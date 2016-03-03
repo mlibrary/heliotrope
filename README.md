@@ -1,4 +1,5 @@
 # heliotrope
+[![Build Status](https://travis-ci.org/curationexperts/heliotrope.svg?branch=master)](https://travis-ci.org/curationexperts/heliotrope)
 Hydra-based digital publisher platform
 
 ## Testing
