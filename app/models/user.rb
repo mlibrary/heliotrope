@@ -3,15 +3,9 @@ class User < ActiveRecord::Base
   include Hydra::User
   # Connects this user object to Curation Concerns behaviors.
   include CurationConcerns::User
-
-
-
-  if Blacklight::Utils.needs_attr_accessible?
-
-    attr_accessible :email, :password, :password_confirmation
-  end
-# Connects this user object to Blacklights Bookmarks. 
+  # Connects this user object to Blacklights Bookmarks.
   include Blacklight::User
+
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
   devise :database_authenticatable, :registerable,

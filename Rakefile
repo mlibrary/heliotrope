@@ -6,6 +6,7 @@ require File.expand_path('../config/application', __FILE__)
 Rails.application.load_tasks
 
 # Get rid of the default task (was spec)
-task default: []; Rake::Task[:default].clear
+task default: []
+Rake::Task[:default].clear
 
 task default: :ci

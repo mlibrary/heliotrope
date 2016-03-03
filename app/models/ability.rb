@@ -1,6 +1,6 @@
 class Ability
   include Hydra::Ability
-  
+
   include CurationConcerns::Ability
   self.ability_logic += [:everyone_can_create_curation_concerns]
 
