@@ -1,9 +1,17 @@
-# Generated via
-#  `rails generate curation_concerns:work Monograph`
 require 'rails_helper'
 
 describe CurationConcerns::MonographsController do
-  it "has tests" do
-    skip "Add your tests here"
+  let(:monograph) { create(:monograph, user: user) }
+  let(:user) { create(:user) }
+
+  describe "#show" do
+    before do
+      sign_in user
+    end
+
+    it 'is successful' do
+      get :show, id: monograph
+      expect(response).to be_success
+    end
   end
 end
