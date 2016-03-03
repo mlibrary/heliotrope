@@ -1,0 +1,16 @@
+language: ruby
+cache: bundler
+sudo: false
+
+rvm:
+  - 2.3.0
+jdk:
+  - oraclejdk8
+
+notifications:
+  email:
+    - justin@curationexperts.com
+
+env:
+  global:
+    - NOKOGIRI_USE_SYSTEM_LIBRARIES=true
