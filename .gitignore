@@ -16,5 +16,6 @@
 !/log/.keep
 /tmp
 
-# Ignore fcrepo test data
+# Ignore fcrepo test/development data
 /fcrepo4-test-data
+/fcrepo4-development-data

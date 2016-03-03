@@ -10,3 +10,10 @@ Hydra-based digital publisher platform
    `solr_wrapper -p 8985 -d solr/config/ --collection_name hydra-test`
 1. Run tests
    `rspec`
+
+
+## Development
+
+Run this command to start Fedora, Solr and Rails:
+
+`rake hydra:server`
