@@ -14,6 +14,9 @@ Hydra-based digital publisher platform
    `rspec`
 
 
+Alternatively you can run `rake ci`, but this is slower because it starts up and tears down Fedora and Solr before/after the test suite is run.
+
+
 ## Development
 
 Run this command to start Fedora, Solr and Rails:
