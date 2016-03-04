@@ -39,7 +39,6 @@ set :resque_stdout_log, "#{shared_path}/log/resque-pool.stdout.log"
 set :resque_kill_signal, 'QUIT'
 
 namespace :deploy do
-
   after :restart, :clear_cache do
     on roles(:web), in: :groups, limit: 3, wait: 10 do
       # Here we can do anything such as:
