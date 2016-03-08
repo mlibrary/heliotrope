@@ -3,9 +3,25 @@ Hydra-based digital publisher platform
 
 ## Development
 
-Run this command to start Fedora, Solr and Rails:
+### Initial setup
+
+  * clone the repository
+  * run `bundle install`
+  * run `rake db:schema:load`
+
+### Run the application
+
+Run this command to start Fedora, Solr and Rails servers:
 
 `rake hydra:server`
+
+Or, if you prefer to start each server individually:
+
+```
+  $ fcrepo_wrapper -p 8984 --no-jms
+  $ solr_wrapper -p 8983 -d solr/config/ --collection_name hydra-dev
+  $ bin/rails s
+```
 
 ## Testing
 
