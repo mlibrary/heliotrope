@@ -60,4 +60,5 @@ group :development, :test do
   gem 'rubocop-rspec'
   gem 'sqlite3'
   gem 'factory_girl_rails'
+  gem 'capybara'
 end
