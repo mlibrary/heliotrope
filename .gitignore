@@ -19,3 +19,5 @@
 # Ignore fcrepo test/development data
 /fcrepo4-test-data
 /fcrepo4-development-data
+
+.rvmrc
