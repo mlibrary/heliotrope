@@ -21,5 +21,25 @@ class SolrDocument
 
   # Do content negotiation for AF models.
 
+  def date
+    fetch('date_tesim', [])
+  end
+
+  def isbn
+    fetch('isbn_tesim', [])
+  end
+
+  def editor
+    fetch('editor_tesim', [])
+  end
+
+  def copyright_holder
+    fetch('copyright_holder_tesim', [])
+  end
+
+  def buy_url
+    fetch('buy_URL_ssim', [])
+  end
+
   use_extension(Hydra::ContentNegotiation)
 end
