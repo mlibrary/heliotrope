@@ -19,7 +19,7 @@ class Monograph < ActiveFedora::Base
   property :copyright_holder, predicate: ::RDF::URI.new('http://schema.org/copyrightHolder') do |index|
     index.as :stored_searchable
   end
-  property :buy_URL, predicate: ::RDF::URI.new('http://schema.org/sameAs') do |index|
+  property :buy_url, predicate: ::RDF::URI.new('http://schema.org/sameAs') do |index|
     index.as :symbol
   end
 end
