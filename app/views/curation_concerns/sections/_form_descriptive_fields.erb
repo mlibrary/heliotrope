@@ -1,0 +1,9 @@
+<div class="row">
+  <div class="col-md-6" id="required-information">
+    <fieldset class="required">
+      <legend>Required Information</legend>
+      <%= f.input :title, as: :multi_value %>
+      <%= f.input :monograph_id, collection: Monograph.all.map { |b| [b.title.first, b.id] } %>
+    </fieldset>
+  </div>
+</div>

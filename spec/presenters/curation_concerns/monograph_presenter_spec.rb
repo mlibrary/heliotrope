@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe MonographPresenter do
+describe CurationConcerns::MonographPresenter do
   let(:mono_doc) { SolrDocument.new(id: 'mono', active_fedora_model_ssi: ['Monograph']) }
   let(:ability) { double('ability') }
   let(:presenter) { described_class.new(mono_doc, ability) }
