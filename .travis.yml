@@ -2,6 +2,8 @@ language: ruby
 cache: bundler
 sudo: false
 
+before_script:
+  - bundle exec bin/setup
 rvm:
   - 2.3.0
 jdk:

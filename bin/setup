@@ -1,5 +1,7 @@
 #!/usr/bin/env ruby
 require 'pathname'
+require 'fileutils'
+include FileUtils
 
 # path to your application root.
 APP_ROOT = Pathname.new File.expand_path('../../', __FILE__)
@@ -12,10 +14,12 @@ Dir.chdir APP_ROOT do
   system "gem install bundler --conservative"
   system "bundle check || bundle install"
 
-  # puts "\n== Copying sample files =="
-  # unless File.exist?("config/database.yml")
-  #   system "cp config/database.yml.sample config/database.yml"
-  # end
+  puts "\n== Copying sample files =="
+  files = ['secrets', 'database']
+  files.each do |f|
+    yml_name = "config/#{f}.yml"
+    cp "#{yml_name}.sample", yml_name unless File.exist?(yml_name)
+  end
 
   puts "\n== Preparing database =="
   system "bin/rake db:setup"

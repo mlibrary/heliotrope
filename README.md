@@ -7,7 +7,7 @@ Hydra-based digital publisher platform
 
   * clone the repository
   * run `bundle install`
-  * run `rake db:schema:load`
+  * run `bundle exec bin/setup`
 
 ### Run the application
 

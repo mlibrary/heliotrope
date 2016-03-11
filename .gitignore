@@ -21,4 +21,7 @@
 /fcrepo4-development-data
 /fcrepo4-data
 
+/config/secrets.yml
+/config/database.yml
+
 .rvmrc
