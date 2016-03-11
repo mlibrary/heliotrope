@@ -1,9 +1,8 @@
-# Generated via
-#  `rails generate curation_concerns:work Section`
 require 'rails_helper'
 
 describe CurationConcerns::SectionsController do
-  it "has tests" do
-    skip "Add your tests here"
+  describe "#show_presenter" do
+    subject { controller.show_presenter }
+    it { is_expected.to eq CurationConcerns::SectionPresenter }
   end
 end

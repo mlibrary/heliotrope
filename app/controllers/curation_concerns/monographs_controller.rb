@@ -1,8 +1,5 @@
 class CurationConcerns::MonographsController < ApplicationController
   include CurationConcerns::CurationConcernController
   set_curation_concern_type Monograph
-
-  def show_presenter
-    MonographPresenter
-  end
+  self.show_presenter = CurationConcerns::MonographPresenter
 end
