@@ -38,7 +38,7 @@ class SolrDocument
   end
 
   def buy_url
-    fetch('buy_URL_ssim', [])
+    fetch('buy_url_ssim', [])
   end
 
   use_extension(Hydra::ContentNegotiation)

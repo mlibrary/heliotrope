@@ -1,8 +1,7 @@
-<<<<<<< 68d8a94a31aef7fa53724dfc6d4a459eb07648b1
 class MonographPresenter < ::CurationConcerns::WorkShowPresenter
   delegate :title, :date_created, :date_modified, :date_uploaded, :description,
            :creator, :editor, :contributor, :subject, :publisher, :date, :language,
-           :isbn, :copyright_holder, :buy_URL, :embargo_release_date,
+           :isbn, :copyright_holder, :buy_url, :embargo_release_date,
            :lease_expiration_date, :rights, to: :solr_document
 
   def section_docs
