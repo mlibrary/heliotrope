@@ -4,7 +4,7 @@ source 'https://rubygems.org'
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '4.2.6'
 
-gem 'curation_concerns', git: 'https://github.com/projecthydra-labs/curation_concerns.git'
+gem 'curation_concerns', git: 'https://github.com/projecthydra-labs/curation_concerns.git', branch: 'refactor_search_builder'
 gem 'pg', '0.18.4'
 # Use sqlite3 as the database for Active Record
 # gem 'sqlite3'
