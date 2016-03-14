@@ -21,3 +21,10 @@
 
 en:
   hello: "Hello world"
+  simple_form:
+    labels:
+      defaults:
+        isbn: "ISBN"
+        editor: "Editor"
+        buy_url: "Buy Book URL"
+        copyright_holder: "Copyright Holder"
