@@ -30,5 +30,9 @@ describe SearchBuilder do
       expect(subject['qf']).to match %r{\bcreator_tesim\b}
       expect(subject['qf']).to match %r{\bsubject_tesim\b}
     end
+
+    it "facets the required fields" do
+      expect(subject['facet.field']).to include 'subject_sim'
+    end
   end
 end
