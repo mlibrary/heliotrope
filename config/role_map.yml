@@ -17,3 +17,7 @@ test:
   patron:
     - patron1@example.com
     - leland_himself@example.com
+production:
+  archivist:
+    - info@example.com 
+
