@@ -17,8 +17,8 @@ GIT
 
 GIT
   remote: https://github.com/projecthydra-labs/curation_concerns.git
-  revision: 57fa1043430bba5cdd90c5cbe30710550a0e9bd6
-  branch: refactor_search_builder
+  revision: 7e45cbce49fe8218731ad88165373e28605dc377
+  branch: member_partial
   specs:
     curation_concerns (0.10.0)
       blacklight (~> 6.0)
@@ -42,6 +42,7 @@ GIT
       redlock (~> 0.1.2)
       resque (~> 1.23)
       resque-pool (~> 0.3)
+      solrizer (~> 3.4)
 
 GEM
   remote: https://rubygems.org/
