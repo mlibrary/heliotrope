@@ -5,6 +5,7 @@ source 'https://rubygems.org'
 gem 'rails', '4.2.6'
 
 gem 'curation_concerns', git: 'https://github.com/projecthydra-labs/curation_concerns.git', branch: 'refactor_search_builder'
+gem 'active-fedora', github: 'projecthydra/active_fedora', branch: 'default_scopes'
 gem 'pg', '0.18.4'
 # Use sqlite3 as the database for Active Record
 # gem 'sqlite3'
@@ -47,7 +48,6 @@ group :development do
 end
 
 gem 'rsolr', '~> 1.0.6'
-gem 'globalid'
 gem 'devise'
 gem 'devise-guests', '~> 0.3'
 

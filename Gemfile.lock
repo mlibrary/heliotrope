@@ -1,4 +1,21 @@
 GIT
+  remote: git://github.com/projecthydra/active_fedora.git
+  revision: c9284c037a6f1e1e9537b999e3caf02012c8b511
+  branch: default_scopes
+  specs:
+    active-fedora (9.9.1)
+      active-triples (~> 0.7.1)
+      activesupport (>= 4.1.0)
+      deprecation
+      ldp (~> 0.5.0)
+      linkeddata
+      nom-xml (>= 0.5.1)
+      om (~> 3.1)
+      rdf-rdfxml (~> 1.1)
+      rsolr (~> 1.0, >= 1.0.10)
+      solrizer (~> 3.4)
+
+GIT
   remote: https://github.com/projecthydra-labs/curation_concerns.git
   revision: 57fa1043430bba5cdd90c5cbe30710550a0e9bd6
   branch: refactor_search_builder
@@ -48,16 +65,6 @@ GEM
       erubis (~> 2.7.0)
       rails-dom-testing (~> 1.0, >= 1.0.5)
       rails-html-sanitizer (~> 1.0, >= 1.0.2)
-    active-fedora (9.9.1)
-      active-triples (~> 0.7.1)
-      activesupport (>= 4.1.0)
-      deprecation
-      ldp (~> 0.4.0)
-      linkeddata
-      nom-xml (>= 0.5.1)
-      om (~> 3.1)
-      rdf-rdfxml (~> 1.1)
-      rsolr (~> 1.0.10)
     active-triples (0.7.5)
       activemodel (>= 3.0.0)
       activesupport (>= 3.0.0)
@@ -260,10 +267,12 @@ GEM
       activesupport (>= 3.0.0)
     kaminari_route_prefix (0.0.1)
       kaminari (>= 0.16, < 2)
-    ldp (0.4.1)
+    ldp (0.5.0)
+      deprecation
       faraday
       http_logger
       linkeddata (>= 1.1)
+      rdf-vocab
       slop
     libv8 (3.16.14.13)
     link_header (0.0.8)
@@ -485,7 +494,7 @@ GEM
     solr_wrapper (0.7.0)
       ruby-progressbar
       rubyzip
-    solrizer (3.3.0)
+    solrizer (3.4.0)
       activesupport
       daemons
       nokogiri
@@ -558,6 +567,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  active-fedora!
   byebug
   capistrano (= 3.4.0)
   capistrano-bundler
@@ -570,7 +580,6 @@ DEPENDENCIES
   devise-guests (~> 0.3)
   factory_girl_rails
   fcrepo_wrapper
-  globalid
   jbuilder (~> 2.0)
   jquery-rails
   pg (= 0.18.4)

@@ -4,15 +4,9 @@ class Ability
 
   # Define any customized permissions here.
   def custom_permissions
-    if admin?
-      can [:destroy], ActiveFedora::Base
-    end
-
-    # Limits creating new objects to a specific group
-    #
-    # if user_groups.include? 'special_group'
-    #   can [:create], ActiveFedora::Base
-    # end
+    return unless admin?
+    can [:destroy], ActiveFedora::Base
+    can :publish, Monograph
   end
 
   # TODO: For now, any signed in user is an admin
