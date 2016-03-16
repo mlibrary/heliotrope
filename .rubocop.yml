@@ -113,3 +113,7 @@ RSpec/InstanceVariable:
 
 RSpec/NotToNot:
   Enabled: false
+
+RSpec/DescribeClass:
+  Exclude:
+    - 'spec/routing/**/*'
