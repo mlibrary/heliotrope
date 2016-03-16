@@ -21,8 +21,8 @@ class SolrDocument
 
   # Do content negotiation for AF models.
 
-  def date
-    fetch('date_tesim', [])
+  def date_published
+    fetch('date_published_tesim', [])
   end
 
   def isbn
