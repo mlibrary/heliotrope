@@ -1,7 +1,6 @@
 GIT
   remote: git://github.com/projecthydra/active_fedora.git
-  revision: cec7ec60787825857212bdbdf7ac5d86a7b41e7d
-  branch: default_scopes
+  revision: 7b31314785914bdc075980493a8705ae8d820635
   specs:
     active-fedora (9.9.1)
       active-triples (~> 0.7.1)
@@ -17,8 +16,7 @@ GIT
 
 GIT
   remote: https://github.com/projecthydra-labs/curation_concerns.git
-  revision: 830784b83bd6219593feef05cdb5c0533189433b
-  branch: file_presenters
+  revision: 8f190ff6e93ffb1a95574727c7865d4dc9d0f682
   specs:
     curation_concerns (0.10.0)
       blacklight (~> 6.0)
