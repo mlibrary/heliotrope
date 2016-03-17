@@ -1,6 +1,6 @@
 GIT
   remote: git://github.com/projecthydra/active_fedora.git
-  revision: c9284c037a6f1e1e9537b999e3caf02012c8b511
+  revision: cec7ec60787825857212bdbdf7ac5d86a7b41e7d
   branch: default_scopes
   specs:
     active-fedora (9.9.1)
@@ -17,8 +17,8 @@ GIT
 
 GIT
   remote: https://github.com/projecthydra-labs/curation_concerns.git
-  revision: 7e45cbce49fe8218731ad88165373e28605dc377
-  branch: member_partial
+  revision: 830784b83bd6219593feef05cdb5c0533189433b
+  branch: file_presenters
   specs:
     curation_concerns (0.10.0)
       blacklight (~> 6.0)
@@ -179,7 +179,7 @@ GEM
     devise-guests (0.5.0)
       devise
     diff-lcs (1.2.5)
-    domain_name (0.5.20160309)
+    domain_name (0.5.20160310)
       unf (>= 0.0.5, < 1.0.0)
     ebnf (1.0.0)
       rdf (~> 1.1)
@@ -371,7 +371,7 @@ GEM
       rake (>= 0.8.7)
       thor (>= 0.18.1, < 2.0)
     rainbow (2.1.0)
-    rake (11.1.0)
+    rake (11.1.1)
     rdf (1.99.1)
       link_header (~> 0.0, >= 0.0.8)
     rdf-aggregate-repo (1.99.0)
@@ -492,7 +492,7 @@ GEM
       rack-protection (~> 1.4)
       tilt (>= 1.3, < 3)
     slop (4.2.1)
-    solr_wrapper (0.7.0)
+    solr_wrapper (0.7.1)
       ruby-progressbar
       rubyzip
     solrizer (3.4.0)

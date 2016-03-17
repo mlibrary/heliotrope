@@ -1,10 +1,10 @@
 <% unless presenter.section_docs.blank? %>
-  <h2> Sections </h2>
+  <h2>Sections</h2>
 
-  <ul>
+  <ul class="sections">
     <% presenter.section_docs.each do |doc| %>
       <li>
-        <%= link_to(doc.title_or_label, main_app.curation_concerns_section_path(doc)) %></td>
+        <%= link_to(doc.title_or_label, main_app.curation_concerns_section_path(doc)) %>
       </li>
     <% end %>
   </ul>
