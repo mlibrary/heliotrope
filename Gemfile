@@ -4,7 +4,7 @@ source 'https://rubygems.org'
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '4.2.6'
 
-gem 'curation_concerns', git: 'https://github.com/projecthydra-labs/curation_concerns.git', branch: 'member_partial'
+gem 'curation_concerns', git: 'https://github.com/projecthydra-labs/curation_concerns.git', branch: 'file_presenters'
 gem 'active-fedora', github: 'projecthydra/active_fedora', branch: 'default_scopes'
 gem 'pg', '0.18.4'
 # Use sqlite3 as the database for Active Record

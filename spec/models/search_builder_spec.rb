@@ -13,7 +13,7 @@ describe SearchBuilder do
       before { search_builder.filter_models(solr_params) }
 
       it 'limits query to collection and generic work' do
-        expect(solr_params[:fq].first).to match(/{!raw f=has_model_ssim}Monograph.*OR.*{!raw f=has_model_ssim}Collection/)
+        expect(solr_params[:fq].first).to match(/{!field f=has_model_ssim}Monograph.*OR.*{!field f=has_model_ssim}Collection/)
         expect(solr_params[:fq].first).not_to match(/{!raw f=has_model_ssim}Section/)
       end
     end
