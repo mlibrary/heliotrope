@@ -1,9 +1,10 @@
 module CurationConcerns
   class MonographPresenter < WorkShowPresenter
-    delegate :title, :date_created, :date_modified, :date_uploaded, :description,
-             :creator, :editor, :contributor, :subject, :publisher, :date, :language,
-             :isbn, :copyright_holder, :buy_url, :embargo_release_date,
-             :lease_expiration_date, :rights, to: :solr_document
+    delegate :title, :date_created, :date_modified, :date_uploaded,
+             :description, :creator, :editor, :contributor, :subject,
+             :publisher, :date_published, :language, :isbn, :copyright_holder,
+             :buy_url, :embargo_release_date, :lease_expiration_date, :rights,
+             to: :solr_document
 
     def section_docs
       return @section_docs if @section_docs

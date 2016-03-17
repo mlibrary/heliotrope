@@ -35,4 +35,12 @@ describe CurationConcerns::MonographPresenter do
       end
     end
   end
+
+  describe '#date_published' do
+    before do
+      allow(mono_doc).to receive(:date_published).and_return(['Oct 7th'])
+    end
+    subject { presenter.date_published }
+    it { is_expected.to eq ['Oct 7th'] }
+  end
 end

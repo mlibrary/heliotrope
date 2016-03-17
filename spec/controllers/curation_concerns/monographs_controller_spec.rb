@@ -14,6 +14,17 @@ describe CurationConcerns::MonographsController do
     end
   end
 
+  describe "#create" do
+    it 'is successful' do
+      post :create, monograph: { title: ['Title one'],
+                                 date_published: ['Oct 20th'] }
+
+      expect(assigns[:curation_concern].title).to eq ['Title one']
+      expect(assigns[:curation_concern].date_published).to eq ['Oct 20th']
+      expect(response).to redirect_to Rails.application.routes.url_helpers.curation_concerns_monograph_path(assigns[:curation_concern])
+    end
+  end
+
   describe "#publish" do
     it 'is successful' do
       expect(PublishJob).to receive(:perform_later).with(monograph)
