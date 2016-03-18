@@ -11,6 +11,7 @@ describe Ability do
   describe 'platform-wide admin user' do
     let(:creating_user) { current_user }
     let(:current_user) { create(:platform_admin) }
+    let(:role) { create(:role) }
 
     it do
       should be_able_to(:create, Monograph.new)
@@ -28,6 +29,28 @@ describe Ability do
       should be_able_to(:read, file_set)
       should be_able_to(:update, file_set)
       should be_able_to(:destroy, file_set)
+
+      should be_able_to(:read, role)
+      should be_able_to(:update, role)
+      should be_able_to(:destroy, role)
+    end
+  end
+
+  describe 'a press-admin' do
+    let(:my_press) { create(:press) }
+    let(:current_user) { create(:press_admin, press: my_press) }
+    context "roles" do
+      let(:my_press_role) { create(:role, resource: my_press) }
+      let(:other_press_role) { create(:role) }
+      it do
+        should be_able_to(:read, my_press_role)
+        should be_able_to(:update, my_press_role)
+        should be_able_to(:destroy, my_press_role)
+
+        should_not be_able_to(:read, other_press_role)
+        should_not be_able_to(:update, other_press_role)
+        should_not be_able_to(:destroy, other_press_role)
+      end
     end
   end
 
@@ -84,6 +107,15 @@ describe Ability do
         should be_able_to(:read, file_set)
         should_not be_able_to(:update, file_set)
         should_not be_able_to(:destroy, file_set)
+      end
+    end
+
+    context "admin only things" do
+      let(:role) { create(:role) }
+      it do
+        should_not be_able_to(:read, role)
+        should_not be_able_to(:update, role)
+        should_not be_able_to(:destroy, role)
       end
     end
   end

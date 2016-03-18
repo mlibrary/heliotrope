@@ -35,11 +35,11 @@ Rails.application.routes.draw do
   end
 
   resources :presses, path: '/' do
-    # resources :roles, path: 'users', only: [:index, :create, :destroy] do
-    #   collection do
-    #     patch :update_all
-    #   end
-    # end
+    resources :roles, path: 'users', only: [:index, :create, :destroy] do
+      collection do
+        patch :update_all
+      end
+    end
   end
 
   root 'presses#index'

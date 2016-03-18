@@ -28,3 +28,9 @@ en:
         editor: "Editor"
         buy_url: "Buy Book URL"
         copyright_holder: "Copyright Holder"
+  helpers:
+    submit:
+      role:
+        updated:   "User has been updated."
+        destroyed: "User has been removed."
+        batch_error: "There was a problem saving the user(s)."
