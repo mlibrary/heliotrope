@@ -4,6 +4,8 @@ class Ability
 
   # Define any customized permissions here.
   def custom_permissions
+    can [:index, :read], Press
+
     return unless platform_admin?
     can [:destroy], ActiveFedora::Base
     can :publish, Monograph
