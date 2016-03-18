@@ -2,7 +2,7 @@ require 'rails_helper'
 
 describe CurationConcerns::MonographsController do
   let(:monograph) { create(:monograph, user: user) }
-  let(:user) { create(:user) }
+  let(:user) { create(:platform_admin) }
   before do
     sign_in user
   end

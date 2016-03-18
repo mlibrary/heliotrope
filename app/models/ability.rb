@@ -4,14 +4,13 @@ class Ability
 
   # Define any customized permissions here.
   def custom_permissions
-    return unless admin?
+    return unless platform_admin?
     can [:destroy], ActiveFedora::Base
     can :publish, Monograph
   end
 
-  # TODO: For now, any signed in user is an admin
-  def admin?
-    # user_groups.include? 'admin'
-    registered_user?
+  def platform_admin?
+    @user.platform_admin?
   end
+  alias admin? platform_admin?
 end
