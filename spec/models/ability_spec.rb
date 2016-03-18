@@ -8,10 +8,9 @@ describe Ability do
   let(:section) { create(:section, user: creating_user) }
   let(:file_set) { create(:file_set, user: creating_user) }
 
-  describe 'admin user' do
-    # TODO: all signed in users are currently admins
+  describe 'platform-wide admin user' do
     let(:creating_user) { current_user }
-    let(:current_user) { create(:user) }
+    let(:current_user) { create(:platform_admin) }
 
     it do
       should be_able_to(:create, Monograph.new)

@@ -6,7 +6,7 @@ feature 'Create a section' do
       Section.destroy_all
       Monograph.destroy_all
     end
-    let(:user) { create(:user) }
+    let(:user) { create(:platform_admin) }
     let!(:monograph) { create(:monograph, user: user) }
     before do
       login_as user
