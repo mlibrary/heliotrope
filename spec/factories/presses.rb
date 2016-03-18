@@ -3,6 +3,6 @@ FactoryGirl.define do
     name "MyString"
     logo_path "MyString"
     description "MyText"
-    subdomain "MyString"
+    sequence(:subdomain) { |_n| "press-#{srand}" }
   end
 end

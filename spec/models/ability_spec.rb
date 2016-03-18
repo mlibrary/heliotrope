@@ -43,6 +43,14 @@ describe Ability do
       end
     end
 
+    context "presses" do
+      let(:press) { create(:press) }
+      it do
+        should be_able_to(:index, Press)
+        should be_able_to(:read, press)
+      end
+    end
+
     context "read/modify/destroy private things" do
       it do
         should_not be_able_to(:read, monograph)

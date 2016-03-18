@@ -1,5 +1,9 @@
 require 'rails_helper'
 
 RSpec.describe Press, type: :model do
-  pending "add some examples to (or delete) #{__FILE__}"
+  describe "to_param" do
+    let(:press) { build(:press, subdomain: 'umich') }
+    subject { press.to_param }
+    it { is_expected.to eq 'umich' }
+  end
 end

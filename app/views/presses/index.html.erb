@@ -1,0 +1,6 @@
+<h2>Presses</h2>
+<ul>
+  <% @presses.each do |press| %>
+    <li><%= link_to press.name, press %></li>
+  <% end %>
+</ul>

@@ -10,8 +10,6 @@ Rails.application.routes.draw do
   devise_for :users
   mount Hydra::Collections::Engine => '/'
   mount CurationConcerns::Engine, at: '/'
-  resources :welcome, only: 'index'
-  root 'welcome#index'
   curation_concerns_collections
   curation_concerns_basic_routes
   curation_concerns_embargo_management
@@ -35,4 +33,14 @@ Rails.application.routes.draw do
       delete 'clear'
     end
   end
+
+  resources :presses, path: '/' do
+    # resources :roles, path: 'users', only: [:index, :create, :destroy] do
+    #   collection do
+    #     patch :update_all
+    #   end
+    # end
+  end
+
+  root 'presses#index'
 end
