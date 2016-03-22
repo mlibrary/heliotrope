@@ -23,4 +23,6 @@ class Monograph < ActiveFedora::Base
   property :buy_url, predicate: ::RDF::Vocab::SCHEMA.sameAs do |index|
     index.as :symbol
   end
+
+  self.indexer = MonographIndexer
 end

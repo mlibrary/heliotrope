@@ -8,19 +8,28 @@ module CurationConcerns
 
     def section_docs
       return @section_docs if @section_docs
-      @section_docs = member_docs.select { |doc| doc['active_fedora_model_ssi'] == 'Section'.freeze }
+      @section_docs = ordered_member_docs.select { |doc| doc['active_fedora_model_ssi'] == 'Section'.freeze }
     end
 
     private
 
-      def member_docs
-        return @member_docs if @member_docs
-        ids = solr_document[Solrizer.solr_name('member_ids', :symbol)]
-        @member_docs = if ids.blank?
-                         []
-                       else
-                         ActiveFedora::SolrService.query("{!terms f=id}#{ids.join(',')}").map { |res| SolrDocument.new(res) }
-                       end
+      def ordered_member_docs
+        return @ordered_member_docs if @ordered_member_docs
+
+        ids = Array(solr_document[Solrizer.solr_name('ordered_member_ids', :symbol)])
+
+        if ids.blank?
+          @ordered_member_docs = []
+          return @ordered_member_docs
+        else
+          query_results = ActiveFedora::SolrService.query("{!terms f=id}#{ids.join(',')}")
+
+          docs_hash = query_results.each_with_object({}) do |res, h|
+            h[res['id']] = SolrDocument.new(res)
+          end
+
+          @ordered_member_docs = ids.map { |id| docs_hash[id] }
+        end
       end
   end
 end
