@@ -20,7 +20,6 @@
 # available at http://guides.rubyonrails.org/i18n.html.
 
 en:
-  hello: "Hello world"
   simple_form:
     labels:
       defaults:
@@ -34,3 +33,5 @@ en:
         updated:   "User has been updated."
         destroyed: "User has been removed."
         batch_error: "There was a problem saving the user(s)."
+  file_manager:
+    link_text: "Organize Sections"
