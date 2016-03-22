@@ -1,7 +1,7 @@
 FactoryGirl.define do
   factory :role do
     resource nil
-    user nil
-    role "MyString"
+    user { FactoryGirl.create(:user) }
+    role 'admin'
   end
 end

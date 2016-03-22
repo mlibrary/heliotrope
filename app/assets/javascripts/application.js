@@ -16,4 +16,5 @@
 // Required by Blacklight
 //= require blacklight/blacklight
 
+//= require 'edit_users'
 //= require_tree .

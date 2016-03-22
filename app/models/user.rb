@@ -14,6 +14,16 @@ class User < ActiveRecord::Base
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable, :validatable
 
+  alias_attribute :user_key, :email
+
+  def press_roles
+    roles.where(resource_type: 'Press')
+  end
+
+  def admin_roles
+    press_roles.where(role: 'admin')
+  end
+
   def platform_admin?
     roles.where(role: 'admin', resource: nil).any?
   end
@@ -22,6 +32,6 @@ class User < ActiveRecord::Base
   # user class to get a user-displayable login/identifier for
   # the account.
   def to_s
-    email
+    user_key
   end
 end

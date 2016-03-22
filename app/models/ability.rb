@@ -6,6 +6,8 @@ class Ability
   def custom_permissions
     can [:index, :read], Press
 
+    # press admin
+    can :manage, Role, resource_id: @user.admin_roles.pluck(:resource_id), resource_type: 'Press'
     return unless platform_admin?
     can [:destroy], ActiveFedora::Base
     can :publish, Monograph
