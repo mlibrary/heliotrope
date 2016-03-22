@@ -30,8 +30,8 @@ en:
   helpers:
     submit:
       role:
-        updated:   "User has been updated."
-        destroyed: "User has been removed."
-        batch_error: "There was a problem saving the user(s)."
+        updated:   "User role has been updated."
+        destroyed: "User role has been removed."
+        batch_error: "There was a problem saving the user role(s)."
   file_manager:
     link_text: "Organize Sections"

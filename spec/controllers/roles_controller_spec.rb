@@ -46,7 +46,7 @@ describe RolesController, type: :controller do
           }
         }
         expect(response).to redirect_to press_roles_path(press)
-        expect(flash[:notice]).to eq 'User has been updated.'
+        expect(flash[:notice]).to eq 'User role has been updated.'
 
         admin.reload
 
@@ -84,7 +84,7 @@ describe RolesController, type: :controller do
 
         expect(response).to redirect_to press_roles_path(press)
         expect(press.roles).to be_empty
-        expect(flash[:notice]).to eq 'User has been removed.'
+        expect(flash[:notice]).to eq 'User role has been removed.'
       end
 
       it 'handles failure' do
@@ -95,7 +95,7 @@ describe RolesController, type: :controller do
           }
         }
         expect(response).to be_successful
-        expect(flash[:alert]).to eq 'There was a problem saving the user(s).'
+        expect(flash[:alert]).to eq 'There was a problem saving the user role(s).'
       end
     end
   end
