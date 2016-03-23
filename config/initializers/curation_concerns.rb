@@ -37,7 +37,7 @@ CurationConcerns.configure do |config|
   # config.working_path = File.join(Rails.root, 'tmp', 'uploads')
 
   # If you have ffmpeg installed and want to transcode audio and video uncomment this line
-  # config.enable_ffmpeg = true
+  config.enable_ffmpeg = true
 
   # CurationConcerns uses NOIDs for files and collections instead of Fedora UUIDs
   # where NOID = 10-character string and UUID = 32-character string w/ hyphens

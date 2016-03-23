@@ -24,12 +24,14 @@ set :linked_files,
       config/resque-pool.yml
       config/secrets.yml
       config/solr.yml
+      config/initializers/curation_concerns.rb
     )
 
 # Default value for linked_dirs is []
 set :linked_dirs,
     %w(
       log
+      tmp
     )
 
 # Default value for default_env is {}
