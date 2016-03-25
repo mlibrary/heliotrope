@@ -21,6 +21,12 @@ and start the redis server like this (change this command depending on where you
 
 `redis-server /usr/local/etc/redis.conf`
 
+#### Create an admin user
+
+There is a rake task you can use to create a superadmin user.  It will prompt you for an email address and password, and then create a user with the correct role.
+
+`rake admin`
+
 ### Run the application
 
 Run this command to start Fedora, Solr and Rails servers:
