@@ -22,7 +22,7 @@ module CurationConcerns
           @ordered_member_docs = []
           return @ordered_member_docs
         else
-          query_results = ActiveFedora::SolrService.query("{!terms f=id}#{ids.join(',')}")
+          query_results = ActiveFedora::SolrService.query("{!terms f=id}#{ids.join(',')}", rows: ids.count)
 
           docs_hash = query_results.each_with_object({}) do |res, h|
             h[res['id']] = SolrDocument.new(res)
