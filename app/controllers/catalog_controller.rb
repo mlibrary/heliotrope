@@ -56,7 +56,7 @@ class CatalogController < ApplicationController
     config.add_index_field solr_name('format', :stored_searchable)
     config.add_index_field solr_name('identifier', :stored_searchable)
     # Heliotrope
-    config.add_index_field solr_name('date', :stored_searchable)
+    config.add_index_field solr_name('date_published', :stored_searchable)
     config.add_index_field solr_name('isbn', :stored_searchable)
     config.add_index_field solr_name('editor', :stored_searchable)
     config.add_index_field solr_name('copyright_holder', :stored_searchable)
