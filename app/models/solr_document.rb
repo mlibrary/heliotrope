@@ -41,5 +41,33 @@ class SolrDocument
     fetch('buy_url_ssim', [])
   end
 
+  def caption
+    fetch('caption_tesim', [])
+  end
+
+  def alt_text
+    fetch('alt_text_tesim', [])
+  end
+
+  def resource_type
+    fetch('resource_type_tesim', [])
+  end
+
+  def content_type
+    fetch('content_type_tesim', [])
+  end
+
+  def keywords
+    fetch('keywords_tesim', [])
+  end
+
+  def relation
+    fetch('relation_tesim', [])
+  end
+
+  def identifier
+    fetch('identifier_tesim', [])
+  end
+
   use_extension(Hydra::ContentNegotiation)
 end

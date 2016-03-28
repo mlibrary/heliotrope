@@ -12,8 +12,7 @@ class Monograph < ActiveFedora::Base
   property :press, predicate: ::RDF::Vocab::MARCRelators.pbl, multiple: false do |index|
     index.as :stored_searchable, :facetable
   end
-  validates :press, presence: { message: 'You must select a press' }
-
+  validates :press, presence: { message: 'You must select a press.' }
   property :date_published, predicate: ::RDF::Vocab::SCHEMA.datePublished do |index|
     index.as :stored_searchable
   end

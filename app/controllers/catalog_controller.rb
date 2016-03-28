@@ -62,6 +62,11 @@ class CatalogController < ApplicationController
     config.add_index_field solr_name('editor', :stored_searchable)
     config.add_index_field solr_name('copyright_holder', :stored_searchable)
     config.add_index_field solr_name('buy_url', :symbol)
+    config.add_index_field solr_name('caption', :stored_searchable)
+    config.add_index_field solr_name('alt_text', :stored_searchable)
+    config.add_index_field solr_name('content_type', :stored_searchable)
+    config.add_index_field solr_name('keywords', :stored_searchable)
+    config.add_index_field solr_name('relation', :stored_searchable)
 
     # "fielded" search configuration. Used by pulldown among other places.
     # For supported keys in hash, see rdoc for Blacklight::SearchFields
