@@ -4,10 +4,16 @@ class Monograph < ActiveFedora::Base
   include ::CurationConcerns::WorkBehavior
   include ::CurationConcerns::BasicMetadata
   include GlobalID::Identification
+
+  self.indexer = MonographIndexer
+
   validates :title, presence: { message: 'Your work must have a title.' }
 
-  # Move this into its own concern later?
-  # RDF predicates are not mapped correctly
+  property :press, predicate: ::RDF::Vocab::MARCRelators.pbl, multiple: false do |index|
+    index.as :stored_searchable, :facetable
+  end
+  validates :press, presence: { message: 'You must select a press' }
+
   property :date_published, predicate: ::RDF::Vocab::SCHEMA.datePublished do |index|
     index.as :stored_searchable
   end
@@ -23,6 +29,4 @@ class Monograph < ActiveFedora::Base
   property :buy_url, predicate: ::RDF::Vocab::SCHEMA.sameAs do |index|
     index.as :symbol
   end
-
-  self.indexer = MonographIndexer
 end

@@ -19,5 +19,11 @@ FactoryGirl.define do
         user.roles.create role: 'admin', resource: evaluator.press
       end
     end
+
+    factory :editor do
+      after(:create) do |user, evaluator|
+        user.roles.create role: 'editor', resource: evaluator.press
+      end
+    end
   end
 end
