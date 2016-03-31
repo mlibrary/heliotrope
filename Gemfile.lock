@@ -1,41 +1,25 @@
 GIT
-  remote: git://github.com/projecthydra/active_fedora.git
-  revision: 7b31314785914bdc075980493a8705ae8d820635
-  specs:
-    active-fedora (9.9.1)
-      active-triples (~> 0.7.1)
-      activesupport (>= 4.1.0)
-      deprecation
-      ldp (~> 0.5.0)
-      linkeddata
-      nom-xml (>= 0.5.1)
-      om (~> 3.1)
-      rdf-rdfxml (~> 1.1)
-      rsolr (~> 1.0, >= 1.0.10)
-      solrizer (~> 3.4)
-
-GIT
   remote: https://github.com/projecthydra-labs/curation_concerns.git
-  revision: 8f190ff6e93ffb1a95574727c7865d4dc9d0f682
+  revision: b44fbfd48bed67a3d2f8154dbec78af09c84e5c6
   specs:
-    curation_concerns (0.10.0)
+    curation_concerns (0.11.0.rc1)
       blacklight (~> 6.0)
       blacklight_advanced_search (~> 6.0)
       breadcrumbs_on_rails (~> 2.3)
-      curation_concerns-models (= 0.10.0)
+      curation_concerns-models (= 0.11.0.rc1)
       hydra-editor (~> 1.1)
-      hydra-head (~> 9.6)
+      hydra-head (~> 9.9)
       jquery-ui-rails
       kaminari_route_prefix (~> 0.0.1)
       rails_autolink
       simple_form (~> 3.1)
       sprockets-es6
-    curation_concerns-models (0.10.0)
+    curation_concerns-models (0.11.0.rc1)
       active_attr
       active_fedora-noid (~> 1.0)
       hydra-collections (~> 8.1)
       hydra-head (~> 9.3)
-      hydra-works (~> 0.7)
+      hydra-works (~> 0.8, >= 0.8.1)
       qa (~> 0.5)
       redlock (~> 0.1.2)
       resque (~> 1.23)
@@ -64,6 +48,18 @@ GEM
       erubis (~> 2.7.0)
       rails-dom-testing (~> 1.0, >= 1.0.5)
       rails-html-sanitizer (~> 1.0, >= 1.0.2)
+    active-fedora (9.10.4)
+      active-triples (~> 0.7.1)
+      activemodel (>= 4.2, < 6)
+      activesupport (>= 4.2.4, < 6)
+      deprecation
+      ldp (~> 0.5.0)
+      linkeddata
+      nom-xml (>= 0.5.1)
+      om (~> 3.1)
+      rdf-rdfxml (~> 1.1)
+      rsolr (~> 1.0, >= 1.0.10)
+      solrizer (~> 3.4)
     active-triples (0.7.5)
       activemodel (>= 3.0.0)
       activesupport (>= 3.0.0)
@@ -76,8 +72,8 @@ GEM
     active_fedora-noid (1.0.3)
       active-fedora (~> 9.7)
       noid (~> 0.7)
-    activefedora-aggregation (0.8.1)
-      active-fedora (~> 9.5)
+    activefedora-aggregation (0.10.0)
+      active-fedora (~> 9.10.1)
       activesupport
       rdf (~> 1.1, >= 1.1.17.1)
       rdf-vocab (~> 0.8.1)
@@ -102,7 +98,7 @@ GEM
     addressable (2.4.0)
     arel (6.0.3)
     ast (2.2.0)
-    autoprefixer-rails (6.3.3.1)
+    autoprefixer-rails (6.3.5)
       execjs
     babel-source (5.8.35)
     babel-transpiler (0.7.0)
@@ -177,8 +173,6 @@ GEM
     devise-guests (0.5.0)
       devise
     diff-lcs (1.2.5)
-    domain_name (0.5.20160310)
-      unf (>= 0.0.5, < 1.0.0)
     ebnf (1.0.0)
       rdf (~> 1.1)
       sxp (~> 0.1, >= 0.1.3)
@@ -200,33 +194,30 @@ GEM
     haml (4.0.7)
       tilt
     htmlentities (4.3.4)
-    http-cookie (1.0.2)
-      domain_name (~> 0.5)
     http_logger (0.5.1)
-    hydra-access-controls (9.8.1)
-      active-fedora (~> 9.9)
+    hydra-access-controls (9.9.0)
+      active-fedora (~> 9.10.0)
       activesupport (~> 4.0)
       blacklight (>= 5.16)
       blacklight-access_controls (~> 0.1)
       cancancan (~> 1.8)
       deprecation (~> 0.2)
-    hydra-collections (8.1.1)
+    hydra-collections (8.2.0)
       active-fedora (~> 9.9)
       blacklight (~> 6.0)
       deprecation (~> 0.1)
-      hydra-head (~> 9.1)
+      hydra-head (~> 9.9)
       hydra-works (~> 0.4)
       rdf (~> 1.99)
       rdf-vocab (~> 0)
-    hydra-core (9.8.1)
-      active-fedora (~> 9.8)
-      hydra-access-controls (= 9.8.1)
+    hydra-core (9.9.0)
+      hydra-access-controls (= 9.9.0)
       rails (~> 4.0)
-    hydra-derivatives (3.0.0)
+    hydra-derivatives (3.0.1)
       active-fedora (~> 9.0)
       activesupport (~> 4.0)
       deprecation
-      mime-types (< 3)
+      mime-types (> 2.0, < 4.0)
       mini_magick (>= 3.2, < 5)
     hydra-editor (1.2.0)
       active-fedora (>= 9.0.0)
@@ -235,18 +226,18 @@ GEM
       simple_form (~> 3.1.0)
     hydra-file_characterization (0.3.3)
       activesupport (>= 3.0.0)
-    hydra-head (9.8.1)
-      hydra-access-controls (= 9.8.1)
-      hydra-core (= 9.8.1)
+    hydra-head (9.9.0)
+      hydra-access-controls (= 9.9.0)
+      hydra-core (= 9.9.0)
       rails (>= 3.2.6)
-    hydra-pcdm (0.4.0)
+    hydra-pcdm (0.5.0)
       active-fedora (~> 9.6)
-      activefedora-aggregation (~> 0.6)
+      activefedora-aggregation (~> 0.10)
       mime-types (>= 1)
-    hydra-works (0.7.1)
+    hydra-works (0.8.1)
       hydra-derivatives (~> 3.0)
       hydra-file_characterization (~> 0.3, >= 0.3.3)
-      hydra-pcdm (~> 0.4)
+      hydra-pcdm (~> 0.5)
     i18n (0.7.0)
     jbuilder (2.4.1)
       activesupport (>= 3.0.0, < 5.1)
@@ -298,10 +289,12 @@ GEM
       sparql-client (~> 1.99)
     loofah (2.0.3)
       nokogiri (>= 1.5.9)
-    mail (2.6.3)
-      mime-types (>= 1.16, < 3)
-    mime-types (2.99.1)
-    mini_magick (4.4.0)
+    mail (2.6.4)
+      mime-types (>= 1.16, < 4)
+    mime-types (3.0)
+      mime-types-data (~> 3.2015)
+    mime-types-data (3.2016.0221)
+    mini_magick (4.5.1)
     mini_portile2 (2.0.0)
     minitest (5.8.4)
     mono_logger (1.1.0)
@@ -311,7 +304,6 @@ GEM
     net-scp (1.2.1)
       net-ssh (>= 2.6.5)
     net-ssh (3.0.2)
-    netrc (0.11.0)
     noid (0.8.0)
     nokogiri (1.6.7.2)
       mini_portile2 (~> 2.0.0.rc2)
@@ -331,12 +323,12 @@ GEM
       blankslate (>= 2.0, <= 4.0)
     pg (0.18.4)
     powerpack (0.1.1)
-    qa (0.5.0)
+    qa (0.6.0)
       activerecord-import
       deprecation
+      faraday
       nokogiri (~> 1.6.0)
       rails (>= 3.2.13, < 5.0)
-      rest-client
     rack (1.6.4)
     rack-protection (1.5.3)
       rack
@@ -369,7 +361,7 @@ GEM
       rake (>= 0.8.7)
       thor (>= 0.18.1, < 2.0)
     rainbow (2.1.0)
-    rake (11.1.1)
+    rake (11.1.2)
     rdf (1.99.1)
       link_header (~> 0.0, >= 0.0.8)
     rdf-aggregate-repo (1.99.0)
@@ -440,10 +432,6 @@ GEM
     resque-pool (0.6.0)
       rake
       resque (~> 1.22)
-    rest-client (1.8.0)
-      http-cookie (>= 1.0.2, < 2.0)
-      mime-types (>= 1.16, < 3.0)
-      netrc (~> 0.7)
     rsolr (1.0.13)
       builder (>= 2.1.2)
     rspec-core (3.4.4)
@@ -472,7 +460,7 @@ GEM
     rubocop-rspec (1.4.0)
     ruby-progressbar (1.7.5)
     rubyzip (1.2.0)
-    sass (3.4.21)
+    sass (3.4.22)
     sass-rails (5.0.4)
       railties (>= 4.0.0, < 5.0)
       sass (~> 3.1)
@@ -489,7 +477,7 @@ GEM
       rack (~> 1.5)
       rack-protection (~> 1.4)
       tilt (>= 1.3, < 3)
-    slop (4.2.1)
+    slop (4.3.0)
     solr_wrapper (0.7.1)
       ruby-progressbar
       rubyzip
@@ -499,7 +487,7 @@ GEM
       nokogiri
       stomp
       xml-simple
-    sparql (1.99.0)
+    sparql (1.99.1)
       builder (~> 3.2)
       ebnf (~> 1.0)
       rdf (~> 1.99)
@@ -545,9 +533,6 @@ GEM
     uglifier (2.7.2)
       execjs (>= 0.3.0)
       json (>= 1.8.0)
-    unf (0.1.4)
-      unf_ext
-    unf_ext (0.0.7.2)
     unicode-display_width (0.3.1)
     vegas (0.1.11)
       rack (>= 1.0.0)
@@ -566,7 +551,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  active-fedora!
+  active-fedora (= 9.10.4)
   byebug
   capistrano (= 3.4.0)
   capistrano-bundler

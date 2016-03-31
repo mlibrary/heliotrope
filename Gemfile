@@ -5,7 +5,7 @@ source 'https://rubygems.org'
 gem 'rails', '4.2.6'
 
 gem 'curation_concerns', git: 'https://github.com/projecthydra-labs/curation_concerns.git'
-gem 'active-fedora', github: 'projecthydra/active_fedora'
+gem 'active-fedora', '9.10.4'
 gem 'pg', '0.18.4'
 # Use sqlite3 as the database for Active Record
 # gem 'sqlite3'
