@@ -24,6 +24,11 @@ class User < ActiveRecord::Base
     press_roles.where(role: 'admin')
   end
 
+  # Presses for which this user is an admin
+  def admin_presses
+    platform_admin? ? Press.all : presses.where(['roles.role = ?', 'admin'])
+  end
+
   def platform_admin?
     roles.where(role: 'admin', resource: nil).any?
   end

@@ -1,6 +1,6 @@
 FactoryGirl.define do
   factory :press do
-    name "MyString"
+    sequence(:name) { |n| "Press #{n}" }
     logo_path "MyString"
     description "MyText"
     sequence(:subdomain) { |_n| "press-#{srand}" }

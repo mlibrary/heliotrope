@@ -9,6 +9,7 @@ FactoryGirl.define do
     end
 
     sequence(:title) { |n| ["Test Monograph #{n}"] }
+    press { FactoryGirl.create(:press).subdomain }
     visibility Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE
 
     factory :public_monograph do
