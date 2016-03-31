@@ -53,5 +53,6 @@ namespace :deploy do
     end
   end
 
+  before :restart, 'resque:pool:stop'
   after :clear_cache, 'resque:pool:start'
 end
