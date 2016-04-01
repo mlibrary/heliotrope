@@ -25,6 +25,7 @@ set :linked_files,
       config/resque-pool.yml
       config/secrets.yml
       config/solr.yml
+      config/puma.rb
     )
 
 # Default value for linked_dirs is []
@@ -55,4 +56,12 @@ namespace :deploy do
 
   before :restart, 'resque:pool:stop'
   after :clear_cache, 'resque:pool:start'
+end
+
+namespace :puma do
+  task :start do
+    on roles(:puma), in: :sequence, wait: 3 do
+      execute 'sudo', 'systemctl', 'restart', 'heliotrope-puma'
+    end
+  end
 end

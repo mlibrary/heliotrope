@@ -5,7 +5,20 @@
 # property set.  Don't declare `role :all`, it's a meta role.
 set :stage, :aws
 set :rails_env, 'production'
-server 'press.curationexperts.com', user: 'deploy', roles: [:web, :app, :db, :resque_pool]
+set :branch, ENV["REVISION"] || ENV["BRANCH"] || "master"
+server 'press.curationexperts.com', user: 'deploy', roles: [:web, :app, :db, :puma, :resque_pool]
+
+namespace :deploy do
+  task :restart do
+    on roles(:puma) do
+      # This has to be enabled in visudo on the server
+      execute :sudo, '/bin/systemctl', 'restart', 'heliotrope-puma'
+    end
+  end
+  after :finishing, :compile_assets
+  after :finishing, :cleanup
+  after :finishing, :restart
+end
 
 # Extended Server Syntax
 # ======================
