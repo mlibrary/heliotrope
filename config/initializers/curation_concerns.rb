@@ -1,4 +1,6 @@
 CurationConcerns.configure do |config|
+  # use the yaml file for server config settings - derivatives, uploads, & minter-state
+  yaml = YAML.load(ERB.new(IO.read(File.join(Rails.root, 'config', 'cc.yml'))).result)[Rails.env].with_indifferent_access
   # Injected via `rails g curation_concerns:work Section`
   config.register_curation_concern :section
   # Injected via `rails g curation_concerns:work Monograph`
@@ -29,12 +31,12 @@ CurationConcerns.configure do |config|
 
   # Location on local file system where derivatives will be stored.
   # If you use a multi-server architecture, this MUST be a shared volume.
-  # config.derivatives_path = File.join(Rails.root, 'tmp', 'derivatives')
+  config.derivatives_path = yaml["derivatives_path"] || File.join(Rails.root, 'tmp', 'derivatives')
 
   # Location on local file system where uploaded files will be staged
   # prior to being ingested into the repository or having derivatives generated.
   # If you use a multi-server architecture, this MUST be a shared volume.
-  # config.working_path = File.join(Rails.root, 'tmp', 'uploads')
+  config.working_path = yaml["uploads_path"] || File.join(Rails.root, 'tmp', 'uploads')
 
   # If you have ffmpeg installed and want to transcode audio and video uncomment this line
   config.enable_ffmpeg = true
@@ -48,7 +50,7 @@ CurationConcerns.configure do |config|
 
   # Store identifier minter's state in a file for later replayability
   # If you use a multi-server architecture, this MUST be on a shared volume.
-  # config.minter_statefile = '/tmp/minter-state'
+  config.minter_statefile = yaml["minter_path"] || '/tmp/minter-state'
 
   # Specify the prefix for Redis keys:
   # config.redis_namespace = "curation_concerns"
