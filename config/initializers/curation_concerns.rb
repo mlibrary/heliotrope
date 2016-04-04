@@ -31,12 +31,12 @@ CurationConcerns.configure do |config|
 
   # Location on local file system where derivatives will be stored.
   # If you use a multi-server architecture, this MUST be a shared volume.
-  config.derivatives_path = yaml["derivatives_path"] || File.join(Rails.root, 'tmp', 'derivatives')
+  config.derivatives_path = yaml["derivatives_path"]
 
   # Location on local file system where uploaded files will be staged
   # prior to being ingested into the repository or having derivatives generated.
   # If you use a multi-server architecture, this MUST be a shared volume.
-  config.working_path = yaml["uploads_path"] || File.join(Rails.root, 'tmp', 'uploads')
+  config.working_path = yaml["uploads_path"]
 
   # If you have ffmpeg installed and want to transcode audio and video uncomment this line
   config.enable_ffmpeg = true
@@ -50,7 +50,7 @@ CurationConcerns.configure do |config|
 
   # Store identifier minter's state in a file for later replayability
   # If you use a multi-server architecture, this MUST be on a shared volume.
-  config.minter_statefile = yaml["minter_path"] || '/tmp/minter-state'
+  config.minter_statefile = yaml["minter_path"]
 
   # Specify the prefix for Redis keys:
   # config.redis_namespace = "curation_concerns"
