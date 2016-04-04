@@ -1,6 +1,6 @@
 CurationConcerns.configure do |config|
   # use the yaml file for server config settings - derivatives, uploads, & minter-state
-  yaml = YAML.load(ERB.new(IO.read(File.join(Rails.root, 'config', 'cc.yml'))).result)[Rails.env].with_indifferent_access
+  yaml = YAML.load(ERB.new(IO.read(File.join(Rails.root, 'config', 'curation_concerns.yml'))).result)[Rails.env].with_indifferent_access
   # Injected via `rails g curation_concerns:work Section`
   config.register_curation_concern :section
   # Injected via `rails g curation_concerns:work Monograph`

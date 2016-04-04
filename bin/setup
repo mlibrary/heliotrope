@@ -15,7 +15,7 @@ Dir.chdir APP_ROOT do
   system "bundle check || bundle install"
 
   puts "\n== Copying sample files =="
-  files = ['secrets', 'database', 'cc']
+  files = ['secrets', 'database', 'curation_concerns']
   files.each do |f|
     yml_name = "config/#{f}.yml"
     cp "#{yml_name}.sample", yml_name unless File.exist?(yml_name)
