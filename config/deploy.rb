@@ -18,6 +18,7 @@ set :keep_releases, 5
 set :linked_files,
     %w(
       config/blacklight.yml
+      config/cc.yml
       config/database.yml
       config/fedora.yml
       config/redis.yml
