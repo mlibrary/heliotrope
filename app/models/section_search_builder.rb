@@ -1,4 +1,6 @@
 class SectionSearchBuilder < ::SearchBuilder
+  include CurationConcerns::SingleResult
+
   private
 
     def work_types
