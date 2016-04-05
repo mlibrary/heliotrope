@@ -93,6 +93,10 @@ Rails/Date:
 Rails/TimeZone:
   Enabled: false
 
+Rails/Output:
+  Exclude:
+    - 'lib/import/**/*'
+
 RSpec/AnyInstance:
   Enabled: false
 
