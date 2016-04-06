@@ -18,13 +18,13 @@ set :keep_releases, 5
 set :linked_files,
     %w(
       config/blacklight.yml
+      config/curation_concerns.yml
       config/database.yml
       config/fedora.yml
       config/redis.yml
       config/resque-pool.yml
       config/secrets.yml
       config/solr.yml
-      config/initializers/curation_concerns.rb
     )
 
 # Default value for linked_dirs is []
