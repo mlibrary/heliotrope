@@ -20,6 +20,7 @@ class Ability
     return unless platform_admin?
     can [:destroy], ActiveFedora::Base
     can :publish, Monograph
+    can :manage, Role
   end
 
   def platform_admin?

@@ -2,9 +2,8 @@ require 'rails_helper'
 
 describe CurationConcerns::SectionActor do
   let(:user) { create(:user) }
-  let(:actor) do
-    described_class.new(curation_concern, user, attributes)
-  end
+  let(:list_of_actors) { [described_class] }
+  let(:actor) { CurationConcerns::ActorStack.new(curation_concern, user, list_of_actors) }
 
   describe "#create" do
     let(:curation_concern) { Section.new }
@@ -13,12 +12,20 @@ describe CurationConcerns::SectionActor do
                          monograph_id: monograph.id } }
 
     it 'adds the section to the monograph' do
-      expect(actor.create).to be true
+      expect(actor.create(attributes)).to be true
       expect(monograph.reload.ordered_members.to_a.size).to eq 1
     end
   end
 
+  # TODO: Write a higher-level test for re-ordering the files
+  # that are attached to a section.  This is no longer the right
+  # place to test that behavior because the ordering is no
+  # longer handled by the SectionActor itself.  (As of v0.12.0
+  # of curation_concerns, ordering is done by
+  # CurationConcerns::ApplyOrderActor).
   describe "reorder the attached files" do
+    let(:list_of_actors) { [CurationConcerns::ApplyOrderActor, described_class] }
+
     let(:curation_concern) { create(:section) }
     let!(:file_set1) { create(:file_set) }
     let!(:file_set2) { create(:file_set) }
@@ -28,8 +35,9 @@ describe CurationConcerns::SectionActor do
       curation_concern.save!
     end
     let(:attributes) { { ordered_member_ids: [file_set2.id, file_set1.id] } }
+
     it 'sets the order of the files in the section' do
-      expect(actor.update).to be true
+      expect(actor.update(attributes)).to be true
       expect(curation_concern.reload.ordered_member_ids).to eq [file_set2.id, file_set1.id]
     end
   end
