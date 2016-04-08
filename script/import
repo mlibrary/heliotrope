@@ -1,0 +1,59 @@
+#!/usr/bin/env ruby
+
+require 'optparse'
+puts "Loading environment"
+require File.expand_path('../../config/environment',  __FILE__)
+require 'import'
+
+# Valid selections for access rights.
+# Note: This script doesn't handle the case of lease/embargo.
+def visibility_choices
+  { 'public' => Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC,
+    'authenticated' => Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED,
+    'private' => Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE }
+end
+
+# Parse the the command line arguments
+def parse_inputs(args)
+  inputs = {}
+  opts = OptionParser.new
+
+  opts.on('-d DIR', 'Path to the directory where the CSV files are located. (required)') do |dir|
+    inputs[:root_dir] = dir
+  end
+
+  opts.on('-p PRESS', 'Subdomain of the Press that the monographs belong to. (required)') do |press|
+    inputs[:press] = press
+  end
+
+  opts.on("-v [VISIBILITY]", "The visibility level that the imported records will have.", "   Valid options are: #{visibility_choices.keys.inspect}") do |vis|
+    vis = vis.downcase
+    raise "Error: Invalid value for visibility: #{vis}" unless visibility_choices.include?(vis)
+    inputs[:visibility] = visibility_choices.fetch(vis)
+  end
+
+  opts.on('-h', '--help', 'Print this help message') do
+    puts opts
+    exit 0
+  end
+
+  opts.parse!(args)
+
+  raise "Error: The CSV directory is required" unless inputs[:root_dir]
+  raise "Error: The Press required" unless inputs[:press]
+
+  inputs
+rescue => e
+  puts e.message
+  puts opts
+  exit 1
+end
+
+# Read and validate inputs
+options = parse_inputs(ARGV)
+
+puts "Begin import"
+importer = Import::Importer.new(options[:root_dir], options[:press], options[:visibility])
+importer.run
+
+puts "Import finished"
