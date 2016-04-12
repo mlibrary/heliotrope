@@ -1,7 +1,7 @@
 # use environment variables to deploy to Michigan staging server
-# require 'capistrano/puma'
 
 set :stage, :staging
+set :ssh_options, auth_methods: %w(gssapi-with-mic publickey hostbased password keyboard-interactive)
 set :rails_env, 'production'
 set :repo_url, ENV.fetch('REPO', 'https://github.com/curationexperts/heliotrope.git')
 set :deploy_to, ENV.fetch('DIR', '/opt/heliotrope')
@@ -32,7 +32,7 @@ namespace :deploy do
   task :restart do
     on roles(:puma) do
       # This has to be enabled in visudo on the server
-      execute :sudo, '/bin/systemctl', 'restart', 'app-heliotrope'
+      execute :sudo, '/bin/systemctl', 'restart', 'app-heliotrope-testing'
     end
   end
 
