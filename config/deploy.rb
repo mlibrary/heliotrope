@@ -38,12 +38,6 @@ set :linked_dirs,
 # Default value for default_env is {}
 # set :default_env, { path: "/opt/ruby/bin:$PATH" }
 
-require 'resque'
-
-set :resque_stderr_log, "#{shared_path}/log/resque-pool.stderr.log"
-set :resque_stdout_log, "#{shared_path}/log/resque-pool.stdout.log"
-set :resque_kill_signal, 'QUIT'
-
 namespace :deploy do
   after :restart, :clear_cache do
     on roles(:web), in: :groups, limit: 3, wait: 10 do
@@ -53,9 +47,6 @@ namespace :deploy do
       # end
     end
   end
-
-  before :restart, 'resque:pool:stop'
-  after :clear_cache, 'resque:pool:start'
 end
 
 namespace :puma do
