@@ -9,6 +9,7 @@ default: &default
 
 development:
   <<: *default
+  minter_path: <%= File.join(Rails.root, 'tmp', 'minter-state') %>
 
 test:
   <<: *default
