@@ -8,6 +8,12 @@ set :rails_env, 'production'
 set :branch, ENV["REVISION"] || ENV["BRANCH"] || "master"
 server 'press.curationexperts.com', user: 'deploy', roles: [:web, :app, :db, :puma, :resque_pool]
 
+set :bundle_path, '/opt/heliotrope/shared/vendor/bundle'
+set :rbenv_ruby, '2.3.0'
+set :rbenv_type, :user
+set :rbenv_prefix, "RBENV_ROOT=#{fetch(:rbenv_path)} RBENV_VERSION=#{fetch(:rbenv_ruby)} #{fetch(:rbenv_path)}/bin/rbenv exec"
+set :rbenv_map_bins, %w(rake gem bundle ruby rails)
+
 namespace :deploy do
   task :restart do
     on roles(:puma) do
