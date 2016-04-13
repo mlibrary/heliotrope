@@ -53,8 +53,8 @@ gem 'devise-guests', '~> 0.3'
 
 group :development, :test do
   gem 'byebug'
-  gem 'fcrepo_wrapper'
-  gem 'solr_wrapper', '>= 0.3'
+  gem 'fcrepo_wrapper', git: "https://github.com/curationexperts/fcrepo_wrapper.git"
+  gem 'solr_wrapper', git: "https://github.com/cbeer/solr_wrapper.git"
   gem 'rspec-rails'
   gem 'rubocop', '~> 0.37.2'
   gem 'rubocop-rspec'
