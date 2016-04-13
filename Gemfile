@@ -7,6 +7,8 @@ gem 'rails', '4.2.6'
 gem 'curation_concerns', git: 'https://github.com/projecthydra-labs/curation_concerns.git'
 gem 'active-fedora', '9.10.4'
 gem 'pg', '0.18.4'
+gem 'mysql2'
+gem 'puma'
 # Use sqlite3 as the database for Active Record
 # gem 'sqlite3'
 # Use SCSS for stylesheets

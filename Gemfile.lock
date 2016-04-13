@@ -313,6 +313,7 @@ GEM
     mono_logger (1.1.0)
     multi_json (1.11.2)
     multipart-post (2.0.0)
+    mysql2 (0.4.3)
     net-http-persistent (2.9.4)
     net-scp (1.2.1)
       net-ssh (>= 2.6.5)
@@ -336,6 +337,7 @@ GEM
       blankslate (>= 2.0, <= 4.0)
     pg (0.18.4)
     powerpack (0.1.1)
+    puma (3.4.0)
     qa (0.6.0)
       activerecord-import
       deprecation
@@ -576,7 +578,9 @@ DEPENDENCIES
   fcrepo_wrapper!
   jbuilder (~> 2.0)
   jquery-rails
+  mysql2
   pg (= 0.18.4)
+  puma
   rails (= 4.2.6)
   rsolr (~> 1.0.6)
   rspec-rails
