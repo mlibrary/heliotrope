@@ -11,6 +11,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   # Every Vagrant virtual environment requires a box to build off of.
   config.vm.box = "camper"
+  config.vm.box_version ">= 3.0"
   config.vm.box_url = "http://camp.curationexperts.com/dce-boxes.json"
 
   # Disable automatic box update checking. If you disable this, then
