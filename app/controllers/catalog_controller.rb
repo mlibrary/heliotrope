@@ -31,6 +31,7 @@ class CatalogController < ApplicationController
     config.add_facet_field solr_name('based_near', :facetable), limit: 5
     config.add_facet_field solr_name('publisher', :facetable), limit: 5
     config.add_facet_field solr_name('file_format', :facetable), limit: 5
+    config.add_facet_field 'press_name_ssim', label: "Press", limit: 5
     config.add_facet_field 'generic_type_sim', show: false, single: true
 
     # Have BL send all facet field names to Solr, which has been the default
