@@ -11,8 +11,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   # Every Vagrant virtual environment requires a box to build off of.
   config.vm.box = "camper"
-  config.vm.box_version ">= 3.0"
-  config.vm.box_url = "http://camp.curationexperts.com/dce-boxes.json"
+  config.vm.box_version = ">= 3.0"
+  config.vm.box_url = "http://camp.curationexperts.com/vagrant-boxes/dce-boxes.json"
 
   # Disable automatic box update checking. If you disable this, then
   # boxes will only be checked for updates when the user runs
@@ -62,9 +62,9 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     #vb.gui = true
     #
     # Use VBoxManage to customize the VM. For example to change memory:
-    vb.customize ["modifyvm", :id, "--memory", "1024"]
-    vb.customize ["modifyvm", :id, "--cpus", "1"]
-    vb.customize ["modifyvm", :id, "--name", "Heliotrope DEV VM"]
+    vb.customize ["modifyvm", :id, "--memory", "4096"]
+    vb.customize ["modifyvm", :id, "--cpus", "2"]
+    vb.customize ["modifyvm", :id, "--name", "Heliotrope Dev VM"]
     # vb.customize ["setextradata", :id, "VBoxInternal2/SharedFoldersEnableSymlinksCreate/v-root", "1"]
   end
   #
