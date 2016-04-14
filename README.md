@@ -8,21 +8,7 @@ Hydra-based digital publisher platform
   * clone the repository
   * run `bundle install`
   * run `bundle exec bin/setup`
-
-#### Install redis
-
-Heliotrope uses redis to store information about the background jobs.
-
-If you are using a mac, you can use homebrew to install redis:
-
-`brew install redis`
-
-and start the redis server like this (change this command depending on where your config file is located):
-
-`redis-server /usr/local/etc/redis.conf`
-
-**VAGRANT**: if you're using a Vagrant box, redis server is probably already installed and running.  
-You can check with the following command: `redis-cli ping`, the server should respond with "pong"
+  * [install redis](https://github.com/curationexperts/heliotrope/wiki/Background-Jobs#how-to-install-redis)
 
 #### Create an admin user
 
