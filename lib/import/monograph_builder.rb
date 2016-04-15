@@ -9,13 +9,13 @@ module Import
     end
 
     def run
-      actor.create
+      actor.create(attributes)
     end
 
     private
 
       def actor
-        @actor ||= CurationConcerns::CurationConcern.actor(Monograph.new, user, attributes)
+        @actor ||= CurationConcerns::CurationConcern.actor(Monograph.new, user)
       end
   end
 end
