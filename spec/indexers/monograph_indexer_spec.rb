@@ -14,9 +14,14 @@ describe MonographIndexer do
 
   describe 'indexing a monograph' do
     subject { indexer.generate_solr_document }
+    let(:press_name) { Press.find_by(subdomain: monograph.press).name }
 
     it 'indexes the ordered members' do
       expect(subject['ordered_member_ids_ssim']).to eq [file.id, chapter1.id]
+    end
+
+    it 'indexes the press name' do
+      expect(subject['press_name_ssim']).to eq press_name
     end
   end
 end

@@ -8,24 +8,13 @@ Hydra-based digital publisher platform
   * clone the repository
   * run `bundle install`
   * run `bundle exec bin/setup`
-
-#### Install redis
-
-Heliotrope uses redis to store information about the background jobs.
-
-If you are using a mac, you can use homebrew to install redis:
-
-`brew install redis`
-
-and start the redis server like this (change this command depending on where your config file is located):
-
-`redis-server /usr/local/etc/redis.conf`
+  * [install redis](https://github.com/curationexperts/heliotrope/wiki/Background-Jobs#how-to-install-redis)
 
 #### Create an admin user
 
 There is a rake task you can use to create a superadmin user.  It will prompt you for an email address and password, and then create a user with the correct role.
 
-`rake admin`
+`bundle exec rake admin`
 
 ### Run the application
 
@@ -33,17 +22,14 @@ Run this command to start Fedora, Solr and Rails servers:
 
 `rake hydra:server`
 
-and start redis:
-
-`redis-server /usr/local/etc/redis.conf`
-
 Or, if you prefer to start each server individually:
+*(you must use this alternate option if runnig on a VM)*
 
 ```
   $ redis-server /usr/local/etc/redis.conf
-  $ fcrepo_wrapper -p 8984 --no-jms
-  $ solr_wrapper -p 8983 -d solr/config/ --collection_name hydra-development
-  $ bin/rails s
+  $ bundle exec fcrepo_wrapper -p 8984 --no-jms
+  $ bundle exec solr_wrapper -p 8983 -d solr/config/ --collection_name hydra-development
+  $ bundle exec bin/rails s
 ```
 
 ## Testing

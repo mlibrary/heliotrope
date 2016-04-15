@@ -7,6 +7,8 @@ gem 'rails', '4.2.6'
 gem 'curation_concerns', git: 'https://github.com/projecthydra-labs/curation_concerns.git'
 gem 'active-fedora', '9.10.4'
 gem 'pg', '0.18.4'
+gem 'mysql2'
+gem 'puma'
 # Use sqlite3 as the database for Active Record
 # gem 'sqlite3'
 # Use SCSS for stylesheets
@@ -53,8 +55,8 @@ gem 'devise-guests', '~> 0.3'
 
 group :development, :test do
   gem 'byebug'
-  gem 'fcrepo_wrapper'
-  gem 'solr_wrapper', '>= 0.3'
+  gem 'fcrepo_wrapper', git: "https://github.com/curationexperts/fcrepo_wrapper.git"
+  gem 'solr_wrapper', git: "https://github.com/cbeer/solr_wrapper.git"
   gem 'rspec-rails'
   gem 'rubocop', '~> 0.37.2'
   gem 'rubocop-rspec'
