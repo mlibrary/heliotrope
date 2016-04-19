@@ -5,7 +5,7 @@ default: &default
   # on distributed architectures, uploads_path must be on a drive shared with the web server
   uploads_path: <%= File.join(Rails.root, 'tmp', 'uploads') %>
   # minter_path tracks the ID of the last-created object
-  minter_path: /tmp/minter-state
+  minter_path: <%= File.join(Rails.root, 'tmp', 'minter-state') %>
 
 development:
   <<: *default
@@ -15,6 +15,7 @@ test:
 
 production:
   <<: *default
-  minter_path: <%= File.join(Rails.root, 'minter-state') %>
-  # we recommend derivatives_path and the minter_path to non-temporary locations
-  # for production systems
+  # we recommend setting derivatives_path and the minter_path
+  # to persistent (non-temporary) locations for production systems
+  derivatives_path: <%= File.join(Rails.root, 'derivatives')
+  minter_path: <%= File.join(Rails.root, 'minter-state')
