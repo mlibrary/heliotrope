@@ -25,6 +25,7 @@ set :linked_files,
       config/resque-pool.yml
       config/secrets.yml
       config/solr.yml
+      config/puma.rb
     )
 
 # Default value for linked_dirs is []
@@ -37,12 +38,6 @@ set :linked_dirs,
 # Default value for default_env is {}
 # set :default_env, { path: "/opt/ruby/bin:$PATH" }
 
-require 'resque'
-
-set :resque_stderr_log, "#{shared_path}/log/resque-pool.stderr.log"
-set :resque_stdout_log, "#{shared_path}/log/resque-pool.stdout.log"
-set :resque_kill_signal, 'QUIT'
-
 namespace :deploy do
   after :restart, :clear_cache do
     on roles(:web), in: :groups, limit: 3, wait: 10 do
@@ -52,6 +47,12 @@ namespace :deploy do
       # end
     end
   end
+end
 
-  after :clear_cache, 'resque:pool:start'
+namespace :puma do
+  task :start do
+    on roles(:puma), in: :sequence, wait: 3 do
+      execute 'sudo', 'systemctl', 'restart', 'heliotrope-puma'
+    end
+  end
 end

@@ -1,55 +1,43 @@
-# server-based syntax
-# ======================
-# Defines a single server with a list of roles and multiple properties.
-# You can define all roles on a single server, or split them:
+# use environment variables to deploy to Michigan staging server
 
-# server 'example.com', user: 'deploy', roles: %w{app db web}, my_property: :my_value
-# server 'example.com', user: 'deploy', roles: %w{app web}, other_property: :other_value
-# server 'db.example.com', user: 'deploy', roles: %w{db}
+set :stage, :staging
+set :ssh_options, auth_methods: %w(gssapi-with-mic publickey hostbased password keyboard-interactive)
+set :rails_env, 'production'
+set :repo_url, ENV.fetch('REPO', 'https://github.com/curationexperts/heliotrope.git')
+set :deploy_to, ENV.fetch('DIR', '/opt/heliotrope')
+server "#{ENV.fetch('USER')}@#{ENV.fetch('HOST')}", roles: [:web, :app, :db, :puma, :resque_pool]
 
-# role-based syntax
-# ==================
+# for distributed architecture, specify the roles & hosts separately:
+# role :web, "#{ENV.fetch('WEB_USER')}@#{ENV.fetch('WEB_HOST')}"
+# role :app, "#{ENV.fetch('APP_USER')}@#{ENV.fetch('APP_HOST')}"
+# role :db, "#{ENV.fetch('DB_USER')}@#{ENV.fetch('DB_HOST')}"
+# role :resque_pool, "#{ENV.fetch('RESQUE_USER')}@#{ENV.fetch('RESQUE_HOST')}"
 
-# Defines a role with one or multiple servers. The primary server in each
-# group is considered to be the first unless any  hosts have the primary
-# property set. Specify the username and a domain or IP for the server.
-# Don't use `:all`, it's a meta role.
+# pass a BRANCH to deploy a branch other than master
+# or a REVISION to deploy a specific commit
+set :branch, ENV['REVISION'] || ENV['BRANCH'] || 'master'
 
-# role :app, %w{deploy@example.com}, my_property: :my_value
-# role :web, %w{user1@primary.com user2@additional.com}, other_property: :other_value
-# role :db,  %w{deploy@example.com}
+# settings for use on a shared staging environment using rbenv
+set :default_env, 'HOME' => ENV.fetch('DIR')
+set :keep_releases, 3
+set :rbenv_custom_path, '/l/local/rbenv'
+set :rbenv_ruby, '2.3.0'
+set :rbenv_type, :system
+set :rbenv_prefix, "RBENV_ROOT=#{fetch(:rbenv_path)} RBENV_VERSION=#{fetch(:rbenv_ruby)} #{fetch(:rbenv_path)}/bin/rbenv exec"
 
-# Configuration
-# =============
-# You can set any configuration variable like in config/deploy.rb
-# These variables are then only loaded and set in this stage.
-# For available Capistrano configuration variables see the documentation page.
-# http://capistranorb.com/documentation/getting-started/configuration/
-# Feel free to add new variables to customise your setup.
+set :bundle_path, -> { shared_path.join('vendor/bundle') }
+set :bundle_flags, '--quiet --deployment'
 
-# Custom SSH Options
-# ==================
-# You may pass any option but keep in mind that net/ssh understands a
-# limited set of options, consult the Net::SSH documentation.
-# http://net-ssh.github.io/net-ssh/classes/Net/SSH.html#method-c-start
-#
-# Global options
-# --------------
-#  set :ssh_options, {
-#    keys: %w(/home/rlisowski/.ssh/id_rsa),
-#    forward_agent: false,
-#    auth_methods: %w(password)
-#  }
-#
-# The server-based syntax can be used to override options:
-# ------------------------------------
-# server 'example.com',
-#   user: 'user_name',
-#   roles: %w{web app},
-#   ssh_options: {
-#     user: 'user_name', # overrides user setting above
-#     keys: %w(/home/user_name/.ssh/id_rsa),
-#     forward_agent: false,
-#     auth_methods: %w(publickey password)
-#     # password: 'please use keys'
-#   }
+namespace :deploy do
+  task :restart do
+    on roles(:puma) do
+      # This has to be enabled in visudo on the server
+      execute :sudo, '/bin/systemctl', 'restart', 'app-heliotrope-testing'
+    end
+  end
+
+  # before :starting, "linked_files:upload:files"
+  after :finishing, :compile_assets
+  after :finishing, :cleanup
+  after :finishing, :restart
+end
