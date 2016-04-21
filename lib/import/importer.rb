@@ -50,7 +50,7 @@ module Import
       end
 
       def user
-        @user ||= User.new(user_key: 'system')
+        @user ||= DummyUser.new(user_key: 'system')
       end
 
       # The 'attrs' parameter is an array of hashes.

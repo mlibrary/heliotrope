@@ -4,9 +4,9 @@ source 'https://rubygems.org'
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '4.2.6'
 
-gem 'curation_concerns', '0.12.0.pre5'
+gem 'curation_concerns', '0.12.0.pre9'
 gem 'active-fedora', '9.10.4'
-gem 'pg', '0.18.4'
+# gem 'pg', '0.18.4'
 gem 'mysql2'
 gem 'puma'
 # Use sqlite3 as the database for Active Record
@@ -42,8 +42,9 @@ group :development do
   gem 'capistrano', '3.4.0'
   gem 'capistrano-rails', '>= 1.1.3'
   gem 'capistrano-bundler'
-  gem 'capistrano-passenger'
-    # Access an IRB console on exception pages or by using <%= console %> in views
+  gem 'capistrano-rbenv', '~> 2.0'
+  gem 'net-ssh-krb', :git => 'https://github.com/Lax/net-ssh-kerberos.git', :branch => 'gssapi', :require => 'net/ssh/kerberos'
+  # Access an IRB console on exception pages or by using <%= console %> in views
   gem 'web-console', '~> 2.0'
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
   gem 'spring'
