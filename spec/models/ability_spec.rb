@@ -9,10 +9,12 @@ describe Ability do
   let(:section) { create(:section, user: creating_user) }
   let(:file_set) { create(:file_set, user: creating_user) }
 
-  describe 'platform-wide admin user' do
+  describe 'a platform-wide admin user' do
     let(:creating_user) { current_user }
     let(:current_user) { create(:platform_admin) }
     let(:role) { create(:role) }
+    let(:another_user) { create(:user) }
+    let(:another_user_monograph) { create(:monograph, user: another_user, press: press.subdomain) }
 
     it do
       should be_able_to(:create, Monograph.new)
@@ -34,6 +36,13 @@ describe Ability do
       should be_able_to(:read, role)
       should be_able_to(:update, role)
       should be_able_to(:destroy, role)
+    end
+
+    it "can read, update, publish or destroy a monograph created by another user" do
+      should be_able_to(:read, another_user_monograph)
+      should be_able_to(:update, another_user_monograph)
+      should be_able_to(:publish, another_user_monograph)
+      should be_able_to(:destroy, another_user_monograph)
     end
   end
 
@@ -123,6 +132,7 @@ describe Ability do
         should be_able_to(:read, monograph)
         should_not be_able_to(:update, monograph)
         should_not be_able_to(:destroy, monograph)
+        should_not be_able_to(:publish, monograph)
 
         should be_able_to(:read, section)
         should_not be_able_to(:update, section)
