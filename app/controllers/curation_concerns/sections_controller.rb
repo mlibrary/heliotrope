@@ -6,4 +6,8 @@ class CurationConcerns::SectionsController < ApplicationController
   def search_builder_class
     ::SectionSearchBuilder
   end
+
+  def curation_concern
+    @curation_concern ||= ActiveFedora::Base.find(params[:id])
+  end
 end
