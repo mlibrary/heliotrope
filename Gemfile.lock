@@ -156,6 +156,9 @@ GEM
       execjs
     coffee-script-source (1.10.0)
     concurrent-ruby (1.0.1)
+    config (1.1.0)
+      activesupport (>= 3.0)
+      deep_merge (~> 1.0.1)
     curation_concerns (0.12.0.pre9)
       active-fedora (~> 9.9)
       active_attr
@@ -181,6 +184,7 @@ GEM
       sprockets-es6
     daemons (1.2.3)
     debug_inspector (0.0.2)
+    deep_merge (1.0.1)
     deprecation (0.2.2)
       activesupport
     devise (3.5.6)
@@ -569,6 +573,7 @@ DEPENDENCIES
   capistrano-rbenv (~> 2.0)
   capybara
   coffee-rails (~> 4.1.0)
+  config
   curation_concerns (= 0.12.0.pre9)
   devise
   devise-guests (~> 0.3)
