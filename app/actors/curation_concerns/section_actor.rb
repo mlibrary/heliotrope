@@ -14,6 +14,8 @@ module CurationConcerns
         if monograph
           monograph.ordered_members << curation_concern
           monograph.save!
+          # Story #81, section should have the same visibility as it's monograph
+          curation_concern.visibility = monograph.visibility
         end
       end
   end
