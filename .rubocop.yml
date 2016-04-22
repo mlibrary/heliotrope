@@ -121,3 +121,4 @@ RSpec/NotToNot:
 RSpec/DescribeClass:
   Exclude:
     - 'spec/routing/**/*'
+    - 'spec/views/**/*'

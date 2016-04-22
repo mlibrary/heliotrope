@@ -1,0 +1,42 @@
+<ul class="nav navbar-nav">
+  <li class="dropdown my-actions">
+    <a class="dropdown-toggle user-display-name" data-toggle="dropdown" href="#">
+      <%= current_user.user_key %>
+      <span class="caret"></span>
+    </a>
+
+    <ul class="dropdown-menu">
+      <% include_collections_link ||= can?(:create, Collection) %>
+
+      <% if include_collections_link %>
+        <li><%= link_to 'My Collections', search_path_for_my_collections, class: 'my-collections', role: 'menuitem' %></li>
+      <% end %>
+
+      <% if include_collections_link %>
+        <li class="divider"></li>
+      <% end %>
+
+      <% show_users_link = @press && can?(:manage, Role) %>
+      <% show_embargo_link = can? :discover, Hydra::AccessControls::Embargo %>
+      <% show_lease_link = can? :discover, Hydra::AccessControls::Lease %>
+
+      <% if show_users_link %>
+        <li><%= link_to "Users", press_roles_path(@press) %></li>
+      <% end %>
+
+      <% if show_embargo_link %>
+        <li><%= link_to 'Embargos', main_app.embargoes_path, role: 'menuitem' %></li>
+      <% end %>
+
+      <% if show_lease_link %>
+        <li><%= link_to 'Leases', main_app.leases_path, role: 'menuitem' %></li>
+      <% end %>
+
+      <% if show_users_link || show_embargo_link || show_lease_link %>
+        <li class="divider"></li>
+      <% end %>
+
+      <li><%= link_to 'Log Out', main_app.destroy_user_session_path, class: 'log-out', role: 'menuitem' %></li>
+    </ul>
+  </li>
+</ul>
