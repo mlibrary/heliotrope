@@ -16,6 +16,10 @@ describe CurationConcerns::SectionActor do
     let(:attributes) { { title: ["This is a title."],
                          monograph_id: monograph.id } }
 
+    let(:private_attributes) { { title: ["This is a private section title."],
+                                 monograph_id: monograph.id,
+                                 visibility: 'restricted' } }
+
     it 'adds the section to the monograph' do
       expect(actor.create(attributes)).to be true
       expect(monograph.reload.ordered_members.to_a.size).to eq 1
@@ -24,6 +28,11 @@ describe CurationConcerns::SectionActor do
     it "adds the monograph visibility to the section" do
       expect(actor.create(attributes)).to be true
       expect(Section.first.visibility).to eq monograph.visibility
+    end
+
+    it "adds the section visibility to the section" do
+      expect(actor.create(private_attributes)).to be true
+      expect(Section.first.visibility).to eq 'restricted'
     end
   end
 
