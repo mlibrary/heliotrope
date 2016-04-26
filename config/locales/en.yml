@@ -35,3 +35,7 @@ en:
         batch_error: "There was a problem saving the user role(s)."
   file_manager:
     link_text: "Organize Sections"
+  press_catalog:
+    search_form:
+      q:
+        label: "Search within %{press_name}"
