@@ -4,7 +4,7 @@ source 'https://rubygems.org'
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '4.2.6'
 
-gem 'curation_concerns', '0.12.0.pre9'
+gem 'curation_concerns', '0.12.0'
 gem 'active-fedora', '9.10.4'
 # gem 'pg', '0.18.4'
 gem 'mysql2'

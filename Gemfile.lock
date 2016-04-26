@@ -159,7 +159,7 @@ GEM
     config (1.1.0)
       activesupport (>= 3.0)
       deep_merge (~> 1.0.1)
-    curation_concerns (0.12.0.pre9)
+    curation_concerns (0.12.0)
       active-fedora (~> 9.9)
       active_attr
       active_fedora-noid (~> 1.0)
@@ -574,7 +574,7 @@ DEPENDENCIES
   capybara
   coffee-rails (~> 4.1.0)
   config
-  curation_concerns (= 0.12.0.pre9)
+  curation_concerns (= 0.12.0)
   devise
   devise-guests (~> 0.3)
   factory_girl_rails
