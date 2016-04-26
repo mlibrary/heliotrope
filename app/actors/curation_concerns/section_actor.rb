@@ -11,7 +11,7 @@ module CurationConcerns
       def maybe_set_monograph(attributes)
         monograph = Monograph.find(attributes.delete('monograph_id')) if attributes.key?('monograph_id')
         yield
-        if monograph
+        if monograph && !monograph.ordered_members.to_a.include?(curation_concern)
           monograph.ordered_members << curation_concern
           monograph.save!
           # Story #81, section should have the same visibility as it's monograph by default

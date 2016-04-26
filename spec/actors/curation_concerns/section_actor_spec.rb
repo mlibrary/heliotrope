@@ -36,6 +36,22 @@ describe CurationConcerns::SectionActor do
     end
   end
 
+  describe "#update" do
+    let(:curation_concern) { Section.new }
+    let(:monograph) { create(:monograph) }
+    let(:attributes) { { title: ["This is a section title."],
+                         monograph_id: monograph.id } }
+
+    # bug #178
+    it "does not re-add the section to monograph.ordered_members on update" do
+      expect(actor.create(attributes)).to be true
+      expect(monograph.reload.ordered_members.to_a.size).to eq 1
+
+      expect(actor.update(attributes)).to be true
+      expect(monograph.reload.ordered_members.to_a.size).to eq 1
+    end
+  end
+
   # TODO: Write a higher-level test for re-ordering the files
   # that are attached to a section.  This is no longer the right
   # place to test that behavior because the ordering is no
