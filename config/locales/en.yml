@@ -39,9 +39,11 @@ en:
         updated:   "User role has been updated."
         destroyed: "User role has been removed."
         batch_error: "There was a problem saving the user role(s)."
-  file_manager:
-    link_text: "Organize Sections"
   press_catalog:
     search_form:
       q:
         label: "Search within %{press_name}"
+  manage_assets:
+    monograph_link_text: "Organize Sections and Assets"
+    section_link_text: "Organize Assets"
+
