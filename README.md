@@ -32,6 +32,20 @@ Or, if you prefer to start each server individually:
   $ bundle exec bin/rails s
 ```
 
+### Run Resque Workers for Background Jobs
+
+Heliotrope uses resque to process background jobs, such as characterizing files with FITS and creating derivatives (thumbnails, web-friendly video, etc.). In production we recommend resque-pool for managing resque workers. In development, you can use the relevant rake tasks. 
+
+To start worker(s) to run the jobs:
+```
+QUEUE=* VERBOSE=1 rake resque:work
+```
+
+To see the status of recent jobs in the browser console:
+```
+resque-web -N curation_concerns:development
+```
+
 ## Testing
 
 run `rake ci`
