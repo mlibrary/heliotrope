@@ -1,0 +1,103 @@
+<%= simple_form_for [main_app, curation_concern],
+                    html: { multipart: true },
+                    wrapper_mappings: { multifile: :horizontal_file_input } do |f| %>
+  <div class="row">
+    <div class="col-md-6">
+      <fieldset class="required">
+        <legend>Your File&#8217;s Title</legend>
+        <span class="control-label">
+          <%= label_tag 'file_set[title][]', 'Title',  class: "string optional" %>
+        </span>
+        <%= text_field_tag 'file_set[title][]', curation_concern.title.first, class: 'form-control' %>
+      </fieldset>
+      <fieldset class="required">
+        <legend>
+          Attach Your File
+        </legend>
+        <%= f.input :files, as: :multifile %>
+      </fieldset>
+      <fieldset class="required">
+        <legend>Required Information</legend>
+          <span class="control-label">
+            <%= label_tag 'file_set[resource_type][]', 'Resource Type',  class: "string required" %>
+          </span>
+          <%= text_field_tag 'file_set[resource_type][]', curation_concern.resource_type.first, class: 'form-control' %>
+          <span class="control-label">
+            <%= label_tag 'file_set[caption][]', 'Caption',  class: "string required" %>
+          </span>
+          <%= text_field_tag 'file_set[caption][]', curation_concern.caption.first, class: 'form-control' %>
+
+          <span class="control-label">
+            <%= label_tag 'file_set[alt_text][]', 'Alternative Text',  class: "string required" %>
+          </span>
+          <%= text_field_tag 'file_set[alt_text][]', curation_concern.alt_text.first, class: 'form-control' %>
+
+          <span class="control-label">
+            <%= label_tag 'file_set[copyright_holder][]', 'Copyright Holder',  class: "string required" %>
+          </span>
+          <%= text_field_tag 'file_set[copyright_holder][]', curation_concern.copyright_holder.first, class: 'form-control' %>
+      </fieldset>
+      <fieldset class="optional">
+        <legend>Optional Information</legend>
+          <span class="control-label">
+            <%= label_tag 'file_set[description][]', 'Description',  class: "string optional" %>
+          </span>
+          <%= text_area_tag 'file_set[description][]', curation_concern.description.first, class: 'form-control' %>
+
+          <span class="control-label">
+            <%= label_tag 'file_set[content_type][]', 'Content Type',  class: "string optional" %>
+          </span>
+          <%= text_field_tag 'file_set[content_type][]', curation_concern.content_type.first, class: 'form-control' %>
+
+          <span class="control-label">
+            <%= label_tag 'file_set[creator][]', 'Creator',  class: "string optional" %>
+          </span>
+          <%= text_field_tag 'file_set[creator][]', curation_concern.creator.first, class: 'form-control' %>
+
+          <span class="control-label">
+            <%= label_tag 'file_set[contributor][]', 'Contributor',  class: "string optional" %>
+          </span>
+          <%= text_field_tag 'file_set[contributor][]', curation_concern.creator.first, class: 'form-control' %>
+
+          <span class="control-label">
+            <%= label_tag 'file_set[date_created][]', 'Date created',  class: "string optional" %>
+          </span>
+          <%= text_field_tag 'file_set[date_created][]', curation_concern.date_created.first, class: 'form-control' %>
+
+          <span class="control-label">
+            <%= label_tag 'file_set[keywords][]', 'Keywords',  class: "string optional" %>
+          </span>
+          <%= text_field_tag 'file_set[keywords][]', curation_concern.keywords.first, class: 'form-control' %>
+
+          <span class="control-label">
+            <%= label_tag 'file_set[language][]', 'Language',  class: "string optional" %>
+          </span>
+          <%= text_field_tag 'file_set[language][]', curation_concern.language.first, class: 'form-control' %>
+
+          <span class="control-label">
+            <%= label_tag 'file_set[identifier][]', 'Identifier',  class: "string optional" %>
+          </span>
+          <%= text_field_tag 'file_set[identifier][]', curation_concern.identifier.first, class: 'form-control' %>
+
+          <span class="control-label">
+            <%= label_tag 'file_set[relation][]', 'Relation',  class: "string optional" %>
+          </span>
+          <%= text_field_tag 'file_set[relation][]', curation_concern.relation.first, class: 'form-control' %>
+      </fieldset>
+    </div>
+
+    <div class="col-md-6">
+      <%= render "form_permission", f: f %>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-12 form-actions">
+      <%= f.submit(
+        (curation_concern.persisted? ? "Update Attached File" : %(Attach to #{parent.human_readable_type})),
+        class: 'btn btn-primary'
+      ) %>
+      <%= link_to 'Cancel', parent_path(parent), class: 'btn btn-link' %>
+    </div>
+  </div>
+<% end %>

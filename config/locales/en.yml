@@ -27,6 +27,12 @@ en:
         editor: "Editor"
         buy_url: "Buy Book URL"
         copyright_holder: "Copyright Holder"
+        date_published: "Date Published"
+        caption: "Caption"
+        alt_text: "Alternative Text"
+        content_type: "Content Type"
+        keywords: "Keywords"
+        relation: "Relation to Narrative"
   helpers:
     submit:
       role:

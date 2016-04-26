@@ -13,7 +13,7 @@ feature 'Create a monograph' do
       visit new_curation_concerns_monograph_path
       fill_in 'Title', with: 'Test monograph'
       select press.name, from: 'Press'
-      fill_in 'Date published', with: 'Oct 20th'
+      fill_in 'Date Published', with: 'Oct 20th'
       click_button 'Create Monograph'
       expect(page).to have_content 'Test monograph'
       expect(page).to have_content 'Oct 20th'

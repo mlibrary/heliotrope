@@ -18,6 +18,6 @@ describe Monograph do
   it 'must have a press' do
     mono = described_class.new
     expect(mono.valid?).to eq false
-    expect(mono.errors.messages[:press]).to eq ['You must select a press']
+    expect(mono.errors.messages[:press]).to eq ['You must select a press.']
   end
 end
