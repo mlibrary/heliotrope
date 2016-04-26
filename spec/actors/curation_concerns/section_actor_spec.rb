@@ -1,19 +1,38 @@
 require 'rails_helper'
 
 describe CurationConcerns::SectionActor do
+  before do
+    Section.destroy_all
+    Monograph.destroy_all
+  end
+
   let(:user) { create(:user) }
   let(:list_of_actors) { [described_class] }
   let(:actor) { CurationConcerns::ActorStack.new(curation_concern, user, list_of_actors) }
 
   describe "#create" do
     let(:curation_concern) { Section.new }
-    let(:monograph) { create(:monograph) }
+    let(:monograph) { create(:public_monograph) }
     let(:attributes) { { title: ["This is a title."],
                          monograph_id: monograph.id } }
+
+    let(:private_attributes) { { title: ["This is a private section title."],
+                                 monograph_id: monograph.id,
+                                 visibility: 'restricted' } }
 
     it 'adds the section to the monograph' do
       expect(actor.create(attributes)).to be true
       expect(monograph.reload.ordered_members.to_a.size).to eq 1
+    end
+
+    it "adds the monograph visibility to the section" do
+      expect(actor.create(attributes)).to be true
+      expect(Section.first.visibility).to eq monograph.visibility
+    end
+
+    it "adds the section visibility to the section" do
+      expect(actor.create(private_attributes)).to be true
+      expect(Section.first.visibility).to eq 'restricted'
     end
   end
 
