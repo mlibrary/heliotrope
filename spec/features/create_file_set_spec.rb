@@ -20,7 +20,7 @@ feature 'Create a file set' do
       # Now attach a file to the Monograph by creating a FileSet
       click_link 'Attach a File'
       fill_in 'Title', with: 'Test file set'
-      attach_file 'file_set_files', Rails.root + 'spec/fixtures/csv/miranda.jpg'
+      attach_file 'file_set_files', File.join(fixture_path, 'csv', 'miranda.jpg')
       fill_in 'Resource Type', with: 'image'
       fill_in 'Caption', with: 'This is a caption for the image'
       fill_in 'Alternative Text', with: 'This is some alt text for the image'
