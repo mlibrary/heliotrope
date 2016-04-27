@@ -27,3 +27,10 @@
 
 # Ignore Vagrant support files
 .vagrant
+
+# Ignore OS X Desktop Services Store files
+.DS_Store
+
+# Ignore RubyMine project settings folder
+.idea/
+
