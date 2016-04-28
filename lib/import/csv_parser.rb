@@ -68,9 +68,10 @@ module Import
       end
 
       def creator(data)
-        last_name = data['Primary Creator Last Name'].strip
-        first_name = data['Primary Creator First Name'].strip
-        Array("#{last_name}, #{first_name}")
+        last_name = data['Primary Creator Last Name'] ? data['Primary Creator Last Name'].strip : ''
+        first_name = data['Primary Creator First Name'] ? data['Primary Creator First Name'].strip : ''
+        joining_comma = last_name == '' || first_name == '' ? '' : ', '
+        Array(last_name + joining_comma + first_name)
       end
   end
 end

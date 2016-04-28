@@ -2,7 +2,7 @@ require 'rails_helper'
 require 'import/csv_parser'
 
 describe Import::CSVParser do
-  let(:input_file) { File.join(fixture_path, 'csv', 'tempest', 'tempest.csv') }
+  let(:input_file) { File.join(fixture_path, 'csv', 'tempest2', 'tempest.csv') }
   let(:parser) { described_class.new(input_file) }
 
   before do
@@ -25,7 +25,7 @@ describe Import::CSVParser do
       expect(subject['files']).to eq ['shipwreck.jpg', 'miranda.jpg']
       expect(subject['files_metadata']).to eq [
         { 'title' => ['The shipwreck scene in Act I, Scene 1'],
-          'creator' => ['Smith, Benjamin'] },
+          'creator' => ['Smith'] },
         { 'title' => ['Miranda'],
           'creator' => ['Waterhouse, John William'] }
       ]
