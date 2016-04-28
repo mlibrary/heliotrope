@@ -32,6 +32,18 @@ Or, if you prefer to start each server individually:
   $ bundle exec bin/rails s
 ```
 
+### Explain Partials
+
+Set the EXPLAIN_PARTIALS environment variable to show partials being rendered in source html of your views
+(view this info using your browser's inspect element mode)
+
+```
+$ EXPLAIN_PARTIALS=true bundle exec bin/rails s
+```
+
+*NOTE:* Because this feature can add a fair bit of overhead, it is restricted 
+to only run in development mode.
+
 ## Testing
 
 run `rake ci`
