@@ -6,7 +6,8 @@ describe CurationConcerns::SectionPresenter do
     { "id" => "qr46r109z",
       "title_tesim" => ["foo bar"],
       "human_readable_type_tesim" => ["Generic Work"],
-      "has_model_ssim" => ["GenericWork"] }
+      "has_model_ssim" => ["GenericWork"],
+      "monograph_id_ssim" => "dr26xx448" }
   end
 
   let(:ability) { nil }
@@ -27,9 +28,4 @@ describe CurationConcerns::SectionPresenter do
     subject { presenter.monograph_label }
     it { is_expected.to eq 'My first monograph' }
   end
-
-  # describe "#monograph_id" do
-  #   subject { presenter.monograph_id }
-  #   it { is_expected.to eq 'my book' }
-  # end
 end
