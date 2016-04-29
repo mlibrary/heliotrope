@@ -1,5 +1,13 @@
 Rails.application.routes.draw do
   mount Blacklight::Engine => '/'
+  resque_web_constraint = lambda do |request|
+    current_user = request.env['warden'].user
+    current_user.present? && current_user.respond_to?(:platform_admin?) && current_user.platform_admin?
+  end
+
+  constraints resque_web_constraint do
+    mount ResqueWeb::Engine => '/resque'
+  end
 
   concern :searchable, Blacklight::Routes::Searchable.new
 
