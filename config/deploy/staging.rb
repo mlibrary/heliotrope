@@ -10,6 +10,9 @@ server "#{ENV.fetch('USER')}@#{ENV.fetch('HOST')}", roles: [:web, :app, :db, :pu
 # ensure umask is set to allow groups to read/write
 SSHKit.config.umask = "0002"
 
+# prevent permissions issues by using a temp dir under user's home dir
+set :tmp_dir, ENV['TMP'] || '/tmp'
+
 # for distributed architecture, specify the roles & hosts separately:
 # role :web, "#{ENV.fetch('WEB_USER')}@#{ENV.fetch('WEB_HOST')}"
 # role :app, "#{ENV.fetch('APP_USER')}@#{ENV.fetch('APP_HOST')}"
