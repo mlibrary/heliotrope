@@ -12,6 +12,7 @@ AllCops:
     - 'spec/internal/**/*'
     - 'spec/test_app_templates/**/*'
     - 'vendor/**/*'
+    - 'tmp/**/*'
 
 Lint/ImplicitStringConcatenation:
   Exclude:

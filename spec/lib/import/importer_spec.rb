@@ -47,7 +47,7 @@ describe Import::Importer do
       it 'imports the monograph record' do
         expect { importer.run }
           .to change { Monograph.count }.by(1)
-          .and(change { FileSet.count }.by(2))
+          .and(change { FileSet.count }.by(3))
 
         monograph = Monograph.first
         expect(monograph.visibility).to eq public_vis

@@ -22,12 +22,14 @@ describe Import::CSVParser do
     it 'collects attributes from the CSV file' do
       expect(subject['title']).to eq ['The Tempest', 'A Subtitle']
       expect(subject['creator']).to eq ['Shakespeare, William']
-      expect(subject['files']).to eq ['shipwreck.jpg', 'miranda.jpg']
+      expect(subject['files']).to eq ['shipwreck.jpg', 'miranda.jpg', 'ファイル.txt']
       expect(subject['files_metadata']).to eq [
         { 'title' => ['The shipwreck scene in Act I, Scene 1'],
           'creator' => ['Smith, Benjamin'] },
         { 'title' => ['Miranda'],
-          'creator' => ['Waterhouse, John William'] }
+          'creator' => ['Waterhouse, John William'] },
+        { 'title' => ['日本語のファイル'],
+          'creator' => nil }
       ]
     end
   end
