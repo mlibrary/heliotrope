@@ -11,7 +11,7 @@ server "#{ENV.fetch('USER')}@#{ENV.fetch('HOST')}", roles: [:web, :app, :db, :pu
 SSHKit.config.umask = "0002"
 
 # prevent permissions issues by using a temp dir under user's home dir
-set :tmp_dir, ENV['TMP'] || '/tmp'
+set :tmp_dir, "/tmp/#{ENV.fetch('USER')}"
 
 # for distributed architecture, specify the roles & hosts separately:
 # role :web, "#{ENV.fetch('WEB_USER')}@#{ENV.fetch('WEB_HOST')}"
