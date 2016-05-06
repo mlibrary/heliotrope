@@ -16,6 +16,10 @@ There is a rake task you can use to create a superadmin user.  It will prompt yo
 
 `bundle exec rake admin`
 
+If you need to run this when the app has been deployed, run:
+
+`RAILS_ENV=production bundle exec rake admin`
+
 ### Run the application
 
 Run this command to start Fedora, Solr and Rails servers:
