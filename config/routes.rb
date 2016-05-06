@@ -44,6 +44,8 @@ Rails.application.routes.draw do
   get '/:subdomain', controller: :press_catalog, action: :index, as: :press_catalog
 
   resources :presses, path: '/', only: [:index] do
+    resources :sub_brands, only: [:new, :create, :show, :edit, :update]
+
     resources :roles, path: 'users', only: [:index, :create, :destroy] do
       collection do
         patch :update_all

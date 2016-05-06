@@ -7,6 +7,7 @@
 <% editor    = can?(:edit,    @presenter.id) %>
 
 <%= render 'representative_media', presenter: @presenter %>
+<%= render 'sub_brands', presenter: @presenter %>
 <%= render "attributes", presenter: @presenter %>
 <%= render 'sections', presenter: @presenter %>
 <%= render 'related_files', presenter: @presenter %>
