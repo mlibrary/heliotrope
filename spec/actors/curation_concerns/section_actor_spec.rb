@@ -34,6 +34,11 @@ describe CurationConcerns::SectionActor do
       expect(actor.create(private_attributes)).to be true
       expect(Section.first.visibility).to eq 'restricted'
     end
+
+    it "adds the monograph_id to the section" do
+      expect(actor.create(attributes)).to be true
+      expect(Section.first.monograph_id).to eq monograph.id
+    end
   end
 
   describe "#update" do
