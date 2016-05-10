@@ -1,9 +1,3 @@
-<h2><%= @press.name %></h2>
-
-<% if @press.logo_path %>
-  <p><%= image_tag @press.logo_path %></p>
-<% end %>
-
-<p><%= @press.description %></p>
+<%= render 'shared/press_branding' %>
 
 <%= link_to "Manage users", press_roles_path(@press) %>
