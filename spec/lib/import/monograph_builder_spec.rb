@@ -8,8 +8,8 @@ describe Import::MonographBuilder do
   let(:attrs) { { 'title' => ['The Tempest'],
                   'press' => 'umich',
                   'visibility' => public_vis,
-                  'files' => [File.new(File.join(Rails.root, 'spec', 'fixtures', 'csv', 'tempest', 'act1', 'shipwreck.jpg')),
-                              File.new(File.join(Rails.root, 'spec', 'fixtures', 'csv', 'tempest', 'miranda.jpg'))]
+                  'files' => [File.new(File.join(Rails.root, 'spec', 'fixtures', 'csv', 'import', 'shipwreck.jpg')),
+                              File.new(File.join(Rails.root, 'spec', 'fixtures', 'csv', 'import', 'miranda.jpg'))]
   } }
 
   describe 'initialize' do

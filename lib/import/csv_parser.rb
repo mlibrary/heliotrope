@@ -8,8 +8,13 @@ module Import
 
     def attributes
       attrs = {}
-      attrs['files'] = []
-      attrs['files_metadata'] = []
+
+      # a CSV can only have one monograph (probably for in-house use only)...
+      attrs['monograph'] = {}
+      attrs['monograph']['files'] = []
+      attrs['monograph']['files_metadata'] = []
+      # ... but can have many sections
+      attrs['sections'] = {}
 
       puts "Parsing file: #{file}"
       rows = CSV.read(file, headers: true)
@@ -23,7 +28,7 @@ module Import
         if asset_data?(row)
           data_for_asset(row, attrs)
         else
-          data_for_monograph(row, attrs)
+          data_for_monograph(row, attrs['monograph'])
         end
       end
 
@@ -33,7 +38,7 @@ module Import
     private
 
       def asset_data?(data)
-        !data['File Name'].blank?
+        data['File Name'] != '://:MONOGRAPH://:' && data['Section'] != '://:MONOGRAPH://:'
       end
 
       # TODO: With this code, the last row wins.  We need to
@@ -55,12 +60,35 @@ module Import
         file_attrs['title'] = title
         file_attrs['creator'] = creator(data)
 
-        # An array of file names with a matching array of
-        # metadata for each of those files.
-        attrs['files'] << data['File Name']
-        attrs['files_metadata'] << file_attrs
+        # blank section will mean 'attach to monograph'
+        # this section_title will also be used as section key, but a curation_concern...
+        # can have several titles, so the actual section title is an array (see below)
+        section_title = data['Section']
 
-        # TODO: The two matching arrays will only work if they
+        # using parallel arrays for files and their metadata
+        # for both monographs and sections
+        if section_title
+          section_title = section_title.strip
+          # will need to know what section to attach the file to later???
+          unless attrs['sections'][section_title]
+            current_section = {}
+            current_section['title'] = Array(data['Section'].split(';')).map(&:strip)
+            current_section['files'] = []
+            current_section['files_metadata'] = []
+            attrs['sections'][section_title] = current_section
+          end
+          attrs['sections'][section_title]['files'] << data['File Name']
+          attrs['sections'][section_title]['files_metadata'] << file_attrs
+          puts "    ... will attach to Section: #{section_title}"
+        else
+          # An array of file names with a matching array of
+          # metadata for each of those files.
+          attrs['monograph']['files'] << data['File Name']
+          attrs['monograph']['files_metadata'] << file_attrs
+          puts "    ... will attach directly to monograph"
+        end
+
+        # TODO: The matching arrays will only work if they
         # both contain exactly the same number of elements.
         # We should either store the file name together with
         # the metadata, or else raise an error if the 2 arrays

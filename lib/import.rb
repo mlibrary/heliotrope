@@ -3,6 +3,7 @@ module Import
   autoload :DummyUser
   autoload :CSVParser
   autoload :MonographBuilder
+  autoload :SectionBuilder
   autoload :FileSetBuilder
   autoload :Importer
 end

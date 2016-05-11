@@ -2,7 +2,7 @@ require 'rails_helper'
 require 'import/csv_parser'
 
 describe Import::CSVParser do
-  let(:input_file) { File.join(fixture_path, 'csv', 'tempest', 'tempest.csv') }
+  let(:input_file) { File.join(fixture_path, 'csv', 'import', 'tempest.csv') }
   let(:parser) { described_class.new(input_file) }
 
   before do
@@ -17,7 +17,7 @@ describe Import::CSVParser do
   end
 
   describe '#attributes' do
-    subject { parser.attributes }
+    subject { parser.attributes['monograph'] }
 
     it 'collects attributes from the CSV file' do
       expect(subject['title']).to eq ['The Tempest', 'A Subtitle']
