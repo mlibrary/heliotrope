@@ -28,4 +28,10 @@ class Monograph < ActiveFedora::Base
   property :buy_url, predicate: ::RDF::Vocab::SCHEMA.sameAs do |index|
     index.as :symbol
   end
+
+  def destroy
+    # #76 Deleting a monograph should delete all its sections
+    works.each(&:delete)
+    super
+  end
 end
