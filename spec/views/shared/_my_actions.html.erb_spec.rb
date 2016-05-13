@@ -18,6 +18,7 @@ describe 'shared/_my_actions.html.erb' do
 
       it 'has correct links' do
         expect(rendered).to have_link("Log Out")
+        expect(rendered).to have_link("Jobs", href: resque_web_path)
         expect(rendered).to have_link("Embargos", href: embargoes_path)
         expect(rendered).to have_link("Leases", href: leases_path)
         expect(rendered).to have_link("Users", href: press_roles_path(press))
@@ -29,6 +30,7 @@ describe 'shared/_my_actions.html.erb' do
 
       it 'has correct links' do
         expect(rendered).to have_link("Log Out")
+        expect(rendered).to have_link("Jobs", href: resque_web_path)
         expect(rendered).to have_link("Embargos", href: embargoes_path)
         expect(rendered).to have_link("Leases", href: leases_path)
         expect(rendered).to_not have_link("Users", href: press_roles_path(press))
@@ -46,7 +48,8 @@ describe 'shared/_my_actions.html.erb' do
       end
 
       it 'has correct links' do
-        expect(rendered).to have_link("Log Out")
+        expect(rendered).to     have_link("Log Out")
+        expect(rendered).to_not have_link("Jobs", href: resque_web_path)
 
         # TODO: Fix this
         # expect(rendered).to_not have_link("Users")
@@ -61,8 +64,9 @@ describe 'shared/_my_actions.html.erb' do
       before { render }
 
       it 'has correct links' do
-        expect(rendered).to have_link("Log Out")
+        expect(rendered).to     have_link("Log Out")
         expect(rendered).to_not have_link("Users")
+        expect(rendered).to_not have_link("Jobs", href: resque_web_path)
 
         # TODO: Fix this
         # expect(rendered).to_not have_link("Embargos")
