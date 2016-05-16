@@ -17,7 +17,12 @@
       <% end %>
 
       <% show_jobs_link = current_user && current_user.platform_admin? %>
-      <% show_users_link = @press && can?(:manage, Role) %>
+      <%
+        show_users_link = @press && (
+          current_user.platform_admin? ||
+          current_user.roles.where(role: 'admin', resource_id: @press.id, resource_type: 'Press').first
+        )
+      %>
       <% show_embargo_link = can? :discover, Hydra::AccessControls::Embargo %>
       <% show_lease_link = can? :discover, Hydra::AccessControls::Lease %>
 
