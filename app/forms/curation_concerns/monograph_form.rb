@@ -23,5 +23,13 @@ module CurationConcerns
 
       Hash[presses.map(&:sub_brands).flatten.map { |brand| [brand.title, brand.id] }]
     end
+
+    def select_files
+      # We only want FileSets here, not Sections see story #174
+      # Use model.file_set_ids, not model.member_ids
+      file_sets ||=
+        PresenterFactory.build_presenters(model.file_set_ids, FileSetPresenter, current_ability)
+      Hash[file_sets.map { |file| [file.to_s, file.id] }]
+    end
   end
 end
