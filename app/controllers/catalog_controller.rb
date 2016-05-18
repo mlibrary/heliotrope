@@ -4,7 +4,7 @@ class CatalogController < ApplicationController
     config.search_builder_class = ::SearchBuilder
     ## Default parameters to send to solr for all search-like requests. See also SolrHelper#solr_search_params
     config.default_solr_params = {
-      qf: 'title_tesim creator_tesim subject_tesim',
+      qf: 'title_tesim creator_full_name_tesim subject_tesim',
       qt: 'search',
       rows: 10
     }
@@ -24,7 +24,7 @@ class CatalogController < ApplicationController
     # solr fields that will be treated as facets by the blacklight application
     #   The ordering of the field names is the order of the display
     config.add_facet_field solr_name('human_readable_type', :facetable)
-    config.add_facet_field solr_name('creator', :facetable), limit: 5
+    config.add_facet_field solr_name('creator_full_name', :facetable), label: 'Creator', limit: 5
     config.add_facet_field solr_name('tag', :facetable), limit: 5
     config.add_facet_field solr_name('subject', :facetable), limit: 5
     config.add_facet_field solr_name('language', :facetable), limit: 5
@@ -44,7 +44,7 @@ class CatalogController < ApplicationController
     config.add_index_field solr_name('description', :stored_searchable)
     config.add_index_field solr_name('tag', :stored_searchable)
     config.add_index_field solr_name('subject', :stored_searchable)
-    config.add_index_field solr_name('creator', :stored_searchable)
+    config.add_index_field solr_name('creator_full_name', :stored_searchable), label: 'Creator'
     config.add_index_field solr_name('contributor', :stored_searchable)
     config.add_index_field solr_name('publisher', :stored_searchable)
     config.add_index_field solr_name('based_near', :stored_searchable)
@@ -115,7 +115,7 @@ class CatalogController < ApplicationController
     end
 
     config.add_search_field('creator') do |field|
-      solr_name = solr_name('creator', :stored_searchable, type: :string)
+      solr_name = solr_name('creator_full_name', :stored_searchable, type: :string)
       field.solr_local_parameters = {
         qf: solr_name,
         pf: solr_name
