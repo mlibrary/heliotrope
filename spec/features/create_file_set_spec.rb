@@ -45,8 +45,7 @@ feature 'Create a file set' do
       expect(page).to have_content 'University of Michigan'
       expect(page).to have_content 'Veggies es bonus vobis, proinde vos postulo essum magis kohlrabi welsh onion daikon amaranth tatsoi tomatillo melon azuki bean garlic.'
       expect(page).to have_content 'screenshot'
-      # TODO: Fix this
-      # expect(page).to have_content 'Test Creator'
+      expect(page).to have_content 'Test Creator'
       expect(page).to have_content 'Test Contributor'
       expect(page).to have_content '2016'
       expect(page).to have_content 'keyword 1'

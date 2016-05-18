@@ -13,5 +13,9 @@ module CurationConcerns
         date_created: [], keywords: [], language: [], identifier: [],
         relation: [], title: [])
     end
+
+    def actor
+      @actor ||= ::CurationConcerns::AssetActor.new(@file_set, current_user)
+    end
   end
 end
