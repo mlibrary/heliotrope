@@ -50,14 +50,19 @@
           <%= text_field_tag 'file_set[content_type][]', curation_concern.content_type.first, class: 'form-control' %>
 
           <span class="control-label">
-            <%= label_tag 'file_set[creator][]', 'Creator',  class: "string optional" %>
+            <%= label_tag 'file_set[creator_family_name]', 'Primary Creator (family name)',  class: "string optional" %>
           </span>
-          <%= text_field_tag 'file_set[creator][]', curation_concern.creator.first, class: 'form-control' %>
+          <%= text_field_tag 'file_set[creator_family_name]', curation_concern.creator_family_name, class: 'form-control' %>
+
+          <span class="control-label">
+            <%= label_tag 'file_set[creator_given_name]', 'Primary Creator (given name)',  class: "string optional" %>
+          </span>
+          <%= text_field_tag 'file_set[creator_given_name]', curation_concern.creator_given_name, class: 'form-control' %>
 
           <span class="control-label">
             <%= label_tag 'file_set[contributor][]', 'Contributor',  class: "string optional" %>
           </span>
-          <%= text_field_tag 'file_set[contributor][]', curation_concern.creator.first, class: 'form-control' %>
+          <%= text_field_tag 'file_set[contributor][]', curation_concern.contributor.first, class: 'form-control' %>
 
           <span class="control-label">
             <%= label_tag 'file_set[date_created][]', 'Date created',  class: "string optional" %>

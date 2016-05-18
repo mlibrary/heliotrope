@@ -4,6 +4,7 @@ class Monograph < ActiveFedora::Base
   include ::CurationConcerns::WorkBehavior
   include ::CurationConcerns::BasicMetadata
   include GlobalID::Identification
+  include StoresCreatorNameSeparately
 
   self.indexer = MonographIndexer
 
