@@ -3,7 +3,8 @@
 
   <%= f.input :title, as: :multi_value %>
   <%= f.input :press, collection: @form.select_press, input_html: { class: 'required' } %>
-  <%= f.input :creator, as: :multi_value %>
+  <%= f.input :creator_family_name, label: 'Primary Creator (family name)' %>
+  <%= f.input :creator_given_name, label: 'Primary Creator (given name)' %>
   <%= f.input :contributor, as: :multi_value, input_html: { class: 'form-control' } %>
   <%= f.input :description, as: :multi_value, input_html: { rows: '14', type: 'textarea'} %>
 </fieldset>

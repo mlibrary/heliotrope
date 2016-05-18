@@ -98,8 +98,7 @@ module Import
       def creator(data)
         last_name = data['Primary Creator Last Name'] ? data['Primary Creator Last Name'].strip : ''
         first_name = data['Primary Creator First Name'] ? data['Primary Creator First Name'].strip : ''
-        joining_comma = last_name.blank? || first_name.blank? ? '' : ', '
-        full_name = last_name + joining_comma + first_name
+        full_name = ::FullName.build(last_name, first_name)
         full_name.blank? ? nil : Array(full_name)
       end
   end

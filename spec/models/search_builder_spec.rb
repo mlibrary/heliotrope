@@ -27,7 +27,7 @@ describe SearchBuilder do
 
     it "searches the required fields" do
       expect(subject['qf']).to match %r{\btitle_tesim\b}
-      expect(subject['qf']).to match %r{\bcreator_tesim\b}
+      expect(subject['qf']).to match %r{\bcreator_full_name_tesim\b}
       expect(subject['qf']).to match %r{\bsubject_tesim\b}
     end
 

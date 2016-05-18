@@ -38,6 +38,14 @@ class Monograph < ActiveFedora::Base
     index.as :symbol
   end
 
+  property :creator_family_name, predicate: ::RDF::Vocab::FOAF.family_name, multiple: false do |index|
+    index.as :stored_searchable
+  end
+
+  property :creator_given_name, predicate: ::RDF::Vocab::FOAF.givenname, multiple: false do |index|
+    index.as :stored_searchable
+  end
+
   def destroy
     # #76 Deleting a monograph should delete all its sections
     works.each(&:delete)
