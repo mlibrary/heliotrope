@@ -65,8 +65,8 @@ GEM
     active_attr (0.9.0)
       activemodel (>= 3.0.2, < 5.1)
       activesupport (>= 3.0.2, < 5.1)
-    active_fedora-noid (1.0.3)
-      active-fedora (~> 9.7)
+    active_fedora-noid (1.1.0)
+      active-fedora (>= 9.7, < 11)
       noid (~> 0.7)
     activefedora-aggregation (0.10.0)
       active-fedora (~> 9.10.1)
@@ -94,8 +94,10 @@ GEM
     addressable (2.4.0)
     arel (6.0.3)
     ast (2.2.0)
-    autoprefixer-rails (6.3.6)
+    autoprefixer-rails (6.3.6.1)
       execjs
+    awesome_nested_set (3.0.3)
+      activerecord (>= 4.0.0, < 5)
     babel-source (5.8.35)
     babel-transpiler (0.7.0)
       babel-source (>= 4.0, < 6)
@@ -105,7 +107,7 @@ GEM
     bcrypt (3.1.11)
     binding_of_caller (0.7.2)
       debug_inspector (>= 0.0.1)
-    blacklight (6.1.0)
+    blacklight (6.2.0)
       bootstrap-sass (~> 3.2)
       deprecation
       globalid
@@ -127,7 +129,7 @@ GEM
     breadcrumbs_on_rails (2.3.1)
     builder (3.2.2)
     byebug (8.2.4)
-    cancancan (1.13.1)
+    cancancan (1.14.0)
     capistrano (3.4.0)
       i18n
       rake (>= 10.0.0)
@@ -160,15 +162,16 @@ GEM
     config (1.1.0)
       activesupport (>= 3.0)
       deep_merge (~> 1.0.1)
-    curation_concerns (0.12.0)
+    curation_concerns (0.14.0)
       active-fedora (~> 9.9)
       active_attr
       active_fedora-noid (~> 1.0)
+      awesome_nested_set (~> 3.0)
       blacklight (~> 6.1)
       blacklight_advanced_search (~> 6.0)
       breadcrumbs_on_rails (~> 2.3)
       deprecation (~> 0.1)
-      hydra-editor (~> 1.1)
+      hydra-editor (~> 2.0)
       hydra-head (~> 9.9)
       hydra-works (~> 0.8, >= 0.8.1)
       jquery-ui-rails
@@ -178,8 +181,6 @@ GEM
       rdf (~> 1.99)
       rdf-vocab (~> 0)
       redlock (~> 0.1.2)
-      resque (~> 1.23)
-      resque-pool (~> 0.3)
       simple_form (~> 3.1)
       solrizer (~> 3.4)
       sprockets-es6
@@ -231,13 +232,13 @@ GEM
     hydra-core (9.9.0)
       hydra-access-controls (= 9.9.0)
       rails (~> 4.0)
-    hydra-derivatives (3.0.1)
-      active-fedora (~> 9.0)
+    hydra-derivatives (3.1.1)
+      active-fedora (>= 9.0, < 11)
       activesupport (~> 4.0)
       deprecation
       mime-types (> 2.0, < 4.0)
       mini_magick (>= 3.2, < 5)
-    hydra-editor (1.2.0)
+    hydra-editor (2.0.0)
       active-fedora (>= 9.0.0)
       cancancan (~> 1.8)
       rails (~> 4.1)
@@ -444,8 +445,8 @@ GEM
     redis (3.3.0)
     redis-namespace (1.5.2)
       redis (~> 3.0, >= 3.0.4)
-    redlock (0.1.5)
-      redis (~> 3, >= 3.0.5)
+    redlock (0.1.6)
+      redis (~> 3, >= 3.3.0)
     ref (2.0.0)
     responders (2.1.2)
       railties (>= 4.2.0, < 5.1)
@@ -593,7 +594,7 @@ DEPENDENCIES
   capybara
   coffee-rails (~> 4.1.0)
   config
-  curation_concerns (= 0.12.0)
+  curation_concerns (= 0.14.0)
   devise
   devise-guests (~> 0.3)
   factory_girl_rails
@@ -605,6 +606,7 @@ DEPENDENCIES
   puma
   rails (= 4.2.6)
   resque
+  resque-pool
   resque-web (~> 0.0.7)
   rsolr (~> 1.0.6)
   rspec-rails
