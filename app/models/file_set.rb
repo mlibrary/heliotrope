@@ -3,6 +3,7 @@ class FileSet < ActiveFedora::Base
   include ::CurationConcerns::FileSetBehavior
   include ::CurationConcerns::BasicMetadata
   include GlobalID::Identification
+  include StoresCreatorNameSeparately
 
   property :caption, predicate: ::RDF::Vocab::SCHEMA.caption do |index|
     index.as :stored_searchable

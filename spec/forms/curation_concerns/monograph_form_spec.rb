@@ -40,7 +40,9 @@ describe CurationConcerns::MonographForm do
                             :editor,
                             :copyright_holder,
                             :buy_url,
-                            :sub_brand] }
+                            :sub_brand,
+                            :creator_family_name,
+                            :creator_given_name] }
   end
 
   describe 'required_fields' do

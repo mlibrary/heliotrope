@@ -69,5 +69,9 @@ class SolrDocument
     fetch('identifier_tesim', [])
   end
 
+  def creator_full_name
+    fetch('creator_full_name_tesim', [])
+  end
+
   use_extension(Hydra::ContentNegotiation)
 end

@@ -49,7 +49,8 @@ module Import
         puts "  Monograph: #{title.first}"
 
         attrs['title'] = title
-        attrs['creator'] = creator(data)
+        attrs['creator_family_name'] = creator_family_name(data)
+        attrs['creator_given_name'] = creator_given_name(data)
       end
 
       def data_for_asset(data, attrs)
@@ -58,7 +59,8 @@ module Import
 
         file_attrs = {}
         file_attrs['title'] = title
-        file_attrs['creator'] = creator(data)
+        file_attrs['creator_family_name'] = creator_family_name(data)
+        file_attrs['creator_given_name'] = creator_given_name(data)
 
         # blank section will mean 'attach to monograph'
         # this section_title will also be used as section key, but a curation_concern...
@@ -95,12 +97,14 @@ module Import
         # don't have the same count.
       end
 
-      def creator(data)
-        last_name = data['Primary Creator Last Name'] ? data['Primary Creator Last Name'].strip : ''
-        first_name = data['Primary Creator First Name'] ? data['Primary Creator First Name'].strip : ''
-        joining_comma = last_name.blank? || first_name.blank? ? '' : ', '
-        full_name = last_name + joining_comma + first_name
-        full_name.blank? ? nil : Array(full_name)
+      def creator_family_name(data)
+        return unless data['Primary Creator Last Name']
+        data['Primary Creator Last Name'].strip
+      end
+
+      def creator_given_name(data)
+        return unless data['Primary Creator First Name']
+        data['Primary Creator First Name'].strip
       end
   end
 end
