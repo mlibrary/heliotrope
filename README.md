@@ -1,4 +1,4 @@
-# heliotrope [![Build Status](https://travis-ci.org/mlibrary/heliotrope.svg?branch=master)](https://travis-ci.org/curationexperts/heliotrope)
+# heliotrope [![Build Status](https://travis-ci.org/mlibrary/heliotrope.svg?branch=master)](https://travis-ci.org/mlibrary/heliotrope)
 Hydra-based digital publisher platform
 
 ## Development
