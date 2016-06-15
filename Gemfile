@@ -4,10 +4,12 @@ source 'https://rubygems.org'
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '4.2.6'
 
-gem 'curation_concerns', '0.12.0'
+gem 'curation_concerns', '0.14.0'
 gem 'active-fedora', '9.10.4'
 gem 'resque-web', '~> 0.0.7', require: 'resque_web'
 gem 'resque'
+gem 'resque-pool'
+
 # gem 'pg', '0.18.4'
 gem 'mysql2'
 gem 'puma'
