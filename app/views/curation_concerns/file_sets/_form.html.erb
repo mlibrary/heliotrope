@@ -59,20 +59,14 @@
           </span>
           <%= text_field_tag 'file_set[creator_given_name]', curation_concern.creator_given_name, class: 'form-control' %>
 
-          <span class="control-label">
-            <%= label_tag 'file_set[contributor][]', 'Contributor',  class: "string optional" %>
-          </span>
-          <%= text_field_tag 'file_set[contributor][]', curation_concern.contributor.first, class: 'form-control' %>
+          <%= f.input :contributor, as: :multi_value, input_html: { class: 'form-control' } %>
 
           <span class="control-label">
             <%= label_tag 'file_set[date_created][]', 'Date created',  class: "string optional" %>
           </span>
           <%= text_field_tag 'file_set[date_created][]', curation_concern.date_created.first, class: 'form-control' %>
 
-          <span class="control-label">
-            <%= label_tag 'file_set[keywords][]', 'Keywords',  class: "string optional" %>
-          </span>
-          <%= text_field_tag 'file_set[keywords][]', curation_concern.keywords.first, class: 'form-control' %>
+          <%= f.input :keywords, as: :multi_value, input_html: { class: 'form-control' } %>
 
           <span class="control-label">
             <%= label_tag 'file_set[language][]', 'Language',  class: "string optional" %>
