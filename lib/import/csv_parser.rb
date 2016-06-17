@@ -25,9 +25,14 @@ module Import
       rows.delete(0)
 
       rows.each do |row|
+        row.each { |_, value| value.strip! if value }
+
+        # next if required_fields_missing(row)
         if asset_data?(row)
+          puts "ASSET"
           data_for_asset(row, attrs)
         else
+          puts "MONOGRAPH"
           data_for_monograph(row, attrs['monograph'])
         end
       end
@@ -44,48 +49,67 @@ module Import
       # TODO: With this code, the last row wins.  We need to
       # decide if we expect the file to have more than 1 row
       # of data, and handle additional rows accordingly.
-      def data_for_monograph(data, attrs)
-        title = Array(data['Title'].split(';')).map(&:strip)
+      def data_for_monograph(row, attrs)
+        title = Array(row['Title'].split(';')).map(&:strip)
         puts "  Monograph: #{title.first}"
-
         attrs['title'] = title
-        attrs['creator_family_name'] = creator_family_name(data)
-        attrs['creator_given_name'] = creator_given_name(data)
+        attrs['creator_family_name'] = creator_family_name(row)
+        attrs['creator_given_name'] = creator_given_name(row)
       end
 
-      def data_for_asset(data, attrs)
-        title = Array(data['Title'].split(';')).map(&:strip)
-        puts "    Asset: (#{data['File Name']}) #{title.first}"
+      def data_for_asset(row, attrs)
+        # do a section check
 
         file_attrs = {}
-        file_attrs['title'] = title
-        file_attrs['creator_family_name'] = creator_family_name(data)
-        file_attrs['creator_given_name'] = creator_given_name(data)
+        # validate_data(data, file_attrs)
 
+        metadata_fields.each do |field|
+          if row[field['field_name']]
+            file_attrs[field['metadata_name']] = if row[field['multi_value']]
+                                                   Array(row[field['field_name']].split(';')).map(&:strip)
+                                                 else
+                                                   Array(row[field['field_name']].strip)
+                                                 end
+          elsif row[field['required']]
+            # add to array of missing stuff
+            missing_required_fields.add(row[field['field_name']])
+          end
+        end
+
+        file_attrs['creator_family_name'] = creator_family_name(row)
+        file_attrs['creator_given_name'] = creator_given_name(row)
+
+        puts "    Asset: (#{row['File Name']}) #{file_attrs['title'].first}"
+        attach_asset(row, attrs, file_attrs)
+      end
+
+      def attach_asset(row, attrs, file_attrs)
         # blank section will mean 'attach to monograph'
-        # this section_title will also be used as section key, but a curation_concern...
-        # can have several titles, so the actual section title is an array (see below)
-        section_title = data['Section']
+
+        section_title = if row['Section']
+                          row['Section']
+                        else
+                          '://:MONOGRAPH://:'
+                        end
 
         # using parallel arrays for files and their metadata
         # for both monographs and sections
-        if section_title
-          section_title = section_title.strip
-          # will need to know what section to attach the file to later???
+        if section_title != '://:MONOGRAPH://:'
+          # create section if new
           unless attrs['sections'][section_title]
             current_section = {}
-            current_section['title'] = Array(data['Section'].split(';')).map(&:strip)
+            current_section['title'] = Array(row['Section'].split(';')).map(&:strip)
             current_section['files'] = []
             current_section['files_metadata'] = []
             attrs['sections'][section_title] = current_section
           end
-          attrs['sections'][section_title]['files'] << data['File Name']
+          attrs['sections'][section_title]['files'] << row['File Name']
           attrs['sections'][section_title]['files_metadata'] << file_attrs
           puts "    ... will attach to Section: #{section_title}"
         else
           # An array of file names with a matching array of
           # metadata for each of those files.
-          attrs['monograph']['files'] << data['File Name']
+          attrs['monograph']['files'] << row['File Name']
           attrs['monograph']['files_metadata'] << file_attrs
           puts "    ... will attach directly to monograph"
         end
@@ -97,14 +121,26 @@ module Import
         # don't have the same count.
       end
 
-      def creator_family_name(data)
-        return unless data['Primary Creator Last Name']
-        data['Primary Creator Last Name'].strip
+      def creator_family_name(row)
+        return unless row['Primary Creator Last Name']
+        row['Primary Creator Last Name'].strip
       end
 
-      def creator_given_name(data)
-        return unless data['Primary Creator First Name']
-        data['Primary Creator First Name'].strip
+      def creator_given_name(row)
+        return unless row['Primary Creator First Name']
+        row['Primary Creator First Name'].strip
+      end
+
+      def metadata_fields
+        [
+          { 'field_name' => 'Title', 'metadata_name' => 'title', 'required' => true, 'multi_value' => false },
+          { 'field_name' => 'Caption', 'metadata_name' => 'caption', 'required' => true, 'multi_value' => true },
+          { 'field_name' => 'Alternative Text', 'metadata_name' => 'alt_text', 'required' => true, 'multi_value' => true },
+          { 'field_name' => 'Resource Type', 'metadata_name' => 'content_type', 'required' => true, 'multi_value' => true },
+          { 'field_name' => 'Copyright Holder', 'metadata_name' => 'copyright_holder', 'required' => true, 'multi_value' => true },
+          { 'field_name' => 'Externally Hosted Resource', 'metadata_name' => 'external_resource', 'required' => true, 'multi_value' => true },
+          { 'field_name' => 'Persistent ID', 'metadata_name' => 'persistent_id', 'required' => true, 'multi_value' => true }
+        ]
       end
   end
 end

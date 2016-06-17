@@ -13,7 +13,7 @@ module CurationConcerns
         description: [], content_type: [],
         contributor: [],
         date_created: [], keywords: [], language: [], identifier: [],
-        relation: [], title: [])
+        relation: [], title: [], external_resource: [], persistent_id: [])
     end
 
     def actor

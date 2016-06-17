@@ -69,6 +69,14 @@ class SolrDocument
     fetch('identifier_tesim', [])
   end
 
+  def external_resource
+    fetch('external_resource_ssim', [])
+  end
+
+  def persistent_id
+    fetch('persistent_id_ssim', [])
+  end
+
   def creator_full_name
     fetch('creator_full_name_tesim', [])
   end
