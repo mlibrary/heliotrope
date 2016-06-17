@@ -14,3 +14,5 @@ en:
         content_type_tesim: "Content Type"
         keywords_tesim: "Keywords"
         relation_tesim: "Relation to Narrative"
+        external_resource_ssim: "External Resource"
+        persistent_id_ssim: "Persistent ID"

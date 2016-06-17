@@ -49,7 +49,7 @@ describe Import::Importer do
         expect { importer.run }
           .to change { Monograph.count }.by(1)
           .and(change { Section.count }.by(2))
-          .and(change { FileSet.count }.by(7))
+          .and(change { FileSet.count }.by(8))
 
         monograph = Monograph.first
         expect(monograph.visibility).to eq public_vis

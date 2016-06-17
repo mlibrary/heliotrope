@@ -11,7 +11,7 @@ module CurationConcerns
         resource_type: [], caption: [], alt_text: [], copyright_holder: [],
         description: [], content_type: [], creator: [], contributor: [],
         date_created: [], keywords: [], language: [], identifier: [],
-        relation: [], title: [])
+        relation: [], title: [], external_resource: [], persistent_id: [])
     end
   end
 end

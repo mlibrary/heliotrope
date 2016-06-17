@@ -83,6 +83,14 @@
             <%= label_tag 'file_set[relation][]', 'Relation',  class: "string optional" %>
           </span>
           <%= text_field_tag 'file_set[relation][]', curation_concern.relation.first, class: 'form-control' %>
+          <span class="control-label">
+            <%= label_tag 'file_set[external_resource][]', 'External Resource',  class: "string optional" %>
+          </span>
+          <%= text_field_tag 'file_set[external_resource][]', curation_concern.external_resource.first, class: 'form-control' %>
+          <span class="control-label">
+            <%= label_tag 'file_set[persistent_id][]', 'Persistent ID',  class: "string optional" %>
+          </span>
+          <%= text_field_tag 'file_set[persistent_id][]', curation_concern.persistent_id.first, class: 'form-control' %>
       </fieldset>
     </div>
 

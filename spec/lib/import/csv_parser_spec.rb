@@ -41,9 +41,10 @@ describe Import::CSVParser do
 
       expect(subject['sections'])
         .to include('Act 2: Stirrin\' Up' => { 'title' => ['Act 2: Stirrin\' Up'],
-                                               'files' => ['shipwreck2.jpg', 'miranda2.jpg'],
+                                               'files' => ['shipwreck2.jpg', 'miranda2.jpg', 'shipwreck1.jpg'],
                                                'files_metadata' => [{ 'title' => ['Section 2 Shipwreck'], 'creator' => ['Smith'] },
-                                                                    { 'title' => ['Section 2 Miranda'], 'creator' => ['Waterhouse, John William'] }]
+                                                                    { 'title' => ['Section 2 Miranda'], 'creator' => ['Waterhouse, John William'] },
+                                                                    { 'title' => ['Previous Shipwreck File (Again)'], 'creator' => ['Smith'] }]
                                              })
     end
   end

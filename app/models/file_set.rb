@@ -28,4 +28,10 @@ class FileSet < ActiveFedora::Base
   property :date_published, predicate: ::RDF::Vocab::SCHEMA.datePublished do |index|
     index.as :stored_searchable
   end
+  property :external_resource, predicate: ::RDF::Vocab::DC.source do |index|
+    index.as :symbol
+  end
+  property :persistent_id, predicate: ::RDF::Vocab::DC.URI do |index|
+    index.as :symbol
+  end
 end

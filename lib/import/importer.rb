@@ -25,7 +25,7 @@ module Import
         update_fileset_metadata(monograph, monograph_file_attrs)
         monograph_id = monograph.id
 
-        sections.each do |_title, section_attrs|
+        sections.each do |_, section_attrs|
           section_files_attrs = section_attrs.delete('files_metadata')
           section_attrs['monograph_id'] = monograph_id
           section_attrs = transform_attributes(section_attrs, 'section')
