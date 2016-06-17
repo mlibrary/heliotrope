@@ -10,6 +10,9 @@ gem 'resque-web', '~> 0.0.7', require: 'resque_web'
 gem 'resque'
 gem 'resque-pool'
 
+# clamav only in production
+gem 'clamav', group: :production
+
 # gem 'pg', '0.18.4'
 gem 'mysql2'
 gem 'puma'
