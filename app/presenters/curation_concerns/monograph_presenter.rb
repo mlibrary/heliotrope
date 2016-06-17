@@ -1,14 +1,27 @@
 module CurationConcerns
   class MonographPresenter < WorkShowPresenter
+    include ActionView::Helpers::UrlHelper
+
     delegate :title, :date_created, :date_modified, :date_uploaded,
              :description, :creator, :editor, :contributor, :subject,
              :publisher, :date_published, :language, :isbn, :copyright_holder,
-             :buy_url, :embargo_release_date, :lease_expiration_date, :rights,
+             :buy_url, :embargo_release_date, :lease_expiration_date, :rights, :creator_full_name,
              to: :solr_document
 
     def section_docs
       return @section_docs if @section_docs
       @section_docs = ordered_member_docs.select { |doc| doc['active_fedora_model_ssi'] == 'Section'.freeze }
+    end
+
+    def sub_brand_links
+      press = Press.where(subdomain: solr_document[:press_tesim]).first
+      return nil unless press
+
+      Array(solr_document[:sub_brand_ssim]).map do |id|
+        sub_brand = SubBrand.find(id) if SubBrand.exists?(id)
+        next unless sub_brand
+        link_to(sub_brand.title, Rails.application.routes.url_helpers.press_sub_brand_path(press, id))
+      end.compact
     end
 
     private

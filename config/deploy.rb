@@ -2,7 +2,7 @@
 lock '3.4.0'
 
 set :application, 'heliotrope'
-set :repo_url, ENV.fetch('REPO', 'https://github.com/curationexperts/heliotrope.git')
+set :repo_url, ENV.fetch('REPO', 'https://github.com/mlibrary/heliotrope.git')
 set :deploy_to, '/opt/heliotrope'
 
 # pass a BRANCH_NAME to deploy a branch other than master

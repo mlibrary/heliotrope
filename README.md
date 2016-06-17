@@ -1,4 +1,4 @@
-# heliotrope [![Build Status](https://travis-ci.org/curationexperts/heliotrope.svg?branch=master)](https://travis-ci.org/curationexperts/heliotrope)
+# heliotrope [![Build Status](https://travis-ci.org/mlibrary/heliotrope.svg?branch=master)](https://travis-ci.org/mlibrary/heliotrope)
 Hydra-based digital publisher platform
 
 ## Development
@@ -8,7 +8,7 @@ Hydra-based digital publisher platform
   * clone the repository
   * run `bundle install`
   * run `bundle exec bin/setup`
-  * [install redis](https://github.com/curationexperts/heliotrope/wiki/Background-Jobs#how-to-install-redis)
+  * [install redis](https://github.com/mlibrary/heliotrope/wiki/Background-Jobs#how-to-install-redis)
 
 #### Create an admin user
 

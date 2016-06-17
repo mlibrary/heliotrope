@@ -1,0 +1,9 @@
+<% links = presenter.sub_brand_links %>
+<% unless links.blank? %>
+  <h2>Sub-Brands</h2>
+  <ul class='sub-brands'>
+    <% links.each do |link| %>
+      <li> <%= link %> </li>
+    <% end %>
+  </ul>
+<% end %>

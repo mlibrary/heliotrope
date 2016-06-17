@@ -5,6 +5,8 @@ describe Ability do
   subject { described_class.new(current_user) }
 
   let(:press) { create(:press) }
+  let(:sub_brand) { create(:sub_brand, press: press) }
+
   let(:monograph) { create(:monograph, user: creating_user, press: press.subdomain) }
   let(:section) { create(:section, user: creating_user) }
   let(:file_set) { create(:file_set, user: creating_user) }
@@ -36,6 +38,9 @@ describe Ability do
       should be_able_to(:read, role)
       should be_able_to(:update, role)
       should be_able_to(:destroy, role)
+
+      should be_able_to(:update, press)
+      should be_able_to(:manage, sub_brand)
     end
 
     it "can read, update, publish or destroy a monograph created by another user" do
@@ -49,7 +54,17 @@ describe Ability do
   describe 'a press-admin' do
     let(:my_press) { create(:press) }
     let(:other_press) { create(:press) }
+    let(:my_sub_brand) { create(:sub_brand, press: my_press, title: ['My own sub-brand']) }
+    let(:other_sub_brand) { create(:sub_brand, press: other_press, title: ["Someone else's sub-brand"]) }
     let(:current_user) { create(:press_admin, press: my_press) }
+
+    it do
+      should     be_able_to(:update, my_press)
+      should_not be_able_to(:update, other_press)
+      should     be_able_to(:manage, my_sub_brand)
+      should_not be_able_to(:manage, other_sub_brand)
+      should     be_able_to(:read, other_sub_brand)
+    end
 
     context "roles" do
       let(:my_press_role) { create(:role, resource: my_press) }
@@ -79,11 +94,15 @@ describe Ability do
 
   describe 'a press editor' do
     let(:my_press) { create(:press) }
+    let(:my_sub_brand) { create(:sub_brand, press: my_press, title: ['My own sub-brand']) }
     let(:current_user) { create(:editor, press: my_press) }
     let(:monograph_for_my_press) { Monograph.new(press: my_press.subdomain) }
 
     it do
+      should_not be_able_to(:update, my_press)
       should_not be_able_to(:create, monograph_for_my_press)
+      should_not be_able_to(:manage, my_sub_brand)
+      should     be_able_to(:read, my_sub_brand)
     end
   end
 
@@ -100,10 +119,12 @@ describe Ability do
     end
 
     context "presses" do
-      let(:press) { create(:press) }
       it do
-        should be_able_to(:index, Press)
-        should be_able_to(:read, press)
+        should     be_able_to(:index, Press)
+        should     be_able_to(:read, press)
+        should_not be_able_to(:update, press)
+        should_not be_able_to(:manage, sub_brand)
+        should     be_able_to(:read, sub_brand)
       end
     end
 

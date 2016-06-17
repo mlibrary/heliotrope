@@ -16,12 +16,22 @@
         <li class="divider"></li>
       <% end %>
 
-      <% show_users_link = @press && can?(:manage, Role) %>
+      <% show_jobs_link = current_user && current_user.platform_admin? %>
+      <%
+        show_users_link = @press && (
+          current_user.platform_admin? ||
+          current_user.roles.where(role: 'admin', resource_id: @press.id, resource_type: 'Press').first
+        )
+      %>
       <% show_embargo_link = can? :discover, Hydra::AccessControls::Embargo %>
       <% show_lease_link = can? :discover, Hydra::AccessControls::Lease %>
 
+      <% if show_jobs_link %>
+        <li><%= link_to "Jobs", main_app.resque_web_path %></li>
+      <% end %>
+
       <% if show_users_link %>
-        <li><%= link_to "Users", press_roles_path(@press) %></li>
+        <li><%= link_to "Users", main_app.press_roles_path(@press) %></li>
       <% end %>
 
       <% if show_embargo_link %>
@@ -32,7 +42,7 @@
         <li><%= link_to 'Leases', main_app.leases_path, role: 'menuitem' %></li>
       <% end %>
 
-      <% if show_users_link || show_embargo_link || show_lease_link %>
+      <% if show_jobs_link || show_users_link || show_embargo_link || show_lease_link %>
         <li class="divider"></li>
       <% end %>
 

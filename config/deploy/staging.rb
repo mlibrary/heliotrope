@@ -3,7 +3,7 @@
 set :stage, :staging
 set :ssh_options, auth_methods: %w(gssapi-with-mic publickey hostbased password keyboard-interactive)
 set :rails_env, 'production'
-set :repo_url, ENV.fetch('REPO', 'https://github.com/curationexperts/heliotrope.git')
+set :repo_url, ENV.fetch('REPO', 'https://github.com/mlibrary/heliotrope.git')
 set :deploy_to, ENV.fetch('DIR', '/opt/heliotrope')
 server "#{ENV.fetch('USER')}@#{ENV.fetch('HOST')}", roles: [:web, :app, :db, :puma, :resque_pool]
 

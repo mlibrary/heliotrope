@@ -27,7 +27,7 @@ module Import
       rows.each do |row|
         row.each { |_, value| value.strip! if value }
 
-        #next if required_fields_missing(row)
+        # next if required_fields_missing(row)
         if asset_data?(row)
           puts "ASSET"
           data_for_asset(row, attrs)
@@ -52,33 +52,32 @@ module Import
       def data_for_monograph(row, attrs)
         title = Array(row['Title'].split(';')).map(&:strip)
         puts "  Monograph: #{title.first}"
-
         attrs['title'] = title
-        attrs['creator'] = creator(row)
+        attrs['creator_family_name'] = creator_family_name(row)
+        attrs['creator_given_name'] = creator_given_name(row)
       end
 
       def data_for_asset(row, attrs)
         # do a section check
 
         file_attrs = {}
-        missing_fields = []
-        #validate_data(data, file_attrs)
+        # validate_data(data, file_attrs)
 
         metadata_fields.each do |field|
           if row[field['field_name']]
-            if row[field['multi_value']] == true
-              file_attrs[field['metadata_name']] = Array(row[field['field_name']].split(';')).map(&:strip)
-            else
-              file_attrs[field['metadata_name']] = Array(row[field['field_name']].strip)
-            end
+            file_attrs[field['metadata_name']] = if row[field['multi_value']]
+                                                   Array(row[field['field_name']].split(';')).map(&:strip)
+                                                 else
+                                                   Array(row[field['field_name']].strip)
+                                                 end
           elsif row[field['required']]
             # add to array of missing stuff
             missing_required_fields.add(row[field['field_name']])
           end
         end
 
-        # creator is speicial as it requires to adding two fields together
-        file_attrs['creator'] = creator(row)
+        file_attrs['creator_family_name'] = creator_family_name(row)
+        file_attrs['creator_given_name'] = creator_given_name(row)
 
         puts "    Asset: (#{row['File Name']}) #{file_attrs['title'].first}"
         attach_asset(row, attrs, file_attrs)
@@ -86,16 +85,16 @@ module Import
 
       def attach_asset(row, attrs, file_attrs)
         # blank section will mean 'attach to monograph'
-        attach_to_monograph = false
-        if !row['Section'].nil? && row['Section'] != '' && row['Section'] != '://:MONOGRAPH://:'
-          section_title = row['Section']
-        else
-          section_title = '://:MONOGRAPH://:'
-       end
+
+        section_title = if row['Section']
+                          row['Section']
+                        else
+                          '://:MONOGRAPH://:'
+                        end
 
         # using parallel arrays for files and their metadata
         # for both monographs and sections
-        unless section_title == '://:MONOGRAPH://:'
+        if section_title != '://:MONOGRAPH://:'
           # create section if new
           unless attrs['sections'][section_title]
             current_section = {}
@@ -122,12 +121,14 @@ module Import
         # don't have the same count.
       end
 
-      def creator(row)
-        last_name = row['Primary Creator Last Name'] ? row['Primary Creator Last Name'] : ''
-        first_name = row['Primary Creator First Name'] ? row['Primary Creator First Name'] : ''
-        joining_comma = last_name.blank? || first_name.blank? ? '' : ', '
-        full_name = last_name + joining_comma + first_name
-        full_name.blank? ? nil : Array(full_name)
+      def creator_family_name(row)
+        return unless row['Primary Creator Last Name']
+        row['Primary Creator Last Name'].strip
+      end
+
+      def creator_given_name(row)
+        return unless row['Primary Creator First Name']
+        row['Primary Creator First Name'].strip
       end
 
       def metadata_fields

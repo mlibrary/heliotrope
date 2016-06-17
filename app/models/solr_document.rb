@@ -77,5 +77,9 @@ class SolrDocument
     fetch('persistent_id_ssim', [])
   end
 
+  def creator_full_name
+    fetch('creator_full_name_tesim', [])
+  end
+
   use_extension(Hydra::ContentNegotiation)
 end
