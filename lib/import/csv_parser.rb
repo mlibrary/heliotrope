@@ -65,7 +65,7 @@ module Import
 
         metadata_fields.each do |field|
           if row[field['field_name']]
-            file_attrs[field['metadata_name']] = if row[field['multi_value']]
+            file_attrs[field['metadata_name']] = if row[field['multi_value'] == true]
                                                    Array(row[field['field_name']].split(';')).map(&:strip)
                                                  else
                                                    Array(row[field['field_name']].strip)
@@ -136,7 +136,7 @@ module Import
           { 'field_name' => 'Title', 'metadata_name' => 'title', 'required' => true, 'multi_value' => false },
           { 'field_name' => 'Caption', 'metadata_name' => 'caption', 'required' => true, 'multi_value' => true },
           { 'field_name' => 'Alternative Text', 'metadata_name' => 'alt_text', 'required' => true, 'multi_value' => true },
-          { 'field_name' => 'Resource Type', 'metadata_name' => 'content_type', 'required' => true, 'multi_value' => true },
+          { 'field_name' => 'Resource Type', 'metadata_name' => 'content_type', 'required' => true, 'multi_value' => false },
           { 'field_name' => 'Copyright Holder', 'metadata_name' => 'copyright_holder', 'required' => true, 'multi_value' => true },
           { 'field_name' => 'Externally Hosted Resource', 'metadata_name' => 'external_resource', 'required' => true, 'multi_value' => true },
           { 'field_name' => 'Persistent ID', 'metadata_name' => 'persistent_id', 'required' => true, 'multi_value' => true }
