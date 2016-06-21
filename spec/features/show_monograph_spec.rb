@@ -16,7 +16,7 @@ feature "Show a monograph with attached sections" do
   end
 
   scenario do
-    visit curation_concerns_monograph_path(monograph)
+    visit monograph_show_path(monograph)
 
     expect(page).to have_link 'Chapter 1'
     expect(page).to have_link 'Shakespeare, William'

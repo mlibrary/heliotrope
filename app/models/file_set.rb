@@ -5,6 +5,8 @@ class FileSet < ActiveFedora::Base
   include GlobalID::Identification
   include StoresCreatorNameSeparately
 
+  self.indexer = FileSetIndexer
+
   property :caption, predicate: ::RDF::Vocab::SCHEMA.caption do |index|
     index.as :stored_searchable
   end
@@ -15,7 +17,7 @@ class FileSet < ActiveFedora::Base
     index.as :stored_searchable
   end
   property :keywords, predicate: ::RDF::Vocab::DC.subject do |index|
-    index.as :stored_searchable
+    index.as :stored_searchable, :facetable
   end
   property :relation, predicate: ::RDF::Vocab::DC.relation do |index|
     index.as :stored_searchable

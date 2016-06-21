@@ -19,7 +19,12 @@ module CurationConcerns
     delegate :has?, :first, :fetch, to: :solr_document
 
     # Metadata Methods
-    delegate :title, :resource_type, :caption, :alt_text, :description, :copyright_holder, :content_type, :creator, :creator_full_name, :contributor, :date_created, :keywords, :relation, :publisher, :identifier, :language, :date_uploaded, :rights, :embargo_release_date, :lease_expiration_date, :depositor, :tags, :title_or_label, :external_resource, :persistent_id, to: :solr_document
+    delegate :title, :resource_type, :caption, :alt_text, :description, :copyright_holder,
+             :content_type, :creator, :creator_full_name, :contributor, :date_created,
+             :keywords, :relation, :publisher, :identifier, :language, :date_uploaded,
+             :rights, :embargo_release_date, :lease_expiration_date, :depositor, :tags,
+             :title_or_label, :external_resource, :persistent_id, :section_title, :section_id,
+             to: :solr_document
 
     def page_title
       Array(solr_document['label_tesim']).first
