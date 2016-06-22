@@ -38,7 +38,7 @@ namespace :deploy do
   task :restart do
     on roles(:puma) do
       # This has to be enabled in visudo on the server
-      execute :sudo, '/bin/systemctl', 'restart', 'app-heliotrope-testing'
+      execute :sudo, '/bin/systemctl', 'restart', 'app-heliotrope-testing.service'
     end
   end
 
