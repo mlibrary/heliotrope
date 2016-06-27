@@ -32,6 +32,10 @@ def parse_inputs(args)
     inputs[:visibility] = visibility_choices.fetch(vis)
   end
 
+  opts.on('-t', '--test', 'Only test/validate the CSV data, do not import') do |test|
+    inputs[:test] = true
+  end
+
   opts.on('-h', '--help', 'Print this help message') do
     puts opts
     exit 0
@@ -54,6 +58,6 @@ options = parse_inputs(ARGV)
 
 puts "Begin import"
 importer = Import::Importer.new(options[:root_dir], options[:press], options[:visibility])
-importer.run
+importer.run(interaction = true, options[:test])
 
 puts "Import finished"

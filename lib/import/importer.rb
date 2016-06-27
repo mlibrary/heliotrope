@@ -8,10 +8,22 @@ module Import
       @visibility = visibility
     end
 
-    def run
+    def run(interaction = false, test = false)
       validate_press
       csv_files.each do |file|
-        attrs = CSVParser.new(file).attributes
+        errors = ''
+        attrs = CSVParser.new(file).attributes(errors)
+
+        if interaction && !errors.blank?
+          puts errors
+          puts "\n\nERRORS IN DATA! Please review the errors above.\n"
+          puts "Do you wish to continue (Y/n)?"
+          continue = gets
+          exit unless continue.downcase.first == 'y'
+        end
+
+        # command-line option to exit
+        exit if test == true
 
         monograph_attrs = attrs.delete('monograph')
         sections = attrs.delete('sections')

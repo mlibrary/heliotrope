@@ -6,9 +6,9 @@ module Import
       @file = input_file
     end
 
-    def attributes
+    def attributes(errors_out = '')
       attrs = {}
-
+      errors = ''
       # a CSV can only have one monograph (probably for in-house use only)...
       attrs['monograph'] = {}
       attrs['monograph']['files'] = []
@@ -17,70 +17,48 @@ module Import
       attrs['sections'] = {}
 
       puts "Parsing file: #{file}"
-      rows = CSV.read(file, headers: true)
-
+      rows = CSV.read(file, headers: true, skip_blanks: true).delete_if { |row| row.to_hash.values.all?(&:blank?) }
+      row_data = RowData.new
       # The template CSV file contains an extra row after the
       # headers that has explanatory text about how to fill in
       # the table.  We want to throw away that text.
       rows.delete(0)
 
+      # human-readable row counter
+      errors = ''
+      row_num = 3
       rows.each do |row|
         row.each { |_, value| value.strip! if value }
 
-        # next if required_fields_missing(row)
+        if missing_file_name?(row)
+          puts "Row #{row_num}: File name missing - skipping row!"
+          row_num += 1
+          next
+        end
+
         if asset_data?(row)
           puts "ASSET"
-          data_for_asset(row, attrs)
+          file_attrs = {}
+          errors += row_data.data_for_asset(row_num, row, file_attrs)
+          attach_asset(row, attrs, file_attrs)
         else
           puts "MONOGRAPH"
-          data_for_monograph(row, attrs['monograph'])
+          row_data.data_for_monograph(row, attrs['monograph'])
         end
+        row_num += 1
       end
-
+      errors_out.replace errors
       attrs
     end
 
     private
 
-      def asset_data?(data)
-        data['File Name'] != '://:MONOGRAPH://:' && data['Section'] != '://:MONOGRAPH://:'
+      def missing_file_name?(row)
+        row['File Name'].blank?
       end
 
-      # TODO: With this code, the last row wins.  We need to
-      # decide if we expect the file to have more than 1 row
-      # of data, and handle additional rows accordingly.
-      def data_for_monograph(row, attrs)
-        title = Array(row['Title'].split(';')).map(&:strip)
-        puts "  Monograph: #{title.first}"
-        attrs['title'] = title
-        attrs['creator_family_name'] = creator_family_name(row)
-        attrs['creator_given_name'] = creator_given_name(row)
-      end
-
-      def data_for_asset(row, attrs)
-        # do a section check
-
-        file_attrs = {}
-        # validate_data(data, file_attrs)
-
-        metadata_fields.each do |field|
-          if row[field['field_name']]
-            file_attrs[field['metadata_name']] = if row[field['multi_value'] == true]
-                                                   Array(row[field['field_name']].split(';')).map(&:strip)
-                                                 else
-                                                   Array(row[field['field_name']].strip)
-                                                 end
-          elsif row[field['required']]
-            # add to array of missing stuff
-            missing_required_fields.add(row[field['field_name']])
-          end
-        end
-
-        file_attrs['creator_family_name'] = creator_family_name(row)
-        file_attrs['creator_given_name'] = creator_given_name(row)
-
-        puts "    Asset: (#{row['File Name']}) #{file_attrs['title'].first}"
-        attach_asset(row, attrs, file_attrs)
+      def asset_data?(row)
+        row['File Name'] != '://:MONOGRAPH://:' && row['Section'] != '://:MONOGRAPH://:'
       end
 
       def attach_asset(row, attrs, file_attrs)
@@ -105,13 +83,13 @@ module Import
           end
           attrs['sections'][section_title]['files'] << row['File Name']
           attrs['sections'][section_title]['files_metadata'] << file_attrs
-          puts "    ... will attach to Section: #{section_title}"
+          # puts "    ... will attach to Section: #{section_title}"
         else
           # An array of file names with a matching array of
           # metadata for each of those files.
           attrs['monograph']['files'] << row['File Name']
           attrs['monograph']['files_metadata'] << file_attrs
-          puts "    ... will attach directly to monograph"
+          # puts "    ... will attach directly to monograph"
         end
 
         # TODO: The matching arrays will only work if they
@@ -119,28 +97,6 @@ module Import
         # We should either store the file name together with
         # the metadata, or else raise an error if the 2 arrays
         # don't have the same count.
-      end
-
-      def creator_family_name(row)
-        return unless row['Primary Creator Last Name']
-        row['Primary Creator Last Name'].strip
-      end
-
-      def creator_given_name(row)
-        return unless row['Primary Creator First Name']
-        row['Primary Creator First Name'].strip
-      end
-
-      def metadata_fields
-        [
-          { 'field_name' => 'Title', 'metadata_name' => 'title', 'required' => true, 'multi_value' => false },
-          { 'field_name' => 'Caption', 'metadata_name' => 'caption', 'required' => true, 'multi_value' => true },
-          { 'field_name' => 'Alternative Text', 'metadata_name' => 'alt_text', 'required' => true, 'multi_value' => true },
-          { 'field_name' => 'Resource Type', 'metadata_name' => 'content_type', 'required' => true, 'multi_value' => false },
-          { 'field_name' => 'Copyright Holder', 'metadata_name' => 'copyright_holder', 'required' => true, 'multi_value' => true },
-          { 'field_name' => 'Externally Hosted Resource', 'metadata_name' => 'external_resource', 'required' => true, 'multi_value' => true },
-          { 'field_name' => 'Persistent ID', 'metadata_name' => 'persistent_id', 'required' => true, 'multi_value' => true }
-        ]
       end
   end
 end
