@@ -1,4 +1,4 @@
-version: 5.5.1
+version: 5.5.2
 port: '8983'
 download_dir: /var/tmp
 collection:
