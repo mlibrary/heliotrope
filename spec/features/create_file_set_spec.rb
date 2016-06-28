@@ -17,6 +17,8 @@ feature 'Create a file set' do
       select press.name, from: 'Press'
       fill_in 'Date Published', with: 'Oct 20th'
       click_button 'Create Monograph'
+      # Go to monograph show page (not monograph catalog page)
+      click_link 'Manage Monograph and Files'
       # Now attach a file to the Monograph by creating a FileSet
       click_link 'Attach a File'
       fill_in 'Title', with: 'Test file set'
@@ -37,8 +39,7 @@ feature 'Create a file set' do
       fill_in 'Relation', with: 'Introduction'
       click_button 'Attach to Monograph'
       # On Monograph Page
-      expect(page).to have_css('tr.file_set td.attribute')
-      click_link 'miranda.jpg'
+      click_link 'Test file set'
       # On FileSet Page
       expect(page).to have_content 'Test file set'
       expect(page).to have_content 'image'

@@ -81,5 +81,21 @@ class SolrDocument
     fetch('creator_full_name_tesim', [])
   end
 
+  def creator_given_name
+    fetch('creator_given_name_tesim', [])
+  end
+
+  def creator_family_name
+    fetch('creator_family_name_tesim', [])
+  end
+
+  def section_title
+    fetch('section_title_tesim', [])
+  end
+
+  def section_id
+    fetch('section_id_ssim', [])
+  end
+
   use_extension(Hydra::ContentNegotiation)
 end

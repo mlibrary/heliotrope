@@ -16,7 +16,7 @@ feature 'Display a section' do
   end
 
   scenario 'for a monograph with several sections' do
-    visit curation_concerns_monograph_path(monograph)
+    visit monograph_show_path(monograph)
 
     expect(page).to have_link 'Chapter 1'
     expect(page).to have_link 'Chapter 2'
@@ -24,7 +24,7 @@ feature 'Display a section' do
     click_on 'Chapter 1'
     expect(page).to have_content 'Chapter 1'
 
-    visit curation_concerns_monograph_path(monograph)
+    visit monograph_show_path(monograph)
     click_on 'Chapter 2'
     expect(page).to have_content 'Chapter 2'
   end

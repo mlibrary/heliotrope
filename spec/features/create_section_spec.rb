@@ -19,7 +19,7 @@ feature 'Create a section' do
       click_button 'Create Section'
       expect(page).to have_content 'Test section'
 
-      visit curation_concerns_monograph_path(monograph)
+      visit monograph_show_path(monograph)
       within '.sections' do
         expect(page).to have_link 'Test section'
       end

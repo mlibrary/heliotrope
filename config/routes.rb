@@ -25,6 +25,11 @@ Rails.application.routes.draw do
   devise_for :users
   mount CurationConcerns::Engine, at: '/'
   curation_concerns_collections
+
+  get 'concern/monographs/new', controller: 'curation_concerns/monographs', action: :new
+  get 'concern/monographs/:id', controller: :monograph_catalog, action: :index, as: :monograph_catalog
+  get 'concern/monographs/:id/show', controller: 'curation_concerns/monographs', action: :show, as: :monograph_show
+
   curation_concerns_basic_routes
   curation_concerns_embargo_management
   concern :exportable, Blacklight::Routes::Exportable.new
