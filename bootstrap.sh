@@ -8,6 +8,8 @@ echo 'Upgrading existing packages...'
 sudo apt-get upgrade -y > /dev/null 2>&1
 echo 'Installing libmysqlclient-dev...'
 sudo apt-get install -y libmysqlclient-dev > /dev/null 2>&1
+echo 'Installing libclamav-dev...'
+sudo apt-get install -y libclamav-dev > /dev/null 2>&1
 echo 'bundle install...'
 bundle install
 echo 'Running "bundle exec bin/setup"...'
