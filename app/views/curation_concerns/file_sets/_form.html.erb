@@ -66,6 +66,8 @@
           </span>
           <%= text_field_tag 'file_set[date_created][]', curation_concern.date_created.first, class: 'form-control' %>
 
+          <%= f.input :sort_date, input_html: { class: 'form-control' }, placeholder: 'YYYY-MM-DD' %>
+
           <%= f.input :keywords, as: :multi_value, input_html: { class: 'form-control' } %>
 
           <span class="control-label">

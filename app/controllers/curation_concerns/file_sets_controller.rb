@@ -8,7 +8,7 @@ module CurationConcerns
         :visibility_during_embargo, :embargo_release_date,
         :visibility_after_embargo, :visibility_during_lease,
         :lease_expiration_date, :visibility_after_lease, :visibility,
-        :creator_family_name, :creator_given_name,
+        :creator_family_name, :creator_given_name, :sort_date,
         resource_type: [], caption: [], alt_text: [], copyright_holder: [],
         description: [], content_type: [],
         contributor: [],
