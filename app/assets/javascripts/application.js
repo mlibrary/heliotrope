@@ -12,9 +12,11 @@
 //
 //= require jquery
 //= require jquery_ujs
+//= require jquery-ui/datepicker
 //= require turbolinks//
 // Required by Blacklight
 //= require blacklight/blacklight
 
 //= require 'edit_users'
+//= require 'file_set_sort_date'
 //= require_tree .

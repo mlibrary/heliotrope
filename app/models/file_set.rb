@@ -10,31 +10,49 @@ class FileSet < ActiveFedora::Base
   property :caption, predicate: ::RDF::Vocab::SCHEMA.caption do |index|
     index.as :stored_searchable
   end
+
   property :alt_text, predicate: ::RDF::Vocab::SCHEMA.accessibilityFeature do |index|
     index.as :stored_searchable
   end
+
   property :content_type, predicate: ::RDF::Vocab::SCHEMA.contentType do |index|
     index.as :stored_searchable
   end
+
   property :keywords, predicate: ::RDF::Vocab::DC.subject do |index|
     index.as :stored_searchable, :facetable
   end
+
   property :relation, predicate: ::RDF::Vocab::DC.relation do |index|
     index.as :stored_searchable
   end
+
   property :identifier, predicate: ::RDF::Vocab::DC.identifier do |index|
     index.as :stored_searchable
   end
+
   property :copyright_holder, predicate: ::RDF::Vocab::SCHEMA.copyrightHolder do |index|
     index.as :stored_searchable
   end
+
   property :date_published, predicate: ::RDF::Vocab::SCHEMA.datePublished do |index|
     index.as :stored_searchable
   end
+
   property :external_resource, predicate: ::RDF::Vocab::DC.source do |index|
     index.as :symbol
   end
+
   property :persistent_id, predicate: ::RDF::Vocab::DC.URI do |index|
     index.as :symbol
   end
+
+  property :sort_date, predicate: ::RDF::Vocab::DC.date, multiple: false do |index|
+    index.as :stored_searchable
+  end
+  validates :sort_date, format: {
+    with: /\A\d\d\d\d-\d\d-\d\d\z/,
+    message: "Your sort date must be in YYYY-MM-DD format",
+    allow_blank: true
+  }
 end
