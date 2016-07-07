@@ -11,7 +11,7 @@ module CurationConcerns
 
     def section_docs
       return @section_docs if @section_docs
-      @section_docs = ordered_member_docs.select { |doc| doc['active_fedora_model_ssi'] == 'Section'.freeze }
+      @section_docs = ordered_member_docs.select { |doc| doc['has_model_ssim'] == ['Section'].freeze }
     end
 
     def sub_brand_links

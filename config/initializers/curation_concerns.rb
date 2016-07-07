@@ -60,6 +60,8 @@ CurationConcerns.configure do |config|
   # Leaving it blank will set the start date to when ever the file was uploaded by
   # NOTE: if you have always sent analytics to GA for downloads and page views leave this commented out
   # config.analytic_start_date = DateTime.new(2014,9,10)
+
+  config.ingest_queue_name = :ingest
 end
 
 Date::DATE_FORMATS[:standard] = '%m/%d/%Y'

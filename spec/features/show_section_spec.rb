@@ -10,7 +10,8 @@ feature 'Display a section' do
   let!(:unauthorized_section) { create(:section, user: admin_user) }
 
   before do
-    monograph.ordered_members = [ch1, ch2]
+    monograph.ordered_members << ch1
+    monograph.ordered_members << ch2
     monograph.save!
     login_as user
   end

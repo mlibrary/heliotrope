@@ -4,8 +4,8 @@ source 'https://rubygems.org'
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '4.2.6'
 
-gem 'curation_concerns', '0.14.0'
-gem 'active-fedora', '9.10.4'
+gem 'curation_concerns', '1.1.0'
+gem 'active-fedora', '~> 10.0.0'
 gem 'resque-web', '~> 0.0.7', require: 'resque_web'
 gem 'resque'
 gem 'resque-pool'
@@ -65,7 +65,7 @@ gem 'devise-guests', '~> 0.3'
 
 group :development, :test do
   gem 'byebug'
-  gem 'fcrepo_wrapper', git: "https://github.com/curationexperts/fcrepo_wrapper.git"
+  gem 'fcrepo_wrapper', git: "https://github.com/cbeer/fcrepo_wrapper.git"
   gem 'solr_wrapper', git: "https://github.com/cbeer/solr_wrapper.git"
   gem 'rspec-rails'
   gem 'rubocop', '~> 0.37.2'
