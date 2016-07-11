@@ -7,13 +7,13 @@ describe CurationConcerns::MonographPresenter do
   let(:imprint) { create(:sub_brand, title: 'UM Press Literary Classics') }
   let(:series) { create(:sub_brand, title: "W. Shakespeare Collector's Series") }
 
-  let(:mono_doc) { SolrDocument.new(id: 'mono', active_fedora_model_ssi: ['Monograph']) }
+  let(:mono_doc) { SolrDocument.new(id: 'mono', has_model_ssim: ['Monograph']) }
   let(:ability) { double('ability') }
   let(:presenter) { described_class.new(mono_doc, ability) }
 
   describe '#sub_brand_links' do
     context 'a monograph without sub-brands' do
-      let(:mono_doc) { SolrDocument.new(id: 'mono', active_fedora_model_ssi: ['Monograph'], press_tesim: [press.subdomain]) }
+      let(:mono_doc) { SolrDocument.new(id: 'mono', has_model_ssim: ['Monograph'], press_tesim: [press.subdomain]) }
 
       it 'returns empty list' do
         expect(presenter.sub_brand_links).to eq []
@@ -22,7 +22,7 @@ describe CurationConcerns::MonographPresenter do
 
     # This case will probably never happen
     context 'when press is missing' do
-      let(:mono_doc) { SolrDocument.new(id: 'mono', active_fedora_model_ssi: ['Monograph'], sub_brand_ssim: [imprint.id, series.id]) }
+      let(:mono_doc) { SolrDocument.new(id: 'mono', has_model_ssim: ['Monograph'], sub_brand_ssim: [imprint.id, series.id]) }
 
       it 'returns nil' do
         expect(presenter.sub_brand_links).to be_nil
@@ -30,7 +30,7 @@ describe CurationConcerns::MonographPresenter do
     end
 
     context 'a monograph with sub-brands' do
-      let(:mono_doc) { SolrDocument.new(id: 'mono', active_fedora_model_ssi: ['Monograph'], press_tesim: [press.subdomain], sub_brand_ssim: [imprint.id, series.id]) }
+      let(:mono_doc) { SolrDocument.new(id: 'mono', has_model_ssim: ['Monograph'], press_tesim: [press.subdomain], sub_brand_ssim: [imprint.id, series.id]) }
 
       it 'returns links for the sub-brands' do
         expect(presenter.sub_brand_links.count).to eq 2
@@ -40,7 +40,7 @@ describe CurationConcerns::MonographPresenter do
     end
 
     context 'when it fails to find the sub-brand' do
-      let(:mono_doc) { SolrDocument.new(id: 'mono', active_fedora_model_ssi: ['Monograph'], press_tesim: [press.subdomain], sub_brand_ssim: [imprint.id, series.id]) }
+      let(:mono_doc) { SolrDocument.new(id: 'mono', has_model_ssim: ['Monograph'], press_tesim: [press.subdomain], sub_brand_ssim: [imprint.id, series.id]) }
 
       before { series.destroy } # Now the series ID is invalid
 
@@ -62,17 +62,17 @@ describe CurationConcerns::MonographPresenter do
   end
 
   context 'a monograph with sections and filesets' do
-    let(:fileset_doc) { SolrDocument.new(id: 'fileset', active_fedora_model_ssi: ['FileSet']) }
-    let(:chapter_1_doc) { SolrDocument.new(id: 'chapter1', active_fedora_model_ssi: ['Section']) }
-    let(:chapter_2_doc) { SolrDocument.new(id: 'chapter2', active_fedora_model_ssi: ['Section']) }
-    let(:chapter_3_doc) { SolrDocument.new(id: 'chapter3', active_fedora_model_ssi: ['Section']) }
-    let(:chapter_4_doc) { SolrDocument.new(id: 'chapter4', active_fedora_model_ssi: ['Section']) }
-    let(:chapter_5_doc) { SolrDocument.new(id: 'chapter5', active_fedora_model_ssi: ['Section']) }
-    let(:chapter_6_doc) { SolrDocument.new(id: 'chapter6', active_fedora_model_ssi: ['Section']) }
-    let(:chapter_7_doc) { SolrDocument.new(id: 'chapter7', active_fedora_model_ssi: ['Section']) }
-    let(:chapter_8_doc) { SolrDocument.new(id: 'chapter8', active_fedora_model_ssi: ['Section']) }
-    let(:chapter_9_doc) { SolrDocument.new(id: 'chapter9', active_fedora_model_ssi: ['Section']) }
-    let(:chapter_10_doc) { SolrDocument.new(id: 'chapter10', active_fedora_model_ssi: ['Section']) }
+    let(:fileset_doc) { SolrDocument.new(id: 'fileset', has_model_ssim: ['FileSet']) }
+    let(:chapter_1_doc) { SolrDocument.new(id: 'chapter1', has_model_ssim: ['Section']) }
+    let(:chapter_2_doc) { SolrDocument.new(id: 'chapter2', has_model_ssim: ['Section']) }
+    let(:chapter_3_doc) { SolrDocument.new(id: 'chapter3', has_model_ssim: ['Section']) }
+    let(:chapter_4_doc) { SolrDocument.new(id: 'chapter4', has_model_ssim: ['Section']) }
+    let(:chapter_5_doc) { SolrDocument.new(id: 'chapter5', has_model_ssim: ['Section']) }
+    let(:chapter_6_doc) { SolrDocument.new(id: 'chapter6', has_model_ssim: ['Section']) }
+    let(:chapter_7_doc) { SolrDocument.new(id: 'chapter7', has_model_ssim: ['Section']) }
+    let(:chapter_8_doc) { SolrDocument.new(id: 'chapter8', has_model_ssim: ['Section']) }
+    let(:chapter_9_doc) { SolrDocument.new(id: 'chapter9', has_model_ssim: ['Section']) }
+    let(:chapter_10_doc) { SolrDocument.new(id: 'chapter10', has_model_ssim: ['Section']) }
 
     before do
       # I added chapter 1 twice to make sure that duplicate

@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe CurationConcerns::AssetActor do
+describe CurationConcerns::Actors::AssetActor do
   let(:user) { create(:user) }
   let(:file_set) { create(:file_set) }
   let(:actor) { described_class.new(file_set, user) }

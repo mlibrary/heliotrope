@@ -13,7 +13,7 @@ describe SearchBuilder do
       before { search_builder.filter_models(solr_params) }
 
       it 'limits query to collection and generic work' do
-        expect(solr_params[:fq].first).to match(/{!field f=has_model_ssim}Monograph.*OR.*{!field f=has_model_ssim}Collection/)
+        expect(solr_params[:fq].first).to match(/{!terms f=has_model_ssim}Monograph,Collection/)
         expect(solr_params[:fq].first).not_to match(/{!raw f=has_model_ssim}Section/)
       end
     end
@@ -21,17 +21,18 @@ describe SearchBuilder do
 
   describe "searching" do
     subject do
-      search_builder.current_ability = Ability.new(nil)
       search_builder.where('fish').query
     end
 
     it "searches the required fields" do
+      allow(context).to receive(:current_ability) { Ability.new(nil) }
       expect(subject['qf']).to match %r{\btitle_tesim\b}
       expect(subject['qf']).to match %r{\bcreator_full_name_tesim\b}
       expect(subject['qf']).to match %r{\bsubject_tesim\b}
     end
 
     it "facets the required fields" do
+      allow(context).to receive(:current_ability) { Ability.new(nil) }
       expect(subject['facet.field']).to include 'subject_sim'
     end
   end

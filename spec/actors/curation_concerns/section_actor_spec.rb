@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe CurationConcerns::SectionActor do
+describe CurationConcerns::Actors::SectionActor do
   before do
     Section.destroy_all
     Monograph.destroy_all
@@ -8,7 +8,7 @@ describe CurationConcerns::SectionActor do
 
   let(:user) { create(:user) }
   let(:list_of_actors) { [described_class] }
-  let(:actor) { CurationConcerns::ActorStack.new(curation_concern, user, list_of_actors) }
+  let(:actor) { CurationConcerns::Actors::ActorStack.new(curation_concern, user, list_of_actors) }
 
   describe "#create" do
     let(:curation_concern) { Section.new }
@@ -64,7 +64,7 @@ describe CurationConcerns::SectionActor do
   # of curation_concerns, ordering is done by
   # CurationConcerns::ApplyOrderActor).
   describe "reorder the attached files" do
-    let(:list_of_actors) { [CurationConcerns::ApplyOrderActor, described_class] }
+    let(:list_of_actors) { [CurationConcerns::Actors::ApplyOrderActor, described_class] }
 
     let(:curation_concern) { create(:section) }
     let!(:file_set1) { create(:file_set) }

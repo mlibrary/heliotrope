@@ -16,7 +16,6 @@ class MonographSearchBuilder < ::SearchBuilder
         assets << om.id if om.file_set?
         assets << Section.find(om.id).ordered_members.to_a.map(&:id) unless om.file_set?
       end
-
       assets.join(",") || ''
     end
 

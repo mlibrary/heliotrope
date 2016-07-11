@@ -18,7 +18,7 @@ module Import
     private
 
       def actor
-        @actor ||= CurationConcerns::FileSetActor.new(file_set, user)
+        @actor ||= CurationConcerns::Actors::FileSetActor.new(file_set, user)
       end
   end
 end

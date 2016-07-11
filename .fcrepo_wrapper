@@ -1,0 +1,2 @@
+port: 8984
+enable_jms: false

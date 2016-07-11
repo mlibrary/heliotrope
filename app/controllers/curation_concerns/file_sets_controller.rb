@@ -16,8 +16,8 @@ module CurationConcerns
         relation: [], title: [], external_resource: [], persistent_id: [])
     end
 
-    def actor
-      @actor ||= ::CurationConcerns::AssetActor.new(@file_set, current_user)
-    end
+    # def actor
+    #  @actor ||= ::CurationConcerns::Actors::AssetActor.new(@file_set, current_user)
+    # end
   end
 end

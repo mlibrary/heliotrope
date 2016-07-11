@@ -1,6 +1,8 @@
 # Generated via
 #  `rails generate curation_concerns:work Monograph`
 module CurationConcerns
-  class MonographActor < CurationConcerns::BaseActor
+  module Actors
+    class MonographActor < CurationConcerns::Actors::BaseActor
+    end
   end
 end

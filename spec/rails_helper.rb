@@ -41,8 +41,10 @@ RSpec.configure do |config|
   # config.filter_gems_from_backtrace("gem name")
 
   config.include FactoryGirl::Syntax::Methods
-  config.include Devise::TestHelpers, type: :controller
-  config.include Devise::TestHelpers, type: :view
+  config.include Devise::Test::ControllerHelpers, type: :controller
+  # config.include Devise::TestHelpers, type: :controller
+  # config.include Devise::TestHelpers, type: :view
+  config.include Devise::Test::ControllerHelpers, type: :view
   config.include Warden::Test::Helpers, type: :feature
 end
 
@@ -50,5 +52,5 @@ end
 # such as background jobs and lock management.
 def stub_out_redis
   allow(CharacterizeJob).to receive_messages(perform_later: nil, perform_now: nil)
-  allow_any_instance_of(CurationConcerns::FileSetActor).to receive(:acquire_lock_for).and_yield
+  allow_any_instance_of(CurationConcerns::Actors::FileSetActor).to receive(:acquire_lock_for).and_yield
 end
