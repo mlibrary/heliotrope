@@ -2,6 +2,28 @@
 <% provide :page_header do %>
   <h1>File Details <small><%= @presenter.title.first %></small></h1>
 <% end %>
-<%= media_display @presenter %>
+
+<% if @presenter.image? %>
+  <div id="map"></div>
+  <script>
+  $().ready(function() {
+
+    //window.F = window.F || {};
+    var $map = $("#map");
+    //$map.height($(window).height() - 100);
+    $map.height(600);
+    $map.width(600);
+
+    var map = L.map('map', {
+      center: [0, 0],
+      crs: L.CRS.Simple,
+      zoom: 0,
+    }).addLayer(L.tileLayer.iiif("<%= riiif.info_path(@presenter.id) %>"));
+  });
+  </script>
+<% else %>
+  <%= media_display @presenter %>
+<% end %>
+
 <%= render "attributes", presenter: @presenter %>
 <%= render "show_actions", presenter: @presenter, parent: parent %>
