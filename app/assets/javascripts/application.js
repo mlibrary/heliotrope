@@ -17,6 +17,9 @@
 // Required by Blacklight
 //= require blacklight/blacklight
 
+//= require leaflet
+//= require leaflet-iiif
+
 //= require 'edit_users'
 //= require 'file_set_sort_date'
 //= require_tree .

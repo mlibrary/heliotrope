@@ -7,6 +7,7 @@ end
 
 Rails.application.routes.draw do
   mount Blacklight::Engine => '/'
+  mount Riiif::Engine => '/image-service', as: 'riiif'
 
   constraints resque_web_constraint do
     mount ResqueWeb::Engine => "/#{RESQUE_MOUNT_PATH}"

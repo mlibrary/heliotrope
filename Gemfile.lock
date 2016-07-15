@@ -534,6 +534,8 @@ GEM
       sass-rails
       twitter-bootstrap-rails
     retriable (1.4.1)
+    riiif (0.4.0)
+      rails (> 3.2.0)
     rsolr (1.0.13)
       builder (>= 2.1.2)
     rspec-core (3.5.0)
@@ -694,6 +696,7 @@ DEPENDENCIES
   resque
   resque-pool
   resque-web (~> 0.0.7)
+  riiif (= 0.4.0)
   rsolr (~> 1.0.6)
   rspec-rails
   rubocop (~> 0.37.2)
