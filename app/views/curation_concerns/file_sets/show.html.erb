@@ -21,6 +21,11 @@
     }).addLayer(L.tileLayer.iiif("<%= riiif.info_path(@presenter.id) %>"));
   });
   </script>
+
+  <% if @presenter.allow_download? %>
+    <%= link_to "Download the full-sized image", main_app.download_path(@presenter.id), target: "_new" %>
+  <% end %>
+  
 <% else %>
   <%= media_display @presenter %>
 <% end %>

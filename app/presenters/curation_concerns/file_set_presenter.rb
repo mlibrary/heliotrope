@@ -40,5 +40,13 @@ module CurationConcerns
     def link_name
       current_ability.can?(:read, id) ? Array(solr_document['label_tesim']).first : 'File'
     end
+
+    def allow_download?
+      if allow_download == 'yes' || allow_download.first == 'yes'
+        true
+      else
+        false
+      end
+    end
   end
 end
