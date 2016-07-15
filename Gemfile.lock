@@ -7,22 +7,6 @@ GIT
       gssapi (~> 1.2.0)
       net-ssh (>= 2.0)
 
-GIT
-  remote: https://github.com/cbeer/fcrepo_wrapper.git
-  revision: 812592a816c165b1b4e23cffd260b1cb64ddad25
-  specs:
-    fcrepo_wrapper (0.5.2)
-      ruby-progressbar
-
-GIT
-  remote: https://github.com/cbeer/solr_wrapper.git
-  revision: c71d5fbdc7e8903556dcc5047908b3b212f9fc69
-  specs:
-    solr_wrapper (0.13.2)
-      faraday
-      ruby-progressbar
-      rubyzip
-
 GEM
   remote: https://rubygems.org/
   specs:
@@ -229,6 +213,8 @@ GEM
       railties (>= 3.0.0)
     faraday (0.9.2)
       multipart-post (>= 1.2, < 3)
+    fcrepo_wrapper (0.5.2)
+      ruby-progressbar
     ffi (1.9.12)
     font-awesome-rails (4.6.3.1)
       railties (>= 3.2, < 5.1)
@@ -597,6 +583,10 @@ GEM
       httparty (>= 0.11.0)
       oauth2 (>= 0.9.2)
     slop (4.3.0)
+    solr_wrapper (0.14.2)
+      faraday
+      ruby-progressbar
+      rubyzip
     solrizer (3.4.0)
       activesupport
       daemons
@@ -686,7 +676,7 @@ DEPENDENCIES
   devise
   devise-guests (~> 0.3)
   factory_girl_rails
-  fcrepo_wrapper!
+  fcrepo_wrapper (= 0.5.2)
   jbuilder (~> 2.0)
   jquery-rails
   mysql2
@@ -703,7 +693,7 @@ DEPENDENCIES
   rubocop-rspec
   sass-rails (~> 5.0)
   sdoc (~> 0.4.0)
-  solr_wrapper!
+  solr_wrapper (= 0.14.2)
   spring
   sqlite3
   therubyracer

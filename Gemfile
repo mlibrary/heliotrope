@@ -67,8 +67,8 @@ gem 'devise-guests', '~> 0.3'
 
 group :development, :test do
   gem 'byebug'
-  gem 'fcrepo_wrapper', git: "https://github.com/cbeer/fcrepo_wrapper.git"
-  gem 'solr_wrapper', git: "https://github.com/cbeer/solr_wrapper.git"
+  gem 'fcrepo_wrapper', '0.5.2'
+  gem 'solr_wrapper', '0.14.2'
   gem 'rspec-rails'
   gem 'rubocop', '~> 0.37.2'
   gem 'rubocop-rspec'
