@@ -1,0 +1,44 @@
+<div class="image" title="<%= @presenter.alt_text %>">
+    <% if @presenter.image? %>
+      <div id="image"></div>
+      <script>
+      $().ready(function() {
+
+        //window.F = window.F || {};
+        var $map = $("#image");
+        //$map.height($(window).height() - 100);
+        //$map.height(540);
+        //$map.width(540);
+
+        var map = L.map('image', {
+          center: [0, 0],
+          crs: L.CRS.Simple,
+          zoom: 0,
+        }).addLayer(L.tileLayer.iiif("<%= riiif.info_path(@presenter.id) %>"));
+      });
+      </script>
+      <% else %>
+        <%= media_display @presenter %>
+    <% end %>
+  </div> <!-- /.image/media -->
+  <p><em><%= presenter.attribute_to_html(:caption, label: '') %></em></p>
+  <% if @presenter.translation.present? %>
+  <div class="panel panel-default translation">
+    <div class="panel-heading">
+      <h3 class="panel-title">Translation</h3>
+    </div>
+    <div class="panel-body fixed">
+      <p><%= presenter.attribute_to_html(:translation, label: '') %></p>
+    </div>
+  </div><!-- /.translation panel -->
+  <% end %>
+  <% if @presenter.transcript.present? %>
+  <div class="panel panel-default transcript">
+    <div class="panel-heading">
+      <h3 class="panel-title">Transcript</h3>
+    </div>
+    <div class="panel-body fixed">
+      <p><%= presenter.attribute_to_html(:transcript, label: '') %></p>
+    </div>
+  </div><!-- /.transcript panel -->
+  <% end %>
