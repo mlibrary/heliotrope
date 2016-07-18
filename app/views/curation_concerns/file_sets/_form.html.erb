@@ -6,7 +6,7 @@
       <fieldset class="required">
         <legend>Your File&#8217;s Title</legend>
         <span class="control-label">
-          <%= label_tag 'file_set[title][]', 'Title',  class: "string optional" %>
+          <%= label_tag 'file_set[title][]', 'Title',  class: 'string optional' %>
         </span>
         <%= text_field_tag 'file_set[title][]', curation_concern.title.first, class: 'form-control' %>
       </fieldset>
@@ -33,65 +33,142 @@
           <%= text_field_tag 'file_set[alt_text][]', curation_concern.alt_text.first, class: 'form-control' %>
 
           <span class="control-label">
-            <%= label_tag 'file_set[copyright_holder][]', 'Copyright Holder',  class: "string required" %>
+            <%= label_tag 'file_set[copyright_holder]', 'Copyright Holder',  class: "string required" %>
           </span>
-          <%= text_field_tag 'file_set[copyright_holder][]', curation_concern.copyright_holder.first, class: 'form-control' %>
+          <%= text_field_tag 'file_set[copyright_holder]', curation_concern.copyright_holder, class: 'form-control' %>
+          <span class="control-label">
+            <%= label_tag 'file_set[copyright_status]', 'Copyright Status',  class: "string required" %>
+          </span>
+          <%= text_field_tag 'file_set[copyright_status]', curation_concern.copyright_status, class: 'form-control' %>
+          <span class="control-label">
+            <%= label_tag 'file_set[rights_granted]', 'Rights Granted',  class: 'string optional' %>
+          </span>
+          <%= text_field_tag 'file_set[rights_granted]', curation_concern.rights_granted, class: 'form-control' %>
+          <span class="control-label">
+            <%= label_tag 'file_set[rights_granted_creative_commons]', 'Rights Granted - Creative Commons',  class: 'string optional' %>
+          </span>
+          <%= text_field_tag 'file_set[rights_granted_creative_commons]', curation_concern.rights_granted_creative_commons, class: 'form-control' %>
+          <span class="control-label">
+            <%= label_tag 'file_set[exclusive_to_platform]', 'Exclusive to Platform?',  class: "string required" %>
+          </span>
+          <%= text_field_tag 'file_set[exclusive_to_platform]', curation_concern.exclusive_to_platform, class: 'form-control' %>
+
+          <%= f.input :permissions_expiration_date, input_html: { class: 'form-control' }, placeholder: 'YYYY-MM-DD' %>
+
+          <span class="control-label">
+            <%= label_tag 'file_set[allow_display_after_expiration]', 'Allow Display After Expiration?',  class: 'string optional' %>
+          </span>
+          <%= text_field_tag 'file_set[allow_display_after_expiration]', curation_concern.allow_display_after_expiration, class: 'form-control' %>
+          <span class="control-label">
+            <%= label_tag 'file_set[allow_download_after_expiration]', 'Allow Download After Expiration?',  class: 'string optional' %>
+          </span>
+          <%= text_field_tag 'file_set[allow_download_after_expiration]', curation_concern.allow_download_after_expiration, class: 'form-control' %>
       </fieldset>
       <fieldset class="optional">
         <legend>Optional Information</legend>
           <span class="control-label">
-            <%= label_tag 'file_set[description][]', 'Description',  class: "string optional" %>
+            <%= label_tag 'file_set[description][]', 'Description',  class: 'string optional' %>
           </span>
           <%= text_area_tag 'file_set[description][]', curation_concern.description.first, class: 'form-control' %>
 
           <span class="control-label">
-            <%= label_tag 'file_set[content_type][]', 'Content Type',  class: "string optional" %>
+            <%= label_tag 'file_set[content_type][]', 'Content Type',  class: 'string optional' %>
           </span>
           <%= text_field_tag 'file_set[content_type][]', curation_concern.content_type.first, class: 'form-control' %>
 
           <span class="control-label">
-            <%= label_tag 'file_set[creator_family_name]', 'Primary Creator (family name)',  class: "string optional" %>
+            <%= label_tag 'file_set[creator_family_name]', 'Primary Creator (family name)',  class: 'string optional' %>
           </span>
           <%= text_field_tag 'file_set[creator_family_name]', curation_concern.creator_family_name, class: 'form-control' %>
 
           <span class="control-label">
-            <%= label_tag 'file_set[creator_given_name]', 'Primary Creator (given name)',  class: "string optional" %>
+            <%= label_tag 'file_set[creator_given_name]', 'Primary Creator (given name)',  class: 'string optional' %>
           </span>
           <%= text_field_tag 'file_set[creator_given_name]', curation_concern.creator_given_name, class: 'form-control' %>
+
+          <%= f.input :primary_creator_role, as: :multi_value, input_html: { class: 'form-control required' } %>
 
           <%= f.input :contributor, as: :multi_value, input_html: { class: 'form-control' } %>
 
           <span class="control-label">
-            <%= label_tag 'file_set[date_created][]', 'Date created',  class: "string optional" %>
+            <%= label_tag 'file_set[date_created][]', 'Date Created',  class: 'string optional' %>
           </span>
           <%= text_field_tag 'file_set[date_created][]', curation_concern.date_created.first, class: 'form-control' %>
 
           <%= f.input :sort_date, input_html: { class: 'form-control' }, placeholder: 'YYYY-MM-DD' %>
 
+          <span class="control-label">
+            <%= label_tag 'file_set[display_date]', 'Display Date',  class: 'string optional' %>
+          </span>
+          <%= text_field_tag 'file_set[display_date]', curation_concern.display_date, class: 'form-control' %>
+
           <%= f.input :keywords, as: :multi_value, input_html: { class: 'form-control' } %>
 
           <span class="control-label">
-            <%= label_tag 'file_set[language][]', 'Language',  class: "string optional" %>
+            <%= label_tag 'file_set[language][]', 'Language',  class: 'string optional' %>
           </span>
           <%= text_field_tag 'file_set[language][]', curation_concern.language.first, class: 'form-control' %>
 
           <span class="control-label">
-            <%= label_tag 'file_set[identifier][]', 'Identifier',  class: "string optional" %>
+            <%= label_tag 'file_set[transcript]', 'Transcript',  class: 'string optional' %>
           </span>
-          <%= text_field_tag 'file_set[identifier][]', curation_concern.identifier.first, class: 'form-control' %>
+          <%= text_area_tag 'file_set[transcript]', curation_concern.transcript, class: 'form-control' %>
 
           <span class="control-label">
-            <%= label_tag 'file_set[relation][]', 'Relation',  class: "string optional" %>
+            <%= label_tag 'file_set[translation][]', 'Translation(s)',  class: 'string optional' %>
+          </span>
+          <%= text_area_tag 'file_set[translation][]', curation_concern.translation.first, class: 'form-control' %>
+
+          <span class="control-label">
+            <%= label_tag 'file_set[identifier]', 'Identifier',  class: 'string optional' %>
+          </span>
+          <%= text_field_tag 'file_set[identifier]', curation_concern.identifier, class: 'form-control' %>
+
+          <span class="control-label">
+            <%= label_tag 'file_set[relation][]', 'Relation',  class: 'string optional' %>
           </span>
           <%= text_field_tag 'file_set[relation][]', curation_concern.relation.first, class: 'form-control' %>
+
           <span class="control-label">
-            <%= label_tag 'file_set[external_resource][]', 'External Resource',  class: "string optional" %>
+            <%= label_tag 'file_set[external_resource]', 'External Resource',  class: 'string optional' %>
           </span>
-          <%= text_field_tag 'file_set[external_resource][]', curation_concern.external_resource.first, class: 'form-control' %>
+          <%= text_field_tag 'file_set[external_resource]', curation_concern.external_resource, class: 'form-control' %>
+
           <span class="control-label">
-            <%= label_tag 'file_set[persistent_id][]', 'Persistent ID',  class: "string optional" %>
+            <%= label_tag 'file_set[book_needs_handles]', 'Book Needs Handles?',  class: "string required" %>
           </span>
-          <%= text_field_tag 'file_set[persistent_id][]', curation_concern.persistent_id.first, class: 'form-control' %>
+          <%= text_field_tag 'file_set[book_needs_handles]', curation_concern.book_needs_handles, class: 'form-control' %>
+
+          <span class="control-label">
+            <%= label_tag 'file_set[allow_download]', 'Allow Download?',  class: "string required" %>
+          </span>
+          <%= text_field_tag 'file_set[allow_download]', curation_concern.allow_download, class: 'form-control' %>
+
+          <span class="control-label">
+            <%= label_tag 'file_set[allow_hi_res]', 'Allow Hi-Res?',  class: "string required" %>
+          </span>
+          <%= text_field_tag 'file_set[allow_hi_res]', curation_concern.allow_hi_res, class: 'form-control' %>
+
+          <span class="control-label">
+            <%= label_tag 'file_set[credit_line]', 'Credit Line',  class: "string required" %>
+          </span>
+          <%= text_field_tag 'file_set[credit_line]', curation_concern.credit_line, class: 'form-control' %>
+
+          <span class="control-label">
+            <%= label_tag 'file_set[holding_contact]', 'Holding Contact',  class: "string required" %>
+          </span>
+          <%= text_field_tag 'file_set[holding_contact]', curation_concern.holding_contact, class: 'form-control' %>
+
+          <span class="control-label">
+            <%= label_tag 'file_set[ext_url_doi_or_handle]', 'External URL/DOI',  class: "string required" %>
+          </span>
+          <%= text_field_tag 'file_set[ext_url_doi_or_handle]', curation_concern.ext_url_doi_or_handle, class: 'form-control' %>
+
+          <span class="control-label">
+            <%= label_tag 'file_set[use_crossref_xml]', 'Use Crossref XML?',  class: "string required" %>
+          </span>
+          <%= text_field_tag 'file_set[use_crossref_xml]', curation_concern.use_crossref_xml, class: 'form-control' %>
+
       </fieldset>
     </div>
 

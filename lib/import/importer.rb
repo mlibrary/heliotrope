@@ -1,6 +1,6 @@
 module Import
   class Importer
-    attr_reader :root_dir, :press_subdomain, :visibility
+    attr_reader :root_dir, :press_subdomain, :monograph_title, :visibility
 
     def initialize(root_dir, press_subdomain, visibility = Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE)
       @root_dir = root_dir
@@ -8,28 +8,27 @@ module Import
       @visibility = visibility
     end
 
-    def run(interaction = false, test = false)
+    def run(interaction = false, monograph_title = '', test = false)
       validate_press
       csv_files.each do |file|
         errors = ''
         attrs = CSVParser.new(file).attributes(errors)
-
-        if interaction && !errors.blank?
-          puts errors
-          puts "\n\nERRORS IN DATA! Please review the errors above.\n"
-          puts "Do you wish to continue (Y/n)?"
-          continue = gets
-          exit unless continue.downcase.first == 'y'
-        end
-
-        # command-line option to exit
-        exit if test == true
-
         monograph_attrs = attrs.delete('monograph')
         sections = attrs.delete('sections')
 
+        # if there is a command-line monograph title then use it
+        monograph_attrs['title'] = Array(monograph_title) unless monograph_title.blank?
+
+        # find files now (stop everything ASAP if not found or duplicates found)
+        add_full_file_paths(monograph_attrs)
+        sections.each do |_, section_attrs|
+          add_full_file_paths(section_attrs)
+        end
+
+        optional_early_exit(interaction, errors, test)
+
         monograph_file_attrs = monograph_attrs.delete('files_metadata')
-        monograph_attrs = transform_attributes(monograph_attrs, 'monograph')
+        monograph_attrs = add_command_line_attrs(monograph_attrs, 'monograph')
         monograph_builder = MonographBuilder.new(user, monograph_attrs)
         monograph_builder.run
 
@@ -40,7 +39,7 @@ module Import
         sections.each do |_, section_attrs|
           section_files_attrs = section_attrs.delete('files_metadata')
           section_attrs['monograph_id'] = monograph_id
-          section_attrs = transform_attributes(section_attrs, 'section')
+          section_attrs = add_command_line_attrs(section_attrs, 'section')
           section_builder = SectionBuilder.new(user, section_attrs)
           section_builder.run
 
@@ -66,22 +65,21 @@ module Import
         @csv_files ||= Dir.glob(File.join(root_dir, '*.csv'))
       end
 
-      def transform_attributes(attrs, type)
+      def add_command_line_attrs(attrs, type)
         if type == 'monograph'
           attributes = attrs.merge('press' => press_subdomain, 'visibility' => visibility)
         elsif type == 'section'
           attributes = attrs.merge('visibility' => visibility)
         end
-
-        attributes['files'] = attrs['files'].map do |file|
-          File.new(find_file(file))
-        end
-
         attributes
       end
 
-      # TODO: If the file is missing, raise an error?
-      # TODO: Raise an error if find more than 1 file
+      def add_full_file_paths(attrs)
+        attrs['files'] = attrs['files'].map do |file|
+          File.new(find_file(file))
+        end
+      end
+
       def find_file(file_name)
         match = Dir.glob("#{root_dir}/**/#{file_name}")
         if match.empty?
@@ -105,6 +103,19 @@ module Import
           builder = FileSetBuilder.new(member, user, attrs[i])
           builder.run
         end
+      end
+
+      def optional_early_exit(interaction, errors, test)
+        if interaction && !errors.blank?
+          puts errors
+          puts "\n\nERRORS IN DATA! Please review the errors above.\n"
+          exit if test == true
+          puts "Do you wish to continue (y/n)?"
+          continue = gets
+          exit unless continue.downcase.first == 'y'
+        end
+        # command-line option to exit
+        exit if test == true
       end
   end
 end

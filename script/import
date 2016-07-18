@@ -32,6 +32,10 @@ def parse_inputs(args)
     inputs[:visibility] = visibility_choices.fetch(vis)
   end
 
+  opts.on('-m [MONOGRAPH NAME]', 'Set monograph name (will override monograph name in CSV file).') do |monograph_title|
+    inputs[:monograph_title] = monograph_title
+  end
+
   opts.on('-t', '--test', 'Only test/validate the CSV data, do not import') do |test|
     inputs[:test] = true
   end
@@ -58,6 +62,6 @@ options = parse_inputs(ARGV)
 
 puts "Begin import"
 importer = Import::Importer.new(options[:root_dir], options[:press], options[:visibility])
-importer.run(interaction = true, options[:test])
+importer.run(interaction = true, options[:monograph_title], options[:test])
 
 puts "Import finished"

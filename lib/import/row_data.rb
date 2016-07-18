@@ -1,10 +1,11 @@
+require 'date'
+
 module Import
   class RowData
     attr_reader :row, :attrs
 
     def data_for_monograph(row, attrs)
       title = Array(row['Title'].split(';')).map(&:strip)
-      puts "  Monograph: #{title.first}"
       attrs['title'] = title
       attrs['creator_family_name'] = creator_family_name(row)
       attrs['creator_given_name'] = creator_given_name(row)
@@ -13,6 +14,7 @@ module Import
     def data_for_asset(row_num, row, file_attrs)
       missing_fields_errors = []
       controlled_vocab_errors = []
+      date_errors = []
 
       # TODO: raise an error if file name is missing and it's not explicitly an external resource
       # ... not going to do this until I know how to attach it as an external resource!
@@ -22,17 +24,19 @@ module Import
       #   next
       # end
 
-      metadata_fields.each do |field|
+      FIELDS.each do |field|
         if !row[field['field_name']].blank?
-          puts "#{field['field_name']}: " + row[field['field_name']]
+          is_multi_valued = field['multi_value']
+          field_values = field_values_to_array(row[field['field_name']], is_multi_valued)
+
           if field['acceptable_values']
-            field_value_acceptable(field, row, controlled_vocab_errors)
+            field_value_acceptable(field['field_name'], field['acceptable_values'], field_values, controlled_vocab_errors)
           end
-          file_attrs[field['metadata_name']] = if row[field['multi_value'] == true]
-                                                 Array(row[field['field_name']].split(';')).map(&:strip)
-                                               else
-                                                 Array(row[field['field_name']].strip)
-                                               end
+          if field['date_format']
+            field_values = field_check_dates(field['field_name'], field_values, date_errors)
+            next if field_values.blank?
+          end
+          file_attrs[field['metadata_name']] = set_single_or_multiple_asset(field_values, is_multi_valued)
         elsif field['required'] == true
           # add to array of missing stuff
           # missing_required_fields.add(row[field['field_name']])
@@ -43,89 +47,82 @@ module Import
       file_attrs['creator_family_name'] = creator_family_name(row)
       file_attrs['creator_given_name'] = creator_given_name(row)
 
-      combine_field_errors(row_num, missing_fields_errors, controlled_vocab_errors)
+      combine_field_errors(row_num, missing_fields_errors, controlled_vocab_errors, date_errors)
     end
 
-    def field_value_acceptable(field, row, controlled_vocab_errors)
-      unless field['acceptable_values'].include? row[field['field_name']]
-        controlled_vocab_errors << field['field_name'] + ' - "' + row[field['field_name']] + '"'
+    private
+
+      def field_values_to_array(sheet_value, is_multi_valued)
+        if is_multi_valued == true
+          Array(sheet_value.split(';')).map(&:strip)
+        else
+          Array(sheet_value.strip)
+        end
       end
-    end
 
-    def creator_family_name(row)
-      return unless row['Primary Creator Last Name']
-      row['Primary Creator Last Name'].strip
-    end
-
-    def creator_given_name(row)
-      return unless row['Primary Creator First Name']
-      row['Primary Creator First Name'].strip
-    end
-
-    def combine_field_errors(row_num, missing_fields_errors, controlled_vocab_errors)
-      message = ''
-      message += "\n\nRow #{row_num} has errors:\n" unless missing_fields_errors.empty? && controlled_vocab_errors.empty?
-      unless missing_fields_errors.empty?
-        message += "missing required fields: \n" + missing_fields_errors.join(', ')
+      def set_single_or_multiple_asset(field_values, is_multi_valued)
+        is_multi_valued == true ? field_values : field_values.first
       end
-      unless controlled_vocab_errors.empty?
-        message += "\nunacceptable values for: \n" + controlled_vocab_errors.join(', ')
-      end
-      message
-    end
 
-    def metadata_fields
-      [
-        # for now leave File Name separate, but eventually when external resources are figured out it should go in here too with required => false
-        # { 'field_name' => 'File Name', 'metadata_name' => 'title', 'required' => true, 'multi_value' => false },
-        { 'field_name' => 'Title', 'metadata_name' => 'title', 'required' => true, 'multi_value' => false },
-        { 'field_name' => 'Resource Type', 'metadata_name' => 'resource_type', 'required' => true, 'multi_value' => false, 'acceptable_values' => ['audio', 'image', 'dataset', 'table', '3D model', 'text', 'video'] },
-        { 'field_name' => 'Externally Hosted Resource', 'metadata_name' => 'external_resource', 'required' => true, 'multi_value' => true, 'acceptable_values' => ['yes', 'no'] },
-        { 'field_name' => 'Caption', 'metadata_name' => 'caption', 'required' => true, 'multi_value' => true },
-        { 'field_name' => 'Alternative Text', 'metadata_name' => 'alt_text', 'required' => true, 'multi_value' => true },
-        # { 'field_name' => 'Book and Platform (BP) or Platform-only (P)', 'metadata_name' => '', 'required' => true, 'multi_value' => true, 'acceptable_values' => ['BP', 'P'] },
-        { 'field_name' => 'Copyright Holder', 'metadata_name' => 'copyright_holder', 'required' => true, 'multi_value' => true },
-        # { 'field_name' => 'Allow High-Res Display?', 'metadata_name' => '', 'required' => true, 'multi_value' => false, 'acceptable_values' => ['yes', 'no', 'Not hosted on the platform'], 'acceptable_values' => ['yes', 'no', 'Not hosted on the platform'] },
-        # { 'field_name' => 'Allow Download?', 'metadata_name' => '', 'required' => true, 'multi_value' => false, 'acceptable_values' => ['yes', 'no', 'Not hosted on the platform'] },
-        # { 'field_name' => 'Copyright Status', 'metadata_name' => '', 'required' => true, 'multi_value' => false, 'acceptable_values' => ['in copyright', 'public domain', 'status unknown'] },
-        # { 'field_name' => 'Rights Granted', 'metadata_name' => '', 'required' => false, 'multi_value' => false },
-        { 'field_name' => 'Rights Granted - Creative Commons',
-          'metadata_name' => '',
-          'required' => false,
-          'multi_value' => false,
-          'acceptable_values' => [
-            'Creative Commons Attribution license, 3.0 Unported',
-            'Creative Commons Attribution-NoDerivatives license, 3.0 Unported',
-            'Creative Commons Attribution-NonCommercial-NoDerivatives license, 3.0 Unported',
-            'Creative Commons Attribution-NonCommercial license, 3.0 Unported',
-            'Creative Commons Attribution-NonCommercial-ShareAlike license, 3.0 Unported',
-            'Creative Commons Attribution-ShareAlike license, 3.0 Unported',
-            'Creative Commons Zero license (implies pd)',
-            'Creative Commons Attribution 4.0 International license',
-            'Creative Commons Attribution-NoDerivatives 4.0 International license',
-            'Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International license',
-            'Creative Commons Attribution-NonCommercial 4.0 International license',
-            'Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International license',
-            'Creative Commons Attribution-ShareAlike 4.0 International license'] },
-        { 'field_name' => 'Permissions Expiration Date', 'metadata_name' => 'persistent_id', 'required' => false, 'multi_value' => true },
-        { 'field_name' => 'After Expiration: Allow Display?', 'metadata_name' => '', 'required' => false, 'multi_value' => true, 'acceptable_values' => ['none', 'high-res', 'low-res', 'Not hosted on the platform'] },
-        { 'field_name' => 'After Expiration: Allow Download?', 'metadata_name' => '', 'required' => false, 'multi_value' => true, 'acceptable_values' => ['yes', 'no', 'Not hosted on the platform'] },
-        { 'field_name' => 'Credit Line', 'metadata_name' => '', 'required' => false, 'multi_value' => true },
-        { 'field_name' => 'Holding Contact', 'metadata_name' => '', 'required' => false, 'multi_value' => true },
-        # { 'field_name' => 'Persistent ID - Display on Platform', 'metadata_name' => '', 'required' => true, 'multi_value' => false, 'acceptable_values' => ['yes', 'no'] },
-        { 'field_name' => 'Persistent ID - XML for CrossRef', 'metadata_name' => '', 'required' => false, 'multi_value' => true, 'acceptable_values' => ['yes', 'no'] },
-        { 'field_name' => 'Persistent ID - Handle', 'metadata_name' => '', 'required' => false, 'multi_value' => true, 'acceptable_values' => ['yes', 'no'] },
-        { 'field_name' => 'Content Type', 'metadata_name' => 'content_type', 'required' => false, 'multi_value' => true },
-        { 'field_name' => 'Primary Creator Role', 'metadata_name' => '', 'required' => false, 'multi_value' => true },
-        { 'field_name' => 'Additional Creator(s)', 'metadata_name' => '', 'required' => false, 'multi_value' => true },
-        { 'field_name' => 'Sort Date', 'metadata_name' => '', 'required' => false, 'multi_value' => true },
-        { 'field_name' => 'Display Date', 'metadata_name' => '', 'required' => false, 'multi_value' => true },
-        { 'field_name' => 'Description', 'metadata_name' => 'description', 'required' => false, 'multi_value' => true },
-        { 'field_name' => 'Keywords', 'metadata_name' => 'keywords', 'required' => false, 'multi_value' => true },
-        { 'field_name' => 'Language', 'metadata_name' => 'language', 'required' => false, 'multi_value' => true },
-        { 'field_name' => 'Transcript', 'metadata_name' => '', 'required' => false, 'multi_value' => true },
-        { 'field_name' => 'Translation', 'metadata_name' => '', 'required' => false, 'multi_value' => true }
-      ]
-    end
+      def field_value_acceptable(field_name, acceptable_values, actual_values, controlled_vocab_errors)
+        actual_values.each do |actual_value|
+          unless acceptable_values.include? actual_value
+            controlled_vocab_errors << field_name + ' - "' + actual_value + '"'
+          end
+        end
+      end
+
+      def field_check_dates(field_name, actual_values, date_errors)
+        output_dates = []
+        actual_values.each do |actual_value|
+          fixed_date = output_date(actual_value)
+          if !actual_value.blank? && actual_value.casecmp('perpetuity') != 0 && fixed_date.blank?
+            date_errors << field_name + ': "' + actual_value + '"'
+          elsif !fixed_date.blank?
+            output_dates << fixed_date
+          end
+        end
+        output_dates
+      end
+
+      def output_date(date_string)
+        y = m = d = ''
+        if date_string[/\d{4}-\d{2}-\d{2}/]
+          y, m, d = date_string.split '-'
+        elsif date_string[/\d{4}-\d{2}/]
+          y, m = date_string.split '-'
+          d = '01'
+        elsif date_string[/\d{4}/]
+          y = date_string
+          m = d = '01'
+        end
+        return nil unless Date.valid_date?(y.to_i, m.to_i, d.to_i)
+        y + '-' + m + '-' + d
+      end
+
+      def creator_family_name(row)
+        return unless row['Primary Creator Last Name']
+        row['Primary Creator Last Name'].strip
+      end
+
+      def creator_given_name(row)
+        return unless row['Primary Creator First Name']
+        row['Primary Creator First Name'].strip
+      end
+
+      def combine_field_errors(row_num, missing_fields_errors, controlled_vocab_errors, date_errors)
+        message = ''
+        message += "\n\nRow #{row_num} has errors:\n" unless missing_fields_errors.empty? && controlled_vocab_errors.empty?
+        unless missing_fields_errors.empty?
+          message += "missing required fields: \n" + missing_fields_errors.join(', ')
+        end
+        unless controlled_vocab_errors.empty?
+          message += "\nunacceptable values for: \n" + controlled_vocab_errors.join(', ')
+        end
+        unless date_errors.empty?
+          message += "\nthese dates cannot be padded to a YYYY-MM-DD value: \n" + date_errors.join(', ')
+        end
+        message
+      end
   end
 end

@@ -37,12 +37,10 @@ module Import
         end
 
         if asset_data?(row)
-          puts "ASSET"
           file_attrs = {}
           errors += row_data.data_for_asset(row_num, row, file_attrs)
           attach_asset(row, attrs, file_attrs)
         else
-          puts "MONOGRAPH"
           row_data.data_for_monograph(row, attrs['monograph'])
         end
         row_num += 1
@@ -63,6 +61,7 @@ module Import
 
       def attach_asset(row, attrs, file_attrs)
         # blank section will mean 'attach to monograph'
+        # puts file_attrs.to_s
 
         section_title = if row['Section']
                           row['Section']
