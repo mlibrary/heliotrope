@@ -19,6 +19,10 @@ class FileSet < ActiveFedora::Base
     index.as :stored_searchable
   end
 
+  property :primary_creator_role, predicate: ::RDF::Vocab::SCHEMA.roleName do |index|
+    index.as :stored_searchable
+  end
+
   property :keywords, predicate: ::RDF::Vocab::DC.subject do |index|
     index.as :stored_searchable, :facetable
   end
@@ -27,32 +31,101 @@ class FileSet < ActiveFedora::Base
     index.as :stored_searchable
   end
 
-  property :identifier, predicate: ::RDF::Vocab::DC.identifier do |index|
+  property :identifier, predicate: ::RDF::Vocab::DC.identifier, multiple: false do |index|
     index.as :stored_searchable
   end
 
-  property :copyright_holder, predicate: ::RDF::Vocab::SCHEMA.copyrightHolder do |index|
+  property :copyright_holder, predicate: ::RDF::Vocab::SCHEMA.copyrightHolder, multiple: false do |index|
     index.as :stored_searchable
+  end
+
+  property :copyright_status, predicate: ::RDF::URI.new('http://fulcrum.org/ns#copyrightStatus'), multiple: false do |index|
+    index.as :symbol
+  end
+
+  property :rights_granted, predicate: ::RDF::URI.new('http://fulcrum.org/ns#rightsGranted'), multiple: false do |index|
+    index.as :symbol
+  end
+
+  property :rights_granted_creative_commons, predicate: ::RDF::URI.new('http://fulcrum.org/ns#rightsGrantedCreativeCommons'), multiple: false do |index|
+    index.as :symbol
+  end
+
+  property :exclusive_to_platform, predicate: ::RDF::URI.new('http://fulcrum.org/ns#exclusiveToPlatform'), multiple: false do |index|
+    index.as :symbol
+  end
+
+  property :permissions_expiration_date, predicate: ::RDF::URI.new('http://fulcrum.org/ns#permissionsExpirationDate'), multiple: false do |index|
+    index.as :symbol
+  end
+  validates :permissions_expiration_date, format: {
+    with: /\A\d\d\d\d-\d\d-\d\d\z/,
+    message: "Your permissions expiration date must be in YYYY-MM-DD format",
+    allow_blank: true
+  }
+
+  property :allow_display_after_expiration, predicate: ::RDF::URI.new('http://fulcrum.org/ns#allowDisplayAfterExpiration'), multiple: false do |index|
+    index.as :symbol
+  end
+
+  property :allow_download_after_expiration, predicate: ::RDF::URI.new('http://fulcrum.org/ns#allowDownloadAfterExpiration'), multiple: false do |index|
+    index.as :symbol
   end
 
   property :date_published, predicate: ::RDF::Vocab::SCHEMA.datePublished do |index|
     index.as :stored_searchable
   end
 
-  property :external_resource, predicate: ::RDF::Vocab::DC.source do |index|
+  property :external_resource, predicate: ::RDF::URI.new('http://fulcrum.org/ns#externalResource'), multiple: false do |index|
     index.as :symbol
   end
 
-  property :persistent_id, predicate: ::RDF::Vocab::DC.URI do |index|
+  property :book_needs_handles, predicate: ::RDF::URI.new('http://fulcrum.org/ns#bookNeedsHandles'), multiple: false do |index|
     index.as :symbol
+  end
+
+  property :display_date, predicate: ::RDF::URI.new('http://fulcrum.org/ns#displayDate'), multiple: false do |index|
+    index.as :stored_searchable
   end
 
   property :sort_date, predicate: ::RDF::Vocab::DC.date, multiple: false do |index|
-    index.as :stored_searchable
+    index.as :stored_searchable, :facetable
   end
   validates :sort_date, format: {
     with: /\A\d\d\d\d-\d\d-\d\d\z/,
     message: "Your sort date must be in YYYY-MM-DD format",
     allow_blank: true
   }
+
+  property :allow_download, predicate: ::RDF::URI.new('http://fulcrum.org/ns#allowDownload'), multiple: false do |index|
+    index.as :symbol
+  end
+
+  property :allow_hi_res, predicate: ::RDF::URI.new('http://fulcrum.org/ns#allowHiRes'), multiple: false do |index|
+    index.as :symbol
+  end
+
+  property :credit_line, predicate: ::RDF::URI.new('http://fulcrum.org/ns#creditLine'), multiple: false do |index|
+    index.as :symbol
+  end
+
+  property :holding_contact, predicate: ::RDF::URI.new('http://fulcrum.org/ns#holdingContact'), multiple: false do |index|
+    index.as :symbol
+  end
+
+  property :ext_url_doi_or_handle, predicate: ::RDF::URI.new('http://fulcrum.org/ns#externalUrlDoiOrHandle'), multiple: false do |index|
+    index.as :symbol
+  end
+
+  property :use_crossref_xml, predicate: ::RDF::URI.new('http://fulcrum.org/ns#useCrossrefXml'), multiple: false do |index|
+    index.as :symbol
+  end
+
+  property :transcript, predicate: ::RDF::URI.new('http://fulcrum.org/ns#transcript'), multiple: false do |index|
+    index.as :stored_searchable
+  end
+
+  property :translation, predicate: ::RDF::URI.new('http://fulcrum.org/ns#translation') do |index|
+    index.as :stored_searchable
+  end
 end

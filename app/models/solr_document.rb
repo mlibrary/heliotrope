@@ -21,80 +21,59 @@ class SolrDocument
 
   # Do content negotiation for AF models.
 
-  def date_published
-    fetch('date_published_tesim', [])
+  ssim_fields = [
+    'allow_display_after_expiration',
+    'allow_download',
+    'allow_download_after_expiration',
+    'allow_hi_res',
+    'book_needs_handles',
+    'buy_url',
+    'copyright_status',
+    'credit_line',
+    'exclusive_to_platform',
+    'external_resource',
+    'ext_url_doi_or_handle',
+    'holding_contact',
+    'permissions_expiration_date',
+    'rights_granted',
+    'rights_granted_creative_commons',
+    'section_id',
+    'use_crossref_xml'
+  ]
+
+  ssim_fields.each do |field|
+    define_method(field) do
+      fetch("#{field}_ssim", [])
+    end
   end
 
-  def isbn
-    fetch('isbn_tesim', [])
-  end
+  tesim_fields = [
+    'alt_text',
+    'caption',
+    'content_type',
+    'copyright_holder',
+    'creator_family_name',
+    'creator_full_name',
+    'creator_given_name',
+    'date_published',
+    'display_date',
+    'editor',
+    'identifier',
+    'isbn',
+    'keywords',
+    'primary_creator_role',
+    'relation',
+    'resource_type',
+    'section_title',
+    'sort_date',
+    'transcript',
+    'translation'
+  ]
 
-  def editor
-    fetch('editor_tesim', [])
-  end
-
-  def copyright_holder
-    fetch('copyright_holder_tesim', [])
-  end
-
-  def buy_url
-    fetch('buy_url_ssim', [])
-  end
-
-  def caption
-    fetch('caption_tesim', [])
-  end
-
-  def alt_text
-    fetch('alt_text_tesim', [])
-  end
-
-  def resource_type
-    fetch('resource_type_tesim', [])
-  end
-
-  def content_type
-    fetch('content_type_tesim', [])
-  end
-
-  def keywords
-    fetch('keywords_tesim', [])
-  end
-
-  def relation
-    fetch('relation_tesim', [])
-  end
-
-  def identifier
-    fetch('identifier_tesim', [])
-  end
-
-  def external_resource
-    fetch('external_resource_ssim', [])
-  end
-
-  def persistent_id
-    fetch('persistent_id_ssim', [])
-  end
-
-  def creator_full_name
-    fetch('creator_full_name_tesim', [])
-  end
-
-  def creator_given_name
-    fetch('creator_given_name_tesim', [])
-  end
-
-  def creator_family_name
-    fetch('creator_family_name_tesim', [])
-  end
-
-  def section_title
-    fetch('section_title_tesim', [])
-  end
-
-  def section_id
-    fetch('section_id_ssim', [])
+  tesim_fields.each do |field|
+    define_method(field) do
+      fetch("#{field}_tesim", [])
+    end
   end
 
   use_extension(Hydra::ContentNegotiation)
