@@ -25,22 +25,22 @@ module Import
       # end
 
       FIELDS.each do |field|
-        if !row[field['field_name']].blank?
-          is_multi_valued = field['multi_value']
-          field_values = field_values_to_array(row[field['field_name']], is_multi_valued)
+        if !row[field[:field_name]].blank?
+          is_multivalued = field[:multivalued]
+          field_values = split_field_values_to_array(row[field[:field_name]], is_multivalued)
 
-          if field['acceptable_values']
-            field_value_acceptable(field['field_name'], field['acceptable_values'], field_values, controlled_vocab_errors)
+          if field[:acceptable_values]
+            field_value_acceptable(field[:field_name], field[:acceptable_values], field_values, controlled_vocab_errors)
           end
-          if field['date_format']
-            field_values = field_check_dates(field['field_name'], field_values, date_errors)
+          if field[:date_format]
+            field_values = field_check_dates(field[:field_name], field_values, date_errors)
             next if field_values.blank?
           end
-          file_attrs[field['metadata_name']] = set_single_or_multiple_asset(field_values, is_multi_valued)
-        elsif field['required'] == true
+          file_attrs[field[:metadata_name]] = return_scalar_or_multivalued(field_values, is_multivalued)
+        elsif field[:required] == true
           # add to array of missing stuff
-          # missing_required_fields.add(row[field['field_name']])
-          missing_fields_errors << field['field_name']
+          # missing_required_fields.add(row[field[:field_name']])
+          missing_fields_errors << field[:field_name]
         end
       end
 
@@ -52,16 +52,16 @@ module Import
 
     private
 
-      def field_values_to_array(sheet_value, is_multi_valued)
-        if is_multi_valued == true
+      def split_field_values_to_array(sheet_value, is_multivalued)
+        if is_multivalued == :yes_split
           Array(sheet_value.split(';')).map(&:strip)
         else
           Array(sheet_value.strip)
         end
       end
 
-      def set_single_or_multiple_asset(field_values, is_multi_valued)
-        is_multi_valued == true ? field_values : field_values.first
+      def return_scalar_or_multivalued(field_values, is_multivalued)
+        is_multivalued == :no ? field_values.first : field_values
       end
 
       def field_value_acceptable(field_name, acceptable_values, actual_values, controlled_vocab_errors)
