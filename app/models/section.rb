@@ -5,6 +5,8 @@ class Section < ActiveFedora::Base
 
   validates :title, presence: { message: 'Your work must have a title.' }
 
+  self.indexer = SectionIndexer
+
   property :date_published, predicate: ::RDF::Vocab::SCHEMA.datePublished do |index|
     index.as :stored_searchable
   end
