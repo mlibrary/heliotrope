@@ -20,4 +20,10 @@ describe 'Routes', type: :routing do
       expect(get: '/umich/sub_brands/new').to route_to(controller: 'sub_brands', action: 'new', press_id: 'umich')
     end
   end
+
+  describe 'for robots.txt' do
+    it 'has robots.txt' do
+      expect(get: '/robots.txt').to route_to(controller: 'robots', action: 'robots')
+    end
+  end
 end
