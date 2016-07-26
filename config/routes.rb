@@ -54,6 +54,8 @@ Rails.application.routes.draw do
     end
   end
 
+  get '/robots.txt' => 'robots#robots'
+
   get '/:subdomain', controller: :press_catalog, action: :index, as: :press_catalog
 
   resources :presses, path: '/', only: [:index] do

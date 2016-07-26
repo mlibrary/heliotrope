@@ -40,6 +40,8 @@ gem 'sdoc', '~> 0.4.0', group: :doc
 
 gem 'riiif', '0.4.0'
 
+gem 'actionpack-page_caching', '~> 1.0.1'
+
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
 
