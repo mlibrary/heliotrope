@@ -1,4 +1,4 @@
-<p><%= presenter.attribute_to_html(:description, label: '') %></p>
+<p><%= presenter.attribute_to_html(:description, render_as: :markdown, label: '') %></p>
 <%= presenter.attribute_to_html(:creator_full_name, label: 'Creator', catalog_search_link: true) %>
 <%= presenter.attribute_to_html(:primary_creator_role, label: 'Creator Role') %>
 <%= presenter.attribute_to_html(:contributor, label: 'Contributors', catalog_search_link: true) %>

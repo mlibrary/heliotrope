@@ -21,14 +21,14 @@
         <%= media_display @presenter %>
     <% end %>
   </div> <!-- /.image/media -->
-  <p><em><%= presenter.attribute_to_html(:caption, label: '') %></em></p>
+  <p><em><%= presenter.attribute_to_html(:caption, render_as: :markdown, label: '') %></em></p>
   <% if @presenter.translation.present? %>
   <div class="panel panel-default translation">
     <div class="panel-heading">
       <h3 class="panel-title">Translation</h3>
     </div>
     <div class="panel-body fixed">
-      <p><%= presenter.attribute_to_html(:translation, label: '') %></p>
+      <p><%= presenter.attribute_to_html(:translation, render_as: :markdown, label: '') %></p>
     </div>
   </div><!-- /.translation panel -->
   <% end %>
@@ -38,7 +38,7 @@
       <h3 class="panel-title">Transcript</h3>
     </div>
     <div class="panel-body fixed">
-      <p><%= presenter.attribute_to_html(:transcript, label: '') %></p>
+      <p><%= presenter.attribute_to_html(:transcript, render_as: :markdown, label: '') %></p>
     </div>
   </div><!-- /.transcript panel -->
   <% end %>

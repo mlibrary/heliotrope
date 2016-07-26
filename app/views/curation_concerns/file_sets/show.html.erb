@@ -1,5 +1,6 @@
 <% provide :page_title, @presenter.page_title %>
 <% provide :page_header do %>
+
 <% end %>
 
   <div class="row asset">
@@ -11,7 +12,7 @@
     <div class="col-sm-6">
       <div class="row asset-attributes">
         <div class="col-sm-12">
-          <h2><%= @presenter %></h2>
+          <h2><%= render_markdown @presenter.to_s %></h2>
           <!-- TODO: get metadata for parent object -->
           <!-- monograph title -->
           <!-- monograph primary creator firstname lastname -->
