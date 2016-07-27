@@ -7,4 +7,4 @@
 <%= presenter.attribute_to_html(:rights_granted, label: 'Rights Granted') %>
 <%= presenter.attribute_to_html(:rights_granted_creative_commons, label: 'Rights Granted - Creative Commons') %>
 <%= presenter.attribute_to_html(:credit_line, label: 'Credit Line') %>
-<%= presenter.attribute_to_html(:holding_contact, label: '') %>
+<%= presenter.attribute_to_html(:holding_contact, render_as: :markdown, label: '') %>

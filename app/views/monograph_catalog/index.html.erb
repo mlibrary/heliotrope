@@ -8,7 +8,7 @@
 <% provide :sidebar do %>
   <%= render 'curation_concerns/base/representative_media', presenter: @monograph_presenter %>
 
-  <h2><%= @monograph_presenter.title.first || '' %></h2>
+  <h2><%= render_markdown @monograph_presenter.title.first || '' %></h2>
 
   <% if can?(:edit, @monograph_presenter.id) %>
     <%= link_to "Manage Monograph and Files", main_app.monograph_show_path(@monograph_presenter.id), class: 'btn btn-primary', id: 'manage-monograph-button' %>
@@ -16,7 +16,7 @@
 
   <h3><%= @monograph_presenter.creator_given_name.first %> <%= @monograph_presenter.creator_family_name.first %></h3>
 
-  <p><%= @monograph_presenter.description.first || '' %></h3>
+  <p><%= render_markdown @monograph_presenter.description.first || '' %></h3>
 
   <p>ISBN: <%= @monograph_presenter.isbn.first %></p>
 

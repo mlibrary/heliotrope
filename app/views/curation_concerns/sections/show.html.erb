@@ -1,15 +1,21 @@
 <% provide :page_title, @presenter.page_title %>
 <% provide :page_header do %>
-  <h1><%= render_markdown @presenter.to_s %> <span class="human_readable_type">(<%= @presenter.human_readable_type %>)</span></h1>
+  <h1><%= render_markdown @presenter.to_s %> </h1>
+  <% if @parent_presenter %>
+    <ul class="breadcrumb">
+      <li><%= link_to @parent_presenter, polymorphic_path([main_app, @parent_presenter]) %></li>
+      <li class="active"><%= @presenter.human_readable_type %></li>
+    </ul>
+  <% else %>
+    <span class="human_readable_type">(<%= @presenter.human_readable_type %>)</span>
+  <% end %>
 <% end %>
 
 <% collector = can?(:collect, @presenter.id) %>
 <% editor    = can?(:edit,    @presenter.id) %>
 
 <%= render 'representative_media', presenter: @presenter %>
-<%= render 'sub_brands', presenter: @presenter %>
 <%= render "attributes", presenter: @presenter %>
-<%= render 'sections', presenter: @presenter %>
 <%= render 'related_files', presenter: @presenter %>
 <% if editor %>
   <%= render 'multiple_upload', presenter: @presenter %>

@@ -3,10 +3,6 @@
   <h4 class="index_title">
     <% counter = document_counter_with_offset(document_counter) %>
     <%= render_markdown link_to_document document, document_show_link_field(document), counter: counter %>
-
-    <% if document.section_id.present? %>
-      <p>From <%= render_markdown link_to document.section_title.first, curation_concerns_section_path(document.section_id) %></p>
-    <% end %>
-
   </h4>
+
 </div>
