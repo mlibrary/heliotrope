@@ -2,9 +2,6 @@ language: ruby
 cache: bundler
 sudo: required
 
-before_install:
-  - sudo apt-get install -qq clamav-daemon libclamav-dev clamav-data
-  - sudo freshclam -v
 before_script:
   - bundle exec bin/setup
 rvm:
