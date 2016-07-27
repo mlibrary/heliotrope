@@ -1,34 +1,29 @@
 <% provide :page_title, @presenter.page_title %>
 <% provide :page_header do %>
-  <h1>File Details <small><%= @presenter.title.first %></small></h1>
 <% end %>
 
-<% if @presenter.image? %>
-  <div id="map"></div>
-  <script>
-  $().ready(function() {
-
-    //window.F = window.F || {};
-    var $map = $("#map");
-    //$map.height($(window).height() - 100);
-    $map.height(600);
-    $map.width(600);
-
-    var map = L.map('map', {
-      center: [0, 0],
-      crs: L.CRS.Simple,
-      zoom: 0,
-    }).addLayer(L.tileLayer.iiif("<%= riiif.info_path(@presenter.id) %>"));
-  });
-  </script>
-
-  <% if @presenter.allow_download? %>
-    <%= link_to "Download the full-sized image", main_app.download_path(@presenter.id), target: "_new" %>
-  <% end %>
-  
-<% else %>
-  <%= media_display @presenter %>
-<% end %>
-
-<%= render "attributes", presenter: @presenter %>
-<%= render "show_actions", presenter: @presenter, parent: parent %>
+  <div class="row asset">
+    <!-- file_sets _media -->
+    <div class="col-sm-6">
+      <%= render "media", presenter: @presenter %>
+    </div> <!-- / file_sets _media -->
+    <!-- file_sets metadata and actions -->
+    <div class="col-sm-6">
+      <div class="row asset-attributes">
+        <div class="col-sm-12">
+          <h2><%= @presenter %></h2>
+          <!-- TODO: get metadata for parent object -->
+          <!-- monograph title -->
+          <!-- monograph primary creator firstname lastname -->
+          <h3>From <a href="#">Book Title</a>, by Firstname Lastname</h3>
+          <br />
+          <%= render "attributes", presenter: @presenter %>
+        </div>
+      </div> <!-- /.asset-attributes -->
+      <div class="row asset-actions">
+        <div class="col-sm-12">
+          <%= render "show_actions", presenter: @presenter, parent: parent %>
+        </div>
+      </div> <!-- /.asset-actions -->
+    </div> <!-- / file_sets metadata and actions -->
+  </div> <!-- /.asset -->

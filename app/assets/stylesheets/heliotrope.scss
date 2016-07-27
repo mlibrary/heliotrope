@@ -1,0 +1,33 @@
+// custom styles for heliotrope
+
+
+.asset {
+  // leaflet
+  #image {
+    height: 540px;
+    width: 97%;
+  }
+
+  .table > thead > tr > th, .table > thead > tr > td, .table > tbody > tr > th, .table > tbody > tr > td, .table > tfoot > tr > th, .table > tfoot > tr > td {
+    border-top: 0 solid #fff;
+  }
+
+  .description, .permission_badge {
+    margin-top: 1em;
+    margin-left: -6em;
+  }
+
+  .keywords {
+    display: inline;
+    margin-right: .5em;
+  }
+
+  .translation, .transcript {
+    margin-top: 2em;
+  }
+
+  .holding_contact {
+    margin-left: -6em;
+  }
+
+}

@@ -1,13 +1,39 @@
-<table class="table table-striped <%= dom_class(presenter) %> attributes" <%= presenter.microdata_type_to_html %>>
-  <caption class="table-heading"><h2>Attributes</h2></caption>
-  <thead>
-    <tr><th>Attribute Name</th><th>Values</th></tr>
-  </thead>
-  <tbody>
-    <%= render 'attribute_rows', presenter: presenter %>
-    <%= presenter.attribute_to_html(:permission_badge, label: 'Visibility') %>
-    <%= presenter.attribute_to_html(:embargo_release_date) %>
-    <%= presenter.attribute_to_html(:lease_expiration_date) %>
-    <%= presenter.attribute_to_html(:rights) %>
-  </tbody>
-</table>
+<ul class="nav nav-tabs" role="tablist">
+  <li role="presentation" class="active"><a href="#info" aria-controls="info" role="tab" data-toggle="tab">Info</a></li>
+  <li role="presentation"><a href="#permissions" aria-controls="permissions" role="tab" data-toggle="tab">Permissions</a></li>
+  <!-- <li role="presentation"><a href="#stats" aria-controls="stats" role="tab" data-toggle="tab">Stats</a></li> -->
+  <!-- <li role="presentation"><a href="#technical-info" aria-controls="technical-info" role="tab" data-toggle="tab">Technical Info</a></li> -->
+</ul>
+
+<div class="tab-content">
+  <div role="tabpanel" class="tab-pane fade in active" id="info">
+    <table class="table <%= dom_class(presenter) %> attributes" <%= presenter.microdata_type_to_html %>>
+      <tbody>
+        <%= render 'attribute_rows_info', presenter: presenter %>
+      </tbody>
+    </table>
+  </div> <!-- /.info panel -->
+  <div role="tabpanel" class="tab-pane fade" id="permissions">
+    <table class="table <%= dom_class(presenter) %> attributes" <%= presenter.microdata_type_to_html %>>
+      <tbody>
+        <%= render 'attribute_rows_permissions', presenter: presenter %>
+      </tbody>
+    </table>
+  </div> <!-- /.permissions panel -->
+  <!-- TODO: activate pageview and download count via Google Analytics API -->
+  <% if false %>
+  <div role="tabpanel" class="tab-pane fade" id="stats">
+    <%= render 'attribute_rows_stats', presenter: presenter %>
+  </div>  <!-- /.stats panel -->
+  <% end %>
+  <!-- TODO: create presenter for asset's file metadata fields -->
+  <% if false %>
+  <div role="tabpanel" class="tab-pane fade" id="technical-info">
+    <table class="table <%= dom_class(presenter) %> attributes" <%= presenter.microdata_type_to_html %>>
+      <tbody>
+       <%= render 'attribute_rows_technical', presenter: presenter %>
+      </tbody>
+    </table>
+   </div> <!-- /.technical-info panel -->
+  <% end %>
+</div> <!-- /.tab-content Tab panes -->
