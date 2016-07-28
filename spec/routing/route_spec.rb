@@ -26,4 +26,15 @@ describe 'Routes', type: :routing do
       expect(get: '/robots.txt').to route_to(controller: 'robots', action: 'robots')
     end
   end
+
+  describe 'for production (and test)' do
+    # temporarily disable devise registrations in production #266
+    it 'has no password routes' do
+      expect(get: '/users/password/new').to_not be_routable
+      expect(get: '/users/password').to_not be_routable
+    end
+    it 'has no registation routes' do
+      expect(get: '/users/sign_up').to_not be_routable
+    end
+  end
 end
