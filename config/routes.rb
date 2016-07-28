@@ -23,7 +23,13 @@ Rails.application.routes.draw do
     concerns :searchable
   end
 
-  devise_for :users
+  if Rails.env.eql?('development')
+    devise_for :users
+  else
+    # temporarily disable devise registrations and password resets for production #266
+    devise_for :users, skip: [:registration, :password]
+  end
+
   mount CurationConcerns::Engine, at: '/'
   curation_concerns_collections
 
