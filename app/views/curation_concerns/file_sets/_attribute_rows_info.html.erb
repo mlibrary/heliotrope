@@ -2,7 +2,7 @@
 <%= presenter.attribute_to_html(:creator_full_name, label: 'Creator', catalog_search_link: true) %>
 <%= presenter.attribute_to_html(:primary_creator_role, label: 'Creator Role') %>
 <%= presenter.attribute_to_html(:contributor, label: 'Contributors', catalog_search_link: true) %>
-<!-- TODO: get subjects from parent monograph -->
+<%= presenter.attribute_to_html(:subjects) %>
 <%= presenter.attribute_to_html(:display_date, label: 'Date') %>
 <%= presenter.attribute_to_html(:section_title, label: 'Related Chapter', render_as: :markdown) %>
 <%= presenter.attribute_to_html(:keywords, catalog_search_link: true) %>

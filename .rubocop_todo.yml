@@ -2,7 +2,3 @@
 Metrics/ClassLength:
   Exclude:
     - 'app/controllers/catalog_controller.rb'
-
-Metrics/CyclomaticComplexity:
-  Exclude:
-    - 'app/indexers/file_set_indexer.rb'

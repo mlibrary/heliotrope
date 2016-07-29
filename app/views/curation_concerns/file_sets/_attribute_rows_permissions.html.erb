@@ -2,7 +2,7 @@
 <%= presenter.attribute_to_html(:embargo_release_date) %>
 <%= presenter.attribute_to_html(:lease_expiration_date) %>
 <%= presenter.attribute_to_html(:rights) %>
-<%= presenter.attribute_to_html(:copyright_holder, label: 'Copyright Holder') %>
+<%= presenter.attribute_to_html(:copyright_holder, render_as: :markdown, label: 'Copyright Holder') %>
 <%= presenter.attribute_to_html(:copyright_status, label: 'Copyright Status') %>
 <%= presenter.attribute_to_html(:rights_granted, label: 'Rights Granted') %>
 <%= presenter.attribute_to_html(:rights_granted_creative_commons, label: 'Rights Granted - Creative Commons') %>

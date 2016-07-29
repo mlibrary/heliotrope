@@ -2,7 +2,7 @@ module CurationConcerns
   class FileSetPresenter
     include ModelProxy
     include PresentsAttributes
-    attr_accessor :solr_document, :current_ability, :request
+    attr_accessor :solr_document, :current_ability, :request, :monograph_presenter
 
     # @param [SolrDocument] solr_document
     # @param [Ability] current_ability
@@ -43,6 +43,18 @@ module CurationConcerns
 
     def section_id
       Array(solr_document['section_id_ssim']).first
+    end
+
+    def monograph_id
+      Array(solr_document['monograph_id_ssim']).first
+    end
+
+    def monograph
+      @monograph_presenter ||= PresenterFactory.build_presenters([monograph_id], MonographPresenter, current_ability).first
+    end
+
+    def subjects
+      monograph.subject
     end
 
     def link_name
