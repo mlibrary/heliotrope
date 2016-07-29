@@ -37,6 +37,14 @@ module CurationConcerns
       Array(solr_document['label_tesim']).first
     end
 
+    def section_title
+      Array(solr_document['section_title_tesim']).first
+    end
+
+    def section_id
+      Array(solr_document['section_id_ssim']).first
+    end
+
     def link_name
       current_ability.can?(:read, id) ? Array(solr_document['label_tesim']).first : 'File'
     end
