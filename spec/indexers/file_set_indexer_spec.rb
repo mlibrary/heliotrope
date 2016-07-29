@@ -3,7 +3,7 @@ require 'rails_helper'
 describe FileSetIndexer do
   let(:indexer) { described_class.new(file_set) }
   let(:monograph) { create(:monograph) }
-  let(:section) { create(:section) }
+  let(:section) { create(:section, monograph_id: monograph.id) }
   let(:file_set) { create(:file_set) }
   let(:file) do
     Hydra::PCDM::File.new.tap do |f|
@@ -45,6 +45,10 @@ describe FileSetIndexer do
 
     it "indexs it's original_name" do
       expect(subject['original_name_tesim']).to eq file_set.original_file.original_name
+    end
+
+    it "index's it's monograph's id" do
+      expect(subject['monograph_id_ssim']).to eq monograph.id
     end
   end
 end
