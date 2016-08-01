@@ -5,13 +5,15 @@ en:
     search:
       fields:
         date_published_tesim: "Date Published"
-        isbn_tesim: "ISBN"
+        isbn_tesim: "ISBN (Hardcover)"
+        isbn_softcover_tesim: "ISBN (Softcover)"
+        isbn_ebook_tesim: "ISBN (E-Book)"
         editor_tesim: "Editor"
         copyright_holder_tesim: "Copyright Holder"
         copyright_status_tesim: "Copyright Status"
         rights_granted_tesim: "Rights Granted"
         rights_granted_creative_commons_tesim: "Rights Granted - Creative Commons"
-        buy_url_ssim: "Buy Book"
+        buy_url_ssim: "Buy Book URL"
         caption_tesim: "Caption"
         alt_text_tesim: "Alternative Text"
         content_type_tesim: "Content Type"

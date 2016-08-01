@@ -60,6 +60,8 @@ class SolrDocument
     'editor',
     'identifier',
     'isbn',
+    'isbn_softcover',
+    'isbn_ebook',
     'keywords',
     'primary_creator_role',
     'relation',

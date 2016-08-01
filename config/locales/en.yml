@@ -23,7 +23,9 @@ en:
   simple_form:
     labels:
       defaults:
-        isbn: "ISBN"
+        isbn: "ISBN (Hardcover)"
+        isbn_softcover: "ISBN (Softcover)"
+        isbn_ebook: "ISBN (E-Book)"
         editor: "Editor"
         buy_url: "Buy Book URL"
         copyright_holder: "Copyright Holder"
@@ -66,4 +68,3 @@ en:
   manage_assets:
     monograph_link_text: "Organize Sections and Assets"
     section_link_text: "Organize Assets"
-

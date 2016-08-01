@@ -27,6 +27,14 @@ class Monograph < ActiveFedora::Base
     index.as :stored_searchable
   end
 
+  property :isbn_softcover, predicate: ::RDF::Vocab::SCHEMA.isbn do |index|
+    index.as :stored_searchable
+  end
+
+  property :isbn_ebook, predicate: ::RDF::Vocab::SCHEMA.isbn do |index|
+    index.as :stored_searchable
+  end
+
   property :editor, predicate: ::RDF::Vocab::SCHEMA.editor do |index|
     index.as :stored_searchable
   end
