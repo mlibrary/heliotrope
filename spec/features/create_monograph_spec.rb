@@ -12,8 +12,8 @@ feature 'Create a monograph' do
     scenario do
       visit new_curation_concerns_monograph_path
       fill_in 'Title', with: 'Test monograph'
-      select press.name, from: 'Press'
-      fill_in 'ISBN', with: '123-456-7890'
+      select press.name, from: 'Publisher'
+      fill_in 'ISBN (Hardcover)', with: '123-456-7890'
       click_button 'Create Monograph'
       expect(page).to have_content 'Test monograph'
       expect(page).to have_content '123-456-7890'

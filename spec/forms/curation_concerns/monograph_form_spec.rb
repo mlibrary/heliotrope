@@ -39,6 +39,8 @@ describe CurationConcerns::MonographForm do
                             :press,
                             :date_published,
                             :isbn,
+                            :isbn_softcover,
+                            :isbn_ebook,
                             :editor,
                             :copyright_holder,
                             :buy_url,
