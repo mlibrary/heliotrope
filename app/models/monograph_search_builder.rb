@@ -3,8 +3,9 @@ class MonographSearchBuilder < ::SearchBuilder
   self.default_processor_chain += [:filter_by_members]
 
   def filter_by_members(solr_parameters)
+    ids = asset_ids(blacklight_params['id'])
     solr_parameters[:fq] ||= []
-    solr_parameters[:fq] << "{!terms f=id}#{asset_ids(blacklight_params['id'])}"
+    solr_parameters[:fq] << "{!terms f=id}#{ids}" if ids.present?
   end
 
   private
@@ -13,18 +14,20 @@ class MonographSearchBuilder < ::SearchBuilder
     def asset_ids(id)
       assets = []
 
-      ids = ActiveFedora::SolrService.query("{!terms f=id}#{id}").first['ordered_member_ids_ssim']
+      monograph = ActiveFedora::SolrService.query("{!terms f=id}#{id}")
 
-      if ids.present?
-        docs = ActiveFedora::SolrService.query("{!terms f=id}#{ids.join(',')}")
+      if monograph.present?
+        ids = monograph.first['ordered_member_ids_ssim']
+        if ids.present?
+          docs = ActiveFedora::SolrService.query("{!terms f=id}#{ids.join(',')}")
 
-        section_docs = docs.select { |doc| doc['has_model_ssim'] == ['Section'].freeze }
-        asset_docs   = docs.select { |doc| doc['has_model_ssim'] == ['FileSet'].freeze }
+          section_docs = docs.select { |doc| doc['has_model_ssim'] == ['Section'].freeze }
+          asset_docs   = docs.select { |doc| doc['has_model_ssim'] == ['FileSet'].freeze }
 
-        assets << asset_docs.map(&:id)
-        assets << section_docs.map { |doc| doc['ordered_member_ids_ssim'] }
+          assets << asset_docs.map(&:id)
+          assets << section_docs.map { |doc| doc['ordered_member_ids_ssim'] }
+        end
       end
-
       assets.join(',')
     end
 
