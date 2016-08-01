@@ -4,6 +4,11 @@ class MonographCatalogController < ::CatalogController
   configure_blacklight do |config|
     config.search_builder_class = MonographSearchBuilder
 
+    config.facet_fields.tap do
+      config.facet_fields.delete('human_readable_type_sim')
+    end
+
+    config.add_facet_field solr_name('resource_type', :facetable), label: "Resource Type", limit: 5
     config.add_facet_field solr_name('keywords', :facetable), label: "Keyword", limit: 5
     config.add_facet_field solr_name('section_title', :facetable), label: "Section", limit: 5
     config.add_facet_fields_to_solr_request!
