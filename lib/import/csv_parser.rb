@@ -19,23 +19,24 @@ module Import
       puts "Parsing file: #{file}"
       rows = CSV.read(file, headers: true, skip_blanks: true).delete_if { |row| row.to_hash.values.all?(&:blank?) }
       row_data = RowData.new
+
+      # human-readable row counter
+      row_num = rows.count
+
       # The template CSV file contains an extra row after the
       # headers that has explanatory text about how to fill in
       # the table.  We want to throw away that text.
       rows.delete(0)
 
-      # workaround for default order of the assets (created time)
-      rows.reverse!
-      
-      # human-readable row counter
       errors = ''
-      row_num = 3
-      rows.each do |row|
+
+      # reverse_each is a workaround for default order of the assets (created time)
+      rows.reverse_each do |row|
         row.each { |_, value| value.strip! if value }
 
         if missing_file_name?(row)
           puts "Row #{row_num}: File name missing - skipping row!"
-          row_num += 1
+          row_num -= 1
           next
         end
 
@@ -46,7 +47,7 @@ module Import
         else
           row_data.data_for_monograph(row, attrs['monograph'])
         end
-        row_num += 1
+        row_num -= 1
       end
       errors_out.replace errors
       attrs
