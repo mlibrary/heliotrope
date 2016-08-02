@@ -24,6 +24,9 @@ module Import
       # the table.  We want to throw away that text.
       rows.delete(0)
 
+      # workaround for default order of the assets (created time)
+      rows.reverse!
+      
       # human-readable row counter
       errors = ''
       row_num = 3
