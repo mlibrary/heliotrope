@@ -6,7 +6,7 @@ module Import
       @file = input_file
     end
 
-    def attributes(errors_out = '')
+    def attributes(errors_out = '', reverse_order = false)
       attrs = {}
       errors = ''
       # a CSV can only have one monograph (probably for in-house use only)...
@@ -20,8 +20,8 @@ module Import
       rows = CSV.read(file, headers: true, skip_blanks: true).delete_if { |row| row.to_hash.values.all?(&:blank?) }
       row_data = RowData.new
 
-      # human-readable row counter
-      row_num = rows.count
+      # human-readable row counter (3 accounts for the top two discarded rows)
+      row_num = get_human_row_num(rows, reverse_order)
 
       # The template CSV file contains an extra row after the
       # headers that has explanatory text about how to fill in
@@ -31,12 +31,14 @@ module Import
       errors = ''
 
       # reverse_each is a workaround for default order of the assets (created time)
-      rows.reverse_each do |row|
+      rows = rows.reverse_each if reverse_order
+
+      rows.each do |row|
         row.each { |_, value| value.strip! if value }
 
         if missing_file_name?(row)
           puts "Row #{row_num}: File name missing - skipping row!"
-          row_num -= 1
+          row_num = next_row_num(row_num, reverse_order)
           next
         end
 
@@ -47,13 +49,21 @@ module Import
         else
           row_data.data_for_monograph(row, attrs['monograph'])
         end
-        row_num -= 1
+        row_num = next_row_num(row_num, reverse_order)
       end
       errors_out.replace errors
       attrs
     end
 
     private
+
+      def next_row_num(row_num, reverse_order)
+        reverse_order ? row_num - 1 : row_num + 1
+      end
+
+      def get_human_row_num(rows, reverse_order)
+        reverse_order ? rows.count : 3
+      end
 
       def missing_file_name?(row)
         row['File Name'].blank?
