@@ -4,7 +4,7 @@ module CurationConcerns
 
     delegate :title, :date_created, :date_modified, :date_uploaded,
              :description, :creator, :editor, :contributor, :subject,
-             :publisher, :date_published, :language, :isbn, :isbn_softcover,
+             :publisher, :date_published, :language, :isbn, :isbn_paper,
              :isbn_ebook, :copyright_holder, :buy_url, :embargo_release_date,
              :lease_expiration_date, :rights, :creator_full_name,
              :creator_given_name, :creator_family_name,
