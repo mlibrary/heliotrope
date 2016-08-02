@@ -51,7 +51,7 @@ describe Import::MonographBuilder do
         expect(monograph.description).to eq attrs['description']
         expect(monograph.isbn).to eq attrs['isbn']
         expect(monograph.isbn_paper).to eq attrs['isbn_paper']
-        expect(monograph.isbn_paper).to eq attrs['isbn_ebook']
+        expect(monograph.isbn_ebook).to eq attrs['isbn_ebook']
         expect(monograph.buy_url).to eq attrs['buy_url']
 
         expect(monograph.ordered_member_ids.count).to eq 2
