@@ -14,8 +14,8 @@ module Import
   UNIVERSAL_FIELDS =
     [
       { field_name: 'Title', metadata_name: 'title', required: true, multivalued: :yes_split },
-      { field_name: 'Primary Creator Last Name', metadata_name: 'creator_family_name', required: true, multivalued: :no },
-      { field_name: 'Primary Creator First Name', metadata_name: 'creator_given_name', required: true, multivalued: :no },
+      { field_name: 'Primary Creator Last Name', metadata_name: 'creator_family_name', required: false, multivalued: :no },
+      { field_name: 'Primary Creator First Name', metadata_name: 'creator_given_name', required: false, multivalued: :no },
       { field_name: 'Description', metadata_name: 'description', required: false, multivalued: :yes }
     ].freeze
 
