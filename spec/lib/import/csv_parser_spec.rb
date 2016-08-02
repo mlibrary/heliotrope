@@ -34,24 +34,22 @@ describe Import::CSVParser do
           'creator_given_name' => 'John William',
           'resource_type' => ['image'] },
         { 'title' => ['日本語のファイル'],
-          'creator_family_name' => nil,
-          'creator_given_name' => nil,
           'resource_type' => ['text'] }
       ]
 
       expect(subject['sections'])
         .to include('Act 1: Calm Waters' => { 'title' => ['Act 1: Calm Waters'],
                                               'files' => ['shipwreck1.jpg', 'miranda1.jpg'],
-                                              'files_metadata' => [{ 'title' => ['Section 1 Shipwreck'], 'creator_family_name' => 'Smith', 'creator_given_name' => nil, 'resource_type' => ['image'] },
+                                              'files_metadata' => [{ 'title' => ['Section 1 Shipwreck'], 'creator_family_name' => 'Smith', 'resource_type' => ['image'] },
                                                                    { 'title' => ['Section 1 Miranda'], 'creator_family_name' => 'Waterhouse', 'creator_given_name' => 'John William', 'resource_type' => ['image'] }]
                                             })
 
       expect(subject['sections'])
         .to include('Act 2: Stirrin\' Up' => { 'title' => ['Act 2: Stirrin\' Up'],
                                                'files' => ['shipwreck2.jpg', 'miranda2.jpg', 'shipwreck1.jpg'],
-                                               'files_metadata' => [{ 'title' => ['Section 2 Shipwreck'], 'creator_family_name' => 'Smith', 'creator_given_name' => nil, 'resource_type' => ['image'] },
+                                               'files_metadata' => [{ 'title' => ['Section 2 Shipwreck'], 'creator_family_name' => 'Smith', 'resource_type' => ['image'] },
                                                                     { 'title' => ['Section 2 Miranda'], 'creator_family_name' => 'Waterhouse', 'creator_given_name' => 'John William', 'resource_type' => ['image'] },
-                                                                    { 'title' => ['Previous Shipwreck File (Again)'], 'creator_family_name' => 'Smith', 'creator_given_name' => nil, 'resource_type' => ['image'] }]
+                                                                    { 'title' => ['Previous Shipwreck File (Again)'], 'creator_family_name' => 'Smith', 'resource_type' => ['image'] }]
                                              })
     end
   end

@@ -5,10 +5,14 @@ module Import
     attr_reader :row, :attrs
 
     def data_for_monograph(row, attrs)
-      title = Array(row['Title'].split(';')).map(&:strip)
-      attrs['title'] = title
-      attrs['creator_family_name'] = creator_family_name(row)
-      attrs['creator_given_name'] = creator_given_name(row)
+      fields = UNIVERSAL_FIELDS + MONOGRAPH_FIELDS
+      fields.each do |field|
+        # no error-checking for monograph stuff right now
+        next if row[field[:field_name]].blank?
+        is_multivalued = field[:multivalued]
+        field_values = split_field_values_to_array(row[field[:field_name]], is_multivalued)
+        attrs[field[:metadata_name]] = return_scalar_or_multivalued(field_values, is_multivalued)
+      end
     end
 
     def data_for_asset(row_num, row, file_attrs)
@@ -23,8 +27,8 @@ module Import
       #   puts "Row #{row_num}: File name missing and not external resource!"
       #   next
       # end
-
-      FIELDS.each do |field|
+      fields = UNIVERSAL_FIELDS + ASSET_FIELDS
+      fields.each do |field|
         if !row[field[:field_name]].blank?
           is_multivalued = field[:multivalued]
           field_values = split_field_values_to_array(row[field[:field_name]], is_multivalued)
@@ -43,10 +47,6 @@ module Import
           missing_fields_errors << field[:field_name]
         end
       end
-
-      file_attrs['creator_family_name'] = creator_family_name(row)
-      file_attrs['creator_given_name'] = creator_given_name(row)
-
       combine_field_errors(row_num, missing_fields_errors, controlled_vocab_errors, date_errors)
     end
 
@@ -98,16 +98,6 @@ module Import
         end
         return nil unless Date.valid_date?(y.to_i, m.to_i, d.to_i)
         y + '-' + m + '-' + d
-      end
-
-      def creator_family_name(row)
-        return unless row['Primary Creator Last Name']
-        row['Primary Creator Last Name'].strip
-      end
-
-      def creator_given_name(row)
-        return unless row['Primary Creator First Name']
-        row['Primary Creator First Name'].strip
       end
 
       def combine_field_errors(row_num, missing_fields_errors, controlled_vocab_errors, date_errors)
