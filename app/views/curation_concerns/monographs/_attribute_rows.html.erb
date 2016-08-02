@@ -10,4 +10,4 @@
   <%= presenter.attribute_to_html(:isbn_paper, label: 'ISBN (Paper)') %>
   <%= presenter.attribute_to_html(:isbn_ebook, label: 'ISBN (E-Book)') %>
   <%= presenter.attribute_to_html(:copyright_holder) %>
-  <%= presenter.attribute_to_html(:buy_url) %>
+  <%= presenter.attribute_to_html(:buy_url, render_as: :markdown) %>
