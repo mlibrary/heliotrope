@@ -6,7 +6,7 @@ en:
       fields:
         date_published_tesim: "Date Published"
         isbn_tesim: "ISBN (Hardcover)"
-        isbn_softcover_tesim: "ISBN (Softcover)"
+        isbn_paper_tesim: "ISBN (Paper)"
         isbn_ebook_tesim: "ISBN (E-Book)"
         editor_tesim: "Editor"
         copyright_holder_tesim: "Copyright Holder"

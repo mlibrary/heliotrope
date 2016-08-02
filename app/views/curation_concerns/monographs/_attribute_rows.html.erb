@@ -1,11 +1,13 @@
   <%= presenter.attribute_to_html(:description, render_as: :markdown) %>
-  <%= presenter.attribute_to_html(:creator_full_name, label: 'Creator', render_as: :linked) %>
+  <%= presenter.attribute_to_html(:creator_full_name, label: 'Author', render_as: :linked) %>
   <%= presenter.attribute_to_html(:editor, catalog_search_link: true) %>
-  <%= presenter.attribute_to_html(:contributor, label: 'Contributors', render_as: :linked) %>
+  <%= presenter.attribute_to_html(:contributor, label: 'Additional Authors', render_as: :linked) %>
   <%= presenter.attribute_to_html(:subject, catalog_search_link: true) %>
-  <%= presenter.attribute_to_html(:publisher) %>
+  <%= presenter.attribute_to_html(:press, label: 'Publisher') %>
   <%= presenter.attribute_to_html(:language) %>
   <%= presenter.attribute_to_html(:date_published) %>
-  <%= presenter.attribute_to_html(:isbn) %>
+  <%= presenter.attribute_to_html(:isbn, label: 'ISBN (Hardcover)') %>
+  <%= presenter.attribute_to_html(:isbn_paper, label: 'ISBN (Paper)') %>
+  <%= presenter.attribute_to_html(:isbn_ebook, label: 'ISBN (E-Book)') %>
   <%= presenter.attribute_to_html(:copyright_holder) %>
   <%= presenter.attribute_to_html(:buy_url) %>

@@ -18,7 +18,29 @@
 
   <p><%= render_markdown @monograph_presenter.description.first || '' %></h3>
 
-  <p>ISBN: <%= @monograph_presenter.isbn.first %></p>
+    <% if defined?(@monograph_presenter.isbn) %>
+      <ul class="isbn list-unstyled">
+        <% @monograph_presenter.isbn.each do |isbn| %>
+          <li>ISBN: <%= isbn %></li>
+        <% end %>
+      </ul>
+    <% end %>
+
+    <% if defined?(@monograph_presenter.isbn_paper) %>
+      <ul class="isbn list-unstyled">
+        <% @monograph_presenter.isbn_paper.each do |isbn_paper| %>
+          <li>ISBN (Paper): <%= isbn_paper %></li>
+        <% end %>
+      </ul>
+    <% end %>
+
+    <% if defined?(@monograph_presenter.isbn_ebook) %>
+      <ul class="isbn list-unstyled">
+        <% @monograph_presenter.isbn_ebook.each do |isbn_ebook| %>
+          <li>ISBN (E-Book): <%= isbn_ebook %></li>
+        <% end %>
+      </ul>
+    <% end %>
 
   <%= render 'catalog/search_sidebar' %>
 <% end %>
