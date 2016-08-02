@@ -52,7 +52,7 @@ class FileSet < ActiveFedora::Base
   end
 
   property :exclusive_to_platform, predicate: ::RDF::URI.new('http://fulcrum.org/ns#exclusiveToPlatform'), multiple: false do |index|
-    index.as :symbol
+    index.as :symbol, :facetable
   end
 
   property :permissions_expiration_date, predicate: ::RDF::URI.new('http://fulcrum.org/ns#permissionsExpirationDate'), multiple: false do |index|
