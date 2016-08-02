@@ -27,6 +27,14 @@ class Monograph < ActiveFedora::Base
     index.as :stored_searchable
   end
 
+  property :isbn_softcover, predicate: ::RDF::URI.new('http://fulcrum.org/ns#isbnSoftcover') do |index|
+    index.as :stored_searchable
+  end
+
+  property :isbn_ebook, predicate: ::RDF::URI.new('http://fulcrum.org/ns#isbnEbook') do |index|
+    index.as :stored_searchable
+  end
+
   property :editor, predicate: ::RDF::Vocab::SCHEMA.editor do |index|
     index.as :stored_searchable
   end

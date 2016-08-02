@@ -3,7 +3,9 @@
 module CurationConcerns
   class MonographForm < CurationConcerns::Forms::WorkForm
     self.model_class = ::Monograph
-    self.terms += [:press, :date_published, :isbn, :editor, :copyright_holder, :buy_url, :sub_brand, :creator_family_name, :creator_given_name]
+    self.terms += [:press, :date_published, :isbn, :isbn_softcover, :isbn_ebook,
+                   :editor, :copyright_holder, :buy_url, :sub_brand,
+                   :creator_family_name, :creator_given_name]
     self.required_fields += [:press]
 
     delegate :current_user, to: :current_ability
