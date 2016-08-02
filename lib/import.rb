@@ -11,11 +11,28 @@ module Import
   # something to note is that the multivalued :yes/:no values mirror the model, such that assignment will work properly as a scalar or array...
   # ... the third :yes_split means that this is a field we actually want to *use* as multivalued, and so will split the CSV field on semicolons to do so
 
-  FIELDS =
+  UNIVERSAL_FIELDS =
+    [
+      { field_name: 'Title', metadata_name: 'title', required: true, multivalued: :yes_split },
+      { field_name: 'Primary Creator Last Name', metadata_name: 'creator_family_name', required: false, multivalued: :no },
+      { field_name: 'Primary Creator First Name', metadata_name: 'creator_given_name', required: false, multivalued: :no },
+      { field_name: 'Description', metadata_name: 'description', required: false, multivalued: :yes }
+    ].freeze
+
+  MONOGRAPH_FIELDS =
+    [
+      { field_name: 'Publisher', metadata_name: 'publisher', multivalued: :yes },
+      { field_name: 'Subject', metadata_name: 'subject', multivalued: :yes },
+      { field_name: 'ISBN (hardcover)', metadata_name: 'isbn', multivalued: :yes },
+      { field_name: 'ISBN (paper)', metadata_name: 'isbn_paper', multivalued: :yes },
+      { field_name: 'ISBN (ebook)', metadata_name: 'isbn_ebook', multivalued: :yes },
+      { field_name: 'Buy Book URL', metadata_name: 'buy_url', multivalued: :yes }
+    ].freeze
+
+  ASSET_FIELDS =
     [
       # for now leave File Name separate, but eventually when external resources are figured out it should go in here too with required => false
       # { field_name: 'File Name', metadata_name: 'title', required: true, multivalued: :no },
-      { field_name: 'Title', metadata_name: 'title', required: true, multivalued: :yes },
       { field_name: 'Resource Type', metadata_name: 'resource_type', required: true, multivalued: :yes, acceptable_values: ['audio', 'image', 'dataset', 'table', '3D model', 'text', 'video'] },
       { field_name: 'Externally Hosted Resource', metadata_name: 'external_resource', required: true, multivalued: :no, acceptable_values: ['yes', 'no'] },
       { field_name: 'Caption', metadata_name: 'caption', required: true, multivalued: :yes },
@@ -57,7 +74,6 @@ module Import
       { field_name: 'Additional Creator(s)', metadata_name: 'contributor', required: false, multivalued: :yes_split },
       { field_name: 'Sort Date', metadata_name: 'sort_date', required: false, multivalued: :no, date_format: true },
       { field_name: 'Display Date', metadata_name: 'display_date', required: false, multivalued: :no },
-      { field_name: 'Description', metadata_name: 'description', required: false, multivalued: :yes },
       { field_name: 'Keywords', metadata_name: 'keywords', required: false, multivalued: :yes_split },
       { field_name: 'Language', metadata_name: 'language', required: false, multivalued: :yes_split },
       { field_name: 'Transcript', metadata_name: 'transcript', required: false, multivalued: :no },

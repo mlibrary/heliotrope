@@ -26,8 +26,7 @@ describe Import::CSVParser do
       expect(subject['files']).to eq ['shipwreck.jpg', 'miranda.jpg']
       expect(subject['files_metadata']).to eq [
         { 'title' => ['The shipwreck scene in Act I, Scene 1'],
-          'creator_family_name' => 'Smith',
-          'creator_given_name' => nil },
+          'creator_family_name' => 'Smith' },
         { 'title' => ['Miranda'],
           'creator_family_name' => 'Waterhouse',
           'creator_given_name' => 'John William' }

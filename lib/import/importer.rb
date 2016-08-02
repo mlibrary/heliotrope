@@ -12,7 +12,8 @@ module Import
       validate_press
       csv_files.each do |file|
         errors = ''
-        attrs = CSVParser.new(file).attributes(errors)
+        # only reverse the rows when running an import from the command-line
+        attrs = CSVParser.new(file).attributes(errors, interaction)
         monograph_attrs = attrs.delete('monograph')
         sections = attrs.delete('sections')
 
