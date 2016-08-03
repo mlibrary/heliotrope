@@ -21,7 +21,7 @@
     <% if defined?(@monograph_presenter.isbn) %>
       <ul class="isbn list-unstyled">
         <% @monograph_presenter.isbn.each do |isbn| %>
-          <li>ISBN: <%= isbn %></li>
+          <li>ISBN (Hardcover): <%= isbn %></li>
         <% end %>
       </ul>
     <% end %>
@@ -40,6 +40,15 @@
           <li>ISBN (E-Book): <%= isbn_ebook %></li>
         <% end %>
       </ul>
+    <% end %>
+
+
+    <% if defined?(@monograph_presenter.buy_url) %>
+    <div class="btn-toolbar" role="toolbar" aria-label="">
+      <div class="btn-group" role="group" aria-label="">
+          <a href="<%= @monograph_presenter.buy_url.first %>" target="_blank" title="Buy <%= @monograph_presenter.title.first %>" role="button" class="btn btn-default btn-small">Buy Book</a>
+      </div>
+    </div>
     <% end %>
 
   <%= render 'catalog/search_sidebar' %>
