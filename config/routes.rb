@@ -64,6 +64,7 @@ Rails.application.routes.draw do
   get '/robots.txt' => 'robots#robots'
 
   get '/:subdomain', controller: :press_catalog, action: :index, as: :press_catalog
+  get '/:subdomain/facet', controller: :press_catalog, action: :facet
 
   resources :presses, path: '/', only: [:index] do
     resources :sub_brands, only: [:new, :create, :show, :edit, :update]
