@@ -40,8 +40,8 @@ describe Import::CSVParser do
       expect(subject['sections'])
         .to include('Act 1: Calm Waters' => { 'title' => ['Act 1: Calm Waters'],
                                               'files' => ['shipwreck1.jpg', 'miranda1.jpg'],
-                                              'files_metadata' => [{ 'title' => ['Section 1 Shipwreck'], 'creator_family_name' => 'Smith', 'resource_type' => ['image'] },
-                                                                   { 'title' => ['Section 1 Miranda'], 'creator_family_name' => 'Waterhouse', 'creator_given_name' => 'John William', 'resource_type' => ['image'] }]
+                                              'files_metadata' => [{ 'title' => ['Section 1 Shipwreck'], 'creator_family_name' => 'Smith', 'resource_type' => ['image'], 'keywords' => ['keyword1', 'keyword2'] },
+                                                                   { 'title' => ['Section 1 Miranda'], 'creator_family_name' => 'Waterhouse', 'creator_given_name' => 'John William', 'resource_type' => ['image'], 'keywords' => ['regular', 'italicized'] }]
                                             })
 
       expect(subject['sections'])

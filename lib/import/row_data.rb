@@ -1,4 +1,6 @@
 require 'date'
+require 'redcarpet'
+require 'redcarpet/render_strip'
 
 module Import
   class RowData
@@ -27,12 +29,15 @@ module Import
       #   puts "Row #{row_num}: File name missing and not external resource!"
       #   next
       # end
+
+      md = Redcarpet::Markdown.new(Redcarpet::Render::StripDown, space_after_headers: true)
+
       fields = UNIVERSAL_FIELDS + ASSET_FIELDS
       fields.each do |field|
         if !row[field[:field_name]].blank?
           is_multivalued = field[:multivalued]
           field_values = split_field_values_to_array(row[field[:field_name]], is_multivalued)
-
+          field_values = strip_markdown_from_array_of_values(field[:field_name], field_values, md)
           if field[:acceptable_values]
             field_value_acceptable(field[:field_name], field[:acceptable_values], field_values, controlled_vocab_errors)
           end
@@ -53,11 +58,11 @@ module Import
     private
 
       def split_field_values_to_array(sheet_value, is_multivalued)
-        if is_multivalued == :yes_split
-          Array(sheet_value.split(';')).map(&:strip)
-        else
-          Array(sheet_value.strip)
-        end
+        is_multivalued == :yes_split ? Array(sheet_value.split(';')).map!(&:strip) : Array(sheet_value.strip)
+      end
+
+      def strip_markdown_from_array_of_values(field_name, field_values, md)
+        field_name == "Keywords" ? field_values.map! { |value| md.render(value).strip! } : field_values
       end
 
       def return_scalar_or_multivalued(field_values, is_multivalued)
