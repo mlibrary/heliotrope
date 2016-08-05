@@ -3,7 +3,7 @@
 <%= presenter.attribute_to_html(:primary_creator_role, label: 'Creator Role') %>
 <%= presenter.attribute_to_html(:contributor, label: 'Contributors', catalog_search_link: true) %>
 <%= presenter.attribute_to_html(:subjects) %>
-<%= presenter.attribute_to_html(:display_date, label: 'Date') %>
+<%= presenter.attribute_to_html(:display_date, render_as: :markdown, label: 'Date') %>
 <%= presenter.attribute_to_html(:section_title, label: 'Related Chapter', render_as: :markdown) %>
 <%= presenter.attribute_to_html(:keywords, catalog_search_link: true) %>
 <%= presenter.attribute_to_html(:content_type, label: 'Content Type') %>
