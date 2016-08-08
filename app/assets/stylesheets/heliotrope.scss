@@ -1,5 +1,60 @@
 // custom styles for heliotrope
 
+.monograph {
+
+  .monograph-info {
+
+    h2 {
+      font-size: 1.5em;
+    }
+
+    h3 {
+      font-size: 1.3em;
+    }
+
+    .description,
+    .isbn {
+      margin-bottom: 1.5em;
+    }
+
+  }
+
+  .top-panel-heading {
+    padding-top: 0;
+    padding-left: 0;
+  }
+
+  #documents {
+    .document {
+
+      margin-bottom: 2em;
+      padding-top: 1.5em;
+
+      .document-thumbnail {
+        img {
+        margin-top: .9em;
+        }
+      }
+
+      .documentHeader {
+
+        p {
+            font-size: 1.15em;
+            font-weight: 500;
+        }
+
+      }
+
+      .document-metadata {
+        width: auto;
+        padding-left: 0;
+        padding-right: 0;
+      }
+    }
+  }
+
+}
+
 .asset {
 
   // leaflet-images
