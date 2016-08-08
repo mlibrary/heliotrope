@@ -10,7 +10,7 @@ class MonographCatalogController < ::CatalogController
 
     config.add_facet_field solr_name('resource_type', :facetable), label: "Resource Type", limit: 5
     config.add_facet_field solr_name('keywords', :facetable), label: "Keyword", limit: 5
-    config.add_facet_field solr_name('section_title', :facetable), label: "Section", limit: 5
+    config.add_facet_field solr_name('section_title', :facetable), label: "Section", limit: 5, sort: 'index'
     config.add_facet_field solr_name('sort_date', :facetable), date: { format: '%Y' }, label: "Year", limit: 5
     config.add_facet_field solr_name('exclusive_to_platform', :facetable), label: "Exclusivity", helper_method: :exclusivity_facet
     config.add_facet_fields_to_solr_request!
