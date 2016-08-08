@@ -6,6 +6,8 @@ class MonographIndexer < CurationConcerns::WorkIndexer
       press = Press.find_by(subdomain: object.press)
       press_name = press.name unless press.nil?
       solr_doc[Solrizer.solr_name('press_name', :symbol)] = press_name
+
+      solr_doc[Solrizer.solr_name('representative_id', :symbol)] = object.representative_id
     end
   end
 end
