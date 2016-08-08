@@ -16,6 +16,10 @@ class PressCatalogController < ::CatalogController
   end
   helper_method :show_press_search?
 
+  def facet
+    super
+  end
+
   private
 
     def load_press
