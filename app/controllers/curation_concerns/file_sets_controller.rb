@@ -10,7 +10,7 @@ module CurationConcerns
         :visibility_during_embargo, :embargo_release_date,
         :visibility_after_embargo, :visibility_during_lease,
         :lease_expiration_date, :visibility_after_lease, :visibility,
-        :creator_family_name, :creator_given_name, :sort_date,
+        :creator_family_name, :creator_given_name, :sort_date, :search_year,
         :book_needs_handles, :allow_download, :allow_hi_res,
         :copyright_status, :rights_granted, :rights_granted_creative_commons,
         :exclusive_to_platform, :permissions_expiration_date,
