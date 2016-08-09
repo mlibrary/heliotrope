@@ -5,17 +5,36 @@ class MonographCatalogController < ::CatalogController
     config.search_builder_class = MonographSearchBuilder
 
     config.facet_fields.tap do
+      # solr facet fields not to be displayed in the index (search results) view
       config.facet_fields.delete('human_readable_type_sim')
+      config.facet_fields.delete('creator_full_name_sim')
+      config.facet_fields.delete('tag_sim')
+      config.facet_fields.delete('subject_sim')
+      config.facet_fields.delete('language_sim')
     end
 
-    config.add_facet_field solr_name('resource_type', :facetable), label: "Resource Type", limit: 5
-    config.add_facet_field solr_name('keywords', :facetable), label: "Keyword", limit: 5
-    config.add_facet_field solr_name('section_title', :facetable), label: "Section", limit: 5, sort: 'index'
-    config.add_facet_field solr_name('sort_date', :facetable), date: { format: '%Y' }, label: "Year", limit: 5
+    config.index_fields.tap do
+      # solr fields not to be displayed in the index (search results) view
+      config.index_fields.delete('creator_full_name_tesim')
+      config.index_fields.delete('language_tesim')
+      config.index_fields.delete('contributor_tesim')
+      config.index_fields.delete('human_readable_type_tesim')
+      config.index_fields.delete('copyright_holder_tesim')
+      config.index_fields.delete('caption_tesim')
+      config.index_fields.delete('alt_text_tesim')
+      config.index_fields.delete('content_type_tesim')
+      config.index_fields.delete('keywords_tesim')
+    end
+
+    config.add_facet_field solr_name('section_title', :facetable), label: "Section", limit: 5, sort: 'index', url_method: :facet_url_helper
+    config.add_facet_field solr_name('keywords', :facetable), label: "Keyword", limit: 5, url_method: :facet_url_helper
+    config.add_facet_field solr_name('creator_full_name', :facetable), label: 'Creator', limit: 5, url_method: :facet_url_helper
+    config.add_facet_field solr_name('resource_type', :facetable), label: "Format", limit: 5, url_method: :facet_url_helper
+    config.add_facet_field solr_name('sort_date', :facetable), date: { format: '%Y' }, label: "Year", limit: 5, url_method: :facet_url_helper
     config.add_facet_field solr_name('exclusive_to_platform', :facetable), label: "Exclusivity", helper_method: :exclusivity_facet
     config.add_facet_fields_to_solr_request!
 
-    config.index.partials = [:index_header, :thumbnail, :index]
+    config.index.partials = [:thumbnail, :index_header, :index]
   end
 
   def facet

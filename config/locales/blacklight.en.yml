@@ -3,6 +3,8 @@ en:
     application_name: 'Blacklight'
 
     search:
+      facets:
+        title: 'Filter materials'
       fields:
         date_published_tesim: "Date Published"
         isbn_tesim: "ISBN (Hardcover)"

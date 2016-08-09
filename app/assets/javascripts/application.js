@@ -21,6 +21,7 @@
 //= require leaflet-iiif
 
 //= require 'edit_users'
+//= require 'short_monograph_description'
 //= require 'file_set_sort_date'
 //= require 'disable_video_download'
 //= require_tree .
