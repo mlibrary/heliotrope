@@ -1,18 +1,18 @@
 <% provide :page_title, @press.name %>
-<% provide :page_class, 'search' %>
+<% provide :page_class, 'press' %>
 
-<% provide :page_header do %>
-  <% if @press.logo_path %>
-    <p><%= image_tag @press.logo_path, alt: @press.name %></p>
-  <% end %>
-  <p><%= @press.description %></p>
+<!-- Main jumbotron for a primary heading image -->
+    <div class="jumbotron">
+      <div class="container">
+        <% if @press.logo_path %>
+          <div class="logo">
+            <%= image_tag @press.logo_path, alt: @press.name, class: 'img-thumbnail' %>
+          </div>
+        <% end %>
 
-  <%= render 'catalog/navbar' %>
-<% end %>
-
-<% provide :sidebar do %>
-  <%= render 'catalog/search_sidebar' %>
-<% end %>
+        <p class="lead"><%= @press.description %></p>
+      </div>
+    </div>
 
 <div id="content">
   <%= render 'catalog/search_results' %>

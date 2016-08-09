@@ -8,7 +8,7 @@ jQuery(function(){
 
         $(this).html(
             t.slice(0,500)+'<span>... </span><a href="#" class="more">More</a>'+
-            '<span style="display:none;">'+ t.slice(100,t.length)+' <a href="#" class="less">Less</a></span>'
+            '<span style="display:none;">'+ t.slice(500,t.length)+' <a href="#" class="less">Less</a></span>'
         );
 
     });

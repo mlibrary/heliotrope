@@ -12,8 +12,15 @@
     <%= stylesheet_link_tag 'application' %>
     <%= javascript_include_tag 'application' %>
   </head>
+<% if defined?(@press.subdomain) %>
+  <body class="<%= @press.subdomain %>">
+<% elsif defined?(@monograph_presenter.subdomain) %>
+  <body class="<%= @monograph_presenter.subdomain %>">
+<% elsif defined?(@presenter.monograph.subdomain) %>
+  <body class="<%= @presenter.monograph.subdomain %>">
+<% else %>
   <body>
-
+<% end %>
     <%= content_for?(:body) ? yield(:body) : yield %>
 
     <%= render 'shared/ajax_modal' %>

@@ -1,0 +1,35 @@
+<nav id="brand-bar" class="navbar navbar-default navbar-static-top">
+  <div class="container">
+    <!-- brand and toggle grouped together -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#brand-bar-nav" aria-expanded="false" aria-controls="navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <% if defined?(@press.name) %>
+        <a class="navbar-brand" href="/<%= @press.subdomain %>"><%= @press.name %></a>
+      <% elsif defined?(@monograph_presenter.press) %>
+        <a class="navbar-brand" href="/<%= @monograph_presenter.subdomain %>"><%= @monograph_presenter.press %></a>
+      <% elsif defined?(@presenter.monograph.press) %>
+        <a class="navbar-brand" href="/<%= @presenter.monograph.press %>"><%= @presenter.monograph.press %></a>
+      <% else %>
+        <a class="navbar-brand" href="#">University Press</a>
+      <% end %>
+    </div>
+
+    <!-- search -->
+    <% if show_site_search? %>
+      <%= render 'shared/site_search' %>
+    <% elsif respond_to?(:show_press_search?) && show_press_search? %>
+      <%= render 'press_catalog/press_search' %>
+    <% end %>
+
+    <div class="collapse navbar-collapse" id="brand-bar-nav">
+      <div class="navbar-right">
+        <%= render 'shared/site_actions' if show_site_actions? %>
+      </div>
+    </div>
+  </div>
+</nav>
