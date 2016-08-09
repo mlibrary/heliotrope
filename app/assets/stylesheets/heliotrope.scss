@@ -1,5 +1,8 @@
 // custom styles for heliotrope
 
+// navigation menu
+
+// monograph
 .monograph {
 
   .monograph-info {
@@ -25,8 +28,8 @@
   }
 
   #documents {
-    .document {
 
+    .document {
       margin-bottom: 2em;
       padding-top: 1.5em;
 
@@ -37,12 +40,10 @@
       }
 
       .documentHeader {
-
         p {
             font-size: 1.15em;
             font-weight: 500;
         }
-
       }
 
       .document-metadata {
@@ -50,11 +51,14 @@
         padding-left: 0;
         padding-right: 0;
       }
+
     }
+
   }
 
 }
 
+// asset pages
 .asset {
 
   // leaflet-images
