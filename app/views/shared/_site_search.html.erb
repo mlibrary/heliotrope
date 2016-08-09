@@ -4,7 +4,7 @@
   <% catalog_url = main_app.search_catalog_path %>
 <% end %>
 
-<%= form_tag catalog_url, method: :get, class: "search-form navbar-form" do %>
+<%= form_tag catalog_url, method: :get, class: "search-form navbar-left navbar-form" do %>
   <fieldset>
     <legend class="sr-only">Search <%= application_name %></legend>
     <%= label_tag :catalog_search, t('curation_concerns.search.form.q.label'), class: "sr-only" %>

@@ -26,6 +26,14 @@ module CurationConcerns
       end.compact
     end
 
+    def subdomain
+      Array(solr_document['press_tesim']).first
+    end
+
+    def press
+      Array(solr_document['press_name_ssim']).first
+    end
+
     private
 
       def ordered_member_docs
