@@ -36,5 +36,6 @@ en:
         primary_creator_role_tesim: "Primary Creator Role(s)"
         display_date_tesim: "Display Date"
         sort_date_tesim: "Sort Date"
+        search_year_tesim: "Search Year"
         transcript_tesim: "Transcript"
         translation_tesim: "Translation(s)"

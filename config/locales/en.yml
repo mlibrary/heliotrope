@@ -53,6 +53,7 @@ en:
         primary_creator_role: "Primary Creator Role(s)"
         display_date: "Display Date"
         sort_date: "Sort Date"
+        search_year: "Search Year"
         transcript: "Transcript"
         translation: "Translation(s)"
   helpers:

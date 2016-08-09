@@ -47,8 +47,6 @@ module Import
           end
           file_attrs[field[:metadata_name]] = return_scalar_or_multivalued(field_values, is_multivalued)
         elsif field[:required] == true
-          # add to array of missing stuff
-          # missing_required_fields.add(row[field[:field_name']])
           missing_fields_errors << field[:field_name]
         end
       end

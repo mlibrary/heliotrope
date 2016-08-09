@@ -68,6 +68,7 @@ class SolrDocument
     'resource_type',
     'section_title',
     'sort_date',
+    'search_year',
     'transcript',
     'translation'
   ]

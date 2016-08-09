@@ -45,6 +45,7 @@ module Import
         if asset_data?(row)
           file_attrs = {}
           errors += row_data.data_for_asset(row_num, row, file_attrs)
+          add_assets_not_in_spreadsheet(file_attrs)
           attach_asset(row, attrs, file_attrs)
         else
           row_data.data_for_monograph(row, attrs['monograph'])
@@ -56,6 +57,12 @@ module Import
     end
 
     private
+
+      def add_assets_not_in_spreadsheet(file_attrs)
+        if file_attrs['sort_date']
+          file_attrs['search_year'] = file_attrs['sort_date'][0, 4]
+        end
+      end
 
       def next_row_num(row_num, reverse_order)
         reverse_order ? row_num - 1 : row_num + 1

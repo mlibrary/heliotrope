@@ -73,6 +73,8 @@ module Import
       { field_name: 'Primary Creator Role', metadata_name: 'primary_creator_role', required: false, multivalued: :yes_split },
       { field_name: 'Additional Creator(s)', metadata_name: 'contributor', required: false, multivalued: :yes_split },
       { field_name: 'Sort Date', metadata_name: 'sort_date', required: false, multivalued: :no, date_format: true },
+      # should 'Search Year' column be added to metadata spreadsheet?
+      # { field_name: 'Search Year', metadata_name: 'search_year', required: false, multivalued: :no, date_format: true },
       { field_name: 'Display Date', metadata_name: 'display_date', required: false, multivalued: :no },
       { field_name: 'Keywords', metadata_name: 'keywords', required: false, multivalued: :yes_split },
       { field_name: 'Language', metadata_name: 'language', required: false, multivalued: :yes_split },
