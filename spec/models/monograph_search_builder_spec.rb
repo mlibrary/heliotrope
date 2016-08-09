@@ -1,8 +1,9 @@
 require 'rails_helper'
 
 describe MonographSearchBuilder do
-  let(:monograph) { create(:monograph) }
+  let(:monograph) { create(:monograph, representative_id: cover.id) }
   let(:section) { create(:section) }
+  let(:cover) { create(:file_set) }
   let(:file1) { create(:file_set) }
   let(:file2) { create(:file_set) }
   let(:config) { CatalogController.blacklight_config }
@@ -11,6 +12,7 @@ describe MonographSearchBuilder do
   let(:search_builder) { described_class.new(context) }
 
   before do
+    monograph.ordered_members << cover
     monograph.ordered_members << file1
     section.ordered_members << file2
     section.save!
@@ -23,7 +25,7 @@ describe MonographSearchBuilder do
       search_builder.blacklight_params['id'] = monograph.id
       search_builder.filter_by_members(solr_params)
     }
-    it "creates a query for the monograph's assets" do
+    it "creates a query for the monograph's assets but without the representative_id" do
       expect(solr_params[:fq].first).to match(/{!terms f=id}#{file1.id},#{file2.id}/)
     end
   end

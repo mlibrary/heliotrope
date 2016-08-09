@@ -59,7 +59,10 @@ feature 'Create a file set' do
 
       click_button 'Attach to Monograph'
       # On Monograph Page
-      click_link 'Test file set'
+      # The file we just added won't show up on the monograph catalog page since it's
+      # the representative fileset. Navigate to the FileSet page
+      click_link 'Manage Monograph and Files'
+      click_link 'miranda.jpg'
       # On FileSet Page
       expect(page).to have_content 'Test file set'
       # expect(page).to have_content 'image'

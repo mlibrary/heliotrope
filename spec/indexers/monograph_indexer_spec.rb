@@ -23,5 +23,9 @@ describe MonographIndexer do
     it 'indexes the press name' do
       expect(subject['press_name_ssim']).to eq press_name
     end
+
+    it 'indexes the representative_id' do
+      expect(subject['representative_id_ssim']).to eq monograph.representative_id
+    end
   end
 end
