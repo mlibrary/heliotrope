@@ -13,7 +13,7 @@
       <% elsif defined?(@monograph_presenter.press) %>
         <a class="navbar-brand" href="/<%= @monograph_presenter.subdomain %>"><%= @monograph_presenter.press %></a>
       <% elsif defined?(@presenter.monograph.press) %>
-        <a class="navbar-brand" href="/<%= @presenter.monograph.press %>"><%= @presenter.monograph.press %></a>
+        <a class="navbar-brand" href="/<%= @presenter.monograph.subdomain %>"><%= @presenter.monograph.press %></a>
       <% else %>
         <a class="navbar-brand" href="#">University Press</a>
       <% end %>
