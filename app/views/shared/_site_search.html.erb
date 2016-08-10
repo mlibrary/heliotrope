@@ -1,5 +1,7 @@
 <% if params['controller'] == 'monograph_catalog' %>
   <% catalog_url = main_app.monograph_catalog_path(params[:id]) %>
+<% elsif params['controller'] == 'curation_concerns/file_sets' && !@presenter.nil? %>
+  <% catalog_url = main_app.monograph_catalog_path(@presenter.monograph_id) %>
 <% else %>
   <% catalog_url = main_app.search_catalog_path %>
 <% end %>
