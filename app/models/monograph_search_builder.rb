@@ -3,7 +3,12 @@ class MonographSearchBuilder < ::SearchBuilder
   self.default_processor_chain += [:filter_by_members]
 
   def filter_by_members(solr_parameters)
-    ids = asset_ids(blacklight_params['id'])
+    ids = if blacklight_params[:monograph_id]
+            # used for the facets "more" link and facet modal
+            asset_ids(blacklight_params[:monograph_id])
+          else
+            asset_ids(blacklight_params['id'])
+          end
     solr_parameters[:fq] ||= []
     solr_parameters[:fq] << "{!terms f=id}#{ids}"
   end
