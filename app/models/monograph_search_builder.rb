@@ -5,7 +5,7 @@ class MonographSearchBuilder < ::SearchBuilder
   def filter_by_members(solr_parameters)
     ids = asset_ids(blacklight_params['id'])
     solr_parameters[:fq] ||= []
-    solr_parameters[:fq] << "{!terms f=id}#{ids}" if ids.present?
+    solr_parameters[:fq] << "{!terms f=id}#{ids}"
   end
 
   private
