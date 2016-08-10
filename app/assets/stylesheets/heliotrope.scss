@@ -1,6 +1,32 @@
 // custom styles for heliotrope
 
+// navigation menu
+.navbar {
+  margin-bottom: 0;
+}
+
+// press
+.jumbotron {
+
+  .container {
+    margin-top: 3em;
+  }
+
+  .logo {
+
+    img {
+      width: 180px;
+      height: auto;
+      margin: 0 1em 1em 0;
+    }
+
+  }
+
+}
+
+// monograph
 .monograph {
+  margin-top: 5em;
 
   .monograph-info {
 
@@ -25,8 +51,8 @@
   }
 
   #documents {
-    .document {
 
+    .document {
       margin-bottom: 2em;
       padding-top: 1.5em;
 
@@ -37,12 +63,10 @@
       }
 
       .documentHeader {
-
         p {
             font-size: 1.15em;
             font-weight: 500;
         }
-
       }
 
       .document-metadata {
@@ -50,12 +74,16 @@
         padding-left: 0;
         padding-right: 0;
       }
+
     }
+
   }
 
 }
 
+// asset pages
 .asset {
+  margin-top: 5em;
 
   // leaflet-images
   #image {

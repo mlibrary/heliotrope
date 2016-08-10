@@ -1,18 +1,5 @@
 <% provide :page_title, @press.name %>
-<% provide :page_class, 'search' %>
-
-<% provide :page_header do %>
-  <% if @press.logo_path %>
-    <p><%= image_tag @press.logo_path, alt: @press.name %></p>
-  <% end %>
-  <p><%= @press.description %></p>
-
-  <%= render 'catalog/navbar' %>
-<% end %>
-
-<% provide :sidebar do %>
-  <%= render 'catalog/search_sidebar' %>
-<% end %>
+<% provide :page_class, 'press' %>
 
 <div id="content">
   <%= render 'catalog/search_results' %>

@@ -15,24 +15,26 @@ feature 'Press Catalog' do
       let!(:colors) { create(:public_monograph, title: ['Red and Blue are Colors'], press: psu.subdomain) }
 
       scenario 'visits the catalog page for a press' do
+        # jmcglone: disabling the main catalog test because we won't launch with this.
+        # TODO: reenable this test once we bring back the main catalog search
         # The main catalog
-        visit search_catalog_path
+        # visit search_catalog_path
 
         # I should see all the public monographs
-        expect(page).to have_selector('#documents .document', count: 3)
-        expect(page).to have_link red.title.first
-        expect(page).to have_link blue.title.first
-        expect(page).to have_link colors.title.first
+        # expect(page).to have_selector('#documents .document', count: 3)
+        # expect(page).to have_link red.title.first
+        # expect(page).to have_link blue.title.first
+        # expect(page).to have_link colors.title.first
 
         # Search the catalog
-        fill_in 'q', with: 'Red'
-        click_button 'Search'
+        # fill_in 'q', with: 'Red'
+        # click_button 'Search'
 
         # I should see search results from all presses
-        expect(page).to have_selector('#documents .document', count: 2)
-        expect(page).to     have_link red.title.first
-        expect(page).to_not have_link blue.title.first
-        expect(page).to     have_link colors.title.first
+        # expect(page).to have_selector('#documents .document', count: 2)
+        # expect(page).to     have_link red.title.first
+        # expect(page).to_not have_link blue.title.first
+        # expect(page).to     have_link colors.title.first
 
         # The catalog for a certain press
         visit Rails.application.routes.url_helpers.press_catalog_path(umich)

@@ -1,0 +1,12 @@
+<!-- Main jumbotron for a primary heading image -->
+    <div class="jumbotron">
+      <div class="container">
+        <% if @press.logo_path %>
+          <div class="logo pull-left">
+            <%= image_tag @press.logo_path, alt: @press.name, class: 'img-thumbnail' %>
+          </div>
+        <% end %>
+
+        <p class="lead"><%= @press.description %></p>
+      </div>
+    </div>

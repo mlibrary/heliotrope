@@ -33,6 +33,14 @@ module CurationConcerns
              :display_date, :sort_date, :search_year, :transcript, :translation, :file_format,
              to: :solr_document
 
+    def subdomain
+      Array(solr_document['press_tesim']).first
+    end
+
+    def press
+      Array(solr_document['press_name_ssim']).first
+    end
+
     def page_title
       Array(solr_document['label_tesim']).first
     end
