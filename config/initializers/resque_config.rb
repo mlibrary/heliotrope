@@ -3,4 +3,4 @@ config = YAML.load(ERB.new(IO.read(File.join(Rails.root, 'config', 'redis.yml'))
 Resque.redis = Redis.new(host: config[:host], port: config[:port], thread_safe: true)
 
 Resque.inline = Rails.env.test?
-Resque.redis.namespace = "#{Settings.resque_namespace}:#{Rails.env}"
+Resque.redis.namespace = Settings.resque_namespace || "heliotrope"
