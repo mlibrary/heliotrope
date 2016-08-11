@@ -1,0 +1,64 @@
+<footer class="press">
+  <div class="container-fluid">
+    <div class="row col-wrap">
+      <div class="col-sm-4 social col">
+        <p>
+          <% if defined?(@press.logo_path) %>
+            <%= image_tag @press.logo_path, alt: @press.name, class: 'img-thumbnail img-responsive' %><br /><br />
+          <% elsif defined?(@monograph_presenter.press_logo) %>
+            <%= image_tag @monograph_presenter.press_logo, alt: @monograph_presenter.press, class: 'img-thumbnail img-responsive' %><br /><br />
+          <% elsif defined?(@presenter.monograph.press_logo) %>
+            <%= image_tag @presenter.monograph.press_logo, alt: @presenter.monograph.press, class: 'img-thumbnail img-responsive' %><br /><br />
+          <% end %>
+          <% if defined?(@press.press_url) %>
+            <a class="brand" href="<%= @press.press_url %>"><%= @press.name %></a>
+          <% elsif defined?(@monograph_presenter.press_url) %>
+            <a class="brand" href="<%= @monograph_presenter.press_url %>"><%= @monograph_presenter.press %></a>
+          <% elsif defined?(@presenter.monograph.press_url) %>
+            <a class="brand" href="<%= @presenter.monograph.press_url %>"><%= @presenter.monograph.press %></a>
+          <% else %>
+            <a class="brand" href="#" >University Press</a>
+          <% end %>
+        </p>
+        <!-- <ul class="list-inline">
+          <li><a href="#">FB</a></li>
+          <li><a href="#">I</a></li>
+          <li><a href="#">T</a></li>
+          <li><a href="#">YT</a></li>
+        </ul> -->
+      </div>
+      <div class="col-sm-4 footer-nav col">
+        <!-- <ul class="list-unstyled">
+          <li><a href="#">Home</a></li>
+          <li><a href="#">Search</a></li>
+          <li><a href="#">Browse All Books</a></li>
+          <li><a href="#">Browse All Book Materials</a></li>
+          <li><a href="#">About</a></li>
+        </ul> -->
+      </div>
+      <div class="col-sm-4 platform col">
+        <p>Powered by <a href="#">Fulcrum</a></p>
+        <ul class="list-unstyled">
+          <!-- <li><a href="#">Help</a></li> -->
+          <li><a href="http://fulcrum.org/about/">About</a></li>
+          <li><a href="http://fulcrum.org/blog/">Blog</a></li>
+          <li><a href="mailto:fulcrum-info@umich.edu">Contact</a></li>
+          <li><a href="https://github.com/mlibrary/heliotrope">Contribute</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="row copyright">
+      <div class="col-sm-12">
+        <% if defined?(@press.name) %>
+          <p>&copy; <%= @press.name %> 2016</p>
+        <% elsif defined?(@monograph_presenter.press) %>
+          <p>&copy; <%= @monograph_presenter.press %> 2016</p>
+        <% elsif defined?(@presenter.monograph.press) %>
+          <p>&copy; <%= @presenter.monograph.press %> 2016</p>
+        <% else %>
+          <p>&copy; University Press 2016</p>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</footer>

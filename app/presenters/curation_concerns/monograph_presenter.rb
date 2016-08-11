@@ -34,6 +34,14 @@ module CurationConcerns
       Array(solr_document['press_name_ssim']).first
     end
 
+    def press_logo
+      Press.find_by(subdomain: subdomain).logo_path
+    end
+
+    def press_url
+      Press.find_by(subdomain: subdomain).press_url
+    end
+
     private
 
       def ordered_member_docs

@@ -5,6 +5,54 @@
   margin-bottom: 0;
 }
 
+// footer
+// generic press
+footer.press {
+  background-color: #262626;
+  color: #fff;
+  margin-top: 5em;
+
+  img {
+    width: 100px;
+    height: auto;
+  }
+
+  .col-wrap {
+    overflow: hidden;
+  }
+
+  .col {
+    margin-bottom: -99999px;
+    padding-bottom: 99999px;
+  }
+
+  .social {
+    padding-left: 30px;
+  }
+
+  .social,
+  .footer-nav {
+    padding-top: 30px;
+    background-color: #171717;
+  }
+
+  .platform {
+    padding-top: 30px;
+    color: #BABABA;
+  }
+
+  .copyright {
+    background-color: #000;
+    padding: 10px;
+
+      p {
+        font-size: 16px;
+      }
+
+  }
+
+}
+
 // press
 .jumbotron {
 
