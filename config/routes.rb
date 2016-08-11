@@ -36,7 +36,7 @@ Rails.application.routes.draw do
   get 'concern/monographs/new', controller: 'curation_concerns/monographs', action: :new
   get 'concern/monographs/:id', controller: :monograph_catalog, action: :index, as: :monograph_catalog
   get 'concern/monographs/:id/show', controller: 'curation_concerns/monographs', action: :show, as: :monograph_show
-  get 'monograph_catalog/facet/:id', controller: :monograph_catalog, action: :facet
+  get 'monograph_catalog/facet/:id', controller: :monograph_catalog, action: :facet, as: :monograph_catalog_facet
 
   curation_concerns_basic_routes
   curation_concerns_embargo_management
