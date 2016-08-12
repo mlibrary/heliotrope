@@ -1,6 +1,87 @@
 // Press themes are collected here
 
 // Northwestern University Press
+// colors
+$nw-brand-color: #4e2a84;
+$nw-accent-color: #d8d6d6;
+
+$nw-purple-60: #836eaa;
+$nw-purple-30: #b6acd1;
+$nw-purple-10: #e4e0ee;
+$nw-black-80: #342f2e;
+$nw-black-20: #bbb8b8;
+$nw-white: #fff;
+
+$fulcrum-light-2: #bec4cc;
+
+// typography
+@mixin akkurat {
+  font-family: "akkurat", arial, sans-serif;
+}
+
+@mixin campton {
+  font-family: "campton";
+}
+
 .northwestern {
+
+  // navigation menu
+  #brand-bar {
+    background-color: $nw-brand-color;
+
+    .navbar-brand {
+      color: $nw-white;
+    }
+
+    .navbar-nav {
+      a#add-content,
+      a.login,
+      a.user-display-name {
+          color: $nw-white;
+      }
+    }
+
+    button.search-submit {
+      background-color: $nw-purple-60;
+      border-color: $nw-purple-60;
+    }
+
+  }
+
+  // jumbotron
+  .jumbotron {
+    background-color: $nw-purple-10;
+
+    .logo {
+
+      img {
+        margin-right: 3em;
+        width: 150px;
+      }
+
+    }
+
+  }
+
+  //footer
+  footer {
+    .social,
+    .footer-nav {
+      background-color: $nw-purple-60;
+      img {
+        width: 50px;
+      }
+      a {
+        color: $nw-white;
+      }
+    }
+    .copyright {
+      background-color: $nw-brand-color;
+    }
+    .platform {
+      background-color: $nw-black-80;
+    }
+  }
+
 
 }

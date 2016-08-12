@@ -1,0 +1,99 @@
+// this contains variables and overrides for fulcrum specific design and branding
+
+///////////////////////////////////
+// variables
+///////////////////////////////////
+
+
+// colors
+$fulcrum-brand-color:   #002C63;
+$fulcrum-accent-color:  #00AFEC;
+
+$fulcrum-white:         #FFF;
+$fulcrum-light-1:       #E9EEF5;
+$fulcrum-light-2:       #BEC4CC;
+$fulcrum-gray:          #8A8E96;
+$fulcrum-dark-1:        #565B63;
+$fulcrum-dark-2:        #31343B;
+$fulcrum-black:         #111417;
+
+$fulcrum-shadow:        rgba($fulcrum-black, 0.33);
+
+$fulcrum-ui-success:    #43C59E;
+$fulcrum-ui-caution:    #FFE67A;
+$fulcrum-ui-warning:    #FF6663;
+
+$fulcrum-facebook-blue: #3b5998;
+$fulcrum-twitter-blue:  #00aced;
+$fulcrum-linkedin-blue: #0077B5;
+$fulcrum-google-red:    #DD4B39;
+
+
+// type sizes
+$alpha:    2rem; // 40px
+$beta:  1.65rem; // 33px
+$gamma: 1.15rem; // 23px
+$delta: 0.95rem; // 19px
+$milli: 0.65rem; // 13px
+
+// icon sizes
+$github: 2rem;
+
+// custom type sizes
+$navi: 0.85rem;
+$zeta: 3rem;
+
+// breakpoints
+$bp--m: 30em;
+$bp--l: 56em;
+
+// border radius
+$radius:     4px;
+
+
+///////////////////////////////////
+// typography
+///////////////////////////////////
+
+// google webfonts
+@mixin crete {
+  font-family: "Crete Round", Merriweather, georgia, serif;
+  font-weight: 400;
+}
+@mixin crete-italic {
+  font-family: "Crete Round", Merriweather, georgia, serif;
+  font-weight: 400;
+  font-style: italic;
+}
+
+
+// typekit webfonts
+@mixin effra {
+  font-family: "effra", Effra-regular, AvenirNext-Medium, Avenir-Medium, avenir, sans-serif;
+  font-weight: 400;
+}
+@mixin effra-italic {
+  font-family: "effra", Effra-regular, AvenirNext-Medium, Avenir-Medium, avenir, sans-serif;
+  font-weight: 400;
+  font-style: italic;
+}
+@mixin effra-medium {
+  font-family: "effra", Effra-Medium, AvenirNext-Medium, Avenir-Medium, avenir, sans-serif;
+  font-weight: 500;
+}
+@mixin effra-light {
+  font-family: "effra", Effra-regular, AvenirNext-Medium, Avenir-Medium, avenir, sans-serif;
+  font-weight: 300;
+}
+
+
+footer {
+  .platform {
+    background-color: $fulcrum-brand-color;
+    @include effra-medium;
+    a {
+      border-bottom: 3px solid transparent;
+      color: $fulcrum-white;
+    }
+  }
+}

@@ -4,11 +4,11 @@
       <div class="col-sm-4 social col">
         <p>
           <% if defined?(@press.logo_path) %>
-            <%= image_tag @press.logo_path, alt: @press.name, class: 'img-thumbnail img-responsive' %><br /><br />
+            <%= image_tag @press.logo_path, alt: @press.name, class: 'img-responsive' %><br /><br />
           <% elsif defined?(@monograph_presenter.press_logo) %>
-            <%= image_tag @monograph_presenter.press_logo, alt: @monograph_presenter.press, class: 'img-thumbnail img-responsive' %><br /><br />
+            <%= image_tag @monograph_presenter.press_logo, alt: @monograph_presenter.press, class: 'img-responsive' %><br /><br />
           <% elsif defined?(@presenter.monograph.press_logo) %>
-            <%= image_tag @presenter.monograph.press_logo, alt: @presenter.monograph.press, class: 'img-thumbnail img-responsive' %><br /><br />
+            <%= image_tag @presenter.monograph.press_logo, alt: @presenter.monograph.press, class: 'img-responsive' %><br /><br />
           <% end %>
           <% if defined?(@press.press_url) %>
             <a class="brand" href="<%= @press.press_url %>"><%= @press.name %></a>

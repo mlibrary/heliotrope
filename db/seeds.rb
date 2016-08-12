@@ -20,8 +20,8 @@ Press.create!(name: 'Indiana University Press',
               press_url: 'http://www.iupress.indiana.edu')
 
 Press.create!(name: 'Northwestern University Press',
-              logo_path: 'http://www.nupress.northwestern.edu/sites/all/themes/nupress/images/northwestern-press-logo-old.png',
-              description: "Northwestern University Press is dedicated to publishing works of enduring scholarly and cultural value, extending the university’s mission to a community of readers throughout the world.",
+              logo_path: 'northwestern.png',
+              description: "Northwestern University Press is dedicated to publishing works of enduring scholarly and cultural value, extending the University’s mission to a community of readers throughout the world. The Press publishes books and journals in the humanities, especially philosophy, literature, and contemporary European writers in translation and continues to explore new media as it strives to promote the finest works of scholarship in the humanities and social sciences.",
               subdomain: 'northwestern',
               press_url: 'http://nupress.northwestern.edu/')
 
