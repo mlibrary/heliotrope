@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160805201611) do
+ActiveRecord::Schema.define(version: 20160811101311) do
 
   create_table "bookmarks", force: :cascade do |t|
     t.integer  "user_id",       null: false
@@ -67,6 +67,7 @@ ActiveRecord::Schema.define(version: 20160805201611) do
     t.string   "subdomain"
     t.datetime "created_at",  null: false
     t.datetime "updated_at",  null: false
+    t.string   "press_url"
   end
 
   create_table "roles", force: :cascade do |t|
