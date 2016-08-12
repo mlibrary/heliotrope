@@ -34,3 +34,8 @@
 # Ignore RubyMine project settings folder
 .idea/
 
+# Ignore all files ending in "log", vagrant log files
+**/*.log
+
+# Ignore all files ending in "swp", vim swap files
+**/*.swp
