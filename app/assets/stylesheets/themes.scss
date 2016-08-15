@@ -23,9 +23,63 @@ $fulcrum-light-2: #bec4cc;
   font-family: "campton";
 }
 
+@mixin droid-serif {
+  font-family: "droid-serif", Georgia, serif;
+}
+
+@mixin freight-sans-semi-bold {
+  font-family: "freight-sans-pro", sans-serif;
+  font-weight:600;
+}
+
+@mixin freight-sans-book {
+  font-family: "freight-sans-pro", sans-serif;
+  font-weight: 400;
+}
+
+@mixin freight-sans-light {
+  font-family: "freight-sans-pro", sans-serif;
+  font-weight:300;
+}
+
 .northwestern {
 
+  //typography
+  @include droid-serif;
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5 {
+    @include freight-sans-semi-bold;
+  }
+
+  a {
+    color: $nw-brand-color;
+  }
+
+  a:hover,
+  a:active {
+    color: $nw-purple-60;
+  }
+
+  // buttons
+  .btn {
+    @include freight-sans-book;
+  }
+
+  #manage-monograph-button {
+    color: $nw-white;
+  }
+
   // navigation menu
+  .navbar-default .navbar-nav > .open > a,
+  .navbar-default .navbar-nav > .open > a:hover,
+  .navbar-default .navbar-nav > .open > a:focus {
+    background-color: $nw-purple-60;
+  }
+
   #brand-bar {
     background-color: $nw-brand-color;
 
@@ -41,6 +95,7 @@ $fulcrum-light-2: #bec4cc;
       }
     }
 
+
     button.search-submit {
       background-color: $nw-purple-60;
       border-color: $nw-purple-60;
@@ -51,6 +106,7 @@ $fulcrum-light-2: #bec4cc;
   // jumbotron
   .jumbotron {
     background-color: $nw-purple-10;
+    @include freight-sans-light;
 
     .logo {
 
@@ -63,17 +119,27 @@ $fulcrum-light-2: #bec4cc;
 
   }
 
+  // assets
+  .asset {
+    ul.nav-tabs li {
+      @include freight-sans-book;
+    }
+  }
+
   //footer
   footer {
+    a,
+    a:hover,
+    a:active {
+      color: $nw-white;
+    }
     .social,
     .footer-nav {
       background-color: $nw-purple-60;
       img {
         width: 50px;
       }
-      a {
-        color: $nw-white;
-      }
+
     }
     .copyright {
       background-color: $nw-brand-color;

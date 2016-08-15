@@ -11,6 +11,23 @@
     <%= csrf_meta_tag %>
     <%= stylesheet_link_tag 'application' %>
     <%= javascript_include_tag 'application' %>
+    <!-- typekit for northwestern -->
+    <% if defined?(@press.subdomain ) %>
+      <% if @press.subdomain == 'northwestern' %>
+        <script src="//use.typekit.net/wyq1mfc.js"></script>
+        <script>try{Typekit.load({ async: true });}catch(e){}</script>
+      <% end %>
+    <% elsif defined?(@monograph_presenter.subdomain) %>
+      <% if @monograph_presenter.subdomain == 'northwestern' %>
+        <script src="//use.typekit.net/wyq1mfc.js"></script>
+        <script>try{Typekit.load({ async: true });}catch(e){}</script>
+      <% end %>
+    <% elsif defined?(@presenter.monograph.subdomain) %>
+      <% if @presenter.monograph.subdomain == 'northwestern' %>
+        <script src="//use.typekit.net/wyq1mfc.js"></script>
+        <script>try{Typekit.load({ async: true });}catch(e){}</script>
+      <% end %>
+    <% end %>
   </head>
 <% if defined?(@press.subdomain) %>
   <body class="<%= @press.subdomain %>">
