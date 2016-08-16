@@ -15,5 +15,6 @@
  *= require jquery-ui/datepicker
  *= require leaflet
  *= require heliotrope
+ *= require fulcrum
  *= require themes
  */

@@ -1,6 +1,153 @@
 // Press themes are collected here
 
 // Northwestern University Press
+// colors
+$nw-brand-color: #4e2a84;
+$nw-accent-color: #d8d6d6;
+
+$nw-purple-60: #836eaa;
+$nw-purple-30: #b6acd1;
+$nw-purple-10: #e4e0ee;
+$nw-black-80: #342f2e;
+$nw-black-20: #bbb8b8;
+$nw-white: #fff;
+
+$fulcrum-light-2: #bec4cc;
+
+// typography
+@mixin akkurat {
+  font-family: "akkurat", arial, sans-serif;
+}
+
+@mixin campton {
+  font-family: "campton";
+}
+
+@mixin droid-serif {
+  font-family: "droid-serif", Georgia, serif;
+}
+
+@mixin freight-sans-semi-bold {
+  font-family: "freight-sans-pro", sans-serif;
+  font-weight:600;
+}
+
+@mixin freight-sans-book {
+  font-family: "freight-sans-pro", sans-serif;
+  font-weight: 400;
+}
+
+@mixin freight-sans-light {
+  font-family: "freight-sans-pro", sans-serif;
+  font-weight:300;
+}
+
 .northwestern {
+
+  //typography
+  @include droid-serif;
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5 {
+    @include freight-sans-semi-bold;
+  }
+
+  a {
+    color: $nw-brand-color;
+  }
+
+  a:hover,
+  a:active {
+    color: $nw-purple-60;
+  }
+
+  // buttons
+  .btn {
+    @include freight-sans-book;
+  }
+
+  #manage-monograph-button {
+    color: $nw-white;
+  }
+
+  // navigation menu
+  .navbar-default .navbar-nav > .open > a,
+  .navbar-default .navbar-nav > .open > a:hover,
+  .navbar-default .navbar-nav > .open > a:focus {
+    background-color: $nw-purple-60;
+  }
+
+  #brand-bar {
+    background-color: $nw-brand-color;
+
+    .navbar-brand {
+      color: $nw-white;
+    }
+
+    .navbar-nav {
+      a#add-content,
+      a.login,
+      a.user-display-name {
+          color: $nw-white;
+      }
+    }
+
+
+    button.search-submit {
+      background-color: $nw-purple-60;
+      border-color: $nw-purple-60;
+    }
+
+  }
+
+  // jumbotron
+  .jumbotron {
+    background-color: $nw-purple-10;
+    @include freight-sans-light;
+
+    .logo {
+
+      img {
+        margin-right: 3em;
+        width: 150px;
+      }
+
+    }
+
+  }
+
+  // assets
+  .asset {
+    ul.nav-tabs li {
+      @include freight-sans-book;
+    }
+  }
+
+  //footer
+  footer {
+    a,
+    a:hover,
+    a:active {
+      color: $nw-white;
+    }
+    .social,
+    .footer-nav {
+      background-color: $nw-purple-60;
+      img {
+        width: 50px;
+      }
+
+    }
+    .copyright {
+      background-color: $nw-brand-color;
+    }
+    .platform {
+      background-color: $nw-black-80;
+    }
+  }
+
 
 }
