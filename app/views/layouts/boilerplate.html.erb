@@ -9,9 +9,33 @@
     <title><%= content_for?(:page_title) ? yield(:page_title) : default_page_title %></title>
     <meta name="viewport" content="width=device-width">
     <%= csrf_meta_tag %>
+
+    <!-- Favicons -->
+    <%= favicon_link_tag 'favicon/apple-icon-57x57.png', rel: 'apple-touch-icon', sizes: '57x57' %>
+    <%= favicon_link_tag 'favicon/apple-icon-60x60.png', rel: 'apple-touch-icon', sizes: '60x60' %>
+    <%= favicon_link_tag 'favicon/apple-icon-72x72.png', rel: 'apple-touch-icon', sizes: '72x72' %>
+    <%= favicon_link_tag 'favicon/apple-icon-76x76.png', rel: 'apple-touch-icon', sizes: '76x76' %>
+    <%= favicon_link_tag 'favicon/apple-icon-114x114.png', rel: 'apple-touch-icon', sizes: '114x114' %>
+    <%= favicon_link_tag 'favicon/apple-icon-120x120.png', rel: 'apple-touch-icon', sizes: '120x120' %>
+    <%= favicon_link_tag 'favicon/apple-icon-144x144.png', rel: 'apple-touch-icon', sizes: '144x144' %>
+    <%= favicon_link_tag 'favicon/apple-icon-152x152.png', rel: 'apple-touch-icon', sizes: '152x152' %>
+    <%= favicon_link_tag 'favicon/apple-icon-180x180.png', rel: 'apple-touch-icon', sizes: '180x180' %>
+    <%= favicon_link_tag 'favicon/android-icon-192x192.png', rel: 'icon', type: 'image/png', sizes: '192x192' %>
+    <%= favicon_link_tag 'favicon/favicon-32x32.png', rel: 'icon', type: 'image/png', sizes: '32x32' %>
+    <%= favicon_link_tag 'favicon/favicon-96x96.png', rel: 'icon', type: 'image/png', sizes: '96x96' %>
+    <%= favicon_link_tag 'favicon/favicon-16x16.png', rel: 'icon', type: 'image/png', sizes: '16x16' %>
+    <%= favicon_link_tag 'favicon/manifest.json', rel: 'manifest' %>
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="/assets/favicon/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+
+    <!-- CSS -->
     <%= stylesheet_link_tag 'application' %>
+
+    <!-- Javascript -->
     <%= javascript_include_tag 'application' %>
-    <!-- typekit for northwestern -->
+
+    <!-- Typekit - Northwestern -->
     <% if defined?(@press.subdomain ) %>
       <% if @press.subdomain == 'northwestern' %>
         <script src="//use.typekit.net/wyq1mfc.js"></script>
