@@ -55,6 +55,7 @@ $fulcrum-light-2: #bec4cc;
     @include freight-sans-semi-bold;
   }
 
+  // links
   a {
     color: $nw-brand-color;
   }
@@ -103,6 +104,8 @@ $fulcrum-light-2: #bec4cc;
 
   }
 
+  // press catalog
+
   // jumbotron
   .jumbotron {
     background-color: $nw-purple-10;
@@ -117,6 +120,18 @@ $fulcrum-light-2: #bec4cc;
 
     }
 
+  }
+
+  .press {
+
+    h2:nth-child(2) {
+      margin-bottom: 1.5em;
+    }
+
+    .document,
+    .documentHeader {
+      margin-bottom: 2em;
+    }
   }
 
   // assets

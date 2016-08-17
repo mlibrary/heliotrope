@@ -3,6 +3,8 @@ class PressCatalogController < ::CatalogController
 
   configure_blacklight do |config|
     config.search_builder_class = PressSearchBuilder
+
+    config.index.partials = [:thumbnail, :index_header]
   end
 
   def show_site_search?
