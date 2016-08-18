@@ -18,7 +18,7 @@ feature 'FileSet Search' do
     click_link 'Manage Monograph and Files'
     click_link 'Attach a File'
     fill_in 'Title', with: 'Blue'
-    fill_in 'Description', with: "Damage report! Mr. Worf, you do remember how to fire phasers? Worf, It's better than music. It's jazz."
+    fill_in 'Caption', with: "Damage report! Mr. Worf, you do remember how to fire phasers? Worf, It's better than music. It's jazz."
     attach_file 'file_set_files', File.join(fixture_path, 'csv', 'miranda.jpg')
     click_button 'Attach to Monograph'
 
