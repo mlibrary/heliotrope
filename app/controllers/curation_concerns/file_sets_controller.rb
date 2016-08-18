@@ -16,12 +16,12 @@ module CurationConcerns
         :exclusive_to_platform, :permissions_expiration_date,
         :allow_display_after_expiration, :allow_download_after_expiration,
         :credit_line, :holding_contact, :ext_url_doi_or_handle,
-        :use_crossref_xml, :display_date, :external_resource,
+        :use_crossref_xml, :external_resource,
         :transcript, :copyright_holder,
         description: [], resource_type: [], caption: [], alt_text: [],
         content_type: [], contributor: [], date_created: [], keywords: [],
         language: [], identifier: [], relation: [], title: [],
-        primary_creator_role: [], translation: [])
+        primary_creator_role: [], translation: [], display_date: [])
     end
 
     # We kept getting errors with visibility settings, see #272 and #280

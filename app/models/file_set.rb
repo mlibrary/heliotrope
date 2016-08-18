@@ -84,7 +84,7 @@ class FileSet < ActiveFedora::Base
     index.as :symbol
   end
 
-  property :display_date, predicate: ::RDF::URI.new('http://fulcrum.org/ns#displayDate'), multiple: false do |index|
+  property :display_date, predicate: ::RDF::URI.new('http://fulcrum.org/ns#displayDate') do |index|
     index.as :stored_searchable
   end
 
