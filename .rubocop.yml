@@ -13,6 +13,7 @@ AllCops:
     - 'spec/test_app_templates/**/*'
     - 'vendor/**/*'
     - 'tmp/**/*'
+    - 'app/models/riiif/file.rb'
 
 Lint/ImplicitStringConcatenation:
   Exclude:
