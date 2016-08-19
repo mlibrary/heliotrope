@@ -43,7 +43,7 @@ module Riiif
     end
 
     def mime_type(path)
-      IO.popen(["file", "--brief", "--mime-type", path], in: :close, err: :close).read.chomp
+      IO.popen(["file", "--brief", "--mime-type", path], in: :close, err: :close) { |io| io.read.chomp }
     end
 
     def extract_tifftopnm(options)
