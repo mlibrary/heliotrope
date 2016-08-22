@@ -30,7 +30,7 @@ module Import
 
       errors = ''
 
-      # reverse_each is a workaround for default order of the assets (created time)
+      # reverse_each is a workaround for default fileset/asset results ordering (which is creation time)
       rows = rows.reverse_each if reverse_order
 
       rows.each do |row|
@@ -53,6 +53,9 @@ module Import
         row_num = next_row_num(row_num, reverse_order)
       end
       errors_out.replace errors
+      # we need to reverse the order of sections now if we've reversed the rows...
+      # this is so they attach to the monograph in the order they appear in the spreadsheet
+      attrs['sections'] = attrs['sections'].to_a.reverse.to_h if reverse_order
       attrs
     end
 
