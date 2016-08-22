@@ -53,15 +53,12 @@
       <% end %>
     <% end %>
   </head>
-<% if defined?(@press.subdomain) %>
-  <body class="<%= @press.subdomain %>">
-<% elsif defined?(@monograph_presenter.subdomain) %>
-  <body class="<%= @monograph_presenter.subdomain %>">
-<% elsif defined?(@presenter.monograph.subdomain) %>
-  <body class="<%= @presenter.monograph.subdomain %>">
+<% unless press_subdomain.nil? %>
+  <body class="<%= press_subdomain %>">
 <% else %>
   <body>
 <% end %>
+
     <%= content_for?(:body) ? yield(:body) : yield %>
 
     <%= render 'shared/ajax_modal' %>
