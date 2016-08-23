@@ -1,17 +1,18 @@
 require 'open3'
-require 'mkmf'
 module Riiif
   class File
     include Open3
     include ActiveSupport::Benchmarkable
 
-    attr_reader :path
+    attr_reader :path, :mime_type, :tifftopnm
 
     delegate :logger, to: :Rails
 
     # @param input_path [String] The location of an image file
     def initialize(input_path, tempfile = nil)
       @path = input_path
+      @mime_type = `file --brief --mime-type #{path.shellescape}`.chomp
+      @tifftopnm = system("which tifftopnm > /dev/null 2>&1")
       @tempfile = tempfile # ensures that the tempfile will stick around until this file is garbage collected.
     end
 
@@ -34,16 +35,12 @@ module Riiif
     end
 
     def extract(options)
-      command = if mime_type(path).match(/tiff/) && find_executable('tifftopnm')
+      command = if mime_type.match(/tiff/) && tifftopnm
                   extract_tifftopnm(options)
                 else
                   extract_imagemagick(options)
                 end
       execute(command)
-    end
-
-    def mime_type(path)
-      IO.popen(["file", "--brief", "--mime-type", path], in: :close, err: :close) { |io| io.read.chomp }
     end
 
     def extract_tifftopnm(options)

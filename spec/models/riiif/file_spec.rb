@@ -10,7 +10,7 @@ describe Riiif::File do
   describe '#mime_type' do
     context 'when file is a tiff' do
       it 'returns mime_type "image/tiff"' do
-        expect(subject.mime_type(path)).to eq('image/tiff')
+        expect(subject.mime_type).to eq('image/tiff')
       end
     end
   end
@@ -21,7 +21,7 @@ describe Riiif::File do
     context 'when netpbn is installed and the image is a tiff' do
       it 'calls extract_tifftopnm' do
         allow_any_instance_of(described_class).to receive(:mime_type).and_return('image/tiff')
-        allow_any_instance_of(described_class).to receive(:find_executable).and_return('/usr/bin/tifftopnm')
+        allow_any_instance_of(described_class).to receive(:tifftopnm).and_return(true)
 
         expect(subject).to receive(:extract_tifftopnm).with({})
         subject.extract({})
@@ -31,7 +31,7 @@ describe Riiif::File do
     context 'when netpbn is not installed and the image is a tiff' do
       it 'calls extract_imagemagick' do
         allow_any_instance_of(described_class).to receive(:mime_type).and_return('image/tiff')
-        allow_any_instance_of(described_class).to receive(:find_executable).and_return(nil)
+        allow_any_instance_of(described_class).to receive(:tifftopnm).and_return(false)
 
         expect(subject).to receive(:extract_imagemagick).with({})
         subject.extract({})
@@ -42,7 +42,7 @@ describe Riiif::File do
       it 'calls extract_imagemagick' do
         # only tiffs use netpbn for now
         allow_any_instance_of(described_class).to receive(:mime_type).and_return('image/jpg')
-        allow_any_instance_of(described_class).to receive(:find_executable).and_return('usr/bin/tifftopnm')
+        allow_any_instance_of(described_class).to receive(:tifftopnm).and_return(true)
 
         expect(subject).to receive(:extract_imagemagick).with({})
         subject.extract({})
