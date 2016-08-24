@@ -23,4 +23,15 @@ describe CurationConcerns::FileSetPresenter do
       expect(presenter.monograph.creator_family_name.first).to eq monograph.creator_family_name
     end
   end
+
+  describe '#page_title' do
+    let(:expected_page_title) { 'Hello' }
+    let(:fileset_doc) { SolrDocument.new(id: 'fs', has_model_ssim: ['FileSet'], title_tesim: [expected_page_title]) }
+    context 'is file set first title' do
+      it { expect(presenter.page_title).to eq fileset_doc[:title_tesim].first }
+    end
+    context 'is expected page title' do
+      it { expect(presenter.page_title).to eq expected_page_title }
+    end
+  end
 end

@@ -50,7 +50,7 @@ module CurationConcerns
     end
 
     def page_title
-      Array(solr_document['label_tesim']).first
+      Array(solr_document['title_tesim']).first
     end
 
     def section_title
