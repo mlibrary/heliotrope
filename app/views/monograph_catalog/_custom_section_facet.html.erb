@@ -1,0 +1,12 @@
+<ul class="facet-values list-unstyled">
+  <% paginator = facet_paginator(facet_field, display_facet) %>
+  <% monograph_id = params[:monograph_id] || @monograph_presenter.id %>
+  <%= render_facet_limit_list reorder_section_facet(monograph_id, paginator), field_name %>
+
+  <% unless paginator.last_page? || params[:action] == "facet" %>
+    <li class="more_facets_link">
+      <%= link_to t("more_#{field_name}_html", scope: 'blacklight.search.facets', default: :more_html, field_name: facet_field.label),
+        search_facet_url(id: field_name), class: "more_facets_link" %>
+    </li>
+  <% end %>
+</ul>
