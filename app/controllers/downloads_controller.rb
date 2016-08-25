@@ -2,11 +2,17 @@ class DownloadsController < ApplicationController
   include CurationConcerns::DownloadBehavior
 
   def show
-    if thumbnail? || webm? || sound? || allow_download?
+    if thumbnail? || video? || sound? || allow_download?
       super
     else
       render 'curation_concerns/base/unauthorized', status: :unauthorized
     end
+  end
+
+  def mime_type_for(file)
+    # See #427
+    mime_type = `file --brief --mime-type #{file.shellescape}` || MIME::Types.type_for(File.extname(file)).first.content_type
+    mime_type.chomp
   end
 
   def allow_download?
@@ -26,9 +32,9 @@ class DownloadsController < ApplicationController
     end
   end
 
-  def webm?
+  def video?
     # video "previews"
-    if params[:file] == 'webm'
+    if params[:file] == 'webm' || params[:file] == 'mp4'
       true
     else
       false

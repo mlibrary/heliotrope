@@ -29,4 +29,11 @@ describe DownloadsController do
       end
     end
   end
+
+  describe "#mime_type_for" do
+    let(:file) { File.join(fixture_path, 'it.mp4') }
+    it "gives the correct mime_type for an mp4 video" do
+      expect(subject.mime_type_for(file)).to eq('video/mp4')
+    end
+  end
 end
