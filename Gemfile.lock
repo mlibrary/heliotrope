@@ -499,11 +499,18 @@ GEM
       rails (> 3.2.0)
     rsolr (1.0.13)
       builder (>= 2.1.2)
+    rspec (3.5.0)
+      rspec-core (~> 3.5.0)
+      rspec-expectations (~> 3.5.0)
+      rspec-mocks (~> 3.5.0)
     rspec-core (3.5.0)
       rspec-support (~> 3.5.0)
     rspec-expectations (3.5.0)
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.5.0)
+    rspec-html-matchers (0.8.0)
+      nokogiri (~> 1)
+      rspec (>= 3.0.0.a, < 4)
     rspec-mocks (3.5.0)
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.5.0)
@@ -657,6 +664,7 @@ DEPENDENCIES
   resque-web (~> 0.0.7)
   riiif (= 0.4.0)
   rsolr (~> 1.0.6)
+  rspec-html-matchers
   rspec-rails
   rubocop (~> 0.37.2)
   rubocop-rspec

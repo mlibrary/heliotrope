@@ -69,6 +69,7 @@ group :development, :test do
   gem 'fcrepo_wrapper', '0.5.2'
   gem 'solr_wrapper', '0.14.2'
   gem 'rspec-rails'
+  gem 'rspec-html-matchers'
   gem 'rubocop', '~> 0.37.2'
   gem 'rubocop-rspec'
   gem 'sqlite3'
