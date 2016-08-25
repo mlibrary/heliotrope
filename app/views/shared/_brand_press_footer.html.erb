@@ -44,6 +44,7 @@
           <li><a href="http://fulcrum.org/blog/">Blog</a></li>
           <li><a href="mailto:fulcrum-info@umich.edu">Contact</a></li>
           <li><a href="https://github.com/mlibrary/heliotrope">Contribute</a></li>
+          <li><% if current_user %> <%= link_to 'Log Out', main_app.destroy_user_session_path, class: 'log-out', role: 'menuitem' %> <% else %> <%= link_to 'Log In', main_app.new_user_session_path, class: 'login', role: 'menuitem' %> <% end %></li>
         </ul>
       </div>
     </div>
