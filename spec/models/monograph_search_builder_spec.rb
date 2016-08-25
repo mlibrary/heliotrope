@@ -39,5 +39,39 @@ describe MonographSearchBuilder do
         expect(solr_params[:fq].first).to eq("{!terms f=id}")
       end
     end
+
+    # Maybe this test doesn't belong here... but where to put it?
+    # We're testing search, not really the search_builder...
+    # For #386
+    context "a monograph with file_sets with markdown content" do
+      let(:monograph) { create(:monograph, representative_id: cover.id) }
+      let(:cover) { create(:file_set, title: ["Blue"], description: ["italic _elephant_"]) }
+      let(:file1) { create(:file_set, title: ["Red"], description: ["bold __spider__"]) }
+      let(:file2) { create(:file_set, title: ["Yellow"], description: ["strikethrough ~~lizard~~"]) }
+
+      before do
+        monograph.ordered_members << cover
+        monograph.ordered_members << file1
+        monograph.ordered_members << file2
+        monograph.save!
+      end
+
+      it "recieves the correct file_set after searching for italic" do
+        doc = ActiveFedora::SolrService.query("{!terms f=description_tesim}elephant").first
+        expect(doc[:title_tesim]).to eq(["Blue"])
+      end
+
+      it "recieves the correct result after searching for bold" do
+        doc = ActiveFedora::SolrService.query("{!terms f=description_tesim}spider").first
+        expect(doc[:title_tesim]).to eq(["Red"])
+      end
+
+      it "recieves the correct result after searching for strikethrough" do
+        # solr doesn't need any changes in solr/config/schema.xml for strikethrough.
+        # It just "does the right thing". Should test it anyway I guess.
+        doc = ActiveFedora::SolrService.query("{!terms f=description_tesim}lizard").first
+        expect(doc[:title_tesim]).to eq(["Yellow"])
+      end
+    end
   end
 end
