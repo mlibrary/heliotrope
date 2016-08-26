@@ -26,7 +26,7 @@ class MonographCatalogController < ::CatalogController
       config.index_fields.delete('keywords_tesim')
     end
 
-    config.add_facet_field solr_name('section_title', :facetable), label: "Section", limit: 5, sort: 'index', url_method: :facet_url_helper
+    config.add_facet_field solr_name('section_title', :facetable), label: "Section", url_method: :facet_url_helper, partial: 'custom_section_facet'
     config.add_facet_field solr_name('keywords', :facetable), label: "Keyword", limit: 5, url_method: :facet_url_helper
     config.add_facet_field solr_name('creator_full_name', :facetable), label: 'Creator', limit: 5, url_method: :facet_url_helper
     config.add_facet_field solr_name('resource_type', :facetable), label: "Format", limit: 5, url_method: :facet_url_helper
