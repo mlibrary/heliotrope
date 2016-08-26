@@ -53,9 +53,6 @@ module Import
         row_num = next_row_num(row_num, reverse_order)
       end
       errors_out.replace errors
-      # we need to reverse the order of sections now if we've reversed the rows...
-      # this is so they attach to the monograph in the order they appear in the spreadsheet
-      attrs['sections'] = attrs['sections'].to_a.reverse.to_h if reverse_order
       attrs
     end
 

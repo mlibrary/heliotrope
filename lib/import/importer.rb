@@ -8,21 +8,22 @@ module Import
       @visibility = visibility
     end
 
-    def run(interaction = false, monograph_title = '', test = false)
+    def run(reverse = false, monograph_title = '', test = false)
+      interaction = !Rails.env.test?
       validate_press
       csv_files.each do |file|
         errors = ''
         # only reverse the rows when running an import from the command-line
-        attrs = CSVParser.new(file).attributes(errors, interaction)
+        attrs = CSVParser.new(file).attributes(errors, reverse)
         monograph_attrs = attrs.delete('monograph')
-        sections = attrs.delete('sections')
+        sections_attrs = attrs.delete('sections').values
 
         # if there is a command-line monograph title then use it
         monograph_attrs['title'] = Array(monograph_title) unless monograph_title.blank?
 
         # find files now (stop everything ASAP if not found or duplicates found)
         add_full_file_paths(monograph_attrs)
-        sections.each do |_, section_attrs|
+        sections_attrs.each do |section_attrs|
           add_full_file_paths(section_attrs)
         end
 
@@ -37,7 +38,8 @@ module Import
         update_fileset_metadata(monograph, monograph_file_attrs)
         monograph_id = monograph.id
 
-        sections.each do |_, section_attrs|
+        sections = []
+        sections_attrs.each do |section_attrs|
           section_files_attrs = section_attrs.delete('files_metadata')
           section_attrs['monograph_id'] = monograph_id
           section_attrs = add_command_line_attrs(section_attrs, 'section')
@@ -46,6 +48,13 @@ module Import
 
           section = section_builder.curation_concern
           update_fileset_metadata(section, section_files_attrs)
+          sections << section
+        end
+
+        # reverse the order of sections if we've reversed the rows...
+        # so they attach to the monograph in the order they appear in the spreadsheet
+        sections = sections.reverse if reverse
+        sections.each do |section|
           # add section to monograph
           monograph.ordered_members << section
           monograph.save!

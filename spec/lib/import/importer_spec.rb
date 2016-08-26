@@ -42,6 +42,7 @@ describe Import::Importer do
       stub_out_redis
       Monograph.destroy_all
       Section.destroy_all
+      FileSet.destroy_all
     end
 
     context 'when the importer runs successfully' do
@@ -54,20 +55,54 @@ describe Import::Importer do
         monograph = Monograph.first
         expect(monograph.visibility).to eq public_vis
 
-        section = Section.first
+        sections = Monograph.first.ordered_members.to_a.select { |m| m.class.name == 'Section' }
+        section = sections.first
         expect(section.visibility).to eq public_vis
-
+        expect(section.title).to eq ['Act 1: Calm Waters']
         # Test that the FileSetBuilder got called to add the
         # metadata to the FileSets.
         shipwreck = monograph.ordered_members.to_a.first
         expect(shipwreck.title).to eq ['Monograph Shipwreck']
         miranda = monograph.ordered_members.to_a.second
         expect(miranda.title).to eq ['Monograph Miranda']
+        japanese = monograph.ordered_members.to_a.third
+        expect(japanese.title).to eq ['日本語のファイル']
 
         shipwreck = section.ordered_members.to_a.first
         expect(shipwreck.title).to eq ['Section 1 Shipwreck']
         miranda = section.ordered_members.to_a.second
         expect(miranda.title).to eq ['Section 1 Miranda']
+      end
+    end
+
+    context 'when the importer runs (reversing the rows) successfully' do
+      it 'imports the sections (unreversed) and files (reversed)' do
+        expect { importer.run(true, nil, nil) }
+          .to change { Monograph.count }.by(1)
+          .and(change { Section.count }.by(2))
+          .and(change { FileSet.count }.by(8))
+
+        monograph = Monograph.first
+        expect(monograph.visibility).to eq public_vis
+
+        # sections not reversed
+        sections = Monograph.first.ordered_members.to_a.select { |m| m.class.name == 'Section' }
+        section = sections.first
+        expect(section.visibility).to eq public_vis
+        expect(section.title).to eq ['Act 1: Calm Waters']
+
+        # files reversed within monographs and sections
+        japanese = monograph.ordered_members.to_a.first
+        expect(japanese.title).to eq ['日本語のファイル']
+        miranda = monograph.ordered_members.to_a.second
+        expect(miranda.title).to eq ['Monograph Miranda']
+        miranda = monograph.ordered_members.to_a.third
+        expect(miranda.title).to eq ['Monograph Shipwreck']
+
+        shipwreck = section.ordered_members.to_a.first
+        expect(shipwreck.title).to eq ['Section 1 Miranda']
+        miranda = section.ordered_members.to_a.second
+        expect(miranda.title).to eq ['Section 1 Shipwreck']
       end
     end
 
