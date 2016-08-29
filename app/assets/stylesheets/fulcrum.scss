@@ -86,7 +86,24 @@ $radius:     4px;
   font-weight: 300;
 }
 
+// navigation menu
+#brand-bar {
+  .navbar-right {
+    img.logo {
+      margin-top: .7em;
+    }
+    a.beta {
+      color: $fulcrum-white;
+      font-size: .7em;
+      text-transform: uppercase;
+      vertical-align: super;
+      @include effra-light;
 
+    }
+  }
+}
+
+// footer
 footer {
   .platform {
     background-color: $fulcrum-brand-color;
@@ -94,6 +111,18 @@ footer {
     a {
       border-bottom: 3px solid transparent;
       color: $fulcrum-white;
+    }
+    a.beta {
+      font-size: 0.65em;
+      text-transform: uppercase;
+      vertical-align: super;
+      @include effra-light;
+    }
+    img.logo {
+      margin-bottom: -1px;
+      margin-left: 4px;
+      vertical-align: baseline;
+      width: 90px;
     }
   }
 }
