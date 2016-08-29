@@ -134,6 +134,15 @@ $fulcrum-light-2: #bec4cc;
     }
   }
 
+  // monograph
+  .monograph {
+    .documentHeader {
+      p {
+        @include freight-sans-book;
+      }
+    }
+  }
+
   // assets
   .asset {
     ul.nav-tabs li {
