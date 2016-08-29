@@ -132,6 +132,21 @@ footer.press {
 .asset {
   margin-top: 5em;
 
+  figure {
+    display: inline;
+    margin: initial;
+  }
+
+  figcaption {
+    font-style: italic;
+    margin-top: 1em;
+    
+    em {
+      font-style: normal;
+    }
+
+  }
+
   // leaflet-images
   #image {
     height: 540px;
@@ -143,12 +158,18 @@ footer.press {
     width: 97%;
   }
 
+  // metadata info
   .table > thead > tr > th, .table > thead > tr > td, .table > tbody > tr > th, .table > tbody > tr > td, .table > tfoot > tr > th, .table > tfoot > tr > td {
     border-top: 0 solid #fff;
   }
 
-  .description, .permission_badge {
-    margin-top: 1em;
+  .tab-content {
+    table.table {
+      margin-top: 1.5em;
+    }
+  }
+
+  .description {
     margin-left: -6em;
   }
 

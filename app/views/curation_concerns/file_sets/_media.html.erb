@@ -1,4 +1,4 @@
-<div class="image" title="<%= @presenter.alt_text.first %>">
+  <figure class="image" title="<%= @presenter.alt_text.first %>">
     <% if @presenter.image? %>
       <div id="image"></div>
       <script>
@@ -6,9 +6,6 @@
 
         //window.F = window.F || {};
         var $map = $("#image");
-        //$map.height($(window).height() - 100);
-        //$map.height(540);
-        //$map.width(540);
 
         var map = L.map('image', {
           center: [0, 0],
@@ -20,8 +17,9 @@
       <% else %>
         <%= media_display @presenter %>
     <% end %>
-  </div> <!-- /.image/media -->
-  <p><em><%= presenter.attribute_to_html(:caption, render_as: :markdown, label: '') %></em></p>
+    <figcaption><%= presenter.attribute_to_html(:caption, render_as: :markdown, label: '') %></figcaption>
+  </figure> <!-- /.image/media -->
+
   <% if @presenter.translation.present? %>
   <div class="panel panel-default translation">
     <div class="panel-heading">
