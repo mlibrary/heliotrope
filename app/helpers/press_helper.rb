@@ -14,4 +14,9 @@ module PressHelper
     press = Press.where(subdomain: subdomain).first
     press.google_analytics if press.present?
   end
+
+  def typekit(subdomain)
+    press = Press.where(subdomain: subdomain).first
+    press.typekit if press.present?
+  end
 end

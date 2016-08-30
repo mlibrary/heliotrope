@@ -41,6 +41,7 @@ def northwestern
     press.description = "Northwestern University Press is dedicated to publishing works of enduring scholarly and cultural value, extending the University’s mission to a community of readers throughout the world. The Press publishes books and journals in the humanities, especially philosophy, literature, and contemporary European writers in translation and continues to explore new media as it strives to promote the finest works of scholarship in the humanities and social sciences.<br/><br/>[northwestern.fulcrumscholar.org](http://northwestern.fulcrumscholar.org) is the home of supplemental content for select books. You can find the full catalog of Northwestern University Press titles at the [publisher's website](http://www.nupress.northwestern.edu/)."
     press.subdomain = 'northwestern'
     press.press_url = 'http://nupress.northwestern.edu/'
+    press.typekit = 'wyq1mfc'
     press.save
   end
   puts "updated/created northwestern"
