@@ -1,10 +1,6 @@
 <header id="banner" role="banner">
   <hgroup>
-    <% if defined?(@press.subdomain) %>
-      <%= render 'shared/brand_press_bar' %>
-    <% elsif defined?(@monograph_presenter.subdomain) %>
-      <%= render 'shared/brand_press_bar' %>
-    <% elsif defined?(@presenter.monograph.subdomain) %>
+    <% unless press_subdomain.nil? %>
       <%= render 'shared/brand_press_bar' %>
     <% else %>
       <%= render 'shared/brand_bar' %>

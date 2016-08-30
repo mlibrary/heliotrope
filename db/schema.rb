@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160811101311) do
+ActiveRecord::Schema.define(version: 20160822171245) do
 
   create_table "bookmarks", force: :cascade do |t|
     t.integer  "user_id",       null: false
@@ -65,9 +65,10 @@ ActiveRecord::Schema.define(version: 20160811101311) do
     t.string   "logo_path"
     t.text     "description"
     t.string   "subdomain"
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
+    t.datetime "created_at",       null: false
+    t.datetime "updated_at",       null: false
     t.string   "press_url"
+    t.string   "google_analytics"
   end
 
   create_table "roles", force: :cascade do |t|
