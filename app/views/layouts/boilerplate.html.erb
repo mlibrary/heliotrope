@@ -29,29 +29,18 @@
     <meta name="msapplication-TileImage" content="/assets/favicon/ms-icon-144x144.png">
     <meta name="theme-color" content="#ffffff">
 
+  <% unless press_subdomain.nil? %>
+    <!-- Typekit -->
+    <%= render 'shared/typekit' %>
+  <% end %>
+  
     <!-- CSS -->
     <%= stylesheet_link_tag 'application' %>
 
     <!-- Javascript -->
     <%= javascript_include_tag 'application' %>
 
-    <!-- Typekit - Northwestern -->
-    <% if defined?(@press.subdomain ) %>
-      <% if @press.subdomain == 'northwestern' %>
-        <script src="//use.typekit.net/wyq1mfc.js"></script>
-        <script>try{Typekit.load({ async: true });}catch(e){}</script>
-      <% end %>
-    <% elsif defined?(@monograph_presenter.subdomain) %>
-      <% if @monograph_presenter.subdomain == 'northwestern' %>
-        <script src="//use.typekit.net/wyq1mfc.js"></script>
-        <script>try{Typekit.load({ async: true });}catch(e){}</script>
-      <% end %>
-    <% elsif defined?(@presenter.monograph.subdomain) %>
-      <% if @presenter.monograph.subdomain == 'northwestern' %>
-        <script src="//use.typekit.net/wyq1mfc.js"></script>
-        <script>try{Typekit.load({ async: true });}catch(e){}</script>
-      <% end %>
-    <% end %>
+
   </head>
 <% unless press_subdomain.nil? %>
   <body class="<%= press_subdomain %>">
