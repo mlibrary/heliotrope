@@ -99,10 +99,7 @@
 
           <%= f.input :search_year, input_html: { class: 'form-control' }, placeholder: 'YYYY' %>
 
-          <span class="control-label">
-            <%= label_tag 'file_set[display_date][]', 'Display Date',  class: 'string optional' %>
-          </span>
-          <%= text_field_tag 'file_set[display_date][]', curation_concern.display_date.first, class: 'form-control' %>
+          <%= f.input :display_date, as: :multi_value, input_html: { class: 'form-control' } %>
 
           <%= f.input :keywords, as: :multi_value, input_html: { class: 'form-control' } %>
 
