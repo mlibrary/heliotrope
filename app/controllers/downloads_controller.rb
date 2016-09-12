@@ -3,7 +3,17 @@ class DownloadsController < ApplicationController
 
   def show
     if thumbnail? || video? || sound? || allow_download?
-      super
+      # See #401
+      if file.is_a? String
+        # For derivatives stored on the local file system
+        response.headers['Accept-Ranges'] = 'bytes'
+        response.headers['Content-Length'] = File.size(file).to_s
+        file.sub!(/releases\/\d+/, "shared")
+        response.headers['X-Sendfile'] = file
+        send_file file, derivative_download_options
+      else
+        super
+      end
     else
       render 'curation_concerns/base/unauthorized', status: :unauthorized
     end

@@ -10,3 +10,4 @@ Metrics/CyclomaticComplexity:
 Metrics/PerceivedComplexity:
   Exclude:
     - 'app/models/riiif/file.rb'
+    - 'app/controllers/downloads_controller.rb'
