@@ -45,7 +45,7 @@ feature 'Create a file set' do
       fill_in 'Keywords', with: 'keyword 1'
       fill_in 'Language', with: 'English'
       fill_in 'Transcript', with: 'This is what is transcribed for you to read'
-      fill_in 'Translation(s)', with: 'Here is what that means'
+      fill_in 'Translation(s)', with: 'Here is what that&nbsp;means'
       fill_in 'Identifier', with: 'http://hdl.handle.net/1111'
       fill_in 'Relation', with: 'Introduction'
       fill_in 'External Resource', with: 'no3'

@@ -1,0 +1,6 @@
+<% typekit_id = typekit(press_subdomain) %>
+
+<% unless typekit_id.nil? %>
+  <script src="https://use.typekit.net/<%= typekit_id %>.js"></script>
+  <script>try{Typekit.load({ async: true });}catch(e){}</script>
+<% end %>
