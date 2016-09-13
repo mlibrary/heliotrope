@@ -25,7 +25,7 @@ class MonographSearchBuilder < ::SearchBuilder
         ids = monograph.first['ordered_member_ids_ssim']
         if ids.present?
           ids.delete(monograph.first['representative_id_ssim'].first)
-          docs = ActiveFedora::SolrService.query("{!terms f=id}#{ids.join(',')}")
+          docs = ActiveFedora::SolrService.query("{!terms f=id}#{ids.join(',')}", rows: 9999)
 
           section_docs = docs.select { |doc| doc['has_model_ssim'] == ['Section'].freeze }
           asset_docs   = docs.select { |doc| doc['has_model_ssim'] == ['FileSet'].freeze }
