@@ -1,8 +1,8 @@
 module FacetHelper
   def exclusivity_facet(value)
-    if value == 'P'
+    if value == 'yes'
       "Does not appear in book"
-    elsif value == 'BP'
+    elsif value == 'no'
       "Appears in book"
     else
       "Unknown exclusivity #{value}"
