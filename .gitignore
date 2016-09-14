@@ -16,6 +16,10 @@
 !/log/.keep
 /tmp
 
+# Ignore jekyll auto-generated files -- if you need to create a static page, put it in fulcrum/
+/public
+.sass-cache
+
 # Ignore fcrepo test/development data
 /fcrepo4-test-data
 /fcrepo4-development-data

@@ -45,6 +45,8 @@ gem 'actionpack-page_caching', '~> 1.0.1'
 
 gem 'redcarpet', '~> 3.3.4'
 
+# Use Jekyll for blog and informational pages
+gem 'jekyll'
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
 
