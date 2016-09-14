@@ -6,6 +6,15 @@ task admin: :environment do
   puts 'User created.'
 end
 
+task passwd: :environment do
+  puts 'Set password for user.'
+  u = User.find_by!(email: prompt_for_email)
+  u.password = prompt_for_password
+  u.password_confirmation = prompt_for_password_confirmation
+  u.save!
+  puts 'Password set.'
+end
+
 desc 'Create a new press'
 task press: :environment do
   print 'Press name: '
@@ -40,6 +49,18 @@ def prompt_for_password
   begin
     system 'stty -echo'
     print 'Password (must be 8+ characters): '
+    password = $stdin.gets.chomp
+    puts "\n"
+  ensure
+    system 'stty echo'
+  end
+  password
+end
+
+def prompt_for_password_confirmation
+  begin
+    system 'stty -echo'
+    print 'Confirm password: '
     password = $stdin.gets.chomp
     puts "\n"
   ensure
