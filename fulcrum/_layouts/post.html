@@ -1,0 +1,35 @@
+---
+layout: default
+---
+<div class="container">
+      <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+        <div class="row">
+          <div class="col s12 center">
+            <header class="post-header">
+              <h1 class="post-title" itemprop="name headline">{{ page.title }}</h1>
+            </header>
+          </div>
+        </div>
+        {% if page.feature-image-file %}
+        <div class="row post-feature-image">
+          <div class="col s12 m12 l10 offset-l1">
+            <img class="responsive-img z-depth-1 materialboxed" src="/img/blog/{{ page.feature-image-file }}" {% if page.feature-image-alt %} alt="{{ page.feature-image-alt }}" {% endif %}{% if page.feature-image-caption %} data-caption="{{ page.feature-image-caption }}"{% endif %}>
+          </div>
+        </div>
+        {% endif %}
+        <div class="row">
+          <div class="col s12 m2 l2 push-m9 push-l9 offset-m1 offset-l1">
+            <h2 class="delta post-date"><time class="heading" datetime="{{ page.date | date_to_xmlschema }}" itemprop="datePublished">{{ page.date | date: "%b %-d, %Y" }}</time></h2>
+            {% if page.author %}
+            <h3 class="delta post-author"><span itemprop="author" itemscope itemtype="http://schema.org/Person"><span itemprop="name">{{ page.author }}</span></span></h3>
+            {% endif %}
+          </div>
+          <div class="col s12 m9 l9 pull-m3 pull-l3">
+            <div class="post-content" itemprop="articleBody">
+              {{ content }}
+            </div>
+          </div>
+
+        </div>
+      </article>
+</div>

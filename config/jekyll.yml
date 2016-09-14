@@ -1,0 +1,23 @@
+# Site information
+title: fulcrum
+email: fulcrum-info@umich.edu
+description: > # this means to ignore newlines until "url:"
+  Fulcrum is a publishing platform that helps publishers present the
+  full richness of their authors' research outputs in a durable, discoverable,
+  and flexible form.
+url: "http://fulcrum.org" # the base hostname & protocol for your site
+twitter_username: fulcrumpub
+github_username:  mlibrary/heliotrope
+
+# Handling reading
+encoding: "utf-8"
+markdown_ext: "markdown,mkdown,mkdn,mkd,md"
+
+# Conversion
+markdown: kramdown
+
+# Serving
+baseurl: "" # the subpath of your site, e.g. /blog
+
+# Outputting
+permalink: /blog/:year/:month/:day/:title
