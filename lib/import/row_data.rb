@@ -72,7 +72,7 @@ module Import
 
       def downcase_restricted_values(field_name, field_values)
         # when using controlled vocabularies make everything lowercase (Yes/No etc) except the crazy CC license names
-        field_name == "Rights Granted - Creative Commons" ? field_values.map!(&:downcase) : field_values
+        field_name == "Rights Granted - Creative Commons" ? field_values : field_values.map!(&:downcase)
       end
 
       def return_scalar_or_multivalued(field_values, is_multivalued)
