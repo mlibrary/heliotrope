@@ -6,6 +6,7 @@ task admin: :environment do
   puts 'User created.'
 end
 
+desc 'Set password for user'
 task passwd: :environment do
   puts 'Set password for user.'
   u = User.find_by!(email: prompt_for_email)
