@@ -15,4 +15,4 @@ Riiif::Image.info_service = lambda do |id, _file|
   { height: doc["height_is"], width: doc["width_is"] }
 end
 
-Riiif::Engine.config.cache_duration_in_days = 30
+Riiif::Engine.config.cache_duration_in_days = 7
