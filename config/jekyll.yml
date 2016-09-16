@@ -1,3 +1,7 @@
+# Where things are
+source: ./fulcrum
+destination: ./public
+
 # Site information
 title: fulcrum
 email: fulcrum-info@umich.edu
@@ -12,6 +16,7 @@ github_username:  mlibrary/heliotrope
 # Handling reading
 encoding: "utf-8"
 markdown_ext: "markdown,mkdown,mkdn,mkd,md"
+keep_files: ["/assets"]
 
 # Conversion
 markdown: kramdown
