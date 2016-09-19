@@ -16,7 +16,7 @@ github_username:  mlibrary/heliotrope
 # Handling reading
 encoding: "utf-8"
 markdown_ext: "markdown,mkdown,mkdn,mkd,md"
-keep_files: ["/assets"]
+keep_files: ["/assets", "/system", "/uploads"]
 
 # Conversion
 markdown: kramdown
