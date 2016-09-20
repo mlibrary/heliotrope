@@ -1,30 +1,26 @@
 namespace :jekyll do
-  task build: :environment do
-    dest = Rails.root.join('public')
+  baseurl = ''
+  dest = Rails.root.join('public')
+  conf = Rails.root.join('config', 'jekyll.yml')
+  source = Rails.root.join('fulcrum')
 
+  task build: :environment do
     options = {
-      'baseurl' => '',
-      'config' => Rails.root.join('config', 'jekyll.yml').to_s,
+      'baseurl' => baseurl,
+      'config' => conf.to_s,
       'watch' => true,
-      'port' => 3000,
-      'source' => Rails.root.join('fulcrum').to_s,
+      'source' => source.to_s,
       'destination' => dest.to_s
     }
 
-    build = Thread.new { Jekyll::Commands::Build.process(options) }
-    serve = Thread.new { Jekyll::Commands::Serve.process(options) }
-
-    commands = [build, serve]
-    commands.each { |c| c.join }
+    Jekyll::Commands::Build.process(options)
   end
 
   task deploy: :environment do
-    dest = Rails.root.join('public')
-
     options = {
-      'baseurl' => '',
-      'config' => Rails.root.join('config', 'jekyll.yml').to_s,
-      'source' => Rails.root.join('fulcrum').to_s,
+      'baseurl' => baseurl,
+      'config' => conf.to_s,
+      'source' => source.to_s,
       'destination' => dest.to_s
     }
 
