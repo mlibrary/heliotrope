@@ -24,7 +24,7 @@
 <%= presenter.attribute_to_html(:permissions_expiration_date, label: 'Permissions Expiration Date') %>
 <%= presenter.attribute_to_html(:allow_display_after_expiration, label: 'Allow Display After Expiration?') %>
 <%= presenter.attribute_to_html(:allow_download_after_expiration, label: 'Allow Download After Expiration?') %>
-<%= presenter.attribute_to_html(:credit_line, label: 'Credit Line') %>
+<%= presenter.attribute_to_html(:credit_line, render_as: :markdown, label: 'Credit Line') %>
 <%= presenter.attribute_to_html(:holding_contact, label: 'Holding Contact') %>
 <%= presenter.attribute_to_html(:ext_url_doi_or_handle, label: 'External URL/DOI') %>
 <%= presenter.attribute_to_html(:use_crossref_xml, label: 'Use Crossref XML?') %>
