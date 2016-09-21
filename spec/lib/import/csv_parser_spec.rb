@@ -23,6 +23,7 @@ describe Import::CSVParser do
       expect(subject['monograph']['title']).to eq ['The Tempest', 'A Subtitle']
       expect(subject['monograph']['creator_family_name']).to eq 'Shakespeare'
       expect(subject['monograph']['creator_given_name']).to eq 'William'
+      expect(subject['monograph']['contributor']).to eq ['Christopher Marlowe', 'Sir Francis Bacon']
       expect(subject['monograph']['files']).to eq ['shipwreck.jpg', 'miranda.jpg', 'ファイル.txt']
       expect(subject['monograph']['files_metadata']).to eq [
         { 'title' => ['Monograph Shipwreck'],
