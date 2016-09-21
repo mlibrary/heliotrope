@@ -16,6 +16,7 @@ module Import
       { field_name: 'Title', metadata_name: 'title', required: true, multivalued: :yes_split },
       { field_name: 'Primary Creator Last Name', metadata_name: 'creator_family_name', required: false, multivalued: :no },
       { field_name: 'Primary Creator First Name', metadata_name: 'creator_given_name', required: false, multivalued: :no },
+      { field_name: 'Additional Creator(s)', metadata_name: 'contributor', required: false, multivalued: :yes_split },
       { field_name: 'Description', metadata_name: 'description', required: false, multivalued: :yes }
     ].freeze
 
@@ -71,7 +72,6 @@ module Import
       { field_name: 'Persistent ID - Handle', metadata_name: 'book_needs_handles', required: false, multivalued: :no, acceptable_values: ['yes', 'no'] },
       { field_name: 'Content Type', metadata_name: 'content_type', required: false, multivalued: :yes },
       { field_name: 'Primary Creator Role', metadata_name: 'primary_creator_role', required: false, multivalued: :yes_split },
-      { field_name: 'Additional Creator(s)', metadata_name: 'contributor', required: false, multivalued: :yes_split },
       { field_name: 'Sort Date', metadata_name: 'sort_date', required: false, multivalued: :no, date_format: true },
       # should 'Search Year' column be added to metadata spreadsheet?
       # { field_name: 'Search Year', metadata_name: 'search_year', required: false, multivalued: :no, date_format: true },
