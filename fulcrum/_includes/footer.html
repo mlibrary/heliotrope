@@ -1,0 +1,40 @@
+<footer class="page-footer">
+    <div class="container">
+      <div class="row">
+        <div class="col l6 s12">
+              <img class="responsive-img" src="/img/fulcrum-white-footer.png" alt="Fulcrum">
+              <p class="grey-text text-lighten-4 about light">{{ site.description }} Fulcrum is currently under development but seeks partners interested in being early adopters. For more information about the platform, please subscribe to our newsletter or send an e-mail to <a href="mailto:{{ site.email }}">{{ site.email }}</a>.</p>
+        </div>
+        <div class="col l3 s12 offset-l1 footer-menu">
+          <ul>
+            <li><a class="white-text" href="/about/index.html#authors">For Authors</a></li>
+            <li><a class="white-text" href="/about/index.html#publishers">For Publishers</a></li>
+            <li><a class="white-text" href="/about/index.html#readers">For Readers</a></li>
+            <li><a class="white-text" href="/blog/">Blog</a></li>
+            <li><a class="white-text" href="mailto:{{ site.email }}">Contact</a></li>
+            <li><a class="white-text" href="https://github.com/{{ site.github_username }}">Contribute</a></li>
+          </ul>
+        </div>
+        <div class="col l1 s12 offset-l1 footer-menu">
+          <ul class="social-media-list">
+            {% if site.github_username %}
+            <li>
+              {% include icon-github.html username=site.github_username %}
+            </li>
+            {% endif %}
+
+            {% if site.twitter_username %}
+            <li>
+              {% include icon-twitter.html username=site.twitter_username %}
+            </li>
+            {% endif %}
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="footer-copyright right-align">
+      <div class="container">
+      &copy; 2016 Regents of the University of Michigan
+      </div>
+    </div>
+  </footer>
