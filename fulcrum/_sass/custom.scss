@@ -1,0 +1,168 @@
+@import 'brand';
+@import 'syntax-highlighting';
+
+/* Custom Stylesheet */
+/**
+ * Use this file to override Materialize files so you can update
+ * the core Materialize files in the future
+ *
+ */
+
+// navigation menu
+//// resize navigation menu
+ @media only screen and (min-width: 601px) {
+   nav, nav .nav-wrapper i, nav a.button-collapse, nav a.button-collapse i {
+     height: 3.45rem;
+     line-height: 64px;
+   }
+}
+
+.button-collapse:hover {
+
+}
+
+// fix buttons
+.button--lg {
+  line-height: normal;
+}
+
+.btn-large:hover, .btn:hover {
+  color: #ffffff;
+  background-position: 0;
+}
+
+// custom sizing and positioning for icons
+//// 3-things icons
+.icon {
+  font-size: 2.4rem;
+}
+//// sign-up submit
+.sign-up {
+  margin-top: -.1rem;
+}
+
+// layout
+p {
+  line-height: 1.7rem;
+}
+
+// services and scholar
+.services {
+  padding-top: 5rem;
+}
+
+// sponsor
+.sponsor p {
+  line-height: 2rem;
+}
+
+// footer
+footer.page-footer {
+  background-color: $brand-color;
+  padding-top: 2rem;
+}
+
+.footer-menu {
+  margin-top: 2.4rem;
+}
+
+// blog
+.post-feature-image {
+  margin-bottom: 40px;
+}
+
+.post-date {
+  margin-top: 1rem;
+}
+
+.post-author {
+  margin-top: .5rem;
+  @include effra-light;
+  font-size: 0.9rem;
+}
+
+.post-content ul {
+  padding-left: 2.5rem;
+}
+
+.post-content ul li {
+  list-style-type: disc;
+
+}
+
+.button-collapse {
+  color: #26a69a;
+}
+
+.about {
+  a:hover, a:focus, a:active {
+    color: $accent-color;
+    border-color: $accent-color;
+  }
+}
+
+.parallax-container {
+  min-height: 380px;
+  line-height: 0;
+  height: auto;
+  color: rgba(255,255,255,.9);
+}
+  .parallax-container .section {
+    width: 100%;
+  }
+
+@media only screen and (max-width : 992px) {
+  .parallax-container .section {
+    position: absolute;
+    top: 40%;
+  }
+  #index-banner .section, .parallax-container .section.sponsor {
+    top: -5%;
+  }
+
+}
+
+@media only screen and (max-width : 600px) {
+
+.nav-container, .nav-container .container, .nav-container .column {
+    height: 3.07rem;
+  }
+
+  .nav-logo svg {
+    margin-top: .2rem;
+  }
+
+  #index-banner .section, .parallax-container .section.sponsor {
+    top: 0;
+  }
+
+ .sponsor p {
+    font-size: $delta;
+    margin-top: 0;
+  }
+
+  #index-banner h1.zeta {
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+
+}
+
+@media only screen and (max-width : 480px) {
+
+  .nav-container, .nav-container .container, .nav-container .column {
+      height: 3.36rem;
+    }
+
+}
+
+.icon-block {
+  padding: 0 15px;
+}
+.icon-block .material-icons {
+  font-size: inherit;
+}
+
+footer.page-footer {
+  margin: 0;
+}

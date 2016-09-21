@@ -5,5 +5,5 @@
 <%= presenter.attribute_to_html(:copyright_status, label: 'Copyright Status') %>
 <%= presenter.attribute_to_html(:rights_granted, label: 'Rights Granted') %>
 <%= presenter.attribute_to_html(:rights_granted_creative_commons, label: 'Rights Granted - Creative Commons') %>
-<%= presenter.attribute_to_html(:credit_line, label: 'Credit Line') %>
+<%= presenter.attribute_to_html(:credit_line, render_as: :markdown, label: 'Credit Line') %>
 <%= presenter.attribute_to_html(:holding_contact, render_as: :markdown, label: '') %>

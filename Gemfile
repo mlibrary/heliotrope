@@ -1,6 +1,5 @@
 source 'https://rubygems.org'
 
-
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 # gem 'rails', '4.2.6'
 gem 'rails', '4.2.7.1'
@@ -44,6 +43,9 @@ gem 'riiif', '0.4.0'
 gem 'actionpack-page_caching', '~> 1.0.1'
 
 gem 'redcarpet', '~> 3.3.4'
+
+# Use Jekyll for blog and informational pages
+gem 'jekyll'
 
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'

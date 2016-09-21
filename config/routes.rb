@@ -62,6 +62,7 @@ Rails.application.routes.draw do
   end
 
   get '/robots.txt' => 'robots#robots'
+  get '/presses' => 'presses#index'
 
   get '/:subdomain', controller: :press_catalog, action: :index, as: :press_catalog
   get '/:subdomain/facet', controller: :press_catalog, action: :facet
@@ -75,6 +76,5 @@ Rails.application.routes.draw do
       end
     end
   end
-
   root 'presses#index'
 end

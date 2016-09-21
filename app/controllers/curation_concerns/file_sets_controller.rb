@@ -1,6 +1,7 @@
 module CurationConcerns
   class FileSetsController < ApplicationController
     include CurationConcerns::FileSetsControllerBehavior
+
     self.form_class = Heliotrope::Forms::FileSetEditForm
 
     def file_set_params
@@ -51,6 +52,25 @@ module CurationConcerns
         params[:file_set].delete :visibility_during_lease
         params[:file_set].delete :lease_expiration_date
         params[:file_set].delete :visibility_after_lease
+      end
+    end
+
+    # Override CurationConcerns::FileSetControllerBehavior create method
+    # routed to /files (POST)
+    # TODO: Fix "code smell" in CurationConcerns.
+    def create
+      if !(params.key?(:file_set) && params.fetch(:file_set).key?(:files))
+        respond_to do |wants|
+          wants.html do
+            flash[:error] = 'You must attach a file!'
+            render action: 'new'
+          end
+          wants.all do
+            create_from_upload(params)
+          end
+        end
+      else
+        create_from_upload(params)
       end
     end
   end

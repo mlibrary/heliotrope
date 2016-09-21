@@ -1,0 +1,575 @@
+///////////////////////////////////
+// variables
+///////////////////////////////////
+
+
+// colors
+$brand-color:   #002C63;
+$accent-color:  #00AFEC;
+
+$white:         #FFF;
+$light-1:       #E9EEF5;
+$light-2:       #BEC4CC;
+$gray:          #8A8E96;
+$dark-1:        #565B63;
+$dark-2:        #31343B;
+$black:         #111417;
+
+$shadow:        rgba($black, 0.33);
+
+$ui-success:    #43C59E;
+$ui-caution:    #FFE67A;
+$ui-warning:    #FF6663;
+
+$facebook-blue: #3b5998;
+$twitter-blue:  #00aced;
+$linkedin-blue: #0077B5;
+$google-red:    #DD4B39;
+
+
+// type sizes
+$alpha:    2rem; // 40px
+$beta:  1.65rem; // 33px
+$gamma: 1.15rem; // 23px
+$delta: 0.95rem; // 19px
+$milli: 0.65rem; // 13px
+
+// icon sizes
+$github: 2rem;
+$twitter: 2rem;
+
+// custom type sizes
+$navi: 0.85rem;
+$zeta: 3rem;
+
+// breakpoints
+$bp--m: 30em;
+$bp--l: 56em;
+
+// border radius
+$radius:     4px;
+
+
+// reuseable measurements
+$nav-height:         3.45rem;
+
+$stroke-width:       3px;
+$stroke-width--lg:   5px;
+
+$button-padding:     0.325em 1.5em 0.5em;
+$button-padding--xl: 0.7em 1.75em 0.825em;
+$nav-padding:        1rem 0.5rem;
+$field-padding:      0.625em 0.825em;
+
+$section-padding:    2.5rem;
+$grid-padding:       1rem;
+
+
+// transition timing
+$timing: 0.2s ease;
+
+
+///////////////////////////////////
+// manual resets
+///////////////////////////////////
+
+// kill link underlines
+a {
+  text-decoration: none;
+}
+
+// Forms are stupid
+label {
+  display: inline-block;
+}
+input[type=checkbox],
+input[type=radio]{
+  vertical-align: middle;
+}
+input[type=submit],
+input[type=radio],
+input[type=checkbox],
+button,
+label {
+  cursor: pointer;
+}
+
+// Reset buttons
+button {
+  overflow: visible;
+  cursor: pointer;
+  background: transparent;
+  border: 0;
+  -webkit-appearance: none;
+  display: block;
+  outline: none;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+
+  &::-moz-focus-inner {
+    padding: 0;
+    border: 0
+  }
+}
+
+// reset form elements
+button, input[type=button] {
+  border: none;
+}
+
+
+///////////////////////////////////
+// utility classes
+///////////////////////////////////
+
+
+// Screen reader text
+.u-screenreader {
+  clip: rect(1px, 1px, 1px, 1px);
+  position: absolute !important;
+  height: 1px;
+  width: 1px;
+  overflow: hidden;
+}
+.u-screenreader--ignore {
+  speak: none;
+}
+
+.u-margins_off {
+  margin-top: 0 !important;
+}
+
+
+///////////////////////////////////
+// typography
+///////////////////////////////////
+
+
+// scale baseline with document
+html {
+  font-size: 105%;
+
+  @media screen and (min-width: $bp--m) {
+    font-size: 115%;
+  }
+
+  @media screen and (min-width: $bp--l) {
+    font-size: 125%; // 1rem = 20px
+  }
+}
+
+
+// google webfonts
+@mixin crete {
+  font-family: "Crete Round", Merriweather, georgia, serif;
+  font-weight: 400;
+}
+@mixin crete-italic {
+  font-family: "Crete Round", Merriweather, georgia, serif;
+  font-weight: 400;
+  font-style: italic;
+}
+
+
+// typekit webfonts
+@mixin effra {
+  font-family: "effra", Effra-regular, AvenirNext-Medium, Avenir-Medium, avenir, sans-serif;
+  font-weight: 400;
+}
+@mixin effra-italic {
+  font-family: "effra", Effra-regular, AvenirNext-Medium, Avenir-Medium, avenir, sans-serif;
+  font-weight: 400;
+  font-style: italic;
+}
+@mixin effra-medium {
+  font-family: "effra", Effra-Medium, AvenirNext-Medium, Avenir-Medium, avenir, sans-serif;
+  font-weight: 500;
+}
+@mixin effra-light {
+  font-family: "effra", Effra-regular, AvenirNext-Medium, Avenir-Medium, avenir, sans-serif;
+  font-weight: 300;
+}
+
+// icons
+.github {
+  height: $github;
+}
+.twitter {
+  height: $twitter;
+}
+
+// global
+html {
+  @include effra;
+}
+
+main * {
+  line-height: 1em;
+}
+
+a, strong,
+button, input[type=button] {
+  @include effra-medium;
+}
+
+em {
+  @include effra-italic;
+}
+
+h1, h2, h3, h4, h5, h6,
+.heading {
+  @include crete;
+
+  em, i {
+    @include crete-italic;
+  }
+}
+
+h1,
+.alpha {
+  font-size: $beta;
+  line-height: 1.5em;
+  margin-bottom: 1em;
+
+  @media screen and (min-width: $bp--l) {
+    font-size: $alpha;
+  }
+}
+
+.zeta {
+  font-size: $alpha;
+  margin-top: -.6rem;
+
+  @media screen and (min-width: $bp--m) {
+
+  margin-top: 2.1rem;
+
+  }
+
+
+  @media screen and (min-width: $bp--l) {
+    font-size: $zeta;
+    margin-top: 2.1rem;
+    margin-bottom: 0.67rem;
+  }
+}
+
+h2,
+.beta {
+  font-size: $beta;
+  line-height: 1.2em;
+  margin-bottom: 0.75em;
+}
+
+h3,
+.gamma {
+  font-size: $gamma;
+  line-height: 1.3em;
+  margin-bottom: 0.5em;
+}
+
+h4, h5, h6,
+.delta {
+  font-size: $delta;
+  line-height: 1.6em;
+  margin-bottom: 0.5em;
+}
+
+small,
+.milli {
+  font-size: $milli;
+  max-width: 28rem; // reel in line width
+}
+
+p,
+.button {
+  line-height: 1.58em;
+}
+
+
+///////////////////////////////////
+// global colors
+///////////////////////////////////
+
+
+* {
+  color: $dark-1;
+}
+
+// headings
+h1, h2, h3, h4, h5, h6,
+.heading {
+  color: $brand-color;
+}
+
+// links
+a {
+  color: $accent-color;
+  border-bottom: $stroke-width solid transparent;
+
+  &:hover, &:focus, &:active {
+    color: $brand-color;
+    border-color: inherit;
+  }
+}
+
+// focus
+*:focus {
+  outline: 0;
+  box-shadow: 0px 0px 6px 0px $accent-color;
+}
+[disabled]:focus {
+  box-shadow: 0px 0px 6px 0px $light-2;
+}
+
+// selection enhancement
+::selection {
+  background: rgba($light-2, 0.333333);
+  text-shadow: none;
+}
+
+
+///////////////////////////////////
+// nav
+///////////////////////////////////
+
+
+.nav-container,
+.nav-container .container,
+.nav-container .column {
+  height: $nav-height;
+}
+
+.nav-container:after {
+  content: '';
+  display: block;
+  width: 100%;
+  height: $stroke-width--lg;
+  position: relative;
+  bottom: $stroke-width--lg;
+  background: $brand-color;
+  background-image: linear-gradient(-113deg, $brand-color 0%, $accent-color 100%);
+}
+
+.main-nav {
+  padding-top: $grid-padding / 2;
+}
+
+.nav-logo  {
+  border-bottom: none;
+
+  svg {
+    height: 2.25rem;
+    width: auto;
+    margin-top: .36rem;
+  }
+}
+
+.main-nav-list {
+  float: right;
+  list-style: none;
+  top: 1.5em;
+  right: -($grid-padding / 2);
+}
+
+.main-nav-item {
+  display: inline-block;
+}
+
+.main-nav-link {
+  color: $brand-color;
+  //padding: $nav-padding;
+
+  /* &:after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: $stroke-width--lg;
+    bottom: -0.2rem; // massively fudged, just to get the idea across
+    left: 50%;
+    background: $accent-color;
+    z-index: 10;
+  } */
+
+  &:hover, &:active, &:focus,
+  &.is-active-page {
+    color: $accent-color;
+
+    &:after {
+      width: 100%;
+      left: 0;
+    }
+  }
+}
+
+
+///////////////////////////////////
+// buttons
+///////////////////////////////////
+
+
+// buttons
+@mixin button {
+  @include effra;
+  display: inline-block;
+  border-bottom: none;
+  border-radius: $radius;
+  color: $white;
+  background: $accent-color;
+  background-image: linear-gradient(to right, $brand-color 50%, $accent-color 50%);
+  background-position: -100%;
+  background-size: 201%;
+  background-repeat: no-repeat;
+  text-shadow: none;
+  text-decoration: none;
+
+  &:hover, &:focus, &:active {
+    color: $white;
+    background-position: 0;
+  }
+
+  &:active {
+    box-shadow: inset 0 1px 12px $shadow;
+  }
+
+  &[disabled] {
+    cursor-events: none;
+    background: $light-2;
+
+    &:active {
+      box-shadow: none;
+    }
+  }
+
+}
+
+.button, .btn {
+  @include button;
+  padding: 0.3em 1.625em 0.4em 1.625em;
+}
+
+.button--lg, .btn-large {
+  @include button;
+  padding: 0.65em 1.75em 0.75em 1.75em;
+  font-size: $gamma;
+}
+
+.button--sm {
+  @include button;
+  padding: 0.75em 1.75em 0.825em 1.75em;
+  font-size: $milli;
+}
+
+///////////////////////////////////
+// fields
+///////////////////////////////////
+
+
+input[type='text'], textarea {
+  width: 100%;
+  padding: $field-padding;
+  background: $light-1;
+  border: none;
+}
+
+// input field bottom border when not active
+input:not([type]), input[type=text], input[type=password], input[type=email], input[type=url], input[type=time], input[type=date], input[type=datetime], input[type=datetime-local], input[type=tel], input[type=number], input[type=search], textarea.materialize-textarea {
+  border-bottom: 1px solid $brand-color;
+}
+
+// label field font-color when activated
+input:not([type]):focus:not([readonly])+label, input[type=text]:focus:not([readonly])+label, input[type=password]:focus:not([readonly])+label, input[type=email]:focus:not([readonly])+label, input[type=url]:focus:not([readonly])+label, input[type=time]:focus:not([readonly])+label, input[type=date]:focus:not([readonly])+label, input[type=datetime]:focus:not([readonly])+label, input[type=datetime-local]:focus:not([readonly])+label, input[type=tel]:focus:not([readonly])+label, input[type=number]:focus:not([readonly])+label, input[type=search]:focus:not([readonly])+label, textarea.materialize-textarea:focus:not([readonly])+label {
+  color: $accent-color;
+}
+
+// input field bottom border + highlighted when activated
+input:not([type]):focus:not([readonly]), input[type=text]:focus:not([readonly]), input[type=password]:focus:not([readonly]), input[type=email]:focus:not([readonly]), input[type=url]:focus:not([readonly]), input[type=time]:focus:not([readonly]), input[type=date]:focus:not([readonly]), input[type=datetime]:focus:not([readonly]), input[type=datetime-local]:focus:not([readonly]), input[type=tel]:focus:not([readonly]), input[type=number]:focus:not([readonly]), input[type=search]:focus:not([readonly]), textarea.materialize-textarea:focus:not([readonly]) {
+   border-bottom: 1px solid $accent-color;
+   box-shadow: 0 1px 0 0 $accent-color;
+}
+
+textarea {
+  min-height: $grid-padding * 8;
+  max-height: $grid-padding * 24;
+}
+
+label {
+  top: 10px; // bring label closer to field without messing up vertical rhythm
+}
+
+form .button {
+  margin-top: $grid-padding / 2; // space out the submit button
+}
+
+// style placeholder text -- not super well supported, but hey
+::placeholder {
+  color: $gray;
+}
+
+
+///////////////////////////////////
+// swatches
+///////////////////////////////////
+
+
+.swatch {
+  display: block;
+  height: $grid-padding * 2;
+
+  &.brand-color  { background: $brand-color;  height: $grid-padding * 6;}
+  &.accent-color { background: $accent-color; height: $grid-padding * 6;}
+
+  &.white   { background: $white;   }
+  &.light-1 { background: $light-1; }
+  &.light-2 { background: $light-2; }
+  &.gray    { background: $gray;    }
+  &.dark-1  { background: $dark-1;  }
+  &.dark-2  { background: $dark-2;  }
+  &.black   { background: $black;   }
+
+  &.ui-success { background: $ui-success; }
+  &.ui-caution { background: $ui-caution; }
+  &.ui-warning { background: $ui-warning; }
+
+  &-label {
+    padding: $grid-padding / 2;
+    color: $black;
+    opacity: 0.66666666;
+  }
+
+  &-label--light {
+    padding: $grid-padding / 2;
+    color: $white;
+    opacity: 0.66666666;
+  }
+
+}
+
+
+///////////////////////////////////
+// transitions
+///////////////////////////////////
+
+
+/* {
+  transition:
+    color $timing,
+    background $timing,
+    border $timing,
+    box-shadow $timing,
+    fill $timing,
+    transform $timing;
+} */
+
+// reset transition for nested stuff
+a > {
+  em, i,
+  strong, b,
+  g, path {
+    transition: none;
+  }
+}
+
+*:after {
+  transition: all 0.2s ease;
+}

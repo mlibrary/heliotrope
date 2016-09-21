@@ -72,6 +72,18 @@ describe Import::Importer do
         expect(shipwreck.title).to eq ['Section 1 Shipwreck']
         miranda = section.ordered_members.to_a.second
         expect(miranda.title).to eq ['Section 1 Miranda']
+
+        # restricted-value fields get lowercased, apart from CC licenses
+        shipwreck = monograph.ordered_members.to_a.first
+        expect(shipwreck.external_resource).to eq 'no'
+        expect(shipwreck.rights_granted_creative_commons).to eq 'Creative Commons Attribution-ShareAlike license, 3.0 Unported'
+        miranda = monograph.ordered_members.to_a.second
+        expect(miranda.external_resource).to eq 'no'
+        expect(miranda.rights_granted_creative_commons).to eq 'Creative Commons Zero license (implies pd)'
+
+        # exclusivity should be transformed from P/BP to yes/no
+        expect(shipwreck.exclusive_to_platform).to eq 'no'
+        expect(miranda.exclusive_to_platform).to eq 'yes'
       end
     end
 
