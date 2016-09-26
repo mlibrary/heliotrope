@@ -8,7 +8,7 @@ class DownloadsController < ApplicationController
         # For derivatives stored on the local file system
         response.headers['Accept-Ranges'] = 'bytes'
         response.headers['Content-Length'] = File.size(file).to_s
-        file.sub!(/releases\/\d+/, "shared")
+        file.sub!(/releases\/\d+/, "current")
         response.headers['X-Sendfile'] = file
         send_file file, derivative_download_options
       else
