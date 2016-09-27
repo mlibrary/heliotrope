@@ -37,7 +37,7 @@ module Import
         row.each { |_, value| value.strip! if value }
 
         if missing_file_name?(row)
-          puts "Row #{row_num}: File name missing - skipping row!"
+          puts "Row #{row_num}: File name can only be missing for external resources - skipping row!"
           row_num = next_row_num(row_num, reverse_order)
           next
         end
@@ -73,7 +73,7 @@ module Import
       end
 
       def missing_file_name?(row)
-        row['File Name'].blank?
+        row['File Name'].blank? && row['Externally Hosted Resource'] != 'yes'
       end
 
       def asset_data?(row)
@@ -84,11 +84,7 @@ module Import
         # blank section will mean 'attach to monograph'
         # puts file_attrs.to_s
 
-        section_title = if row['Section']
-                          row['Section']
-                        else
-                          '://:MONOGRAPH://:'
-                        end
+        section_title = get_section_title(row)
 
         # using parallel arrays for files and their metadata
         # for both monographs and sections
@@ -101,13 +97,13 @@ module Import
             current_section['files_metadata'] = []
             attrs['sections'][section_title] = current_section
           end
-          attrs['sections'][section_title]['files'] << row['File Name']
+          attrs['sections'][section_title]['files'] << row['File Name'] || ''
           attrs['sections'][section_title]['files_metadata'] << file_attrs
           # puts "    ... will attach to Section: #{section_title}"
         else
           # An array of file names with a matching array of
           # metadata for each of those files.
-          attrs['monograph']['files'] << row['File Name']
+          attrs['monograph']['files'] << row['File Name'] || ''
           attrs['monograph']['files_metadata'] << file_attrs
           # puts "    ... will attach directly to monograph"
         end
@@ -117,6 +113,10 @@ module Import
         # We should either store the file name together with
         # the metadata, or else raise an error if the 2 arrays
         # don't have the same count.
+      end
+
+      def get_section_title(row)
+        row['Section'].blank? ? '://:MONOGRAPH://:' : row['Section']
       end
   end
 end
