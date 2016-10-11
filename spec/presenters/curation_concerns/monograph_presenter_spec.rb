@@ -73,11 +73,13 @@ describe CurationConcerns::MonographPresenter do
     let(:chapter_8_doc) { SolrDocument.new(id: 'chapter8', has_model_ssim: ['Section']) }
     let(:chapter_9_doc) { SolrDocument.new(id: 'chapter9', has_model_ssim: ['Section']) }
     let(:chapter_10_doc) { SolrDocument.new(id: 'chapter10', has_model_ssim: ['Section']) }
+    # I added chapter 1 twice to make sure that duplicate
+    # entries will work correctly.
+    let(:mono_doc) { SolrDocument.new(id: 'mono',
+                                      has_model_ssim: ['Monograph'],
+                                      ordered_member_ids_ssim: [fileset_doc.id, chapter_1_doc.id, chapter_2_doc.id, chapter_3_doc.id, chapter_1_doc.id, chapter_4_doc.id, chapter_5_doc.id, chapter_6_doc.id, chapter_7_doc.id, chapter_8_doc.id, chapter_9_doc.id, chapter_10_doc.id]) }
 
     before do
-      # I added chapter 1 twice to make sure that duplicate
-      # entries will work correctly.
-      mono_doc.merge!(ordered_member_ids_ssim: [fileset_doc.id, chapter_1_doc.id, chapter_2_doc.id, chapter_3_doc.id, chapter_1_doc.id, chapter_4_doc.id, chapter_5_doc.id, chapter_6_doc.id, chapter_7_doc.id, chapter_8_doc.id, chapter_9_doc.id, chapter_10_doc.id])
       ActiveFedora::SolrService.add([fileset_doc, chapter_2_doc, chapter_1_doc, chapter_3_doc, mono_doc, chapter_4_doc, chapter_5_doc, chapter_6_doc, chapter_7_doc, chapter_8_doc, chapter_9_doc, chapter_10_doc])
       ActiveFedora::SolrService.commit
     end
