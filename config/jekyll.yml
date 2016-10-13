@@ -25,4 +25,4 @@ markdown: kramdown
 baseurl: "" # the subpath of your site, e.g. /blog
 
 # Outputting
-permalink: /blog/:year/:month/:day/:title
+permalink: /blog/:year/:month/:day/:title/
