@@ -156,7 +156,7 @@
           <span class="control-label">
             <%= label_tag 'file_set[holding_contact]', 'Holding Contact',  class: "string required" %>
           </span>
-          <%= text_field_tag 'file_set[holding_contact]', curation_concern.holding_contact, class: 'form-control' %>
+          <%= text_area_tag 'file_set[holding_contact]', curation_concern.holding_contact, class: 'form-control' %>
 
           <span class="control-label">
             <%= label_tag 'file_set[ext_url_doi_or_handle]', 'External URL/DOI',  class: "string required" %>

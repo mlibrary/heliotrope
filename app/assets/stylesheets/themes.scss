@@ -148,6 +148,15 @@ $fulcrum-light-2: #bec4cc;
     ul.nav-tabs li {
       @include freight-sans-book;
     }
+
+    #permissions {
+      table tbody tr:last-of-type {
+          th {
+            display: none;
+          }
+      }
+      
+    }
   }
 
   //footer
