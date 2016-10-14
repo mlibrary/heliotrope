@@ -118,8 +118,8 @@ module Import
 
       def optional_early_exit(interaction, errors, test)
         if interaction && !errors.blank?
-          puts errors
-          puts "\n\nERRORS IN DATA! Please review the errors above.\n"
+          puts "\n" + errors + "\n" + "-" * 100 + "\n"
+          puts "\n\nSome rows/fields have been flagged for your approval. Please review the messages above before proceeding.\n"
           exit if test == true
           puts "Do you wish to continue (y/n)?"
           continue = gets

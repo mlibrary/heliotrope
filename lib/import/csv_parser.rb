@@ -8,7 +8,7 @@ module Import
 
     def attributes(errors_out = '', reverse_order = false)
       attrs = {}
-      errors = ''
+
       # a CSV can only have one monograph (probably for in-house use only)...
       attrs['monograph'] = {}
       attrs['monograph']['files'] = []
@@ -28,7 +28,8 @@ module Import
       # the table.  We want to throw away that text.
       rows.delete(0)
 
-      errors = ''
+      skipped_array = []
+      errors_array = []
 
       # reverse_each is a workaround for default fileset/asset results ordering (which is creation time)
       rows = rows.reverse_each if reverse_order
@@ -37,14 +38,14 @@ module Import
         row.each { |_, value| value.strip! if value }
 
         if missing_file_name?(row)
-          puts "Row #{row_num}: File name can only be missing for external resources - skipping row!"
+          skipped_array << "Row #{row_num}: File name can only be missing for external resources - row will be skipped\n"
           row_num = next_row_num(row_num, reverse_order)
           next
         end
 
         if asset_data?(row)
           file_attrs = {}
-          errors += row_data.data_for_asset(row_num, row, file_attrs)
+          errors_array << row_data.data_for_asset(row_num, row, file_attrs)
           add_assets_not_in_spreadsheet(file_attrs)
           attach_asset(row, attrs, file_attrs)
         else
@@ -52,7 +53,8 @@ module Import
         end
         row_num = next_row_num(row_num, reverse_order)
       end
-      errors_out.replace errors
+
+      errors_out.replace reverse_order ? skipped_array.reverse.join + errors_array.reverse.join : skipped_array.join + "\n\n" + errors_array.join
       attrs
     end
 
@@ -69,7 +71,8 @@ module Import
       end
 
       def get_human_row_num(rows, reverse_order)
-        reverse_order ? rows.count : 3
+        # Match the row numbering of the original sheet. Note the header row is not included in the row count (headers: true)
+        reverse_order ? rows.count + 1 : 3
       end
 
       def missing_file_name?(row)

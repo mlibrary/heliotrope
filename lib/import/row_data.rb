@@ -18,11 +18,8 @@ module Import
     end
 
     def data_for_asset(row_num, row, file_attrs)
-      missing_fields_errors = []
-      controlled_vocab_errors = []
-      date_errors = []
-
       md = Redcarpet::Markdown.new(Redcarpet::Render::StripDown, space_after_headers: true)
+      missing_fields_errors, controlled_vocab_errors, date_errors = Array.new(3) { [] }
 
       fields = UNIVERSAL_FIELDS + ASSET_FIELDS
       fields.each do |field|
@@ -108,12 +105,21 @@ module Import
       end
 
       def combine_field_errors(row_num, missing_fields_errors, controlled_vocab_errors, date_errors)
-        message = ''
-        message += "\n\nRow #{row_num} has errors:\n" unless missing_fields_errors.empty? && controlled_vocab_errors.empty?
-        message += missing_fields_errors.empty? ? '' : "missing required fields: \n" + missing_fields_errors.join(', ')
+        message = "\n"
+        message += '-' * 100 + "\nRow #{row_num}:"
+        message += missing_fields_errors.empty? ? '' : "\nmissing required fields: \n" + missing_fields_errors.join(', ')
         message += controlled_vocab_errors.empty? ? '' : "\nunacceptable values for: \n" + controlled_vocab_errors.join(', ')
-        message += date_errors.empty? ? '' : "\nthese dates cannot be padded to a YYYY-MM-DD value: \n" + date_errors.join(', ')
+        message += date_errors.empty? ? '' : "\nthese dates cannot be padded to a YYYY-MM-DD value and will be discarded: \n" + date_errors.join(', ')
+        # If every required metadata field is empty then assume it's the cover image. This is a pretty nasty assumption but I think it's the best way for now.
+        if hide_errors(missing_fields_errors, controlled_vocab_errors, date_errors) then message = '' end
         message
+      end
+
+      def hide_errors(missing_fields_errors, controlled_vocab_errors, date_errors)
+        no_errors = missing_fields_errors.empty? && controlled_vocab_errors.empty? && date_errors.empty?
+        required_fields_count = UNIVERSAL_FIELDS.find_all { |fields| fields[:required] == true }.count + ASSET_FIELDS.find_all { |fields| fields[:required] == true }.count
+        no_required_fields_present = missing_fields_errors.count == required_fields_count
+        no_errors || no_required_fields_present
       end
   end
 end
