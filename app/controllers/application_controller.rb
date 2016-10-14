@@ -11,4 +11,13 @@ class ApplicationController < ActionController::Base
   # Prevent CSRF attacks by raising an exception.
   # For APIs, you may want to use :null_session instead.
   protect_from_forgery with: :exception
+
+  rescue_from ActiveFedora::ObjectNotFoundError, with: :render_unauthorized
+  # rescue_from ActiveFedora::ActiveFedoraError, with: :render_unauthorized
+
+  protected
+
+    def render_unauthorized(_exception)
+      render 'curation_concerns/base/unauthorized', status: :unauthorized
+    end
 end
