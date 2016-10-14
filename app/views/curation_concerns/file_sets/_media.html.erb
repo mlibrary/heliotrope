@@ -1,21 +1,30 @@
   <figure class="image" title="<%= @presenter.alt_text.first %>">
-    <% if @presenter.image? %>
+    <% if external_resource?(@presenter) == false %>
+      <% if @presenter.image? %>
       <div id="image"></div>
       <script>
       $().ready(function() {
 
-        //window.F = window.F || {};
-        var $map = $("#image");
+            //window.F = window.F || {};
+            var $map = $("#image");
 
-        var map = L.map('image', {
-          center: [0, 0],
-          crs: L.CRS.Simple,
-          zoom: 0,
-        }).addLayer(L.tileLayer.iiif("<%= riiif.info_path(@presenter.id) %>"));
-      });
+            var map = L.map('image', {
+              center: [0, 0],
+              crs: L.CRS.Simple,
+              zoom: 0,
+            }).addLayer(L.tileLayer.iiif("<%= riiif.info_path(@presenter.id) %>"));
+          });
       </script>
       <% else %>
-        <%= media_display @presenter %>
+      <%= media_display @presenter %>
+      <% end %>
+    <% else %>
+      <p class="external-text lead">This is an external resource hosted on another website.<br />
+        <a href="<%= @presenter.ext_url_doi_or_handle.first %>" title="<%= @presenter.title.first %>" ><span class="glyphicon glyphicon-share" aria-hidden="true"></span> View object</a> at originating website.
+      </p>
+      <div id="image">
+        <%= external_resource_linked_image(@presenter) %>
+      </div>
     <% end %>
     <figcaption><%= presenter.attribute_to_html(:caption, render_as: :markdown, label: '') %></figcaption>
   </figure> <!-- /.image/media -->

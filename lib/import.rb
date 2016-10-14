@@ -32,8 +32,6 @@ module Import
 
   ASSET_FIELDS =
     [
-      # for now leave File Name separate, but eventually when external resources are figured out it should go in here too with required => false
-      # { field_name: 'File Name', metadata_name: 'title', required: true, multivalued: :no },
       { field_name: 'Resource Type', metadata_name: 'resource_type', required: true, multivalued: :yes, acceptable_values: ['audio', 'image', 'dataset', 'table', '3D model', 'text', 'video'] },
       { field_name: 'Externally Hosted Resource', metadata_name: 'external_resource', required: true, multivalued: :no, acceptable_values: ['yes', 'no'] },
       { field_name: 'Caption', metadata_name: 'caption', required: true, multivalued: :yes },

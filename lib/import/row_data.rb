@@ -22,14 +22,6 @@ module Import
       controlled_vocab_errors = []
       date_errors = []
 
-      # TODO: raise an error if file name is missing and it's not explicitly an external resource
-      # ... not going to do this until I know how to attach it as an external resource!
-      #
-      # if row['File Name'].blank? && row['Externally-Hosted Resource'] != 'yes'
-      #   puts "Row #{row_num}: File name missing and not external resource!"
-      #   next
-      # end
-
       md = Redcarpet::Markdown.new(Redcarpet::Render::StripDown, space_after_headers: true)
 
       fields = UNIVERSAL_FIELDS + ASSET_FIELDS

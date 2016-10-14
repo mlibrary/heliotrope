@@ -85,13 +85,14 @@ module Import
       end
 
       def add_full_file_paths(attrs)
+        # assigning empty files a generic link icon here, should be external resources
         attrs['files'] = attrs['files'].map do |file|
-          File.new(find_file(file))
+          file.blank? ? Rails.root.join('app', 'assets', 'images', 'external_resource.jpg') : File.new(find_file(file))
         end
       end
 
       def find_file(file_name)
-        match = Dir.glob("#{root_dir}/**/#{file_name}")
+        match = Dir.glob(File.join(root_dir, '**', file_name))
         if match.empty?
           raise "'File #{file_name}' not found anywhere under '#{root_dir}'"
         elsif match.count > 1
