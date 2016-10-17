@@ -15,6 +15,9 @@ feature 'Create a file set' do
       visit new_curation_concerns_monograph_path
       fill_in 'Title', with: 'Test monograph'
       select press.name, from: 'Publisher'
+      fill_in 'Author (last name)', with: 'Johns'
+      fill_in 'Author (first name)', with: 'Jimmy'
+      fill_in 'Additional Authors', with: 'Sub Way'
       fill_in 'Date Published', with: 'Oct 20th'
       click_button 'Create Monograph'
       # Go to monograph show page (not monograph catalog page)
@@ -59,11 +62,15 @@ feature 'Create a file set' do
 
       click_button 'Attach to Monograph'
       # On Monograph Page
+      # Monograph page has authors
+      expect(page).to have_content 'Jimmy Johns and Sub Way'
       # The file we just added won't show up on the monograph catalog page since it's
       # the representative fileset. Navigate to the FileSet page
       click_link 'Manage Monograph and Files'
       click_link 'miranda.jpg'
       # On FileSet Page
+      # FileSet page also has authors
+      expect(page).to have_content 'Jimmy Johns and Sub Way'
       expect(page).to have_content 'Test file set'
       # expect(page).to have_content 'image'
       expect(page).to have_content 'This is a caption for the image'

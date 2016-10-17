@@ -56,5 +56,14 @@ feature 'Press Catalog' do
         expect(page).to_not have_link colors.title.first
       end
     end
+    context 'with with a monograph with multiple authors' do
+      before { Monograph.destroy_all }
+      let!(:monograph) { create(:public_monograph, title: ['The Two Authors\' Book'], creator_family_name: 'Johns', creator_given_name: 'Jimmy', contributor: ['Sub Way'], press: umich.subdomain) }
+
+      scenario 'Sees multiple author names on the press catalog page' do
+        visit Rails.application.routes.url_helpers.press_catalog_path(umich)
+        expect(page).to have_content 'Jimmy Johns and Sub Way'
+      end
+    end
   end # not logged in
 end
