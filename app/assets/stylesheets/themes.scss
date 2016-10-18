@@ -150,12 +150,21 @@ $fulcrum-light-2: #bec4cc;
     }
 
     #permissions {
+
       table tbody tr:last-of-type {
           th {
-            display: none;
+            display: table-column;
+          }
+
+          li.holding_contact {
+            margin-left: -6em;
           }
       }
-      
+
+      table tbody tr:only-of-type li.holding_contact {
+          margin-left: 0;
+      }
+
     }
   }
 
