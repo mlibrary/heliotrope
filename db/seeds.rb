@@ -49,10 +49,11 @@ end
 
 def minnesota
   Press.where(name: 'University of Minnesota Press').first_or_initialize.tap do |press|
-    press.logo_path = 'http://www.upress.umn.edu/++theme++ump.theme/_images/logo.gif'
-    press.description = "The University of Minnesota Press holds a strong commitment to publishing books on the people, history, and natural environment of Minnesota and the Upper Midwest."
+    press.logo_path = 'minnesota.png'
+    press.description = "Established in 1925, the University of Minnesota Press is recognized internationally for its innovative, boundary-breaking editorial program in the humanities and social sciences, and is committed to publishing books on the people, history, and natural environment of Minnesota and the Upper Midwest.<br/><br/>This page is the home of supplemental content for select University of Minnesota Press books. You can find the full catalog of Minnesota titles on the [publisher's website](https://www.upress.umn.edu/)."
     press.subdomain = 'minnesota'
-    press.press_url = 'http://www.upress.umn.edu/'
+    press.press_url = 'https://www.upress.umn.edu/'
+    press.typekit = 'vqj2dgv'
     press.save
   end
   puts "updated/created minnesota"
@@ -61,6 +62,7 @@ end
 if Rails.env.eql?('production')
   # add presses as they become ready for production
   northwestern
+  minnesota
 else
   northwestern
   pennstate
