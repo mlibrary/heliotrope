@@ -20,7 +20,7 @@
       <% end %>
     <% else %>
       <p class="external-text lead">This is an external resource hosted on another website.<br />
-        <a href="<%= @presenter.ext_url_doi_or_handle.first %>" title="<%= @presenter.title.first %>" ><span class="glyphicon glyphicon-share" aria-hidden="true"></span> View object</a> at originating website.
+        <a href="<%= @presenter.ext_url_doi_or_handle.first %>" title="<%= @presenter.title.first %>" target="_blank" ><span class="glyphicon glyphicon-share" aria-hidden="true"></span> View object</a> at originating website.
       </p>
       <div id="image">
         <%= external_resource_linked_image(@presenter) %>
