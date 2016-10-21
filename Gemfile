@@ -4,8 +4,7 @@ source 'https://rubygems.org'
 # gem 'rails', '4.2.6'
 gem 'rails', '4.2.7.1'
 
-gem 'curation_concerns', '1.1.0'
-gem 'active-fedora', '~> 10.0.0'
+gem 'curation_concerns', '1.6.2'
 gem 'resque-web', '~> 0.0.7', require: 'resque_web'
 gem 'resque'
 gem 'resque-pool'
@@ -64,7 +63,7 @@ group :development do
   gem 'pry-rails', '~> 0.3.4'
 end
 
-gem 'rsolr', '~> 1.0.6'
+gem 'rsolr', '~> 1.1.2'
 gem 'devise'
 gem 'devise-guests', '~> 0.3'
 
@@ -72,6 +71,8 @@ group :development, :test do
   gem 'byebug'
   gem 'fcrepo_wrapper', '0.5.2'
   gem 'solr_wrapper', '0.14.2'
+  #gem 'fcrepo_wrapper', '0.6'
+  #gem 'solr_wrapper', '~> 0.16'
   gem 'rspec-rails'
   gem 'rspec-html-matchers'
   gem 'rubocop', '~> 0.37.2'
