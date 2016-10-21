@@ -31,8 +31,12 @@ class FileSet < ActiveFedora::Base
     index.as :stored_searchable
   end
 
-  property :identifier, predicate: ::RDF::Vocab::DC.identifier, multiple: false do |index|
-    index.as :stored_searchable
+  property :doi, predicate: ::RDF::Vocab::Identifiers.doi, multiple: false do |index|
+    index.as :symbol
+  end
+
+  property :hdl, predicate: ::RDF::Vocab::Identifiers.hdl, multiple: false do |index|
+    index.as :symbol
   end
 
   property :copyright_holder, predicate: ::RDF::Vocab::SCHEMA.copyrightHolder, multiple: false do |index|

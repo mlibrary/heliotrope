@@ -25,13 +25,13 @@ module CurationConcerns
     # Metadata Methods
     delegate :resource_type, :caption, :alt_text, :description, :copyright_holder,
              :content_type, :creator, :creator_full_name, :contributor, :date_created,
-             :keywords, :relation, :publisher, :identifier, :language, :date_uploaded,
+             :keywords, :relation, :publisher, :language, :date_uploaded,
              :rights, :embargo_release_date, :lease_expiration_date, :depositor, :tags,
              :title_or_label, :external_resource, :book_needs_handles, :section_title, :section_id,
              :allow_download, :allow_hi_res, :copyright_status, :rights_granted,
              :rights_granted_creative_commons, :exclusive_to_platform, :permissions_expiration_date,
              :allow_display_after_expiration, :allow_download_after_expiration, :credit_line,
-             :holding_contact, :ext_url_doi_or_handle, :use_crossref_xml, :primary_creator_role,
+             :holding_contact, :ext_url_doi_or_handle, :doi, :hdl, :use_crossref_xml, :primary_creator_role,
              :display_date, :sort_date, :search_year, :transcript, :translation, :file_format,
              to: :solr_document
 
@@ -73,6 +73,31 @@ module CurationConcerns
 
     def link_name
       current_ability.can?(:read, id) ? Array(solr_document['label_tesim']).first : 'File'
+    end
+
+    def citable_link
+      case ext_url_doi_or_handle.first
+      when /handle/i
+        handle_url
+      when /doi/i
+        doi_url
+      else
+        handle_url
+      end
+    end
+
+    def handle_url
+      if hdl.first.present?
+        "http://hdl.handle.net/2027/fulcrum.#{hdl.first}"
+      else
+        # Right now handles match up with the NOID, but that won't always be true (probably)
+        # This works for now, but might need to be removed in the future
+        "http://hdl.handle.net/2027/fulcrum.#{id}"
+      end
+    end
+
+    def doi_url
+      # TODO: we don't yet have examples for this
     end
 
     def allow_download?
