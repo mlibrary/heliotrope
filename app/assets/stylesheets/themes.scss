@@ -121,6 +121,15 @@ $umn-white: #fff;
     }
   }
 
+  // monograph
+  .monograph {
+    .documentHeader {
+      p {
+        @include brandon;
+      }
+    }
+  }
+
   // assets
   .asset {
     ul.nav-tabs li {
