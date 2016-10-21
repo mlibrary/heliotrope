@@ -1,5 +1,182 @@
 // Press themes are collected here
 
+// University of Minnesota press
+// colors
+$umn-brand-color: #7b2e00;
+$umn-accent-color: #ffde7a;
+
+$umn-accent-footer-aqua: #0b788a;
+$umn-accent-footer-rust: #bd6423;
+
+$umn-accent-link: #a43727;
+$umn-accent-link2: #ef4b4b;
+
+$umn-grey: #d5d6d2;
+$umn-black: #0b3d4c;
+$umn-black-80: #342f2e;
+$umn-blue: #16bbe6;
+$umn-white: #fff;
+
+// typography
+@mixin brandon {
+  font-family: "brandon-grotesque", sans-serif;
+}
+
+@mixin ff-meta-serif {
+  font-family: "ff-meta-serif-web-pro", serif;
+}
+
+.minnesota {
+
+  // typography
+  @include ff-meta-serif;
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5 {
+    @include brandon;
+  }
+
+  // links
+  a {
+    color: $umn-accent-link;
+  }
+
+  a:hover,
+  a:active {
+    color: $umn-accent-link2;
+  }
+
+  // buttons
+  .btn {
+    @include brandon;
+  }
+
+  #manage-monograph-button {
+    color: $umn-grey;
+  }
+
+  // navigation menu
+  .navbar-default .navbar-nav > .open > a,
+  .navbar-default .navbar-nav > .open > a:hover,
+  .navbar-default .navbar-nav > .open > a:focus {
+    background-color: $umn-accent-footer-aqua;
+  }
+
+  #brand-bar {
+    background-color: $umn-brand-color;
+
+    .navbar-brand {
+      color: $umn-white;
+      @include brandon;
+      text-transform: uppercase;
+      font-weight: 500;
+    }
+
+    .navbar-nav {
+      a#add-content,
+      a.login,
+      a.user-display-name {
+          color: $umn-white;
+      }
+    }
+
+    button.search-submit {
+      background-color: $umn-accent-footer-aqua;
+      border-color: $umn-accent-footer-aqua;
+    }
+
+  }
+
+  // press catalog
+
+  // jumbotron
+  .jumbotron {
+    background-color: $umn-grey;
+    @include brandon;
+
+    .logo {
+
+      img {
+        margin-right: 3em;
+        width: auto;
+        height: 250px;
+      }
+
+    }
+
+  }
+
+  .press {
+
+    h2:nth-child(2) {
+      margin-bottom: 1.5em;
+    }
+
+    .document,
+    .documentHeader {
+      margin-bottom: 2em;
+    }
+  }
+
+  // monograph
+  .monograph {
+    .documentHeader {
+      p {
+        @include brandon;
+      }
+    }
+  }
+
+  // assets
+  .asset {
+    ul.nav-tabs li {
+      @include brandon;
+    }
+  }
+
+  //footer
+  footer {
+    a,
+    a:hover,
+    a:active {
+      color: $umn-white;
+    }
+    .social,
+    .footer-nav {
+      background-color: $umn-accent-footer-aqua;
+
+      .crop {
+        height: 44px;
+        width: 65px;
+        overflow: hidden;
+        margin-top: 4em;
+        margin-bottom: 1em;
+      }
+
+      img {
+        width: 70px;
+      }
+
+      p {
+        @include brandon;
+        text-transform: uppercase;
+        font-weight: 500;
+      }
+
+    }
+    .copyright {
+      background-color: $umn-brand-color;
+    }
+    .platform {
+      background-color: $umn-black-80;
+    }
+  }
+
+}
+
 // Northwestern University Press
 // colors
 $nw-brand-color: #4e2a84;
@@ -15,14 +192,6 @@ $nw-white: #fff;
 $fulcrum-light-2: #bec4cc;
 
 // typography
-@mixin akkurat {
-  font-family: "akkurat", arial, sans-serif;
-}
-
-@mixin campton {
-  font-family: "campton";
-}
-
 @mixin droid-serif {
   font-family: "droid-serif", Georgia, serif;
 }
