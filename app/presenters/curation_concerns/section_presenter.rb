@@ -1,5 +1,7 @@
 module CurationConcerns
   class SectionPresenter < WorkShowPresenter
+    include TitlePresenter
+
     def monograph_label
       member_of.first.fetch('title_tesim', []).first
     end

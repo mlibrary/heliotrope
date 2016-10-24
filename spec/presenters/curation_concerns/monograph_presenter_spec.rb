@@ -11,6 +11,10 @@ describe CurationConcerns::MonographPresenter do
   let(:ability) { double('ability') }
   let(:presenter) { described_class.new(mono_doc, ability) }
 
+  it 'includes TitlePresenter' do
+    expect(described_class.new(nil, nil)).to be_a TitlePresenter
+  end
+
   describe '#sub_brand_links' do
     context 'a monograph without sub-brands' do
       let(:mono_doc) { SolrDocument.new(id: 'mono', has_model_ssim: ['Monograph'], press_tesim: [press.subdomain]) }

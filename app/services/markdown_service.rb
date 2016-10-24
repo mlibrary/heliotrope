@@ -12,7 +12,7 @@ class MarkdownService
     rendered_html = outer_p_tags_removed.nil? ? rendered_html : outer_p_tags_removed[1]
     # redcarpet's hard_wrap causes unwanted line breaks, the first gsub seems to be the most targeted way to remove them
     # with the second gsub allowing us to unescape non-breaking spaces to format certain fields per authors' requests
-    rendered_html.gsub(/<\/th><br>/, '</th>').gsub(/&amp;nbsp;/, '&nbsp;')
+    rendered_html.gsub(/<\/th><br>/, '</th>').gsub(/&amp;nbsp;/, '&nbsp;').html_safe
   end
 
   mattr_accessor :sd

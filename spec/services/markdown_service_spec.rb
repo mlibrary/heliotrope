@@ -1,10 +1,17 @@
 require 'rails_helper'
 
 describe MarkdownService do
-  let(:html) { "\n\nThis is _italics_ and this is\n\na paragraph\n\n__bold__ a line\nbreak and this is ~~strikethrough~~" }
+  describe '.markdown' do
+    let(:html) { "\n\nThis is _italics_ and this is\n\na paragraph\n\n__bold__ a line\nbreak and this is ~~strikethrough~~" }
+    let(:rvalue) { described_class.markdown(html) }
 
-  it "renders html from markdown" do
-    expect(described_class.markdown(html)).to eq("This is <em>italics</em> and this is</p>\n\n<p>a paragraph</p>\n\n<p><strong>bold</strong> a line<br>\nbreak and this is <del>strikethrough</del>")
+    it "renders html from markdown" do
+      expect(rvalue).to eq("This is <em>italics</em> and this is</p>\n\n<p>a paragraph</p>\n\n<p><strong>bold</strong> a line<br>\nbreak and this is <del>strikethrough</del>")
+    end
+
+    it 'returns safe html' do
+      expect(rvalue).to be_a ActiveSupport::SafeBuffer
+    end
   end
 
   describe '.markdown_as_text' do
