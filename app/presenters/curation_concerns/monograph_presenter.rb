@@ -1,8 +1,9 @@
 module CurationConcerns
   class MonographPresenter < WorkShowPresenter
+    include TitlePresenter
     include ActionView::Helpers::UrlHelper
 
-    delegate :title, :date_created, :date_modified, :date_uploaded,
+    delegate :date_created, :date_modified, :date_uploaded,
              :description, :creator, :editor, :contributor, :subject,
              :publisher, :date_published, :language, :isbn, :isbn_paper,
              :isbn_ebook, :copyright_holder, :buy_url, :embargo_release_date,

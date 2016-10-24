@@ -1,4 +1,4 @@
-<% provide :page_title, @monograph_presenter.title.first || "Title" %>
+<% provide :page_title, @monograph_presenter.title || "Title" %>
 <% provide :page_class, 'search monograph' %>
 
 <% provide :page_header do %>
@@ -11,7 +11,7 @@
       <%= render 'curation_concerns/base/representative_media', presenter: @monograph_presenter %>
     </div><!-- /.monograph-cover -->
     <div class="monograph-metadata">
-      <h2><%= render_markdown @monograph_presenter.title.first || '' %></h2>
+      <h2><%= @monograph_presenter.title || '' %></h2>
       <% if can?(:edit, @monograph_presenter.id) %>
         <%= link_to "Manage Monograph and Files", main_app.monograph_show_path(@monograph_presenter.id), class: 'btn btn-primary', id: 'manage-monograph-button' %>
       <% end %>

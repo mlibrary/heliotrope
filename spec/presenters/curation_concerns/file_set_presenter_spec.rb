@@ -10,11 +10,8 @@ describe CurationConcerns::FileSetPresenter do
     monograph.save!
   end
 
-  describe '#allow_download?' do
-    let(:fileset_doc) { SolrDocument.new(id: 'fs', has_model_ssim: ['FileSet'], allow_download_ssim: 'yes') }
-    it "can download" do
-      expect(presenter.allow_download?).to be true
-    end
+  it 'includes TitlePresenter' do
+    expect(described_class.new(nil, nil)).to be_a TitlePresenter
   end
 
   describe "#monograph" do
@@ -24,14 +21,10 @@ describe CurationConcerns::FileSetPresenter do
     end
   end
 
-  describe '#page_title' do
-    let(:expected_page_title) { 'Hello' }
-    let(:fileset_doc) { SolrDocument.new(id: 'fs', has_model_ssim: ['FileSet'], title_tesim: [expected_page_title]) }
-    context 'is file set first title' do
-      it { expect(presenter.page_title).to eq fileset_doc[:title_tesim].first }
-    end
-    context 'is expected page title' do
-      it { expect(presenter.page_title).to eq expected_page_title }
+  describe '#allow_download?' do
+    let(:fileset_doc) { SolrDocument.new(id: 'fs', has_model_ssim: ['FileSet'], allow_download_ssim: 'yes') }
+    it "can download" do
+      expect(presenter.allow_download?).to be true
     end
   end
 end

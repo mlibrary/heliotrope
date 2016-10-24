@@ -1,7 +1,9 @@
 module CurationConcerns
   class FileSetPresenter
+    include TitlePresenter
     include ModelProxy
     include PresentsAttributes
+
     attr_accessor :solr_document, :current_ability, :request, :monograph_presenter
 
     # @param [SolrDocument] solr_document
@@ -21,7 +23,7 @@ module CurationConcerns
     delegate :has?, :first, :fetch, to: :solr_document
 
     # Metadata Methods
-    delegate :title, :resource_type, :caption, :alt_text, :description, :copyright_holder,
+    delegate :resource_type, :caption, :alt_text, :description, :copyright_holder,
              :content_type, :creator, :creator_full_name, :contributor, :date_created,
              :keywords, :relation, :publisher, :identifier, :language, :date_uploaded,
              :rights, :embargo_release_date, :lease_expiration_date, :depositor, :tags,
@@ -47,10 +49,6 @@ module CurationConcerns
 
     def press_url
       Press.find_by(subdomain: subdomain).press_url
-    end
-
-    def page_title
-      Array(solr_document['title_tesim']).first
     end
 
     def section_title

@@ -3,6 +3,10 @@ require 'rails_helper'
 describe CurationConcerns::SectionPresenter do
   let(:ability) { nil }
 
+  it 'includes TitlePresenter' do
+    expect(described_class.new(nil, nil)).to be_a TitlePresenter
+  end
+
   describe "#monograph_label" do
     let(:solr_document) { SolrDocument.new(attributes) }
     let(:attributes) do

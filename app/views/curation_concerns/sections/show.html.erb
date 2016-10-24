@@ -1,6 +1,6 @@
 <% provide :page_title, @presenter.page_title %>
 <% provide :page_header do %>
-  <h1><%= render_markdown @presenter.to_s %> </h1>
+  <h1><%= @presenter.title %> </h1>
   <% if @parent_presenter %>
     <ul class="breadcrumb">
       <li><%= link_to @parent_presenter, polymorphic_path([main_app, @parent_presenter]) %></li>

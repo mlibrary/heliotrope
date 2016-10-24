@@ -12,8 +12,8 @@
     <div class="col-sm-6">
       <div class="row asset-attributes">
         <div class="col-sm-12">
-          <h2><%= render_markdown @presenter.page_title %></h2>
-          <h3>From <em><%= render_markdown link_to @presenter.monograph.title.first, "/concern/monographs/#{@presenter.monograph.id}" %></em>
+          <h2><%= @presenter.title %></h2>
+          <h3>From <em><%= link_to @presenter.monograph.title, "/concern/monographs/#{@presenter.monograph.id}" %></em>
             by <%= @presenter.monograph.creator_given_name.first %> <%= @presenter.monograph.creator_family_name.first %><%= contributors_string(@presenter.monograph.contributor) %></h3></h3>
           <br />
           <%= render "attributes", presenter: @presenter %>

@@ -1,6 +1,6 @@
 <% provide :page_title, @presenter.page_title %>
 <% provide :page_header do %>
-  <h1><%= render_markdown @presenter.to_s %> <span class="human_readable_type">(<%= @presenter.human_readable_type %>)</span></h1>
+  <h1><%= @presenter.title %> <span class="human_readable_type">(<%= @presenter.human_readable_type %>)</span></h1>
 <% end %>
 
 <% collector = can?(:collect, @presenter.id) %>
