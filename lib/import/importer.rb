@@ -87,7 +87,7 @@ module Import
       def add_full_file_paths(attrs)
         # assigning empty files a generic link icon here, should be external resources
         attrs['files'] = attrs['files'].map do |file|
-          file.blank? ? Rails.root.join('app', 'assets', 'images', 'external_resource.jpg') : File.new(find_file(file))
+          file.blank? ? File.new(Rails.root.join('app', 'assets', 'images', 'external_resource.jpg')) : File.new(find_file(file))
         end
       end
 
