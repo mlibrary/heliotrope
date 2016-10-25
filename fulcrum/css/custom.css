@@ -545,6 +545,21 @@ a > g, a > path {
 p {
   line-height: 1.7rem; }
 
+.case-study {
+  padding-top: 5rem;
+  padding-bottom: 4rem; }
+  .case-study h3, .case-study h4, .case-study h5 {
+    margin-top: 0; }
+  .case-study h4 {
+    margin-bottom: 0; }
+  .case-study h5 {
+    font-size: .8em; }
+  .case-study .project-cover a:hover,
+  .case-study .project-cover a:active {
+    color: transparent; }
+  .case-study .project-info h3 {
+    font-style: italic; }
+
 .services {
   padding-top: 5rem; }
 
