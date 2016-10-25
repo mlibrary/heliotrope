@@ -18,7 +18,7 @@ module CurationConcerns
         :allow_display_after_expiration, :allow_download_after_expiration,
         :credit_line, :holding_contact, :ext_url_doi_or_handle,
         :use_crossref_xml, :external_resource,
-        :transcript, :copyright_holder,
+        :transcript, :copyright_holder, :doi, :hdl,
         description: [], resource_type: [], caption: [], alt_text: [],
         content_type: [], contributor: [], date_created: [], keywords: [],
         language: [], identifier: [], relation: [], title: [],

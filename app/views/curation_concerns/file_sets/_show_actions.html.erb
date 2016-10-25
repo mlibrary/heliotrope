@@ -13,12 +13,12 @@
   <div class="btn-group share">
     <button type="button" class="btn btn-default btn-lg dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Share <span class="caret"></span></button>
       <ul class="dropdown-menu">
-        <li><a href="http://twitter.com/intent/tweet?text=<%= @presenter.page_title %>&amp;url=http://hdl.handle.net/2027/fulcrum.<%= @presenter.id %>">Twitter</a></li>
-        <li><a href="http://www.facebook.com/sharer.php?u=http://hdl.handle.net/2027/fulcrum.<%= @presenter.id %>&amp;t=<%= @presenter %>">Facebook</a></li>
-        <li><a href="https://plus.google.com/share?url=http://hdl.handle.net/2027/fulcrum.<%= @presenter.id %>">Google+</a></li>
-        <li><a href="http://www.reddit.com/submit?url=http://hdl.handle.net/2027/fulcrum.<%= @presenter.id %>">Reddit</a></li>
-        <li><a href="http://www.mendeley.com/import/?url=http://hdl.handle.net/2027/fulcrum.<%= @presenter.id %>">Mendeley</a></li>
-        <li><a href="http://www.citeulike.org/posturl?url=http://hdl.handle.net/2027/fulcrum.<%= @presenter.id %>&amp;title=<%= @presenter %>">Cite U Like</a></li>
+        <li><a href="http://twitter.com/intent/tweet?text=<%= @presenter.page_title %>&amp;url=<%= @presenter.citable_link %>">Twitter</a></li>
+        <li><a href="http://www.facebook.com/sharer.php?u=<%= @presenter.citable_link %>&amp;t=<%= @presenter %>">Facebook</a></li>
+        <li><a href="https://plus.google.com/share?url=<%= @presenter.citable_link %>">Google+</a></li>
+        <li><a href="http://www.reddit.com/submit?url=<%= @presenter.citable_link %>">Reddit</a></li>
+        <li><a href="http://www.mendeley.com/import/?url=<%= @presenter.citable_link %>">Mendeley</a></li>
+        <li><a href="http://www.citeulike.org/posturl?url=<%= @presenter.citable_link %>&amp;title=<%= @presenter %>">Cite U Like</a></li>
       </ul>
   </div>
 </div><!-- form-actions -->

@@ -14,6 +14,20 @@ describe CurationConcerns::FileSetPresenter do
     expect(described_class.new(nil, nil)).to be_a TitlePresenter
   end
 
+  describe "handles" do
+    let(:fileset_doc) { SolrDocument.new(id: 'fileset_id', has_model_ssim: ['FileSet'], ext_url_doi_or_handle: ["Handle"], hdl_ssim: ["HANDLE"]) }
+    it "has a handle" do
+      expect(presenter.hdl.first).to eq 'HANDLE'
+      expect(presenter.handle_url).to eq "http://hdl.handle.net/2027/fulcrum.HANDLE"
+      expect(presenter.citable_link).to eq "http://hdl.handle.net/2027/fulcrum.HANDLE"
+    end
+    it "does not have a handle" do
+      fileset_doc.to_h['hdl_ssim'][0] = nil
+      # right now we're defaulting to the NOID for new things that don't yet have handles
+      expect(presenter.citable_link).to eq "http://hdl.handle.net/2027/fulcrum.fileset_id"
+    end
+  end
+
   describe "#monograph" do
     let(:fileset_doc) { SolrDocument.new(file_set.to_solr) }
     it "has the monograph's creator_family_name" do

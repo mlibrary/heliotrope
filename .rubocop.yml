@@ -27,6 +27,11 @@ Metrics/AbcSize:
 Metrics/MethodLength:
   Enabled: false
 
+Metrics/ClassLength:
+  Description: 'Avoid classes longer than 250 lines of code'
+  Enabled: true
+  Max: 250
+
 Performance/RedundantMerge:
   Enabled: false
 
