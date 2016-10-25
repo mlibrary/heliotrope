@@ -46,6 +46,36 @@ p {
   line-height: 1.7rem;
 }
 
+// case studies
+.case-study {
+  padding-top: 5rem;
+  padding-bottom: 4rem;
+
+  h3, h4, h5 {
+    margin-top: 0;
+  }
+
+  h4 {
+    margin-bottom: 0;
+  }
+
+  h5 {
+    font-size: .8em;
+  }
+
+  .project-cover {
+    a:hover,
+    a:active {
+      color: transparent;
+    }
+  }
+
+  .project-info h3 {
+    font-style: italic;
+  }
+
+}
+
 // services and scholar
 .services {
   padding-top: 5rem;
