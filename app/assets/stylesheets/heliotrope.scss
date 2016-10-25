@@ -174,8 +174,12 @@ footer.press {
   }
 
   .keywords {
-    display: inline;
+    display: inline-flex;
     margin-right: .5em;
+  }
+
+  .keywords:not(:last-of-type):after {
+   content: ", ";
   }
 
   .translation, .transcript {
