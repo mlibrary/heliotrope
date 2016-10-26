@@ -38,7 +38,7 @@ end
 def northwestern
   Press.where(name: 'Northwestern University Press').first_or_initialize.tap do |press|
     press.logo_path = 'northwestern.png'
-    press.description = "Northwestern University Press is dedicated to publishing works of enduring scholarly and cultural value, extending the University’s mission to a community of readers throughout the world.<br/><br/>[northwestern.fulcrumscholar.org](http://northwestern.fulcrumscholar.org) is the home of supplemental content for select books. You can find the full catalog of Northwestern University Press titles at the [publisher's website](http://www.nupress.northwestern.edu/)."
+    press.description = "Northwestern University Press is dedicated to publishing works of enduring scholarly and cultural value, extending the University’s mission to a community of readers throughout the world.<br/><br/>[northwestern.fulcrum.org](http://northwestern.fulcrum.org) is the home of supplemental content for select books. You can find the full catalog of Northwestern University Press titles at the [publisher's website](http://www.nupress.northwestern.edu/)."
     press.subdomain = 'northwestern'
     press.press_url = 'http://nupress.northwestern.edu/'
     press.typekit = 'wyq1mfc'
