@@ -102,7 +102,7 @@ $umn-white: #fff;
       img {
         margin-right: 3em;
         width: auto;
-        height: 250px;
+        height: 150px;
       }
 
     }
@@ -142,11 +142,11 @@ $umn-white: #fff;
     a,
     a:hover,
     a:active {
-      color: $umn-white;
+      color: $umn-black-80;
     }
     .social,
     .footer-nav {
-      background-color: $umn-accent-footer-aqua;
+      background-color:  $umn-grey;
 
       .crop {
         height: 126px;
@@ -155,6 +155,7 @@ $umn-white: #fff;
 
       img {
         width: 45px;
+        filter: grayscale(100%) contrast(125%);
       }
 
       p {
