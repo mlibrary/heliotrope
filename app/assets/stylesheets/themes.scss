@@ -142,7 +142,7 @@ $umn-white: #fff;
     a,
     a:hover,
     a:active {
-      color: $umn-black-80;
+      color: $umn-white;
     }
     .social,
     .footer-nav {
@@ -151,6 +151,12 @@ $umn-white: #fff;
       .crop {
         height: 126px;
         width: auto;
+      }
+
+      a,
+      a:hover,
+      a:active {
+        color: $umn-black-80;
       }
 
       img {
