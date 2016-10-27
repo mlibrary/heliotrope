@@ -43,3 +43,7 @@
 
 # Ignore all files ending in "swp", vim swap files
 **/*.swp
+
+# Ingnore import directory
+import/
+
