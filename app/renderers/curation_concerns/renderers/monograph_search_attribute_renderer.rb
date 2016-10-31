@@ -1,6 +1,6 @@
 module CurationConcerns
   module Renderers
-    class LinkedAttributeRenderer < AttributeRenderer
+    class MonographSearchAttributeRenderer < AttributeRenderer
       private
 
         def li_value(value)

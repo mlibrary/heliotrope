@@ -1,6 +1,6 @@
 module CurationConcerns
   module Renderers
-    class FacetedAttributeRenderer < AttributeRenderer
+    class MonographFacetAttributeRenderer < AttributeRenderer
       private
 
         def li_value(value)
