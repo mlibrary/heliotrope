@@ -5,9 +5,12 @@ module CurationConcerns
     class MarkdownAttributeRenderer < AttributeRenderer
       def render
         markup = ''
-
         return markup if !values.present? && !options[:include_empty]
-        markup << %(<tr><th>#{label}</th>\n<td><ul class='tabular list-unstyled'>)
+        markup << if label.empty?
+                    %(<tr><td colspan="2"><ul class='tabular list-unstyled'>)
+                  else
+                    %(<tr><th>#{label}</th>\n<td><ul class='tabular list-unstyled'>)
+                  end
         attributes = microdata_object_attributes(field).merge(class: "attribute #{field}")
         Array(values).each do |value|
           markup << "<li#{html_attributes(attributes)}>#{attribute_value_to_html(value.to_s)}</li>"
