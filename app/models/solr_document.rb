@@ -33,6 +33,8 @@ class SolrDocument
     'exclusive_to_platform',
     'external_resource',
     'ext_url_doi_or_handle',
+    'doi',
+    'hdl',
     'holding_contact',
     'permissions_expiration_date',
     'rights_granted',

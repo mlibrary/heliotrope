@@ -8,15 +8,4 @@
 <%= presenter.attribute_to_html(:keywords, render_as: :monograph_facet, monograph_id: presenter.monograph.id) %>
 <%= presenter.attribute_to_html(:content_type, render_as: :monograph_search, monograph_id: presenter.monograph.id) %>
 <%= presenter.attribute_to_html(:language, render_as: :monograph_facet, monograph_id: presenter.monograph.id) %>
-<!-- TODO: replace permalink display with model generated handle/doi instead of constructing it here -->
-<tr>
-  <th>Citable Link</th>
-  <td>
-    <ul class="tabular list-unstyled">
-      <li class="attribute permalink">
-        <a href="http://hdl.handle.net/2027/fulcrum.<%= @presenter.id %>">http://hdl.handle.net/2027/fulcrum.<%= @presenter.id %></a>
-      </li>
-    </ul>
-  </td>
-</tr>
-<%= presenter.attribute_to_html(:identifier) %>
+<%= presenter.attribute_to_html(:citable_link, label: 'Citable Link', render_as: :external_link) %>

@@ -119,11 +119,6 @@
           <%= text_area_tag 'file_set[translation][]', curation_concern.translation.first, class: 'form-control' %>
 
           <span class="control-label">
-            <%= label_tag 'file_set[identifier]', 'Identifier',  class: 'string optional' %>
-          </span>
-          <%= text_field_tag 'file_set[identifier]', curation_concern.identifier, class: 'form-control' %>
-
-          <span class="control-label">
             <%= label_tag 'file_set[relation][]', 'Relation',  class: 'string optional' %>
           </span>
           <%= text_field_tag 'file_set[relation][]', curation_concern.relation.first, class: 'form-control' %>
@@ -137,6 +132,10 @@
             <%= label_tag 'file_set[book_needs_handles]', 'Book Needs Handles?',  class: "string required" %>
           </span>
           <%= text_field_tag 'file_set[book_needs_handles]', curation_concern.book_needs_handles, class: 'form-control' %>
+
+          <%= f.input :doi, label: 'DOI', input_html: { class: 'form-control' } %>
+
+          <%= f.input :hdl, label: 'Handle', input_html: { class: 'form-control' } %>
 
           <span class="control-label">
             <%= label_tag 'file_set[allow_download]', 'Allow Download?',  class: "string required" %>
