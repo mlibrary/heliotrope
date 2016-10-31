@@ -1,6 +1,12 @@
 require 'rails_helper'
 
 feature 'Create a file set' do
+  before do
+    FileSet.destroy_all
+    Section.destroy_all
+    Monograph.destroy_all
+  end
+
   context 'as a logged in user' do
     let(:user) { create(:platform_admin) }
     let!(:press) { create(:press) }
@@ -20,9 +26,17 @@ feature 'Create a file set' do
       fill_in 'Additional Authors', with: 'Sub Way'
       fill_in 'Date Published', with: 'Oct 20th'
       click_button 'Create Monograph'
-      # Go to monograph show page (not monograph catalog page)
-      click_link 'Manage Monograph and Files'
-      # Now attach a file to the Monograph by creating a FileSet
+      # On Monograph Page
+      # Monograph page has authors
+      expect(page).to have_content 'Jimmy Johns and Sub Way'
+
+      # Create a Section
+      visit new_curation_concerns_section_path
+      fill_in 'Title', with: 'Test section'
+      select 'Test monograph', from: "section_monograph_id"
+      click_button 'Create Section'
+
+      # Now attach a file to the Section. First create a FileSet
       click_link 'Attach a File'
       fill_in 'Title', with: 'Test file set'
       attach_file 'file_set_files', File.join(fixture_path, 'csv', 'miranda.jpg')
@@ -40,6 +54,7 @@ feature 'Create a file set' do
       fill_in 'Content Type', with: 'screenshot'
       fill_in 'Primary Creator (family name)', with: 'FamilyName'
       fill_in 'Primary Creator (given name)', with: 'GivenName'
+      fill_in 'Primary Creator Role', with: 'director'
       fill_in 'Contributor', with: 'Test Contributor'
       fill_in 'Date Created', with: '2016'
       fill_in 'Sort Date', with: '2000-01-01'
@@ -60,13 +75,8 @@ feature 'Create a file set' do
       fill_in 'Holding Contact', with: 'Unauthorized use prohibited. A Nice Museum.'
       fill_in 'Use Crossref XML?', with: 'yes3'
 
-      click_button 'Attach to Monograph'
-      # On Monograph Page
-      # Monograph page has authors
-      expect(page).to have_content 'Jimmy Johns and Sub Way'
-      # The file we just added won't show up on the monograph catalog page since it's
-      # the representative fileset. Navigate to the FileSet page
-      click_link 'Manage Monograph and Files'
+      # Attach it to the Section
+      click_button 'Attach to Section'
       click_link 'miranda.jpg'
       # On FileSet Page
       # FileSet page also has authors
@@ -98,6 +108,17 @@ feature 'Create a file set' do
       # expect(page).to have_content 'no2'
       # expect(page).to have_content 'no3'
       # expect(page).to have_content 'no4'
+
+      # check metadata is linking as intended
+      # facets
+      expect(page).to have_link("keyword 1", href: "/concern/monographs/" + Monograph.first.id + "?f%5Bkeywords_sim%5D%5B%5D=keyword+1")
+      expect(page).to have_link("English", href: "/concern/monographs/" + Monograph.first.id + "?f%5Blanguage_sim%5D%5B%5D=English")
+      expect(page).to have_link("Test section", href: "/concern/monographs/" + Monograph.first.id + "?f%5Bsection_title_sim%5D%5B%5D=Test+section")
+      expect(page).to have_link("FamilyName, GivenName", href: "/concern/monographs/" + Monograph.first.id + "?f%5Bcreator_full_name_sim%5D%5B%5D=FamilyName%2C+GivenName")
+      expect(page).to have_link("Test Contributor", href: "/concern/monographs/" + Monograph.first.id + "?f%5Bcontributor_sim%5D%5B%5D=Test+Contributor")
+      # search fields
+      expect(page).to have_link("director", href: "/concern/monographs/" + Monograph.first.id + "?f%5Bprimary_creator_role_tesim%5D%5B%5D=director")
+      expect(page).to have_link("screenshot", href: "/concern/monographs/" + Monograph.first.id + "?f%5Bcontent_type_tesim%5D%5B%5D=screenshot")
     end
   end
 end
