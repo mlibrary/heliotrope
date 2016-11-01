@@ -548,6 +548,10 @@ p {
 .case-study {
   padding-top: 5rem;
   padding-bottom: 4rem; }
+  .case-study .row {
+    margin-bottom: 5em; }
+  .case-study .row:last-child {
+    margin-bottom: 20px; }
   .case-study h3, .case-study h4, .case-study h5 {
     margin-top: 0; }
   .case-study h4 {

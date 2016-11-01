@@ -51,6 +51,14 @@ p {
   padding-top: 5rem;
   padding-bottom: 4rem;
 
+  .row {
+    margin-bottom: 5em;
+  }
+
+  .row:last-child {
+    margin-bottom: 20px;
+  }
+
   h3, h4, h5 {
     margin-top: 0;
   }
