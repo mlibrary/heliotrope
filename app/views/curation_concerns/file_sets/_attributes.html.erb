@@ -1,7 +1,7 @@
 <ul class="nav nav-tabs" role="tablist">
   <li role="presentation" class="active"><a href="#info" aria-controls="info" role="tab" data-toggle="tab">Info</a></li>
   <li role="presentation"><a href="#permissions" aria-controls="permissions" role="tab" data-toggle="tab">Permissions</a></li>
-  <!-- <li role="presentation"><a href="#stats" aria-controls="stats" role="tab" data-toggle="tab">Stats</a></li> -->
+  <li role="presentation"><a href="#stats" aria-controls="stats" role="tab" data-toggle="tab">Stats</a></li>
   <% if external_resource?(presenter) == false %>
   <li role="presentation"><a href="#technical-info" aria-controls="technical-info" role="tab" data-toggle="tab">Technical Info</a></li>
   <% end %>
@@ -22,12 +22,15 @@
       </tbody>
     </table>
   </div> <!-- /.permissions panel -->
-  <!-- TODO: activate pageview and download count via Google Analytics API -->
-  <% if false %>
+
   <div role="tabpanel" class="tab-pane fade" id="stats">
-    <%= render 'attribute_rows_stats', presenter: presenter %>
+    <table class="table <%= dom_class(presenter) %> attributes" <%= presenter.microdata_type_to_html %>>
+      <tbody>
+        <%= render 'attribute_rows_stats', presenter: presenter %>
+      </tbody>
+    </table>
   </div>  <!-- /.stats panel -->
-  <% end %>
+
 
   <div role="tabpanel" class="tab-pane fade" id="technical-info">
     <table class="table <%= dom_class(presenter) %> attributes" <%= presenter.microdata_type_to_html %>>

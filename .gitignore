@@ -27,6 +27,7 @@
 
 /config/secrets.yml
 /config/database.yml
+/config/analytics.yml
 /config/curation_concerns.yml
 
 # Ignore Vagrant support files

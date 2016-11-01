@@ -316,6 +316,8 @@ GEM
       rdf-turtle
       rdf-vocab (>= 0.8)
       slop
+    legato (0.7.0)
+      multi_json
     less (2.6.0)
       commonjs (~> 0.2.7)
     less-rails (2.7.1)
@@ -615,7 +617,10 @@ DEPENDENCIES
   jekyll
   jquery-rails
   jquery-turbolinks
+  legato (~> 0.3)
   mysql2
+  oauth
+  oauth2 (~> 1.2)
   pry-rails (~> 0.3.4)
   puma
   rails (= 4.2.7.1)
@@ -631,6 +636,7 @@ DEPENDENCIES
   rubocop-rspec
   sass-rails (~> 5.0)
   sdoc (~> 0.4.0)
+  signet
   solr_wrapper (= 0.14.2)
   spring
   sqlite3

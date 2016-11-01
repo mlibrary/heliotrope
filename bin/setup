@@ -11,7 +11,7 @@ Dir.chdir APP_ROOT do
   # Add necessary setup steps to this file:
 
   puts "\n== Copying sample files =="
-  files = ['secrets', 'database']
+  files = ['secrets', 'database', 'analytics']
   files.each do |f|
     yml_name = "config/#{f}.yml"
     cp "#{yml_name}.sample", yml_name unless File.exist?(yml_name)
