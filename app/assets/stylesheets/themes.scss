@@ -130,6 +130,29 @@ $umn-white: #fff;
     }
   }
 
+  // pagination
+  .page_links {
+    @include brandon;
+  }
+
+  .pagination {
+    @include brandon;
+     li a, li span {
+       color: $umn-accent-footer-aqua;
+     }
+
+     .active>a,
+     .active>a:hover,
+     .active>a:focus,
+     .active>span,
+     .active>span:hover,
+     .active>span:focus {
+       background-color: $umn-accent-footer-aqua;
+       border-color: $umn-accent-footer-aqua;
+       color: $umn-white;
+     }
+  }
+
   // assets
   .asset {
     ul.nav-tabs li {
