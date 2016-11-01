@@ -1,6 +1,6 @@
-jQuery(function(){
+jQuery($(document).on('turbolinks:load', function (){
 
-    var minimized_elements = $('p.description');
+    var minimized_elements = $('.description');
 
     minimized_elements.each(function(){
         // TODO: Threshold should probably be passed in as a parameter.
@@ -22,6 +22,7 @@ jQuery(function(){
         }
 
         var index = text.length - (total - threshold);
+        while ((text.charAt(index) != ' ') && (index > 0)) index--;
         $clone = $($md[n]).clone();
         // Text nodes have a nodeType of 3
         if ($md[n].nodeType == 3) {
@@ -32,7 +33,7 @@ jQuery(function(){
           $md[n].innerHTML = text.slice(index,text.length);
         }
         $(this).append($clone[0]);
-        $(this).append('<span>... </span><a href="#" class="more">More</a>');
+        $(this).append('<span>...</span><a href="#" class="more"> More</a>');
         $less = $('<span style="display:none;"></span>');
         for(; n<m; n++){
           $less.append($md[n]);
@@ -51,4 +52,5 @@ jQuery(function(){
         event.preventDefault();
         $(this).parent().hide().prev().show().prev().show();
     });
-});
+}));
+

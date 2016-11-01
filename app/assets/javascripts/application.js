@@ -10,20 +10,25 @@
 // Read Sprockets README (https://github.com/rails/sprockets#sprockets-directives) for details
 // about supported directives.
 //
+// The order of inclusion of jQuery is important –
+// ensure you load jquery.turbolinks before turbolinks and after jquery.
 //= require jquery
+//= require jquery.turbolinks
+// Include all your custom js between jquery-turbolinks.js
 //= require jquery_ujs
 //= require jquery-ui/datepicker
-//= require turbolinks//
+//= require 'short_monograph_description'
+// and turbolinks.js
+//= require turbolinks
 // Required by Blacklight
 //= require blacklight/blacklight
-
+// Required by Heliotrope?
 //= require leaflet
 //= require leaflet-iiif
-
 //= require 'edit_users'
-//= require 'short_monograph_description'
 //= require 'file_set_sort_date'
 //= require 'disable_video_download'
 //= require 'disable_audio_download'
 //= require 'disable_image_download'
+// Required by Hydra/Rails?
 //= require_tree .
