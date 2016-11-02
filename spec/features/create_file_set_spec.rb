@@ -65,7 +65,7 @@ feature 'Create a file set' do
       fill_in 'Transcript', with: 'This is what is transcribed for you to read'
       fill_in 'Translation(s)', with: 'Here is what that&nbsp;means'
       fill_in 'Relation', with: 'Introduction'
-      fill_in 'External Resource', with: 'no3'
+      fill_in 'Externally-Hosted Resource?', with: 'no3'
       fill_in 'Book Needs Handles?', with: 'yes'
       fill_in 'External URL/DOI', with: 'Handle'
       fill_in 'Handle', with: "this-is-a-handle"
