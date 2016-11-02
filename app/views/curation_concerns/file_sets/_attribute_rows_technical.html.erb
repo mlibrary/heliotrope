@@ -1,9 +1,9 @@
-<%= presenter.attribute_to_html(:file_format) %>
-<%= presenter.attribute_to_html(:file_size) %>
+<%= presenter.attribute_to_html(:file_format, label: t('file_format')) %>
+<%= presenter.attribute_to_html(:file_size, label: t('file_size')) %>
 <%= presenter.attribute_to_html(:width) %>
 <%= presenter.attribute_to_html(:height) %>
-<%= presenter.attribute_to_html(:mime_type) %>
-<%= presenter.attribute_to_html(:last_modified) %>
-<%= presenter.attribute_to_html(:original_checksum) %>
+<%= presenter.attribute_to_html(:mime_type, label: t('mime_type')) %>
+<%= presenter.attribute_to_html(:last_modified, label: t('last_modified')) %>
+<%= presenter.attribute_to_html(:original_checksum, label: t('original_checksum')) %>
 <%= presenter.attribute_to_html(:duration) %>
-<%= presenter.attribute_to_html(:sample_rate) %>
+<%= presenter.attribute_to_html(:sample_rate, label: t('sample_rate')) %>
