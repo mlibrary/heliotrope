@@ -35,6 +35,8 @@ class MonographCatalogController < ::CatalogController
     config.add_facet_fields_to_solr_request!
 
     config.index.partials = [:thumbnail, :index_header, :index]
+
+    config.view.gallery.partials = [:index_header, :index]
   end
 
   def facet

@@ -82,5 +82,11 @@ feature 'Monograph Catalog Search' do
     click_button 'keyword-search-submit'
     expect(page).to have_content 'Unruly Puddles'
     expect(page).to_not have_content 'Strange Marshes'
+
+    # Gallery view
+    visit monograph_catalog_path id: monograph.id, view: 'gallery'
+    expect(page).to have_selector("#documents.row.gallery")
+    expect(page).to have_selector(".gallery .document .thumbnail .caption")
+    expect(page).to have_content("Unruly Puddles")
   end
 end
