@@ -72,6 +72,22 @@ module CurationConcerns
       monograph.subject
     end
 
+    def previous_id?
+      monograph.previous_file_sets_id? id
+    end
+
+    def previous_id
+      monograph.previous_file_sets_id id
+    end
+
+    def next_id?
+      monograph.next_file_sets_id? id
+    end
+
+    def next_id
+      monograph.next_file_sets_id id
+    end
+
     def link_name
       current_ability.can?(:read, id) ? Array(solr_document['label_tesim']).first : 'File'
     end

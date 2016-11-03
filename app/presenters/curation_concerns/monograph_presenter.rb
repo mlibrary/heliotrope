@@ -43,7 +43,39 @@ module CurationConcerns
       Press.find_by(subdomain: subdomain).press_url
     end
 
+    def previous_file_sets_id?(file_sets_id)
+      return false unless ordered_file_sets_ids.include? file_sets_id
+      ordered_file_sets_ids.first != file_sets_id
+    end
+
+    def previous_file_sets_id(file_sets_id)
+      return nil unless previous_file_sets_id? file_sets_id
+      ordered_file_sets_ids[(ordered_file_sets_ids.find_index(file_sets_id) - 1)]
+    end
+
+    def next_file_sets_id?(file_sets_id)
+      return false unless ordered_file_sets_ids.include? file_sets_id
+      ordered_file_sets_ids.last != file_sets_id
+    end
+
+    def next_file_sets_id(file_sets_id)
+      return nil unless next_file_sets_id? file_sets_id
+      ordered_file_sets_ids[(ordered_file_sets_ids.find_index(file_sets_id) + 1)]
+    end
+
     private
+
+      def ordered_file_sets_ids
+        return @ordered_file_sets_ids if @ordered_file_sets_ids
+        file_sets_ids = []
+        section_docs.each do |section_doc|
+          # Danger, Will Robinson! the ordered list is stored in reverse order.
+          section_doc['ordered_member_ids_ssim'].reverse_each do |file_sets_id|
+            file_sets_ids.append file_sets_id
+          end unless section_doc['ordered_member_ids_ssim'].nil?
+        end
+        @ordered_file_sets_ids = file_sets_ids
+      end
 
       def ordered_member_docs
         return @ordered_member_docs if @ordered_member_docs
