@@ -64,6 +64,7 @@ if Rails.env.eql?('production')
   # add presses as they become ready for production
   northwestern
   minnesota
+  pennstate
 else
   northwestern
   pennstate
