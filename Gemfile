@@ -48,6 +48,12 @@ gem 'redcarpet', '~> 3.3.4'
 # Use Jekyll for blog and informational pages
 gem 'jekyll'
 
+# Talking to Google Analytics
+gem 'oauth'
+gem 'oauth2', '~> 1.2'
+gem 'signet'
+gem 'legato', '~> 0.3'
+
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
 

@@ -3,6 +3,7 @@ module CurationConcerns
     include TitlePresenter
     include ModelProxy
     include PresentsAttributes
+    include Rails.application.routes.url_helpers
 
     attr_accessor :solr_document, :current_ability, :request, :monograph_presenter
 
@@ -108,6 +109,28 @@ module CurationConcerns
       end
     end
 
+    # Google Analytics
+    def google_analytics_id
+      press = Press.find_by(subdomain: subdomain)
+      return press.google_analytics unless press.nil? || press.google_analytics.nil?
+      Rails.application.secrets.google_analytics_id
+    end
+
+    def pageviews_by_date
+      profile = AnalyticsService.profile(google_analytics_id)
+      unless profile
+        Rails.logger.error("Google Analytics profile has not been established. Unable to fetch statistics.")
+        return []
+      end
+      Pageview.for_path(curation_concerns_file_set_path(id))
+              .results(profile)
+              .map(&:to_h)
+    end
+
+    def pageviews
+      pageviews_by_date.map { |entry| entry[:pageviews].to_i }.inject(0) { |sum, x| sum + x }
+    end
+
     # Technical Metadata
     def width
       solr_document['width_is']
@@ -115,6 +138,10 @@ module CurationConcerns
 
     def height
       solr_document['height_is']
+    end
+
+    def mime_type
+      solr_document['mime_type_ssi']
     end
 
     def file_size
