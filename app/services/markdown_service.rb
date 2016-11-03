@@ -1,10 +1,55 @@
 require 'redcarpet/render_strip'
 
+class CustomMarkdownRenderer < Redcarpet::Render::HTML
+  def link(link, _title, link_text)
+    if external_link?(link)
+      "<a target=\"_blank\" href=\"#{link}\">#{link_text}</a>"
+    else
+      "<a href=\"#{link}\">#{link_text}</a>"
+    end
+  end
+
+  def autolink(link, _link_type)
+    if external_link?(link)
+      "<a target=\"_blank\" href=\"#{link}\">#{link}</a>"
+    else
+      "<a href=\"#{link}\">#{link}</a>"
+    end
+  end
+
+  private
+
+    def external_link?(link)
+      if link.start_with?('/') ||
+         link.include?('fulcrum.org') ||
+         link.include?('fulcrumscholar.org') ||
+         link.include?('fulcrum.www.lib.umich.edu') ||
+         link.include?('localhost')
+        false
+      else
+        true
+      end
+    end
+end
+
 class MarkdownService
   mattr_accessor :md
-  self.md = Redcarpet::Markdown.new(Redcarpet::Render::HTML.new(safe_links_only: true, hard_wrap: true),
-                                    autolink: true, strikethrough: true, lax_spacing: true, no_intra_emphasis: true,
-                                    disable_indented_code_blocks: true, tables: true)
+
+  render_options = {
+    hard_wrap:                    true,
+    safe_links_only:              true
+  }
+
+  extensions = {
+    autolink:                     true,
+    disable_indented_code_blocks: true,
+    lax_spacing:                  true,
+    no_intra_emphasis:            true,
+    strikethrough:                true,
+    tables:                       true
+  }
+
+  self.md = Redcarpet::Markdown.new(CustomMarkdownRenderer.new(render_options), extensions)
 
   def self.markdown(value)
     rendered_html = md.render(value)
