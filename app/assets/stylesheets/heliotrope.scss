@@ -5,6 +5,12 @@
   margin-bottom: 0;
 }
 
+// breadcrumbs
+.main-header {
+  border-bottom: 0;
+  margin-bottom: 0;
+}
+
 // footer
 footer.press {
   background-color: #262626;
@@ -73,9 +79,8 @@ footer.press {
 
 // monograph
 .monograph {
-  margin-top: 5em;
 
-  .monograph-info {
+ .monograph-info {
 
     h2 {
       font-size: 1.5em;
@@ -130,7 +135,6 @@ footer.press {
 
 // asset pages
 .asset {
-  margin-top: 5em;
 
   figure {
     display: inline;

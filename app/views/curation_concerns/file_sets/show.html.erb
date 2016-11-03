@@ -1,6 +1,15 @@
 <% provide :page_title, @presenter.page_title %>
 <% provide :page_header do %>
-
+  <!-- breadcrumbs -->
+  <div class="row">
+    <nav class="breadcrumbs col-sm-12">
+      <ol class="breadcrumb">
+        <li><a href=<%= "/#{@presenter.monograph.subdomain}" %>>Home</a></li>
+        <li><a href=<%= main_app.monograph_catalog_path(@presenter.monograph_id) %>><%= @presenter.monograph.page_title %></a></li>
+        <li class="active"><%= @presenter.page_title %></li>
+      </ol>
+    </nav>
+  </div>
 <% end %>
 
   <div class="row asset">
@@ -13,8 +22,8 @@
       <div class="row asset-attributes">
         <div class="col-sm-12">
           <h2><%= @presenter.title %></h2>
-          <h3>From <em><%= link_to @presenter.monograph.title, "/concern/monographs/#{@presenter.monograph.id}" %></em>
-            by <%= @presenter.monograph.creator_given_name.first %> <%= @presenter.monograph.creator_family_name.first %><%= contributors_string(@presenter.monograph.contributor) %></h3></h3>
+          <h3>From <em><%= link_to @presenter.monograph.title, main_app.monograph_catalog_path(@presenter.monograph_id) %></em>
+            by <%= @presenter.monograph.creator_given_name.first %> <%= @presenter.monograph.creator_family_name.first %><%= contributors_string(@presenter.monograph.contributor) %></h3>
           <br />
           <%= render "attributes", presenter: @presenter %>
         </div>
