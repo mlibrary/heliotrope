@@ -50,7 +50,7 @@ feature 'Create a file set' do
       fill_in 'Exclusive to Platform?', with: 'yes1'
       fill_in 'Allow Display After Expiration?', with: 'no1'
       fill_in 'Allow Download After Expiration?', with: 'no2'
-      fill_in 'Description', with: 'Veggies es bonus vobis, proinde vos postulo essum magis kohlrabi welsh onion daikon amaranth tatsoi tomatillo melon azuki bean garlic.'
+      fill_in 'Description', with: 'Veggies es bonus vobis, [external link](www.external-link.com) proinde vos postulo essum magis [internal link](www.fulcrum.org) kohlrabi welsh onion daikon amaranth tatsoi tomatillo melon azuki bean garlic.'
       fill_in 'Content Type', with: 'screenshot'
       fill_in 'Primary Creator (family name)', with: 'FamilyName'
       fill_in 'Primary Creator (given name)', with: 'GivenName'
@@ -85,7 +85,7 @@ feature 'Create a file set' do
       # expect(page).to have_content 'image'
       expect(page).to have_content 'This is a caption for the image'
       expect(page).to have_content 'University of Michigan'
-      expect(page).to have_content 'Veggies es bonus vobis, proinde vos postulo essum magis kohlrabi welsh onion daikon amaranth tatsoi tomatillo melon azuki bean garlic.'
+      expect(page).to have_content 'Veggies es bonus vobis, external link proinde vos postulo essum magis internal link kohlrabi welsh onion daikon amaranth tatsoi tomatillo melon azuki bean garlic.'
       expect(page).to have_content 'screenshot'
       expect(page).to have_content 'FamilyName, GivenName'
       expect(page).to have_content 'Test Contributor'
@@ -119,6 +119,10 @@ feature 'Create a file set' do
       # search fields
       expect(page).to have_link("director", href: "/concern/monographs/" + Monograph.first.id + "?f%5Bprimary_creator_role_tesim%5D%5B%5D=director")
       expect(page).to have_link("screenshot", href: "/concern/monographs/" + Monograph.first.id + "?f%5Bcontent_type_tesim%5D%5B%5D=screenshot")
+
+      # check external autolink are opening in a new tab and internal are not
+      find_link('external link')[:target].should eq('_blank')
+      find_link('internal link')[:target].should eq(nil)
     end
   end
 end

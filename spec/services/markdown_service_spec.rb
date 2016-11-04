@@ -9,6 +9,26 @@ describe MarkdownService do
       expect(rvalue).to eq("This is <em>italics</em> and this is</p>\n\n<p>a paragraph</p>\n\n<p><strong>bold</strong> a line<br>\nbreak and this is <del>strikethrough</del>")
     end
 
+    it 'autolinks internal autolinks in same tab' do
+      expect(described_class.markdown('www.fulcrum.org')).to eq('<a href="http://www.fulcrum.org">www.fulcrum.org</a>')
+    end
+
+    it 'autolinks internal "named" links in same tab' do
+      expect(described_class.markdown('[internal link name](www.fulcrumscholar.org)')).to eq('<a href="www.fulcrumscholar.org">internal link name</a>')
+    end
+
+    it 'autolinks internal "app path" links in same tab' do
+      expect(described_class.markdown('[Northwestern](/northwestern)')).to eq('<a href="/northwestern">Northwestern</a>')
+    end
+
+    it 'autolinks external autolinks in new tab' do
+      expect(described_class.markdown('www.example.com')).to eq('<a target="_blank" href="http://www.example.com">www.example.com</a>')
+    end
+
+    it 'autolinks external "named" links in new tab' do
+      expect(described_class.markdown('[external link name](www.example.com)')).to eq('<a target="_blank" href="www.example.com">external link name</a>')
+    end
+
     it 'returns safe html' do
       expect(rvalue).to be_a ActiveSupport::SafeBuffer
     end
