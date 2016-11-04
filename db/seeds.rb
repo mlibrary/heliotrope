@@ -1,6 +1,10 @@
 # This file should contain all the record creation needed to seed the database with its default values, or update those values when necessary.
 # The data can then be loaded with the rake db:seed (or created alongside the db with db:setup).
 #
+def bulleit?
+  return true if Socket.gethostname == 'bulleit-1.umdl.umich.edu'
+  false
+end
 
 def michigan
   Press.where(name: 'University of Michigan Press').first_or_initialize.tap do |press|
@@ -8,6 +12,7 @@ def michigan
     press.description = '[The University of Michigan Press](http://www.press.umich.edu/) publishes academic and general books about contemporary political, social, and cultural issues.'
     press.subdomain = 'michigan'
     press.press_url = 'http://www.press.umich.edu'
+    press.google_analytics = 'UA-77847516-8' if bulleit?
     press.save
   end
   puts "updated/created michigan"
@@ -20,6 +25,7 @@ def pennstate
     press.subdomain = 'pennstate'
     press.press_url = 'http://www.psupress.org'
     press.typekit = 'cbh1mev'
+    press.google_analytics = 'UA-77847516-7' if bulleit?
     press.save
   end
   puts "updated/created pennstate"
@@ -31,6 +37,7 @@ def indiana
     press.description = "Indiana University Press's mission is to inform and inspire scholars, students, and thoughtful general readers by disseminating ideas and knowledge of global significance, regional importance, and lasting value."
     press.subdomain = 'indiana'
     press.press_url = 'http://www.iupress.indiana.edu'
+    press.google_analytics = 'UA-77847516-6' if bulleit?
     press.save
   end
   puts "updated/created indiana"
@@ -43,6 +50,7 @@ def northwestern
     press.subdomain = 'northwestern'
     press.press_url = 'http://nupress.northwestern.edu/'
     press.typekit = 'wyq1mfc'
+    press.google_analytics = 'UA-77847516-3' if bulleit?
     press.save
   end
   puts "updated/created northwestern"
@@ -55,6 +63,7 @@ def minnesota
     press.subdomain = 'minnesota'
     press.press_url = 'https://www.upress.umn.edu/'
     press.typekit = 'vqj2dgv'
+    press.google_analytics = 'UA-77847516-5' if bulleit?
     press.save
   end
   puts "updated/created minnesota"
@@ -64,7 +73,7 @@ if Rails.env.eql?('production')
   # add presses as they become ready for production
   northwestern
   minnesota
-  pennstate
+  pennstate unless bulleit?
 else
   northwestern
   pennstate
