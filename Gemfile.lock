@@ -473,6 +473,7 @@ GEM
       rspec-core (~> 3.5.0)
       rspec-expectations (~> 3.5.0)
       rspec-mocks (~> 3.5.0)
+    rspec-context-private (0.0.1)
     rspec-core (3.5.0)
       rspec-support (~> 3.5.0)
     rspec-expectations (3.5.0)
@@ -630,6 +631,7 @@ DEPENDENCIES
   resque-web (~> 0.0.7)
   riiif (= 0.4.0)
   rsolr (~> 1.1.2)
+  rspec-context-private
   rspec-html-matchers
   rspec-rails
   rubocop (~> 0.37.2)

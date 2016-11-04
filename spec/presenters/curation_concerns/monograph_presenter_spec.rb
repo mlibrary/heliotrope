@@ -63,20 +63,64 @@ describe CurationConcerns::MonographPresenter do
         expect(subject).to eq []
       end
     end
+
+    describe '#ordered_file_sets_ids', :private do
+      subject { presenter.ordered_file_sets_ids }
+      it 'returns an empty array' do
+        expect(subject.count).to eq 0
+      end
+    end
+
+    describe '#previous_file_sets_id?' do
+      subject { presenter.previous_file_sets_id? 0 }
+      it 'returns false' do
+        expect(subject).to eq false
+      end
+    end
+
+    describe '#previous_file_sets_id' do
+      subject { presenter.previous_file_sets_id 0 }
+      it 'returns nil' do
+        expect(subject).to eq nil
+      end
+    end
+
+    describe '#next_file_sets_id?' do
+      subject { presenter.next_file_sets_id? 0 }
+      it 'returns false' do
+        expect(subject).to eq false
+      end
+    end
+
+    describe '#next_file_sets_id' do
+      subject { presenter.next_file_sets_id 0 }
+      it 'returns nil' do
+        expect(subject).to eq nil
+      end
+    end
   end
 
   context 'a monograph with sections and filesets' do
     let(:fileset_doc) { SolrDocument.new(id: 'fileset', has_model_ssim: ['FileSet']) }
-    let(:chapter_1_doc) { SolrDocument.new(id: 'chapter1', has_model_ssim: ['Section']) }
-    let(:chapter_2_doc) { SolrDocument.new(id: 'chapter2', has_model_ssim: ['Section']) }
-    let(:chapter_3_doc) { SolrDocument.new(id: 'chapter3', has_model_ssim: ['Section']) }
-    let(:chapter_4_doc) { SolrDocument.new(id: 'chapter4', has_model_ssim: ['Section']) }
-    let(:chapter_5_doc) { SolrDocument.new(id: 'chapter5', has_model_ssim: ['Section']) }
-    let(:chapter_6_doc) { SolrDocument.new(id: 'chapter6', has_model_ssim: ['Section']) }
-    let(:chapter_7_doc) { SolrDocument.new(id: 'chapter7', has_model_ssim: ['Section']) }
-    let(:chapter_8_doc) { SolrDocument.new(id: 'chapter8', has_model_ssim: ['Section']) }
-    let(:chapter_9_doc) { SolrDocument.new(id: 'chapter9', has_model_ssim: ['Section']) }
-    let(:chapter_10_doc) { SolrDocument.new(id: 'chapter10', has_model_ssim: ['Section']) }
+    let(:expected_id_count) { 20 }
+    let(:expected_first_id) { 'expected_first_id' }
+    let(:expected_first_next_id) { 'expected_first_next_id' }
+    let(:expected_middle_previous_id) { 'expected_middle_previous_id' }
+    let(:expected_middle_id) { 'expected_middle_id' }
+    let(:expected_middle_next_id) { 'expected_middle_next_id' }
+    let(:expected_last_previous_id) { 'expected_last_previous_id' }
+    let(:expected_last_id) { 'expected_last_id' }
+    # Danger, Will Robinson! the ordered_member_ids_ssim list are stored in reverse order.
+    let(:chapter_1_doc) { SolrDocument.new(id: 'chapter1', has_model_ssim: ['Section'], ordered_member_ids_ssim: ['last_1', expected_first_next_id, expected_first_id]) }
+    let(:chapter_2_doc) { SolrDocument.new(id: 'chapter2', has_model_ssim: ['Section'], ordered_member_ids_ssim: ['first_2']) }
+    let(:chapter_3_doc) { SolrDocument.new(id: 'chapter3', has_model_ssim: ['Section'], ordered_member_ids_ssim: ['last_3', 'first_3']) }
+    let(:chapter_4_doc) { SolrDocument.new(id: 'chapter4', has_model_ssim: ['Section'], ordered_member_ids_ssim: ['last_4', 'middle_4', 'first_4']) }
+    let(:chapter_5_doc) { SolrDocument.new(id: 'chapter5', has_model_ssim: ['Section'], ordered_member_ids_ssim: []) }
+    let(:chapter_6_doc) { SolrDocument.new(id: 'chapter6', has_model_ssim: ['Section'], ordered_member_ids_ssim: [expected_middle_previous_id, 'first_6']) }
+    let(:chapter_7_doc) { SolrDocument.new(id: 'chapter7', has_model_ssim: ['Section'], ordered_member_ids_ssim: []) }
+    let(:chapter_8_doc) { SolrDocument.new(id: 'chapter8', has_model_ssim: ['Section'], ordered_member_ids_ssim: [expected_middle_id]) }
+    let(:chapter_9_doc) { SolrDocument.new(id: 'chapter9', has_model_ssim: ['Section'], ordered_member_ids_ssim: ['last_9', expected_middle_next_id]) }
+    let(:chapter_10_doc) { SolrDocument.new(id: 'chapter10', has_model_ssim: ['Section'], ordered_member_ids_ssim: [expected_last_id, expected_last_previous_id, 'first_10']) }
     # I added chapter 1 twice to make sure that duplicate
     # entries will work correctly.
     let(:mono_doc) { SolrDocument.new(id: 'mono',
@@ -101,6 +145,112 @@ describe CurationConcerns::MonographPresenter do
         expect(subject.count).to eq 11
         expect(subject.map(&:class).uniq).to eq [SolrDocument]
         expect(subject.map(&:id)).to eq [chapter_1_doc.id, chapter_2_doc.id, chapter_3_doc.id, chapter_1_doc.id, chapter_4_doc.id, chapter_5_doc.id, chapter_6_doc.id, chapter_7_doc.id, chapter_8_doc.id, chapter_9_doc.id, chapter_10_doc.id]
+      end
+    end
+
+    describe '#ordered_file_sets_ids', :private do
+      subject { presenter.ordered_file_sets_ids }
+
+      it 'returns an array of expected size' do
+        expect(subject.count).to eq expected_id_count
+      end
+
+      it 'the first element of the array is as expected' do
+        expect(subject.first).to eq expected_first_id
+      end
+
+      it 'the last element of the array is as expected' do
+        expect(subject.last).to eq expected_last_id
+      end
+    end
+
+    context 'expected first id' do
+      describe '#previous_file_sets_id?' do
+        subject { presenter.previous_file_sets_id? expected_first_id }
+        it 'returns false' do
+          expect(subject).to eq false
+        end
+      end
+
+      describe '#previous_file_sets_id' do
+        subject { presenter.previous_file_sets_id expected_first_id }
+        it 'returns nil' do
+          expect(subject).to eq nil
+        end
+      end
+
+      describe '#next_file_sets_id?' do
+        subject { presenter.next_file_sets_id? expected_first_id }
+        it 'returns true' do
+          expect(subject).to eq true
+        end
+      end
+
+      describe '#next_file_sets_id' do
+        subject { presenter.next_file_sets_id expected_first_id }
+        it 'returns expected' do
+          expect(subject).to eq expected_first_next_id
+        end
+      end
+    end
+
+    context 'expected_middle_id' do
+      describe '#previous_file_sets_id?' do
+        subject { presenter.previous_file_sets_id? expected_middle_id }
+        it 'returns true' do
+          expect(subject).to eq true
+        end
+      end
+
+      describe '#previous_file_sets_id' do
+        subject { presenter.previous_file_sets_id expected_middle_id }
+        it 'returns expected' do
+          expect(subject).to eq expected_middle_previous_id
+        end
+      end
+
+      describe '#next_file_sets_id?' do
+        subject { presenter.next_file_sets_id? expected_middle_id }
+        it 'returns true' do
+          expect(subject).to eq true
+        end
+      end
+
+      describe '#next_file_sets_id' do
+        subject { presenter.next_file_sets_id expected_middle_id }
+        it 'returns expected' do
+          expect(subject).to eq expected_middle_next_id
+        end
+      end
+    end
+
+    context 'expected last id' do
+      describe '#previous_file_sets_id?' do
+        subject { presenter.previous_file_sets_id? expected_last_id }
+        it 'returns true' do
+          expect(subject).to eq true
+        end
+      end
+
+      describe '#previous_file_sets_id' do
+        subject { presenter.previous_file_sets_id expected_last_id }
+        it 'returns expected' do
+          expect(subject).to eq expected_last_previous_id
+        end
+      end
+
+      describe '#next_file_sets_id?' do
+        subject { presenter.next_file_sets_id? expected_last_id }
+        it 'returns false' do
+          expect(subject).to eq false
+        end
+      end
+
+      describe '#next_file_sets_id' do
+        subject { presenter.next_file_sets_id expected_last_id }
+        it 'returns nil' do
+          expect(subject).to eq nil
+        end
       end
     end
   end

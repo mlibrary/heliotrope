@@ -82,6 +82,7 @@ group :development, :test do
   #gem 'fcrepo_wrapper', '0.6'
   #gem 'solr_wrapper', '~> 0.16'
   gem 'rspec-rails'
+  gem 'rspec-context-private'
   gem 'rspec-html-matchers'
   gem 'rubocop', '~> 0.37.2'
   gem 'rubocop-rspec'
