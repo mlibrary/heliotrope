@@ -1,10 +1,10 @@
 // Press themes are collected here
 
-/* - - - - - - - - - - - - - - - - - - - - - - -
+///////////////////////////////////////////////
 //
 // University of Minnesota Press
 //
-- - - - - - - - - - - - - - - - - - - - - - - */
+///////////////////////////////////////////////
 // colors
 $umn-brand-color: #7b2e00;
 $umn-accent-color: #ffde7a;
@@ -94,6 +94,11 @@ $umn-white: #fff;
 
   }
 
+  // breadcrumbs
+  .breadcrumbs {
+    @include brandon;
+  }
+
   // press catalog
 
   // jumbotron
@@ -158,6 +163,10 @@ $umn-white: #fff;
   }
 
   // assets
+  .asset-navigation {
+    @include brandon;
+  }
+
   .asset {
     ul.nav-tabs li {
       @include brandon;
@@ -208,11 +217,11 @@ $umn-white: #fff;
 
 }
 
-/* - - - - - - - - - - - - - - - - - - - - - - -
+///////////////////////////////////////////////
 //
 // Northwestern University Press
 //
-- - - - - - - - - - - - - - - - - - - - - - - */
+///////////////////////////////////////////////
 // colors
 $nw-brand-color: #4e2a84;
 $nw-accent-color: #d8d6d6;
@@ -308,6 +317,11 @@ $fulcrum-light-2: #bec4cc;
 
   }
 
+  // breadcrumbs
+  .breadcrumbs {
+    @include freight-sans-book;
+  }
+
   // press catalog
 
   // jumbotron
@@ -348,6 +362,10 @@ $fulcrum-light-2: #bec4cc;
   }
 
   // assets
+  .asset-navigation {
+    @include freight-sans-book;
+  }
+
   .asset {
     ul.nav-tabs li {
       @include freight-sans-book;
@@ -398,11 +416,11 @@ $fulcrum-light-2: #bec4cc;
 
 }
 
-/* - - - - - - - - - - - - - - - - - - - - - - -
+///////////////////////////////////////////////
 //
 // Penn State University Press
 //
-- - - - - - - - - - - - - - - - - - - - - - - */
+///////////////////////////////////////////////
 // colors
 $psu-brand-color: #036;
 $psu-brand-color-alt: #ccc;
@@ -534,6 +552,11 @@ $psu-jumbotron: #efefef;
 
   }
 
+  // breadcrumbs
+  .breadcrumbs {
+    @include proxima-nova;
+  }
+
   // press catalog
 
   // jumbotron
@@ -598,6 +621,10 @@ $psu-jumbotron: #efefef;
   }
 
   // assets
+  .asset-navigation {
+    @include proxima-nova;
+  }
+
   .asset {
     ul.nav-tabs li {
       @include proxima-nova;
