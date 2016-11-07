@@ -28,7 +28,7 @@
       </fieldset>
       <fieldset class="optional">
         <legend>Optional Information</legend>
-          <%= f.input :description, input_html: { multiple: true, value: curation_concern.description.first, class: 'form-control' } %>
+          <%= f.input :description, as: :text, input_html: { multiple: true, value: curation_concern.description.first, class: 'form-control' } %>
           <%= f.input :content_type, as: :multi_value, input_html: { class: 'form-control' } %>
           <%= f.input :creator_family_name, input_html: { class: 'form-control' } %>
           <%= f.input :creator_given_name, input_html: { class: 'form-control' } %>
@@ -41,7 +41,7 @@
           <%= f.input :keywords, as: :multi_value, input_html: { class: 'form-control' } %>
           <%= f.input :language, input_html: { multiple: true, value: curation_concern.language.first, class: 'form-control' } %>
           <%= f.input :transcript, input_html: { class: 'form-control' } %>
-          <%= f.input :translation, input_html: { multiple: true, value: curation_concern.translation.first, class: 'form-control' } %>
+          <%= f.input :translation, as: :text, input_html: { multiple: true, value: curation_concern.translation.first, class: 'form-control' } %>
           <%= f.input :relation, input_html: { multiple: true, value: curation_concern.relation.first, class: 'form-control' } %>
           <%= f.input :book_needs_handles, input_html: { class: 'form-control' } %>
           <%= f.input :doi, input_html: { class: 'form-control' } %>
@@ -50,7 +50,7 @@
           <%= f.input :rights_granted, input_html: { class: 'form-control' } %>
           <%= f.input :rights_granted_creative_commons, input_html: { class: 'form-control' } %>
           <%= f.input :credit_line, input_html: { class: 'form-control' } %>
-          <%= f.input :holding_contact, input_html: { class: 'form-control' } %>
+          <%= f.input :holding_contact, as: :text, input_html: { class: 'form-control' } %>
           <%= f.input :allow_display_after_expiration, input_html: { class: 'form-control required' } %>
           <%= f.input :allow_download_after_expiration, input_html: { class: 'form-control required' } %>
           <%= f.input :use_crossref_xml, input_html: { class: 'form-control' } %>
