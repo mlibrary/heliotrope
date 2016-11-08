@@ -92,11 +92,10 @@ footer.press {
 
   .page_links {
     display: inline-block;
+    vertical-align: middle;
+    margin-top: .4em;
   }
 
-  .view-icon-gallery {
-    &:before { content: "\e011"; }
-  }
   // MONOGRAPH INFORMATION
  .monograph-info {
 
@@ -151,6 +150,10 @@ footer.press {
   }
 
   // MONOGRAPH ASSETS - GALLERY VIEW
+  .view-icon-gallery {
+    &:before { content: "\e011"; }
+  }
+  
   #documents.gallery {
     display: -webkit-box;
     display: -moz-box;
