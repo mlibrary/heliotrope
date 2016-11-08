@@ -121,8 +121,8 @@ feature 'Create a file set' do
       expect(page).to have_link("screenshot", href: "/concern/monographs/" + Monograph.first.id + "?f%5Bcontent_type_tesim%5D%5B%5D=screenshot")
 
       # check external autolink are opening in a new tab and internal are not
-      find_link('external link')[:target].should eq('_blank')
-      find_link('internal link')[:target].should eq(nil)
+      expect(find_link('external link')[:target]).to eq '_blank'
+      expect(find_link('internal link')[:target]).to be nil
     end
   end
 end

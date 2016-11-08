@@ -1,6 +1,7 @@
 module CurationConcerns
   class MonographPresenter < WorkShowPresenter
     include TitlePresenter
+    include AnalyticsPresenter
     include ActionView::Helpers::UrlHelper
 
     delegate :date_created, :date_modified, :date_uploaded,
@@ -61,6 +62,10 @@ module CurationConcerns
     def next_file_sets_id(file_sets_id)
       return nil unless next_file_sets_id? file_sets_id
       ordered_file_sets_ids[(ordered_file_sets_ids.find_index(file_sets_id) + 1)]
+    end
+
+    def pageviews
+      pageviews_by_ids(file_set_ids << id)
     end
 
     private
