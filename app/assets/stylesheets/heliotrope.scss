@@ -1,4 +1,8 @@
-// the out-of-the-box layout for heliotrope
+///////////////////////////////////////////
+// HELIOTROPE BASE THEME
+// Place standard styling of app here
+// Press related overrides go in themes.scss
+///////////////////////////////////////////
 
 // navigation menu
 .navbar {
@@ -134,6 +138,18 @@ footer.press {
 }
 
 // asset pages
+.asset-navigation {
+  a.previous span {
+    margin-right: 5px;
+    margin-top: 2px;
+  }
+
+  a.next span {
+    margin-left: 5px;
+    margin-top: 2px;
+  }
+}
+
 .asset {
 
   figure {

@@ -1,5 +1,6 @@
 <% provide :page_title, @presenter.page_title %>
 <% provide :page_header do %>
+  <!-- breadcrumbs -->
   <div class="row">
     <nav class="breadcrumbs col-sm-12">
       <ol class="breadcrumb">
@@ -9,14 +10,24 @@
       </ol>
     </nav>
   </div>
-  <ul class="pager">
-      <li class="previous">
-        <%= link_to "Previous", main_app.curation_concerns_file_set_path(@presenter.previous_id) if @presenter.previous_id? %>
-      </li>
-      <li class="next">
-        <%= link_to "Next", main_app.curation_concerns_file_set_path(@presenter.next_id) if @presenter.next_id? %>
-      </li>
-  </ul>
+
+  <!-- asset navigation -->
+  <div class="row">
+    <nav class="asset-navigation col-sm-12">
+      <ul class="pager">
+          <li class="previous">
+          <% if @presenter.previous_id? %>
+            <a href="<%= @presenter.previous_id %>" class="previous"><span class="glyphicon glyphicon-triangle-left" aria-hidden="true"></span> Previous</a>
+          <% end %>
+          </li>
+          <li class="next">
+          <% if @presenter.next_id? %>
+            <a href="<%= @presenter.next_id %>" class="next">Next <span class="glyphicon glyphicon-triangle-right" aria-hidden="true"></span></a>
+          <% end %>
+          </li>
+      </ul>
+    </nav>
+  </div>
 <% end %>
 
   <div class="row asset">
