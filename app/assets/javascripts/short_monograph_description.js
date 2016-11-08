@@ -1,6 +1,6 @@
 jQuery($(document).on('turbolinks:load', function (){
 
-    var minimized_elements = $('.description');
+    var minimized_elements = $('.monograph-metadata .description');
 
     minimized_elements.each(function(){
         // TODO: Threshold should probably be passed in as a parameter.
