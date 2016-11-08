@@ -359,6 +359,30 @@ $fulcrum-light-2: #bec4cc;
         @include freight-sans-book;
       }
     }
+
+    // pagination
+    .page_links {
+      @include freight-sans-book;
+    }
+
+    .pagination {
+      @include freight-sans-book;
+       li a, li span {
+         color: $nw-brand-color;
+       }
+
+       .active>a,
+       .active>a:hover,
+       .active>a:focus,
+       .active>span,
+       .active>span:hover,
+       .active>span:focus {
+         background-color: $nw-brand-color;
+         border-color: $nw-brand-color;
+         color: $nw-white;
+       }
+    }
+
   }
 
   // assets

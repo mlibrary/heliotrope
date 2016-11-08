@@ -4,18 +4,22 @@
 // Press related overrides go in themes.scss
 ///////////////////////////////////////////
 
-// navigation menu
+///////////////////////////////////
+// NAVIGATION MENU
+///////////////////////////////////
 .navbar {
   margin-bottom: 0;
 }
-
-// breadcrumbs
+///////////////////////////////////
+// BREADCRUMBS
+///////////////////////////////////
 .main-header {
   border-bottom: 0;
   margin-bottom: 0;
 }
-
-// footer
+///////////////////////////////////
+// FOOTER
+///////////////////////////////////
 footer.press {
   background-color: #262626;
   color: #fff;
@@ -61,8 +65,9 @@ footer.press {
   }
 
 }
-
-// press
+///////////////////////////////////
+// PRESS PAGE
+///////////////////////////////////
 .jumbotron {
 
   .container {
@@ -80,10 +85,18 @@ footer.press {
   }
 
 }
-
-// monograph
+///////////////////////////////////
+// MONOGRAPH PAGE
+///////////////////////////////////
 .monograph {
 
+  .page_links {
+    display: inline-block;
+    vertical-align: middle;
+    margin-top: .4em;
+  }
+
+  // MONOGRAPH INFORMATION
  .monograph-info {
 
     h2 {
@@ -106,7 +119,8 @@ footer.press {
     padding-left: 0;
   }
 
-  #documents {
+  // MONOGRAPH ASSETS - LIST VIEW
+  #documents.documents-list {
 
     .document {
       margin-bottom: 2em;
@@ -135,22 +149,101 @@ footer.press {
 
   }
 
-}
+  // MONOGRAPH ASSETS - GALLERY VIEW
+  .view-icon-gallery {
+    &:before { content: "\e011"; }
+  }
+  
+  #documents.gallery {
+    display: -webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    flex-flow: row wrap;
+    -webkit-flex-wrap: wrap;
+    padding-top: 2em;
+    margin: 0 auto;
+    width: 90%;
 
-// asset pages
-.asset-navigation {
-  a.previous span {
-    margin-right: 5px;
-    margin-top: 2px;
+    .document {
+      border-bottom: none;
+      border-top: none;
+
+      -webkit-box-flex: 1;
+      -moz-box-flex: 1;
+      -ms-flex: 1;
+      flex: 1;
+
+      min-width: 250px;
+      min-height: 250px;
+      -webkit-flex: 1 0 250px;
+    }
+
+    .document:first-child {
+      margin-top: auto;
+    }
+
+    .index_title {
+      width: 100%;
+      font-weight: 400;
+    }
+
+    .document-counter {
+      display: none;
+    }
+
+    .index-document-functions {
+      clear: left;
+    }
+
+    .document-metadata {
+      dt, dd {
+        float: none;
+        width: auto;
+        clear: none;
+        text-align: left;
+        margin: 0;
+        padding: 0;
+      }
+    }
   }
 
-  a.next span {
-    margin-left: 5px;
-    margin-top: 2px;
-  }
-}
+  #documents.row.gallery {
+    display: block;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: flex;
 
+    .document {
+      display: flex;
+      flex: none;
+      align-items: stretch;
+
+      .thumbnail {
+        width: 100%;
+        padding: 1em;
+      }
+    }
+  }
+
+}
+///////////////////////////////////
+// ASSET PAGES
+///////////////////////////////////
 .asset {
+
+  .asset-navigation {
+    a.previous span {
+      margin-right: 5px;
+      margin-top: 2px;
+    }
+
+    a.next span {
+      margin-left: 5px;
+      margin-top: 2px;
+    }
+  }
 
   figure {
     display: inline;
@@ -167,19 +260,24 @@ footer.press {
 
   }
 
-  // leaflet-images
+  // LEAFLET/IMAGES
   #image {
     height: 540px;
     width: 97%;
   }
 
-  // video
+  // VIDEO
   video {
     width: 97%;
   }
 
-  // metadata info
-  .table > thead > tr > th, .table > thead > tr > td, .table > tbody > tr > th, .table > tbody > tr > td, .table > tfoot > tr > th, .table > tfoot > tr > td {
+  // ASSET METADATA
+  .table > thead > tr > th,
+  .table > thead > tr > td,
+  .table > tbody > tr > th,
+  .table > tbody > tr > td,
+  .table > tfoot > tr > th,
+  .table > tfoot > tr > td {
     border-top: 0 solid #fff;
   }
 
@@ -200,74 +298,5 @@ footer.press {
 
   .translation, .transcript {
     margin-top: 2em;
-  }
-}
-
-
-// gallery view
-.view-icon-gallery {
-  &:before { content: "\e011"; }
-}
-
-#documents.gallery {
-  display: -webkit-box;
-  display: -moz-box;
-  display: -ms-flexbox;
-  display: -webkit-flex;
-  display: flex;
-  flex-flow: row wrap;
-  -webkit-flex-wrap: wrap;
-
-  .document {
-    border-bottom: none;
-    border-top: none;
-
-    -webkit-box-flex: 1;
-    -moz-box-flex: 1;
-    -ms-flex: 1;
-    flex: 1;
-
-    min-width: 250px;
-    min-height: 250px;
-    -webkit-flex: 1 0 250px;
-  }
-
-  .index_title {
-    width: 100%;
-  }
-
-  .document-counter {
-    display: none;
-  }
-
-  .index-document-functions {
-    clear: left;
-  }
-
-  .document-metadata {
-    dt, dd {
-      float: none;
-      width: auto;
-      clear: none;
-      text-align: left;
-      margin: 0;
-      padding: 0;
-    }
-  }
-}
-
-#documents.row.gallery {
-  display: block;
-  display: -moz-box;
-  display: -ms-flexbox;
-  display: flex;
-
-  .document {
-    display: flex;
-    flex: none;
-    align-items: stretch;
-    .thumbnail {
-      width: 100%
-    }
   }
 }
