@@ -1,5 +1,5 @@
 class MonographCatalogController < ::CatalogController
-  before_action :load_presenter, only: [:index]
+  before_action :load_presenter, only: [:index, :facet]
 
   configure_blacklight do |config|
     config.search_builder_class = MonographSearchBuilder
@@ -46,7 +46,8 @@ class MonographCatalogController < ::CatalogController
   private
 
     def load_presenter
-      @curation_concern = Monograph.find(params[:id])
-      @monograph_presenter = CurationConcerns::PresenterFactory.build_presenters([params['id']], CurationConcerns::MonographPresenter, current_ability).first
+      monograph_id = params[:monograph_id] || params[:id]
+      @curation_concern = Monograph.find(monograph_id)
+      @monograph_presenter = CurationConcerns::PresenterFactory.build_presenters([monograph_id], CurationConcerns::MonographPresenter, current_ability).first
     end
 end

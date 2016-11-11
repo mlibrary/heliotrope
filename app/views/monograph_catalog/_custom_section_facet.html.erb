@@ -1,7 +1,6 @@
 <ul class="facet-values list-unstyled">
   <% paginator = facet_paginator(facet_field, display_facet) %>
-  <% monograph_id = params[:monograph_id] || @monograph_presenter.id %>
-  <%= render_facet_limit_list reorder_section_facet(monograph_id, paginator), field_name %>
+  <%= render_facet_limit_list reorder_section_facet(@monograph_presenter, paginator), field_name %>
 
   <% unless paginator.last_page? || params[:action] == "facet" %>
     <li class="more_facets_link">
