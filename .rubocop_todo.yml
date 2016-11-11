@@ -11,3 +11,7 @@ Metrics/PerceivedComplexity:
   Exclude:
     - 'app/models/riiif/file.rb'
     - 'app/controllers/downloads_controller.rb'
+
+Style/RedundantReturn:
+  Exclude:
+    - 'app/presenters/concerns/analytics_presenter.rb'

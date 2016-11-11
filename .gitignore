@@ -28,7 +28,10 @@
 /config/secrets.yml
 /config/database.yml
 /config/analytics.yml
+/config/analytics.yml.dev
 /config/curation_concerns.yml
+# Google Analytics access keys
+*.p12
 
 # Ignore Vagrant support files
 .vagrant
@@ -47,4 +50,3 @@
 
 # Ingnore import directory
 import/
-

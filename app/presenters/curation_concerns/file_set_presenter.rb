@@ -1,6 +1,7 @@
 module CurationConcerns
   class FileSetPresenter
     include TitlePresenter
+    include AnalyticsPresenter
     include ModelProxy
     include PresentsAttributes
     include Rails.application.routes.url_helpers
@@ -126,25 +127,8 @@ module CurationConcerns
     end
 
     # Google Analytics
-    def google_analytics_id
-      press = Press.find_by(subdomain: subdomain)
-      return press.google_analytics unless press.nil? || press.google_analytics.nil?
-      Rails.application.secrets.google_analytics_id
-    end
-
-    def pageviews_by_date
-      profile = AnalyticsService.profile(google_analytics_id)
-      unless profile
-        Rails.logger.error("Google Analytics profile has not been established. Unable to fetch statistics.")
-        return []
-      end
-      Pageview.for_path(curation_concerns_file_set_path(id))
-              .results(profile)
-              .map(&:to_h)
-    end
-
     def pageviews
-      pageviews_by_date.map { |entry| entry[:pageviews].to_i }.inject(0) { |sum, x| sum + x }
+      pageviews_by_path(curation_concerns_file_set_path(id))
     end
 
     # Technical Metadata

@@ -5,11 +5,7 @@ describe Pageview, type: :model do
     expect(described_class.metrics).to be == Legato::ListParameter.new(:metrics, [:pageviews])
   end
 
-  it 'has a date dimension' do
-    expect(described_class.dimensions).to be == Legato::ListParameter.new(:dimensions, [:date])
-  end
-
-  it 'responds to :for_path' do
-    expect(described_class).to respond_to(:for_path)
+  it 'has a date and pagePath dimension' do
+    expect(described_class.dimensions).to be == Legato::ListParameter.new(:dimensions, [:date, :pagePath])
   end
 end
