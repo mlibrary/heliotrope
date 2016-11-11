@@ -28,11 +28,10 @@ module FacetHelper
     end
   end
 
-  def reorder_section_facet(monograph_id, paginator)
+  def reorder_section_facet(monograph_presenter, paginator)
     # if on the dedicated facet page, defer to the user's sort choice
     if !params['facet.sort']
-      sections = Monograph.find(monograph_id).ordered_members.to_a.select { |m| m.class.name == 'Section' }
-      ordered_section_titles = sections.map { |s| s.title.first }
+      ordered_section_titles = monograph_presenter.section_docs.map { |s| s.title.first }
       ordered_facet_items = []
       ordered_section_titles.each do |section_title|
         paginator.items.each do |item|
