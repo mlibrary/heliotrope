@@ -1,0 +1,18 @@
+<div class="col-sm-4 press-block-a col">
+  <% if footer_block_a(press_subdomain) %>
+    <p><%= render_markdown footer_block_a(press_subdomain) %></p>
+  <% else %>
+    <div class="crop">
+      <%= image_tag logo(press_subdomain), alt: name(press_subdomain), class: 'img-responsive' %><br /><br />
+    </div>
+    <p>
+      <a class="brand" href="<%= url(press_subdomain) %>"><%= name(press_subdomain) %></a>
+    </p>
+  <% end %>
+  <!-- <ul class="list-inline">
+    <li><a href="#">FB</a></li>
+    <li><a href="#">I</a></li>
+    <li><a href="#">T</a></li>
+    <li><a href="#">YT</a></li>
+  </ul> -->
+</div>

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160830143512) do
+ActiveRecord::Schema.define(version: 20161111093512) do
 
   create_table "bookmarks", force: :cascade do |t|
     t.integer  "user_id",       null: false
@@ -70,6 +70,8 @@ ActiveRecord::Schema.define(version: 20160830143512) do
     t.string   "press_url"
     t.string   "google_analytics"
     t.string   "typekit"
+    t.text     "footer_block_a"
+    t.text     "footer_block_c"
   end
 
   create_table "roles", force: :cascade do |t|

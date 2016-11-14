@@ -1,5 +1,5 @@
-// Press themes are collected here
-
+// Press Themes are collected here to override
+// base classes set in heliotrope.scss
 ///////////////////////////////////////////////
 //
 // University of Minnesota Press
@@ -180,8 +180,8 @@ $umn-white: #fff;
     a:active {
       color: $umn-white;
     }
-    .social,
-    .footer-nav {
+    .press-block-a,
+    .press-block-b {
       background-color:  $umn-grey;
 
       .crop {
@@ -207,7 +207,7 @@ $umn-white: #fff;
       }
 
     }
-    .copyright {
+    .press-block-c {
       background-color: $umn-brand-color;
     }
     .platform {
@@ -421,15 +421,15 @@ $fulcrum-light-2: #bec4cc;
     a:active {
       color: $nw-white;
     }
-    .social,
-    .footer-nav {
+    .press-block-a,
+    .press-block-b {
       background-color: $nw-purple-60;
       img {
         width: 50px;
       }
 
     }
-    .copyright {
+    .press-block-c {
       background-color: $nw-brand-color;
     }
     .platform {
@@ -665,8 +665,8 @@ $psu-jumbotron: #efefef;
 
 
 
-    .social,
-    .footer-nav {
+    .press-block-a,
+    .press-block-b {
       background-color: $psu-brand-color-alt;
 
       .crop {
@@ -698,7 +698,7 @@ $psu-jumbotron: #efefef;
       }
 
     }
-    .copyright {
+    .press-block-c {
       background-color: $psu-brand-color;
     }
     // .platform {
