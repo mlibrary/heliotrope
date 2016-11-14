@@ -11,7 +11,7 @@ class Ability
     can :manage, Role, resource_id: @user.admin_roles.pluck(:resource_id), resource_type: 'Press'
 
     # monograph.press is a String (the subdomain of a Press)
-    can :create, Monograph do |m|
+    can [:create, :update], Monograph do |m|
       @user.admin_presses.map(&:subdomain).include?(m.press)
     end
 
@@ -21,6 +21,19 @@ class Ability
 
     can :update, Press do |p|
       admin_for?(p)
+    end
+
+    # For the different view presenters
+    can :update, CurationConcerns::MonographPresenter do |p|
+      @user.admin_presses.map(&:subdomain).include?(p.subdomain)
+    end
+
+    can :update, CurationConcerns::FileSetPresenter do |p|
+      @user.admin_presses.map(&:subdomain).include?(p.monograph.subdomain)
+    end
+
+    can :update, CurationConcerns::SectionPresenter do |p|
+      @user.admin_presses.map(&:subdomain).include?(p.monograph.subdomain)
     end
 
     grant_platform_admin_abilities

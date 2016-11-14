@@ -3,8 +3,8 @@ require 'rails_helper'
 feature 'Display a section' do
   let(:user) { create(:user) }
   let!(:monograph) { create(:monograph, user: user) }
-  let!(:ch2) { create(:section, title: ['Chapter 2'], user: user) }
-  let!(:ch1) { create(:section, title: ['Chapter 1'], user: user) }
+  let!(:ch2) { create(:section, title: ['Chapter 2'], user: user, monograph_id: monograph.id) }
+  let!(:ch1) { create(:section, title: ['Chapter 1'], user: user, monograph_id: monograph.id) }
 
   let(:admin_user) { create(:platform_admin) }
   let!(:unauthorized_section) { create(:section, user: admin_user) }

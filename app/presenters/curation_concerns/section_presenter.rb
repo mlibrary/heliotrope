@@ -2,6 +2,16 @@ module CurationConcerns
   class SectionPresenter < WorkShowPresenter
     include TitlePresenter
 
+    attr_accessor :monograph_presenter
+
+    def monograph_id
+      Array(solr_document['monograph_id_ssim']).first
+    end
+
+    def monograph
+      @monograph_presenter ||= PresenterFactory.build_presenters([monograph_id], MonographPresenter, current_ability).first
+    end
+
     def monograph_label
       member_of.first.fetch('title_tesim', []).first
     end

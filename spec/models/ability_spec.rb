@@ -11,12 +11,25 @@ describe Ability do
   let(:section) { create(:section, user: creating_user) }
   let(:file_set) { create(:file_set, user: creating_user) }
 
+  let(:monograph_presenter) do
+    CurationConcerns::MonographPresenter.new(SolrDocument.new(id: monograph.id, press_tesim: press.subdomain), described_class.new(creating_user))
+  end
+  let(:section_presenter) do
+    CurationConcerns::SectionPresenter.new(SolrDocument.new(id: section.id, monograph_id_ssim: monograph.id), described_class.new(creating_user))
+  end
+  let(:file_set_presenter) do
+    CurationConcerns::FileSetPresenter.new(SolrDocument.new(id: file_set.id, monograph_id_ssim: monograph.id), described_class.new(creating_user))
+  end
+
   describe 'a platform-wide admin user' do
     let(:creating_user) { current_user }
     let(:current_user) { create(:platform_admin) }
     let(:role) { create(:role) }
     let(:another_user) { create(:user) }
     let(:another_user_monograph) { create(:monograph, user: another_user, press: press.subdomain) }
+    let(:another_user_monograph_presenter) do
+      CurationConcerns::MonographPresenter.new(SolrDocument.new(id: another_user_monograph.id, press_tesim: press.subdomain), described_class.new(another_user))
+    end
 
     it do
       should be_able_to(:create, Monograph.new)
@@ -24,16 +37,19 @@ describe Ability do
       should be_able_to(:read, monograph)
       should be_able_to(:update, monograph)
       should be_able_to(:destroy, monograph)
+      should be_able_to(:update, monograph_presenter)
 
       should be_able_to(:create, Section.new)
       should be_able_to(:read, section)
       should be_able_to(:update, section)
       should be_able_to(:destroy, section)
+      should be_able_to(:update, section_presenter)
 
       should be_able_to(:create, FileSet.new)
       should be_able_to(:read, file_set)
       should be_able_to(:update, file_set)
       should be_able_to(:destroy, file_set)
+      should be_able_to(:update, file_set_presenter)
 
       should be_able_to(:read, role)
       should be_able_to(:update, role)
@@ -48,6 +64,7 @@ describe Ability do
       should be_able_to(:update, another_user_monograph)
       should be_able_to(:publish, another_user_monograph)
       should be_able_to(:destroy, another_user_monograph)
+      should be_able_to(:update, another_user_monograph_presenter)
     end
   end
 
@@ -86,8 +103,17 @@ describe Ability do
 
       it do
         should be_able_to(:create, monograph_for_my_press)
-
         should_not be_able_to(:create, monograph_for_other_press)
+      end
+    end
+
+    context "updating" do
+      let(:my_presenter) { CurationConcerns::MonographPresenter.new(SolrDocument.new(id: 'my_id', press_tesim: my_press.subdomain), subject) }
+      let(:other_presenter) { CurationConcerns::MonographPresenter.new(SolrDocument.new(id: 'other_id', press_tesim: other_press.subdomain), subject) }
+
+      it do
+        should be_able_to(:update, my_presenter)
+        should_not be_able_to(:update, other_presenter)
       end
     end
   end
