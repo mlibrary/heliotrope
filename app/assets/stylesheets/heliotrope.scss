@@ -39,12 +39,12 @@ footer.press {
     padding-bottom: 99999px;
   }
 
-  .social {
+  .press-block-a {
     padding-left: 30px;
   }
 
-  .social,
-  .footer-nav {
+  .press-block-a,
+  .press-block-b {
     padding-top: 30px;
     background-color: #171717;
   }
@@ -54,7 +54,7 @@ footer.press {
     color: #BABABA;
   }
 
-  .copyright {
+  .press-block-c {
     background-color: #000;
     padding: 10px;
 
@@ -153,7 +153,7 @@ footer.press {
   .view-icon-gallery {
     &:before { content: "\e011"; }
   }
-  
+
   #documents.gallery {
     display: -webkit-box;
     display: -moz-box;

@@ -1,0 +1,11 @@
+<div class="col-sm-4 platform col">
+  <p>Powered by <a href="/" title="Fulcrum" data-turbolinks="false"><%= image_tag "fulcrum-white-50px.png", class: 'logo', alt: 'Fulcrum Beta logo' %></a> <a class="beta" href="/beta" title="Fulcrum Beta information" data-turbolinks="false">beta</a></p>
+  <ul class="list-unstyled">
+    <!-- <li><a href="#">Help</a></li> -->
+    <li><a href="/about/" data-turbolinks="false">About</a></li>
+    <li><a href="/blog/" data-turbolinks="false">Blog</a></li>
+    <li><a href="mailto:fulcrum-info@umich.edu">Contact</a></li>
+    <li><a href="https://github.com/mlibrary/heliotrope">Contribute</a></li>
+    <li><% if current_user %> <%= link_to 'Log Out', main_app.destroy_user_session_path, class: 'log-out', role: 'menuitem' %> <% else %> <%= link_to 'Log In', main_app.new_user_session_path, class: 'login', role: 'menuitem' %> <% end %></li>
+  </ul>
+</div>
