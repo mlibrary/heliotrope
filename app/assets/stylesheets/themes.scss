@@ -580,7 +580,8 @@ $psu-gray-1: #3F4550;
     }
 
     .navbar-right {
-      display: none;
+      margin-top: -3em;
+      margin-right: 1em;
     }
 
   }
@@ -689,26 +690,15 @@ $psu-gray-1: #3F4550;
       }
 
       p {
-        @include jenson-display;
-        background-image: image-url("pennstate-blue.png");
-        background-position: 0px 11px;
-        background-repeat: no-repeat;
-        height: 60px;
-        width: 38em;
-        margin-top: 2.4em;
-
-        a.brand {
-          margin-left: 45px;
-          position: relative;
-          top: 18px;
-        }
+        padding-top: 8em;
+        color: $psu-gray-2;
+        @include proxima-nova;
       }
 
     }
 
     .press-block-c {
       background-color: $psu-gray-2;
-      @include proxima-nova;
     }
     // .platform {
     //  background-color: $umn-black-80;
@@ -760,42 +750,52 @@ $psu-gray-1: #3F4550;
     .jumbotron {
       padding-top: 48px;
     }
-    #brand-bar form.navbar-form {
-    margin-left: -15px;
-    margin-right: -15px;
-    padding: 10px 15px;
-    border-top: 1px solid transparent;
-    border-bottom: 1px solid transparent;
-    -webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 1px 0 rgba(255, 255, 255, 0.1);
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 1px 0 rgba(255, 255, 255, 0.1);
-    margin-top: 8px;
-    margin-bottom: 8px;
-    position: inherit;
 
+    #brand-bar {
 
-      .input-group {
-        position: relative;
-        display: table;
-        border-collapse: separate;
-        width: 100%;
+      .navbar-brand {
+        margin-top: -2em;
+        margin-bottom: 2em;
+        text-align: center;
       }
 
-      .input-group .form-control {
-        position: relative;
-        z-index: 2;
-        float: left;
-        width: 100%;
-        margin-bottom: 0;
-      }
 
-      .input-group-btn {
-        position: relative;
-        font-size: 0;
-        white-space: nowrap;
-        width: 1%;
-      }
+      form.navbar-form {
+      margin-left: -15px;
+      margin-right: -15px;
+      padding: 10px 15px;
+      border-top: 1px solid transparent;
+      border-bottom: 1px solid transparent;
+      -webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 1px 0 rgba(255, 255, 255, 0.1);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 1px 0 rgba(255, 255, 255, 0.1);
+      margin-top: 8px;
+      margin-bottom: 8px;
+      position: inherit;
 
+
+        .input-group {
+          position: relative;
+          display: table;
+          border-collapse: separate;
+          width: 100%;
+        }
+
+        .input-group .form-control {
+          position: relative;
+          z-index: 2;
+          float: left;
+          width: 100%;
+          margin-bottom: 0;
+        }
+
+        .input-group-btn {
+          position: relative;
+          font-size: 0;
+          white-space: nowrap;
+          width: 1%;
+        }
+
+      }
     }
   }
-
 }

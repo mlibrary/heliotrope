@@ -20,9 +20,9 @@ end
 
 def pennstate
   Press.where(name: 'Penn State University Press').first_or_initialize.tap do |press|
-    press.logo_path = 'penn-state.png'
+    press.logo_path = 'pennstate.png'
     press.description = 'Penn State University Press publishes books and journals of the highest quality for a worldwide audience of scholars, students, and non-academic readers, with an emphasis on core fields of the humanities and social sciences. This page features supplemental content for select PSU Press titles. You can find the complete catalog of our publications and additional information about the Press on our [website](http://www.psupress.org/).'
-    press.footer_block_a = '© Penn State University 2016'
+    press.footer_block_a = '© Penn State University Press 2016'
     press.footer_block_c = 'http://www.psupress.org'
     press.subdomain = 'pennstate'
     press.press_url = 'http://www.psupress.org'
