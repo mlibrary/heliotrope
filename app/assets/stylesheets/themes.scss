@@ -452,6 +452,8 @@ $psu-brand-accent: #6cc;
 $psu-link: #00527b;
 $psu-white: #fff;
 $psu-jumbotron: #efefef;
+$psu-gray-2: #302f32;
+$psu-gray-1: #3F4550;
 
 
 // typography
@@ -532,7 +534,7 @@ $psu-jumbotron: #efefef;
 
   #brand-bar {
     background-color: $psu-brand-color;
-    height: 6em;
+    height: 8.5em;
 
     .container {
       height: 100%;
@@ -542,19 +544,26 @@ $psu-jumbotron: #efefef;
       background-image: image-url("pennstate.png");
       background-position: 0px 11px;
       background-repeat: no-repeat;
-      height: 100%;
+      height: 6em;
+      display: block;
+      width: 100%;
+      margin-top: 1em;
     }
 
     .navbar-brand {
       color: $psu-brand-color-alt;
       @include jenson-display;
-      padding-left: 163px;
-      padding-top: 33px;
+      width: inherit;
+      text-align: right;
+        font-size: 1.5em;
 
     }
 
-    form {
-      padding-top: 14px;
+    form.navbar-form {
+      position: relative;
+      top: -3em;
+      padding-right: 2.5em;
+      float: right !important;
     }
 
     .navbar-nav {
@@ -571,7 +580,8 @@ $psu-jumbotron: #efefef;
     }
 
     .navbar-right {
-      padding-top: 14px;
+      margin-top: -3em;
+      margin-right: 1em;
     }
 
   }
@@ -663,8 +673,6 @@ $psu-jumbotron: #efefef;
       color: $psu-white;
     }
 
-
-
     .press-block-a,
     .press-block-b {
       background-color: $psu-brand-color-alt;
@@ -682,24 +690,15 @@ $psu-jumbotron: #efefef;
       }
 
       p {
-        @include jenson-display;
-        background-image: image-url("pennstate-blue.png");
-        background-position: 0px 11px;
-        background-repeat: no-repeat;
-        height: 60px;
-        width: 38em;
-        margin-top: 2.4em;
-
-        a.brand {
-          margin-left: 45px;
-          position: relative;
-          top: 18px;
-        }
+        padding-top: 8em;
+        color: $psu-gray-2;
+        @include proxima-nova;
       }
 
     }
+
     .press-block-c {
-      background-color: $psu-brand-color;
+      background-color: $psu-gray-2;
     }
     // .platform {
     //  background-color: $umn-black-80;
@@ -751,41 +750,52 @@ $psu-jumbotron: #efefef;
     .jumbotron {
       padding-top: 48px;
     }
-    .navbar-form {
-    margin-left: -15px;
-    margin-right: -15px;
-    padding: 10px 15px;
-    border-top: 1px solid transparent;
-    border-bottom: 1px solid transparent;
-    -webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 1px 0 rgba(255, 255, 255, 0.1);
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 1px 0 rgba(255, 255, 255, 0.1);
-    margin-top: 8px;
-    margin-bottom: 8px;
 
+    #brand-bar {
 
-      .input-group {
-        position: relative;
-        display: table;
-        border-collapse: separate;
-        width: 100%;
+      .navbar-brand {
+        margin-top: -2em;
+        margin-bottom: 2em;
+        text-align: center;
       }
 
-      .input-group .form-control {
-        position: relative;
-        z-index: 2;
-        float: left;
-        width: 100%;
-        margin-bottom: 0;
-      }
 
-      .input-group-btn {
-        position: relative;
-        font-size: 0;
-        white-space: nowrap;
-        width: 1%;
-      }
+      form.navbar-form {
+      margin-left: -15px;
+      margin-right: -15px;
+      padding: 10px 15px;
+      border-top: 1px solid transparent;
+      border-bottom: 1px solid transparent;
+      -webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 1px 0 rgba(255, 255, 255, 0.1);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 1px 0 rgba(255, 255, 255, 0.1);
+      margin-top: 8px;
+      margin-bottom: 8px;
+      position: inherit;
 
+
+        .input-group {
+          position: relative;
+          display: table;
+          border-collapse: separate;
+          width: 100%;
+        }
+
+        .input-group .form-control {
+          position: relative;
+          z-index: 2;
+          float: left;
+          width: 100%;
+          margin-bottom: 0;
+        }
+
+        .input-group-btn {
+          position: relative;
+          font-size: 0;
+          white-space: nowrap;
+          width: 1%;
+        }
+
+      }
     }
   }
-
 }
