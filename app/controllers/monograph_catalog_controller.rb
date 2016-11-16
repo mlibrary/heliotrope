@@ -4,6 +4,15 @@ class MonographCatalogController < ::CatalogController
   configure_blacklight do |config|
     config.search_builder_class = MonographSearchBuilder
 
+    config.default_per_page = 20
+    config.add_sort_field 'chapter asc', sort: "#{uploaded_field} desc", label: "Chapter \u25B2"
+    config.add_sort_field 'chapter desc', sort: "#{uploaded_field} asc", label: "Chapter \u25BC"
+    # leaving the #{uploaded_field} desc in these for chapter sort when all else is equal
+    config.add_sort_field 'format asc', sort: "#{solr_name('resource_type', :sortable)} asc, #{uploaded_field} desc", label: "Format \u25B2"
+    config.add_sort_field 'format desc', sort: "#{solr_name('resource_type', :sortable)} desc, #{uploaded_field} desc", label: "Format \u25BC"
+    config.add_sort_field 'year asc', sort: "#{solr_name('search_year', :sortable)} asc, #{uploaded_field} desc", label: "Year \u25B2"
+    config.add_sort_field 'year desc', sort: "#{solr_name('search_year', :sortable)} desc, #{uploaded_field} desc", label: "Year \u25BC"
+
     config.facet_fields.tap do
       # solr facet fields not to be displayed in the index (search results) view
       config.facet_fields.delete('human_readable_type_sim')
