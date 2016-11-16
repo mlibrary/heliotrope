@@ -16,7 +16,7 @@ class FileSet < ActiveFedora::Base
   end
 
   property :content_type, predicate: ::RDF::Vocab::SCHEMA.contentType do |index|
-    index.as :stored_searchable
+    index.as :stored_searchable, :facetable
   end
 
   property :primary_creator_role, predicate: ::RDF::Vocab::SCHEMA.roleName do |index|
