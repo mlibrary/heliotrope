@@ -1,10 +1,10 @@
 <div class="form-actions">
-  <% if can? :edit, presenter.id %>
+  <% if can? :edit, presenter %>
     <%= link_to "Edit", edit_polymorphic_path([main_app, presenter]), class: 'btn btn-default btn-lg'  %>
     <!-- TODO: remove the following button, it will be replaced by breadcrumbs -->
     <%= link_to "Back to #{parent.human_readable_type}", parent_path(parent), class: 'btn btn-default btn-lg' %>
   <% end %>
-  <% if  can? :edit, presenter.id || presenter.allow_download?  %>
+  <% if  can? :edit, presenter || presenter.allow_download?  %>
     <%= link_to "Download", main_app.download_path(presenter), class: 'btn btn-default btn-lg' %>
   <% end %>
   <!-- TODO: add citation generator -->

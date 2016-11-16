@@ -2,6 +2,8 @@ require 'rails_helper'
 
 describe CurationConcerns::SectionPresenter do
   let(:ability) { nil }
+  let(:press) { create(:press) }
+  let(:monograph) { create(:monograph, press: press.subdomain) }
 
   it 'includes TitlePresenter' do
     expect(described_class.new(nil, nil)).to be_a TitlePresenter
@@ -14,7 +16,7 @@ describe CurationConcerns::SectionPresenter do
         "title_tesim" => ["foo bar"],
         "human_readable_type_tesim" => ["Section"],
         "has_model_ssim" => ["Section"],
-        "monograph_id_ssim" => "dr26xx448"
+        "monograph_id_ssim" => monograph.id
       }
     end
     let(:presenter) { described_class.new(solr_document, ability) }
@@ -36,6 +38,13 @@ describe CurationConcerns::SectionPresenter do
 
     it "returns a FileSetPresenter" do
       expect(presenter.representative_presenter.class).to eq CurationConcerns::FileSetPresenter
+    end
+  end
+
+  describe "#monograph" do
+    let(:presenter) { described_class.new(SolrDocument.new(id: 'section_id', monograph_id_ssim: monograph.id), ability) }
+    it "returns a MonographPresenters" do
+      expect(presenter.monograph.class).to eq CurationConcerns::MonographPresenter
     end
   end
 end

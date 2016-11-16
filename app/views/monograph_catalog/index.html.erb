@@ -21,7 +21,7 @@
 
     <div class="monograph-metadata">
       <h2><%= @monograph_presenter.title || '' %></h2>
-      <% if can?(:edit, @monograph_presenter.id) %>
+      <% if can? :edit, @monograph_presenter %>
         <%= link_to "Manage Monograph and Files", main_app.monograph_show_path(@monograph_presenter.id), class: 'btn btn-primary', id: 'manage-monograph-button' %>
       <% end %>
       <h3><%= @monograph_presenter.creator_given_name.first %> <%= @monograph_presenter.creator_family_name.first %><%= contributors_string(@monograph_presenter.contributor) %></h3>
