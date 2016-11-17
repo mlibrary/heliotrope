@@ -9,6 +9,28 @@
  */
 
 // navigation menu
+.skip a {
+  position:absolute;
+  left:-10000px;
+  top:auto;
+  width:1px;
+  height:1px;
+  overflow:hidden;
+}
+
+.skip a:focus {
+  position: static;
+  width: auto;
+  height: auto;
+  top: 0;
+  left: 0;
+  float: left;
+  padding: .5em;
+  background: $accent-color;
+  color: $white;
+  border-bottom: 0;  
+}
+
 //// resize navigation menu
  @media only screen and (min-width: 601px) {
    nav, nav .nav-wrapper i, nav a.button-collapse, nav a.button-collapse i {
@@ -98,6 +120,9 @@ p {
 footer.page-footer {
   background-color: $brand-color;
   padding-top: 2rem;
+  .footer-copyright .container {
+    color: $light-2;
+  }
 }
 
 .footer-menu {
@@ -133,6 +158,9 @@ footer.page-footer {
 }
 
 .about {
+  a {
+    color: $accent-color;
+  }
   a:hover, a:focus, a:active {
     color: $accent-color;
     border-color: $accent-color;
