@@ -29,9 +29,12 @@
       <div class="description">
         <%= render_markdown @monograph_presenter.description.first || '' %>
       </div>
+      <% pageviews = @monograph_presenter.pageviews %>
+      <% unless pageviews.nil? %>
       <div>
-        <p>This item has been viewed <b><%= @monograph_presenter.pageviews %></b> times.</p>
+        <p>This item has been viewed <b><%= pageviews %></b> times.</p>
       </div>
+      <% end %>
       <div><p></p></div>
       <div class="isbn">
         <% if defined?(@monograph_presenter.isbn) %>
