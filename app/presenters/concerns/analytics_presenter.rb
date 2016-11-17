@@ -5,8 +5,12 @@ module AnalyticsPresenter
     count = 0
     profile = google_analytics_profile
     if profile.present?
-      Pageview.results(profile).each do |entry|
-        count += entry[:pageviews].to_i if entry[:pagePath] == path
+      begin
+        Pageview.results(profile).each do |entry|
+          count += entry[:pageviews].to_i if entry[:pagePath] == path
+        end
+      rescue OAuth2::Error => e
+        Rails.logger.error(e.code["message"])
       end
     end
     return count
@@ -16,10 +20,17 @@ module AnalyticsPresenter
     count = 0
     profile = google_analytics_profile
     if profile.present?
-      Pageview.results(profile).each do |entry|
-        ids.each do |id|
-          count += entry[:pageviews].to_i if entry[:pagePath].include? id
+      begin
+        Pageview.results(profile).each do |entry|
+          ids.each do |id|
+            count += entry[:pageviews].to_i if entry[:pagePath].include? id
+          end
         end
+      rescue OAuth2::Error => e
+        # TODO: we're hitting GA quotas for monograph_catalog pages in production.
+        # Need to figure out a better way to do this...
+        Rails.logger.error(e.code["message"])
+        return nil
       end
     end
     return count
