@@ -7,6 +7,8 @@
 $brand-color:   #002C63;
 $accent-color:  #00AFEC;
 
+$link-color:    #0077b6;
+
 $white:         #FFF;
 $light-1:       #E9EEF5;
 $light-2:       #BEC4CC;
@@ -193,9 +195,15 @@ html {
 // icons
 .github {
   height: $github;
+  path {
+    color: $light-2;
+  }
 }
 .twitter {
   height: $twitter;
+  path {
+    color: $light-2;
+  }
 }
 
 // global
@@ -304,7 +312,7 @@ h1, h2, h3, h4, h5, h6,
 
 // links
 a {
-  color: $accent-color;
+  color: $link-color;
   border-bottom: $stroke-width solid transparent;
 
   &:hover, &:focus, &:active {
