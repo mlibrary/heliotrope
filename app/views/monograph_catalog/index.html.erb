@@ -7,14 +7,14 @@
     <nav class="breadcrumbs col-sm-12">
       <ol class="breadcrumb">
         <li><a href=<%= "/#{@monograph_presenter.subdomain}" %>>Home</a></li>
-        <li><%= @monograph_presenter.page_title %></li>
+        <li class="active"><%= @monograph_presenter.page_title %></li>
       </ol>
     </nav>
   </div>
 <% end %>
 
 <% provide :sidebar do %>
-  <div class="monograph-info">
+  <div id="maincontent" class="monograph-info">
     <div class="monograph-cover">
       <%= render 'curation_concerns/base/representative_media', presenter: @monograph_presenter %>
     </div><!-- /.monograph-cover -->
