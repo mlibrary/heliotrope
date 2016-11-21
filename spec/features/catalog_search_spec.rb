@@ -1,6 +1,10 @@
 require 'rails_helper'
 
 feature 'Catalog search' do
+  before do
+    Monograph.destroy_all
+  end
+
   context 'a user who is not logged in' do
     let!(:private_monograph) { create(:private_monograph) }
     let!(:public_monograph) { create(:public_monograph) }

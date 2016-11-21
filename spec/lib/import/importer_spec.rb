@@ -40,6 +40,9 @@ describe Import::Importer do
   describe '#run' do
     before do
       stub_out_redis
+      Monograph.destroy_all
+      Section.destroy_all
+      FileSet.destroy_all
     end
 
     context 'when the importer runs successfully' do

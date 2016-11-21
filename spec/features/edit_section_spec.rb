@@ -2,6 +2,10 @@ require 'rails_helper'
 
 feature 'Edit a section' do
   context 'a logged in user' do
+    before do
+      Section.destroy_all
+      Monograph.destroy_all
+    end
     let(:user) { create(:platform_admin) }
     let!(:monograph1) { create(:monograph, user: user) }
     let!(:monograph2) { create(:monograph, user: user) }
