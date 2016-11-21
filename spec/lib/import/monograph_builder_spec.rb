@@ -31,7 +31,6 @@ describe Import::MonographBuilder do
 
   describe '#run' do
     before do
-      Monograph.destroy_all
       stub_out_redis
     end
 
