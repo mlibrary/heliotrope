@@ -1,6 +1,12 @@
 require 'rails_helper'
 
 feature 'Create a file set' do
+  before do
+    FileSet.destroy_all
+    Section.destroy_all
+    Monograph.destroy_all
+  end
+
   context 'as a logged in user' do
     let(:user) { create(:platform_admin) }
     let!(:press) { create(:press) }

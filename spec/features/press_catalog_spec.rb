@@ -8,6 +8,8 @@ feature 'Press Catalog' do
 
   context 'a user who is not logged in' do
     context 'with monographs for different presses' do
+      before { Monograph.destroy_all }
+
       let!(:red) { create(:public_monograph, title: ['The Red Book'], press: umich.subdomain) }
       let!(:blue) { create(:public_monograph, title: ['The Blue Book'], press: umich.subdomain) }
       let!(:colors) { create(:public_monograph, title: ['Red and Blue are Colors'], press: psu.subdomain) }
@@ -55,6 +57,7 @@ feature 'Press Catalog' do
       end
     end
     context 'with with a monograph with multiple authors' do
+      before { Monograph.destroy_all }
       let!(:monograph) { create(:public_monograph, title: ['The Two Authors\' Book'], creator_family_name: 'Johns', creator_given_name: 'Jimmy', contributor: ['Sub Way'], press: umich.subdomain) }
 
       scenario 'Sees multiple author names on the press catalog page' do
