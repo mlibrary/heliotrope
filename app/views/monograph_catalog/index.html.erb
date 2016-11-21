@@ -29,7 +29,7 @@
       <div class="description">
         <%= render_markdown @monograph_presenter.description.first || '' %>
       </div>
-      <% pageviews = nil #@monograph_presenter.pageviews %>
+      <% pageviews = @monograph_presenter.pageviews %>
       <% unless pageviews.nil? %>
       <div>
         <p>This item has been viewed <b><%= pageviews %></b> times.</p>
