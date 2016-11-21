@@ -2,10 +2,6 @@ require 'rails_helper'
 
 feature 'Create a section' do
   context 'a logged in user' do
-    before do
-      Section.destroy_all
-      Monograph.destroy_all
-    end
     let(:user) { create(:platform_admin) }
     let!(:monograph) { create(:monograph, user: user) }
     before do
