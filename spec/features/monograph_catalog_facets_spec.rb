@@ -1,12 +1,6 @@
 require 'rails_helper'
 
 feature "Monograph Catalog Facets" do
-  before do
-    FileSet.destroy_all
-    Section.destroy_all
-    Monograph.destroy_all
-  end
-
   context "keywords" do
     let(:user) { create(:platform_admin) }
     let(:monograph) { create(:monograph, user: user, title: ["Yellow"], representative_id: cover.id) }
