@@ -5,17 +5,49 @@
 ///////////////////////////////////////////
 
 ///////////////////////////////////
+// COLORS
+///////////////////////////////////
+$gray-60: #686868;
+///////////////////////////////////
 // NAVIGATION MENU
 ///////////////////////////////////
 .navbar {
   margin-bottom: 0;
 }
+
+// skip links
+.skip a {
+  position:absolute;
+  left:-10000px;
+  top:auto;
+  width:1px;
+  height:1px;
+  overflow:hidden;
+}
+
+.skip a:focus {
+  position: static;
+  width: auto;
+  height: auto;
+  top: 0;
+  left: 0;
+  float: left;
+  padding: .5em;
+  background: #fff;
+}
+
 ///////////////////////////////////
 // BREADCRUMBS
 ///////////////////////////////////
 .main-header {
   border-bottom: 0;
   margin-bottom: 0;
+}
+
+.breadcrumbs {
+  .active {
+    color: $gray-60;
+  }
 }
 ///////////////////////////////////
 // FOOTER
@@ -231,19 +263,19 @@ footer.press {
 ///////////////////////////////////
 // ASSET PAGES
 ///////////////////////////////////
-.asset {
-
-  .asset-navigation {
-    a.previous span {
-      margin-right: 5px;
-      margin-top: 2px;
-    }
-
-    a.next span {
-      margin-left: 5px;
-      margin-top: 2px;
-    }
+.asset-navigation {
+  a.previous span {
+    margin-right: 5px;
+    margin-top: 2px;
   }
+
+  a.next span {
+    margin-left: 5px;
+    margin-top: 2px;
+  }
+}
+
+.asset {
 
   figure {
     display: inline;
