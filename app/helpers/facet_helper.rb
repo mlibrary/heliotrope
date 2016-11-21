@@ -35,9 +35,10 @@ module FacetHelper
       ordered_facet_items = []
       ordered_section_titles.each do |section_title|
         paginator.items.each do |item|
-          if item.value == section_title
-            ordered_facet_items << Blacklight::Solr::Response::Facets::FacetItem.new(value: item.value, hits: item.hits)
-          end
+          next unless item.value == section_title
+          ordered_facet_items << Blacklight::Solr::Response::Facets::FacetItem.new(label: render_markdown(item.value),
+                                                                                   value: item.value,
+                                                                                   hits: item.hits)
         end
       end
       # if a limit is desired it can be added as a second parameter here, but for now I think all sections should display
@@ -45,5 +46,9 @@ module FacetHelper
     else
       paginator
     end
+  end
+
+  def markdown_as_text_facet(value)
+    render_markdown_as_text(value)
   end
 end
