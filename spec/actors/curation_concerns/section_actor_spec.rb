@@ -1,11 +1,6 @@
 require 'rails_helper'
 
 describe CurationConcerns::Actors::SectionActor do
-  before do
-    Section.destroy_all
-    Monograph.destroy_all
-  end
-
   let(:user) { create(:user) }
   let(:list_of_actors) { [described_class] }
   let(:actor) { CurationConcerns::Actors::ActorStack.new(curation_concern, user, list_of_actors) }

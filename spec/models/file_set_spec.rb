@@ -7,10 +7,6 @@ describe FileSet do
   let(:search_year) { '2014' }
   let(:bad_search_year) { 'YEAR' }
 
-  before do
-    described_class.destroy_all
-  end
-
   it 'has a valid sort_date' do
     file_set.sort_date = sort_date
     file_set.apply_depositor_metadata('admin@example.com')

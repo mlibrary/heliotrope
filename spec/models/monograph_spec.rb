@@ -8,11 +8,6 @@ describe Monograph do
   let(:imprint) { create(:sub_brand, title: 'UM Press Literary Classics') }
   let(:series) { create(:sub_brand, title: "W. Shakespeare Collector's Series") }
 
-  before do
-    Section.destroy_all
-    described_class.destroy_all
-  end
-
   it "has date_published" do
     monograph.date_published = [date]
     expect(monograph.date_published).to eq [date]
