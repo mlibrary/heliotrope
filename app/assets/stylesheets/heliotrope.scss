@@ -278,7 +278,9 @@ footer.press {
 .asset {
 
   figure {
-    display: inline;
+    display: inline-block;
+    width: 97%;
+    height: auto;
     margin: initial;
   }
 
@@ -295,12 +297,18 @@ footer.press {
   // LEAFLET/IMAGES
   #image {
     height: 540px;
-    width: 97%;
+    width: 100% !important;
   }
 
   // VIDEO
   video {
-    width: 97%;
+    width: 100% !important;
+    height: auto !important;
+  }
+
+  // AUDIO
+  audio {
+    width: 100% !important;
   }
 
   // ASSET METADATA
