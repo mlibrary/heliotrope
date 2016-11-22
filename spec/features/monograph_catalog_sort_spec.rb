@@ -3,11 +3,11 @@ require 'rails_helper'
 feature 'Monograph catalog sort' do
   context 'FileSet results set' do
     let(:user) { create(:platform_admin) }
-    let(:cover) { create(:file_set, title: ['Representative']) }
+    let(:cover) { create(:file_set, title: ['Representative'], date_uploaded: DateTime.new(2000, 2, 3, 4, 1, 0, '+0')) }
     # this fileset_outlier will have year/format values 'above' the others
     # note1: setting the date_uploaded is necessary for the default sort behavior to work (done in factory)
     # note2: search_year is stored as a string, but possibly shouldn't be
-    let(:fileset_outlier) { create(:file_set, title: ['Outlier'], search_year: '2000', resource_type: ['video']) }
+    let(:fileset_outlier) { create(:file_set, title: ['Outlier'], search_year: '2000', resource_type: ['video'], date_uploaded: DateTime.new(2001, 2, 3, 4, 1, 0, '+0')) }
     let(:monograph) { create(:monograph, user: user, title: ['Polka Dots'], representative_id: cover.id) }
     let(:fileset_count) { 24 }
 
@@ -16,8 +16,10 @@ feature 'Monograph catalog sort' do
       login_as user
       monograph.ordered_members << cover
       monograph.ordered_members << fileset_outlier
-      # years here increment from 1900 thanks to the factory sequence
-      fileset_count.times { monograph.ordered_members << FactoryGirl.create(:file_set) }
+      # start_years here increment from 1900 thanks to the factory sequence
+      fileset_count.times do |i|
+        monograph.ordered_members << FactoryGirl.create(:file_set, date_uploaded: DateTime.new(2010, 2, 3, 4, i, 0, '+0'))
+      end
       monograph.save!
     end
 
