@@ -26,7 +26,7 @@ feature 'Create a file set' do
 
       # Create a Section
       visit new_curation_concerns_section_path
-      fill_in 'Title', with: 'Test section'
+      fill_in 'Title', with: 'Test section with _Italicized Title_ therein'
       select 'Test monograph', from: "section_monograph_id"
       click_button 'Create Section'
 
@@ -103,11 +103,17 @@ feature 'Create a file set' do
       # expect(page).to have_content 'no3'
       # expect(page).to have_content 'no4'
 
+      # check section title is present and renders italics/emphasis
+      section_title = page.first('.list-unstyled .section_title a').text
+      expect(section_title).to eq 'Test section with Italicized Title therein'
+      italicized_text = page.first('.list-unstyled .section_title a em').text
+      expect(italicized_text).to eq 'Italicized Title'
+
       # check metadata is linking as intended
       # facets
       expect(page).to have_link("keyword 1", href: "/concern/monographs/" + Monograph.first.id + "?f%5Bkeywords_sim%5D%5B%5D=keyword+1")
       expect(page).to have_link("English", href: "/concern/monographs/" + Monograph.first.id + "?f%5Blanguage_sim%5D%5B%5D=English")
-      expect(page).to have_link("Test section", href: "/concern/monographs/" + Monograph.first.id + "?f%5Bsection_title_sim%5D%5B%5D=Test+section")
+      expect(page).to have_link("Test section with Italicized Title therein", href: "/concern/monographs/" + Monograph.first.id + "?f%5Bsection_title_sim%5D%5B%5D=Test+section+with+_Italicized+Title_+therein")
       expect(page).to have_link("FamilyName, GivenName", href: "/concern/monographs/" + Monograph.first.id + "?f%5Bcreator_full_name_sim%5D%5B%5D=FamilyName%2C+GivenName")
       expect(page).to have_link("Test Contributor", href: "/concern/monographs/" + Monograph.first.id + "?f%5Bcontributor_sim%5D%5B%5D=Test+Contributor")
       # search fields
