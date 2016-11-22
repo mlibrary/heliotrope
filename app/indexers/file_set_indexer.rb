@@ -1,6 +1,9 @@
 class FileSetIndexer < CurationConcerns::FileSetIndexer
   def generate_solr_document
     super.tap do |solr_doc|
+      # resource_type is not sortable, but we want it to be
+      solr_doc[Solrizer.solr_name('resource_type', :sortable)] = object.resource_type
+
       # Extra technical metadata we need to index
       # These are apparently not necessarily integers all the time, so index them as symbols
       index_technical_metadata(solr_doc, object.original_file) if object.original_file.present?
