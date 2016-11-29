@@ -94,7 +94,7 @@ feature 'Create a file set' do
       expect(page).to have_content 'Here is what that means'
       expect(page).to have_content 'A Nice Museum'
       expect(page).to have_content 'Unauthorized use prohibited. A Nice Museum.'
-      expect(page).to have_content 'http://hdl.handle.net/2027/fulcrum.this-is-a-handle'
+      expect(page.has_field?('Citable Link', with: 'http://hdl.handle.net/2027/fulcrum.this-is-a-handle')).to be true
       # expect(page).to have_content 'yes1'
       # expect(page).to have_content 'yes2'
       # expect(page).to have_content 'yes3'
