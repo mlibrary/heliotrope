@@ -8,4 +8,3 @@
 <%= presenter.attribute_to_html(:keywords, render_as: :monograph_facet, monograph_id: presenter.monograph.id) %>
 <%= presenter.attribute_to_html(:content_type, label: t('content_type'), render_as: :monograph_search, monograph_id: presenter.monograph.id) %>
 <%= presenter.attribute_to_html(:language, render_as: :monograph_facet, monograph_id: presenter.monograph.id) %>
-<%= presenter.attribute_to_html(:citable_link, label: t('citable_link'), render_as: :external_link) %>

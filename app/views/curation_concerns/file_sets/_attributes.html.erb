@@ -12,6 +12,15 @@
     <table class="table <%= dom_class(presenter) %> attributes" <%= presenter.microdata_type_to_html %>>
       <tbody>
         <%= render 'attribute_rows_info', presenter: presenter %>
+        <tr>
+          <th><%= t('citable_link') %></th>
+          <td>
+            <form>
+              <label for="permalink" style="display: none;"><%= t('citable_link') %></label>
+              <input type="text" class="form-control" id="permalink" value="<%= presenter.citable_link %>" readonly="readonly" onclick="this.select(); document.execCommand('copy');" />
+            </form>
+          </td>
+        </tr>
       </tbody>
     </table>
   </div> <!-- /.info panel -->
