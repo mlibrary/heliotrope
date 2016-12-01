@@ -6,6 +6,7 @@ Metrics/ClassLength:
 Metrics/CyclomaticComplexity:
   Exclude:
     - 'app/models/riiif/file.rb'
+    - 'app/controllers/downloads_controller.rb'
 
 Metrics/PerceivedComplexity:
   Exclude:

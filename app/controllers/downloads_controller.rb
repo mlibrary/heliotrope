@@ -2,7 +2,10 @@ class DownloadsController < ApplicationController
   include CurationConcerns::DownloadBehavior
 
   def show
-    if thumbnail? || video? || sound? || allow_download?
+    if transcript?
+      render text: file_set_doc['transcript_tesim'].first
+
+    elsif thumbnail? || video? || sound? || allow_download?
       # See #401
       if file.is_a? String
         # For derivatives stored on the local file system
@@ -19,6 +22,10 @@ class DownloadsController < ApplicationController
     end
   end
 
+  def file_set_doc
+    ActiveFedora::SolrService.query("{!terms f=id}#{params[:id]}").first || {}
+  end
+
   def mime_type_for(file)
     # See #427
     mime_type = `file --brief --mime-type #{file.shellescape}` || MIME::Types.type_for(File.extname(file)).first.content_type
@@ -26,8 +33,7 @@ class DownloadsController < ApplicationController
   end
 
   def allow_download?
-    @file_set ||= FileSet.find(params[:id])
-    if @file_set.allow_download == 'yes'
+    if file_set_doc['allow_download_ssim'].first == 'yes'
       true
     else
       false
@@ -54,6 +60,14 @@ class DownloadsController < ApplicationController
   def sound?
     # sound "previews"
     if params[:file] == 'mp3' || params[:file] == 'ogg'
+      true
+    else
+      false
+    end
+  end
+
+  def transcript?
+    if params[:file] == 'vtt'
       true
     else
       false

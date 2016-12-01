@@ -30,5 +30,8 @@ module Heliotrope
 
     # Add concerns to autoload paths
     config.autoload_paths += %W( #{config.root}/app/presenters/concerns )
+
+    # Fonts for the AblePlayer HTML player
+    config.assets.paths << Rails.root.join("vendor", "assets", "fonts")
   end
 end
