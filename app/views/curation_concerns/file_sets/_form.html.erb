@@ -40,7 +40,7 @@
           <%= f.input :display_date, as: :multi_value, label: 'Display Date', input_html: { class: 'form-control' } %>
           <%= f.input :keywords, as: :multi_value, input_html: { class: 'form-control' } %>
           <%= f.input :language, as: :multi_value, input_html: { class: 'form-control' } %>
-          <%= f.input :transcript, input_html: { class: 'form-control' } %>
+          <%= f.input :transcript, as: :text, input_html: { class: 'form-control' } %>
           <%= f.input :translation, as: :text, input_html: { multiple: true, value: curation_concern.translation.first, class: 'form-control' } %>
           <%= f.input :relation, input_html: { multiple: true, value: curation_concern.relation.first, class: 'form-control' } %>
           <%= f.input :book_needs_handles, input_html: { class: 'form-control' } %>
