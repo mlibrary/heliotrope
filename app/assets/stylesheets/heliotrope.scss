@@ -321,6 +321,12 @@ footer.press {
     border-top: 0 solid #fff;
   }
 
+  #info {
+    table tbody tr:last-of-type th {
+      vertical-align: middle;
+    }
+  }
+
   .tab-content {
     table.table {
       margin-top: 1.5em;

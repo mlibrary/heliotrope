@@ -8,10 +8,11 @@ end
 
 def michigan
   Press.where(name: 'University of Michigan Press').first_or_initialize.tap do |press|
-    press.logo_path = 'http://www.press.umich.edu/images/umpre/logo.png'
-    press.description = '[The University of Michigan Press](http://www.press.umich.edu/) publishes academic and general books about contemporary political, social, and cultural issues.'
+    press.logo_path = 'michigan.png'
+    press.description = 'University of Michigan Press is a leading publisher of books and digital projects in the humanities and social sciences that are aligned with the strengths of its parent institution. Areas of particular focus are performing arts, classical studies, political science, area studies, disability and class studies, English Language Teaching, and the social, cultural, and environmental history of the Great Lakes region of the US.<br/><br/>[michigan.fulcrum.org](https://michigan.fulcrum.org) is the home of supplemental content for select books and the location of enriched digital titles. You can find the full catalog of University of Michigan Press titles at [the publisher\'s website](http://www.press.umich.edu/).'
     press.subdomain = 'michigan'
     press.press_url = 'http://www.press.umich.edu'
+    press.typekit = 'umv2ydc'
     press.google_analytics = 'UA-77847516-8' if bulleit?
     press.save
   end
