@@ -2,6 +2,236 @@
 // base classes set in heliotrope.scss
 ///////////////////////////////////////////////
 //
+// University of Michigan Press
+//
+///////////////////////////////////////////////
+// colors
+$um-brand-color: #00274c;
+$um-accent-color: #e4e1df;
+
+$um-accent-footer: #989c97;
+
+$um-accent-link: #587abc;
+
+$um-grey-1: #d5d6d2;
+$um-grey-2: #989c97;
+$um-grey-3: #655a52;
+$um-blue: #40658f;
+$um-white: #fff;
+$um-black-80: #342f2e;
+
+// typography
+@mixin meta {
+  font-family: "ff-meta-web-pro", sans-serif;
+}
+
+@mixin meta-serif {
+  font-family: "ff-meta-serif-web-pro", serif;
+}
+
+@mixin minion {
+  font-family: "minion-pro", serif;
+}
+
+.michigan {
+
+  // typography
+  @include minion;
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5 {
+    @include meta;
+    font-weight: 700;
+  }
+
+  // links
+  a {
+    color: $um-blue;
+  }
+
+  a:hover,
+  a:active {
+    color: $um-accent-link;
+  }
+
+  // buttons
+  .btn {
+    @include meta;
+  }
+
+  #manage-monograph-button {
+    color: $um-accent-color;
+    background-color: $um-brand-color;
+  }
+
+  // navigation menu
+  .navbar-default .navbar-nav > .open > a,
+  .navbar-default .navbar-nav > .open > a:hover,
+  .navbar-default .navbar-nav > .open > a:focus {
+    background-color: $um-accent-color;
+  }
+
+  #brand-bar {
+    background-color: $um-brand-color;
+    border-color: $um-brand-color;
+
+    .navbar-brand {
+      color: $um-white;
+      @include meta;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+
+    .navbar-nav {
+      a#add-content,
+      a.login,
+      a.user-display-name {
+          color: $um-accent-color;
+      }
+
+      .open > a,
+      .open > a:focus,
+      .open > a:hover {
+        background-color: $um-blue;
+      }
+    }
+
+    button.search-submit {
+      background-color: $um-accent-color;
+      border-color: $um-accent-color;
+      color: $um-brand-color;
+    }
+
+  }
+
+  // breadcrumbs
+  .breadcrumbs {
+    @include meta;
+  }
+
+  // press catalog
+
+  // jumbotron
+  .jumbotron {
+    background-color: $um-grey-1;
+    @include meta-serif;
+
+    .logo {
+
+      img {
+        width: 84px;
+        margin-right: 3em;
+      }
+
+    }
+
+  }
+
+  .press {
+
+    h2:nth-child(2) {
+      margin-bottom: 1.5em;
+    }
+
+    .document,
+    .documentHeader {
+      margin-bottom: 2em;
+    }
+  }
+
+  // monograph
+  .monograph {
+    .documentHeader {
+      p {
+        @include meta;
+      }
+    }
+  }
+
+  // pagination
+  .page_links {
+    @include meta;
+  }
+
+  .pagination {
+    @include meta;
+     li a, li span {
+       color: $um-brand-color;
+     }
+
+     .active>a,
+     .active>a:hover,
+     .active>a:focus,
+     .active>span,
+     .active>span:hover,
+     .active>span:focus {
+       background-color: $um-brand-color;
+       border-color: $um-brand-color;
+       color: $um-accent-color;
+     }
+  }
+
+  // assets
+  .asset-navigation {
+    @include meta;
+  }
+
+  .asset {
+    ul.nav-tabs li {
+      @include meta;
+    }
+  }
+
+  //footer
+  footer {
+    a,
+    a:hover,
+    a:active {
+      color: $um-accent-color;
+    }
+    .press-block-a,
+    .press-block-b {
+      background-color:  $um-blue;
+
+      .crop {
+        height: 126px;
+        width: auto;
+      }
+
+      a,
+      a:hover,
+      a:active {
+        color: $um-accent-color;
+      }
+
+      img {
+        width: 50px;
+      }
+
+      p {
+        @include meta;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+      }
+
+    }
+    .press-block-c {
+      background-color: $um-brand-color;
+      @include meta-serif;
+    }
+    .platform {
+      background-color: $um-black-80;
+    }
+  }
+
+}
+///////////////////////////////////////////////
+//
 // University of Minnesota Press
 //
 ///////////////////////////////////////////////
