@@ -30,6 +30,7 @@ describe Import::CSVParser do
           'creator_family_name' => 'Smith',
           'creator_given_name' => 'Benjamin',
           'resource_type' => ['image'],
+          'content_type' => ['portrait'],
           'external_resource' => 'no',
           'exclusive_to_platform' => 'no',
           'rights_granted_creative_commons' => 'Creative Commons Attribution-ShareAlike license, 3.0 Unported' },
@@ -37,16 +38,19 @@ describe Import::CSVParser do
           'creator_family_name' => 'Waterhouse',
           'creator_given_name' => 'John William',
           'resource_type' => ['image'],
+          'content_type' => ['audience materials'],
           'external_resource' => 'no',
           'exclusive_to_platform' => 'yes',
           'rights_granted_creative_commons' => 'Creative Commons Zero license (implies pd)' },
         { 'title' => ['日本語のファイル'],
           'resource_type' => ['text'],
+          'content_type' => ['portrait', 'illustration'],
           'external_resource' => 'no',
           'exclusive_to_platform' => 'yes',
           'rights_granted_creative_commons' => 'Creative Commons Zero license (implies pd)' }
       ]
 
+      # order of asset metadata here is as in lib/import.rb
       expect(subject['sections'])
         .to include('Act 1: Calm Waters' => { 'title' => ['Act 1: Calm Waters'],
                                               'files' => ['shipwreck1.jpg', 'miranda1.jpg'],
@@ -56,6 +60,7 @@ describe Import::CSVParser do
                                                                      'external_resource' => 'no',
                                                                      'exclusive_to_platform' => 'yes',
                                                                      'rights_granted_creative_commons' => 'Creative Commons Zero license (implies pd)',
+                                                                     'content_type' => ['audience materials'],
                                                                      'keywords' => ['keyword1', 'keyword2'] },
                                                                    { 'title' => ['Section 1 Miranda'],
                                                                      'creator_family_name' => 'Waterhouse',
@@ -64,6 +69,7 @@ describe Import::CSVParser do
                                                                      'external_resource' => 'no',
                                                                      'exclusive_to_platform' => 'yes',
                                                                      'rights_granted_creative_commons' => 'Creative Commons Zero license (implies pd)',
+                                                                     'content_type' => ['portrait'],
                                                                      'keywords' => ['regular', 'italicized'] }
                                                                    ]
                                             })
@@ -76,20 +82,23 @@ describe Import::CSVParser do
                                                                       'resource_type' => ['image'],
                                                                       'external_resource' => 'no',
                                                                       'exclusive_to_platform' => 'yes',
-                                                                      'rights_granted_creative_commons' => 'Creative Commons Zero license (implies pd)' },
+                                                                      'rights_granted_creative_commons' => 'Creative Commons Zero license (implies pd)',
+                                                                      'content_type' => ['audience materials'] },
                                                                     { 'title' => ['Section 2 Miranda'],
                                                                       'creator_family_name' => 'Waterhouse',
                                                                       'creator_given_name' => 'John William',
                                                                       'resource_type' => ['image'],
                                                                       'external_resource' => 'no',
                                                                       'exclusive_to_platform' => 'yes',
-                                                                      'rights_granted_creative_commons' => 'Creative Commons Zero license (implies pd)' },
+                                                                      'rights_granted_creative_commons' => 'Creative Commons Zero license (implies pd)',
+                                                                      'content_type' => ['illustration'] },
                                                                     { 'title' => ['Previous Shipwreck File (Again)'],
                                                                       'creator_family_name' => 'Smith',
                                                                       'resource_type' => ['image'],
                                                                       'external_resource' => 'no',
                                                                       'exclusive_to_platform' => 'yes',
-                                                                      'rights_granted_creative_commons' => 'Creative Commons Zero license (implies pd)' }
+                                                                      'rights_granted_creative_commons' => 'Creative Commons Zero license (implies pd)',
+                                                                      'content_type' => ['portrait', 'photograph'] }
                                                                     ]
                                              })
     end
