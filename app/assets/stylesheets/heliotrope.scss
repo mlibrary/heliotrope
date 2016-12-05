@@ -333,12 +333,12 @@ footer.press {
     }
   }
 
-  .keywords {
+  .keywords, .content_type, .language {
     display: inline-flex;
     margin-right: .5em;
   }
 
-  .keywords:not(:last-of-type):after {
+  .keywords:not(:last-of-type):after, .content_type:not(:last-of-type):after, .language:not(:last-of-type):after {
    content: ", ";
   }
 

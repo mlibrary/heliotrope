@@ -118,7 +118,7 @@ feature 'Create a file set' do
       expect(page).to have_link("Test Contributor", href: "/concern/monographs/" + Monograph.first.id + "?f%5Bcontributor_sim%5D%5B%5D=Test+Contributor")
       # search fields
       expect(page).to have_link("director", href: "/concern/monographs/" + Monograph.first.id + "?f%5Bprimary_creator_role_tesim%5D%5B%5D=director")
-      expect(page).to have_link("screenshot", href: "/concern/monographs/" + Monograph.first.id + "?f%5Bcontent_type_tesim%5D%5B%5D=screenshot")
+      expect(page).to have_link("screenshot", href: "/concern/monographs/" + Monograph.first.id + "?f%5Bcontent_type_sim%5D%5B%5D=screenshot")
 
       # check external autolink are opening in a new tab and internal are not
       expect(find_link('external link')[:target]).to eq '_blank'

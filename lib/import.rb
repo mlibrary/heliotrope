@@ -68,7 +68,7 @@ module Import
       { field_name: 'Persistent ID - Display on Platform', metadata_name: 'ext_url_doi_or_handle', required: false, multivalued: :no },
       { field_name: 'Persistent ID - XML for CrossRef', metadata_name: 'use_crossref_xml', required: false, multivalued: :no, acceptable_values: ['yes', 'no'] },
       { field_name: 'Persistent ID - Handle', metadata_name: 'book_needs_handles', required: false, multivalued: :no, acceptable_values: ['yes', 'no'] },
-      { field_name: 'Content Type', metadata_name: 'content_type', required: false, multivalued: :yes },
+      { field_name: 'Content Type', metadata_name: 'content_type', required: false, multivalued: :yes_split },
       { field_name: 'Primary Creator Role', metadata_name: 'primary_creator_role', required: false, multivalued: :yes_split },
       { field_name: 'Sort Date', metadata_name: 'sort_date', required: false, multivalued: :no, date_format: true },
       { field_name: 'Display Date', metadata_name: 'display_date', required: false, multivalued: :yes_split },
