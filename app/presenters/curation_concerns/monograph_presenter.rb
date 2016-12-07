@@ -65,7 +65,7 @@ module CurationConcerns
     end
 
     def pageviews
-      pageviews_by_ids(file_set_ids << id)
+      pageviews_by_ids(ordered_file_sets_ids << id)
     end
 
     private
