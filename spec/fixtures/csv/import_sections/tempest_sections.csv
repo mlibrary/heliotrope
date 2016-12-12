@@ -1,13 +1,18 @@
-File Name,Title,Resource Type,Content Type,Externally Hosted Resource,Book and Platform (BP) or Platform-only (P),Rights Granted - Creative Commons,Primary Creator Last Name,Primary Creator First Name,Additional Creator(s),Keywords,Section
+File Name,Title,Resource Type,Content Type,Language,Externally Hosted Resource,Book and Platform (BP) or Platform-only (P),Rights Granted - Creative Commons,Primary Creator Last Name,Primary Creator First Name,Additional Creator(s),Keywords,Section
 ,"Title of the object
-A name given to the resource. Examples: title of a painting, photo, video.",,,,,,"An entity primarily responsible for making the resource. Examples: Author/authors; artists; photographers; institutional authors or producers, such as university or federal agency.
+A name given to the resource. Examples: title of a painting, photo, video.",,,,,,,"An entity primarily responsible for making the resource. Examples: Author/authors; artists; photographers; institutional authors or producers, such as university or federal agency.
 ",,,,
-://:MONOGRAPH://:,The Tempest; A Subtitle,,,,,, Shakespeare,William,Christopher Marlowe; Sir Francis Bacon,,://:MONOGRAPH://:
-shipwreck.jpg,Monograph Shipwreck,image,portrait,No,BP,"Creative Commons Attribution-ShareAlike license, 3.0 Unported",Smith,Benjamin ,,,
-miranda.jpg,Monograph Miranda, image,audience materials,no,P,Creative Commons Zero license (implies pd),Waterhouse,John William,,,
-ファイル.txt,日本語のファイル ,text,portrait; illustration,no,P,Creative Commons Zero license (implies pd),,,,,
-shipwreck1.jpg,Section 1 Shipwreck,image,audience materials,No,P,Creative Commons Zero license (implies pd),Smith,,,keyword1; keyword2;,Act 1: Calm Waters
-miranda1.jpg,Section 1 Miranda,image,portrait,no,P,Creative Commons Zero license (implies pd),Waterhouse,John William,,regular; _italicized_,Act 1: Calm Waters
-shipwreck2.jpg,Section 2 Shipwreck,image,audience materials,No,P,Creative Commons Zero license (implies pd),Smith,,,,Act 2: Stirrin' Up
-miranda2.jpg,Section 2 Miranda,image,illustration,no,P,Creative Commons Zero license (implies pd),Waterhouse,John William,,,Act 2: Stirrin' Up
-shipwreck1.jpg,Previous Shipwreck File (Again),image,portrait; photograph,No,P,Creative Commons Zero license (implies pd),Smith,,,,Act 2: Stirrin' Up
+://:MONOGRAPH://:,The Tempest; A Subtitle,,,,,,, Shakespeare,William,Christopher Marlowe; Sir Francis Bacon,,://:MONOGRAPH://:
+shipwreck.jpg,Monograph Shipwreck,image,portrait,English,No,BP,"Creative Commons Attribution-ShareAlike license, 3.0 Unported",Smith,Benjamin ,,,
+miranda.jpg,Monograph Miranda, image,audience materials,English; German,no,P,Creative Commons Zero license (implies pd),Waterhouse,John William,,,
+ファイル.txt,日本語のファイル ,text,portrait; illustration,Japanese,no,P,Creative Commons Zero license (implies pd),,,,,
+shipwreck1.jpg,Section 1 Shipwreck,image,audience materials,Russian,No,P,Creative Commons Zero license (implies pd),Smith,,,keyword1; keyword2;,Act 1: Calm Waters
+miranda1.jpg,Section 1 Miranda,image,portrait,Russian; German; French,no,P,Creative Commons Zero license (implies pd),Waterhouse,John William,,regular; _italicized_,Act 1: Calm Waters
+shipwreck2.jpg,Section 2 Shipwreck,image,audience materials,French,No,P,Creative Commons Zero license (implies pd),Smith,,,,Act 2: Stirrin' Up
+miranda2.jpg,Section 2 Miranda,image,illustration,English,no,P,Creative Commons Zero license (implies pd),Waterhouse,John William,,,Act 2: Stirrin' Up
+shipwreck1.jpg,Previous Shipwreck File (Again),image,portrait; photograph,Latin,No,P,Creative Commons Zero license (implies pd),Smith,,,,Act 2: Stirrin' Up
+,,,,,,,,,,,,
+,,,,,,,,,,,,
+,,,,,,,,,,,,
+,,,,,,,,,,,,
+,c,,,,,,,,,,,

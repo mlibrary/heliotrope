@@ -19,6 +19,7 @@ describe Import::CSVParser do
   describe '#attributes' do
     subject { parser.attributes }
 
+    # order of asset metadata here is as in lib/import.rb
     it 'collects attributes from the CSV file' do
       expect(subject['monograph']['title']).to eq ['The Tempest', 'A Subtitle']
       expect(subject['monograph']['creator_family_name']).to eq 'Shakespeare'
@@ -30,24 +31,27 @@ describe Import::CSVParser do
           'creator_family_name' => 'Smith',
           'creator_given_name' => 'Benjamin',
           'resource_type' => ['image'],
-          'content_type' => ['portrait'],
           'external_resource' => 'no',
           'exclusive_to_platform' => 'no',
-          'rights_granted_creative_commons' => 'Creative Commons Attribution-ShareAlike license, 3.0 Unported' },
+          'rights_granted_creative_commons' => 'Creative Commons Attribution-ShareAlike license, 3.0 Unported',
+          'content_type' => ['portrait'],
+          'language' => ['English'] },
         { 'title' => ['Monograph Miranda'],
           'creator_family_name' => 'Waterhouse',
           'creator_given_name' => 'John William',
           'resource_type' => ['image'],
-          'content_type' => ['audience materials'],
           'external_resource' => 'no',
           'exclusive_to_platform' => 'yes',
-          'rights_granted_creative_commons' => 'Creative Commons Zero license (implies pd)' },
+          'rights_granted_creative_commons' => 'Creative Commons Zero license (implies pd)',
+          'content_type' => ['audience materials'],
+          'language' => ['English', 'German'] },
         { 'title' => ['日本語のファイル'],
           'resource_type' => ['text'],
-          'content_type' => ['portrait', 'illustration'],
           'external_resource' => 'no',
           'exclusive_to_platform' => 'yes',
-          'rights_granted_creative_commons' => 'Creative Commons Zero license (implies pd)' }
+          'rights_granted_creative_commons' => 'Creative Commons Zero license (implies pd)',
+          'content_type' => ['portrait', 'illustration'],
+          'language' => ['Japanese'] }
       ]
 
       # order of asset metadata here is as in lib/import.rb
@@ -61,7 +65,8 @@ describe Import::CSVParser do
                                                                      'exclusive_to_platform' => 'yes',
                                                                      'rights_granted_creative_commons' => 'Creative Commons Zero license (implies pd)',
                                                                      'content_type' => ['audience materials'],
-                                                                     'keywords' => ['keyword1', 'keyword2'] },
+                                                                     'keywords' => ['keyword1', 'keyword2'],
+                                                                     'language' => ['Russian'] },
                                                                    { 'title' => ['Section 1 Miranda'],
                                                                      'creator_family_name' => 'Waterhouse',
                                                                      'creator_given_name' => 'John William',
@@ -70,7 +75,8 @@ describe Import::CSVParser do
                                                                      'exclusive_to_platform' => 'yes',
                                                                      'rights_granted_creative_commons' => 'Creative Commons Zero license (implies pd)',
                                                                      'content_type' => ['portrait'],
-                                                                     'keywords' => ['regular', 'italicized'] }
+                                                                     'keywords' => ['regular', 'italicized'],
+                                                                     'language' => ['Russian', 'German', 'French'] }
                                                                    ]
                                             })
 
@@ -83,7 +89,8 @@ describe Import::CSVParser do
                                                                       'external_resource' => 'no',
                                                                       'exclusive_to_platform' => 'yes',
                                                                       'rights_granted_creative_commons' => 'Creative Commons Zero license (implies pd)',
-                                                                      'content_type' => ['audience materials'] },
+                                                                      'content_type' => ['audience materials'],
+                                                                      'language' => ['French'] },
                                                                     { 'title' => ['Section 2 Miranda'],
                                                                       'creator_family_name' => 'Waterhouse',
                                                                       'creator_given_name' => 'John William',
@@ -91,14 +98,16 @@ describe Import::CSVParser do
                                                                       'external_resource' => 'no',
                                                                       'exclusive_to_platform' => 'yes',
                                                                       'rights_granted_creative_commons' => 'Creative Commons Zero license (implies pd)',
-                                                                      'content_type' => ['illustration'] },
+                                                                      'content_type' => ['illustration'],
+                                                                      'language' => ['English'] },
                                                                     { 'title' => ['Previous Shipwreck File (Again)'],
                                                                       'creator_family_name' => 'Smith',
                                                                       'resource_type' => ['image'],
                                                                       'external_resource' => 'no',
                                                                       'exclusive_to_platform' => 'yes',
                                                                       'rights_granted_creative_commons' => 'Creative Commons Zero license (implies pd)',
-                                                                      'content_type' => ['portrait', 'photograph'] }
+                                                                      'content_type' => ['portrait', 'photograph'],
+                                                                      'language' => ['Latin'] }
                                                                     ]
                                              })
     end
