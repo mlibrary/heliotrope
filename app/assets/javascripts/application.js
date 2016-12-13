@@ -30,5 +30,6 @@
 //= require 'disable_video_download'
 //= require 'disable_audio_download'
 //= require 'disable_image_download'
+//= require 'ga_event_tracking'
 // Required by Hydra/Rails?
 //= require_tree .

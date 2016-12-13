@@ -112,4 +112,48 @@ feature "Monograph Catalog Facets" do
       expect(facet_breadcrumb_text).to eq 'A Section with Italicized Title Stuff'
     end
   end
+
+  context "all facets" do
+    let(:user) { create(:platform_admin) }
+    let(:monograph) { create(:monograph, user: user, title: ["Yellow"], representative_id: cover.id) }
+    let(:cover) { create(:file_set) }
+    before do
+      login_as user
+      stub_out_redis
+      monograph.ordered_members << cover
+      monograph.save!
+    end
+
+    scenario "shows the correct facets" do
+      visit new_curation_concerns_section_path
+      fill_in 'Title', with: "A Section"
+      select monograph.title.first, from: "Monograph"
+      click_button 'Create Section'
+
+      click_link 'Attach a File'
+      fill_in 'Title', with: 'File Title'
+      fill_in 'Resource Type', with: 'image'
+      fill_in 'Content Type', with: 'portrait'
+      fill_in 'Exclusive to Platform?', with: 'yes'
+      fill_in 'Primary Creator (family name)', with: 'McTesterson'
+      fill_in 'Primary Creator (given name)', with: 'Testy'
+      fill_in 'Search Year', with: '1974'
+      fill_in 'Keywords', with: 'stuff'
+      attach_file 'file_set_files', File.join(fixture_path, 'csv', 'miranda.jpg')
+      click_button 'Attach to Section'
+
+      # Selectors needed for assets/javascripts/ga_event_tracking.js
+      # If these change, fix here then update ga_event_tracking.js
+      visit monograph_catalog_path(id: monograph.id)
+
+      expect(page).to have_selector('#facet-section_title_sim a.facet_select')
+      expect(page).to have_selector('#facet-keywords_sim a.facet_select')
+      expect(page).to have_selector('#facet-creator_full_name_sim a.facet_select')
+      expect(page).to have_selector('#facet-resource_type_sim a.facet_select')
+      # content type is nested/pivoted under resource type
+      expect(find('#facet-resource_type_sim-image a.facet_select').text).to eq 'portrait'
+      expect(page).to have_selector('#facet-search_year_sim a.facet_select')
+      expect(page).to have_selector('#facet-exclusive_to_platform_sim a.facet_select')
+    end
+  end
 end

@@ -63,7 +63,7 @@
       <% if defined?(@monograph_presenter.buy_url) %>
       <div class="btn-toolbar" role="toolbar" aria-label="">
         <div class="btn-group" role="group" aria-label="">
-            <a href="<%= @monograph_presenter.buy_url.first %>" target="_blank" title="Buy <%= @monograph_presenter.title %>" role="button" class="btn btn-default btn-small">Buy Book</a>
+            <a id="monograph-buy-btn" href="<%= @monograph_presenter.buy_url.first %>" target="_blank" title="Buy <%= @monograph_presenter.title %>" role="button" class="btn btn-default btn-small">Buy Book</a>
         </div>
       </div>
       <% end %>

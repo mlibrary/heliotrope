@@ -52,6 +52,15 @@ feature 'Press Catalog' do
         expect(page).to     have_link red.title.first
         expect(page).to_not have_link blue.title.first
         expect(page).to_not have_link colors.title.first
+
+        # Selectors needed for assets/javascripts/ga_event_tracking.js
+        # If these change, fix here then update ga_event_tracking.js
+        expect(page).to have_selector('a.navbar-brand')
+        expect(page).to have_selector('#documents .document h2.index_title a')
+        expect(page).to have_selector('#documents .document a.btn.btn-default')
+        expect(page).to have_selector('footer.press a')
+        expect(page).to have_selector('#keyword-search-submit')
+        expect(page).to have_selector('#catalog_search')
       end
     end
     context 'with with a monograph with multiple authors' do

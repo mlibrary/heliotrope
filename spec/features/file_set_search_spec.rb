@@ -31,5 +31,10 @@ feature 'FileSet Search' do
     click_button 'keyword-search-submit'
 
     expect(page).to have_content 'Mr. Worf'
+
+    # Selectors needed for assets/javascripts/ga_event_tracking.js
+    # If these change, fix here then update ga_event_tracking.js
+    expect(page).to have_selector('#keyword-search-submit')
+    expect(page).to have_selector('#catalog_search')
   end
 end
