@@ -35,13 +35,13 @@ feature 'Monograph catalog sort' do
       expect(first_fileset_link_text).to eq monograph.ordered_members.to_a[fileset_count + 1].title.first
 
       # this control is styled as a drop-down but is actually a button & list, hence click_link not select
-      click_link "Chapter \u25BC"
+      click_link "Section \u25BC"
       first_fileset_link_text = page.first('.documentHeader .index_title a').text
       # [0] would be the representative file, not shown on this page...
       # this is the outlier file as it was uploaded second (shows up second last)
       expect(first_fileset_link_text).to eq monograph.ordered_members.to_a[1].title.first
 
-      click_link "Chapter \u25B2"
+      click_link "Section \u25B2"
       first_fileset_link_text = page.first('.documentHeader .index_title a').text
       # essentially default sort, sans score, last uploaded is first
       expect(first_fileset_link_text).to eq monograph.ordered_members.to_a[fileset_count + 1].title.first
