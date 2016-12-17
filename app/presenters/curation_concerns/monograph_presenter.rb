@@ -73,11 +73,15 @@ module CurationConcerns
       def ordered_file_sets_ids
         return @ordered_file_sets_ids if @ordered_file_sets_ids
         file_sets_ids = []
-        section_docs.each do |section_doc|
-          # Danger, Will Robinson! the ordered list is stored in reverse order.
-          section_doc['ordered_member_ids_ssim'].reverse_each do |file_sets_id|
-            file_sets_ids.append file_sets_id
-          end unless section_doc['ordered_member_ids_ssim'].nil?
+        ordered_member_docs.each do |doc|
+          if doc['has_model_ssim'] == ['Section'].freeze
+            # Danger, Will Robinson! the ordered list is stored in reverse order.
+            doc['ordered_member_ids_ssim'].reverse_each do |file_sets_id|
+              file_sets_ids.append file_sets_id
+            end unless doc['ordered_member_ids_ssim'].nil?
+          elsif doc['has_model_ssim'] == ['FileSet'].freeze && doc.id != representative_id
+            file_sets_ids.append doc.id
+          end
         end
         @ordered_file_sets_ids = file_sets_ids
       end

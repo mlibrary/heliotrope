@@ -101,8 +101,10 @@ describe CurationConcerns::MonographPresenter do
   end
 
   context 'a monograph with sections and filesets' do
+    # the cover FileSet won't be included in the ordered_file_sets_ids
+    let(:cover_fileset_doc) { SolrDocument.new(id: 'cover', has_model_ssim: ['FileSet']) }
     let(:fileset_doc) { SolrDocument.new(id: 'fileset', has_model_ssim: ['FileSet']) }
-    let(:expected_id_count) { 20 }
+    let(:expected_id_count) { 21 }
     let(:expected_first_id) { 'expected_first_id' }
     let(:expected_first_next_id) { 'expected_first_next_id' }
     let(:expected_middle_previous_id) { 'expected_middle_previous_id' }
@@ -125,10 +127,12 @@ describe CurationConcerns::MonographPresenter do
     # entries will work correctly.
     let(:mono_doc) { SolrDocument.new(id: 'mono',
                                       has_model_ssim: ['Monograph'],
-                                      ordered_member_ids_ssim: [fileset_doc.id, chapter_1_doc.id, chapter_2_doc.id, chapter_3_doc.id, chapter_1_doc.id, chapter_4_doc.id, chapter_5_doc.id, chapter_6_doc.id, chapter_7_doc.id, chapter_8_doc.id, chapter_9_doc.id, chapter_10_doc.id]) }
+                                      # representative_id has a rather different Solr name!
+                                      hasRelatedMediaFragment_ssim: cover_fileset_doc.id, # won't be added to ordered_file_sets_ids array and hence expected_id_count
+                                      ordered_member_ids_ssim: [cover_fileset_doc.id, chapter_1_doc.id, chapter_2_doc.id, chapter_3_doc.id, fileset_doc.id, chapter_1_doc.id, chapter_4_doc.id, chapter_5_doc.id, chapter_6_doc.id, chapter_7_doc.id, chapter_8_doc.id, chapter_9_doc.id, chapter_10_doc.id]) }
 
     before do
-      ActiveFedora::SolrService.add([fileset_doc, chapter_2_doc, chapter_1_doc, chapter_3_doc, mono_doc, chapter_4_doc, chapter_5_doc, chapter_6_doc, chapter_7_doc, chapter_8_doc, chapter_9_doc, chapter_10_doc])
+      ActiveFedora::SolrService.add([fileset_doc, cover_fileset_doc, chapter_2_doc, chapter_1_doc, chapter_3_doc, mono_doc, chapter_4_doc, chapter_5_doc, chapter_6_doc, chapter_7_doc, chapter_8_doc, chapter_9_doc, chapter_10_doc])
       ActiveFedora::SolrService.commit
     end
 
