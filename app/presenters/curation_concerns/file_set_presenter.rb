@@ -94,10 +94,7 @@ module CurationConcerns
     end
 
     def citable_link
-      case ext_url_doi_or_handle.first
-      when /handle/i
-        handle_url
-      when /doi/i
+      if doi.present?
         doi_url
       else
         handle_url
@@ -115,7 +112,7 @@ module CurationConcerns
     end
 
     def doi_url
-      # TODO: we don't yet have examples for this
+      doi.first
     end
 
     def allow_download?
