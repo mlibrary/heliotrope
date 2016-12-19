@@ -123,6 +123,11 @@ feature 'Create a file set' do
       # check external autolink are opening in a new tab and internal are not
       expect(find_link('external link')[:target]).to eq '_blank'
       expect(find_link('internal link')[:target]).to be nil
+
+      # Selectors needed for assets/javascripts/ga_event_tracking.js
+      # If these change, fix here then update ga_event_tracking.js
+      expect(page).to have_selector('#image')
+      expect(page).to have_selector('ul.nav.nav-tabs li a', count: 4)
     end
   end
 end

@@ -43,6 +43,13 @@ feature 'Monograph Catalog Search' do
     attach_file 'file_set_files', File.join(fixture_path, 'csv', 'miranda.jpg')
     click_button 'Attach to Monograph'
 
+    # Selectors needed for assets/javascripts/ga_event_tracking.js
+    # If these change, fix here then update ga_event_tracking.js
+    expect(page).to have_selector('#documents .document h4.index_title a')
+    expect(page).to have_selector('#monograph-buy-btn')
+    expect(page).to have_selector('#keyword-search-submit')
+    expect(page).to have_selector('#catalog_search')
+
     fill_in 'catalog_search', with: 'Unruly'
     click_button 'keyword-search-submit'
     expect(page).to have_content 'Unruly Puddles'
