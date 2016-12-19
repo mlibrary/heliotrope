@@ -14,6 +14,7 @@
  *= require_self
  *= require jquery-ui/datepicker
  *= require leaflet
+ *= require blacklight_facets
  *= require heliotrope
  *= require fulcrum
  *= require themes
