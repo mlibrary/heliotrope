@@ -51,4 +51,93 @@ module FacetHelper
   def markdown_as_text_facet(value)
     render_markdown_as_text(value)
   end
+
+  ##
+  # Determine whether a facet should be rendered as collapsed or not.
+  #   - if the facet is 'active', don't collapse
+  #   - if the facet is configured to collapse (the default), collapse
+  #   - if the facet is configured not to collapse, don't collapse
+  #
+  # @param [Blacklight::Configuration::FacetField] facet_field
+  # @return [Boolean]
+  def should_collapse_facet?(facet_field)
+    !facet_field_in_params?(facet_field) && facet_field.collapse
+  end
+
+  ##
+  # Are any facet restrictions for a field in the query parameters?
+  #
+  # @param [Blacklight::Configuration::FacetField] facet_field
+  # @return [Boolean]
+  def facet_field_in_params?(facet_field)
+    return !facet_params(facet_field).blank? if (facet_field.class == String) || (facet_field.class == Symbol)
+    pivot = facet_field[:pivot]
+    return !facet_params(facet_field.field).blank? if pivot.nil?
+    flag = false
+    pivot.each do |field|
+      flag ||= !facet_params(field).blank?
+    end
+    flag
+  end
+
+  ##
+  # Standard display of a facet pivot value in a list. Used in both _facets sidebar
+  # partial and catalog/facet expanded list. Will output facet value name as
+  # a link to add that to your restrictions, with count in parens.
+  #
+  # @param [String] facet_field
+  # @param [Blacklight::Solr::Response::Facets::FacetItem] item
+  # @param [Blacklight::Solr::Response::Facets::(FacetField || FacetItem)] parent
+  # @param [Hash] options
+  # @option options [Boolean] :suppress_link display the facet, but don't link to it
+  # @return [String]
+  def render_facet_pivot_value(facet_field, item, parent, options = {})
+    p = search_state.add_facet_params_and_redirect(facet_field, item) # Default behavior is to include parent field, but we only want the parent field if it is selected!
+    if parent.class == Blacklight::Solr::Response::Facets::FacetItem
+      p[:f][parent.field] = p[:f][parent.field].uniq # if parent is selected it will be inclued twice so force it to be unique a.k.a. singular
+      p[:f][parent.field].delete(parent.value) unless facet_in_params?(parent.field, parent) # Remove parent if not selected
+      p[:f].delete(parent.field) if p[:f][parent.field].empty? # Remove field if empty
+      p.delete(:f) if p[:f].empty? # Remove filter if empty
+    end
+    path = search_action_path(p)
+    content_tag(:span, class: "facet-label") do
+      link_to_unless(options[:suppress_link], facet_display_value(facet_field, item), path, class: "facet_select")
+    end + render_facet_pivot_count(item.hits)
+  end
+
+  ##
+  # Standard display of a SELECTED facet pivot value (e.g. without a link and with a remove button)
+  #
+  # @param [String] facet_field
+  # @param [Blacklight::Solr::Response::Facets::FacetItem] item
+  def render_selected_facet_pivot_value(facet_field, item, _options = {})
+    # need to dup the facet values,
+    # if the values aren't dup'd, then the values
+    # from the session will get remove in the show view...
+    p = search_state.to_hash.deep_dup
+    p[:f][facet_field].delete(item.value) # Remove self from selected
+    p[:f].delete(facet_field) if p[:f][facet_field].empty? # Remove field if empty
+    p.delete(:f) if p[:f].empty? # Remove filter if empty
+    remove_href = search_action_path(p)
+    content_tag(:span, class: "facet-label") do
+      content_tag(:span, facet_display_value(facet_field, item), class: "selected") +
+        # remove link
+        link_to(remove_href, class: "remove") do
+          content_tag(:span, '', class: "glyphicon glyphicon-remove") + content_tag(:span, '[remove]', class: 'sr-only')
+        end
+    end + render_facet_count(item.hits, classes: ["selected"])
+  end
+
+  ##
+  # Renders a count value for facet limits. Can be over-ridden locally
+  # to change style. And can be called by plugins to get consistent display.
+  #
+  # @param [Integer] num number of facet results
+  # @param [Hash] options
+  # @option options [Array<String>]  an array of classes to add to count span.
+  # @return [String]
+  def render_facet_pivot_count(num, options = {})
+    classes = (options[:classes] || []) << "facet-pivot-count"
+    content_tag("span", t('blacklight.search.facets.count', number: number_with_delimiter(num)), class: classes)
+  end
 end

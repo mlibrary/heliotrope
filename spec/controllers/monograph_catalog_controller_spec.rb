@@ -1,6 +1,28 @@
 require 'rails_helper'
 
 describe MonographCatalogController do
+  describe 'blacklight_config' do
+    blacklight_config = described_class.blacklight_config
+    context 'facet_fields' do
+      expected_fields = %w(based_near section_title keywords creator_full_name resource_type search_year exclusive_to_platform)
+      expected_facet_fields = expected_fields.map { |field| described_class.solr_name(field, :facetable) }
+      it 'has expected facet fields' do
+        expect(blacklight_config.facet_fields).to include(*expected_facet_fields)
+      end
+      context 'facet field resource_type' do
+        expected_facet_field_resource_type = described_class.solr_name('resource_type', :facetable)
+        expected_facet_field_content_type = described_class.solr_name('content_type', :facetable)
+        facet_field_resource_type = blacklight_config.facet_fields[expected_facet_field_resource_type]
+        it 'has pivot' do
+          expect(facet_field_resource_type.pivot).to_not be_nil
+        end
+        it 'pivot has expected facet field names' do
+          expect(facet_field_resource_type.pivot).to eq([expected_facet_field_resource_type, expected_facet_field_content_type])
+        end
+      end
+    end
+  end # blacklight_config
+
   describe '#index' do
     context 'when not a monograph id' do
       before { get :index, id: 'not_a_monograph_id' }
@@ -8,7 +30,6 @@ describe MonographCatalogController do
         expect(response).to be_unauthorized
       end
     end
-
     context 'when a monograph id' do
       let(:press) { build(:press) }
       let(:user) { create(:platform_admin) }
