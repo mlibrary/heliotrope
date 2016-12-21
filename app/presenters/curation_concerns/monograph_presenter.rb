@@ -2,6 +2,7 @@ module CurationConcerns
   class MonographPresenter < WorkShowPresenter
     include TitlePresenter
     include AnalyticsPresenter
+    include OpenUrlPresenter
     include ActionView::Helpers::UrlHelper
 
     delegate :date_created, :date_modified, :date_uploaded,
