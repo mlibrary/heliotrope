@@ -300,6 +300,23 @@ footer.press {
     width: 100% !important;
   }
 
+  // TODO: WEBKIT MEDIA CONTROLS
+  // This should work for all webkit browsers
+  ::-internal-media-controls-download-button {
+     display:none;
+   }
+  // but doesn't in Chrome Version 55
+  // so we hide the download button (which is the last button on the panel)
+  ::-webkit-media-controls-panel {
+    width: calc(100% + 30px); /* Adjust as needed */
+  }
+  // by hiding the overflow of the enclosure
+  ::-webkit-media-controls-enclosure {
+    overflow:hidden;
+  }
+  // but this won't work for non-shadow-DOM browsers
+  // so this is a temporary fix to buy time.
+
   // VIDEO
   video {
     width: 100% !important;
