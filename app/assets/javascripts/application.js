@@ -31,5 +31,7 @@
 //= require 'disable_audio_download'
 //= require 'disable_image_download'
 //= require 'ga_event_tracking'
+//= require 'bowser.min'
+//= require 'disable_chrome_media_download_button'
 // Required by Hydra/Rails?
 //= require_tree .

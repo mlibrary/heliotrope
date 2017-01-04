@@ -300,6 +300,21 @@ footer.press {
     width: 100% !important;
   }
 
+  // WEBKIT MEDIA CONTROLS
+  // disable the download button in chrome 55+
+  // See assets/javascripts/disable_chrome_media_download_button.js
+  // #670
+  .no-download::-internal-media-controls-download-button {
+    display:none;
+  }
+  .no-download::-webkit-media-controls-panel {
+    width: calc(100% + 30px); /* Adjust as needed */
+  }
+  .no-download::-webkit-media-controls-enclosure {
+    overflow:hidden;
+  }
+
+
   // VIDEO
   video {
     width: 100% !important;
