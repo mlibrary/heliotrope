@@ -50,6 +50,7 @@ end
 # Stub out anything that requires a redis connection,
 # such as background jobs and lock management.
 def stub_out_redis
+  allow(IngestFileJob).to receive_messages(perform_later: nil, perform_now: nil)
   allow(CharacterizeJob).to receive_messages(perform_later: nil, perform_now: nil)
   allow_any_instance_of(CurationConcerns::Actors::FileSetActor).to receive(:acquire_lock_for).and_yield
 end
