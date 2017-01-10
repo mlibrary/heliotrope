@@ -31,6 +31,10 @@
 <% end %>
 
   <div id="maincontent" class="row asset">
+    <!-- COinS for Zotero, etc -->
+    <% if defined? @presenter.file_set_coins_title %>
+      <span class="Z3988" title="<%= @presenter.file_set_coins_title %>"></span>
+    <% end %>
     <!-- file_sets _media -->
     <div class="col-sm-6">
       <%= render "media", presenter: @presenter %>

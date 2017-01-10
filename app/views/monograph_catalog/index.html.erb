@@ -15,6 +15,11 @@
 
 <% provide :sidebar do %>
   <div id="maincontent" class="monograph-info">
+    <!-- COinS for Zotero, etc -->
+    <% if defined? @monograph_presenter.monograph_coins_title %>
+      <span class="Z3988" title="<%= @monograph_presenter.monograph_coins_title %>"></span>
+    <% end %>
+    
     <div class="monograph-cover">
       <%= render 'curation_concerns/base/representative_media', presenter: @monograph_presenter %>
     </div><!-- /.monograph-cover -->
