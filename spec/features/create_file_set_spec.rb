@@ -3,7 +3,23 @@ require 'rails_helper'
 feature 'Create a file set' do
   context 'as a logged in user' do
     let(:user) { create(:platform_admin) }
-    let!(:press) { create(:press) }
+
+    let(:section) { build(:section, title: ['Test section with _Italicized Title_ therein']) }
+    let(:monograph_id) { monograph.id }
+
+    let!(:monograph) do
+      m = build(:monograph, title: ['Test monograph'],
+                            creator_family_name: 'Johns',
+                            creator_given_name: 'Jimmy',
+                            contributor: ['Sub Way'],
+                            date_published: ['Oct 20th'])
+      # Add the section to this monograph
+      m.ordered_members << section
+      m.save!
+      section.monograph_id = m.id
+      section.save!
+      m
+    end
 
     before do
       login_as user
@@ -16,24 +32,7 @@ feature 'Create a file set' do
     end
 
     scenario do
-      # Start by creating a Monograph
-      visit new_curation_concerns_monograph_path
-      fill_in 'Title', with: 'Test monograph'
-      select press.name, from: 'Publisher'
-      fill_in 'Author (last name)', with: 'Johns'
-      fill_in 'Author (first name)', with: 'Jimmy'
-      fill_in 'Additional Authors', with: 'Sub Way'
-      fill_in 'Date Published', with: 'Oct 20th'
-      click_button 'Create Monograph'
-      # On Monograph Page
-      # Monograph page has authors
-      expect(page).to have_content 'Jimmy Johns and Sub Way'
-
-      # Create a Section
-      visit new_curation_concerns_section_path
-      fill_in 'Title', with: 'Test section with _Italicized Title_ therein'
-      select 'Test monograph', from: "section_monograph_id"
-      click_button 'Create Section'
+      visit curation_concerns_section_path(section)
 
       # Now attach a file to the Section. First create a FileSet
       click_link 'Attach a File'
@@ -76,6 +75,7 @@ feature 'Create a file set' do
 
       # Attach it to the Section
       click_button 'Attach to Section'
+
       click_link 'miranda.jpg'
       # On FileSet Page
       # FileSet page also has authors
@@ -116,14 +116,14 @@ feature 'Create a file set' do
 
       # check metadata is linking as intended
       # facets
-      expect(page).to have_link("keyword 1", href: "/concern/monographs/" + Monograph.first.id + "?f%5Bkeywords_sim%5D%5B%5D=keyword+1")
-      expect(page).to have_link("English", href: "/concern/monographs/" + Monograph.first.id + "?f%5Blanguage_sim%5D%5B%5D=English")
-      expect(page).to have_link("Test section with Italicized Title therein", href: "/concern/monographs/" + Monograph.first.id + "?f%5Bsection_title_sim%5D%5B%5D=Test+section+with+_Italicized+Title_+therein")
-      expect(page).to have_link("FamilyName, GivenName", href: "/concern/monographs/" + Monograph.first.id + "?f%5Bcreator_full_name_sim%5D%5B%5D=FamilyName%2C+GivenName")
-      expect(page).to have_link("Test Contributor", href: "/concern/monographs/" + Monograph.first.id + "?f%5Bcontributor_sim%5D%5B%5D=Test+Contributor")
+      expect(page).to have_link("keyword 1", href: "/concern/monographs/" + monograph_id + "?f%5Bkeywords_sim%5D%5B%5D=keyword+1")
+      expect(page).to have_link("English", href: "/concern/monographs/" + monograph_id + "?f%5Blanguage_sim%5D%5B%5D=English")
+      expect(page).to have_link("Test section with Italicized Title therein", href: "/concern/monographs/" + monograph_id + "?f%5Bsection_title_sim%5D%5B%5D=Test+section+with+_Italicized+Title_+therein")
+      expect(page).to have_link("FamilyName, GivenName", href: "/concern/monographs/" + monograph_id + "?f%5Bcreator_full_name_sim%5D%5B%5D=FamilyName%2C+GivenName")
+      expect(page).to have_link("Test Contributor", href: "/concern/monographs/" + monograph_id + "?f%5Bcontributor_sim%5D%5B%5D=Test+Contributor")
       # search fields
-      expect(page).to have_link("director", href: "/concern/monographs/" + Monograph.first.id + "?f%5Bprimary_creator_role_tesim%5D%5B%5D=director")
-      expect(page).to have_link("screenshot", href: "/concern/monographs/" + Monograph.first.id + "?f%5Bcontent_type_sim%5D%5B%5D=screenshot")
+      expect(page).to have_link("director", href: "/concern/monographs/" + monograph_id + "?f%5Bprimary_creator_role_tesim%5D%5B%5D=director")
+      expect(page).to have_link("screenshot", href: "/concern/monographs/" + monograph_id + "?f%5Bcontent_type_sim%5D%5B%5D=screenshot")
 
       # check external autolink are opening in a new tab and internal are not
       expect(find_link('external link')[:target]).to eq '_blank'
