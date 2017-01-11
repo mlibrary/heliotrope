@@ -7,7 +7,12 @@ feature 'Create a file set' do
 
     before do
       login_as user
-      stub_out_redis
+
+      # stub out redis file-locking:
+      allow_any_instance_of(CurationConcerns::Actors::FileSetActor).to receive(:acquire_lock_for).and_yield
+
+      # Don't run characterize job during specs
+      allow(CharacterizeJob).to receive_messages(perform_later: nil, perform_now: nil)
     end
 
     scenario do

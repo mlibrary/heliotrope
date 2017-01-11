@@ -1,6 +1,10 @@
 require 'rails_helper'
 
 feature "Monograph Catalog Facets" do
+  before do
+    stub_out_redis
+  end
+
   context "keywords" do
     let(:user) { create(:platform_admin) }
     let(:monograph) { create(:monograph, user: user, title: ["Yellow"], representative_id: cover.id) }
@@ -24,7 +28,6 @@ feature "Monograph Catalog Facets" do
     let(:cover) { create(:file_set) }
     before do
       login_as user
-      stub_out_redis
       monograph.ordered_members << cover
       monograph.save!
     end
@@ -119,7 +122,6 @@ feature "Monograph Catalog Facets" do
     let(:cover) { create(:file_set) }
     before do
       login_as user
-      stub_out_redis
       monograph.ordered_members << cover
       monograph.save!
     end
