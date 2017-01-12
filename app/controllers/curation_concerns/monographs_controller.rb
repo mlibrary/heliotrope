@@ -11,6 +11,11 @@ class CurationConcerns::MonographsController < ApplicationController
     redirect_to [main_app, curation_concern], notice: 'Monograph is publishing.'
   end
 
+  def update
+    super
+    curation_concern.update_index if params[:monograph][:ordered_member_ids]
+  end
+
   protected
 
     # The curation_concerns gem doesn't allow cancancan to

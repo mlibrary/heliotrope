@@ -5,13 +5,19 @@ class MonographCatalogController < ::CatalogController
     config.search_builder_class = MonographSearchBuilder
 
     config.default_per_page = 20
-    config.add_sort_field 'section asc', sort: "#{uploaded_field} desc", label: "Section \u25B2"
-    config.add_sort_field 'section desc', sort: "#{uploaded_field} asc", label: "Section \u25BC"
+
+    down_arrow = "\u25BC"
+    up_arrow = "\u25B2"
+
+    # this will be proper monograph order, I guess we'll still call it Section ordering...
+    config.add_sort_field 'section asc', sort: "monograph_position_isi asc", label: "Section #{up_arrow}"
+    config.add_sort_field 'section desc', sort: "monograph_position_isi desc", label: "Section #{down_arrow}"
+
     # leaving the #{uploaded_field} desc in these for section sort when all else is equal
-    config.add_sort_field 'format asc', sort: "#{solr_name('resource_type', :sortable)} asc, #{uploaded_field} desc", label: "Format \u25B2"
-    config.add_sort_field 'format desc', sort: "#{solr_name('resource_type', :sortable)} desc, #{uploaded_field} desc", label: "Format \u25BC"
-    config.add_sort_field 'year asc', sort: "#{solr_name('search_year', :sortable)} asc, #{uploaded_field} desc", label: "Year \u25B2"
-    config.add_sort_field 'year desc', sort: "#{solr_name('search_year', :sortable)} desc, #{uploaded_field} desc", label: "Year \u25BC"
+    config.add_sort_field 'format asc', sort: "#{solr_name('resource_type', :sortable)} asc, monograph_position_isi asc", label: "Format #{up_arrow}"
+    config.add_sort_field 'format desc', sort: "#{solr_name('resource_type', :sortable)} desc, monograph_position_isi asc", label: "Format #{down_arrow}"
+    config.add_sort_field 'year asc', sort: "#{solr_name('search_year', :sortable)} asc, monograph_position_isi asc", label: "Year #{up_arrow}"
+    config.add_sort_field 'year desc', sort: "#{solr_name('search_year', :sortable)} desc, monograph_position_isi asc", label: "Year #{down_arrow}"
 
     config.facet_fields.tap do
       # solr facet fields not to be displayed in the index (search results) view
