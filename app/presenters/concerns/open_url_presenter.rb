@@ -12,7 +12,7 @@ module OpenUrlPresenter
     fields << "rft.genre=bookitem"
     fields << "rft.source=fulcrum.org"
     fields << "rft.identifier=#{CGI.escape(citable_link)}"
-    fields << "rft.au=#{CGI.escape(full_name)}" if creator_full_name.present?
+    fields << "rft.au=#{CGI.escape(creator_full_name.first)}" if creator_full_name.present?
 
     contributor.each do |contrib|
       fields << "rft.au=#{CGI.escape(contrib)}"
@@ -35,7 +35,7 @@ module OpenUrlPresenter
     fields << "rft_val_fmt=info:ofi/fmt:kev:mtx:book"
     fields << "rfr_id=info:sid/fulcrum.org"
     fields << "rft.source=fulcrum.org"
-    fields << "rft.au=#{CGI.escape(full_name)}" if creator_full_name.present?
+    fields << "rft.au=#{CGI.escape(creator_full_name.first)}" if creator_full_name.present?
 
     contributor.each do |contrib|
       fields << "rtf.au=#{CGI.escape(contrib)}"
@@ -57,17 +57,4 @@ module OpenUrlPresenter
 
     fields.join('&')
   end
-
-  private
-
-    def full_name
-      # There's something weird with creator_full_name, is it multi or singular?
-      # Sometimes it's one, sometimes the other.
-      # Once #685 is fixed, this can be removed
-      if creator_full_name.is_a?(Array)
-        creator_full_name.first
-      else
-        creator_full_name
-      end
-    end
 end
