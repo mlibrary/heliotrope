@@ -9,7 +9,8 @@ feature 'Monograph catalog sort' do
     # note2: search_year is stored as a string, but possibly shouldn't be
     let(:fileset_outlier) { create(:file_set, title: ['Outlier'], search_year: '2000', resource_type: ['video'], date_uploaded: DateTime.new(2001, 2, 3, 4, 1, 0, '+0')) }
     let(:monograph) { create(:monograph, user: user, title: ['Polka Dots'], representative_id: cover.id) }
-    let(:fileset_count) { 24 }
+    let(:per_page) { 2 }
+    let(:fileset_count) { per_page + 1 } # ensure pagination
     let(:down_arrow) { "\u25BC" }
     let(:up_arrow) { "\u25B2" }
 
@@ -18,17 +19,21 @@ feature 'Monograph catalog sort' do
       login_as user
       monograph.ordered_members << cover
       monograph.ordered_members << fileset_outlier
-      # start_years here increment from 1900 thanks to the factory sequence
+      # search_year here increments from 1900 thanks to the factory sequence
       fileset_count.times do |i|
         monograph.ordered_members << FactoryGirl.create(:file_set, date_uploaded: DateTime.new(2010, 2, 3, 4, i, 0, '+0'))
       end
       monograph.save!
+
+      # Stub the pagination to a low number so that we don't
+      # have to create so many records to exercise pagination.
+      allow_any_instance_of(::Blacklight::Configuration).to receive(:default_per_page).and_return(per_page)
     end
 
-    scenario 'displays 20 results by default and is ordered as expected' do
+    scenario 'displays paginated results and is ordered as expected' do
       visit monograph_catalog_path(id: monograph.id)
-      # 20 results on page by default
-      expect(page).to have_selector('#documents .document', count: 20)
+      # we expect to have per_page number of results on the page
+      expect(page).to have_selector('#documents .document', count: per_page)
 
       # relevance/score with date_uploaded desc (date_uploaded is also 'Chapter' order right now)
       first_fileset_link_text = page.first('.documentHeader .index_title a').text
