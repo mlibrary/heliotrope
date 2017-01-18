@@ -52,6 +52,9 @@ module FacetHelper
     render_markdown_as_text(value)
   end
 
+  ############################################################################
+  ## Begin Blacklight Helper Override...
+
   ##
   # Determine whether a facet should be rendered as collapsed or not.
   #   - if the facet is 'active', don't collapse
@@ -67,18 +70,21 @@ module FacetHelper
   ##
   # Are any facet restrictions for a field in the query parameters?
   #
-  # @param [Blacklight::Configuration::FacetField] facet_field
+  # @param [[String] || [Blacklight::Configuration::FacetField]] facet_field
   # @return [Boolean]
   def facet_field_in_params?(facet_field)
     return !facet_params(facet_field).blank? if (facet_field.class == String) || (facet_field.class == Symbol)
     pivot = facet_field[:pivot]
     return !facet_params(facet_field.field).blank? if pivot.nil?
-    flag = false
-    pivot.each do |field|
-      flag ||= !facet_params(field).blank?
-    end
-    flag
+    pivot.any? { |p| !facet_params(p).blank? }
   end
+
+  ##
+  ## ...Blacklight Helper Override End
+  ############################################################################
+
+  ############################################################################
+  ## Begin Blacklight Helper Pivot Extension...
 
   ##
   # Standard display of a facet pivot value in a list. Used in both _facets sidebar
@@ -94,7 +100,7 @@ module FacetHelper
   def render_facet_pivot_value(facet_field, item, parent, options = {})
     p = search_state.add_facet_params_and_redirect(facet_field, item) # Default behavior is to include parent field, but we only want the parent field if it is selected!
     if parent.class == Blacklight::Solr::Response::Facets::FacetItem
-      p[:f][parent.field] = p[:f][parent.field].uniq # if parent is selected it will be inclued twice so force it to be unique a.k.a. singular
+      p[:f][parent.field] = p[:f][parent.field].uniq # if parent is selected it will be included twice so force it to be unique a.k.a. singular
       p[:f][parent.field].delete(parent.value) unless facet_in_params?(parent.field, parent) # Remove parent if not selected
       p[:f].delete(parent.field) if p[:f][parent.field].empty? # Remove field if empty
       p.delete(:f) if p[:f].empty? # Remove filter if empty
@@ -128,7 +134,6 @@ module FacetHelper
     end + render_facet_count(item.hits, classes: ["selected"])
   end
 
-  ##
   # Renders a count value for facet limits. Can be over-ridden locally
   # to change style. And can be called by plugins to get consistent display.
   #
@@ -140,4 +145,7 @@ module FacetHelper
     classes = (options[:classes] || []) << "facet-pivot-count"
     content_tag("span", t('blacklight.search.facets.count', number: number_with_delimiter(num)), class: classes)
   end
+
+  ## ...Blacklight Helper Pivot Extension End
+  ############################################################################
 end
