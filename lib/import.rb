@@ -23,7 +23,7 @@ module Import
   MONOGRAPH_FIELDS =
     [
       { field_name: 'Publisher', metadata_name: 'publisher', multivalued: :yes },
-      { field_name: 'Subject', metadata_name: 'subject', multivalued: :yes },
+      { field_name: 'Subject', metadata_name: 'subject', multivalued: :yes_split },
       { field_name: 'ISBN (hardcover)', metadata_name: 'isbn', multivalued: :yes },
       { field_name: 'ISBN (paper)', metadata_name: 'isbn_paper', multivalued: :yes },
       { field_name: 'ISBN (ebook)', metadata_name: 'isbn_ebook', multivalued: :yes },
