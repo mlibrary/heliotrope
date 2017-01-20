@@ -9,7 +9,7 @@ describe Import::MonographBuilder do
                   'press' => 'umich',
                   'visibility' => public_vis,
                   'publisher' => ['Blah Press'],
-                  'subject' => ['Stuff'],
+                  'subject' => ['Stuff', 'Things'],
                   'description' => ['The Right Stuff'],
                   'isbn' => ['555-7-5432-1234-9'],
                   'isbn_paper' => ['555-7-5432-1235-0'],
@@ -52,6 +52,7 @@ describe Import::MonographBuilder do
         expect(monograph.isbn_paper).to eq attrs['isbn_paper']
         expect(monograph.isbn_ebook).to eq attrs['isbn_ebook']
         expect(monograph.buy_url).to eq attrs['buy_url']
+        expect(monograph.subject.count).to eq 2
 
         expect(monograph.ordered_member_ids.count).to eq 2
         shipwreck, miranda = monograph.ordered_members.to_a
