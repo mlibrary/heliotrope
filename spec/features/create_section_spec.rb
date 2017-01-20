@@ -4,6 +4,10 @@ feature 'Create a section' do
   context 'a logged in user' do
     let(:user) { create(:platform_admin) }
     let!(:monograph) { create(:monograph, user: user) }
+    let!(:sipity_entity) do
+      create(:sipity_entity, proxy_for_global_id: monograph.to_global_id.to_s)
+    end
+
     before do
       login_as user
     end
