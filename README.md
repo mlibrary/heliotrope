@@ -46,10 +46,10 @@ Set the EXPLAIN_PARTIALS environment variable to show partials being rendered in
 $ EXPLAIN_PARTIALS=true bundle exec bin/rails s
 ```
 
-*NOTE:* Because this feature can add a fair bit of overhead, it is restricted 
+*NOTE:* Because this feature can add a fair bit of overhead, it is restricted
 to only run in development mode.
 
-## Testing
+### Testing
 
 run `rake ci`
 
@@ -64,3 +64,7 @@ Alternatively, you can start up each server individually.  This may be preferabl
 1. Run tests
 
    `rspec`
+
+### Contact
+
+Contact the [Fulcrum Developers List](mailto:fulcrum-dev@umich.edu) with any question about the project.
