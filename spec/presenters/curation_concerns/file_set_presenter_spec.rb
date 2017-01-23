@@ -59,4 +59,12 @@ describe CurationConcerns::FileSetPresenter do
       expect(presenter.subdomain).to eq 'yellow'
     end
   end
+
+  describe '#label' do
+    let(:file_set) { create(:file_set, label: 'filename.tif') }
+    let(:fileset_doc) { SolrDocument.new(file_set.to_solr) }
+    it "returns the label" do
+      expect(presenter.label).to eq 'filename.tif'
+    end
+  end
 end
