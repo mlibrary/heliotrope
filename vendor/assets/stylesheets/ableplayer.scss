@@ -1118,11 +1118,11 @@ button svg {
 */
 @font-face {
   font-family: 'able';
-    src:    url('/assets/able.eot?dqripi');
-    src:    url('/assets/able.eot?dqripi#iefix') format('embedded-opentype'),
-        url('/assets/able.ttf?dqripi') format('truetype'),
-        url('/assets/able.woff?dqripi') format('woff'),
-        url('/assets/able.svg?dqripi#able') format('svg');
+    src: url('able.eot'); /* IE9 Compat Modes */
+    src: url('able.eot#iefix') format('embedded-opentype'), /* IE6 - IE8 */
+         url('able.ttf') format('truetype'), /* Safari, Android, iOS */
+         url('able.woff') format('woff'), /* Modern Browsers */
+         url('able.svg#able') format('svg'); /* Legacy iOS */
   font-weight: normal;
   font-style: normal;
 }
