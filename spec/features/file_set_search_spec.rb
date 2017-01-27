@@ -4,9 +4,6 @@ feature 'FileSet Search' do
   let(:user) { create(:platform_admin) }
   let(:monograph) { create(:monograph, user: user, title: ["Yellow"], representative_id: cover.id) }
   let(:cover) { create(:file_set) }
-  let!(:sipity_entity) do
-    create(:sipity_entity, proxy_for_global_id: monograph.to_global_id.to_s)
-  end
 
   before do
     monograph.ordered_members << cover

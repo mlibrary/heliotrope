@@ -102,7 +102,7 @@ module Import
       end
 
       def user
-        @user ||= DummyUser.new(id: 0, user_key: 'system')
+        @user ||= DummyUser.new(user_key: 'system')
       end
 
       # The 'attrs' parameter is an array of hashes.
