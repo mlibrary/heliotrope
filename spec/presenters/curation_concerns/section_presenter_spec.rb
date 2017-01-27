@@ -22,6 +22,9 @@ describe CurationConcerns::SectionPresenter do
     let(:presenter) { described_class.new(solr_document, ability) }
 
     it "returns the it's monograph's label" do
+      # this call happens in the monograph indexer
+      allow(ActiveFedora::SolrService).to receive(:query)
+        .with("{!terms f=id}#{monograph.id}")
       allow(ActiveFedora::SolrService).to receive(:query)
         .with("{!terms f=member_ids_ssim}qr46r109z")
         .and_return([{ "member_ids_ssim" => ["qr46r109z"],
