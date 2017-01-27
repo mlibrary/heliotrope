@@ -6,6 +6,9 @@ feature "Monograph Catalog Facets" do
   end
 
   let(:cover) { create(:public_file_set) }
+  let!(:sipity_entity) do
+    create(:sipity_entity, proxy_for_global_id: monograph.to_global_id.to_s)
+  end
 
   context "keywords" do
     let(:monograph) { create(:public_monograph, title: ["Yellow"], representative_id: cover.id) }
