@@ -315,15 +315,62 @@ footer.press {
   }
 
 
-  // VIDEO
-  video {
-    width: 100% !important;
-    height: auto !important;
+  // AUDIO and VIDEO - Able Player
+  .able-wrapper {
+
+    .able {
+      box-shadow: 0 0 0 0 transparent;
+
+      video {
+        width: 100% !important;
+        height: auto !important;
+      }
+
+      audio {
+        width: 100% !important;
+      }
+
+      .able-seekbar {
+        height: 0.8em;
+      }
+
+      .able-status-bar {
+        height: 2em;
+        min-height: 2em;
+      }
+
+    }
+
   }
 
-  // AUDIO
-  audio {
-    width: 100% !important;
+  #transcript, .translation {
+    width: 97%;
+
+  }
+
+  #transcript {
+    padding-top: 2em;
+    .able-transcript-area {
+      border-color: #DDD;
+
+      .able-window-toolbar {
+        color: #333;
+        background-color: #f5f5f5;
+        border-color: #DDD;
+
+        h3 {
+          color: #333;
+          display: inline-block;
+          margin-right: 68%;
+        }
+
+        label {
+          color: #333;
+        }
+
+      }
+
+    }
   }
 
   // ASSET METADATA

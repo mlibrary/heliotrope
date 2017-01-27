@@ -33,5 +33,10 @@
 //= require 'ga_event_tracking'
 //= require 'bowser.min'
 //= require 'disable_chrome_media_download_button'
+// AblePlayer audio/video player and dependancies
+//= require js.cookie
+//= require modernizr.custom
+//= require ableplayer
+//= require ableplayer_transcript
 // Required by Hydra/Rails?
 //= require_tree .
