@@ -3,9 +3,6 @@ require 'rails_helper'
 describe CurationConcerns::MonographsController do
   let(:monograph) { create(:monograph, user: user, press: press.subdomain) }
   let(:press) { build(:press) }
-  let!(:sipity_entity) do
-    create(:sipity_entity, proxy_for_global_id: monograph.to_global_id.to_s)
-  end
 
   before do
     sign_in user
