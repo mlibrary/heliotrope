@@ -8956,7 +8956,7 @@
 
     // Transcript toolbar content:
     this.$autoScrollTranscriptCheckbox = $('<input id="autoscroll-transcript-checkbox" type="checkbox">');
-    this.$transcriptToolbar.append($('<h3 class="panel-title">Transcript</h3><label for="autoscroll-transcript-checkbox">' + this.tt.autoScroll + ': </label>'), this.$autoScrollTranscriptCheckbox);
+    this.$transcriptToolbar.append($('<label for="autoscroll-transcript-checkbox">' + this.tt.autoScroll + ': </label>'), this.$autoScrollTranscriptCheckbox);
 
     // Add field for selecting a transcript language
     // This will be deleted in initialize.js > recreatePlayer() if there are no languages

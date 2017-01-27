@@ -37,5 +37,6 @@
 //= require js.cookie
 //= require modernizr.custom
 //= require ableplayer
+//= require ableplayer_transcript
 // Required by Hydra/Rails?
 //= require_tree .
