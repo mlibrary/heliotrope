@@ -125,6 +125,9 @@ en:
         transcript: :"transcript"
         translation: :"translation"
         use_crossref_xml: :"use_crossref_xml"
+    hints:
+      defaults:
+        transcript: "Transcripts must be formatted as WebVTT captions. <a href='https://developer.mozilla.org/en-US/docs/Web/API/WebVTT_API' target='_blank'>Get help with WebVTT formatting.</a>"
   helpers:
     submit:
       role:
