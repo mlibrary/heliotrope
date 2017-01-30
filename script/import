@@ -62,6 +62,6 @@ options = parse_inputs(ARGV)
 
 puts "Begin import"
 importer = Import::Importer.new(options[:root_dir], options[:press], options[:visibility])
-importer.run(interaction = true, options[:monograph_title], options[:test])
+importer.run(options[:monograph_title], options[:test])
 
 puts "Import finished"

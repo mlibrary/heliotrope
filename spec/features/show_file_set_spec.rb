@@ -45,22 +45,21 @@ feature 'FileSet Browse' do
       expect(page).to have_link('Previous', href: monograph.ordered_members.to_a[1].id)
       expect(page).to have_link('Next', href: monograph.ordered_members.to_a[3].id)
 
-      # TODO: fix array values when the reversing of Sections' FileSets is undone
       # arrow links show between FileSets within the same Section
       visit curation_concerns_file_set_path(section1.ordered_members.to_a[1].id)
-      expect(page).to have_link('Next', href: section1.ordered_members.to_a[0].id)
-      expect(page).to have_link('Previous', href: section1.ordered_members.to_a[2].id)
+      expect(page).to have_link('Next', href: section1.ordered_members.to_a[2].id)
+      expect(page).to have_link('Previous', href: section1.ordered_members.to_a[0].id)
 
       # arrow links show between the last FileSet in one Section and the first FileSet in the next Section
-      visit curation_concerns_file_set_path(section1.ordered_members.to_a[0].id)
-      expect(page).to have_link('Next', href: section2.ordered_members.to_a[2].id)
-      visit curation_concerns_file_set_path(section2.ordered_members.to_a[2].id)
-      expect(page).to have_link('Previous', href: section1.ordered_members.to_a[0].id)
+      visit curation_concerns_file_set_path(section1.ordered_members.to_a[2].id)
+      expect(page).to have_link('Next', href: section2.ordered_members.to_a[0].id)
+      visit curation_concerns_file_set_path(section2.ordered_members.to_a[0].id)
+      expect(page).to have_link('Previous', href: section1.ordered_members.to_a[2].id)
 
       # non-representative Monograph FileSet has links to neighboring FileSets in Sections
       visit curation_concerns_file_set_path(monograph.ordered_members.to_a[6].id)
-      expect(page).to have_link('Previous', href: section2.ordered_members.to_a[0].id)
-      expect(page).to have_link('Next', href: section3.ordered_members.to_a[2].id)
+      expect(page).to have_link('Previous', href: section2.ordered_members.to_a[2].id)
+      expect(page).to have_link('Next', href: section3.ordered_members.to_a[0].id)
     end
   end
 end
