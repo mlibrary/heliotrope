@@ -56,14 +56,6 @@ describe CurationConcerns::MonographPresenter do
   end
 
   context 'a monograph with no attached members' do
-    describe '#section_docs' do
-      subject { presenter.section_docs }
-
-      it 'returns an empty set' do
-        expect(subject).to eq []
-      end
-    end
-
     describe '#ordered_file_sets_ids', :private do
       subject { presenter.ordered_file_sets_ids }
       it 'returns an empty array' do
@@ -100,58 +92,82 @@ describe CurationConcerns::MonographPresenter do
     end
   end
 
-  context 'a monograph with sections and filesets' do
-    # the cover FileSet won't be included in the ordered_file_sets_ids
-    let(:cover_fileset_doc) { SolrDocument.new(id: 'cover', has_model_ssim: ['FileSet']) }
-    let(:fileset_doc) { SolrDocument.new(id: 'fileset', has_model_ssim: ['FileSet']) }
-    let(:expected_id_count) { 21 }
-    let(:expected_first_id) { 'expected_first_id' }
-    let(:expected_first_next_id) { 'expected_first_next_id' }
-    let(:expected_middle_previous_id) { 'expected_middle_previous_id' }
-    let(:expected_middle_id) { 'expected_middle_id' }
-    let(:expected_middle_next_id) { 'expected_middle_next_id' }
-    let(:expected_last_previous_id) { 'expected_last_previous_id' }
-    let(:expected_last_id) { 'expected_last_id' }
-    let(:chapter_1_doc) { SolrDocument.new(id: 'chapter1', has_model_ssim: ['Section'], ordered_member_ids_ssim: [expected_first_id, expected_first_next_id, 'last_1']) }
-    let(:chapter_2_doc) { SolrDocument.new(id: 'chapter2', has_model_ssim: ['Section'], ordered_member_ids_ssim: ['first_2']) }
-    let(:chapter_3_doc) { SolrDocument.new(id: 'chapter3', has_model_ssim: ['Section'], ordered_member_ids_ssim: ['first_3', 'last_3']) }
-    let(:chapter_4_doc) { SolrDocument.new(id: 'chapter4', has_model_ssim: ['Section'], ordered_member_ids_ssim: ['first_4', 'middle_4', 'last_4']) }
-    let(:chapter_5_doc) { SolrDocument.new(id: 'chapter5', has_model_ssim: ['Section'], ordered_member_ids_ssim: []) }
-    let(:chapter_6_doc) { SolrDocument.new(id: 'chapter6', has_model_ssim: ['Section'], ordered_member_ids_ssim: ['first_6', expected_middle_previous_id]) }
-    let(:chapter_7_doc) { SolrDocument.new(id: 'chapter7', has_model_ssim: ['Section'], ordered_member_ids_ssim: []) }
-    let(:chapter_8_doc) { SolrDocument.new(id: 'chapter8', has_model_ssim: ['Section'], ordered_member_ids_ssim: [expected_middle_id]) }
-    let(:chapter_9_doc) { SolrDocument.new(id: 'chapter9', has_model_ssim: ['Section'], ordered_member_ids_ssim: [expected_middle_next_id, 'last_9']) }
-    let(:chapter_10_doc) { SolrDocument.new(id: 'chapter10', has_model_ssim: ['Section'], ordered_member_ids_ssim: ['first_10', expected_last_previous_id, expected_last_id]) }
-    # I added chapter 1 twice to make sure that duplicate
-    # entries will work correctly.
-    let(:mono_doc) { SolrDocument.new(id: 'mono',
-                                      has_model_ssim: ['Monograph'],
-                                      # representative_id has a rather different Solr name!
-                                      hasRelatedMediaFragment_ssim: cover_fileset_doc.id, # won't be added to ordered_file_sets_ids array and hence expected_id_count
-                                      ordered_member_ids_ssim: [cover_fileset_doc.id, chapter_1_doc.id, chapter_2_doc.id, chapter_3_doc.id, fileset_doc.id, chapter_1_doc.id, chapter_4_doc.id, chapter_5_doc.id, chapter_6_doc.id, chapter_7_doc.id, chapter_8_doc.id, chapter_9_doc.id, chapter_10_doc.id]) }
+  describe '#ordered_section_titles' do
+    subject { presenter.ordered_section_titles }
 
-    before do
-      ActiveFedora::SolrService.add([fileset_doc, cover_fileset_doc, chapter_2_doc, chapter_1_doc, chapter_3_doc, mono_doc, chapter_4_doc, chapter_5_doc, chapter_6_doc, chapter_7_doc, chapter_8_doc, chapter_9_doc, chapter_10_doc])
-      ActiveFedora::SolrService.commit
-    end
+    let(:mono_doc) {
+      SolrDocument.new(id: 'mono',
+                       has_model_ssim: ['Monograph'],
+                       ordered_member_ids_ssim: ordered_ids)
+    }
 
-    describe '#section_docs' do
-      subject { presenter.section_docs }
+    let(:cover) { SolrDocument.new(id: 'cover', has_model_ssim: ['FileSet']) }
+    let(:blue_file) { SolrDocument.new(id: 'blue', has_model_ssim: ['FileSet'], section_title_tesim: ['chapter 2']) }
+    let(:green_file) { SolrDocument.new(id: 'green', has_model_ssim: ['FileSet'], section_title_tesim: ['chapter 4']) }
 
-      it 'finds solr docs for attached sections in the correct order' do
-        # Make sure we're testing with more than 10 members
-        # to test that we are getting the right number of
-        # results back from the solr query.  Default solr
-        # query is 10, so if we don't specify the number of
-        # rows that we want, we'll be missing some results.
-        expect(mono_doc['ordered_member_ids_ssim'].count).to be >= 10
-        expect(subject.count).to eq 11
-        expect(subject.map(&:class).uniq).to eq [SolrDocument]
-        expect(subject.map(&:id)).to eq [chapter_1_doc.id, chapter_2_doc.id, chapter_3_doc.id, chapter_1_doc.id, chapter_4_doc.id, chapter_5_doc.id, chapter_6_doc.id, chapter_7_doc.id, chapter_8_doc.id, chapter_9_doc.id, chapter_10_doc.id]
+    context 'monograph.ordered_members contains a non-file' do
+      let(:non_file) { SolrDocument.new(id: 'NotAFile', has_model_ssim: ['Monograph']) } # It doesn't have section_title_tesim
+      let(:ordered_ids) { [cover.id, blue_file.id, non_file.id, green_file.id] }
+
+      before do
+        ActiveFedora::SolrService.add([mono_doc, cover, blue_file, non_file, green_file])
+        ActiveFedora::SolrService.commit
+      end
+
+      it 'returns the list of chapter titles' do
+        expect(subject).to eq ["chapter 2", "chapter 4"]
       end
     end
 
-    describe '#ordered_file_sets_ids', :private do
+    context 'a fileset that belongs to more than 1 chapter' do
+      let(:red_file) { SolrDocument.new(id: 'red', has_model_ssim: ['FileSet'], section_title_tesim: ['chapter 1', 'chapter 3']) }
+
+      let(:ordered_ids) {
+        # red_file appears in both chapter 1 and chapter 3
+        [cover.id, red_file.id, blue_file.id, red_file.id, green_file.id]
+      }
+
+      before do
+        ActiveFedora::SolrService.add([mono_doc, cover, red_file, blue_file, green_file])
+        ActiveFedora::SolrService.commit
+      end
+
+      # Notice that these chapter titles are out of order.
+      # That's because the ordered_section_titles method
+      # assumes that each FileSet has only 1 section_title.
+      # Since red_file has 2 values for section_title, the
+      # assumption is broken, so the order isn't guaranteed.
+      it 'has all the chapters in the list' do
+        expect(subject).to eq ["chapter 1", "chapter 3", "chapter 2", "chapter 4"]
+      end
+    end
+  end
+
+  context 'a monograph with filesets' do
+    # the cover FileSet won't be included in the ordered_file_sets_ids
+    let(:cover_fileset_doc) { SolrDocument.new(id: 'cover', has_model_ssim: ['FileSet']) }
+    let(:fs1_doc) { SolrDocument.new(id: 'fs1', has_model_ssim: ['FileSet']) }
+    let(:fs2_doc) { SolrDocument.new(id: 'fs2', has_model_ssim: ['FileSet']) }
+    let(:fs3_doc) { SolrDocument.new(id: 'fs3', has_model_ssim: ['FileSet']) }
+
+    let(:expected_id_count) { 3 }
+
+    let(:mono_doc) do
+      SolrDocument.new(
+        id: 'mono',
+        has_model_ssim: ['Monograph'],
+        # representative_id has a rather different Solr name!
+        hasRelatedMediaFragment_ssim: cover_fileset_doc.id,
+        ordered_member_ids_ssim: [cover_fileset_doc.id, fs1_doc.id, fs2_doc.id, fs3_doc.id]
+      )
+    end
+
+    before do
+      ActiveFedora::SolrService.add([mono_doc, cover_fileset_doc, fs1_doc, fs2_doc, fs3_doc])
+      ActiveFedora::SolrService.commit
+    end
+
+    describe '#ordered_file_sets_ids' do
       subject { presenter.ordered_file_sets_ids }
 
       it 'returns an array of expected size' do
@@ -159,101 +175,77 @@ describe CurationConcerns::MonographPresenter do
       end
 
       it 'the first element of the array is as expected' do
-        expect(subject.first).to eq expected_first_id
+        expect(subject.first).to eq 'fs1'
       end
 
       it 'the last element of the array is as expected' do
-        expect(subject.last).to eq expected_last_id
+        expect(subject.last).to eq 'fs3'
       end
     end
 
-    context 'expected first id' do
+    context 'the first (non-representative) file' do
       describe '#previous_file_sets_id?' do
-        subject { presenter.previous_file_sets_id? expected_first_id }
-        it 'returns false' do
-          expect(subject).to eq false
-        end
+        subject { presenter.previous_file_sets_id? fs1_doc.id }
+        it { is_expected.to be false }
       end
 
       describe '#previous_file_sets_id' do
-        subject { presenter.previous_file_sets_id expected_first_id }
-        it 'returns nil' do
-          expect(subject).to eq nil
-        end
+        subject { presenter.previous_file_sets_id fs1_doc.id }
+        it { is_expected.to eq nil }
       end
 
       describe '#next_file_sets_id?' do
-        subject { presenter.next_file_sets_id? expected_first_id }
-        it 'returns true' do
-          expect(subject).to eq true
-        end
+        subject { presenter.next_file_sets_id? fs1_doc.id }
+        it { is_expected.to eq true }
       end
 
       describe '#next_file_sets_id' do
-        subject { presenter.next_file_sets_id expected_first_id }
-        it 'returns expected' do
-          expect(subject).to eq expected_first_next_id
-        end
+        subject { presenter.next_file_sets_id fs1_doc.id }
+        it { is_expected.to eq fs2_doc.id }
       end
     end
 
-    context 'expected_middle_id' do
+    context 'the 2nd file in the list' do
       describe '#previous_file_sets_id?' do
-        subject { presenter.previous_file_sets_id? expected_middle_id }
-        it 'returns true' do
-          expect(subject).to eq true
-        end
+        subject { presenter.previous_file_sets_id? fs2_doc.id }
+        it { is_expected.to eq true }
       end
 
       describe '#previous_file_sets_id' do
-        subject { presenter.previous_file_sets_id expected_middle_id }
-        it 'returns expected' do
-          expect(subject).to eq expected_middle_previous_id
-        end
+        subject { presenter.previous_file_sets_id fs2_doc.id }
+        it { is_expected.to eq fs1_doc.id }
       end
 
       describe '#next_file_sets_id?' do
-        subject { presenter.next_file_sets_id? expected_middle_id }
-        it 'returns true' do
-          expect(subject).to eq true
-        end
+        subject { presenter.next_file_sets_id? fs2_doc.id }
+        it { is_expected.to eq true }
       end
 
       describe '#next_file_sets_id' do
-        subject { presenter.next_file_sets_id expected_middle_id }
-        it 'returns expected' do
-          expect(subject).to eq expected_middle_next_id
-        end
+        subject { presenter.next_file_sets_id fs2_doc.id }
+        it { is_expected.to eq fs3_doc.id }
       end
     end
 
-    context 'expected last id' do
+    context 'the last file in the list' do
       describe '#previous_file_sets_id?' do
-        subject { presenter.previous_file_sets_id? expected_last_id }
-        it 'returns true' do
-          expect(subject).to eq true
-        end
+        subject { presenter.previous_file_sets_id? fs3_doc.id }
+        it { is_expected.to eq true }
       end
 
       describe '#previous_file_sets_id' do
-        subject { presenter.previous_file_sets_id expected_last_id }
-        it 'returns expected' do
-          expect(subject).to eq expected_last_previous_id
-        end
+        subject { presenter.previous_file_sets_id fs3_doc.id }
+        it { is_expected.to eq fs2_doc.id }
       end
 
       describe '#next_file_sets_id?' do
-        subject { presenter.next_file_sets_id? expected_last_id }
-        it 'returns false' do
-          expect(subject).to eq false
-        end
+        subject { presenter.next_file_sets_id? fs3_doc.id }
+        it { is_expected.to eq false }
       end
 
       describe '#next_file_sets_id' do
-        subject { presenter.next_file_sets_id expected_last_id }
-        it 'returns nil' do
-          expect(subject).to eq nil
-        end
+        subject { presenter.next_file_sets_id fs3_doc.id }
+        it { is_expected.to eq nil }
       end
     end
   end

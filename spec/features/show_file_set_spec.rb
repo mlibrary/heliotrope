@@ -5,9 +5,6 @@ feature 'FileSet Browse' do
     let(:user) { create(:platform_admin) }
     let(:cover) { create(:file_set, title: ['Representative']) }
     let(:monograph) { create(:monograph, user: user, title: ['Browse Me'], representative_id: cover.id) }
-    let(:section1) { create(:section, monograph_id: monograph.id) }
-    let(:section2) { create(:section, monograph_id: monograph.id) }
-    let(:section3) { create(:section, monograph_id: monograph.id) }
     let(:fileset_count) { 3 }
 
     before do
@@ -17,17 +14,9 @@ feature 'FileSet Browse' do
 
       fileset_count.times do
         monograph.ordered_members << FactoryGirl.create(:file_set)
-        section1.ordered_members << FactoryGirl.create(:file_set)
-        section2.ordered_members << FactoryGirl.create(:file_set)
-        section3.ordered_members << FactoryGirl.create(:file_set)
       end
 
-      monograph.ordered_members << section1
-      monograph.ordered_members << section2
-      monograph.ordered_members << FactoryGirl.create(:file_set)
-      monograph.ordered_members << section3
       monograph.save!
-      Section.all.each(&:save!)
       FileSet.all.each(&:save!)
     end
 
@@ -44,22 +33,6 @@ feature 'FileSet Browse' do
       visit curation_concerns_file_set_path(monograph.ordered_members.to_a[2].id)
       expect(page).to have_link('Previous', href: monograph.ordered_members.to_a[1].id)
       expect(page).to have_link('Next', href: monograph.ordered_members.to_a[3].id)
-
-      # arrow links show between FileSets within the same Section
-      visit curation_concerns_file_set_path(section1.ordered_members.to_a[1].id)
-      expect(page).to have_link('Next', href: section1.ordered_members.to_a[2].id)
-      expect(page).to have_link('Previous', href: section1.ordered_members.to_a[0].id)
-
-      # arrow links show between the last FileSet in one Section and the first FileSet in the next Section
-      visit curation_concerns_file_set_path(section1.ordered_members.to_a[2].id)
-      expect(page).to have_link('Next', href: section2.ordered_members.to_a[0].id)
-      visit curation_concerns_file_set_path(section2.ordered_members.to_a[0].id)
-      expect(page).to have_link('Previous', href: section1.ordered_members.to_a[2].id)
-
-      # non-representative Monograph FileSet has links to neighboring FileSets in Sections
-      visit curation_concerns_file_set_path(monograph.ordered_members.to_a[6].id)
-      expect(page).to have_link('Previous', href: section2.ordered_members.to_a[2].id)
-      expect(page).to have_link('Next', href: section3.ordered_members.to_a[0].id)
     end
   end
 end

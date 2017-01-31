@@ -6,6 +6,7 @@ namespace :heliotrope do
     Monograph.all.each do |m|
       fileset_dates = []
       m.ordered_members.to_a.each do |mono_member|
+        # TODO: Remove Sections from this rake task
         if mono_member.is_a? Section
           mono_member.ordered_members.to_a.each do |fs|
             fileset_dates << fs.date_uploaded
@@ -15,6 +16,7 @@ namespace :heliotrope do
       fileset_dates.sort!
       i=0
       m.ordered_members.to_a.each do |mono_member|
+        # TODO: Remove Sections from this rake task
         if mono_member.is_a? Section
           mono_member.ordered_members.to_a.reverse_each do |fs|
             fs.date_uploaded = fileset_dates[i]

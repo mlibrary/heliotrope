@@ -15,26 +15,16 @@ class MonographSearchBuilder < ::SearchBuilder
 
   private
 
-    # Get the asset/fileset ids of the monograph and the asset ids of the monograph's sections
+    # Get the asset/fileset ids of the monograph
     def asset_ids(id)
-      assets = []
-
       monograph = ActiveFedora::SolrService.query("{!terms f=id}#{id}")
+      return unless monograph.present?
 
-      if monograph.present?
-        ids = monograph.first['ordered_member_ids_ssim']
-        if ids.present?
-          ids.delete(monograph.first['representative_id_ssim'].first)
-          docs = ActiveFedora::SolrService.query("{!terms f=id}#{ids.join(',')}", rows: 9999)
+      ids = monograph.first['ordered_member_ids_ssim']
+      return unless ids.present?
 
-          section_docs = docs.select { |doc| doc['has_model_ssim'] == ['Section'].freeze }
-          asset_docs   = docs.select { |doc| doc['has_model_ssim'] == ['FileSet'].freeze }
-
-          assets << asset_docs.map(&:id)
-          assets << section_docs.map { |doc| doc['ordered_member_ids_ssim'] }
-        end
-      end
-      assets.join(',')
+      ids.delete(monograph.first['representative_id_ssim'].first)
+      ids.join(',')
     end
 
     def work_types

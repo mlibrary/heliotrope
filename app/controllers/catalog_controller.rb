@@ -68,7 +68,7 @@ class CatalogController < ApplicationController
     config.add_index_field solr_name('alt_text', :stored_searchable)
     config.add_index_field solr_name('content_type', :stored_searchable)
     config.add_index_field solr_name('keywords', :stored_searchable)
-    config.add_index_field solr_name('relation', :stored_searchable)
+    config.add_index_field solr_name('section_title', :stored_searchable)
 
     # "fielded" search configuration. Used by pulldown among other places.
     # For supported keys in hash, see rdoc for Blacklight::SearchFields

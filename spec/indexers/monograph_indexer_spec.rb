@@ -2,13 +2,11 @@ require 'rails_helper'
 
 describe MonographIndexer do
   let(:indexer) { described_class.new(monograph) }
-  let(:monograph) { create(:monograph) }
-  let(:chapter1) { create(:section) }
+  let(:monograph) { build(:monograph) }
   let(:file) { create(:file_set) }
 
   before do
     monograph.ordered_members << file
-    monograph.ordered_members << chapter1
     monograph.save!
   end
 
@@ -17,7 +15,7 @@ describe MonographIndexer do
     let(:press_name) { Press.find_by(subdomain: monograph.press).name }
 
     it 'indexes the ordered members' do
-      expect(subject['ordered_member_ids_ssim']).to eq [file.id, chapter1.id]
+      expect(subject['ordered_member_ids_ssim']).to eq [file.id]
     end
 
     it 'indexes the press name' do

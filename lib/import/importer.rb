@@ -14,17 +14,17 @@ module Import
       csv_files.each do |file|
         errors = ''
         attrs = CSVParser.new(file).attributes(errors)
+
+        # The first file in the csv is the cover/representative file
+        cover = attrs["monograph"]["files"][0]
+
         monograph_attrs = attrs.delete('monograph')
-        sections_attrs = attrs.delete('sections').values
 
         # if there is a command-line monograph title then use it
         monograph_attrs['title'] = Array(monograph_title) unless monograph_title.blank?
 
         # find files now (stop everything ASAP if not found or duplicates found)
         add_full_file_paths(monograph_attrs)
-        sections_attrs.each do |section_attrs|
-          add_full_file_paths(section_attrs)
-        end
 
         optional_early_exit(interaction, errors, test)
 
@@ -35,26 +35,12 @@ module Import
 
         monograph = monograph_builder.curation_concern
         update_fileset_metadata(monograph, monograph_file_attrs)
-        monograph_id = monograph.id
 
-        sections = []
-        sections_attrs.each do |section_attrs|
-          section_files_attrs = section_attrs.delete('files_metadata')
-          section_attrs['monograph_id'] = monograph_id
-          section_attrs = add_command_line_attrs(section_attrs, 'section')
-          section_builder = SectionBuilder.new(user, section_attrs)
-          section_builder.run
-
-          section = section_builder.curation_concern
-          update_fileset_metadata(section, section_files_attrs)
-          sections << section
-        end
-
-        sections.each do |section|
-          # add section to monograph
-          monograph.ordered_members << section
-          monograph.save!
-        end
+        puts "Saving #{cover} as the cover"
+        f = FileSet.where(label: cover)
+        monograph.representative_id = f.first.id
+        monograph.thumbnail_id = f.first.id
+        monograph.save!
       end
     end
 

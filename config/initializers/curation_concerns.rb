@@ -1,6 +1,4 @@
 CurationConcerns.configure do |config|
-  # Injected via `rails g curation_concerns:work Section`
-  config.register_curation_concern :section
   # Injected via `rails g curation_concerns:work Monograph`
   config.register_curation_concern :monograph
   # Should schema.org microdata be displayed?

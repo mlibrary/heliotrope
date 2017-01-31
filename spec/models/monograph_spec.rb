@@ -30,17 +30,4 @@ describe Monograph do
     monograph.sub_brand << series.id
     expect(monograph.sub_brand).to contain_exactly(imprint.id, series.id)
   end
-
-  context "after destroy" do
-    let(:monograph) { create(:monograph) }
-    let(:section) { create(:section, monograph_id: monograph.id) }
-    before do
-      monograph.ordered_members << section
-      monograph.save!
-    end
-    it "has no sections" do
-      monograph.destroy
-      expect { section.reload }.to raise_error ActiveFedora::ObjectNotFoundError
-    end
-  end
 end

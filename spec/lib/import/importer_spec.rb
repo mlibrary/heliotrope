@@ -46,41 +46,41 @@ describe Import::Importer do
       it 'imports the monograph, sections and files' do
         expect { importer.run }
           .to change { Monograph.count }.by(1)
-          .and(change { Section.count }.by(2))
           .and(change { FileSet.count }.by(8))
 
         monograph = Monograph.first
         expect(monograph.visibility).to eq public_vis
 
-        sections = Monograph.first.ordered_members.to_a.select { |m| m.class.name == 'Section' }
-        section = sections.first
-        expect(section.visibility).to eq public_vis
-        expect(section.title).to eq ['Act 1: Calm Waters']
-        # Test that the FileSetBuilder got called to add the
-        # metadata to the FileSets.
-        shipwreck = monograph.ordered_members.to_a.first
-        expect(shipwreck.title).to eq ['Monograph Shipwreck']
-        miranda = monograph.ordered_members.to_a.second
-        expect(miranda.title).to eq ['Monograph Miranda']
-        japanese = monograph.ordered_members.to_a.third
-        expect(japanese.title).to eq ['日本語のファイル']
+        file_sets = monograph.ordered_members.to_a
 
-        shipwreck = section.ordered_members.to_a.first
-        expect(shipwreck.title).to eq ['Section 1 Shipwreck']
-        miranda = section.ordered_members.to_a.second
-        expect(miranda.title).to eq ['Section 1 Miranda']
+        expect(file_sets[0].title).to eq ['Monograph Shipwreck']
 
-        # restricted-value fields get lowercased, apart from CC licenses
-        shipwreck = monograph.ordered_members.to_a.first
-        expect(shipwreck.external_resource).to eq 'no'
-        expect(shipwreck.rights_granted_creative_commons).to eq 'Creative Commons Attribution-ShareAlike license, 3.0 Unported'
-        miranda = monograph.ordered_members.to_a.second
-        expect(miranda.external_resource).to eq 'no'
-        expect(miranda.rights_granted_creative_commons).to eq 'Creative Commons Zero license (implies pd)'
+        # The monograph cover/representative is the first file_set
+        expect(file_sets[0].id).to eq monograph.representative_id
 
-        # exclusivity should be transformed from P/BP to yes/no
-        expect(shipwreck.exclusive_to_platform).to eq 'no'
-        expect(miranda.exclusive_to_platform).to eq 'yes'
+        # Restricted-value fields get lowercased, apart from CC licenses
+        expect(file_sets[0].external_resource).to eq 'no'
+        expect(file_sets[0].rights_granted_creative_commons).to eq 'Creative Commons Attribution-ShareAlike license, 3.0 Unported'
+
+        # Exclusivity should be transformed from P/BP to yes/no
+        expect(file_sets[0].exclusive_to_platform).to eq 'no'
+
+        expect(file_sets[1].title).to eq ['Monograph Miranda']
+        expect(file_sets[1].external_resource).to eq 'no'
+        expect(file_sets[1].rights_granted_creative_commons).to eq 'Creative Commons Zero license (implies pd)'
+        expect(file_sets[1].exclusive_to_platform).to eq 'yes'
+
+        expect(file_sets[2].title).to eq ['日本語のファイル']
+
+        # FileSets w/ sections
+        expect(file_sets[3].title).to eq ['Section 1 Shipwreck']
+        expect(file_sets[3].section_title).to eq ['Act 1: Calm Waters']
+
+        expect(file_sets[4].title).to eq ['Section 1 Miranda']
+        expect(file_sets[4].section_title).to eq ['Act 1: Calm Waters']
+
+        expect(file_sets[5].title).to eq ['Section 2 Shipwreck']
+        expect(file_sets[5].section_title).to eq ['Act 2: Stirrin\' Up']
       end
     end
 

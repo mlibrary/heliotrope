@@ -14,6 +14,7 @@ namespace :heliotrope do
         # we're including the cover (and whatever other files attached to the monograph) here...
         puts "\"#{Rails.application.routes.url_helpers.curation_concerns_file_set_path(member.id)}\",\"#{member.label}\",\"\""
       else
+        # TODO: Remove Sections from this rake task
         s = Section.find(member.id)
         s.ordered_members.to_a.each do |file_set|
           puts "\"#{Rails.application.routes.url_helpers.curation_concerns_file_set_path(file_set.id)}\",\"#{file_set.label}\",\"#{file_set.member_of[0].title[0]}\""

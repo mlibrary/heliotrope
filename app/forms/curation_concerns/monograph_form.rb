@@ -27,7 +27,7 @@ module CurationConcerns
     end
 
     def select_files
-      # We only want FileSets here, not Sections see story #174
+      # We only want FileSets here, not any other models, see story #174
       # Use model.file_set_ids, not model.member_ids
       file_sets ||=
         PresenterFactory.build_presenters(model.file_set_ids, FileSetPresenter, current_ability)

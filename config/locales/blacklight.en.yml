@@ -20,7 +20,7 @@ en:
         alt_text_tesim: "Alternative Text"
         content_type_tesim: "Content Type"
         keywords_tesim: "Keywords"
-        relation_tesim: "Relation to Narrative"
+        section_title_tesim: "Section"
         external_resource_ssim: "External Resource"
         book_needs_handles_ssim: "Book Needs Handles?"
         allow_download_ssim: "Allow Download?"

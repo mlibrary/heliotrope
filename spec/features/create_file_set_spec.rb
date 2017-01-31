@@ -4,20 +4,18 @@ feature 'Create a file set' do
   context 'as a logged in user' do
     let(:user) { create(:platform_admin) }
 
-    let(:section) { build(:section, title: ['Test section with _Italicized Title_ therein']) }
+    let!(:cover) { create(:public_file_set, user: user) }
+    let(:fs_title) { 'Test file set' }
     let(:monograph_id) { monograph.id }
-
     let!(:monograph) do
       m = build(:monograph, title: ['Test monograph'],
+                            representative_id: cover.id,
                             creator_family_name: 'Johns',
                             creator_given_name: 'Jimmy',
                             contributor: ['Sub Way'],
                             date_published: ['Oct 20th'])
-      # Add the section to this monograph
-      m.ordered_members << section
+      m.ordered_members << cover
       m.save!
-      section.monograph_id = m.id
-      section.save!
       m
     end
 
@@ -32,11 +30,11 @@ feature 'Create a file set' do
     end
 
     scenario do
-      visit curation_concerns_section_path(section)
+      visit monograph_show_path(monograph)
 
-      # Now attach a file to the Section. First create a FileSet
+      # Now attach a file to the Monograph. First create a FileSet
       click_link 'Attach a File'
-      fill_in 'Title', with: 'Test file set'
+      fill_in 'Title', with: fs_title
       attach_file 'file_set_files', File.join(fixture_path, 'csv', 'miranda.jpg')
       fill_in 'Resource Type', with: 'image'
       fill_in 'Caption', with: 'This is a caption for the image'
@@ -62,7 +60,7 @@ feature 'Create a file set' do
       fill_in 'Language', with: 'English'
       fill_in 'Transcript', with: 'This is what is transcribed for you to read'
       fill_in 'Translation(s)', with: 'Here is what that&nbsp;means'
-      fill_in 'Relation', with: 'Introduction'
+      fill_in 'Related Section', with: 'Test section with _Italicized Title_ therein'
       fill_in 'Externally-Hosted Resource?', with: 'no3'
       fill_in 'Book Needs Handles?', with: 'yes'
       fill_in 'External URL/DOI', with: 'Handle'
@@ -73,10 +71,13 @@ feature 'Create a file set' do
       fill_in 'Holding Contact', with: 'Unauthorized use prohibited. A Nice Museum.'
       fill_in 'Use Crossref XML?', with: 'yes3'
 
-      # Attach it to the Section
-      click_button 'Attach to Section'
+      # Save the form
+      click_button 'Attach to Monograph'
 
-      click_link 'miranda.jpg'
+      # On Monograph catalog page
+      expect(page).to have_current_path(curation_concerns_monograph_path(monograph))
+      click_link fs_title
+
       # On FileSet Page
       # FileSet page also has authors
       expect(page).to have_content 'Jimmy Johns and Sub Way'
@@ -93,7 +94,6 @@ feature 'Create a file set' do
       # expect(page).to have_content '2026-01-01'
       expect(page).to have_content 'keyword 1'
       expect(page).to have_content 'English'
-      # expect(page).to have_content 'Introduction'
       # expect(page).to have_content 'yes1'
       # If the file_set has a transcript, the #transcript div will be present to be managed by AblePlayer
       expect(page).to have_selector('#transcript')

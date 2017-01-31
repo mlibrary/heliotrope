@@ -72,20 +72,16 @@ describe CurationConcerns::MonographForm do
 
   describe 'select_files' do
     let(:monograph) { Monograph.new }
-    let(:section1) { create(:section, monograph_id: monograph.id) }
-    let(:section2) { create(:section, monograph_id: monograph.id) }
     let(:file_set) { create(:file_set) }
 
     subject { form.select_files }
 
     before do
-      monograph.ordered_members << section1
-      monograph.ordered_members << section2
       monograph.ordered_members << file_set
     end
 
     # Story #174
-    it 'contains only file sets, not sections' do
+    it 'contains the file set' do
       expect(subject.count).to eq 1
     end
   end

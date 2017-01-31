@@ -13,9 +13,13 @@ module CurationConcerns
              :creator_given_name, :creator_family_name,
              to: :solr_document
 
-    def section_docs
-      return @section_docs if @section_docs
-      @section_docs = ordered_member_docs.select { |doc| doc['has_model_ssim'] == ['Section'].freeze }
+    # ASSUMPTION: Each FileSet record has only 1 section_title.
+    # If section_title has more than 1 value, the order of the
+    # titles is not guaranteed (because multi-value fields are
+    # unordered in fedora).  See the spec file for interesting
+    # test cases.
+    def ordered_section_titles
+      ordered_member_docs.flat_map(&:section_title).uniq
     end
 
     def sub_brand_links
@@ -69,40 +73,34 @@ module CurationConcerns
       pageviews_by_ids(ordered_file_sets_ids << id)
     end
 
-    private
-
-      def ordered_file_sets_ids
-        return @ordered_file_sets_ids if @ordered_file_sets_ids
-        file_sets_ids = []
-        ordered_member_docs.each do |doc|
-          if doc['has_model_ssim'] == ['Section'].freeze
-            doc['ordered_member_ids_ssim'].each do |file_sets_id|
-              file_sets_ids.append file_sets_id
-            end unless doc['ordered_member_ids_ssim'].nil?
-          elsif doc['has_model_ssim'] == ['FileSet'].freeze && doc.id != representative_id
-            file_sets_ids.append doc.id
-          end
-        end
-        @ordered_file_sets_ids = file_sets_ids
-      end
-
-      def ordered_member_docs
-        return @ordered_member_docs if @ordered_member_docs
-
-        ids = Array(solr_document[Solrizer.solr_name('ordered_member_ids', :symbol)])
-
-        if ids.blank?
-          @ordered_member_docs = []
-          return @ordered_member_docs
-        else
-          query_results = ActiveFedora::SolrService.query("{!terms f=id}#{ids.join(',')}", rows: ids.count)
-
-          docs_hash = query_results.each_with_object({}) do |res, h|
-            h[res['id']] = SolrDocument.new(res)
-          end
-
-          @ordered_member_docs = ids.map { |id| docs_hash[id] }
+    def ordered_file_sets_ids
+      return @ordered_file_sets_ids if @ordered_file_sets_ids
+      file_sets_ids = []
+      ordered_member_docs.each do |doc|
+        if doc['has_model_ssim'] == ['FileSet'].freeze && doc.id != representative_id
+          file_sets_ids.append doc.id
         end
       end
+      @ordered_file_sets_ids = file_sets_ids
+    end
+
+    def ordered_member_docs
+      return @ordered_member_docs if @ordered_member_docs
+
+      ids = Array(solr_document[Solrizer.solr_name('ordered_member_ids', :symbol)])
+
+      if ids.blank?
+        @ordered_member_docs = []
+        return @ordered_member_docs
+      else
+        query_results = ActiveFedora::SolrService.query("{!terms f=id}#{ids.join(',')}", rows: ids.count)
+
+        docs_hash = query_results.each_with_object({}) do |res, h|
+          h[res['id']] = SolrDocument.new(res)
+        end
+
+        @ordered_member_docs = ids.map { |id| docs_hash[id] }
+      end
+    end
   end
 end

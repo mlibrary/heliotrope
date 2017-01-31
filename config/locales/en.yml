@@ -63,7 +63,6 @@ en:
   primary_creator_role: "Primary Creator Role(s)"
   press: "Publisher"
   publisher: "Publisher"
-  relation: "Relation to Narrative"
   resource_type: "Resource Type"
   rights_granted: "Rights Granted"
   rights_granted_creative_commons: "Rights Granted - Creative Commons"
@@ -114,11 +113,11 @@ en:
         permissions_expiration_date: :"permissions_expiration_date"
         press: :"press"
         primary_creator_role: :"primary_creator_role"
-        relation: :"relation"
         resource_type: :"resource_type"
         rights_granted: :"rights_granted"
         rights_granted_creative_commons: :"rights_granted_creative_commons"
         search_year: :"search_year"
+        section: :"section"
         section_title: :"section_title"
         sort_date: :"sort_date"
         sub_brand: :"sub_brand"
@@ -139,5 +138,5 @@ en:
       q:
         label: "Search within %{press_name}"
   manage_assets:
-    monograph_link_text: "Organize Sections and Assets"
+    monograph_link_text: "Organize Assets"
     section_link_text: "Organize Assets"
