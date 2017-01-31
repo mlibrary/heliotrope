@@ -8,13 +8,12 @@ module Import
       @visibility = visibility
     end
 
-    def run(reverse = false, monograph_title = '', test = false)
+    def run(monograph_title = '', test = false)
       interaction = !Rails.env.test?
       validate_press
       csv_files.each do |file|
         errors = ''
-        # only reverse the rows when running an import from the command-line
-        attrs = CSVParser.new(file).attributes(errors, reverse)
+        attrs = CSVParser.new(file).attributes(errors)
         monograph_attrs = attrs.delete('monograph')
         sections_attrs = attrs.delete('sections').values
 
@@ -51,9 +50,6 @@ module Import
           sections << section
         end
 
-        # reverse the order of sections if we've reversed the rows...
-        # so they attach to the monograph in the order they appear in the spreadsheet
-        sections = sections.reverse if reverse
         sections.each do |section|
           # add section to monograph
           monograph.ordered_members << section

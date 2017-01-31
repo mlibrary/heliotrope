@@ -112,17 +112,16 @@ describe CurationConcerns::MonographPresenter do
     let(:expected_middle_next_id) { 'expected_middle_next_id' }
     let(:expected_last_previous_id) { 'expected_last_previous_id' }
     let(:expected_last_id) { 'expected_last_id' }
-    # Danger, Will Robinson! the ordered_member_ids_ssim list are stored in reverse order.
-    let(:chapter_1_doc) { SolrDocument.new(id: 'chapter1', has_model_ssim: ['Section'], ordered_member_ids_ssim: ['last_1', expected_first_next_id, expected_first_id]) }
+    let(:chapter_1_doc) { SolrDocument.new(id: 'chapter1', has_model_ssim: ['Section'], ordered_member_ids_ssim: [expected_first_id, expected_first_next_id, 'last_1']) }
     let(:chapter_2_doc) { SolrDocument.new(id: 'chapter2', has_model_ssim: ['Section'], ordered_member_ids_ssim: ['first_2']) }
-    let(:chapter_3_doc) { SolrDocument.new(id: 'chapter3', has_model_ssim: ['Section'], ordered_member_ids_ssim: ['last_3', 'first_3']) }
-    let(:chapter_4_doc) { SolrDocument.new(id: 'chapter4', has_model_ssim: ['Section'], ordered_member_ids_ssim: ['last_4', 'middle_4', 'first_4']) }
+    let(:chapter_3_doc) { SolrDocument.new(id: 'chapter3', has_model_ssim: ['Section'], ordered_member_ids_ssim: ['first_3', 'last_3']) }
+    let(:chapter_4_doc) { SolrDocument.new(id: 'chapter4', has_model_ssim: ['Section'], ordered_member_ids_ssim: ['first_4', 'middle_4', 'last_4']) }
     let(:chapter_5_doc) { SolrDocument.new(id: 'chapter5', has_model_ssim: ['Section'], ordered_member_ids_ssim: []) }
-    let(:chapter_6_doc) { SolrDocument.new(id: 'chapter6', has_model_ssim: ['Section'], ordered_member_ids_ssim: [expected_middle_previous_id, 'first_6']) }
+    let(:chapter_6_doc) { SolrDocument.new(id: 'chapter6', has_model_ssim: ['Section'], ordered_member_ids_ssim: ['first_6', expected_middle_previous_id]) }
     let(:chapter_7_doc) { SolrDocument.new(id: 'chapter7', has_model_ssim: ['Section'], ordered_member_ids_ssim: []) }
     let(:chapter_8_doc) { SolrDocument.new(id: 'chapter8', has_model_ssim: ['Section'], ordered_member_ids_ssim: [expected_middle_id]) }
-    let(:chapter_9_doc) { SolrDocument.new(id: 'chapter9', has_model_ssim: ['Section'], ordered_member_ids_ssim: ['last_9', expected_middle_next_id]) }
-    let(:chapter_10_doc) { SolrDocument.new(id: 'chapter10', has_model_ssim: ['Section'], ordered_member_ids_ssim: [expected_last_id, expected_last_previous_id, 'first_10']) }
+    let(:chapter_9_doc) { SolrDocument.new(id: 'chapter9', has_model_ssim: ['Section'], ordered_member_ids_ssim: [expected_middle_next_id, 'last_9']) }
+    let(:chapter_10_doc) { SolrDocument.new(id: 'chapter10', has_model_ssim: ['Section'], ordered_member_ids_ssim: ['first_10', expected_last_previous_id, expected_last_id]) }
     # I added chapter 1 twice to make sure that duplicate
     # entries will work correctly.
     let(:mono_doc) { SolrDocument.new(id: 'mono',
