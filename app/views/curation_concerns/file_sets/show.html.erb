@@ -17,12 +17,12 @@
       <ul class="pager">
           <li class="previous">
           <% if @presenter.previous_id? %>
-            <a href="<%= @presenter.previous_id %>" class="previous"><span class="glyphicon glyphicon-triangle-left" aria-hidden="true"></span> Previous</a>
+            <a href="<%= @presenter.previous_id %>" class="previous" data-turbolinks="false"><span class="glyphicon glyphicon-triangle-left" aria-hidden="true"></span> Previous</a>
           <% end %>
           </li>
           <li class="next">
           <% if @presenter.next_id? %>
-            <a href="<%= @presenter.next_id %>" class="next">Next <span class="glyphicon glyphicon-triangle-right" aria-hidden="true"></span></a>
+            <a href="<%= @presenter.next_id %>" class="next" data-turbolinks="false">Next <span class="glyphicon glyphicon-triangle-right" aria-hidden="true"></span></a>
           <% end %>
           </li>
       </ul>
