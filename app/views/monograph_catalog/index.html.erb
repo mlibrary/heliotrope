@@ -19,7 +19,7 @@
     <% if defined? @monograph_presenter.monograph_coins_title %>
       <span class="Z3988" title="<%= @monograph_presenter.monograph_coins_title %>"></span>
     <% end %>
-    
+
     <div class="monograph-cover">
       <%= render 'curation_concerns/base/representative_media', presenter: @monograph_presenter %>
     </div><!-- /.monograph-cover -->
@@ -37,7 +37,7 @@
       <% pageviews = @monograph_presenter.pageviews %>
       <% unless pageviews.nil? %>
       <div>
-        <p>This item has been viewed <b><%= pageviews %></b> times.</p>
+        <p>This item has been viewed <b><%= number_with_delimiter pageviews %></b> times.</p>
       </div>
       <% end %>
       <div><p></p></div>
