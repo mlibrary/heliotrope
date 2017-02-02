@@ -23,8 +23,8 @@
 // Required by Blacklight
 //= require blacklight/blacklight
 // Required by Heliotrope?
-//= require leaflet
-//= require leaflet-iiif
+//= require leaflet_1.0.3
+//= require leaflet-iiif_1.0.2
 //= require 'edit_users'
 //= require 'file_set_sort_date'
 //= require 'disable_video_download'

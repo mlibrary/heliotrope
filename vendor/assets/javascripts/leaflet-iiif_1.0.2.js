@@ -1,5 +1,5 @@
 /*
- * Leaflet-IIIF 0.1.2
+ * Leaflet-IIIF 1.0.2
  * IIIF Viewer for Leaflet
  * by Jack Reed, @mejackreed
  */
@@ -35,7 +35,7 @@ L.TileLayer.Iiif = L.TileLayer.extend({
     var _this = this,
       x = coords.x,
       y = (coords.y),
-      zoom = _this._map.getZoom(),
+      zoom = _this._getZoomForUrl(),
       scale = Math.pow(2, _this.maxNativeZoom - zoom),
       tileBaseSize = _this.options.tileSize * scale,
       minx = (x * tileBaseSize),
@@ -51,22 +51,8 @@ L.TileLayer.Iiif = L.TileLayer.extend({
       quality: _this.quality,
       region: [minx, miny, xDiff, yDiff].join(','),
       rotation: 0,
-      size: _this._iiifSizeParam(Math.ceil(xDiff / scale), Math.ceil(yDiff / scale))
+      size: Math.ceil(xDiff / scale) + ','
     }, this.options));
-  },
-  /**
-  * Returns a IIIF size parameter based off of the max dimension of
-  * a tile
-  * @param {Number} x - The width of a tile
-  * @param {Number} y - The height of a tile
-  * @returns {String}
-  */
-  _iiifSizeParam: function(x, y) {
-    if (x >= y) {
-      return x + ',';
-    } else {
-      return ',' + y;
-    }
   },
   onAdd: function(map) {
     var _this = this;
@@ -138,7 +124,9 @@ L.TileLayer.Iiif = L.TileLayer.extend({
         _this._setQuality();
 
         // Unless an explicit tileSize is set, use a preferred tileSize
-        if (!_this.explicitTileSize) {
+        if (!_this._explicitTileSize) {
+          // Set the default first
+          _this.options.tileSize = 256;
           if (data.tiles) {
             // Image API 2.0 Case
             _this.options.tileSize = data.tiles[0].width;
@@ -207,9 +195,9 @@ L.TileLayer.Iiif = L.TileLayer.extend({
   _templateUrl: function() {
     return this._infoToBaseUrl() + '{region}/{size}/{rotation}/{quality}.{format}';
   },
-  _tileShouldBeLoaded: function(coords) {
+  _isValidTile: function(coords) {
     var _this = this,
-      zoom = _this._map.getZoom(),
+      zoom = _this._getZoomForUrl(),
       sizes = _this._tierSizes[zoom],
       x = coords.x,
       y = (coords.y);
