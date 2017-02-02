@@ -14,6 +14,7 @@ RSpec.describe DashboardController, type: :controller do
         sign_in user
         get :index
       end
+      it { expect(response).to_not be_unauthorized }
       it { expect(response).to be_success }
     end
   end

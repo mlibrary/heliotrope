@@ -99,4 +99,73 @@ describe RolesController, type: :controller do
       end
     end
   end
+
+  describe "GET #index2" do
+    context 'unauthenticated user' do
+      before { get :index2 }
+      it { expect(response).to redirect_to new_user_session_path }
+    end
+    context "authenticated user" do
+      before do
+        sign_in current_user
+        get :index2
+      end
+      context "non-admin" do
+        let(:current_user) { create(:user) }
+        it { expect(response).to_not be_unauthorized }
+        it { expect(response).to be_success }
+      end
+    end
+  end
+
+  describe "GET #show" do
+    let(:role_id) { 0 }
+    context 'unauthenticated user' do
+      before { get :show, id: role_id }
+      it { expect(response).to redirect_to new_user_session_path }
+    end
+    context "authenticated user" do
+      let(:current_user) { create(:user) }
+      before do
+        sign_in current_user
+        get :show, id: role_id
+      end
+      context "role record not found" do
+        it { expect(response).to be_unauthorized }
+      end
+      context "current user is user" do
+        let(:current_user) { create(:editor, press: create(:press)) }
+        let(:role_id) { current_user.roles.first.id }
+        it { expect(response).to_not be_unauthorized }
+        it { expect(response).to be_success }
+      end
+      context "current user is different user" do
+        let(:current_user) { create(:user) }
+        let(:user) { create(:editor, press: create(:press)) }
+        let(:role_id) { user.roles.first.id }
+        it { expect(response).to have_http_status(302) }
+      end
+      context "current user is press admin" do
+        let(:current_user) { create(:press_admin, press: create(:press)) }
+        let(:user) { create(:editor, press: create(:press)) }
+        let(:role_id) { user.roles.first.id }
+        it { expect(response).to have_http_status(302) }
+      end
+      context "current user is press admin and user has press role" do
+        let(:current_user) { create(:press_admin, press: press) }
+        let(:user) { create(:editor, press: press) }
+        let(:role_id) { user.roles.first.id }
+        let(:press) { create(:press) }
+        it { expect(response).to_not be_unauthorized }
+        it { expect(response).to be_success }
+      end
+      context "current user is platform admin" do
+        let(:current_user) { create(:platform_admin) }
+        let(:user) { create(:editor, press: create(:press)) }
+        let(:role_id) { user.roles.first.id }
+        it { expect(response).to_not be_unauthorized }
+        it { expect(response).to be_success }
+      end
+    end
+  end
 end

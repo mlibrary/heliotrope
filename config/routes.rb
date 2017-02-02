@@ -31,6 +31,10 @@ Rails.application.routes.draw do
     # temporarily disable devise registrations and password resets for production #266
     devise_for :users, skip: [:registration, :password]
   end
+  get 'users', controller: :users, action: :index, as: :users
+  get 'users/:id', controller: :users, action: :show, as: :user
+  get 'roles', controller: :roles, action: :index2, as: :roles
+  get 'roles/:id', controller: :roles, action: :show, as: :role
 
   mount CurationConcerns::Engine, at: '/'
   curation_concerns_collections
