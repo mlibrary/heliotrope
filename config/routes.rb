@@ -6,6 +6,8 @@ resque_web_constraint = lambda do |request|
 end
 
 Rails.application.routes.draw do
+  get 'dashboard', controller: :dashboard, action: :index
+
   mount Blacklight::Engine => '/'
   mount Riiif::Engine => '/image-service', as: 'riiif'
 
