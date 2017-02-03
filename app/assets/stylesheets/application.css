@@ -13,7 +13,7 @@
  *= require_tree .
  *= require_self
  *= require jquery-ui/datepicker
- *= require leaflet
+ *= require leaflet_1.0.3
  *= require blacklight_facets
  *= require ableplayer
  *= require heliotrope
