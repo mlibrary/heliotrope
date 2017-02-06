@@ -1,0 +1,8 @@
+version: 6.4.1
+port: 8983
+download_dir: tmp/solr_download
+instance_dir: tmp/solr
+collection:
+  persist: true
+  dir: solr/config/
+  name: hydra-development

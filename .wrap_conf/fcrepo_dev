@@ -1,0 +1,6 @@
+port: 8984
+enable_jms: false
+version: 4.5.1
+download_dir: tmp/fedora_download
+instance_dir: tmp/fedora
+fcrepo_home_dir: tmp/fedora/dev
