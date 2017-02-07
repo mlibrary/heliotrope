@@ -538,7 +538,7 @@ GEM
       httparty (>= 0.11.0)
       oauth2 (>= 0.9.2)
     slop (3.6.0)
-    solr_wrapper (0.14.2)
+    solr_wrapper (0.21.0)
       faraday
       ruby-progressbar
       rubyzip
@@ -641,7 +641,7 @@ DEPENDENCIES
   sass-rails (~> 5.0)
   sdoc (~> 0.4.0)
   signet
-  solr_wrapper (= 0.14.2)
+  solr_wrapper (= 0.21.0)
   spring
   sqlite3
   therubyracer
@@ -650,4 +650,4 @@ DEPENDENCIES
   web-console (~> 2.0)
 
 BUNDLED WITH
-   1.13.6
+   1.14.2
