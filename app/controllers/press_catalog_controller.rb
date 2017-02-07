@@ -26,5 +26,9 @@ class PressCatalogController < ::CatalogController
 
     def load_press
       @press = Press.find_by_subdomain(params['subdomain'])
+      if @press.nil?
+        flash[:error] = "The press \"#{params['subdomain']}\" doesn't exist!"
+        redirect_to presses_path
+      end
     end
 end
