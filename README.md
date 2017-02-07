@@ -37,6 +37,12 @@ Or, if you prefer to start each server individually:
   $ bundle exec bin/rails s
 ```
 
+Note, there are also config files available for running the wrappers (which save you from having to remember ports, collection names etc). Their settings attempt to persist your Solr index as you move between dev and test. Use like so:
+```
+fcrepo_wrapper --config .wrap_conf/fcrepo_dev
+solr_wrapper --config .wrap_conf/solr_dev
+```
+
 ### Explain Partials
 
 Set the EXPLAIN_PARTIALS environment variable to show partials being rendered in source html of your views
@@ -57,10 +63,10 @@ Alternatively, you can start up each server individually.  This may be preferabl
 
 1. Start up FCrepo
 
-   `fcrepo_wrapper -p 8986 --no-jms`
+   `fcrepo_wrapper -p 8986 --no-jms` OR `fcrepo_wrapper --config .wrap_conf/fcrepo_test`
 1. Start up Solr
 
-   `solr_wrapper -p 8985 -d solr/config/ --collection_name hydra-test`
+   `solr_wrapper -p 8985 -d solr/config/ --collection_name hydra-test` OR `solr_wrapper --config .wrap_conf/solr_test`
 1. Run tests
 
    `rspec`
