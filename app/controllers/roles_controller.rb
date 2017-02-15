@@ -3,12 +3,24 @@
 # existing users
 class RolesController < ApplicationController
   before_action :authenticate_user!
-  load_and_authorize_resource :press, find_by: :subdomain
-  load_and_authorize_resource through: :press, except: [:update_all]
+  load_and_authorize_resource :press, find_by: :subdomain, except: [:index2, :show]
+  load_and_authorize_resource through: :press, except: [:update_all, :index2, :show]
 
   def index
     role = @press.roles.build
     authorize! :edit, role
+  end
+
+  def index2
+    @roles = RolesPresenter.new(current_user, current_user)
+    authorize! :read, @roles
+  end
+
+  def show
+    role = Role.find(params[:id])
+    user = User.find(role.user_id)
+    @role = RolePresenter.new(role, user, current_user)
+    authorize! :read, @role
   end
 
   def update_all

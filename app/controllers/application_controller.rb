@@ -14,6 +14,7 @@ class ApplicationController < ActionController::Base
 
   rescue_from ActiveFedora::ObjectNotFoundError, with: :render_unauthorized
   # rescue_from ActiveFedora::ActiveFedoraError, with: :render_unauthorized
+  rescue_from ActiveRecord::RecordNotFound, with: :render_unauthorized
 
   protected
 

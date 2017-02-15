@@ -21,5 +21,10 @@ describe ApplicationController do
     #   get :trigger
     #   expect(response).to be_unauthorized
     # end
+    it "ActiveRecord::RecordNotFound with response unauthorized" do
+      controller.the_exception = ActiveRecord::RecordNotFound.new
+      get :trigger
+      expect(response).to be_unauthorized
+    end
   end
 end

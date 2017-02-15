@@ -1,0 +1,21 @@
+<table class="table table-striped">
+  <tr>
+    <th>id</th>
+    <th>email</th>
+    <th>roles</th>
+  </tr>
+  <% users.all.each do |user| %>
+      <% if can? :read, user %>
+        <tr>
+          <td><%= link_to user.id, user_path(user.id) %></td>
+          <td><%= user.email %></td>
+          <td>
+            <% roles = RolesPresenter.new(user.user, users.current_user) %>
+            <% if can? :read, roles %>
+                <%= render partial: "roles/roles", locals: { roles: roles } %>
+            <% end %>
+          </td>
+        </tr>
+      <% end %>
+  <% end %>
+</table>

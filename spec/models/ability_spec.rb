@@ -56,6 +56,24 @@ describe Ability do
       should be_able_to(:destroy, another_user_monograph)
       should be_able_to(:update, another_user_monograph_presenter)
     end
+
+    describe "UsersPresenter" do
+      it { should be_able_to(:read, UsersPresenter.new(current_user)) }
+    end
+
+    describe "UserPresenter" do
+      it { should be_able_to(:read, UserPresenter.new(another_user, current_user)) }
+    end
+
+    describe "RolesPresenter" do
+      it { should be_able_to(:read, RolesPresenter.new(current_user, current_user)) }
+      it { should be_able_to(:read, RolesPresenter.new(another_user, current_user)) }
+    end
+
+    describe "RolePresenter" do
+      it { should be_able_to(:read, RolePresenter.new(current_user.roles.first, current_user, current_user)) }
+      it { should be_able_to(:read, RolePresenter.new(another_user.roles.first, another_user, current_user)) }
+    end
   end
 
   describe 'a press-admin' do
@@ -106,6 +124,32 @@ describe Ability do
         should_not be_able_to(:update, other_presenter)
       end
     end
+
+    describe "UsersPresenter" do
+      it { should be_able_to(:read, UsersPresenter.new(current_user)) }
+    end
+
+    describe "UserPresenter" do
+      let(:my_press_user) { create(:editor, press: my_press) }
+      let(:other_press_user) { create(:editor, press: other_press) }
+      it { should     be_able_to(:read, UserPresenter.new(current_user, current_user)) }
+      it { should     be_able_to(:read, UserPresenter.new(my_press_user, current_user)) }
+      it { should_not be_able_to(:read, UserPresenter.new(other_press_user, current_user)) }
+    end
+
+    describe "RolesPresenter" do
+      let(:another_user) { double("another_user") }
+      it { should be_able_to(:read, RolesPresenter.new(current_user, current_user)) }
+      it { should be_able_to(:read, RolesPresenter.new(another_user, current_user)) }
+    end
+
+    describe "RolePresenter" do
+      let(:my_press_user) { create(:editor, press: my_press) }
+      let(:other_press_user) { create(:editor, press: other_press) }
+      it { should     be_able_to(:read, RolePresenter.new(current_user.roles.first, current_user, current_user)) }
+      it { should     be_able_to(:read, RolePresenter.new(my_press_user.roles.first, my_press_user, current_user)) }
+      it { should_not be_able_to(:read, RolePresenter.new(other_press_user.roles.first, other_press_user, current_user)) }
+    end
   end
 
   describe 'a press editor' do
@@ -119,6 +163,33 @@ describe Ability do
       should_not be_able_to(:create, monograph_for_my_press)
       should_not be_able_to(:manage, my_sub_brand)
       should     be_able_to(:read, my_sub_brand)
+    end
+
+    describe "UsersPresenter" do
+      it { should_not be_able_to(:read, UsersPresenter.new(current_user)) }
+    end
+
+    describe "UserPresenter" do
+      let(:my_press_user) { create(:editor, press: my_press) }
+      let(:other_press_user) { create(:editor, press: create(:press)) }
+      it { should     be_able_to(:read, UserPresenter.new(current_user, current_user)) }
+      it { should_not be_able_to(:read, UserPresenter.new(my_press_user, current_user)) }
+      it { should_not be_able_to(:read, UserPresenter.new(other_press_user, current_user)) }
+      it { should_not be_able_to(:read, UserPresenter.new(create(:user), current_user)) }
+    end
+
+    describe "RolesPresenter" do
+      let(:another_user) { double("another_user") }
+      it { should be_able_to(:read, RolesPresenter.new(current_user, current_user)) }
+      it { should be_able_to(:read, RolesPresenter.new(another_user, current_user)) }
+    end
+
+    describe "RolePresenter" do
+      let(:my_press_user) { create(:editor, press: my_press) }
+      let(:other_press_user) { create(:editor, press: create(:press)) }
+      it { should     be_able_to(:read, RolePresenter.new(current_user.roles.first, current_user, current_user)) }
+      it { should_not be_able_to(:read, RolePresenter.new(my_press_user.roles.first, my_press_user, current_user)) }
+      it { should_not be_able_to(:read, RolePresenter.new(other_press_user.roles.first, other_press_user, current_user)) }
     end
   end
 
@@ -178,6 +249,27 @@ describe Ability do
         should_not be_able_to(:update, role)
         should_not be_able_to(:destroy, role)
       end
+    end
+
+    describe "UsersPresenter" do
+      it { should_not be_able_to(:read, UsersPresenter.new(current_user)) }
+    end
+
+    describe "UserPresenter" do
+      it { should     be_able_to(:read, UserPresenter.new(current_user, current_user)) }
+      it { should_not be_able_to(:read, UserPresenter.new(create(:user), current_user)) }
+    end
+
+    describe "RolesPresenter" do
+      let(:another_user) { double("another_user") }
+      it { should be_able_to(:read, RolesPresenter.new(current_user, current_user)) }
+      it { should be_able_to(:read, RolesPresenter.new(another_user, current_user)) }
+    end
+
+    describe "RolePresenter" do
+      let(:another_user) { create(:editor, press: create(:press)) }
+      it { should     be_able_to(:read, RolePresenter.new(current_user.roles.first, current_user, current_user)) }
+      it { should_not be_able_to(:read, RolePresenter.new(another_user.roles.first, another_user, current_user)) }
     end
   end
 end

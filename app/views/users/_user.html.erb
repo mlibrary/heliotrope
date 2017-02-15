@@ -1,0 +1,5 @@
+<p><%= user.email %></p>
+<% if user.roles? %>
+  <h2>Roles</h2>
+  <%= render partial: 'roles/roles', locals: { roles: user.roles } %>
+<% end %>
