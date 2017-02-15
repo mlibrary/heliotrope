@@ -8,10 +8,8 @@ class FileSetIndexer < CurationConcerns::FileSetIndexer
       # These are apparently not necessarily integers all the time, so index them as symbols
       index_technical_metadata(solr_doc, object.original_file) if object.original_file.present?
 
-      # Make sure the asset is aware of it's section and it's monograph
       object.in_works.each do |work|
         index_monograph_metadata(solr_doc, work) if work.is_a?(Monograph)
-        index_section_metadata(solr_doc, work) if work.is_a?(Section)
       end
     end
   end
@@ -23,14 +21,8 @@ class FileSetIndexer < CurationConcerns::FileSetIndexer
     solr_doc[Solrizer.solr_name('original_name', :stored_searchable)] = orig.original_name if orig.original_name.present?
   end
 
+  # Make sure the asset is aware of its monograph
   def index_monograph_metadata(solr_doc, work)
     solr_doc[Solrizer.solr_name('monograph_id', :symbol)] = work.id
-  end
-
-  def index_section_metadata(solr_doc, work)
-    solr_doc[Solrizer.solr_name('section_title', :stored_searchable)] = work.title
-    solr_doc[Solrizer.solr_name('section_title', :facetable)] = work.title
-    solr_doc[Solrizer.solr_name('section_id', :symbol)] = work.id
-    solr_doc[Solrizer.solr_name('monograph_id', :symbol)] = work.monograph_id
   end
 end

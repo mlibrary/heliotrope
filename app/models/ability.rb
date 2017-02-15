@@ -32,10 +32,6 @@ class Ability
       @user.admin_presses.map(&:subdomain).include?(p.monograph.subdomain)
     end
 
-    can :update, CurationConcerns::SectionPresenter do |p|
-      @user.admin_presses.map(&:subdomain).include?(p.monograph.subdomain)
-    end
-
     grant_platform_admin_abilities
   end
 

@@ -21,7 +21,7 @@ module CurationConcerns
         :transcript, :copyright_holder, :doi, :hdl,
         description: [], resource_type: [], caption: [], alt_text: [],
         content_type: [], contributor: [], date_created: [], keywords: [],
-        language: [], identifier: [], relation: [], title: [],
+        language: [], identifier: [], section_title: [], title: [],
         primary_creator_role: [], translation: [], display_date: [])
     end
 
@@ -29,7 +29,7 @@ module CurationConcerns
     # This fails far up the stack in hydra-access-controls with errors similar to
     # https://groups.google.com/forum/#!searchin/hydra-tech/visibility/hydra-tech/bEjUiLS6HiU/uWvi9ssVAQAJ
     # either saying embargo/lease is not a valid visibility, or setting OA files as lease and privates as
-    # embargos. Since we're allowing users to choose visibility for FileSets (not just inherit from Monograph/Section),
+    # embargos. Since we're allowing users to choose visibility for FileSets (not just inherit from Monograph),
     # it appears we need to tweak this to get it working? This ugly hack solves an immediate problem, but
     # TODO: decide if overriding Hydra::AccessControls::Embargoable somehow is a better path forward,
     # see: https://github.com/ualbertalib/sufia/commit/4edf55214f7064e8a4aec7290f4f1b30a60571d8

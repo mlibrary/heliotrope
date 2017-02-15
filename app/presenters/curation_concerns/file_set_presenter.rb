@@ -28,9 +28,9 @@ module CurationConcerns
     # Metadata Methods
     delegate :resource_type, :caption, :alt_text, :description, :copyright_holder,
              :content_type, :creator, :creator_full_name, :contributor, :date_created,
-             :keywords, :relation, :publisher, :language, :date_uploaded,
+             :keywords, :publisher, :language, :date_uploaded,
              :rights, :embargo_release_date, :lease_expiration_date, :depositor, :tags,
-             :title_or_label, :external_resource, :book_needs_handles, :section_title, :section_id,
+             :title_or_label, :external_resource, :book_needs_handles, :section_title,
              :allow_download, :allow_hi_res, :copyright_status, :rights_granted,
              :rights_granted_creative_commons, :exclusive_to_platform, :permissions_expiration_date,
              :allow_display_after_expiration, :allow_download_after_expiration, :credit_line,
@@ -53,14 +53,6 @@ module CurationConcerns
 
     def press_url
       Press.find_by(subdomain: subdomain).press_url
-    end
-
-    def section_title
-      Array(solr_document['section_title_tesim']).first
-    end
-
-    def section_id
-      Array(solr_document['section_id_ssim']).first
     end
 
     def monograph_id

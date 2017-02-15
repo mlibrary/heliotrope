@@ -22,44 +22,27 @@ feature "Monograph Catalog Facets" do
   end
 
   context "sections" do
-    let(:section1) { build(:public_section, title: ['C 1']) }
-    let(:section2) { build(:public_section, title: ['B 2']) }
-    let(:section3) { build(:public_section, title: ['A 3']) }
-
     let(:monograph) do
       m = build(:public_monograph, title: ["Yellow"], representative_id: cover.id)
-      m.ordered_members = [cover, section1, section2, section3]
-      m.save! # Now m will have an ID
-      [section1, section2, section3].each do |section|
-        section.monograph_id = m.id
-        section.save!
-      end
+      m.ordered_members = [cover, fs1, fs2, fs3, fs4, fs5, fs6]
+      m.save!
       m
     end
 
-    let(:fs1) { build(:public_file_set, title: ['Sec 1 File 1']) }
-    let(:fs2) { build(:public_file_set, title: ['Sec 2 File 1']) }
-    let(:fs3) { build(:public_file_set, title: ['Sec 2 File 2']) }
-    let(:fs4) { build(:public_file_set, title: ['Sec 3 File 1']) }
-    let(:fs5) { build(:public_file_set, title: ['Sec 3 File 2']) }
-    let(:fs6) { build(:public_file_set, title: ['Sec 3 File 3']) }
+    # Section 1 has 1 file
+    let(:s1_title) { ['C 1'] }
+    let(:fs1) { build(:public_file_set, title: ['Sec 1 File 1'], section_title: s1_title) }
 
-    before do
-      # Section 1 has 1 file
-      section1.ordered_members = [fs1]
-      section1.save!
-      # Section 2 has 2 files
-      section2.ordered_members = [fs2, fs3]
-      section2.save!
-      # Section 3 has 3 files
-      section3.ordered_members = [fs4, fs5, fs6]
-      section3.save!
+    # Section 2 has 2 files
+    let(:s2_title) { ['B 2'] }
+    let(:fs2) { build(:public_file_set, title: ['Sec 2 File 1'], section_title: s2_title) }
+    let(:fs3) { build(:public_file_set, title: ['Sec 2 File 2'], section_title: s2_title) }
 
-      # Update the solr index for each file to add section info
-      [section1, section2, section3].each do |section|
-        section.ordered_members.to_a.each(&:update_index)
-      end
-    end
+    # Section 3 has 3 files
+    let(:s3_title) { ['A 3'] }
+    let(:fs4) { build(:public_file_set, title: ['Sec 3 File 1'], section_title: s3_title) }
+    let(:fs5) { build(:public_file_set, title: ['Sec 3 File 2'], section_title: s3_title) }
+    let(:fs6) { build(:public_file_set, title: ['Sec 3 File 3'], section_title: s3_title) }
 
     scenario "shows sections in intended order" do
       visit monograph_catalog_facet_path(id: 'section_title_sim', monograph_id: monograph.id)
@@ -69,31 +52,24 @@ feature "Monograph Catalog Facets" do
       # "B 2"
       # "A 3"
       # so by order, not alphabetically or by frequency
-
       expect(page).to have_selector '.facet-values li:first', text: "C 1"
       expect(page).to_not have_selector '.facet-values li:first', text: "A 3"
+
+      # TODO: Test the ordering of 'B 2' and 'A 3' facets
+      expect(page).to have_selector '.facet-values li', text: "B 2"
+      expect(page).to have_selector '.facet-values li', text: "A 3"
     end
   end
 
   context "with italics in the title" do
-    let(:section) { create(:public_section, title: ["A Section with _Italicized Title_ Stuff"]) }
-
     let(:monograph) do
       m = build(:public_monograph, title: ["Yellow"], representative_id: cover.id)
-      m.ordered_members = [cover, section]
+      m.ordered_members = [cover, fs]
       m.save!
-      section.monograph_id = m.id
-      section.save!
       m
     end
 
-    let(:fs) { create(:public_file_set) }
-
-    before do
-      section.ordered_members = [fs]
-      section.save!
-      fs.update_index
-    end
+    let(:fs) { create(:public_file_set, section_title: ["A Section with _Italicized Title_ Stuff"]) }
 
     scenario "shows italics (emphasis) in section facet links" do
       visit monograph_catalog_path(id: monograph.id)
@@ -258,11 +234,7 @@ feature "Monograph Catalog Facets" do
     end
 
     scenario "shows the correct facets" do
-      visit new_curation_concerns_section_path
-      fill_in 'Title', with: "A Section"
-      select monograph.title.first, from: "Monograph"
-      click_button 'Create Section'
-
+      visit monograph_show_path(monograph)
       click_link 'Attach a File'
       fill_in 'Title', with: 'File Title'
       fill_in 'Resource Type', with: 'image'
@@ -272,8 +244,9 @@ feature "Monograph Catalog Facets" do
       fill_in 'Primary Creator (given name)', with: 'Testy'
       fill_in 'Search Year', with: '1974'
       fill_in 'Keywords', with: 'stuff'
+      fill_in 'Related Section', with: 'A Section'
       attach_file 'file_set_files', File.join(fixture_path, 'csv', 'miranda.jpg')
-      click_button 'Attach to Section'
+      click_button 'Attach to Monograph'
 
       # Selectors needed for assets/javascripts/ga_event_tracking.js
       # If these change, fix here then update ga_event_tracking.js

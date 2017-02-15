@@ -8,14 +8,10 @@ describe Ability do
   let(:sub_brand) { create(:sub_brand, press: press) }
 
   let(:monograph) { create(:monograph, user: creating_user, press: press.subdomain) }
-  let(:section) { create(:section, user: creating_user) }
   let(:file_set) { create(:file_set, user: creating_user) }
 
   let(:monograph_presenter) do
     CurationConcerns::MonographPresenter.new(SolrDocument.new(id: monograph.id, press_tesim: press.subdomain), described_class.new(creating_user))
-  end
-  let(:section_presenter) do
-    CurationConcerns::SectionPresenter.new(SolrDocument.new(id: section.id, monograph_id_ssim: monograph.id), described_class.new(creating_user))
   end
   let(:file_set_presenter) do
     CurationConcerns::FileSetPresenter.new(SolrDocument.new(id: file_set.id, monograph_id_ssim: monograph.id), described_class.new(creating_user))
@@ -38,12 +34,6 @@ describe Ability do
       should be_able_to(:update, monograph)
       should be_able_to(:destroy, monograph)
       should be_able_to(:update, monograph_presenter)
-
-      should be_able_to(:create, Section.new)
-      should be_able_to(:read, section)
-      should be_able_to(:update, section)
-      should be_able_to(:destroy, section)
-      should be_able_to(:update, section_presenter)
 
       should be_able_to(:create, FileSet.new)
       should be_able_to(:read, file_set)
@@ -139,7 +129,6 @@ describe Ability do
     context "creating" do
       it do
         should_not be_able_to(:create, Monograph.new)
-        should_not be_able_to(:create, Section.new)
         should_not be_able_to(:create, FileSet.new)
       end
     end
@@ -161,10 +150,6 @@ describe Ability do
         should_not be_able_to(:update, monograph)
         should_not be_able_to(:destroy, monograph)
 
-        should_not be_able_to(:read, section)
-        should_not be_able_to(:update, section)
-        should_not be_able_to(:destroy, section)
-
         should_not be_able_to(:read, file_set)
         should_not be_able_to(:update, file_set)
         should_not be_able_to(:destroy, file_set)
@@ -173,17 +158,12 @@ describe Ability do
 
     context "read/modify/destroy public things" do
       let(:monograph) { create(:public_monograph, user: creating_user, press: press.subdomain) }
-      let(:section) { create(:public_section, user: creating_user) }
       let(:file_set) { create(:public_file_set, user: creating_user) }
       it do
         should be_able_to(:read, monograph)
         should_not be_able_to(:update, monograph)
         should_not be_able_to(:destroy, monograph)
         should_not be_able_to(:publish, monograph)
-
-        should be_able_to(:read, section)
-        should_not be_able_to(:update, section)
-        should_not be_able_to(:destroy, section)
 
         should be_able_to(:read, file_set)
         should_not be_able_to(:update, file_set)

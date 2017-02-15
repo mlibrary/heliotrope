@@ -26,7 +26,10 @@ describe Import::CSVParser do
       expect(subject['monograph']['creator_given_name']).to eq 'William'
       expect(subject['monograph']['contributor']).to eq ['Christopher Marlowe', 'Sir Francis Bacon']
       expect(subject['monograph']['subject']).to eq ['Dog', 'Cat', 'Mouse']
-      expect(subject['monograph']['files']).to eq ['shipwreck.jpg', 'miranda.jpg', 'ファイル.txt']
+      expect(subject['monograph']['files']).to eq ['shipwreck.jpg', 'miranda.jpg', 'ファイル.txt', 'shipwreck1.jpg', 'miranda1.jpg', 'shipwreck2.jpg', 'miranda2.jpg', 'shipwreck1.jpg']
+
+      expect(subject['monograph']['files_metadata'].count).to eq 8
+
       expect(subject['monograph']['files_metadata']).to eq [
         { 'title' => ['Monograph Shipwreck'],
           'creator_family_name' => 'Smith',
@@ -36,7 +39,8 @@ describe Import::CSVParser do
           'exclusive_to_platform' => 'no',
           'rights_granted_creative_commons' => 'Creative Commons Attribution-ShareAlike license, 3.0 Unported',
           'content_type' => ['portrait'],
-          'language' => ['English'] },
+          'language' => ['English']
+        },
         { 'title' => ['Monograph Miranda'],
           'creator_family_name' => 'Waterhouse',
           'creator_given_name' => 'John William',
@@ -45,72 +49,71 @@ describe Import::CSVParser do
           'exclusive_to_platform' => 'yes',
           'rights_granted_creative_commons' => 'Creative Commons Zero license (implies pd)',
           'content_type' => ['audience materials'],
-          'language' => ['English', 'German'] },
+          'language' => ['English', 'German']
+        },
         { 'title' => ['日本語のファイル'],
           'resource_type' => ['text'],
           'external_resource' => 'no',
           'exclusive_to_platform' => 'yes',
           'rights_granted_creative_commons' => 'Creative Commons Zero license (implies pd)',
           'content_type' => ['portrait', 'illustration'],
-          'language' => ['Japanese'] }
+          'language' => ['Japanese']
+        },
+        { 'title' => ['Section 1 Shipwreck'],
+          'creator_family_name' => 'Smith',
+          'resource_type' => ['image'],
+          'external_resource' => 'no',
+          'exclusive_to_platform' => 'yes',
+          'rights_granted_creative_commons' => 'Creative Commons Zero license (implies pd)',
+          'content_type' => ['audience materials'],
+          'keywords' => ['keyword1', 'keyword2'],
+          'language' => ['Russian'],
+          'section_title' => ['Act 1: Calm Waters']
+        },
+        { 'title' => ['Section 1 Miranda'],
+          'creator_family_name' => 'Waterhouse',
+          'creator_given_name' => 'John William',
+          'resource_type' => ['image'],
+          'external_resource' => 'no',
+          'exclusive_to_platform' => 'yes',
+          'rights_granted_creative_commons' => 'Creative Commons Zero license (implies pd)',
+          'content_type' => ['portrait'],
+          'keywords' => ['regular', 'italicized'],
+          'language' => ['Russian', 'German', 'French'],
+          'section_title' => ['Act 1: Calm Waters']
+        },
+        { 'title' => ['Section 2 Shipwreck'],
+          'creator_family_name' => 'Smith',
+          'resource_type' => ['image'],
+          'external_resource' => 'no',
+          'exclusive_to_platform' => 'yes',
+          'rights_granted_creative_commons' => 'Creative Commons Zero license (implies pd)',
+          'content_type' => ['audience materials'],
+          'language' => ['French'],
+          'section_title' => ['Act 2: Stirrin\' Up']
+        },
+        { 'title' => ['Section 2 Miranda'],
+          'creator_family_name' => 'Waterhouse',
+          'creator_given_name' => 'John William',
+          'resource_type' => ['image'],
+          'external_resource' => 'no',
+          'exclusive_to_platform' => 'yes',
+          'rights_granted_creative_commons' => 'Creative Commons Zero license (implies pd)',
+          'content_type' => ['illustration'],
+          'language' => ['English'],
+          'section_title' => ['Act 2: Stirrin\' Up']
+        },
+        { 'title' => ['Previous Shipwreck File (Again)'],
+          'creator_family_name' => 'Smith',
+          'resource_type' => ['image'],
+          'external_resource' => 'no',
+          'exclusive_to_platform' => 'yes',
+          'rights_granted_creative_commons' => 'Creative Commons Zero license (implies pd)',
+          'content_type' => ['portrait', 'photograph'],
+          'language' => ['Latin'],
+          'section_title' => ['Act 2: Stirrin\' Up']
+        }
       ]
-
-      # order of asset metadata here is as in lib/import.rb
-      expect(subject['sections'])
-        .to include('Act 1: Calm Waters' => { 'title' => ['Act 1: Calm Waters'],
-                                              'files' => ['shipwreck1.jpg', 'miranda1.jpg'],
-                                              'files_metadata' => [{ 'title' => ['Section 1 Shipwreck'],
-                                                                     'creator_family_name' => 'Smith',
-                                                                     'resource_type' => ['image'],
-                                                                     'external_resource' => 'no',
-                                                                     'exclusive_to_platform' => 'yes',
-                                                                     'rights_granted_creative_commons' => 'Creative Commons Zero license (implies pd)',
-                                                                     'content_type' => ['audience materials'],
-                                                                     'keywords' => ['keyword1', 'keyword2'],
-                                                                     'language' => ['Russian'] },
-                                                                   { 'title' => ['Section 1 Miranda'],
-                                                                     'creator_family_name' => 'Waterhouse',
-                                                                     'creator_given_name' => 'John William',
-                                                                     'resource_type' => ['image'],
-                                                                     'external_resource' => 'no',
-                                                                     'exclusive_to_platform' => 'yes',
-                                                                     'rights_granted_creative_commons' => 'Creative Commons Zero license (implies pd)',
-                                                                     'content_type' => ['portrait'],
-                                                                     'keywords' => ['regular', 'italicized'],
-                                                                     'language' => ['Russian', 'German', 'French'] }
-                                                                   ]
-                                            })
-
-      expect(subject['sections'])
-        .to include('Act 2: Stirrin\' Up' => { 'title' => ['Act 2: Stirrin\' Up'],
-                                               'files' => ['shipwreck2.jpg', 'miranda2.jpg', 'shipwreck1.jpg'],
-                                               'files_metadata' => [{ 'title' => ['Section 2 Shipwreck'],
-                                                                      'creator_family_name' => 'Smith',
-                                                                      'resource_type' => ['image'],
-                                                                      'external_resource' => 'no',
-                                                                      'exclusive_to_platform' => 'yes',
-                                                                      'rights_granted_creative_commons' => 'Creative Commons Zero license (implies pd)',
-                                                                      'content_type' => ['audience materials'],
-                                                                      'language' => ['French'] },
-                                                                    { 'title' => ['Section 2 Miranda'],
-                                                                      'creator_family_name' => 'Waterhouse',
-                                                                      'creator_given_name' => 'John William',
-                                                                      'resource_type' => ['image'],
-                                                                      'external_resource' => 'no',
-                                                                      'exclusive_to_platform' => 'yes',
-                                                                      'rights_granted_creative_commons' => 'Creative Commons Zero license (implies pd)',
-                                                                      'content_type' => ['illustration'],
-                                                                      'language' => ['English'] },
-                                                                    { 'title' => ['Previous Shipwreck File (Again)'],
-                                                                      'creator_family_name' => 'Smith',
-                                                                      'resource_type' => ['image'],
-                                                                      'external_resource' => 'no',
-                                                                      'exclusive_to_platform' => 'yes',
-                                                                      'rights_granted_creative_commons' => 'Creative Commons Zero license (implies pd)',
-                                                                      'content_type' => ['portrait', 'photograph'],
-                                                                      'language' => ['Latin'] }
-                                                                    ]
-                                             })
     end
   end
 end

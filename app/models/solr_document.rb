@@ -39,7 +39,6 @@ class SolrDocument
     'permissions_expiration_date',
     'rights_granted',
     'rights_granted_creative_commons',
-    'section_id',
     'use_crossref_xml'
   ]
 
@@ -66,7 +65,6 @@ class SolrDocument
     'isbn_ebook',
     'keywords',
     'primary_creator_role',
-    'relation',
     'resource_type',
     'section_title',
     'sort_date',

@@ -14,7 +14,6 @@ describe SearchBuilder do
 
       it 'limits query to collection and generic work' do
         expect(solr_params[:fq].first).to match(/{!terms f=has_model_ssim}Monograph,Collection/)
-        expect(solr_params[:fq].first).not_to match(/{!raw f=has_model_ssim}Section/)
       end
     end
   end

@@ -27,8 +27,8 @@ class FileSet < ActiveFedora::Base
     index.as :stored_searchable, :facetable
   end
 
-  property :relation, predicate: ::RDF::Vocab::DC.relation do |index|
-    index.as :stored_searchable
+  property :section_title, predicate: ::RDF::Vocab::DC.relation do |index|
+    index.as :stored_searchable, :facetable
   end
 
   property :doi, predicate: ::RDF::Vocab::Identifiers.doi, multiple: false do |index|

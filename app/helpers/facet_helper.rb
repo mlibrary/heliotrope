@@ -31,9 +31,8 @@ module FacetHelper
   def reorder_section_facet(monograph_presenter, paginator)
     # if on the dedicated facet page, defer to the user's sort choice
     if !params['facet.sort']
-      ordered_section_titles = monograph_presenter.section_docs.map { |s| s.title.first }
       ordered_facet_items = []
-      ordered_section_titles.each do |section_title|
+      monograph_presenter.ordered_section_titles.each do |section_title|
         paginator.items.each do |item|
           next unless item.value == section_title
           ordered_facet_items << Blacklight::Solr::Response::Facets::FacetItem.new(label: render_markdown(item.value),

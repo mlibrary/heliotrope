@@ -8,8 +8,7 @@ describe MonographSearchBuilder do
 
   describe "#filter_by_members" do
     context "a monograph with assets" do
-      let(:monograph) { create(:monograph, representative_id: cover.id) }
-      let(:section) { create(:section) }
+      let(:monograph) { build(:monograph, representative_id: cover.id) }
       let(:cover) { create(:file_set) }
       let(:file1) { create(:file_set) }
       let(:file2) { create(:file_set) }
@@ -17,9 +16,7 @@ describe MonographSearchBuilder do
       before do
         monograph.ordered_members << cover
         monograph.ordered_members << file1
-        section.ordered_members << file2
-        section.save!
-        monograph.ordered_members << section
+        monograph.ordered_members << file2
         monograph.save!
         search_builder.blacklight_params['id'] = monograph.id
         search_builder.filter_by_members(solr_params)

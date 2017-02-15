@@ -73,6 +73,7 @@ module Import
       { field_name: 'Sort Date', metadata_name: 'sort_date', required: false, multivalued: :no, date_format: true },
       { field_name: 'Display Date', metadata_name: 'display_date', required: false, multivalued: :yes_split },
       { field_name: 'Keywords', metadata_name: 'keywords', required: false, multivalued: :yes_split },
+      { field_name: 'Section', metadata_name: 'section_title', required: false, multivalued: :yes },
       { field_name: 'Language', metadata_name: 'language', required: false, multivalued: :yes_split },
       { field_name: 'Transcript', metadata_name: 'transcript', required: false, multivalued: :no },
       { field_name: 'Translation', metadata_name: 'translation', required: false, multivalued: :yes }

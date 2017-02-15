@@ -15,8 +15,6 @@ module Import
       attrs['monograph'] = {}
       attrs['monograph']['files'] = []
       attrs['monograph']['files_metadata'] = []
-      # ... but can have many sections
-      attrs['sections'] = {}
 
       puts "Parsing file: #{file}"
       rows = CSV.read(file, headers: true, skip_blanks: true).delete_if { |row| row.to_hash.values.all?(&:blank?) }
@@ -74,32 +72,8 @@ module Import
       end
 
       def attach_asset(row, attrs, file_attrs)
-        # blank section will mean 'attach to monograph'
-        # puts file_attrs.to_s
-
-        section_title = get_section_title(row)
-
-        # using parallel arrays for files and their metadata
-        # for both monographs and sections
-        if section_title != '://:MONOGRAPH://:'
-          # create section if new
-          unless attrs['sections'][section_title]
-            current_section = {}
-            current_section['title'] = Array(row['Section'].split(';')).map(&:strip)
-            current_section['files'] = []
-            current_section['files_metadata'] = []
-            attrs['sections'][section_title] = current_section
-          end
-          attrs['sections'][section_title]['files'] << row['File Name'] || ''
-          attrs['sections'][section_title]['files_metadata'] << file_attrs
-          # puts "    ... will attach to Section: #{section_title}"
-        else
-          # An array of file names with a matching array of
-          # metadata for each of those files.
-          attrs['monograph']['files'] << row['File Name'] || ''
-          attrs['monograph']['files_metadata'] << file_attrs
-          # puts "    ... will attach directly to monograph"
-        end
+        attrs['monograph']['files'] << row['File Name'] || ''
+        attrs['monograph']['files_metadata'] << file_attrs
 
         # TODO: The matching arrays will only work if they
         # both contain exactly the same number of elements.
