@@ -248,6 +248,14 @@ describe CurationConcerns::MonographPresenter do
         it { is_expected.to eq nil }
       end
     end
+
+    describe "#representative_presenter" do
+      subject { presenter.representative_presenter }
+
+      it "returns a FileSetPresenter" do
+        expect(subject.class).to eq CurationConcerns::FileSetPresenter
+      end
+    end
   end
 
   describe '#date_published' do
