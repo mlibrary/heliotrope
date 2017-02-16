@@ -1,0 +1,40 @@
+#!/usr/bin/env ruby
+
+require 'optparse'
+puts "Loading environment"
+require File.expand_path('../../config/environment',  __FILE__)
+require 'export'
+
+
+# Parse the the command line arguments
+def parse_inputs(args)
+  inputs = {}
+  opts = OptionParser.new
+
+  opts.on('-m [MONOGRAPH ID]', 'ID of monograph to export (or \'all\').') do |monograph_id|
+    inputs[:monograph_id] = monograph_id
+  end
+
+  opts.on('-h', '--help', 'Print this help message') do
+    puts opts
+    exit 0
+  end
+
+  opts.parse!(args)
+
+  raise "Error: Monograph ID (or 'all') is required" unless inputs[:monograph_id]
+
+  inputs
+rescue => e
+  puts e.message
+  puts opts
+  exit 1
+end
+
+# Read and validate inputs
+options = parse_inputs(ARGV)
+
+puts "Begin export"
+exporter = Export::Exporter.new(options[:monograph_id])
+exporter.run
+puts "Export finished"
