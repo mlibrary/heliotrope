@@ -41,6 +41,13 @@ module Import
         monograph.representative_id = f.first.id
         monograph.thumbnail_id = f.first.id
         monograph.save!
+
+        # I think that because the cover essentially has no metadata (just the file name),
+        # it's not included in monograph_file_attrs (it is but it's just {}) and so
+        # never gets it's metadata updated as the other file_sets do.
+        # For some reason this seems to cause the technical metadata from Characterization
+        # to not be in solr. This seems to fix that. TODO: investigate this more.
+        f.first.update_index
       end
     end
 

@@ -102,5 +102,14 @@ module CurationConcerns
         @ordered_member_docs = ids.map { |id| docs_hash[id] }
       end
     end
+
+    # This overrides CC 1.6.2's work_show_presenter.rb which is recursive.
+    # Because our FileSets also have respresentative_presenters (I guess that's not normal?)
+    # this recursive call from Work -> Arbitrary Nesting of Works -> FileSet never ends.
+    # Our PCDM model currently only has Work -> FileSet so this this non-recursive approach should be fine
+    def representative_presenter
+      return nil if representative_id.blank?
+      @representative_presenter ||= CurationConcerns::PresenterFactory.build_presenters([representative_id], CurationConcerns::FileSetPresenter, current_ability).first
+    end
   end
 end
