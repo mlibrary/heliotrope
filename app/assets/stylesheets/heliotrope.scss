@@ -345,32 +345,11 @@ footer.press {
 
   #transcript, .translation {
     width: 97%;
-
   }
 
-  #transcript {
-    padding-top: 2em;
-    .able-transcript-area {
-      border-color: #DDD;
-
-      .able-window-toolbar {
-        color: #333;
-        background-color: #f5f5f5;
-        border-color: #DDD;
-
-        h3 {
-          color: #333;
-          display: inline-block;
-          margin-right: 68%;
-        }
-
-        label {
-          color: #333;
-        }
-
-      }
-
-    }
+  .transcript .panel-body {
+    overflow-y:scroll;
+    height:400px;
   }
 
   // ASSET METADATA

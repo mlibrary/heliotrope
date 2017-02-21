@@ -186,16 +186,6 @@ $um-black-80: #342f2e;
     }
   }
 
-  #transcript {
-    .able-transcript-area {
-      .able-window-toolbar {
-        label {
-          @include meta;
-        }
-      }
-    }
-  }
-
   //footer
   footer {
     a,

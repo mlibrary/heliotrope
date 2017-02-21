@@ -95,8 +95,7 @@ feature 'Create a file set' do
       expect(page).to have_content 'keyword 1'
       expect(page).to have_content 'English'
       # expect(page).to have_content 'yes1'
-      # If the file_set has a transcript, the #transcript div will be present to be managed by AblePlayer
-      expect(page).to have_selector('#transcript')
+      expect(page).to have_content 'This is what is transcribed for you to read'
       expect(page).to have_content 'Here is what that means'
       expect(page).to have_content 'A Nice Museum'
       expect(page).to have_content 'Unauthorized use prohibited. A Nice Museum.'
