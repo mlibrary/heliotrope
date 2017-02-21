@@ -660,6 +660,7 @@ DEPENDENCIES
   factory_girl_rails
   fakefs
   fcrepo_wrapper (= 0.5.2)
+  httparty
   jbuilder (~> 2.0)
   jekyll
   jquery-rails
