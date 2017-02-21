@@ -36,7 +36,7 @@ end
 
 def indiana
   Press.where(name: 'Indiana University Press').first_or_initialize.tap do |press|
-    press.logo_path = 'https://assets.iu.edu/brand/2.x/trident-large.png'
+    press.logo_path = 'indiana.png'
     press.description = "Indiana University Press's mission is to inform and inspire scholars, students, and thoughtful general readers by disseminating ideas and knowledge of global significance, regional importance, and lasting value."
     press.subdomain = 'indiana'
     press.press_url = 'http://www.iupress.indiana.edu'
@@ -76,6 +76,7 @@ if Rails.env.eql?('production')
   # add presses as they become ready for production
   northwestern
   minnesota
+  indiana
   pennstate unless bulleit?
 else
   northwestern

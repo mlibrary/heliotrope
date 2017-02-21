@@ -2,6 +2,232 @@
 // base classes set in heliotrope.scss
 ///////////////////////////////////////////////
 //
+// Indiana University Press
+//
+///////////////////////////////////////////////
+// colors
+$iu-brand-color: #990000;
+$iu-accent-color: #eeedeb;
+
+$iu-accent-footer: #aca39a;
+
+$iu-accent-link: #990000;
+
+$iu-black: #191919;
+$iu-mahogany: #4a3c31;
+$iu-darklimestone: #83786f;
+$iu-darkmidnight: #01426a;
+$iu-midnight: #006298;
+
+// font file import from IU
+@import url('https://fonts.iu.edu/style.css?family=BentonSans:regular,bold|GeorgiaPro:regular');
+
+// typography
+@mixin benton-regular {
+  font-family: BentonSansRegular,Helvetica,Arial,sans-serif;
+  font-weight: 400;
+}
+
+@mixin benton-bold {
+  font-family: BentonSansBold,Helvetica,Arial,sans-serif;
+  font-weight: 400;
+}
+
+@mixin georgia-pro {
+  font-family: GeorgiaProRegular,Georgia,serif;
+}
+
+.indiana {
+
+  // typography
+  @include benton-regular;
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5 {
+    @include benton-bold;
+  }
+
+  // links
+  a {
+    color: $iu-darkmidnight;
+  }
+
+  a:hover,
+  a:active {
+    color: $iu-midnight;
+  }
+
+  // buttons
+  .btn {
+    @include benton-regular;
+  }
+
+  #manage-monograph-button {
+    color: $iu-accent-color;
+    background-color: $iu-brand-color;
+  }
+
+  // navigation menu
+  .navbar-default .navbar-nav > .open > a,
+  .navbar-default .navbar-nav > .open > a:hover,
+  .navbar-default .navbar-nav > .open > a:focus {
+    background-color: $iu-accent-color;
+  }
+
+  #brand-bar {
+    background-color: $iu-brand-color;
+    border-color: $iu-brand-color;
+
+    .navbar-brand {
+      color: $iu-accent-color;
+      @include benton-bold;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+
+    .navbar-nav {
+      a#add-content,
+      a.login,
+      a.user-display-name {
+          color: $iu-accent-color;
+      }
+
+      .open > a,
+      .open > a:focus,
+      .open > a:hover {
+        background-color: $iu-brand-color;
+      }
+    }
+
+    button.search-submit {
+      background-color: $iu-accent-color;
+      border-color: $iu-accent-color;
+      color: $iu-brand-color;
+    }
+
+  }
+
+  // breadcrumbs
+  .breadcrumbs {
+    @include benton-bold;
+  }
+
+  // press catalog
+
+  // jumbotron
+  .jumbotron {
+    background-color: $iu-accent-color;
+    @include georgia-pro;
+
+    .logo.pull-left {
+
+        float: none !important;
+        margin-bottom: 2.5em;
+
+      img {
+        width: 75%;
+        margin: 0 auto;
+        display: block;
+      }
+
+    }
+
+    .lead {
+      text-align: center;
+    }
+
+  }
+
+  .press {
+
+    h2:nth-child(2) {
+      margin-bottom: 1.5em;
+    }
+
+    .document,
+    .documentHeader {
+      margin-bottom: 2em;
+    }
+  }
+
+  // monograph
+  .monograph {
+    .documentHeader {
+      p {
+        @include georgia-pro;
+      }
+    }
+  }
+
+  // pagination
+  .pagination {
+    @include benton-bold;
+     li a, li span {
+       color: $iu-brand-color;
+     }
+
+     .active>a,
+     .active>a:hover,
+     .active>a:focus,
+     .active>span,
+     .active>span:hover,
+     .active>span:focus {
+       background-color: $iu-brand-color;
+       border-color: $iu-brand-color;
+       color: $iu-accent-color;
+     }
+  }
+
+  // assets
+
+  #transcript {
+    .able-transcript-area {
+      .able-window-toolbar {
+        label {
+          @include georgia-pro;
+        }
+      }
+    }
+  }
+
+  //footer
+  footer {
+    a,
+    a:hover,
+    a:active {
+      color: $iu-accent-color;
+    }
+    .press-block-a,
+    .press-block-b {
+      background-color:  $iu-accent-footer;
+
+      img {
+        height: auto;
+        width: auto;
+      }
+
+      a,
+      a:hover,
+      a:active {
+        color: $iu-brand-color;
+      }
+
+    }
+    .press-block-c {
+      background-color: $iu-brand-color;
+    }
+    .platform {
+      background-color: $iu-darklimestone;
+    }
+  }
+
+}
+
+///////////////////////////////////////////////
+//
 // University of Michigan Press
 //
 ///////////////////////////////////////////////
