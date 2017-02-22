@@ -7,7 +7,7 @@ module Import
     attr_reader :row, :attrs
 
     def data_for_monograph(row, attrs)
-      fields = UNIVERSAL_FIELDS + MONOGRAPH_FIELDS
+      fields = METADATA_FIELDS.select { |f| [:universal, :monograph].include? f[:object] }
       fields.each do |field|
         # no error-checking for monograph stuff right now
         next if row[field[:field_name]].blank?
@@ -21,7 +21,7 @@ module Import
       md = Redcarpet::Markdown.new(Redcarpet::Render::StripDown, space_after_headers: true)
       missing_fields_errors, controlled_vocab_errors, date_errors = Array.new(3) { [] }
 
-      fields = UNIVERSAL_FIELDS + ASSET_FIELDS
+      fields = METADATA_FIELDS.select { |f| [:universal, :file_set].include? f[:object] }
       fields.each do |field|
         if !row[field[:field_name]].blank?
           is_multivalued = field[:multivalued]
@@ -117,7 +117,7 @@ module Import
 
       def hide_errors(missing_fields_errors, controlled_vocab_errors, date_errors)
         no_errors = missing_fields_errors.empty? && controlled_vocab_errors.empty? && date_errors.empty?
-        required_fields_count = UNIVERSAL_FIELDS.find_all { |fields| fields[:required] == true }.count + ASSET_FIELDS.find_all { |fields| fields[:required] == true }.count
+        required_fields_count = METADATA_FIELDS.find_all { |fields| fields[:required] == true }.count
         no_required_fields_present = missing_fields_errors.count == required_fields_count
         no_errors || no_required_fields_present
       end

@@ -101,6 +101,7 @@ Rails/TimeZone:
 
 Rails/Output:
   Exclude:
+    - 'lib/export/**/*'
     - 'lib/import/**/*'
 
 RSpec/AnyInstance:

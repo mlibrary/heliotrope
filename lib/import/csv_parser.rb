@@ -68,7 +68,7 @@ module Import
       end
 
       def asset_data?(row)
-        row['File Name'] != '://:MONOGRAPH://:' && row['Section'] != '://:MONOGRAPH://:'
+        row['File Name'] != MONO_FILENAME_FLAG && row['Section'] != MONO_FILENAME_FLAG
       end
 
       def attach_asset(row, attrs, file_attrs)
