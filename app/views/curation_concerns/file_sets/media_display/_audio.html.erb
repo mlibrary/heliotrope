@@ -1,14 +1,8 @@
-<% if @presenter.transcript.present? %>
-<audio id="audio" preload="auto" data-able-player data-transcript-div="transcript">
+<audio id="audio" preload="auto" data-able-player >
   <source src="<%= main_app.download_path(file_set, file: 'ogg') %>" type="audio/ogg" />
   <source src="<%= main_app.download_path(file_set, file: 'mp3') %>" type="audio/mpeg" />
-  <track kind="captions" src="<%= main_app.download_path(file_set, file: 'vtt') %>" srclang="en" label="English"  />
+  <% if @presenter.transcript.present? %>
+    <track kind="captions" src="<%= main_app.download_path(file_set, file: 'vtt') %>" srclang="en" label="English"  />
+  <% end %>
   Your browser does not support the audio tag.
 </audio>
-<% else %>
-  <audio id="audio" preload="auto" data-able-player>
-    <source src="<%= main_app.download_path(file_set, file: 'ogg') %>" type="audio/ogg" />
-    <source src="<%= main_app.download_path(file_set, file: 'mp3') %>" type="audio/mpeg" />
-    Your browser does not support the audio tag.
-  </audio>
-<% end %>

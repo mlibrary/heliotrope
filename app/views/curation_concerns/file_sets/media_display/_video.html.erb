@@ -1,14 +1,8 @@
-<% if @presenter.transcript.present? %>
-  <video id="video" preload="auto" data-able-player data-transcript-div="transcript">
-    <source src="<%= main_app.download_path(file_set, file: 'webm') %>" type="video/webm" />
-    <source src="<%= main_app.download_path(file_set, file: 'mp4') %>" type="video/mp4" />
+<video id="video" preload="auto" data-able-player >
+  <source src="<%= main_app.download_path(file_set, file: 'webm') %>" type="video/webm" />
+  <source src="<%= main_app.download_path(file_set, file: 'mp4') %>" type="video/mp4" />
+  <% if @presenter.transcript.present? %>
     <track kind="captions" src="<%= main_app.download_path(file_set, file: 'vtt') %>" srclang="en" label="English"  />
-    Your browser does not support the video tag.
-  </video>
-<% else %>
-  <video id="video" preload="auto" data-able-player>
-    <source src="<%= main_app.download_path(file_set, file: 'webm') %>" type="video/webm" />
-    <source src="<%= main_app.download_path(file_set, file: 'mp4') %>" type="video/mp4" />
-    Your browser does not support the video tag.
-  </video>
-<% end %>
+  <% end %>
+  Your browser does not support the video tag.
+</video>
