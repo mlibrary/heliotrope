@@ -18,6 +18,9 @@ feature 'Create a file set' do
       m.save!
       m
     end
+    let!(:sipity_entity) do
+      create(:sipity_entity, proxy_for_global_id: monograph.to_global_id.to_s)
+    end
 
     before do
       login_as user
