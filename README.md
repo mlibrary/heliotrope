@@ -1,5 +1,7 @@
-[![Stories in Ready](https://badge.waffle.io/mlibrary/heliotrope.png?label=ready&title=Ready)](https://waffle.io/mlibrary/heliotrope)
 # heliotrope [![Build Status](https://travis-ci.org/mlibrary/heliotrope.svg?branch=master)](https://travis-ci.org/mlibrary/heliotrope)
+[![Coverage Status](https://coveralls.io/repos/github/mlibrary/heliotrope/badge.svg?branch=coveralls)](https://coveralls.io/github/mlibrary/heliotrope?branch=coveralls)
+[![Stories in Ready](https://badge.waffle.io/mlibrary/heliotrope.png?label=ready&title=Ready)](https://waffle.io/mlibrary/heliotrope)
+
 Hydra-based digital publisher platform
 
 ## Development
