@@ -3,16 +3,15 @@ require 'rails_helper'
 feature 'Monograph catalog sort' do
   context 'FileSet results set' do
     let(:user) { create(:platform_admin) }
-    let(:cover) { create(:file_set, title: ['Representative'], date_uploaded: DateTime.new(2000, 2, 3, 4, 1, 0, '+0')) }
+    let(:cover) { create(:file_set, title: ['Representative']) }
     # this fileset_outlier will have year/format values 'above' the others
-    # note1: setting the date_uploaded is necessary for the default sort behavior to work (done in factory)
-    # note2: search_year is stored as a string, but possibly shouldn't be
-    let(:fileset_outlier) { create(:file_set, title: ['Outlier'], search_year: '2000', resource_type: ['video'], date_uploaded: DateTime.new(2001, 2, 3, 4, 1, 0, '+0')) }
+    # note: search_year is stored as a string, but possibly shouldn't be
+    let(:fileset_outlier) { create(:file_set, title: ['Outlier'], search_year: '2000', resource_type: ['video']) }
     let(:monograph) { create(:monograph, user: user, title: ['Polka Dots'], representative_id: cover.id) }
     let(:per_page) { 2 }
     let(:fileset_count) { per_page + 1 } # ensure pagination
-    let(:down_arrow) { "\u25BC" }
     let(:up_arrow) { "\u25B2" }
+    let(:down_arrow) { "\u25BC" }
 
     before do
       stub_out_redis
@@ -20,11 +19,9 @@ feature 'Monograph catalog sort' do
       monograph.ordered_members << cover
       monograph.ordered_members << fileset_outlier
       # search_year here increments from 1900 thanks to the factory sequence
-      fileset_count.times do |i|
-        monograph.ordered_members << FactoryGirl.create(:file_set, date_uploaded: DateTime.new(2010, 2, 3, 4, i, 0, '+0'))
-      end
+      fileset_count.times { monograph.ordered_members << FactoryGirl.create(:file_set) }
       monograph.save!
-
+      monograph.ordered_members.to_a.each(&:save!)
       # Stub the pagination to a low number so that we don't
       # have to create so many records to exercise pagination.
       allow_any_instance_of(::Blacklight::Configuration).to receive(:default_per_page).and_return(per_page)
@@ -35,22 +32,22 @@ feature 'Monograph catalog sort' do
       # we expect to have per_page number of results on the page
       expect(page).to have_selector('#documents .document', count: per_page)
 
-      # relevance/score with date_uploaded desc (date_uploaded is also 'Chapter' order right now)
+      # should be monograph order using monograph_position_isi
       first_fileset_link_text = page.first('.documentHeader .index_title a').text
-      # [0] would be the representative file, not shown on this page...
+      # the representative file (cover) is not shown on this page, so...
       # this is the outlier file as it was uploaded second
-      expect(first_fileset_link_text).to eq monograph.ordered_members.to_a[1].title.first
+      expect(first_fileset_link_text).to eq fileset_outlier.title.first
 
       # this control is styled as a drop-down but is actually a button & list, hence click_link not select
       click_link "Section #{down_arrow}"
       first_fileset_link_text = page.first('.documentHeader .index_title a').text
-      # ordered_members go from 0 to fileset_count + 1
+      # ordered_members go from 0 to fileset_count + 1, descending so last is shown first
       expect(first_fileset_link_text).to eq monograph.ordered_members.to_a[fileset_count + 1].title.first
 
       click_link "Section #{up_arrow}"
       first_fileset_link_text = page.first('.documentHeader .index_title a').text
-      # essentially default sort, sans score, first uploaded is first
-      expect(first_fileset_link_text).to eq monograph.ordered_members.to_a[1].title.first
+      # essentially default sort, sans score, ascending so first is shown first
+      expect(first_fileset_link_text).to eq fileset_outlier.title.first
 
       click_link "Format #{down_arrow}"
       first_fileset_link_text = page.first('.documentHeader .index_title a').text
