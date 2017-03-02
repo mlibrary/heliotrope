@@ -47,3 +47,6 @@
 
 # Ignore all files ending in "swp", vim swap files
 **/*.swp
+
+# Ignore coverall's files
+/coverage
