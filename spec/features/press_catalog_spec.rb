@@ -35,7 +35,7 @@ feature 'Press Catalog' do
         # expect(page).to     have_link colors.title.first
 
         # The catalog for a certain press
-        visit Rails.application.routes.url_helpers.press_catalog_path(umich)
+        visit "/#{umich.subdomain}"
 
         # I should see only the public monographs for this press
         expect(page).to have_selector('#documents .document', count: 2)
@@ -67,7 +67,7 @@ feature 'Press Catalog' do
       let!(:monograph) { create(:public_monograph, title: ['The Two Authors\' Book'], creator_family_name: 'Johns', creator_given_name: 'Jimmy', contributor: ['Sub Way'], press: umich.subdomain) }
 
       scenario 'Sees multiple author names on the press catalog page' do
-        visit Rails.application.routes.url_helpers.press_catalog_path(umich)
+        visit "/#{umich.subdomain}"
         expect(page).to have_content 'Jimmy Johns and Sub Way'
       end
     end

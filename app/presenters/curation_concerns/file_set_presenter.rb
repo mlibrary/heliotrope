@@ -96,13 +96,7 @@ module CurationConcerns
     end
 
     def handle_url
-      if hdl.first.present?
-        "http://hdl.handle.net/2027/fulcrum.#{hdl.first}"
-      else
-        # Right now handles match up with the NOID, but that won't always be true (probably)
-        # This works for now, but might need to be removed in the future
-        "http://hdl.handle.net/2027/fulcrum.#{id}"
-      end
+      HandleService.url(self)
     end
 
     def doi_url
@@ -115,6 +109,10 @@ module CurationConcerns
       else
         false
       end
+    end
+
+    def embed_code
+      "<iframe src='#{embed_url}?hdl=#{HandleService.handle(self)}' height='500' width='500'>Your browser doesn't support iframes!</iframe>"
     end
 
     # Google Analytics

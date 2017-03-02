@@ -18,6 +18,7 @@ describe 'curation_concerns/file_sets/show', type: :view do
     monograph.ordered_members << file_set
     monograph.save!
     assign(:presenter, file_set_presenter)
+    allow(file_set_presenter).to receive(:embed_code).and_return("embed code")
   end
 
   context 'render markdown' do

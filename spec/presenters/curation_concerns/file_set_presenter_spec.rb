@@ -67,4 +67,10 @@ describe CurationConcerns::FileSetPresenter do
       expect(presenter.label).to eq 'filename.tif'
     end
   end
+
+  describe '#embed_code' do
+    let(:file_set) { create(:file_set) }
+    let(:fileset_doc) { SolrDocument.new(file_set.to_solr) }
+    it { expect(presenter.embed_code).to eq "<iframe src='http://#{Settings.host}/embed?hdl=#{HandleService.handle(presenter)}' height='500' width='500'>Your browser doesn't support iframes!</iframe>" }
+  end
 end

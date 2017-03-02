@@ -6,6 +6,7 @@ resque_web_constraint = lambda do |request|
 end
 
 Rails.application.routes.draw do
+  get 'embed', controller: :embed, action: :show
   get 'dashboard', controller: :dashboard, action: :index
 
   mount Blacklight::Engine => '/'
