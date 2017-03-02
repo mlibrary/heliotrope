@@ -1,4 +1,4 @@
-<audio id="audio" preload="auto" data-able-player >
+<audio id="audio" preload="auto" data-able-player data-include-transcript="false">
   <source src="<%= main_app.download_path(file_set, file: 'ogg') %>" type="audio/ogg" />
   <source src="<%= main_app.download_path(file_set, file: 'mp3') %>" type="audio/mpeg" />
   <% if @presenter.transcript.present? %>
