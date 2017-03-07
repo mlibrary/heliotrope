@@ -1,6 +1,6 @@
 <h2>Presses</h2>
 <ul>
   <% @presses.each do |press| %>
-    <li><%= link_to press.name, press_catalog_path(press) %></li>
+    <li><%= link_to press.name, press.subdomain %></li>
   <% end %>
 </ul>
