@@ -11,7 +11,7 @@ describe MonographCatalogController do
     end
 
     context 'facet_fields' do
-      expected_fields = %w(based_near section_title keywords creator_full_name content_type resource_type search_year exclusive_to_platform)
+      expected_fields = %w(based_near section_title keywords creator_full_name content_type resource_type search_year exclusive_to_platform contributor)
       expected_facet_fields = expected_fields.map { |field| described_class.solr_name(field, :facetable) }
       it 'has expected facet fields' do
         expect(blacklight_config.facet_fields).to include(*expected_facet_fields)
@@ -38,6 +38,16 @@ describe MonographCatalogController do
         end
         it 'pivot has expected facet field names' do
           expect(facet_field_resource_type.pivot).to eq([expected_facet_field_resource_type, expected_facet_field_content_type])
+        end
+      end
+      context 'facet field contributor' do
+        expected_facet_field = described_class.solr_name('contributor', :facetable)
+        facet_field = blacklight_config.facet_fields[expected_facet_field]
+        it 'has label' do
+          expect(facet_field.label).to eq("Contributor")
+        end
+        it 'show false' do
+          expect(facet_field.show).to be_falsey
         end
       end
     end
