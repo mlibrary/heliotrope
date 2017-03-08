@@ -73,5 +73,43 @@ module CurationConcerns
         create_from_upload(params)
       end
     end
+
+    def create_from_upload(params)
+      # check error condition No files
+      return render_json_response(response_type: :bad_request, options: { message: 'Error! No file to save' }) unless params.key?(:file_set) && params.fetch(:file_set).key?(:files)
+
+      file = params[:file_set][:files].detect { |f| f.respond_to?(:original_filename) }
+      if !file
+        render_json_response(response_type: :bad_request, options: { message: 'Error! No file for upload', description: 'unknown file' })
+      elsif empty_file?(file)
+        render_json_response(response_type: :unprocessable_entity, options: { errors: { files: "#{file.original_filename} has no content! (Zero length file)" }, description: t('curation_concerns.api.unprocessable_entity.empty_file') })
+      else
+        process_file(file)
+      end
+    rescue RSolr::Error::Http => error
+      logger.error "FileSetController::create rescued #{error.class}\n\t#{error}\n #{error.backtrace.join("\n")}\n\n"
+      render_json_response(response_type: :internal_error, options: { message: 'Error occurred while creating a FileSet.' })
+    ensure
+      # remove the tempfile (only if it is a temp file)
+
+      # I know this is terrible, but without it the file is deleted before IngestFileJob can run!!!
+      # Sufia (and presumably Hyrax) uses CarrierWave for file uploads, but CC does not.
+      # It sort of does it's own thing which seems to cause a condition where the uploaded
+      # temp "RackMultipart" file gets deleted before ingest can run, meaning we get a file_set without
+      # a file. And if ingest doesn't run, neither does characterization or derivatives which
+      # is of course bad.
+      # So this awful "sleep" is completly temporary:
+      # 1. This will all be gone when we upgrade to Hyrax
+      # 2. The importer never gets here, this is only for "manual" file_set creation by users via the UI
+      #    and we don't even have a use case for that right now.
+      # 3. So this only happens for developers trying things out in the UI.
+      # 4. This is only for "create". Even "update" never gets here, that's completly different
+      # Obviously this can't be permanent.
+      # TODO: fix this.
+      Rails.logger.debug("Waiting in #{__FILE__}:#{__LINE__}, see #627")
+      sleep 10
+
+      file.tempfile.delete if file.respond_to?(:tempfile)
+    end
   end
 end

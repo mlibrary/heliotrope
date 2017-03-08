@@ -36,5 +36,9 @@ module Heliotrope
 
     # Set default host from Settings
     Rails.application.routes.default_url_options[:host] = Settings.host
+
+    # Never use /tmp, always use ~/tmp, #627 and http://stackoverflow.com/a/17068331
+    tmpdir = File.join(Rails.root, 'tmp')
+    ENV['TMPDIR'] = tmpdir
   end
 end

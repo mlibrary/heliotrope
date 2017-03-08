@@ -7,11 +7,13 @@ Metrics/CyclomaticComplexity:
   Exclude:
     - 'app/models/riiif/file.rb'
     - 'app/controllers/downloads_controller.rb'
+    - 'app/controllers/curation_concerns/file_sets_controller.rb'
 
 Metrics/PerceivedComplexity:
   Exclude:
     - 'app/models/riiif/file.rb'
     - 'app/controllers/downloads_controller.rb'
+    - 'app/controllers/curation_concerns/file_sets_controller.rb'
 
 Style/RedundantReturn:
   Exclude:
