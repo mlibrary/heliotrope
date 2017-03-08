@@ -53,13 +53,14 @@ feature 'Create a file set' do
       fill_in 'Content Type', with: 'screenshot'
       fill_in 'Primary Creator (family name)', with: 'FamilyName'
       fill_in 'Primary Creator (given name)', with: 'GivenName'
-      fill_in 'Primary Creator Role', with: 'director'
+      fill_in 'Primary Creator Role', with: 'on screen talent'
       fill_in 'Contributor', with: 'Test Contributor'
       fill_in 'Date Created', with: '2016'
       fill_in 'Sort Date', with: '2000-01-01'
       fill_in 'Permissions Expiration Date', with: '2026-01-01'
       fill_in 'Display Date', with: 'circa sometime for the (premiere, Berlin, LOLZ!)'
-      fill_in 'Keywords', with: 'keyword 1'
+      # add apostrophes to prevent regression of double-html-encoding bug (#772)
+      fill_in 'Keywords', with: 'Conor O\'Neill\'s'
       fill_in 'Language', with: 'English'
       fill_in 'Transcript', with: 'This is what is transcribed for you to read'
       fill_in 'Translation(s)', with: 'Here is what that&nbsp;means'
@@ -95,7 +96,7 @@ feature 'Create a file set' do
       expect(page).to have_content 'circa sometime for the (premiere, Berlin, LOLZ!)'
       # expect(page).to have_content '2000-01-01'
       # expect(page).to have_content '2026-01-01'
-      expect(page).to have_content 'keyword 1'
+      expect(page).to have_content 'Conor O\'Neill\'s'
       expect(page).to have_content 'English'
       # expect(page).to have_content 'yes1'
       expect(page).to have_content 'This is what is transcribed for you to read'
@@ -117,15 +118,13 @@ feature 'Create a file set' do
       italicized_text = page.first('.list-unstyled .section_title a em').text
       expect(italicized_text).to eq 'Italicized Title'
 
-      # check metadata is linking as intended
-      # facets
-      expect(page).to have_link("keyword 1", href: "/concern/monographs/" + monograph_id + "?f%5Bkeywords_sim%5D%5B%5D=keyword+1")
+      # check facets
+      expect(page).to have_link("Conor O'Neill's", href: "/concern/monographs/" + monograph_id + "?f%5Bkeywords_sim%5D%5B%5D=Conor+O%27Neill%27s")
       expect(page).to have_link("English", href: "/concern/monographs/" + monograph_id + "?f%5Blanguage_sim%5D%5B%5D=English")
       expect(page).to have_link("Test section with Italicized Title therein", href: "/concern/monographs/" + monograph_id + "?f%5Bsection_title_sim%5D%5B%5D=Test+section+with+_Italicized+Title_+therein")
       expect(page).to have_link("FamilyName, GivenName", href: "/concern/monographs/" + monograph_id + "?f%5Bcreator_full_name_sim%5D%5B%5D=FamilyName%2C+GivenName")
       expect(page).to have_link("Test Contributor", href: "/concern/monographs/" + monograph_id + "?f%5Bcontributor_sim%5D%5B%5D=Test+Contributor")
-      # search fields
-      expect(page).to have_link("director", href: "/concern/monographs/" + monograph_id + "?f%5Bprimary_creator_role_tesim%5D%5B%5D=director")
+      expect(page).to have_link("on screen talent", href: "/concern/monographs/" + monograph_id + "?f%5Bprimary_creator_role_sim%5D%5B%5D=on+screen+talent")
       expect(page).to have_link("screenshot", href: "/concern/monographs/" + monograph_id + "?f%5Bcontent_type_sim%5D%5B%5D=screenshot")
 
       # check external autolink are opening in a new tab and internal are not
@@ -136,6 +135,15 @@ feature 'Create a file set' do
       # If these change, fix here then update ga_event_tracking.js
       expect(page).to have_selector('#image')
       expect(page).to have_selector('ul.nav.nav-tabs li a', count: 4)
+
+      # check facet results - bug #772
+      # multi-word primary creator role facet
+      click_link 'on screen talent'
+      expect(page).to have_content 'Test file set'
+      click_link 'Test file set'
+      # double html encoding breaking facet with apostrophe
+      click_link 'Conor O\'Neill\'s'
+      expect(page).to have_content 'Test file set'
     end
   end
 end

@@ -13,11 +13,11 @@ module CurationConcerns
 
         def search_path(value)
           Rails.application.routes.url_helpers.monograph_catalog_path(
-            id: options[:monograph_id], :"f[#{search_field}][]" => ERB::Util.h(value))
+            id: options[:monograph_id], :"f[#{search_field}][]" => value)
         end
 
         def search_field
-          ERB::Util.h(Solrizer.solr_name(options.fetch(:search_field, field), :facetable, type: :string))
+          Solrizer.solr_name(options.fetch(:search_field, field), :facetable, type: :string)
         end
     end
   end
