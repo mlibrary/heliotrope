@@ -14,7 +14,7 @@ describe OpenUrlPresenter do
                                         title_tesim: ['Songs of Stuff'],
                                         description_tesim: ['Description about things'],
                                         creator_full_name_tesim: ['Ronald, Ron'],
-                                        search_year_tesim: ['2025'],
+                                        sort_date_tesim: ['2025-01-01'],
                                         monograph_id_ssim: ['1']) }
 
   describe "#monograph_coins_title" do

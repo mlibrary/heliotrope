@@ -97,11 +97,6 @@ class FileSet < ActiveFedora::Base
   end
   validates :sort_date, format: { with: /\A\d\d\d\d-\d\d-\d\d\z/, message: "Your sort date must be in YYYY-MM-DD format", allow_blank: true }
 
-  property :search_year, predicate: ::RDF::URI.new('http://fulcrum.org/ns#searchYear'), multiple: false do |index|
-    index.as :sortable, :stored_searchable, :facetable
-  end
-  validates :search_year, format: { with: /\A\d\d\d\d\z/, message: "Your search year must be in YYYY format", allow_blank: true }
-
   property :allow_download, predicate: ::RDF::URI.new('http://fulcrum.org/ns#allowDownload'), multiple: false do |index|
     index.as :symbol
   end

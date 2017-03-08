@@ -245,7 +245,7 @@ feature "Monograph Catalog Facets" do
       fill_in 'Exclusive to Platform?', with: 'yes'
       fill_in 'Primary Creator (family name)', with: 'McTesterson'
       fill_in 'Primary Creator (given name)', with: 'Testy'
-      fill_in 'Search Year', with: '1974'
+      fill_in 'Sort Date', with: '1974-01-01'
       fill_in 'Keywords', with: 'stuff'
       fill_in 'Related Section', with: 'A Section'
       attach_file 'file_set_files', File.join(fixture_path, 'csv', 'miranda.jpg')
