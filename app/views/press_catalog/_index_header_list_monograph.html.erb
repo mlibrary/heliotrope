@@ -22,7 +22,7 @@
   </div>
   <div class="row">
     <div class="col-sm-12">
-      <a class="btn btn-default" href="<%= url_for_document document %>">View book materials</a>
+      <a class="btn btn-default" href="<%= polymorphic_path(url_for_document(document)) %>">View book materials</a>
     </div>
   </div>
 </div>
