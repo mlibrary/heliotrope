@@ -20,8 +20,8 @@
   <% @presenter.contributor.each do |contributor| %>
   <meta name="citation_author" content="<%= contributor %>">
   <% end %>
-  <% if @presenter.search_year.present? %>
-  <meta name="citation_publication_date" content="<%= @presenter.search_year.first %>">
+  <% if @presenter.sort_date.present? %>
+  <meta name="citation_publication_date" content="<%= @presenter.sort_date.first[0,4] %>">
   <% end %>
   <% if @presenter.doi.present? %>
   <meta name="citation_doi" content="<%= @presenter.doi_url.gsub('https://doi.org/', '') %>">

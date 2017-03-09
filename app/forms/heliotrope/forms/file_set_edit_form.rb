@@ -7,7 +7,7 @@ module Heliotrope::Forms
                    :copyright_status, :rights_granted, :rights_granted_creative_commons,
                    :exclusive_to_platform, :permissions_expiration_date,
                    :allow_display_after_expiration, :allow_download_after_expiration,
-                   :sort_date, :search_year, :allow_download, :allow_hi_res, :credit_line,
+                   :sort_date, :allow_download, :allow_hi_res, :credit_line,
                    :holding_contact, :ext_url_doi_or_handle, :doi, :hdl, :use_crossref_xml,
                    :primary_creator_role, :display_date, :transcript, :translation]
   end

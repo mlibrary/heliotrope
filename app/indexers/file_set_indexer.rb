@@ -13,6 +13,10 @@ class FileSetIndexer < CurationConcerns::FileSetIndexer
       end
 
       index_monograph_position(solr_doc) unless object.in_works.blank?
+      unless object.sort_date.blank?
+        solr_doc[Solrizer.solr_name('search_year', :sortable)] = object.sort_date[0, 4]
+        solr_doc[Solrizer.solr_name('search_year', :facetable)] = object.sort_date[0, 4]
+      end
     end
   end
 

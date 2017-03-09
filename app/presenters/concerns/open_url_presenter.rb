@@ -25,7 +25,7 @@ module OpenUrlPresenter
       fields << "rft.subject=#{CGI.escape(subject)}"
     end
 
-    fields << "rft.date=#{CGI.escape(search_year.first)}" if search_year.present?
+    fields << "rft.date=#{CGI.escape(sort_date.first[0, 4])}" if sort_date.present?
     fields.join('&')
   end
 

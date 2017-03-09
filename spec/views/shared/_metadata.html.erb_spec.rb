@@ -43,7 +43,7 @@ describe 'shared/_metadata.html.erb' do
                                            has_model_ssim: ['FileSet'],
                                            title_tesim: ['Bark Bark Boop'],
                                            creator_full_name_tesim: ['Mr. Noodles'],
-                                           search_year_tesim: ['2011']) }
+                                           sort_date_tesim: ['2011-01-01']) }
     it 'has the correct metadata' do
       @presenter = CurationConcerns::FileSetPresenter.new(solr_document, nil)
       render
@@ -59,7 +59,7 @@ describe 'shared/_metadata.html.erb' do
                                            has_model_ssim: ['FileSet'],
                                            title_tesim: ['Bark Bark Boop'],
                                            creator_full_name_tesim: ['Mr. Noodles'],
-                                           search_year_tesim: ['2011'],
+                                           sort_date_tesim: ['2011-01-01'],
                                            doi_ssim: ['https://doi.org/10.3998/fulcrum.001']) }
     it "has the doi metadata (but not the doi url)" do
       @presenter = CurationConcerns::FileSetPresenter.new(solr_document, nil)

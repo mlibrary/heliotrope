@@ -16,7 +16,7 @@ FactoryGirl.define do
     end
 
     sequence(:title) { |n| ["Test FileSet #{n}"] }
-    sequence(:search_year, 1900, &:to_s)
+    sequence(:sort_date, 1900) { |n| "#{n}-01-01" }
     # pad this one out so that string comparisons are consistent
     sequence(:resource_type) { |n| ["audio#{n.to_s.rjust(4, '0')}"] }
     date_uploaded { CurationConcerns::TimeService.time_in_utc }

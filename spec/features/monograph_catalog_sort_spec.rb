@@ -6,7 +6,7 @@ feature 'Monograph catalog sort' do
     let(:cover) { create(:file_set, title: ['Representative']) }
     # this fileset_outlier will have year/format values 'above' the others
     # note: search_year is stored as a string, but possibly shouldn't be
-    let(:fileset_outlier) { create(:file_set, title: ['Outlier'], search_year: '2000', resource_type: ['video']) }
+    let(:fileset_outlier) { create(:file_set, title: ['Outlier'], sort_date: '2000-01-01', resource_type: ['video']) }
     let(:monograph) { create(:monograph, user: user, title: ['Polka Dots'], representative_id: cover.id) }
     let(:per_page) { 2 }
     let(:fileset_count) { per_page + 1 } # ensure pagination
@@ -18,7 +18,7 @@ feature 'Monograph catalog sort' do
       login_as user
       monograph.ordered_members << cover
       monograph.ordered_members << fileset_outlier
-      # search_year here increments from 1900 thanks to the factory sequence
+      # sort_date here increments from 1900 thanks to the factory sequence
       fileset_count.times { monograph.ordered_members << FactoryGirl.create(:file_set) }
       monograph.save!
       monograph.ordered_members.to_a.each(&:save!)

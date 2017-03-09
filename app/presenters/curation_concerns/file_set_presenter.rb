@@ -35,7 +35,7 @@ module CurationConcerns
              :rights_granted_creative_commons, :exclusive_to_platform, :permissions_expiration_date,
              :allow_display_after_expiration, :allow_download_after_expiration, :credit_line,
              :holding_contact, :ext_url_doi_or_handle, :doi, :hdl, :use_crossref_xml, :primary_creator_role,
-             :display_date, :sort_date, :search_year, :transcript, :translation, :file_format,
+             :display_date, :sort_date, :transcript, :translation, :file_format,
              :creator_given_name, :creator_family_name, :label,
              to: :solr_document
 
