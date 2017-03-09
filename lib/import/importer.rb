@@ -86,6 +86,8 @@ module Import
           raise "'File #{file_name}' not found anywhere under '#{root_dir}'"
         elsif match.count > 1
           raise "More than one file found with name: '#{file_name}'"
+        elsif File.zero?(match.first)
+          raise "Zero-size file found: '#{file_name}'"
         end
         match.first
       end
