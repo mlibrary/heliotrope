@@ -20,7 +20,7 @@ class FileSet < ActiveFedora::Base
   end
 
   property :primary_creator_role, predicate: ::RDF::Vocab::SCHEMA.roleName do |index|
-    index.as :stored_searchable
+    index.as :stored_searchable, :facetable
   end
 
   property :keywords, predicate: ::RDF::Vocab::DC.subject do |index|
