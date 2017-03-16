@@ -32,11 +32,16 @@ def parse_inputs(args)
     inputs[:visibility] = visibility_choices.fetch(vis)
   end
 
-  opts.on('-m [MONOGRAPH NAME]', 'Set monograph name (will override monograph name in CSV file).') do |monograph_title|
+  opts.on('-n [MONOGRAPH TITLE]', '--name', 'Set monograph title (will override monograph title in CSV file).') do |monograph_title|
     inputs[:monograph_title] = monograph_title
   end
 
-  opts.on('-t', '--test', 'Only test/validate the CSV data, do not import') do |test|
+  opts.on('-m [MONOGRAPH ID]', '--monograph_id', 'ID of existing monograph to which assets will be added, i.e. "reimporting".') do |monograph_id|
+    inputs[:monograph_id] = monograph_id
+    raise "This ID does not correspond to a pre-existing monograph" unless !Monograph.where(id: monograph_id).first.blank?
+  end
+
+  opts.on('-t [TEST]', '--test', 'Only test/validate the CSV data, do not import') do |test|
     inputs[:test] = true
   end
 
@@ -47,9 +52,11 @@ def parse_inputs(args)
 
   opts.parse!(args)
 
+  if inputs[:monograph_id] && (inputs[:press] || inputs[:visibility] || inputs[:monograph_title])
+    raise "Error: using -m or --monograph_id (i.e. reimporting) excludes -p, -v and -m"
+  end
   raise "Error: The CSV directory is required" unless inputs[:root_dir]
-  raise "Error: The Press required" unless inputs[:press]
-
+  raise "Error: The Press required for importing new monographs, i.e. *not* reimporting" unless inputs[:press] || inputs[:monograph_id]
   inputs
 rescue => e
   puts e.message
@@ -61,7 +68,7 @@ end
 options = parse_inputs(ARGV)
 
 puts "Begin import"
-importer = Import::Importer.new(options[:root_dir], options[:press], options[:visibility])
-importer.run(options[:monograph_title], options[:test])
+importer = Import::Importer.new(options[:root_dir], options[:press], options[:visibility], options[:monograph_title], options[:monograph_id])
+importer.run(options[:test])
 
 puts "Import finished"
