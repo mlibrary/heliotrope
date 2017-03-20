@@ -6,6 +6,15 @@ def bulleit?
   false
 end
 
+def heliotrope
+  Press.where(name: 'Heliotrope Press').first_or_initialize.tap do |press|
+    press.subdomain = 'heliotrope'
+    press.description = 'Heliotrope Press'
+    press.save
+  end
+  puts "updated/created heliotrope"
+end
+
 def michigan
   Press.where(name: 'University of Michigan Press').first_or_initialize.tap do |press|
     press.logo_path = 'michigan.png'
@@ -74,11 +83,13 @@ end
 
 if Rails.env.eql?('production')
   # add presses as they become ready for production
+  heliotrope unless bulleit?
   northwestern
   minnesota
   indiana
   pennstate unless bulleit?
 else
+  heliotrope
   northwestern
   pennstate
   indiana

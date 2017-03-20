@@ -35,7 +35,6 @@ describe CurationConcerns::FileSetPresenter do
     let(:monograph) { create(:monograph, creator_given_name: "firstname", creator_family_name: "lastname") }
     let(:file_set) { create(:file_set) }
     let(:press) { create(:press, subdomain: 'blue') }
-
     before do
       monograph.ordered_members << file_set
       monograph.save!
@@ -72,9 +71,31 @@ describe CurationConcerns::FileSetPresenter do
     end
   end
 
+  describe '#allow_embed?' do
+    let(:press) { create(:press) }
+    let(:monograph) { create(:monograph, press: press.subdomain) }
+    let(:file_set) { create(:file_set) }
+    before do
+      monograph.ordered_members << file_set
+      monograph.save!
+    end
+    let(:fileset_doc) { SolrDocument.new(file_set.to_solr) }
+    context 'no' do
+      it { expect(presenter.allow_embed?).to be false }
+    end
+    context 'yes' do
+      let(:press) { Press.find_by_subdomain('heliotrope') }
+      it { expect(presenter.allow_embed?).to be true }
+    end
+  end
+
   describe '#embed_code' do
     let(:file_set) { create(:file_set) }
     let(:fileset_doc) { SolrDocument.new(file_set.to_solr) }
-    it { expect(presenter.embed_code).to eq "<iframe src='http://#{Settings.host}/embed?hdl=#{HandleService.handle(presenter)}' height='500' width='500'>Your browser doesn't support iframes!</iframe>" }
+    before do
+      allow(presenter).to receive(:width).and_return('width')
+      allow(presenter).to receive(:height).and_return('height')
+    end
+    it { expect(presenter.embed_code).to eq "<iframe src='http://#{Settings.host}/embed?hdl=#{HandleService.handle(presenter)}' height='#{presenter.height}' width='#{presenter.width}'>Your browser doesn't support iframes!</iframe>" }
   end
 end
