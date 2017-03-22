@@ -9,6 +9,9 @@ gem 'resque-web', '~> 0.0.7', require: 'resque_web'
 gem 'resque'
 gem 'resque-pool'
 
+# We need this due to #778.
+gem 'active-fedora', '~> 11.1.5', github: 'projecthydra/active_fedora', ref: 'fae7df019337506b53fc721b22414fdc45830f9b'
+
 # clamav only in production
 gem 'clamav', group: :production
 

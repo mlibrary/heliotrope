@@ -1,3 +1,17 @@
+GIT
+  remote: git://github.com/projecthydra/active_fedora.git
+  revision: fae7df019337506b53fc721b22414fdc45830f9b
+  ref: fae7df019337506b53fc721b22414fdc45830f9b
+  specs:
+    active-fedora (11.1.5)
+      active-triples (~> 0.11.0)
+      activemodel (>= 4.2, < 6)
+      activesupport (>= 4.2.4, < 6)
+      deprecation
+      ldp (~> 0.6.0)
+      rsolr (>= 1.1.2, < 3)
+      solrizer (>= 3.4, < 5)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -22,14 +36,6 @@ GEM
       erubis (~> 2.7.0)
       rails-dom-testing (~> 1.0, >= 1.0.5)
       rails-html-sanitizer (~> 1.0, >= 1.0.2)
-    active-fedora (11.1.1)
-      active-triples (~> 0.11.0)
-      activemodel (>= 4.2, < 6)
-      activesupport (>= 4.2.4, < 6)
-      deprecation
-      ldp (~> 0.6.0)
-      rsolr (>= 1.1.2, < 3)
-      solrizer (~> 3.4)
     active-triples (0.11.0)
       activemodel (>= 3.0.0)
       activesupport (>= 3.0.0)
@@ -356,7 +362,7 @@ GEM
     kaminari_route_prefix (0.0.2)
       kaminari (~> 0.16)
     kramdown (1.9.0)
-    ldp (0.6.3)
+    ldp (0.6.4)
       deprecation
       faraday
       http_logger
@@ -664,6 +670,7 @@ PLATFORMS
 
 DEPENDENCIES
   actionpack-page_caching (~> 1.0.1)
+  active-fedora (~> 11.1.5)!
   byebug
   capybara
   clamav
@@ -711,4 +718,4 @@ DEPENDENCIES
   web-console (~> 2.0)
 
 BUNDLED WITH
-   1.14.3
+   1.14.6
