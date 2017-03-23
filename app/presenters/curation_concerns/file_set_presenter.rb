@@ -111,8 +111,12 @@ module CurationConcerns
       end
     end
 
+    def allow_embed?
+      monograph.subdomain == 'heliotrope'
+    end
+
     def embed_code
-      "<iframe src='#{embed_url}?hdl=#{HandleService.handle(self)}' height='500' width='500'>Your browser doesn't support iframes!</iframe>"
+      "<iframe src='#{embed_url}?hdl=#{HandleService.handle(self)}' height='#{height}' width='#{width}'>Your browser doesn't support iframes!</iframe>"
     end
 
     # Google Analytics
