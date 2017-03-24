@@ -17,7 +17,7 @@ describe Import::CSVParser do
   end
 
   describe '#attributes' do
-    subject { parser.attributes['monograph'] }
+    subject { parser.attributes }
 
     it 'collects attributes from the CSV file' do
       expect(subject['title']).to eq ['The Tempest', 'A Subtitle']

@@ -21,16 +21,16 @@ describe Import::CSVParser do
 
     # order of asset metadata here is as in lib/import.rb
     it 'collects attributes from the CSV file' do
-      expect(subject['monograph']['title']).to eq ['The Tempest', 'A Subtitle']
-      expect(subject['monograph']['creator_family_name']).to eq 'Shakespeare'
-      expect(subject['monograph']['creator_given_name']).to eq 'William'
-      expect(subject['monograph']['contributor']).to eq ['Christopher Marlowe', 'Sir Francis Bacon']
-      expect(subject['monograph']['subject']).to eq ['Dog', 'Cat', 'Mouse']
-      expect(subject['monograph']['files']).to eq ['shipwreck.jpg', 'miranda.jpg', 'ファイル.txt', 'shipwreck1.jpg', 'miranda1.jpg', 'shipwreck2.jpg', 'miranda2.jpg', 'shipwreck1.jpg']
+      expect(subject['title']).to eq ['The Tempest', 'A Subtitle']
+      expect(subject['creator_family_name']).to eq 'Shakespeare'
+      expect(subject['creator_given_name']).to eq 'William'
+      expect(subject['contributor']).to eq ['Christopher Marlowe', 'Sir Francis Bacon']
+      expect(subject['subject']).to eq ['Dog', 'Cat', 'Mouse']
+      expect(subject['files']).to eq ['shipwreck.jpg', 'miranda.jpg', 'ファイル.txt', 'shipwreck1.jpg', 'miranda1.jpg', 'shipwreck2.jpg', 'miranda2.jpg', 'shipwreck1.jpg']
 
-      expect(subject['monograph']['files_metadata'].count).to eq 8
+      expect(subject['files_metadata'].count).to eq 8
 
-      expect(subject['monograph']['files_metadata']).to eq [
+      expect(subject['files_metadata']).to eq [
         { 'title' => ['Monograph Shipwreck'],
           'creator_family_name' => 'Smith',
           'creator_given_name' => 'Benjamin',

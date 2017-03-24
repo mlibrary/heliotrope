@@ -1,53 +1,54 @@
 module Import
   class Importer
-    attr_reader :root_dir, :press_subdomain, :monograph_title, :visibility
+    attr_reader :root_dir, :press_subdomain, :monograph_id, :monograph_title, :visibility, :reimporting
 
-    def initialize(root_dir, press_subdomain, visibility = Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE)
+    def initialize(root_dir, press_subdomain, visibility = Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE, monograph_title = '', monograph_id = '')
       @root_dir = root_dir
-      @press_subdomain = press_subdomain
-      @visibility = visibility
+      @reimporting = false
+      @reimport_mono = Monograph.where(id: monograph_id).first
+
+      if !monograph_id.blank?
+        raise "No monograph found with id #{monograph_id}" if @reimport_mono.blank?
+        @reimporting = true
+      else
+        @press_subdomain = press_subdomain
+        @visibility = visibility
+        @monograph_title = monograph_title
+      end
     end
 
-    def run(monograph_title = '', test = false)
+    def run(test = false)
       interaction = !Rails.env.test?
-      validate_press
+      validate_press unless reimporting
       csv_files.each do |file|
         errors = ''
         attrs = CSVParser.new(file).attributes(errors)
 
         # The first file in the csv is the cover/representative file
-        cover = attrs["monograph"]["files"][0]
-
-        monograph_attrs = attrs.delete('monograph')
+        cover = attrs['files'][0]
 
         # if there is a command-line monograph title then use it
-        monograph_attrs['title'] = Array(monograph_title) unless monograph_title.blank?
+        attrs['title'] = Array(monograph_title) unless monograph_title.blank?
 
-        # find files now (stop everything ASAP if not found or duplicates found)
-        add_full_file_paths(monograph_attrs)
+        # create file objects (stop everything here if any are not found, duplicates or of zero size)
+        file_objects(attrs)
 
         optional_early_exit(interaction, errors, test)
 
-        monograph_file_attrs = monograph_attrs.delete('files_metadata')
-        monograph_attrs = add_command_line_attrs(monograph_attrs, 'monograph')
-        monograph_builder = MonographBuilder.new(user, monograph_attrs)
-        monograph_builder.run
+        # because the MonographBuilder sets its metadata, files_metadata has to be removed here
+        file_attrs = attrs.delete('files_metadata')
 
-        monograph = monograph_builder.curation_concern
-        update_fileset_metadata(monograph, monograph_file_attrs)
-
-        puts "Saving #{cover} as the cover"
-        f = FileSet.where(label: cover)
-        monograph.representative_id = f.first.id
-        monograph.thumbnail_id = f.first.id
-        monograph.save!
-
-        # I think that because the cover essentially has no metadata (just the file name),
-        # it's not included in monograph_file_attrs (it is but it's just {}) and so
-        # never gets it's metadata updated as the other file_sets do.
-        # For some reason this seems to cause the technical metadata from Characterization
-        # to not be in solr. This seems to fix that. TODO: investigate this more.
-        f.first.update_index
+        if reimporting
+          # TODO: make add_new_filesets return something sensible?
+          raise "There may have been a problem attaching the new files" unless add_new_filesets(@reimport_mono, attrs, file_attrs)
+        else
+          attrs.merge!('press' => press_subdomain, 'visibility' => visibility)
+          monograph_builder = MonographBuilder.new(user, attrs)
+          monograph_builder.run
+          monograph = monograph_builder.curation_concern
+          representative_image(monograph, cover)
+          update_fileset_metadata(monograph, file_attrs)
+        end
       end
     end
 
@@ -64,16 +65,7 @@ module Import
         @csv_files ||= Dir.glob(File.join(root_dir, '*.csv'))
       end
 
-      def add_command_line_attrs(attrs, type)
-        if type == 'monograph'
-          attributes = attrs.merge('press' => press_subdomain, 'visibility' => visibility)
-        elsif type == 'section'
-          attributes = attrs.merge('visibility' => visibility)
-        end
-        attributes
-      end
-
-      def add_full_file_paths(attrs)
+      def file_objects(attrs)
         # assigning empty files a generic link icon here, should be external resources
         attrs['files'] = attrs['files'].map do |file|
           file.blank? ? File.new(Rails.root.join('app', 'assets', 'images', 'external_resource.jpg')) : File.new(find_file(file))
@@ -107,6 +99,16 @@ module Import
         end
       end
 
+      def add_new_filesets(monograph, attrs, file_attrs)
+        [attrs['files'], file_attrs].transpose.each do |file, metadata|
+          file_set = FileSet.new
+          file_set_actor = CurationConcerns::Actors::FileSetActor.new(file_set, user)
+          file_set_actor.create_metadata(monograph, metadata)
+          file_set_actor.create_content(file)
+          file_set_actor.update_metadata(metadata)
+        end
+      end
+
       def optional_early_exit(interaction, errors, test)
         if interaction && !errors.blank?
           puts "\n" + errors + "\n" + "-" * 100 + "\n"
@@ -118,6 +120,23 @@ module Import
         end
         # command-line option to exit
         exit if test == true
+      end
+
+      def representative_image(monograph, cover)
+        puts "Saving #{cover} as the cover"
+        # note that this line can pull any ingested file set with the first file set's file name
+        # ... even if it's not actually a child of this monograph
+        f = FileSet.where(label: cover)
+        monograph.representative_id = f.first.id
+        monograph.thumbnail_id = f.first.id
+        monograph.save!
+
+        # I think that because the cover essentially has no metadata (just the file name),
+        # it's not included in file_attrs (it is but it's just {}) and so
+        # never gets it's metadata updated as the other file_sets do.
+        # For some reason this seems to cause the technical metadata from Characterization
+        # to not be in solr. This seems to fix that. TODO: investigate this more.
+        f.first.update_index
       end
   end
 end

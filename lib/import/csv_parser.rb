@@ -12,9 +12,9 @@ module Import
       attrs = {}
 
       # a CSV can only have one monograph (probably for in-house use only)...
-      attrs['monograph'] = {}
-      attrs['monograph']['files'] = []
-      attrs['monograph']['files_metadata'] = []
+      attrs = {}
+      attrs['files'] = []
+      attrs['files_metadata'] = []
 
       puts "Parsing file: #{file}"
       rows = CSV.read(file, headers: true, skip_blanks: true).delete_if { |row| row.to_hash.values.all?(&:blank?) }
@@ -45,7 +45,7 @@ module Import
           errors_array << row_data.data_for_asset(row_num, row, file_attrs)
           attach_asset(row, attrs, file_attrs)
         else
-          row_data.data_for_monograph(row, attrs['monograph'])
+          row_data.data_for_monograph(row, attrs)
         end
         row_num += 1
       end
@@ -65,8 +65,8 @@ module Import
       end
 
       def attach_asset(row, attrs, file_attrs)
-        attrs['monograph']['files'] << row['File Name'] || ''
-        attrs['monograph']['files_metadata'] << file_attrs
+        attrs['files'] << row['File Name'] || ''
+        attrs['files_metadata'] << file_attrs
 
         # TODO: The matching arrays will only work if they
         # both contain exactly the same number of elements.
