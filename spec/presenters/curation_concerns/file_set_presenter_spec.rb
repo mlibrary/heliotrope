@@ -84,7 +84,7 @@ describe CurationConcerns::FileSetPresenter do
       it { expect(presenter.allow_embed?).to be false }
     end
     context 'yes' do
-      let(:press) { Press.find_by_subdomain('heliotrope') }
+      let(:press) { Press.find_by_subdomain('heliotrope') || create(:press, subdomain: 'heliotrope') }
       it { expect(presenter.allow_embed?).to be true }
     end
   end
