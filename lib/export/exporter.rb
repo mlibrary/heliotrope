@@ -51,17 +51,16 @@ module Export
       end
 
       def field_value(item, metadata_name, multivalued)
-        value = if multivalued == :yes_split
-                  # TODO: right now we have lost any intended order in our multi-value fields, so I'm sorting them
-                  # alphabetically on export. This is convenient for testing but we'll have to address the problem
-                  # eventually *and* possibly fix production data too
-                  item.public_send(metadata_name).sort.join('; ')
-                elsif multivalued == :yes
-                  item.public_send(metadata_name).first
-                else
-                  item.public_send(metadata_name)
-                end
-        metadata_name == 'exclusive_to_platform' ? value.gsub('no', 'BP').gsub('yes', 'P') : value
+        if multivalued == :yes_split
+          # TODO: right now we have lost any intended order in our multi-value fields, so I'm sorting them
+          # alphabetically on export. This is convenient for testing but we'll have to address the problem
+          # eventually *and* possibly fix production data too
+          item.public_send(metadata_name).sort.join('; ')
+        elsif multivalued == :yes
+          item.public_send(metadata_name).first
+        else
+          item.public_send(metadata_name)
+        end
       end
 
       def output_filesets_to_csv(mono_title, lines, output_files)
@@ -89,11 +88,6 @@ module Export
           row2 << nil
         end
         csv << row1 << row2
-      end
-
-      def convert_exclusivity_field(field_name, field_values)
-        change_values = { 'no' => 'BP', 'yes' => 'P' }
-        field_name == 'Book and Platform (BP) or Platform-only (P)' ? field_values.map! { |value| change_values[value.upcase] } : field_values
       end
   end
 end

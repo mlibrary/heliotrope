@@ -27,7 +27,6 @@ module Import
           is_multivalued = field[:multivalued]
           field_values = split_field_values_to_array(row[field[:field_name]], is_multivalued)
           field_values = strip_markdown_from_array_of_values(field[:field_name], field_values, md)
-          field_values = convert_exclusivity_field(field[:field_name], field_values)
           if field[:acceptable_values]
             downcase_restricted_values(field[:field_name], field_values)
             field_value_acceptable(field[:field_name], field[:acceptable_values], field_values, controlled_vocab_errors)
@@ -52,11 +51,6 @@ module Import
 
       def strip_markdown_from_array_of_values(field_name, field_values, md)
         field_name == "Keywords" ? field_values.map! { |value| md.render(value).strip! } : field_values
-      end
-
-      def convert_exclusivity_field(field_name, field_values)
-        change_values = { "BP" => "no", "P" => "yes" }
-        field_name == "Book and Platform (BP) or Platform-only (P)" ? field_values.map! { |value| change_values[value.upcase] } : field_values
       end
 
       def downcase_restricted_values(field_name, field_values)

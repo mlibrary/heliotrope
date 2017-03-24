@@ -1,14 +1,4 @@
 module FacetHelper
-  def exclusivity_facet(value)
-    if value == 'yes'
-      "Does not appear in book"
-    elsif value == 'no'
-      "Appears in book"
-    else
-      "Unknown exclusivity #{value}"
-    end
-  end
-
   def facet_url_helper(facet_field, item)
     # called from the facet modal from the monograph_catalog page
     if params[:monograph_id]
