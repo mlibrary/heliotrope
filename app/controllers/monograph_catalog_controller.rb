@@ -48,7 +48,7 @@ class MonographCatalogController < ::CatalogController
     config.add_facet_field solr_name('content_type', :facetable), label: "Content", show: false
     config.add_facet_field solr_name('resource_type', :facetable), label: "Format", pivot: [solr_name('resource_type', :facetable), solr_name('content_type', :facetable)], url_method: :facet_url_helper
     config.add_facet_field solr_name('search_year', :facetable), label: "Year", limit: 5, url_method: :facet_url_helper
-    config.add_facet_field solr_name('exclusive_to_platform', :facetable), label: "Exclusivity", helper_method: :exclusivity_facet
+    config.add_facet_field solr_name('exclusive_to_platform', :facetable), label: "Exclusivity", query: { exclusive_to_platform: { label: 'Exclusive to Fulcrum', fq: "#{solr_name('exclusive_to_platform', :facetable)}:yes" } }
     config.add_facet_field solr_name('contributor', :facetable), label: "Contributor", show: false
     config.add_facet_field solr_name('primary_creator_role', :facetable), label: "Creator Role", show: false
     config.add_facet_fields_to_solr_request!
