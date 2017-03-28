@@ -85,7 +85,7 @@ module Export
         row2 = []
         all_metadata.each do |field|
           row1 << field[:field_name]
-          row2 << nil
+          row2 << 'instruction placeholder'
         end
         csv << row1 << row2
       end
