@@ -24,9 +24,6 @@ module Import
         errors = ''
         attrs = CSVParser.new(file).attributes(errors)
 
-        # The first file in the csv is the cover/representative file
-        cover = attrs['files'][0]
-
         # if there is a command-line monograph title then use it
         attrs['title'] = Array(monograph_title) unless monograph_title.blank?
 
@@ -46,8 +43,8 @@ module Import
           monograph_builder = MonographBuilder.new(user, attrs)
           monograph_builder.run
           monograph = monograph_builder.curation_concern
-          representative_image(monograph, cover)
           update_fileset_metadata(monograph, file_attrs)
+          representative_image(monograph)
         end
       end
     end
@@ -122,13 +119,11 @@ module Import
         exit if test == true
       end
 
-      def representative_image(monograph, cover)
-        puts "Saving #{cover} as the cover"
-        # note that this line can pull any ingested file set with the first file set's file name
-        # ... even if it's not actually a child of this monograph
-        f = FileSet.where(label: cover)
-        monograph.representative_id = f.first.id
-        monograph.thumbnail_id = f.first.id
+      def representative_image(monograph)
+        cover_id = monograph.ordered_members.to_a.first.id
+        puts "Saving #{cover_id} as the cover"
+        monograph.representative_id = cover_id
+        monograph.thumbnail_id = cover_id
         monograph.save!
 
         # I think that because the cover essentially has no metadata (just the file name),
@@ -136,7 +131,7 @@ module Import
         # never gets it's metadata updated as the other file_sets do.
         # For some reason this seems to cause the technical metadata from Characterization
         # to not be in solr. This seems to fix that. TODO: investigate this more.
-        f.first.update_index
+        FileSet.find(cover_id).update_index
       end
   end
 end

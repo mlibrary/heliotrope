@@ -104,16 +104,16 @@ module Import
         message += missing_fields_errors.empty? ? '' : "\nmissing required fields: \n" + missing_fields_errors.join(', ')
         message += controlled_vocab_errors.empty? ? '' : "\nunacceptable values for: \n" + controlled_vocab_errors.join(', ')
         message += date_errors.empty? ? '' : "\nthese dates cannot be padded to a YYYY-MM-DD value and will be discarded: \n" + date_errors.join(', ')
-        # If every required metadata field is empty then assume it's the cover image. This is a pretty nasty assumption but I think it's the best way for now.
-        if hide_errors(missing_fields_errors, controlled_vocab_errors, date_errors) then message = '' end
-        message
+        hide_errors(message, row_num, missing_fields_errors, controlled_vocab_errors, date_errors)
       end
 
-      def hide_errors(missing_fields_errors, controlled_vocab_errors, date_errors)
-        no_errors = missing_fields_errors.empty? && controlled_vocab_errors.empty? && date_errors.empty?
-        required_fields_count = METADATA_FIELDS.find_all { |fields| fields[:required] == true }.count
-        no_required_fields_present = missing_fields_errors.count == required_fields_count
-        no_errors || no_required_fields_present
+      def hide_errors(message, row_num, missing_fields_errors, controlled_vocab_errors, date_errors)
+        # silence error data for row 3, which we've been using for the cover
+        if row_num == 3 || (missing_fields_errors.empty? && controlled_vocab_errors.empty? && date_errors.empty?)
+          ''
+        else
+          message
+        end
       end
   end
 end
