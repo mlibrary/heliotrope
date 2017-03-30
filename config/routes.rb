@@ -68,6 +68,7 @@ Rails.application.routes.draw do
     end
   end
 
+  get '/favicon.ico', to: redirect('/favicon/favicon.ico')
   get '/robots.txt' => 'robots#robots'
   get '/presses' => 'presses#index'
 
