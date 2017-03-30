@@ -1,0 +1,15 @@
+<ul class="nav nav-sidebar">
+  <li <%= "class=active" if partial.to_s == :home.to_s %>><a href="<%= partial_dashboard_path(partial: :home) %>"><span class="glyphicon glyphicon-home" aria-hidden="true"></span> Home</a></li>
+<% if current_user.platform_admin? %>
+  <li <%= "class=active" if partial.to_s == :publishers.to_s %>><a href="<%= partial_dashboard_path(partial: :publishers) %>"><span class="glyphicon glyphicon-tower" aria-hidden="true"></span> Publishers</a></li>
+  <li <%= "class=active" if partial.to_s == :users.to_s %>><a href="<%= partial_dashboard_path(partial: :users) %>"><span class="glyphicon glyphicon-user" aria-hidden="true"></span> Users</a></li>
+<% end %>
+  <li <%= "class=active" if partial.to_s == :books.to_s %>><a href="<%= partial_dashboard_path(partial: :books) %>"><span class="glyphicon glyphicon-book" aria-hidden="true"></span> Books</a></li>
+  <li <%= "class=active" if partial.to_s == :items.to_s %>><a href="<%= partial_dashboard_path(partial: :items) %>"><span class="glyphicon glyphicon-tags" aria-hidden="true"></span> Items</a></li>
+  <li <%= "class=active" if partial.to_s == :pages.to_s %>><a href="<%= partial_dashboard_path(partial: :pages) %>"><span class="glyphicon glyphicon-file" aria-hidden="true"></span> Pages</a></li>
+  <li <%= "class=active" if partial.to_s == :reports.to_s %>><a href="<%= partial_dashboard_path(partial: :reports) %>"><span class="glyphicon glyphicon-stats" aria-hidden="true"></span> Reports</a></li>
+  <p><br/><br/><br/></p>
+  <li <%= "class=active" if partial.to_s == :customize.to_s %>><a href="<%= partial_dashboard_path(partial: :customize) %>"><span class="glyphicon glyphicon-tint" aria-hidden="true"></span> Customize</a></li>
+  <li <%= "class=active" if partial.to_s == :settings.to_s %>><a href="<%= partial_dashboard_path(partial: :settings) %>"><span class="glyphicon glyphicon-cog" aria-hidden="true"></span> Settings</a></li>
+  <li <%= "class=active" if partial.to_s == :help.to_s %>><a href="<%= partial_dashboard_path(partial: :help) %>"><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span> Help</a></li>
+</ul>

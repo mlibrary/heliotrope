@@ -1,11 +1,2 @@
-<h1>Dashboard</h1>
-<% user =  UserPresenter.new(current_user, current_user) %>
-<% if can? :read, user %>
-  <h2>User</h2>
-  <%= render partial: "users/user", locals: { user: user } %>
-<% end %>
-<% users = UsersPresenter.new(current_user) %>
-<% if can? :read, users %>
-  <h2>Users</h2>
-  <%= render partial: "users/users", locals: { users: users } %>
-<% end %>
+<%= content_for(:body_attributes, 'data-no-turbolink') %>
+<!-- Place holder for :index, currently being redirected to action :show, partial: dashboard -->

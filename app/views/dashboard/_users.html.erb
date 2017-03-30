@@ -1,0 +1,4 @@
+<% users = UsersPresenter.new(current_user) %>
+<% if can? :read, users %>
+    <%= render partial: "users/users", locals: { users: users } %>
+<% end %>

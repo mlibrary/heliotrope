@@ -1,0 +1,2 @@
+class DashboardPresenter < ApplicationPresenter
+end
