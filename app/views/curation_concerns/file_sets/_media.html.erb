@@ -35,7 +35,7 @@
           <h3 class="panel-title">Transcript</h3>
         </div>
         <div class="panel-body fixed">
-          <p><%= presenter.attribute_to_html(:transcript, render_as: :markdown, label: '') %></p>
+          <p><%= presenter.attribute_to_html(:transcript, render_as: :markdown, label: '', newlines_only: true) %></p>
         </div>
       </div><!-- /.transcript panel -->
   <% end %>
