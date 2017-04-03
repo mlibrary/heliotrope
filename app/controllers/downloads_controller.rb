@@ -15,7 +15,11 @@ class DownloadsController < ApplicationController
         response.headers['X-Sendfile'] = file
         send_file file, derivative_download_options
       else
-        super
+        self.status = 200
+        send_file_headers! content_options.merge(disposition: 'attachment')
+        response.headers['Content-Length'] ||= file.size.to_s
+        response.headers['Last-Modified'] = asset.modified_date.utc.strftime("%a, %d %b %Y %T GMT")
+        stream_body file.stream
       end
     else
       render 'curation_concerns/base/unauthorized', status: :unauthorized
