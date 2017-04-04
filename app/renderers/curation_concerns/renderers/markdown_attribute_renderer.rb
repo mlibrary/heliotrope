@@ -8,7 +8,12 @@ module CurationConcerns
         return markup if !values.present? && !options[:include_empty]
         markup_values = []
         Array(values).each do |value|
-          markup_values << MarkdownService.markdown(value)
+          markup_values << if options[:newlines_only]
+                             # need to manually escape the value here as it's bypassing the service
+                             ERB::Util.h(value).gsub(/(?:\n\r?|\r\n?)/, '<br>')
+                           else
+                             MarkdownService.markdown(value)
+                           end
         end
 
         markup << if label.empty?
