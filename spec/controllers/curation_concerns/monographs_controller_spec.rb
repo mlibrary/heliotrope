@@ -14,6 +14,21 @@ describe CurationConcerns::MonographsController do
   context 'a platform superadmin' do
     let(:user) { create(:platform_admin) }
 
+    describe "#new" do
+      context 'press parameter' do
+        let(:subdomain) { "subdomain" }
+        let(:form) { assigns(:form) }
+        it 'handles missing press param' do
+          get :new
+          expect(form["press"]).to match(//)
+        end
+        it 'handles press param' do
+          get :new, press: subdomain
+          expect(form["press"]).to match(/#{subdomain}/)
+        end
+      end
+    end
+
     describe "#show" do
       it 'is successful' do
         get :show, id: monograph

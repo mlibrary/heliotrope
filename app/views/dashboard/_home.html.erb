@@ -1,5 +1,10 @@
 <% repository =  RepositoryPresenter.new(current_user) %>
-<table class="table table-striped">
+<h1>Repository Summary</h1>
+<table class="table table-striped" summary="Repository Global Stats">
+  <tr>
+    <th scope="col">Object</th>
+    <th scope="col">Count</th>
+  </tr>
   <tr>
     <td>Publishers</td>
     <td><%= repository.publisher_ids.count() %></td>

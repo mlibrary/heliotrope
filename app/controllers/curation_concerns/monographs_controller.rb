@@ -11,6 +11,11 @@ class CurationConcerns::MonographsController < ApplicationController
     redirect_to [main_app, curation_concern], notice: 'Monograph is publishing.'
   end
 
+  def new
+    super
+    @form[:press] = params[:press] unless params[:press].nil?
+  end
+
   protected
 
     # The curation_concerns gem doesn't allow cancancan to
