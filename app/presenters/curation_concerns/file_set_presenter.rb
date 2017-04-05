@@ -100,11 +100,11 @@ module CurationConcerns
     end
 
     def doi_url
-      doi.first
+      doi
     end
 
     def allow_download?
-      if allow_download == 'yes' || allow_download.first == 'yes'
+      if allow_download == 'yes'
         true
       else
         false

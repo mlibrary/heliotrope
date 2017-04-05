@@ -4,6 +4,7 @@ class SolrDocument
   # Adds CurationConcerns behaviors to the SolrDocument.
   include CurationConcerns::SolrDocumentBehavior
 
+  include SolrDocumentExtensions
   # self.unique_key = 'id'
 
   # Email uses the semantic field mappings below to generate the body of an email.
@@ -20,64 +21,5 @@ class SolrDocument
   use_extension(Blacklight::Document::DublinCore)
 
   # Do content negotiation for AF models.
-
-  ssim_fields = [
-    'allow_display_after_expiration',
-    'allow_download',
-    'allow_download_after_expiration',
-    'allow_hi_res',
-    'book_needs_handles',
-    'buy_url',
-    'copyright_status',
-    'credit_line',
-    'exclusive_to_platform',
-    'external_resource',
-    'ext_url_doi_or_handle',
-    'doi',
-    'hdl',
-    'holding_contact',
-    'permissions_expiration_date',
-    'rights_granted',
-    'rights_granted_creative_commons',
-    'use_crossref_xml'
-  ]
-
-  ssim_fields.each do |field|
-    define_method(field) do
-      fetch("#{field}_ssim", [])
-    end
-  end
-
-  tesim_fields = [
-    'alt_text',
-    'caption',
-    'content_type',
-    'copyright_holder',
-    'creator_family_name',
-    'creator_full_name',
-    'creator_given_name',
-    'date_published',
-    'display_date',
-    'editor',
-    'identifier',
-    'isbn',
-    'isbn_paper',
-    'isbn_ebook',
-    'keywords',
-    'primary_creator_role',
-    'resource_type',
-    'section_title',
-    'sort_date',
-    'search_year',
-    'transcript',
-    'translation'
-  ]
-
-  tesim_fields.each do |field|
-    define_method(field) do
-      fetch("#{field}_tesim", [])
-    end
-  end
-
   use_extension(Hydra::ContentNegotiation)
 end

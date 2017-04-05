@@ -12,7 +12,7 @@ module OpenUrlPresenter
     fields << "rft.genre=bookitem"
     fields << "rft.source=fulcrum.org"
     fields << "rft.identifier=#{CGI.escape(citable_link)}"
-    fields << "rft.au=#{CGI.escape(creator_full_name.first)}" if creator_full_name.present?
+    fields << "rft.au=#{CGI.escape(creator_full_name)}" if creator_full_name.present?
 
     contributor.each do |contrib|
       fields << "rft.au=#{CGI.escape(contrib)}"
@@ -25,7 +25,7 @@ module OpenUrlPresenter
       fields << "rft.subject=#{CGI.escape(subject)}"
     end
 
-    fields << "rft.date=#{CGI.escape(sort_date.first[0, 4])}" if sort_date.present?
+    fields << "rft.date=#{CGI.escape(sort_date[0, 4])}" if sort_date.present?
     fields.join('&')
   end
 
@@ -35,7 +35,7 @@ module OpenUrlPresenter
     fields << "rft_val_fmt=info:ofi/fmt:kev:mtx:book"
     fields << "rfr_id=info:sid/fulcrum.org"
     fields << "rft.source=fulcrum.org"
-    fields << "rft.au=#{CGI.escape(creator_full_name.first)}" if creator_full_name.present?
+    fields << "rft.au=#{CGI.escape(creator_full_name)}" if creator_full_name.present?
 
     contributor.each do |contrib|
       fields << "rtf.au=#{CGI.escape(contrib)}"
