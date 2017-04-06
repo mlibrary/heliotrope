@@ -1,0 +1,19 @@
+<% repository =  RepositoryPresenter.new(current_user) %>
+<table class="table table-striped">
+  <tr>
+    <td>Publishers</td>
+    <td><%= repository.publisher_ids.count() %></td>
+  </tr>
+  <tr>
+    <td>Monographs</td>
+    <td><%= repository.monograph_ids.count() %></td>
+  </tr>
+  <tr>
+    <td>Assets</td>
+    <td><%= repository.asset_ids.count() %></td>
+  </tr>
+  <tr>
+    <td>Users</td>
+    <td><%= repository.user_ids.count() %></td>
+  </tr>
+</table>

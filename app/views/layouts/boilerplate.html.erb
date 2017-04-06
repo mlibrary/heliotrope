@@ -44,13 +44,10 @@
     <%= javascript_include_tag 'application' %>
 
   </head>
-<% unless press_subdomain.nil? %>
-  <body class="<%= press_subdomain %>">
+
+  <body <%= "class=#{press_subdomain}" unless press_subdomain.nil? %> <%= yield(:body_attributes) %>>
     <div class="skip"><a href="#maincontent">Skip to main content</a></div>
-<% else %>
-  <body>
-    <div class="skip"><a href="#maincontent">Skip to main content</a></div>
-<% end %>
+
 
     <%= content_for?(:body) ? yield(:body) : yield %>
 

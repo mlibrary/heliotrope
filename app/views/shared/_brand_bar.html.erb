@@ -10,6 +10,11 @@
       <%= link_to application_name, main_app.root_path, id: 'home-link', class: 'navbar-brand' %>
     </div>
 
+    <!-- search -->
+    <% if show_site_search? %>
+        <%= render 'shared/site_search' %>
+    <% end %>
+
     <div class="collapse navbar-collapse" id="brand-bar-nav">
       <div class="navbar-right">
         <% if current_user && show_site_actions? %>

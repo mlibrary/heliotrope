@@ -57,22 +57,43 @@ describe Ability do
       should be_able_to(:update, another_user_monograph_presenter)
     end
 
-    describe "UsersPresenter" do
-      it { should be_able_to(:read, UsersPresenter.new(current_user)) }
+    context "ApplicationPresenter" do
+      it { should be_able_to(:read, ApplicationPresenter.new(current_user)) }
     end
 
-    describe "UserPresenter" do
-      it { should be_able_to(:read, UserPresenter.new(another_user, current_user)) }
+    context "DashboardPresenter" do
+      it { should be_able_to(:read, DashboardPresenter.new(current_user)) }
     end
 
-    describe "RolesPresenter" do
+    context "PublisherPresenter" do
+      let(:publisher) { double("publisher") }
+      it { should be_able_to(:read, PublisherPresenter.new(current_user, publisher)) }
+    end
+
+    context "PublishersPresenter" do
+      it { should be_able_to(:read, PublishersPresenter.new(current_user)) }
+    end
+
+    context "RepositoryPresenter" do
+      it { should be_able_to(:read, RepositoryPresenter.new(current_user)) }
+    end
+
+    context "RolePresenter" do
+      it { should be_able_to(:read, RolePresenter.new(current_user.roles.first, current_user, current_user)) }
+      it { should be_able_to(:read, RolePresenter.new(another_user.roles.first, another_user, current_user)) }
+    end
+
+    context "RolesPresenter" do
       it { should be_able_to(:read, RolesPresenter.new(current_user, current_user)) }
       it { should be_able_to(:read, RolesPresenter.new(another_user, current_user)) }
     end
 
-    describe "RolePresenter" do
-      it { should be_able_to(:read, RolePresenter.new(current_user.roles.first, current_user, current_user)) }
-      it { should be_able_to(:read, RolePresenter.new(another_user.roles.first, another_user, current_user)) }
+    context "UserPresenter" do
+      it { should be_able_to(:read, UserPresenter.new(another_user, current_user)) }
+    end
+
+    context "UsersPresenter" do
+      it { should be_able_to(:read, UsersPresenter.new(current_user)) }
     end
   end
 
@@ -125,8 +146,39 @@ describe Ability do
       end
     end
 
-    describe "UsersPresenter" do
-      it { should be_able_to(:read, UsersPresenter.new(current_user)) }
+    context "ApplicationPresenter" do
+      it { should_not be_able_to(:read, ApplicationPresenter.new(current_user)) }
+    end
+
+    context "DashboardPresenter" do
+      it { should_not be_able_to(:read, DashboardPresenter.new(current_user)) }
+    end
+
+    context "PublisherPresenter" do
+      let(:publisher) { double("publisher") }
+      it { should_not be_able_to(:read, PublisherPresenter.new(current_user, publisher)) }
+    end
+
+    context "PublishersPresenter" do
+      it { should_not be_able_to(:read, PublishersPresenter.new(current_user)) }
+    end
+
+    context "RepositoryPresenter" do
+      it { should_not be_able_to(:read, RepositoryPresenter.new(current_user)) }
+    end
+
+    describe "RolePresenter" do
+      let(:my_press_user) { create(:editor, press: my_press) }
+      let(:other_press_user) { create(:editor, press: other_press) }
+      it { should     be_able_to(:read, RolePresenter.new(current_user.roles.first, current_user, current_user)) }
+      it { should     be_able_to(:read, RolePresenter.new(my_press_user.roles.first, my_press_user, current_user)) }
+      it { should_not be_able_to(:read, RolePresenter.new(other_press_user.roles.first, other_press_user, current_user)) }
+    end
+
+    describe "RolesPresenter" do
+      let(:another_user) { double("another_user") }
+      it { should be_able_to(:read, RolesPresenter.new(current_user, current_user)) }
+      it { should be_able_to(:read, RolesPresenter.new(another_user, current_user)) }
     end
 
     describe "UserPresenter" do
@@ -137,18 +189,8 @@ describe Ability do
       it { should_not be_able_to(:read, UserPresenter.new(other_press_user, current_user)) }
     end
 
-    describe "RolesPresenter" do
-      let(:another_user) { double("another_user") }
-      it { should be_able_to(:read, RolesPresenter.new(current_user, current_user)) }
-      it { should be_able_to(:read, RolesPresenter.new(another_user, current_user)) }
-    end
-
-    describe "RolePresenter" do
-      let(:my_press_user) { create(:editor, press: my_press) }
-      let(:other_press_user) { create(:editor, press: other_press) }
-      it { should     be_able_to(:read, RolePresenter.new(current_user.roles.first, current_user, current_user)) }
-      it { should     be_able_to(:read, RolePresenter.new(my_press_user.roles.first, my_press_user, current_user)) }
-      it { should_not be_able_to(:read, RolePresenter.new(other_press_user.roles.first, other_press_user, current_user)) }
+    describe "UsersPresenter" do
+      it { should be_able_to(:read, UsersPresenter.new(current_user)) }
     end
   end
 
@@ -165,8 +207,39 @@ describe Ability do
       should     be_able_to(:read, my_sub_brand)
     end
 
-    describe "UsersPresenter" do
-      it { should_not be_able_to(:read, UsersPresenter.new(current_user)) }
+    context "ApplicationPresenter" do
+      it { should_not be_able_to(:read, ApplicationPresenter.new(current_user)) }
+    end
+
+    context "DashboardPresenter" do
+      it { should_not be_able_to(:read, DashboardPresenter.new(current_user)) }
+    end
+
+    context "PublisherPresenter" do
+      let(:publisher) { double("publisher") }
+      it { should_not be_able_to(:read, PublisherPresenter.new(current_user, publisher)) }
+    end
+
+    context "PublishersPresenter" do
+      it { should_not be_able_to(:read, PublishersPresenter.new(current_user)) }
+    end
+
+    context "RepositoryPresenter" do
+      it { should_not be_able_to(:read, RepositoryPresenter.new(current_user)) }
+    end
+
+    describe "RolePresenter" do
+      let(:my_press_user) { create(:editor, press: my_press) }
+      let(:other_press_user) { create(:editor, press: create(:press)) }
+      it { should     be_able_to(:read, RolePresenter.new(current_user.roles.first, current_user, current_user)) }
+      it { should_not be_able_to(:read, RolePresenter.new(my_press_user.roles.first, my_press_user, current_user)) }
+      it { should_not be_able_to(:read, RolePresenter.new(other_press_user.roles.first, other_press_user, current_user)) }
+    end
+
+    describe "RolesPresenter" do
+      let(:another_user) { double("another_user") }
+      it { should be_able_to(:read, RolesPresenter.new(current_user, current_user)) }
+      it { should be_able_to(:read, RolesPresenter.new(another_user, current_user)) }
     end
 
     describe "UserPresenter" do
@@ -178,18 +251,8 @@ describe Ability do
       it { should_not be_able_to(:read, UserPresenter.new(create(:user), current_user)) }
     end
 
-    describe "RolesPresenter" do
-      let(:another_user) { double("another_user") }
-      it { should be_able_to(:read, RolesPresenter.new(current_user, current_user)) }
-      it { should be_able_to(:read, RolesPresenter.new(another_user, current_user)) }
-    end
-
-    describe "RolePresenter" do
-      let(:my_press_user) { create(:editor, press: my_press) }
-      let(:other_press_user) { create(:editor, press: create(:press)) }
-      it { should     be_able_to(:read, RolePresenter.new(current_user.roles.first, current_user, current_user)) }
-      it { should_not be_able_to(:read, RolePresenter.new(my_press_user.roles.first, my_press_user, current_user)) }
-      it { should_not be_able_to(:read, RolePresenter.new(other_press_user.roles.first, other_press_user, current_user)) }
+    describe "UsersPresenter" do
+      it { should_not be_able_to(:read, UsersPresenter.new(current_user)) }
     end
   end
 
@@ -251,13 +314,31 @@ describe Ability do
       end
     end
 
-    describe "UsersPresenter" do
-      it { should_not be_able_to(:read, UsersPresenter.new(current_user)) }
+    context "ApplicationPresenter" do
+      it { should_not be_able_to(:read, ApplicationPresenter.new(current_user)) }
     end
 
-    describe "UserPresenter" do
-      it { should     be_able_to(:read, UserPresenter.new(current_user, current_user)) }
-      it { should_not be_able_to(:read, UserPresenter.new(create(:user), current_user)) }
+    context "DashboardPresenter" do
+      it { should_not be_able_to(:read, DashboardPresenter.new(current_user)) }
+    end
+
+    context "PublisherPresenter" do
+      let(:publisher) { double("publisher") }
+      it { should_not be_able_to(:read, PublisherPresenter.new(current_user, publisher)) }
+    end
+
+    context "PublishersPresenter" do
+      it { should_not be_able_to(:read, PublishersPresenter.new(current_user)) }
+    end
+
+    context "RepositoryPresenter" do
+      it { should_not be_able_to(:read, RepositoryPresenter.new(current_user)) }
+    end
+
+    describe "RolePresenter" do
+      let(:another_user) { create(:editor, press: create(:press)) }
+      it { should     be_able_to(:read, RolePresenter.new(current_user.roles.first, current_user, current_user)) }
+      it { should_not be_able_to(:read, RolePresenter.new(another_user.roles.first, another_user, current_user)) }
     end
 
     describe "RolesPresenter" do
@@ -266,10 +347,13 @@ describe Ability do
       it { should be_able_to(:read, RolesPresenter.new(another_user, current_user)) }
     end
 
-    describe "RolePresenter" do
-      let(:another_user) { create(:editor, press: create(:press)) }
-      it { should     be_able_to(:read, RolePresenter.new(current_user.roles.first, current_user, current_user)) }
-      it { should_not be_able_to(:read, RolePresenter.new(another_user.roles.first, another_user, current_user)) }
+    describe "UserPresenter" do
+      it { should     be_able_to(:read, UserPresenter.new(current_user, current_user)) }
+      it { should_not be_able_to(:read, UserPresenter.new(create(:user), current_user)) }
+    end
+
+    describe "UsersPresenter" do
+      it { should_not be_able_to(:read, UsersPresenter.new(current_user)) }
     end
   end
 end

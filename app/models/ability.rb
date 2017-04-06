@@ -4,6 +4,7 @@ class Ability
 
   # Define any customized permissions here.
   def custom_permissions
+    can [:read], ApplicationPresenter, &:can_read?
     can [:read], UsersPresenter, &:can_read?
     can [:read], UserPresenter, &:can_read?
     can [:read], RolesPresenter, &:can_read?

@@ -1,5 +1,6 @@
 class CatalogController < ApplicationController
   include CurationConcerns::CatalogController
+
   configure_blacklight do |config|
     config.search_builder_class = ::SearchBuilder
     ## Default parameters to send to solr for all search-like requests. See also SolrHelper#solr_search_params
@@ -247,5 +248,9 @@ class CatalogController < ApplicationController
     # If there are more than this many search results, no spelling ("did you
     # mean") suggestion is offered.
     config.spell_max = 5
+  end
+
+  def show_site_search?
+    true
   end
 end

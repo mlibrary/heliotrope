@@ -28,7 +28,7 @@ describe UsersPresenter do
       it { expect(subject[0].user).to eq user }
       it { expect(subject[0].current_user).to eq current_user }
     end
-    context 'with users' do
+    context 'with users sorted on email' do
       let(:user1) { double("user1") }
       let(:user2) { double("user2") }
       before do

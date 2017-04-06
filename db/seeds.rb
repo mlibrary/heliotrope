@@ -81,11 +81,13 @@ def pennstate
   puts "updated/created pennstate"
 end
 
-# add presses as they become ready for production
-heliotrope unless bulleit?
-indiana
-michigan
-minnesota
-northwestern
-pennstate unless bulleit?
+unless Rails.env.test?
+  # add presses as they become ready for production
+  heliotrope unless bulleit?
+  indiana
+  michigan
+  minnesota
+  northwestern
+  pennstate unless bulleit?
+end
 

@@ -1,0 +1,13 @@
+<!--<%#= content_for(:body_attributes, 'data-no-turbolink') %>-->
+<div id="dashboard" class="container-fluid">
+  <div class="row">
+    <div class="col-sm-3 col-md-2" id="sidebar" role="navigation">
+      <%= render partial: 'sidebar', locals: { current_user: current_user, partial: @partial } %>
+    </div><!--/span-->
+    <div class="col-sm-9 col-md-10 main">
+      <div id="maincontent" class="container col-sm-12 col-md-12">
+        <%= render partial: "#{@partial}", locals: { current_user: current_user } %>
+      </div>
+    </div>
+  </div><!--/row-->
+</div><!--/.container-->
