@@ -6,7 +6,7 @@ class HandleService
   def self.handle(object)
     return nil if object.nil?
     hdl = object.id if object.respond_to?(:id)
-    hdl = object.hdl.first if object.respond_to?(:hdl) && object.hdl.first.present?
+    hdl = object.hdl if object.respond_to?(:hdl) && object.hdl.present?
     return nil if hdl.nil?
     "2027/fulcrum.#{hdl}"
   end

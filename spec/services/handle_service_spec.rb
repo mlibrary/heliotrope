@@ -41,8 +41,8 @@ describe HandleService do
     end
 
     context 'with assigned handle' do
-      let(:hdl) { ['hdl'] }
-      let(:handle) { "2027/fulcrum.#{hdl.first}" }
+      let(:hdl) { 'hdl' }
+      let(:handle) { "2027/fulcrum.#{hdl}" }
       let(:response) { double("response") }
 
       before do

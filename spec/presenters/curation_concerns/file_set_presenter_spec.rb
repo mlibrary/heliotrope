@@ -41,7 +41,7 @@ describe CurationConcerns::FileSetPresenter do
     end
     let(:fileset_doc) { SolrDocument.new(file_set.to_solr) }
     it "has the monograph's creator_family_name" do
-      expect(presenter.monograph.creator_family_name.first).to eq monograph.creator_family_name
+      expect(presenter.monograph.creator_family_name).to eq monograph.creator_family_name
     end
   end
 

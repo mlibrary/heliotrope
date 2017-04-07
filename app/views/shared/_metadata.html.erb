@@ -1,7 +1,7 @@
 <% if @monograph_presenter.present? %>
 
   <meta name="citation_title" content="<%= @monograph_presenter.page_title %>">
-  <meta name="citation_author" content="<%= @monograph_presenter.creator_full_name.first %>">
+  <meta name="citation_author" content="<%= @monograph_presenter.creator_full_name %>">
   <% @monograph_presenter.contributor.each do |contributor| %>
   <meta name="citation_author" content="<%= contributor %>">
   <% end %>
@@ -16,12 +16,12 @@
 <% elsif @presenter.present? && @presenter.model_name.singular == 'file_set' %>
 
   <meta name="citation_title" content="<%= @presenter.page_title %>">
-  <meta name="citation_author" content="<%= @presenter.creator_full_name.first %>">
+  <meta name="citation_author" content="<%= @presenter.creator_full_name %>">
   <% @presenter.contributor.each do |contributor| %>
   <meta name="citation_author" content="<%= contributor %>">
   <% end %>
   <% if @presenter.sort_date.present? %>
-  <meta name="citation_publication_date" content="<%= @presenter.sort_date.first[0,4] %>">
+  <meta name="citation_publication_date" content="<%= @presenter.sort_date[0,4] %>">
   <% end %>
   <% if @presenter.doi.present? %>
   <meta name="citation_doi" content="<%= @presenter.doi_url.gsub('https://doi.org/', '') %>">

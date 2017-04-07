@@ -10,28 +10,15 @@ class Monograph < ActiveFedora::Base
 
   validates :title, presence: { message: 'Your work must have a title.' }
 
-  property :press, predicate: ::RDF::Vocab::MARCRelators.pbl, multiple: false do |index|
-    index.as :stored_searchable, :facetable
-  end
-  validates :press, presence: { message: 'You must select a press.' }
-
-  property :sub_brand, predicate: ::RDF::Vocab::MARCRelators.bsl do |index|
+  property :buy_url, predicate: ::RDF::Vocab::SCHEMA.sameAs do |index|
     index.as :symbol
   end
 
+  property :copyright_holder, predicate: ::RDF::Vocab::SCHEMA.copyrightHolder do |index|
+    index.as :stored_searchable
+  end
+
   property :date_published, predicate: ::RDF::Vocab::SCHEMA.datePublished do |index|
-    index.as :stored_searchable
-  end
-
-  property :isbn, predicate: ::RDF::Vocab::SCHEMA.isbn do |index|
-    index.as :stored_searchable
-  end
-
-  property :isbn_paper, predicate: ::RDF::URI.new('http://fulcrum.org/ns#isbnSoftcover') do |index|
-    index.as :stored_searchable
-  end
-
-  property :isbn_ebook, predicate: ::RDF::URI.new('http://fulcrum.org/ns#isbnEbook') do |index|
     index.as :stored_searchable
   end
 
@@ -39,11 +26,24 @@ class Monograph < ActiveFedora::Base
     index.as :stored_searchable
   end
 
-  property :copyright_holder, predicate: ::RDF::Vocab::SCHEMA.copyrightHolder do |index|
+  property :isbn, predicate: ::RDF::Vocab::SCHEMA.isbn do |index|
     index.as :stored_searchable
   end
 
-  property :buy_url, predicate: ::RDF::Vocab::SCHEMA.sameAs do |index|
+  property :isbn_ebook, predicate: ::RDF::URI.new('http://fulcrum.org/ns#isbnEbook') do |index|
+    index.as :stored_searchable
+  end
+
+  property :isbn_paper, predicate: ::RDF::URI.new('http://fulcrum.org/ns#isbnSoftcover') do |index|
+    index.as :stored_searchable
+  end
+
+  property :press, predicate: ::RDF::Vocab::MARCRelators.pbl, multiple: false do |index|
+    index.as :stored_searchable, :facetable
+  end
+  validates :press, presence: { message: 'You must select a press.' }
+
+  property :sub_brand, predicate: ::RDF::Vocab::MARCRelators.bsl do |index|
     index.as :symbol
   end
 end
