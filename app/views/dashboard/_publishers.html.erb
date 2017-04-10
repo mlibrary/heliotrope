@@ -1,23 +1,24 @@
 <% repository =  RepositoryPresenter.new(current_user) %>
 <% publishers =  PublishersPresenter.new(current_user) %>
-<table class="table table-striped">
+<h1>Publishers Summary</h1>
+<table class="table table-striped" summary="Respository Publishers Stats">
   <tr>
+    <td></td>
     <th>Publisher</th>
     <th>Subdomain</th>
     <th>Monographs</th>
     <th>Assets</th>
     <th>Users</th>
-    <th></th>
   </tr>
   <% publishers.all.each do |publisher| %>
     <% if can? :read, publisher %>
       <tr>
+        <td><a href="<%= search_catalog_path("f[press_name_ssim][]" => "#{publisher.name}")%>"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> Search</a></td>
         <td><%= publisher.name %></td>
         <td><%= link_to publisher.subdomain, "/#{publisher.subdomain}" %></td>
-        <td><%= repository.monograph_ids(publisher).count() %></td>
+        <td><%= repository.monograph_ids(publisher).count() %>&nbsp;<a href="<%= concern_monographs_new_path %>?press=<%= publisher.subdomain %>"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Add</a></td>
         <td><%= repository.asset_ids(publisher).count() %></td>
         <td><%= repository.user_ids(publisher).count() %></td>
-        <td><a href="<%= search_catalog_path("f[press_name_ssim][]" => "#{publisher.name}")%>"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> Search</a></td>
       </tr>
     <% end %>
   <% end %>
