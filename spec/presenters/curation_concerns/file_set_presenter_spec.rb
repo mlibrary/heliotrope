@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe CurationConcerns::FileSetPresenter do
+RSpec.describe CurationConcerns::FileSetPresenter do
   let(:ability) { double('ability') }
   let(:presenter) { described_class.new(fileset_doc, ability) }
 
@@ -97,5 +97,17 @@ describe CurationConcerns::FileSetPresenter do
       allow(presenter).to receive(:height).and_return('height')
     end
     it { expect(presenter.embed_code).to eq "<iframe src='http://#{Settings.host}/embed?hdl=#{HandleService.handle(presenter)}' height='#{presenter.height}' width='#{presenter.width}'>Your browser doesn't support iframes!</iframe>" }
+  end
+
+  describe '#epub?' do
+    let(:fileset_doc) { SolrDocument.new(id: 'fileset_id', has_model_ssim: ['FileSet'], mime_type_ssi: mime_type) }
+    context 'text/plain' do
+      let(:mime_type) { 'text/plain' }
+      it { expect(presenter.epub?).to eq false }
+    end
+    context 'application/epub+zip' do
+      let(:mime_type) { 'application/epub+zip' }
+      it { expect(presenter.epub?).to eq true }
+    end
   end
 end

@@ -1,0 +1,26 @@
+<% provide :body do %>
+<div id="epub">
+  <div id="reader" style="width: 400px; height: 400px;"></div>
+  <script type="text/javascript">
+    var reader = cozy.reader('reader', { href: "<%= "#{main_app.epub_url}/#{params[:id]}" %>" });
+    cozy.control.title({ region: 'top.header.left' }).addTo(reader);
+    cozy.control.contents({ region: 'top.toolbar.left' }).addTo(reader);
+    cozy.control.widget({
+      region: 'top.toolbar.left',
+      template: `<div class="doi-label"><span data-slot="title"></span></div>`,
+      states: [{
+        stateName: 'doi',
+        title: "DOI: 10.3998/fulcrum.12345"
+      }]
+    }).addTo(reader);
+    cozy.control.preferences({ region: 'top.toolbar.right' }).addTo(reader);
+    // cozy.control.pageFirst({ region: 'left.sidebar' }).addTo(reader);
+    cozy.control.pagePrevious({ region: 'left.sidebar' }).addTo(reader);
+    cozy.control.pageNext({ region: 'right.sidebar' }).addTo(reader);
+    // cozy.control.pageLast({ region: 'right.sidebar' }).addTo(reader);
+    cozy.control.publicationMetadata({ region: 'bottom.footer' }).addTo(reader);
+    reader.start();
+  </script>
+</div>
+<% end %>
+<%= render template: 'layouts/boilerplate' %>
