@@ -4,23 +4,25 @@ class RepositoryPresenter < ApplicationPresenter
   end
 
   def monograph_ids(publisher = nil)
-    query = {}
-    query[Solrizer.solr_name('has_model', :symbol)] = 'Monograph'
-    # query[Solrizer.solr_name('press', :symbol)] = publisher.subdomain unless publisher.nil?
-    query[:press_tesim] = publisher.subdomain unless publisher.nil?
-    ActiveFedora::Base.where(query).map(&:id)
+    docs = ActiveFedora::SolrService.query("+has_model_ssim:Monograph", rows: 10_000)
+    ids = []
+    docs.each do |doc|
+      if publisher.nil?
+        ids << doc['id']
+      elsif doc['press_tesim'].first == publisher.subdomain
+        ids << doc['id']
+      end
+    end
+    ids
   end
 
   def asset_ids(publisher = nil)
-    query = {}
-    query[Solrizer.solr_name('has_model', :symbol)] = 'Monograph'
-    # query[Solrizer.solr_name('press', :symbol)] = publisher.subdomain unless publisher.nil?
-    query[:press_tesim] = publisher.subdomain unless publisher.nil?
-    monographs = ActiveFedora::Base.where(query)
     asset_ids = []
-    monographs.each do |monograph|
-      monograph_doc = ActiveFedora::SolrService.query("{!terms f=id}#{monograph.id}")
-      asset_ids += monograph_doc.blank? ? [] : monograph_doc[0][Solrizer.solr_name('ordered_member_ids', :symbol)]
+    monograph_ids(publisher).each do |monograph_id|
+      monograph_doc = ActiveFedora::SolrService.query("{!terms f=id}#{monograph_id}")
+      unless monograph_doc.blank?
+        asset_ids += monograph_doc[0][Solrizer.solr_name('ordered_member_ids', :symbol)] || []
+      end
     end
     asset_ids
   end
