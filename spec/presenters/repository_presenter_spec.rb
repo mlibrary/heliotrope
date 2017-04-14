@@ -28,6 +28,7 @@ describe RepositoryPresenter do
     let!(:publisher2) { create(:press) }
     let!(:monograph1) { create(:monograph, press: publisher1.subdomain) }
     let!(:monograph2) { create(:monograph, press: publisher2.subdomain) }
+
     context 'nil publisher' do
       subject { described_class.new(current_user).monograph_ids }
       it do
@@ -59,36 +60,46 @@ describe RepositoryPresenter do
     let!(:publisher2) { create(:press) }
     let!(:monograph1) { create(:monograph, press: publisher1.subdomain) }
     let!(:monograph2) { create(:monograph, press: publisher2.subdomain) }
-    let!(:asset1) { create(:file_set) }
-    let!(:asset2) { create(:file_set) }
-    before do
-      monograph1.ordered_members << asset1
-      monograph1.save!
-      monograph2.ordered_members << asset2
-      monograph2.save!
-    end
-    context 'nil publisher' do
+
+    context 'when monographs have no assets' do
       subject { described_class.new(current_user).asset_ids }
-      it do
-        expect(subject).to be_a Array
-        expect(subject.length).to eq 2
-        expect(subject).to include(asset1.id, asset2.id)
-      end
+      it { expect(subject.length).to eq 0 }
     end
-    context 'first publisher' do
-      subject { described_class.new(current_user).asset_ids(publisher1) }
-      it do
-        expect(subject).to be_a Array
-        expect(subject.length).to eq 1
-        expect(subject).to include(asset1.id)
+
+    context 'when monographs have assets' do
+      let!(:asset1) { create(:file_set) }
+      let!(:asset2) { create(:file_set) }
+
+      before do
+        monograph1.ordered_members << asset1
+        monograph1.save!
+        monograph2.ordered_members << asset2
+        monograph2.save!
       end
-    end
-    context 'second publisher' do
-      subject { described_class.new(current_user).asset_ids(publisher2) }
-      it do
-        expect(subject).to be_a Array
-        expect(subject.length).to eq 1
-        expect(subject).to include(asset2.id)
+
+      context 'nil publisher' do
+        subject { described_class.new(current_user).asset_ids }
+        it do
+          expect(subject).to be_a Array
+          expect(subject.length).to eq 2
+          expect(subject).to include(asset1.id, asset2.id)
+        end
+      end
+      context 'first publisher' do
+        subject { described_class.new(current_user).asset_ids(publisher1) }
+        it do
+          expect(subject).to be_a Array
+          expect(subject.length).to eq 1
+          expect(subject).to include(asset1.id)
+        end
+      end
+      context 'second publisher' do
+        subject { described_class.new(current_user).asset_ids(publisher2) }
+        it do
+          expect(subject).to be_a Array
+          expect(subject.length).to eq 1
+          expect(subject).to include(asset2.id)
+        end
       end
     end
   end
