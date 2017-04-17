@@ -1,8 +1,4 @@
 <% provide :body do %>
-    <div class="container">
-      <div id="maincontent" class="asset">
-        <%= render "curation_concerns/file_sets/media", presenter: @presenter %>
-      </div> <!-- /.asset -->
-    </div>
+  <%= render "curation_concerns/file_sets/media_embedded", presenter: @presenter %>
 <% end %>
-<%= render template: 'layouts/boilerplate' %>
+<%= render template: 'layouts/embedded' %>
