@@ -65,7 +65,9 @@ module Import
       def file_objects(attrs)
         # assigning empty files a generic link icon here, should be external resources
         attrs['files'] = attrs['files'].map do |file|
-          file.blank? ? File.new(Rails.root.join('app', 'assets', 'images', 'external_resource.jpg')) : File.new(find_file(file))
+          # setting external resources to '' here (not nil) gets the FileSet created using the existing...
+          # CC actor stack, as long as we also bow out just before ingest in FileSetActor's create_content
+          file.blank? ? '' : File.new(find_file(file))
         end
       end
 

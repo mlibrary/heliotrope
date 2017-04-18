@@ -47,7 +47,7 @@ describe Import::Importer do
       it 'imports the new monograph and files, or "reimports" them to a pre-existing monograph' do
         expect { importer.run }
           .to change { Monograph.count }.by(1)
-          .and(change { FileSet.count }.by(8))
+          .and(change { FileSet.count }.by(9))
 
         monograph = Monograph.first
         expect(monograph.visibility).to eq public_vis
@@ -61,9 +61,6 @@ describe Import::Importer do
         # Restricted-value fields get lowercased, apart from CC licenses
         expect(file_sets[0].external_resource).to eq 'no'
         expect(file_sets[0].rights_granted_creative_commons).to eq 'Creative Commons Attribution-ShareAlike license, 3.0 Unported'
-
-        # Exclusivity should be transformed from P/BP to yes/no
-        expect(file_sets[0].exclusive_to_platform).to eq 'no'
 
         expect(file_sets[1].title).to eq ['Monograph Miranda']
         expect(file_sets[1].external_resource).to eq 'no'
@@ -89,14 +86,14 @@ describe Import::Importer do
         reimporter = described_class.new(root_dir, nil, nil, nil, monograph.id)
         expect { reimporter.run }
           .to change { Monograph.count }.by(0)
-          .and(change { FileSet.count }.by(8))
+          .and(change { FileSet.count }.by(9))
 
         # check it's indeed the same monograph
         expect(Monograph.first.id).to eq monograph.id
 
         # check counts explicitly
         expect(Monograph.count).to eq(1)
-        expect(FileSet.count).to eq(16)
+        expect(FileSet.count).to eq(18)
 
         # grab all FileSets again
         file_sets = Monograph.first.ordered_members.to_a
@@ -105,18 +102,19 @@ describe Import::Importer do
         expect(file_sets[0].id).to eq monograph.representative_id
 
         # check order/existence of new files
-        expect(file_sets[8].title).to eq ['Monograph Shipwreck']
-        expect(file_sets[9].title).to eq ['Monograph Miranda']
-        expect(file_sets[10].title).to eq ['日本語のファイル']
-        expect(file_sets[11].title).to eq ['Section 1 Shipwreck']
-        expect(file_sets[12].title).to eq ['Section 1 Miranda']
-        expect(file_sets[13].title).to eq ['Section 2 Shipwreck']
-        expect(file_sets[14].title).to eq ['Section 2 Miranda']
-        expect(file_sets[15].title).to eq ['Previous Shipwreck File (Again)']
+        expect(file_sets[9].title).to eq ['Monograph Shipwreck']
+        expect(file_sets[10].title).to eq ['Monograph Miranda']
+        expect(file_sets[11].title).to eq ['日本語のファイル']
+        expect(file_sets[12].title).to eq ['Section 1 Shipwreck']
+        expect(file_sets[13].title).to eq ['Section 1 Miranda']
+        expect(file_sets[14].title).to eq ['Section 2 Shipwreck']
+        expect(file_sets[15].title).to eq ['Section 2 Miranda']
+        expect(file_sets[16].title).to eq ['Previous Shipwreck File (Again)']
+        expect(file_sets[17].title).to eq ['External Bard Transcript']
 
         # new filesets should have the same visibility as the parent monograph
-        expect(file_sets[9].visibility).to eq monograph.visibility
-        expect(file_sets[14].visibility).to eq monograph.visibility
+        expect(file_sets[10].visibility).to eq monograph.visibility
+        expect(file_sets[15].visibility).to eq monograph.visibility
       end
     end
 
