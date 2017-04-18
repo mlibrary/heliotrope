@@ -21,9 +21,20 @@ feature 'Create an external resource' do
       select press.name, from: 'Publisher'
       fill_in 'Date Published', with: 'Oct 20th'
       click_button 'Create Monograph'
+
       # Go to monograph show page (not monograph catalog page)
       click_link 'Manage Monograph and Files'
-      # Now attach a file to the Monograph by creating a FileSet
+      # attach a representative file to the Monograph
+      click_link 'Attach a File'
+      fill_in 'Title', with: 'Representative Image'
+      attach_file 'file_set_files', File.join(fixture_path, 'csv', 'shipwreck.jpg')
+      fill_in 'Resource Type', with: 'image'
+      fill_in 'Caption', with: 'This is a caption for the representative image'
+      click_button 'Attach to Monograph'
+
+      # TODO: enable the creation of "fileless" external resources through the UI (don't attach_file below)
+      click_link 'Manage Monograph and Files'
+      # attach an external resource file to the Monograph
       click_link 'Attach a File'
       fill_in 'Title', with: 'Test external resource'
       attach_file 'file_set_files', File.join(fixture_path, 'csv', 'miranda.jpg')
@@ -32,7 +43,7 @@ feature 'Create an external resource' do
       fill_in 'Alternative Text', with: 'This is some alt text for the external resource'
       fill_in 'Copyright Holder', with: 'University of Michigan'
       fill_in 'Copyright Status', with: 'in-copyright'
-      fill_in 'Exclusive to Platform?', with: 'BP'
+      fill_in 'Exclusive to Platform?', with: 'no'
       fill_in 'Allow Download?', with: 'no'
       fill_in 'Allow Hi-Res?', with: 'yes'
 
@@ -40,9 +51,14 @@ feature 'Create an external resource' do
       fill_in 'External URL/DOI', with: 'https://www.example.com/blah'
 
       click_button 'Attach to Monograph'
+
       # On Monograph Page
-      # The file we just added won't show up on the monograph catalog page since it's
-      # the representative fileset. Navigate to the FileSet page
+      # check the direct links to the external resource from both list and gallery views
+      expect(page).to have_link('View Object', href: "https://www.example.com/blah")
+      click_link 'Gallery'
+      expect(page).to have_link('View External Object', href: "https://www.example.com/blah")
+
+      # Navigate to the FileSet page
       click_link 'Manage Monograph and Files'
       click_link 'miranda.jpg'
       # On FileSet Page
