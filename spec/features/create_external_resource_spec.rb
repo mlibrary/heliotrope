@@ -68,6 +68,9 @@ feature 'Create an external resource' do
       # Look for the text highlighting this is an external resource
       expect(page).to have_content 'This is an external resource hosted on another website.'
       expect(page).to have_link(nil, href: "https://www.example.com/blah")
+
+      # no image present on an external resource's FileSet page
+      expect(page).to_not have_css('div.image')
     end
   end
 end

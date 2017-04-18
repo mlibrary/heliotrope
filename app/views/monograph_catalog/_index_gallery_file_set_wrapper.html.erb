@@ -4,7 +4,7 @@
     <div class="caption">
       <%= render_document_partials document, blacklight_config.view_config(:gallery).partials, :document_counter => document_counter %>
     </div>
-    <% if external_resource?(document) %>
+    <% if document.external_resource == 'yes' %>
         <div id="ext-res-gallery">
           <a href="<%= document.ext_url_doi_or_handle %>"><span class="glyphicon glyphicon-share" aria-hidden="true"></span> View External Object</a>
         </div>
