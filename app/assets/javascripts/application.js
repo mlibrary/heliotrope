@@ -23,6 +23,8 @@
 // Required by Blacklight
 //= require blacklight/blacklight
 // Required by Heliotrope?
+//= require epub
+//= require cozy-src
 //= require leaflet_1.0.3
 //= require leaflet-iiif_1.0.2
 //= require 'edit_users'

@@ -160,5 +160,9 @@ module CurationConcerns
     def original_name
       solr_document['original_name_tesim']
     end
+
+    def epub?
+      ['application/epub+zip'].include? mime_type
+    end
   end
 end

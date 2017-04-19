@@ -19,6 +19,9 @@ class ApplicationController < ActionController::Base
   protected
 
     def render_unauthorized(_exception)
-      render 'curation_concerns/base/unauthorized', status: :unauthorized
+      respond_to do |format|
+        format.html { render 'curation_concerns/base/unauthorized', status: :unauthorized }
+        format.any { head :unauthorized, content_type: 'text/plain' }
+      end
     end
 end
