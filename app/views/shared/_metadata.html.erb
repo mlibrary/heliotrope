@@ -1,9 +1,11 @@
 <% if @monograph_presenter.present? %>
 
-  <meta name="citation_title" content="<%= @monograph_presenter.page_title %>">
-  <meta name="citation_author" content="<%= @monograph_presenter.creator_full_name %>">
+  <meta name="citation_title" content="<%= @monograph_presenter.page_title.html_safe %>">
+  <% if @monograph_presenter.creator_full_name.present? %>
+  <meta name="citation_author" content="<%= @monograph_presenter.creator_full_name.html_safe %>">
+  <% end %>
   <% @monograph_presenter.contributor.each do |contributor| %>
-  <meta name="citation_author" content="<%= contributor %>">
+  <meta name="citation_author" content="<%= contributor.html_safe %>">
   <% end %>
   <% if @monograph_presenter.date_published.present? %>
   <meta name="citation_publication_date" content="<%= @monograph_presenter.date_published.first %>">
@@ -15,10 +17,12 @@
 
 <% elsif @presenter.present? && @presenter.model_name.singular == 'file_set' %>
 
-  <meta name="citation_title" content="<%= @presenter.page_title %>">
-  <meta name="citation_author" content="<%= @presenter.creator_full_name %>">
+  <meta name="citation_title" content="<%= @presenter.page_title.html_safe %>">
+  <% if @presenter.creator_full_name.present? %>
+  <meta name="citation_author" content="<%= @presenter.creator_full_name.html_safe %>">
+  <% end %>
   <% @presenter.contributor.each do |contributor| %>
-  <meta name="citation_author" content="<%= contributor %>">
+  <meta name="citation_author" content="<%= contributor.html_safe %>">
   <% end %>
   <% if @presenter.sort_date.present? %>
   <meta name="citation_publication_date" content="<%= @presenter.sort_date[0,4] %>">

@@ -38,6 +38,20 @@ describe 'shared/_metadata.html.erb' do
     end
   end
 
+  context "when the monograph has special characters" do
+    # See #870
+    let(:solr_document) { SolrDocument.new(id: '1',
+                                           has_model_ssim: ['Monograph'],
+                                           title_tesim: [%q(Bob's “Smart” Dog’s "Rött" Äpple)],
+                                           creator_full_name_tesim: ['Bob'],
+                                           press_name_ssim: ['Swedish Red Apple']) }
+    it "renders the characters correctly" do
+      @monograph_presenter = CurationConcerns::MonographPresenter.new(solr_document, nil)
+      render
+      expect(rendered).to match(%q(Bob's “Smart” Dog’s "Rött" Äpple))
+    end
+  end
+
   context "with a file_set presenter" do
     let(:solr_document) { SolrDocument.new(id: '001',
                                            has_model_ssim: ['FileSet'],
