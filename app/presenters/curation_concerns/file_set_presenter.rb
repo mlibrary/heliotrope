@@ -103,12 +103,12 @@ module CurationConcerns
       doi
     end
 
+    def external_resource?
+      external_resource == 'yes'
+    end
+
     def allow_download?
-      if allow_download == 'yes'
-        true
-      else
-        false
-      end
+      allow_download == 'yes'
     end
 
     def allow_embed?

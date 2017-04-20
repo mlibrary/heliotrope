@@ -1,5 +1,5 @@
   <figure class="image" title="<%= @presenter.alt_text.first %>">
-    <% if external_resource?(@presenter) == false %>
+    <% if !@presenter.external_resource? %>
       <% if @presenter.image? %>
       <div id="image"></div>
       <script>
@@ -24,9 +24,6 @@
       <p class="external-text lead">This is an external resource hosted on another website.<br />
         <a href="<%= @presenter.ext_url_doi_or_handle %>" title="<%= @presenter.title %>" target="_blank" ><span class="glyphicon glyphicon-share" aria-hidden="true"></span> View object</a> at originating website.
       </p>
-      <div id="image">
-        <%= external_resource_linked_image(@presenter) %>
-      </div>
     <% end %>
     <figcaption><%= @presenter.attribute_to_html(:caption, render_as: :markdown, label: '') %></figcaption>
   </figure> <!-- /.image/media -->
