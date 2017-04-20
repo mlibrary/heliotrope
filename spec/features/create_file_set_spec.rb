@@ -24,12 +24,7 @@ feature 'Create a file set' do
 
     before do
       login_as user
-
-      # stub out redis file-locking:
-      allow_any_instance_of(CurationConcerns::Actors::FileSetActor).to receive(:acquire_lock_for).and_yield
-
-      # Don't run characterize job during specs
-      allow(CharacterizeJob).to receive_messages(perform_later: nil, perform_now: nil)
+      stub_out_redis
     end
 
     scenario do
@@ -133,7 +128,6 @@ feature 'Create a file set' do
 
       # Selectors needed for assets/javascripts/ga_event_tracking.js
       # If these change, fix here then update ga_event_tracking.js
-      expect(page).to have_selector('#image')
       expect(page).to have_selector('ul.nav.nav-tabs li a', count: 4)
 
       # check facet results - bug #772

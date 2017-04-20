@@ -4,7 +4,7 @@ source 'https://rubygems.org'
 # gem 'rails', '4.2.6'
 gem 'rails', '4.2.7.1'
 
-gem 'curation_concerns', '2.0.0.rc1'
+gem 'curation_concerns', '2.0.0.rc2'
 gem 'resque-web', '~> 0.0.7', require: 'resque_web'
 gem 'resque'
 gem 'resque-pool'
