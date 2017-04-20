@@ -73,6 +73,10 @@ Alternatively, you can start up each server individually.  This may be preferabl
 
    `rspec`
 
+### Wiki
+  
+For additional details and helpful hints [read the wiki.](https://github.com/mlibrary/heliotrope/wiki)
+
 ### Contact
 
 Contact the [Fulcrum Developers List](mailto:fulcrum-dev@umich.edu) with any question about the project.
