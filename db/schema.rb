@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170127203131) do
+ActiveRecord::Schema.define(version: 20170420185619) do
 
   create_table "bookmarks", force: :cascade do |t|
     t.integer  "user_id",       null: false
@@ -266,11 +266,12 @@ ActiveRecord::Schema.define(version: 20170127203131) do
   add_index "sipity_workflow_states", ["workflow_id", "name"], name: "sipity_type_state_aggregate", unique: true
 
   create_table "sipity_workflows", force: :cascade do |t|
-    t.string   "name",        null: false
+    t.string   "name",                null: false
     t.string   "label"
     t.text     "description"
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
+    t.datetime "created_at",          null: false
+    t.datetime "updated_at",          null: false
+    t.boolean  "allows_access_grant"
   end
 
   add_index "sipity_workflows", ["name"], name: "index_sipity_workflows_on_name", unique: true

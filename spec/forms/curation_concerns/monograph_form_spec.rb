@@ -36,6 +36,7 @@ describe CurationConcerns::MonographForm do
                             :ordered_member_ids,
                             :source,
                             :in_works_ids,
+                            :member_of_collection_ids,
                             :press,
                             :date_published,
                             :isbn,
