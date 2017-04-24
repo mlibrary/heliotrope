@@ -89,6 +89,10 @@ module SolrDocumentExtensions::FileSet
     Array(self[Solrizer.solr_name('primary_creator_role', :stored_searchable)])
   end
 
+  def resource_type
+    Array(self[Solrizer.solr_name('resource_type', :stored_searchable)]).first
+  end
+
   def rights_granted
     Array(self[Solrizer.solr_name('rights_granted', :symbol)]).first
   end
