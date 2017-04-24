@@ -17,7 +17,7 @@ class MonographSearchBuilder < ::SearchBuilder
 
     # Get the asset/fileset ids of the monograph
     def asset_ids(id)
-      monograph = ActiveFedora::SolrService.query("{!terms f=id}#{id}")
+      monograph = ActiveFedora::SolrService.query("{!terms f=id}#{id}", rows: 1)
       return unless monograph.present?
 
       ids = monograph.first['ordered_member_ids_ssim']

@@ -54,19 +54,19 @@ describe MonographSearchBuilder do
       end
 
       it "recieves the correct file_set after searching for italic" do
-        doc = ActiveFedora::SolrService.query("{!terms f=description_tesim}elephant").first
+        doc = ActiveFedora::SolrService.query("{!terms f=description_tesim}elephant", rows: 10_000).first
         expect(doc[:title_tesim]).to eq(["Blue"])
       end
 
       it "recieves the correct result after searching for bold" do
-        doc = ActiveFedora::SolrService.query("{!terms f=description_tesim}spider").first
+        doc = ActiveFedora::SolrService.query("{!terms f=description_tesim}spider", rows: 10_000).first
         expect(doc[:title_tesim]).to eq(["Red"])
       end
 
       it "recieves the correct result after searching for strikethrough" do
         # solr doesn't need any changes in solr/config/schema.xml for strikethrough.
         # It just "does the right thing". Should test it anyway I guess.
-        doc = ActiveFedora::SolrService.query("{!terms f=description_tesim}lizard").first
+        doc = ActiveFedora::SolrService.query("{!terms f=description_tesim}lizard", rows: 10_000).first
         expect(doc[:title_tesim]).to eq(["Yellow"])
       end
     end

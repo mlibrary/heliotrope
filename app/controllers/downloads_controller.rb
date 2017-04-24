@@ -27,7 +27,7 @@ class DownloadsController < ApplicationController
   end
 
   def file_set_doc
-    ActiveFedora::SolrService.query("{!terms f=id}#{params[:id]}").first || {}
+    ActiveFedora::SolrService.query("{!terms f=id}#{params[:id]}", rows: 1).first || {}
   end
 
   def mime_type_for(file)
