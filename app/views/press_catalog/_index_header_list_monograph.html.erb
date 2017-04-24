@@ -7,6 +7,9 @@
         <%= render_markdown link_to_document document, document_show_link_field(document), counter: counter %>
       </h2>
       <h3><%= render_markdown document.creator_given_name || '' %> <%= render_markdown document.creator_family_name || '' %><%= contributors_string(document.contributor) %></h3>
+      <% unless document.editor.nil? %>
+        <h3>Edited by <%= document.editor %></h3>
+      <% end %>
       <p><%= render_markdown document.description.first || '' %></p>
     </div>
   </div>
