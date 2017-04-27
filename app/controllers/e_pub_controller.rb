@@ -2,7 +2,7 @@ require 'zip'
 
 class EPubController < ApplicationController
   def show
-    file_set_doc = ActiveFedora::SolrService.query("{!terms f=id}#{params[:id]}").first
+    file_set_doc = ActiveFedora::SolrService.query("{!terms f=id}#{params[:id]}", row: 1).first
     mime_type = file_set_doc['mime_type_ssi'] unless file_set_doc.nil?
     epub_zip = mime_type.include? 'application/epub+zip' unless mime_type.nil?
     if epub_zip

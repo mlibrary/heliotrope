@@ -11,14 +11,14 @@ end
 # each image. If you are using hydra-file_characterization, you have the height & width
 # cached in Solr. The following block directs the info_service to return those values:
 Riiif::Image.info_service = lambda do |id, _file|
-  doc = ActiveFedora::SolrService.query("{!terms f=id}#{id}").first
+  doc = ActiveFedora::SolrService.query("{!terms f=id}#{id}", rows: 1).first
   { height: doc["height_is"], width: doc["width_is"] }
 end
 
 module Riiif
   def Image.cache_key(id, options)
     # Add a timestamp to "expire" image tiles if a file_set is updated with a new image
-    options[:timestamp] = ActiveFedora::SolrService.query("{!terms f=id}#{id}").first["timestamp"]
+    options[:timestamp] = ActiveFedora::SolrService.query("{!terms f=id}#{id}", rows: 1).first["timestamp"]
     str = options.merge(id: id).delete_if { |_, v| v.nil? }.to_s
     # Use a MD5 digest to ensure the keys aren't too long.
     Digest::MD5.hexdigest(str)

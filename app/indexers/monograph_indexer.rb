@@ -13,7 +13,7 @@ class MonographIndexer < CurationConcerns::WorkIndexer
   end
 
   def existing_filesets
-    existing_monograph_doc = ActiveFedora::SolrService.query("{!terms f=id}#{object.id}")
+    existing_monograph_doc = ActiveFedora::SolrService.query("{!terms f=id}#{object.id}", rows: 1)
     order = existing_monograph_doc.blank? ? [] : existing_monograph_doc[0][Solrizer.solr_name('ordered_member_ids', :symbol)]
     order || []
   end

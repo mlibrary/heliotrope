@@ -19,7 +19,7 @@ class RepositoryPresenter < ApplicationPresenter
   def asset_ids(publisher = nil)
     asset_ids = []
     monograph_ids(publisher).each do |monograph_id|
-      monograph_doc = ActiveFedora::SolrService.query("{!terms f=id}#{monograph_id}")
+      monograph_doc = ActiveFedora::SolrService.query("{!terms f=id}#{monograph_id}", rows: 1)
       unless monograph_doc.blank?
         asset_ids += monograph_doc[0][Solrizer.solr_name('ordered_member_ids', :symbol)] || []
       end
