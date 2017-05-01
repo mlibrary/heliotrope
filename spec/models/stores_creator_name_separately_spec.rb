@@ -10,19 +10,19 @@ describe StoresCreatorNameSeparately do
 
   subject { work }
 
-  it 'has properties for creator first and last name' do
+  it 'has properties for creator first and last names' do
     expect(subject.creator_family_name).to be_nil
     expect(subject.creator_given_name).to be_nil
   end
 
   describe '#to_solr' do
-    let(:attributes) {{ creator_family_name: 'Shakespeare',
-                        creator_given_name: 'W.' }}
+    let(:attributes) {{ creator_family_name: 'Moose',
+                        creator_given_name: 'Bullwinkle' }}
     subject { work.to_solr }
 
     it 'indexes the full name of the creator' do
-      expect(subject['creator_full_name_tesim']).to eq 'Shakespeare, W.'
-      expect(subject['creator_full_name_sim']).to eq 'Shakespeare, W.'
+      expect(subject['creator_full_name_tesim']).to eq 'Moose, Bullwinkle'
+      expect(subject['creator_full_name_sim']).to eq 'Moose, Bullwinkle'
     end
   end
 end

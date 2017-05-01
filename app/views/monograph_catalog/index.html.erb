@@ -30,9 +30,11 @@
         <%= link_to "Manage Monograph and Files", main_app.monograph_show_path(@monograph_presenter.id), class: 'btn btn-primary', id: 'manage-monograph-button' %>
       <% end %>
       <h3><%= @monograph_presenter.creator_given_name %> <%= @monograph_presenter.creator_family_name %><%= contributors_string(@monograph_presenter.contributor) %></h3>
-      <% unless @monograph_presenter.editor.nil? %>
-        <h3>Edited by <%= @monograph_presenter.editor %></h3>
+
+      <% if @monograph_presenter.editors? %>
+        <h3>Edited by <%= @monograph_presenter.editors %></h3>
       <% end %>
+
       <div class="description">
         <%= render_markdown @monograph_presenter.description.first || '' %>
       </div>

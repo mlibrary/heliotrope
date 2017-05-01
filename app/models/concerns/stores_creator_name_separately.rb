@@ -13,8 +13,6 @@ module StoresCreatorNameSeparately
     end
   end
 
-  # Index the primary creator's full name in solr for faceting,
-  # searching, and display.
   def to_solr
     super.tap do |solr_doc|
       name = full_name

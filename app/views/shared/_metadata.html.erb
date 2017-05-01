@@ -1,36 +1,50 @@
 <% if @monograph_presenter.present? %>
 
   <meta name="citation_title" content="<%= @monograph_presenter.page_title.html_safe %>">
+
   <% if @monograph_presenter.creator_full_name.present? %>
-  <meta name="citation_author" content="<%= @monograph_presenter.creator_full_name.html_safe %>">
+    <meta name="citation_author" content="<%= @monograph_presenter.creator_full_name.html_safe %>">
+    <% @monograph_presenter.contributor.each do |contributor| %>
+      <meta name="citation_author" content="<%= contributor.html_safe %>">
+    <% end %>
   <% end %>
-  <% @monograph_presenter.contributor.each do |contributor| %>
-  <meta name="citation_author" content="<%= contributor.html_safe %>">
+
+  <% if @monograph_presenter.editors? %>
+    <meta name="citation_author" content="<%= @monograph_presenter.primary_editor_full_name.html_safe %>">
+    <% @monograph_presenter.editor.each do |editor| %>
+      <meta name="citation_author" content="<%= editor.html_safe %>">
+    <% end %>
   <% end %>
+
   <% if @monograph_presenter.date_published.present? %>
-  <meta name="citation_publication_date" content="<%= @monograph_presenter.date_published.first %>">
+    <meta name="citation_publication_date" content="<%= @monograph_presenter.date_published.first %>">
   <% end %>
+
   <% if @monograph_presenter.isbn.present? %>
-  <meta name="citation_isbn" content="<%= @monograph_presenter.isbn.first %>">
+    <meta name="citation_isbn" content="<%= @monograph_presenter.isbn.first %>">
   <% end %>
+
   <meta name="citation_publisher" content="<%= @monograph_presenter.press %>">
 
 <% elsif @presenter.present? && @presenter.model_name.singular == 'file_set' %>
 
   <meta name="citation_title" content="<%= @presenter.page_title.html_safe %>">
+
   <% if @presenter.creator_full_name.present? %>
-  <meta name="citation_author" content="<%= @presenter.creator_full_name.html_safe %>">
+    <meta name="citation_author" content="<%= @presenter.creator_full_name.html_safe %>">
+    <% @presenter.contributor.each do |contributor| %>
+      <meta name="citation_author" content="<%= contributor.html_safe %>">
+    <% end %>
   <% end %>
-  <% @presenter.contributor.each do |contributor| %>
-  <meta name="citation_author" content="<%= contributor.html_safe %>">
-  <% end %>
+
   <% if @presenter.sort_date.present? %>
-  <meta name="citation_publication_date" content="<%= @presenter.sort_date[0,4] %>">
+    <meta name="citation_publication_date" content="<%= @presenter.sort_date[0,4] %>">
   <% end %>
+
   <% if @presenter.doi.present? %>
-  <meta name="citation_doi" content="<%= @presenter.doi_url.gsub('https://doi.org/', '') %>">
+    <meta name="citation_doi" content="<%= @presenter.doi_url.gsub('https://doi.org/', '') %>">
   <% else %>
-  <meta name="DC.identifier" content="<%= @presenter.handle_url.gsub('http://hdl.handle.net/', '') %>">
+    <meta name="DC.identifier" content="<%= @presenter.handle_url.gsub('http://hdl.handle.net/', '') %>">
   <% end %>
 
 <% else %>

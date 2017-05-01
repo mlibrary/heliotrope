@@ -38,6 +38,14 @@ class Monograph < ActiveFedora::Base
     index.as :stored_searchable
   end
 
+  property :primary_editor_family_name, predicate: ::RDF::URI.new('http://fulcrum.org/ns#primaryEditorFamilyName'), multiple: false do |index|
+    index.as :stored_searchable
+  end
+
+  property :primary_editor_given_name, predicate: ::RDF::URI.new('http://fulcrum.org/ns#primaryEditorGivenName'), multiple: false do |index|
+    index.as :stored_searchable
+  end
+
   property :press, predicate: ::RDF::Vocab::MARCRelators.pbl, multiple: false do |index|
     index.as :stored_searchable, :facetable
   end
