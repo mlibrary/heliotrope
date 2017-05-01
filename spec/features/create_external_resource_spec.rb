@@ -54,7 +54,7 @@ feature 'Create an external resource' do
 
       # On Monograph Page
       # check the direct links to the external resource from both list and gallery views
-      expect(page).to have_link('View Object', href: "https://www.example.com/blah")
+      expect(page).to have_link('View External Object', href: "https://www.example.com/blah")
       click_link 'Gallery'
       expect(page).to have_link('View External Object', href: "https://www.example.com/blah")
 
