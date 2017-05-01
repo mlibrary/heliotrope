@@ -1,9 +1,9 @@
 <%- if has_thumbnail?(document) && tn = render_thumbnail_tag(document, {}, :counter => document_counter_with_offset(document_counter)) %>
 <div class="document-thumbnail col-sm-3">
   <% if document.external_resource == 'yes' %>
-    <% icon_string = '<span class="glyphicon ' + glyphicon_type(document.resource_type) + ' external-resource-list" aria-hidden="true"></span>' %>
+    <% icon_string = '<span class="glyphicon ' + glyphicon_type(document.resource_type) + ' external-resource-icon" aria-hidden="true"></span>' %>
     <%= tn.gsub(/<img.*>/, icon_string + '<br/>').html_safe %>
-    <a class="external" href="<%= document.ext_url_doi_or_handle %>"><span class="glyphicon glyphicon-share" aria-hidden="true"></span> View Object</a>
+    <a class="external-resource-link" href="<%= document.ext_url_doi_or_handle %>" target="_blank"><span class="glyphicon glyphicon-share" aria-hidden="true"></span> View External Object</a>
   <% else %>
     <%= tn %>
   <% end %>

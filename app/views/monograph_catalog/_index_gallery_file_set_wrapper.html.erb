@@ -1,7 +1,7 @@
 <div class="document col-xs-6 col-md-3">
   <div class="thumbnail">
     <% if document.external_resource == 'yes' %>
-      <% icon_string = '<span class="glyphicon ' + glyphicon_type(document.resource_type) + ' external-resource-gallery" aria-hidden="true"></span>' %>
+      <% icon_string = '<span class="glyphicon ' + glyphicon_type(document.resource_type) + ' external-resource-icon" aria-hidden="true"></span>' %>
       <% tn = render_thumbnail_tag(document, {}, :counter => document_counter_with_offset(document_counter)) %>
       <%= tn.gsub(/<img.*>/, icon_string + '<br/>').html_safe %>
     <% else %>
@@ -11,8 +11,8 @@
       <%= render_document_partials document, blacklight_config.view_config(:gallery).partials, :document_counter => document_counter %>
     </div>
     <% if document.external_resource == 'yes' %>
-      <div id="external-resource-gallery-caption">
-        <a href="<%= document.ext_url_doi_or_handle %>"><span class="glyphicon glyphicon-share" aria-hidden="true"></span> View External Object</a>
+      <div class="external-resource-link">
+        <a href="<%= document.ext_url_doi_or_handle %>" target="_blank"><span class="glyphicon glyphicon-share" aria-hidden="true"></span> View External Object</a>
       </div>
     <% end %>
   </div>
