@@ -69,12 +69,17 @@
         <% end %>
       </div> <!-- /.isbn -->
 
-      <% if defined?(@monograph_presenter.buy_url) %>
-      <div class="btn-toolbar" role="toolbar" aria-label="">
-        <div class="btn-group" role="group" aria-label="">
-            <a id="monograph-buy-btn" href="<%= @monograph_presenter.buy_url.first %>" target="_blank" title="Buy <%= @monograph_presenter.title %>" role="button" class="btn btn-default btn-small">Buy Book</a>
+      <% if @monograph_presenter.buy_url? || @monograph_presenter.epub? %>
+        <div class="btn-toolbar" role="toolbar" aria-label="">
+          <div class="btn-group" role="group" aria-label="">
+          <% if @monograph_presenter.epub? %>
+            <a id="monograph-read-btn" href="<%= epub_path(@monograph_presenter.epub) %>" target="_blank" title="Read <%= @monograph_presenter.title %>" role="button" class="btn btn-default btn-small">Read Book</a>
+          <% end %>
+          <% if @monograph_presenter.buy_url? %>
+            <a id="monograph-buy-btn" href="<%= @monograph_presenter.buy_url %>" target="_blank" title="Buy <%= @monograph_presenter.title %>" role="button" class="btn btn-default btn-small">Buy Book</a>
+          <% end %>
+          </div>
         </div>
-      </div>
       <% end %>
 
     </div><!-- /.monograph-metadata -->

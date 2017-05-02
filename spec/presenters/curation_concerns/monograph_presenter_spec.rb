@@ -15,6 +15,60 @@ describe CurationConcerns::MonographPresenter do
     expect(described_class.new(nil, nil)).to be_a TitlePresenter
   end
 
+  describe '#buy_url?' do
+    context 'empty' do
+      before { allow(mono_doc).to receive(:buy_url).and_return([]) }
+      subject { presenter.buy_url? }
+      it { expect(subject).to be false }
+    end
+    context 'url' do
+      before { allow(mono_doc).to receive(:buy_url).and_return(['url']) }
+      subject { presenter.buy_url? }
+      it { expect(subject).to be true }
+    end
+  end
+
+  describe '#buy_url' do
+    context 'empty' do
+      before { allow(mono_doc).to receive(:buy_url).and_return([]) }
+      subject { presenter.buy_url }
+      it { expect(subject).to be nil }
+    end
+    context 'url' do
+      before { allow(mono_doc).to receive(:buy_url).and_return(['url']) }
+      subject { presenter.buy_url }
+      it { expect(subject).to eq 'url' }
+    end
+  end
+
+  describe '#date_published' do
+    before do
+      allow(mono_doc).to receive(:date_published).and_return(['Oct 7th'])
+    end
+    subject { presenter.date_published }
+    it { is_expected.to eq ['Oct 7th'] }
+  end
+
+  describe '#editors' do
+    before do
+      allow(mono_doc).to receive(:primary_editor_given_name).and_return('Abe')
+      allow(mono_doc).to receive(:primary_editor_family_name).and_return('Cat')
+      allow(mono_doc).to receive(:editor).and_return(['Thing Lastname', 'Manny Feetys'])
+    end
+    subject { presenter.editors }
+    it { is_expected.to eq "Abe Cat, Thing Lastname, and Manny Feetys" }
+  end
+
+  describe '#editors?' do
+    before do
+      allow(mono_doc).to receive(:primary_editor_given_name).and_return(nil)
+      allow(mono_doc).to receive(:primary_editor_family_name).and_return(nil)
+      allow(mono_doc).to receive(:editor).and_return([])
+    end
+    subject { presenter.editors? }
+    it { is_expected.to eq false }
+  end
+
   describe '#sub_brand_links' do
     context 'a monograph without sub-brands' do
       let(:mono_doc) { SolrDocument.new(id: 'mono', has_model_ssim: ['Monograph'], press_tesim: [press.subdomain]) }
@@ -51,43 +105,6 @@ describe CurationConcerns::MonographPresenter do
       it 'gracefully ignores missing sub-brands' do
         expect(presenter.sub_brand_links.count).to eq 1
         expect(presenter.sub_brand_links.first).to match(/href="#{Rails.application.routes.url_helpers.press_sub_brand_path(press, imprint)}"/)
-      end
-    end
-  end
-
-  context 'a monograph with no attached members' do
-    describe '#ordered_file_sets_ids', :private do
-      subject { presenter.ordered_file_sets_ids }
-      it 'returns an empty array' do
-        expect(subject.count).to eq 0
-      end
-    end
-
-    describe '#previous_file_sets_id?' do
-      subject { presenter.previous_file_sets_id? 0 }
-      it 'returns false' do
-        expect(subject).to eq false
-      end
-    end
-
-    describe '#previous_file_sets_id' do
-      subject { presenter.previous_file_sets_id 0 }
-      it 'returns nil' do
-        expect(subject).to eq nil
-      end
-    end
-
-    describe '#next_file_sets_id?' do
-      subject { presenter.next_file_sets_id? 0 }
-      it 'returns false' do
-        expect(subject).to eq false
-      end
-    end
-
-    describe '#next_file_sets_id' do
-      subject { presenter.next_file_sets_id 0 }
-      it 'returns nil' do
-        expect(subject).to eq nil
       end
     end
   end
@@ -143,7 +160,54 @@ describe CurationConcerns::MonographPresenter do
     end
   end
 
-  context 'a monograph with filesets' do
+  context 'a monograph with no attached members' do
+    describe '#ordered_file_sets_ids', :private do
+      subject { presenter.ordered_file_sets_ids }
+      it 'returns an empty array' do
+        expect(subject.count).to eq 0
+      end
+    end
+
+    describe '#previous_file_sets_id?' do
+      subject { presenter.previous_file_sets_id? 0 }
+      it 'returns false' do
+        expect(subject).to eq false
+      end
+    end
+
+    describe '#previous_file_sets_id' do
+      subject { presenter.previous_file_sets_id 0 }
+      it 'returns nil' do
+        expect(subject).to eq nil
+      end
+    end
+
+    describe '#next_file_sets_id?' do
+      subject { presenter.next_file_sets_id? 0 }
+      it 'returns false' do
+        expect(subject).to eq false
+      end
+    end
+
+    describe '#next_file_sets_id' do
+      subject { presenter.next_file_sets_id 0 }
+      it 'returns nil' do
+        expect(subject).to eq nil
+      end
+    end
+
+    describe '#epub?' do
+      subject { presenter.epub? }
+      it { expect(subject).to be false }
+    end
+
+    describe '#epub' do
+      subject { presenter.epub }
+      it { expect(subject).to be nil }
+    end
+  end # context 'a monograph with no attached members' do
+
+  context 'a monograph with attached members' do
     # the cover FileSet won't be included in the ordered_file_sets_ids
     let(:cover_fileset_doc) { SolrDocument.new(id: 'cover', has_model_ssim: ['FileSet']) }
     let(:fs1_doc) { SolrDocument.new(id: 'fs1', has_model_ssim: ['FileSet']) }
@@ -256,33 +320,29 @@ describe CurationConcerns::MonographPresenter do
         expect(subject.class).to eq CurationConcerns::FileSetPresenter
       end
     end
-  end
 
-  describe '#date_published' do
-    before do
-      allow(mono_doc).to receive(:date_published).and_return(['Oct 7th'])
+    describe '#epub?' do
+      subject { presenter.epub? }
+      it { expect(subject).to be false }
     end
-    subject { presenter.date_published }
-    it { is_expected.to eq ['Oct 7th'] }
-  end
 
-  describe '#editors' do
-    before do
-      allow(mono_doc).to receive(:primary_editor_given_name).and_return('Abe')
-      allow(mono_doc).to receive(:primary_editor_family_name).and_return('Cat')
-      allow(mono_doc).to receive(:editor).and_return(['Thing Lastname', 'Manny Feetys'])
+    describe '#epub' do
+      subject { presenter.epub }
+      it { expect(subject).to be nil }
     end
-    subject { presenter.editors }
-    it { is_expected.to eq "Abe Cat, Thing Lastname, and Manny Feetys" }
-  end
 
-  describe '#editors?' do
-    before do
-      allow(mono_doc).to receive(:primary_editor_given_name).and_return(nil)
-      allow(mono_doc).to receive(:primary_editor_family_name).and_return(nil)
-      allow(mono_doc).to receive(:editor).and_return([])
+    context 'has epub' do
+      let(:fs2_doc) { SolrDocument.new(id: 'fs2', has_model_ssim: ['FileSet'], mime_type_ssi: 'application/epub+zip') }
+
+      describe '#epub?' do
+        subject { presenter.epub? }
+        it { expect(subject).to be true }
+      end
+
+      describe '#epub' do
+        subject { presenter.epub }
+        it { expect(subject.id).to eq fs2_doc.id }
+      end
     end
-    subject { presenter.editors? }
-    it { is_expected.to eq false }
-  end
+  end # context 'a monograph with attached members' do
 end

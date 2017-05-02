@@ -113,6 +113,22 @@ module CurationConcerns
       end
     end
 
+    def buy_url?
+      !solr_document.buy_url.blank?
+    end
+
+    def buy_url
+      solr_document.buy_url.first if buy_url?
+    end
+
+    def epub?
+      ordered_member_docs.any? { |doc| ['application/epub+zip'].include? doc.mime_type unless doc.nil? }
+    end
+
+    def epub
+      ordered_member_docs.find { |doc| ['application/epub+zip'].include? doc.mime_type unless doc.nil? }
+    end
+
     # This overrides CC 1.6.2's work_show_presenter.rb which is recursive.
     # Because our FileSets also have respresentative_presenters (I guess that's not normal?)
     # this recursive call from Work -> Arbitrary Nesting of Works -> FileSet never ends.
