@@ -2,7 +2,9 @@ require 'rails_helper'
 
 describe MonographIndexer do
   let(:indexer) { described_class.new(monograph) }
-  let(:monograph) { build(:monograph) }
+  let(:monograph) { build(:monograph,
+                          primary_editor_given_name: 'Bullwinkle',
+                          primary_editor_family_name: 'Moose') }
   let(:file) { create(:file_set) }
 
   before do
@@ -24,6 +26,11 @@ describe MonographIndexer do
 
     it 'indexes the representative_id' do
       expect(subject['representative_id_ssim']).to eq monograph.representative_id
+    end
+
+    it 'indexes the primary_editor_full_name' do
+      expect(subject['primary_editor_full_name_tesim']).to eq 'Moose, Bullwinkle'
+      expect(subject['primary_editor_full_name_sim']).to eq 'Moose, Bullwinkle'
     end
   end
 end

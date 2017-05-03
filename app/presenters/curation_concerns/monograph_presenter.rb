@@ -11,6 +11,8 @@ module CurationConcerns
              :isbn_ebook, :copyright_holder, :buy_url, :embargo_release_date,
              :lease_expiration_date, :rights, :creator_full_name,
              :creator_given_name, :creator_family_name,
+             :primary_editor_family_name, :primary_editor_given_name,
+             :primary_editor_full_name,
              to: :solr_document
 
     # ASSUMPTION: Each FileSet record has only 1 section_title.
@@ -31,6 +33,14 @@ module CurationConcerns
         next unless sub_brand
         link_to(sub_brand.title, Rails.application.routes.url_helpers.press_sub_brand_path(press, id))
       end.compact
+    end
+
+    def editors
+      ["#{primary_editor_given_name} #{primary_editor_family_name}", editor].flatten.to_sentence
+    end
+
+    def editors?
+      !editors.blank?
     end
 
     def subdomain

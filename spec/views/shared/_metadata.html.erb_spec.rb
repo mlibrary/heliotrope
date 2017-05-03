@@ -52,6 +52,23 @@ describe 'shared/_metadata.html.erb' do
     end
   end
 
+  context "when the monograph has editors, not authors" do
+    # See 879
+    let(:solr_document) { SolrDocument.new(id: '1',
+                                           has_model_ssim: ['Monograph'],
+                                           title_tesim: ["More Things About Stuff"],
+                                           primary_editor_full_name_tesim: ['Tafferty, Marge'],
+                                           editor_tesim: ['Blug Shoeman', 'Melissa Allen'],
+                                           press_name_ssim: ['Marge INC.']) }
+    it "renders the editors as authors" do
+      @monograph_presenter = CurationConcerns::MonographPresenter.new(solr_document, nil)
+      render
+      expect(rendered).to match "Tafferty, Marge"
+      expect(rendered).to match "Blug Shoeman"
+      expect(rendered).to match "Melissa Allen"
+    end
+  end
+
   context "with a file_set presenter" do
     let(:solr_document) { SolrDocument.new(id: '001',
                                            has_model_ssim: ['FileSet'],

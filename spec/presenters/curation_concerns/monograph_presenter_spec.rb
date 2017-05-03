@@ -265,4 +265,24 @@ describe CurationConcerns::MonographPresenter do
     subject { presenter.date_published }
     it { is_expected.to eq ['Oct 7th'] }
   end
+
+  describe '#editors' do
+    before do
+      allow(mono_doc).to receive(:primary_editor_given_name).and_return('Abe')
+      allow(mono_doc).to receive(:primary_editor_family_name).and_return('Cat')
+      allow(mono_doc).to receive(:editor).and_return(['Thing Lastname', 'Manny Feetys'])
+    end
+    subject { presenter.editors }
+    it { is_expected.to eq "Abe Cat, Thing Lastname, and Manny Feetys" }
+  end
+
+  describe '#editors?' do
+    before do
+      allow(mono_doc).to receive(:primary_editor_given_name).and_return(nil)
+      allow(mono_doc).to receive(:primary_editor_family_name).and_return(nil)
+      allow(mono_doc).to receive(:editor).and_return([])
+    end
+    subject { presenter.editors? }
+    it { is_expected.to eq false }
+  end
 end

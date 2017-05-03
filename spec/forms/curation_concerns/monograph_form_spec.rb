@@ -47,7 +47,9 @@ describe CurationConcerns::MonographForm do
                             :buy_url,
                             :sub_brand,
                             :creator_family_name,
-                            :creator_given_name] }
+                            :creator_given_name,
+                            :primary_editor_family_name,
+                            :primary_editor_given_name] }
   end
 
   describe 'required_fields' do

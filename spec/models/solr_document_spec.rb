@@ -25,6 +25,9 @@ describe SolrDocument do
   it { is_expected.to respond_to(:isbn_ebook) }
   it { is_expected.to respond_to(:isbn_paper) }
   it { is_expected.to respond_to(:press) }
+  it { is_expected.to respond_to(:primary_editor_family_name) }
+  it { is_expected.to respond_to(:primary_editor_full_name) }
+  it { is_expected.to respond_to(:primary_editor_given_name) }
   it { is_expected.to respond_to(:sub_brand) }
 
   # FileSet
