@@ -31,7 +31,7 @@ Run this command to start Fedora, Solr and Rails servers:
 `rake hydra:server`
 
 Or, if you prefer to start each server individually:
-*(you must use this alternate option if runnig on a VM)*
+*(you must use this alternate option if running on a VM)*
 
 ```
   $ redis-server /usr/local/etc/redis.conf
