@@ -14,6 +14,7 @@
       <p><%= render_markdown document.description.first || '' %></p>
     </div>
   </div>
+
   <div class="row featured-assets">
     <div class="col-sm-3">
     </div>
@@ -24,9 +25,23 @@
     <div class="col-sm-3">
     </div>
   </div>
-  <div class="row">
-    <div class="col-sm-12">
-      <a class="btn btn-default" href="<%= polymorphic_path(url_for_document(document)) %>">View book materials</a>
+
+  <% if presenter.epub? %>
+    <div class="row">
+      <div class="col-sm-12">
+        <a class="btn btn-default" href="<%= epub_path(presenter.epub) %>" target="_blank">Read</a>
+      </div>
     </div>
-  </div>
+    <div class="row">
+      <div class="col-sm-12">
+        <a class="btn btn-default" href="<%= polymorphic_path(url_for_document(document)) %>">More Info</a>
+      </div>
+    </div>
+  <% else %>
+    <div class="row">
+      <div class="col-sm-12">
+        <a class="btn btn-default" href="<%= polymorphic_path(url_for_document(document)) %>">View book materials</a>
+      </div>
+    </div>
+  <% end %>
 </div>
