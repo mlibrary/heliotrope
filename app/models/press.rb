@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Press < ActiveRecord::Base
   validates :subdomain, presence: true, uniqueness: true
   has_many :roles, as: :resource, dependent: :delete_all

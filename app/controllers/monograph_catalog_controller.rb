@@ -1,5 +1,7 @@
+# frozen_string_literal: true
+
 class MonographCatalogController < ::CatalogController
-  before_action :load_presenter, only: [:index, :facet]
+  before_action :load_presenter, only: %i[index facet]
 
   configure_blacklight do |config|
     config.search_builder_class = MonographSearchBuilder
@@ -53,9 +55,9 @@ class MonographCatalogController < ::CatalogController
     config.add_facet_field solr_name('primary_creator_role', :facetable), label: "Creator Role", show: false
     config.add_facet_fields_to_solr_request!
 
-    config.index.partials = [:thumbnail, :index_header, :index]
+    config.index.partials = %i[thumbnail index_header index]
 
-    config.view.gallery.partials = [:index_header, :index]
+    config.view.gallery.partials = %i[index_header index]
   end
 
   def facet

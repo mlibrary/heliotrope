@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CurationConcerns::MonographsController < ApplicationController
   include CurationConcerns::CurationConcernController
   self.curation_concern_type = Monograph

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 describe CurationConcerns::FileSetsController do
@@ -7,8 +9,7 @@ describe CurationConcerns::FileSetsController do
                                visibility_after_embargo: "open",
                                visibility_during_lease: "open",
                                lease_expiration_date: "2020-01-01",
-                               visibility_after_lease: "restricted"
-  } } }
+                               visibility_after_lease: "restricted" } } }
 
   describe "when visibility is embargo" do
     before do

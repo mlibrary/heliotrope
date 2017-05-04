@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 source 'https://rubygems.org'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
@@ -5,9 +7,9 @@ source 'https://rubygems.org'
 gem 'rails', '4.2.7.1'
 
 gem 'curation_concerns', '2.0.0'
-gem 'resque-web', '~> 0.0.7', require: 'resque_web'
 gem 'resque'
 gem 'resque-pool'
+gem 'resque-web', '~> 0.0.7', require: 'resque_web'
 
 # We need this due to #778.
 gem 'active-fedora', '~> 11.1.5', github: 'projecthydra/active_fedora', ref: 'fae7df019337506b53fc721b22414fdc45830f9b'
@@ -52,10 +54,10 @@ gem 'redcarpet', '~> 3.3.4'
 gem 'jekyll'
 
 # Talking to Google Analytics
+gem 'legato', '~> 0.3'
 gem 'oauth'
 gem 'oauth2', '~> 1.2'
 gem 'signet'
-gem 'legato', '~> 0.3'
 
 # test coverage with coveralls
 gem 'coveralls', require: false
@@ -76,25 +78,25 @@ group :development do
   # Access an IRB console on exception pages or by using <%= console %> in views
   gem 'web-console', '~> 2.0'
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
-  gem 'spring'
   gem 'pry-rails', '~> 0.3.4'
+  gem 'spring'
 end
 
-gem 'rsolr', '~> 1.1.2'
 gem 'devise'
 gem 'devise-guests', '~> 0.3'
+gem 'rsolr', '~> 1.1.2'
 
 group :development, :test do
   gem 'byebug'
+  gem 'capybara'
+  gem 'factory_girl_rails'
+  gem "fakefs", require: "fakefs/safe"
   gem 'fcrepo_wrapper', '0.5.2'
-  gem 'solr_wrapper', '0.21.0'
-  gem 'rspec-rails'
   gem 'rspec-context-private'
   gem 'rspec-html-matchers'
-  gem 'rubocop', '~> 0.37.2'
-  gem 'rubocop-rspec'
+  gem 'rspec-rails'
+  gem 'rubocop', '~> 0.48.1'
+  gem 'rubocop-rspec', '~> 1.15.1'
+  gem 'solr_wrapper', '0.21.0'
   gem 'sqlite3'
-  gem 'factory_girl_rails'
-  gem 'capybara'
-  gem "fakefs", require: "fakefs/safe"
 end

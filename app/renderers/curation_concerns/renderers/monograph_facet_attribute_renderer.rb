@@ -13,7 +13,8 @@ module CurationConcerns
 
         def search_path(value)
           Rails.application.routes.url_helpers.monograph_catalog_path(
-            id: options[:monograph_id], :"f[#{search_field}][]" => value)
+            id: options[:monograph_id], :"f[#{search_field}][]" => value
+          )
         end
 
         def search_field

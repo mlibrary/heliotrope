@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class PressSearchBuilder < ::SearchBuilder
   self.default_processor_chain += [:filter_by_press]
 

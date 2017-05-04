@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class HandleService
   def self.handle?(object)
     !handle(object).nil?

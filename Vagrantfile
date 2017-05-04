@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
@@ -29,7 +31,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.network "forwarded_port", guest: 8983, host: 8983, auto_correct: true
   config.vm.network "forwarded_port", guest: 8984, host: 8984, auto_correct: true
   config.vm.network "forwarded_port", guest: 3000, host: 3000, auto_correct: true
-  
+
   # Create a private network, which allows host-only access to the machine
   # using a specific IP.
   # config.vm.network "private_network", ip: "192.168.33.10"
@@ -38,10 +40,10 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # Bridged networks make the machine appear as another physical device on
   # your network.
   # config.vm.network "public_network"
-  
+
   # Set the VM hostname
   config.vm.hostname = "heliotrope"
-  
+
   # If true, then any SSH connections made will enable agent forwarding.
   # Default value: false
   # config.ssh.forward_agent = true
@@ -52,9 +54,9 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # argument is a set of non-required options.
   # config.vm.synced_folder "../data", "/vagrant_data"
   # config.vm.synced_folder ".", "/vagrant", id: "vagrant-root",
-     # owner: "vagrant",
-     # group: "vagrant",
-     # mount_options: ["dmode=775,fmode=664"]
+  # owner: "vagrant",
+  # group: "vagrant",
+  # mount_options: ["dmode=775,fmode=664"]
 
   # Provider-specific configuration so you can fine-tune various
   # backing providers for Vagrant. These expose provider-specific options.
@@ -62,7 +64,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   #
   config.vm.provider "virtualbox" do |vb|
     # Don't boot with headless mode
-    #vb.gui = true
+    # vb.gui = true
     #
     # Use VBoxManage to customize the VM. For example to change memory:
     vb.customize ["modifyvm", :id, "--memory", "8000"]
@@ -73,5 +75,4 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   #
   # View the documentation for the provider you're using for more
   # information on available options.
-
 end

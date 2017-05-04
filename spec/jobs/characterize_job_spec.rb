@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 require 'fakefs/spec_helpers'
 
@@ -73,6 +75,7 @@ describe CharacterizeJob do
   context "when there's a preexisting IIIF cached file" do
     include FakeFS::SpecHelpers
     let(:cached_file) { Rails.root.join('tmp', 'network_files', Digest::MD5.hexdigest(file_set.original_file.uri.to_s)) }
+
     it "deletes the cached file" do
       FileUtils.mkdir_p Rails.root.join('tmp', 'network_files')
       FileUtils.touch cached_file

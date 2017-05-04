@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module FacetHelper
   def facet_url_helper(facet_field, item)
     # called from the facet modal from the monograph_catalog page
@@ -5,7 +7,7 @@ module FacetHelper
       previous_params = search_state.params_for_search.except(:monograph_id, :_)['f']
       previous_param_string = ''
 
-      if previous_params && !previous_params.empty?
+      if previous_params.present?
         previous_params.each do |facet, values|
           values.each do |value|
             previous_param_string += "&f%5B#{facet}%5D%5B%5D=#{value}"
@@ -62,10 +64,10 @@ module FacetHelper
   # @param [[String] || [Blacklight::Configuration::FacetField]] facet_field
   # @return [Boolean]
   def facet_field_in_params?(facet_field)
-    return !facet_params(facet_field).blank? if (facet_field.class == String) || (facet_field.class == Symbol)
+    return facet_params(facet_field).present? if (facet_field.class == String) || (facet_field.class == Symbol)
     pivot = facet_field[:pivot]
-    return !facet_params(facet_field.field).blank? if pivot.nil?
-    pivot.any? { |p| !facet_params(p).blank? }
+    return facet_params(facet_field.field).present? if pivot.nil?
+    pivot.any? { |p| facet_params(p).present? }
   end
 
   ##

@@ -1,7 +1,10 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 describe DownloadsController do
   let(:user) { create(:user) }
+
   before do
     sign_in user
   end
@@ -12,6 +15,7 @@ describe DownloadsController do
                               user: user,
                               allow_download: 'yes',
                               content: File.open(File.join(fixture_path, 'csv', 'miranda.jpg'))) }
+
       it "sends the file" do
         get :show, id: file_set
         expect(response.body).to eq file_set.original_file.content
@@ -23,6 +27,7 @@ describe DownloadsController do
                               user: user,
                               allow_download: 'no',
                               content: File.open(File.join(fixture_path, 'csv', 'miranda.jpg'))) }
+
       it "shows the unauthorized message" do
         get :show, id: file_set
         expect(response).to have_http_status(401)
@@ -32,6 +37,7 @@ describe DownloadsController do
 
   describe "#mime_type_for" do
     let(:file) { File.join(fixture_path, 'it.mp4') }
+
     it "gives the correct mime_type for an mp4 video" do
       expect(subject.mime_type_for(file)).to eq('video/mp4')
     end

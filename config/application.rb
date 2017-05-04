@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require File.expand_path('../boot', __FILE__)
 
 require 'rails/all'
@@ -29,7 +31,7 @@ module Heliotrope
     config.active_job.queue_adapter = :resque
 
     # Add concerns to autoload paths
-    config.autoload_paths += %W( #{config.root}/app/presenters/concerns )
+    config.autoload_paths += %W[#{config.root}/app/presenters/concerns]
 
     # Fonts for the AblePlayer HTML player
     config.assets.paths << Rails.root.join("vendor", "assets", "fonts")
@@ -38,7 +40,7 @@ module Heliotrope
     Rails.application.routes.default_url_options[:host] = Settings.host
 
     # Never use /tmp, always use ~/tmp, #627 and http://stackoverflow.com/a/17068331
-    tmpdir = File.join(Rails.root, 'tmp')
+    tmpdir = Rails.root.join('tmp').to_s
     ENV['TMPDIR'] = tmpdir
   end
 end

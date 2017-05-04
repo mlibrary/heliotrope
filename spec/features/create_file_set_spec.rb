@@ -1,13 +1,15 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 feature 'Create a file set' do
   context 'as a logged in user' do
     let(:user) { create(:platform_admin) }
 
-    let!(:cover) { create(:public_file_set, user: user) }
+    let(:cover) { create(:public_file_set, user: user) }
     let(:fs_title) { 'Test file set' }
     let(:monograph_id) { monograph.id }
-    let!(:monograph) do
+    let(:monograph) do
       m = build(:monograph, title: ['Test monograph'],
                             representative_id: cover.id,
                             creator_family_name: 'Johns',
@@ -18,7 +20,7 @@ feature 'Create a file set' do
       m.save!
       m
     end
-    let!(:sipity_entity) do
+    let(:sipity_entity) do
       create(:sipity_entity, proxy_for_global_id: monograph.to_global_id.to_s)
     end
 

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe SubBrandsController, type: :controller do
@@ -6,6 +8,7 @@ RSpec.describe SubBrandsController, type: :controller do
 
   context 'a platform-wide admin user' do
     let(:user) { create(:platform_admin) }
+
     before { sign_in user }
 
     describe '#new' do
@@ -21,6 +24,7 @@ RSpec.describe SubBrandsController, type: :controller do
 
     describe '#edit' do
       let(:sub_brand) { create :sub_brand, press: press }
+
       before { get :edit, press_id: sub_brand.press, id: sub_brand }
 
       it 'displays the form to edit the sub-brand' do
@@ -33,6 +37,7 @@ RSpec.describe SubBrandsController, type: :controller do
 
     describe '#update' do
       let(:sub_brand) { create :sub_brand, press: press, title: 'old name' }
+
       before { patch :update, press_id: sub_brand.press, id: sub_brand, sub_brand: params }
 
       context 'with correct inputs' do
@@ -93,6 +98,7 @@ RSpec.describe SubBrandsController, type: :controller do
 
   context 'a press-level admin user' do
     let(:user) { create(:press_admin, press: press) }
+
     before { sign_in user }
 
     context 'within my own press' do
@@ -120,6 +126,7 @@ RSpec.describe SubBrandsController, type: :controller do
 
       describe '#edit' do
         let(:sub_brand) { create :sub_brand, press: another_press }
+
         before { get :edit, press_id: another_press, id: sub_brand }
 
         it 'denies access' do
@@ -131,6 +138,7 @@ RSpec.describe SubBrandsController, type: :controller do
       describe '#update' do
         let(:sub_brand) { create :sub_brand, press: another_press, title: 'old name' }
         let(:params) { { title: 'new name' } }
+
         before { patch :update, press_id: sub_brand.press, id: sub_brand, sub_brand: params }
 
         it 'denies access' do
@@ -144,6 +152,7 @@ RSpec.describe SubBrandsController, type: :controller do
 
   context 'a press-level editor' do
     let(:user) { create(:editor) }
+
     before { sign_in user }
 
     describe '#new' do
@@ -157,6 +166,7 @@ RSpec.describe SubBrandsController, type: :controller do
 
     describe '#edit' do
       let(:sub_brand) { create :sub_brand, press: press }
+
       before { get :edit, press_id: sub_brand.press, id: sub_brand }
 
       it 'denies access' do
@@ -168,6 +178,7 @@ RSpec.describe SubBrandsController, type: :controller do
     describe '#update' do
       let(:sub_brand) { create :sub_brand, press: press, title: 'old name' }
       let(:params) { { title: 'new name' } }
+
       before { patch :update, press_id: sub_brand.press, id: sub_brand, sub_brand: params }
 
       it 'denies access' do

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class RepositoryPresenter < ApplicationPresenter
   def publisher_ids
     Press.all.map(&:id)
@@ -20,7 +22,7 @@ class RepositoryPresenter < ApplicationPresenter
     asset_ids = []
     monograph_ids(publisher).each do |monograph_id|
       monograph_doc = ActiveFedora::SolrService.query("{!terms f=id}#{monograph_id}", rows: 1)
-      unless monograph_doc.blank?
+      if monograph_doc.present?
         asset_ids += monograph_doc[0][Solrizer.solr_name('ordered_member_ids', :symbol)] || []
       end
     end

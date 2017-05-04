@@ -1,10 +1,12 @@
+# frozen_string_literal: true
+
 ##
 # CRUD actions for assigning press roles to
 # existing users
 class RolesController < ApplicationController
   before_action :authenticate_user!
-  load_and_authorize_resource :press, find_by: :subdomain, except: [:index2, :show]
-  load_and_authorize_resource through: :press, except: [:update_all, :index2, :show]
+  load_and_authorize_resource :press, find_by: :subdomain, except: %i[index2 show]
+  load_and_authorize_resource through: :press, except: %i[update_all index2 show]
 
   def index
     role = @press.roles.build
@@ -38,7 +40,7 @@ class RolesController < ApplicationController
   protected
 
     def press_params
-      params.require(:press).permit(roles_attributes: [:id, :user_key, :role, :_destroy])
+      params.require(:press).permit(roles_attributes: %i[id user_key role _destroy])
     end
 
     def any_deleted

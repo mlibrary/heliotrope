@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class EmbedController < ApplicationController
   def show
     response.headers.except! 'X-Frame-Options'

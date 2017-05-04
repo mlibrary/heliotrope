@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 describe RepositoryPresenter do
@@ -13,9 +15,11 @@ describe RepositoryPresenter do
   end
 
   describe '#publisher_ids' do
+    subject { described_class.new(current_user).publisher_ids }
+
     let!(:publisher1) { create(:press) }
     let!(:publisher2) { create(:press) }
-    subject { described_class.new(current_user).publisher_ids }
+
     it do
       expect(subject).to be_a Array
       expect(subject.length).to eq 2

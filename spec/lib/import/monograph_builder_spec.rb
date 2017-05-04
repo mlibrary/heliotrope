@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 require 'import'
 
@@ -15,9 +17,8 @@ describe Import::MonographBuilder do
                   'isbn_paper' => ['555-7-5432-1235-0'],
                   'isbn_ebook' => ['555-7-5432-1236-1'],
                   'buy_url' => ['http://example.com'],
-                  'files' => [File.new(File.join(Rails.root, 'spec', 'fixtures', 'csv', 'import', 'shipwreck.jpg')),
-                              File.new(File.join(Rails.root, 'spec', 'fixtures', 'csv', 'import', 'miranda.jpg'))]
-  } }
+                  'files' => [File.new(Rails.root.join('spec', 'fixtures', 'csv', 'import', 'shipwreck.jpg')),
+                              File.new(Rails.root.join('spec', 'fixtures', 'csv', 'import', 'miranda.jpg'))] } }
 
   describe 'initialize' do
     it 'has a user' do

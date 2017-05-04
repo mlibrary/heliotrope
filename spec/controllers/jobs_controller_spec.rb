@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe JobsController, type: :controller do
@@ -11,6 +13,7 @@ RSpec.describe JobsController, type: :controller do
 
     context 'when a non-authorized user is logged in' do
       let(:user) { create(:user) }
+
       before { sign_in user }
 
       it 'renders 404' do

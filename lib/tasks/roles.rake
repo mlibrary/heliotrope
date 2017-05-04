@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 desc 'Add application-wide admin privileges to a user'
 task admin: :environment do
   puts 'Creating an admin user.'

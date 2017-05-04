@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # When you create records in fedora, hydra requires that there is a user_key listed as the depositor of the record.  Since we don't have a real user to act as the depositor when we run the importer, we have a dummy user that isn't persisted to the database.
 
 # In curation_concerns version 0.12.0, the method signatures of some of the background jobs have been changed so that they take a User as an argument instead of a (String) user_key.  As a result, we had errors when globalid tried to convert the (non-existent) user ID to a global id.  So, I added this DummyUser class to provide the needed behavior.

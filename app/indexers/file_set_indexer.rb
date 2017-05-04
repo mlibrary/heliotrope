@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class FileSetIndexer < CurationConcerns::FileSetIndexer
   def generate_solr_document
     super.tap do |solr_doc|
@@ -12,8 +14,8 @@ class FileSetIndexer < CurationConcerns::FileSetIndexer
         index_monograph_metadata(solr_doc, work) if work.is_a?(Monograph)
       end
 
-      index_monograph_position(solr_doc) unless object.in_works.blank?
-      unless object.sort_date.blank?
+      index_monograph_position(solr_doc) if object.in_works.present?
+      if object.sort_date.present?
         solr_doc[Solrizer.solr_name('search_year', :sortable)] = object.sort_date[0, 4]
         solr_doc[Solrizer.solr_name('search_year', :facetable)] = object.sort_date[0, 4]
       end
@@ -40,6 +42,6 @@ class FileSetIndexer < CurationConcerns::FileSetIndexer
 
     fileset_order = parent.ordered_member_ids
 
-    solr_doc['monograph_position_isi'] = fileset_order.index(object.id) unless fileset_order.blank?
+    solr_doc['monograph_position_isi'] = fileset_order.index(object.id) if fileset_order.present?
   end
 end

@@ -5,7 +5,7 @@ module CurationConcerns
     class MarkdownAttributeRenderer < AttributeRenderer
       def render
         markup = ''
-        return markup if !values.present? && !options[:include_empty]
+        return markup if values.blank? && !options[:include_empty]
         markup_values = []
         Array(values).each do |value|
           markup_values << MarkdownService.markdown(value)

@@ -1,17 +1,19 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 describe SolrDocument do
   let(:instance) { described_class.new(attributes) }
 
   describe "#date_published" do
-    let(:attributes) { { 'date_published_tesim' => ['Oct 20th'] } }
     subject { instance.date_published }
+    let(:attributes) { { 'date_published_tesim' => ['Oct 20th'] } }
     it { is_expected.to eq ['Oct 20th'] }
   end
 
   describe "#allow_display_after_expiration" do
-    let(:attributes) { { 'allow_display_after_expiration_ssim' => ['yes'] } }
     subject { instance.allow_display_after_expiration }
+    let(:attributes) { { 'allow_display_after_expiration_ssim' => ['yes'] } }
     it { is_expected.to eq 'yes' }
   end
 

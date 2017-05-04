@@ -1,10 +1,12 @@
+# frozen_string_literal: true
+
 class PressCatalogController < ::CatalogController
   before_action :load_press
 
   configure_blacklight do |config|
     config.search_builder_class = PressSearchBuilder
 
-    config.index.partials = [:thumbnail, :index_header]
+    config.index.partials = %i[thumbnail index_header]
   end
 
   def show_site_search?
@@ -25,10 +27,10 @@ class PressCatalogController < ::CatalogController
   private
 
     def load_press
-      @press = Press.find_by_subdomain(params['subdomain'])
-      if @press.nil?
-        flash[:error] = "The press \"#{params['subdomain']}\" doesn't exist!"
-        redirect_to presses_path
-      end
+      @press = Press.find_by(subdomain: params['subdomain'])
+      return @press unless @press.nil?
+
+      flash[:error] = "The press \"#{params['subdomain']}\" doesn't exist!"
+      redirect_to presses_path
     end
 end

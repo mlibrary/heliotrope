@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 describe MonographCatalogController do
@@ -11,14 +13,17 @@ describe MonographCatalogController do
     end
 
     context 'facet_fields' do
-      expected_fields = %w(based_near section_title keywords creator_full_name content_type resource_type search_year exclusive_to_platform contributor)
+      expected_fields = %w[based_near section_title keywords creator_full_name content_type resource_type search_year exclusive_to_platform contributor]
       expected_facet_fields = expected_fields.map { |field| described_class.solr_name(field, :facetable) }
+
       it 'has expected facet fields' do
         expect(blacklight_config.facet_fields).to include(*expected_facet_fields)
       end
+
       context 'facet field content_type' do
         expected_facet_field_content_type = described_class.solr_name('content_type', :facetable)
         facet_field_content_type = blacklight_config.facet_fields[expected_facet_field_content_type]
+
         it 'has label' do
           expect(facet_field_content_type.label).to eq("Content")
         end
@@ -30,6 +35,7 @@ describe MonographCatalogController do
         expected_facet_field_resource_type = described_class.solr_name('resource_type', :facetable)
         expected_facet_field_content_type = described_class.solr_name('content_type', :facetable)
         facet_field_resource_type = blacklight_config.facet_fields[expected_facet_field_resource_type]
+
         it 'has label' do
           expect(facet_field_resource_type.label).to eq("Format")
         end
@@ -43,6 +49,7 @@ describe MonographCatalogController do
       context 'facet field contributor' do
         expected_facet_field = described_class.solr_name('contributor', :facetable)
         facet_field = blacklight_config.facet_fields[expected_facet_field]
+
         it 'has label' do
           expect(facet_field.label).to eq("Contributor")
         end

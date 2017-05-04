@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module ApplicationHelper
   def contributors_string(contributors)
     if !contributors.empty?

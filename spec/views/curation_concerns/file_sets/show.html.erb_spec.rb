@@ -1,18 +1,16 @@
 require 'rails_helper'
 
 describe 'curation_concerns/file_sets/show', type: :view do
-  before do
-    def view.parent
-      nil
-    end
-  end
-
   let(:monograph) { create(:monograph) }
   let(:file_set) { create(:file_set) }
   let(:file_set_doc) { SolrDocument.new(file_set.to_solr) }
   let(:file_set_presenter) { CurationConcerns::FileSetPresenter.new(file_set_doc, nil) }
 
   before do
+    def view.parent
+      nil
+    end
+
     monograph.ordered_members << file_set
     monograph.save!
     assign(:presenter, file_set_presenter)

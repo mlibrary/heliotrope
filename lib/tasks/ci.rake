@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 unless Rails.env.production?
   require 'rubocop/rake_task'
   desc 'Run style checker'
@@ -15,4 +17,3 @@ unless Rails.env.production?
     end
   end
 end
-

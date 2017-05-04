@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module PressHelper
   # Get the subdomain from any view that would have one
   def press_subdomain

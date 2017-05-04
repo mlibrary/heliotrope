@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class RolesPresenter
   attr_reader :user, :current_user
 

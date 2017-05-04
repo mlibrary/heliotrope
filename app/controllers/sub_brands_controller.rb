@@ -1,12 +1,12 @@
+# frozen_string_literal: true
+
 class SubBrandsController < ApplicationController
   load_resource :press, find_by: :subdomain
   load_and_authorize_resource through: :press
 
-  def show
-  end
+  def show; end
 
-  def new
-  end
+  def new; end
 
   def create
     if @sub_brand.save
@@ -16,8 +16,7 @@ class SubBrandsController < ApplicationController
     end
   end
 
-  def edit
-  end
+  def edit; end
 
   def update
     if @sub_brand.update(sub_brand_params)

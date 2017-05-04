@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'oauth2'
 require 'signet/oauth_2/client'
 require 'legato'
@@ -20,8 +22,8 @@ module AnalyticsService
 
   class Config
     def self.load_from_yaml
-      filename = File.join(Rails.root, 'config', 'analytics.yml')
-      yaml = YAML.load(File.read(filename)) if File.exist?(filename)
+      filename = Rails.root.join('config', 'analytics.yml')
+      yaml = YAML.safe_load(File.read(filename)) if File.exist?(filename)
       unless yaml
         Rails.logger.error("Unable to fetch any keys from #{filename}.")
         return new({})
@@ -29,7 +31,7 @@ module AnalyticsService
       new yaml.fetch('analytics')
     end
 
-    REQUIRED_KEYS = %w(app_name app_version privkey_path privkey_secret client_email).freeze
+    REQUIRED_KEYS = %w[app_name app_version privkey_path privkey_secret client_email].freeze
 
     def initialize(config)
       @config = config

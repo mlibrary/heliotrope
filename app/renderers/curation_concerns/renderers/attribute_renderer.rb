@@ -22,7 +22,7 @@ module CurationConcerns
       # Draw the table row for the attribute
       def render
         markup = ''
-        return markup if !values.present? && !options[:include_empty]
+        return markup if values.blank? && !options[:include_empty]
         markup << if label.empty?
                     %(<tr><td colspan="2"><ul class='tabular list-unstyled'>)
                   else
@@ -42,7 +42,8 @@ module CurationConcerns
       def label
         translate(
           :"blacklight.search.fields.show.#{field}",
-          default: [:"blacklight.search.fields.#{field}", options.fetch(:label, field.to_s.humanize)])
+          default: [:"blacklight.search.fields.#{field}", options.fetch(:label, field.to_s.humanize)]
+        )
       end
 
       private
@@ -59,7 +60,7 @@ module CurationConcerns
           buffer = ""
           attributes.each do |k, v|
             buffer << " #{k}"
-            buffer << %(="#{v}") unless v.blank?
+            buffer << %(="#{v}") if v.present?
           end
           buffer
         end

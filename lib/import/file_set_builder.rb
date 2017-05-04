@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Import
   class FileSetBuilder
     attr_reader :file_set, :user, :attributes

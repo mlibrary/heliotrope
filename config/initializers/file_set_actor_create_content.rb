@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 CurationConcerns::Actors::FileSetActor.class_eval do
   # @param [File, ActionDigest::HTTP::UploadedFile, Tempfile] file the file uploaded by the user.
   # @param [String] relation ('original_file')

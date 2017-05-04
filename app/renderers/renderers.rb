@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module CurationConcerns
   # Module that will containing Renderers
   # @since 0.14.0

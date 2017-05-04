@@ -1,22 +1,27 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 describe User do
   describe '#user_key' do
-    let(:user) { described_class.new(email: 'foo@example.com') }
     subject { user.user_key }
+    let(:user) { described_class.new(email: 'foo@example.com') }
     it { is_expected.to eq 'foo@example.com' }
   end
 
   describe '#presses' do
+    subject { user.presses }
+
     let(:press1) { create(:press) }
     let(:press2) { create(:press) }
-    let!(:press3) { create(:press) }
+    let(:press3) { create(:press) }
     let(:user) { create(:user) }
+
     before do
       create(:role, resource: press1, user: user, role: 'admin')
       create(:role, resource: press2, user: user, role: 'admin')
     end
-    subject { user.presses }
+
     it { is_expected.to eq [press1, press2] }
   end
 

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class MonographIndexer < CurationConcerns::WorkIndexer
   def generate_solr_document
     super.tap do |solr_doc|

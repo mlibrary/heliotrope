@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'csv'
 
 module Export
@@ -73,7 +75,7 @@ module Export
           filename = '/tmp/' + prefix + '_' + Time.now.strftime('%Y%m%d%H%M%S') + '.csv'
           CSV.open(filename, 'wb') do |csv|
             write_csv_header_rows(csv)
-            lines.each { |line| csv << line unless line.blank? }
+            lines.each { |line| csv << line if line.present? }
           end
           puts 'output written to ' + filename
           output_files << filename

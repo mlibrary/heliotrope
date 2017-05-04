@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 CurationConcerns.configure do |config|
   # Injected via `rails g curation_concerns:work Monograph`
   config.register_curation_concern :monograph

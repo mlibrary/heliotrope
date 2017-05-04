@@ -1,5 +1,7 @@
+# frozen_string_literal: true
+
 class Role < ActiveRecord::Base
-  ROLES = %w(admin editor).freeze
+  ROLES = %w[admin editor].freeze
   belongs_to :resource, polymorphic: true
   belongs_to :user
   validates :role, inclusion: { in: ROLES }
@@ -18,14 +20,14 @@ class Role < ActiveRecord::Base
   # setting user key causes the user to get set
   def user_key=(key)
     @user_key = key
-    self.user ||= ::User.find_by_user_key(key)
-    user.user_key = key if user
+    self.user ||= ::User.find_by(user_key: key)
+    user&.user_key = key
   end
 
   protected
 
     def user_must_exist
-      errors.add(:user_key, 'User must sign up first.') unless user.present?
+      errors.add(:user_key, 'User must sign up first.') if user.blank?
     end
 
     # This is just like

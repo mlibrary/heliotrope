@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe EPubController, type: :controller do
@@ -8,16 +10,19 @@ RSpec.describe EPubController, type: :controller do
     end
     context 'file nil' do
       let(:file_set) { create(:file_set) }
+
       before { get :show, id: file_set.id }
       it { expect(response).to have_http_status(:unauthorized) }
     end
     context 'file not epub' do
       let(:file_set) { create(:file_set, content: File.open(File.join(fixture_path, 'it.mp4'))) }
+
       before { get :show, id: file_set.id }
       it { expect(response).to have_http_status(:unauthorized) }
     end
     context 'file epub' do
       let(:file_set) { create(:file_set, content: File.open(File.join(fixture_path, 'moby-dick.epub'))) }
+
       before { get :show, id: file_set.id }
       it do
         expect(response).to_not have_http_status(:unauthorized)
@@ -33,6 +38,7 @@ RSpec.describe EPubController, type: :controller do
     end
     context 'file nil' do
       let(:file_set) { create(:file_set) }
+
       before { get :file, id: file_set.id, file: 'META-INF/container', format: 'xml' }
       it do
         expect(response).to_not have_http_status(:unauthorized)
@@ -42,6 +48,7 @@ RSpec.describe EPubController, type: :controller do
     end
     context 'file not epub' do
       let(:file_set) { create(:file_set, content: File.open(File.join(fixture_path, 'it.mp4'))) }
+
       before { get :file, id: file_set.id, file: 'META-INF/container', format: 'xml' }
       it do
         expect(response).to_not have_http_status(:unauthorized)
@@ -51,6 +58,7 @@ RSpec.describe EPubController, type: :controller do
     end
     context 'file epub' do
       let(:file_set) { create(:file_set, content: File.open(File.join(fixture_path, 'moby-dick.epub'))) }
+
       context 'file not found' do
         before { get :file, id: file_set.id, file: 'META-INF/container', format: 'txt' }
         it do

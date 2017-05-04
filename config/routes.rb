@@ -1,4 +1,6 @@
-RESQUE_MOUNT_PATH = 'resque'.freeze
+# frozen_string_literal: true
+
+RESQUE_MOUNT_PATH = 'resque'
 
 resque_web_constraint = lambda do |request|
   current_user = request.env['warden'].user
@@ -33,7 +35,7 @@ Rails.application.routes.draw do
     devise_for :users
   else
     # temporarily disable devise registrations and password resets for production #266
-    devise_for :users, skip: [:registration, :password]
+    devise_for :users, skip: %i[registration password]
   end
   get 'users', controller: :users, action: :index, as: :users
   get 'users/:id', controller: :users, action: :show, as: :user
@@ -78,9 +80,9 @@ Rails.application.routes.draw do
   get '/:subdomain/facet', controller: :press_catalog, action: :facet
 
   resources :presses, path: '/', only: [:index] do
-    resources :sub_brands, only: [:new, :create, :show, :edit, :update]
+    resources :sub_brands, only: %i[new create show edit update]
 
-    resources :roles, path: 'users', only: [:index, :create, :destroy] do
+    resources :roles, path: 'users', only: %i[index create destroy] do
       collection do
         patch :update_all
       end
