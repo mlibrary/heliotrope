@@ -30,6 +30,7 @@ describe SolrDocument do
   it { is_expected.to respond_to(:primary_editor_family_name) }
   it { is_expected.to respond_to(:primary_editor_full_name) }
   it { is_expected.to respond_to(:primary_editor_given_name) }
+  it { is_expected.to respond_to(:representative_epub_id) }
   it { is_expected.to respond_to(:sub_brand) }
 
   # FileSet
@@ -55,6 +56,7 @@ describe SolrDocument do
   it { is_expected.to respond_to(:keywords) }
   it { is_expected.to respond_to(:permissions_expiration_date) }
   it { is_expected.to respond_to(:primary_creator_role) }
+  it { is_expected.to respond_to(:resource_type) }
   it { is_expected.to respond_to(:rights_granted) }
   it { is_expected.to respond_to(:rights_granted_creative_commons) }
   it { is_expected.to respond_to(:section_title) }

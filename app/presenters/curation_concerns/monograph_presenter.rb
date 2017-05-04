@@ -124,11 +124,11 @@ module CurationConcerns
     end
 
     def epub?
-      ordered_member_docs.any? { |doc| ['application/epub+zip'].include? doc.mime_type unless doc.nil? }
+      solr_document.representative_epub_id.present?
     end
 
     def epub
-      ordered_member_docs.find { |doc| ['application/epub+zip'].include? doc.mime_type unless doc.nil? }
+      ordered_member_docs.find { |doc| doc.id == solr_document.representative_epub_id } if epub?
     end
 
     # This overrides CC 1.6.2's work_show_presenter.rb which is recursive.

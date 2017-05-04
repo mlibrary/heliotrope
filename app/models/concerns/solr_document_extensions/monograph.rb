@@ -55,6 +55,10 @@ module SolrDocumentExtensions::Monograph
     Array(self[Solrizer.solr_name('primary_editor_given_name', :stored_searchable)]).first
   end
 
+  def representative_epub_id
+    Array(self[Solrizer.solr_name('representative_epub_id', :symbol)]).first
+  end
+
   def sub_brand
     Array(self[Solrizer.solr_name('sub_brand', :symbol)])
   end

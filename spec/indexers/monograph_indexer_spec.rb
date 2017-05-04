@@ -30,6 +30,11 @@ describe MonographIndexer do
       expect(subject['representative_id_ssim']).to eq monograph.representative_id
     end
 
+    context 'epub' do
+      let(:file) { create(:file_set, content: File.open(File.join(fixture_path, 'moby-dick.epub'))) }
+      it { expect(subject['representative_epub_id_ssim']).to eq file.id }
+    end
+
     it 'indexes the primary_editor_full_name' do
       expect(subject['primary_editor_full_name_tesim']).to eq 'Moose, Bullwinkle'
       expect(subject['primary_editor_full_name_sim']).to eq 'Moose, Bullwinkle'
