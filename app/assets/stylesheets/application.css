@@ -15,9 +15,9 @@
  *= require jquery-ui/datepicker
  *= require leaflet_1.0.3
  *= require blacklight_facets
+ *= require cozy
  *= require ableplayer
  *= require heliotrope
  *= require fulcrum
  *= require themes
- *= require cozy
  */
