@@ -334,7 +334,7 @@ describe CurationConcerns::MonographPresenter do
     end
 
     context 'has epub' do
-      let(:fs2_doc) { SolrDocument.new(id: 'fs2', has_model_ssim: ['FileSet'], mime_type_ssi: 'application/epub+zip') }
+      before { allow(mono_doc).to receive(:representative_epub_id).and_return(fs2_doc.id) }
 
       describe '#epub?' do
         subject { presenter.epub? }

@@ -26,6 +26,12 @@ describe MonographSearchBuilder do
       it "creates a query for the monograph's assets but without the representative_id" do
         expect(solr_params[:fq].first).to match(/{!terms f=id}#{file1.id},#{file2.id}/)
       end
+      context 'epub' do
+        let(:file2) { create(:file_set, content: File.open(File.join(fixture_path, 'moby-dick.epub'))) }
+        it "creates a query for the monograph's assets but without the epub id" do
+          expect(solr_params[:fq].first).to match(/{!terms f=id}#{file1.id}/)
+        end
+      end
     end
 
     context "a monograph with no assets" do
