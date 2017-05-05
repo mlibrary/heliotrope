@@ -424,15 +424,15 @@ footer.press {
 ///////////////////////////////////
 
 .cozy-container i[class^='icon-'] {
-    font-size: 2rem;
+    font-size: 2rem !important;
 }
 
 .cozy-container i[class^='icon-chevron-'] {
-    font-size: 2.5em;
+    font-size: 2.5em !important;
 }
 
 .cozy-preferences-modal .button--sm {
-  font-size: 1em;
+  font-size: 1em !important;
 }
 
 .cozy-container input[type="radio"] {
@@ -448,6 +448,6 @@ footer.press {
   font-weight: bold;
 }
 
-.cozy-container {
-
+.cozy-container form label {
+  font-weight: normal;
 }
