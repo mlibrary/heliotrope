@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 namespace :jekyll do
   baseurl = ''
   dest = Rails.root.join('public')

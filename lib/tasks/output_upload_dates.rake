@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 desc "print the upload_dates of all file_sets"
 # the representative image will be ignored as it's...
 # attached directly to the monograph

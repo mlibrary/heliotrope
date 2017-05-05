@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ApplicationPresenter
   attr_reader :current_user
 

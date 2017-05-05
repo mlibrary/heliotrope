@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 describe ApplicationPresenter do
@@ -22,8 +24,9 @@ describe ApplicationPresenter do
   end
 
   describe '#can_read?' do
-    let(:is_platform_admin) { double("is_platform_admin") }
     subject { described_class.new(current_user).can_read? }
+    let(:is_platform_admin) { double("is_platform_admin") }
+
     before do
       allow(current_user).to receive(:platform_admin?).and_return(is_platform_admin)
     end

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class User < ActiveRecord::Base
   # Connects this user object to Hydra behaviors.
   include Hydra::User

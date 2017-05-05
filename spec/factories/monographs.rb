@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 FactoryGirl.define do
   factory :monograph, aliases: [:private_monograph] do
     transient do

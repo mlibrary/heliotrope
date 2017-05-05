@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Tell RIIIF to get files via HTTP (not from the local disk)
 Riiif::Image.file_resolver = Riiif::HTTPFileResolver.new
 

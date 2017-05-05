@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 desc 'Clean the IIIF cache and the uploads directory'
 namespace :heliotrope do
   task clean_cache: :environment do
@@ -14,7 +16,6 @@ namespace :heliotrope do
     network_files_path = Rails.root.join('tmp', 'network_files')
 
     Dir.foreach(network_files_path) do |f|
-
       file = "#{network_files_path}/#{f}"
 
       if File.mtime(file) < 7.days.ago && File.file?(file)

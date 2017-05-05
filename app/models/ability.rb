@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Ability
   include Hydra::Ability
   include CurationConcerns::Ability
@@ -10,14 +12,14 @@ class Ability
     can [:read], RolesPresenter, &:can_read?
     can [:read], RolePresenter, &:can_read?
 
-    can [:index, :read], Press
+    can %i[index read], Press
     can [:read], SubBrand
 
     # press admin
     can :manage, Role, resource_id: @user.admin_roles.pluck(:resource_id), resource_type: 'Press'
 
     # monograph.press is a String (the subdomain of a Press)
-    can [:create, :update], Monograph do |m|
+    can %i[create update], Monograph do |m|
       @user.admin_presses.map(&:subdomain).include?(m.press)
     end
 

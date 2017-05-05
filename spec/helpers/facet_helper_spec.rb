@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 describe FacetHelper do
@@ -101,7 +103,7 @@ describe FacetHelper do
     it 'field is a FacetField with pivot and NOT in params and pivot in params' do
       facet_field[:pivot] = ["pivot"]
       allow(helper).to receive(:facet_params) do |field|
-        (field == "pivot") ? Blacklight::Configuration::FacetField.new(field: field).normalize! : nil
+        field == "pivot" ? Blacklight::Configuration::FacetField.new(field: field).normalize! : nil
       end
       expect(helper.facet_field_in_params?(facet_field)).to be true
     end
@@ -109,7 +111,7 @@ describe FacetHelper do
     it 'field is a FacetField with pivot and in params and pivot NOT in params' do
       facet_field[:pivot] = ["pivot"]
       allow(helper).to receive(:facet_params) do |field|
-        (field == "field") ? Blacklight::Configuration::FacetField.new(field: field).normalize! : nil
+        field == "field" ? Blacklight::Configuration::FacetField.new(field: field).normalize! : nil
       end
       expect(helper.facet_field_in_params?(facet_field)).to be false
     end

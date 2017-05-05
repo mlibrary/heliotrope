@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 FactoryGirl.define do
   # The ::Collection model is defined in .internal_test_app/app/models by the
   # curation_concerns:install generator.

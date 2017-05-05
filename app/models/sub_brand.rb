@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class SubBrand < ActiveRecord::Base
   belongs_to :press
 

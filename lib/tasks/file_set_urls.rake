@@ -1,7 +1,8 @@
+# frozen_string_literal: true
+
 desc 'get file_set urls and file_set labels for a monograph'
 namespace :heliotrope do
-  task :file_set_urls, [:monograph_id] => :environment do |t, args|
-
+  task :file_set_urls, [:monograph_id] => :environment do |_t, args|
     # Usage: Needs a valid monograph id as a parameter
     # $ bundle exec rake "heliotrope:file_set_urls[q811kk573]"
 

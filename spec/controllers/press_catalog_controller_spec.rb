@@ -1,7 +1,10 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe PressCatalogController, type: :controller do
   let(:press) { create :press }
+
   describe "GET #index" do
     it "redirects to presses" do
       get :index, subdomain: "subdomain"

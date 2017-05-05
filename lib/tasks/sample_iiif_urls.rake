@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 desc "Generate riif image-service urls based off of random FileSets that are tiffs. Used to stress test with siege."
 task sample_iiif_urls: :environment do
   #
@@ -36,7 +38,7 @@ task sample_iiif_urls: :environment do
     info = image.info
     # Get 100 different tiles for each tiff
     100.times do
-      x,y,w,h = random_region(info)
+      x, y, w, h = random_region(info)
       urls << "#{base_url}/image-service/#{id}/#{x},#{y},#{w},#{h}/full/0/default.jpg"
     end
   end
@@ -54,5 +56,5 @@ def random_region(info)
   w = width - x
   h = height - y
 
-  return x,y,w,h
+  [x, y, w, h]
 end

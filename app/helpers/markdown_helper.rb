@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module MarkdownHelper
   def render_markdown(value)
     MarkdownService.markdown(value).html_safe

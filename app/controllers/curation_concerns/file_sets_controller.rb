@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module CurationConcerns
   class FileSetsController < ApplicationController
     include CurationConcerns::FileSetsControllerBehavior
@@ -22,7 +24,8 @@ module CurationConcerns
         description: [], resource_type: [], caption: [], alt_text: [],
         content_type: [], contributor: [], date_created: [], keywords: [],
         language: [], identifier: [], section_title: [], title: [],
-        primary_creator_role: [], translation: [], display_date: [])
+        primary_creator_role: [], translation: [], display_date: []
+      )
     end
 
     # We kept getting errors with visibility settings, see #272 and #280

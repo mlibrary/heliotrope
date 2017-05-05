@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class RobotsController < ApplicationController
   caches_page :robots
 

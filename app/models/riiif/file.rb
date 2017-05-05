@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'open3'
 module Riiif
   class File
@@ -31,7 +33,7 @@ module Riiif
       tempfile.close
       new(tempfile.path, tempfile)
     ensure
-      tempfile.close if tempfile
+      tempfile&.close
     end
 
     def extract(options)
@@ -52,9 +54,9 @@ module Riiif
 
       if options[:size]
         w, h = options[:size].split("x")
-        command << "pnmscalefixed -xysize #{w} #{h}" if h.present?  && w.present?
-        command << "pnmscalefixed -xsize #{w}"       if !h.present? && w.present?
-        command << "pnmscalefixed -ysize #{h}"       if h.present?  && !w.present?
+        command << "pnmscalefixed -xysize #{w} #{h}" if h.present? && w.present?
+        command << "pnmscalefixed -xsize #{w}"       if h.blank? && w.present?
+        command << "pnmscalefixed -ysize #{h}"       if h.present? && w.blank?
       end
 
       # ignore quality

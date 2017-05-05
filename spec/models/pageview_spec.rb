@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 describe Pageview, type: :model do
@@ -6,6 +8,6 @@ describe Pageview, type: :model do
   end
 
   it 'has a date and pagePath dimension' do
-    expect(described_class.dimensions).to be == Legato::ListParameter.new(:dimensions, [:date, :pagePath])
+    expect(described_class.dimensions).to be == Legato::ListParameter.new(:dimensions, %i[date pagePath])
   end
 end

@@ -46,6 +46,11 @@ Style/BlockEndNewline:
   Exclude:
     - 'spec/**/*'
 
+Style/FileName:
+  Exclude:
+    - 'Gemfile'
+    - 'Vagrantfile'
+
 Style/MultilineBlockLayout:
   Exclude:
     - 'spec/**/*'

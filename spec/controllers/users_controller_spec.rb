@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe UsersController, type: :controller do
@@ -13,10 +15,12 @@ RSpec.describe UsersController, type: :controller do
       end
       context "non-admin" do
         let(:current_user) { create(:user) }
+
         it { expect(response).to have_http_status(302) }
       end
       context "press admin" do
         let(:current_user) { create(:press_admin, press: create(:press)) }
+
         it { expect(response).to_not be_unauthorized }
         it { expect(response).to be_success }
       end

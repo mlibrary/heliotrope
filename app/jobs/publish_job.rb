@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class PublishJob < ActiveJob::Base
   queue_as :publish
 

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module CurationConcerns
   class MonographPresenter < WorkShowPresenter
     include TitlePresenter
@@ -40,7 +42,7 @@ module CurationConcerns
     end
 
     def editors?
-      !editors.blank?
+      editors.present?
     end
 
     def subdomain
@@ -114,7 +116,7 @@ module CurationConcerns
     end
 
     def buy_url?
-      !solr_document.buy_url.blank?
+      solr_document.buy_url.present?
     end
 
     def buy_url

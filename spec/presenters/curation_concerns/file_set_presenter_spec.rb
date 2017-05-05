@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe CurationConcerns::FileSetPresenter do
@@ -11,6 +13,7 @@ RSpec.describe CurationConcerns::FileSetPresenter do
   describe "#citable_link" do
     context "with a DOI" do
       let(:fileset_doc) { SolrDocument.new(id: 'fileset_id', has_model_ssim: ['FileSet'], doi_ssim: ['http://doi.and.things']) }
+
       it "has a DOI" do
         expect(presenter.citable_link).to eq 'http://doi.and.things'
       end
@@ -18,14 +21,16 @@ RSpec.describe CurationConcerns::FileSetPresenter do
 
     context "with an explicit handle and no DOI" do
       let(:fileset_doc) { SolrDocument.new(id: 'fileset_id', has_model_ssim: ['FileSet'], hdl_ssim: ['a.handle']) }
-      it "it has that explicit handle" do
+
+      it "has that explicit handle" do
         expect(presenter.citable_link).to eq "http://hdl.handle.net/2027/fulcrum.a.handle"
       end
     end
 
     context "with no DOI and no explicit handle" do
       let(:fileset_doc) { SolrDocument.new(id: 'fileset_id', has_model_ssim: ['FileSet']) }
-      it "it has the default NOID based handle" do
+
+      it "has the default NOID based handle" do
         expect(presenter.citable_link).to eq "http://hdl.handle.net/2027/fulcrum.fileset_id"
       end
     end
@@ -35,11 +40,13 @@ RSpec.describe CurationConcerns::FileSetPresenter do
     let(:monograph) { create(:monograph, creator_given_name: "firstname", creator_family_name: "lastname") }
     let(:file_set) { create(:file_set) }
     let(:press) { create(:press, subdomain: 'blue') }
+    let(:fileset_doc) { SolrDocument.new(file_set.to_solr) }
+
     before do
       monograph.ordered_members << file_set
       monograph.save!
     end
-    let(:fileset_doc) { SolrDocument.new(file_set.to_solr) }
+
     it "has the monograph's creator_family_name" do
       expect(presenter.monograph.creator_family_name).to eq monograph.creator_family_name
     end
@@ -75,11 +82,13 @@ RSpec.describe CurationConcerns::FileSetPresenter do
     let(:press) { create(:press) }
     let(:monograph) { create(:monograph, press: press.subdomain) }
     let(:file_set) { create(:file_set) }
+    let(:fileset_doc) { SolrDocument.new(file_set.to_solr) }
+
     before do
       monograph.ordered_members << file_set
       monograph.save!
     end
-    let(:fileset_doc) { SolrDocument.new(file_set.to_solr) }
+
     context 'no' do
       it { expect(presenter.allow_embed?).to be false }
     end
@@ -92,6 +101,7 @@ RSpec.describe CurationConcerns::FileSetPresenter do
   describe '#embed_code' do
     let(:file_set) { create(:file_set) }
     let(:fileset_doc) { SolrDocument.new(file_set.to_solr) }
+
     before do
       allow(presenter).to receive(:width).and_return('width')
       allow(presenter).to receive(:height).and_return('height')
@@ -101,6 +111,7 @@ RSpec.describe CurationConcerns::FileSetPresenter do
 
   describe '#epub?' do
     let(:fileset_doc) { SolrDocument.new(id: 'fileset_id', has_model_ssim: ['FileSet'], mime_type_ssi: mime_type) }
+
     context 'text/plain' do
       let(:mime_type) { 'text/plain' }
       it { expect(presenter.epub?).to eq false }

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module ExternalResourceHelper
   def glyphicon_type(resource_type)
     case resource_type.downcase

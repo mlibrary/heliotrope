@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class JobsController < ApplicationController
   # For a user with the right authorization, the controllers in
   # the mounted ResqueWeb engine should handle the web request.

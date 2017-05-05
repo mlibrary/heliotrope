@@ -32,7 +32,7 @@ module Import
       errors_array = []
 
       rows.each do |row|
-        row.each { |_, value| value.strip! if value }
+        row.each { |_, value| value&.strip! }
 
         if missing_file_name?(row)
           skipped_array << "Row #{row_num}: File name can only be missing for external resources - row will be skipped\n"

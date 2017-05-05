@@ -1,11 +1,13 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 # Riiif::File is taken from the riiif gem https://github.com/curationexperts/riiif
 # We override it in order to use netpbn's tifftopnm for tiffs
 # See #400
 describe Riiif::File do
-  let(:path) { File.join(fixture_path, 'kitty.tif') }
   subject { described_class.new(path) }
+  let(:path) { File.join(fixture_path, 'kitty.tif') }
 
   describe '#mime_type' do
     context 'when file is a tiff' do

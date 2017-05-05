@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 require 'import/csv_parser'
 
@@ -35,7 +37,8 @@ describe Import::CSVParser do
         'shipwreck2.jpg',
         'miranda2.jpg',
         'shipwreck1.jpg',
-        nil]
+        nil
+      ]
 
       expect(subject['files_metadata'].count).to eq 9
 
@@ -48,8 +51,7 @@ describe Import::CSVParser do
           'content_type' => ['portrait'],
           'creator_family_name' => 'Smith',
           'creator_given_name' => 'Benjamin',
-          'language' => ['English']
-        },
+          'language' => ['English'] },
         { 'title' => ['Monograph Miranda'],
           'resource_type' => ['image'],
           'external_resource' => 'no',
@@ -58,16 +60,14 @@ describe Import::CSVParser do
           'content_type' => ['audience materials'],
           'creator_family_name' => 'Waterhouse',
           'creator_given_name' => 'John William',
-          'language' => ['English', 'German']
-        },
+          'language' => ['English', 'German'] },
         { 'title' => ['日本語のファイル'],
           'resource_type' => ['text'],
           'external_resource' => 'no',
           'rights_granted_creative_commons' => 'Creative Commons Zero license (implies pd)',
           'exclusive_to_platform' => 'yes',
           'content_type' => ['portrait', 'illustration'],
-          'language' => ['Japanese']
-        },
+          'language' => ['Japanese'] },
         { 'title' => ['Section 1 Shipwreck'],
           'resource_type' => ['image'],
           'external_resource' => 'no',
@@ -77,8 +77,7 @@ describe Import::CSVParser do
           'creator_family_name' => 'Smith',
           'keywords' => ['keyword1', 'keyword2'],
           'section_title' => ['Act 1: Calm Waters'],
-          'language' => ['Russian']
-        },
+          'language' => ['Russian'] },
         { 'title' => ['Section 1 Miranda'],
           'resource_type' => ['image'],
           'external_resource' => 'no',
@@ -89,8 +88,7 @@ describe Import::CSVParser do
           'creator_given_name' => 'John William',
           'keywords' => ['regular', 'italicized'],
           'section_title' => ['Act 1: Calm Waters'],
-          'language' => ['Russian', 'German', 'French']
-        },
+          'language' => ['Russian', 'German', 'French'] },
         { 'title' => ['Section 2 Shipwreck'],
           'resource_type' => ['image'],
           'external_resource' => 'no',
@@ -99,8 +97,7 @@ describe Import::CSVParser do
           'content_type' => ['audience materials'],
           'creator_family_name' => 'Smith',
           'section_title' => ['Act 2: Stirrin\' Up'],
-          'language' => ['French']
-        },
+          'language' => ['French'] },
         { 'title' => ['Section 2 Miranda'],
           'resource_type' => ['image'],
           'external_resource' => 'no',
@@ -110,8 +107,7 @@ describe Import::CSVParser do
           'creator_family_name' => 'Waterhouse',
           'creator_given_name' => 'John William',
           'section_title' => ['Act 2: Stirrin\' Up'],
-          'language' => ['English']
-        },
+          'language' => ['English'] },
         { 'title' => ['Previous Shipwreck File (Again)'],
           'resource_type' => ['image'],
           'external_resource' => 'no',
@@ -120,8 +116,7 @@ describe Import::CSVParser do
           'content_type' => ['portrait', 'photograph'],
           'creator_family_name' => 'Smith',
           'section_title' => ['Act 2: Stirrin\' Up'],
-          'language' => ['Latin']
-        },
+          'language' => ['Latin'] },
         { 'title' => ['External Bard Transcript'],
           'resource_type' => ['text'],
           'external_resource' => 'yes',
@@ -131,8 +126,7 @@ describe Import::CSVParser do
           'creator_given_name' => 'Bob',
           'keywords' => ['interview'],
           'section_title' => ['Act 3: External Stuffs'],
-          'language' => ['English']
-        }
+          'language' => ['English'] }
       ]
     end
   end

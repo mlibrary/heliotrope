@@ -7,7 +7,7 @@ module Import
       @reimporting = false
       @reimport_mono = Monograph.where(id: monograph_id).first
 
-      if !monograph_id.blank?
+      if monograph_id.present?
         raise "No monograph found with id #{monograph_id}" if @reimport_mono.blank?
         @reimporting = true
       else
@@ -25,7 +25,7 @@ module Import
         attrs = CSVParser.new(file).attributes(errors)
 
         # if there is a command-line monograph title then use it
-        attrs['title'] = Array(monograph_title) unless monograph_title.blank?
+        attrs['title'] = Array(monograph_title) if monograph_title.present?
 
         # create file objects (stop everything here if any are not found, duplicates or of zero size)
         file_objects(attrs)
@@ -109,7 +109,7 @@ module Import
       end
 
       def optional_early_exit(interaction, errors, test)
-        if interaction && !errors.blank?
+        if interaction && errors.present?
           puts "\n" + errors + "\n" + "-" * 100 + "\n"
           puts "\n\nSome rows/fields have been flagged for your approval. Please review the messages above before proceeding.\n"
           exit if test == true

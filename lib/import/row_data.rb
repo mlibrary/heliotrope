@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'date'
 require 'redcarpet'
 require 'redcarpet/render_strip'
@@ -7,7 +9,7 @@ module Import
     attr_reader :row, :attrs
 
     def data_for_monograph(row, attrs)
-      fields = METADATA_FIELDS.select { |f| [:universal, :monograph].include? f[:object] }
+      fields = METADATA_FIELDS.select { |f| %i[universal monograph].include? f[:object] }
       fields.each do |field|
         # no error-checking for monograph stuff right now
         next if row[field[:field_name]].blank?
@@ -21,9 +23,9 @@ module Import
       md = Redcarpet::Markdown.new(Redcarpet::Render::StripDown, space_after_headers: true)
       missing_fields_errors, controlled_vocab_errors, date_errors = Array.new(3) { [] }
 
-      fields = METADATA_FIELDS.select { |f| [:universal, :file_set].include? f[:object] }
+      fields = METADATA_FIELDS.select { |f| %i[universal file_set].include? f[:object] }
       fields.each do |field|
-        if !row[field[:field_name]].blank?
+        if row[field[:field_name]].present?
           is_multivalued = field[:multivalued]
           field_values = split_field_values_to_array(row[field[:field_name]], is_multivalued)
           field_values = strip_markdown_from_array_of_values(field[:field_name], field_values, md)
@@ -74,9 +76,9 @@ module Import
         output_dates = []
         actual_values.each do |actual_value|
           fixed_date = output_date(actual_value)
-          if !actual_value.blank? && actual_value.casecmp('perpetuity') != 0 && fixed_date.blank?
+          if actual_value.present? && actual_value.casecmp('perpetuity') != 0 && fixed_date.blank?
             date_errors << field_name + ': "' + actual_value + '"'
-          elsif !fixed_date.blank?
+          elsif fixed_date.present?
             output_dates << fixed_date
           end
         end

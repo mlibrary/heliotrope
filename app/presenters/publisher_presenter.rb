@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class PublisherPresenter < ApplicationPresenter
   attr_reader :publisher
 

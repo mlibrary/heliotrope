@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe EmbedController, type: :controller do
@@ -11,6 +13,7 @@ RSpec.describe EmbedController, type: :controller do
 
     context 'invalid handle' do
       let(:hdl) { 'hdl' }
+
       before do
         allow(HandleService).to receive(:object).with(hdl).and_return(nil)
         get :show, hdl: hdl
@@ -20,7 +23,8 @@ RSpec.describe EmbedController, type: :controller do
 
     context 'invalid presenter' do
       let(:hdl) { 'hdl' }
-      let(:obj) { double("obj") }
+      let(:obj) { object_double("obj") }
+
       before do
         allow(HandleService).to receive(:object).with(hdl).and_return(obj)
         allow(obj).to receive(:id).and_return(0)
@@ -31,8 +35,9 @@ RSpec.describe EmbedController, type: :controller do
 
     context 'successful render' do
       let(:hdl) { 'hdl' }
-      let(:obj) { double("obj") }
-      let(:presenter) { double("presenter") }
+      let(:obj) { object_double("obj") }
+      let(:presenter) { object_double("presenter") }
+
       before do
         allow(HandleService).to receive(:object).with(hdl).and_return(obj)
         allow(obj).to receive(:id).and_return(0)

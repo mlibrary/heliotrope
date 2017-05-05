@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # something to note is that the multivalued :yes/:no values mirror the model, such that assignment will work properly as a scalar or array...
 # ... the third :yes_split means that this is a field we actually want to *use* as multivalued, and so will split the CSV field on semicolons to do so
 
@@ -30,7 +32,8 @@ METADATA_FIELDS =
         'Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International license',
         'Creative Commons Attribution-NonCommercial 4.0 International license',
         'Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International license',
-        'Creative Commons Attribution-ShareAlike 4.0 International license'] },
+        'Creative Commons Attribution-ShareAlike 4.0 International license'
+      ] },
     { object: :file_set, field_name: 'Permissions Expiration Date', metadata_name: 'permissions_expiration_date', required: false, multivalued: :no, date_format: true },
     { object: :file_set, field_name: 'After Expiration: Allow Display?', metadata_name: 'allow_display_after_expiration', required: false, multivalued: :no, acceptable_values: ['none', 'high-res', 'low-res', 'not hosted on the platform'] },
     { object: :file_set, field_name: 'After Expiration: Allow Download?', metadata_name: 'allow_download_after_expiration', required: false, multivalued: :no, acceptable_values: ['yes', 'no', 'not hosted on the platform'] },
@@ -61,4 +64,4 @@ METADATA_FIELDS =
     { object: :monograph, field_name: 'Buy Book URL', metadata_name: 'buy_url', multivalued: :yes }
   ].freeze
 
-MONO_FILENAME_FLAG = '://:MONOGRAPH://:'.freeze
+MONO_FILENAME_FLAG = '://:MONOGRAPH://:'

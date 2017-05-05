@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 describe CurationConcerns::MonographForm do
@@ -10,57 +12,56 @@ describe CurationConcerns::MonographForm do
 
   describe 'terms' do
     subject { described_class.terms }
-    it { is_expected.to eq [:title,
-                            :creator,
-                            :contributor,
-                            :description,
-                            :keyword,
-                            :rights,
-                            :publisher,
-                            :date_created,
-                            :subject,
-                            :language,
-                            :identifier,
-                            :based_near,
-                            :related_url,
-                            :representative_id,
-                            :thumbnail_id,
-                            :files,
-                            :visibility_during_embargo,
-                            :embargo_release_date,
-                            :visibility_after_embargo,
-                            :visibility_during_lease,
-                            :lease_expiration_date,
-                            :visibility_after_lease,
-                            :visibility,
-                            :ordered_member_ids,
-                            :source,
-                            :in_works_ids,
-                            :member_of_collection_ids,
-                            :press,
-                            :date_published,
-                            :isbn,
-                            :isbn_paper,
-                            :isbn_ebook,
-                            :editor,
-                            :copyright_holder,
-                            :buy_url,
-                            :sub_brand,
-                            :creator_family_name,
-                            :creator_given_name,
-                            :primary_editor_family_name,
-                            :primary_editor_given_name] }
+    it { is_expected.to eq %i[title
+                              creator
+                              contributor
+                              description
+                              keyword
+                              rights
+                              publisher
+                              date_created
+                              subject
+                              language
+                              identifier
+                              based_near
+                              related_url
+                              representative_id
+                              thumbnail_id
+                              files
+                              visibility_during_embargo
+                              embargo_release_date
+                              visibility_after_embargo
+                              visibility_during_lease
+                              lease_expiration_date
+                              visibility_after_lease
+                              visibility
+                              ordered_member_ids
+                              source
+                              in_works_ids
+                              member_of_collection_ids
+                              press
+                              date_published
+                              isbn
+                              isbn_paper
+                              isbn_ebook
+                              editor
+                              copyright_holder
+                              buy_url
+                              sub_brand
+                              creator_family_name
+                              creator_given_name
+                              primary_editor_family_name
+                              primary_editor_given_name] }
   end
 
   describe 'required_fields' do
     subject { described_class.required_fields }
-    it { is_expected.to eq [:title, :press] }
+    it { is_expected.to eq %i[title press] }
   end
 
   describe 'select_press' do
-    let(:monograph) { Monograph.new }
-
     subject { form.select_press }
+    let(:monograph) { Monograph.new }
 
     before do
       create(:role, resource: press1, user: user, role: 'admin')
@@ -74,10 +75,9 @@ describe CurationConcerns::MonographForm do
   end
 
   describe 'select_files' do
+    subject { form.select_files }
     let(:monograph) { Monograph.new }
     let(:file_set) { create(:file_set) }
-
-    subject { form.select_files }
 
     before do
       monograph.ordered_members << file_set

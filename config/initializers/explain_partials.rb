@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Start the app with EXPLAIN_PARTIALS=true to show locations of view partials
 if Rails.env.development? && ENV['EXPLAIN_PARTIALS']
   module ActionView

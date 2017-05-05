@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 desc "cache google analytics data"
 namespace :heliotrope do
   task ga_cache: :environment do
