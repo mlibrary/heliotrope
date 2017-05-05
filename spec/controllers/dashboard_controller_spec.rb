@@ -24,7 +24,7 @@ RSpec.describe DashboardController, type: :controller do
     let(:partial) { 'home' }
 
     context 'unauthenticated user' do
-      before { get :show, partial: partial }
+      before { get :show, params: { partial: partial } }
       it { expect(response).to redirect_to new_user_session_path }
     end
     context "authenticated user" do
@@ -32,7 +32,7 @@ RSpec.describe DashboardController, type: :controller do
 
       before do
         sign_in user
-        get :show, partial: partial
+        get :show, params: { partial: partial }
       end
       it { expect(response).to_not be_unauthorized }
       it { expect(response).to be_success }

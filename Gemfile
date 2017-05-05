@@ -4,10 +4,11 @@ source 'https://rubygems.org'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 # gem 'rails', '4.2.6'
-gem 'rails', '4.2.7.1'
+# gem 'rails', '4.2.7.1'
+gem 'rails', '5.0.2'
 
 gem 'curation_concerns', '2.0.0'
-gem 'resque'
+gem 'resque', '~> 1.26.0'
 gem 'resque-pool'
 gem 'resque-web', '~> 0.0.7', require: 'resque_web'
 
@@ -46,12 +47,13 @@ gem 'sdoc', '~> 0.4.0', group: :doc
 
 gem 'riiif', '0.4.0'
 
-gem 'actionpack-page_caching', '~> 1.0.1'
+gem 'actionpack-page_caching', '~> 1.1.0'
 
 gem 'redcarpet', '~> 3.3.4'
 
 # Use Jekyll for blog and informational pages
-gem 'jekyll'
+# See #937 before updating this version
+gem 'jekyll', '~> 3.1.3'
 
 # Use gem version of cozy-sun-bear
 gem 'cozy-sun-bear', git: 'https://github.com/mlibrary/cozy-sun-bear'
@@ -87,7 +89,8 @@ end
 
 gem 'devise'
 gem 'devise-guests', '~> 0.3'
-gem 'rsolr', '~> 1.1.2'
+# gem 'rsolr', '~> 1.1.2'
+gem 'rsolr', '~> 2.0.1'
 
 group :development, :test do
   gem 'byebug'
@@ -95,6 +98,7 @@ group :development, :test do
   gem 'factory_girl_rails'
   gem "fakefs", require: "fakefs/safe"
   gem 'fcrepo_wrapper', '0.5.2'
+  gem 'rails-controller-testing'
   gem 'rspec-context-private'
   gem 'rspec-html-matchers'
   gem 'rspec-rails'

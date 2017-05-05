@@ -25,14 +25,14 @@ class EPubController < ApplicationController
           if entry
             render plain: entry.get_input_stream.read, layout: false
           else
-            render nothing: true, status: 200, content_type: 'text/html'
+            head :ok
           end
         end
       rescue
-        render nothing: true, status: 200, content_type: 'text/html'
+        head :ok
       end
     else
-      render nothing: true, status: 200, content_type: 'text/html'
+      head :ok
     end
   end
 end

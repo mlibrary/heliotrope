@@ -25,7 +25,7 @@ describe CurationConcerns::MonographsController do
           expect(form["press"]).to match(//)
         end
         it 'handles press param' do
-          get :new, press: subdomain
+          get :new, params: { press: subdomain }
           expect(form["press"]).to match(/#{subdomain}/)
         end
       end
@@ -33,16 +33,16 @@ describe CurationConcerns::MonographsController do
 
     describe "#show" do
       it 'is successful' do
-        get :show, id: monograph
+        get :show, params: { id: monograph }
         expect(response).to be_success
       end
     end
 
     describe "#create" do
       it 'is successful' do
-        post :create, monograph: { title: ['Title one'],
-                                   press: press.subdomain,
-                                   date_published: ['Oct 20th'] }
+        post :create, params: { monograph: { title: ['Title one'],
+                                             press: press.subdomain,
+                                             date_published: ['Oct 20th'] } }
 
         expect(assigns[:curation_concern].title).to eq ['Title one']
         expect(assigns[:curation_concern].date_published).to eq ['Oct 20th']
@@ -54,7 +54,7 @@ describe CurationConcerns::MonographsController do
     describe "#publish" do
       it 'is successful' do
         expect(PublishJob).to receive(:perform_later).with(monograph)
-        post :publish, id: monograph
+        post :publish, params: { id: monograph }
         expect(response).to redirect_to Rails.application.routes.url_helpers.curation_concerns_monograph_path(monograph)
         expect(flash[:notice]).to eq "Monograph is publishing."
       end
@@ -70,8 +70,8 @@ describe CurationConcerns::MonographsController do
 
         it 'is successful' do
           expect {
-            post :create, monograph: { title: ['Title one'],
-                                       press: press.subdomain }
+            post :create, params: { monograph: { title: ['Title one'],
+                                                 press: press.subdomain } }
           }.to change { Monograph.count }.by(1)
 
           expect(assigns[:curation_concern].title).to eq ['Title one']
@@ -83,8 +83,8 @@ describe CurationConcerns::MonographsController do
       context "within a press that I don't have permission for" do
         it 'denies access' do
           expect {
-            post :create, monograph: { title: ['Title one'],
-                                       press: press.subdomain }
+            post :create, params: { monograph: { title: ['Title one'],
+                                                 press: press.subdomain } }
           }.not_to change { Monograph.count }
 
           expect(response.status).to eq 401

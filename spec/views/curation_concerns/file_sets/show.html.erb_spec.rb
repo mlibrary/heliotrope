@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe 'curation_concerns/file_sets/show', type: :view do
+RSpec.describe 'curation_concerns/file_sets/show' do
   let(:monograph) { create(:monograph) }
   let(:file_set) { create(:file_set) }
   let(:file_set_doc) { SolrDocument.new(file_set.to_solr) }
@@ -8,7 +8,11 @@ describe 'curation_concerns/file_sets/show', type: :view do
 
   before do
     def view.parent
-      nil
+      monograph
+    end
+
+    def view.parent_path(_)
+      "/concern/monographs/{monograph.id}"
     end
 
     monograph.ordered_members << file_set
@@ -17,14 +21,18 @@ describe 'curation_concerns/file_sets/show', type: :view do
     allow(file_set_presenter).to receive(:embed_code).and_return("embed code")
     allow(view).to receive(:parent).and_return(monograph)
     allow(view).to receive(:can?).with(:edit, file_set_presenter).and_return(false)
+    stub_template "curation_concerns/file_sets/_media.html.erb" => "render nothing"
   end
 
   context 'render markdown' do
     let(:expected_title) { 'markdown' }
     let(:expected_title_with_emphasis_markdown) { '_' + expected_title + '_' }
     let(:file_set) { create(:file_set, title: [expected_title_with_emphasis_markdown]) }
-    before { render }
-    it { expect(rendered).to have_tag('em', text: expected_title) }
+
+    it {
+      render
+      expect(rendered).to have_tag('em', text: expected_title)
+    }
   end
 
   context 'form-actions' do

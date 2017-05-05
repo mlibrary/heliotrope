@@ -3,7 +3,7 @@
     <p><%= render_markdown footer_block_a(press_subdomain) %></p>
   <% else %>
     <div class="crop">
-      <%= image_tag logo(press_subdomain), alt: name(press_subdomain), class: 'img-responsive' %><br /><br />
+      <%= image_tag logo(press_subdomain) || 'fulcrum-white-50px', alt: name(press_subdomain), class: 'img-responsive' %><br /><br />
     </div>
     <p>
       <a class="brand" href="<%= url(press_subdomain) %>"><%= name(press_subdomain) %></a>

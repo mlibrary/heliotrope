@@ -3,6 +3,10 @@
 require 'rails_helper'
 
 describe 'shared/_ga.html.erb' do
+  before do
+    view.extend PressHelper
+  end
+
   context "when there's a fulcrum google_analytics_id" do
     it "renders google analytics javascript with fulcrum GA id" do
       Rails.application.secrets.google_analytics_id = "TEST-ID"

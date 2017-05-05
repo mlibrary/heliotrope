@@ -16,7 +16,7 @@ RSpec.describe EmbedController, type: :controller do
 
       before do
         allow(HandleService).to receive(:object).with(hdl).and_return(nil)
-        get :show, hdl: hdl
+        get :show, params: { hdl: hdl }
       end
       it { expect(response).to have_http_status(:unauthorized) }
     end
@@ -28,7 +28,7 @@ RSpec.describe EmbedController, type: :controller do
       before do
         allow(HandleService).to receive(:object).with(hdl).and_return(obj)
         allow(obj).to receive(:id).and_return(0)
-        get :show, hdl: hdl
+        get :show, params: { hdl: hdl }
       end
       it { expect(response).to have_http_status(:unauthorized) }
     end
@@ -42,7 +42,7 @@ RSpec.describe EmbedController, type: :controller do
         allow(HandleService).to receive(:object).with(hdl).and_return(obj)
         allow(obj).to receive(:id).and_return(0)
         allow(CurationConcerns::PresenterFactory).to receive(:build_presenters).with([obj.id], CurationConcerns::FileSetPresenter, anything).and_return([presenter])
-        get :show, hdl: hdl
+        get :show, params: { hdl: hdl }
       end
       it { expect(response).to_not have_http_status(:unauthorized) }
       it { expect(response).to be_success }

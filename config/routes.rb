@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-RESQUE_MOUNT_PATH = 'resque'
-
 resque_web_constraint = lambda do |request|
   current_user = request.env['warden'].user
   current_user.present? && current_user.respond_to?(:platform_admin?) && current_user.platform_admin?
@@ -18,12 +16,12 @@ Rails.application.routes.draw do
   mount Riiif::Engine => '/image-service', as: 'riiif'
 
   constraints resque_web_constraint do
-    mount ResqueWeb::Engine => "/#{RESQUE_MOUNT_PATH}"
+    mount ResqueWeb::Engine => "/resque"
   end
 
   # For anyone who doesn't meet resque_web_constraint,
   # fall through to this controller.
-  get RESQUE_MOUNT_PATH, controller: :jobs, action: :forbid
+  get 'resque', controller: :jobs, action: :forbid
 
   concern :searchable, Blacklight::Routes::Searchable.new
 

@@ -17,7 +17,7 @@ describe DownloadsController do
                               content: File.open(File.join(fixture_path, 'csv', 'miranda.jpg'))) }
 
       it "sends the file" do
-        get :show, id: file_set
+        get :show, params: { id: file_set }
         expect(response.body).to eq file_set.original_file.content
       end
     end
@@ -29,7 +29,7 @@ describe DownloadsController do
                               content: File.open(File.join(fixture_path, 'csv', 'miranda.jpg'))) }
 
       it "shows the unauthorized message" do
-        get :show, id: file_set
+        get :show, params: { id: file_set }
         expect(response).to have_http_status(401)
       end
     end

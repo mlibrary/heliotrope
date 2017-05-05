@@ -12,7 +12,7 @@ RSpec.describe SubBrandsController, type: :controller do
     before { sign_in user }
 
     describe '#new' do
-      before { get :new, press_id: press }
+      before { get :new, params: { press_id: press } }
 
       it 'displays the form for a new sub-brand' do
         expect(response).to render_template :new
@@ -25,7 +25,7 @@ RSpec.describe SubBrandsController, type: :controller do
     describe '#edit' do
       let(:sub_brand) { create :sub_brand, press: press }
 
-      before { get :edit, press_id: sub_brand.press, id: sub_brand }
+      before { get :edit, params: { press_id: sub_brand.press, id: sub_brand } }
 
       it 'displays the form to edit the sub-brand' do
         expect(response).to render_template :edit
@@ -38,7 +38,7 @@ RSpec.describe SubBrandsController, type: :controller do
     describe '#update' do
       let(:sub_brand) { create :sub_brand, press: press, title: 'old name' }
 
-      before { patch :update, press_id: sub_brand.press, id: sub_brand, sub_brand: params }
+      before { patch :update, params: { press_id: sub_brand.press, id: sub_brand, sub_brand: params } }
 
       context 'with correct inputs' do
         let(:params) { { title: 'new name' } }
@@ -68,7 +68,7 @@ RSpec.describe SubBrandsController, type: :controller do
 
         it 'creates the record' do
           expect {
-            post :create, params
+            post :create, params: params
           }.to change { SubBrand.count }.by(1)
 
           sub_brand = assigns[:sub_brand]
@@ -87,7 +87,7 @@ RSpec.describe SubBrandsController, type: :controller do
 
         it 're-renders the form so user can correct errors' do
           expect {
-            post :create, params
+            post :create, params: params
           }.to change { SubBrand.count }.by(0)
 
           expect(response).to render_template :new
@@ -103,7 +103,7 @@ RSpec.describe SubBrandsController, type: :controller do
 
     context 'within my own press' do
       describe '#new' do
-        before { get :new, press_id: press }
+        before { get :new, params: { press_id: press } }
 
         it 'displays the form for a new sub-brand' do
           expect(response).to render_template :new
@@ -116,7 +116,7 @@ RSpec.describe SubBrandsController, type: :controller do
 
     context 'within another press' do
       describe '#new' do
-        before { get :new, press_id: another_press }
+        before { get :new, params: { press_id: another_press } }
 
         it 'denies access' do
           expect(flash.alert).to match(/You are not authorized/)
@@ -127,7 +127,7 @@ RSpec.describe SubBrandsController, type: :controller do
       describe '#edit' do
         let(:sub_brand) { create :sub_brand, press: another_press }
 
-        before { get :edit, press_id: another_press, id: sub_brand }
+        before { get :edit, params: { press_id: another_press, id: sub_brand } }
 
         it 'denies access' do
           expect(response.code).to eq '401'
@@ -139,7 +139,7 @@ RSpec.describe SubBrandsController, type: :controller do
         let(:sub_brand) { create :sub_brand, press: another_press, title: 'old name' }
         let(:params) { { title: 'new name' } }
 
-        before { patch :update, press_id: sub_brand.press, id: sub_brand, sub_brand: params }
+        before { patch :update, params: { press_id: sub_brand.press, id: sub_brand, sub_brand: params } }
 
         it 'denies access' do
           expect(response.code).to eq '401'
@@ -156,7 +156,7 @@ RSpec.describe SubBrandsController, type: :controller do
     before { sign_in user }
 
     describe '#new' do
-      before { get :new, press_id: press }
+      before { get :new, params: { press_id: press } }
 
       it 'denies access' do
         expect(flash.alert).to match(/You are not authorized/)
@@ -167,7 +167,7 @@ RSpec.describe SubBrandsController, type: :controller do
     describe '#edit' do
       let(:sub_brand) { create :sub_brand, press: press }
 
-      before { get :edit, press_id: sub_brand.press, id: sub_brand }
+      before { get :edit, params: { press_id: sub_brand.press, id: sub_brand } }
 
       it 'denies access' do
         expect(response.code).to eq '401'
@@ -179,7 +179,7 @@ RSpec.describe SubBrandsController, type: :controller do
       let(:sub_brand) { create :sub_brand, press: press, title: 'old name' }
       let(:params) { { title: 'new name' } }
 
-      before { patch :update, press_id: sub_brand.press, id: sub_brand, sub_brand: params }
+      before { patch :update, params: { press_id: sub_brand.press, id: sub_brand, sub_brand: params } }
 
       it 'denies access' do
         expect(response.code).to eq '401'
@@ -194,7 +194,7 @@ RSpec.describe SubBrandsController, type: :controller do
     let(:sub_brand) { create :sub_brand }
 
     describe '#show' do
-      before { get :show, press_id: sub_brand.press, id: sub_brand }
+      before { get :show, params: { press_id: sub_brand.press, id: sub_brand } }
 
       it 'is successful' do
         expect(response).to render_template :show
