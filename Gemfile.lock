@@ -14,8 +14,7 @@ GIT
 
 GIT
   remote: https://github.com/mlibrary/cozy-sun-bear
-  revision: 3e0e6cf886779127695f9e8097c72ee238845c31
-  branch: gemify
+  revision: 3332490c706aa9d42d002c959678ffb3aa7916d6
   specs:
     cozy-sun-bear (0.1.0)
       railties
@@ -692,7 +691,7 @@ DEPENDENCIES
   coffee-rails (~> 4.1.0)
   config
   coveralls
-  cozy-sun-bear (= 0.1.0)!
+  cozy-sun-bear!
   curation_concerns (= 2.0.0)
   devise
   devise-guests (~> 0.3)
