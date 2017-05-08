@@ -38,13 +38,13 @@ describe PublishersPresenter do
         expect(subject[0].current_user).to eq current_user
       end
     end
-    context 'with publishers sorted on subdomain' do
+    context 'with publishers sorted on name' do
       let(:publisher1) { double("publisher1") }
       let(:publisher2) { double("publisher2") }
       before do
         allow(Press).to receive(:all).and_return([publisher1, publisher2])
-        allow(publisher1).to receive(:subdomain).and_return("z")
-        allow(publisher2).to receive(:subdomain).and_return("a")
+        allow(publisher1).to receive(:name).and_return("z")
+        allow(publisher2).to receive(:name).and_return("a")
       end
       it do
         expect(subject).to be_a Array
