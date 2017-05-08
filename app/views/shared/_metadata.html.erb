@@ -9,7 +9,7 @@
     <% end %>
   <% end %>
 
-  <% if @monograph_presenter.editors? %>
+  <% if @monograph_presenter.primary_editor_full_name.present? %>
     <meta name="citation_author" content="<%= @monograph_presenter.primary_editor_full_name.html_safe %>">
     <% @monograph_presenter.editor.each do |editor| %>
       <meta name="citation_author" content="<%= editor.html_safe %>">
