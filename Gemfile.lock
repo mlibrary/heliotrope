@@ -12,6 +12,14 @@ GIT
       rsolr (>= 1.1.2, < 3)
       solrizer (>= 3.4, < 5)
 
+GIT
+  remote: https://github.com/mlibrary/cozy-sun-bear
+  revision: 3e0e6cf886779127695f9e8097c72ee238845c31
+  branch: gemify
+  specs:
+    cozy-sun-bear (0.1.0)
+      railties
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -684,6 +692,7 @@ DEPENDENCIES
   coffee-rails (~> 4.1.0)
   config
   coveralls
+  cozy-sun-bear (= 0.1.0)!
   curation_concerns (= 2.0.0)
   devise
   devise-guests (~> 0.3)
