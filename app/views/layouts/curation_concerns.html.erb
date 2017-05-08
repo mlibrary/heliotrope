@@ -15,7 +15,7 @@
     <%= content_for?(:main) ? yield(:main) : yield %>
   </div>
 
-  <% if defined?(@press.subdomain) %>
+  <% if defined?(@press.subdomain) && !@press.new_record? %>
     <%= render 'shared/brand_press_footer' %>
   <% elsif defined?(@monograph_presenter.subdomain) %>
     <%= render 'shared/brand_press_footer' %>

@@ -48,6 +48,7 @@ class Ability
     can [:destroy], ActiveFedora::Base
     can :publish, Monograph
     can :manage, Role
+    can :manage, Press
   end
 
   def platform_admin?

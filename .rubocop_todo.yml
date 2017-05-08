@@ -6,7 +6,7 @@ Lint/AmbiguousBlockAssociation:
 
 Metrics/BlockLength:
   Enabled: true
-  Max: 291 # default is 25
+  Max: 295 # default is 25
 
 Metrics/ClassLength:
   Exclude:
