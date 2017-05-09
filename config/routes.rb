@@ -79,7 +79,7 @@ Rails.application.routes.draw do
   get '/:subdomain', controller: :press_catalog, action: :index, as: :press_catalog
   get '/:subdomain/facet', controller: :press_catalog, action: :facet
 
-  resources :presses, path: '/', only: [:index] do
+  resources :presses, path: '/', only: %i[index edit] do
     resources :sub_brands, only: %i[new create show edit update]
 
     resources :roles, path: 'users', only: %i[index create destroy] do
@@ -88,5 +88,6 @@ Rails.application.routes.draw do
       end
     end
   end
+
   root 'presses#index'
 end
