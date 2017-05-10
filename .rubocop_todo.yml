@@ -89,6 +89,7 @@ Style/FrozenStringLiteralComment:
     - 'spec/views/curation_concerns/file_sets/show.html.erb_spec.rb'
     - 'spec/views/curation_concerns/file_sets/_media.html.erb_spec.rb'
     - 'app/renderers/curation_concerns/renderers/*'
+    - 'app/models/riiif/file.rb'
 
 Style/GuardClause:
   Exclude:
