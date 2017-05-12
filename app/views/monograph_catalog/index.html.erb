@@ -73,7 +73,7 @@
         <div class="btn-toolbar" role="toolbar" aria-label="">
           <div class="btn-group" role="group" aria-label="">
           <% if @monograph_presenter.epub? %>
-            <a id="monograph-read-btn" href="<%= epub_path(@monograph_presenter.epub) %>" target="_blank" title="Read <%= @monograph_presenter.title %>" role="button" class="btn btn-default btn-small">Read Book</a>
+            <a id="monograph-read-btn" href="<%= epub_path(@monograph_presenter.epub) %>" title="Read <%= @monograph_presenter.title %>" role="button" class="btn btn-default btn-small">Read Book</a>
           <% end %>
           <% if @monograph_presenter.buy_url? %>
             <a id="monograph-buy-btn" href="<%= @monograph_presenter.buy_url %>" target="_blank" title="Buy <%= @monograph_presenter.title %>" role="button" class="btn btn-default btn-small">Buy Book</a>

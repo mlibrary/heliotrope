@@ -4,10 +4,11 @@ require 'zip'
 
 class EPubController < ApplicationController
   def show
-    file_set_doc = ActiveFedora::SolrService.query("{!terms f=id}#{params[:id]}", row: 1).first
-    mime_type = file_set_doc['mime_type_ssi'] unless file_set_doc.nil?
-    epub_zip = mime_type.include? 'application/epub+zip' unless mime_type.nil?
-    if epub_zip
+    presenter = CurationConcerns::FileSetPresenter.new(SolrDocument.new(FileSet.find(params[:id]).to_solr), current_ability, request)
+    if presenter.epub?
+      @title = presenter.title
+      @citable_link = presenter.citable_link
+      @back_link = params[:subdomain].present? ? main_app.root_url + params[:subdomain] : main_app.monograph_catalog_url(presenter.monograph_id)
       render layout: false
     else
       render 'curation_concerns/base/unauthorized', status: :unauthorized
