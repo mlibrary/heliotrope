@@ -18,7 +18,7 @@ describe 'shared/_metadata.html.erb' do
                                            press_name_ssim: ['Seeing Eye Press'],
                                            date_published_tesim: ['2001']) }
     it "has the correct metadata" do
-      @monograph_presenter = CurationConcerns::MonographPresenter.new(solr_document, nil)
+      @monograph_presenter = Hyrax::MonographPresenter.new(solr_document, nil)
       render
       expect(rendered).to match('Sun Moon Dog')
       expect(rendered).to match('Boutros-Boutros')
@@ -34,7 +34,7 @@ describe 'shared/_metadata.html.erb' do
                                            creator_full_name_tesim: ['Boutros-Boutros Doggie'],
                                            press_name_ssim: ['Seeing Eye Press']) }
     it "has no citation_publication_date" do
-      @monograph_presenter = CurationConcerns::MonographPresenter.new(solr_document, nil)
+      @monograph_presenter = Hyrax::MonographPresenter.new(solr_document, nil)
       render
       expect(rendered).to_not match('citation_publication_date')
     end
@@ -48,7 +48,7 @@ describe 'shared/_metadata.html.erb' do
                                            creator_full_name_tesim: ['Bob'],
                                            press_name_ssim: ['Swedish Red Apple']) }
     it "renders the characters correctly" do
-      @monograph_presenter = CurationConcerns::MonographPresenter.new(solr_document, nil)
+      @monograph_presenter = Hyrax::MonographPresenter.new(solr_document, nil)
       render
       expect(rendered).to match(%q(Bob's “Smart” Dog’s "Rött" Äpple))
     end
@@ -63,7 +63,7 @@ describe 'shared/_metadata.html.erb' do
                                            editor_tesim: ['Blug Shoeman', 'Melissa Allen'],
                                            press_name_ssim: ['Marge INC.']) }
     it "renders the editors as authors" do
-      @monograph_presenter = CurationConcerns::MonographPresenter.new(solr_document, nil)
+      @monograph_presenter = Hyrax::MonographPresenter.new(solr_document, nil)
       render
       expect(rendered).to match "Tafferty, Marge"
       expect(rendered).to match "Blug Shoeman"
@@ -78,7 +78,7 @@ describe 'shared/_metadata.html.erb' do
                                            creator_full_name_tesim: ['Mr. Noodles'],
                                            sort_date_tesim: ['2011-01-01']) }
     it 'has the correct metadata' do
-      @presenter = CurationConcerns::FileSetPresenter.new(solr_document, nil)
+      @presenter = Hyrax::FileSetPresenter.new(solr_document, nil)
       render
       expect(rendered).to match('Bark')
       expect(rendered).to match('Noodles')
@@ -95,7 +95,7 @@ describe 'shared/_metadata.html.erb' do
                                            sort_date_tesim: ['2011-01-01'],
                                            doi_ssim: ['https://doi.org/10.3998/fulcrum.001']) }
     it "has the doi metadata (but not the doi url)" do
-      @presenter = CurationConcerns::FileSetPresenter.new(solr_document, nil)
+      @presenter = Hyrax::FileSetPresenter.new(solr_document, nil)
       render
       expect(rendered).to match('10.3998/fulcrum.001')
       expect(rendered).to_not match('https://doi.org/')

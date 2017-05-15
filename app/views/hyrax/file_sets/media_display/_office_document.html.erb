@@ -1,0 +1,16 @@
+<% if Hyrax.config.display_media_download_link? && file_set.allow_download? %>
+    <%= link_to hyrax.download_path(file_set), target: "_new", title: "Download the document" do %>
+        <figure>
+            <%= image_tag thumbnail_url(file_set),
+                          class: "img-responsive",
+                          alt: "Download the document #{file_set.to_s}" %>
+            <figcaption>Download the document</figcaption>
+        </figure>
+    <% end %>
+<% else %>
+    <figure>
+        <%= image_tag thumbnail_url(file_set),
+                      class: "img-responsive",
+                      alt: "Thumbnail of #{file_set.to_s}" %>
+    </figure>
+<% end %>

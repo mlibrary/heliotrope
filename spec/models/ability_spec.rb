@@ -13,10 +13,10 @@ describe Ability do
   let(:file_set) { create(:file_set, user: creating_user) }
 
   let(:monograph_presenter) do
-    CurationConcerns::MonographPresenter.new(SolrDocument.new(id: monograph.id, press_tesim: press.subdomain), described_class.new(creating_user))
+    Hyrax::MonographPresenter.new(SolrDocument.new(id: monograph.id, press_tesim: press.subdomain), described_class.new(creating_user))
   end
   let(:file_set_presenter) do
-    CurationConcerns::FileSetPresenter.new(SolrDocument.new(id: file_set.id, monograph_id_ssim: monograph.id), described_class.new(creating_user))
+    Hyrax::FileSetPresenter.new(SolrDocument.new(id: file_set.id, monograph_id_ssim: monograph.id), described_class.new(creating_user))
   end
 
   describe 'a platform-wide admin user' do
@@ -26,7 +26,7 @@ describe Ability do
     let(:another_user) { create(:user) }
     let(:another_user_monograph) { create(:monograph, user: another_user, press: press.subdomain) }
     let(:another_user_monograph_presenter) do
-      CurationConcerns::MonographPresenter.new(SolrDocument.new(id: another_user_monograph.id, press_tesim: press.subdomain), described_class.new(another_user))
+      Hyrax::MonographPresenter.new(SolrDocument.new(id: another_user_monograph.id, press_tesim: press.subdomain), described_class.new(another_user))
     end
 
     it do
@@ -141,8 +141,8 @@ describe Ability do
     end
 
     context "updating" do
-      let(:my_presenter) { CurationConcerns::MonographPresenter.new(SolrDocument.new(id: 'my_id', press_tesim: my_press.subdomain), subject) }
-      let(:other_presenter) { CurationConcerns::MonographPresenter.new(SolrDocument.new(id: 'other_id', press_tesim: other_press.subdomain), subject) }
+      let(:my_presenter) { Hyrax::MonographPresenter.new(SolrDocument.new(id: 'my_id', press_tesim: my_press.subdomain), subject) }
+      let(:other_presenter) { Hyrax::MonographPresenter.new(SolrDocument.new(id: 'other_id', press_tesim: other_press.subdomain), subject) }
 
       it do
         is_expected.to be_able_to(:update, my_presenter)

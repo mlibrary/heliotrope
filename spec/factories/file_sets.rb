@@ -21,7 +21,7 @@ FactoryGirl.define do
     sequence(:sort_date, 1900) { |n| "#{n}-01-01" }
     # pad this one out so that string comparisons are consistent
     sequence(:resource_type) { |n| ["audio#{n.to_s.rjust(4, '0')}"] }
-    date_uploaded { CurationConcerns::TimeService.time_in_utc }
+    date_uploaded { Hyrax::TimeService.time_in_utc }
     visibility Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE
 
     factory :public_file_set do

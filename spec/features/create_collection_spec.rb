@@ -10,7 +10,7 @@ feature 'Create a collection' do
     end
 
     scenario do
-      visit new_collection_path
+      visit hyrax.new_collection_path
       fill_in 'Title', with: 'Test collection'
       click_button 'Create Collection'
       expect(page).to have_content 'Collection was successfully created.'

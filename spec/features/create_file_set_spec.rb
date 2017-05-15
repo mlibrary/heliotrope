@@ -47,7 +47,7 @@ feature 'Create a file set' do
       fill_in 'Exclusive to Platform?', with: 'yes1'
       fill_in 'Allow Display After Expiration?', with: 'no1'
       fill_in 'Allow Download After Expiration?', with: 'no2'
-      fill_in 'Description', with: 'Veggies es bonus vobis, [external link](www.external-link.com) proinde vos postulo essum magis [internal link](www.fulcrum.org) kohlrabi welsh onion daikon amaranth tatsoi tomatillo melon azuki bean garlic.'
+      fill_in 'Abstract or Summary', with: 'Veggies es bonus vobis, [external link](www.external-link.com) proinde vos postulo essum magis [internal link](www.fulcrum.org) kohlrabi welsh onion daikon amaranth tatsoi tomatillo melon azuki bean garlic.'
       fill_in 'Content Type', with: 'screenshot'
       fill_in 'Primary Creator (family name)', with: 'FamilyName'
       fill_in 'Primary Creator (given name)', with: 'GivenName'
@@ -82,14 +82,14 @@ feature 'Create a file set' do
       click_button 'Attach to Monograph'
 
       # going back in to add a second section_title (seems easier than enabling JS for this test etc)
-      visit edit_curation_concerns_file_set_path(FileSet.where(title: fs_title).first.id)
+      visit edit_hyrax_file_set_path(FileSet.where(title: fs_title).first.id)
       expect(page).to have_css('input.file_set_section_title', count: 2)
       page.all(:fillable_field, 'file_set[section_title][]').last.set('C 1')
       click_button 'Update Attached File'
 
       # Go to Monograph catalog page
       click_link 'Back to Monograph'
-      expect(page).to have_current_path(curation_concerns_monograph_path(monograph))
+      expect(page).to have_current_path(hyrax_monograph_path(monograph, locale: 'en'))
       # order in FileSet's section_title has been taken from Monograph's section_titles
       expect(page).to have_content 'From C 1 and Test section with Italicized Title therein'
 

@@ -16,7 +16,7 @@ feature 'Monograph Catalog Search' do
 
   it 'has the correct search field form' do
     visit monograph_catalog_path(monograph.id)
-    expect(page).to have_selector("form[action='/concern/monographs/#{monograph.id}']")
+    expect(page).to have_selector("form[action='/concern/monographs/#{monograph.id}?locale=en']")
   end
 
   scenario 'searches the monograph catalog page' do
@@ -27,7 +27,7 @@ feature 'Monograph Catalog Search' do
     fill_in 'Title', with: 'Strange Marshes'
     fill_in 'Caption', with: 'onion'
     fill_in 'Alternative Text', with: 'garlic'
-    fill_in 'Description', with: 'tomato'
+    fill_in 'Abstract or Summary', with: 'tomato'
     fill_in 'Contributor', with: 'potato'
     fill_in 'Keywords', with: 'squash'
     fill_in 'Transcript', with: 'broccoli'
@@ -40,7 +40,7 @@ feature 'Monograph Catalog Search' do
     fill_in 'Title', with: 'Unruly Puddles'
     fill_in 'Caption', with: 'monkey'
     fill_in 'Alternative Text', with: 'lizard'
-    fill_in 'Description', with: 'elephant'
+    fill_in 'Abstract or Summary', with: 'elephant'
     fill_in 'Contributor', with: 'rhino'
     fill_in 'Keywords', with: 'snake'
     fill_in 'Transcript', with: 'tiger'

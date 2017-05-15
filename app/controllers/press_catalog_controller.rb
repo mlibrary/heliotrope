@@ -3,6 +3,9 @@
 class PressCatalogController < ::CatalogController
   before_action :load_press
 
+  self.theme = 'curation_concerns'
+  with_themed_layout 'catalog'
+
   configure_blacklight do |config|
     config.search_builder_class = PressSearchBuilder
 
