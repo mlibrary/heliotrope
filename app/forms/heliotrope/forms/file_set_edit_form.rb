@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Heliotrope::Forms
-  class FileSetEditForm < CurationConcerns::Forms::FileSetEditForm
+  class FileSetEditForm < Hyrax::Forms::FileSetEditForm
     self.terms += %i[resource_type caption alt_text copyright_holder
                      description content_type date_created keywords
                      language section_title external_resource

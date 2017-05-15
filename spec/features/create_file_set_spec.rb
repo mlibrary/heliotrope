@@ -46,7 +46,7 @@ feature 'Create a file set' do
       fill_in 'Exclusive to Platform?', with: 'yes1'
       fill_in 'Allow Display After Expiration?', with: 'no1'
       fill_in 'Allow Download After Expiration?', with: 'no2'
-      fill_in 'Description', with: 'Veggies es bonus vobis, [external link](www.external-link.com) proinde vos postulo essum magis [internal link](www.fulcrum.org) kohlrabi welsh onion daikon amaranth tatsoi tomatillo melon azuki bean garlic.'
+      fill_in 'Abstract or Summary', with: 'Veggies es bonus vobis, [external link](www.external-link.com) proinde vos postulo essum magis [internal link](www.fulcrum.org) kohlrabi welsh onion daikon amaranth tatsoi tomatillo melon azuki bean garlic.'
       fill_in 'Content Type', with: 'screenshot'
       fill_in 'Primary Creator (family name)', with: 'FamilyName'
       fill_in 'Primary Creator (given name)', with: 'GivenName'
@@ -76,7 +76,7 @@ feature 'Create a file set' do
       click_button 'Attach to Monograph'
 
       # On Monograph catalog page
-      expect(page).to have_current_path(curation_concerns_monograph_path(monograph))
+      expect(page).to have_current_path(hyrax_monograph_path(monograph, locale: 'en'))
       click_link fs_title
 
       # On FileSet Page

@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
 class CatalogController < ApplicationController
-  include CurationConcerns::CatalogController
+  include Hydra::Catalog
+  include Hydra::Controller::ControllerBehavior
 
   configure_blacklight do |config|
     config.search_builder_class = ::SearchBuilder

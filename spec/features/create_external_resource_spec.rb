@@ -18,11 +18,11 @@ feature 'Create an external resource' do
 
     scenario do
       # Start by creating a Monograph
-      visit new_curation_concerns_monograph_path
+      visit new_hyrax_monograph_path
       fill_in 'Title', with: 'Test monograph'
       select press.name, from: 'Publisher'
       fill_in 'Date Published', with: 'Oct 20th'
-      click_button 'Create Monograph'
+      click_button 'Save'
 
       # Go to monograph show page (not monograph catalog page)
       click_link 'Manage Monograph and Files'

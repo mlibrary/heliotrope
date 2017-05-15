@@ -9,17 +9,19 @@ feature 'Create a monograph' do
 
     before do
       login_as user
+      stub_out_redis
     end
 
     scenario do
-      visit new_curation_concerns_monograph_path
+      visit new_hyrax_monograph_path
       fill_in 'Title', with: 'Test monograph'
       fill_in 'Author (last name)', with: 'Johns'
       fill_in 'Author (first name)', with: 'Jimmy'
       fill_in 'Additional Authors', with: 'Sub Way'
       select press.name, from: 'Publisher'
       fill_in 'ISBN (Hardcover)', with: '123-456-7890'
-      click_button 'Create Monograph'
+      click_button 'Save'
+
       expect(page).to have_content 'Test monograph'
       expect(page).to have_content '123-456-7890'
       # Monograph page has authors

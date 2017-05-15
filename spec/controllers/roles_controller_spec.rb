@@ -106,7 +106,7 @@ describe RolesController, type: :controller do
   describe "GET #index2" do
     context 'unauthenticated user' do
       before { get :index2 }
-      it { expect(response).to redirect_to new_user_session_path }
+      it { expect(response).to redirect_to('/users/sign_in') }
     end
     context "authenticated user" do
       before do
@@ -127,7 +127,7 @@ describe RolesController, type: :controller do
 
     context 'unauthenticated user' do
       before { get :show, params: { id: role_id } }
-      it { expect(response).to redirect_to new_user_session_path }
+      it { expect(response).to redirect_to('/users/sign_in') }
     end
     context "authenticated user" do
       let(:current_user) { create(:user) }

@@ -1,6 +1,7 @@
 module Import
   class Importer
-    attr_reader :root_dir, :press_subdomain, :monograph_id, :monograph_title, :visibility, :reimporting
+    attr_reader :root_dir, :press_subdomain, :monograph_id, :monograph_title,
+                :visibility, :reimporting, :reimport_mono
 
     def initialize(root_dir, press_subdomain, visibility = Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE, monograph_title = '', monograph_id = '')
       @root_dir = root_dir
@@ -101,10 +102,11 @@ module Import
       def add_new_filesets(monograph, attrs, file_attrs)
         [attrs['files'], file_attrs].transpose.each do |file, metadata|
           file_set = FileSet.new
-          file_set_actor = CurationConcerns::Actors::FileSetActor.new(file_set, user)
-          file_set_actor.create_metadata(monograph, metadata)
+          file_set_actor = Hyrax::Actors::FileSetActor.new(file_set, user)
+          file_set_actor.create_metadata(metadata)
           file_set_actor.create_content(file)
           file_set_actor.update_metadata(metadata)
+          file_set_actor.attach_file_to_work(monograph, metadata)
         end
       end
 

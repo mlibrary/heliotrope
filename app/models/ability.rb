@@ -2,7 +2,7 @@
 
 class Ability
   include Hydra::Ability
-  include CurationConcerns::Ability
+  include Hyrax::Ability
 
   # Define any customized permissions here.
   def custom_permissions
@@ -32,11 +32,11 @@ class Ability
     end
 
     # For the different view presenters
-    can :update, CurationConcerns::MonographPresenter do |p|
+    can :update, Hyrax::MonographPresenter do |p|
       @user.admin_presses.map(&:subdomain).include?(p.subdomain)
     end
 
-    can :update, CurationConcerns::FileSetPresenter do |p|
+    can :update, Hyrax::FileSetPresenter do |p|
       @user.admin_presses.map(&:subdomain).include?(p.monograph.subdomain)
     end
 

@@ -7,7 +7,8 @@ describe 'shared/_add_content.html.erb' do
 
   before do
     allow(view).to receive(:current_user).and_return(user)
-    view.extend CurationConcerns::AbilityHelper
+    view.extend Hyrax::AbilityHelper
+    view.extend Heliotrope::AbilityHelper
   end
 
   context 'a platform-wide admin user' do
