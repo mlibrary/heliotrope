@@ -1,0 +1,52 @@
+  <figure class="image" title="<%= @presenter.alt_text.first %>">
+    <% if !@presenter.external_resource? %>
+      <% if @presenter.image? %>
+        <% riiif_url = "/image-service/#{@presenter.id}/info.json" %>
+        <div id="image"></div>
+        <script>
+        $().ready(function() {
+
+              //window.F = window.F || {};
+              var $map = $("#image");
+
+              var map = L.map('image', {
+                center: [0, 0],
+                crs: L.CRS.Simple,
+                zoom: 0,
+              }).addLayer(L.tileLayer.iiif("<%= riiif_url %>"));
+            });
+        </script>
+      <% elsif @presenter.epub? %>
+        <%= render partial: 'hyrax/file_sets/media_display/epub', locals: { file_set: @presenter } %>
+      <% else %>
+        <%= media_display @presenter %>
+      <% end %>
+    <% else %>
+      <p class="external-text lead">This is an external resource hosted on another website.<br />
+        <a href="<%= @presenter.ext_url_doi_or_handle %>" title="<%= @presenter.title %>" target="_blank" ><span class="glyphicon glyphicon-share" aria-hidden="true"></span> View object</a> at originating website.
+      </p>
+    <% end %>
+    <figcaption><%= @presenter.attribute_to_html(:caption, render_as: :markdown, label: '') %></figcaption>
+  </figure> <!-- /.image/media -->
+
+  <% if @presenter.transcript.present? %>
+      <div class="panel panel-default transcript">
+        <div class="panel-heading">
+          <h3 class="panel-title">Transcript</h3>
+        </div>
+        <div class="panel-body fixed">
+          <p><%= presenter.attribute_to_html(:transcript, render_as: :multiline, label: '') %></p>
+        </div>
+      </div><!-- /.transcript panel -->
+  <% end %>
+
+  <% if @presenter.translation.present? %>
+  <div class="panel panel-default translation">
+    <div class="panel-heading">
+      <h3 class="panel-title">Translation</h3>
+    </div>
+    <div class="panel-body fixed">
+      <p><%= presenter.attribute_to_html(:translation, render_as: :markdown, label: '') %></p>
+    </div>
+  </div><!-- /.translation panel -->
+  <% end %>

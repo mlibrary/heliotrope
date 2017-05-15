@@ -10,7 +10,7 @@ RSpec.describe "embed/show.html.erb", type: :view do
     end
   end
   let(:file_set_doc) { SolrDocument.new(file_set.to_solr) }
-  let(:file_set_presenter) { CurationConcerns::FileSetPresenter.new(file_set_doc, nil) }
+  let(:file_set_presenter) { Hyrax::FileSetPresenter.new(file_set_doc, nil) }
 
   before do
     allow(mock_file).to receive(:mime_type).and_return('image/tiff')

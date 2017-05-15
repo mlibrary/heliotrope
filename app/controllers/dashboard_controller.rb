@@ -11,7 +11,7 @@ class DashboardController < ApplicationController
     if ['home', 'publishers', 'users', 'monographs', 'assets', 'pages', 'reports', 'customize', 'settings', 'help'].include? @partial
       render
     else
-      render 'curation_concerns/base/unauthorized', status: :unauthorized
+      render 'hyrax/base/unauthorized', status: :unauthorized
     end
   end
 end

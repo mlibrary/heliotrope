@@ -80,7 +80,7 @@ describe MonographCatalogController do
           expect(controller.instance_variable_get(:@curation_concern)).to eq monograph
         end
         it 'monograph presenter is a monograph presenter class' do
-          expect(controller.instance_variable_get(:@monograph_presenter).class).to eq CurationConcerns::MonographPresenter
+          expect(controller.instance_variable_get(:@monograph_presenter).class).to eq Hyrax::MonographPresenter
         end
         it 'mongraph presenter has the monograph' do
           expect(controller.instance_variable_get(:@monograph_presenter).solr_document.id).to eq monograph.id

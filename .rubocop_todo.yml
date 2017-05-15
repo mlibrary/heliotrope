@@ -1,7 +1,7 @@
 # Put any overides here
 Lint/AmbiguousBlockAssociation:
   Exclude:
-    - 'spec/controllers/curation_concerns/monographs_controller_spec.rb'
+    - 'spec/controllers/hyrax/monographs_controller_spec.rb'
     - 'spec/controllers/roles_controller_spec.rb'
 
 Metrics/BlockLength:
@@ -16,13 +16,13 @@ Metrics/CyclomaticComplexity:
   Exclude:
     - 'app/models/riiif/file.rb'
     - 'app/controllers/downloads_controller.rb'
-    - 'app/controllers/curation_concerns/file_sets_controller.rb'
+    - 'app/controllers/hyrax/file_sets_controller.rb'
 
 Metrics/PerceivedComplexity:
   Exclude:
     - 'app/models/riiif/file.rb'
     - 'app/controllers/downloads_controller.rb'
-    - 'app/controllers/curation_concerns/file_sets_controller.rb'
+    - 'app/controllers/hyrax/file_sets_controller.rb'
 
 Rails/Exit:
   Exclude:
@@ -35,8 +35,8 @@ Rails/OutputSafety:
     - 'app/services/markdown_service.rb'
     - 'app/helpers/markdown_helper.rb'
     - 'app/helpers/gallery_helper.rb'
-    - 'app/renderers/curation_concerns/renderers/attribute_renderer.rb'
-    - 'app/renderers/curation_concerns/renderers/markdown_attribute_renderer.rb'
+    - 'app/renderers/hyrax/renderers/attribute_renderer.rb'
+    - 'app/renderers/hyrax/renderers/markdown_attribute_renderer.rb'
 
 Rails/SkipsModelValidations:
   Exclude:
@@ -44,7 +44,7 @@ Rails/SkipsModelValidations:
 
 RSpec/EmptyExampleGroup:
   Exclude:
-    - 'spec/actors/curation_concerns/monograph_actor_spec.rb'
+    - 'spec/actors/hyrax/monograph_actor_spec.rb'
 
 RSpec/EmptyLineAfterFinalLet:
   Enabled: false
@@ -78,18 +78,27 @@ RSpec/SubjectStub:
 RSpec/VerifiedDoubles:
   Enabled: false
 
+Style/EmptyLinesAroundBlockBody:
+  Exclude:
+    - 'config/initializers/mailboxer.rb'
+
 Style/FrozenStringLiteralComment:
   Exclude:
     - 'lib/import/importer.rb'
     - 'lib/import/csv_parser.rb'
-    - 'spec/views/curation_concerns/file_sets/show.html.erb_spec.rb'
-    - 'spec/views/curation_concerns/file_sets/_media.html.erb_spec.rb'
-    - 'app/renderers/curation_concerns/renderers/*'
+    - 'spec/views/hyrax/file_sets/show.html.erb_spec.rb'
+    - 'spec/views/hyrax/file_sets/_media.html.erb_spec.rb'
+    - 'app/renderers/hyrax/renderers/*'
     - 'app/models/riiif/file.rb'
+    - 'config/initializers/mailboxer.rb'
 
 Style/GuardClause:
   Exclude:
     - 'lib/import/importer.rb'
+
+Style/NumericLiterals:
+  Exclude:
+    - 'config/initializers/mailboxer.rb'
 
 Style/RedundantReturn:
   Exclude:

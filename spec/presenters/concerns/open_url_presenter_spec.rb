@@ -20,7 +20,7 @@ describe OpenUrlPresenter do
                                         monograph_id_ssim: ['1']) }
 
   describe "#monograph_coins_title" do
-    let(:presenter) { CurationConcerns::MonographPresenter.new(mono_doc, nil) }
+    let(:presenter) { Hyrax::MonographPresenter.new(mono_doc, nil) }
 
     it "has the correct metadata" do
       kevs = presenter.monograph_coins_title
@@ -38,10 +38,10 @@ describe OpenUrlPresenter do
   end
 
   describe '#file_set_coins_title' do
-    let(:presenter) { CurationConcerns::FileSetPresenter.new(file_set_doc, nil) }
+    let(:presenter) { Hyrax::FileSetPresenter.new(file_set_doc, nil) }
 
     it "has the correct metadata" do
-      allow(presenter).to receive(:monograph).and_return(CurationConcerns::MonographPresenter.new(mono_doc, nil))
+      allow(presenter).to receive(:monograph).and_return(Hyrax::MonographPresenter.new(mono_doc, nil))
 
       kevs = presenter.file_set_coins_title
 

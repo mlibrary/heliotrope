@@ -17,7 +17,7 @@ module Import
     private
 
       def actor
-        @actor ||= CurationConcerns::CurationConcern.actor(Monograph.new, user)
+        @actor ||= Hyrax::CurationConcern.actor(Monograph.new, Ability.new(user))
       end
   end
 end

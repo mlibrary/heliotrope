@@ -26,7 +26,7 @@
 
   <meta name="citation_publisher" content="<%= @monograph_presenter.press %>">
 
-<% elsif @presenter.present? && @presenter.model_name.singular == 'file_set' %>
+<% elsif @presenter.present? && @presenter.class == Hyrax::FileSetPresenter %>
 
   <meta name="citation_title" content="<%= @presenter.page_title.html_safe %>">
 
