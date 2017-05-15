@@ -4,9 +4,13 @@ class User < ActiveRecord::Base
   # Connects this user object to Hydra behaviors.
   include Hydra::User
   # Connects this user object to Curation Concerns behaviors.
-  include CurationConcerns::User
+  include Hyrax::User
   # Connects this user object to Blacklights Bookmarks.
   include Blacklight::User
+
+  include Hyrax::WithEvents
+  # Adds acts_as_messageable for user mailboxes
+  include Mailboxer::Models::Messageable
 
   has_many :roles, dependent: :destroy
   has_many :presses, through: :roles, source: 'resource', source_type: "Press"

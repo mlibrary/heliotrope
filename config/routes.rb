@@ -40,19 +40,18 @@ Rails.application.routes.draw do
   get 'roles', controller: :roles, action: :index2, as: :roles
   get 'roles/:id', controller: :roles, action: :show, as: :role
 
-  mount CurationConcerns::Engine, at: '/'
-  curation_concerns_collections
+  mount Hyrax::Engine, at: '/'
 
-  get 'concern/monographs/new', controller: 'curation_concerns/monographs', action: :new
+  get 'concern/monographs/new', controller: 'hyrax/monographs', action: :new
   get 'concern/monographs/:id', controller: :monograph_catalog, action: :index, as: :monograph_catalog
-  get 'concern/monographs/:id/show', controller: 'curation_concerns/monographs', action: :show, as: :monograph_show
+  get 'concern/monographs/:id/show', controller: 'hyrax/monographs', action: :show, as: :monograph_show
   get 'monograph_catalog/facet/:id', controller: :monograph_catalog, action: :facet, as: :monograph_catalog_facet
 
   curation_concerns_basic_routes
   curation_concerns_embargo_management
   concern :exportable, Blacklight::Routes::Exportable.new
 
-  namespace :curation_concerns, path: '/concerns' do
+  namespace :hyrax, path: '/concerns' do
     resources :monographs, only: [] do
       member do
         post :publish

@@ -2,8 +2,8 @@
 
 class SolrDocument
   include Blacklight::Solr::Document
-  # Adds CurationConcerns behaviors to the SolrDocument.
-  include CurationConcerns::SolrDocumentBehavior
+  # Adds Hyrax behaviors to the SolrDocument.
+  include Hyrax::SolrDocumentBehavior
 
   include SolrDocumentExtensions
   # self.unique_key = 'id'

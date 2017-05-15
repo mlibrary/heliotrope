@@ -41,3 +41,4 @@
 //= require ableplayer_transcript
 // Required by Hydra/Rails?
 //= require_tree .
+//= require hyrax

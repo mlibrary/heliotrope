@@ -5,7 +5,7 @@ require 'rails_helper'
 describe 'Routes', type: :routing do
   describe 'publish' do
     it 'publishes the monograph' do
-      expect(post: '/concerns/monographs/77/publish').to route_to(controller: 'curation_concerns/monographs', id: '77', action: 'publish')
+      expect(post: '/concerns/monographs/77/publish').to route_to(controller: 'hyrax/monographs', id: '77', action: 'publish')
     end
   end
 
@@ -27,6 +27,14 @@ describe 'Routes', type: :routing do
     it 'has robots.txt' do
       expect(get: '/robots.txt').to route_to(controller: 'robots', action: 'robots')
     end
+  end
+
+  describe 'Monograph Catalog' do
+    it { expect(get: 'concern/monographs/new').to route_to(controller: 'hyrax/monographs', action: 'new') }
+  end
+
+  describe 'Download' do
+    it { expect(get: '/downloads/9').to route_to(controller: 'hyrax/downloads', action: 'show', id: '9') }
   end
 
   describe 'for Users' do

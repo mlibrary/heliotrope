@@ -4,7 +4,7 @@ require 'rails_helper'
 
 describe AnalyticsPresenter do
   let(:ability) { double('ability') }
-  let(:presenter) { CurationConcerns::FileSetPresenter.new(fileset_doc, ability) }
+  let(:presenter) { Hyrax::FileSetPresenter.new(fileset_doc, ability) }
   let(:fileset_doc) { SolrDocument.new(id: 'fs') }
 
   describe "#page_views_by_path" do

@@ -5,9 +5,9 @@ class ApplicationController < ActionController::Base
   include Blacklight::Controller
   include Hydra::Controller::ControllerBehavior
 
-  # Adds CurationConcerns behaviors to the application controller.
-  include CurationConcerns::ApplicationControllerBehavior
-  include CurationConcerns::ThemedLayoutController
+  # Adds Hyrax behaviors to the application controller.
+  include Hyrax::Controller
+  include Hyrax::ThemedLayoutController
   with_themed_layout '1_column'
 
   # Prevent CSRF attacks by raising an exception.
@@ -22,7 +22,7 @@ class ApplicationController < ActionController::Base
 
     def render_unauthorized(_exception)
       respond_to do |format|
-        format.html { render 'curation_concerns/base/unauthorized', status: :unauthorized }
+        format.html { render 'hyrax/base/unauthorized', status: :unauthorized }
         format.any { head :unauthorized, content_type: 'text/plain' }
       end
     end

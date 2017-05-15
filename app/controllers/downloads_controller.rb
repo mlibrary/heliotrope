@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class DownloadsController < ApplicationController
-  include CurationConcerns::DownloadBehavior
+  include Hyrax::DownloadBehavior
 
   def show
     if transcript?
@@ -24,7 +24,7 @@ class DownloadsController < ApplicationController
         stream_body file.stream
       end
     else
-      render 'curation_concerns/base/unauthorized', status: :unauthorized
+      render 'hyrax/base/unauthorized', status: :unauthorized
     end
   end
 
