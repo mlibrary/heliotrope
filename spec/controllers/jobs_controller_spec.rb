@@ -17,7 +17,7 @@ RSpec.describe JobsController, type: :controller do
       before { sign_in user }
 
       it 'renders 404' do
-        expect(controller).to receive(:render_404) { controller.render nothing: true }
+        expect(controller).to receive(:render_404) { controller.head :ok }
         get :forbid
       end
     end

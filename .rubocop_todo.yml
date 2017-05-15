@@ -28,10 +28,6 @@ Rails/Exit:
   Exclude:
     - 'lib/**/*'
 
-# This only works in Rails 5
-Rails/HttpPositionalArguments:
-  Enabled: false
-
 Rails/OutputSafety:
   Exclude:
     - 'spec/presenters/concerns/title_presenter_spec.rb'

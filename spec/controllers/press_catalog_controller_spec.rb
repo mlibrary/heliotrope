@@ -7,11 +7,11 @@ RSpec.describe PressCatalogController, type: :controller do
 
   describe "GET #index" do
     it "redirects to presses" do
-      get :index, subdomain: "subdomain"
+      get :index, params: { subdomain: "subdomain" }
       expect(response).to redirect_to(presses_path)
     end
     it "returns http success" do
-      get :index, subdomain: press
+      get :index, params: { subdomain: press }
       expect(response).to have_http_status(:success)
     end
   end

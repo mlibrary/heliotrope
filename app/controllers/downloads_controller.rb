@@ -5,7 +5,7 @@ class DownloadsController < ApplicationController
 
   def show
     if transcript?
-      render text: file_set_doc['transcript_tesim'].first
+      render plain: file_set_doc['transcript_tesim'].first
 
     elsif thumbnail? || video? || sound? || allow_download?
       # See #401

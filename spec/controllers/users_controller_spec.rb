@@ -35,14 +35,14 @@ RSpec.describe UsersController, type: :controller do
   describe "GET #show" do
     let(:user_id) { 0 }
     context 'unauthenticated user' do
-      before { get :show, id: user_id }
+      before { get :show, params: { id: user_id } }
       it { expect(response).to redirect_to new_user_session_path }
     end
     context "authenticated user" do
       let(:current_user) { create(:user) }
       before do
         sign_in current_user
-        get :show, id: user_id
+        get :show, params: { id: user_id }
       end
       context "user record not found" do
         it { expect(response).to be_unauthorized }
