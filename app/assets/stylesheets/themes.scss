@@ -920,8 +920,8 @@ $psu-gray-1: #3F4550;
   word-spacing: 1px;
 }
 
-@mixin jenson {
-  font-family: "adobe-jenson-pro", Georgia, serif;
+@mixin droid-serif {
+  font-family: "droid-serif", Georgia, serif;
 }
 
 @mixin proxima-nova {
@@ -931,7 +931,7 @@ $psu-gray-1: #3F4550;
 .pennstate {
 
   // typography
-  @include jenson;
+  @include droid-serif;
 
   h1,
   h2,
