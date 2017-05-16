@@ -21,9 +21,14 @@ RSpec.describe EPubController, type: :controller do
       it { expect(response).to have_http_status(:unauthorized) }
     end
     context 'file epub' do
+      let(:monograph) { create(:monograph) }
       let(:file_set) { create(:file_set, content: File.open(File.join(fixture_path, 'moby-dick.epub'))) }
-
-      before { get :show, params: { id: file_set.id } }
+      before do
+        monograph.ordered_members << file_set
+        monograph.save!
+        file_set.save!
+        get :show, params: { id: file_set.id }
+      end
       it do
         expect(response).to_not have_http_status(:unauthorized)
         expect(response).to have_http_status(:success)
