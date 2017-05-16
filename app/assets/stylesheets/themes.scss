@@ -905,6 +905,7 @@ $fulcrum-light-2: #bec4cc;
 $psu-brand-color: #036;
 $psu-brand-color-alt: #ccc;
 $psu-brand-accent: #6cc;
+$psu-button-foreground: #4a4a4a;
 $psu-link: #00527b;
 $psu-white: #fff;
 $psu-jumbotron: #efefef;
@@ -960,7 +961,7 @@ $psu-gray-1: #3F4550;
   .btn-default {
     background-color: $psu-brand-accent;
     border-color: $psu-brand-accent;
-    color: $psu-white;
+    color: $psu-button-foreground;
   }
 
   .btn-default:hover,
@@ -1033,6 +1034,7 @@ $psu-gray-1: #3F4550;
     button.search-submit {
       background-color: $psu-brand-accent;
       border-color: $psu-brand-accent;
+      color: $psu-button-foreground;
     }
 
     .navbar-right {
