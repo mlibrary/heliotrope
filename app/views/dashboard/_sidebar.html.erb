@@ -4,8 +4,8 @@
   <li <%= "class=active" if partial.to_s == :publishers.to_s %>><a href="<%= partial_dashboard_path(partial: :publishers) %>"><span class="glyphicon glyphicon-tower" aria-hidden="true"></span> Publishers</a></li>
   <li <%= "class=active" if partial.to_s == :users.to_s %>><a href="<%= partial_dashboard_path(partial: :users) %>"><span class="glyphicon glyphicon-user" aria-hidden="true"></span> Users</a></li>
 <% end %>
-  <li <%= "class=active" if partial.to_s == :books.to_s %>><a href="<%= partial_dashboard_path(partial: :books) %>"><span class="glyphicon glyphicon-book" aria-hidden="true"></span> Monographs</a></li>
-  <li <%= "class=active" if partial.to_s == :items.to_s %>><a href="<%= partial_dashboard_path(partial: :items) %>"><span class="glyphicon glyphicon-tags" aria-hidden="true"></span> Assets</a></li>
+  <li <%= "class=active" if partial.to_s == :books.to_s %>><a href="<%= partial_dashboard_path(partial: :monographs) %>"><span class="glyphicon glyphicon-book" aria-hidden="true"></span> Monographs</a></li>
+  <li <%= "class=active" if partial.to_s == :items.to_s %>><a href="<%= partial_dashboard_path(partial: :assets) %>"><span class="glyphicon glyphicon-tags" aria-hidden="true"></span> Assets</a></li>
   <li <%= "class=active" if partial.to_s == :pages.to_s %>><a href="<%= partial_dashboard_path(partial: :pages) %>"><span class="glyphicon glyphicon-file" aria-hidden="true"></span> Pages</a></li>
   <li <%= "class=active" if partial.to_s == :reports.to_s %>><a href="<%= partial_dashboard_path(partial: :reports) %>"><span class="glyphicon glyphicon-stats" aria-hidden="true"></span> Reports</a></li>
 </ul>

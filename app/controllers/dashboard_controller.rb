@@ -8,7 +8,7 @@ class DashboardController < ApplicationController
 
   def show
     @partial = params[:partial]
-    if ['home', 'publishers', 'users', 'books', 'items', 'pages', 'reports', 'customize', 'settings', 'help'].include? @partial
+    if ['home', 'publishers', 'users', 'monographs', 'assets', 'pages', 'reports', 'customize', 'settings', 'help'].include? @partial
       render
     else
       render 'curation_concerns/base/unauthorized', status: :unauthorized
