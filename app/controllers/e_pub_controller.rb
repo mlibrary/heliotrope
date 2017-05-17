@@ -13,6 +13,8 @@ class EPubController < ApplicationController
     else
       render 'curation_concerns/base/unauthorized', status: :unauthorized
     end
+  rescue Ldp::Gone # tombstone
+    raise CanCan::AccessDenied
   end
 
   def file
@@ -20,20 +22,18 @@ class EPubController < ApplicationController
     file = file_set.original_file unless file_set.nil?
     if file
       epub_file = params[:file] + '.' + params[:format]
-      begin
-        Zip::File.open_buffer(file.content) do |zip_file|
-          entry = zip_file.get_entry(epub_file)
-          if entry
-            render plain: entry.get_input_stream.read, layout: false
-          else
-            head :ok
-          end
+      Zip::File.open_buffer(file.content) do |zip_file|
+        entry = zip_file.get_entry(epub_file)
+        if entry
+          render plain: entry.get_input_stream.read, layout: false
+        else
+          head :ok
         end
-      rescue
-        head :ok
       end
     else
       head :ok
     end
+  rescue
+    head :ok
   end
 end

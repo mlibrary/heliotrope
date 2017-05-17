@@ -87,5 +87,20 @@ describe MonographCatalogController do
         end
       end
     end
+    context 'when a monograph tombstone id' do
+      let(:press) { build(:press) }
+      let(:user) { create(:platform_admin) }
+      let(:monograph) { create(:monograph, user: user, press: press.subdomain) }
+      before do
+        monograph.destroy!
+        get :index, params: { id: monograph.id }
+      end
+      it do
+        # The HTTP response status code 302 Found is a common way of performing URL redirection.
+        expect(response).to have_http_status(:found)
+        # raise CanCan::AccessDenied currently redirects to root_url
+        expect(response.header["Location"]).to match "http://test.host/"
+      end
+    end
   end # #index
 end
