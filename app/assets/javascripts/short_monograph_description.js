@@ -26,15 +26,15 @@ jQuery($(document).on('turbolinks:load', function (){
 
         // Determine index of where to slice element n
         var index = content.length - (length - threshold); // first guess
-        var regexp = /<.+>.+<\/.+>/g;
-        var buffer;
-        while (buffer = regexp.exec(content)) {
-          if (index < buffer.index) {
-            break;
+        var regexp = /<.+>.+<\/.+>/g; // match mark up
+        var markup;
+        while (markup = regexp.exec(content)) {
+          if (index < markup.index) { // outside markup
+            break; // slice before word
           }
-          else if (index < regexp.lastIndex) {
-            index = buffer.index;
-            break;
+          else if (index < regexp.lastIndex) { // inside markup
+            index = markup.index;
+            break; // slice before markup
           }
         }
         while ((content.charAt(index) != ' ') && (index > 0)) index--; // slice on space
@@ -47,11 +47,11 @@ jQuery($(document).on('turbolinks:load', function (){
         } else {
           $clone[0].innerHTML = content.slice(0,index);
         }
-        $clone[0].append(' ...');
 
         // Create less span and append truncated clone of element n
         $less = $('<span></span>');
         $less.append($clone[0]);
+        $less.append(' ...');
         $(this).append($less);
         $(this).append(' <a href="#" class="more"> More >></a>');
 
