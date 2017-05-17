@@ -265,22 +265,20 @@ footer.press {
       .thumbnail {
         width: 100%;
         padding: 1em;
+        text-align: center;
 
-        a:first-child {
-          text-align: center;
-        }
-
-        .external-resource-gallery {
+        .external-resource-icon {
           font-size: 9em;
         }
 
       }
       .caption {
         display: inline-block;
+        text-align: left;
+      }
 
-        .external-resource-link {
-          text-align: center;
-        }
+      .external-resource-link {
+        text-align: center;
       }
     }
   }

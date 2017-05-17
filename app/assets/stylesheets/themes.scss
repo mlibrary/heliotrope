@@ -1097,7 +1097,7 @@ $psu-gray-1: #3F4550;
   .pagination {
     @include proxima-nova;
      li a, li span {
-       color: $psu-brand-accent;
+       color: $psu-button-foreground;
      }
 
      .active>a,
@@ -1108,7 +1108,7 @@ $psu-gray-1: #3F4550;
      .active>span:focus {
        background-color: $psu-brand-accent;
        border-color: $psu-brand-accent;
-       color: $psu-white;
+       color: $psu-button-foreground;
      }
   }
 
