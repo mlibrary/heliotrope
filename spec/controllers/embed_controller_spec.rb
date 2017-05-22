@@ -44,8 +44,25 @@ RSpec.describe EmbedController, type: :controller do
         allow(CurationConcerns::PresenterFactory).to receive(:build_presenters).with([obj.id], CurationConcerns::FileSetPresenter, anything).and_return([presenter])
         get :show, params: { hdl: hdl }
       end
-      it { expect(response).to_not have_http_status(:unauthorized) }
-      it { expect(response).to be_success }
+      it do
+        expect(response).to_not have_http_status(:unauthorized)
+        expect(response).to be_success
+      end
+    end
+
+    context 'tombstone' do
+      let(:hdl) { 'hdl' }
+
+      before do
+        allow(HandleService).to receive(:object).with(hdl).and_raise(Ldp::Gone)
+        get :show, params: { hdl: hdl }
+      end
+      it do
+        # The HTTP response status code 302 Found is a common way of performing URL redirection.
+        expect(response).to have_http_status(:found)
+        # raise CanCan::AccessDenied currently redirects to root_url
+        expect(response.header["Location"]).to match "http://test.host/"
+      end
     end
   end
 end

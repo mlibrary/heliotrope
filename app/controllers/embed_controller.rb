@@ -11,5 +11,7 @@ class EmbedController < ApplicationController
     else
       render layout: false
     end
+  rescue Ldp::Gone # tombstone
+    raise CanCan::AccessDenied
   end
 end
