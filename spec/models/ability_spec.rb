@@ -47,6 +47,7 @@ describe Ability do
       is_expected.to be_able_to(:update, role)
       is_expected.to be_able_to(:destroy, role)
 
+      is_expected.to be_able_to(:create, Press.new)
       is_expected.to be_able_to(:update, press)
       is_expected.to be_able_to(:manage, sub_brand)
     end
@@ -107,6 +108,7 @@ describe Ability do
     let(:current_user) { create(:press_admin, press: my_press) }
 
     it do
+      is_expected.to_not be_able_to(:create, Press.new)
       is_expected.to     be_able_to(:update, my_press)
       is_expected.to_not be_able_to(:update, other_press)
       is_expected.to     be_able_to(:manage, my_sub_brand)
@@ -203,6 +205,7 @@ describe Ability do
     let(:monograph_for_my_press) { Monograph.new(press: my_press.subdomain) }
 
     it do
+      is_expected.to_not be_able_to(:create, Press.new)
       is_expected.to_not be_able_to(:update, my_press)
       is_expected.to_not be_able_to(:create, monograph_for_my_press)
       is_expected.to_not be_able_to(:manage, my_sub_brand)
@@ -271,6 +274,7 @@ describe Ability do
 
     context "presses" do
       it do
+        is_expected.to_not be_able_to(:create, Press.new)
         is_expected.to     be_able_to(:index, Press)
         is_expected.to     be_able_to(:read, press)
         is_expected.to_not be_able_to(:update, press)

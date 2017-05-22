@@ -72,6 +72,8 @@ Rails.application.routes.draw do
   end
 
   get '/robots.txt' => 'robots#robots'
+
+  resources :presses, only: %i[new create edit update]
   get '/presses' => 'presses#index'
 
   get '/:subdomain', controller: :press_catalog, action: :index, as: :press_catalog

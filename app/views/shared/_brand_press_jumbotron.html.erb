@@ -1,12 +1,12 @@
 <!-- Main jumbotron for a primary heading image -->
     <div class="jumbotron">
       <div class="container">
-        <% if @press.logo_path %>
+        <% if @press.logo_path && !@press.new_record? %>
           <div class="logo pull-left">
             <%= image_tag @press.logo_path, alt: @press.name %>
           </div>
         <% end %>
 
-        <p class="lead"><%= render_markdown @press.description %></p>
+        <p class="lead"><%= render_markdown @press.description if @press.description.present? %></p>
       </div>
     </div>

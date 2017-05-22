@@ -1,6 +1,6 @@
 <% include_works_link ||= can_ever_create_works? %>
 <% include_collections_link ||= can?(:create, ::Collection) %>
-<% include_sub_brand_link ||= @press.present? #&& can?(:update, @press) %>
+<% include_sub_brand_link ||= @press.present? && !@press.new_record? #&& can?(:update, @press) %>
 
 <% if include_works_link || include_collections_link || include_sub_brand_link %>
   <ul class="nav navbar-nav">

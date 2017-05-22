@@ -8,6 +8,9 @@ en:
       # You can uncomment the line below if you need to overwrite the whole required html.
       # When using html, text and mark won't be used.
       # html: '<abbr title="required">*</abbr>'
+      # the above text/required values are being ignored. Some interplay with Devise?
+      # http://stackoverflow.com/questions/7650689/how-to-disable-asterisk-on-forms-required-fields/26723121
+      html: '*'
     error_notification:
       default_message: "Please review the problems below:"
     # Examples

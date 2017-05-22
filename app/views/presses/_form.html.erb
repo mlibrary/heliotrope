@@ -1,0 +1,23 @@
+<%= simple_form_for @press  do |f| %>
+    <% if @press.errors.any? %>
+        <div id="error_explanation">
+          <h2><%= pluralize(@press.errors.count, "error") %> prohibited this press from being saved:</h2>
+
+          <ul>
+            <% @press.errors.full_messages.each do |message| %>
+                <li><%= message %></li>
+            <% end %>
+          </ul>
+        </div>
+    <% end %>
+  <%= f.input :name, label: 'Publisher Name', required: true %>
+  <%= f.input :subdomain, label: 'fulcrum.org Subdomain', required: true %>
+  <%= f.input :description, required: true %>
+  <%= f.input :logo_path, label: 'Logo Path', required: true %>
+  <%= f.input :press_url, label: 'Publisher\'s Current Website Address', required: true %>
+  <%= f.input :google_analytics, label: 'Google Analytics Tracking ID', required: true %>
+  <%= f.input :typekit, label: 'Typekit ID' %>
+  <%= f.input :footer_block_a %>
+  <%= f.input :footer_block_c %>
+  <%= f.submit label: 'Save Publisher' %>
+<% end %>

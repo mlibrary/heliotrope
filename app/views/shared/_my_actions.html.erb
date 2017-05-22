@@ -33,7 +33,7 @@
         <li><%= link_to "Jobs", main_app.resque_web_path %></li>
       <% end %>
 
-      <% if show_users_link %>
+      <% if show_users_link && !@press.new_record? %>
         <li><%= link_to "Users", main_app.press_roles_path(@press) %></li>
       <% end %>
 
