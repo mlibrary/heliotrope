@@ -14,11 +14,8 @@
     cozy.control.contents({ region: 'top.toolbar.left' }).addTo(reader);
     cozy.control.widget.panel({
         region: 'top.toolbar.left',
-        template: `<div class="permalink-label"><span class="u-screenreader">Permalink</span><form><input data-slot="title" type="text" id="permalink" value="" readonly="readonly" onclick="this.select(); document.execCommand('copy');"></form></div>`,
-        states: [{
-            stateName: 'doi',
-            title: "<%= @citable_link %>"
-        }]
+        data: { title: "<%= @citable_link %>"}, 
+	template: `<div class="permalink-label"><span class="u-screenreader">Permalink</span><form><input data-slot="title" type="text" id="permalink" value="" readonly="readonly" onclick="this.select(); document.execCommand('copy');"></form></div>`,
     }).addTo(reader);
     cozy.control.preferences({ region: 'top.toolbar.right' }).addTo(reader);
     // cozy.control.pageFirst({ region: 'left.sidebar' }).addTo(reader);
