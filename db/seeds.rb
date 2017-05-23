@@ -88,6 +88,6 @@ unless Rails.env.test?
   michigan
   minnesota
   northwestern
-  pennstate unless bulleit?
+  pennstate
 end
 
