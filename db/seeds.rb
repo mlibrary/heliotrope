@@ -66,6 +66,19 @@ def northwestern
   puts "updated/created northwestern"
 end
 
+def nyupress
+  Press.where(name: 'NYU Press').first_or_initialize.tap do |press|
+    press.logo_path = 'nyupress.png'
+    press.description = "Making common cause with the best and the brightest, the great and the good, New York University Press aspires to nothing less than the transformation of the intellectual and cultural landscape. Infused with the conviction that the ideas of the academy matter, we foster knowledge that resonates within and beyond the walls of the university.<br/><br/>[nyupress.fulcrum.org](http://nyupress.fulcrum.org) is the home of supplemental content for select NYU Press books. You can find the full catalog of NYU Press titles on the [publisher’s website](https://nyupress.org)."
+    press.subdomain = 'nyupress'
+    press.press_url = 'https://nyupress.org'
+    press.typekit = 'uup5rjt'
+    press.google_analytics = 'UA-77847516-11' if bulleit?
+    press.save
+  end
+  puts "updated/created nyupress"
+end
+
 def pennstate
   Press.where(name: 'Penn State University Press').first_or_initialize.tap do |press|
     press.logo_path = 'pennstate.png'
@@ -88,6 +101,6 @@ unless Rails.env.test?
   michigan
   minnesota
   northwestern
+  nyupress unless bulleit?
   pennstate
 end
-
