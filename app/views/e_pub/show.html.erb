@@ -4,25 +4,20 @@
   <div id="reader"></div>
   <script type="text/javascript">
     var reader = cozy.reader('reader', { href: "<%= "#{main_app.epub_url}/#{params[:id]}" %>" });
-    cozy.control.widget({
-      region: 'top.header.left',
-      template: `<div class="btn btn-default"><span class="u-screenreader">Close</span><form><input data-slot="title" type="button" id="close" value="" readonly="readonly" onclick='window.location = "<%= "#{@back_link}" %>";'></form></div>`,
-      states: [{
-        stateName: 'close',
-        title: "X"
-      }]
+    cozy.control.widget.button({
+	    region: 'top.header.left',
+	    data: { label: '<i class="icon-x oi" data-glyph="x" aria-hidden="true"></i>'},
+	    template: `<button class="button--sm cozy-close" data-toggle="button" data-slot="label"></button>`,
+	    onClick: function() { window.location = "<%= "#{@back_link}" %>"; }
     }).addTo(reader);
     cozy.control.title({ region: 'top.header.left' }).addTo(reader);
     cozy.control.contents({ region: 'top.toolbar.left' }).addTo(reader);
-    cozy.control.widget({
+    cozy.control.widget.panel({
         region: 'top.toolbar.left',
-        template: `<div class="permalink-label"><span class="u-screenreader">Permalink</span><form><input data-slot="title" type="text" id="permalink" value="" readonly="readonly" onclick="this.select(); document.execCommand('copy');"></form></div>`,
-        states: [{
-            stateName: 'doi',
-            title: "<%= @citable_link %>"
-        }]
+        data: { title: "<%= @citable_link %>"}, 
+	template: `<div class="permalink-label"><span class="u-screenreader">Permalink</span><form><input data-slot="title" type="text" id="permalink" value="" readonly="readonly" onclick="this.select(); document.execCommand('copy');"></form></div>`,
     }).addTo(reader);
-    cozy.control.preferences({ region: 'top.header.right' }).addTo(reader);
+    cozy.control.preferences({ region: 'top.toolbar.right' }).addTo(reader);
     // cozy.control.pageFirst({ region: 'left.sidebar' }).addTo(reader);
     cozy.control.pagePrevious({ region: 'left.sidebar' }).addTo(reader);
     cozy.control.pageNext({ region: 'right.sidebar' }).addTo(reader);
