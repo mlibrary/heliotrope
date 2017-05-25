@@ -24,15 +24,15 @@ feature 'FileSet Browse' do
 
     scenario 'navigation arrows' do
       # no arrow links from representative FileSet (cover)
-      visit curation_concerns_file_set_path(monograph.ordered_members.to_a[0].id)
+      visit hyrax_file_set_path(monograph.ordered_members.to_a[0].id)
       expect(page).to_not have_link(nil, href: monograph.ordered_members.to_a[1].id)
 
       # no arrow link to representative FileSet
-      visit curation_concerns_file_set_path(monograph.ordered_members.to_a[1].id)
+      visit hyrax_file_set_path(monograph.ordered_members.to_a[1].id)
       expect(page).to_not have_link(nil, href: monograph.ordered_members.to_a[0].id)
 
       # arrow links show on non-representative monograph FileSets
-      visit curation_concerns_file_set_path(monograph.ordered_members.to_a[2].id)
+      visit hyrax_file_set_path(monograph.ordered_members.to_a[2].id)
       expect(page).to have_link('Previous', href: monograph.ordered_members.to_a[1].id)
       expect(page).to have_link('Next', href: monograph.ordered_members.to_a[3].id)
     end

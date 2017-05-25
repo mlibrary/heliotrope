@@ -1,5 +1,5 @@
 <% if Hyrax.config.display_media_download_link? && file_set.allow_download? %>
-    <%= link_to main_app.download_path(file_set), target: "_new", title: "Download the document" do %>
+    <%= link_to hyrax.download_path(file_set), target: "_new", title: "Download the document" do %>
         <figure>
             <%= image_tag "default.png", alt: "No preview available", class: "img-responsive" %>
             <figcaption>Download the document</figcaption>

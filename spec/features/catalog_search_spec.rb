@@ -11,7 +11,7 @@ feature 'Catalog search' do
       visit search_catalog_path
 
       # There should be this many search results total:
-      expect(page).to have_selector('#documents .document', count: 1)
+      expect(page).to have_selector('.catalog .document', count: 1)
 
       expect(page).to have_link public_monograph.title.first
       expect(page).not_to have_link private_monograph.title.first

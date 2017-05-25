@@ -23,4 +23,10 @@ class SolrDocument
 
   # Do content negotiation for AF models.
   use_extension(Hydra::ContentNegotiation)
+
+  # Override hyrax
+  def itemtype
+    return 'http://schema.org/CreativeWork' if resource_type.blank?
+    Hyrax::ResourceTypesService.microdata_type(resource_type.first)
+  end
 end
