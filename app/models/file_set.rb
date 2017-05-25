@@ -130,4 +130,10 @@ class FileSet < ActiveFedora::Base
   property :use_crossref_xml, predicate: ::RDF::URI.new('http://fulcrum.org/ns#useCrossrefXml'), multiple: false do |index|
     index.as :symbol
   end
+
+  # Cast to a SolrDocument by querying from Solr
+  # Hyrax Heliotrope override: cast to an actual presenter, not just a solr_doc
+  def to_presenter
+    ::Hyrax::FileSetPresenter.new(CatalogController.new.fetch(id).last, nil)
+  end
 end
