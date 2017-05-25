@@ -106,7 +106,7 @@ RSpec.describe Hyrax::FileSetPresenter do
       allow(presenter).to receive(:width).and_return('width')
       allow(presenter).to receive(:height).and_return('height')
     end
-    it { expect(presenter.embed_code).to eq "<iframe src='http://#{Settings.host}/embed?locale=en;hdl=#{HandleService.handle(presenter)}' height='#{presenter.height}' width='#{presenter.width}'>Your browser doesn't support iframes!</iframe>" }
+    it { expect(presenter.embed_code).to eq "<iframe src='http://#{Settings.host}/embed?hdl=#{CGI.escape(HandleService.handle(presenter))}' height='#{presenter.height}' width='#{presenter.width}'>Your browser doesn't support iframes!</iframe>" }
   end
 
   describe '#epub?' do

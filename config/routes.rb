@@ -58,6 +58,9 @@ Rails.application.routes.draw do
       end
     end
   end
+
+  mount Qa::Engine => '/authorities'
+
   resources :solr_documents, only: [:show], path: '/catalog', controller: 'catalog' do
     concerns :exportable
   end

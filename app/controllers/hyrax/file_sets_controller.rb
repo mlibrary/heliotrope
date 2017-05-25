@@ -87,7 +87,7 @@ module Hyrax
       elsif empty_file?(file)
         render_json_response(response_type: :unprocessable_entity, options: { errors: { files: "#{file.original_filename} has no content! (Zero length file)" }, description: t('curation_concerns.api.unprocessable_entity.empty_file') })
       else
-        process_file(file)
+        process_file(actor, file)
       end
     rescue RSolr::Error::Http => error
       logger.error "FileSetController::create rescued #{error.class}\n\t#{error}\n #{error.backtrace.join("\n")}\n\n"

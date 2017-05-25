@@ -33,10 +33,6 @@ describe 'Routes', type: :routing do
     it { expect(get: 'concern/monographs/new').to route_to(controller: 'hyrax/monographs', action: 'new') }
   end
 
-  describe 'Download' do
-    it { expect(get: '/downloads/9').to route_to(controller: 'hyrax/downloads', action: 'show', id: '9') }
-  end
-
   describe 'for Users' do
     it { expect(get: '/users').to route_to(controller: 'users', action: 'index') }
     it { expect(get: '/users/id').to route_to(controller: 'users', action: 'show', id: 'id') }
