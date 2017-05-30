@@ -16,7 +16,7 @@ feature 'Monograph Catalog Search' do
 
   it 'has the correct search field form' do
     visit monograph_catalog_path(monograph.id)
-    expect(page).to have_selector("form[action='/concern/monographs/#{monograph.id}']")
+    expect(page).to have_selector("form[action='/concern/monographs/#{monograph.id}?locale=en']")
   end
 
   scenario 'searches the monograph catalog page' do

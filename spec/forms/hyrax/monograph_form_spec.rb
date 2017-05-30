@@ -13,18 +13,12 @@ describe Hyrax::MonographForm do
   describe 'terms' do
     subject { described_class.terms }
     it { is_expected.to eq %i[title
-                              creator
                               contributor
                               description
-                              keyword
                               rights
-                              publisher
                               date_created
                               subject
                               language
-                              identifier
-                              based_near
-                              related_url
                               representative_id
                               thumbnail_id
                               files
@@ -36,7 +30,6 @@ describe Hyrax::MonographForm do
                               visibility_after_lease
                               visibility
                               ordered_member_ids
-                              source
                               in_works_ids
                               member_of_collection_ids
                               admin_set_id
@@ -45,19 +38,19 @@ describe Hyrax::MonographForm do
                               isbn
                               isbn_paper
                               isbn_ebook
+                              primary_editor_family_name
+                              primary_editor_given_name
                               editor
                               copyright_holder
                               buy_url
                               sub_brand
                               creator_family_name
-                              creator_given_name
-                              primary_editor_family_name
-                              primary_editor_given_name] }
+                              creator_given_name] }
   end
 
   describe 'required_fields' do
     subject { described_class.required_fields }
-    it { is_expected.to eq %i[title press] }
+    it { is_expected.to eq %i[title press creator_family_name creator_given_name description] }
   end
 
   describe 'select_press' do
