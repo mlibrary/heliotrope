@@ -26,6 +26,13 @@ RSpec.configure do |config|
   config.before :each do
     ActiveFedora::Cleaner.clean! if ActiveFedora::Base.count > 0
   end
+
+  config.after(:all) do
+    if Rails.env.test? || Rails.env.cucumber?
+      FileUtils.rm_rf(Dir[Rails.root.join('spec', 'support', 'uploads')])
+    end
+  end
+
   # rspec-expectations config goes here. You can use an alternate
   # assertion/expectation library such as wrong or the stdlib/minitest
   # assertions if you prefer.

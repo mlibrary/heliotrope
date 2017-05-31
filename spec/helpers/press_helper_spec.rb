@@ -48,12 +48,13 @@ describe PressHelper do
       end
     end
 
-    context "when a press doesn't have a google_analytics id" do
-      let(:press) { create(:press, subdomain: "Big Brown Book Barn") }
-
-      it "returns nil" do
-        expect(google_analytics(press.subdomain)).to be_nil
-      end
-    end
+    # google_analytics is now required
+    # context "when a press doesn't have a google_analytics id" do
+    #   let(:press) { create(:press, subdomain: "Big Brown Book Barn") }
+    #
+    #   it "returns nil" do
+    #     expect(google_analytics(press.subdomain)).to be_nil
+    #   end
+    # end
   end
 end

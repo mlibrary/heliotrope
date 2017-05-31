@@ -19,7 +19,9 @@ module PressHelper
 
   def logo(subdomain)
     press = Press.where(subdomain: subdomain).first
-    press.logo_path if press.present?
+    # the url method puts a forward-slash here that...
+    # doesn't suit image_tag. Removing it.
+    press.logo_path.url.sub('/', '') if press.present?
   end
 
   def footer_block_a(subdomain)

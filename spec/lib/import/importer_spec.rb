@@ -8,7 +8,7 @@ describe Import::Importer do
   let(:private_vis) { Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE }
 
   let(:root_dir) { File.join(fixture_path, 'csv', 'import_sections') }
-  let(:press) { Press.find_or_create_by(subdomain: 'umich') }
+  let(:press) { create(:press, subdomain: 'umich') }
   let(:importer) { described_class.new(root_dir, press.subdomain, visibility) }
   let(:visibility) { public_vis }
 

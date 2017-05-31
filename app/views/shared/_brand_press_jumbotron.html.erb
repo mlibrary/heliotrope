@@ -3,7 +3,7 @@
       <div class="container">
         <% if @press.logo_path && !@press.new_record? %>
           <div class="logo pull-left">
-            <%= image_tag @press.logo_path, alt: @press.name %>
+            <%= image_tag logo(@press.subdomain), alt: @press.name %>
           </div>
         <% end %>
 
