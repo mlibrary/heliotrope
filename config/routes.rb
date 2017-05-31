@@ -40,6 +40,8 @@ Rails.application.routes.draw do
   get 'roles', controller: :roles, action: :index2, as: :roles
   get 'roles/:id', controller: :roles, action: :show, as: :role
 
+  get '/', to: redirect('/index.html')
+
   mount Hyrax::Engine, at: '/'
 
   get 'concern/monographs/new', controller: 'hyrax/monographs', action: :new
