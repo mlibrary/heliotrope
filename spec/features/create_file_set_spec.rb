@@ -76,7 +76,7 @@ feature 'Create a file set' do
       click_button 'Attach to Monograph'
 
       # On Monograph catalog page
-      expect(page).to have_current_path(hyrax_monograph_path(monograph), locale: i18n.locale)
+      expect(page).to have_current_path(hyrax_monograph_path(monograph, locale: 'en'))
       click_link fs_title
 
       # On FileSet Page

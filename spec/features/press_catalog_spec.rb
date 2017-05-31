@@ -55,10 +55,10 @@ feature 'Press Catalog' do
         expect(page).to_not have_link blue.title.first
         expect(page).to_not have_link colors.title.first
 
-        expect(page).to have_link("View book materials", href: monograph_catalog_path(red))
+        expect(page).to have_link("View book materials", href: monograph_catalog_path(red, locale: 'en'))
         # thumbnail link
         expect(page).to have_selector("img[alt='#{red.title[0]}']")
-        expect(page).to have_link('', href: monograph_catalog_path(red))
+        expect(page).to have_link('', href: monograph_catalog_path(red, locale: 'en'))
 
         # Selectors needed for assets/javascripts/ga_event_tracking.js
         # If these change, fix here then update ga_event_tracking.js
