@@ -560,6 +560,27 @@ a > g, a > path {
   color: #ffffff;
   background-position: 0; }
 
+.promo {
+  margin-top: 2em; }
+
+.video {
+  height: 0;
+  padding-top: 25px;
+  padding-bottom: 67.5%;
+  margin-bottom: 10px;
+  position: relative;
+  overflow: hidden; }
+
+.video.widescreen {
+  padding-bottom: 56.34%; }
+
+.video embed, .video iframe, .video object, .video video {
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  position: absolute; }
+
 .icon {
   font-size: 2.4rem; }
 
@@ -645,7 +666,10 @@ footer.page-footer {
     top: 40%; }
 
   #index-banner .section, .parallax-container .section.sponsor {
-    top: -5%; } }
+    top: -5%; }
+
+  #index-banner .section, .parallax-container .section.phases {
+    top: 0%; } }
 @media only screen and (max-width: 600px) {
   .nav-container, .nav-container .container, .nav-container .column {
     height: 3.07rem; }
