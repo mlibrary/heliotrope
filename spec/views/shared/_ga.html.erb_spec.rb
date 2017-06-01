@@ -15,10 +15,13 @@ describe 'shared/_ga.html.erb' do
     end
   end
 
+  let(:press) { create(:press, subdomain: 'bookcircus', google_analytics: 'TEST-PRESS-ID') }
+
   context "when there's a fulcrum google analytics id and a press google analytics id and we're on a press page" do
     it "renders google analytics javascript with the press google analytics id" do
       Rails.application.secrets.google_analytics_id = "TEST-ID"
-      @press = Press.create(subdomain: 'bookcircus', google_analytics: 'TEST-PRESS-ID')
+      # create this above where the factory can fill out required fields
+      @press = press
       render
       expect(rendered).to match(/TEST-PRESS-ID/)
     end

@@ -1,5 +1,5 @@
 <div class="col-sm-4 press-block-a col">
-  <% if footer_block_a(press_subdomain) %>
+  <% if footer_block_a(press_subdomain).present? %>
     <p><%= render_markdown footer_block_a(press_subdomain) %></p>
   <% else %>
     <div class="crop">

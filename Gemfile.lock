@@ -142,6 +142,10 @@ GEM
       rack (>= 1.0.0)
       rack-test (>= 0.5.4)
       xpath (~> 2.0)
+    carrierwave (1.1.0)
+      activemodel (>= 4.0.0)
+      activesupport (>= 4.0.0)
+      mime-types (>= 1.16)
     clamav (0.4.1)
     clipboard-rails (1.6.1)
     coderay (1.1.1)
@@ -703,6 +707,7 @@ DEPENDENCIES
   active-fedora (~> 11.1.5)!
   byebug
   capybara
+  carrierwave (~> 1.1.0)
   clamav
   coffee-rails (~> 4.1.0)
   config

@@ -87,6 +87,7 @@ group :development do
   gem 'spring'
 end
 
+gem 'carrierwave', '~> 1.1.0'
 gem 'devise'
 gem 'devise-guests', '~> 0.3'
 # gem 'rsolr', '~> 1.1.2'

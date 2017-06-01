@@ -13,11 +13,14 @@
   <%= f.input :name, label: 'Publisher Name', required: true %>
   <%= f.input :subdomain, label: 'fulcrum.org Subdomain', required: true %>
   <%= f.input :description, required: true %>
-  <%= f.input :logo_path, label: 'Logo Path', required: true %>
+  <div class="form-group string required logo_path">
+    <label class="control-label string required" for="logo_path">* Upload a Logo</label>
+    <%= f.file_field :logo_path, required: true %>
+  </div>
   <%= f.input :press_url, label: 'Publisher\'s Current Website Address', required: true %>
   <%= f.input :google_analytics, label: 'Google Analytics Tracking ID', required: true %>
   <%= f.input :typekit, label: 'Typekit ID' %>
-  <%= f.input :footer_block_a %>
-  <%= f.input :footer_block_c %>
+  <%= f.input :footer_block_a, include_blank: false, include_hidden: false %>
+  <%= f.input :footer_block_c, include_blank: false, include_hidden: false %>
   <%= f.submit label: 'Save Publisher' %>
 <% end %>
