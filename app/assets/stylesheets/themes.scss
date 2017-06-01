@@ -952,8 +952,8 @@ $nyu-gray-2: #342f2e;
 
   .btn-default:hover,
   .btn-default:active {
-    background-color: $nyu-brand-accent;
-    border-color: $nyu-brand-accent;
+    background-color: $nyu-brand-color-2;
+    border-color: $nyu-brand-color-2;
     color: $nyu-brand-color;
   }
 
@@ -964,8 +964,9 @@ $nyu-gray-2: #342f2e;
 
   #manage-monograph-button:hover,
   #manage-monograph-button:active {
-    background-color: $nyu-brand-accent;
+    background-color: $nyu-brand-color-2;
     color: $nyu-brand-color;
+    border-color: $nyu-brand-color-2;
   }
 
   // navigation menu
@@ -977,20 +978,23 @@ $nyu-gray-2: #342f2e;
 
   #brand-bar {
     background-color: $nyu-brand-color;
+    height: 65px;
 
     .container {
       height: 100%;
     }
 
-    .navbar-header {
-      background-image: image-url("nyupress.png");
-      background-position: 0px 11px;
-      background-repeat: no-repeat;
-      display: block;
+    form.navbar-form {
+      margin-top: 16px;
     }
 
     .navbar-brand {
-      color: $nyu-brand-accent;
+      color: transparent;
+      width: 350px;
+      margin-top: 11px;
+      background-image: image-url("nyupress.png");
+      background-repeat: no-repeat;
+      display: block;
     }
 
     .navbar-nav {
@@ -999,6 +1003,10 @@ $nyu-gray-2: #342f2e;
       a.user-display-name {
           color: $nyu-brand-accent;
       }
+    }
+
+    .navbar-right {
+      padding-top: 9px;
     }
 
     button.search-submit {
@@ -1063,7 +1071,7 @@ $nyu-gray-2: #342f2e;
     a,
     a:hover,
     a:active {
-      color: $nyu-brand-color;
+      color: transparent;
     }
 
     .press-block-a,
@@ -1071,8 +1079,14 @@ $nyu-gray-2: #342f2e;
       background-color: $nyu-brand-color-2;
 
       .crop {
+        width: 40px;
+        height: 40px;
+        overflow: hidden;
+
         img {
-          display: none;
+            width: 296px;
+            height: 40px;
+            max-width: initial;
         }
       }
     }
