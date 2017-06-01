@@ -898,6 +898,202 @@ $fulcrum-light-2: #bec4cc;
 
 ///////////////////////////////////////////////
 //
+// NYU Press
+//
+///////////////////////////////////////////////
+// colors
+$nyu-brand-color: #57068c;
+$nyu-brand-accent: #fff;
+$nyu-brand-color-2: #d7d0db;
+$nyu-link: #57068c;
+$nyu-white: #fff;
+$nyu-jumbotron: #f5f5f5;
+$nyu-gray-1: #3f4550;
+$nyu-gray-2: #342f2e;
+
+
+// typography
+@mixin adelle-sans {
+  font-family: "adelle-sans", Helvetica, sans-serif;
+}
+
+.nyupress {
+
+  // typography
+  @include adelle-sans;
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5 {
+    font-weight: 600;
+  }
+
+  // links
+  a {
+    color: $nyu-link;
+  }
+
+  a:hover,
+  a:active {
+  }
+
+  // buttons
+  .btn {
+    @include adelle-sans;
+  }
+
+  .btn-default {
+    background-color: $nyu-brand-color;
+    border-color: $nyu-brand-color;
+    color: $nyu-brand-accent;
+  }
+
+  .btn-default:hover,
+  .btn-default:active {
+    background-color: $nyu-brand-accent;
+    border-color: $nyu-brand-accent;
+    color: $nyu-brand-color;
+  }
+
+  #manage-monograph-button {
+    color: $nyu-brand-accent;
+    background-color: $nyu-brand-color;
+  }
+
+  #manage-monograph-button:hover,
+  #manage-monograph-button:active {
+    background-color: $nyu-brand-accent;
+    color: $nyu-brand-color;
+  }
+
+  // navigation menu
+  .navbar-default .navbar-nav > .open > a,
+  .navbar-default .navbar-nav > .open > a:hover,
+  .navbar-default .navbar-nav > .open > a:focus {
+    background-color: $nyu-brand-accent;
+  }
+
+  #brand-bar {
+    background-color: $nyu-brand-color;
+
+    .container {
+      height: 100%;
+    }
+
+    .navbar-header {
+      background-image: image-url("nyupress.png");
+      background-position: 0px 11px;
+      background-repeat: no-repeat;
+      display: block;
+    }
+
+    .navbar-brand {
+      color: $nyu-brand-accent;
+    }
+
+    .navbar-nav {
+      a#add-content,
+      a.login,
+      a.user-display-name {
+          color: $nyu-brand-accent;
+      }
+    }
+
+    button.search-submit {
+      background-color: $nyu-jumbotron;
+      border-color: $nyu-jumbotron;
+      color: $nyu-brand-color;
+    }
+
+  }
+
+  // press catalog
+
+  // jumbotron
+  .jumbotron {
+    background-color: $nyu-jumbotron;
+    padding-top: 20px;
+    padding-bottom: 28px;
+
+    .logo {
+
+      img {
+        display: none;
+      }
+
+    }
+
+  }
+
+  .press {
+
+    h2:nth-child(2) {
+      margin-bottom: 1.5em;
+    }
+
+    .document,
+    .documentHeader {
+      margin-bottom: 2em;
+    }
+  }
+
+  // pagination
+
+  .pagination {
+     li a, li span {
+       color: $nyu-brand-color;
+     }
+
+     .active>a,
+     .active>a:hover,
+     .active>a:focus,
+     .active>span,
+     .active>span:hover,
+     .active>span:focus {
+       background-color: $nyu-brand-color;
+       border-color: $nyu-brand-color;
+       color: $nyu-brand-accent;
+     }
+  }
+
+  //footer
+  footer {
+    a,
+    a:hover,
+    a:active {
+      color: $nyu-brand-color;
+    }
+
+    .press-block-a,
+    .press-block-b {
+      background-color: $nyu-brand-color-2;
+
+      .crop {
+        img {
+          display: none;
+        }
+      }
+    }
+
+    .press-block-c {
+      background-color: $nyu-brand-color;
+      color: $nyu-brand-accent;
+    }
+
+    .platform {
+      background-color: $nyu-gray-2;
+      a,
+      a:hover,
+      a:active {
+        color: $nyu-brand-accent;
+      }
+    }
+  }
+}
+///////////////////////////////////////////////
+//
 // Penn State University Press
 //
 ///////////////////////////////////////////////
