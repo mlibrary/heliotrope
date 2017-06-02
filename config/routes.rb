@@ -93,5 +93,9 @@ Rails.application.routes.draw do
     end
   end
 
+  # TODO: Used in dev only? If apache is in front I don't think this ever happens?
+  # Might fix #379 but need to check
+  get '/favicon/favicon.ico', to: redirect('/favicon.ico')
+
   root 'presses#index'
 end

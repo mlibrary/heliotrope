@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe DownloadsController, type: :controller do
+RSpec.describe Hyrax::DownloadsController, type: :controller do
   let(:user) { create(:user) }
 
   before do
