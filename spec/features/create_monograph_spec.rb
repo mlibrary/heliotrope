@@ -13,7 +13,7 @@ feature 'Create a monograph' do
 
     scenario do
       visit new_curation_concerns_monograph_path
-      fill_in 'Title', with: 'Test monograph'
+      fill_in 'monograph[title][]', with: 'Test monograph'
       fill_in 'Author (last name)', with: 'Johns'
       fill_in 'Author (first name)', with: 'Jimmy'
       fill_in 'Additional Authors', with: 'Sub Way'

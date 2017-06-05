@@ -7,4 +7,7 @@
   <%= f.input :creator_given_name, label: t('author_first_name') %>
   <%= f.input :contributor, as: :multi_value, input_html: { class: 'form-control' }, label: t('additional_authors') %>
   <%= f.input :description, as: :multi_value, input_html: { rows: '14', type: 'textarea'} %>
+  <%= f.input :section_titles, as: :text, label: t('section_titles'), input_html: { rows: '14',
+                                                                                    class: 'form-control required',
+                                                                                    placeholder: 'Enter *all* section titles, one per line' } %>
 </fieldset>

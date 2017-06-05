@@ -15,7 +15,8 @@ feature 'Create a file set' do
                             creator_family_name: 'Johns',
                             creator_given_name: 'Jimmy',
                             contributor: ['Sub Way'],
-                            date_published: ['Oct 20th'])
+                            date_published: ['Oct 20th'],
+                            section_titles: "C 1\nC 2\nTest section with _Italicized Title_ therein\nC 3\nC 4")
       m.ordered_members << cover
       m.save!
       m
@@ -61,7 +62,12 @@ feature 'Create a file set' do
       fill_in 'Language', with: 'English'
       fill_in 'Transcript', with: 'This is what is transcribed for you to read'
       fill_in 'Translation(s)', with: 'Here is what that&nbsp;means'
+
+      # section_title is a multi-value field but it's not possible to add another without js: true (Selenium)
+      # adding one now, will revisit the page to add the second section_title
+      expect(page).to have_css('input.file_set_section_title', count: 1)
       fill_in 'Related Section', with: 'Test section with _Italicized Title_ therein'
+
       fill_in 'Externally-Hosted Resource?', with: 'no3'
       fill_in 'Book Needs Handles?', with: 'yes'
       fill_in 'External URL/DOI', with: 'Handle'
@@ -75,15 +81,24 @@ feature 'Create a file set' do
       # Save the form
       click_button 'Attach to Monograph'
 
-      # On Monograph catalog page
+      # going back in to add a second section_title (seems easier than enabling JS for this test etc)
+      visit edit_curation_concerns_file_set_path(FileSet.where(title: fs_title).first.id)
+      expect(page).to have_css('input.file_set_section_title', count: 2)
+      page.all(:fillable_field, 'file_set[section_title][]').last.set('C 1')
+      click_button 'Update Attached File'
+
+      # Go to Monograph catalog page
+      click_link 'Back to Monograph'
       expect(page).to have_current_path(curation_concerns_monograph_path(monograph))
+      # order in FileSet's section_title has been taken from Monograph's section_titles
+      expect(page).to have_content 'From C 1 and Test section with Italicized Title therein'
+
       click_link fs_title
 
       # On FileSet Page
       # FileSet page also has authors
       expect(page).to have_content 'Jimmy Johns and Sub Way'
       expect(page).to have_content 'Test file set'
-      # expect(page).to have_content 'image'
       expect(page).to have_content 'This is a caption for the image'
       expect(page).to have_content 'University of Michigan'
       expect(page).to have_content 'Veggies es bonus vobis, external link proinde vos postulo essum magis internal link kohlrabi welsh onion daikon amaranth tatsoi tomatillo melon azuki bean garlic.'
@@ -91,27 +106,17 @@ feature 'Create a file set' do
       expect(page).to have_content 'FamilyName, GivenName'
       expect(page).to have_content 'Test Contributor'
       expect(page).to have_content 'circa sometime for the (premiere, Berlin, LOLZ!)'
-      # expect(page).to have_content '2000-01-01'
-      # expect(page).to have_content '2026-01-01'
       expect(page).to have_content 'Conor O\'Neill\'s'
       expect(page).to have_content 'English'
-      # expect(page).to have_content 'yes1'
       expect(page).to have_content 'This is what is transcribed for you to read'
       expect(page).to have_content 'Here is what that means'
       expect(page).to have_content 'A Nice Museum'
       expect(page).to have_content 'Unauthorized use prohibited. A Nice Museum.'
       expect(page.has_field?('Citable Link', with: 'http://hdl.handle.net/2027/fulcrum.this-is-a-handle')).to be true
-      # expect(page).to have_content 'yes1'
-      # expect(page).to have_content 'yes2'
-      # expect(page).to have_content 'yes3'
-      # expect(page).to have_content 'no1'
-      # expect(page).to have_content 'no2'
-      # expect(page).to have_content 'no3'
-      # expect(page).to have_content 'no4'
 
-      # check section title is present and renders italics/emphasis
-      section_title = page.first('.list-unstyled .section_title a').text
-      expect(section_title).to eq 'Test section with Italicized Title therein'
+      # order in FileSet's section_title has been taken from Monograph's section_titles
+      assert_equal page.all('.list-unstyled .section_title a').collect(&:text), ['C 1', 'Test section with Italicized Title therein']
+
       italicized_text = page.first('.list-unstyled .section_title a em').text
       expect(italicized_text).to eq 'Italicized Title'
 

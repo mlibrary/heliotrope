@@ -17,13 +17,30 @@ module CurationConcerns
              :primary_editor_full_name,
              to: :solr_document
 
-    # ASSUMPTION: Each FileSet record has only 1 section_title.
-    # If section_title has more than 1 value, the order of the
-    # titles is not guaranteed (because multi-value fields are
-    # unordered in fedora).  See the spec file for interesting
-    # test cases.
     def ordered_section_titles
-      ordered_member_docs.flat_map(&:section_title).uniq
+      # FileSets store their section_title as ActiveTriples::Relation, which does not preserve order.
+      # As a result they can't be relied on to give the correct order for their own sections, or sections as a whole.
+      # For this reason, we're adding section_titles to the monograph, where all sections are entered manually, giving
+      # canonical order (and later spelling etc) for FileSet sections.
+      # However, fileset_section_titles will make a useful fallback.
+      fileset_section_titles = ordered_member_docs.flat_map(&:section_title).uniq
+      manual_monograph_section_titles = solr_document.section_titles
+      if manual_monograph_section_titles.present?
+        if fileset_section_titles.count != manual_monograph_section_titles.count
+          Rails.logger.warn("Monograph #{id} has a section_titles count not matching its FileSets' unique section_titles")
+        end
+        manual_monograph_section_titles
+      else
+        fileset_section_titles
+      end
+    end
+
+    def display_section_titles(section_titles_in)
+      section_titles_out = []
+      ordered_section_titles.each do |ordered_title|
+        section_titles_in.each { |title| section_titles_out << ordered_title if title == ordered_title }
+      end
+      section_titles_out.blank? ? section_titles_in.to_sentence : section_titles_out.to_sentence
     end
 
     def sub_brand_links

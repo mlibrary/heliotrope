@@ -56,4 +56,8 @@ class Monograph < ActiveFedora::Base
   property :sub_brand, predicate: ::RDF::Vocab::MARCRelators.bsl do |index|
     index.as :symbol
   end
+
+  property :section_titles, predicate: ::RDF::Vocab::DC.tableOfContents, multiple: false do |index|
+    index.as :symbol
+  end
 end
