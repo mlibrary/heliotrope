@@ -6,6 +6,18 @@ def bulleit?
   false
 end
 
+def heb
+  Press.where(name: 'ACLS Humanities E-Book').first_or_initialize.tap do |press|
+    press.logo_path = 'heb.jpg'
+    press.description = 'ACLS Humanities E-Book (HEB) is an online collection of about 5,000 books of high quality in the humanities, accessible through institutional and individual subscription. These titles are offered by the ACLS in collaboration with thirty-one learned societies, over 100 contributing publishers, and the Michigan Publishing division at the University of Michigan Library. The result is an online, fully searchable collection of high-quality books in the Humanities, recommended and reviewed by scholars. These are works of major importance that remain vital to both scholars and advanced students, and are frequently cited in the literature. (See title list.) The collection features unlimited multi-user access and free, downloadable MARC records. HEB is available 24/7 on- and off-campus through standard web browsers.'
+    press.subdomain = 'heb'
+    press.press_url = 'http://www.humanitiesebook.org'
+    press.typekit = 'ynm6dns'
+    press.save
+  end
+  puts "updated/created heb"
+end
+
 def heliotrope
   Press.where(name: 'Heliotrope Press').first_or_initialize.tap do |press|
     press.subdomain = 'heliotrope'
@@ -96,6 +108,7 @@ end
 
 unless Rails.env.test?
   # add presses as they become ready for production
+  heb unless bulleit?
   heliotrope unless bulleit?
   indiana
   michigan
