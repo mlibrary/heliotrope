@@ -51,7 +51,8 @@ describe CurationConcerns::MonographForm do
                               creator_family_name
                               creator_given_name
                               primary_editor_family_name
-                              primary_editor_given_name] }
+                              primary_editor_given_name
+                              section_titles] }
   end
 
   describe 'required_fields' do

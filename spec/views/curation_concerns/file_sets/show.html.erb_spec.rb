@@ -82,4 +82,36 @@ RSpec.describe 'curation_concerns/file_sets/show' do
       end
     end
   end
+
+  context 'multiple sections per FileSet, appearing in order in FileSets/ordered_members section_title fields' do
+    let(:file_set1) { create(:file_set, section_title: ['Chapter 1']) }
+    let(:file_set2) { create(:file_set, section_title: ['Chapter 2']) }
+    let(:file_set3) { create(:file_set, section_title: ['Chapter 3']) }
+    let(:file_set) { create(:file_set, section_title: ['Chapter 3', 'Chapter 1', 'Chapter 2']) }
+
+    it 'infers the correct order from the FileSets\' section_titles to show the order correctly' do
+      monograph.ordered_members = []
+      monograph.ordered_members << file_set1 << file_set2 << file_set3 << file_set
+      monograph.save!
+      render
+      expect(rendered).to have_css('ul.tabular.list-unstyled li.attribute.section_title', count: 3)
+      expect(rendered).to match(/.*Chapter 1.*Chapter 2.*Chapter 3.*/)
+      expect(rendered).to_not match(/.*Chapter 3.*Chapter 1.*Chapter 2.*/)
+    end
+  end
+
+  context 'multiple sections per FileSet, occurring out-of-order in FileSets\'/ordered_members\' section_title fields' do
+    let(:monograph) { create(:monograph, section_titles: "Chapter 1\nChapter 2\nChapter3") }
+    let(:file_set) { create(:file_set, section_title: ['Chapter 3', 'Chapter 1']) }
+
+    it 'uses monograph section_titles to show the order correctly' do
+      monograph.ordered_members = []
+      monograph.ordered_members << file_set
+      monograph.save!
+      render
+      expect(rendered).to have_css('ul.tabular.list-unstyled li.attribute.section_title', count: 2)
+      expect(rendered).to match(/Chapter 1.*Chapter 3/)
+      expect(rendered).to_not match(/Chapter 3.*Chapter 1/)
+    end
+  end
 end

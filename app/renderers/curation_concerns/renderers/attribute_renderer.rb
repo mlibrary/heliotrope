@@ -29,11 +29,26 @@ module CurationConcerns
                     %(<tr><th>#{label}</th>\n<td><ul class='tabular list-unstyled'>)
                   end
         attributes = microdata_object_attributes(field).merge(class: "attribute #{field}")
+
+        maybe_sort_values
+
         Array(values).each do |value|
           markup << "<li#{html_attributes(attributes)}>#{attribute_value_to_html(value.to_s)}</li>"
         end
+
         markup << %(</ul></td></tr>)
         markup.html_safe
+      end
+
+      def maybe_sort_values
+        # options[:sort_by] is an array showing values' items in their intended order
+        return if options[:sort_by].blank? || !values.is_a?(Array) || values.count < 1
+        ordered_values = []
+        options[:sort_by].each do |ordered_item|
+          values.each { |unordered_item| ordered_values << ordered_item if unordered_item == ordered_item }
+        end
+        # there may be (but should't be) missing values (values - ordered_values), add them to the end
+        @values = ordered_values + (values - ordered_values) if ordered_values.present?
       end
 
       # @return The human-readable label for this field.
