@@ -14,11 +14,11 @@ GIT
 
 GIT
   remote: https://github.com/mlibrary/cozy-sun-bear
-  revision: 86064869129ecbf3b614590ba325e2e2a0b9ccd0
-  ref: 86064869129ecbf3b614590ba325e2e2a0b9ccd0
+  revision: 068659c7740dbe9c270c0824d922efb8295142c4
+  ref: 068659c7740dbe9c270c0824d922efb8295142c4
   specs:
     cozy-sun-bear (0.1.0)
-      railties
+      railties (>= 3.1.1)
 
 GEM
   remote: https://rubygems.org/
