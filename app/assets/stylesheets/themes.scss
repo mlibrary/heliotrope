@@ -2,6 +2,45 @@
 // base classes set in heliotrope.scss
 ///////////////////////////////////////////////
 //
+// Global mixins
+//
+///////////////////////////////////////////////
+@mixin button-background-color($theme-button-background-color) {
+  background-color: $theme-button-background-color;
+  border-color: $theme-button-background-color;
+}
+@mixin button-font-color($theme-button-font-color) {
+  color: $theme-button-font-color;
+}
+@mixin button-hover-background-color($theme-button-hover-background-color) {
+  background-color: $theme-button-hover-background-color;
+  border-color: $theme-button-hover-background-color;
+}
+@mixin button-hover-font-color($theme-button-hover-font-color) {
+  color: $theme-button-hover-font-color;
+}
+@mixin epub-button-background-color($theme-epub-button-background-color,$theme-epub-button-hover-background-color,$theme-epub-button-font-color) {
+  color: $theme-epub-button-font-color;
+  background: $theme-epub-button-background-color;
+  background-image: linear-gradient(to right, $theme-epub-button-hover-background-color 50%, $theme-epub-button-background-color 50%);
+  background-position: -100%;
+  background-size: 201%;
+  background-repeat: no-repeat;
+  &:hover, &:focus, &:active {
+    color: $theme-epub-button-font-color;
+    background-position: 0;
+    transition: 0.2s ease-in;
+  }
+}
+@mixin epub-prev-next-color($theme-epub-prev-next-color) {
+  color: $theme-epub-prev-next-color;
+
+}
+@mixin epub-hover-prev-next-color($theme-epub-hover-prev-next-color) {
+  color: $theme-epub-hover-prev-next-color
+}
+///////////////////////////////////////////////
+//
 // ACLS Humanities E-Book
 //
 ///////////////////////////////////////////////
@@ -56,16 +95,14 @@ $heb-black-80: #342f2e;
   }
 
   .btn-default {
-    background-color: $heb-brand-color;
-    border-color: $heb-brand-color;
-    color: $heb-white;
+    @include button-background-color($heb-brand-color);
+    @include button-font-color($heb-white);
   }
 
   .btn-default:hover,
   .btn-default:active {
-    background-color: $heb-grey-2;
-    border-color: $heb-grey-2;
-    color: $heb-link;
+    @include button-hover-background-color($heb-grey-2);
+    @include button-hover-font-color($heb-link);
   }
 
   // navigation menu
@@ -182,6 +219,33 @@ $heb-black-80: #342f2e;
     .platform {
       background-color: $heb-black-80;
     }
+  }
+
+  // EPUB Reader
+  #reader {
+
+    .button {
+      @include epub-button-background-color($heb-brand-color,$heb-grey-2,$heb-white);
+    }
+
+    .button--lg {
+      @include epub-button-background-color($heb-brand-color,$heb-grey-2,$heb-white);
+    }
+
+    .button--sm {
+      @include epub-button-background-color($heb-brand-color,$heb-grey-2,$heb-white);
+    }
+
+    i[class^='icon-chevron-'] {
+      @include epub-prev-next-color($heb-grey-2);
+      transition: 0.2s ease-in;
+    }
+
+    i[class^='icon-chevron-']:hover {
+      @include epub-hover-prev-next-color($heb-brand-color);
+      transition: 0.2s ease-in;
+    }
+
   }
 
 }

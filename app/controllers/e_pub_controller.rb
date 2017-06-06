@@ -8,7 +8,10 @@ class EPubController < ApplicationController
     if presenter.epub?
       @title = presenter.title
       @citable_link = presenter.citable_link
+      @creator_given_name = presenter.creator_given_name
+      @creator_family_name = presenter.creator_family_name
       @back_link = params[:subdomain].present? ? main_app.root_url + params[:subdomain] : main_app.monograph_catalog_url(presenter.monograph_id)
+      @subdomain = presenter.monograph.subdomain
       render layout: false
     else
       render 'curation_concerns/base/unauthorized', status: :unauthorized
