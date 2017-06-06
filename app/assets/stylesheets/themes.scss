@@ -39,6 +39,9 @@
 @mixin epub-hover-prev-next-color($theme-epub-hover-prev-next-color) {
   color: $theme-epub-hover-prev-next-color
 }
+@mixin epub-logo-size($theme-epub-logo-size) {
+  height: $theme-epub-logo-size;
+}
 ///////////////////////////////////////////////
 //
 // ACLS Humanities E-Book
@@ -246,6 +249,9 @@ $heb-black-80: #342f2e;
       transition: 0.2s ease-in;
     }
 
+    .cozy-control .logo img {
+      @include epub-logo-size(54.4px);
+    }
 
   }
 

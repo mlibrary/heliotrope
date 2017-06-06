@@ -24,7 +24,15 @@
   	    template: `<button class="button--sm cozy-close" data-toggle="button" data-slot="label"></button>`,
   	    onClick: function() { window.location = "<%= "#{@back_link}" %>"; }
       }).addTo(reader);
+      <% if defined? @subdomain %>
+      cozy.control.widget.panel({
+        region: 'top.header.left',
+        template: `<div class="logo"><%= image_tag "#{@subdomain}.png" %></div>`,
+        data: { title: "<%= @subdomain %>" }
+      }).addTo(reader);
+      <% end %>
       cozy.control.title({ region: 'top.header.left' }).addTo(reader);
+
       cozy.control.contents({ region: 'top.toolbar.left' }).addTo(reader);
       cozy.control.widget.panel({
           region: 'top.toolbar.left',
