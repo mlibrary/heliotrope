@@ -4,7 +4,7 @@ require 'zip'
 
 class EPubController < ApplicationController
   def show
-    presenter = CurationConcerns::FileSetPresenter.new(SolrDocument.new(FileSet.find(params[:id]).to_solr), current_ability, request)
+    presenter = Hyrax::FileSetPresenter.new(SolrDocument.new(FileSet.find(params[:id]).to_solr), current_ability, request)
     if presenter.epub?
       @title = presenter.title
       @citable_link = presenter.citable_link
@@ -14,7 +14,7 @@ class EPubController < ApplicationController
       @subdomain = presenter.monograph.subdomain
       render layout: false
     else
-      render 'curation_concerns/base/unauthorized', status: :unauthorized
+      render 'hyrax/base/unauthorized', status: :unauthorized
     end
   rescue Ldp::Gone # tombstone
     raise CanCan::AccessDenied

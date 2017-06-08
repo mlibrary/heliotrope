@@ -27,6 +27,7 @@ describe Import::FileSetBuilder do
   describe '#run' do
     before do
       FileSet.destroy_all
+      stub_out_redis
     end
 
     context 'when the builder runs successfully' do

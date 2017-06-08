@@ -17,6 +17,8 @@
 // Include all your custom js between jquery-turbolinks.js
 //= require jquery_ujs
 //= require jquery-ui/datepicker
+//= require dataTables/jquery.dataTables
+//= require dataTables/bootstrap/3/jquery.dataTables.bootstrap
 //= require 'short_monograph_description'
 // and turbolinks.js
 //= require turbolinks
@@ -41,3 +43,4 @@
 //= require ableplayer_transcript
 // Required by Hydra/Rails?
 //= require_tree .
+//= require hyrax

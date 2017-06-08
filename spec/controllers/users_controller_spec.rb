@@ -6,7 +6,7 @@ RSpec.describe UsersController, type: :controller do
   describe "GET #index" do
     context 'unauthenticated user' do
       before { get :index }
-      it { expect(response).to redirect_to new_user_session_path }
+      it { expect(response).to redirect_to('/users/sign_in') }
     end
     context "authenticated user" do
       before do
@@ -36,7 +36,7 @@ RSpec.describe UsersController, type: :controller do
     let(:user_id) { 0 }
     context 'unauthenticated user' do
       before { get :show, params: { id: user_id } }
-      it { expect(response).to redirect_to new_user_session_path }
+      it { expect(response).to redirect_to('/users/sign_in') }
     end
     context "authenticated user" do
       let(:current_user) { create(:user) }

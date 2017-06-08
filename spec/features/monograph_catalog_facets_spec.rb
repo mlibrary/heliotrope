@@ -163,8 +163,8 @@ feature "Monograph Catalog Facets" do
 
       # Only parent facet should be selected.
       within selected_facets do
-        expect(page).to have_content "Format #{expected_resource_facet}", count: 1
-        expect(page).to have_content "Remove constraint Format: #{expected_resource_facet}", count: 1
+        expect(page).to have_content "Resource type #{expected_resource_facet}", count: 1
+        expect(page).to have_content "Remove constraint Resource type: #{expected_resource_facet}", count: 1
         expect(page).to have_content "Content #{expected_content_facet}", count: 0
         expect(page).to have_content "Remove constraint Content: #{expected_content_facet}", count: 0
       end
@@ -191,8 +191,8 @@ feature "Monograph Catalog Facets" do
       # Now both parent and child facet should be selected.
       # Verify the parent facet appears in the list only 1 time.
       within selected_facets do
-        expect(page).to have_content "Format #{expected_resource_facet}", count: 1
-        expect(page).to have_content "Remove constraint Format: #{expected_resource_facet}", count: 1
+        expect(page).to have_content "Resource type #{expected_resource_facet}", count: 1
+        expect(page).to have_content "Remove constraint Resource type: #{expected_resource_facet}", count: 1
         expect(page).to have_content "Content #{expected_content_facet}", count: 1
         expect(page).to have_content "Remove constraint Content: #{expected_content_facet}", count: 1
       end

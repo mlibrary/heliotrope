@@ -30,7 +30,7 @@ feature 'FileSet Search' do
     click_link 'Manage Monograph and Files'
     click_link 'miranda.jpg'
 
-    expect(page).to have_selector("form[action='/concern/monographs/#{monograph.id}']")
+    expect(page).to have_selector("form[action='/concern/monographs/#{monograph.id}?locale=en']")
 
     fill_in 'catalog_search', with: 'jazz'
     click_button 'keyword-search-submit'

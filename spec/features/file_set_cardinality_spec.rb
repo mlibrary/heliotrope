@@ -55,10 +55,9 @@ feature 'FileSet Cardinality' do
   context "with solr_doc" do
     let(:doc) { SolrDocument.new(cover.to_solr) }
     scenario "On the file_set edit page" do
-      visit edit_curation_concerns_file_set_path(cover.id)
+      visit edit_hyrax_file_set_path(cover.id)
 
       # These are assertions of what is, not neccessarily what is "right"
-
       expect(cover.allow_display_after_expiration).to eql 'lo-res'
       expect(doc.allow_display_after_expiration).to eql 'lo-res'
       expect(find('#file_set_allow_display_after_expiration')[:class]).to_not include 'multi-text-field'

@@ -1,0 +1,40 @@
+<div class="form-actions">
+  <% if can?(:edit, presenter) %>
+    <%= link_to "Edit", edit_polymorphic_path([main_app, presenter]), class: 'btn btn-default btn-lg'  %>
+    <!-- TODO: remove the following button, it will be replaced by breadcrumbs -->
+    <%= link_to "Back to #{parent.human_readable_type}", parent_path(parent), class: 'btn btn-default btn-lg' %>
+  <% end %>
+  <% if can?(:edit, presenter) || presenter.allow_download?  %>
+    <%= link_to "Download", hyrax.download_path(presenter), target: :_blank, class: 'btn btn-default btn-lg', data: { turbolinks: false } %>
+  <% end %>
+  <% if can?(:edit, presenter) || presenter.allow_embed? %>
+  <form style="display:inline;">
+    <input type="text" style="display:none;" id="embedcode" value="<%= presenter.embed_code %>" readonly="readonly">
+    <span class="btn btn-default btn-lg" onclick="CopyToClipboard()">&lt;html /&gt;</span>
+    <script>
+      function CopyToClipboard() {
+        var e = document.getElementById("embedcode");
+        e.style.display = "block";
+        e.focus();
+        e.select();
+        document.execCommand("copy");
+        e.style.display = "none";
+      }
+    </script>
+  </form>
+  <% end %>
+  <!-- TODO: add citation generator -->
+  <!-- <button type="button" class="btn btn-default btn-lg cite">Cite</button> -->
+  <!-- TODO: figure out what asset metadata field holds the permanent URL and replace below -->
+  <div class="btn-group share">
+    <button type="button" class="btn btn-default btn-lg dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Share <span class="caret"></span></button>
+      <ul class="dropdown-menu">
+        <li><a href="http://twitter.com/intent/tweet?text=<%= @presenter.page_title %>&amp;url=<%= @presenter.citable_link %>">Twitter</a></li>
+        <li><a href="http://www.facebook.com/sharer.php?u=<%= @presenter.citable_link %>&amp;t=<%= @presenter.page_title %>">Facebook</a></li>
+        <li><a href="https://plus.google.com/share?url=<%= @presenter.citable_link %>">Google+</a></li>
+        <li><a href="http://www.reddit.com/submit?url=<%= @presenter.citable_link %>">Reddit</a></li>
+        <li><a href="http://www.mendeley.com/import/?url=<%= @presenter.citable_link %>">Mendeley</a></li>
+        <li><a href="http://www.citeulike.org/posturl?url=<%= @presenter.citable_link %>&amp;title=<%= @presenter.page_title %>">Cite U Like</a></li>
+      </ul>
+  </div>
+</div><!-- form-actions -->

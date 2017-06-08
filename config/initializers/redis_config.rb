@@ -16,7 +16,7 @@ if defined?(PhusionPassenger)
                         nil
                       end
       Resque.redis = Redis.current
-      Resque.redis.namespace = "#{CurationConcerns.config.redis_namespace}:#{Rails.env}"
+      Resque.redis.namespace = "#{Hyrax.config.redis_namespace}:#{Rails.env}"
       Resque.redis.client.reconnect if Resque.redis
     end
   end
