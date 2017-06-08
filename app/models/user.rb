@@ -5,6 +5,8 @@ class User < ActiveRecord::Base
   include Hydra::User
   # Connects this user object to Curation Concerns behaviors.
   include Hyrax::User
+  include Hyrax::UserUsageStats
+
   # Connects this user object to Blacklights Bookmarks.
   include Blacklight::User
 

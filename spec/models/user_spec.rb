@@ -9,6 +9,12 @@ describe User do
     it { is_expected.to eq 'foo@example.com' }
   end
 
+  describe "#total_file_views" do
+    subject { user.total_file_views }
+    let(:user) { create(:user) }
+    it { is_expected.to eq 0 }
+  end
+
   describe '#presses' do
     subject { user.presses }
 
