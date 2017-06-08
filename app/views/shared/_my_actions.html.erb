@@ -6,7 +6,10 @@
     </a>
 
     <ul class="dropdown-menu">
-      <li><%= link_to 'Dashboard', main_app.dashboard_path, role: 'menuitem'  %></li>
+      <li><%= link_to 'Fulcrum', main_app.fulcrum_path, role: 'menuitem'  %></li>
+      <li class="divider"></li>
+      <li><%= link_to 'Admin', hyrax.admin_path, role: 'menuitem'  %></li>
+      <li><%= link_to 'Dashboard', hyrax.dashboard_index_path, role: 'menuitem'  %></li>
       <li class="divider"></li>
 
       <% include_collections_link ||= can?(:create, Collection) %>

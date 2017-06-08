@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe DashboardController, type: :controller do
+RSpec.describe FulcrumController, type: :controller do
   describe "GET #index" do
     context 'unauthenticated user' do
       before { get :index }
@@ -17,7 +17,7 @@ RSpec.describe DashboardController, type: :controller do
         get :index
       end
       it { expect(response).to_not be_unauthorized }
-      it { expect(response).to redirect_to("/dashboard/home?locale=en") }
+      it { expect(response).to redirect_to("/fulcrum/home?locale=en") }
     end
   end
 

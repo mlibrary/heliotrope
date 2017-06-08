@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe "dashboard/show.html.erb", type: :view do
+RSpec.describe "fulcrum/show.html.erb", type: :view do
   let(:current_user) { create(:platform_admin) }
   let(:partial) { 'home' }
   before do

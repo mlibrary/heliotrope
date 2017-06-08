@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe "dashboard/index.html.erb", type: :view do
+RSpec.describe "fulcrum/index.html.erb", type: :view do
   let(:current_user) { create(:platform_admin) }
   before do
     allow(view).to receive(:current_user).and_return(current_user)
