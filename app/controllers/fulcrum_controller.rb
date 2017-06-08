@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class DashboardController < ApplicationController
+class FulcrumController < ApplicationController
   before_action :authenticate_user!
   def index
     redirect_to action: :show, partial: :home
