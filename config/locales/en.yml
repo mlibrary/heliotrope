@@ -164,3 +164,8 @@ en:
   manage_assets:
     monograph_link_text: "Organize Assets"
     section_link_text: "Organize Assets"
+  blacklight:
+    search:
+      fields:
+        facet:
+          resource_type_sim: Format
