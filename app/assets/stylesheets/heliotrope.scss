@@ -12,7 +12,11 @@ $gray-60: #686868;
 // NAVIGATION MENU
 ///////////////////////////////////
 .navbar {
-  margin-bottom: 0;
+  margin-bottom: 0 !important;
+}
+
+.input-group {
+  margin-bottom: 0 !important;
 }
 
 // skip links
@@ -45,6 +49,8 @@ $gray-60: #686868;
 }
 
 .breadcrumbs {
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
   .active {
     color: $gray-60;
   }
