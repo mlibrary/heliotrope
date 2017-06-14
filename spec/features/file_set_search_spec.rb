@@ -4,32 +4,34 @@ require 'rails_helper'
 
 feature 'FileSet Search' do
   let(:user) { create(:platform_admin) }
-  let(:monograph) { create(:monograph, user: user, title: ["Yellow"], representative_id: cover.id) }
   let(:cover) { create(:file_set) }
-  let!(:sipity_entity) do
+  let(:file) { File.open(fixture_path + '/csv/shipwreck.jpg') }
+  let(:file_set) { create(:public_file_set, user: user,
+                                            title: ["Blue"],
+                                            caption: ["Mr. Worf, It's better than music. It's jazz."])}
+  let!(:monograph) do
+    m = build(:monograph, title: ['Yellow'],
+                          representative_id: cover.id)
+    Hydra::Works::AddFileToFileSet.call(file_set, file, :original_file)
+    m.ordered_members = [cover, file_set]
+    m.save!
+    m
+  end
+
+  let(:sipity_entity) do
     create(:sipity_entity, proxy_for_global_id: monograph.to_global_id.to_s)
   end
 
   before do
-    monograph.ordered_members << cover
-    monograph.save!
     login_as user
     stub_out_redis
+    # Without this the file_set's solr_doc won't know it's monograph_id
+    # which means you can't do things like @presenter.monograph.subdomain in the views
+    file_set.update_index
   end
 
   scenario 'searches the monograph catalog page, not the catalog page' do
-    visit monograph_catalog_path(monograph.id)
-
-    click_link 'Manage Monograph and Files'
-    click_link 'Attach a File'
-    fill_in 'Title', with: 'Blue'
-    fill_in 'Caption', with: "Damage report! Mr. Worf, you do remember how to fire phasers? Worf, It's better than music. It's jazz."
-    attach_file 'file_set_files', File.join(fixture_path, 'csv', 'miranda.jpg')
-    click_button 'Attach to Monograph'
-
-    click_link 'Manage Monograph and Files'
-    click_link 'miranda.jpg'
-
+    visit hyrax_file_set_path(file_set)
     expect(page).to have_selector("form[action='/concern/monographs/#{monograph.id}?locale=en']")
 
     fill_in 'catalog_search', with: 'jazz'

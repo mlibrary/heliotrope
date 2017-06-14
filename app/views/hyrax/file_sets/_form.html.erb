@@ -2,16 +2,10 @@
                     html: { multipart: true },
                     wrapper_mappings: { multifile: :horizontal_file_input } do |f| %>
   <div class="row">
-    <div class="col-md-6">
+    <div class="col-md-12">
       <fieldset class="required">
         <legend>Your File&#8217;s Title</legend>
           <%= f.input :title, input_html: { multiple: true, value: curation_concern.title.first, class: 'form-control required' } %>
-      </fieldset>
-      <fieldset class="required">
-        <legend>
-          Attach Your File
-        </legend>
-        <%= f.input :files, as: :multifile %>
       </fieldset>
       <fieldset class="required">
         <legend>Required Information</legend>
@@ -54,10 +48,6 @@
           <%= f.input :allow_download_after_expiration, input_html: { class: 'form-control required' } %>
           <%= f.input :use_crossref_xml, input_html: { class: 'form-control' } %>
       </fieldset>
-    </div>
-
-    <div class="col-md-6">
-      <%= render "form_permission", f: f %>
     </div>
   </div>
 

@@ -2,13 +2,11 @@
 
 require 'rails_helper'
 
-feature 'Create a file set' do
+feature 'Edit a file set' do
   context 'as a logged in user' do
     let(:user) { create(:platform_admin) }
 
     let(:cover) { create(:public_file_set, user: user) }
-    let(:fs_title) { 'Test file set' }
-    let(:monograph_id) { monograph.id }
     let(:monograph) do
       m = build(:monograph, title: ['Test monograph'],
                             representative_id: cover.id,
@@ -21,22 +19,26 @@ feature 'Create a file set' do
       m.save!
       m
     end
+
     let(:sipity_entity) do
       create(:sipity_entity, proxy_for_global_id: monograph.to_global_id.to_s)
     end
 
+    let(:file) { File.open(fixture_path + '/csv/shipwreck.jpg') }
+    let(:file_set_title) { "Test FileSet Title" }
+    let(:file_set) { create(:public_file_set, user: user, title: [file_set_title]) }
+
     before do
       login_as user
       stub_out_redis
+      Hydra::Works::AddFileToFileSet.call(file_set, file, :original_file)
+      monograph.ordered_members << file_set
+      monograph.save!
     end
 
     scenario do
-      visit monograph_show_path(monograph)
+      visit edit_hyrax_file_set_path(file_set)
 
-      # Now attach a file to the Monograph. First create a FileSet
-      click_link 'Attach a File'
-      fill_in 'Title', with: fs_title
-      attach_file 'file_set_files', File.join(fixture_path, 'csv', 'miranda.jpg')
       fill_in 'Resource Type', with: 'image'
       fill_in 'Caption', with: 'This is a caption for the image'
       fill_in 'Alternative Text', with: 'This is some alt text for the image'
@@ -78,11 +80,10 @@ feature 'Create a file set' do
       fill_in 'Holding Contact', with: 'Unauthorized use prohibited. A Nice Museum.'
       fill_in 'Use Crossref XML?', with: 'yes3'
 
-      # Save the form
-      click_button 'Attach to Monograph'
+      click_button 'Update Attached File'
 
-      # going back in to add a second section_title (seems easier than enabling JS for this test etc)
-      visit edit_hyrax_file_set_path(FileSet.where(title: fs_title).first.id)
+      # Add another section title
+      visit edit_hyrax_file_set_path(file_set)
       expect(page).to have_css('input.file_set_section_title', count: 2)
       page.all(:fillable_field, 'file_set[section_title][]').last.set('C 1')
       click_button 'Update Attached File'
@@ -90,15 +91,16 @@ feature 'Create a file set' do
       # Go to Monograph catalog page
       click_link 'Back to Monograph'
       expect(page).to have_current_path(hyrax_monograph_path(monograph, locale: 'en'))
-      # order in FileSet's section_title has been taken from Monograph's section_titles
+      # Order in FileSet's section_title has been taken from Monograph's section_titles
       expect(page).to have_content 'From C 1 and Test section with Italicized Title therein'
+      click_link file_set_title
 
-      click_link fs_title
+      expect(page).to have_current_path(hyrax_file_set_path(file_set, locale: 'en'))
 
       # On FileSet Page
       # FileSet page also has authors
       expect(page).to have_content 'Jimmy Johns and Sub Way'
-      expect(page).to have_content 'Test file set'
+      expect(page).to have_content file_set_title
       expect(page).to have_content 'This is a caption for the image'
       expect(page).to have_content 'University of Michigan'
       expect(page).to have_content 'Veggies es bonus vobis, external link proinde vos postulo essum magis internal link kohlrabi welsh onion daikon amaranth tatsoi tomatillo melon azuki bean garlic.'
@@ -106,6 +108,7 @@ feature 'Create a file set' do
       expect(page).to have_content 'FamilyName, GivenName'
       expect(page).to have_content 'Test Contributor'
       expect(page).to have_content 'circa sometime for the (premiere, Berlin, LOLZ!)'
+
       expect(page).to have_content 'Conor O\'Neill\'s'
       expect(page).to have_content 'English'
       expect(page).to have_content 'This is what is transcribed for you to read'
@@ -117,17 +120,14 @@ feature 'Create a file set' do
       # order in FileSet's section_title has been taken from Monograph's section_titles
       assert_equal page.all('.list-unstyled .section_title a').collect(&:text), ['C 1', 'Test section with Italicized Title therein']
 
-      italicized_text = page.first('.list-unstyled .section_title a em').text
-      expect(italicized_text).to eq 'Italicized Title'
-
       # check facets
-      expect(page).to have_link("Conor O'Neill's", href: "/concern/monographs/" + monograph_id + "?f%5Bkeywords_sim%5D%5B%5D=Conor+O%27Neill%27s")
-      expect(page).to have_link("English", href: "/concern/monographs/" + monograph_id + "?f%5Blanguage_sim%5D%5B%5D=English")
-      expect(page).to have_link("Test section with Italicized Title therein", href: "/concern/monographs/" + monograph_id + "?f%5Bsection_title_sim%5D%5B%5D=Test+section+with+_Italicized+Title_+therein")
-      expect(page).to have_link("FamilyName, GivenName", href: "/concern/monographs/" + monograph_id + "?f%5Bcreator_full_name_sim%5D%5B%5D=FamilyName%2C+GivenName")
-      expect(page).to have_link("Test Contributor", href: "/concern/monographs/" + monograph_id + "?f%5Bcontributor_sim%5D%5B%5D=Test+Contributor")
-      expect(page).to have_link("on screen talent", href: "/concern/monographs/" + monograph_id + "?f%5Bprimary_creator_role_sim%5D%5B%5D=on+screen+talent")
-      expect(page).to have_link("screenshot", href: "/concern/monographs/" + monograph_id + "?f%5Bcontent_type_sim%5D%5B%5D=screenshot")
+      expect(page).to have_link("Conor O'Neill's", href: "/concern/monographs/" + monograph.id + "?f%5Bkeywords_sim%5D%5B%5D=Conor+O%27Neill%27s")
+      expect(page).to have_link("English", href: "/concern/monographs/" + monograph.id + "?f%5Blanguage_sim%5D%5B%5D=English")
+      expect(page).to have_link("Test section with Italicized Title therein", href: "/concern/monographs/" + monograph.id + "?f%5Bsection_title_sim%5D%5B%5D=Test+section+with+_Italicized+Title_+therein")
+      expect(page).to have_link("FamilyName, GivenName", href: "/concern/monographs/" + monograph.id + "?f%5Bcreator_full_name_sim%5D%5B%5D=FamilyName%2C+GivenName")
+      expect(page).to have_link("Test Contributor", href: "/concern/monographs/" + monograph.id + "?f%5Bcontributor_sim%5D%5B%5D=Test+Contributor")
+      expect(page).to have_link("on screen talent", href: "/concern/monographs/" + monograph.id + "?f%5Bprimary_creator_role_sim%5D%5B%5D=on+screen+talent")
+      expect(page).to have_link("screenshot", href: "/concern/monographs/" + monograph.id + "?f%5Bcontent_type_sim%5D%5B%5D=screenshot")
 
       # check external autolink are opening in a new tab and internal are not
       expect(find_link('external link')[:target]).to eq '_blank'
@@ -140,11 +140,11 @@ feature 'Create a file set' do
       # check facet results - bug #772
       # multi-word primary creator role facet
       click_link 'on screen talent'
-      expect(page).to have_content 'Test file set'
-      click_link 'Test file set'
+      expect(page).to have_content file_set_title
+      click_link file_set_title
       # double html encoding breaking facet with apostrophe
       click_link 'Conor O\'Neill\'s'
-      expect(page).to have_content 'Test file set'
+      expect(page).to have_content file_set_title
     end
   end
 end

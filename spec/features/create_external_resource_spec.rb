@@ -7,39 +7,45 @@ feature 'Create an external resource' do
     let(:user) { create(:platform_admin) }
     let!(:press) { create(:press) }
 
+    # We need to be able to accept "fileless" file_sets, which will
+    # just be links to "external resources". Right now in Hyrax there's
+    # no way to create a file_set w/o a file in the UI, so we need to
+    # cheat a little. In the future we need to modify the UI so that it's
+    # possible to create a file_set w/o a file.
+    # TODO: enable the creation of "fileless" external resources through the UI (don't attach_file below)
+
+    let(:cover) { create(:public_file_set, user: user) }
+    let(:monograph) do
+      m = build(:monograph, title: ['Test monograph'],
+                            representative_id: cover.id,
+                            creator_family_name: 'Johns',
+                            creator_given_name: 'Jimmy',
+                            contributor: ['Sub Way'],
+                            date_published: ['Oct 20th'])
+      m.ordered_members << cover
+      m.save!
+      m
+    end
+
+    let(:sipity_entity) do
+      create(:sipity_entity, proxy_for_global_id: monograph.to_global_id.to_s)
+    end
+
+    let(:file) { File.open(fixture_path + '/csv/shipwreck.jpg') }
+    let(:file_set_title) { "Test External Resource" }
+    let(:file_set) { create(:public_file_set, user: user, title: [file_set_title]) }
+
     before do
       login_as user
       stub_out_redis
+      Hydra::Works::AddFileToFileSet.call(file_set, file, :original_file)
+      monograph.ordered_members << file_set
+      monograph.save!
     end
 
-    # folowing create_file_set_spec.rb for the most part to create...
-    # a fileset linking to an external resource with only metadata...
-    # listed as 'required' in our metadata template
-
     scenario do
-      # Start by creating a Monograph
-      visit new_hyrax_monograph_path
-      fill_in 'monograph[title][]', with: 'Test monograph'
-      select press.name, from: 'Publisher'
-      fill_in 'Date Published', with: 'Oct 20th'
-      click_button 'Save'
+      visit edit_hyrax_file_set_path(file_set)
 
-      # Go to monograph show page (not monograph catalog page)
-      click_link 'Manage Monograph and Files'
-      # attach a representative file to the Monograph
-      click_link 'Attach a File'
-      fill_in 'Title', with: 'Representative Image'
-      attach_file 'file_set_files', File.join(fixture_path, 'csv', 'shipwreck.jpg')
-      fill_in 'Resource Type', with: 'image'
-      fill_in 'Caption', with: 'This is a caption for the representative image'
-      click_button 'Attach to Monograph'
-
-      # TODO: enable the creation of "fileless" external resources through the UI (don't attach_file below)
-      click_link 'Manage Monograph and Files'
-      # attach an external resource file to the Monograph
-      click_link 'Attach a File'
-      fill_in 'Title', with: 'Test external resource'
-      attach_file 'file_set_files', File.join(fixture_path, 'csv', 'miranda.jpg')
       fill_in 'Resource Type', with: 'image'
       fill_in 'Caption', with: 'This is a caption for the external resource'
       fill_in 'Alternative Text', with: 'This is some alt text for the external resource'
@@ -52,19 +58,20 @@ feature 'Create an external resource' do
       fill_in 'Externally-Hosted Resource?', with: 'yes'
       fill_in 'External URL/DOI', with: 'https://www.example.com/blah'
 
-      click_button 'Attach to Monograph'
+      click_button 'Update Attached File'
 
       # On Monograph Page
       # check the direct links to the external resource from both list and gallery views
+      visit monograph_catalog_path(monograph)
+
       expect(page).to have_link('View External Object', href: "https://www.example.com/blah")
       click_link 'Gallery'
       expect(page).to have_link('View External Object', href: "https://www.example.com/blah")
 
-      # Navigate to the FileSet page
-      click_link 'Manage Monograph and Files'
-      click_link 'miranda.jpg'
       # On FileSet Page
-      expect(page).to have_content 'Test external resource'
+      visit hyrax_file_set_path(file_set)
+
+      expect(page).to have_content file_set_title
       expect(page).to have_content 'This is a caption for the external resource'
       expect(page).to have_content 'University of Michigan'
       # Look for the text highlighting this is an external resource

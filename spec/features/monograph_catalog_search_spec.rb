@@ -4,10 +4,37 @@ require 'rails_helper'
 
 feature 'Monograph Catalog Search' do
   let(:user) { create(:platform_admin) }
-  let(:monograph) { create(:monograph, user: user, title: ["Weird Bogs"], buy_url: ['https://example.com']) }
+  let(:monograph) do
+    m = build(:monograph, user: user,
+                          title: ["Weird Bogs"],
+                          buy_url: ['https://example.com'],
+                          representative_id: cover.id)
+    m.ordered_members = [cover, fs1, fs2]
+    m.save!
+    m
+  end
   let(:sipity_entity) do
     create(:sipity_entity, proxy_for_global_id: monograph.to_global_id.to_s)
   end
+
+  let(:cover) { create(:public_file_set, user: user) }
+  let(:fs1) { create(:file_set, title: ['Strange Marshes'],
+                                caption: ['onion'],
+                                alt_text: ['garlic'],
+                                description: ['tomato'],
+                                contributor: ['potato'],
+                                keywords: ['squash'],
+                                transcript: 'broccoli',
+                                translation: ['cauliflower']) }
+
+  let(:fs2) { create(:file_set, title: ['Unruly Puddles'],
+                                caption: ['monkey'],
+                                alt_text: ['lizard'],
+                                description: ['elephant'],
+                                contributor: ['rhino'],
+                                keywords: ['snake'],
+                                transcript: 'tiger',
+                                translation: ['mouse']) }
 
   before do
     login_as user
@@ -21,32 +48,6 @@ feature 'Monograph Catalog Search' do
 
   scenario 'searches the monograph catalog page' do
     visit monograph_catalog_path(monograph.id)
-
-    click_link 'Manage Monograph and Files'
-    click_link 'Attach a File'
-    fill_in 'Title', with: 'Strange Marshes'
-    fill_in 'Caption', with: 'onion'
-    fill_in 'Alternative Text', with: 'garlic'
-    fill_in 'Abstract or Summary', with: 'tomato'
-    fill_in 'Contributor', with: 'potato'
-    fill_in 'Keywords', with: 'squash'
-    fill_in 'Transcript', with: 'broccoli'
-    fill_in 'Translation(s)', with: 'cauliflower'
-    attach_file 'file_set_files', File.join(fixture_path, 'csv', 'miranda.jpg')
-    click_button 'Attach to Monograph'
-
-    click_link 'Manage Monograph and Files'
-    click_link 'Attach a File'
-    fill_in 'Title', with: 'Unruly Puddles'
-    fill_in 'Caption', with: 'monkey'
-    fill_in 'Alternative Text', with: 'lizard'
-    fill_in 'Abstract or Summary', with: 'elephant'
-    fill_in 'Contributor', with: 'rhino'
-    fill_in 'Keywords', with: 'snake'
-    fill_in 'Transcript', with: 'tiger'
-    fill_in 'Translation(s)', with: 'mouse'
-    attach_file 'file_set_files', File.join(fixture_path, 'csv', 'miranda.jpg')
-    click_button 'Attach to Monograph'
 
     # Selectors needed for assets/javascripts/ga_event_tracking.js
     # If these change, fix here then update ga_event_tracking.js

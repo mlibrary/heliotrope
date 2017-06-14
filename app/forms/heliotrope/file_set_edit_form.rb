@@ -1,7 +1,10 @@
 # frozen_string_literal: true
 
-module Heliotrope::Forms
+module Heliotrope
   class FileSetEditForm < Hyrax::Forms::FileSetEditForm
+    # In hyrax this seems to be used for FileSetsController.params.require(:file_set).permit
+    # If removed you get the "Umpermitted Parameters" error...
+
     self.terms += %i[resource_type caption alt_text copyright_holder
                      description content_type date_created keywords
                      language section_title external_resource

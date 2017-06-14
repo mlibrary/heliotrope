@@ -265,31 +265,26 @@ feature "Monograph Catalog Facets" do
   context "all facets" do
     let(:user) { create(:platform_admin) }
     let(:monograph) { create(:monograph, user: user, title: ["Yellow"], representative_id: cover.id) }
+    let(:file_set) { create(:public_file_set, resource_type: ['image'],
+                                              content_type: ['portrait'],
+                                              exclusive_to_platform: 'yes',
+                                              creator_family_name: 'McTesterson',
+                                              creator_given_name: 'Testy',
+                                              sort_date: '1974-01-01',
+                                              keywords: ['stuff'],
+                                              section_title: ['A Section']) }
+
     before do
       login_as user
-      monograph.ordered_members << cover
+      monograph.ordered_members = [cover, file_set]
       monograph.save!
     end
 
     scenario "shows the correct facets" do
-      visit monograph_show_path(monograph)
-      click_link 'Attach a File'
-      fill_in 'Title', with: 'File Title'
-      fill_in 'Resource Type', with: 'image'
-      fill_in 'Content Type', with: 'portrait'
-      fill_in 'Exclusive to Platform?', with: 'yes'
-      fill_in 'Primary Creator (family name)', with: 'McTesterson'
-      fill_in 'Primary Creator (given name)', with: 'Testy'
-      fill_in 'Sort Date', with: '1974-01-01'
-      fill_in 'Keywords', with: 'stuff'
-      fill_in 'Related Section', with: 'A Section'
-      attach_file 'file_set_files', File.join(fixture_path, 'csv', 'miranda.jpg')
-      click_button 'Attach to Monograph'
+      visit monograph_catalog_path(id: monograph.id)
 
       # Selectors needed for assets/javascripts/ga_event_tracking.js
       # If these change, fix here then update ga_event_tracking.js
-      visit monograph_catalog_path(id: monograph.id)
-
       expect(page).to have_selector('#facet-section_title_sim a.facet_select')
       expect(page).to have_selector('#facet-keywords_sim a.facet_select')
       expect(page).to have_selector('#facet-creator_full_name_sim a.facet_select')
