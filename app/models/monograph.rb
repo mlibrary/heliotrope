@@ -3,6 +3,7 @@
 # Generated via
 #  `rails generate curation_concerns:work Monograph`
 class Monograph < ActiveFedora::Base
+  include ActiveFedora::Noid::Model
   include ::Hyrax::WorkBehavior
   include ::Hyrax::BasicMetadata
   include GlobalID::Identification
