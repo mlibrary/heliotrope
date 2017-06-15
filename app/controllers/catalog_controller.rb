@@ -4,6 +4,17 @@ class CatalogController < ApplicationController
   include Hydra::Catalog
   include Hydra::Controller::ControllerBehavior
 
+  # This filter applies the hydra access controls
+  before_action :enforce_show_permissions, only: :show
+
+  def self.uploaded_field
+    solr_name('system_create', :stored_sortable, type: :date)
+  end
+
+  def self.modified_field
+    solr_name('system_modified', :stored_sortable, type: :date)
+  end
+
   configure_blacklight do |config|
     config.search_builder_class = ::SearchBuilder
     ## Default parameters to send to solr for all search-like requests. See also SolrHelper#solr_search_params
@@ -255,5 +266,12 @@ class CatalogController < ApplicationController
 
   def show_site_search?
     true
+  end
+
+  # disable the bookmark control from displaying in gallery view
+  # Hyrax doesn't show any of the default controls on the list view, so
+  # this method is not called in that context.
+  def render_bookmarks_control?
+    false
   end
 end
