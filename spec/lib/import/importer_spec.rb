@@ -52,6 +52,10 @@ describe Import::Importer do
           .and(change { FileSet.count }.by(9))
 
         monograph = Monograph.first
+
+        expect(monograph.id.length).to_not eq 36 # GUID
+        expect(monograph.id.length).to eq 9 # NOID
+
         expect(monograph.visibility).to eq public_vis
         file_sets = monograph.ordered_members.to_a
 

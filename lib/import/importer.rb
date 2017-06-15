@@ -1,5 +1,7 @@
 module Import
   class Importer
+    include ::Hyrax::Noid
+
     attr_reader :root_dir, :press_subdomain, :monograph_id, :monograph_title,
                 :visibility, :reimporting, :reimport_mono
 
