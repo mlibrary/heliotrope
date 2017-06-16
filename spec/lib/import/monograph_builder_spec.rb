@@ -43,6 +43,9 @@ describe Import::MonographBuilder do
         expect(Monograph.count).to eq 1
         monograph = Monograph.first
 
+        expect(monograph.id.length).to_not eq 36 # GUID
+        expect(monograph.id.length).to eq 9 # NOID
+
         expect(monograph.title).to eq attrs['title']
         expect(monograph.press).to eq attrs['press']
         expect(monograph.visibility).to eq attrs['visibility']
