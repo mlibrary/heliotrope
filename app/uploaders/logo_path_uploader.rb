@@ -12,12 +12,12 @@ class LogoPathUploader < CarrierWave::Uploader::Base
   # Override the directory where uploaded files will be stored.
   # What you put here is prepended to the logo_path.url, along with a preceeding '/'
   def store_dir
-    nil
+    "upload/#{model.class.to_s.underscore}/#{mounted_as}/#{model.subdomain}"
   end
 
   # Provide a default URL as a default if there hasn't been a file uploaded:
   def default_url
-    'fulcrum-white-50px'
+    'fulcrum-white-50px.png'
   end
 
   # Process files as they are uploaded:
