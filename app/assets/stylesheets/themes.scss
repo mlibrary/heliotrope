@@ -172,6 +172,11 @@ $heb-black-80: #342f2e;
     }
   }
 
+  // monograph catalog
+  #sort-dropdown .dropdown-toggle, #per_page-dropdown .dropdown-toggle {
+    color: $heb-white;
+  }
+
   // pagination
 
   .pagination {
@@ -402,6 +407,11 @@ $iu-midnight: #006298;
     }
   }
 
+  // monograph catalog
+  #sort-dropdown .dropdown-toggle, #per_page-dropdown .dropdown-toggle {
+    color: $iu-darkmidnight;
+  }
+
   // monograph
   .monograph {
     .documentHeader {
@@ -616,6 +626,11 @@ $um-black-80: #342f2e;
     .documentHeader {
       margin-bottom: 2em;
     }
+  }
+
+  // monograph catalog
+  #sort-dropdown .dropdown-toggle, #per_page-dropdown .dropdown-toggle {
+    color: $um-blue;
   }
 
   // monograph
@@ -833,6 +848,11 @@ $umn-white: #fff;
     .documentHeader {
       margin-bottom: 2em;
     }
+  }
+
+  // monograph catalog
+  #sort-dropdown .dropdown-toggle, #per_page-dropdown .dropdown-toggle {
+    color: $umn-accent-link;
   }
 
   // monograph
@@ -1056,6 +1076,12 @@ $fulcrum-light-2: #bec4cc;
       margin-bottom: 2em;
     }
   }
+
+  // monograph catalog
+  #sort-dropdown .dropdown-toggle, #per_page-dropdown .dropdown-toggle {
+    color: $nw-purple-60;
+  }
+
 
   // monograph
   .monograph {
@@ -1294,6 +1320,11 @@ $nyu-gray-2: #342f2e;
     .documentHeader {
       margin-bottom: 2em;
     }
+  }
+
+  // monograph catalog
+  #sort-dropdown .dropdown-toggle, #per_page-dropdown .dropdown-toggle {
+      color: $nyu-brand-accent;
   }
 
   // pagination
@@ -1546,6 +1577,11 @@ $psu-gray-1: #3F4550;
         @include proxima-nova;
       }
     }
+  }
+
+  // monograph catalog
+  #sort-dropdown .dropdown-toggle, #per_page-dropdown .dropdown-toggle {
+    color: $psu-button-foreground;
   }
 
   // pagination
