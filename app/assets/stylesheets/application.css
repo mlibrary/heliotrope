@@ -11,6 +11,7 @@
  * file per style scope.
  *
  *= require_tree .
+ *= require_self
  *= require dataTables/bootstrap/3/jquery.dataTables.bootstrap
  *= require jquery-ui/datepicker
  *= require leaflet_1.0.3
@@ -20,5 +21,4 @@
  *= require heliotrope
  *= require fulcrum
  *= require themes
- *= require_self
  */

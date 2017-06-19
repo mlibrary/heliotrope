@@ -1,9 +1,9 @@
-# heliotrope 
+# heliotrope
 [![Build Status](https://travis-ci.org/mlibrary/heliotrope.svg?branch=master)](https://travis-ci.org/mlibrary/heliotrope)
 [![Coverage Status](https://coveralls.io/repos/github/mlibrary/heliotrope/badge.svg?branch=master)](https://coveralls.io/github/mlibrary/heliotrope?branch=master)
 [![Stories in Ready](https://badge.waffle.io/mlibrary/heliotrope.png?label=ready&title=Ready)](https://waffle.io/mlibrary/heliotrope)
 
-Hydra-based digital publisher platform
+Samvera-based digital publishing platform built by the University of Michigan Library
 
 ## Development
 
@@ -75,7 +75,7 @@ Alternatively, you can start up each server individually.  This may be preferabl
    `rspec`
 
 ### Wiki
-  
+
 For additional details and helpful hints [read the wiki.](https://github.com/mlibrary/heliotrope/wiki)
 
 ### Contact

@@ -128,10 +128,18 @@ footer.press {
 ///////////////////////////////////
 .monograph {
 
+  div.facets h3 {
+    font-size: 1.2em;
+  }
+
   .page_links {
     display: inline-block;
     vertical-align: middle;
     margin-top: .4em;
+  }
+
+  #appliedParams.constraints-container {
+    margin-bottom: 20px;
   }
 
   // MONOGRAPH INFORMATION
@@ -279,7 +287,7 @@ footer.press {
         text-align: center;
 
         .external-resource-icon {
-          font-size: 9em;
+          font-size: 8em;
         }
 
       }
