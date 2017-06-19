@@ -157,12 +157,17 @@ footer.press {
     padding-left: 0;
   }
 
+  #sortAndPerPage {
+    border-bottom: none;
+  }
+
   // MONOGRAPH ASSETS - LIST VIEW
   #documents.documents-list {
 
     .document {
       margin-bottom: 2em;
       padding-top: 1.5em;
+      border-bottom: none;
 
       .document-thumbnail {
         img {
