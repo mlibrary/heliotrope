@@ -15,6 +15,11 @@ class LogoPathUploader < CarrierWave::Uploader::Base
     "upload/#{model.class.to_s.underscore}/#{mounted_as}/#{model.subdomain}"
   end
 
+  # explicitly set cache_dir as it defaults to 'uploads/tmp' and will thus create public/uploads. See #1013.
+  def cache_dir
+    'upload/tmp'
+  end
+  
   # Provide a default URL as a default if there hasn't been a file uploaded:
   def default_url
     'fulcrum-white-50px.png'
