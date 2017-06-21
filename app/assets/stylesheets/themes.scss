@@ -1267,7 +1267,7 @@ $nyu-gray-2: #342f2e;
       color: transparent;
       width: 350px;
       margin-top: 11px;
-      background-image: image-url("nyupress.png");
+      background-image: url("/upload/press/logo_path/nyupress/nyupress.png");
       background-repeat: no-repeat;
       display: block;
     }
@@ -1488,7 +1488,7 @@ $psu-gray-1: #3F4550;
     }
 
     .navbar-header {
-      background-image: image-url("pennstate.png");
+      background-image: url("/upload/press/logo_path/pennstate/pennstate.png");
       background-position: 0px 11px;
       background-repeat: no-repeat;
       height: 6em;

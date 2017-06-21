@@ -28,14 +28,27 @@ feature 'Adding a new press' do
       expect(page).to have_content 'Test Publisher'
       expect(page).to have_content 'A Test Publisher description'
       expect(page).to have_css("img[alt='Test Publisher']")
-      # This works in dev, Travis CI doesn't like it. Asset pipeline issue?
-      # expect(page).to have_css("img[src*='/assets/shipwreck']")
+
       expect(page).to have_css("img[src*='shipwreck']")
+      # Default Fulcrum logo only used once, in the right-side footer, i.e. not used for the press
+      expect(page).to have_css("img[src*='fulcrum-white-50px']", count: 1)
+
       expect(page).to have_link 'Test Publisher', href: 'https://example.com'
       expect(page).to have_css("script[src='https://use.typekit.net/2346553.js']", visible: false)
       # leaving footer block a blank to produce external link to the Publisher
       # expect(page).to have_content 'Footer Block A Stuff'
       expect(page).to have_content 'Footer Block C Stuff'
+
+      # go back in and remove the logo
+      visit edit_press_path 'testpub'
+      find(:css, '#press_remove_logo_path').set(true)
+      click_button 'Save'
+      click_link 'Test Publisher'
+
+      # Check that the default logo is being used, note that this logo is always used *once* in the...
+      # right-side footer. The press logo is shown twice, so this logo appears 3 times for a logo-less press
+      expect(page).to have_css("img[src*='fulcrum-white-50px']", count: 3)
+      expect(page).to_not have_css("img[src*='shipwreck']")
     end
   end
 end

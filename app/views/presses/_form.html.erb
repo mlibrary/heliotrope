@@ -13,12 +13,19 @@
   <%= f.input :name, label: 'Publisher Name', required: true %>
   <%= f.input :subdomain, label: 'fulcrum.org Subdomain', required: true %>
   <%= f.input :description, required: true %>
-  <div class="form-group string required logo_path">
+  <div class="form-group string logo_path">
     <label class="control-label string required" for="logo_path">* Upload a Logo</label>
-    <%= f.file_field :logo_path, required: true %>
+    <%= f.file_field :logo_path %>
+    <% if @press.logo_path? %>
+      <label>
+        <%= f.check_box :remove_logo_path %>
+        Remove Existing Logo
+      </label>
+      <%= image_tag @press.logo_path_url, class: 'press-form-logo' if @press.logo_path? %>
+    <% end %>
   </div>
   <%= f.input :press_url, label: 'Publisher\'s Current Website Address', required: true %>
-  <%= f.input :google_analytics, label: 'Google Analytics Tracking ID', required: true %>
+  <%= f.input :google_analytics, label: 'Google Analytics Tracking ID' %>
   <%= f.input :typekit, label: 'Typekit ID' %>
   <%= f.input :footer_block_a, include_blank: false, include_hidden: false %>
   <%= f.input :footer_block_c, include_blank: false, include_hidden: false %>
