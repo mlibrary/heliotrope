@@ -2,19 +2,23 @@ module Import
   class Importer
     include ::Hyrax::Noid
 
-    attr_reader :root_dir, :press_subdomain, :monograph_id, :monograph_title,
+    attr_reader :root_dir, :user_email, :press_subdomain, :monograph_id, :monograph_title,
                 :visibility, :reimporting, :reimport_mono
 
-    def initialize(root_dir, press_subdomain, visibility = Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE, monograph_title = '', monograph_id = '')
+    def initialize(root_dir: '', user_email: '', monograph_id: '', press: '',
+                   visibility: Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE,
+                   monograph_title: '')
+
       @root_dir = root_dir
+      @user_email = user_email
       @reimporting = false
       @reimport_mono = Monograph.where(id: monograph_id).first
 
       if monograph_id.present?
-        raise "No monograph found with id #{monograph_id}" if @reimport_mono.blank?
+        raise "No monograph found with id '#{monograph_id}'" if @reimport_mono.blank?
         @reimporting = true
       else
-        @press_subdomain = press_subdomain
+        @press_subdomain = press
         @visibility = visibility
         @monograph_title = monograph_title
       end
@@ -22,6 +26,7 @@ module Import
 
     def run(test = false)
       interaction = !Rails.env.test?
+      validate_user
       validate_press unless reimporting
       csv_files.each do |file|
         errors = ''
@@ -53,6 +58,10 @@ module Import
     end
 
     private
+
+      def validate_user
+        raise "No user found with email '#{user_email}'. You must enter the email address of an actual user." if user.blank?
+      end
 
       def validate_press
         unless Press.exists?(subdomain: press_subdomain)
@@ -87,7 +96,7 @@ module Import
       end
 
       def user
-        @user ||= DummyUser.new(id: 0, user_key: 'system')
+        @user ||= User.find_by(email: user_email)
       end
 
       # The 'attrs' parameter is an array of hashes.

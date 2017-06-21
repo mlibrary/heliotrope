@@ -18,11 +18,15 @@ def parse_inputs(args)
   inputs = {}
   opts = OptionParser.new
 
-  opts.on('-d DIR', 'Path to the directory where the CSV files are located. (required)') do |dir|
+  opts.on('-d DIR', 'Path to the directory where the CSV files are located. (always required)') do |dir|
     inputs[:root_dir] = dir
   end
 
-  opts.on('-p PRESS', 'Subdomain of the Press that the monographs belong to. (required)') do |press|
+  opts.on('-u USER', 'username (email) of the user to use as depositor of the content. (always required)') do |dir|
+    inputs[:user_email] = dir
+  end
+
+  opts.on('-p PRESS', 'Subdomain of the Press that the monographs belong to. (required for new monograph)') do |press|
     inputs[:press] = press
   end
 
@@ -36,7 +40,7 @@ def parse_inputs(args)
     inputs[:monograph_title] = monograph_title
   end
 
-  opts.on('-m [MONOGRAPH ID]', '--monograph_id', 'ID of existing monograph to which assets will be added, i.e. "reimporting".') do |monograph_id|
+  opts.on('-m [MONOGRAPH ID]', '--monograph_id', 'ID of existing monograph to which assets will be added, i.e. "reimporting". (required when reimporting)') do |monograph_id|
     inputs[:monograph_id] = monograph_id
     raise "This ID does not correspond to a pre-existing monograph" unless !Monograph.where(id: monograph_id).first.blank?
   end
@@ -53,9 +57,10 @@ def parse_inputs(args)
   opts.parse!(args)
 
   if inputs[:monograph_id] && (inputs[:press] || inputs[:visibility] || inputs[:monograph_title])
-    raise "Error: using -m or --monograph_id (i.e. reimporting) excludes -p, -v and -m"
+    raise "Error: using -m or --monograph_id (i.e. reimporting) excludes -p, -v and -n"
   end
   raise "Error: The CSV directory is required" unless inputs[:root_dir]
+  raise "Error: Username (email) is required" unless inputs[:user_email]
   raise "Error: The Press required for importing new monographs, i.e. *not* reimporting" unless inputs[:press] || inputs[:monograph_id]
   inputs
 rescue => e
@@ -68,7 +73,12 @@ end
 options = parse_inputs(ARGV)
 
 puts "Begin import"
-importer = Import::Importer.new(options[:root_dir], options[:press], options[:visibility], options[:monograph_title], options[:monograph_id])
+importer = Import::Importer.new({ root_dir: options[:root_dir],
+                                  user_email: options[:user_email],
+                                  press: options[:press],
+                                  visibility: options[:visibility],
+                                  monograph_title: options[:monograph_title],
+                                  monograph_id: options[:monograph_id]})
 importer.run(options[:test])
 
 puts "Import finished"

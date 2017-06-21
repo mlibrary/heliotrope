@@ -32,6 +32,9 @@ Metrics/ClassLength:
   Enabled: true
   Max: 250
 
+Metrics/ParameterLists:
+  CountKeywordArgs: false
+
 Performance/RedundantMerge:
   Enabled: false
 
