@@ -25,6 +25,8 @@ Dir.chdir APP_ROOT do
   if Rails.env == 'test'
     # we don't need clamav in test or travis-ci
     system "gem install bundler install --without production --conservative"
+    # build /public with jekyll
+    system "bin/rake jekyll:deploy"
   else
     system "gem install bundler --conservative"
   end
