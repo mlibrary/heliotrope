@@ -13,6 +13,7 @@ Samvera-based digital publishing platform built by the University of Michigan Li
   * run `bundle install`
   * run `bundle exec bin/setup`
   * [install redis](https://github.com/mlibrary/heliotrope/wiki/Background-Jobs#how-to-install-redis)
+  * [build public](https://github.com/mlibrary/heliotrope/wiki/Static-Pages-and-Blog)
 
 #### Create an admin user
 
