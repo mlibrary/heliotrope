@@ -33,6 +33,7 @@ feature 'FileSet Search' do
   scenario 'searches the monograph catalog page, not the catalog page' do
     visit hyrax_file_set_path(file_set)
     expect(page).to have_selector("form[action='/concern/monographs/#{monograph.id}?locale=en']")
+    expect(page).to have_content 'Mr. Worf'
 
     fill_in 'catalog_search', with: 'jazz'
     click_button 'keyword-search-submit'

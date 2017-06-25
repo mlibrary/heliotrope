@@ -2,113 +2,132 @@
 
 source 'https://rubygems.org'
 
+git_source(:github) do |repo_name|
+  repo_name = "#{repo_name}/#{repo_name}" unless repo_name.include?("/")
+  "https://github.com/#{repo_name}.git"
+end
+
+##############################################################################
+#
+# Rails
+#
+##############################################################################
+
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-# gem 'rails', '4.2.6'
-# gem 'rails', '4.2.7.1'
-gem 'rails', '5.0.2'
-
-# gem 'curation_concerns', '2.0.0'
-# gem 'hyrax', github: 'projecthydra-labs/hyrax', ref: '9395ac75a04902237bf692c0b67c9cf292c9d39d' # May 18th
-gem 'hyrax', '1.0.1'
-
-gem 'resque', '~> 1.26.0'
-gem 'resque-pool'
-gem 'resque-web', '~> 0.0.7', require: 'resque_web'
-
-# We need this due to #778.
-# gem 'active-fedora', '~> 11.1.5', github: 'projecthydra/active_fedora', ref: 'fae7df019337506b53fc721b22414fdc45830f9b'
-gem 'active-fedora', '~> 11.1.6'
-
-# clamav only in production
-gem 'clamav', group: :production
-
-# gem 'pg', '0.18.4'
-gem 'mysql2'
-gem 'puma'
+gem 'rails', '~> 5.1.1'
 # Use sqlite3 as the database for Active Record
 # gem 'sqlite3'
+# Use Puma as the app server
+gem 'puma', '~> 3.7'
 # Use SCSS for stylesheets
 gem 'sass-rails', '~> 5.0'
-# use config gem to pull in settings from .yml files
-gem 'config'
 # Use Uglifier as compressor for JavaScript assets
-gem 'uglifier', '>= 3.2.0'
-# Use CoffeeScript for .coffee assets and views
-gem 'coffee-rails', '~> 4.1.0'
+# gem 'uglifier', '>= 1.3.0'
 # See https://github.com/rails/execjs#readme for more supported runtimes
-gem 'therubyracer', platforms: :ruby
+# gem 'therubyracer', platforms: :ruby
 
-# Use jquery as the JavaScript library
-gem 'jquery-rails'
-# jQuery plugin for drop-in fix binded events problem caused by Turbolinks
-gem 'jquery-turbolinks'
-# Turbolinks makes following links in your web application faster. Read more: https://github.com/rails/turbolinks
-gem 'turbolinks'
+# Use CoffeeScript for .coffee assets and views
+gem 'coffee-rails', '~> 4.2'
+# Turbolinks makes navigating your web application faster. Read more: https://github.com/turbolinks/turbolinks
+gem 'turbolinks', '~> 5'
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
-gem 'jbuilder', '~> 2.0'
-# bundle exec rake doc:rails generates the API under doc/api.
-gem 'sdoc', '~> 0.4.0', group: :doc
-
-gem 'riiif', '0.4.0'
-
-gem 'actionpack-page_caching', '~> 1.1.0'
-
-gem 'redcarpet', '~> 3.3.4'
-
-# Use Jekyll for blog and informational pages
-# See #937 before updating this version
-gem 'jekyll', '~> 3.1.3'
-
-# Use gem version of cozy-sun-bear
-gem 'cozy-sun-bear', git: 'https://github.com/mlibrary/cozy-sun-bear', ref: '068659c7740dbe9c270c0824d922efb8295142c4'
-
-# Talking to Google Analytics
-gem 'legato', '~> 0.3'
-gem 'oauth'
-gem 'oauth2', '~> 1.2'
-gem 'signet'
-
-# test coverage with coveralls
-gem 'coveralls', require: false
-
+gem 'jbuilder', '~> 2.5'
+# Use Redis adapter to run Action Cable in production
+# gem 'redis', '~> 3.0'
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
-
-# Use Unicorn as the app server
-# gem 'unicorn'
 
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
 
-gem 'httparty'
-gem 'rubyzip'
-
-group :development do
-  # Access an IRB console on exception pages or by using <%= console %> in views
-  gem 'web-console', '~> 2.0'
-  # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
-  gem 'pry-rails', '~> 0.3.4'
-  gem 'spring'
+group :development, :test do
+  # Call 'byebug' anywhere in the code to stop execution and get a debugger console
+  gem 'byebug', platforms: %i[mri mingw x64_mingw]
+  # Adds support for Capybara system testing and selenium driver
+  gem 'capybara', '~> 2.13'
+  gem 'selenium-webdriver'
 end
 
-gem 'carrierwave', '~> 1.1.0'
-gem 'devise'
-gem 'devise-guests', '~> 0.3'
-# gem 'rsolr', '~> 1.1.2'
-gem 'rsolr', '~> 2.0.1'
+group :development do
+  gem 'listen', '>= 3.0.5', '< 3.2'
+  # Access an IRB console on exception pages or by using <%= console %> anywhere in the code.
+  gem 'web-console', '>= 3.3.0'
+  # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
+  gem 'spring'
+  gem 'spring-watcher-listen', '~> 2.0.0'
+end
+
+# Windows does not include zoneinfo files, so bundle the tzinfo-data gem
+gem 'tzinfo-data', platforms: %i[mingw mswin x64_mingw jruby]
+
+##############################################################################
+#
+# Hyrax
+#
+##############################################################################
+
+gem 'hyrax', github: 'samvera/hyrax', ref: '72b5992e9a38fa18d5d325181a031d0d09eab196' # Jun 23, 2017
 
 group :development, :test do
-  gem 'byebug'
-  gem 'capybara'
+  gem 'solr_wrapper', '>= 0.3'
+end
+
+# gem 'rsolr', '>= 1.0'
+gem 'devise'
+gem 'devise-guests', '~> 0.6'
+gem 'jquery-rails' # Use jquery as the JavaScript library
+group :development, :test do
+  gem 'fcrepo_wrapper'
+  gem 'rspec-rails'
+end
+
+##############################################################################
+#
+# Heliotrope
+#
+##############################################################################
+
+gem 'actionpack-page_caching', '~> 1.1.0'
+gem 'carrierwave', '~> 1.1.0'
+gem 'config' # use config gem to pull in settings from .yml files
+gem 'cozy-sun-bear', git: 'https://github.com/mlibrary/cozy-sun-bear', ref: '068659c7740dbe9c270c0824d922efb8295142c4'
+gem 'httparty'
+gem 'jekyll', '~> 3.1.3'
+gem 'jquery-turbolinks'
+gem 'legato', '~> 0.3'
+gem 'oauth'
+gem 'oauth2', '~> 1.2'
+gem 'redcarpet', '~> 3.3.4'
+gem 'resque', '~> 1.26.0'
+gem 'resque-pool'
+gem 'resque-web', '~> 0.0.7', require: 'resque_web'
+gem 'riiif', '0.4.0'
+gem 'rsolr', '~> 2.0.1'
+gem 'rubyzip'
+gem 'signet'
+gem 'uglifier', '>= 3.2.0'
+
+group :development do
+  gem 'pry-rails', '~> 0.3.4'
+  gem 'sdoc', '~> 0.4.0', group: :doc # bundle exec rake doc:rails generates the API under doc/api.
+end
+
+group :development, :test do
+  gem 'rubocop', '~> 0.48.1'
+  gem 'rubocop-rspec', '~> 1.15.1'
+  gem 'sqlite3' # Use sqlite3 as the database for Active Record
+end
+
+group :test do
+  gem 'coveralls', require: false
   gem 'factory_girl_rails'
   gem "fakefs", require: "fakefs/safe"
-  gem 'fcrepo_wrapper', '0.5.2'
   gem 'rails-controller-testing'
   gem 'rspec-context-private'
   gem 'rspec-html-matchers'
-  gem 'rspec-rails'
-  gem 'rubocop', '~> 0.48.1'
-  gem 'rubocop-rspec', '~> 1.15.1'
-  gem 'solr_wrapper', '0.21.0'
-  gem 'sqlite3'
+end
+
+group :production do
+  gem 'clamav'
+  gem 'mysql2' # Use mysql2 as the database for Active Record
 end

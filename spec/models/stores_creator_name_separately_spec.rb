@@ -4,6 +4,7 @@ require 'rails_helper'
 
 class TestWork < ActiveFedora::Base
   include StoresCreatorNameSeparately
+  include StoresCreatorNameSeparatelyToSolr
 end
 
 describe StoresCreatorNameSeparately do

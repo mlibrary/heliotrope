@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
 # Generated via
-#  `rails generate curation_concerns:work Monograph`
+#  `rails generate hyrax:work Monograph`
 module Hyrax
   class MonographForm < Hyrax::Forms::WorkForm
     self.model_class = ::Monograph
-    self.terms += %i[press date_published isbn isbn_paper isbn_ebook
+    self.terms += %i[resource_type press date_published isbn isbn_paper isbn_ebook
                      primary_editor_family_name primary_editor_given_name editor
                      copyright_holder buy_url sub_brand
                      creator_family_name creator_given_name
@@ -37,7 +37,7 @@ module Hyrax
       # We only want FileSets here, not any other models, see story #174
       # Use model.file_set_ids, not model.member_ids
       file_sets ||=
-        PresenterFactory.build_presenters(model.file_set_ids, FileSetPresenter, current_ability)
+        PresenterFactory.build_for(ids: model.file_set_ids, presenter_class: FileSetPresenter, presenter_args: current_ability)
       Hash[file_sets.map { |file| [file.to_s, file.id] }]
     end
   end

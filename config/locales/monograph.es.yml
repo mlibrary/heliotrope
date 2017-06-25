@@ -1,0 +1,10 @@
+es:
+  hyrax:
+    icons:
+      monograph:     'fa fa-file-text-o'
+    select_type:
+      monograph:
+        # TODO: translate `human_name` into Spanish
+        name:               "Monograph"
+        # TODO: translate `human_name` into Spanish
+        description:        "Monograph trabajos"

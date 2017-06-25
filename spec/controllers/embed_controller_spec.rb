@@ -41,7 +41,7 @@ RSpec.describe EmbedController, type: :controller do
       before do
         allow(HandleService).to receive(:object).with(hdl).and_return(obj)
         allow(obj).to receive(:id).and_return(0)
-        allow(Hyrax::PresenterFactory).to receive(:build_presenters).with([obj.id], Hyrax::FileSetPresenter, anything).and_return([presenter])
+        allow(Hyrax::PresenterFactory).to receive(:build_for).with(ids: [obj.id], presenter_class: Hyrax::FileSetPresenter, presenter_args: anything).and_return([presenter])
         get :show, params: { hdl: hdl }
       end
       it do

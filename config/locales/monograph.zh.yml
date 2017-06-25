@@ -1,0 +1,10 @@
+zh:
+  hyrax:
+    icons:
+      monograph:     'fa fa-file-text-o'
+    select_type:
+      monograph:
+        # TODO: translate `human_name` into Chinese
+        name:               "Monograph"
+        # TODO: translate `human_name` into Chinese
+        description:        "Monograph 作品"

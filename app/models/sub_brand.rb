@@ -7,7 +7,7 @@ class SubBrand < ActiveRecord::Base
   validates :title, presence: true
 
   # A sub-brand can contain other sub-brands
-  belongs_to :parent, class_name: 'SubBrand'
+  belongs_to :parent, class_name: 'SubBrand', optional: true
   has_many :sub_brands, foreign_key: 'parent_id'
   validate :cannot_contain_itself
   validate :cannot_contain_parent

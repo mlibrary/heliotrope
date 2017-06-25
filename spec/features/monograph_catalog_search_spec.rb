@@ -48,6 +48,8 @@ feature 'Monograph Catalog Search' do
 
   scenario 'searches the monograph catalog page' do
     visit monograph_catalog_path(monograph.id)
+    expect(page).to have_content 'Unruly Puddles'
+    expect(page).to have_content 'Strange Marshes'
 
     # Selectors needed for assets/javascripts/ga_event_tracking.js
     # If these change, fix here then update ga_event_tracking.js

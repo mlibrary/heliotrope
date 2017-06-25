@@ -13,40 +13,32 @@
 
 # Ignore all logfiles and tempfiles.
 /log/*
+/tmp/*
 !/log/.keep
-/tmp
+!/tmp/.keep
+
+/node_modules
+/yarn-error.log
+
+.byebug_history
 
 # Ignore jekyll auto-generated files -- if you need to create a static page, put it in fulcrum/
 /public
 .sass-cache
 
-# Ignore fcrepo test/development data
-/fcrepo4-test-data
-/fcrepo4-development-data
-/fcrepo4-data
-
+# Ingnore per dev configs
 /config/secrets.yml
 /config/database.yml
 /config/analytics.yml
 /config/analytics.yml.dev
 /config/curation_concerns.yml
+/config/role_map.yml
+
 # Google Analytics access keys
 *.p12
 
 # Ignore Vagrant support files
 .vagrant
-
-# Ignore OS X Desktop Services Store files
-.DS_Store
-
-# Ignore RubyMine project settings folder
-.idea/
-
-# Ignore all files ending in "log", vagrant log files
-**/*.log
-
-# Ignore all files ending in "swp", vim swap files
-**/*.swp
 
 # Ignore coverall's files
 /coverage

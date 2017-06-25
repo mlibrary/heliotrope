@@ -1,16 +1,8 @@
 # frozen_string_literal: true
 
 # Generated via
-#  `rails generate curation_concerns:work Monograph`
+#  `rails generate hyrax:work Monograph`
 class Monograph < ActiveFedora::Base
-  include ::Hyrax::WorkBehavior
-  include ::Hyrax::BasicMetadata
-  include StoresCreatorNameSeparately
-
-  self.indexer = MonographIndexer
-
-  validates :title, presence: { message: 'Your work must have a title.' }
-
   property :buy_url, predicate: ::RDF::Vocab::SCHEMA.sameAs do |index|
     index.as :symbol
   end
@@ -59,4 +51,16 @@ class Monograph < ActiveFedora::Base
   property :section_titles, predicate: ::RDF::Vocab::DC.tableOfContents, multiple: false do |index|
     index.as :symbol
   end
+
+  include StoresCreatorNameSeparately
+  include ::Hyrax::WorkBehavior
+  # This must come after the WorkBehavior because it finalizes the metadata
+  # schema (by adding accepts_nested_attributes)
+  include ::Hyrax::BasicMetadata
+  include StoresCreatorNameSeparatelyToSolr
+  self.indexer = MonographIndexer
+  # Change this to restrict which works can be added as a child.
+  # self.valid_child_concerns = []
+  validates :title, presence: { message: 'Your work must have a title.' }
+  self.human_readable_type = 'Monograph'
 end

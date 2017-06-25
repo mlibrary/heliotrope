@@ -3,7 +3,7 @@
 module ExternalResourceHelper
   def glyphicon_type(resource_type)
     return 'glyphicon glyphicon-file' if resource_type.blank?
-    case resource_type.downcase
+    case resource_type.first.downcase
     when 'text'
       'glyphicon glyphicon-file'
     when 'image'

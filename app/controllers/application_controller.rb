@@ -5,7 +5,7 @@ class ApplicationController < ActionController::Base
   include Blacklight::Controller
   include Hydra::Controller::ControllerBehavior
 
-  # Adds Hyrax behaviors to the application controller.
+  # Adds Hyrax behaviors into the application controller
   include Hyrax::Controller
   include Hyrax::ThemedLayoutController
   with_themed_layout '1_column'
@@ -25,6 +25,13 @@ class ApplicationController < ActionController::Base
   protected
 
     def render_unauthorized(_exception)
+      respond_to do |format|
+        format.html { render 'hyrax/base/unauthorized', status: :unauthorized }
+        format.any { head :unauthorized, content_type: 'text/plain' }
+      end
+    end
+
+    def render_404
       respond_to do |format|
         format.html { render 'hyrax/base/unauthorized', status: :unauthorized }
         format.any { head :unauthorized, content_type: 'text/plain' }

@@ -2,6 +2,25 @@
 
 require 'rails_helper'
 
+# Hyrax Example
+#
+# describe SearchBuilder do
+#   let(:user_params) { Hash.new }
+#   let(:blacklight_config) { Blacklight::Configuration.new }
+#   let(:scope) { double blacklight_config: blacklight_config }
+#   subject(:search_builder) { described_class.new scope }
+#
+#   # describe "my custom step" do
+#   #   subject(:query_parameters) do
+#   #     search_builder.with(user_params).processed_parameters
+#   #   end
+#   #
+#   #   it "adds my custom data" do
+#   #     expect(query_parameters).to include :custom_data
+#   #   end
+#   # end
+# end
+
 describe SearchBuilder do
   let(:ability) { double('ability') }
   let(:config) { CatalogController.blacklight_config }
@@ -15,7 +34,7 @@ describe SearchBuilder do
       before { search_builder.filter_models(solr_params) }
 
       it 'limits query to collection and generic work' do
-        expect(solr_params[:fq].first).to match(/{!terms f=has_model_ssim}Monograph,Collection/)
+        expect(solr_params[:fq].first).to match(/{!terms f=has_model_ssim}Monograph,Asset,Collection/)
       end
     end
   end

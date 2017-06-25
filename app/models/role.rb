@@ -2,8 +2,8 @@
 
 class Role < ActiveRecord::Base
   ROLES = %w[admin editor].freeze
-  belongs_to :resource, polymorphic: true
   belongs_to :user
+  belongs_to :resource, polymorphic: true, optional: true
   validates :role, inclusion: { in: ROLES }
   validates :user_key, presence: true
   validate :user_must_exist, if: -> { user_key.present? }

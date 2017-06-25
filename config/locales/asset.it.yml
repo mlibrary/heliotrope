@@ -1,0 +1,8 @@
+it:
+  hyrax:
+    icons:
+      asset:     'fa fa-file-text-o'
+    select_type:
+      asset:
+        name:               "Asset"
+        description:        "Asset opere"

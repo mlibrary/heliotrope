@@ -1,5 +1,8 @@
 # frozen_string_literal: true
 
+# NOTE: This is a modified version of simple_form's default config file.
+#       The only changes were to move the input to after the hint and error.
+
 # Use this setup block to configure all options available in SimpleForm.
 SimpleForm.setup do |config|
   # Wrappers are used by the form builder to generate a
@@ -43,9 +46,11 @@ SimpleForm.setup do |config|
     b.optional :readonly
 
     ## Inputs
-    b.use :label_input
+    # b.use :label_input
+    b.use :label
     b.use :hint,  wrap_with: { tag: :span, class: :hint }
     b.use :error, wrap_with: { tag: :span, class: :error }
+    b.use :input
 
     ## full_messages_for
     # If you want to display the full error message for the attribute, you can
@@ -100,7 +105,7 @@ SimpleForm.setup do |config|
   # config.item_wrapper_class = nil
 
   # How the label text should be generated altogether with the required text.
-  # config.label_text = lambda { |label, required, explicit_label| "#{required} #{label}" }
+  config.label_text = ->(label, required, _) { "#{label} #{required}" }
 
   # You can define the class to use on all labels. Default is nil.
   # config.label_class = nil
