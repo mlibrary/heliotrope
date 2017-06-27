@@ -32,7 +32,6 @@
 /config/analytics.yml
 /config/analytics.yml.dev
 /config/curation_concerns.yml
-/config/role_map.yml
 
 # Google Analytics access keys
 *.p12
