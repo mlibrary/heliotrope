@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'csv'
 
 module Import
@@ -8,7 +10,7 @@ module Import
       @file = input_file
     end
 
-    def attributes(errors_out = '')
+    def attributes(errors_out = [''])
       attrs = {}
 
       # a CSV can only have one monograph (probably for in-house use only)...
@@ -50,7 +52,7 @@ module Import
         row_num += 1
       end
 
-      errors_out.replace skipped_array.join + "\n\n" + errors_array.join
+      errors_out[0] = skipped_array.join + "\n\n" + errors_array.join
       attrs
     end
 

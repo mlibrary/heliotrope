@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Import
   class Importer
     include ::Hyrax::Noid
@@ -24,7 +26,7 @@ module Import
       interaction = !Rails.env.test?
       validate_press unless reimporting
       csv_files.each do |file|
-        errors = ''
+        errors = ['']
         attrs = CSVParser.new(file).attributes(errors)
 
         # if there is a command-line monograph title then use it
@@ -33,20 +35,26 @@ module Import
         # create file objects (stop everything here if any are not found, duplicates or of zero size)
         file_objects(attrs)
 
-        optional_early_exit(interaction, errors, test)
+        optional_early_exit(interaction, errors[0], test)
+
+        # because the actor stack pukes, files has to be removed here
+        files = attrs.delete('files')
 
         # because the MonographBuilder sets its metadata, files_metadata has to be removed here
         file_attrs = attrs.delete('files_metadata')
 
         if reimporting
           # TODO: make add_new_filesets return something sensible?
+          attrs['files'] = files
           raise "There may have been a problem attaching the new files" unless add_new_filesets(@reimport_mono, attrs, file_attrs)
         else
           attrs.merge!('press' => press_subdomain, 'visibility' => visibility)
           monograph_builder = MonographBuilder.new(user, attrs)
           monograph_builder.run
           monograph = monograph_builder.curation_concern
-          update_fileset_metadata(monograph, file_attrs)
+          attrs['files'] = files
+          add_new_filesets(monograph, attrs, file_attrs)
+          # update_fileset_metadata(monograph,  file_attrs)
           representative_image(monograph)
         end
       end
@@ -71,6 +79,7 @@ module Import
           # setting external resources to '' here (not nil) gets the FileSet created using the existing...
           # CC actor stack, as long as we also bow out just before ingest in FileSetActor's create_content
           file.blank? ? '' : File.new(find_file(file))
+          # file.blank? ? '' : Hydra::PCDM::File.new { File.new(find_file(file)) }
         end
       end
 
@@ -108,7 +117,7 @@ module Import
           file_set_actor.create_metadata(metadata)
           file_set_actor.create_content(file)
           file_set_actor.update_metadata(metadata)
-          file_set_actor.attach_file_to_work(monograph, metadata)
+          file_set_actor.attach_to_work(monograph, metadata)
         end
       end
 

@@ -41,6 +41,7 @@ describe Import::Importer do
 
   describe '#run' do
     before do
+      # AdminSet.find_or_create_default_admin_set_id
       stub_out_redis
     end
 
