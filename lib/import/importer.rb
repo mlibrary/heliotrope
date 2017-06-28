@@ -37,24 +37,18 @@ module Import
 
         optional_early_exit(interaction, errors[0], test)
 
-        # because the actor stack pukes, files has to be removed here
-        files = attrs.delete('files')
-
         # because the MonographBuilder sets its metadata, files_metadata has to be removed here
         file_attrs = attrs.delete('files_metadata')
 
         if reimporting
           # TODO: make add_new_filesets return something sensible?
-          attrs['files'] = files
           raise "There may have been a problem attaching the new files" unless add_new_filesets(@reimport_mono, attrs, file_attrs)
         else
           attrs.merge!('press' => press_subdomain, 'visibility' => visibility)
           monograph_builder = MonographBuilder.new(user, attrs)
           monograph_builder.run
-          monograph = monograph_builder.curation_concern
-          attrs['files'] = files
-          add_new_filesets(monograph, attrs, file_attrs)
-          # update_fileset_metadata(monograph,  file_attrs)
+          monograph = Monograph.find(monograph_builder.curation_concern.id)
+          update_fileset_metadata(monograph, file_attrs)
           representative_image(monograph)
         end
       end
@@ -78,8 +72,7 @@ module Import
         attrs['files'] = attrs['files'].map do |file|
           # setting external resources to '' here (not nil) gets the FileSet created using the existing...
           # CC actor stack, as long as we also bow out just before ingest in FileSetActor's create_content
-          file.blank? ? '' : File.new(find_file(file))
-          # file.blank? ? '' : Hydra::PCDM::File.new { File.new(find_file(file)) }
+          file.blank? ? Tempfile.new('external.') : File.new(find_file(file))
         end
       end
 

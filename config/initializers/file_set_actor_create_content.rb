@@ -12,7 +12,7 @@ Hyrax::Actors::FileSetActor.class_eval do
     return false unless file_set.save # Need to save to get an id
 
     # This is the only change for Heliotrope, allowing external resources to be saved with no ingested file
-    return true if file.blank?
+    return true if file.blank? || file.size.zero?
 
     build_file_actor(relation).ingest_file(io_decorator(file))
     true
