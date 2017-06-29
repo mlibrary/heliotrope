@@ -8,18 +8,21 @@ RSpec.describe EPubController, type: :controller do
       before { get :show, params: { id: :id } }
       it { expect(response).to have_http_status(:unauthorized) }
     end
+
     context 'file nil' do
       let(:file_set) { create(:file_set) }
 
       before { get :show, params: { id: file_set.id } }
       it { expect(response).to have_http_status(:unauthorized) }
     end
+
     context 'file not epub' do
       let(:file_set) { create(:file_set, content: File.open(File.join(fixture_path, 'it.mp4'))) }
 
       before { get :show, params: { id: file_set.id } }
       it { expect(response).to have_http_status(:unauthorized) }
     end
+
     context 'file epub' do
       let(:monograph) { create(:monograph) }
       let(:file_set) { create(:file_set, content: File.open(File.join(fixture_path, 'moby-dick.epub'))) }
@@ -34,6 +37,7 @@ RSpec.describe EPubController, type: :controller do
         expect(response).to have_http_status(:success)
       end
     end
+
     context 'tombstone' do
       let(:monograph) { create(:monograph) }
       let(:file_set) { create(:file_set, content: File.open(File.join(fixture_path, 'moby-dick.epub'))) }
@@ -58,30 +62,33 @@ RSpec.describe EPubController, type: :controller do
       before { get :file, params: { id: :id, file: 'META-INF/container', format: 'xml' } }
       it do
         expect(response).to_not have_http_status(:unauthorized)
-        expect(response).to have_http_status(:success)
+        expect(response).to have_http_status(:not_found)
         expect(response.body.empty?).to be true
       end
     end
+
     context 'file nil' do
       let(:file_set) { create(:file_set) }
 
       before { get :file, params: { id: file_set.id, file: 'META-INF/container', format: 'xml' } }
       it do
         expect(response).to_not have_http_status(:unauthorized)
-        expect(response).to have_http_status(:success)
+        expect(response).to have_http_status(:not_found)
         expect(response.body.empty?).to be true
       end
     end
+
     context 'file not epub' do
       let(:file_set) { create(:file_set, content: File.open(File.join(fixture_path, 'it.mp4'))) }
 
       before { get :file, params: { id: file_set.id, file: 'META-INF/container', format: 'xml' } }
       it do
         expect(response).to_not have_http_status(:unauthorized)
-        expect(response).to have_http_status(:success)
+        expect(response).to have_http_status(:not_found)
         expect(response.body.empty?).to be true
       end
     end
+
     context 'file epub' do
       let(:file_set) { create(:file_set, content: File.open(File.join(fixture_path, 'moby-dick.epub'))) }
 
@@ -89,10 +96,11 @@ RSpec.describe EPubController, type: :controller do
         before { get :file, params: { id: file_set.id, file: 'META-INF/container', format: 'txt' } }
         it do
           expect(response).to_not have_http_status(:unauthorized)
-          expect(response).to have_http_status(:success)
+          expect(response).to have_http_status(:not_found)
           expect(response.body.empty?).to be true
         end
       end
+
       context 'file exist' do
         before { get :file, params: { id: file_set.id, file: 'META-INF/container', format: 'xml' } }
         it do
@@ -101,6 +109,7 @@ RSpec.describe EPubController, type: :controller do
           expect(response.body.empty?).to be false
         end
       end
+
       context 'tombstone' do
         before do
           file_set.destroy!
@@ -108,7 +117,7 @@ RSpec.describe EPubController, type: :controller do
         end
         it do
           expect(response).to_not have_http_status(:unauthorized)
-          expect(response).to have_http_status(:success)
+          expect(response).to have_http_status(:not_found)
           expect(response.body.empty?).to be true
         end
       end

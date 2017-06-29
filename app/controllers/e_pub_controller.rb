@@ -34,9 +34,10 @@ class EPubController < ApplicationController
         end
       end
     else
-      head :ok
+      head :not_found
     end
   rescue
-    head :ok
+    Rails.logger.debug("No EPUB file found for ID: #{params[:id]}")
+    head :not_found
   end
 end
