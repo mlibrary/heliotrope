@@ -13,13 +13,8 @@ include Warden::Test::Helpers
 
 # NOTE: If you generated more than one work, you have to set "js: true"
 RSpec.feature 'Create a Monograph', js: true do
-  context 'a logged in hyrax user' do
-    let(:user_attributes) do
-      { email: 'test@example.com' }
-    end
-    let(:user) do
-      User.new(user_attributes) { |u| u.save(validate: false) }
-    end
+  context 'as platform administrator' do
+    let(:user) { create(:platform_admin) }
 
     before do
       AdminSet.find_or_create_default_admin_set_id
@@ -27,42 +22,21 @@ RSpec.feature 'Create a Monograph', js: true do
     end
 
     scenario do
-      visit '/dashboard'
-      click_link "Works"
-      click_link "Add new work"
-
+      visit '/dashboard?locale=en'
+      expect(page).to have_content 'Works'
+      expect(page).to have_link 'Works'
+      click_link 'Works'
+      sleep 2
+      expect(page).to have_content 'Add new work'
+      expect(page).to have_link 'Add new work'
+      click_link 'Add new work'
+      sleep 2
       # If you generate more than one work uncomment these lines
-      choose "payload_concern", option: "Monograph"
-      click_button "Create work"
-
-      expect(page).to have_content "Add New Monograph"
+      expect(page).to have_content 'Monograph'
+      choose 'payload_concern', option: 'Monograph'
+      click_button 'Create work'
+      sleep 2
+      expect(page).to have_content 'Add New Monograph'
     end
   end
-
-  # context 'a logged in heliotrope user' do
-  #   let(:user) { create(:platform_admin) }
-  #   let!(:press) { create(:press) }
-  #
-  #   before do
-  #     login_as user
-  #     stub_out_redis
-  #   end
-  #
-  #   scenario do
-  #     visit new_hyrax_monograph_path
-  #     fill_in 'monograph[title][]', with: 'Test monograph'
-  #     # fill_in 'Title', with: 'Test monograph'
-  #     fill_in 'Author (last name)', with: 'Johns'
-  #     fill_in 'Author (first name)', with: 'Jimmy'
-  #     fill_in 'Additional Authors', with: 'Sub Way'
-  #     select press.name, from: 'Publisher'
-  #     fill_in 'ISBN (Hardcover)', with: '123-456-7890'
-  #     click_button 'Save'
-  #
-  #     expect(page).to have_content 'Test monograph'
-  #     expect(page).to have_content '123-456-7890'
-  #     # Monograph page has authors
-  #     expect(page).to have_content 'Jimmy Johns and Sub Way'
-  #   end
-  # end
 end

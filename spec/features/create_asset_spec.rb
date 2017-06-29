@@ -13,13 +13,8 @@ include Warden::Test::Helpers
 
 # NOTE: If you generated more than one work, you have to set "js: true"
 RSpec.feature 'Create a Asset', js: true do
-  context 'a logged in user' do
-    let(:user_attributes) do
-      { email: 'test@example.com' }
-    end
-    let(:user) do
-      User.new(user_attributes) { |u| u.save(validate: false) }
-    end
+  context 'as platform administrator' do
+    let(:user) { create(:platform_admin) }
 
     before do
       AdminSet.find_or_create_default_admin_set_id
@@ -27,15 +22,21 @@ RSpec.feature 'Create a Asset', js: true do
     end
 
     scenario do
-      visit '/dashboard'
-      click_link "Works"
-      click_link "Add new work"
-
+      visit '/dashboard?locale=en'
+      expect(page).to have_content 'Works'
+      expect(page).to have_link 'Works'
+      click_link 'Works'
+      sleep 2
+      expect(page).to have_content 'Add new work'
+      expect(page).to have_link 'Add new work'
+      click_link 'Add new work'
+      sleep 2
       # If you generate more than one work uncomment these lines
-      choose "payload_concern", option: "Asset"
-      click_button "Create work"
-
-      expect(page).to have_content "Add New Asset"
+      expect(page).to have_content 'Asset'
+      choose 'payload_concern', option: 'Asset'
+      click_button 'Create work'
+      sleep 2
+      expect(page).to have_content 'Add New Asset'
     end
   end
 end
