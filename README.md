@@ -61,6 +61,8 @@ to only run in development mode.
 
 ### Testing
 
+Make sure you have seeded your test DB with `RAILS_ENV=test bundle exec rake db:seed`
+
 run `rake ci`
 
 Alternatively, you can start up each server individually.  This may be preferable because `rake ci` starts up and tears down Fedora and Solr before/after the test suite is run.
@@ -74,6 +76,9 @@ Alternatively, you can start up each server individually.  This may be preferabl
 1. Run tests
 
    `rspec`
+
+*NOTE:* As of June 20, 2017 we have a test which requires the static pages to be built in order for the routing to happen correctly (See the Wiki for more details), which means running this:
+`bundle exec rake jekyll:build`
 
 ### Wiki
 
