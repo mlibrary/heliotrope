@@ -6,7 +6,7 @@
     if ( true ) {
             //$("body").addClass("reading");
             var reader = cozy.reader('reader', {
-                href: "<%= "#{main_app.epub_url}/#{params[:id]}" %>",
+                href: "<%= "#{main_app.epub_url.gsub!(/\?.*/, '')}/#{params[:id]}" %>",
                 metadata: {
                     doi: '<%= @citable_link %>',
                     // TO-DO: iterate all creator given and family names for monograph
@@ -27,7 +27,7 @@
       <% if defined? @subdomain %>
       cozy.control.widget.panel({
         region: 'top.header.left',
-        template: `<div class="logo"><%= image_tag "#{@subdomain}.png" %></div>`,
+        template: `<div class="logo"><%= image_tag logo(@subdomain), alt: @subdomain %>`,
         data: { title: "<%= @subdomain %>" }
       }).addTo(reader);
       <% end %>
