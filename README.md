@@ -12,7 +12,7 @@ Samvera-based digital publishing platform built by the University of Michigan Li
   * clone the repository
   * run `bundle install`
   * run `bundle exec bin/setup`
-  * Install MySQL [OS X El Capitan](https://gist.github.com/nrollr/a8d156206fa1e53c6cd6)
+  * [Install MySQL OS X El Capitan](https://github.com/mlibrary/heliotrope/wiki/Install-MySQL-on-OS-X-El-Capitan)
   * [install redis](https://github.com/mlibrary/heliotrope/wiki/Background-Jobs#how-to-install-redis)
   * [build public](https://github.com/mlibrary/heliotrope/wiki/Static-Pages-and-Blog)
 
