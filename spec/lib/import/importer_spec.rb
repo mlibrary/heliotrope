@@ -8,8 +8,13 @@ describe Import::Importer do
   let(:private_vis) { Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE }
 
   let(:root_dir) { File.join(fixture_path, 'csv', 'import_sections') }
+  let(:user) { create(:user, email: 'blah@example.com') }
+  # let(:user_email) { '' }
   let(:press) { create(:press, subdomain: 'umich') }
-  let(:importer) { described_class.new(root_dir, press.subdomain, visibility) }
+  let(:importer) { described_class.new(root_dir: root_dir,
+                                       user_email: user.email,
+                                       press: press.subdomain,
+                                       visibility: public_vis) }
   let(:visibility) { public_vis }
 
   before do
@@ -22,6 +27,10 @@ describe Import::Importer do
       expect(importer.root_dir).to eq root_dir
     end
 
+    it 'has a user' do
+      expect(importer.user_email).to eq user.email
+    end
+
     it 'has a press' do
       expect(importer.press_subdomain).to eq press.subdomain
     end
@@ -31,7 +40,7 @@ describe Import::Importer do
     end
 
     context 'default visibility' do
-      let(:importer) { described_class.new(root_dir, press.subdomain) }
+      let(:importer) { described_class.new(root_dir: root_dir, user_email: user.email, press: press.subdomain) }
 
       it 'is private' do
         expect(importer.visibility).to eq private_vis
@@ -56,10 +65,13 @@ describe Import::Importer do
         expect(monograph.id.length).to_not eq 36 # GUID
         expect(monograph.id.length).to eq 9 # NOID
 
+        expect(monograph.depositor).to eq user.email
+
         expect(monograph.visibility).to eq public_vis
         file_sets = monograph.ordered_members.to_a
 
         expect(file_sets[0].title).to eq ['Monograph Shipwreck']
+        expect(file_sets[0].depositor).to eq user.email
 
         # The monograph cover/representative is the first file_set
         expect(file_sets[0].id).to eq monograph.representative_id
@@ -89,7 +101,7 @@ describe Import::Importer do
         # *************** Start "reimport" tests ***************
         # ******************************************************
 
-        reimporter = described_class.new(root_dir, nil, nil, nil, monograph.id)
+        reimporter = described_class.new(root_dir: root_dir, user_email: user.email, monograph_id: monograph.id)
         expect { reimporter.run }
           .to change { Monograph.count }.by(0)
           .and(change { FileSet.count }.by(9))
@@ -126,10 +138,19 @@ describe Import::Importer do
 
     context 'when the monograph id doesn\'t match a pre-existing monograph' do
       let(:monograph_id) { 'non-existent' }
-      let(:reimporter) { described_class.new(root_dir, nil, nil, nil, monograph_id) }
+      let(:reimporter) { described_class.new(root_dir: root_dir, user_email: user.email, monograph_id: monograph_id) }
 
       it 'raises an exception' do
-        expect { reimporter.run }.to raise_error(/No monograph found with id #{monograph_id}/)
+        expect { reimporter.run }.to raise_error(/No monograph found with id '#{monograph_id}'/)
+      end
+    end
+
+    context 'when the user_email doesn\'t match a pre-existing user' do
+      let(:email_address) { 'non-existent' }
+      let(:importer) { described_class.new(root_dir: root_dir, user_email: email_address, press: press.subdomain) }
+
+      it 'raises an exception' do
+        expect { importer.run }.to raise_error(/No user found with email '#{email_address}'/)
       end
     end
 
