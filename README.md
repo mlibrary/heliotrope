@@ -1,24 +1,28 @@
 # heliotrope
+
 [![Build Status](https://travis-ci.org/mlibrary/heliotrope.svg?branch=master)](https://travis-ci.org/mlibrary/heliotrope)
 [![Coverage Status](https://coveralls.io/repos/github/mlibrary/heliotrope/badge.svg?branch=master)](https://coveralls.io/github/mlibrary/heliotrope?branch=master)
 [![Stories in Ready](https://badge.waffle.io/mlibrary/heliotrope.png?label=ready&title=Ready)](https://waffle.io/mlibrary/heliotrope)
 
-Samvera-based digital publishing platform built by the University of Michigan Library
+[Samvera](https://wiki.duraspace.org/display/samvera/Samvera)based digital publishing platform built by the [University of Michigan Library](https://www.lib.umich.edu/)
 
 ## Development
+
+### Prerequisites
+
+  * [install redis](https://github.com/mlibrary/heliotrope/wiki/Background-Jobs#how-to-install-redis)
+  * install mysql ([Install MySQL OS X El Capitan](https://github.com/mlibrary/heliotrope/wiki/Install-MySQL-on-OS-X-El-Capitan))
 
 ### Initial setup
 
   * clone the repository
   * run `bundle install`
   * run `bundle exec bin/setup`
-  * [Install MySQL OS X El Capitan](https://github.com/mlibrary/heliotrope/wiki/Install-MySQL-on-OS-X-El-Capitan)
-  * [install redis](https://github.com/mlibrary/heliotrope/wiki/Background-Jobs#how-to-install-redis)
   * [build public](https://github.com/mlibrary/heliotrope/wiki/Static-Pages-and-Blog)
 
-#### Create an admin user
+#### Make yourself a "super" admin user
 
-There is a rake task you can use to create a superadmin user.  It will prompt you for an email address and password, and then create a user with the correct role.
+There is a rake task you can use to create a "super" admin user.  It will prompt you for an email address and password, and then create a user with the correct role.
 
 `bundle exec rake admin`
 
@@ -26,7 +30,19 @@ If you need to run this when the app has been deployed, run:
 
 `RAILS_ENV=production bundle exec rake admin`
 
-### Run the application
+#### Give yourself an admin role
+
+```
+$ vi ./config/role_map.yml
+   
+development:
+  admin:   
+    - yourself@domain.com
+  archivist:
+    - archivist1@example.com
+```
+
+#### Run the application
 
 Run this command to start Fedora, Solr and Rails servers:
 
@@ -48,6 +64,14 @@ fcrepo_wrapper --config .wrap_conf/fcrepo_dev
 solr_wrapper --config .wrap_conf/solr_dev
 ```
 
+#### Create [default administrative set](https://github.com/samvera/hyrax#create-default-administrative-set) and load [workflows](https://github.com/samvera/hyrax/wiki/Defining-a-Workflow)
+
+`bundle exec rake hyrax:default_admin_set:create`
+ 
+`bundle exec rake hyrax:workflow:load`
+
+## Debugging
+
 ### Explain Partials
 
 Set the EXPLAIN_PARTIALS environment variable to show partials being rendered in source html of your views
@@ -60,7 +84,7 @@ $ EXPLAIN_PARTIALS=true bundle exec bin/rails s
 *NOTE:* Because this feature can add a fair bit of overhead, it is restricted
 to only run in development mode.
 
-### Testing
+## Testing
 
 Make sure you have seeded your test DB with `RAILS_ENV=test bundle exec rake db:seed`
 
@@ -81,10 +105,10 @@ Alternatively, you can start up each server individually.  This may be preferabl
 *NOTE:* As of June 20, 2017 we have a test which requires the static pages to be built in order for the routing to happen correctly (See the Wiki for more details), which means running this:
 `bundle exec rake jekyll:build`
 
-### Wiki
+## Wiki
 
 For additional details and helpful hints [read the wiki.](https://github.com/mlibrary/heliotrope/wiki)
 
-### Contact
+## Contact
 
 Contact the [Fulcrum Developers List](mailto:fulcrum-dev@umich.edu) with any question about the project.
