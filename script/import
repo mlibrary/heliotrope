@@ -22,8 +22,8 @@ def parse_inputs(args)
     inputs[:root_dir] = dir
   end
 
-  opts.on('-u USER', 'username (email) of the user to use as depositor of the content. (always required)') do |dir|
-    inputs[:user_email] = dir
+  opts.on('-u USER', 'username (email) of the user to use as depositor of the content. (always required)') do |usr|
+    inputs[:user_email] = usr
   end
 
   opts.on('-p PRESS', 'Subdomain of the Press that the monographs belong to. (required for new monograph)') do |press|
