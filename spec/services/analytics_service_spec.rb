@@ -11,6 +11,11 @@ describe AnalyticsService, :no_clean do
     let(:config) { described_class.send(:config) }
 
     context "When the yaml file has values" do
+      before do
+        allow(File).to receive(:exist?).and_return true
+        allow(File).to receive(:read).and_return("# Loads configuration options from config/analytics.yml. Expected structure:\nanalytics:\n  app_name: 'My App Name'\n  app_version: '0.0.1'\n  privkey_path: '/tmp/privkey.p12'\n  privkey_secret: 's00pers3kr1t'\n  client_email: 'oauth@example.org'\n")
+      end
+
       it "is valid" do
         expect(config).to be_valid
       end
@@ -26,6 +31,7 @@ describe AnalyticsService, :no_clean do
 
     context "When the yaml file has no values" do
       before do
+        allow(File).to receive(:exist?).and_return true
         allow(File).to receive(:read).and_return("# Just comments\n# and comments\n")
       end
 

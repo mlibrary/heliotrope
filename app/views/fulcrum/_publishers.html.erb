@@ -13,10 +13,16 @@
   <% publishers.all.each do |publisher| %>
     <% if can? :read, publisher %>
       <tr>
-        <td><a href="<%= edit_press_path(publisher.id) %>"><span class="glyphicon glyphicon-edit" aria-hidden="true"></span> Edit</a></td>
+        <td><%= link_to(edit_press_path(publisher.subdomain)) do %>
+            <span class="glyphicon glyphicon-edit" aria-hidden="true"></span> Edit
+          <% end %>
+        </td>
         <td><%= publisher.name %></td>
-        <td><%= link_to publisher.subdomain, "/#{publisher.subdomain}" %></td>
-        <td><%= repository.monograph_ids(publisher).count() %>&nbsp;<a href="<%= concern_monographs_new_path %>?press=<%= publisher.subdomain %>"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Add</a></td>
+        <td><%= link_to publisher.subdomain, "/#{publisher.subdomain}?locale=#{I18n.locale}" %></td>
+        <td><%= repository.monograph_ids(publisher).count() %>&nbsp;<%= link_to(concern_monographs_new_path(press: publisher.subdomain)) do %>
+            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Add
+          <% end %>
+        </td>
         <td><%= repository.asset_ids(publisher).count() %></td>
         <td><%= repository.user_ids(publisher).count() %></td>
       </tr>
