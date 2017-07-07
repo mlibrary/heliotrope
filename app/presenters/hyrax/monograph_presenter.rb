@@ -62,6 +62,14 @@ module Hyrax
       editors.present?
     end
 
+    def authors
+      ["#{creator_given_name} #{creator_family_name}", contributor].flatten.to_sentence
+    end
+
+    def authors?
+      authors.present?
+    end
+
     def subdomain
       Array(solr_document['press_tesim']).first
     end

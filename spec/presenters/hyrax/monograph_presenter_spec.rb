@@ -73,6 +73,26 @@ describe Hyrax::MonographPresenter do
     it { is_expected.to eq false }
   end
 
+  describe '#authors' do
+    before do
+      allow(mono_doc).to receive(:creator_given_name).and_return('Abe')
+      allow(mono_doc).to receive(:creator_family_name).and_return('Cat')
+      allow(mono_doc).to receive(:contributor).and_return(['Thing Lastname', 'Manny Feetys'])
+    end
+    subject { presenter.authors }
+    it { is_expected.to eq "Abe Cat, Thing Lastname, and Manny Feetys" }
+  end
+
+  describe '#authors?' do
+    before do
+      allow(mono_doc).to receive(:creator_given_name).and_return(nil)
+      allow(mono_doc).to receive(:creator_family_name).and_return(nil)
+      allow(mono_doc).to receive(:contributor).and_return([])
+    end
+    subject { presenter.authors? }
+    it { is_expected.to eq false }
+  end
+
   describe '#sub_brand_links' do
     context 'a monograph without sub-brands' do
       let(:mono_doc) { ::SolrDocument.new(id: 'mono', has_model_ssim: ['Monograph'], press_tesim: [press.subdomain]) }
