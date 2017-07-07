@@ -2,7 +2,7 @@
   <div class="row">
     <div class="footer-text col-md-12">
       <p>
-        Powered by <a href="https://github.com/projecthydra-labs/curation_concerns">Hyrax</a> | Made possible by the <a href="http://projecthydra.org">Hydra</a> project | <% if current_user %> <%= link_to 'Log Out', main_app.destroy_user_session_path, class: 'log-out', role: 'menuitem' %> <% else %> <%= link_to 'Log In', main_app.new_user_session_path, class: 'login', role: 'menuitem' %>
+        Powered by <a href="https://github.com/samvera/hyrax">Hyrax</a> | Made possible by the <a href="https://samvera.org">Samvera</a> project | <% if current_user %> <%= link_to 'Log Out', main_app.destroy_user_session_path, class: 'log-out', role: 'menuitem' %> <% else %> <%= link_to 'Log In', main_app.new_user_session_path, class: 'login', role: 'menuitem' %>
         <% end %>
       </p>
     </div>
