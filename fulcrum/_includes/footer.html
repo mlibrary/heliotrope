@@ -13,7 +13,7 @@
             <li><a class="white-text" href="/blog/">Blog</a></li>
             <li><a class="white-text" href="mailto:{{ site.email }}">Contact</a></li>
             <li><a class="white-text" href="https://github.com/{{ site.github_username }}">Contribute</a></li>
-            <li><a class="white-text" href="/users/sign_in">Login</a></li>
+            <li><a id="sign-in" class="white-text"></a></li>
           </ul>
         </div>
         <div class="col l1 s12 offset-l1 footer-menu">
@@ -39,3 +39,29 @@
       </div>
     </div>
   </footer>
+  {% comment %}
+
+    Insecure "fulcrum_signed_in_static" cookie is ONLY
+    for this login/logout cosmetic feature see #863
+
+  {% endcomment %}
+  <script>
+    var signed_in = false;
+
+    var ca = document.cookie.split(';');
+    for (var i = 0; i < ca.length; i++) {
+      var c = ca[i];
+      if (c.trim() === "fulcrum_signed_in_static=true") {
+        signed_in = true ;
+      }
+    }
+
+    if (signed_in) {
+      $('#sign-in').prop("href", "/users/sign_out")
+      $('#sign-in').text("Log Out");
+    }
+    else {
+      $('#sign-in').prop("href", "/users/sign_in")
+      $('#sign-in').text("Log In");
+    }
+  </script>

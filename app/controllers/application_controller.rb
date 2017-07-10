@@ -37,6 +37,7 @@ class ApplicationController < ActionController::Base
     # redirect to it after loggin in or out. This override makes signing in
     # and signing up work automatically.
     def store_current_location
+      sign_in_static_cookie
       return unless request.get?
       return if request.url =~ /image-service/
       return if request.url =~ /downloads/
@@ -48,7 +49,20 @@ class ApplicationController < ActionController::Base
     # the session is destroyed on log out, we need to use request.referrer
     # root_path is there as a backup
     def after_sign_out_path_for(_resource)
+      sign_out_static_cookie
       return root_path if request.referer =~ /dashboard/
       request.referer || root_path
+    end
+
+    # This cookie is strictly here for the fulcrum static/jekyll pages,
+    # specifically to show either "Log In" or "Log Out" in the footer.
+    # Nothing more. So it is unencrypted and unsigned. Don't do anything
+    # important with this as it's not secure. see #863
+    def sign_in_static_cookie
+      cookies[:fulcrum_signed_in_static] = true
+    end
+
+    def sign_out_static_cookie
+      cookies.delete :fulcrum_signed_in_static
     end
 end
