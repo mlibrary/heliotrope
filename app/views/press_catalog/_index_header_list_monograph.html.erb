@@ -7,7 +7,9 @@
         <% counter = document_counter_with_offset(document_counter) %>
         <%= render_markdown link_to_document document, document_show_link_field(document), counter: counter %>
       </h2>
-      <h3><%= render_markdown document.creator_given_name || '' %> <%= render_markdown document.creator_family_name || '' %><%= contributors_string(document.contributor) %></h3>
+      <% if presenter.authors? %>
+        <h3><%= render_markdown presenter.authors %></h3>
+      <% end %>
       <% if presenter.editors? %>
         <h3>Edited by <%= presenter.editors %></h3>
       <% end %>
