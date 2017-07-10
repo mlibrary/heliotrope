@@ -19,12 +19,11 @@ end
 
 module Riiif
   def Image.cache_key(id, options)
-    # Add a timestamp to "expire" image tiles if a file_set is updated with a new image
-    options[:timestamp] = ActiveFedora::SolrService.query("{!terms f=id}#{id}", rows: 1).first["timestamp"]
-    str = options.merge(id: id).delete_if { |_, v| v.nil? }.to_s
+    str = options.to_h.merge(id: id).delete_if { |_, v| v.nil? }.to_s
     # Use a MD5 digest to ensure the keys aren't too long.
-    Digest::MD5.hexdigest(str)
+    # Add a timestamp to "expire" image tiles if a file_set is updated with a new image
+    'riiif:' + Digest::MD5.hexdigest(str) + ActiveFedora::SolrService.query("{!terms f=id}#{id}", rows: 1).first["timestamp"]
   end
 end
 
-Riiif::Engine.config.cache_duration_in_days = 7
+Riiif::Engine.config.cache_duration_in_days = 30

@@ -49,7 +49,7 @@ gem 'jbuilder', '~> 2.0'
 # bundle exec rake doc:rails generates the API under doc/api.
 gem 'sdoc', '~> 0.4.0', group: :doc
 
-gem 'riiif', '0.4.0'
+gem 'riiif', '1.4.1'
 
 gem 'actionpack-page_caching', '~> 1.1.0'
 
