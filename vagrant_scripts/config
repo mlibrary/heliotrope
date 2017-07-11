@@ -1,0 +1,12 @@
+#!/bin/sh
+#
+# Contain Environment variables for installs
+#
+
+DOWNLOAD_DIR="/home/vagrant/downloads"
+if [ ! -d $DOWNLOAD_DIR ]; then
+  mkdir $DOWNLOAD_DIR
+  sudo chown -R vagrant:vagrant $DOWNLOAD_DIR
+fi
+
+FITS_VERSION=1.0.5
