@@ -9,7 +9,7 @@ gem 'rails', '5.0.2'
 
 # gem 'curation_concerns', '2.0.0'
 # gem 'hyrax', github: 'projecthydra-labs/hyrax', ref: '9395ac75a04902237bf692c0b67c9cf292c9d39d' # May 18th
-gem 'hyrax', '1.0.1'
+gem 'hyrax', '1.0.2'
 
 gem 'resque', '~> 1.26.0'
 gem 'resque-pool'
