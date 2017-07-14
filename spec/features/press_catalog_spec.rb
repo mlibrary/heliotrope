@@ -78,5 +78,26 @@ feature 'Press Catalog' do
         expect(page).to have_content 'Jimmy Johns and Sub Way'
       end
     end
+    # Because Hyrax now uses system_create (which is non-modifiable in Fedora) as the uploaded_field, we can't easily...
+    # set the uploaded_field in specs. Two 1-second sleeps ensure these monographs have different uploaded_fields, as...
+    # the time granularity is one second. FYI it used to be date_uploaded, which we could set as we pleased.
+    # TODO: (possibly) maybe rewrite this in a view test like this one
+    # https://github.com/samvera/hyrax/blob/master/spec/views/hyrax/collections/_form_for_select_collection.html.erb_spec.rb
+    context 'monograph sort order is uploaded_field desc' do
+      before do
+        create(:press, subdomain: 'sort_press')
+        create(:public_monograph, press: 'sort_press', title: ['First Created'])
+        sleep 1.second
+        create(:public_monograph, press: 'sort_press', title: ['Second Created'])
+        sleep 1.second
+        create(:public_monograph, press: 'sort_press', title: ['Third Created'])
+      end
+      scenario "shows the monographs in reverse order of date_uploaded" do
+        visit "/sort_press"
+        assert_equal page.all('.documentHeader .index_title a').collect(&:text), ['Third Created',
+                                                                                  'Second Created',
+                                                                                  'First Created']
+      end
+    end
   end # not logged in
 end
