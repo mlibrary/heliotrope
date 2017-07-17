@@ -4,17 +4,16 @@
         <% riiif_url = "/image-service/#{@presenter.id}/info.json" %>
         <div id="image"></div>
         <script>
-        $().ready(function() {
-
-              //window.F = window.F || {};
-              var $map = $("#image");
-
-              var map = L.map('image', {
-                center: [0, 0],
-                crs: L.CRS.Simple,
-                zoom: 0,
-              }).addLayer(L.tileLayer.iiif("<%= riiif_url %>"));
-            });
+          $().ready(function() {
+              var map, layer;
+              map = L.map('image', {
+                  center: [0, 0],
+                  crs: L.CRS.Simple,
+                  zoom: 0
+              });
+              layer = L.tileLayer.iiif("<%= riiif_url %>", { bestFit: true } );
+              layer.addTo(map);
+          });
         </script>
       <% elsif @presenter.epub? %>
         <%= render partial: 'hyrax/file_sets/media_display/epub', locals: { file_set: @presenter } %>
