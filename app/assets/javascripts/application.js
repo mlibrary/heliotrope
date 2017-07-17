@@ -25,7 +25,8 @@
 // Required by Blacklight
 //= require blacklight/blacklight
 // Required by Heliotrope?
-//= require cozy-sun-bear-main
+// conorom 20170717: disabling CSB temporarily (until its JS plays nice with IE11)
+// require cozy-sun-bear-main
 //= require leaflet_1.0.3
 //= require leaflet-iiif_1.2.1_best_fit
 //= require 'edit_users'
