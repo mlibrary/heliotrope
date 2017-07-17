@@ -247,20 +247,7 @@ class CatalogController < ApplicationController
       }
     end
 
-    # "sort results by" select (pulldown)
-    # label in pulldown is followed by the name of the SOLR field to sort by and
-    # whether the sort is ascending or descending (it must be asc or desc
-    # except in the relevancy case).
-    # label is key, solr field is value
-    down_arrow = "\u25BC"
-    config.add_sort_field 'relevance', sort: "score desc, monograph_position_isi asc", label: "Relevance #{down_arrow}"
-    # config.add_sort_field "#{uploaded_field} desc", label: "date uploaded \u25BC"
-    # config.add_sort_field "#{uploaded_field} asc", label: "date uploaded \u25B2"
-    # config.add_sort_field "#{modified_field} desc", label: "date modified \u25BC"
-    # config.add_sort_field "#{modified_field} asc", label: "date modified \u25B2"
-
-    # If there are more than this many search results, no spelling ("did you
-    # mean") suggestion is offered.
+    # If there are more than this many search results, no spelling ("did you mean") suggestion is offered.
     config.spell_max = 5
   end
 

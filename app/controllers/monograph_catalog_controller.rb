@@ -13,6 +13,7 @@ class MonographCatalogController < ::CatalogController
     down_arrow = "\u25BC"
 
     config.default_per_page = 20
+    config.add_sort_field 'relevance', sort: "score desc, monograph_position_isi asc", label: "Relevance #{down_arrow}"
     config.add_sort_field 'section asc', sort: "monograph_position_isi asc", label: "Section #{up_arrow}"
     config.add_sort_field 'section desc', sort: "monograph_position_isi desc", label: "Section #{down_arrow}"
     # leaving the #{uploaded_field} desc in these for section sort when all else is equal
