@@ -24,6 +24,28 @@ class User < ApplicationRecord
 
   alias_attribute :user_key, :email
 
+  # Override Hyrda
+  # current_user.groups is used in lot of places like
+  # blacklight-access-controls, hydra-access-controls, hyrax.
+  # This returns an array of "publisher_roles" like:
+  # ["northwestern_admin", "northwestern_editor"]
+  # These correspond to read_groups or edit_groups
+  # in a Monograph or FileSet
+  def groups
+    if platform_admin?
+      Role::ROLES.map do |r|
+        Press.all.map { |p| "#{p.subdomain}_#{r}" }
+      end.flatten.sort + ['admin']
+      # Adding just 'admin' since I *think* we'll need this for hyrax 2 admin dashboard.
+      # We're completly overriding whatever RoleMapper or config/role_map.yml would give
+      # from hydra-access-controls lib/hydra/user.rb
+    else
+      press_roles.map do |r|
+        Press.all.map { |p| "#{p.subdomain}_#{r.role}" if r.resource_id == p.id }
+      end.flatten.compact.sort
+    end
+  end
+
   def press_roles
     roles.where(resource_type: 'Press')
   end

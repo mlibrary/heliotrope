@@ -16,11 +16,20 @@ class Ability
     can [:read], SubBrand
 
     # press admin
+    grant_press_admin_abilities
+
+    grant_platform_admin_abilities
+  end
+
+  def grant_press_admin_abilities
     can :manage, Role, resource_id: @user.admin_roles.pluck(:resource_id), resource_type: 'Press'
 
-    # monograph.press is a String (the subdomain of a Press)
     can %i[create update], Monograph do |m|
       @user.admin_presses.map(&:subdomain).include?(m.press)
+    end
+
+    can %i[create update], ::Hyrax::FileSet do |f|
+      @user.admin_presses.map(&:subdomain).include?(f.parent.press) unless f.parent.nil?
     end
 
     can :manage, SubBrand do |sb|
@@ -39,8 +48,6 @@ class Ability
     can :update, Hyrax::FileSetPresenter do |p|
       @user.admin_presses.map(&:subdomain).include?(p.monograph.subdomain)
     end
-
-    grant_platform_admin_abilities
   end
 
   def grant_platform_admin_abilities
