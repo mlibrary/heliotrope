@@ -12,7 +12,7 @@ namespace :heliotrope do
 
     m.ordered_members.to_a.each do |member|
       if member.file_set?
-        puts "\"#{Rails.application.routes.url_helpers.curation_concerns_file_set_path(member.id)}\",\"#{member.label}\""
+        puts "\"#{Rails.application.routes.url_helpers.hyrax_file_set_path(member.id)}\",\"#{member.label}\""
       end
     end
   end
