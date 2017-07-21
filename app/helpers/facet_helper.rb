@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 module FacetHelper
+  include Blacklight::FacetsHelperBehavior
+
   def facet_url_helper(facet_field, item)
     # called from the facet modal from the monograph_catalog page
     if params[:monograph_id]
@@ -45,6 +47,21 @@ module FacetHelper
 
   ############################################################################
   ## Begin Blacklight Helper Override...
+
+  ##
+  # Determine if Blacklight should render the display_facet or not
+  #
+  # By default, only render facets with items.
+  #
+  # @param [Blacklight::Solr::Response::Facets::FacetField] display_facet
+  # @return [Boolean]
+  def should_render_facet?(display_facet)
+    # display when show is nil or true
+    facet_config = facet_configuration_for_field(display_facet.name)
+    display = should_render_field?(facet_config, display_facet)
+    display_facet.items.reject! { |item| item.value.blank? }
+    display && display_facet.items.present? # && !display_facet.items.empty?
+  end
 
   ##
   # Determine whether a facet should be rendered as collapsed or not.
