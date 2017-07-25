@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class CharacterizeJob < ActiveJob::Base
+class CharacterizeJob < ApplicationJob
   queue_as Hyrax.config.ingest_queue_name
 
   # @param [FileSet] file_set

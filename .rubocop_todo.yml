@@ -4,6 +4,10 @@ Lint/AmbiguousBlockAssociation:
     - 'spec/controllers/hyrax/monographs_controller_spec.rb'
     - 'spec/controllers/roles_controller_spec.rb'
 
+Layout/EmptyLinesAroundBlockBody:
+  Exclude:
+    - 'config/initializers/mailboxer.rb'
+
 Metrics/BlockLength:
   Enabled: true
   Max: 295 # default is 25
@@ -77,10 +81,6 @@ RSpec/SubjectStub:
 
 RSpec/VerifiedDoubles:
   Enabled: false
-
-Style/EmptyLinesAroundBlockBody:
-  Exclude:
-    - 'config/initializers/mailboxer.rb'
 
 Style/FrozenStringLiteralComment:
   Exclude:

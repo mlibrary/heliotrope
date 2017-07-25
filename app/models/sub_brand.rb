@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class SubBrand < ActiveRecord::Base
+class SubBrand < ApplicationRecord
   belongs_to :press
 
   validates :press, presence: true

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Press < ActiveRecord::Base
+class Press < ApplicationRecord
   mount_uploader :logo_path, LogoPathUploader
   validates :name, presence: true, uniqueness: true
   validates :subdomain, presence: true, uniqueness: true
