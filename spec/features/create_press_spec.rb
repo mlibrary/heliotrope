@@ -39,9 +39,10 @@ feature 'Adding a new press' do
       # expect(page).to have_content 'Footer Block A Stuff'
       expect(page).to have_content 'Footer Block C Stuff'
 
-      # go back in and remove the logo
+      # go back in and remove the logo and footer_block_c to test default behaviors
       visit edit_press_path 'testpub'
       find(:css, '#press_remove_logo_path').set(true)
+      fill_in 'Footer block c', with: ''
       click_button 'Save'
       click_link 'Test Publisher'
 
@@ -49,6 +50,10 @@ feature 'Adding a new press' do
       # right-side footer. The press logo is shown twice, so this logo appears 3 times for a logo-less press
       expect(page).to have_css("img[src*='fulcrum-white-50px']", count: 3)
       expect(page).to_not have_css("img[src*='shipwreck']")
+
+      # no footer_block_c results in default copyright message
+      expect(page).to_not have_content 'Footer Block C Stuff'
+      expect(page).to have_css('.row.press-block-c .col-sm-12 p', text: '© Test Publisher 2017')
     end
   end
 end

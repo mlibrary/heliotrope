@@ -1,5 +1,5 @@
 <div class="col-sm-12">
-  <% if footer_block_c(press_subdomain) %>
+  <% if footer_block_c(press_subdomain).present? %>
     <p><%= render_markdown footer_block_c(press_subdomain) %></p>
   <% else %>
     <p>&copy; <%= name(press_subdomain) %> 2017</p>
