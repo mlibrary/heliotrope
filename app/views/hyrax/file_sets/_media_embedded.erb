@@ -14,8 +14,23 @@
         layer.addTo(map);
       });
     </script>
+  <% elsif @presenter.video? %>
+      <video id="video-embedded"
+             preload="auto"
+             data-able-player
+             data-include-transcript="false"
+             data-allow-fullscreen="false"
+             poster="<%= hyrax.download_path(@presenter.id, file: 'thumbnail') %>">
+
+        <source src="<%= hyrax.download_path(@presenter.id, file: 'webm') %>" type="video/webm" />
+        <source src="<%= hyrax.download_path(@presenter.id, file: 'mp4') %>" type="video/mp4" />
+        <% if @presenter.transcript.present? %>
+            <track kind="captions" src="<%= hyrax.download_path(@presenter.id, file: 'vtt') %>" srclang="en" label="English"  />
+        <% end %>
+        Your browser does not support the video tag.
+      </video>
   <% else %>
-  <%= media_display @presenter %>
+      <%# fall back to default, no use case for this yet%>
+      <%= media_display @presenter %>
   <% end %>
-  <figcaption id="embed-caption"><%= presenter.attribute_to_html(:caption, render_as: :markdown, label: '') %></figcaption>
 </figure>

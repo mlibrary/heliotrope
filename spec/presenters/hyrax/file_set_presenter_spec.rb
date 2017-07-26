@@ -103,10 +103,10 @@ RSpec.describe Hyrax::FileSetPresenter do
     let(:fileset_doc) { SolrDocument.new(file_set.to_solr) }
 
     before do
-      allow(presenter).to receive(:width).and_return('width')
-      allow(presenter).to receive(:height).and_return('height')
+      allow(presenter).to receive(:width).and_return('40%')
+      allow(presenter).to receive(:height).and_return('65%')
     end
-    it { expect(presenter.embed_code).to eq "<iframe src='http://#{Settings.host}/embed?hdl=#{CGI.escape(HandleService.handle(presenter))}' height='#{presenter.height}' width='#{presenter.width}'>Your browser doesn't support iframes!</iframe>" }
+    it { expect(presenter.embed_code).to eq "<iframe src='http://#{Settings.host}/embed?hdl=#{CGI.escape(HandleService.handle(presenter))}' width='#{presenter.width}' height='#{presenter.height}' scrolling='no'>Your browser doesn't support iframes!</iframe>" }
   end
 
   describe '#epub?' do

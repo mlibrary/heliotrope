@@ -118,7 +118,7 @@ module Hyrax
     end
 
     def embed_code
-      "<iframe src='#{embed_url(hdl: HandleService.handle(self))}' height='#{height}' width='#{width}'>Your browser doesn't support iframes!</iframe>"
+      "<iframe src='#{embed_url(hdl: HandleService.handle(self))}' width='40%' height='65%' scrolling='no'>Your browser doesn't support iframes!</iframe>"
     end
 
     # Google Analytics
