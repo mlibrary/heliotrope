@@ -1,0 +1,69 @@
+- subdomain: heb
+  production: false
+  name: 'ACLS Humanities E-Book'
+  logo_path: 'heb.jpg'
+  description: "ACLS Humanities E-Book (HEB) is an online collection of about 5,000 books of high quality in the humanities, accessible through institutional and individual subscription. These titles are offered by the ACLS in collaboration with thirty-one learned societies, over 100 contributing publishers, and the Michigan Publishing division at the University of Michigan Library. The result is an online, fully searchable collection of high-quality books in the Humanities, recommended and reviewed by scholars. These are works of major importance that remain vital to both scholars and advanced students, and are frequently cited in the literature. (See title list.) The collection features unlimited multi-user access and free, downloadable MARC records. HEB is available 24/7 on- and off-campus through standard web browsers."
+  press_url: 'http://www.humanitiesebook.org'
+  typekit: 'ynm6dns'
+
+- subdomain: heliotrope
+  production: false
+  name: 'Heliotrope Press'
+  description: "Heliotrope Press"
+  press_url: 'https://www.fulcrum.org'
+
+- subdomain: indiana
+  production: true
+  name: 'Indiana University Press'
+  logo_path: 'indiana.png'
+  description: "Indiana University Press's mission is to inform and inspire scholars, students, and thoughtful general readers by disseminating ideas and knowledge of global significance, regional importance, and lasting value."
+  press_url: 'http://www.iupress.indiana.edu'
+  google_analytics: 'UA-77847516-6'
+
+- subdomain: michigan
+  production: true
+  name: 'University of Michigan Press'
+  logo_path: 'michigan.png'
+  description: "'University of Michigan Press is a leading publisher of books and digital projects in the humanities and social sciences that are aligned with the strengths of its parent institution. Areas of particular focus are performing arts, classical studies, political science, area studies, disability and class studies, English Language Teaching, and the social, cultural, and environmental history of the Great Lakes region of the US.<br/><br/>[michigan.fulcrum.org](https://michigan.fulcrum.org) is the home of supplemental content for select books and the location of enriched digital titles. You can find the full catalog of University of Michigan Press titles at [the publisher's website](http://www.press.umich.edu/)."
+  press_url: 'http://www.press.umich.edu'
+  typekit: 'umv2ydc'
+  google_analytics: 'UA-77847516-8'
+
+- subdomain: minnesota
+  production: true
+  name: 'University of Minnesota Press'
+  logo_path: 'minnesota.png'
+  description: "Established in 1925, the University of Minnesota Press is recognized internationally for its innovative, boundary-breaking editorial program in the humanities and social sciences, and is committed to publishing books on the people, history, and natural environment of Minnesota and the Upper Midwest.<br/><br/>This page is the home of supplemental content for select University of Minnesota Press books. You can find the full catalog of Minnesota titles on the [publisher's website](https://www.upress.umn.edu/)."
+  subdomain: 'minnesota'
+  press_url: 'https://www.upress.umn.edu/'
+  typekit: 'vqj2dgv'
+  google_analytics: 'UA-77847516-5'
+
+- subdomain: northwestern
+  production: true
+  name: 'Northwestern University Press'
+  logo_path: 'northwestern.png'
+  description: "Northwestern University Press is dedicated to publishing works of enduring scholarly and cultural value, extending the University’s mission to a community of readers throughout the world.<br/><br/>[northwestern.fulcrum.org](http://northwestern.fulcrum.org) is the home of supplemental content for select books. You can find the full catalog of Northwestern University Press titles at the [publisher's website](http://www.nupress.northwestern.edu/)."
+  press_url: 'http://nupress.northwestern.edu/'
+  typekit: 'wyq1mfc'
+  google_analytics: 'UA-77847516-3'
+
+- subdomain: nyupress
+  production: false
+  name: 'NYU Press'
+  logo_path: 'nyupress.png'
+  description: "Making common cause with the best and the brightest, the great and the good, New York University Press aspires to nothing less than the transformation of the intellectual and cultural landscape. Infused with the conviction that the ideas of the academy matter, we foster knowledge that resonates within and beyond the walls of the university.<br/><br/>[nyupress.fulcrum.org](http://nyupress.fulcrum.org) is the home of supplemental content for select NYU Press books. You can find the full catalog of NYU Press titles on the [publisher’s website](https://nyupress.org)."
+  press_url: 'https://nyupress.org'
+  typekit: 'uup5rjt'
+  google_analytics: 'UA-77847516-11'
+
+- subdomain: pennstate
+  production: true
+  name: 'Penn State University Press'
+  logo_path: 'pennstate.png'
+  description: "Penn State University Press publishes books and journals of the highest quality for a worldwide audience of scholars, students, and non-academic readers, with an emphasis on core fields of the humanities and social sciences. This page features supplemental content for select PSU Press titles. You can find the complete catalog of our publications and additional information about the Press on our [website](http://www.psupress.org/)."
+  footer_block_a: '© Penn State University Press 2016'
+  footer_block_c: 'http://www.psupress.org'
+  press_url: 'http://www.psupress.org'
+  typekit: 'cbh1mev'
+  google_analytics: 'UA-77847516-7'
