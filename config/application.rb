@@ -42,6 +42,6 @@ module Heliotrope
     ENV['TMPDIR'] = tmpdir
 
     # Set the epub engine for cozy-sun-bear
-    config.cozy_epub_engine = 'epubjs';
+    config.cozy_epub_engine = 'epubjs'
   end
 end
