@@ -40,5 +40,8 @@ module Heliotrope
     # Never use /tmp, always use ~/tmp, #627 and http://stackoverflow.com/a/17068331
     tmpdir = Rails.root.join('tmp').to_s
     ENV['TMPDIR'] = tmpdir
+
+    # Set the epub engine for cozy-sun-bear
+    config.cozy_epub_engine = 'epubjs'
   end
 end

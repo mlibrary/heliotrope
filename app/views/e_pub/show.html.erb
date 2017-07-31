@@ -6,7 +6,7 @@
     if ( true ) {
             //$("body").addClass("reading");
             var reader = cozy.reader('reader', {
-                href: "<%= "#{main_app.epub_url.gsub!(/\?.*/, '')}/#{params[:id]}" %>",
+                href: "<%= "#{main_app.epub_url.gsub!(/\?.*/, '')}/" %>",
                 metadata: {
                     doi: '<%= @citable_link %>',
                     // TO-DO: iterate all creator given and family names for monograph
@@ -24,13 +24,14 @@
   	    template: `<button class="button--sm cozy-close" data-toggle="button" data-slot="label"></button>`,
   	    onClick: function() { window.location = "<%= "#{@back_link}" %>"; }
       }).addTo(reader);
-      <% if defined? @subdomain %>
-      cozy.control.widget.panel({
-        region: 'top.header.left',
-        template: `<div class="logo"><%= image_tag logo(@subdomain), alt: @subdomain %>`,
-        data: { title: "<%= @subdomain %>" }
-      }).addTo(reader);
-      <% end %>
+      // TO-DO: only show logo for publishers that also have CSS overrides. Currently only HEB has this.
+      // <% if defined? @subdomain %>
+      //cozy.control.widget.panel({
+      //  region: 'top.header.left',
+      //  template: `<div class="logo"><%= image_tag logo(@subdomain), alt: @subdomain %>`,
+      //  data: { title: "<%= @subdomain %>" }
+      //}).addTo(reader);
+      // <% end %>
       cozy.control.title({ region: 'top.header.left' }).addTo(reader);
 
       cozy.control.contents({ region: 'top.toolbar.left' }).addTo(reader);
@@ -40,6 +41,14 @@
   	template: `<div class="permalink-label"><span class="u-screenreader">Permalink</span><form><input data-slot="title" type="text" id="permalink" value="" readonly="readonly" onclick="this.select(); document.execCommand('copy');"></form></div>`,
       }).addTo(reader);
       cozy.control.citation({ region: 'top.toolbar.left' }).addTo(reader);
+      cozy.control.widget.button({
+                        region: 'top.toolbar.right',
+                        template: '<button class="button--sm" data-toggle="button" data-slot="label"></button>',
+                        data: { label: 'FULLSCREEN' },
+                        onClick: function() {
+                            reader.requestFullscreen();
+                        }
+                    }).addTo(reader);
       cozy.control.preferences({ region: 'top.toolbar.right' }).addTo(reader);
       // cozy.control.pageFirst({ region: 'left.sidebar' }).addTo(reader);
       cozy.control.pagePrevious({ region: 'left.sidebar' }).addTo(reader);
