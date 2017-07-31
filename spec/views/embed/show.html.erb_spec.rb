@@ -5,7 +5,7 @@ require 'rails_helper'
 RSpec.describe "embed/show.html.erb", type: :view do
   let(:mock_file) { Hydra::PCDM::File.new }
   let(:file_set) do
-    FileSet.new(id: 'a0s1d2f3g', title: ['A Title'], creator: ['Pants, Mr Smarty'], caption: ['Interesting Caption']) do |f|
+    FileSet.new(id: 'a0s1d2f3g', title: ['A Title'], creator: ['Pants, Mr Smarty']) do |f|
       f.apply_depositor_metadata('user@example.com')
     end
   end
@@ -27,7 +27,6 @@ RSpec.describe "embed/show.html.erb", type: :view do
       expect(rendered).to_not have_tag('maincontent')
       expect(rendered).to_not have_tag('asset')
       expect(rendered).to have_tag('figure')
-      expect(rendered).to have_tag('figcaption', text: 'Interesting Caption')
     }
   end
 end
