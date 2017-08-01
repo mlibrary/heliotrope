@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'zip'
-
 class EPubController < ApplicationController
   def show
     presenter = Hyrax::FileSetPresenter.new(SolrDocument.new(FileSet.find(params[:id]).to_solr), current_ability, request)
@@ -14,6 +12,7 @@ class EPubController < ApplicationController
       @subdomain = presenter.monograph.subdomain
       render layout: false
     else
+      Rails.logger.info("### INFO FileSet #{params[:id]} is not an EPub. ###")
       render 'hyrax/base/unauthorized', status: :unauthorized
     end
   rescue Ldp::Gone # tombstone
@@ -21,23 +20,9 @@ class EPubController < ApplicationController
   end
 
   def file
-    file_set = FileSet.find(params[:id])
-    file = file_set.original_file unless file_set.nil?
-    if file
-      epub_file = params[:file] + '.' + params[:format]
-      Zip::File.open_buffer(file.content) do |zip_file|
-        entry = zip_file.get_entry(epub_file)
-        if entry
-          render plain: entry.get_input_stream.read, layout: false
-        else
-          head :ok
-        end
-      end
-    else
-      head :not_found
-    end
+    render plain: EPubService.read(params[:id], params[:file] + '.' + params[:format]), layout: false
   rescue
-    Rails.logger.debug("No EPUB file found for ID: #{params[:id]}")
+    Rails.logger.info("### INFO Entry #{params[:file]}.#{params[:format]} not found in EPub #{params[:id]}. ###")
     head :not_found
   end
 end
