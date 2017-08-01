@@ -57,8 +57,10 @@ describe Import::Importer do
       # It saves a nice chunk of time (> 10 secs) to test the "reimport" here as well. Ugly though.
       it 'imports the new monograph and files, or "reimports" them to a pre-existing monograph' do
         expect { importer.run }
-          .to change { Monograph.count }.by(1)
-          .and(change { FileSet.count }.by(9))
+          .to change { Monograph.count }
+          .by(1)
+          .and(change { FileSet.count }
+          .by(9))
 
         monograph = Monograph.first
 
@@ -103,8 +105,10 @@ describe Import::Importer do
 
         reimporter = described_class.new(root_dir: root_dir, user_email: user.email, monograph_id: monograph.id)
         expect { reimporter.run }
-          .to change { Monograph.count }.by(0)
-          .and(change { FileSet.count }.by(9))
+          .to change { Monograph.count }
+          .by(0)
+          .and(change { FileSet.count }
+          .by(9))
 
         # check it's indeed the same monograph
         expect(Monograph.first.id).to eq monograph.id

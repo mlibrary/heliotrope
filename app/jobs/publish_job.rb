@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class PublishJob < ActiveJob::Base
+class PublishJob < ApplicationJob
   queue_as :publish
 
   def perform(curation_concern)

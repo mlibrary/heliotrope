@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Role < ActiveRecord::Base
+class Role < ApplicationRecord
   ROLES = %w[admin editor].freeze
   belongs_to :resource, polymorphic: true
   belongs_to :user
