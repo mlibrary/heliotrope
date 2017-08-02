@@ -1,0 +1,5 @@
+/* A place to put embed-specific styles
+ *
+ *= require common
+ *= require_tree ./embed
+*/

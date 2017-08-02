@@ -10,15 +10,9 @@
  * defined in the other CSS/SCSS files in this directory. It is generally better to create a new
  * file per style scope.
  *
- *= require_tree .
- *= require_self
+ *= require common
+ *= require_tree ./application
  *= require dataTables/bootstrap/3/jquery.dataTables.bootstrap
  *= require jquery-ui/datepicker
- *= require leaflet_1.0.3
- *= require blacklight_facets
- *= require ableplayer
  *= require cozy-sun-bear-main
- *= require heliotrope
- *= require fulcrum
- *= require themes
  */

@@ -1,4 +1,4 @@
-<figure class="image" title="<%= @presenter.alt_text.first %>">
+<figure title="<%= @presenter.alt_text.first %>">
   <% if @presenter.image? %>
     <% riiif_url = "/image-service/#{@presenter.id}/info.json" %>
     <div id="image"></div>
@@ -10,12 +10,13 @@
           crs: L.CRS.Simple,
           zoom: 0
         });
-        layer = L.tileLayer.iiif("<%= riiif_url %>", { bestFit: true } );
+        // turning best-fit off as it's not liking being nested within layers of iframes etc in the epub reader
+        layer = L.tileLayer.iiif("<%= riiif_url %>", { bestFit: false } );
         layer.addTo(map);
       });
     </script>
   <% elsif @presenter.video? %>
-      <video id="video-embedded"
+      <video id="video"
              preload="auto"
              data-able-player
              data-include-transcript="false"

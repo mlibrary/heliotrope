@@ -9,7 +9,7 @@
   <% end %>
   <% if can?(:edit, presenter) || presenter.allow_embed? %>
   <form style="display:inline;">
-    <input type="text" style="display:none;" id="embedcode" value="<%= presenter.embed_code %>" readonly="readonly">
+    <textarea  id="embedcode" style="display:none;" readonly="readonly"><%= presenter.embed_code %></textarea>
     <span class="btn btn-default btn-lg" onclick="CopyToClipboard()">&lt;html /&gt;</span>
     <script>
       function CopyToClipboard() {

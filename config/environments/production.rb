@@ -46,6 +46,10 @@ Rails.application.configure do
   # Force all access to the app over SSL, use Strict-Transport-Security, and use secure cookies.
   # config.force_ssl = true
 
+  # As Apache will do the redirecting that `config.force_ssl = true` would bring about, we just want...
+  # helpers in production to return suitable https links. Hence this:
+  Rails.application.routes.default_url_options[:protocol] = 'https'
+
   # Use the lowest log level to ensure availability of diagnostic information
   # when problems arise.
   config.log_level = :debug

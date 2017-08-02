@@ -1,0 +1,26 @@
+///////////////////////////////////////////
+// HELIOTROPE EMBEDDED CONTENT STYLESHEET
+///////////////////////////////////////////
+
+html, body, figure, #image, .able, .able-wrapper{
+    margin: 0px;
+    padding: 0px;
+    border: 0px;
+    width: 100%;
+    height: 100%;
+}
+
+.able-wrapper {
+    .able {
+        box-shadow: 0 0 0 0 transparent;
+    }
+
+    video {
+        width: 100% !important;
+        height: auto !important;
+    }
+
+    audio {
+        width: 100% !important;
+    }
+}
