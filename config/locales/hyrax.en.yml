@@ -1,0 +1,8 @@
+en:
+  hyrax:
+    visibility:
+      private:
+        text: "Draft"
+      restricted:
+        class: "label-danger"
+        text: "Draft"
