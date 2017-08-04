@@ -1,0 +1,78 @@
+Layout/AlignHash:
+  Enabled: false
+Layout/AlignParameters:
+  Enabled: false
+Layout/ClosingParenthesisIndentation:
+  Enabled: false
+Layout/ExtraSpacing:
+  Enabled: false
+Layout/FirstParameterIndentation:
+  Enabled: false
+Layout/IndentationWidth:
+  Enabled: false
+Layout/LeadingCommentSpace:
+  Enabled: false
+Layout/SpaceAfterComma:
+  Enabled: false
+Layout/SpaceAroundOperators:
+  Enabled: false
+Layout/SpaceInsideHashLiteralBraces:
+  Enabled: false
+Layout/SpaceInsideStringInterpolation:
+  Enabled: false
+Layout/TrailingBlankLines:
+  Enabled: false
+
+
+Lint/AssignmentInCondition:
+  Enabled: false
+Lint/StringConversionInInterpolation:
+  Enabled: false
+Lint/UselessAssignment:
+  Enabled: false
+Lint/UnusedBlockArgument:
+  Enabled: false
+Lint/Void:
+  Enabled: false
+
+Metrics/BlockLength:
+  Enabled: false
+Metrics/LineLength:
+  Enabled: false
+
+Performance/StringReplacement:
+  Enabled: false
+
+
+Style/AndOr:
+  Enabled: false
+Style/ConditionalAssignment:
+  Enabled: false
+Style/EmptyElse:
+  Enabled: false
+Style/HashSyntax:
+  Enabled: false
+Style/IdenticalConditionalBranches:
+  Enabled: false
+Style/IfInsideElse:
+  Enabled: false
+Style/IfUnlessModifier:
+  Enabled: false
+Style/MethodCallWithoutArgsParentheses:
+  Enabled: false
+Style/NegatedIf:
+  Enabled: false
+Style/Next:
+  Enabled: false
+Style/PreferredHashMethods:
+  Enabled: false
+Style/StringLiterals:
+  Enabled: false
+Style/StringLiteralsInInterpolation:
+  Enabled: false
+Style/SymbolProc:
+  Enabled: false
+Style/UnlessElse:
+  Enabled: false
+Style/UnneededInterpolation:
+  Enabled: false

@@ -51,3 +51,6 @@
 
 # Ignore coverall's files
 /coverage
+
+# Ignore Ruumba working directory
+/ruumba
