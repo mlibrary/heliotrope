@@ -60,8 +60,6 @@ Style/IfUnlessModifier:
   Enabled: false
 Style/MethodCallWithoutArgsParentheses:
   Enabled: false
-Style/NegatedIf:
-  Enabled: false
 Style/Next:
   Enabled: false
 Style/PreferredHashMethods:

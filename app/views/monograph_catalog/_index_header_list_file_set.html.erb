@@ -5,7 +5,7 @@
       <% counter = document_counter_with_offset(document_counter) %>
       <%= render_markdown link_to_document document, document_show_link_field(document), counter: counter %>
     </h4>
-    <% if !document.section_title.blank? %>
+    <% if document.section_title.present? %>
       <p>From <%= render_markdown @monograph_presenter.display_section_titles document.section_title %></p>
     <% end %>
   </div>
