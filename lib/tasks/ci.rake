@@ -8,8 +8,15 @@ unless Rails.env.production?
     task.fail_on_error = true
   end
 
+  require 'ruumba/rake_task'
+  desc "Run style checker's sidekick"
+  Ruumba::RakeTask.new(:ruumba) do |task|
+    task.dir = ["app/views"]
+    task.options = { tmp_folder: "ruumba", arguments: ["--display-cop-names", "--config .ruumba.yml"] }
+  end
+
   desc 'Run the ci build'
-  task ci: [:rubocop] do
+  task ci: %i[rubocop ruumba] do
     require 'active_fedora/rake_support'
     with_test_server do
       # run the tests

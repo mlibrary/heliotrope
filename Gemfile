@@ -109,6 +109,7 @@ group :development, :test do
   gem 'rspec-rails'
   gem 'rubocop', '~> 0.49.1'
   gem 'rubocop-rspec', '~> 1.15.1'
+  gem 'ruumba'
   gem 'solr_wrapper', '0.21.0'
   gem 'sqlite3'
 end

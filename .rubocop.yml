@@ -8,11 +8,12 @@ AllCops:
     - '**/config.ru'
   Exclude:
     - 'db/**/*'
+    - 'ruumba/**/*'
     - 'script/**/*'
     - 'spec/internal/**/*'
     - 'spec/test_app_templates/**/*'
-    - 'vendor/**/*'
     - 'tmp/**/*'
+    - 'vendor/**/*'
 
 Layout/BlockEndNewline:
   Exclude:
