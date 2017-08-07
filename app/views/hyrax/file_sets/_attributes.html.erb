@@ -2,7 +2,7 @@
   <li role="presentation" class="active"><a href="#info" aria-controls="info" role="tab" data-toggle="tab">Info</a></li>
   <li role="presentation"><a href="#permissions" aria-controls="permissions" role="tab" data-toggle="tab">Permissions</a></li>
   <li role="presentation"><a href="#stats" aria-controls="stats" role="tab" data-toggle="tab">Stats</a></li>
-  <% if !presenter.external_resource? %>
+  <% unless presenter.external_resource? %>
   <li role="presentation"><a href="#technical-info" aria-controls="technical-info" role="tab" data-toggle="tab">Technical Info</a></li>
   <% end %>
 </ul>
