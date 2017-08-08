@@ -118,7 +118,27 @@ module Hyrax
     end
 
     def embed_code
-      "<iframe src='#{embed_url(hdl: HandleService.handle(self))}' width='40%' height='65%' scrolling='no'>Your browser doesn't support iframes!</iframe>"
+      if video?
+        responsive_embed_code
+      else
+        generic_embed_code
+      end
+    end
+
+    def responsive_embed_code
+      <<~END
+        <div style='width:auto; page-break-inside:avoid; -webkit-column-break-inside:avoid; break-inside:avoid; overflow:hidden;#{padding_top} padding-bottom:#{padding_bottom}%; position:relative; height:0;'>
+          <iframe src='#{embed_link}' style='border-width:0; left:0; top:0; width:100%; height:100%; position:absolute;' scrolling='no'></iframe>
+        </div>
+      END
+    end
+
+    def generic_embed_code
+      "<iframe src='#{embed_link}' style='display:inline-block; border-width:0; width:100%; height:500px;' scrolling='no'></iframe>"
+    end
+
+    def embed_link
+      embed_url(hdl: HandleService.handle(self))
     end
 
     # Google Analytics
@@ -133,6 +153,20 @@ module Hyrax
 
     def height
       solr_document['height_is']
+    end
+
+    def bad_dimensions?
+      width.blank? || width.zero? || height.blank? || height.zero?
+    end
+
+    def padding_top
+      video? ? ' padding-top:98px;' : ''
+    end
+
+    def padding_bottom
+      # adjusts the height to allow for what the video player is doing to preserve the content's aspect ratio
+      percentage = bad_dimensions? ? 75 : (height.to_f * 100.0 / width.to_f).round(2)
+      (percentage % 1).zero? ? percentage.to_i : percentage
     end
 
     def mime_type

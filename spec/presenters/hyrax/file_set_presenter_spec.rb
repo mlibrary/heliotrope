@@ -5,6 +5,7 @@ require 'rails_helper'
 RSpec.describe Hyrax::FileSetPresenter do
   let(:ability) { double('ability') }
   let(:presenter) { described_class.new(fileset_doc, ability) }
+  let(:dimensionless_presenter) { described_class.new(fileset_doc, ability) }
 
   it 'includes TitlePresenter' do
     expect(described_class.new(nil, nil)).to be_a TitlePresenter
@@ -99,14 +100,54 @@ RSpec.describe Hyrax::FileSetPresenter do
   end
 
   describe '#embed_code' do
-    let(:file_set) { create(:file_set) }
-    let(:fileset_doc) { SolrDocument.new(file_set.to_solr) }
+    let(:image_embed_code) {
+      "<iframe src='http://#{Settings.host}/embed?hdl=#{CGI.escape(HandleService.handle(presenter))}' style='display:inline-block; border-width:0; width:100%; height:500px;' scrolling='no'></iframe>"
+    }
+    let(:video_embed_code) {
+      <<~END
+        <div style='width:auto; page-break-inside:avoid; -webkit-column-break-inside:avoid; break-inside:avoid; overflow:hidden; padding-top:98px; padding-bottom:56.25%; position:relative; height:0;'>
+          <iframe src='http://#{Settings.host}/embed?hdl=#{CGI.escape(HandleService.handle(presenter))}' style='border-width:0; left:0; top:0; width:100%; height:100%; position:absolute;' scrolling='no'></iframe>
+        </div>
+      END
+    }
+    let(:dimensionless_image_embed_code) {
+      "<iframe src='http://#{Settings.host}/embed?hdl=#{CGI.escape(HandleService.handle(presenter))}' style='display:inline-block; border-width:0; width:100%; height:500px;' scrolling='no'></iframe>"
+    }
+    let(:dimensionless_video_embed_code) {
+      <<~END
+        <div style='width:auto; page-break-inside:avoid; -webkit-column-break-inside:avoid; break-inside:avoid; overflow:hidden; padding-top:98px; padding-bottom:75%; position:relative; height:0;'>
+          <iframe src='http://#{Settings.host}/embed?hdl=#{CGI.escape(HandleService.handle(presenter))}' style='border-width:0; left:0; top:0; width:100%; height:100%; position:absolute;' scrolling='no'></iframe>
+        </div>
+      END
+    }
 
     before do
-      allow(presenter).to receive(:width).and_return('40%')
-      allow(presenter).to receive(:height).and_return('65%')
+      allow(presenter).to receive(:width).and_return(1920)
+      allow(presenter).to receive(:height).and_return(1080)
+      allow(dimensionless_presenter).to receive(:width).and_return('')
+      allow(dimensionless_presenter).to receive(:height).and_return('')
     end
-    it { expect(presenter.embed_code).to eq "<iframe src='http://#{Settings.host}/embed?hdl=#{CGI.escape(HandleService.handle(presenter))}' width='#{presenter.width}' height='#{presenter.height}' scrolling='no'>Your browser doesn't support iframes!</iframe>" }
+
+    context 'image FileSet' do
+      let(:mime_type) { 'image/tiff' }
+      let(:fileset_doc) { SolrDocument.new(id: 'fileset_id', has_model_ssim: ['FileSet'], mime_type_ssi: mime_type) }
+      it { expect(presenter.embed_code).to eq image_embed_code }
+    end
+    context 'video FileSet' do
+      let(:mime_type) { 'video/mp4' }
+      let(:fileset_doc) { SolrDocument.new(id: 'fileset_id', has_model_ssim: ['FileSet'], mime_type_ssi: mime_type) }
+      it { expect(presenter.embed_code).to eq video_embed_code }
+    end
+    context 'dimensionless image FileSet' do
+      let(:mime_type) { 'image/tiff' }
+      let(:fileset_doc) { SolrDocument.new(id: 'fileset_id', has_model_ssim: ['FileSet'], mime_type_ssi: mime_type) }
+      it { expect(dimensionless_presenter.embed_code).to eq dimensionless_image_embed_code }
+    end
+    context 'dimensionless video FileSet' do
+      let(:mime_type) { 'video/mp4' }
+      let(:fileset_doc) { SolrDocument.new(id: 'fileset_id', has_model_ssim: ['FileSet'], mime_type_ssi: mime_type) }
+      it { expect(dimensionless_presenter.embed_code).to eq dimensionless_video_embed_code }
+    end
   end
 
   describe '#epub?' do

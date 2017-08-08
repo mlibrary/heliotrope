@@ -1,4 +1,4 @@
-  <figure class="image" title="<%= @presenter.alt_text.first %>">
+  <figure title="<%= @presenter.alt_text.first %>">
     <% if !@presenter.external_resource? %>
       <% if @presenter.image? %>
         <% riiif_url = "/image-service/#{@presenter.id}/info.json" %>

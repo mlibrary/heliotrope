@@ -1,22 +1,10 @@
 <!DOCTYPE html>
-<head>
-  <!-- CSS -->
-  <%= stylesheet_link_tag 'application' %>
-  <!-- Javascript -->
-  <%= javascript_include_tag 'application' %>
-
-  <style>
-    body {
-      padding: 0;
-      margin: 0;
-    }
-    html, body, figure, #image {
-      height: 100%;
-      width: 100%;
-    }
-  </style>
-
-</head>
+  <head>
+    <!-- CSS -->
+    <%= stylesheet_link_tag 'embed' %>
+    <!-- Javascript -->
+    <%= javascript_include_tag 'embed' %>
+  </head>
   <body>
     <%= content_for?(:body) ? yield(:body) : yield %>
   </body>
