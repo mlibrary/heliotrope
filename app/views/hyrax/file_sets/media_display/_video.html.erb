@@ -1,3 +1,8 @@
+<%# https://github.com/mlibrary/heliotrope/issues/1084 %>
+<% content_for :head do %>
+    <meta name="turbolinks-cache-control" content="no-cache">
+<% end %>
+
 <video id="video" preload="auto" data-able-player data-include-transcript="false">
   <source src="<%= hyrax.download_path(file_set, file: 'webm') %>" type="video/webm" />
   <source src="<%= hyrax.download_path(file_set, file: 'mp4') %>" type="video/mp4" />
