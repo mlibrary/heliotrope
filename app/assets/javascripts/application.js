@@ -10,23 +10,16 @@
 // Read Sprockets README (https://github.com/rails/sprockets#sprockets-directives) for details
 // about supported directives.
 //
-// The order of inclusion of jQuery is important –
-// ensure you load jquery.turbolinks before turbolinks and after jquery.
-// note: jquery is in ./common.js
-//= require common
-//= require jquery.turbolinks
-// Include all your custom js between jquery-turbolinks.js
+//= require jquery
 //= require jquery_ujs
+//= require turbolinks
 //= require jquery-ui/datepicker
 //= require dataTables/jquery.dataTables
 //= require dataTables/bootstrap/3/jquery.dataTables.bootstrap
-// Required by Blacklight
+// note: blacklight/blacklight must always be included after turbolinks
 //= require blacklight/blacklight
-// Required by Heliotrope?
 //= require cozy-sun-bear-main
 //= require 'bowser.min'
-// Required by Samvera/Rails?
-// and turbolinks.js
-//= require turbolinks
 //= require_tree ./application
+//= require common
 //= require hyrax
