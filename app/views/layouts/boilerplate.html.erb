@@ -43,6 +43,9 @@
     <!-- Javascript -->
     <%= javascript_include_tag 'application' %>
 
+  <% if content_for?(:head) %>
+    <%= yield(:head) %>
+  <% end %>
   </head>
 
   <body <%= "class=#{press_subdomain}" unless press_subdomain.nil? %> <%= yield(:body_attributes) %>>

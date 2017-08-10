@@ -35,7 +35,11 @@
 "use strict";
 
 (function ($) {
-  $(document).ready(function () {
+  // conorom 20170809: this is a heliotrope hack to get better Turbolinks behavior...
+  // specifically "restoration" (browser back button) visits on the video page:
+  // https://github.com/mlibrary/heliotrope/issues/1084
+  // $(document).ready(function () { // not Turbolinks aware
+  $( document ).on('turbolinks:load', function() {
     $('video, audio').each(function (index, element) {
       if ($(element).data('able-player') !== undefined) {
         new AblePlayer($(this),$(element));

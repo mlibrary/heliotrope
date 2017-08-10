@@ -1,3 +1,8 @@
+<%# https://github.com/mlibrary/heliotrope/issues/1084 %>
+<% content_for :head do %>
+  <meta name="turbolinks-cache-control" content="no-cache">
+<% end %>
+
 <audio id="audio" preload="auto" data-able-player data-include-transcript="false">
   <source src="<%= hyrax.download_path(file_set, file: 'ogg') %>" type="audio/ogg" />
   <source src="<%= hyrax.download_path(file_set, file: 'mp3') %>" type="audio/mpeg" />
