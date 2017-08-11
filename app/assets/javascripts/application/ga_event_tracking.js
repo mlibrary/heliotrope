@@ -1,138 +1,139 @@
 $(document).on('turbolinks:load', function() {
   // Register user events with google analytics
 
-  //
-  // Press page
-  //
-  // header link
-  $('a.navbar-brand').click(function() {
-    ga('pressTracker.send', 'event', which_category(), 'click', $(this).attr('href'))
-  });
-
-  // press catalog listing of monographs, titles and title buttons
-  $('#documents .document').each(function(index, value) {
-
-    var title = $(value).find('h2.index_title a').text();
-
-    $(value).find('h2.index_title a').click(function() {
-      ga('pressTracker.send', 'event', 'press_page', 'click', title)
+  if (typeof(ga) == typeof(Function)) {
+    //
+    // Press page
+    //
+    // header link
+    $('a.navbar-brand').click(function() {
+      ga('pressTracker.send', 'event', which_category(), 'click', $(this).attr('href'))
     });
 
-    $(value).find('a.btn.btn-default').click(function() {
-      ga('pressTracker.send', 'event', 'press_page', 'click_button', title)
-    })
-  });
+    // press catalog listing of monographs, titles and title buttons
+    $('#documents .document').each(function(index, value) {
 
-  // footer links
-  $('footer.press a').click(function() {
-    ga('pressTracker.send', 'event', which_category(), 'click', $(this).attr('href'))
-  });
+      var title = $(value).find('h2.index_title a').text();
 
-  //
-  // Search
-  //
-  // The search form on each "page type" is the same, so we try to guess where
-  // the search came from for the event category.
-  //
-  $('#keyword-search-submit').click(function() {
-    // console.log(which_category());
-    ga('pressTracker.send', 'event', which_category(), 'search', $('#catalog_search').val());
-  });
+      $(value).find('h2.index_title a').click(function() {
+        ga('pressTracker.send', 'event', 'press_page', 'click', title)
+      });
 
-  //
-  // Monograph page
-  //
-  // monograph catalog listing of file_sets/assets
-  // This is *very* close the press_page catalog listing, it's just h4 instead of h2!
-  $('#documents .document h4.index_title a').click(function() {
-    ga('pressTracker.send', 'event', 'monograph_page', 'click', $(this).text());
-  });
+      $(value).find('a.btn.btn-default').click(function() {
+        ga('pressTracker.send', 'event', 'press_page', 'click_button', title)
+      })
+    });
 
-  // buy button
-  $('#monograph-buy-btn').click(function() {
-    ga('pressTracker.send', 'event', 'monograph_page', 'click_buy', $(this).attr('href'))
-  });
+    // footer links
+    $('footer.press a').click(function() {
+      ga('pressTracker.send', 'event', which_category(), 'click', $(this).attr('href'))
+    });
 
-  // sort
-  $('#sort-dropdown ul.dropdown-menu li a').click(function() {
-    //console.log($(this).attr('href').split("?")[1]);
-    ga('pressTracker.send', 'event', 'monograph_page', 'sort', $(this).attr('href').split("?")[1]);
-  });
+    //
+    // Search
+    //
+    // The search form on each "page type" is the same, so we try to guess where
+    // the search came from for the event category.
+    //
+    $('#keyword-search-submit').click(function() {
+      // console.log(which_category());
+      ga('pressTracker.send', 'event', which_category(), 'search', $('#catalog_search').val());
+    });
 
-  // facets
-  //$('#facets a.facet_select').mouseover(function() {
-  //  console.log($(this).text());
-  //});
-  // Repeating/hard coding this to get a little more detail in the 'action', but
-  // probably could DRY it out with a little work...
-  // Also, this doesn't work in the facet modal yet, just the top 5...
-  $('#facet-section_title_sim a.facet_select').click(function() {
-    ga('pressTracker.send', 'event', 'monograph_page', 'facet_section', $(this).text());
-  });
-  $('#facet-keywords_sim a.facet_select').click(function() {
-    ga('pressTracker.send', 'event', 'monograph_page', 'facet_keywords', $(this).text());
-  });
-  $('#facet-creator_full_name_sim a.facet_select').click(function() {
-    ga('pressTracker.send', 'event', 'monograph_page', 'facet_creator', $(this).text());
-  });
-  $('#facet-resource_type_sim a.facet_select').click(function() {
-    ga('pressTracker.send', 'event', 'monograph_page', 'facet_format', $(this).text());
-  });
-  $('#facet-search_year_sim a.facet_select').click(function() {
-    ga('pressTracker.send', 'event', 'monograph_page', 'facet_year', $(this).text());
-  });
-  $('#facet-exclusive_to_platform_sim a.facet_select').click(function() {
-    ga('pressTracker.send', 'event', 'monograph_page', 'facet_exclusivity', $(this).text());
-  });
+    //
+    // Monograph page
+    //
+    // monograph catalog listing of file_sets/assets
+    // This is *very* close the press_page catalog listing, it's just h4 instead of h2!
+    $('#documents .document h4.index_title a').click(function() {
+      ga('pressTracker.send', 'event', 'monograph_page', 'click', $(this).text());
+    });
 
-  //
-  // File Set/Asset page
-  //
-  // leaflet image zoom buttons
-  $('a.leaflet-control-zoom-in').click(function() {
-    ga('pressTracker.send', 'event', 'file_set_page', 'zoom_in', $('#asset-title').text());
-  });
-  $('a.leaflet-control-zoom-out').click(function() {
-    ga('pressTracker.send', 'event', 'file_set_page', 'zoom_out', $('#asset-title').text());
-  });
-  // capture the scrollwheel zoom too...
-  var image = $('#image');
-  if (image) {
-    image.on('DOMMouseScroll mousewheel', function (event) {
-      if ( event.originalEvent.detail > 0 || event.originalEvent.wheelDelta < 0 ) {
-        ga('pressTracker.send', 'event', 'file_set_page', 'zoom_out', $('#asset-title').text());
-      } else {
-        ga('pressTracker.send', 'event', 'file_set_page', 'zoom_in', $('#asset-title').text());
-      }
+    // buy button
+    $('#monograph-buy-btn').click(function() {
+      ga('pressTracker.send', 'event', 'monograph_page', 'click_buy', $(this).attr('href'))
+    });
+
+    // sort
+    $('#sort-dropdown ul.dropdown-menu li a').click(function() {
+      //console.log($(this).attr('href').split("?")[1]);
+      ga('pressTracker.send', 'event', 'monograph_page', 'sort', $(this).attr('href').split("?")[1]);
+    });
+
+    // facets
+    //$('#facets a.facet_select').mouseover(function() {
+    //  console.log($(this).text());
+    //});
+    // Repeating/hard coding this to get a little more detail in the 'action', but
+    // probably could DRY it out with a little work...
+    // Also, this doesn't work in the facet modal yet, just the top 5...
+    $('#facet-section_title_sim a.facet_select').click(function() {
+      ga('pressTracker.send', 'event', 'monograph_page', 'facet_section', $(this).text());
+    });
+    $('#facet-keywords_sim a.facet_select').click(function() {
+      ga('pressTracker.send', 'event', 'monograph_page', 'facet_keywords', $(this).text());
+    });
+    $('#facet-creator_full_name_sim a.facet_select').click(function() {
+      ga('pressTracker.send', 'event', 'monograph_page', 'facet_creator', $(this).text());
+    });
+    $('#facet-resource_type_sim a.facet_select').click(function() {
+      ga('pressTracker.send', 'event', 'monograph_page', 'facet_format', $(this).text());
+    });
+    $('#facet-search_year_sim a.facet_select').click(function() {
+      ga('pressTracker.send', 'event', 'monograph_page', 'facet_year', $(this).text());
+    });
+    $('#facet-exclusive_to_platform_sim a.facet_select').click(function() {
+      ga('pressTracker.send', 'event', 'monograph_page', 'facet_exclusivity', $(this).text());
+    });
+
+    //
+    // File Set/Asset page
+    //
+    // leaflet image zoom buttons
+    $('a.leaflet-control-zoom-in').click(function() {
+      ga('pressTracker.send', 'event', 'file_set_page', 'zoom_in', $('#asset-title').text());
+    });
+    $('a.leaflet-control-zoom-out').click(function() {
+      ga('pressTracker.send', 'event', 'file_set_page', 'zoom_out', $('#asset-title').text());
+    });
+    // capture the scrollwheel zoom too...
+    var image = $('#image');
+    if (image) {
+      image.on('DOMMouseScroll mousewheel', function (event) {
+        if ( event.originalEvent.detail > 0 || event.originalEvent.wheelDelta < 0 ) {
+          ga('pressTracker.send', 'event', 'file_set_page', 'zoom_out', $('#asset-title').text());
+        } else {
+          ga('pressTracker.send', 'event', 'file_set_page', 'zoom_in', $('#asset-title').text());
+        }
+      });
+    }
+
+    // video and audio
+    var video = $('#video').get(0)
+    if (video) {
+      video.addEventListener("play", function() {
+        ga('pressTracker.send', 'event', 'file_set_page', 'play_video', $('#asset-title').text());
+      });
+      video.addEventListener("pause", function() {
+        ga('pressTracker.send', 'event', 'file_set_page', 'stop_video', $('#asset-title').text());
+      });
+    }
+    var audio = $('#audio').get(0)
+    if (audio) {
+      audio.addEventListener("play", function() {
+        ga('pressTracker.send', 'event', 'file_set_page', 'start_audio', $('#asset-title').text());
+      });
+      audio.addEventListener("pause", function() {
+        ga('pressTracker.send', 'event', 'file_set_page', 'stop_audio', $('#asset-title').text());
+      });
+    }
+
+    // tabs
+    $('ul.nav.nav-tabs li a').click(function() {
+      var tab = $(this).attr('href').split('#')[1];
+      ga('pressTracker.send', 'event', 'file_set_page', 'tab_' + tab, $('#asset-title').text());
     });
   }
-
-  // video and audio
-  var video = $('#video').get(0)
-  if (video) {
-    video.addEventListener("play", function() {
-      ga('pressTracker.send', 'event', 'file_set_page', 'play_video', $('#asset-title').text());
-    });
-    video.addEventListener("pause", function() {
-      ga('pressTracker.send', 'event', 'file_set_page', 'stop_video', $('#asset-title').text());
-    });
-  }
-  var audio = $('#audio').get(0)
-  if (audio) {
-    audio.addEventListener("play", function() {
-      ga('pressTracker.send', 'event', 'file_set_page', 'start_audio', $('#asset-title').text());
-    });
-    audio.addEventListener("pause", function() {
-      ga('pressTracker.send', 'event', 'file_set_page', 'stop_audio', $('#asset-title').text());
-    });
-  }
-
-  // tabs
-  $('ul.nav.nav-tabs li a').click(function() {
-    var tab = $(this).attr('href').split('#')[1];
-    ga('pressTracker.send', 'event', 'file_set_page', 'tab_' + tab, $('#asset-title').text());
-  });
-
 
   function which_category() {
     // Some events can be in multiple "pages", press, monograph or file_set
