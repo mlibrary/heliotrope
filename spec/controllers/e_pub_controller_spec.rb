@@ -112,13 +112,23 @@ RSpec.describe EPubController, type: :controller do
 
       context 'tombstone' do
         before do
+          FileUtils.rm_rf(Rails.root.join("tmp", "epubs", file_set.id))
           file_set.destroy!
-          get :file, params: { id: file_set.id, file: 'META-INF/container', format: 'xml' }
         end
-        it do
-          expect(response).to_not have_http_status(:unauthorized)
-          expect(response).to have_http_status(:not_found)
-          expect(response.body.empty?).to be true
+
+        it "is destroyed" do
+          expect(file_set.destroyed?).to be true
+        end
+
+        context "after destroy" do
+          before do
+            get :file, params: { id: file_set.id, file: 'META-INF/container', format: 'xml' }
+          end
+          it "is not found" do
+            expect(response).to_not have_http_status(:unauthorized)
+            expect(response).to have_http_status(:not_found)
+            expect(response.body.empty?).to be true
+          end
         end
       end
     end

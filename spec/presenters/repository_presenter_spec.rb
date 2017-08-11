@@ -109,10 +109,15 @@ describe RepositoryPresenter do
   end
 
   describe '#user_ids' do
+    before do
+      User.destroy_all
+    end
+
     let!(:publisher1) { create(:press) }
     let!(:publisher2) { create(:press) }
     let!(:user1) { create(:press_admin, press: publisher1) }
     let!(:user2) { create(:press_admin, press: publisher2) }
+
     context 'nil publisher' do
       subject { described_class.new(current_user).user_ids }
       it do
