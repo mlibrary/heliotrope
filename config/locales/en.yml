@@ -65,6 +65,7 @@ en:
   primary_editor_family_name: "Editor (last name)"
   primary_editor_given_name: "Editor (first name)"
   publisher: "Publisher"
+  redirect_to: "Redirect to"
   resource_type: "Resource Type"
   rights_granted: "Rights Granted"
   rights_granted_creative_commons: "Rights Granted - Creative Commons"

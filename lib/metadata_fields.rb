@@ -56,6 +56,7 @@ METADATA_FIELDS =
     { object: :file_set, field_name: 'Language', metadata_name: 'language', required: false, multivalued: :yes_split },
     { object: :file_set, field_name: 'Transcript', metadata_name: 'transcript', required: false, multivalued: :no },
     { object: :file_set, field_name: 'Translation', metadata_name: 'translation', required: false, multivalued: :yes },
+    { object: :file_set, field_name: 'Redirect to', metadata_name: 'redirect_to', required: false, multivalued: :no },
     { object: :monograph, field_name: 'Publisher', metadata_name: 'publisher', multivalued: :yes },
     { object: :monograph, field_name: 'Subject', metadata_name: 'subject', multivalued: :yes_split },
     { object: :monograph, field_name: 'ISBN (hardcover)', metadata_name: 'isbn', multivalued: :yes },

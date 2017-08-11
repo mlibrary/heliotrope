@@ -74,6 +74,7 @@ feature 'Edit a file set' do
       fill_in 'Book Needs Handles?', with: 'yes'
       fill_in 'External URL/DOI', with: 'Handle'
       fill_in 'Handle', with: "this-is-a-handle"
+      fill_in 'Redirect to', with: "this-is-a-redirect"
       fill_in 'Allow Download?', with: 'no4'
       fill_in 'Allow Hi-Res?', with: 'yes2'
       fill_in 'Credit Line', with: 'A Nice Museum'
@@ -115,6 +116,7 @@ feature 'Edit a file set' do
       expect(page).to have_content 'Here is what that means'
       expect(page).to have_content 'A Nice Museum'
       expect(page).to have_content 'Unauthorized use prohibited. A Nice Museum.'
+      expect(page).to have_content 'this-is-a-redirect'
       expect(page.has_field?('Citable Link', with: 'http://hdl.handle.net/2027/fulcrum.this-is-a-handle')).to be true
 
       # order in FileSet's section_title has been taken from Monograph's section_titles

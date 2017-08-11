@@ -91,6 +91,10 @@ module SolrDocumentExtensions::FileSet
     Array(self[Solrizer.solr_name('primary_creator_role', :stored_searchable)])
   end
 
+  def redirect_to
+    Array(self[Solrizer.solr_name('redirect_to', :symbol)]).first
+  end
+
   def resource_type
     Array(self[Solrizer.solr_name('resource_type', :stored_searchable)]).first
   end
