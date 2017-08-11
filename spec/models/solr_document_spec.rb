@@ -52,6 +52,7 @@ describe SolrDocument do
   it { is_expected.to respond_to(:external_resource) }
   it { is_expected.to respond_to(:ext_url_doi_or_handle) }
   it { is_expected.to respond_to(:hdl) }
+  it { is_expected.to respond_to(:redirect_to) }
   it { is_expected.to respond_to(:holding_contact) }
   it { is_expected.to respond_to(:keywords) }
   it { is_expected.to respond_to(:permissions_expiration_date) }

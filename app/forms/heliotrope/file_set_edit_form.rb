@@ -14,6 +14,6 @@ module Heliotrope
                      allow_display_after_expiration allow_download_after_expiration
                      sort_date allow_download allow_hi_res credit_line
                      holding_contact ext_url_doi_or_handle doi hdl use_crossref_xml
-                     primary_creator_role display_date transcript translation]
+                     primary_creator_role display_date transcript translation redirect_to]
   end
 end
