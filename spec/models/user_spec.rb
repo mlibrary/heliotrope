@@ -64,4 +64,26 @@ describe User do
       it { is_expected.to be false }
     end
   end
+
+  describe '#groups' do
+    let(:press1) { create(:press, subdomain: 'red') }
+    let(:press2) { create(:press, subdomain: 'blue') }
+
+    let(:admin) { create(:user) }
+    let(:editor) { create(:user) }
+    let(:platform_admin) { create(:platform_admin) }
+
+    before do
+      Press.delete_all
+      Role.delete_all
+      create(:role, resource: press1, user: admin, role: 'admin')
+      create(:role, resource: press2, user: editor, role: 'editor')
+    end
+
+    it "returns the right groups for users" do
+      expect(admin.groups).to eq ["red_admin"]
+      expect(editor.groups).to eq ["blue_editor"]
+      expect(platform_admin.groups).to eq ["blue_admin", "blue_editor", "red_admin", "red_editor", "admin"]
+    end
+  end
 end
