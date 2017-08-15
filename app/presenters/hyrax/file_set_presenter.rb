@@ -118,7 +118,7 @@ module Hyrax
     end
 
     def embed_code
-      if video?
+      if video? || image?
         responsive_embed_code
       else
         generic_embed_code
@@ -127,14 +127,16 @@ module Hyrax
 
     def responsive_embed_code
       <<~END
-        <div style='width:auto; page-break-inside:avoid; -webkit-column-break-inside:avoid; break-inside:avoid; overflow:hidden;#{padding_top} padding-bottom:#{padding_bottom}%; position:relative; height:0;'>
-          <iframe src='#{embed_link}' style='border-width:0; left:0; top:0; width:100%; height:100%; position:absolute;' scrolling='no'></iframe>
+        <div style='width:auto; page-break-inside:avoid; -webkit-column-break-inside:avoid; break-inside:avoid; max-width:#{embed_width}px; margin:auto'>
+          <div style='overflow:hidden;#{padding_top} padding-bottom:#{padding_bottom}%; position:relative; height:0;'>#{embed_height_string}
+            <iframe src='#{embed_link}' style='overflow:hidden; border-width:0; left:0; top:0; width:100%; height:100%; position:absolute;'></iframe>
+          </div>
         </div>
       END
     end
 
     def generic_embed_code
-      "<iframe src='#{embed_link}' style='display:inline-block; border-width:0; width:100%; height:500px;' scrolling='no'></iframe>"
+      "<iframe src='#{embed_link}' style='display:block; overflow:hidden; border-width:0; width:98%; max-width:98%; max-height:400px; margin:auto'></iframe>"
     end
 
     def embed_link
@@ -146,6 +148,48 @@ module Hyrax
       pageviews_by_path(hyrax_file_set_path(id))
     end
 
+    # Embed Code Stuff
+
+    def embed_width
+      width_ok? ? width : 400
+    end
+
+    def embed_height
+      height_ok? ? height : 300
+    end
+
+    def embed_height_string
+      media_type = if video?
+                     ' video'
+                   elsif image?
+                     ' image'
+                   else
+                     ''
+                   end
+      height_ok? ? "<!-- actual#{media_type} height: #{embed_height}px -->" : ''
+    end
+
+    def width_ok?
+      width.present? && !width.zero?
+    end
+
+    def height_ok?
+      height.present? && !height.zero?
+    end
+
+    def padding_top
+      # allows for Able Player's controls
+      video? || audio? ? ' padding-top:98px;' : ''
+    end
+
+    def padding_bottom
+      # images have pan/zoom and are often portrait, which would gobble up massive height, so use 60% for all
+      return 60 unless video?
+      # adjusts the height to allow for what the video player is doing to preserve the content's aspect ratio
+      percentage = !width_ok? || !height_ok? ? 75 : (height.to_f * 100.0 / width.to_f).round(2)
+      (percentage % 1).zero? ? percentage.to_i : percentage
+    end
+
     # Technical Metadata
     def width
       solr_document['width_is']
@@ -153,20 +197,6 @@ module Hyrax
 
     def height
       solr_document['height_is']
-    end
-
-    def bad_dimensions?
-      width.blank? || width.zero? || height.blank? || height.zero?
-    end
-
-    def padding_top
-      video? ? ' padding-top:98px;' : ''
-    end
-
-    def padding_bottom
-      # adjusts the height to allow for what the video player is doing to preserve the content's aspect ratio
-      percentage = bad_dimensions? ? 75 : (height.to_f * 100.0 / width.to_f).round(2)
-      (percentage % 1).zero? ? percentage.to_i : percentage
     end
 
     def mime_type

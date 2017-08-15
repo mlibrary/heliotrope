@@ -3887,7 +3887,11 @@
             var centerTooltip = true;
             if ($(this).closest('div').hasClass('able-right-controls')) {
               // this control is on the right side
-              if ($(this).is(':last-child')) {
+              // conorom 20170813: `|| $(this).hasClass('able-button-handler-volume')` is a heliotrope bug-fix
+              // (hack) to stop the pop-out "Volume" tooltip from leaving the player area. The volume button
+              // was obviously assumed to be the last-child, but that's actually the volume slider. Having this
+              // tooltip pop out of the player area causes problems with "responsive" embedding in epubs etc.
+              if ($(this).is(':last-child') || $(this).hasClass('able-button-handler-volume')) {
                 // this is the last control on the right
                 // position tooltip using the "right" property
                 centerTooltip = false;

@@ -17,6 +17,5 @@
 // note: blacklight/blacklight must always be included after turbolinks
 //= require blacklight/blacklight
 //= require cozy-sun-bear-main
-//= require 'bowser.min'
 //= require_tree ./application
 //= require hyrax
