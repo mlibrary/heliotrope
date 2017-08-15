@@ -10,6 +10,10 @@ html, body, figure, #image, .able, .able-wrapper{
     height: 100%;
 }
 
+html {
+  overflow:hidden;
+}
+
 .able-wrapper {
     .able {
         box-shadow: 0 0 0 0 transparent;
