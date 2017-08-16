@@ -4,21 +4,34 @@ require 'zip'
 
 class EPubService
   def self.read(epub_id, file_entry) # called from EPubController.file
+    # EPub entry file to read
     epub_entry_file = EPubService.epub_entry_path(epub_id, file_entry)
+
+    # Extract the entry file and the entire EPub if necessary
     EPubService.cache_epub_entry(epub_id, file_entry) unless File.exist?(epub_entry_file)
+
+    # At this point the entry file exist in the cache so reset the time to live for the EPub in the cache
     FileUtils.touch(EPubService.epub_path(epub_id))
+
+    # Read the entry file
     File.read(epub_entry_file)
   end
 
   def self.cache_epub_entry(epub_id, file_entry) # called from EPubService.read
+    # EPub entry file to cache
     epub_entry_file = EPubService.epub_entry_path(epub_id, file_entry)
+
+    # Return if the file is already cached
     return if File.exist?(epub_entry_file)
 
+    # Get the original EPub from Fedora
     epub_file = FileSet.find(epub_id)&.original_file
     raise EPubServiceError, "EPub #{epub_id} file is nil." if epub_file.nil?
 
+    # Extract the entire EPub in the background if necessary (EPubServiceJob calls EPubService.cache(epub_id))
     EPubServiceJob.perform_later(epub_id) unless Dir.exist?(EPubService.epub_path(epub_id))
 
+    # Extract just this entry file from the epub
     begin
       Zip::File.open_buffer(epub_file.content) do |zip_file|
         EPubService.make_epub_entry_path(epub_id, file_entry)
@@ -29,21 +42,29 @@ class EPubService
     rescue Zip::Error
       raise EPubServiceError, "EPub #{epub_id} is corrupt."
     end
+
+    # At this point the entry file exist in the cache
   end
 
   def self.cache_epub(epub_id) # called from EPubServiceJob
+    # Get the original EPub from Fedora
     epub_file = FileSet.find(epub_id)&.original_file
     raise EPubServiceError, "EPub #{epub_id} file is nil." if epub_file.nil?
+
+    # Extract the entire EPub
     begin
       Zip::File.open_buffer(epub_file.content) do |zip_file|
         zip_file.each do |entry|
           EPubService.make_epub_entry_path(epub_id, entry.name)
+          # Extract just this entry file from the epub (Gaurd against file existing to support asynchronous calls to the service)
           entry.extract(EPubService.epub_entry_path(epub_id, entry.name)) unless File.exist?(EPubService.epub_entry_path(epub_id, entry.name))
+          # At this point the entry file exist in the cache
         end
       end
     rescue Zip::Error
       raise EPubServiceError, "EPub #{epub_id} is corrupt."
     end
+    # At this point the epub has beed cached
   end
 
   def self.prune_cache # called from EPubServiceJob
