@@ -21,8 +21,7 @@
              data-able-player
              data-include-transcript="false"
              data-allow-fullscreen="false"
-             poster="<%= hyrax.download_path(@presenter.id, file: 'thumbnail') %>">
-
+             poster="<%= hyrax.download_path(@presenter.id, file: 'jpeg') %>">
         <source src="<%= hyrax.download_path(@presenter.id, file: 'webm') %>" type="video/webm" />
         <source src="<%= hyrax.download_path(@presenter.id, file: 'mp4') %>" type="video/mp4" />
         <% if @presenter.transcript.present? %>
