@@ -1,9 +1,10 @@
 # frozen_string_literal: true
 
-class EPubController < ApplicationController
+class EPubsController < ApplicationController
   def show
     presenter = Hyrax::FileSetPresenter.new(SolrDocument.new(FileSet.find(params[:id]).to_solr), current_ability, request)
     if presenter.epub?
+      EPubsService.open(params[:id])
       @title = presenter.title
       @citable_link = presenter.citable_link
       @creator_given_name = presenter.creator_given_name
@@ -20,7 +21,7 @@ class EPubController < ApplicationController
   end
 
   def file
-    render plain: EPubService.read(params[:id], params[:file] + '.' + params[:format]), layout: false
+    render plain: EPubsService.read(params[:id], params[:file] + '.' + params[:format]), layout: false
   rescue
     Rails.logger.info("### INFO Entry #{params[:file]}.#{params[:format]} not found in EPub #{params[:id]}. ###")
     head :not_found

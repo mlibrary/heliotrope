@@ -6,8 +6,8 @@ resque_web_constraint = lambda do |request|
 end
 
 Rails.application.routes.draw do
-  get 'epub/:id', controller: :e_pub, action: :show, as: :epub
-  get 'epub/:id/*file', controller: :e_pub, action: :file, as: :epub_file
+  get 'epubs/:id', controller: :e_pubs, action: :show, as: :epub
+  get 'epubs/:id/*file', controller: :e_pubs, action: :file, as: :epub_file
   get 'embed', controller: :embed, action: :show
   get 'fulcrum', controller: :fulcrum, action: :index, as: :fulcrum
   get 'fulcrum/:partial', controller: :fulcrum, action: :show, as: :partial_fulcrum

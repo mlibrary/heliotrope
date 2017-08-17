@@ -2,11 +2,36 @@
 
 require 'rails_helper'
 
-RSpec.describe EPubService do
-  before { FileUtils.rm_rf(described_class.epubs_path) }
-
+RSpec.describe EPubsService do
   let(:epub) { create(:file_set, content: File.open(File.join(fixture_path, 'moby-dick.epub'))) }
   let(:file_entry) { "META-INF/container.xml" }
+
+  before { FileUtils.rm_rf(described_class.epubs_path) }
+
+  describe '#open' do
+    subject(:open) { described_class.open(epub_id) }
+    let(:epub_id) { epub.id }
+
+    context 'file_set is an epub' do
+      it 'opens the EPub file' do
+        expect { open }.not_to raise_error
+      end
+    end
+
+    context 'file_set is not an epub' do
+      let(:epub) { create(:file_set, content: File.open(File.join(fixture_path, 'it.mp4'))) }
+      it 'opens the EPub file' do
+        expect { open }.not_to raise_error
+      end
+    end
+
+    context 'file_set does not exist' do
+      let(:epub_id) { "epub_id" }
+      it 'raises ActiveFedora::ObjectNotFoundError' do
+        expect { open }.to raise_error(ActiveFedora::ObjectNotFoundError)
+      end
+    end
+  end
 
   describe '#read' do
     subject(:read) { described_class.read(epub_id, file_entry) }
@@ -18,14 +43,14 @@ RSpec.describe EPubService do
     end
     context 'file_set is an epub but file_entry does not exist.' do
       let(:file_entry) { "META-INF/container.txt" }
-      it 'raises EPubServiceError' do
-        expect { read }.to raise_error(EPubServiceError, "Entry #{file_entry} in EPub #{epub.id} does not exist.")
+      it 'raises EPubsServiceError' do
+        expect { read }.to raise_error(EPubsServiceError, "Entry #{file_entry} in EPub #{epub.id} does not exist.")
       end
     end
     context 'file_set is not an epub' do
       let(:epub) { create(:file_set, content: File.open(File.join(fixture_path, 'it.mp4'))) }
-      it 'raises EPubServiceError' do
-        expect { read }.to raise_error(EPubServiceError, "EPub #{epub.id} is corrupt.")
+      it 'raises EPubsServiceError' do
+        expect { read }.to raise_error(EPubsServiceError, "EPub #{epub.id} is corrupt.")
       end
     end
     context 'file_set does not exist' do
@@ -33,6 +58,30 @@ RSpec.describe EPubService do
       it 'raises ActiveFedora::ObjectNotFoundError' do
         expect { read }.to raise_error(ActiveFedora::ObjectNotFoundError)
       end
+    end
+  end
+
+  describe '#close' do
+    subject(:close) { described_class.close(epub_id) }
+    let(:epub_id) { epub.id }
+
+    context 'file_set is an epub' do
+      it 'closes the EPub file' do
+        expect { close }.not_to raise_error
+        expect(Dir.exist?(described_class.epub_path(epub.id))).to be false
+      end
+    end
+
+    context 'file_set is not an epub' do
+      let(:epub) { create(:file_set, content: File.open(File.join(fixture_path, 'it.mp4'))) }
+      it 'closes the EPub file' do
+        expect { close }.not_to raise_error      end
+    end
+
+    context 'file_set does not exist' do
+      let(:epub_id) { "epub_id" }
+      it 'closes the EPub file' do
+        expect { close }.not_to raise_error      end
     end
   end
 
@@ -46,14 +95,14 @@ RSpec.describe EPubService do
     end
     context 'entry file does not exist in epub' do
       let(:file_entry) { "entry/file.xml" }
-      it 'raises EPubServiceError' do
-        expect { cache_epub_entry }.to raise_error(EPubServiceError, "Entry #{file_entry} in EPub #{epub.id} does not exist.")
+      it 'raises EPubsServiceError' do
+        expect { cache_epub_entry }.to raise_error(EPubsServiceError, "Entry #{file_entry} in EPub #{epub.id} does not exist.")
       end
     end
     context 'epub is nil' do
       let(:epub) { create(:file_set) }
-      it 'raises EPubServiceError' do
-        expect { cache_epub_entry }.to raise_error(EPubServiceError, "EPub #{epub.id} file is nil.")
+      it 'raises EPubsServiceError' do
+        expect { cache_epub_entry }.to raise_error(EPubsServiceError, "EPub #{epub.id} file is nil.")
       end
     end
   end
@@ -68,8 +117,8 @@ RSpec.describe EPubService do
     end
     context 'epub is nil' do
       let(:epub) { create(:file_set) }
-      it 'raises EPubServiceError' do
-        expect { cache_epub }.to raise_error(EPubServiceError, "EPub #{epub.id} file is nil.")
+      it 'raises EPubsServiceError' do
+        expect { cache_epub }.to raise_error(EPubsServiceError, "EPub #{epub.id} file is nil.")
       end
     end
   end
@@ -89,6 +138,15 @@ RSpec.describe EPubService do
         prune_cache
         expect(Dir.exist?(described_class.epub_path(epub.id))).to be false
       end
+    end
+  end
+
+  describe '#prune_cache_epub' do
+    subject(:prune_cache_epub) { described_class.prune_cache_epub(epub.id) }
+    before { described_class.cache_epub(epub.id) }
+    it 'removes the epub' do
+      prune_cache_epub
+      expect(Dir.exist?(described_class.epub_path(epub.id))).to be false
     end
   end
 

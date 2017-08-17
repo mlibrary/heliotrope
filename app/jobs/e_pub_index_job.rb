@@ -6,7 +6,7 @@ class EPubIndexJob < ApplicationJob
   # This `perform_later` should be the last thing called by
   # EPubServiceJob as it relies on the cached EPub existing
   def perform(epub_id)
-    epub_path = EPubService.epub_path(epub_id)
+    epub_path = ::EPubsService.epub_path(epub_id)
     db_file = "#{epub_path}/#{epub_id}.db"
 
     lite = EPubIndexService::SqlLite.new(db_file)
