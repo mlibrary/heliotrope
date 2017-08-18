@@ -22,6 +22,9 @@ gem 'active-fedora', '~> 11.1.6'
 # clamav only in production
 gem 'clamav', group: :production
 
+# sqlite for epub indexing
+gem 'sqlite3'
+
 # gem 'pg', '0.18.4'
 gem 'mysql2'
 gem 'puma'
@@ -111,5 +114,4 @@ group :development, :test do
   gem 'rubocop-rspec', '~> 1.15.1'
   gem 'ruumba'
   gem 'solr_wrapper', '0.21.0'
-  gem 'sqlite3'
 end

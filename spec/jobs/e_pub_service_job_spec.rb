@@ -16,8 +16,10 @@ RSpec.describe EPubServiceJob, type: :job do
   end
 
   it 'executes perform' do
-    expect(EPubService).to receive(:cache_epub).with(epub_id).once
-    expect(EPubService).to receive(:prune_cache).with(no_args).once
+    allow(EPubIndexJob).to receive(:perform_later).with(epub_id)
+    expect(EPubService).to receive(:cache_epub).with(epub_id).ordered
+    expect(EPubIndexJob).to receive(:perform_later).with(epub_id).ordered
+    expect(EPubService).to receive(:prune_cache).with(no_args).ordered
     perform_enqueued_jobs { job }
   end
 
