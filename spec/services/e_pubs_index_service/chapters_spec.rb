@@ -3,9 +3,9 @@
 require 'rails_helper'
 require 'nokogiri'
 
-RSpec.describe EPubIndexService::Chapters do
+RSpec.describe EPubsIndexService::Chapters do
   let(:epub_fileset) { create(:file_set, content: File.open(File.join(fixture_path, 'moby-dick.epub'))) }
-  let(:epub) { EPubIndexService::EPub.new(EPubsService.epub_path(epub_fileset.id)) }
+  let(:epub) { EPubsIndexService::EPub.new(EPubsService.epub_path(epub_fileset.id)) }
 
   before do
     EPubsService.cache_epub(epub_fileset.id)

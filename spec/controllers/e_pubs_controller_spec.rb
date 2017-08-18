@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'rails_helper'
+require 'json'
 
 RSpec.describe EPubsController, type: :controller do
   describe "#show" do
@@ -132,6 +133,39 @@ RSpec.describe EPubsController, type: :controller do
             expect(response.body.empty?).to be true
           end
         end
+      end
+    end
+  end
+
+  describe "GET #search" do
+    let(:file_set) { create(:file_set, content: File.open(File.join(fixture_path, 'moby-dick.epub'))) }
+
+    before do
+      EPubsServiceJob.perform_now(file_set.id)
+    end
+
+    after do
+      EPubsService.clear_cache
+    end
+
+    context 'finds case insensitive search results' do
+      before { get :search, params: { id: file_set.id, q: "White Whale" } }
+
+      it do
+        expect(response).to have_http_status(:success)
+        expect(JSON.parse(response.body)["q"]).to eq "White Whale"
+        expect(JSON.parse(response.body)["search_results"].length).to eq 91
+        expect(JSON.parse(response.body)["search_results"][0]["cfi"]).to eq "/6/84[xchapter_036]!/4/2/42"
+        expect(JSON.parse(response.body)["search_results"][0]["snippet"]).to eq "... heard me give orders about a white whale. Look ye! d’ye see this Spanis..."
+      end
+    end
+
+    context 'finds hypenated search results' do
+      before { get :search, params: { id: file_set.id, q: "bell-boy" } }
+
+      it do
+        expect(response).to have_http_status(:success)
+        expect(JSON.parse(response.body)["search_results"].length).to eq 2
       end
     end
   end

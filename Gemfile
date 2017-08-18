@@ -63,7 +63,7 @@ gem 'redcarpet', '~> 3.3.4'
 gem 'jekyll', '~> 3.1.3'
 
 # Use gem version of cozy-sun-bear
-gem 'cozy-sun-bear', git: 'https://github.com/mlibrary/cozy-sun-bear', ref: '0a4accd279640860b9b6546987399bc297dc3b21'
+gem 'cozy-sun-bear', git: 'https://github.com/mlibrary/cozy-sun-bear', ref: '3f63929c28d47108e8f5d6fa49eec7e927b672dd'
 
 # Talking to Google Analytics
 gem 'legato', '~> 0.3'

@@ -3,7 +3,7 @@
 require 'sqlite3'
 require 'fileutils'
 
-module EPubIndexService
+module EPubsIndexService
   class SqlLite
     attr_accessor :db, :db_file
     def initialize(db_file)

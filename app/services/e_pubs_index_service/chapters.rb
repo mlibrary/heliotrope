@@ -2,7 +2,7 @@
 
 require 'nokogiri'
 
-module EPubIndexService
+module EPubsIndexService
   class Chapters
     def self.create(epub)
       title = epub.content.xpath("//title").text

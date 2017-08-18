@@ -3,7 +3,7 @@
 require 'rails_helper'
 require 'nokogiri'
 
-RSpec.describe EPubIndexService::EPub do
+RSpec.describe EPubsIndexService::EPub do
   before(:all) do # rubocop:disable BeforeAfterAll
     @epub = create(:file_set, content: File.open(File.join(fixture_path, 'moby-dick.epub')))
     EPubsService.cache_epub(@epub.id)
