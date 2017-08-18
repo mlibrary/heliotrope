@@ -7,8 +7,7 @@ module Hyrax
     def show
       if transcript?
         render plain: file_set_doc['transcript_tesim'].first
-
-      elsif thumbnail? || video? || sound? || allow_download?
+      elsif file.present? && (thumbnail? || jpeg? || video? || sound? || allow_download?)
         # See #401
         if file.is_a? String
           # For derivatives stored on the local file system
@@ -29,6 +28,24 @@ module Hyrax
       end
     end
 
+    # going to tweak this function from Hyrax to return the thumbnail if the full-size screenshot is empty
+    def load_file
+      file_reference = params[:file]
+      return default_file unless file_reference
+
+      file_path = Hyrax::DerivativePath.derivative_path_for_reference(params[asset_param_key], file_reference)
+      # pre-tweak this is the last line
+      # File.exist?(file_path) ? file_path : nil
+
+      if File.exist?(file_path)
+        file_path
+      elsif jpeg?
+        # you wanted the full-size poster, but it doesn't exist... you get the thumbnail
+        file_path = Hyrax::DerivativePath.derivative_path_for_reference(params[asset_param_key], 'thumbnail')
+        File.exist?(file_path) ? file_path : nil
+      end
+    end
+
     def file_set_doc
       ActiveFedora::SolrService.query("{!terms f=id}#{params[:id]}", rows: 1).first || {}
     end
@@ -40,45 +57,30 @@ module Hyrax
     end
 
     def allow_download?
-      if file_set_doc['allow_download_ssim'].first == 'yes'
-        true
-      else
-        false
-      end
+      file_set_doc['allow_download_ssim'].first == 'yes' ? true : false
     end
 
     def thumbnail?
-      if params[:file] == 'thumbnail'
-        true
-      else
-        false
-      end
+      params[:file] == 'thumbnail' ? true : false
+    end
+
+    def jpeg?
+      # want this for HTML5 video tag poster attribute, it's a full-size screenshot of the video
+      params[:file] == 'jpeg' ? true : false
     end
 
     def video?
       # video "previews"
-      if params[:file] == 'webm' || params[:file] == 'mp4'
-        true
-      else
-        false
-      end
+      params[:file] == 'webm' || params[:file] == 'mp4' ? true : false
     end
 
     def sound?
       # sound "previews"
-      if params[:file] == 'mp3' || params[:file] == 'ogg'
-        true
-      else
-        false
-      end
+      params[:file] == 'mp3' || params[:file] == 'ogg' ? true : false
     end
 
     def transcript?
-      if params[:file] == 'vtt'
-        true
-      else
-        false
-      end
+      params[:file] == 'vtt' ? true : false
     end
   end
 end
