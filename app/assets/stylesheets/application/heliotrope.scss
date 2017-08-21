@@ -186,6 +186,16 @@ footer.press {
     border-bottom: none;
   }
 
+  .pagination {
+
+    a.disabled {
+      color: #000000;
+      pointer-events: none;
+      cursor: default;
+    }
+
+  }
+
   // MONOGRAPH ASSETS - LIST VIEW
   #documents.documents-list {
 
