@@ -459,6 +459,28 @@ footer.press {
 }
 
 ///////////////////////////////////
+// SURVEY
+///////////////////////////////////
+.survey {
+  font-size: 1.5em;
+
+  .message {
+    padding-bottom: 1em;
+  }
+
+  a.btn-primary, a.btn-primary:hover, a.btn-primary:active {
+    color: #fff;
+  }
+
+  a.btn-default, a.btn-default:active, a.btn-default:hover {
+    color: inherit;
+    background-color: #d9edf7;
+    border-color: #d9edf7;
+  }
+
+}
+
+///////////////////////////////////
 // EPUB READER - cozy-sun-bear
 ///////////////////////////////////
 #epub {
