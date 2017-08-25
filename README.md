@@ -4,7 +4,7 @@
 [![Coverage Status](https://coveralls.io/repos/github/mlibrary/heliotrope/badge.svg?branch=master)](https://coveralls.io/github/mlibrary/heliotrope?branch=master)
 [![Stories in Ready](https://badge.waffle.io/mlibrary/heliotrope.png?label=ready&title=Ready)](https://waffle.io/mlibrary/heliotrope)
 
-[Samvera](https://wiki.duraspace.org/display/samvera/Samvera)based digital publishing platform built by the [University of Michigan Library](https://www.lib.umich.edu/)
+[Samvera](https://wiki.duraspace.org/display/samvera/Samvera) based digital publishing platform built by the [University of Michigan Library](https://www.lib.umich.edu/)
 
 ## Development
 
@@ -34,7 +34,7 @@ If you need to run this when the app has been deployed, run:
 
 ```
 $ vi ./config/role_map.yml
-   
+
 development:
   admin:   
     - yourself@domain.com
@@ -67,7 +67,7 @@ solr_wrapper --config .wrap_conf/solr_dev
 #### Create [default administrative set](https://github.com/samvera/hyrax#create-default-administrative-set) and load [workflows](https://github.com/samvera/hyrax/wiki/Defining-a-Workflow)
 
 `bundle exec rake hyrax:default_admin_set:create`
- 
+
 `bundle exec rake hyrax:workflow:load`
 
 ## Debugging
