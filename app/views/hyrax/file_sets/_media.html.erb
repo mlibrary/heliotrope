@@ -1,6 +1,11 @@
   <figure title="<%= @presenter.alt_text.first %>">
     <% if !@presenter.external_resource? %>
       <% if @presenter.image? %>
+        <%# https://github.com/mlibrary/heliotrope/issues/1127 %>
+        <% content_for :head do %>
+            <meta name="turbolinks-cache-control" content="no-cache">
+        <% end %>
+
         <% riiif_url = "/image-service/#{@presenter.id}/info.json" %>
         <div id="image"></div>
         <script>
