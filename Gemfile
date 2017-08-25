@@ -9,7 +9,7 @@ gem 'rails', '5.0.2'
 
 # gem 'curation_concerns', '2.0.0'
 # gem 'hyrax', github: 'projecthydra-labs/hyrax', ref: '9395ac75a04902237bf692c0b67c9cf292c9d39d' # May 18th
-gem 'hyrax', '1.0.2'
+gem 'hyrax', '1.0.4'
 
 gem 'resque', '~> 1.26.0'
 gem 'resque-pool'
@@ -17,7 +17,7 @@ gem 'resque-web', '~> 0.0.7', require: 'resque_web'
 
 # We need this due to #778.
 # gem 'active-fedora', '~> 11.1.5', github: 'projecthydra/active_fedora', ref: 'fae7df019337506b53fc721b22414fdc45830f9b'
-gem 'active-fedora', '~> 11.1.6'
+gem 'active-fedora', '~> 11.3.1'
 
 # clamav only in production
 gem 'clamav', group: :production
