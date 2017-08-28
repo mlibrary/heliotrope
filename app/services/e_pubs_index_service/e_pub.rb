@@ -2,7 +2,7 @@
 
 require 'nokogiri'
 
-module EPubIndexService
+module EPubsIndexService
   class EPub
     attr_accessor :epub_path, :container, :content_file, :content_dir, :content
     def initialize(epub_path)

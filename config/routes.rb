@@ -8,6 +8,7 @@ end
 Rails.application.routes.draw do
   get 'epubs/:id', controller: :e_pubs, action: :show, as: :epub
   get 'epubs/:id/*file', controller: :e_pubs, action: :file, as: :epub_file
+  get 'epub_search/:id', controller: :e_pubs, action: :search, as: :epub_search
   get 'embed', controller: :embed, action: :show
   get 'fulcrum', controller: :fulcrum, action: :index, as: :fulcrum
   get 'fulcrum/:partial', controller: :fulcrum, action: :show, as: :partial_fulcrum

@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe EPubIndexService::SqlLite do
+RSpec.describe EPubsIndexService::SqlLite do
   subject { described_class.new(":memory:") }
 
   describe "#db" do
@@ -21,14 +21,14 @@ RSpec.describe EPubIndexService::SqlLite do
 
   describe "#load_chapters" do
     let(:chapters) { [
-      EPubIndexService::Chapter.new(
+      EPubsIndexService::Chapter.new(
         'book title',
         '1',
         '1.xhmtl',
         '/6/2[1.xhtml]!',
         'things about stuff'
       ),
-      EPubIndexService::Chapter.new(
+      EPubsIndexService::Chapter.new(
         'book title',
         '2',
         '2.xhtml',

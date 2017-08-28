@@ -5,7 +5,7 @@ class EPubsServiceJob < ApplicationJob
 
   def perform(epub_id) # _later called from EPubsService.open
     EPubsService.cache_epub(epub_id)
-    EPubIndexJob.perform_later(epub_id)
+    EPubsIndexJob.perform_later(epub_id)
     EPubsService.prune_cache
   rescue EPubsServiceError => e
     Rails.logger.info(e.message)
