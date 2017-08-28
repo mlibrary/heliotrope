@@ -6,15 +6,15 @@ require 'nokogiri'
 RSpec.describe EPubIndexService::EPub do
   before(:all) do # rubocop:disable BeforeAfterAll
     @epub = create(:file_set, content: File.open(File.join(fixture_path, 'moby-dick.epub')))
-    EPubService.cache_epub(@epub.id)
+    EPubsService.cache_epub(@epub.id)
   end
 
   after(:all) do # rubocop:disable BeforeAfterAll
-    EPubService.clear_cache
+    ::EPubsService.clear_cache
   end
 
   context "has the correct attributes" do
-    subject { described_class.new(EPubService.epub_path(@epub.id)) }
+    subject { described_class.new(EPubsService.epub_path(@epub.id)) }
 
     it "container" do
       expect(subject.container.xpath("//container/rootfiles/rootfile")).to_not be nil

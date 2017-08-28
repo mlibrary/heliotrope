@@ -2,8 +2,8 @@
 
 require 'rails_helper'
 
-RSpec.describe EPubController, type: :controller do
-  describe "GET #show" do
+RSpec.describe EPubsController, type: :controller do
+  describe "#show" do
     context 'not found' do
       before { get :show, params: { id: :id } }
       it { expect(response).to have_http_status(:unauthorized) }
@@ -57,7 +57,7 @@ RSpec.describe EPubController, type: :controller do
     end
   end
 
-  describe "GET #file" do
+  describe "#file" do
     context 'not found' do
       before { get :file, params: { id: :id, file: 'META-INF/container', format: 'xml' } }
       it do
@@ -114,6 +114,8 @@ RSpec.describe EPubController, type: :controller do
         before do
           FileUtils.rm_rf(Rails.root.join("tmp", "epubs", file_set.id))
           file_set.destroy!
+          EPubsService.clear_cache
+          get :file, params: { id: file_set.id, file: 'META-INF/container', format: 'xml' }
         end
 
         it "is destroyed" do
