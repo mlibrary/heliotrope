@@ -9,8 +9,8 @@
     <% end %>
 <% else %>
     <figure>
+        <% alt = (file_set.alt_text.present?) ? file_set.alt_text : "Thumbnail of #{file_set.to_s}" %>
         <%= image_tag thumbnail_url(file_set),
-                      class: "img-responsive",
-                      alt: "Thumbnail of #{file_set.to_s}" %>
+                      class: "img-responsive", alt: alt %>
     </figure>
 <% end %>
