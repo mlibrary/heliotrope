@@ -160,5 +160,15 @@ module Hyrax
       return nil if representative_id.blank?
       @representative_presenter ||= Hyrax::PresenterFactory.build_presenters([representative_id], Hyrax::FileSetPresenter, current_ability).first
     end
+
+    def representative_alt_text?
+      solr_document.representative_id.present?
+    end
+
+    # Alt text for cover page/thumbnail. Defaults to first title if not found.
+    def representative_alt_text
+      rep = representative_presenter
+      (rep.nil? || rep.alt_text.empty?) ? solr_document.title.first : rep.alt_text.first
+    end
   end
 end
