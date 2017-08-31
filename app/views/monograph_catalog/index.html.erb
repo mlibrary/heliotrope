@@ -1,6 +1,5 @@
-<% provide :page_title, @monograph_presenter.title || "Title" %>
+<% provide :page_title, @monograph_presenter.title %>
 <% provide :page_class, 'search monograph' %>
-
 <% provide :page_header do %>
   <!-- survey -->
   <div class="alert alert-info  alert-dismissible survey" role="alert" style="display: none;">
@@ -9,94 +8,85 @@
     <a class="btn btn-primary btn-lg" role="button" href="https://umich.qualtrics.com/jfe/form/SV_5clJsgxZXioWanH?Book=<%= @monograph_presenter.page_title %>" target="_blank" onclick="Cookies.set('survey', 'clicked', { expires: 30 });" data-dismiss="alert">Yes, I can help.</a>
     <a href="#" class="btn btn-default btn-lg" role="button" data-dismiss="alert" aria-label="Close" onclick="Cookies.set('survey', 'ignore', { expires: 15 });">No thanks.</a>
   </div>
-
   <!-- breadcrumbs -->
   <div class="row">
     <nav class="breadcrumbs col-sm-12">
       <ol class="breadcrumb">
-        <li><a href=<%= "/#{@monograph_presenter.subdomain}" %>>Home</a></li>
+        <li><a href=<%= "/#{@monograph_presenter.subdomain}" %>><%= t('.home') %></a></li>
         <li class="active"><%= @monograph_presenter.page_title %></li>
       </ol>
     </nav>
   </div>
-<% end %>
-
+<% end %><!-- provide :page_header -->
 <% provide :sidebar do %>
   <div id="maincontent" class="monograph-info">
-    <!-- COinS for Zotero, etc -->
-    <% if defined? @monograph_presenter.monograph_coins_title %>
+    <% if @monograph_presenter.monograph_coins_title? %>
+      <!-- COinS for Zotero, etc -->
       <span class="Z3988" title="<%= @monograph_presenter.monograph_coins_title %>"></span>
     <% end %>
-
     <div class="monograph-cover">
       <%= render 'hyrax/base/representative_media', presenter: @monograph_presenter %>
     </div><!-- /.monograph-cover -->
-
     <div class="monograph-metadata">
-      <h2><%= @monograph_presenter.title || '' %></h2>
+      <h2><%= @monograph_presenter.title %></h2>
       <% if can? :edit, @monograph_presenter %>
-        <%= link_to "Manage Monograph and Files", main_app.monograph_show_path(@monograph_presenter.id), class: 'btn btn-primary', id: 'manage-monograph-button' %>
+        <%= link_to t('.can_edit'), main_app.monograph_show_path(@monograph_presenter.id), class: 'btn btn-primary', id: 'manage-monograph-button' %>
       <% end %>
       <% if @monograph_presenter.authors? %>
         <h3><%= render_markdown @monograph_presenter.authors %></h3>
       <% end %>
       <% if @monograph_presenter.editors? %>
-        <h3>Edited by <%= @monograph_presenter.editors %></h3>
+        <h3><%= t('.edited_by', editors: @monograph_presenter.editors) %></h3>
       <% end %>
-
       <div class="description">
         <%= render_markdown @monograph_presenter.description.first || '' %>
-      </div>
-      <% pageviews = @monograph_presenter.pageviews %>
-      <% unless pageviews.nil? %>
-      <div>
-        <p>This item has been viewed <b><%= number_with_delimiter pageviews %></b> times.</p>
-      </div>
-      <% end %>
+      </div><!-- /.description -->
+      <div class="pageviews">
+        <p><%= t('.pageviews_html', count: number_with_delimiter(@monograph_presenter.pageviews)) %></p>
+      </div><!-- /.pageviews -->
       <div><p></p></div>
-      <div class="isbn">
-        <% if defined?(@monograph_presenter.isbn) %>
-        <ul class="isbn-hardcover list-unstyled">
-          <% @monograph_presenter.isbn.each do |isbn| %>
-            <li>ISBN (Hardcover): <%= isbn %></li>
-          <% end %>
-        </ul>
+      <% if @monograph_presenter.isbn? %>
+        <div class="isbn">
+          <% if @monograph_presenter.isbn_hardcover? %>
+            <ul class="isbn-hardcover list-unstyled">
+              <% @monograph_presenter.isbn_hardcover.each do |isbn_hardcover| %>
+                  <li><%= t('.isbn_hardcover', isbn: isbn_hardcover) %></li>
+              <% end %>
+            </ul>
         <% end %>
-        <% if defined?(@monograph_presenter.isbn_paper) %>
-        <ul class="isbn-paper list-unstyled">
-          <% @monograph_presenter.isbn_paper.each do |isbn_paper| %>
-            <li>ISBN (Paper): <%= isbn_paper %></li>
+          <% if @monograph_presenter.isbn_paper? %>
+            <ul class="isbn-paper list-unstyled">
+              <% @monograph_presenter.isbn_paper.each do |isbn_paper| %>
+                <li><%= t('.isbn_paper', isbn: isbn_paper) %></li>
+              <% end %>
+            </ul>
           <% end %>
-        </ul>
-        <% end %>
-        <% if defined?(@monograph_presenter.isbn_ebook) %>
-        <ul class="isbn-ebook list-unstyled">
-          <% @monograph_presenter.isbn_ebook.each do |isbn_ebook| %>
-            <li>ISBN (E-Book): <%= isbn_ebook %></li>
+          <% if @monograph_presenter.isbn_ebook? %>
+            <ul class="isbn-ebook list-unstyled">
+              <% @monograph_presenter.isbn_ebook.each do |isbn_ebook| %>
+                <li><%= t('.isbn_ebook', isbn: isbn_ebook) %></li>
+              <% end %>
+            </ul>
           <% end %>
-        </ul>
-        <% end %>
-      </div> <!-- /.isbn -->
-
+        </div> <!-- /.isbn -->
+      <% end %>
       <% if @monograph_presenter.buy_url? || @monograph_presenter.epub? %>
         <div class="btn-toolbar" role="toolbar" aria-label="">
           <div class="btn-group" role="group" aria-label="">
-          <% if @monograph_presenter.epub? %>
-            <a id="monograph-read-btn" href="<%= epub_path(@monograph_presenter.epub) %>" title="Read <%= @monograph_presenter.title %>" role="button" class="btn btn-default btn-small">Read Book</a>
-          <% end %>
-          <% if @monograph_presenter.buy_url? %>
-            <a id="monograph-buy-btn" href="<%= @monograph_presenter.buy_url %>" target="_blank" title="Buy <%= @monograph_presenter.title %>" role="button" class="btn btn-default btn-small">Buy Book</a>
-          <% end %>
-          </div>
-        </div>
+            <% if @monograph_presenter.epub? %>
+              <a id="monograph-read-btn" href="<%= epub_path(@monograph_presenter.epub) %>" title="<%= t('.read', title: @monograph_presenter.title) %>" role="button" class="btn btn-default btn-small"><%= t('.read_book') %></a>
+            <% end %>
+            <% if @monograph_presenter.buy_url? %>
+              <a id="monograph-buy-btn" href="<%= @monograph_presenter.buy_url %>" target="_blank" title="<%= t('.buy', title: @monograph_presenter.title) %>" role="button" class="btn btn-default btn-small"><%= t('.buy_book') %></a>
+            <% end %>
+          </div><!-- /.btn-group -->
+        </div><!-- /.btn-toolbar -->
       <% end %>
-
     </div><!-- /.monograph-metadata -->
   </div><!-- /.monograph-info -->
   <hr>
   <%= render 'catalog/search_sidebar' %>
-  <% end %>
-
-  <div class="content">
-    <%= render 'catalog/search_results' %>
-  </div>
+<% end %><!-- provide :sidebar -->
+<div class="content">
+  <%= render 'catalog/search_results' %>
+</div><!-- /.content -->
