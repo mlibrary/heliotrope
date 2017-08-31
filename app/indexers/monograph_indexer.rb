@@ -14,8 +14,10 @@ class MonographIndexer < Hyrax::WorkIndexer
       existing_fileset_order = existing_filesets
       solr_doc[Solrizer.solr_name('ordered_member_ids', :symbol)] = object.ordered_member_ids
       solr_doc[Solrizer.solr_name('representative_id', :symbol)] = object.representative_id
-      solr_doc[Solrizer.solr_name('representative_epub_id', :symbol)] = existing_fileset_order.find { |id| ['application/epub+zip'].include? FileSet.find(id).mime_type }
       trigger_fileset_reindexing(existing_fileset_order, object.ordered_member_ids)
+
+      # grab the first fileset that is an epub and set it as the representative_epub_id
+      solr_doc[Solrizer.solr_name('representative_epub_id', :symbol)] = existing_filesets.find { |id| ['application/epub+zip'].include? FileSet.find(id).mime_type }
     end
   end
 
