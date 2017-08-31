@@ -2,24 +2,24 @@
 
 require 'rails_helper'
 
-describe MonographIndexer do
-  let(:indexer) { described_class.new(monograph) }
-  let(:monograph) { build(:monograph,
-                          primary_editor_given_name: 'Bullwinkle',
-                          primary_editor_family_name: 'Moose') }
-  let(:file) { create(:file_set) }
-
-  before do
-    monograph.ordered_members << file
-    monograph.save!
-  end
-
+RSpec.describe MonographIndexer do
   describe 'indexing a monograph' do
     subject { indexer.generate_solr_document }
+
+    let(:indexer) { described_class.new(monograph) }
+    let(:monograph) { build(:monograph,
+                            primary_editor_given_name: 'Bullwinkle',
+                            primary_editor_family_name: 'Moose') }
+    let(:file_set) { create(:file_set) }
     let(:press_name) { Press.find_by(subdomain: monograph.press).name }
 
+    before do
+      monograph.ordered_members << file_set
+      monograph.save!
+    end
+
     it 'indexes the ordered members' do
-      expect(subject['ordered_member_ids_ssim']).to eq [file.id]
+      expect(subject['ordered_member_ids_ssim']).to eq [file_set.id]
     end
 
     it 'indexes the press name' do
@@ -30,14 +30,35 @@ describe MonographIndexer do
       expect(subject['representative_id_ssim']).to eq monograph.representative_id
     end
 
-    context 'epub' do
-      let(:file) { create(:file_set, content: File.open(File.join(fixture_path, 'moby-dick.epub'))) }
-      it { expect(subject['representative_epub_id_ssim']).to eq file.id }
-    end
-
     it 'indexes the primary_editor_full_name' do
       expect(subject['primary_editor_full_name_tesim']).to eq 'Moose, Bullwinkle'
       expect(subject['primary_editor_full_name_sim']).to eq 'Moose, Bullwinkle'
+    end
+  end
+
+  describe 'representative_epub_id' do
+    subject { indexer.generate_solr_document[Solrizer.solr_name('representative_epub_id', :symbol)] }
+
+    let(:indexer) { described_class.new(monograph) }
+    let(:monograph) { build(:monograph) }
+
+    context 'no file set' do
+      before { monograph.save! }
+      it { is_expected.to be_nil }
+    end
+    context 'file set' do
+      before do
+        monograph.ordered_members << file_set
+        monograph.save!
+      end
+      context 'non-epub file set' do
+        let(:file_set) { create(:file_set) }
+        it { is_expected.to be_nil }
+      end
+      context 'epub file set' do
+        let(:file_set) { create(:file_set, content: File.open(File.join(fixture_path, 'moby-dick.epub'))) }
+        it { is_expected.to eq file_set.id }
+      end
     end
   end
 end
