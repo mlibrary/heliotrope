@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-describe Hyrax::MonographPresenter do
+RSpec.describe Hyrax::MonographPresenter do
   include ActionView::Helpers::UrlHelper
 
   before { Press.destroy_all }
@@ -15,8 +15,32 @@ describe Hyrax::MonographPresenter do
   let(:ability) { double('ability') }
   let(:presenter) { described_class.new(mono_doc, ability) }
 
-  it 'includes TitlePresenter' do
-    expect(described_class.new(nil, nil)).to be_a TitlePresenter
+  describe '#presenters' do
+    subject { described_class.new(nil, nil) }
+    it do
+      is_expected.to be_a AnalyticsPresenter
+      is_expected.to be_a ISBNPresenter
+      is_expected.to be_a OpenUrlPresenter
+      is_expected.to be_a TitlePresenter
+    end
+  end
+
+  describe '#monograph_coins_title?' do
+    subject { presenter.monograph_coins_title? }
+    context 'undef' do
+      before { presenter.instance_eval('undef :monograph_coins_title') }
+      it { is_expected.to be false }
+    end
+    context 'def' do
+      context 'blank' do
+        before { allow(presenter).to receive(:monograph_coins_title).and_return('') }
+        it { is_expected.to be false }
+      end
+      context 'present' do
+        before { allow(presenter).to receive(:monograph_coins_title).and_return('MONOGRAPH-COINS-TITLE') }
+        it { is_expected.to be true }
+      end
+    end
   end
 
   describe '#buy_url?' do

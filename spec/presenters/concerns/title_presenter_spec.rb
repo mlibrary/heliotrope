@@ -12,30 +12,71 @@ class Presenter
 end
 
 describe TitlePresenter do
-  let(:markdown_title) { '__Markdown Title__' }
-  let(:expected_markdown_title_as_text) { 'Markdown Title' }
-  let(:expected_markdown_title_as_html_safe) { '<strong>Markdown Title</strong>'.html_safe }
   let(:solr_document) { SolrDocument.new(title_tesim: [markdown_title]) }
   let(:presenter) { Presenter.new(solr_document) }
 
   describe 'Presenter' do
+    subject { presenter }
+    let(:markdown_title) { double("markdown title") }
     it 'includes TitlePresenter' do
-      expect(presenter).to be_a described_class
+      is_expected.to be_a described_class
     end
   end
 
   describe '#page_title' do
-    it 'translates markdown to text' do
-      expect(presenter.page_title).to eq expected_markdown_title_as_text
+    subject { presenter.page_title }
+    let(:expected_markdown_title_as_text) { 'Title' }
+
+    context 'empty array' do
+      let(:markdown_title) { nil }
+      it 'translates markdown to text' do
+        is_expected.to eq expected_markdown_title_as_text
+      end
+    end
+
+    context 'empty string' do
+      let(:markdown_title) { '' }
+      it 'translates markdown to text' do
+        is_expected.to eq expected_markdown_title_as_text
+      end
+    end
+
+    context '__Markdown Title__' do
+      let(:markdown_title) { '__Markdown Title__' }
+      let(:expected_markdown_title_as_text) { 'Markdown Title' }
+      it 'translates markdown to text' do
+        is_expected.to eq expected_markdown_title_as_text
+      end
     end
   end
 
   describe '#title' do
-    it 'translates markdown to html' do
-      expect(presenter.title).to eq expected_markdown_title_as_html_safe
+    subject { presenter.title }
+    let(:expected_markdown_title_as_html_safe) { 'Title'.html_safe }
+
+    context 'empty array' do
+      let(:markdown_title) { nil }
+      it 'translates markdown to safe html' do
+        is_expected.to eq expected_markdown_title_as_html_safe
+        is_expected.to be_a ActiveSupport::SafeBuffer
+      end
     end
-    it 'returns safe html' do
-      expect(presenter.title).to be_a ActiveSupport::SafeBuffer
+
+    context 'empty string' do
+      let(:markdown_title) { '' }
+      it 'translates markdown to safe html' do
+        is_expected.to eq expected_markdown_title_as_html_safe
+        is_expected.to be_a ActiveSupport::SafeBuffer
+      end
+    end
+
+    context '__Markdown Title__' do
+      let(:markdown_title) { '__Markdown Title__' }
+      let(:expected_markdown_title_as_html_safe) { '<strong>Markdown Title</strong>'.html_safe }
+      it 'translates markdown to safe html' do
+        is_expected.to eq expected_markdown_title_as_html_safe
+        is_expected.to be_a ActiveSupport::SafeBuffer
+      end
     end
   end
 end

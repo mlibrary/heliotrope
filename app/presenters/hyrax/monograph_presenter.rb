@@ -2,9 +2,10 @@
 
 module Hyrax
   class MonographPresenter < WorkShowPresenter
-    include TitlePresenter
     include AnalyticsPresenter
+    include ISBNPresenter
     include OpenUrlPresenter
+    include TitlePresenter
     include ActionView::Helpers::UrlHelper
 
     delegate :date_created, :date_modified, :date_uploaded,
@@ -150,6 +151,11 @@ module Hyrax
 
     def epub
       ordered_member_docs.find { |doc| doc.id == solr_document.representative_epub_id } if epub?
+    end
+
+    def monograph_coins_title?
+      return false unless defined? monograph_coins_title
+      monograph_coins_title.present?
     end
 
     # This overrides CC 1.6.2's work_show_presenter.rb which is recursive.

@@ -30,6 +30,10 @@ Lint/ImplicitStringConcatenation:
   Exclude:
     - 'lib/generators/sufia/**/*'
 
+Metrics/BlockLength:
+  Exclude:
+    - 'spec/**/*'
+
 Metrics/LineLength:
   Enabled: false
 

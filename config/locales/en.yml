@@ -20,6 +20,15 @@
 # available at http://guides.rubyonrails.org/i18n.html.
 
 en:
+  activerecord:
+    errors:
+      models:
+        press:
+          attributes:
+            logo_path:
+              blank: "You must upload a logo image"
+              taken: "This logo image is already taken"
+  additional_authors: "Additional Authors"
   allow_display_after_expiration: "Allow Display After Expiration?"
   allow_download: "Allow Download?"
   allow_download_after_expiration: "Allow Download After Expiration?"
@@ -28,7 +37,11 @@ en:
   author: "Author"
   author_first_name: "Author (first name)"
   author_last_name: "Author (last name)"
-  additional_authors: "Additional Authors"
+  blacklight:
+    search:
+      fields:
+        facet:
+          resource_type_sim: Format
   book_needs_handles: "Book Needs Handles?"
   buy_url: "Buy Book URL"
   caption: "Caption"
@@ -38,7 +51,9 @@ en:
   copyright_holder: "Copyright Holder"
   copyright_status: "Copyright Status"
   creator: "Creator"
+  creator_family_name: "Primary Creator (family name)"
   creator_full_name: "Author"
+  creator_given_name: "Primary Creator (given name)"
   credit_line: "Credit Line"
   date_created: "Date Created"
   date_published: "Date Published"
@@ -46,37 +61,6 @@ en:
   doi: "DOI"
   editor: "Editors"
   embargo_release_date: "Embargo Release Date"
-  exclusive_to_platform: "Exclusive to Platform?"
-  ext_url_doi_or_handle: "External URL/DOI"
-  external_resource: "Externally-Hosted Resource?"
-  file_size: "File Size (bytes)"
-  hdl: "Handle"
-  holding_contact: "Holding Contact"
-  isbn: "ISBN (Hardcover)"
-  isbn_ebook: "ISBN (E-Book)"
-  isbn_paper: "ISBN (Paper)"
-  keywords: "Keywords"
-  lease_expiration_date: "Lease Expiration Date"
-  permissions_expiration_date: "Permissions Expiration Date"
-  creator_family_name: "Primary Creator (family name)"
-  creator_given_name: "Primary Creator (given name)"
-  primary_creator_role: "Primary Creator Role(s)"
-  press: "Publisher"
-  primary_editor_family_name: "Editor (last name)"
-  primary_editor_given_name: "Editor (first name)"
-  publisher: "Publisher"
-  redirect_to: "Redirect to"
-  resource_type: "Resource Type"
-  rights_granted: "Rights Granted"
-  rights_granted_creative_commons: "Rights Granted - Creative Commons"
-  section: "Section"
-  section_title: "Related Section"
-  section_titles: "Section Titles"
-  sort_date: "Sort Date"
-  sub_brand: "Sub-brand"
-  transcript: "Transcript"
-  translation: "Translation(s)"
-  use_crossref_xml: "Use Crossref XML?"
   errors:
     messages:
       carrierwave_processing_error: failed to be processed
@@ -90,83 +74,112 @@ en:
       mini_magick_processing_error: "Failed to manipulate with MiniMagick, maybe it is not an image? Original Error: %{e}"
       min_size_error: "File size should be greater than %{min_size}"
       max_size_error: "File size should be less than %{max_size}"
-  activerecord:
-    errors:
-      models:
-        press:
-          attributes:
-            logo_path:
-              blank: "You must upload a logo image"
-              taken: "This logo image is already taken"
-  simple_form:
-    labels:
-      defaults:
-        allow_display_after_expiration: :"allow_display_after_expiration"
-        allow_download: :"allow_download"
-        allow_download_after_expiration: :"allow_download_after_expiration"
-        allow_hi_res: :"allow_hi_res"
-        alt_text: :"alt_text"
-        book_needs_handles: :"book_needs_handles"
-        buy_url: :"buy_url"
-        caption: :"caption"
-        citable_link: :"citable_link"
-        content_type: :"content_type"
-        contributor: :"contributor"
-        copyright_holder: :"copyright_holder"
-        copyright_status: :"copyright_status"
-        creator_family_name: :"creator_family_name"
-        creator_given_name: :"creator_given_name"
-        credit_line: :"credit_line"
-        date_created: :"date_created"
-        date_published: :"date_published"
-        display_date: :"display_date"
-        doi: :"doi"
-        editor: :"editor"
-        embargo_release_date: :"embargo_release_date"
-        exclusive_to_platform: :"exclusive_to_platform"
-        ext_url_doi_or_handle: :"ext_url_doi_or_handle"
-        external_resource: :"external_resource"
-        hdl: :"hdl"
-        holding_contact: :"holding_contact"
-        isbn: :"isbn"
-        isbn_ebook: :"isbn_ebook"
-        isbn_paper: :"isbn_paper"
-        keywords: :"keywords"
-        lease_expiration_date: :"lease_expiration_date"
-        permissions_expiration_date: :"permissions_expiration_date"
-        press: :"press"
-        primary_creator_role: :"primary_creator_role"
-        primary_editor_given_name: "primary_editor_given_name"
-        primary_editor_family_name: "primary_editor_family_name"
-        resource_type: :"resource_type"
-        rights_granted: :"rights_granted"
-        rights_granted_creative_commons: :"rights_granted_creative_commons"
-        section: :"section"
-        section_title: :"section_title"
-        section_titles: :"section_titles"
-        sort_date: :"sort_date"
-        sub_brand: :"sub_brand"
-        transcript: :"transcript"
-        translation: :"translation"
-        use_crossref_xml: :"use_crossref_xml"
-    hints:
-      defaults:
-        transcript: "Transcripts must be formatted as WebVTT captions. <a href='https://developer.mozilla.org/en-US/docs/Web/API/WebVTT_API' target='_blank'>Get help with WebVTT formatting.</a>"
+  exclusive_to_platform: "Exclusive to Platform?"
+  ext_url_doi_or_handle: "External URL/DOI"
+  external_resource: "Externally-Hosted Resource?"
+  file_size: "File Size (bytes)"
+  hdl: "Handle"
   helpers:
     submit:
       role:
         updated:   "User role has been updated."
         destroyed: "User role has been removed."
         batch_error: "There was a problem saving the user role(s)."
+  holding_contact: "Holding Contact"
+  isbn: "ISBN (Hardcover)"
+  isbn_ebook: "ISBN (E-Book)"
+  isbn_paper: "ISBN (Paper)"
+  keywords: "Keywords"
+  lease_expiration_date: "Lease Expiration Date"
+  manage_assets:
+    monograph_link_text: "Organize Assets"
+    section_link_text: "Organize Assets"
+  monograph_catalog:
+    index:
+      buy: "Buy %{title}"
+      buy_book: "Buy Book"
+      can_edit: "Manage Monograph and Files"
+      edited_by: "Edited by %{editors}"
+      home: "Home"
+      isbn_hardcover: "ISBN (Hardcover): %{isbn}"
+      isbn_ebook: "ISBN (E-Book): %{isbn}"
+      isbn_paper: "ISBN (Paper): %{isbn}"
+      pageviews_html: "This item has been viewed <b>%{count}</b> times."
+      read: "Read %{title}"
+      read_book: "Read Book"
+  permissions_expiration_date: "Permissions Expiration Date"
+  press: "Publisher"
   press_catalog:
     search_form:
       q:
         label: "Search within %{press_name}"
-  manage_assets:
-    monograph_link_text: "Organize Assets"
-    section_link_text: "Organize Assets"
-  blacklight:
-    search:
-      fields:
-        facet:
-          resource_type_sim: Format
+  primary_creator_role: "Primary Creator Role(s)"
+  primary_editor_family_name: "Editor (last name)"
+  primary_editor_given_name: "Editor (first name)"
+  publisher: "Publisher"
+  redirect_to: "Redirect to"
+  resource_type: "Resource Type"
+  rights_granted: "Rights Granted"
+  rights_granted_creative_commons: "Rights Granted - Creative Commons"
+  section: "Section"
+  section_title: "Related Section"
+  section_titles: "Section Titles"
+  simple_form:
+      labels:
+        defaults:
+          allow_display_after_expiration: :"allow_display_after_expiration"
+          allow_download: :"allow_download"
+          allow_download_after_expiration: :"allow_download_after_expiration"
+          allow_hi_res: :"allow_hi_res"
+          alt_text: :"alt_text"
+          book_needs_handles: :"book_needs_handles"
+          buy_url: :"buy_url"
+          caption: :"caption"
+          citable_link: :"citable_link"
+          content_type: :"content_type"
+          contributor: :"contributor"
+          copyright_holder: :"copyright_holder"
+          copyright_status: :"copyright_status"
+          creator_family_name: :"creator_family_name"
+          creator_given_name: :"creator_given_name"
+          credit_line: :"credit_line"
+          date_created: :"date_created"
+          date_published: :"date_published"
+          display_date: :"display_date"
+          doi: :"doi"
+          editor: :"editor"
+          embargo_release_date: :"embargo_release_date"
+          exclusive_to_platform: :"exclusive_to_platform"
+          ext_url_doi_or_handle: :"ext_url_doi_or_handle"
+          external_resource: :"external_resource"
+          hdl: :"hdl"
+          holding_contact: :"holding_contact"
+          isbn: :"isbn"
+          isbn_ebook: :"isbn_ebook"
+          isbn_paper: :"isbn_paper"
+          keywords: :"keywords"
+          lease_expiration_date: :"lease_expiration_date"
+          permissions_expiration_date: :"permissions_expiration_date"
+          press: :"press"
+          primary_creator_role: :"primary_creator_role"
+          primary_editor_given_name: "primary_editor_given_name"
+          primary_editor_family_name: "primary_editor_family_name"
+          resource_type: :"resource_type"
+          rights_granted: :"rights_granted"
+          rights_granted_creative_commons: :"rights_granted_creative_commons"
+          section: :"section"
+          section_title: :"section_title"
+          section_titles: :"section_titles"
+          sort_date: :"sort_date"
+          sub_brand: :"sub_brand"
+          transcript: :"transcript"
+          translation: :"translation"
+          use_crossref_xml: :"use_crossref_xml"
+      hints:
+        defaults:
+          transcript: "Transcripts must be formatted as WebVTT captions. <a href='https://developer.mozilla.org/en-US/docs/Web/API/WebVTT_API' target='_blank'>Get help with WebVTT formatting.</a>"
+  sort_date: "Sort Date"
+  sub_brand: "Sub-brand"
+  transcript: "Transcript"
+  translation: "Translation(s)"
+  use_crossref_xml: "Use Crossref XML?"
