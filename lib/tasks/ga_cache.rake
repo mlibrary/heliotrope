@@ -13,9 +13,18 @@ namespace :heliotrope do
         if profile.present?
           # If you don't give a date range, you get one month by default
           # If you don't give a limit, you get 1000 rows by default
-          Pageview.results(profile, start_date: '2016-01-01', end_date: Date.today, limit: 100_000).each do |entry|
-            cached << entry
+          # Also: GA will only return up to 10_000 rows for any request
+          total_results = Pageview.results(profile, start_date: '2016-01-01', end_date: Date.today).total_results
+          offset = 1
+
+          while total_results.positive?
+            Pageview.results(profile, start_date: '2016-01-01', end_date: Date.today, limit: 10_000, offset: offset).each do |entry|
+              cached << entry
+            end
+            offset += 10_000
+            total_results -= 10_000
           end
+
           Rails.cache.write('ga_pageviews', cached)
           Rails.logger.info("Wrote ga_pageviews to cache")
         else
