@@ -1,4 +1,4 @@
-class CreateSubBrands < ActiveRecord::Migration
+class CreateSubBrands < ActiveRecord::Migration[4.2]
   # Altered this migration in place 2016-08-04.  Blame grosscol.
   def change
     create_table :sub_brands do |t|

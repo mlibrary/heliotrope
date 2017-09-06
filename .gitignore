@@ -13,8 +13,20 @@
 
 # Ignore all logfiles and tempfiles.
 /log/*
+/tmp/*
 !/log/.keep
-/tmp
+!/tmp/.keep
+
+/node_modules
+/yarn-error.log
+
+.byebug_history
+
+##############################################################################
+#
+# Heliotrope
+#
+##############################################################################
 
 # Ignore jekyll auto-generated files -- if you need to create a static page, put it in fulcrum/
 /public
@@ -31,11 +43,21 @@
 /config/analytics.yml.dev
 /config/curation_concerns.yml
 /config/role_map.yml
+
 # Google Analytics access keys
 *.p12
 
 # Ignore Vagrant support files
 .vagrant
+
+# Ignore all files ending in "log", vagrant log files
+**/*.log
+
+# Ignore coverall's files
+/coverage
+
+# Ignore Ruumba working directory
+/ruumba
 
 # Ignore OS X Desktop Services Store files
 .DS_Store
@@ -43,14 +65,5 @@
 # Ignore RubyMine project settings folder
 .idea/
 
-# Ignore all files ending in "log", vagrant log files
-**/*.log
-
 # Ignore all files ending in "swp", vim swap files
 **/*.swp
-
-# Ignore coverall's files
-/coverage
-
-# Ignore Ruumba working directory
-/ruumba

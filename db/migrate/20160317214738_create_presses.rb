@@ -1,4 +1,4 @@
-class CreatePresses < ActiveRecord::Migration
+class CreatePresses < ActiveRecord::Migration[4.2]
   def change
     create_table :presses do |t|
       t.string :name

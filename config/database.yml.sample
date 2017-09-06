@@ -12,7 +12,7 @@ default: &default
   encoding: utf8
   pool: 5
   #timeout: 5000
-  #username: root
+  username: root
   #password:
   #shost: localhost
   #port: 3306
