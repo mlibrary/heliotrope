@@ -1278,6 +1278,15 @@ $nyu-gray-2: #342f2e;
       a.user-display-name {
           color: $nyu-brand-accent;
       }
+
+      a#add-content:active,
+      a#add-content:focus,
+      a.login:active,
+      a.login:focus,
+      a.user-display-name:active,
+      a.user-display-name:focus {
+          color: $nyu-gray-2;
+      }
     }
 
     .navbar-right {
@@ -1385,6 +1394,52 @@ $nyu-gray-2: #342f2e;
       }
     }
   }
+
+  // EPUB Reader
+  #reader {
+
+    .cozy-control .cozy-h1 {
+      font-size: 1.5em;
+    }
+
+    .button {
+      @include epub-button-background-color($nyu-brand-color,$nyu-brand-color-2,$nyu-brand-accent);
+    }
+
+    .button--lg {
+      @include epub-button-background-color($nyu-brand-color,$nyu-brand-color-2,$nyu-brand-accent);
+    }
+
+    .button--sm {
+      @include epub-button-background-color($nyu-brand-color,$nyu-brand-color-2,$nyu-brand-accent);
+    }
+
+    i[class^='icon-chevron-'] {
+      @include epub-prev-next-color($nyu-brand-color-2);
+      transition: 0.2s ease-in;
+    }
+
+    i[class^='icon-chevron-']:hover {
+      @include epub-hover-prev-next-color($nyu-brand-color);
+      transition: 0.2s ease-in;
+    }
+
+    .cozy-control .logo {
+      background: $nyu-brand-color-2;
+      height: 54.6px;
+      width: 50px;
+      overflow: hidden;
+
+      img {
+        height: 40px;
+        margin-top: .5em;
+        margin-left: .55em;
+      }
+    }
+
+  }
+
+
 }
 ///////////////////////////////////////////////
 //
