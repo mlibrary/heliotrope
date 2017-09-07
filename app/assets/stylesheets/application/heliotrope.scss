@@ -129,6 +129,12 @@ footer.press {
 
     .document {
       border-bottom: none;
+      padding-top: 2em;
+
+      .epub {
+        padding-bottom: 1em;
+      }
+
     }
 
   }
@@ -159,7 +165,38 @@ footer.press {
     margin-bottom: 20px;
   }
 
-  // MONOGRAPH INFORMATION
+  // EPUB - MONOGRAPH INFORMATION
+  .monograph-info-epub {
+    padding-bottom: 4em;
+    margin-bottom: 4em;
+    border-bottom: 1px solid #e5e5e5;
+
+    #manage-monograph-button {
+      margin-top: 2em;
+    }
+
+    .monograph-metadata {
+      .description {
+        padding-bottom: 2em;
+      }
+
+      .isbn {
+        padding-top: 2em;
+      }
+    }
+  }
+
+  .monograph-assets-toc-epub {
+    .monograph-assets-toc-epub-content {
+      padding-top: 4em;
+    }
+    .chapter {
+      margin-left: 4em;
+    }
+  }
+
+
+  // SUPPLEMENTAL MATERIALS ONLY - MONOGRAPH INFORMATION
  .monograph-info {
 
     h2 {

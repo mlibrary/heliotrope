@@ -29,12 +29,12 @@
   </div>
 
   <% if presenter.epub? %>
-    <div class="row">
+    <div class="row epub">
       <div class="col-sm-12">
-        <a class="btn btn-default" href="<%= epub_path(presenter.epub, publisher: presenter.subdomain) %>" title="Read <%= presenter.title %>" role="button">Read</a>
+        <a class="btn btn-default btn-lg" href="<%= epub_path(presenter.epub, publisher: presenter.subdomain) %>" title="Read <%= presenter.title %>" role="button">Read</a>
       </div>
     </div>
-    <div class="row">
+    <div class="row info">
       <div class="col-sm-12">
         <a class="btn btn-default" href="<%= polymorphic_path(url_for_document(document)) %>">More Info</a>
       </div>
