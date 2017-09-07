@@ -28,12 +28,25 @@ class EPubsSearchService
     end
   end
 
-  def snippet(e, q)
-    p0 = e.text.downcase.index(q.downcase)
-    p1 = p0 + q.length
+  def snippet(e, p0, p1)
     before = e.text[p0 - 30..p0 - 1]
     after  = e.text[p1 + 1..p1 + 30]
     "...#{before}#{e.text[p0..p1]}#{after}..."
+  end
+
+  def find_hits(e, q, offset, hits)
+    p0 = e.text.downcase.index(q.downcase, offset)
+    p1 = p0 + q.length
+
+    hits.push(
+      p0: p0,
+      p1: p1,
+      snippet: snippet(e, p0, p1)
+    )
+
+    find_hits(e, q, p1, hits) if e.text.downcase.index(q.downcase, p1)
+
+    hits
   end
 
   def chapters_from_db(q)
@@ -68,12 +81,16 @@ class EPubsSearchService
       els.each do |e|
         # calculate the cfi of the dom element
         cfi = walk_up_dom(e, "", 0)
+        # find all the hits in this element
+        hits = find_hits(e, q, 0, [])
 
-        results[:search_results].push(
-          cfi: "#{r[:basecfi]}#{cfi}",
-          chapter_id: r[:chapter_id],
-          snippet: snippet(e, q)
-        )
+        hits.each do |hit|
+          results[:search_results].push(
+            cfi: "#{r[:basecfi]}#{cfi},/1:#{hit[:p0]},/1:#{hit[:p1]}",
+            chapter_id: r[:chapter_id],
+            snippet: hit[:snippet]
+          )
+        end
       end
     end
     results

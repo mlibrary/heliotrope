@@ -154,8 +154,8 @@ RSpec.describe EPubsController, type: :controller do
       it do
         expect(response).to have_http_status(:success)
         expect(JSON.parse(response.body)["q"]).to eq "White Whale"
-        expect(JSON.parse(response.body)["search_results"].length).to eq 91
-        expect(JSON.parse(response.body)["search_results"][0]["cfi"]).to eq "/6/84[xchapter_036]!/4/2/42"
+        expect(JSON.parse(response.body)["search_results"].length).to eq 107
+        expect(JSON.parse(response.body)["search_results"][0]["cfi"]).to eq "/6/84[xchapter_036]!/4/2/42,/1:66,/1:77"
         expect(JSON.parse(response.body)["search_results"][0]["snippet"]).to eq "... heard me give orders about a white whale. Look ye! d’ye see this Spanis..."
       end
     end
@@ -165,7 +165,7 @@ RSpec.describe EPubsController, type: :controller do
 
       it do
         expect(response).to have_http_status(:success)
-        expect(JSON.parse(response.body)["search_results"].length).to eq 2
+        expect(JSON.parse(response.body)["search_results"].length).to eq 3
       end
     end
   end
