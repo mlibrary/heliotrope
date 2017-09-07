@@ -49,7 +49,7 @@
   google_analytics: 'UA-77847516-3'
 
 - subdomain: nyupress
-  production: false
+  production: true
   name: 'NYU Press'
   logo_path: 'nyupress.png'
   description: "Making common cause with the best and the brightest, the great and the good, New York University Press aspires to nothing less than the transformation of the intellectual and cultural landscape. Infused with the conviction that the ideas of the academy matter, we foster knowledge that resonates within and beyond the walls of the university.<br/><br/>[nyupress.fulcrum.org](http://nyupress.fulcrum.org) is the home of supplemental content for select NYU Press books. You can find the full catalog of NYU Press titles on the [publisher’s website](https://nyupress.org)."
