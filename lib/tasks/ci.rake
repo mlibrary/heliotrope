@@ -15,8 +15,17 @@ unless Rails.env.production?
     task.options = { tmp_folder: "ruumba", arguments: ["--display-cop-names", "--config .ruumba.yml"] }
   end
 
+  desc "Run spec in lib directory"
+  task :lib_spec do
+    puts 'Running spec in lib...'
+    Dir.chdir('lib') do
+      RSpec::Core::RakeTask.new(:spec_lib)
+      Rake::Task['spec_lib'].invoke
+    end
+  end
+
   desc 'Run the ci build'
-  task ci: %i[rubocop ruumba] do
+  task ci: %i[rubocop ruumba lib_spec] do
     require 'active_fedora/rake_support'
     with_test_server do
       # run the tests
