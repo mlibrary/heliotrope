@@ -1,0 +1,64 @@
+# frozen_string_literal: true
+
+class Cfi
+  # "Ugh! EPUB CFIs..."
+  # http://matt.garrish.ca/2013/03/navigating-cfis-part-1/
+  # http://matt.garrish.ca/2013/12/navigating-cfis-part-2/
+
+  private_class_method :new
+  attr_accessor :node, :query, :pos0, :pos1, :section
+
+  SNIPPET_PAD = 30
+
+  def self.from(node, query, offset)
+    if node.text? && !node.content.strip.empty? && !query.empty? && offset.integer?
+      new(node, query, offset)
+    else
+      CfiNull.send(:new)
+    end
+  end
+
+  def range
+    "/#{@section}:#{@pos0},/#{@section}:#{@pos1}"
+  end
+
+  def snippet
+    before = @node.text[@pos0 - SNIPPET_PAD..@pos0 - 1]
+    after  = @node.text[@pos1 + 1..@pos1 + SNIPPET_PAD]
+    "...#{before}#{@node.text[@pos0..@pos1]}#{after}..."
+  end
+
+  def cfi
+    indexes = []
+    this = @node.parent
+
+    while this && this.name != "body"
+      # for the hierarchy, we only care about elements
+      siblings = this.parent.element_children
+      idx = siblings.index(this)
+
+      indexes << if this.text?
+                   idx + 1
+                 else
+                   (idx + 1) * 2
+                 end
+
+      indexes[-1] = "#{indexes[-1]}[#{this['id']}]" if this['id']
+
+      this = this.parent
+    end
+    indexes.reverse!
+    # "body" is always 4
+    "/4/#{indexes.join('/')},#{range}"
+  end
+
+  private
+
+    def initialize(node, query, offset)
+      @node = node
+      @query = query
+      @section = node.parent.children.index(node) + 1
+      @pos0 = node.content.downcase.index(query.downcase, offset)
+      @pos1 = @pos0 + query.length
+    end
+end
