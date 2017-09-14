@@ -11,7 +11,7 @@ class EPubsController < ApplicationController
       @creator_family_name = presenter.creator_family_name
       @back_link = params[:publisher].present? ? URI.join(main_app.root_url, params[:publisher]).to_s : main_app.monograph_catalog_url(presenter.monograph_id)
       @subdomain = presenter.monograph.subdomain
-      @search_url = main_app.epub_search_url(params[:id], q: "")
+      @search_url = main_app.epub_search_url(params[:id], q: "").gsub!(/locale=en&/, '')
       render layout: false
     else
       Rails.logger.info("### INFO FileSet #{params[:id]} is not an EPub. ###")
