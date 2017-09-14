@@ -19,10 +19,10 @@ module EPub
       EPubsService.clear_cache
     end
 
-    def self.epub(id)
-      return EPub.null_object unless ::EPub.noid?(id)
-      return EPub.null_object unless cached?(id)
-      EPub.from(id)
+    def self.publication(id)
+      return Publication.null_object unless ::EPub.noid?(id)
+      return Publication.null_object unless cached?(id)
+      Publication.from(id)
     end
 
     def self.prune(_time_delta = 1.day)

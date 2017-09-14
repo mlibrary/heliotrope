@@ -1,95 +1,94 @@
 # frozen_string_literal: true
 
-require_relative '../../lib/e_pub/e_pub'
 require 'zip'
 
 class EPubsService
-  def self.factory(epub_id)
-    return EPub::EPub.from(epub_id) if EPub::Cache.cached?(epub_id)
-    presenter = Hyrax::FileSetPresenter.new(SolrDocument.new(FileSet.find(epub_id).to_solr), nil, nil)
-    return EPub::EPub.null_object unless presenter.epub?
-    EPub::EPub.from(epub_id)
+  def self.factory(id)
+    return EPub::Publication.from(id) if EPub::Cache.cached?(id)
+    presenter = Hyrax::FileSetPresenter.new(SolrDocument.new(FileSet.find(id).to_solr), nil, nil)
+    return EPub::Publication.null_object unless presenter.epub?
+    EPub::Publication.from(id)
   rescue StandardError => e
-    Rails.logger.info("### INFO epubs service factory epub from #{epub_id} raised #{e} ###")
-    EPub::EPub.null_object
+    Rails.logger.info("### INFO epubs service factory publication from #{id} raised #{e} ###")
+    EPub::Publication.null_object
   end
   #
   # Public Interface
   #
 
-  def self.open(epub_id) # called from EPubsController#show
+  def self.open(id) # called from EPubsController#show
     # Return if EPub is cached
-    return if Dir.exist?(EPubsService.epub_path(epub_id))
+    return if Dir.exist?(EPubsService.epub_path(id))
 
     # Create the EPub directory to short circuit other asynchronous calls
-    EPubsService.make_epub_path(epub_id)
+    EPubsService.make_epub_path(id)
 
-    # Extract the entire EPub in the background (EPubsServiceJob calls EPubsService#cache(epub_id))
-    EPubsServiceJob.perform_later(epub_id)
+    # Extract the entire EPub in the background (EPubsServiceJob calls EPubsService#cache(id))
+    EPubsServiceJob.perform_later(id)
   end
 
-  def self.read(epub_id, file_entry) # called from EPubsController#file
+  def self.read(id, file_entry) # called from EPubsController#file
     # Cache the EPub if necessary
-    EPubsService.open(epub_id)
+    EPubsService.open(id)
 
     # EPub entry file to read
-    epub_entry_file = EPubsService.epub_entry_path(epub_id, file_entry)
+    epub_entry_file = EPubsService.epub_entry_path(id, file_entry)
 
     # Cache the EPub entry file if necessary
-    EPubsService.cache_epub_entry(epub_id, file_entry) unless File.exist?(epub_entry_file)
+    EPubsService.cache_epub_entry(id, file_entry) unless File.exist?(epub_entry_file)
 
     # At this point the EPub entry file exist in the cache so reset the time to live for the entire cached EPub
-    FileUtils.touch(EPubsService.epub_path(epub_id))
+    FileUtils.touch(EPubsService.epub_path(id))
 
     # Read the EPub entry file
     File.read(epub_entry_file)
   end
 
-  def self.close(epub_id) # called from ? (Admin Dashboard Utility)
-    EPubsService.prune_cache_epub(epub_id)
+  def self.close(id) # called from ? (Admin Dashboard Utility)
+    EPubsService.prune_cache_epub(id)
   end
 
   #
   # Protected Interface
   #
 
-  def self.cache_epub_entry(epub_id, file_entry) # called from EPubsService#read
+  def self.cache_epub_entry(id, file_entry) # called from EPubsService#read
     # Get the original EPub from Fedora
-    epub_file = FileSet.find(epub_id)&.original_file
-    raise EPubsServiceError, "EPub #{epub_id} file is nil." if epub_file.nil?
+    epub_file = FileSet.find(id)&.original_file
+    raise EPubsServiceError, "EPub #{id} file is nil." if epub_file.nil?
 
     # Extract just this EPub entry file from the EPub
     begin
       Zip::File.open_buffer(epub_file.content) do |zip_file|
-        EPubsService.make_epub_entry_path(epub_id, file_entry)
+        EPubsService.make_epub_entry_path(id, file_entry)
         # Gaurd against EPub entry file existing to support asynchronous calls
-        zip_file.extract(file_entry, EPubsService.epub_entry_path(epub_id, file_entry)) unless File.exist?(EPubsService.epub_entry_path(epub_id, file_entry))
+        zip_file.extract(file_entry, EPubsService.epub_entry_path(id, file_entry)) unless File.exist?(EPubsService.epub_entry_path(id, file_entry))
       end
     rescue Errno::ENOENT
-      raise EPubsServiceError, "Entry #{file_entry} in EPub #{epub_id} does not exist."
+      raise EPubsServiceError, "Entry #{file_entry} in EPub #{id} does not exist."
     rescue Zip::Error
-      raise EPubsServiceError, "EPub #{epub_id} is corrupt."
+      raise EPubsServiceError, "EPub #{id} is corrupt."
     end
     # At this point the EPub entry file has been cached
   end
 
-  def self.cache_epub(epub_id) # called from EPubsServiceJob
+  def self.cache_epub(id) # called from EPubsServiceJob
     # Get the original EPub from Fedora
-    epub_file = FileSet.find(epub_id)&.original_file
-    raise EPubsServiceError, "EPub #{epub_id} file is nil." if epub_file.nil?
+    epub_file = FileSet.find(id)&.original_file
+    raise EPubsServiceError, "EPub #{id} file is nil." if epub_file.nil?
 
     # Extract the entire EPub
     begin
       Zip::File.open_buffer(epub_file.content) do |zip_file|
         zip_file.each do |entry|
-          EPubsService.make_epub_entry_path(epub_id, entry.name)
+          EPubsService.make_epub_entry_path(id, entry.name)
           # Extract just this entry file from the epub (Gaurd against file existing to support asynchronous calls)
-          entry.extract(EPubsService.epub_entry_path(epub_id, entry.name)) unless File.exist?(EPubsService.epub_entry_path(epub_id, entry.name))
+          entry.extract(EPubsService.epub_entry_path(id, entry.name)) unless File.exist?(EPubsService.epub_entry_path(id, entry.name))
           # At this point the EPub entry file has been cached
         end
       end
     rescue Zip::Error
-      raise EPubsServiceError, "EPub #{epub_id} is corrupt."
+      raise EPubsServiceError, "EPub #{id} is corrupt."
     end
     # At this point the EPub has been cached
   end
@@ -101,8 +100,8 @@ class EPubsService
     end
   end
 
-  def self.prune_cache_epub(epub_id) # called from EPubsService#close
-    FileUtils.rm_rf(EPubsService.epub_path(epub_id)) if Dir.exist?(EPubsService.epub_path(epub_id))
+  def self.prune_cache_epub(id) # called from EPubsService#close
+    FileUtils.rm_rf(EPubsService.epub_path(id)) if Dir.exist?(EPubsService.epub_path(id))
   end
 
   def self.clear_cache # called from specs
@@ -115,26 +114,26 @@ class EPubsService
     Rails.root.join('tmp', 'epubs')
   end
 
-  def self.epub_path(epub_id)
-    File.join(EPubsService.epubs_path, epub_id)
+  def self.epub_path(id)
+    File.join(EPubsService.epubs_path, id)
   end
 
-  def self.epub_entry_path(epub_id, file_entry)
-    File.join(EPubsService.epub_path(epub_id), file_entry)
+  def self.epub_entry_path(id, file_entry)
+    File.join(EPubsService.epub_path(id), file_entry)
   end
 
   def self.make_epubs_path
     FileUtils.mkdir_p(EPubsService.epubs_path) unless Dir.exist?(EPubsService.epubs_path)
   end
 
-  def self.make_epub_path(epub_id)
+  def self.make_epub_path(id)
     EPubsService.make_epubs_path
-    FileUtils.mkdir_p(EPubsService.epub_path(epub_id)) unless Dir.exist?(EPubsService.epub_path(epub_id))
+    FileUtils.mkdir_p(EPubsService.epub_path(id)) unless Dir.exist?(EPubsService.epub_path(id))
   end
 
-  def self.make_epub_entry_path(epub_id, file_entry)
+  def self.make_epub_entry_path(id, file_entry)
     EPubsService.make_epubs_path
-    epub_dir = EPubsService.epub_path(epub_id)
+    epub_dir = EPubsService.epub_path(id)
     file_entry.split(File::SEPARATOR).each do |sub_dir|
       FileUtils.mkdir_p(epub_dir) unless Dir.exist?(epub_dir)
       epub_dir = File.join(epub_dir, sub_dir)

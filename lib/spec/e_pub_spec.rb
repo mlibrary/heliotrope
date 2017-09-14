@@ -1,8 +1,5 @@
 # frozen_string_literal: true
 
-require 'spec_helper'
-require_relative '../e_pub'
-
 RSpec.describe EPub do
   describe '#logger' do
     it 'attribute getter' do

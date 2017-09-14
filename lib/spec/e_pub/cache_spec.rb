@@ -1,8 +1,5 @@
 # frozen_string_literal: true
 
-require_relative '../spec_helper'
-require_relative '../support/e_pub_helper'
-
 RSpec.describe EPub::Cache do
   let(:noid) { 'validnoid' }
   let(:non_noid) { 'invalidnoid' }
@@ -83,8 +80,8 @@ RSpec.describe EPub::Cache do
     it { expect(@called).to be true }
   end
 
-  describe '#epub' do
-    subject { described_class.epub(id) }
+  describe '#publication' do
+    subject { described_class.publication(id) }
 
     before do
       allow(Dir).to receive(:exist?).with(EPubsService.epub_path(id)).and_return(cached)
@@ -94,11 +91,11 @@ RSpec.describe EPub::Cache do
       let(:id) { non_noid }
       context 'not cached' do
         let(:cached) { false }
-        it { is_expected.to be_an_instance_of(EPub::EPubNullObject) }
+        it { is_expected.to be_an_instance_of(EPub::PublicationNullObject) }
       end
       context 'cached' do
         let(:cached) { true }
-        it { is_expected.to be_an_instance_of(EPub::EPubNullObject) }
+        it { is_expected.to be_an_instance_of(EPub::PublicationNullObject) }
       end
     end
 
@@ -106,11 +103,11 @@ RSpec.describe EPub::Cache do
       let(:id) { noid }
       context 'not cached' do
         let(:cached) { false }
-        it { is_expected.to be_an_instance_of(EPub::EPubNullObject) }
+        it { is_expected.to be_an_instance_of(EPub::PublicationNullObject) }
       end
       context 'cached' do
         let(:cached) { true }
-        it { is_expected.to be_an_instance_of(EPub::EPub) }
+        it { is_expected.to be_an_instance_of(EPub::Publication) }
       end
     end
   end
