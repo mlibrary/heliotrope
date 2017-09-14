@@ -15,61 +15,65 @@
 
 ### Initial setup
 
-  * clone the repository
-  * run `bundle install`
-  * run `bundle exec bin/setup`
-  * [build public](https://github.com/mlibrary/heliotrope/wiki/Static-Pages-and-Blog)
+```
+$ git clone https://github.com/mlibrary/heliotrope.git
+$ cd heliotrope
+$ bundle install
+$ ./bin/bundle exec ./bin/setup
+$ ./bin/bundle exec ./bin/rails jekyll:deploy
+```  
+See Wiki page [Static Pages and Blog](https://github.com/mlibrary/heliotrope/wiki/Static-Pages-and-Blog) for more information on [jekyll](https://jekyllrb.com/) integration.
 
-#### Make yourself a "super" admin user
+#### Make yourself a "platform" admin
 
-There is a rake task you can use to create a "super" admin user.  It will prompt you for an email address and password, and then create a user with the correct role.
-
-`bundle exec rake admin`
-
+There is a rails task you can use to create a "platform" admin user.  It will prompt you for an email address and password, and then create a user with the correct role.
+```
+$ ./bin/bundle exec ./bin/rails admin
+```
 If you need to run this when the app has been deployed, run:
-
-`RAILS_ENV=production bundle exec rake admin`
-
+```
+$ RAILS_ENV=production ./bin/bundle exec ./bin/rails admin
+```
 #### Give yourself an admin role
 
 ```
 $ vi ./config/role_map.yml
-
+```
+```
 development:
   admin:   
-    - yourself@domain.com
+    - yourself@domain.com 
   archivist:
     - archivist1@example.com
+...
 ```
 
 #### Run the application
 
 Run this command to start Fedora, Solr and Rails servers:
-
-`rake hydra:server`
-
-Or, if you prefer to start each server individually:
-*(you must use this alternate option if running on a VM)*
+```
+$ ./bin/bundle exec ./bin/rails hydra:server
+```
+Or, if you prefer to start each server individually execute each of the following commands in a seperate shells: *(you must use this alternate option if running on a VM)*
 
 ```
-  $ redis-server /usr/local/etc/redis.conf
-  $ bundle exec fcrepo_wrapper -p 8984 --no-jms
-  $ bundle exec solr_wrapper -p 8983 -d solr/config/ --collection_name hydra-development
-  $ bundle exec bin/rails s
+$ redis-server /usr/local/etc/redis.conf
+$ fcrepo_wrapper -p 8984 --no-jms
+$ solr_wrapper -p 8983 -d solr/config/ --collection_name hydra-development 
+$ ./bin/bundle exec ./bin/rails s
 ```
 
 Note, there are also config files available for running the wrappers (which save you from having to remember ports, collection names etc). Their settings attempt to persist your Solr index as you move between dev and test. Use like so:
 ```
-fcrepo_wrapper --config .wrap_conf/fcrepo_dev
-solr_wrapper --config .wrap_conf/solr_dev
+$ fcrepo_wrapper --config .wrap_conf/fcrepo_dev
+$ solr_wrapper --config .wrap_conf/solr_dev
 ```
 
 #### Create [default administrative set](https://github.com/samvera/hyrax#create-default-administrative-set) and load [workflows](https://github.com/samvera/hyrax/wiki/Defining-a-Workflow)
-
-`bundle exec rake hyrax:default_admin_set:create`
-
-`bundle exec rake hyrax:workflow:load`
-
+```
+$ ./bin/bundle exec ./bin/rails hyrax:default_admin_set:create
+$ ./bin/bundle exec ./bin/rails hyrax:workflow:load
+```
 ## Debugging
 
 ### Explain Partials
@@ -78,7 +82,7 @@ Set the EXPLAIN_PARTIALS environment variable to show partials being rendered in
 (view this info using your browser's inspect element mode)
 
 ```
-$ EXPLAIN_PARTIALS=true bundle exec bin/rails s
+$ EXPLAIN_PARTIALS=true ./bin/bundle exec ./bin/rails s
 ```
 
 *NOTE:* Because this feature can add a fair bit of overhead, it is restricted
@@ -86,24 +90,39 @@ to only run in development mode.
 
 ## Testing
 
-Make sure you have seeded your test DB with `RAILS_ENV=test bundle exec rake db:seed`
+To exectue the continuous integration task run by Travis CI
 
-run `rake ci`
+```
+$ ./bin/bundle exec ./bin/rails ci
+```
 
-Alternatively, you can start up each server individually.  This may be preferable because `rake ci` starts up and tears down Fedora and Solr before/after the test suite is run.
+Alternatively, you can start up each server individually.  This may be preferable because the ci task starts up and tears down Fedora and Solr before/after the test suite is run.
 
 1. Start up FCrepo
-
-   `fcrepo_wrapper -p 8986 --no-jms` OR `fcrepo_wrapper --config .wrap_conf/fcrepo_test`
+```
+$ fcrepo_wrapper -p 8986 --no-jms 
+```
+or
+```
+$ fcrepo_wrapper --config .wrap_conf/fcrepo_test
+```
 1. Start up Solr
-
-   `solr_wrapper -p 8985 -d solr/config/ --collection_name hydra-test` OR `solr_wrapper --config .wrap_conf/solr_test`
+```
+$ solr_wrapper -p 8985 -d solr/config/ --collection_name hydra-test 
+```
+or
+```
+$ solr_wrapper --config .wrap_conf/solr_test
+```
 1. Run tests
-
-   `rspec`
-
-*NOTE:* As of June 20, 2017 we have a test which requires the static pages to be built in order for the routing to happen correctly (See the Wiki for more details), which means running this:
-`bundle exec rake jekyll:build`
+```
+$ ./bin/bundle exec ./bin/rails rubocop
+$ ./bin/bunlde exec ./bin/rails ruumba
+$ ./bin/bundle exec ./bin/rails lib_spec
+$ ./bin/bundle exec rspec
+```
+*NOTE:* As of June 20, 2017 we have a test that require the static pages to be built in order for the routing to happen correctly (See the Wiki for more details) which means you need to execute
+`./bin/bundle exec ./bin/rails jekyll:deploy` to running rspec.  This need only be done once and if you followed the initial setup then you did this already.
 
 ## Wiki
 
