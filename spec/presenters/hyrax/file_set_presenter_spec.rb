@@ -91,10 +91,11 @@ RSpec.describe Hyrax::FileSetPresenter do
     end
 
     context 'no' do
+      before { allow(ability).to receive(:platform_admin?).and_return(false) }
       it { expect(presenter.allow_embed?).to be false }
     end
     context 'yes' do
-      let(:press) { create(:press, subdomain: 'heliotrope') }
+      before { allow(ability).to receive(:platform_admin?).and_return(true) }
       it { expect(presenter.allow_embed?).to be true }
     end
   end
