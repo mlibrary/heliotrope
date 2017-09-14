@@ -63,7 +63,7 @@ RSpec.describe EPubsController, type: :controller do
       before { get :file, params: { id: :id, file: 'META-INF/container', format: 'xml' } }
       it do
         expect(response).to_not have_http_status(:unauthorized)
-        expect(response).to have_http_status(:not_found)
+        expect(response).to have_http_status(:success)
         expect(response.body.empty?).to be true
       end
     end
@@ -74,7 +74,7 @@ RSpec.describe EPubsController, type: :controller do
       before { get :file, params: { id: file_set.id, file: 'META-INF/container', format: 'xml' } }
       it do
         expect(response).to_not have_http_status(:unauthorized)
-        expect(response).to have_http_status(:not_found)
+        expect(response).to have_http_status(:success)
         expect(response.body.empty?).to be true
       end
     end
@@ -85,7 +85,7 @@ RSpec.describe EPubsController, type: :controller do
       before { get :file, params: { id: file_set.id, file: 'META-INF/container', format: 'xml' } }
       it do
         expect(response).to_not have_http_status(:unauthorized)
-        expect(response).to have_http_status(:not_found)
+        expect(response).to have_http_status(:success)
         expect(response.body.empty?).to be true
       end
     end
@@ -97,7 +97,7 @@ RSpec.describe EPubsController, type: :controller do
         before { get :file, params: { id: file_set.id, file: 'META-INF/container', format: 'txt' } }
         it do
           expect(response).to_not have_http_status(:unauthorized)
-          expect(response).to have_http_status(:not_found)
+          expect(response).to have_http_status(:success)
           expect(response.body.empty?).to be true
         end
       end
@@ -129,7 +129,7 @@ RSpec.describe EPubsController, type: :controller do
           end
           it "is not found" do
             expect(response).to_not have_http_status(:unauthorized)
-            expect(response).to have_http_status(:not_found)
+            expect(response).to have_http_status(:success)
             expect(response.body.empty?).to be true
           end
         end

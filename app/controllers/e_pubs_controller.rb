@@ -4,7 +4,7 @@ class EPubsController < ApplicationController
   def show
     presenter = Hyrax::FileSetPresenter.new(SolrDocument.new(FileSet.find(params[:id]).to_solr), current_ability, request)
     if presenter.epub?
-      EPubsService.open(params[:id])
+      EPubsService.factory(params[:id]) # cache epub
       @title = presenter.title
       @citable_link = presenter.citable_link
       @creator_given_name = presenter.creator_given_name
@@ -22,10 +22,7 @@ class EPubsController < ApplicationController
   end
 
   def file
-    render plain: EPubsService.read(params[:id], params[:file] + '.' + params[:format]), layout: false
-  rescue
-    Rails.logger.info("### INFO Entry #{params[:file]}.#{params[:format]} not found in EPub #{params[:id]}. ###")
-    head :not_found
+    render plain: EPubsService.factory(params[:id]).read(params[:file] + '.' + params[:format]), layout: false
   end
 
   def search
@@ -34,8 +31,7 @@ class EPubsController < ApplicationController
       headers['Access-Control-Allow-Methods'] = 'GET'
       headers['Access-Control-Request-Method'] = '*'
     end
-    es = EPubsSearchService.new(params[:id])
-    results = es.search(params[:q])
+    results = EPubsService.factory(params[:id]).search(params[:q])
     if results[:search_results]
       render json: results
     else

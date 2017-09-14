@@ -1,8 +1,18 @@
 # frozen_string_literal: true
 
+require_relative '../../lib/e_pub/e_pub'
 require 'zip'
 
 class EPubsService
+  def self.factory(epub_id)
+    return EPub::EPub.from(epub_id) if EPub::Cache.cached?(epub_id)
+    presenter = Hyrax::FileSetPresenter.new(SolrDocument.new(FileSet.find(epub_id).to_solr), nil, nil)
+    return EPub::EPub.null_object unless presenter.epub?
+    EPub::EPub.from(epub_id)
+  rescue StandardError => e
+    Rails.logger.info("### INFO epubs service factory epub from #{epub_id} raised #{e} ###")
+    EPub::EPub.null_object
+  end
   #
   # Public Interface
   #
