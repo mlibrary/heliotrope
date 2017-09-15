@@ -114,7 +114,7 @@ module Hyrax
     end
 
     def allow_embed?
-      monograph.subdomain == 'heliotrope'
+      current_ability.platform_admin?
     end
 
     def embed_code
@@ -123,6 +123,10 @@ module Hyrax
       else
         generic_embed_code
       end
+    end
+
+    def embed_link
+      embed_url(hdl: HandleService.handle(self))
     end
 
     def responsive_embed_code
@@ -137,10 +141,6 @@ module Hyrax
 
     def generic_embed_code
       "<iframe src='#{embed_link}' style='display:block; overflow:hidden; border-width:0; width:98%; max-width:98%; max-height:400px; margin:auto'></iframe>"
-    end
-
-    def embed_link
-      embed_url(hdl: HandleService.handle(self))
     end
 
     # Google Analytics

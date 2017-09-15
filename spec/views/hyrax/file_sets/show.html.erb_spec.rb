@@ -1,10 +1,11 @@
 require 'rails_helper'
 
 RSpec.describe 'hyrax/file_sets/show' do
+  let(:ability) { double("ability") }
   let(:monograph) { create(:monograph) }
   let(:file_set) { create(:file_set) }
   let(:file_set_doc) { SolrDocument.new(file_set.to_solr) }
-  let(:file_set_presenter) { Hyrax::FileSetPresenter.new(file_set_doc, nil) }
+  let(:file_set_presenter) { Hyrax::FileSetPresenter.new(file_set_doc, ability) }
 
   before do
     def view.parent
@@ -20,6 +21,7 @@ RSpec.describe 'hyrax/file_sets/show' do
     monograph.ordered_members << file_set
     monograph.save!
     assign(:presenter, file_set_presenter)
+    allow(ability).to receive(:platform_admin?).and_return(false)
     allow(file_set_presenter).to receive(:embed_code).and_return("embed code")
     allow(view).to receive(:parent).and_return(monograph)
     allow(view).to receive(:can?).with(:edit, file_set_presenter).and_return(false)
