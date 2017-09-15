@@ -24,8 +24,8 @@ class MonographSearchBuilder < ::SearchBuilder
       ids = monograph.first['ordered_member_ids_ssim']
       return if ids.blank?
 
-      ids.delete(monograph.first['representative_id_ssim'].first)
-      ids.delete(monograph.first['representative_epub_id_ssim'].first) unless monograph.first['representative_epub_id_ssim'].nil?
+      ids.delete(monograph.first['representative_id_ssim']&.first)
+      ids.delete(monograph.first['representative_epub_id_ssim']&.first)
       ids.join(',')
     end
 

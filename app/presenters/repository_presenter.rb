@@ -11,7 +11,7 @@ class RepositoryPresenter < ApplicationPresenter
     docs.each do |doc|
       if publisher.nil?
         ids << doc['id']
-      elsif doc['press_tesim'].first == publisher.subdomain
+      elsif doc['press_tesim']&.first == publisher.subdomain
         ids << doc['id']
       end
     end

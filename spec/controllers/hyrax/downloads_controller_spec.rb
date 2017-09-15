@@ -86,4 +86,14 @@ RSpec.describe Hyrax::DownloadsController, type: :controller do
       expect(subject.mime_type_for(file)).to eq('video/mp4')
     end
   end
+
+  describe "allow_download is nil" do
+    let(:file_set) { create(:file_set,
+                            user: user,
+                            content: File.open(File.join(fixture_path, 'csv', 'miranda.jpg'))) }
+
+    it "does not raise an error when you try to download the file" do
+      expect { get :show, params: { id: file_set.id, use_route: 'downloads' } }.not_to raise_error
+    end
+  end
 end

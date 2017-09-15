@@ -6,7 +6,7 @@ module Hyrax
 
     def show
       if transcript?
-        render plain: file_set_doc['transcript_tesim'].first
+        render plain: file_set_doc['transcript_tesim']&.first
       elsif file.present? && (thumbnail? || jpeg? || video? || sound? || allow_download?)
         # See #401
         if file.is_a? String
@@ -57,7 +57,7 @@ module Hyrax
     end
 
     def allow_download?
-      file_set_doc['allow_download_ssim'].first == 'yes' ? true : false
+      file_set_doc['allow_download_ssim']&.first == 'yes' ? true : false
     end
 
     def thumbnail?
