@@ -22,18 +22,24 @@ $ bundle install
 $ ./bin/bundle exec ./bin/setup
 $ ./bin/bundle exec ./bin/rails jekyll:deploy
 ```  
-See Wiki page [Static Pages and Blog](https://github.com/mlibrary/heliotrope/wiki/Static-Pages-and-Blog) for more information on [jekyll](https://jekyllrb.com/) integration.
+See Wiki page [Static Pages and Blog](https://github.com/mlibrary/heliotrope/wiki/Static-Pages-and-Blog) for more information on [Jekyll](https://jekyllrb.com/) integration.
 
 #### Make yourself a "platform" admin
 
-There is a rails task you can use to create a "platform" admin user.  It will prompt you for an email address and password, and then create a user with the correct role.
+There is a rails task you can execute to create a "platform" admin user.  It will prompt you for an email address and password, and then create a user with the correct role.
 ```
 $ ./bin/bundle exec ./bin/rails admin
 ```
-If you need to run this when the app has been deployed, run:
+If you forget your password, execute:
+```
+$ ./bin/bundle exec ./bin/rails passwd
+```
+If you need to run this when the app has been deployed, execute:
 ```
 $ RAILS_ENV=production ./bin/bundle exec ./bin/rails admin
+$ RAILS_ENV=production ./bin/bundle exec ./bin/rails passwd
 ```
+
 #### Give yourself an admin role
 
 ```
@@ -50,11 +56,11 @@ development:
 
 #### Run the application
 
-Run this command to start Fedora, Solr and Rails servers:
+Execute this command to start Fedora, Solr and Rails servers:
 ```
 $ ./bin/bundle exec ./bin/rails hydra:server
 ```
-Or, if you prefer to start each server individually execute each of the following commands in a seperate shells: *(you must use this alternate option if running on a VM)*
+Or, if you prefer to start each server individually execute each of the following commands in a seperate shell: *(you must use this alternate option if running on a VM)*
 
 ```
 $ redis-server /usr/local/etc/redis.conf
@@ -98,7 +104,7 @@ $ ./bin/bundle exec ./bin/rails ci
 
 Alternatively, you can start up each server individually.  This may be preferable because the ci task starts up and tears down Fedora and Solr before/after the test suite is run.
 
-1. Start up FCrepo
+Start up FCrepo
 ```
 $ fcrepo_wrapper -p 8986 --no-jms 
 ```
@@ -106,7 +112,7 @@ or
 ```
 $ fcrepo_wrapper --config .wrap_conf/fcrepo_test
 ```
-1. Start up Solr
+Start up Solr
 ```
 $ solr_wrapper -p 8985 -d solr/config/ --collection_name hydra-test 
 ```
@@ -114,15 +120,18 @@ or
 ```
 $ solr_wrapper --config .wrap_conf/solr_test
 ```
-1. Run tests
+Run tests
 ```
 $ ./bin/bundle exec ./bin/rails rubocop
 $ ./bin/bunlde exec ./bin/rails ruumba
 $ ./bin/bundle exec ./bin/rails lib_spec
 $ ./bin/bundle exec rspec
 ```
-*NOTE:* As of June 20, 2017 we have a test that requires the static pages to be built in order for routing to happen correctly (See the Wiki for more details) which means you need to execute
-`./bin/bundle exec ./bin/rails jekyll:deploy` to run rspec.  This need only be done once and if you followed the initial setup then you did this already.
+*NOTE:* As of June 20, 2017 there are tests that require the static pages to be built in order for routing to happen correctly ([Static Pages and Blog](https://github.com/mlibrary/heliotrope/wiki/Static-Pages-and-Blog)) which means you need to execute
+```
+$ ./bin/bundle exec ./bin/rails jekyll:deploy
+```
+to run rspec.  This only need be executed once and if you followed the initial setup then you did this already.
 
 ## Wiki
 
