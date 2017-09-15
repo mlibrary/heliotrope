@@ -121,8 +121,8 @@ $ ./bin/bunlde exec ./bin/rails ruumba
 $ ./bin/bundle exec ./bin/rails lib_spec
 $ ./bin/bundle exec rspec
 ```
-*NOTE:* As of June 20, 2017 we have a test that require the static pages to be built in order for the routing to happen correctly (See the Wiki for more details) which means you need to execute
-`./bin/bundle exec ./bin/rails jekyll:deploy` to running rspec.  This need only be done once and if you followed the initial setup then you did this already.
+*NOTE:* As of June 20, 2017 we have a test that requires the static pages to be built in order for routing to happen correctly (See the Wiki for more details) which means you need to execute
+`./bin/bundle exec ./bin/rails jekyll:deploy` to run rspec.  This need only be done once and if you followed the initial setup then you did this already.
 
 ## Wiki
 
