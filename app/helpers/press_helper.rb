@@ -13,37 +13,37 @@ module PressHelper
   end
 
   def name(subdomain)
-    press = Press.where(subdomain: subdomain).first
+    press = Press.where(subdomain: subdomain)&.first
     press.name if press.present?
   end
 
   def logo(subdomain)
-    press = Press.where(subdomain: subdomain).first
+    press = Press.where(subdomain: subdomain)&.first
     press.present? ? press.logo_path_url : 'fulcrum-white-50px.png'
   end
 
   def footer_block_a(subdomain)
-    press = Press.where(subdomain: subdomain).first
+    press = Press.where(subdomain: subdomain)&.first
     press.footer_block_a if press.present?
   end
 
   def footer_block_c(subdomain)
-    press = Press.where(subdomain: subdomain).first
+    press = Press.where(subdomain: subdomain)&.first
     press.footer_block_c if press.present?
   end
 
   def url(subdomain)
-    press = Press.where(subdomain: subdomain).first
+    press = Press.where(subdomain: subdomain)&.first
     press.press_url if press.present?
   end
 
   def google_analytics(subdomain)
-    press = Press.where(subdomain: subdomain).first
+    press = Press.where(subdomain: subdomain)&.first
     press.google_analytics if press.present?
   end
 
   def typekit(subdomain)
-    press = Press.where(subdomain: subdomain).first
+    press = Press.where(subdomain: subdomain)&.first
     press.typekit if press.present?
   end
 end
