@@ -186,7 +186,7 @@ RSpec.describe EPub::Publication do
           is_expected.not_to eq results
           is_expected.to eq described_class.null_object.search(query)
           expect(@message).not_to eq 'message'
-          expect(@message).to eq '### INFO query #[Double "query"] in publication validnoid raised StandardError ###'
+          expect(@message).to eq '### INFO query #[Double "query"] in publication validnoid raised StandardError at: e.backtrace[0] ###'
         end
       end
     end

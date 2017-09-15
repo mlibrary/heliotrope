@@ -8,8 +8,6 @@ class Cfi
   private_class_method :new
   attr_accessor :node, :query, :pos0, :pos1, :section
 
-  SNIPPET_PAD = 30
-
   def self.from(node, query, offset)
     if node.text? && !node.content.strip.empty? && !query.empty? && offset.integer?
       new(node, query, offset)
@@ -23,9 +21,7 @@ class Cfi
   end
 
   def snippet
-    before = @node.text[@pos0 - SNIPPET_PAD..@pos0 - 1]
-    after  = @node.text[@pos1 + 1..@pos1 + SNIPPET_PAD]
-    "...#{before}#{@node.text[@pos0..@pos1]}#{after}..."
+    Snippet.from(@node, @pos0, @pos1).snippet
   end
 
   def cfi
