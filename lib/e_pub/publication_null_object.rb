@@ -1,8 +1,12 @@
 # frozen_string_literal: true
 
 module EPub
-  class EPubNullObject < EPub
+  class PublicationNullObject < Publication
     private_class_method :new
+
+    def chapters
+      []
+    end
 
     def read(_file_entry)
       ''

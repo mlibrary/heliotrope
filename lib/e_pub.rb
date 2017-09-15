@@ -1,11 +1,8 @@
 # frozen_string_literal: true
 
-# EPub Module
-require_relative './e_pub/cache'
-require_relative './e_pub/e_pub'
-require_relative './e_pub/e_pub_null_object'
-
 module EPub
+  extend ActiveSupport::Autoload
+
   #
   # Logger
   #

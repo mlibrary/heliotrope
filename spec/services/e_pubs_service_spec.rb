@@ -16,26 +16,26 @@ RSpec.describe EPubsService do
     context 'nil id' do
       let(:id) { nil }
       it 'returns a null object' do
-        is_expected.to be_an_instance_of(EPub::EPubNullObject)
+        is_expected.to be_an_instance_of(EPub::PublicationNullObject)
       end
     end
     context 'id not found' do
       let(:id) { noid }
       it 'returns a null object' do
-        is_expected.to be_an_instance_of(EPub::EPubNullObject)
+        is_expected.to be_an_instance_of(EPub::PublicationNullObject)
       end
     end
     context 'file set id' do
       context 'file set is an epub' do
         it 'returns an epub' do
-          is_expected.to be_an_instance_of(EPub::EPub)
+          is_expected.to be_an_instance_of(EPub::Publication)
           expect(subject.id).to eq id
         end
       end
       context 'file set is not an epub' do
         let(:epub) { create(:file_set, content: File.open(File.join(fixture_path, 'it.mp4'))) }
         it 'returns a null object' do
-          is_expected.to be_an_instance_of(EPub::EPubNullObject)
+          is_expected.to be_an_instance_of(EPub::PublicationNullObject)
         end
       end
     end

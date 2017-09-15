@@ -153,6 +153,10 @@ module Hyrax
       ordered_member_docs.find { |doc| doc.id == solr_document.representative_epub_id } if epub?
     end
 
+    def epub_presenter
+      EPubsService.factory(solr_document.representative_epub_id).presenter
+    end
+
     def monograph_coins_title?
       return false unless defined? monograph_coins_title
       monograph_coins_title.present?
