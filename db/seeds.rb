@@ -11,7 +11,6 @@ end
 def update_create(entry)
   Press.where(subdomain: entry["subdomain"]).first_or_initialize.tap do |press|
     press.name = entry["name"]
-    press.logo_path = entry["logo_path"]
     press.description = entry["description"]
     press.subdomain = entry["subdomain"]
     press.press_url = entry["press_url"]
