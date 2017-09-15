@@ -1,20 +1,28 @@
 <figure title="<%= @presenter.alt_text.first %>">
   <% if @presenter.image? %>
-    <% riiif_url = "/image-service/#{@presenter.id}/info.json" %>
-    <div id="image"></div>
-    <script>
-      $().ready(function() {
-        var map, layer;
-        map = L.map('image', {
-          center: [0, 0],
-          crs: L.CRS.Simple,
-          zoom: 0
+      <% riiif_url = "/image-service/#{@presenter.id}/info.json" %>
+      <div id="image"></div>
+      <script>
+        var map, timer;
+
+        // there's no need to bind to ready as currently a resize happens on load
+        $(window).resize(function() {
+          clearTimeout (timer);
+          timer = setTimeout(setupLeafletMap, 250);
         });
-        // turning best-fit off as it's not liking being nested within layers of iframes etc in the epub reader
-        layer = L.tileLayer.iiif("<%= riiif_url %>", { bestFit: false } );
-        layer.addTo(map);
-      });
-    </script>
+
+        var setupLeafletMap = function() {
+          if (map != undefined) { map.off(); map.remove(); }
+          var layer;
+          map = L.map('image', {
+              center: [0, 0],
+              crs: L.CRS.Simple,
+              zoom: 0
+          });
+          layer = L.tileLayer.iiif("<%= riiif_url %>", { bestFit: true });
+          layer.addTo(map);
+        };
+      </script>
   <% elsif @presenter.video? %>
       <video id="video"
              preload="auto"
