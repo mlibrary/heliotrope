@@ -132,7 +132,7 @@ module Hyrax
     def responsive_embed_code
       <<~END
         <div style='width:auto; page-break-inside:avoid; -webkit-column-break-inside:avoid; break-inside:avoid; max-width:#{embed_width}px; margin:auto'>
-          <div style='overflow:hidden;#{padding_top} padding-bottom:#{padding_bottom}%; position:relative; height:0;'>#{embed_height_string}
+          <div style='overflow:hidden; padding-bottom:#{padding_bottom}%; position:relative; height:0;'>#{embed_height_string}
             <iframe src='#{embed_link}' style='overflow:hidden; border-width:0; left:0; top:0; width:100%; height:100%; position:absolute;'></iframe>
           </div>
         </div>
@@ -175,11 +175,6 @@ module Hyrax
 
     def height_ok?
       height.present? && !height.zero?
-    end
-
-    def padding_top
-      # allows for Able Player's controls
-      video? || audio? ? ' padding-top:98px;' : ''
     end
 
     def padding_bottom

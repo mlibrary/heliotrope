@@ -3,11 +3,11 @@
 ///////////////////////////////////////////
 
 html, body, figure, #image, .able, .able-wrapper{
-    margin: 0px;
-    padding: 0px;
-    border: 0px;
-    width: 100%;
-    height: 100%;
+  margin: 0px;
+  padding: 0px;
+  border: 0px;
+  width: 100%;
+  height: 100%;
 }
 
 html {
@@ -15,16 +15,52 @@ html {
 }
 
 .able-wrapper {
-    .able {
-        box-shadow: 0 0 0 0 transparent;
+  .able {
+    // hide the now-off-center giant play button
+    .able-big-play-button.icon-play:before {
+      // center the big play icon relative to the whole page
+      // note: it's off-center due to the following line in ableplayer_embed.js
+      // this.$bigPlayButton.height(this.$mediaContainer.height() - 98);
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      margin-top: -64px;
+      margin-left: -50px;
     }
+    box-shadow: 0 0 0 0 transparent;
+    .able-player.able-video {
+      // shunt the controls onto the video and hide them
+      -webkit-transform: translateY(-98px);
+      transform: translateY(-98px);
+      -webkit-opacity: 0;
+      -moz-opacity: 0;
+      opacity: 0;
+      -webkit-transition: all 2s ease;
+      -moz-transition: all 2s ease;
+      -ms-transition: all 2s ease;
+      -o-transition: all 2s ease;
+      transition: all 2s ease;
+    }
+    .icon-preferences {
+      // the only useful dialog for embed right now is keyboard (shortcuts), but...
+      // it's too big for the iframe. So just hide the button for now.
+      display: none;
+    }
+  }
+  // :active here is a first attempt to defeat sticky touch hover behavior
+  .able:hover > div:nth-child(3), .able:active > div:nth-child(3) {
+    // show the controls on hover
+    -webkit-opacity: 1;
+    -moz-opacity: 1;
+    opacity: 1;
+  }
 
-    video {
-        width: 100% !important;
-        height: auto !important;
-    }
+  video {
+    width: 100% !important;
+    height: auto !important;
+  }
 
-    audio {
-        width: 100% !important;
-    }
+  audio {
+    width: 100% !important;
+  }
 }

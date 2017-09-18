@@ -122,7 +122,7 @@ RSpec.describe Hyrax::FileSetPresenter do
     let(:video_embed_code) {
       <<~END
         <div style='width:auto; page-break-inside:avoid; -webkit-column-break-inside:avoid; break-inside:avoid; max-width:1920px; margin:auto'>
-          <div style='overflow:hidden; padding-top:98px; padding-bottom:56.25%; position:relative; height:0;'><!-- actual video height: 1080px -->
+          <div style='overflow:hidden; padding-bottom:56.25%; position:relative; height:0;'><!-- actual video height: 1080px -->
             <iframe src='http://#{Settings.host}/embed?hdl=#{CGI.escape(HandleService.handle(presenter))}' style='overflow:hidden; border-width:0; left:0; top:0; width:100%; height:100%; position:absolute;'></iframe>
           </div>
         </div>
@@ -131,7 +131,7 @@ RSpec.describe Hyrax::FileSetPresenter do
     let(:dimensionless_video_embed_code) {
       <<~END
         <div style='width:auto; page-break-inside:avoid; -webkit-column-break-inside:avoid; break-inside:avoid; max-width:400px; margin:auto'>
-          <div style='overflow:hidden; padding-top:98px; padding-bottom:75%; position:relative; height:0;'>
+          <div style='overflow:hidden; padding-bottom:75%; position:relative; height:0;'>
             <iframe src='http://#{Settings.host}/embed?hdl=#{CGI.escape(HandleService.handle(presenter))}' style='overflow:hidden; border-width:0; left:0; top:0; width:100%; height:100%; position:absolute;'></iframe>
           </div>
         </div>
