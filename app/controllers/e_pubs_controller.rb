@@ -22,7 +22,10 @@ class EPubsController < ApplicationController
   end
 
   def file
-    render plain: EPubsService.factory(params[:id]).read(params[:file] + '.' + params[:format]), layout: false
+    render plain: EPubsService.factory(params[:id]).read(params[:file] + '.' + params[:format]), content_type: Mime::Type.lookup_by_extension(params[:format]), layout: false
+  rescue
+    Rails.logger.info("### INFO rendering of EPub entry file #{params[:file] + '.' + params[:format]} mapping to 'Content-Type': #{Mime::Type.lookup_by_extension(params[:format])} threw exception. ###")
+    head :no_content
   end
 
   def search

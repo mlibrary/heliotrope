@@ -108,6 +108,7 @@ RSpec.describe EPubsController, type: :controller do
           expect(response).to_not have_http_status(:unauthorized)
           expect(response).to have_http_status(:success)
           expect(response.body.empty?).to be false
+          expect(response.header['Content-Type']).to include('application/xml')
         end
       end
 
