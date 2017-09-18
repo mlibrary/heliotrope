@@ -19,7 +19,7 @@ module Import
       end
     end
 
-    def data_for_asset(row_num, row, file_attrs)
+    def data_for_asset(row_num, row, file_attrs, errors)
       md = Redcarpet::Markdown.new(Redcarpet::Render::StripDown, space_after_headers: true)
       missing_fields_errors, controlled_vocab_errors, date_errors = Array.new(3) { [] }
 
@@ -42,7 +42,7 @@ module Import
           missing_fields_errors << field[:field_name]
         end
       end
-      combine_field_errors(row_num, missing_fields_errors, controlled_vocab_errors, date_errors)
+      combine_field_errors(errors, row_num, missing_fields_errors, controlled_vocab_errors, date_errors)
     end
 
     private
@@ -100,13 +100,13 @@ module Import
         y + '-' + m + '-' + d
       end
 
-      def combine_field_errors(row_num, missing_fields_errors, controlled_vocab_errors, date_errors)
-        message = "\n"
-        message += '-' * 100 + "\nRow #{row_num}:"
+      def combine_field_errors(errors, row_num, missing_fields_errors, controlled_vocab_errors, date_errors)
+        message = ''
         message += missing_fields_errors.empty? ? '' : "\nmissing required fields: \n" + missing_fields_errors.join(', ')
         message += controlled_vocab_errors.empty? ? '' : "\nunacceptable values for: \n" + controlled_vocab_errors.join(', ')
         message += date_errors.empty? ? '' : "\nthese dates cannot be padded to a YYYY-MM-DD value and will be discarded: \n" + date_errors.join(', ')
         hide_errors(message, row_num, missing_fields_errors, controlled_vocab_errors, date_errors)
+        errors[row_num] = message if message.present?
       end
 
       def hide_errors(message, row_num, missing_fields_errors, controlled_vocab_errors, date_errors)

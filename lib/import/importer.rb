@@ -29,8 +29,7 @@ module Import
       validate_user
       validate_press unless reimporting
       csv_files.each do |file|
-        errors = ''
-        attrs = CSVParser.new(file).attributes(errors)
+        attrs = CSVParser.new(file).attributes
 
         # if there is a command-line monograph title then use it
         attrs['title'] = Array(monograph_title) if monograph_title.present?
@@ -38,7 +37,7 @@ module Import
         # create file objects (stop everything here if any are not found, duplicates or of zero size)
         file_objects(attrs)
 
-        optional_early_exit(interaction, errors, test)
+        optional_early_exit(interaction, attrs.delete('row_errors'), test)
 
         # because the MonographBuilder sets its metadata, files_metadata has to be removed here
         file_attrs = attrs.delete('files_metadata')
@@ -123,7 +122,10 @@ module Import
 
       def optional_early_exit(interaction, errors, test)
         if interaction && errors.present?
-          puts "\n" + errors + "\n" + "-" * 100 + "\n"
+          errors.each do |row_num, error|
+            puts '-' * 100 + "\nRow #{row_num}" + error + "\n"
+          end
+          puts '-' * 100 + "\n"
           puts "\n\nSome rows/fields have been flagged for your approval. Please review the messages above before proceeding.\n"
           exit if test == true
           puts "Do you wish to continue (y/n)?"

@@ -8,13 +8,14 @@ module Import
       @file = input_file
     end
 
-    def attributes(errors_out = '')
+    def attributes
       attrs = {}
 
       # a CSV can only have one monograph (probably for in-house use only)...
       attrs = {}
       attrs['files'] = []
       attrs['files_metadata'] = []
+      attrs['row_errors'] = {}
 
       puts "Parsing file: #{file}"
       rows = CSV.read(file, headers: true, skip_blanks: true).delete_if { |row| row.to_hash.values.all?(&:blank?) }
@@ -28,29 +29,24 @@ module Import
       # the table.  We want to throw away that text.
       rows.delete(0)
 
-      skipped_array = []
-      errors_array = []
-
       rows.each do |row|
         row.each { |_, value| value&.strip! }
 
         if missing_file_name?(row)
-          skipped_array << "Row #{row_num}: File name can only be missing for external resources - row will be skipped\n"
+          errors[row_num] = "File name can only be missing for external resources - row will be skipped"
           row_num += 1
           next
         end
 
         if asset_data?(row)
           file_attrs = {}
-          errors_array << row_data.data_for_asset(row_num, row, file_attrs)
+          row_data.data_for_asset(row_num, row, file_attrs, attrs['row_errors'])
           attach_asset(row, attrs, file_attrs)
         else
           row_data.data_for_monograph(row, attrs)
         end
         row_num += 1
       end
-
-      errors_out.replace skipped_array.join + "\n\n" + errors_array.join
       attrs
     end
 
