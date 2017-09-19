@@ -3,8 +3,7 @@
 module EPub
   class Publication
     private_class_method :new
-
-    attr_reader :id
+    attr_reader :id, :container, :content_file, :content_dir, :content, :epub_path, :toc
 
     # Class Methods
 
@@ -27,8 +26,62 @@ module EPub
 
     # Instance Methods
 
+    def container
+      @container ||= Nokogiri::XML(File.open(EPubsService.epub_entry_path(id, "META-INF/container.xml")))
+      @container.remove_namespaces!
+    end
+
+    def content_file
+      @content_file ||= container.xpath("//rootfile/@full-path").text
+    end
+
+    def content_dir
+      @content_dir ||= File.dirname(content_file)
+    end
+
+    def content
+      @content ||= Nokogiri::XML(File.open(File.join(epub_path, content_file)))
+      @content.remove_namespaces!
+    end
+
+    def epub_path
+      @epub_path ||= EPubsService.epub_path(id)
+    end
+
+    def toc
+      # EPUB3 *must* have an item with properties="nav" in their manifest
+      @toc ||= Nokogiri::XML(File.open(File.join(epub_path,
+                                                 content_dir,
+                                                 content.xpath("//manifest/item[@properties='nav']").first.attributes["href"].value)))
+      @toc.remove_namespaces!
+    end
+
+    def chapter_title_from_toc(chapter_href)
+      # Navigation can be way more complicated than this, so this is a WIP
+      toc.xpath("//nav/ol/li/a[@href='#{chapter_href}']").text || ""
+    end
+
     def chapters
-      [Chapter.send(:new)]
+      chapters = []
+      i = 0
+      content.xpath("//spine/itemref/@idref").each do |idref|
+        i += 1
+        content.xpath("//manifest/item").each do |item|
+          next unless item.attributes['id'].text == idref.text
+
+          doc = Nokogiri::XML(File.open(File.join(epub_path, content_dir, item.attributes['href'].text)))
+          doc.remove_namespaces!
+
+          chapters.push(Chapter.send(:new,
+                                     item.attributes['id'].text,
+                                     item.attributes['href'].text,
+                                     chapter_title_from_toc(item.attributes['href'].text),
+                                     "/6/#{i * 2}[#{item.attributes['id'].text}]!",
+                                     doc))
+        end
+      end
+
+      chapters
     end
 
     def read(file_entry = "META-INF/container.xml")

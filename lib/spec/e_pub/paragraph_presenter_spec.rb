@@ -9,14 +9,14 @@ RSpec.describe EPub::ParagraphPresenter do
     end
   end
 
-  describe '#html' do
-    subject { described_class.send(:new, paragraph).html }
-    let(:html) { double("html") }
+  describe '#text' do
+    subject { described_class.send(:new, paragraph).text }
+    let(:text) { double("text") }
     let(:safe_html) { double("safe_html") }
 
     before do
-      allow(paragraph).to receive(:html).and_return(html)
-      allow(html).to receive(:html_safe).and_return(safe_html)
+      allow(paragraph).to receive(:text).and_return(text)
+      allow(text).to receive(:html_safe).and_return(safe_html)
     end
     it 'returns the paragraph html as safe html' do
       is_expected.to eq safe_html

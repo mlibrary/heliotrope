@@ -15,8 +15,8 @@ RSpec.describe EPub::Paragraph do
     end
   end
 
-  describe '#html' do
-    subject { described_class.send(:new).html }
+  describe '#text' do
+    subject { described_class.send(:new, "I am paragraph text").text }
 
     it 'returns a string' do
       is_expected.to be_an_instance_of(String)
@@ -24,7 +24,7 @@ RSpec.describe EPub::Paragraph do
   end
 
   describe '#presenter' do
-    subject { described_class.send(:new).presenter }
+    subject { described_class.send(:new, "I am paragraph text").presenter }
 
     it 'returns a chapter presenter' do
       is_expected.to be_an_instance_of(EPub::ParagraphPresenter)

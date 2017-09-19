@@ -9,11 +9,16 @@ module EPub
     end
 
     def paragraphs
-      rvalue = []
-      @chapter.paragraphs.each do |paragraph|
-        rvalue << paragraph.presenter
+      @chapter.paragraphs.map(&:presenter)
+    end
+
+    def blurb
+      text = ""
+      @chapter.paragraphs.each do |p|
+        text += "<p>#{p.text}</p>"
+        break if text.length >= 100
       end
-      rvalue
+      text.html_safe # rubocop:disable Rails/OutputSafety
     end
 
     private

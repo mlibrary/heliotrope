@@ -29,6 +29,7 @@ RSpec.describe EPub::PublicationPresenter do
         chapters << double("chapter#{index}")
         presenters << double("presenter#{index}")
         allow(chapters[index]).to receive(:presenter).and_return(presenters[index])
+        allow(chapters[index]).to receive(:title?).and_return(true)
       end
     end
     it 'returns the chapter presenters' do

@@ -3,6 +3,7 @@
 module EPub
   class Paragraph
     private_class_method :new
+    attr_accessor :text
 
     # Class Methods
 
@@ -12,16 +13,14 @@ module EPub
 
     # Instance Methods
 
-    def html
-      '<p>paragraph</p>'
-    end
-
     def presenter
       ParagraphPresenter.send(:new, self)
     end
 
     private
 
-      def initialize; end
+      def initialize(text)
+        @text = text
+      end
   end
 end
