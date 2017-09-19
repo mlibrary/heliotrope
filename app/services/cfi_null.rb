@@ -8,9 +8,9 @@ class CfiNull < Cfi
   def initialize
     @node = Nokogiri.XML(nil)
     @query = ""
-    @pos0 = -1
-    @pos1 = -1
-    @section = -1
+    @pos0 = ""
+    @pos1 = ""
+    @section = ""
   end
 
   def range

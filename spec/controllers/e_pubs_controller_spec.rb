@@ -157,7 +157,7 @@ RSpec.describe EPubsController, type: :controller do
         expect(JSON.parse(response.body)["q"]).to eq "White Whale"
         expect(JSON.parse(response.body)["search_results"].length).to eq 107
         expect(JSON.parse(response.body)["search_results"][0]["cfi"]).to eq "/6/84[xchapter_036]!/4/2/42,/1:66,/1:77"
-        expect(JSON.parse(response.body)["search_results"][0]["snippet"]).to eq "... heard me give orders about a white whale. Look ye! d’ye see this Spanis..."
+        expect(JSON.parse(response.body)["search_results"][0]["snippet"]).to eq "...ders have before now heard me give orders about a white whale. Look ye! d’ye see this Spanish ounce of gold?\"—hol..."
       end
     end
 
