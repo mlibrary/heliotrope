@@ -20,4 +20,3 @@ require 'active_support/dependencies'
 ActiveSupport::Dependencies.autoload_paths <<  File.expand_path("../../../app/services", __FILE__)
 # lib
 ActiveSupport::Dependencies.autoload_paths <<  File.expand_path("../../../lib", __FILE__)
-ActiveSupport::Dependencies.autoload_paths <<  File.expand_path("../../../lib/e_pub", __FILE__)

@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 module EPub
-  extend ActiveSupport::Autoload
-
   #
   # Logger
   #
@@ -47,4 +45,11 @@ module EPub
     @configured = true
     yield self
   end
+end
+
+#
+# Dependencies
+#
+Dir.glob('./**/lib/e_pub/**/*').each do |file|
+  require_dependency file if File.file?(file)
 end
