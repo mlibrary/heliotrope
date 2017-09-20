@@ -16,7 +16,6 @@ html {
 
 .able-wrapper {
   .able {
-    // hide the now-off-center giant play button
     .able-big-play-button.icon-play:before {
       // center the big play icon relative to the whole page
       // note: it's off-center due to the following line in ableplayer_embed.js
