@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require_dependency 'e_pub'
 require 'zip'
 
 class EPubsService
