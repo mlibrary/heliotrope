@@ -8,7 +8,6 @@
 // Able Player stuff
 //= require js.cookie
 //= require modernizr.custom
-//= require ableplayer_turbolinks
 // `disable_chrome_media_download_button.js` in `./common` requires bowser
 //= require 'bowser.min'
 //= require_tree ./common
