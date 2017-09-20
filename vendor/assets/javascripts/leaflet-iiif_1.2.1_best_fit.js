@@ -322,7 +322,9 @@ L.TileLayer.Iiif = L.TileLayer.extend({
             key;
 
         imageSize = this._imageSizes[this.maxNativeZoom];
-        key = imageSize.x > imageSize.y ? 'x' : 'y';
+        // *** heliotrope *** we don't always use square maps, incorporate aspect ratio here
+        // key = imageSize.x > imageSize.y ? 'x' : 'y';
+        key = imageSize.x > (imageSize.y * (mapSize.x * 1.0 / mapSize.y)) ? 'x' : 'y';
 
         var fraction = imageSize[key] / mapSize[key];
         var exp = Math.log2(fraction);
