@@ -11,7 +11,8 @@
         <h2><%= @monograph_presenter.title %></h2>
         <% if can? :edit, @monograph_presenter %>
             <%= link_to t('monograph_catalog.index.can_edit'), main_app.monograph_show_path(@monograph_presenter.id), class: 'btn btn-primary', id: 'manage-monograph-button' %>
-        <% end %>
+            <%= link_to t('monograph_catalog.index.reindex'), main_app.monograph_reindex_path(@monograph_presenter.id), method: :patch, class: 'btn btn-primary', id: 'monograph-reindex-button' %>
+      <% end %>
         <% if @monograph_presenter.authors? %>
             <h3><%= render_markdown @monograph_presenter.authors %></h3>
         <% end %>

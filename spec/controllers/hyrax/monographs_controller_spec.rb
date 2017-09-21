@@ -15,7 +15,7 @@ describe Hyrax::MonographsController do
       stub_out_redis
     end
 
-    context 'a platform superadmin' do
+    context 'a platform admin' do
       let(:user) { create(:platform_admin) }
 
       describe "#new" do
@@ -61,7 +61,16 @@ describe Hyrax::MonographsController do
           expect(flash[:notice]).to eq "Monograph is publishing."
         end
       end
-    end # platform superadmin
+
+      describe "reindex" do
+        it 'is successful' do
+          expect(CurationConcernUpdateIndexJob).to receive(:perform_later).with(monograph)
+          patch :reindex, params: { id: monograph }
+          expect(response).to redirect_to Rails.application.routes.url_helpers.hyrax_monograph_path(monograph, locale: I18n.locale)
+          expect(flash[:notice]).to eq I18n.t('monograph_catalog.index.reindexing', title: monograph.title&.first)
+        end
+      end
+    end # platform admin
 
     context 'a press-level admin' do
       let(:user) { create(:press_admin) }

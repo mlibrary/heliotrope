@@ -14,6 +14,11 @@ module Hyrax
       redirect_to [main_app, curation_concern], notice: 'Monograph is publishing.'
     end
 
+    def reindex
+      CurationConcernUpdateIndexJob.perform_later(curation_concern)
+      redirect_to [main_app, curation_concern], notice: I18n.t('monograph_catalog.index.reindexing', title: curation_concern.title&.first)
+    end
+
     def new
       super
       @form[:press] = params[:press] unless params[:press].nil?

@@ -48,6 +48,7 @@ Rails.application.routes.draw do
   get 'concern/monographs/new', controller: 'hyrax/monographs', action: :new
   get 'concern/monographs/:id', controller: :monograph_catalog, action: :index, as: :monograph_catalog
   get 'concern/monographs/:id/show', controller: 'hyrax/monographs', action: :show, as: :monograph_show
+  patch 'concern/monographs/:id/reindex', controller: 'hyrax/monographs', action: :reindex, as: :monograph_reindex
   get 'monograph_catalog/facet/:id', controller: :monograph_catalog, action: :facet, as: :monograph_catalog_facet
 
   curation_concerns_basic_routes

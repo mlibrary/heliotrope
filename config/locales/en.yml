@@ -107,6 +107,8 @@ en:
       pageviews_html: "This item has been viewed <b>%{count}</b> times."
       read: "Read %{title}"
       read_book: "Read Book"
+      reindex: "Reindex"
+      reindexing: "Reindexing %{title}"
   permissions_expiration_date: "Permissions Expiration Date"
   press: "Publisher"
   press_catalog:
