@@ -3,30 +3,33 @@
       <% riiif_url = "/image-service/#{@presenter.id}/info.json" %>
       <div id="image"></div>
       <script>
-        var map, timer;
+          var map, layer, timer;
 
-        // there's no need to bind to ready as currently a resize happens on load
-        $(window).resize(function() {
-          clearTimeout (timer);
-          timer = setTimeout(setupLeafletMap, 250);
-        });
-
-        var setupLeafletMap = function() {
-          if (map != undefined) { map.off(); map.remove(); }
-          var layer;
-          map = L.map('image', {
-              center: [0, 0],
-              crs: L.CRS.Simple,
-              zoom: 0,
-              attributionControl: false
+          $(document).ready(function() {
+              setupLeafletMap();
           });
-          layer = L.tileLayer.iiif("<%= riiif_url %>", { bestFit: true });
-          layer.addTo(map);
-        };
+
+          $(window).resize(function() {
+              clearTimeout (timer);
+              timer = setTimeout(setupLeafletMap, 150);
+          });
+
+          var setupLeafletMap = function() {
+              if (map != undefined) { map.off(); map.remove(); }
+              map = L.map('image', {
+                  center: [0, 0],
+                  crs: L.CRS.Simple,
+                  zoom: 0,
+                  scrollWheelZoom: false,
+                  attributionControl: false
+              });
+              layer = L.tileLayer.iiif("<%= riiif_url %>", { bestFit: true });
+              layer.addTo(map);
+          };
       </script>
   <% elsif @presenter.video? %>
       <video id="video"
-             preload="auto"
+             preload="metadata"
              data-able-player
              data-include-transcript="false"
              data-allow-fullscreen="false"
