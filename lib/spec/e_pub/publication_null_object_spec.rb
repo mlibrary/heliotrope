@@ -1,11 +1,15 @@
 # frozen_string_literal: true
 
 RSpec.describe EPub::PublicationNullObject do
+  # Class Methods
+
   describe '#new' do
     it 'private_class_method' do
       expect { is_expected }.to raise_error(NoMethodError)
     end
   end
+
+  # Instance Methods
 
   describe '#id' do
     subject { EPub::Publication.null_object.id }
@@ -22,8 +26,25 @@ RSpec.describe EPub::PublicationNullObject do
     end
   end
 
+  describe '#presenter' do
+    subject { EPub::Publication.null_object.presenter }
+
+    it 'returns an publication presenter' do
+      is_expected.to be_an_instance_of(EPub::PublicationPresenter)
+      expect(subject.id).to eq 'epub_null'
+    end
+  end
+
+  describe '#purge' do
+    subject { EPub::Publication.null_object.purge }
+    it { is_expected.to eq nil }
+  end
+
   describe '#read' do
-    subject { EPub::Publication.null_object.read(nil) }
+    subject { EPub::Publication.null_object.read(file_entry) }
+
+    let(:file_entry) { double('file_entry') }
+
     it 'returns an empty string' do
       is_expected.to be_a(String)
       is_expected.to be_empty

@@ -4,7 +4,7 @@ class EPubsController < ApplicationController
   def show
     presenter = Hyrax::FileSetPresenter.new(SolrDocument.new(FileSet.find(params[:id]).to_solr), current_ability, request)
     if presenter.epub?
-      EPubsService.factory(params[:id]) # cache epub
+      FactoryService.e_pub_publication(params[:id]) # cache epub
       @title = presenter.title
       @citable_link = presenter.citable_link
       @creator_given_name = presenter.creator_given_name
@@ -14,7 +14,7 @@ class EPubsController < ApplicationController
       @search_url = main_app.epub_search_url(params[:id], q: "").gsub!(/locale=en&/, '')
       render layout: false
     else
-      Rails.logger.info("### INFO FileSet #{params[:id]} is not an EPub. ###")
+      Rails.logger.info("EPubsController.show(#{params[:id]}) is not an EPub.")
       render 'hyrax/base/unauthorized', status: :unauthorized
     end
   rescue Ldp::Gone # tombstone
@@ -22,9 +22,9 @@ class EPubsController < ApplicationController
   end
 
   def file
-    render plain: EPubsService.factory(params[:id]).read(params[:file] + '.' + params[:format]), content_type: Mime::Type.lookup_by_extension(params[:format]), layout: false
-  rescue
-    Rails.logger.info("### INFO rendering of EPub entry file #{params[:file] + '.' + params[:format]} mapping to 'Content-Type': #{Mime::Type.lookup_by_extension(params[:format])} threw exception. ###")
+    render plain: FactoryService.e_pub_publication(params[:id]).read(params[:file] + '.' + params[:format]), content_type: Mime::Type.lookup_by_extension(params[:format]), layout: false
+  rescue StandardError => e
+    Rails.logger.info("EPubsController.file(#{params[:file] + '.' + params[:format]}) mapping to 'Content-Type': #{Mime::Type.lookup_by_extension(params[:format])} raised #{e}")
     head :no_content
   end
 
@@ -34,7 +34,7 @@ class EPubsController < ApplicationController
       headers['Access-Control-Allow-Methods'] = 'GET'
       headers['Access-Control-Request-Method'] = '*'
     end
-    results = EPubsService.factory(params[:id]).search(params[:q])
+    results = FactoryService.e_pub_publication(params[:id]).search(params[:q])
     if results[:search_results]
       render json: results
     else
