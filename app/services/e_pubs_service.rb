@@ -21,11 +21,16 @@ class EPubsService
     # Return if EPub is cached
     return if Dir.exist?(EPubsService.epub_path(id))
 
-    # Create the EPub directory to short circuit other asynchronous calls
-    EPubsService.make_epub_path(id)
+    @@monitor ||= Monitor.new # rubocop:disable Style/ClassVars
+    @@monitor.synchronize do
+      unless Dir.exist?(EPubsService.epub_path(id))
+        # Create the EPub directory to short circuit other asynchronous calls
+        EPubsService.make_epub_path(id)
 
-    # Extract the entire EPub in the background (EPubsServiceJob calls EPubsService#cache(id))
-    EPubsServiceJob.perform_later(id)
+        # Extract the entire EPub in the foreground (EPubsServiceJob calls EPubsService#cache(id))
+        EPubsServiceJob.perform_now(id)
+      end
+    end
   end
 
   def self.read(id, file_entry) # called from EPubsController#file
@@ -35,10 +40,9 @@ class EPubsService
     # EPub entry file to read
     epub_entry_file = EPubsService.epub_entry_path(id, file_entry)
 
-    # Cache the EPub entry file if necessary
-    EPubsService.cache_epub_entry(id, file_entry) unless File.exist?(epub_entry_file)
+    raise EPubsServiceError, "Entry #{file_entry} in EPub #{id} does not exist." unless File.exist?(epub_entry_file)
 
-    # At this point the EPub entry file exist in the cache so reset the time to live for the entire cached EPub
+    # Reset the time to live for the entire cached EPub
     FileUtils.touch(EPubsService.epub_path(id))
 
     # Read the EPub entry file
@@ -52,26 +56,6 @@ class EPubsService
   #
   # Protected Interface
   #
-
-  def self.cache_epub_entry(id, file_entry) # called from EPubsService#read
-    # Get the original EPub from Fedora
-    epub_file = FileSet.find(id)&.original_file
-    raise EPubsServiceError, "EPub #{id} file is nil." if epub_file.nil?
-
-    # Extract just this EPub entry file from the EPub
-    begin
-      Zip::File.open_buffer(epub_file.content) do |zip_file|
-        EPubsService.make_epub_entry_path(id, file_entry)
-        # Gaurd against EPub entry file existing to support asynchronous calls
-        zip_file.extract(file_entry, EPubsService.epub_entry_path(id, file_entry)) unless File.exist?(EPubsService.epub_entry_path(id, file_entry))
-      end
-    rescue Errno::ENOENT
-      raise EPubsServiceError, "Entry #{file_entry} in EPub #{id} does not exist."
-    rescue Zip::Error
-      raise EPubsServiceError, "EPub #{id} is corrupt."
-    end
-    # At this point the EPub entry file has been cached
-  end
 
   def self.cache_epub(id) # called from EPubsServiceJob
     # Get the original EPub from Fedora
