@@ -2,6 +2,7 @@
 
 module EPub
   class Chapter
+    attr_accessor :chapter_id, :chapter_href, :title, :base_cfi, :doc, :paragraphs
     private_class_method :new
 
     # Class Methods
@@ -11,13 +12,12 @@ module EPub
     end
 
     # Instance Methods
-
-    def title
-      'chapter title'
+    def title?
+      @title.present?
     end
 
     def paragraphs
-      [Paragraph.send(:new)]
+      @paragraphs ||= @doc.xpath("//p").map { |p| Paragraph.send(:new, p.text) }
     end
 
     def presenter
@@ -26,6 +26,12 @@ module EPub
 
     private
 
-      def initialize; end
+      def initialize(chapter_id, chapter_href, chapter_title, base_cfi, doc)
+        @chapter_id = chapter_id
+        @chapter_href = chapter_href
+        @title = chapter_title
+        @base_cfi = base_cfi
+        @doc = doc
+      end
   end
 end

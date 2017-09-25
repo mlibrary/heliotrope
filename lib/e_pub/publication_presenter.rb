@@ -9,11 +9,7 @@ module EPub
     end
 
     def chapters
-      rvalue = []
-      @publication.chapters.each do |chapter|
-        rvalue << chapter.presenter
-      end
-      rvalue
+      @publication.chapters.map { |chapter| chapter.presenter if chapter.title? }.compact
     end
 
     private
