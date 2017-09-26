@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe EPub do
+RSpec.describe MCSV do
   describe '#logger' do
     it 'attribute getter' do
       expect { described_class.logger }.not_to raise_error

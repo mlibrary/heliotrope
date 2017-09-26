@@ -10,36 +10,36 @@ RSpec.describe EPubsService do
   let(:epub) { create(:file_set, content: File.open(File.join(fixture_path, 'moby-dick.epub'))) }
   let(:file_entry) { "META-INF/container.xml" }
 
-  describe '#factory' do
-    subject { described_class.factory(id) }
-
-    context 'nil id' do
-      let(:id) { nil }
-      it 'returns a null object' do
-        is_expected.to be_an_instance_of(EPub::PublicationNullObject)
-      end
-    end
-    context 'id not found' do
-      let(:id) { noid }
-      it 'returns a null object' do
-        is_expected.to be_an_instance_of(EPub::PublicationNullObject)
-      end
-    end
-    context 'file set id' do
-      context 'file set is an epub' do
-        it 'returns an epub' do
-          is_expected.to be_an_instance_of(EPub::Publication)
-          expect(subject.id).to eq id
-        end
-      end
-      context 'file set is not an epub' do
-        let(:epub) { create(:file_set, content: File.open(File.join(fixture_path, 'it.mp4'))) }
-        it 'returns a null object' do
-          is_expected.to be_an_instance_of(EPub::PublicationNullObject)
-        end
-      end
-    end
-  end
+  # describe '#factory' do
+  #   subject { described_class.factory(id) }
+  #
+  #   context 'nil id' do
+  #     let(:id) { nil }
+  #     it 'returns a null object' do
+  #       is_expected.to be_an_instance_of(EPub::PublicationNullObject)
+  #     end
+  #   end
+  #   context 'id not found' do
+  #     let(:id) { noid }
+  #     it 'returns a null object' do
+  #       is_expected.to be_an_instance_of(EPub::PublicationNullObject)
+  #     end
+  #   end
+  #   context 'file set id' do
+  #     context 'file set is an epub' do
+  #       it 'returns an epub' do
+  #         is_expected.to be_an_instance_of(EPub::Publication)
+  #         expect(subject.id).to eq id
+  #       end
+  #     end
+  #     context 'file set is not an epub' do
+  #       let(:epub) { create(:file_set, content: File.open(File.join(fixture_path, 'it.mp4'))) }
+  #       it 'returns a null object' do
+  #         is_expected.to be_an_instance_of(EPub::PublicationNullObject)
+  #       end
+  #     end
+  #   end
+  # end
 
   describe '#open' do
     subject { described_class.open(id) }

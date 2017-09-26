@@ -5,6 +5,8 @@ module EPub
     private_class_method :new
     attr_reader :id, :container, :content_file, :content_dir, :content, :epub_path, :toc
 
+    # Instance Methods
+
     def chapters
       []
     end

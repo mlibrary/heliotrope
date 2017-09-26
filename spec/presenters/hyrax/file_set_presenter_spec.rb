@@ -175,15 +175,58 @@ RSpec.describe Hyrax::FileSetPresenter do
   end
 
   describe '#epub?' do
+    subject { presenter.epub? }
+
     let(:fileset_doc) { SolrDocument.new(id: 'fileset_id', has_model_ssim: ['FileSet'], mime_type_ssi: mime_type) }
 
     context 'text/plain' do
       let(:mime_type) { 'text/plain' }
-      it { expect(presenter.epub?).to eq false }
+      it { is_expected.to be false }
     end
     context 'application/epub+zip' do
       let(:mime_type) { 'application/epub+zip' }
-      it { expect(presenter.epub?).to eq true }
+      it { is_expected.to be true }
+    end
+  end
+
+  describe '#manifest?' do
+    subject { presenter.manifest? }
+
+    let(:fileset_doc) { SolrDocument.new(id: 'fileset_id', has_model_ssim: ['FileSet'], mime_type_ssi: mime_type) }
+
+    context 'text/plain' do
+      let(:mime_type) { 'text/plain' }
+      it { is_expected.to be false }
+    end
+    context 'text/csv' do
+      let(:mime_type) { 'text/csv' }
+      it { is_expected.to be true }
+    end
+    context 'text/comma-separated-values' do
+      let(:mime_type) { 'text/comma-separated-values' }
+      it { is_expected.to be true }
+    end
+  end
+
+  describe '#file' do
+    subject { presenter.file }
+
+    let(:fileset_doc) { SolrDocument.new(id: id) }
+    let(:id) { double("id") }
+    let(:file_set) { double("file_set") }
+
+    before do
+      allow(FileSet).to receive(:find).with(id).and_return(file_set)
+      allow(file_set).to receive(:original_file).and_return(file)
+    end
+
+    context 'nil' do
+      let(:file) { nil }
+      it { expect { subject }.to  raise_error("FileSet #[Double \"id\"] original file is nil.") }
+    end
+    context 'file' do
+      let(:file) { double("file") }
+      it { is_expected.to eq file }
     end
   end
 end

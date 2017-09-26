@@ -60,7 +60,7 @@ Execute this command to start Fedora, Solr and Rails servers:
 ```
 $ ./bin/bundle exec ./bin/rails hydra:server
 ```
-Or, if you prefer to start each server individually execute each of the following commands in a seperate shell: *(you must use this alternate option if running on a VM)*
+Or, if you prefer to start each server individually execute each of the following commands in a seperate shells: *(you must use this alternate option if running on a VM)*
 
 ```
 $ redis-server /usr/local/etc/redis.conf
@@ -127,11 +127,16 @@ $ ./bin/bunlde exec ./bin/rails ruumba
 $ ./bin/bundle exec ./bin/rails lib_spec
 $ ./bin/bundle exec rspec
 ```
-*NOTE:* As of June 20, 2017 there are tests that require the static pages to be built in order for routing to happen correctly ([Static Pages and Blog](https://github.com/mlibrary/heliotrope/wiki/Static-Pages-and-Blog)) which means you need to execute
+*NOTE:* To run individual specs located in the ./lib/spec directory (a.k.a lib_spec) first step into the lib directory and then execute rspec.
+```
+$ cd lib
+$ ../bin/bundle exec rspec
+```
+*PS:* As of June 20, 2017 there are tests that require the static pages to be built in order for routing to happen correctly ([Static Pages and Blog](https://github.com/mlibrary/heliotrope/wiki/Static-Pages-and-Blog)) which means you need to execute
 ```
 $ ./bin/bundle exec ./bin/rails jekyll:deploy
 ```
-to run rspec.  This only need be executed once and if you followed the initial setup then you did this already.
+before running rspec.  This only need be executed once and if you followed the [initial setup](#initial-setup) then you did this already.
 
 ## Wiki
 

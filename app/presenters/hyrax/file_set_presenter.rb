@@ -225,5 +225,16 @@ module Hyrax
     def epub?
       ['application/epub+zip'].include? mime_type
     end
+
+    def manifest?
+      ['text/csv', 'text/comma-separated-values'].include? mime_type
+    end
+
+    def file
+      # Get the original file from Fedora
+      file = ::FileSet.find(id)&.original_file
+      raise "FileSet #{id} original file is nil." if file.nil?
+      file
+    end
   end
 end

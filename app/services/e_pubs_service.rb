@@ -4,15 +4,15 @@ require_dependency 'e_pub'
 require 'zip'
 
 class EPubsService
-  def self.factory(id)
-    return EPub::Publication.from(id) if EPub::Cache.cached?(id)
-    presenter = Hyrax::FileSetPresenter.new(SolrDocument.new(FileSet.find(id).to_solr), nil, nil)
-    return EPub::Publication.null_object unless presenter.epub?
-    EPub::Publication.from(id)
-  rescue StandardError => e
-    Rails.logger.info("### INFO epubs service factory publication from #{id} raised #{e} ###")
-    EPub::Publication.null_object
-  end
+  # def self.factory(id)
+  #   return EPub::Publication.from(id) if EPub::Cache.cached?(id)
+  #   presenter = Hyrax::FileSetPresenter.new(SolrDocument.new(FileSet.find(id).to_solr), nil, nil)
+  #   return EPub::Publication.null_object unless presenter.epub?
+  #   EPub::Publication.from(id)
+  # rescue StandardError => e
+  #   Rails.logger.info("### INFO epubs service factory publication from #{id} raised #{e} ###")
+  #   EPub::Publication.null_object
+  # end
   #
   # Public Interface
   #
