@@ -154,7 +154,7 @@ module Hyrax
     end
 
     def epub_presenter
-      EPubsService.factory(solr_document.representative_epub_id).presenter
+      FactoryService.e_pub_publication(solr_document.representative_epub_id).presenter
     end
 
     def monograph_coins_title?
