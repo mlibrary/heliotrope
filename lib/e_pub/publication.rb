@@ -97,7 +97,7 @@ module EPub
       return Publication.null_object.search(query) unless Cache.cached?(id)
       EPubsSearchService.new(id).search(query)
     rescue StandardError => e
-      ::EPub.logger.info("Publication.search(#{query}) in publication #{id} raised #{e} at: e.backtrace[0]")
+      ::EPub.logger.info("Publication.search(#{query}) in publication #{id} raised #{e}") # at: #{e.backtrace.join("\n")}")
       Publication.null_object.search(query)
     end
 
