@@ -16,7 +16,7 @@ class EPubsSearchService
     offset = 0
 
     while node.content.downcase.index(query.downcase, offset)
-      cfi = Cfi.from(node, query, offset)
+      cfi = EPub::Cfi.from(node, query, offset)
       matches.push(
         cfi: cfi.cfi,
         snippet: cfi.snippet
@@ -59,7 +59,7 @@ class EPubsSearchService
       matches.flatten.compact.each do |match|
         results[:search_results].push(
           cfi: "#{chapter[:basecfi]}#{match[:cfi]}",
-          chapter_id: chapter[:chapter_id],
+          title: chapter[:title],
           snippet: match[:snippet]
         )
       end

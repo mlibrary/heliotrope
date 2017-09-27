@@ -1,9 +1,8 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
 require 'nokogiri'
 
-RSpec.describe Cfi do
+RSpec.describe EPub::Cfi do
   let(:chapter) do
     <<-EOT
     <html>
@@ -109,7 +108,7 @@ RSpec.describe Cfi do
     let(:cfi) { described_class.from(node, query, offset) }
 
     it "is a null object" do
-      expect(cfi).to be_a(CfiNull)
+      expect(cfi).to be_an_instance_of(EPub::CfiNullObject)
     end
     it "the null object responds to node" do
       expect(cfi.respond_to?(:node)).to be true
@@ -126,7 +125,7 @@ RSpec.describe Cfi do
     let(:cfi) { described_class.from(node, query, offset) }
 
     it "returns a null object" do
-      expect(cfi).to be_a(CfiNull)
+      expect(cfi).to be_an_instance_of(EPub::CfiNullObject)
     end
   end
 end
