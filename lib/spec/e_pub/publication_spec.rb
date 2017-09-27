@@ -179,7 +179,7 @@ RSpec.describe EPub::Publication do
           is_expected.not_to eq results
           is_expected.to eq described_class.null_object.search(query)
           expect(@message).not_to eq 'message'
-          expect(@message).to eq 'Publication.search(#[Double "query"]) in publication validnoid raised StandardError at: e.backtrace[0]'
+          expect(@message).to eq 'Publication.search(#[Double "query"]) in publication validnoid raised StandardError'
         end
       end
     end
@@ -260,8 +260,8 @@ RSpec.describe EPub::Publication do
         it "has the title of" do
           expect(subject.title).to eq 'Damage report!'
         end
-        it "has the base_cfi of" do
-          expect(subject.base_cfi).to eq '/6/2[Chapter01]!'
+        it "has the basecfi of" do
+          expect(subject.basecfi).to eq '/6/2[Chapter01]!'
         end
         it "has the chapter doc" do
           expect(subject.doc.name).to eq 'document'

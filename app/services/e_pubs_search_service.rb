@@ -1,29 +1,14 @@
 # frozen_string_literal: true
 
 require 'nokogiri'
+require_dependency 'e_pub'
 
 class EPubsSearchService
-  attr_reader :db, :epub
+  attr_reader :epub
 
   def initialize(id)
     EPubsServiceJob.perform_now(id) unless File.directory? EPubsService.epub_path(id)
-    @epub = EPubsIndexService::EPub.new(EPubsService.epub_path(id))
-    @db = SQLite3::Database.new "#{EPubsService.epub_path(id)}/#{id}.db"
-  rescue SQLite3::Exception => e
-    raise "Unable to create #{EPubsService.epub_path(id)}/#{id}.db, #{e}"
-  end
-
-  def chapters_from_db(query)
-    db_results = []
-    stm = @db.prepare "SELECT href, basecfi, chapter_id from chapters where chapters MATCH ?"
-    # In sqlite a - (hyphen) acts as NOT which we pretty much never want.
-    # In FTS4 it's also a token, so we can just remove it without affecting results
-    stm.bind_param 1, query.sub("-", " ")
-    rs = stm.execute
-    rs.each do |row|
-      db_results.push(href: row[0], basecfi: row[1], chapter_id: row[2])
-    end
-    db_results
+    @epub = EPub::Publication.from(id)
   end
 
   def find_selection(node, query)
@@ -83,7 +68,7 @@ class EPubsSearchService
   end
 
   def search(query)
-    db_results = chapters_from_db(query)
+    db_results = EPub::SqlLite.from(@epub).search_chapters(query)
     results_from_chapters(db_results, query)
   end
 end
