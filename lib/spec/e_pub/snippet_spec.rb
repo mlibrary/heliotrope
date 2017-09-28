@@ -1,9 +1,8 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
 require 'nokogiri'
 
-RSpec.describe Snippet do
+RSpec.describe EPub::Snippet do
   let(:chapter) do
     <<-EOT
     <html>
@@ -60,7 +59,7 @@ RSpec.describe Snippet do
     let(:pos0) { 0 }
     let(:pos1) { 1 }
     it "returns a null Snippet with an empty snippet" do
-      expect(described_class.from(node, pos0, pos1)).to be_a(SnippetNull)
+      expect(described_class.from(node, pos0, pos1)).to be_an_instance_of(EPub::SnippetNullObject)
       expect(described_class.from(node, pos0, pos1).snippet).to eq ""
     end
   end
