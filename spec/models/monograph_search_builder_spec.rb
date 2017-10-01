@@ -24,11 +24,20 @@ describe MonographSearchBuilder do
         search_builder.filter_by_members(solr_params)
       end
       it "creates a query for the monograph's assets but without the representative_id" do
+        expect(solr_params[:fq].first).not_to match(/{!terms f=id}#{cover.id},#{file1.id},#{file2.id}/)
         expect(solr_params[:fq].first).to match(/{!terms f=id}#{file1.id},#{file2.id}/)
       end
       context 'epub' do
         let(:file2) { create(:file_set, content: File.open(File.join(fixture_path, 'moby-dick.epub'))) }
         it "creates a query for the monograph's assets but without the epub id" do
+          expect(solr_params[:fq].first).not_to match(/{!terms f=id}#{file1.id},#{file2.id}/)
+          expect(solr_params[:fq].first).to match(/{!terms f=id}#{file1.id}/)
+        end
+      end
+      context 'manifest' do
+        let(:file2) { create(:file_set, content: File.open(File.join(fixture_path, 'csv', 'import', 'tempest.csv'))) }
+        it "creates a query for the monograph's assets but without the manifest id" do
+          expect(solr_params[:fq].first).not_to match(/{!terms f=id}#{file1.id},#{file2.id}/)
           expect(solr_params[:fq].first).to match(/{!terms f=id}#{file1.id}/)
         end
       end

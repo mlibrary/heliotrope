@@ -18,6 +18,9 @@ class MonographIndexer < Hyrax::WorkIndexer
 
       # grab the first fileset that is an epub and set it as the representative_epub_id
       solr_doc[Solrizer.solr_name('representative_epub_id', :symbol)] = existing_filesets.find { |id| ['application/epub+zip'].include? FileSet.find(id).mime_type }
+
+      # grab the first fileset that is a csv and set it as the representative_manifest_id
+      solr_doc[Solrizer.solr_name('representative_manifest_id', :symbol)] = existing_filesets.find { |id| ['text/csv', 'text/comma-separated-values'].include? FileSet.find(id).mime_type }
     end
   end
 

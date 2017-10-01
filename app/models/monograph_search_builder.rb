@@ -26,6 +26,7 @@ class MonographSearchBuilder < ::SearchBuilder
 
       ids.delete(monograph.first['representative_id_ssim']&.first)
       ids.delete(monograph.first['representative_epub_id_ssim']&.first)
+      ids.delete(monograph.first['representative_manifest_id_ssim']&.first)
       ids.join(',')
     end
 

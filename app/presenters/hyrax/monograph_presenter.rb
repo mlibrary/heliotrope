@@ -111,9 +111,11 @@ module Hyrax
       return @ordered_file_sets_ids if @ordered_file_sets_ids
       file_sets_ids = []
       ordered_member_docs.each do |doc|
-        if doc['has_model_ssim'] == ['FileSet'].freeze && doc.id != representative_id
-          file_sets_ids.append doc.id
-        end
+        next if doc['has_model_ssim'] != ['FileSet'].freeze
+        next if doc.id == solr_document.representative_id
+        next if doc.id == solr_document.representative_epub_id
+        next if doc.id == solr_document.representative_manifest_id
+        file_sets_ids.append doc.id
       end
       @ordered_file_sets_ids = file_sets_ids
     end
@@ -153,8 +155,24 @@ module Hyrax
       ordered_member_docs.find { |doc| doc.id == solr_document.representative_epub_id } if epub?
     end
 
+    def epub_id
+      solr_document.representative_epub_id if epub?
+    end
+
     def epub_presenter
       FactoryService.e_pub_publication(solr_document.representative_epub_id).presenter
+    end
+
+    def manifest?
+      solr_document.representative_manifest_id.present?
+    end
+
+    def manifest_id
+      solr_document.representative_manifest_id if manifest?
+    end
+
+    def manifest
+      ordered_member_docs.find { |doc| doc.id == solr_document.representative_manifest_id } if manifest?
     end
 
     def monograph_coins_title?

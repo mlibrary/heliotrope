@@ -90,4 +90,25 @@ describe CharacterizeJob do
       expect(cached_file.exist?).to be false
     end
   end
+
+  context "manifest csv file" do
+    let(:file_path) { Rails.root + 'tmp' + 'uploads' + 'ab' + 'c1' + '23' + '45' + 'abc12345' + 'manifest.csv' }
+    let(:file) do
+      Hydra::PCDM::File.new.tap do |f|
+        f.content = 'foo'
+        f.original_name = 'manifest.csv'
+        f.save!
+      end
+    end
+
+    it "mime type is set to 'text/csv' or 'text/comma-separated-values'" do
+      allow(Hydra::Works::CharacterizationService).to receive(:run).with(file, filename)
+      allow(file).to receive(:save!)
+      allow(file_set).to receive(:update_index)
+      allow(CreateDerivativesJob).to receive(:perform_later).with(file_set, file.id, filename)
+      described_class.perform_now(file_set, file.id)
+
+      expect(['text/csv', 'text/comma-separated-values'].include?(file_set.characterization_proxy.mime_type)).to be true
+    end
+  end
 end
