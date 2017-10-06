@@ -21,6 +21,13 @@ class CharacterizeJob < ApplicationJob
     File.delete(cached_file) if File.exist?(cached_file)
 
     Hydra::Works::CharacterizationService.run(file_set.characterization_proxy, filename)
+
+    if ['text/plain'].include? file_set.characterization_proxy.mime_type
+      if ['text/csv', 'text/comma-separated-values'].include? Rack::Mime::MIME_TYPES[File.extname(filename)]
+        file_set.characterization_proxy.mime_type = Rack::Mime::MIME_TYPES[File.extname(filename)]
+      end
+    end
+
     Rails.logger.debug "Ran characterization on #{file_set.characterization_proxy.id} (#{file_set.characterization_proxy.mime_type})"
     file_set.characterization_proxy.save!
     file_set.update_index
