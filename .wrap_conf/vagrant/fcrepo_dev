@@ -1,6 +1,6 @@
 port: 8984
 enable_jms: false
-version: 4.5.1
+version: 4.7.4
 download_dir: /home/vagrant/fedora_download
 # LevelDB won't work in the directory shared with the host
 instance_dir: /home/vagrant/fedora
