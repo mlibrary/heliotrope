@@ -1,4 +1,8 @@
 <% provide :page_title, @title || "Title" %>
+<%# https://github.com/mlibrary/heliotrope/issues/1228 %>
+<% content_for :head do %>
+  <meta name="turbolinks-cache-control" content="no-cache">
+<% end %>
 <% provide :body do %>
 <div id="epub" class="<%= @subdomain %>">
   <div id="reader"></div>
