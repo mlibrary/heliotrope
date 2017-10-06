@@ -6,10 +6,17 @@ RSpec.describe EPub::Publication do
   describe "without a test epub" do
     let(:noid) { 'validnoid' }
     let(:non_noid) { 'invalidnoid' }
+    let(:validator) { double("validator") }
 
     before do
       allow(EPubsService).to receive(:open).with(noid).and_return(nil)
       allow(EPub::Cache).to receive(:cached?).with(noid).and_return(true)
+
+      allow(EPub::Validator).to receive(:from).and_return(validator)
+      allow(validator).to receive(:id).and_return(noid)
+      allow(validator).to receive(:content_file).and_return(true)
+      allow(validator).to receive(:content).and_return(true)
+      allow(validator).to receive(:toc).and_return(true)
     end
 
     # Class Methods
@@ -197,48 +204,6 @@ RSpec.describe EPub::Publication do
 
     after do
       FileUtils.rm_rf "../tmp/epubs/#{id}" if Dir.exist?("../tmp/epubs/#{id}")
-    end
-
-    describe "#container" do
-      subject { FactoryService.e_pub_publication(id) }
-      it "returns the container.opf file" do
-        expect(subject.container.xpath("//rootfile/@full-path").text).to eq 'EPUB/content.opf'
-      end
-    end
-
-    describe "#content_file" do
-      subject { FactoryService.e_pub_publication(id) }
-      it "returns the content file" do
-        expect(subject.content_file).to eq 'EPUB/content.opf'
-      end
-    end
-
-    describe "#content_dir" do
-      subject { FactoryService.e_pub_publication(id) }
-      it "returns the content directory" do
-        expect(subject.content_dir).to eq 'EPUB'
-      end
-    end
-
-    describe "#content" do
-      subject { FactoryService.e_pub_publication(id) }
-      it "contains epub package information" do
-        expect(subject.content.children[0].name).to eq "package"
-      end
-    end
-
-    describe "#epub_path" do
-      subject { FactoryService.e_pub_publication(id) }
-      it "returns the epub's path" do
-        expect(subject.epub_path).to eq "../tmp/epubs/#{id}"
-      end
-    end
-
-    describe "#toc" do
-      subject { FactoryService.e_pub_publication(id) }
-      it "contains the epub navigation element" do
-        expect(subject.toc.xpath("//body/nav").any?).to be true
-      end
     end
 
     describe "#chapters" do

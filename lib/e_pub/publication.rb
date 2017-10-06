@@ -3,7 +3,7 @@
 module EPub
   class Publication
     private_class_method :new
-    attr_reader :id, :container, :content_file, :content_dir, :content, :epub_path, :toc
+    attr_reader :id, :content_file, :content, :toc
 
     # Class Methods
 
@@ -12,13 +12,18 @@ module EPub
     def self.from(epub, options = {})
       return null_object if epub.blank?
       noid = if epub.is_a?(Hash)
-               return null_object unless Valid.noid?(epub[:id])
                epub[:id]
              else
-               return null_object unless Valid.noid?(epub)
                epub
              end
-      new(noid.to_s)
+      return null_object unless Valid.noid?(noid)
+
+      EPubsService.open(noid) # cache publication if it isn't already
+
+      valid_epub = Validator.from(noid)
+      return null_object if valid_epub.is_a?(ValidatorNullObject)
+
+      new(valid_epub)
     rescue StandardError => e
       ::EPub.logger.info("Publication.from(#{epub}, #{options}) raised #{e}")
       null_object
@@ -43,7 +48,7 @@ module EPub
         content.xpath("//manifest/item").each do |item|
           next unless item.attributes['id'].text == idref.text
 
-          doc = Nokogiri::XML(File.open(File.join(epub_path, content_dir, item.attributes['href'].text)))
+          doc = Nokogiri::XML(File.open(File.join(EPubsService.epub_path(id), File.dirname(content_file), item.attributes['href'].text)))
           doc.remove_namespaces!
 
           chapters.push(Chapter.send(:new,
@@ -55,28 +60,6 @@ module EPub
         end
       end
       chapters
-    end
-
-    def container
-      @container ||= Nokogiri::XML(File.open(EPubsService.epub_entry_path(id, "META-INF/container.xml")))
-      @container.remove_namespaces!
-    end
-
-    def content
-      @content ||= Nokogiri::XML(File.open(File.join(epub_path, content_file)))
-      @content.remove_namespaces!
-    end
-
-    def content_dir
-      @content_dir ||= File.dirname(content_file)
-    end
-
-    def content_file
-      @content_file ||= container.xpath("//rootfile/@full-path").text
-    end
-
-    def epub_path
-      @epub_path ||= EPubsService.epub_path(id)
     end
 
     def presenter
@@ -101,19 +84,13 @@ module EPub
       Publication.null_object.search(query)
     end
 
-    def toc
-      # EPUB3 *must* have an item with properties="nav" in their manifest
-      @toc ||= Nokogiri::XML(File.open(File.join(epub_path,
-                                                 content_dir,
-                                                 content.xpath("//manifest/item[@properties='nav']").first.attributes["href"].value)))
-      @toc.remove_namespaces!
-    end
-
     private
 
-      def initialize(id)
-        @id = id
-        EPubsService.open(@id) # cache publication
+      def initialize(valid_epub)
+        @id = valid_epub.id
+        @content_file = valid_epub.content_file
+        @content = valid_epub.content
+        @toc = valid_epub.toc
       end
   end
 end

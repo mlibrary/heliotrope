@@ -46,7 +46,7 @@ class EPubsSearchService
     results[:search_results] = [] if db_results.length.positive?
 
     db_results.each do |chapter|
-      file = File.join(@epub.epub_path, @epub.content_dir, chapter[:href])
+      file = File.join(EPubsService.epub_path(@epub.id), File.dirname(@epub.content_file), chapter[:href])
       doc = Nokogiri::XML(File.open(file))
       doc.remove_namespaces!
 

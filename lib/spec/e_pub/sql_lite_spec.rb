@@ -23,8 +23,8 @@ RSpec.describe EPub::SqlLite do
   end
 
   before do
+    allow(EPubsService).to receive(:epub_path).and_return(true)
     allow(epub_publication).to receive(:is_a?).and_return(EPub::Publication)
-    allow(epub_publication).to receive(:epub_path).and_return(true)
     allow(epub_publication).to receive(:id).and_return('id')
     allow(File).to receive(:join).and_return(":memory:")
     allow(epub_publication).to receive(:chapters).and_return(chapters)
