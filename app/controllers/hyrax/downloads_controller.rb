@@ -57,30 +57,30 @@ module Hyrax
     end
 
     def allow_download?
-      file_set_doc['allow_download_ssim']&.first == 'yes' ? true : false
+      current_user.platform_admin? || file_set_doc['allow_download_ssim']&.first == 'yes'
     end
 
     def thumbnail?
-      params[:file] == 'thumbnail' ? true : false
+      params[:file] == 'thumbnail'
     end
 
     def jpeg?
       # want this for HTML5 video tag poster attribute, it's a full-size screenshot of the video
-      params[:file] == 'jpeg' ? true : false
+      params[:file] == 'jpeg'
     end
 
     def video?
       # video "previews"
-      params[:file] == 'webm' || params[:file] == 'mp4' ? true : false
+      params[:file] == 'webm' || params[:file] == 'mp4'
     end
 
     def sound?
       # sound "previews"
-      params[:file] == 'mp3' || params[:file] == 'ogg' ? true : false
+      params[:file] == 'mp3' || params[:file] == 'ogg'
     end
 
     def transcript?
-      params[:file] == 'vtt' ? true : false
+      params[:file] == 'vtt'
     end
   end
 end

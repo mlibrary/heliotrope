@@ -27,10 +27,17 @@ RSpec.describe Hyrax::DownloadsController, type: :controller do
                               user: user,
                               allow_download: 'no',
                               content: File.open(File.join(fixture_path, 'csv', 'miranda.jpg'))) }
+      let(:platform_admin) { create(:platform_admin) }
 
       it "shows the unauthorized message" do
         get :show, params: { id: file_set.id, use_route: 'downloads' }
         expect(response).to have_http_status(401)
+      end
+      it "allows platform admin to have the file anyway" do
+        sign_in platform_admin
+        get :show, params: { id: file_set.id, use_route: 'downloads' }
+        expect(response).to have_http_status(200)
+        sign_out platform_admin
       end
     end
 
