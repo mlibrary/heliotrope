@@ -105,11 +105,11 @@ module Import
         message += missing_fields_errors.empty? ? '' : "\nmissing required fields: \n" + missing_fields_errors.join(', ')
         message += controlled_vocab_errors.empty? ? '' : "\nunacceptable values for: \n" + controlled_vocab_errors.join(', ')
         message += date_errors.empty? ? '' : "\nthese dates cannot be padded to a YYYY-MM-DD value and will be discarded: \n" + date_errors.join(', ')
-        hide_errors(message, row_num, missing_fields_errors, controlled_vocab_errors, date_errors)
+        message = maybe_hide_errors(message, row_num, missing_fields_errors, controlled_vocab_errors, date_errors)
         errors[row_num] = message if message.present?
       end
 
-      def hide_errors(message, row_num, missing_fields_errors, controlled_vocab_errors, date_errors)
+      def maybe_hide_errors(message, row_num, missing_fields_errors, controlled_vocab_errors, date_errors)
         # silence error data for row 3, which we've been using for the cover
         if row_num == 3 || (missing_fields_errors.empty? && controlled_vocab_errors.empty? && date_errors.empty?)
           ''
