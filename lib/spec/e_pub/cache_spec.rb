@@ -82,9 +82,16 @@ RSpec.describe EPub::Cache do
 
   describe '#publication' do
     subject { described_class.publication(id) }
+    let(:validator) { double("validator") }
 
     before do
       allow(Dir).to receive(:exist?).with(EPubsService.epub_path(id)).and_return(cached)
+
+      allow(EPub::Validator).to receive(:from).and_return(validator)
+      allow(validator).to receive(:id).and_return(noid)
+      allow(validator).to receive(:content_file).and_return(true)
+      allow(validator).to receive(:content).and_return(true)
+      allow(validator).to receive(:toc).and_return(true)
     end
 
     context 'non noid' do

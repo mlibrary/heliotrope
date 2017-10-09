@@ -3,7 +3,7 @@
 module EPub
   class PublicationNullObject < Publication
     private_class_method :new
-    attr_reader :id, :container, :content_file, :content_dir, :content, :epub_path, :toc
+    attr_reader :id, :content_file, :content, :toc
 
     # Instance Methods
 
@@ -23,6 +23,9 @@ module EPub
 
       def initialize
         @id = 'epub_null'
+        @content_file = "empty"
+        @content = Nokogiri::XML(nil)
+        @toc = Nokogiri::XML(nil)
       end
   end
 end

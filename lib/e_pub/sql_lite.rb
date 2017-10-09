@@ -8,7 +8,7 @@ module EPub
     def self.from(epub_publication)
       return null_object unless epub_publication.is_a?(EPub::Publication)
 
-      db = SQLite3::Database.new File.join(epub_publication.epub_path, "#{epub_publication.id}.db")
+      db = SQLite3::Database.new File.join(EPubsService.epub_path(epub_publication.id), "#{epub_publication.id}.db")
       new(epub_publication, db)
     rescue StandardError => e
       ::EPub.logger.info("SqlLite.from(#{epub_publication} raised #{e}")
