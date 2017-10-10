@@ -129,6 +129,23 @@ module Hyrax
       embed_url(hdl: HandleService.handle(self))
     end
 
+    def embed_fulcrum_logo_title
+      # a number of titles have double quotes in/around them, but we need the hover-over title itself to demarcate
+      # the asset title. Given that italicization has already been lost in the TitlePresenter, I think removing all
+      # double quotes and re-quoting the whole "Fulcrum title" is the best solution
+      'View "' + page_title.delete('"') + '" on Fulcrum'
+    end
+
+    def embed_fulcrum_logo_link(protocol, host_with_port)
+      return citable_link if id.blank?
+      if (Rails.env.production? && host_with_port.include?('heliotrope')) || Rails.env.development?
+        protocol + host_with_port + '/concern/file_sets/' + id
+      else
+        # actual production and test
+        citable_link
+      end
+    end
+
     def responsive_embed_code
       <<~END
         <div style='width:auto; page-break-inside:avoid; -webkit-column-break-inside:avoid; break-inside:avoid; max-width:#{embed_width}px; margin:auto'>

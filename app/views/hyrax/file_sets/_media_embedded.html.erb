@@ -1,4 +1,13 @@
 <figure title="<%= @presenter.alt_text.first %>">
+  <%# note that the fulcrum-embed-link hover display relies on it being the first child of <figure> %>
+  <div class="fulcrum-embed-link">
+    <%# note embed_fulcrum_logo_title is double-quoted, <base target="_blank"> in embedded.html.erb doesn't work here %>
+    <a href="<%= @presenter.embed_fulcrum_logo_link(request.protocol, request.host_with_port) %>"
+       title='<%= @presenter.embed_fulcrum_logo_title %>'
+       target="_blank">
+      <%= image_tag "fulcrum-white-50px.png", class: 'logo', alt: 'Fulcrum logo' %>
+    </a>
+  </div>
   <% if @presenter.image? %>
       <% riiif_url = "/image-service/#{@presenter.id}/info.json" %>
       <div id="image"></div>
