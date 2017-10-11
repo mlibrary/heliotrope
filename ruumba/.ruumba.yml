@@ -2,17 +2,29 @@ AllCops:
   TargetRubyVersion:
     2.3.1
 
+
+# These *must* stay "false" because they will never
+# work with ruumba:
+# https://github.com/ericqweinstein/ruumba#fix-paths-and-unapplicable-cops
+# begin unapplicable cops
+Style/FrozenStringLiteralComment:
+  Enabled: false
 Layout/AlignHash:
   Enabled: false
 Layout/AlignParameters:
   Enabled: false
+Layout/IndentationWidth:
+  Enabled: false
+Layout/TrailingBlankLines:
+  Enabled: false
+# end unapplicable cops
+
+
 Layout/ClosingParenthesisIndentation:
   Enabled: false
 Layout/ExtraSpacing:
   Enabled: false
 Layout/FirstParameterIndentation:
-  Enabled: false
-Layout/IndentationWidth:
   Enabled: false
 Layout/LeadingCommentSpace:
   Enabled: false
@@ -23,8 +35,6 @@ Layout/SpaceAroundOperators:
 Layout/SpaceInsideHashLiteralBraces:
   Enabled: false
 Layout/SpaceInsideStringInterpolation:
-  Enabled: false
-Layout/TrailingBlankLines:
   Enabled: false
 
 
