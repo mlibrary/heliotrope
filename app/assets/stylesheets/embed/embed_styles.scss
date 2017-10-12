@@ -63,3 +63,40 @@ html {
     width: 100% !important;
   }
 }
+
+.fulcrum-embed-link {
+  position: absolute;
+  top: 0;
+  right: 0;
+  float: right;
+  width: 6%;
+  min-width: 60px;
+  height: auto;
+  // Able Player uses some extremely high z-indices
+  z-index: 60000;
+  padding: 3px;
+  margin: 0;
+  font-size: 11px;
+  pointer-events: auto;
+  box-shadow: none;
+  // hide until hover
+  -webkit-opacity: 0;
+  -moz-opacity: 0;
+  opacity: 0;
+  -webkit-transition: all 2s ease;
+  -moz-transition: all 2s ease;
+  -ms-transition: all 2s ease;
+  -o-transition: all 2s ease;
+  transition: all 2s ease;
+  .logo {
+    width: 100%;
+    height: 100%;
+  }
+}
+
+figure:hover > div:nth-child(1), figure:active > div:nth-child(1) {
+  // show on hover
+  -webkit-opacity: 1;
+  -moz-opacity: 1;
+  opacity: 1;
+}
