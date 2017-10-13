@@ -15,15 +15,20 @@
           var map, layer, timer;
 
           $(document).ready(function() {
-              setupLeafletMap();
+              // give half a second for resize to take over
+              throttleLeafletMapSetup(500);
           });
 
           $(window).resize(function() {
-              clearTimeout (timer);
-              timer = setTimeout(setupLeafletMap, 150);
+              throttleLeafletMapSetup(250);
           });
 
-          var setupLeafletMap = function() {
+          function throttleLeafletMapSetup(milliseconds) {
+              clearTimeout (timer);
+              timer = setTimeout(setupLeafletMap, milliseconds);
+          };
+
+          function setupLeafletMap() {
               if (map != undefined) { map.off(); map.remove(); }
               map = L.map('image', {
                   center: [0, 0],
