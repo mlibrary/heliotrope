@@ -3,6 +3,7 @@
 [![Build Status](https://travis-ci.org/mlibrary/heliotrope.svg?branch=master)](https://travis-ci.org/mlibrary/heliotrope)
 [![Coverage Status](https://coveralls.io/repos/github/mlibrary/heliotrope/badge.svg?branch=master)](https://coveralls.io/github/mlibrary/heliotrope?branch=master)
 [![Stories in Ready](https://badge.waffle.io/mlibrary/heliotrope.png?label=ready&title=Ready)](https://waffle.io/mlibrary/heliotrope)
+[![Floobits Status](https://floobits.com/gkostin/heliotrope.svg)](https://floobits.com/gkostin/heliotrope/redirect)
 
 [Samvera](https://wiki.duraspace.org/display/samvera/Samvera) based digital publishing platform built by the [University of Michigan Library](https://www.lib.umich.edu/)
 
