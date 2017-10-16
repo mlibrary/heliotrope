@@ -1,16 +1,37 @@
-<% if Hyrax.config.display_media_download_link? && file_set.allow_download? %>
-    <%= link_to hyrax.download_path(file_set), target: "_new", title: "Download the full-sized PDF" do %>
-        <figure>
-            <%= image_tag thumbnail_url(file_set),
-                          class: "img-responsive",
-                          alt: "Download the full-sized PDF of #{file_set.to_s}" %>
-            <figcaption>Download the full-sized PDF</figcaption>
-        </figure>
+<% if file_set.use_glyphicon? %>
+  <% if Hyrax.config.display_media_download_link? && file_set.allow_download? %>
+    <%= link_to hyrax.download_path(file_set), target: "_new", title: "Download this PDF" do %>
+      <figure>
+        <span class="<%= file_set.glyphicon_type %> asset-page-glyphicon"
+              aria-hidden="true"
+              alt='Download the PDF of "<%= file_set.page_title.delete('"') %>"'>
+        </span>
+        <figcaption>Download this PDF</figcaption>
+      </figure>
     <% end %>
-<% else %>
+  <% else %>
     <figure>
-        <%= image_tag thumbnail_url(file_set),
-                      class: "img-responsive",
-                      alt: "Thumbnail of #{file_set.to_s}" %>
+      <span class="<%= file_set.glyphicon_type %> asset-page-glyphicon"
+            aria-hidden="true"
+            alt="">
+      </span>
     </figure>
+  <% end %>
+<% else %>
+  <% if Hyrax.config.display_media_download_link? && file_set.allow_download? %>
+    <%= link_to hyrax.download_path(file_set), target: "_new", title: "Download this PDF" do %>
+      <figure>
+        <%= image_tag thumbnail_url(file_set),
+                      class: "img-responsive asset-page-image",
+                      alt: 'Download the PDF of "' +  file_set.page_title.delete('"') + '"' %>
+        <figcaption>Download this PDF</figcaption>
+      </figure>
+    <% end %>
+  <% else %>
+    <figure>
+      <%= image_tag thumbnail_url(file_set),
+                    class: "img-responsive asset-page-image",
+                    alt: 'Thumbnail of "' + file_set.page_title.delete('"') + '"' %>
+    </figure>
+  <% end %>
 <% end %>

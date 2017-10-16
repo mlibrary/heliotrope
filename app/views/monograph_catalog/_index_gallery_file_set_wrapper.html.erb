@@ -1,7 +1,8 @@
+<% fs_presenter = Hyrax::FileSetPresenter.new(document, nil, nil) %>
 <div class="document col-xs-6 col-md-3">
   <div class="thumbnail">
-    <% if document.external_resource == 'yes' %>
-      <% icon_string = '<span class="glyphicon ' + glyphicon_type(document.resource_type) + ' external-resource-icon" aria-hidden="true"></span>' %>
+    <% if fs_presenter.use_glyphicon? %>
+      <% icon_string = '<span class="' + fs_presenter.glyphicon_type + ' file-set-glyphicon" aria-hidden="true"></span>' %>
       <% tn = render_thumbnail_tag(document, {}, :counter => document_counter_with_offset(document_counter)) %>
       <%= tn.gsub(/<img.*>/, icon_string + '<br/>').html_safe %>
     <% else %>

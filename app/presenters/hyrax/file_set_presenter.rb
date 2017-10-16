@@ -254,5 +254,38 @@ module Hyrax
       raise "FileSet #{id} original file is nil." if file.nil?
       file
     end
+
+    def thumbnail_path
+      solr_document['thumbnail_path_ss']
+    end
+
+    def glyphicon_type
+      return 'glyphicon glyphicon-file' if pdf? || resource_type.blank?
+      glyphicon_by_resource_type
+    end
+
+    def glyphicon_by_resource_type
+      case resource_type.downcase
+      when 'text'
+        'glyphicon glyphicon-file'
+      when 'image'
+        'glyphicon glyphicon-picture'
+      when 'video'
+        'glyphicon glyphicon-film'
+      when 'audio'
+        'glyphicon glyphicon-volume-up'
+      else
+        'glyphicon glyphicon-file'
+      end
+    end
+
+    def use_glyphicon?
+      # If the thumbnail_path in Solr points to the assets directory, it is using a Hyrax default.
+      # aside: Much of the thumbnail behavior can be examined by reading this page and its links to Hyrax code:
+      # https://github.com/samvera/hyrax/wiki/How-Thumbnails-Get-rendered
+      # Anyway, this default (set with a call to ActionController::Base.helpers.image_path) can't be styled per...
+      # publisher so instead we'll use resource-type-specific glyphicons in "publisher branding" colors
+      mime_type.blank? || external_resource == 'yes' || thumbnail_path.start_with?('/assets/')
+    end
   end
 end

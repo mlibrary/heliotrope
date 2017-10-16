@@ -233,4 +233,81 @@ RSpec.describe Hyrax::FileSetPresenter do
       it { is_expected.to eq file }
     end
   end
+
+  describe '#glyphicon_type' do
+    subject { presenter.glyphicon_type }
+
+    let(:fileset_doc) { SolrDocument.new(id: 'fileset_id',
+                                         has_model_ssim: ['FileSet'],
+                                         mime_type_ssi: mime_type,
+                                         resource_type_tesim: resource_type)
+    }
+
+    context 'pdf file' do
+      let(:mime_type) { 'application/pdf' }
+      let(:resource_type) { nil }
+      it { is_expected.to be 'glyphicon glyphicon-file' }
+    end
+    context 'text resource_type' do
+      let(:mime_type) { nil }
+      let(:resource_type) { ['text'] }
+      it { is_expected.to be 'glyphicon glyphicon-file' }
+    end
+    context 'image resource_type' do
+      let(:mime_type) { nil }
+      let(:resource_type) { ['image'] }
+      it { is_expected.to be 'glyphicon glyphicon-picture' }
+    end
+    context 'video resource_type' do
+      let(:mime_type) { nil }
+      let(:resource_type) { ['video'] }
+      it { is_expected.to be 'glyphicon glyphicon-film' }
+    end
+    context 'audio resource_type' do
+      let(:mime_type) { nil }
+      let(:resource_type) { ['audio'] }
+      it { is_expected.to be 'glyphicon glyphicon-volume-up' }
+    end
+    context 'mystery file' do
+      let(:mime_type) { nil }
+      let(:resource_type) { ['blurb'] }
+      it { is_expected.to be 'glyphicon glyphicon-file' }
+    end
+  end
+
+  describe '#use_glyphicon?' do
+    subject { presenter.use_glyphicon? }
+
+    let(:fileset_doc) { SolrDocument.new(id: 'fileset_id',
+                                         has_model_ssim: ['FileSet'],
+                                         mime_type_ssi: mime_type,
+                                         external_resource_ssim: external_resource,
+                                         thumbnail_path_ss: thumbnail_path)
+    }
+
+    context 'file not using a thumbnail derivative' do
+      let(:mime_type) { 'application/pdf' }
+      let(:external_resource) { 'no' }
+      let(:thumbnail_path) { ActionController::Base.helpers.image_path 'default.png' }
+      it { is_expected.to be true }
+    end
+    context 'file using a thumbnail derivative' do
+      let(:mime_type) { 'application/pdf' }
+      let(:external_resource) { 'no' }
+      let(:thumbnail_path) { Hyrax::Engine.routes.url_helpers.download_path('fileset_id', file: 'thumbnail') }
+      it { is_expected.to be false }
+    end
+    context 'external resource' do
+      let(:mime_type) { nil }
+      let(:external_resource) { 'yes' }
+      let(:thumbnail_path) { nil }
+      it { is_expected.to be true }
+    end
+    context 'mystery file' do
+      let(:mime_type) { nil }
+      let(:external_resource) { nil }
+      let(:thumbnail_path) { nil }
+      it { is_expected.to be true }
+    end
+  end
 end
