@@ -33,7 +33,7 @@ module Import
         row.each { |_, value| value&.strip! }
 
         if missing_file_name?(row)
-          errors[row_num] = "File name can only be missing for external resources - row will be skipped"
+          attrs['row_errors'][row_num] = "File name can only be missing for external resources - row will be skipped"
           row_num += 1
           next
         end
