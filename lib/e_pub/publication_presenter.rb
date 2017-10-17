@@ -12,6 +12,10 @@ module EPub
       @publication.chapters.map { |chapter| chapter.presenter if chapter.title? }.compact
     end
 
+    def content_dir
+      File.dirname(@publication.content_file) || ""
+    end
+
     private
 
       def initialize(publication = Publication.null_object)
