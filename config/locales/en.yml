@@ -16,6 +16,16 @@
 #
 # This would use the information in config/locales/es.yml.
 #
+# The following keys must be escaped otherwise they will not be retrieved by
+# the default I18n backend:
+#
+# true, false, on, off, yes, no
+#
+# Instead, surround them with single quotes.
+#
+# en:
+#   'true': 'foo'
+#
 # To learn more, please read the Rails Internationalization guide
 # available at http://guides.rubyonrails.org/i18n.html.
 
@@ -54,6 +64,7 @@ en:
   creator_family_name: "Primary Creator (family name)"
   creator_full_name: "Author"
   creator_given_name: "Primary Creator (given name)"
+  creator_role: "Creator Role"
   credit_line: "Credit Line"
   date_created: "Date Created"
   date_published: "Date Published"
@@ -77,6 +88,7 @@ en:
   exclusive_to_platform: "Exclusive to Platform?"
   ext_url_doi_or_handle: "External URL/DOI"
   external_resource: "Externally-Hosted Resource?"
+  file_format: "File Format"
   file_size: "File Size (bytes)"
   hdl: "Handle"
   helpers:
@@ -90,10 +102,12 @@ en:
   isbn_ebook: "ISBN (E-Book)"
   isbn_paper: "ISBN (Paper)"
   keywords: "Keywords"
+  last_modified: "Last Modified"
   lease_expiration_date: "Lease Expiration Date"
   manage_assets:
     monograph_link_text: "Organize Assets"
     section_link_text: "Organize Assets"
+  mime_type: "Mime Type"
   monograph_catalog:
     index:
       buy: "Buy %{title}"
@@ -109,6 +123,7 @@ en:
       read_book: "Read Book"
       reindex: "Reindex"
       reindexing: "Reindexing %{title}"
+  original_checksum: "Original Checksum"
   permissions_expiration_date: "Permissions Expiration Date"
   press: "Publisher"
   press_catalog:
@@ -123,6 +138,15 @@ en:
   resource_type: "Resource Type"
   rights_granted: "Rights Granted"
   rights_granted_creative_commons: "Rights Granted - Creative Commons"
+  role:
+    admin: "Admin"
+    editor: "Editor"
+  roles:
+    index:
+      email: "Email"
+      role: "Role"
+      actions: "Actions"
+  sample_rate: "Sample Rate"
   section: "Section"
   section_title: "Related Section"
   section_titles: "Section Titles"

@@ -11,7 +11,7 @@ RSpec.describe SubBrand, type: :model do
 
     it 'must belong to a press' do
       expect(sub_brand.valid?).to eq false
-      expect(sub_brand.errors.messages[:press]).to eq ["can't be blank"]
+      expect(sub_brand.errors.messages[:press]).to eq ["must exist", "can't be blank"]
     end
 
     it 'must have a title' do

@@ -3,9 +3,9 @@ cache: bundler
 sudo: required
 bundler_args: --without production
 before_script:
-  - bundle exec bin/setup
+  - bin/bundle exec bin/setup
 rvm:
-  - 2.3.0
+  - 2.3.1
 jdk:
   - oraclejdk8
 

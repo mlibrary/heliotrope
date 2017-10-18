@@ -1,5 +1,9 @@
 en:
   hyrax:
+    account_name: "Fulcrum"
+    monographs:
+      show:
+        last_modified: "Last Modified"
     visibility:
       private:
         text: "Draft"

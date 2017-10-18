@@ -2,7 +2,9 @@
 
 class Role < ApplicationRecord
   ROLES = %w[admin editor].freeze
-  belongs_to :resource, polymorphic: true
+  # A platform_admin has a role of "admin" with a resource of "nil" so
+  # we need belongs_to: resource to be optional. In rails 5 this defaults to false.
+  belongs_to :resource, polymorphic: true, optional: true
   belongs_to :user
   validates :role, inclusion: { in: ROLES }
   validates :user_key, presence: true

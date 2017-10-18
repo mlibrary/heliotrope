@@ -77,23 +77,20 @@ Rails.application.routes.draw do
     end
   end
 
-  get '/robots.txt' => 'robots#robots'
-
-  resources :presses, only: %i[new create edit update]
   get '/presses' => 'presses#index'
-
-  get ':subdomain', controller: :press_catalog, action: :index, as: :press_catalog
-  get ':subdomain/facet', controller: :press_catalog, action: :facet
-
+  resources :presses, only: %i[new create edit update]
   resources :presses, path: '/', only: %i[index edit] do
     resources :sub_brands, only: %i[new create show edit update]
-
     resources :roles, path: 'users', only: %i[index create destroy] do
       collection do
         patch :update_all
       end
     end
   end
+
+  get '/robots.txt' => 'robots#robots'
+  get ':subdomain', controller: :press_catalog, action: :index, as: :press_catalog
+  get ':subdomain/facet', controller: :press_catalog, action: :facet
 
   # TODO: Used in dev only? If apache is in front I don't think this ever happens?
   # Might fix #379 but need to check

@@ -1,4 +1,4 @@
-class AddParentToSubBrands < ActiveRecord::Migration
+class AddParentToSubBrands < ActiveRecord::Migration[4.2]
   # Adds a foreign key to sub_brands from itself.
   # Which is weird.  Consider not being weird.
   def up

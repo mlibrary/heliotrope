@@ -25,6 +25,7 @@ RSpec.describe EPubsServiceJob, type: :job do
 
   it 'logs EPubsServiceError' do
     allow(EPubsService).to receive(:cache_epub).and_raise(EPubsServiceError, "message")
+    allow(Rails.logger).to receive(:info)
     expect(Rails.logger).to receive(:info).with("message")
     perform_enqueued_jobs { job }
   end
