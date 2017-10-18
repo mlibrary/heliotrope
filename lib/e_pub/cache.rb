@@ -1,22 +1,33 @@
 # frozen_string_literal: true
 
+require 'zip'
+
 module EPub
   class Cache
     private_class_method :new
 
-    def self.cache(id, _epub_zip)
+    def self.cache(id, epub)
       return unless ::Valid.noid?(id)
       purge(id) if cached?(id)
-      EPubsService.cache_epub(id)
+      begin
+        Zip::File.open(epub) do |zip_file|
+          zip_file.each do |entry|
+            ::EPub.make_path_entry(id, entry.name)
+            entry.extract(::EPub.path_entry(id, entry.name)) # unless File.exist?(::EPub.path_entry(id, entry.name))
+          end
+        end
+      rescue Zip::Error
+        raise "EPUB #{id} is corrupt."
+      end
     end
 
     def self.cached?(id)
       return false unless ::Valid.noid?(id)
-      Dir.exist?(EPubsService.epub_path(id))
+      Dir.exist?(::EPub.path(id))
     end
 
     def self.clear
-      EPubsService.clear_cache
+      FileUtils.rm_rf(Dir.glob(File.join(::EPub.root, "*"))) if Dir.exist?(::EPub.root)
     end
 
     def self.publication(id)
@@ -25,13 +36,9 @@ module EPub
       Publication.from(id)
     end
 
-    def self.prune(_time_delta = 1.day)
-      EPubsService.prune_cache
-    end
-
     def self.purge(id)
       return unless ::Valid.noid?(id)
-      EPubsService.prune_cache_epub(id)
+      FileUtils.rm_rf(::EPub.path(id)) if Dir.exist?(::EPub.path(id))
     end
   end
 end

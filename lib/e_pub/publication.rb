@@ -7,22 +7,19 @@ module EPub
 
     # Class Methods
 
-    def self.clear_cache; end
+    def self.clear_cache
+      Cache.clear
+    end
 
-    def self.from(epub, options = {})
+    def self.from(epub, options = {}) # rubocop:disable Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity
       return null_object if epub.blank?
-      noid = if epub.is_a?(Hash)
-               epub[:id]
-             else
-               epub
-             end
+      noid = epub.is_a?(Hash) ? epub[:id] : epub
       return null_object unless Valid.noid?(noid)
-
-      EPubsService.open(noid) # cache publication if it isn't already
-
+      file = epub[:file] if epub.is_a?(Hash)
+      Cache.cache(noid, file) if file.present?
+      return null_object unless Cache.cached?(noid)
       valid_epub = Validator.from(noid)
       return null_object if valid_epub.is_a?(ValidatorNullObject)
-
       new(valid_epub)
     rescue StandardError => e
       ::EPub.logger.info("Publication.from(#{epub}, #{options}) raised #{e}")
@@ -48,7 +45,7 @@ module EPub
         content.xpath("//manifest/item").each do |item|
           next unless item.attributes['id'].text == idref.text
 
-          doc = Nokogiri::XML(File.open(File.join(EPubsService.epub_path(id), File.dirname(content_file), item.attributes['href'].text)))
+          doc = Nokogiri::XML(File.open(File.join(::EPub.path(id), File.dirname(content_file), item.attributes['href'].text)))
           doc.remove_namespaces!
 
           chapters.push(Chapter.send(:new,
@@ -66,13 +63,18 @@ module EPub
       PublicationPresenter.send(:new, self)
     end
 
-    def purge; end
+    def purge
+      Cache.purge(id)
+    end
 
     def read(file_entry = "META-INF/container.xml")
       return Publication.null_object.read(file_entry) unless Cache.cached?(id)
-      EPubsService.read(id, file_entry)
+      entry_file = ::EPub.path_entry(id, file_entry)
+      return Publication.null_object.read(file_entry) unless File.exist?(entry_file)
+      FileUtils.touch(::EPub.path(id)) # Reset the time to live for the entire cached EPUB
+      File.read(entry_file)
     rescue StandardError => e
-      ::EPub.logger.info("Publication.read(#{file_entry})  in publication #{id} raised #{e}")
+      ::EPub.logger.info("Publication.read(#{file_entry}) in publication #{id} raised #{e}") # at: #{e.backtrace.join("\n")}")
       Publication.null_object.read(file_entry)
     end
 

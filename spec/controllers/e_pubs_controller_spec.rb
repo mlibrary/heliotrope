@@ -114,9 +114,8 @@ RSpec.describe EPubsController, type: :controller do
 
       context 'tombstone' do
         before do
-          FileUtils.rm_rf(Rails.root.join("tmp", "epubs", file_set.id))
+          EPub::Cache.purge(file_set.id)
           file_set.destroy!
-          EPubsService.clear_cache
           get :file, params: { id: file_set.id, file: 'META-INF/container', format: 'xml' }
         end
 
@@ -139,15 +138,7 @@ RSpec.describe EPubsController, type: :controller do
   end
 
   describe "GET #search" do
-    let(:file_set) { create(:file_set, content: File.open(File.join(fixture_path, 'moby-dick.epub'))) }
-
-    before do
-      EPubsServiceJob.perform_now(file_set.id)
-    end
-
-    after do
-      EPubsService.clear_cache
-    end
+    let(:file_set) { create(:file_set, id: '999999999', content: File.open(File.join(fixture_path, 'moby-dick.epub'))) }
 
     context 'finds case insensitive search results' do
       before { get :search, params: { id: file_set.id, q: "White Whale" } }
