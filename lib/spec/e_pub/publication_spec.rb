@@ -6,10 +6,11 @@ RSpec.describe EPub::Publication do
   describe "without a test epub" do
     let(:noid) { 'validnoid' }
     let(:non_noid) { 'invalidnoid' }
+    let(:epub) { double("epub") }
     let(:validator) { double("validator") }
 
     before do
-      allow(EPubsService).to receive(:open).with(noid).and_return(nil)
+      allow(EPub::Cache).to receive(:cache).with(noid, epub).and_return(nil)
       allow(EPub::Cache).to receive(:cached?).with(noid).and_return(true)
 
       allow(EPub::Validator).to receive(:from).and_return(validator)
@@ -128,23 +129,27 @@ RSpec.describe EPub::Publication do
     describe '#read' do
       subject { described_class.from(noid).read(file_entry) }
 
+      let(:path) { double("path") }
+      let(:path_entry) { double("path_entry") }
       let(:file_entry) { double("file_entry") }
       let(:text) { double("text") }
 
       before do
-        allow(EPubsService).to receive(:read).with(noid, file_entry).and_return(text)
+        allow(File).to receive(:exist?).with(path_entry).and_return(true)
+        allow(FileUtils).to receive(:touch).with(path)
+        allow(File).to receive(:read).with(path_entry).and_return(text)
+        allow(::EPub).to receive(:path_entry).with(noid, file_entry).and_return(path_entry)
+        allow(::EPub).to receive(:path).with(noid).and_return(path)
       end
 
-      context 'epubs service returns text' do
-        it 'returns text' do
-          is_expected.to eq text
-        end
+      context 'returns text' do
+        it { is_expected.to eq text }
       end
 
-      context 'epubs service raises standard error' do
+      context 'standard error' do
         before do
-          allow(EPubsService).to receive(:read).with(noid, file_entry).and_raise(StandardError)
           @message = 'message'
+          allow(File).to receive(:read).with(path_entry).and_raise("StandardError")
           allow(EPub.logger).to receive(:info).with(any_args) { |value| @message = value }
         end
 
@@ -152,7 +157,7 @@ RSpec.describe EPub::Publication do
           is_expected.not_to eq text
           is_expected.to eq described_class.null_object.read(file_entry)
           expect(@message).not_to eq 'message'
-          expect(@message).to eq 'Publication.read(#[Double "file_entry"])  in publication validnoid raised StandardError'
+          expect(@message).to eq 'Publication.read(#[Double "file_entry"]) in publication validnoid raised StandardError'
         end
       end
     end
@@ -198,7 +203,7 @@ RSpec.describe EPub::Publication do
     before do
       FileUtils.mkdir_p "../tmp/epubs" unless Dir.exist? "../tmp/epubs"
       FileUtils.cp_r "spec/fixtures/fake_epub01_unpacked", "../tmp/epubs/#{id}"
-      allow(EPubsService).to receive(:epub_path).and_return("../tmp/epubs/#{id}")
+      allow(EPub).to receive(:path).with(id).and_return("../tmp/epubs/#{id}")
       allow(FactoryService).to receive(:e_pub_publication_from).with(id).and_return(described_class.from(id: id, epub: nil))
     end
 

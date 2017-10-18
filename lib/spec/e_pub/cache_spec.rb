@@ -3,12 +3,10 @@
 RSpec.describe EPub::Cache do
   let(:noid) { 'validnoid' }
   let(:non_noid) { 'invalidnoid' }
-  let(:id) { double("id") }
-  let(:path) { double("path") }
+  let(:id) { double('id') }
 
-  before do
-    allow(EPubsService).to receive(:epub_path).with(id).and_return(path)
-  end
+  before { described_class.cache(id, './spec/fixtures/fake_epub01.epub') }
+  after { described_class.clear }
 
   describe '#new' do
     it 'private_class_method' do
@@ -17,136 +15,91 @@ RSpec.describe EPub::Cache do
   end
 
   describe '#cache' do
-    subject { described_class.cache(id, nil) }
-
-    before do
-      @called = false
-      allow(EPubsService).to receive(:cache_epub).with(id) { @called = true }
-      allow(Dir).to receive(:exist?).with(EPubsService.epub_path(id)).and_return(false)
-      subject
-    end
+    subject { described_class.cache(id, './spec/fixtures/fake_epub01.epub') }
 
     context 'non noid' do
       let(:id) { non_noid }
-      it { expect(@called).to be false }
+      it do
+        expect(described_class.cached?(id)).to be false
+        subject
+        expect(described_class.cached?(id)).to be false
+      end
     end
     context 'noid' do
       let(:id) { noid }
-      it { expect(@called).to be true }
+      it do
+        expect(described_class.cached?(id)).to be true
+        subject
+        expect(described_class.cached?(id)).to be true
+      end
     end
   end
 
   describe '#cached?' do
     subject { described_class.cached?(id) }
 
-    before do
-      allow(Dir).to receive(:exist?).with(EPubsService.epub_path(id)).and_return(cached)
-    end
-
     context 'non noid' do
       let(:id) { non_noid }
-
-      context 'not cached' do
-        let(:cached) { false }
-        it { is_expected.to be false }
-      end
-      context 'cached' do
-        let(:cached) { true }
-        it { is_expected.to be false }
-      end
+      it { is_expected.to be false }
     end
     context 'noid' do
       let(:id) { noid }
-      context 'not cached' do
-        let(:cached) { false }
-        it { is_expected.to be false }
-      end
-      context 'cached' do
-        let(:cached) { true }
-        it { is_expected.to be true }
-      end
+      it { is_expected.to be true }
     end
   end
 
   describe '#clear' do
     subject { described_class.clear }
 
-    before do
-      @called = false
-      allow(EPubsService).to receive(:clear_cache) { @called = true }
-      subject
+    context 'non noid' do
+      let(:id) { non_noid }
+      it do
+        expect(described_class.cached?(id)).to be false
+        subject
+        expect(described_class.cached?(id)).to be false
+      end
     end
-
-    it { expect(@called).to be true }
+    context 'noid' do
+      let(:id) { noid }
+      it do
+        expect(described_class.cached?(id)).to be true
+        subject
+        expect(described_class.cached?(id)).to be false
+      end
+    end
   end
 
   describe '#publication' do
     subject { described_class.publication(id) }
-    let(:validator) { double("validator") }
-
-    before do
-      allow(Dir).to receive(:exist?).with(EPubsService.epub_path(id)).and_return(cached)
-
-      allow(EPub::Validator).to receive(:from).and_return(validator)
-      allow(validator).to receive(:id).and_return(noid)
-      allow(validator).to receive(:content_file).and_return(true)
-      allow(validator).to receive(:content).and_return(true)
-      allow(validator).to receive(:toc).and_return(true)
-    end
 
     context 'non noid' do
       let(:id) { non_noid }
-      context 'not cached' do
-        let(:cached) { false }
-        it { is_expected.to be_an_instance_of(EPub::PublicationNullObject) }
-      end
-      context 'cached' do
-        let(:cached) { true }
-        it { is_expected.to be_an_instance_of(EPub::PublicationNullObject) }
-      end
+      it { is_expected.to be_an_instance_of(EPub::PublicationNullObject) }
     end
-
     context 'noid' do
       let(:id) { noid }
-      context 'not cached' do
-        let(:cached) { false }
-        it { is_expected.to be_an_instance_of(EPub::PublicationNullObject) }
-      end
-      context 'cached' do
-        let(:cached) { true }
-        it { is_expected.to be_an_instance_of(EPub::Publication) }
-      end
+      it { is_expected.to be_an_instance_of(EPub::Publication) }
     end
-  end
-
-  describe '#prune' do
-    subject { described_class.prune }
-
-    before do
-      @called = false
-      allow(EPubsService).to receive(:prune_cache) { @called = true }
-      subject
-    end
-
-    it { expect(@called).to be true }
   end
 
   describe '#purge' do
     subject { described_class.purge(id) }
 
-    before do
-      @called = false
-      allow(EPubsService).to receive(:prune_cache_epub).with(id) { @called = true }
-      subject
-    end
-
     context 'non noid' do
       let(:id) { non_noid }
-      it { expect(@called).to be false }
+      it do
+        expect(described_class.cached?(id)).to be false
+        subject
+        expect(described_class.cached?(id)).to be false
+      end
     end
     context 'noid' do
       let(:id) { noid }
-      it { expect(@called).to be true }
+      it do
+        expect(described_class.cached?(id)).to be true
+        subject
+        expect(described_class.cached?(id)).to be false
+      end
     end
   end
 end

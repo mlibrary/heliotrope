@@ -9,7 +9,7 @@ RSpec.describe EPub::Validator do
     before do
       FileUtils.mkdir_p "../tmp/epubs" unless Dir.exist? "../tmp/epubs"
       FileUtils.cp_r "spec/fixtures/fake_epub01_unpacked", "../tmp/epubs/#{id}"
-      allow(EPubsService).to receive(:epub_path).and_return("../tmp/epubs/#{id}")
+      allow(EPub).to receive(:path).with(id).and_return("../tmp/epubs/#{id}")
     end
 
     after do
@@ -48,7 +48,7 @@ RSpec.describe EPub::Validator do
 
   describe "with an invalid epub" do
     before do
-      allow(EPubsService).to receive(:epub_path).and_return("")
+      allow(EPub).to receive(:path).with(id).and_return("")
       allow(EPub.logger).to receive(:info).and_return(true)
     end
 

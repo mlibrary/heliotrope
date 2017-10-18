@@ -20,3 +20,9 @@ require 'active_support/dependencies'
 ActiveSupport::Dependencies.autoload_paths <<  File.expand_path("../../../app/services", __FILE__)
 # lib
 ActiveSupport::Dependencies.autoload_paths <<  File.expand_path("../../../lib", __FILE__)
+
+# Use this setup block to configure all options available in EPub.
+EPub.configure do |config|
+  # config.logger = Rails.logger
+  config.root = "../tmp/lib/spec/epubs"
+end

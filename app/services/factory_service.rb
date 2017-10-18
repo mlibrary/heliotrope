@@ -75,7 +75,7 @@ module FactoryService # rubocop:disable Metrics/ModuleLength
     @monitor.synchronize do
       @semaphores[id].synchronize do
         hash = @e_pub_publication_cache.delete(id)
-        hash[:publication].purge
+        hash[:publication].purge if hash.present?
       end
       @semaphores.delete(id)
     end
@@ -88,7 +88,7 @@ module FactoryService # rubocop:disable Metrics/ModuleLength
     @monitor.synchronize do
       @semaphores[id].synchronize do
         hash = @mcsv_manifest_cache.delete(id)
-        hash[:manifest].purge
+        hash[:manifest].purge if hash.present?
       end
       @semaphores.delete(id)
     end
@@ -150,7 +150,16 @@ module FactoryService # rubocop:disable Metrics/ModuleLength
 
     def self.e_pub_publication_from(id)
       presenter = Hyrax::FileSetPresenter.new(SolrDocument.new(FileSet.find(id).to_solr), nil, nil)
-      presenter.epub? ? EPub::Publication.from(id: id, epub: presenter.file) : EPub::Publication.null_object
+      return EPub::Publication.null_object unless presenter.epub?
+      file = Tempfile.new(id)
+      file.write(presenter.file.content.force_encoding("utf-8"))
+      file.close
+      publication = EPub::Publication.from(id: id, file: file.path)
+      return publication if publication.instance_of?(EPub::PublicationNullObject)
+      sql_lite = EPub::SqlLite.from(publication)
+      sql_lite.create_table
+      sql_lite.load_chapters
+      publication
     rescue StandardError => e
       Rails.logger.info("FactoryService.e_pub_publication_from(#{id}) raised #{e}")
       EPub::Publication.null_object

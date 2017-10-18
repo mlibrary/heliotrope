@@ -57,3 +57,9 @@ def stub_out_redis
   allow(ContentEventJob).to receive_messages(perform_later: nil, perform_now: nil)
   allow_any_instance_of(Hyrax::Actors::FileSetActor).to receive(:acquire_lock_for).and_yield
 end
+
+# Use this setup block to configure all options available in EPub.
+EPub.configure do |config|
+  # config.logger = Rails.logger
+  config.root = "./tmp/spec/epubs"
+end

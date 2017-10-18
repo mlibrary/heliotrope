@@ -7,8 +7,7 @@ class EPubsSearchService
   attr_reader :epub
 
   def initialize(id)
-    EPubsServiceJob.perform_now(id) unless File.directory? EPubsService.epub_path(id)
-    @epub = EPub::Publication.from(id)
+    @epub = FactoryService.e_pub_publication(id)
   end
 
   def find_selection(node, query)
@@ -46,7 +45,7 @@ class EPubsSearchService
     results[:search_results] = [] if db_results.length.positive?
 
     db_results.each do |chapter|
-      file = File.join(EPubsService.epub_path(@epub.id), File.dirname(@epub.content_file), chapter[:href])
+      file = File.join(EPub.path(@epub.id), File.dirname(@epub.content_file), chapter[:href])
       doc = Nokogiri::XML(File.open(file))
       doc.remove_namespaces!
 
