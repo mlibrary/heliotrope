@@ -18,6 +18,24 @@ RSpec.describe EPub::PublicationPresenter do
     end
   end
 
+  describe '#content_dir' do
+    subject { described_class.send(:new, publication).content_dir }
+    let(:content_file) { double("content_file") }
+
+    context "when a directory exists" do
+      before { allow(publication).to receive(:content_file).and_return("EPUB/content.opf") }
+      it "returns the directory" do
+        is_expected.to eq "EPUB"
+      end
+    end
+    context "when no directory exists" do
+      before { allow(publication).to receive(:content_file).and_return("content.opf") }
+      it "returns ." do
+        is_expected.to eq "."
+      end
+    end
+  end
+
   describe '#chapters' do
     subject { described_class.send(:new, publication).chapters }
     let(:n) { 4 }

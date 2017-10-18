@@ -12,6 +12,10 @@ module EPub
       @chapter.paragraphs.map(&:presenter)
     end
 
+    def href
+      @chapter.chapter_href
+    end
+
     def blurb
       text = ""
       @chapter.paragraphs.each do |p|

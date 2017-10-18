@@ -1,7 +1,21 @@
 # frozen_string_literal: true
 
 RSpec.describe EPub::ChapterPresenter do
-  let(:chapter) { double("chapter") }
+  let(:chapter_doc) do
+    <<-EOT
+    <html>
+      <head>
+        <title>Stuff about Things</title>
+      </head>
+      <body>
+        <p>Chapter 1</p>
+        <p>Human sacrifice, cats and dogs <i>living</i> together... <i>mass</i> hysteria!</p>
+        <p>The one grand stage where he enacted all his various parts so manifold, was his vice-bench; a long rude ponderous table furnished with several vices, of different sizes, and both of iron and of wood. At all times except when whales were alongside, this bench was securely lashed athwartships against the rear of the Try-works.</p>
+      </body>
+    </html>
+    EOT
+  end
+  let(:chapter) { EPub::Chapter.send(:new, '1', 'Chapter1.xhtml', 'The Title', "/6/4/2[Chapter1]", Nokogiri::XML(chapter_doc)) }
 
   describe '#new' do
     it 'private_class_method' do
@@ -11,32 +25,23 @@ RSpec.describe EPub::ChapterPresenter do
 
   describe '#title' do
     subject { described_class.send(:new, chapter).title }
-    let(:title) { double("title") }
-    before { allow(chapter).to receive(:title).and_return(title) }
     it 'returns the chapter title' do
-      is_expected.to eq title
+      is_expected.to eq "The Title"
+    end
+  end
+
+  describe '#href' do
+    subject { described_class.send(:new, chapter).href }
+    it 'returns the chapter href' do
+      is_expected.to eq 'Chapter1.xhtml'
     end
   end
 
   describe '#paragraphs' do
     subject { described_class.send(:new, chapter).paragraphs }
-    let(:n) { 4 }
-    let(:paragraphs) { [] }
-    let(:presenters) { [] }
-    before do
-      allow(chapter).to receive(:paragraphs).and_return(paragraphs)
-      n.times do |index|
-        paragraphs << double("paragraph#{index}")
-        presenters << double("presenter#{index}")
-        allow(paragraphs[index]).to receive(:presenter).and_return(presenters[index])
-      end
-    end
     it 'returns the chapter paragraph presenters' do
-      is_expected.to be_an_instance_of(Array)
-      expect(subject.size).to eq n
-      subject.each_with_index do |presenter, index|
-        expect(presenter).to eq presenters[index]
-      end
+      expect(subject.size).to eq 3
+      expect(subject).to all(be_an_instance_of(EPub::ParagraphPresenter))
     end
   end
 end
