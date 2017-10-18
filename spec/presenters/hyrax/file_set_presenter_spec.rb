@@ -62,6 +62,10 @@ RSpec.describe Hyrax::FileSetPresenter do
       let(:fileset_doc) { SolrDocument.new(id: 'fs', has_model_ssim: ['FileSet'], allow_download_ssim: 'yes') }
       it { expect(presenter.allow_download?).to be true }
     end
+    context 'external resource' do
+      let(:fileset_doc) { SolrDocument.new(id: 'fs', has_model_ssim: ['FileSet'], allow_download_ssim: 'yes', external_resource_ssim: 'yes') }
+      it { expect(presenter.allow_download?).to be false }
+    end
   end
 
   describe '#subdomain' do
