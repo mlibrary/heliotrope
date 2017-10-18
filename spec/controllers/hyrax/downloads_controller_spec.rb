@@ -5,20 +5,27 @@ require 'rails_helper'
 RSpec.describe Hyrax::DownloadsController, type: :controller do
   let(:user) { create(:user) }
 
-  before do
-    sign_in user
-  end
-
   describe "#show" do
     context "when allow_download is yes" do
       let(:file_set) { create(:file_set,
                               user: user,
                               allow_download: 'yes',
+                              read_groups: ["public"],
                               content: File.open(File.join(fixture_path, 'csv', 'miranda.jpg'))) }
 
-      it "sends the file" do
-        get :show, params: { id: file_set.id, use_route: 'downloads' }
-        expect(response.body).to eq file_set.original_file.content
+      context "and a user is logged in" do
+        before { sign_in user }
+        it "sends the file" do
+          get :show, params: { id: file_set.id, use_route: 'downloads' }
+          expect(response.body).to eq file_set.original_file.content
+        end
+      end
+
+      context "and the user is not logged in" do
+        it "sends the file" do
+          get :show, params: { id: file_set.id, use_route: 'downloads' }
+          expect(response.body).to eq file_set.original_file.content
+        end
       end
     end
 
@@ -26,24 +33,38 @@ RSpec.describe Hyrax::DownloadsController, type: :controller do
       let(:file_set) { create(:file_set,
                               user: user,
                               allow_download: 'no',
+                              read_groups: ["public"],
                               content: File.open(File.join(fixture_path, 'csv', 'miranda.jpg'))) }
-      let(:platform_admin) { create(:platform_admin) }
 
-      it "shows the unauthorized message" do
-        get :show, params: { id: file_set.id, use_route: 'downloads' }
-        expect(response).to have_http_status(401)
+      context "and the user is logged in" do
+        before { sign_in user }
+        it "shows the unauthorized message" do
+          get :show, params: { id: file_set.id, use_route: 'downloads' }
+          expect(response).to have_http_status(401)
+        end
       end
-      it "allows platform admin to have the file anyway" do
-        sign_in platform_admin
-        get :show, params: { id: file_set.id, use_route: 'downloads' }
-        expect(response).to have_http_status(200)
-        sign_out platform_admin
+
+      context "and the user is not logged in" do
+        it "shows the unauthorized message" do
+          get :show, params: { id: file_set.id, use_route: 'downloads' }
+          expect(response).to have_http_status(401)
+        end
+      end
+
+      context "and the user is logged in as a platform_admin" do
+        let(:platform_admin) { create(:platform_admin) }
+        before { sign_in platform_admin }
+        it "sends the file" do
+          get :show, params: { id: file_set.id, use_route: 'downloads' }
+          expect(response).to have_http_status(200)
+          expect(response.body).to eq file_set.original_file.content
+        end
       end
     end
 
     context "jpeg (for use as video poster attribute) derivative" do
       # allow_download is not relevant to derivative behavior
-      let(:file_set) { create(:file_set, user: user, allow_download: 'no') }
+      let(:file_set) { create(:file_set, user: user, allow_download: 'no', read_groups: ['public']) }
       let(:thumbnail_path) { Hyrax::DerivativePath.derivative_path_for_reference(file_set.id, 'thumbnail') }
       # the new 'jpeg' derivative meant for video 'poster' attribute
       let(:jpeg_path) { Hyrax::DerivativePath.derivative_path_for_reference(file_set.id, 'jpeg') }
