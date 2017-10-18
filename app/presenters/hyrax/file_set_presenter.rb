@@ -110,6 +110,7 @@ module Hyrax
     end
 
     def allow_download?
+      return false if external_resource?
       allow_download == 'yes'
     end
 
