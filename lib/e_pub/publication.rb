@@ -34,7 +34,7 @@ module EPub
 
     def chapter_title_from_toc(chapter_href)
       # Navigation can be way more complicated than this, so this is a WIP
-      toc.xpath("//nav/ol/li/a[@href='#{chapter_href}']").text || ""
+      toc.xpath("//nav[@type='toc']/ol/li/a[@href='#{chapter_href}']").text || ""
     end
 
     def chapters
