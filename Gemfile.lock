@@ -1,7 +1,7 @@
 GIT
   remote: https://github.com/mlibrary/cozy-sun-bear
-  revision: 363898fc7a14787dae627eeb4fd0b8fc5c3d8a9a
-  ref: 363898fc7a14787dae627eeb4fd0b8fc5c3d8a9a
+  revision: 0f25581d4ec498662d59d1b2bb62d8a235d1782b
+  ref: 0f25581d4ec498662d59d1b2bb62d8a235d1782b
   specs:
     cozy-sun-bear (0.1.0)
       railties (>= 3.1.1)
@@ -938,4 +938,4 @@ DEPENDENCIES
   web-console (>= 3.3.0)
 
 BUNDLED WITH
-   1.16.0.pre.1
+   1.16.0.pre.3
