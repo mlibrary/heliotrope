@@ -25,6 +25,41 @@ RSpec.describe Hyrax::MonographPresenter do
     end
   end
 
+  describe '#assets?' do
+    subject { presenter.assets? }
+
+    let(:mono_doc) {
+      ::SolrDocument.new(id: 'mono',
+                         has_model_ssim: ['Monograph'],
+                         # representative_id has a rather different Solr name!
+                         hasRelatedMediaFragment_ssim: cover.id,
+                         ordered_member_ids_ssim: ordered_ids)
+    }
+
+    let(:cover) { ::SolrDocument.new(id: 'cover', has_model_ssim: ['FileSet']) }
+    let(:blue_file) { ::SolrDocument.new(id: 'blue', has_model_ssim: ['FileSet']) }
+    let(:green_file) { ::SolrDocument.new(id: 'green', has_model_ssim: ['FileSet']) }
+
+    context 'has assets' do
+      let(:ordered_ids) { [cover.id, blue_file.id, green_file.id] }
+
+      before do
+        ActiveFedora::SolrService.add([mono_doc, cover, blue_file, green_file])
+        ActiveFedora::SolrService.commit
+      end
+      it { is_expected.to be true }
+    end
+    context 'does not have assets' do
+      let(:ordered_ids) { [cover.id] }
+
+      before do
+        ActiveFedora::SolrService.add([mono_doc, cover])
+        ActiveFedora::SolrService.commit
+      end
+      it { is_expected.to be false }
+    end
+  end
+
   describe '#monograph_coins_title?' do
     subject { presenter.monograph_coins_title? }
     context 'undef' do
