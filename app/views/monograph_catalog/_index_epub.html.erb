@@ -60,6 +60,32 @@
     <% end %>
   </div><!-- /.monograph-metadata -->
 </div><!-- /.monograph-info-epub -->
+<script>
+$(document).ready(function() {
+  // https://stackoverflow.com/a/10524697
+   var monograph_id = '<%= @monograph_presenter.id %>';
+   var previous_monograph_id = localStorage.getItem('monograph_id');
+   localStorage.setItem('monograph_id', monograph_id);
+
+   if (monograph_id !== previous_monograph_id) {
+     localStorage.removeItem('lastTab');
+
+   }
+
+
+  // for bootstrap 3 use 'shown.bs.tab', for bootstrap 2 use 'shown' in the next line
+  $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+    // save the latest tab; use cookies if you like 'em better:
+    localStorage.setItem('lastTab', $(this).attr('href'));
+  });
+
+  // go to the latest tab, if it exists:
+  var lastTab = localStorage.getItem('lastTab');
+  if (lastTab) {
+    $('[href="' + lastTab + '"]').tab('show');
+  }
+});
+</script>
 <div class="row monograph-assets-toc-epub">
   <div class="col-sm-12">
     <ul class="nav nav-tabs" role="tablist">
