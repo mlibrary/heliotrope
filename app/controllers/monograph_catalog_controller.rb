@@ -73,7 +73,7 @@ class MonographCatalogController < ::CatalogController
     def load_presenter
       monograph_id = params[:monograph_id] || params[:id]
       @curation_concern = Monograph.find(monograph_id)
-      @monograph_presenter = Hyrax::PresenterFactory.build_presenters([monograph_id], Hyrax::MonographPresenter, current_ability).first
+      @monograph_presenter = Hyrax::PresenterFactory.build_for(ids: [monograph_id], presenter_class: Hyrax::MonographPresenter, presenter_args: current_ability).first
     rescue Ldp::Gone # tombstone
       raise CanCan::AccessDenied
     end

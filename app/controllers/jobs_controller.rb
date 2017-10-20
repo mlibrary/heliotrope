@@ -9,4 +9,8 @@ class JobsController < ApplicationController
     raise ::CanCan::AccessDenied unless current_user
     render_404
   end
+
+  def render_404
+    render file: Rails.root.join('public', '404.html'), status: :not_found, layout: false
+  end
 end
