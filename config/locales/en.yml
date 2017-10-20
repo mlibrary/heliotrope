@@ -121,7 +121,6 @@ en:
       pageviews_html: "This item has been viewed <b>%{count}</b> times."
       read: "Read %{title}"
       read_book: "Read Book"
-      reindex: "Reindex"
       reindexing: "Reindexing %{title}"
   original_checksum: "Original Checksum"
   permissions_expiration_date: "Permissions Expiration Date"

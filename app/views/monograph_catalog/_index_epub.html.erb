@@ -8,7 +8,6 @@
          alt="<%= @monograph_presenter.representative_alt_text %>">
     <% if can? :edit, @monograph_presenter %>
         <%= link_to t('monograph_catalog.index.can_edit'), main_app.monograph_show_path(@monograph_presenter.id), class: 'btn btn-primary', id: 'manage-monograph-button' %>
-        <%= link_to t('monograph_catalog.index.reindex'), main_app.monograph_reindex_path(@monograph_presenter.id), method: :patch, class: 'btn btn-primary', id: 'monograph-reindex-button' %>
   <% end %>
   </div><!-- /.monograph-cover -->
   <div class="col-sm-9 monograph-metadata">
@@ -65,7 +64,9 @@
   <div class="col-sm-12">
     <ul class="nav nav-tabs" role="tablist">
       <li role="presentation" class="active"><a href="#toc" aria-controls="toc" role="tab" data-toggle="tab">Table of Contents</a></li>
-      <li role="presentation"><a href="#media" aria-controls="media" role="tab" data-toggle="tab">Media</a></li>
+      <% if @monograph_presenter.assets? %>
+        <li role="presentation"><a href="#media" aria-controls="media" role="tab" data-toggle="tab">Media</a></li>
+      <% end %>
       <li role="presentation"><a href="#stats" aria-controls="stats" role="tab" data-toggle="tab">Stats</a></li>
     </ul>
     <div class="tab-content monograph-assets-toc-epub-content">
@@ -74,16 +75,18 @@
           <%= render 'index_epub_toc' %>
         </div>
       </div>
-      <div role="tabpanel" class="tab-pane media row" id="media">
-        <div class="col-sm-3 sidebar">
-          <%= render 'catalog/search_sidebar' %>
+      <% if @monograph_presenter.assets? %>
+        <div role="tabpanel" class="tab-pane media row" id="media">
+          <div class="col-sm-3 sidebar">
+            <%= render 'catalog/search_sidebar' %>
+          </div>
+          <div class="col-sm-9">
+            <div class="content">
+              <%= render 'catalog/search_results' %>
+            </div><!-- /.content -->
+          </div>
         </div>
-        <div class="col-sm-9">
-          <div class="content">
-            <%= render 'catalog/search_results' %>
-          </div><!-- /.content -->
-        </div>
-      </div>
+      <% end %>
       <div role="tabpanel" class="tab-pane stats row" id="stats">
         <div class="col-sm-12 pageviews">
           <p><%= t('monograph_catalog.index.pageviews_html', count: number_with_delimiter(@monograph_presenter.pageviews)) %></p>

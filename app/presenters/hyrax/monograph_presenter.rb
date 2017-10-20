@@ -198,5 +198,9 @@ module Hyrax
       rep = representative_presenter
       rep.nil? || rep.alt_text.empty? ? solr_document.title.first : rep.alt_text.first
     end
+
+    def assets?
+      ordered_file_sets_ids.present?
+    end
   end
 end
