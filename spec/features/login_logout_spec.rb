@@ -13,7 +13,7 @@ feature 'Login and Logout' do
       fill_in 'Password', with: 'a password'
       click_button 'Log in'
 
-      expect(page).to have_current_path(hyrax.dashboard_index_path(locale: 'en'))
+      expect(page).to have_current_path(hyrax.dashboard_path(locale: 'en'))
     end
   end
 
@@ -25,9 +25,9 @@ feature 'Login and Logout' do
     end
 
     scenario "logout goes to /" do
-      visit(hyrax.dashboard_index_path)
+      visit(hyrax.dashboard_path)
 
-      first('.log-out').click
+      click_link "Logout"
 
       expect(page).to have_current_path(main_app.root_path(locale: 'en'))
     end
@@ -68,7 +68,10 @@ feature 'Login and Logout' do
     scenario "logging out goes to that asset page" do
       login_as user
       visit hyrax_file_set_path(file_set)
-      first('.log-out').click
+
+      within("footer") do
+        click_link "Log Out"
+      end
 
       expect(page).to have_current_path(hyrax_file_set_path(file_set))
     end

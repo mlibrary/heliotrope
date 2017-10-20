@@ -12,9 +12,6 @@ module Import
 
     def run
       actor.update_metadata(attributes)
-      # TODO: Check the return value of update_metadata method:
-      # success = actor.update_metadata(attributes)
-      # if not successful raise an error
     end
 
     private

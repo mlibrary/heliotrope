@@ -3,7 +3,7 @@
 module Import
   class MonographBuilder
     attr_reader :user, :attributes
-    delegate :curation_concern, to: :actor
+    delegate :curation_concern, to: :actor_environment
 
     def initialize(user, attrs)
       @attributes = attrs
@@ -11,13 +11,17 @@ module Import
     end
 
     def run
-      actor.create(attributes)
+      actor.create(actor_environment)
     end
 
     private
 
       def actor
-        @actor ||= Hyrax::CurationConcern.actor(Monograph.new, Ability.new(user))
+        @actor ||= Hyrax::CurationConcern.actor
+      end
+
+      def actor_environment
+        @actor_environment ||= Hyrax::Actors::Environment.new(Monograph.new, Ability.new(user), attributes)
       end
   end
 end

@@ -39,13 +39,23 @@ RSpec.describe Hyrax::FileSetPresenter do
 
   describe "#monograph" do
     let(:monograph) { create(:monograph, creator_given_name: "firstname", creator_family_name: "lastname") }
+    let(:cover) { create(:file_set) }
     let(:file_set) { create(:file_set) }
     let(:press) { create(:press, subdomain: 'blue') }
     let(:fileset_doc) { SolrDocument.new(file_set.to_solr) }
 
     before do
+      monograph.ordered_members << cover
       monograph.ordered_members << file_set
       monograph.save!
+    end
+
+    it "has a monograph" do
+      expect(presenter.monograph).to be_an_instance_of(Hyrax::MonographPresenter)
+    end
+
+    it "has it's monograph's id" do
+      expect(presenter.monograph.id).to eq monograph.id
     end
 
     it "has the monograph's creator_family_name" do

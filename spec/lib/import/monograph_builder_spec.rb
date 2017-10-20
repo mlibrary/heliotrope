@@ -7,6 +7,10 @@ describe Import::MonographBuilder do
   let(:builder) { described_class.new(user, attrs) }
   let(:user) { create(:user) }
   let(:public_vis) { Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC }
+  let(:file1) { File.new(Rails.root.join('spec', 'fixtures', 'csv', 'import', 'shipwreck.jpg')) }
+  let(:file2) { File.new(Rails.root.join('spec', 'fixtures', 'csv', 'import', 'miranda.jpg')) }
+  let(:uploaded_file1) { Hyrax::UploadedFile.create(user: user, file: file1) }
+  let(:uploaded_file2) { Hyrax::UploadedFile.create(user: user, file: file2) }
   let(:attrs) { { 'title' => ['The Tempest'],
                   'press' => 'umich',
                   'visibility' => public_vis,
@@ -17,8 +21,7 @@ describe Import::MonographBuilder do
                   'isbn_paper' => ['555-7-5432-1235-0'],
                   'isbn_ebook' => ['555-7-5432-1236-1'],
                   'buy_url' => ['http://example.com'],
-                  'files' => [File.new(Rails.root.join('spec', 'fixtures', 'csv', 'import', 'shipwreck.jpg')),
-                              File.new(Rails.root.join('spec', 'fixtures', 'csv', 'import', 'miranda.jpg'))] } }
+                  'uploaded_files' => [uploaded_file1.id, uploaded_file2.id] } }
 
   describe 'initialize' do
     it 'has a user' do
