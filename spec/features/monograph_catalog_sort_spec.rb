@@ -21,7 +21,7 @@ feature 'Monograph catalog sort' do
       monograph.ordered_members << cover
       monograph.ordered_members << fileset_outlier
       # sort_date here increments from 1900 thanks to the factory sequence
-      fileset_count.times { monograph.ordered_members << FactoryGirl.create(:file_set) }
+      fileset_count.times { monograph.ordered_members << FactoryBot.create(:file_set) }
       monograph.save!
       monograph.ordered_members.to_a.each(&:save!)
       # Stub the pagination to a low number so that we don't

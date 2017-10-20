@@ -15,7 +15,8 @@ describe Hyrax::MonographForm do
     it { is_expected.to eq %i[title
                               contributor
                               description
-                              rights
+                              license
+                              rights_statement
                               date_created
                               subject
                               language

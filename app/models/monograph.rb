@@ -3,14 +3,6 @@
 # Generated via
 #  `rails generate curation_concerns:work Monograph`
 class Monograph < ActiveFedora::Base
-  include ::Hyrax::WorkBehavior
-  include ::Hyrax::BasicMetadata
-  include StoresCreatorNameSeparately
-
-  self.indexer = MonographIndexer
-
-  validates :title, presence: { message: 'Your work must have a title.' }
-
   property :buy_url, predicate: ::RDF::Vocab::SCHEMA.sameAs do |index|
     index.as :symbol
   end
@@ -59,4 +51,14 @@ class Monograph < ActiveFedora::Base
   property :section_titles, predicate: ::RDF::Vocab::DC.tableOfContents, multiple: false do |index|
     index.as :symbol
   end
+
+  include StoresCreatorNameSeparately
+  include ::Hyrax::WorkBehavior
+  # This must come after the WorkBehavior because it finalizes the metadata
+  # schema (by adding accepts_nested_attributes)
+  include ::Hyrax::BasicMetadata
+
+  self.indexer = ::MonographIndexer
+
+  validates :title, presence: { message: 'Your work must have a title.' }
 end
