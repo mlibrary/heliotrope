@@ -49,5 +49,13 @@ module Heliotrope
 
     # Set the epub engine for cozy-sun-bear
     config.cozy_epub_engine = 'epubjs'
+
+    config.to_prepare do
+      # See the release notes for Hyrax 2 for an explanation of this Module#prepend
+      # FileSetsControllerBehavior is in the services directory
+      Hyrax::FileSetsController.prepend FileSetsControllerBehavior
+      # DownloadsControllerBehavior is in the services directory
+      Hyrax::DownloadsController.prepend DownloadsControllerBehavior
+    end
   end
 end

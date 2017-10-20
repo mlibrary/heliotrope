@@ -62,6 +62,10 @@ Hyrax.config do |config|
   # config.analytic_start_date = DateTime.new(2014,9,10)
 
   config.ingest_queue_name = :ingest
+
+  # For now turn off user notifications. When we decide about how to do things like
+  # workflows we can turn them back on.
+  config.realtime_notifications = false
 end
 
 Date::DATE_FORMATS[:standard] = '%m/%d/%Y'

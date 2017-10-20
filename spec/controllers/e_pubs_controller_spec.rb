@@ -69,7 +69,7 @@ RSpec.describe EPubsController, type: :controller do
     end
 
     context 'file nil' do
-      let(:file_set) { create(:file_set) }
+      let(:file_set) { create(:file_set, id: '111111119') }
 
       before { get :file, params: { id: file_set.id, file: 'META-INF/container', format: 'xml' } }
       it do

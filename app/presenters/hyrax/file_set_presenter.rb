@@ -7,6 +7,8 @@ module Hyrax
     include OpenUrlPresenter
     include ModelProxy
     include PresentsAttributes
+    include CharacterizationBehavior
+    include WithEvents
     include Rails.application.routes.url_helpers
     include ActionView::Helpers::NumberHelper
 
@@ -32,7 +34,7 @@ module Hyrax
     delegate :resource_type, :caption, :alt_text, :description, :copyright_holder,
              :content_type, :creator, :creator_full_name, :contributor, :date_created,
              :keywords, :publisher, :language, :date_uploaded,
-             :rights, :embargo_release_date, :lease_expiration_date, :depositor, :tags,
+             :rights_statement, :license, :embargo_release_date, :lease_expiration_date, :depositor, :tags,
              :title_or_label, :external_resource, :book_needs_handles, :section_title,
              :allow_download, :allow_hi_res, :copyright_status, :rights_granted,
              :rights_granted_creative_commons, :exclusive_to_platform, :permissions_expiration_date,
@@ -63,7 +65,7 @@ module Hyrax
     end
 
     def monograph
-      @monograph_presenter ||= PresenterFactory.build_presenters([monograph_id], MonographPresenter, current_ability).first
+      @monograph_presenter ||= Hyrax::PresenterFactory.build_for(ids: [monograph_id], presenter_class: Hyrax::MonographPresenter, presenter_args: current_ability).first
     end
 
     def subjects
@@ -265,7 +267,7 @@ module Hyrax
     end
 
     def glyphicon_by_resource_type
-      case resource_type.downcase
+      case resource_type.first.downcase
       when 'text'
         'glyphicon glyphicon-file'
       when 'image'

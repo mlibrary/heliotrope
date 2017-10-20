@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Import
   class Importer
     include ::Hyrax::Noid
@@ -31,27 +33,29 @@ module Import
       csv_files.each do |file|
         attrs = CSVParser.new(file).attributes
 
+        optional_early_exit(interaction, attrs.delete('row_errors'), test)
+
         # if there is a command-line monograph title then use it
         attrs['title'] = Array(monograph_title) if monograph_title.present?
 
-        # create file objects (stop everything here if any are not found, duplicates or of zero size)
-        file_objects(attrs)
-
-        optional_early_exit(interaction, attrs.delete('row_errors'), test)
-
-        # because the MonographBuilder sets its metadata, files_metadata has to be removed here
-        file_attrs = attrs.delete('files_metadata')
+        # Wrap files in UploadedFile wrappers using /dev/null for external resources
+        uploaded_files = attrs.delete('files').map do |filename|
+          if filename.present?
+            Hyrax::UploadedFile.create(file: File.new(find_file(filename)), user: user)
+          else
+            # "External Resources" are FileSets without a file
+            Hyrax::UploadedFile.create(file: File.new("/dev/null"), user: user) # TODO: Is File.new("/dev/null") really good here?
+          end
+        end
+        attrs['import_uploaded_files_ids'] = uploaded_files.map(&:id)
+        attrs['import_uploaded_files_attributes'] = attrs.delete('files_metadata')
 
         if reimporting
-          # TODO: make add_new_filesets return something sensible?
-          raise "There may have been a problem attaching the new files" unless add_new_filesets(@reimport_mono, attrs, file_attrs)
+          attrs.merge!('visibility' => reimport_mono.visibility)
+          Hyrax::CurationConcern.actor.update(Hyrax::Actors::Environment.new(@reimport_mono, Ability.new(user), attrs))
         else
           attrs.merge!('press' => press_subdomain, 'visibility' => visibility)
-          monograph_builder = MonographBuilder.new(user, attrs)
-          monograph_builder.run
-          monograph = monograph_builder.curation_concern
-          update_fileset_metadata(monograph, file_attrs)
-          representative_image(monograph)
+          Hyrax::CurationConcern.actor.create(Hyrax::Actors::Environment.new(Monograph.new, Ability.new(user), attrs))
         end
       end
     end
@@ -73,15 +77,6 @@ module Import
         @csv_files ||= Dir.glob(File.join(root_dir, '*.csv'))
       end
 
-      def file_objects(attrs)
-        # assigning empty files a generic link icon here, should be external resources
-        attrs['files'] = attrs['files'].map do |file|
-          # setting external resources to '' here (not nil) gets the FileSet created using the existing...
-          # CC actor stack, as long as we also bow out just before ingest in FileSetActor's create_content
-          file.blank? ? '' : File.new(find_file(file))
-        end
-      end
-
       def find_file(file_name)
         match = Dir.glob(File.join(root_dir, '**', file_name))
         if match.empty?
@@ -98,28 +93,6 @@ module Import
         @user ||= User.find_by(email: user_email)
       end
 
-      # The 'attrs' parameter is an array of hashes.
-      # Each hash in the array is a set of attributes for one
-      # FileSet.  The array is in the correct order to match
-      # the order of the filesets in the ordered_members list.
-      def update_fileset_metadata(work, attrs)
-        work.ordered_members.to_a.each_with_index do |member, i|
-          builder = FileSetBuilder.new(member, user, attrs[i])
-          builder.run
-        end
-      end
-
-      def add_new_filesets(monograph, attrs, file_attrs)
-        [attrs['files'], file_attrs].transpose.each do |file, metadata|
-          file_set = FileSet.new
-          file_set_actor = Hyrax::Actors::FileSetActor.new(file_set, user)
-          file_set_actor.create_metadata(metadata)
-          file_set_actor.create_content(file)
-          file_set_actor.update_metadata(metadata)
-          file_set_actor.attach_file_to_work(monograph, metadata)
-        end
-      end
-
       def optional_early_exit(interaction, errors, test)
         if interaction && errors.present?
           errors.each do |row_num, error|
@@ -134,21 +107,6 @@ module Import
         end
         # command-line option to exit
         exit if test == true
-      end
-
-      def representative_image(monograph)
-        cover_id = monograph.ordered_members.to_a.first.id
-        puts "Saving #{cover_id} as the cover"
-        monograph.representative_id = cover_id
-        monograph.thumbnail_id = cover_id
-        monograph.save!
-
-        # I think that because the cover essentially has no metadata (just the file name),
-        # it's not included in file_attrs (it is but it's just {}) and so
-        # never gets it's metadata updated as the other file_sets do.
-        # For some reason this seems to cause the technical metadata from Characterization
-        # to not be in solr. This seems to fix that. TODO: investigate this more.
-        FileSet.find(cover_id).update_index
       end
   end
 end

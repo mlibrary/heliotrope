@@ -15,11 +15,11 @@ module StoresCreatorNameSeparately
     end
   end
 
-  def to_solr
-    super.tap do |solr_doc|
+  def to_solr(solr_doc = {})
+    super(solr_doc).tap do |doc|
       name = full_name
-      solr_doc[Solrizer.solr_name('creator_full_name', :stored_searchable)] = name
-      solr_doc[Solrizer.solr_name('creator_full_name', :facetable)] = name
+      doc[Solrizer.solr_name('creator_full_name', :stored_searchable)] = name
+      doc[Solrizer.solr_name('creator_full_name', :facetable)] = name
     end
   end
 
