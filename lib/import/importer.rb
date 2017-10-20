@@ -39,8 +39,11 @@ module Import
 
         optional_early_exit(interaction, attrs.delete('row_errors'), test)
 
-        # because the MonographBuilder sets its metadata, files_metadata has to be removed here
+        # Because the MonographBuilder sets its metadata, files_metadata has to be removed here
         file_attrs = attrs.delete('files_metadata')
+        # The old "files" array cause errors in hyrax2, we need "uploaded_files" which was
+        # created above in file_objects(attrs)
+        attrs.delete('files')
 
         if reimporting
           # TODO: make add_new_filesets return something sensible?
@@ -49,9 +52,18 @@ module Import
           attrs.merge!('press' => press_subdomain, 'visibility' => visibility)
           monograph_builder = MonographBuilder.new(user, attrs)
           monograph_builder.run
-          monograph = monograph_builder.curation_concern
+          monograph = Monograph.find(monograph_builder.curation_concern.id)
+          puts "Ingesting files. This could take some time, could be over an hour for 300+ files."
+          until monograph.ordered_members.to_a.length == attrs["uploaded_files"].length
+            # This is obviously terrible, but we need to wait for all the files to be
+            # ingested via the resque jobs before we can update the file_sets with their metadata
+            # TODO: Investigate other ways to do this.
+            monograph = monograph.reload
+            sleep 1
+            print "."
+          end
+          puts "\nUpdating FileSet Metadata"
           update_fileset_metadata(monograph, file_attrs)
-          representative_image(monograph)
         end
       end
     end
@@ -75,11 +87,16 @@ module Import
 
       def file_objects(attrs)
         # assigning empty files a generic link icon here, should be external resources
-        attrs['files'] = attrs['files'].map do |file|
-          # setting external resources to '' here (not nil) gets the FileSet created using the existing...
-          # CC actor stack, as long as we also bow out just before ingest in FileSetActor's create_content
-          file.blank? ? '' : File.new(find_file(file))
+        uploaded_files = attrs['files'].map do |file|
+          if file.present?
+            Hyrax::UploadedFile.create(file: File.new(find_file(file)), user: user)
+          else
+            # "External Resources" are FileSets without a file
+            Hyrax::UploadedFile.create(file: File.new("/dev/null"), user: user) # Is File.new("/dev/null") really good here? Leaving it file: "" causes an error...
+          end
         end
+
+        attrs['uploaded_files'] = uploaded_files.map(&:id)
       end
 
       def find_file(file_name)
@@ -110,13 +127,13 @@ module Import
       end
 
       def add_new_filesets(monograph, attrs, file_attrs)
-        [attrs['files'], file_attrs].transpose.each do |file, metadata|
+        [attrs['uploaded_files'], file_attrs].transpose.each do |file, metadata|
           file_set = FileSet.new
           file_set_actor = Hyrax::Actors::FileSetActor.new(file_set, user)
           file_set_actor.create_metadata(metadata)
-          file_set_actor.create_content(file)
+          file_set_actor.create_content(Hyrax::UploadedFile.find(file))
           file_set_actor.update_metadata(metadata)
-          file_set_actor.attach_file_to_work(monograph, metadata)
+          file_set_actor.attach_to_work(monograph, metadata)
         end
       end
 
@@ -134,21 +151,6 @@ module Import
         end
         # command-line option to exit
         exit if test == true
-      end
-
-      def representative_image(monograph)
-        cover_id = monograph.ordered_members.to_a.first.id
-        puts "Saving #{cover_id} as the cover"
-        monograph.representative_id = cover_id
-        monograph.thumbnail_id = cover_id
-        monograph.save!
-
-        # I think that because the cover essentially has no metadata (just the file name),
-        # it's not included in file_attrs (it is but it's just {}) and so
-        # never gets it's metadata updated as the other file_sets do.
-        # For some reason this seems to cause the technical metadata from Characterization
-        # to not be in solr. This seems to fix that. TODO: investigate this more.
-        FileSet.find(cover_id).update_index
       end
   end
 end

@@ -19,14 +19,12 @@ Metrics/ClassLength:
 Metrics/CyclomaticComplexity:
   Exclude:
     - 'app/models/riiif/file.rb'
-    - 'app/controllers/hyrax/downloads_controller.rb'
-    - 'app/controllers/hyrax/file_sets_controller.rb'
+    - 'app/services/downloads_controller_behavior.rb'
 
 Metrics/PerceivedComplexity:
   Exclude:
     - 'app/models/riiif/file.rb'
-    - 'app/controllers/hyrax/downloads_controller.rb'
-    - 'app/controllers/hyrax/file_sets_controller.rb'
+    - 'app/services/downloads_controller_behavior.rb'
 
 Rails/Exit:
   Exclude:

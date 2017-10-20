@@ -5,11 +5,18 @@
 require 'rails_helper'
 
 describe Hyrax::Actors::MonographActor do
-  subject { Hyrax::CurationConcern.actor(monograph, ::Ability.new(user)) }
+  subject(:middleware) do
+    stack = ActionDispatch::MiddlewareStack.new.tap do |middleware|
+      middleware.use described_class
+    end
+    stack.build(terminator)
+  end
 
-  let(:user) { create(:user) }
-  let(:monograph) { Monograph.new }
-  let(:admin_set) { create(:admin_set, with_permission_template: { with_active_workflow: true }) }
+  let(:curation_concern) { build(:monograph, user: user) }
+  let(:ability) { ::Ability.new(user) }
+  let(:user) { create(:platform_admin) }
+  let(:terminator) { Hyrax::Actors::Terminator.new }
+  let(:env) { Hyrax::Actors::Environment.new(curation_concern, ability, attributes) }
 
   describe "create" do
     before do
@@ -24,17 +31,17 @@ describe Hyrax::Actors::MonographActor do
       end
 
       it "adds default group read and edit permissions" do
-        subject.create(attributes)
+        expect(middleware.create(env)).to be true
 
-        expect(monograph.read_groups).to match_array ["heliotrope_admin", "heliotrope_editor"]
-        expect(monograph.edit_groups).to match_array ["heliotrope_admin", "heliotrope_editor"]
+        expect(curation_concern.read_groups).to match_array ["heliotrope_admin", "heliotrope_editor"]
+        expect(curation_concern.edit_groups).to match_array ["heliotrope_admin", "heliotrope_editor"]
       end
 
       it "updates to public" do
         attributes["visibility"] = Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC
-        subject.update(attributes)
+        expect(middleware.create(env)).to be true
 
-        expect(monograph.read_groups).to include("public")
+        expect(curation_concern.read_groups).to include("public")
       end
     end
 
@@ -46,24 +53,24 @@ describe Hyrax::Actors::MonographActor do
       end
 
       it "adds default group read and edit permissions including public read" do
-        subject.create(attributes)
+        expect(middleware.create(env)).to be true
 
-        expect(monograph.read_groups).to match_array ["heliotrope_admin", "heliotrope_editor", "public"]
-        expect(monograph.edit_groups).to match_array ["heliotrope_admin", "heliotrope_editor"]
+        expect(curation_concern.read_groups).to match_array ["heliotrope_admin", "heliotrope_editor", "public"]
+        expect(curation_concern.edit_groups).to match_array ["heliotrope_admin", "heliotrope_editor"]
       end
 
       it "updates with a new group" do
         (attributes["edit_groups"] ||= []).push("anotherpress_editor")
-        subject.update(attributes)
+        expect(middleware.update(env)).to be true
 
-        expect(monograph.edit_groups).to match_array ["heliotrope_admin", "heliotrope_editor", "anotherpress_editor"]
+        expect(curation_concern.edit_groups).to match_array ["heliotrope_admin", "heliotrope_editor", "anotherpress_editor"]
       end
 
       it "updates to private" do
         attributes["visibility"] = Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE
-        subject.update(attributes)
+        expect(middleware.update(env)).to be true
 
-        expect(monograph.read_groups).to_not include("public")
+        expect(curation_concern.read_groups).to_not include("public")
       end
     end
   end
