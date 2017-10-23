@@ -20,7 +20,13 @@ module EPub
       return null_object unless Cache.cached?(noid)
       valid_epub = Validator.from(noid)
       return null_object if valid_epub.is_a?(ValidatorNullObject)
-      new(valid_epub)
+      publication = new(valid_epub)
+      if file.present?
+        sql_lite = EPub::SqlLite.from(publication)
+        sql_lite.create_table
+        sql_lite.load_chapters
+      end
+      publication
     rescue StandardError => e
       ::EPub.logger.info("Publication.from(#{epub}, #{options}) raised #{e}")
       null_object
@@ -80,7 +86,7 @@ module EPub
 
     def search(query)
       return Publication.null_object.search(query) unless Cache.cached?(id)
-      EPubsSearchService.new(id).search(query)
+      Search.new(self).search(query)
     rescue StandardError => e
       ::EPub.logger.info("Publication.search(#{query}) in publication #{id} raised #{e}") # at: #{e.backtrace.join("\n")}")
       Publication.null_object.search(query)

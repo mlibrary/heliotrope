@@ -163,15 +163,16 @@ RSpec.describe EPub::Publication do
     end
 
     describe '#search' do
-      subject { described_class.from(noid).search(query) }
+      subject { instance.search(query) }
 
-      let(:e_pubs_search_service) { double("e_pubs_search_service") }
+      let(:instance) { described_class.from(noid) }
+      let(:search)  { double("search") }
       let(:query) { double("query") }
       let(:results) { double("results") }
 
       before do
-        allow(EPubsSearchService).to receive(:new).with(noid).and_return(e_pubs_search_service)
-        allow(e_pubs_search_service).to receive(:search).with(query).and_return(results)
+        allow(EPub::Search).to receive(:new).with(instance).and_return(search)
+        allow(search).to receive(:search).with(query).and_return(results)
       end
 
       context 'epubs search service returns results' do
@@ -182,7 +183,7 @@ RSpec.describe EPub::Publication do
 
       context 'epubs search service raises standard error' do
         before do
-          allow(e_pubs_search_service).to receive(:search).with(query).and_raise(StandardError)
+          allow(search).to receive(:search).with(query).and_raise(StandardError)
           @message = 'message'
           allow(EPub.logger).to receive(:info).with(any_args) { |value| @message = value }
         end
@@ -198,21 +199,18 @@ RSpec.describe EPub::Publication do
   end
 
   describe "with a test epub" do
-    let(:id) { '999999999' }
-
     before do
-      FileUtils.mkdir_p "../tmp/epubs" unless Dir.exist? "../tmp/epubs"
-      FileUtils.cp_r "spec/fixtures/fake_epub01_unpacked", "../tmp/epubs/#{id}"
-      allow(EPub).to receive(:path).with(id).and_return("../tmp/epubs/#{id}")
-      allow(FactoryService).to receive(:e_pub_publication_from).with(id).and_return(described_class.from(id: id, epub: nil))
+      @id = '999999999'
+      @file = './spec/fixtures/fake_epub01.epub'
+      described_class.from(id: @id, file: @file)
     end
 
     after do
-      FileUtils.rm_rf "../tmp/epubs/#{id}" if Dir.exist?("../tmp/epubs/#{id}")
+      described_class.from(@id).purge
     end
 
     describe "#chapters" do
-      subject { FactoryService.e_pub_publication(id) }
+      subject { described_class.from(@id) }
       it "has 3 chapters" do
         expect(subject.chapters.count).to be 3
       end
@@ -220,7 +218,7 @@ RSpec.describe EPub::Publication do
       describe "the first chapter" do
         # It's a little wrong to test this here, but Publication has the logic
         # that populates the Chapter object, so it's here. For now.
-        subject { FactoryService.e_pub_publication(id).chapters[0] }
+        subject { described_class.from(@id).chapters[0] }
         it "has the id of" do
           expect(subject.chapter_id).to eq "Chapter01"
         end
