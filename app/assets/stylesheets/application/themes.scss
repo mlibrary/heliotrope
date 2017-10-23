@@ -251,6 +251,13 @@ $heb-black-80: #342f2e;
       transition: 0.2s ease-in;
     }
 
+    .cozy-control .logo {
+      height: 47px;
+
+      img {
+        height: 50.4px;
+      }
+    }
   }
 
 }
@@ -1426,12 +1433,12 @@ $nyu-gray-2: #342f2e;
 
     .cozy-control .logo {
       background: $nyu-brand-color-2;
-      height: 54.6px;
-      width: 50px;
+      height: 46.6px;
+      width: 43px;
       overflow: hidden;
 
       img {
-        height: 40px;
+        height: 33px;
         margin-top: .5em;
         margin-left: .55em;
       }

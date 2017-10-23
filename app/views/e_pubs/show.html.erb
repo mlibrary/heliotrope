@@ -65,8 +65,9 @@
       // Fullscreen widget
       cozy.control.widget.button({
                         region: 'top.toolbar.right',
+                        className: 'cozy-container-fullscreen',
                         template: '<button class="button--sm" data-toggle="button" data-slot="label"></button>',
-                        data: { label: 'FULLSCREEN' },
+                        data: { label: '<i id="fullscreen" class="icon-fullscreen-enter oi" data-glyph="fullscreen-enter" title="Fullscreen Mode" aria-hidden="true"></i>' },
                         onClick: function() {
                             reader.requestFullscreen();
                         }
