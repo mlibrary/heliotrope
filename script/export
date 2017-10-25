@@ -1,40 +1,31 @@
 #!/usr/bin/env ruby
 
 require 'optparse'
-puts "Loading environment"
-require File.expand_path('../../config/environment',  __FILE__)
-require 'export'
+require 'ostruct'
 
-
-# Parse the the command line arguments
-def parse_inputs(args)
-  inputs = {}
-  opts = OptionParser.new
-
-  opts.on('-m [MONOGRAPH ID]', 'ID of monograph to export (or \'all\').') do |monograph_id|
-    inputs[:monograph_id] = monograph_id
+options = OpenStruct.new
+option_parser = OptionParser.new do |opts|
+  opts.banner = "Usage: export [--file <filename>] <monograph_id>"
+  opts.on('-f', '--file [FILENAME]', 'Name of output file') do |filename|
+    options.file = filename
   end
-
-  opts.on('-h', '--help', 'Print this help message') do
+  opts.on_tail('-h', '--help', 'Print this help message') do
     puts opts
     exit 0
   end
-
-  opts.parse!(args)
-
-  raise "Error: Monograph ID (or 'all') is required" unless inputs[:monograph_id]
-
-  inputs
-rescue => e
-  puts e.message
-  puts opts
-  exit 1
 end
+option_parser.parse!(ARGV)
 
-# Read and validate inputs
-options = parse_inputs(ARGV)
-
-puts "Begin export"
-exporter = Export::Exporter.new(options[:monograph_id])
-exporter.run
-puts "Export finished"
+if ARGV.empty?
+  puts option_parser.help()
+else
+  require File.expand_path('../../config/environment',  __FILE__)
+  require 'export'
+  monograph_id = ARGV[0]
+  $stdout.reopen(options.file, 'w') if options.file
+  begin
+    puts Export::Exporter.new(monograph_id).export
+  rescue StandardError => e
+    STDERR.puts e.message
+  end
+end
