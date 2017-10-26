@@ -217,7 +217,7 @@ module Hyrax
     end
 
     def file_size
-      solr_document['file_size_is']
+      solr_document['file_size_lts']
     end
 
     def last_modified
