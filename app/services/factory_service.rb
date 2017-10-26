@@ -154,12 +154,7 @@ module FactoryService # rubocop:disable Metrics/ModuleLength
       file = Tempfile.new(id)
       file.write(presenter.file.content.force_encoding("utf-8"))
       file.close
-      publication = EPub::Publication.from(id: id, file: file.path)
-      return publication if publication.instance_of?(EPub::PublicationNullObject)
-      sql_lite = EPub::SqlLite.from(publication)
-      sql_lite.create_table
-      sql_lite.load_chapters
-      publication
+      EPub::Publication.from(id: id, file: file.path)
     rescue StandardError => e
       Rails.logger.info("FactoryService.e_pub_publication_from(#{id}) raised #{e}")
       EPub::Publication.null_object
