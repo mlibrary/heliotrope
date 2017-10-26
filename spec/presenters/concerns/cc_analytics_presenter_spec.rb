@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-describe AnalyticsPresenter do
+describe CCAnalyticsPresenter do
   let(:ability) { double('ability') }
   let(:presenter) { Hyrax::FileSetPresenter.new(fileset_doc, ability) }
   let(:fileset_doc) { SolrDocument.new(id: 'fs') }

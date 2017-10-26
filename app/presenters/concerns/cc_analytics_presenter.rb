@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module AnalyticsPresenter
+module CCAnalyticsPresenter
   extend ActiveSupport::Concern
 
   def pageviews_by_path(path)
@@ -12,7 +12,7 @@ module AnalyticsPresenter
         count += entry[:pageviews].to_i if entry[:pagePath] == path
       end
     end
-    return count
+    count
   end
 
   def pageviews_by_ids(ids)
@@ -26,6 +26,6 @@ module AnalyticsPresenter
         end
       end
     end
-    return count
+    count
   end
 end
