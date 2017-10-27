@@ -12,6 +12,7 @@ Rails.application.routes.draw do
   get 'embed', controller: :embed, action: :show
   get 'fulcrum', controller: :fulcrum, action: :index, as: :fulcrum
   get 'fulcrum/:partial', controller: :fulcrum, action: :show, as: :partial_fulcrum
+  get 'analytics', controller: :analytics, action: :show
 
   mount Blacklight::Engine => '/'
   mount Riiif::Engine => '/image-service', as: 'riiif'

@@ -19,6 +19,7 @@ describe 'shared/_my_actions.html.erb' do
       end
 
       it 'has correct links' do
+        expect(rendered).to have_link("Analytics")
         expect(rendered).to have_link("Dashboard")
         expect(rendered).to have_link("Log Out")
         expect(rendered).to have_link("Jobs", href: resque_web_path)
@@ -32,6 +33,7 @@ describe 'shared/_my_actions.html.erb' do
       before { render }
 
       it 'has correct links' do
+        expect(rendered).to have_link("Analytics")
         expect(rendered).to have_link("Dashboard")
         expect(rendered).to have_link("Log Out")
         expect(rendered).to have_link("Jobs", href: resque_web_path)
@@ -52,6 +54,7 @@ describe 'shared/_my_actions.html.erb' do
       end
 
       it 'has the correct links' do
+        expect(rendered).to_not have_link("Analytics")
         expect(rendered).to have_link("Dashboard")
         expect(rendered).to have_link("Log Out")
         expect(rendered).to have_link("Embargos", href: embargoes_path)
@@ -68,6 +71,7 @@ describe 'shared/_my_actions.html.erb' do
       end
 
       it 'has the correct links' do
+        expect(rendered).to_not have_link("Analytics")
         expect(rendered).to have_link("Dashboard")
         expect(rendered).to have_link("Log Out")
         expect(rendered).to have_link("Embargos", href: embargoes_path)
@@ -87,6 +91,7 @@ describe 'shared/_my_actions.html.erb' do
       end
 
       it 'has the correct links' do
+        expect(rendered).to_not have_link("Analytics")
         expect(rendered).to have_link("Dashboard")
         expect(rendered).to have_link("Log Out")
         expect(rendered).to have_link("Embargos", href: embargoes_path)
@@ -103,6 +108,7 @@ describe 'shared/_my_actions.html.erb' do
       end
 
       it 'has the correct links' do
+        expect(rendered).to_not have_link("Analytics")
         expect(rendered).to have_link("Dashboard")
         expect(rendered).to have_link("Log Out")
         expect(rendered).to have_link("Embargos", href: embargoes_path)
@@ -122,6 +128,7 @@ describe 'shared/_my_actions.html.erb' do
       end
 
       it 'has correct links' do
+        expect(rendered).to_not have_link("Analytics")
         expect(rendered).to     have_link("Dashboard")
         expect(rendered).to     have_link("Log Out")
         expect(rendered).to_not have_link("Jobs", href: resque_web_path)
@@ -137,6 +144,7 @@ describe 'shared/_my_actions.html.erb' do
       before { render }
 
       it 'has correct links' do
+        expect(rendered).to_not have_link("Analytics")
         expect(rendered).to     have_link("Dashboard")
         expect(rendered).to     have_link("Log Out")
         expect(rendered).to_not have_link("Users")

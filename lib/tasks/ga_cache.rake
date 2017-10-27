@@ -27,6 +27,39 @@ namespace :heliotrope do
 
           Rails.cache.write('ga_pageviews', cached)
           Rails.logger.info("Wrote ga_pageviews to cache")
+
+          GASessions.results(profile, start_date: '2016-01-01', end_date: Date.today, limit: 1).each do |entry|
+            Rails.cache.write('ga_sessions', entry.sessions)
+          end
+          Rails.logger.info("Wrote ga_sessions to cache")
+          GAUsers.results(profile, start_date: '2016-01-01', end_date: Date.today, limit: 1).each do |entry|
+            Rails.cache.write('ga_users', entry.users)
+          end
+          Rails.logger.info("Wrote ga_users to cache")
+          cached = []
+          GAPages.results(profile, start_date: '2016-01-01', end_date: Date.today, limit: 100, sort: '-pageviews').each do |entry|
+            cached << entry
+          end
+          Rails.cache.write('ga_pages', cached)
+          Rails.logger.info("Wrote #{cached.count} ga_pages to cache")
+          cached = []
+          GALandingPages.results(profile, start_date: '2016-01-01', end_date: Date.today, limit: 100, sort: '-pageviews').each do |entry|
+            cached << entry
+          end
+          Rails.cache.write('ga_landing_pages', cached)
+          Rails.logger.info("Wrote #{cached.count} ga_landing_pages to cache")
+          cached = []
+          GAChannels.results(profile, start_date: '2016-01-01', end_date: Date.today, limit: 100, sort: '-pageviews').each do |entry|
+            cached << entry
+          end
+          Rails.cache.write('ga_channels', cached)
+          Rails.logger.info("Wrote #{cached.count} ga_channels to cache")
+          cached = []
+          GAReferrers.results(profile, start_date: '2016-01-01', end_date: Date.today, limit: 100, sort: '-pageviews').each do |entry|
+            cached << entry
+          end
+          Rails.cache.write('ga_referrers', cached)
+          Rails.logger.info("Wrote #{cached.count} ga_referrers to cache")
         else
           Rails.logger.error("Google Analytics profile has not been established. Unable to fetch statistics.")
         end

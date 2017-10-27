@@ -3,7 +3,7 @@
 module Hyrax
   class FileSetPresenter
     include TitlePresenter
-    include AnalyticsPresenter
+    include CCAnalyticsPresenter
     include OpenUrlPresenter
     include ModelProxy
     include PresentsAttributes
