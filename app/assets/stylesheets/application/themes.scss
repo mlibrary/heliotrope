@@ -48,6 +48,7 @@
 $heb-brand-color: #111;
 $heb-accent-color: #d5d6d2;
 $heb-link: red;
+$heb-red: #cc0000;
 $heb-accent-footer: #989c97;
 
 $heb-accent-link: #989c97;
@@ -55,6 +56,7 @@ $heb-accent-link: #989c97;
 $heb-grey-1: #d5d6d2;
 $heb-grey-2: #989c97;
 $heb-grey-3: #655a52;
+$heb-grey-4: #ccc;
 $heb-white: #fff;
 $heb-black-80: #342f2e;
 
@@ -113,30 +115,31 @@ $heb-black-80: #342f2e;
   }
 
   #brand-bar {
-    background-color: $heb-brand-color;
-    border-color: $heb-brand-color;
+    background-color: $heb-white;
+    border-bottom: 10px solid $heb-red;
 
     .navbar-brand {
-      color: $heb-white;
+      color: $heb-red;
+      font-weight: 900;
     }
 
     .navbar-nav {
       a#add-content,
       a.login,
       a.user-display-name {
-          color: $heb-accent-color;
+          color: $heb-red;
       }
 
       .open > a,
       .open > a:focus,
       .open > a:hover {
-        background-color: $heb-grey-2;
+        background-color: $heb-grey-4;
       }
     }
 
     button.search-submit {
-      background-color: $heb-grey-2;
-      border-color: $heb-grey-2;
+      background-color: $heb-grey-4;
+      border-color: $heb-grey-4;
       color: $heb-brand-color;
     }
 
@@ -146,7 +149,7 @@ $heb-black-80: #342f2e;
 
   // jumbotron
   .jumbotron {
-    background-color: $heb-grey-1;
+    background-color: $heb-grey-4;
     font-weight: 200;
 
     .logo {
@@ -205,7 +208,7 @@ $heb-black-80: #342f2e;
     }
     .press-block-a,
     .press-block-b {
-      background-color:  $heb-grey-2;
+      background-color:  $heb-grey-4;
 
       a,
       a:hover,
