@@ -4,37 +4,35 @@ require 'csv'
 
 module Export
   class Exporter
-    attr_reader :monographs
-
     def initialize(monograph_id)
-      @monographs = if monograph_id == 'all'
-                      Monograph.all
-                    else
-                      [Monograph.find(monograph_id)]
-                    end
+      @monograph = Monograph.find(monograph_id) if monograph_id.present?
     end
 
-    def run
-      output_files = []
-      monographs.to_a.each do |m|
-        lines = []
-        m.ordered_members.to_a.each do |mm|
-          lines << metadata_field(mm, :file_set)
-        end
-        lines << metadata_field(m, :monograph)
-        output_filesets_to_csv(m.title.first, lines, output_files)
+    def export
+      return String.new if @monograph.blank?
+      lines = []
+      @monograph.ordered_members.to_a.each do |member|
+        lines << metadata_field(member, :file_set)
       end
-      output_files
+      lines << metadata_field(@monograph, :monograph)
+      buffer = String.new
+      CSV.generate(buffer) do |csv|
+        write_csv_header_rows(csv)
+        lines.each { |line| csv << line if line.present? }
+      end
+      buffer
     end
 
     private
 
       def all_metadata
-        # we need the file name in the exported CSV file (required doesn't matter here)
-        # ideally this should be moved to metadata_fields.rb and the importer would be refactored (maybe)
-        # aside: in the absence of a title, the filename is also used for that
+        # Export the object id in the first column of the exported CSV file (required doesn't matter here)
+        noid = [{ object: :universal, field_name: 'NOID', metadata_name: 'id', required: true, multivalued: :no }]
+        # We need the file name in the exported CSV file (required doesn't matter here)
+        # Ideally this should be moved to metadata_fields.rb and the importer would be refactored (maybe)
+        # Aside: In the absence of a title the file name is used
         file = [{ object: :file_set, field_name: 'File Name', metadata_name: 'label', required: true, multivalued: :no }]
-        file + METADATA_FIELDS
+        noid + file + METADATA_FIELDS
       end
 
       def metadata_field(item, object_type)
@@ -62,23 +60,6 @@ module Export
           item.public_send(metadata_name).first
         else
           item.public_send(metadata_name)
-        end
-      end
-
-      def output_filesets_to_csv(mono_title, lines, output_files)
-        if lines.blank?
-          puts 'no output generated'
-        else
-          # create a neatish monograph title plus timestamp filename...
-          # for starters throw away any subtitles, which follow a ':'
-          prefix = mono_title.split(':')[0].squish.downcase.tr(" ", "_").gsub(/[^\w\.]/, '')
-          filename = '/tmp/' + prefix + '_' + Time.now.strftime('%Y%m%d%H%M%S') + '.csv'
-          CSV.open(filename, 'wb') do |csv|
-            write_csv_header_rows(csv)
-            lines.each { |line| csv << line if line.present? }
-          end
-          puts 'output written to ' + filename
-          output_files << filename
         end
       end
 
