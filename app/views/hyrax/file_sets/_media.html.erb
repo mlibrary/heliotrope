@@ -32,7 +32,9 @@
     <% end %>
     <figcaption><%= @presenter.attribute_to_html(:caption, render_as: :markdown, label: '') %></figcaption>
     <% if @presenter.allow_download?  %>
-        <%= link_to @presenter.download_button_label, hyrax.download_path(@presenter), target: :_blank, class: 'btn btn-default btn-lg btn-heliotrope-download', data: { turbolinks: false } %>
+        <div class="text-center">
+          <%= link_to @presenter.download_button_label, hyrax.download_path(@presenter), target: :_blank, class: 'btn btn-default btn-lg btn-heliotrope-download', data: { turbolinks: false } %>
+        </div>
     <% end %>
   </figure> <!-- /.image/media -->
   <% if @presenter.transcript.present? %>
