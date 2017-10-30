@@ -4,9 +4,6 @@
     <!-- TODO: remove the following button, it will be replaced by breadcrumbs -->
     <%= link_to "Back to #{parent.human_readable_type}", parent_path(parent), class: 'btn btn-default btn-lg' %>
   <% end %>
-  <% if can?(:edit, presenter) || presenter.allow_download?  %>
-    <%= link_to "Download", hyrax.download_path(presenter), target: :_blank, class: 'btn btn-default btn-lg', data: { turbolinks: false } %>
-  <% end %>
   <% if can?(:edit, presenter) || presenter.allow_embed? %>
   <form style="display:inline;">
     <textarea  id="embedcode" style="display:none;" readonly="readonly"><%= presenter.embed_code %></textarea>

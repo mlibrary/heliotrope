@@ -54,17 +54,45 @@ RSpec.describe Hyrax::FileSetPresenter do
   end
 
   describe '#allow_download?' do
-    context 'no' do
+    context 'allow_download != "yes"' do
+      before do
+        allow(ability).to receive(:platform_admin?).and_return(false)
+        allow(ability).to receive(:can?).with(:edit, 'fs').and_return(false)
+      end
       let(:fileset_doc) { SolrDocument.new(id: 'fs', has_model_ssim: ['FileSet'], allow_download_ssim: 'no') }
       it { expect(presenter.allow_download?).to be false }
     end
-    context 'yes' do
+    context 'allow_download == "yes"' do
+      before do
+        allow(ability).to receive(:platform_admin?).and_return(false)
+        allow(ability).to receive(:can?).with(:edit, 'fs').and_return(false)
+      end
       let(:fileset_doc) { SolrDocument.new(id: 'fs', has_model_ssim: ['FileSet'], allow_download_ssim: 'yes') }
       it { expect(presenter.allow_download?).to be true }
     end
-    context 'external resource' do
+    context 'external resource overrides everything to hide download button' do
+      before do
+        allow(ability).to receive(:platform_admin?).and_return(true)
+        allow(ability).to receive(:can?).with(:edit, 'fs').and_return(true)
+      end
       let(:fileset_doc) { SolrDocument.new(id: 'fs', has_model_ssim: ['FileSet'], allow_download_ssim: 'yes', external_resource_ssim: 'yes') }
       it { expect(presenter.allow_download?).to be false }
+    end
+    context 'user has edit privileges' do
+      before do
+        allow(ability).to receive(:platform_admin?).and_return(false)
+        allow(ability).to receive(:can?).with(:edit, 'fs').and_return(true)
+      end
+      let(:fileset_doc) { SolrDocument.new(id: 'fs', has_model_ssim: ['FileSet'], allow_download_ssim: 'no') }
+      it { expect(presenter.allow_download?).to be true }
+    end
+    context 'user is a platform admin' do
+      before do
+        allow(ability).to receive(:platform_admin?).and_return(true)
+        allow(ability).to receive(:can?).with(:edit, 'fs').and_return(false)
+      end
+      let(:fileset_doc) { SolrDocument.new(id: 'fs', has_model_ssim: ['FileSet'], allow_download_ssim: 'no') }
+      it { expect(presenter.allow_download?).to be true }
     end
   end
 
@@ -308,6 +336,40 @@ RSpec.describe Hyrax::FileSetPresenter do
       let(:external_resource) { nil }
       let(:thumbnail_path) { nil }
       it { is_expected.to be true }
+    end
+  end
+
+  describe '#download_button_label' do
+    subject { presenter.download_button_label }
+
+    let(:fileset_doc) { SolrDocument.new(id: 'fileset_id',
+                                         has_model_ssim: ['FileSet'],
+                                         label_tesim: label,
+                                         file_size_lts: file_size)
+    }
+
+    context 'size and file extension (from label)' do
+      let(:label) { ['Blah.mp4'] }
+      let(:file_size) { 55_308_883 }
+      it { is_expected.to eq 'Download MP4 (52.7 MB)' }
+    end
+
+    context 'size only' do
+      let(:label) { nil }
+      let(:file_size) { 55_308_883 }
+      it { is_expected.to eq 'Download (52.7 MB)' }
+    end
+
+    context 'file extension/label only' do
+      let(:label) { ['Blah.mp4'] }
+      let(:file_size) { nil }
+      it { is_expected.to eq 'Download MP4' }
+    end
+
+    context 'neither file extension nor label' do
+      let(:label) { nil }
+      let(:file_size) { nil }
+      it { is_expected.to eq 'Download' }
     end
   end
 end
