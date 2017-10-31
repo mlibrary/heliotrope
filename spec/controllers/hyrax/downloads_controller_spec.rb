@@ -36,11 +36,21 @@ RSpec.describe Hyrax::DownloadsController, type: :controller do
                               read_groups: ["public"],
                               content: File.open(File.join(fixture_path, 'csv', 'miranda.jpg'))) }
 
-      context "and the user is logged in" do
-        before { sign_in user }
+      context "and a non-edit user is logged in" do
+        let(:non_edit_user) { create(:user) }
+        before { sign_in non_edit_user }
         it "shows the unauthorized message" do
           get :show, params: { id: file_set.id, use_route: 'downloads' }
           expect(response).to have_http_status(401)
+        end
+      end
+
+      context "and an edit user is logged in" do
+        before { sign_in user }
+        it "shows the unauthorized message" do
+          get :show, params: { id: file_set.id, use_route: 'downloads' }
+          expect(response).to have_http_status(200)
+          expect(response.body).to eq file_set.original_file.content
         end
       end
 

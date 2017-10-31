@@ -57,7 +57,8 @@ module Hyrax
     end
 
     def allow_download?
-      (current_user && current_user.platform_admin?) || file_set_doc['allow_download_ssim']&.first == 'yes'
+      # should match 'show button' allow_download? logic in file_set_presenter
+      file_set_doc['allow_download_ssim']&.first == 'yes' || current_user&.platform_admin? || current_user&.can?(:edit, params[:id])
     end
 
     def thumbnail?

@@ -8,6 +8,7 @@ module Hyrax
     include ModelProxy
     include PresentsAttributes
     include Rails.application.routes.url_helpers
+    include ActionView::Helpers::NumberHelper
 
     attr_accessor :solr_document, :current_ability, :request, :monograph_presenter
 
@@ -111,7 +112,8 @@ module Hyrax
 
     def allow_download?
       return false if external_resource?
-      allow_download == 'yes'
+      # safe navigation (&.) as current_Ability is nil in some specs, should match allow_download? logic in downloads_controller
+      allow_download == 'yes' || current_ability&.platform_admin? || current_ability&.can?(:edit, id)
     end
 
     def allow_embed?
@@ -286,6 +288,15 @@ module Hyrax
       # Anyway, this default (set with a call to ActionController::Base.helpers.image_path) can't be styled per...
       # publisher so instead we'll use resource-type-specific glyphicons in "publisher branding" colors
       mime_type.blank? || external_resource == 'yes' || thumbnail_path.start_with?('/assets/')
+    end
+
+    def download_button_label
+      download_label = 'Download'
+      extension = File.extname(label).delete('.').upcase if label.present?
+      size = number_to_human_size(file_size) if file_size.present?
+      download_label += ' ' + extension if extension.present?
+      download_label += ' (' + size + ')' if size.present?
+      download_label
     end
   end
 end

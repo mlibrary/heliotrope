@@ -12,10 +12,15 @@ RSpec.describe 'hyrax/file_sets/_media', type: :view do
   let(:ability) { double('ability') }
   let(:request) { double('request') }
   let(:file_set_presenter) { Hyrax::FileSetPresenter.new(file_set_doc, ability, request) }
+  let(:allow_download) { nil }
+
+  before do
+    assign(:presenter, file_set_presenter)
+    allow(file_set_presenter).to receive(:allow_download?).and_return(allow_download)
+  end
 
   context 'with an external_resource' do
     it 'has the external resource url' do
-      assign(:presenter, file_set_presenter)
       render
       expect(rendered).to match('<a href="http://things.at/stuff" title=')
     end
@@ -35,10 +40,23 @@ RSpec.describe 'hyrax/file_sets/_media', type: :view do
       allow(file_set_presenter).to receive(:translation).and_return(present)
     end
     it do
-      assign(:presenter, file_set_presenter)
       stub_template("hyrax/file_sets/media_display/_epub.html.erb" => "epub")
       render
       expect(rendered).to match(/epub/)
+    end
+  end
+
+  context 'download button' do
+    before do
+      render
+    end
+    context 'has a download link when allow_download? returns true' do
+      let(:allow_download) { true }
+      it { expect(rendered).to have_link('Download') }
+    end
+    context 'has no download link when allow_download? returns false' do
+      let(:allow_download) { false }
+      it { expect(rendered).to_not have_link('Download') }
     end
   end
 end
