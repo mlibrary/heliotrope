@@ -1,5 +1,4 @@
 <% include_works_link ||= can_ever_create_works? %>
-<% include_collections_link ||= can?(:create, ::Collection) %>
 <% include_sub_brand_link ||= @press.present? && !@press.new_record? #&& can?(:update, @press) %>
 
 <% if include_works_link || include_collections_link || include_sub_brand_link %>
@@ -14,10 +13,6 @@
         <%= render 'shared/add_works' %>
         </li>
         <li class="divider"></li>
-      <% end %>
-
-      <% if include_collections_link %>
-        <li><%= link_to 'Add a Collection', hyrax.new_collection_path, class: 'menu-heading new-collection', role: 'menuitem' %></li>
       <% end %>
 
       <% if include_sub_brand_link %>

@@ -80,7 +80,8 @@ gem 'devise-guests', '~> 0.3'
 
 gem 'httparty'
 
-gem 'hyrax', '1.0.4'
+# gem 'hyrax', '1.0.4'
+gem 'hyrax', '2.0.0.rc1'
 
 # Use Jekyll for blog and informational pages
 # See #937 before updating this version

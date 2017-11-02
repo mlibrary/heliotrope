@@ -9,7 +9,8 @@ RSpec.describe MonographIndexer do
     let(:indexer) { described_class.new(monograph) }
     let(:monograph) { build(:monograph,
                             primary_editor_given_name: 'Bullwinkle',
-                            primary_editor_family_name: 'Moose') }
+                            primary_editor_family_name: 'Moose',
+                            description: ["This is the abstract"]) }
     let(:file_set) { create(:file_set) }
     let(:press_name) { Press.find_by(subdomain: monograph.press).name }
 
@@ -33,6 +34,10 @@ RSpec.describe MonographIndexer do
     it 'indexes the primary_editor_full_name' do
       expect(subject['primary_editor_full_name_tesim']).to eq 'Moose, Bullwinkle'
       expect(subject['primary_editor_full_name_sim']).to eq 'Moose, Bullwinkle'
+    end
+
+    it 'has description indexed by Hyrax::IndexesBasicMetadata' do
+      expect(subject['description_tesim'].first).to eq 'This is the abstract'
     end
   end
 

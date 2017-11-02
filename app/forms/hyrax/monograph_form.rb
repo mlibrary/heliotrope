@@ -37,7 +37,7 @@ module Hyrax
       # We only want FileSets here, not any other models, see story #174
       # Use model.file_set_ids, not model.member_ids
       file_sets ||=
-        PresenterFactory.build_presenters(model.file_set_ids, FileSetPresenter, current_ability)
+        PresenterFactory.build_for(ids: model.file_set_ids, presenter_class: Hyrax::FileSetPresenter, presenter_args: current_ability)
       Hash[file_sets.map { |file| [file.to_s, file.id] }]
     end
   end

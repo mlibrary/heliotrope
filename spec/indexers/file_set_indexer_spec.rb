@@ -6,7 +6,7 @@ describe FileSetIndexer do
   let(:indexer) { described_class.new(file_set2) }
   let(:monograph) { create(:monograph) }
   let(:file_set1) { create(:file_set) }
-  let(:file_set2) { create(:file_set, section_title: ['A section title']) }
+  let(:file_set2) { create(:file_set, section_title: ['A section title'], description: ["This is the description"]) }
   let(:file) do
     Hydra::PCDM::File.new.tap do |f|
       f.content = 'foo'
@@ -59,6 +59,10 @@ describe FileSetIndexer do
       monograph.ordered_members = [file_set2, file_set1]
       monograph.save!
       expect(subject['monograph_position_isi']).to eq 0
+    end
+
+    it 'has description indexed by Hyrax::IndexesBasicMetadata' do
+      expect(subject['description_tesim'].first).to eq 'This is the description'
     end
   end
 end

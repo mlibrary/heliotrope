@@ -23,8 +23,8 @@ describe 'shared/_my_actions.html.erb' do
         expect(rendered).to have_link("Dashboard")
         expect(rendered).to have_link("Log Out")
         expect(rendered).to have_link("Jobs", href: resque_web_path)
-        expect(rendered).to have_link("Embargos", href: embargoes_path)
-        expect(rendered).to have_link("Leases", href: leases_path)
+        expect(rendered).to have_link("Embargos", href: hyrax.embargoes_path)
+        expect(rendered).to have_link("Leases", href: hyrax.leases_path)
         expect(rendered).to have_link("Users", href: press_roles_path(press))
       end
     end
@@ -37,8 +37,8 @@ describe 'shared/_my_actions.html.erb' do
         expect(rendered).to have_link("Dashboard")
         expect(rendered).to have_link("Log Out")
         expect(rendered).to have_link("Jobs", href: resque_web_path)
-        expect(rendered).to have_link("Embargos", href: embargoes_path)
-        expect(rendered).to have_link("Leases", href: leases_path)
+        expect(rendered).to have_link("Embargos", href: hyrax.embargoes_path)
+        expect(rendered).to have_link("Leases", href: hyrax.leases_path)
         expect(rendered).to_not have_link("Users", href: press_roles_path(press))
       end
     end
@@ -57,8 +57,8 @@ describe 'shared/_my_actions.html.erb' do
         expect(rendered).to_not have_link("Analytics")
         expect(rendered).to have_link("Dashboard")
         expect(rendered).to have_link("Log Out")
-        expect(rendered).to have_link("Embargos", href: embargoes_path)
-        expect(rendered).to have_link("Leases", href: leases_path)
+        expect(rendered).to have_link("Embargos", href: hyrax.embargoes_path)
+        expect(rendered).to have_link("Leases", href: hyrax.leases_path)
         expect(rendered).to have_link("Users", href: press_roles_path(press))
       end
     end
@@ -74,8 +74,8 @@ describe 'shared/_my_actions.html.erb' do
         expect(rendered).to_not have_link("Analytics")
         expect(rendered).to have_link("Dashboard")
         expect(rendered).to have_link("Log Out")
-        expect(rendered).to have_link("Embargos", href: embargoes_path)
-        expect(rendered).to have_link("Leases", href: leases_path)
+        expect(rendered).to have_link("Embargos", href: hyrax.embargoes_path)
+        expect(rendered).to have_link("Leases", href: hyrax.leases_path)
         expect(rendered).to_not have_link("Users", href: press_roles_path(different_press))
       end
     end
@@ -94,8 +94,8 @@ describe 'shared/_my_actions.html.erb' do
         expect(rendered).to_not have_link("Analytics")
         expect(rendered).to have_link("Dashboard")
         expect(rendered).to have_link("Log Out")
-        expect(rendered).to have_link("Embargos", href: embargoes_path)
-        expect(rendered).to have_link("Leases", href: leases_path)
+        expect(rendered).to have_link("Embargos", href: hyrax.embargoes_path)
+        expect(rendered).to have_link("Leases", href: hyrax.leases_path)
         expect(rendered).to_not have_link("Users")
       end
     end
@@ -111,8 +111,8 @@ describe 'shared/_my_actions.html.erb' do
         expect(rendered).to_not have_link("Analytics")
         expect(rendered).to have_link("Dashboard")
         expect(rendered).to have_link("Log Out")
-        expect(rendered).to have_link("Embargos", href: embargoes_path)
-        expect(rendered).to have_link("Leases", href: leases_path)
+        expect(rendered).to have_link("Embargos", href: hyrax.embargoes_path)
+        expect(rendered).to have_link("Leases", href: hyrax.leases_path)
         expect(rendered).to_not have_link("Users", href: press_roles_path(different_press))
       end
     end
