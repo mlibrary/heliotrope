@@ -2,6 +2,9 @@ language: ruby
 cache: bundler
 sudo: required
 bundler_args: --without production
+before_install:
+  - gem update --system
+  - gem install bundler
 before_script:
   - bin/bundle exec bin/setup
 rvm:
