@@ -99,6 +99,10 @@ describe Import::Importer do
         expect(file_sets[5].title).to eq ['Section 2 Shipwreck']
         expect(file_sets[5].section_title).to eq ['Act 2: Stirrin\' Up']
 
+        # filesets should have the same visibility as the parent monograph
+        expect(file_sets[0].visibility).to eq monograph.visibility
+        expect(file_sets[8].visibility).to eq monograph.visibility
+
         # ******************************************************
         # *************** Start "reimport" tests ***************
         # ******************************************************
@@ -133,6 +137,13 @@ describe Import::Importer do
         expect(file_sets[15].title).to eq ['Section 2 Miranda']
         expect(file_sets[16].title).to eq ['Previous Shipwreck File (Again)']
         expect(file_sets[17].title).to eq ['External Bard Transcript']
+
+        # check monograph visibility doesn't change
+        expect(Monograph.first.visibility).to eq monograph.visibility
+
+        # old filesets should have the same visibility as the parent monograph
+        expect(file_sets[0].visibility).to eq monograph.visibility
+        expect(file_sets[8].visibility).to eq monograph.visibility
 
         # new filesets should have the same visibility as the parent monograph
         expect(file_sets[10].visibility).to eq monograph.visibility

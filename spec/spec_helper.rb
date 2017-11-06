@@ -18,8 +18,15 @@
 # users commonly want.
 #
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
-require 'coveralls'
-Coveralls.wear!
+def coverage_needed?
+  ENV['COVERAGE'] || ENV['TRAVIS']
+end
+
+if coverage_needed?
+  require 'coveralls'
+  Coveralls.wear!
+end
+
 require 'active_fedora/cleaner'
 
 RSpec.configure do |config|

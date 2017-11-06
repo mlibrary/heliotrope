@@ -1,6 +1,10 @@
+# frozen_string_literal: true
+
 module Import
   class Importer
     include ::Hyrax::Noid
+    # Insert actor after obtaining lock so we are first in line!
+    Hyrax::CurationConcern.actor_factory.insert_after(Hyrax::Actors::OptimisticLockValidator, CreateWithImportFilesActor)
 
     attr_reader :root_dir, :user_email, :press_subdomain, :monograph_id, :monograph_title,
                 :visibility, :reimporting, :reimport_mono
@@ -31,39 +35,29 @@ module Import
       csv_files.each do |file|
         attrs = CSVParser.new(file).attributes
 
+        optional_early_exit(interaction, attrs.delete('row_errors'), test)
+
         # if there is a command-line monograph title then use it
         attrs['title'] = Array(monograph_title) if monograph_title.present?
 
-        # create file objects (stop everything here if any are not found, duplicates or of zero size)
-        file_objects(attrs)
-
-        optional_early_exit(interaction, attrs.delete('row_errors'), test)
-
-        # Because the MonographBuilder sets its metadata, files_metadata has to be removed here
-        file_attrs = attrs.delete('files_metadata')
-        # The old "files" array cause errors in hyrax2, we need "uploaded_files" which was
-        # created above in file_objects(attrs)
-        attrs.delete('files')
+        # Wrap files in UploadedFile wrappers using /dev/null for external resources
+        uploaded_files = attrs.delete('files').map do |filename|
+          if filename.present?
+            Hyrax::UploadedFile.create(file: File.new(find_file(filename)), user: user)
+          else
+            # "External Resources" are FileSets without a file
+            Hyrax::UploadedFile.create(file: File.new("/dev/null"), user: user) # TODO: Is File.new("/dev/null") really good here?
+          end
+        end
+        attrs['uploaded_files_ids'] = uploaded_files.map(&:id)
+        attrs['uploaded_files_attributes'] = attrs.delete('files_metadata')
 
         if reimporting
-          # TODO: make add_new_filesets return something sensible?
-          raise "There may have been a problem attaching the new files" unless add_new_filesets(@reimport_mono, attrs, file_attrs)
+          attrs.merge!('visibility' => reimport_mono.visibility)
+          Hyrax::CurationConcern.actor.update(Hyrax::Actors::Environment.new(@reimport_mono, Ability.new(user), attrs))
         else
           attrs.merge!('press' => press_subdomain, 'visibility' => visibility)
-          monograph_builder = MonographBuilder.new(user, attrs)
-          monograph_builder.run
-          monograph = Monograph.find(monograph_builder.curation_concern.id)
-          puts "Ingesting files. This could take some time, could be over an hour for 300+ files."
-          until monograph.ordered_members.to_a.length == attrs["uploaded_files"].length
-            # This is obviously terrible, but we need to wait for all the files to be
-            # ingested via the resque jobs before we can update the file_sets with their metadata
-            # TODO: Investigate other ways to do this.
-            monograph = monograph.reload
-            sleep 1
-            print "."
-          end
-          puts "\nUpdating FileSet Metadata"
-          update_fileset_metadata(monograph, file_attrs)
+          Hyrax::CurationConcern.actor.create(Hyrax::Actors::Environment.new(Monograph.new, Ability.new(user), attrs))
         end
       end
     end
@@ -85,20 +79,6 @@ module Import
         @csv_files ||= Dir.glob(File.join(root_dir, '*.csv'))
       end
 
-      def file_objects(attrs)
-        # assigning empty files a generic link icon here, should be external resources
-        uploaded_files = attrs['files'].map do |file|
-          if file.present?
-            Hyrax::UploadedFile.create(file: File.new(find_file(file)), user: user)
-          else
-            # "External Resources" are FileSets without a file
-            Hyrax::UploadedFile.create(file: File.new("/dev/null"), user: user) # Is File.new("/dev/null") really good here? Leaving it file: "" causes an error...
-          end
-        end
-
-        attrs['uploaded_files'] = uploaded_files.map(&:id)
-      end
-
       def find_file(file_name)
         match = Dir.glob(File.join(root_dir, '**', file_name))
         if match.empty?
@@ -113,28 +93,6 @@ module Import
 
       def user
         @user ||= User.find_by(email: user_email)
-      end
-
-      # The 'attrs' parameter is an array of hashes.
-      # Each hash in the array is a set of attributes for one
-      # FileSet.  The array is in the correct order to match
-      # the order of the filesets in the ordered_members list.
-      def update_fileset_metadata(work, attrs)
-        work.ordered_members.to_a.each_with_index do |member, i|
-          builder = FileSetBuilder.new(member, user, attrs[i])
-          builder.run
-        end
-      end
-
-      def add_new_filesets(monograph, attrs, file_attrs)
-        [attrs['uploaded_files'], file_attrs].transpose.each do |file, metadata|
-          file_set = FileSet.new
-          file_set_actor = Hyrax::Actors::FileSetActor.new(file_set, user)
-          file_set_actor.create_metadata(metadata)
-          file_set_actor.create_content(Hyrax::UploadedFile.find(file))
-          file_set_actor.update_metadata(metadata)
-          file_set_actor.attach_to_work(monograph, metadata)
-        end
       end
 
       def optional_early_exit(interaction, errors, test)
