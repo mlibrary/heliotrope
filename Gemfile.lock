@@ -785,6 +785,8 @@ GEM
       rack (~> 2.0)
       rack-protection (= 2.0.0)
       tilt (~> 2.0)
+    sitemap_generator (5.3.1)
+      builder (~> 3.0)
     slop (4.6.0)
     solr_wrapper (0.21.0)
       faraday
@@ -927,6 +929,7 @@ DEPENDENCIES
   sdoc (~> 0.4.0)
   selenium-webdriver
   signet
+  sitemap_generator
   solr_wrapper (= 0.21.0)
   spring
   spring-watcher-listen (~> 2.0.0)

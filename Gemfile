@@ -109,6 +109,8 @@ gem 'rubyzip'
 
 # bundle exec rake doc:rails generates the API under doc/api.
 gem 'sdoc', '~> 0.4.0', group: :doc
+gem 'sitemap_generator'
+
 # sqlite for epub indexing
 gem 'sqlite3'
 
