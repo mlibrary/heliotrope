@@ -3,7 +3,7 @@
 # something to note is that the multivalued :yes/:no values mirror the model, such that assignment will work properly as a scalar or array...
 # ... the third :yes_split means that this is a field we actually want to *use* as multivalued, and so will split the CSV field on semicolons to do so
 
-METADATA_FIELDS =
+METADATA_FIELDS ||=
   [
     { object: :universal, field_name: 'Title', metadata_name: 'title', required: true, multivalued: :yes_split },
     { object: :file_set, field_name: 'Resource Type', metadata_name: 'resource_type', required: true, multivalued: :yes, acceptable_values: ['audio', 'image', 'dataset', 'table', '3D model', 'text', 'video'] },
@@ -65,4 +65,4 @@ METADATA_FIELDS =
     { object: :monograph, field_name: 'Buy Book URL', metadata_name: 'buy_url', multivalued: :yes }
   ].freeze
 
-MONO_FILENAME_FLAG = '://:MONOGRAPH://:'
+MONO_FILENAME_FLAG ||= '://:MONOGRAPH://:'
