@@ -10,8 +10,8 @@
        poster="<%= hyrax.download_path(file_set, file: 'jpeg') %>">
   <source src="<%= hyrax.download_path(file_set, file: 'webm') %>" type="video/webm" />
   <source src="<%= hyrax.download_path(file_set, file: 'mp4') %>" type="video/mp4" />
-  <% if file_set.transcript.present? %>
-    <track kind="captions" src="<%= hyrax.download_path(file_set, file: 'vtt') %>" srclang="en" label="English"  />
+  <% if file_set.transcript.present? %><%# kind="subtitles" due to https://github.com/mlibrary/heliotrope/issues/1234 %>
+    <track kind="subtitles" src="<%= hyrax.download_path(file_set, file: 'vtt') %>" srclang="en" label="English"  />
   <% end %>
   Your browser does not support the video tag.
 </video>
