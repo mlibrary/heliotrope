@@ -600,3 +600,18 @@ footer.press {
 .cozy-control .logo img {
   height: 54.4px;
 }
+
+
+///////////////////////////////////
+// SITE REQUIRES COOKIES ALERT
+///////////////////////////////////
+#cookies-required-alert {
+  position: fixed;
+  top: 90%;
+  /*
+    To stay on top of leaflet. They seem to have it somewhere over 300.
+    It's nuts... And then AblePlayer has it somewhere over 1000!
+    I don't even know. Can this mad arms race be won?
+  */
+  z-index: 99999;
+}
