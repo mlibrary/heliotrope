@@ -5,7 +5,7 @@ class EPubsController < ApplicationController
     presenter = Hyrax::FileSetPresenter.new(SolrDocument.new(FileSet.find(params[:id]).to_solr), current_ability, request)
     if presenter.epub?
       FactoryService.e_pub_publication(params[:id]) # cache epub
-      @title = presenter.title
+      @title = presenter.parent.present? ? presenter.parent.title : presenter.title
       @citable_link = presenter.citable_link
       @creator_given_name = presenter.creator_given_name
       @creator_family_name = presenter.creator_family_name
