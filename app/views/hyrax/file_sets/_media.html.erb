@@ -30,7 +30,7 @@
         <a href="<%= @presenter.ext_url_doi_or_handle %>" title="<%= @presenter.title %>" target="_blank" ><span class="glyphicon glyphicon-share" aria-hidden="true"></span> View object</a> at originating website.
       </p>
     <% end %>
-    <figcaption><%= @presenter.attribute_to_html(:caption, render_as: :markdown, label: '') %></figcaption>
+    <figcaption<%= ' class="text-center"'.html_safe if @presenter.center_caption? %>><%= @presenter.attribute_to_html(:caption, render_as: :markdown, label: '') %></figcaption>
     <% if @presenter.allow_download?  %>
         <div class="text-center">
           <%= link_to @presenter.download_button_label, hyrax.download_path(@presenter), target: :_blank, class: 'btn btn-default btn-lg btn-heliotrope-download', data: { turbolinks: false } %>

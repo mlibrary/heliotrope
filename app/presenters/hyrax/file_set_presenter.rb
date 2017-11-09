@@ -290,6 +290,12 @@ module Hyrax
       mime_type.blank? || external_resource == 'yes' || thumbnail_path.start_with?('/assets/')
     end
 
+    def center_caption?
+      # when using the default thumbnail view (or glyphicon) both this and the download button are centered.
+      # The caption lies between these. It looks very weird if it's left-aligned, especially if it's short.
+      !image? && !video? && !audio?
+    end
+
     def download_button_label
       download_label = 'Download'
       extension = File.extname(label).delete('.').upcase if label.present?
