@@ -293,7 +293,7 @@ module Hyrax
     def center_caption?
       # when using the default thumbnail view (or glyphicon) both this and the download button are centered.
       # The caption lies between these. It looks very weird if it's left-aligned, especially if it's short.
-      !image? && !video? && !audio?
+      !image? && !video? && !audio? && !external_resource?
     end
 
     def download_button_label
