@@ -14,19 +14,19 @@ RSpec.describe CreateWithImportFilesActor do
   let(:user) { create(:user) }
   let(:ability) { ::Ability.new(user) }
   let(:monograph) { create(:monograph, user: user) }
-  let(:uploaded_files_ids)  { [] }
-  let(:uploaded_files) { [] }
-  let(:uploaded_files_attributes) { [] }
-  let(:attributes) { { uploaded_files_ids: uploaded_files_ids, uploaded_files_attributes: uploaded_files_attributes } }
+  let(:import_uploaded_files_ids)  { [] }
+  let(:import_uploaded_files) { [] }
+  let(:import_uploaded_files_attributes) { [] }
+  let(:attributes) { { import_uploaded_files_ids: import_uploaded_files_ids, import_uploaded_files_attributes: import_uploaded_files_attributes } }
   let(:env) { Hyrax::Actors::Environment.new(monograph, ability, attributes) }
   let(:expected_env) { Hyrax::Actors::Environment.new(monograph, ability, {}) }
   let(:n) { 0 }
 
   before do
     n.times do |i|
-      uploaded_files_ids << i
-      uploaded_files << "file#{i}"
-      uploaded_files_attributes << { title: ["title#{i}"] }
+      import_uploaded_files_ids << i
+      import_uploaded_files << "file#{i}"
+      import_uploaded_files_attributes << { title: ["title#{i}"] }
     end
   end
 
@@ -34,7 +34,7 @@ RSpec.describe CreateWithImportFilesActor do
     context "on #{mode}" do
       before do
         allow(terminator).to receive(mode).and_return(true)
-        allow(Hyrax::UploadedFile).to receive(:find).with(uploaded_files_ids).and_return(uploaded_files)
+        allow(Hyrax::UploadedFile).to receive(:find).with(import_uploaded_files_ids).and_return(import_uploaded_files)
       end
 
       context 'when files is empty' do
@@ -48,7 +48,7 @@ RSpec.describe CreateWithImportFilesActor do
       context 'when files exist' do
         let(:n) { 3 }
         it 'is successful' do
-          expect(AttachImportFilesToWorkJob).to receive(:perform_later).with(expected_env.curation_concern, expected_env.attributes.to_h.symbolize_keys, uploaded_files, uploaded_files_attributes)
+          expect(AttachImportFilesToWorkJob).to receive(:perform_later).with(expected_env.curation_concern, expected_env.attributes.to_h.symbolize_keys, import_uploaded_files, import_uploaded_files_attributes)
           middleware.public_send(mode, env)
         end
       end

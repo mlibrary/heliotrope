@@ -5,16 +5,16 @@ class CreateWithImportFilesActor < Hyrax::Actors::AbstractActor
   # @param [Hyrax::Actors::Environment] env
   # @return [Boolean] true if create was successful
   def create(env)
-    files_ids = env.attributes.delete(:uploaded_files_ids)
-    files_attributes = env.attributes.delete(:uploaded_files_attributes)
+    files_ids = env.attributes.delete(:import_uploaded_files_ids)
+    files_attributes = env.attributes.delete(:import_uploaded_files_attributes)
     next_actor.create(env) && create_with_import_files(env, files_ids, files_attributes)
   end
 
   # @param [Hyrax::Actors::Environment] env
   # @return [Boolean] true if update was successful
   def update(env)
-    files_ids = env.attributes.delete(:uploaded_files_ids)
-    files_attributes = env.attributes.delete(:uploaded_files_attributes)
+    files_ids = env.attributes.delete(:import_uploaded_files_ids)
+    files_attributes = env.attributes.delete(:import_uploaded_files_attributes)
     next_actor.update(env) && update_with_import_files(env, files_ids, files_attributes)
   end
 

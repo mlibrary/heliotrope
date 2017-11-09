@@ -3,8 +3,6 @@
 module Import
   class Importer
     include ::Hyrax::Noid
-    # Insert actor after obtaining lock so we are first in line!
-    Hyrax::CurationConcern.actor_factory.insert_after(Hyrax::Actors::OptimisticLockValidator, CreateWithImportFilesActor)
 
     attr_reader :root_dir, :user_email, :press_subdomain, :monograph_id, :monograph_title,
                 :visibility, :reimporting, :reimport_mono
@@ -49,8 +47,8 @@ module Import
             Hyrax::UploadedFile.create(file: File.new("/dev/null"), user: user) # TODO: Is File.new("/dev/null") really good here?
           end
         end
-        attrs['uploaded_files_ids'] = uploaded_files.map(&:id)
-        attrs['uploaded_files_attributes'] = attrs.delete('files_metadata')
+        attrs['import_uploaded_files_ids'] = uploaded_files.map(&:id)
+        attrs['import_uploaded_files_attributes'] = attrs.delete('files_metadata')
 
         if reimporting
           attrs.merge!('visibility' => reimport_mono.visibility)
