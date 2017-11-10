@@ -139,12 +139,10 @@ module Hyrax
       'View "' + page_title.delete('"') + '" on Fulcrum'
     end
 
-    def embed_fulcrum_logo_link(protocol, host_with_port)
-      return citable_link if id.blank?
-      if (Rails.env.production? && host_with_port.include?('heliotrope')) || Rails.env.development?
-        protocol + host_with_port + '/concern/file_sets/' + id
+    def embed_fulcrum_logo_link
+      if !root_url.include?('fulcrum')
+        root_url + 'concern/file_sets/' + id
       else
-        # actual production and test
         citable_link
       end
     end

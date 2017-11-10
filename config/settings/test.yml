@@ -7,4 +7,4 @@
   # minter_path tracks the ID of the last-created object
   minter_path: <%= File.join(Rails.root, 'tmp', 'minter-state') %>
   resque_namespace: heliotrope-testing
-  host: localhost:3000
+  host: test.host

@@ -19,15 +19,15 @@ class HandleService
     "http://hdl.handle.net/#{handle}"
   end
 
-  def self.object(handle, host = nil)
+  def self.object(handle)
     return nil unless handle.is_a? String
     match = /(.*)(2027\/fulcrum\.)(.*)$/.match(handle)
     return nil if match.nil?
-    actual_noid = if Rails.env.development? || host&.include?('heliotrope')
-                    match[3]
-                  else
+    actual_noid = if Rails.env.test? || Rails.application.routes.url_helpers.root_url.include?('fulcrum')
                     # only check handle.net when running in 'proper' production
                     noid(match[3])
+                  else
+                    match[3]
                   end
     ActiveFedora::Base.find(actual_noid)
   end

@@ -18,12 +18,6 @@ task sample_iiif_urls: :environment do
   # -t "time" do it for 180 seconds
   #
 
-  base_url = if Rails.env.eql?('production') && Rails.root.to_s.match(/staging/)
-               "https://heliotrope-staging.hydra.lib.umich.edu"
-             else
-               "http://127.0.0.1:3000"
-             end
-
   tiffs = FileSet.all.to_a.select do |f|
     f.original_file.mime_type.match(/tiff/)
   end
@@ -39,7 +33,7 @@ task sample_iiif_urls: :environment do
     # Get 100 different tiles for each tiff
     100.times do
       x, y, w, h = random_region(info)
-      urls << "#{base_url}/image-service/#{id}/#{x},#{y},#{w},#{h}/full/0/default.jpg"
+      urls << "#{Rails.application.routes.url_helpers.root_url}/image-service/#{id}/#{x},#{y},#{w},#{h}/full/0/default.jpg"
     end
   end
 

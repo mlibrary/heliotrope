@@ -27,7 +27,7 @@ RSpec.describe "embed/show.html.erb", type: :view do
       # logo links back to the Fulcrum asset page through the handle
       expect(rendered).to have_css("img[src*='fulcrum-white-50px']", count: 1)
       expect(rendered).to have_link(nil,
-                                    href: file_set_presenter.citable_link,
+                                    href: root_url + 'concern/file_sets/' + file_set.id,
                                     title: file_set_presenter.embed_fulcrum_logo_title)
     }
   end
@@ -47,7 +47,7 @@ RSpec.describe "embed/show.html.erb", type: :view do
       # logo links back to the Fulcrum asset page through the handle
       expect(rendered).to have_css("img[src*='fulcrum-white-50px']", count: 1)
       expect(rendered).to have_link(nil,
-                                    href: file_set_presenter.citable_link,
+                                    href: root_url + 'concern/file_sets/' + file_set.id,
                                     title: file_set_presenter.embed_fulcrum_logo_title)
     }
   end
