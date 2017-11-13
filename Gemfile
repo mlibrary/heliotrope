@@ -62,7 +62,7 @@ gem 'tzinfo-data', platforms: %i[mingw mswin x64_mingw jruby]
 
 gem 'actionpack-page_caching', '~> 1.1.0'
 
-gem 'active-fedora', '~> 11.3.1'
+# gem 'active-fedora', '~> 11.3.1'
 
 gem 'carrierwave', '~> 1.1.0'
 
@@ -81,7 +81,8 @@ gem 'devise-guests', '~> 0.3'
 gem 'httparty'
 
 # gem 'hyrax', '1.0.4'
-gem 'hyrax', '2.0.0.rc1'
+# gem 'hyrax', '2.0.0.rc1'
+gem 'hyrax', '2.0.0'
 
 # Use Jekyll for blog and informational pages
 # See #937 before updating this version
@@ -136,7 +137,7 @@ group :development, :test do
   gem 'rspec-html-matchers'
   gem 'rspec-rails'
   gem 'rubocop', '~> 0.49.1'
-  gem 'rubocop-rspec', '~> 1.15.1'
+  gem 'rubocop-rspec', '~> 1.16.0'
   gem 'ruumba'
   gem 'solr_wrapper', '0.21.0'
 end
