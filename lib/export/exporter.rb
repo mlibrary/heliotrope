@@ -10,15 +10,15 @@ module Export
 
     def export
       return String.new if @monograph.blank?
-      lines = []
+      rows = []
       @monograph.ordered_members.to_a.each do |member|
-        lines << metadata_field(member, :file_set)
+        rows << metadata_row(member, :file_set)
       end
-      lines << metadata_field(@monograph, :monograph)
+      rows << metadata_row(@monograph, :monograph)
       buffer = String.new
       CSV.generate(buffer) do |csv|
         write_csv_header_rows(csv)
-        lines.each { |line| csv << line if line.present? }
+        rows.each { |row| csv << row if row.present? }
       end
       buffer
     end
@@ -32,25 +32,36 @@ module Export
         # Ideally this should be moved to metadata_fields.rb and the importer would be refactored (maybe)
         # Aside: In the absence of a title the file name is used
         file = [{ object: :file_set, field_name: 'File Name', metadata_name: 'label', required: true, multivalued: :no }]
-        noid + file + METADATA_FIELDS
+        # We want the url in the exported CSV file (required doesn't matter here)
+        url = [{ object: :universal, field_name: 'Link', metadata_name: 'url', required: true, multivalued: :no }]
+        noid + file + url + METADATA_FIELDS
       end
 
-      def metadata_field(item, object_type)
-        line = []
+      def metadata_row(item, object_type)
+        row = []
         all_metadata.each do |field|
-          metadata_name = field[:metadata_name]
-          if (field[:object] != :universal && field[:object] != object_type) || item.public_send(metadata_name).blank?
-            line << if object_type == :monograph && (['label', 'section_title'].include? metadata_name)
-                      MONO_FILENAME_FLAG
-                    end
-            next
-          end
-          line << field_value(item, metadata_name, field[:multivalued])
+          row << metadata_field_value(item, object_type, field)
         end
-        line
+        row
+      end
+
+      def metadata_field_value(item, object_type, field) # rubocop:disable Metrics/CyclomaticComplexity
+        return item_url(item, object_type) if field[:object] == :universal && field[:field_name] == 'Link'
+        return field_value(item, field[:metadata_name], field[:multivalued]) if field[:object] == :universal || field[:object] == object_type
+        return MONO_FILENAME_FLAG if object_type == :monograph && (['label', 'section_title'].include? field[:metadata_name])
+      end
+
+      def item_url(item, item_type)
+        link = if item_type == :monograph
+                 Rails.application.routes.url_helpers.hyrax_monograph_url(item)
+               else
+                 Rails.application.routes.url_helpers.hyrax_file_set_url(item)
+               end
+        '=HYPERLINK("' + link + '")'
       end
 
       def field_value(item, metadata_name, multivalued)
+        return if item.public_send(metadata_name).blank?
         if multivalued == :yes_split
           # TODO: right now we have lost any intended order in our multi-value fields, so I'm sorting them
           # alphabetically on export. This is convenient for testing but we'll have to address the problem
