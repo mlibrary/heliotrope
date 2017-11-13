@@ -15,7 +15,7 @@ RSpec.describe EmbedController, type: :controller do
       let(:hdl) { 'hdl' }
 
       before do
-        allow(HandleService).to receive(:object).with(hdl, 'test.host').and_return(nil)
+        allow(HandleService).to receive(:object).with(hdl).and_return(nil)
         get :show, params: { hdl: hdl }
       end
       it { expect(response).to have_http_status(:unauthorized) }
@@ -26,7 +26,7 @@ RSpec.describe EmbedController, type: :controller do
       let(:obj) { object_double("obj") }
 
       before do
-        allow(HandleService).to receive(:object).with(hdl, 'test.host').and_return(obj)
+        allow(HandleService).to receive(:object).with(hdl).and_return(obj)
         allow(obj).to receive(:id).and_return(0)
         get :show, params: { hdl: hdl }
       end
@@ -39,7 +39,7 @@ RSpec.describe EmbedController, type: :controller do
       let(:presenter) { object_double("presenter") }
 
       before do
-        allow(HandleService).to receive(:object).with(hdl, 'test.host').and_return(obj)
+        allow(HandleService).to receive(:object).with(hdl).and_return(obj)
         allow(obj).to receive(:id).and_return(0)
         allow(Hyrax::PresenterFactory).to receive(:build_presenters).with([obj.id], Hyrax::FileSetPresenter, anything).and_return([presenter])
         get :show, params: { hdl: hdl }
@@ -54,7 +54,7 @@ RSpec.describe EmbedController, type: :controller do
       let(:hdl) { 'hdl' }
 
       before do
-        allow(HandleService).to receive(:object).with(hdl, 'test.host').and_raise(Ldp::Gone)
+        allow(HandleService).to receive(:object).with(hdl).and_raise(Ldp::Gone)
         get :show, params: { hdl: hdl }
       end
       it do
