@@ -1,35 +1,5 @@
   <figure title="<%= @presenter.alt_text.first %>">
-    <% if !@presenter.external_resource? %>
-      <% if @presenter.image? %>
-        <%# https://github.com/mlibrary/heliotrope/issues/1127 %>
-        <% content_for :head do %>
-            <meta name="turbolinks-cache-control" content="no-cache">
-        <% end %>
-
-        <% riiif_url = "/image-service/#{@presenter.id}/info.json" %>
-        <div id="image"></div>
-        <script>
-          $().ready(function() {
-              var map, layer;
-              map = L.map('image', {
-                  center: [0, 0],
-                  crs: L.CRS.Simple,
-                  zoom: 0
-              });
-              layer = L.tileLayer.iiif("<%= riiif_url %>", { bestFit: true } );
-              layer.addTo(map);
-          });
-        </script>
-      <% elsif @presenter.epub? %>
-        <%= render partial: 'hyrax/file_sets/media_display/epub', locals: { file_set: @presenter } %>
-      <% else %>
-        <%= media_display @presenter %>
-      <% end %>
-    <% else %>
-      <p class="external-text lead">This is an external resource hosted on another website.<br />
-        <a href="<%= @presenter.ext_url_doi_or_handle %>" title="<%= @presenter.title %>" target="_blank" ><span class="glyphicon glyphicon-share" aria-hidden="true"></span> View object</a> at originating website.
-      </p>
-    <% end %>
+    <%= render partial: @presenter.heliotrope_media_partial, locals: { file_set: @presenter } %>
     <figcaption<%= ' class="text-center"'.html_safe if @presenter.center_caption? %>><%= @presenter.attribute_to_html(:caption, render_as: :markdown, label: '') %></figcaption>
     <% if @presenter.allow_download?  %>
         <div class="text-center">

@@ -1,0 +1,19 @@
+<%# https://github.com/mlibrary/heliotrope/issues/1127 %>
+<% content_for :head do %>
+    <meta name="turbolinks-cache-control" content="no-cache">
+<% end %>
+
+<% riiif_url = "/image-service/#{file_set.id}/info.json" %>
+<div id="image"></div>
+<script>
+    $().ready(function() {
+        var map, layer;
+        map = L.map('image', {
+            center: [0, 0],
+            crs: L.CRS.Simple,
+            zoom: 0
+        });
+        layer = L.tileLayer.iiif("<%= riiif_url %>", { bestFit: true } );
+        layer.addTo(map);
+    });
+</script>

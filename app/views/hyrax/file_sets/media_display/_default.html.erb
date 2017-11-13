@@ -1,7 +1,29 @@
-<% if Hyrax.config.display_media_download_link? && file_set.allow_download? %>
-    <%= link_to hyrax.download_path(file_set), target: "_new", title: "Download the document" do %>
-      <%= image_tag "default.png", alt: "No preview available", class: "img-responsive" %>
+<% if file_set.use_glyphicon? %>
+  <% if file_set.allow_download? %>
+    <%= link_to hyrax.download_path(file_set), target: "_new", title: file_set.download_button_label, class: 'glyphicon-download-link' do %>
+      <span class="<%= file_set.glyphicon_type %> asset-page-glyphicon"
+            aria-hidden="true"
+            alt='"<%= file_set.download_button_label %>, titled "<%= file_set.page_title.delete('"') %>"'>
+      </span>
     <% end %>
+  <% else %>
+    <span class="<%= file_set.glyphicon_type %> asset-page-glyphicon"
+          aria-hidden="true"
+          alt=""
+          role="presentation">
+    </span>
+  <% end %>
 <% else %>
-    <%= image_tag "default.png", alt: "No preview available", class: "img-responsive" %>
+  <% if file_set.allow_download? %>
+    <%= link_to hyrax.download_path(file_set), target: "_new", title: file_set.download_button_label do %>
+      <%= image_tag thumbnail_url(file_set),
+                    class: "img-responsive asset-page-image",
+                    alt: file_set.download_button_label + ', titled "' +  file_set.page_title.delete('"') + '"' %>
+    <% end %>
+  <% else %>
+    <%= image_tag thumbnail_url(file_set),
+                  class: "img-responsive asset-page-image",
+                  alt: 'Thumbnail of "' + file_set.page_title.delete('"') + '"',
+                  role: 'presentation' %>
+  <% end %>
 <% end %>
