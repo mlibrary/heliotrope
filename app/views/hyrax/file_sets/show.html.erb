@@ -1,4 +1,7 @@
 <% provide :page_title, @presenter.page_title %>
+<% if parent.blank? %>
+  <%= render "hyrax/file_sets/orphan_fileset", presenter: @presenter %>
+<% else %>
 <% provide :page_header do %>
   <!-- survey -->
   <div class="alert alert-info alert-dismissible survey" alert="role" style="display: none;">
@@ -71,3 +74,4 @@
       </div> <!-- /.asset-actions -->
     </div> <!-- / file_sets metadata and actions -->
   </div> <!-- /.asset -->
+<% end %>

@@ -1,0 +1,23 @@
+<div id="maincontent" class="row asset">
+  <!-- file_sets _media -->
+  <div class="col-sm-6">
+    <%= render "media", presenter: @presenter %>
+  </div> <!-- / file_sets _media -->
+  <!-- file_sets metadata and actions -->
+  <div class="col-sm-6">
+    <div class="row asset-attributes">
+      <div class="col-sm-12">
+        <h2 id="asset-title"><%= @presenter.title %></h2>
+        <h3>*** Has no parent monograph ***
+        </h3>
+        <br />
+        <%= render "attribute_rows_orphan_fileset", presenter: @presenter %>
+      </div>
+    </div> <!-- /.asset-attributes -->
+    <div class="row asset-actions">
+      <div class="col-sm-12">
+        <%# render "show_actions", presenter: @presenter, parent: parent %>
+      </div>
+    </div> <!-- /.asset-actions -->
+  </div> <!-- / file_sets metadata and actions -->
+</div> <!-- /.asset -->
