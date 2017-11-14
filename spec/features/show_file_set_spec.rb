@@ -15,7 +15,7 @@ feature 'FileSet Browse' do
       monograph.ordered_members << cover
 
       fileset_count.times do
-        monograph.ordered_members << FactoryGirl.create(:file_set)
+        monograph.ordered_members << FactoryBot.create(:file_set)
       end
 
       monograph.save!

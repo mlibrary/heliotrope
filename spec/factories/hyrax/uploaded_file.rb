@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-FactoryGirl.define do
+FactoryBot.define do
   factory :uploaded_file, class: Hyrax::UploadedFile do
     user
     file do

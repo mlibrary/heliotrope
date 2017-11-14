@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-FactoryGirl.define do
+FactoryBot.define do
   factory :user do
     transient do
-      press { FactoryGirl.create(:press) }
+      press { FactoryBot.create(:press) }
     end
 
     sequence(:email) { |_n| "email-#{srand}@test.com" }
