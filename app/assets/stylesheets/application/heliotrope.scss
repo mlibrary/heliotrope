@@ -521,6 +521,11 @@ footer.press {
     text-align: center;
     margin-bottom: 20px;
   }
+
+  a.glyphicon-download-link, a.glyphicon-download-link:hover {
+    text-decoration: none !important;
+  }
+
 }
 
 ///////////////////////////////////

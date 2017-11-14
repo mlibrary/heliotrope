@@ -1,0 +1,13 @@
+<video id="video"
+       preload="metadata"
+       data-able-player
+       data-include-transcript="false"
+       data-allow-fullscreen="false"
+       poster="<%= hyrax.download_path(file_set.id, file: 'jpeg') %>">
+  <source src="<%= hyrax.download_path(file_set.id, file: 'webm') %>" type="video/webm" />
+  <source src="<%= hyrax.download_path(file_set.id, file: 'mp4') %>" type="video/mp4" />
+  <% if file_set.transcript.present? %><%# kind="subtitles" due to https://github.com/mlibrary/heliotrope/issues/1234 %>
+      <track kind="subtitles" src="<%= hyrax.download_path(file_set.id, file: 'vtt') %>" srclang="en" label="English"  />
+  <% end %>
+  Your browser does not support the video tag.
+</video>

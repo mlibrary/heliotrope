@@ -1,11 +1,7 @@
-<% if Hyrax.config.display_media_download_link? && file_set.allow_download? %>
-  <%= link_to hyrax.download_path(file_set), target: "_new", title: "Download the full-sized image" do %>
-    <%= image_tag thumbnail_url(file_set),
-                  class: "img-responsive",
-                  alt: "Download the full-sized image of #{file_set.to_s}" %>
-  <% end %>
-<% else %>
-  <% alt = file_set.alt_text.present? ? file_set.alt_text : "Thumbnail of #{file_set.to_s}" %>
+<%# A simple image partial to be used by Hyrax's representative_media method %>
+<div>
   <%= image_tag thumbnail_url(file_set),
-                class: "img-responsive", alt: alt %>
-<% end %>
+                class: "representative-media",
+                alt: "",
+                role: "presentation" %>
+</div>

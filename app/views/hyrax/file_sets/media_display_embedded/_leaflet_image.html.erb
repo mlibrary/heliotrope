@@ -1,0 +1,32 @@
+<% riiif_url = "/image-service/#{file_set.id}/info.json" %>
+<div id="image"></div>
+<script>
+    var map, layer, timer;
+
+    $(document).ready(function() {
+        // give half a second for resize to take over
+        throttleLeafletMapSetup(500);
+    });
+
+    $(window).resize(function() {
+        throttleLeafletMapSetup(250);
+    });
+
+    function throttleLeafletMapSetup(milliseconds) {
+        clearTimeout (timer);
+        timer = setTimeout(setupLeafletMap, milliseconds);
+    };
+
+    function setupLeafletMap() {
+        if (map != undefined) { map.off(); map.remove(); }
+        map = L.map('image', {
+            center: [0, 0],
+            crs: L.CRS.Simple,
+            zoom: 0,
+            scrollWheelZoom: false,
+            attributionControl: false
+        });
+        layer = L.tileLayer.iiif("<%= riiif_url %>", { bestFit: true });
+        layer.addTo(map);
+    };
+</script>

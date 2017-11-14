@@ -302,5 +302,23 @@ module Hyrax
       download_label += ' (' + size + ')' if size.present?
       download_label
     end
+
+    def heliotrope_media_partial(directory = 'media_display')
+      # we've diverged from the media_display_partial stuff in Hyrax, so check our asset-page partials here
+      partial = 'hyrax/file_sets/' + directory + '/'
+      partial + if external_resource?
+                  'external_resource'
+                elsif image?
+                  'leaflet_image'
+                elsif video?
+                  'video'
+                elsif audio?
+                  'audio'
+                elsif epub?
+                  'epub'
+                else
+                  'default'
+                end
+    end
   end
 end
