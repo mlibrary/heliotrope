@@ -141,7 +141,7 @@ module Hyrax
 
     def embed_fulcrum_logo_link
       if !root_url.include?('fulcrum')
-        root_url + 'concern/file_sets/' + id
+        hyrax_file_set_url(id)
       else
         citable_link
       end
