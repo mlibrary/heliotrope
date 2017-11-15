@@ -9,6 +9,7 @@ module Hyrax
     include PresentsAttributes
     include Rails.application.routes.url_helpers
     include ActionView::Helpers::NumberHelper
+    include ActionView::Helpers::TagHelper
 
     attr_accessor :solr_document, :current_ability, :request, :monograph_presenter
 
@@ -257,6 +258,10 @@ module Hyrax
 
     def thumbnail_path
       solr_document['thumbnail_path_ss']
+    end
+
+    def gylphicon
+      tag.span class: glyphicon_type + " file-set-glyphicon", "aria-label": alt_text&.first || ""
     end
 
     def glyphicon_type
