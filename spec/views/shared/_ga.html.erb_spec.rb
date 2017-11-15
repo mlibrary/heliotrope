@@ -3,6 +3,8 @@
 require 'rails_helper'
 
 describe 'shared/_ga.html.erb' do
+  let(:press) { create(:press, subdomain: 'bookcircus', google_analytics: 'TEST-PRESS-ID') }
+
   before do
     view.extend PressHelper
   end
@@ -14,8 +16,6 @@ describe 'shared/_ga.html.erb' do
       expect(rendered).to match(/TEST-ID/)
     end
   end
-
-  let(:press) { create(:press, subdomain: 'bookcircus', google_analytics: 'TEST-PRESS-ID') }
 
   context "when there's a fulcrum google analytics id and a press google analytics id and we're on a press page" do
     it "renders google analytics javascript with the press google analytics id" do

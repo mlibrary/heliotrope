@@ -15,7 +15,6 @@ feature 'Create a monograph' do
     scenario do
       visit new_hyrax_monograph_path
       fill_in 'monograph[title][]', with: 'Test monograph'
-      # fill_in 'Title', with: 'Test monograph'
       fill_in 'Author (last name)', with: 'Johns'
       fill_in 'Author (first name)', with: 'Jimmy'
       fill_in 'Additional Authors', with: 'Sub Way'
@@ -24,9 +23,7 @@ feature 'Create a monograph' do
       click_button 'Save'
 
       expect(page).to have_content 'Test monograph'
-      expect(page).to have_content '123-456-7890'
-      # Monograph page has authors
-      expect(page).to have_content 'Jimmy Johns and Sub Way'
+      expect(page).to have_content "Your files are being processed by Fulcrum in the background."
     end
   end
 end

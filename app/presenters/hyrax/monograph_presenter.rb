@@ -186,7 +186,7 @@ module Hyrax
     # Our PCDM model currently only has Work -> FileSet so this this non-recursive approach should be fine
     def representative_presenter
       return nil if representative_id.blank?
-      @representative_presenter ||= Hyrax::PresenterFactory.build_presenters([representative_id], Hyrax::FileSetPresenter, current_ability).first
+      @representative_presenter ||= Hyrax::PresenterFactory.build_for(ids: [representative_id], presenter_class: Hyrax::FileSetPresenter, presenter_args: current_ability).first
     end
 
     def representative_alt_text?

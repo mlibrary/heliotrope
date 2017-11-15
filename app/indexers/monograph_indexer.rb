@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class MonographIndexer < Hyrax::WorkIndexer
+  include Hyrax::IndexesBasicMetadata
+
   def generate_solr_document
     super.tap do |solr_doc|
       press = Press.find_by(subdomain: object.press)

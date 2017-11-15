@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-FactoryGirl.define do
+FactoryBot.define do
   factory :monograph, aliases: [:private_monograph] do
     transient do
-      user { FactoryGirl.create(:user) }
+      user { FactoryBot.create(:user) }
     end
 
     after(:build) do |work, evaluator|
@@ -11,7 +11,7 @@ FactoryGirl.define do
     end
 
     sequence(:title) { |n| ["Test Monograph #{n}"] }
-    press { FactoryGirl.create(:press).subdomain }
+    press { FactoryBot.create(:press).subdomain }
     visibility Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE
 
     factory :public_monograph do
