@@ -1,20 +1,33 @@
+![Logo](https://)
 # heliotrope
 
-[![Build Status](https://travis-ci.org/mlibrary/heliotrope.svg?branch=master)](https://travis-ci.org/mlibrary/heliotrope)
+Code: [![Build Status](https://travis-ci.org/mlibrary/heliotrope.svg?branch=master)](https://travis-ci.org/mlibrary/heliotrope)
 [![Coverage Status](https://coveralls.io/repos/github/mlibrary/heliotrope/badge.svg?branch=master)](https://coveralls.io/github/mlibrary/heliotrope?branch=master)
-[![Stories in Ready](https://badge.waffle.io/mlibrary/heliotrope.png?label=ready&title=Ready)](https://waffle.io/mlibrary/heliotrope)
+
+Jump in: [![Stories in Ready](https://badge.waffle.io/mlibrary/heliotrope.png?label=ready&title=Ready)](https://waffle.io/mlibrary/heliotrope)
 [![Floobits Status](https://floobits.com/gkostin/heliotrope.svg)](https://floobits.com/gkostin/heliotrope/redirect)
 
+# Table of Contents
+
+
+# What is Heliotrope? What is Fulcrum?
 [Samvera](https://wiki.duraspace.org/display/samvera/Samvera) based digital publishing platform built by the [University of Michigan Library](https://www.lib.umich.edu/)
 
-## Development
+## Feature List
 
-### Prerequisites
+# Help/Contact
+
+For additional details and helpful hints [read the wiki.](https://github.com/mlibrary/heliotrope/wiki)
+Contact the [Fulcrum Developers List](mailto:fulcrum-dev@umich.edu) with any questions about the project.
+
+# Getting started
+
+## Prerequisites
 
   * [install redis](https://github.com/mlibrary/heliotrope/wiki/Background-Jobs#how-to-install-redis)
   * install mysql ([Install MySQL OS X El Capitan](https://github.com/mlibrary/heliotrope/wiki/Install-MySQL-on-OS-X-El-Capitan))
 
-### Initial setup
+## Initial setup
 
 ```
 $ git clone https://github.com/mlibrary/heliotrope.git
@@ -25,7 +38,8 @@ $ ./bin/bundle exec ./bin/rails jekyll:deploy
 ```  
 See Wiki page [Static Pages and Blog](https://github.com/mlibrary/heliotrope/wiki/Static-Pages-and-Blog) for more information on [Jekyll](https://jekyllrb.com/) integration.
 
-#### Make yourself a "platform" admin
+## Create users
+### Make yourself a "platform" admin
 
 There is a rails task you can execute to create a "platform" admin user.  It will prompt you for an email address and password, and then create a user with the correct role.
 ```
@@ -41,7 +55,7 @@ $ RAILS_ENV=production ./bin/bundle exec ./bin/rails admin
 $ RAILS_ENV=production ./bin/bundle exec ./bin/rails passwd
 ```
 
-#### Give yourself an admin role
+### Give yourself an admin role
 
 ```
 $ vi ./config/role_map.yml
@@ -49,13 +63,13 @@ $ vi ./config/role_map.yml
 ```
 development:
   admin:   
-    - yourself@domain.com 
+    - yourself@domain.com
   archivist:
     - archivist1@example.com
 ...
 ```
 
-#### Run the application
+## Run the application
 
 Execute this command to start Fedora, Solr and Rails servers:
 ```
@@ -66,7 +80,7 @@ Or, if you prefer to start each server individually execute each of the followin
 ```
 $ redis-server /usr/local/etc/redis.conf
 $ fcrepo_wrapper -p 8984 --no-jms
-$ solr_wrapper -p 8983 -d solr/config/ --collection_name hydra-development 
+$ solr_wrapper -p 8983 -d solr/config/ --collection_name hydra-development
 $ ./bin/bundle exec ./bin/rails s
 ```
 
@@ -76,14 +90,14 @@ $ fcrepo_wrapper --config .wrap_conf/fcrepo_dev
 $ solr_wrapper --config .wrap_conf/solr_dev
 ```
 
-#### Create [default administrative set](https://github.com/samvera/hyrax#create-default-administrative-set) and load [workflows](https://github.com/samvera/hyrax/wiki/Defining-a-Workflow)
+## Create [default administrative set](https://github.com/samvera/hyrax#create-default-administrative-set) and load [workflows](https://github.com/samvera/hyrax/wiki/Defining-a-Workflow)
 ```
 $ ./bin/bundle exec ./bin/rails hyrax:default_admin_set:create
 $ ./bin/bundle exec ./bin/rails hyrax:workflow:load
 ```
-## Debugging
+# Debugging
 
-### Explain Partials
+## Explain Partials
 
 Set the EXPLAIN_PARTIALS environment variable to show partials being rendered in source html of your views
 (view this info using your browser's inspect element mode)
@@ -107,7 +121,7 @@ Alternatively, you can start up each server individually.  This may be preferabl
 
 Start up FCrepo
 ```
-$ fcrepo_wrapper -p 8986 --no-jms 
+$ fcrepo_wrapper -p 8986 --no-jms
 ```
 or
 ```
@@ -115,7 +129,7 @@ $ fcrepo_wrapper --config .wrap_conf/fcrepo_test
 ```
 Start up Solr
 ```
-$ solr_wrapper -p 8985 -d solr/config/ --collection_name hydra-test 
+$ solr_wrapper -p 8985 -d solr/config/ --collection_name hydra-test
 ```
 or
 ```
@@ -139,10 +153,8 @@ $ ./bin/bundle exec ./bin/rails jekyll:deploy
 ```
 before running rspec.  This only need be executed once and if you followed the [initial setup](#initial-setup) then you did this already.
 
-## Wiki
+# License
 
-For additional details and helpful hints [read the wiki.](https://github.com/mlibrary/heliotrope/wiki)
+# Contributing
 
-## Contact
-
-Contact the [Fulcrum Developers List](mailto:fulcrum-dev@umich.edu) with any question about the project.
+# Acknowledgements
