@@ -29,7 +29,6 @@
     <div class="collapse navbar-collapse" id="brand-bar-nav">
       <div class="navbar-right">
         <% if current_user && show_site_actions? %>
-          <%= render 'shared/add_content' %>
           <%= render 'shared/my_actions' %>
         <% else %>
           <a href="/" title="Fulcrum" data-turbolinks="false"><%= image_tag "fulcrum-mark-white-30px.png", class: 'logo', alt: 'Fulcrum Beta logo' %></a> <a class="beta" href="/beta" title="Fulcrum Beta information" data-turbolinks="false">beta</a>

@@ -27,7 +27,7 @@ feature 'Login and Logout' do
     scenario "logout goes to /" do
       visit(hyrax.dashboard_path)
 
-      click_link "Logout"
+      click_link "Log Out"
 
       expect(page).to have_current_path(main_app.root_path(locale: 'en'))
     end

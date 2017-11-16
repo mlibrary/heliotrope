@@ -126,7 +126,8 @@ $heb-black-80: #342f2e;
     .navbar-nav {
       a#add-content,
       a.login,
-      a.user-display-name {
+      a.user-display-name,
+      a.language-dropdown {
           color: $heb-red;
       }
 
@@ -355,7 +356,8 @@ $iu-midnight: #006298;
     .navbar-nav {
       a#add-content,
       a.login,
-      a.user-display-name {
+      a.user-display-name,
+      a.language-dropdown {
           color: $iu-accent-color;
       }
 
@@ -584,7 +586,8 @@ $um-black-80: #342f2e;
     .navbar-nav {
       a#add-content,
       a.login,
-      a.user-display-name {
+      a.user-display-name,
+      a.language-dropdown {
           color: $um-accent-color;
       }
 
@@ -812,7 +815,8 @@ $umn-white: #fff;
     .navbar-nav {
       a#add-content,
       a.login,
-      a.user-display-name {
+      a.user-display-name,
+      a.language-dropdown {
           color: $umn-white;
       }
     }
@@ -1039,7 +1043,8 @@ $fulcrum-light-2: #bec4cc;
     .navbar-nav {
       a#add-content,
       a.login,
-      a.user-display-name {
+      a.user-display-name,
+      a.language-dropdown {
           color: $nw-white;
       }
     }
@@ -1285,7 +1290,8 @@ $nyu-gray-2: #342f2e;
     .navbar-nav {
       a#add-content,
       a.login,
-      a.user-display-name {
+      a.user-display-name,
+      a.language-dropdown {
           color: $nyu-brand-accent;
       }
 
@@ -1294,7 +1300,9 @@ $nyu-gray-2: #342f2e;
       a.login:active,
       a.login:focus,
       a.user-display-name:active,
-      a.user-display-name:focus {
+      a.user-display-name:focus,
+      a.language-dropdown:active,
+      a.language-dropdown:focus {
           color: $nyu-gray-2;
       }
     }
@@ -1581,7 +1589,8 @@ $psu-gray-1: #3F4550;
     .navbar-nav {
       a#add-content,
       a.login,
-      a.user-display-name {
+      a.user-display-name,
+      a.language-dropdown {
           color: $psu-white;
       }
     }
