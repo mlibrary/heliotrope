@@ -26,7 +26,7 @@
       cozy.control.widget.button({
   	    region: 'top.header.left',
   	    data: { label: '<i class="icon-x oi" data-glyph="x" aria-hidden="true"></i>'},
-  	    template: `<button class="button--sm cozy-close" data-toggle="button" data-slot="label"></button>`,
+  	    template: `<button class="button--sm cozy-close" data-toggle="button" data-slot="label" aria-label="Close reader"></button>`,
   	    onClick: function() { window.location = "<%= "#{@back_link}" %>"; }
       }).addTo(reader);
       // Press brand widget
@@ -50,7 +50,7 @@
       cozy.control.widget.panel({
         region: 'top.toolbar.left',
         data: { title: "<%= @citable_link %>"},
-  	    template: `<div class="permalink-label"><span class="u-screenreader">Permalink</span><form><input data-slot="title" type="text" id="permalink" value="" readonly="readonly" onclick="this.select(); document.execCommand('copy');"></form></div>`,
+  	    template: `<div class="permalink-label"><label class="u-screenreader" for="permalink">Permalink</label><form><input data-slot="title" type="text" id="permalink" value="" readonly="readonly" onclick="this.select(); document.execCommand('copy');"></form></div>`,
       }).addTo(reader);
       // Citation widget
       cozy.control.citation({ region: 'top.toolbar.left' }).addTo(reader);
@@ -66,7 +66,7 @@
       cozy.control.widget.button({
                         region: 'top.toolbar.right',
                         className: 'cozy-container-fullscreen',
-                        template: '<button class="button--sm" data-toggle="button" data-slot="label"></button>',
+                        template: '<button class="button--sm" data-toggle="button" data-slot="label" aria-label="Full screen"></button>',
                         data: { label: '<i id="fullscreen" class="icon-fullscreen-enter oi" data-glyph="fullscreen-enter" title="Fullscreen Mode" aria-hidden="true"></i>' },
                         onClick: function() {
                             reader.requestFullscreen();
