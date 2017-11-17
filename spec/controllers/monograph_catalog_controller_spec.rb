@@ -61,20 +61,43 @@ describe MonographCatalogController do
   end # blacklight_config
 
   describe '#index' do
-    context 'when not a monograph id' do
-      before { get :index, params: { id: 'not_a_monograph_id' } }
-      it 'then expect response unauthorized' do
-        expect(response).to be_unauthorized
+    context 'no monograph exists with provided id' do
+      context 'id never existed' do
+        before { get :index, params: { id: 'not_a_monograph_id' } }
+        it 'response is not successful' do
+          expect(response).to_not be_success
+          expect(response).to_not render_template('monograph_catalog/index')
+        end
+        it 'shows 404 page' do
+          expect(response.status).to equal 404
+          expect(response.body).to have_title("404 - The page you were looking for doesn't exist")
+        end
+      end
+      context 'deleted/tombstoned id' do
+        let(:monograph) { create(:monograph) }
+        before do
+          monograph.destroy!
+          get :index, params: { id: monograph.id }
+        end
+        it 'response is not successful' do
+          expect(response).to_not be_success
+          expect(response).to_not render_template('monograph_catalog/index')
+        end
+        it 'shows 404 page' do
+          expect(response.status).to equal 404
+          expect(response.body).to have_title("404 - The page you were looking for doesn't exist")
+        end
       end
     end
-    context 'when a monograph id' do
-      let(:press) { build(:press) }
-      let(:user) { create(:platform_admin) }
-      let(:monograph) { create(:monograph, user: user, press: press.subdomain) }
-      before { get :index, params: { id: monograph.id } }
-      context 'then expect' do
-        it 'response success' do
+    context 'when a monograph with the id exists' do
+      context 'when a monograph is open/public' do
+        let(:monograph) { create(:public_monograph) }
+        before do
+          get :index, params: { id: monograph.id }
+        end
+        it 'response is successful' do
           expect(response).to be_success
+          expect(response).to render_template('monograph_catalog/index')
         end
         it 'curation concern to be the monograph' do
           expect(controller.instance_variable_get(:@curation_concern)).to eq monograph
@@ -86,20 +109,41 @@ describe MonographCatalogController do
           expect(controller.instance_variable_get(:@monograph_presenter).solr_document.id).to eq monograph.id
         end
       end
-    end
-    context 'when a monograph tombstone id' do
-      let(:press) { build(:press) }
-      let(:user) { create(:platform_admin) }
-      let(:monograph) { create(:monograph, user: user, press: press.subdomain) }
-      before do
-        monograph.destroy!
-        get :index, params: { id: monograph.id }
-      end
-      it do
-        # The HTTP response status code 302 Found is a common way of performing URL redirection.
-        expect(response).to have_http_status(:found)
-        # raise CanCan::AccessDenied currently redirects to root_url
-        expect(response.header["Location"]).to match "http://test.host/"
+      context 'when a monograph is draft/private' do
+        context 'no user logged in' do
+          let(:monograph) { create(:private_monograph) }
+          before do
+            get :index, params: { id: monograph.id }
+          end
+          it 'response is not successful' do
+            expect(response).to_not be_success
+            expect(response).to_not render_template('monograph_catalog/index')
+          end
+          it 'redirects to login page' do
+            expect(response).to redirect_to(new_user_session_path)
+          end
+        end
+        context 'logged-in read user (depositor)' do
+          let(:user) { create(:user) }
+          let(:monograph) { create(:private_monograph, user: user) }
+          before do
+            sign_in user
+            get :index, params: { id: monograph.id }
+          end
+          it 'response is successful' do
+            expect(response).to be_success
+            expect(response).to render_template('monograph_catalog/index')
+          end
+          it 'curation concern to be the monograph' do
+            expect(controller.instance_variable_get(:@curation_concern)).to eq monograph
+          end
+          it 'monograph presenter is a monograph presenter class' do
+            expect(controller.instance_variable_get(:@monograph_presenter).class).to eq Hyrax::MonographPresenter
+          end
+          it 'mongraph presenter has the monograph' do
+            expect(controller.instance_variable_get(:@monograph_presenter).solr_document.id).to eq monograph.id
+          end
+        end
       end
     end
   end # #index
