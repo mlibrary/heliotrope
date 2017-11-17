@@ -1,4 +1,11 @@
-<ul class="nav navbar-nav">
+<ul class="nav navbar-nav navbar-right">
+  <%= render 'shared/add_content' %>
+  <%= render 'shared/locale_picker' if available_translations.size > 1 %>
+  <!-- We're not using these yet but when we do they're in hyrax views/hyrax/notifications/_notifications.html.erb
+  <li>
+    <%= render_notifications(user: current_user) %>
+  </li>
+  -->
   <li class="dropdown my-actions">
     <a class="dropdown-toggle user-display-name" data-toggle="dropdown" href="#">
       <%= current_user.user_key %>
