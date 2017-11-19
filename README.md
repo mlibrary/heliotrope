@@ -19,25 +19,25 @@ Jump in: [![Stories in Ready](https://badge.waffle.io/mlibrary/heliotrope.png?la
 * [Acknowledgements](#acknowledgements)
 
 # What is Fulcrum? What is Heliotrope?
-[Fulcrum](https://fulcrum.org) is an in-development publishing platform and set of hosting and publishing services aimed to help scholarly publishers present the full richness of their authors' research outputs in a durable, discoverable, and flexible form. Its first phase of development focused on providing branded companion websites for books. Now, in its second phase, it will expand to host complete e-book collections, journals, and new forms of multimodal publications as well as provide a set of hosting and publishing services for publishers.
+[Fulcrum](https://www.fulcrum.org) is an in-development publishing platform and set of hosting and publishing services aimed to help scholarly publishers present the full richness of their authors' research outputs in a durable, discoverable, and flexible form. Its first phase of development is focused on providing branded companion websites for books. Now, in its second phase, it will expand to host complete e-book collections, journals, and new forms of multimodal publications as well as provide a set of hosting and publishing services for publishers.
 
 **Heliotrope** is the codebase behind the Fulcrum publishing platform. It is a Rails application that extends [Hyrax](https://github.com/samvera/hyrax)–the popular front-end repository solution from the [Samvera open source community](https://samvera.org/)–to provide solutions for scholarly publishers.
 
-It is built by the [University of Michigan Library](https://www.lib.umich.edu) and managed by the Library's publishing unit, [Michigan Publishing](https://publishing.umich.edu).
+It is built by the [University of Michigan Library](https://www.lib.umich.edu) and managed by the Library's publishing division, [Michigan Publishing](https://publishing.umich.edu).
 
 ## Feature List
 In addition to the [features that come with Hyrax](https://github.com/samvera/hyrax/wiki/Feature-matrix), Heliotrope offers the following:
 * Web-based e-book reader for FileSets that are valid EPUBs. The e-book reader is delivered as a single-page JS application that is included with Heliotrope as a gem. [See the wiki for more details and features](https://github.com/mlibrary/heliotrope/wiki/EPUB-Reader) specific to the e-book reader.
-* Publisher catalog page listing Works associated with publisher ([Example](https://fulcrum.org/michigan)).
+* Publisher catalog page listing Works associated with publisher ([Example](https://www.fulcrum.org/michigan)).
 * Customized branding (logo, colors, fonts) for publisher that is applied to associated Works and FileSets ([Example](https://www.fulcrum.org/concern/monographs/w0892995q)).
 * Publisher-specific usage analytics (eg, support for multiple Google Analytics IDs on a single page, allowing each publisher to have their own Google Analytics property).
 * Bulk importer for Works and their children.
 * Embed codes for FileSets, allowing FileSets to be embedded into external websites and EPUB files.
 * Support for FileSets that are hosted externally  ([Example](https://www.fulcrum.org/concern/file_sets/zg64tk984)).
 * Additional metadata fields for Books and their associated media.
-* Accessibility improvements to meet Section 508 and WCAG 2.0AA guidelines.
-* Delivery of time-based media through an accessible media player, AblePlayer. Support for transcripts and captions when provided ([Example](https://www.fulcrum.org/concern/file_sets/jh343s28d)).
-* Delivery of IIIF-served images using Leaflet ([Example](https://www.fulcrum.org/concern/file_sets/s7526c42w)).
+* Accessibility improvements to meet Section 508 and [WCAG 2.0AA guidelines](https://www.w3.org/TR/WCAG20/).
+* Delivery of time-based media through an accessible media player, [AblePlayer](https://ableplayer.github.io/ableplayer/). Support for transcripts and captions when provided ([Example](https://www.fulcrum.org/concern/file_sets/jh343s28d)).
+* Delivery of [IIIF](http://iiif.io/)-served images using Leaflet ([Example](https://www.fulcrum.org/concern/file_sets/s7526c42w)).
 * Integration with [Jekyll](https://jekyllrb.com/) static-site generator for "aboutware" static pages and blog.
 
 # Help/Contact
