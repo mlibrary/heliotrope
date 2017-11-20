@@ -27,8 +27,8 @@ It is built by the [University of Michigan Library](https://www.lib.umich.edu) a
 
 ## Feature List
 In addition to the [features that come with Hyrax](https://github.com/samvera/hyrax/wiki/Feature-matrix), Heliotrope offers the following:
-* Web-based e-book reader for FileSets that are valid EPUBs. The e-book reader is delivered as a single-page JS application that is included with Heliotrope as a gem. [See the wiki for more details and features](https://github.com/mlibrary/heliotrope/wiki/EPUB-Reader) specific to the e-book reader.
-* Publisher catalog page listing Works associated with publisher ([Example](https://www.fulcrum.org/michigan)).
+* Web-based e-book reader for [FileSets](http://pcdm.org/works#FileSet) that are valid EPUBs. The e-book reader is delivered as a single-page JS application that is included with Heliotrope as a gem. [See the wiki for more details and features](https://github.com/mlibrary/heliotrope/wiki/EPUB-Reader) specific to the e-book reader.
+* Publisher catalog page listing [Works](http://pcdm.org/works#Work) associated with publisher ([Example](https://www.fulcrum.org/michigan)).
 * Customized branding (logo, colors, fonts) for publisher that is applied to associated Works and FileSets ([Example](https://www.fulcrum.org/concern/monographs/w0892995q)).
 * Publisher-specific usage analytics (eg, support for multiple Google Analytics IDs on a single page, allowing each publisher to have their own Google Analytics property).
 * Bulk importer for Works and their children.
@@ -41,7 +41,7 @@ In addition to the [features that come with Hyrax](https://github.com/samvera/hy
 * Integration with [Jekyll](https://jekyllrb.com/) static-site generator for "aboutware" static pages and blog.
 
 # Help/Contact
-For additional details and helpful hints [read our ever growing Wiki.](https://github.com/mlibrary/heliotrope/wiki). To get in touch with us over e-mail, contact the [Fulcrum Developers List](mailto:fulcrum-dev@umich.edu). To stay updated with developments in Heliotrope and Fulcrum, [sign-up for our newsletter](https://www.fulcrum.org/#get-updates).
+For additional details and helpful hints [read our ever growing Wiki](https://github.com/mlibrary/heliotrope/wiki). To get in touch with us over e-mail, contact the [Fulcrum Developers List](mailto:fulcrum-dev@umich.edu). To stay updated with developments in Heliotrope and Fulcrum, [sign-up for our newsletter](https://www.fulcrum.org/#get-updates).
 
 # Getting started
 
@@ -98,10 +98,9 @@ development:
 ### 4. Create [default administrative set](https://github.com/samvera/hyrax#create-default-administrative-set) and load [workflows](https://github.com/samvera/hyrax/wiki/Defining-a-Workflow)
 ```
 $ ./bin/bundle exec ./bin/rails hyrax:default_admin_set:create
-$ ./bin/bundle exec ./bin/rails hyrax:workflow:load
 ```
 
-### 5. Run the application
+### 4. Run the application
 
 Execute this command to start Fedora, Solr and Rails servers:
 ```
@@ -121,6 +120,11 @@ $ ./bin/bundle exec ./bin/rails s
 ```
 $ fcrepo_wrapper --config .wrap_conf/fcrepo_dev
 $ solr_wrapper --config .wrap_conf/solr_dev
+```
+
+### 5. Create [default administrative set](https://github.com/samvera/hyrax#create-default-administrative-set) and load [workflows](https://github.com/samvera/hyrax/wiki/Defining-a-Workflow)
+```
+$ ./bin/bundle exec ./bin/rails hyrax:default_admin_set:create
 ```
 
 # Debugging
