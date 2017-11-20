@@ -95,11 +95,6 @@ development:
 ...
 ```
 
-### 4. Create [default administrative set](https://github.com/samvera/hyrax#create-default-administrative-set) and load [workflows](https://github.com/samvera/hyrax/wiki/Defining-a-Workflow)
-```
-$ ./bin/bundle exec ./bin/rails hyrax:default_admin_set:create
-```
-
 ### 4. Run the application
 
 Execute this command to start Fedora, Solr and Rails servers:
@@ -122,7 +117,7 @@ $ fcrepo_wrapper --config .wrap_conf/fcrepo_dev
 $ solr_wrapper --config .wrap_conf/solr_dev
 ```
 
-### 5. Create [default administrative set](https://github.com/samvera/hyrax#create-default-administrative-set) and load [workflows](https://github.com/samvera/hyrax/wiki/Defining-a-Workflow)
+### 5. Create [default administrative set](https://github.com/samvera/hyrax#create-default-administrative-set)
 ```
 $ ./bin/bundle exec ./bin/rails hyrax:default_admin_set:create
 ```
