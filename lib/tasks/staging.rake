@@ -33,7 +33,7 @@ namespace :staging do
   task unseed: :environment do
     puts "unseeding..."
     User.all.each do |user|
-      user.destroy! if user.email =~ /example.com/
+      user.destroy! if user.email.match?(/example.com/)
     end
     puts "unseeded"
   end

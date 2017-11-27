@@ -39,8 +39,8 @@ class ApplicationController < ActionController::Base
     def store_current_location
       sign_in_static_cookie
       return unless request.get?
-      return if request.url =~ /image-service/
-      return if request.url =~ /downloads/
+      return if request.url.match?(/image-service/)
+      return if request.url.match?(/downloads/)
       store_location_for(:user, request.url)
     end
 
@@ -50,7 +50,7 @@ class ApplicationController < ActionController::Base
     # root_path is there as a backup
     def after_sign_out_path_for(_resource)
       sign_out_static_cookie
-      return root_path if request.referer =~ /dashboard/
+      return root_path if request.referer.match?(/dashboard/)
       request.referer || root_path
     end
 
