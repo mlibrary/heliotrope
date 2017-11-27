@@ -41,11 +41,14 @@
     <meta name="citation_publication_date" content="<%= @presenter.sort_date[0,4] %>">
   <% end %>
 
+<% end %>
+
+<% if @presenter.present? && @presenter.class == Hyrax::FileSetPresenter %>
+
   <% if @presenter.doi.present? %>
     <meta name="citation_doi" content="<%= @presenter.doi_url.gsub('https://doi.org/', '') %>">
   <% else %>
     <meta name="DC.identifier" content="<%= @presenter.handle_url.gsub('http://hdl.handle.net/', '') %>">
   <% end %>
 
-<% else %>
 <% end %>
