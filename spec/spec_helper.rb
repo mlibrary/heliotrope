@@ -24,7 +24,11 @@ end
 
 if coverage_needed?
   require 'coveralls'
-  Coveralls.wear!
+  Coveralls.wear! do
+    add_filter 'config'
+    add_filter 'lib/spec'
+    add_filter 'spec'
+  end
 end
 
 require 'active_fedora/cleaner'
