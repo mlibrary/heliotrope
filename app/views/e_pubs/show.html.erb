@@ -4,6 +4,9 @@
   <meta name="turbolinks-cache-control" content="no-cache">
 <% end %>
 <% provide :body do %>
+<% if defined? @presenter.file_set_coins_title %>
+  <span class="Z3988" title="<%= @presenter.file_set_coins_title %>"></span>
+<% end %>
 <div id="epub" class="<%= @subdomain %>">
   <div id="reader"></div>
   <script type="text/javascript">
