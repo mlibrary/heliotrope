@@ -88,10 +88,13 @@
       cozy.control.pagePrevious({ region: 'left.sidebar' }).addTo(reader);
       cozy.control.pageNext({ region: 'right.sidebar' }).addTo(reader);
       // cozy.control.pageLast({ region: 'right.sidebar' }).addTo(reader);
-      cozy.control.navigator({ region: 'book.navigator' }).addTo(reader);
+      // cozy.control.navigator({ region: 'book.navigator' }).addTo(reader);
 
       // Publisher/copyright widgets
-      cozy.control.publicationMetadata({ region: 'bottom.footer' }).addTo(reader);
+      // cozy.control.publicationMetadata({ region: 'bottom.footer' }).addTo(reader);
+
+      // Navigator widgets
+      cozy.control.navigator({ region: 'bottom.navigator' }).addTo(reader);
 
       // Initiate EPUB Reader
       reader.start();
