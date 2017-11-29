@@ -15,7 +15,7 @@ RSpec.describe "monograph_catalog/index.html.erb", type: :view do
                     I18n.t(value)
                   end
     debug_puts "t(#{value}) #{translation}"
-    raise translation if /translation missing/ =~ translation
+    raise translation if /translation missing/.match? translation
     value
   end
 
