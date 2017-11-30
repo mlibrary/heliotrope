@@ -25,10 +25,6 @@ module EPub
       "/#{@section}:#{@pos0},/#{@section}:#{@pos1}"
     end
 
-    def snippet
-      EPub::Snippet.from(@node, @pos0, @pos1).snippet
-    end
-
     def cfi
       # walk up the dom elements to determine the CFI of the node
       indexes = []
@@ -60,8 +56,32 @@ module EPub
         @node = node
         @query = query
         @section = node.parent.children.index(node) + 1
-        @pos0 = node.content.downcase.index(query.downcase, offset)
+        @pos0 = node.content.index(/#{query}\W/i, offset)
         @pos1 = @pos0 + query.length
       end
+  end
+
+  class CfiNullObject < Cfi
+    attr_reader :node, :query, :pos0, :pos1, :section
+
+    def initialize
+      @node = Nokogiri.XML(nil)
+      @query = ""
+      @pos0 = ""
+      @pos1 = ""
+      @section = ""
+    end
+
+    def range
+      ""
+    end
+
+    def snippet
+      ""
+    end
+
+    def cfi
+      ""
+    end
   end
 end
