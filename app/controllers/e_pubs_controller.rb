@@ -14,7 +14,7 @@ class EPubsController < ApplicationController
       @search_url = main_app.epub_search_url(params[:id], q: "").gsub!(/locale=en&/, '')
       @monograph_presenter = nil
       if @presenter.parent.present?
-        @monograph_presenter = Hyrax::PresenterFactory.build_presenters([@presenter.parent.id], Hyrax::MonographPresenter, current_ability).first
+        @monograph_presenter = Hyrax::PresenterFactory.build_for(ids: [@presenter.parent.id], presenter_class: Hyrax::MonographPresenter, presenter_args: current_ability).first
       end
       render layout: false
     else
