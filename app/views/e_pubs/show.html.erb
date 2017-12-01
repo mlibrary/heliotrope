@@ -93,6 +93,13 @@
       // Publisher/copyright widgets
       // cozy.control.publicationMetadata({ region: 'bottom.footer' }).addTo(reader);
 
+      // Feedback widget
+      cozy.control.widget.panel({
+        region: 'bottom.navigator.left',
+        className: 'cozy-panel-feedback',
+        template: '<a href="https://docs.google.com/forms/d/e/1FAIpQLSeY04WhBtHGSXONu3jGiYnOcVzZxzHi3FGbS9ELg8rJdMpgpw/viewform?usp=sf_link" target="_blank" title="Report a problem or share feedback"><i class="icon-comment-square oi" data-glyph="comment-square" aria-hidden="true"></i></a>',
+      }).addTo(reader);
+
       // Navigator widgets
       cozy.control.navigator({ region: 'bottom.navigator' }).addTo(reader);
 

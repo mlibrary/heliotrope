@@ -571,6 +571,10 @@ footer.press {
     font-size: 2.5em !important;
 }
 
+.cozy-container i.icon-comment-square {
+  font-size: 1.7rem !important;
+}
+
 .cozy-preferences-modal .button--sm {
   font-size: 1em !important;
 }
@@ -618,6 +622,16 @@ footer.press {
   font-size: .9em;
 }
 
+.cozy-container .cozy-panel-feedback {
+  position: fixed;
+  padding-top: 1.8em;
+  padding-left: 1em;
+  z-index: 2;
+
+  a {
+    color: #333 !important;
+  }
+}
 
 ///////////////////////////////////
 // SITE REQUIRES COOKIES ALERT
