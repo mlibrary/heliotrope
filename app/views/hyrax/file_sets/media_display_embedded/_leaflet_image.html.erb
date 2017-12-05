@@ -28,5 +28,6 @@
         });
         layer = L.tileLayer.iiif("<%= riiif_url %>", { bestFit: true });
         layer.addTo(map);
+        L.control.pan({ panOffset: 150 }).addTo(map);
     };
 </script>
