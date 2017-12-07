@@ -50,7 +50,7 @@ class ApplicationController < ActionController::Base
     # root_path is there as a backup
     def after_sign_out_path_for(_resource)
       sign_out_static_cookie
-      return root_path if request.referer.match?(/dashboard/)
+      return root_path if request.referer.nil? || request.referer.match?(/dashboard/)
       request.referer || root_path
     end
 
