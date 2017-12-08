@@ -146,9 +146,9 @@ RSpec.describe EPubsController, type: :controller do
       it do
         expect(response).to have_http_status(:success)
         expect(JSON.parse(response.body)["q"]).to eq "White Whale"
-        expect(JSON.parse(response.body)["search_results"].length).to eq 107
+        expect(JSON.parse(response.body)["search_results"].length).to eq 95
         expect(JSON.parse(response.body)["search_results"][0]["cfi"]).to eq "/6/84[xchapter_036]!/4/2/42,/1:66,/1:77"
-        expect(JSON.parse(response.body)["search_results"][0]["snippet"]).to eq "...ders have before now heard me give orders about a white whale. Look ye! d’ye see this Spanish ounce of gold?\"—hol..."
+        expect(JSON.parse(response.body)["search_results"][0]["snippet"]).to eq "“All ye mast-headers have before now heard me give orders about a white whale. Look ye! d’ye see this Spanish ounce of gold?\"—holding up a broad bright coin to the sun—\"it is a sixteen dollar piece, men. D’ye see it? Mr. Starbuck, hand me yon top-maul.”"
       end
     end
 
