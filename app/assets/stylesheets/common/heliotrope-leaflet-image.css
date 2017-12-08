@@ -1,0 +1,10 @@
+/* don't use publisher custom colors on Leaflet zoom contols */
+.leaflet-control-zoom a {
+    color: black;
+}
+
+/* Make it clear when the Leaflet map has the focus */
+#image:focus {
+    outline: 6px auto -webkit-focus-ring-color;
+    outline-offset: -3px;
+}

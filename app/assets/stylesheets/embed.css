@@ -2,4 +2,5 @@
  *
  *= require common
  *= require_tree ./embed
+ *= require_tree ./common
 */
