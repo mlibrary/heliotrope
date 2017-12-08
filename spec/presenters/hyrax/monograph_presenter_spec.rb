@@ -44,7 +44,8 @@ RSpec.describe Hyrax::MonographPresenter do
       let(:ordered_ids) { [cover.id, blue_file.id, green_file.id] }
 
       before do
-        ActiveFedora::SolrService.add([mono_doc, cover, blue_file, green_file])
+        # SolrService.add takes hashes not docs!
+        ActiveFedora::SolrService.add([mono_doc.to_h, cover.to_h, blue_file.to_h, green_file.to_h])
         ActiveFedora::SolrService.commit
       end
       it { is_expected.to be true }
@@ -53,7 +54,8 @@ RSpec.describe Hyrax::MonographPresenter do
       let(:ordered_ids) { [cover.id] }
 
       before do
-        ActiveFedora::SolrService.add([mono_doc, cover])
+        # SolrService.add takes hashes not docs!
+        ActiveFedora::SolrService.add([mono_doc.to_h, cover.to_h])
         ActiveFedora::SolrService.commit
       end
       it { is_expected.to be false }
@@ -210,7 +212,8 @@ RSpec.describe Hyrax::MonographPresenter do
       let(:ordered_ids) { [cover.id, blue_file.id, non_file.id, green_file.id] }
 
       before do
-        ActiveFedora::SolrService.add([mono_doc, cover, blue_file, non_file, green_file])
+        # SolrService.add takes hashes not docs!
+        ActiveFedora::SolrService.add([mono_doc.to_h, cover.to_h, blue_file.to_h, non_file.to_h, green_file.to_h])
         ActiveFedora::SolrService.commit
       end
 
@@ -228,7 +231,8 @@ RSpec.describe Hyrax::MonographPresenter do
       }
 
       before do
-        ActiveFedora::SolrService.add([mono_doc, cover, red_file, blue_file, green_file])
+        # SolrService.add takes hashes not docs!
+        ActiveFedora::SolrService.add([mono_doc.to_h, cover.to_h, red_file.to_h, blue_file.to_h, green_file.to_h])
         ActiveFedora::SolrService.commit
       end
 
@@ -310,7 +314,8 @@ RSpec.describe Hyrax::MonographPresenter do
     end
 
     before do
-      ActiveFedora::SolrService.add([mono_doc, cover_fileset_doc, fs1_doc, fs2_doc, fs3_doc])
+      # SolrService.add takes hashes not docs!
+      ActiveFedora::SolrService.add([mono_doc.to_h, cover_fileset_doc.to_h, fs1_doc.to_h, fs2_doc.to_h, fs3_doc.to_h])
       ActiveFedora::SolrService.commit
     end
 
