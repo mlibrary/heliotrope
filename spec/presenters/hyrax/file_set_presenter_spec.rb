@@ -434,4 +434,54 @@ RSpec.describe Hyrax::FileSetPresenter do
       it { is_expected.to eq 'hyrax/file_sets/media_display_embedded/default' }
     end
   end
+
+  describe "PDF extracted_text download" do
+    let(:fileset_doc) { SolrDocument.new(id: id, label_tesim: ['test_pdf.pdf']) }
+    let(:id) { double("id") }
+    let(:file_set) { double("file_set") }
+
+    before do
+      allow(FileSet).to receive(:find).with(id).and_return(file_set)
+      allow(file_set).to receive(:extracted_text).and_return(text_file)
+    end
+
+    context "extracted_text_file exists" do
+      let(:text_file) do
+        Hydra::PCDM::File.new.tap do |f|
+          f.content = IO.read(File.join(fixture_path, 'test_pdf.txt'))
+          f.original_name = 'long_GUID_thingy.txt'
+          f.save!
+        end
+      end
+
+      context "extracted_text?" do
+        subject { presenter.extracted_text? }
+        it { is_expected.to be true }
+      end
+
+      context "extracted_text_file" do
+        subject { presenter.extracted_text_file }
+        it { is_expected.to eq text_file }
+      end
+
+      context "extracted_text_download_button_label" do
+        subject { presenter.extracted_text_download_button_label }
+        it { is_expected.to eq 'Download TXT (' + text_file.size.to_s + ' Bytes)' }
+      end
+
+      context "extracted_text_download_filename" do
+        subject { presenter.extracted_text_download_filename }
+        it { is_expected.to eq 'test_pdf.txt' }
+      end
+    end
+
+    context "extracted_text_file doesn't exist" do
+      let(:text_file) { nil }
+
+      context "extracted_text?" do
+        subject { presenter.extracted_text? }
+        it { is_expected.to be_falsey }
+      end
+    end
+  end
 end

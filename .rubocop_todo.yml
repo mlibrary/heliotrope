@@ -15,6 +15,7 @@ Metrics/BlockLength:
 Metrics/ClassLength:
   Exclude:
     - 'app/controllers/catalog_controller.rb'
+    - 'app/presenters/hyrax/file_set_presenter.rb'
 
 Metrics/CyclomaticComplexity:
   Exclude:
