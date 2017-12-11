@@ -89,24 +89,28 @@ $(document).on('turbolinks:load', function() {
     //
     // File Set/Asset page
     //
-    // leaflet image zoom buttons
+    // Leaflet image pan and zoom buttons
     $('a.leaflet-control-zoom-in').click(function() {
       ga('pressTracker.send', 'event', 'file_set_page', 'zoom_in', $('#asset-title').text());
     });
     $('a.leaflet-control-zoom-out').click(function() {
       ga('pressTracker.send', 'event', 'file_set_page', 'zoom_out', $('#asset-title').text());
     });
-    // capture the scrollwheel zoom too...
-    var image = $('#image');
-    if (image) {
-      image.on('DOMMouseScroll mousewheel', function (event) {
-        if ( event.originalEvent.detail > 0 || event.originalEvent.wheelDelta < 0 ) {
-          ga('pressTracker.send', 'event', 'file_set_page', 'zoom_out', $('#asset-title').text());
-        } else {
-          ga('pressTracker.send', 'event', 'file_set_page', 'zoom_in', $('#asset-title').text());
-        }
-      });
-    }
+    $('a.leaflet-control-pan-up').click(function() {
+      ga('pressTracker.send', 'event', 'file_set_page', 'pan_up', $('#asset-title').text());
+
+    });
+    $('a.leaflet-control-pan-down').click(function() {
+      ga('pressTracker.send', 'event', 'file_set_page', 'pan_down', $('#asset-title').text());
+
+    });
+    $('a.leaflet-control-pan-left').click(function() {
+      ga('pressTracker.send', 'event', 'file_set_page', 'pan_left', $('#asset-title').text());
+
+    });
+    $('a.leaflet-control-pan-right').click(function() {
+      ga('pressTracker.send', 'event', 'file_set_page', 'pan_right', $('#asset-title').text());
+    });
 
     // video and audio
     var video = $('#video').get(0)
