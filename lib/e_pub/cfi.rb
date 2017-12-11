@@ -54,12 +54,21 @@ module EPub
       "/4/#{indexes.join('/')},#{range}"
     end
 
+    def find_section(node)
+      count = -1
+      node.parent.children.each do |child|
+        # AFAIK "section" text should always be odd, only elements are even
+        count += 2 if child.text?
+        return count if child == @node
+      end
+    end
+
     private
 
       def initialize(node, query, offset)
         @node = node
         @query = query
-        @section = node.parent.children.index(node) + 1
+        @section = find_section(node)
         @pos0 = node.content.downcase.index(query.downcase, offset)
         @pos1 = @pos0 + query.length
       end

@@ -50,15 +50,15 @@ RSpec.describe EPub::Cfi do
     let(:cfi) { described_class.from(node, query, offset) }
 
     it "finds the correct section" do
-      expect(cfi.section).to eq 8
+      expect(cfi.section).to eq 7
     end
 
     it "finds the correct range" do
-      expect(cfi.range).to eq "/8:354,/8:363"
+      expect(cfi.range).to eq "/7:354,/7:363"
     end
 
     it "find the correct cfi" do
-      expect(cfi.cfi).to eq '/4/4,/8:354,/8:363'
+      expect(cfi.cfi).to eq '/4/4,/7:354,/7:363'
     end
   end
 
