@@ -44,4 +44,43 @@ RSpec.describe Press, type: :model do
     let(:press) { build(:press) }
     it { is_expected.to eq [] }
   end
+
+  describe "a parent press" do
+    let(:parent_press) { create(:press, subdomain: "blue") }
+
+    context "with children" do
+      let!(:child1) { create(:press, subdomain: "maize", parent_id: parent_press.id) }
+      let!(:child2) { create(:press, subdomain: "green", parent_id: parent_press.id) }
+
+      it "the parent press knows it's children presses (that are series, imprints, whatever)" do
+        expect(parent_press.children.count).to eq 2
+        expect(parent_press.children.first.subdomain).to eq "maize"
+        expect(parent_press.children.last.subdomain).to eq "green"
+      end
+
+      it "the child presses know their parent" do
+        expect(child1.parent).to eq parent_press
+        expect(child2.parent).to eq parent_press
+      end
+
+      context "a child press can itself have children" do
+        # TODO: While this works in the model, it's not really supported anywhere else
+        # so if we ever actually need parent -> child -> child we'll have to make some code changes
+        let!(:child_child) { create(:press, subdomain: "orange", parent_id: child1.id) }
+
+        it "the child's child press knows it's parent" do
+          expect(child_child.parent).to eq child1
+        end
+
+        context "while there are many presses now, we can get a list of 'root' or 'ultimate parent' presses" do
+          it "there is only be one parent press" do
+            expect(Press.parent_presses.count).to be 1
+          end
+          it "there are 4 presses total" do
+            expect(Press.all.count).to be 4
+          end
+        end
+      end
+    end
+  end
 end

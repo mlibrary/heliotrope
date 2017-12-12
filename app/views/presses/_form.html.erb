@@ -29,5 +29,6 @@
   <%= f.input :typekit, label: 'Typekit ID' %>
   <%= f.input :footer_block_a %>
   <%= f.input :footer_block_c %>
+  <%= f.input :parent_id, collection: Press.parent_presses, prompt: "Choose a parent press (optional)" %>
   <%= f.submit label: 'Save Publisher' %>
 <% end %>

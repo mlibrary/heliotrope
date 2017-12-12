@@ -57,4 +57,36 @@ describe PressHelper do
     #   end
     # end
   end
+
+  describe "when a child press has a parent" do
+    let(:press) { create(:press, subdomain: "blue",
+                                 name: "Blue Press",
+                                 logo_path: Rack::Test::UploadedFile.new(File.open(Rails.root.join('spec', 'fixtures', 'csv', 'import', 'shipwreck.jpg')), 'image/jpg'),
+                                 description: "This is Blue Press",
+                                 press_url: "http://blue.com",
+                                 google_analytics: "GA-ID-BLUE",
+                                 typekit: "BLUE-TYPEKIT",
+                                 footer_block_a: "blue-footer-a",
+                                 footer_block_c: "blue-footer-c",
+                                 parent_id: nil) }
+    let(:child) { create(:press, subdomain: "maize",
+                                 name: "Maize Press",
+                                 logo_path: Rack::Test::UploadedFile.new(File.open(Rails.root.join('spec', 'fixtures', 'csv', 'import', 'miranda.jpg')), 'image/jpg'),
+                                 description: "This is Maize Press",
+                                 press_url: "http://blue.com/maize",
+                                 google_analytics: nil, # factorybot will fake a ga-id without this
+                                 parent_id: press.id) }
+
+    context "when the child is missing a field" do
+      it "uses the parent's field" do
+        expect(footer_block_a(child.subdomain)).to eq press.footer_block_a
+        expect(footer_block_c(child.subdomain)).to eq press.footer_block_c
+        expect(google_analytics(child.subdomain)).to eq press.google_analytics
+        expect(typekit(child.subdomain)).to eq press.typekit
+      end
+      it "does not use the parent's name, since a name is required for all presses" do
+        expect(name(child.subdomain)).to eq child.name
+      end
+    end
+  end
 end
