@@ -53,7 +53,7 @@ $gray-60: #686868;
   padding-top: 0 !important;
   padding-bottom: 0 !important;
   .active {
-    color: $gray-60;
+    color: $gray-60 !important;
   }
 }
 ///////////////////////////////////
@@ -90,7 +90,7 @@ footer.press {
 
   .platform {
     padding-top: 30px;
-    color: #BABABA;
+    color: #FFFFFF;
   }
 
   .press-block-c {
@@ -554,6 +554,15 @@ footer.press {
     border-color: #d9edf7;
   }
 
+  a.close {
+    color: #31708f;
+    opacity: .75;
+  }
+
+  a.close:active, a.close:hover {
+    color: #31708f;
+    opacity: 1;
+  }
 }
 
 ///////////////////////////////////
