@@ -11,16 +11,34 @@ module EPub
       results_from_chapters(db_results, query)
     end
 
+    def node_query_match(node, query, offset = 0)
+      # node.content.downcase.index(query.downcase, offset)
+      # As per #1363, people want us to: "Develop exact term matching"
+      # So this for example this will find "music" or "Music" but not "musical"
+      # when searching for "music". Any sort of stemming is going to be super hard
+      # since we need to parse the DOM for results.
+      # Try this for now.
+      node.content.index(/#{query}\W/i, offset)
+    end
+
     private
 
       def find_selection(node, query)
         matches = []
         offset = 0
 
-        while node.content.downcase.index(query.downcase, offset)
+        while node_query_match(node, query, offset)
           cfi = EPub::Cfi.from(node, query, offset)
-          matches.push(cfi: cfi.cfi,
-                       snippet: cfi.snippet)
+          snippet = EPub::Snippet.from(node, cfi.pos0, cfi.pos1).snippet
+          # Sometimes the search term will be in the same sentence twice (or more),
+          # creating identical snippets with slightly different CFIs.
+          # This seems pointless so exlude identical snippets from search results.
+          unless matches.map(&:snippet).include? snippet
+            result = OpenStruct.new
+            result.cfi = cfi.cfi
+            result.snippet = snippet
+            matches << result
+          end
           offset = cfi.pos1 + 1
         end
         matches
@@ -28,10 +46,10 @@ module EPub
 
       def find_targets(node, query)
         targets = []
-        return nil unless node.content.downcase.index(query.downcase)
+        return nil unless node_query_match(node, query)
 
         node.children.each do |child|
-          targets << if child.text? && child.text.downcase.index(query.downcase)
+          targets << if child.text? && node_query_match(child, query)
                        find_selection(child, query)
                      else
                        find_targets(child, query)
@@ -57,9 +75,9 @@ module EPub
           end
 
           matches.flatten.compact.each do |match|
-            results[:search_results].push(cfi: "#{chapter[:basecfi]}#{match[:cfi]}",
+            results[:search_results].push(cfi: "#{chapter[:basecfi]}#{match.cfi}",
                                           title: chapter[:title],
-                                          snippet: match[:snippet])
+                                          snippet: match.snippet)
           end
         end
         results
