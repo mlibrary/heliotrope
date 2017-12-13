@@ -20,6 +20,7 @@ html {
       // center the big play icon relative to the whole page
       // note: it's off-center due to the following line in ableplayer_embed.js
       // this.$bigPlayButton.height(this.$mediaContainer.height() - 98);
+      -webkit-transform: translate3d(0,0,0);
       position: fixed;
       top: 50%;
       left: 50%;
