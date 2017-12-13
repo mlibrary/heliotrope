@@ -11,7 +11,8 @@
         map = L.map('image', {
             center: [0, 0],
             crs: L.CRS.Simple,
-            zoom: 0
+            zoom: 0,
+            scrollWheelZoom: false
         });
         layer = L.tileLayer.iiif("<%= riiif_url %>", { bestFit: true } );
         layer.addTo(map);
