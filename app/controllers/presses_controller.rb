@@ -30,6 +30,6 @@ class PressesController < ApplicationController
 
     def press_params
       params.require(:press).permit(:subdomain, :name, :logo_path, :description, :press_url, :google_analytics,
-                                    :typekit, :footer_block_a, :footer_block_c, :remove_logo_path)
+                                    :typekit, :footer_block_a, :footer_block_c, :remove_logo_path, :parent_id)
     end
 end

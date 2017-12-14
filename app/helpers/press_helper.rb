@@ -22,28 +22,56 @@ module PressHelper
     press.present? ? press.logo_path_url : 'fulcrum-white-50px.png'
   end
 
-  def footer_block_a(subdomain)
-    press = Press.where(subdomain: subdomain)&.first
-    press.footer_block_a if press.present?
-  end
-
-  def footer_block_c(subdomain)
-    press = Press.where(subdomain: subdomain)&.first
-    press.footer_block_c if press.present?
-  end
-
   def url(subdomain)
     press = Press.where(subdomain: subdomain)&.first
     press.press_url if press.present?
   end
 
+  # These are not required. If there's no value we'll try to get the parent's (if one exists)
+
+  def footer_block_a(subdomain)
+    press = Press.where(subdomain: subdomain)&.first
+    return if press.blank?
+    if press.footer_block_a.blank?
+      parent_press(press)&.footer_block_a
+    else
+      press.footer_block_a
+    end
+  end
+
+  def footer_block_c(subdomain)
+    press = Press.where(subdomain: subdomain)&.first
+    return if press.blank?
+    if press.footer_block_c.blank?
+      parent_press(press)&.footer_block_c
+    else
+      press.footer_block_c
+    end
+  end
+
   def google_analytics(subdomain)
     press = Press.where(subdomain: subdomain)&.first
-    press.google_analytics if press.present?
+    return if press.blank?
+    if press.google_analytics.blank?
+      parent_press(press)&.google_analytics
+    else
+      press.google_analytics
+    end
   end
 
   def typekit(subdomain)
     press = Press.where(subdomain: subdomain)&.first
-    press.typekit if press.present?
+    return if press.blank?
+    if press.typekit.blank?
+      parent_press(press)&.typekit
+    else
+      press.typekit
+    end
   end
+
+  private
+
+    def parent_press(child_press)
+      Press.find(child_press.parent_id) if child_press.parent_id.present?
+    end
 end

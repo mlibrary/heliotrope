@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171019191061) do
+ActiveRecord::Schema.define(version: 20171212164112) do
 
   create_table "bookmarks", id: :integer, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.integer "user_id", null: false
@@ -213,6 +213,8 @@ ActiveRecord::Schema.define(version: 20171019191061) do
     t.string "typekit"
     t.text "footer_block_a"
     t.text "footer_block_c"
+    t.integer "parent_id"
+    t.index ["parent_id"], name: "index_presses_on_parent_id"
   end
 
   create_table "proxy_deposit_requests", id: :integer, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
