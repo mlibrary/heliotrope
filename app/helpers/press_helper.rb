@@ -12,6 +12,12 @@ module PressHelper
     end
   end
 
+  def press_subdomains(subdomain)
+    press = Press.where(subdomain: subdomain)&.first
+    return if press.blank?
+    [press.subdomain, parent_press(press)&.subdomain].compact
+  end
+
   def name(subdomain)
     press = Press.where(subdomain: subdomain)&.first
     press.name if press.present?

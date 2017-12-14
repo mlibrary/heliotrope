@@ -47,8 +47,7 @@
     <%= yield(:head) %>
   <% end %>
   </head>
-
-  <body <%= "class=#{press_subdomain}" unless press_subdomain.nil? %> <%= yield(:body_attributes) %>>
+  <%= tag.body class: press_subdomains(press_subdomain) %>
     <div class="skip"><a href="#maincontent">Skip to main content</a></div>
 
 

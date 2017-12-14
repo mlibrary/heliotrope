@@ -47,15 +47,6 @@ describe PressHelper do
         expect(google_analytics(press.subdomain)).to eq("1-XX")
       end
     end
-
-    # google_analytics is now required
-    # context "when a press doesn't have a google_analytics id" do
-    #   let(:press) { create(:press, subdomain: "Big Brown Book Barn") }
-    #
-    #   it "returns nil" do
-    #     expect(google_analytics(press.subdomain)).to be_nil
-    #   end
-    # end
   end
 
   describe "when a child press has a parent" do
@@ -86,6 +77,12 @@ describe PressHelper do
       end
       it "does not use the parent's name, since a name is required for all presses" do
         expect(name(child.subdomain)).to eq child.name
+      end
+    end
+
+    describe "#press_subdomains" do
+      it "returns the press's subdomains in the right order, child then parent" do
+        expect(press_subdomains(child.subdomain)).to eq [child.subdomain, press.subdomain]
       end
     end
   end
