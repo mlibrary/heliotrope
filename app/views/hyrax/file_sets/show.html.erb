@@ -12,15 +12,7 @@
   </div>
 
   <!-- breadcrumbs -->
-  <div class="row">
-    <nav class="breadcrumbs col-sm-12">
-      <ol class="breadcrumb">
-        <li><a href=<%= "/#{@presenter.monograph.subdomain}" %>>Home</a></li>
-        <li><a href=<%= main_app.monograph_catalog_path(@presenter.monograph_id) %>><%= @presenter.monograph.page_title %></a></li>
-        <li class="active"><%= @presenter.page_title %></li>
-      </ol>
-    </nav>
-  </div>
+  <%= render 'shared/breadcrumbs' %>
 
   <!-- asset navigation -->
   <div class="row">

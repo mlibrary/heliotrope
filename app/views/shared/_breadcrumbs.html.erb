@@ -1,0 +1,9 @@
+<div class="row">
+  <nav class="breadcrumbs col-sm-12">
+    <ol class="breadcrumb">
+      <% breadcrumbs.each do |crumb| %>
+        <%= content_tag(:li, crumb[:href].blank? ? crumb[:text] : content_tag(:a, crumb[:text], href: crumb[:href]), class: crumb[:class]) %>
+      <% end %>
+    </ol>
+  </nav>
+</div>

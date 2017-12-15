@@ -60,6 +60,7 @@ RSpec.describe "monograph_catalog/index.html.erb", type: :view do
     subject { view.view_flow.content[:page_header] }
     let(:page_title) { 'PAGE-TITLE' }
     let(:subdomain) { 'SUBDOMAIN' }
+    let!(:press) { create(:press, subdomain: subdomain) }
     before do
       allow(monograph_presenter).to receive(:page_title).and_return(page_title)
       allow(monograph_presenter).to receive(:subdomain).and_return(subdomain)
@@ -69,7 +70,7 @@ RSpec.describe "monograph_catalog/index.html.erb", type: :view do
       debug_puts subject.to_s
       is_expected.not_to be_empty
       # Breadcrumbs
-      is_expected.to match(/<li>.*?<a.*?href=\/#{subdomain}.*?>.*?#{t('.home')}.*?<\/a>.*?<\/li>/m)
+      is_expected.to match(/<li.*?>.*?<a.*?href="\/#{subdomain}">Home<\/a>.*?<\/li>/m)
       is_expected.to match(/<li.*?active.*?>.*?#{page_title}.*?<\/li>/m)
     end
   end
