@@ -48,6 +48,7 @@ RSpec.describe 'hyrax/file_sets/_media', type: :view do
 
   context 'download button' do
     before do
+      allow(FileSet).to receive(:find).with('fileset_id').and_return(file_set)
       render
     end
     context 'has a download link when allow_download? returns true' do
