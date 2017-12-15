@@ -7274,8 +7274,7 @@
         }
         else {
           this.$bigPlayButton.width(this.$mediaContainer.width());
-          // *** heliotrope *** bigPlayButton interfers with the overlayed controls, make room for them
-          this.$bigPlayButton.height(this.$mediaContainer.height() - 98);
+          this.$bigPlayButton.height(this.$mediaContainer.height());
         }
       }
       else {
