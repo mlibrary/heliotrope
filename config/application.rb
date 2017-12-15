@@ -37,9 +37,6 @@ module Heliotrope
     # Add lib directory to autoload paths
     config.autoload_paths << "#{config.root}/lib"
 
-    # Fonts for the AblePlayer HTML player
-    config.assets.paths << Rails.root.join("vendor", "assets", "fonts")
-
     # Set default host from Settings
     Rails.application.routes.default_url_options[:host] = Settings.host
 
