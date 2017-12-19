@@ -13,6 +13,8 @@ Rails.application.routes.draw do
   get 'fulcrum', controller: :fulcrum, action: :index, as: :fulcrum
   get 'fulcrum/:partial', controller: :fulcrum, action: :show, as: :partial_fulcrum
   get 'analytics', controller: :analytics, action: :show
+  get 'webgl/:id', controller: :webgls, action: :show, as: :webgl
+  get 'webgl/:id/*file', controller: :webgls, action: :file, as: :webgl_file
 
   mount Blacklight::Engine => '/'
   mount Riiif::Engine => '/image-service', as: 'riiif'
@@ -88,12 +90,14 @@ Rails.application.routes.draw do
   end
 
   get '/robots.txt' => 'robots#robots'
-  get ':subdomain', controller: :press_catalog, action: :index, as: :press_catalog
-  get ':subdomain/facet', controller: :press_catalog, action: :facet
 
+  get '/favicon.ico', to: redirect('/favicon/favicon.ico')
   # TODO: Used in dev only? If apache is in front I don't think this ever happens?
   # Might fix #379 but need to check
   get '/favicon/favicon.ico', to: redirect('/favicon.ico')
+
+  get ':subdomain', controller: :press_catalog, action: :index, as: :press_catalog
+  get ':subdomain/facet', controller: :press_catalog, action: :facet
 
   root 'presses#index'
 end

@@ -1,0 +1,17 @@
+<% provide :page_title, @presenter.page_title || "Title" %>
+<% content_for :head do %>
+  <meta name="turbolinks-cache-control" content="no-cache">
+  <%= csrf_meta_tag %>
+  <link src="shortcut icon" href="<%= @favicon %>">
+  <script src="<%= @unity_progress %>"></script>
+  <script src="<%= @unity_loader %>"></script>
+  <script>
+    $(document).on('ready page:load', function(){
+      var gameInstance = UnityLoader.instantiate("gameContainer", "<%= @unity_json %>", {onProgress: UnityProgress});
+    });
+  </script>
+<% end %>
+<div class="webgl-content">
+  <div id="gameContainer" style="width: 1024px; height: 600px"></div>
+</div>
+<%= render template: 'layouts/boilerplate' %>
