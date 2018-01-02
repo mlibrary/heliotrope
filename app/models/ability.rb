@@ -13,7 +13,6 @@ class Ability
     can [:read], RolePresenter, &:can_read?
 
     can %i[index read], Press
-    can [:read], SubBrand
 
     # press admin
     grant_press_admin_abilities
@@ -30,10 +29,6 @@ class Ability
 
     can %i[create update], ::Hyrax::FileSet do |f|
       @user.admin_presses.map(&:subdomain).include?(f.parent.press) unless f.parent.nil?
-    end
-
-    can :manage, SubBrand do |sb|
-      admin_for?(sb.press)
     end
 
     can :update, Press do |p|

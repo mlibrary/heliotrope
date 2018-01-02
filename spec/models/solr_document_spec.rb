@@ -32,7 +32,6 @@ describe SolrDocument do
   it { is_expected.to respond_to(:primary_editor_given_name) }
   it { is_expected.to respond_to(:representative_epub_id) }
   it { is_expected.to respond_to(:representative_manifest_id) }
-  it { is_expected.to respond_to(:sub_brand) }
 
   # FileSet
   it { is_expected.to respond_to(:allow_display_after_expiration) }

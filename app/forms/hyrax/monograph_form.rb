@@ -6,10 +6,8 @@ module Hyrax
   class MonographForm < Hyrax::Forms::WorkForm
     self.model_class = ::Monograph
     self.terms += %i[press date_published isbn isbn_paper isbn_ebook
-                     primary_editor_family_name primary_editor_given_name editor
-                     copyright_holder buy_url sub_brand
-                     creator_family_name creator_given_name
-                     section_titles]
+                     primary_editor_family_name primary_editor_given_name editor copyright_holder buy_url
+                     creator_family_name creator_given_name section_titles]
     self.terms -= %i[creator keyword publisher identifier based_near related_url source]
 
     self.required_fields = %i[title press creator_family_name creator_given_name description]
@@ -21,16 +19,6 @@ module Hyrax
     # @return [Hash] The press that this monograph belongs to.
     def select_press
       Hash[current_user.admin_presses.map { |press| [press.name, press.subdomain] }]
-    end
-
-    def select_sub_brand
-      presses = if press.blank?
-                  current_user.admin_presses
-                else
-                  Press.where(subdomain: press)
-                end
-
-      Hash[presses.map(&:sub_brands).flatten.map { |brand| [brand.title, brand.id] }]
     end
 
     def select_files

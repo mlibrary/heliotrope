@@ -197,7 +197,6 @@ en:
           section_title: :"section_title"
           section_titles: :"section_titles"
           sort_date: :"sort_date"
-          sub_brand: :"sub_brand"
           transcript: :"transcript"
           translation: :"translation"
           use_crossref_xml: :"use_crossref_xml"
@@ -205,7 +204,6 @@ en:
         defaults:
           transcript: "Transcripts must be formatted as WebVTT captions. <a href='https://developer.mozilla.org/en-US/docs/Web/API/WebVTT_API' target='_blank'>Get help with WebVTT formatting.</a>"
   sort_date: "Sort Date"
-  sub_brand: "Sub-brand"
   transcript: "Transcript"
   translation: "Translation(s)"
   use_crossref_xml: "Use Crossref XML?"

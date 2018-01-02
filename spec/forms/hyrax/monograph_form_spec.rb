@@ -44,7 +44,6 @@ describe Hyrax::MonographForm do
                               editor
                               copyright_holder
                               buy_url
-                              sub_brand
                               creator_family_name
                               creator_given_name
                               section_titles] }
@@ -82,48 +81,6 @@ describe Hyrax::MonographForm do
     # Story #174
     it 'contains the file set' do
       expect(subject.count).to eq 1
-    end
-  end
-
-  describe 'select_sub_brand' do
-    subject { form.select_sub_brand }
-
-    let!(:imprint) { create(:sub_brand, press: press1) }
-    let!(:series) { create(:sub_brand, press: press1) }
-    let!(:series2) { create(:sub_brand, press: press2) }
-    let!(:another_press_sub_brand) { create(:sub_brand) }
-
-    context 'a user who is a press-level admin' do
-      before do
-        create(:role, resource: press1, user: user, role: 'admin')
-        create(:role, resource: press2, user: user, role: 'admin')
-      end
-
-      context 'when no press is selected' do
-        let(:monograph) { Monograph.new }
-
-        it 'contains sub-brands of presses I am an admin for' do
-          expect(subject.count).to eq 3
-          expect(subject[imprint.title]).to eq imprint.id
-          expect(subject[series.title]).to eq series.id
-          expect(subject[series2.title]).to eq series2.id
-
-          expect(subject.key?(another_press_sub_brand.title)).to eq false
-        end
-      end
-
-      context 'when a press is selected' do
-        let(:monograph) { Monograph.new(press: press1.subdomain) }
-
-        it 'only contains sub-brands of that press' do
-          expect(subject.count).to eq 2
-          expect(subject[imprint.title]).to eq imprint.id
-          expect(subject[series.title]).to eq series.id
-
-          expect(subject.key?(series2.title)).to eq false
-          expect(subject.key?(another_press_sub_brand.title)).to eq false
-        end
-      end
     end
   end
 end

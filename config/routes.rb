@@ -80,7 +80,6 @@ Rails.application.routes.draw do
   get '/presses' => 'presses#index'
   resources :presses, only: %i[new create edit update]
   resources :presses, path: '/', only: %i[index edit] do
-    resources :sub_brands, only: %i[new create show edit update]
     resources :roles, path: 'users', only: %i[index create destroy] do
       collection do
         patch :update_all
