@@ -11,6 +11,7 @@
  * It is generally better to create a new file per style scope.
  *
  *= require common
+ * require application_survey
  *= require_tree ./application
  *= require_tree ./common
  *= require dataTables/bootstrap/3/jquery.dataTables.bootstrap

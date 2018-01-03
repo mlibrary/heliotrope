@@ -1,0 +1,10 @@
+<!-- survey -->
+<% presenter = @monograph_presenter || @presenter %>
+<% asset_link_needed = presenter.class == Hyrax::FileSetPresenter %>
+<% link_params = '?Book=' + (asset_link_needed ? presenter.monograph.page_title + '&Asset=' + presenter.page_title : presenter.page_title) %>
+<div class="alert alert-info alert-dismissible survey" role="alert" style="display: none;">
+  <a class="close" data-dismiss="alert" aria-label="Close" href="#" onclick="Cookies.set('survey', 'ignore', { expires: 15 });">&#x2715</a>
+  <p class="message">Got two minutes? Help us improve your experience on Fulcrum by answering a few questions about your visit.</p>
+  <a href="https://umich.qualtrics.com/jfe/form/SV_5clJsgxZXioWanH<%= link_params %>" class="btn btn-primary btn-lg" role="button" target="_blank" onclick="Cookies.set('survey', 'clicked', { expires: 30 });" data-dismiss="alert">Yes, I can help.</a>
+  <a href="#" class="btn btn-default btn-lg" role="button" data-dismiss="alert" aria-label="Close" onclick="Cookies.set('survey', 'ignore', { expires: 15 });">No thanks.</a>
+</div>
