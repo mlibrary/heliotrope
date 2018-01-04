@@ -44,10 +44,6 @@ class Monograph < ActiveFedora::Base
   end
   validates :press, presence: { message: 'You must select a press.' }
 
-  property :sub_brand, predicate: ::RDF::Vocab::MARCRelators.bsl do |index|
-    index.as :symbol
-  end
-
   property :section_titles, predicate: ::RDF::Vocab::DC.tableOfContents, multiple: false do |index|
     index.as :symbol
   end

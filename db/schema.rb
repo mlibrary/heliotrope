@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171212164112) do
+ActiveRecord::Schema.define(version: 20180102224401) do
 
   create_table "bookmarks", id: :integer, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.integer "user_id", null: false
@@ -426,17 +426,6 @@ ActiveRecord::Schema.define(version: 20171212164112) do
     t.index ["permission_template_id", "name"], name: "index_sipity_workflows_on_permission_template_and_name", unique: true
   end
 
-  create_table "sub_brands", id: :integer, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
-    t.integer "press_id", null: false
-    t.integer "parent_id"
-    t.string "title", null: false
-    t.text "description"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["parent_id"], name: "index_sub_brands_on_parent_id"
-    t.index ["press_id"], name: "index_sub_brands_on_press_id"
-  end
-
   create_table "tinymce_assets", id: :integer, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.string "file"
     t.datetime "created_at", null: false
@@ -539,7 +528,5 @@ ActiveRecord::Schema.define(version: 20171212164112) do
   add_foreign_key "mailboxer_receipts", "mailboxer_notifications", column: "notification_id", name: "receipts_on_notification_id"
   add_foreign_key "permission_template_accesses", "permission_templates"
   add_foreign_key "roles", "users"
-  add_foreign_key "sub_brands", "presses"
-  add_foreign_key "sub_brands", "sub_brands", column: "parent_id"
   add_foreign_key "uploaded_files", "users"
 end

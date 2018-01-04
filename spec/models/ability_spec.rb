@@ -7,7 +7,6 @@ describe Ability do
   subject { described_class.new(current_user) }
 
   let(:press) { create(:press) }
-  let(:sub_brand) { create(:sub_brand, press: press) }
 
   let(:monograph) { create(:monograph, user: creating_user, press: press.subdomain) }
   let(:file_set) { create(:file_set, user: creating_user) }
@@ -49,7 +48,6 @@ describe Ability do
 
       is_expected.to be_able_to(:create, Press.new)
       is_expected.to be_able_to(:update, press)
-      is_expected.to be_able_to(:manage, sub_brand)
     end
 
     it "can read, update, publish or destroy a monograph created by another user" do
@@ -103,17 +101,12 @@ describe Ability do
   describe 'a press-admin' do
     let(:my_press) { create(:press) }
     let(:other_press) { create(:press) }
-    let(:my_sub_brand) { create(:sub_brand, press: my_press, title: ['My own sub-brand']) }
-    let(:other_sub_brand) { create(:sub_brand, press: other_press, title: ["Someone else's sub-brand"]) }
     let(:current_user) { create(:press_admin, press: my_press) }
 
     it do
       is_expected.to_not be_able_to(:create, Press.new)
       is_expected.to     be_able_to(:update, my_press)
       is_expected.to_not be_able_to(:update, other_press)
-      is_expected.to     be_able_to(:manage, my_sub_brand)
-      is_expected.to_not be_able_to(:manage, other_sub_brand)
-      is_expected.to     be_able_to(:read, other_sub_brand)
     end
 
     context "roles" do
@@ -200,7 +193,6 @@ describe Ability do
 
   describe 'a press editor' do
     let(:my_press) { create(:press) }
-    let(:my_sub_brand) { create(:sub_brand, press: my_press, title: ['My own sub-brand']) }
     let(:current_user) { create(:editor, press: my_press) }
     let(:monograph_for_my_press) { Monograph.new(press: my_press.subdomain) }
 
@@ -208,8 +200,6 @@ describe Ability do
       is_expected.to_not be_able_to(:create, Press.new)
       is_expected.to_not be_able_to(:update, my_press)
       is_expected.to_not be_able_to(:create, monograph_for_my_press)
-      is_expected.to_not be_able_to(:manage, my_sub_brand)
-      is_expected.to     be_able_to(:read, my_sub_brand)
     end
 
     context "ApplicationPresenter" do
@@ -278,8 +268,6 @@ describe Ability do
         is_expected.to     be_able_to(:index, Press)
         is_expected.to     be_able_to(:read, press)
         is_expected.to_not be_able_to(:update, press)
-        is_expected.to_not be_able_to(:manage, sub_brand)
-        is_expected.to     be_able_to(:read, sub_brand)
       end
     end
 

@@ -8,9 +8,6 @@ RSpec.describe Hyrax::MonographPresenter do
   before { Press.destroy_all }
   let(:press) { create(:press, subdomain: 'michigan') }
 
-  let(:imprint) { create(:sub_brand, title: 'UM Press Literary Classics') }
-  let(:series) { create(:sub_brand, title: "W. Shakespeare Collector's Series") }
-
   let(:mono_doc) { ::SolrDocument.new(id: 'mono', has_model_ssim: ['Monograph']) }
   let(:ability) { double('ability') }
   let(:presenter) { described_class.new(mono_doc, ability) }
@@ -152,46 +149,6 @@ RSpec.describe Hyrax::MonographPresenter do
     end
     subject { presenter.authors? }
     it { is_expected.to eq false }
-  end
-
-  describe '#sub_brand_links' do
-    context 'a monograph without sub-brands' do
-      let(:mono_doc) { ::SolrDocument.new(id: 'mono', has_model_ssim: ['Monograph'], press_tesim: [press.subdomain]) }
-
-      it 'returns empty list' do
-        expect(presenter.sub_brand_links).to eq []
-      end
-    end
-
-    # This case will probably never happen
-    context 'when press is missing' do
-      let(:mono_doc) { ::SolrDocument.new(id: 'mono', has_model_ssim: ['Monograph'], sub_brand_ssim: [imprint.id, series.id]) }
-
-      it 'returns nil' do
-        expect(presenter.sub_brand_links).to be_nil
-      end
-    end
-
-    context 'a monograph with sub-brands' do
-      let(:mono_doc) { ::SolrDocument.new(id: 'mono', has_model_ssim: ['Monograph'], press_tesim: [press.subdomain], sub_brand_ssim: [imprint.id, series.id]) }
-
-      it 'returns links for the sub-brands' do
-        expect(presenter.sub_brand_links.count).to eq 2
-        expect(presenter.sub_brand_links.first).to match(link_to(imprint.title, Rails.application.routes.url_helpers.press_sub_brand_path(press, imprint)))
-        expect(presenter.sub_brand_links.last).to match(link_to(series.title, Rails.application.routes.url_helpers.press_sub_brand_path(press, series)))
-      end
-    end
-
-    context 'when it fails to find the sub-brand' do
-      let(:mono_doc) { ::SolrDocument.new(id: 'mono', has_model_ssim: ['Monograph'], press_tesim: [press.subdomain], sub_brand_ssim: [imprint.id, series.id]) }
-
-      before { series.destroy } # Now the series ID is invalid
-
-      it 'gracefully ignores missing sub-brands' do
-        expect(presenter.sub_brand_links.count).to eq 1
-        expect(presenter.sub_brand_links.first).to match(link_to(imprint.title, Rails.application.routes.url_helpers.press_sub_brand_path(press, imprint)))
-      end
-    end
   end
 
   describe '#ordered_section_titles' do

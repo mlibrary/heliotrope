@@ -44,17 +44,6 @@ module Hyrax
       section_titles_out.blank? ? section_titles_in.to_sentence : section_titles_out.to_sentence
     end
 
-    def sub_brand_links
-      press = Press.where(subdomain: solr_document[:press_tesim]).first
-      return nil unless press
-
-      Array(solr_document[:sub_brand_ssim]).map do |id|
-        sub_brand = SubBrand.find(id) if SubBrand.exists?(id)
-        next unless sub_brand
-        link_to(sub_brand.title, Rails.application.routes.url_helpers.press_sub_brand_path(press, id))
-      end.compact
-    end
-
     def editors
       ["#{primary_editor_given_name} #{primary_editor_family_name}", editor].flatten.to_sentence
     end
