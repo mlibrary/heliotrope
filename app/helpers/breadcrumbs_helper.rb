@@ -3,7 +3,7 @@
 module BreadcrumbsHelper
   def breadcrumbs
     crumbs = if @presenter.present? && @presenter.class == Hyrax::FileSetPresenter
-               breadcrumbs_for_file_set(@presenter.monograph_presenter.subdomain, @presenter)
+               breadcrumbs_for_file_set(@presenter.monograph.subdomain, @presenter)
              elsif @monograph_presenter.present?
                breadcrumbs_for_monograph(@monograph_presenter.subdomain, @monograph_presenter)
              end
