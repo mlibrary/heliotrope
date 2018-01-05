@@ -57,4 +57,43 @@ describe Hyrax::FileSetsController do
       end
     end
   end
+
+  context 'update the thumbnail' do
+    let(:thumbnail_path) { File.join(fixture_path, 'csv', 'shipwreck.jpg') }
+    let(:thumbnail_deriv_path) { Hyrax::DerivativePath.derivative_path_for_reference(file_set.id, 'thumbnail') }
+    let(:file) { fixture_file_upload('/csv/shipwreck.jpg', 'image/jpg') }
+    it 'copies the updated file to the thumbnail derivative path' do
+      # no derivatives for this FileSet yet
+      expect(Hyrax::DerivativePath.derivatives_for_reference(file_set).count).to eq 0
+      expect(File).not_to exist(thumbnail_deriv_path)
+
+      post :update, params: { id: file_set, user_thumbnail: { custom_thumbnail: file } }
+
+      # now the "uploaded" thumbnail is in place
+      expect(Hyrax::DerivativePath.derivatives_for_reference(file_set).count).to eq 1
+      expect(File).to exist(thumbnail_deriv_path)
+      expect(FileUtils.compare_file(thumbnail_path, thumbnail_deriv_path)).to be_truthy
+    end
+    after do
+      FileUtils.rm_rf(Hyrax.config.derivatives_path)
+    end
+  end
+
+  context 'setting the `thumbnail_path_ss` Solr value' do
+    # note: querying the changed Solr values results in intermittent timing errors, so just verifying SolrService.add()
+    let(:file_set_doc_default) { file_set.to_solr.merge(thumbnail_path_ss: default_thumbnail_path) }
+    let(:default_thumbnail_path) { ActionController::Base.helpers.image_path('default.png') }
+
+    let(:file_set_doc_derivative) { file_set.to_solr.merge(thumbnail_path_ss: thumbnail_derivative_path) }
+    let(:thumbnail_derivative_path) { Hyrax::Engine.routes.url_helpers.download_path(file_set.id, file: 'thumbnail') }
+
+    it 'sets it to the Hyrax default thumbnail path' do
+      expect(ActiveFedora::SolrService).to receive(:add).with(file_set_doc_default, softCommit: true)
+      post :update, params: { id: file_set, user_thumbnail: { use_default: '1' } }
+    end
+    it 'sets it to the thumbnail derivative path' do
+      expect(ActiveFedora::SolrService).to receive(:add).with(file_set_doc_derivative, softCommit: true)
+      post :update, params: { id: file_set, user_thumbnail: { use_default: '0' } }
+    end
+  end
 end

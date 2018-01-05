@@ -262,6 +262,10 @@ module Hyrax
       solr_document['thumbnail_path_ss']
     end
 
+    def using_default_thumbnail?
+      thumbnail_path.start_with?('/assets/')
+    end
+
     def gylphicon
       tag.span class: glyphicon_type + " file-set-glyphicon", "aria-label": alt_text&.first || ""
     end
@@ -292,7 +296,7 @@ module Hyrax
       # https://github.com/samvera/hyrax/wiki/How-Thumbnails-Get-rendered
       # Anyway, this default (set with a call to ActionController::Base.helpers.image_path) can't be styled per...
       # publisher so instead we'll use resource-type-specific glyphicons in "publisher branding" colors
-      mime_type.blank? || external_resource == 'yes' || thumbnail_path.start_with?('/assets/')
+      mime_type.blank? || external_resource == 'yes' || using_default_thumbnail?
     end
 
     def center_caption?

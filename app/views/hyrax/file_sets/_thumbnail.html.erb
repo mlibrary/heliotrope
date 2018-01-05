@@ -1,0 +1,16 @@
+<div id="thumbnail_display" class="tab-pane">
+  <h2>Thumbnail</h2>
+  <%= simple_form_for [main_app, curation_concern], html: { multipart: true } do |f| %>
+      <%= hidden_field_tag('redirect_tab', 'thumbnail') %>
+      <%= simple_fields_for :user_thumbnail do |t| %>
+        <%= t.input :use_default, label: 'Override Thumbnail with Glyphicon?', as: :boolean,
+                    input_html: { checked: curation_concern.to_presenter.using_default_thumbnail? } %>
+        <h4>Upload New Thumbnail (JPG/JPEG only!)</h4>
+        <%= t.input :custom_thumbnail, as: :file, wrapper: :vertical_file_input, label: false, required: false,
+                    input_html: { accept: 'image/jpg, image/jpeg' } %>
+      <% end %>
+      <%= f.button :button, name: "update_thumbnail", id: "upload_submit", onclick: "confirmation_needed = false;", class: "btn btn-primary" do %>
+          <i class="glyphicon glyphicon-upload"></i> Save Changes
+      <% end %>
+  <% end %>
+</div>

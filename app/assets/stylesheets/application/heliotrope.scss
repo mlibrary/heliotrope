@@ -534,6 +534,13 @@ footer.press {
 
 }
 
+// restrict large user-uploaded thumbnails on the asset edit page
+.restricted-width-media-display {
+  .representative-media {
+    width: 100%;
+  }
+}
+
 ///////////////////////////////////
 // EPUB READER - cozy-sun-bear
 ///////////////////////////////////
