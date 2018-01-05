@@ -1,5 +1,6 @@
 <!--<%#= content_for(:body_attributes, 'data-no-turbolink') %>-->
 <% provide :page_title, "Dashboard #{@partial.capitalize}" %>
+<%= render 'shared/skip_links' %>
 <div id="dashboard" class="container-fluid">
   <div class="row">
     <div class="col col-sm-3 col-md-2" id="sidebar" role="navigation">
