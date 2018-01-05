@@ -48,8 +48,6 @@
   <% end %>
   </head>
   <%= tag.body class: press_subdomains(press_subdomain) %>
-    <div class="skip"><a href="#maincontent">Skip to main content</a></div>
-
 
     <%= content_for?(:body) ? yield(:body) : yield %>
 
