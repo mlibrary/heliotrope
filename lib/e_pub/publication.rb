@@ -15,17 +15,22 @@ module EPub
       return null_object if epub.blank?
       noid = epub.is_a?(Hash) ? epub[:id] : epub
       return null_object unless Valid.noid?(noid)
+
       file = epub[:file] if epub.is_a?(Hash)
       Cache.cache(noid, file) if file.present?
       return null_object unless Cache.cached?(noid)
+
       valid_epub = Validator.from(noid)
       return null_object if valid_epub.is_a?(ValidatorNullObject)
+
       publication = new(valid_epub)
+
       if file.present?
         sql_lite = EPub::SqlLite.from(publication)
         sql_lite.create_table
         sql_lite.load_chapters
       end
+
       publication
     rescue StandardError => e
       ::EPub.logger.info("Publication.from(#{epub}, #{options}) raised #{e}")

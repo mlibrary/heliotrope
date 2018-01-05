@@ -251,6 +251,10 @@ module Hyrax
       ['text/csv', 'text/comma-separated-values'].include? mime_type
     end
 
+    def webgl?
+      ['application/zip', 'application/octet-stream'].include?(mime_type) && File.extname(original_name) == ".unity"
+    end
+
     def file
       # Get the original file from Fedora
       file = ::FileSet.find(id)&.original_file

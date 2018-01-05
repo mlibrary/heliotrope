@@ -18,11 +18,14 @@ class MonographIndexer < Hyrax::WorkIndexer
       solr_doc[Solrizer.solr_name('representative_id', :symbol)] = object.representative_id
       trigger_fileset_reindexing(existing_fileset_order, object.ordered_member_ids)
 
+      # These are pulling all the FileSets for a monograph from fedora multiple times... TODO: make it not
+
       # grab the first fileset that is an epub and set it as the representative_epub_id
       solr_doc[Solrizer.solr_name('representative_epub_id', :symbol)] = existing_filesets.find { |id| ['application/epub+zip'].include? FileSet.find(id).mime_type }
-
       # grab the first fileset that is a csv and set it as the representative_manifest_id
       solr_doc[Solrizer.solr_name('representative_manifest_id', :symbol)] = existing_filesets.find { |id| ['text/csv', 'text/comma-separated-values'].include? FileSet.find(id).mime_type }
+      # grab the first fileset that is a webgl and set it
+      solr_doc[Solrizer.solr_name('representative_webgl_id', :symbol)] = existing_filesets.find { |id| ['application/zip'].include?(FileSet.find(id).mime_type) && File.extname(FileSet.find(id).original_file.file_name.first) == ".unity" }
     end
   end
 
