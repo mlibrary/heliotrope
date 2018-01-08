@@ -63,6 +63,10 @@ module SolrDocumentExtensions::Monograph
     Array(self[Solrizer.solr_name('representative_manifest_id', :symbol)]).first
   end
 
+  def representative_webgl_id
+    Array(self[Solrizer.solr_name('representative_webgl_id', :symbol)]).first
+  end
+
   def section_titles
     value = Array(self[Solrizer.solr_name('section_titles', :symbol)]).first
     value.present? ? value.split(/\r?\n/).reject(&:blank?) : value

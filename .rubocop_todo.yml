@@ -20,6 +20,7 @@ Metrics/CyclomaticComplexity:
   Exclude:
     - 'app/models/riiif/file.rb'
     - 'app/services/downloads_controller_behavior.rb'
+    - 'app/presenters/hyrax/monograph_presenter.rb'
 
 Metrics/PerceivedComplexity:
   Exclude:

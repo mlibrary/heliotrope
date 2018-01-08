@@ -97,6 +97,9 @@ $(document).ready(function() {
           <li role="presentation" class="active"><a href="#media" aria-controls="media" role="tab" data-toggle="tab">Media</a></li>
         <% end %>
       <% end %>
+      <% if @monograph_presenter.webgl? %>
+        <li role="presentation"><a href="#webgl" aria-controls="webgl" role="tab" data-toggle="tab">3-D Model</a></li>
+      <% end %>
       <li role="presentation"><a href="#stats" aria-controls="stats" role="tab" data-toggle="tab">Stats</a></li>
     </ul>
     <div class="tab-content monograph-assets-toc-epub-content">
@@ -120,6 +123,13 @@ $(document).ready(function() {
             <div class="content">
               <%= render 'catalog/search_results' %>
             </div><!-- /.content -->
+          </div>
+        </div>
+      <% end %>
+      <% if @monograph_presenter.webgl? %>
+        <div role="tabpanel" class="tab-pane webgl row" id="webgl">
+          <div class="col-sm-12">
+            <%= render 'webgls/tab' %>
           </div>
         </div>
       <% end %>
