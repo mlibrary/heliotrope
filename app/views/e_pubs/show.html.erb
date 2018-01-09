@@ -4,7 +4,7 @@
   <meta name="turbolinks-cache-control" content="no-cache">
 <% end %>
 <% provide :body do %>
-<% if defined? @presenter.file_set_coins_title %>
+<% if false && defined? @presenter.file_set_coins_title %>
   <span class="Z3988" title="<%= @presenter.file_set_coins_title %>"></span>
 <% end %>
 <div id="epub" class="<%= @subdomain %>">
@@ -29,7 +29,7 @@
       cozy.control.widget.button({
   	    region: 'top.header.left',
   	    data: { label: '<i class="icon-x oi" data-glyph="x" aria-hidden="true"></i>'},
-  	    template: `<button class="button--sm cozy-close" data-toggle="button" data-slot="label" aria-label="Close reader"></button>`,
+  	    template: '<button class="button--sm cozy-close" data-toggle="button" data-slot="label" aria-label="Close reader"></button>',
   	    onClick: function() { window.location = "<%= "#{@back_link}" %>"; }
       }).addTo(reader);
       // Press brand widget
@@ -39,7 +39,7 @@
         <% if %w[heb nyupress].include? @subdomain %>
           cozy.control.widget.panel({
             region: 'top.header.left',
-            template: `<div class="logo"><%= image_tag logo(@subdomain), alt: @subdomain %>`,
+            template: '<div class="logo"><%= image_tag logo(@subdomain), alt: @subdomain %>',
             data: { title: "<%= @subdomain %>" }
           }).addTo(reader);
           <% end %>
@@ -53,7 +53,7 @@
       cozy.control.widget.panel({
         region: 'top.toolbar.left',
         data: { title: "<%= @citable_link %>"},
-  	    template: `<div class="permalink-label"><label class="u-screenreader" for="permalink">Permalink</label><form><input data-slot="title" type="text" id="permalink" value="" readonly="readonly" onclick="this.select(); document.execCommand('copy');"></form></div>`,
+  	    template: '<div class="permalink-label"><label class="u-screenreader" for="permalink">Permalink</label><form><input data-slot="title" type="text" id="permalink" value="" readonly="readonly" onclick="this.select(); document.execCommand(\'copy\');"></form></div>',
       }).addTo(reader);
       // Citation widget
       cozy.control.citation({ region: 'top.toolbar.left' }).addTo(reader);
