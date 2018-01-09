@@ -5,8 +5,4 @@
   <!-- breadcrumbs -->
   <%= render 'shared/breadcrumbs' %>
 <% end %><!-- provide :page_header -->
-<% if @monograph_presenter.epub? %>
-    <%= render 'index_epub' %>
-<% else %>
-    <%= render 'index_monograph' %>
-<% end %><!-- if @monograph_presenter.epub? -->
+<%= render 'index_monograph' %>

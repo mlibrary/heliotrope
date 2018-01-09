@@ -7,8 +7,6 @@ feature "Monograph Catalog Facets" do
     stub_out_redis
   end
 
-  # the monograph cover will be represented by the default glyphicon-file (media_display/_default.html.erb), meaning...
-  # there will always be one glyphicon-file in the top-left of the monograph catalog page (see count: 1 in scenarios)
   let(:cover) { create(:public_file_set) }
 
   context "external resource image icons" do
@@ -22,7 +20,7 @@ feature "Monograph Catalog Facets" do
     scenario "image shows picture icon in list view" do
       visit monograph_catalog_path(monograph.id)
       expect(page).to have_css('span.glyphicon-picture')
-      expect(page).to have_css('span.glyphicon-file', count: 1)
+      expect(page).to have_css('span.glyphicon-file', count: 0)
       expect(page).to_not have_css('span.glyphicon-film')
       expect(page).to_not have_css('span.glyphicon-volume-up')
     end
@@ -30,7 +28,7 @@ feature "Monograph Catalog Facets" do
       visit monograph_catalog_path(monograph.id)
       click_link "Gallery"
       expect(page).to have_css('span.glyphicon-picture')
-      expect(page).to have_css('span.glyphicon-file', count: 1)
+      expect(page).to have_css('span.glyphicon-file', count: 0)
       expect(page).to_not have_css('span.glyphicon-film')
       expect(page).to_not have_css('span.glyphicon-volume-up')
     end
@@ -46,7 +44,7 @@ feature "Monograph Catalog Facets" do
     end
     scenario "text shows file icon in list view" do
       visit monograph_catalog_path(monograph.id)
-      expect(page).to have_css('span.glyphicon-file', count: 2)
+      expect(page).to have_css('span.glyphicon-file', count: 1)
       expect(page).to_not have_css('span.glyphicon-film')
       expect(page).to_not have_css('span.glyphicon-volume-up')
       expect(page).to_not have_css('span.glyphicon-picture')
@@ -54,7 +52,7 @@ feature "Monograph Catalog Facets" do
     scenario "text shows file icon in gallery view" do
       visit monograph_catalog_path(monograph.id)
       click_link "Gallery"
-      expect(page).to have_css('span.glyphicon-file', count: 2)
+      expect(page).to have_css('span.glyphicon-file', count: 1)
       expect(page).to_not have_css('span.glyphicon-film')
       expect(page).to_not have_css('span.glyphicon-volume-up')
       expect(page).to_not have_css('span.glyphicon-picture')
@@ -74,7 +72,7 @@ feature "Monograph Catalog Facets" do
       expect(page).to have_css('span.glyphicon-film')
       expect(page).to_not have_css('span.glyphicon-volume-up')
       expect(page).to_not have_css('span.glyphicon-picture')
-      expect(page).to have_css('span.glyphicon-file', count: 1)
+      expect(page).to have_css('span.glyphicon-file', count: 0)
     end
     scenario "video shows film icon in gallery view" do
       visit monograph_catalog_path(monograph.id)
@@ -82,7 +80,7 @@ feature "Monograph Catalog Facets" do
       expect(page).to have_css('span.glyphicon-film')
       expect(page).to_not have_css('span.glyphicon-volume-up')
       expect(page).to_not have_css('span.glyphicon-picture')
-      expect(page).to have_css('span.glyphicon-file', count: 1)
+      expect(page).to have_css('span.glyphicon-file', count: 0)
     end
   end
 
@@ -98,7 +96,7 @@ feature "Monograph Catalog Facets" do
       visit monograph_catalog_path(monograph.id)
       expect(page).to have_css('span.glyphicon-volume-up')
       expect(page).to_not have_css('span.glyphicon-picture')
-      expect(page).to have_css('span.glyphicon-file', count: 1)
+      expect(page).to have_css('span.glyphicon-file', count: 0)
       expect(page).to_not have_css('span.glyphicon-film')
     end
     scenario "audio shows 'volume up' icon in gallery view" do
@@ -106,7 +104,7 @@ feature "Monograph Catalog Facets" do
       click_link "Gallery"
       expect(page).to have_css('span.glyphicon-volume-up')
       expect(page).to_not have_css('span.glyphicon-picture')
-      expect(page).to have_css('span.glyphicon-file', count: 1)
+      expect(page).to have_css('span.glyphicon-file', count: 0)
       expect(page).to_not have_css('span.glyphicon-film')
     end
   end
