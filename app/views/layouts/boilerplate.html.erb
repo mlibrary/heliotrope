@@ -47,11 +47,11 @@
     <%= yield(:head) %>
   <% end %>
   </head>
-  <%= tag.body class: press_subdomains(press_subdomain) %>
+  <%= tag.body class: press_subdomains(press_subdomain) do %>
 
     <%= content_for?(:body) ? yield(:body) : yield %>
 
     <%= render 'shared/ajax_modal' %>
     <%= render 'shared/cookie_alert' %>
-  </body>
+  <% end %>
 </html>
