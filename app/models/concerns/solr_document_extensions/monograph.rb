@@ -55,16 +55,8 @@ module SolrDocumentExtensions::Monograph
     Array(self[Solrizer.solr_name('primary_editor_given_name', :stored_searchable)]).first
   end
 
-  def representative_epub_id
-    Array(self[Solrizer.solr_name('representative_epub_id', :symbol)]).first
-  end
-
   def representative_manifest_id
     Array(self[Solrizer.solr_name('representative_manifest_id', :symbol)]).first
-  end
-
-  def representative_webgl_id
-    Array(self[Solrizer.solr_name('representative_webgl_id', :symbol)]).first
   end
 
   def section_titles

@@ -10,7 +10,7 @@ describe MonographSearchBuilder do
 
   describe "#filter_by_members" do
     context "a monograph with assets" do
-      let(:monograph) { build(:monograph, representative_id: cover.id) }
+      let(:monograph) { create(:monograph, representative_id: cover.id) }
       let(:cover) { create(:file_set) }
       let(:file1) { create(:file_set) }
       let(:file2) { create(:file_set) }
@@ -21,20 +21,30 @@ describe MonographSearchBuilder do
         monograph.ordered_members << file2
         monograph.save!
         search_builder.blacklight_params['id'] = monograph.id
-        search_builder.filter_by_members(solr_params)
       end
-      it "creates a query for the monograph's assets but without the representative_id" do
-        expect(solr_params[:fq].first).not_to match(/{!terms f=id}#{cover.id},#{file1.id},#{file2.id}/)
-        expect(solr_params[:fq].first).to match(/{!terms f=id}#{file1.id},#{file2.id}/)
+      context "reprensentative id (cover)" do
+        before { search_builder.filter_by_members(solr_params) }
+        it "creates a query for the monograph's assets but without the representative_id" do
+          expect(solr_params[:fq].first).not_to match(/{!terms f=id}#{cover.id},#{file1.id},#{file2.id}/)
+          expect(solr_params[:fq].first).to match(/{!terms f=id}#{file1.id},#{file2.id}/)
+        end
       end
       context 'epub' do
+        before do
+          FeaturedRepresentative.create!(monograph_id: monograph.id, file_set_id: file2.id, kind: 'epub')
+          search_builder.filter_by_members(solr_params)
+        end
+        after { FeaturedRepresentative.destroy_all }
+
         let(:file2) { create(:file_set, content: File.open(File.join(fixture_path, 'moby-dick.epub'))) }
+
         it "creates a query for the monograph's assets but without the epub id" do
           expect(solr_params[:fq].first).not_to match(/{!terms f=id}#{file1.id},#{file2.id}/)
           expect(solr_params[:fq].first).to match(/{!terms f=id}#{file1.id}/)
         end
       end
       context 'manifest' do
+        before { search_builder.filter_by_members(solr_params) }
         let(:file2) { create(:file_set, content: File.open(File.join(fixture_path, 'csv', 'import', 'tempest.csv'))) }
         it "creates a query for the monograph's assets but without the manifest id" do
           expect(solr_params[:fq].first).not_to match(/{!terms f=id}#{file1.id},#{file2.id}/)

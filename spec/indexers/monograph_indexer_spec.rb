@@ -41,32 +41,6 @@ RSpec.describe MonographIndexer do
     end
   end
 
-  describe 'representative_epub_id' do
-    subject { indexer.generate_solr_document[Solrizer.solr_name('representative_epub_id', :symbol)] }
-
-    let(:indexer) { described_class.new(monograph) }
-    let(:monograph) { build(:monograph) }
-
-    context 'no file set' do
-      before { monograph.save! }
-      it { is_expected.to be_nil }
-    end
-    context 'file set' do
-      before do
-        monograph.ordered_members << file_set
-        monograph.save!
-      end
-      context 'non-epub file set' do
-        let(:file_set) { create(:file_set) }
-        it { is_expected.to be_nil }
-      end
-      context 'epub file set' do
-        let(:file_set) { create(:file_set, content: File.open(File.join(fixture_path, 'moby-dick.epub'))) }
-        it { is_expected.to eq file_set.id }
-      end
-    end
-  end
-
   describe 'representative_manifest_id' do
     subject { indexer.generate_solr_document[Solrizer.solr_name('representative_manifest_id', :symbol)] }
 

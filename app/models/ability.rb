@@ -51,6 +51,7 @@ class Ability
     can :publish, Monograph
     can :manage, Role
     can :manage, Press
+    can :manage, FeaturedRepresentative
   end
 
   def platform_admin?

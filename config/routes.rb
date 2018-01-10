@@ -15,6 +15,8 @@ Rails.application.routes.draw do
   get 'analytics', controller: :analytics, action: :show
   get 'webgl/:id', controller: :webgls, action: :show, as: :webgl
   get 'webgl/:id/*file', controller: :webgls, action: :file, as: :webgl_file
+  post 'featured_representatives', controller: :featured_representatives, action: :save
+  delete 'featured_representatives', controller: :featured_representatives, action: :delete
 
   mount Blacklight::Engine => '/'
   mount Riiif::Engine => '/image-service', as: 'riiif'

@@ -102,9 +102,8 @@ module Hyrax
       ordered_member_docs.each do |doc|
         next if doc['has_model_ssim'] != ['FileSet'].freeze
         next if doc.id == solr_document.representative_id
-        next if doc.id == solr_document.representative_epub_id
         next if doc.id == solr_document.representative_manifest_id
-        next if doc.id == solr_document.representative_webgl_id
+        next if featured_representatives.map(&:file_set_id).include? doc.id
         file_sets_ids.append doc.id
       end
       @ordered_file_sets_ids = file_sets_ids
@@ -147,20 +146,24 @@ module Hyrax
       solr_document.buy_url.first if buy_url?
     end
 
+    def featured_representatives
+      FeaturedRepresentative.where(monograph_id: id)
+    end
+
     def epub?
-      solr_document.representative_epub_id.present?
+      featured_representatives.map(&:kind).include? 'epub'
     end
 
     def epub
-      ordered_member_docs.find { |doc| doc.id == solr_document.representative_epub_id } if epub?
+      ordered_member_docs.find { |doc| doc.id == epub_id }
     end
 
     def epub_id
-      solr_document.representative_epub_id if epub?
+      featured_representatives.map { |fr| fr.file_set_id if fr.kind == 'epub' }.compact.first
     end
 
     def epub_presenter
-      FactoryService.e_pub_publication(solr_document.representative_epub_id).presenter
+      FactoryService.e_pub_publication(epub_id).presenter
     end
 
     def manifest?
@@ -176,11 +179,15 @@ module Hyrax
     end
 
     def webgl?
-      solr_document.representative_webgl_id.present?
+      featured_representatives.map(&:kind).include? 'webgl'
+    end
+
+    def webgl
+      ordered_member_docs.find { |doc| doc.id == webgl_id }
     end
 
     def webgl_id
-      solr_document.representative_webgl_id
+      featured_representatives.map { |fr| fr.file_set_id if fr.kind == 'webgl' }.compact.first
     end
 
     def monograph_coins_title?
