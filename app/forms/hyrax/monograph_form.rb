@@ -5,7 +5,7 @@
 module Hyrax
   class MonographForm < Hyrax::Forms::WorkForm
     self.model_class = ::Monograph
-    self.terms += %i[press date_published isbn isbn_paper isbn_ebook
+    self.terms += %i[press date_published isbn isbn_paper isbn_ebook hdl
                      primary_editor_family_name primary_editor_given_name editor copyright_holder buy_url
                      creator_family_name creator_given_name section_titles]
     self.terms -= %i[creator keyword publisher identifier based_near related_url source]

@@ -17,6 +17,9 @@ describe SolrDocument do
     it { is_expected.to eq 'yes' }
   end
 
+  # Monograph + FileSet
+  it { is_expected.to respond_to(:hdl) }
+
   # Monograph
   it { is_expected.to respond_to(:buy_url) }
   it { is_expected.to respond_to(:creator_family_name) }
@@ -51,7 +54,6 @@ describe SolrDocument do
   it { is_expected.to respond_to(:exclusive_to_platform) }
   it { is_expected.to respond_to(:external_resource) }
   it { is_expected.to respond_to(:ext_url_doi_or_handle) }
-  it { is_expected.to respond_to(:hdl) }
   it { is_expected.to respond_to(:redirect_to) }
   it { is_expected.to respond_to(:holding_contact) }
   it { is_expected.to respond_to(:keywords) }

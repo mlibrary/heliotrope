@@ -33,31 +33,25 @@
           </div><!-- /.btn-group -->
         </div><!-- /.btn-toolbar -->
     <% end %>
-    <% if @monograph_presenter.isbn? %>
-        <div class="isbn">
-          <% if @monograph_presenter.isbn_hardcover? %>
-              <ul class="isbn-hardcover list-unstyled">
-                <% @monograph_presenter.isbn_hardcover.each do |isbn_hardcover| %>
-                    <li><%= t('monograph_catalog.index.isbn_hardcover', isbn: isbn_hardcover) %></li>
-                <% end %>
-              </ul>
-          <% end %>
-          <% if @monograph_presenter.isbn_paper? %>
-              <ul class="isbn-paper list-unstyled">
-                <% @monograph_presenter.isbn_paper.each do |isbn_paper| %>
-                    <li><%= t('monograph_catalog.index.isbn_paper', isbn: isbn_paper) %></li>
-                <% end %>
-              </ul>
-          <% end %>
-          <% if @monograph_presenter.isbn_ebook? %>
-              <ul class="isbn-ebook list-unstyled">
-                <% @monograph_presenter.isbn_ebook.each do |isbn_ebook| %>
-                    <li><%= t('monograph_catalog.index.isbn_ebook', isbn: isbn_ebook) %></li>
-                <% end %>
-              </ul>
-          <% end %>
-        </div> <!-- /.isbn -->
-    <% end %>
+
+    <table class="table monograph attributes" <%= @monograph_presenter.microdata_type_to_html %>>
+      <tbody>
+      <%= @monograph_presenter.attribute_to_html(:isbn, label: t('isbn')) %>
+      <%= @monograph_presenter.attribute_to_html(:isbn_paper, label: t('isbn_paper')) %>
+      <%= @monograph_presenter.attribute_to_html(:isbn_ebook, label: t('isbn_ebook')) %>
+      <tr>
+        <th><%= t('citable_link') %></th>
+        <td>
+          <form>
+            <label for="permalink" style="display: none;"><%= t('citable_link') %></label>
+            <input type="text" class="form-control" id="permalink" aria-label="citable link" value="<%= @monograph_presenter.citable_link %>" readonly="readonly" onclick="this.select(); document.execCommand('copy');" />
+          </form>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+
+
   </div><!-- /.monograph-metadata -->
 </div><!-- /.monograph-info-epub -->
 <script>

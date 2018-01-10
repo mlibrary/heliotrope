@@ -173,7 +173,7 @@ footer.press {
 
   // EPUB - MONOGRAPH INFORMATION
   .monograph-info-epub {
-    padding-bottom: 4em;
+    padding-bottom: 2em;
 
     #manage-monograph-button {
       margin-top: 2em;
@@ -184,8 +184,26 @@ footer.press {
         padding-bottom: 2em;
       }
 
-      .isbn {
-        padding-top: 2em;
+      table.table {
+        margin-top: 1.5em;
+      }
+
+      .table > thead > tr > th,
+      .table > thead > tr > td,
+      .table > tbody > tr > th,
+      .table > tbody > tr > td,
+      .table > tfoot > tr > th,
+      .table > tfoot > tr > td {
+        border-top: 0 solid #fff;
+        padding: 0px;
+      }
+
+      table tbody tr:last-of-type th {
+        vertical-align: middle;
+      }
+
+      input#permalink {
+        max-width: 50%;
       }
     }
   }
