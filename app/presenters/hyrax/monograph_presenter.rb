@@ -104,6 +104,7 @@ module Hyrax
         next if doc.id == solr_document.representative_id
         next if doc.id == solr_document.representative_epub_id
         next if doc.id == solr_document.representative_manifest_id
+        next if doc.id == solr_document.representative_webgl_id
         file_sets_ids.append doc.id
       end
       @ordered_file_sets_ids = file_sets_ids
@@ -162,6 +163,14 @@ module Hyrax
 
     def manifest
       ordered_member_docs.find { |doc| doc.id == solr_document.representative_manifest_id } if manifest?
+    end
+
+    def webgl?
+      solr_document.representative_webgl_id.present?
+    end
+
+    def webgl_id
+      solr_document.representative_webgl_id
     end
 
     def monograph_coins_title?

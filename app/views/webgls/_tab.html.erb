@@ -1,0 +1,21 @@
+<%
+webgl_id = @monograph_presenter.webgl_id
+webgl = FactoryService.webgl_unity(webgl_id)
+@unity_progress = "/webgl/#{webgl_id}/#{webgl.unity_progress}"
+@unity_loader = "/webgl/#{webgl_id}/#{webgl.unity_loader}"
+@unity_json = "/webgl/#{webgl_id}/#{webgl.unity_json}"
+%>
+<script src="<%= @unity_progress %>"></script>
+<script src="<%= @unity_loader %>"></script>
+<script>
+  // only load when the tab is clicked, otherwise the whole page gets locked on first load
+  var gameInstance = undefined;
+  $("a[href='#webgl']").bind('click', function() {
+    if (typeof gameInstance === 'undefined') {
+      gameInstance = UnityLoader.instantiate("gameContainer", "<%= @unity_json %>", {onProgress: UnityProgress});
+    }
+  });
+</script>
+<div class="webgl-content">
+  <div id="gameContainer" style="width: 1024px; height: 600px"></div>
+</div>
