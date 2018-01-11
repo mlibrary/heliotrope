@@ -1,5 +1,5 @@
 <%= presenter.attribute_to_html(:file_format, label: t('file_format')) %>
-<%= presenter.attribute_to_html(:file_size, label: t('file_size')) %>
+<%= presenter.attribute_to_html(:file_size, label: t('file_size'), render_as: :file_size) %>
 <%= presenter.attribute_to_html(:width) %>
 <%= presenter.attribute_to_html(:height) %>
 <%= presenter.attribute_to_html(:mime_type, label: t('mime_type')) %>
