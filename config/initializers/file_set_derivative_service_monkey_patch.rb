@@ -15,4 +15,17 @@ Hyrax::FileSetDerivativesService.class_eval do
     Rails.logger.warn("WARNING: config/initializers/file_set_derivative_monky_patch.rb happened!")
     nil
   end
+
+  # seeing as this monkey patch already exists I'm going to customize our derivative creation here:
+  # 1) FYI, we're allowing full text extraction on PDFs (default Hyrax behavior)
+  # 2) we don't want derivatives created for office documents (just using our glyphicon override), commenting that out
+  def create_derivatives(filename)
+    case mime_type
+    when *file_set.class.pdf_mime_types             then create_pdf_derivatives(filename)
+    # when *file_set.class.office_document_mime_types then create_office_document_derivatives(filename)
+    when *file_set.class.audio_mime_types           then create_audio_derivatives(filename)
+    when *file_set.class.video_mime_types           then create_video_derivatives(filename)
+    when *file_set.class.image_mime_types           then create_image_derivatives(filename)
+    end
+  end
 end
