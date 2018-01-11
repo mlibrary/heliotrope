@@ -89,7 +89,7 @@ en:
   ext_url_doi_or_handle: "External URL/DOI"
   external_resource: "Externally-Hosted Resource?"
   file_format: "File Format"
-  file_size: "File Size (bytes)"
+  file_size: "File Size"
   hdl: "Handle"
   helpers:
     submit:

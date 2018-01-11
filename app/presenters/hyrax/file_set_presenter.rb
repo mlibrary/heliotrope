@@ -10,7 +10,6 @@ module Hyrax
     include CharacterizationBehavior
     include WithEvents
     include Rails.application.routes.url_helpers
-    include ActionView::Helpers::NumberHelper
     include ActionView::Helpers::TagHelper
 
     attr_accessor :solr_document, :current_ability, :request, :monograph_presenter
@@ -312,7 +311,7 @@ module Hyrax
     def download_button_label
       download_label = 'Download'
       extension = File.extname(label).delete('.').upcase if label.present?
-      size = number_to_human_size(file_size) if file_size.present?
+      size = ActiveSupport::NumberHelper.number_to_human_size(file_size) if file_size.present?
       download_label += ' ' + extension if extension.present?
       download_label += ' (' + size + ')' if size.present?
       download_label
