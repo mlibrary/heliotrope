@@ -71,4 +71,8 @@ module SolrDocumentExtensions::Monograph
     value = Array(self[Solrizer.solr_name('section_titles', :symbol)]).first
     value.present? ? value.split(/\r?\n/).reject(&:blank?) : value
   end
+
+  def hdl
+    Array(self[Solrizer.solr_name('hdl', :symbol)]).first
+  end
 end

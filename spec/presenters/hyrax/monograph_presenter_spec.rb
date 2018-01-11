@@ -390,4 +390,22 @@ RSpec.describe Hyrax::MonographPresenter do
       end
     end
   end # context 'a monograph with attached members' do
+
+  describe "#citable_link" do
+    context "with an explicit handle" do
+      let(:mono_doc) { SolrDocument.new(id: 'monograph_id', has_model_ssim: ['Monograph'], hdl_ssim: ['a.handle']) }
+
+      it "has that explicit handle" do
+        expect(presenter.citable_link).to eq "http://hdl.handle.net/2027/fulcrum.a.handle"
+      end
+    end
+
+    context "with no explicit handle" do
+      let(:mono_doc) { SolrDocument.new(id: 'monograph_id', has_model_ssim: ['FileSet']) }
+
+      it "has the default NOID based handle" do
+        expect(presenter.citable_link).to eq "http://hdl.handle.net/2027/fulcrum.monograph_id"
+      end
+    end
+  end
 end

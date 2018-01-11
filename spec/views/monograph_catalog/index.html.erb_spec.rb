@@ -108,9 +108,9 @@ RSpec.describe "monograph_catalog/index.html.erb", type: :view do
           is_expected.not_to match authors
           is_expected.not_to match t('.edited_by')
           is_expected.not_to match(/<div.*?class=\"isbn\".*?>.*?<\/div>/m)
-          is_expected.not_to match t('.isbn_hardcover')
-          is_expected.not_to match t('.isbn_paper')
-          is_expected.not_to match t('.isbn_ebook')
+          is_expected.not_to match t('isbn')
+          is_expected.not_to match t('isbn_paper')
+          is_expected.not_to match t('isbn_ebook')
           is_expected.not_to match t('.buy')
           is_expected.not_to match t('.buy_book')
         end
@@ -163,7 +163,7 @@ RSpec.describe "monograph_catalog/index.html.erb", type: :view do
         end
       end
 
-      context 'pagevviews' do
+      context 'pageviews' do
         before do
           allow(monograph_presenter).to receive(:pageviews).and_return("PAGEVIEWS")
           render
@@ -174,38 +174,27 @@ RSpec.describe "monograph_catalog/index.html.erb", type: :view do
         end
       end
 
-      context 'isbn?' do
+      context 'isbn (a.k.a. isbn_hardcover)' do
         before do
-          allow(monograph_presenter).to receive(:isbn?).and_return(true)
+          allow(monograph_presenter).to receive(:isbn).and_return("ISBN-HARDCOVER")
           render
         end
         it do
           debug_puts subject.to_s
-          is_expected.to match(/<div.*?class=\"isbn\".*?>.*?<\/div>/m)
+          is_expected.to match t('isbn')
+          is_expected.to match "ISBN-HARDCOVER"
         end
       end
 
-      context 'isbn_hardcover?' do
+      context 'isbn_paper' do
         before do
-          allow(monograph_presenter).to receive(:isbn_hardcover?).and_return(true)
-          allow(monograph_presenter).to receive(:isbn_hardcover).and_return(["ISBN-HARDCOVER"])
-          render
-        end
-        it do
-          debug_puts subject.to_s
-          is_expected.to match t('.isbn_hardcover')
-        end
-      end
-
-      context 'isbn_paper?' do
-        before do
-          allow(monograph_presenter).to receive(:isbn_paper?).and_return(true)
           allow(monograph_presenter).to receive(:isbn_paper).and_return(["ISBN-PAPER"])
           render
         end
         it do
           debug_puts subject.to_s
-          is_expected.to match t('.isbn_paper')
+          is_expected.to match t('isbn_paper')
+          is_expected.to match "ISBN-PAPER"
         end
       end
 
@@ -217,7 +206,7 @@ RSpec.describe "monograph_catalog/index.html.erb", type: :view do
         end
         it do
           debug_puts subject.to_s
-          is_expected.to match t('.isbn_ebook')
+          is_expected.to match t('isbn_ebook')
         end
       end
 
@@ -231,6 +220,18 @@ RSpec.describe "monograph_catalog/index.html.erb", type: :view do
           debug_puts subject.to_s
           is_expected.to match t('.buy')
           is_expected.to match t('.buy_book')
+        end
+      end
+
+      context 'handle' do
+        before do
+          allow(monograph_presenter).to receive(:citable_link).and_return(["http://hdl.handle.net/2027/fulcrum.999999999"])
+          render
+        end
+        it do
+          debug_puts subject.to_s
+          is_expected.to match t('citable_link')
+          is_expected.to match "http://hdl.handle.net/2027/fulcrum.999999999"
         end
       end
     end

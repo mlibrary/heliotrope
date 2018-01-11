@@ -39,6 +39,7 @@ describe Hyrax::MonographForm do
                               isbn
                               isbn_paper
                               isbn_ebook
+                              hdl
                               primary_editor_family_name
                               primary_editor_given_name
                               editor
