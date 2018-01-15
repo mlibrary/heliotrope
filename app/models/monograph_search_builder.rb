@@ -25,10 +25,16 @@ class MonographSearchBuilder < ::SearchBuilder
       return if ids.blank?
 
       ids.delete(monograph.first['representative_id_ssim']&.first)
-      ids.delete(monograph.first['representative_epub_id_ssim']&.first)
       ids.delete(monograph.first['representative_manifest_id_ssim']&.first)
-      ids.delete(monograph.first['representative_webgl_id_ssim']&.first)
+      featured_representatives(monograph.first['id']).each do |fr|
+        ids.delete(fr.file_set_id)
+      end
+
       ids.join(',')
+    end
+
+    def featured_representatives(id)
+      FeaturedRepresentative.where(monograph_id: id)
     end
 
     def work_types

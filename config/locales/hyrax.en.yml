@@ -1,6 +1,9 @@
 en:
   hyrax:
     account_name: "Fulcrum"
+    base:
+      items:
+        set_representative: "Set Representative"
     monographs:
       show:
         last_modified: "Last Modified"

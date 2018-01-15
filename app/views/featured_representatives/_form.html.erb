@@ -1,0 +1,33 @@
+<% if member.featured_representative? %>
+<div class="row">
+  <div class="col-sm-8">
+    <b><%= member.featured_representative.kind %></b>
+  </div>
+  <div class="col-sm-4">
+    <% if can? :edit, member.id %>
+      <%= link_to "Unset", main_app.featured_representatives_path(id: member.featured_representative.id, monograph_id: member.monograph.id),
+          method: :delete, title: "Delete #{member.featured_representative.kind}",
+          data: { confirm: "Unset Featured Representative?" },
+          class: "btn btn-default" %>
+    <% end %>
+  </div>
+</div>
+<% else %>
+  <% if can? :edit, member.id %>
+    <% if member.monograph.present? %>
+      <%= form_tag(main_app.featured_representatives_path, method: "post") do %>
+        <div class="row">
+          <div class="col-sm-8">
+            <%= select_tag(:kind, options_for_select(FeaturedRepresentative.kinds - member.monograph.featured_representatives.map(&:kind)), class: 'form-control') %>
+
+            <%= hidden_field_tag(:file_set_id, member.id) %>
+            <%= hidden_field_tag(:monograph_id, member.monograph.id) %>
+          </div>
+          <div class="col-sm-4">
+            <%= submit_tag("Set", class: 'btn btn-default') %>
+          </div>
+        </div>
+      <% end %>
+    <% end  %>
+  <% end %>
+<% end %>

@@ -334,5 +334,13 @@ module Hyrax
                   'default'
                 end
     end
+
+    def featured_representative
+      FeaturedRepresentative.where(monograph_id: monograph_id, file_set_id: id).first
+    end
+
+    def featured_representative?
+      featured_representative
+    end
   end
 end

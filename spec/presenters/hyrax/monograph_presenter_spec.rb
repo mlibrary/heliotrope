@@ -376,8 +376,21 @@ RSpec.describe Hyrax::MonographPresenter do
       it { expect(subject).to be nil }
     end
 
-    context 'has epub' do
-      before { allow(mono_doc).to receive(:representative_epub_id).and_return(fs2_doc.id) }
+    context 'featured_representatives' do
+      let!(:fr1) { create(:featured_representative, monograph_id: presenter.id,
+                                                    file_set_id: fs2_doc.id,
+                                                    kind: 'epub') }
+      let!(:fr2) { create(:featured_representative, monograph_id: presenter.id,
+                                                    file_set_id: fs3_doc.id,
+                                                    kind: 'webgl') }
+      after do
+        FeaturedRepresentative.destroy_all
+      end
+
+      describe '#featured_representatives' do
+        subject { presenter.featured_representatives }
+        it { expect(subject.count).to be 2 }
+      end
 
       describe '#epub?' do
         subject { presenter.epub? }
@@ -387,6 +400,26 @@ RSpec.describe Hyrax::MonographPresenter do
       describe '#epub' do
         subject { presenter.epub }
         it { expect(subject.id).to eq fs2_doc.id }
+      end
+
+      describe '#epub_id' do
+        subject { presenter.epub_id }
+        it { expect(subject).to eq fs2_doc.id }
+      end
+
+      describe '#webgl?' do
+        subject { presenter.webgl? }
+        it { expect(subject).to be true }
+      end
+
+      describe '#webgl' do
+        subject { presenter.webgl }
+        it { expect(subject.id).to eq fs3_doc.id }
+      end
+
+      describe '#webgl_id' do
+        subject { presenter.webgl_id }
+        it { expect(subject).to eq fs3_doc.id }
       end
     end
   end # context 'a monograph with attached members' do

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180102224401) do
+ActiveRecord::Schema.define(version: 20180109210107) do
 
   create_table "bookmarks", id: :integer, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.integer "user_id", null: false
@@ -63,6 +63,14 @@ ActiveRecord::Schema.define(version: 20180102224401) do
     t.index ["parent_id"], name: "index_curation_concerns_operations_on_parent_id"
     t.index ["rgt"], name: "index_curation_concerns_operations_on_rgt"
     t.index ["user_id"], name: "index_curation_concerns_operations_on_user_id"
+  end
+
+  create_table "featured_representatives", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.string "monograph_id"
+    t.string "file_set_id"
+    t.string "kind"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "featured_works", id: :integer, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|

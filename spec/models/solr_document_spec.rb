@@ -33,7 +33,6 @@ describe SolrDocument do
   it { is_expected.to respond_to(:primary_editor_family_name) }
   it { is_expected.to respond_to(:primary_editor_full_name) }
   it { is_expected.to respond_to(:primary_editor_given_name) }
-  it { is_expected.to respond_to(:representative_epub_id) }
   it { is_expected.to respond_to(:representative_manifest_id) }
 
   # FileSet
