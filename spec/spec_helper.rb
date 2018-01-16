@@ -44,6 +44,14 @@ RSpec.configure do |config|
     end
   end
 
+  # System specs (new in rails 5.1) use headless chrome and Capybara
+  # This is where we test a11y w/ axe-matchers
+  config.before(:each, type: :system) do
+    driven_by :selenium_chrome_headless
+    # If you actually want to watch these happen locally (and have chrome installed)
+    # driven_by :selenium_chrome
+  end
+
   # rspec-expectations config goes here. You can use an alternate
   # assertion/expectation library such as wrong or the stdlib/minitest
   # assertions if you prefer.

@@ -38,14 +38,6 @@ gem 'jbuilder', '~> 2.5'
 # When 2.0.4 is out this might not be needed anymore
 gem 'rack', git: 'https://github.com/rack/rack.git', ref: 'ee01748'
 
-group :development, :test do
-  # Call 'byebug' anywhere in the code to stop execution and get a debugger console
-  # gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
-  # Adds support for Capybara system testing and selenium driver
-  gem 'capybara', '~> 2.13'
-  gem 'selenium-webdriver'
-end
-
 group :development do
   gem 'listen', '>= 3.0.5', '< 3.2'
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
@@ -133,7 +125,14 @@ gem 'oauth2', '~> 1.2'
 gem 'signet'
 
 group :development, :test do
+  # For accessibility testing from system specs
+  # Note the monkey patch in config/initializers! Update with care!
+  gem 'axe-matchers', '1.3.3'
   gem 'byebug'
+  gem 'capybara', '~> 2.13'
+  # System specs use headless chrome, feature specs use rack_test (for now)
+  # https://github.com/teamcapybara/capybara#racktest
+  gem 'chromedriver-helper'
   # test coverage with coveralls
   gem 'coveralls', require: false
   gem 'factory_bot_rails'
@@ -146,6 +145,7 @@ group :development, :test do
   gem 'rubocop', '~> 0.49.1'
   gem 'rubocop-rspec', '~> 1.16.0'
   gem 'ruumba'
+  gem 'selenium-webdriver'
   gem 'solr_wrapper', '0.21.0'
 end
 

@@ -7,6 +7,10 @@ require File.expand_path('../../config/environment', __FILE__)
 abort("The Rails environment is running in production mode!") if Rails.env.production?
 require 'spec_helper'
 require 'rspec/rails'
+
+require 'capybara/rspec'
+require 'axe/rspec'
+
 # Add additional requires below this line. Rails is not loaded until this point!
 
 # Requires supporting ruby files with custom matchers and macros, etc, in
@@ -63,3 +67,9 @@ EPub.configure do |config|
   # config.logger = Rails.logger
   config.root = "./tmp/spec/epubs"
 end
+
+# For system specs
+Chromedriver.set_version "2.33"
+# On system spec failure, don't dump the (binary!) screenshot to the console,
+# just save it to disk
+ENV['RAILS_SYSTEM_TESTING_SCREENSHOT'] = "simple"
