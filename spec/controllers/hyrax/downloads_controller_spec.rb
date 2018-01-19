@@ -115,6 +115,47 @@ RSpec.describe Hyrax::DownloadsController, type: :controller do
         FileUtils.rm_rf(Hyrax.config.derivatives_path)
       end
     end
+
+    context "PDF extracted_text download" do
+      let(:file_set) { create(:file_set,
+                              user: user,
+                              allow_download: 'yes',
+                              read_groups: ["public"])}
+      let(:text_file) do
+        Hydra::PCDM::File.new.tap do |f|
+          f.content = IO.read(File.join(fixture_path, 'test_pdf.txt'))
+          f.original_name = 'test_pdf.txt'
+          f.save!
+        end
+      end
+
+      let(:mock_association) { double('blah') }
+
+      before do
+        allow(subject).to receive(:dereference_file).with(:extracted_text).and_return(mock_association)
+      end
+
+      context "When the extracted_text file exists" do
+        before do
+          allow(mock_association).to receive(:reader).and_return(text_file)
+        end
+        it "sends the file given the related URL parameter" do
+          get :show, params: { id: file_set.id, file: 'extracted_text', use_route: 'downloads' }
+          expect(response).to have_http_status(200)
+          expect(response.body).to eq IO.read(File.join(fixture_path, 'test_pdf.txt'))
+        end
+      end
+
+      context "When the extracted_text file does not exist" do
+        before do
+          allow(mock_association).to receive(:reader).and_return(nil)
+        end
+        it "returns 401" do
+          get :show, params: { id: file_set.id, file: 'extracted_text', use_route: 'downloads' }
+          expect(response).to have_http_status(401)
+        end
+      end
+    end
   end
 
   describe "#mime_type_for" do

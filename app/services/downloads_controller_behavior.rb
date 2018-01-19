@@ -29,7 +29,9 @@ module DownloadsControllerBehavior
   # going to tweak this function from Hyrax to return the thumbnail if the full-size screenshot is empty
   def load_file
     file_reference = params[:file]
+
     return default_file unless file_reference
+    return extracted_text_file if file_reference == 'extracted_text'
 
     file_path = Hyrax::DerivativePath.derivative_path_for_reference(params[asset_param_key], file_reference)
     # pre-tweak this is the last line
@@ -42,6 +44,12 @@ module DownloadsControllerBehavior
       file_path = Hyrax::DerivativePath.derivative_path_for_reference(params[asset_param_key], 'thumbnail')
       File.exist?(file_path) ? file_path : nil
     end
+  end
+
+  def extracted_text_file
+    # just copying default_file behavior with :extracted_text instead of default_content_path (a.k.a. :original_file)
+    association = dereference_file(:extracted_text)
+    association&.reader
   end
 
   def file_set_doc

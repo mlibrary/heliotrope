@@ -12,7 +12,7 @@ module Hyrax
     include Rails.application.routes.url_helpers
     include ActionView::Helpers::TagHelper
 
-    attr_accessor :solr_document, :current_ability, :request, :monograph_presenter
+    attr_accessor :solr_document, :current_ability, :request, :monograph_presenter, :file_set
 
     # @param [SolrDocument] solr_document
     # @param [Ability] current_ability
@@ -254,11 +254,26 @@ module Hyrax
       ['application/zip', 'application/octet-stream'].include?(mime_type) && File.extname(original_name) == ".unity"
     end
 
+    def file_set
+      @file_set ||= ::FileSet.find(id)
+    end
+
     def file
       # Get the original file from Fedora
-      file = ::FileSet.find(id)&.original_file
+      file = file_set&.original_file
       raise "FileSet #{id} original file is nil." if file.nil?
       file
+    end
+
+    def extracted_text_file
+      file_set&.extracted_text
+    end
+
+    def extracted_text?
+      # TODO: remove this line when we have some extracted text in place that's worth offering for download...
+      # and/or a disclaimer as outlined in https://github.com/mlibrary/heliotrope/issues/1429
+      return false if Rails.env.eql?('production')
+      extracted_text_file&.size&.positive?
     end
 
     def thumbnail_path
@@ -315,6 +330,14 @@ module Hyrax
       download_label += ' ' + extension if extension.present?
       download_label += ' (' + size + ')' if size.present?
       download_label
+    end
+
+    def extracted_text_download_button_label
+      'Download TXT (' + ActiveSupport::NumberHelper.number_to_human_size(extracted_text_file.size) + ')'
+    end
+
+    def extracted_text_download_filename
+      File.basename(label, '.*') + '.txt'
     end
 
     def heliotrope_media_partial(directory = 'media_display')
