@@ -3,6 +3,10 @@
 # Generated via
 #  `rails generate curation_concerns:work Monograph`
 class Monograph < ActiveFedora::Base
+  property :creator_display, predicate: ::RDF::Vocab::FOAF.maker, multiple: false do |index|
+    index.as :stored_searchable
+  end
+
   property :buy_url, predicate: ::RDF::Vocab::SCHEMA.sameAs do |index|
     index.as :symbol
   end

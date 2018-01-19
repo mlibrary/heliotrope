@@ -35,6 +35,7 @@ describe Hyrax::MonographForm do
                               member_of_collection_ids
                               admin_set_id
                               press
+                              creator_display
                               date_published
                               isbn
                               isbn_paper
@@ -52,7 +53,7 @@ describe Hyrax::MonographForm do
 
   describe 'required_fields' do
     subject { described_class.required_fields }
-    it { is_expected.to eq %i[title press creator_family_name creator_given_name description] }
+    it { is_expected.to eq %i[title press creator_display creator_family_name creator_given_name description] }
   end
 
   describe 'select_press' do
