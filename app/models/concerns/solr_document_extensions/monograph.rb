@@ -3,6 +3,10 @@
 module SolrDocumentExtensions::Monograph
   extend ActiveSupport::Concern
 
+  def creator_display
+    Array(self[Solrizer.solr_name('creator_display', :stored_searchable)]).first
+  end
+
   def buy_url
     Array(self[Solrizer.solr_name('buy_url', :symbol)])
   end

@@ -122,23 +122,58 @@ RSpec.describe Hyrax::MonographPresenter do
   end
 
   describe '#editors?' do
-    before do
-      allow(mono_doc).to receive(:primary_editor_given_name).and_return(nil)
-      allow(mono_doc).to receive(:primary_editor_family_name).and_return(nil)
-      allow(mono_doc).to receive(:editor).and_return([])
+    describe "no editors or creator_display" do
+      before do
+        allow(mono_doc).to receive(:primary_editor_given_name).and_return(nil)
+        allow(mono_doc).to receive(:primary_editor_family_name).and_return(nil)
+        allow(mono_doc).to receive(:editor).and_return([])
+      end
+      subject { presenter.editors? }
+      it { is_expected.to eq false }
     end
-    subject { presenter.editors? }
-    it { is_expected.to eq false }
+    before do
+      allow(mono_doc).to receive(:primary_editor_given_name).and_return('Abe')
+      allow(mono_doc).to receive(:primary_editor_family_name).and_return('Cat')
+      allow(mono_doc).to receive(:editor).and_return(['Thing Lastname', 'Manny Feetys'])
+    end
+    describe "editors, no creator_display" do
+      subject { presenter.editors? }
+      it { is_expected.to eq true }
+    end
+    describe "creator_display overrides editors when both are present" do
+      before do
+        allow(mono_doc).to receive(:creator_display).and_return('A very elaborate description of editors and authors')
+      end
+      subject { presenter.editors? }
+      it { is_expected.to eq false }
+    end
   end
 
   describe '#authors' do
+    describe "creator_display exists, creators/contributors don't" do
+      before do
+        allow(mono_doc).to receive(:creator_display).and_return('A very elaborate description of editors and authors')
+      end
+      subject { presenter.authors }
+      it { is_expected.to eq 'A very elaborate description of editors and authors' }
+    end
     before do
       allow(mono_doc).to receive(:creator_given_name).and_return('Abe')
       allow(mono_doc).to receive(:creator_family_name).and_return('Cat')
       allow(mono_doc).to receive(:contributor).and_return(['Thing Lastname', 'Manny Feetys'])
+      allow(mono_doc).to receive(:creator_display).and_return(nil)
     end
-    subject { presenter.authors }
-    it { is_expected.to eq "Abe Cat, Thing Lastname, and Manny Feetys" }
+    describe "creators/contributors exist, creator_display doesn't" do
+      subject { presenter.authors }
+      it { is_expected.to eq 'Abe Cat, Thing Lastname, and Manny Feetys' }
+    end
+    describe 'creators/contributors exist, as does creator_display' do
+      before do
+        allow(mono_doc).to receive(:creator_display).and_return('A very elaborate description of editors and authors')
+      end
+      subject { presenter.authors }
+      it { is_expected.to eq 'A very elaborate description of editors and authors' }
+    end
   end
 
   describe '#authors?' do
@@ -146,6 +181,7 @@ RSpec.describe Hyrax::MonographPresenter do
       allow(mono_doc).to receive(:creator_given_name).and_return(nil)
       allow(mono_doc).to receive(:creator_family_name).and_return(nil)
       allow(mono_doc).to receive(:contributor).and_return([])
+      allow(mono_doc).to receive(:creator_display).and_return(nil)
     end
     subject { presenter.authors? }
     it { is_expected.to eq false }

@@ -42,7 +42,7 @@
           <h2 id="asset-title"><%= @presenter.title %></h2>
           <h3>From <em><%= link_to @presenter.monograph.title, main_app.monograph_catalog_path(@presenter.monograph_id) %></em>
             <% if @presenter.monograph.authors? %>
-              by <%= @presenter.monograph.authors %>
+              by <%= render_markdown @presenter.monograph.authors %>
             <% end %>
             <% if @presenter.monograph.editors? %>
               edited by <%= @presenter.monograph.editors %>

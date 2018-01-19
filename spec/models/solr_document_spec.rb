@@ -21,6 +21,7 @@ describe SolrDocument do
   it { is_expected.to respond_to(:hdl) }
 
   # Monograph
+  it { is_expected.to respond_to(:creator_display) }
   it { is_expected.to respond_to(:buy_url) }
   it { is_expected.to respond_to(:creator_family_name) }
   it { is_expected.to respond_to(:creator_full_name) }

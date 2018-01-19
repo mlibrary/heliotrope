@@ -9,7 +9,7 @@ module Hyrax
     include ActionView::Helpers::UrlHelper
 
     delegate :date_created, :date_modified, :date_uploaded,
-             :description, :creator, :editor, :contributor, :subject,
+             :description, :creator, :creator_display, :editor, :contributor, :subject,
              :publisher, :date_published, :language, :isbn, :isbn_paper,
              :isbn_ebook, :copyright_holder, :buy_url, :embargo_release_date,
              :lease_expiration_date, :rights, :creator_full_name,
@@ -44,15 +44,22 @@ module Hyrax
       section_titles_out.blank? ? section_titles_in.to_sentence : section_titles_out.to_sentence
     end
 
+    def creator_display?
+      solr_document.creator_display.present?
+    end
+
     def editors
       ["#{primary_editor_given_name} #{primary_editor_family_name}", editor].flatten.to_sentence
     end
 
     def editors?
+      # make the assumption that a free-form authorship entry covers editors as well
+      return false if creator_display?
       editors.present?
     end
 
     def authors
+      return creator_display if creator_display?
       ["#{creator_given_name} #{creator_family_name}", contributor].flatten.to_sentence
     end
 
