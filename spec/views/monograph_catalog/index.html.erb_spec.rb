@@ -27,6 +27,7 @@ RSpec.describe "monograph_catalog/index.html.erb", type: :view do
     stub_template "catalog/_search_results" => "<!-- render-template-catalog/_search_results -->"
     assign(:monograph_presenter, monograph_presenter)
     allow(view).to receive(:t).with(any_args) { |value| value }
+    allow(monograph_presenter).to receive(:date_uploaded).and_return(DateTime.now)
   end
 
   describe 'provide: page_title' do

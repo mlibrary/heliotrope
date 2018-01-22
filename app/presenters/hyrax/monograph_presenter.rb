@@ -9,6 +9,8 @@ module Hyrax
     include FeaturedRepresentatives::MonographPresenter
     include ActionView::Helpers::UrlHelper
 
+    attr_accessor :pageviews
+
     delegate :date_created, :date_modified, :date_uploaded,
              :description, :creator, :creator_display, :editor, :contributor, :subject,
              :publisher, :date_published, :language, :isbn, :isbn_paper,
@@ -100,8 +102,16 @@ module Hyrax
       ordered_file_sets_ids[(ordered_file_sets_ids.find_index(file_sets_id) + 1)]
     end
 
-    def pageviews
-      pageviews_by_ids(ordered_file_sets_ids << id)
+    def monograph_analytics_ids
+      ordered_file_sets_ids + [id]
+    end
+
+    def pageviews_count
+      @pageviews ||= pageviews_by_ids(monograph_analytics_ids)
+    end
+
+    def pageviews_over_time_graph_data
+      [{ "label": "Total Pageviews", "data": flot_pageviews_over_time(monograph_analytics_ids).to_a.sort }]
     end
 
     def ordered_file_sets_ids
