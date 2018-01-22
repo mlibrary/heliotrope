@@ -23,9 +23,28 @@ RSpec.describe EPub::Validator do
     end
 
     describe "#content_file" do
-      subject { described_class.from(@id) }
-      it "returns the content file" do
-        expect(subject.content_file).to eq 'EPUB/content.opf'
+      context "with a single rendition" do
+        subject { described_class.from(@id) }
+        it "returns the content file" do
+          expect(subject.content_file).to eq 'EPUB/content.opf'
+        end
+      end
+      context "with multiple renditions" do
+        before do
+          File.open(EPub.path_entry(@id, "META-INF/container.xml"), 'w') do |f|
+            f.puts %(<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+            <container version="1.0" xmlns="urn:oasis:names:tc:opendocument:xmlns:container">
+              <rootfiles>
+                <rootfile full-path="EPUB/content.opf" media-type="application/oebps-package+xml" rendition:accessMode="textual"/>
+                <rootfile full-path="EPUB/not_a_thing.opf" media-type="application/oebps-package+xml" rendition:accessMode="visual"/>
+              </rootfiles>
+            </container>)
+          end
+        end
+        subject { described_class.from(@id) }
+        it "has the correct (always the first) rendition" do
+          expect(subject.content_file).to eq 'EPUB/content.opf'
+        end
       end
     end
 
