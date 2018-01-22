@@ -6,7 +6,9 @@ module EPub
 
     def self.from(id)
       container    = Nokogiri::XML(File.open(EPub.path_entry(id, "META-INF/container.xml"))).remove_namespaces!
-      content_file = container.xpath("//rootfile/@full-path").text
+      # Get the first content file (for muliple rendition epubs)
+      # http://www.idpf.org/epub/renditions/multiple/
+      content_file = container.xpath("//rootfile/@full-path")[0].text
       content      = Nokogiri::XML(File.open(File.join(EPub.path(id), content_file))).remove_namespaces!
       # EPUB3 *must* have an item with properties="nav" in it's manifest
       toc          = Nokogiri::XML(File.open(File.join(EPub.path(id),
