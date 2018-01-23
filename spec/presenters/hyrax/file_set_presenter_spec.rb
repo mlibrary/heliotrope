@@ -219,15 +219,15 @@ RSpec.describe Hyrax::FileSetPresenter do
   describe '#epub?' do
     subject { presenter.epub? }
 
-    let(:fileset_doc) { SolrDocument.new(id: 'fileset_id', has_model_ssim: ['FileSet'], mime_type_ssi: mime_type) }
+    let(:fileset_doc) { SolrDocument.new(id: 'fileset_id', monograph_id_ssim: 'monograph_id', has_model_ssim: ['FileSet']) }
 
-    context 'text/plain' do
-      let(:mime_type) { 'text/plain' }
-      it { is_expected.to be false }
-    end
-    context 'application/epub+zip' do
-      let(:mime_type) { 'application/epub+zip' }
+    context "featured_representative.kind == 'epub'" do
+      let!(:fr) { create(:featured_representative, monograph_id: 'monograph_id', file_set_id: 'fileset_id', kind: 'epub') }
+      after { FeaturedRepresentative.destroy_all }
       it { is_expected.to be true }
+    end
+    context 'not an epub featured_representative' do
+      it { is_expected.to be false }
     end
   end
 

@@ -3,11 +3,19 @@
 require 'rails_helper'
 
 RSpec.describe FactoryService do
+  let(:monograph) { create(:monograph) }
   let(:epub) { create(:file_set, content: File.open(File.join(fixture_path, 'moby-dick.epub'))) }
   let(:mcsv) { create(:file_set, content: File.open(File.join(fixture_path, 'csv/import/tempest.csv'))) }
   let(:webgl) { create(:file_set, content: File.open(File.join(fixture_path, 'fake-game.unity'))) }
 
-  before { described_class.clear_caches }
+  before do
+    monograph.ordered_members << epub << webgl
+    monograph.save!
+    FeaturedRepresentative.create(monograph_id: monograph.id, file_set_id: epub.id, kind: 'epub')
+    FeaturedRepresentative.create(monograph_id: monograph.id, file_set_id: webgl.id, kind: 'webgl')
+    described_class.clear_caches
+  end
+  after { FeaturedRepresentative.destroy_all }
   after(:all) { described_class.clear_caches } # rubocop:disable RSpec/BeforeAfterAll
 
   describe '#nop' do

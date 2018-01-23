@@ -94,6 +94,12 @@ $(document).ready(function() {
       <% if @monograph_presenter.webgl? %>
         <li role="presentation"><a href="#webgl" aria-controls="webgl" role="tab" data-toggle="tab">3-D Model</a></li>
       <% end %>
+      <% if @monograph_presenter.database? %>
+        <li role="presentation"><a href="<%= @monograph_presenter.database['ext_url_doi_or_handle_ssim'].first %>" aria-controls="database" role="tab" target="_blank">Database <span class="glyphicon glyphicon-share" aria-hidden="true"></span></a></li>
+      <% end %>
+      <% if @monograph_presenter.aboutware? %>
+        <li role="presentation"><a href="#aboutware" aria-controls="aboutware" role="tab" data-toggle="tab">About</a></li>
+      <% end %>
       <li role="presentation"><a href="#stats" aria-controls="stats" role="tab" data-toggle="tab">Stats</a></li>
     </ul>
     <div class="tab-content monograph-assets-toc-epub-content">
@@ -124,6 +130,14 @@ $(document).ready(function() {
         <div role="tabpanel" class="tab-pane webgl row" id="webgl">
           <div class="col-sm-12">
             <%= render 'webgls/tab' %>
+          </div>
+        </div>
+      <% end %>
+      <% if @monograph_presenter.aboutware? %>
+        <div role="tabpanel" class="tab-pane aboutware row" id="aboutware">
+          <div class="col-sm-12">
+            <!-- this assumes that the "aboutware" FileSet is an html doc -->
+            <%= @monograph_presenter.aboutware.file.content.html_safe %>
           </div>
         </div>
       <% end %>

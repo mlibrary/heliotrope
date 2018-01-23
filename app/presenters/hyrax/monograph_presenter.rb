@@ -6,6 +6,7 @@ module Hyrax
     include ISBNPresenter
     include OpenUrlPresenter
     include TitlePresenter
+    include FeaturedRepresentatives::MonographPresenter
     include ActionView::Helpers::UrlHelper
 
     delegate :date_created, :date_modified, :date_uploaded,
@@ -153,26 +154,6 @@ module Hyrax
       solr_document.buy_url.first if buy_url?
     end
 
-    def featured_representatives
-      FeaturedRepresentative.where(monograph_id: id)
-    end
-
-    def epub?
-      featured_representatives.map(&:kind).include? 'epub'
-    end
-
-    def epub
-      ordered_member_docs.find { |doc| doc.id == epub_id }
-    end
-
-    def epub_id
-      featured_representatives.map { |fr| fr.file_set_id if fr.kind == 'epub' }.compact.first
-    end
-
-    def epub_presenter
-      FactoryService.e_pub_publication(epub_id).presenter
-    end
-
     def manifest?
       solr_document.representative_manifest_id.present?
     end
@@ -183,18 +164,6 @@ module Hyrax
 
     def manifest
       ordered_member_docs.find { |doc| doc.id == solr_document.representative_manifest_id } if manifest?
-    end
-
-    def webgl?
-      featured_representatives.map(&:kind).include? 'webgl'
-    end
-
-    def webgl
-      ordered_member_docs.find { |doc| doc.id == webgl_id }
-    end
-
-    def webgl_id
-      featured_representatives.map { |fr| fr.file_set_id if fr.kind == 'webgl' }.compact.first
     end
 
     def monograph_coins_title?

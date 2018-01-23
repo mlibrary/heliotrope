@@ -9,6 +9,7 @@ module Hyrax
     include PresentsAttributes
     include CharacterizationBehavior
     include WithEvents
+    include FeaturedRepresentatives::FileSetPresenter
     include Rails.application.routes.url_helpers
     include ActionView::Helpers::TagHelper
 
@@ -242,16 +243,8 @@ module Hyrax
       solr_document['original_name_tesim']
     end
 
-    def epub?
-      ['application/epub+zip'].include? mime_type
-    end
-
     def manifest?
       ['text/csv', 'text/comma-separated-values'].include? mime_type
-    end
-
-    def webgl?
-      ['application/zip', 'application/octet-stream'].include?(mime_type) && File.extname(original_name) == ".unity"
     end
 
     def file_set
@@ -356,14 +349,6 @@ module Hyrax
                 else
                   'default'
                 end
-    end
-
-    def featured_representative
-      FeaturedRepresentative.where(monograph_id: monograph_id, file_set_id: id).first
-    end
-
-    def featured_representative?
-      featured_representative
     end
   end
 end
