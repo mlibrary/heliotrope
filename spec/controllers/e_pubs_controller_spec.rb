@@ -27,12 +27,14 @@ RSpec.describe EPubsController, type: :controller do
     context 'file epub' do
       let(:monograph) { create(:monograph) }
       let(:file_set) { create(:file_set, content: File.open(File.join(fixture_path, 'moby-dick.epub'))) }
+      let!(:fr) { create(:featured_representative, monograph_id: monograph.id, file_set_id: file_set.id, kind: 'epub') }
       before do
         monograph.ordered_members << file_set
         monograph.save!
         file_set.save!
         get :show, params: { id: file_set.id }
       end
+      after { FeaturedRepresentative.destroy_all }
       it do
         expect(response).to_not have_http_status(:unauthorized)
         expect(response).to have_http_status(:success)
@@ -91,7 +93,15 @@ RSpec.describe EPubsController, type: :controller do
     end
 
     context 'file epub' do
+      let(:monograph) { create(:monograph) }
       let(:file_set) { create(:file_set, content: File.open(File.join(fixture_path, 'moby-dick.epub'))) }
+      let!(:fr) { create(:featured_representative, monograph_id: monograph.id, file_set_id: file_set.id, kind: 'epub') }
+      before do
+        monograph.ordered_members << file_set
+        monograph.save!
+        file_set.save!
+      end
+      after { FeaturedRepresentative.destroy_all }
 
       context 'file not found' do
         before { get :file, params: { id: file_set.id, file: 'META-INF/container', format: 'txt' } }
@@ -138,7 +148,15 @@ RSpec.describe EPubsController, type: :controller do
   end
 
   describe "GET #search" do
+    let(:monograph) { create(:monograph) }
     let(:file_set) { create(:file_set, id: '999999999', content: File.open(File.join(fixture_path, 'moby-dick.epub'))) }
+    let!(:fr) { create(:featured_representative, monograph_id: monograph.id, file_set_id: file_set.id, kind: 'epub') }
+    before do
+      monograph.ordered_members << file_set
+      monograph.save!
+      file_set.save!
+    end
+    after { FeaturedRepresentative.destroy_all }
 
     context 'finds case insensitive search results' do
       before { get :search, params: { id: file_set.id, q: "White Whale" } }

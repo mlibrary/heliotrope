@@ -7,8 +7,15 @@ RSpec.describe WebglsController, type: :controller do
 
   describe '#show' do
     context "when the file_set is a webgl" do
+      let(:monograph) { create(:monograph) }
       let(:file_set) { create(:file_set, content: File.open(File.join(fixture_path, 'fake-game.unity'))) }
-      before { get :show, params: { id: file_set.id } }
+      let!(:fr) { create(:featured_representative, monograph_id: monograph.id, file_set_id: file_set.id, kind: 'webgl') }
+      before do
+        monograph.ordered_members << file_set
+        monograph.save!
+        get :show, params: { id: file_set.id }
+      end
+      after { FeaturedRepresentative.destroy_all }
       it { expect(response).to have_http_status(:success) }
     end
 
@@ -21,7 +28,14 @@ RSpec.describe WebglsController, type: :controller do
 
   describe '#file' do
     context "the file_set is a webgl" do
+      let(:monograph) { create(:monograph) }
       let(:file_set) { create(:file_set, content: File.open(File.join(fixture_path, 'fake-game.unity'))) }
+      let!(:fr) { create(:featured_representative, monograph_id: monograph.id, file_set_id: file_set.id, kind: 'webgl') }
+      before do
+        monograph.ordered_members << file_set
+        monograph.save!
+      end
+      after { FeaturedRepresentative.destroy_all }
       it "returns the UnityLoader.js file" do
         get :file, params: { id: file_set.id, file: 'Build/UnityLoader', format: 'js' }
         expect(response).to have_http_status(:success)
