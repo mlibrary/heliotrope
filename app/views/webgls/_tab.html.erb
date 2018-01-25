@@ -8,12 +8,20 @@ webgl = FactoryService.webgl_unity(webgl_id)
 <script src="<%= @unity_progress %>"></script>
 <script src="<%= @unity_loader %>"></script>
 <script>
-  // only load when the tab is clicked, otherwise the whole page gets locked on first load
   var gameInstance = undefined;
-  $("a[href='#webgl']").bind('click', function() {
-    if (typeof gameInstance === 'undefined') {
-      gameInstance = UnityLoader.instantiate("gameContainer", "<%= @unity_json %>", {onProgress: UnityProgress});
+  $(document).on('turbolinks:load', function() {
+    // load the webgl if the webgl tab is already active
+    if ($('#webgl-tab').hasClass('active')) {
+      if (typeof gameInstance === 'undefined') {
+        gameInstance = UnityLoader.instantiate("gameContainer", "<%= @unity_json %>", {onProgress: UnityProgress});
+      }
     }
+    // or load the webgl if the tab is clicked
+    $("a[href='#webgl']").bind('click', function() {
+      if (typeof gameInstance === 'undefined') {
+        gameInstance = UnityLoader.instantiate("gameContainer", "<%= @unity_json %>", {onProgress: UnityProgress});
+      }
+    });
   });
 </script>
 <div class="webgl-content">

@@ -92,7 +92,7 @@ $(document).ready(function() {
         <% end %>
       <% end %>
       <% if @monograph_presenter.webgl? %>
-        <li role="presentation"><a href="#webgl" aria-controls="webgl" role="tab" data-toggle="tab">3-D Model</a></li>
+        <li id="webgl-tab" role="presentation"><a href="#webgl" aria-controls="webgl" role="tab" data-toggle="tab">3-D Model</a></li>
       <% end %>
       <li role="presentation"><a href="#stats" aria-controls="stats" role="tab" data-toggle="tab">Stats</a></li>
     </ul>
