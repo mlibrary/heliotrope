@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+# In hyrax this is app/services/default_middleware_stack.rb
+
 # module Hyrax
 #   class DefaultMiddlewareStack
 #     def self.build_stack
@@ -30,6 +32,8 @@
 # Insert actor after obtaining lock so we are first in line!
 Hyrax::CurationConcern.actor_factory.insert_after(Hyrax::Actors::OptimisticLockValidator, CreateWithImportFilesActor)
 Hyrax::CurationConcern.actor_factory.insert_after(Hyrax::Actors::OptimisticLockValidator, HeliotropeActor)
+# Destroy FeaturedRepresentatives on delete
+Hyrax::CurationConcern.actor_factory.insert_after(Hyrax::Actors::CleanupTrophiesActor, FeaturedRepresentativeActor)
 
 # NOTE: New call order is:
 # ...
