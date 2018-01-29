@@ -166,7 +166,7 @@ module Hyrax
 
     # Google Analytics
     def pageviews
-      pageviews_by_path(hyrax_file_set_path(id))
+      @pageviews ||= pageviews_by_path(hyrax_file_set_path(id))
     end
 
     # Embed Code Stuff

@@ -13,6 +13,7 @@ FactoryBot.define do
     sequence(:title) { |n| ["Test Monograph #{n}"] }
     press { FactoryBot.create(:press).subdomain }
     visibility Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE
+    date_uploaded { DateTime.now }
 
     factory :public_monograph do
       visibility Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC

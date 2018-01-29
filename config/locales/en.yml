@@ -116,7 +116,7 @@ en:
       can_edit: "Manage Monograph and Files"
       edited_by: "Edited by %{editors}"
       home: "Home"
-      pageviews_html: "This item has been viewed <b>%{count}</b> times."
+      pageviews_html: "<strong>%{count}</strong> views since %{date}"
       read: "Read %{title}"
       read_book: "Read Book"
       reindex: "Reindex Monograph"
