@@ -56,7 +56,8 @@
   	    template: '<div class="permalink-label"><label class="u-screenreader" for="permalink">Permalink</label><form><input data-slot="title" type="text" id="permalink" value="" readonly="readonly" onclick="this.select(); document.execCommand(\'copy\');"></form></div>',
       }).addTo(reader);
       // Citation widget
-      cozy.control.citation({ region: 'top.toolbar.left' }).addTo(reader);
+      // We'll need to do some work in order to pass pre-fomatted citations to CSB
+      // see: https://github.com/mlibrary/cozy-sun-bear/wiki/Metadata-and-Citations
       // Search widget
       <% unless Heliotrope::Application.config.cozy_epub_engine == 'readium' %>
         cozy.control.search({
