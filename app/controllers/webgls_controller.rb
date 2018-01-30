@@ -4,7 +4,9 @@ class WebglsController < ApplicationController
   protect_from_forgery except: :file
 
   def show
-    # @presenter = Hyrax::PresenterFactory.build_for(ids: [params[:id]], presenter_class: Hyrax::FileSetPresenter, presenter_args: current_ability)&.first
+    # This isn't actually used right now. Instead we're using what's in views/webgl/_tabs.html.erb which
+    # is called from the monograph_catalog page instead of calling this directly
+    # through a route. TODO: delete this (and specs), or leave it here as an example?
     @presenter = Hyrax::FileSetPresenter.new(SolrDocument.new(FileSet.find(params[:id]).to_solr), current_ability, request)
     if @presenter.webgl?
       webgl = FactoryService.webgl_unity(params[:id])
