@@ -22,6 +22,9 @@
 
 .byebug_history
 
+# Ignore Redis snapshots
+dump.rdb
+
 ##############################################################################
 #
 # Heliotrope
