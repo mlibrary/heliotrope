@@ -388,8 +388,14 @@ footer.press {
     }
   }
 
+  .stats-container.usage {
+    width: 80%;
+  }
 
-
+  .stats-container.overview {
+    width: 80%;
+    height: 150px;
+  }
 }
 ///////////////////////////////////
 // ASSET PAGES
@@ -548,6 +554,15 @@ footer.press {
     text-decoration: none !important;
   }
 
+  .stats-container.usage {
+    width: 100%;
+    height: 250px;
+  }
+
+  .stats-container.overview {
+    width: 100%;
+    height: 125px;
+  }
 }
 
 // restrict large user-uploaded thumbnails on the asset edit page

@@ -171,7 +171,7 @@ RSpec.describe "monograph_catalog/index.html.erb", type: :view do
         end
         it do
           debug_puts subject.to_s
-          is_expected.to match t('.pageviews_html')
+          is_expected.to match t('pageviews_html')
         end
       end
 

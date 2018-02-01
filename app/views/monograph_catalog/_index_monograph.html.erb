@@ -100,7 +100,7 @@ $(document).ready(function() {
       <% if @monograph_presenter.aboutware? %>
         <li role="presentation"><a href="#aboutware" aria-controls="aboutware" role="tab" data-toggle="tab">About</a></li>
       <% end %>
-      <li id="monograph-stats-tab" role="presentation"><a href="#monograph-stats" aria-controls="monograph-stats" role="tab" data-toggle="tab">Stats</a></li>
+      <li id="stats-tab" role="presentation"><a href="#stats" aria-controls="stats-tab" role="tab" data-toggle="tab">Stats</a></li>
     </ul>
     <div class="tab-content monograph-assets-toc-epub-content">
       <% if @monograph_presenter.epub? %>
@@ -141,7 +141,7 @@ $(document).ready(function() {
           </div>
         </div>
       <% end %>
-      <div role="tabpanel" class="tab-pane stats row" id="monograph-stats">
+      <div role="tabpanel" class="tab-pane stats row" id="stats">
         <%= render 'stats' %>
       </div>
     </div>
