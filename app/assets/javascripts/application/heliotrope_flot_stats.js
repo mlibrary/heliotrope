@@ -2,39 +2,51 @@
 // https://github.com/samvera/hyrax/blob/1e504c200fd9c39120f514ac33cd42cd843de9fa/app/assets/javascripts/hyrax/flot_stats.js
 
 // Changes:
-// 1) made it "Turbolinks aware", triggering when the stats tab is already active on page load, or is clicked
-// 2) added a flag so it doesn't redraw more than once per page load, as the user might have zoomed the graph etc.
-// 3) added setTimeOut with 250ms, which overcomes two Flot issues which stem from plotting a graph in a hidden parent:
+// 1) `hyrax_item_stats` changed to `heliotrope_item_stats`
+// 2) made it "Turbolinks aware", triggering when the stats tab is already active on page load, or is clicked
+// 3) added a flag so it doesn't redraw more than once per page load (resizing aside), as the user might have...
+//    zoomed the graph etc.
+// 4) added setTimeOut with 250ms, which overcomes two Flot issues which stem from plotting a graph in a hidden parent:
 //   a) the graph never resizes appropriately to the space available (this one can also be solved by...
 //      adding `jquery.flot.resize` to `application.js` but that causes a noticeable "jump" as the graph resizes)
 //      see https://stackoverflow.com/a/26070749/3418063 and https://github.com/flot/flot/issues/1014
 //   b) the labels can overlap the graph (most notably on the y-axis), again from not knowing available space exactly
 //      see https://stackoverflow.com/q/18012123/3418063
-// 4) used UTC functions (like getUTCDate etc.) for the tooltip on the graph points. The version in Hyrax (copied...
+// 5) used UTC functions (like getUTCDate etc.) for the tooltip on the graph points. The version in Hyrax (copied...
 //    from Sufia) takes timezone into account on the tooltip but not the axis, so the former always seems a day ...
 //    behind (west of GMT)
-//
-// Apart from these changes it's all the same with `hyrax_item_stats` changed to `heliotrope_item_stats`
+// 6) added windows resize function, throttled, so that the graphs can be responsive with a width in percent
+// 7) changed "series" and "selection" color for both graphs to rgb(90, 145, 180)
 
-
-// see 2) above ^
+// see 3) above ^
 var heliotropeStatsAlreadyDrawn = false;
 
+var heliotropeStatFlotTimer;
+$(window).resize(function() {
+  throttleHeliotropeStatFlot(50);
+});
+
+function throttleHeliotropeStatFlot(milliseconds) {
+  clearTimeout (heliotropeStatFlotTimer);
+  heliotropeStatFlotTimer = setTimeout(heliotropeStatFlot, milliseconds);
+};
+
 $(document).on('turbolinks:load', function() {
-  if ($('#monograph-stats-tab').hasClass('active')) {
-    setTimeout(monographStatFlot, 250);
-    heliotropeStatsAlreadyDrawn = true;
+  // need to set this to false here for Turbolinks browser back/forward button (restoration) events
+  heliotropeStatsAlreadyDrawn = false;
+
+  if ($('#stats-tab').hasClass('active')) {
+    throttleHeliotropeStatFlot(250);
   }
 
-  $("a[href='#monograph-stats']").bind('click', function () {
+  $("a[href='#stats']").bind('click', function () {
     if(heliotropeStatsAlreadyDrawn == false) {
-      setTimeout(monographStatFlot, 250);
-      heliotropeStatsAlreadyDrawn = true;
+      throttleHeliotropeStatFlot(250);
     }
   });
 });
 
-function monographStatFlot() {
+function heliotropeStatFlot() {
   if (typeof heliotrope_item_stats === "undefined") {
     return;
   }
@@ -72,6 +84,7 @@ function monographStatFlot() {
       min: 0
     },
     series: {
+      color: "rgb(90, 145, 180)",
       lines: {
         show: true,
         fill: true
@@ -82,6 +95,7 @@ function monographStatFlot() {
       }
     },
     selection: {
+      color: "rgb(90, 145, 180)",
       mode: "x"
     },
     grid: {
@@ -117,6 +131,7 @@ function monographStatFlot() {
 
   var overview = $.plot("#overview", heliotrope_item_stats, {
     series: {
+      color: "rgb(90, 145, 180)",
       lines: {
         show: true,
         lineWidth: 1
@@ -134,6 +149,7 @@ function monographStatFlot() {
       autoscaleMargin: 0.1
     },
     selection: {
+      color: "rgb(90, 145, 180)",
       mode: "x"
     },
     legend: {
@@ -154,4 +170,6 @@ function monographStatFlot() {
   $("#overview").bind("plotselected", function (event, ranges) {
     plot.setSelection(ranges);
   });
+
+  heliotropeStatsAlreadyDrawn = true;
 };

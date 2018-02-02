@@ -116,12 +116,12 @@ en:
       can_edit: "Manage Monograph and Files"
       edited_by: "Edited by %{editors}"
       home: "Home"
-      pageviews_html: "<strong>%{count}</strong> views since %{date}"
       read: "Read %{title}"
       read_book: "Read Book"
       reindex: "Reindex Monograph"
       reindexing: "Reindexing %{title}"
   original_checksum: "Original Checksum"
+  pageviews_html: "<strong>%{count}</strong> views since %{date}"
   permissions_expiration_date: "Permissions Expiration Date"
   press: "Publisher"
   press_catalog:
