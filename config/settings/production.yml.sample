@@ -1,20 +1,20 @@
-  # sample settings for curation concerns in a production environment:
-  #
-  # derivatives_path contains thumbnails and web-friendly audio, and video files for playbock
-  # for production, put this in a non-temporary location:
-  # derivatives_path: <%= File.join(Rails.root, 'derivatives') %>
-  # or
-  # derivatives_path: /opt/derivatives
-  #
-  #
-  # uploads_path stashes files uploaded via the browser before ingest to fedora
-  # on distributed architectures, uploads_path must be on a drive shared with the web server
-  # in production, have a way of periodically clearing out this directory
-  # uploads_path: <%= File.join(Rails.root, 'uploads') %>
-  #
-  #
-  # minter_path tracks the ID of the last-created object
-  # for production, put this in a non-temporary location:
-  # minter_path: <%= File.join(Rails.root, 'minter-state') %>
-  # or 
-  # minter_path: /opt/minter-state
+# sample settings for curation concerns in a production environment:
+#
+# derivatives_path contains thumbnails and web-friendly audio, and video files for playbock
+# for production, put this in a non-temporary location:
+# derivatives_path: <%= File.join(Rails.root, 'derivatives') %>
+# or
+# derivatives_path: /opt/derivatives
+#
+#
+# uploads_path stashes files uploaded via the browser before ingest to fedora
+# on distributed architectures, uploads_path must be on a drive shared with the web server
+# in production, have a way of periodically clearing out this directory
+# uploads_path: <%= File.join(Rails.root, 'uploads') %>
+#
+#
+# minter_path tracks the ID of the last-created object
+# for production, put this in a non-temporary location:
+# minter_path: <%= File.join(Rails.root, 'minter-state') %>
+# or
+# minter_path: /opt/minter-state

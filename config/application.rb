@@ -36,9 +36,17 @@ module Heliotrope
 
     # Add lib directory to autoload paths
     config.autoload_paths << "#{config.root}/lib"
+    config.autoload_paths << "#{config.root}/lib/devise"
 
-    # Set default host from Settings
-    Rails.application.routes.default_url_options[:host] = Settings.host
+    # For properly generating URLs and minting DOIs - the app may not by default
+    # Outside of a request context the hostname needs to be provided.
+    config.hostname = Settings.host
+
+    # Set default host
+    Rails.application.routes.default_url_options[:host] = config.hostname
+
+    # URL for logging the user out of Cosign
+    config.cosign_logout_url = Settings.cosign_logout_url
 
     # Never use /tmp, always use ~/tmp, #627 and http://stackoverflow.com/a/17068331
     tmpdir = Rails.root.join('tmp').to_s
