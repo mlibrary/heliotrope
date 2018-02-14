@@ -11,7 +11,7 @@ describe Hyrax::MonographsController do
     end
 
     before do
-      sign_in user
+      cosign_sign_in user
       stub_out_redis
     end
 
@@ -112,7 +112,7 @@ describe Hyrax::MonographsController do
     let(:monograph) { create(:monograph, user: user, press: press.subdomain) }
 
     before do
-      sign_in user
+      cosign_sign_in user
     end
 
     context 'monograph created' do

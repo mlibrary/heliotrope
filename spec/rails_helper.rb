@@ -49,6 +49,16 @@ RSpec.configure do |config|
   config.include RSpecHtmlMatchers
 end
 
+def cosign_sign_in(user)
+  allow_any_instance_of(ApplicationController).to receive(:valid_user?).and_return(true)
+  sign_in user
+end
+
+def cosign_login_as(user)
+  allow_any_instance_of(ApplicationController).to receive(:valid_user?).and_return(true)
+  login_as user
+end
+
 # Stub out anything that requires a redis connection,
 # such as background jobs and lock management.
 def stub_out_redis

@@ -8,7 +8,7 @@ feature 'Create a monograph' do
     let!(:press) { create(:press) }
 
     before do
-      login_as user
+      cosign_login_as user
       stub_out_redis
     end
 

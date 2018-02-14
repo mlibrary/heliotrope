@@ -6,7 +6,7 @@ feature 'Create a collection' do
   context 'a logged in user' do
     let(:user) { create(:platform_admin) }
     before do
-      login_as user
+      cosign_login_as user
     end
 
     scenario do

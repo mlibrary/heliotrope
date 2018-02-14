@@ -1,10 +1,12 @@
-  # settings for curation concerns for the test environment, locally and on Travis:
-  # derivatives_path contains thumbnails and web-friendly audio, and video files for playbock
-  derivatives_path: <%= File.join(Rails.root, 'tmp', 'rspec_derivatives') %>
-  # uploads_path stashes files uploaded via the browser before ingest to fedora
-  # on distributed architectures, uploads_path must be on a drive shared with the web server
-  uploads_path: <%= File.join(Rails.root, 'tmp', 'uploads') %>
-  # minter_path tracks the ID of the last-created object
-  minter_path: <%= File.join(Rails.root, 'tmp', 'minter-state') %>
-  resque_namespace: heliotrope-testing
-  host: test.host
+# settings for curation concerns for the test environment, locally and on Travis:
+# derivatives_path contains thumbnails and web-friendly audio, and video files for playbock
+derivatives_path: <%= File.join(Rails.root, 'tmp', 'rspec_derivatives') %>
+# uploads_path stashes files uploaded via the browser before ingest to fedora
+# on distributed architectures, uploads_path must be on a drive shared with the web server
+uploads_path: <%= File.join(Rails.root, 'tmp', 'uploads') %>
+# minter_path tracks the ID of the last-created object
+minter_path: <%= File.join(Rails.root, 'tmp', 'minter-state') %>
+resque_namespace: heliotrope-testing
+host: test.host
+# cosign_logout_url: "https://weblogin.umich.edu/cgi-bin/logout?"
+cosign_logout_url: ""

@@ -6,11 +6,11 @@ RSpec.describe AnalyticsController, type: :controller do
   describe "GET #show" do
     context 'unauthenticated user' do
       before { get :show }
-      it { expect(response).to redirect_to('/users/sign_in') }
+      it { expect(response).to redirect_to('/login') }
     end
     context "authenticated user" do
       before do
-        sign_in current_user
+        cosign_sign_in current_user
         get :show
       end
       context "non-admin" do
