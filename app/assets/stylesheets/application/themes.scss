@@ -734,6 +734,343 @@ $um-black-80: #342f2e;
 
 }
 ///////////////////////////////////////////////
+// University of Michigan Press -
+// Gabii Project Reports
+///////////////////////////////////////////////
+// colors
+$gabii-brand-color:   #1b2f43;
+$gabii-accent-color:  #b7c7d9;
+
+$gabii-white:         #f0f4f5;
+$gabii-light-1:       #45586e;
+$gabii-light-2:       #e9faff;
+$gabii-gray:          #acb0b4;
+$gabii-dark-gray:     #9d9d9d;
+$gabii-dark-1:        #00051c;
+$gabii-dark-2:        #8796a8;
+$gabii-black:         #111417;
+
+$gabii-jumbo:         #eeeeee;
+$gabii-link:          #39688f;
+$gabii-link-hover:    #1e5667;
+
+// typography
+@mixin garamond {
+  font-family: "adobe-garamond-pro", Georgia, serif;
+}
+
+@mixin lato {
+  font-family: 'Lato', Helvetica, sans-serif;
+}
+
+.gabii {
+
+  @include garamond;
+  color: #00051c;
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  .alert {
+    @include lato;
+  }
+
+  // links
+  a {
+    color: $gabii-link;
+  }
+
+  a:hover,
+  a:active {
+    color: $gabii-link-hover;
+  }
+
+  // buttons and alerts
+  .btn {
+    @include lato;
+    color: $gabii-white;
+    background-color: $gabii-brand-color;
+
+    &:hover, &:focus, &:active {
+      color: $gabii-brand-color;
+      background-color: $gabii-accent-color;
+    }
+  }
+
+  .btn-default,
+  .btn
+
+  #manage-monograph-button {
+    color: $gabii-white;
+    background-color: $gabii-brand-color;
+  }
+
+  // navigation menu
+  .navbar-default .navbar-nav > .open > a,
+  .navbar-default .navbar-nav > .open > a:hover,
+  .navbar-default .navbar-nav > .open > a:focus {
+    background-color: $gabii-brand-color;
+  }
+
+  #brand-bar {
+    background-color: $gabii-brand-color;
+    border-color: $gabii-brand-color;
+
+    .navbar-header {
+      background-image: url("/upload/press/logo_path/gabii/gabii.png");
+      background-repeat: no-repeat;
+      background-size: 45px;
+      background-position-y: 6px;
+    }
+
+    .navbar-brand {
+      color: $gabii-white;
+      @include lato;
+      text-transform: initial;
+      letter-spacing: initial;
+      font-size: 1.65em;
+      padding-left: 3em;
+    }
+
+    .navbar-brand:hover {
+      color: $gabii-accent-color;
+    }
+
+    .navbar-nav {
+
+      @include lato;
+
+      a#add-content,
+      a.login,
+      a.user-display-name,
+      a.language-dropdown {
+          color: $gabii-white;
+      }
+
+      .open > a,
+      .open > a:focus,
+      .open > a:hover {
+        background-color: $gabii-accent-color;
+        color: $gabii-brand-color;
+      }
+    }
+
+    button.search-submit {
+      background-color: $gabii-accent-color;
+      border-color: $gabii-accent-color;
+      color: $gabii-brand-color;
+    }
+
+    .search-query {
+      @include lato;
+    }
+
+  }
+
+  // breadcrumbs
+  .breadcrumbs {
+    @include lato;
+  }
+
+  // press catalog
+
+  // jumbotron
+  .jumbotron {
+    background-color: $gabii-jumbo;
+    @include lato;
+    font-weight: 200;
+
+    .logo {
+
+      img {
+        display: none;
+      }
+
+    }
+
+  }
+
+  #maincontent {
+    font-size: 18px;
+  }
+
+  .press {
+
+    h2:first-child {
+      margin-bottom: 1.5em;
+    }
+
+    .document,
+    .documentHeader {
+      margin-bottom: 2em;
+    }
+  }
+
+  // monograph catalog
+  #sort-dropdown .dropdown-toggle, #per_page-dropdown .dropdown-toggle {
+    color: $gabii-white;
+
+    &:hover {
+      color: $gabii-brand-color;
+    }
+  }
+
+  .dropdown-menu {
+    @include lato;
+  }
+
+  // monograph
+  .monograph {
+    .documentHeader {
+      p {
+        @include garamond;
+      }
+    }
+
+    .nav-tabs {
+      @include lato;
+    }
+
+    .monograph-assets-toc-epub {
+      .monograph-assets-toc-epub-content {
+        font-size: 18px;
+      }
+    }
+  }
+
+  // pagination
+  .page_links {
+    @include lato;
+  }
+
+  .pagination {
+    @include lato;
+     li a, li span {
+       color: $gabii-brand-color;
+     }
+
+     .active>a,
+     .active>a:hover,
+     .active>a:focus,
+     .active>span,
+     .active>span:hover,
+     .active>span:focus {
+       background-color: $gabii-brand-color;
+       border-color: $gabii-brand-color;
+       color: $gabii-accent-color;
+     }
+  }
+
+  // assets
+  .asset-navigation {
+    @include lato;
+  }
+
+  .asset {
+    ul.nav-tabs li {
+      @include lato;
+    }
+  }
+
+  //footer
+  footer {
+    a,
+    a:hover,
+    a:active {
+      color: $gabii-white;
+    }
+    .press-block-a,
+    .press-block-b {
+      background-color:  $gabii-light-1;
+
+
+      a,
+      a:hover,
+      a:active {
+        color: $gabii-accent-color;
+      }
+
+      img {
+        width: initial;
+      }
+
+      p {
+        @include lato;
+        text-transform: initial;
+        letter-spacing: initial;
+        font-size: 1.5em;
+      }
+
+    }
+    .press-block-c {
+      background-color: $gabii-brand-color;
+      @include lato;
+    }
+    .platform {
+      background-color: $gabii-black;
+    }
+  }
+
+  // EPUB Reader
+  #reader {
+
+    .cozy-control .cozy-h1 {
+      font-size: 1.5em;
+    }
+
+    .button {
+      @include epub-button-background-color($gabii-brand-color,$gabii-accent-color,$gabii-white);
+    }
+
+    .button--lg {
+      @include epub-button-background-color($gabii-brand-color,$gabii-accent-color,$gabii-white);
+    }
+
+    .button--sm {
+      @include epub-button-background-color($gabii-brand-color,$gabii-accent-color,$gabii-white);
+    }
+
+    .button:hover,
+    .button--lg:hover,
+    .button--sm:hover {
+      color: $gabii-brand-color;
+    }
+
+    i[class^='icon-chevron-'] {
+      @include epub-prev-next-color($gabii-accent-color);
+      transition: 0.2s ease-in;
+    }
+
+    i[class^='icon-chevron-']:hover {
+      @include epub-hover-prev-next-color($gabii-brand-color);
+      transition: 0.2s ease-in;
+    }
+
+    .cozy-control .logo {
+      background: $gabii-brand-color;
+      height: 46.6px;
+      width: 46px;
+      overflow: hidden;
+
+      img {
+        height: 31px;
+        margin-top: .5em;
+        margin-left: .2em;
+      }
+    }
+
+    .cozy-navigator-range__background {
+          background-image: linear-gradient(90deg, #FFFFFF, #FFFFFF 50%, transparent 50%), linear-gradient(90deg, $gabii-brand-color, $gabii-accent-color) !important;
+    }
+
+  }
+
+
+
+}
+///////////////////////////////////////////////
 //
 // University of Minnesota Press
 //

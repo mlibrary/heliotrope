@@ -35,8 +35,8 @@
       // Press brand widget
       // TO-DO: only show logo for publishers that also have CSS overrides. Currently only HEB has this.
       <% if defined? @subdomain %>
-        // only include logos for heb and nyupress at this point
-        <% if %w[heb nyupress].include? @subdomain %>
+        // only include logos for heb, nyupress, and gabii at this point
+        <% if %w[heb nyupress gabii].include? @subdomain %>
           cozy.control.widget.panel({
             region: 'top.header.left',
             template: '<div class="logo"><%= image_tag logo(@subdomain), alt: @subdomain %>',
