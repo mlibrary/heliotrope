@@ -3,6 +3,10 @@
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
 
+  # Middleware to fake authentication header field that would come from apache.
+  # See comments in ./lib/devise/fake_auth_header.rb for more details.
+  config.middleware.use FakeAuthHeader
+
   # The test environment is used exclusively to run your application's
   # test suite. You never need to work with it otherwise. Remember that
   # your test database is "scratch space" for the test suite and is wiped
