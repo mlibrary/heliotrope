@@ -14,7 +14,7 @@ RSpec.describe Hyrax::DownloadsController, type: :controller do
                               content: File.open(File.join(fixture_path, 'csv', 'miranda.jpg'))) }
 
       context "and a user is logged in" do
-        before { sign_in user }
+        before { cosign_sign_in user }
         it "sends the file" do
           get :show, params: { id: file_set.id, use_route: 'downloads' }
           expect(response.body).to eq file_set.original_file.content
@@ -38,7 +38,7 @@ RSpec.describe Hyrax::DownloadsController, type: :controller do
 
       context "and a non-edit user is logged in" do
         let(:non_edit_user) { create(:user) }
-        before { sign_in non_edit_user }
+        before { cosign_sign_in non_edit_user }
         it "shows the unauthorized message" do
           get :show, params: { id: file_set.id, use_route: 'downloads' }
           expect(response).to have_http_status(401)
@@ -46,7 +46,7 @@ RSpec.describe Hyrax::DownloadsController, type: :controller do
       end
 
       context "and an edit user is logged in" do
-        before { sign_in user }
+        before { cosign_sign_in user }
         it "shows the unauthorized message" do
           get :show, params: { id: file_set.id, use_route: 'downloads' }
           expect(response).to have_http_status(200)
@@ -63,7 +63,7 @@ RSpec.describe Hyrax::DownloadsController, type: :controller do
 
       context "and the user is logged in as a platform_admin" do
         let(:platform_admin) { create(:platform_admin) }
-        before { sign_in platform_admin }
+        before { cosign_sign_in platform_admin }
         it "sends the file" do
           get :show, params: { id: file_set.id, use_route: 'downloads' }
           expect(response).to have_http_status(200)

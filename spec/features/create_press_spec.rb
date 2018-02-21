@@ -7,7 +7,7 @@ feature 'Adding a new press' do
     let(:user) { create(:platform_admin) }
 
     before do
-      login_as user
+      cosign_login_as user
     end
 
     scenario 'creates a press' do

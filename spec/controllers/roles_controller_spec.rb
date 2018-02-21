@@ -6,7 +6,7 @@ describe RolesController, type: :controller do
   let(:press) { create(:press) }
 
   describe 'when user does not have access' do
-    before { sign_in create(:user) }
+    before { cosign_sign_in create(:user) }
     describe 'GET index' do
       it 'denies access' do
         get :index, params: { press_id: press }
@@ -20,7 +20,7 @@ describe RolesController, type: :controller do
     let(:user) { create(:user) }
     let(:role) { admin.roles.first }
 
-    before { sign_in admin }
+    before { cosign_sign_in admin }
 
     describe "index" do
       it 'allows index' do
@@ -106,11 +106,11 @@ describe RolesController, type: :controller do
   describe "GET #index2" do
     context 'unauthenticated user' do
       before { get :index2 }
-      it { expect(response).to redirect_to('/users/sign_in') }
+      it { expect(response).to redirect_to('/login') }
     end
     context "authenticated user" do
       before do
-        sign_in current_user
+        cosign_sign_in current_user
         get :index2
       end
       context "non-admin" do
@@ -127,13 +127,13 @@ describe RolesController, type: :controller do
 
     context 'unauthenticated user' do
       before { get :show, params: { id: role_id } }
-      it { expect(response).to redirect_to('/users/sign_in') }
+      it { expect(response).to redirect_to('/login') }
     end
     context "authenticated user" do
       let(:current_user) { create(:user) }
 
       before do
-        sign_in current_user
+        cosign_sign_in current_user
         get :show, params: { id: role_id }
       end
       context "role record not found" do

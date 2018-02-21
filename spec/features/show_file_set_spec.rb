@@ -11,7 +11,7 @@ feature 'FileSet Browse' do
 
     before do
       stub_out_redis
-      login_as user
+      cosign_login_as user
       monograph.ordered_members << cover
 
       fileset_count.times do

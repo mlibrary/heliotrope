@@ -127,7 +127,7 @@ describe MonographCatalogController do
           let(:user) { create(:user) }
           let(:monograph) { create(:private_monograph, user: user) }
           before do
-            sign_in user
+            cosign_sign_in user
             get :index, params: { id: monograph.id }
           end
           it 'response is successful' do

@@ -275,7 +275,7 @@ feature "Monograph Catalog Facets" do
                                               section_title: ['A Section']) }
 
     before do
-      login_as user
+      cosign_login_as user
       monograph.ordered_members = [cover, file_set]
       monograph.save!
     end

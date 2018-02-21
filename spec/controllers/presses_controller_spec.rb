@@ -8,7 +8,7 @@ RSpec.describe PressesController, type: :controller do
       let(:user) { create(:user) }
       let!(:press) { create(:press) }
 
-      before { sign_in user }
+      before { cosign_sign_in user }
 
       it 'shows the presses' do
         get :index
@@ -33,7 +33,7 @@ RSpec.describe PressesController, type: :controller do
 
   context 'a platform-wide admin user create/edit' do
     let(:user) { create(:platform_admin) }
-    before { sign_in user }
+    before { cosign_sign_in user }
 
     describe '#new' do
       before { get :new }
@@ -58,7 +58,7 @@ RSpec.describe PressesController, type: :controller do
 
   context 'a press admin user create/edit' do
     let(:user) { create(:press_admin) }
-    before { sign_in user }
+    before { cosign_sign_in user }
 
     describe '#new' do
       before { get :new }

@@ -36,7 +36,7 @@ feature 'Create an external resource' do
     let(:file_set) { create(:public_file_set, user: user, title: [file_set_title]) }
 
     before do
-      login_as user
+      cosign_login_as user
       stub_out_redis
       Hydra::Works::AddFileToFileSet.call(file_set, file, :original_file)
       monograph.ordered_members << file_set

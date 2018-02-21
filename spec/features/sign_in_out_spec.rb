@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-feature 'Login and Logout' do
+feature 'Sign In Out' do
   context "from /" do
     let!(:user) { create(:platform_admin, email: "ferg@example.com") }
 
@@ -10,8 +10,7 @@ feature 'Login and Logout' do
       visit new_user_session_path
 
       fill_in 'Email', with: 'ferg@example.com'
-      fill_in 'Password', with: 'a password'
-      click_button 'Log in'
+      click_button 'Save'
 
       expect(page).to have_current_path(hyrax.dashboard_path(locale: 'en'))
     end
@@ -21,7 +20,7 @@ feature 'Login and Logout' do
     let!(:user) { create(:platform_admin, email: "ferg@example.com") }
 
     before do
-      login_as user
+      cosign_login_as user
     end
 
     scenario "logout goes to /" do
@@ -59,14 +58,13 @@ feature 'Login and Logout' do
 
       click_link "Log In"
       fill_in 'Email', with: 'ferg@example.com'
-      fill_in 'Password', with: 'a password'
-      click_button 'Log in'
+      click_button 'Save'
 
       expect(page).to have_current_path(hyrax_file_set_path(file_set))
     end
 
     scenario "logging out goes to that asset page" do
-      login_as user
+      cosign_login_as user
       visit hyrax_file_set_path(file_set)
 
       within("footer") do
