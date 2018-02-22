@@ -8,11 +8,11 @@ namespace :heliotrope do
 end
 
 desc "clear epub cache"
-  namespace :heliotrope do
-    task clear_epub_cache: :environment do
-      FactoryService.clear_e_pub_publication_cache
-    end
+namespace :heliotrope do
+  task clear_epub_cache: :environment do
+    FactoryService.clear_e_pub_publication_cache
   end
+end
 
 desc "purge epub from cache"
 namespace :heliotrope do
