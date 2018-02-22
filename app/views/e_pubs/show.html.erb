@@ -66,6 +66,8 @@
         }).addTo(reader);
       <% end %>
 
+      // Bib info widget
+      cozy.control.bibliographicInformation({ region: 'top.toolbar.left' }).addTo(reader)
       // Fullscreen widget
       cozy.control.widget.button({
                         region: 'top.toolbar.right',
@@ -83,7 +85,6 @@
                     }).addTo(reader);
       // Reading preferences widget
       cozy.control.preferences({ region: 'top.toolbar.right' }).addTo(reader);
-
       // Paging widgets
       // cozy.control.pageFirst({ region: 'left.sidebar' }).addTo(reader);
       cozy.control.pagePrevious({ region: 'left.sidebar' }).addTo(reader);
