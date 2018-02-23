@@ -15,46 +15,6 @@ webgl = FactoryService.webgl_unity(webgl_id)
     <script src="<%= @unity_progress %>"></script>
     <script src="<%= @unity_loader %>"></script>
 
-    <style type="text/css">
-      .panel-open.panel-right .cozy-module-book-cover {
-        width: 50vw
-      }
-      .panel-open.panel-right .cozy-module-right {
-        right: 50vw;
-      }
-      .special-panel {
-        position: absolute;
-        background: #f1f1f1;
-        border-left: solid 1px #e8e8e8;
-        border-top: solid 1px #e8e8e8;
-        border-bottom: solid 1px #e8e8e8;
-        overflow: scroll;
-      }
-      .panel-right .special-panel {
-        left: 50vw;
-        right: 0;
-        top: 0;
-        bottom: 0;
-      }
-      #gameContainer {
-        margin-left: auto !important;
-        margin-right: auto !important;
-      }
-      .gabii #reader .special-panel .panel-control button.button--sm.webgl-close {
-        background: transparent;
-        color: #333;
-        padding: 2em;
-      }
-      .gabii #reader .special-panel .panel-control button.button--sm.webgl-close:hover,
-      .gabii #reader .special-panel .panel-control button.button--sm.webgl-close:active,
-      .gabii #reader .special-panel .panel-control button.button--sm.webgl-close:focus {
-        transition: unset;
-        box-shadow: unset;
-      }
-      .special-panel .panel-info {
-        padding: 0 1em;
-      }
-    </style>
   <% end %>
 <% end %>
 
@@ -111,6 +71,7 @@ webgl = FactoryService.webgl_unity(webgl_id)
       <% if @monograph_presenter.webgl? %>
 
         var gameInstance;
+        // open panel function and initiate game if not initiated
         var open_panel = function() {
           var $main = $(".cozy-module-main");
           var $book = $(".cozy-module-book-cover");
@@ -120,7 +81,7 @@ webgl = FactoryService.webgl_unity(webgl_id)
           var $panel= $(".special-panel");
 
           if (! $panel.length) {
-            $panel = $('<div class="special-panel"><div class="panel-control"><button class="button--sm webgl-close" data-toggle="button" data-slot="label" aria-label="Close 3-D Model"><i class="icon-x oi" data-glyph="x" aria-hidden="true"></i></button></div><div class="webgl-content"><div id="gameContainer" tabindex="0"></div></div><div class="panel-info"><h2>Gabii Area B 3D Model</h2><p>DOI: https://doi.org/10.3998/mpub.9231782.model</p><p>The interactive content found here serves as a 3D visual reference for the narrative text. It contains 3D models of Gabii\'s stratigraphy, schematic reconstructions of key features, descriptive data, and direct links to entries from the project\'s online database. Links in the text will guide you through a structured exploration of the house\'s stratigraphy and reconstructions. Readers are encouraged both to follow the narrative laid out in this text, and to explore the 3D content freely. Investigation into the data behind the interpretations and reconstructions is supported by access to the project\'s database.</p></div></div>').appendTo($main);
+            $panel = $('<div class="special-panel"><div class="panel-control"><button class="button--sm webgl-close" data-toggle="button" data-slot="label" aria-label="Close 3-D Model" onclick="close_panel();"><i class="icon-x oi" data-glyph="x" aria-hidden="true"></i></button></div><div class="webgl-content"><div id="gameContainer" tabindex="0"></div></div><div class="panel-info"><h2>Gabii Area B 3D Model</h2><p><strong>DOI: https://doi.org/10.3998/mpub.9231782.model</strong></p><p>The interactive content found here serves as a 3D visual reference for the narrative text. It contains 3D models of Gabii\'s stratigraphy, schematic reconstructions of key features, descriptive data, and direct links to entries from the project\'s online database. Links in the text will guide you through a structured exploration of the house\'s stratigraphy and reconstructions. Readers are encouraged both to follow the narrative laid out in this text, and to explore the 3D content freely. Investigation into the data behind the interpretations and reconstructions is supported by access to the project\'s database.</p></div></div>').appendTo($main);
           } else {
             $panel.show();
           }
@@ -138,33 +99,6 @@ webgl = FactoryService.webgl_unity(webgl_id)
           if (! gameInstance) {
             gameInstance = UnityLoader.instantiate("gameContainer", "<%= "#{@unity_json}" %>", options );
 
-
-            // reader is instantiated...
-            var click_handler = function(event) {
-              var s = event.target.getAttribute('data-uid');
-              var SendMessage = gameInstance.SendMessage;
-              function getToUnity(s) {
-              //    SendMessage("WebCommunicator", "ShowString", s);
-                if ($('body').hasClass('panel-open')) {
-                  SendMessage ("WebCommunicator", "ShowString", s);
-                } else {
-                  open_panel();
-                  SendMessage ("WebCommunicator", "ShowString", s);
-                }
-              };
-              var gameContainerDiv = document.getElementById("gameContainer");
-              gameContainerDiv.focus();
-              getToUnity(s);
-            };
-
-            reader.on('ready:contents', function(contents) {
-              var links = contents.content.querySelectorAll("a[data-uid]");
-              for(var i =0, n = links.length; i < n; i++) {
-                var link = links[i];
-                link.addEventListener('click', click_handler);
-              }
-            })
-
           } else {
             // resize the webGL canvas
             var $g = $('#gameContainer');
@@ -178,8 +112,9 @@ webgl = FactoryService.webgl_unity(webgl_id)
           setTimeout(function() {
              window.dispatchEvent(new Event('resize'));
           }, 0);
-        }
+        } // end open_panel
 
+        // close panel function
         var close_panel = function() {
           var $panel = $('.special-panel');
           if ($panel.length) {
@@ -192,9 +127,37 @@ webgl = FactoryService.webgl_unity(webgl_id)
           }
         }
 
+        // Open SU panel in WebGL if SU link is clicked
+        var click_handler = function(event) {
+          var s = event.target.getAttribute('data-uid');
+          var SendMessage = gameInstance.SendMessage;
+          var $panel= $(".special-panel");
+          function getToUnity(s) {
+              SendMessage("WebCommunicator", "ShowString", s);
+          };
+          var gameContainerDiv = document.getElementById("gameContainer");
+          if ($('body').hasClass('panel-open')) {
+            gameContainerDiv.focus();
+            getToUnity(s);
+          } else {
+            open_panel();
+            gameContainerDiv.focus();
+            getToUnity(s);
+          }
+        };
+
+        // Setup SU link event listener
+        reader.on('ready:contents', function(contents) {
+          var links = contents.content.querySelectorAll("a[data-uid]");
+          for(var i =0, n = links.length; i < n; i++) {
+            var link = links[i];
+            link.addEventListener('click', click_handler);
+          }
+        })
+
         cozy.control.widget.toggle({
           region: 'top.toolbar.left',
-          template: '<button class="button--sm" data-toggle="button" aria-label="3D Model">3D Model</button>',
+          template: '<button class="button--sm" id="webgl" data-toggle="button" aria-label="3D Model">3D Model</button>',
           states: [{
             stateName: 'open-webgl',
             onClick: function(btn, reader) {

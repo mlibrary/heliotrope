@@ -1065,9 +1065,33 @@ $gabii-link-hover:    #1e5667;
           background-image: linear-gradient(90deg, #FFFFFF, #FFFFFF 50%, transparent 50%), linear-gradient(90deg, $gabii-brand-color, $gabii-accent-color) !important;
     }
 
+    .special-panel {
+
+      .panel-control button.button--sm.webgl-close {
+      background: transparent;
+      color: #333;
+      padding: 2em;
+
+        &:hover,
+        &:active,
+        &:focus {
+          transition: unset;
+          box-shadow: unset;
+        }
+
+      }
+
+      .panel-info {
+        padding: 0 1em;
+
+        p {
+          font-size: .75em;
+        }
+
+      }
+    }
+
   }
-
-
 
 }
 ///////////////////////////////////////////////
