@@ -19,15 +19,34 @@
 
     function setupLeafletMap() {
         if (map != undefined) { map.off(); map.remove(); }
-        map = L.map('image', {
+
+        // https://github.com/mlibrary/cozy-sun-bear/issues/129
+        if (bowser.safari && bowser.version >= 11) {
+          map = L.map('image', {
+            center: [0, 0],
+            crs: L.CRS.Simple,
+            zoom: 0,
+            zoomControl: false,
+            scrollWheelZoom: false,
+            doubleClickZoom: false,
+            boxZoom: false,
+            dragging: false,
+            attributionControl: false
+          });
+          layer = L.tileLayer.iiif("<%= riiif_url %>", { bestFit: true });
+          layer.addTo(map);
+        }
+        else {
+          map = L.map('image', {
             center: [0, 0],
             crs: L.CRS.Simple,
             zoom: 0,
             scrollWheelZoom: false,
             attributionControl: false
-        });
-        layer = L.tileLayer.iiif("<%= riiif_url %>", { bestFit: true });
-        layer.addTo(map);
-        L.control.pan({ panOffset: 150 }).addTo(map);
+          });
+          layer = L.tileLayer.iiif("<%= riiif_url %>", { bestFit: true });
+          layer.addTo(map);
+          L.control.pan({ panOffset: 150 }).addTo(map);
+        }
     };
 </script>
