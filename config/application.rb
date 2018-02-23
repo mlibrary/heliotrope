@@ -48,6 +48,10 @@ module Heliotrope
     # URL for logging the user out of Cosign
     config.cosign_logout_url = Settings.cosign_logout_url
 
+    # Disable automatic account creation on Cosign logins unless
+    # enabled in config/settings.
+    config.create_user_on_login = Settings.create_user_on_login && true
+
     # Never use /tmp, always use ~/tmp, #627 and http://stackoverflow.com/a/17068331
     tmpdir = Rails.root.join('tmp').to_s
     ENV['TMPDIR'] = tmpdir

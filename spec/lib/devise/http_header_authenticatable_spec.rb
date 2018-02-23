@@ -87,14 +87,26 @@ RSpec.describe Devise::Strategies::HttpHeaderAuthenticatable do
         context 'with a new user' do
           before { allow(User).to receive(:find_by).with(user_key: user.user_key).and_return(nil) }
 
-          it 'rejects a new user' do
-            expect(User).to receive(:create).with(user_key: user.user_key).never
-            # expect(User).to receive(:new).with(user_key: user.user_key).once.and_return(user)
-            # expect_any_instance_of(User).to receive(:populate_attributes).once
-            expect(User).to receive(:new).with(user_key: user.user_key).never
-            expect_any_instance_of(User).to receive(:populate_attributes).never
-            expect(subject).to be_valid
-            expect(subject.authenticate!).to eq(:success)
+          context 'when create_user_on_login is enabled' do
+            it 'allows a new user' do
+              allow(Rails.configuration).to receive(:create_user_on_login).and_return(true)
+              expect(User).to receive(:create).with(user_key: user.user_key).never
+              expect(User).to receive(:new).with(user_key: user.user_key).once.and_return(user)
+              expect_any_instance_of(User).to receive(:populate_attributes).once
+              expect(subject).to be_valid
+              expect(subject.authenticate!).to eq(:success)
+            end
+          end
+
+          context 'when create_user_on_login is disabled' do
+            it 'rejects a new user' do
+              allow(Rails.configuration).to receive(:create_user_on_login).and_return(false)
+              expect(User).to receive(:create).with(user_key: user.user_key).never
+              expect(User).to receive(:new).with(user_key: user.user_key).never
+              expect_any_instance_of(User).to receive(:populate_attributes).never
+              expect(subject).to be_valid
+              expect(subject.authenticate!).to eq(:failure)
+            end
           end
         end
 
