@@ -649,6 +649,32 @@ footer.press {
   }
 }
 
+.panel-open.panel-right .cozy-module-book-cover {
+  width: 50vw
+}
+.panel-open.panel-right .cozy-module-right {
+  right: 50vw;
+}
+.special-panel {
+  position: absolute;
+  background: #f1f1f1;
+  border-left: solid 1px #e8e8e8;
+  border-top: solid 1px #e8e8e8;
+  border-bottom: solid 1px #e8e8e8;
+  overflow: scroll;
+}
+.panel-right .special-panel {
+  left: 50vw;
+  right: 0;
+  top: 0;
+  bottom: 0;
+}
+
+#gameContainer {
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
 /* Feel free to be horrified at the bonkers-ness of this construct. */
 .cozy-panel-toolbar div.cozy-control:not(:first-of-type) {
   border-left: 1px solid white;

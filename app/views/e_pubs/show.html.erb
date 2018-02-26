@@ -2,29 +2,46 @@
 <%# https://github.com/mlibrary/heliotrope/issues/1228 %>
 <% content_for :head do %>
   <meta name="turbolinks-cache-control" content="no-cache">
+  <% if @monograph_presenter.webgl? %>
+<%
+# load what we need to show the webgl/3-d model if needed
+webgl_id = @monograph_presenter.webgl_id
+webgl = FactoryService.webgl_unity(webgl_id)
+@unity_progress = "/webgl/#{webgl_id}/#{webgl.unity_progress}"
+@unity_loader = "/webgl/#{webgl_id}/#{webgl.unity_loader}"
+@unity_json = "/webgl/#{webgl_id}/#{webgl.unity_json}"
+%>
+    <!-- browser detection here -->
+    <script src="<%= @unity_progress %>"></script>
+    <script src="<%= @unity_loader %>"></script>
+
+  <% end %>
 <% end %>
+
 <% provide :body do %>
 <% if defined? @presenter.file_set_coins_title %>
   <span class="Z3988" title="<%= @presenter.file_set_coins_title %>"></span>
 <% end %>
+
 <div id="epub" class="<%= @subdomain %>">
   <div id="reader"></div>
   <script type="text/javascript">
     if ( true ) {
-            //$("body").addClass("reading");
-            var reader = cozy.reader('reader', {
-                href: "<%= "#{main_app.epub_url.gsub!(/\?.*/, '')}/" %>",
-                metadata: {
-                    doi: '<%= @citable_link %>',
-                    // TO-DO: iterate all creator given and family names for monograph
-                    // creator: [
-                    //    ''
-                    // ],
-                    // TO-DO: we currently don't store location metadata in the monograph
-                    // record. Should we? Can we rely on all EPUBs having location?
-                    location: 'Ann Arbor, MI'
-                }
-            });
+      //$("body").addClass("reading");
+      var reader = cozy.reader('reader', {
+          href: "<%= "#{main_app.epub_url.gsub!(/\?.*/, '')}/" %>",
+          metadata: {
+              doi: '<%= @citable_link %>',
+              // TO-DO: iterate all creator given and family names for monograph
+              // creator: [
+              //    ''
+              // ],
+              // TO-DO: we currently don't store location metadata in the monograph
+              // record. Should we? Can we rely on all EPUBs having location?
+              location: 'Ann Arbor, MI'
+          }
+      });
+
       // Close reader/Return to previous screen widget
       cozy.control.widget.button({
   	    region: 'top.header.left',
@@ -49,15 +66,145 @@
 
       // Table of contents widget
       cozy.control.contents({ region: 'top.toolbar.left' }).addTo(reader);
+
+      // Webgl/3-D model
+      <% if @monograph_presenter.webgl? %>
+
+        var gameInstance;
+        // open panel function and initiate game if not initiated
+        var open_panel = function() {
+          var $main = $(".cozy-module-main");
+          var $book = $(".cozy-module-book-cover");
+          close_panel();
+          $("body").addClass("panel-open panel-right");
+
+          var $panel= $(".special-panel");
+
+          if (! $panel.length) {
+            $panel = $('<div class="special-panel"><div class="panel-control"><button class="button--sm webgl-close" data-toggle="button" data-slot="label" aria-label="Close 3-D Model" onclick="close_panel();"><i class="icon-x oi" data-glyph="x" aria-hidden="true"></i></button></div><div class="webgl-content"><div id="gameContainer" tabindex="0"></div></div><div class="panel-info"><h2>Gabii Area B 3D Model</h2><p><strong>DOI: https://doi.org/10.3998/mpub.9231782.model</strong></p><p>The interactive content found here serves as a 3D visual reference for the narrative text. It contains 3D models of Gabii\'s stratigraphy, schematic reconstructions of key features, descriptive data, and direct links to entries from the project\'s online database. Links in the text will guide you through a structured exploration of the house\'s stratigraphy and reconstructions. Readers are encouraged both to follow the narrative laid out in this text, and to explore the 3D content freely. Investigation into the data behind the interpretations and reconstructions is supported by access to the project\'s database.</p></div></div>').appendTo($main);
+          } else {
+            $panel.show();
+          }
+
+          var options = { onProgress: UnityProgress };
+
+          var h = $panel.height();
+          var w = $panel.width();
+
+          // the game has to have a specific aspect ratio or it looks distorted
+          var r = w / 1024;
+          options.width = w + 'px';
+          options.height = Math.ceil(600 * r) + 'px';
+
+          if (! gameInstance) {
+            gameInstance = UnityLoader.instantiate("gameContainer", "<%= "#{@unity_json}" %>", options );
+
+          } else {
+            // resize the webGL canvas
+            var $g = $('#gameContainer');
+            $g.css({ width: options.width, height: options.height });
+            var $c = $g.find('canvas').get(0);
+            $c.setAttribute('width', parseInt(options.width));
+            $c.setAttribute('height', parseInt(options.height));
+          }
+
+          // resize EPUB
+          setTimeout(function() {
+             window.dispatchEvent(new Event('resize'));
+          }, 0);
+        } // end open_panel
+
+        // close panel function
+        var close_panel = function() {
+          var $panel = $('.special-panel');
+          if ($panel.length) {
+            $('.special-panel').hide();
+            $('body').removeClass('panel-open');
+            $('body').removeClass('panel-right');
+            setTimeout(function() {
+              window.dispatchEvent(new Event('resize'));
+            }, 0);
+          }
+        }
+
+        // Open SU panel in WebGL if SU link is clicked
+        var click_handler = function(event) {
+          var s = event.target.getAttribute('data-uid');
+          var SendMessage = gameInstance.SendMessage;
+          var $panel= $(".special-panel");
+          function getToUnity(s) {
+              SendMessage("WebCommunicator", "ShowString", s);
+          };
+          var gameContainerDiv = document.getElementById("gameContainer");
+          if ($('body').hasClass('panel-open')) {
+            gameContainerDiv.focus();
+            getToUnity(s);
+          } else {
+            open_panel();
+            gameContainerDiv.focus();
+            getToUnity(s);
+          }
+        };
+
+        // Setup SU link event listener
+        reader.on('ready:contents', function(contents) {
+          var links = contents.content.querySelectorAll("a[data-uid]");
+          for(var i =0, n = links.length; i < n; i++) {
+            var link = links[i];
+            link.addEventListener('click', click_handler);
+          }
+        })
+
+        cozy.control.widget.toggle({
+          region: 'top.toolbar.left',
+          template: '<button class="button--sm" id="webgl" data-toggle="button" aria-label="3D Model">3D Model</button>',
+          states: [{
+            stateName: 'open-webgl',
+            onClick: function(btn, reader) {
+              open_panel();
+              btn.state('close-webgl');
+            }
+          },
+          {
+            stateName: 'close-webgl',
+            onClick: function(btn, reader) {
+              close_panel();
+              btn.state('open-webgl');
+            }
+          }],
+        }).addTo(reader);
+      <% end %>
+
+      // Database
+      // This is a very specific case of an externally hosted database that is related to the epub
+      <% if @monograph_presenter.database? %>
+        cozy.control.widget.button({
+          region: 'top.toolbar.left',
+          template: '<button class="button--sm" data-toggle="button" aria-label="Database">Database</button>',
+          onClick: function() { window.location = "<%= "#{@monograph_presenter.database['ext_url_doi_or_handle_ssim'].first}" %>"; }
+        }).addTo(reader);
+      <% end %>
+
+      // Media
+      <% if @monograph_presenter.assets? %>
+        cozy.control.widget.button({
+          region: 'top.toolbar.left',
+          template: '<button class="button--sm" data-toggle="button" aria-label="Media">Media</button>',
+          onClick: function() { window.location = "<%= "#{main_app.monograph_catalog_url(@presenter.monograph_id) + "#media"}" %>"; }
+        }).addTo(reader);
+      <% end %>
+
       // Permalink widget
       cozy.control.widget.panel({
         region: 'top.toolbar.left',
         data: { title: "<%= @citable_link %>"},
   	    template: '<div class="permalink-label"><label class="u-screenreader" for="permalink">Permalink</label><form><input data-slot="title" type="text" id="permalink" value="" readonly="readonly" onclick="this.select(); document.execCommand(\'copy\');"></form></div>',
       }).addTo(reader);
+
       // Citation widget
       // We'll need to do some work in order to pass pre-fomatted citations to CSB
       // see: https://github.com/mlibrary/cozy-sun-bear/wiki/Metadata-and-Citations
+
       // Search widget
       <% unless Heliotrope::Application.config.cozy_epub_engine == 'readium' %>
         cozy.control.search({
