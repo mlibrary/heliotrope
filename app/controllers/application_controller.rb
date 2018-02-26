@@ -91,7 +91,7 @@ class ApplicationController < ActionController::Base
     #    infinite redirect loop.
     # - The request is an Ajax request as this can lead to very unexpected behaviour.
     def storable_location? # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
-      return false unless is_a?(::MonographCatalogController) || is_a?(::Hyrax::FileSetsController)
+      return false unless is_a?(PressCatalogController) || is_a?(::MonographCatalogController) || is_a?(::Hyrax::FileSetsController)
       return false unless request.get? || is_navigational_format?
       return false if request.xhr?
       return false if request.url.match?(/image-service/)

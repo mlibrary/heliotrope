@@ -87,10 +87,12 @@ RSpec.describe Devise::Strategies::HttpHeaderAuthenticatable do
         context 'with a new user' do
           before { allow(User).to receive(:find_by).with(user_key: user.user_key).and_return(nil) }
 
-          it 'creates a new user' do
+          it 'rejects a new user' do
             expect(User).to receive(:create).with(user_key: user.user_key).never
-            expect(User).to receive(:new).with(user_key: user.user_key).once.and_return(user)
-            expect_any_instance_of(User).to receive(:populate_attributes).once
+            # expect(User).to receive(:new).with(user_key: user.user_key).once.and_return(user)
+            # expect_any_instance_of(User).to receive(:populate_attributes).once
+            expect(User).to receive(:new).with(user_key: user.user_key).never
+            expect_any_instance_of(User).to receive(:populate_attributes).never
             expect(subject).to be_valid
             expect(subject.authenticate!).to eq(:success)
           end
@@ -99,7 +101,7 @@ RSpec.describe Devise::Strategies::HttpHeaderAuthenticatable do
         context 'with an existing user' do
           before { allow(User).to receive(:find_by).with(user_key: user.user_key).and_return(user) }
 
-          it 'updates the existing user' do
+          it 'accepts the existing user' do
             expect(User).to receive(:create).with(user_key: user.user_key).never
             expect(User).to receive(:new).with(user_key: user.user_key).never
             expect_any_instance_of(User).to receive(:populate_attributes).never

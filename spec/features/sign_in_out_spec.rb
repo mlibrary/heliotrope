@@ -2,14 +2,14 @@
 
 require 'rails_helper'
 
-feature 'Sign In Out' do
+feature 'Log In and Out' do
   context "from /" do
-    let!(:user) { create(:platform_admin, email: "ferg@example.com") }
+    let!(:user) { create(:platform_admin, email: "wolverine@umich.edu") }
 
     scenario "login in goes to /dashboard" do
       visit new_user_session_path
 
-      fill_in 'Email', with: 'ferg@example.com'
+      fill_in 'Email', with: 'wolverine@umich.edu'
       click_button 'Save'
 
       expect(page).to have_current_path(hyrax.dashboard_path(locale: 'en'))
@@ -17,7 +17,7 @@ feature 'Sign In Out' do
   end
 
   context "when logged in and on the /dashboard page" do
-    let!(:user) { create(:platform_admin, email: "ferg@example.com") }
+    let!(:user) { create(:platform_admin, email: "wolverine@umich.edu") }
 
     before do
       cosign_login_as user
@@ -33,7 +33,7 @@ feature 'Sign In Out' do
   end
 
   context "on an asset page" do
-    let(:user) { create(:platform_admin, email: "ferg@example.com") }
+    let(:user) { create(:platform_admin, email: "wolverine@umich.edu") }
     let(:cover) { create(:file_set) }
     let(:file_set) { create(:public_file_set, user: user, title: ["Blue"]) }
     let!(:monograph) do
@@ -57,7 +57,7 @@ feature 'Sign In Out' do
       visit hyrax_file_set_path(file_set)
 
       click_link "Log In"
-      fill_in 'Email', with: 'ferg@example.com'
+      fill_in 'Email', with: 'wolverine@umich.edu'
       click_button 'Save'
 
       expect(page).to have_current_path(hyrax_file_set_path(file_set))

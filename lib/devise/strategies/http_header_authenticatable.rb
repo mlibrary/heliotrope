@@ -17,9 +17,10 @@ module Devise
           Rails.logger.debug "[AUTHN] HttpHeaderAuthenticatable#authenticate! succeeded: _#{user_key}_"
           user = User.find_by(user_key: user_key)
           if user.nil?
-            Rails.logger.debug '[AUTHN] HttpHeaderAuthenticatable#authenticate! new.'
-            user = User.new(user_key: user_key)
-            user.populate_attributes
+            # Rails.logger.debug '[AUTHN] HttpHeaderAuthenticatable#authenticate! new.'
+            # user = User.new(user_key: user_key)
+            # user.populate_attributes
+            Rails.logger.debug '[AUTHN] HttpHeaderAuthenticatable#authenticate! not found.'
           else
             Rails.logger.debug '[AUTHN] HttpHeaderAuthenticatable#authenticate! found.'
           end

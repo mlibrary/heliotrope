@@ -9,6 +9,8 @@ class SessionsController < ApplicationController
       # sign in successful - redirect back to where user came from (see Devise::Controllers::StoreLocation#stored_location_for)
       sign_in_static_cookie
       redirect_to stored_location_for(:user) || hyrax.dashboard_path
+    elsif Rails.env.production?
+      redirect_to stored_location_for(:user) || root_url
     else
       redirect_to new_authentications_path
     end
