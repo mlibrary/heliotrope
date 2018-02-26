@@ -37,7 +37,7 @@ feature 'Monograph Catalog Search' do
                                 translation: ['mouse']) }
 
   before do
-    login_as user
+    cosign_login_as user
     stub_out_redis
   end
 

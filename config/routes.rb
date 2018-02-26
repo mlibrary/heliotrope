@@ -35,12 +35,10 @@ Rails.application.routes.draw do
     concerns :searchable
   end
 
-  if Rails.env.eql?('development')
-    devise_for :users
-  else
-    # temporarily disable devise registrations and password resets for production #266
-    devise_for :users, skip: %i[registration password]
-  end
+  devise_for :users, path: '', path_names: { sign_in: 'login', sign_out: 'logout' }, controllers: { sessions: 'sessions' }, skip: %i[registration password]
+  get 'logoff', controller: :sessions, action: :terminate, as: :terminate_user_session
+  resource :authentications, only: %i[new create destroy]
+
   get 'users', controller: :users, action: :index, as: :users
   get 'users/:id', controller: :users, action: :show, as: :user
   get 'roles', controller: :roles, action: :index2, as: :roles

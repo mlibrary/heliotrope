@@ -17,10 +17,36 @@ class User < ApplicationRecord
   has_many :roles, dependent: :destroy
   has_many :presses, through: :roles, source: 'resource', source_type: "Press"
 
+  before_validation :generate_password, on: :create
+
+  def generate_password
+    self.password = SecureRandom.urlsafe_base64(12)
+    self.password_confirmation = password
+  end
+
+  # Use the http header as auth.  This app will be behind a reverse proxy
+  #   that will take care of the authentication.
+  Devise.add_module(:http_header_authenticatable,
+                    strategy: true,
+                    controller: :sessions,
+                    model: 'devise/models/http_header_authenticatable')
+
+  # Add our custom module to devise.
+  devise :http_header_authenticatable
+
+  def populate_attributes
+    # TODO: Override this for HttpHeaderAuthenticatable
+  end
+
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable, :validatable
+
+  # blacklight magic (may not be needed)
+  # if Blacklight::Utils.needs_attr_accessible?
+  #   attr_accessible :email, :password, :password_confirmation
+  # end
 
   alias_attribute :user_key, :email
 

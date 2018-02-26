@@ -6,11 +6,11 @@ RSpec.describe UsersController, type: :controller do
   describe "GET #index" do
     context 'unauthenticated user' do
       before { get :index }
-      it { expect(response).to redirect_to('/users/sign_in') }
+      it { expect(response).to redirect_to('/login') }
     end
     context "authenticated user" do
       before do
-        sign_in current_user
+        cosign_sign_in current_user
         get :index
       end
       context "non-admin" do
@@ -36,12 +36,12 @@ RSpec.describe UsersController, type: :controller do
     let(:user_id) { 0 }
     context 'unauthenticated user' do
       before { get :show, params: { id: user_id } }
-      it { expect(response).to redirect_to('/users/sign_in') }
+      it { expect(response).to redirect_to('/login') }
     end
     context "authenticated user" do
       let(:current_user) { create(:user) }
       before do
-        sign_in current_user
+        cosign_sign_in current_user
         get :show, params: { id: user_id }
       end
       context "user record not found" do

@@ -9,7 +9,7 @@ RSpec.describe FeaturedRepresentativesController, type: :controller do
 
   context "as a platform_admin" do
     # TODO: allow press admins to set/unset FeaturedRepresentatives
-    before { sign_in user }
+    before { cosign_sign_in user }
 
     describe '#save' do
       before { post :save, params: { monograph_id: monograph.id, file_set_id: file_set.id, kind: 'epub' } }

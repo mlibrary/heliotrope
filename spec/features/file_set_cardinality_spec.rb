@@ -48,7 +48,7 @@ feature 'FileSet Cardinality' do
     monograph.ordered_members << cover
     monograph.save!
     cover.save!
-    login_as user
+    cosign_login_as user
     stub_out_redis
   end
 

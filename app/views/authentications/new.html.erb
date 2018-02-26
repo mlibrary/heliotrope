@@ -1,0 +1,11 @@
+<h1>Authentication</h1>
+
+<%= link_to "Abort", authentications_path, class: 'btn btn-submit', method: :delete %>
+
+<h2>Fake HTTP Authentication</h2>
+
+<%= form_for @authentication do |f| %>
+  <%= f.label :email %>
+  <%= f.text_field :email %>
+  <%= f.submit %>
+<% end %>

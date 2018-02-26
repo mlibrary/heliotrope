@@ -10,19 +10,21 @@ describe ApplicationController do
         raise @the_exception
       end
     end
-    before do
-      routes.draw { get "trigger" => "anonymous#trigger" }
-    end
+
+    before { routes.draw { get "trigger" => "anonymous#trigger" } }
+
     it "ActiveFedora::ObjectNotFoundError with response unauthorized" do
       controller.the_exception = ActiveFedora::ObjectNotFoundError.new
       get :trigger
       expect(response).to be_unauthorized
     end
+
     # it "ActiveFedora::ActiveFedoraError with response unauthorized" do
     #   controller.the_exception = ActiveFedora::ActiveFedoraError.new
     #   get :trigger
     #   expect(response).to be_unauthorized
     # end
+
     it "ActiveRecord::RecordNotFound with response unauthorized" do
       controller.the_exception = ActiveRecord::RecordNotFound.new
       get :trigger

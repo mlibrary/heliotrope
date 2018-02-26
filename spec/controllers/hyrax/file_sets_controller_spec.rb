@@ -12,7 +12,7 @@ describe Hyrax::FileSetsController do
     monograph.ordered_members << file_set
     monograph.save!
     file_set.save!
-    sign_in user
+    cosign_sign_in user
   end
 
   context 'tombstone' do

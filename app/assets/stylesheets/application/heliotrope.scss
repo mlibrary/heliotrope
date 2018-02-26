@@ -675,6 +675,12 @@ footer.press {
   margin-right: auto !important;
 }
 
+/* Feel free to be horrified at the bonkers-ness of this construct. */
+.cozy-panel-toolbar div.cozy-control:not(:first-of-type) {
+  border-left: 1px solid white;
+}
+
+
 ///////////////////////////////////
 // SITE REQUIRES COOKIES ALERT
 ///////////////////////////////////
