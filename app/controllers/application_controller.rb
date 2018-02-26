@@ -50,16 +50,22 @@ class ApplicationController < ActionController::Base
     #   * ensuring the user will be logged out if REMOTE_USER is not set
     def clear_session_user
       return nil_request if request.nil?
+
       search = session[:search].dup if session[:search]
-      redirect_to_url = stored_location_for(:user)
+      user_return_to = session[:user_return_to].dup if session[:user_return_to]
+      flash_notice = flash[:notice]
+
       if valid_user_signed_in?
         sign_in_static_cookie
       else
         sign_out_static_cookie
-        request.env['warden'].logout
+        request.env['warden'].logout(:default)
+        expire_data_after_sign_out!
       end
+
       session[:search] = search
-      store_location_for(:user, redirect_to_url)
+      session[:user_return_to] = user_return_to
+      flash[:notice] = flash_notice
     end
 
     def valid_user_signed_in?
