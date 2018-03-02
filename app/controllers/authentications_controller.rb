@@ -6,9 +6,7 @@ class AuthenticationsController < ApplicationController
   end
 
   def create
-    email = authentication_params[:email]
-    user = email.split('@').first
-    ENV['FAKE_HTTP_X_REMOTE_USER'] = user
+    ENV['FAKE_HTTP_X_REMOTE_USER'] = authentication_params[:email]
     redirect_to new_user_session_path
   end
 
