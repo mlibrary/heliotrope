@@ -18,7 +18,10 @@ module EPub
       # when searching for "music". Any sort of stemming is going to be super hard
       # since we need to parse the DOM for results.
       # Try this for now.
-      node.content.index(/#{query}\W/i, offset)
+      # node.content.index(/#{query}\W/i, offset)
+      # Allowing regexes really messes up CFIs and highlighting and isn't really
+      # appropriate for this simple search feature
+      node.content.index(/#{Regexp.escape(query)}\W/i, offset)
     end
 
     private

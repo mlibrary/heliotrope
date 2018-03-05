@@ -50,5 +50,11 @@ RSpec.describe EPub::Search do
       let(:query) { "search" }
       it { expect(subject.node_query_match(node, query)).to eq nil }
     end
+
+    context "regexes don't work: looking for sea*.ch will not match 'search'" do
+      let(:node) { doc.xpath("//p")[0].children[0] }
+      let(:query) { "sea*.ch" }
+      it { expect(subject.node_query_match(node, query)).to eq nil }
+    end
   end
 end
