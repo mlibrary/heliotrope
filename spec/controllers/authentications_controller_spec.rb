@@ -13,7 +13,7 @@ RSpec.describe AuthenticationsController, type: :controller do
     subject { post :create, params: { authentication: { email: 'wolverine@umich.edu' } } }
 
     it do
-      expect(ENV).to receive(:[]=).with('FAKE_HTTP_X_REMOTE_USER', 'wolverine')
+      expect(ENV).to receive(:[]=).with('FAKE_HTTP_X_REMOTE_USER', 'wolverine@umich.edu')
       is_expected.to redirect_to new_user_session_path
     end
   end
