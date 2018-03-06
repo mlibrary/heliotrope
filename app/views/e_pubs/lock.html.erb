@@ -1,0 +1,11 @@
+<h2>EPUB Subscriptions</h2>
+<ul>
+  <% @subscriptions.each do |subscription| %>
+    <% if subscription.subscriber == @subscriber %>
+      <li><%= link_to "#{subscription.subscriber} => #{subscription.publication}", main_app.unsubscribe_epub_path(id: subscription.publication.split(':').last), method: :delete %></li>
+    <% else %>
+      <li><%= "#{subscription.subscriber} => #{subscription.publication}" %></li>
+    <% end %>
+  <% end %>
+  <li><%= link_to "#{@subscriber.id} => #{@publication.id}", main_app.subscribe_epub_path(id: @publication.id.split(':').last), method: :post %></li>
+</ul>

@@ -42,6 +42,30 @@ describe FeaturedRepresentatives::FileSetPresenter do
       it "is an epub" do
         expect(subject.epub?).to be true
       end
+
+      context "lock" do
+        let(:epub_entity) { Entity.new(type: :epub, identifier: 'fid1') }
+
+        before { allow(Subscription).to receive(:find_by).with(subscriber: epub_entity.id, publication: epub_entity.id).and_return(subscription) }
+
+        context "unlocked" do
+          let(:subscription) { nil }
+
+          it do
+            expect(subject.epub_locked?).to be false
+            expect(subject.epub_unlocked?).to be true
+          end
+        end
+
+        context "locked" do
+          let(:subscription) { double('subscription') }
+
+          it do
+            expect(subject.epub_locked?).to be true
+            expect(subject.epub_unlocked?).to be false
+          end
+        end
+      end
     end
   end
 

@@ -1,0 +1,21 @@
+<% if member.epub? %>
+  <% if can? :edit, member.id %>
+    <% if member.epub_locked? %>
+      <%= link_to t('.open'), main_app.unlock_epub_path(member.id),
+        method: :delete, title: t('.open'),
+        data: { confirm: t('.open') },
+        class: 'btn btn-default' %>
+    <% else %>
+      <%= link_to t('.restrict'), main_app.lock_epub_path(member.id),
+        method: :post, title: t('.restrict'),
+        data: { confirm: t('.restrict') },
+        class: 'btn btn-default' %>
+    <% end %>
+  <% else %>
+    <% if member.epub_locked? %>
+      <%= t('.open') %>
+    <% else %>
+      <%= t('.restricted') %>
+    <% end %>
+  <% end %>
+<% end %>

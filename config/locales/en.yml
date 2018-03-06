@@ -73,6 +73,11 @@ en:
   doi: "DOI"
   editor: "Editors"
   embargo_release_date: "Embargo Release Date"
+  e_pubs:
+    form:
+      open: "Open"
+      restrict: "Restrict"
+      restricted: "Restricted"
   errors:
     messages:
       carrierwave_processing_error: failed to be processed
@@ -99,6 +104,10 @@ en:
         destroyed: "User role has been removed."
         batch_error: "There was a problem saving the user role(s)."
   holding_contact: "Holding Contact"
+  hyrax:
+    base:
+      items:
+        access: "Access"
   isbn: "ISBN (Hardcover)"
   isbn_ebook: "ISBN (E-Book)"
   isbn_paper: "ISBN (Paper)"
