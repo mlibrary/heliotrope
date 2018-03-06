@@ -6,6 +6,11 @@ resque_web_constraint = lambda do |request|
 end
 
 Rails.application.routes.draw do
+  get 'lock/epubs/:id', controller: :e_pubs, action: :lock, as: :epub_lock
+  post 'lock/epubs/:id', controller: :e_pubs, action: :lock, as: :lock_epub
+  delete 'lock/epubs/:id', controller: :e_pubs, action: :lock, as: :unlock_epub
+  post 'subscription/epubs/:id', controller: :e_pubs, action: :subscription, as: :subscribe_epub
+  delete 'subscription/epubs/:id', controller: :e_pubs, action: :subscription, as: :unsubscribe_epub
   get 'epubs/:id', controller: :e_pubs, action: :show, as: :epub
   get 'epubs/:id/*file', controller: :e_pubs, action: :file, as: :epub_file
   get 'epub_search/:id', controller: :e_pubs, action: :search, as: :epub_search

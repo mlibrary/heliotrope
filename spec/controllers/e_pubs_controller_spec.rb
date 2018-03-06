@@ -4,6 +4,10 @@ require 'rails_helper'
 require 'json'
 
 RSpec.describe EPubsController, type: :controller do
+  let(:show) { true }
+
+  before { allow_any_instance_of(described_class).to receive(:show?).and_return(show) }
+
   describe "#show" do
     context 'not found' do
       before { get :show, params: { id: :id } }
@@ -35,9 +39,19 @@ RSpec.describe EPubsController, type: :controller do
         get :show, params: { id: file_set.id }
       end
       after { FeaturedRepresentative.destroy_all }
+
       it do
-        expect(response).to_not have_http_status(:unauthorized)
         expect(response).to have_http_status(:success)
+        expect(response.body.empty?).to be true
+      end
+
+      context 'access denied' do
+        let(:show) { false }
+
+        it do
+          expect(response).to have_http_status(:redirect)
+          expect(response).to redirect_to(lock_epub_path)
+        end
       end
     end
 
@@ -64,7 +78,6 @@ RSpec.describe EPubsController, type: :controller do
     context 'not found' do
       before { get :file, params: { id: :id, file: 'META-INF/container', format: 'xml' } }
       it do
-        expect(response).to_not have_http_status(:unauthorized)
         expect(response).to have_http_status(:success)
         expect(response.body.empty?).to be true
       end
@@ -75,7 +88,6 @@ RSpec.describe EPubsController, type: :controller do
 
       before { get :file, params: { id: file_set.id, file: 'META-INF/container', format: 'xml' } }
       it do
-        expect(response).to_not have_http_status(:unauthorized)
         expect(response).to have_http_status(:success)
         expect(response.body.empty?).to be true
       end
@@ -86,7 +98,6 @@ RSpec.describe EPubsController, type: :controller do
 
       before { get :file, params: { id: file_set.id, file: 'META-INF/container', format: 'xml' } }
       it do
-        expect(response).to_not have_http_status(:unauthorized)
         expect(response).to have_http_status(:success)
         expect(response.body.empty?).to be true
       end
@@ -106,7 +117,6 @@ RSpec.describe EPubsController, type: :controller do
       context 'file not found' do
         before { get :file, params: { id: file_set.id, file: 'META-INF/container', format: 'txt' } }
         it do
-          expect(response).to_not have_http_status(:unauthorized)
           expect(response).to have_http_status(:success)
           expect(response.body.empty?).to be true
         end
@@ -115,10 +125,17 @@ RSpec.describe EPubsController, type: :controller do
       context 'file exist' do
         before { get :file, params: { id: file_set.id, file: 'META-INF/container', format: 'xml' } }
         it do
-          expect(response).to_not have_http_status(:unauthorized)
           expect(response).to have_http_status(:success)
           expect(response.body.empty?).to be false
           expect(response.header['Content-Type']).to include('application/xml')
+        end
+
+        context 'access denied' do
+          let(:show) { false }
+          it do
+            expect(response).to have_http_status(:success)
+            expect(response.body.empty?).to be true
+          end
         end
       end
 
@@ -138,7 +155,6 @@ RSpec.describe EPubsController, type: :controller do
             get :file, params: { id: file_set.id, file: 'META-INF/container', format: 'xml' }
           end
           it "is not found" do
-            expect(response).to_not have_http_status(:unauthorized)
             expect(response).to have_http_status(:success)
             expect(response.body.empty?).to be true
           end
@@ -177,6 +193,15 @@ RSpec.describe EPubsController, type: :controller do
         expect(response).to have_http_status(:success)
         expect(JSON.parse(response.body)["search_results"].length).to eq 3
       end
+
+      context 'access denied' do
+        let(:show) { false }
+
+        it do
+          expect(response).to have_http_status(:not_found)
+          expect(response.body.empty?).to be true
+        end
+      end
     end
 
     context "searches must be 3 or more characters" do
@@ -204,6 +229,87 @@ RSpec.describe EPubsController, type: :controller do
         expect(JSON.parse(response.body)["search_results"].length).to eq 1
         expect(JSON.parse(response.body)["search_results"][0]["snippet"]).to eq "This is a snippet"
       end
+    end
+  end
+
+  describe '#lock' do
+    let(:user) { create(:user) }
+    let(:monograph) { create(:monograph) }
+    let(:file_set) { create(:file_set, id: '999999999', content: File.open(File.join(fixture_path, 'moby-dick.epub'))) }
+    let!(:fr) { create(:featured_representative, monograph_id: monograph.id, file_set_id: file_set.id, kind: 'epub') }
+    before do
+      monograph.ordered_members << file_set
+      monograph.save!
+      file_set.save!
+    end
+    after { FeaturedRepresentative.destroy_all }
+
+    it do
+      # Open Access
+      session[:show_set] = []
+      get :lock, params: { id: file_set.id }
+      expect(session[:show_set].include?(file_set.id)).to be true
+      expect(response).to redirect_to(epub_path)
+
+      # Restricted Access
+      post :lock, params: { id: file_set.id }
+      expect(session[:show_set].include?(file_set.id)).to be false
+
+      # Anonymous User
+      get :lock, params: { id: file_set.id }
+      expect(session[:show_set].include?(file_set.id)).to be false
+      expect(response).to redirect_to(new_user_session_path)
+
+      # Authenticated User
+      cosign_sign_in(user)
+      get :lock, params: { id: file_set.id }
+      expect(session[:show_set].include?(file_set.id)).to be false
+      expect(response).to render_template(:lock)
+
+      # Subscribed User
+      post :subscription, params: { id: file_set.id }
+      expect(session[:show_set].include?(file_set.id)).to be false
+      get :lock, params: { id: file_set.id }
+      expect(session[:show_set].include?(file_set.id)).to be true
+      expect(response).to redirect_to(epub_path)
+    end
+
+    context 'set/clear lock' do
+      let(:epub_1) { '1' }
+      let(:epub_2) { '2' }
+
+      it do
+        session[:show_set] = [epub_1, file_set.id, epub_2]
+        expect { post :lock, params: { id: file_set.id } }.to change { Subscription.count }.by(1)
+        expect(response).to redirect_to(monograph_show_path(monograph.id))
+        expect(session[:show_set].include?(epub_1)).to be true
+        expect(session[:show_set].include?(file_set.id)).to be false
+        expect(session[:show_set].include?(epub_2)).to be true
+        session[:show_set] << file_set.id
+        expect { delete :lock, params: { id: file_set.id } }.to change { Subscription.count }.by(-1)
+        expect(response).to redirect_to(monograph_show_path(monograph.id))
+        expect(session[:show_set].include?(epub_1)).to be true
+        expect(session[:show_set].include?(file_set.id)).to be false
+        expect(session[:show_set].include?(epub_2)).to be true
+      end
+    end
+  end
+
+  describe '#subscription' do
+    let(:epub_1) { '1' }
+    let(:epub_2) { '2' }
+    let(:user) { create(:user) }
+
+    it do
+      cosign_sign_in(user)
+      session[:show_set] = [epub_1, epub_2]
+      expect { post :subscription, params: { id: epub_1 } }.to change { Subscription.count }.by(1)
+      expect(session[:show_set].include?(epub_1)).to be false
+      expect(session[:show_set].include?(epub_2)).to be true
+      session[:show_set] << epub_1
+      expect { delete :subscription, params: { id: epub_1 } }.to change { Subscription.count }.by(-1)
+      expect(session[:show_set].include?(epub_1)).to be false
+      expect(session[:show_set].include?(epub_2)).to be true
     end
   end
 end

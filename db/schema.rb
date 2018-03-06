@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180109210107) do
+ActiveRecord::Schema.define(version: 20180228213312) do
 
   create_table "bookmarks", id: :integer, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.integer "user_id", null: false
@@ -432,6 +432,14 @@ ActiveRecord::Schema.define(version: 20180109210107) do
     t.integer "permission_template_id"
     t.boolean "active"
     t.index ["permission_template_id", "name"], name: "index_sipity_workflows_on_permission_template_and_name", unique: true
+  end
+
+  create_table "subscriptions", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.string "subscriber"
+    t.string "publication"
+    t.index ["publication"], name: "index_subscriptions_on_publication"
+    t.index ["subscriber", "publication"], name: "index_subscriptions_on_subscriber_and_publication", unique: true
+    t.index ["subscriber"], name: "index_subscriptions_on_subscriber"
   end
 
   create_table "tinymce_assets", id: :integer, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
