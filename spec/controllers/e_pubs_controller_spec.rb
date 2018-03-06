@@ -178,5 +178,32 @@ RSpec.describe EPubsController, type: :controller do
         expect(JSON.parse(response.body)["search_results"].length).to eq 3
       end
     end
+
+    context "searches must be 3 or more characters" do
+      before { get :search, params: { id: file_set.id, q: "no" } }
+
+      it { expect(response).to have_http_status(:not_found) }
+    end
+
+    context "if a search is cached, return the cached search" do
+      let(:results) do
+        { q: 'search term',
+          search_results: [
+            cfi: "/6/84/[chap]!/4/2/2/,/1:66,/1:77",
+            snippet: "This is a snippet"
+          ] }
+      end
+
+      before do
+        allow(Rails.cache).to receive(:fetch).and_return(results)
+        get :search, params: { id: file_set.id, q: "White Whale" }
+      end
+
+      it do
+        expect(response).to have_http_status(:success)
+        expect(JSON.parse(response.body)["search_results"].length).to eq 1
+        expect(JSON.parse(response.body)["search_results"][0]["snippet"]).to eq "This is a snippet"
+      end
+    end
   end
 end
