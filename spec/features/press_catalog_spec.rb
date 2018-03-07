@@ -12,6 +12,7 @@ feature 'Press Catalog' do
     context 'with monographs for different presses' do
       let!(:red) { create(:public_monograph, title: ['The Red Book'], press: umich.subdomain) }
       let!(:blue) { create(:public_monograph, title: ['The Blue Book'], press: umich.subdomain) }
+      let!(:invisible) { create(:private_monograph, title: ['The Invisible Book'], press: umich.subdomain) }
       let!(:colors) { create(:public_monograph, title: ['Red and Blue are Colors'], press: psu.subdomain) }
 
       scenario 'visits the catalog page for a press' do
@@ -43,6 +44,7 @@ feature 'Press Catalog' do
         expect(page).to have_selector('#documents .document', count: 2)
         expect(page).to     have_link red.title.first
         expect(page).to     have_link blue.title.first
+        expect(page).to_not have_link invisible.title.first
         expect(page).to_not have_link colors.title.first
 
         # Search within this press catalog
@@ -53,6 +55,7 @@ feature 'Press Catalog' do
         expect(page).to have_selector('#documents .document', count: 1)
         expect(page).to     have_link red.title.first
         expect(page).to_not have_link blue.title.first
+        expect(page).to_not have_link invisible.title.first
         expect(page).to_not have_link colors.title.first
 
         expect(page).to have_link("View book materials", href: monograph_catalog_path(red, locale: 'en'))
@@ -69,7 +72,30 @@ feature 'Press Catalog' do
         expect(page).to have_selector('#keyword-search-submit')
         expect(page).to have_selector('#catalog_search')
       end
+
+      context 'with a press that also has "child presses"' do
+        let(:umich_child_1) { create(:press, subdomain: 'umich_child_1', parent_id: umich.id) }
+        let(:umich_child_2) { create(:press, subdomain: 'umich_child_2', parent_id: umich.id) }
+        let(:psu_child) { create(:press, subdomain: 'psu_child', parent_id: psu.id) }
+        let!(:purple) { create(:public_monograph, title: ['The Purple Book'], press: umich_child_1.subdomain) }
+        let!(:green) { create(:public_monograph, title: ['The Green Book'], press: umich_child_2.subdomain) }
+        let!(:hues) { create(:public_monograph, title: ['Purple and Green be Hues'], press: psu_child.subdomain) }
+
+        scenario 'visits the catalog page for a press' do
+          visit "/#{umich.subdomain}"
+          # I should see only the public monographs for umich press and its children
+          expect(page).to have_selector('#documents .document', count: 4)
+          expect(page).to     have_link red.title.first
+          expect(page).to     have_link blue.title.first
+          expect(page).to_not have_link invisible.title.first
+          expect(page).to     have_link purple.title.first
+          expect(page).to     have_link green.title.first
+          expect(page).to_not have_link colors.title.first
+          expect(page).to_not have_link hues.title.first
+        end
+      end
     end
+
     context 'with with a monograph with multiple authors' do
       let!(:monograph) { create(:public_monograph, title: ['The Two Authors\' Book'], creator_family_name: 'Johns', creator_given_name: 'Jimmy', contributor: ['Sub Way'], press: umich.subdomain) }
 
