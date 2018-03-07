@@ -182,7 +182,11 @@ RSpec.describe EPubsController, type: :controller do
     context "searches must be 3 or more characters" do
       before { get :search, params: { id: file_set.id, q: "no" } }
 
-      it { expect(response).to have_http_status(:not_found) }
+      it do
+        expect(response).to have_http_status(:success)
+        expect(JSON.parse(response.body)["q"]).to eq "no"
+        expect(JSON.parse(response.body)["search_results"].length).to eq 0
+      end
     end
 
     context "if a search is cached, return the cached search" do

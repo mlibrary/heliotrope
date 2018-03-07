@@ -40,17 +40,13 @@ class EPubsController < ApplicationController
     end
 
     # due to performance issues, must have 3 or more characters to search
-    return head :not_found if params[:q].length < 3
+    return render json: { q: params[:q], search_results: [] } if params[:q].length < 3
 
     results = Rails.cache.fetch(search_cache_key(params[:id], params[:q]), expires_in: 30.days) do
       FactoryService.e_pub_publication(params[:id]).search(params[:q])
     end
 
-    if results[:search_results]
-      render json: results
-    else
-      head :not_found
-    end
+    render json: results
   end
 
   def search_cache_key(id, query)
