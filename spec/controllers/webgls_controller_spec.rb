@@ -44,7 +44,6 @@ RSpec.describe WebglsController, type: :controller do
 
       it "does not return a nonexistent file" do
         get :file, params: { id: file_set.id, file: 'Build/NotAThing', format: 'js' }
-        # TODO: really, shouldn't this be a 404/:not_found?
         expect(response).to have_http_status(:success)
         expect(response.body.empty?).to be true
       end
@@ -53,6 +52,24 @@ RSpec.describe WebglsController, type: :controller do
         get :file, params: { id: file_set.id, file: '/etc/passwd', format: '' }
         expect(response).to have_http_status(:success)
         expect(response.body.empty?).to be true
+      end
+
+      context "without an Accept-Encoding gzip header" do
+        it "returns an uncompressed file" do
+          get :file, params: { id: file_set.id, file: 'Build/thing.asm.memory', format: 'unityweb' }
+          expect(response).to have_http_status(:success)
+          expect(response.body).to eq "var things = \"things\";\n"
+        end
+      end
+
+      context "with an Accept-Encoding gzip header" do
+        let(:header) { { 'Accept-Encoding' => 'gzip, deflate, br' } }
+        it "returns a compressed file" do
+          request.headers.merge! header
+          get :file, params: { id: file_set.id, file: 'Build/thing.asm.memory', format: 'unityweb' }
+          expect(response).to have_http_status(:success)
+          expect(response.body).to eq "\u001F\x8B\b\bT\xAB\xA2Z\u0000\u0003thing.asm.memory.unityweb\u0000+K,R(\xC9\xC8\xCCK/V\xB0UP\x82\xB0\x94\xAC\xB9\u0000\xD4\xDB\xCD\xFC\u0017\u0000\u0000\u0000"
+        end
       end
     end
   end

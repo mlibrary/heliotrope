@@ -23,7 +23,14 @@ class WebglsController < ApplicationController
   end
 
   def file
-    render plain: FactoryService.webgl_unity(params[:id]).read(params[:file] + "." + params[:format]), content_type: Mime::Type.lookup_by_extension(params[:format]), layout: false
+    # https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Accept-Encoding
+    accept_headers = request.headers['Accept-Encoding'] || ""
+    send_compressed = if accept_headers.include? 'gzip'
+                        true
+                      else
+                        false
+                      end
+    render plain: FactoryService.webgl_unity(params[:id]).read(params[:file] + "." + params[:format], send_compressed), content_type: Mime::Type.lookup_by_extension(params[:format]), layout: false
   rescue StandardError => e
     Rails.logger.info("WebglsController.file(#{params[:file] + '.' + params[:format]}) mapping to 'Content-Type': #{Mime::Type.lookup_by_extension(params[:format])} raised #{e}")
     head :no_content, status: :not_found
