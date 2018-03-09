@@ -209,5 +209,14 @@ RSpec.describe EPubsController, type: :controller do
         expect(JSON.parse(response.body)["search_results"][0]["snippet"]).to eq "This is a snippet"
       end
     end
+
+    context "when the search query is not found" do
+      before { get :search, params: { id: file_set.id, q: "glubmerschmup" } }
+      it "returns an empty list" do
+        expect(response).to have_http_status(:success)
+        expect(JSON.parse(response.body)["q"]).to eq "glubmerschmup"
+        expect(JSON.parse(response.body)["search_results"]).to eq []
+      end
+    end
   end
 end
