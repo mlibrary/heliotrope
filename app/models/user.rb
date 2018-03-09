@@ -95,4 +95,8 @@ class User < ApplicationRecord
   def to_s
     user_key
   end
+
+  def self.guest(user_key:)
+    Guest.new(user_key: user_key)
+  end
 end

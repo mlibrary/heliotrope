@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-describe User do
+RSpec.describe User do
   describe '#user_key' do
     subject { user.user_key }
     let(:user) { described_class.new(email: 'foo@example.com') }
@@ -85,5 +85,17 @@ describe User do
       expect(editor.groups).to eq ["blue_editor"]
       expect(platform_admin.groups).to eq ["blue_admin", "blue_editor", "red_admin", "red_editor", "admin"]
     end
+  end
+
+  describe '#guest' do
+    subject { described_class.guest(user_key: email) }
+
+    let(:email) { 'wolverine@umich.edu' }
+
+    it { is_expected.to be_a_kind_of(described_class) }
+
+    it { is_expected.to be_an_instance_of(Guest) }
+
+    it { expect(subject.email).to eq(email) }
   end
 end

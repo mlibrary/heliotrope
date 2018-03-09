@@ -59,8 +59,6 @@ RSpec.describe Devise::Strategies::HttpHeaderAuthenticatable do
   end
 
   describe 'authenticate!' do
-    let(:user) { create(:user, email: email) }
-    let(:email) { '' }
     let(:request) { double(headers: header) }
 
     context 'without HTTP_X_REMOTE_USER header' do
@@ -82,87 +80,50 @@ RSpec.describe Devise::Strategies::HttpHeaderAuthenticatable do
         end
       end
 
-      context 'with a user' do
-        context 'with a umich account' do
-          let(:email) { 'wolverine@umich.edu' }
-          let(:remote_user) { user.user_key.split('@').first } # unique name
+      ['umich.edu', 'friends.com'].each do |domain|
+        let(:email) { "name@#{domain}" }
+        let(:remote_user) { domain == 'umich.edu' ? 'name' : email }
 
-          context 'with a new user' do
+        context "with user name@#{domain}" do
+          context 'when a new user' do
             before { allow(User).to receive(:find_by).with(user_key: user.user_key).and_return(nil) }
 
             context 'when create_user_on_login is enabled' do
-              it 'allows a new user' do
+              let(:user) { User.new(user_key: email) }
+
+              it 'allocates new user' do
                 allow(Rails.configuration).to receive(:create_user_on_login).and_return(true)
-                expect(User).to receive(:create).with(user_key: user.user_key).never
                 expect(User).to receive(:new).with(user_key: user.user_key).once.and_return(user)
-                expect_any_instance_of(User).to receive(:populate_attributes).once
+                expect(Guest).to receive(:new).with(user_key: user.user_key).never
+                expect(user).to receive(:populate_attributes).once
                 expect(subject).to be_valid
                 expect(subject.authenticate!).to eq(:success)
               end
             end
 
             context 'when create_user_on_login is disabled' do
-              it 'rejects a new user' do
+              let(:user) { User.guest(user_key: email) }
+
+              it 'allocates new guest' do
                 allow(Rails.configuration).to receive(:create_user_on_login).and_return(false)
-                expect(User).to receive(:create).with(user_key: user.user_key).never
                 expect(User).to receive(:new).with(user_key: user.user_key).never
-                expect_any_instance_of(User).to receive(:populate_attributes).never
-                expect(subject).to be_valid
-                expect(subject.authenticate!).to eq(:failure)
-              end
-            end
-          end
-
-          context 'with an existing user' do
-            before { allow(User).to receive(:find_by).with(user_key: user.user_key).and_return(user) }
-
-            it 'accepts the existing user' do
-              expect(User).to receive(:create).with(user_key: user.user_key).never
-              expect(User).to receive(:new).with(user_key: user.user_key).never
-              expect_any_instance_of(User).to receive(:populate_attributes).never
-              expect(subject).to be_valid
-              expect(subject.authenticate!).to eq(:success)
-            end
-          end
-        end
-
-        context 'with a umich friends account' do
-          let(:email) { 'wolverine@friends.com' }
-          let(:remote_user) { user.user_key } # email address
-
-          context 'with a new user' do
-            before { allow(User).to receive(:find_by).with(user_key: user.user_key).and_return(nil) }
-
-            context 'when create_user_on_login is enabled' do
-              it 'allows a new user' do
-                allow(Rails.configuration).to receive(:create_user_on_login).and_return(true)
-                expect(User).to receive(:create).with(user_key: user.user_key).never
-                expect(User).to receive(:new).with(user_key: user.user_key).once.and_return(user)
-                expect_any_instance_of(User).to receive(:populate_attributes).once
+                expect(Guest).to receive(:new).with(user_key: user.user_key).once.and_return(user)
+                expect(user).to receive(:populate_attributes).once
                 expect(subject).to be_valid
                 expect(subject.authenticate!).to eq(:success)
               end
             end
-
-            context 'when create_user_on_login is disabled' do
-              it 'rejects a new user' do
-                allow(Rails.configuration).to receive(:create_user_on_login).and_return(false)
-                expect(User).to receive(:create).with(user_key: user.user_key).never
-                expect(User).to receive(:new).with(user_key: user.user_key).never
-                expect_any_instance_of(User).to receive(:populate_attributes).never
-                expect(subject).to be_valid
-                expect(subject.authenticate!).to eq(:failure)
-              end
-            end
           end
 
-          context 'with an existing user' do
+          context 'when an existing user' do
+            let(:user) { create(:user, user_key: email) }
+
             before { allow(User).to receive(:find_by).with(user_key: user.user_key).and_return(user) }
 
             it 'accepts the existing user' do
-              expect(User).to receive(:create).with(user_key: user.user_key).never
               expect(User).to receive(:new).with(user_key: user.user_key).never
-              expect_any_instance_of(User).to receive(:populate_attributes).never
+              expect(Guest).to receive(:new).with(user_key: user.user_key).never
+              expect(user).to receive(:populate_attributes).never
               expect(subject).to be_valid
               expect(subject.authenticate!).to eq(:success)
             end

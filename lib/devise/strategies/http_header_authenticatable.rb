@@ -35,14 +35,15 @@ module Devise
         end
 
         def new_user
-          user = nil
-          if Rails.configuration.create_user_on_login
-            debug_log "New user: '#{user_key}'"
-            user = User.new(user_key: user_key)
-            user.populate_attributes
-          else
-            debug_log "Did not find and will not create: '#{user_key}'"
-          end
+          user =
+            if Rails.configuration.create_user_on_login
+              debug_log "New user: '#{user_key}'"
+              User.new(user_key: user_key)
+            else
+              debug_log "Guest user: '#{user_key}'"
+              User.guest(user_key: user_key)
+            end
+          user.populate_attributes
           user
         end
 
