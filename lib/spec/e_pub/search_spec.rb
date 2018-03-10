@@ -15,7 +15,7 @@ RSpec.describe EPub::Search do
 
     context 'db results empty' do
       let(:query) { 'nobody' }
-      it { is_expected.to match(q: query) }
+      it { is_expected.to match(q: query, search_results: []) }
     end
 
     context 'db results non empty' do

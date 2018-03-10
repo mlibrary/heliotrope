@@ -64,7 +64,7 @@ module EPub
       def results_from_chapters(db_results, query)
         results = {}
         results[:q] = query
-        results[:search_results] = [] if db_results.length.positive?
+        results[:search_results] = []
 
         db_results.each do |chapter|
           file = File.join(::EPub.path(@publication.id), File.dirname(@publication.content_file), chapter[:href])
