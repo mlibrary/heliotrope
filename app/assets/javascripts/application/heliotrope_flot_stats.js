@@ -17,6 +17,7 @@
 //    behind (west of GMT)
 // 6) added windows resize function, throttled, so that the graphs can be responsive with a width in percent
 // 7) changed "series" and "selection" color for both graphs to rgb(90, 145, 180)
+// 8) check for #usage-stats in heliotropeStatFlot's guard clause (https://github.com/mlibrary/heliotrope/issues/1615)
 
 // see 3) above ^
 var heliotropeStatsAlreadyDrawn = false;
@@ -47,7 +48,7 @@ $(document).on('turbolinks:load', function() {
 });
 
 function heliotropeStatFlot() {
-  if (typeof heliotrope_item_stats === "undefined") {
+  if (! $('#usage-stats').length || typeof heliotrope_item_stats === "undefined") {
     return;
   }
 
