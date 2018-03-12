@@ -1,0 +1,18 @@
+<ul>
+  <% products.each do |product| %>
+    <li><%= product.identifier %> <%= link_to(component_product_path(component, product), method: :delete, class: "btn btn-default") do %>
+        <span class="glyphicon glyphicon-minus" aria-hidden="true"></span> Remove
+      <% end %>
+    </li>
+  <% end %>
+  <% if component.not_products.present? %>
+    <li>
+      <%= form_tag(component_products_path(component), method: "post") do %>
+        <%= select_tag "id", options_from_collection_for_select(component.not_products, "id", "identifier") %>
+        <%= button_tag(type: 'submit',  class: 'btn btn-default') do %>
+          <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Add
+        <% end %>
+      <% end %>
+    </li>
+  <% end %>
+</ul>

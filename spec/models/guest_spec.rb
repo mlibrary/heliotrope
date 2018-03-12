@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe Guest do
+RSpec.describe Guest, type: :model do
   subject { user }
 
   let(:user) { described_class.new(email: email) }

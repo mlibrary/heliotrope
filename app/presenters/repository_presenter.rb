@@ -1,6 +1,18 @@
 # frozen_string_literal: true
 
 class RepositoryPresenter < ApplicationPresenter
+  def product_ids
+    Product.all.map(&:id)
+  end
+
+  def component_ids
+    Component.all.map(&:id)
+  end
+
+  def lessee_ids
+    Lessee.all.map(&:id)
+  end
+
   def publisher_ids
     Press.all.map(&:id)
   end

@@ -1,0 +1,27 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Lessees</h1>
+
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>Identifier</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @lessees.each do |lessee| %>
+      <tr>
+        <td><%= lessee.identifier %></td>
+        <td><%= link_to 'Show', lessee %></td>
+        <td><%= link_to 'Edit', edit_lessee_path(lessee) %></td>
+        <td><%= link_to 'Destroy', lessee, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Lessee', new_lessee_path %>

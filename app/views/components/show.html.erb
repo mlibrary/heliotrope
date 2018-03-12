@@ -1,0 +1,15 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Component</h1>
+<ul>
+  <li><%= @component.handle %></li>
+</ul>
+
+<h2>Products</h2>
+<%= render partial: 'products', locals: { component: @component, products: @component.products } %>
+
+<h2>Lessees</h2>
+<%= render partial: 'lessees/list', locals: { lessees: @component.lessees } %>
+
+<%= link_to 'Edit', edit_component_path(@component) %> |
+<%= link_to 'Back', components_path %>

@@ -5,7 +5,25 @@ resque_web_constraint = lambda do |request|
   current_user.present? && current_user.respond_to?(:platform_admin?) && current_user.platform_admin?
 end
 
+platform_administrator_constraint = lambda do |request|
+  current_user = request.env['warden'].user
+  current_user.present? && current_user.respond_to?(:platform_admin?) && current_user.platform_admin?
+end
+
 Rails.application.routes.draw do
+  constraints platform_administrator_constraint do
+    resources :lessees do
+      resources :products, only: %i[create destroy]
+    end
+    resources :components do
+      resources :products, only: %i[create destroy]
+    end
+    resources :products do
+      resources :components, only: %i[create destroy]
+      resources :lessees, only: %i[create destroy]
+    end
+  end
+
   get 'epubs/:id', controller: :e_pubs, action: :show, as: :epub
   get 'epubs/:id/*file', controller: :e_pubs, action: :file, as: :epub_file
   get 'epub_search/:id', controller: :e_pubs, action: :search, as: :epub_search

@@ -14,6 +14,45 @@ describe RepositoryPresenter do
     it { expect(subject.current_user).to eq current_user }
   end
 
+  describe '#product_ids' do
+    subject { described_class.new(current_user).product_ids }
+
+    let!(:product1) { create(:product) }
+    let!(:product2) { create(:product) }
+
+    it do
+      expect(subject).to be_a Array
+      expect(subject.length).to eq 2
+      expect(subject).to include(product1.id, product2.id)
+    end
+  end
+
+  describe '#component_ids' do
+    subject { described_class.new(current_user).component_ids }
+
+    let!(:component1) { create(:component) }
+    let!(:component2) { create(:component) }
+
+    it do
+      expect(subject).to be_a Array
+      expect(subject.length).to eq 2
+      expect(subject).to include(component1.id, component2.id)
+    end
+  end
+
+  describe '#lessee_ids' do
+    subject { described_class.new(current_user).lessee_ids }
+
+    let!(:lessee1) { create(:lessee) }
+    let!(:lessee2) { create(:lessee) }
+
+    it do
+      expect(subject).to be_a Array
+      expect(subject.length).to eq 2
+      expect(subject).to include(lessee1.id, lessee2.id)
+    end
+  end
+
   describe '#publisher_ids' do
     subject { described_class.new(current_user).publisher_ids }
 
