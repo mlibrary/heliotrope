@@ -13,4 +13,4 @@ cosign_logout_url: ""
 
 # Should we create users automatically on first login?
 # This supports convenient single sign-on account provisioning
-create_user_on_login: true
+create_user_on_login: false
