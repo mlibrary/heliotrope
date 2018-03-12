@@ -77,7 +77,7 @@ gem 'clamav', group: :production
 gem 'config'
 
 # Use gem version of cozy-sun-bear
-gem 'cozy-sun-bear', git: 'https://github.com/mlibrary/cozy-sun-bear', ref: 'd71afea258d998e0ef13922711a3e41a46c7ee10'
+gem 'cozy-sun-bear', git: 'https://github.com/mlibrary/cozy-sun-bear', ref: '9c082b6a910e68a252f2c191e62cab1e54fa4120'
 
 # Force epub search results to be sentences
 gem 'pragmatic_segmenter', '~> 0.3'
