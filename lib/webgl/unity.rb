@@ -32,12 +32,21 @@ module Webgl
       Cache.purge(id)
     end
 
-    def read(file_entry)
+    def read(file_entry, send_compressed = false)
       return Unity.null_object.read(file_entry) unless Cache.cached?(id)
       entry_file = ::Webgl.path_entry(id, file_entry)
 
       return Unity.null_object.read(entry_file) unless File.exist?(entry_file)
-      File.read(entry_file)
+
+      compressed_file = entry_file + ".gz"
+
+      if send_compressed && File.exist?(compressed_file)
+        # ::Webgl.logger.debug("Sent compressed file: #{compressed_file}")
+        File.read(compressed_file)
+      else
+        # ::Webgl.logger.debug("Sent UNcompressed file: #{entry_file}")
+        File.read(entry_file)
+      end
     end
 
     private
