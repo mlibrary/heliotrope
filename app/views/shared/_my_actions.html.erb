@@ -13,18 +13,10 @@
     </a>
 
     <ul class="dropdown-menu">
-      <li><%= link_to 'Fulcrum', main_app.fulcrum_path, role: 'menuitem'  %></li>
-      <li class="divider"></li>
-      <li><%= link_to 'Dashboard', hyrax.dashboard_path, role: 'menuitem'  %></li>
-      <li class="divider"></li>
+      <% show_fulcrum_link = current_user && current_user.platform_admin? %>
+      <% show_dashboard_link = current_user.groups.length.positive? %>
       <% show_analytics_link = current_user && current_user.platform_admin? %>
-      <% if show_analytics_link %>
-        <li><%= link_to 'Analytics', main_app.analytics_path, role: 'menuitem' %></li>
-      <% end %>
-      <li class="divider"></li>
-
       <% include_collections_link ||= can?(:create, Collection) %>
-
       <% show_jobs_link = current_user && current_user.platform_admin? %>
       <%
         show_users_link = @press && (
@@ -32,8 +24,21 @@
           current_user.roles.where(role: 'admin', resource_id: @press.id, resource_type: 'Press').first
         )
       %>
-      <% show_embargo_link = can? :discover, Hydra::AccessControls::Embargo %>
-      <% show_lease_link = can? :discover, Hydra::AccessControls::Lease %>
+
+      <% if show_fulcrum_link %>
+        <li><%= link_to 'Fulcrum', main_app.fulcrum_path, role: 'menuitem'  %></li>
+        <li class="divider"></li>
+      <% end %>
+
+      <% if show_dashboard_link %>
+        <li><%= link_to 'Dashboard', hyrax.dashboard_path, role: 'menuitem'  %></li>
+        <li class="divider"></li>
+      <% end %>
+
+      <% if show_analytics_link %>
+        <li><%= link_to 'Analytics', main_app.analytics_path, role: 'menuitem' %></li>
+        <li class="divider"></li>
+      <% end %>
 
       <% if show_jobs_link %>
         <li><%= link_to "Jobs", main_app.resque_web_path %></li>
@@ -43,15 +48,7 @@
         <li><%= link_to "Users", main_app.press_roles_path(@press) %></li>
       <% end %>
 
-      <% if show_embargo_link %>
-        <li><%= link_to 'Embargos', hyrax.embargoes_path, role: 'menuitem' %></li>
-      <% end %>
-
-      <% if show_lease_link %>
-        <li><%= link_to 'Leases', hyrax.leases_path, role: 'menuitem' %></li>
-      <% end %>
-
-      <% if show_jobs_link || show_users_link || show_embargo_link || show_lease_link %>
+      <% if show_jobs_link || show_users_link %>
         <li class="divider"></li>
       <% end %>
 
