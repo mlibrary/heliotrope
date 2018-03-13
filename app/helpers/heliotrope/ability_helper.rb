@@ -10,7 +10,7 @@ module Heliotrope
       can = false
       Hyrax.config.curation_concerns.each do |curation_concern_type|
         break if can
-        can = can?(:create, curation_concern_type)
+        can = can?(:create, curation_concern_type) && current_user.groups.length.positive?
       end
       can
     end

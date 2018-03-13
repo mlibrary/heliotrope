@@ -23,8 +23,6 @@ describe 'shared/_my_actions.html.erb' do
         expect(rendered).to have_link("Dashboard")
         expect(rendered).to have_link("Log Out")
         expect(rendered).to have_link("Jobs", href: resque_web_path)
-        expect(rendered).to have_link("Embargos", href: hyrax.embargoes_path)
-        expect(rendered).to have_link("Leases", href: hyrax.leases_path)
         expect(rendered).to have_link("Users", href: press_roles_path(press))
       end
     end
@@ -37,8 +35,6 @@ describe 'shared/_my_actions.html.erb' do
         expect(rendered).to have_link("Dashboard")
         expect(rendered).to have_link("Log Out")
         expect(rendered).to have_link("Jobs", href: resque_web_path)
-        expect(rendered).to have_link("Embargos", href: hyrax.embargoes_path)
-        expect(rendered).to have_link("Leases", href: hyrax.leases_path)
         expect(rendered).to_not have_link("Users", href: press_roles_path(press))
       end
     end
@@ -57,8 +53,6 @@ describe 'shared/_my_actions.html.erb' do
         expect(rendered).to_not have_link("Analytics")
         expect(rendered).to have_link("Dashboard")
         expect(rendered).to have_link("Log Out")
-        expect(rendered).to have_link("Embargos", href: hyrax.embargoes_path)
-        expect(rendered).to have_link("Leases", href: hyrax.leases_path)
         expect(rendered).to have_link("Users", href: press_roles_path(press))
       end
     end
@@ -74,8 +68,6 @@ describe 'shared/_my_actions.html.erb' do
         expect(rendered).to_not have_link("Analytics")
         expect(rendered).to have_link("Dashboard")
         expect(rendered).to have_link("Log Out")
-        expect(rendered).to have_link("Embargos", href: hyrax.embargoes_path)
-        expect(rendered).to have_link("Leases", href: hyrax.leases_path)
         expect(rendered).to_not have_link("Users", href: press_roles_path(different_press))
       end
     end
@@ -94,8 +86,6 @@ describe 'shared/_my_actions.html.erb' do
         expect(rendered).to_not have_link("Analytics")
         expect(rendered).to have_link("Dashboard")
         expect(rendered).to have_link("Log Out")
-        expect(rendered).to have_link("Embargos", href: hyrax.embargoes_path)
-        expect(rendered).to have_link("Leases", href: hyrax.leases_path)
         expect(rendered).to_not have_link("Users")
       end
     end
@@ -111,8 +101,6 @@ describe 'shared/_my_actions.html.erb' do
         expect(rendered).to_not have_link("Analytics")
         expect(rendered).to have_link("Dashboard")
         expect(rendered).to have_link("Log Out")
-        expect(rendered).to have_link("Embargos", href: hyrax.embargoes_path)
-        expect(rendered).to have_link("Leases", href: hyrax.leases_path)
         expect(rendered).to_not have_link("Users", href: press_roles_path(different_press))
       end
     end
@@ -128,15 +116,12 @@ describe 'shared/_my_actions.html.erb' do
       end
 
       it 'has correct links' do
+        expect(rendered).to_not have_link("Fulcrum")
+        expect(rendered).to_not have_link("Dashboard")
         expect(rendered).to_not have_link("Analytics")
-        expect(rendered).to     have_link("Dashboard")
-        expect(rendered).to     have_link("Log Out")
         expect(rendered).to_not have_link("Jobs", href: resque_web_path)
         expect(rendered).to_not have_link("Users")
-
-        # TODO: Fix this
-        # expect(rendered).to_not have_link("Embargos")
-        # expect(rendered).to_not have_link("Leases")
+        expect(rendered).to     have_link("Log Out")
       end
     end
 
@@ -144,15 +129,12 @@ describe 'shared/_my_actions.html.erb' do
       before { render }
 
       it 'has correct links' do
+        expect(rendered).to_not have_link("Fulcrum")
+        expect(rendered).to_not have_link("Dashboard")
         expect(rendered).to_not have_link("Analytics")
-        expect(rendered).to     have_link("Dashboard")
-        expect(rendered).to     have_link("Log Out")
-        expect(rendered).to_not have_link("Users")
         expect(rendered).to_not have_link("Jobs", href: resque_web_path)
-
-        # TODO: Fix this
-        # expect(rendered).to_not have_link("Embargos")
-        # expect(rendered).to_not have_link("Leases")
+        expect(rendered).to_not have_link("Users")
+        expect(rendered).to     have_link("Log Out")
       end
     end
   end # non-privileged user
