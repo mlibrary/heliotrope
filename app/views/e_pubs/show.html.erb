@@ -71,6 +71,10 @@ webgl = FactoryService.webgl_unity(webgl_id)
         <% if @monograph_presenter.webgl? %>
 
         var gameInstance;
+        var gameReady = false;
+
+        //
+
         // open panel function and initiate game if not initiated
         var open_panel = function() {
           var $main = $(".cozy-module-main");
@@ -191,6 +195,27 @@ webgl = FactoryService.webgl_unity(webgl_id)
             link.addEventListener('click', click_handler);
           }
         })
+
+        // Toggling for focus of canvas
+        function GameControlReady () {
+          gameReady = true;
+        }
+
+        function FocusCanvas(focus) {
+          if (gameReady) {
+            SendMessage("GameControl", "FocusCanvas", focus);
+          }
+        }
+
+        document.addEventListener('click', function(e) {
+          if (e.target.id == "canvas") {
+            // Clicked on canvas
+            FocusCanvas("1");
+              } else {
+            // Clicked outside of canvas
+            FocusCanvas("0");
+          }
+        });
 
         cozy.control.widget.toggle({
           region: 'top.toolbar.left',
