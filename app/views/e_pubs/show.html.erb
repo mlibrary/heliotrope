@@ -3,72 +3,72 @@
 <% content_for :head do %>
   <meta name="turbolinks-cache-control" content="no-cache">
   <% if @monograph_presenter.webgl? %>
-<%
+    <%
 # load what we need to show the webgl/3-d model if needed
 webgl_id = @monograph_presenter.webgl_id
 webgl = FactoryService.webgl_unity(webgl_id)
 @unity_progress = "/webgl/#{webgl_id}/#{webgl.unity_progress}"
 @unity_loader = "/webgl/#{webgl_id}/#{webgl.unity_loader}"
 @unity_json = "/webgl/#{webgl_id}/#{webgl.unity_json}"
-%>
+    %>
     <!-- browser detection here -->
     <script src="<%= @unity_progress %>"></script>
     <script src="<%= @unity_loader %>"></script>
-
   <% end %>
 <% end %>
 
 <% provide :body do %>
-<% if defined? @presenter.file_set_coins_title %>
-  <span class="Z3988" title="<%= @presenter.file_set_coins_title %>"></span>
-<% end %>
+  <% if defined? @presenter.file_set_coins_title %>
+    <span class="Z3988" title="<%= @presenter.file_set_coins_title %>"></span>
+  <% end %>
 
-<div id="epub" class="<%= @subdomain %>">
-  <div id="reader"></div>
-  <script type="text/javascript">
-    if ( true ) {
-      //$("body").addClass("reading");
-      var reader = cozy.reader('reader', {
+  <div id="epub" class="<%= @subdomain %>">
+    <div id="reader"></div>
+
+    <script type="text/javascript">
+      if ( true ) {
+        //$("body").addClass("reading");
+        var reader = cozy.reader('reader', {
           href: "<%= "#{main_app.epub_url.gsub!(/\?.*/, '')}/" %>",
           metadata: {
-              doi: '<%= @citable_link %>',
-              // TO-DO: iterate all creator given and family names for monograph
-              // creator: [
-              //    ''
-              // ],
-              // TO-DO: we currently don't store location metadata in the monograph
-              // record. Should we? Can we rely on all EPUBs having location?
-              location: 'Ann Arbor, MI'
+            doi: '<%= @citable_link %>',
+            // TO-DO: iterate all creator given and family names for monograph
+            // creator: [
+            //    ''
+            // ],
+            // TO-DO: we currently don't store location metadata in the monograph
+            // record. Should we? Can we rely on all EPUBs having location?
+            location: 'Ann Arbor, MI'
           }
-      });
+        });
 
-      // Close reader/Return to previous screen widget
-      cozy.control.widget.button({
-  	    region: 'top.header.left',
-  	    data: { label: '<i class="icon-x oi" data-glyph="x" aria-hidden="true"></i>'},
-  	    template: '<button class="button--sm cozy-close" data-toggle="button" data-slot="label" aria-label="Close reader"></button>',
-  	    onClick: function() { window.location = "<%= "#{@back_link}" %>"; }
-      }).addTo(reader);
-      // Press brand widget
-      // TO-DO: only show logo for publishers that also have CSS overrides. Currently only HEB has this.
-      <% if defined? @subdomain %>
+        // Close reader/Return to previous screen widget
+        cozy.control.widget.button({
+          region: 'top.header.left',
+          data: { label: '<i class="icon-x oi" data-glyph="x" aria-hidden="true"></i>'},
+          template: '<button class="button--sm cozy-close" data-toggle="button" data-slot="label" aria-label="Close reader"></button>',
+          onClick: function() { window.location = "<%= "#{@back_link}" %>"; }
+        }).addTo(reader);
+        // Press brand widget
+        // TO-DO: only show logo for publishers that also have CSS overrides. Currently only HEB has this.
+        <% if defined? @subdomain %>
         // only include logos for heb, nyupress, and gabii at this point
         <% if %w[heb nyupress gabii].include? @subdomain %>
-          cozy.control.widget.panel({
-            region: 'top.header.left',
-            template: '<div class="logo"><%= image_tag logo(@subdomain), alt: @subdomain %>',
-            data: { title: "<%= @subdomain %>" }
-          }).addTo(reader);
-          <% end %>
-      <% end %>
-      // Book/chapter title widget
-      cozy.control.title({ region: 'top.header.left' }).addTo(reader);
+        cozy.control.widget.panel({
+          region: 'top.header.left',
+          template: '<div class="logo"><%= image_tag logo(@subdomain), alt: @subdomain %>',
+          data: { title: "<%= @subdomain %>" }
+        }).addTo(reader);
+        <% end %>
+        <% end %>
+        // Book/chapter title widget
+        cozy.control.title({ region: 'top.header.left' }).addTo(reader);
 
-      // Table of contents widget
-      cozy.control.contents({ region: 'top.toolbar.left' }).addTo(reader);
+        // Table of contents widget
+        cozy.control.contents({ region: 'top.toolbar.left' }).addTo(reader);
 
-      // Webgl/3-D model
-      <% if @monograph_presenter.webgl? %>
+        // Webgl/3-D model
+        <% if @monograph_presenter.webgl? %>
 
         var gameInstance;
         // open panel function and initiate game if not initiated
@@ -78,10 +78,34 @@ webgl = FactoryService.webgl_unity(webgl_id)
           close_panel();
           $("body").addClass("panel-open panel-right");
 
-          var $panel= $(".special-panel");
+          var $panel = $('.special-panel');
 
           if (! $panel.length) {
-            $panel = $('<div class="special-panel"><div class="panel-control"><button class="button--sm webgl-close" data-toggle="button" data-slot="label" aria-label="Close 3-D Model" onclick="close_panel();"><i class="icon-x oi" data-glyph="x" aria-hidden="true"></i></button></div><div class="webgl-content"><div id="gameContainer" tabindex="0"></div></div><div class="panel-info"><h2>Gabii Area B 3D Model</h2><p><strong>DOI: https://doi.org/10.3998/mpub.9231782.model</strong></p><p>The interactive content found here serves as a 3D visual reference for the narrative text. It contains 3D models of Gabii\'s stratigraphy, schematic reconstructions of key features, descriptive data, and direct links to entries from the project\'s online database. Links in the text will guide you through a structured exploration of the house\'s stratigraphy and reconstructions. Readers are encouraged both to follow the narrative laid out in this text, and to explore the 3D content freely. Investigation into the data behind the interpretations and reconstructions is supported by access to the project\'s database.</p></div></div>').appendTo($main);
+            var $panelContent =
+              '<div class="special-panel">' +
+                '<div class="panel-control">' +
+                  '<button class="button--sm webgl-close" data-toggle="button" data-slot="label" aria-label="Close 3-D Model" onclick="close_panel();">' +
+                    '<i class="icon-x oi" data-glyph="x" aria-hidden="true"></i>' +
+                  '</button>' +
+                '</div>' +
+                '<div class="webgl-content">' +
+                  '<div id="gameContainer" tabindex="0">' +
+                  '</div>' +
+                '</div>' +
+                '<div class="panel-info">' +
+                  '<h2>Gabii Area B 3D Model</h2>' +
+                  '<p><strong>DOI: https://doi.org/10.3998/mpub.9231782.model</strong></p>' +
+                  '<p>The interactive content found here serves as a 3D visual reference for the narrative text. It ' +
+                  'contains 3D models of Gabii\'s stratigraphy, schematic reconstructions of key features, ' +
+                  'descriptive data, and direct links to entries from the project\'s online database. Links in the ' +
+                  'text will guide you through a structured exploration of the house\'s stratigraphy and ' +
+                  'reconstructions. Readers are encouraged both to follow the narrative laid out in this text, and ' +
+                  'to explore the 3D content freely. Investigation into the data behind the interpretations and ' +
+                  'reconstructions is supported by access to the project\'s database.' +
+                  '</p>' +
+                '</div>' +
+              '</div>';
+            $panel = $($panelContent).appendTo($main);
           } else {
             $panel.show();
           }
@@ -98,7 +122,6 @@ webgl = FactoryService.webgl_unity(webgl_id)
 
           if (! gameInstance) {
             gameInstance = UnityLoader.instantiate("gameContainer", "<%= "#{@unity_json}" %>", options );
-
           } else {
             // resize the webGL canvas
             var $g = $('#gameContainer');
@@ -110,7 +133,7 @@ webgl = FactoryService.webgl_unity(webgl_id)
 
           // resize EPUB
           setTimeout(function() {
-             window.dispatchEvent(new Event('resize'));
+            window.dispatchEvent(new Event('resize'));
           }, 0);
         } // end open_panel
 
@@ -133,7 +156,7 @@ webgl = FactoryService.webgl_unity(webgl_id)
           var SendMessage = gameInstance.SendMessage;
           var $panel= $(".special-panel");
           function getToUnity(s) {
-              SendMessage("WebCommunicator", "ShowString", s);
+            SendMessage("WebCommunicator", "ShowString", s);
           };
           var gameContainerDiv = document.getElementById("gameContainer");
           if ($('body').hasClass('panel-open')) {
@@ -165,98 +188,98 @@ webgl = FactoryService.webgl_unity(webgl_id)
               btn.state('close-webgl');
             }
           },
-          {
-            stateName: 'close-webgl',
-            onClick: function(btn, reader) {
-              close_panel();
-              btn.state('open-webgl');
-            }
-          }],
+            {
+              stateName: 'close-webgl',
+              onClick: function(btn, reader) {
+                close_panel();
+                btn.state('open-webgl');
+              }
+            }],
         }).addTo(reader);
-      <% end %>
+        <% end %>
 
-      // Database
-      // This is a very specific case of an externally hosted database that is related to the epub
-      <% if @monograph_presenter.database? %>
+        // Database
+        // This is a very specific case of an externally hosted database that is related to the epub
+        <% if @monograph_presenter.database? %>
         cozy.control.widget.button({
           region: 'top.toolbar.left',
           template: '<button class="button--sm" data-toggle="button" aria-label="Database">Database</button>',
           onClick: function() { window.location = "<%= "#{@monograph_presenter.database['ext_url_doi_or_handle_ssim'].first}" %>"; }
         }).addTo(reader);
-      <% end %>
+        <% end %>
 
-      // Media
-      <% if @monograph_presenter.assets? %>
+        // Media
+        <% if @monograph_presenter.assets? %>
         cozy.control.widget.button({
           region: 'top.toolbar.left',
           template: '<button class="button--sm" data-toggle="button" aria-label="Media">Media</button>',
           onClick: function() { window.location = "<%= "#{main_app.monograph_catalog_url(@presenter.monograph_id) + "#media"}" %>"; }
         }).addTo(reader);
-      <% end %>
+        <% end %>
 
-      // Permalink widget
-      cozy.control.widget.panel({
-        region: 'top.toolbar.left',
-        data: { title: "<%= @citable_link %>"},
-  	    template: '<div class="permalink-label"><label class="u-screenreader" for="permalink">Permalink</label><form><input data-slot="title" type="text" id="permalink" value="" readonly="readonly" onclick="this.select(); document.execCommand(\'copy\');"></form></div>',
-      }).addTo(reader);
+        // Permalink widget
+        cozy.control.widget.panel({
+          region: 'top.toolbar.left',
+          data: { title: "<%= @citable_link %>"},
+          template: '<div class="permalink-label"><label class="u-screenreader" for="permalink">Permalink</label><form><input data-slot="title" type="text" id="permalink" value="" readonly="readonly" onclick="this.select(); document.execCommand(\'copy\');"></form></div>',
+        }).addTo(reader);
 
-      // Citation widget
-      // We'll need to do some work in order to pass pre-fomatted citations to CSB
-      // see: https://github.com/mlibrary/cozy-sun-bear/wiki/Metadata-and-Citations
+        // Citation widget
+        // We'll need to do some work in order to pass pre-fomatted citations to CSB
+        // see: https://github.com/mlibrary/cozy-sun-bear/wiki/Metadata-and-Citations
 
-      // Search widget
-      <% unless Heliotrope::Application.config.cozy_epub_engine == 'readium' %>
+        // Search widget
+        <% unless Heliotrope::Application.config.cozy_epub_engine == 'readium' %>
         cozy.control.search({
           region: 'top.toolbar.left',
           searchUrl: "<%= @search_url %>"
         }).addTo(reader);
-      <% end %>
+        <% end %>
 
-      // Bib info widget
-      cozy.control.bibliographicInformation({ region: 'top.toolbar.left' }).addTo(reader)
-      // Fullscreen widget
-      cozy.control.widget.button({
-                        region: 'top.toolbar.right',
-                        className: 'cozy-container-fullscreen',
-                        template: '<button class="button--sm" data-toggle="button" data-slot="label" aria-label="Full screen"></button>',
-                        data: { label: '<i id="fullscreen" class="icon-fullscreen-enter oi" data-glyph="fullscreen-enter" title="Fullscreen Mode" aria-hidden="true"></i>' },
-                        onClick: function() {
-                            reader.requestFullscreen();
-                            if (!window.screenTop && !window.screenY) {
-                              $('#fullscreen').attr('data-glyph', 'fullscreen-enter');
-                            } else {
-                              $('#fullscreen').attr('data-glyph', 'fullscreen-exit');
-                            }
-                        }
-                    }).addTo(reader);
-      // Reading preferences widget
-      cozy.control.preferences({ region: 'top.toolbar.right' }).addTo(reader);
-      // Paging widgets
-      // cozy.control.pageFirst({ region: 'left.sidebar' }).addTo(reader);
-      cozy.control.pagePrevious({ region: 'left.sidebar' }).addTo(reader);
-      cozy.control.pageNext({ region: 'right.sidebar' }).addTo(reader);
-      // cozy.control.pageLast({ region: 'right.sidebar' }).addTo(reader);
-      // cozy.control.navigator({ region: 'book.navigator' }).addTo(reader);
+        // Bib info widget
+        cozy.control.bibliographicInformation({ region: 'top.toolbar.left' }).addTo(reader)
+        // Fullscreen widget
+        cozy.control.widget.button({
+          region: 'top.toolbar.right',
+          className: 'cozy-container-fullscreen',
+          template: '<button class="button--sm" data-toggle="button" data-slot="label" aria-label="Full screen"></button>',
+          data: { label: '<i id="fullscreen" class="icon-fullscreen-enter oi" data-glyph="fullscreen-enter" title="Fullscreen Mode" aria-hidden="true"></i>' },
+          onClick: function() {
+            reader.requestFullscreen();
+            if (!window.screenTop && !window.screenY) {
+              $('#fullscreen').attr('data-glyph', 'fullscreen-enter');
+            } else {
+              $('#fullscreen').attr('data-glyph', 'fullscreen-exit');
+            }
+          }
+        }).addTo(reader);
+        // Reading preferences widget
+        cozy.control.preferences({ region: 'top.toolbar.right' }).addTo(reader);
+        // Paging widgets
+        // cozy.control.pageFirst({ region: 'left.sidebar' }).addTo(reader);
+        cozy.control.pagePrevious({ region: 'left.sidebar' }).addTo(reader);
+        cozy.control.pageNext({ region: 'right.sidebar' }).addTo(reader);
+        // cozy.control.pageLast({ region: 'right.sidebar' }).addTo(reader);
+        // cozy.control.navigator({ region: 'book.navigator' }).addTo(reader);
 
-      // Publisher/copyright widgets
-      // cozy.control.publicationMetadata({ region: 'bottom.footer' }).addTo(reader);
+        // Publisher/copyright widgets
+        // cozy.control.publicationMetadata({ region: 'bottom.footer' }).addTo(reader);
 
-      // Feedback widget
-      cozy.control.widget.panel({
-        region: 'bottom.navigator.left',
-        className: 'cozy-panel-feedback',
-        template: '<a href="https://docs.google.com/forms/d/e/1FAIpQLSeY04WhBtHGSXONu3jGiYnOcVzZxzHi3FGbS9ELg8rJdMpgpw/viewform?usp=sf_link" target="_blank" title="Report a problem or share feedback"><i class="icon-comment-square oi" data-glyph="comment-square" aria-hidden="true"></i></a>',
-      }).addTo(reader);
+        // Feedback widget
+        cozy.control.widget.panel({
+          region: 'bottom.navigator.left',
+          className: 'cozy-panel-feedback',
+          template: '<a href="https://docs.google.com/forms/d/e/1FAIpQLSeY04WhBtHGSXONu3jGiYnOcVzZxzHi3FGbS9ELg8rJdMpgpw/viewform?usp=sf_link" target="_blank" title="Report a problem or share feedback"><i class="icon-comment-square oi" data-glyph="comment-square" aria-hidden="true"></i></a>',
+        }).addTo(reader);
 
-      // Navigator widgets
-      cozy.control.navigator({ region: 'bottom.navigator' }).addTo(reader);
+        // Navigator widgets
+        cozy.control.navigator({ region: 'bottom.navigator' }).addTo(reader);
 
-      // Initiate EPUB Reader
-      reader.start();
-    }
-  </script>
-</div>
-<%= render 'shared/ga' %>
+        // Initiate EPUB Reader
+        reader.start();
+      }
+    </script>
+  </div>
+  <%= render 'shared/ga' %>
 <% end %>
 <%= render template: 'layouts/boilerplate' %>
