@@ -48,12 +48,11 @@ class ApplicationController < ActionController::Base
 
     # Clears any user session and authorization information by:
     #   * ensuring the user will be logged out if REMOTE_USER is not set
-    def clear_session_user # rubocop:disable Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity
+    def clear_session_user
       return nil_request if request.nil?
 
+      backup = session.to_hash
       identity = session[:identity].dup if session[:identity]
-      search = session[:search].dup if session[:search]
-      user_return_to = session[:user_return_to].dup if session[:user_return_to]
       flash_notice = flash[:notice]
 
       if valid_user_signed_in?
@@ -64,9 +63,8 @@ class ApplicationController < ActionController::Base
         expire_data_after_sign_out!
       end
 
+      session.update(backup)
       session[:identity] = identity || Keycard::RequestAttributes.new(request).all
-      session[:search] = search
-      session[:user_return_to] = user_return_to
       flash[:notice] = flash_notice
     end
 
