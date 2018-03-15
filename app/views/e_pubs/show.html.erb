@@ -81,6 +81,7 @@ webgl = FactoryService.webgl_unity(webgl_id)
           var $panel = $('.special-panel');
 
           if (! $panel.length) {
+
             var $panelContent =
               '<div class="special-panel">' +
                 '<div class="panel-control">' +
@@ -95,13 +96,7 @@ webgl = FactoryService.webgl_unity(webgl_id)
                 '<div class="panel-info">' +
                   '<h2>Gabii Area B 3D Model</h2>' +
                   '<p><strong>DOI: https://doi.org/10.3998/mpub.9231782.model</strong></p>' +
-                  '<p>The interactive content found here serves as a 3D visual reference for the narrative text. It ' +
-                  'contains 3D models of Gabii\'s stratigraphy, schematic reconstructions of key features, ' +
-                  'descriptive data, and direct links to entries from the project\'s online database. Links in the ' +
-                  'text will guide you through a structured exploration of the house\'s stratigraphy and ' +
-                  'reconstructions. Readers are encouraged both to follow the narrative laid out in this text, and ' +
-                  'to explore the 3D content freely. Investigation into the data behind the interpretations and ' +
-                  'reconstructions is supported by access to the project\'s database.' +
+                  '<p>This interactive section of the publication includes 3D models, descriptions, and links to the online database, and complements the narrative text. Interaction with this content is essential to engaging with our interpretation of the Tincu house. Readers are encouraged both to follow the narrative laid out in the text through the model and data, and to explore the 3D content and database freely.' +
                   '</p>' +
                 '</div>' +
               '</div>';
@@ -124,11 +119,7 @@ webgl = FactoryService.webgl_unity(webgl_id)
             gameInstance = UnityLoader.instantiate("gameContainer", "<%= "#{@unity_json}" %>", options );
           } else {
             // resize the webGL canvas
-            var $g = $('#gameContainer');
-            $g.css({ width: options.width, height: options.height });
-            var $c = $g.find('canvas').get(0);
-            $c.setAttribute('width', parseInt(options.width));
-            $c.setAttribute('height', parseInt(options.height));
+            resize_webgl();
           }
 
           // resize EPUB
@@ -139,6 +130,7 @@ webgl = FactoryService.webgl_unity(webgl_id)
 
         // close panel function
         var close_panel = function() {
+
           var $panel = $('.special-panel');
           if ($panel.length) {
             $('.special-panel').hide();
@@ -149,6 +141,28 @@ webgl = FactoryService.webgl_unity(webgl_id)
             }, 0);
           }
         }
+
+        // resize the webGL canvas
+        var resize_webgl = function() {
+          var $panel= $(".special-panel");
+          var h = $panel.height();
+          var w = $panel.width();
+
+          var r = w / 1024;
+          var width = w + 'px';
+          var height = Math.ceil(600 * r) + 'px';
+
+          var $g = $('#gameContainer');
+          $g.css({ width: width, height: height });
+          var $c = $g.find('canvas').get(0);
+          $c.setAttribute('width', parseInt(width));
+          $c.setAttribute('height', parseInt(height));
+        }
+
+        // dynamic WebGL canvas resizing
+        reader.on('resized', function() {
+          resize_webgl();
+        })
 
         // Open SU panel in WebGL if SU link is clicked
         var click_handler = function(event) {
