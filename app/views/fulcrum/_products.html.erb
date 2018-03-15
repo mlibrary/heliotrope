@@ -1,0 +1,25 @@
+<% products =  Product.all %>
+<h1>Products Summary</h1>
+<table class="table table-striped" summary="Product List">
+  <tr>
+    <th></th>
+    <th>Product <%= link_to(new_product_path) do %>
+        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> New
+      <% end %>
+    </th>
+    <th>Components</th>
+    <th>Lessees</th>
+  </tr>
+  <% products.each do |product| %>
+    <tr>
+      <td><%= link_to(edit_product_path(product)) do %>
+          <span class="glyphicon glyphicon-edit" aria-hidden="true"></span> Edit
+        <% end %>
+      </td>
+      <td><%= link_to product.identifier, product_path(product) %></td>
+      <td><%= product.components.count() %></td>
+      <td><%= product.lessees.count() %></td>
+    </tr>
+  <% end %>
+</table>
+

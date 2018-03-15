@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180109210107) do
+ActiveRecord::Schema.define(version: 20180312122555) do
 
   create_table "bookmarks", id: :integer, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.integer "user_id", null: false
@@ -34,6 +34,20 @@ ActiveRecord::Schema.define(version: 20180109210107) do
     t.boolean "passed"
     t.index ["checked_uri"], name: "index_checksum_audit_logs_on_checked_uri"
     t.index ["file_set_id", "file_id"], name: "by_file_set_id_and_file_id"
+  end
+
+  create_table "components", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.string "handle"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "components_products", id: false, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.bigint "product_id"
+    t.bigint "component_id"
+    t.index ["component_id"], name: "index_components_products_on_component_id"
+    t.index ["product_id", "component_id"], name: "index_components_products_on_product_id_and_component_id", unique: true
+    t.index ["product_id"], name: "index_components_products_on_product_id"
   end
 
   create_table "content_blocks", id: :integer, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
@@ -123,6 +137,20 @@ ActiveRecord::Schema.define(version: 20180109210107) do
     t.datetime "updated_at", null: false
     t.index ["uploaded_file_id"], name: "index_job_io_wrappers_on_uploaded_file_id"
     t.index ["user_id"], name: "index_job_io_wrappers_on_user_id"
+  end
+
+  create_table "lessees", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.string "identifier"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "lessees_products", id: false, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.bigint "product_id"
+    t.bigint "lessee_id"
+    t.index ["lessee_id"], name: "index_lessees_products_on_lessee_id"
+    t.index ["product_id", "lessee_id"], name: "index_lessees_products_on_product_id_and_lessee_id", unique: true
+    t.index ["product_id"], name: "index_lessees_products_on_product_id"
   end
 
   create_table "mailboxer_conversation_opt_outs", id: :integer, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
@@ -223,6 +251,12 @@ ActiveRecord::Schema.define(version: 20180109210107) do
     t.text "footer_block_c"
     t.integer "parent_id"
     t.index ["parent_id"], name: "index_presses_on_parent_id"
+  end
+
+  create_table "products", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.string "identifier"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "proxy_deposit_requests", id: :integer, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
@@ -530,7 +564,11 @@ ActiveRecord::Schema.define(version: 20180109210107) do
     t.index ["work_id"], name: "index_work_view_stats_on_work_id"
   end
 
+  add_foreign_key "components_products", "components"
+  add_foreign_key "components_products", "products"
   add_foreign_key "curation_concerns_operations", "users"
+  add_foreign_key "lessees_products", "lessees"
+  add_foreign_key "lessees_products", "products"
   add_foreign_key "mailboxer_conversation_opt_outs", "mailboxer_conversations", column: "conversation_id", name: "mb_opt_outs_on_conversations_id"
   add_foreign_key "mailboxer_notifications", "mailboxer_conversations", column: "conversation_id", name: "notifications_on_conversation_id"
   add_foreign_key "mailboxer_receipts", "mailboxer_notifications", column: "notification_id", name: "receipts_on_notification_id"

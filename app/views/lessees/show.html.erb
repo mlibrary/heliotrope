@@ -1,0 +1,15 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Lessee</h1>
+<ul>
+  <li><%= @lessee.identifier %></li>
+</ul>
+
+<h2>Products</h2>
+<%= render partial: 'products', locals: { lessee: @lessee, products: @lessee.products } %>
+
+<h2>Components</h2>
+<%= render partial: 'components/list', locals: { components: @lessee.components } %>
+
+<%= link_to 'Edit', edit_lessee_path(@lessee) %> |
+<%= link_to 'Back', lessees_path %>

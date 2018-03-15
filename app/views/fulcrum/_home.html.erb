@@ -7,6 +7,18 @@
     <th scope="col">Count</th>
   </tr>
   <tr>
+    <td>Products</td>
+    <td><%= repository.product_ids.count() %></td>
+  </tr>
+  <tr>
+    <td>Components</td>
+    <td><%= repository.component_ids.count() %></td>
+  </tr>
+  <tr>
+    <td>Lessees</td>
+    <td><%= repository.lessee_ids.count() %></td>
+  </tr>
+  <tr>
     <td>Publishers</td>
     <td><%= repository.publisher_ids.count() %></td>
   </tr>

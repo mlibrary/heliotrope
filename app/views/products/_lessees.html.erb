@@ -1,0 +1,16 @@
+<ul>
+  <% lessees.each do |lessee| %>
+    <li><%= lessee.identifier %> <%= link_to(product_lessee_path(product, lessee), method: :delete, class: "btn btn-default") do %>
+        <span class="glyphicon glyphicon-minus" aria-hidden="true"></span> Remove
+      <% end %>
+    </li>
+  <% end %>
+  <li>
+    <%= form_tag(product_lessees_path(product), method: :post) do %>
+      <%= select_tag "id", options_from_collection_for_select(product.not_lessees, "id", "identifier") %>
+      <%= button_tag(type: 'submit',  class: 'btn btn-default') do %>
+        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Add
+      <% end %>
+    <% end %>
+  </li>
+</ul>

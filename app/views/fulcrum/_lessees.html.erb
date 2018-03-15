@@ -1,0 +1,24 @@
+<% lessees =  Lessee.all %>
+<h1>Lessees Summary</h1>
+<table class="table table-striped" summary="Lessee List">
+  <tr>
+    <th></th>
+    <th>Lessee
+      <%= link_to(new_lessee_path) do %>
+        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> New
+      <% end %></th>
+    <th>Products</th>
+    <th>Components</th>
+  </tr>
+  <% lessees.each do |lessee| %>
+    <tr>
+      <td><%= link_to(edit_lessee_path(lessee)) do %>
+          <span class="glyphicon glyphicon-edit" aria-hidden="true"></span> Edit
+        <% end %>
+      </td>
+      <td><%= link_to lessee.identifier, lessee_path(lessee) %></td>
+      <td><%= lessee.products.count() %></td>
+      <td><%= lessee.components.count() %></td>
+    </tr>
+  <% end %>
+</table>
