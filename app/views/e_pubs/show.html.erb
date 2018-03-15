@@ -178,10 +178,12 @@ webgl = FactoryService.webgl_unity(webgl_id)
           };
           var gameContainerDiv = document.getElementById("gameContainer");
           if ($('body').hasClass('panel-open')) {
+            FocusCanvas("1");
             gameContainerDiv.focus();
             getToUnity(s);
           } else {
             open_panel();
+            FocusCanvas("1");
             gameContainerDiv.focus();
             getToUnity(s);
           }
@@ -203,12 +205,13 @@ webgl = FactoryService.webgl_unity(webgl_id)
 
         function FocusCanvas(focus) {
           if (gameReady) {
+            var SendMessage = gameInstance.SendMessage;
             SendMessage("GameControl", "FocusCanvas", focus);
           }
         }
 
         document.addEventListener('click', function(e) {
-          if (e.target.id == "canvas") {
+          if (e.target.id == "#canvas") {
             // Clicked on canvas
             FocusCanvas("1");
               } else {
@@ -216,6 +219,21 @@ webgl = FactoryService.webgl_unity(webgl_id)
             FocusCanvas("0");
           }
         });
+
+        document.addEventListener('keydown', function(event) {
+          if (event.defaultPrevented) {
+            return; // Do nothing if the event was already processed
+          }
+
+          switch (event.key) {
+            case "Tab":
+              FocusCanvas("0");
+            break;
+            default:
+            return;
+          }
+
+        }, true);
 
         cozy.control.widget.toggle({
           region: 'top.toolbar.left',
