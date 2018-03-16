@@ -140,7 +140,7 @@ webgl = FactoryService.webgl_unity(webgl_id)
 
         // close panel function
         var close_panel = function() {
-
+          toggle.state('open-webgl');
           var $panel = $('.special-panel');
           if ($panel.length) {
             $('.special-panel').hide();
@@ -241,7 +241,7 @@ webgl = FactoryService.webgl_unity(webgl_id)
 
         }, true);
 
-        cozy.control.widget.toggle({
+        var toggle = cozy.control.widget.toggle({
           region: 'top.toolbar.left',
           template: '<button class="button--sm" id="webgl" data-toggle="button" aria-label="3D Model">3D Model</button>',
           states: [{
@@ -258,7 +258,8 @@ webgl = FactoryService.webgl_unity(webgl_id)
                 btn.state('open-webgl');
               }
             }],
-        }).addTo(reader);
+        })
+        toggle.addTo(reader);
         <% end %>
 
         // Database
