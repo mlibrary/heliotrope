@@ -11,14 +11,19 @@ webgl = FactoryService.webgl_unity(webgl_id)
 @unity_loader = "/webgl/#{webgl_id}/#{webgl.unity_loader}"
 @unity_json = "/webgl/#{webgl_id}/#{webgl.unity_json}"
     %>
+
     <script>
       if (heliotropeMobileUser === false) {
         document.write('<script src="<%= @unity_progress %>"><\/script>');
         document.write('<script src="<%= @unity_loader %>"><\/script>');
       }
     </script>
-    <!--<script src="<%= @unity_progress %>"></script>-->
-    <!--<script src="<%= @unity_loader %>"></script>-->
+    <script>
+      // this has to go right after @unity_loader is loaded to guarantee no random JS errors get alert-boxed
+      UnityLoader.Error.handler = function(e, t){
+        // NOP to stop the nuisance alert boxes for *all* (even non-Unity) JS errors
+      }
+    </script>
   <% end %>
 <% end %>
 
