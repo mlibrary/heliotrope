@@ -11,9 +11,13 @@ webgl = FactoryService.webgl_unity(webgl_id)
 @unity_loader = "/webgl/#{webgl_id}/#{webgl.unity_loader}"
 @unity_json = "/webgl/#{webgl_id}/#{webgl.unity_json}"
     %>
-    <!-- browser detection here -->
-    <script src="<%= @unity_progress %>"></script>
-    <script src="<%= @unity_loader %>"></script>
+
+    <script>
+      if (heliotropeMobileUser === false) {
+        document.write('<script src="<%= @unity_progress %>"><\/script>');
+        document.write('<script src="<%= @unity_loader %>"><\/script>');
+      }
+    </script>
     <script>
       // this has to go right after @unity_loader is loaded to guarantee no random JS errors get alert-boxed
       UnityLoader.Error.handler = function(e, t){
@@ -92,6 +96,11 @@ webgl = FactoryService.webgl_unity(webgl_id)
 
           if (! $panel.length) {
 
+            var $mobileUserMessage = "";
+            if(heliotropeMobileUser === true) {
+              $mobileUserMessage = '<div id="epub-webgl-mobile-message">Sorry, mobile devices are not compatible with WebGL.</div>';
+            }
+
             var $panelContent =
               '<div class="special-panel">' +
                 '<div class="panel-control">' +
@@ -101,6 +110,7 @@ webgl = FactoryService.webgl_unity(webgl_id)
                 '</div>' +
                 '<div class="webgl-content">' +
                   '<div id="gameContainer" tabindex="0">' +
+                    $mobileUserMessage +
                   '</div>' +
                 '</div>' +
                 '<div class="panel-info">' +
@@ -115,21 +125,24 @@ webgl = FactoryService.webgl_unity(webgl_id)
             $panel.show();
           }
 
-          var options = { onProgress: UnityProgress };
+          // mobile users won't be loading the 3D content so this stuff isn't required
+          if (heliotropeMobileUser === false) {
+            var options = {onProgress: UnityProgress};
 
-          var h = $panel.height();
-          var w = $panel.width();
+            var h = $panel.height();
+            var w = $panel.width();
 
-          // the game has to have a specific aspect ratio or it looks distorted
-          var r = w / 1024;
-          options.width = w + 'px';
-          options.height = Math.ceil(600 * r) + 'px';
+            // the game has to have a specific aspect ratio or it looks distorted
+            var r = w / 1024;
+            options.width = w + 'px';
+            options.height = Math.ceil(600 * r) + 'px';
 
-          if (! gameInstance) {
-            gameInstance = UnityLoader.instantiate("gameContainer", "<%= "#{@unity_json}" %>", options );
-          } else {
-            // resize the webGL canvas
-            resize_webgl();
+            if (!gameInstance) {
+              gameInstance = UnityLoader.instantiate("gameContainer", "<%= "#{@unity_json}" %>", options);
+            } else {
+              // resize the webGL canvas
+              resize_webgl();
+            }
           }
 
           // resize EPUB
@@ -171,7 +184,8 @@ webgl = FactoryService.webgl_unity(webgl_id)
 
         // dynamic WebGL canvas resizing
         reader.on('resized', function() {
-          resize_webgl();
+          // again, these folks won't have a canvas to resize
+          if (heliotropeMobileUser === false) resize_webgl();
         })
 
         // Open SU panel in WebGL if SU link is clicked

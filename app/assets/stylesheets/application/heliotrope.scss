@@ -675,6 +675,13 @@ footer.press {
   margin-right: auto !important;
 }
 
+#epub-webgl-mobile-message {
+  text-align: center;
+  font-size: 1em;
+  font-weight: bold;
+  padding: 60px;
+}
+
 /* Feel free to be horrified at the bonkers-ness of this construct. */
 .cozy-panel-toolbar div.cozy-control:not(:first-of-type) {
   border-left: 1px solid white;
