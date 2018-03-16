@@ -71,6 +71,10 @@ webgl = FactoryService.webgl_unity(webgl_id)
         <% if @monograph_presenter.webgl? %>
 
         var gameInstance;
+        var gameReady = false;
+
+        //
+
         // open panel function and initiate game if not initiated
         var open_panel = function() {
           var $main = $(".cozy-module-main");
@@ -174,10 +178,12 @@ webgl = FactoryService.webgl_unity(webgl_id)
           };
           var gameContainerDiv = document.getElementById("gameContainer");
           if ($('body').hasClass('panel-open')) {
+            FocusCanvas("1");
             gameContainerDiv.focus();
             getToUnity(s);
           } else {
             open_panel();
+            FocusCanvas("1");
             gameContainerDiv.focus();
             getToUnity(s);
           }
@@ -191,6 +197,43 @@ webgl = FactoryService.webgl_unity(webgl_id)
             link.addEventListener('click', click_handler);
           }
         })
+
+        // Toggling for focus of canvas
+        function GameControlReady () {
+          gameReady = true;
+        }
+
+        function FocusCanvas(focus) {
+          if (gameReady) {
+            var SendMessage = gameInstance.SendMessage;
+            SendMessage("GameControl", "FocusCanvas", focus);
+          }
+        }
+
+        document.addEventListener('click', function(e) {
+          if (e.target.id == "#canvas") {
+            // Clicked on canvas
+            FocusCanvas("1");
+              } else {
+            // Clicked outside of canvas
+            FocusCanvas("0");
+          }
+        });
+
+        document.addEventListener('keydown', function(event) {
+          if (event.defaultPrevented) {
+            return; // Do nothing if the event was already processed
+          }
+
+          switch (event.key) {
+            case "Tab":
+              FocusCanvas("0");
+            break;
+            default:
+            return;
+          }
+
+        }, true);
 
         cozy.control.widget.toggle({
           region: 'top.toolbar.left',
