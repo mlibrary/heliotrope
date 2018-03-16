@@ -14,6 +14,12 @@ webgl = FactoryService.webgl_unity(webgl_id)
     <!-- browser detection here -->
     <script src="<%= @unity_progress %>"></script>
     <script src="<%= @unity_loader %>"></script>
+    <script>
+      // this has to go right after @unity_loader is loaded to guarantee no random JS errors get alert-boxed
+      UnityLoader.Error.handler = function(e, t){
+        // NOP to stop the nuisance alert boxes for *all* (even non-Unity) JS errors
+      }
+    </script>
   <% end %>
 <% end %>
 
