@@ -3,7 +3,7 @@
   <meta name="turbolinks-cache-control" content="no-cache">
   <%= csrf_meta_tag %>
   <link src="shortcut icon" href="<%= @favicon %>">
-  <script src="<%= @unity_progress %>"></script>
+  <%= javascript_include_tag 'unity_progress_heliotrope' %>');
   <script src="<%= @unity_loader %>"></script>
   <script>
     // this has to go right after @unity_loader is loaded to guarantee no random JS errors get alert-boxed
@@ -13,7 +13,7 @@
   </script>
   <script>
     $(document).on('ready page:load', function(){
-      var gameInstance = UnityLoader.instantiate("gameContainer", "<%= @unity_json %>", {onProgress: UnityProgress});
+      var gameInstance = UnityLoader.instantiate("gameContainer", "<%= @unity_json %>", {onProgress: UnityProgressHeliotrope});
     });
   </script>
 <% end %>

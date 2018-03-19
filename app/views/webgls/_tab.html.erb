@@ -1,7 +1,7 @@
 <%
 webgl_id = @monograph_presenter.webgl_id
 webgl = FactoryService.webgl_unity(webgl_id)
-@unity_progress = "/webgl/#{webgl_id}/#{webgl.unity_progress}"
+@unity_progress = javascript_path 'unity_progress_heliotrope'
 @unity_loader = "/webgl/#{webgl_id}/#{webgl.unity_loader}"
 @unity_json = "/webgl/#{webgl_id}/#{webgl.unity_json}"
 %>
@@ -19,13 +19,13 @@ webgl = FactoryService.webgl_unity(webgl_id)
     // load the webgl if the webgl tab is already active
     if ($('#webgl-tab').hasClass('active')) {
       if (typeof gameInstance === 'undefined') {
-        gameInstance = UnityLoader.instantiate("gameContainer", "<%= @unity_json %>", {onProgress: UnityProgress});
+        gameInstance = UnityLoader.instantiate("gameContainer", "<%= @unity_json %>", {onProgress: UnityProgressHeliotrope});
       }
     }
     // or load the webgl if the tab is clicked
     $("a[href='#webgl']").bind('click', function() {
       if (typeof gameInstance === 'undefined') {
-        gameInstance = UnityLoader.instantiate("gameContainer", "<%= @unity_json %>", {onProgress: UnityProgress});
+        gameInstance = UnityLoader.instantiate("gameContainer", "<%= @unity_json %>", {onProgress: UnityProgressHeliotrope});
       }
     });
   });
