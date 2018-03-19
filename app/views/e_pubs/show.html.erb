@@ -14,12 +14,12 @@ webgl = FactoryService.webgl_unity(webgl_id)
        <!-- browser detection here -->
      <script src="<%= @unity_progress %>"></script>
      <script src="<%= @unity_loader %>"></script>
-	<script>
- 	// this has to go right after @unity_loader is loaded to guarantee no random JS errors get alert-boxed
+	   <script>
+ 	   // this has to go right after @unity_loader is loaded to guarantee no random JS errors get alert-boxed
       	UnityLoader.Error.handler = function(e, t){
-        // NOP to stop the nuisance alert boxes for *all* (even non-Unity) JS errors
-}	
-	</script>
+          // NOP to stop the nuisance alert boxes for *all* (even non-Unity) JS errors
+        }
+	   </script>
   <% end %>
 <% end %>
 
@@ -79,7 +79,10 @@ webgl = FactoryService.webgl_unity(webgl_id)
         var gameInstance;
         var gameReady = false;
 
-        //
+        // load the game on launch of e-reader
+        reader.on('ready', function() {
+          open_panel();
+        })
 
         // open panel function and initiate game if not initiated
         var open_panel = function() {
@@ -181,7 +184,10 @@ webgl = FactoryService.webgl_unity(webgl_id)
         // dynamic WebGL canvas resizing
         reader.on('resized', function() {
           // again, these folks won't have a canvas to resize
-          if (heliotropeMobileUser === false) resize_webgl();
+          //if (heliotropeMobileUser === false)
+          if (gameReady) {
+            resize_webgl();
+          }
         })
 
         // Open SU panel in WebGL if SU link is clicked
@@ -250,6 +256,11 @@ webgl = FactoryService.webgl_unity(webgl_id)
           }
 
         }, true);
+
+        // Take user to a POI when passed a string from WebGL
+        function goToParagraph() {
+          // don't do anything quite yet - here to prevent errors
+        }
 
         var toggle = cozy.control.widget.toggle({
           region: 'top.toolbar.left',
