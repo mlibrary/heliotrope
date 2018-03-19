@@ -48,9 +48,10 @@ class ApplicationController < ActionController::Base
 
     # Clears any user session and authorization information by:
     #   * ensuring the user will be logged out if REMOTE_USER is not set
-    def clear_session_user
+    def clear_session_user # rubocop:disable Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity
       return nil_request if request.nil?
 
+      identity = session[:identity].dup if session[:identity]
       search = session[:search].dup if session[:search]
       user_return_to = session[:user_return_to].dup if session[:user_return_to]
       flash_notice = flash[:notice]
@@ -63,9 +64,19 @@ class ApplicationController < ActionController::Base
         expire_data_after_sign_out!
       end
 
+      session[:identity] = identity || Keycard::RequestAttributes.new(request).all
       session[:search] = search
       session[:user_return_to] = user_return_to
       flash[:notice] = flash_notice
+    end
+
+    def valid_institution?
+      identity = session[:identity] # a.k.a. Keycard::RequestAttributes.new(request).all
+      return false if identity.blank?
+      institutions = [identity['dlpsInstitutionId']].flatten
+      _has_campus = institutions.include?('1') # Ann Arbor Campus
+      has_lit = institutions.include?('490') # LIT
+      has_lit
     end
 
     def valid_user_signed_in?

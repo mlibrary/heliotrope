@@ -100,6 +100,9 @@ gem 'jquery-rails'
 # jQuery plugin for drop-in fix binded events problem caused by Turbolinks
 gem 'jquery-turbolinks'
 
+# Keycard provides authentication support and user/request information
+gem 'keycard', github: 'mlibrary/keycard'
+
 # Use MySQL as the database for Active Record
 gem 'mysql2'
 
