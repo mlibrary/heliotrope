@@ -79,6 +79,7 @@ end
 #
 # Require Relative
 #
+require_relative './e_pub/bridge_to_webgl'
 require_relative './e_pub/cache'
 require_relative './e_pub/cfi'
 require_relative './e_pub/chapter'

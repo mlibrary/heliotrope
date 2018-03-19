@@ -257,6 +257,15 @@ webgl = FactoryService.webgl_unity(webgl_id)
 
         }, true);
 
+
+        // POI to CFI webgl -> epub mapping stuff
+        var poiToCfiMap = {};
+
+        var fetch_poi = function() {
+          $.get("<%= "#{epub_file_path(id: @presenter.id, file: 'epub-webgl-map.json')}" %>", function(data) {
+            poiToCfiMap = data;
+          });
+        }
         // Take user to a POI when passed a string from WebGL
         function goToParagraph() {
           // don't do anything quite yet - here to prevent errors
@@ -281,6 +290,9 @@ webgl = FactoryService.webgl_unity(webgl_id)
             }],
         })
         toggle.addTo(reader);
+        <% else %>
+        // no-op for epubs without a webgl (so... almost all of them)
+        var fetch_poi = function() { }
         <% end %>
 
         // Database
@@ -361,7 +373,7 @@ webgl = FactoryService.webgl_unity(webgl_id)
         cozy.control.navigator({ region: 'bottom.navigator' }).addTo(reader);
 
         // Initiate EPUB Reader
-        reader.start();
+        reader.start(fetch_poi);
       }
     </script>
   </div>
