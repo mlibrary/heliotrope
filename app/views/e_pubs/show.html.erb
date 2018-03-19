@@ -7,7 +7,7 @@
 # load what we need to show the webgl/3-d model if needed
 webgl_id = @monograph_presenter.webgl_id
 webgl = FactoryService.webgl_unity(webgl_id)
-@unity_progress = "/webgl/#{webgl_id}/#{webgl.unity_progress}"
+@unity_progress = javascript_path 'unity_progress_heliotrope'
 @unity_loader = "/webgl/#{webgl_id}/#{webgl.unity_loader}"
 @unity_json = "/webgl/#{webgl_id}/#{webgl.unity_json}"
     %>
@@ -127,7 +127,7 @@ webgl = FactoryService.webgl_unity(webgl_id)
 
           // mobile users won't be loading the 3D content so this stuff isn't required
           if (heliotropeMobileUser === false) {
-            var options = {onProgress: UnityProgress};
+            var options = {onProgress: UnityProgressHeliotrope};
 
             var h = $panel.height();
             var w = $panel.width();
