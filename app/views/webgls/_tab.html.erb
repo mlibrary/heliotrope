@@ -15,21 +15,107 @@ webgl = FactoryService.webgl_unity(webgl_id)
 </script>
 <script>
   var gameInstance = undefined;
+  var gameReady = false;
+  // Toggling for focus of canvas
+  function GameControlReady () {
+    gameReady = true;
+  }
+
   $(document).on('turbolinks:load', function() {
     // load the webgl if the webgl tab is already active
     if ($('#webgl-tab').hasClass('active')) {
       if (typeof gameInstance === 'undefined') {
+
+
         gameInstance = UnityLoader.instantiate("gameContainer", "<%= @unity_json %>", {onProgress: UnityProgressHeliotrope});
+
+        function FocusCanvas(focus) {
+          if (gameReady) {
+            var SendMessage = gameInstance.SendMessage;
+            SendMessage("GameControl", "FocusCanvas", focus);
+          }
+        }
+
+        document.addEventListener('click', function(e) {
+          if (e.target.id == "#canvas") {
+            // Clicked on canvas
+            FocusCanvas("1");
+              } else {
+            // Clicked outside of canvas
+            FocusCanvas("0");
+          }
+        });
+
+        document.addEventListener('keydown', function(event) {
+          if (event.defaultPrevented) {
+            return; // Do nothing if the event was already processed
+          }
+
+          switch (event.key) {
+            case "Tab":
+              FocusCanvas("0");
+            break;
+            default:
+            return;
+          }
+
+        }, true);
+
+        // Take user to a POI when passed a string from WebGL
+        function goToParagraph() {
+          // don't do anything quite yet - here to prevent errors
+          var goToParagraph = null;
+        }
       }
     }
     // or load the webgl if the tab is clicked
     $("a[href='#webgl']").bind('click', function() {
       if (typeof gameInstance === 'undefined') {
+
+
         gameInstance = UnityLoader.instantiate("gameContainer", "<%= @unity_json %>", {onProgress: UnityProgressHeliotrope});
+
+        function FocusCanvas(focus) {
+          if (gameReady) {
+            var SendMessage = gameInstance.SendMessage;
+            SendMessage("GameControl", "FocusCanvas", focus);
+          }
+        }
+
+        document.addEventListener('click', function(e) {
+          if (e.target.id == "#canvas") {
+            // Clicked on canvas
+            FocusCanvas("1");
+              } else {
+            // Clicked outside of canvas
+            FocusCanvas("0");
+          }
+        });
+
+        document.addEventListener('keydown', function(event) {
+          if (event.defaultPrevented) {
+            return; // Do nothing if the event was already processed
+          }
+
+          switch (event.key) {
+            case "Tab":
+              FocusCanvas("0");
+            break;
+            default:
+            return;
+          }
+
+        }, true);
+
+        // Take user to a POI when passed a string from WebGL
+        function goToParagraph() {
+          // don't do anything quite yet - here to prevent errors
+          var goToParagraph = null;
+        }
       }
     });
   });
 </script>
 <div class="webgl-content">
-  <div id="gameContainer" style="width: 1024px; height: 600px"></div>
+  <div id="gameContainer" style="width: 1024px; height: 600px" tabindex="0"></div>
 </div>
