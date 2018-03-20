@@ -198,12 +198,22 @@ module FactoryService # rubocop:disable Metrics/ModuleLength
       file = Tempfile.new(id)
       file.write(presenter.file.content.force_encoding("utf-8"))
       file.close
-      EPub::Publication.from(id: id, file: file.path)
+      EPub::Publication.from(id: id, file: file.path, webgl: create_epub_webgl_bridge(id))
     rescue StandardError => e
       Rails.logger.info("FactoryService.e_pub_publication_from(#{id}) raised #{e}")
       EPub::Publication.null_object
     end
     private_class_method :e_pub_publication_from
+
+    def self.create_epub_webgl_bridge(id)
+      epub_fr = FeaturedRepresentative.where(file_set_id: id).first
+      if FeaturedRepresentative.where(monograph_id: epub_fr.monograph_id, kind: 'webgl')&.first.present?
+        true
+      else
+        false
+      end
+    end
+    private_class_method :create_epub_webgl_bridge
 
     def self.mcvs_manifest_from(id)
       presenter = Hyrax::FileSetPresenter.new(SolrDocument.new(FileSet.find(id).to_solr), nil, nil)

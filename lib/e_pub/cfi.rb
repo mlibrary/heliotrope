@@ -65,7 +65,8 @@ module EPub
         @node = node
         @query = query
         @section = find_section(node)
-        @pos0 = node.content.index(/#{query}\W/i, offset)
+        # @pos0 = node.content.index(/#{query}\W/i, offset)
+        @pos0 = node.content.index(/#{Regexp.escape(query)}\W/i, offset)
         @pos1 = @pos0 + query.length
       end
   end

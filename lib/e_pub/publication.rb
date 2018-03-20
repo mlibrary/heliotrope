@@ -29,6 +29,10 @@ module EPub
         sql_lite = EPub::SqlLite.from(publication)
         sql_lite.create_table
         sql_lite.load_chapters
+
+        # Edge case for epubs with POI (Point of Interest) to map to CFI for a webgl (gabii)
+        # See 1630
+        EPub::BridgeToWebgl.cache(publication) if epub[:webgl]
       end
 
       publication
