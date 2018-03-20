@@ -46,6 +46,13 @@
   <% if content_for?(:head) %>
     <%= yield(:head) %>
   <% end %>
+
+  <!-- This seemingly causes Turbolinks issues when compiled with the rest of the JS, set it here for reuse -->
+  <script>
+    var heliotropeMobileUser = false;
+    if (bowser.mobile || bowser.tablet) heliotropeMobileUser = true;
+  </script>
+
   </head>
   <%= tag.body class: press_subdomains(press_subdomain) do %>
 

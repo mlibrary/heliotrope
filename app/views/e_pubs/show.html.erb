@@ -95,9 +95,9 @@ webgl = FactoryService.webgl_unity(webgl_id)
 
           if (! $panel.length) {
 
-            var $mobileUserMessage = "";
+            var mobileUserMessage = '';
             if(heliotropeMobileUser === true) {
-              $mobileUserMessage = '<div id="epub-webgl-mobile-message">Sorry, mobile devices are not compatible with WebGL.</div>';
+              mobileUserMessage = '<div id="epub-webgl-mobile-message">Sorry, mobile devices are not compatible with WebGL.</div>';
             }
 
             var $panelContent =
@@ -109,7 +109,7 @@ webgl = FactoryService.webgl_unity(webgl_id)
                 '</div>' +
                 '<div class="webgl-content">' +
                   '<div id="gameContainer" tabindex="0">' +
-                    $mobileUserMessage +
+                    mobileUserMessage +
                   '</div>' +
                 '</div>' +
                 '<div class="panel-info">' +
@@ -183,9 +183,8 @@ webgl = FactoryService.webgl_unity(webgl_id)
 
         // dynamic WebGL canvas resizing
         reader.on('resized', function() {
-          // again, these folks won't have a canvas to resize
-          //if (heliotropeMobileUser === false)
-          if (gameReady) {
+          // mobile users shouldn't have a canvas to resize
+          if (gameReady && heliotropeMobileUser === false) {
             resize_webgl();
           }
         })

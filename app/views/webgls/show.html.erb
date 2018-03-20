@@ -3,7 +3,7 @@
   <meta name="turbolinks-cache-control" content="no-cache">
   <%= csrf_meta_tag %>
   <link src="shortcut icon" href="<%= @favicon %>">
-  <%= javascript_include_tag 'unity_progress_heliotrope' %>');
+  <%= javascript_include_tag 'unity_progress_heliotrope' %>'
   <script src="<%= @unity_loader %>"></script>
   <script>
     // this has to go right after @unity_loader is loaded to guarantee no random JS errors get alert-boxed
@@ -18,45 +18,51 @@
     function GameControlReady () {
       gameReady = true;
     }
-    $(document).on('ready page:load', function(){
+    $(document).on('turbolinks:load', function() {
 
-      gameInstance = UnityLoader.instantiate("gameContainer", "<%= @unity_json %>", {onProgress: UnityProgressHeliotrope});
-
-      function FocusCanvas(focus) {
-        if (gameReady) {
-          var SendMessage = gameInstance.SendMessage;
-          SendMessage("GameControl", "FocusCanvas", focus);
-        }
+      if (heliotropeMobileUser === true) {
+        $('#gameContainer').html('<div id="epub-webgl-mobile-message">Sorry, mobile devices are not compatible with WebGL.</div>');
       }
+      else if (typeof gameInstance === 'undefined' ) {
 
-      document.addEventListener('click', function(e) {
-        if (e.target.id == "#canvas") {
-          // Clicked on canvas
-          FocusCanvas("1");
-            } else {
-          // Clicked outside of canvas
-          FocusCanvas("0");
-        }
-      });
+        gameInstance = UnityLoader.instantiate("gameContainer", "<%= @unity_json %>", {onProgress: UnityProgressHeliotrope});
 
-      document.addEventListener('keydown', function(event) {
-        if (event.defaultPrevented) {
-          return; // Do nothing if the event was already processed
+        function FocusCanvas(focus) {
+          if (gameReady) {
+            var SendMessage = gameInstance.SendMessage;
+            SendMessage("GameControl", "FocusCanvas", focus);
+          }
         }
 
-        switch (event.key) {
-          case "Tab":
+        document.addEventListener('click', function (e) {
+          if (e.target.id == "#canvas") {
+            // Clicked on canvas
+            FocusCanvas("1");
+          } else {
+            // Clicked outside of canvas
             FocusCanvas("0");
-          break;
-          default:
-          return;
+          }
+        });
+
+        document.addEventListener('keydown', function (event) {
+          if (event.defaultPrevented) {
+            return; // Do nothing if the event was already processed
+          }
+
+          switch (event.key) {
+            case "Tab":
+              FocusCanvas("0");
+              break;
+            default:
+              return;
+          }
+
+        }, true);
+
+        // Take user to a POI when passed a string from WebGL
+        function goToParagraph() {
+          // don't do anything quite yet - here to prevent errors
         }
-
-      }, true);
-
-      // Take user to a POI when passed a string from WebGL
-      function goToParagraph() {
-        // don't do anything quite yet - here to prevent errors
       }
     });
   </script>
