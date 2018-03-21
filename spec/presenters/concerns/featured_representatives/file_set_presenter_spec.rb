@@ -84,4 +84,41 @@ describe FeaturedRepresentatives::FileSetPresenter do
       end
     end
   end
+
+  describe '#component' do
+    subject { presenter }
+
+    let(:presenter) { TestFileSetPresenter.new(SolrDocument.new(id: 'fid1', monograph_id: 'mid')) }
+    let!(:fr) { create(:featured_representative, file_set_id: 'fid1', monograph_id: 'mid', kind: kind) }
+    let(:kind) { 'aboutware' }
+
+    after { FeaturedRepresentative.destroy_all }
+
+    it { expect(subject.component?).to be false }
+    it { expect(subject.component).to be 0 }
+
+    context 'component' do
+      let(:component) { double("component", id: id) }
+      let(:id) { double("id", positive?: true) }
+
+      before { allow(Component).to receive(:find_by).with(handle: "2027/fulcrum.fid1").and_return(component) }
+
+      it { expect(subject.component?).to be false }
+      it { expect(subject.component).to be 0 }
+
+      context 'epub' do
+        let(:kind) { 'epub' }
+
+        it { expect(subject.component?).to be true }
+        it { expect(subject.component).to be id }
+      end
+
+      context 'webgl' do
+        let(:kind) { 'webgl' }
+
+        it { expect(subject.component?).to be false }
+        it { expect(subject.component).to be 0 }
+      end
+    end
+  end
 end

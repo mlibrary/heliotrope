@@ -12,6 +12,17 @@ module FeaturedRepresentatives
       featured_representative ? true : false
     end
 
+    def component?
+      component.positive?
+    end
+
+    def component
+      return 0 unless epub?
+      epub_component = Component.find_by(handle: HandleService.handle(self))
+      return 0 if epub_component.blank?
+      epub_component.id
+    end
+
     def epub?
       # ['application/epub+zip'].include? mime_type
       featured_representative&.kind == 'epub'

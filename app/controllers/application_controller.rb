@@ -8,6 +8,10 @@ class ApplicationController < ActionController::Base
   # before the location can be stored.
   before_action :store_user_location!, if: :storable_location?
 
+  # Prevent CSRF attacks by raising an exception.
+  # For APIs, you may want to use :null_session instead.
+  protect_from_forgery with: :exception
+
   # Adds a few additional behaviors into the application controller
   include Blacklight::Controller
   include Hydra::Controller::ControllerBehavior
@@ -20,21 +24,19 @@ class ApplicationController < ActionController::Base
   # Behavior for devise.  Use remote user field in http header for auth.
   include Behaviors::HttpHeaderAuthenticatableBehavior
 
-  # Prevent CSRF attacks by raising an exception.
-  # For APIs, you may want to use :null_session instead.
-  protect_from_forgery with: :exception
-
   rescue_from ActiveFedora::ObjectNotFoundError, with: :render_unauthorized
   # rescue_from ActiveFedora::ActiveFedoraError, with: :render_unauthorized
   rescue_from ActiveRecord::RecordNotFound, with: :render_unauthorized
 
-  # Clears any user session and authorization information
-  before_action :clear_session_user
+  def current_institutions?
+    current_institutions.count.positive?
+  end
 
-  # register callback with warden to clear flash message
-  Warden::Manager.after_authentication do |user, auth, _opts|
-    Rails.logger.debug "[AUTHN] Warden after_authentication (clearing flash): #{user}"
-    auth.request.flash.clear
+  def current_institutions
+    session[:identity] ||= Keycard::RequestAttributes.new(request).all
+    identity = session[:identity]
+    return [] if identity.blank?
+    [identity['dlpsInstitutionId']].flatten.map(&:to_s)
   end
 
   private
@@ -44,37 +46,6 @@ class ApplicationController < ActionController::Base
         format.html { render 'hyrax/base/unauthorized', status: :unauthorized }
         format.any { head :unauthorized, content_type: 'text/plain' }
       end
-    end
-
-    # Clears any user session and authorization information by:
-    #   * ensuring the user will be logged out if REMOTE_USER is not set
-    def clear_session_user
-      return nil_request if request.nil?
-
-      backup = session.to_hash
-      identity = session[:identity].dup if session[:identity]
-      flash_notice = flash[:notice]
-
-      if valid_user_signed_in?
-        sign_in_static_cookie
-      else
-        sign_out_static_cookie
-        request.env['warden'].logout(:default)
-        expire_data_after_sign_out!
-      end
-
-      session.update(backup)
-      session[:identity] = identity || Keycard::RequestAttributes.new(request).all
-      flash[:notice] = flash_notice
-    end
-
-    def valid_institution?
-      identity = session[:identity] # a.k.a. Keycard::RequestAttributes.new(request).all
-      return false if identity.blank?
-      institutions = [identity['dlpsInstitutionId']].flatten
-      _has_campus = institutions.include?('1') # Ann Arbor Campus
-      has_lit = institutions.include?('490') # LIT
-      has_lit
     end
 
     def valid_user_signed_in?

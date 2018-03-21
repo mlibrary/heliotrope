@@ -22,6 +22,13 @@ module Devise
         end
       end
 
+      # Override and set to false for things like OmniAuth that technically
+      # run through Authentication (user_set) very often, which would normally
+      # reset CSRF data in the session
+      def clean_up_csrf?
+        false
+      end
+
       private
 
         def user_key

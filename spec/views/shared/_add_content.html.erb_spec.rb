@@ -5,6 +5,7 @@ require 'rails_helper'
 describe 'shared/_my_actions.html.erb' do
   before do
     allow(view).to receive(:current_user).and_return(user)
+    allow(view).to receive(:current_institutions?).and_return(false)
   end
 
   context "a platform admin user" do

@@ -30,6 +30,8 @@
       <div class="navbar-right">
         <% if current_user && show_site_actions? %>
           <%= render 'shared/my_actions' %>
+        <% elsif current_institutions? %>
+          <%= render 'shared/institutions' %>
         <% else %>
           <a href="/" title="Fulcrum" data-turbolinks="false"><%= image_tag "fulcrum-mark-white-30px.png", class: 'logo', alt: 'Fulcrum Beta logo' %></a> <a class="beta" href="/beta" title="Fulcrum Beta information" data-turbolinks="false">beta</a>
         <% end %>

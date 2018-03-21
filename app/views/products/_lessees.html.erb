@@ -5,12 +5,14 @@
       <% end %>
     </li>
   <% end %>
-  <li>
-    <%= form_tag(product_lessees_path(product), method: :post) do %>
-      <%= select_tag "id", options_from_collection_for_select(product.not_lessees, "id", "identifier") %>
-      <%= button_tag(type: 'submit',  class: 'btn btn-default') do %>
-        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Add
+  <% if product.not_lessees.present? %>
+    <li>
+      <%= form_tag(product_lessees_path(product), method: :post) do %>
+        <%= select_tag "id", options_from_collection_for_select(product.not_lessees, "id", "identifier") %>
+        <%= button_tag(type: 'submit',  class: 'btn btn-default') do %>
+          <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Add
+        <% end %>
       <% end %>
-    <% end %>
-  </li>
+    </li>
+  <% end %>
 </ul>
