@@ -17,12 +17,10 @@ class User < ApplicationRecord
   has_many :roles, dependent: :destroy
   has_many :presses, through: :roles, source: 'resource', source_type: "Press"
 
-  before_validation :generate_password, on: :create
-
-  def generate_password
-    self.password = SecureRandom.urlsafe_base64(12)
-    self.password_confirmation = password
-  end
+  # Include default devise modules. Others available are:
+  # :registerable, :recoverable, :rememberable, :trackable, :validatable
+  # :confirmable, :lockable, :timeoutable and :omniauthable
+  devise :database_authenticatable
 
   # Use the http header as auth.  This app will be behind a reverse proxy
   #   that will take care of the authentication.
@@ -38,19 +36,9 @@ class User < ApplicationRecord
     # TODO: Override this for HttpHeaderAuthenticatable
   end
 
-  # Include default devise modules. Others available are:
-  # :confirmable, :lockable, :timeoutable and :omniauthable
-  devise :database_authenticatable, :registerable,
-         :recoverable, :rememberable, :trackable, :validatable
-
-  # blacklight magic (may not be needed)
-  # if Blacklight::Utils.needs_attr_accessible?
-  #   attr_accessible :email, :password, :password_confirmation
-  # end
-
   alias_attribute :user_key, :email
 
-  # Override Hyrda
+  # Override Hydra
   # current_user.groups is used in lot of places like
   # blacklight-access-controls, hydra-access-controls, hyrax.
   # This returns an array of "publisher_roles" like:

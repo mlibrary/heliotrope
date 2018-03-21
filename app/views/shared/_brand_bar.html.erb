@@ -19,6 +19,8 @@
       <div class="navbar-right">
         <% if current_user && show_site_actions? %>
           <%= render 'shared/my_actions' %>
+        <% elsif current_institutions? %>
+          <%= render 'shared/institutions' %>
         <% end %>
       </div>
     </div>

@@ -7,7 +7,7 @@ RSpec.describe Authentication, type: :model do
 
   let(:args) { { email: email } }
   let(:email) { user.email }
-  let(:user) { create(:user) }
+  let(:user) { build(:user) }
 
   it 'is valid' do
     expect(subject).to be_valid

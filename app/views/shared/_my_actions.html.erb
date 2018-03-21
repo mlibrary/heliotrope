@@ -3,7 +3,7 @@
   <%= render 'shared/locale_picker' if available_translations.size > 1 %>
   <!-- We're not using these yet but when we do they're in hyrax views/hyrax/notifications/_notifications.html.erb
   <li>
-    <%= render_notifications(user: current_user) %>
+    <#%= render_notifications(user: current_user) %>
   </li>
   -->
   <li class="dropdown my-actions">
@@ -24,6 +24,13 @@
           current_user.roles.where(role: 'admin', resource_id: @press.id, resource_type: 'Press').first
         )
       %>
+
+      <% if current_institutions? %>
+        <% current_institutions.each do |institution| %>
+          <li class="menuitem"><%= institution %></li>
+        <% end %>
+        <li class="divider"></li>
+      <% end %>
 
       <% if show_fulcrum_link %>
         <li><%= link_to 'Fulcrum', main_app.fulcrum_path, role: 'menuitem'  %></li>

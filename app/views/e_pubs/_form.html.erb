@@ -1,0 +1,23 @@
+<% if member.epub? %>
+  <% if can? :edit, member.id %>
+    <% if member.component? %>
+      <%= link_to t('.destroy'),
+        main_app.component_path(member.component),
+        method: :delete,
+        title: t('.destroy'),
+        data: { confirm: t('.destroy') },
+        class: 'btn btn-default' %>
+    <% else %>
+      <%= link_to t('.create'),
+        main_app.components_path(component: { handle: HandleService.handle(member) }),
+        method: :post,
+        title: t('.create'),
+        data: { confirm: t('.create') },
+        class: 'btn btn-default' %>
+    <% end %>
+  <% else %>
+    <% if member.component? %>
+      <%= member.component %>
+    <% end %>
+  <% end %>
+<% end %>
