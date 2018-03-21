@@ -71,6 +71,22 @@ RSpec.describe WebglsController, type: :controller do
           expect(response.body).to eq "\u001F\x8B\b\bT\xAB\xA2Z\u0000\u0003thing.asm.memory.unityweb\u0000+K,R(\xC9\xC8\xCCK/V\xB0UP\x82\xB0\x94\xAC\xB9\u0000\xD4\xDB\xCD\xFC\u0017\u0000\u0000\u0000"
         end
       end
+
+      context "with a presumed pre-gzipped unityweb file (Unity 2017)" do
+        it "responds with Content-Encoding gzip header, stopping mod_deflate from recompressing it" do
+          get :file, params: { id: file_set.id, file: 'Build/thing.asm.memory', format: 'unityweb' }
+          expect(response).to have_http_status(:success)
+          expect(response.headers['Content-Encoding']).to eq('gzip')
+        end
+      end
+
+      context "with a non-unityweb file" do
+        it "doesn't respond with Content-Encoding gzip header, mod_deflate will compress this" do
+          get :file, params: { id: file_set.id, file: 'Build/UnityLoader', format: 'js' }
+          expect(response).to have_http_status(:success)
+          expect(response.headers['Content-Encoding']).to_not eq('gzip')
+        end
+      end
     end
   end
 end
