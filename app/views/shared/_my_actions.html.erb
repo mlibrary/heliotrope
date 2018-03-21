@@ -27,7 +27,7 @@
 
       <% if current_institutions? %>
         <% current_institutions.each do |institution| %>
-          <li class="menuitem"><%= institution %></li>
+          <li class="menuitem"><%= institution.name %></li>
         <% end %>
         <li class="divider"></li>
       <% end %>

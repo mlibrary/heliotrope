@@ -1,0 +1,26 @@
+<% institutions =  Institution.all %>
+<h1>Institution Summary</h1>
+<table class="table table-striped" summary="Institution List">
+  <tr>
+    <th></th>
+    <th>Institution <%= link_to(new_institution_path) do %>
+        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> New
+      <% end %>
+    </th>
+    <th>Lessee</th>
+    <th>WWW</th>
+    <th>Login</th>
+  </tr>
+  <% institutions.each do |institution| %>
+    <tr>
+      <td><%= link_to(edit_institution_path(institution)) do %>
+          <span class="glyphicon glyphicon-edit" aria-hidden="true"></span> Edit
+        <% end %>
+      </td>
+      <td><%= link_to institution.name, institution_path(institution) %></td>
+      <td><%= link_to institution.key, lessee_path(institution.lessee) %></td>
+      <td><%= link_to institution.site, institution.site %></td>
+      <td><%= link_to institution.login, institution.login %></td>
+    </tr>
+  <% end %>
+</table>

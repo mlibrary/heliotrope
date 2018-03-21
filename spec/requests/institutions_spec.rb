@@ -2,27 +2,27 @@
 
 require 'rails_helper'
 
-RSpec.describe "Products", type: :request do
-  let(:product) { create(:product) }
+RSpec.describe "Institutions", type: :request do
+  let(:institution) { create(:institution) }
 
   context 'unauthorized' do
-    describe "GET /products" do
+    describe "GET /institutions" do
       it do
-        get products_path
+        get institutions_path
         expect(response).to have_http_status(302)
         expect(response).to redirect_to(presses_path)
       end
     end
-    describe "GET /products/1/purchase" do
+    describe "GET /institutions/1/login" do
       it do
-        get purchase_product_path(product)
+        get login_institution_path(institution)
         expect(response).to have_http_status(302)
-        expect(response).to redirect_to(product.purchase)
+        expect(response).to redirect_to(institution.login)
       end
     end
-    describe "GET /products/1/help" do
+    describe "GET /institutions/1/help" do
       it do
-        get help_product_path(product)
+        get help_institution_path(institution)
         expect(response).to have_http_status(200)
       end
     end
@@ -33,22 +33,22 @@ RSpec.describe "Products", type: :request do
 
     before { cosign_sign_in(user) }
 
-    describe "GET /products" do
+    describe "GET /institutions" do
       it do
-        get products_path
+        get institutions_path
         expect(response).to have_http_status(200)
       end
     end
-    describe "GET /products/1/purchase" do
+    describe "GET /institutions/1/login" do
       it do
-        get purchase_product_path(product)
+        get login_institution_path(institution)
         expect(response).to have_http_status(302)
-        expect(response).to redirect_to(product.purchase)
+        expect(response).to redirect_to(institution.login)
       end
     end
-    describe "GET /products/1/help" do
+    describe "GET /institutions/1/help" do
       it do
-        get help_product_path(product)
+        get help_institution_path(institution)
         expect(response).to have_http_status(200)
       end
     end

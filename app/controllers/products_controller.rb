@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class ProductsController < ApplicationController
-  before_action :set_product, only: %i[show edit update destroy add remove]
+  before_action :set_product, only: %i[show edit update destroy add remove purchase help]
 
   # GET /products
   # GET /products.json
@@ -100,6 +100,14 @@ class ProductsController < ApplicationController
     end
   end
 
+  # GET /products/1/purchase
+  def purchase
+    redirect_to @product.purchase
+  end
+
+  # GET /products/1/help
+  def help; end
+
   private
 
     # Use callbacks to share common setup or constraints between actions.
@@ -109,6 +117,6 @@ class ProductsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def product_params
-      params.require(:product).permit(:identifier)
+      params.require(:product).permit(:identifier, :purchase)
     end
 end

@@ -5,8 +5,9 @@ require 'rails_helper'
 RSpec.describe Product, type: :model do
   subject { product }
 
-  let(:product) { described_class.new(identifier: "identifier") }
+  let(:product) { described_class.new(identifier: identifier, purchase: purchase) }
   let(:identifier) { double('identifier') }
+  let(:purchase) { double('purchase') }
 
   it { is_expected.to be_valid }
 

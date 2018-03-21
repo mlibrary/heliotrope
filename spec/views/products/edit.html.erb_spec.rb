@@ -7,7 +7,8 @@ RSpec.describe "products/edit", type: :view do
     @product = assign(
       :product,
       Product.create!(
-        identifier: "MyString"
+        identifier: "MyString",
+        purchase: "MyString"
       )
     )
   end
@@ -16,6 +17,7 @@ RSpec.describe "products/edit", type: :view do
     render
     assert_select "form[action=?][method=?]", product_path(@product), "post" do
       assert_select "input[name=?]", "product[identifier]"
+      assert_select "input[name=?]", "product[purchase]"
     end
   end
 end

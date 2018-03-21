@@ -5,7 +5,7 @@ require 'rails_helper'
 RSpec.describe "Lessees", type: :request do
   context 'unauthorized' do
     describe "GET /lessees" do
-      it "works! (now write some real specs)" do
+      it do
         get lessees_path
         expect(response).to have_http_status(302)
         expect(response).to redirect_to(presses_path)
@@ -19,7 +19,7 @@ RSpec.describe "Lessees", type: :request do
     before { cosign_sign_in(user) }
 
     describe "GET /lessees" do
-      it "works! (now write some real specs)" do
+      it do
         get lessees_path
         expect(response).to have_http_status(200)
       end

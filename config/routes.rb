@@ -12,6 +12,7 @@ end
 
 Rails.application.routes.draw do
   constraints platform_administrator_constraint do
+    resources :institutions
     resources :lessees do
       resources :products, only: %i[create destroy]
     end
@@ -21,6 +22,20 @@ Rails.application.routes.draw do
     resources :products do
       resources :components, only: %i[create destroy]
       resources :lessees, only: %i[create destroy]
+    end
+  end
+
+  resources :institutions, only: [] do
+    member do
+      get :login
+      get :help
+    end
+  end
+
+  resources :products, only: [] do
+    member do
+      get :purchase
+      get :help
     end
   end
 

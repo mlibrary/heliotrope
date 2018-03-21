@@ -8,13 +8,13 @@
   -->
   <li class="dropdown my-actions">
     <a class="dropdown-toggle user-display-name" data-toggle="dropdown" href="#">
-      <%= controller.current_institutions.first %>
+      <%= controller.current_institutions.first.name %>
       <span class="caret"></span>
     </a>
 
     <ul class="dropdown-menu">
       <% controller.current_institutions.each do |institution| %>
-        <li><%= institution %></li>
+        <li><%= institution.name %></li>
       <% end %>
     </ul>
   </li>

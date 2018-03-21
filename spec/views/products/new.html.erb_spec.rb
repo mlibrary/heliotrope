@@ -7,7 +7,8 @@ RSpec.describe "products/new", type: :view do
     assign(
       :product,
       Product.new(
-        identifier: "MyString"
+        identifier: "MyString",
+        purchase: "MyString"
       )
     )
   end
@@ -16,6 +17,7 @@ RSpec.describe "products/new", type: :view do
     render
     assert_select "form[action=?][method=?]", products_path, "post" do
       assert_select "input[name=?]", "product[identifier]"
+      assert_select "input[name=?]", "product[purchase]"
     end
   end
 end

@@ -1,0 +1,41 @@
+<div class="row">
+  <div class="col-sm-1"></div>
+  <div class="col-sm-10 col-center-block">
+    <h2 class="text-center">Log in to get the most out of Fulcrum</h2>
+    <p class="text-center"><%= link_to 'Back', :back %></p>
+  </div>
+  <div class="col-sm-1"></div>
+</div>
+<div class="row">
+  <div class="col-sm-1"></div>
+  <div class="col-sm-5">
+    <h4>Find your institution:</h4>
+    <ul>
+      <% @institutions.each do |institution| %>
+        <li><%= link_to institution.name, login_institution_path(institution) %></li>
+      <% end %>
+    </ul>
+    <p><%= link_to %q("Why isn't my institution listed?"), 'https://www.fulcrum.org/blog' %></p>
+  </div>
+  <div class="col-sm-5">
+    <% if current_user.present? %>
+      <h4>Purchase access:</h4>
+      <ul>
+        <% @products.each do |product| %>
+          <li><%= link_to product.identifier, purchase_product_path(product) %></li>
+        <% end %>
+      </ul>
+      <p><%= link_to %q("Why doesn't my purchase allow me access?"), 'https://www.fulcrum.org/blog' %></p>
+  <% else %>
+      <h4>Log in as our guest:</h4>
+      <p>See <%= link_to '"What can I access without logging in?"', 'https://www.fulcrum.org/blog' %> for information about what all users can do without logging in.</p>
+      <p>Log in with:</p>
+      <ul>
+        <li><%= link_to 'University of Michigan Friend Account', main_app.new_user_session_path %></li>
+      </ul>
+      <p>Still need a way to log in? <a href="http://documentation.its.umich.edu/node/305">Create a University of Michigan Friend Account</a></p>
+    <% end %>
+  </div>
+  <div class="col-sm-1"></div>
+</div>
+

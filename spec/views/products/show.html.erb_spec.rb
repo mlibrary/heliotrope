@@ -7,7 +7,8 @@ RSpec.describe "products/show", type: :view do
     @product = assign(
       :product,
       Product.create!(
-        identifier: "Identifier"
+        identifier: "Identifier",
+        purchase: "Purchase"
       )
     )
   end
@@ -15,5 +16,6 @@ RSpec.describe "products/show", type: :view do
   it "renders attributes in <p>" do
     render
     expect(rendered).to match(/Identifier/)
+    expect(rendered).to match(/Purchase/)
   end
 end
