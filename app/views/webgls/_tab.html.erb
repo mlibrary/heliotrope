@@ -21,6 +21,13 @@ webgl = FactoryService.webgl_unity(webgl_id)
     gameReady = true;
   }
 
+  // Take user to a POI when passed a string from WebGL
+  function goToParagraph(p) {
+    var paragraphHandle = "http://hdl.handle.net/2027/fulcrum.9231782/" + "par" + p;
+    $('#paragraphHandle').html('<a href="' + paragraphHandle + '" target="_blank">' + paragraphHandle + '</a>');
+    $('#goToParagraphModal').modal();
+  }
+
   $(document).on('turbolinks:load', function() {
     // load the webgl if the webgl tab is already active
     if ($('#webgl-tab').hasClass('active')) {
@@ -60,12 +67,6 @@ webgl = FactoryService.webgl_unity(webgl_id)
           }
 
         }, true);
-
-        // Take user to a POI when passed a string from WebGL
-        function goToParagraph() {
-          // don't do anything quite yet - here to prevent errors
-          var goToParagraph = null;
-        }
       }
     }
     // or load the webgl if the tab is clicked
@@ -106,16 +107,28 @@ webgl = FactoryService.webgl_unity(webgl_id)
           }
 
         }, true);
-
-        // Take user to a POI when passed a string from WebGL
-        function goToParagraph() {
-          // don't do anything quite yet - here to prevent errors
-          var goToParagraph = null;
-        }
       }
     });
   });
 </script>
 <div class="webgl-content">
   <div id="gameContainer" style="width: 1024px; height: 600px" tabindex="0"></div>
+</div>
+
+<div class="modal fade" id="goToParagraphModal" tabindex="-1" role="dialog" aria-labelledby="goToParagraphModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      </div>
+      <div class="modal-body">
+        <p>To view a textual reference to this stratigraphic unit in the publication, please use the following permalink (will open in a new window):</p>
+
+        <p id="paragraphHandle"></p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
 </div>
