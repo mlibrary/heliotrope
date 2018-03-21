@@ -38,6 +38,10 @@ gem 'jbuilder', '~> 2.5'
 # When 2.0.4 is out this might not be needed anymore
 gem 'rack', git: 'https://github.com/rack/rack.git', ref: 'ee01748'
 
+# Loofah (dependancy for rails-html-sanitizer) security fix
+# https://github.com/flavorjones/loofah/issues/144
+gem 'loofah', '~> 2.2'
+
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   # gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
