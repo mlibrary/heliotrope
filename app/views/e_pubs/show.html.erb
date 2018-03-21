@@ -152,7 +152,7 @@ webgl = FactoryService.webgl_unity(webgl_id)
 
         // close panel function
         var close_panel = function() {
-          toggle.state('open-webgl');
+          panel_toggle.state('open-webgl');
           var $panel = $('.special-panel');
           if ($panel.length) {
             $('.special-panel').hide();
@@ -190,23 +190,28 @@ webgl = FactoryService.webgl_unity(webgl_id)
         })
 
         // Open SU panel in WebGL if SU link is clicked
+        // If in a11y mode, open database record
         var click_handler = function(event) {
           var s = event.target.getAttribute('data-uid');
-          var SendMessage = gameInstance.SendMessage;
-          var $panel= $(".special-panel");
-          function getToUnity(s) {
-            SendMessage("WebCommunicator", "ShowString", s);
-          };
-          var gameContainerDiv = document.getElementById("gameContainer");
-          if ($('body').hasClass('panel-open')) {
-            FocusCanvas("1");
-            gameContainerDiv.focus();
-            getToUnity(s);
+          if ($('body').hasClass('a11y')) {
+            window.open('https://doi.org/10.3998/gabii.1.' + s, '_blank');
           } else {
-            open_panel();
-            FocusCanvas("1");
-            gameContainerDiv.focus();
-            getToUnity(s);
+            var SendMessage = gameInstance.SendMessage;
+            var $panel= $(".special-panel");
+            function getToUnity(s) {
+              SendMessage("WebCommunicator", "ShowString", s);
+            };
+            var gameContainerDiv = document.getElementById("gameContainer");
+            if ($('body').hasClass('panel-open')) {
+              FocusCanvas("1");
+              gameContainerDiv.focus();
+              getToUnity(s);
+            } else {
+              open_panel();
+              FocusCanvas("1");
+              gameContainerDiv.focus();
+              getToUnity(s);
+            }
           }
         };
 
@@ -219,7 +224,9 @@ webgl = FactoryService.webgl_unity(webgl_id)
           }
         })
 
-        // Toggling for focus of canvas
+        // Toggling focus of canvas - if clicked on canvas, focus
+        // if clicked outside of canvas, remove focus
+        // if tab advance after focusing canvas, remove canvas focus
         function GameControlReady () {
           gameReady = true;
         }
@@ -279,7 +286,28 @@ webgl = FactoryService.webgl_unity(webgl_id)
           };
         }
 
-        var toggle = cozy.control.widget.toggle({
+        // accessibility mode functions
+        var a11y_on = function() {
+          $('body').addClass('a11y');
+          $('.toggle-a11y').addClass('on');
+          $('.toggle-a11y').attr('aria-disabled', 'false');
+          console.log('a11y-on');
+          close_panel();
+          //$('.webgl-content').detach();
+          // do something different with links to unity
+          // go to database in new window
+        }
+
+        var a11y_off = function() {
+          $('body').removeClass('a11y');
+          $('.toggle-a11y').removeClass('on');
+          $('.toggle-a11y').attr('aria-disabled', 'true');
+          console.log('a11y-off');
+          open_panel();
+        }
+
+        // 3D model toggler
+        var panel_toggle = cozy.control.widget.toggle({
           region: 'top.toolbar.left',
           template: '<button class="button--sm" id="webgl" data-toggle="button" aria-label="3D Model">3D Model</button>',
           states: [{
@@ -297,7 +325,28 @@ webgl = FactoryService.webgl_unity(webgl_id)
               }
             }],
         })
-        toggle.addTo(reader);
+        panel_toggle.addTo(reader);
+
+        // Accessibility mode toggler
+        var a11y_toggle = cozy.control.widget.toggle({
+          region: 'top.header.right',
+          template: '<a target="_top" class="toggle-a11y" data-toggle="button" aria-disabled="true">Accessibility Mode</a>',
+          states: [{
+            stateName: 'a11y-on',
+            onClick: function(btn, reader) {
+              a11y_on();
+              btn.state('a11y-off');
+            }
+          },
+            {
+              stateName: 'a11y-off',
+              onClick: function(btn, reader) {
+                a11y_off();
+                btn.state('a11y-on');
+              }
+            }],
+        })
+        a11y_toggle.addTo(reader);
         <% else %>
         // no-op for epubs without a webgl (so... almost all of them)
         var fetch_poi = function() { }
