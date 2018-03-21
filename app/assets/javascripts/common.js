@@ -2,7 +2,7 @@
 //
 //= require jquery
 //= require jquery_ujs
-//= require turbolinks
+// require turbolinks
 //= require leaflet_1.0.3
 //= require leaflet-iiif_1.2.1_best_fit
 //= require L.Control.Pan

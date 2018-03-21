@@ -32,7 +32,8 @@ function throttleHeliotropeStatFlot(milliseconds) {
   heliotropeStatFlotTimer = setTimeout(heliotropeStatFlot, milliseconds);
 };
 
-$(document).on('turbolinks:load', function() {
+//$(document).on('turbolinks:load', function() {
+$(document).ready(function() {
   // need to set this to false here for Turbolinks browser back/forward button (restoration) events
   heliotropeStatsAlreadyDrawn = false;
 

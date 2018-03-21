@@ -28,7 +28,9 @@ webgl = FactoryService.webgl_unity(webgl_id)
     $('#goToParagraphModal').modal();
   }
 
-  $(document).on('turbolinks:load', function() {
+  //$(document).on('turbolinks:load', function() {
+  //$(document).on('page:load', function() {
+  $(document).ready(function() {
     // load the webgl if the webgl tab is already active
     if ($('#webgl-tab').hasClass('active')) {
       if (typeof gameInstance === 'undefined') {

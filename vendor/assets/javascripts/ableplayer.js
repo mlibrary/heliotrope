@@ -38,8 +38,8 @@
   // conorom 20170809: this is a heliotrope hack to get better Turbolinks behavior...
   // specifically "restoration" (browser back button) visits on the video page:
   // https://github.com/mlibrary/heliotrope/issues/1084
-  $(document).ready(function () { // not Turbolinks aware
-  //$( document ).on('turbolinks:load', function() {
+  $(document).ready(function () {
+  //$( document ).on('turbolinks:load', function() { // 2018-03-21: no turbolinks!
     $('video, audio').each(function (index, element) {
       if ($(element).data('able-player') !== undefined) {
         new AblePlayer($(this),$(element));
@@ -1231,11 +1231,7 @@
     // in the Preferences popup menu
     // Human-readable label for each group is defined in translation table
     if (this.mediaType === 'video') {
-      // return ['captions','descriptions','keyboard','transcript'];
-      // *** heliotrope *** for embed for now we're only going to offer the shortcut keys
-      // note: as the dialog is too big for the iframe (with scrolling unavailable)...
-      // we're hiding the preferences button. Thus this hack is kinda moot right now.
-      return ['keyboard'];
+      return ['captions','descriptions','keyboard','transcript'];
     }
     else if (this.mediaType === 'audio') {
       var groups = [];
@@ -8580,28 +8576,27 @@
     // set caption position to either 'overlay' or 'below'
     // if position parameter was passed to this function, use that
     // otherwise use user preference
-    // if (typeof position === 'undefined') {
-    //   position = this.prefCaptionsPosition;
-    // }
+    if (typeof position === 'undefined') {
+      position = this.prefCaptionsPosition;
+    }
     if (typeof this.$captionsWrapper !== 'undefined') {
-    // *** heliotrope *** captions have to be overlayed in embed view
-    //   if (position == 'below') {
-    //     this.$captionsWrapper.removeClass('able-captions-overlay').addClass('able-captions-below');
-    //     // also need to update in-line styles
-    //     this.$captionsWrapper.css({
-    //       'background-color': this.prefCaptionsBGColor,
-    //       'opacity': '1'
-    //     });
-    //   }
-    //   else {
+
+      if (position == 'below') {
+        this.$captionsWrapper.removeClass('able-captions-overlay').addClass('able-captions-below');
+        // also need to update in-line styles
+        this.$captionsWrapper.css({
+          'background-color': this.prefCaptionsBGColor,
+          'opacity': '1'
+        });
+      }
+      else {
         this.$captionsWrapper.removeClass('able-captions-below').addClass('able-captions-overlay');
         this.$captionsWrapper.css({
           'background-color': 'transparent',
           'opacity': ''
         });
-    //   }
+      }
     }
-
   };
 
 })(jQuery);
@@ -10261,7 +10256,7 @@
 
     // Also play/pause when clicking on the media.
     this.$media.click(function () {
-     thisObj.handlePlay();
+      thisObj.handlePlay();
     });
 
     // add listeners for media events

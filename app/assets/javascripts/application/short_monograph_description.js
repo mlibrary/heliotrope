@@ -1,5 +1,5 @@
-jQuery($(document).on('turbolinks:load', function (){
-
+//jQuery($(document).on('turbolinks:load', function (){
+$(document).ready(function() {
     var minimized_elements = $('.monograph-metadata .description');
 
     minimized_elements.each(function(){
@@ -74,5 +74,4 @@ jQuery($(document).on('turbolinks:load', function (){
         event.preventDefault();
         $(this).parent().hide().prev().show().prev().show();
     });
-}));
-
+});
