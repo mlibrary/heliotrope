@@ -286,26 +286,6 @@ webgl = FactoryService.webgl_unity(webgl_id)
           };
         }
 
-        // accessibility mode functions
-        var a11y_on = function() {
-          $('body').addClass('a11y');
-          $('.toggle-a11y').addClass('on');
-          $('.toggle-a11y').attr('aria-disabled', 'false');
-          console.log('a11y-on');
-          close_panel();
-          //$('.webgl-content').detach();
-          // do something different with links to unity
-          // go to database in new window
-        }
-
-        var a11y_off = function() {
-          $('body').removeClass('a11y');
-          $('.toggle-a11y').removeClass('on');
-          $('.toggle-a11y').attr('aria-disabled', 'true');
-          console.log('a11y-off');
-          open_panel();
-        }
-
         // 3D model toggler
         var panel_toggle = cozy.control.widget.toggle({
           region: 'top.toolbar.left',
@@ -327,26 +307,69 @@ webgl = FactoryService.webgl_unity(webgl_id)
         })
         panel_toggle.addTo(reader);
 
-        // Accessibility mode toggler
-        var a11y_toggle = cozy.control.widget.toggle({
-          region: 'top.header.right',
-          template: '<a target="_top" class="toggle-a11y" data-toggle="button" aria-disabled="true">Accessibility Mode</a>',
-          states: [{
-            stateName: 'a11y-on',
-            onClick: function(btn, reader) {
-              a11y_on();
-              btn.state('a11y-off');
-            }
-          },
+        // accessibility mode functions
+        var a11y_on = function() {
+          $('body').addClass('a11y');
+          $('.toggle-a11y').addClass('on');
+          $('.toggle-a11y').attr('aria-disabled', 'false');
+          console.log('a11y-on');
+          close_panel();
+          //$('.webgl-content').detach();
+          // do something different with links to unity
+          // go to database in new window
+        }
+
+        var a11y_off = function() {
+          $('body').removeClass('a11y');
+          $('.toggle-a11y').removeClass('on');
+          $('.toggle-a11y').attr('aria-disabled', 'true');
+          console.log('a11y-off');
+          open_panel();
+        }
+
+        // Accessibility mode in preferences
+        cozy.control.preferences({
+          region: 'top.toolbar.right',
+          fields: [
             {
-              stateName: 'a11y-off',
-              onClick: function(btn, reader) {
-                a11y_off();
-                btn.state('a11y-on');
-              }
-            }],
-        })
-        a11y_toggle.addTo(reader);
+              label: 'Accessibility Mode',
+              name: 'accessibility-mode',
+              inputs: [
+                { value: 'off', label: 'Off' },
+                { value: 'on', label: 'On'}
+              ],
+              value: 'off',
+              callback: function(value) {
+                if value == 'on' {
+                  a11y_on();
+                } else {
+                  a11y_off();
+                }
+                //alert("Accessibility Mode changed to " + value);
+              },
+              hint: 'Read the publication without the 3D model. Links to stratigraphic units point to database records.'
+            }
+          ]
+        }).addTo(reader);
+        //var a11y_toggle = cozy.control.widget.toggle({
+        //  region: 'top.header.right',
+        //  template: '<a target="_top" class="toggle-a11y" data-toggle="button" aria-disabled="true">Accessibility Mode</a>',
+        //  states: [{
+        //    stateName: 'a11y-on',
+        //    onClick: function(btn, reader) {
+        //      a11y_on();
+        //      btn.state('a11y-off');
+        //    }
+        //  },
+        //    {
+        //      stateName: 'a11y-off',
+        //      onClick: function(btn, reader) {
+        //        a11y_off();
+        //        btn.state('a11y-on');
+        //      }
+        //    }],
+        // })
+        // a11y_toggle.addTo(reader);
         <% else %>
         // no-op for epubs without a webgl (so... almost all of them)
         var fetch_poi = function() { }
