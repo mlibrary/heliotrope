@@ -1016,6 +1016,10 @@ $gabii-link-hover:    #1e5667;
   // EPUB Reader
   #reader {
 
+    .hint {
+      padding: 1em 2em;
+    }
+    
     .cozy-control .cozy-h1 {
       font-size: 1.5em;
     }
@@ -1041,6 +1045,11 @@ $gabii-link-hover:    #1e5667;
     .button--sm[disabled] {
       background: #e8e8e8;
       cursor: none;
+      color: $gabii-white;
+
+      &:hover {
+        color: $gabii-white;
+      }
     }
 
     i[class^='icon-chevron-'] {
