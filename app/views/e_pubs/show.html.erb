@@ -95,13 +95,13 @@ webgl = FactoryService.webgl_unity(webgl_id)
 
           if (! $panel.length) {
 
-            var mobileUserMessage = '';
+            var $mobileUserMessage = "";
             if(heliotropeMobileUser === true) {
-              mobileUserMessage = '<div id="epub-webgl-mobile-message">Sorry, mobile devices are not compatible with WebGL.</div>';
+              $mobileUserMessage = '<div id="epub-webgl-mobile-message">Sorry, mobile devices are not compatible with WebGL.</div>';
             }
 
             var $panelContent =
-              '<div class="special-panel">' +
+              '<div class="special-panel" aria-hidden="false">' +
                 '<div class="panel-control">' +
                   '<button class="button--sm webgl-close" data-toggle="button" data-slot="label" aria-label="Close 3-D Model" onclick="close_panel();">' +
                     '<i class="icon-x oi" data-glyph="x" aria-hidden="true"></i>' +
@@ -109,7 +109,7 @@ webgl = FactoryService.webgl_unity(webgl_id)
                 '</div>' +
                 '<div class="webgl-content">' +
                   '<div id="gameContainer" tabindex="0">' +
-                    mobileUserMessage +
+                    $mobileUserMessage +
                   '</div>' +
                 '</div>' +
                 '<div class="panel-info">' +
@@ -122,6 +122,8 @@ webgl = FactoryService.webgl_unity(webgl_id)
             $panel = $($panelContent).appendTo($main);
           } else {
             $panel.show();
+            $('.special-panel').prop('hidden', false);
+            $('.special-panel').attr('aria-hidden', 'false');
           }
 
           // mobile users won't be loading the 3D content so this stuff isn't required
@@ -152,12 +154,14 @@ webgl = FactoryService.webgl_unity(webgl_id)
 
         // close panel function
         var close_panel = function() {
-          toggle.state('open-webgl');
+          panel_toggle.state('open-webgl');
           var $panel = $('.special-panel');
           if ($panel.length) {
             $('.special-panel').hide();
             $('body').removeClass('panel-open');
             $('body').removeClass('panel-right');
+            $('.special-panel').prop('hidden', true);
+            $('.special-panel').attr('aria-hidden', 'true');
             setTimeout(function() {
               window.dispatchEvent(new Event('resize'));
             }, 0);
@@ -183,30 +187,36 @@ webgl = FactoryService.webgl_unity(webgl_id)
 
         // dynamic WebGL canvas resizing
         reader.on('resized', function() {
-          // mobile users shouldn't have a canvas to resize
-          if (gameReady && heliotropeMobileUser === false) {
+          // again, these folks won't have a canvas to resize
+          //if (heliotropeMobileUser === false)
+          if (gameReady) {
             resize_webgl();
           }
         })
 
         // Open SU panel in WebGL if SU link is clicked
+        // If in a11y mode, open database record
         var click_handler = function(event) {
           var s = event.target.getAttribute('data-uid');
-          var SendMessage = gameInstance.SendMessage;
-          var $panel= $(".special-panel");
-          function getToUnity(s) {
-            SendMessage("WebCommunicator", "ShowString", s);
-          };
-          var gameContainerDiv = document.getElementById("gameContainer");
-          if ($('body').hasClass('panel-open')) {
-            FocusCanvas("1");
-            gameContainerDiv.focus();
-            getToUnity(s);
+          if ($('body').hasClass('a11y')) {
+            window.open('https://doi.org/10.3998/gabii.1.' + s, '_blank');
           } else {
-            open_panel();
-            FocusCanvas("1");
-            gameContainerDiv.focus();
-            getToUnity(s);
+            var SendMessage = gameInstance.SendMessage;
+            var $panel= $(".special-panel");
+            function getToUnity(s) {
+              SendMessage("WebCommunicator", "ShowString", s);
+            };
+            var gameContainerDiv = document.getElementById("gameContainer");
+            if ($('body').hasClass('panel-open')) {
+              FocusCanvas("1");
+              gameContainerDiv.focus();
+              getToUnity(s);
+            } else {
+              open_panel();
+              FocusCanvas("1");
+              gameContainerDiv.focus();
+              getToUnity(s);
+            }
           }
         };
 
@@ -219,7 +229,9 @@ webgl = FactoryService.webgl_unity(webgl_id)
           }
         })
 
-        // Toggling for focus of canvas
+        // Toggling focus of canvas - if clicked on canvas, focus
+        // if clicked outside of canvas, remove focus
+        // if tab advance after focusing canvas, remove canvas focus
         function GameControlReady () {
           gameReady = true;
         }
@@ -256,8 +268,6 @@ webgl = FactoryService.webgl_unity(webgl_id)
 
         }, true);
 
-
-
         // POI to CFI webgl -> epub mapping stuff
         var poiToCfiMap = {};
 
@@ -279,7 +289,8 @@ webgl = FactoryService.webgl_unity(webgl_id)
           };
         }
 
-        var toggle = cozy.control.widget.toggle({
+        // 3D model toggler
+        var panel_toggle = cozy.control.widget.toggle({
           region: 'top.toolbar.left',
           template: '<button class="button--sm" id="webgl" data-toggle="button" aria-label="3D Model">3D Model</button>',
           states: [{
@@ -297,7 +308,24 @@ webgl = FactoryService.webgl_unity(webgl_id)
               }
             }],
         })
-        toggle.addTo(reader);
+        panel_toggle.addTo(reader);
+
+        // accessibility mode on/off
+        var a11y_on = function() {
+          $('body').addClass('a11y');
+          $('#webgl').attr('aria-disabled', 'true');
+          $('#webgl').prop('disabled', true);
+          close_panel();
+        }
+
+        var a11y_off = function() {
+          $('body').removeClass('a11y');
+          $('.toggle-a11y').removeClass('on');
+          $('#webgl').attr('aria-disabled', 'false');
+          $('#webgl').prop('disabled', false);
+          open_panel();
+        }
+
         <% else %>
         // no-op for epubs without a webgl (so... almost all of them)
         var fetch_poi = function() { }
@@ -343,6 +371,7 @@ webgl = FactoryService.webgl_unity(webgl_id)
 
         // Bib info widget
         cozy.control.bibliographicInformation({ region: 'top.toolbar.left' }).addTo(reader)
+
         // Fullscreen widget
         cozy.control.widget.button({
           region: 'top.toolbar.right',
@@ -358,8 +387,36 @@ webgl = FactoryService.webgl_unity(webgl_id)
             }
           }
         }).addTo(reader);
-        // Reading preferences widget
+
+        // Reading preferences widget - webgl gets custom preferences
+        <% if @monograph_presenter.webgl? %>
+        // Add accessibility mode to preferences
+        cozy.control.preferences({
+          region: 'top.toolbar.right',
+          fields: [
+            {
+              label: 'Accessibility Mode',
+              name: 'accessibility-mode',
+              inputs: [
+                { value: 'off', label: 'Off' },
+                { value: 'on', label: 'On'}
+              ],
+              value: 'off',
+              callback: function(value) {
+                if (value == 'on') {
+                  a11y_on();
+                } else {
+                  a11y_off();
+                }
+              },
+              hint: 'When Accessibility Mode is "On", the publication is read without the 3D model. All links to stratigraphic units point to external database records.'
+            }
+          ]
+        }).addTo(reader);
+        <% else %>
         cozy.control.preferences({ region: 'top.toolbar.right' }).addTo(reader);
+        <% end %>
+
         // Paging widgets
         // cozy.control.pageFirst({ region: 'left.sidebar' }).addTo(reader);
         cozy.control.pagePrevious({ region: 'left.sidebar' }).addTo(reader);
