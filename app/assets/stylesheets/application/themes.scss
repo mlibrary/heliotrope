@@ -1038,6 +1038,11 @@ $gabii-link-hover:    #1e5667;
       color: $gabii-brand-color;
     }
 
+    .button--sm[disabled] {
+      background: #e8e8e8;
+      cursor: none;
+    }
+
     i[class^='icon-chevron-'] {
       @include epub-prev-next-color($gabii-accent-color);
       transition: 0.2s ease-in;
