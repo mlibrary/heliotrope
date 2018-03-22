@@ -398,8 +398,8 @@ webgl = FactoryService.webgl_unity(webgl_id)
               label: 'Accessibility Mode',
               name: 'accessibility-mode',
               inputs: [
-                { value: 'off', label: 'Accessibility Mode Off' },
-                { value: 'on', label: 'Accessibility Mode On'}
+                { value: 'off', label: 'Off' },
+                { value: 'on', label: 'On'}
               ],
               value: 'off',
               callback: function(value) {
@@ -408,7 +408,6 @@ webgl = FactoryService.webgl_unity(webgl_id)
                 } else {
                   a11y_off();
                 }
-                //alert("Accessibility Mode changed to " + value);
               },
               hint: 'When Accessibility Mode is "On", the publication is read without the 3D model. All links to stratigraphic units point to external database records.'
             }
