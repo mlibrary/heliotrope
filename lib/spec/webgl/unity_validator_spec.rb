@@ -4,7 +4,7 @@ RSpec.describe Webgl::UnityValidator do
   describe "with a valid webgl" do
     before do
       @id = 'validnoid'
-      @file = './spec/fixtures/fake-game.unity'
+      @file = './spec/fixtures/fake-game.zip'
       Webgl::Unity.from(id: @id, file: @file)
     end
 
