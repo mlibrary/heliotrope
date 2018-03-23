@@ -20,6 +20,8 @@ if Settings.keycard&.database
   Keycard::DB.config.opts = Settings.keycard.database
 end
 
+Keycard::DB.config.readonly = true if Settings.keycard&.readonly
+
 # Services = Canister.new
 # Services.register(:presenters) {
 #   Vizier::PresenterFactory.new(PRESENTERS, config_type: config_class)

@@ -9,6 +9,8 @@ end
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '~> 5.1.3'
+gem 'rails-html-sanitizer', '~> 1.0.4'
+
 # Use sqlite3 as the database for Active Record
 # gem 'sqlite3'
 # Use Puma as the app server
@@ -37,10 +39,6 @@ gem 'jbuilder', '~> 2.5'
 # Pinning Rack commit that resolves the large file upload issue
 # When 2.0.4 is out this might not be needed anymore
 gem 'rack', git: 'https://github.com/rack/rack.git', ref: 'ee01748'
-
-# Loofah (dependancy for rails-html-sanitizer) security fix
-# https://github.com/flavorjones/loofah/issues/144
-gem 'loofah', '~> 2.2'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
@@ -105,7 +103,7 @@ gem 'jquery-rails'
 gem 'jquery-turbolinks'
 
 # Keycard provides authentication support and user/request information
-gem 'keycard', github: 'mlibrary/keycard'
+gem 'keycard', '~> 0.1.1'
 
 # Use MySQL as the database for Active Record
 gem 'mysql2'
