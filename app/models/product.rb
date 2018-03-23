@@ -7,6 +7,7 @@ class Product < ApplicationRecord
   has_many :lessees, through: :lessees_products
 
   validates :identifier, presence: true, allow_blank: false
+  validates :purchase, presence: true, allow_blank: false
 
   def not_components
     Component.where.not(id: components.map(&:id))

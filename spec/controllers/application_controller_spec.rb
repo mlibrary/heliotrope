@@ -31,4 +31,33 @@ describe ApplicationController do
       expect(response).to be_unauthorized
     end
   end
+
+  context 'institutions' do
+    controller do
+      def trigger; end
+    end
+
+    let(:keycard) { {} }
+    let(:institution) { double('institution', identifier: 'identifier') }
+
+    before do
+      allow_any_instance_of(Keycard::RequestAttributes).to receive(:all).and_return(keycard)
+      allow(Institution).to receive(:where).with(key: ['identifier']).and_return(institution)
+      request.env["HTTP_ACCEPT"] = 'application/json'
+      routes.draw { get "trigger" => "anonymous#trigger" }
+      get :trigger
+    end
+
+    it { expect(controller.current_institutions?).to be false }
+    it { expect(controller.current_institutions).to be_empty }
+
+    context 'institution' do
+      let(:keycard) { { "dlpsInstitutionId" => institution.identifier } }
+      let(:institution) { double('institution', identifier: 'identifier') }
+
+      it { expect(controller.current_institutions?).to be true }
+      it { expect(controller.current_institutions).not_to be_empty }
+      it { expect(controller.current_institutions.first).to be institution }
+    end
+  end
 end

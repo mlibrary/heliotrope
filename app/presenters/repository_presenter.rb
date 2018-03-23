@@ -13,6 +13,10 @@ class RepositoryPresenter < ApplicationPresenter
     Lessee.all.map(&:id)
   end
 
+  def institution_ids
+    Institution.all.map(&:id)
+  end
+
   def publisher_ids
     Press.all.map(&:id)
   end

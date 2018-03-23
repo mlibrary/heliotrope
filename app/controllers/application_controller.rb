@@ -35,8 +35,8 @@ class ApplicationController < ActionController::Base
   def current_institutions
     session[:identity] ||= Keycard::RequestAttributes.new(request).all
     identity = session[:identity]
-    return [] if identity.blank?
-    [identity['dlpsInstitutionId']].flatten.map(&:to_s)
+    return [] if identity.blank? || identity['dlpsInstitutionId'].blank?
+    [Institution.where(key: [identity['dlpsInstitutionId']].flatten.map(&:to_s))].flatten
   end
 
   private

@@ -61,11 +61,10 @@ class EPubsController < ApplicationController
     if access?
       set_session_show
       redirect_to epub_path(params[:id])
-    elsif valid_user_signed_in?
-      @subscribers = subscribers
-      render
     else
-      redirect_to new_user_session_path
+      @institutions = component_institutions
+      @products = component_products
+      render 'access'
     end
   end
 
@@ -105,11 +104,27 @@ class EPubsController < ApplicationController
     def access?
       component = Component.find_by(handle: publication.identifier)
       return true if component.blank?
-      identifiers = current_institutions
+      identifiers = current_institutions.map(&:key)
       identifiers << subscriber.identifier
       lessees = Lessee.where(identifier: identifiers)
       return false if lessees.blank?
       lessees.any? { |lessee| component.lessees.include?(lessee) }
+    end
+
+    def component_institutions
+      component = Component.find_by(handle: publication.identifier)
+      return [] if component.blank?
+      lessees = component.lessees
+      return [] if lessees.blank?
+      Institution.where(key: lessees.pluck(:identifier))
+    end
+
+    def component_products
+      component = Component.find_by(handle: publication.identifier)
+      return [] if component.blank?
+      products = component.products
+      return [] if products.blank?
+      products
     end
 
     def subscribers

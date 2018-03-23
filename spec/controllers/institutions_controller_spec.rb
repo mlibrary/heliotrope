@@ -25,27 +25,32 @@ require 'rails_helper'
 # removed from Rails core in Rails 5, but can be added back in via the
 # `rails-controller-testing` gem.
 
-RSpec.describe ProductsController, type: :controller do
+RSpec.describe InstitutionsController, type: :controller do
   # This should return the minimal set of attributes required to create a valid
-  # Product. As you add validations to Product, be sure to
+  # Institution. As you add validations to Institution, be sure to
   # adjust the attributes here as well.
   let(:valid_attributes) { {
-    identifier: "valid_identifier",
-    purchase: "valid_purchase"
+    key: 'key',
+    name: 'name',
+    site: 'site',
+    login: 'login'
   } }
+
   let(:invalid_attributes) { {
-    identifier: "",
-    purchase: ""
+    key: '',
+    name: '',
+    site: '',
+    login: ''
   } }
 
   # This should return the minimal set of values that should be in the session
   # in order to pass any filters (e.g. authentication) defined in
-  # ProductsController. Be sure to keep this updated too.
+  # InstitutionsController. Be sure to keep this updated too.
   let(:valid_session) { {} }
 
   describe "GET #index" do
     it "returns a success response" do
-      _product = Product.create! valid_attributes
+      _institution = Institution.create! valid_attributes
       get :index, params: {}, session: valid_session
       expect(response).to be_success
     end
@@ -53,8 +58,8 @@ RSpec.describe ProductsController, type: :controller do
 
   describe "GET #show" do
     it "returns a success response" do
-      product = Product.create! valid_attributes
-      get :show, params: { id: product.to_param }, session: valid_session
+      institution = Institution.create! valid_attributes
+      get :show, params: { id: institution.to_param }, session: valid_session
       expect(response).to be_success
     end
   end
@@ -68,29 +73,29 @@ RSpec.describe ProductsController, type: :controller do
 
   describe "GET #edit" do
     it "returns a success response" do
-      product = Product.create! valid_attributes
-      get :edit, params: { id: product.to_param }, session: valid_session
+      institution = Institution.create! valid_attributes
+      get :edit, params: { id: institution.to_param }, session: valid_session
       expect(response).to be_success
     end
   end
 
   describe "POST #create" do
     context "with valid params" do
-      it "creates a new Product" do
+      it "creates a new Institution" do
         expect {
-          post :create, params: { product: valid_attributes }, session: valid_session
-        }.to change(Product, :count).by(1)
+          post :create, params: { institution: valid_attributes }, session: valid_session
+        }.to change(Institution, :count).by(1)
       end
 
-      it "redirects to the created product" do
-        post :create, params: { product: valid_attributes }, session: valid_session
-        expect(response).to redirect_to(Product.last)
+      it "redirects to the created institution" do
+        post :create, params: { institution: valid_attributes }, session: valid_session
+        expect(response).to redirect_to(Institution.last)
       end
     end
 
     context "with invalid params" do
       it "returns a success response (i.e. to display the 'new' template)" do
-        post :create, params: { product: invalid_attributes }, session: valid_session
+        post :create, params: { institution: invalid_attributes }, session: valid_session
         expect(response).to be_success
       end
     end
@@ -99,46 +104,50 @@ RSpec.describe ProductsController, type: :controller do
   describe "PUT #update" do
     context "with valid params" do
       let(:new_attributes) { {
-        identifier: "new_identifier",
-        purchase: "new_purchase"
+        key: 'new_key',
+        name: 'new_name',
+        site: 'new_site',
+        login: 'new_login'
       } }
 
-      it "updates the requested product" do
-        product = Product.create! valid_attributes
-        put :update, params: { id: product.to_param, product: new_attributes }, session: valid_session
-        product.reload
-        expect(product.identifier).to eq("new_identifier")
-        expect(product.purchase).to eq("new_purchase")
+      it "updates the requested institution" do
+        institution = Institution.create! valid_attributes
+        put :update, params: { id: institution.to_param, institution: new_attributes }, session: valid_session
+        institution.reload
+        expect(institution.key).to eq("new_key")
+        expect(institution.name).to eq("new_name")
+        expect(institution.site).to eq("new_site")
+        expect(institution.login).to eq("new_login")
       end
 
-      it "redirects to the product" do
-        product = Product.create! valid_attributes
-        put :update, params: { id: product.to_param, product: valid_attributes }, session: valid_session
-        expect(response).to redirect_to(product)
+      it "redirects to the institution" do
+        institution = Institution.create! valid_attributes
+        put :update, params: { id: institution.to_param, institution: valid_attributes }, session: valid_session
+        expect(response).to redirect_to(institution)
       end
     end
 
     context "with invalid params" do
       it "returns a success response (i.e. to display the 'edit' template)" do
-        product = Product.create! valid_attributes
-        put :update, params: { id: product.to_param, product: invalid_attributes }, session: valid_session
+        institution = Institution.create! valid_attributes
+        put :update, params: { id: institution.to_param, institution: invalid_attributes }, session: valid_session
         expect(response).to be_success
       end
     end
   end
 
   describe "DELETE #destroy" do
-    it "destroys the requested product" do
-      product = Product.create! valid_attributes
+    it "destroys the requested institution" do
+      institution = Institution.create! valid_attributes
       expect {
-        delete :destroy, params: { id: product.to_param }, session: valid_session
-      }.to change(Product, :count).by(-1)
+        delete :destroy, params: { id: institution.to_param }, session: valid_session
+      }.to change(Institution, :count).by(-1)
     end
 
-    it "redirects to the products list" do
-      product = Product.create! valid_attributes
-      delete :destroy, params: { id: product.to_param }, session: valid_session
-      expect(response).to redirect_to(products_url)
+    it "redirects to the institutions list" do
+      institution = Institution.create! valid_attributes
+      delete :destroy, params: { id: institution.to_param }, session: valid_session
+      expect(response).to redirect_to(institutions_url)
     end
   end
 end

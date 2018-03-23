@@ -259,8 +259,8 @@ RSpec.describe EPubsController, type: :controller do
     after { FeaturedRepresentative.destroy_all }
 
     context 'institution subscription' do
-      let(:institution) { double('institution', identifier: 'institute') }
-      let(:keycard) { { "dlpsInstitutionId" => institution.identifier } }
+      let(:keycard) { { "dlpsInstitutionId" => dlpsInstitutionId } }
+      let(:dlpsInstitutionId) { 'institute' }
 
       before { allow_any_instance_of(Keycard::RequestAttributes).to receive(:all).and_return(keycard) }
 
@@ -277,14 +277,15 @@ RSpec.describe EPubsController, type: :controller do
         # Anonymous User
         get :lock, params: { id: file_set.id }
         expect(session[:show_set].include?(file_set.id)).to be false
-        expect(response).to redirect_to(new_user_session_path)
+        expect(response).to render_template(:access)
 
         # Subscribed Institution
-        product = Product.create!(identifier: 'product')
+        product = Product.create!(identifier: 'product', purchase: 'purchase')
         product.components << component
-        lessee = Lessee.create!(identifier: institution.identifier)
+        lessee = Lessee.create!(identifier: dlpsInstitutionId)
         product.lessees << lessee
         product.save!
+        Institution.create!(key: dlpsInstitutionId, name: 'Name', site: 'Site', login: 'Login')
         get :lock, params: { id: file_set.id }
         expect(session[:show_set].include?(file_set.id)).to be true
         expect(response).to redirect_to(epub_path)
@@ -307,16 +308,16 @@ RSpec.describe EPubsController, type: :controller do
         # Anonymous User
         get :lock, params: { id: file_set.id }
         expect(session[:show_set].include?(file_set.id)).to be false
-        expect(response).to redirect_to(new_user_session_path)
+        expect(response).to render_template(:access)
 
         # Authenticated User
         cosign_sign_in(user)
         get :lock, params: { id: file_set.id }
         expect(session[:show_set].include?(file_set.id)).to be false
-        expect(response).to render_template(:lock)
+        expect(response).to render_template(:access)
 
         # Subscribed User
-        product = Product.create!(identifier: 'product')
+        product = Product.create!(identifier: 'product', purchase: 'purchase')
         product.components << component
         lessee = Lessee.create!(identifier: user.email)
         product.lessees << lessee
