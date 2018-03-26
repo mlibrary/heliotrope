@@ -1,6 +1,9 @@
 <ul class="nav navbar-nav navbar-right">
   <%= render 'shared/add_content' %>
+  <!-- Hyrax seems to think available_translations.size is 7 but for Gabii
+       we only have the English locale. Suppressing for now.
   <%= render 'shared/locale_picker' if available_translations.size > 1 %>
+  -->
   <!-- We're not using these yet but when we do they're in hyrax views/hyrax/notifications/_notifications.html.erb
   <li>
     <#%= render_notifications(user: current_user) %>
