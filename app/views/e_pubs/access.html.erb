@@ -1,41 +1,79 @@
-<div class="row">
-  <div class="col-sm-1"></div>
-  <div class="col-sm-10 col-center-block">
-    <h2 class="text-center">Log in to get the most out of Fulcrum</h2>
-    <p class="text-center"><%= link_to 'Back', :back %></p>
-  </div>
-  <div class="col-sm-1"></div>
+<% provide :page_title, @title || "Access Restricted to #{@monograph_presenter.title}" %>
+<div class="alert alert-danger">
+  <p class="text-center"><em><%= @monograph_presenter.title %></em> is a restricted access online resource. <%= link_to 'Go back to previous page', :back %>.</p>
 </div>
-<div class="row">
-  <div class="col-sm-1"></div>
-  <div class="col-sm-5">
-    <h4>Find your institution:</h4>
-    <ul>
-      <% @institutions.each do |institution| %>
-        <li><%= link_to institution.name, login_institution_path(institution) %></li>
-      <% end %>
-    </ul>
-    <p><%= link_to %q("Why isn't my institution listed?"), 'https://www.fulcrum.org/blog' %></p>
+  <div class="row restrict-title">
+    <div class="col-sm-12 col-center-block">
+      <!-- TODO: this free intro is hardcoded and bad -->
+      <h1 class="text-center">To keep reading <em><%= @monograph_presenter.title %></em>, <a href="https://quod.lib.umich.edu/g/gabii/introduction/">read the free introduction</a> or choose an option below.</h1>
+    </div>
   </div>
-  <div class="col-sm-5">
-    <% if current_user.present? %>
-      <h4>Purchase access:</h4>
-      <ul>
-        <% @products.each do |product| %>
-          <li><%= link_to product.identifier, purchase_product_path(product) %></li>
-        <% end %>
-      </ul>
-      <p><%= link_to %q("Why doesn't my purchase allow me access?"), 'https://www.fulcrum.org/blog' %></p>
-  <% else %>
-      <h4>Log in as our guest:</h4>
-      <p>See <%= link_to '"What can I access without logging in?"', 'https://www.fulcrum.org/blog' %> for information about what all users can do without logging in.</p>
-      <p>Log in with:</p>
-      <ul>
-        <li><%= link_to 'University of Michigan Friend Account', main_app.new_user_session_path %></li>
-      </ul>
-      <p>Still need a way to log in? <a href="http://documentation.its.umich.edu/node/305">Create a University of Michigan Friend Account</a></p>
-    <% end %>
-  </div>
-  <div class="col-sm-1"></div>
-</div>
+  <div class="row">
+    <div class="col-sm-4">
+      <div class="panel panel-danger">
+        <div class="panel-heading">
+          <h3 class="panel-title">Sign in to read</h3>
+        </div>
+        <div class="panel-body">
+          <p>If you have purchased individual access login below.</p>
+          <p class="text-center">
+            <a class="btn btn-default" role="button" href="<%= "#{main_app.new_user_session_path}" %>">Sign In</a>
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-4">
+      <div class="panel panel-danger">
+        <div class="panel-heading">
+          <h3 class="panel-title">Read from your institution</h3>
+        </div>
+        <div class="panel-body">
+          <p>If your institution has purchased access, you will need to access this resource on-campus or through your library's website.</p>
+          <p class="text-center">
+            <a class="btn btn-default" role="button" data-toggle="modal" data-target="#subscribers">View list of Subscribers</a>
+          </p>
+        </div>
+        <!-- subscribers modal -->
+        <div class="modal fade" id="subscribers" tabindex="-1" role="dialog" aria-labelledby="subscriberLabel">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h2 class="modal-title" id="subscriberLabel">List of Subscribers to <em><%= @monograph_presenter.title %></em></h2>
+              </div>
+              <div class="modal-body">
+                <ul>
+                  <% @institutions.each do |institution| %>
+                    <li><%= institution.name %></li>
+                  <% end %>
+                </ul>
+                <p>If you do not see your institution listed above, talk to your librarian about purchasing access.</p>
+                <p>If your institution is listed above and you are continuing to have trouble accessing, please contact your institution's library.</p>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+              </div>
+            </div>
+          </div>
+        </div>
 
+      </div>
+    </div>
+    <div class="col-sm-4">
+      <div class="panel panel-danger">
+        <div class="panel-heading">
+          <h3 class="panel-title">Purchase to read</h3>
+        </div>
+        <div class="panel-body">
+          <p>You can purchase individual or institution access via the University of Michigan Press below.</p>
+          <p class="text-center">
+          <a class="btn btn-default" role="button" href="https://www.press.umich.edu/9231782/mid_republican_house_from_gabii">Buy Publication</a>
+          <!--
+          TODO: List only the purchase URL for the product being blocked
+          <a class="btn btn-default" role="button" href="">Buy Publication</a>
+          -->
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
