@@ -184,6 +184,17 @@ footer.press {
         padding-bottom: 2em;
       }
 
+    .webgl.alert {
+      margin-left: 0;
+      margin-right: 0;
+      font-size: 15px;
+
+      a {
+        text-decoration: underline;
+        font-weight: bold;
+      }
+    }
+
       table.table {
         margin-top: 1.5em;
       }

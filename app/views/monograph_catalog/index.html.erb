@@ -6,3 +6,12 @@
   <%= render 'shared/breadcrumbs' %>
 <% end %><!-- provide :page_header -->
 <%= render 'index_monograph' %>
+<% if @monograph_presenter.webgl? %>
+  <script>
+    if (heliotropeIncompatibleWebGlUser === true ) {
+      $('#webgl-message').html('<div class="webgl alert alert-danger alert-dismissable" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><p><strong>Sorry!</strong> This publication has interactive features that are not compatible with your browser or device. <a href="#aboutware">Learn more here</a>. If you continue on, you can still read the publication but the 3D model will not load.</p></div>');
+    } else {
+      $('#webgl-message').html('<div class="webgl alert alert-info alert-dismissable" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><p>This publication has interactive features that require a supported browser, hardware, and reliable network connection to interact with a 3D model. <a href="#aboutware">Learn more here</a>.</p></div>');
+    }
+  </script>
+<% end %>

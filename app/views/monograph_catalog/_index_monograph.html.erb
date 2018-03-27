@@ -33,6 +33,9 @@
           </div><!-- /.btn-group -->
         </div><!-- /.btn-toolbar -->
     <% end %>
+    <% if @monograph_presenter.webgl? %>
+      <div id="webgl-message"></div>
+    <% end %>
 
     <table class="table monograph attributes" <%= @monograph_presenter.microdata_type_to_html %>>
       <tbody>

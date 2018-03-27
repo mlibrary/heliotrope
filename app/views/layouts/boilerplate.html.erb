@@ -49,8 +49,8 @@
 
   <!-- This seemingly causes Turbolinks issues when compiled with the rest of the JS, set it here for reuse -->
   <script>
-    var heliotropeMobileUser = false;
-    if (bowser.mobile || bowser.tablet) heliotropeMobileUser = true;
+    var heliotropeIncompatibleWebGlUser = false;
+    if (bowser.mobile || bowser.tablet || bowser.msie) heliotropeIncompatibleWebGlUser = true;
   </script>
 
   </head>
