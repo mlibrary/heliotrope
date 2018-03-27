@@ -62,6 +62,10 @@ class EPubsController < ApplicationController
       set_session_show
       redirect_to epub_path(params[:id])
     else
+      @monograph_presenter = nil
+      if @presenter.parent.present?
+        @monograph_presenter = Hyrax::PresenterFactory.build_for(ids: [@presenter.parent.id], presenter_class: Hyrax::MonographPresenter, presenter_args: current_ability).first
+      end
       @institutions = component_institutions
       @products = component_products
       render 'access'
