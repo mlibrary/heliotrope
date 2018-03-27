@@ -77,9 +77,20 @@ webgl = FactoryService.webgl_unity(webgl_id)
         var gameInstance;
         var gameReady = false;
 
+        // a flag to allow the panel to be open with `a11y_on` the first time only for users with an incompatible...
+        // device or browser (heliotropeIncompatibleWebGlUser === true)
+        var firstLaunchWebGlEpub = false;
+
         // load the game on launch of e-reader
         reader.on('ready', function() {
           open_panel();
+          // the a11y state disables the "3D MODEL" button and hides the WebGL panel. These are things we want for...
+          // incompatible device/browser users also, but initially we *do* want them to see the panel with the...
+          // incompatibility message as an "easy" way to inform them about the problem (firstLaunchWebGlEpub flag)
+          if(heliotropeIncompatibleWebGlUser === true) {
+            firstLaunchWebGlEpub = true;
+            a11y_on();
+          }
         })
 
         // open panel function and initiate game if not initiated
@@ -94,8 +105,8 @@ webgl = FactoryService.webgl_unity(webgl_id)
           if (! $panel.length) {
 
             var mobileUserMessage = '';
-            if(heliotropeMobileUser === true) {
-              mobileUserMessage = '<div id="epub-webgl-mobile-message">Sorry, mobile devices are not compatible with WebGL.</div>';
+            if(heliotropeIncompatibleWebGlUser === true) {
+              mobileUserMessage = '<div id="epub-webgl-mobile-message">Sorry, it looks like your device or browser is not compatible with WebGL.<br />Please check our <a href="http://hdl.handle.net/2027/fulcrum.9231782/about">compatibility requirements</a>.</div>';
             }
 
             var $panelContent =
@@ -125,7 +136,7 @@ webgl = FactoryService.webgl_unity(webgl_id)
           }
 
           // mobile users won't be loading the 3D content so this stuff isn't required
-          if (heliotropeMobileUser === false) {
+          if (heliotropeIncompatibleWebGlUser === false) {
             var options = {};
 
             var h = $panel.height();
@@ -148,11 +159,12 @@ webgl = FactoryService.webgl_unity(webgl_id)
           setTimeout(function() {
             window.dispatchEvent(new Event('resize'));
           }, 0);
+
+          panel_toggle.state('close-webgl');
         } // end open_panel
 
         // close panel function
         var close_panel = function() {
-          panel_toggle.state('open-webgl');
           var $panel = $('.special-panel');
           if ($panel.length) {
             $('.special-panel').hide();
@@ -164,6 +176,7 @@ webgl = FactoryService.webgl_unity(webgl_id)
               window.dispatchEvent(new Event('resize'));
             }, 0);
           }
+          panel_toggle.state('open-webgl');
         }
 
         // resize the webGL canvas
@@ -186,7 +199,7 @@ webgl = FactoryService.webgl_unity(webgl_id)
         // dynamic WebGL canvas resizing
         reader.on('resized', function() {
           // mobile users shouldn't have a canvas to resize
-          if (gameReady && heliotropeMobileUser === false) {
+          if (gameReady && heliotropeIncompatibleWebGlUser === false) {
             resize_webgl();
           }
         })
@@ -312,7 +325,12 @@ webgl = FactoryService.webgl_unity(webgl_id)
           $('body').addClass('a11y');
           $('#webgl').attr('aria-disabled', 'true');
           $('#webgl').prop('disabled', true);
-          close_panel();
+          // a flag (set above) to allow the WebGL panel, with an incompatibility message, to be open with a11y_on...
+          // mode on initial load *only* for users with an incompatible device/browser
+          if(firstLaunchWebGlEpub === true)
+            firstLaunchWebGlEpub = false;
+          else if($('.special-panel').prop('hidden') == false) // the user might have closed this manually
+            close_panel();
         }
 
         var a11y_off = function() {
@@ -320,6 +338,7 @@ webgl = FactoryService.webgl_unity(webgl_id)
           $('.toggle-a11y').removeClass('on');
           $('#webgl').attr('aria-disabled', 'false');
           $('#webgl').prop('disabled', false);
+
           open_panel();
         }
 
@@ -398,7 +417,7 @@ webgl = FactoryService.webgl_unity(webgl_id)
                 { value: 'off', label: 'Off' },
                 { value: 'on', label: 'On'}
               ],
-              value: 'off',
+              value: heliotropeIncompatibleWebGlUser === true ? 'on' : 'off',
               callback: function(value) {
                 if (value == 'on') {
                   a11y_on();
