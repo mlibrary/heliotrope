@@ -24,25 +24,17 @@ class WebglsController < ApplicationController
   end
 
   def file
-    # send_compressed is no longer relevant, Unity will unpack the unityweb files itself if the browser does not
-    # TODO: tidy up (remove?) send_compressed and related code in FactoryService
-    # https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Accept-Encoding
-    accept_headers = request.headers['Accept-Encoding'] || ""
-    send_compressed = if accept_headers.include? 'gzip'
-                        true
-                      else
-                        false
-                      end
-
     # `.unityweb` files are gzipped by default as part of the release build process.
     # They need `Content-Encoding: gzip` to trigger browser unpacking.
     response.headers['Content-Encoding'] = 'gzip' if params[:format] == 'unityweb'
 
-    render plain: FactoryService.webgl_unity(params[:id]).read(params[:file] + "." + params[:format], send_compressed),
-           content_type: Mime::Type.lookup_by_extension(params[:format]),
-           layout: false
+    file = Rails.root + FactoryService.webgl_unity(params[:id]).file(params[:file] + "." + params[:format])
+    # Need to match apache's XSendFilePath configuration
+    file = file.to_s.sub(/releases\/\d+/, "current")
+    response.headers['X-Sendfile'] = file
+    send_file file
   rescue StandardError => e
-    Rails.logger.info("WebglsController.file(#{params[:file] + '.' + params[:format]}) mapping to 'Content-Type': #{Mime::Type.lookup_by_extension(params[:format])} raised #{e}")
+    Rails.logger.info("WebglsController.file(#{params[:file] + '.' + params[:format]}) raised #{e}")
     head :no_content, status: :not_found
   end
 end

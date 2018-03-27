@@ -2,7 +2,7 @@
 
 RSpec.describe Webgl::Unity do
   let(:id) { 'validnoid' }
-  let(:unity_file) { './spec/fixtures/fake-game.unity' }
+  let(:unity_file) { './spec/fixtures/fake-game.zip' }
 
   describe "with a valid noid and unity file" do
     subject { described_class.from(id: id, file: unity_file) }
@@ -28,19 +28,18 @@ RSpec.describe Webgl::Unity do
   end
 
   describe "#read" do
+    subject { described_class.from(id: id, file: unity_file).read(js_file) }
     let(:js_file) { "Build/thing.asm.memory.unityweb" }
-    context "without compression" do
-      subject { described_class.from(id: id, file: unity_file).read(js_file) }
-      it "returns the uncompressed file contents" do
-        expect(subject).to eq "var things = \"things\";\n"
-      end
+    it "returns the file contents" do
+      expect(subject).to eq "\u001F\x8B\b\bT\xAB\xA2Z\u0000\u0003thing.asm.memory.unityweb\u0000+K,R(\xC9\xC8\xCCK/V\xB0UP\x82\xB0\x94\xAC\xB9\u0000\xD4\xDB\xCD\xFC\u0017\u0000\u0000\u0000"
     end
+  end
 
-    context "with compression" do
-      subject { described_class.from(id: id, file: unity_file).read(js_file, true) }
-      it "returns the compressed file contents" do
-        expect(subject).to eq "\u001F\x8B\b\bT\xAB\xA2Z\u0000\u0003thing.asm.memory.unityweb\u0000+K,R(\xC9\xC8\xCCK/V\xB0UP\x82\xB0\x94\xAC\xB9\u0000\xD4\xDB\xCD\xFC\u0017\u0000\u0000\u0000"
-      end
+  describe "#file" do
+    subject { described_class.from(id: id, file: unity_file).file(js_file) }
+    let(:js_file) { "Build/thing.asm.memory.unityweb" }
+    it "returns the file path" do
+      expect(subject).to eq "./tmp/webgl/validnoid/Build/thing.asm.memory.unityweb"
     end
   end
 end

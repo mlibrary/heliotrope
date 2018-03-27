@@ -6,7 +6,7 @@ RSpec.describe FactoryService do
   let(:monograph) { create(:monograph) }
   let(:epub) { create(:file_set, content: File.open(File.join(fixture_path, 'moby-dick.epub'))) }
   let(:mcsv) { create(:file_set, content: File.open(File.join(fixture_path, 'csv/import/tempest.csv'))) }
-  let(:webgl) { create(:file_set, content: File.open(File.join(fixture_path, 'fake-game.unity'))) }
+  let(:webgl) { create(:file_set, content: File.open(File.join(fixture_path, 'fake-game.zip'))) }
 
   before do
     monograph.ordered_members << epub << webgl
