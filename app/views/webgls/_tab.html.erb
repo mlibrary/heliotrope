@@ -32,8 +32,8 @@ webgl = FactoryService.webgl_unity(webgl_id)
     // load the webgl if the webgl tab is already active
     if ($('#webgl-tab').hasClass('active')) {
 
-      if (heliotropeMobileUser === true) {
-        $('#gameContainer').html('<div id="epub-webgl-mobile-message">Sorry, mobile devices are not compatible with WebGL.</div>');
+      if (heliotropeIncompatibleWebGlUser === true) {
+        $('#gameContainer').html('<div id="epub-webgl-mobile-message">Sorry, it looks like your device or browser is not compatible with WebGL.<br />Please check our <a href="http://hdl.handle.net/2027/fulcrum.9231782/about">compatibility requirements</a>.</div>');
       }
       else if (typeof gameInstance === 'undefined' ) {
 
@@ -76,8 +76,8 @@ webgl = FactoryService.webgl_unity(webgl_id)
     // or load the webgl if the tab is clicked
     $("a[href='#webgl']").bind('click', function() {
 
-      if (heliotropeMobileUser === true) {
-        $('#gameContainer').html('<div id="epub-webgl-mobile-message">Sorry, mobile devices are not compatible with WebGL.</div>');
+      if (heliotropeIncompatibleWebGlUser === true) {
+        $('#gameContainer').html('<div id="epub-webgl-mobile-message">Sorry, it looks like your device or browser is not compatible with WebGL.<br />Please check our <a href="http://hdl.handle.net/2027/fulcrum.9231782/about">compatibility requirements</a>.</div>');
       }
       else if (typeof gameInstance === 'undefined' ) {
 
