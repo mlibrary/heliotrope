@@ -6,6 +6,10 @@ class Institution < ApplicationRecord
   validates :site, presence: true, allow_blank: false
   validates :login, presence: true, allow_blank: false
 
+  def lessee?
+    lessee.present?
+  end
+
   def lessee
     Lessee.find_by(identifier: key)
   end

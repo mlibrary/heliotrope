@@ -18,7 +18,13 @@
         <% end %>
       </td>
       <td><%= link_to institution.name, institution_path(institution) %></td>
-      <td><%= link_to institution.key, lessee_path(institution.lessee) %></td>
+      <td>
+        <% if institution.lessee? %>
+          <%= link_to institution.key, lessee_path(institution.lessee) %>
+        <% else %>
+          <%= institution.key %>
+        <% end %>
+      </td>
       <td><%= link_to institution.site, institution.site %></td>
       <td><%= link_to institution.login, institution.login %></td>
     </tr>
