@@ -270,7 +270,7 @@ footer.press {
   #documents.documents-list {
 
     .document {
-      margin-bottom: 2em;
+      margin-bottom: 1.5em;
       padding-top: 1.5em;
       border-bottom: none;
 
@@ -282,6 +282,11 @@ footer.press {
         .file-set-glyphicon {
           font-size: 9em;
           margin-bottom: 10px;
+        }
+
+        .glyphicon.glyphicon-file {
+          // glyphicons with portrait orientation take up too much height
+          font-size: 6em;
         }
 
         .external-resource-link {
