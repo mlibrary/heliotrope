@@ -446,9 +446,13 @@ webgl = FactoryService.webgl_unity(webgl_id)
         // Feedback widget
         cozy.control.widget.panel({
           region: 'bottom.navigator.left',
-          className: 'cozy-panel-feedback',
-          template: '<a href="https://docs.google.com/forms/d/e/1FAIpQLSeY04WhBtHGSXONu3jGiYnOcVzZxzHi3FGbS9ELg8rJdMpgpw/viewform?usp=sf_link" target="_blank" title="Report a problem or share feedback"><i class="icon-comment-square oi" data-glyph="comment-square" aria-hidden="true"></i></a>',
-        }).addTo(reader);
+	  className: 'cozy-panel-feedback',
+	  <% if @monograph_presenter.webgl? %>
+          template: '<a href="https://docs.google.com/forms/d/e/1FAIpQLSehtWeYRAmb12pLcQV0WXDvsQgdEsI6H-gbj4HumdySrmwhZg/viewform?usp=sf_link" target="_blank" title="Report a problem or share feedback"><i class="icon-comment-square oi" data-glyph="comment-square" aria-hidden="true"></i></a>',
+  	  <% else %>
+	  template: '<a href="https://docs.google.com/forms/d/e/1FAIpQLSeY04WhBtHGSXONu3jGiYnOcVzZxzHi3FGbS9ELg8rJdMpgpw/viewform?usp=sf_link" target="_blank" title="Report a problem or share feedback"><i class="icon-comment-square oi" data-glyph="comment-square" aria-hidden="true"></i></a>',
+  	  <% end %>
+	  }).addTo(reader);
 
         // Navigator widgets
         cozy.control.navigator({ region: 'bottom.navigator' }).addTo(reader);
