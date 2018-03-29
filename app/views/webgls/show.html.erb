@@ -3,7 +3,7 @@
   <meta name="turbolinks-cache-control" content="no-cache">
   <%= csrf_meta_tag %>
   <link src="shortcut icon" href="<%= @favicon %>">
-  <script src="<%= 'webgl/' + @unity_loader %>"></script>
+  <script src="<%= @unity_loader %>"></script>
   <% Rails.logger.info("UNITY LOADER: " + @unity_loader) %>
   <script>
     // this has to go right after @unity_loader is loaded to guarantee no random JS errors get alert-boxed
