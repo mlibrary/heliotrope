@@ -47,19 +47,6 @@ module EPub
 
     # Instance Methods
 
-    def chapter_title_from_toc(chapter_href)
-      # Navigation can be way more complicated than this, so this is a WIP
-      title = toc.xpath("//nav[@type='toc']/ol/li/a[@href='#{chapter_href}']").text || ""
-      # Many more ifs will come to infest this space...
-      if title.blank?
-        chapter_href = File.basename(chapter_href)
-        title = toc.xpath("//nav[@type='toc']/ol/li/a[@href='#{chapter_href}']").text || ""
-      end
-
-      ::EPub.logger.error("Can't find chapter title for #{chapter_href}") if title.blank?
-      title
-    end
-
     def chapters
       chapters = []
       i = 0
@@ -74,7 +61,7 @@ module EPub
           chapters.push(Chapter.send(:new,
                                      item.attributes['id'].text,
                                      item.attributes['href'].text,
-                                     chapter_title_from_toc(item.attributes['href'].text),
+                                     toc.chapter_title(item),
                                      "/6/#{i * 2}[#{item.attributes['id'].text}]!",
                                      doc))
         end
@@ -115,7 +102,7 @@ module EPub
         @id = valid_epub.id
         @content_file = valid_epub.content_file
         @content = valid_epub.content
-        @toc = valid_epub.toc
+        @toc = ::EPub::Toc.new(valid_epub.toc)
       end
   end
 end
