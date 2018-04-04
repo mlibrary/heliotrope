@@ -4,6 +4,7 @@ module Hyrax
   class MonographPresenter < WorkShowPresenter
     include CCAnalyticsPresenter
     include ISBNPresenter
+    include CitableLinkPresenter
     include OpenUrlPresenter
     include TitlePresenter
     include FeaturedRepresentatives::MonographPresenter
@@ -17,8 +18,7 @@ module Hyrax
              :isbn_ebook, :copyright_holder, :buy_url, :embargo_release_date,
              :lease_expiration_date, :rights, :creator_full_name,
              :creator_given_name, :creator_family_name,
-             :primary_editor_family_name, :primary_editor_given_name,
-             :primary_editor_full_name, :hdl,
+             :primary_editor_family_name, :primary_editor_given_name, :primary_editor_full_name,
              to: :solr_document
 
     def ordered_section_titles
@@ -144,16 +144,6 @@ module Hyrax
 
         @ordered_member_docs = ids.map { |id| docs_hash[id] }
       end
-    end
-
-    # Monographs, unlike FileSets (in theory), should never have anything other than a Fulcrum handle (handle_url)...
-    # i.e. they won't have a partner-supplied DOI. I'm just adding this method for consistency.
-    def citable_link
-      handle_url
-    end
-
-    def handle_url
-      HandleService.url(self)
     end
 
     def buy_url?

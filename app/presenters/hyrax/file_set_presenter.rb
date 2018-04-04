@@ -4,6 +4,7 @@ module Hyrax
   class FileSetPresenter
     include TitlePresenter
     include CCAnalyticsPresenter
+    include CitableLinkPresenter
     include OpenUrlPresenter
     include ModelProxy
     include PresentsAttributes
@@ -40,7 +41,7 @@ module Hyrax
              :allow_download, :allow_hi_res, :copyright_status, :rights_granted,
              :rights_granted_creative_commons, :exclusive_to_platform, :permissions_expiration_date,
              :allow_display_after_expiration, :allow_download_after_expiration, :credit_line,
-             :holding_contact, :ext_url_doi_or_handle, :doi, :hdl, :use_crossref_xml, :primary_creator_role,
+             :holding_contact, :ext_url_doi_or_handle, :use_crossref_xml, :primary_creator_role,
              :display_date, :sort_date, :transcript, :translation, :file_format,
              :creator_given_name, :creator_family_name, :label, :redirect_to,
              to: :solr_document
@@ -91,22 +92,6 @@ module Hyrax
 
     def link_name
       current_ability.can?(:read, id) ? Array(solr_document['label_tesim']).first : 'File'
-    end
-
-    def citable_link
-      if doi.present?
-        doi_url
-      else
-        handle_url
-      end
-    end
-
-    def handle_url
-      HandleService.url(self)
-    end
-
-    def doi_url
-      doi
     end
 
     def external_resource?

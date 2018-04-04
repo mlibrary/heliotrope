@@ -55,10 +55,6 @@ module SolrDocumentExtensions::FileSet
     Array(self[Solrizer.solr_name('display_date', :stored_searchable)])
   end
 
-  def doi
-    Array(self[Solrizer.solr_name('doi', :symbol)]).first
-  end
-
   def exclusive_to_platform
     Array(self[Solrizer.solr_name('exclusive_to_platform', :symbol)]).first
   end
@@ -69,10 +65,6 @@ module SolrDocumentExtensions::FileSet
 
   def ext_url_doi_or_handle
     Array(self[Solrizer.solr_name('ext_url_doi_or_handle', :symbol)]).first
-  end
-
-  def hdl
-    Array(self[Solrizer.solr_name('hdl', :symbol)]).first
   end
 
   def holding_contact

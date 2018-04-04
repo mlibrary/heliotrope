@@ -52,10 +52,7 @@ class Monograph < ActiveFedora::Base
     index.as :symbol
   end
 
-  property :hdl, predicate: ::RDF::Vocab::Identifiers.hdl, multiple: false do |index|
-    index.as :symbol
-  end
-
+  include HeliotropeCitableLinks
   include StoresCreatorNameSeparately
   include ::Hyrax::WorkBehavior
   # This must come after the WorkBehavior because it finalizes the metadata

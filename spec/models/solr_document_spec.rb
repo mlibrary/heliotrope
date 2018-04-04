@@ -18,6 +18,7 @@ describe SolrDocument do
   end
 
   # Monograph + FileSet
+  it { is_expected.to respond_to(:doi) }
   it { is_expected.to respond_to(:hdl) }
 
   # Monograph
@@ -50,7 +51,6 @@ describe SolrDocument do
   it { is_expected.to respond_to(:credit_line) }
   it { is_expected.to respond_to(:date_published) }
   it { is_expected.to respond_to(:display_date) }
-  it { is_expected.to respond_to(:doi) }
   it { is_expected.to respond_to(:exclusive_to_platform) }
   it { is_expected.to respond_to(:external_resource) }
   it { is_expected.to respond_to(:ext_url_doi_or_handle) }
