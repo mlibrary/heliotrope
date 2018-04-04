@@ -12,4 +12,11 @@ class UsersController < ApplicationController
     @user = UserPresenter.new(User.find(params[:id]), current_user)
     authorize! :read, @user
   end
+
+  def tokenize
+    @user = User.find(params[:id])
+    authorize! :update, @user
+    @user.tokenize!
+    redirect_to main_app.partial_fulcrum_path(partial: :tokens)
+  end
 end

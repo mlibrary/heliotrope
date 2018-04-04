@@ -87,6 +87,9 @@ gem 'pragmatic_segmenter', '~> 0.3'
 gem 'devise'
 gem 'devise-guests', '~> 0.3'
 
+# Json Web Token
+gem 'jwt'
+
 gem 'httparty'
 
 # gem 'hyrax', '1.0.4'

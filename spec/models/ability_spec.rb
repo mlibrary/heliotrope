@@ -48,6 +48,8 @@ describe Ability do
 
       is_expected.to be_able_to(:create, Press.new)
       is_expected.to be_able_to(:update, press)
+
+      is_expected.to be_able_to(:manage, another_user)
     end
 
     it "can read, update, publish or destroy a monograph created by another user" do
