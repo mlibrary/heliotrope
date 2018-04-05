@@ -3,9 +3,10 @@
 module FeaturedRepresentatives
   module MonographPresenter
     extend ActiveSupport::Concern
+    attr_reader :frs
 
     def featured_representatives
-      FeaturedRepresentative.where(monograph_id: id)
+      @frs ||= FeaturedRepresentative.where(monograph_id: id)
     end
 
     def epub?
