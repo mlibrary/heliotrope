@@ -34,27 +34,7 @@ webgl = FactoryService.webgl_unity(webgl_id)
         //$("body").addClass("reading");
         var reader = cozy.reader('reader', {
           href: "<%= "#{main_app.epub_url.gsub!(/\?.*/, '')}/" %>",
-          // #1270 TODO:  If has a downloadable EPUB, MOBI, or PDF
-          // add the download link information as an option to cozy.reader
-          // Question: how do we know if a PDF is representative of the book and
-          // not an asset? Can we add a "set representative" for PDF and MOBI?
-          download_links: [
-            {
-              format: 'EPUB',
-              size: '22 MB',
-              href: '#'
-            },
-            {
-              format: 'MOBI',
-              size: '12 MB',
-              href: '#'
-            },
-            {
-              format: 'PDF',
-              size: '15 MB',
-              href: '#'
-            }
-          ],
+          download_links: <%= @epub_download_presenter.download_links.to_json.html_safe %>,
           metadata: {
             doi: '<%= @citable_link %>',
             // TODO: iterate all creator given and family names for monograph
@@ -423,12 +403,12 @@ webgl = FactoryService.webgl_unity(webgl_id)
         }).addTo(reader);
 
         // Download widget
-        // #1270 TODO: if has downloadable EPUB, PDF, or MOBI
-        // add the download control
+        <% if @epub_download_presenter.download_links.length.positive? %>
         cozy.control.download({
             region: 'top.toolbar.left',
             template: '<button class="button--sm cozy-download" data-toggle="open" aria-label="Download book" role="button"><i id="download" class="oi" data-glyph="data-transfer-download" title="Download book" aria-hidden="true"></i></button>',
         }).addTo(reader);
+        <% end %>
 
         // Fullscreen widget
         cozy.control.widget.button({
@@ -488,13 +468,13 @@ webgl = FactoryService.webgl_unity(webgl_id)
         // Feedback widget
         cozy.control.widget.panel({
           region: 'bottom.navigator.left',
-	  className: 'cozy-panel-feedback',
-	  <% if @monograph_presenter.webgl? %>
+          className: 'cozy-panel-feedback',
+          <% if @monograph_presenter.webgl? %>
           template: '<a href="https://docs.google.com/forms/d/e/1FAIpQLSehtWeYRAmb12pLcQV0WXDvsQgdEsI6H-gbj4HumdySrmwhZg/viewform?usp=sf_link" target="_blank" title="Report a problem or share feedback"><i class="icon-comment-square oi" data-glyph="comment-square" aria-hidden="true"></i></a>',
-  	  <% else %>
-	  template: '<a href="https://docs.google.com/forms/d/e/1FAIpQLSeY04WhBtHGSXONu3jGiYnOcVzZxzHi3FGbS9ELg8rJdMpgpw/viewform?usp=sf_link" target="_blank" title="Report a problem or share feedback"><i class="icon-comment-square oi" data-glyph="comment-square" aria-hidden="true"></i></a>',
-  	  <% end %>
-	  }).addTo(reader);
+          <% else %>
+          template: '<a href="https://docs.google.com/forms/d/e/1FAIpQLSeY04WhBtHGSXONu3jGiYnOcVzZxzHi3FGbS9ELg8rJdMpgpw/viewform?usp=sf_link" target="_blank" title="Report a problem or share feedback"><i class="icon-comment-square oi" data-glyph="comment-square" aria-hidden="true"></i></a>',
+          <% end %>
+        }).addTo(reader);
 
         // Navigator widgets
         cozy.control.navigator({ region: 'bottom.navigator' }).addTo(reader);

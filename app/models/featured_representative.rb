@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class FeaturedRepresentative < ApplicationRecord
-  KINDS = %w[epub webgl database aboutware].freeze
+  KINDS = %w[epub webgl database aboutware pdf_ebook mobi].freeze
 
   validates :monograph_id, presence: true
   validates :file_set_id, presence: true
