@@ -84,6 +84,16 @@ class User < ApplicationRecord
     user_key
   end
 
+  def token
+    JsonWebToken.encode(email: email, pin: encrypted_password)
+  end
+
+  def tokenize!
+    self.password = SecureRandom.urlsafe_base64(12)
+    self.password_confirmation = password
+    save!
+  end
+
   def self.guest(user_key:)
     Guest.new(user_key: user_key)
   end

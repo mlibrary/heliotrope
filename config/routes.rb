@@ -11,7 +11,16 @@ platform_administrator_constraint = lambda do |request|
 end
 
 Rails.application.routes.draw do
+  namespace :api, constraints: ->(req) { req.format == :json } do
+    resource :token, only: %i[show]
+  end
+
   constraints platform_administrator_constraint do
+    resources :users, only: [] do
+      member do
+        put :tokenize
+      end
+    end
     resources :institutions
     resources :lessees do
       resources :products, only: %i[create destroy]

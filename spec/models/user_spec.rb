@@ -87,6 +87,22 @@ RSpec.describe User do
     end
   end
 
+  describe '#token' do
+    subject { user.token }
+    let(:user) { build(:user) }
+    it { is_expected.to eq(JsonWebToken.encode(email: user.email, pin: user.encrypted_password)) }
+  end
+
+  describe '#tokenize!' do
+    let(:user) { build(:user) }
+    it do
+      old_token = user.token
+      user.tokenize!
+      expect(user.token).not_to eq(old_token)
+      expect(user.token).to eq(JsonWebToken.encode(email: user.email, pin: user.encrypted_password))
+    end
+  end
+
   describe '#guest' do
     subject { described_class.guest(user_key: email) }
 

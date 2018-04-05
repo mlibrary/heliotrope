@@ -1,6 +1,7 @@
 <ul class="nav nav-sidebar" role="navigation">
   <li <%= "class=active" if partial.to_s == :home.to_s %>><a href="<%= main_app.partial_fulcrum_path(partial: :home) %>"><span class="glyphicon glyphicon-home" aria-hidden="true"></span> Home</a></li>
 <% if current_user.platform_admin? %>
+  <li <%= "class=active" if partial.to_s == :tokens.to_s %>><a href="<%= main_app.partial_fulcrum_path(partial: :tokens) %>"><span class="glyphicon glyphicon-star" aria-hidden="true"></span> Tokens</a></li>
   <li <%= "class=active" if partial.to_s == :products.to_s %>><a href="<%= main_app.partial_fulcrum_path(partial: :products) %>"><span class="glyphicon glyphicon-king" aria-hidden="true"></span> Products</a></li>
   <li <%= "class=active" if partial.to_s == :components.to_s %>><a href="<%= main_app.partial_fulcrum_path(partial: :components) %>"><span class="glyphicon glyphicon-knight" aria-hidden="true"></span> Components</a></li>
   <li <%= "class=active" if partial.to_s == :lessees.to_s %>><a href="<%= main_app.partial_fulcrum_path(partial: :lessees) %>"><span class="glyphicon glyphicon-pawn" aria-hidden="true"></span> Lessees</a></li>

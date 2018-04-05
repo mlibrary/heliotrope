@@ -1,0 +1,22 @@
+<% users =  User.all %>
+<h1>Tokens Summary</h1>
+<table class="table table-striped" summary="Tokens List">
+  <tr>
+    <th>eMail</th>
+    <th>Token</th>
+    <th></th>
+  </tr>
+
+  <% users.each do |user| %>
+    <tr>
+      <td><%= user.email %></td>
+      <td><%= text_field(:user, :token, size: 80, value: user.token, disabled: true) %></td>
+      <td>
+        <%= link_to "New", main_app.tokenize_user_path(user.id),
+                    method: :put, title: "New token",
+                    data: { confirm: "Generate new token?" },
+                    class: "btn btn-default" %>
+      </td>
+    </tr>
+  <% end %>
+</table>

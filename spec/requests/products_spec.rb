@@ -5,51 +5,84 @@ require 'rails_helper'
 RSpec.describe "Products", type: :request do
   let(:product) { create(:product) }
 
-  context 'unauthorized' do
+  context 'anonymous' do
     describe "GET /products" do
       it do
         get products_path
-        expect(response).to have_http_status(302)
+        expect(response).to have_http_status(:found)
         expect(response).to redirect_to(presses_path)
       end
     end
-    describe "GET /products/1/purchase" do
+
+    describe "GET /products/:id/purchase" do
       it do
         get purchase_product_path(product)
-        expect(response).to have_http_status(302)
+        expect(response).to have_http_status(:found)
         expect(response).to redirect_to(product.purchase)
       end
     end
-    describe "GET /products/1/help" do
+
+    describe "GET /products/:id/help" do
       it do
         get help_product_path(product)
-        expect(response).to have_http_status(200)
+        expect(response).to have_http_status(:ok)
       end
     end
   end
 
-  context 'authorized' do
-    let(:user) { create(:platform_admin) }
+  context 'user' do
+    before { cosign_sign_in(current_user) }
 
-    before { cosign_sign_in(user) }
+    context 'unauthorized' do
+      let(:current_user) { create(:user) }
 
-    describe "GET /products" do
-      it do
-        get products_path
-        expect(response).to have_http_status(200)
+      describe "GET /products" do
+        it do
+          get products_path
+          expect(response).to have_http_status(:found)
+          expect(response).to redirect_to(presses_path)
+        end
+      end
+
+      describe "GET /products/:id/purchase" do
+        it do
+          get purchase_product_path(product)
+          expect(response).to have_http_status(:found)
+          expect(response).to redirect_to(product.purchase)
+        end
+      end
+
+      describe "GET /products/:id/help" do
+        it do
+          get help_product_path(product)
+          expect(response).to have_http_status(:ok)
+        end
       end
     end
-    describe "GET /products/1/purchase" do
-      it do
-        get purchase_product_path(product)
-        expect(response).to have_http_status(302)
-        expect(response).to redirect_to(product.purchase)
+
+    context 'authorized' do
+      let(:current_user) { create(:platform_admin) }
+
+      describe "GET /products" do
+        it do
+          get products_path
+          expect(response).to have_http_status(:ok)
+        end
       end
-    end
-    describe "GET /products/1/help" do
-      it do
-        get help_product_path(product)
-        expect(response).to have_http_status(200)
+
+      describe "GET /products/:id/purchase" do
+        it do
+          get purchase_product_path(product)
+          expect(response).to have_http_status(:found)
+          expect(response).to redirect_to(product.purchase)
+        end
+      end
+
+      describe "GET /products/:id/help" do
+        it do
+          get help_product_path(product)
+          expect(response).to have_http_status(:ok)
+        end
       end
     end
   end

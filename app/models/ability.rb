@@ -52,6 +52,7 @@ class Ability
     can :manage, Role
     can :manage, Press
     can :manage, FeaturedRepresentative
+    can :manage, User
   end
 
   def platform_admin?
