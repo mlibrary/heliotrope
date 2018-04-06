@@ -5,7 +5,7 @@ module API
     respond_to :json
 
     def show
-      @token = Token.new(current_user&.token)
+      render json: { token: 'token' }, status: :ok
     end
   end
 end

@@ -1,22 +1,40 @@
-<% users =  User.all %>
-<h1>Tokens Summary</h1>
-<table class="table table-striped" summary="Tokens List">
+<h1><%= current_user.email %></h1>
+<table class="table table-striped" summary="Tokenize List">
   <tr>
-    <th>eMail</th>
-    <th>Token</th>
     <th></th>
+    <th>Token</th>
+  </tr>
+  <tr>
+    <td>
+      <%= link_to "New", main_app.tokenize_user_path(current_user.id),
+                  method: :put, title: "New token",
+                  data: { confirm: "Generate new token?" },
+                  class: "btn btn-default" %>
+    </td>
+    <td>
+      <%= text_field(:user, :token, size: 120, value: current_user.token, disabled: true) %>
+    </td>
+  </tr>
+</table>
+<% users =  User.all %>
+<h2>Tokenize</h2>
+<table class="table table-striped" summary="Tokenize List">
+  <tr>
+    <th></th>
+    <th>eMail</th>
+    <th>PIN</th>
   </tr>
 
   <% users.each do |user| %>
     <tr>
-      <td><%= user.email %></td>
-      <td><%= text_field(:user, :token, size: 80, value: user.token, disabled: true) %></td>
       <td>
         <%= link_to "New", main_app.tokenize_user_path(user.id),
                     method: :put, title: "New token",
                     data: { confirm: "Generate new token?" },
                     class: "btn btn-default" %>
       </td>
+      <td><%= user.email %></td>
+      <td><%= user.encrypted_password %></td>
     </tr>
   <% end %>
 </table>
