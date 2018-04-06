@@ -23,7 +23,7 @@ Jump in: [![Stories in Ready](https://badge.waffle.io/mlibrary/heliotrope.png?la
 
 **Heliotrope** is the codebase behind the Fulcrum publishing platform. It is a Rails application that extends [Hyrax](https://github.com/samvera/hyrax)–the popular front-end repository solution from the [Samvera open source community](https://samvera.org/)–to provide solutions for scholarly publishers.
 
-It is built by the [University of Michigan Library](https://www.lib.umich.edu) and managed by the Library's publishing division, [Michigan Publishing](https://publishing.umich.edu).
+It is built by the [University of Michigan Library](https://www.lib.umich.edu) and managed by the Library's publishing division, [Michigan Publishing](https://www.publishing.umich.edu).
 
 ## Feature List
 In addition to the [features that come with Hyrax](https://github.com/samvera/hyrax/wiki/Feature-matrix), Heliotrope offers the following:
