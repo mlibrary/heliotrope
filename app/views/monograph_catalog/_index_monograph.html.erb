@@ -31,6 +31,9 @@
                 <a id="monograph-buy-btn" href="<%= @monograph_presenter.buy_url %>" target="_blank" title="<%= t('monograph_catalog.index.buy', title: @monograph_presenter.title) %>" role="button" class="btn btn-default btn-small"><%= t('monograph_catalog.index.buy_book') %></a>
             <% end %>
           </div><!-- /.btn-group -->
+          <% if @monograph_presenter.webgl? %>
+          <span class="message">Enjoy free-trial access through June 2018. Afterwards, you can purchase access <a href="https://www.press.umich.edu/9231782/mid_republican_house_from_gabii">here</a>.</span>
+          <% end %>
         </div><!-- /.btn-toolbar -->
     <% end %>
     <% if @monograph_presenter.webgl? %>
