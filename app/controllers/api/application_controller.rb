@@ -2,17 +2,23 @@
 
 module API
   class ApplicationController < ActionController::API
+    respond_to :json
     before_action :authorize_request
 
     attr_reader :current_user
 
-    rescue_from StandardError, with: :render_unauthorized
-
-    private
-
-      def render_unauthorized(exception)
+    rescue_from ActiveRecord::RecordNotFound, StandardError do |exception|
+      case exception
+      when ActiveRecord::RecordInvalid
+        render json: { exception: exception.inspect }, status: :unprocessable_entity
+      when ActiveRecord::RecordNotFound
+        render json: { exception: exception.inspect }, status: :not_found
+      else
         render json: { exception: exception.inspect }, status: :unauthorized
       end
+    end
+
+    private
 
       def authorize_request
         @current_user = platform_admin_from_payload(payload_from_token(token_from_header))
