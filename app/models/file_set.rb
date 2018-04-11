@@ -54,10 +54,6 @@ class FileSet < ActiveFedora::Base
     index.as :stored_searchable
   end
 
-  property :doi, predicate: ::RDF::Vocab::Identifiers.doi, multiple: false do |index|
-    index.as :symbol
-  end
-
   property :exclusive_to_platform, predicate: ::RDF::URI.new('http://fulcrum.org/ns#exclusiveToPlatform'), multiple: false do |index|
     index.as :symbol, :facetable
   end
@@ -67,10 +63,6 @@ class FileSet < ActiveFedora::Base
   end
 
   property :ext_url_doi_or_handle, predicate: ::RDF::URI.new('http://fulcrum.org/ns#externalUrlDoiOrHandle'), multiple: false do |index|
-    index.as :symbol
-  end
-
-  property :hdl, predicate: ::RDF::Vocab::Identifiers.hdl, multiple: false do |index|
     index.as :symbol
   end
 
@@ -129,6 +121,7 @@ class FileSet < ActiveFedora::Base
   end
 
   include GlobalID::Identification
+  include HeliotropeCitableLinks
   include StoresCreatorNameSeparately
   include ::Hyrax::FileSetBehavior
   include ::Hyrax::BasicMetadata

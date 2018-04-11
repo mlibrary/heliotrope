@@ -12,11 +12,25 @@ RSpec.describe Hyrax::FileSetPresenter do
   end
 
   describe "#citable_link" do
-    context "with a DOI" do
-      let(:fileset_doc) { SolrDocument.new(id: 'fileset_id', has_model_ssim: ['FileSet'], doi_ssim: ['http://doi.and.things']) }
+    context "has a DOI" do
+      let(:fileset_doc) { SolrDocument.new(id: 'fileset_id',
+                                           has_model_ssim: ['FileSet'],
+                                           doi_ssim: ['http://doi.and.things']) }
 
-      it "has a DOI" do
-        expect(presenter.citable_link).to eq 'http://doi.and.things'
+      context "and no handle" do
+        it "returns the DOI" do
+          expect(presenter.citable_link).to eq 'http://doi.and.things'
+        end
+      end
+
+      context "and also an explicit handle" do
+        let(:fileset_doc) { SolrDocument.new(id: 'fileset_id',
+                                             has_model_ssim: ['FileSet'],
+                                             doi_ssim: ['http://doi.and.things'],
+                                             hdl_ssim: ['a.handle']) }
+        it "returns the DOI" do
+          expect(presenter.citable_link).to eq 'http://doi.and.things'
+        end
       end
     end
 

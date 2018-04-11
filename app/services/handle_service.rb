@@ -6,17 +6,19 @@ class HandleService
   end
 
   def self.handle(object)
-    return nil if object.nil?
-    hdl = object.id if object.respond_to?(:id)
-    hdl = object.hdl if object.respond_to?(:hdl) && object.hdl.present?
-    return nil if hdl.nil?
-    "2027/fulcrum.#{hdl}"
+    hdl_prefix = '2027/fulcrum.'
+    hdl = if object.respond_to?(:hdl) && object&.hdl.present?
+            object.hdl
+          elsif object.respond_to?(:id) && object&.id.present?
+            object.id
+          end
+    hdl.present? ? hdl_prefix + hdl.to_s : nil
   end
 
   def self.url(object)
     handle = handle(object)
-    return nil if handle.nil?
-    "http://hdl.handle.net/#{handle}"
+    # note this assumes that entries in the hdl field are just NOIDs
+    handle.present? ? "http://hdl.handle.net/#{handle}" : nil
   end
 
   def self.object(handle)
