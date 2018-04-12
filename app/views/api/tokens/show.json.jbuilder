@@ -1,3 +1,3 @@
 # frozen_string_literal: true
 
-json.partial! "token", token: @token
+json.partial! "user", user: current_user

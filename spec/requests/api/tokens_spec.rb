@@ -3,18 +3,16 @@
 require 'rails_helper'
 
 RSpec.describe "Tokens", type: :request do
-  def token_obj(token:)
+  def user_obj(user:)
     {
-      "header" => token.header,
-      "payload" => token.payload,
-      "signature" => token.signature
+      "id" => user.id,
+      "email" => user.email,
+      "url" => user_url(user.id, format: :json)
     }
   end
-
   let(:headers) do
     {
-      "ACCEPT" => "application/json",      # This is what Rails 4 accepts
-      "HTTP_ACCEPT" => "application/json", # This is what Rails 3 accepts
+      "ACCEPT" => "application/json",
       "CONTENT_TYPE" => "application/json"
     }
   end
@@ -47,7 +45,6 @@ RSpec.describe "Tokens", type: :request do
     context 'token' do
       let(:token) { user.token }
       let(:user) { build(:user) }
-      let(:output) { JSON.parse(@response.body) }
 
       context 'user not found' do
         it do
@@ -80,7 +77,7 @@ RSpec.describe "Tokens", type: :request do
           expect(token).to eq(user.token)
           get api_token_path, headers: headers
           expect(response).to have_http_status(:ok)
-          expect(output).to eq(token_obj(token: Token.new(token)))
+          expect(response_hash[:user]).to eq(user_obj(user: user))
         end
 
         context 'unsigned token' do

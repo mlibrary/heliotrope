@@ -13,6 +13,16 @@ end
 Rails.application.routes.draw do
   namespace :api, constraints: ->(req) { req.format == :json } do
     resource :token, only: %i[show]
+    scope module: :v1, constraints: API::Version.new('v1', true) do
+      get 'lessee', controller: :lessees, action: :find, as: :find_lessee
+      resources :lessees, only: %i[index show create destroy] do
+        resources :products, only: %i[index show create update destroy]
+      end
+      get 'product', controller: :products, action: :find, as: :find_product
+      resources :products, only: %i[index show create destroy] do
+        resources :lessees, only: %i[index show create update destroy]
+      end
+    end
   end
 
   constraints platform_administrator_constraint do
