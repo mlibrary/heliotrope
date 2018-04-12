@@ -643,6 +643,16 @@ footer.press {
 	padding: .71em 1em;
 }
 
+.cozy-control .btn-group {
+  display: initial;
+
+  .dropdown-menu {
+    border-radius: 0px;
+    top: 125%;
+  }
+
+}
+
 .cozy-modal {
   padding: 0 !important;
 }
