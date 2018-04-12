@@ -929,6 +929,17 @@ $gabii-link-hover:    #1e5667;
       }
     }
 
+    .message {
+      @include lato;
+      font-size: .8em;
+      padding-left: 1em;
+      vertical-align: sub;
+
+      a {
+        text-decoration: underline;
+      }
+    }
+
     .nav-tabs {
       @include lato;
     }
@@ -1019,7 +1030,30 @@ $gabii-link-hover:    #1e5667;
     .hint {
       padding: 1em 2em;
     }
-    
+
+    .cozy-panel-header > .cozy-panel-right {
+
+      justify-content: flex-end;
+
+      .alert {
+        padding: 12.5px;
+        margin: 0;
+        font-size: .9em;
+
+        a {
+          text-decoration: underline;
+        }
+      }
+
+      .alert-dismissable .close {
+        top: -10px;
+        right: -5px;
+      }
+
+    }
+
+
+
     .cozy-control .cozy-h1 {
       font-size: 1.5em;
     }

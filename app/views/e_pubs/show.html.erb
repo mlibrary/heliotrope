@@ -68,6 +68,13 @@ webgl = FactoryService.webgl_unity(webgl_id)
         // Book/chapter title widget
         cozy.control.title({ region: 'top.header.left' }).addTo(reader);
 
+        <% if @monograph_presenter.webgl? %>
+        cozy.control.widget.panel({
+          region: 'top.header.right',
+          template: `<div class="alert alert-info alert-dismissable" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><span class="message"><strong>Access to the full publication is free through June 2018.</strong> Afterwards, you can purchase access <a href="https://www.press.umich.edu/9231782/mid_republican_house_from_gabii">here</a>.</span></div>`
+        }).addTo(reader);
+        <% end %>
+
         // Table of contents widget
         cozy.control.contents({ region: 'top.toolbar.left' }).addTo(reader);
 
