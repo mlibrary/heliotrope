@@ -152,6 +152,17 @@ $heb-black-80: #342f2e;
   .jumbotron {
     background-color: $heb-grey-4;
     font-weight: 200;
+    padding-top: 2em;
+    padding-bottom: 2em;
+
+    p {
+      font-size: 16px;
+      margin-bottom: 0;
+    }
+    
+    .container {
+      margin-top: 0;
+    }
 
     .logo {
 
