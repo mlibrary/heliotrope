@@ -395,6 +395,12 @@ webgl = FactoryService.webgl_unity(webgl_id)
         // Bib info widget
         cozy.control.bibliographicInformation({ region: 'top.toolbar.left' }).addTo(reader)
 
+        // Share widget
+        cozy.control.widget.button({
+          region: 'top.toolbar.left',
+          template: `<div class="btn-group"><button class="button--sm dropdown-toggle" data-toggle="dropdown" aria-label="Share book" aria-haspopup="true" aria-expanded="false"><i id="share" class="icon-share-boxed oi" data-glyph="share-boxed" title="Share book" aria-hidden="true"></i></button><ul class="dropdown-menu"><li><a href="http://twitter.com/intent/tweet?text=<%= @monograph_presenter.page_title %>&amp;url=<%= @citable_link %>" target="_blank">Twitter</a></li><li><a href="http://www.facebook.com/sharer.php?u=<%= @citable_link %>&amp;t=<%= @monograph_presenter.page_title %>" target="_blank">Facebook</a></li><li><a href="https://plus.google.com/share?url=<%= @citable_link %>" target="_blank">Google+</a></li><li><a href="http://www.reddit.com/submit?url=<%= @citable_link %>" target="_blank">Reddit</a></li><li><a href="http://www.mendeley.com/import/?url=<%= @citable_link %>" target="_blank">Mendeley</a></li><li><a href="http://www.citeulike.org/posturl?url=<%= @citable_link %>&amp;title=<%= @monograph_presenter.page_title %>" target="_blank">Cite U Like</a></li></ul></div>`
+        }).addTo(reader);
+
         // Fullscreen widget
         cozy.control.widget.button({
           region: 'top.toolbar.right',
