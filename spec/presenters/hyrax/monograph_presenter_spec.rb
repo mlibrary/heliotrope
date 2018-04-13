@@ -499,4 +499,35 @@ RSpec.describe Hyrax::MonographPresenter do
       end
     end
   end
+
+  describe '#creator' do
+    context 'values in creator_full_name and contributor' do
+      before do
+        allow(mono_doc).to receive(:creator_full_name).and_return('Man, Rocket')
+        allow(mono_doc).to receive(:contributor).and_return(['Boop, Betty', 'Love, Thomas'])
+      end
+      subject { presenter.creator }
+      it { expect(subject).to eq ['Man, Rocket', 'Boop, Betty', 'Love, Thomas'] }
+    end
+
+    context 'values in primary_editor_full_name and editor' do
+      before do
+        allow(mono_doc).to receive(:primary_editor_full_name).and_return('Smith, John')
+        allow(mono_doc).to receive(:editor).and_return(['Sue, Peggy', 'Jones, Tom'])
+      end
+      subject { presenter.creator }
+      it { expect(subject).to eq ['Smith, John', 'Sue, Peggy', 'Jones, Tom'] }
+    end
+
+    context 'values in creator_full_name, contributor, primary_editor_full_name and editor' do
+      before do
+        allow(mono_doc).to receive(:creator_full_name).and_return('Man, Rocket')
+        allow(mono_doc).to receive(:contributor).and_return(['Boop, Betty', 'Love, Thomas'])
+        allow(mono_doc).to receive(:primary_editor_full_name).and_return('Smith, John')
+        allow(mono_doc).to receive(:editor).and_return(['Sue, Peggy', 'Jones, Tom'])
+      end
+      subject { presenter.creator }
+      it { expect(subject).to eq ['Man, Rocket', 'Boop, Betty', 'Love, Thomas', 'Smith, John', 'Sue, Peggy', 'Jones, Tom'] }
+    end
+  end
 end

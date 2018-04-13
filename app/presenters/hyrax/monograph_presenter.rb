@@ -13,13 +13,20 @@ module Hyrax
     attr_accessor :pageviews
 
     delegate :date_created, :date_modified, :date_uploaded,
-             :description, :creator, :creator_display, :editor, :contributor, :subject,
-             :publisher, :date_published, :language, :isbn, :isbn_paper,
+             :description, :creator_display, :editor, :contributor, :subject,
+             :based_near, :publisher, :date_published, :language, :isbn, :isbn_paper,
              :isbn_ebook, :copyright_holder, :buy_url, :embargo_release_date,
              :lease_expiration_date, :rights, :creator_full_name,
              :creator_given_name, :creator_family_name,
              :primary_editor_family_name, :primary_editor_given_name, :primary_editor_full_name,
              to: :solr_document
+
+    def creator
+      # CitationsBehavior depends on `creator`. ActiveTriple::Relation `creator` doesn't retain order.
+      creator_authors = creator_full_name.present? ? contributor.unshift(creator_full_name) : contributor
+      creator_editors = primary_editor_full_name.present? ? editor.unshift(primary_editor_full_name) : editor
+      creator_authors + creator_editors
+    end
 
     def ordered_section_titles
       # FileSets store their section_title as ActiveTriples::Relation, which does not preserve order.
