@@ -3,6 +3,9 @@
 # Generated via
 #  `rails generate curation_concerns:work Monograph`
 class Monograph < ActiveFedora::Base
+  # related to our StoresCreatorNameSeparately and using Hyrax code that relies on `creator`, like CitationsBehaviors
+  before_save :set_creator
+
   property :creator_display, predicate: ::RDF::Vocab::FOAF.maker, multiple: false do |index|
     index.as :stored_searchable
   end
@@ -62,4 +65,18 @@ class Monograph < ActiveFedora::Base
   self.indexer = ::MonographIndexer
 
   validates :title, presence: { message: 'Your work must have a title.' }
+
+  private
+
+    def editor_full_name
+      joining_comma = primary_editor_family_name.blank? || primary_editor_given_name.blank? ? '' : ', '
+      primary_editor_family_name.to_s + joining_comma + primary_editor_given_name.to_s
+    end
+
+    def set_creator
+      authors = full_name.present? ? contributor.to_a.unshift(full_name) : contributor.to_a
+      editors = editor_full_name.present? ? editor.to_a.unshift(editor_full_name) : editor.to_a
+      heliotrope_creators = authors + editors
+      self.creator = heliotrope_creators if heliotrope_creators.present?
+    end
 end
