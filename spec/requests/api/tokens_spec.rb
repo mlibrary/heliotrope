@@ -10,6 +10,7 @@ RSpec.describe "Tokens", type: :request do
       "url" => user_url(user.id, format: :json)
     }
   end
+
   let(:headers) do
     {
       "ACCEPT" => "application/json",
