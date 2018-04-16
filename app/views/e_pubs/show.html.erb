@@ -34,9 +34,10 @@ webgl = FactoryService.webgl_unity(webgl_id)
         //$("body").addClass("reading");
         var reader = cozy.reader('reader', {
           href: "<%= "#{main_app.epub_url.gsub!(/\?.*/, '')}/" %>",
+          download_links: <%= @epub_download_presenter.download_links.to_json.html_safe %>,
           metadata: {
             doi: '<%= @citable_link %>',
-            // TO-DO: iterate all creator given and family names for monograph
+            // TODO: iterate all creator given and family names for monograph
             // creator: [
             //    ''
             // ],
@@ -54,7 +55,7 @@ webgl = FactoryService.webgl_unity(webgl_id)
           onClick: function() { window.location = "<%= "#{@back_link}" %>"; }
         }).addTo(reader);
         // Press brand widget
-        // TO-DO: only show logo for publishers that also have CSS overrides. Currently only HEB has this.
+        // TODO: only show logo for publishers that also have CSS overrides. Currently only HEB has this.
         <% if defined? @subdomain %>
         // only include logos for heb, nyupress, and gabii at this point
         <% if %w[heb nyupress gabii].include? @subdomain %>
@@ -401,6 +402,14 @@ webgl = FactoryService.webgl_unity(webgl_id)
           template: `<div class="btn-group"><button class="button--sm dropdown-toggle" data-toggle="dropdown" aria-label="Share book" aria-haspopup="true" aria-expanded="false"><i id="share" class="icon-share-boxed oi" data-glyph="share-boxed" title="Share book" aria-hidden="true"></i></button><ul class="dropdown-menu"><li><a href="http://twitter.com/intent/tweet?text=<%= @monograph_presenter.page_title %>&amp;url=<%= @citable_link %>" target="_blank">Twitter</a></li><li><a href="http://www.facebook.com/sharer.php?u=<%= @citable_link %>&amp;t=<%= @monograph_presenter.page_title %>" target="_blank">Facebook</a></li><li><a href="https://plus.google.com/share?url=<%= @citable_link %>" target="_blank">Google+</a></li><li><a href="http://www.reddit.com/submit?url=<%= @citable_link %>" target="_blank">Reddit</a></li><li><a href="http://www.mendeley.com/import/?url=<%= @citable_link %>" target="_blank">Mendeley</a></li><li><a href="http://www.citeulike.org/posturl?url=<%= @citable_link %>&amp;title=<%= @monograph_presenter.page_title %>" target="_blank">Cite U Like</a></li></ul></div>`
         }).addTo(reader);
 
+        // Download widget
+        <% if @epub_download_presenter.download_links.length.positive? %>
+        cozy.control.download({
+            region: 'top.toolbar.left',
+            template: '<button class="button--sm cozy-download" data-toggle="open" aria-label="Download book" role="button"><i id="download" class="oi" data-glyph="data-transfer-download" title="Download book" aria-hidden="true"></i></button>',
+        }).addTo(reader);
+        <% end %>
+
         // Fullscreen widget
         cozy.control.widget.button({
           region: 'top.toolbar.right',
@@ -459,13 +468,13 @@ webgl = FactoryService.webgl_unity(webgl_id)
         // Feedback widget
         cozy.control.widget.panel({
           region: 'bottom.navigator.left',
-	  className: 'cozy-panel-feedback',
-	  <% if @monograph_presenter.webgl? %>
+          className: 'cozy-panel-feedback',
+          <% if @monograph_presenter.webgl? %>
           template: '<a href="https://docs.google.com/forms/d/e/1FAIpQLSehtWeYRAmb12pLcQV0WXDvsQgdEsI6H-gbj4HumdySrmwhZg/viewform?usp=sf_link" target="_blank" title="Report a problem or share feedback"><i class="icon-comment-square oi" data-glyph="comment-square" aria-hidden="true"></i></a>',
-  	  <% else %>
-	  template: '<a href="https://docs.google.com/forms/d/e/1FAIpQLSeY04WhBtHGSXONu3jGiYnOcVzZxzHi3FGbS9ELg8rJdMpgpw/viewform?usp=sf_link" target="_blank" title="Report a problem or share feedback"><i class="icon-comment-square oi" data-glyph="comment-square" aria-hidden="true"></i></a>',
-  	  <% end %>
-	  }).addTo(reader);
+          <% else %>
+          template: '<a href="https://docs.google.com/forms/d/e/1FAIpQLSeY04WhBtHGSXONu3jGiYnOcVzZxzHi3FGbS9ELg8rJdMpgpw/viewform?usp=sf_link" target="_blank" title="Report a problem or share feedback"><i class="icon-comment-square oi" data-glyph="comment-square" aria-hidden="true"></i></a>',
+          <% end %>
+        }).addTo(reader);
 
         // Navigator widgets
         cozy.control.navigator({ region: 'bottom.navigator' }).addTo(reader);

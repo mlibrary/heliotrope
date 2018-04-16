@@ -33,5 +33,13 @@ module FeaturedRepresentatives
       # ['application/zip', 'application/octet-stream'].include?(mime_type) && File.extname(original_name) == ".unity"
       featured_representative&.kind == 'webgl'
     end
+
+    def pdf_ebook?
+      featured_representative&.kind == 'pdf_ebook'
+    end
+
+    def mobi?
+      featured_representative&.kind == 'mobi'
+    end
   end
 end

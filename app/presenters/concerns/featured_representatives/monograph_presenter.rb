@@ -63,5 +63,21 @@ module FeaturedRepresentatives
     def aboutware_id
       featured_representatives.map { |fr| fr.file_set_id if fr.kind == 'aboutware' }.compact.first
     end
+
+    def pdf_ebook?
+      featured_representatives.map(&:kind).include? 'pdf_ebook'
+    end
+
+    def pdf_ebook_id
+      featured_representatives.map { |fr| fr.file_set_id if fr.kind == 'pdf_ebook' }.compact.first
+    end
+
+    def mobi?
+      featured_representatives.map(&:kind).include? 'mobi'
+    end
+
+    def mobi_id
+      featured_representatives.map { |fr| fr.file_set_id if fr.kind == 'mobi' }.compact.first
+    end
   end
 end

@@ -13,10 +13,14 @@ class EPubsController < ApplicationController
     @back_link = params[:publisher].present? ? URI.join(main_app.root_url, params[:publisher]).to_s : main_app.monograph_catalog_url(@presenter.monograph_id)
     @subdomain = @presenter.monograph.subdomain
     @search_url = main_app.epub_search_url(params[:id], q: "").gsub!(/locale=en&/, '')
+
     @monograph_presenter = nil
     if @presenter.parent.present?
       @monograph_presenter = Hyrax::PresenterFactory.build_for(ids: [@presenter.parent.id], presenter_class: Hyrax::MonographPresenter, presenter_args: current_ability).first
     end
+
+    @epub_download_presenter = EPubDownloadPresenter.new(@presenter, @monograph_presenter, current_ability)
+
     render layout: false
   end
 
