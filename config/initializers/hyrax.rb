@@ -14,6 +14,10 @@ Hyrax.config do |config|
   # Note: In Hyrax you must trigger the FileSetAuditService manually.
   # config.max_days_between_audits = 7
 
+  if Rails.application.secrets.key? :geonames_username
+    config.geonames_username = Rails.application.secrets.geonames_username
+  end
+
   # Enable displaying usage statistics in the UI
   # Requires a Google Analytics id and OAuth2 keyfile.  See README for more info
   # config.analytics = false

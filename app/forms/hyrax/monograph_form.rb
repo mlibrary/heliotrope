@@ -8,9 +8,10 @@ module Hyrax
     self.terms += %i[press creator_display date_published isbn isbn_paper isbn_ebook hdl doi
                      primary_editor_family_name primary_editor_given_name editor copyright_holder buy_url
                      creator_family_name creator_given_name section_titles]
-    self.terms -= %i[creator keyword publisher identifier based_near related_url source]
+    self.terms -= %i[creator keyword identifier related_url source]
 
-    self.required_fields = %i[title press creator_display creator_family_name creator_given_name description]
+    self.required_fields = %i[title press creator_display creator_family_name creator_given_name description
+                              publisher date_created]
     self.required_fields -= %i[creator keyword rights]
 
     delegate :current_user, to: :current_ability
