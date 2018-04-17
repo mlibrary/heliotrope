@@ -73,6 +73,16 @@ feature 'Press Catalog' do
         expect(page).to have_selector('#catalog_search')
       end
 
+      scenario 'visits the catalog page for a press with the press name capitalized' do
+        visit "/#{umich.subdomain.upcase}"
+        # I should see only the public monographs for this press
+        expect(page).to have_selector('#documents .document', count: 2)
+        expect(page).to     have_link red.title.first
+        expect(page).to     have_link blue.title.first
+        expect(page).to_not have_link invisible.title.first
+        expect(page).to_not have_link colors.title.first
+      end
+
       context 'with a press that also has "child presses"' do
         let(:umich_child_1) { create(:press, subdomain: 'umich_child_1', parent_id: umich.id) }
         let(:umich_child_2) { create(:press, subdomain: 'umich_child_2', parent_id: umich.id) }
