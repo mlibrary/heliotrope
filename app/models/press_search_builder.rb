@@ -7,6 +7,6 @@ class PressSearchBuilder < ::SearchBuilder
     solr_parameters[:fq] ||= []
     children = Press.find_by(subdomain: blacklight_params['subdomain']).children.pluck(:subdomain)
     all_presses = children.push(blacklight_params['subdomain']).uniq
-    solr_parameters[:fq] << "{!terms f=press_sim}#{all_presses.join(',')}"
+    solr_parameters[:fq] << "{!terms f=press_sim}#{all_presses.map(&:downcase).join(',')}"
   end
 end
