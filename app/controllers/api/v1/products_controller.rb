@@ -2,15 +2,26 @@
 
 module API
   module V1
+    # Products Controller
     class ProductsController < API::ApplicationController
       before_action :set_product, only: %i[show update destroy]
-
+      # @example get /api/product?identifier=String
+      # @param [Hash] params { identifier: String }
+      # @return [ActionDispatch::Response] {Product}
+      #   (See ./app/views/api/v1/products/show.json.jbuilder for details)
       def find
         @product = Product.find_by(identifier: params[:identifier])
         return head :not_found if @product.blank?
         render :show
       end
 
+      # @overload index
+      #   @example get /api/products
+      # @overload index
+      #   @example get /api/lessees/:lessee_id/products
+      #   @param [Hash] params { lessee_id: Number }
+      # @return [ActionDispatch::Response] array of {Product}
+      #   (See ./app/views/api/v1/products/index.json.jbuilder for details)
       def index
         @products = []
         if params[:lessee_id].present?
@@ -21,6 +32,14 @@ module API
         end
       end
 
+      # @overload show
+      #   @example get /api/products/:id
+      #   @param [Hash] params { id: Number }
+      # @overload show
+      #   @example get /api/lessees/:lessee_id/products/:id
+      #   @param [Hash] params { lessee_id: Number, id: Number }
+      # @return [ActionDispatch::Response] {Product}
+      #   (See ./app/views/api/v1/products/show.json.jbuilder for details)
       def show
         return head :not_found if @product.blank?
         if params[:lessee_id].present? # rubocop:disable Style/GuardClause
@@ -30,6 +49,14 @@ module API
         end
       end
 
+      # @overload create
+      #   post /api/products
+      #   @param [Hash] parmas { product: { identifier: String } }
+      # @overload create
+      #   post /api/lessees/:lessee_id/products
+      #   @param [Hash] params { lessee_id: Number, product: { identifier: String } }
+      # @return [ActionDispatch::Response] {Product}
+      #   (See ./app/views/api/v1/products/show.json.jbuilder for details)
       def create
         if params[:lessee_id].present?
           create_lessee_product
@@ -38,6 +65,14 @@ module API
         end
       end
 
+      # @overload update
+      #   @example put /api/products/:id
+      #   @param [Hash] params { id: Number }
+      # @overload update
+      #   @example put /api/lessees/:lessee_id/products/:id
+      #   @param [Hash] params { lessee_id: Number, id: Number }
+      # @return [ActionDispatch::Response] {Product}
+      #   (See ./app/views/api/v1/products/show.json.jbuilder for details)
       def update
         if params[:lessee_id].present?
           update_lessee_product
@@ -46,6 +81,13 @@ module API
         end
       end
 
+      # @overload destroy
+      #   @example delete /api/products/:id
+      #   @param [Hash] parmas { id: Number }
+      # @overload destroy
+      #   @example delete /api/lessees/:lessee_id/products/:id
+      #   @param [Hash] params { lessee_id: Number, id: Number }
+      # @return [ActionDispatch::Response]
       def destroy
         if params[:lessee_id].present?
           set_lessee!

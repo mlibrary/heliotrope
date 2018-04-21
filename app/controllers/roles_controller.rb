@@ -50,7 +50,7 @@ class RolesController < ApplicationController
     end
 
     # When nested attributes are passed in, ensure we have authorization to update each row.
-    # @param attr [Hash,Array] the nested attributes
+    # @param attrs [Hash, Array] the nested attributes
     # @param klass [Class] the class that is getting created
     # @return [Integer] a count of the number of deleted records
     def authorize_nested_attributes!(attrs, klass)

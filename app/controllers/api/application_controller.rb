@@ -1,13 +1,20 @@
 # frozen_string_literal: true
 
 module API
+  # Base controller for API REST controllers
+  # @note Responses only to JSON request
+  # @note Uses JSON Web Token (JWT) to authenticate and authorize request
+  # @note Rescues from ActiveRecord::RecordInvalid, ActiveRecord::RecordNotFound, and StandardError
   class ApplicationController < ActionController::API
     respond_to :json
+
     before_action :authorize_request
 
+    # User identification extracted from JWT
+    # @return [User] the authenticated and authorized {User} of the current request
     attr_reader :current_user
 
-    rescue_from ActiveRecord::RecordNotFound, StandardError do |exception|
+    rescue_from ActiveRecord::RecordInvalid, ActiveRecord::RecordNotFound, StandardError do |exception|
       case exception
       when ActiveRecord::RecordInvalid
         render json: { exception: exception.inspect }, status: :unprocessable_entity
