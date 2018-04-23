@@ -72,7 +72,7 @@ webgl = FactoryService.webgl_unity(webgl_id)
         <% if @monograph_presenter.webgl? %>
         cozy.control.widget.panel({
           region: 'top.header.right',
-          template: `<div class="alert alert-info alert-dismissable" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><span class="message"><strong>Access to the full publication is free through June 2018.</strong> Afterwards, you can purchase access <a href="https://www.press.umich.edu/9231782/mid_republican_house_from_gabii">here</a>.</span></div>`
+          template: '<div class="alert alert-info alert-dismissable" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><span class="message"><strong>Access to the full publication is free through June 2018.</strong> Afterwards, you can purchase access <a href="https://www.press.umich.edu/9231782/mid_republican_house_from_gabii">here</a>.</span></div>'
         }).addTo(reader);
         <% end %>
 
@@ -399,7 +399,7 @@ webgl = FactoryService.webgl_unity(webgl_id)
         // Share widget
         cozy.control.widget.button({
           region: 'top.toolbar.left',
-          template: `<div class="btn-group"><button class="button--sm dropdown-toggle" data-toggle="dropdown" aria-label="Share book" aria-haspopup="true" aria-expanded="false"><i id="share" class="icon-share-boxed oi" data-glyph="share-boxed" title="Share book" aria-hidden="true"></i></button><ul class="dropdown-menu"><li><a href="http://twitter.com/intent/tweet?text=<%= @monograph_presenter.page_title %>&amp;url=<%= @citable_link %>" target="_blank">Twitter</a></li><li><a href="http://www.facebook.com/sharer.php?u=<%= @citable_link %>&amp;t=<%= @monograph_presenter.page_title %>" target="_blank">Facebook</a></li><li><a href="https://plus.google.com/share?url=<%= @citable_link %>" target="_blank">Google+</a></li><li><a href="http://www.reddit.com/submit?url=<%= @citable_link %>" target="_blank">Reddit</a></li><li><a href="http://www.mendeley.com/import/?url=<%= @citable_link %>" target="_blank">Mendeley</a></li><li><a href="http://www.citeulike.org/posturl?url=<%= @citable_link %>&amp;title=<%= @monograph_presenter.page_title %>" target="_blank">Cite U Like</a></li></ul></div>`
+          template: '<div class="btn-group"><button class="button--sm dropdown-toggle" data-toggle="dropdown" aria-label="Share book" aria-haspopup="true" aria-expanded="false"><i id="share" class="icon-share-boxed oi" data-glyph="share-boxed" title="Share book" aria-hidden="true"></i></button><ul class="dropdown-menu"><li><a href="http://twitter.com/intent/tweet?text=<%= @monograph_presenter.page_title %>&amp;url=<%= @citable_link %>" target="_blank">Twitter</a></li><li><a href="http://www.facebook.com/sharer.php?u=<%= @citable_link %>&amp;t=<%= @monograph_presenter.page_title %>" target="_blank">Facebook</a></li><li><a href="https://plus.google.com/share?url=<%= @citable_link %>" target="_blank">Google+</a></li><li><a href="http://www.reddit.com/submit?url=<%= @citable_link %>" target="_blank">Reddit</a></li><li><a href="http://www.mendeley.com/import/?url=<%= @citable_link %>" target="_blank">Mendeley</a></li><li><a href="http://www.citeulike.org/posturl?url=<%= @citable_link %>&amp;title=<%= @monograph_presenter.page_title %>" target="_blank">Cite U Like</a></li></ul></div>'
         }).addTo(reader);
 
         // Download widget
