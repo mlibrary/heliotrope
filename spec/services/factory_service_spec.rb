@@ -11,6 +11,8 @@ RSpec.describe FactoryService do
   before do
     monograph.ordered_members << epub << webgl
     monograph.save!
+    epub.save!
+    webgl.save!
     FeaturedRepresentative.create(monograph_id: monograph.id, file_set_id: epub.id, kind: 'epub')
     FeaturedRepresentative.create(monograph_id: monograph.id, file_set_id: webgl.id, kind: 'webgl')
     described_class.clear_caches
@@ -21,8 +23,6 @@ RSpec.describe FactoryService do
   describe '#nop' do
     it { expect(described_class).to respond_to(:nop) }
   end
-
-  describe
 
   describe '#clear_semaphores' do
     it { expect(described_class).to respond_to(:clear_semaphores) }
@@ -157,9 +157,7 @@ RSpec.describe FactoryService do
     end
     context 'object not found' do
       let(:id) { 'validnoid' }
-      before { allow(FileSet).to receive(:find).with(id).and_raise(ActiveFedora::ObjectNotFoundError) }
       it 'returns a null object' do
-        expect(Rails.logger).to receive(:info).with("FactoryService.e_pub_publication_from(validnoid) raised ActiveFedora::ObjectNotFoundError")
         is_expected.to be_an_instance_of(EPub::PublicationNullObject)
       end
     end
@@ -190,9 +188,7 @@ RSpec.describe FactoryService do
     end
     context 'object not found' do
       let(:id) { 'validnoid' }
-      before { allow(FileSet).to receive(:find).with(id).and_raise(ActiveFedora::ObjectNotFoundError) }
       it 'returns a null object' do
-        expect(Rails.logger).to receive(:info).with("FactoryService.mcsv_manifest_from(validnoid) raised ActiveFedora::ObjectNotFoundError")
         is_expected.to be_an_instance_of(MCSV::ManifestNullObject)
       end
     end

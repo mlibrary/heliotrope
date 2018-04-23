@@ -79,15 +79,13 @@ class EPubsController < ApplicationController
   private
 
     def set_presenter
-      @presenter = Hyrax::FileSetPresenter.new(SolrDocument.new(FileSet.find(params[:id]).to_solr), current_ability, request)
-      if @presenter.epub?
+      @presenter = Hyrax::PresenterFactory.build_for(ids: [params[:id]], presenter_class: Hyrax::FileSetPresenter, presenter_args: nil).first
+      if @presenter.present? && @presenter.epub?
         FactoryService.e_pub_publication(params[:id]) # cache epub
       else
         Rails.logger.info("EPubsController.set_presenter(#{params[:id]}) is not an EPub.")
         render 'hyrax/base/unauthorized', status: :unauthorized
       end
-    rescue Ldp::Gone # tombstone
-      raise CanCan::AccessDenied
     end
 
     def set_show

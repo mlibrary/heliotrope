@@ -8,8 +8,8 @@ class WebglsController < ApplicationController
     # from the monograph_catalog page instead of calling this directly through a route. However it's a good place to
     # check the WebGL outside of the EPUB or navigation tab craziness, yet inside Rails and Turbolinks craziness.
     # Eventually we could delete this (and specs), or leave it here "forever" as an example?
-    @presenter = Hyrax::FileSetPresenter.new(SolrDocument.new(FileSet.find(params[:id]).to_solr), current_ability, request)
-    if @presenter.webgl?
+    @presenter = Hyrax::PresenterFactory.build_for(ids: [params[:id]], presenter_class: Hyrax::FileSetPresenter, presenter_args: nil).first
+    if @presenter.present? && @presenter.webgl?
       webgl = FactoryService.webgl_unity(params[:id])
       @unity_progress = "#{params[:id]}/#{webgl.unity_progress}"
       @unity_loader = "#{params[:id]}/#{webgl.unity_loader}"
@@ -19,8 +19,6 @@ class WebglsController < ApplicationController
       Rails.logger.info("WebglsController.show(#{params[:id]}) is not a WebGL.")
       render 'hyrax/base/unauthorized', status: :unauthorized
     end
-  rescue Ldp::Gone # tombstone
-    raise CanCan::AccessDenied
   end
 
   def file
