@@ -644,11 +644,12 @@ footer.press {
 }
 
 .cozy-control .btn-group {
-  display: initial;
+  display: flex;
+  height: 100%;
 
   .dropdown-menu {
     border-radius: 0px;
-    top: 125%;
+    top: 96%;
   }
 
 }
