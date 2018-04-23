@@ -70,3 +70,11 @@ dump.rdb
 
 # Ignore all files ending in "swp", vim swap files
 **/*.swp
+
+# Ignore YARD hidden directory
+.yardoc
+lib/.yardoc
+
+# Ignore documentation directory
+/doc
+lib/doc

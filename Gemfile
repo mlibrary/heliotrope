@@ -81,14 +81,8 @@ gem 'config'
 # Use gem version of cozy-sun-bear
 gem 'cozy-sun-bear', git: 'https://github.com/mlibrary/cozy-sun-bear', ref: '9139d358e3cd6b3cca7d71e3ff8352269d6c218d'
 
-# Force epub search results to be sentences
-gem 'pragmatic_segmenter', '~> 0.3'
-
 gem 'devise'
 gem 'devise-guests', '~> 0.3'
-
-# Json Web Token
-gem 'jwt'
 
 gem 'httparty'
 
@@ -105,11 +99,17 @@ gem 'jquery-rails'
 # jQuery plugin for drop-in fix binded events problem caused by Turbolinks
 gem 'jquery-turbolinks'
 
+# Json Web Token
+gem 'jwt'
+
 # Keycard provides authentication support and user/request information
 gem 'keycard', '~> 0.1.1'
 
 # Use MySQL as the database for Active Record
 gem 'mysql2'
+
+# Force epub search results to be sentences
+gem 'pragmatic_segmenter', '~> 0.3'
 
 gem 'redcarpet', '~> 3.3.4'
 
@@ -159,4 +159,6 @@ end
 
 group :development do
   gem 'pry-rails', '~> 0.3.4'
+  # Yay! A Ruby Documentation Tool
+  gem 'yard'
 end

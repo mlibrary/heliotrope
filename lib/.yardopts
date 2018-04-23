@@ -1,0 +1,1 @@
+--no-private --protected metadata_fields.rb e_pub.rb e_pub/**/*.rb webgl.rb webgl/**/*.rb
