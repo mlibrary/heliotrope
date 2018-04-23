@@ -1,9 +1,9 @@
 <li class="nav-item dropdown">
-    <a class="nav-link dropdown-toggle language-dropdown" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+    <button type="button" onclick="location.href='#'" class="nav-link dropdown-toggle language-dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         <span class="sr-only"><%= t('hyrax.toolbar.language_switch') %></span>
         <span title="<%= t('hyrax.toolbar.language_switch') %>"><%= available_translations[I18n.locale.to_s] %></span>
         <b class="caret"></b>
-    </a>
+    </button>
     <ul class="dropdown-menu" role="menu">
         <li role="presentation" class="dropdown-header"><%= t('hyrax.toolbar.language_switch') %></li>
         <li role="presentation" class="divider"></li>
