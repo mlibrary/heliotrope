@@ -13,6 +13,7 @@ RSpec.describe WebglsController, type: :controller do
       before do
         monograph.ordered_members << file_set
         monograph.save!
+        file_set.save!
         get :show, params: { id: file_set.id }
       end
       after { FeaturedRepresentative.destroy_all }
@@ -34,6 +35,7 @@ RSpec.describe WebglsController, type: :controller do
       before do
         monograph.ordered_members << file_set
         monograph.save!
+        file_set.save!
       end
       after { FeaturedRepresentative.destroy_all }
       it "returns the UnityLoader.js file" do

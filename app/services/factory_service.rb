@@ -193,7 +193,8 @@ module FactoryService # rubocop:disable Metrics/ModuleLength
     private_class_method :semaphore
 
     def self.e_pub_publication_from(id)
-      presenter = Hyrax::FileSetPresenter.new(SolrDocument.new(FileSet.find(id).to_solr), nil, nil)
+      presenter = Hyrax::PresenterFactory.build_for(ids: [id], presenter_class: Hyrax::FileSetPresenter, presenter_args: nil).first
+      return EPub::Publication.null_object if presenter.nil?
       return EPub::Publication.null_object unless presenter.epub?
       file = Tempfile.new(id)
       file.write(presenter.file.content.force_encoding("utf-8"))
@@ -216,7 +217,8 @@ module FactoryService # rubocop:disable Metrics/ModuleLength
     private_class_method :create_epub_webgl_bridge
 
     def self.mcvs_manifest_from(id)
-      presenter = Hyrax::FileSetPresenter.new(SolrDocument.new(FileSet.find(id).to_solr), nil, nil)
+      presenter = Hyrax::PresenterFactory.build_for(ids: [id], presenter_class: Hyrax::FileSetPresenter, presenter_args: nil).first
+      return MCSV::Manifest.null_object if presenter.nil?
       presenter.manifest? ? MCSV::Manifest.from(id: id, mcsv: presenter.file) : MCSV::Manifest.null_object
     rescue StandardError => e
       Rails.logger.info("FactoryService.mcsv_manifest_from(#{id}) raised #{e}")
@@ -225,7 +227,8 @@ module FactoryService # rubocop:disable Metrics/ModuleLength
     private_class_method :mcvs_manifest_from
 
     def self.webgl_unity_from(id)
-      presenter = Hyrax::FileSetPresenter.new(SolrDocument.new(FileSet.find(id).to_solr), nil, nil)
+      presenter = Hyrax::PresenterFactory.build_for(ids: [id], presenter_class: Hyrax::FileSetPresenter, presenter_args: nil).first
+      return Webgl::Unity.null_object if presenter.nil?
       return Webgl::Unity.null_object unless presenter.webgl?
       file = Tempfile.new(id)
       file.write(presenter.file.content.force_encoding("utf-8"))

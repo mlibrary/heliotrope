@@ -54,24 +54,6 @@ RSpec.describe EPubsController, type: :controller do
         end
       end
     end
-
-    context 'tombstone' do
-      let(:monograph) { create(:monograph) }
-      let(:file_set) { create(:file_set, content: File.open(File.join(fixture_path, 'moby-dick.epub'))) }
-      before do
-        monograph.ordered_members << file_set
-        monograph.save!
-        file_set.save!
-        file_set.destroy!
-        get :show, params: { id: file_set.id }
-      end
-      it do
-        # The HTTP response status code 302 Found is a common way of performing URL redirection.
-        expect(response).to have_http_status(:found)
-        # raise CanCan::AccessDenied currently redirects to root_url
-        expect(response.header["Location"]).to match "http://test.host/"
-      end
-    end
   end
 
   describe "#file" do
