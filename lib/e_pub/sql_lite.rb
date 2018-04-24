@@ -15,6 +15,17 @@ module EPub
       null_object
     end
 
+    def self.from_directory(root_path)
+      return null_object unless File.exist? root_path
+
+      epub_publication = EPub::Publication.from_directory(root_path)
+      db = SQLite3::Database.new File.join(root_path, "#{epub_publication.id}.db")
+      new(epub_publication, db)
+    rescue StandardError => e
+      ::EPub.logger.info("SqlLite.from_directory(#{epub_publication} raised #{e} #{e.backtrace}")
+      null_object
+    end
+
     def self.null_object
       SqlLiteNullObject.send(:new)
     end
@@ -25,8 +36,8 @@ module EPub
       raise "Unable to create VIRTUAL TABLE 'chapters' in #{@db.filename}, #{e}"
     end
 
-    def load_chapters
-      @epub_publication.chapters.each do |c|
+    def load_chapters(root_path = nil)
+      @epub_publication.chapters(root_path).each do |c|
         text = c.doc.search('//text()').map(&:text).delete_if { |x| x !~ /\w/ }
         @db.execute "INSERT INTO chapters VALUES (?, ?, ?, ?, ?)", c.chapter_id, c.chapter_href, c.title, c.basecfi, text.join(" ")
       end

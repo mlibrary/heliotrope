@@ -21,6 +21,27 @@ module EPub
       ValidatorNullObject.new
     end
 
+    def self.from_directory(root_path)
+      container = Nokogiri::XML(File.open(File.join(root_path, "META-INF/container.xml"))).remove_namespaces!
+      # Get the first content file (for muliple rendition epubs)
+      # http://www.idpf.org/epub/renditions/multiple/
+      content_file = container.xpath("//rootfile/@full-path")[0].text
+      content = Nokogiri::XML(File.open(File.join(root_path, content_file))).remove_namespaces!
+      # EPUB3 *must* have an item with properties="nav" in it's manifest
+      toc = Nokogiri::XML(File.open(File.join(root_path,
+                                              File.dirname(content_file),
+                                              content.xpath("//manifest/item[@properties='nav']").first.attributes["href"].value))).remove_namespaces!
+
+      new(id: root_path_to_noid(root_path), container: container, content_file: content_file, content: content, toc: toc)
+    rescue Errno::ENOENT, NoMethodError => e
+      ::EPub.logger.info("EPub::Validator.from_directory(#{root_path}) raised #{e}")
+      ValidatorNullObject.new
+    end
+
+    def self.root_path_to_noid(root_path)
+      root_path.gsub(/-epub/, '').split('/').slice(-5, 5).join('')
+    end
+
     private
 
       def initialize(opts)
