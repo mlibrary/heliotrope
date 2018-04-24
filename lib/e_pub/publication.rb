@@ -41,13 +41,24 @@ module EPub
       null_object
     end
 
+    def self.from_directory(root_path)
+      return null_object unless File.exist? root_path
+      valid_epub = Validator.from_directory(root_path)
+      return null_object if valid_epub.is_a?(ValidatorNullObject)
+
+      new(valid_epub)
+    rescue StandardError => e
+      ::EPub.logger.info("Publication.from_directory(#{root_path}) raised #{e} #{e.backtrace}")
+      null_object
+    end
+
     def self.null_object
       PublicationNullObject.send(:new)
     end
 
     # Instance Methods
 
-    def chapters
+    def chapters(root_path = nil)
       chapters = []
       i = 0
       content.xpath("//spine/itemref/@idref").each do |idref|
@@ -55,7 +66,7 @@ module EPub
         content.xpath("//manifest/item").each do |item|
           next unless item.attributes['id'].text == idref.text
 
-          doc = Nokogiri::XML(File.open(File.join(::EPub.path(id), File.dirname(content_file), item.attributes['href'].text)))
+          doc = Nokogiri::XML(File.open(File.join(root_path || ::EPub.path(id), File.dirname(content_file), item.attributes['href'].text)))
           doc.remove_namespaces!
 
           chapters.push(Chapter.send(:new,
