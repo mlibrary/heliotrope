@@ -640,12 +640,12 @@ footer.press {
 }
 
 .cozy-control button.button--sm.cozy-close {
-	padding: .71em 1em;
+	padding: .83em 1em !important;
 }
 
 .cozy-control .btn-group {
   display: flex;
-  height: 100%;
+  flex: 1 1 auto;
 
   .dropdown-menu {
     border-radius: 0px;
