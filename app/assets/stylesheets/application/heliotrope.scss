@@ -20,24 +20,26 @@ $gray-60: #686868;
 }
 
 // skip links
-.skip a {
-  position:absolute;
-  left:-10000px;
-  top:auto;
-  width:1px;
-  height:1px;
-  overflow:hidden;
+div.skip {
+  position: absolute;
+  z-index: 1001;
 }
 
-.skip a:focus {
-  position: static;
-  width: auto;
-  height: auto;
-  top: 0;
-  left: 0;
-  float: left;
-  padding: .5em;
-  background: #fff;
+.skip {
+  a {
+    position: absolute;
+    top: auto;
+    left: -10000px;
+    overflow: hidden;
+  }
+
+  a:focus {
+    position: static;
+    top: 0;
+    left: 0;
+    color: white;
+    background-color: black;
+  }
 }
 
 ///////////////////////////////////
