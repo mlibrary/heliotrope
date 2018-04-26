@@ -11,7 +11,7 @@ module EPub
     end
 
     def self.cache(publication)
-      json_mapfile = File.join(EPub.path(publication.id), 'epub-webgl-map.json')
+      json_mapfile = File.join(publication.root_path || EPub.path(publication.id), 'epub-webgl-map.json')
 
       publication.chapters.each do |chapter|
         chapter.doc.xpath("//p[@data-poi]").each do |node|

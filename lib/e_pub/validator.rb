@@ -2,7 +2,7 @@
 
 module EPub
   class Validator
-    attr_reader :id, :container, :content_file, :content, :toc
+    attr_reader :id, :container, :content_file, :content, :toc, :root_path
 
     def self.from(id)
       container    = Nokogiri::XML(File.open(EPub.path_entry(id, "META-INF/container.xml"))).remove_namespaces!
@@ -32,7 +32,7 @@ module EPub
                                               File.dirname(content_file),
                                               content.xpath("//manifest/item[@properties='nav']").first.attributes["href"].value))).remove_namespaces!
 
-      new(id: root_path_to_noid(root_path), container: container, content_file: content_file, content: content, toc: toc)
+      new(id: root_path_to_noid(root_path), container: container, content_file: content_file, content: content, toc: toc, root_path: root_path)
     rescue Errno::ENOENT, NoMethodError => e
       ::EPub.logger.info("EPub::Validator.from_directory(#{root_path}) raised #{e}")
       ValidatorNullObject.new
@@ -50,11 +50,12 @@ module EPub
         @content_file = opts[:content_file]
         @content      = opts[:content]
         @toc          = opts[:toc]
+        @root_path    = opts[:root_path]
       end
   end
 
   class ValidatorNullObject
-    attr_reader :id, :container, :content_file, :content, :toc
+    attr_reader :id, :container, :content_file, :content, :toc, :root_path
 
     def initialize
       @id           = "null_epub"
@@ -62,6 +63,7 @@ module EPub
       @content_file = "empty"
       @content      = Nokogiri::XML(nil)
       @toc          = Nokogiri::XML(nil)
+      @root_path    = nil
     end
   end
 end

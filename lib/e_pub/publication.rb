@@ -3,7 +3,7 @@
 module EPub
   class Publication
     private_class_method :new
-    attr_reader :id, :content_file, :content, :toc
+    attr_reader :id, :content_file, :content, :toc, :root_path
 
     # Class Methods
 
@@ -58,7 +58,7 @@ module EPub
 
     # Instance Methods
 
-    def chapters(root_path = nil)
+    def chapters
       chapters = []
       i = 0
       content.xpath("//spine/itemref/@idref").each do |idref|
@@ -114,6 +114,7 @@ module EPub
         @content_file = valid_epub.content_file
         @content = valid_epub.content
         @toc = ::EPub::Toc.new(valid_epub.toc)
+        @root_path = valid_epub.root_path
       end
   end
 end

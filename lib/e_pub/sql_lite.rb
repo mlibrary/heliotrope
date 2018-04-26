@@ -36,8 +36,8 @@ module EPub
       raise "Unable to create VIRTUAL TABLE 'chapters' in #{@db.filename}, #{e}"
     end
 
-    def load_chapters(root_path = nil)
-      @epub_publication.chapters(root_path).each do |c|
+    def load_chapters
+      @epub_publication.chapters.each do |c|
         text = c.doc.search('//text()').map(&:text).delete_if { |x| x !~ /\w/ }
         @db.execute "INSERT INTO chapters VALUES (?, ?, ?, ?, ?)", c.chapter_id, c.chapter_href, c.title, c.basecfi, text.join(" ")
       end
