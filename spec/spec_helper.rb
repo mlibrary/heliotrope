@@ -41,6 +41,7 @@ RSpec.configure do |config|
   config.after(:all) do
     if Rails.env.test? || Rails.env.cucumber?
       FileUtils.rm_rf(Dir[Rails.root.join('spec', 'support', 'uploads')])
+      FileUtils.rm_rf(Dir[Rails.root.join('tmp', 'rspec_derivatives')])
     end
   end
 

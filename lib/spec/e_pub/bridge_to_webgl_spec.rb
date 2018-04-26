@@ -45,6 +45,7 @@ RSpec.describe EPub::BridgeToWebgl do
       allow(EPub.logger).to receive(:info).and_return(nil)
       allow(publication).to receive(:id).and_return(id)
       allow(publication).to receive(:chapters).and_return(chapters)
+      allow(publication).to receive(:root_path).and_return("/ep/ub/id/")
 
       described_class.cache(publication)
 

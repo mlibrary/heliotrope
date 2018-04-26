@@ -7,7 +7,7 @@ class UnpackJob < ApplicationJob
     file_set = FileSet.find id
     raise "No file_set for #{id}" if file_set.nil?
 
-    root_path = Hyrax::DerivativePath.new(id).derivative_path + kind
+    root_path = UnpackService.root_path_from_noid(id, kind)
 
     FileUtils.remove_entry_secure(root_path) if Dir.exist? root_path
 
@@ -18,34 +18,50 @@ class UnpackJob < ApplicationJob
     case kind
     when 'epub'
       unpack_epub(id, root_path, file)
+      create_search_index(root_path)
+      epub_webgl_bridge(id, root_path, kind)
     when 'webgl'
       unpack_webgl(id, root_path, file)
+      epub_webgl_bridge(id, root_path, kind)
     else
       Rails.logger.error("Can't unpack #{kind} for #{id}")
     end
-
-    # Edge case for epubs with POI (Point of Interest) to map to CFI for a webgl (gabii)
-    # See 1630
-    # EPub::BridgeToWebgl.cache(publication) # if epub[:webgl]
   end
 
   private
 
-    def unpack_epub(id, root_path, file)
-      begin
-        Zip::File.open(file.path) do |zip_file|
-          zip_file.each do |entry|
-            make_path_entry(root_path, entry.name)
-            entry.extract(File.join(root_path, entry.name))
-          end
+    def epub_webgl_bridge(id, root_path, kind)
+      # Edge case for epubs with POI (Point of Interest) to map to CFI for a webgl (gabii)
+      # See 1630
+      monograph_id = FeaturedRepresentative.where(file_set_id: id)&.first&.monograph_id
+      case kind
+      when 'epub'
+        if FeaturedRepresentative.where(monograph_id: monograph_id, kind: 'webgl')&.first.present?
+          EPub::BridgeToWebgl.cache(EPub::Publication.from_directory(root_path))
         end
-      rescue Zip::Error
-        raise "EPUB #{id} is corrupt."
+      when 'webgl'
+        epub_id = FeaturedRepresentative.where(monograph_id: monograph_id, kind: 'epub')&.first&.file_set_id
+        if epub_id.present?
+          EPub::BridgeToWebgl.cache(EPub::Publication.from_directory(UnpackService.root_path_from_noid(epub_id, 'epub')))
+        end
       end
+    end
 
+    def unpack_epub(id, root_path, file)
+      Zip::File.open(file.path) do |zip_file|
+        zip_file.each do |entry|
+          make_path_entry(root_path, entry.name)
+          entry.extract(File.join(root_path, entry.name))
+        end
+      end
+    rescue Zip::Error
+      raise "EPUB #{id} is corrupt."
+    end
+
+    def create_search_index(root_path)
       sql_lite = EPub::SqlLite.from_directory(root_path)
       sql_lite.create_table
-      sql_lite.load_chapters(root_path)
+      sql_lite.load_chapters
     end
 
     def unpack_webgl(id, root_path, file)
