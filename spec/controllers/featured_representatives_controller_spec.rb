@@ -12,7 +12,10 @@ RSpec.describe FeaturedRepresentativesController, type: :controller do
     before { cosign_sign_in user }
 
     describe '#save' do
-      before { post :save, params: { monograph_id: monograph.id, file_set_id: file_set.id, kind: 'epub' } }
+      before do
+        allow(UnpackJob).to receive_messages(perform_later: nil, perform_now: nil)
+        post :save, params: { monograph_id: monograph.id, file_set_id: file_set.id, kind: 'epub' }
+      end
       after { FeaturedRepresentative.destroy_all }
 
       it "saves the featured_representative" do
