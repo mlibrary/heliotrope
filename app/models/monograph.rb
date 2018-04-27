@@ -15,6 +15,8 @@ class Monograph < ActiveFedora::Base
     index.as :stored_searchable
   end
 
+  # this is specifically for tracking when PublishJob (which we've never used) was run
+  # if we decide to get rid of PublishJob obviously this should go too
   property :date_published, predicate: ::RDF::Vocab::SCHEMA.datePublished do |index|
     index.as :stored_searchable
   end
