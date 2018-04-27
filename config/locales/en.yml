@@ -107,6 +107,10 @@ en:
     base:
       items:
         component: "Component"
+    search:
+      form:
+        q:
+          label: "Search within %{application_name}"
   isbn: "ISBN (Hardcover)"
   isbn_ebook: "ISBN (E-Book)"
   isbn_paper: "ISBN (Paper)"
@@ -128,14 +132,19 @@ en:
       read_book: "Read Book"
       reindex: "Reindex Monograph"
       reindexing: "Reindexing %{title}"
+    search:
+      form:
+        q:
+          label: "Search within %{monograph_name}"
   original_checksum: "Original Checksum"
   pageviews_html: "<strong>%{count}</strong> views since %{date}"
   permissions_expiration_date: "Permissions Expiration Date"
   press: "Publisher"
   press_catalog:
-    search_form:
-      q:
-        label: "Search within %{press_name}"
+    search:
+      form:
+        q:
+          label: "Search within %{press_name}"
   primary_creator_role: "Primary Creator Role(s)"
   primary_editor_family_name: "Editor (last name)"
   primary_editor_given_name: "Editor (first name)"
