@@ -10,7 +10,7 @@ module Hyrax
                      creator_family_name creator_given_name section_titles]
     self.terms -= %i[creator keyword identifier related_url source]
 
-    self.required_fields = %i[title press creator_display creator_family_name creator_given_name description
+    self.required_fields = %i[title press creator_family_name creator_given_name description
                               publisher date_created]
     self.required_fields -= %i[creator keyword rights]
 
