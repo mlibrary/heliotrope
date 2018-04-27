@@ -12,6 +12,10 @@ class FeaturedRepresentativesController < ApplicationController
       FeaturedRepresentative.create!(monograph_id: params[:monograph_id],
                                      file_set_id: params[:file_set_id],
                                      kind: params[:kind])
+
+      if ['epub', 'webgl'].include? params[:kind]
+        UnpackJob.perform_later(params[:file_set_id], params[:kind])
+      end
     end
     redirect_to monograph_show_path(params[:monograph_id])
   end
