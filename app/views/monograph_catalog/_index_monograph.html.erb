@@ -57,71 +57,49 @@
       </tbody>
     </table>
 
-
   </div><!-- /.monograph-metadata -->
 </div><!-- /.monograph-info-epub -->
-<script>
-$(document).ready(function() {
-  // https://stackoverflow.com/a/10524697
-   var monograph_id = '<%= @monograph_presenter.id %>';
-   var previous_monograph_id = localStorage.getItem('monograph_id');
-   localStorage.setItem('monograph_id', monograph_id);
 
-   if (monograph_id !== previous_monograph_id) {
-     localStorage.removeItem('lastTab');
-   }
-
-  // for bootstrap 3 use 'shown.bs.tab', for bootstrap 2 use 'shown' in the next line
-  $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
-    // save the latest tab; use cookies if you like 'em better:
-    localStorage.setItem('lastTab', $(this).attr('href'));
-  });
-
-  // go to the latest tab, if it exists:
-  var lastTab = localStorage.getItem('lastTab');
-  if (lastTab) {
-    $('[href="' + lastTab + '"]').tab('show');
-  }
-});
-</script>
 <div class="row monograph-assets-toc-epub">
-  <div class="col-sm-12">
+  <div class="col-sm-12" id="tabs">
     <ul class="nav nav-tabs" role="tablist">
       <% if @monograph_presenter.epub? %>
-        <li role="presentation" class="active"><a href="#toc" aria-controls="toc" role="tab" data-toggle="tab">Table of Contents</a></li>
+        <li role="presentation" class="active"><a id="tab-toc" role="tab" href="#toc" aria-controls="toc" aria-selected="true" data-toggle="tab" tabindex="0">Table of Contents</a></li>
       <% end %>
       <% if @monograph_presenter.assets? %>
         <% if @monograph_presenter.epub? %>
-          <li role="presentation"><a href="#media" aria-controls="media" role="tab" data-toggle="tab">Media</a></li>
+          <li role="presentation"><a id="tab-media" role="tab" href="#media" aria-controls="media" aria-selected="false" data-toggle="tab" tabindex="-1">Media</a></li>
         <% else %>
-          <li role="presentation" class="active"><a href="#media" aria-controls="media" role="tab" data-toggle="tab">Media</a></li>
+          <li role="presentation" class="active"><a id="tab-media" role="tab" href="#media" aria-controls="media" aria-selected="true" data-toggle="tab" tabindex="0">Media</a></li>
         <% end %>
       <% end %>
       <% if @monograph_presenter.webgl? %>
-        <li id="webgl-tab" role="presentation"><a href="#webgl" aria-controls="webgl" role="tab" data-toggle="tab">3-D Model</a></li>
+        <li role="presentation"><a id="tab-webgl" role="tab" href="#webgl" aria-controls="webgl" aria-selected="false" data-toggle="tab" tabindex="-1">3-D Model</a></li>
       <% end %>
       <% if @monograph_presenter.database? %>
-        <li role="presentation"><a href="<%= @monograph_presenter.database['ext_url_doi_or_handle_ssim'].first %>" aria-controls="database" role="tab" target="_blank">Database <span class="glyphicon glyphicon-share" aria-hidden="true"></span></a></li>
+        <li role="presentation"><a id="tab-database" role="tab" href="<%= @monograph_presenter.database['ext_url_doi_or_handle_ssim'].first %>" aria-controls="database" aria-selected="false" target="_blank" tabindex="-1">Database <span class="glyphicon glyphicon-share" aria-hidden="true" aria-label="Link to external database"></span></a></li>
       <% end %>
       <% if @monograph_presenter.aboutware? %>
-        <li role="presentation"><a href="#aboutware" aria-controls="aboutware" role="tab" data-toggle="tab">About</a></li>
+        <li role="presentation"><a id="tab-aboutware" role="tab" href="#aboutware" aria-controls="aboutware" aria-selected="false" data-toggle="tab" tabindex="-1">About</a></li>
       <% end %>
-      <li id="stats-tab" role="presentation"><a href="#stats" aria-controls="stats-tab" role="tab" data-toggle="tab">Stats</a></li>
+      <li role="presentation"><a id="tab-stats" role="tab" href="#stats" aria-controls="stats-tab" aria-selected="false" data-toggle="tab" tabindex="-1">Stats</a></li>
     </ul>
-    <div class="tab-content monograph-assets-toc-epub-content">
+    <div id="tabs-content" class="tab-content monograph-assets-toc-epub-content" aria-live="polite">
       <% if @monograph_presenter.epub? %>
-        <div role="tabpanel" class="tab-pane active toc row" id="toc">
+        <section id="toc" aria-hidden="false" aria-labelledby="tab-toc" class="tab-pane active toc row" tabindex="0">
           <div class="col-sm-12">
+            <h2 class="sr-only">Table of Contents</h2>
             <%= render 'index_epub_toc' %>
           </div>
-        </div>
+        </section>
       <% end %>
       <% if @monograph_presenter.assets? %>
         <% if @monograph_presenter.epub? %>
-          <div role="tabpanel" class="tab-pane media row" id="media">
+        <section id="media" aria-hidden="true" aria-labelledby="tab-media" class="tab-pane media row" tabindex="0">
         <% else %>
-          <div role="tabpanel" class="tab-pane active media row" id="media">
+        <section id="media" aria-hidden="false" aria-labelledby="tab-media" class="tab-pane active media row" tabindex="0">
         <% end %>
+          <h2 class="sr-only">Media</h2>
           <div class="col-sm-3 fulcrum_sidebar">
             <%= render 'catalog/search_sidebar' %>
           </div>
@@ -130,26 +108,29 @@ $(document).ready(function() {
               <%= render 'catalog/search_results' %>
             </div><!-- /.content -->
           </div>
-        </div>
+        </section>
       <% end %>
       <% if @monograph_presenter.webgl? %>
-        <div role="tabpanel" class="tab-pane webgl row" id="webgl">
+        <section id="webgl" aria-hidden="true" aria-labelledby="tab-webgl" class="tab-pane webgl row" tabindex="0">
           <div class="col-sm-12">
+            <h2 class="sr-only">3D Model</h2>
             <%= render 'webgls/tab' %>
           </div>
-        </div>
+        </section>
       <% end %>
       <% if @monograph_presenter.aboutware? %>
-        <div role="tabpanel" class="tab-pane aboutware row" id="aboutware">
+        <section id="aboutware" aria-hidden="true" aria-labelledby="tab-aboutware" class="tab-pane aboutware row" tabindex="0">
           <div class="col-sm-12">
+            <h2 class="sr-only">About</h2>
             <!-- this assumes that the "aboutware" FileSet is an html doc -->
             <%= @monograph_presenter.aboutware.file.content.force_encoding("UTF-8").html_safe %>
           </div>
-        </div>
+        </section>
       <% end %>
-      <div role="tabpanel" class="tab-pane stats row" id="stats">
+      <section id="stats" aria-hidden="true" aria-labelledby="tab-stats" class="tab-pane stats row" tabindex="0">
+        <h2 class="sr-only">Stats</h2>
         <%= render 'stats' %>
-      </div>
+      </section>
     </div>
   </div>
 </div><!-- /.monograph-assets-toc-epub -->
