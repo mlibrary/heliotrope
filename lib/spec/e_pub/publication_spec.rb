@@ -18,7 +18,7 @@ RSpec.describe EPub::Publication do
       allow(validator).to receive(:content_file).and_return(true)
       allow(validator).to receive(:content).and_return(true)
       allow(validator).to receive(:toc).and_return(true)
-      allow(validator).to receive(:root_path).and_return(true)
+      allow(validator).to receive(:root_path).and_return(nil)
     end
 
     # Class Methods
@@ -200,41 +200,86 @@ RSpec.describe EPub::Publication do
   end
 
   describe "with a test epub" do
-    before do
-      @id = '999999999'
-      @file = './spec/fixtures/fake_epub01.epub'
-      described_class.from(id: @id, file: @file)
-    end
-
-    after do
-      described_class.from(@id).purge
-    end
-
-    describe "#chapters" do
-      subject { described_class.from(@id) }
-      it "has 3 chapters" do
-        expect(subject.chapters.count).to be 3
+    context "using #from" do
+      before do
+        @id = '999999999'
+        @file = './spec/fixtures/fake_epub01.epub'
+        described_class.from(id: @id, file: @file)
       end
 
-      describe "the first chapter" do
-        # It's a little wrong to test this here, but Publication has the logic
-        # that populates the Chapter object, so it's here. For now.
-        subject { described_class.from(@id).chapters[0] }
-        it "has the id of" do
-          expect(subject.chapter_id).to eq "Chapter01"
+      after do
+        described_class.from(@id).purge
+      end
+
+      describe "#chapters" do
+        subject { described_class.from(@id) }
+        it "has 3 chapters" do
+          expect(subject.chapters.count).to be 3
         end
-        it "has the href of" do
-          expect(subject.chapter_href).to eq "xhtml/Chapter01.xhtml"
+
+        describe "the first chapter" do
+          # It's a little wrong to test this here, but Publication has the logic
+          # that populates the Chapter object, so it's here. For now.
+          subject { described_class.from(@id).chapters[0] }
+          it "has the id of" do
+            expect(subject.chapter_id).to eq "Chapter01"
+          end
+          it "has the href of" do
+            expect(subject.chapter_href).to eq "xhtml/Chapter01.xhtml"
+          end
+          it "has the title of" do
+            expect(subject.title).to eq 'Damage report!'
+          end
+          it "has the basecfi of" do
+            expect(subject.basecfi).to eq '/6/2[Chapter01]!'
+          end
+          it "has the chapter doc" do
+            expect(subject.doc.name).to eq 'document'
+            expect(subject.doc.xpath("//p")[2].text).to eq "Computer, belay that order"
+          end
         end
-        it "has the title of" do
-          expect(subject.title).to eq 'Damage report!'
+      end
+    end
+
+    context "using #from_directory with root_path" do
+      before do
+        @noid = '999999999'
+        @root_path = UnpackHelper.noid_to_root_path(@noid, 'epub')
+        @file = './spec/fixtures/fake_epub01.epub'
+        UnpackHelper.unpack_epub(@noid, @root_path, @file)
+        allow(EPub.logger).to receive(:info).and_return(nil)
+      end
+
+      after do
+        FileUtils.rm_rf(Dir[File.join('./tmp', 'rspec_derivatives')])
+      end
+
+      describe "#chapters" do
+        subject { described_class.from_directory(@root_path) }
+        it "has 3 chapters" do
+          expect(subject.chapters.count).to be 3
         end
-        it "has the basecfi of" do
-          expect(subject.basecfi).to eq '/6/2[Chapter01]!'
-        end
-        it "has the chapter doc" do
-          expect(subject.doc.name).to eq 'document'
-          expect(subject.doc.xpath("//p")[2].text).to eq "Computer, belay that order"
+
+        describe "the first chapter" do
+          # It's a little wrong to test this here, but Publication has the logic
+          # that populates the Chapter object, so it's here. For now.
+          subject { described_class.from_directory(@root_path).chapters[0] }
+          it "has the id of" do
+            expect(subject.chapter_id).to eq "Chapter01"
+          end
+          it "has the href of" do
+            expect(subject.chapter_href).to eq "xhtml/Chapter01.xhtml"
+          end
+          it "has the title of" do
+            expect(subject.title).to eq 'Damage report!'
+          end
+          it "has the basecfi of" do
+            expect(subject.basecfi).to eq '/6/2[Chapter01]!'
+          end
+          it "has the chapter doc" do
+            expect(subject.doc.name).to eq 'document'
+            expect(subject.doc.xpath("//p")[2].text).to eq "Computer, belay that order"
+          end
         end
       end
     end

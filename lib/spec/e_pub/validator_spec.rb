@@ -72,6 +72,12 @@ RSpec.describe EPub::Validator do
     subject { described_class.from(@id) }
     it "is a ValidatorNullObject" do
       is_expected.to be_an_instance_of(EPub::ValidatorNullObject)
+      expect(subject.id).to eq 'null_epub'
+      expect(subject.container).to be_an_instance_of(Nokogiri::XML::Document)
+      expect(subject.content_file).to be "empty"
+      expect(subject.content).to be_an_instance_of(Nokogiri::XML::Document)
+      expect(subject.toc).to be_an_instance_of(Nokogiri::XML::Document)
+      expect(subject.root_path).to be nil
     end
   end
 end
