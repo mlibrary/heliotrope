@@ -64,29 +64,29 @@
   <div class="col-sm-12" id="tabs">
     <ul class="nav nav-tabs" role="tablist">
       <% if @monograph_presenter.epub? %>
-        <li role="presentation" class="active"><a id="tab-toc" role="tab" href="#toc" aria-controls="toc" aria-selected="true" data-toggle="tab" tabindex="0">Table of Contents</a></li>
+        <li role="presentation" class="active"><a id="tab-toc" href="#toc" data-toggle="tab" role="tab" aria-controls="toc" aria-selected="true" tabindex="0">Table of Contents</a></li>
       <% end %>
       <% if @monograph_presenter.assets? %>
         <% if @monograph_presenter.epub? %>
-          <li role="presentation"><a id="tab-media" role="tab" href="#media" aria-controls="media" aria-selected="false" data-toggle="tab" tabindex="-1">Media</a></li>
+          <li role="presentation"><a id="tab-media" href="#media" role="tab" data-toggle="tab" aria-controls="media" aria-selected="false" tabindex="-1">Media</a></li>
         <% else %>
-          <li role="presentation" class="active"><a id="tab-media" role="tab" href="#media" aria-controls="media" aria-selected="true" data-toggle="tab" tabindex="0">Media</a></li>
+          <li role="presentation" class="active"><a id="tab-media" href="#media" data-toggle="tab" role="tab" aria-controls="media" aria-selected="true"  tabindex="0">Media</a></li>
         <% end %>
       <% end %>
       <% if @monograph_presenter.webgl? %>
-        <li role="presentation"><a id="tab-webgl" role="tab" href="#webgl" aria-controls="webgl" aria-selected="false" data-toggle="tab" tabindex="-1">3-D Model</a></li>
+        <li role="presentation"><a id="tab-webgl" href="#webgl" role="tab" data-toggle="tab" aria-controls="webgl" aria-selected="false" tabindex="-1">3-D Model</a></li>
       <% end %>
       <% if @monograph_presenter.database? %>
-        <li role="presentation"><a id="tab-database" role="tab" href="<%= @monograph_presenter.database['ext_url_doi_or_handle_ssim'].first %>" aria-controls="database" aria-selected="false" target="_blank" tabindex="-1">Database <span class="glyphicon glyphicon-share" aria-hidden="true" aria-label="Link to external database"></span></a></li>
+        <li role="presentation"><a id="tab-database" href="<%= @monograph_presenter.database['ext_url_doi_or_handle_ssim'].first %>" target="_blank" role="tab" aria-controls="database" aria-selected="false" tabindex="-1">Database <span class="glyphicon glyphicon-share" aria-hidden="true" aria-label="Link to external database"></span></a></li>
       <% end %>
       <% if @monograph_presenter.aboutware? %>
-        <li role="presentation"><a id="tab-aboutware" role="tab" href="#aboutware" aria-controls="aboutware" aria-selected="false" data-toggle="tab" tabindex="-1">About</a></li>
+        <li role="presentation"><a id="tab-aboutware" href="#aboutware" role="tab" data-toggle="tab" aria-controls="aboutware" aria-selected="false" tabindex="-1">About</a></li>
       <% end %>
-      <li role="presentation"><a id="tab-stats" role="tab" href="#stats" aria-controls="stats-tab" aria-selected="false" data-toggle="tab" tabindex="-1">Stats</a></li>
+      <li role="presentation"><a id="tab-stats" href="#stats" role="tab" data-toggle="tab" aria-controls="stats" aria-selected="false" tabindex="-1">Stats</a></li>
     </ul>
     <div id="tabs-content" class="tab-content monograph-assets-toc-epub-content" aria-live="polite">
       <% if @monograph_presenter.epub? %>
-        <section id="toc" aria-hidden="false" aria-labelledby="tab-toc" class="tab-pane active toc row" tabindex="0">
+        <section id="toc" class="tab-pane active fade in toc row" role="tabpanel" aria-hidden="false" aria-labelledby="tab-toc" tabindex="0">
           <div class="col-sm-12">
             <h2 class="sr-only">Table of Contents</h2>
             <%= render 'index_epub_toc' %>
@@ -95,9 +95,9 @@
       <% end %>
       <% if @monograph_presenter.assets? %>
         <% if @monograph_presenter.epub? %>
-        <section id="media" aria-hidden="true" aria-labelledby="tab-media" class="tab-pane media row" tabindex="0">
+        <section id="media" class="tab-pane fade in media row" role="tabpanel" aria-hidden="true" aria-labelledby="tab-media" tabindex="0">
         <% else %>
-        <section id="media" aria-hidden="false" aria-labelledby="tab-media" class="tab-pane active media row" tabindex="0">
+        <section id="media" class="tab-pane fade in active media row" role="tabpanel" aria-hidden="false" aria-labelledby="tab-media" tabindex="0">
         <% end %>
           <h2 class="sr-only">Media</h2>
           <div class="col-sm-3 fulcrum_sidebar">
@@ -111,7 +111,7 @@
         </section>
       <% end %>
       <% if @monograph_presenter.webgl? %>
-        <section id="webgl" aria-hidden="true" aria-labelledby="tab-webgl" class="tab-pane webgl row" tabindex="0">
+        <section id="webgl" class="tab-pane fade in webgl row" role="tabpanel" aria-hidden="true" aria-labelledby="tab-webgl" tabindex="0">
           <div class="col-sm-12">
             <h2 class="sr-only">3D Model</h2>
             <%= render 'webgls/tab' %>
@@ -119,7 +119,7 @@
         </section>
       <% end %>
       <% if @monograph_presenter.aboutware? %>
-        <section id="aboutware" aria-hidden="true" aria-labelledby="tab-aboutware" class="tab-pane aboutware row" tabindex="0">
+        <section id="aboutware" class="tab-pane fade in aboutware row" role="tabpanel" aria-hidden="true" aria-labelledby="tab-aboutware" tabindex="0">
           <div class="col-sm-12">
             <h2 class="sr-only">About</h2>
             <!-- this assumes that the "aboutware" FileSet is an html doc -->
@@ -127,7 +127,7 @@
           </div>
         </section>
       <% end %>
-      <section id="stats" aria-hidden="true" aria-labelledby="tab-stats" class="tab-pane stats row" tabindex="0">
+      <section id="stats" class="tab-pane fade in stats row" role="tabpanel" aria-hidden="true" aria-labelledby="tab-stats" tabindex="0">
         <h2 class="sr-only">Stats</h2>
         <%= render 'stats' %>
       </section>
