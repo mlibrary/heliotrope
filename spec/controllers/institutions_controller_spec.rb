@@ -30,14 +30,14 @@ RSpec.describe InstitutionsController, type: :controller do
   # Institution. As you add validations to Institution, be sure to
   # adjust the attributes here as well.
   let(:valid_attributes) { {
-    key: 'key',
+    identifier: 'identifier',
     name: 'name',
     site: 'site',
     login: 'login'
   } }
 
   let(:invalid_attributes) { {
-    key: '',
+    identifier: '',
     name: '',
     site: '',
     login: ''
@@ -104,7 +104,7 @@ RSpec.describe InstitutionsController, type: :controller do
   describe "PUT #update" do
     context "with valid params" do
       let(:new_attributes) { {
-        key: 'new_key',
+        identifier: 'new_identifier',
         name: 'new_name',
         site: 'new_site',
         login: 'new_login'
@@ -114,7 +114,7 @@ RSpec.describe InstitutionsController, type: :controller do
         institution = Institution.create! valid_attributes
         put :update, params: { id: institution.to_param, institution: new_attributes }, session: valid_session
         institution.reload
-        expect(institution.key).to eq("new_key")
+        expect(institution.identifier).to eq("new_identifier")
         expect(institution.name).to eq("new_name")
         expect(institution.site).to eq("new_site")
         expect(institution.login).to eq("new_login")

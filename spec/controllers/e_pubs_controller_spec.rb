@@ -267,7 +267,7 @@ RSpec.describe EPubsController, type: :controller do
         lessee = Lessee.create!(identifier: dlpsInstitutionId)
         product.lessees << lessee
         product.save!
-        Institution.create!(key: dlpsInstitutionId, name: 'Name', site: 'Site', login: 'Login')
+        Institution.create!(identifier: dlpsInstitutionId, name: 'Name', site: 'Site', login: 'Login')
         get :lock, params: { id: file_set.id }
         expect(session[:show_set].include?(file_set.id)).to be true
         expect(response).to redirect_to(epub_path)

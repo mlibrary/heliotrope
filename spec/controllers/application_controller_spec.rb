@@ -42,7 +42,7 @@ describe ApplicationController do
 
     before do
       allow_any_instance_of(Keycard::RequestAttributes).to receive(:all).and_return(keycard)
-      allow(Institution).to receive(:where).with(key: ['identifier']).and_return(institution)
+      allow(Institution).to receive(:where).with(identifier: ['identifier']).and_return(institution)
       request.env["HTTP_ACCEPT"] = 'application/json'
       routes.draw { get "trigger" => "anonymous#trigger" }
       get :trigger

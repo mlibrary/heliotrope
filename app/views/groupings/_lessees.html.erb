@@ -1,0 +1,34 @@
+<div class="row">
+  <% lessees.each do |lessee| %>
+    <div class="col-md-1">
+      <% if lessee.grouping? %>
+        <span class="glyphicon glyphicon-duplicate" aria-hidden="true"></span>
+      <% elsif lessee.institution? %>
+        <span class="glyphicon glyphicon-registration-mark" aria-hidden="true"></span>
+      <% end %>
+    </div>
+    <div class="col-md-5">
+      <% if lessee.institution? %>
+        <%= lessee.institution.name %>
+      <% else %>
+        <%= lessee.identifier %>
+      <% end %>
+    </div>
+    <div class="col-md-6">
+      <%= link_to(grouping_lessee_path(grouping, lessee), method: :delete, class: "btn btn-default") do %>
+        <span class="glyphicon glyphicon-minus" aria-hidden="true"></span> Remove
+      <% end %>
+    </div>
+  <% end %>
+  <% if grouping.not_lessees.present? %>
+    <%= form_tag(grouping_lessees_path(grouping), method: :post) do %>
+      <div class="col-md-1"></div>
+      <div class="col-md-5"><%= select_tag "id", options_from_collection_for_select(grouping.not_lessees, "id", "identifier") %></div>
+      <div class="col-md-6">
+        <%= button_tag(type: 'submit', class: 'btn btn-default') do %>
+          <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Add
+        <% end %>
+      </div>
+    <% end %>
+  <% end %>
+</div>

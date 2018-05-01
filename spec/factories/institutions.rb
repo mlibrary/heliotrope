@@ -2,7 +2,7 @@
 
 FactoryBot.define do
   factory :institution do
-    key "MyString"
+    identifier "MyString"
     name "MyString"
     site "MyString"
     login "MyString"

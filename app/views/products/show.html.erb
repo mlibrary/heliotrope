@@ -1,17 +1,25 @@
 <p id="notice"><%= notice %></p>
-
-<h1>Product</h1>
-<ul>
-  <li><%= @product.identifier %></li>
-  <li><%= @product.purchase %></li>
-</ul>
-
-<h2>Components</h2>
-<%= render partial: 'components', locals: { product: @product, components: @product.components } %>
-
-<h2>Lessees</h2>
-<%= render partial: 'lessees', locals: { product: @product, lessees: @product.lessees } %>
-
-
-<%= link_to 'Edit', edit_product_path(@product) %> |
-<%= link_to 'Back', products_path %>
+<div id="maincontent">
+  <div class="row">
+    <div class="col-md-12"><h1>Product</h1></div>
+    <div class="col-md-1"><em>Identifier</em></div>
+    <div class="col-md-11"><%= @product.identifier %></div>
+    <div class="col-md-1"><em>Purchase</em></div>
+    <div class="col-md-11"><%= @product.purchase %></div>
+    <div class="col-md-12"><h2>Components</h2></div>
+    <div class="col-md-12">
+      <%= render partial: 'components', locals: { product: @product, components: @product.components } %>
+    </div>
+    <div class="col-md-12"><h2>Lessees</h2></div>
+    <div class="col-md-12">
+      <%= render partial: 'lessees', locals: { product: @product, lessees: @product.lessees } %>
+    </div>
+    <div class="col-md-12"><br/></div>
+    <div class="col-md-12">
+      <%= link_to 'Edit', edit_product_path(@product) %>
+      <span> | </span>
+      <%= link_to 'Back', products_path %>
+    </div>
+    <div class="col-md-12"><br/></div>
+  </div>
+</div>

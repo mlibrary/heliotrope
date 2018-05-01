@@ -1,5 +1,5 @@
 <% lessees =  Lessee.all %>
-<h1>Lessees Summary</h1>
+<h1>Lessees</h1>
 <table class="table table-striped" summary="Lessee List">
   <tr>
     <th></th>
@@ -12,11 +12,20 @@
   </tr>
   <% lessees.each do |lessee| %>
     <tr>
-      <td><%= link_to(edit_lessee_path(lessee)) do %>
-          <span class="glyphicon glyphicon-edit" aria-hidden="true"></span> Edit
+      <td>
+        <% if lessee.grouping? %>
+          <span class="glyphicon glyphicon-duplicate" aria-hidden="true"></span>
+        <% elsif lessee.institution? %>
+          <span class="glyphicon glyphicon-registration-mark" aria-hidden="true"></span>
         <% end %>
       </td>
-      <td><%= link_to lessee.identifier, lessee_path(lessee) %></td>
+      <td>
+        <% if lessee.institution? %>
+          <%= link_to lessee.institution.name, lessee_path(lessee) %>
+        <% else %>
+          <%= link_to lessee.identifier, lessee_path(lessee) %>
+        <% end %>
+      </td>
       <td><%= lessee.products.count() %></td>
       <td><%= lessee.components.count() %></td>
     </tr>

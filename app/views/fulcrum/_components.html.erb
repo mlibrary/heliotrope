@@ -1,8 +1,7 @@
 <% components =  Component.all %>
-<h1>Components Summary</h1>
+<h1>Components</h1>
 <table class="table table-striped" summary="Components List">
   <tr>
-    <th></th>
     <th>Component <%= link_to(new_component_path) do %>
         <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> New
       <% end %>
@@ -12,10 +11,6 @@
   </tr>
   <% components.each do |component| %>
     <tr>
-      <td><%= link_to(edit_component_path(component)) do %>
-          <span class="glyphicon glyphicon-edit" aria-hidden="true"></span> Edit
-        <% end %>
-      </td>
       <td><%= link_to component.handle, component_path(component) %></td>
       <td><%= component.products.count() %></td>
       <td><%= component.lessees.count() %></td>

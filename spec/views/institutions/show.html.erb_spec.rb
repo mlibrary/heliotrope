@@ -7,7 +7,7 @@ RSpec.describe "institutions/show", type: :view do
     @institution = assign(
       :institution,
       Institution.create!(
-        key: "Key",
+        identifier: "Identifier",
         name: "Name",
         site: "Site",
         login: "Login"
@@ -17,7 +17,7 @@ RSpec.describe "institutions/show", type: :view do
 
   it "renders attributes in <p>" do
     render
-    expect(rendered).to match(/Key/)
+    expect(rendered).to match(/Identifier/)
     expect(rendered).to match(/Name/)
     expect(rendered).to match(/Site/)
     expect(rendered).to match(/Login/)

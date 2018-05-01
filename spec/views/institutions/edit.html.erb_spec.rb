@@ -7,7 +7,7 @@ RSpec.describe "institutions/edit", type: :view do
     @institution = assign(
       :institution,
       Institution.create!(
-        key: "MyString",
+        identifier: "MyString",
         name: "MyString",
         site: "MyString",
         login: "MyString"
@@ -18,7 +18,7 @@ RSpec.describe "institutions/edit", type: :view do
   it "renders the edit institution form" do
     render
     assert_select "form[action=?][method=?]", institution_path(@institution), "post" do
-      assert_select "input[name=?]", "institution[key]"
+      assert_select "input[name=?]", "institution[identifier]"
       assert_select "input[name=?]", "institution[name]"
       assert_select "input[name=?]", "institution[site]"
       assert_select "input[name=?]", "institution[login]"

@@ -38,4 +38,42 @@ RSpec.describe Lessee, type: :model do
       lessee.save!
     end
   end
+
+  describe '#grouping?' do
+    subject { lessee.grouping? }
+
+    let(:lessee) { Lessee.find_by(identifier: identifier) }
+    let(:identifier) { 'identifier' }
+
+    context 'non-grouping' do
+      before { create(:lessee, identifier: identifier) }
+
+      it { is_expected.to be false }
+    end
+
+    context 'grouping' do
+      before { create(:grouping, identifier: identifier) }
+
+      it { is_expected.to be true }
+    end
+  end
+
+  describe '#institution?' do
+    subject { lessee.institution? }
+
+    let(:lessee) { Lessee.find_by(identifier: identifier) }
+    let(:identifier) { 'identifier' }
+
+    before { create(:lessee, identifier: identifier) }
+
+    context 'non-instituion' do
+      it { is_expected.to be false }
+    end
+
+    context 'institution' do
+      before { create(:institution, identifier: identifier) }
+
+      it { is_expected.to be true }
+    end
+  end
 end

@@ -3,6 +3,8 @@
 class Lessee < ApplicationRecord
   has_many :lessees_products
   has_many :products, through: :lessees_products
+  has_many :groupings_lessees
+  has_many :groupings, through: :groupings_lessees
 
   validates :identifier, presence: true, allow_blank: false
 
@@ -13,5 +15,25 @@ class Lessee < ApplicationRecord
   def components
     return [] if products.blank?
     Component.where(id: ComponentsProduct.where(product_id: products.map(&:id)).map(&:component_id)).distinct
+  end
+
+  def grouping?
+    grouping.present?
+  end
+
+  def grouping
+    Grouping.find_by(identifier: identifier)
+  end
+
+  def not_groupings
+    Grouping.where.not(id: groupings.map(&:id))
+  end
+
+  def institution?
+    institution.present?
+  end
+
+  def institution
+    Institution.find_by(identifier: identifier)
   end
 end

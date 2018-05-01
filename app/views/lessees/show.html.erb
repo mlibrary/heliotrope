@@ -1,15 +1,38 @@
 <p id="notice"><%= notice %></p>
-
-<h1>Lessee</h1>
-<ul>
-  <li><%= @lessee.identifier %></li>
-</ul>
-
-<h2>Products</h2>
-<%= render partial: 'products', locals: { lessee: @lessee, products: @lessee.products } %>
-
-<h2>Components</h2>
-<%= render partial: 'components/list', locals: { components: @lessee.components } %>
-
-<%= link_to 'Edit', edit_lessee_path(@lessee) %> |
-<%= link_to 'Back', lessees_path %>
+<div id="maincontent">
+  <div class="row">
+    <div class="col-md-12"><h1>Lessee</h1></div>
+    <div class="col-md-1"><em>Identifier</em></div>
+    <div class="col-md-11"><%= @lessee.identifier %></div>
+    <% if @lessee.institution? %>
+      <div class="col-md-12"><h2>Institution</h2></div>
+      <div class="col-md-1"></div>
+      <div class="col-md-11"><%= link_to @lessee.institution.name, institution_path(@lessee.institution) %></div>
+    <% end %>
+    <% if @lessee.grouping? %>
+      <div class="col-md-12"><h2>Grouping</h2></div>
+      <div class="col-md-1"></div>
+      <div class="col-md-11"><%= link_to @lessee.grouping.identifier, grouping_path(@lessee.grouping) %></div>
+    <% else %>
+      <div class="col-md-12"><h2>Groupings</h2></div>
+      <div class="col-md-12">
+        <%= render partial: 'groupings', locals: { lessee: @lessee, groupings: @lessee.groupings } %>
+      </div>
+    <% end %>
+    <div class="col-md-12"><h2>Products</h2></div>
+    <div class="col-md-12">
+      <%= render partial: 'products', locals: { lessee: @lessee, products: @lessee.products } %>
+    </div>
+    <div class="col-md-12"><h2>Components</h2></div>
+    <div class="col-md-12">
+      <%= render partial: 'components', locals: { lessee: @lessee, components: @lessee.components } %>
+    </div>
+    <div class="col-md-12"><br/></div>
+    <div class="col-md-12">
+      <%= link_to 'Edit', edit_lessee_path(@lessee) %>
+      <span> | </span>
+      <%= link_to 'Back', lessees_path %>
+    </div>
+    <div class="col-md-12"><br/></div>
+  </div>
+</div>

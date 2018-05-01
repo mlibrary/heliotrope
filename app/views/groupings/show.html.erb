@@ -1,0 +1,22 @@
+<p id="notice"><%= notice %></p>
+<div id="maincontent">
+  <div class="row">
+    <div class="col-md-12"><h1>Grouping</h1></div>
+    <div class="col-md-1"><em>Identifier</em></div>
+    <div class="col-md-11"><%= @grouping.identifier %></div>
+    <div class="col-md-12"><h2>Lessee</h2></div>
+    <div class="col-md-1"></div>
+    <div class="col-md-11"><%= link_to @grouping.lessee.identifier, lessee_path(@grouping.lessee) %></div>
+    <div class="col-md-12"><h2>Lessees</h2></div>
+    <div class="col-md-12">
+      <%= render partial: 'lessees', locals: { grouping: @grouping, lessees: @grouping.lessees } %>
+    </div>
+    <div class="col-md-12"><br/></div>
+    <div class="col-md-12">
+      <%= link_to 'Edit', edit_grouping_path(@grouping) %>
+      <span> | </span>
+      <%= link_to 'Back', groupings_path %>
+    </div>
+    <div class="col-md-12"><br/></div>
+  </div>
+</div>
