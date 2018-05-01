@@ -12,7 +12,7 @@ module Hyrax
 
     attr_accessor :pageviews
 
-    delegate :date_created, :date_modified, :date_uploaded,
+    delegate :date_created, :date_modified, :date_uploaded, :location,
              :description, :creator_display, :editor, :contributor, :subject,
              :based_near, :publisher, :date_published, :language, :isbn, :isbn_paper,
              :isbn_ebook, :copyright_holder, :buy_url, :embargo_release_date,
@@ -26,6 +26,10 @@ module Hyrax
       creator_authors = creator_full_name.present? ? contributor.unshift(creator_full_name) : contributor
       creator_editors = primary_editor_full_name.present? ? editor.unshift(primary_editor_full_name) : editor
       creator_authors + creator_editors
+    end
+
+    def based_near_label
+      location
     end
 
     def ordered_section_titles

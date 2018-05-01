@@ -64,7 +64,9 @@ METADATA_FIELDS ||=
     { object: :monograph, field_name: 'ISBN (hardcover)', metadata_name: 'isbn', multivalued: :yes },
     { object: :monograph, field_name: 'ISBN (paper)', metadata_name: 'isbn_paper', multivalued: :yes },
     { object: :monograph, field_name: 'ISBN (ebook)', metadata_name: 'isbn_ebook', multivalued: :yes },
-    { object: :monograph, field_name: 'Buy Book URL', metadata_name: 'buy_url', multivalued: :yes }
+    { object: :monograph, field_name: 'Buy Book URL', metadata_name: 'buy_url', multivalued: :yes },
+    { object: :monograph, field_name: 'Pub Year', metadata_name: 'date_created', multivalued: :yes },
+    { object: :monograph, field_name: 'Pub Location', metadata_name: 'location', multivalued: :no }
   ].freeze
 
 MONO_FILENAME_FLAG ||= '://:MONOGRAPH://:'
