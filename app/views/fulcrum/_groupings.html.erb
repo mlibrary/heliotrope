@@ -1,0 +1,21 @@
+<% groupings = Grouping.all %>
+<h1>Groupings</h1>
+<table class="table table-striped" summary="Grouping List">
+  <tr>
+    <th>Grouping <%= link_to(new_grouping_path) do %>
+        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> New
+      <% end %>
+    </th>
+    <th>Lessees</th>
+    <th>Products</th>
+    <th>Components</th>
+  </tr>
+  <% groupings.each do |grouping| %>
+    <tr>
+      <td><%= link_to grouping.identifier, grouping_path(grouping) %></td>
+      <td><%= grouping.lessees.count() %></td>
+      <td><%= grouping.lessee.products.count() %></td>
+      <td><%= grouping.lessee.components.count() %></td>
+    </tr>
+  <% end %>
+</table>

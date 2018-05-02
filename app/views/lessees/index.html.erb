@@ -1,27 +1,28 @@
 <p id="notice"><%= notice %></p>
-
-<h1>Lessees</h1>
-
-<table class="table table-striped">
-  <thead>
-    <tr>
-      <th>Identifier</th>
-      <th colspan="3"></th>
-    </tr>
-  </thead>
-
-  <tbody>
-    <% @lessees.each do |lessee| %>
-      <tr>
-        <td><%= lessee.identifier %></td>
-        <td><%= link_to 'Show', lessee %></td>
-        <td><%= link_to 'Edit', edit_lessee_path(lessee) %></td>
-        <td><%= link_to 'Destroy', lessee, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
-
-<br>
-
-<%= link_to 'New Lessee', new_lessee_path %>
+<div id="maincontent">
+  <div class="row">
+    <div class="col-md-12"><h1>Lessees</h1></div>
+    <div class="col-md-12">
+      <% @lessees.each do |lessee| %>
+        <% if lessee.institution? %>
+          <div class="col-md-1"><span class="glyphicon glyphicon-registration-mark" aria-hidden="true"></span></div>
+          <div class="col-md-5"><%= lessee.institution.name %></div>
+        <% elsif lessee.grouping? %>
+          <div class="col-md-1"><span class="glyphicon glyphicon-duplicate" aria-hidden="true"></span></div>
+          <div class="col-md-5"><%= lessee.grouping.identifier %></div>
+        <% else %>
+          <div class="col-md-1"></div>
+          <div class="col-md-5"><%= lessee.identifier %></div>
+        <% end %>
+        <div class="col-md-6">
+          <div class="col-md-4"><%= link_to 'Show', lessee %></div>
+          <div class="col-md-4"><%= link_to 'Edit', edit_lessee_path(lessee) %></div>
+          <div class="col-md-4"><%= link_to 'Destroy', lessee, method: :delete, data: { confirm: 'Are you sure?' } %></div>
+        </div>
+      <% end %>
+    </div>
+    <div class="col-md-12"><br/></div>
+    <div class="col-md-6"><%= link_to 'New Lessee', new_lessee_path %></div>
+    <div class="col-md-12"><br/></div>
+  </div>
+</div>

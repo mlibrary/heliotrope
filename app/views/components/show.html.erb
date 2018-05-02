@@ -1,15 +1,23 @@
 <p id="notice"><%= notice %></p>
-
-<h1>Component</h1>
-<ul>
-  <li><%= @component.handle %></li>
-</ul>
-
-<h2>Products</h2>
-<%= render partial: 'products', locals: { component: @component, products: @component.products } %>
-
-<h2>Lessees</h2>
-<%= render partial: 'lessees/list', locals: { lessees: @component.lessees } %>
-
-<%= link_to 'Edit', edit_component_path(@component) %> |
-<%= link_to 'Back', components_path %>
+<div id="maincontent">
+  <div class="row">
+    <div class="col-md-12"><h1>Component</h1></div>
+    <div class="col-md-1"><em>Handle</em></div>
+    <div class="col-md-11"><%= link_to @component.handle, HandleService.url(HandleService.object(@component.handle)) %></div>
+    <div class="col-md-12"><h2>Products</h2></div>
+    <div class="col-md-12">
+      <%= render partial: 'products', locals: { component: @component, products: @component.products } %>
+    </div>
+    <div class="col-md-12"><h2>Lessees</h2></div>
+    <div class="col-md-12">
+      <%= render partial: 'lessees', locals: { component: @component, lessees: @component.lessees } %>
+    </div>
+    <div class="col-md-12"><br/></div>
+    <div class="col-md-12">
+      <%= link_to 'Edit', edit_component_path(@component) %>
+      <span> | </span>
+      <%= link_to 'Back', components_path %>
+    </div>
+    <div class="col-md-12"><br/></div>
+  </div>
+</div>

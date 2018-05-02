@@ -110,7 +110,7 @@ class EPubsController < ApplicationController
     def access?
       component = Component.find_by(handle: publication.identifier)
       return true if component.blank?
-      identifiers = current_institutions.map(&:key)
+      identifiers = current_institutions.map(&:identifier)
       identifiers << subscriber.identifier
       lessees = Lessee.where(identifier: identifiers)
       return false if lessees.blank?
@@ -122,7 +122,7 @@ class EPubsController < ApplicationController
       return [] if component.blank?
       lessees = component.lessees
       return [] if lessees.blank?
-      Institution.where(key: lessees.pluck(:identifier))
+      Institution.where(identifier: lessees.pluck(:identifier))
     end
 
     def component_products

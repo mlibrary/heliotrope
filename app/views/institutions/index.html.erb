@@ -1,33 +1,20 @@
 <p id="notice"><%= notice %></p>
-
-<h1>Institutions</h1>
-
-<table>
-  <thead>
-    <tr>
-      <th>Key</th>
-      <th>Name</th>
-      <th>Site</th>
-      <th>Login</th>
-      <th colspan="3"></th>
-    </tr>
-  </thead>
-
-  <tbody>
-    <% @institutions.each do |institution| %>
-      <tr>
-        <td><%= institution.key %></td>
-        <td><%= institution.name %></td>
-        <td><%= institution.site %></td>
-        <td><%= institution.login %></td>
-        <td><%= link_to 'Show', institution %></td>
-        <td><%= link_to 'Edit', edit_institution_path(institution) %></td>
-        <td><%= link_to 'Destroy', institution, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
-
-<br>
-
-<%= link_to 'New Institution', new_institution_path %>
+<div id="maincontent">
+  <div class="row">
+    <div class="col-md-12"><h1>Institutions</h1></div>
+    <div class="col-md-12">
+      <% @institutions.each do |institution| %>
+        <div class="col-md-1"><%= institution.identifier %></div>
+        <div class="col-md-5"><%= institution.name %></div>
+        <div class="col-md-6">
+          <div class="col-md-4"><%= link_to 'Show', institution %></div>
+          <div class="col-md-4"><%= link_to 'Edit', edit_institution_path(institution) %></div>
+          <div class="col-md-4"><%= link_to 'Destroy', institution, method: :delete, data: { confirm: 'Are you sure?' } %></div>
+        </div>
+      <% end %>
+    </div>
+    <div class="col-md-12"><br/></div>
+    <div class="col-md-12"><%= link_to 'New Institution', new_institution_path %></div>
+    <div class="col-md-12"><br/></div>
+  </div>
+</div>

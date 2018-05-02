@@ -17,6 +17,10 @@ class RepositoryPresenter < ApplicationPresenter
     Institution.all.map(&:id)
   end
 
+  def grouping_ids
+    Grouping.all.map(&:id)
+  end
+
   def publisher_ids
     Press.all.map(&:id)
   end

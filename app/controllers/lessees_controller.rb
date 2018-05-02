@@ -24,14 +24,23 @@ class LesseesController < ApplicationController
   # POST /lessees
   # POST /lessees.json
   # POST /products/product_id:/lessees
-  def create # rubocop:disable Metrics/PerceivedComplexity
-    if params[:product_id].present?
-      product = Product.find(params[:product_id])
-      @lessee = Lessee.find(params[:id])
-      if product.present? && @lessee.present? && !product.lessees.include?(@lessee)
-        product.lessees << @lessee
+  def create # rubocop:disable Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity
+    if params[:product_id].present? || params[:grouping_id].present?
+      if params[:product_id].present?
+        product = Product.find(params[:product_id])
+        @lessee = Lessee.find(params[:id])
+        if product.present? && @lessee.present? && !product.lessees.include?(@lessee)
+          product.lessees << @lessee
+        end
+        redirect_to product
+      else # params[:grouping_id].present?
+        grouping = Grouping.find(params[:grouping_id])
+        @lessee = Lessee.find(params[:id])
+        if grouping.present? && @lessee.present? && !grouping.lessees.include?(@lessee)
+          grouping.lessees << @lessee
+        end
+        redirect_to grouping
       end
-      redirect_to product
     else
       @lessee = Lessee.new(lessee_params)
       respond_to do |format|
@@ -63,13 +72,21 @@ class LesseesController < ApplicationController
   # DELETE /lessees/1
   # DELETE /lessees/1.json
   # DELETE /products/product_id:/lessees/:id
-  def destroy
-    if params[:product_id].present?
-      product = Product.find(params[:product_id])
-      if product.present? && @lessee.present? && product.lessees.include?(@lessee)
-        product.lessees.delete(@lessee)
+  def destroy # rubocop:disable Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity
+    if params[:product_id].present? || params[:grouping_id].present?
+      if params[:product_id].present?
+        product = Product.find(params[:product_id])
+        if product.present? && @lessee.present? && product.lessees.include?(@lessee)
+          product.lessees.delete(@lessee)
+        end
+        redirect_to product
+      else # params[:grouping_id].present?
+        grouping = Grouping.find(params[:grouping_id])
+        if grouping.present? && @lessee.present? && grouping.lessees.include?(@lessee)
+          grouping.lessees.delete(@lessee)
+        end
+        redirect_to grouping
       end
-      redirect_to product
     else
       @lessee.destroy
       respond_to do |format|

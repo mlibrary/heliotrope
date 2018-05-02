@@ -1,5 +1,11 @@
-<h1>New Institution</h1>
-
-<%= render 'form', institution: @institution %>
-
-<%= link_to 'Back', institutions_path %>
+<div id="maincontent">
+  <div class="row">
+    <div class="col-md-12"><h1>New Institution</h1></div>
+    <div class="col-md-12">
+      <%= render 'form', institution: @institution %>
+    </div>
+    <div class="col-md-12"><br/></div>
+    <div class="col-md-12"><%= link_to 'Back', institutions_path %></div>
+    <div class="col-md-12"><br/></div>
+  </div>
+</div>

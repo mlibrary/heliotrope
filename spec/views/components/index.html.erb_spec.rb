@@ -19,6 +19,6 @@ RSpec.describe "components/index", type: :view do
 
   it "renders a list of components" do
     render
-    assert_select "tr>td", text: "Handle".to_s, count: 2
+    assert_select "div", text: "Handle".to_s, count: 2
   end
 end

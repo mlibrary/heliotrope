@@ -1,6 +1,15 @@
-<h1>Editing Lessee</h1>
-
-<%= render 'form', lessee: @lessee %>
-
-<%= link_to 'Show', @lessee %> |
-<%= link_to 'Back', lessees_path %>
+<div id="maincontent">
+  <div class="row">
+    <div class="col-md-12"><h1>Editing Lessee</h1></div>
+    <div class="col-md-12">
+      <%= render 'form', lessee: @lessee %>
+    </div>
+    <div class="col-md-12"><br/></div>
+    <div class="col-md-12">
+      <%= link_to 'Show', @lessee %>
+      <span> | </span>
+      <%= link_to 'Back', lessees_path %>
+    </div>
+    <div class="col-md-12"><br/></div>
+  </div>
+</div>

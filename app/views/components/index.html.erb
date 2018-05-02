@@ -1,27 +1,20 @@
 <p id="notice"><%= notice %></p>
-
-<h1>Components</h1>
-
-<table class="table table-striped">
-  <thead>
-    <tr>
-      <th>Handle</th>
-      <th colspan="3"></th>
-    </tr>
-  </thead>
-
-  <tbody>
-    <% @components.each do |component| %>
-      <tr>
-        <td><%= component.handle %></td>
-        <td><%= link_to 'Show', component %></td>
-        <td><%= link_to 'Edit', edit_component_path(component) %></td>
-        <td><%= link_to 'Destroy', component, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
-
-<br>
-
-<%= link_to 'New Component', new_component_path %>
+<div id="maincontent">
+  <div class="row">
+    <div class="col-md-12"><h1>Components</h1></div>
+    <div class="col-md-12">
+      <% @components.each do |component| %>
+        <div class="col-md-1"></div>
+        <div class="col-md-5"><%= component.handle %></div>
+        <div class="col-md-6">
+          <div class="col-md-4"><%= link_to 'Show', component %></div>
+          <div class="col-md-4"><%= link_to 'Edit', edit_component_path(component) %></div>
+          <div class="col-md-4"><%= link_to 'Destroy', component, method: :delete, data: { confirm: 'Are you sure?' } %></div>
+        </div>
+      <% end %>
+    </div>
+    <div class="col-md-12"><br/></div>
+    <div class="col-md-12"><%= link_to 'New Component', new_component_path %></div>
+    <div class="col-md-12"><br/></div>
+  </div>
+</div>

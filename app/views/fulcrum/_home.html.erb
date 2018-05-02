@@ -1,11 +1,6 @@
 <% repository =  RepositoryPresenter.new(current_user) %>
-<h1>Home</h1>
-<h3>Fulcrum Summary</h3>
+<h1>Fulcrum</h1>
 <table class="table table-striped" summary="Repository Global Stats">
-  <tr>
-    <th scope="col">Object</th>
-    <th scope="col">Count</th>
-  </tr>
   <tr>
     <td>Products</td>
     <td><%= repository.product_ids.count() %></td>
@@ -23,8 +18,16 @@
     <td><%= repository.institution_ids.count() %></td>
   </tr>
   <tr>
+    <td>Groupings</td>
+    <td><%= repository.grouping_ids.count() %></td>
+  </tr>
+  <tr>
     <td>Publishers</td>
     <td><%= repository.publisher_ids.count() %></td>
+  </tr>
+  <tr>
+    <td>Users</td>
+    <td><%= repository.user_ids.count() %></td>
   </tr>
   <tr>
     <td>Monographs</td>
@@ -33,9 +36,5 @@
   <tr>
     <td>Assets</td>
     <td><%= repository.asset_ids.count() %></td>
-  </tr>
-  <tr>
-    <td>Users</td>
-    <td><%= repository.user_ids.count() %></td>
   </tr>
 </table>
