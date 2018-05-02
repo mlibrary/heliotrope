@@ -69,6 +69,6 @@ module SolrDocumentExtensions::Monograph
   end
 
   def location
-    Array(self[Solrizer.solr_name('location', :stored_searchable)])
+    Array(self[Solrizer.solr_name('location', :stored_searchable)]).first
   end
 end
