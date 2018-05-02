@@ -51,12 +51,14 @@ describe Hyrax::MonographForm do
                               buy_url
                               creator_family_name
                               creator_given_name
-                              section_titles] }
+                              section_titles
+                              location] }
   end
 
   describe 'required_fields' do
     subject { described_class.required_fields }
-    it { is_expected.to eq %i[title press creator_family_name creator_given_name description publisher date_created] }
+    it { is_expected.to eq %i[title press creator_family_name creator_given_name description publisher date_created
+                              location] }
   end
 
   describe 'select_press' do

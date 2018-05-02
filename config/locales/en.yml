@@ -68,6 +68,8 @@ en:
   creator_role: "Creator Role"
   credit_line: "Credit Line"
   date_created: "Date Created"
+  publication_year: "Publication Year" # used on :date_created for Monographs
+  location: "Publication Location"
   date_published: "Date Published"
   display_date: "Date"
   doi: "DOI"

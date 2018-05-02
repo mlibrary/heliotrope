@@ -54,6 +54,10 @@ class Monograph < ActiveFedora::Base
     index.as :symbol
   end
 
+  property :location, predicate: ::RDF::Vocab::DC.Location, multiple: false do |index|
+    index.as :stored_searchable
+  end
+
   include HeliotropeCitableLinks
   include StoresCreatorNameSeparately
   include ::Hyrax::WorkBehavior
