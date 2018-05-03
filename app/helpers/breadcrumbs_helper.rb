@@ -2,8 +2,10 @@
 
 module BreadcrumbsHelper
   def breadcrumbs
-    crumbs = if @presenter.present? && @presenter.class == Hyrax::FileSetPresenter
+    crumbs = if @presenter&.class == Hyrax::FileSetPresenter
                breadcrumbs_for_file_set(@presenter.monograph.subdomain, @presenter)
+             elsif @presenter&.class == Hyrax::MonographPresenter
+               breadcrumbs_for_monograph_show_page(@presenter.subdomain, @presenter)
              elsif @monograph_presenter.present?
                breadcrumbs_for_monograph(@monograph_presenter.subdomain, @monograph_presenter)
              end
@@ -18,6 +20,15 @@ module BreadcrumbsHelper
 
       crumbs = possible_parent(press)
       crumbs << { href: "", text: presenter.page_title, class: "active" }
+    end
+
+    def breadcrumbs_for_monograph_show_page(subdomain, presenter)
+      press = Press.where(subdomain: subdomain)&.first
+      return [] if press.blank?
+
+      crumbs = possible_parent(press)
+      crumbs << { href: main_app.monograph_catalog_path(presenter.id), text: presenter.page_title, class: "" }
+      crumbs << { href: "", text: 'Show', class: "active" }
     end
 
     def breadcrumbs_for_file_set(subdomain, presenter)
