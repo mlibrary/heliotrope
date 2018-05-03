@@ -95,6 +95,22 @@ p {
   line-height: 1.7rem;
 }
 
+// partners
+.partners {
+  img {
+    width: 100%;
+  }
+
+  a {
+    display: block;
+  }
+
+  a:hover {
+    border-bottom: 0 solid transparent;
+  }
+}
+
+
 // case studies
 .case-study {
   padding-top: 5rem;
