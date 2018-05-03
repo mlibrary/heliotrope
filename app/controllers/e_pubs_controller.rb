@@ -124,15 +124,17 @@ class EPubsController < ApplicationController
       return true if component.blank?
       identifiers = current_institutions.map(&:identifier)
       identifiers << subscriber.identifier
-      lessees = Lessee.where(identifier: identifiers)
-      return false if lessees.blank?
+      groupings_lessees = GroupingsLessee.where(lessee: Lessee.where(identifier: identifiers).map(&:id))
+      groupings = Grouping.where(id: groupings_lessees.map(&:grouping_id))
+      identifiers << groupings.map(&:identifier)
+      lessees = Lessee.where(identifier: identifiers.flatten)
       lessees.any? { |lessee| component.lessees.include?(lessee) }
     end
 
     def component_institutions
       component = Component.find_by(handle: publication.identifier)
       return [] if component.blank?
-      lessees = component.lessees
+      lessees = component.lessees(true)
       return [] if lessees.blank?
       Institution.where(identifier: lessees.pluck(:identifier))
     end
@@ -148,7 +150,7 @@ class EPubsController < ApplicationController
     def subscribers
       component = Component.find_by(handle: publication.identifier)
       return [] if component.blank?
-      component.lessees
+      component.lessees(true)
     end
 
     def subscriber

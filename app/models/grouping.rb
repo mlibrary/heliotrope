@@ -2,7 +2,7 @@
 
 class Grouping < ApplicationRecord
   has_many :groupings_lessees
-  has_many :lessees, through: :groupings_lessees
+  has_many :lessees, after_add: :remove_groupings, through: :groupings_lessees
 
   validates :identifier, presence: true, allow_blank: false
 
@@ -15,6 +15,18 @@ class Grouping < ApplicationRecord
 
   before_create do
     Lessee.create!(identifier: identifier)
+  end
+
+  before_destroy do
+    if lessee.products.present?
+      errors.add(:base, "grouping has #{lessee.products.count} associated products!")
+      throw(:abort)
+    end
+
+    if lessees.present?
+      errors.add(:base, "grouping has #{lessees.count} associated lessees!")
+      throw(:abort)
+    end
   end
 
   after_destroy do
@@ -30,7 +42,13 @@ class Grouping < ApplicationRecord
   end
 
   def not_lessees
-    # TODO: Filter out self.lessee from result
-    Lessee.where.not(id: lessees.map(&:id))
+    Lessee.where.not(id: lessees.map(&:id)).reject(&:grouping?)
   end
+
+  private
+
+    def remove_groupings(added_lessees)
+      groupings = [added_lessees].select(&:grouping?)
+      lessees.delete(groupings)
+    end
 end

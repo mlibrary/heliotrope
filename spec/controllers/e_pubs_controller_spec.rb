@@ -246,7 +246,7 @@ RSpec.describe EPubsController, type: :controller do
 
       before { allow_any_instance_of(Keycard::RequestAttributes).to receive(:all).and_return(keycard) }
 
-      it do
+      it 'institution' do
         # Open Access
         session[:show_set] = []
         get :lock, params: { id: file_set.id }
@@ -272,12 +272,44 @@ RSpec.describe EPubsController, type: :controller do
         expect(session[:show_set].include?(file_set.id)).to be true
         expect(response).to redirect_to(epub_path)
       end
+
+      it 'grouping' do
+        # Open Access
+        session[:show_set] = []
+        get :lock, params: { id: file_set.id }
+        expect(session[:show_set].include?(file_set.id)).to be true
+        expect(response).to redirect_to(epub_path)
+
+        # Restricted Access
+        component = Component.create!(handle: HandleService.handle(file_set))
+
+        # Anonymous User
+        get :lock, params: { id: file_set.id }
+        expect(session[:show_set].include?(file_set.id)).to be false
+        expect(response).to render_template(:access)
+
+        # Subscribed Grouping
+        product = Product.create!(identifier: 'product', purchase: 'purchase')
+        product.components << component
+        grouping = Grouping.create!(identifier: 'grouping')
+        product.lessees << grouping.lessee
+        lessee = Lessee.create!(identifier: dlpsInstitutionId)
+        grouping.lessees << lessee
+        institution = Institution.create!(identifier: dlpsInstitutionId, name: 'Name', site: 'Site', login: 'Login')
+        institution.save!
+        lessee.save!
+        grouping.save!
+        product.save!
+        get :lock, params: { id: file_set.id }
+        expect(session[:show_set].include?(file_set.id)).to be true
+        expect(response).to redirect_to(epub_path)
+      end
     end
 
     context 'user subscription' do
       let(:user) { create(:user) }
 
-      it do
+      it 'lessee' do
         # Open Access
         session[:show_set] = []
         get :lock, params: { id: file_set.id }
@@ -303,6 +335,42 @@ RSpec.describe EPubsController, type: :controller do
         product.components << component
         lessee = Lessee.create!(identifier: user.email)
         product.lessees << lessee
+        product.save!
+        get :lock, params: { id: file_set.id }
+        expect(session[:show_set].include?(file_set.id)).to be true
+        expect(response).to redirect_to(epub_path)
+      end
+
+      it 'grouping' do
+        # Open Access
+        session[:show_set] = []
+        get :lock, params: { id: file_set.id }
+        expect(session[:show_set].include?(file_set.id)).to be true
+        expect(response).to redirect_to(epub_path)
+
+        # Restricted Access
+        component = Component.create!(handle: HandleService.handle(file_set))
+
+        # Anonymous User
+        get :lock, params: { id: file_set.id }
+        expect(session[:show_set].include?(file_set.id)).to be false
+        expect(response).to render_template(:access)
+
+        # Authenticated User
+        cosign_sign_in(user)
+        get :lock, params: { id: file_set.id }
+        expect(session[:show_set].include?(file_set.id)).to be false
+        expect(response).to render_template(:access)
+
+        # Subscribed Grouping
+        product = Product.create!(identifier: 'product', purchase: 'purchase')
+        product.components << component
+        grouping = Grouping.create!(identifier: 'grouping')
+        product.lessees << grouping.lessee
+        lessee = Lessee.create!(identifier: user.email)
+        grouping.lessees << lessee
+        lessee.save!
+        grouping.save!
         product.save!
         get :lock, params: { id: file_set.id }
         expect(session[:show_set].include?(file_set.id)).to be true

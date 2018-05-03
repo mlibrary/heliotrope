@@ -10,7 +10,7 @@ RSpec.describe Lessee, type: :model do
 
   it { is_expected.to be_valid }
 
-  it 'products and components' do
+  it 'products, not_products, and components' do
     n = 3
     products = []
     n.times { products << create(:product) }
@@ -39,13 +39,13 @@ RSpec.describe Lessee, type: :model do
     end
   end
 
-  describe '#grouping?' do
+  describe '#grouping? and grouping' do
     subject { lessee.grouping? }
 
     let(:lessee) { Lessee.find_by(identifier: identifier) }
     let(:identifier) { 'identifier' }
 
-    context 'non-grouping' do
+    context 'not-grouping' do
       before { create(:lessee, identifier: identifier) }
 
       it { is_expected.to be false }
@@ -58,7 +58,32 @@ RSpec.describe Lessee, type: :model do
     end
   end
 
-  describe '#institution?' do
+  it 'groupings and not_groupings' do
+    n = 3
+    groupings = []
+    n.times { |i| groupings << create(:grouping, identifier: "grouping#{i}") }
+    expected_groupings = []
+
+    groupings.each_with_index do |grouping, index|
+      expect(lessee.groupings.count).to eq(index)
+      expect(lessee.not_groupings.count).to eq(n - index)
+      expect(lessee.groupings).to eq(expected_groupings)
+      expected_groupings << grouping
+      lessee.groupings << grouping
+      lessee.save!
+    end
+
+    groupings.each_with_index do |grouping, index|
+      expect(lessee.groupings.count).to eq(n - index)
+      expect(lessee.not_groupings.count).to eq(index)
+      expect(lessee.groupings).to eq(expected_groupings)
+      expected_groupings.delete(grouping)
+      lessee.groupings.delete(grouping)
+      lessee.save!
+    end
+  end
+
+  describe '#institution? and institution' do
     subject { lessee.institution? }
 
     let(:lessee) { Lessee.find_by(identifier: identifier) }

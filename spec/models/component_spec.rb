@@ -10,7 +10,7 @@ RSpec.describe Component, type: :model do
 
   it { is_expected.to be_valid }
 
-  it 'products and lessees' do
+  it 'products, not_products, and lessees' do
     n = 3
     products = []
     n.times { products << create(:product) }
@@ -37,5 +37,21 @@ RSpec.describe Component, type: :model do
       component.products.delete(product)
       component.save!
     end
+  end
+
+  it 'lessees recursive' do
+    n = 3
+    product = create(:product)
+    n.times { product.lessees << create(:lessee) }
+    grouping = create(:grouping, identifier: 'grouping')
+    n.times { grouping.lessees << create(:lessee) }
+    product.lessees << grouping.lessee
+    product.save!
+    component.products << product
+    component.save!
+    expected_lessees = []
+    product.lessees.each { |l| expected_lessees << l }
+    grouping.lessees.each { |l| expected_lessees << l }
+    expect(component.lessees(true)).to eq(expected_lessees)
   end
 end
