@@ -1,4 +1,8 @@
 <% provide :page_title, @presenter.page_title %>
+<% provide :page_header do %>
+  <!-- breadcrumbs -->
+  <%= render 'shared/breadcrumbs' %>
+<% end %>
 <div itemscope itemtype="http://schema.org/CreativeWork" class="row">
   <div class="col-xs-12">
     <header>

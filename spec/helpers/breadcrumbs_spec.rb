@@ -41,6 +41,44 @@ RSpec.describe BreadcrumbsHelper do
     end
   end
 
+  describe "when on a monograph show page" do
+    context "with no parent press" do
+      it "returns the right breadcrumbs" do
+        @presenter = monograph_presenter
+        expect(breadcrumbs).to match_array([{ href: "/blue",
+                                              text: "Home",
+                                              class: "" },
+                                            { href: "/concern/monographs/1",
+                                              text: "Monograph Title",
+                                              class: "" },
+                                            { href: "",
+                                              text: "Show",
+                                              class: "active" }])
+      end
+    end
+
+    context "with a parent press" do
+      let(:parent) { create(:press, subdomain: "maize", name: "Maize Press") }
+      it "returns the right breadcrumbs" do
+        @presenter = monograph_presenter
+        press.parent_id = parent.id
+        press.save!
+        expect(breadcrumbs).to match_array([{ href: "/maize",
+                                              text: "Home",
+                                              class: "" },
+                                            { href: "/blue",
+                                              text: "Blue Press",
+                                              class: "" },
+                                            { href: "/concern/monographs/1",
+                                              text: "Monograph Title",
+                                              class: "" },
+                                            { href: "",
+                                              text: "Show",
+                                              class: "active" }])
+      end
+    end
+  end
+
   describe "when on a file_set/asset page" do
     let(:file_set_presenter) { Hyrax::FileSetPresenter.new(SolrDocument.new(id: 2,
                                                                             title_tesim: ["FileSet Title"],
