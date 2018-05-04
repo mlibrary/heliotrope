@@ -381,9 +381,16 @@ webgl = FactoryService.webgl_unity(webgl_id)
           template: '<div class="permalink-label"><label class="u-screenreader" for="permalink">Permalink</label><form><input data-slot="title" type="text" id="permalink" value="" readonly="readonly" onclick="this.select(); document.execCommand(\'copy\');"></form></div>',
         }).addTo(reader);
 
+        <% if @monograph_presenter.citations_ready? %>
         // Citation widget
-        // We'll need to do some work in order to pass pre-fomatted citations to CSB
         // see: https://github.com/mlibrary/cozy-sun-bear/wiki/Metadata-and-Citations
+        var my_citations = [
+          {format: 'MLA', text: "<%= export_as_mla_citation(@monograph_presenter).gsub('"', '\"').html_safe %>" },
+          {format: 'APA', text: "<%= export_as_apa_citation(@monograph_presenter).gsub('"', '\"').html_safe %>" },
+          {format: 'Chicago', text: "<%= export_as_chicago_citation(@monograph_presenter).gsub('"', '\"').html_safe %>" }
+        ]
+        cozy.control.citation({ region: 'top.toolbar.left', citations: my_citations }).addTo(reader);
+        <% end %>
 
         // Search widget
         <% unless Heliotrope::Application.config.cozy_epub_engine == 'readium' %>

@@ -21,15 +21,22 @@ module Hyrax
              :primary_editor_family_name, :primary_editor_given_name, :primary_editor_full_name,
              to: :solr_document
 
+    def citations_ready?
+      # everything used by Hyrax::CitationsBehavior
+      title.present? && creator.present? && location.present? &&
+        date_created.first.present? && publisher.first.present?
+    end
+
     def creator
       # CitationsBehavior depends on `creator`. ActiveTriple::Relation `creator` doesn't retain order.
       creator_authors = creator_full_name.present? ? contributor.unshift(creator_full_name) : contributor
       creator_editors = primary_editor_full_name.present? ? editor.unshift(primary_editor_full_name) : editor
-      creator_authors + creator_editors
+      creator_authors.present? || creator_editors.present? ? creator_authors + creator_editors : []
     end
 
     def based_near_label
-      location
+      # wrap this in an array as CitationsBehavior seems to be calling `.first` on it
+      Array(location)
     end
 
     def ordered_section_titles
