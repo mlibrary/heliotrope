@@ -1,5 +1,6 @@
 <!DOCTYPE html>
   <head>
+    <title><%= content_for?(:page_title) ? yield(:page_title) : yield %></title>
     <!-- Ensure all links open outside the iframe, in a new tab -->
     <base target="_blank">
     <!-- CSS -->
