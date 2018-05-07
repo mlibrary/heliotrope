@@ -1,52 +1,56 @@
-<ul class="nav nav-tabs" role="tablist">
-  <li role="presentation" class="active"><a href="#info" aria-controls="info" role="tab" data-toggle="tab">Info</a></li>
-  <li role="presentation"><a href="#permissions" aria-controls="permissions" role="tab" data-toggle="tab">Permissions</a></li>
-  <li id="stats-tab" role="presentation"><a href="#stats" aria-controls="stats-tab" role="tab" data-toggle="tab">Stats</a></li>
-  <% unless presenter.external_resource? %>
-  <li role="presentation"><a href="#technical-info" aria-controls="technical-info" role="tab" data-toggle="tab">Technical Info</a></li>
-  <% end %>
-</ul>
+<div id="tabs">
+  <ul class="nav nav-tabs" role="tablist">
+    <li role="presentation" class="active"><a id="tab-info" href="#info" data-toggle="tab" role="tab" aria-controls="info" aria-selected="true" tabindex="0">Info</a></li>
+    <li role="presentation"><a id="tab-permissions" href="#permissions" data-toggle="tab" role="tab" aria-controls="permissions" aria-selected="false"   tabindex="-1">Permissions</a></li>
+    <li id="stats-tab" role="presentation"><a id="tab-stats" href="#stats" data-toggle="tab" role="tab" aria-controls="stats" aria-selected="false" tabindex="-1">Stats</a></li>
+    <% unless presenter.external_resource? %>
+    <li role="presentation"><a id="tab-technical-info" href="#technical-info" data-toggle="tab" role="tab" aria-controls="technical-info" aria-selected="false"   tabindex="-1">Technical Info</a></li>
+    <% end %>
+  </ul>
 
-<div class="tab-content">
-  <div role="tabpanel" class="tab-pane fade in active" id="info">
-    <table class="table <%= dom_class(presenter) %> attributes" <%= presenter.microdata_type_to_html %>>
-      <tbody>
-        <%= render 'attribute_rows_info', presenter: presenter %>
-        <tr>
-          <th><%= t('citable_link') %></th>
-          <td>
-            <form>
-              <label for="permalink" style="display: none;"><%= t('citable_link') %></label>
-              <input type="text" class="form-control" id="permalink" value="<%= presenter.citable_link %>" readonly="readonly" onclick="this.select(); document.execCommand('copy');" />
-            </form>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div> <!-- /.info panel -->
-  <div role="tabpanel" class="tab-pane fade" id="permissions">
-    <table class="table <%= dom_class(presenter) %> attributes" <%= presenter.microdata_type_to_html %>>
-      <tbody>
-        <%= render 'attribute_rows_permissions', presenter: presenter %>
-      </tbody>
-    </table>
-  </div> <!-- /.permissions panel -->
+  <div id="tabs-content" class="tab-content" aria-live="polite">
+    <section id="info" class="tab-pane fade in active" role="tabpanel" aria-hidden="false" aria-labelledby="tab-info" tabindex="0">
+      <h4 class="sr-only">Info</h4>
+      <table class="table <%= dom_class(presenter) %> attributes" <%= presenter.microdata_type_to_html %>>
+        <tbody>
+          <%= render 'attribute_rows_info', presenter: presenter %>
+          <tr>
+            <th><%= t('citable_link') %></th>
+            <td>
+              <form>
+                <label id="citable_link" for="permalink" style="display: none;"><%= t('citable_link') %></label>
+                <input type="text" class="form-control" aria-labelledby="citable_link" id="permalink" value="<%= presenter.citable_link %>" readonly="readonly" onclick="this.select(); document.execCommand('copy');" />
+              </form>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </section> <!-- /.info panel -->
+    <section id="permissions" class="tab-pane fade" role="tabpanel" aria-hidden="true" aria-labelledby="tab-permissions" tabindex="0">
+      <h4 class="sr-only">Permissions</h4>
+      <table class="table <%= dom_class(presenter) %> attributes" <%= presenter.microdata_type_to_html %>>
+        <tbody>
+          <%= render 'attribute_rows_permissions', presenter: presenter %>
+        </tbody>
+      </table>
+    </section> <!-- /.permissions panel -->
 
-  <div role="tabpanel" class="tab-pane fade" id="stats">
-    <table class="table <%= dom_class(presenter) %> attributes" <%= presenter.microdata_type_to_html %>>
-      <tbody>
-        <%= render 'attribute_rows_stats', presenter: presenter %>
-      </tbody>
-    </table>
-  </div>  <!-- /.stats panel -->
+    <section id="stats" class="tab-pane fade" role="tabpanel" aria-hidden="true" aria-labelledby="tab-stats" tabindex="0">
+      <h4 class="sr-only">Stats</h4>
+      <table class="table <%= dom_class(presenter) %> attributes" <%= presenter.microdata_type_to_html %>>
+        <tbody>
+          <%= render 'attribute_rows_stats', presenter: presenter %>
+        </tbody>
+      </table>
+    </section>  <!-- /.stats panel -->
 
-
-  <div role="tabpanel" class="tab-pane fade" id="technical-info">
-    <table class="table <%= dom_class(presenter) %> attributes" <%= presenter.microdata_type_to_html %>>
-      <tbody>
-       <%= render 'attribute_rows_technical', presenter: presenter %>
-      </tbody>
-    </table>
-   </div> <!-- /.technical-info panel -->
-
-</div> <!-- /.tab-content Tab panes -->
+    <section id="technical-info" class="tab-pane fade" role="tabpanel" aria-hidden="true" aria-labelledby="tab-technical-info" tabindex="0">
+      <h4 class="sr-only">Technical Info</h4>
+      <table class="table <%= dom_class(presenter) %> attributes" <%= presenter.microdata_type_to_html %>>
+        <tbody>
+         <%= render 'attribute_rows_technical', presenter: presenter %>
+        </tbody>
+      </table>
+    </section> <!-- /.technical-info panel -->
+  </div> <!-- /.tab-content Tab panes -->
+</div>
