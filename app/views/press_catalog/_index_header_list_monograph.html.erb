@@ -30,19 +30,19 @@
 
   <% if presenter.epub? %>
     <div class="row epub">
-      <div class="col-sm-12" data-turbolinks="false">
-        <a class="btn btn-default btn-lg" href="<%= epub_path(presenter.epub, publisher: presenter.subdomain) %>" title="Read <%= presenter.title %>" role="button">Read</a>
+      <div class="col-sm-12">
+        <a class="btn btn-default btn-lg" href="<%= epub_path(presenter.epub, publisher: presenter.subdomain) %>" title="Read <%= presenter.title %>" data-turbolinks="false">Read</a>
       </div>
     </div>
-    <div class="row info" data-turbolinks="false">
+    <div class="row info">
       <div class="col-sm-12">
-        <a class="btn btn-default" href="<%= polymorphic_path(url_for_document(document)) %>">More Info</a>
+        <a class="btn btn-default" href="<%= polymorphic_path(url_for_document(document)) %>" data-turbolinks="false">More Info</a>
       </div>
     </div>
   <% else %>
     <div class="row">
       <div class="col-sm-12">
-        <a class="btn btn-default" href="<%= polymorphic_path(url_for_document(document)) %>">View book materials</a>
+        <a class="btn btn-default" href="<%= polymorphic_path(url_for_document(document)) %>" data-turbolinks="false">View book materials</a>
       </div>
     </div>
   <% end %>

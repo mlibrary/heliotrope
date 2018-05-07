@@ -17,7 +17,9 @@
         <div class="panel-body">
           <p>If you have purchased individual access login below.</p>
           <p class="text-center">
-            <a class="btn btn-default" role="button" href="<%= "#{main_app.new_user_session_path}" %>">Sign In</a>
+            <form action="<%= main_app.new_user_session_path %>">
+              <button type="submit" class="btn btn-default">Sign In</button>
+            </form>
           </p>
         </div>
       </div>
@@ -30,7 +32,7 @@
         <div class="panel-body">
           <p>If your institution has purchased access, you will need to access this resource on-campus or through your library's website.</p>
           <p class="text-center">
-            <a class="btn btn-default" role="button" data-toggle="modal" data-target="#subscribers">View list of Subscribers</a>
+            <button type="button" class="btn btn-default" data-toggle="modal" data-target="#subscribers">View list of Subscribers</button>
           </p>
         </div>
         <!-- subscribers modal -->
@@ -67,10 +69,14 @@
         <div class="panel-body">
           <p>You can purchase individual or institution access via the University of Michigan Press below.</p>
           <p class="text-center">
-          <a class="btn btn-default" role="button" href="https://www.press.umich.edu/9231782/mid_republican_house_from_gabii">Buy Publication</a>
+          <form action="https://www.press.umich.edu/9231782/mid_republican_house_from_gabii">
+            <button type="submit" formtarget="_blank" class="btn btn-default">Buy Publication</button>
+          </form>
           <!--
           TODO: List only the purchase URL for the product being blocked
-          <a class="btn btn-default" role="button" href="">Buy Publication</a>
+          <form action="https://?">
+            <button type="submit" class="btn btn-default">?</button>
+          </form>
           -->
           </p>
         </div>

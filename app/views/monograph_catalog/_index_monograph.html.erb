@@ -7,8 +7,10 @@
     <img class="img-responsive" src="/image-service/<%= @monograph_presenter.representative_id %>/full/225,/0/default.jpg"
          alt="<%= @monograph_presenter.representative_alt_text %>">
     <% if can? :edit, @monograph_presenter %>
-        <%= link_to t('monograph_catalog.index.can_edit'), main_app.monograph_show_path(@monograph_presenter.id), class: 'btn btn-primary', id: 'manage-monograph-button' %>
-  <% end %>
+      <form action="<%= main_app.monograph_show_path(@monograph_presenter.id) %>">
+        <button type="submit" class="btn btn-primary" id="manage-monograph-button"><%= t('monograph_catalog.index.can_edit') %></button>
+      </form>
+    <% end %>
   </div><!-- /.monograph-cover -->
   <div class="col-sm-9 monograph-metadata">
     <h2><%= @monograph_presenter.title %></h2>
@@ -25,10 +27,10 @@
         <div class="btn-toolbar" role="toolbar" aria-label="">
           <div class="btn-group" role="group" aria-label="">
             <% if @monograph_presenter.epub? %>
-                <a id="monograph-read-btn" href="<%= epub_path(@monograph_presenter.epub) %>" title="<%= t('monograph_catalog.index.read', title: @monograph_presenter.title) %>" role="button" class="btn btn-default btn-small" data-turbolinks="false"><%= t('monograph_catalog.index.read_book') %></a>
+                <a id="monograph-read-btn" href="<%= epub_path(@monograph_presenter.epub) %>" title="<%= t('monograph_catalog.index.read', title: @monograph_presenter.title) %>" class="btn btn-default btn-small" data-turbolinks="false"><%= t('monograph_catalog.index.read_book') %></a>
             <% end %>
             <% if @monograph_presenter.buy_url? %>
-                <a id="monograph-buy-btn" href="<%= @monograph_presenter.buy_url %>" target="_blank" title="<%= t('monograph_catalog.index.buy', title: @monograph_presenter.title) %>" role="button" class="btn btn-default btn-small"><%= t('monograph_catalog.index.buy_book') %></a>
+                <a id="monograph-buy-btn" href="<%= @monograph_presenter.buy_url %>" target="_blank" title="<%= t('monograph_catalog.index.buy', title: @monograph_presenter.title) %>" class="btn btn-default btn-small" data-turbolinks="false"><%= t('monograph_catalog.index.buy_book') %></a>
             <% end %>
           </div><!-- /.btn-group -->
           <% if @monograph_presenter.webgl? %>

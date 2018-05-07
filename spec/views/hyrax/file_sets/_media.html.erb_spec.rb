@@ -53,11 +53,11 @@ RSpec.describe 'hyrax/file_sets/_media', type: :view do
     end
     context 'has a download link when allow_download? returns true' do
       let(:allow_download) { true }
-      it { expect(rendered).to have_link('Download') }
+      it { expect(rendered).to have_button('Download') }
     end
     context 'has no download link when allow_download? returns false' do
       let(:allow_download) { false }
-      it { expect(rendered).to_not have_link('Download') }
+      it { expect(rendered).to_not have_button('Download') }
     end
   end
 end

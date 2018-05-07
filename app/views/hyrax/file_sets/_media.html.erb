@@ -3,13 +3,13 @@
     <figcaption<%= ' class="text-center"'.html_safe if @presenter.center_caption? %>><%= @presenter.attribute_to_html(:caption, render_as: :markdown, label: '') %></figcaption>
     <% if @presenter.allow_download?  %>
         <div class="text-center">
-          <%= link_to @presenter.download_button_label, hyrax.download_path(@presenter), target: :_blank, class: 'btn btn-default btn-lg btn-heliotrope-download', data: { turbolinks: false } %>
+          <form action="<%= hyrax.download_path(@presenter) %>">
+            <button type="submit" formtarget="_blank" class="btn btn-default btn-lg btn-heliotrope-download"><%= @presenter.download_button_label %></button>
+          </form>
           <% if @presenter.extracted_text? %>
-              <%= link_to @presenter.extracted_text_download_button_label,
-                          hyrax.download_path(@presenter, file: 'extracted_text', filename: @presenter.extracted_text_download_filename),
-                          target: :_blank,
-                          class: 'btn btn-default btn-lg btn-heliotrope-download',
-                          data: { turbolinks: false } %>
+            <form action="<%= hyrax.download_path(@presenter, file: 'extracted_text', filename: @presenter.extracted_text_download_filename) %>">
+              <button type="submit" formtarget="_blank" class="btn btn-default btn-lg btn-heliotrope-download"><%= @presenter.extracted_text_download_button_label %></button>
+            </form>
           <% end %>
         </div>
     <% end %>

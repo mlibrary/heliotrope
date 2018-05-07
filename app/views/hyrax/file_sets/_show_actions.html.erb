@@ -1,24 +1,29 @@
 <div class="form-actions">
   <% if can?(:edit, presenter) %>
-    <%= link_to "Edit", edit_polymorphic_path([main_app, presenter]), class: 'btn btn-default btn-lg'  %>
+    <form action="<%= edit_polymorphic_path([main_app, presenter]) %>">
+      <button type="submit" class="btn btn-default btn-lg">Edit</button>
+    </form>
     <!-- TODO: remove the following button, it will be replaced by breadcrumbs -->
-    <%= link_to "Back to #{parent.human_readable_type}", parent_path(parent), class: 'btn btn-default btn-lg' %>
+    <form action="<%= parent_path(parent) %>">
+      <button type="submit" class="btn btn-default btn-lg"><%= "Back to #{parent.human_readable_type}" %></button>
+    </form>
   <% end %>
   <% if can?(:edit, presenter) || presenter.allow_embed? %>
-  <form style="display:inline;">
-    <textarea  id="embedcode" style="display:none;" readonly="readonly"><%= presenter.embed_code %></textarea>
-    <span class="btn btn-default btn-lg" onclick="CopyToClipboard()">&lt;html /&gt;</span>
-    <script>
-      function CopyToClipboard() {
-        var e = document.getElementById("embedcode");
-        e.style.display = "block";
-        e.focus();
-        e.select();
-        document.execCommand("copy");
-        e.style.display = "none";
-      }
-    </script>
-  </form>
+    <form action="#" onsubmit="CopyToClipboard()" style="display:inline;">
+      <textarea  id="embedcode" style="display:none;" readonly="readonly"><%= presenter.embed_code %></textarea>
+      <button type="submit" class="btn btn-default btn-lg">&lt;html /&gt;</button>
+      <script>
+        function CopyToClipboard() {
+          var e = document.getElementById("embedcode");
+          e.style.display = "block";
+          e.focus();
+          e.select();
+          document.execCommand("copy");
+          e.style.display = "none";
+          window.alert("Copied to clipboard.")
+        }
+      </script>
+    </form>
   <% end %>
   <!-- TODO: add citation generator -->
   <!-- <button type="button" class="btn btn-default btn-lg cite">Cite</button> -->

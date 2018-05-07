@@ -19,7 +19,7 @@ $(document).on('turbolinks:load', function() {
         ga('pressTracker.send', 'event', 'press_page', 'click', title)
       });
 
-      $(value).find('a.btn.btn-default').click(function() {
+      $(value).find('button.btn.btn-default').click(function() {
         ga('pressTracker.send', 'event', 'press_page', 'click_button', title)
       })
     });
