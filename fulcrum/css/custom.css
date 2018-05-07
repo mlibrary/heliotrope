@@ -163,7 +163,7 @@ a {
   box-shadow: 0px 0px 6px 0px #BEC4CC; }
 
 ::selection {
-  background: rgba(190, 196, 204, 0.33333);
+  background: rgba(190, 196, 204, 0.333333);
   text-shadow: none; }
 
 .nav-container,
@@ -590,8 +590,33 @@ a > g, a > path {
 p {
   line-height: 1.7rem; }
 
+.partners img {
+  width: 100%;
+  filter: grayscale(100%); }
+.partners img:hover {
+  filter: grayscale(0%); }
+.partners img.square {
+  max-width: 150px; }
+.partners img.vertical {
+  max-height: 245px;
+  width: auto; }
+.partners a {
+  display: block;
+  text-align: center; }
+.partners a:hover, .partners a:active {
+  border-bottom: 3px solid transparent; }
+
+hr.brand {
+  content: '';
+  display: block;
+  width: 100%;
+  height: 5px;
+  position: relative;
+  bottom: 5px;
+  background: #002C63;
+  background-image: linear-gradient(-113deg, #002C63 0%, #00AFEC 100%); }
+
 .case-study {
-  padding-top: 5rem;
   padding-bottom: 4rem; }
   .case-study .row {
     margin-bottom: 5em; }
