@@ -10,7 +10,11 @@ class WebglsController < ApplicationController
     # Eventually we could delete this (and specs), or leave it here "forever" as an example?
     @presenter = Hyrax::PresenterFactory.build_for(ids: [params[:id]], presenter_class: Hyrax::FileSetPresenter, presenter_args: nil).first
     if @presenter.present? && @presenter.webgl?
-      webgl = FactoryService.webgl_unity(params[:id])
+      webgl = if Dir.exist?(UnpackService.root_path_from_noid(params[:id], 'webgl'))
+                Webgl::Unity.from_directory(UnpackService.root_path_from_noid(params[:id], 'webgl'))
+              else
+                FactoryService.webgl_unity(params[:id])
+              end
       @unity_progress = "#{params[:id]}/#{webgl.unity_progress}"
       @unity_loader = "#{params[:id]}/#{webgl.unity_loader}"
       @unity_json = "#{params[:id]}/#{webgl.unity_json}"
@@ -22,17 +26,25 @@ class WebglsController < ApplicationController
   end
 
   def file
+    webgl = if Dir.exist?(UnpackService.root_path_from_noid(params[:id], 'webgl'))
+              Webgl::Unity.from_directory(UnpackService.root_path_from_noid(params[:id], 'webgl'))
+            else
+              FactoryService.webgl_unity(params[:id])
+            end
+
     # `.unityweb` files are gzipped by default as part of the release build process.
     # They need `Content-Encoding: gzip` to trigger browser unpacking.
     response.headers['Content-Encoding'] = 'gzip' if params[:format] == 'unityweb'
 
-    file = Rails.root + FactoryService.webgl_unity(params[:id]).file(params[:file] + "." + params[:format])
+    file = webgl.file(params[:file] + "." + params[:format])
+    file = Rails.root + file if webgl.root_path.blank?
+
     # Need to match apache's XSendFilePath configuration
     file = file.to_s.sub(/releases\/\d+/, "current")
     response.headers['X-Sendfile'] = file
     send_file file
   rescue StandardError => e
-    Rails.logger.info("WebglsController.file(#{params[:file] + '.' + params[:format]}) raised #{e}")
+    Rails.logger.info("WebglsController.file(#{params[:file] + '.' + params[:format]}) raised #{e} #{e.backtrace.join("\n")}")
     head :no_content, status: :not_found
   end
 end

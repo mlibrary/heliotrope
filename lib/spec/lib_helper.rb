@@ -24,3 +24,50 @@ EPub.configure do |config|
   # config.logger = Rails.logger
   config.root = "../tmp/lib/spec/epubs"
 end
+
+# Unpacking helpers for epubs and webgls
+# In Rails this is handled by the UnpackJob
+# But since we're not including Rails...
+module UnpackHelper
+  def self.noid_to_root_path(noid, kind)
+    "./tmp/rspec_derivatives/" + noid.split('').each_slice(2).map(&:join).join('/') + "-" + kind
+  end
+
+  def self.unpack_epub(id, root_path, file)
+    Zip::File.open(file) do |zip_file|
+      zip_file.each do |entry|
+        make_path_entry(root_path, entry.name)
+        entry.extract(File.join(root_path, entry.name))
+      end
+    end
+  rescue Zip::Error
+    raise "EPUB #{id} is corrupt."
+  end
+
+  def self.unpack_webgl(id, root_path, file)
+    Zip::File.open(file) do |zip_file|
+      zip_file.each do |entry|
+        # We don't want to include the root directory, it could be named anything.
+        parts = entry.name.split(File::SEPARATOR)
+        without_parent = parts.slice(1, parts.length).join(File::SEPARATOR)
+        make_path_entry(root_path, without_parent)
+        entry.extract(File.join(root_path, without_parent))
+      end
+    end
+  rescue Zip::Error
+    raise "Webgl #{id} is corrupt."
+  end
+
+  def self.make_path_entry(root_path, file_entry)
+    FileUtils.mkdir_p(root_path) unless Dir.exist?(root_path)
+    dir = root_path
+    file_entry.split(File::SEPARATOR).each do |sub_dir|
+      FileUtils.mkdir_p(dir) unless Dir.exist?(dir)
+      dir = File.join(dir, sub_dir)
+    end
+  end
+end
+
+RSpec.configure do |config|
+  config.include UnpackHelper
+end

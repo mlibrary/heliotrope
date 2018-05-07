@@ -26,8 +26,13 @@ class EPubsController < ApplicationController
 
   def file
     return head :no_content unless show?
+    epub = if Dir.exist?(UnpackService.root_path_from_noid(params[:id], 'epub'))
+             EPub::Publication.from_directory(UnpackService.root_path_from_noid(params[:id], 'epub'))
+           else
+             FactoryService.e_pub_publication(params[:id])
+           end
     begin
-      render plain: FactoryService.e_pub_publication(params[:id]).read(params[:file] + '.' + params[:format]), content_type: Mime::Type.lookup_by_extension(params[:format]), layout: false
+      render plain: epub.read(params[:file] + '.' + params[:format]), content_type: Mime::Type.lookup_by_extension(params[:format]), layout: false
     rescue StandardError => e
       Rails.logger.info("EPubsController.file(#{params[:file] + '.' + params[:format]}) mapping to 'Content-Type': #{Mime::Type.lookup_by_extension(params[:format])} raised #{e}")
       head :no_content
@@ -46,7 +51,12 @@ class EPubsController < ApplicationController
     return render json: { q: params[:q], search_results: [] } if params[:q].length < 3
 
     results = Rails.cache.fetch(search_cache_key(params[:id], params[:q]), expires_in: 30.days) do
-      FactoryService.e_pub_publication(params[:id]).search(params[:q])
+      epub = if Dir.exist?(UnpackService.root_path_from_noid(params[:id], 'epub'))
+               EPub::Publication.from_directory(UnpackService.root_path_from_noid(params[:id], 'epub'))
+             else
+               FactoryService.e_pub_publication(params[:id])
+             end
+      epub.search(params[:q])
     end
 
     render json: results
@@ -81,7 +91,9 @@ class EPubsController < ApplicationController
     def set_presenter
       @presenter = Hyrax::PresenterFactory.build_for(ids: [params[:id]], presenter_class: Hyrax::FileSetPresenter, presenter_args: nil).first
       if @presenter.present? && @presenter.epub?
-        FactoryService.e_pub_publication(params[:id]) # cache epub
+        unless Dir.exist?(UnpackService.root_path_from_noid(params[:id], 'epub'))
+          FactoryService.e_pub_publication(params[:id]) # cache epub
+        end
       else
         Rails.logger.info("EPubsController.set_presenter(#{params[:id]}) is not an EPub.")
         render 'hyrax/base/unauthorized', status: :unauthorized

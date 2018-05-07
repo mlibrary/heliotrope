@@ -6,7 +6,11 @@
     <%
 # load what we need to show the webgl/3-d model if needed
 webgl_id = @monograph_presenter.webgl_id
-webgl = FactoryService.webgl_unity(webgl_id)
+webgl = if Dir.exist?(UnpackService.root_path_from_noid(webgl_id, 'webgl'))
+          Webgl::Unity.from_directory(UnpackService.root_path_from_noid(webgl_id, 'webgl'))
+        else
+          FactoryService.webgl_unity(webgl_id)
+        end
 @unity_loader = "/webgl/#{webgl_id}/#{webgl.unity_loader}"
 @unity_json = "/webgl/#{webgl_id}/#{webgl.unity_json}"
     %>

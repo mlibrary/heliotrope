@@ -44,7 +44,7 @@ RSpec.describe EPub::Toc do
     context "no match" do
       let(:none) { Nokogiri::XML('<item id="x" href="notevenclose.xhtml"> ') }
       it do
-        allow(EPub.logger).to receive(:error).and_return(nil)
+        allow(EPub.logger).to receive(:info).and_return(nil)
         expect(subject.chapter_title(none.children[0])).to eq ''
       end
     end

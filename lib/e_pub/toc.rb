@@ -31,7 +31,7 @@ module EPub
         title = @doc.xpath("//nav[@type='toc']/ol/li/a[@href='#{upone_href}']").text
       end
 
-      ::EPub.logger.error("Can't find chapter title for #{chapter_href}") if title.blank?
+      ::EPub.logger.info("Can't find chapter title for #{chapter_href}") if title.blank?
       title
     end
   end

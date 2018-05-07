@@ -42,6 +42,7 @@ module EPub
     end
 
     def self.from_directory(root_path)
+      ::EPub.logger.info("Opening Publication from directory #{root_path}")
       return null_object unless File.exist? root_path
       valid_epub = Validator.from_directory(root_path)
       return null_object if valid_epub.is_a?(ValidatorNullObject)
@@ -89,10 +90,14 @@ module EPub
     end
 
     def read(file_entry = "META-INF/container.xml")
-      return Publication.null_object.read(file_entry) unless Cache.cached?(id)
-      entry_file = ::EPub.path_entry(id, file_entry)
+      if @root_path.present?
+        entry_file = File.join(root_path, file_entry)
+      else
+        return Publication.null_object.read(file_entry) unless Cache.cached?(id)
+        entry_file = ::EPub.path_entry(id, file_entry)
+      end
       return Publication.null_object.read(file_entry) unless File.exist?(entry_file)
-      FileUtils.touch(::EPub.path(id)) # Reset the time to live for the entire cached EPUB
+      FileUtils.touch(::EPub.path(id)) if root_path.blank? # Reset the time to live for the entire cached EPUB
       File.read(entry_file)
     rescue StandardError => e
       ::EPub.logger.info("Publication.read(#{file_entry}) in publication #{id} raised #{e}") # at: #{e.backtrace.join("\n")}")
