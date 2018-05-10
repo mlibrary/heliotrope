@@ -8,6 +8,18 @@ class Lessee < ApplicationRecord
 
   validates :identifier, presence: true, allow_blank: false
 
+  before_destroy do
+    if products.present?
+      errors.add(:base, "lessee has #{products.count} associated products!")
+      throw(:abort)
+    end
+
+    if groupings.present?
+      errors.add(:base, "lessee has #{groupings.count} associated groupings!")
+      throw(:abort)
+    end
+  end
+
   def not_products
     Product.where.not(id: products.map(&:id))
   end

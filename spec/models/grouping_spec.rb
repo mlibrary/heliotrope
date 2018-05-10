@@ -69,5 +69,60 @@ RSpec.describe Grouping, type: :model do
 
       it { expect(lessee).to be nil }
     end
+
+    it 'lessees and not_lessees' do
+      n = 3
+      lessees = []
+      n.times { |i| lessees << create(:lessee, identifier: "lessee#{i}") }
+      expected_lessees = []
+
+      lessees.each_with_index do |lessee, index|
+        expect(grouping.lessees.count).to eq(index)
+        expect(grouping.not_lessees.count).to eq(n - index)
+        expect(grouping.lessees).to eq(expected_lessees)
+        expected_lessees << lessee
+        grouping.lessees << lessee
+        grouping.save!
+      end
+
+      lessees.each_with_index do |lessee, index|
+        expect(grouping.lessees.count).to eq(n - index)
+        expect(grouping.not_lessees.count).to eq(index)
+        expect(grouping.lessees).to eq(expected_lessees)
+        expected_lessees.delete(lessee)
+        grouping.lessees.delete(lessee)
+        grouping.save!
+      end
+    end
+
+    it 'grouping_lessees and not_lessees' do
+      n = 3
+      lessees = []
+      n.times { |i| lessees << create(:lessee, identifier: "lessee#{i}") }
+      groupings = []
+      n.times { |i| groupings << create(:grouping, identifier: "grouping#{i}") }
+      grouping_lessees = []
+      n.times { |i| grouping_lessees << groupings[i].lessee }
+      expected_lessees = []
+
+      grouping_lessees.each_with_index do |grouping_lessee, index|
+        expect(grouping.lessees.count).to eq(index)
+        expect(grouping.not_lessees.count).to eq(n - index)
+        expect(grouping.lessees).to eq(expected_lessees)
+        expected_lessees << lessees[index]
+        grouping.lessees << lessees[index]
+        grouping.lessees << grouping_lessee
+        grouping.save!
+      end
+
+      lessees.each_with_index do |lessee, index|
+        expect(grouping.lessees.count).to eq(n - index)
+        expect(grouping.not_lessees.count).to eq(index)
+        expect(grouping.lessees).to eq(expected_lessees)
+        expected_lessees.delete(lessee)
+        grouping.lessees.delete(lessee)
+        grouping.save!
+      end
+    end
   end
 end

@@ -11,7 +11,7 @@ RSpec.describe Product, type: :model do
 
   it { is_expected.to be_valid }
 
-  it 'components' do
+  it 'components and not_components' do
     n = 3
     components = []
     n.times { components << create(:component) }
@@ -31,7 +31,7 @@ RSpec.describe Product, type: :model do
     end
   end
 
-  it 'lessees' do
+  it 'lessees and not_lessees' do
     n = 3
     lessees = []
     n.times { lessees << create(:lessee) }

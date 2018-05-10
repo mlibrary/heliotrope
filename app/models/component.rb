@@ -6,12 +6,25 @@ class Component < ApplicationRecord
 
   validates :handle, presence: true, allow_blank: false
 
+  before_destroy do
+    if products.present?
+      errors.add(:base, "component has #{products.count} associated products!")
+      throw(:abort)
+    end
+  end
+
   def not_products
     Product.where.not(id: products.map(&:id))
   end
 
-  def lessees
+  def lessees(recursive = false)
     return [] if products.blank?
-    Lessee.where(id: LesseesProduct.where(product_id: products.map(&:id)).map(&:lessee_id)).distinct
+    records = Lessee.where(id: LesseesProduct.where(product_id: products.map(&:id)).map(&:lessee_id)).distinct
+    return records unless recursive
+    rvalue = []
+    records.each { |r| rvalue << r }
+    grouping_lessees = rvalue.select(&:grouping?)
+    grouping_lessees.each { |l| rvalue << l.grouping.lessees }
+    rvalue.flatten
   end
 end
