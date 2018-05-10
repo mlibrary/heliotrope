@@ -39,6 +39,15 @@ RSpec.describe EPub::Search do
         expect(subject[:search_results][1][:snippet]).to eq "Why don't we just give everybody a promotion and call it a night - 'Commander'?"
       end
     end
+
+    context "with multiple matches in deeply nested nodes" do
+      let(:query) { 'star wars' }
+      it "doesn't include duplicate snippets" do
+        expect(subject[:q]).to eq 'star wars'
+        @snippets = subject[:search_results].map { |result| result[:snippet] if result[:snippet].present? }.compact
+        expect(@snippets.length).to eq @snippets.uniq.length
+      end
+    end
   end
 
   describe "#node_query_match" do
