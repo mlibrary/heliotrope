@@ -10,7 +10,7 @@ module Import
       @file = input_file
     end
 
-    def attributes
+    def attributes(stream = nil)
       attrs = {}
 
       # a CSV can only have one monograph (probably for in-house use only)...
@@ -19,8 +19,12 @@ module Import
       attrs['files_metadata'] = []
       attrs['row_errors'] = {}
 
-      puts "Parsing file: #{file}"
-      rows = CSV.read(file, headers: true, skip_blanks: true).delete_if { |row| row.to_hash.values.all?(&:blank?) }
+      rows = if stream.present?
+               CSV.parse(stream, headers: true, skip_blanks: true).delete_if { |row| row.to_hash.values.all?(&:blank?) }
+             else
+               puts "Parsing file: #{file}"
+               CSV.read(file, headers: true, skip_blanks: true).delete_if { |row| row.to_hash.values.all?(&:blank?) }
+             end
       row_data = RowData.new
 
       # human-readable row counter (3 accounts for the top two discarded rows)
