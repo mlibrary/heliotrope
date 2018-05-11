@@ -26,6 +26,10 @@ Layout/ExtraSpacing:
   Enabled: false
 Layout/FirstParameterIndentation:
   Enabled: false
+Layout/IndentationConsistency:
+  Enabled: false
+Layout/IndentationWidth:
+  Enabled: false
 Layout/LeadingCommentSpace:
   Enabled: false
 Layout/SpaceAfterComma:
@@ -39,6 +43,8 @@ Layout/SpaceInsideStringInterpolation:
 
 
 Lint/AssignmentInCondition:
+  Enabled: false
+Lint/BlockAlignment:
   Enabled: false
 Lint/StringConversionInInterpolation:
   Enabled: false
