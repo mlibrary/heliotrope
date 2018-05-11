@@ -122,6 +122,18 @@ Rails.application.routes.draw do
     end
   end
 
+  constraints platform_administrator_constraint do
+    resource :manifests, path: 'concern/monographs/:id/manifest', only: %i[new edit update create destroy], as: :monograph_manifests
+
+    resource :monograph_manifests, path: 'concern/monographs/:id/manifest', only: [:show] do
+      member do
+        get :export
+        patch :import
+        get :preview
+      end
+    end
+  end
+
   mount Qa::Engine => '/authorities'
 
   resources :solr_documents, only: [:show], path: '/catalog', controller: 'catalog' do

@@ -1,0 +1,46 @@
+<div class="container">
+  <div class="col-md-12">
+    <div class="row">
+      <h1><%= t('monograph_manifests.show.h1') %></h1>
+    </div>
+    <div class="row">
+      <div class="col-md-6">
+        <div class="row">
+          <div class="col-md-12"><h2><%= t('monograph_manifests.show.h2.monograph', noid: @presenter.id) %></h2></div>
+        </div>
+        <div class="row">
+          <div class="col-md-11"><hr/></div>
+          <div class="col-md-1"></div>
+        </div>
+        <div class="row">
+          <div class="col-md-12">
+            <%= button_to t('monograph_manifests.show.export'), main_app.export_monograph_manifests_path(@presenter.id), method: :get, class: 'btn btn-primary' %>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="row">
+          <div class="col-md-12"><h2><%= t('monograph_manifests.show.h2.manifest', filename: @presenter.explicit.filename) %></h2></div>
+        </div>
+        <div class="row">
+          <div class="col-md-11"><hr/></div>
+          <div class="col-md-1"></div>
+        </div>
+        <div class="row">
+          <div class="col-md-2">
+            <%= button_to t('monograph_manifests.show.upload'), main_app.new_monograph_manifests_path(@presenter.id), method: :get, class: 'btn btn-primary' %>
+          </div>
+          <div class="col-md-2">
+            <%= button_to t('monograph_manifests.show.preview'), main_app.preview_monograph_manifests_path(@presenter.id), method: :get, class: 'btn btn-primary' if @presenter.explicit.persisted? %>
+          </div>
+          <div class="col-md-8">
+            <%= button_to t('monograph_manifests.show.delete'), main_app.monograph_manifests_path(@presenter.id), method: :delete, data: { confirm: t('monograph_manifests.show.confirm') }, class: 'btn btn-primary' if @presenter.explicit.persisted? %>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12"><hr></div>
+    </div>
+  </div>
+</div>
