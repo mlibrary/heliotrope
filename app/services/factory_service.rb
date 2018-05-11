@@ -2,7 +2,6 @@
 
 require_dependency 'valid'
 require_dependency 'e_pub'
-require_dependency 'mcsv'
 require_dependency 'webgl'
 
 module FactoryService # rubocop:disable Metrics/ModuleLength
@@ -13,7 +12,6 @@ module FactoryService # rubocop:disable Metrics/ModuleLength
   @monitor.synchronize do
     @semaphores ||= Hash.new { |hash, key| hash[key] = Mutex.new }
     @e_pub_publication_cache ||= Hash.new { { publication: EPub::Publication.null_object, time: Time.now } }
-    @mcsv_manifest_cache ||= Hash.new { { manifest: MCSV::Manifest.null_object, time: Time.now } }
     @webgl_unity_cache ||= Hash.new { { unity: Webgl::Unity.null_object, time: Time.now } }
   end
 
@@ -39,7 +37,6 @@ module FactoryService # rubocop:disable Metrics/ModuleLength
   def self.clear_caches
     @monitor.synchronize do
       clear_e_pub_publication_cache
-      clear_mcsv_manifest_cache
       clear_webgl_unity_cache
       clear_semaphores # Order dependent, must be called last!
     end
@@ -55,19 +52,6 @@ module FactoryService # rubocop:disable Metrics/ModuleLength
       end
       @e_pub_publication_cache.clear
       EPub::Publication.clear_cache
-    end
-  end
-
-  def self.clear_mcsv_manifest_cache
-    @monitor.synchronize do
-      @mcsv_manifest_cache.each do |id, hash|
-        @semaphores[id].synchronize do
-          hash[:manifest].purge
-        end
-        @semaphores.delete(id)
-      end
-      @mcsv_manifest_cache.clear
-      MCSV::Manifest.clear_cache
     end
   end
 
@@ -92,19 +76,6 @@ module FactoryService # rubocop:disable Metrics/ModuleLength
       @semaphores[id].synchronize do
         hash = @e_pub_publication_cache.delete(id)
         hash[:publication].purge if hash.present?
-      end
-      @semaphores.delete(id)
-    end
-  end
-
-  def self.purge_mcsv_manifest(id)
-    Rails.logger.info("FactoryService.purge_mcsv_manifest(#{id}) \'#{id}\' is not a noid.") unless Valid.noid?(id)
-    return unless Valid.noid?(id)
-
-    @monitor.synchronize do
-      @semaphores[id].synchronize do
-        hash = @mcsv_manifest_cache.delete(id)
-        hash[:manifest].purge if hash.present?
       end
       @semaphores.delete(id)
     end
@@ -147,21 +118,6 @@ module FactoryService # rubocop:disable Metrics/ModuleLength
                     end
       @e_pub_publication_cache[id] = { publication: publication, time: Time.now } unless publication.instance_of?(EPub::PublicationNullObject)
       publication
-    end
-  end
-
-  def self.mcsv_manifest(id)
-    Rails.logger.info("FactoryService.mcsv_manifest(#{id}) \'#{id}\' is NOT a valid noid.") unless Valid.noid?(id)
-    return MCSV::Manifest.null_object unless Valid.noid?(id)
-
-    semaphore(id).synchronize do
-      manifest = if @mcsv_manifest_cache .key?(id)
-                   @mcsv_manifest_cache[id][:manifest]
-                 else
-                   mcvs_manifest_from(id)
-                 end
-      @mcsv_manifest_cache[id] = { manifest: manifest, time: Time.now } unless manifest.instance_of?(MCSV::ManifestNullObject)
-      manifest
     end
   end
 
@@ -215,16 +171,6 @@ module FactoryService # rubocop:disable Metrics/ModuleLength
       end
     end
     private_class_method :create_epub_webgl_bridge
-
-    def self.mcvs_manifest_from(id)
-      presenter = Hyrax::PresenterFactory.build_for(ids: [id], presenter_class: Hyrax::FileSetPresenter, presenter_args: nil).first
-      return MCSV::Manifest.null_object if presenter.nil?
-      presenter.manifest? ? MCSV::Manifest.from(id: id, mcsv: presenter.file) : MCSV::Manifest.null_object
-    rescue StandardError => e
-      Rails.logger.info("FactoryService.mcsv_manifest_from(#{id}) raised #{e}")
-      MCSV::Manifest.null_object
-    end
-    private_class_method :mcvs_manifest_from
 
     def self.webgl_unity_from(id)
       presenter = Hyrax::PresenterFactory.build_for(ids: [id], presenter_class: Hyrax::FileSetPresenter, presenter_args: nil).first

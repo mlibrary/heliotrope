@@ -5,7 +5,6 @@ require 'rails_helper'
 RSpec.describe FactoryService do
   let(:monograph) { create(:monograph) }
   let(:epub) { create(:file_set, content: File.open(File.join(fixture_path, 'moby-dick.epub'))) }
-  let(:mcsv) { create(:file_set, content: File.open(File.join(fixture_path, 'csv/import/tempest.csv'))) }
   let(:webgl) { create(:file_set, content: File.open(File.join(fixture_path, 'fake-game.zip'))) }
 
   before do
@@ -33,7 +32,6 @@ RSpec.describe FactoryService do
 
     it "calls each child's clear cache" do
       expect(described_class).to receive(:clear_e_pub_publication_cache).ordered
-      expect(described_class).to receive(:clear_mcsv_manifest_cache).ordered
       expect(described_class).to receive(:clear_webgl_unity_cache).ordered
       expect(described_class).to receive(:clear_semaphores).ordered
       subject
@@ -58,27 +56,6 @@ RSpec.describe FactoryService do
       subject
       new_publication = described_class.e_pub_publication(id)
       expect(old_publication).not_to eq new_publication
-    end
-  end
-
-  describe '#clear_mcsv_manifest_cache' do
-    subject { described_class.clear_mcsv_manifest_cache }
-
-    let(:id) { mcsv.id }
-
-    it 'caches the manifest' do
-      old_manifest = described_class.mcsv_manifest(id)
-      new_manifest = described_class.mcsv_manifest(id)
-      expect(old_manifest).to eq new_manifest
-    end
-
-    it 'clears the cache' do
-      old_manifest = described_class.mcsv_manifest(id)
-      expect(old_manifest).to receive(:purge)
-      expect(MCSV::Manifest).to receive(:clear_cache)
-      subject
-      new_manifest = described_class.mcsv_manifest(id)
-      expect(old_manifest).not_to eq new_manifest
     end
   end
 
@@ -117,20 +94,6 @@ RSpec.describe FactoryService do
     end
   end
 
-  describe '#purge_mcsv_manifest' do
-    subject { described_class.purge_mcsv_manifest(id) }
-
-    let(:id) { mcsv.id }
-
-    it 'purges the manifest' do
-      old_manifest = described_class.mcsv_manifest(id)
-      expect(old_manifest).to receive(:purge)
-      subject
-      new_manifest = described_class.mcsv_manifest(id)
-      expect(old_manifest).not_to eq new_manifest
-    end
-  end
-
   describe '#purge_webgl_unity' do
     subject { described_class.purge_webgl_unity(id) }
 
@@ -166,42 +129,6 @@ RSpec.describe FactoryService do
       it 'returns an epub publication' do
         is_expected.to be_an_instance_of(EPub::Publication)
         expect(subject.id).to eq id
-      end
-    end
-    context 'file set is not an epub' do
-      let(:id) { mcsv.id }
-      it 'returns a null object' do
-        is_expected.to be_an_instance_of(EPub::PublicationNullObject)
-      end
-    end
-  end
-
-  describe '#mcsv_manifest' do
-    subject { described_class.mcsv_manifest(id) }
-
-    context 'nil id' do
-      let(:id) { nil }
-      it 'returns a null object' do
-        expect(Rails.logger).to receive(:info).with("FactoryService.mcsv_manifest() '' is NOT a valid noid.")
-        is_expected.to be_an_instance_of(MCSV::ManifestNullObject)
-      end
-    end
-    context 'object not found' do
-      let(:id) { 'validnoid' }
-      it 'returns a null object' do
-        is_expected.to be_an_instance_of(MCSV::ManifestNullObject)
-      end
-    end
-    context 'file set is a manifest' do
-      let(:id) { mcsv.id }
-      it 'returns a manifest file' do
-        is_expected.to be_an_instance_of(MCSV::Manifest)
-      end
-    end
-    context 'file set is not a manifest' do
-      let(:id) { epub.id }
-      it 'returns a null object' do
-        is_expected.to be_an_instance_of(MCSV::ManifestNullObject)
       end
     end
   end
