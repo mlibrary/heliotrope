@@ -3,7 +3,9 @@
 require 'rails_helper'
 
 RSpec.describe WebglsController, type: :controller do
-  after { Webgl::Cache.clear }
+  after do
+    FileUtils.rm_rf('./tmp/rspec_derivatives')
+  end
 
   describe '#show' do
     context "when the file_set is a webgl" do
@@ -14,6 +16,8 @@ RSpec.describe WebglsController, type: :controller do
         monograph.ordered_members << file_set
         monograph.save!
         file_set.save!
+        UnpackJob.perform_now(file_set.id, 'webgl')
+        allow(Webgl.logger).to receive(:info).and_return(nil)
         get :show, params: { id: file_set.id }
       end
       after { FeaturedRepresentative.destroy_all }
@@ -36,6 +40,8 @@ RSpec.describe WebglsController, type: :controller do
         monograph.ordered_members << file_set
         monograph.save!
         file_set.save!
+        UnpackJob.perform_now(file_set.id, 'webgl')
+        allow(Webgl.logger).to receive(:info).and_return(nil)
       end
       after { FeaturedRepresentative.destroy_all }
       it "returns the UnityLoader.js file" do
