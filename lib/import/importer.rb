@@ -26,6 +26,62 @@ module Import
       end
     end
 
+    def metadata_field(key)
+      METADATA_FIELDS.each do |field|
+        return field if key == field[:field_name]
+      end
+      nil
+    end
+
+    def metadata_field_value(field, value)
+      return value if field[:multivalued] == :no
+      return [value] if field[:multivalued] == :yes
+      return value.split(';') if value.present?
+      []
+    end
+
+    def metadata_monograph_field?(key)
+      field = metadata_field(key)
+      return field[:object] != :file_set if field.present?
+      false
+    end
+
+    def metadata_file_set_field?(key)
+      field = metadata_field(key)
+      return field[:object] != :monograph if field.present?
+      false
+    end
+
+    def import(manifest) # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
+      return false if @reimport_mono.blank?
+      monograph = @reimport_mono
+      rows = CSV.parse(manifest, headers: true, skip_blanks: true).delete_if { |row| row.to_hash.values.all?(&:blank?) }
+      # The template CSV file contains an extra row after the
+      # headers that has explanatory text about how to fill in
+      # the table.  We want to throw away that text.
+      rows.delete(0)
+      rows.each do |row|
+        noid = row.field('NOID')
+        row.each do |key, value|
+          field = metadata_field(key)
+          next if field.blank? || value.blank?
+          if noid == monograph.id
+            if metadata_monograph_field?(key)
+              monograph[field[:metadata_name]] = metadata_field_value(field, value)
+              monograph.save
+            end
+          else
+            file_set = FileSet.find(noid)
+            if metadata_file_set_field?(key)
+              file_set[field[:metadata_name]] = metadata_field_value(field, value)
+              file_set.save
+            end
+          end
+        end
+      end
+      true
+    end
+
     def run(test = false)
       interaction = !Rails.env.test?
       validate_user

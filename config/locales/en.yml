@@ -122,6 +122,15 @@ en:
   manage_assets:
     monograph_link_text: "Organize Assets"
     section_link_text: "Organize Assets"
+  manifest:
+    edit:
+      h1: "Upload Manifest"
+    form:
+      cancel: "Cancel"
+      csv: "CSV"
+      save: "Save"
+    new:
+      h1: "Upload Manifest"
   mime_type: "Mime Type"
   monograph_catalog:
     index:
@@ -138,6 +147,24 @@ en:
       form:
         q:
           label: "Search within %{monograph_name}"
+  monograph_manifests:
+    preview:
+      cancel: "Cancel"
+      h1: "Preview Monograph Manifest"
+      h2:
+        monograph: "Monograph: %{noid}"
+        manifest: "Manifest: %{filename}"
+      import: "Update"
+    show:
+      h1: "Monograph Manifest"
+      h2:
+        monograph: "Monograph: %{noid}"
+        manifest: "Manifest: %{filename}"
+      confirm: "Are you sure?"
+      delete: "Delete"
+      export: "Download"
+      preview: "Preview"
+      upload: "Upload"
   original_checksum: "Original Checksum"
   pageviews_html: "<strong>%{count}</strong> views since %{date}"
   permissions_expiration_date: "Permissions Expiration Date"
