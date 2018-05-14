@@ -1,0 +1,31 @@
+<div class="row">
+  <hr>
+</div>
+<% unless @manifest.errors.empty? %>
+  <div class="row alert alert-error">
+    <ul>
+    <% @manifest.errors.full_messages.each do |msg| %>
+      <li><%= msg %></li>
+    <% end %>
+    </ul>
+  </div>
+<% end %>
+<div class="row">
+  <%= form_for @manifest, url: monograph_manifests_path do |f| %>
+    <div class="row">
+      <div class="col-md-2"><%= f.label t('manifest.form.csv') %></div>
+      <div class="col-md-10"><%= f.file_field :csv %></div>
+    </div>
+    <div class="row">
+      <hr>
+    </div>
+    <div class="row">
+      <div class="col-md-2"></div>
+      <div class="col-md-2"><%= f.submit t('manifest.form.cancel'), name: :cancel, class: "btn btn-primary" %></div>
+      <div class="col-md-8"><%= f.submit t('manifest.form.save'), class: "btn btn-primary" %></div>
+    </div>
+  <% end %>
+</div>
+<div class="row">
+  <hr>
+</div>
