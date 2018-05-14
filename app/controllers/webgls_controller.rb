@@ -13,7 +13,7 @@ class WebglsController < ApplicationController
       webgl = if Dir.exist?(UnpackService.root_path_from_noid(params[:id], 'webgl'))
                 Webgl::Unity.from_directory(UnpackService.root_path_from_noid(params[:id], 'webgl'))
               else
-                FactoryService.webgl_unity(params[:id])
+                Webgl::Unity.null_object
               end
       @unity_progress = "#{params[:id]}/#{webgl.unity_progress}"
       @unity_loader = "#{params[:id]}/#{webgl.unity_loader}"
@@ -29,7 +29,7 @@ class WebglsController < ApplicationController
     webgl = if Dir.exist?(UnpackService.root_path_from_noid(params[:id], 'webgl'))
               Webgl::Unity.from_directory(UnpackService.root_path_from_noid(params[:id], 'webgl'))
             else
-              FactoryService.webgl_unity(params[:id])
+              Webgl::Unity.null_object
             end
 
     # `.unityweb` files are gzipped by default as part of the release build process.
