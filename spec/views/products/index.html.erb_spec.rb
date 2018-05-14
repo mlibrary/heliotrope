@@ -8,11 +8,11 @@ RSpec.describe "products/index", type: :view do
       :products,
       [
         Product.create!(
-          identifier: "Identifier",
+          identifier: "Identifier1",
           purchase: "Purchase"
         ),
         Product.create!(
-          identifier: "Identifier",
+          identifier: "Identifier2",
           purchase: "Purchase"
         )
       ]
@@ -21,6 +21,7 @@ RSpec.describe "products/index", type: :view do
 
   it "renders a list of products" do
     render
-    assert_select "div", text: "Identifier".to_s, count: 2
+    assert_select "div", text: "Identifier1".to_s, count: 1
+    assert_select "div", text: "Identifier2".to_s, count: 1
   end
 end

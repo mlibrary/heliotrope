@@ -8,13 +8,13 @@ RSpec.describe "institutions/index", type: :view do
       :institutions,
       [
         Institution.create!(
-          identifier: "Identifier",
+          identifier: "Identifier1",
           name: "Name",
           site: "Site",
           login: "Login"
         ),
         Institution.create!(
-          identifier: "Identifier",
+          identifier: "Identifier2",
           name: "Name",
           site: "Site",
           login: "Login"
@@ -25,6 +25,8 @@ RSpec.describe "institutions/index", type: :view do
 
   it "renders a list of institutions" do
     render
+    assert_select "div", text: "Identifier1".to_s, count: 1
+    assert_select "div", text: "Identifier2".to_s, count: 1
     assert_select "div", text: "Name".to_s, count: 2
   end
 end

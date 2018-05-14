@@ -98,14 +98,14 @@ RSpec.describe GroupingsController, type: :controller do
   describe "PUT #update" do
     context "with valid params" do
       let(:new_attributes) { {
-        identifier: 'new_identifier'
+        identifier: 'identifier' # grouping identifier can not be updated
       } }
 
       it "updates the requested grouping" do
         grouping = Grouping.create! valid_attributes
         put :update, params: { id: grouping.to_param, grouping: new_attributes }, session: valid_session
         grouping.reload
-        expect(grouping.identifier).to eq("new_identifier")
+        expect(grouping.identifier).to eq("identifier")
       end
 
       it "redirects to the grouping" do

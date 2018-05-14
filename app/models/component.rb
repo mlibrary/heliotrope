@@ -4,13 +4,21 @@ class Component < ApplicationRecord
   has_many :components_products
   has_many :products, through: :components_products
 
-  validates :handle, presence: true, allow_blank: false
+  validates :handle, presence: true, allow_blank: false, uniqueness: true
 
   before_destroy do
     if products.present?
       errors.add(:base, "component has #{products.count} associated products!")
       throw(:abort)
     end
+  end
+
+  def update?
+    true
+  end
+
+  def destroy?
+    products.blank?
   end
 
   def not_products

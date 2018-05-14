@@ -3,58 +3,78 @@
 require 'rails_helper'
 
 RSpec.describe Lessee, type: :model do
-  subject { lessee }
+  subject { described_class.new(identifier: "identifier") }
 
-  let(:lessee) { described_class.new(identifier: "identifier") }
   let(:identifier) { double('identifier') }
 
-  it { is_expected.to be_valid }
+  it do
+    is_expected.to be_valid
+    expect(subject.update?).to be true
+    expect(subject.destroy?).to be true
+  end
 
   it 'products, not_products, and components' do
     n = 3
     products = []
-    n.times { products << create(:product) }
+    n.times { |i| products << create(:product, identifier: "product#{i}") }
     components = []
-    n.times { components << create(:component) }
+    n.times { |i| components << create(:component, handle: "component#{i}") }
     expected_components = []
 
+    expect(subject.update?).to be true
+    expect(subject.destroy?).to be true
+
     products.each_with_index do |product, index|
-      expect(lessee.products.count).to eq(index)
-      expect(lessee.not_products.count).to eq(n - index)
-      expect(lessee.components).to eq(expected_components)
+      expect(subject.products.count).to eq(index)
+      expect(subject.not_products.count).to eq(n - index)
+      expect(subject.components).to eq(expected_components)
       expected_components << components[index]
       product.components << components[index]
       product.save!
-      lessee.products << product
-      lessee.save!
+      subject.products << product
+      subject.save!
+      expect(subject.update?).to be true
+      expect(subject.destroy?).to be false
     end
 
     products.each_with_index do |product, index|
-      expect(lessee.products.count).to eq(n - index)
-      expect(lessee.not_products.count).to eq(index)
-      expect(lessee.components).to eq(expected_components)
+      expect(subject.update?).to be true
+      expect(subject.destroy?).to be false
+      expect(subject.products.count).to eq(n - index)
+      expect(subject.not_products.count).to eq(index)
+      expect(subject.components).to eq(expected_components)
       expected_components.delete(components[index])
-      lessee.products.delete(product)
-      lessee.save!
+      subject.products.delete(product)
+      subject.save!
     end
+
+    expect(subject.update?).to be true
+    expect(subject.destroy?).to be true
   end
 
   describe '#grouping? and grouping' do
-    subject { lessee.grouping? }
+    subject { Lessee.find_by(identifier: identifier) }
 
-    let(:lessee) { Lessee.find_by(identifier: identifier) }
     let(:identifier) { 'identifier' }
 
     context 'not-grouping' do
       before { create(:lessee, identifier: identifier) }
 
-      it { is_expected.to be false }
+      it do
+        expect(subject.grouping?).to be false
+        expect(subject.update?).to be true
+        expect(subject.destroy?).to be true
+      end
     end
 
     context 'grouping' do
       before { create(:grouping, identifier: identifier) }
 
-      it { is_expected.to be true }
+      it do
+        expect(subject.grouping?).to be true
+        expect(subject.update?).to be false
+        expect(subject.destroy?).to be false
+      end
     end
   end
 
@@ -64,41 +84,58 @@ RSpec.describe Lessee, type: :model do
     n.times { |i| groupings << create(:grouping, identifier: "grouping#{i}") }
     expected_groupings = []
 
+    expect(subject.update?).to be true
+    expect(subject.destroy?).to be true
+
     groupings.each_with_index do |grouping, index|
-      expect(lessee.groupings.count).to eq(index)
-      expect(lessee.not_groupings.count).to eq(n - index)
-      expect(lessee.groupings).to eq(expected_groupings)
+      expect(subject.groupings.count).to eq(index)
+      expect(subject.not_groupings.count).to eq(n - index)
+      expect(subject.groupings).to eq(expected_groupings)
       expected_groupings << grouping
-      lessee.groupings << grouping
-      lessee.save!
+      subject.groupings << grouping
+      subject.save!
+      expect(subject.update?).to be true
+      expect(subject.destroy?).to be false
     end
 
     groupings.each_with_index do |grouping, index|
-      expect(lessee.groupings.count).to eq(n - index)
-      expect(lessee.not_groupings.count).to eq(index)
-      expect(lessee.groupings).to eq(expected_groupings)
+      expect(subject.update?).to be true
+      expect(subject.destroy?).to be false
+      expect(subject.groupings.count).to eq(n - index)
+      expect(subject.not_groupings.count).to eq(index)
+      expect(subject.groupings).to eq(expected_groupings)
       expected_groupings.delete(grouping)
-      lessee.groupings.delete(grouping)
-      lessee.save!
+      subject.groupings.delete(grouping)
+      subject.save!
     end
+
+    expect(subject.update?).to be true
+    expect(subject.destroy?).to be true
   end
 
   describe '#institution? and institution' do
-    subject { lessee.institution? }
+    subject { Lessee.find_by(identifier: identifier) }
 
-    let(:lessee) { Lessee.find_by(identifier: identifier) }
     let(:identifier) { 'identifier' }
 
-    before { create(:lessee, identifier: identifier) }
-
     context 'non-instituion' do
-      it { is_expected.to be false }
+      before { create(:lessee, identifier: identifier) }
+
+      it do
+        expect(subject.institution?).to be false
+        expect(subject.update?).to be true
+        expect(subject.destroy?).to be true
+      end
     end
 
     context 'institution' do
       before { create(:institution, identifier: identifier) }
 
-      it { is_expected.to be true }
+      it do
+        expect(subject.institution?).to be true
+        expect(subject.update?).to be false
+        expect(subject.destroy?).to be false
+      end
     end
   end
 end

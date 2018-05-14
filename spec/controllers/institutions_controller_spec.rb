@@ -104,7 +104,7 @@ RSpec.describe InstitutionsController, type: :controller do
   describe "PUT #update" do
     context "with valid params" do
       let(:new_attributes) { {
-        identifier: 'new_identifier',
+        identifier: 'identifier', # institution identifier can not be updated
         name: 'new_name',
         site: 'new_site',
         login: 'new_login'
@@ -114,7 +114,7 @@ RSpec.describe InstitutionsController, type: :controller do
         institution = Institution.create! valid_attributes
         put :update, params: { id: institution.to_param, institution: new_attributes }, session: valid_session
         institution.reload
-        expect(institution.identifier).to eq("new_identifier")
+        expect(institution.identifier).to eq("identifier")
         expect(institution.name).to eq("new_name")
         expect(institution.site).to eq("new_site")
         expect(institution.login).to eq("new_login")

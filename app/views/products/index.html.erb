@@ -8,8 +8,8 @@
         <div class="col-md-5"><%= product.identifier %></div>
         <div class="col-md-6">
           <div class="col-md-4"><%= link_to 'Show', product %></div>
-          <div class="col-md-4"><%= link_to 'Edit', edit_product_path(product) %></div>
-          <div class="col-md-4"><%= link_to 'Destroy', product, method: :delete, data: { confirm: 'Are you sure?' } %></div>
+          <div class="col-md-4"><%= link_to_if product.update?, 'Edit', edit_product_path(product) %></div>
+          <div class="col-md-4"><%= link_to_if product.destroy?, 'Destroy', product, method: :delete, data: { confirm: 'Are you sure?' } %></div>
         </div>
       <% end %>
     </div>

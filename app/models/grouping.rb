@@ -4,17 +4,29 @@ class Grouping < ApplicationRecord
   has_many :groupings_lessees
   has_many :lessees, after_add: :remove_groupings, through: :groupings_lessees
 
-  validates :identifier, presence: true, allow_blank: false
+  validates :identifier, presence: true, allow_blank: false, uniqueness: true
 
   before_validation(on: :create) do
     if Lessee.find_by(identifier: identifier).present?
-      errors.add(:base, "lessee identifier #{identifier} exists!")
+      errors.add(:identifier, "lessee identifier #{identifier} exists!")
+      throw(:abort)
+    end
+  end
+
+  before_validation(on: :update) do
+    if identifier_changed?
+      errors.add(:identifier, "grouping identifier can not be changed!")
       throw(:abort)
     end
   end
 
   before_create do
-    Lessee.create!(identifier: identifier)
+    begin
+      Lessee.create!(identifier: identifier)
+    rescue
+      errors.add(:identifier, "create lessee #{identifier} fail!")
+      throw(:abort)
+    end
   end
 
   before_destroy do
@@ -22,7 +34,6 @@ class Grouping < ApplicationRecord
       errors.add(:base, "grouping has #{lessee.products.count} associated products!")
       throw(:abort)
     end
-
     if lessees.present?
       errors.add(:base, "grouping has #{lessees.count} associated lessees!")
       throw(:abort)
@@ -31,6 +42,14 @@ class Grouping < ApplicationRecord
 
   after_destroy do
     lessee.destroy!
+  end
+
+  def update?
+    false
+  end
+
+  def destroy?
+    !((lessee? && lessee.products.present?) || lessees.present?)
   end
 
   def lessee?

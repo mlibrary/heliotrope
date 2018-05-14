@@ -17,7 +17,7 @@
     <% end %>
     <div class="col-md-12"><br/></div>
     <div class="col-md-12">
-      <%= link_to 'Edit', edit_institution_path(@institution) %>
+      <%= link_to_if @institution.update?, 'Edit', edit_institution_path(@institution) %>
       <span> | </span>
       <%= link_to 'Back', institutions_path %>
     </div>

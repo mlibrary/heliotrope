@@ -29,7 +29,7 @@
     </div>
     <div class="col-md-12"><br/></div>
     <div class="col-md-12">
-      <%= link_to 'Edit', edit_lessee_path(@lessee) %>
+      <%= link_to_if @lessee.update?, 'Edit', edit_lessee_path(@lessee) %>
       <span> | </span>
       <%= link_to 'Back', lessees_path %>
     </div>

@@ -8,8 +8,8 @@
         <div class="col-md-5"><%= component.handle %></div>
         <div class="col-md-6">
           <div class="col-md-4"><%= link_to 'Show', component %></div>
-          <div class="col-md-4"><%= link_to 'Edit', edit_component_path(component) %></div>
-          <div class="col-md-4"><%= link_to 'Destroy', component, method: :delete, data: { confirm: 'Are you sure?' } %></div>
+          <div class="col-md-4"><%= link_to_if component.update?, 'Edit', edit_component_path(component) %></div>
+          <div class="col-md-4"><%= link_to_if component.destroy?, 'Destroy', component, method: :delete, data: { confirm: 'Are you sure?' } %></div>
         </div>
       <% end %>
     </div>

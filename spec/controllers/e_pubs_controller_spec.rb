@@ -247,12 +247,12 @@ RSpec.describe EPubsController, type: :controller do
         expect(response).to render_template(:access)
 
         # Subscribed Institution
+        Institution.create!(identifier: dlpsInstitutionId, name: 'Name', site: 'Site', login: 'Login')
         product = Product.create!(identifier: 'product', purchase: 'purchase')
         product.components << component
-        lessee = Lessee.create!(identifier: dlpsInstitutionId)
+        lessee = Lessee.find_by(identifier: dlpsInstitutionId)
         product.lessees << lessee
         product.save!
-        Institution.create!(identifier: dlpsInstitutionId, name: 'Name', site: 'Site', login: 'Login')
         get :lock, params: { id: file_set.id }
         expect(session[:show_set].include?(file_set.id)).to be true
         expect(response).to redirect_to(epub_path)
@@ -274,13 +274,13 @@ RSpec.describe EPubsController, type: :controller do
         expect(response).to render_template(:access)
 
         # Subscribed Grouping
+        institution = Institution.create!(identifier: dlpsInstitutionId, name: 'Name', site: 'Site', login: 'Login')
         product = Product.create!(identifier: 'product', purchase: 'purchase')
         product.components << component
         grouping = Grouping.create!(identifier: 'grouping')
         product.lessees << grouping.lessee
-        lessee = Lessee.create!(identifier: dlpsInstitutionId)
+        lessee = Lessee.find_by(identifier: dlpsInstitutionId)
         grouping.lessees << lessee
-        institution = Institution.create!(identifier: dlpsInstitutionId, name: 'Name', site: 'Site', login: 'Login')
         institution.save!
         lessee.save!
         grouping.save!

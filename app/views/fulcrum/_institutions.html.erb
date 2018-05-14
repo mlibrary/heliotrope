@@ -6,12 +6,14 @@
         <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> New
       <% end %>
     </th>
+    <th>Identifier</th>
     <th>Products</th>
     <th>Components</th>
   </tr>
   <% institutions.each do |institution| %>
     <tr>
       <td><%= link_to institution.name, institution_path(institution) %></td>
+      <td><%= link_to_if institution.lessee?, institution.identifier, lessee_path(institution.lessee) %></td>
       <% if institution.lessee? %>
         <td><%= institution.lessee.products.count() %></td>
         <td><%= institution.lessee.components.count() %></td>
