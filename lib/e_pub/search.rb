@@ -7,7 +7,7 @@ module EPub
     end
 
     def search(query)
-      db_results = EPub::SqlLite.from(@publication).search_chapters(query)
+      db_results = EPub::SqlLite.from_publication(@publication).search_chapters(query)
       results_from_chapters(db_results, query)
     end
 
@@ -67,7 +67,7 @@ module EPub
         results[:search_results] = []
 
         db_results.each do |chapter|
-          file = File.join(::EPub.path(@publication.id), File.dirname(@publication.content_file), chapter[:href])
+          file = File.join(@publication.root_path, File.dirname(@publication.content_file), chapter[:href])
           doc = Nokogiri::XML(File.open(file))
           doc.remove_namespaces!
 

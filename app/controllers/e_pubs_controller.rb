@@ -29,7 +29,7 @@ class EPubsController < ApplicationController
     epub = if Dir.exist?(UnpackService.root_path_from_noid(params[:id], 'epub'))
              EPub::Publication.from_directory(UnpackService.root_path_from_noid(params[:id], 'epub'))
            else
-             FactoryService.e_pub_publication(params[:id])
+             EPub::Publication.null_object
            end
     begin
       render plain: epub.read(params[:file] + '.' + params[:format]), content_type: Mime::Type.lookup_by_extension(params[:format]), layout: false
@@ -54,7 +54,7 @@ class EPubsController < ApplicationController
       epub = if Dir.exist?(UnpackService.root_path_from_noid(params[:id], 'epub'))
                EPub::Publication.from_directory(UnpackService.root_path_from_noid(params[:id], 'epub'))
              else
-               FactoryService.e_pub_publication(params[:id])
+               EPub::Publication.null_object
              end
       epub.search(params[:q])
     end
@@ -90,11 +90,7 @@ class EPubsController < ApplicationController
 
     def set_presenter
       @presenter = Hyrax::PresenterFactory.build_for(ids: [params[:id]], presenter_class: Hyrax::FileSetPresenter, presenter_args: nil).first
-      if @presenter.present? && @presenter.epub?
-        unless Dir.exist?(UnpackService.root_path_from_noid(params[:id], 'epub'))
-          FactoryService.e_pub_publication(params[:id]) # cache epub
-        end
-      else
+      unless @presenter.present? && @presenter.epub? # rubocop:disable Style/GuardClause
         Rails.logger.info("EPubsController.set_presenter(#{params[:id]}) is not an EPub.")
         render 'hyrax/base/unauthorized', status: :unauthorized
       end

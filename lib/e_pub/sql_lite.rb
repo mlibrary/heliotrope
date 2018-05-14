@@ -1,25 +1,19 @@
 # frozen_string_literal: true
 
+require 'sqlite3'
+
 module EPub
   class SqlLite
     private_class_method :new
     attr_accessor :epub_publication, :db
 
-    def self.from(epub_publication)
-      return null_object unless epub_publication.is_a?(EPub::Publication)
-
-      db = SQLite3::Database.new File.join(EPub.path(epub_publication.id), "#{epub_publication.id}.db")
-      new(epub_publication, db)
-    rescue StandardError => e
-      ::EPub.logger.info("SqlLite.from(#{epub_publication} raised #{e}")
-      null_object
-    end
-
     def self.from_directory(root_path)
       return null_object unless File.exist? root_path
+      from_publication(EPub::Publication.from_directory(root_path))
+    end
 
-      epub_publication = EPub::Publication.from_directory(root_path)
-      db = SQLite3::Database.new File.join(root_path, "#{epub_publication.id}.db")
+    def self.from_publication(epub_publication)
+      db = SQLite3::Database.new File.join(epub_publication.root_path, "#{epub_publication.id}.db")
       new(epub_publication, db)
     rescue StandardError => e
       ::EPub.logger.info("SqlLite.from_directory(#{epub_publication} raised #{e} #{e.backtrace}")

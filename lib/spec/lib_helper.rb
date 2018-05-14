@@ -3,6 +3,8 @@
 # default spec helper
 require 'spec_helper'
 
+require 'zip'
+
 # RSpec::Mocks::MockExpectationError: An expectation of `:info` was set on `nil`.
 # To allow expectations on `nil` and suppress this message,
 # set `RSpec::Mocks.configuration.allow_message_expectations_on_nil` to `true`.
@@ -22,7 +24,6 @@ ActiveSupport::Dependencies.autoload_paths << File.expand_path("../../../lib", _
 # Use this setup block to configure all options available in EPub.
 EPub.configure do |config|
   # config.logger = Rails.logger
-  config.root = "../tmp/lib/spec/epubs"
 end
 
 # Unpacking helpers for epubs and webgls
@@ -65,6 +66,12 @@ module UnpackHelper
       FileUtils.mkdir_p(dir) unless Dir.exist?(dir)
       dir = File.join(dir, sub_dir)
     end
+  end
+
+  def self.create_search_index(root_path)
+    sql_lite = EPub::SqlLite.from_directory(root_path)
+    sql_lite.create_table
+    sql_lite.load_chapters
   end
 end
 

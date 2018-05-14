@@ -25,7 +25,7 @@ module FeaturedRepresentatives
       epub = if Dir.exist?(UnpackService.root_path_from_noid(epub_id, 'epub'))
                EPub::Publication.from_directory(UnpackService.root_path_from_noid(epub_id, 'epub'))
              else
-               FactoryService.e_pub_publication(epub_id)
+               EPub::Publication.null_object
              end
       epub.presenter
     end

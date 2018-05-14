@@ -10,8 +10,8 @@ module EPub
       attr_reader :mapping
     end
 
-    def self.cache(publication)
-      json_mapfile = File.join(publication.root_path || EPub.path(publication.id), 'epub-webgl-map.json')
+    def self.construct_bridge(publication)
+      json_mapfile = File.join(publication.root_path, 'epub-webgl-map.json')
 
       publication.chapters.each do |chapter|
         chapter.doc.xpath("//p[@data-poi]").each do |node|

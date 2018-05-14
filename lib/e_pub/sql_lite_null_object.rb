@@ -7,9 +7,9 @@ module EPub
 
     def create_table; end
 
-    def load_chapters(root_path = nil); end
+    def load_chapters; end
 
-    def search_chapters
+    def search_chapters(_query)
       []
     end
 

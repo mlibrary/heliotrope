@@ -93,6 +93,7 @@ RSpec.describe EPubsController, type: :controller do
         monograph.ordered_members << file_set
         monograph.save!
         file_set.save!
+        UnpackJob.perform_now(file_set.id, 'epub')
       end
       after { FeaturedRepresentative.destroy_all }
 
@@ -120,28 +121,6 @@ RSpec.describe EPubsController, type: :controller do
           end
         end
       end
-
-      context 'tombstone' do
-        before do
-          EPub::Cache.purge(file_set.id)
-          file_set.destroy!
-          get :file, params: { id: file_set.id, file: 'META-INF/container', format: 'xml' }
-        end
-
-        it "is destroyed" do
-          expect(file_set.destroyed?).to be true
-        end
-
-        context "after destroy" do
-          before do
-            get :file, params: { id: file_set.id, file: 'META-INF/container', format: 'xml' }
-          end
-          it "is not found" do
-            expect(response).to have_http_status(:success)
-            expect(response.body.empty?).to be true
-          end
-        end
-      end
     end
   end
 
@@ -153,6 +132,7 @@ RSpec.describe EPubsController, type: :controller do
       monograph.ordered_members << file_set
       monograph.save!
       file_set.save!
+      UnpackJob.perform_now(file_set.id, 'epub')
     end
     after { FeaturedRepresentative.destroy_all }
 

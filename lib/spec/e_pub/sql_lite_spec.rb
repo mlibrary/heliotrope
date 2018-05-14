@@ -4,8 +4,9 @@ require 'sqlite3'
 require 'nokogiri'
 
 RSpec.describe EPub::SqlLite do
-  subject { described_class.from(epub_publication) }
+  subject { described_class.from_directory(root_path) }
 
+  let(:root_path) { double("root_path") }
   let(:epub_publication) { double("publication") }
   let(:chapters) do
     [EPub::Chapter.send(:new,
@@ -23,10 +24,12 @@ RSpec.describe EPub::SqlLite do
   end
 
   before do
-    allow(EPub).to receive(:path).and_return(true)
+    allow(EPub::Publication).to receive(:from_directory).with(root_path).and_return(epub_publication)
+    allow(epub_publication).to receive(:root_path).and_return(true)
     allow(epub_publication).to receive(:is_a?).and_return(EPub::Publication)
     allow(epub_publication).to receive(:id).and_return('id')
     allow(File).to receive(:join).and_return(":memory:")
+    allow(File).to receive(:exist?).with(root_path).and_return(true)
     allow(epub_publication).to receive(:chapters).and_return(chapters)
   end
 
@@ -73,9 +76,10 @@ RSpec.describe EPub::SqlLite do
   end
 
   describe "with an invalid EPub::Publication object" do
-    subject { described_class.from("nothing") }
+    subject { described_class.from_directory("nothing") }
 
     it "returns an instance of SqlLiteNullObject" do
+      allow(File).to receive(:exist?).with("nothing").and_return(false)
       is_expected.to be_an_instance_of(EPub::SqlLiteNullObject)
     end
   end

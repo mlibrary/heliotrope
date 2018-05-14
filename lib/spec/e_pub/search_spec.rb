@@ -4,14 +4,20 @@ require 'nokogiri'
 
 RSpec.describe EPub::Search do
   describe '#search' do
-    before(:all) do # rubocop:disable RSpec/BeforeAfterAll
-      @id = 'validnoid'
+    before do
+      @noid = '999999991'
+      @root_path = UnpackHelper.noid_to_root_path(@noid, 'epub')
       @file = './spec/fixtures/fake_epub01.epub'
-      EPub::Publication.from(id: @id, file: @file)
+      UnpackHelper.unpack_epub(@noid, @root_path, @file)
+      UnpackHelper.create_search_index(@root_path)
+      allow(EPub.logger).to receive(:info).and_return(nil)
     end
-    after(:all) { EPub::Publication.from(@id).purge } # rubocop:disable RSpec/BeforeAfterAll
 
-    subject { described_class.new(EPub::Publication.from(@id)).search(query) }
+    after do
+      FileUtils.rm_rf(Dir[File.join('./tmp', 'rspec_derivatives')])
+    end
+
+    subject { described_class.new(EPub::Publication.from_directory(@root_path)).search(query) }
 
     context 'db results empty' do
       let(:query) { 'nobody' }
