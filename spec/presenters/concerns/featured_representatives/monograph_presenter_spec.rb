@@ -77,8 +77,6 @@ describe FeaturedRepresentatives::MonographPresenter do
 
       describe "#epub_presenter" do
         it "returns a presenter" do
-          # How dumb is this? TODO: A better way to isolate and test this? Maybe it's fine...
-          allow(FactoryService).to receive(:e_pub_publication).with('epubid').and_return(EPub::Publication.from('epubid'))
           expect(subject.epub_presenter).to be_an_instance_of(EPub::PublicationPresenter)
         end
       end

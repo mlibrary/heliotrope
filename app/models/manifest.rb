@@ -94,7 +94,6 @@ class Manifest
   end
 
   def create(current_user)
-    return false unless Valid.noid?(@monograph_id)
     return false if @csv.blank?
     destroy(current_user)
     csv.cache!(content_type: @csv.content_type, filename: @csv.original_filename, tempfile: @csv.tempfile)

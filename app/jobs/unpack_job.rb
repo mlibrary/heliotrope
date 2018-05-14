@@ -37,12 +37,12 @@ class UnpackJob < ApplicationJob
       case kind
       when 'epub'
         if FeaturedRepresentative.where(monograph_id: monograph_id, kind: 'webgl')&.first.present?
-          EPub::BridgeToWebgl.cache(EPub::Publication.from_directory(root_path))
+          EPub::BridgeToWebgl.construct_bridge(EPub::Publication.from_directory(root_path))
         end
       when 'webgl'
         epub_id = FeaturedRepresentative.where(monograph_id: monograph_id, kind: 'epub')&.first&.file_set_id
         if epub_id.present?
-          EPub::BridgeToWebgl.cache(EPub::Publication.from_directory(UnpackService.root_path_from_noid(epub_id, 'epub')))
+          EPub::BridgeToWebgl.construct_bridge(EPub::Publication.from_directory(UnpackService.root_path_from_noid(epub_id, 'epub')))
         end
       end
     end

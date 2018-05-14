@@ -35,11 +35,6 @@ RSpec.describe EPub::PublicationNullObject do
     end
   end
 
-  describe '#purge' do
-    subject { EPub::Publication.null_object.purge }
-    it { is_expected.to eq nil }
-  end
-
   describe '#read' do
     subject { EPub::Publication.null_object.read(file_entry) }
 

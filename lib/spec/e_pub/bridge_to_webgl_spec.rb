@@ -39,7 +39,7 @@ RSpec.describe EPub::BridgeToWebgl do
     EOT
   end
 
-  describe "#cache" do
+  describe "#construct_bridge" do
     it "creates the POI to CFI mapping" do
       allow(File).to receive(:write).and_return(nil)
       allow(EPub.logger).to receive(:info).and_return(nil)
@@ -47,7 +47,7 @@ RSpec.describe EPub::BridgeToWebgl do
       allow(publication).to receive(:chapters).and_return(chapters)
       allow(publication).to receive(:root_path).and_return("/ep/ub/id/")
 
-      described_class.cache(publication)
+      described_class.construct_bridge(publication)
 
       expect(described_class.mapping).to eq [{ poi: "par1", cfi: "/6/2[chapter1]!/4/2[div1]/2" },
                                              { poi: "par2", cfi: "/6/2[chapter1]!/4/6[div3]/4[div4]/2[para2]" }]
