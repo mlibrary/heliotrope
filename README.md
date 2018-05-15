@@ -2,9 +2,6 @@
 Code: [![Build Status](https://travis-ci.org/mlibrary/heliotrope.svg?branch=master)](https://travis-ci.org/mlibrary/heliotrope)
 [![Coverage Status](https://coveralls.io/repos/github/mlibrary/heliotrope/badge.svg?branch=master)](https://coveralls.io/github/mlibrary/heliotrope?branch=master)
 
-Jump in: [![Stories in Ready](https://badge.waffle.io/mlibrary/heliotrope.png?label=ready&title=Ready)](https://waffle.io/mlibrary/heliotrope)
-[![Floobits Status](https://floobits.com/gkostin/heliotrope.svg)](https://floobits.com/gkostin/heliotrope/redirect)
-
 # Table of Contents
 * [What is Fulcrum? What is Heliotrope?](#what-is-fulcrum-what-is-heliotrope)
   * [Feature List](#feature-list)
