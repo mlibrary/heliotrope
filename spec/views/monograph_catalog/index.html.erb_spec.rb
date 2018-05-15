@@ -20,7 +20,8 @@ RSpec.describe "monograph_catalog/index.html.erb", type: :view do
   end
 
   let(:debug) { false }
-  let(:monograph_presenter) { build(:monograph_presenter) }
+  let(:current_ability) { double("ability") }
+  let(:monograph_presenter) { Hyrax::MonographPresenter.new(SolrDocument.new(id: 'mono_id', title: ["Untitled"], has_model_ssim: ['Monograph']), current_ability) }
 
   before do
     stub_template "catalog/_search_sidebar" => "<!-- render-template-catalog/_search_sidebar -->"

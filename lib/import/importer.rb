@@ -5,17 +5,18 @@ module Import
     include ::Hyrax::Noid
 
     attr_reader :root_dir, :user_email, :press_subdomain, :monograph_id, :monograph_title,
-                :visibility, :reimporting, :reimport_mono, :quiet
+                :visibility, :reimporting, :reimport_mono, :quiet, :workflow
 
     def initialize(root_dir: '', user_email: '', monograph_id: '', press: '',
                    visibility: Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE,
-                   monograph_title: '', quiet: '')
+                   monograph_title: '', quiet: '', workflow: '')
 
       @root_dir = root_dir
       @user_email = user_email
       @reimporting = false
       @reimport_mono = Monograph.where(id: monograph_id).first
       @quiet = quiet
+      @workflow = workflow
 
       if monograph_id.present?
         raise "No monograph found with id '#{monograph_id}'" if @reimport_mono.blank?
@@ -83,13 +84,16 @@ module Import
       true
     end
 
-    def run(test = false) # rubocop:disable Metrics/PerceivedComplexity
+    def run(test = false) # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
       interaction = !Rails.env.test? && !@quiet
 
       validate_user
       validate_press unless reimporting
       csv_files.each do |file|
         attrs = CSVParser.new(file).attributes
+
+        admin_set_id = check_for_admin_set if @workflow.present?
+        puts "You are using workflow '#{@workflow}' that has an AdminSet id of #{admin_set_id}" if admin_set_id
 
         optional_early_exit(interaction, attrs.delete('row_errors'), test)
 
@@ -113,6 +117,7 @@ module Import
           Hyrax::CurationConcern.actor.update(Hyrax::Actors::Environment.new(@reimport_mono, Ability.new(user), attrs))
         else
           attrs.merge!('press' => press_subdomain, 'visibility' => visibility)
+          attrs.merge!('admin_set_id' => admin_set_id) if admin_set_id
           Hyrax::CurationConcern.actor.create(Hyrax::Actors::Environment.new(Monograph.new, Ability.new(user), attrs))
         end
       end
@@ -165,6 +170,17 @@ module Import
         end
         # command-line option to exit
         exit if test == true
+      end
+
+      def check_for_admin_set
+        if @workflow.present?
+          AdminSet.all.each do |admin_set|
+            if admin_set&.permission_template&.active_workflow&.name == @workflow
+              return admin_set.id
+            end
+          end
+          fail "You're trying to use the workflow #{@workflow} but a corresponding AdminSet was not found. Make sure you've registered this workflow."
+        end
       end
   end
 end

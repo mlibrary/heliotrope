@@ -29,8 +29,10 @@
   <div class="col-sm-12">
     <%= render 'csb_hyrax_citations', presenter: @presenter %>
     <%= render 'items', presenter: @presenter %>
+    <% if @presenter.workflow.state != "deposited" %>
+      <%= render 'workflow_actions_widget', presenter: @presenter %>
+    <% end %>
     <%# TODO: we may consider adding these partials in the future %>
-    <%#= render 'workflow_actions_widget', presenter: @presenter %>
     <%#= render 'sharing_with', presenter: @presenter %>
     <%#= render 'user_activity', presenter: @presenter %>
   </div>

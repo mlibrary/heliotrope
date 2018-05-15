@@ -49,6 +49,10 @@ def parse_inputs(args)
     inputs[:test] = true
   end
 
+  opts.on('-w [WORKFLOW NAME]', '--workflow', 'Specify a Workflow') do |workflow|
+    inputs[:workflow] = workflow
+  end
+
   opts.on('-h', '--help', 'Print this help message') do
     puts opts
     exit 0
@@ -60,8 +64,8 @@ def parse_inputs(args)
 
   opts.parse!(args)
 
-  if inputs[:monograph_id] && (inputs[:press] || inputs[:visibility] || inputs[:monograph_title])
-    raise "Error: using -m or --monograph_id (i.e. reimporting) excludes -p, -v and -n"
+  if inputs[:monograph_id] && (inputs[:press] || inputs[:visibility] || inputs[:monograph_title] || inputs[:workflow])
+    raise "Error: using -m or --monograph_id (i.e. reimporting) excludes -p, -v, -n and -w"
   end
   raise "Error: The CSV directory is required" unless inputs[:root_dir]
   raise "Error: Username (email) is required" unless inputs[:user_email]
@@ -84,6 +88,8 @@ importer = Import::Importer.new({ root_dir: options[:root_dir],
                                   monograph_title: options[:monograph_title],
                                   monograph_id: options[:monograph_id],
                                   quiet: options[:quiet]})
+                                  workflow: options[:workflow]})
+
 importer.run(options[:test])
 
 puts "Import finished"
