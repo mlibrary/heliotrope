@@ -33,15 +33,12 @@ module EPub
         while node_query_match(node, query, offset)
           cfi = EPub::Cfi.from(node, query, offset)
           snippet = EPub::Snippet.from(node, cfi.pos0, cfi.pos1).snippet
-          # Sometimes the search term will be in the same sentence twice (or more),
-          # creating identical snippets with slightly different CFIs.
-          # This seems pointless so exlude identical snippets from search results.
-          unless matches.map(&:snippet).include? snippet
-            result = OpenStruct.new
-            result.cfi = cfi.cfi
-            result.snippet = snippet
-            matches << result
-          end
+
+          result = OpenStruct.new
+          result.cfi = cfi.cfi
+          result.snippet = snippet
+          matches << result
+
           offset = cfi.pos1 + 1
         end
         matches
@@ -77,10 +74,19 @@ module EPub
             matches << find_targets(node, query)
           end
 
-          matches.flatten.compact.each do |match|
+          matches = matches.flatten.compact
+
+          matches.each_index do |index|
+            match = matches[index]
+
+            # De-duplicate identical snippets with slightly different CFIs that are neighbors.
+            # Since we need the CFIs in the reader for syntax highlighting, still send those,
+            # just not snippets
+            empty_snippet = "" if match.snippet == matches[index - 1].snippet && matches.length > 1
+
             results[:search_results].push(cfi: "#{chapter[:basecfi]}#{match.cfi}",
                                           title: chapter[:title],
-                                          snippet: match.snippet)
+                                          snippet: empty_snippet || match.snippet)
           end
         end
         results
