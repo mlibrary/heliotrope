@@ -2,6 +2,8 @@
 Code: [![Build Status](https://travis-ci.org/mlibrary/heliotrope.svg?branch=master)](https://travis-ci.org/mlibrary/heliotrope)
 [![Coverage Status](https://coveralls.io/repos/github/mlibrary/heliotrope/badge.svg?branch=master)](https://coveralls.io/github/mlibrary/heliotrope?branch=master)
 
+Jump In: [Issue Tracker](https://tools.lib.umich.edu/jira/projects/HELIO/issues)
+
 # Table of Contents
 * [What is Fulcrum? What is Heliotrope?](#what-is-fulcrum-what-is-heliotrope)
   * [Feature List](#feature-list)
@@ -183,6 +185,8 @@ Heliotrope is available under the [Apache 2.0 license](LICENSE.md).
 
 # Contributing
 We'd love to accept your contributions and there are lots of ways to engage with the Fulcrum project and Heliotrope codebase even if you aren't a developer. Please see our [contributing guidelines](https://github.com/mlibrary/heliotrope/wiki/How-to-Contribute) for how you can get involved.
+
+Please note: As of May 14 2018, we have migrated our issues to a [JIRA project](https://tools.lib.umich.edu/jira/projects/HELIO/issues) and are no longer creating new issues in GitHub. All GitHub issues that were open at the time of migration will be updated with relevant links to the corresponding JIRA issue. If you find bugs or would like to open an issue, you can still use GitHub for that to open the conversation with Fulcrum developers.
 
 # Acknowledgements
 Initial development has been supported by a generous grant from the [Andrew W. Mellon Foundation](https://mellon.org/) and implemented by the University of Michigan Library and Press working with partners from Indiana, Minnesota, Northwestern, and Penn State universities and [Data Curation Experts](https://curationexperts.com/).
