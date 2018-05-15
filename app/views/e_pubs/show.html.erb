@@ -404,9 +404,6 @@ webgl = if Dir.exist?(UnpackService.root_path_from_noid(webgl_id, 'webgl'))
         }).addTo(reader);
         <% end %>
 
-        // Bib info widget
-        cozy.control.bibliographicInformation({ region: 'top.toolbar.left' }).addTo(reader)
-
         // Share widget
         cozy.control.widget.button({
           region: 'top.toolbar.left',
