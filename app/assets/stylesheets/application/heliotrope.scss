@@ -618,6 +618,76 @@ footer.press {
 ///////////////////////////////////
 #epub {
   font-size: 16px;
+
+  // Custom Loading Animation
+  .fulcrum-loading {
+    margin: 0 auto;
+    width: 100px;
+    height: 25px;
+    font-size: 10px;
+  }
+
+  .fulcrum-loading > .rect {
+    height: 100%;
+    width: 76%;
+    display: block;
+    margin-bottom: 0;
+    -webkit-animation: stretchdelay 1.6s infinite ease-in-out;
+    animation: stretchdelay 1.6s infinite ease-in-out;
+  }
+
+  .fulcrum-loading > .circle {
+    height: 100%;
+    width: 30%;
+    border-radius: 50%;
+    display: block;
+    margin-bottom: 0;
+    -webkit-animation: stretchdelay 1.6s infinite ease-in-out;
+    animation: stretchdelay 1.6s infinite ease-in-out;
+
+  }
+
+  .fulcrum-loading .circ1 {
+    -webkit-animation-delay: -1.4s;
+    animation-delay: -1.4s;
+    margin-left: 42%;
+  }
+  .fulcrum-loading .rect2 {
+    -webkit-animation-delay: -1.2s;
+    animation-delay: -1.2s;
+  }
+  .fulcrum-loading .circ2 {
+    -webkit-animation-delay: -1s;
+    animation-delay: -1s;
+    margin-left: 4%;
+  }
+
+  @-webkit-keyframes stretchdelay {
+    0%, 40%, 100% {
+      -webkit-transform: scaleX(0.8);
+      background-color: #002C63;
+      box-shadow: 0 0 0 rgba(10, 10, 10, 0.1);
+    }
+    20% {
+      -webkit-transform: scaleX(1);
+      background-color: #00AFEC;
+      box-shadow: 0 5px 6px rgba(10, 10, 10, 0.4);
+    }
+  }
+  @keyframes stretchdelay {
+    0%, 40%, 100% {
+      background-color: #002C63;
+      transform: scaleX(0.8);
+      -webkit-transform: scaleX(0.8);
+      box-shadow: 0 0 0 rgba(10, 10, 10, 0.1);
+    }
+    20% {
+      background-color: #00AFEC;
+      transform: scaleY(1);
+      -webkit-transform: scaleX(1);
+      box-shadow: 0 5px 6px rgba(10, 10, 10, 0.4);
+    }
+  }
 }
 
 .cozy-container i[class^='icon-'] {
