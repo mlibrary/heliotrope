@@ -9,8 +9,7 @@ RSpec.describe Manifest, type: :model do
   # NOTE: #create is dependent on Carrierwave and was not tested.
 
   before do
-    # Don't print status messages during specs
-    allow($stdout).to receive(:puts)
+    allow($stdout).to receive(:puts) # Don't print status messages during specs
   end
 
   it 'no csv file' do

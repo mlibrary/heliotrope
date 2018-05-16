@@ -11,10 +11,10 @@ class MonographManifestsController < ApplicationController
   def import
     @monograph_manifest = MonographManifest.new(params[:id])
     if @monograph_manifest.explicit.persisted?
-      notice = "TODO: Import"
-      Manifest.new(params[:id]).destroy(current_user)
+      notice = t('monograph_manifests.notice.perform_job')
+      UpdateMonographJob.perform_now(params[:id])
     else
-      notice = t('monograph_manifests.import.no_manifest')
+      notice = t('monograph_manifests.notice.no_manifest')
     end
     redirect_to main_app.monograph_manifests_path, notice: notice
   end
@@ -24,7 +24,7 @@ class MonographManifestsController < ApplicationController
     if @monograph_manifest.explicit.persisted?
       @presenter = MonographManifestPresenter.new(current_user, @monograph_manifest)
     else
-      notice = t('monograph_manifests.import.no_manifest')
+      notice = t('monograph_manifests.notice.no_manifest')
       redirect_to main_app.monograph_manifests_path, notice: notice
     end
   end
