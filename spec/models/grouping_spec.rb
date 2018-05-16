@@ -3,15 +3,17 @@
 require 'rails_helper'
 
 RSpec.describe Grouping, type: :model do
-  subject { grouping }
-
   let(:identifier) { 'identifier' }
   let(:lessee) { Lessee.find_by(identifier: identifier) }
 
   context 'build' do
-    let(:grouping) { build(:grouping, identifier: identifier) }
+    subject { build(:grouping, identifier: identifier) }
 
-    it { is_expected.to be_valid }
+    it do
+      is_expected.to be_valid
+      expect(subject.update?).to be false
+      expect(subject.destroy?).to be true
+    end
 
     describe '#lessee?' do
       it { expect(subject.lessee?).to be false }
@@ -25,7 +27,7 @@ RSpec.describe Grouping, type: :model do
     end
 
     context 'saved' do
-      before { grouping.save }
+      before { subject.save }
 
       it { is_expected.to be_valid }
 
@@ -41,7 +43,7 @@ RSpec.describe Grouping, type: :model do
       end
 
       context 'destroy' do
-        before { grouping.destroy }
+        before { subject.destroy }
 
         it { expect(lessee).to be nil }
       end
@@ -49,9 +51,13 @@ RSpec.describe Grouping, type: :model do
   end
 
   context 'create' do
-    let(:grouping) { create(:grouping, identifier: identifier) }
+    subject { create(:grouping, identifier: identifier) }
 
-    it { is_expected.to be_valid }
+    it do
+      is_expected.to be_valid
+      expect(subject.update?).to be false
+      expect(subject.destroy?).to be true
+    end
 
     describe '#lessee?' do
       it { expect(subject.lessee?).to be true }
@@ -65,7 +71,7 @@ RSpec.describe Grouping, type: :model do
     end
 
     context 'destroy' do
-      before { grouping.destroy }
+      before { subject.destroy }
 
       it { expect(lessee).to be nil }
     end
@@ -77,21 +83,21 @@ RSpec.describe Grouping, type: :model do
       expected_lessees = []
 
       lessees.each_with_index do |lessee, index|
-        expect(grouping.lessees.count).to eq(index)
-        expect(grouping.not_lessees.count).to eq(n - index)
-        expect(grouping.lessees).to eq(expected_lessees)
+        expect(subject.lessees.count).to eq(index)
+        expect(subject.not_lessees.count).to eq(n - index)
+        expect(subject.lessees).to eq(expected_lessees)
         expected_lessees << lessee
-        grouping.lessees << lessee
-        grouping.save!
+        subject.lessees << lessee
+        subject.save!
       end
 
       lessees.each_with_index do |lessee, index|
-        expect(grouping.lessees.count).to eq(n - index)
-        expect(grouping.not_lessees.count).to eq(index)
-        expect(grouping.lessees).to eq(expected_lessees)
+        expect(subject.lessees.count).to eq(n - index)
+        expect(subject.not_lessees.count).to eq(index)
+        expect(subject.lessees).to eq(expected_lessees)
         expected_lessees.delete(lessee)
-        grouping.lessees.delete(lessee)
-        grouping.save!
+        subject.lessees.delete(lessee)
+        subject.save!
       end
     end
 
@@ -106,22 +112,22 @@ RSpec.describe Grouping, type: :model do
       expected_lessees = []
 
       grouping_lessees.each_with_index do |grouping_lessee, index|
-        expect(grouping.lessees.count).to eq(index)
-        expect(grouping.not_lessees.count).to eq(n - index)
-        expect(grouping.lessees).to eq(expected_lessees)
+        expect(subject.lessees.count).to eq(index)
+        expect(subject.not_lessees.count).to eq(n - index)
+        expect(subject.lessees).to eq(expected_lessees)
         expected_lessees << lessees[index]
-        grouping.lessees << lessees[index]
-        grouping.lessees << grouping_lessee
-        grouping.save!
+        subject.lessees << lessees[index]
+        subject.lessees << grouping_lessee
+        subject.save!
       end
 
       lessees.each_with_index do |lessee, index|
-        expect(grouping.lessees.count).to eq(n - index)
-        expect(grouping.not_lessees.count).to eq(index)
-        expect(grouping.lessees).to eq(expected_lessees)
+        expect(subject.lessees.count).to eq(n - index)
+        expect(subject.not_lessees.count).to eq(index)
+        expect(subject.lessees).to eq(expected_lessees)
         expected_lessees.delete(lessee)
-        grouping.lessees.delete(lessee)
-        grouping.save!
+        subject.lessees.delete(lessee)
+        subject.save!
       end
     end
   end

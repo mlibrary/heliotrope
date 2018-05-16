@@ -17,8 +17,8 @@ describe RepositoryPresenter do
   describe '#product_ids' do
     subject { described_class.new(current_user).product_ids }
 
-    let!(:product1) { create(:product) }
-    let!(:product2) { create(:product) }
+    let!(:product1) { create(:product, identifier: 'product1') }
+    let!(:product2) { create(:product, identifier: 'product2') }
 
     it do
       expect(subject).to be_a Array
@@ -30,8 +30,8 @@ describe RepositoryPresenter do
   describe '#component_ids' do
     subject { described_class.new(current_user).component_ids }
 
-    let!(:component1) { create(:component) }
-    let!(:component2) { create(:component) }
+    let!(:component1) { create(:component, handle: 'component1') }
+    let!(:component2) { create(:component, handle: 'component2') }
 
     it do
       expect(subject).to be_a Array
@@ -43,8 +43,8 @@ describe RepositoryPresenter do
   describe '#lessee_ids' do
     subject { described_class.new(current_user).lessee_ids }
 
-    let!(:lessee1) { create(:lessee) }
-    let!(:lessee2) { create(:lessee) }
+    let!(:lessee1) { create(:lessee, identifier: 'lessee1') }
+    let!(:lessee2) { create(:lessee, identifier: 'lessee2') }
 
     it do
       expect(subject).to be_a Array
@@ -56,8 +56,8 @@ describe RepositoryPresenter do
   describe '#institution_ids' do
     subject { described_class.new(current_user).institution_ids }
 
-    let!(:institution1) { create(:institution) }
-    let!(:institution2) { create(:institution) }
+    let!(:institution1) { create(:institution, identifier: 'institution1') }
+    let!(:institution2) { create(:institution, identifier: 'institution2') }
 
     it do
       expect(subject).to be_a Array

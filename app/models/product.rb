@@ -6,19 +6,26 @@ class Product < ApplicationRecord
   has_many :lessees_products
   has_many :lessees, through: :lessees_products
 
-  validates :identifier, presence: true, allow_blank: false
-  validates :purchase, presence: true, allow_blank: false
+  validates :identifier, presence: true, allow_blank: false, uniqueness: true
+  # validates :purchase, presence: true, allow_blank: false
 
   before_destroy do
     if components.present?
       errors.add(:base, "product has #{components.count} associated components!")
       throw(:abort)
     end
-
     if lessees.present?
       errors.add(:base, "product has #{lessees.count} associated lessees!")
       throw(:abort)
     end
+  end
+
+  def update?
+    true
+  end
+
+  def destroy?
+    !(components.present? || lessees.present?)
   end
 
   def not_components

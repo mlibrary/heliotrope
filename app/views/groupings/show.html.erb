@@ -13,7 +13,7 @@
     </div>
     <div class="col-md-12"><br/></div>
     <div class="col-md-12">
-      <%= link_to 'Edit', edit_grouping_path(@grouping) %>
+      <%= link_to_if @grouping.update?, 'Edit', edit_grouping_path(@grouping) %>
       <span> | </span>
       <%= link_to 'Back', groupings_path %>
     </div>

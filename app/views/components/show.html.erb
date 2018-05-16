@@ -14,7 +14,7 @@
     </div>
     <div class="col-md-12"><br/></div>
     <div class="col-md-12">
-      <%= link_to 'Edit', edit_component_path(@component) %>
+      <%= link_to_if @component.update?, 'Edit', edit_component_path(@component) %>
       <span> | </span>
       <%= link_to 'Back', components_path %>
     </div>

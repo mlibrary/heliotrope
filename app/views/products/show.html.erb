@@ -16,7 +16,7 @@
     </div>
     <div class="col-md-12"><br/></div>
     <div class="col-md-12">
-      <%= link_to 'Edit', edit_product_path(@product) %>
+      <%= link_to_if @product.update?, 'Edit', edit_product_path(@product) %>
       <span> | </span>
       <%= link_to 'Back', products_path %>
     </div>

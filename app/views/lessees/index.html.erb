@@ -16,8 +16,8 @@
         <% end %>
         <div class="col-md-6">
           <div class="col-md-4"><%= link_to 'Show', lessee %></div>
-          <div class="col-md-4"><%= link_to 'Edit', edit_lessee_path(lessee) %></div>
-          <div class="col-md-4"><%= link_to 'Destroy', lessee, method: :delete, data: { confirm: 'Are you sure?' } %></div>
+          <div class="col-md-4"><%= link_to_if lessee.update?, 'Edit', edit_lessee_path(lessee) %></div>
+          <div class="col-md-4"><%= link_to_if lessee.destroy?, 'Destroy', lessee, method: :delete, data: { confirm: 'Are you sure?' } %></div>
         </div>
       <% end %>
     </div>

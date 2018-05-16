@@ -8,10 +8,10 @@ RSpec.describe "lessees/index", type: :view do
       :lessees,
       [
         Lessee.create!(
-          identifier: "Identifier"
+          identifier: "Identifier1"
         ),
         Lessee.create!(
-          identifier: "Identifier"
+          identifier: "Identifier2"
         )
       ]
     )
@@ -19,6 +19,7 @@ RSpec.describe "lessees/index", type: :view do
 
   it "renders a list of lessees" do
     render
-    assert_select "div", text: "Identifier".to_s, count: 2
+    assert_select "div", text: "Identifier1".to_s, count: 1
+    assert_select "div", text: "Identifier2".to_s, count: 1
   end
 end

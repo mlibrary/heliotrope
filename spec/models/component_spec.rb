@@ -3,55 +3,68 @@
 require 'rails_helper'
 
 RSpec.describe Component, type: :model do
-  subject { component }
+  subject { described_class.new(handle: "handle") }
 
-  let(:component) { described_class.new(handle: "handle") }
   let(:handle) { double('handle') }
 
-  it { is_expected.to be_valid }
+  it do
+    is_expected.to be_valid
+    expect(subject.update?).to be true
+    expect(subject.destroy?).to be true
+  end
 
   it 'products, not_products, and lessees' do
     n = 3
     products = []
-    n.times { products << create(:product) }
+    n.times { |i| products << create(:product, identifier: "product#{i}") }
     lessees = []
-    n.times { lessees << create(:lessee) }
+    n.times { |i| lessees << create(:lessee, identifier: "lessee#{i}") }
     expected_lessees = []
 
+    expect(subject.update?).to be true
+    expect(subject.destroy?).to be true
+
     products.each_with_index do |product, index|
-      expect(component.products.count).to eq(index)
-      expect(component.not_products.count).to eq(n - index)
-      expect(component.lessees).to eq(expected_lessees)
+      expect(subject.products.count).to eq(index)
+      expect(subject.not_products.count).to eq(n - index)
+      expect(subject.lessees).to eq(expected_lessees)
       expected_lessees << lessees[index]
       product.lessees << lessees[index]
       product.save!
-      component.products << product
-      component.save!
+      subject.products << product
+      subject.save!
+      expect(subject.update?).to be true
+      expect(subject.destroy?).to be false
     end
 
     products.each_with_index do |product, index|
-      expect(component.products.count).to eq(n - index)
-      expect(component.not_products.count).to eq(index)
-      expect(component.lessees).to eq(expected_lessees)
+      expect(subject.update?).to be true
+      expect(subject.destroy?).to be false
+      expect(subject.products.count).to eq(n - index)
+      expect(subject.not_products.count).to eq(index)
+      expect(subject.lessees).to eq(expected_lessees)
       expected_lessees.delete(lessees[index])
-      component.products.delete(product)
-      component.save!
+      subject.products.delete(product)
+      subject.save!
     end
+
+    expect(subject.update?).to be true
+    expect(subject.destroy?).to be true
   end
 
   it 'lessees recursive' do
     n = 3
     product = create(:product)
-    n.times { product.lessees << create(:lessee) }
+    n.times { |i| product.lessees << create(:lessee, identifier: "product_lessee#{i}") }
     grouping = create(:grouping, identifier: 'grouping')
-    n.times { grouping.lessees << create(:lessee) }
+    n.times { |i| grouping.lessees << create(:lessee, identifier: "grouping_lessee#{i}") }
     product.lessees << grouping.lessee
     product.save!
-    component.products << product
-    component.save!
+    subject.products << product
+    subject.save!
     expected_lessees = []
     product.lessees.each { |l| expected_lessees << l }
     grouping.lessees.each { |l| expected_lessees << l }
-    expect(component.lessees(true)).to eq(expected_lessees)
+    expect(subject.lessees(true)).to eq(expected_lessees)
   end
 end

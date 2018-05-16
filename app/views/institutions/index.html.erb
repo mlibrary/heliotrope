@@ -8,8 +8,8 @@
         <div class="col-md-5"><%= institution.name %></div>
         <div class="col-md-6">
           <div class="col-md-4"><%= link_to 'Show', institution %></div>
-          <div class="col-md-4"><%= link_to 'Edit', edit_institution_path(institution) %></div>
-          <div class="col-md-4"><%= link_to 'Destroy', institution, method: :delete, data: { confirm: 'Are you sure?' } %></div>
+          <div class="col-md-4"><%= link_to_if institution.update?, 'Edit', edit_institution_path(institution) %></div>
+          <div class="col-md-4"><%= link_to_if institution.destroy?, 'Destroy', institution, method: :delete, data: { confirm: 'Are you sure?' } %></div>
         </div>
       <% end %>
     </div>

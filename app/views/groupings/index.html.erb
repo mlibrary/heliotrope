@@ -8,8 +8,8 @@
         <div class="col-md-5"><%= grouping.identifier %></div>
         <div class="col-md-6">
           <div class="col-md-4"><%= link_to 'Show', grouping %></div>
-          <div class="col-md-4"><%= link_to 'Edit', edit_grouping_path(grouping) %></div>
-          <div class="col-md-4"><%= link_to 'Destroy', grouping, method: :delete, data: { confirm: 'Are you sure?' } %></div>
+          <div class="col-md-4"><%= link_to_if grouping.update?, 'Edit', edit_grouping_path(grouping) %></div>
+          <div class="col-md-4"><%= link_to_if grouping.destroy?, 'Destroy', grouping, method: :delete, data: { confirm: 'Are you sure?' } %></div>
         </div>
       <% end %>
     </div>

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180427235551) do
+ActiveRecord::Schema.define(version: 20180515144732) do
 
   create_table "bookmarks", id: :integer, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.integer "user_id", null: false
@@ -40,6 +40,7 @@ ActiveRecord::Schema.define(version: 20180427235551) do
     t.string "handle"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["handle"], name: "index_components_on_handle", unique: true
   end
 
   create_table "components_products", id: false, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
@@ -122,6 +123,7 @@ ActiveRecord::Schema.define(version: 20180427235551) do
     t.string "identifier"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["identifier"], name: "index_groupings_on_identifier", unique: true
   end
 
   create_table "groupings_lessees", id: false, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
@@ -140,13 +142,13 @@ ActiveRecord::Schema.define(version: 20180427235551) do
   end
 
   create_table "institutions", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
-    t.string "key"
     t.string "name"
     t.string "site"
     t.string "login"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "identifier"
+    t.index ["identifier"], name: "index_institutions_on_identifier", unique: true
   end
 
   create_table "job_io_wrappers", id: :integer, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
@@ -167,6 +169,7 @@ ActiveRecord::Schema.define(version: 20180427235551) do
     t.string "identifier"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["identifier"], name: "index_lessees_on_identifier", unique: true
   end
 
   create_table "lessees_products", id: false, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
@@ -282,6 +285,7 @@ ActiveRecord::Schema.define(version: 20180427235551) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "purchase"
+    t.index ["identifier"], name: "index_products_on_identifier", unique: true
   end
 
   create_table "proxy_deposit_requests", id: :integer, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|

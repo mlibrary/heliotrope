@@ -3,51 +3,74 @@
 require 'rails_helper'
 
 RSpec.describe Product, type: :model do
-  subject { product }
+  subject { described_class.new(identifier: identifier, purchase: purchase) }
 
-  let(:product) { described_class.new(identifier: identifier, purchase: purchase) }
   let(:identifier) { double('identifier') }
   let(:purchase) { double('purchase') }
 
-  it { is_expected.to be_valid }
+  it do
+    is_expected.to be_valid
+    expect(subject.update?).to be true
+    expect(subject.destroy?).to be true
+  end
 
   it 'components and not_components' do
     n = 3
     components = []
-    n.times { components << create(:component) }
+    n.times { |i| components << create(:component, handle: "component#{i}") }
+
+    expect(subject.update?).to be true
+    expect(subject.destroy?).to be true
 
     components.each_with_index do |component, index|
-      expect(product.components.count).to eq(index)
-      expect(product.not_components.count).to eq(n - index)
-      product.components << component
-      product.save!
+      expect(subject.components.count).to eq(index)
+      expect(subject.not_components.count).to eq(n - index)
+      subject.components << component
+      subject.save!
+      expect(subject.update?).to be true
+      expect(subject.destroy?).to be false
     end
 
     components.each_with_index do |component, index|
-      expect(product.components.count).to eq(n - index)
-      expect(product.not_components.count).to eq(index)
-      product.components.delete(component)
-      product.save!
+      expect(subject.update?).to be true
+      expect(subject.destroy?).to be false
+      expect(subject.components.count).to eq(n - index)
+      expect(subject.not_components.count).to eq(index)
+      subject.components.delete(component)
+      subject.save!
     end
+
+    expect(subject.update?).to be true
+    expect(subject.destroy?).to be true
   end
 
   it 'lessees and not_lessees' do
     n = 3
     lessees = []
-    n.times { lessees << create(:lessee) }
+    n.times { |i| lessees << create(:lessee, identifier: "lessee#{i}") }
+
+    expect(subject.update?).to be true
+    expect(subject.destroy?).to be true
 
     lessees.each_with_index do |lessee, index|
-      expect(product.lessees.count).to eq(index)
-      expect(product.not_lessees.count).to eq(n - index)
-      product.lessees << lessee
-      product.save!
+      expect(subject.lessees.count).to eq(index)
+      expect(subject.not_lessees.count).to eq(n - index)
+      subject.lessees << lessee
+      subject.save!
+      expect(subject.update?).to be true
+      expect(subject.destroy?).to be false
     end
 
     lessees.each_with_index do |lessee, index|
-      expect(product.lessees.count).to eq(n - index)
-      expect(product.not_lessees.count).to eq(index)
-      product.lessees.delete(lessee)
-      product.save!
+      expect(subject.update?).to be true
+      expect(subject.destroy?).to be false
+      expect(subject.lessees.count).to eq(n - index)
+      expect(subject.not_lessees.count).to eq(index)
+      subject.lessees.delete(lessee)
+      subject.save!
     end
+
+    expect(subject.update?).to be true
+    expect(subject.destroy?).to be true
   end
 end
