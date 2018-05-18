@@ -162,6 +162,19 @@ footer.press {
   width: auto;
 }
 ///////////////////////////////////
+// MONOGRAPH FORM
+///////////////////////////////////
+
+.simple_form.edit_monograph, .simple_form.new_monograph {
+  a, a:hover, a:active, a:visited, a:focus {
+    text-decoration:none;
+  }
+  .control-label.required {
+    color: #d33a35; // match 'incomplete' color, i.e. Hyrax $brand-danger Bootstrap override
+  }
+}
+
+///////////////////////////////////
 // MONOGRAPH PAGE
 ///////////////////////////////////
 .monograph {
@@ -190,7 +203,7 @@ footer.press {
     padding-bottom: 2em;
 
     #manage-monograph-button {
-      margin-top: 2em;
+      margin-top: 1em;
     }
 
     .monograph-metadata {
