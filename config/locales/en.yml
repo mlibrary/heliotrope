@@ -148,6 +148,9 @@ en:
         q:
           label: "Search within %{monograph_name}"
   monograph_manifests:
+    notice:
+      perform_job: "Performing monograph update job."
+      no_manifest: "No Explicit Manifest"
     preview:
       cancel: "Cancel"
       h1: "Preview Monograph Manifest"
