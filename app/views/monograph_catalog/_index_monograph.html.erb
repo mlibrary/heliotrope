@@ -8,7 +8,10 @@
          alt="<%= @monograph_presenter.representative_alt_text %>">
     <% if can? :edit, @monograph_presenter %>
       <form action="<%= main_app.monograph_show_path(@monograph_presenter.id) %>">
-        <button type="submit" class="btn btn-primary" id="manage-monograph-button"><%= t('monograph_catalog.index.can_edit') %></button>
+        <button type="submit" class="btn btn-primary" id="manage-monograph-button"><%= t('monograph_catalog.index.show_page_button') %></button>
+      </form>
+      <form action="<%= main_app.edit_hyrax_monograph_path(@monograph_presenter.id) %>">
+        <button type="submit" class="btn btn-primary" id="manage-monograph-button"><%= t('monograph_catalog.index.edit_page_button') %></button>
       </form>
     <% end %>
   </div><!-- /.monograph-cover -->

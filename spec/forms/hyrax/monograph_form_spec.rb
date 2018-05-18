@@ -15,13 +15,10 @@ describe Hyrax::MonographForm do
     it { is_expected.to eq %i[title
                               contributor
                               description
-                              license
-                              rights_statement
                               publisher
                               date_created
                               subject
                               language
-                              based_near
                               representative_id
                               thumbnail_id
                               files
@@ -38,7 +35,7 @@ describe Hyrax::MonographForm do
                               admin_set_id
                               press
                               creator_display
-                              date_published
+                              date_created
                               isbn
                               isbn_paper
                               isbn_ebook

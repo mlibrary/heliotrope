@@ -105,7 +105,8 @@ RSpec.describe "monograph_catalog/index.html.erb", type: :view do
           debug_puts subject.to_s
           is_expected.not_to be_empty
           is_expected.not_to match(/<span.*?class=\"Z3988\".*?title=\".*?".*?>.*?<\/span>/m)
-          is_expected.not_to match t('.can_edit')
+          is_expected.not_to match t('.show_page_button')
+          is_expected.not_to match t('.edit_page_button')
           is_expected.not_to match authors
           is_expected.not_to match t('.edited_by')
           is_expected.not_to match(/<div.*?class=\"isbn\".*?>.*?<\/div>/m)
@@ -136,7 +137,8 @@ RSpec.describe "monograph_catalog/index.html.erb", type: :view do
         end
         it do
           debug_puts subject.to_s
-          is_expected.to match t('.can_edit')
+          is_expected.to match t('.show_page_button')
+          is_expected.to match t('.edit_page_button')
         end
       end
 
