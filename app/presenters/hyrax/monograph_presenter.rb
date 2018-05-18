@@ -13,7 +13,7 @@ module Hyrax
     attr_accessor :pageviews
 
     delegate :date_created, :date_modified, :date_uploaded, :location,
-             :description, :creator_display, :editor, :contributor, :subject,
+             :description, :creator_display, :editor, :contributor, :subject, :section_titles,
              :based_near, :publisher, :date_published, :language, :isbn, :isbn_paper,
              :isbn_ebook, :copyright_holder, :buy_url, :embargo_release_date,
              :lease_expiration_date, :rights, :creator_full_name,

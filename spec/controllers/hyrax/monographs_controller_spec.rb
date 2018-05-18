@@ -42,12 +42,12 @@ describe Hyrax::MonographsController do
 
       describe "#create" do
         it 'is successful' do
-          post :create, params: { monograph: { title: ['Title one'],
+          post :create, params: { monograph: { title: 'Title one',
                                                press: press.subdomain,
-                                               date_published: ['Oct 20th'] } }
+                                               date_created: '2001' } }
 
           expect(assigns[:curation_concern].title).to eq ['Title one']
-          expect(assigns[:curation_concern].date_published).to eq ['Oct 20th']
+          expect(assigns[:curation_concern].date_created).to eq ['2001']
           expect(assigns[:curation_concern].press).to eq press.subdomain
           expect(response).to redirect_to Rails.application.routes.url_helpers.hyrax_monograph_path(assigns[:curation_concern], locale: I18n.locale)
         end
@@ -81,7 +81,7 @@ describe Hyrax::MonographsController do
 
           it 'is successful' do
             expect {
-              post :create, params: { monograph: { title: ['Title one'],
+              post :create, params: { monograph: { title: 'Title one',
                                                    press: press.subdomain } }
             }.to change { Monograph.count }.by(1)
 

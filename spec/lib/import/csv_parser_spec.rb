@@ -2,6 +2,7 @@
 
 require 'rails_helper'
 require 'import/csv_parser'
+require 'metadata_fields' unless defined?(MONO_FILENAME_FLAG) # solves loading issue when this spec is run solo
 
 describe Import::CSVParser do
   let(:input_file) { File.join(fixture_path, 'csv', 'import_sections', 'tempest_sections.csv') }
@@ -23,7 +24,7 @@ describe Import::CSVParser do
 
     # order of asset metadata here is as in lib/import.rb
     it 'collects attributes from the CSV file' do
-      expect(subject['title']).to eq ['The Tempest', 'A Subtitle']
+      expect(subject['title']).to eq ['The Tempest: A Subtitle']
       expect(subject['creator_family_name']).to eq 'Shakespeare'
       expect(subject['creator_given_name']).to eq 'William'
       expect(subject['contributor']).to eq ['Christopher Marlowe', 'Sir Francis Bacon']
