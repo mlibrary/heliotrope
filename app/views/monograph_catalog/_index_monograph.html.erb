@@ -7,9 +7,8 @@
     <img class="img-responsive" src="/image-service/<%= @monograph_presenter.representative_id %>/full/225,/0/default.jpg"
          alt="<%= @monograph_presenter.representative_alt_text %>">
     <% if can? :edit, @monograph_presenter %>
-      <form action="<%= main_app.monograph_show_path(@monograph_presenter.id) %>">
-        <button type="submit" class="btn btn-primary" id="manage-monograph-button"><%= t('monograph_catalog.index.can_edit') %></button>
-      </form>
+      <a class="btn btn-default manage-monograph-button" href="<%= main_app.monograph_show_path(@monograph_presenter.id) %>" title="<%= t('monograph_catalog.index.show_page_button') %>" data-turbolinks="false"><%= t('monograph_catalog.index.show_page_button') %></a>
+      <a class="btn btn-default manage-monograph-button" href="<%= main_app.edit_hyrax_monograph_path(@monograph_presenter.id) %>" title="<%= t('monograph_catalog.index.edit_page_button') %>" data-turbolinks="false"><%= t('monograph_catalog.index.edit_page_button') %></a>
     <% end %>
   </div><!-- /.monograph-cover -->
   <div class="col-sm-9 monograph-metadata">

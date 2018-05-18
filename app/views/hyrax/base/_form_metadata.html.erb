@@ -1,0 +1,114 @@
+<p><%= t('simple_form.labels.monograph.required_message') %></p>
+<%= link_to '#basic-metadata',
+            data: { toggle: 'collapse' },
+            role: "button",
+            'aria-expanded'=> "false",
+            'aria-controls'=> "basic-metadata"  do %>
+  <legend>
+    <%= t('simple_form.labels.monograph.basic_metadata.legend_html') %>
+  </legend>
+<% end %>
+<div id="basic-metadata" class='collapse'>
+  <p><%= t('simple_form.labels.monograph.basic_metadata.help_html') %></p>
+  <%= f.input :title %>
+  <%= f.input :press, collection: @form.select_press, input_html: { class: 'required' } %>
+  <%= f.input :description,  as: :text, input_html: { rows: '5' } %>
+  <%= f.input :subject, as: :multi_value %>
+  <%= f.input :language, as: :multi_value %>
+  <%= f.input :section_titles,  as: :text, input_html: { rows: '5' } %>
+  <%= f.input :buy_url, as: :multi_value %>
+</div>
+
+
+<%= link_to '#authorship-metadata',
+            data: { toggle: 'collapse' },
+            role: "button",
+            'aria-expanded'=> "false",
+            'aria-controls'=> "authorship-metadata"  do %>
+  <legend>
+    <%= t('simple_form.labels.monograph.authorship_metadata.legend_html') %>
+  </legend>
+<% end %>
+<div id="authorship-metadata" class='collapse'>
+  <p><%= t('simple_form.labels.monograph.authorship_metadata.help_html') %></p>
+  <%= f.input :creator_family_name, label: t('author_last_name') %>
+  <%= f.input :creator_given_name, label: t('author_first_name') %>
+  <%= f.input :creator_display, as: :text, input_html: { class: 'form-control' }, label: t('creator_display') %>
+  <%= f.input :contributor, as: :multi_value, label: t('additional_authors') %>
+  <%= f.input :primary_editor_family_name,  label: t('primary_editor_family_name') %>
+  <%= f.input :primary_editor_given_name,   label: t('primary_editor_given_name') %>
+  <%= f.input :editor, as: :multi_value, label: t('editor') %>
+</div>
+
+
+<%= link_to '#citation-metadata',
+              data: { toggle: 'collapse' },
+              role: "button",
+              'aria-expanded'=> "false",
+              'aria-controls'=> "citation-metadata"  do %>
+  <legend>
+    <%= t("simple_form.labels.monograph.citation_metadata.legend_html") %>
+  </legend>
+<% end %>
+<div id="citation-metadata" class='collapse'>
+  <p><%= t('simple_form.labels.monograph.citation_metadata.help_html') %></p>
+  <%= f.input :publisher %>
+  <%= f.input :date_created,
+              input_html: {class: 'form-control required'},
+              required: f.object.required?(:date_created) %>
+  <%= f.input :location, required: f.object.required?(:location) %>
+</div>
+
+
+<%= link_to '#isbn-metadata',
+            data: { toggle: 'collapse' },
+            role: "button",
+            'aria-expanded'=> "false",
+            'aria-controls'=> "isbn-metadata"  do %>
+  <legend>
+    <%= t("simple_form.labels.monograph.isbn_metadata.legend_html") %>
+  </legend>
+<% end %>
+<div id="isbn-metadata" class='collapse'>
+  <p><%= t('simple_form.labels.monograph.isbn_metadata.help_html') %></p>
+  <%# # TODO: if these fields are sticking around then their cardinality should be "changed" %>
+  <%= f.input :isbn, as: :multi_value %>
+  <%= f.input :isbn_paper, as: :multi_value %>
+  <%= f.input :isbn_ebook, as: :multi_value %>
+</div>
+
+
+<%= link_to '#citable-links-metadata',
+            data: { toggle: 'collapse' },
+            role: "button",
+            'aria-expanded'=> "false",
+            'aria-controls'=> "citable-links-metadata"  do %>
+  <legend>
+    <%= t("simple_form.labels.monograph.citable_links_metadata.legend_html") %>
+  </legend>
+<% end %>
+<div id="citable-links-metadata" class='collapse'>
+  <p><%= t('simple_form.labels.monograph.citable_links_metadata.help_html') %></p>
+  <%= f.input :hdl %>
+  <%= f.input :doi %>
+</div>
+
+
+<%= link_to '#hyrax-representatives',
+            data: { toggle: 'collapse' },
+            role: "button",
+            'aria-expanded'=> "false",
+            'aria-controls'=> "hyrax-representatives"  do %>
+  <legend>
+    <%= t("simple_form.labels.monograph.hyrax_representatives.legend_html") %>
+  </legend>
+<% end %>
+<div id="hyrax-representatives" class='collapse'>
+  <strong><%= t('simple_form.labels.monograph.hyrax_representatives.media.legend_html') %></strong>
+  <p><%= t('simple_form.labels.monograph.hyrax_representatives.media.help_html') %></p>
+  <%= f.select :representative_id, @form.select_files, {}, class: 'form-control' %>
+
+  <stong><%= t('simple_form.labels.monograph.hyrax_representatives.thumbnail.legend_html') %></stong>
+  <p><%= t('simple_form.labels.monograph.hyrax_representatives.thumbnail.help_html') %></p>
+  <%= f.select :thumbnail_id, @form.select_files, {}, class: 'form-control' %>
+</div>

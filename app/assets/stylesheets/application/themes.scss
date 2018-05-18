@@ -90,7 +90,7 @@ $heb-black-80: #342f2e;
 
   // buttons
 
-  #manage-monograph-button {
+  .manage-monograph-button {
     color: $heb-white;
     background-color: $heb-brand-color;
     border-color: $heb-brand-color;
@@ -341,7 +341,7 @@ $iu-midnight: #006298;
     @include benton-regular;
   }
 
-  #manage-monograph-button {
+  .manage-monograph-button {
     color: $iu-accent-color;
     background-color: $iu-brand-color;
   }
@@ -570,7 +570,7 @@ $um-black-80: #342f2e;
     @include meta;
   }
 
-  #manage-monograph-button {
+  .manage-monograph-button {
     color: $um-accent-color;
     background-color: $um-brand-color;
   }
@@ -813,7 +813,7 @@ $gabii-link-hover:    #1e5667;
   .btn-default,
   .btn
 
-  #manage-monograph-button {
+  .manage-monograph-button {
     color: $gabii-white;
     background-color: $gabii-brand-color;
   }
@@ -1211,7 +1211,7 @@ $umn-white: #fff;
     @include brandon;
   }
 
-  #manage-monograph-button {
+  .manage-monograph-button {
     color: $umn-grey;
   }
 
@@ -1442,7 +1442,7 @@ $fulcrum-light-2: #bec4cc;
     @include freight-sans-book;
   }
 
-  #manage-monograph-button {
+  .manage-monograph-button {
     color: $nw-white;
   }
 
@@ -1667,13 +1667,13 @@ $nyu-gray-2: #342f2e;
     color: $nyu-brand-color;
   }
 
-  #manage-monograph-button {
+  .manage-monograph-button {
     color: $nyu-brand-accent;
     background-color: $nyu-brand-color;
   }
 
-  #manage-monograph-button:hover,
-  #manage-monograph-button:active {
+  .manage-monograph-button:hover,
+  .manage-monograph-button:active {
     background-color: $nyu-brand-color-2;
     color: $nyu-brand-color;
     border-color: $nyu-brand-color-2;
@@ -1954,13 +1954,13 @@ $psu-gray-1: #3F4550;
     color: $psu-white;
   }
 
-  #manage-monograph-button {
+  .manage-monograph-button {
     color: $psu-white;
     background-color: $psu-brand-color;
   }
 
-  #manage-monograph-button:hover,
-  #manage-monograph-button:active {
+  .manage-monograph-button:hover,
+  .manage-monograph-button:active {
     background-color: $psu-white;
     color: $psu-brand-color;
   }
