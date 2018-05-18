@@ -640,11 +640,20 @@ hr.brand {
 .sponsor p {
   line-height: 2rem; }
 
+ol.terms ul li {
+  list-style-type: lower-latin; }
+
 footer.page-footer {
   background-color: #002C63;
   padding-top: 2rem; }
   footer.page-footer .footer-copyright .container {
     color: #BEC4CC; }
+    footer.page-footer .footer-copyright .container a {
+      font-weight: 300;
+      color: #00AFEC; }
+    footer.page-footer .footer-copyright .container a:hover, footer.page-footer .footer-copyright .container a:focus, footer.page-footer .footer-copyright .container a:active {
+      color: #00AFEC;
+      border-color: #00AFEC; }
 
 .footer-menu {
   margin-top: 2.4rem; }

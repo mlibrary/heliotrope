@@ -183,12 +183,27 @@ hr.brand {
   line-height: 2rem;
 }
 
+// Terms
+ol.terms {
+  ul li {
+    list-style-type: lower-latin;
+  }
+}
+
 // footer
 footer.page-footer {
   background-color: $brand-color;
   padding-top: 2rem;
   .footer-copyright .container {
     color: $light-2;
+    a {
+      font-weight: 300;
+      color: $accent-color;
+    }
+    a:hover, a:focus, a:active {
+      color: $accent-color;
+      border-color: $accent-color;
+    }
   }
 }
 
@@ -232,6 +247,10 @@ footer.page-footer {
     color: $accent-color;
     border-color: $accent-color;
   }
+}
+
+.footer-copyright {
+
 }
 
 .parallax-container {
