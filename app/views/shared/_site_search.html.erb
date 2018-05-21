@@ -1,12 +1,15 @@
 <% if params['controller'] == 'monograph_catalog' %>
   <% catalog_url = main_app.monograph_catalog_path(params[:id]) %>
   <% search_label = t('monograph_catalog.search.form.q.label', monograph_name: @monograph_presenter.page_title) %>
+  <% placeholder = t('monograph_catalog.search.form.q.placeholder') %>
 <% elsif params['controller'] == 'hyrax/file_sets' && !@presenter.nil? && @presenter.monograph.present? %>
   <% catalog_url = main_app.monograph_catalog_path(@presenter.monograph_id) %>
   <% search_label = t('monograph_catalog.search.form.q.label', monograph_name: @presenter.monograph_presenter.page_title) %>
+  <% placeholder = t('monograph_catalog.search.form.q.placeholder') %>
 <% else %>
   <% catalog_url = main_app.search_catalog_path %>
   <% search_label = t('hyrax.search.form.q.label', application_name: application_name) %>
+  <% placeholder = t('hyrax.search.form.q.placeholder') %>
 <% end %>
 
 <%= form_tag catalog_url, method: :get, class: "search-form navbar-left navbar-form" do %>
@@ -15,7 +18,7 @@
     <div class="input-group">
       <%= label_tag :catalog_search, search_label, class: "sr-only" %>
       <%= text_field_tag(:q, params[:q], class: "q search-query form-control", id: "catalog_search",
-                         placeholder: t('hyrax.search.form.q.placeholder'), tabindex: "0", type: "search") %>
+                         placeholder: placeholder, tabindex: "0", type: "search") %>
       <div class="input-group-btn">
         <button type="submit" class="search-submit btn btn-primary" id="keyword-search-submit" tabindex="0">
           <i class="glyphicon glyphicon-search"></i><span class="sr-only">Search</span>
