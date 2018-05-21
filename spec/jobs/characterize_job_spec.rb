@@ -91,24 +91,53 @@ describe CharacterizeJob do
     end
   end
 
-  context "manifest csv file" do
-    let(:file_path) { Rails.root + 'tmp' + 'uploads' + 'ab' + 'c1' + '23' + '45' + 'abc12345' + 'manifest.csv' }
+  context "#maybe_set_featured_representative" do
+    let(:file_path) { Rails.root + 'tmp' + 'uploads' + 'ab' + 'c1' + '23' + '45' + 'abc12345' + heb_file_type }
     let(:file) do
       Hydra::PCDM::File.new.tap do |f|
         f.content = 'foo'
-        f.original_name = 'manifest.csv'
+        f.original_name = heb_file_type
         f.save!
       end
     end
+    let(:monograph) { build(:monograph, id: 'mono_id', press: 'heb') }
 
-    it "mime type is set to 'text/csv' or 'text/comma-separated-values'" do
+    before do
       allow(Hydra::Works::CharacterizationService).to receive(:run).with(file, filename)
       allow(file).to receive(:save!)
       allow(file_set).to receive(:update_index)
       allow(CreateDerivativesJob).to receive(:perform_later).with(file_set, file.id, filename)
-      described_class.perform_now(file_set, file.id)
+      allow(file_set).to receive(:parent).and_return(monograph)
+    end
 
-      expect(['text/csv', 'text/comma-separated-values'].include?(file_set.characterization_proxy.mime_type)).to be true
+    after { FeaturedRepresentative.destroy_all }
+
+    context "with heb press and an epub" do
+      let(:heb_file_type) { 'this_is.epub' }
+      it "sets the featured_representative" do
+        allow(UnpackJob).to receive(:perform_later).and_return(true)
+        expect { described_class.perform_now(file_set, file.id) }
+          .to change { FeaturedRepresentative.count }
+          .by(1)
+      end
+    end
+
+    context "with heb press and related.html" do
+      let(:heb_file_type) { 'related.html' }
+      it "sets the featured_representative" do
+        expect { described_class.perform_now(file_set, file.id) }
+          .to change { FeaturedRepresentative.count }
+          .by(1)
+      end
+    end
+
+    context "with heb press and reviews.html" do
+      let(:heb_file_type) { 'reviews.html' }
+      it "sets the featured_representative" do
+        expect { described_class.perform_now(file_set, file.id) }
+          .to change { FeaturedRepresentative.count }
+          .by(1)
+      end
     end
   end
 end
