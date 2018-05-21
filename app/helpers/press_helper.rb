@@ -75,6 +75,16 @@ module PressHelper
     end
   end
 
+  def restricted_message(subdomain)
+    press = Press.where(subdomain: subdomain)&.first
+    return if press.blank?
+    if press.restricted_message.blank?
+      parent_press(press)&.restricted_message
+    else
+      press.restricted_message
+    end
+  end
+
   private
 
     def parent_press(child_press)

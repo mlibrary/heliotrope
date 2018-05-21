@@ -49,6 +49,13 @@ describe PressHelper do
     end
   end
 
+  describe "#restricted_message" do
+    let(:press) { create(:press, subdomain: "blah", restricted_message: "<b>No. Just No.</b>") }
+    it "returns the restricted_message" do
+      expect(restricted_message(press.subdomain)).to eq "<b>No. Just No.</b>"
+    end
+  end
+
   describe "when a child press has a parent" do
     let(:press) { create(:press, subdomain: "blue",
                                  name: "Blue Press",

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180515144732) do
+ActiveRecord::Schema.define(version: 20180521202001) do
 
   create_table "bookmarks", id: :integer, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.integer "user_id", null: false
@@ -277,6 +277,7 @@ ActiveRecord::Schema.define(version: 20180515144732) do
     t.text "footer_block_a"
     t.text "footer_block_c"
     t.integer "parent_id"
+    t.text "restricted_message"
     t.index ["parent_id"], name: "index_presses_on_parent_id"
   end
 

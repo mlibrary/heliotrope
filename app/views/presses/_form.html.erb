@@ -30,5 +30,6 @@
   <%= f.input :footer_block_a %>
   <%= f.input :footer_block_c %>
   <%= f.input :parent_id, collection: Press.parent_presses, prompt: "Choose a parent press (optional)" %>
+  <%= f.input :restricted_message, label: 'Message for restricted works (if any). HTML is ok' %>
   <%= f.submit label: 'Save Publisher' %>
 <% end %>
