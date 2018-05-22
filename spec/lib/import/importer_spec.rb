@@ -16,6 +16,7 @@ describe Import::Importer do
                                        user_email: user.email,
                                        press: press.subdomain,
                                        visibility: public_vis,
+                                       quiet: true,
                                        monograph_id: monograph_id) }
   let(:monograph_id) { '' }
   let(:visibility) { public_vis }
@@ -40,6 +41,10 @@ describe Import::Importer do
 
     it 'has a visibility' do
       expect(importer.visibility).to eq public_vis
+    end
+
+    it 'has quiet (which will turn off interactivity)' do
+      expect(importer.quiet).to eq true
     end
 
     context 'default visibility' do

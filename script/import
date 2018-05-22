@@ -54,6 +54,10 @@ def parse_inputs(args)
     exit 0
   end
 
+  opts.on('-q', '--quiet', 'Turn off interactive messages') do
+    inputs[:quiet] = true
+  end
+
   opts.parse!(args)
 
   if inputs[:monograph_id] && (inputs[:press] || inputs[:visibility] || inputs[:monograph_title])
@@ -78,7 +82,8 @@ importer = Import::Importer.new({ root_dir: options[:root_dir],
                                   press: options[:press],
                                   visibility: options[:visibility],
                                   monograph_title: options[:monograph_title],
-                                  monograph_id: options[:monograph_id]})
+                                  monograph_id: options[:monograph_id],
+                                  quiet: options[:quiet]})
 importer.run(options[:test])
 
 puts "Import finished"
