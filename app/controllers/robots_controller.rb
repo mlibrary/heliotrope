@@ -5,9 +5,9 @@ class RobotsController < ApplicationController
 
   def robots
     env = Rails.env
-    env = 'staging' if Socket.gethostname == 'nectar.umdl.umich.edu'
+    env = 'not_production' if Socket.gethostname == 'nectar.umdl.umich.edu'
 
     robots = File.read(Rails.root + "config/robots/robots.#{env}.txt")
-    render text: robots, layout: false, content_type: "text/plain"
+    render plain: robots, layout: false, content_type: "text/plain"
   end
 end
