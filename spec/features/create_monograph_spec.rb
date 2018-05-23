@@ -28,9 +28,9 @@ feature 'Create a monograph' do
       fill_in 'Buy Book URL(s)', with: 'http://www.example.com/buy'
 
       # Authorship Metadata
-      fill_in 'Author (last name)', with: 'Johns'
-      fill_in 'Author (first name)', with: 'Jimmy'
-      fill_in 'Additional Authors', with: 'Sub Way'
+      # # 'Authors' is ambiguous
+      fill_in 'monograph[creator]', with: "Johns, Jimmy\nWay, Sub (editor)"
+      fill_in 'Additional Authors', with: 'Shoppe, Sandwich (another unused role)'
 
       # Citation Metadata
       # publisher
@@ -53,7 +53,7 @@ feature 'Create a monograph' do
       expect(page).to have_content 'Test monograph'
       expect(page).to have_content press.name
       expect(page).to have_content 'Blahdy blah description works'
-      expect(page).to have_content "Jimmy Johns and Sub Way"
+      expect(page).to have_content "Jimmy Johns, Sub Way and Sandwich Shoppe"
       expect(page).to have_field('Citable Link', with: 'http://wwww.example.com')
       expect(page).to have_content '123-456-7890'
       expect(page).to have_content '123-456-7891'
@@ -75,7 +75,7 @@ feature 'Create a monograph' do
       # back on Monograph catalog page
       # check authorship override
       expect(page).to have_content "Fancy Authorship Name Stuff That Takes Precedence"
-      expect(page).to_not have_content "Jimmy Johns and Sub Way"
+      expect(page).to_not have_content "Jimmy Johns, Sub Way and Shoppe Sandwich"
       click_link 'Manage Monograph and Files'
 
       # On Monograph show page

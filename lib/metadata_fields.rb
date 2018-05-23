@@ -46,6 +46,7 @@ METADATA_FIELDS ||=
     { object: :universal, field_name: 'Handle', metadata_name: 'hdl', required: false, multivalued: :no },
     { object: :universal, field_name: 'DOI', metadata_name: 'doi', required: false, multivalued: :no },
     { object: :file_set, field_name: 'Content Type', metadata_name: 'content_type', required: false, multivalued: :yes_split },
+    # TODO: remove these three fields, or change the import code to combine them into `creator`
     { object: :universal, field_name: 'Primary Creator Last Name', metadata_name: 'creator_family_name', required: false, multivalued: :no },
     { object: :universal, field_name: 'Primary Creator First Name', metadata_name: 'creator_given_name', required: false, multivalued: :no },
     { object: :file_set, field_name: 'Primary Creator Role', metadata_name: 'primary_creator_role', required: false, multivalued: :yes_split },

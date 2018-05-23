@@ -16,9 +16,6 @@
     <% if @monograph_presenter.authors? %>
         <h3><%= render_markdown @monograph_presenter.authors %></h3>
     <% end %>
-    <% if @monograph_presenter.editors? %>
-        <h3><%= t('monograph_catalog.index.edited_by', editors: @monograph_presenter.editors) %></h3>
-    <% end %>
     <div class="description">
       <%= render_markdown @monograph_presenter.description.first || '' %>
     </div>

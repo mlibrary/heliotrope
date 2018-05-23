@@ -15,20 +15,8 @@ module SolrDocumentExtensions::Monograph
 
   # date_published is also in FileSet
 
-  def creator_family_name
-    Array(self[Solrizer.solr_name('creator_family_name', :stored_searchable)]).first
-  end
-
   def creator_full_name
     Array(self[Solrizer.solr_name('creator_full_name', :stored_searchable)]).first
-  end
-
-  def creator_given_name
-    Array(self[Solrizer.solr_name('creator_given_name', :stored_searchable)]).first
-  end
-
-  def editor
-    Array(self[Solrizer.solr_name('editor', :stored_searchable)])
   end
 
   def isbn
@@ -45,18 +33,6 @@ module SolrDocumentExtensions::Monograph
 
   def press
     Array(self[Solrizer.solr_name('press', :stored_searchable)]).first
-  end
-
-  def primary_editor_family_name
-    Array(self[Solrizer.solr_name('primary_editor_family_name', :stored_searchable)]).first
-  end
-
-  def primary_editor_full_name
-    Array(self[Solrizer.solr_name('primary_editor_full_name', :stored_searchable)]).first
-  end
-
-  def primary_editor_given_name
-    Array(self[Solrizer.solr_name('primary_editor_given_name', :stored_searchable)]).first
   end
 
   def representative_manifest_id

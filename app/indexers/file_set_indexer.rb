@@ -6,6 +6,15 @@ class FileSetIndexer < Hyrax::FileSetIndexer
       # resource_type is not sortable, but we want it to be
       solr_doc[Solrizer.solr_name('resource_type', :sortable)] = object.resource_type
 
+      roleless_creators = multiline_names_minus_role('creator')
+      solr_doc[Solrizer.solr_name('creator', :stored_searchable)] = roleless_creators
+      solr_doc[Solrizer.solr_name('creator_full_name', :stored_searchable)] = roleless_creators&.first
+      solr_doc[Solrizer.solr_name('creator_full_name', :facetable)] = roleless_creators&.first
+      primary_creator_role = first_creator_roles
+      solr_doc[Solrizer.solr_name('primary_creator_role', :stored_searchable)] = primary_creator_role
+      solr_doc[Solrizer.solr_name('primary_creator_role', :facetable)] = primary_creator_role
+      solr_doc[Solrizer.solr_name('contributor', :stored_searchable)] = multiline_contributors # include roles
+
       # Extra technical metadata we need to index
       # These are apparently not necessarily integers all the time, so index them as symbols
       index_technical_metadata(solr_doc, object.original_file) if object.original_file.present?
@@ -20,6 +29,22 @@ class FileSetIndexer < Hyrax::FileSetIndexer
         solr_doc[Solrizer.solr_name('search_year', :facetable)] = object.sort_date[0, 4]
       end
     end
+  end
+
+  def multiline_names_minus_role(field)
+    value = object.public_send(field).first
+    value.present? ? value.split(/\r?\n/).reject(&:blank?).map { |val| val.sub(/\s*\(.+\)$/, '').strip } : value
+  end
+
+  def multiline_contributors
+    # any role in parenthesis will persist in Solr for contributors, as we've always done
+    value = object.contributor.first
+    value.present? ? value.split(/\r?\n/).reject(&:blank?).map(&:strip) : value
+  end
+
+  def first_creator_roles
+    value = object.creator.first
+    value.present? ? Array.wrap(value[/\(([^()]*)\)/]&.gsub(/\(|\)/, '')&.split(',')&.map(&:strip)&.map(&:downcase)) : value
   end
 
   def index_technical_metadata(solr_doc, orig)

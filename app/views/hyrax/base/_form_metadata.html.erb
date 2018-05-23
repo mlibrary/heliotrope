@@ -31,13 +31,9 @@
 <% end %>
 <div id="authorship-metadata" class='collapse'>
   <p><%= t('simple_form.labels.monograph.authorship_metadata.help_html') %></p>
-  <%= f.input :creator_family_name, label: t('author_last_name') %>
-  <%= f.input :creator_given_name, label: t('author_first_name') %>
+  <%= f.input :creator,  as: :text, input_html: { rows: '5' } %>
+  <%= f.input :contributor,  as: :text, input_html: { rows: '5' }, label: t('additional_authors') %>
   <%= f.input :creator_display, as: :text, input_html: { class: 'form-control' }, label: t('creator_display') %>
-  <%= f.input :contributor, as: :multi_value, label: t('additional_authors') %>
-  <%= f.input :primary_editor_family_name,  label: t('primary_editor_family_name') %>
-  <%= f.input :primary_editor_given_name,   label: t('primary_editor_given_name') %>
-  <%= f.input :editor, as: :multi_value, label: t('editor') %>
 </div>
 
 

@@ -25,10 +25,8 @@
         <legend>Optional Information</legend>
           <%= f.input :description, as: :text, input_html: { multiple: true, value: curation_concern.description.first, class: 'form-control' } %>
           <%= f.input :content_type, as: :multi_value, input_html: { class: 'form-control' } %>
-          <%= f.input :creator_family_name, input_html: { class: 'form-control' } %>
-          <%= f.input :creator_given_name, input_html: { class: 'form-control' } %>
-          <%= f.input :primary_creator_role, as: :multi_value, input_html: { class: 'form-control' } %>
-          <%= f.input :contributor, as: :multi_value, input_html: { class: 'form-control' } %>
+          <%= f.input :creator,  as: :text, input_html: { multiple: true, rows: '5', value: curation_concern.creator.first } %>
+          <%= f.input :contributor,  as: :text, input_html: { multiple: true, rows: '5', value: curation_concern.contributor.first } %>
           <%= f.input :date_created, input_html: { multiple: true, value: curation_concern.date_created.first, class: 'form-control' } %>
           <%= f.input :sort_date, input_html: { class: 'form-control' }, placeholder: 'YYYY-MM-DD' %>
           <%= f.input :display_date, as: :multi_value, label: 'Display Date', input_html: { class: 'form-control' } %>

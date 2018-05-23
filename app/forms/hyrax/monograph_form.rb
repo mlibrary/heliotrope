@@ -5,14 +5,12 @@
 module Hyrax
   class MonographForm < Hyrax::Forms::WorkForm
     self.model_class = ::Monograph
-    self.terms += %i[press creator_display date_created isbn isbn_paper isbn_ebook hdl doi
-                     primary_editor_family_name primary_editor_given_name editor copyright_holder buy_url
-                     creator_family_name creator_given_name section_titles location]
-    self.terms -= %i[creator keyword identifier related_url source based_near rights_statement license]
+    self.terms += %i[press creator_display date_created isbn isbn_paper isbn_ebook hdl doi copyright_holder
+                     buy_url section_titles location]
+    self.terms -= %i[keyword identifier related_url source based_near rights_statement license]
 
-    self.required_fields = %i[title press creator_family_name creator_given_name description publisher date_created
-                              location]
-    self.required_fields -= %i[creator keyword rights]
+    self.required_fields = %i[title press description creator publisher date_created location]
+    self.required_fields -= %i[keyword rights]
 
     delegate :current_user, to: :current_ability
 
@@ -32,24 +30,34 @@ module Hyrax
 
     # RE: below methods, see https://samvera.github.io/customize-metadata-other-customizations.html
     def self.multiple?(field)
-      if %i[title description publisher date_created].include? field.to_sym
+      if %i[title description creator contributor publisher date_created].include? field.to_sym
         false
       else
         super
       end
     end
 
-    def self.model_attributes(_)
+    def self.model_attributes(_) # rubocop:disable Metrics/CyclomaticComplexity
       attrs = super
       attrs[:title] = Array(attrs[:title]) if attrs[:title]
       attrs[:description] = Array(attrs[:description]) if attrs[:description]
+      attrs[:creator] = Array(attrs[:creator]) if attrs[:creator]
+      attrs[:contributor] = Array(attrs[:contributor]) if attrs[:contributor]
       attrs[:publisher] = Array(attrs[:publisher]) if attrs[:publisher]
       attrs[:date_created] = Array(attrs[:date_created]) if attrs[:date_created]
-      # heliotrope fields that shouldn't have been multi
+      # TODO: add any heliotrope fields that shouldn't have been multi here (e.g. ISBNs maybe, see below also)
       attrs
     end
 
     def title
+      super.first || ""
+    end
+
+    def creator
+      super.first || ""
+    end
+
+    def contributor
       super.first || ""
     end
 

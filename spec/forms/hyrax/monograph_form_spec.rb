@@ -13,6 +13,7 @@ describe Hyrax::MonographForm do
   describe 'terms' do
     subject { described_class.terms }
     it { is_expected.to eq %i[title
+                              creator
                               contributor
                               description
                               publisher
@@ -41,21 +42,15 @@ describe Hyrax::MonographForm do
                               isbn_ebook
                               hdl
                               doi
-                              primary_editor_family_name
-                              primary_editor_given_name
-                              editor
                               copyright_holder
                               buy_url
-                              creator_family_name
-                              creator_given_name
                               section_titles
                               location] }
   end
 
   describe 'required_fields' do
     subject { described_class.required_fields }
-    it { is_expected.to eq %i[title press creator_family_name creator_given_name description publisher date_created
-                              location] }
+    it { is_expected.to eq %i[title press description creator publisher date_created location] }
   end
 
   describe 'select_press' do

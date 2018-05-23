@@ -22,19 +22,15 @@ describe SolrDocument do
   it { is_expected.to respond_to(:hdl) }
 
   # Monograph
+  it { is_expected.to respond_to(:creator) }
+  it { is_expected.to respond_to(:contributor) }
   it { is_expected.to respond_to(:creator_display) }
-  it { is_expected.to respond_to(:buy_url) }
-  it { is_expected.to respond_to(:creator_family_name) }
   it { is_expected.to respond_to(:creator_full_name) }
-  it { is_expected.to respond_to(:creator_given_name) }
-  it { is_expected.to respond_to(:editor) }
+  it { is_expected.to respond_to(:buy_url) }
   it { is_expected.to respond_to(:isbn) }
   it { is_expected.to respond_to(:isbn_ebook) }
   it { is_expected.to respond_to(:isbn_paper) }
   it { is_expected.to respond_to(:press) }
-  it { is_expected.to respond_to(:primary_editor_family_name) }
-  it { is_expected.to respond_to(:primary_editor_full_name) }
-  it { is_expected.to respond_to(:primary_editor_given_name) }
   it { is_expected.to respond_to(:representative_manifest_id) }
 
   # FileSet

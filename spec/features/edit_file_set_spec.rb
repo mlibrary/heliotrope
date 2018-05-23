@@ -10,9 +10,8 @@ feature 'Edit a file set' do
     let(:monograph) do
       m = build(:monograph, title: ['Test monograph'],
                             representative_id: cover.id,
-                            creator_family_name: 'Johns',
-                            creator_given_name: 'Jimmy',
-                            contributor: ['Sub Way'],
+                            creator: ['Johns, Jimmy'],
+                            contributor: ["Way, Sub\nContributor, Another"],
                             date_published: ['Oct 20th'],
                             section_titles: "C 1\nC 2\nTest section with _Italicized Title_ therein\nC 3\nC 4")
       m.ordered_members << cover
@@ -51,10 +50,8 @@ feature 'Edit a file set' do
       fill_in 'Allow Download After Expiration?', with: 'no2'
       fill_in 'Abstract or Summary', with: 'Veggies es bonus vobis, [external link](www.external-link.com) proinde vos postulo essum magis [internal link](www.fulcrum.org) kohlrabi welsh onion daikon amaranth tatsoi tomatillo melon azuki bean garlic.'
       fill_in 'Content Type', with: 'screenshot'
-      fill_in 'Primary Creator (family name)', with: 'FamilyName'
-      fill_in 'Primary Creator (given name)', with: 'GivenName'
-      fill_in 'Primary Creator Role', with: 'on screen talent'
-      fill_in 'Contributor', with: 'Test Contributor'
+      fill_in 'Creator', with: 'FamilyName, GivenName (On Screen Talent)'
+      fill_in 'Contributor', with: 'Contributor, Mr A. (photographer)'
       fill_in 'Date Created', with: '2016'
       fill_in 'Sort Date', with: '2000-01-01'
       fill_in 'Permissions Expiration Date', with: '2026-01-01'
@@ -99,14 +96,14 @@ feature 'Edit a file set' do
 
       # On FileSet Page
       # FileSet page also has authors
-      expect(page).to have_content 'Jimmy Johns and Sub Way'
+      expect(page).to have_content 'Jimmy Johns, Sub Way and Another Contributor'
       expect(page).to have_content file_set_title
       expect(page).to have_content 'This is a caption for the image'
       expect(page).to have_content 'University of Michigan'
       expect(page).to have_content 'Veggies es bonus vobis, external link proinde vos postulo essum magis internal link kohlrabi welsh onion daikon amaranth tatsoi tomatillo melon azuki bean garlic.'
       expect(page).to have_content 'screenshot'
       expect(page).to have_content 'FamilyName, GivenName'
-      expect(page).to have_content 'Test Contributor'
+      expect(page).to have_content 'Contributor, Mr A. (photographer)'
       expect(page).to have_content 'circa sometime for the (premiere, Berlin, LOLZ!)'
 
       expect(page).to have_content 'Conor O\'Neill\'s'
@@ -125,8 +122,9 @@ feature 'Edit a file set' do
       expect(page).to have_link("English", href: "/concern/monographs/" + monograph.id + "?f%5Blanguage_sim%5D%5B%5D=English")
       expect(page).to have_link("Test section with Italicized Title therein", href: "/concern/monographs/" + monograph.id + "?f%5Bsection_title_sim%5D%5B%5D=Test+section+with+_Italicized+Title_+therein")
       expect(page).to have_link("FamilyName, GivenName", href: "/concern/monographs/" + monograph.id + "?f%5Bcreator_full_name_sim%5D%5B%5D=FamilyName%2C+GivenName")
-      expect(page).to have_link("Test Contributor", href: "/concern/monographs/" + monograph.id + "?f%5Bcontributor_sim%5D%5B%5D=Test+Contributor")
+      # The "on screen talent" role was downcased on indexing
       expect(page).to have_link("on screen talent", href: "/concern/monographs/" + monograph.id + "?f%5Bprimary_creator_role_sim%5D%5B%5D=on+screen+talent")
+      expect(page).to have_link("Contributor, Mr A. (photographer)", href: "/concern/monographs/" + monograph.id + "?f%5Bcontributor_sim%5D%5B%5D=Contributor%2C+Mr+A.+%28photographer%29")
       expect(page).to have_link("screenshot", href: "/concern/monographs/" + monograph.id + "?f%5Bcontent_type_sim%5D%5B%5D=screenshot")
 
       # check external autolink are opening in a new tab and internal are not

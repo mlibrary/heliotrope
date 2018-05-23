@@ -52,7 +52,8 @@ RSpec.describe Hyrax::FileSetPresenter do
   end
 
   describe "#monograph" do
-    let(:monograph) { create(:monograph, creator_given_name: "firstname", creator_family_name: "lastname") }
+    let(:monograph) { create(:monograph, creator: creator) }
+    let(:creator) { ['lastname, firstname'] }
     let(:cover) { create(:file_set) }
     let(:file_set) { create(:file_set) }
     let(:press) { create(:press, subdomain: 'blue') }
@@ -72,8 +73,8 @@ RSpec.describe Hyrax::FileSetPresenter do
       expect(presenter.monograph.id).to eq monograph.id
     end
 
-    it "has the monograph's creator_family_name" do
-      expect(presenter.monograph.creator_family_name).to eq monograph.creator_family_name
+    it "has the monograph's creator" do
+      expect(presenter.monograph.creator).to match_array(creator)
     end
   end
 

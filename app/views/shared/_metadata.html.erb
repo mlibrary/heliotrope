@@ -2,17 +2,9 @@
 
   <meta name="citation_title" content="<%= @monograph_presenter.page_title.html_safe %>">
 
-  <% if @monograph_presenter.creator_full_name.present? %>
-    <meta name="citation_author" content="<%= @monograph_presenter.creator_full_name.html_safe %>">
-    <% @monograph_presenter.contributor.each do |contributor| %>
-      <meta name="citation_author" content="<%= contributor.html_safe %>">
-    <% end %>
-  <% end %>
-
-  <% if @monograph_presenter.primary_editor_full_name.present? %>
-    <meta name="citation_author" content="<%= @monograph_presenter.primary_editor_full_name.html_safe %>">
-    <% @monograph_presenter.editor.each do |editor| %>
-      <meta name="citation_author" content="<%= editor.html_safe %>">
+  <% if @monograph_presenter.present? %>
+    <% @monograph_presenter.creator.each do |creator_name| %>
+      <meta name="citation_author" content="<%= creator_name.html_safe %>">
     <% end %>
   <% end %>
 
@@ -30,11 +22,8 @@
 
   <meta name="citation_title" content="<%= @presenter.page_title.html_safe %>">
 
-  <% if @presenter.creator_full_name.present? %>
-    <meta name="citation_author" content="<%= @presenter.creator_full_name.html_safe %>">
-    <% @presenter.contributor.each do |contributor| %>
-      <meta name="citation_author" content="<%= contributor.html_safe %>">
-    <% end %>
+  <% @presenter.creator.each do |creator_name| %>
+    <meta name="citation_author" content="<%= creator_name.html_safe %>">
   <% end %>
 
   <% if @presenter.sort_date.present? %>

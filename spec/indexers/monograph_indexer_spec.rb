@@ -8,8 +8,7 @@ RSpec.describe MonographIndexer do
 
     let(:indexer) { described_class.new(monograph) }
     let(:monograph) { build(:monograph,
-                            primary_editor_given_name: 'Bullwinkle',
-                            primary_editor_family_name: 'Moose',
+                            creator: ["Moose, Bullwinkle\nSquirrel, Rocky"],
                             description: ["This is the abstract"]) }
     let(:file_set) { create(:file_set) }
     let(:press_name) { Press.find_by(subdomain: monograph.press).name }
@@ -31,9 +30,9 @@ RSpec.describe MonographIndexer do
       expect(subject['representative_id_ssim']).to eq monograph.representative_id
     end
 
-    it 'indexes the primary_editor_full_name' do
-      expect(subject['primary_editor_full_name_tesim']).to eq 'Moose, Bullwinkle'
-      expect(subject['primary_editor_full_name_sim']).to eq 'Moose, Bullwinkle'
+    it 'indexes the first creator\'s full_name' do
+      expect(subject['creator_full_name_tesim']).to eq 'Moose, Bullwinkle'
+      expect(subject['creator_full_name_sim']).to eq 'Moose, Bullwinkle'
     end
 
     it 'has description indexed by Hyrax::IndexesBasicMetadata' do

@@ -268,8 +268,7 @@ feature "Monograph Catalog Facets" do
     let(:file_set) { create(:public_file_set, resource_type: ['image'],
                                               content_type: ['portrait'],
                                               exclusive_to_platform: 'yes',
-                                              creator_family_name: 'McTesterson',
-                                              creator_given_name: 'Testy',
+                                              creator: ['McTesterson, Testy'],
                                               sort_date: '1974-01-01',
                                               keywords: ['stuff'],
                                               section_title: ['A Section']) }
