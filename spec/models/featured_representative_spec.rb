@@ -4,7 +4,7 @@ require 'rails_helper'
 
 RSpec.describe FeaturedRepresentative, type: :model do
   describe '#kinds' do
-    it { expect(described_class.kinds).to eq %w[epub webgl database aboutware pdf_ebook mobi] }
+    it { expect(described_class.kinds).to eq %w[epub webgl database aboutware pdf_ebook mobi reviews related] }
   end
 
   describe "the combination of mongraph_id, file_set_id and kind" do

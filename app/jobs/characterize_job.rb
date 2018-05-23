@@ -22,12 +22,6 @@ class CharacterizeJob < ApplicationJob
 
     Hydra::Works::CharacterizationService.run(file_set.characterization_proxy, filename)
 
-    if ['text/plain'].include? file_set.characterization_proxy.mime_type
-      if ['text/csv', 'text/comma-separated-values'].include? Rack::Mime::MIME_TYPES[File.extname(filename)]
-        file_set.characterization_proxy.mime_type = Rack::Mime::MIME_TYPES[File.extname(filename)]
-      end
-    end
-
     Rails.logger.debug "Ran characterization on #{file_set.characterization_proxy.id} (#{file_set.characterization_proxy.mime_type})"
     file_set.characterization_proxy.save!
     file_set.update_index
@@ -35,10 +29,32 @@ class CharacterizeJob < ApplicationJob
 
     # Heliotrope addition: allow "reversioned" FileSets to be Unpacked if needed
     kind = FeaturedRepresentative.where(file_set_id: file_set.id)&.first&.kind
+    # HACK: for HELIO-1830
+    if kind.blank? && file_set.parent&.press == 'heb'
+      kind = maybe_set_featured_representative(file_set)
+    end
     if kind.present? && ['epub', 'webgl'].include?(kind)
       UnpackJob.perform_later(file_set.id, kind)
     end
 
     CreateDerivativesJob.perform_later(file_set, file_id, filename)
+  end
+
+  def maybe_set_featured_representative(file_set)
+    kind = case file_set.original_file.file_name.first
+           when /\.epub$/
+             "epub"
+           when "related.html"
+             "related"
+           when "reviews.html"
+             "reviews"
+           end
+
+    if kind.present?
+      FeaturedRepresentative.create!(monograph_id: file_set.parent.id,
+                                     file_set_id: file_set.id,
+                                     kind: kind)
+    end
+    kind
   end
 end
