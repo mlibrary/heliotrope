@@ -4,7 +4,8 @@
     <div class="input-group">
       <%= label_tag :catalog_search, t('press_catalog.search.form.q.label', press_name: @press.name), class: "sr-only" %>
       <%= text_field_tag(:q, params[:q], class: "q search-query form-control", id: "catalog_search",
-                         placeholder: t('hyrax.search.form.q.placeholder'), tabindex: "0", type: "search") %>
+                         placeholder: t('press_catalog.search.form.q.placeholder', press_name: @press.name),
+                         tabindex: "0", type: "search") %>
       <div class="input-group-btn">
         <button type="submit" class="search-submit btn btn-primary" id="keyword-search-submit" tabindex="0">
           <i class="glyphicon glyphicon-search"></i><span class="sr-only">Search</span>

@@ -146,6 +146,7 @@ en:
       form:
         q:
           label: "Search within %{monograph_name}"
+          placeholder: "Search assets"
   monograph_manifests:
     notice:
       perform_job: "Performing monograph update job."
@@ -176,6 +177,7 @@ en:
       form:
         q:
           label: "Search within %{press_name}"
+          placeholder: "Search works"
   primary_creator_role: "Primary Creator Role(s)"
   primary_editor_family_name: "Editor (last name)"
   primary_editor_given_name: "Editor (first name)"
