@@ -5,16 +5,17 @@ module Import
     include ::Hyrax::Noid
 
     attr_reader :root_dir, :user_email, :press_subdomain, :monograph_id, :monograph_title,
-                :visibility, :reimporting, :reimport_mono
+                :visibility, :reimporting, :reimport_mono, :quiet
 
     def initialize(root_dir: '', user_email: '', monograph_id: '', press: '',
                    visibility: Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE,
-                   monograph_title: '')
+                   monograph_title: '', quiet: '')
 
       @root_dir = root_dir
       @user_email = user_email
       @reimporting = false
       @reimport_mono = Monograph.where(id: monograph_id).first
+      @quiet = quiet
 
       if monograph_id.present?
         raise "No monograph found with id '#{monograph_id}'" if @reimport_mono.blank?
@@ -82,8 +83,9 @@ module Import
       true
     end
 
-    def run(test = false)
-      interaction = !Rails.env.test?
+    def run(test = false) # rubocop:disable Metrics/PerceivedComplexity
+      interaction = !Rails.env.test? && !@quiet
+
       validate_user
       validate_press unless reimporting
       csv_files.each do |file|
