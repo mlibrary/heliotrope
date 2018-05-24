@@ -5,9 +5,10 @@
 module Hyrax
   class MonographForm < Hyrax::Forms::WorkForm
     self.model_class = ::Monograph
-    self.terms += %i[press creator_display date_created isbn isbn_paper isbn_ebook hdl doi copyright_holder
-                     buy_url section_titles location]
-    self.terms -= %i[keyword identifier related_url source based_near rights_statement license]
+    # Hyrax::BasicMetadata fields are already included
+    self.terms += %i[press creator_display isbn isbn_paper isbn_ebook hdl doi copyright_holder
+                     holding_contact buy_url section_titles location]
+    self.terms -= %i[keyword related_url source based_near rights_statement license]
 
     self.required_fields = %i[title press description creator publisher date_created location]
     self.required_fields -= %i[keyword rights]

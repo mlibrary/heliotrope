@@ -17,6 +17,8 @@
   <%= f.input :language, as: :multi_value %>
   <%= f.input :section_titles,  as: :text, input_html: { rows: '5' } %>
   <%= f.input :buy_url, as: :multi_value %>
+  <%= f.input :copyright_holder %>
+  <%= f.input :holding_contact %>
 </div>
 
 
@@ -87,6 +89,7 @@
   <p><%= t('simple_form.labels.monograph.citable_links_metadata.help_html') %></p>
   <%= f.input :hdl %>
   <%= f.input :doi %>
+  <%= f.input :identifier, as: :multi_value %>
 </div>
 
 

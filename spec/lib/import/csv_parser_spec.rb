@@ -25,10 +25,10 @@ describe Import::CSVParser do
     # order of asset metadata here is as in lib/import.rb
     it 'collects attributes from the CSV file' do
       expect(subject['title']).to eq ['The Tempest: A Subtitle']
-      expect(subject['creator_family_name']).to eq 'Shakespeare'
-      expect(subject['creator_given_name']).to eq 'William'
-      expect(subject['contributor']).to eq ['Christopher Marlowe', 'Sir Francis Bacon']
+      expect(subject['creator']).to eq ["Shakespeare, William\nPlaywright, Mr. Uncredited"]
+      expect(subject['contributor']).to eq ["Christopher Marlowe\nSir Francis Bacon"]
       expect(subject['subject']).to eq ['Dog', 'Cat', 'Mouse']
+      expect(subject['isbn']).to eq ['134513451345', '1451-25423', '1451343513']
       expect(subject['files']).to eq [
         'shipwreck.jpg',
         'miranda.jpg',
@@ -50,8 +50,7 @@ describe Import::CSVParser do
           'rights_granted_creative_commons' => 'Creative Commons Attribution-ShareAlike license, 3.0 Unported',
           'exclusive_to_platform' => 'no',
           'content_type' => ['portrait'],
-          'creator_family_name' => 'Smith',
-          'creator_given_name' => 'Benjamin',
+          'creator' => ['Smith, Benjamin'],
           'language' => ['English'] },
         { 'title' => ['Monograph Miranda'],
           'resource_type' => ['image'],
@@ -59,8 +58,7 @@ describe Import::CSVParser do
           'rights_granted_creative_commons' => 'Creative Commons Zero license (implies pd)',
           'exclusive_to_platform' => 'yes',
           'content_type' => ['audience materials'],
-          'creator_family_name' => 'Waterhouse',
-          'creator_given_name' => 'John William',
+          'creator' => ['Waterhouse, John William'],
           'language' => ['English', 'German'] },
         { 'title' => ['日本語のファイル'],
           'resource_type' => ['text'],
@@ -75,7 +73,7 @@ describe Import::CSVParser do
           'rights_granted_creative_commons' => 'Creative Commons Zero license (implies pd)',
           'exclusive_to_platform' => 'yes',
           'content_type' => ['audience materials'],
-          'creator_family_name' => 'Smith',
+          'creator' => ['Smith'],
           'keywords' => ['keyword1', 'keyword2'],
           'section_title' => ['Act 1: Calm Waters'],
           'language' => ['Russian'] },
@@ -85,8 +83,7 @@ describe Import::CSVParser do
           'rights_granted_creative_commons' => 'Creative Commons Zero license (implies pd)',
           'exclusive_to_platform' => 'yes',
           'content_type' => ['portrait'],
-          'creator_family_name' => 'Waterhouse',
-          'creator_given_name' => 'John William',
+          'creator' => ["Waterhouse, John William\nCreator, A. Second"],
           'keywords' => ['regular', 'italicized'],
           'section_title' => ['Act 1: Calm Waters'],
           'language' => ['Russian', 'German', 'French'] },
@@ -96,7 +93,7 @@ describe Import::CSVParser do
           'rights_granted_creative_commons' => 'Creative Commons Zero license (implies pd)',
           'exclusive_to_platform' => 'yes',
           'content_type' => ['audience materials'],
-          'creator_family_name' => 'Smith',
+          'creator' => ['Smith'],
           'section_title' => ['Act 2: Stirrin\' Up'],
           'language' => ['French'] },
         { 'title' => ['Section 2 Miranda'],
@@ -105,8 +102,7 @@ describe Import::CSVParser do
           'rights_granted_creative_commons' => 'Creative Commons Zero license (implies pd)',
           'exclusive_to_platform' => 'yes',
           'content_type' => ['illustration'],
-          'creator_family_name' => 'Waterhouse',
-          'creator_given_name' => 'John William',
+          'creator' => ['Waterhouse, John William'],
           'section_title' => ['Act 2: Stirrin\' Up'],
           'language' => ['English'] },
         { 'title' => ['Previous Shipwreck File (Again)'],
@@ -115,7 +111,7 @@ describe Import::CSVParser do
           'rights_granted_creative_commons' => 'Creative Commons Zero license (implies pd)',
           'exclusive_to_platform' => 'yes',
           'content_type' => ['portrait', 'photograph'],
-          'creator_family_name' => 'Smith',
+          'creator' => ['Smith'],
           'section_title' => ['Act 2: Stirrin\' Up'],
           'language' => ['Latin'] },
         { 'title' => ['External Bard Transcript'],
@@ -123,8 +119,7 @@ describe Import::CSVParser do
           'external_resource' => 'yes',
           'exclusive_to_platform' => 'no',
           'content_type' => ['Interview Transcript'],
-          'creator_family_name' => 'L\'Interviewere',
-          'creator_given_name' => 'Bob',
+          'creator' => ['L\'Interviewere, Bob'],
           'keywords' => ['interview'],
           'section_title' => ['Act 3: External Stuffs'],
           'language' => ['English'] }

@@ -35,20 +35,12 @@ module SolrDocumentExtensions::FileSet
     Array(self[Solrizer.solr_name('content_type', :stored_searchable)])
   end
 
-  def copyright_holder
-    Array(self[Solrizer.solr_name('copyright_holder', :stored_searchable)]).first
-  end
-
   def copyright_status
     Array(self[Solrizer.solr_name('copyright_status', :symbol)]).first
   end
 
   def credit_line
     Array(self[Solrizer.solr_name('credit_line', :symbol)]).first
-  end
-
-  def date_published
-    Array(self[Solrizer.solr_name('date_published', :stored_searchable)])
   end
 
   def display_date
@@ -65,10 +57,6 @@ module SolrDocumentExtensions::FileSet
 
   def ext_url_doi_or_handle
     Array(self[Solrizer.solr_name('ext_url_doi_or_handle', :symbol)]).first
-  end
-
-  def holding_contact
-    Array(self[Solrizer.solr_name('holding_contact', :symbol)]).first
   end
 
   def keywords

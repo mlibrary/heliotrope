@@ -26,6 +26,8 @@ feature 'Create a monograph' do
       fill_in 'Language', with: 'English'
       fill_in 'Section Titles', with: 'Intro\nChapter 1\nChapter 2'
       fill_in 'Buy Book URL(s)', with: 'http://www.example.com/buy'
+      fill_in 'Copyright Holder', with: 'Blahdy Blah Copyright Holder'
+      fill_in 'Holding Contact', with: 'http://www.blahpresscompany.com/'
 
       # Authorship Metadata
       # # 'Authors' is ambiguous
@@ -46,6 +48,7 @@ feature 'Create a monograph' do
 
       # Citable Links
       fill_in 'DOI', with: 'http://wwww.example.com'
+      fill_in 'Identifier', with: 'http://www.one-of-many-permanent-urls-for-this.com'
 
       click_button 'Save'
 
@@ -97,6 +100,10 @@ feature 'Create a monograph' do
       expect(page).to have_content 'Intro\nChapter 1\nChapter 2'
       # buy_url
       expect(page).to have_content 'http://www.example.com/buy'
+      # copyright_holder
+      expect(page).to have_content 'Blahdy Blah Copyright Holder'
+      # holding_contact
+      expect(page).to have_content 'http://www.blahpresscompany.com/'
 
       # Citation Metadata
       # publisher
@@ -109,6 +116,11 @@ feature 'Create a monograph' do
       expect(page).to have_content '123-456-7890'
       expect(page).to have_content '123-456-7891'
       expect(page).to have_content '123-456-7892'
+
+      # DOI
+      expect(page).to have_content 'http://wwww.example.com'
+      # identifier
+      expect(page).to have_content 'http://www.one-of-many-permanent-urls-for-this.com'
 
       # MLA citation
       expect(page).to have_content 'Johns, Jimmy, and Sub Way. Test Monograph. Ann Arbor, MI.'

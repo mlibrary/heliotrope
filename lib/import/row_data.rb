@@ -47,8 +47,15 @@ module Import
 
     private
 
+      # TODO: look into using Array.wrap() instead of this confusing stuff if possible
       def split_field_values_to_array(sheet_value, is_multivalued)
-        is_multivalued == :yes_split ? Array(sheet_value.split(';')).map!(&:strip).reject(&:empty?) : Array(sheet_value.strip)
+        if is_multivalued == :yes_split
+          Array(sheet_value.split(';').map!(&:strip).reject(&:empty?))
+        elsif is_multivalued == :yes_multiline
+          Array(sheet_value.split(';').map!(&:strip).reject(&:empty?).join("\n"))
+        else
+          Array(sheet_value.strip)
+        end
       end
 
       def strip_markdown_from_array_of_values(field_name, field_values, md)
@@ -60,6 +67,7 @@ module Import
         field_name == "Rights Granted - Creative Commons" ? field_values : field_values.map!(&:downcase)
       end
 
+      # TODO: look into using Array.wrap() instead of this confusing stuff if possible
       def return_scalar_or_multivalued(field_values, is_multivalued)
         is_multivalued == :no ? field_values.first : field_values
       end
