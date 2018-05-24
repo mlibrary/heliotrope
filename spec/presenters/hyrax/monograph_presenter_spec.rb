@@ -111,44 +111,6 @@ RSpec.describe Hyrax::MonographPresenter do
     it { is_expected.to eq ['Oct 7th'] }
   end
 
-  describe '#editors' do
-    before do
-      allow(mono_doc).to receive(:primary_editor_given_name).and_return('Abe')
-      allow(mono_doc).to receive(:primary_editor_family_name).and_return('Cat')
-      allow(mono_doc).to receive(:editor).and_return(['Thing Lastname', 'Manny Feetys'])
-    end
-    subject { presenter.editors }
-    it { is_expected.to eq "Abe Cat, Thing Lastname, and Manny Feetys" }
-  end
-
-  describe '#editors?' do
-    describe "no editors or creator_display" do
-      before do
-        allow(mono_doc).to receive(:primary_editor_given_name).and_return(nil)
-        allow(mono_doc).to receive(:primary_editor_family_name).and_return(nil)
-        allow(mono_doc).to receive(:editor).and_return([])
-      end
-      subject { presenter.editors? }
-      it { is_expected.to eq false }
-    end
-    before do
-      allow(mono_doc).to receive(:primary_editor_given_name).and_return('Abe')
-      allow(mono_doc).to receive(:primary_editor_family_name).and_return('Cat')
-      allow(mono_doc).to receive(:editor).and_return(['Thing Lastname', 'Manny Feetys'])
-    end
-    describe "editors, no creator_display" do
-      subject { presenter.editors? }
-      it { is_expected.to eq true }
-    end
-    describe "creator_display overrides editors when both are present" do
-      before do
-        allow(mono_doc).to receive(:creator_display).and_return('A very elaborate description of editors and authors')
-      end
-      subject { presenter.editors? }
-      it { is_expected.to eq false }
-    end
-  end
-
   describe '#authors' do
     describe "creator_display exists, creators/contributors don't" do
       before do
@@ -158,14 +120,13 @@ RSpec.describe Hyrax::MonographPresenter do
       it { is_expected.to eq 'A very elaborate description of editors and authors' }
     end
     before do
-      allow(mono_doc).to receive(:creator_given_name).and_return('Abe')
-      allow(mono_doc).to receive(:creator_family_name).and_return('Cat')
-      allow(mono_doc).to receive(:contributor).and_return(['Thing Lastname', 'Manny Feetys'])
+      allow(mono_doc).to receive(:creator).and_return(['Cat, Abe'])
+      allow(mono_doc).to receive(:contributor).and_return(['Lastname, Thing', 'Feetys, Manny'])
       allow(mono_doc).to receive(:creator_display).and_return(nil)
     end
     describe "creators/contributors exist, creator_display doesn't" do
       subject { presenter.authors }
-      it { is_expected.to eq 'Abe Cat, Thing Lastname, and Manny Feetys' }
+      it { is_expected.to eq 'Abe Cat, Thing Lastname and Manny Feetys' }
     end
     describe 'creators/contributors exist, as does creator_display' do
       before do
@@ -178,8 +139,6 @@ RSpec.describe Hyrax::MonographPresenter do
 
   describe '#authors?' do
     before do
-      allow(mono_doc).to receive(:creator_given_name).and_return(nil)
-      allow(mono_doc).to receive(:creator_family_name).and_return(nil)
       allow(mono_doc).to receive(:contributor).and_return([])
       allow(mono_doc).to receive(:creator_display).and_return(nil)
     end
@@ -503,31 +462,12 @@ RSpec.describe Hyrax::MonographPresenter do
   describe '#creator' do
     context 'values in creator_full_name and contributor' do
       before do
-        allow(mono_doc).to receive(:creator_full_name).and_return('Man, Rocket')
-        allow(mono_doc).to receive(:contributor).and_return(['Boop, Betty', 'Love, Thomas'])
+        allow(mono_doc).to receive(:creator).and_return(['Man, Rocket', 'Boop, Betty'])
+        allow(mono_doc).to receive(:contributor).and_return(['Love, Thomas'])
       end
       subject { presenter.creator }
-      it { expect(subject).to eq ['Man, Rocket', 'Boop, Betty', 'Love, Thomas'] }
-    end
-
-    context 'values in primary_editor_full_name and editor' do
-      before do
-        allow(mono_doc).to receive(:primary_editor_full_name).and_return('Smith, John')
-        allow(mono_doc).to receive(:editor).and_return(['Sue, Peggy', 'Jones, Tom'])
-      end
-      subject { presenter.creator }
-      it { expect(subject).to eq ['Smith, John', 'Sue, Peggy', 'Jones, Tom'] }
-    end
-
-    context 'values in creator_full_name, contributor, primary_editor_full_name and editor' do
-      before do
-        allow(mono_doc).to receive(:creator_full_name).and_return('Man, Rocket')
-        allow(mono_doc).to receive(:contributor).and_return(['Boop, Betty', 'Love, Thomas'])
-        allow(mono_doc).to receive(:primary_editor_full_name).and_return('Smith, John')
-        allow(mono_doc).to receive(:editor).and_return(['Sue, Peggy', 'Jones, Tom'])
-      end
-      subject { presenter.creator }
-      it { expect(subject).to eq ['Man, Rocket', 'Boop, Betty', 'Love, Thomas', 'Smith, John', 'Sue, Peggy', 'Jones, Tom'] }
+      # contributors are not used any more in creator (and therefore citations)
+      it { expect(subject).to eq ['Man, Rocket', 'Boop, Betty'] }
     end
   end
 end

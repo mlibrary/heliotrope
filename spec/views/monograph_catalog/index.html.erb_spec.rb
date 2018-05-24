@@ -29,6 +29,7 @@ RSpec.describe "monograph_catalog/index.html.erb", type: :view do
     assign(:monograph_presenter, monograph_presenter)
     allow(view).to receive(:t).with(any_args) { |value| value }
     allow(monograph_presenter).to receive(:date_uploaded).and_return(DateTime.now)
+    allow(monograph_presenter).to receive(:creator).and_return([])
   end
 
   describe 'provide: page_title' do
@@ -95,7 +96,6 @@ RSpec.describe "monograph_catalog/index.html.erb", type: :view do
 
       let(:monograph_coins_title) { "MONOGRAPH-COINS-TITLE" }
       let(:authors) { "AUTHORS" }
-      let(:editors) { "EDITORS" }
 
       context 'default' do
         before do
@@ -109,7 +109,6 @@ RSpec.describe "monograph_catalog/index.html.erb", type: :view do
           is_expected.not_to match t('.show_page_button')
           is_expected.not_to match t('.edit_page_button')
           is_expected.not_to match authors
-          is_expected.not_to match t('.edited_by')
           is_expected.not_to match(/<div.*?class=\"isbn\".*?>.*?<\/div>/m)
           is_expected.not_to match t('isbn')
           is_expected.not_to match t('isbn_paper')
@@ -152,18 +151,6 @@ RSpec.describe "monograph_catalog/index.html.erb", type: :view do
         it do
           debug_puts subject.to_s
           is_expected.to match authors
-        end
-      end
-
-      context 'editors?' do
-        before do
-          allow(monograph_presenter).to receive(:editors?).and_return(true)
-          allow(monograph_presenter).to receive(:editors).and_return(editors)
-          render
-        end
-        it do
-          debug_puts subject.to_s
-          is_expected.to match t('.edited_by')
         end
       end
 

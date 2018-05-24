@@ -10,9 +10,6 @@
       <% if presenter.authors? %>
         <h3><%= render_markdown presenter.authors %></h3>
       <% end %>
-      <% if presenter.editors? %>
-        <h3>Edited by <%= presenter.editors %></h3>
-      <% end %>
       <p><%= render_markdown document.description.first || '' %></p>
     </div>
   </div>

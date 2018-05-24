@@ -9,8 +9,11 @@ class MonographIndexer < Hyrax::WorkIndexer
       press_name = press.name unless press.nil?
       solr_doc[Solrizer.solr_name('press_name', :symbol)] = press_name
 
-      solr_doc[Solrizer.solr_name('primary_editor_full_name', :stored_searchable)] = editor_full_name
-      solr_doc[Solrizer.solr_name('primary_editor_full_name', :facetable)] = editor_full_name
+      roleless_creators = multiline_names_minus_role('creator')
+      solr_doc[Solrizer.solr_name('creator', :stored_searchable)] = roleless_creators
+      solr_doc[Solrizer.solr_name('creator_full_name', :stored_searchable)] = roleless_creators&.first
+      solr_doc[Solrizer.solr_name('creator_full_name', :facetable)] = roleless_creators&.first
+      solr_doc[Solrizer.solr_name('contributor', :stored_searchable)] = multiline_names_minus_role('contributor')
 
       # grab previous file set order here from Solr (before they are reindexed)
       existing_fileset_order = existing_filesets
@@ -38,10 +41,8 @@ class MonographIndexer < Hyrax::WorkIndexer
     end
   end
 
-  def editor_full_name
-    # This is the same as StoresCreatorNameSeparately#last_name
-    # but I'm not sure why we're even doing this: "Lastname, Firstname"?
-    joining_comma = object.primary_editor_family_name.blank? || object.primary_editor_given_name.blank? ? '' : ', '
-    object.primary_editor_family_name.to_s + joining_comma + object.primary_editor_given_name.to_s
+  def multiline_names_minus_role(field)
+    value = object.public_send(field).first
+    value.present? ? value.split(/\r?\n/).reject(&:blank?).map { |val| val.sub(/\s*\(.+\)$/, '').strip } : value
   end
 end

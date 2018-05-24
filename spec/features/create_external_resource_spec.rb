@@ -18,8 +18,7 @@ feature 'Create an external resource' do
     let(:monograph) do
       m = build(:monograph, title: ['Test monograph'],
                             representative_id: cover.id,
-                            creator_family_name: 'Johns',
-                            creator_given_name: 'Jimmy',
+                            creator: ['Johns, Jimmy'],
                             contributor: ['Sub Way'],
                             date_published: ['Oct 20th'])
       m.ordered_members << cover

@@ -107,7 +107,11 @@ feature 'Press Catalog' do
     end
 
     context 'with with a monograph with multiple authors' do
-      let!(:monograph) { create(:public_monograph, title: ['The Two Authors\' Book'], creator_family_name: 'Johns', creator_given_name: 'Jimmy', contributor: ['Sub Way'], press: umich.subdomain) }
+      let!(:monograph) { create(:public_monograph,
+                                title: ['The Two Authors\' Book'],
+                                creator: ['Johns, Jimmy (a role)'],
+                                contributor: ['Way, Sub (another role)'],
+                                press: umich.subdomain) }
 
       scenario 'Sees multiple author names on the press catalog page' do
         visit "/#{umich.subdomain}"

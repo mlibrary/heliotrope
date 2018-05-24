@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+# TODO: remove this file and references to it once the dust setlles on multi-line creator work
+
 module StoresCreatorNameSeparately
   extend ActiveSupport::Concern
 
@@ -14,19 +16,4 @@ module StoresCreatorNameSeparately
       index.as :stored_searchable
     end
   end
-
-  def to_solr(solr_doc = {})
-    super(solr_doc).tap do |doc|
-      name = full_name
-      doc[Solrizer.solr_name('creator_full_name', :stored_searchable)] = name
-      doc[Solrizer.solr_name('creator_full_name', :facetable)] = name
-    end
-  end
-
-  private
-
-    def full_name
-      joining_comma = creator_family_name.blank? || creator_given_name.blank? ? '' : ', '
-      creator_family_name.to_s + joining_comma + creator_given_name.to_s
-    end
 end

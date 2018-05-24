@@ -44,9 +44,6 @@
             <% if @presenter.monograph.authors? %>
               by <%= render_markdown @presenter.monograph.authors %>
             <% end %>
-            <% if @presenter.monograph.editors? %>
-              edited by <%= @presenter.monograph.editors %>
-            <% end %>
           </h3>
           <br />
           <%= render "attributes", presenter: @presenter %>

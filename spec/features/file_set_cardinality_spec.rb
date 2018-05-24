@@ -19,8 +19,10 @@ feature 'FileSet Cardinality' do
                                   book_needs_handles: "yes",
                                   caption: ["This is the caption"],
                                   content_type: ["drawing", "illustration"],
+                                  contributor: ["Thomas, John (playwright, author)\nGuy, Other (lackey)"],
                                   copyright_holder: "This is the © Copyright Holder",
                                   copyright_status: "in-copyright",
+                                  creator: ["Smith, John (author, artist, photographer)\nCoauthor, Sally"],
                                   credit_line: "Copyright by Some Person...",
                                   date_published: ["2017-01-01"],
                                   display_date: ["circa. 2000"],
@@ -32,7 +34,6 @@ feature 'FileSet Cardinality' do
                                   holding_contact: "Some museum or something somewhere",
                                   keywords: ["dogs", "cats", "fish"],
                                   permissions_expiration_date: "2020-01-01",
-                                  primary_creator_role: ["author", "artist", "photographer"],
                                   rights_granted: "Non-exclusive, North America, term-limited",
                                   rights_granted_creative_commons: "CC-BY",
                                   section_title: ["Chapter 2"],
@@ -90,6 +91,12 @@ feature 'FileSet Cardinality' do
       expect(doc.content_type).to match_array(['drawing', 'illustration'])
       expect(find('#file_set_content_type')[:class]).to include 'multi-text-field'
 
+      # contributor is a Hyrax::BasicMetadata multi-valued field we're using as a single-value (in Fedora) field...
+      # with entries separated by a new line.
+      expect(cover.contributor).to match_array(["Thomas, John (playwright, author)\nGuy, Other (lackey)"])
+      expect(doc.contributor).to match_array(['Thomas, John (playwright, author)', 'Guy, Other (lackey)'])
+      expect(find('#file_set_contributor')[:class]).to_not include 'multi-text-field'
+
       expect(cover.copyright_holder).to eql 'This is the © Copyright Holder'
       expect(doc.copyright_holder).to eql 'This is the © Copyright Holder'
       expect(find('#file_set_copyright_holder')[:class]).to_not include 'multi-text-field'
@@ -97,6 +104,13 @@ feature 'FileSet Cardinality' do
       expect(cover.copyright_status).to eql 'in-copyright'
       expect(doc.copyright_status).to eql 'in-copyright'
       expect(find('#file_set_copyright_status')[:class]).to_not include 'multi-text-field'
+
+      # creator is a Hyrax::BasicMetadata multi-valued field we're using as a single-value (in Fedora) field...
+      # with entries separated by a new line. Roles are indexed separately in `primary_creator_role`
+      expect(cover.creator).to match_array(["Smith, John (author, artist, photographer)\nCoauthor, Sally"])
+      expect(doc.creator).to match_array(['Smith, John', 'Coauthor, Sally'])
+      expect(find('#file_set_caption')[:class]).to_not include 'multi-text-field'
+      expect(doc.primary_creator_role).to match_array(["author", "artist", "photographer"])
 
       expect(cover.credit_line).to eql 'Copyright by Some Person...'
       expect(doc.credit_line).to eql 'Copyright by Some Person...'
@@ -142,10 +156,6 @@ feature 'FileSet Cardinality' do
       expect(cover.permissions_expiration_date).to eql '2020-01-01'
       expect(doc.permissions_expiration_date).to eql '2020-01-01'
       expect(find('#file_set_permissions_expiration_date')[:class]).to_not include 'multi-text-field'
-
-      expect(cover.primary_creator_role).to match_array(["author", "artist", "photographer"])
-      expect(doc.primary_creator_role).to match_array(["author", "artist", "photographer"])
-      expect(find('#file_set_primary_creator_role')[:class]).to include 'multi-text-field'
 
       expect(cover.rights_granted).to eql 'Non-exclusive, North America, term-limited'
       expect(doc.rights_granted).to eql 'Non-exclusive, North America, term-limited'

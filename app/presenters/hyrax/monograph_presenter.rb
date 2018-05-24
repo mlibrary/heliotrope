@@ -12,26 +12,17 @@ module Hyrax
 
     attr_accessor :pageviews
 
-    delegate :date_created, :date_modified, :date_uploaded, :location,
-             :description, :creator_display, :editor, :contributor, :subject, :section_titles,
-             :based_near, :publisher, :date_published, :language, :isbn, :isbn_paper,
-             :isbn_ebook, :copyright_holder, :buy_url, :embargo_release_date,
-             :lease_expiration_date, :rights, :creator_full_name,
-             :creator_given_name, :creator_family_name,
-             :primary_editor_family_name, :primary_editor_given_name, :primary_editor_full_name,
+    delegate :date_created, :date_modified, :date_uploaded, :location, :description,
+             :creator, :creator_display, :creator_full_name, :contributor,
+             :subject, :section_titles, :based_near, :publisher, :date_published, :language,
+             :isbn, :isbn_paper, :isbn_ebook, :copyright_holder, :buy_url, :embargo_release_date,
+             :lease_expiration_date, :rights,
              to: :solr_document
 
     def citations_ready?
       # everything used by Hyrax::CitationsBehavior
       title.present? && creator.present? && location.present? &&
         date_created.first.present? && publisher.first.present?
-    end
-
-    def creator
-      # CitationsBehavior depends on `creator`. ActiveTriple::Relation `creator` doesn't retain order.
-      creator_authors = creator_full_name.present? ? contributor.unshift(creator_full_name) : contributor
-      creator_editors = primary_editor_full_name.present? ? editor.unshift(primary_editor_full_name) : editor
-      creator_authors.present? || creator_editors.present? ? creator_authors + creator_editors : []
     end
 
     def based_near_label
@@ -69,19 +60,19 @@ module Hyrax
       solr_document.creator_display.present?
     end
 
-    def editors
-      ["#{primary_editor_given_name} #{primary_editor_family_name}", editor].flatten.to_sentence
+    def unreverse_names(comma_separated_names)
+      forward_names = []
+      comma_separated_names.each { |n| forward_names << unreverse_name(n) }
+      forward_names
     end
 
-    def editors?
-      # make the assumption that a free-form authorship entry covers editors as well
-      return false if creator_display?
-      editors.present?
+    def unreverse_name(comma_separated_name)
+      comma_separated_name.split(',').map(&:strip).reverse.join(' ')
     end
 
     def authors
       return creator_display if creator_display?
-      ["#{creator_given_name} #{creator_family_name}", contributor].flatten.to_sentence
+      [unreverse_names(creator), unreverse_names(contributor)].flatten.to_sentence(last_word_connector: ' and ')
     end
 
     def authors?
