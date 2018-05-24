@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'zip'
+
 class UnpackJob < ApplicationJob
   queue_as :unpack
 
