@@ -5,8 +5,7 @@
   <div class="row restrict-title">
     <div class="col-sm-12 col-center-block">
       <!-- TODO: this free intro is hardcoded and bad -->
-      <h1 class="text-center">To keep reading <em><%= @monograph_presenter.title %></em>, <a href="https://quod.lib.umich.edu/g/gabii/introduction/">read the free introduction</a> or choose an option below.</h1>
-    </div>
+      <%= restricted_message(@monograph_presenter.subdomain)&.html_safe %>
   </div>
   <div class="row">
     <div class="col-sm-4">
