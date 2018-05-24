@@ -87,7 +87,7 @@ importer = Import::Importer.new({ root_dir: options[:root_dir],
                                   visibility: options[:visibility],
                                   monograph_title: options[:monograph_title],
                                   monograph_id: options[:monograph_id],
-                                  quiet: options[:quiet]})
+                                  quiet: options[:quiet],
                                   workflow: options[:workflow]})
 
 importer.run(options[:test])
