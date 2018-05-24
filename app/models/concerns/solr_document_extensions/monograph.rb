@@ -11,10 +11,6 @@ module SolrDocumentExtensions::Monograph
     Array(self[Solrizer.solr_name('buy_url', :symbol)])
   end
 
-  # copyright_holder is also in FileSet
-
-  # date_published is also in FileSet
-
   def creator_full_name
     Array(self[Solrizer.solr_name('creator_full_name', :stored_searchable)]).first
   end

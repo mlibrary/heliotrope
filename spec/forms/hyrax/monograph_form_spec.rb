@@ -20,6 +20,7 @@ describe Hyrax::MonographForm do
                               date_created
                               subject
                               language
+                              identifier
                               representative_id
                               thumbnail_id
                               files
@@ -36,13 +37,13 @@ describe Hyrax::MonographForm do
                               admin_set_id
                               press
                               creator_display
-                              date_created
                               isbn
                               isbn_paper
                               isbn_ebook
                               hdl
                               doi
                               copyright_holder
+                              holding_contact
                               buy_url
                               section_titles
                               location] }

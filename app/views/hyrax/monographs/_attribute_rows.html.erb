@@ -4,6 +4,8 @@
 <%= presenter.attribute_to_html(:language) %>
 <%= presenter.attribute_to_html(:section_titles) %>
 <%= presenter.attribute_to_html(:buy_url, render_as: :markdown) %>
+<%= presenter.attribute_to_html(:copyright_holder) %>
+<%= presenter.attribute_to_html(:holding_contact) %>
 
 <%= presenter.attribute_to_html(:creator_full_name, label: t('author'), render_as: :linked) %>
 <%= presenter.attribute_to_html(:contributor, label: t('additional_authors'), render_as: :linked) %>
@@ -13,4 +15,6 @@
 <%= presenter.attribute_to_html(:isbn, label: t('isbn')) %>
 <%= presenter.attribute_to_html(:isbn_paper, label: t('isbn_paper')) %>
 <%= presenter.attribute_to_html(:isbn_ebook, label: t('isbn_ebook')) %>
-<%= presenter.attribute_to_html(:copyright_holder) %>
+
+<%= presenter.attribute_to_html(:doi) %>
+<%= presenter.attribute_to_html(:identifier) %>
