@@ -32,20 +32,31 @@ RSpec.describe EPub::Validator do
         end
       end
       context "with multiple renditions" do
+        # NOTE: we're emulating .remove_namespaces! here.
+        # TODO: probably stop using .remove_namespaces!
         before do
           File.open(File.join(@root_path, "META-INF/container.xml"), 'w') do |f|
             f.puts %(<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
             <container version="1.0" xmlns="urn:oasis:names:tc:opendocument:xmlns:container">
               <rootfiles>
-                <rootfile full-path="EPUB/content.opf" media-type="application/oebps-package+xml" rendition:accessMode="textual"/>
-                <rootfile full-path="EPUB/not_a_thing.opf" media-type="application/oebps-package+xml" rendition:accessMode="visual"/>
+                <rootfile full-path="EPUB/content.opf"
+                          media-type="application/oebps-package+xml"
+                          accessMode="visual"
+                          label="Text"/>
+                <rootfile full-path="EPUB/content_page_image.opf"
+                          media-type="application/oebps-package+xml"
+                          accessMode="visual"
+                          label="Page Scan"/>
               </rootfiles>
             </container>)
           end
         end
         subject { described_class.from_directory(@root_path) }
-        it "has the correct (always the first) rendition" do
+        it "has the correct OCR rendition" do
           expect(subject.content_file).to eq 'EPUB/content.opf'
+        end
+        it "has multi_rendition == 'yes'" do
+          expect(subject.multi_rendition).to eq 'yes'
         end
       end
     end
@@ -80,6 +91,7 @@ RSpec.describe EPub::Validator do
       expect(subject.content).to be_an_instance_of(Nokogiri::XML::Document)
       expect(subject.toc).to be_an_instance_of(Nokogiri::XML::Document)
       expect(subject.root_path).to be "root_path"
+      expect(subject.multi_rendition).to be "no"
     end
   end
 end

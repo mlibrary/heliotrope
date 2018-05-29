@@ -61,6 +61,7 @@ module EPub
       def results_from_chapters(db_results, query)
         results = {}
         results[:q] = query
+        results[:highlight_off] = @publication.multi_rendition
         results[:search_results] = []
 
         db_results.each do |chapter|

@@ -3,7 +3,7 @@
 module EPub
   class Publication
     private_class_method :new
-    attr_reader :id, :content_file, :content, :toc, :root_path
+    attr_reader :id, :content_file, :content, :toc, :root_path, :multi_rendition
 
     # Class Methods
 
@@ -74,6 +74,7 @@ module EPub
         @content = valid_epub.content
         @toc = ::EPub::Toc.new(valid_epub.toc)
         @root_path = valid_epub.root_path
+        @multi_rendition = valid_epub.multi_rendition
       end
   end
 end
