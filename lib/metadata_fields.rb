@@ -77,7 +77,9 @@ METADATA_FIELDS ||=
     ########################################################################################################
     { object: :monograph, field_name: 'Buy Book URL', metadata_name: 'buy_url', multivalued: :yes },
     { object: :monograph, field_name: 'Pub Year', metadata_name: 'date_created', multivalued: :yes },
-    { object: :monograph, field_name: 'Pub Location', metadata_name: 'location', multivalued: :no }
+    { object: :monograph, field_name: 'Pub Location', metadata_name: 'location', multivalued: :no },
+    { object: :monograph, field_name: 'Legacy ID', metadata_name: 'identifier', multivalued: :yes },
+    { object: :monograph, field_name: 'Series', metadata_name: 'series', multivalued: :yes_split }
   ].freeze
 
 MONO_FILENAME_FLAG ||= '://:MONOGRAPH://:'

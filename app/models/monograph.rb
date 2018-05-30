@@ -11,20 +11,6 @@ class Monograph < ActiveFedora::Base
     index.as :symbol
   end
 
-  property :copyright_holder, predicate: ::RDF::Vocab::SCHEMA.copyrightHolder, multiple: false do |index|
-    index.as :stored_searchable
-  end
-
-  property :holding_contact, predicate: ::RDF::URI.new('http://fulcrum.org/ns#holdingContact'), multiple: false do |index|
-    index.as :symbol
-  end
-
-  # this is specifically for tracking when PublishJob (which we've never used) was run
-  # if we decide to get rid of PublishJob obviously this should go too
-  property :date_published, predicate: ::RDF::Vocab::SCHEMA.datePublished do |index|
-    index.as :stored_searchable
-  end
-
   property :editor, predicate: ::RDF::Vocab::SCHEMA.editor do |index|
     index.as :stored_searchable
   end
@@ -33,6 +19,8 @@ class Monograph < ActiveFedora::Base
     index.as :stored_searchable
   end
 
+  ############################################################################################################
+  # TODO: once the values in isbn_ebook and isbn_paper have been copied/moved to isbn, remove these fields
   property :isbn_ebook, predicate: ::RDF::URI.new('http://fulcrum.org/ns#isbnEbook') do |index|
     index.as :stored_searchable
   end
@@ -40,6 +28,7 @@ class Monograph < ActiveFedora::Base
   property :isbn_paper, predicate: ::RDF::URI.new('http://fulcrum.org/ns#isbnSoftcover') do |index|
     index.as :stored_searchable
   end
+  ############################################################################################################
 
   property :primary_editor_family_name, predicate: ::RDF::URI.new('http://fulcrum.org/ns#primaryEditorFamilyName'), multiple: false do |index|
     index.as :stored_searchable
@@ -62,8 +51,13 @@ class Monograph < ActiveFedora::Base
     index.as :stored_searchable
   end
 
-  include HeliotropeCitableLinks
+  property :series, predicate: ::RDF::Vocab::DCMIType.Collection do |index|
+    index.as :stored_searchable
+  end
+
+  include HeliotropeUniversalMetadata
   include StoresCreatorNameSeparately
+  include ::Hyrax::WorkBehavior
   include ::Hyrax::WorkBehavior
   # This must come after the WorkBehavior because it finalizes the metadata
   # schema (by adding accepts_nested_attributes)

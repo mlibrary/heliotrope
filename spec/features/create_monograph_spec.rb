@@ -24,6 +24,7 @@ feature 'Create a monograph' do
       fill_in 'Subject', with: 'red stuff'
       expect(page).to have_css('input.monograph_language', count: 1)
       fill_in 'Language', with: 'English'
+      fill_in 'Series', with: 'The Cereal Series'
       fill_in 'Section Titles', with: 'Intro\nChapter 1\nChapter 2'
       fill_in 'Buy Book URL(s)', with: 'http://www.example.com/buy'
       fill_in 'Copyright Holder', with: 'Blahdy Blah Copyright Holder'
@@ -42,9 +43,8 @@ feature 'Create a monograph' do
       # location
       fill_in 'Publication Location', with: 'Ann Arbor, MI.'
       # ISBNs
-      fill_in 'ISBN (Hardcover)', with: '123-456-7890'
-      fill_in 'ISBN (Paper)', with: '123-456-7891'
-      fill_in 'ISBN (E-Book)', with: '123-456-7892'
+      expect(page).to have_css('input.monograph_isbn', count: 1)
+      fill_in 'ISBN(s)', with: '123-456-7890'
 
       # Citable Links
       fill_in 'DOI', with: 'http://wwww.example.com'
@@ -59,8 +59,6 @@ feature 'Create a monograph' do
       expect(page).to have_content "Jimmy Johns, Sub Way and Sandwich Shoppe"
       expect(page).to have_field('Citable Link', with: 'http://wwww.example.com')
       expect(page).to have_content '123-456-7890'
-      expect(page).to have_content '123-456-7891'
-      expect(page).to have_content '123-456-7892'
       expect(page).to have_content "Your files are being processed by Fulcrum in the background."
 
       click_link 'Edit Monograph'
@@ -72,6 +70,10 @@ feature 'Create a monograph' do
       page.all(:fillable_field, 'monograph[subject][]').last.set('green stuff')
       expect(page).to have_css('input.monograph_language', count: 2)
       page.all(:fillable_field, 'monograph[language][]').last.set('German')
+      expect(page).to have_css('input.monograph_series', count: 2)
+      page.all(:fillable_field, 'monograph[series][]').last.set('The Second Series')
+      expect(page).to have_css('input.monograph_isbn', count: 2)
+      page.all(:fillable_field, 'monograph[isbn][]').last.set('123-456-7891')
 
       click_button 'Save'
 
@@ -79,6 +81,13 @@ feature 'Create a monograph' do
       # check authorship override
       expect(page).to have_content "Fancy Authorship Name Stuff That Takes Precedence"
       expect(page).to_not have_content "Jimmy Johns, Sub Way and Shoppe Sandwich"
+      # series
+      expect(page).to have_content 'The Cereal Series'
+      expect(page).to have_content 'The Second Series'
+      # ISBN
+      expect(page).to have_content '123-456-7890'
+      expect(page).to have_content '123-456-7891'
+
       click_link 'Manage Monograph and Files'
 
       # On Monograph show page
@@ -115,7 +124,6 @@ feature 'Create a monograph' do
       # ISBN
       expect(page).to have_content '123-456-7890'
       expect(page).to have_content '123-456-7891'
-      expect(page).to have_content '123-456-7892'
 
       # DOI
       expect(page).to have_content 'http://wwww.example.com'

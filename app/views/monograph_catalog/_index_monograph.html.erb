@@ -42,9 +42,8 @@
 
     <table class="table monograph attributes" <%= @monograph_presenter.microdata_type_to_html %>>
       <tbody>
+      <%= @monograph_presenter.attribute_to_html(:series, label: t('series')) %>
       <%= @monograph_presenter.attribute_to_html(:isbn, label: t('isbn')) %>
-      <%= @monograph_presenter.attribute_to_html(:isbn_paper, label: t('isbn_paper')) %>
-      <%= @monograph_presenter.attribute_to_html(:isbn_ebook, label: t('isbn_ebook')) %>
       <tr>
         <th><%= t('citable_link') %></th>
         <td>

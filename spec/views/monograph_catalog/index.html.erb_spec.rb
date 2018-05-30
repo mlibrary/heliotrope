@@ -165,39 +165,15 @@ RSpec.describe "monograph_catalog/index.html.erb", type: :view do
         end
       end
 
-      context 'isbn (a.k.a. isbn_hardcover)' do
+      context 'isbn' do
         before do
-          allow(monograph_presenter).to receive(:isbn).and_return("ISBN-HARDCOVER")
+          allow(monograph_presenter).to receive(:isbn).and_return(["ISBN-HARDCOVER", "ISBN-PAPER", "ISBN-EBOOK"])
           render
         end
         it do
           debug_puts subject.to_s
           is_expected.to match t('isbn')
-          is_expected.to match "ISBN-HARDCOVER"
-        end
-      end
-
-      context 'isbn_paper' do
-        before do
-          allow(monograph_presenter).to receive(:isbn_paper).and_return(["ISBN-PAPER"])
-          render
-        end
-        it do
-          debug_puts subject.to_s
-          is_expected.to match t('isbn_paper')
-          is_expected.to match "ISBN-PAPER"
-        end
-      end
-
-      context 'isbn_ebook?' do
-        before do
-          allow(monograph_presenter).to receive(:isbn_ebook?).and_return(true)
-          allow(monograph_presenter).to receive(:isbn_ebook).and_return(["ISBN-EBOOK"])
-          render
-        end
-        it do
-          debug_puts subject.to_s
-          is_expected.to match t('isbn_ebook')
+          is_expected.to match "ISBN-HARDCOVER.*ISBN-PAPER.*ISBN-EBOOK"
         end
       end
 

@@ -43,4 +43,8 @@ module SolrDocumentExtensions::Monograph
   def location
     Array(self[Solrizer.solr_name('location', :stored_searchable)]).first
   end
+
+  def series
+    Array(self[Solrizer.solr_name('series', :stored_searchable)])
+  end
 end
