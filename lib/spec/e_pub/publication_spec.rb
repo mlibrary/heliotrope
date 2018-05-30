@@ -17,6 +17,7 @@ RSpec.describe EPub::Publication do
       allow(validator).to receive(:content).and_return(true)
       allow(validator).to receive(:toc).and_return(true)
       allow(validator).to receive(:root_path).and_return(nil)
+      allow(validator).to receive(:multi_rendition).and_return("no")
       allow(EPub.logger).to receive(:info).and_return(nil)
     end
 
