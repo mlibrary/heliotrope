@@ -90,12 +90,6 @@ $heb-black-80: #342f2e;
 
   // buttons
 
-  .manage-monograph-button {
-    color: $heb-white;
-    background-color: $heb-brand-color;
-    border-color: $heb-brand-color;
-  }
-
   .btn-default {
     @include button-background-color($heb-brand-color);
     @include button-font-color($heb-white);
@@ -341,11 +335,6 @@ $iu-midnight: #006298;
     @include benton-regular;
   }
 
-  .manage-monograph-button {
-    color: $iu-accent-color;
-    background-color: $iu-brand-color;
-  }
-
   // navigation menu
   .navbar-default .navbar-nav > .open > a,
   .navbar-default .navbar-nav > .open > a:hover,
@@ -568,11 +557,6 @@ $um-black-80: #342f2e;
   // buttons
   .btn {
     @include meta;
-  }
-
-  .manage-monograph-button {
-    color: $um-accent-color;
-    background-color: $um-brand-color;
   }
 
   // navigation menu
@@ -812,11 +796,6 @@ $gabii-link-hover:    #1e5667;
 
   .btn-default,
   .btn
-
-  .manage-monograph-button {
-    color: $gabii-white;
-    background-color: $gabii-brand-color;
-  }
 
   // navigation menu
   .navbar-default .navbar-nav > .open > a,
@@ -1211,10 +1190,6 @@ $umn-white: #fff;
     @include brandon;
   }
 
-  .manage-monograph-button {
-    color: $umn-grey;
-  }
-
   // navigation menu
   .navbar-default .navbar-nav > .open > a,
   .navbar-default .navbar-nav > .open > a:hover,
@@ -1442,10 +1417,6 @@ $fulcrum-light-2: #bec4cc;
     @include freight-sans-book;
   }
 
-  .manage-monograph-button {
-    color: $nw-white;
-  }
-
   // navigation menu
   .navbar-default .navbar-nav > .open > a,
   .navbar-default .navbar-nav > .open > a:hover,
@@ -1665,18 +1636,6 @@ $nyu-gray-2: #342f2e;
     background-color: $nyu-brand-color-2;
     border-color: $nyu-brand-color-2;
     color: $nyu-brand-color;
-  }
-
-  .manage-monograph-button {
-    color: $nyu-brand-accent;
-    background-color: $nyu-brand-color;
-  }
-
-  .manage-monograph-button:hover,
-  .manage-monograph-button:active {
-    background-color: $nyu-brand-color-2;
-    color: $nyu-brand-color;
-    border-color: $nyu-brand-color-2;
   }
 
   // navigation menu
@@ -1952,17 +1911,6 @@ $psu-gray-1: #3F4550;
     background-color: $psu-brand-color;
     border-color: $psu-brand-color;
     color: $psu-white;
-  }
-
-  .manage-monograph-button {
-    color: $psu-white;
-    background-color: $psu-brand-color;
-  }
-
-  .manage-monograph-button:hover,
-  .manage-monograph-button:active {
-    background-color: $psu-white;
-    color: $psu-brand-color;
   }
 
   // navigation menu
