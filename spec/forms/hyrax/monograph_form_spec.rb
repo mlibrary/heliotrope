@@ -46,7 +46,8 @@ describe Hyrax::MonographForm do
                               holding_contact
                               buy_url
                               section_titles
-                              location] }
+                              location
+                              series] }
   end
 
   describe 'required_fields' do

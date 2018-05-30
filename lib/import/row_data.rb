@@ -14,7 +14,8 @@ module Import
         # no error-checking for monograph stuff right now
         next if row[field[:field_name]].blank?
         is_multivalued = field[:multivalued]
-        field_values = split_field_values_to_array(row[field[:field_name]], is_multivalued)
+        field_values = split_field_values(row[field[:field_name]], is_multivalued)
+        field_values = combine_existing_values(field_values, is_multivalued, attrs[field[:metadata_name]])
         attrs[field[:metadata_name]] = return_scalar_or_multivalued(field_values, is_multivalued)
       end
     end
@@ -27,8 +28,9 @@ module Import
       fields.each do |field|
         if row[field[:field_name]].present?
           is_multivalued = field[:multivalued]
-          field_values = split_field_values_to_array(row[field[:field_name]], is_multivalued)
-          field_values = strip_markdown_from_array_of_values(field[:field_name], field_values, md)
+          # ensuring all values are arrays
+          field_values = split_field_values(row[field[:field_name]], is_multivalued)
+          field_values = strip_markdown(field[:field_name], field_values, md)
           if field[:acceptable_values]
             downcase_restricted_values(field[:field_name], field_values)
             field_value_acceptable(field[:field_name], field[:acceptable_values], field_values, controlled_vocab_errors)
@@ -47,18 +49,18 @@ module Import
 
     private
 
-      # TODO: look into using Array.wrap() instead of this confusing stuff if possible
-      def split_field_values_to_array(sheet_value, is_multivalued)
+      def split_field_values(sheet_value, is_multivalued)
         if is_multivalued == :yes_split
-          Array(sheet_value.split(';').map!(&:strip).reject(&:empty?))
+          sheet_value.split(';').map!(&:strip).reject(&:empty?)
         elsif is_multivalued == :yes_multiline
-          Array(sheet_value.split(';').map!(&:strip).reject(&:empty?).join("\n"))
+          sheet_value.split(';').map!(&:strip).reject(&:empty?).join("\n")
         else
-          Array(sheet_value.strip)
+          # force array for uniformity, ease of iteration in subsequent methods
+          Array.wrap(sheet_value.strip)
         end
       end
 
-      def strip_markdown_from_array_of_values(field_name, field_values, md)
+      def strip_markdown(field_name, field_values, md)
         field_name == "Keywords" ? field_values.map! { |value| md.render(value).strip! } : field_values
       end
 
@@ -67,9 +69,23 @@ module Import
         field_name == "Rights Granted - Creative Commons" ? field_values : field_values.map!(&:downcase)
       end
 
-      # TODO: look into using Array.wrap() instead of this confusing stuff if possible
+      def combine_existing_values(field_values, is_multivalued, existing_values)
+        # we now have multiple columns mapping to the same Fedora field (e.g. `identifier`), so have to aggregate
+        if existing_values.present?
+          if is_multivalued == :no
+            Array(existing_values.first + field_values.first)
+          elsif is_multivalued == :yes_multiline
+            Array(existing_values.first + "\n" + field_values.first)
+          else
+            existing_values + field_values
+          end
+        else
+          field_values
+        end
+      end
+
       def return_scalar_or_multivalued(field_values, is_multivalued)
-        is_multivalued == :no ? field_values.first : field_values
+        is_multivalued == :no ? field_values.first : Array.wrap(field_values)
       end
 
       def field_value_acceptable(field_name, acceptable_values, actual_values, controlled_vocab_errors)

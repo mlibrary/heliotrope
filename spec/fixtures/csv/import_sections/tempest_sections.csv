@@ -1,14 +1,14 @@
-File Name,Title,Resource Type,Content Type,Language,Externally Hosted Resource,Exclusive to Fulcrum,Rights Granted - Creative Commons,Creator(s),Additional Creator(s),Keywords,Section,Subject,ISBN(s)
+File Name,Title,Resource Type,Persistent ID - Display on Platform,Content Type,Language,Externally Hosted Resource,Exclusive to Fulcrum,Rights Granted - Creative Commons,Creator(s),Additional Creator(s),Keywords,Section,Subject,ISBN(s),Legacy ID,Series
 ,"Title of the object
-A name given to the resource. Examples: title of a painting, photo, video.",,,,,,,"An entity primarily responsible for making the resource. Examples: Author/authors; artists; photographers; institutional authors or producers, such as university or federal agency.
-",,,,,
-://:MONOGRAPH://:,The Tempest: A Subtitle,,,,,,," Shakespeare, William; Playwright, Mr. Uncredited",Christopher Marlowe; Sir Francis Bacon,,://:MONOGRAPH://:,Dog;Cat;Mouse,134513451345; 1451-25423; 1451343513
-shipwreck.jpg,Monograph Shipwreck,image,portrait,English,No,No,"Creative Commons Attribution-ShareAlike license, 3.0 Unported","Smith, Benjamin",,,,,
-miranda.jpg,Monograph Miranda, image,audience materials,English; German,no,yes,Creative Commons Zero license (implies pd),"Waterhouse, John William",,,,,
-ファイル.txt,日本語のファイル ,text,portrait; illustration,Japanese,no,yes,Creative Commons Zero license (implies pd),,,,,,
-shipwreck1.jpg,Section 1 Shipwreck,image,audience materials,Russian,No,Yes,Creative Commons Zero license (implies pd),Smith,,keyword1; keyword2;,Act 1: Calm Waters,,
-miranda1.jpg,Section 1 Miranda,image,portrait,Russian; German; French,no,yes,Creative Commons Zero license (implies pd),"Waterhouse, John William; Creator, A. Second",,regular; _italicized_,Act 1: Calm Waters,,
-shipwreck2.jpg,Section 2 Shipwreck,image,audience materials,French,No,yes,Creative Commons Zero license (implies pd),Smith,,,Act 2: Stirrin' Up,,
-miranda2.jpg,Section 2 Miranda,image,illustration,English,no,Yes,Creative Commons Zero license (implies pd),"Waterhouse, John William",,,Act 2: Stirrin' Up,,
-shipwreck1.jpg,Previous Shipwreck File (Again),image,portrait; photograph,Latin,No,yes,Creative Commons Zero license (implies pd),Smith,,,Act 2: Stirrin' Up,,
-,External Bard Transcript,text,Interview Transcript,English,yes,no,,"L'Interviewere, Bob",,interview,Act 3: External Stuffs,,
+A name given to the resource. Examples: title of a painting, photo, video.",,,,,,,,"An entity primarily responsible for making the resource. Examples: Author/authors; artists; photographers; institutional authors or producers, such as university or federal agency.
+",,,,,,,
+://:MONOGRAPH://:,The Tempest: A Subtitle,,http://www.example.com/handle,,,,,," Shakespeare, William; Playwright, Mr. Uncredited",Christopher Marlowe; Sir Francis Bacon,,://:MONOGRAPH://:,Dog;Cat;Mouse,134513451345; 1451-25423; 1451343513,999.999.9999,Series the First;Cereal Series; Serial the Third
+shipwreck.jpg,Monograph Shipwreck,image,,portrait,English,No,No,"Creative Commons Attribution-ShareAlike license, 3.0 Unported","Smith, Benjamin",,,,,,,
+miranda.jpg,Monograph Miranda, image,,audience materials,English; German,no,yes,Creative Commons Zero license (implies pd),"Waterhouse, John William",,,,,,,
+ファイル.txt,日本語のファイル ,text,,portrait; illustration,Japanese,no,yes,Creative Commons Zero license (implies pd),,,,,,,,
+shipwreck1.jpg,Section 1 Shipwreck,image,,audience materials,Russian,No,Yes,Creative Commons Zero license (implies pd),Smith,,keyword1; keyword2;,Act 1: Calm Waters,,,,
+miranda1.jpg,Section 1 Miranda,image,,portrait,Russian; German; French,no,yes,Creative Commons Zero license (implies pd),"Waterhouse, John William; Creator, A. Second",,regular; _italicized_,Act 1: Calm Waters,,,,
+shipwreck2.jpg,Section 2 Shipwreck,image,,audience materials,French,No,yes,Creative Commons Zero license (implies pd),Smith,,,Act 2: Stirrin' Up,,,,
+miranda2.jpg,Section 2 Miranda,image,,illustration,English,no,Yes,Creative Commons Zero license (implies pd),"Waterhouse, John William",,,Act 2: Stirrin' Up,,,,
+shipwreck1.jpg,Previous Shipwreck File (Again),image,,portrait; photograph,Latin,No,yes,Creative Commons Zero license (implies pd),Smith,,,Act 2: Stirrin' Up,,,,
+,External Bard Transcript,text,,Interview Transcript,English,yes,no,,"L'Interviewere, Bob",,interview,Act 3: External Stuffs,,,,

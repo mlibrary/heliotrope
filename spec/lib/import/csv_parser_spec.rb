@@ -22,13 +22,15 @@ describe Import::CSVParser do
   describe '#attributes' do
     subject { parser.attributes }
 
-    # order of asset metadata here is as in lib/import.rb
     it 'collects attributes from the CSV file' do
       expect(subject['title']).to eq ['The Tempest: A Subtitle']
+      # testing aggregation of identifiers such as legacy handle and ID here
+      expect(subject['identifier']).to eq ['http://www.example.com/handle', '999.999.9999']
       expect(subject['creator']).to eq ["Shakespeare, William\nPlaywright, Mr. Uncredited"]
       expect(subject['contributor']).to eq ["Christopher Marlowe\nSir Francis Bacon"]
       expect(subject['subject']).to eq ['Dog', 'Cat', 'Mouse']
       expect(subject['isbn']).to eq ['134513451345', '1451-25423', '1451343513']
+      expect(subject['series']).to eq ['Series the First', 'Cereal Series', 'Serial the Third']
       expect(subject['files']).to eq [
         'shipwreck.jpg',
         'miranda.jpg',

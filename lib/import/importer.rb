@@ -92,6 +92,15 @@ module Import
       csv_files.each do |file|
         attrs = CSVParser.new(file).attributes
 
+        # tombstoned HEB items have a Monograph title of `[title removed]`. We don't want to import these.
+        if attrs['title'].blank? # might as well bow out if the monograph title is blank for some reason too.
+          puts "Monograph title cannot be blank. Not importing this Monograph."
+          exit
+        elsif attrs['title'].first&.strip == '[title removed]'
+          puts "HEB tombstoned EPUB detected. Not importing this Monograph."
+          exit
+        end
+
         admin_set_id = check_for_admin_set if @workflow.present?
         puts "You are using workflow '#{@workflow}' that has an AdminSet id of #{admin_set_id}" if admin_set_id
 

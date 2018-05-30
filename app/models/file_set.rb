@@ -34,22 +34,12 @@ class FileSet < ActiveFedora::Base
     index.as :stored_searchable, :facetable
   end
 
-  property :copyright_holder, predicate: ::RDF::Vocab::SCHEMA.copyrightHolder, multiple: false do |index|
-    index.as :stored_searchable
-  end
-
   property :copyright_status, predicate: ::RDF::URI.new('http://fulcrum.org/ns#copyrightStatus'), multiple: false do |index|
     index.as :symbol
   end
 
   property :credit_line, predicate: ::RDF::URI.new('http://fulcrum.org/ns#creditLine'), multiple: false do |index|
     index.as :symbol
-  end
-
-  # this is specifically for tracking when PublishJob (which we've never used) was run
-  # if we decide to get rid of PublishJob obviously this should go too
-  property :date_published, predicate: ::RDF::Vocab::SCHEMA.datePublished do |index|
-    index.as :stored_searchable
   end
 
   property :display_date, predicate: ::RDF::URI.new('http://fulcrum.org/ns#displayDate') do |index|
@@ -65,10 +55,6 @@ class FileSet < ActiveFedora::Base
   end
 
   property :ext_url_doi_or_handle, predicate: ::RDF::URI.new('http://fulcrum.org/ns#externalUrlDoiOrHandle'), multiple: false do |index|
-    index.as :symbol
-  end
-
-  property :holding_contact, predicate: ::RDF::URI.new('http://fulcrum.org/ns#holdingContact'), multiple: false do |index|
     index.as :symbol
   end
 
@@ -123,7 +109,7 @@ class FileSet < ActiveFedora::Base
   end
 
   include GlobalID::Identification
-  include HeliotropeCitableLinks
+  include HeliotropeUniversalMetadata
   include StoresCreatorNameSeparately
   include ::Hyrax::FileSetBehavior
   include ::Hyrax::BasicMetadata

@@ -109,7 +109,8 @@ en:
       form:
         q:
           label: "Search within %{application_name}"
-  isbn: "ISBN (Hardcover)"
+  isbn: "ISBN(s)"
+  # TODO: remove these once their values are copied in to :isbn
   isbn_ebook: "ISBN (E-Book)"
   isbn_paper: "ISBN (Paper)"
   keywords: "Keywords"
@@ -192,6 +193,7 @@ en:
   section: "Section"
   section_title: "Related Section"
   section_titles: "Section Titles"
+  series: "Series"
   simple_form:
     labels:
       defaults:
@@ -268,6 +270,7 @@ en:
         language: "Language"
         location: "Publication Location"
         required_message: "Field groups marked with * contain required metadata fields (colored red)."
+        series: "Series"
         subject: "Subject"
         title: "Title"
     hints:

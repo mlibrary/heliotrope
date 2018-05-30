@@ -7,7 +7,7 @@ module Hyrax
     self.model_class = ::Monograph
     # Hyrax::BasicMetadata fields are already included
     self.terms += %i[press creator_display isbn isbn_paper isbn_ebook hdl doi copyright_holder
-                     holding_contact buy_url section_titles location]
+                     holding_contact buy_url section_titles location series]
     self.terms -= %i[keyword related_url source based_near rights_statement license]
 
     self.required_fields = %i[title press description creator publisher date_created location]

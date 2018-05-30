@@ -16,7 +16,7 @@ module Hyrax
              :creator, :creator_display, :creator_full_name, :contributor,
              :subject, :section_titles, :based_near, :publisher, :date_published, :language,
              :isbn, :isbn_paper, :isbn_ebook, :copyright_holder, :holding_contact,
-             :buy_url, :embargo_release_date, :lease_expiration_date, :rights,
+             :buy_url, :embargo_release_date, :lease_expiration_date, :rights, :series,
              to: :solr_document
 
     def citations_ready?
