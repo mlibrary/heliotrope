@@ -69,6 +69,36 @@ module FeaturedRepresentatives
       featured_representatives.map { |fr| fr.file_set_id if fr.kind == 'aboutware' }.compact.first
     end
 
+    def reviews?
+      featured_representatives.map(&:kind).include? 'reviews'
+    end
+
+    def reviews
+      # This somewhat oddly returns a presenter not a solr_doc. Maybe they all should
+      # return presenters?
+      solr_doc = ordered_member_docs.find { |doc| doc.id == reviews_id }
+      Hyrax::FileSetPresenter.new(solr_doc, current_ability, request) if solr_doc.present?
+    end
+
+    def reviews_id
+      featured_representatives.map { |fr| fr.file_set_id if fr.kind == 'reviews' }.compact.first
+    end
+
+    def related?
+      featured_representatives.map(&:kind).include? 'related'
+    end
+
+    def related
+      # This somewhat oddly returns a presenter not a solr_doc. Maybe they all should
+      # return presenters?
+      solr_doc = ordered_member_docs.find { |doc| doc.id == related_id }
+      Hyrax::FileSetPresenter.new(solr_doc, current_ability, request) if solr_doc.present?
+    end
+
+    def related_id
+      featured_representatives.map { |fr| fr.file_set_id if fr.kind == 'related' }.compact.first
+    end
+
     def pdf_ebook?
       featured_representatives.map(&:kind).include? 'pdf_ebook'
     end

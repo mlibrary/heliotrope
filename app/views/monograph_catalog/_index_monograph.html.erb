@@ -43,6 +43,8 @@
     <table class="table monograph attributes" <%= @monograph_presenter.microdata_type_to_html %>>
       <tbody>
       <%= @monograph_presenter.attribute_to_html(:series, label: t('series')) %>
+      <%= @monograph_presenter.attribute_to_html(:copyright_holder, label: t('copyright_holder')) %>
+      <%= @monograph_presenter.attribute_to_html(:holding_contact, render_as: :markdown, label: t('holding_contact')) %>
       <%= @monograph_presenter.attribute_to_html(:isbn, label: t('isbn')) %>
       <tr>
         <th><%= t('citable_link') %></th>
@@ -71,6 +73,12 @@
         <% else %>
           <li role="presentation" class="active"><a id="tab-media" href="#media" data-toggle="tab" role="tab" aria-controls="media" aria-selected="true"  tabindex="0">Media</a></li>
         <% end %>
+      <% end %>
+      <% if @monograph_presenter.reviews? %>
+        <li role="presentation"><a id="tab-reviews" href="#reviews" role="tab" data-toggle="tab" aria-controls="reviews" aria-selected="false" tabindex="-1">Reviews</a></li>
+      <% end %>
+      <% if @monograph_presenter.related? %>
+        <li role="presentation"><a id="tab-related" href="#related" role="tab" data-toggle="tab" aria-controls="related" aria-selected="false" tabindex="-1">Related Titles</a></li>
       <% end %>
       <% if @monograph_presenter.webgl? %>
         <li role="presentation"><a id="tab-webgl" href="#webgl" role="tab" data-toggle="tab" aria-controls="webgl" aria-selected="false" tabindex="-1">3-D Model</a></li>
@@ -121,8 +129,26 @@
         <section id="aboutware" class="tab-pane fade in aboutware row" role="tabpanel" aria-hidden="true" aria-labelledby="tab-aboutware" tabindex="0">
           <div class="col-sm-12">
             <h2 class="sr-only">About</h2>
-            <!-- this assumes that the "aboutware" FileSet is an html doc -->
+            <%# this assumes that the "aboutware" FileSet is an html doc %>
             <%= @monograph_presenter.aboutware.file.content.force_encoding("UTF-8").html_safe %>
+          </div>
+        </section>
+      <% end %>
+      <% if @monograph_presenter.reviews? %>
+        <section id="reviews" class="tab-pane fade in reviews row" role="tabpanel" aria-hidden="true" aria-labelledby="tab-reviews" tabindex="0">
+          <div class="col-sm-12">
+            <h2 class="sr-only">Reviews</h2>
+            <%# this assumes that the "reviews" FileSet is an html doc %>
+            <%= auto_link(@monograph_presenter.reviews.file.content.force_encoding("UTF-8"), html: { target: '_blank' }, sanitize: false).html_safe %>
+          </div>
+        </section>
+      <% end %>
+      <% if @monograph_presenter.related? %>
+        <section id="related" class="tab-pane fade in related row" role="tabpanel" aria-hidden="true" aria-labelledby="tab-related" tabindex="0">
+          <div class="col-sm-12">
+            <h2 class="sr-only">Related Titles</h2>
+            <%# this assumes that the "related" FileSet is an html doc %>
+            <%= @monograph_presenter.related.file.content.force_encoding("UTF-8").html_safe %>
           </div>
         </section>
       <% end %>

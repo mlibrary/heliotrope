@@ -84,6 +84,9 @@ feature 'Create a monograph' do
       # series
       expect(page).to have_content 'The Cereal Series'
       expect(page).to have_content 'The Second Series'
+      # copyright stuff
+      expect(page).to have_content 'Blahdy Blah Copyright Holder'
+      expect(page).to have_content 'http://www.blahpresscompany.com/'
       # ISBN
       expect(page).to have_content '123-456-7890'
       expect(page).to have_content '123-456-7891'
