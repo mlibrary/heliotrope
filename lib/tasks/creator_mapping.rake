@@ -16,6 +16,10 @@ namespace :heliotrope do
       end
       puts csv_string
 
+      ## note for posterity: this should have ensured that `creator` couldn't be set to [""], which will display a blank...
+      ## value in the UI. Empty values should have been set to [].
+      #
+      ## these lines are commented for safety
       # m.creator = Array.wrap(monograph_creator)
       # m.contributor = []
       # m.save!
@@ -29,6 +33,10 @@ namespace :heliotrope do
       end
       puts csv_string
 
+      ## note for posterity: this should have ensured that `creator`/`contributor` couldn't be set to [""], which will...
+      ## display a blank value in the UI. Empty values should have been set to [].
+      # 
+      # these lines are commented for safety
       # f.creator = Array.wrap(file_set_creator)
       # f.contributor = Array.wrap(f.contributor.join("\n"))
       # f.save!
