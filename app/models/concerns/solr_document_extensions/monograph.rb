@@ -19,14 +19,6 @@ module SolrDocumentExtensions::Monograph
     Array(self[Solrizer.solr_name('isbn', :stored_searchable)])
   end
 
-  def isbn_ebook
-    Array(self[Solrizer.solr_name('isbn_ebook', :stored_searchable)])
-  end
-
-  def isbn_paper
-    Array(self[Solrizer.solr_name('isbn_paper', :stored_searchable)])
-  end
-
   def press
     Array(self[Solrizer.solr_name('press', :stored_searchable)]).first
   end

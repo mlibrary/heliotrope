@@ -19,17 +19,6 @@ class Monograph < ActiveFedora::Base
     index.as :stored_searchable
   end
 
-  ############################################################################################################
-  # TODO: once the values in isbn_ebook and isbn_paper have been copied/moved to isbn, remove these fields
-  property :isbn_ebook, predicate: ::RDF::URI.new('http://fulcrum.org/ns#isbnEbook') do |index|
-    index.as :stored_searchable
-  end
-
-  property :isbn_paper, predicate: ::RDF::URI.new('http://fulcrum.org/ns#isbnSoftcover') do |index|
-    index.as :stored_searchable
-  end
-  ############################################################################################################
-
   property :primary_editor_family_name, predicate: ::RDF::URI.new('http://fulcrum.org/ns#primaryEditorFamilyName'), multiple: false do |index|
     index.as :stored_searchable
   end

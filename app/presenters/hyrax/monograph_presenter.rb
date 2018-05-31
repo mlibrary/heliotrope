@@ -3,7 +3,6 @@
 module Hyrax
   class MonographPresenter < WorkShowPresenter
     include CCAnalyticsPresenter
-    include ISBNPresenter
     include CitableLinkPresenter
     include OpenUrlPresenter
     include TitlePresenter
@@ -15,7 +14,7 @@ module Hyrax
     delegate :date_created, :date_modified, :date_uploaded, :location, :description,
              :creator, :creator_display, :creator_full_name, :contributor,
              :subject, :section_titles, :based_near, :publisher, :date_published, :language,
-             :isbn, :isbn_paper, :isbn_ebook, :copyright_holder, :holding_contact,
+             :isbn, :copyright_holder, :holding_contact,
              :buy_url, :embargo_release_date, :lease_expiration_date, :rights, :series,
              to: :solr_document
 

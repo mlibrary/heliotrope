@@ -28,8 +28,6 @@ describe SolrDocument do
   it { is_expected.to respond_to(:creator_full_name) }
   it { is_expected.to respond_to(:buy_url) }
   it { is_expected.to respond_to(:isbn) }
-  it { is_expected.to respond_to(:isbn_ebook) }
-  it { is_expected.to respond_to(:isbn_paper) }
   it { is_expected.to respond_to(:press) }
   it { is_expected.to respond_to(:representative_manifest_id) }
 

@@ -106,15 +106,13 @@ RSpec.describe "monograph_catalog/index.html.erb", type: :view do
           debug_puts subject.to_s
           is_expected.not_to be_empty
           is_expected.not_to match(/<span.*?class=\"Z3988\".*?title=\".*?".*?>.*?<\/span>/m)
-          is_expected.not_to match t('.show_page_button')
-          is_expected.not_to match t('.edit_page_button')
+          is_expected.not_to match t('monograph_catalog.index.show_page_button')
+          is_expected.not_to match t('monograph_catalog.index.edit_page_button')
           is_expected.not_to match authors
           is_expected.not_to match(/<div.*?class=\"isbn\".*?>.*?<\/div>/m)
           is_expected.not_to match t('isbn')
-          is_expected.not_to match t('isbn_paper')
-          is_expected.not_to match t('isbn_ebook')
-          is_expected.not_to match t('.buy')
-          is_expected.not_to match t('.buy_book')
+          is_expected.not_to match t('monograph_catalog.index.buy')
+          is_expected.not_to match t('monograph_catalog.index.buy_book')
         end
       end
 
@@ -137,8 +135,8 @@ RSpec.describe "monograph_catalog/index.html.erb", type: :view do
         end
         it do
           debug_puts subject.to_s
-          is_expected.to match t('.show_page_button')
-          is_expected.to match t('.edit_page_button')
+          is_expected.to match t('monograph_catalog.index.show_page_button')
+          is_expected.to match t('monograph_catalog.index.edit_page_button')
         end
       end
 
@@ -185,8 +183,8 @@ RSpec.describe "monograph_catalog/index.html.erb", type: :view do
         end
         it do
           debug_puts subject.to_s
-          is_expected.to match t('.buy')
-          is_expected.to match t('.buy_book')
+          is_expected.to match t('monograph_catalog.index.buy')
+          is_expected.to match t('monograph_catalog.index.buy_book')
         end
       end
 

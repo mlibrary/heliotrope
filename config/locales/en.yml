@@ -110,9 +110,6 @@ en:
         q:
           label: "Search within %{application_name}"
   isbn: "ISBN(s)"
-  # TODO: remove these once their values are copied in to :isbn
-  isbn_ebook: "ISBN (E-Book)"
-  isbn_paper: "ISBN (Paper)"
   keywords: "Keywords"
   last_modified: "Last Modified"
   lease_expiration_date: "Lease Expiration Date"
@@ -223,8 +220,6 @@ en:
         hdl: :"hdl"
         holding_contact: :"holding_contact"
         isbn: :"isbn"
-        isbn_ebook: :"isbn_ebook"
-        isbn_paper: :"isbn_paper"
         keywords: :"keywords"
         lease_expiration_date: :"lease_expiration_date"
         permissions_expiration_date: :"permissions_expiration_date"
@@ -283,6 +278,7 @@ en:
         citation_publisher: "The publisher name used in auto-generated citations."
         creator_display: "An optional free-text field allowing custom authorship display."
         hdl: "A thing to remove in HELIO-1775"
+        isbn: "Enter as many ISBN values as you want. Put the format in parentheses if needed, e.g. \"123-123456-1 (e-book)\"."
         description: "A free-text description of the work (markdown allowed)."
         language: "The language of the monograph's content."
         location: "The place name used in auto-generated citations."
