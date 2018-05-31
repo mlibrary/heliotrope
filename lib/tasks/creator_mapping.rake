@@ -35,7 +35,7 @@ namespace :heliotrope do
 
       ## note for posterity: this should have ensured that `creator`/`contributor` couldn't be set to [""], which will...
       ## display a blank value in the UI. Empty values should have been set to [].
-      # 
+      #
       # these lines are commented for safety
       # f.creator = Array.wrap(file_set_creator)
       # f.contributor = Array.wrap(f.contributor.join("\n"))
