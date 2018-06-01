@@ -6,7 +6,7 @@ module Hyrax
   class MonographForm < Hyrax::Forms::WorkForm
     self.model_class = ::Monograph
     # Hyrax::BasicMetadata fields are already included
-    self.terms += %i[press creator_display isbn isbn_paper isbn_ebook hdl doi copyright_holder
+    self.terms += %i[press creator_display isbn hdl doi copyright_holder
                      holding_contact buy_url section_titles location series]
     self.terms -= %i[keyword related_url source based_near rights_statement license]
 
@@ -46,7 +46,6 @@ module Hyrax
       attrs[:contributor] = Array(attrs[:contributor]) if attrs[:contributor]
       attrs[:publisher] = Array(attrs[:publisher]) if attrs[:publisher]
       attrs[:date_created] = Array(attrs[:date_created]) if attrs[:date_created]
-      # TODO: add any heliotrope fields that shouldn't have been multi here (e.g. ISBNs maybe, see below also)
       attrs
     end
 
@@ -73,18 +72,5 @@ module Hyrax
     def date_created
       super.first || ""
     end
-
-    # TODO: if these fields are sticking around then their cardinality should be "changed"
-    # def isbn
-    #   super.first || ""
-    # end
-    #
-    # def isbn_paper
-    #   super.first || ""
-    # end
-    #
-    # def isbn_ebook
-    #   super.first || ""
-    # end
   end
 end

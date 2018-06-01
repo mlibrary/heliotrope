@@ -16,7 +16,6 @@ RSpec.describe Hyrax::MonographPresenter do
     subject { described_class.new(nil, nil) }
     it do
       is_expected.to be_a CCAnalyticsPresenter
-      is_expected.to be_a ISBNPresenter
       is_expected.to be_a OpenUrlPresenter
       is_expected.to be_a TitlePresenter
     end

@@ -67,14 +67,7 @@ METADATA_FIELDS ||=
     { object: :file_set, field_name: 'Redirect to', metadata_name: 'redirect_to', required: false, multivalued: :no },
     { object: :monograph, field_name: 'Publisher', metadata_name: 'publisher', multivalued: :yes },
     { object: :monograph, field_name: 'Subject', metadata_name: 'subject', multivalued: :yes_split },
-    ########################################################################################################
-    # TODO: tidy up ISBN fields. For now, the unlabelled, potentially-multivalued HED ISBNs will all go in `:isbn`, later this will probably be multivalued: :no_multiline
     { object: :monograph, field_name: 'ISBN(s)', metadata_name: 'isbn', multivalued: :yes_split },
-    ########################################################################################################
-    { object: :monograph, field_name: 'ISBN (hardcover)', metadata_name: 'isbn', multivalued: :yes },
-    { object: :monograph, field_name: 'ISBN (paper)', metadata_name: 'isbn_paper', multivalued: :yes },
-    { object: :monograph, field_name: 'ISBN (ebook)', metadata_name: 'isbn_ebook', multivalued: :yes },
-    ########################################################################################################
     { object: :monograph, field_name: 'Buy Book URL', metadata_name: 'buy_url', multivalued: :yes },
     { object: :monograph, field_name: 'Pub Year', metadata_name: 'date_created', multivalued: :yes },
     { object: :monograph, field_name: 'Pub Location', metadata_name: 'location', multivalued: :no },
