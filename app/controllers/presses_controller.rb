@@ -3,9 +3,14 @@
 class PressesController < ApplicationController
   load_and_authorize_resource find_by: :subdomain
 
-  def index; end
+  def index
+    authorize!(:index, Press)
+    @presses = Press.all
+  end
 
-  def new; end
+  def new
+    @press = Press.new
+  end
 
   def create
     @press = Press.create(press_params)
