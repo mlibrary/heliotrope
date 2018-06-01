@@ -23,7 +23,7 @@ describe Export::Exporter do
   describe '#export' do
     subject { described_class.new(monograph.id).export }
 
-    let(:monograph) { build(:monograph, representative_id: cover.id) }
+    let(:monograph) { build(:monograph, representative_id: cover.id, creator: ["First, Ms Joan\nSecond, Mr Tom"], contributor: ["Doe, Jane\nJoe, G.I."]) }
     let(:cover) { create(:file_set) }
     let(:file1) { create(:file_set) }
     let(:file2) { create(:file_set) }
@@ -34,7 +34,7 @@ describe Export::Exporter do
         #{cover.id},,"=HYPERLINK(""#{Rails.application.routes.url_helpers.hyrax_file_set_url(cover)}"")",#{cover.title.first},#{cover.resource_type.first},,,,,,,,,,,,,,,,,,,,,,,,#{cover.sort_date},,,,,,,,,,,,,,,,
         #{file1.id},,"=HYPERLINK(""#{Rails.application.routes.url_helpers.hyrax_file_set_url(file1)}"")",#{file1.title.first},#{file1.resource_type.first},,,,,,,,,,,,,,,,,,,,,,,,#{file1.sort_date},,,,,,,,,,,,,,,,
         #{file2.id},,"=HYPERLINK(""#{Rails.application.routes.url_helpers.hyrax_file_set_url(file2)}"")",#{file2.title.first},#{file2.resource_type.first},,,,,,,,,,,,,,,,,,,,,,,,#{file2.sort_date},,,,,,,,,,,,,,,,
-        #{monograph.id},://:MONOGRAPH://:,"=HYPERLINK(""#{Rails.application.routes.url_helpers.hyrax_monograph_url(monograph)}"")",#{monograph.title.first},,,,,,,,,,,,,,,,,,,,,,,,,,,,,://:MONOGRAPH://:,,,,,,,,,,,,
+        #{monograph.id},://:MONOGRAPH://:,"=HYPERLINK(""#{Rails.application.routes.url_helpers.hyrax_monograph_url(monograph)}"")",#{monograph.title.first},,,,,,,,,,,,,,,,,,,,,,,"First, Ms Joan; Second, Mr Tom","Doe, Jane; Joe, G.I.",,,,,://:MONOGRAPH://:,,,,,,,,,,,,
       eos
     end
 
