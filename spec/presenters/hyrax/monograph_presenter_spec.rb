@@ -134,6 +134,13 @@ RSpec.describe Hyrax::MonographPresenter do
       subject { presenter.authors }
       it { is_expected.to eq 'A very elaborate description of editors and authors' }
     end
+    describe 'the \heb\' press leaves author names reversed, joined with a semi-colon' do
+      before do
+        allow(presenter).to receive(:subdomain).and_return('heb')
+      end
+      subject { presenter.authors }
+      it { is_expected.to eq 'Cat, Abe; Lastname, Thing; Feetys, Manny' }
+    end
   end
 
   describe '#authors?' do
