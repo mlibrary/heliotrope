@@ -9,6 +9,9 @@ class MonographIndexer < Hyrax::WorkIndexer
       press_name = press.name unless press.nil?
       solr_doc[Solrizer.solr_name('press_name', :symbol)] = press_name
 
+      # Removing punctuation so that a title starting with quotes doesn't always come first
+      solr_doc[Solrizer.solr_name('title', :sortable)] = object&.title&.first&.downcase&.gsub(/[^\w\s\d-]/, '')
+
       roleless_creators = multiline_names_minus_role('creator')
       solr_doc[Solrizer.solr_name('creator', :stored_searchable)] = roleless_creators
       solr_doc[Solrizer.solr_name('creator_full_name', :stored_searchable)] = roleless_creators&.first
