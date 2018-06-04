@@ -3,8 +3,9 @@
 class FileSetIndexer < Hyrax::FileSetIndexer
   def generate_solr_document
     super.tap do |solr_doc|
-      # resource_type is not sortable, but we want it to be
-      solr_doc[Solrizer.solr_name('resource_type', :sortable)] = object.resource_type
+      # Removing punctuation so that a title starting with quotes doesn't always come first
+      solr_doc[Solrizer.solr_name('title', :sortable)] = object&.title&.first&.downcase&.gsub(/[^\w\s\d-]/, '')
+      solr_doc[Solrizer.solr_name('resource_type', :sortable)] = object&.resource_type&.first
 
       roleless_creators = multiline_names_minus_role('creator')
       solr_doc[Solrizer.solr_name('creator', :stored_searchable)] = roleless_creators

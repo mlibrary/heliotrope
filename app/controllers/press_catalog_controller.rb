@@ -9,7 +9,7 @@ class PressCatalogController < ::CatalogController
   configure_blacklight do |config|
     config.search_builder_class = PressSearchBuilder
     config.index.partials = %i[thumbnail index_header]
-    config.add_sort_field "#{uploaded_field} desc"
+    config.add_sort_field "#{Solrizer.solr_name('title', :sortable)} asc"
   end
 
   def show_site_search?
