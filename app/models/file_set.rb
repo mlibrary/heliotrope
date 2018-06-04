@@ -71,10 +71,6 @@ class FileSet < ActiveFedora::Base
     allow_blank: true
   }
 
-  property :primary_creator_role, predicate: ::RDF::Vocab::SCHEMA.roleName do |index|
-    index.as :stored_searchable, :facetable
-  end
-
   property :redirect_to, predicate: ::RDF::URI.new('http://fulcrum.org/ns#redirectTo'), multiple: false do |index|
     index.as :symbol
   end
@@ -110,7 +106,6 @@ class FileSet < ActiveFedora::Base
 
   include GlobalID::Identification
   include HeliotropeUniversalMetadata
-  include StoresCreatorNameSeparately
   include ::Hyrax::FileSetBehavior
   include ::Hyrax::BasicMetadata
 

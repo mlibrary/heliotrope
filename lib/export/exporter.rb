@@ -63,12 +63,17 @@ module Export
       def field_value(item, metadata_name, multivalued)
         return if item.public_send(metadata_name).blank?
         if multivalued == :yes_split
-          # TODO: right now we have lost any intended order in our multi-value fields, so I'm sorting them
-          # alphabetically on export. This is convenient for testing but we'll have to address the problem
-          # eventually *and* possibly fix production data too
+          # Any intended order within a multi-valued field is lost after having been stored in an...
+          # `ActiveTriples::Relation`, so I'm arbitrarily sorting them alphabetically on export.
+          # Items whose order must be preserved should never be stored in an `ActiveTriples::Relation`.
           item.public_send(metadata_name).sort.join('; ')
         elsif multivalued == :yes
+          # this is a multi-valued field but we're only using it to hold one value
           item.public_send(metadata_name).first
+        elsif multivalued == :yes_multiline
+          # this is a multi-valued field but we're only using the first one to hold a string containing...
+          # ordered, newline-separated values. Need such to be semi-colon-separeated in a cell once again
+          item.public_send(metadata_name).first.split(/\r?\n/).reject(&:blank?).join('; ')
         else
           item.public_send(metadata_name)
         end

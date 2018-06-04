@@ -11,19 +11,7 @@ class Monograph < ActiveFedora::Base
     index.as :symbol
   end
 
-  property :editor, predicate: ::RDF::Vocab::SCHEMA.editor do |index|
-    index.as :stored_searchable
-  end
-
   property :isbn, predicate: ::RDF::Vocab::SCHEMA.isbn do |index|
-    index.as :stored_searchable
-  end
-
-  property :primary_editor_family_name, predicate: ::RDF::URI.new('http://fulcrum.org/ns#primaryEditorFamilyName'), multiple: false do |index|
-    index.as :stored_searchable
-  end
-
-  property :primary_editor_given_name, predicate: ::RDF::URI.new('http://fulcrum.org/ns#primaryEditorGivenName'), multiple: false do |index|
     index.as :stored_searchable
   end
 
@@ -45,7 +33,6 @@ class Monograph < ActiveFedora::Base
   end
 
   include HeliotropeUniversalMetadata
-  include StoresCreatorNameSeparately
   include ::Hyrax::WorkBehavior
   include ::Hyrax::WorkBehavior
   # This must come after the WorkBehavior because it finalizes the metadata
