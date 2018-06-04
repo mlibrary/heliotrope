@@ -29,6 +29,11 @@ class ApplicationController < ActionController::Base
   # rescue_from ActiveFedora::ActiveFedoraError, with: :render_unauthorized
   rescue_from ActiveRecord::RecordNotFound, with: :render_unauthorized
 
+  # TODO: See gkostin about this comment if you have any questions.
+  # Ensure CanCan by authorize!(<action>, <resource> || <resouce_class>)
+  # rescue_from CanCan::AccessDenied, with: :render_unauthorized # TODO: Might be needed
+  # check_authorization unless: :devise_controller? || :checkpoint_controller?
+
   def current_institutions?
     current_institutions.count.positive?
   end
@@ -41,6 +46,10 @@ class ApplicationController < ActionController::Base
   end
 
   private
+
+    def checkpoint_controller?
+      false # Overridden in CheckpointController to return true
+    end
 
     # register callback with warden to clear flash message
     Warden::Manager.after_authentication do |user, auth, _opts|

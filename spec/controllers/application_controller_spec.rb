@@ -60,4 +60,8 @@ describe ApplicationController do
       it { expect(controller.current_institutions.first).to be institution }
     end
   end
+
+  describe '#checkpoint_controller?' do
+    it { expect(controller.send(:checkpoint_controller?)).to be false }
+  end
 end

@@ -24,7 +24,7 @@ Dir.chdir APP_ROOT do
   end
 
   puts "\n== Copying sample databases =="
-  files = ['keycard-development', 'keycard-test']
+  files = ['keycard-development', 'keycard-test', 'checkpoint-development', 'checkpoint-test']
   files.each do |f|
     sqlite_name = "db/#{f}.sqlite3"
     cp "#{sqlite_name}.sample", sqlite_name unless File.exist?(sqlite_name)

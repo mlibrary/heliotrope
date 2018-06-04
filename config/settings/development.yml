@@ -21,3 +21,10 @@ keycard:
     database: db/keycard-development.sqlite3
     pool: 5
     timeout: 5000
+
+checkpoint:
+  database:
+    adapter: sqlite
+    database: db/checkpoint-development.sqlite3
+    pool: 5
+    timeout: 5000

@@ -70,7 +70,14 @@ gem 'actionpack-page_caching', '~> 1.1.0'
 
 # gem 'active-fedora', '~> 11.3.1'
 
+# Canister provides containers
+gem 'canister', '~> 0.9.0'
+
 gem 'carrierwave', '~> 1.1.0'
+
+# Checkpoint provides authorization support
+# gem 'checkpoint', '~> 1.0.0'
+gem 'checkpoint', git: 'https://github.com/mlibrary/checkpoint', branch: 'master'
 
 # clamav only in production
 gem 'clamav', group: :production
@@ -106,7 +113,7 @@ gem 'jwt'
 gem 'keycard', '~> 0.1.1'
 
 # Use MySQL as the database for Active Record
-gem 'mysql2'
+gem 'mysql2', '~> 0.4.10'
 
 # Force epub search results to be sentences
 gem 'pragmatic_segmenter', '~> 0.3'

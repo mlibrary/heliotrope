@@ -38,6 +38,10 @@ class User < ApplicationRecord
 
   alias_attribute :user_key, :email
 
+  def role?
+    roles.any?
+  end
+
   # Override Hydra
   # current_user.groups is used in lot of places like
   # blacklight-access-controls, hydra-access-controls, hyrax.

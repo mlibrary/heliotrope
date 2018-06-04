@@ -15,6 +15,24 @@ RSpec.describe User do
     it { is_expected.to eq 0 }
   end
 
+  describe '#role?' do
+    subject { user.role? }
+
+    let(:user) { create(:user) }
+
+    before { Role.delete_all }
+
+    it { is_expected.to be false }
+
+    context 'role' do
+      let(:role) { create(:role, user: user) }
+
+      before { role }
+
+      it { is_expected.to be true }
+    end
+  end
+
   describe '#presses' do
     subject { user.presses }
 

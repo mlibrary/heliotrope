@@ -21,3 +21,10 @@ keycard:
     database: db/keycard-test.sqlite3
     pool: 5
     timeout: 5000
+
+checkpoint:
+  database:
+    adapter: sqlite
+    database: db/checkpoint-test.sqlite3
+    pool: 5
+    timeout: 5000
