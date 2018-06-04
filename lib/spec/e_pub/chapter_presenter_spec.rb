@@ -44,4 +44,11 @@ RSpec.describe EPub::ChapterPresenter do
       expect(subject).to all(be_an_instance_of(EPub::ParagraphPresenter))
     end
   end
+
+  describe "#cfi" do
+    subject { described_class.send(:new, chapter).cfi }
+    it "returns the (base) cfi" do
+      is_expected.to eq "/6/4/2[Chapter1]"
+    end
+  end
 end
