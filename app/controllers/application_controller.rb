@@ -7,7 +7,6 @@ class ApplicationController < ActionController::Base
   # as `authenticate_user!` (or whatever your resource is) will halt the filter chain and redirect
   # before the location can be stored.
   before_action :store_user_location!, if: :storable_location?
-  before_action :clear_session_user, unless: :valid_user_signed_in?
 
   # Prevent CSRF attacks by raising an exception.
   # For APIs, you may want to use :null_session instead.
@@ -62,13 +61,6 @@ class ApplicationController < ActionController::Base
         format.html { render 'hyrax/base/unauthorized', status: :unauthorized }
         format.any { head :unauthorized, content_type: 'text/plain' }
       end
-    end
-
-    def clear_session_user
-      backup = session.to_hash
-      # sign_out_static_cookie TODO: Maybe?
-      request.env['warden'].logout
-      session.update(backup)
     end
 
     def valid_user_signed_in?
