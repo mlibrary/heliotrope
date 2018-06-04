@@ -16,6 +16,10 @@ module EPub
       @chapter.chapter_href
     end
 
+    def cfi
+      @chapter.basecfi
+    end
+
     def blurb
       text = ""
       @chapter.paragraphs.each do |p|

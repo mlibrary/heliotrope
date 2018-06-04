@@ -4,7 +4,7 @@
 <% @monograph_presenter.epub_presenter.chapters.each do |chapter| %>
   <div class="row chapter">
     <div class="col-sm-12">
-      <h3><a href="<%= epub_url %>#/<%= epub_dir %>/<%= chapter.href %>"><%= chapter.title %></a></h3>
+      <h3><a href="<%= epub_url %>#<%= chapter.cfi %>4/1:0"><%= chapter.title %></a></h3>
       <%= chapter.blurb unless chapter.paragraphs.empty? %>
       <hr>
     </div>
