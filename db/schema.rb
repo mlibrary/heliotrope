@@ -59,6 +59,21 @@ ActiveRecord::Schema.define(version: 20180607011158) do
     t.string "external_key"
   end
 
+  create_table "counter_reports", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.string "session"
+    t.integer "institution"
+    t.string "noid"
+    t.string "model"
+    t.string "section"
+    t.string "section_type"
+    t.integer "investigation"
+    t.integer "request"
+    t.string "turnaway"
+    t.string "access_type"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "curation_concerns_operations", id: :integer, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.string "status"
     t.string "operation_type"
