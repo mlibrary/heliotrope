@@ -40,6 +40,22 @@ RSpec.describe MonographIndexer do
     end
   end
 
+  describe 'empty creator field' do
+    subject { indexer.generate_solr_document }
+
+    let(:indexer) { described_class.new(monograph) }
+    let(:monograph) { build(:monograph,
+                            contributor: ["Moose, Bullwinkle\nSquirrel, Rocky"])}
+    before do
+      monograph.save!
+    end
+
+    it 'promotes the first contributor to creator' do
+      expect(subject['creator_tesim']).to eq ['Moose, Bullwinkle']
+      expect(subject['contributor_tesim']).to eq ['Squirrel, Rocky']
+    end
+  end
+
   describe 'representative_manifest_id' do
     subject { indexer.generate_solr_document[Solrizer.solr_name('representative_manifest_id', :symbol)] }
 

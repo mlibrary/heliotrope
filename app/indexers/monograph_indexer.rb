@@ -13,10 +13,17 @@ class MonographIndexer < Hyrax::WorkIndexer
       solr_doc[Solrizer.solr_name('title', :sortable)] = object&.title&.first&.downcase&.gsub(/[^\w\s\d-]/, '')
 
       roleless_creators = multiline_names_minus_role('creator')
+      roleless_contributors = multiline_names_minus_role('contributor')
+
+      # fix for imported Monographs that only have contributors for whatever reason, i.e. the metadata was created...
+      # outside Fulcrum and only had supposed "non-author roles" which were put in as contributors so we'll promote...
+      # the first contributor to a creator for use in citations
+      roleless_creators = [roleless_contributors&.shift] if roleless_creators.blank?
+
       solr_doc[Solrizer.solr_name('creator', :stored_searchable)] = roleless_creators
       solr_doc[Solrizer.solr_name('creator_full_name', :stored_searchable)] = roleless_creators&.first
       solr_doc[Solrizer.solr_name('creator_full_name', :facetable)] = roleless_creators&.first
-      solr_doc[Solrizer.solr_name('contributor', :stored_searchable)] = multiline_names_minus_role('contributor')
+      solr_doc[Solrizer.solr_name('contributor', :stored_searchable)] = roleless_contributors
 
       # grab previous file set order here from Solr (before they are reindexed)
       existing_fileset_order = existing_filesets
