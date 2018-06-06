@@ -441,8 +441,15 @@ footer.press {
   }
 
   section#reviews {
-    th, td {
-      padding: 10px;
+    table {
+      // the reviews.html files all have a "Reviews" caption on the table
+      // which appears immediately under our "Reviews" tab link and looks redundant
+      caption {
+        display: none;
+      }
+      th, td {
+        padding: 10px;
+      }
     }
   }
 }
