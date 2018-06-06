@@ -135,6 +135,8 @@ gem 'rubyzip'
 gem 'sdoc', '~> 0.4.0', group: :doc
 gem 'sitemap_generator', '~> 6.0.1'
 
+gem 'sinatra', '~> 2.0.2'
+
 # sqlite for epub indexing
 gem 'sqlite3'
 
