@@ -8,6 +8,7 @@ AllCops:
     - '**/config.ru'
   Exclude:
     - 'db/**/*'
+    - 'public/**/*'
     - 'ruumba/**/*'
     - 'script/**/*'
     - 'spec/internal/**/*'

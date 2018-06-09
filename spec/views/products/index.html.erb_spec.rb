@@ -9,10 +9,12 @@ RSpec.describe "products/index", type: :view do
       [
         Product.create!(
           identifier: "Identifier1",
+          name: "Name",
           purchase: "Purchase"
         ),
         Product.create!(
           identifier: "Identifier2",
+          name: "Name",
           purchase: "Purchase"
         )
       ]

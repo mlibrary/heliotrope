@@ -48,6 +48,9 @@ module Heliotrope
     # URL for logging the user out of Cosign
     config.cosign_logout_url = Settings.cosign_logout_url
 
+    # URL for logging the user in via shibbolleth
+    config.shibboleth_service_provider_url = Settings.shibboleth_service_provider_url
+
     # Disable automatic account creation on Cosign logins unless
     # enabled in config/settings.
     config.create_user_on_login = Settings.create_user_on_login && true

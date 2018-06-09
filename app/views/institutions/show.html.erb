@@ -2,19 +2,35 @@
 <div id="maincontent">
   <div class="row">
     <div class="col-md-12"><h1>Institution</h1></div>
+  </div>
+  <div class="row">
     <div class="col-md-1"><em>Identifier</em></div>
     <div class="col-md-11"><%= @institution.identifier %></div>
+  </div>
+  <div class="row">
     <div class="col-md-1"><em>Name</em></div>
     <div class="col-md-11"><%= @institution.name %></div>
+  </div>
+  <div class="row">
+    <div class="col-md-1"><em>Entity Id</em></div>
+    <div class="col-md-11"><%= @institution.entity_id %></div>
+  </div>
+  <div class="row">
     <div class="col-md-1"><em>Site</em></div>
     <div class="col-md-11"><%= @institution.site %></div>
+  </div>
+  <div class="row">
     <div class="col-md-1"><em>Login</em></div>
     <div class="col-md-11"><%= @institution.login %></div>
-    <% if @institution.lessee? %>
+  </div>
+  <% if @institution.lessee? %>
+    <div class="row">
       <div class="col-md-12"><h2>Lessee</h2></div>
       <div class="col-md-1"></div>
       <div class="col-md-11"><%= link_to @institution.lessee.identifier, lessee_path(@institution.lessee) %></div>
-    <% end %>
+    </div>
+  <% end %>
+  <div class="row">
     <div class="col-md-12"><br/></div>
     <div class="col-md-12">
       <%= link_to_if @institution.update?, 'Edit', edit_institution_path(@institution) %>

@@ -7,6 +7,7 @@ RSpec.describe "Products", type: :request do
     {
       "id" => product.id,
       "identifier" => product.identifier,
+      "name" => product.name,
       "url" => product_url(product, format: :json)
     }
   end
@@ -27,7 +28,7 @@ RSpec.describe "Products", type: :request do
 
   context 'unauthorized' do
     let(:input) { params.to_json }
-    let(:params) { { product: { identifier: new_identifier, purchase: 'purchase' } } }
+    let(:params) { { product: { identifier: new_identifier, name: 'name', purchase: 'purchase' } } }
 
     it { get api_find_product_path, headers: headers; expect(response).to have_http_status(:unauthorized) } # rubocop:disable Style/Semicolon
     it { get api_products_path, headers: headers; expect(response).to have_http_status(:unauthorized) } # rubocop:disable Style/Semicolon
@@ -90,7 +91,7 @@ RSpec.describe "Products", type: :request do
         let(:input) { params.to_json }
 
         context 'blank identifier' do
-          let(:params) { { product: { identifier: '', purchase: 'purchase' } } }
+          let(:params) { { product: { identifier: '', name: 'name', purchase: 'purchase' } } }
 
           it 'errors' do
             post api_products_path, params: input, headers: headers
@@ -102,7 +103,7 @@ RSpec.describe "Products", type: :request do
         end
 
         context 'unique identifier' do
-          let(:params) { { product: { identifier: new_identifier, purchase: 'purchase' } } }
+          let(:params) { { product: { identifier: new_identifier, name: 'name', purchase: 'purchase' } } }
 
           it 'creates product' do
             post api_products_path, params: input, headers: headers
@@ -115,7 +116,7 @@ RSpec.describe "Products", type: :request do
         end
 
         context 'existing identifier' do
-          let(:params) { { product: { identifier: identifier, purchase: 'purchase' } } }
+          let(:params) { { product: { identifier: identifier, name: 'name', purchase: 'purchase' } } }
 
           it 'does nothing' do
             post api_products_path, params: input, headers: headers

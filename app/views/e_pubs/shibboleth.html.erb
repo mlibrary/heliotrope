@@ -1,0 +1,5 @@
+<% provide :page_title, "#{@institution.name} identity provider not found." %>
+<div class="alert alert-danger">
+  <p class="text-center"><em><%= @institution.name %></em> identity provider not found.</p>
+</div>
+<p class="text-center"><%= link_to 'Go back to previous page', epub_path(@presenter.id) %>.</p>

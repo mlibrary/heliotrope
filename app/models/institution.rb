@@ -3,6 +3,7 @@
 class Institution < ApplicationRecord
   validates :identifier, presence: true, allow_blank: false, uniqueness: true
   validates :name, presence: true, allow_blank: false
+  # validates :entity_id, presence: true, allow_blank: false
   # validates :site, presence: true, allow_blank: false
   # validates :login, presence: true, allow_blank: false
 
@@ -58,5 +59,9 @@ class Institution < ApplicationRecord
 
   def lessee
     Lessee.find_by(identifier: identifier)
+  end
+
+  def shibboleth?
+    entity_id.present?
   end
 end

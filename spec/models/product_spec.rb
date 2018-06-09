@@ -3,9 +3,10 @@
 require 'rails_helper'
 
 RSpec.describe Product, type: :model do
-  subject { described_class.new(identifier: identifier, purchase: purchase) }
+  subject { described_class.new(identifier: identifier, name: name, purchase: purchase) }
 
   let(:identifier) { double('identifier') }
+  let(:name) { double('name') }
   let(:purchase) { double('purchase') }
 
   it do

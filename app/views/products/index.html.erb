@@ -4,8 +4,8 @@
     <div class="col-md-12"><h1>Products</h1></div>
     <div class="col-md-12">
       <% @products.each do |product| %>
-        <div class="col-md-1"></div>
-        <div class="col-md-5"><%= product.identifier %></div>
+        <div class="col-md-1"><%= product.identifier %></div>
+        <div class="col-md-5"><%= product.name %></div>
         <div class="col-md-6">
           <div class="col-md-4"><%= link_to 'Show', product %></div>
           <div class="col-md-4"><%= link_to_if product.update?, 'Edit', edit_product_path(product) %></div>

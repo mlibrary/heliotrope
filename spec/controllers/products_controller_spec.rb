@@ -31,10 +31,12 @@ RSpec.describe ProductsController, type: :controller do
   # adjust the attributes here as well.
   let(:valid_attributes) { {
     identifier: "valid_identifier",
+    name: "valid_name",
     purchase: "valid_purchase"
   } }
   let(:invalid_attributes) { {
     identifier: "",
+    name: "",
     purchase: ""
   } }
 
@@ -100,6 +102,7 @@ RSpec.describe ProductsController, type: :controller do
     context "with valid params" do
       let(:new_attributes) { {
         identifier: "new_identifier",
+        name: "new_name",
         purchase: "new_purchase"
       } }
 

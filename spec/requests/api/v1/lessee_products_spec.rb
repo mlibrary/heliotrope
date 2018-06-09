@@ -7,6 +7,7 @@ RSpec.describe "Lessee Products", type: :request do
     {
       "id" => product.id,
       "identifier" => product.identifier,
+      "name" => product.name,
       "url" => product_url(product, format: :json)
     }
   end
@@ -21,9 +22,9 @@ RSpec.describe "Lessee Products", type: :request do
   let(:lessee_identifier) { 'lessee' }
   let(:lessee2) { build(:lessee, id: lessee.id + 1, identifier: lessee2_identifier) }
   let(:lessee2_identifier) { 'lessee2' }
-  let(:product) { create(:product, identifier: identifier) }
+  let(:product) { create(:product, identifier: identifier, name: 'name') }
   let(:identifier) { 'product' }
-  let(:product2) { build(:product, id: product.id + 1, identifier: identifier2) }
+  let(:product2) { build(:product, id: product.id + 1, identifier: identifier2, name: 'name') }
   let(:identifier2) { 'product2' }
   let(:response_body) { JSON.parse(@response.body) }
   let(:response_hash) { HashWithIndifferentAccess.new response_body }
@@ -35,7 +36,7 @@ RSpec.describe "Lessee Products", type: :request do
 
   context 'unauthorized' do
     let(:input) { params.to_json }
-    let(:params) { { product: { identifier: identifier, purchase: 'purchase' } } }
+    let(:params) { { product: { identifier: identifier, name: 'name', purchase: 'purchase' } } }
 
     it { get api_lessee_products_path(lessee), headers: headers; expect(response).to have_http_status(:unauthorized) } # rubocop:disable Style/Semicolon
     it { post api_lessee_products_path(lessee), params: input, headers: headers; expect(response).to have_http_status(:unauthorized) } # rubocop:disable Style/Semicolon
@@ -96,10 +97,10 @@ RSpec.describe "Lessee Products", type: :request do
 
       describe "POST /api/v1/lessees/:lessee_id/products" do # create
         let(:input) { params.to_json }
-        let(:params) { { product: { identifier: identifier2, purchase: 'purchase' } } }
+        let(:params) { { product: { identifier: identifier2, name: 'name', purchase: 'purchase' } } }
 
         context 'blank identifier' do
-          let(:params) { { product: { identifier: '', purchase: 'purchase' } } }
+          let(:params) { { product: { identifier: '', name: 'name', purchase: 'purchase' } } }
 
           it 'lessee2 not found' do
             post api_lessee_products_path(lessee2), params: input, headers: headers
