@@ -248,7 +248,7 @@ RSpec.describe EPubsController, type: :controller do
 
         # Subscribed Institution
         Institution.create!(identifier: dlpsInstitutionId, name: 'Name', site: 'Site', login: 'Login')
-        product = Product.create!(identifier: 'product', purchase: 'purchase')
+        product = Product.create!(identifier: 'product', name: 'name', purchase: 'purchase')
         product.components << component
         lessee = Lessee.find_by(identifier: dlpsInstitutionId)
         product.lessees << lessee
@@ -275,7 +275,7 @@ RSpec.describe EPubsController, type: :controller do
 
         # Subscribed Grouping
         institution = Institution.create!(identifier: dlpsInstitutionId, name: 'Name', site: 'Site', login: 'Login')
-        product = Product.create!(identifier: 'product', purchase: 'purchase')
+        product = Product.create!(identifier: 'product', name: 'name', purchase: 'purchase')
         product.components << component
         grouping = Grouping.create!(identifier: 'grouping')
         product.lessees << grouping.lessee
@@ -316,7 +316,7 @@ RSpec.describe EPubsController, type: :controller do
         expect(response).to render_template(:access)
 
         # Subscribed User
-        product = Product.create!(identifier: 'product', purchase: 'purchase')
+        product = Product.create!(identifier: 'product', name: 'name', purchase: 'purchase')
         product.components << component
         lessee = Lessee.create!(identifier: user.email)
         product.lessees << lessee
@@ -348,7 +348,7 @@ RSpec.describe EPubsController, type: :controller do
         expect(response).to render_template(:access)
 
         # Subscribed Grouping
-        product = Product.create!(identifier: 'product', purchase: 'purchase')
+        product = Product.create!(identifier: 'product', name: 'name', purchase: 'purchase')
         product.components << component
         grouping = Grouping.create!(identifier: 'grouping')
         product.lessees << grouping.lessee

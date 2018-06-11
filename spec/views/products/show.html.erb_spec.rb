@@ -8,6 +8,7 @@ RSpec.describe "products/show", type: :view do
       :product,
       Product.create!(
         identifier: "Identifier",
+        name: "Name",
         purchase: "Purchase"
       )
     )

@@ -69,7 +69,7 @@ class ApplicationController < ActionController::Base
 
     def user_sign_out_prompt
       Rails.logger.debug "[AUTHN] user_sign_out_prompt: #{current_user.try(:email) || '(no user)'}"
-      redirect_to Hyrax::Engine.config.cosign_logout_url + terminate_user_session_url
+      redirect_to Rails.configuration.cosign_logout_url + terminate_user_session_url
     end
 
     def user_sign_out

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class EPubsController < ApplicationController
-  before_action :set_presenter, only: %i[show lock]
+  before_action :set_presenter, only: %i[show lock shibboleth]
   before_action :set_show, only: %i[show]
 
   def show
@@ -82,6 +82,17 @@ class EPubsController < ApplicationController
       @products = component_products
       render 'access'
     end
+  end
+
+  def shibboleth
+    @institution = Institution.find(params[:institution_id])
+    entity = @institution&.entity_id
+    # encoded_entity = CGI.escape(entity)
+    target = epub_url(params[:id])
+    # encoded_target = CGI.escape(target)
+    login_params = "entityID=#{entity}&target=#{target}"
+    # login_params_encoded = CGI.escape(login_params)
+    redirect_to "#{Rails.configuration.shibboleth_service_provider_url}/Login?#{login_params}" if @institution&.shibboleth?
   end
 
   private

@@ -2,10 +2,10 @@
 <div class="alert alert-danger">
   <p class="text-center"><em><%= @monograph_presenter.title %></em> is a restricted access online resource. <%= link_to 'Go back to previous page', :back %>.</p>
 </div>
-  <div class="row restrict-title">
-    <div class="col-sm-12 col-center-block">
-      <!-- TODO: this free intro is hardcoded and bad -->
-      <%= restricted_message(@monograph_presenter.subdomain)&.html_safe %>
+<div class="row restrict-title">
+  <div class="col-sm-12 col-center-block">
+    <!-- TODO: this free intro is hardcoded and bad -->
+    <%= restricted_message(@monograph_presenter.subdomain)&.html_safe %>
   </div>
   <div class="row">
     <div class="col-sm-4">
@@ -14,12 +14,23 @@
           <h3 class="panel-title">Sign in to read</h3>
         </div>
         <div class="panel-body">
-          <p>If you have purchased individual access login below.</p>
-          <p class="text-center">
-            <form action="<%= main_app.new_user_session_path %>">
-              <button type="submit" class="btn btn-default">Sign In</button>
-            </form>
-          </p>
+          <% if current_user %>
+            <p>Not you? <%= current_user.email %></p>
+            <p>If you have purchased individual access you may try logging in again.</p>
+            <p class="text-center">
+              <form action="<%= main_app.destroy_user_session_path %>">
+                <button type="submit" class="btn btn-default">Sign Out</button>
+              </form>
+            </p>
+            <p>Or speak with an customer service representative.</p>
+          <% else %>
+            <p>If you have purchased individual access log in.</p>
+            <p class="text-center">
+              <form action="<%= main_app.new_user_session_path %>">
+                <button type="submit" class="btn btn-default">Sign In</button>
+              </form>
+            </p>
+          <% end %>
         </div>
       </div>
     </div>
@@ -29,35 +40,37 @@
           <h3 class="panel-title">Read from your institution</h3>
         </div>
         <div class="panel-body">
-          <p>If your institution has purchased access, you will need to access this resource on-campus or through your library's website.</p>
+          <% if current_institutions? %>
+            <p>Not your institution?</p>
+            <ul>
+              <% current_institutions.each do |institution| %>
+                <li><%= institution.name %></li>
+              <% end %>
+            </ul>
+          <% end %>
+          <p>You may attempt to login at the appropriate institution.</p>
           <p class="text-center">
-            <button type="button" class="btn btn-default" data-toggle="modal" data-target="#subscribers">View list of Subscribers</button>
-          </p>
-        </div>
-        <!-- subscribers modal -->
-        <div class="modal fade" id="subscribers" tabindex="-1" role="dialog" aria-labelledby="subscriberLabel">
-          <div class="modal-dialog" role="document">
-            <div class="modal-content">
-              <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h2 class="modal-title" id="subscriberLabel">List of Subscribers to <em><%= @monograph_presenter.title %></em></h2>
-              </div>
-              <div class="modal-body">
-                <ul>
-                  <% @institutions.each do |institution| %>
-                    <li><%= institution.name %></li>
+            <%= form_tag(epub_shibboleth_path(@presenter.id), method: :post) do %>
+              <select id="institution_id" name="institution_id">
+                <% @institutions.each do |institution| %>
+                  <% if institution.shibboleth? %>
+                    <option value=<%= institution.id %>><%= institution.name %></option>
                   <% end %>
-                </ul>
-                <p>If you do not see your institution listed above, talk to your librarian about purchasing access.</p>
-                <p>If your institution is listed above and you are continuing to have trouble accessing, please contact your institution's library.</p>
-              </div>
-              <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-              </div>
-            </div>
-          </div>
+                <% end %>
+              </select>
+              <button type="submit">Login</button>
+            <% end %>
+          </p>
+          <p>For other institutions.<p>
+          <ul>
+            <% @institutions.each do |institution| %>
+              <% unless institution.shibboleth? %>
+                <li><%= institution.name %></li>
+              <% end %>
+            <% end %>
+          </ul>
+          <p>You will need to access this resource on-campus or through your library's website.</p>
         </div>
-
       </div>
     </div>
     <div class="col-sm-4">
@@ -66,19 +79,50 @@
           <h3 class="panel-title">Purchase to read</h3>
         </div>
         <div class="panel-body">
-          <p>You can purchase individual or institution access via the University of Michigan Press below.</p>
-          <p class="text-center">
-          <form action="https://www.press.umich.edu/9231782/mid_republican_house_from_gabii">
-            <button type="submit" formtarget="_blank" class="btn btn-default">Buy Publication</button>
-          </form>
-          <!--
-          TODO: List only the purchase URL for the product being blocked
-          <form action="https://?">
-            <button type="submit" class="btn btn-default">?</button>
-          </form>
-          -->
-          </p>
+          <p>You may purchase individual or institution access.</p>
+          <ul>
+            <% @products.each do |product| %>
+              <li><%= link_to product.name, product.purchase, target: '_blank' %></li>
+            <% end %>
+          </ul>
         </div>
       </div>
     </div>
   </div>
+  <div class="row">
+    <div class="col-sm-3"></div>
+    <div class="col-sm-6">
+      <div class="panel panel-danger">
+        <div class="panel-heading">
+          <h3 class="panel-title">Federation</h3>
+        </div>
+        <div id="idpSelect" class="panel-body"></div>
+        <script>
+          idSelectUIParms = new IdPSelectUIParms();
+
+          idSelectUIParms.dataSource = '/shibboleth/discofeed';
+          //idSelectUIParms.dataSource = '<%= Rails.configuration.shibboleth_service_provider_url %>/DiscoFeed';
+
+          idSelectUIParms.defaultLogo = '<%= asset_path('fulcrum-logo.png') %>';
+          idSelectUIParms.defaultLogoWidth = 8;
+          idSelectUIParms.defaultLogoHeight = 16;
+
+          //idSelectUIParms.defaultReturn = '<%= ds_shibboleth_url %>?target=<%= epub_shibboleth_path(@presenter.id) %>';
+          idSelectUIParms.defaultReturn = '<%= Rails.configuration.shibboleth_service_provider_url %>?target=<%= epub_shibboleth_path(@presenter.id) %>';
+
+          idSelectUIParms.helpURL = '<%= help_shibboleth_url %>';
+
+          //idSelectUIParms.myEntityID = 'https://shibboleth.umich.edu/idp/shibboleth';
+          idSelectUIParms.myEntityID = 'https://shib-idp-test.www.umich.edu/idp/shibboleth';
+
+          //idSelectUIParms.preferredIdP = ['https://shibboleth.umich.edu/idp/shibboleth'];
+          idSelectUIParms.preferredIdP = ['https://shib-idp-test.www.umich.edu/idp/shibboleth'];
+
+          idSelectUIParms.testGUI = true;
+          (new IdPSelectUI()).draw(idSelectUIParms);
+        </script>
+      </div>
+    </div>
+    <div class="col-sm-3"></div>
+  </div>
+</div>

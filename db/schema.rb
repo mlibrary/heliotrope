@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180521202001) do
+ActiveRecord::Schema.define(version: 20180607011158) do
 
   create_table "bookmarks", id: :integer, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.integer "user_id", null: false
@@ -148,6 +148,7 @@ ActiveRecord::Schema.define(version: 20180521202001) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "identifier"
+    t.string "entity_id"
     t.index ["identifier"], name: "index_institutions_on_identifier", unique: true
   end
 
@@ -286,6 +287,7 @@ ActiveRecord::Schema.define(version: 20180521202001) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "purchase"
+    t.string "name"
     t.index ["identifier"], name: "index_products_on_identifier", unique: true
   end
 

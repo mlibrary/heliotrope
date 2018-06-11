@@ -18,6 +18,7 @@
 // note: blacklight/blacklight must always be included after turbolinks
 //= require blacklight/blacklight
 //= require cozy-sun-bear-main
+//= require_tree ./idpselect
 //= require_tree ./application
 // require application_survey
 //= require hyrax
