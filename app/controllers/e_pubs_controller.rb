@@ -19,6 +19,8 @@ class EPubsController < ApplicationController
 
     @epub_download_presenter = EPubDownloadPresenter.new(@presenter, @monograph_presenter, current_ability)
 
+    CounterService.from(self, @presenter).count(request: 1)
+
     render layout: false
   end
 
@@ -80,6 +82,7 @@ class EPubsController < ApplicationController
       end
       @institutions = component_institutions
       @products = component_products
+      CounterService.from(self, @presenter).count(request: 1, turnaway: "No_License")
       render 'access'
     end
   end
