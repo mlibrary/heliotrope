@@ -18,8 +18,12 @@ describe SolrDocument do
   end
 
   # Monograph + FileSet
+  it { is_expected.to respond_to(:copyright_holder) }
+  it { is_expected.to respond_to(:date_published) }
   it { is_expected.to respond_to(:doi) }
   it { is_expected.to respond_to(:hdl) }
+  it { is_expected.to respond_to(:has_model) }
+  it { is_expected.to respond_to(:holding_contact) }
 
   # Monograph
   it { is_expected.to respond_to(:creator) }
@@ -40,16 +44,13 @@ describe SolrDocument do
   it { is_expected.to respond_to(:book_needs_handles) }
   it { is_expected.to respond_to(:caption) }
   it { is_expected.to respond_to(:content_type) }
-  it { is_expected.to respond_to(:copyright_holder) }
   it { is_expected.to respond_to(:copyright_status) }
   it { is_expected.to respond_to(:credit_line) }
-  it { is_expected.to respond_to(:date_published) }
   it { is_expected.to respond_to(:display_date) }
   it { is_expected.to respond_to(:exclusive_to_platform) }
   it { is_expected.to respond_to(:external_resource) }
   it { is_expected.to respond_to(:ext_url_doi_or_handle) }
   it { is_expected.to respond_to(:redirect_to) }
-  it { is_expected.to respond_to(:holding_contact) }
   it { is_expected.to respond_to(:keywords) }
   it { is_expected.to respond_to(:permissions_expiration_date) }
   it { is_expected.to respond_to(:primary_creator_role) }

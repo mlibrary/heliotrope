@@ -43,7 +43,7 @@ module Hyrax
              :allow_display_after_expiration, :allow_download_after_expiration, :credit_line,
              :holding_contact, :ext_url_doi_or_handle, :use_crossref_xml, :primary_creator_role,
              :display_date, :sort_date, :transcript, :translation, :file_format,
-             :label, :redirect_to,
+             :label, :redirect_to, :has_model,
              to: :solr_document
 
     def subdomain
@@ -92,6 +92,11 @@ module Hyrax
 
     def link_name
       current_ability.can?(:read, id) ? Array(solr_document['label_tesim']).first : 'File'
+    end
+
+    def multimedia?
+      # currently just need this for COUNTER reports
+      audio? || video? || image?
     end
 
     def external_resource?

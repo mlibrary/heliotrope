@@ -22,4 +22,8 @@ module SolrDocumentExtensions::Universal
   def holding_contact
     Array(self[Solrizer.solr_name('holding_contact', :symbol)]).first
   end
+
+  def has_model # rubocop:disable Style/PredicateName
+    Array(self[Solrizer.solr_name('has_model', :symbol)]).first
+  end
 end

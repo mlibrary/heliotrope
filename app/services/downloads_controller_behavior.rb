@@ -4,7 +4,7 @@ module DownloadsControllerBehavior
   # These are heliotrope's local changes to Hyrax::DownloadsController
   def show
     if transcript?
-      render plain: file_set_doc['transcript_tesim']&.first
+      render plain: presenter.transcript
     elsif file.present? && (thumbnail? || jpeg? || video? || sound? || allow_download?)
       # See #401
       if file.is_a? String
@@ -15,6 +15,7 @@ module DownloadsControllerBehavior
         response.headers['X-Sendfile'] = file
         send_file file, derivative_download_options
       else
+        CounterService.from(self, presenter).count(request: 1) if presenter.multimedia?
         self.status = 200
         send_file_headers! content_options.merge(disposition: 'attachment')
         response.headers['Content-Length'] ||= file.size.to_s
@@ -52,8 +53,8 @@ module DownloadsControllerBehavior
     association&.reader
   end
 
-  def file_set_doc
-    ActiveFedora::SolrService.query("{!terms f=id}#{params[:id]}", rows: 1).first || {}
+  def presenter
+    Hyrax::PresenterFactory.build_for(ids: [params[:id]], presenter_class: Hyrax::FileSetPresenter, presenter_args: current_ability).first
   end
 
   def mime_type_for(file)
@@ -64,7 +65,7 @@ module DownloadsControllerBehavior
 
   def allow_download?
     # should match 'show button' allow_download? logic in file_set_presenter
-    file_set_doc['allow_download_ssim']&.first == 'yes' || current_user&.platform_admin? || current_user&.can?(:edit, params[:id])
+    presenter.allow_download? || current_user&.platform_admin? || current_user&.can?(:edit, params[:id])
   end
 
   def thumbnail?
