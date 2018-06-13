@@ -8,8 +8,6 @@ uploads_path: <%= File.join(Rails.root, 'tmp', 'uploads') %>
 minter_path: <%= File.join(Rails.root, 'tmp', 'minter-state') %>
 resque_namespace: heliotrope-testing
 host: test.host
-# cosign_logout_url: "https://weblogin.umich.edu/cgi-bin/logout?"
-cosign_logout_url: ""
 # shibboleth_service_provider_url: "https://quod.lib.umich.edu/Shibboleth.sso"
 shibboleth_service_provider_url: ""
 

@@ -45,9 +45,6 @@ module Heliotrope
     # Set default host
     Rails.application.routes.default_url_options[:host] = config.hostname
 
-    # URL for logging the user out of Cosign
-    config.cosign_logout_url = Settings.cosign_logout_url
-
     # URL for logging the user in via shibbolleth
     config.shibboleth_service_provider_url = Settings.shibboleth_service_provider_url
 
