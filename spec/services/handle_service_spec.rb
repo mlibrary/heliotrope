@@ -3,113 +3,72 @@
 require 'rails_helper'
 
 describe HandleService do
-  context 'nil argument' do
-    it { expect(described_class.handle?(nil)).to eq false }
-    it { expect(described_class.handle(nil)).to eq nil }
-    it { expect(described_class.url(nil)).to eq nil }
-    it { expect(described_class.object(nil)).to eq nil }
+  subject { described_class }
+
+  let(:invalidnoid) { 'invalidnoid' }
+  let(:validnoid) { 'validnoid' }
+
+  describe '#noid' do
+    it { expect(subject.noid(nil)).to be nil }
+    it { expect(subject.noid("http://authority/path")).to be nil }
+    it { expect(subject.noid(subject.path(invalidnoid))).to eq nil }
+    it { expect(subject.noid(subject.path(validnoid))).to eq validnoid }
+    it { expect(subject.noid(subject.url(validnoid))).to eq validnoid }
+    it { expect(subject.noid(subject.url(validnoid) + "?key=value")).to eq validnoid }
   end
 
-  context 'invalid object' do
-    let(:object) { double("object") }
-    it { expect(described_class.handle?(object)).to eq false }
-    it { expect(described_class.handle(object)).to eq nil }
-    it { expect(described_class.url(object)).to eq nil }
+  describe '#path' do
+    it { expect(subject.path(nil)).to eq '2027/fulcrum.' }
+    it { expect(subject.path(invalidnoid)).to eq "2027/fulcrum.#{invalidnoid}" }
+    it { expect(subject.path(validnoid)).to eq "2027/fulcrum.#{validnoid}" }
   end
 
-  context 'invalid handle' do
-    it { expect(described_class.object(double("handle"))).to eq nil }
-    it { expect(described_class.object("handle")).to eq nil }
+  describe '#url' do
+    it { expect(subject.url(nil)).to eq "http://hdl.handle.net/#{subject.path(nil)}" }
+    it { expect(subject.url(invalidnoid)).to eq "http://hdl.handle.net/#{subject.path(invalidnoid)}" }
+    it { expect(subject.url(validnoid)).to eq "http://hdl.handle.net/#{subject.path(validnoid)}" }
   end
 
-  context 'valid object' do
-    let(:noid) { 'noid' }
-    let(:handle) { "2027/fulcrum.#{noid}" }
-    let(:url) { "http://hdl.handle.net/#{handle}" }
-    let(:object) { double("object") }
+  describe '#value' do
+    let(:response) { double('response') }
+    let(:value) { double('value') }
 
     before do
-      allow(ActiveFedora::Base).to receive(:find).and_raise(ActiveFedora::ObjectNotFoundError)
-      allow(ActiveFedora::Base).to receive(:find).with(noid).and_return(object)
-      allow(object).to receive(:id).and_return(noid)
+      allow(HTTParty).to receive(:get).with("http://hdl.handle.net/api/handles/#{subject.path(validnoid)}").and_return(response)
+      allow(response).to receive(:code).and_return(code)
+      allow(response).to receive(:[]).with('responseCode').and_return(responseCode)
     end
 
-    context 'without assigned handle' do
-      it { expect(described_class.handle?(object)).to eq true }
-      it { expect(described_class.handle(object)).to eq handle }
-      it { expect(described_class.url(object)).to eq url }
-      it { expect(described_class.object(handle)).to eq object }
-      it { expect(described_class.object(url)).to eq object }
-    end
-
-    context 'with assigned handle' do
-      let(:hdl) { 'hdl' }
-      let(:handle) { "2027/fulcrum.#{hdl}" }
-      let(:response) { double("response") }
+    context '1 : Success. (HTTP 200 OK)' do
+      let(:responseCode) { 1 }
+      let(:code) { 200 }
 
       before do
-        allow(object).to receive(:hdl).and_return(hdl)
-        allow(HTTParty).to receive(:get).and_return(response)
-        allow(response).to receive(:code).and_return(code)
-        allow(response).to receive(:[]).with('responseCode').and_return(responseCode)
+        allow(response).to receive(:[]).with('values').and_return([{ "type" => "URL", "data" => { "value" => value } }])
       end
 
-      context '1 : Success. (HTTP 200 OK)' do
-        let(:responseCode) { 1 }
-        let(:code) { 200 }
+      it { expect(subject.value(validnoid)).to eq value }
+    end
 
-        before do
-          allow(response).to receive(:[]).with('values').and_return([{ "type" => "URL", "data" => { "value" => "https:/fulcrum.org/concern/file_sets/#{handle_noid}" } }])
-        end
+    context '2 : Error. Something unexpected went wrong during handle resolution. (HTTP 500 Internal Server Error)' do
+      let(:responseCode) { 2 }
+      let(:code) { 500 }
 
-        context 'valid handle noid' do
-          let(:handle_noid) { noid }
-          it { expect(described_class.handle?(object)).to eq true }
-          it { expect(described_class.handle(object)).to eq handle }
-          it { expect(described_class.url(object)).to eq url }
-          it { expect(described_class.object(handle)).to eq object }
-          it { expect(described_class.object(url)).to eq object }
-        end
+      it { expect(subject.value(validnoid)).to be nil }
+    end
 
-        context 'invalid handle noid' do
-          let(:handle_noid) { 'stale_noid' }
-          it { expect(described_class.handle?(object)).to eq true }
-          it { expect(described_class.handle(object)).to eq handle }
-          it { expect(described_class.url(object)).to eq url }
-          it { expect { described_class.object(handle) }.to raise_error(ActiveFedora::ObjectNotFoundError) }
-          it { expect { described_class.object(url) }.to raise_error(ActiveFedora::ObjectNotFoundError) }
-        end
-      end
+    context '100 : Handle Not Found. (HTTP 404 Not Found)' do
+      let(:responseCode) { 100 }
+      let(:code) { 404 }
 
-      context '2 : Error. Something unexpected went wrong during handle resolution. (HTTP 500 Internal Server Error)' do
-        let(:responseCode) { 2 }
-        let(:code) { 500 }
-        it { expect(described_class.handle?(object)).to eq true }
-        it { expect(described_class.handle(object)).to eq handle }
-        it { expect(described_class.url(object)).to eq url }
-        it { expect { described_class.object(handle) }.to raise_error(ActiveFedora::ObjectNotFoundError) }
-        it { expect { described_class.object(url) }.to raise_error(ActiveFedora::ObjectNotFoundError) }
-      end
+      it { expect(subject.value(validnoid)).to be nil }
+    end
 
-      context '100 : Handle Not Found. (HTTP 404 Not Found)' do
-        let(:responseCode) { 100 }
-        let(:code) { 404 }
-        it { expect(described_class.handle?(object)).to eq true }
-        it { expect(described_class.handle(object)).to eq handle }
-        it { expect(described_class.url(object)).to eq url }
-        it { expect { described_class.object(handle) }.to raise_error(ActiveFedora::ObjectNotFoundError) }
-        it { expect { described_class.object(url) }.to raise_error(ActiveFedora::ObjectNotFoundError) }
-      end
+    context '200 : Values Not Found. The handle exists but has no values (or no values according to the types and indices specified). (HTTP 200 OK)' do
+      let(:responseCode) { 200 }
+      let(:code) { 200 }
 
-      context '200 : Values Not Found. The handle exists but has no values (or no values according to the types and indices specified). (HTTP 200 OK)' do
-        let(:responseCode) { 200 }
-        let(:code) { 200 }
-        it { expect(described_class.handle?(object)).to eq true }
-        it { expect(described_class.handle(object)).to eq handle }
-        it { expect(described_class.url(object)).to eq url }
-        it { expect { described_class.object(handle) }.to raise_error(ActiveFedora::ObjectNotFoundError) }
-        it { expect { described_class.object(url) }.to raise_error(ActiveFedora::ObjectNotFoundError) }
-      end
+      it { expect(subject.value(validnoid)).to be nil }
     end
   end
 end

@@ -10,8 +10,8 @@ RSpec.describe "components/show", type: :view do
         handle: "Handle"
       )
     )
-    allow(HandleService).to receive(:object).with(@component.handle).and_return(@component)
-    allow(HandleService).to receive(:url).with(@component).and_return("http://www.example.com")
+    allow(HandleService).to receive(:noid).with(@component.handle).and_return('noid')
+    allow(HandleService).to receive(:url).with('noid').and_return('url')
   end
 
   it "renders attributes" do

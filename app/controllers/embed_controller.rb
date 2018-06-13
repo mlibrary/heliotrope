@@ -3,16 +3,12 @@
 class EmbedController < ApplicationController
   def show
     response.headers.except! 'X-Frame-Options'
-    hdl = params[:hdl]
-    object = hdl.nil? ? nil : HandleService.object(hdl)
-    @presenter = object.nil? ? nil : Hyrax::PresenterFactory.build_for(ids: [object.id], presenter_class: Hyrax::FileSetPresenter, presenter_args: current_ability).first
-
+    noid = HandleService.noid(params[:hdl] || "")
+    @presenter = Hyrax::PresenterFactory.build_for(ids: [noid], presenter_class: Hyrax::FileSetPresenter, presenter_args: nil).first
     if @presenter.nil?
       render 'hyrax/base/unauthorized', status: :unauthorized
     else
       render layout: false
     end
-  rescue Ldp::Gone # tombstone
-    raise CanCan::AccessDenied
   end
 end

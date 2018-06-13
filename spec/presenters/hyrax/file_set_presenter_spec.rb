@@ -7,8 +7,11 @@ RSpec.describe Hyrax::FileSetPresenter do
   let(:presenter) { described_class.new(fileset_doc, ability) }
   let(:dimensionless_presenter) { described_class.new(fileset_doc, ability) }
 
-  it 'includes TitlePresenter' do
-    expect(described_class.new(nil, nil)).to be_a TitlePresenter
+  describe '#presenters' do
+    subject { described_class.new(nil, nil) }
+    it do
+      is_expected.to be_a TitlePresenter
+    end
   end
 
   describe "#citable_link" do
@@ -17,36 +20,16 @@ RSpec.describe Hyrax::FileSetPresenter do
                                            has_model_ssim: ['FileSet'],
                                            doi_ssim: ['http://doi.and.things']) }
 
-      context "and no handle" do
-        it "returns the DOI" do
-          expect(presenter.citable_link).to eq 'http://doi.and.things'
-        end
-      end
-
-      context "and also an explicit handle" do
-        let(:fileset_doc) { SolrDocument.new(id: 'fileset_id',
-                                             has_model_ssim: ['FileSet'],
-                                             doi_ssim: ['http://doi.and.things'],
-                                             hdl_ssim: ['a.handle']) }
-        it "returns the DOI" do
-          expect(presenter.citable_link).to eq 'http://doi.and.things'
-        end
+      it "returns the DOI" do
+        expect(presenter.citable_link).to eq 'http://doi.and.things'
       end
     end
 
-    context "with an explicit handle and no DOI" do
-      let(:fileset_doc) { SolrDocument.new(id: 'fileset_id', has_model_ssim: ['FileSet'], hdl_ssim: ['a.handle']) }
-
-      it "has that explicit handle" do
-        expect(presenter.citable_link).to eq "http://hdl.handle.net/2027/fulcrum.a.handle"
-      end
-    end
-
-    context "with no DOI and no explicit handle" do
+    context "with no DOI" do
       let(:fileset_doc) { SolrDocument.new(id: 'fileset_id', has_model_ssim: ['FileSet']) }
 
       it "has the default NOID based handle" do
-        expect(presenter.citable_link).to eq "http://hdl.handle.net/2027/fulcrum.fileset_id"
+        expect(presenter.citable_link).to eq HandleService.url(fileset_doc.id)
       end
     end
   end

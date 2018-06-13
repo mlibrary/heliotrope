@@ -1,46 +1,25 @@
 # frozen_string_literal: true
 
 class HandleService
-  def self.handle?(object)
-    !handle(object).nil?
-  end
-
-  def self.handle(object)
-    hdl_prefix = '2027/fulcrum.'
-    hdl = if object.respond_to?(:hdl) && object&.hdl.present?
-            object.hdl
-          elsif object.respond_to?(:id) && object&.id.present?
-            object.id
-          end
-    hdl.present? ? hdl_prefix + hdl.to_s : nil
-  end
-
-  def self.url(object)
-    handle = handle(object)
-    # note this assumes that entries in the hdl field are just NOIDs
-    handle.present? ? "http://hdl.handle.net/#{handle}" : nil
-  end
-
-  def self.object(handle)
-    return nil unless handle.is_a? String
-    match = /(.*)(2027\/fulcrum\.)(.*)$/.match(handle)
+  def self.noid(handle_path_or_url)
+    match = /^(.*)(2027\/fulcrum\.)(.*)$/i.match(handle_path_or_url || "")
     return nil if match.nil?
-    actual_noid = if Rails.env.test? || Rails.application.routes.url_helpers.root_url.include?('fulcrum')
-                    # only check handle.net when running in 'proper' production
-                    noid(match[3])
-                  else
-                    match[3]
-                  end
-    ActiveFedora::Base.find(actual_noid)
+    noid = /^[[:alnum:]]{9}$/i.match(match[3])
+    return match[3] unless noid.nil?
+    noid = /^([[:alnum:]]{9})\?(.*)$/i.match(match[3])
+    return nil if noid.nil?
+    noid[1]
   end
 
-  private_class_method def self.noid(hdl)
-    match = /(.*)(concern\/file_sets\/)(.*)$/.match(value(hdl))
-    return hdl if match.nil?
-    match[3]
+  def self.path(noid)
+    "2027/fulcrum.#{noid}"
   end
 
-  private_class_method def self.value(hdl)
+  def self.url(noid)
+    "http://hdl.handle.net/#{path(noid)}"
+  end
+
+  def self.value(noid)
     # Proxy Server REST API
     #
     # The handle proxy REST API allows programmatic access to handle resolution using HTTP.
@@ -61,13 +40,13 @@ class HandleService
     # 2 : Error. Something unexpected went wrong during handle resolution. (HTTP 500 Internal Server Error)
     # 100 : Handle Not Found. (HTTP 404 Not Found)
     # 200 : Values Not Found. The handle exists but has no values (or no values according to the types and indices specified). (HTTP 200 OK)
-    response = HTTParty.get("http://hdl.handle.net/api/handles/2027/fulcrum.#{hdl}")
+    response = HTTParty.get("http://hdl.handle.net/api/handles/#{path(noid)}")
     url = nil
     if response.code == 200 && response['responseCode'] == 1
       response['values'].each do |value|
         url ||= value['data']['value'] if value['type'] == 'URL'
       end
     end
-    url ||= ""
+    url
   end
 end

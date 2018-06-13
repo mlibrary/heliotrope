@@ -268,7 +268,7 @@ RSpec.describe EPubsController, type: :controller do
         expect(response).to redirect_to(epub_path)
 
         # Restricted Access
-        component = Component.create!(handle: HandleService.handle(file_set))
+        component = Component.create!(handle: HandleService.path(file_set.id))
 
         # Anonymous User
         get :lock, params: { id: file_set.id }
@@ -295,7 +295,7 @@ RSpec.describe EPubsController, type: :controller do
         expect(response).to redirect_to(epub_path)
 
         # Restricted Access
-        component = Component.create!(handle: HandleService.handle(file_set))
+        component = Component.create!(handle: HandleService.path(file_set.id))
 
         # Anonymous User
         get :lock, params: { id: file_set.id }
@@ -331,7 +331,7 @@ RSpec.describe EPubsController, type: :controller do
         expect(response).to redirect_to(epub_path)
 
         # Restricted Access
-        component = Component.create!(handle: HandleService.handle(file_set))
+        component = Component.create!(handle: HandleService.path(file_set.id))
 
         # Anonymous User
         get :lock, params: { id: file_set.id }
@@ -363,7 +363,7 @@ RSpec.describe EPubsController, type: :controller do
         expect(response).to redirect_to(epub_path)
 
         # Restricted Access
-        component = Component.create!(handle: HandleService.handle(file_set))
+        component = Component.create!(handle: HandleService.path(file_set.id))
 
         # Anonymous User
         get :lock, params: { id: file_set.id }
