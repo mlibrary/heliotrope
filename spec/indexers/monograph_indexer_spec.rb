@@ -55,30 +55,4 @@ RSpec.describe MonographIndexer do
       expect(subject['contributor_tesim']).to eq ['Squirrel, Rocky']
     end
   end
-
-  describe 'representative_manifest_id' do
-    subject { indexer.generate_solr_document[Solrizer.solr_name('representative_manifest_id', :symbol)] }
-
-    let(:indexer) { described_class.new(monograph) }
-    let(:monograph) { build(:monograph) }
-
-    context 'no file set' do
-      before { monograph.save! }
-      it { is_expected.to be_nil }
-    end
-    context 'file set' do
-      before do
-        monograph.ordered_members << file_set
-        monograph.save!
-      end
-      context 'non-csv file set' do
-        let(:file_set) { create(:file_set) }
-        it { is_expected.to be_nil }
-      end
-      context 'csv file set' do
-        let(:file_set) { create(:file_set, content: File.open(File.join(fixture_path, 'csv', 'import', 'tempest.csv'))) }
-        it { is_expected.to eq file_set.id }
-      end
-    end
-  end
 end

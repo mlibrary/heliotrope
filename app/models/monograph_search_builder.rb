@@ -25,7 +25,6 @@ class MonographSearchBuilder < ::SearchBuilder
       return if ids.blank?
 
       ids.delete(monograph.first['representative_id_ssim']&.first)
-      ids.delete(monograph.first['representative_manifest_id_ssim']&.first)
       featured_representatives(monograph.first['id']).each do |fr|
         ids.delete(fr.file_set_id)
       end

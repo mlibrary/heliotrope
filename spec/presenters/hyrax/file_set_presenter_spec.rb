@@ -246,25 +246,6 @@ RSpec.describe Hyrax::FileSetPresenter do
     end
   end
 
-  describe '#manifest?' do
-    subject { presenter.manifest? }
-
-    let(:fileset_doc) { SolrDocument.new(id: 'fileset_id', has_model_ssim: ['FileSet'], mime_type_ssi: mime_type) }
-
-    context 'text/plain' do
-      let(:mime_type) { 'text/plain' }
-      it { is_expected.to be false }
-    end
-    context 'text/csv' do
-      let(:mime_type) { 'text/csv' }
-      it { is_expected.to be true }
-    end
-    context 'text/comma-separated-values' do
-      let(:mime_type) { 'text/comma-separated-values' }
-      it { is_expected.to be true }
-    end
-  end
-
   describe '#file' do
     subject { presenter.file }
 
