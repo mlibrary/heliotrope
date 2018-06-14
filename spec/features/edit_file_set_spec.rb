@@ -68,13 +68,11 @@ feature 'Edit a file set' do
       fill_in 'Related Section', with: 'Test section with _Italicized Title_ therein'
 
       fill_in 'Externally-Hosted Resource?', with: 'no3'
-      fill_in 'Book Needs Handles?', with: 'yes'
       fill_in 'External URL/DOI', with: 'Handle'
       fill_in 'Allow Download?', with: 'no4'
       fill_in 'Allow Hi-Res?', with: 'yes2'
       fill_in 'Credit Line', with: 'A Nice Museum'
       fill_in 'Holding Contact', with: 'Unauthorized use prohibited. A Nice Museum.'
-      fill_in 'Use Crossref XML?', with: 'yes3'
 
       click_button 'Update Attached File'
 

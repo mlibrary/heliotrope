@@ -39,7 +39,6 @@ describe SolrDocument do
   it { is_expected.to respond_to(:allow_download_after_expiration) }
   it { is_expected.to respond_to(:allow_hi_res) }
   it { is_expected.to respond_to(:alt_text) }
-  it { is_expected.to respond_to(:book_needs_handles) }
   it { is_expected.to respond_to(:caption) }
   it { is_expected.to respond_to(:content_type) }
   it { is_expected.to respond_to(:copyright_status) }
@@ -59,5 +58,4 @@ describe SolrDocument do
   it { is_expected.to respond_to(:sort_date) }
   it { is_expected.to respond_to(:transcript) }
   it { is_expected.to respond_to(:translation) }
-  it { is_expected.to respond_to(:use_crossref_xml) }
 end

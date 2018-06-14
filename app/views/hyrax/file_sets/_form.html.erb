@@ -35,7 +35,6 @@
           <%= f.input :transcript, as: :text, input_html: { class: 'form-control' } %>
           <%= f.input :translation, as: :text, input_html: { multiple: true, value: curation_concern.translation.first, class: 'form-control' } %>
           <%= f.input :section_title, as: :multi_value, input_html: { class: 'form-control' } %>
-          <%= f.input :book_needs_handles, input_html: { class: 'form-control' } %>
           <%= f.input :doi, input_html: { class: 'form-control' } %>
           <%= f.input :redirect_to, input_html: { class: 'form-control' } %>
           <%= f.input :permissions_expiration_date, input_html: { class: 'form-control required' }, placeholder: 'YYYY-MM-DD' %>
@@ -45,7 +44,6 @@
           <%= f.input :holding_contact, as: :text, input_html: { class: 'form-control' } %>
           <%= f.input :allow_display_after_expiration, input_html: { class: 'form-control required' } %>
           <%= f.input :allow_download_after_expiration, input_html: { class: 'form-control required' } %>
-          <%= f.input :use_crossref_xml, input_html: { class: 'form-control' } %>
       </fieldset>
     </div>
   </div>

@@ -52,7 +52,6 @@ en:
       fields:
         facet:
           resource_type_sim: Format
-  book_needs_handles: "Book Needs Handles?"
   buy_url: "Buy Book URL(s)"
   caption: "Caption"
   citable_link: "Citable Link"
@@ -198,7 +197,6 @@ en:
         allow_download_after_expiration: :"allow_download_after_expiration"
         allow_hi_res: :"allow_hi_res"
         alt_text: :"alt_text"
-        book_needs_handles: :"book_needs_handles"
         buy_url: :"buy_url"
         caption: :"caption"
         citable_link: :"citable_link"
@@ -231,7 +229,6 @@ en:
         sort_date: :"sort_date"
         transcript: :"transcript"
         translation: :"translation"
-        use_crossref_xml: :"use_crossref_xml"
       monograph:
         creator: "Authors"
         authorship_metadata:
@@ -285,4 +282,3 @@ en:
   sort_date: "Sort Date"
   transcript: "Transcript"
   translation: "Translation(s)"
-  use_crossref_xml: "Use Crossref XML?"

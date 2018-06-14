@@ -47,9 +47,6 @@ METADATA_FIELDS ||=
     # TODO: maybe change the column name of this to, say, 'Identifier(s)' in the CSV sheet
     { object: :universal, field_name: 'Persistent ID - Display on Platform', metadata_name: 'identifier', required: false, multivalued: :yes },
     ### TODO: Clean up these fields in https://tools.lib.umich.edu/jira/browse/HELIO-1775 ###
-    # { object: :file_set, field_name: 'Persistent ID - Display on Platform', metadata_name: 'ext_url_doi_or_handle', required: false, multivalued: :no },
-    { object: :file_set, field_name: 'Persistent ID - XML for CrossRef', metadata_name: 'use_crossref_xml', required: false, multivalued: :no, acceptable_values: ['yes', 'no'] },
-    { object: :file_set, field_name: 'Persistent ID - Handle', metadata_name: 'book_needs_handles', required: false, multivalued: :no, acceptable_values: ['yes', 'no'] },
     { object: :universal, field_name: 'DOI', metadata_name: 'doi', required: false, multivalued: :no },
     ########################################################################################################
     { object: :file_set, field_name: 'Content Type', metadata_name: 'content_type', required: false, multivalued: :yes_split },
