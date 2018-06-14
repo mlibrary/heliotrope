@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 class EPubsController < ApplicationController
-  before_action :set_presenter, only: %i[show lock shibboleth]
-  before_action :set_show, only: %i[show]
+  before_action :set_presenter, only: %i[show lock shibboleth download_chapter search]
+  before_action :set_show, only: %i[show download_chapter]
 
   def show
     return render 'hyrax/base/unauthorized', status: :unauthorized unless show?
@@ -66,7 +66,32 @@ class EPubsController < ApplicationController
     "epub:" +
       Digest::MD5.hexdigest(query) +
       id +
-      ActiveFedora::SolrService.query("{!terms f=id}#{id}", rows: 1).first["timestamp"]
+      @presenter.date_modified.to_s
+  end
+
+  def download_chapter
+    return render 'hyrax/base/unauthorized', status: :unauthorized unless show?
+    epub = if Dir.exist?(UnpackService.root_path_from_noid(params[:id], 'epub'))
+             EPub::Publication.from_directory(UnpackService.root_path_from_noid(params[:id], 'epub'))
+           else
+             EPub::Publication.null_object
+           end
+    chapter = EPub::Chapter.from_cfi(epub, params[:cfi])
+    rendered_pdf = Rails.cache.fetch(pdf_cache_key(params[:id], chapter.title), expires_in: 30.days) do
+      pdf = chapter.pdf
+      pdf.render
+    end
+
+    CounterService.from(self, @presenter).count(request: 1, section_type: "Chapter", section: chapter.title)
+
+    send_data rendered_pdf, type: "application/pdf", disposition: "inline"
+  end
+
+  def pdf_cache_key(id, chapter_title)
+    "pdf:" +
+      Digest::MD5.hexdigest(chapter_title) +
+      id +
+      @presenter.date_modified.to_s
   end
 
   def lock

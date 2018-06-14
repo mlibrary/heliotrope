@@ -99,9 +99,6 @@ describe MonographCatalogController do
           expect(response).to be_success
           expect(response).to render_template('monograph_catalog/index')
         end
-        it 'curation concern to be the monograph' do
-          expect(controller.instance_variable_get(:@curation_concern)).to eq monograph
-        end
         it 'monograph presenter is a monograph presenter class' do
           expect(controller.instance_variable_get(:@monograph_presenter).class).to eq Hyrax::MonographPresenter
         end
@@ -133,9 +130,6 @@ describe MonographCatalogController do
           it 'response is successful' do
             expect(response).to be_success
             expect(response).to render_template('monograph_catalog/index')
-          end
-          it 'curation concern to be the monograph' do
-            expect(controller.instance_variable_get(:@curation_concern)).to eq monograph
           end
           it 'monograph presenter is a monograph presenter class' do
             expect(controller.instance_variable_get(:@monograph_presenter).class).to eq Hyrax::MonographPresenter

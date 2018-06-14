@@ -118,6 +118,9 @@ gem 'mysql2', '~> 0.4.10'
 # Force epub search results to be sentences
 gem 'pragmatic_segmenter', '~> 0.3'
 
+# Turn page image epub chapters into pdfs
+gem 'prawn', '~> 2.2'
+
 gem 'redcarpet', '~> 3.3.4'
 
 gem 'resque', '~> 1.26.0'

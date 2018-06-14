@@ -3,7 +3,8 @@
 module EPub
   class Publication
     private_class_method :new
-    attr_reader :id, :content_file, :content, :toc, :root_path, :multi_rendition
+    attr_reader :id, :content_file, :content, :toc, :root_path,
+                :multi_rendition, :page_scan_content_file, :ocr_content_file
 
     # Class Methods
 
@@ -25,6 +26,27 @@ module EPub
     # Instance Methods
 
     def chapters
+      chapters = chapters_from_database || []
+      chapters = chapters_from_file if chapters.empty?
+      chapters
+    end
+
+    def chapters_from_database
+      results = EPub::SqlLite.from_publication(self).fetch_chapters
+      chapters = []
+      results.each do |result|
+        chapters.push(Chapter.send(:new,
+                                   id: result[:id],
+                                   href: result[:href],
+                                   title: result[:title],
+                                   basecfi: result[:basecfi],
+                                   doc: Nokogiri::XML(File.open(File.join(root_path, File.dirname(content_file), result[:href]))).remove_namespaces!,
+                                   publication: self))
+      end
+      chapters
+    end
+
+    def chapters_from_file
       chapters = []
       i = 0
       content.xpath("//spine/itemref/@idref").each do |idref|
@@ -36,11 +58,12 @@ module EPub
           doc.remove_namespaces!
 
           chapters.push(Chapter.send(:new,
-                                     item.attributes['id'].text,
-                                     item.attributes['href'].text,
-                                     toc.chapter_title(item),
-                                     "/6/#{i * 2}[#{item.attributes['id'].text}]!",
-                                     doc))
+                                     id: item.attributes['id'].text,
+                                     href: item.attributes['href'].text,
+                                     title: toc.chapter_title(item),
+                                     basecfi: "/6/#{i * 2}[#{item.attributes['id'].text}]!",
+                                     doc: doc,
+                                     publication: self))
         end
       end
       chapters
@@ -75,6 +98,8 @@ module EPub
         @toc = ::EPub::Toc.new(valid_epub.toc)
         @root_path = valid_epub.root_path
         @multi_rendition = valid_epub.multi_rendition
+        @page_scan_content_file = valid_epub.page_scan_content_file
+        @ocr_content_file = valid_epub.ocr_content_file
       end
   end
 end

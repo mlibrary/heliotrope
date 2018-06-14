@@ -43,7 +43,7 @@ module Hyrax
              :allow_display_after_expiration, :allow_download_after_expiration, :credit_line,
              :holding_contact, :ext_url_doi_or_handle, :primary_creator_role,
              :display_date, :sort_date, :transcript, :translation, :file_format,
-             :label, :redirect_to, :has_model,
+             :label, :redirect_to, :has_model, :date_modified,
              to: :solr_document
 
     def subdomain

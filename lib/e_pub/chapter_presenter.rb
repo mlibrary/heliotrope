@@ -13,15 +13,20 @@ module EPub
     end
 
     def href
-      @chapter.chapter_href
+      @chapter.href
     end
 
     def cfi
       @chapter.basecfi
     end
 
+    def downloadable?
+      @chapter.downloadable?
+    end
+
     def blurb
       text = ""
+      return text if @chapter.publication.multi_rendition == 'yes'
       @chapter.paragraphs.each do |p|
         text += "<p>#{p.text}</p>"
         break if text.length >= 100

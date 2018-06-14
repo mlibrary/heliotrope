@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
 RSpec.describe EPub::ChapterPresenter do
+  subject { described_class.send(:new, chapter) }
+
+  let(:publication) { double("publication") }
   let(:chapter_doc) do
     <<-EOT
     <html>
@@ -15,40 +18,74 @@ RSpec.describe EPub::ChapterPresenter do
     </html>
     EOT
   end
-  let(:chapter) { EPub::Chapter.send(:new, '1', 'Chapter1.xhtml', 'The Title', "/6/4/2[Chapter1]", Nokogiri::XML(chapter_doc)) }
+  let(:chapter) do
+    EPub::Chapter.send(:new,
+                       id: '1',
+                       href: 'Chapter1.xhtml',
+                       title: 'The Title',
+                       basecfi: "/6/4/2[Chapter1]",
+                       doc: Nokogiri::XML(chapter_doc),
+                       publication: publication)
+  end
 
   describe '#new' do
     it 'private_class_method' do
-      expect { is_expected }.to raise_error(NoMethodError)
+      expect { described_class.new }.to raise_error(NoMethodError)
     end
   end
 
   describe '#title' do
-    subject { described_class.send(:new, chapter).title }
     it 'returns the chapter title' do
-      is_expected.to eq "The Title"
+      expect(subject.title).to eq "The Title"
     end
   end
 
   describe '#href' do
-    subject { described_class.send(:new, chapter).href }
     it 'returns the chapter href' do
-      is_expected.to eq 'Chapter1.xhtml'
+      expect(subject.href).to eq 'Chapter1.xhtml'
     end
   end
 
   describe '#paragraphs' do
-    subject { described_class.send(:new, chapter).paragraphs }
     it 'returns the chapter paragraph presenters' do
-      expect(subject.size).to eq 3
-      expect(subject).to all(be_an_instance_of(EPub::ParagraphPresenter))
+      expect(subject.paragraphs.size).to eq 3
+      expect(subject.paragraphs).to all(be_an_instance_of(EPub::ParagraphPresenter))
     end
   end
 
   describe "#cfi" do
-    subject { described_class.send(:new, chapter).cfi }
     it "returns the (base) cfi" do
-      is_expected.to eq "/6/4/2[Chapter1]"
+      expect(subject.cfi).to eq "/6/4/2[Chapter1]"
+    end
+  end
+
+  describe "#downloadable" do
+    context "when the epub is not fixed layout" do
+      it "returns false" do
+        allow(publication).to receive(:multi_rendition).and_return("no")
+        expect(subject.downloadable?).to be false
+      end
+    end
+    context "when the epub is fixed layout" do
+      it "returns true" do
+        allow(publication).to receive(:multi_rendition).and_return("yes")
+        expect(subject.downloadable?).to be true
+      end
+    end
+  end
+
+  describe "#blurb" do
+    context "when the epub is not fixed layout" do
+      it "returns some text (usually the first few paragraphs)" do
+        allow(publication).to receive(:multi_rendition).and_return("no")
+        expect(subject.blurb.starts_with?("<p>Chapter 1</p><p>Human sacrifice, cats and dogs living together")).to be true
+      end
+    end
+    context "when the epub is fixed layout" do
+      it "returns an empty string" do
+        allow(publication).to receive(:multi_rendition).and_return("yes")
+        expect(subject.blurb).to be ""
+      end
     end
   end
 end
