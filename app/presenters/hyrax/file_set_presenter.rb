@@ -237,10 +237,6 @@ module Hyrax
       solr_document['original_name_tesim']
     end
 
-    def manifest?
-      ['text/csv', 'text/comma-separated-values'].include? mime_type
-    end
-
     def file_set
       @file_set ||= ::FileSet.find(id)
     end

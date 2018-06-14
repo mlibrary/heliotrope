@@ -23,10 +23,6 @@ module SolrDocumentExtensions::Monograph
     Array(self[Solrizer.solr_name('press', :stored_searchable)]).first
   end
 
-  def representative_manifest_id
-    Array(self[Solrizer.solr_name('representative_manifest_id', :symbol)]).first
-  end
-
   def section_titles
     value = Array(self[Solrizer.solr_name('section_titles', :symbol)]).first
     value.present? ? value.split(/\r?\n/).reject(&:blank?) : value

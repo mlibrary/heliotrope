@@ -30,9 +30,6 @@ class MonographIndexer < Hyrax::WorkIndexer
       solr_doc[Solrizer.solr_name('ordered_member_ids', :symbol)] = object.ordered_member_ids
       solr_doc[Solrizer.solr_name('representative_id', :symbol)] = object.representative_id
       trigger_fileset_reindexing(existing_fileset_order, object.ordered_member_ids)
-
-      # grab the first fileset that is a csv and set it as the representative_manifest_id
-      solr_doc[Solrizer.solr_name('representative_manifest_id', :symbol)] = existing_filesets.find { |id| ['text/csv', 'text/comma-separated-values'].include? FileSet.find(id).mime_type }
     end
   end
 

@@ -132,7 +132,6 @@ module Hyrax
       ordered_member_docs.each do |doc|
         next if doc['has_model_ssim'] != ['FileSet'].freeze
         next if doc.id == solr_document.representative_id
-        next if doc.id == solr_document.representative_manifest_id
         next if featured_representatives.map(&:file_set_id).include? doc.id
         file_sets_ids.append doc.id
       end
@@ -164,18 +163,6 @@ module Hyrax
 
     def buy_url
       solr_document.buy_url.first if buy_url?
-    end
-
-    def manifest?
-      solr_document.representative_manifest_id.present?
-    end
-
-    def manifest_id
-      solr_document.representative_manifest_id if manifest?
-    end
-
-    def manifest
-      ordered_member_docs.find { |doc| doc.id == solr_document.representative_manifest_id } if manifest?
     end
 
     def monograph_coins_title?
