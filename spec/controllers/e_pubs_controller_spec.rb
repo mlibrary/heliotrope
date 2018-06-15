@@ -392,4 +392,24 @@ RSpec.describe EPubsController, type: :controller do
       end
     end
   end
+
+  describe 'session[:set_show]' do
+    let(:presenter) { double('presenter', epub?: true) }
+    let(:n) { 20 }
+    let(:m) { 10 }
+
+    before do
+      allow(Hyrax::PresenterFactory).to receive(:build_for).and_return([presenter])
+    end
+
+    it 'buffers m ids' do
+      session[:show_set] = []
+      n.times do |i|
+        get :lock, params: { id: i }
+        expect(response).to redirect_to(epub_path)
+        expect(session[:show_set].include?(i.to_s)).to be true
+        expect(session[:show_set].length).to be <= m
+      end
+    end
+  end
 end
