@@ -394,7 +394,7 @@ RSpec.describe EPubsController, type: :controller do
   end
 
   describe 'session[:set_show]' do
-    let(:presenter) { double('presenter', epub?: true) }
+    let(:presenter) { double('presenter', id: 'id', epub?: true) }
     let(:n) { 20 }
     let(:m) { 10 }
 
