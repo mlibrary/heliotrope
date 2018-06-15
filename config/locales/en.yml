@@ -93,7 +93,6 @@ en:
   external_resource: "Externally-Hosted Resource?"
   file_format: "File Format"
   file_size: "File Size"
-  hdl: "Handle"
   helpers:
     submit:
       role:
@@ -217,7 +216,6 @@ en:
         exclusive_to_platform: :"exclusive_to_platform"
         ext_url_doi_or_handle: :"ext_url_doi_or_handle"
         external_resource: :"external_resource"
-        hdl: :"hdl"
         holding_contact: :"holding_contact"
         isbn: :"isbn"
         keywords: :"keywords"
@@ -277,7 +275,6 @@ en:
         doi: "A full persistent URL, that can be cited (e.g. http://www.example.com). Takes precedence over default Fulcrum handle."
         citation_publisher: "The publisher name used in auto-generated citations."
         creator_display: "An optional free-text field allowing custom authorship display."
-        hdl: "A thing to remove in HELIO-1775"
         isbn: "Enter as many ISBN values as you want. Put the format in parentheses if needed, e.g. \"123-123456-1 (e-book)\"."
         description: "A free-text description of the work (markdown allowed)."
         language: "The language of the monograph's content."

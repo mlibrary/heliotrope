@@ -38,7 +38,6 @@ describe Hyrax::MonographForm do
                               press
                               creator_display
                               isbn
-                              hdl
                               doi
                               copyright_holder
                               holding_contact

@@ -166,6 +166,6 @@ class EPubsController < ApplicationController
     end
 
     def publication
-      @publication ||= Entity.new(type: :epub, identifier: HandleService.handle(@presenter))
+      @publication ||= Entity.new(type: :epub, identifier: HandleService.path(@presenter.id))
     end
 end

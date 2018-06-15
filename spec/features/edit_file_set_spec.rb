@@ -70,7 +70,6 @@ feature 'Edit a file set' do
       fill_in 'Externally-Hosted Resource?', with: 'no3'
       fill_in 'Book Needs Handles?', with: 'yes'
       fill_in 'External URL/DOI', with: 'Handle'
-      fill_in 'Handle', with: "this-is-a-handle"
       fill_in 'Allow Download?', with: 'no4'
       fill_in 'Allow Hi-Res?', with: 'yes2'
       fill_in 'Credit Line', with: 'A Nice Museum'
@@ -112,7 +111,7 @@ feature 'Edit a file set' do
       expect(page).to have_content 'Here is what that means'
       expect(page).to have_content 'A Nice Museum'
       expect(page).to have_content 'Unauthorized use prohibited. A Nice Museum.'
-      expect(page.has_field?('Citable Link', with: 'http://hdl.handle.net/2027/fulcrum.this-is-a-handle')).to be true
+      expect(page.has_field?('Citable Link', with: HandleService.url(file_set.id))).to be true
 
       # order in FileSet's section_title has been taken from Monograph's section_titles
       assert_equal page.all('.list-unstyled .section_title a').collect(&:text), ['C 1', 'Test section with Italicized Title therein']

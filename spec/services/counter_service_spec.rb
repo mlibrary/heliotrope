@@ -73,7 +73,7 @@ describe CounterService do
   describe "#access_type" do
     context "with a restricted epub" do
       before do
-        allow(HandleService).to receive(:handle).and_return(true)
+        allow(HandleService).to receive(:path).and_return(true)
         allow(Component).to receive(:find_by).and_return(true)
       end
       it "is 'Controlled'" do
@@ -83,7 +83,7 @@ describe CounterService do
     end
     context "with an unrestricted epub" do
       before do
-        allow(HandleService).to receive(:handle).and_return(true)
+        allow(HandleService).to receive(:path).and_return(true)
         allow(Component).to receive(:find_by).and_return(false)
       end
       it "is OA_Gold" do
@@ -92,7 +92,7 @@ describe CounterService do
     end
     context "with an asset with no permissions_expiration_date" do
       before do
-        allow(HandleService).to receive(:handle).and_return(true)
+        allow(HandleService).to receive(:path).and_return(true)
         allow(Component).to receive(:find_by).and_return(false)
       end
       it "is OA_Gold" do
@@ -101,7 +101,7 @@ describe CounterService do
     end
     context "with an asset with a permissions_expiration_date" do
       before do
-        allow(HandleService).to receive(:handle).and_return(true)
+        allow(HandleService).to receive(:path).and_return(true)
         allow(Component).to receive(:find_by).and_return(false)
         allow(presenter).to receive(:permissions_expiration_date).and_return("2020-01-27")
       end
@@ -121,7 +121,7 @@ describe CounterService do
       allow(DateTime).to receive(:now).and_return(now)
       allow(now).to receive(:strftime).with('%Y-%m-%d').and_return("2020-10-17")
       allow(now).to receive(:hour).and_return('13')
-      allow(HandleService).to receive(:handle).and_return(true)
+      allow(HandleService).to receive(:path).and_return(true)
       allow(Component).to receive(:find_by).and_return(false)
     end
 

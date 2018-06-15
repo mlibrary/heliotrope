@@ -122,7 +122,7 @@ module Hyrax
     end
 
     def embed_link
-      embed_url(hdl: HandleService.handle(self))
+      embed_url(hdl: HandleService.path(id))
     end
 
     def embed_fulcrum_logo_title

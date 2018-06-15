@@ -12,7 +12,7 @@ module Heliotrope
                      exclusive_to_platform permissions_expiration_date
                      allow_display_after_expiration allow_download_after_expiration
                      sort_date allow_download allow_hi_res credit_line
-                     holding_contact ext_url_doi_or_handle doi hdl use_crossref_xml
+                     holding_contact ext_url_doi_or_handle doi use_crossref_xml
                      display_date transcript translation redirect_to]
 
     # the type of metadata customizations used on the Monograph form do not work here (`def self.multiple?` etc). Link:

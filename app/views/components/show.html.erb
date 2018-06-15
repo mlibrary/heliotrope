@@ -3,7 +3,7 @@
   <div class="row">
     <div class="col-md-12"><h1>Component</h1></div>
     <div class="col-md-1"><em>Handle</em></div>
-    <div class="col-md-11"><%= link_to @component.handle, HandleService.url(HandleService.object(@component.handle)) %></div>
+    <div class="col-md-11"><%= link_to @component.handle, HandleService.url(HandleService.noid(@component.handle)) %></div>
     <div class="col-md-12"><h2>Products</h2></div>
     <div class="col-md-12">
       <%= render partial: 'products', locals: { component: @component, products: @component.products } %>

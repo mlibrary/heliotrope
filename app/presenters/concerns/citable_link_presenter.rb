@@ -3,7 +3,7 @@
 module CitableLinkPresenter
   extend ActiveSupport::Concern
 
-  delegate :hdl, :doi, to: :solr_document
+  delegate :doi, to: :solr_document
 
   def citable_link
     if doi.present?
@@ -13,11 +13,11 @@ module CitableLinkPresenter
     end
   end
 
-  def handle_url
-    HandleService.url(self)
-  end
-
   def doi_url
     doi
+  end
+
+  def handle_url
+    HandleService.url(id)
   end
 end

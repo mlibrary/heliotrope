@@ -19,7 +19,7 @@ module FeaturedRepresentatives
 
     def component
       return 0 unless epub?
-      epub_component = Component.find_by(handle: HandleService.handle(self))
+      epub_component = Component.find_by(handle: HandleService.path(id))
       return 0 if epub_component.blank?
       epub_component.id
     end

@@ -21,7 +21,6 @@ describe SolrDocument do
   it { is_expected.to respond_to(:copyright_holder) }
   it { is_expected.to respond_to(:date_published) }
   it { is_expected.to respond_to(:doi) }
-  it { is_expected.to respond_to(:hdl) }
   it { is_expected.to respond_to(:has_model) }
   it { is_expected.to respond_to(:holding_contact) }
 

@@ -101,7 +101,7 @@ describe FeaturedRepresentatives::FileSetPresenter do
       let(:component) { double("component", id: id) }
       let(:id) { double("id", positive?: true) }
 
-      before { allow(Component).to receive(:find_by).with(handle: "2027/fulcrum.fid1").and_return(component) }
+      before { allow(Component).to receive(:find_by).with(handle: HandleService.path(fr.file_set_id)).and_return(component) }
 
       it { expect(subject.component?).to be false }
       it { expect(subject.component).to be 0 }
