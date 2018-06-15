@@ -120,6 +120,7 @@ class EPubsController < ApplicationController
     def set_session_show
       session[:show_set] ||= []
       session[:show_set] << params[:id] unless session[:show_set].include?(params[:id])
+      session[:show_set].shift if session[:show_set].length > 10
     end
 
     def clear_session_show
