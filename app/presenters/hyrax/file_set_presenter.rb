@@ -37,11 +37,11 @@ module Hyrax
              :content_type, :creator, :creator_full_name, :contributor, :date_created,
              :keywords, :publisher, :language, :date_uploaded,
              :rights_statement, :license, :embargo_release_date, :lease_expiration_date, :depositor, :tags,
-             :title_or_label, :external_resource, :book_needs_handles, :section_title,
+             :title_or_label, :external_resource, :section_title,
              :allow_download, :allow_hi_res, :copyright_status, :rights_granted,
              :rights_granted_creative_commons, :exclusive_to_platform, :permissions_expiration_date,
              :allow_display_after_expiration, :allow_download_after_expiration, :credit_line,
-             :holding_contact, :ext_url_doi_or_handle, :use_crossref_xml, :primary_creator_role,
+             :holding_contact, :ext_url_doi_or_handle, :primary_creator_role,
              :display_date, :sort_date, :transcript, :translation, :file_format,
              :label, :redirect_to, :has_model,
              to: :solr_document

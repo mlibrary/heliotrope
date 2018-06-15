@@ -23,10 +23,6 @@ module SolrDocumentExtensions::FileSet
     Array(self[Solrizer.solr_name('alt_text', :stored_searchable)])
   end
 
-  def book_needs_handles
-    Array(self[Solrizer.solr_name('book_needs_handles', :symbol)]).first
-  end
-
   def caption
     Array(self[Solrizer.solr_name('caption', :stored_searchable)])
   end
@@ -101,9 +97,5 @@ module SolrDocumentExtensions::FileSet
 
   def translation
     Array(self[Solrizer.solr_name('translation', :stored_searchable)]).first
-  end
-
-  def use_crossref_xml
-    Array(self[Solrizer.solr_name('use_crossref_xml', :symbol)]).first
   end
 end

@@ -16,7 +16,6 @@ feature 'FileSet Cardinality' do
                                   allow_download_after_expiration: "no",
                                   allow_hi_res: "yes",
                                   alt_text: ["This is the alt text"],
-                                  book_needs_handles: "yes",
                                   caption: ["This is the caption"],
                                   content_type: ["drawing", "illustration"],
                                   contributor: ["Thomas, John (playwright, author)\nGuy, Other (lackey)"],
@@ -38,8 +37,7 @@ feature 'FileSet Cardinality' do
                                   section_title: ["Chapter 2"],
                                   sort_date: "1997-01-11",
                                   transcript: "This is the transcript",
-                                  translation: ["This is a translation"],
-                                  use_crossref_xml: "no")}
+                                  translation: ["This is a translation"])}
   let!(:sipity_entity) do
     create(:sipity_entity, proxy_for_global_id: monograph.to_global_id.to_s)
   end
@@ -77,10 +75,6 @@ feature 'FileSet Cardinality' do
       expect(cover.alt_text).to match_array(['This is the alt text'])
       expect(doc.alt_text).to match_array(['This is the alt text'])
       expect(find('#file_set_alt_text')[:class]).to_not include 'multi-text-field'
-
-      expect(cover.book_needs_handles).to eql 'yes'
-      expect(doc.book_needs_handles).to eql 'yes'
-      expect(find('#file_set_book_needs_handles')[:class]).to_not include 'multi-text-field'
 
       expect(cover.caption).to match_array(['This is the caption'])
       expect(doc.caption).to match_array(['This is the caption'])
@@ -175,10 +169,6 @@ feature 'FileSet Cardinality' do
       expect(cover.translation).to match_array(["This is a translation"])
       expect(doc.translation).to eql 'This is a translation'
       expect(find('#file_set_translation')[:class]).to_not include 'multi-text-field'
-
-      expect(cover.use_crossref_xml).to eql 'no'
-      expect(doc.use_crossref_xml).to eql 'no'
-      expect(find('#file_set_use_crossref_xml')[:class]).to_not include 'multi-text-field'
     end
   end
 end
