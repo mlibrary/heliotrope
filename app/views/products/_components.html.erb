@@ -1,7 +1,7 @@
 <div class="row">
   <% components.each do |component| %>
     <div class="col-md-1"></div>
-    <div class="col-md-5"><%= link_to component.handle, HandleService.url(HandleService.object(component.handle)) %></div>
+    <div class="col-md-5"><%= link_to component.handle, HandleService.url(HandleService.noid(component.handle)) %></div>
     <div class="col-md-6">
       <%= link_to(product_component_path(product, component), method: :delete, class: "btn btn-default") do %>
         <span class="glyphicon glyphicon-minus" aria-hidden="true"></span> Remove

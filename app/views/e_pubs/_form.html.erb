@@ -9,7 +9,7 @@
         class: 'btn btn-default' %>
     <% else %>
       <%= link_to t('.create'),
-        main_app.components_path(component: { handle: HandleService.handle(member) }),
+        main_app.components_path(component: { handle: HandleService.path(member.id) }),
         method: :post,
         title: t('.create'),
         data: { confirm: t('.create') },
