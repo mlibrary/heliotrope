@@ -37,14 +37,6 @@ RSpec.describe SessionsController, type: :controller do
   describe '#destroy' do
     subject { get :destroy }
 
-    before { allow_any_instance_of(described_class).to receive(:user_signed_in?).and_return(true) }
-
-    it { is_expected.to redirect_to Hyrax::Engine.config.cosign_logout_url + terminate_user_session_url }
-  end
-
-  describe '#terminate' do
-    subject { get :terminate }
-
     let(:cookie) { "cosign-" + Hyrax::Engine.config.hostname }
 
     before do
@@ -58,12 +50,6 @@ RSpec.describe SessionsController, type: :controller do
       is_expected.to redirect_to root_url
       expect(cookies[:fulcrum_signed_in_static]).to be nil
       expect(cookies[cookie]).to be nil
-    end
-
-    context 'stored location for user' do
-      before { allow_any_instance_of(SessionsController).to receive(:stored_location_for).with(:user).and_return('http://return_to_me') }
-
-      it { is_expected.to redirect_to 'http://return_to_me' }
     end
   end
 end

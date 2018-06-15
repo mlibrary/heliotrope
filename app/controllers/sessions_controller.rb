@@ -10,7 +10,7 @@ class SessionsController < ApplicationController
       sign_in_static_cookie
       redirect_to stored_location_for(:user) || hyrax.dashboard_path
     elsif Rails.env.production?
-      redirect_to stored_location_for(:user) || root_url
+      render
     else
       redirect_to new_authentications_path
     end
@@ -21,19 +21,10 @@ class SessionsController < ApplicationController
   end
 
   def destroy
-    # User sign out action - Step 1 of 2
-    Rails.logger.debug "[AUTHN] sessions#destroy, user sign out (1 of 2)"
-    user_sign_out_prompt
-  end
-
-  def terminate
-    # User sign out action - Step 2 of 2
-    Rails.logger.debug "[AUTHN] sessions#terminate, user sign out (2 of 2)"
-    # Called only if user has confirmed sign out request
-    redirect_to_url = stored_location_for(:user)
+    Rails.logger.debug "[AUTHN] sessions#destroy, user sign out"
     user_sign_out
     ENV['FAKE_HTTP_X_REMOTE_USER'] = '(null)'
     sign_out_static_cookie
-    redirect_to redirect_to_url || root_url
+    redirect_to root_url
   end
 end

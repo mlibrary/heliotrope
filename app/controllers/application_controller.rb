@@ -67,11 +67,6 @@ class ApplicationController < ActionController::Base
       user_signed_in? && valid_user?(request.headers)
     end
 
-    def user_sign_out_prompt
-      Rails.logger.debug "[AUTHN] user_sign_out_prompt: #{current_user.try(:email) || '(no user)'}"
-      redirect_to Rails.configuration.cosign_logout_url + terminate_user_session_url
-    end
-
     def user_sign_out
       Rails.logger.debug "[AUTHN] user_sign_out: #{current_user.try(:email) || '(no user)'}"
       sign_out(:user)

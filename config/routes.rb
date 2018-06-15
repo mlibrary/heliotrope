@@ -102,7 +102,6 @@ Rails.application.routes.draw do
   end
 
   devise_for :users, path: '', path_names: { sign_in: 'login', sign_out: 'logout' }, controllers: { sessions: 'sessions' }, skip: %i[registration password]
-  get 'logoff', controller: :sessions, action: :terminate, as: :terminate_user_session
   resource :authentications, only: %i[new create destroy]
 
   get 'users', controller: :users, action: :index, as: :users
