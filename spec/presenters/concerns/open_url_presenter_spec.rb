@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-describe OpenUrlPresenter do
+RSpec.describe OpenUrlPresenter do
   let(:mono_doc) { SolrDocument.new(id: '1',
                                     title_tesim: ['Stuff'],
                                     creator_full_name_tesim: ['Worm, Bird'],

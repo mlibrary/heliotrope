@@ -3,7 +3,7 @@
 module CitableLinkPresenter
   extend ActiveSupport::Concern
 
-  delegate :doi, to: :solr_document
+  delegate :doi, :hdl, to: :solr_document
 
   def citable_link
     if doi.present?
@@ -13,11 +13,19 @@ module CitableLinkPresenter
     end
   end
 
+  def doi_path
+    doi.present? ? doi : ""
+  end
+
   def doi_url
-    doi
+    "https://doi.org/" + doi_path
+  end
+
+  def handle_path
+    hdl.present? ? hdl : HandleService.path(id)
   end
 
   def handle_url
-    HandleService.url(id)
+    "http://hdl.handle.net/" + handle_path
   end
 end

@@ -35,9 +35,9 @@
 <% if @presenter.present? && @presenter.class == Hyrax::FileSetPresenter %>
 
   <% if @presenter.doi.present? %>
-    <meta name="citation_doi" content="<%= @presenter.doi_url.gsub('https://doi.org/', '') %>">
+    <meta name="citation_doi" content="<%= @presenter.doi_path %>">
   <% else %>
-    <meta name="DC.identifier" content="<%= @presenter.handle_url.gsub('http://hdl.handle.net/', '') %>">
+    <meta name="citation_hdl" content="<%= @presenter.handle_path %>">
   <% end %>
 
 <% end %>

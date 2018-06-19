@@ -15,6 +15,10 @@ module SolrDocumentExtensions::Universal
     Array(self[Solrizer.solr_name('doi', :symbol)]).first
   end
 
+  def hdl
+    Array(self[Solrizer.solr_name('hdl', :symbol)]).first
+  end
+
   def holding_contact
     Array(self[Solrizer.solr_name('holding_contact', :symbol)]).first
   end

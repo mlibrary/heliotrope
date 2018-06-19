@@ -47,8 +47,9 @@ feature 'Create a monograph' do
       fill_in 'ISBN(s)', with: '123-456-7890'
 
       # Citable Links
-      fill_in 'DOI', with: 'http://wwww.example.com'
-      fill_in 'Identifier', with: 'http://www.one-of-many-permanent-urls-for-this.com'
+      fill_in 'DOI', with: '<doi>'
+      fill_in 'Handle', with: '<hdl>'
+      fill_in 'Identifier', with: '<identifier>'
 
       click_button 'Save'
 
@@ -57,7 +58,7 @@ feature 'Create a monograph' do
       expect(page).to have_content press.name
       expect(page).to have_content 'Blahdy blah description works'
       expect(page).to have_content "Jimmy Johns, Sub Way and Sandwich Shoppe"
-      expect(page).to have_field('Citable Link', with: 'http://wwww.example.com')
+      expect(page).to have_field('Citable Link', with: 'https://doi.org/<doi>')
       expect(page).to have_content '123-456-7890'
       expect(page).to have_content "Your files are being processed by Fulcrum in the background."
 
@@ -129,9 +130,11 @@ feature 'Create a monograph' do
       expect(page).to have_content '123-456-7891'
 
       # DOI
-      expect(page).to have_content 'http://wwww.example.com'
-      # identifier
-      expect(page).to have_content 'http://www.one-of-many-permanent-urls-for-this.com'
+      expect(page).to have_content '<doi>'
+      # Handle
+      expect(page).to have_content '<hdl>'
+      # Identifier
+      expect(page).to have_content '<identifier>'
 
       # MLA citation
       expect(page).to have_content 'Johns, Jimmy, and Sub Way. Test Monograph. Ann Arbor, MI.'

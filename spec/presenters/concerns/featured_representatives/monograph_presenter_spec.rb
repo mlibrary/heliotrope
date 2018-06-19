@@ -34,7 +34,7 @@ class TestMonographPresenter
   end
 end
 
-describe FeaturedRepresentatives::MonographPresenter do
+RSpec.describe FeaturedRepresentatives::MonographPresenter do
   context "with featured_representatives" do
     describe "#featured_representatives" do
       subject { TestMonographPresenter.new(SolrDocument.new(id: 'mid')) }

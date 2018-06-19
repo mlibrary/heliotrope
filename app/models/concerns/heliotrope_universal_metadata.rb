@@ -18,10 +18,11 @@ module HeliotropeUniversalMetadata
       index.as :symbol
     end
 
-    # TODO: Remove property after deleting property from Fedora.
-    property :hdl, predicate: ::RDF::Vocab::Identifiers.hdl, multiple: false
-
     property :doi, predicate: ::RDF::Vocab::Identifiers.doi, multiple: false do |index|
+      index.as :symbol
+    end
+
+    property :hdl, predicate: ::RDF::Vocab::Identifiers.hdl, multiple: false do |index|
       index.as :symbol
     end
   end

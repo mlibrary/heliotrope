@@ -95,7 +95,7 @@ describe 'shared/_metadata.html.erb' do
                                            title_tesim: ['Bark Bark Boop'],
                                            creator_tesim: ['Mr. Noodles'],
                                            sort_date_tesim: ['2011-01-01'],
-                                           doi_ssim: ['https://doi.org/10.3998/fulcrum.001']) }
+                                           doi_ssim: ['10.3998/fulcrum.001']) }
     it 'has the doi metadata (but not the doi url)' do
       @presenter = Hyrax::FileSetPresenter.new(solr_document, nil)
       render

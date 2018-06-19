@@ -26,9 +26,10 @@ feature 'FileSet Cardinality' do
                                   date_published: ["2017-01-01"],
                                   display_date: ["circa. 2000"],
                                   doi: "",
+                                  hdl: "",
                                   exclusive_to_platform: "yes",
                                   external_resource: "no",
-                                  ext_url_doi_or_handle: "Handle",
+                                  ext_url_doi_or_handle: "URL",
                                   holding_contact: "Some museum or something somewhere",
                                   keywords: ["dogs", "cats", "fish"],
                                   permissions_expiration_date: "2020-01-01",
@@ -122,6 +123,10 @@ feature 'FileSet Cardinality' do
       expect(doc.doi).to eql ''
       expect(find('#file_set_doi')[:class]).to_not include 'multi-text-field'
 
+      expect(cover.hdl).to eql ''
+      expect(doc.hdl).to eql ''
+      expect(find('#file_set_hdl')[:class]).to_not include 'multi-text-field'
+
       expect(cover.exclusive_to_platform).to eql 'yes'
       expect(doc.exclusive_to_platform).to eql 'yes'
       expect(find('#file_set_exclusive_to_platform')[:class]).to_not include 'multi-text-field'
@@ -130,8 +135,8 @@ feature 'FileSet Cardinality' do
       expect(doc.external_resource).to eql 'no'
       expect(find('#file_set_external_resource')[:class]).to_not include 'multi-text-field'
 
-      expect(cover.ext_url_doi_or_handle).to eql 'Handle'
-      expect(doc.ext_url_doi_or_handle).to eql 'Handle'
+      expect(cover.ext_url_doi_or_handle).to eql 'URL'
+      expect(doc.ext_url_doi_or_handle).to eql 'URL'
       expect(find('#file_set_ext_url_doi_or_handle')[:class]).to_not include 'multi-text-field'
 
       expect(cover.holding_contact).to eql 'Some museum or something somewhere'

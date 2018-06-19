@@ -68,7 +68,7 @@ feature 'Edit a file set' do
       fill_in 'Related Section', with: 'Test section with _Italicized Title_ therein'
 
       fill_in 'Externally-Hosted Resource?', with: 'no3'
-      fill_in 'External URL/DOI', with: 'Handle'
+      fill_in 'External URL/DOI', with: 'URL'
       fill_in 'Allow Download?', with: 'no4'
       fill_in 'Allow Hi-Res?', with: 'yes2'
       fill_in 'Credit Line', with: 'A Nice Museum'
