@@ -141,6 +141,17 @@ RSpec.describe Hyrax::MonographPresenter do
       subject { presenter.authors }
       it { is_expected.to eq 'Cat, Abe; Lastname, Thing; Feetys, Manny' }
     end
+    context 'Solr doc creator values have text following a second comma' do
+      before do
+        allow(mono_doc).to receive(:creator).and_return(['Man, Rocket, 1888-1968', 'Boop, Betty, some weird stuff'])
+        allow(mono_doc).to receive(:contributor).and_return(['Love, Thomas'])
+        allow(presenter).to receive(:subdomain).and_return('heb')
+      end
+      subject { presenter.authors }
+      it 'is included in authors method' do
+        expect(subject).to eq 'Man, Rocket, 1888-1968; Boop, Betty, some weird stuff; Love, Thomas'
+      end
+    end
   end
 
   describe '#authors?' do
@@ -446,14 +457,27 @@ RSpec.describe Hyrax::MonographPresenter do
   end
 
   describe '#creator' do
-    context 'values in creator_full_name and contributor' do
+    context 'there are values in creator and contributor' do
       before do
         allow(mono_doc).to receive(:creator).and_return(['Man, Rocket', 'Boop, Betty'])
         allow(mono_doc).to receive(:contributor).and_return(['Love, Thomas'])
       end
       subject { presenter.creator }
       # contributors are not used any more in creator (and therefore citations)
-      it { expect(subject).to eq ['Man, Rocket', 'Boop, Betty'] }
+      it 'only includes the values in creator' do
+        expect(subject).to eq ['Man, Rocket', 'Boop, Betty']
+      end
+    end
+
+    context 'Solr doc creator values have text following a second comma' do
+      before do
+        allow(mono_doc).to receive(:creator).and_return(['Man, Rocket, 1888-1968', 'Boop, Betty, some weird stuff'])
+        allow(mono_doc).to receive(:contributor).and_return(['Love, Thomas'])
+      end
+      subject { presenter.creator }
+      it 'does not return this extra text' do
+        expect(subject).to eq ['Man, Rocket', 'Boop, Betty']
+      end
     end
   end
 end

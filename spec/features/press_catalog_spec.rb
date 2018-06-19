@@ -7,6 +7,7 @@ feature 'Press Catalog' do
 
   let(:umich) { create(:press, subdomain: 'umich') }
   let(:psu) { create(:press, subdomain: 'psu') }
+  let(:heb) { create(:press, subdomain: 'heb') }
 
   context 'a user who is not logged in' do
     context 'with monographs for different presses' do
@@ -106,16 +107,29 @@ feature 'Press Catalog' do
       end
     end
 
-    context 'with with a monograph with multiple authors' do
+    context 'with a monograph with multiple authors' do
       let!(:monograph) { create(:public_monograph,
                                 title: ['The Two Authors\' Book'],
                                 creator: ['Johns, Jimmy (a role)'],
                                 contributor: ['Way, Sub (another role)'],
                                 press: umich.subdomain) }
 
-      scenario 'Sees multiple author names on the press catalog page' do
+      scenario 'sees multiple author names on the press catalog page' do
         visit "/#{umich.subdomain}"
         expect(page).to have_content 'Jimmy Johns and Sub Way'
+      end
+    end
+
+    context 'with a monograph with multiple authors in HEB-style format' do
+      let!(:monograph) { create(:public_monograph,
+                                title: ['The Three Authors\' Book'],
+                                creator: ["Johns, Jimmy, 1888-1968 (a role)\nAuthor, Second"],
+                                contributor: ['Way, Sub (another role)'],
+                                press: heb.subdomain) }
+
+      scenario 'sees multiple "reversed" author names on the press catalog page, retaining birth/death years' do
+        visit "/#{heb.subdomain}"
+        expect(page).to have_content 'Johns, Jimmy, 1888-1968; Author, Second; Way, Sub'
       end
     end
 

@@ -12,11 +12,22 @@ module Hyrax
     attr_accessor :pageviews
 
     delegate :date_created, :date_modified, :date_uploaded, :location, :description,
-             :creator, :creator_display, :creator_full_name, :contributor,
+             :creator_display, :creator_full_name, :contributor,
              :subject, :section_titles, :based_near, :publisher, :date_published, :language,
              :isbn, :copyright_holder, :holding_contact, :has_model,
              :buy_url, :embargo_release_date, :lease_expiration_date, :rights, :series,
              to: :solr_document
+
+    def creator
+      # this is the value used in CitationsBehavior, so remove anything after the second comma in a name, like HEB's...
+      # author birth/death years etc
+      citable_creators = []
+      solr_document.creator&.each do |creator|
+        citable_creator = creator&.split(',')&.map(&:strip)&.first(2)&.join(', ')
+        citable_creators << citable_creator if citable_creator.present?
+      end
+      citable_creators
+    end
 
     def citations_ready?
       # everything used by Hyrax::CitationsBehavior
@@ -72,9 +83,9 @@ module Hyrax
     def authors
       return creator_display if creator_display?
       if subdomain != 'heb'
-        [unreverse_names(creator), unreverse_names(contributor)].flatten.to_sentence(last_word_connector: ' and ')
+        [unreverse_names(solr_document.creator), unreverse_names(contributor)].flatten.to_sentence(last_word_connector: ' and ')
       else
-        [creator, contributor].flatten.join('; ')
+        [solr_document.creator, contributor].flatten.join('; ')
       end
     end
 
