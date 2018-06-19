@@ -8,11 +8,12 @@ RSpec.describe EPub::BridgeToWebgl do
   let(:chapters) do
     [
       EPub::Chapter.send(:new,
-                         'chapter1',
-                         'chapter1.html',
-                         'Chapter 1',
-                         "/6/2[chapter1]!",
-                         Nokogiri::XML(chapter1))
+                         id: 'chapter1',
+                         href: 'chapter1.html',
+                         title: 'Chapter 1',
+                         basecfi: "/6/2[chapter1]!",
+                         doc: Nokogiri::XML(chapter1),
+                         publication: publication)
     ]
   end
   let(:chapter1) do

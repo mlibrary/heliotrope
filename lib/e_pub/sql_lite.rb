@@ -31,9 +31,9 @@ module EPub
     end
 
     def load_chapters
-      @epub_publication.chapters.each do |c|
+      @epub_publication.chapters_from_file.each do |c|
         text = c.doc.search('//text()').map(&:text).delete_if { |x| x !~ /\w/ }
-        @db.execute "INSERT INTO chapters VALUES (?, ?, ?, ?, ?)", c.chapter_id, c.chapter_href, c.title, c.basecfi, text.join(" ")
+        @db.execute "INSERT INTO chapters VALUES (?, ?, ?, ?, ?)", c.id, c.href, c.title, c.basecfi, text.join(" ")
       end
     rescue SQLite3::Exception => e
       raise "Unable to load chapters to #{@db.filename}, #{e}"
@@ -50,6 +50,24 @@ module EPub
         db_results.push(href: row[0], basecfi: row[1], title: row[2])
       end
       db_results
+    end
+
+    def find_by_cfi(cfi)
+      stm = @db.prepare "select chapter_id, chapter_href, title, text from chapters where basecfi = ?"
+      stm.bind_param 1, cfi
+      rs = stm.execute
+      row = rs.first
+      { id: row[0], href: row[1], basecfi: cfi, title: row[2], doc: row[3] }
+    end
+
+    def fetch_chapters
+      stm = @db.prepare("select chapter_id, chapter_href, title, basecfi from chapters")
+      rs = stm.execute
+      results = []
+      rs.each do |row|
+        results << { id: row[0], href: row[1], title: row[2], basecfi: row[3] }
+      end
+      results
     end
 
     private

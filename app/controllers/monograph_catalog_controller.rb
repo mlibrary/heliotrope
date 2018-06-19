@@ -73,9 +73,6 @@ class MonographCatalogController < ::CatalogController
     def load_presenter
       monograph_id = params[:monograph_id] || params[:id]
       raise CanCan::AccessDenied unless current_ability&.can?(:read, monograph_id)
-      @curation_concern = Monograph.find(monograph_id)
       @monograph_presenter = Hyrax::PresenterFactory.build_for(ids: [monograph_id], presenter_class: Hyrax::MonographPresenter, presenter_args: current_ability).first
-    rescue Ldp::Gone # tombstone, this should be caught by the current_ability check above and 404'ed
-      raise CanCan::AccessDenied
     end
 end

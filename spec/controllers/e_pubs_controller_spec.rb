@@ -412,4 +412,26 @@ RSpec.describe EPubsController, type: :controller do
       end
     end
   end
+
+  describe '#download_chapter' do
+    let(:monograph) { create(:monograph) }
+    let(:file_set) { create(:file_set, id: '999999999', content: File.open(File.join(fixture_path, 'fake_epub_multi_rendition.epub'))) }
+    let!(:fr) { create(:featured_representative, monograph_id: monograph.id, file_set_id: file_set.id, kind: 'epub') }
+    before do
+      monograph.ordered_members << file_set
+      monograph.save!
+      file_set.save!
+      UnpackJob.perform_now(file_set.id, 'epub')
+    end
+    after { FeaturedRepresentative.destroy_all }
+
+    it 'sends the chapter as pdf' do
+      get :download_chapter, params: { id: file_set.id, cfi: '/6/2[xhtml00000003]!' }
+      expect(response).to have_http_status(:success)
+      expect(response.headers['Content-Type']).to eq 'application/pdf'
+      expect(response.headers['Content-Disposition']).to eq 'inline'
+      expect(response.headers['Content-Transfer-Encoding']).to eq 'binary'
+      expect(response.body.starts_with?("%PDF-1.3\n")).to be true
+    end
+  end
 end

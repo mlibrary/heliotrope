@@ -42,7 +42,6 @@ end
 require_relative './e_pub/bridge_to_webgl'
 require_relative './e_pub/cfi'
 require_relative './e_pub/chapter'
-require_relative './e_pub/chapter_null_object'
 require_relative './e_pub/chapter_presenter'
 require_relative './e_pub/paragraph'
 require_relative './e_pub/paragraph_null_object'

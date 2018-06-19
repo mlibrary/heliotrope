@@ -18,6 +18,8 @@ RSpec.describe EPub::Publication do
       allow(validator).to receive(:toc).and_return(true)
       allow(validator).to receive(:root_path).and_return(nil)
       allow(validator).to receive(:multi_rendition).and_return("no")
+      allow(validator).to receive(:page_scan_content_file).and_return("")
+      allow(validator).to receive(:ocr_content_file).and_return("")
       allow(EPub.logger).to receive(:info).and_return(nil)
     end
 
@@ -98,6 +100,7 @@ RSpec.describe EPub::Publication do
         @root_path = UnpackHelper.noid_to_root_path(@noid, 'epub')
         @file = './spec/fixtures/fake_epub01.epub'
         UnpackHelper.unpack_epub(@noid, @root_path, @file)
+        UnpackHelper.create_search_index(@root_path)
         allow(EPub.logger).to receive(:info).and_return(nil)
       end
 
@@ -116,10 +119,10 @@ RSpec.describe EPub::Publication do
           # that populates the Chapter object, so it's here. For now.
           subject { described_class.from_directory(@root_path).chapters[0] }
           it "has the id of" do
-            expect(subject.chapter_id).to eq "Chapter01"
+            expect(subject.id).to eq "Chapter01"
           end
           it "has the href of" do
-            expect(subject.chapter_href).to eq "xhtml/Chapter01.xhtml"
+            expect(subject.href).to eq "xhtml/Chapter01.xhtml"
           end
           it "has the title of" do
             expect(subject.title).to eq 'Damage report!'
