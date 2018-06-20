@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class EPubsController < ApplicationController
-  before_action :set_presenter, only: %i[show lock shibboleth download_chapter search]
+  before_action :set_presenter, only: %i[show shibboleth download_chapter search]
   before_action :set_show, only: %i[show download_chapter]
 
   def show
@@ -94,24 +94,6 @@ class EPubsController < ApplicationController
       @presenter.date_modified.to_s
   end
 
-  def lock
-    @subscriber = nil
-    clear_session_show
-    if access?
-      set_session_show
-      redirect_to epub_path(params[:id])
-    else
-      @monograph_presenter = nil
-      if @presenter.parent.present?
-        @monograph_presenter = Hyrax::PresenterFactory.build_for(ids: [@presenter.parent.id], presenter_class: Hyrax::MonographPresenter, presenter_args: current_ability).first
-      end
-      @institutions = component_institutions
-      @products = component_products
-      CounterService.from(self, @presenter).count(request: 1, turnaway: "No_License")
-      render 'access'
-    end
-  end
-
   def shibboleth
     @institution = Institution.find(params[:institution_id])
     entity = @institution&.entity_id
@@ -135,11 +117,28 @@ class EPubsController < ApplicationController
 
     def set_show
       return if show?
-      redirect_to epub_lock_path(params[:id])
+      @subscriber = nil
+      clear_session_show
+      if access?
+        set_session_show
+      else
+        @monograph_presenter = nil
+        if @presenter.parent.present?
+          @monograph_presenter = Hyrax::PresenterFactory.build_for(ids: [@presenter.parent.id], presenter_class: Hyrax::MonographPresenter, presenter_args: current_ability).first
+        end
+        @institutions = component_institutions
+        @products = component_products
+        CounterService.from(self, @presenter).count(request: 1, turnaway: "No_License")
+        render 'access'
+      end
     end
 
     def show?
-      session[:show_set]&.include?(params[:id])
+      if session[:show_set].present?
+        session[:show_set]&.include?(params[:id])
+      else
+        false
+      end
     end
 
     def set_session_show

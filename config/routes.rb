@@ -71,7 +71,6 @@ Rails.application.routes.draw do
   end
 
   get 'epubs/:id', controller: :e_pubs, action: :show, as: :epub
-  get 'epubs/:id/lock', controller: :e_pubs, action: :lock, as: :epub_lock
   post 'epubs/:id/shibboleth', controller: :e_pubs, action: :shibboleth, as: :epub_shibboleth
   get 'epubs/:id/*file', controller: :e_pubs, action: :file, as: :epub_file
   get 'epub_search/:id', controller: :e_pubs, action: :search, as: :epub_search
