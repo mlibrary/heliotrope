@@ -1,15 +1,18 @@
 <h2>CSB Citations</h2>
-
-<table class="table table-striped monograph attributes" itemscope="" itemtype="http://schema.org/CreativeWork">
-  <thead>
-  <tr><th>Citation</th><th>Value</th></tr>
-  </thead>
-  <tbody>
-  <tr><th>MLA</th>
-    <td><ul class="tabular list-unstyled"><li class="attribute"><%= export_as_mla_citation(@presenter) %></li></ul></td></tr>
-  <tr><th>APA</th>
-    <td><ul class="tabular list-unstyled"><li class="attribute"><%= export_as_apa_citation(@presenter) %></li></ul></td></tr>
-  <tr><th>Chicago</th>
-    <td><ul class="tabular list-unstyled"><li class="attribute"><%= export_as_chicago_citation(@presenter) %></li></ul></td></tr>
-  </tbody>
-</table>
+<% if @presenter.citations_ready? %>
+  <table class="table table-striped monograph attributes" itemscope="" itemtype="http://schema.org/CreativeWork">
+    <thead>
+    <tr><th>Citation</th><th>Value</th></tr>
+    </thead>
+    <tbody>
+    <tr><th>MLA</th>
+      <td><ul class="tabular list-unstyled"><li class="attribute"><%= export_as_mla_citation(@presenter) %></li></ul></td></tr>
+    <tr><th>APA</th>
+      <td><ul class="tabular list-unstyled"><li class="attribute"><%= export_as_apa_citation(@presenter) %></li></ul></td></tr>
+    <tr><th>Chicago</th>
+      <td><ul class="tabular list-unstyled"><li class="attribute"><%= export_as_chicago_citation(@presenter) %></li></ul></td></tr>
+    </tbody>
+  </table>
+<% else %>
+  One or more metadata required for citations are missing.
+<% end %>
