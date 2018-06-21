@@ -207,10 +207,39 @@ footer.press {
     }
 
     .monograph-metadata {
+      .copyright {
+        font-size: .85em;
+      }
+
       .description {
+        padding-top: 1.2em;
         padding-bottom: 2em;
       }
 
+      .additional-metadata {
+        padding-top: 2em;
+        dt, dd {
+          display: inline-block;
+          float: left;
+        }
+        dt {
+          clear: both;
+          width: 8em;
+        }
+
+        dd {
+          padding-left: 3em;
+        }
+
+        dd > form {
+          width: 200%;
+          label {}
+        }
+
+        ul {
+          padding-left: 0;
+        }
+      }
     .webgl.alert {
       margin-left: 0;
       margin-right: 0;
@@ -241,7 +270,7 @@ footer.press {
       }
 
       input#permalink {
-        max-width: 50%;
+        max-width: 70%;
       }
     }
   }

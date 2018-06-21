@@ -40,6 +40,20 @@ module Hyrax
         markup.html_safe
       end
 
+      # Draw the dl row for the attribute
+      def render_dl_row
+        markup = ''
+
+        return markup if values.blank? && !options[:include_empty]
+        markup << %(<dt>#{label}</dt>\n<dd><ul class='tabular'>)
+        attributes = microdata_object_attributes(field).merge(class: "attribute attribute-#{field}")
+        Array(values).each do |value|
+          markup << "<li#{html_attributes(attributes)}>#{attribute_value_to_html(value.to_s)}</li>"
+        end
+        markup << %(</ul></dd>)
+        markup.html_safe
+      end
+
       def maybe_sort_values
         # options[:sort_by] is an array showing values' items in their intended order
         return if options[:sort_by].blank? || !values.is_a?(Array) || values.count < 1
