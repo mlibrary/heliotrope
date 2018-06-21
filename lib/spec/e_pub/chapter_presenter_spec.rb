@@ -73,19 +73,4 @@ RSpec.describe EPub::ChapterPresenter do
       end
     end
   end
-
-  describe "#blurb" do
-    context "when the epub is not fixed layout" do
-      it "returns some text (usually the first few paragraphs)" do
-        allow(publication).to receive(:multi_rendition).and_return("no")
-        expect(subject.blurb.starts_with?("<p>Chapter 1</p><p>Human sacrifice, cats and dogs living together")).to be true
-      end
-    end
-    context "when the epub is fixed layout" do
-      it "returns an empty string" do
-        allow(publication).to receive(:multi_rendition).and_return("yes")
-        expect(subject.blurb).to be ""
-      end
-    end
-  end
 end
