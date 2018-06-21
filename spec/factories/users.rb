@@ -7,8 +7,8 @@ FactoryBot.define do
     end
 
     sequence(:email) { |_n| "email-#{srand}@test.com" }
-    password 'a password'
-    password_confirmation 'a password'
+
+    encrypted_password { SecureRandom.urlsafe_base64(12) }
 
     factory :platform_admin do
       after(:create) do |user, _evaluator|

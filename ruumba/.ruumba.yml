@@ -9,13 +9,19 @@ AllCops:
 # begin unapplicable cops
 Style/FrozenStringLiteralComment:
   Enabled: false
+
 Layout/AlignHash:
   Enabled: false
 Layout/AlignParameters:
   Enabled: false
+Layout/ElseAlignment:
+  Enabled: false
 Layout/IndentationWidth:
   Enabled: false
 Layout/TrailingBlankLines:
+  Enabled: false
+
+Lint/EndAlignment:
   Enabled: false
 # end unapplicable cops
 

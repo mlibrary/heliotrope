@@ -63,7 +63,7 @@ feature 'Log In and Out' do
       expect(page).to have_current_path(hyrax_file_set_path(file_set))
     end
 
-    scenario "logging out goes to root page" do
+    scenario "logging out goes to that asset page" do
       cosign_login_as user
       visit hyrax_file_set_path(file_set)
 
@@ -71,7 +71,7 @@ feature 'Log In and Out' do
         click_link "Log Out"
       end
 
-      expect(page).to have_current_path(main_app.root_path(locale: 'en'))
+      expect(page).to have_current_path(hyrax_file_set_path(file_set))
     end
   end
 end

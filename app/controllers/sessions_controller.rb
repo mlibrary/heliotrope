@@ -22,9 +22,10 @@ class SessionsController < ApplicationController
 
   def destroy
     Rails.logger.debug "[AUTHN] sessions#destroy, user sign out"
+    redirect_to_url = stored_location_for(:user)
     user_sign_out
     ENV['FAKE_HTTP_X_REMOTE_USER'] = '(null)'
     sign_out_static_cookie
-    redirect_to root_url
+    redirect_to redirect_to_url || root_url
   end
 end

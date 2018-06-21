@@ -20,7 +20,7 @@ class User < ApplicationRecord
   # Include default devise modules. Others available are:
   # :registerable, :recoverable, :rememberable, :trackable, :validatable
   # :confirmable, :lockable, :timeoutable and :omniauthable
-  devise :database_authenticatable
+  # devise :database_authenticatable
 
   # Use the http header as auth.  This app will be behind a reverse proxy
   #   that will take care of the authentication.
@@ -30,10 +30,11 @@ class User < ApplicationRecord
                     model: 'devise/models/http_header_authenticatable')
 
   # Add our custom module to devise.
-  devise :http_header_authenticatable
+  devise :rememberable, :http_header_authenticatable
 
   def populate_attributes
     # TODO: Override this for HttpHeaderAuthenticatable
+    # Rails.logger.info "session[:identity] = #{session[:identity]}"
   end
 
   alias_attribute :user_key, :email
@@ -93,8 +94,7 @@ class User < ApplicationRecord
   end
 
   def tokenize!
-    self.password = SecureRandom.urlsafe_base64(12)
-    self.password_confirmation = password
+    self.encrypted_password = SecureRandom.urlsafe_base64(12)
     save!
   end
 

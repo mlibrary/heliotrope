@@ -8,8 +8,7 @@ uploads_path: <%= File.join(Rails.root, 'tmp', 'uploads') %>
 minter_path: <%= File.join(Rails.root, 'tmp', 'minter-state') %>
 resque_namespace: heliotrope-development
 host: localhost:3000
-# shibboleth_service_provider_url: "https://quod.lib.umich.edu/Shibboleth.sso"
-shibboleth_service_provider_url: "https://quod.lib.umich.edu/Shibboleth.sso"
+shibboleth_identity_provider_url: "https://shibboleth.umich.edu/idp/shibboleth"
 
 # Should we create users automatically on first login?
 # This supports convenient single sign-on account provisioning
