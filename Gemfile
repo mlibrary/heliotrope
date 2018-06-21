@@ -139,6 +139,8 @@ gem 'sdoc', '~> 0.4.0', group: :doc
 gem 'sitemap_generator', '~> 6.0.1'
 
 gem 'sinatra', '~> 2.0.2'
+# CVE-2018-3760
+gem 'sprockets', '~> 3.7.2'
 
 # sqlite for epub indexing
 gem 'sqlite3'
