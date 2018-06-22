@@ -79,12 +79,12 @@ module EPub
       files = files_in_chapter
       images = images_in_files(files)
       EPub.logger.info("CONVERTING #{images.count} PAGE IMAGES to PDF")
-      pdf = Prawn::Document.new(page_size: "A4", page_layout: :portrait)
-      images.each_with_index do |img, i|
-        pdf.image img, scale: 0.1
-        pdf.start_new_page(size: "A4", page_layout: :portrait) unless i == images.index(images.last)
+      # In Prawn, "LETTER" is 8.5x11 which is 612x792
+      pdf = Prawn::Document.new(page_size: "LETTER", page_layout: :portrait, margin: 50)
+      images.each do |img|
+        pdf.image img, fit: [512, 692] # minus 100 for the margin
       end
-      pdf # pdf.render_file "filename.pdf"
+      pdf
     end
 
     private
