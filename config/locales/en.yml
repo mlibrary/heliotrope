@@ -139,7 +139,7 @@ en:
     search:
       form:
         q:
-          label: "Search within %{monograph_name}"
+          label: "Search for assets within %{monograph_name}"
           placeholder: "Search assets"
   monograph_manifests:
     notice:
@@ -170,7 +170,7 @@ en:
     search:
       form:
         q:
-          label: "Search within %{press_name}"
+          label: "Search for works within %{press_name}"
           placeholder: "Search works"
   publisher: "Publisher"
   redirect_to: "Redirect to"

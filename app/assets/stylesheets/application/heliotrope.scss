@@ -270,7 +270,7 @@ footer.press {
       }
 
       input#permalink {
-        max-width: 70%;
+        max-width: 82%;
       }
     }
   }
@@ -280,7 +280,13 @@ footer.press {
       padding-top: 4em;
     }
     .chapter {
-      margin-left: 4em;
+      padding-left: 1em;
+    }
+
+    .download {
+      display: block;
+      padding-left: 2em;
+      padding-top: .4em;
     }
   }
 

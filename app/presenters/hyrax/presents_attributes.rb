@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Hyrax
   module PresentsAttributes
     ##
@@ -40,7 +42,7 @@ module Hyrax
     def microdata_type_to_html
       return "" unless display_microdata?
       value = Microdata.fetch(microdata_type_key, default: Hyrax.config.microdata_default_type)
-      " itemscope itemtype=\"#{value}\"".html_safe
+      " itemscope itemtype=\"#{value}\"".html_safe # rubocop:disable Rails/OutputSafety
     end
 
     private

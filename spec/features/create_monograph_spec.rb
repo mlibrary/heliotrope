@@ -87,7 +87,9 @@ feature 'Create a monograph' do
       expect(page).to have_content 'The Second Series'
       # copyright stuff
       expect(page).to have_content 'Blahdy Blah Copyright Holder'
-      expect(page).to have_content 'http://www.blahpresscompany.com/'
+      expect(page).to have_link("Blahdy Blah Copyright Holder", href: "http://www.blahpresscompany.com/")
+      # Subject
+      expect(page).to have_content 'red stuff'
       # ISBN
       expect(page).to have_content '123-456-7890'
       expect(page).to have_content '123-456-7891'
@@ -117,7 +119,6 @@ feature 'Create a monograph' do
       expect(page).to have_content 'Blahdy Blah Copyright Holder'
       # holding_contact
       expect(page).to have_content 'http://www.blahpresscompany.com/'
-
       # Citation Metadata
       # publisher
       expect(page).to have_content 'Blah Press, Co.'
