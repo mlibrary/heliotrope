@@ -51,9 +51,11 @@ module EPub
       chapter_list = Nokogiri::XML(File.open(File.join(@publication.root_path,
                                                        File.dirname(@publication.page_scan_content_file),
                                                        chapter_list_file))).remove_namespaces!
+      chapter_titles = chapter_list.xpath("//ol/li/span")
+      title_node = chapter_titles.map { |node| node if node.text == @title }.compact
 
       results = []
-      chapter_list.xpath("//ol/li/span[text()=\"#{title}\"]").first.parent.traverse do |node|
+      title_node&.first&.parent&.traverse do |node|
         if node.attr("href").present?
           results << File.join(@publication.root_path, File.dirname(@publication.page_scan_content_file), node.attr("href"))
         end
