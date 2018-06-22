@@ -24,16 +24,6 @@ module EPub
       @chapter.downloadable?
     end
 
-    def blurb
-      text = ""
-      return text if @chapter.publication.multi_rendition == 'yes'
-      @chapter.paragraphs.each do |p|
-        text += "<p>#{p.text}</p>"
-        break if text.length >= 100
-      end
-      text.html_safe # rubocop:disable Rails/OutputSafety
-    end
-
     private
 
       def initialize(chapter = Chapter.null_object)
