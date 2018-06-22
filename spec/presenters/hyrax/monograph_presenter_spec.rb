@@ -440,17 +440,17 @@ RSpec.describe Hyrax::MonographPresenter do
     context "has a DOI" do
       let(:mono_doc) { SolrDocument.new(id: 'monograph_id',
                                         has_model_ssim: ['Monograph'],
-                                        doi_ssim: ['http://doi.and.things']) }
+                                        doi_ssim: ['10.NNNN.N/identifier']) }
 
-      it "returns the DOI" do
-        expect(presenter.citable_link).to eq 'http://doi.and.things'
+      it "returns the doi url" do
+        expect(presenter.citable_link).to eq 'https://doi.org/10.NNNN.N/identifier'
       end
     end
 
     context "with no DOI" do
       let(:mono_doc) { SolrDocument.new(id: 'monograph_id', has_model_ssim: ['Monograph']) }
 
-      it "returns the default NOID based handle" do
+      it "returns the handle url" do
         expect(presenter.citable_link).to eq HandleService.url(mono_doc.id)
       end
     end

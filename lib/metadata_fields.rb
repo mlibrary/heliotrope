@@ -41,14 +41,9 @@ METADATA_FIELDS ||=
     { object: :file_set, field_name: 'Credit Line', metadata_name: 'credit_line', required: false, multivalued: :no },
     { object: :universal, field_name: 'Holding Contact', metadata_name: 'holding_contact', required: false, multivalued: :no },
     { object: :file_set, field_name: 'Exclusive to Fulcrum', metadata_name: 'exclusive_to_platform', required: false, multivalued: :no, acceptable_values: ['yes', 'no'] },
-    #
-    #
-    ########################################################################################################
-    # TODO: maybe change the column name of this to, say, 'Identifier(s)' in the CSV sheet
     { object: :universal, field_name: 'Persistent ID - Display on Platform', metadata_name: 'identifier', required: false, multivalued: :yes },
-    ### TODO: Clean up these fields in https://tools.lib.umich.edu/jira/browse/HELIO-1775 ###
     { object: :universal, field_name: 'DOI', metadata_name: 'doi', required: false, multivalued: :no },
-    ########################################################################################################
+    { object: :universal, field_name: 'Handle', metadata_name: 'hdl', required: false, multivalued: :no },
     { object: :file_set, field_name: 'Content Type', metadata_name: 'content_type', required: false, multivalued: :yes_split },
     { object: :universal, field_name: 'Creator(s)', metadata_name: 'creator', required: false, multivalued: :yes_multiline },
     { object: :universal, field_name: 'Additional Creator(s)', metadata_name: 'contributor', required: false, multivalued: :yes_multiline },

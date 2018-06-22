@@ -2,18 +2,18 @@
 
 require 'rails_helper'
 
-class Presenter
-  include TitlePresenter
-  attr_reader :solr_document
+RSpec.describe TitlePresenter do
+  class self::Presenter
+    include TitlePresenter
+    attr_reader :solr_document
 
-  def initialize(solr_document)
-    @solr_document = solr_document
+    def initialize(solr_document)
+      @solr_document = solr_document
+    end
   end
-end
 
-describe TitlePresenter do
   let(:solr_document) { SolrDocument.new(title_tesim: [markdown_title]) }
-  let(:presenter) { Presenter.new(solr_document) }
+  let(:presenter) { self.class::Presenter.new(solr_document) }
 
   describe 'Presenter' do
     subject { presenter }

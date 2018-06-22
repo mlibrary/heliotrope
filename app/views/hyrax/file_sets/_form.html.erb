@@ -36,6 +36,7 @@
           <%= f.input :translation, as: :text, input_html: { multiple: true, value: curation_concern.translation.first, class: 'form-control' } %>
           <%= f.input :section_title, as: :multi_value, input_html: { class: 'form-control' } %>
           <%= f.input :doi, input_html: { class: 'form-control' } %>
+          <%= f.input :hdl, input_html: { class: 'form-control' } %>
           <%= f.input :redirect_to, input_html: { class: 'form-control' } %>
           <%= f.input :permissions_expiration_date, input_html: { class: 'form-control required' }, placeholder: 'YYYY-MM-DD' %>
           <%= f.input :rights_granted, input_html: { class: 'form-control' } %>
