@@ -70,6 +70,18 @@ module Hyrax
       solr_document.creator_display.present?
     end
 
+    def copyright_holder?
+      solr_document.copyright_holder.present?
+    end
+
+    def holding_contact?
+      solr_document.holding_contact.present?
+    end
+
+    def date_created?
+      solr_document.date_created.present?
+    end
+
     def unreverse_names(comma_separated_names)
       forward_names = []
       comma_separated_names.each { |n| forward_names << unreverse_name(n) }

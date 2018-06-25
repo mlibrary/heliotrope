@@ -18,6 +18,16 @@
     <% if @monograph_presenter.authors? %>
         <h3><%= render_markdown @monograph_presenter.authors %></h3>
     <% end %>
+    <% if @monograph_presenter.date_created? %>
+    <span aria-label="publication date" class="pubdate"><%= @monograph_presenter.date_created.first %></span>
+    <% end %>
+    <% if @monograph_presenter.copyright_holder? %>
+       <% if @monograph_presenter.holding_contact? %>
+        <span aria-label="copyright information and contact" class="copyright">&copy; <a href="<%= @monograph_presenter.holding_contact %>"><%= @monograph_presenter.copyright_holder %></a></span>
+       <% else %>
+        <span aria-label="copyright information" class="copyright">&copy; <%= @monograph_presenter.copyright_holder %></span>
+       <% end %>
+    <% end %>
     <div class="description">
       <%= render_markdown @monograph_presenter.description.first || '' %>
     </div>
@@ -40,23 +50,20 @@
       <div id="webgl-message"></div>
     <% end %>
 
-    <table class="table monograph attributes" <%= @monograph_presenter.microdata_type_to_html %>>
-      <tbody>
-      <%= @monograph_presenter.attribute_to_html(:series, label: t('series')) %>
-      <%= @monograph_presenter.attribute_to_html(:copyright_holder, label: t('copyright_holder')) %>
-      <%= @monograph_presenter.attribute_to_html(:holding_contact, render_as: :markdown, label: t('holding_contact')) %>
-      <%= @monograph_presenter.attribute_to_html(:isbn, label: t('isbn')) %>
-      <tr>
-        <th><%= t('citable_link') %></th>
-        <td>
-          <form>
-            <label for="permalink" style="display: none;"><%= t('citable_link') %></label>
-            <input type="text" class="form-control" id="permalink" aria-label="citable link" value="<%= @monograph_presenter.citable_link %>" readonly="readonly" onclick="this.select(); document.execCommand('copy');" />
-          </form>
-        </td>
-      </tr>
-      </tbody>
-    </table>
+  <div class="additional-metadata">
+    <dl>
+      <%= @monograph_presenter.attribute_to_html(:series, html_dl: true) %>
+      <%= @monograph_presenter.attribute_to_html(:isbn, label: t('isbn'), html_dl: true) %>
+      <%= @monograph_presenter.attribute_to_html(:subject, html_dl: true) %>
+      <dt><%= t('citable_link') %></dt>
+      <dd>
+        <form>
+          <label for="permalink" style="display: none;"><%= t('citable_link') %></label>
+          <input type="text" class="form-control" id="permalink" aria-label="citable link" value="<%= @monograph_presenter.citable_link %>" readonly="readonly" onclick="this.select(); document.execCommand('copy');" />
+        </form>
+      </dd>
+    </dl>
+  </div>
 
   </div><!-- /.monograph-metadata -->
 </div><!-- /.monograph-info-epub -->
