@@ -8,5 +8,15 @@
         <% end %>
 
         <p class="lead"><%= render_markdown @press.description if @press.description.present? %></p>
+        <% if @press.location.present? || @press.twitter.present? %>
+        <p class="publisher-info">
+          <% if @press.location.present? %>
+            <span class="location"><span class="glyphicon glyphicon-map-marker" aria-hidden="true"></span> <%= @press.location %></span>
+          <% end %>
+          <% if @press.twitter.present? %>
+            <span class="twitter"><a href="https://twitter.com/<%= @press.twitter %>">@<%= @press.twitter %></a></span>
+          <% end %>
+        </p>
+        <% end %>
       </div>
     </div>

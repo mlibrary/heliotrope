@@ -146,14 +146,14 @@ $heb-black-80: #342f2e;
   .jumbotron {
     background-color: $heb-grey-4;
     font-weight: 200;
-    padding-top: 2em;
-    padding-bottom: 2em;
+    padding-top: 1.5em;
+    padding-bottom: 1em;
 
     p {
       font-size: 16px;
       margin-bottom: 0;
     }
-    
+
     .container {
       margin-top: 0;
     }
@@ -161,7 +161,7 @@ $heb-black-80: #342f2e;
     .logo {
 
       img {
-        width: 150px;
+        width: 100px;
         margin-right: 3em;
       }
 
@@ -210,16 +210,17 @@ $heb-black-80: #342f2e;
     a,
     a:hover,
     a:active {
-      color: $heb-white;
+      color: $heb-grey-1;
     }
     .press-block-a,
     .press-block-b {
       background-color:  $heb-grey-4;
+      font-weight: 600;
 
       a,
       a:hover,
       a:active {
-        color: $heb-white;
+        color: #333;
       }
 
       img {

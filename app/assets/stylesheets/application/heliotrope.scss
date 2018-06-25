@@ -137,6 +137,16 @@ footer.press {
 
   }
 
+  p.publisher-info {
+    font-size: .9em !important;
+    padding-top: .5em;
+
+    span.twitter:nth-child(2)::before {
+      content: " | ";
+    }
+
+  }
+
 }
 .press {
 

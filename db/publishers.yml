@@ -5,6 +5,8 @@
   description: "ACLS Humanities E-Book (HEB) is an online collection of about 5,000 books of high quality in the humanities, accessible through institutional and individual subscription. These titles are offered by the ACLS in collaboration with thirty-one learned societies, over 100 contributing publishers, and the Michigan Publishing division at the University of Michigan Library. The result is an online, fully searchable collection of high-quality books in the Humanities, recommended and reviewed by scholars. These are works of major importance that remain vital to both scholars and advanced students, and are frequently cited in the literature. (See title list.) The collection features unlimited multi-user access and free, downloadable MARC records. HEB is available 24/7 on- and off-campus through standard web browsers."
   press_url: 'http://www.humanitiesebook.org'
   typekit: 'ynm6dns'
+  twitter: 'ACLS_HEB'
+  location: 'New York, New York'
 
 - subdomain: heliotrope
   production: false

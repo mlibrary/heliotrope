@@ -27,7 +27,10 @@
   <%= f.input :press_url, label: 'Publisher\'s Current Website Address', required: true %>
   <%= f.input :google_analytics, label: 'Google Analytics Tracking ID' %>
   <%= f.input :typekit, label: 'Typekit ID' %>
+  <%= f.input :twitter, label: 'Twitter Handle' %>
+  <%= f.input :location, label: 'Publisher Location' %>
   <%= f.input :footer_block_a %>
+  <%= f.input :footer_block_b %>
   <%= f.input :footer_block_c %>
   <%= f.input :parent_id, collection: Press.parent_presses, prompt: "Choose a parent press (optional)" %>
   <%= f.input :restricted_message, label: 'Message for restricted works (if any). HTML is ok' %>

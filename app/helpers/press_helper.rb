@@ -45,6 +45,16 @@ module PressHelper
     end
   end
 
+  def footer_block_b(subdomain)
+    press = Press.where(subdomain: subdomain)&.first
+    return if press.blank?
+    if press.footer_block_b.blank?
+      parent_press(press)&.footer_block_b
+    else
+      press.footer_block_b
+    end
+  end
+
   def footer_block_c(subdomain)
     press = Press.where(subdomain: subdomain)&.first
     return if press.blank?
@@ -72,6 +82,26 @@ module PressHelper
       parent_press(press)&.typekit
     else
       press.typekit
+    end
+  end
+
+  def twitter(subdomain)
+    press = Press.where(subdomain: subdomain)&.first
+    return if press.blank?
+    if press.twitter.blank?
+      parent_press(press)&.twitter
+    else
+      press.twitter
+    end
+  end
+
+  def location(subdomain)
+    press = Press.where(subdomain: subdomain)&.first
+    return if press.blank?
+    if press.location.blank?
+      parent_press(press)&.location
+    else
+      press.location
     end
   end
 
