@@ -65,6 +65,7 @@ describe PressHelper do
                                  google_analytics: "GA-ID-BLUE",
                                  typekit: "BLUE-TYPEKIT",
                                  footer_block_a: "blue-footer-a",
+                                 footer_block_b: "blue-footer-b",
                                  footer_block_c: "blue-footer-c",
                                  parent_id: nil) }
     let(:child) { create(:press, subdomain: "maize",
@@ -78,6 +79,7 @@ describe PressHelper do
     context "when the child is missing a field" do
       it "uses the parent's field" do
         expect(footer_block_a(child.subdomain)).to eq press.footer_block_a
+        expect(footer_block_b(child.subdomain)).to eq press.footer_block_b
         expect(footer_block_c(child.subdomain)).to eq press.footer_block_c
         expect(google_analytics(child.subdomain)).to eq press.google_analytics
         expect(typekit(child.subdomain)).to eq press.typekit

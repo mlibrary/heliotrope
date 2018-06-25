@@ -23,6 +23,10 @@ Metrics/CyclomaticComplexity:
     - 'app/services/downloads_controller_behavior.rb'
     - 'app/presenters/hyrax/monograph_presenter.rb'
 
+Metrics/ModuleLength:
+  Exclude:
+    - 'app/helpers/press_helper.rb'
+
 Metrics/PerceivedComplexity:
   Exclude:
     - 'app/models/riiif/file.rb'
@@ -41,6 +45,7 @@ Rails/OutputSafety:
     - 'app/helpers/gallery_helper.rb'
     - 'app/renderers/hyrax/renderers/attribute_renderer.rb'
     - 'app/renderers/hyrax/renderers/markdown_attribute_renderer.rb'
+    - 'app/views/shared/_brand_press_footer_block_b.html.erb'
 
 Rails/SkipsModelValidations:
   Exclude:
