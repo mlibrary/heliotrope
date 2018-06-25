@@ -38,6 +38,13 @@ RSpec.configure do |config|
     ActiveFedora::Cleaner.clean! if ActiveFedora::Base.count > 0
   end
 
+  # System specs (new in rails 5.1) use headless chrome and Capybara
+  config.before(:each, type: :system) do
+    driven_by :selenium_chrome_headless
+    # If you actually want to watch these happen in the browser (and have chrome installed)
+    # driven_by :selenium_chrome
+  end
+
   config.after(:all) do
     if Rails.env.test? || Rails.env.cucumber?
       FileUtils.rm_rf(Dir[Rails.root.join('tmp', 'spec', 'uploads')])
