@@ -93,6 +93,8 @@ GEM
       public_suffix (>= 2.0.2, < 4.0)
     almond-rails (0.1.0)
       rails (>= 4.2, < 6)
+    archive-zip (0.11.0)
+      io-like (~> 0.3.0)
     arel (8.0.0)
     ast (2.3.0)
     autoprefixer-rails (7.1.6)
@@ -173,6 +175,9 @@ GEM
       mime-types (>= 1.16)
     childprocess (0.8.0)
       ffi (~> 1.0, >= 1.0.11)
+    chromedriver-helper (1.2.0)
+      archive-zip (~> 0.10)
+      nokogiri (~> 1.8)
     clamav (0.4.1)
     clipboard-rails (1.7.1)
     coderay (1.1.2)
@@ -395,6 +400,7 @@ GEM
       concurrent-ruby (~> 1.0)
     ice_nine (0.11.2)
     inflecto (0.0.2)
+    io-like (0.3.0)
     jbuilder (2.7.0)
       activesupport (>= 4.2.0)
       multi_json (>= 1.2)
@@ -914,6 +920,7 @@ DEPENDENCIES
   capybara (~> 2.13)
   carrierwave (~> 1.1.0)
   checkpoint!
+  chromedriver-helper
   clamav
   coffee-rails (~> 4.2)
   config

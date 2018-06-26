@@ -47,6 +47,7 @@ RSpec.configure do |config|
   config.include FactoryBot::Syntax::Methods
   config.include Devise::Test::ControllerHelpers, type: :controller
   config.include Devise::Test::ControllerHelpers, type: :view
+  config.include Devise::Test::IntegrationHelpers, type: :system
   config.include Warden::Test::Helpers, type: :feature
   config.include RSpecHtmlMatchers
 end
@@ -68,4 +69,25 @@ def stub_out_redis
   allow(CharacterizeJob).to receive_messages(perform_later: nil, perform_now: nil)
   allow(ContentEventJob).to receive_messages(perform_later: nil, perform_now: nil)
   allow_any_instance_of(Hyrax::Actors::FileSetActor).to receive(:acquire_lock_for).and_yield
+end
+
+# For system specs
+Chromedriver.set_version "2.33"
+# On system spec failure, don't dump the (binary!) screenshot to the console,
+# just save it to disk which is probably ~/tmp/screenshots
+ENV['RAILS_SYSTEM_TESTING_SCREENSHOT'] = "simple"
+
+require 'capybara/rspec'
+# We need a large screen size for CozySunBear system specs in order to get 2-up
+# pages and other things
+# https://stackoverflow.com/a/47290251
+Capybara.register_driver :selenium_chrome_headless do |app|
+  options = Selenium::WebDriver::Chrome::Options.new
+  [
+    "headless",
+    "window-size=1280x1280",
+    "disable-gpu" # https://developers.google.com/web/updates/2017/04/headless-chrome
+  ].each { |arg| options.add_argument(arg) }
+
+  Capybara::Selenium::Driver.new(app, browser: :chrome, options: options)
 end
