@@ -19,7 +19,7 @@ class CatalogController < ApplicationController
     config.search_builder_class = ::SearchBuilder
     ## Default parameters to send to solr for all search-like requests. See also SolrHelper#solr_search_params
     config.default_solr_params = {
-      qf: 'title_tesim creator_full_name_tesim creator_display_tesim subject_tesim description_tesim keywords_tesim contributor_tesim caption_tesim transcript_tesim translation_tesim alt_text_tesim primary_editor_full_name_tesim editor_tesim',
+      qf: 'title_tesim creator_full_name_tesim creator_display_tesim subject_tesim description_tesim keywords_tesim contributor_tesim caption_tesim transcript_tesim translation_tesim alt_text_tesim identifier_tesim',
       qt: 'search',
       rows: 10
     }
