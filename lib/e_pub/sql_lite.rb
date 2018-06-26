@@ -49,6 +49,7 @@ module EPub
       rs.each do |row|
         db_results.push(href: row[0], basecfi: row[1], title: row[2])
       end
+      stm.close
       db_results
     end
 
@@ -57,6 +58,7 @@ module EPub
       stm.bind_param 1, cfi
       rs = stm.execute
       row = rs.first
+      stm.close
       { id: row[0], href: row[1], basecfi: cfi, title: row[2], doc: row[3] }
     end
 
@@ -67,6 +69,7 @@ module EPub
       rs.each do |row|
         results << { id: row[0], href: row[1], title: row[2], basecfi: row[3] }
       end
+      stm.close
       results
     end
 
