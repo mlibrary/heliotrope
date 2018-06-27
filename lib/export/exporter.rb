@@ -4,6 +4,8 @@ require 'csv'
 
 module Export
   class Exporter
+    attr_reader :all_metadata
+
     def initialize(monograph_id)
       @monograph = Monograph.find(monograph_id) if monograph_id.present?
     end
@@ -23,9 +25,34 @@ module Export
       buffer
     end
 
+    def extract # rubocop:disable Metrics/CyclomaticComplexity
+      return if @monograph.blank?
+      base = File.join(".", "extract")
+      FileUtils.mkdir(base) unless Dir.exist?(base)
+      press = File.join(base, @monograph.press.to_s)
+      FileUtils.mkdir(press) unless Dir.exist?(press)
+      path = File.join(press, @monograph.id.to_s)
+      if Dir.exist?(path)
+        puts "Overwrite #{path} directory? (Y/n):"
+        return unless /y/i.match?(STDIN.getch)
+        FileUtils.rm_rf(path)
+      end
+      FileUtils.mkdir(path)
+      manifest = File.new(File.join(path, @monograph.id.to_s + ".csv"), "w")
+      manifest << export
+      manifest.close
+      @monograph.ordered_members.to_a.each do |member|
+        next if member.original_file.empty?
+        file = File.new(File.join(path, member.original_file.file_name.first), "wb")
+        file.write(member.original_file.content.force_encoding("utf-8"))
+        file.close
+      end
+    end
+
     private
 
       def all_metadata
+        return @all_metadata if @all_metadata.present?
         # Export the object id in the first column of the exported CSV file (required doesn't matter here)
         noid = [{ object: :universal, field_name: 'NOID', metadata_name: 'id', required: true, multivalued: :no }]
         # We need the file name in the exported CSV file (required doesn't matter here)
@@ -34,7 +61,7 @@ module Export
         file = [{ object: :file_set, field_name: 'File Name', metadata_name: 'label', required: true, multivalued: :no }]
         # We want the url in the exported CSV file (required doesn't matter here)
         url = [{ object: :universal, field_name: 'Link', metadata_name: 'url', required: true, multivalued: :no }]
-        noid + file + url + METADATA_FIELDS
+        @all_metadata = noid + file + url + METADATA_FIELDS
       end
 
       def metadata_row(item, object_type)
