@@ -6,8 +6,7 @@ RSpec.describe 'hyrax/file_sets/_media', type: :view do
                          title: ['Things'],
                          caption: ['Stuff'],
                          has_model: ['FileSet'],
-                         external_resource: 'yes',
-                         ext_url_doi_or_handle: 'http://things.at/stuff') }
+                         external_resource_url: 'http://things.at/stuff') }
   let(:file_set_doc) { SolrDocument.new(file_set.to_solr) }
   let(:ability) { double('ability') }
   let(:request) { double('request') }
@@ -32,7 +31,7 @@ RSpec.describe 'hyrax/file_sets/_media', type: :view do
     before do
       allow(alt_text).to receive(:first).and_return('alt_text')
       allow(file_set_presenter).to receive(:alt_text).and_return(alt_text)
-      allow(file_set_presenter).to receive(:external_resource).and_return('no')
+      allow(file_set_presenter).to receive(:external_resource_url).and_return('')
       allow(file_set_presenter).to receive(:image?).and_return(false)
       allow(file_set_presenter).to receive(:epub?).and_return(true)
       allow(present).to receive(:present?).and_return(false)

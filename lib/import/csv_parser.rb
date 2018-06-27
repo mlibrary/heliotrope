@@ -59,7 +59,7 @@ module Import
     private
 
       def missing_file_name?(row)
-        row['File Name'].blank? && row['Externally Hosted Resource'] != 'yes'
+        row['File Name'].blank? && row['External Resource URL'].blank?
       end
 
       def asset_data?(row)

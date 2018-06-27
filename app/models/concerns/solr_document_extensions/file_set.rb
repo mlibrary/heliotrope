@@ -47,12 +47,8 @@ module SolrDocumentExtensions::FileSet
     Array(self[Solrizer.solr_name('exclusive_to_platform', :symbol)]).first
   end
 
-  def external_resource
-    Array(self[Solrizer.solr_name('external_resource', :symbol)]).first
-  end
-
-  def ext_url_doi_or_handle
-    Array(self[Solrizer.solr_name('ext_url_doi_or_handle', :symbol)]).first
+  def external_resource_url
+    Array(self[Solrizer.solr_name('external_resource_url', :symbol)]).first
   end
 
   def keywords

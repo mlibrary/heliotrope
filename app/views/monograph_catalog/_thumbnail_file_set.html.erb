@@ -4,8 +4,8 @@
   <% if fs_presenter.use_glyphicon? %>
     <% icon_string = '<span class="' + fs_presenter.glyphicon_type + ' file-set-glyphicon" aria-hidden="true"></span>' %>
     <%= tn.gsub(/<img.*>/, icon_string + '<br/>').html_safe %>
-    <% if document.external_resource == 'yes' %>
-      <a class="external-resource-link" href="<%= document.ext_url_doi_or_handle %>" target="_blank"><span class="glyphicon glyphicon-share" aria-hidden="true"></span> View External Object</a>
+    <% if fs_presenter.external_resource? %>
+      <a class="external-resource-link" href="<%= document.external_resouce_url %>" target="_blank"><span class="glyphicon glyphicon-share" aria-hidden="true"></span> View External Object</a>
     <% end %>
   <% else %>
     <%= tn %>

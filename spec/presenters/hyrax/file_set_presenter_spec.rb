@@ -83,7 +83,7 @@ RSpec.describe Hyrax::FileSetPresenter do
         allow(ability).to receive(:platform_admin?).and_return(true)
         allow(ability).to receive(:can?).with(:edit, 'fs').and_return(true)
       end
-      let(:fileset_doc) { SolrDocument.new(id: 'fs', has_model_ssim: ['FileSet'], allow_download_ssim: 'yes', external_resource_ssim: 'yes') }
+      let(:fileset_doc) { SolrDocument.new(id: 'fs', has_model_ssim: ['FileSet'], allow_download_ssim: 'yes', external_resource_url_ssim: 'URL') }
       it { expect(presenter.allow_download?).to be false }
     end
     context 'user has edit privileges' do
@@ -298,31 +298,31 @@ RSpec.describe Hyrax::FileSetPresenter do
     let(:fileset_doc) { SolrDocument.new(id: 'fileset_id',
                                          has_model_ssim: ['FileSet'],
                                          mime_type_ssi: mime_type,
-                                         external_resource_ssim: external_resource,
+                                         external_resource_url_ssim: external_resource_url,
                                          thumbnail_path_ss: thumbnail_path)
     }
 
     context 'file not using a thumbnail derivative' do
       let(:mime_type) { 'application/pdf' }
-      let(:external_resource) { 'no' }
+      let(:external_resource_url) { '' }
       let(:thumbnail_path) { ActionController::Base.helpers.image_path 'default.png' }
       it { is_expected.to be true }
     end
     context 'file using a thumbnail derivative' do
       let(:mime_type) { 'application/pdf' }
-      let(:external_resource) { 'no' }
+      let(:external_resource_url) { '' }
       let(:thumbnail_path) { Hyrax::Engine.routes.url_helpers.download_path('fileset_id', file: 'thumbnail') }
       it { is_expected.to be false }
     end
     context 'external resource' do
       let(:mime_type) { nil }
-      let(:external_resource) { 'yes' }
+      let(:external_resource_url) { 'URL' }
       let(:thumbnail_path) { nil }
       it { is_expected.to be true }
     end
     context 'mystery file' do
       let(:mime_type) { nil }
-      let(:external_resource) { nil }
+      let(:external_resource_url) { nil }
       let(:thumbnail_path) { nil }
       it { is_expected.to be true }
     end
@@ -364,8 +364,8 @@ RSpec.describe Hyrax::FileSetPresenter do
 
   describe '#heliotrope_media_partial' do
     subject { presenter.heliotrope_media_partial }
-    let(:external_resource) { 'no' }
-    let(:fileset_doc) { SolrDocument.new(mime_type_ssi: mime_type, external_resource_ssim: external_resource) }
+    let(:external_resource_url) { '' }
+    let(:fileset_doc) { SolrDocument.new(mime_type_ssi: mime_type, external_resource_url_ssim: external_resource_url) }
     context "with an image" do
       let(:mime_type) { 'image/tiff' }
       it { is_expected.to eq 'hyrax/file_sets/media_display/leaflet_image' }
@@ -392,14 +392,14 @@ RSpec.describe Hyrax::FileSetPresenter do
     end
     context "with an external resource" do
       let(:mime_type) { nil }
-      let(:external_resource) { 'yes' }
+      let(:external_resource_url) { 'URL' }
       it { is_expected.to eq 'hyrax/file_sets/media_display/external_resource' }
     end
   end
 
   describe '#heliotrope_media_partial for embedded assets' do
     subject { presenter.heliotrope_media_partial('media_display_embedded') }
-    let(:fileset_doc) { SolrDocument.new(mime_type_ssi: mime_type, external_resource_ssim: 'no') }
+    let(:fileset_doc) { SolrDocument.new(mime_type_ssi: mime_type, external_resource_url_ssim: '') }
     context "with an image" do
       let(:mime_type) { 'image/tiff' }
       it { is_expected.to eq 'hyrax/file_sets/media_display_embedded/leaflet_image' }

@@ -46,8 +46,7 @@ describe SolrDocument do
   it { is_expected.to respond_to(:credit_line) }
   it { is_expected.to respond_to(:display_date) }
   it { is_expected.to respond_to(:exclusive_to_platform) }
-  it { is_expected.to respond_to(:external_resource) }
-  it { is_expected.to respond_to(:ext_url_doi_or_handle) }
+  it { is_expected.to respond_to(:external_resource_url) }
   it { is_expected.to respond_to(:redirect_to) }
   it { is_expected.to respond_to(:keywords) }
   it { is_expected.to respond_to(:permissions_expiration_date) }

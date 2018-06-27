@@ -360,7 +360,7 @@ webgl = if Dir.exist?(UnpackService.root_path_from_noid(webgl_id, 'webgl'))
         cozy.control.widget.button({
           region: 'top.toolbar.left',
           template: '<button class="button--sm" data-toggle="button" aria-label="Database">Database</button>',
-          onClick: function() { window.location = "<%= "#{@monograph_presenter.database['ext_url_doi_or_handle_ssim'].first}" %>"; }
+          onClick: function() { window.location = "<%= "#{@monograph_presenter.database['external_resource_url_ssim'].first}" %>"; }
         }).addTo(reader);
         <% end %>
 

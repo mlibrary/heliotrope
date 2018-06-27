@@ -11,7 +11,6 @@
       <fieldset class="required">
         <legend>Required Information</legend>
           <%= f.input :resource_type, input_html: { multiple: true, value: curation_concern.resource_type.first, class: 'form-control required' } %>
-          <%= f.input :external_resource, input_html: { class: 'form-control required' } %>
           <%= f.input :caption, input_html: { multiple: true, value: curation_concern.caption.first, class: 'form-control required' } %>
           <%= f.input :alt_text, input_html: { multiple: true, value: curation_concern.alt_text.first, class: 'form-control required' } %>
           <%= f.input :exclusive_to_platform, input_html: { class: 'form-control required' } %>
@@ -19,10 +18,10 @@
           <%= f.input :copyright_status, input_html: { class: 'form-control required' } %>
           <%= f.input :allow_hi_res, input_html: { class: 'form-control required' } %>
           <%= f.input :allow_download, input_html: { class: 'form-control required' } %>
-          <%= f.input :ext_url_doi_or_handle, input_html: { class: 'form-control required' } %>
       </fieldset>
       <fieldset class="optional">
         <legend>Optional Information</legend>
+          <%= f.input :external_resource_url, input_html: { class: 'form-control' } %>
           <%= f.input :description, as: :text, input_html: { multiple: true, value: curation_concern.description.first, class: 'form-control' } %>
           <%= f.input :content_type, as: :multi_value, input_html: { class: 'form-control' } %>
           <%= f.input :creator,  as: :text, input_html: { multiple: true, rows: '5', value: curation_concern.creator.first } %>
