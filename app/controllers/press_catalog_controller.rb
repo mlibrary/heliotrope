@@ -12,14 +12,13 @@ class PressCatalogController < ::CatalogController
     config.view.gallery.partials = %i[index_header index]
 
     config.default_per_page = 15
-    # leaving the #{uploaded_field} desc in these for section sort when all else is equal
-    config.add_sort_field "#{Solrizer.solr_name('title', :sortable)} asc", label: "Title (A-Z)"
+    config.add_sort_field 'title asc', sort: "#{Solrizer.solr_name('title', :sortable)} asc", label: "Title (A-Z)"
     config.add_sort_field 'date_uploaded desc', sort: "#{solr_name('date_uploaded', :sortable)} desc", label: "Date Added (Newest First)"
     config.add_sort_field 'author asc', sort: "#{solr_name('creator_full_name', :sortable)} asc", label: "Author (A-Z)"
     config.add_sort_field 'author desc', sort: "#{solr_name('creator_full_name', :sortable)} desc", label: "Author (Z-A)"
-    config.add_sort_field 'year asc', sort: "#{solr_name('date_created', :sortable)} asc", label: "Publication Date (Newest First)"
-    config.add_sort_field 'year desc', sort: "#{solr_name('date_created', :sortable)} desc", label: "Publication Date (Oldest First)"
-    config.add_sort_field "#{Solrizer.solr_name('title', :sortable)} desc", label: "Title (Z-A)"
+    config.add_sort_field 'year desc', sort: "#{solr_name('date_created', :sortable)} desc", label: "Publication Date (Newest First)"
+    config.add_sort_field 'year asc', sort: "#{solr_name('date_created', :sortable)} asc", label: "Publication Date (Oldest First)"
+    config.add_sort_field 'title desc', sort: "#{Solrizer.solr_name('title', :sortable)} desc", label: "Title (Z-A)"
 
     config.facet_fields.tap do
       # solr facet fields not to be displayed in the index (search results) view
