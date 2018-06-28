@@ -132,26 +132,5 @@ feature 'Press Catalog' do
         expect(page).to have_content 'Johns, Jimmy, 1888-1968; Author, Second; Way, Sub'
       end
     end
-
-    context 'monograph sort order is title asc' do
-      before do
-        create(:press, subdomain: 'sort_press')
-        create(:public_monograph, press: 'sort_press', title: ['silverfish'])
-        create(:public_monograph, press: 'sort_press', title: ['Cormorant'])
-        create(:public_monograph, press: 'sort_press', title: ['Zebra'])
-        create(:public_monograph, press: 'sort_press', title: ['aardvark'])
-        create(:public_monograph, press: 'sort_press', title: ['Manatee'])
-        create(:public_monograph, press: 'sort_press', title: ['baboon'])
-      end
-      scenario "shows the monographs in reverse order of date_uploaded" do
-        visit "/sort_press"
-        assert_equal page.all('.documentHeader .index_title a').collect(&:text), ['aardvark',
-                                                                                  'baboon',
-                                                                                  'Cormorant',
-                                                                                  'Manatee',
-                                                                                  'silverfish',
-                                                                                  'Zebra']
-      end
-    end
   end # not logged in
 end
