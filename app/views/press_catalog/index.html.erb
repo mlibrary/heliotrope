@@ -1,6 +1,11 @@
 <% provide :page_title, @press.name %>
 <% provide :page_class, 'press' %>
-
 <div id="maincontent">
-  <%= render 'press_catalog/press_results' %>
+  <h2>Books</h2>
+  <div class="col-sm-3">
+    <%= render 'catalog/search_sidebar' %>
+  </div>
+  <div class="col-sm-9">
+    <%= render 'press_catalog/press_results' %>
+  </div>
 </div>

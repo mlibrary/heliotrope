@@ -23,7 +23,11 @@ class MonographIndexer < Hyrax::WorkIndexer
       solr_doc[Solrizer.solr_name('creator', :stored_searchable)] = roleless_creators
       solr_doc[Solrizer.solr_name('creator_full_name', :stored_searchable)] = roleless_creators&.first
       solr_doc[Solrizer.solr_name('creator_full_name', :facetable)] = roleless_creators&.first
+      solr_doc[Solrizer.solr_name('creator_full_name', :sortable)] = roleless_creators&.first
       solr_doc[Solrizer.solr_name('contributor', :stored_searchable)] = roleless_contributors
+      solr_doc[Solrizer.solr_name('date_created', :sortable)] = roleless_date_created
+      solr_doc[Solrizer.solr_name('contributor', :stored_searchable)] = roleless_contributors
+      solr_doc[Solrizer.solr_name('date_uploaded', :stored_searchable)] = roleless_date_uploaded
 
       # grab previous file set order here from Solr (before they are reindexed)
       existing_fileset_order = existing_filesets
