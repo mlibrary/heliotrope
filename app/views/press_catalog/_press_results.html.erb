@@ -1,5 +1,3 @@
-<h2>Books</h2>
-
 <% @page_title = t('blacklight.search.page_title.title', :constraints => render_search_to_page_title(params), :application_name => application_name) %>
 
 <% content_for(:head) do -%>
@@ -7,8 +5,6 @@
   <%= rss_feed_link_tag %>
   <%= atom_feed_link_tag %>
 <% end %>
-
-<h2 class="sr-only"><%= t('blacklight.search.search_results') %></h2>
 
 <%- if @response.empty? %>
   <%= render "zero_results" %>

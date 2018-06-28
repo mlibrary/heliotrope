@@ -156,6 +156,17 @@ footer.press {
       border-bottom: none;
       padding-top: 2em;
 
+      h3 {
+        font-size: 24px;
+      }
+
+      .authors {
+        display: block;
+        font-size: 18px;
+        font-weight: 700;
+        padding-bottom: 1.5em;
+      }
+
       .epub {
         padding-bottom: 1em;
       }
@@ -207,6 +218,20 @@ footer.press {
   #appliedParams.constraints-container {
     margin-bottom: 20px;
   }
+
+  .monograph-metadata {
+    h1 {
+      font-size: 30px;
+    }
+
+    .authors {
+      font-size: 24px;
+      font-weight: 700;
+      display: block;
+    }
+
+  }
+
 
   // EPUB - MONOGRAPH INFORMATION
   .monograph-info-epub {

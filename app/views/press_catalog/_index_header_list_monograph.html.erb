@@ -3,25 +3,14 @@
 <div class="col-sm-9">
   <div class="row documentHeader">
     <div class="col-sm-12">
-      <h2 class="index_title">
+      <h3 class="index_title">
         <% counter = document_counter_with_offset(document_counter) %>
         <%= render_markdown link_to_document document, document_show_link_field(document), counter: counter %>
-      </h2>
+      </h3>
       <% if presenter.authors? %>
-        <h3><%= render_markdown presenter.authors %></h3>
+        <span class="authors"><%= render_markdown presenter.authors %></span>
       <% end %>
       <p><%= render_markdown document.description.first || '' %></p>
-    </div>
-  </div>
-
-  <div class="row featured-assets">
-    <div class="col-sm-3">
-    </div>
-    <div class="col-sm-3">
-    </div>
-    <div class="col-sm-3">
-    </div>
-    <div class="col-sm-3">
     </div>
   </div>
 

@@ -29,7 +29,7 @@ class Monograph < ActiveFedora::Base
   end
 
   property :series, predicate: ::RDF::Vocab::DCMIType.Collection do |index|
-    index.as :stored_searchable
+    index.as :stored_searchable, :facetable
   end
 
   include HeliotropeUniversalMetadata
