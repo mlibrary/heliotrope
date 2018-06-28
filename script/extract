@@ -1,0 +1,42 @@
+#!/usr/bin/env ruby
+
+require 'optparse'
+require 'ostruct'
+
+options = OpenStruct.new
+option_parser = OptionParser.new do |opts|
+  opts.banner = "Usage: extract [-d <path>] <monograph_id>"
+  opts.on('-d', '--directory [path]', 'Directory to output files') do |path|
+    options.path = path
+    unless File.exist?(path)
+      puts "Directory #{path} must exist!"
+      exit(1)
+    end
+    unless File.directory?(path)
+      puts "The path #{path} must be a directory!"
+      exit(2)
+    end
+  end
+  opts.on_tail('-h', '--help', 'Print this help message') do
+    puts opts
+    exit 0
+  end
+end
+option_parser.parse!(ARGV)
+
+if ARGV.empty?
+  puts option_parser.help()
+else
+  require File.expand_path('../../config/environment',  __FILE__)
+  require 'export'
+  monograph_id = ARGV[0]
+  pwd = Dir.pwd
+  Dir.chdir(options.path) if options.path.present?
+  begin
+    Export::Exporter.new(monograph_id).extract
+  rescue StandardError => e
+    STDERR.puts e.message
+  end
+  Dir.chdir(pwd)
+  exit!(0)
+end
