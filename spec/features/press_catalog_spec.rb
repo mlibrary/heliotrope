@@ -11,7 +11,9 @@ feature 'Press Catalog' do
 
   context 'a user who is not logged in' do
     context 'with monographs for different presses' do
-      let!(:red) { create(:public_monograph, title: ['The Red Book'], press: umich.subdomain) }
+      let(:red_cover_alt_text) { ["The cover of The Red Book"] }
+      let(:red_cover) { create(:public_file_set, alt_text: red_cover_alt_text) }
+      let!(:red) { create(:public_monograph, title: ['The Red Book'], representative_id: red_cover.id, press: umich.subdomain) }
       let!(:blue) { create(:public_monograph, title: ['The Blue Book'], press: umich.subdomain) }
       let!(:invisible) { create(:private_monograph, title: ['The Invisible Book'], press: umich.subdomain) }
       let!(:colors) { create(:public_monograph, title: ['Red and Blue are Colors'], press: psu.subdomain) }
@@ -48,6 +50,9 @@ feature 'Press Catalog' do
         expect(page).to_not have_link invisible.title.first
         expect(page).to_not have_link colors.title.first
 
+        # The Press Catalog is *always* gallery view
+        expect(page).to have_selector('#documents.row.gallery')
+
         # Search within this press catalog
         fill_in 'q', with: 'Red'
         click_button 'Search'
@@ -59,16 +64,14 @@ feature 'Press Catalog' do
         expect(page).to_not have_link invisible.title.first
         expect(page).to_not have_link colors.title.first
 
-        expect(page).to have_link("View book materials", href: monograph_catalog_path(red, locale: 'en'))
         # thumbnail link
-        expect(page).to have_selector("img[alt='Cover image for #{red.title[0]}']")
+        expect(page).to have_selector("img[alt='#{red_cover_alt_text.first}']")
         expect(page).to have_link('', href: monograph_catalog_path(red, locale: 'en'))
 
         # Selectors needed for assets/javascripts/ga_event_tracking.js
         # If these change, fix here then update ga_event_tracking.js
         expect(page).to have_selector('a.navbar-brand')
-        expect(page).to have_selector('#documents .document h3.index_title a')
-        expect(page).to have_selector('#documents .document a.btn.btn-default')
+        expect(page).to have_selector('#documents .document h4.index_title a')
         expect(page).to have_selector('footer.press a')
         expect(page).to have_selector('#keyword-search-submit')
         expect(page).to have_selector('#catalog_search')

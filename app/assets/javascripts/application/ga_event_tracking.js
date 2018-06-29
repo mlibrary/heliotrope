@@ -13,15 +13,11 @@ $(document).on('turbolinks:load', function() {
     // press catalog listing of monographs, titles and title buttons
     $('#documents .document').each(function(index, value) {
 
-      var title = $(value).find('h2.index_title a').text();
+      var title = $(value).find('h4.index_title a').text();
 
-      $(value).find('h2.index_title a').click(function() {
+      $(value).find('h4.index_title a').click(function() {
         ga('pressTracker.send', 'event', 'press_page', 'click', title)
       });
-
-      $(value).find('button.btn.btn-default').click(function() {
-        ga('pressTracker.send', 'event', 'press_page', 'click_button', title)
-      })
     });
 
     // footer links
