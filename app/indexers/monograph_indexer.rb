@@ -23,7 +23,11 @@ class MonographIndexer < Hyrax::WorkIndexer
       solr_doc[Solrizer.solr_name('creator', :stored_searchable)] = roleless_creators
       solr_doc[Solrizer.solr_name('creator_full_name', :stored_searchable)] = roleless_creators&.first
       solr_doc[Solrizer.solr_name('creator_full_name', :facetable)] = roleless_creators&.first
+      solr_doc[Solrizer.solr_name('creator_full_name', :sortable)] = roleless_creators&.first
       solr_doc[Solrizer.solr_name('contributor', :stored_searchable)] = roleless_contributors
+      # probably we'll need more substantial cleanup here, for now discard anything that isn't a number as...
+      # HEB often has stuff like 'c1999' in the Publication Year (`date_created`)
+      solr_doc[Solrizer.solr_name('date_created', :sortable)] = object.date_created&.first&.gsub(/[^0-9]/, '')
 
       # grab previous file set order here from Solr (before they are reindexed)
       existing_fileset_order = existing_filesets
