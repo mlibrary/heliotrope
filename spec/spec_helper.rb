@@ -28,6 +28,7 @@ if coverage_needed?
     add_filter 'config'
     add_filter 'lib/spec'
     add_filter 'spec'
+    add_filter 'lib/tasks'
   end
 end
 
