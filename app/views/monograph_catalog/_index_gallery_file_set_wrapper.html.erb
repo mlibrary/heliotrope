@@ -11,9 +11,9 @@
     <div class="caption">
       <%= render_document_partials document, blacklight_config.view_config(:gallery).partials, :document_counter => document_counter %>
     </div>
-    <% if document.external_resource == 'yes' %>
+    <% if fs_presenter.external_resource? %>
       <div class="external-resource-link">
-        <a href="<%= document.ext_url_doi_or_handle %>" target="_blank"><span class="glyphicon glyphicon-share" aria-hidden="true"></span> View External Object</a>
+        <a href="<%= document.external_resource_url %>" target="_blank"><span class="glyphicon glyphicon-share" aria-hidden="true"></span> View External Object</a>
       </div>
     <% end %>
   </div>

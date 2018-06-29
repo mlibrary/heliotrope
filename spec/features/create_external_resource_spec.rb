@@ -53,9 +53,7 @@ feature 'Create an external resource' do
       fill_in 'Exclusive to Platform?', with: 'no'
       fill_in 'Allow Download?', with: 'no'
       fill_in 'Allow Hi-Res?', with: 'yes'
-
-      fill_in 'Externally-Hosted Resource?', with: 'yes'
-      fill_in 'External URL/DOI', with: 'https://www.example.com/blah'
+      fill_in 'External Resource URL', with: 'https://www.example.com/blah'
 
       click_button 'Update Attached File'
 

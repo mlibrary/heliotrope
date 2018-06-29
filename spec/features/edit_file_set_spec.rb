@@ -67,8 +67,7 @@ feature 'Edit a file set' do
       expect(page).to have_css('input.file_set_section_title', count: 1)
       fill_in 'Related Section', with: 'Test section with _Italicized Title_ therein'
 
-      fill_in 'Externally-Hosted Resource?', with: 'no3'
-      fill_in 'External URL/DOI', with: 'URL'
+      fill_in 'External Resource URL', with: 'URL'
       fill_in 'Allow Download?', with: 'no4'
       fill_in 'Allow Hi-Res?', with: 'yes2'
       fill_in 'Credit Line', with: 'A Nice Museum'
@@ -128,9 +127,9 @@ feature 'Edit a file set' do
       expect(find_link('external link')[:target]).to eq '_blank'
       expect(find_link('internal link')[:target]).to be nil
 
-      # Selectors needed for assets/javascripts/ga_event_tracking.js
+      # Selectors needed for assets/javascripts/application/ga_event_tracking.js
       # If these change, fix here then update ga_event_tracking.js
-      expect(page).to have_selector('ul.nav.nav-tabs li a', count: 4)
+      expect(page).to have_selector('ul.nav.nav-tabs li a', count: 3)
 
       # check facet results - bug #772
       # multi-word primary creator role facet

@@ -8,7 +8,7 @@ METADATA_FIELDS ||=
   [
     { object: :universal, field_name: 'Title', metadata_name: 'title', required: true, multivalued: :yes },
     { object: :file_set, field_name: 'Resource Type', metadata_name: 'resource_type', required: true, multivalued: :yes, acceptable_values: ['audio', 'image', 'dataset', 'table', '3D model', 'text', 'video'] },
-    { object: :file_set, field_name: 'Externally Hosted Resource', metadata_name: 'external_resource', required: true, multivalued: :no, acceptable_values: ['yes', 'no'] },
+    { object: :file_set, field_name: 'External Resource URL', metadata_name: 'external_resource_url', required: false, multivalued: :no },
     { object: :file_set, field_name: 'Caption', metadata_name: 'caption', required: true, multivalued: :yes },
     { object: :file_set, field_name: 'Alternative Text', metadata_name: 'alt_text', required: true, multivalued: :yes },
     { object: :universal, field_name: 'Copyright Holder', metadata_name: 'copyright_holder', required: true, multivalued: :no },

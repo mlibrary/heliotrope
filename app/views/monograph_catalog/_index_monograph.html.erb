@@ -91,7 +91,7 @@
         <li role="presentation"><a id="tab-webgl" href="#webgl" role="tab" data-toggle="tab" aria-controls="webgl" aria-selected="false" tabindex="-1">3-D Model</a></li>
       <% end %>
       <% if @monograph_presenter.database? %>
-        <li role="presentation"><a id="tab-database" href="<%= @monograph_presenter.database['ext_url_doi_or_handle_ssim'].first %>" target="_blank" role="tab" aria-controls="database" aria-selected="false" tabindex="-1">Database <span class="glyphicon glyphicon-share" aria-hidden="true" aria-label="Link to external database"></span></a></li>
+        <li role="presentation"><a id="tab-database" href="<%= @monograph_presenter.database['ext_resource_url_ssim'].first %>" target="_blank" role="tab" aria-controls="database" aria-selected="false" tabindex="-1">Database <span class="glyphicon glyphicon-share" aria-hidden="true" aria-label="Link to external database"></span></a></li>
       <% end %>
       <% if @monograph_presenter.aboutware? %>
         <li role="presentation"><a id="tab-aboutware" href="#aboutware" role="tab" data-toggle="tab" aria-controls="aboutware" aria-selected="false" tabindex="-1">About</a></li>

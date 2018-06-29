@@ -37,11 +37,11 @@ module Hyrax
              :content_type, :creator, :creator_full_name, :contributor, :date_created,
              :keywords, :publisher, :language, :date_uploaded,
              :rights_statement, :license, :embargo_release_date, :lease_expiration_date, :depositor, :tags,
-             :title_or_label, :external_resource, :section_title,
+             :title_or_label, :section_title,
              :allow_download, :allow_hi_res, :copyright_status, :rights_granted,
              :rights_granted_creative_commons, :exclusive_to_platform, :permissions_expiration_date,
              :allow_display_after_expiration, :allow_download_after_expiration, :credit_line,
-             :holding_contact, :ext_url_doi_or_handle, :primary_creator_role,
+             :holding_contact, :external_resource_url, :primary_creator_role,
              :display_date, :sort_date, :transcript, :translation, :file_format,
              :label, :redirect_to, :has_model, :date_modified,
              to: :solr_document
@@ -100,7 +100,7 @@ module Hyrax
     end
 
     def external_resource?
-      external_resource == 'yes'
+      external_resource_url.present?
     end
 
     def allow_download?
@@ -297,7 +297,7 @@ module Hyrax
       # https://github.com/samvera/hyrax/wiki/How-Thumbnails-Get-rendered
       # Anyway, this default (set with a call to ActionController::Base.helpers.image_path) can't be styled per...
       # publisher so instead we'll use resource-type-specific glyphicons in "publisher branding" colors
-      mime_type.blank? || external_resource == 'yes' || using_default_thumbnail?
+      mime_type.blank? || external_resource? || using_default_thumbnail?
     end
 
     def center_caption?
