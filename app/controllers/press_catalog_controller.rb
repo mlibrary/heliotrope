@@ -27,6 +27,7 @@ class PressCatalogController < ::CatalogController
       config.facet_fields.delete('press_name_ssim')
       config.facet_fields.delete('subject_sim')
       config.facet_fields.delete('creator_full_name_sim')
+      config.facet_fields.delete('based_near_sim')
     end
 
     config.add_facet_field solr_name('subject', :facetable), label: "Subject", limit: 10, url_method: :facet_url_helper

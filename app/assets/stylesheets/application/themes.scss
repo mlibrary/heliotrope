@@ -169,13 +169,50 @@ $heb-black-80: #342f2e;
 
   }
 
+
   .press {
 
     .document,
     .documentHeader {
       margin-bottom: 2em;
     }
+
   }
+
+  //filters on press and monograph pages
+  .col-sm-3.facets-container {
+    padding-left: 0px;
+  }
+
+  .panel-group {
+    padding-left: 0px;
+  }
+
+  .panel-group .panel {
+    border-radius: 0px;
+  }
+
+  .panel-heading {
+    padding-top: 15px;
+  }
+
+  .panel-group .panel + .panel {
+    margin-top: 0px;
+  }
+
+  h3.panel-title a, a.more_facets_link {
+    color: #333;
+  }
+
+  .panel-heading.collapse-toggle .panel-title::after {
+    color: #333;
+  }
+
+  .panel-body {
+    background-color: #fafafa;
+  }
+
+
 
   // monograph catalog
   #sort-dropdown .dropdown-toggle, #per_page-dropdown .dropdown-toggle {

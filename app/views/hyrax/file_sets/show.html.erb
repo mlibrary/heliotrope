@@ -39,12 +39,12 @@
     <div class="col-sm-6">
       <div class="row asset-attributes">
         <div class="col-sm-12">
-          <h2 id="asset-title"><%= @presenter.title %></h2>
-          <h3>From <em><%= link_to @presenter.monograph.title, main_app.monograph_catalog_path(@presenter.monograph_id) %></em>
+          <h1 id="asset-title"><%= @presenter.title %></h1>
+          <span>From <em><%= link_to @presenter.monograph.title, main_app.monograph_catalog_path(@presenter.monograph_id) %></em>
             <% if @presenter.monograph.authors? %>
               by <%= render_markdown @presenter.monograph.authors %>
             <% end %>
-          </h3>
+          </span>
           <br />
           <%= render "attributes", presenter: @presenter %>
         </div>
