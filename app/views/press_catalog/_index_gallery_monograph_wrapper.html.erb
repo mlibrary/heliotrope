@@ -1,0 +1,10 @@
+<% presenter = Hyrax::PresenterFactory.build_for(ids: [document.id], presenter_class: Hyrax::MonographPresenter, presenter_args: current_ability).first %>
+<div class="document col-xs-6 col-md-3">
+  <div class="thumbnail">
+    <%= render_thumbnail_tag(document, {alt: presenter.representative_alt_text}, :counter => document_counter_with_offset(document_counter)) %>
+    <div class="caption">
+      <%= render_document_partials document, blacklight_config.view_config(:gallery).partials, :document_counter => document_counter %>
+      <p><%= presenter.authors %></p>
+    </div>
+  </div>
+</div>
