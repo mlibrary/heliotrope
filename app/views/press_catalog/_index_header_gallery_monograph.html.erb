@@ -1,8 +1,8 @@
 <% # header bar for doc items in index view -%>
 <div class="col-sm-12">
   <div class="documentHeader">
-    <h4 class="index_title">
+    <h3 class="index_title">
       <% counter = document_counter_with_offset(document_counter) %>
       <%= render_markdown link_to_document document, document_show_link_field(document), counter: counter %>
-    </h4>
+    </h3>
   </div>

@@ -16,6 +16,15 @@
 .u-screenreader--ignore {
   speak: none;
 }
+
+:focus,
+.btn-group > .btn:focus {
+  outline: 3px solid #00AFEC;
+  outline-offset: 0;
+  -webkit-transition: outline .05s ease-out;
+  -o-transition: outline .05s ease-out;
+  transition: outline .05s ease-out;
+}
 ///////////////////////////////////
 // COLORS
 ///////////////////////////////////
@@ -150,6 +159,7 @@ footer.press {
 }
 .press {
 
+  // List View
   #documents.documents-list {
 
     .document {
@@ -173,6 +183,82 @@ footer.press {
 
     }
 
+  }
+
+  // Gallery View (Default)
+  .results-container {
+    padding-left: 3em;
+
+    #sortAndPerPage, .pagination-search-widgets {
+      border-bottom: none;
+      margin-bottom: 0em;
+      padding-bottom: 4em;
+    }
+
+  }
+
+  #documents.gallery {
+
+    .document {
+      border-top: none;
+      border-bottom: none;
+      margin-top: 0px;
+      padding-top: 0px;
+
+      .thumbnail {
+        text-align: left;
+        border: none;
+        border-radius: 0px;
+        padding: 0px;
+        margin-bottom: 1.5em;
+
+        a > img {
+          margin-left: 0;
+          margin-right: 0;
+        }
+
+        .caption {
+          padding: 0px;
+
+          h3.index_title {
+            font-size: 16px;
+          }
+
+          .authors {
+            font-size: 13px;
+          }
+
+          .col-sm-12 {
+            padding: 0px;
+          }
+        }
+      }
+    }
+
+  }
+}
+///////////////////////////////////
+// PRESS AND MONOGRAPH FILTERS
+///////////////////////////////////
+.col-sm-3.facets-container,
+#facet-panel-collapse {
+  padding-left: 0px;
+}
+.facets-container {
+  .panel-group {
+    padding-left: 0px;
+  }
+
+  .panel-group .panel {
+    border-radius: 0px;
+  }
+
+  .panel-heading {
+    padding-top: 15px;
+  }
+
+  .panel-group .panel + .panel {
+    margin-top: 0px;
   }
 }
 ///////////////////////////////////

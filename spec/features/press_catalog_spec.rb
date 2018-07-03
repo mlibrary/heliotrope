@@ -71,7 +71,7 @@ feature 'Press Catalog' do
         # Selectors needed for assets/javascripts/ga_event_tracking.js
         # If these change, fix here then update ga_event_tracking.js
         expect(page).to have_selector('a.navbar-brand')
-        expect(page).to have_selector('#documents .document h4.index_title a')
+        expect(page).to have_selector('#documents .document h3.index_title a')
         expect(page).to have_selector('footer.press a')
         expect(page).to have_selector('#keyword-search-submit')
         expect(page).to have_selector('#catalog_search')

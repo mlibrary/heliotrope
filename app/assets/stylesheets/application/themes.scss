@@ -97,8 +97,8 @@ $heb-black-80: #342f2e;
 
   .btn-default:hover,
   .btn-default:active {
-    @include button-hover-background-color($heb-grey-2);
-    @include button-hover-font-color($heb-link);
+    @include button-hover-background-color($heb-grey-4);
+    @include button-hover-font-color($heb-brand-color);
   }
 
   // navigation menu
@@ -169,18 +169,23 @@ $heb-black-80: #342f2e;
 
   }
 
-
   .press {
+    .results-container {
 
-    .document,
-    .documentHeader {
-      margin-bottom: 2em;
+      .documentHeader {
+        h3 {
+          font-weight: 600;
+        }
+        a {
+          color: #333;
+        }
+      }
     }
-
   }
 
   //filters on press and monograph pages
-  .col-sm-3.facets-container {
+  .col-sm-3.facets-container,
+  #facet-panel-collapse {
     padding-left: 0px;
   }
 
@@ -212,9 +217,7 @@ $heb-black-80: #342f2e;
     background-color: #fafafa;
   }
 
-
-
-  // monograph catalog
+  // sorts on press and monograph pages
   #sort-dropdown .dropdown-toggle, #per_page-dropdown .dropdown-toggle {
     color: $heb-white;
   }
@@ -223,7 +226,10 @@ $heb-black-80: #342f2e;
 
   .pagination {
      li a, li span {
-       color: $heb-brand-color;
+
+       background-color: $heb-brand-color;
+       border-color: $heb-brand-color;
+       color: $heb-white;
      }
 
      .active>a,
@@ -232,9 +238,9 @@ $heb-black-80: #342f2e;
      .active>span,
      .active>span:hover,
      .active>span:focus {
-       background-color: $heb-brand-color;
-       border-color: $heb-brand-color;
-       color: $heb-white;
+       background-color: $heb-grey-4;
+       border-color: $heb-grey-4;
+       color: $heb-brand-color;
      }
   }
 
@@ -441,14 +447,6 @@ $iu-midnight: #006298;
 
   }
 
-  .press {
-
-    .document,
-    .documentHeader {
-      margin-bottom: 2em;
-    }
-  }
-
   // monograph catalog
   #sort-dropdown .dropdown-toggle, #per_page-dropdown .dropdown-toggle {
     color: $iu-darkmidnight;
@@ -460,6 +458,10 @@ $iu-midnight: #006298;
       p {
         @include georgia-pro;
       }
+    }
+
+    .authors, .copyright {
+      @include benton-bold;
     }
   }
 
@@ -654,14 +656,6 @@ $um-black-80: #342f2e;
 
   }
 
-  .press {
-
-    .document,
-    .documentHeader {
-      margin-bottom: 2em;
-    }
-  }
-
   // monograph catalog
   #sort-dropdown .dropdown-toggle, #per_page-dropdown .dropdown-toggle {
     color: $um-blue;
@@ -673,6 +667,10 @@ $um-black-80: #342f2e;
       p {
         @include meta;
       }
+    }
+
+    .authors, .copyright {
+      @include meta;
     }
   }
 
@@ -912,14 +910,6 @@ $gabii-link-hover:    #1e5667;
     font-size: 18px;
   }
 
-  .press {
-
-    .document,
-    .documentHeader {
-      margin-bottom: 2em;
-    }
-  }
-
   // monograph catalog
   #sort-dropdown .dropdown-toggle, #per_page-dropdown .dropdown-toggle {
     color: $gabii-white;
@@ -939,6 +929,10 @@ $gabii-link-hover:    #1e5667;
       p {
         @include garamond;
       }
+    }
+
+    .authors, .copyright {
+      @include lato;
     }
 
     .message {
@@ -1269,15 +1263,6 @@ $umn-white: #fff;
 
   }
 
-  .press {
-
-
-    .document,
-    .documentHeader {
-      margin-bottom: 2em;
-    }
-  }
-
   // monograph catalog
   #sort-dropdown .dropdown-toggle, #per_page-dropdown .dropdown-toggle {
     color: $umn-accent-link;
@@ -1289,6 +1274,10 @@ $umn-white: #fff;
       p {
         @include brandon;
       }
+    }
+
+    .authors, .copyright {
+      @include brandon;
     }
   }
 
@@ -1490,14 +1479,6 @@ $fulcrum-light-2: #bec4cc;
 
   }
 
-  .press {
-
-    .document,
-    .documentHeader {
-      margin-bottom: 2em;
-    }
-  }
-
   // monograph catalog
   #sort-dropdown .dropdown-toggle, #per_page-dropdown .dropdown-toggle {
     color: $nw-purple-60;
@@ -1510,6 +1491,10 @@ $fulcrum-light-2: #bec4cc;
       p {
         @include freight-sans-book;
       }
+    }
+
+    .authors, .copyright {
+      @include freight-sans-semi-bold;
     }
 
     // pagination
@@ -1729,14 +1714,6 @@ $nyu-gray-2: #342f2e;
 
     }
 
-  }
-
-  .press {
-
-    .document,
-    .documentHeader {
-      margin-bottom: 2em;
-    }
   }
 
   // monograph catalog
@@ -2015,20 +1992,16 @@ $psu-gray-1: #3F4550;
 
   }
 
-  .press {
-
-    .document,
-    .documentHeader {
-      margin-bottom: 2em;
-    }
-  }
-
   // monograph
   .monograph {
     .documentHeader {
       p {
         @include proxima-nova;
       }
+    }
+
+    .authors, .copyright {
+      @include proxima-nova;
     }
   }
 
