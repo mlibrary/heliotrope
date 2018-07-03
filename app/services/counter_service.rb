@@ -16,7 +16,7 @@ class CounterService
 
   def self.allowed_controllers
     # See https://tools.lib.umich.edu/jira/browse/HELIO-1376?focusedCommentId=897580&page=com.atlassian.jira.plugin.system.issuetabpanels%3Acomment-tabpanel#comment-897580
-    ["EPubsController", "Hyrax::FileSetsController", "Hyrax::DownloadsContoller"]
+    ["EPubsController", "Hyrax::FileSetsController", "Hyrax::DownloadsController"]
   end
 
   def self.allowed_presenters

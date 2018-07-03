@@ -12,13 +12,19 @@ describe CounterService do
   describe '#from' do
     context "with a correct controller and presenter" do
       it "creates a CounterService object" do
-        expect(described_class.from(controller, presenter).is_a?(described_class)).to be true
+        expect(described_class.from(controller, presenter)).to be_an_instance_of(described_class)
+      end
+    end
+    context 'with the Hyrax::DownloadsController' do
+      let!(:controller) { Hyrax::DownloadsController.new }
+      it "creates a CounterService object" do
+        expect(described_class.from(controller, presenter)).to be_an_instance_of(described_class)
       end
     end
     context "with the wrong controller or presenter" do
       before { allow(presenter.class).to receive(:name).and_return("OtherPresenter") }
       it "creates a CounterServiceNullObject" do
-        expect(described_class.from(controller, presenter).is_a?(CounterServiceNullObject)).to be true
+        expect(described_class.from(controller, presenter)).to be_an_instance_of(CounterServiceNullObject)
       end
     end
   end
@@ -44,7 +50,7 @@ describe CounterService do
 
   describe "#allowed_controllers" do
     it "limits the allowed controllers" do
-      expect(described_class.allowed_controllers).to eq ["EPubsController", "Hyrax::FileSetsController", "Hyrax::DownloadsContoller"]
+      expect(described_class.allowed_controllers).to eq ["EPubsController", "Hyrax::FileSetsController", "Hyrax::DownloadsController"]
     end
   end
 
