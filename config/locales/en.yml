@@ -238,7 +238,7 @@ en:
           help_html: "General metadata for this title"
           legend_html: "* Basic Metadata"
         citable_links_metadata:
-          help_html: "Citable links asdfasf asf as fas"
+          help_html: "Citable links and identifiers for this title"
           legend_html: "Citable Links"
         citation_publisher: "Citation Publisher"
         citation_metadata:
