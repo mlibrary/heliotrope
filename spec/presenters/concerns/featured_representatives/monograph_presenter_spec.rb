@@ -128,8 +128,8 @@ RSpec.describe FeaturedRepresentatives::MonographPresenter do
       end
 
       describe "#database" do
-        it "returns the database's solr doc" do
-          expect(subject.database['id']).to eq 'dbid'
+        it "returns the database's presenter" do
+          expect(subject.database.id).to eq 'dbid'
         end
       end
     end
