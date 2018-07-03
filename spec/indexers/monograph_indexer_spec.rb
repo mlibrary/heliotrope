@@ -8,8 +8,10 @@ RSpec.describe MonographIndexer do
 
     let(:indexer) { described_class.new(monograph) }
     let(:monograph) { build(:monograph,
+                            title: ['"Blah"-de-blah-blah and Stuff!'],
                             creator: ["Moose, Bullwinkle\nSquirrel, Rocky"],
-                            description: ["This is the abstract"]) }
+                            description: ["This is the abstract"],
+                            date_created: ['c.2018?']) }
     let(:file_set) { create(:file_set) }
     let(:press_name) { Press.find_by(subdomain: monograph.press).name }
 
@@ -30,6 +32,10 @@ RSpec.describe MonographIndexer do
       expect(subject['representative_id_ssim']).to eq monograph.representative_id
     end
 
+    it 'has a single-valued, downcased-and-cleaned-up title to sort by' do
+      expect(subject['title_si']).to eq 'blah-de-blah-blah and stuff'
+    end
+
     it 'indexes the first creator\'s full_name' do
       expect(subject['creator_full_name_tesim']).to eq 'Moose, Bullwinkle'
       expect(subject['creator_full_name_sim']).to eq 'Moose, Bullwinkle'
@@ -37,6 +43,10 @@ RSpec.describe MonographIndexer do
 
     it 'has description indexed by Hyrax::IndexesBasicMetadata' do
       expect(subject['description_tesim'].first).to eq 'This is the abstract'
+    end
+
+    it 'has a single-valued, cleaned-up date_created value to sort by' do
+      expect(subject['date_created_si']).to eq '2018'
     end
   end
 
