@@ -1,3 +1,7 @@
+<% content_for :head do %>
+  <meta name="turbolinks-cache-control" content="no-cache">
+<% end %>
+
 <% provide :page_title, @title || "Access Restricted to #{@monograph_presenter.title}" %>
 <div class="alert alert-danger">
   <p class="text-center"><em><%= @monograph_presenter.title %></em> is a restricted access online resource. <%= link_to 'Go back to previous page', :back %>.</p>
@@ -49,18 +53,26 @@
             </ul>
           <% end %>
           <p>You may attempt to login at the appropriate institution.</p>
-          <p class="text-center">
-            <%= form_tag(epub_shibboleth_path(@presenter.id), method: :post) do %>
-              <select id="institution_id" name="institution_id">
-                <% @institutions.each do |institution| %>
-                  <% if institution.shibboleth? %>
-                    <option value=<%= institution.id %>><%= institution.name %></option>
-                  <% end %>
-                <% end %>
-              </select>
-              <button type="submit">Login</button>
-            <% end %>
-          </p>
+          <div id="idpSelect" class="panel-body"></div>
+          <script>
+            idSelectUIParms = new IdPSelectUIParms();
+            idSelectUIParms.defaultLogo = '<%= asset_path('fulcrum-logo.png') %>';
+            idSelectUIParms.defaultLogoWidth = 8;
+            idSelectUIParms.defaultLogoHeight = 16;
+            <%
+              target = if @monograph_presenter.present?
+                         monograph_catalog_url(@monograph_presenter.id)
+                       else
+                         hyrax_file_set_url(@presenter.id)
+                       end.gsub!(/\?locale=.*/, '')
+            %>
+            idSelectUIParms.defaultReturn = '<%= URI.join(root_url, 'Shibboleth.sso/', 'Login') %>?target=<%= target %>';
+            idSelectUIParms.myEntityID = '<%= Rails.configuration.shibboleth_identity_provider_url %>';
+            idSelectUIParms.preferredIdP = ['<%= Rails.configuration.shibboleth_identity_provider_url %>'];
+            idSelectUIParms.ignoreURLParams = true; // TODO: Figure out why this is needed, or what needs to be fixed to remove it.
+            // idSelectUIParms.testGUI = true;
+            (new IdPSelectUI()).draw(idSelectUIParms);
+          </script>
           <p>For other institutions.<p>
           <ul>
             <% @institutions.each do |institution| %>
@@ -88,41 +100,5 @@
         </div>
       </div>
     </div>
-  </div>
-  <div class="row">
-    <div class="col-sm-3"></div>
-    <div class="col-sm-6">
-      <div class="panel panel-danger">
-        <div class="panel-heading">
-          <h3 class="panel-title">Federation</h3>
-        </div>
-        <div id="idpSelect" class="panel-body"></div>
-        <script>
-          idSelectUIParms = new IdPSelectUIParms();
-
-          idSelectUIParms.dataSource = '/shibboleth/discofeed';
-          //idSelectUIParms.dataSource = '<%= Rails.configuration.shibboleth_service_provider_url %>/DiscoFeed';
-
-          idSelectUIParms.defaultLogo = '<%= asset_path('fulcrum-logo.png') %>';
-          idSelectUIParms.defaultLogoWidth = 8;
-          idSelectUIParms.defaultLogoHeight = 16;
-
-          //idSelectUIParms.defaultReturn = '<%= ds_shibboleth_url %>?target=<%= epub_shibboleth_path(@presenter.id) %>';
-          idSelectUIParms.defaultReturn = '<%= Rails.configuration.shibboleth_service_provider_url %>?target=<%= epub_shibboleth_path(@presenter.id) %>';
-
-          idSelectUIParms.helpURL = '<%= help_shibboleth_url %>';
-
-          //idSelectUIParms.myEntityID = 'https://shibboleth.umich.edu/idp/shibboleth';
-          idSelectUIParms.myEntityID = 'https://shib-idp-test.www.umich.edu/idp/shibboleth';
-
-          //idSelectUIParms.preferredIdP = ['https://shibboleth.umich.edu/idp/shibboleth'];
-          idSelectUIParms.preferredIdP = ['https://shib-idp-test.www.umich.edu/idp/shibboleth'];
-
-          idSelectUIParms.testGUI = true;
-          (new IdPSelectUI()).draw(idSelectUIParms);
-        </script>
-      </div>
-    </div>
-    <div class="col-sm-3"></div>
   </div>
 </div>

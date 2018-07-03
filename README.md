@@ -50,51 +50,29 @@ For additional details and helpful hints [read our ever growing Wiki](https://gi
   * Install mysql ([Install MySQL OS X El Capitan](https://github.com/mlibrary/heliotrope/wiki/Install-MySQL-on-OS-X-El-Capitan))
 
 ## Initial setup
-### 1. Getting a local copy, running bundler, setting up Jekyll
+### 1. Getting a local copy, bundle install gems, and execute setup script
 
 ```
 $ git clone https://github.com/mlibrary/heliotrope.git
 $ cd heliotrope
 $ bundle install
 $ ./bin/bundle exec ./bin/setup
-$ ./bin/bundle exec ./bin/rails jekyll:deploy
 ```  
-See the [Wiki](https://github.com/mlibrary/heliotrope/wiki/Static-Pages-and-Blog) for more information on [Jekyll](https://jekyllrb.com/) integration.
+See the [Wiki](https://github.com/mlibrary/heliotrope/wiki/Static-Pages-and-Blog) for information on [Jekyll](https://jekyllrb.com/) integration.
 
 ### 2. Create users
 #### Make yourself a "platform" admin
-There is a rails task you can execute to create a "platform" admin user. It will prompt you for an email address and password, and then create a user with the correct role.
+There is a rails task you can execute to create a "platform" admin user. It will prompt you for an email address and then create a user with the correct role.
 ```
 $ ./bin/bundle exec ./bin/rails admin
-```
-
-If you forget your password, execute:
-```
-$ ./bin/bundle exec ./bin/rails passwd
 ```
 
 If you need to run this when the app has been deployed, execute:
 ```
 $ RAILS_ENV=production ./bin/bundle exec ./bin/rails admin
-$ RAILS_ENV=production ./bin/bundle exec ./bin/rails passwd
 ```
 
-### 3. Give yourself an admin role
-Edit `./config/role_map.yml` and set the e-mail address you registered with as an admin.
-
-```
-$ vi ./config/role_map.yml
-```
-```
-development:
-  admin:   
-    - yourself@domain.com
-  archivist:
-    - archivist1@example.com
-...
-```
-
-### 4. Run the application
+### 3. Run the application
 
 Execute this command to start Fedora, Solr and Rails servers:
 ```
@@ -116,7 +94,7 @@ $ fcrepo_wrapper --config .wrap_conf/fcrepo_dev
 $ solr_wrapper --config .wrap_conf/solr_dev
 ```
 
-### 5. Create [default administrative set](https://github.com/samvera/hyrax#create-default-administrative-set)
+### 4. Create [default administrative set](https://github.com/samvera/hyrax#create-default-administrative-set)
 ```
 $ ./bin/bundle exec ./bin/rails hyrax:default_admin_set:create
 ```

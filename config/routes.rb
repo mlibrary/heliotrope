@@ -62,14 +62,6 @@ Rails.application.routes.draw do
     end
   end
 
-  resource :shibboleth, only: [] do
-    member do
-      get :discofeed
-      get :ds
-      get :help
-    end
-  end
-
   get 'epubs/:id', controller: :e_pubs, action: :show, as: :epub
   post 'epubs/:id/shibboleth', controller: :e_pubs, action: :shibboleth, as: :epub_shibboleth
   get 'epubs/:id/*file', controller: :e_pubs, action: :file, as: :epub_file
@@ -101,8 +93,16 @@ Rails.application.routes.draw do
     concerns :searchable
   end
 
-  devise_for :users, path: '', path_names: { sign_in: 'login', sign_out: 'logout' }, controllers: { sessions: 'sessions' }, skip: %i[registration password]
+  devise_for :users, path: '', controllers: { sessions: 'sessions' }
+  get 'login', controller: :sessions, action: :new, as: :new_user_session
+  get 'logout', controller: :sessions, action: :destroy, as: :destroy_user_session
   resource :authentications, only: %i[new create destroy]
+
+  unless /^production$/i.match?(Rails.env)
+    get 'Shibboleth.sso/DiscoFeed', controller: :shibboleths, action: :discofeed
+    get 'Shibboleth.sso/Help', controller: :shibboleths, action: :help
+    get 'Shibboleth.sso/Login', controller: :sessions, action: :new
+  end
 
   get 'users', controller: :users, action: :index, as: :users
   get 'users/:id', controller: :users, action: :show, as: :user

@@ -46,7 +46,7 @@ module Heliotrope
     Rails.application.routes.default_url_options[:host] = config.hostname
 
     # URL for logging the user in via shibbolleth
-    config.shibboleth_service_provider_url = Settings.shibboleth_service_provider_url
+    config.shibboleth_identity_provider_url = Settings.shibboleth_identity_provider_url
 
     # Disable automatic account creation on Cosign logins unless
     # enabled in config/settings.

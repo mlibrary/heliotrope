@@ -28,12 +28,6 @@ RSpec.describe SessionsController, type: :controller do
     end
   end
 
-  describe '#create' do
-    subject { post :create }
-
-    it { is_expected.to have_http_status(:bad_request) }
-  end
-
   describe '#destroy' do
     subject { get :destroy }
 

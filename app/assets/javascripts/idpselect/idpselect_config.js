@@ -3,18 +3,19 @@ function IdPSelectUIParms(){
     //
     // Adjust the following to fit into your local configuration
     //
-    this.alwaysShow = true;          // If true, this will show results as soon as you start typing
-    this.dataSource = 'https://quod.lib.umich.edu/Shibboleth.sso/DiscoFeed';   // Where to get the data from
-    this.defaultLanguage = 'en';     // Language to use if the browser local doesnt have a bundle
-    this.defaultLogo = '';  // Replace with your own logo
+    this.alwaysShow = true;                     // If true, this will show results as soon as you start typing
+    this.dataSource = '/Shibboleth.sso/DiscoFeed';  // Where to get the data from
+    this.defaultLanguage = 'en';                // Language to use if the browser local doesnt have a bundle
+    this.defaultLogo = '';                      // Replace with your own logo
     this.defaultLogoWidth = 1;
     this.defaultLogoHeight = 1;
     this.defaultReturn = null;       // If non null, then the default place to send users who are not
                                      // Approaching via the Discovery Protocol for example
     //this.defaultReturn = "https://example.org/Shibboleth.sso/DS?SAMLDS=1&target=https://example.org/secure";
     this.defaultReturnIDParam = null;
-    this.helpURL = 'http://its.umich.edu/accounts-access/uniqnames-passwords/shibboleth';
-    this.ie6Hack = null;             // An array of structures to disable when drawing the pull down (needed to 
+    //this.helpURL = 'http://its.umich.edu/accounts-access/uniqnames-passwords/shibboleth';
+    this.helpURL = '/Shibboleth.sso/Help';
+    this.ie6Hack = null;             // An array of structures to disable when drawing the pull down (needed to
                                      // handle the ie6 z axis problem
     this.insertAtDiv = 'idpSelect';  // The div where we will insert the data
     this.maxResults = 10;            // How many results to show at once or the number at which to
