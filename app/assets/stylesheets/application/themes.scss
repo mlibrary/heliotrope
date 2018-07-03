@@ -218,8 +218,23 @@ $heb-black-80: #342f2e;
   }
 
   // sorts on press and monograph pages
-  #sort-dropdown .dropdown-toggle, #per_page-dropdown .dropdown-toggle {
+  #sort-dropdown .dropdown-toggle,
+  #per_page-dropdown .dropdown-toggle {
     color: $heb-white;
+  }
+
+  #sort-dropdown .dropdown-toggle:hover,
+  #per_page-dropdown .dropdown-toggle:hover,
+  #sort-dropdown .dropdown-toggle:active,
+  #per_page-dropdown .dropdown-toggle:active {
+    color: $heb-brand-color;
+  }
+
+  .constraints-container {
+    padding: 10px 20px;
+    border-radius: 0px;
+    -webkit-box-shadow: none;
+    box-shadow: none;
   }
 
   // pagination
@@ -232,12 +247,33 @@ $heb-black-80: #342f2e;
        color: $heb-white;
      }
 
+     li>a:hover,
+     li>a:focus,
+     li>span:hover,
+     li>span:focus {
+       background-color: $heb-grey-4;
+       border-color: $heb-grey-4;
+       color: $heb-brand-color;
+     }
+
+
      .active>a,
      .active>a:hover,
      .active>a:focus,
      .active>span,
      .active>span:hover,
      .active>span:focus {
+       background-color: $heb-grey-4;
+       border-color: $heb-grey-4;
+       color: $heb-brand-color;
+     }
+
+     .disabled>span,
+     .disabled>span:hover,
+     .disabled>span:focus,
+     .disabled>a,
+     .disabled>a:hover,
+     .disabled>a:focus {
        background-color: $heb-grey-4;
        border-color: $heb-grey-4;
        color: $heb-brand-color;
