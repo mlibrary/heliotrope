@@ -47,7 +47,8 @@ module FeaturedRepresentatives
     end
 
     def database
-      ordered_member_docs.find { |doc| doc.id == database_id }
+      solr_doc = ordered_member_docs.find { |doc| doc.id == database_id }
+      Hyrax::FileSetPresenter.new(solr_doc, current_ability, request) if solr_doc.present?
     end
 
     def database_id
@@ -59,8 +60,6 @@ module FeaturedRepresentatives
     end
 
     def aboutware
-      # This somewhat oddly returns a presenter not a solr_doc. Maybe they all should
-      # return presenters?
       solr_doc = ordered_member_docs.find { |doc| doc.id == aboutware_id }
       Hyrax::FileSetPresenter.new(solr_doc, current_ability, request) if solr_doc.present?
     end
