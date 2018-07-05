@@ -91,7 +91,7 @@
         <li role="presentation"><a id="tab-webgl" href="#webgl" role="tab" data-toggle="tab" aria-controls="webgl" aria-selected="false" tabindex="-1">3-D Model</a></li>
       <% end %>
       <% if @monograph_presenter.database? %>
-        <li role="presentation"><a id="tab-database" href="<%= @monograph_presenter&.database&.external_resource_url %>" target="_blank" role="tab" aria-controls="database" aria-selected="false" tabindex="-1">Database <span class="glyphicon glyphicon-share" aria-hidden="true" aria-label="Link to external database"></span></a></li>
+        <li role="presentation"><a id="tab-database" href="#database" role="tab" data-toggle="tab" aria-controls="database" aria-selected="false" tabindex="-1">Database</a></li>
       <% end %>
       <% if @monograph_presenter.aboutware? %>
         <li role="presentation"><a id="tab-aboutware" href="#aboutware" role="tab" data-toggle="tab" aria-controls="aboutware" aria-selected="false" tabindex="-1">About</a></li>
@@ -129,6 +129,14 @@
           <div class="col-sm-12">
             <h2 class="sr-only">3D Model</h2>
             <%= render 'webgls/tab' %>
+          </div>
+        </section>
+      <% end %>
+      <% if @monograph_presenter.database? %>
+        <section id="database" class="tab-pane fade in database row" role="tabpanel" aria-hidden="true" aria-labelledby="tab-database" tabindex="0">
+          <div class="col-sm-12">
+            <h2 class="sr-only">Database</h2>
+            <a href="<%= @monograph_presenter&.database&.external_resource_url %>" target="_blank">Database <span class="glyphicon glyphicon-share" aria-hidden="true" aria-label="Link to external database"></span></a>
           </div>
         </section>
       <% end %>
