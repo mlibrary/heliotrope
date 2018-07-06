@@ -51,7 +51,7 @@ module API
 
       # @overload create
       #   post /api/products
-      #   @param [Hash] parmas { product: { identifier: String } }
+      #   @param [Hash] params { product: { identifier: String } }
       # @overload create
       #   post /api/lessees/:lessee_id/products
       #   @param [Hash] params { lessee_id: Number, product: { identifier: String } }
@@ -83,7 +83,7 @@ module API
 
       # @overload destroy
       #   @example delete /api/products/:id
-      #   @param [Hash] parmas { id: Number }
+      #   @param [Hash] params { id: Number }
       # @overload destroy
       #   @example delete /api/lessees/:lessee_id/products/:id
       #   @param [Hash] params { lessee_id: Number, id: Number }

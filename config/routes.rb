@@ -26,6 +26,8 @@ Rails.application.routes.draw do
   end
 
   constraints platform_administrator_constraint do
+    resources :api_requests, only: %i[index show destroy]
+
     resources :users, only: [] do
       member do
         put :tokenize

@@ -9,12 +9,14 @@ module API
     respond_to :json
 
     before_action :authorize_request
+    after_action :log_request_response
 
     # User identification extracted from JWT
     # @return [User] the authenticated and authorized {User} of the current request
     attr_reader :current_user
 
     rescue_from ActiveRecord::RecordInvalid, ActiveRecord::RecordNotFound, StandardError do |exception|
+      log_request_response(exception)
       case exception
       when ActiveRecord::RecordInvalid
         render json: { exception: exception.inspect }, status: :unprocessable_entity
@@ -31,12 +33,27 @@ module API
         @current_user = platform_admin_from_payload(payload_from_token(token_from_header))
       end
 
+      def log_request_response(exception = nil)
+        api_request = APIRequest.new
+        api_request.user = @token_user
+        api_request.action = request.method
+        api_request.path = request.original_fullpath
+        api_request.params = params.to_json
+        api_request.status = response.status
+        api_request.exception = exception
+        begin
+          api_request.save!
+        rescue StandardError => e
+          Rails.logger.error("EXCEPTION #{e} API_REQUEST #{api_request.user&.id}, #{api_request.action}, #{api_request.path}, #{api_request.params}, #{api_request.status}, #{api_request.exception}")
+        end
+      end
+
       def platform_admin_from_payload(payload)
-        user = User.find_by(email: payload[:email])
-        raise("User #{payload[:email]} not found.") if user.blank?
-        raise("User #{payload[:email]} pin no longer valid.") if payload[:pin] != user.encrypted_password
-        raise("User #{payload[:email]} not a platform administrator.") unless user.platform_admin?
-        user
+        @token_user = User.find_by(email: payload[:email])
+        raise("User #{payload[:email]} not found.") if @token_user.blank?
+        raise("User #{payload[:email]} pin no longer valid.") if payload[:pin] != @token_user.encrypted_password
+        raise("User #{payload[:email]} not a platform administrator.") unless @token_user.platform_admin?
+        @token_user
       end
 
       def payload_from_token(token)
