@@ -11,7 +11,7 @@ feature 'Press Catalog' do
 
   context 'a user who is not logged in' do
     context 'with monographs for different presses' do
-      let(:red_cover_alt_text) { ["The cover of The Red Book"] }
+      let(:red_cover_alt_text) { ["The Red Book"] }
       let(:red_cover) { create(:public_file_set, alt_text: red_cover_alt_text) }
       let!(:red) { create(:public_monograph, title: ['The Red Book'], representative_id: red_cover.id, press: umich.subdomain) }
       let!(:blue) { create(:public_monograph, title: ['The Blue Book'], press: umich.subdomain) }
@@ -65,13 +65,13 @@ feature 'Press Catalog' do
         expect(page).to_not have_link colors.title.first
 
         # thumbnail link
-        expect(page).to have_selector("img[alt='#{red_cover_alt_text.first}']")
+        expect(page).to have_selector("img[alt='Cover image for #{red_cover_alt_text.first}']")
         expect(page).to have_link('', href: monograph_catalog_path(red, locale: 'en'))
 
         # Selectors needed for assets/javascripts/ga_event_tracking.js
         # If these change, fix here then update ga_event_tracking.js
         expect(page).to have_selector('a.navbar-brand')
-        expect(page).to have_selector('#documents .document h4.index_title a')
+        expect(page).to have_selector('#documents .document h3.index_title a')
         expect(page).to have_selector('footer.press a')
         expect(page).to have_selector('#keyword-search-submit')
         expect(page).to have_selector('#catalog_search')

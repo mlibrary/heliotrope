@@ -1,10 +1,13 @@
 <% presenter = Hyrax::PresenterFactory.build_for(ids: [document.id], presenter_class: Hyrax::MonographPresenter, presenter_args: current_ability).first %>
-<div class="document col-xs-6 col-md-3">
+<div class="document col-xs-6 col-md-4">
   <div class="thumbnail">
-    <%= render_thumbnail_tag(document, {alt: presenter.representative_alt_text}, :counter => document_counter_with_offset(document_counter)) %>
+    <a href="<%= polymorphic_path(url_for_document(document)) %>" >
+      <img class="img-responsive" src="/image-service/<%=document.representative_id%>/full/145,/0/default.jpg"
+           alt="Cover image for <%= presenter.representative_alt_text %>">
+    </a>
     <div class="caption">
       <%= render_document_partials document, blacklight_config.view_config(:gallery).partials, :document_counter => document_counter %>
-      <p><%= presenter.authors %></p>
+      <p class="authors"><%= presenter.authors %></p>
     </div>
   </div>
 </div>

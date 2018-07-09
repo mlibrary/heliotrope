@@ -12,8 +12,6 @@ feature 'Monograph catalog sort' do
     let(:monograph) { create(:monograph, user: user, title: ['Polka Dots'], representative_id: cover.id) }
     let(:per_page) { 2 }
     let(:fileset_count) { per_page + 1 } # ensure pagination
-    let(:up_arrow) { "\u25B2" }
-    let(:down_arrow) { "\u25BC" }
     let(:expected_ordered_members) { monograph.ordered_members.to_ary }
 
     before do
@@ -41,32 +39,32 @@ feature 'Monograph catalog sort' do
       expect(first_fileset_link_text).to eq expected_ordered_members[1].title.first
 
       # this control is styled as a drop-down but is actually a button & list, hence click_link not select
-      click_link "Section #{down_arrow}"
+      click_link "Section (Last First)"
       first_fileset_link_text = page.first('.documentHeader .index_title a').text
       # ordered_members go from 0 to fileset_count + 1, descending so last is shown first
       expect(first_fileset_link_text).to eq expected_ordered_members[fileset_count + 1].title.first
 
-      click_link "Section #{up_arrow}"
+      click_link "Section (Earliest First)"
       first_fileset_link_text = page.first('.documentHeader .index_title a').text
       # essentially default sort, sans score, ascending so first is shown first
       expect(first_fileset_link_text).to eq expected_ordered_members[1].title.first
 
-      click_link "Format #{down_arrow}"
+      click_link "Format (Z-A)"
       first_fileset_link_text = page.first('.documentHeader .index_title a').text
       # highest resource_type is the fileset_outlier, second ordered member, set to 'video' above
       expect(first_fileset_link_text).to eq expected_ordered_members[1].title.first
 
-      click_link "Format #{up_arrow}"
+      click_link "Format (A-Z)"
       first_fileset_link_text = page.first('.documentHeader .index_title a').text
       # lowest resource_type is the 3rd ordered member (first using the audio sequence, should be set to 'audio0001')
       expect(first_fileset_link_text).to eq expected_ordered_members[2].title.first
 
-      click_link "Year #{down_arrow}"
+      click_link "Year (Newest First)"
       first_fileset_link_text = page.first('.documentHeader .index_title a').text
       # highest year is the fileset_outlier, second ordered member [0, 1,... ], manually set to '2000' above
       expect(first_fileset_link_text).to eq expected_ordered_members[1].title.first
 
-      click_link "Year #{up_arrow}"
+      click_link "Year (Oldest First)"
       first_fileset_link_text = page.first('.documentHeader .index_title a').text
       # lowest year is the third ordered member, the first to use the factory's sequence and set to '1900'
       expect(first_fileset_link_text).to eq expected_ordered_members[2].title.first

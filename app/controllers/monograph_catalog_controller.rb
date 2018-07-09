@@ -9,17 +9,15 @@ class MonographCatalogController < ::CatalogController
   configure_blacklight do |config|
     config.search_builder_class = MonographSearchBuilder
 
-    up_arrow = "\u25B2"
-    down_arrow = "\u25BC"
-
     config.default_per_page = 20
-    config.add_sort_field 'relevance', sort: "score desc, monograph_position_isi asc", label: "Relevance #{down_arrow}"
-    config.add_sort_field 'section asc', sort: "monograph_position_isi asc", label: "Section #{up_arrow}"
-    config.add_sort_field 'section desc', sort: "monograph_position_isi desc", label: "Section #{down_arrow}"
-    config.add_sort_field 'format asc', sort: "#{solr_name('resource_type', :sortable)} asc, monograph_position_isi asc", label: "Format #{up_arrow}"
-    config.add_sort_field 'format desc', sort: "#{solr_name('resource_type', :sortable)} desc, monograph_position_isi asc", label: "Format #{down_arrow}"
-    config.add_sort_field 'year asc', sort: "#{solr_name('search_year', :sortable)} asc, monograph_position_isi asc", label: "Year #{up_arrow}"
-    config.add_sort_field 'year desc', sort: "#{solr_name('search_year', :sortable)} desc, monograph_position_isi asc", label: "Year #{down_arrow}"
+    config.add_sort_field 'relevance', sort: "score desc, monograph_position_isi asc", label: "Relevance"
+    config.add_sort_field 'section asc', sort: "monograph_position_isi asc", label: "Section (Earliest First)"
+    config.add_sort_field 'section desc', sort: "monograph_position_isi desc", label: "Section (Last First)"
+    # leaving the #{uploaded_field} desc in these for section sort when all else is equal
+    config.add_sort_field 'format asc', sort: "#{solr_name('resource_type', :sortable)} asc, monograph_position_isi asc", label: "Format (A-Z)"
+    config.add_sort_field 'format desc', sort: "#{solr_name('resource_type', :sortable)} desc, monograph_position_isi asc", label: "Format (Z-A)"
+    config.add_sort_field 'year asc', sort: "#{solr_name('search_year', :sortable)} asc, monograph_position_isi asc", label: "Year (Oldest First)"
+    config.add_sort_field 'year desc', sort: "#{solr_name('search_year', :sortable)} desc, monograph_position_isi asc", label: "Year (Newest First)"
 
     config.facet_fields.tap do
       # solr facet fields not to be displayed in the index (search results) view
