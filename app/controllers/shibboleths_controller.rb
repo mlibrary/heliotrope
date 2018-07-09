@@ -16,4 +16,8 @@ class ShibbolethsController < CheckpointController
   end
 
   def help; end
+
+  def new
+    redirect_to new_user_session_path
+  end
 end

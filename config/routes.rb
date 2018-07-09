@@ -101,7 +101,7 @@ Rails.application.routes.draw do
   unless /^production$/i.match?(Rails.env)
     get 'Shibboleth.sso/DiscoFeed', controller: :shibboleths, action: :discofeed
     get 'Shibboleth.sso/Help', controller: :shibboleths, action: :help
-    get 'Shibboleth.sso/Login', controller: :sessions, action: :new
+    get 'Shibboleth.sso/Login', controller: :shibboleths, action: :new
   end
 
   get 'users', controller: :users, action: :index, as: :users
