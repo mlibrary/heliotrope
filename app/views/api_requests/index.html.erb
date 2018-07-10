@@ -1,0 +1,18 @@
+<p id="notice"><%= notice %></p>
+<div id="maincontent">
+  <div class="row">
+    <div class="col-md-12"><h1>API Requests</h1></div>
+    <div class="col-md-12">
+      <% @api_requests.each do |api_request| %>
+        <div class="col-md-3"><%= api_request.created_at %></div>
+        <div class="col-md-1"><%= api_request.user_id %></div>
+        <div class="col-md-2"><%= api_request.action %> <%= api_request.path %></div>
+        <div class="col-md-1"><%= api_request.status %></div>
+        <div class="col-md-3"><%= api_request.exception %></div>
+        <div class="col-md-1"><%= link_to 'Show', api_request %></div>
+        <div class="col-md-1"><%= link_to 'Destroy', api_request, method: :delete, data: { confirm: 'Are you sure?' } %></div>
+      <% end %>
+    </div>
+    <div class="col-md-12"><br/></div>
+  </div>
+</div>

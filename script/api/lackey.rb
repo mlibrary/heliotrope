@@ -11,19 +11,6 @@ class Lackey
           accept: "application/json, application/vnd.heliotrope.v1+json",
           content_type: "application/json"
 
-  attr_reader :argv
-
-  def initialize(argv)
-    @argv = argv
-  end
-
-  def parse
-    argv.each_with_index do |arg, idx|
-      puts "arg[#{idx}] = #{arg}"
-    end
-    nil
-  end
-
   def find_product(identifier:)
     response = self.class.get("/product", { query: { identifier: identifier } } )
     return response.parsed_response["id"] if response.success?
@@ -150,6 +137,3 @@ class Lackey
       false
     end
 end
-
-lackey = Lackey.new(ARGV)
-lackey.parse

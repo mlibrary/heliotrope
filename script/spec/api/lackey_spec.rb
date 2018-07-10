@@ -3,7 +3,7 @@
 require_relative '../../api/lackey'
 
 RSpec.describe Lackey do
-  lackey = described_class.new([])
+  lackey = described_class.new
 
   products_initial_count = lackey.products.count
   lessees_initial_count = lackey.lessees.count
