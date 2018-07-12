@@ -14,7 +14,7 @@ class PressCatalogController < ::CatalogController
     config.default_per_page = 15
     config.per_page = [10, 15, 50, 100]
 
-    config.add_sort_field 'date_uploaded desc', sort: "#{solr_name('date_uploaded', :stored_sortable, type: :date)} desc", label: "Date Added (Newest First)"
+    config.add_sort_field 'relevance', sort: "score desc, #{solr_name('date_uploaded', :stored_sortable, type: :date)} desc", label: "Relevance"
     config.add_sort_field 'author asc', sort: "#{solr_name('creator_full_name', :sortable)} asc", label: "Author (A-Z)"
     config.add_sort_field 'author desc', sort: "#{solr_name('creator_full_name', :sortable)} desc", label: "Author (Z-A)"
     config.add_sort_field 'year desc', sort: "#{solr_name('date_created', :sortable)} desc", label: "Publication Date (Newest First)"
