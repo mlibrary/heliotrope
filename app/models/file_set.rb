@@ -49,12 +49,6 @@ class FileSet < ActiveFedora::Base
     index.as :symbol, :facetable
   end
 
-  # TODO: Remove property after data has been removed from Fedora.
-  property :external_resource, predicate: ::RDF::URI.new('http://fulcrum.org/ns#externalResource'), multiple: false
-
-  # TODO: Remove property after data has been removed from Fedora.
-  property :ext_url_doi_or_handle, predicate: ::RDF::URI.new('http://fulcrum.org/ns#externalUrlDoiOrHandle'), multiple: false
-
   property :external_resource_url, predicate: ::RDF::Vocab::Identifiers.uri, multiple: false do |index|
     index.as :symbol
   end
