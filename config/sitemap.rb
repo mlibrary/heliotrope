@@ -37,14 +37,17 @@ SitemapGenerator::Sitemap.create do
   # add '/static/about_project', changefreq: 'monthly'
   # add '/static/rights', changefreq: 'monthly'
 
-  Monograph.all.each do |m|
+  Monograph.all.to_a.each do |m|
+    next if m.state != "http://fedora.info/definitions/1/0/access/ObjState#active"
+    next if m.visibility == "restricted"
+
     m.ordered_members.to_a.each do |member|
       if member.file_set?
         url = Rails.application.routes.url_helpers.hyrax_file_set_path(member.id)
         add url, lastmod: m.date_modified, priority: 0.5, changefreq: 'monthly'
       end
     end
-    url = Rails.application.routes.url_helpers.hyrax_file_set_path(m.id)
+    url = Rails.application.routes.url_helpers.hyrax_monograph_path(m.id)
     add url, lastmod: m.date_modified, priority: 1, changefreq: 'monthly'
   end
 end
