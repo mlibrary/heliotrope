@@ -9,7 +9,7 @@ list_lessees = false
 
 options = OpenStruct.new
 option_parser = OptionParser.new do |opts|
-  opts.banner = "Usage: request -l -p [-b <base_uri>] <token>"
+  opts.banner = "Usage: #{$0} -l -p [-b <base_uri>] <token>"
   opts.on('-b', '--base [uri]', 'URL to api') do |base_uri|
     options.base_uri = HTTParty.normalize_base_uri(base_uri)
   end
