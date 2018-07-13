@@ -4,7 +4,7 @@ class APIRequestsController < ApplicationController
   before_action :set_api_request, only: %i[show destroy]
 
   def index
-    @api_requests = APIRequest.all.order(created_at: :desc)
+    @api_requests = APIRequest.order(created_at: :desc).page(params[:page])
   end
 
   def show; end
