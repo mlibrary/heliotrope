@@ -1007,3 +1007,62 @@ footer.press {
   */
   z-index: 99999;
 }
+
+///////////////////////////////////
+// RESPONSIVE MEDIA QUERIES
+///////////////////////////////////
+@media(max-width: 992px) {
+  .press {
+    .page_links {
+      display: block;
+      float: right;
+      padding: 10px 12px;
+    }
+
+    .search-widgets {
+      clear: right;
+    }
+  }
+}
+
+@media(max-width: 768px) {
+
+  .press {
+    #facets .top-panel-heading {
+      border: 0px solid transparent;
+      margin-bottom: 0;
+    }
+
+    .facets-container {
+      button.facets-toggle {
+        border-radius: 0px;
+        margin-top: -4em;
+      }
+    }
+
+    .results-container {
+      margin-top: 0;
+      padding-left: 2em;
+      padding-right: 2em;
+    }
+  }
+
+}
+
+@media(max-width: 460px) {
+  .press {
+    .search-widgets {
+      clear: right;
+
+      #sort-dropdown.btn-group {
+        float: right;
+      }
+
+      #per_page-dropdown.btn-group {
+        display: block;
+        float: right;
+        padding-top: 1em;
+      }
+    }
+  }
+}
