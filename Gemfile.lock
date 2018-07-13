@@ -1,14 +1,4 @@
 GIT
-  remote: https://github.com/mlibrary/checkpoint
-  revision: cd60e319a9a2ca72ce7cc9e7d226b24cc67bbb46
-  branch: master
-  specs:
-    checkpoint (1.0.0)
-      ettin (~> 1.1)
-      mysql2 (~> 0.4.10)
-      sequel (~> 5.6)
-
-GIT
   remote: https://github.com/mlibrary/cozy-sun-bear
   revision: 1c2eec64c6ed2b44e0f7d32f5a1a0b4470811be2
   ref: 1c2eec64c6ed2b44e0f7d32f5a1a0b4470811be2
@@ -173,6 +163,9 @@ GEM
       activemodel (>= 4.0.0)
       activesupport (>= 4.0.0)
       mime-types (>= 1.16)
+    checkpoint (1.0.3)
+      ettin (~> 1.1)
+      sequel (~> 5.6)
     childprocess (0.8.0)
       ffi (~> 1.0, >= 1.0.11)
     chromedriver-helper (1.2.0)
@@ -459,8 +452,11 @@ GEM
     kaminari-core (1.1.1)
     kaminari_route_prefix (0.1.1)
       kaminari (~> 1.0)
-    keycard (0.1.1)
-      mysql2
+    kcv (0.2.3)
+      checkpoint (~> 1.0.3)
+      keycard (~> 0.2.3)
+      vizier (~> 0.1.0)
+    keycard (0.2.3)
       sequel
     kramdown (1.15.0)
     ld-patch (0.3.2)
@@ -792,7 +788,7 @@ GEM
     selenium-webdriver (3.7.0)
       childprocess (~> 0.5)
       rubyzip (~> 1.0)
-    sequel (5.6.0)
+    sequel (5.10.0)
     shex (0.5.1)
       ebnf (~> 1.1)
       json-ld (~> 2.1)
@@ -897,6 +893,7 @@ GEM
     unicode-display_width (1.3.0)
     vegas (0.1.11)
       rack (>= 1.0.0)
+    vizier (0.1.0)
     warden (1.2.7)
       rack (>= 1.0)
     web-console (3.5.1)
@@ -922,7 +919,7 @@ DEPENDENCIES
   canister (~> 0.9.0)
   capybara (~> 2.13)
   carrierwave (~> 1.1.0)
-  checkpoint!
+  checkpoint (~> 1.0.3)
   chromedriver-helper
   clamav
   coffee-rails (~> 4.2)
@@ -942,7 +939,8 @@ DEPENDENCIES
   jquery-rails
   jquery-turbolinks
   jwt
-  keycard (~> 0.1.1)
+  kcv (~> 0.2.3)
+  keycard (~> 0.2.3)
   legato (~> 0.3)
   listen (>= 3.0.5, < 3.2)
   mysql2 (~> 0.4.10)
@@ -989,4 +987,4 @@ DEPENDENCIES
   yard
 
 BUNDLED WITH
-   1.16.1
+   1.16.3

@@ -59,13 +59,13 @@ RSpec.describe EPubsController, type: :controller do
         let(:monograph) { create(:monograph) }
         let(:file_set) { create(:file_set, content: File.open(File.join(fixture_path, 'moby-dick.epub'))) }
         let!(:fr) { create(:featured_representative, monograph_id: monograph.id, file_set_id: file_set.id, kind: 'epub') }
-        let(:keycard) { { "dlpsInstitutionId" => institution.identifier } }
+        let(:keycard) { { dlpsInstitutionId: institution.identifier } }
         let(:institution) { double('institution', identifier: '9999') }
         before do
           monograph.ordered_members << file_set
           monograph.save!
           file_set.save!
-          allow_any_instance_of(Keycard::RequestAttributes).to receive(:all).and_return(keycard)
+          allow_any_instance_of(Keycard::Request::Attributes).to receive(:identity).and_return(keycard)
           allow(Institution).to receive(:where).with(identifier: ['9999']).and_return(institution)
 
           get :show, params: { id: file_set.id }
@@ -257,10 +257,10 @@ RSpec.describe EPubsController, type: :controller do
       after { FeaturedRepresentative.destroy_all }
 
       context 'institution subscription' do
-        let(:keycard) { { "dlpsInstitutionId" => dlpsInstitutionId } }
+        let(:keycard) { { dlpsInstitutionId: dlpsInstitutionId } }
         let(:dlpsInstitutionId) { 'institute' }
 
-        before { allow_any_instance_of(Keycard::RequestAttributes).to receive(:all).and_return(keycard) }
+        before { allow_any_instance_of(Keycard::Request::Attributes).to receive(:identity).and_return(keycard) }
 
         context 'institution' do
           it "Open Access" do
