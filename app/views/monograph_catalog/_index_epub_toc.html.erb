@@ -3,9 +3,11 @@
     <div class="col-sm-12">
       <h3><a href="<%= epub_path(id: @monograph_presenter.epub_id, anchor: chapter.cfi + "4/1:0") %>"><%= chapter.title %></a></h3>
       <% if chapter.downloadable? %>
-      <span class="download"><a class="btn btn-default btn-sm" href="<%= epub_download_chapter_path(id: @monograph_presenter.epub_id, cfi: chapter.cfi) %>" data-turbolinks="false">
-        <i id="download" class="oi" data-glyph="data-transfer-download" title="Download chapter" aria-hidden="true"></i>
-      Download</a></span>
+      <div class="btn-group download" role="group" aria-label="Read or Download Chapter">
+        <a class="btn btn-default btn-sm" href="<%= epub_download_chapter_path(id: @monograph_presenter.epub_id, cfi: chapter.cfi) %>" data-turbolinks="false">
+        <i id="download" class="oi" data-glyph="data-transfer-download" title="Download chapter" aria-hidden="true"></i> Download</a>
+        <a class="btn btn-default btn-sm" href="<%= epub_path(id: @monograph_presenter.epub_id, anchor: chapter.cfi + "4/1:0") %>"><span class="glyphicon glyphicon-book" aria-hidden="true"></span> Read</a>
+      </div>
       <% end %>
       <hr>
     </div>

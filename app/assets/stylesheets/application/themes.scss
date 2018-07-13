@@ -95,6 +95,12 @@ $heb-black-80: #342f2e;
     @include button-font-color($heb-white);
   }
 
+  .download {
+    .btn-default {
+      @include button-background-color($heb-grey-3);
+    }
+  }
+
   .btn-default:hover,
   .btn-default:active {
     @include button-hover-background-color($heb-grey-4);
