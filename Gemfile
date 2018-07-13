@@ -149,6 +149,9 @@ gem 'sqlite3'
 # Use Uglifier as compressor for JavaScript assets
 gem 'uglifier', '>= 3.2.0'
 
+## Gemfile for Rails 3+, Sinatra, and Merb
+gem 'will_paginate', '~> 3.1.0'
+
 # Talking to Google Analytics
 gem 'legato', '~> 0.3'
 gem 'oauth'

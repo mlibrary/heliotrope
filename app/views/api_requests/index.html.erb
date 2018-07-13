@@ -3,16 +3,30 @@
   <div class="row">
     <div class="col-md-12"><h1>API Requests</h1></div>
     <div class="col-md-12">
+      <div class="row">
+        <b>
+          <div class="col-md-2">Timestamp</div>
+          <div class="col-md-1">User ID</div>
+          <div class="col-md-4">Request</div>
+          <div class="col-md-1">Response</div>
+          <div class="col-md-3">Exception</div>
+          <div class="col-md-1"></div>
+          <hr/>
+        </b>
+      </div>
       <% @api_requests.each do |api_request| %>
-        <div class="col-md-3"><%= api_request.created_at %></div>
-        <div class="col-md-1"><%= api_request.user_id %></div>
-        <div class="col-md-2"><%= api_request.action %> <%= api_request.path %></div>
-        <div class="col-md-1"><%= api_request.status %></div>
-        <div class="col-md-3"><%= api_request.exception %></div>
-        <div class="col-md-1"><%= link_to 'Show', api_request %></div>
-        <div class="col-md-1"><%= link_to 'Destroy', api_request, method: :delete, data: { confirm: 'Are you sure?' } %></div>
+        <div class="row">
+          <div class="col-md-2"><%= api_request.created_at %></div>
+          <div class="col-md-1"><%= api_request.user_id %></div>
+          <div class="col-md-4"><%= api_request.action %> <%= api_request.path %></div>
+          <div class="col-md-1"><%= api_request.status %></div>
+          <div class="col-md-3"><%= api_request.exception %></div>
+          <div class="col-md-1"><%= link_to 'Show', api_request %></div>
+        </div>
       <% end %>
     </div>
-    <div class="col-md-12"><br/></div>
+      <div class="col-md-12"><br/></div>
+      <div class="col-md-12"><%= will_paginate @api_requests %></div>
+      <div class="col-md-12"><br/></div>
   </div>
 </div>
