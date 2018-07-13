@@ -16,6 +16,7 @@ module Hyrax
              :subject, :section_titles, :based_near, :publisher, :date_published, :language,
              :isbn, :copyright_holder, :holding_contact, :has_model,
              :buy_url, :embargo_release_date, :lease_expiration_date, :rights, :series,
+             :visibility,
              to: :solr_document
 
     def creator

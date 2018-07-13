@@ -2,10 +2,22 @@
 <% provide :page_class, 'press' %>
 <div id="maincontent">
   <h2>Books</h2>
-  <div class="col-sm-3 facets-container">
-    <%= render 'catalog/search_sidebar' %>
+  <% if has_facet_values?  %>
+  <div class="row">
+    <div class="col-sm-3 facets-container">
+      <%= render 'catalog/search_sidebar' %>
+    </div>
+    <div class="col-sm-9 results-container">
+      <%= render 'catalog/search_results' %>
+    </div>
   </div>
-  <div class="col-sm-9 results-container">
-    <%= render 'catalog/search_results' %>
+  <% else %>
+  <div class="row">
+    <div class="col-sm-1"></div>
+    <div class="col-sm-11 results-container">
+      <%= render 'catalog/search_results' %>
+    </div>
   </div>
+  <% end %>
+
 </div>
