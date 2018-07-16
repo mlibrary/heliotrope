@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require 'sqlite3'
-require 'nokogiri'
 
 RSpec.describe EPub::SqlLite do
   subject { described_class.from_directory(root_path) }
