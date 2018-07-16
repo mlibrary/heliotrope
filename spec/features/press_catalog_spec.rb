@@ -19,27 +19,6 @@ feature 'Press Catalog' do
       let!(:colors) { create(:public_monograph, title: ['Red and Blue are Colors'], press: psu.subdomain) }
 
       scenario 'visits the catalog page for a press' do
-        # jmcglone: disabling the main catalog test because we won't launch with this.
-        # TODO: reenable this test once we bring back the main catalog search
-        # The main catalog
-        # visit search_catalog_path
-
-        # I should see all the public monographs
-        # expect(page).to have_selector('#documents .document', count: 3)
-        # expect(page).to have_link red.title.first
-        # expect(page).to have_link blue.title.first
-        # expect(page).to have_link colors.title.first
-
-        # Search the catalog
-        # fill_in 'q', with: 'Red'
-        # click_button 'Search'
-
-        # I should see search results from all presses
-        # expect(page).to have_selector('#documents .document', count: 2)
-        # expect(page).to     have_link red.title.first
-        # expect(page).to_not have_link blue.title.first
-        # expect(page).to     have_link colors.title.first
-
         # The catalog for a certain press
         visit "/#{umich.subdomain}"
 
@@ -53,9 +32,19 @@ feature 'Press Catalog' do
         # The Press Catalog is *always* gallery view
         expect(page).to have_selector('#documents.row.gallery')
 
+        # Since this is not a search, it's a "browse" and the default
+        # sort should be Sort by Date Added (Newest First)
+        expect(page).to have_content "Sort by Date Added (Newest First)"
+
+        # Presses with less than 15 books will not have facets
+        expect(page).to_not have_selector(".facets-container")
+
         # Search within this press catalog
         fill_in 'q', with: 'Red'
         click_button 'Search'
+
+        # Search results have a default sort of Relevance
+        expect(page).to have_content "Sort by Relevance"
 
         # I should see search results for only this press
         expect(page).to have_selector('#documents .document', count: 1)
@@ -133,6 +122,46 @@ feature 'Press Catalog' do
       scenario 'sees multiple "reversed" author names on the press catalog page, retaining birth/death years' do
         visit "/#{heb.subdomain}"
         expect(page).to have_content 'Johns, Jimmy, 1888-1968; Author, Second; Way, Sub'
+      end
+    end
+
+    context 'with a press with 15 or more open monographs' do
+      before do
+        16.times do
+          title = Faker::Book.title
+          name = Faker::Book.author
+          date = Faker::Time.between(DateTime.now - 9999, DateTime.now)
+          doc = ::SolrDocument.new(
+            id: Random.rand(999_999_999),
+            has_model_ssim: 'Monograph',
+            press_sim: "heb",
+            read_access_group_ssim: "public",
+            title_tesim: title,
+            title_si: title,
+            creator_tesim: name,
+            creator_full_name_si: name,
+            date_created_si: date.year,
+            date_uploaded_dtsi: date,
+            subject_sim: Faker::Pokemon.name,
+            publisher_sim: Faker::Book.publisher,
+            suppressed_bsi: false,
+            visibility_ssi: 'open'
+          )
+          ActiveFedora::SolrService.add(doc.to_h)
+        end
+        ActiveFedora::SolrService.commit
+      end
+
+      scenario 'the press catalog page has facets' do
+        visit "/#{heb.subdomain}"
+
+        # Presses with 15 or more books will have facets,
+        # less than 15 don't
+        expect(page).to have_selector(".facets-container")
+
+        # Only the heb press will have a publisher facet
+        expect(page).to have_link "Publisher"
+        expect(page).to have_selector("#facet-publisher_sim")
       end
     end
   end # not logged in
