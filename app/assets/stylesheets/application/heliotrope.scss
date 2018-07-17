@@ -217,6 +217,7 @@ footer.press {
         a > img {
           margin-left: 0;
           margin-right: 0;
+          border: 2px solid #eeeeee;
         }
 
         .caption {
@@ -307,6 +308,12 @@ footer.press {
     margin-bottom: 20px;
   }
 
+  .monograph-cover {
+    img {
+      border: 4px solid #eeeeee;
+    }
+  }
+  
   .monograph-metadata {
     h1 {
       font-size: 30px;
@@ -462,6 +469,7 @@ footer.press {
       .document-thumbnail {
         img {
         margin-top: .9em;
+        border: 2px solid #eeeeee;
         }
 
         .file-set-glyphicon {
@@ -572,6 +580,10 @@ footer.press {
         width: 100%;
         padding: 1em;
         text-align: center;
+
+        img {
+          border: 2px solid #eeeeee;
+        }
 
         .file-set-glyphicon {
           font-size: 8em;
