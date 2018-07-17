@@ -30,6 +30,11 @@ function storeTab() {
     // go to the latest tab, apply aria semantics, if it exists in localStorage
     // if not the first tab, unset aria semantics for first tab
     var lastTab = localStorage.getItem('lastTab');
+    // If there is a value in the search field, heavy-handedly override
+    // stored value so the media tab is visible on load.
+    if ($('#catalog_search').val().length) {
+      lastTab = '#media';
+    }
     var firstTab = $('ul[role="tablist"]').children().first().children('a[role="tab"]').attr('href');
     if (lastTab) {
       $('a[href="' + lastTab + '"]').tab('show');
