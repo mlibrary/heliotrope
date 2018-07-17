@@ -10,9 +10,9 @@ RSpec.describe EPub::Paragraph do
   describe '#null_object' do
     subject { described_class.null_object }
 
-    it 'returns a chapter null object' do
-      is_expected.to be_an_instance_of(EPub::ParagraphNullObject)
-    end
+    it { is_expected.to be_an_instance_of(EPub::ParagraphNullObject) }
+    it { expect { EPub::ParagraphNullObject.new }.to raise_error(NoMethodError) }
+    it { expect(subject.html).to eq '<p></p>' }
   end
 
   describe '#text' do

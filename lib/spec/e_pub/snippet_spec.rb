@@ -1,7 +1,5 @@
 # frozen_string_literal: false
 
-require 'nokogiri'
-
 RSpec.describe EPub::Snippet do
   let(:chapter) do
     <<-EOT

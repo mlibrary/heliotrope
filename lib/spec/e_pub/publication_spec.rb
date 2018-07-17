@@ -34,9 +34,21 @@ RSpec.describe EPub::Publication do
     describe '#null_object' do
       subject { described_class.null_object }
 
-      it 'returns an instance of PublicationNullObject' do
-        is_expected.to be_an_instance_of(EPub::PublicationNullObject)
-      end
+      let(:file_entry) { double('file_entry') }
+      let(:query) { double("query") }
+
+      it { is_expected.to be_an_instance_of(EPub::PublicationNullObject) }
+      it { expect { EPub::PublicationNullObject.new }.to raise_error(NoMethodError) }
+      it { expect(subject.id).to eq 'epub_null' }
+      it { expect(subject.chapters).to be_an_instance_of(Array) }
+      it { expect(subject.chapters).to be_empty }
+      it { expect(subject.presenter).to be_an_instance_of(EPub::PublicationPresenter) }
+      it { expect(subject.presenter.id).to eq 'epub_null' }
+      it { expect(subject.read(file_entry)).to be_a(String) }
+      it { expect(subject.read(file_entry)).to be_empty }
+      it { expect(subject.search(query)).to be_a(Hash) }
+      it { expect(subject.search(query)[:q]).to eq query }
+      it { expect(subject.search(query)[:search_results]).to eq([]) }
     end
 
     # Instance Methods

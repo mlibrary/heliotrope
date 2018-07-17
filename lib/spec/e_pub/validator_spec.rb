@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'nokogiri'
-
 RSpec.describe EPub::Validator do
   describe "with a valid epub" do
     before do

@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'nokogiri'
-
 RSpec.describe EPub::BridgeToWebgl do
   let(:publication) { double('publication') }
   let(:id) { 'epubid' }
