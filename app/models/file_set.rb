@@ -22,9 +22,6 @@ class FileSet < ActiveFedora::Base
     index.as :stored_searchable
   end
 
-  # TODO: Remove property after data has been removed from Fedora.
-  property :book_needs_handles, predicate: ::RDF::URI.new('http://fulcrum.org/ns#bookNeedsHandles'), multiple: false
-
   property :caption, predicate: ::RDF::Vocab::SCHEMA.caption do |index|
     index.as :stored_searchable
   end
@@ -94,9 +91,6 @@ class FileSet < ActiveFedora::Base
   property :translation, predicate: ::RDF::URI.new('http://fulcrum.org/ns#translation') do |index|
     index.as :stored_searchable
   end
-
-  # TODO: Remove property after data has been removed from Fedora.
-  property :use_crossref_xml, predicate: ::RDF::URI.new('http://fulcrum.org/ns#useCrossrefXml'), multiple: false
 
   include GlobalID::Identification
   include HeliotropeUniversalMetadata
