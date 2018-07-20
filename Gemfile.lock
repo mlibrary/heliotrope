@@ -452,11 +452,11 @@ GEM
     kaminari-core (1.1.1)
     kaminari_route_prefix (0.1.1)
       kaminari (~> 1.0)
-    kcv (0.2.3)
+    kcv (0.2.4)
       checkpoint (~> 1.0.3)
-      keycard (~> 0.2.3)
+      keycard (~> 0.2.4)
       vizier (~> 0.1.0)
-    keycard (0.2.3)
+    keycard (0.2.4)
       sequel
     kramdown (1.15.0)
     ld-patch (0.3.2)
@@ -939,8 +939,8 @@ DEPENDENCIES
   jquery-rails
   jquery-turbolinks
   jwt
-  kcv (~> 0.2.3)
-  keycard (~> 0.2.3)
+  kcv (~> 0.2.4)
+  keycard (~> 0.2.4)
   legato (~> 0.3)
   listen (>= 3.0.5, < 3.2)
   mysql2 (~> 0.4.10)

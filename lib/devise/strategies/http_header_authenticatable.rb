@@ -3,7 +3,7 @@
 module Devise
   module Strategies
     class HttpHeaderAuthenticatable < ::Devise::Strategies::Base
-      include Behaviors::HttpHeaderAuthenticatableBehavior
+      include Devise::Behaviors::HttpHeaderAuthenticatableBehavior
 
       # Called if the user doesn't already have a rails session cookie.
       def valid?

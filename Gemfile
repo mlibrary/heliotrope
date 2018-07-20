@@ -111,10 +111,10 @@ gem 'jquery-turbolinks'
 gem 'jwt'
 
 # KCV is a binding between Keycard, Checkpoint, and Vizier
-gem 'kcv', '~> 0.2.3'
+gem 'kcv', '~> 0.2.4'
 
 # Keycard provides authentication support and user/request information
-gem 'keycard', '~> 0.2.3'
+gem 'keycard', '~> 0.2.4'
 # gem 'keycard', git: 'https://github.com/mlibrary/keycard', branch: 'master'
 
 # Use MySQL as the database for Active Record

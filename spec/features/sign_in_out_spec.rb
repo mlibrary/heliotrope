@@ -3,6 +3,12 @@
 require 'rails_helper'
 
 feature 'Log In and Out' do
+  # FIXME: There is a side effect between requests and tests where the
+  # Authentications controller modifies ENV directly.
+  before do
+    ENV['FAKE_HTTP_X_REMOTE_USER'] = nil
+  end
+
   context "from /" do
     let!(:user) { create(:platform_admin, email: "wolverine@umich.edu") }
 
@@ -53,7 +59,7 @@ feature 'Log In and Out' do
       file_set.update_index
     end
 
-    scenario "logging in goes to that asset page" do
+    scenario "logging in returns to that asset page" do
       visit hyrax_file_set_path(file_set)
 
       click_link "Log In"
@@ -63,7 +69,7 @@ feature 'Log In and Out' do
       expect(page).to have_current_path(hyrax_file_set_path(file_set))
     end
 
-    scenario "logging out goes to that asset page" do
+    scenario "logging out returns to that asset page" do
       cosign_login_as user
       visit hyrax_file_set_path(file_set)
 

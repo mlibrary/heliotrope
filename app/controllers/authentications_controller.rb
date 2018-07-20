@@ -11,6 +11,7 @@ class AuthenticationsController < ApplicationController
   end
 
   def destroy
+    ENV['FAKE_HTTP_X_REMOTE_USER'] = nil
     redirect_to stored_location_for(:user) || root_url
   end
 

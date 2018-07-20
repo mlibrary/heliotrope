@@ -21,6 +21,7 @@ if Settings.keycard&.database
 end
 
 Keycard::DB.config.readonly = true if Settings.keycard&.readonly
+Keycard.config.access = Settings.keycard&.access || :direct
 
 Services = Canister.new
 

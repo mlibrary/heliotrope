@@ -22,15 +22,15 @@ class User < ApplicationRecord
   # :confirmable, :lockable, :timeoutable and :omniauthable
   # devise :database_authenticatable
 
-  # Use the http header as auth.  This app will be behind a reverse proxy
-  #   that will take care of the authentication.
-  Devise.add_module(:http_header_authenticatable,
+  # Authenticate users with Keycard. The Keycard.config.access setting
+  # will determine exactly how that happens (direct, reverse proxy, Shibboleth).
+  Devise.add_module(:keycard_authenticatable,
                     strategy: true,
                     controller: :sessions,
-                    model: 'devise/models/http_header_authenticatable')
+                    model: 'devise/models/keycard_authenticatable')
 
   # Add our custom module to devise.
-  devise :rememberable, :http_header_authenticatable
+  devise :rememberable, :keycard_authenticatable
 
   def populate_attributes
     # TODO: Override this for HttpHeaderAuthenticatable

@@ -17,6 +17,7 @@ RSpec.describe FakeAuthHeader do
     before do
       allow(ENV).to receive(:[]).with("FAKE_HTTP_X_REMOTE_USER").and_return(remote_user)
       allow(env).to receive(:[]=).with("HTTP_X_REMOTE_USER", remote_user)
+      allow(env).to receive(:[]=).with("REMOTE_USER", remote_user)
       allow(app).to receive(:call).with(env)
     end
 

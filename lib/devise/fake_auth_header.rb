@@ -28,6 +28,7 @@ class FakeAuthHeader
   # consideration for threads. different threads can have their own object
   # (a duped copy) and carry on their merry way.
   def _call(env)
+    env['REMOTE_USER'] = ENV['FAKE_HTTP_X_REMOTE_USER']
     env['HTTP_X_REMOTE_USER'] = ENV['FAKE_HTTP_X_REMOTE_USER']
     @app.call(env)
   end
