@@ -41,7 +41,7 @@ describe ApplicationController do
     let(:institution) { double('institution', identifier: 'identifier') }
 
     before do
-      allow_any_instance_of(Keycard::RequestAttributes).to receive(:all).and_return(keycard)
+      allow_any_instance_of(Keycard::Request::Attributes).to receive(:identity).and_return(keycard)
       allow(Institution).to receive(:where).with(identifier: ['identifier']).and_return(institution)
       request.env["HTTP_ACCEPT"] = 'application/json'
       routes.draw { get "trigger" => "anonymous#trigger" }
@@ -52,7 +52,7 @@ describe ApplicationController do
     it { expect(controller.current_institutions).to be_empty }
 
     context 'institution' do
-      let(:keycard) { { "dlpsInstitutionId" => institution.identifier } }
+      let(:keycard) { { dlpsInstitutionId: institution.identifier } }
       let(:institution) { double('institution', identifier: 'identifier') }
 
       it { expect(controller.current_institutions?).to be true }

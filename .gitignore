@@ -21,6 +21,7 @@
 /yarn-error.log
 
 .byebug_history
+.rspec_status
 
 # Ignore Redis snapshots
 dump.rdb

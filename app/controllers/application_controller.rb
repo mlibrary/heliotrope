@@ -21,9 +21,6 @@ class ApplicationController < ActionController::Base
   include Hyrax::ThemedLayoutController
   with_themed_layout '1_column'
 
-  # Behavior for devise.  Use remote user field in http header for auth.
-  include Behaviors::HttpHeaderAuthenticatableBehavior
-
   rescue_from ActiveFedora::ObjectNotFoundError, with: :render_unauthorized
   # rescue_from ActiveFedora::ActiveFedoraError, with: :render_unauthorized
   rescue_from ActiveRecord::RecordNotFound, with: :render_unauthorized
@@ -38,10 +35,10 @@ class ApplicationController < ActionController::Base
   end
 
   def current_institutions
-    session[:identity] ||= Keycard::RequestAttributes.new(request).all
+    session[:identity] ||= Services.request_attributes.for(request).identity
     identity = session[:identity]
-    return [] if identity.blank? || identity['dlpsInstitutionId'].blank?
-    [Institution.where(identifier: [identity['dlpsInstitutionId']].flatten.map(&:to_s))].flatten
+    return [] if identity.blank? || identity[:dlpsInstitutionId].blank?
+    [Institution.where(identifier: [identity[:dlpsInstitutionId]].flatten.map(&:to_s))].flatten
   end
 
   private
@@ -64,7 +61,7 @@ class ApplicationController < ActionController::Base
     end
 
     def valid_user_signed_in?
-      user_signed_in? && valid_user?(request.headers)
+      user_signed_in? && current_user.email.present?
     end
 
     def user_sign_out

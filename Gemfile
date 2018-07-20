@@ -77,8 +77,8 @@ gem 'canister', '~> 0.9.0'
 gem 'carrierwave', '~> 1.1.0'
 
 # Checkpoint provides authorization support
-# gem 'checkpoint', '~> 1.0.0'
-gem 'checkpoint', git: 'https://github.com/mlibrary/checkpoint', branch: 'master'
+gem 'checkpoint', '~> 1.0.3'
+# gem 'checkpoint', git: 'https://github.com/mlibrary/checkpoint', branch: 'master'
 
 # clamav only in production
 gem 'clamav', group: :production
@@ -110,8 +110,12 @@ gem 'jquery-turbolinks'
 # Json Web Token
 gem 'jwt'
 
+# KCV is a binding between Keycard, Checkpoint, and Vizier
+gem 'kcv', '~> 0.2.4'
+
 # Keycard provides authentication support and user/request information
-gem 'keycard', '~> 0.1.1'
+gem 'keycard', '~> 0.2.4'
+# gem 'keycard', git: 'https://github.com/mlibrary/keycard', branch: 'master'
 
 # Use MySQL as the database for Active Record
 gem 'mysql2', '~> 0.4.10'

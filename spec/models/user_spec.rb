@@ -9,6 +9,22 @@ RSpec.describe User do
     it { is_expected.to eq 'foo@example.com' }
   end
 
+  describe '#identity' do
+    let(:user) { described_class.new }
+
+    context 'for a new user' do
+      it 'is an empty hash' do
+        expect(user.identity).to eq({})
+      end
+    end
+
+    it 'allows read and write' do
+      attrs = { user_eid: 'user@domain' }
+      user.identity = attrs
+      expect(user.identity).to eq attrs
+    end
+  end
+
   describe "#total_file_views" do
     subject { user.total_file_views }
     let(:user) { create(:user) }

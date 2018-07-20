@@ -13,4 +13,8 @@ class PolicyAgent
   def agent_id
     @agent.id
   end
+
+  def identity
+    { agent_type => agent_id }
+  end
 end
