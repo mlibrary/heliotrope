@@ -25,6 +25,32 @@
   -o-transition: outline .05s ease-out;
   transition: outline .05s ease-out;
 }
+
+/* Should this be migrated into the CSB gem? */
+.cozy-container i[class^='icon-chevron-'] {
+  color: #919191 !important;
+}
+
+/* Ditto above. Duplicated here because otherwise overridden by !important */
+.cozy-container i[class^='icon-chevron-']:hover {
+  color: #002c63 !important;
+  transition: 0.2s ease-in;
+}
+
+/////////////////////////////////////////////////
+// BOOTSTRAP OVERRIDES FOR WCAG AA/AAA COMPLIANCE
+/////////////////////////////////////////////////
+.alert-info {
+  background-color:#d9edf7;
+  border-color:#bce8f1;
+  color:#235067;
+}
+
+// OK for AA, too light for AAA. #2C632C would work.
+.label-success {
+  background-color:#367c36 !important;
+}
+
 ///////////////////////////////////
 // COLORS
 ///////////////////////////////////
@@ -622,6 +648,7 @@ footer.press {
       }
     }
   }
+
 }
 ///////////////////////////////////
 // ASSET PAGES
