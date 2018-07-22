@@ -98,6 +98,8 @@ Rails.application.routes.draw do
   devise_for :users, path: '', controllers: { sessions: 'sessions' }
   get 'login', controller: :sessions, action: :new, as: :new_user_session
   get 'logout', controller: :sessions, action: :destroy, as: :destroy_user_session
+  get 'shib_login', to: 'sessions#shib_login'
+  get 'shib_session(/:resource)', to: 'sessions#shib_session', as: :shib_session
   resource :authentications, only: %i[new create destroy]
 
   unless /^production$/i.match?(Rails.env)

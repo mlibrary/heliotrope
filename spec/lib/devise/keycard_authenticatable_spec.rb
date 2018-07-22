@@ -8,6 +8,9 @@ RSpec.describe Devise::Strategies::KeycardAuthenticatable do
 
   before do
     allow(strategy).to receive(:identity).and_return(identity)
+    # The Rack/Warden stuff apparently has a nil env/session...
+    # We just purge the log_me_in flag, so do the simplest stub we can.
+    allow(strategy).to receive(:session).and_return({})
   end
 
   context "with a user_eid" do

@@ -6,6 +6,21 @@ module Devise
     # to the application, not just authenticating for reading purposes. This
     # uses Keycard to resolve the user EID.
     class KeycardAuthenticatable < ::Devise::Strategies::Base
+      # NOTE: This is a workaround...
+      # Two elements would make for a more pleasant experience and implementation:
+      # 1. Automatically logging in users who have an SP/SSO session
+      # 2. Terminating the SP/SSO session for effective logout and/or user change
+      #
+      # Meanwhile...
+      # The log_me_in flag is used to signal that this strategy can be used.
+      # It is to indicate that the user has affirmatively acted to log in via
+      # Shibboleth. Otherwise, logging out can cycle back to a protected
+      # resource and the Shibboleth session will still be open, causing a new
+      # app session immediately.
+      def valid?
+        Rails.configuration.auto_login || session[:log_me_in]
+      end
+
       # Look up and set the "current user" based on EID. This may be an
       # existing (persisted), new (unsaved, but saveable by the app), or guest
       # (unsaved, but will raise if save is attempted) User object.

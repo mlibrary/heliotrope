@@ -48,6 +48,17 @@ module Heliotrope
     # URL for logging the user in via shibbolleth
     config.shibboleth_identity_provider_url = Settings.shibboleth_identity_provider_url
 
+    # Affirmative login means that we only log someone into the application
+    # when they actively initiate a login, even if they have an SSO session
+    # that we recognize and could log them in automatically.
+    #
+    # Auto login means that, if we ever access a protected resource (such that
+    # the Devise authenticate_user! filter is called), we will automatically
+    # sign the user into the application if they have an SSO session active.
+    #
+    # See the KeycardAuthenticatable strategy for more detail.
+    config.auto_login = false
+
     # Disable automatic account creation on Cosign logins unless
     # enabled in config/settings.
     config.create_user_on_login = Settings.create_user_on_login && true
