@@ -129,7 +129,6 @@ class EPubsController < ApplicationController
         @institutions = component_institutions
         @products = component_products
         CounterService.from(self, @presenter).count(request: 1, turnaway: "No_License")
-        store_location_for(:user, request.url)
         render 'access'
       end
     end

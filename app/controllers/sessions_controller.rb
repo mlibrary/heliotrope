@@ -50,11 +50,11 @@ class SessionsController < ApplicationController
       hyrax.dashboard_path
     end
 
-    def sp_login_url(entity_id = params[:entityID])
+    def sp_login_url(entity_id = params[:entityID], target = params[:resource])
       URI("#{Settings.shibboleth.sp.url}/Login").tap do |url|
         url.query = URI.encode_www_form(
-          entityID: entity_id,
-          target: shib_session_url(stored_location_for(:user))
+          target: shib_session_url(target),
+          entityID: entity_id
         )
       end.to_s
     end

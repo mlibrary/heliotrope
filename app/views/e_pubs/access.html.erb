@@ -61,12 +61,12 @@
             idSelectUIParms.defaultLogoHeight = 16;
             <%
               target = if @monograph_presenter.present?
-                         monograph_catalog_url(@monograph_presenter.id)
+                         monograph_catalog_path(@monograph_presenter.id)
                        else
-                         hyrax_file_set_url(@presenter.id)
+                         hyrax_file_set_path(@presenter.id)
                        end.gsub!(/\?locale=.*/, '')
             %>
-            idSelectUIParms.defaultReturn = '<%= shib_login_url %>';
+            idSelectUIParms.defaultReturn = '<%= shib_login_url(target) %>';
             idSelectUIParms.myEntityID = '<%= Settings.shibboleth.sp.entity_id %>';
             idSelectUIParms.preferredIdP = ['<%= Settings.shibboleth.default_idp.entity_id %>'];
             idSelectUIParms.ignoreURLParams = true; // TODO: Figure out why this is needed, or what needs to be fixed to remove it.
