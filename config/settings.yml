@@ -1,0 +1,7 @@
+shibboleth:
+  fallback_to_idp: true
+  default_idp:
+    entity_id: https://shibboleth.umich.edu/idp/shibboleth
+  sp:
+    url: /Shibboleth.sso
+    entity_id: https://fulcrum.org/sp
