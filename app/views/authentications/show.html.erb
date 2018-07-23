@@ -1,0 +1,21 @@
+<h1>Request Attributes</h1>
+
+<h2>Identity</h2>
+<table>
+  <th>key</th>
+  <th>value</th>
+  <% @identity.each do |key, value| %>
+    <tr>
+      <td><%= key %></td>
+      <td><%= value %></td>
+    </tr>
+  <% end %>
+</table>
+
+<h2>All</h2>
+<%= @request_attributes.all %>
+
+<h2>Public Methods</h2>
+<%= @request_attributes.public_methods %>
+
+<p></p>

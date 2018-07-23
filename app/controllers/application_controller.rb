@@ -35,10 +35,9 @@ class ApplicationController < ActionController::Base
   end
 
   def current_institutions
-    session[:identity] ||= Services.request_attributes.for(request).identity
-    identity = session[:identity]
-    return [] if identity.blank? || identity[:dlpsInstitutionId].blank?
-    [Institution.where(identifier: [identity[:dlpsInstitutionId]].flatten.map(&:to_s))].flatten
+    session[:dlpsInstitutionId] ||= Services.request_attributes.for(request).all[:dlpsInstitutionId] || []
+    return [] if session[:dlpsInstitutionId].blank?
+    [Institution.where(identifier: [session[:dlpsInstitutionId]].flatten.map(&:to_s))].flatten
   end
 
   private

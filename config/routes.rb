@@ -100,7 +100,7 @@ Rails.application.routes.draw do
   get 'logout', controller: :sessions, action: :destroy, as: :destroy_user_session
   get 'shib_login(/*resource)', to: 'sessions#shib_login', as: :shib_login
   get 'shib_session(/*resource)', to: 'sessions#shib_session', as: :shib_session
-  resource :authentications, only: %i[new create destroy]
+  resource :authentications, only: %i[show new create destroy]
 
   unless /^production$/i.match?(Rails.env)
     get 'Shibboleth.sso/DiscoFeed', controller: :shibboleths, action: :discofeed
