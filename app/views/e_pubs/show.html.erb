@@ -90,7 +90,7 @@ webgl = if Dir.exist?(UnpackService.root_path_from_noid(webgl_id, 'webgl'))
 
         // load the game on launch of e-reader
         reader.on('ready', function() {
-          open_panel();
+          // open_panel();
           // the a11y state disables the "3D MODEL" button and hides the WebGL panel. These are things we want for...
           // incompatible device/browser users also, but initially we *do* want them to see the panel with the...
           // incompatibility message as an "easy" way to inform them about the problem (firstLaunchWebGlEpub flag)
@@ -482,6 +482,9 @@ webgl = if Dir.exist?(UnpackService.root_path_from_noid(webgl_id, 'webgl'))
         // Navigator widgets
         cozy.control.navigator({ region: 'bottom.navigator' }).addTo(reader);
 
+        <% if @monograph_presenter.webgl? %>
+          open_panel();
+        <% end %>
         // Initiate EPUB Reader
         reader.start(fetch_poi);
       }
