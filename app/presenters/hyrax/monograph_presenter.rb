@@ -16,7 +16,7 @@ module Hyrax
              :subject, :section_titles, :based_near, :publisher, :date_published, :language,
              :isbn, :copyright_holder, :holding_contact, :has_model,
              :buy_url, :embargo_release_date, :lease_expiration_date, :rights, :series,
-             :visibility,
+             :visibility, :identifier,
              to: :solr_document
 
     def creator
@@ -81,6 +81,23 @@ module Hyrax
 
     def date_created?
       solr_document.date_created.present?
+    end
+
+    def heb?
+      Array(solr_document['press_tesim']).include?('heb')
+    end
+
+    def heb_id
+      solr_document.identifier.find { |e| /^heb[0-9]/ =~ e }
+    end
+
+    def heb_id?
+      heb_id.present?
+    end
+
+    def heb_dlxs_link
+      return unless heb_id?
+      "https://quod.lib.umich.edu/cgi/t/text/text-idx?c=acls;idno=#{heb_id}"
     end
 
     def unreverse_names(comma_separated_names)

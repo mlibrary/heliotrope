@@ -20,7 +20,8 @@
 //= require cozy-sun-bear-main
 //= require_tree ./idpselect
 //= require_tree ./application
-// require application_survey
+//  require application_survey
+//= require application_message
 //= require hyrax
 // rails new <app> defaults ...
 // require rails-ujs
