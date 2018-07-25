@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class EPubsController < ApplicationController
-  before_action :set_presenter, only: %i[show shibboleth download_chapter search]
+  before_action :set_presenter, only: %i[show download_chapter search]
   before_action :set_show, only: %i[show download_chapter]
 
   def show
@@ -94,17 +94,6 @@ class EPubsController < ApplicationController
       @presenter.date_modified.to_s
   end
 
-  def shibboleth
-    @institution = Institution.find(params[:institution_id])
-    entity = @institution&.entity_id
-    # encoded_entity = CGI.escape(entity)
-    target = epub_url(params[:id])
-    # encoded_target = CGI.escape(target)
-    login_params = "entityID=#{entity}&target=#{target}"
-    # login_params_encoded = CGI.escape(login_params)
-    redirect_to "#{Rails.configuration.shibboleth_service_provider_url}/Login?#{login_params}" if @institution&.shibboleth?
-  end
-
   private
 
     def set_presenter
@@ -135,7 +124,7 @@ class EPubsController < ApplicationController
 
     def show?
       if session[:show_set].present?
-        session[:show_set]&.include?(params[:id])
+        session[:show_set].include?(params[:id])
       else
         false
       end
@@ -143,8 +132,9 @@ class EPubsController < ApplicationController
 
     def set_session_show
       session[:show_set] ||= []
-      session[:show_set] << params[:id] unless session[:show_set].include?(params[:id])
-      session[:show_set].shift if session[:show_set].length > 10
+      session[:show_set].shift if session[:show_set].length > 9
+      clear_session_show
+      session[:show_set] << params[:id]
     end
 
     def clear_session_show

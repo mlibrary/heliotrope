@@ -65,7 +65,6 @@ Rails.application.routes.draw do
   end
 
   get 'epubs/:id', controller: :e_pubs, action: :show, as: :epub
-  post 'epubs/:id/shibboleth', controller: :e_pubs, action: :shibboleth, as: :epub_shibboleth
   get 'epubs/:id/*file', controller: :e_pubs, action: :file, as: :epub_file
   get 'epub_search/:id', controller: :e_pubs, action: :search, as: :epub_search
   get 'epubs_download_chapter/:id', controller: :e_pubs, action: :download_chapter, as: :epub_download_chapter
@@ -98,6 +97,7 @@ Rails.application.routes.draw do
   devise_for :users, path: '', controllers: { sessions: 'sessions' }
   get 'login', controller: :sessions, action: :new, as: :new_user_session
   get 'logout', controller: :sessions, action: :destroy, as: :destroy_user_session
+  get 'default_login', to: 'sessions#default_login', as: :default_login
   get 'shib_login(/*resource)', to: 'sessions#shib_login', as: :shib_login
   get 'shib_session(/*resource)', to: 'sessions#shib_session', as: :shib_session
   resource :authentications, only: %i[new create destroy]

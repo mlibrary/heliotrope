@@ -31,10 +31,7 @@ RSpec.describe SessionsController, type: :controller do
   describe '#destroy' do
     subject { get :destroy }
 
-    let(:cookie) { "cosign-" + Hyrax::Engine.config.hostname }
-
     before do
-      cookies[cookie] = true
       cookies[:fulcrum_signed_in_static] = true
       allow_any_instance_of(described_class).to receive(:user_signed_in?).and_return(true)
     end
@@ -43,7 +40,6 @@ RSpec.describe SessionsController, type: :controller do
       expect(ENV).to receive(:[]=).with('FAKE_HTTP_X_REMOTE_USER', '(null)')
       is_expected.to redirect_to root_url
       expect(cookies[:fulcrum_signed_in_static]).to be nil
-      expect(cookies[cookie]).to be nil
     end
   end
 end
