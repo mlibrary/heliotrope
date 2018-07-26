@@ -17,6 +17,8 @@ class User < ApplicationRecord
   has_many :roles, dependent: :destroy
   has_many :presses, through: :roles, source: 'resource', source_type: "Press"
 
+  attr_accessor :identity
+
   # Include default devise modules. Others available are:
   # :registerable, :recoverable, :rememberable, :trackable, :validatable
   # :confirmable, :lockable, :timeoutable and :omniauthable
@@ -24,13 +26,13 @@ class User < ApplicationRecord
 
   # Authenticate users with Keycard. The Keycard.config.access setting
   # will determine exactly how that happens (direct, reverse proxy, Shibboleth).
-  Devise.add_module(:keycard_authenticatable,
+  Devise.add_module(:http_header_authenticatable,
                     strategy: true,
                     controller: :sessions,
-                    model: 'devise/models/keycard_authenticatable')
+                    model: 'devise/models/http_header_authenticatable')
 
   # Add our custom module to devise.
-  devise :rememberable, :keycard_authenticatable
+  devise :rememberable, :http_header_authenticatable
 
   def populate_attributes
     # TODO: Override this for HttpHeaderAuthenticatable
@@ -87,6 +89,10 @@ class User < ApplicationRecord
   # the account.
   def to_s
     user_key
+  end
+
+  def identity
+    @identity ||= {}
   end
 
   def token
