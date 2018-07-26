@@ -53,12 +53,10 @@ RSpec.configure do |config|
 end
 
 def cosign_sign_in(user)
-  allow_any_instance_of(ApplicationController).to receive(:valid_user?).and_return(true)
   sign_in user
 end
 
 def cosign_login_as(user)
-  allow_any_instance_of(ApplicationController).to receive(:valid_user?).and_return(true)
   login_as user
 end
 
