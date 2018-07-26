@@ -5,8 +5,8 @@ module API
     # Components Controller
     class ComponentsController < API::ApplicationController
       before_action :set_component, only: %i[show update destroy]
-      # @example get /api/component?identifier=String
-      # @param [Hash] params { identifier: String }
+      # @example get /api/component?handle=String
+      # @param [Hash] params { handle: String }
       # @return [ActionDispatch::Response] {Component}
       #   (See ./app/views/api/v1/components/show.json.jbuilder for details)
       def find
@@ -51,10 +51,10 @@ module API
 
       # @overload create
       #   post /api/components
-      #   @param [Hash] params { component: { identifier: String } }
+      #   @param [Hash] params { component: { handle: String } }
       # @overload create
       #   post /api/products/:product_id/components
-      #   @param [Hash] params { product_id: Number, component: { identifier: String } }
+      #   @param [Hash] params { product_id: Number, component: { handle: String } }
       # @return [ActionDispatch::Response] {Component}
       #   (See ./app/views/api/v1/components/show.json.jbuilder for details)
       def create
@@ -104,7 +104,7 @@ module API
 
         def create_component
           status = :ok
-          @component = Component.find_by(identifier: component_params[:identifier])
+          @component = Component.find_by(handle: component_params[:handle])
           if @component.blank?
             @component = Component.new(component_params)
             return render json: @component.errors, status: :unprocessable_entity unless @component.save
@@ -116,7 +116,7 @@ module API
         def create_product_component
           status = :ok
           set_product!
-          @component = Component.find_by(identifier: component_params[:identifier])
+          @component = Component.find_by(handle: component_params[:handle])
           if @component.blank?
             @component = Component.new(component_params)
             return render json: @component.errors, status: :unprocessable_entity unless @component.save
@@ -132,7 +132,7 @@ module API
         def update_component
           status = :ok
           if @component.blank?
-            @component = Component.new(identifier: params[:identifier])
+            @component = Component.new(handle: params[:handle])
             return render json: @component.errors, status: :unprocessable_entity unless @component.save
             status = :created
           end

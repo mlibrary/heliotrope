@@ -18,13 +18,19 @@ module API
       # @overload index
       #   @example get /api/products
       # @overload index
+      #   @example get /api/components/:component_id/products
+      #   @param [Hash] params { component_id: Number }
+      # @overload index
       #   @example get /api/lessees/:lessee_id/products
       #   @param [Hash] params { lessee_id: Number }
       # @return [ActionDispatch::Response] array of {Product}
       #   (See ./app/views/api/v1/products/index.json.jbuilder for details)
       def index
         @products = []
-        if params[:lessee_id].present?
+        if params[:component_id].present?
+          set_component!
+          @products = @component.products
+        elsif params[:lessee_id].present?
           set_lessee!
           @products = @lessee.products
         else
@@ -36,13 +42,20 @@ module API
       #   @example get /api/products/:id
       #   @param [Hash] params { id: Number }
       # @overload show
+      #   @example get /api/components/:component_id/products/:id
+      #   @param [Hash] params { component_id: Number, id: Number }
+      # @overload show
       #   @example get /api/lessees/:lessee_id/products/:id
       #   @param [Hash] params { lessee_id: Number, id: Number }
       # @return [ActionDispatch::Response] {Product}
       #   (See ./app/views/api/v1/products/show.json.jbuilder for details)
-      def show
+      def show # rubocop:disable Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity
         return head :not_found if @product.blank?
-        if params[:lessee_id].present? # rubocop:disable Style/GuardClause
+        if params[:component_id].present?
+          component = Component.find_by(id: params[:component_id])
+          return head :not_found if component.blank?
+          return head :not_found unless component.products.include?(@product)
+        elsif params[:lessee_id].present?
           lessee = Lessee.find_by(id: params[:lessee_id])
           return head :not_found if lessee.blank?
           return head :not_found unless lessee.products.include?(@product)
@@ -53,12 +66,17 @@ module API
       #   post /api/products
       #   @param [Hash] params { product: { identifier: String } }
       # @overload create
+      #   post /api/components/:component_id/products
+      #   @param [Hash] params { component_id: Number, product: { identifier: String } }
+      # @overload create
       #   post /api/lessees/:lessee_id/products
       #   @param [Hash] params { lessee_id: Number, product: { identifier: String } }
       # @return [ActionDispatch::Response] {Product}
       #   (See ./app/views/api/v1/products/show.json.jbuilder for details)
       def create
-        if params[:lessee_id].present?
+        if params[:component_id].present?
+          create_component_product
+        elsif params[:lessee_id].present?
           create_lessee_product
         else
           create_product
@@ -69,12 +87,17 @@ module API
       #   @example put /api/products/:id
       #   @param [Hash] params { id: Number }
       # @overload update
+      #   @example put /api/components/:component_id/products/:id
+      #   @param [Hash] params { component_id: Number, id: Number }
+      # @overload update
       #   @example put /api/lessees/:lessee_id/products/:id
       #   @param [Hash] params { lessee_id: Number, id: Number }
       # @return [ActionDispatch::Response] {Product}
       #   (See ./app/views/api/v1/products/show.json.jbuilder for details)
       def update
-        if params[:lessee_id].present?
+        if params[:component_id].present?
+          update_component_product
+        elsif params[:lessee_id].present?
           update_lessee_product
         else
           update_product
@@ -85,11 +108,17 @@ module API
       #   @example delete /api/products/:id
       #   @param [Hash] params { id: Number }
       # @overload destroy
+      #   @example delete /api/components/:component_id/products/:id
+      #   @param [Hash] params { component_id: Number, id: Number }
+      # @overload destroy
       #   @example delete /api/lessees/:lessee_id/products/:id
       #   @param [Hash] params { lessee_id: Number, id: Number }
       # @return [ActionDispatch::Response]
-      def destroy
-        if params[:lessee_id].present?
+      def destroy # rubocop:disable Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity
+        if params[:component_id].present?
+          set_component!
+          @component.products.delete(@product) if @component.products.include?(@product)
+        elsif params[:lessee_id].present?
           set_lessee!
           @lessee.products.delete(@product) if @lessee.products.include?(@product)
         else
@@ -109,6 +138,22 @@ module API
             @product = Product.new(product_params)
             return render json: @product.errors, status: :unprocessable_entity unless @product.save
             status = :created
+          end
+          render :show, status: status, location: @product
+        end
+
+        def create_component_product
+          status = :ok
+          set_component!
+          @product = Product.find_by(identifier: product_params[:identifier])
+          if @product.blank?
+            @product = Product.new(product_params)
+            return render json: @product.errors, status: :unprocessable_entity unless @product.save
+            status = :created
+          end
+          unless @component.products.include?(@product)
+            @component.products << @product
+            @component.save
           end
           render :show, status: status, location: @product
         end
@@ -139,6 +184,16 @@ module API
           render :show, status: status, location: @product
         end
 
+        def update_component_product
+          set_component!
+          set_product!
+          unless @component.products.include?(@product)
+            @component.products << @product
+            @component.save
+          end
+          render :show, status: :ok, location: @product
+        end
+
         def update_lessee_product
           set_lessee!
           set_product!
@@ -147,6 +202,10 @@ module API
             @lessee.save
           end
           render :show, status: :ok, location: @product
+        end
+
+        def set_component!
+          @component = Component.find_by!(id: params[:component_id])
         end
 
         def set_lessee!

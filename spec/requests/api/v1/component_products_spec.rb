@@ -109,7 +109,7 @@ RSpec.describe "Component Products", type: :request do
             expect(response.body).not_to be_empty
             expect(response_hash[:exception]).not_to be_empty
             expect(response_hash[:exception]).to include("ActiveRecord::RecordNotFound: Couldn't find Component")
-            component2 = Component.find_by(identifier: component2_handle)
+            component2 = Component.find_by(handle: component2_handle)
             product2 = Product.find_by(identifier: identifier2)
             expect(component2).to be_nil
             expect(product2).to be_nil
@@ -153,7 +153,7 @@ RSpec.describe "Component Products", type: :request do
             expect(response.body).not_to be_empty
             expect(response_hash[:exception]).not_to be_empty
             expect(response_hash[:exception]).to include("ActiveRecord::RecordNotFound: Couldn't find Component")
-            component2 = Component.find_by(identifier: component2_handle)
+            component2 = Component.find_by(handle: component2_handle)
             product2 = Product.find_by(identifier: identifier2)
             expect(component2).to be_nil
             expect(product2).to be_nil
@@ -202,7 +202,7 @@ RSpec.describe "Component Products", type: :request do
             expect(response.body).not_to be_empty
             expect(response_hash[:exception]).not_to be_empty
             expect(response_hash[:exception]).to include("ActiveRecord::RecordNotFound: Couldn't find Component")
-            component2 = Component.find_by(identifier: component2_handle)
+            component2 = Component.find_by(handle: component2_handle)
             expect(component2).to be_nil
             expect(product2.components.count).to eq(0)
             expect(Component.all.count).to eq(1)
@@ -332,7 +332,7 @@ RSpec.describe "Component Products", type: :request do
               expect(response.body).not_to be_empty
               expect(response_hash[:exception]).not_to be_empty
               expect(response_hash[:exception]).to include("ActiveRecord::RecordNotFound: Couldn't find Component")
-              component2 = Component.find_by(identifier: component2_handle)
+              component2 = Component.find_by(handle: component2_handle)
               product2 = Product.find_by(identifier: identifier2)
               expect(component2).to be_nil
               expect(product2).to be_nil
@@ -347,7 +347,7 @@ RSpec.describe "Component Products", type: :request do
               expect(response.body).not_to be_empty
               expect(response_hash[:exception]).not_to be_empty
               expect(response_hash[:exception]).to include("ActiveRecord::RecordNotFound: Couldn't find Component")
-              component2 = Component.find_by(identifier: component2_handle)
+              component2 = Component.find_by(handle: component2_handle)
               expect(component2).to be_nil
               expect(product.components.count).to eq(0)
               expect(Component.all.count).to eq(1)
@@ -363,7 +363,7 @@ RSpec.describe "Component Products", type: :request do
               expect(response.body).not_to be_empty
               expect(response_hash[:exception]).not_to be_empty
               expect(response_hash[:exception]).to include("ActiveRecord::RecordNotFound: Couldn't find Component")
-              component2 = Component.find_by(identifier: component2_handle)
+              component2 = Component.find_by(handle: component2_handle)
               expect(component2).to be_nil
               expect(product.components.count).to eq(1)
               expect(product.components.first).to eq(component)
