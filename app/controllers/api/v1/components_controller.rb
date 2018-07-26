@@ -10,7 +10,7 @@ module API
       # @return [ActionDispatch::Response] {Component}
       #   (See ./app/views/api/v1/components/show.json.jbuilder for details)
       def find
-        @component = Component.find_by(identifier: params[:identifier])
+        @component = Component.find_by(handle: params[:handle])
         return head :not_found if @component.blank?
         render :show
       end
@@ -164,7 +164,7 @@ module API
 
         # Never trust parameters from the scary internet, only allow the white list through.
         def component_params
-          params.require(:component).permit(:identifier)
+          params.require(:component).permit(:handle)
         end
     end
   end

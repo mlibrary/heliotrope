@@ -18,12 +18,13 @@ Rails.application.routes.draw do
       resources :lessees, only: %i[index show create destroy] do
         resources :products, only: %i[index show create update destroy]
       end
-      get 'component', controller: :component, action: :find, as: :find_component
+      get 'component', controller: :components, action: :find, as: :find_component
       resources :components, only: %i[index show create destroy] do
         resources :products, only: %i[index show create update destroy]
       end
       get 'product', controller: :products, action: :find, as: :find_product
       resources :products, only: %i[index show create destroy] do
+        resources :components, only: %i[index show create update destroy]
         resources :lessees, only: %i[index show create update destroy]
       end
     end
