@@ -65,7 +65,7 @@ RSpec.describe EPubsController, type: :controller do
           monograph.ordered_members << file_set
           monograph.save!
           file_set.save!
-          allow_any_instance_of(Keycard::Request::Attributes).to receive(:identity).and_return(keycard)
+          allow_any_instance_of(Keycard::Request::Attributes).to receive(:all).and_return(keycard)
           allow(Institution).to receive(:where).with(identifier: ['9999']).and_return(institution)
 
           get :show, params: { id: file_set.id }
@@ -260,7 +260,7 @@ RSpec.describe EPubsController, type: :controller do
         let(:keycard) { { dlpsInstitutionId: dlpsInstitutionId } }
         let(:dlpsInstitutionId) { 'institute' }
 
-        before { allow_any_instance_of(Keycard::Request::Attributes).to receive(:identity).and_return(keycard) }
+        before { allow_any_instance_of(Keycard::Request::Attributes).to receive(:all).and_return(keycard) }
 
         context 'institution' do
           it "Open Access" do

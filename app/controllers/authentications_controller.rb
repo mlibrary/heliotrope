@@ -1,6 +1,11 @@
 # frozen_string_literal: true
 
 class AuthenticationsController < ApplicationController
+  def show
+    @request_attributes = Services.request_attributes.for(request)
+    @identity = @request_attributes.identity
+  end
+
   def new
     @authentication = Authentication.new
   end
