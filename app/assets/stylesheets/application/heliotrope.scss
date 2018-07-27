@@ -339,7 +339,7 @@ footer.press {
       border: 4px solid #eeeeee;
     }
   }
-  
+
   .monograph-metadata {
     h1 {
       font-size: 30px;
@@ -349,6 +349,16 @@ footer.press {
       font-size: 24px;
       font-weight: 700;
       display: block;
+    }
+
+    .message {
+      display: inline-block;
+      padding-left: 2em;
+      padding-top: 1em;
+
+      a {
+        text-decoration: underline;
+      }
     }
 
   }

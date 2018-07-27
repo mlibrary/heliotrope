@@ -189,6 +189,52 @@ $heb-black-80: #342f2e;
     }
   }
 
+  .monograph {
+    .message {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      z-index: 5000;
+      background-color: #002C63;
+      width: 100%;
+      padding: 3em;
+      color: #FFF;
+      display: flex;
+      transition-duration: 0.5s;
+
+      .wrapper {
+        width: 85%;
+        margin: 0 auto;
+        display: flex;
+        flex-direction: row;
+      }
+
+      .text {
+        width: 85%;
+      }
+
+      .dismiss {
+        display: flex;
+        width: 12%;
+        justify-content: flex-end;
+      }
+
+      a {
+        color: #00AFEC;
+        text-decoration: underline;
+      }
+
+      button.dismiss {
+        text-decoration: none;
+        color: #FFF;
+        background: transparent;
+        border: 0;
+        font-size: 2em;
+        padding: 0
+      }
+    }
+  }
+
   //filters on press and monograph pages
   .col-sm-3.facets-container,
   #facet-panel-collapse {
@@ -981,11 +1027,6 @@ $gabii-link-hover:    #1e5667;
       @include lato;
       font-size: .8em;
       padding-left: 1em;
-      vertical-align: sub;
-
-      a {
-        text-decoration: underline;
-      }
     }
 
     .nav-tabs {
