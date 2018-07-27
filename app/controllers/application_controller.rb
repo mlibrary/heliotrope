@@ -66,7 +66,6 @@ class ApplicationController < ActionController::Base
     def user_sign_out
       Rails.logger.debug "[AUTHN] user_sign_out: #{current_user.try(:email) || '(no user)'}"
       sign_out(:user)
-      cookies.delete("cosign-" + Hyrax::Engine.config.hostname, path: '/')
       session.destroy
       flash.clear
     end
@@ -88,7 +87,6 @@ class ApplicationController < ActionController::Base
 
     def store_user_location!
       # :user is the scope we are authenticating
-      # store_location_for(:user, request.fullpath)
       store_location_for(:user, request.url)
     end
 
