@@ -840,12 +840,29 @@ footer.press {
 // ACCESS RESTRICTION PAGE
 ///////////////////////////////////
 .restrict-title {
-  padding: 3em 0 3em;
-  margin: 4em !important;
+  padding: 3em 2em 3em;
+  margin: 0 !important;
   background: #e8e8e8;
   border: 1px solid #d6cece;
 }
 
+.restrict-message {
+  padding-bottom: 2em;
+  font-size: 1.2em;
+}
+
+#idpSelectIdPSelector {
+  width: auto !important;
+
+  #idpSelectInput {
+    width: 60% !important;
+  }
+
+  #idpSelectSelectButton {
+    width: 35% !important;
+  }
+
+}
 ///////////////////////////////////
 // EPUB READER - cozy-sun-bear
 ///////////////////////////////////
