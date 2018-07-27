@@ -62,8 +62,9 @@ module Devise
         end
 
         def existing_user
-          User.find_by(user_key: user_eid).tap do |user|
-            debug_log "Found user: '#{user_eid}'" if user
+          user_key = /@/.match?(user_eid) ? user_eid : "#{user_eid}@umich.edu"
+          User.find_by(user_key: user_key).tap do |user|
+            debug_log "Found user: '#{user_key}'" if user
           end
         end
 
