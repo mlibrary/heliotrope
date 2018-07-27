@@ -34,7 +34,6 @@ class Monograph < ActiveFedora::Base
 
   include HeliotropeUniversalMetadata
   include ::Hyrax::WorkBehavior
-  include ::Hyrax::WorkBehavior
   # This must come after the WorkBehavior because it finalizes the metadata
   # schema (by adding accepts_nested_attributes)
   include ::Hyrax::BasicMetadata
