@@ -7,15 +7,14 @@
   <p class="text-center"><em><%= @monograph_presenter.title %></em> is a restricted access online resource. <%= link_to 'Go back to previous page', :back %>.</p>
 </div>
 <div class="row restrict-title">
-  <div class="col-sm-12 col-center-block">
-    <!-- TODO: this free intro is hardcoded and bad -->
+  <div class="col-sm-12 col-center-block restrict-message">
     <%= restricted_message(@monograph_presenter.subdomain)&.html_safe %>
   </div>
   <div class="row">
     <div class="col-sm-4">
       <div class="panel panel-danger">
         <div class="panel-heading">
-          <h3 class="panel-title">Sign in to read</h3>
+          <h3 class="panel-title">Individual access</h3>
         </div>
         <div class="panel-body">
           <% if current_user %>
@@ -26,9 +25,8 @@
                 <button type="submit" class="btn btn-default">Sign Out</button>
               </form>
             </p>
-            <p>Or speak with an customer service representative.</p>
           <% else %>
-            <p>If you have purchased individual access log in.</p>
+            <p>If you have purchased an individual subscription, login in using your University of Michigan Friend account.</p>
             <p class="text-center">
               <form action="<%= main_app.default_login_path %>">
                 <button type="submit" class="btn btn-default">Sign In</button>
@@ -41,7 +39,7 @@
     <div class="col-sm-4">
       <div class="panel panel-danger">
         <div class="panel-heading">
-          <h3 class="panel-title">Read from your institution</h3>
+          <h3 class="panel-title">Institutional access</h3>
         </div>
         <div class="panel-body">
           <% if current_institutions? %>
@@ -52,7 +50,8 @@
               <% end %>
             </ul>
           <% end %>
-          <p>You may attempt to login at the appropriate institution.</p>
+          <!-- TODO: add an institutional access message that can provide a list of subscribers -->
+          <p>If your institution has purchased a subcription, you may attempt to login at the appropriate institution. <a href="https://www.humanitiesebook.org/subscriptions/institutions/subscribing-institutions/">See if your institution is a subscriber</a>.</p>
           <div id="idpSelect" class="panel-body"></div>
           <script>
             idSelectUIParms = new IdPSelectUIParms();
@@ -73,7 +72,7 @@
             // idSelectUIParms.testGUI = true;
             (new IdPSelectUI()).draw(idSelectUIParms);
           </script>
-          <p>For other institutions.<p>
+          <p><em>For other institutions that do not use the above login method:</em><p>
           <ul>
             <% @institutions.each do |institution| %>
               <% unless institution.shibboleth? %>
@@ -88,11 +87,11 @@
     <div class="col-sm-4">
       <div class="panel panel-danger">
         <div class="panel-heading">
-          <h3 class="panel-title">Purchase to read</h3>
+          <h3 class="panel-title">Purchase a subscription</h3>
         </div>
         <div class="panel-body">
           <p>You may purchase individual or institution access.</p>
-          <ul>
+          <ul class="list-unstyled">
             <% @products.each do |product| %>
               <li><%= link_to product.name, product.purchase, target: '_blank' %></li>
             <% end %>
