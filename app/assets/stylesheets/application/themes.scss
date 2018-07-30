@@ -200,13 +200,16 @@ $heb-black-80: #342f2e;
       padding: 3em;
       color: #FFF;
       display: flex;
+      display: -webkit-flex;
       transition-duration: 0.5s;
 
       .wrapper {
         width: 85%;
         margin: 0 auto;
         display: flex;
+        display: -webkit-flex;
         flex-direction: row;
+        -webkit-flex-direction: row;
       }
 
       .text {
@@ -215,8 +218,10 @@ $heb-black-80: #342f2e;
 
       .dismiss {
         display: flex;
+        display: -webkit-flex;
         width: 12%;
         justify-content: flex-end;
+        -webkit-justify-content: flex-end;
       }
 
       a {
@@ -230,7 +235,8 @@ $heb-black-80: #342f2e;
         background: transparent;
         border: 0;
         font-size: 2em;
-        padding: 0
+        padding: 0;
+        width: 100%;
       }
     }
   }
@@ -397,6 +403,23 @@ $heb-black-80: #342f2e;
     }
   }
 
+}
+
+@media(max-width: 768px) {
+  .heb .monograph .message {
+    padding: 1.5em;
+
+    .wrapper {
+      width: auto;
+    }
+    .text {
+      width: 70%;
+    }
+    .dismiss {
+      width: 20%;
+      padding-left: 10%;
+    }
+  }
 }
 ///////////////////////////////////////////////
 //
