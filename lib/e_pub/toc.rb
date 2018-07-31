@@ -35,6 +35,8 @@ module EPub
             upone_href = "../" + chapter_href
             title = nav_toc.xpath("//a[@href='#{upone_href}']").text
           end
+
+          break # use the first found toc only!
         end
       end
       ::EPub.logger.info("Can't find chapter title for #{chapter_href}") if title.blank?

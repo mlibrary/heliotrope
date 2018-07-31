@@ -22,12 +22,7 @@ module FeaturedRepresentatives
     end
 
     def epub_presenter
-      epub = if Dir.exist?(UnpackService.root_path_from_noid(epub_id, 'epub'))
-               EPub::Publication.from_directory(UnpackService.root_path_from_noid(epub_id, 'epub'))
-             else
-               EPub::Publication.null_object
-             end
-      epub.presenter
+      EPub::Publication.from_directory(UnpackService.root_path_from_noid(epub_id, 'epub')).presenter
     end
 
     def webgl?

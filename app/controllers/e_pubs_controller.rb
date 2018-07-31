@@ -26,11 +26,7 @@ class EPubsController < ApplicationController
 
   def file
     return head :no_content unless show?
-    epub = if Dir.exist?(UnpackService.root_path_from_noid(params[:id], 'epub'))
-             EPub::Publication.from_directory(UnpackService.root_path_from_noid(params[:id], 'epub'))
-           else
-             EPub::Publication.null_object
-           end
+    epub = EPub::Publication.from_directory(UnpackService.root_path_from_noid(params[:id], 'epub'))
     begin
       render plain: epub.read(params[:file] + '.' + params[:format]), content_type: Mime::Type.lookup_by_extension(params[:format]), layout: false
     rescue StandardError => e
@@ -51,11 +47,7 @@ class EPubsController < ApplicationController
     return render json: { q: params[:q], search_results: [] } if params[:q].length < 3
 
     results = Rails.cache.fetch(search_cache_key(params[:id], params[:q]), expires_in: 30.days) do
-      epub = if Dir.exist?(UnpackService.root_path_from_noid(params[:id], 'epub'))
-               EPub::Publication.from_directory(UnpackService.root_path_from_noid(params[:id], 'epub'))
-             else
-               EPub::Publication.null_object
-             end
+      epub = EPub::Publication.from_directory(UnpackService.root_path_from_noid(params[:id], 'epub'))
       epub.search(params[:q])
     end
 
@@ -71,11 +63,7 @@ class EPubsController < ApplicationController
 
   def download_chapter
     return render 'hyrax/base/unauthorized', status: :unauthorized unless show?
-    epub = if Dir.exist?(UnpackService.root_path_from_noid(params[:id], 'epub'))
-             EPub::Publication.from_directory(UnpackService.root_path_from_noid(params[:id], 'epub'))
-           else
-             EPub::Publication.null_object
-           end
+    epub = EPub::Publication.from_directory(UnpackService.root_path_from_noid(params[:id], 'epub'))
     chapter = EPub::Chapter.from_cfi(epub, params[:cfi])
     rendered_pdf = Rails.cache.fetch(pdf_cache_key(params[:id], chapter.title), expires_in: 30.days) do
       pdf = chapter.pdf
