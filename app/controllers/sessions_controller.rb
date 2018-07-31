@@ -18,12 +18,14 @@ class SessionsController < ApplicationController
 
   # Initiate a Shibboleth login through the Service Provider using the Default Identity Provider
   def default_login
+    session.delete(:dlpsInstitutionId)
     redirect_to sp_login_url(Settings.shibboleth.default_idp.entity_id, stored_location_for(:user) || hyrax.dashboard_path)
   end
 
   # Initiate a Shibboleth login through the Service Provider
   def shib_login
     session[:log_me_in] = true
+    session.delete(:dlpsInstitutionId)
     redirect_to sp_login_url
   end
 

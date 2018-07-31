@@ -42,7 +42,10 @@ describe ApplicationController do
 
     before do
       allow_any_instance_of(Keycard::Request::Attributes).to receive(:all).and_return(keycard)
-      allow(Institution).to receive(:where).with(identifier: ['identifier']).and_return(institution)
+      allow(Institution).to receive(:where).with(identifier: []).and_return([])
+      allow(Institution).to receive(:where).with(identifier: 'identifier').and_return([institution])
+      allow(Institution).to receive(:where).with(identifier: ['identifier']).and_return([institution])
+      allow(Institution).to receive(:where).with(entity_id: 'https://entity.id').and_return([institution])
       request.env["HTTP_ACCEPT"] = 'application/json'
       routes.draw { get "trigger" => "anonymous#trigger" }
       get :trigger
@@ -51,8 +54,17 @@ describe ApplicationController do
     it { expect(controller.current_institutions?).to be false }
     it { expect(controller.current_institutions).to be_empty }
 
-    context 'institution' do
-      let(:keycard) { { dlpsInstitutionId: institution.identifier } }
+    context 'with an IP belonging to an institutional network' do
+      let(:keycard) { { dlpsInstitutionId: [institution.identifier] } }
+      let(:institution) { double('institution', identifier: 'identifier') }
+
+      it { expect(controller.current_institutions?).to be true }
+      it { expect(controller.current_institutions).not_to be_empty }
+      it { expect(controller.current_institutions.first).to be institution }
+    end
+
+    context 'when authenticated via partner Shibboleth' do
+      let(:keycard) { { identity_provider: 'https://entity.id' } }
       let(:institution) { double('institution', identifier: 'identifier') }
 
       it { expect(controller.current_institutions?).to be true }

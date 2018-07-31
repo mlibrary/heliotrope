@@ -35,12 +35,34 @@ class ApplicationController < ActionController::Base
   end
 
   def current_institutions
-    session[:dlpsInstitutionId] ||= Services.request_attributes.for(request).all[:dlpsInstitutionId] || []
-    return [] if session[:dlpsInstitutionId].blank?
-    [Institution.where(identifier: [session[:dlpsInstitutionId]].flatten.map(&:to_s))].flatten
+    if session[:dlpsInstitutionId]
+      insts = Institution.where(identifier: session[:dlpsInstitutionId]).to_a
+    else
+      insts = (ip_based_institutions + shib_institutions).uniq
+      session[:dlpsInstitutionId] = insts.map(&:identifier).map(&:to_s)
+    end
+    insts
   end
 
   private
+
+    def request_attributes
+      @request_attributes ||= Services.request_attributes.for(request)
+    end
+
+    def ip_based_institutions
+      ids = request_attributes[:dlpsInstitutionId] || []
+      Institution.where(identifier: ids).to_a
+    end
+
+    def shib_institutions
+      entity_id = request_attributes[:identity_provider]
+      if entity_id
+        Institution.where(entity_id: entity_id).to_a
+      else
+        []
+      end
+    end
 
     def checkpoint_controller?
       false # Overridden in CheckpointController to return true
