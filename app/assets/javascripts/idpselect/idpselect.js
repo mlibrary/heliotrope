@@ -910,7 +910,7 @@ function IdPSelectUI() {
             return false;
         };
         idpEntryDiv.appendChild(a);
-        buildHelpText(idpEntryDiv);
+        // buildHelpText(idpEntryDiv);
                                               
         parentDiv.appendChild(idpEntryDiv);
     };
