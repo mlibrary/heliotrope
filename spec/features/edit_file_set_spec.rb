@@ -82,7 +82,7 @@ feature 'Edit a file set' do
       click_button 'Update Attached File'
 
       # Go to Monograph catalog page
-      click_button 'Back to Monograph'
+      click_link 'Back to Monograph'
       expect(page).to have_current_path(hyrax_monograph_path(monograph, locale: 'en'))
       # Order in FileSet's section_title has been taken from Monograph's section_titles
       expect(page).to have_content 'From C 1 and Test section with Italicized Title therein'
