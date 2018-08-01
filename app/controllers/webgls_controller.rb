@@ -10,11 +10,7 @@ class WebglsController < ApplicationController
     # Eventually we could delete this (and specs), or leave it here "forever" as an example?
     @presenter = Hyrax::PresenterFactory.build_for(ids: [params[:id]], presenter_class: Hyrax::FileSetPresenter, presenter_args: nil).first
     if @presenter.present? && @presenter.webgl?
-      webgl = if Dir.exist?(UnpackService.root_path_from_noid(params[:id], 'webgl'))
-                Webgl::Unity.from_directory(UnpackService.root_path_from_noid(params[:id], 'webgl'))
-              else
-                Webgl::Unity.null_object
-              end
+      webgl = Webgl::Unity.from_directory(UnpackService.root_path_from_noid(params[:id], 'webgl'))
       @unity_progress = "#{params[:id]}/#{webgl.unity_progress}"
       @unity_loader = "#{params[:id]}/#{webgl.unity_loader}"
       @unity_json = "#{params[:id]}/#{webgl.unity_json}"
@@ -26,11 +22,7 @@ class WebglsController < ApplicationController
   end
 
   def file
-    webgl = if Dir.exist?(UnpackService.root_path_from_noid(params[:id], 'webgl'))
-              Webgl::Unity.from_directory(UnpackService.root_path_from_noid(params[:id], 'webgl'))
-            else
-              Webgl::Unity.null_object
-            end
+    webgl = Webgl::Unity.from_directory(UnpackService.root_path_from_noid(params[:id], 'webgl'))
 
     # `.unityweb` files are gzipped by default as part of the release build process.
     # They need `Content-Encoding: gzip` to trigger browser unpacking.

@@ -102,3 +102,5 @@ Style/UnlessElse:
   Enabled: false
 Style/UnneededInterpolation:
   Enabled: false
+Style/WhileUntilModifier:
+  Enabled: false

@@ -43,6 +43,10 @@ module EPub
       root_path.gsub(/-epub/, '').split('/').slice(-5, 5).join('')
     end
 
+    def self.null_object
+      ValidatorNullObject.new
+    end
+
     private
 
       def initialize(opts)
