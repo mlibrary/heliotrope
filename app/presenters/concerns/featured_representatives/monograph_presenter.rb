@@ -22,7 +22,7 @@ module FeaturedRepresentatives
     end
 
     def epub_presenter
-      EPub::Publication.from_directory(UnpackService.root_path_from_noid(epub_id, 'epub')).presenter
+      EPubPresenter.new(EPub::Publication.from_directory(UnpackService.root_path_from_noid(epub_id, 'epub')))
     end
 
     def webgl?

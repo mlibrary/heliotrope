@@ -81,7 +81,7 @@ RSpec.describe FeaturedRepresentatives::MonographPresenter do
 
       describe "#epub_presenter" do
         it "returns a presenter" do
-          expect(subject.epub_presenter).to be_an_instance_of(EPub::PublicationPresenter)
+          expect(subject.epub_presenter).to be_an_instance_of(EPubPresenter)
         end
       end
     end

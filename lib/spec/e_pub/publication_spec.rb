@@ -1,20 +1,30 @@
 # frozen_string_literal: true
 
-require 'byebug'
-
 RSpec.describe EPub::Publication do
+  describe '#new' do
+    it { expect { is_expected }.to raise_error(NoMethodError) }
+  end
+
+  describe '#null_object' do
+    subject { described_class.null_object }
+
+    it { is_expected.to be_an_instance_of(EPub::PublicationNullObject) }
+    it { expect(subject.sections).to be_empty }
+  end
+
   describe "without a test epub" do
     let(:directory) { 'directory' }
     let(:noid) { 'validnoid' }
     let(:epub) { double("epub") }
     let(:validator) { double("validator") }
+    let(:content) { double('content') }
 
     before do
       allow(File).to receive(:exist?).with(directory).and_return(true)
       allow(EPub::Validator).to receive(:from_directory).and_return(validator)
       allow(validator).to receive(:id).and_return(noid)
       allow(validator).to receive(:content_file).and_return(true)
-      allow(validator).to receive(:content).and_return(true)
+      allow(validator).to receive(:content).and_return(content)
       allow(validator).to receive(:toc).and_return(true)
       allow(validator).to receive(:root_path).and_return(nil)
       allow(validator).to receive(:multi_rendition).and_return("no")
@@ -25,12 +35,6 @@ RSpec.describe EPub::Publication do
 
     # Class Methods
 
-    describe '#new' do
-      it 'private_class_method' do
-        expect { is_expected }.to raise_error(NoMethodError)
-      end
-    end
-
     describe '#null_object' do
       subject { described_class.null_object }
 
@@ -39,11 +43,9 @@ RSpec.describe EPub::Publication do
 
       it { is_expected.to be_an_instance_of(EPub::PublicationNullObject) }
       it { expect { EPub::PublicationNullObject.new }.to raise_error(NoMethodError) }
-      it { expect(subject.id).to eq 'epub_null' }
+      it { expect(subject.id).to eq 'null_epub' }
       it { expect(subject.chapters).to be_an_instance_of(Array) }
       it { expect(subject.chapters).to be_empty }
-      it { expect(subject.presenter).to be_an_instance_of(EPub::PublicationPresenter) }
-      it { expect(subject.presenter.id).to eq 'epub_null' }
       it { expect(subject.read(file_entry)).to be_a(String) }
       it { expect(subject.read(file_entry)).to be_empty }
       it { expect(subject.search(query)).to be_a(Hash) }
@@ -57,15 +59,6 @@ RSpec.describe EPub::Publication do
       subject { described_class.from_directory(directory).id }
       it 'returns noid' do
         is_expected.to eq noid
-      end
-    end
-
-    describe '#presenter' do
-      subject { described_class.from_directory(directory).presenter }
-
-      it 'returns an publication presenter' do
-        is_expected.to be_an_instance_of(EPub::PublicationPresenter)
-        expect(subject.id).to eq noid
       end
     end
 
