@@ -66,7 +66,7 @@ feature 'Log In and Out' do
       fill_in 'Email', with: 'wolverine@umich.edu'
       click_button 'Save'
 
-      expect(page).to have_current_path(hyrax_file_set_path(file_set, locale: 'en'))
+      expect(page).to have_current_path(hyrax_file_set_path(file_set))
     end
 
     scenario "logging out returns to that asset page" do

@@ -52,9 +52,10 @@ class SessionsController < ApplicationController
   private
 
     def shib_target
-      url_for Rails.application.routes.recognize_path(params[:resource])
-    rescue
-      hyrax.dashboard_path
+      target = params[:resource] || root_path
+      target = CGI.unescape(target)
+      target = target.gsub(/(^\/*)(.*)/, '/\2')
+      target
     end
 
     def sp_login_url(entity_id = params[:entityID], target = params[:resource])
