@@ -12,7 +12,6 @@ module EPub
       return null_object unless File.exist? root_path
       valid_epub = Validator.from_directory(root_path)
       return null_object if valid_epub.is_a?(ValidatorNullObject)
-
       new(valid_epub)
     rescue StandardError => e
       ::EPub.logger.info("Publication.from_directory(#{root_path}) raised #{e} #{e.backtrace}")
@@ -24,6 +23,15 @@ module EPub
     end
 
     # Instance Methods
+
+    def sections
+      return @sections unless @sections.nil?
+      @sections = []
+      chapters.each do |chapter|
+        @sections << Section.from_chapter(self, chapter) if chapter.title.present?
+      end
+      @sections
+    end
 
     def chapters
       chapters = chapters_from_database || []
@@ -69,10 +77,6 @@ module EPub
       chapters
     end
 
-    def presenter
-      PublicationPresenter.send(:new, self)
-    end
-
     def read(file_entry = "META-INF/container.xml")
       entry_file = File.join(root_path, file_entry)
       return Publication.null_object.read(file_entry) unless File.exist?(entry_file)
@@ -114,7 +118,6 @@ module EPub
 
   class PublicationNullObject < Publication
     private_class_method :new
-    attr_reader :id, :content_file, :content, :toc
 
     # Instance Methods
 
@@ -137,10 +140,7 @@ module EPub
     private
 
       def initialize
-        @id = 'epub_null'
-        @content_file = "empty"
-        @content = Nokogiri::XML(nil)
-        @toc = Nokogiri::XML(nil)
+        super(Validator.null_object)
       end
   end
 end
