@@ -11,7 +11,9 @@ class UnpackJob < ApplicationJob
 
     root_path = UnpackService.root_path_from_noid(id, kind)
 
-    FileUtils.remove_entry_secure(root_path) if Dir.exist? root_path
+    # A rake task run via nightly cron will delete these so we can avoid
+    # problems with puma holding open file handles making deletion fail, HELIO-2015
+    FileUtils.move(root_path, UnpackService.remove_path_from_noid(id, kind)) if Dir.exist? root_path
 
     file = Tempfile.new(id)
     file.write(file_set.original_file.content.force_encoding("utf-8"))
