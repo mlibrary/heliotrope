@@ -7,6 +7,7 @@
   <p class="text-center"><em><%= @monograph_presenter.title %></em> is a restricted access online resource. <%= link_to 'Go back to previous page', :back %>.</p>
 </div>
 <div class="row restrict-title">
+  <h1 class="sr-only">Access Restricted, Please Login to Continue Reading</h1>
   <div class="col-sm-12 col-center-block restrict-message">
     <%= restricted_message(@monograph_presenter.subdomain)&.html_safe %>
   </div>
@@ -14,7 +15,7 @@
     <div class="col-sm-4">
       <div class="panel panel-danger">
         <div class="panel-heading">
-          <h3 class="panel-title">Individual access</h3>
+          <h2 class="panel-title">Individual access</h2>
         </div>
         <div class="panel-body">
           <% if current_user %>
@@ -35,7 +36,7 @@
     <div class="col-sm-4">
       <div class="panel panel-danger">
         <div class="panel-heading">
-          <h3 class="panel-title">Institutional access</h3>
+          <h2 class="panel-title">Institutional access</h2>
         </div>
         <div class="panel-body">
           <% if current_institutions? %>
@@ -83,7 +84,7 @@
     <div class="col-sm-4">
       <div class="panel panel-danger">
         <div class="panel-heading">
-          <h3 class="panel-title">Purchase a subscription</h3>
+          <h2 class="panel-title">Purchase a subscription</h2>
         </div>
         <div class="panel-body">
           <p>You may purchase individual or institution access.</p>
