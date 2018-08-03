@@ -8,7 +8,7 @@ class SessionsController < ApplicationController
       Rails.logger.debug "[AUTHN] sessions#new, user signed in"
       # sign in successful - redirect back to where user came from (see Devise::Controllers::StoreLocation#stored_location_for)
       sign_in_static_cookie
-      redirect_to stored_location_for(:user) || hyrax.dashboard_path
+      redirect_to return_location
     elsif Rails.env.production?
       production_fallback!
     else
@@ -18,8 +18,11 @@ class SessionsController < ApplicationController
 
   # Initiate a Shibboleth login through the Service Provider using the Default Identity Provider
   def default_login
+    session[:log_me_in] = true
     session.delete(:dlpsInstitutionId)
-    redirect_to sp_login_url(Settings.shibboleth.default_idp.entity_id, stored_location_for(:user) || hyrax.dashboard_path)
+    params[:entityID] = Settings.shibboleth.default_idp.entity_id
+    params[:resource] = return_location
+    redirect_to sp_login_url
   end
 
   # Initiate a Shibboleth login through the Service Provider
@@ -41,21 +44,27 @@ class SessionsController < ApplicationController
 
   def destroy
     Rails.logger.debug "[AUTHN] sessions#destroy, user sign out"
-    redirect_to_url = stored_location_for(:user)
+    saved_return_location = return_location
     user_sign_out
     session.delete(:log_me_in)
     ENV['FAKE_HTTP_X_REMOTE_USER'] = '(null)'
     sign_out_static_cookie
-    redirect_to redirect_to_url || root_url
+    redirect_to saved_return_location
   end
 
   private
 
+    def return_location
+      rl = stored_location_for(:user)
+      rl ||= root_path
+      rl
+    end
+
     def shib_target
-      target = params[:resource] || root_path
+      target = params[:resource] || return_location
       target = CGI.unescape(target)
-      target = target.gsub(/(^\/*)(.*)/, '/\2')
-      target
+      return target if target.start_with?('/')
+      target.prepend('/')
     end
 
     def sp_login_url(entity_id = params[:entityID], target = params[:resource])
@@ -74,7 +83,7 @@ class SessionsController < ApplicationController
     #
     # To deal with this scenario, we set the log_me_in flag and try to
     # authenticate again with Devise. If it succeeds, we proceed with the
-    # normal redirect to the resource or dashboard. If it fails, we redirect to
+    # normal redirect to the resource or root. If it fails, we redirect to
     # the app's default IdP.
     #
     # Note that this calls user_signed_in? to do a passive authentication check.
@@ -83,7 +92,7 @@ class SessionsController < ApplicationController
     def production_fallback!
       session[:log_me_in] = true
       if user_signed_in?
-        redirect_to stored_location_for(:user) || hyrax.dashboard_path
+        redirect_to return_location
       elsif Settings.shibboleth.fallback_to_idp
         redirect_to shib_login_url(Settings.shibboleth.default_idp.entity_id)
       else

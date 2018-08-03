@@ -10,7 +10,7 @@ RSpec.describe SessionsController, type: :controller do
       before { allow_any_instance_of(described_class).to receive(:user_signed_in?).and_return(true) }
 
       it do
-        is_expected.to redirect_to 'http://test.host/dashboard?locale=en'
+        is_expected.to redirect_to root_path(locale: 'en')
         expect(cookies[:fulcrum_signed_in_static]).not_to be nil
       end
 

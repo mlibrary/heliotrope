@@ -12,13 +12,13 @@ feature 'Log In and Out' do
   context "from /" do
     let!(:user) { create(:platform_admin, email: "wolverine@umich.edu") }
 
-    scenario "login in goes to /dashboard" do
+    scenario "login in goes to /" do
       visit new_user_session_path
 
       fill_in 'Email', with: 'wolverine@umich.edu'
       click_button 'Save'
 
-      expect(page).to have_current_path(hyrax.dashboard_path(locale: 'en'))
+      expect(page).to have_current_path(root_path(locale: 'en'))
     end
   end
 
