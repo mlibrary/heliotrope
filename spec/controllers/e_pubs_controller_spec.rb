@@ -140,6 +140,7 @@ RSpec.describe EPubsController, type: :controller do
             expect(response).to have_http_status(:success)
             expect(response.body.empty?).to be false
             expect(response.header['Content-Type']).to include('application/xml')
+            expect(response.header['X-Sendfile']).to include('META-INF/container.xml')
           end
 
           context 'access denied' do
