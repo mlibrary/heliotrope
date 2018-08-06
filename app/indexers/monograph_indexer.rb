@@ -9,9 +9,7 @@ class MonographIndexer < Hyrax::WorkIndexer
       press_name = press.name unless press.nil?
       solr_doc[Solrizer.solr_name('press_name', :symbol)] = press_name
 
-      # Removing punctuation so that a title starting with quotes doesn't always come first
-      solr_doc[Solrizer.solr_name('title', :sortable)] = object&.title&.first&.downcase&.gsub(/[^\w\s\d-]/, '')
-
+      solr_doc[Solrizer.solr_name('title', :sortable)] = normalize_for_sort(object&.title&.first)
       roleless_creators = multiline_names_minus_role('creator')
       roleless_contributors = multiline_names_minus_role('contributor')
 
@@ -23,7 +21,8 @@ class MonographIndexer < Hyrax::WorkIndexer
       solr_doc[Solrizer.solr_name('creator', :stored_searchable)] = roleless_creators
       solr_doc[Solrizer.solr_name('creator_full_name', :stored_searchable)] = roleless_creators&.first
       solr_doc[Solrizer.solr_name('creator_full_name', :facetable)] = roleless_creators&.first
-      solr_doc[Solrizer.solr_name('creator_full_name', :sortable)] = roleless_creators&.first
+      solr_doc[Solrizer.solr_name('creator_full_name', :sortable)] = normalize_for_sort(roleless_creators&.first)
+
       solr_doc[Solrizer.solr_name('contributor', :stored_searchable)] = roleless_contributors
       # probably we'll need more substantial cleanup here, for now discard anything that isn't a number as...
       # HEB often has stuff like 'c1999' in the Publication Year (`date_created`)
@@ -55,5 +54,15 @@ class MonographIndexer < Hyrax::WorkIndexer
   def multiline_names_minus_role(field)
     value = object.public_send(field).first
     value.present? ? value.split(/\r?\n/).reject(&:blank?).map { |val| val.sub(/\s*\(.+\)$/, '').strip } : value
+  end
+
+  def normalize_for_sort(value)
+    # transliterate() can't handle nil
+    value ||= ''
+    # Removing punctuation so that, e.g., a value starting with quotes doesn't always come first
+    # transliterate will take care of mapping accented chars to an ASCII equivalent
+    value = ActiveSupport::Inflector.transliterate(value).downcase.gsub(/[^\w\s\d-]/, '')
+    # return nil to ensure removal of Solr doc value if appropriate
+    value.present? ? value : nil
   end
 end
