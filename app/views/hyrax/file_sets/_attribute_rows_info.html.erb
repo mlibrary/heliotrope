@@ -1,5 +1,5 @@
 <p><%= presenter.attribute_to_html(:description, render_as: :markdown, label: '') %></p>
-<%= presenter.attribute_to_html(:creator_full_name, label: t('creator'), render_as: :monograph_facet, monograph_id: presenter.monograph.id) %>
+<%= presenter.attribute_to_html(:creator, label: t('creator'), render_as: :monograph_facet, monograph_id: presenter.monograph.id) %>
 <%= presenter.attribute_to_html(:primary_creator_role, label: t('creator_role'), render_as: :monograph_facet, monograph_id: presenter.monograph.id) %>
 <%= presenter.attribute_to_html(:contributor, label: t('contributor'), render_as: :monograph_facet, monograph_id: presenter.monograph.id) %>
 <%= presenter.attribute_to_html(:subjects) %>

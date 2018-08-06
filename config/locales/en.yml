@@ -52,6 +52,8 @@ en:
       fields:
         facet:
           resource_type_sim: Format
+        show:
+          contributor: Contributor(s)
   buy_url: "Buy Book URL(s)"
   caption: "Caption"
   citable_link: "Citable Link"
@@ -59,7 +61,7 @@ en:
   contributor: "Contributors"
   copyright_holder: "Copyright Holder"
   copyright_status: "Copyright Status"
-  creator: "Creator"
+  creator: "Creator(s)"
   creator_display: "Authorship Display (free-form text)"
   creator_full_name: "Author"
   creator_role: "Creator Role"
