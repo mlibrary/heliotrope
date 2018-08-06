@@ -27,8 +27,13 @@ class EPubsController < ApplicationController
   def file
     return head :no_content unless show?
     epub = EPub::Publication.from_directory(UnpackService.root_path_from_noid(params[:id], 'epub'))
+
+    file = epub.file(params[:file] + '.' + params[:format])
+    file = file.to_s.sub(/releases\/\d+/, "current")
+    response.headers['X-Sendfile'] = file
+
     begin
-      render plain: epub.read(params[:file] + '.' + params[:format]), content_type: Mime::Type.lookup_by_extension(params[:format]), layout: false
+      send_file file
     rescue StandardError => e
       Rails.logger.info("EPubsController.file(#{params[:file] + '.' + params[:format]}) mapping to 'Content-Type': #{Mime::Type.lookup_by_extension(params[:format])} raised #{e}")
       head :no_content

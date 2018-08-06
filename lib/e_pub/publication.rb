@@ -82,6 +82,15 @@ module EPub
       Publication.null_object.read(file_entry)
     end
 
+    def file(file_entry = "META-INF/container.xml")
+      entry_file = File.join(root_path, file_entry)
+      return Publication.null_object.read(file_entry) unless File.exist?(entry_file)
+      entry_file
+    rescue StandardError => e
+      ::EPub.logger.info("Publication.file(#{file_entry}) in publication #{id} raised #{e}") # at: #{e.backtrace.join("\n")}")
+      Publication.null_object.file(file_entry)
+    end
+
     def search(query)
       Search.new(self).search(query)
     rescue StandardError => e
@@ -114,6 +123,10 @@ module EPub
     end
 
     def read(_file_entry)
+      ''
+    end
+
+    def file(_file_entry)
       ''
     end
 

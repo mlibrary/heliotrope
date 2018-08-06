@@ -46,6 +46,8 @@ RSpec.describe EPub::Publication do
       it { expect(subject.presenter.id).to eq 'epub_null' }
       it { expect(subject.read(file_entry)).to be_a(String) }
       it { expect(subject.read(file_entry)).to be_empty }
+      it { expect(subject.file(file_entry)).to be_a(String) }
+      it { expect(subject.file(file_entry)).to be_empty }
       it { expect(subject.search(query)).to be_a(Hash) }
       it { expect(subject.search(query)[:q]).to eq query }
       it { expect(subject.search(query)[:search_results]).to eq([]) }
@@ -118,6 +120,14 @@ RSpec.describe EPub::Publication do
 
       after do
         FileUtils.rm_rf(Dir[File.join('./tmp', 'rspec_derivatives')])
+      end
+
+      describe "#file" do
+        subject { described_class.from_directory(@root_path).file(epub_file) }
+        let(:epub_file) { "META-INF/container.xml" }
+        it "returns the file path" do
+          expect(subject).to eq "./tmp/rspec_derivatives/99/99/99/99/3-epub/META-INF/container.xml"
+        end
       end
 
       describe "#chapters" do
