@@ -2,7 +2,7 @@
 
 class EPubsController < ApplicationController
   before_action :set_presenter, only: %i[show download_chapter download_section search]
-  before_action :set_show, only: %i[show download_chapter]
+  before_action :set_show, only: %i[show download_chapter download_section]
 
   def show
     return render 'hyrax/base/unauthorized', status: :unauthorized unless show?

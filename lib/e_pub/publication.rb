@@ -12,10 +12,15 @@ module EPub
       return null_object unless File.exist? root_path
       valid_epub = Validator.from_directory(root_path)
       return null_object if valid_epub.is_a?(ValidatorNullObject)
-      new(valid_epub)
+      new(valid_epub, Unmarshaller::Container.from_root_path(root_path))
     rescue StandardError => e
       ::EPub.logger.info("Publication.from_directory(#{root_path}) raised #{e} #{e.backtrace}")
       null_object
+    end
+
+    def self.from_unmarshaller_container(unmarshaller_container)
+      return null_object unless unmarshaller_container&.instance_of?(Unmarshaller::Container)
+      new(Validator.null_object, unmarshaller_container)
     end
 
     def self.null_object
@@ -24,14 +29,43 @@ module EPub
 
     # Instance Methods
 
+    #
+    # Unmarshaller
+    #
+
     def sections
-      return @sections unless @sections.nil?
-      @sections = []
-      chapters.each do |chapter|
-        @sections << Section.from_chapter(self, chapter) if chapter.title.present?
-      end
-      @sections
+      @sections ||= rendition.sections
     end
+
+    def rendition
+      return @rendition unless @rendition.nil?
+      renditions.each do |rendition|
+        @rendition ||= rendition
+        @rendition = rendition if /text/i.match?(rendition.label)
+      end
+      @rendition
+    end
+
+    def single_rendition?
+      renditions.length == 1
+    end
+
+    def multi_rendition?
+      renditions.length > 1
+    end
+
+    def renditions
+      return @renditions unless @renditions.nil?
+      @renditions = @unmarshaller_container.rootfile_elements.map do |rootfile_element|
+        Rendition.from_rootfile_element(self, rootfile_element)
+      end
+      @renditions << Rendition.null_object if @renditions.empty?
+      @renditions
+    end
+
+    #
+    # Legacy
+    #
 
     def chapters
       chapters = chapters_from_database || []
@@ -104,7 +138,7 @@ module EPub
 
     private
 
-      def initialize(valid_epub)
+      def initialize(valid_epub, unmarshaller_container = Unmarshaller::Container.null_object)
         @id = valid_epub.id
         @content_file = valid_epub.content_file
         @content = valid_epub.content
@@ -113,6 +147,7 @@ module EPub
         @multi_rendition = valid_epub.multi_rendition
         @page_scan_content_file = valid_epub.page_scan_content_file
         @ocr_content_file = valid_epub.ocr_content_file
+        @unmarshaller_container = unmarshaller_container
       end
   end
 
@@ -140,7 +175,7 @@ module EPub
     private
 
       def initialize
-        super(Validator.null_object)
+        super(Validator.null_object, Unmarshaller::Container.null_object)
       end
   end
 end

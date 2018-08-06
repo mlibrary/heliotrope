@@ -9,7 +9,62 @@ RSpec.describe EPub::Publication do
     subject { described_class.null_object }
 
     it { is_expected.to be_an_instance_of(EPub::PublicationNullObject) }
-    it { expect(subject.sections).to be_empty }
+    it { expect(subject.single_rendition?).to be true }
+    it { expect(subject.multi_rendition?).to be false }
+    it { expect(subject.renditions).to contain_exactly instance_of(EPub::RenditionNullObject) }
+    it { expect(subject.rendition).to be_an_instance_of(EPub::RenditionNullObject) }
+  end
+
+  describe '#from_unmarshaller_container' do
+    subject { described_class.from_unmarshaller_container(unmarshaller_container) }
+
+    context 'nil and null object' do
+      it { expect(described_class.from_unmarshaller_container(nil)).to be_an_instance_of(EPub::PublicationNullObject) }
+      it { expect(described_class.from_unmarshaller_container(EPub::Unmarshaller::Container.null_object)).to be_an_instance_of(EPub::PublicationNullObject) }
+    end
+
+    context 'rendition' do
+      let(:unmarshaller_container) { double('unmarshaller container', rootfile_elements: rootfile_elements, rootfile_element: rootfile_elements.first) }
+      let(:rootfile_elements) { [rootfile_element] }
+      let(:image_rootfile_element) { double('image rootfile element') }
+      let(:text_rootfile_element) { double('text rootfile element') }
+      let(:image_rendition) { double('rendition', label: 'Image', content: content) }
+      let(:text_rendition) { double('other rendition', label: 'Text', content: content) }
+      let(:content) { double('content', nav: nav) }
+      let(:nav) { double('nav', tocs: [toc]) }
+      let(:toc) { double('toc', id: 'toc', headers: [header]) }
+      let(:header) { double('header', text: 'Title', depth: 1, href: '') }
+
+      before do
+        allow(unmarshaller_container).to receive(:instance_of?).with(EPub::Unmarshaller::Container).and_return(true)
+        allow(unmarshaller_container).to receive(:rootfile_elements).and_return(rootfile_elements)
+        allow(EPub::Rendition).to receive(:from_rootfile_element).with(subject, image_rootfile_element).and_return(image_rendition)
+        allow(EPub::Rendition).to receive(:from_rootfile_element).with(subject, text_rootfile_element).and_return(text_rendition)
+        allow(content).to receive(:idref_with_index_from_href).with(header.href).and_return(['1', 1])
+      end
+
+      context 'single rendition' do
+        let(:rootfile_elements) { [image_rootfile_element] }
+
+        it { is_expected.to be_an_instance_of(described_class) }
+        it { expect(subject.single_rendition?).to be true }
+        it { expect(subject.multi_rendition?).to be false }
+        it { expect(subject.renditions.length).to eq 1 }
+        it { expect(subject.rendition.label).to eq 'Image' }
+        # it { expect(subject.rendition.sections.length).to eq 1 }
+      end
+
+      context 'multi rendition' do
+        let(:rootfile_elements) { [image_rootfile_element, text_rootfile_element] }
+
+        it { is_expected.to be_an_instance_of(described_class) }
+        it { expect(subject.single_rendition?).to be false }
+        it { expect(subject.multi_rendition?).to be true }
+        it { expect(subject.renditions.length).to eq 2 }
+        it { expect(subject.rendition.label).to eq 'Text' }
+        # it { expect(subject.rendition.sections.length).to eq 1 }
+      end
+    end
   end
 
   describe "without a test epub" do

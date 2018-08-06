@@ -8,12 +8,15 @@ module EPub
 
     def self.from_cfi(publication, cfi)
       return null_object unless publication&.instance_of?(Publication) && cfi&.instance_of?(String)
-      new(publication, Chapter.from_cfi(publication, cfi))
+      publication.sections.each do |section|
+        return section if section.cfi == cfi
+      end
+      null_object
     end
 
-    def self.from_chapter(publication, chapter)
-      return null_object unless publication&.instance_of?(Publication) && chapter&.instance_of?(Chapter)
-      new(publication, chapter)
+    def self.from_hash(publication, args)
+      return null_object unless args.instance_of?(Hash)
+      new(publication, args)
     end
 
     def self.null_object
@@ -23,30 +26,39 @@ module EPub
     # Instance Methods
 
     def title
-      @chapter.title
+      @args[:title] || ''
     end
 
     def level
-      1
+      @args[:depth] || 0
     end
 
     def cfi
-      @chapter&.basecfi || ''
+      @args[:cfi] || ''
     end
 
     def downloadable?
-      /^\s*yes|y\s*$/i.match?(@publication.multi_rendition)
+      @args[:downloadable] || false
     end
 
     def pdf
-      @chapter.pdf
+      return Chapter.null_object.pdf unless downloadable?
+      chapter = Chapter.from_cfi(@publication, @args[:cfi])
+      files = chapter.files_in_chapter
+      images = chapter.images_in_files(files)
+      # In Prawn, "LETTER" is 8.5x11 which is 612x792
+      pdf = Prawn::Document.new(page_size: "LETTER", page_layout: :portrait, margin: 50)
+      images.each do |img|
+        pdf.image img, fit: [512, 692] # minus 100 for the margin
+      end
+      pdf
     end
 
     private
 
-      def initialize(publication, chapter)
+      def initialize(publication, args)
         @publication = publication
-        @chapter = chapter
+        @args = args
       end
   end
 
@@ -56,7 +68,7 @@ module EPub
     private
 
       def initialize
-        super(Publication.null_object, Chapter.null_object)
+        super(Publication.null_object, {})
       end
   end
 end
