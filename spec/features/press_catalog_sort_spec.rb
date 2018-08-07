@@ -3,10 +3,131 @@
 require 'rails_helper'
 
 feature 'Press catalog sort' do
-  context 'Monograph results set' do
-    # note: I'm doing this as a pure-Solr test for fun, but also because:
-    # - it's faster (in theory?)
-    # - it highlights some of the manipulation being done in indexer and presenter
+  context 'Monograph results set end-to-end' do
+    before do
+      create(:press, subdomain: 'sort_press1')
+      create(:public_monograph,
+             press: 'sort_press1',
+             title: ['silverfish'],
+             date_uploaded: DateTime.new(2018, 11, 3, 4, 5, 0, '+0'),
+             creator: ["Hopeful, Barry"],
+             date_created: ['20180101'])
+
+      create(:public_monograph,
+             press: 'sort_press1',
+             title: ['Cormorant'],
+             date_uploaded: DateTime.new(2018, 10, 3, 4, 5, 0, '+0'),
+             creator: ['Zidane, "Headbutt"'],
+             date_created: ['2015-01-01T00:00'])
+
+      create(:public_monograph,
+             press: 'sort_press1',
+             title: ['Zebra'],
+             date_uploaded: DateTime.new(2018, 12, 3, 4, 5, 0, '+0'),
+             creator: ["Andrée, Renée"],
+             date_created: ['2013MMDD'])
+
+      create(:public_monograph,
+             press: 'sort_press1',
+             title: ['aardvark'],
+             date_uploaded: DateTime.new(2018, 7, 3, 4, 5, 0, '+0'),
+             creator: ["Andrea, Rita"],
+             date_created: ['2017'])
+
+      create(:public_monograph,
+             press: 'sort_press1',
+             title: ['Manatee'],
+             date_uploaded: DateTime.new(2018, 8, 3, 4, 5, 0, '+0'),
+             creator: ["Gulliver, Guy"],
+             date_created: ['2016/05/05'])
+
+      create(:public_monograph,
+             press: 'sort_press1',
+             title: ['baboon'],
+             date_uploaded: DateTime.new(2018, 9, 3, 4, 5, 0, '+0'),
+             creator: ["andrew, ruth"],
+             date_created: ['2014'])
+
+      visit "/sort_press1"
+    end
+
+    it 'is sorted by "Date Added (Newest First)" by default' do
+      assert_equal page.all('.documentHeader .index_title a').collect(&:text), ['Zebra',
+                                                                                'silverfish',
+                                                                                'Cormorant',
+                                                                                'baboon',
+                                                                                'Manatee',
+                                                                                'aardvark']
+    end
+
+    it 'is sortable by "Author (A-Z)"' do
+      click_link 'Author (A-Z)'
+      # names reversed by `authors` method in MonographPresenter
+      assert_equal page.all('.document .thumbnail .caption p').collect(&:text), ['Rita Andrea',
+                                                                                 'Renée Andrée',
+                                                                                 'ruth andrew',
+                                                                                 'Guy Gulliver',
+                                                                                 'Barry Hopeful',
+                                                                                 '"Headbutt" Zidane']
+    end
+
+    it 'is sortable by "Author (Z-A)"' do
+      click_link 'Author (Z-A)'
+      # names reversed by `authors` method in MonographPresenter
+      assert_equal page.all('.document .thumbnail .caption p').collect(&:text), ['"Headbutt" Zidane',
+                                                                                 'Barry Hopeful',
+                                                                                 'Guy Gulliver',
+                                                                                 'ruth andrew',
+                                                                                 'Renée Andrée',
+                                                                                 'Rita Andrea']
+    end
+
+    it 'is sortable by "Publication Date (Newest First)"' do
+      click_link 'Publication Date (Newest First)'
+      # using corresponding titles to check position as pub year isn't shown in results page (or set here)
+      assert_equal page.all('.documentHeader .index_title a').collect(&:text), ['silverfish',
+                                                                                'aardvark',
+                                                                                'Manatee',
+                                                                                'Cormorant',
+                                                                                'baboon',
+                                                                                'Zebra']
+    end
+
+    it 'is sortable by "Publication Date (Oldest First)"' do
+      click_link 'Publication Date (Oldest First)'
+      # using corresponding titles to check position as pub year isn't shown in results page (or set here)
+      assert_equal page.all('.documentHeader .index_title a').collect(&:text), ['Zebra',
+                                                                                'baboon',
+                                                                                'Cormorant',
+                                                                                'Manatee',
+                                                                                'aardvark',
+                                                                                'silverfish']
+    end
+
+    it 'is sortable by "Title (A-Z)"' do
+      click_link 'Title (A-Z)'
+      assert_equal page.all('.documentHeader .index_title a').collect(&:text), ['aardvark',
+                                                                                'baboon',
+                                                                                'Cormorant',
+                                                                                'Manatee',
+                                                                                'silverfish',
+                                                                                'Zebra']
+    end
+
+    it 'is sortable by "Title (Z-A)"' do
+      click_link 'Title (Z-A)'
+      assert_equal page.all('.documentHeader .index_title a').collect(&:text), ['Zebra',
+                                                                                'silverfish',
+                                                                                'Manatee',
+                                                                                'Cormorant',
+                                                                                'baboon',
+                                                                                'aardvark']
+    end
+  end
+
+  context 'Monograph results set using Solr Docs' do
+    # note: The spec above is more appropriate as it incorporates manipulation being done in indexer/presenter, like...
+    # sort normalization. I'm doing this additional pure-Solr test for fun, but also because:
     # - if we ever need to test sorting on immutable Fedora values like system_create or system_modified they can be tested in this manner also
     # - it's an excuse to experiment with the minimum Solr fields required by these Blacklight views
 
@@ -16,7 +137,7 @@ feature 'Press catalog sort' do
         # need these 4 fields to get this doc to show on catalog page
         id: '111111111',
         has_model_ssim: 'Monograph',
-        press_sim: "sort_press",
+        press_sim: "sort_press2",
         read_access_group_ssim: "public",
         # inexact dynamicField usage summary: *_si for sorting, *_tesim for display, *_dtsi for sortable date
         # note: you can never sort by multi-valued Solr fields, e.g. with an 'm' in the suffix per schema.xml
@@ -32,7 +153,7 @@ feature 'Press catalog sort' do
       ::SolrDocument.new(
         id: '222222222',
         has_model_ssim: 'Monograph',
-        press_sim: "sort_press",
+        press_sim: "sort_press2",
         read_access_group_ssim: "public",
         title_tesim: 'Cormorant',
         title_si: 'cormorant', # this is downcased on indexing, otherwise sort will have caps first
@@ -46,7 +167,7 @@ feature 'Press catalog sort' do
       ::SolrDocument.new(
         id: '333333333',
         has_model_ssim: 'Monograph',
-        press_sim: "sort_press",
+        press_sim: "sort_press2",
         read_access_group_ssim: "public",
         title_tesim: 'Zebra',
         title_si: 'zebra', # this is downcased on indexing, otherwise sort will have caps first
@@ -60,7 +181,7 @@ feature 'Press catalog sort' do
       ::SolrDocument.new(
         id: '444444444',
         has_model_ssim: 'Monograph',
-        press_sim: "sort_press",
+        press_sim: "sort_press2",
         read_access_group_ssim: "public",
         title_tesim: 'aardvark',
         title_si: 'aardvark',
@@ -74,7 +195,7 @@ feature 'Press catalog sort' do
       ::SolrDocument.new(
         id: '555555555',
         has_model_ssim: 'Monograph',
-        press_sim: "sort_press",
+        press_sim: "sort_press2",
         read_access_group_ssim: "public",
         title_tesim: 'Manatee',
         title_si: 'manatee', # this is downcased on indexing, otherwise sort will have caps first
@@ -88,7 +209,7 @@ feature 'Press catalog sort' do
       ::SolrDocument.new(
         id: '666666666',
         has_model_ssim: 'Monograph',
-        press_sim: "sort_press",
+        press_sim: "sort_press2",
         read_access_group_ssim: "public",
         title_tesim: 'baboon',
         title_si: 'baboon',
@@ -100,7 +221,7 @@ feature 'Press catalog sort' do
     }
 
     before do
-      create(:press, subdomain: 'sort_press')
+      create(:press, subdomain: 'sort_press2')
       ActiveFedora::SolrService.add([mono_doc_1.to_h,
                                      mono_doc_2.to_h,
                                      mono_doc_3.to_h,
@@ -108,7 +229,7 @@ feature 'Press catalog sort' do
                                      mono_doc_5.to_h,
                                      mono_doc_6.to_h])
       ActiveFedora::SolrService.commit
-      visit "/sort_press"
+      visit "/sort_press2"
     end
 
     it 'is sorted by "Date Added (Newest First)" by default' do
