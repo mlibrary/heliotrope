@@ -1,17 +1,32 @@
-<% @monograph_presenter.epub_presenter.intervals.each do |interval| %>
-  <div class="row chapter">
-    <div class="col-sm-12">
-      <h3><a href="<%= epub_path(id: @monograph_presenter.epub_id, anchor: interval.cfi) %>"><%= interval.title %></a></h3>
-      <% if @monograph_presenter.epub_presenter.multi_rendition? %>
-        <div class="btn-group download" role="group" aria-label="Read or Download Chapter">
-          <% if interval.downloadable? %>
-          <a class="btn btn-default btn-sm" href="<%= epub_download_interval_path(id: @monograph_presenter.epub_id, cfi: interval.cfi, title: interval.title) %>" data-turbolinks="false">
-            <i id="download" class="oi" data-glyph="data-transfer-download" title="Download chapter" aria-hidden="true"></i> Download</a>
-          <% end %>
-          <a class="btn btn-default btn-sm" href="<%= epub_path(id: @monograph_presenter.epub_id, anchor: interval.cfi + "/4/1:0") %>"><span class="glyphicon glyphicon-book" aria-hidden="true"></span> Read</a>
-        </div>
+
+<% level = 0 %>
+  <% @monograph_presenter.epub_presenter.intervals.each do |interval| %>
+    <% if interval.level > level %>
+      <% level += 1 %>
+      <ul class="row toc section">
+        <li>
+    <% elsif interval.level == level %>
+       </li>
+       <li>
+    <% else %>
+      </li>
+      <% while interval.level < level %>
+        <% level -= 1 %>
+        </ul>
+        </li>
       <% end %>
-      <hr>
-    </div>
-  </div>
-<% end %>
+      <li>
+    <% end %>
+    <a href="<%= epub_path(id: @monograph_presenter.epub_id, anchor: interval.cfi) %>"><%= interval.title %></a>
+    <% if interval.downloadable? %>
+      <span class="download">
+        <a class="btn btn-default btn-sm" href="<%= epub_download_interval_path(id: @monograph_presenter.epub_id, cfi: interval.cfi, title: interval.title) %>" data-turbolinks="false">
+          <i id="download" class="oi" data-glyph="data-transfer-download" title="Download section" aria-hidden="true"></i>
+          Download
+        </a>
+        <a class="btn btn-default btn-sm" href="<%= epub_path(id: @monograph_presenter.epub_id, anchor: interval.cfi + "/4/1:0") %>"><span class="glyphicon glyphicon-book" aria-hidden="true"></span> Read</a>
+      </span>
+    <% end %>
+  <% end %>
+  </li>
+</ul>
