@@ -80,11 +80,11 @@ class EPubsController < ApplicationController
 
   def download_section
     return render 'hyrax/base/unauthorized', status: :unauthorized unless show?
-    epub = EPub::Publication.from_directory(UnpackService.root_path_from_noid(params[:id], 'epub'))
-    section = EPub::Section.from_cfi(epub, params[:cfi])
+    publication = EPub::Publication.from_directory(UnpackService.root_path_from_noid(params[:id], 'epub'))
+    section = EPub::Section.from_rendition_cfi_title(publication.rendition, params[:cfi], params[:title])
     rendered_pdf = Rails.cache.fetch(pdf_cache_key(params[:id], section.title), expires_in: 30.days) do
-      pdf = section.pdf
-      pdf.render
+      pdf = EPub::Marshaller::PDF.from_publication_section(publication, section)
+      pdf.document.render
     end
     CounterService.from(self, @presenter).count(request: 1, section_type: "Chapter", section: section.title)
     send_data rendered_pdf, type: "application/pdf", disposition: "inline"

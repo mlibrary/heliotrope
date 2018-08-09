@@ -6,17 +6,19 @@ module EPub
 
     # Class Methods
 
-    def self.from_cfi(publication, cfi)
-      return null_object unless publication&.instance_of?(Publication) && cfi&.instance_of?(String)
-      publication.sections.each do |section|
-        return section if section.cfi == cfi
+    def self.from_rendition_cfi_title(rendition, cfi, title) # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
+      return null_object unless rendition&.instance_of?(Rendition) && cfi&.instance_of?(String) && cfi.present? && title&.instance_of?(String) && title.present?
+      rendition.sections.each do |section|
+        next unless section.cfi == cfi
+        next unless section.title == title
+        return section
       end
       null_object
     end
 
-    def self.from_hash(publication, args)
-      return null_object unless args.instance_of?(Hash)
-      new(publication, args)
+    def self.from_rendition_args(rendition, args)
+      return null_object unless rendition&.instance_of?(Rendition) && args&.instance_of?(Hash)
+      new(rendition, args)
     end
 
     def self.null_object
@@ -41,23 +43,14 @@ module EPub
       @args[:downloadable] || false
     end
 
-    def pdf
-      return Chapter.null_object.pdf unless downloadable?
-      chapter = Chapter.from_cfi(@publication, @args[:cfi])
-      files = chapter.files_in_chapter
-      images = chapter.images_in_files(files)
-      # In Prawn, "LETTER" is 8.5x11 which is 612x792
-      pdf = Prawn::Document.new(page_size: "LETTER", page_layout: :portrait, margin: 50)
-      images.each do |img|
-        pdf.image img, fit: [512, 692] # minus 100 for the margin
-      end
-      pdf
+    def pages
+      @pages ||= @args[:unmarshaller_chapter]&.pages&.map { |unmarshaller_page| Page.from_section_unmarshaller_page(self, unmarshaller_page) } || []
     end
 
     private
 
-      def initialize(publication, args)
-        @publication = publication
+      def initialize(rendition, args)
+        @rendition = rendition
         @args = args
       end
   end
@@ -68,7 +61,7 @@ module EPub
     private
 
       def initialize
-        super(Publication.null_object, {})
+        super(Rendition.null_object, unmarshaller_chapter: Unmarshaller::Chapter.null_object)
       end
   end
 end

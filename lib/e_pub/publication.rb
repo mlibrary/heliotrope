@@ -56,11 +56,20 @@ module EPub
 
     def renditions
       return @renditions unless @renditions.nil?
-      @renditions = @unmarshaller_container.rootfile_elements.map do |rootfile_element|
-        Rendition.from_rootfile_element(self, rootfile_element)
-      end
+      @renditions = @unmarshaller_container.rootfiles.map { |rootfile| Rendition.from_publication_unmarshaller_container_rootfile(self, rootfile) }
       @renditions << Rendition.null_object if @renditions.empty?
       @renditions
+    end
+
+    def downloadable?
+      return @downloadable unless @downloadable.nil?
+      @downloadable = false
+      renditions.each do |rendition|
+        next unless /page scan/i.match?(rendition.label)
+        @downloadable = true
+        break
+      end
+      @downloadable
     end
 
     #

@@ -12,40 +12,42 @@ RSpec.describe EPub::Unmarshaller::Nav do
     it { expect(subject.tocs).to be_empty }
   end
 
-  describe '#from_manifest_item_nav_href' do
-    subject { nav }
+  describe '#from_content_nav_full_path' do
+    subject { described_class.from_content_nav_full_path(content, manifest_item_nav_href) }
 
-    let(:nav) { described_class.from_manifest_item_nav_href(manifest_item_nav_href) }
+    let(:content) { double('content') }
+    let(:manifest_item_nav_href) { '' }
 
-    context 'Non Content and non String' do
-      let(:manifest_item_nav_href) { double('manifest item nav href') }
+    it { is_expected.to be_an_instance_of(EPub::Unmarshaller::NavNullObject) }
 
-      it { is_expected.to be_an_instance_of(EPub::Unmarshaller::NavNullObject) }
-    end
-
-    context 'Null Content and empty String' do
-      let(:manifest_item_nav_href) { '' }
+    context 'Content' do
+      before { allow(content).to receive(:instance_of?).with(EPub::Unmarshaller::Content).and_return(true) }
 
       it { is_expected.to be_an_instance_of(EPub::Unmarshaller::NavNullObject) }
-    end
 
-    context 'Content and item nav' do
-      let(:manifest_item_nav_href) { 'toc.xhtml' }
+      context 'Empty String' do
+        it { is_expected.to be_an_instance_of(EPub::Unmarshaller::NavNullObject) }
 
-      let(:toc_xml) do
-        <<-XML
-          <nav xmlns:epub="http://www.idpf.org/2007/ops" id="toc" epub:type="toc">
-            <a href="1.xhtml">Title</a>
-          </nav>
-        XML
+        context 'manifest item nav href' do
+          let(:manifest_item_nav_href) { 'toc.xhtml' }
+          let(:toc_xml) do
+            <<-XML
+              <nav xmlns:epub="http://www.idpf.org/2007/ops" id="toc" epub:type="toc">
+                <a href="1.xhtml">Title</a>
+              </nav>
+            XML
+          end
+
+          before do
+            allow(File).to receive(:open).with('')
+            allow(File).to receive(:open).with('./META-INF/container.xml')
+            allow(File).to receive(:open).with(manifest_item_nav_href).and_return(toc_xml)
+          end
+
+          it { is_expected.to be_an_instance_of(described_class) }
+          it { expect(subject.tocs).to contain_exactly instance_of(EPub::Unmarshaller::TOC) }
+        end
       end
-
-      before do
-        allow(File).to receive(:open).with(manifest_item_nav_href).and_return(toc_xml)
-      end
-
-      it { is_expected.to be_an_instance_of(described_class) }
-      it { expect(subject.tocs).to contain_exactly instance_of(EPub::Unmarshaller::TOC) }
     end
   end
 end

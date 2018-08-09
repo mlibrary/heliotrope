@@ -2,29 +2,31 @@
 
 module EPub
   module Unmarshaller
-    class Nav
+    class ChapterList
       private_class_method :new
+
+      attr_reader :full_path
 
       # Class Methods
 
-      def self.from_content_nav_full_path(content, full_path)
+      def self.from_content_chapter_list_full_path(content, full_path)
         return null_object unless content&.instance_of?(Content) && full_path&.instance_of?(String) && full_path.present?
         new(content, full_path)
       end
 
       def self.null_object
-        NavNullObject.send(:new)
+        ChapterListNullObject.send(:new)
       end
 
       # Instance Methods
 
-      def tocs
-        return @tocs unless @tocs.nil?
-        @tocs = []
-        @nav_doc.xpath(".//nav[@type='toc']").each do |toc|
-          @tocs << TOC.from_nav_toc_element(self, toc)
+      def chapters
+        return @chapters unless @chapters.nil?
+        @chapters = []
+        @chapter_list_doc.xpath('.//span').each do |span|
+          @chapters << Chapter.from_chapter_list_span_element(self, span)
         end
-        @tocs
+        @chapters
       end
 
       private
@@ -33,14 +35,14 @@ module EPub
           @content = content
           @full_path = full_path
           begin
-            @nav_doc = Nokogiri::XML::Document.parse(File.open(@full_path)).remove_namespaces!
+            @chapter_list_doc = Nokogiri::XML::Document.parse(File.open(@full_path)).remove_namespaces!
           rescue StandardError => _e
-            @nav_doc = Nokogiri::XML::Document.parse(nil)
+            @chapter_list_doc = Nokogiri::XML::Document.parse(nil)
           end
         end
     end
 
-    class NavNullObject < Nav
+    class ChapterListNullObject < ChapterList
       private_class_method :new
 
       private

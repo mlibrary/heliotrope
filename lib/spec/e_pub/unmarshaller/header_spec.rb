@@ -9,42 +9,44 @@ RSpec.describe EPub::Unmarshaller::Header do
     subject { described_class.null_object }
 
     it { is_expected.to be_an_instance_of(EPub::Unmarshaller::HeaderNullObject) }
-    it { expect(subject.href).to eq 'href.xhtml' }
+    it { expect(subject.href).to be_empty }
     it { expect(subject.text).to be_empty }
     it { expect(subject.depth).to be_zero }
   end
 
   describe '#from_toc_anchor_element' do
-    subject { header }
+    subject { described_class.from_toc_anchor_element(toc, anchor_element) }
 
-    let(:header) { described_class.from_toc_anchor_element(anchor_element) }
+    let(:toc) { double('toc') }
+    let(:anchor_element) { double('anchor node') }
 
-    context 'Non TOC and non anchor' do
-      let(:anchor_element) { double('anchor node') }
+    it { is_expected.to be_an_instance_of(EPub::Unmarshaller::HeaderNullObject) }
+
+    context 'TOC' do
+      before { allow(toc).to receive(:instance_of?).with(EPub::Unmarshaller::TOC).and_return(true) }
 
       it { is_expected.to be_an_instance_of(EPub::Unmarshaller::HeaderNullObject) }
-    end
 
-    context 'TOC and anchor' do
-      let(:toc_element) { Nokogiri::XML::Document.parse(toc_xml) }
-      let(:anchor_element) { toc_element.root.xpath('//a').first }
+      context 'Anchor' do
+        let(:toc_element) { Nokogiri::XML::Document.parse(toc_xml) }
+        let(:anchor_element) { toc_element.root.xpath('//a').first }
+        let(:toc_xml) do
+          <<-XML
+          <nav>
+            <ol>
+              <li>
+                <a href="1.xhtml">Title</a>
+              </li>
+            </ol>
+          </nav>
+          XML
+        end
 
-      let(:toc_xml) do
-        <<-XML
-        <nav>
-          <ol>
-            <li>
-              <a href="1.xhtml">Title</a>
-            </li>
-          </ol>
-        </nav>
-        XML
+        it { is_expected.to be_an_instance_of(described_class) }
+        it { expect(subject.href).to eq '1.xhtml' }
+        it { expect(subject.text).to eq 'Title' }
+        it { expect(subject.depth).to eq 1 }
       end
-
-      it { is_expected.to be_an_instance_of(described_class) }
-      it { expect(subject.href).to eq '1.xhtml' }
-      it { expect(subject.text).to eq 'Title' }
-      it { expect(subject.depth).to eq 1 }
     end
   end
 end

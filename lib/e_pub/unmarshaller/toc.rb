@@ -7,13 +7,13 @@ module EPub
 
       # Class Methods
 
-      def self.null_object
-        TOCNullObject.send(:new)
+      def self.from_nav_toc_element(nav, toc_element)
+        return null_object unless nav&.instance_of?(Nav) && toc_element&.instance_of?(Nokogiri::XML::Element)
+        new(nav, toc_element)
       end
 
-      def self.from_nav_toc_element(toc_element)
-        return null_object unless toc_element&.instance_of?(Nokogiri::XML::Element)
-        new(toc_element)
+      def self.null_object
+        TOCNullObject.send(:new)
       end
 
       # Instance Methods
@@ -26,14 +26,15 @@ module EPub
         return headers unless @headers.nil?
         @headers = []
         @toc_element.xpath('.//a').each do |anchor|
-          @headers << Header.from_toc_anchor_element(anchor)
+          @headers << Header.from_toc_anchor_element(self, anchor)
         end
         @headers
       end
 
       private
 
-        def initialize(toc_element)
+        def initialize(nav, toc_element)
+          @nav = nav
           @toc_element = toc_element
         end
     end
@@ -44,7 +45,7 @@ module EPub
       private
 
         def initialize
-          super(Nokogiri::XML::Element.new('toc', Nokogiri::XML::Document.parse(nil)))
+          super(Nav.null_object, Nokogiri::XML::Element.new('toc', Nokogiri::XML::Document.parse(nil)))
         end
     end
   end

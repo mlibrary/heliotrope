@@ -7,20 +7,16 @@ module EPub
 
       # Class Methods
 
+      def self.from_rootfile_full_path(rootfile, full_path)
+        return null_object unless rootfile&.instance_of?(Rootfile) && full_path&.instance_of?(String) && full_path.present?
+        new(rootfile, full_path)
+      end
+
       def self.null_object
         ContentNullObject.send(:new)
       end
 
-      def self.from_full_path(full_path)
-        return null_object unless full_path&.instance_of?(String) && full_path.present?
-        new(full_path)
-      end
-
       # Instance Methods
-
-      def full_dir
-        @full_dir ||= File.dirname(@full_path)
-      end
 
       def idref_with_index_from_href(href)
         idref = ''
@@ -38,26 +34,49 @@ module EPub
         [idref, index]
       end
 
+      def chapter_from_title(title)
+        chapter_list.chapters.each do |chapter|
+          return chapter if chapter.title.casecmp?(title)
+        end
+        Chapter.null_object
+      end
+
       def nav
         return @nav unless @nav.nil?
         begin
-          nav_href = @content_doc.xpath(".//manifest/item[@properties='nav']").first.attributes["href"].value || 'nav.xhtml'
-          @nav = Nav.from_manifest_item_nav_href(File.join(full_dir, nav_href))
+          nav_href = @content_doc.xpath(".//manifest/item[@properties='nav']").first.attributes["href"].value || ''
+          @nav = Nav.from_content_nav_full_path(self, File.join(full_dir, nav_href))
         rescue StandardError => _e
           @nav = Nav.null_object
         end
         @nav
       end
 
+      def chapter_list
+        return @chapter_list unless @chapter_list.nil?
+        begin
+          chapter_list_href = @content_doc.xpath(".//manifest/item[@id='chapterlist']").first.attributes["href"].value || ''
+          @chapter_list = ChapterList.from_content_chapter_list_full_path(self, File.join(full_dir, chapter_list_href))
+        rescue StandardError => _e
+          @chapter_list = ChapterList.null_object
+        end
+        @chapter_list
+      end
+
       private
 
-        def initialize(full_path)
+        def initialize(rootfile, full_path)
+          @rootfile = rootfile
           @full_path = full_path
           begin
             @content_doc = Nokogiri::XML::Document.parse(File.open(@full_path)).remove_namespaces!
           rescue StandardError => _e
             @content_doc = Nokogiri::XML::Document.parse(nil)
           end
+        end
+
+        def full_dir
+          @full_dir ||= File.dirname(@full_path)
         end
     end
 
@@ -67,7 +86,7 @@ module EPub
       private
 
         def initialize
-          super('./full/path/content.opf')
+          super(Rootfile.null_object, '')
         end
     end
   end

@@ -4,7 +4,7 @@
       <h3><a href="<%= epub_path(id: @monograph_presenter.epub_id, anchor: section.cfi + "/4/1:0") %>"><%= section.title %></a></h3>
       <% if section.downloadable? %>
         <div class="btn-group download" role="group" aria-label="Read or Download Chapter">
-          <a class="btn btn-default btn-sm" href="<%= epub_download_section_path(id: @monograph_presenter.epub_id, cfi: section.cfi) %>" data-turbolinks="false">
+          <a class="btn btn-default btn-sm" href="<%= epub_download_section_path(id: @monograph_presenter.epub_id, cfi: section.cfi, title: section.title) %>" data-turbolinks="false">
             <i id="download" class="oi" data-glyph="data-transfer-download" title="Download chapter" aria-hidden="true"></i> Download</a>
           <a class="btn btn-default btn-sm" href="<%= epub_path(id: @monograph_presenter.epub_id, anchor: section.cfi + "/4/1:0") %>"><span class="glyphicon glyphicon-book" aria-hidden="true"></span> Read</a>
         </div>

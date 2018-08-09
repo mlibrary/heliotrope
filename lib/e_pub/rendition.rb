@@ -6,9 +6,9 @@ module EPub
 
     # Class Methods
 
-    def self.from_rootfile_element(publication, rootfile_element)
-      return null_object unless publication&.instance_of?(Publication) && rootfile_element&.instance_of?(Nokogiri::XML::Element)
-      new(publication, rootfile_element)
+    def self.from_publication_unmarshaller_container_rootfile(publication, unmarshaller_rootfile)
+      return null_object unless publication&.instance_of?(Publication) && unmarshaller_rootfile&.instance_of?(Unmarshaller::Rootfile)
+      new(publication, unmarshaller_rootfile)
     end
 
     def self.null_object
@@ -20,44 +20,37 @@ module EPub
     def sections
       return @sections unless @sections.nil?
       @sections = []
-      content.nav.tocs.each do |toc|
-        next unless toc.id == 'toc'
-        toc.headers.each.with_index do |header|
-          idref, index = content.idref_with_index_from_href(header.href)
+      @unmarshaller_rootfile.content.nav.tocs.each do |toc|
+        next unless /toc/i.match?(toc.id)
+        toc.headers.each do |header|
+          next if header.text.blank?
+          idref, index = @unmarshaller_rootfile.content.idref_with_index_from_href(header.href)
           args = {
-            title: header.text || '',
-            depth: header.depth || 0,
+            title: header.text,
+            depth: header.depth,
             cfi: "/6/#{index * 2}[#{idref}]!",
             # Currently only fixed layout epubs can have downloadable sections.
             # For reflowable/non-page-image epubs, we'll need a different process,
             # probably something like headless-chrome.
-            downloadable: @publication.multi_rendition?
+            downloadable: @publication.downloadable?,
+            unmarshaller_chapter: @unmarshaller_rootfile.content.chapter_from_title(header.text)
           }
-          @sections << Section.from_hash(@publication, args) if args[:title].present?
+          @sections << Section.from_rendition_args(self, args)
         end
+        break
       end
       @sections
     end
 
     def label
-      @label ||= @rootfile_element&.attribute('label')&.text || ''
+      @label ||= @unmarshaller_rootfile.label
     end
 
     private
 
-      def initialize(publication, rootfile_element)
+      def initialize(publication, unmarshaller_rootfile)
         @publication = publication
-        @rootfile_element = rootfile_element
-      end
-
-      def content
-        return @content unless @content.nil?
-        full_path = @rootfile_element&.attribute('full-path')&.value
-        @content = if full_path
-                     Unmarshaller::Content.from_full_path(File.join(@publication.root_path, full_path))
-                   else
-                     Unmarshaller::Content.null_object
-                   end
+        @unmarshaller_rootfile = unmarshaller_rootfile
       end
   end
 
@@ -67,7 +60,7 @@ module EPub
     private
 
       def initialize
-        super(Publication.null_object, Nokogiri::XML::Element.new('rootfile', Nokogiri::XML::Document.parse(nil)))
+        super(Publication.null_object, Unmarshaller::Rootfile.null_object)
       end
   end
 end
