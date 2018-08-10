@@ -16,7 +16,7 @@ RSpec.describe EPub::Unmarshaller::ChapterList do
     subject { described_class.from_content_chapter_list_full_path(content, full_path) }
 
     let(:content) { double('content') }
-    let(:full_path) { double('manifest item chapter list href') }
+    let(:full_path) { double('full path') }
 
     it { is_expected.to be_an_instance_of(EPub::Unmarshaller::ChapterListNullObject) }
 

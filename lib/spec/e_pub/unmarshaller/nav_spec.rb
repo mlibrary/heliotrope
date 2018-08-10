@@ -38,11 +38,7 @@ RSpec.describe EPub::Unmarshaller::Nav do
             XML
           end
 
-          before do
-            allow(File).to receive(:open).with('')
-            allow(File).to receive(:open).with('./META-INF/container.xml')
-            allow(File).to receive(:open).with(manifest_item_nav_href).and_return(toc_xml)
-          end
+          before { allow(File).to receive(:open).with(manifest_item_nav_href).and_return(toc_xml) }
 
           it { is_expected.to be_an_instance_of(described_class) }
           it { expect(subject.tocs).to contain_exactly instance_of(EPub::Unmarshaller::TOC) }

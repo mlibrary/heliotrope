@@ -19,19 +19,17 @@ module EPub
       # Instance Methods
 
       def idref_with_index_from_href(href)
-        idref = ''
-        @content_doc.xpath(".//manifest/item").each do |item|
-          next unless /#{href}/.match?(item.attribute('href').value)
-          idref = item.attribute('id').value
-          break
-        end
-        index = 0
-        @content_doc.xpath(".//spine/itemref").each do |itemref|
-          index += 1
-          next unless idref.to_s == itemref.attribute('idref').value
-          break
-        end
-        [idref, index]
+        idref = href_idref[href]
+        idref ||= base_href_idref[href]
+        idref ||= up_one_href_idref[href]
+        index = idref_index[idref]
+        return [idref, index] if idref.present? && index.positive?
+        # match_data = /(^.*)(#.*)/.match(href)
+        # return ['', 0] unless match_data
+        # idref = href_idref[match_data[1]]
+        # index = idref_index[idref]
+        # return [idref, index] if idref.present? && index.positive?
+        ['', 0]
       end
 
       def chapter_from_title(title)
@@ -77,6 +75,49 @@ module EPub
 
         def full_dir
           @full_dir ||= File.dirname(@full_path)
+        end
+
+        def href_idref
+          return @href_idref unless @href_idref.nil?
+          @href_idref = {}
+          @content_doc.xpath(".//manifest/item").each do |item|
+            href = item.attribute('href').value
+            idref = item.attribute('id').value
+            @href_idref[href] = idref if href.present? && idref.present?
+          end
+          @href_idref
+        end
+
+        def base_href_idref
+          return @base_href_idref unless @base_href_idref.nil?
+          @base_href_idref = {}
+          href_idref.each do |href, idref|
+            base_href = File.basename(href)
+            @base_href_idref[base_href] = idref
+          end
+          @base_href_idref
+        end
+
+        def up_one_href_idref
+          return @up_one_href_idref unless @up_one_href_idref.nil?
+          @up_one_href_idref = {}
+          href_idref.each do |href, idref|
+            up_one_href = "../#{href}"
+            @up_one_href_idref[up_one_href] = idref
+          end
+          @up_one_href_idref
+        end
+
+        def idref_index
+          return @idref_index unless @idref_index.nil?
+          @idref_index = {}
+          index = 0
+          @content_doc.xpath(".//spine/itemref").each do |itemref|
+            idref = itemref.attribute('idref').value
+            index += 1
+            @idref_index[idref] = index if idref.present?
+          end
+          @idref_index
         end
     end
 

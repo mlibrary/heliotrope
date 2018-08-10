@@ -19,7 +19,7 @@ RSpec.describe EPub::Unmarshaller::Content do
     subject { described_class.from_rootfile_full_path(rootfile, full_path) }
 
     let(:rootfile) { double('rootfile') }
-    let(:full_path) { double('full path', to_str: './OEBPS/content.opf') }
+    let(:full_path) { '' }
 
     it { is_expected.to be_an_instance_of(EPub::Unmarshaller::ContentNullObject) }
 
@@ -28,70 +28,74 @@ RSpec.describe EPub::Unmarshaller::Content do
 
       it { is_expected.to be_an_instance_of(EPub::Unmarshaller::ContentNullObject) }
 
-      context 'Full Path' do
-        before { allow(full_path).to receive(:instance_of?).with(String).and_return(true) }
+      context 'Empty String' do
+        it { is_expected.to be_an_instance_of(EPub::Unmarshaller::ContentNullObject) }
 
-        it { is_expected.to be_an_instance_of(described_class) }
-        it { expect(subject.idref_with_index_from_href('href')).to eq ['', 0] }
-        it { expect(subject.chapter_from_title('title')).to be_an_instance_of(EPub::Unmarshaller::ChapterNullObject) }
-        it { expect(subject.nav).to be_an_instance_of(EPub::Unmarshaller::NavNullObject) }
-        it { expect(subject.chapter_list).to be_an_instance_of(EPub::Unmarshaller::ChapterListNullObject) }
+        context 'Full Path' do
+          let(:full_path) { './OEBPS/content.opf' }
 
-        context 'Content' do
-          let(:full_dir) { File.dirname(full_path) }
-
-          let(:content_doc) { Nokogiri::Slop(content_xml) }
-          let(:content_xml) do
-            <<-XML
-              <content>
-                <manifest>
-                  <item id="toc" href="toc.xhtml" properties="nav" />
-                  <item id="1" href="1.xhtml"/>
-                  <item id="chapterlist" href="chapterlist_fixed_scan.xhtml" />
-                </manifest>
-                <spine>
-                  <itemref idref="1" />
-                </spine>
-              </content>
-            XML
-          end
-          let(:toc_href) { content_doc.root.manifest.item("[@id='toc']")["href"] }
-          let(:toc_path) { File.join(full_dir, toc_href) }
-          let(:href) { content_doc.root.manifest.item("[@id='1']")["href"] }
-          let(:idref) { content_doc.root.spine.itemref["idref"] }
-
-          let(:toc_doc) { Nokogiri::Slop(toc_xml) }
-          let(:toc_xml) do
-            <<-XML
-              <nav>
-                <a href="1.xhtml">Title</a>
-              </nav>
-            XML
-          end
-
-          let(:chapter_list_href) { content_doc.root.manifest.item("[@id='chapterlist']")["href"] }
-          let(:chapter_list_path) { File.join(full_dir, chapter_list_href) }
-          let(:chapter_list_doc) { Nokogiri::Slop(chapter_list_xml) }
-          let(:chapter_list_xml) do
-            <<-XML
-              <nav>
-                <a href="chapterlist.xhtml">Chapter List</a>
-              </nav>
-            XML
-          end
-
-          before do
-            allow(File).to receive(:open).with('')
-            allow(File).to receive(:open).with('./META-INF/container.xml')
-            allow(File).to receive(:open).with(full_path).and_return(content_xml)
-            allow(File).to receive(:open).with(toc_path).and_return(toc_xml)
-            allow(File).to receive(:open).with(chapter_list_path).and_return(chapter_list_xml)
-          end
-
-          it { expect(subject.idref_with_index_from_href(href)).to eq [idref, 1] }
+          it { is_expected.to be_an_instance_of(described_class) }
+          it { expect(subject.idref_with_index_from_href('href')).to eq ['', 0] }
           it { expect(subject.chapter_from_title('title')).to be_an_instance_of(EPub::Unmarshaller::ChapterNullObject) }
-          it { expect(subject.nav).to be_an_instance_of(EPub::Unmarshaller::Nav) }
-          it { expect(subject.chapter_list).to be_an_instance_of(EPub::Unmarshaller::ChapterList) }
+          it { expect(subject.nav).to be_an_instance_of(EPub::Unmarshaller::NavNullObject) }
+          it { expect(subject.chapter_list).to be_an_instance_of(EPub::Unmarshaller::ChapterListNullObject) }
+
+          context 'Content' do
+            let(:full_dir) { File.dirname(full_path) }
+
+            let(:content_doc) { Nokogiri::Slop(content_xml) }
+            let(:content_xml) do
+              <<-XML
+                <content>
+                  <manifest>
+                    <item id="toc" href="toc.xhtml" properties="nav" />
+                    <item id="1" href="1.xhtml"/>
+                    <item id="chapterlist" href="chapterlist_fixed_scan.xhtml" />
+                  </manifest>
+                  <spine>
+                    <itemref idref="1" />
+                  </spine>
+                </content>
+              XML
+            end
+            let(:toc_href) { content_doc.root.manifest.item("[@id='toc']")["href"] }
+            let(:toc_path) { File.join(full_dir, toc_href) }
+            let(:href) { content_doc.root.manifest.item("[@id='1']")["href"] }
+            let(:idref) { content_doc.root.spine.itemref["idref"] }
+
+            let(:toc_doc) { Nokogiri::Slop(toc_xml) }
+            let(:toc_xml) do
+              <<-XML
+                <nav>
+                  <a href="1.xhtml">Title</a>
+                </nav>
+              XML
+            end
+
+            let(:chapter_list_href) { content_doc.root.manifest.item("[@id='chapterlist']")["href"] }
+            let(:chapter_list_path) { File.join(full_dir, chapter_list_href) }
+            let(:chapter_list_doc) { Nokogiri::Slop(chapter_list_xml) }
+            let(:chapter_list_xml) do
+              <<-XML
+                <nav>
+                  <a href="chapterlist.xhtml">Chapter List</a>
+                </nav>
+              XML
+            end
+
+            before do
+              allow(File).to receive(:open).with('')
+              allow(File).to receive(:open).with('./META-INF/container.xml')
+              allow(File).to receive(:open).with(full_path).and_return(content_xml)
+              allow(File).to receive(:open).with(toc_path).and_return(toc_xml)
+              allow(File).to receive(:open).with(chapter_list_path).and_return(chapter_list_xml)
+            end
+
+            it { expect(subject.idref_with_index_from_href(href)).to eq [idref, 1] }
+            it { expect(subject.chapter_from_title('title')).to be_an_instance_of(EPub::Unmarshaller::ChapterNullObject) }
+            it { expect(subject.nav).to be_an_instance_of(EPub::Unmarshaller::Nav) }
+            it { expect(subject.chapter_list).to be_an_instance_of(EPub::Unmarshaller::ChapterList) }
+          end
         end
       end
     end

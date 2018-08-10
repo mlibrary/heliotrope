@@ -24,14 +24,12 @@ module EPub
         next unless /toc/i.match?(toc.id)
         toc.headers.each do |header|
           next if header.text.blank?
+          next if /.*#.*/.match?(header.href)
           idref, index = @unmarshaller_rootfile.content.idref_with_index_from_href(header.href)
           args = {
             title: header.text,
             depth: header.depth,
             cfi: "/6/#{index * 2}[#{idref}]!",
-            # Currently only fixed layout epubs can have downloadable sections.
-            # For reflowable/non-page-image epubs, we'll need a different process,
-            # probably something like headless-chrome.
             downloadable: @publication.downloadable?,
             unmarshaller_chapter: @unmarshaller_rootfile.content.chapter_from_title(header.text)
           }
