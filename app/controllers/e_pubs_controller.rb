@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 class EPubsController < ApplicationController
-  before_action :set_presenter, only: %i[show download_chapter search]
-  before_action :set_show, only: %i[show download_chapter]
+  before_action :set_presenter, only: %i[show download_chapter download_section search]
+  before_action :set_show, only: %i[show download_chapter download_section]
 
   def show
     return render 'hyrax/base/unauthorized', status: :unauthorized unless show?
@@ -74,9 +74,19 @@ class EPubsController < ApplicationController
       pdf = chapter.pdf
       pdf.render
     end
-
     CounterService.from(self, @presenter).count(request: 1, section_type: "Chapter", section: chapter.title)
+    send_data rendered_pdf, type: "application/pdf", disposition: "inline"
+  end
 
+  def download_section
+    return render 'hyrax/base/unauthorized', status: :unauthorized unless show?
+    epub = EPub::Publication.from_directory(UnpackService.root_path_from_noid(params[:id], 'epub'))
+    section = EPub::Section.from_cfi(epub, params[:cfi])
+    rendered_pdf = Rails.cache.fetch(pdf_cache_key(params[:id], section.title), expires_in: 30.days) do
+      pdf = section.pdf
+      pdf.render
+    end
+    CounterService.from(self, @presenter).count(request: 1, section_type: "Chapter", section: section.title)
     send_data rendered_pdf, type: "application/pdf", disposition: "inline"
   end
 
