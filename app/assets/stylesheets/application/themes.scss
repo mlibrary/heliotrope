@@ -61,8 +61,10 @@ $heb-white: #fff;
 $heb-black-80: #342f2e;
 
 // typography
+@import url('https://fonts.googleapis.com/css?family=Open+Sans:300,400,400i,600,600i,700');
+
 @mixin open-sans {
-  font-family: "open-sans", Helvetica, sans-serif;
+  font-family: 'Open Sans', Helvetica, sans-serif;
 }
 
 .heb {
@@ -120,7 +122,7 @@ $heb-black-80: #342f2e;
 
     .navbar-brand {
       color: $heb-red;
-      font-weight: 900;
+      font-weight: 800;
     }
 
     .navbar-nav {
