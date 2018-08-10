@@ -15,8 +15,8 @@ describe 'shared/_metadata.html.erb' do
                                            has_model_ssim: ['Monograph'],
                                            title_tesim: ['Sun Moon Dog'],
                                            creator_tesim: ['Doggie, Boutros-Boutros', 'Meow, Chairman'],
-                                           press_name_ssim: ['Seeing Eye Press'],
-                                           date_published_tesim: ['2001']) }
+                                           publisher_tesim: ['Seeing Eye Press'],
+                                           date_created_tesim: ['2001']) }
     it 'has the correct metadata' do
       @monograph_presenter = Hyrax::MonographPresenter.new(solr_document, nil)
       render
@@ -33,7 +33,7 @@ describe 'shared/_metadata.html.erb' do
                                            has_model_ssim: ['Monograph'],
                                            title_tesim: ['Sun Moon Dog'],
                                            creator_full_name_tesim: ['Boutros-Boutros Doggie'],
-                                           press_name_ssim: ['Seeing Eye Press']) }
+                                           publisher_tesim: ['Seeing Eye Press']) }
     it 'has no citation_publication_date' do
       @monograph_presenter = Hyrax::MonographPresenter.new(solr_document, nil)
       render
@@ -47,7 +47,7 @@ describe 'shared/_metadata.html.erb' do
                                            has_model_ssim: ['Monograph'],
                                            title_tesim: [%q(Bob's “Smart” Dog’s "Rött" Äpple)],
                                            creator_full_name_tesim: ['Bob'],
-                                           press_name_ssim: ['Swedish Red Apple']) }
+                                           publisher_tesim: ['Swedish Red Apple']) }
     it 'renders the characters correctly' do
       @monograph_presenter = Hyrax::MonographPresenter.new(solr_document, nil)
       render
@@ -62,7 +62,7 @@ describe 'shared/_metadata.html.erb' do
                                            title_tesim: ['More Things About Stuff'],
                                            contributor_tesim: ['Overlooked, Sir Always'],
                                            creator_tesim: ['Blug Shoeman', 'Melissa Allen'],
-                                           press_name_ssim: ['Marge INC.']) }
+                                           publisher_tesim: ['Marge INC.']) }
     it 'creators are cited but contributors are not' do
       @monograph_presenter = Hyrax::MonographPresenter.new(solr_document, nil)
       render

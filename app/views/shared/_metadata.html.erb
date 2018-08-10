@@ -8,15 +8,19 @@
     <% end %>
   <% end %>
 
-  <% if @monograph_presenter.date_published.present? %>
-    <meta name="citation_publication_date" content="<%= @monograph_presenter.date_published.first %>">
+  <% if @monograph_presenter.date_created.present? %>
+    <meta name="citation_publication_date" content="<%= @monograph_presenter.date_created.first %>">
   <% end %>
 
   <% if @monograph_presenter.isbn.present? %>
-    <meta name="citation_isbn" content="<%= @monograph_presenter.isbn.first %>">
+    <% @monograph_presenter.isbn.each do |isbn| %>
+      <meta name="citation_isbn" content="<%= isbn.html_safe %>">
+    <% end %>
   <% end %>
 
-  <meta name="citation_publisher" content="<%= @monograph_presenter.press %>">
+  <% if @monograph_presenter.publisher.present? %>
+    <meta name="citation_publisher" content="<%= @monograph_presenter.publisher.first %>">
+  <% end %>
 
 <% elsif @presenter.present? && @presenter.class == Hyrax::FileSetPresenter %>
 
