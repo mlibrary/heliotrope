@@ -27,6 +27,8 @@ Rails.application.routes.draw do
         resources :components, only: %i[index show create update destroy]
         resources :lessees, only: %i[index show create update destroy]
       end
+      get 'institution', controller: :institutions, action: :find, as: :find_institution
+      resources :institutions, only: %i[index show create update destroy]
     end
   end
 
