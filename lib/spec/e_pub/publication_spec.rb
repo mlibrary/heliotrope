@@ -1,20 +1,88 @@
 # frozen_string_literal: true
 
-require 'byebug'
-
 RSpec.describe EPub::Publication do
+  describe '#new' do
+    it { expect { is_expected }.to raise_error(NoMethodError) }
+  end
+
+  describe '#null_object' do
+    subject { described_class.null_object }
+
+    it { is_expected.to be_an_instance_of(EPub::PublicationNullObject) }
+    it { expect(subject.downloadable?).to be false }
+    it { expect(subject.single_rendition?).to be true }
+    it { expect(subject.multi_rendition?).to be false }
+    it { expect(subject.renditions).to contain_exactly instance_of(EPub::RenditionNullObject) }
+    it { expect(subject.rendition).to be_an_instance_of(EPub::RenditionNullObject) }
+    it { expect(subject.sections).to be subject.rendition.sections }
+    it { expect(subject.sections).to eq EPub::Rendition.null_object.sections }
+  end
+
+  describe '#from_unmarshaller_container' do
+    subject { described_class.from_unmarshaller_container(unmarshaller_container) }
+
+    let(:unmarshaller_container) { double('unmarshaller container', rootfiles: rootfiles, rootfile: rootfiles.first) }
+    let(:rootfiles) { [] }
+
+    it { is_expected.to be_an_instance_of(EPub::PublicationNullObject) }
+
+    context 'Unmarshaller Container' do
+      let(:image_rootfile) { double('image rootfile') }
+      let(:text_rootfile) { double('text rootfile') }
+      let(:image_rendition) { double('image rendition', label: 'Page Scan', sections: [image_section]) }
+      let(:text_rendition) { double('text rendition', label: 'Text', sections: [text_section]) }
+      let(:image_section) { double('image section') }
+      let(:text_section) { double('text section') }
+
+      before do
+        allow(unmarshaller_container).to receive(:instance_of?).with(EPub::Unmarshaller::Container).and_return(true)
+        allow(EPub::Rendition).to receive(:from_publication_unmarshaller_container_rootfile).with(subject, image_rootfile).and_return(image_rendition)
+        allow(EPub::Rendition).to receive(:from_publication_unmarshaller_container_rootfile).with(subject, text_rootfile).and_return(text_rendition)
+      end
+
+      context 'single rendition' do
+        let(:rootfiles) { [text_rootfile] }
+
+        it { is_expected.to be_an_instance_of(described_class) }
+        it { expect(subject.downloadable?).to be false }
+        it { expect(subject.single_rendition?).to be true }
+        it { expect(subject.multi_rendition?).to be false }
+        it { expect(subject.renditions.length).to eq 1 }
+        it { expect(subject.rendition.label).to eq 'Text' }
+        it { expect(subject.sections).to be subject.rendition.sections }
+        it { expect(subject.sections.length).to eq 1 }
+        it { expect(subject.sections.first).to be text_section }
+      end
+
+      context 'multi rendition' do
+        let(:rootfiles) { [image_rootfile, text_rootfile] }
+
+        it { is_expected.to be_an_instance_of(described_class) }
+        it { expect(subject.downloadable?).to be true }
+        it { expect(subject.single_rendition?).to be false }
+        it { expect(subject.multi_rendition?).to be true }
+        it { expect(subject.renditions.length).to eq 2 }
+        it { expect(subject.rendition.label).to eq 'Text' }
+        it { expect(subject.sections).to be subject.rendition.sections }
+        it { expect(subject.sections.length).to eq 1 }
+        it { expect(subject.sections.first).to be text_section }
+      end
+    end
+  end
+
   describe "without a test epub" do
     let(:directory) { 'directory' }
     let(:noid) { 'validnoid' }
     let(:epub) { double("epub") }
     let(:validator) { double("validator") }
+    let(:content) { double('content') }
 
     before do
       allow(File).to receive(:exist?).with(directory).and_return(true)
       allow(EPub::Validator).to receive(:from_directory).and_return(validator)
       allow(validator).to receive(:id).and_return(noid)
       allow(validator).to receive(:content_file).and_return(true)
-      allow(validator).to receive(:content).and_return(true)
+      allow(validator).to receive(:content).and_return(content)
       allow(validator).to receive(:toc).and_return(true)
       allow(validator).to receive(:root_path).and_return(nil)
       allow(validator).to receive(:multi_rendition).and_return("no")
@@ -25,12 +93,6 @@ RSpec.describe EPub::Publication do
 
     # Class Methods
 
-    describe '#new' do
-      it 'private_class_method' do
-        expect { is_expected }.to raise_error(NoMethodError)
-      end
-    end
-
     describe '#null_object' do
       subject { described_class.null_object }
 
@@ -39,11 +101,9 @@ RSpec.describe EPub::Publication do
 
       it { is_expected.to be_an_instance_of(EPub::PublicationNullObject) }
       it { expect { EPub::PublicationNullObject.new }.to raise_error(NoMethodError) }
-      it { expect(subject.id).to eq 'epub_null' }
+      it { expect(subject.id).to eq 'null_epub' }
       it { expect(subject.chapters).to be_an_instance_of(Array) }
       it { expect(subject.chapters).to be_empty }
-      it { expect(subject.presenter).to be_an_instance_of(EPub::PublicationPresenter) }
-      it { expect(subject.presenter.id).to eq 'epub_null' }
       it { expect(subject.read(file_entry)).to be_a(String) }
       it { expect(subject.read(file_entry)).to be_empty }
       it { expect(subject.file(file_entry)).to be_a(String) }
@@ -59,15 +119,6 @@ RSpec.describe EPub::Publication do
       subject { described_class.from_directory(directory).id }
       it 'returns noid' do
         is_expected.to eq noid
-      end
-    end
-
-    describe '#presenter' do
-      subject { described_class.from_directory(directory).presenter }
-
-      it 'returns an publication presenter' do
-        is_expected.to be_an_instance_of(EPub::PublicationPresenter)
-        expect(subject.id).to eq noid
       end
     end
 
