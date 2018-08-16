@@ -53,6 +53,23 @@
   background-position: 0;
 }
 
+// homepage
+p.header {
+  line-height: 1.5em;
+  color: #002C63;
+  @include crete;
+}
+
+span.value {
+  display: block;
+  font-size: 1.65rem;
+  line-height: 1.2em;
+  margin: 1.78rem 0 .75em 0;
+  color: #002C63;
+  @include crete;
+}
+
+
 // video
 .promo {
   margin-top: 2em;
@@ -84,6 +101,9 @@
 //// 3-things icons
 .icon {
   font-size: 2.4rem;
+  display: block;
+  line-height: 1.2em;
+  margin: 1.78rem 0 .75em 0;
 }
 //// sign-up submit
 .sign-up {
@@ -93,6 +113,15 @@
 // layout
 p {
   line-height: 1.7rem;
+}
+
+// blurbs
+p.blurb {
+  font-size: 1.65rem;
+  line-height: 1.2em;
+  margin-bottom: 0.75em;
+  color: #FFF;
+  @include crete
 }
 
 // partners
@@ -148,16 +177,26 @@ hr.brand {
     margin-bottom: 20px;
   }
 
-  h3, h4, h5 {
+  h3 {
     margin-top: 0;
   }
 
-  h4 {
-    margin-bottom: 0;
+  .author,
+  .pubdate {
+    display: block;
+    color: #002C63;
+    line-height: 1.6em;
+    @include crete;
   }
 
-  h5 {
+  .author {
+    font-size: .95rem;
+  }
+
+  .pubdate {
     font-size: .8em;
+    margin-top: 0;
+    margin-bottom: 0.5em;
   }
 
   .project-cover {
@@ -181,6 +220,10 @@ hr.brand {
 // sponsor
 .sponsor p {
   line-height: 2rem;
+}
+
+.sponsor a {
+  color: #002C63;
 }
 
 // Terms
