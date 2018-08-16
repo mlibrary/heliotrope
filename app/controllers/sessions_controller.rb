@@ -81,7 +81,7 @@ class SessionsController < ApplicationController
 
     def unfiltered_discovery_feed
       json = if /^production$/i.match?(Rails.env)
-               HTTParty.get("/Shibboleth.sso/DiscoFeed").body
+               Faraday.get("/Shibboleth.sso/DiscoFeed").body
              else
                File.read(Rails.root.join('config', 'discovery_feed.json'))
              end

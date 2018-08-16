@@ -92,10 +92,9 @@ gem 'cozy-sun-bear', git: 'https://github.com/mlibrary/cozy-sun-bear', ref: '4b5
 gem 'devise'
 gem 'devise-guests', '~> 0.3'
 
-gem 'httparty'
+gem 'faraday', '~>0.12.2'
+gem 'faraday_middleware', '~>0.12.2'
 
-# gem 'hyrax', '1.0.4'
-# gem 'hyrax', '2.0.0.rc1'
 gem 'hyrax', '2.0.0'
 
 # Use Jekyll for blog and informational pages

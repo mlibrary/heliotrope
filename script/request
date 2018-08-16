@@ -11,7 +11,18 @@ options = OpenStruct.new
 option_parser = OptionParser.new do |opts|
   opts.banner = "Usage: #{$0} -l -p [-b <base_uri>] <token>"
   opts.on('-b', '--base [uri]', 'URL to api') do |base_uri|
-    options.base_uri = HTTParty.normalize_base_uri(base_uri)
+    # def self.normalize_base_uri(url) #:nodoc:
+    #   normalized_url = url.dup
+    #   use_ssl = (normalized_url =~ /^https/) || (normalized_url =~ /:443\b/)
+    #   ends_with_slash = normalized_url =~ /\/$/
+    #
+    #   normalized_url.chop! if ends_with_slash
+    #     #   normalized_url.gsub!(/^https?:\/\//i, '')
+    #     #
+    #     #   "http#{'s' if use_ssl}://#{normalized_url}"
+    #     # end
+    #     # options.base_uri = HTTParty.normalize_base_uri(base_uri)
+    options.base_uri = base_uri
   end
   opts.on('-p', '--products', 'List products') do
     list_products = true

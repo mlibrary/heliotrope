@@ -40,7 +40,7 @@ class HandleService
     # 2 : Error. Something unexpected went wrong during handle resolution. (HTTP 500 Internal Server Error)
     # 100 : Handle Not Found. (HTTP 404 Not Found)
     # 200 : Values Not Found. The handle exists but has no values (or no values according to the types and indices specified). (HTTP 200 OK)
-    response = HTTParty.get("http://hdl.handle.net/api/handles/#{path(noid)}")
+    response = Faraday.get("http://hdl.handle.net/api/handles/#{path(noid)}")
     url = nil
     if response.code == 200 && response['responseCode'] == 1
       response['values'].each do |value|
