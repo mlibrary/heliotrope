@@ -10,7 +10,7 @@
 
   <div id="tabs-content" class="tab-content" aria-live="polite">
     <section id="info" class="tab-pane fade in active" role="tabpanel" aria-hidden="false" aria-labelledby="tab-info" tabindex="0">
-      <h4 class="sr-only">Info</h4>
+      <h2 class="sr-only">Info</h2>
       <table class="table <%= dom_class(presenter) %> attributes" <%= presenter.microdata_type_to_html %>>
         <tbody>
           <%= render 'attribute_rows_info', presenter: presenter %>
@@ -27,7 +27,7 @@
       </table>
     </section> <!-- /.info panel -->
     <section id="permissions" class="tab-pane fade" role="tabpanel" aria-hidden="true" aria-labelledby="tab-permissions" tabindex="0">
-      <h4 class="sr-only">Permissions</h4>
+      <h2 class="sr-only">Permissions</h2>
       <table class="table <%= dom_class(presenter) %> attributes" <%= presenter.microdata_type_to_html %>>
         <tbody>
           <%= render 'attribute_rows_permissions', presenter: presenter %>
@@ -36,7 +36,7 @@
     </section> <!-- /.permissions panel -->
 
     <section id="stats" class="tab-pane fade" role="tabpanel" aria-hidden="true" aria-labelledby="tab-stats" tabindex="0">
-      <h4 class="sr-only">Stats</h4>
+      <h2 class="sr-only">Stats</h2>
       <table class="table <%= dom_class(presenter) %> attributes" <%= presenter.microdata_type_to_html %>>
         <tbody>
           <%= render 'attribute_rows_stats', presenter: presenter %>
@@ -45,7 +45,7 @@
     </section>  <!-- /.stats panel -->
 
     <section id="technical-info" class="tab-pane fade" role="tabpanel" aria-hidden="true" aria-labelledby="tab-technical-info" tabindex="0">
-      <h4 class="sr-only">Technical Info</h4>
+      <h2 class="sr-only">Technical Info</h2>
       <table class="table <%= dom_class(presenter) %> attributes" <%= presenter.microdata_type_to_html %>>
         <tbody>
          <%= render 'attribute_rows_technical', presenter: presenter %>

@@ -560,6 +560,21 @@ a > g, a > path {
   color: #ffffff;
   background-position: 0; }
 
+p.header {
+  line-height: 1.5em;
+  color: #002C63;
+  font-family: "Crete Round", Merriweather, georgia, serif;
+  font-weight: 400; }
+
+span.value {
+  display: block;
+  font-size: 1.65rem;
+  line-height: 1.2em;
+  margin: 1.78rem 0 .75em 0;
+  color: #002C63;
+  font-family: "Crete Round", Merriweather, georgia, serif;
+  font-weight: 400; }
+
 .promo {
   margin-top: 2em; }
 
@@ -582,13 +597,24 @@ a > g, a > path {
   position: absolute; }
 
 .icon {
-  font-size: 2.4rem; }
+  font-size: 2.4rem;
+  display: block;
+  line-height: 1.2em;
+  margin: 1.78rem 0 .75em 0; }
 
 .sign-up {
   margin-top: -.1rem; }
 
 p {
   line-height: 1.7rem; }
+
+p.blurb {
+  font-size: 1.65rem;
+  line-height: 1.2em;
+  margin-bottom: 0.75em;
+  color: #FFF;
+  font-family: "Crete Round", Merriweather, georgia, serif;
+  font-weight: 400; }
 
 .partners img {
   width: 100%;
@@ -622,12 +648,21 @@ hr.brand {
     margin-bottom: 5em; }
   .case-study .row:last-child {
     margin-bottom: 20px; }
-  .case-study h3, .case-study h4, .case-study h5 {
+  .case-study h3 {
     margin-top: 0; }
-  .case-study h4 {
-    margin-bottom: 0; }
-  .case-study h5 {
-    font-size: .8em; }
+  .case-study .author,
+  .case-study .pubdate {
+    display: block;
+    color: #002C63;
+    line-height: 1.6em;
+    font-family: "Crete Round", Merriweather, georgia, serif;
+    font-weight: 400; }
+  .case-study .author {
+    font-size: .95rem; }
+  .case-study .pubdate {
+    font-size: .8em;
+    margin-top: 0;
+    margin-bottom: 0.5em; }
   .case-study .project-cover a:hover,
   .case-study .project-cover a:active {
     color: transparent; }
@@ -639,6 +674,9 @@ hr.brand {
 
 .sponsor p {
   line-height: 2rem; }
+
+.sponsor a {
+  color: #002C63; }
 
 ol.terms ul li {
   list-style-type: lower-latin; }
