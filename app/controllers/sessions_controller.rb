@@ -52,7 +52,41 @@ class SessionsController < ApplicationController
     redirect_to saved_return_location
   end
 
+  def discovery_feed
+    id = params[:id] || ''
+    institutions = []
+    component = Component.find_by(handle: '2027/fulcrum.' + id)
+    if component.present?
+      lessees = component.lessees(true)
+      if lessees.present?
+        institutions = Institution.where(identifier: lessees.pluck(:identifier))
+      end
+    end
+    institutions = Set.new(institutions.map(&:entity_id))
+    feed = Rails.cache.fetch("disco:" + id, expires_in: 15.minutes) do
+      obj_disco_feed = unfiltered_discovery_feed
+      obj_filtered_disco_feed = obj_disco_feed
+      unless institutions.empty?
+        obj_filtered_disco_feed = []
+        obj_disco_feed.each do |entry|
+          obj_filtered_disco_feed << entry if entry["entityID"].in?(institutions)
+        end
+      end
+      obj_filtered_disco_feed
+    end
+    render json: feed
+  end
+
   private
+
+    def unfiltered_discovery_feed
+      json = if /^production$/i.match?(Rails.env)
+               HTTParty.get("/Shibboleth.sso/DiscoFeed").body
+             else
+               File.read(Rails.root.join('config', 'discovery_feed.json'))
+             end
+      JSON.parse(json)
+    end
 
     def return_location
       rl = stored_location_for(:user)

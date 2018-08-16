@@ -51,7 +51,9 @@
           <p>If your institution has purchased a subcription, you may attempt to login at the appropriate institution. <a href="https://www.humanitiesebook.org/subscriptions/institutions/subscribing-institutions/">See if your institution is a subscriber</a>.</p>
           <div id="idpSelect" class="panel-body"></div>
           <script>
+            <% product_id = @monograph_presenter.present? ? @monograph_presenter.id : @presenter.id %>
             idSelectUIParms = new IdPSelectUIParms();
+            idSelectUIParms.dataSource = '<%= '/discovery_feed/' + product_id %>';
             idSelectUIParms.defaultLogo = '<%= asset_path('fulcrum-logo.png') %>';
             idSelectUIParms.defaultLogoWidth = 8;
             idSelectUIParms.defaultLogoHeight = 16;
