@@ -42,4 +42,43 @@ RSpec.describe SessionsController, type: :controller do
       expect(cookies[:fulcrum_signed_in_static]).to be nil
     end
   end
+
+  describe '#discovery_feed' do
+    it 'gets full discovery feed' do
+      get :discovery_feed
+      expect(response).to be_success
+      expect { JSON.parse response.body }.not_to raise_error
+      expect(JSON.parse(response.body).size).to be > 1
+    end
+  end
+
+  describe '#discovery_feed/id' do
+    let(:file_set) { create(:file_set, content: File.open(File.join(fixture_path, 'moby-dick.epub'))) }
+    it 'gets parameterized discovery feed' do
+      component = Component.create!(handle: HandleService.path(file_set.id))
+      institution = Institution.create!(identifier: 'UM', name: 'Name', site: 'Site',
+                                        login: 'Login', entity_id: 'https://shibboleth.umich.edu/idp/shibboleth')
+      product = Product.create!(identifier: 'product', name: 'name', purchase: 'purchase')
+      product.components << component
+      grouping = Grouping.create!(identifier: 'grouping')
+      product.lessees << grouping.lessee
+      lessee = Lessee.find_by(identifier: 'UM')
+      grouping.lessees << lessee
+      institution.save!
+      lessee.save!
+      grouping.save!
+      product.save!
+      get :discovery_feed, params: { id: file_set.id }
+      expect(response).to have_http_status(:success)
+      expect { JSON.parse response.body }.not_to raise_error
+      expect(JSON.parse(response.body).size).to be(1)
+      expect(JSON.parse(response.body)[0]['entityID']).to eq('https://shibboleth.umich.edu/idp/shibboleth')
+    end
+    it 'gets full discovery feed if given bogus id' do
+      get :discovery_feed, params: { id: 'bogus_id' }
+      expect(response).to have_http_status(:success)
+      expect { JSON.parse response.body }.not_to raise_error
+      expect(JSON.parse(response.body).size).to be > 1
+    end
+  end
 end
