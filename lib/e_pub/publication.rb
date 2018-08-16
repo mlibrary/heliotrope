@@ -102,20 +102,17 @@ module EPub
       i = 0
       content.xpath("//spine/itemref/@idref").each do |idref|
         i += 1
-        content.xpath("//manifest/item").each do |item|
-          next unless item.attributes['id'].text == idref.text
+        item = content.xpath("//manifest//item[@id='#{idref.text}']").first
+        doc = Nokogiri::XML(File.open(File.join(root_path, File.dirname(content_file), item.attributes['href'].text)))
+        doc.remove_namespaces!
 
-          doc = Nokogiri::XML(File.open(File.join(root_path, File.dirname(content_file), item.attributes['href'].text)))
-          doc.remove_namespaces!
-
-          chapters.push(Chapter.send(:new,
-                                     id: item.attributes['id'].text,
-                                     href: item.attributes['href'].text,
-                                     title: toc.chapter_title(item),
-                                     basecfi: "/6/#{i * 2}[#{item.attributes['id'].text}]!",
-                                     doc: doc,
-                                     publication: self))
-        end
+        chapters.push(Chapter.send(:new,
+                                   id: item.attributes['id'].text,
+                                   href: item.attributes['href'].text,
+                                   title: toc.chapter_title(item),
+                                   basecfi: "/6/#{i * 2}[#{item.attributes['id'].text}]!",
+                                   doc: doc,
+                                   publication: self))
       end
       chapters
     end
