@@ -34,7 +34,7 @@ describe HandleService do
     let(:value) { double('value') }
 
     before do
-      allow(HTTParty).to receive(:get).with("http://hdl.handle.net/api/handles/#{subject.path(validnoid)}").and_return(response)
+      allow(Faraday).to receive(:get).with("http://hdl.handle.net/api/handles/#{subject.path(validnoid)}").and_return(response)
       allow(response).to receive(:code).and_return(code)
       allow(response).to receive(:[]).with('responseCode').and_return(responseCode)
     end

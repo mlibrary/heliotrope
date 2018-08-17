@@ -266,6 +266,8 @@ GEM
       multipart-post (>= 1.2, < 3)
     faraday-encoding (0.0.4)
       faraday
+    faraday_middleware (0.12.2)
+      faraday (>= 0.7.4, < 1.0)
     fcrepo_wrapper (0.5.2)
       ruby-progressbar
     ffi (1.9.18)
@@ -931,8 +933,9 @@ DEPENDENCIES
   factory_bot_rails
   fakefs
   faker
+  faraday (~> 0.12.2)
+  faraday_middleware (~> 0.12.2)
   fcrepo_wrapper (= 0.5.2)
-  httparty
   hyrax (= 2.0.0)
   jbuilder (~> 2.5)
   jekyll (~> 3.1.3)

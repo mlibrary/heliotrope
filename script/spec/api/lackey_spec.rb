@@ -9,12 +9,14 @@ RSpec.describe Lackey do
   lessees_initial_count = lackey.lessees.count
   n = 3
   products = []
+  product_names = []
   lessees = []
 
   before(:all) do
     n.times do |i|
       products << "product#{i}"
-      lackey.find_or_create_product(identifier: products[i])
+      product_names << "product #{i} name"
+      lackey.find_or_create_product(identifier: products[i], name: product_names[i])
       lessees << "lessee#{i}@example.com"
       lackey.find_or_create_lessee(identifier: lessees[i])
     end
@@ -23,7 +25,7 @@ RSpec.describe Lackey do
   after(:all) do
     n.times do |i|
       n.times do |j|
-        lackey.unlink(product_identifier: products[i], lessee_identifier: lessees[j])
+        lackey.unlink(product_identifier: products[i], product_name: product_names[i], lessee_identifier: lessees[j])
       end
     end
     n.times do |i|
@@ -42,18 +44,18 @@ RSpec.describe Lackey do
     end
 
     n.times do |i|
-      lackey.link(product_identifier: products[0], lessee_identifier: lessees[i])
+      lackey.link(product_identifier: products[0], product_name: product_names[0], lessee_identifier: lessees[i])
     end
     expect(lackey.product_lessees(product_identifier: products[0]).count).to eq(n)
 
     n.times do |i|
-      lackey.link(product_identifier: products[i], lessee_identifier: lessees[0])
+      lackey.link(product_identifier: products[i], product_name: product_names[i], lessee_identifier: lessees[0])
     end
     expect(lackey.lessee_products(lessee_identifier: lessees[0]).count).to eq(n)
 
     n.times do |i|
-      lackey.unlink(product_identifier: products[0], lessee_identifier: lessees[i])
-      lackey.unlink(product_identifier: products[i], lessee_identifier: lessees[0])
+      lackey.unlink(product_identifier: products[0], product_name: product_names[0], lessee_identifier: lessees[i])
+      lackey.unlink(product_identifier: products[i], product_name: product_names[i], lessee_identifier: lessees[0])
     end
     expect(lackey.product_lessees(product_identifier: products[0]).count).to eq(0)
     expect(lackey.lessee_products(lessee_identifier: lessees[0]).count).to eq(0)
