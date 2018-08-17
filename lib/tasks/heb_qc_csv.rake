@@ -4,7 +4,7 @@ desc 'Output CSV file (for QC Google Sheet) for HEB Monographs ingested since a 
 namespace :heliotrope do
   task :heb_qc_csv, [:datetime] => :environment do |_t, args|
     # Usage: Needs a valid datetime as a parameter
-    # $ bundle exec rake "heliotrope:heb_qc_csv[2018-06-08T00:00:00-04:00]"
+    # $ bundle exec rake "heliotrope:heb_qc_csv[2018-06-08T00:00:00-05:00]"
 
     begin
       start_time = DateTime.strptime(args.datetime, '%Y-%m-%dT%H:%M:%S%z')
