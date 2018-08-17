@@ -19,16 +19,12 @@ module EPub
       # Instance Methods
 
       def idref_with_index_from_href(href)
+        href = href.split('#').first
         idref = href_idref[href]
         idref ||= base_href_idref[href]
         idref ||= up_one_href_idref[href]
         index = idref_index[idref]
         return [idref, index] if idref.present? && index.positive?
-        # match_data = /(^.*)(#.*)/.match(href)
-        # return ['', 0] unless match_data
-        # idref = href_idref[match_data[1]]
-        # index = idref_index[idref]
-        # return [idref, index] if idref.present? && index.positive?
         ['', 0]
       end
 
@@ -59,6 +55,38 @@ module EPub
           @chapter_list = ChapterList.null_object
         end
         @chapter_list
+      end
+
+      def cfi_from_href_anchor_tag(idref, index, toc_href)
+        tag = toc_href.split('#').last
+
+        chapter_href = @content_doc.xpath(".//manifest/item[@id='#{idref}']").first.attributes["href"].value
+        chapter = File.join(File.dirname(@full_path), chapter_href)
+        doc = Nokogiri::XML::Document.parse(File.open(chapter)).remove_namespaces!
+        node = doc.at_css(%([id="#{tag}"]))
+
+        indexes = []
+        this = node
+
+        while this && this.name != "body"
+          siblings = this.parent.element_children
+          idx = siblings.index(this)
+
+          indexes << if this.text?
+                       idx + 1
+                     else
+                       (idx + 1) * 2
+                     end
+
+          indexes[-1] = "#{indexes[-1]}[#{this['id']}]" if this['id']
+
+          this = this.parent
+        end
+        indexes.reverse!
+
+        return "/6/#{index * 2}[#{idref}]!/4/1:0" if indexes.length.zero?
+
+        "/6/#{index * 2}[#{idref}]!/4/#{indexes.join('/')}"
       end
 
       private
