@@ -3,16 +3,25 @@ layout: page
 title: Accessibility
 permalink: /accessibility/
 ---
-<p class="milli">Last updated: May 11, 2018</p>
+<p class="milli">Last updated: August 18, 2018</p>
 
-<p>Accessibility is a core design component of Fulcrum. We are dedicated to creating inclusive services and content for all readers and are constantly working to make Fulcrum and its content as accessible and usable as possible.</p>
+<p>Accessibility is a core value and design component of Fulcrum. We are dedicated to creating inclusive services and content for all readers, and are constantly working to make Fulcrum and its content as accessible and usable as possible.</p>
 
-<p>The Fulcrum platform aims to meet <a href="https://www.w3.org/WAI/WCAG20/quickref/" title="Web Content Accessibility Guidelines 2.0 AA">WCAG 2.0 AA Standards</a> by providing infrastructure and resources to support accessible books, image descriptions, transcripts for audio, captions for video, and alternative formats for digitized content. We are currently drafting a VPAT 2.1 document which we will make publicly available when completed.</p>
+<p>The Fulcrum platform aims to meet <a href="https://www.w3.org/WAI/WCAG21/quickref/?versions=2.1" title="Web Content Accessibility Guidelines 2.1 AA">WCAG 2.1 AA Standards</a> in both the platform and its content by providing infrastructure and resources to support accessible books, image descriptions, transcripts for audio, captions for video, and alternative formats for digitized content.</p>
 
-<p>Fulcrum provides hosting for a number of different publishers. Accessible content is the primary responsibility of each publisher and we are constantly working with them to support and improve the accessibility of their content. Our initiatives include partnering in the development of projects such as the <a href="https://describingvisualresources.org/">Describing Visual Resources Toolkit</a>.</p>
+<p>The extent to which Fulcrums meets WCAG 2.0 and Section 508 of the U.S. Rehabilitation Act is reported in Fulcrum's <a href="/docs/Fulcrum-VPAT2.1-20180818.pdf">Voluntary Product Accessibility Template (VPAT) Version 2.1</a>.</p>
 
-<h2>Compatibility with tools</h2>
-<p>Fulcrum should be compatible with recent versions of the following screen readers:</p>
+<p>Accessibility features, compatibility, and known issues are also summarized on this page.</p>
+
+<h2>Narrative and Roadmap</h2>
+<p>From June to August 2018, Michigan Publishing and Fulcrum worked with Luke Kudryashov through the <a href="https://www.rackham.umich.edu/publicscholarship/programs/rackham-public-engagement-fellowships/">Rackham Public Engagement Fellowship program</a> to conduct an accessibility evaluation of the Fulcrum platform. Building on the previous usability testing, Luke completed a VPAT 2.1 by testing the platform with the use of assistive technology, documented additional accessibility and usability issues, and also worked with Emma DiPasquale, the Fulcrum community manager, to provide more detailed accessibility documentation for the Fulcrum website.</p>
+
+<p>From January to March 2018, in collaboration with <a href="https://usability.msu.edu/">Michigan State University Usability and Accessibility Research Consulting</a>, Fulcrum was tested by assistive technology users, identifying usability and accessibility issues, which we are actively working to address. Some of these include: usability issues for assistive technology; missing image descriptions for assistive technology navigation; and missing captions and transcripts for video and audio content.</p>
+
+
+<h2>Compatibility</h2>
+<h3>Screen Reader Compatibility</h3>
+<p>Fulcrum should be compatible with most major screen readers, but is optimized for use with NVDA in Firefox. New features are tested with NVDA in Firefox and VoiceOver in Safari. Fulcrum should be compatible with recent versions of the following screen readers:</p>
 
 <ul>
   <li>JAWS</li>
@@ -23,23 +32,89 @@ permalink: /accessibility/
 <p>The site should also be compatible with:</p>
 
 <ul>
-  <li>basic operating system screen magnifiers, such as ZoomText magnifier</li>
+  <li>basic operating system screen magnifiers and contrast settings</li>
+  <li>accessibility browser extensions, such as Read Aloud (text to speech), Zoom Text Only (magnifier), and High Contrast for Chrome</li>
   <li>speech recognition software</li>
   <li>operating system speech packages</li>
 </ul>
 
-<h2>Known issues</h2>
-<p>From January to March 2018, in collaboration with <a href="https://usability.msu.edu/">Michigan State University Usability and Accessibility Research Consulting</a>, Fulcrum was tested by assistive technology users, identifying usability and accessibility issues we are actively working to fix. Some of these include:</p>
-
+<h4>Known issues</h4>
+<p>For readers using NVDA:</p>
 <ul>
-  <li>The “More” pop-up windows when filtering media are problematic for keyboard-only or assistive technology users.</li>
-  <li>While our e-reader is accessible, there are usability issues for assistive technology users.</li>
-  <li>Some EPUB content from Fulcrum partners does not contain image descriptions or sufficient headings for assistive technology navigation.</li>
-  <li>Some video content does not have captions; some audio content does not have transcripts.</li>
+  <li>When changing location in the Fulcrum E-Reader using the navigation slider, each location is read only as a number. This number indicates the percentage of progress through the book (out of 100%).</li>
+  <li>In the Fulcrum E-Reader, books containing embedded media have links that read as “Fulcrum logo” rather than the name of the media element. These links will take you to the media page for each embedded image, video, or audio file.</li>
+  <li>In the Fulcrum E-Reader, alt-text image descriptions will be read when the embedded image is selected via the TAB key, but will not be read automatically via continuous reading. Alt-text image descriptions can be accessed by selecting the embedded image via keyboard controls or by following the link to the full image media page.</li>
+  <li>In the Fulcrum E-Reader, when searching inside the text of a book and following a search result, the matched term in the text is indicated on the page only through visual highlighting of the matched text, but the excerpts and chapter locations are accessible through screen reader technology.</li>
+  <li>Screen reader users are not notified when moving between pages in the Fulcrum E-Reader.</li>
+  <li>In the monograph catalog or book title pages, “Table of Contents” is the default tab. To get to other tabs on that page, navigate to the “Table of Contents” heading and press the right arrow key.</li>
+  <li>In the media pages, “Info” is the default tab. To get to others tabs, navigate to the “Info” heading and press the right arrow key.</li>
+</ul>
+<p>For readers using VoiceOver:</p>
+<ul>
+  <li>In the Fulcrum E-Reader, if reading from the top in Safari, VoiceOver freezes on the permalink field in the top left hand side without continuing to read the main text. To avoid this issue, use VoiceOver with Google Chrome or Firefox or press “tab” on your keyboard to get to the main text rather than reading the entire page with VoiceOver.</li>
+  <li>In the Fulcrum E-Reader, when changing text size in reader preferences (nested under the settings button in top right hand corner), the percentage is read as out of 100% not the percentage by which text size is actually enlarged. The default text size is 100% but is read by VoiceOver as 14%. 200% is read by VoiceOver as 43%, 300% as 71%, and 400% as 100%.</li>
+  <li>When changing the location in the Fulcrum E-Reader through the bottom navigation slider, VoiceOver does not read the correct location. To find out the accurate current location in the text, press “tab” once to have VoiceOver read the label under the scroll bar.</li>
+  <li>When the focus in the Fulcrum E-Reader is on a piece of embedded content such as a video or image, the VoiceOver rotor only recognizes the media controls as links. To access the other links and menu buttons through the rotor, navigate away from the embedded piece of media first.</li>
 </ul>
 
-<p>Our accessibility development work is publicly available and can be tracked in our issue tracker for <a href="https://tools.lib.umich.edu/jira/projects/HELIO/issues/HELIO-1801?filter=allopenissues">Fulcrum</a> and our <a href="https://tools.lib.umich.edu/jira/projects/CSB/issues">E-Reader application</a>.</p>
+<h3>Keyboard Compatibility</h3>
+<ul>
+  <li>In the Fulcrum E-Reader, all of the pages, and media content such as videos, audio, and images should be accessible via standard keyboard controls only (no use of a mouse required).</li>
+  <li>Standard keyboard controls include:
+    <ul>
+      <li>TAB to move through links and buttons</li>
+      <li>SHIFT+TAB to go back to a previous link or button</li>
+      <li>ENTER to select</li>
+    </ul>
+  </li>
+  <li>Stats charts and some specialized content such as 3D models cannot be controlled via keyboard.</li>
+  <li>Left and right arrow keys in the Fulcrum E-Reader provide shortcuts for easy page flipping or scrolling.</li>
+  <li>Using scroll mode in the Fulcrum E-Reader, Page Up and Page Down and up and down arrow keys also allow for page scrolling.</li>
+  <li>The default video player shortcuts are as follows:
+    <ul>
+      <li>Alt + Control + p or spacebar = Play/Pause</li>
+      <li>Alt + Control + s = Restart</li>
+      <li>Alt + Control + r = Rewind</li>
+      <li>Alt + Control + f = Forward</li>
+      <li>Alt + Control + v or 1-9 = Volume</li>
+      <li>Alt + Control + m = Mute/Unmute</li>
+      <li>Alt + Control + c = Hide captions</li>
+      <li>Escape = Close current dialog or popup menu</li>
+    </ul>
+    (The modifier keys can be changed through video keyboard settings.)
+  </li>
+</ul>
+
+<h4>Known issues</h4>
+<p>For readers using keyboard only:</p>
+<ul>
+  <li>Video transcripts are keyboard accessible in Firefox but not in Chrome, Edge, or Safari (make sure “Keyboard-enable transcript” is selected in video transcript preferences).</li>
+  <li>In the Fulcrum E-Reader, pressing TAB to enter the text of the book takes the focus back to the first link in the chapter, rather than the first link on the currently opened page.</li>
+  <li>In the Fulcrum E-Reader, the TAB key moves through each of the video player controls for videos embedded in the text, but the controls remain hidden unless the mouse hovers over the player. The navigation is not trapped and will move onto the next link or button after moving through all of the controls. Following is a list of video controls in order: open video in new tab (with expanded accessibility features), play, restart, rewind, forward, timeline slider, volume, slower, faster, hide captions, preferences.</li>
+</ul>
+
+<h2>Features</h2>
+<ul>
+  <li>Users can choose between page-by-page and scroll view in the Fulcrum E-Reader.</li>
+  <li>AblePlayer video and audio player has the capability for captions, audio descriptions, and transcripts, though not all publishers may provide these features. The caption font, size, color, and location can be adjusted in the player settings.</li>
+  <li>Image descriptions are enabled for screen readers through alt-text attributes (when provided by publisher).</li>
+  <li>While there is no built-in text-to-speech feature, screen readers and text-to-speech browser extensions such as Read Aloud for Chrome should work with the Fulcrum E-Reader as well as all of the book, publisher, and media pages.</li>
+</ul>
+
+<p>For readers with low vision:</p>
+<ul>
+  <li>In the Fulcrum E-Reader, text can be zoomed up to 400% through the preferences menu. Switching to scroll view is recommended when enlarging the text as this will shift the text from two columns to one.</li>
+  <li>Operating system text zoom and font accessibility settings and browser extensions such as Zoom Text Only for Chrome should work with all of the other text on book, publisher, and media pages, as well as the menu bars in the Fulcrum E-Reader.</li>
+  <li>The video player offers a full screen view and the image viewer offers a zoom function.</li>
+  <li>The video player supports user control of caption settings, including toggle, position, font, size, text color, background, and opacity as well as user control of audio description (when captions and audio descriptions provided by publisher).</li>
+  <li>Operating system contrast accessibility features and browser extensions such as High Contrast for Chrome should work with the Fulcrum E-Reader in addition to all other Fulcrum pages.</li>
+</ul>
+
+<h2>Creating accessible content</h2>
+<p>Fulcrum provides hosting for a number of different publishers. Accessible content is the primary responsibility of each publisher and we work with them to support and improve the accessibility of their content. Our initiatives include partnering in the development of projects such as the <a href="https://describingvisualresources.org/">Describing Visual Resources Toolkit</a>.</p>
 
 <h2>Get help and provide feedback</h2>
-<p>Are you having trouble using Fulcrum? <a href="https://goo.gl/forms/mqmDGSe5ihDgWrii1" title="Accessibility Feedback Form">Please let us know</a> so that we can improve your experience.</p>
-<p>If you need to be provided with an accessible version of a book or need other assistance, please send an e-mail to <a href="mailto:fulcrum-info@umich.edu">fulcrum-info@umich.edu</a>.</p>
+
+<p>We are continuing to develop accessibility features and welcome suggestions on how to make the platform more accessible and user-friendly. If you are having trouble using Fulcrum, please let us know using the <a href="https://goo.gl/forms/mqmDGSe5ihDgWrii1" title="Accessibility Feedback Form">feedback form</a> so we can improve your experience.</p>
+
+<p>Our accessibility development work is publicly available and can be tracked in our <a href="https://tools.lib.umich.edu/jira/browse/HELIO-1806?jql=project%20in%20(CSB%2C%20HELIO)%20AND%20status%20in%20(%22In%20Progress%22%2C%20%22To%20Do%22%2C%20%22For%20Review%22)%20AND%20labels%20%3D%20accessibility">issue tracker for Fulcrum</a>. If you need to be provided with an accessible version of a book or need other assistance, please email <a href="mailto:fulcrum-info@umich.edu">fulcrum-info@umich.edu</a>.</p>

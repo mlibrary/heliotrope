@@ -712,7 +712,8 @@ footer.page-footer {
   padding-left: 2.5rem; }
 
 .post-content ul li {
-  list-style-type: disc; }
+  list-style-type: disc;
+  margin-bottom: .3em; }
 
 .button-collapse {
   color: #26a69a; }
