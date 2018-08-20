@@ -37,17 +37,21 @@ SitemapGenerator::Sitemap.create do
   # add '/static/about_project', changefreq: 'monthly'
   # add '/static/rights', changefreq: 'monthly'
 
-  Monograph.all.to_a.each do |m|
-    next if m.state != "http://fedora.info/definitions/1/0/access/ObjState#active"
-    next if m.visibility == "restricted"
-
-    m.ordered_members.to_a.each do |member|
-      if member.file_set?
-        url = Rails.application.routes.url_helpers.hyrax_file_set_path(member.id)
-        add url, lastmod: m.date_modified, priority: 0.5, changefreq: 'monthly'
-      end
+  docs = ActiveFedora::SolrService.query("+has_model_ssim:Monograph", rows: 100_000)
+  docs.each do |d|
+    next unless d['visibility_ssi'] == 'open'
+    d['file_set_ids_ssim'].each do |fsid|
+      fs = ActiveFedora::SolrService.query("{!terms f=id}#{fsid}", rows: 1).first
+      next unless fs['visibility_ssi'] == 'open'
+      rep = FeaturedRepresentative.where(monograph_id: d['id'], file_set_id: fsid).first
+      url = if rep&.kind == 'epub'
+              Rails.application.routes.url_helpers.epub_path(fsid)
+            else
+              Rails.application.routes.url_helpers.hyrax_file_set_path(fsid)
+            end
+      add url, lastmod: d['date_modified_dtsi'], priority: 0.5, changefreq: 'monthly'
     end
-    url = Rails.application.routes.url_helpers.hyrax_monograph_path(m.id)
-    add url, lastmod: m.date_modified, priority: 1, changefreq: 'monthly'
+    url = Rails.application.routes.url_helpers.hyrax_monograph_path(d['id'])
+    add url, lastmod: d['date_modified_dtsi'], priority: 1, changefreq: 'monthly'
   end
 end
