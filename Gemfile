@@ -87,7 +87,7 @@ gem 'clamav', group: :production
 gem 'config'
 
 # Use gem version of cozy-sun-bear
-gem 'cozy-sun-bear', git: 'https://github.com/mlibrary/cozy-sun-bear', ref: '4b5d3b005b44b7b49d04e468b2b8602bef1b2d55'
+gem 'cozy-sun-bear', git: 'https://github.com/mlibrary/cozy-sun-bear', ref: '0743ed26efcad6fb8d09ed1b8ec4b73f86adb441'
 
 gem 'devise'
 gem 'devise-guests', '~> 0.3'

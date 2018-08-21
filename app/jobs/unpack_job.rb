@@ -24,6 +24,7 @@ class UnpackJob < ApplicationJob
       unpack_epub(id, root_path, file)
       create_search_index(root_path)
       epub_webgl_bridge(id, root_path, kind)
+      MinimalEpubJob.perform_later(root_path)
     when 'webgl'
       unpack_webgl(id, root_path, file)
       epub_webgl_bridge(id, root_path, kind)

@@ -19,6 +19,12 @@ class EPubsController < ApplicationController
 
     @epub_download_presenter = EPubDownloadPresenter.new(@presenter, @monograph_presenter, current_ability)
 
+    @use_archive = if File.exist?(File.join(UnpackService.root_path_from_noid(params[:id], 'epub'), params[:id] + ".sm.epub"))
+                     true
+                   else
+                     false
+                   end
+
     CounterService.from(self, @presenter).count(request: 1)
 
     render layout: false
