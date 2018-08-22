@@ -18,33 +18,39 @@ RSpec.describe MinimalEpubJob, type: :job do
     context "if the epub has been unpacked" do
       let(:epub) { create(:file_set, content: File.open(File.join(fixture_path, 'fake_epub_muilti_rendition.epub'))) }
       let(:root_path) { UnpackService.root_path_from_noid(epub.id, 'epub') }
-      let(:sm_epub) { File.join(root_path, epub.id + ".sm.epub") }
-      let(:sm_dir) { File.join(root_path, epub.id + ".sm") }
+      let(:sm_epub) { File.join(root_path, epub.id + '.sm.epub') }
+      let(:sm_dir) { File.join(root_path, epub.id + '.sm') }
+      let(:sm_dir_testing) { sm_dir + '.testing' }
       before do
-        # The UnpackJob actually calls the SmallEpubJob
-        # So delete what the SmallEpubJob created then run it alone
+        # The UnpackJob actually calls the MinimalEpubJob
+        # So to test, delete what the MinimalEpubJob created then run it alone
         UnpackJob.perform_now(epub.id, 'epub')
         FileUtils.rm sm_epub
-        FileUtils.rm_rf sm_dir
       end
 
       it "creates the small epub" do
         expect(File.exist?(sm_epub)).to be false
         expect(Dir.exist?(sm_dir)).to be false
 
+        # Part of MinimalEpubJob is deleting the .sm working directory when done.
+        # For testing however it's better if we have those files to examine.
+        allow(FileUtils).to receive(:remove_entry_secure).with(sm_dir).and_return(true)
         MinimalEpubJob.perform_now(root_path)
+        # But we'll move them so we can test that the deletion of .sm happened too
+        FileUtils.move sm_dir, sm_dir_testing
 
         expect(File.exist?(sm_epub)).to be true
-        expect(Dir.exist?(sm_dir)).to be true
+        # The .sm working directory has been deleted
+        expect(Dir.exist?(sm_dir)).to be false
 
         # no sqlite file
-        expect(File.exist?(File.join(sm_dir, epub.id + ".db"))).to be false
+        expect(File.exist?(File.join(sm_dir_testing, epub.id + ".db"))).to be false
         # no png page images
-        expect(Dir.glob(sm_dir + "OEBPS/images/*.png").count).to be 0
+        expect(Dir.glob(sm_dir_testing + "OEBPS/images/*.png").count).to be 0
         # rewrite images paths in the spine
-        expect(IO.readlines(File.join(sm_dir, "OEBPS/content_fixed_scan.opf")).map { |l| l.match("epubs/#{epub.id}/OEBPS/images/00000003.png") }.compact.count).to eq 1
+        expect(IO.readlines(File.join(sm_dir_testing, "OEBPS/content_fixed_scan.opf")).map { |l| l.match("epubs/#{epub.id}/OEBPS/images/00000003.png") }.compact.count).to eq 1
         # rewrite images paths in the xhtml
-        expect(IO.readlines(File.join(sm_dir, "OEBPS/xhtml/00000001_fixed_scan.xhtml")).map { |l| l.match("epubs/#{epub.id}/OEBPS/images/00000001.png") }.compact.count).to eq 1
+        expect(IO.readlines(File.join(sm_dir_testing, "OEBPS/xhtml/00000001_fixed_scan.xhtml")).map { |l| l.match("epubs/#{epub.id}/OEBPS/images/00000001.png") }.compact.count).to eq 1
       end
     end
   end
