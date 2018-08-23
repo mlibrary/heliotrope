@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-feature 'Edit a file set' do
+describe 'Edit a file set' do
   context 'as a logged in user' do
     let(:user) { create(:platform_admin) }
 
@@ -35,7 +35,7 @@ feature 'Edit a file set' do
       monograph.save!
     end
 
-    scenario do
+    it do
       visit edit_hyrax_file_set_path(file_set)
 
       fill_in 'Resource Type', with: 'image'

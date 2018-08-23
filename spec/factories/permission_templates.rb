@@ -13,7 +13,7 @@ FactoryBot.define do
           if admin_set_id.present?
             begin
               AdminSet.find(admin_set_id)
-            rescue
+            rescue StandardError
               create(:admin_set, id: admin_set_id)
             end
           else
@@ -35,9 +35,9 @@ FactoryBot.define do
     end
 
     transient do
-      with_admin_set false
-      with_workflows false
-      with_active_workflow false
+      with_admin_set { false }
+      with_workflows { false }
+      with_active_workflow { false }
     end
   end
 end

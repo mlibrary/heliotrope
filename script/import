@@ -1,8 +1,9 @@
 #!/usr/bin/env ruby
+# frozen_string_literal: true
 
 require 'optparse'
 puts "Loading environment"
-require File.expand_path('../../config/environment',  __FILE__)
+require File.expand_path('../config/environment', __dir__)
 require 'import'
 
 # Valid selections for access rights.
@@ -14,7 +15,7 @@ def visibility_choices
 end
 
 # Parse the the command line arguments
-def parse_inputs(args)
+def parse_inputs(args) # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
   inputs = {}
   opts = OptionParser.new
 
@@ -42,10 +43,10 @@ def parse_inputs(args)
 
   opts.on('-m [MONOGRAPH ID]', '--monograph_id', 'ID of existing monograph to which assets will be added, i.e. "reimporting". (required when reimporting)') do |monograph_id|
     inputs[:monograph_id] = monograph_id
-    raise "This ID does not correspond to a pre-existing monograph" unless !Monograph.where(id: monograph_id).first.blank?
+    raise "This ID does not correspond to a pre-existing monograph" if Monograph.where(id: monograph_id).first.blank?
   end
 
-  opts.on('-t [TEST]', '--test', 'Only test/validate the CSV data, do not import') do |test|
+  opts.on('-t [TEST]', '--test', 'Only test/validate the CSV data, do not import') do
     inputs[:test] = true
   end
 
@@ -71,7 +72,7 @@ def parse_inputs(args)
   raise "Error: Username (email) is required" unless inputs[:user_email]
   raise "Error: The Press required for importing new monographs, i.e. *not* reimporting" unless inputs[:press] || inputs[:monograph_id]
   inputs
-rescue => e
+rescue StandardError => e
   puts e.message
   puts opts
   exit 1
@@ -81,14 +82,14 @@ end
 options = parse_inputs(ARGV)
 
 puts "Begin import"
-importer = Import::Importer.new({ root_dir: options[:root_dir],
-                                  user_email: options[:user_email],
-                                  press: options[:press],
-                                  visibility: options[:visibility],
-                                  monograph_title: options[:monograph_title],
-                                  monograph_id: options[:monograph_id],
-                                  quiet: options[:quiet],
-                                  workflow: options[:workflow]})
+importer = Import::Importer.new(root_dir: options[:root_dir],
+                                user_email: options[:user_email],
+                                press: options[:press],
+                                visibility: options[:visibility],
+                                monograph_title: options[:monograph_title],
+                                monograph_id: options[:monograph_id],
+                                quiet: options[:quiet],
+                                workflow: options[:workflow])
 
 importer.run(options[:test])
 

@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-feature 'Create a monograph' do
+describe 'Create a monograph' do
   context 'a logged in user' do
     let(:user) { create(:platform_admin) }
     let!(:press) { create(:press) }
@@ -12,7 +12,7 @@ feature 'Create a monograph' do
       stub_out_redis
     end
 
-    scenario do
+    it do
       visit new_hyrax_monograph_path
 
       # Monograph form
@@ -81,7 +81,7 @@ feature 'Create a monograph' do
       # back on Monograph catalog page
       # check authorship override
       expect(page).to have_content "Fancy Authorship Name Stuff That Takes Precedence"
-      expect(page).to_not have_content "Jimmy Johns, Sub Way and Shoppe Sandwich"
+      expect(page).not_to have_content "Jimmy Johns, Sub Way and Shoppe Sandwich"
       # series
       expect(page).to have_content 'The Cereal Series'
       expect(page).to have_content 'The Second Series'

@@ -1,4 +1,5 @@
 #!/usr/bin/env ruby
+# frozen_string_literal: true
 
 require 'optparse'
 require 'ostruct'
@@ -25,9 +26,9 @@ end
 option_parser.parse!(ARGV)
 
 if ARGV.empty?
-  puts option_parser.help()
+  puts option_parser.help
 else
-  require File.expand_path('../../config/environment',  __FILE__)
+  require File.expand_path('../config/environment', __dir__)
   require 'export'
   monograph_id = ARGV[0]
   pwd = Dir.pwd

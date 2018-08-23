@@ -2,8 +2,8 @@
 
 FactoryBot.define do
   factory :role do
-    resource nil
+    resource { nil }
     user { FactoryBot.create(:user) }
-    role 'admin'
+    role { 'admin' }
   end
 end

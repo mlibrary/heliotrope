@@ -29,16 +29,18 @@ RSpec.describe ProductsController, type: :controller do
   # This should return the minimal set of attributes required to create a valid
   # Product. As you add validations to Product, be sure to
   # adjust the attributes here as well.
-  let(:valid_attributes) { {
-    identifier: "valid_identifier",
-    name: "valid_name",
-    purchase: "valid_purchase"
-  } }
-  let(:invalid_attributes) { {
-    identifier: "",
-    name: "",
-    purchase: ""
-  } }
+  let(:valid_attributes) {
+    {
+      identifier: "valid_identifier",
+      name: "valid_name",
+      purchase: "valid_purchase"
+    } }
+  let(:invalid_attributes) {
+    {
+      identifier: "",
+      name: "",
+      purchase: ""
+    } }
 
   # This should return the minimal set of values that should be in the session
   # in order to pass any filters (e.g. authentication) defined in
@@ -100,11 +102,12 @@ RSpec.describe ProductsController, type: :controller do
 
   describe "PUT #update" do
     context "with valid params" do
-      let(:new_attributes) { {
-        identifier: "new_identifier",
-        name: "new_name",
-        purchase: "new_purchase"
-      } }
+      let(:new_attributes) {
+        {
+          identifier: "new_identifier",
+          name: "new_name",
+          purchase: "new_purchase"
+        } }
 
       it "updates the requested product" do
         product = Product.create! valid_attributes

@@ -36,7 +36,7 @@ describe Hyrax::CreateDerivativesJob do
     end
 
     it "doesn't create derivatives" do
-      expect(Hydra::Derivatives::DocumentDerivatives).to_not receive(:create)
+      expect(Hydra::Derivatives::DocumentDerivatives).not_to receive(:create)
       described_class.perform_now(file_set, file.id)
     end
   end
@@ -52,7 +52,7 @@ describe Hyrax::CreateDerivativesJob do
     end
 
     it "doesn't create derivatives" do
-      expect(Hydra::Derivatives::DocumentDerivatives).to_not receive(:create)
+      expect(Hydra::Derivatives::DocumentDerivatives).not_to receive(:create)
       described_class.perform_now(file_set, file.id)
     end
   end

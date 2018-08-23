@@ -7,8 +7,11 @@ describe Hyrax::Renderers::MultilineAttributeRenderer do
 
   describe "newlines only" do
     subject { renderer.render }
-    let(:renderer) { described_class.new(field, ["_Bob_\n11:07 --> 11.61\n" \
-                                               ">> [LAUGH]\n>> Stuff"]) }
+
+    let(:renderer) {
+      described_class.new(field, ["_Bob_\n11:07 --> 11.61\n" \
+                                               ">> [LAUGH]\n>> Stuff"])
+    }
     let(:expected) { tr_content }
     let(:tr_content) {
       "<tr><th>Transcript</th>\n" \
@@ -16,6 +19,7 @@ describe Hyrax::Renderers::MultilineAttributeRenderer do
       "11:07 --&gt; 11.61<br>&gt;&gt; [LAUGH]<br>&gt;&gt; Stuff</li>" \
       "</ul></td></tr>"
     }
+
     it { expect(subject).to match(expected) }
   end
 end

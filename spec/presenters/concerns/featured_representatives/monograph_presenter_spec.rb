@@ -38,6 +38,7 @@ RSpec.describe FeaturedRepresentatives::MonographPresenter do
   context "with featured_representatives" do
     describe "#featured_representatives" do
       subject { TestMonographPresenter.new(SolrDocument.new(id: 'mid')) }
+
       before do
         FeaturedRepresentative.create(
           [
@@ -50,7 +51,9 @@ RSpec.describe FeaturedRepresentatives::MonographPresenter do
           ]
         )
       end
+
       after { FeaturedRepresentative.destroy_all }
+
       it "returns FeaturedRepresentatives" do
         expect(subject.featured_representatives.count).to be 6
       end
@@ -58,7 +61,9 @@ RSpec.describe FeaturedRepresentatives::MonographPresenter do
 
     context "epub methods" do
       subject { TestMonographPresenter.new(SolrDocument.new(id: 'mid')) }
+
       before { FeaturedRepresentative.create(monograph_id: 'mid', file_set_id: 'epubid', kind: 'epub') }
+
       after { FeaturedRepresentative.destroy_all }
 
       describe "#epub?" do
@@ -88,7 +93,9 @@ RSpec.describe FeaturedRepresentatives::MonographPresenter do
 
     context "webgl methods" do
       subject { TestMonographPresenter.new(SolrDocument.new(id: 'mid')) }
+
       before { FeaturedRepresentative.create(monograph_id: 'mid', file_set_id: 'webglid', kind: 'webgl') }
+
       after { FeaturedRepresentative.destroy_all }
 
       describe "#webgl?" do
@@ -112,7 +119,9 @@ RSpec.describe FeaturedRepresentatives::MonographPresenter do
 
     context "database methods" do
       subject { TestMonographPresenter.new(SolrDocument.new(id: 'mid')) }
+
       before { FeaturedRepresentative.create(monograph_id: 'mid', file_set_id: 'dbid', kind: 'database') }
+
       after { FeaturedRepresentative.destroy_all }
 
       describe "#database?" do
@@ -136,7 +145,9 @@ RSpec.describe FeaturedRepresentatives::MonographPresenter do
 
     context "aboutware methods" do
       subject { TestMonographPresenter.new(SolrDocument.new(id: 'mid')) }
+
       before { FeaturedRepresentative.create(monograph_id: 'mid', file_set_id: 'aboutid', kind: 'aboutware') }
+
       after { FeaturedRepresentative.destroy_all }
 
       describe "#aboutware?" do
@@ -161,7 +172,9 @@ RSpec.describe FeaturedRepresentatives::MonographPresenter do
 
     context "reviews methods" do
       subject { TestMonographPresenter.new(SolrDocument.new(id: 'mid')) }
+
       before { FeaturedRepresentative.create(monograph_id: 'mid', file_set_id: 'reviewsid', kind: 'reviews') }
+
       after { FeaturedRepresentative.destroy_all }
 
       describe "#reviews?" do
@@ -186,7 +199,9 @@ RSpec.describe FeaturedRepresentatives::MonographPresenter do
 
     context "related methods" do
       subject { TestMonographPresenter.new(SolrDocument.new(id: 'mid')) }
+
       before { FeaturedRepresentative.create(monograph_id: 'mid', file_set_id: 'relatedid', kind: 'related') }
+
       after { FeaturedRepresentative.destroy_all }
 
       describe "#related?" do
@@ -212,60 +227,79 @@ RSpec.describe FeaturedRepresentatives::MonographPresenter do
 
   context "with no featured representatives" do
     subject { TestMonographPresenter.new(SolrDocument.new(id: 'mid')) }
+
     describe "#featured_representatives" do
       it { expect(subject.featured_representatives.empty?).to be true }
     end
+
     describe '#epub?' do
       it { expect(subject.epub?).to be false }
     end
+
     describe '#epub_id' do
       it { expect(subject.epub_id).to be nil }
     end
+
     describe '#epub' do
       it { expect(subject.epub).to be nil }
     end
+
     describe '#webgl?' do
       it { expect(subject.webgl?).to be false }
     end
+
     describe '#webgl' do
       it { expect(subject.webgl).to be nil }
     end
+
     describe '#webgl_id' do
       it { expect(subject.webgl_id).to be nil }
     end
+
     describe '#database?' do
       it { expect(subject.database?).to be false }
     end
+
     describe '#database' do
       it { expect(subject.database).to be nil }
     end
+
     describe '#database_id' do
       it { expect(subject.database_id).to be nil }
     end
+
     describe '#aboutware?' do
       it { expect(subject.aboutware?).to be false }
     end
+
     describe '#aboutware' do
       it { expect(subject.aboutware).to be nil }
     end
+
     describe '#aboutware_id' do
       it { expect(subject.aboutware_id).to be nil }
     end
+
     describe '#reviews?' do
       it { expect(subject.reviews?).to be false }
     end
+
     describe '#reviews' do
       it { expect(subject.reviews).to be nil }
     end
+
     describe '#reviews_id' do
       it { expect(subject.reviews_id).to be nil }
     end
+
     describe '#related?' do
       it { expect(subject.related?).to be false }
     end
+
     describe '#related' do
       it { expect(subject.related).to be nil }
     end
+
     describe '#related_id' do
       it { expect(subject.related_id).to be nil }
     end

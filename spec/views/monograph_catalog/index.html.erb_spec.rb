@@ -34,11 +34,14 @@ RSpec.describe "monograph_catalog/index.html.erb", type: :view do
 
   describe 'provide: page_title' do
     subject { view.view_flow.content[:page_title] }
+
     let(:page_title) { 'PAGE-TITLE' }
+
     before do
       allow(monograph_presenter).to receive(:title).and_return(page_title)
       render
     end
+
     it do
       debug_puts subject.to_s
       is_expected.not_to be_empty
@@ -48,10 +51,13 @@ RSpec.describe "monograph_catalog/index.html.erb", type: :view do
 
   describe 'provide: page_class' do
     subject { view.view_flow.content[:page_class] }
+
     let(:page_class) { 'search monograph' }
+
     before do
       render
     end
+
     it do
       debug_puts subject.to_s
       is_expected.not_to be_empty
@@ -61,14 +67,17 @@ RSpec.describe "monograph_catalog/index.html.erb", type: :view do
 
   describe 'provide: page_header' do
     subject { view.view_flow.content[:page_header] }
+
     let(:page_title) { 'PAGE-TITLE' }
     let(:subdomain) { 'SUBDOMAIN' }
     let!(:press) { create(:press, subdomain: subdomain) }
+
     before do
       allow(monograph_presenter).to receive(:page_title).and_return(page_title)
       allow(monograph_presenter).to receive(:subdomain).and_return(subdomain)
       render
     end
+
     it do
       debug_puts subject.to_s
       is_expected.not_to be_empty
@@ -83,8 +92,11 @@ RSpec.describe "monograph_catalog/index.html.erb", type: :view do
 
     context 'partial' do
       subject { response.body }
+
       let(:debug) { false }
+
       before { render }
+
       it 'renders' do
         debug_puts subject.to_s
         is_expected.to render_template(partial: '_index_monograph')
@@ -102,6 +114,7 @@ RSpec.describe "monograph_catalog/index.html.erb", type: :view do
           monograph_presenter.instance_eval('undef :monograph_coins_title')
           render
         end
+
         it do
           debug_puts subject.to_s
           is_expected.not_to be_empty
@@ -122,6 +135,7 @@ RSpec.describe "monograph_catalog/index.html.erb", type: :view do
           allow(monograph_presenter).to receive(:monograph_coins_title).and_return(monograph_coins_title)
           render
         end
+
         it do
           debug_puts subject.to_s
           is_expected.to match(/<span.*?class=\"Z3988\".*?title=\"#{monograph_coins_title}\".*?>.*?<\/span>/m)
@@ -133,6 +147,7 @@ RSpec.describe "monograph_catalog/index.html.erb", type: :view do
           allow(view).to receive(:can?).and_return(true)
           render
         end
+
         it do
           debug_puts subject.to_s
           is_expected.to match t('monograph_catalog.index.show_page_button')
@@ -146,6 +161,7 @@ RSpec.describe "monograph_catalog/index.html.erb", type: :view do
           allow(monograph_presenter).to receive(:authors).and_return(authors)
           render
         end
+
         it do
           debug_puts subject.to_s
           is_expected.to match authors
@@ -157,6 +173,7 @@ RSpec.describe "monograph_catalog/index.html.erb", type: :view do
           allow(monograph_presenter).to receive(:pageviews).and_return("PAGEVIEWS")
           render
         end
+
         it do
           debug_puts subject.to_s
           is_expected.to match t('pageviews_html')
@@ -168,6 +185,7 @@ RSpec.describe "monograph_catalog/index.html.erb", type: :view do
           allow(monograph_presenter).to receive(:isbn).and_return(["ISBN-HARDCOVER", "ISBN-PAPER", "ISBN-EBOOK"])
           render
         end
+
         it do
           debug_puts subject.to_s
           is_expected.to match t('isbn')
@@ -181,6 +199,7 @@ RSpec.describe "monograph_catalog/index.html.erb", type: :view do
           allow(monograph_presenter).to receive(:buy_url).and_return("BUY-URL")
           render
         end
+
         it do
           debug_puts subject.to_s
           is_expected.to match t('monograph_catalog.index.buy')
@@ -193,6 +212,7 @@ RSpec.describe "monograph_catalog/index.html.erb", type: :view do
           allow(monograph_presenter).to receive(:citable_link).and_return(["http://hdl.handle.net/2027/fulcrum.999999999"])
           render
         end
+
         it do
           debug_puts subject.to_s
           is_expected.to match t('citable_link')

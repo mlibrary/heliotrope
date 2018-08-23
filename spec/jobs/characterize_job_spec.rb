@@ -37,6 +37,7 @@ describe CharacterizeJob do
 
   context 'when the characterization proxy content is absent' do
     before { allow(file_set).to receive(:characterization_proxy?).and_return(false) }
+
     it 'raises an error' do
       expect { described_class.perform_now(file_set, file.id) }.to raise_error(LoadError, 'original_file was not found')
     end
@@ -45,6 +46,7 @@ describe CharacterizeJob do
   context "when the file set's work is in a collection" do
     let(:work)       { build(:monograph) }
     let(:collection) { build(:collection) }
+
     before do
       allow(file_set).to receive(:parent).and_return(work)
       allow(work).to receive(:in_collections).and_return([collection])
@@ -53,6 +55,7 @@ describe CharacterizeJob do
       allow(file_set).to receive(:update_index)
       allow(CreateDerivativesJob).to receive(:perform_later).with(file_set, file.id, filename)
     end
+
     it "reindexes the collection" do
       expect(collection).to receive(:update_index)
       described_class.perform_now(file_set, file.id)
@@ -114,28 +117,31 @@ describe CharacterizeJob do
 
     context "with heb press and an epub" do
       let(:heb_file_type) { 'this_is.epub' }
+
       it "sets the featured_representative" do
         allow(UnpackJob).to receive(:perform_later).and_return(true)
         expect { described_class.perform_now(file_set, file.id) }
-          .to change { FeaturedRepresentative.count }
+          .to change(FeaturedRepresentative, :count)
           .by(1)
       end
     end
 
     context "with heb press and related.html" do
       let(:heb_file_type) { 'related.html' }
+
       it "sets the featured_representative" do
         expect { described_class.perform_now(file_set, file.id) }
-          .to change { FeaturedRepresentative.count }
+          .to change(FeaturedRepresentative, :count)
           .by(1)
       end
     end
 
     context "with heb press and reviews.html" do
       let(:heb_file_type) { 'reviews.html' }
+
       it "sets the featured_representative" do
         expect { described_class.perform_now(file_set, file.id) }
-          .to change { FeaturedRepresentative.count }
+          .to change(FeaturedRepresentative, :count)
           .by(1)
       end
     end

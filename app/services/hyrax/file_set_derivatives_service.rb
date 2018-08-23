@@ -31,7 +31,7 @@ module Hyrax
     # why after the file_set's been deleted but not before?
     def valid?
       supported_mime_types.include?(mime_type)
-    rescue
+    rescue StandardError
       Rails.logger.warn("WARNING: config/initializers/file_set_derivative_monky_patch.rb happened!")
       nil
     end

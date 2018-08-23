@@ -29,6 +29,7 @@ RSpec.describe Webgl::Unity do
 
     describe "with an invalid noid" do
       subject { described_class.from_directory("/not/a/real/path") }
+
       it "is a UnityNullObject" do
         expect(subject).to be_an_instance_of(Webgl::UnityNullObject)
         expect(subject.id).to eq nil
@@ -41,7 +42,9 @@ RSpec.describe Webgl::Unity do
 
     describe "#file" do
       subject { described_class.from_directory(@root_path).file(js_file) }
+
       let(:js_file) { "Build/thing.asm.memory.unityweb" }
+
       it "returns the file path" do
         expect(subject).to eq "./tmp/rspec_derivatives/va/li/dn/oi/d-webgl/Build/thing.asm.memory.unityweb"
       end

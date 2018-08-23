@@ -3,6 +3,8 @@
 RSpec.describe Webgl::UnityValidator do
   describe "with the #from_directory initializer" do
     context "and a valid webgl" do
+      subject { described_class.from_directory(@root_path) }
+
       before do
         @noid = 'validnoid'
         @root_path = UnpackHelper.noid_to_root_path(@noid, 'webgl')
@@ -14,8 +16,6 @@ RSpec.describe Webgl::UnityValidator do
       after do
         FileUtils.rm_rf('./tmp/rspec_derivatives')
       end
-
-      subject { described_class.from_directory(@root_path) }
 
       it "has the correct attributes" do
         expect(subject).to be_an_instance_of(described_class)
@@ -66,6 +66,7 @@ RSpec.describe Webgl::UnityValidator do
 
   describe "#null_object" do
     subject { described_class.null_object }
+
     it "is a null object" do
       expect(subject).to be_an_instance_of(Webgl::UnityValidatorNullObject)
       # The fact that these all default to nil sort of defeats the purpose of

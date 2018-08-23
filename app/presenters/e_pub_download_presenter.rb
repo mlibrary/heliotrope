@@ -29,7 +29,7 @@ class EPubDownloadPresenter < ApplicationPresenter
       }
     end
 
-    if mobi && mobi.allow_download?
+    if mobi&.allow_download?
       links << {
         format: 'MOBI',
         size: ActiveSupport::NumberHelper.number_to_human_size(mobi.file_size),
@@ -37,7 +37,7 @@ class EPubDownloadPresenter < ApplicationPresenter
       }
     end
 
-    if pdf_ebook && pdf_ebook.allow_download?
+    if pdf_ebook&.allow_download?
       links << {
         format: 'PDF',
         size: ActiveSupport::NumberHelper.number_to_human_size(pdf_ebook.file_size),

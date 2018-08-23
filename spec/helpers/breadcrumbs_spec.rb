@@ -4,10 +4,12 @@ require 'rails_helper'
 
 RSpec.describe BreadcrumbsHelper do
   let!(:press) { create(:press, subdomain: "blue", name: "Blue Press") }
-  let(:monograph_presenter) { Hyrax::MonographPresenter.new(SolrDocument.new(id: 1,
-                                                                             title_tesim: ["Monograph Title"],
-                                                                             press_tesim: "blue",
-                                                                             has_model_ssim: ['Monograph']), nil) }
+  let(:monograph_presenter) {
+    Hyrax::MonographPresenter.new(SolrDocument.new(id: 1,
+                                                   title_tesim: ["Monograph Title"],
+                                                   press_tesim: "blue",
+                                                   has_model_ssim: ['Monograph']), nil)
+  }
 
   describe "when on a monograph catalog page" do
     context "with no parent press" do
@@ -24,6 +26,7 @@ RSpec.describe BreadcrumbsHelper do
 
     context "with a parent press" do
       let(:parent) { create(:press, subdomain: "maize", name: "Maize Press") }
+
       it "returns the right breadcrumbs" do
         @monograph_presenter = monograph_presenter
         press.parent_id = parent.id
@@ -59,6 +62,7 @@ RSpec.describe BreadcrumbsHelper do
 
     context "with a parent press" do
       let(:parent) { create(:press, subdomain: "maize", name: "Maize Press") }
+
       it "returns the right breadcrumbs" do
         @presenter = monograph_presenter
         press.parent_id = parent.id
@@ -80,10 +84,13 @@ RSpec.describe BreadcrumbsHelper do
   end
 
   describe "when on a file_set/asset page" do
-    let(:file_set_presenter) { Hyrax::FileSetPresenter.new(SolrDocument.new(id: 2,
-                                                                            title_tesim: ["FileSet Title"],
-                                                                            has_model_ssim: ["FileSet"],
-                                                                            monograph_id_ssim: 1), nil) }
+    let(:file_set_presenter) {
+      Hyrax::FileSetPresenter.new(SolrDocument.new(id: 2,
+                                                   title_tesim: ["FileSet Title"],
+                                                   has_model_ssim: ["FileSet"],
+                                                   monograph_id_ssim: 1), nil)
+    }
+
     context "with no parent press" do
       it "returns the right breadcrumbs" do
         @presenter = file_set_presenter
@@ -102,6 +109,7 @@ RSpec.describe BreadcrumbsHelper do
 
     context "with a parent press" do
       let(:parent) { create(:press, subdomain: "maize", name: "Maize Press") }
+
       it "returns the right breadcrumbs" do
         @presenter = file_set_presenter
         @presenter.monograph_presenter = monograph_presenter

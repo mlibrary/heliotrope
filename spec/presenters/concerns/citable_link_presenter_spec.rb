@@ -3,7 +3,7 @@
 require 'rails_helper'
 
 RSpec.describe CitableLinkPresenter do
-  class self::Presenter
+  class self::Presenter # rubocop:disable Style/ClassAndModuleChildren
     include CitableLinkPresenter
     attr_reader :id
     attr_reader :solr_document

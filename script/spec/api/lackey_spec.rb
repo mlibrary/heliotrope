@@ -12,7 +12,7 @@ RSpec.describe Lackey do
   product_names = []
   lessees = []
 
-  before(:all) do
+  before(:all) do # rubocop:disable RSpec/BeforeAfterAll
     n.times do |i|
       products << "product#{i}"
       product_names << "product #{i} name"
@@ -22,7 +22,7 @@ RSpec.describe Lackey do
     end
   end
 
-  after(:all) do
+  after(:all) do # rubocop:disable RSpec/BeforeAfterAll
     n.times do |i|
       n.times do |j|
         lackey.unlink(product_identifier: products[i], product_name: product_names[i], lessee_identifier: lessees[j])

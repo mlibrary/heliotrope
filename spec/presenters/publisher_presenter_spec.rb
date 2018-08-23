@@ -12,6 +12,7 @@ describe PublisherPresenter do
 
   describe '#initialize' do
     subject { described_class.new(current_user, publisher) }
+
     it do
       expect(subject.current_user).to eq current_user
       expect(subject.publisher).to eq publisher
@@ -20,17 +21,20 @@ describe PublisherPresenter do
 
   describe 'delegate' do
     subject { described_class.new(current_user, publisher) }
+
     context 'verify dependencies' do
       it { expect(Press.new).to respond_to(:id) }
       it { expect(Press.new).to respond_to(:name) }
       it { expect(Press.new).to respond_to(:subdomain) }
     end
+
     context 'verify methods are delegated to publisher' do
       before do
         allow(publisher).to receive(:id).and_return(:id)
         allow(publisher).to receive(:name).and_return(:name)
         allow(publisher).to receive(:subdomain).and_return(:subdomain)
       end
+
       it do
         expect(subject.id).to equal :id
         expect(subject.name).to equal :name

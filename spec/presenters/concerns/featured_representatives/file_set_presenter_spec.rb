@@ -22,7 +22,9 @@ end
 RSpec.describe FeaturedRepresentatives::FileSetPresenter do
   context "if a featured_representative's kind is epub" do
     subject { TestFileSetPresenter.new(SolrDocument.new(id: 'fid1', monograph_id: 'mid')) }
+
     let!(:fr) { create(:featured_representative, file_set_id: 'fid1', monograph_id: 'mid', kind: 'epub') }
+
     after { FeaturedRepresentative.destroy_all }
 
     describe "#featured_representative?" do
@@ -47,7 +49,9 @@ RSpec.describe FeaturedRepresentatives::FileSetPresenter do
 
   context "if a featured_representatives's kind is webgl" do
     subject { TestFileSetPresenter.new(SolrDocument.new(id: 'fid2', monograph_id: 'mid')) }
+
     let!(:fr) { create(:featured_representative, file_set_id: 'fid2', monograph_id: 'mid', kind: 'webgl') }
+
     after { FeaturedRepresentative.destroy_all }
 
     describe "#webgl?" do

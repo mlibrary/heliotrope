@@ -2,6 +2,8 @@
 
 RSpec.describe EPub::Search do
   describe '#search' do
+    subject { described_class.new(EPub::Publication.from_directory(@root_path)).search(query) }
+
     before do
       @noid = '999999991'
       @root_path = UnpackHelper.noid_to_root_path(@noid, 'epub')
@@ -15,15 +17,15 @@ RSpec.describe EPub::Search do
       FileUtils.rm_rf(Dir[File.join('./tmp', 'rspec_derivatives')])
     end
 
-    subject { described_class.new(EPub::Publication.from_directory(@root_path)).search(query) }
-
     context 'db results empty' do
       let(:query) { 'nobody' }
+
       it { is_expected.to match(q: query, highlight_off: "no", search_results: []) }
     end
 
     context 'db results non empty' do
       let(:query) { 'everybody' }
+
       it do
         expect(subject[:q]).to eq "everybody"
         expect(subject[:search_results].length).to eq 2
@@ -40,9 +42,10 @@ RSpec.describe EPub::Search do
 
     context "with multiple matches in deeply nested nodes" do
       let(:query) { 'star wars' }
+
       it "doesn't include duplicate snippets" do
         expect(subject[:q]).to eq 'star wars'
-        @snippets = subject[:search_results].map { |result| result[:snippet] if result[:snippet].present? }.compact
+        @snippets = subject[:search_results].map { |result| result[:snippet].presence }.compact
         expect(@snippets.length).to eq @snippets.uniq.length
       end
     end
@@ -50,23 +53,27 @@ RSpec.describe EPub::Search do
 
   describe "#node_query_match" do
     subject { described_class.new(double("publication")) }
+
     let(:doc) { Nokogiri::XML("<html><body><p>We will match search.</p><p>We will not match searched.<p></body></html>") }
 
     context "when looking for 'search' it matches 'search'" do
       let(:node) { doc.xpath("//p")[0].children[0] }
       let(:query) { "search" }
+
       it { expect(subject.node_query_match(node, query)).to eq 14 }
     end
 
     context "when looking for 'search' it will not match 'searched'" do
       let(:node) { doc.xpath("//p")[1].children[0] }
       let(:query) { "search" }
+
       it { expect(subject.node_query_match(node, query)).to eq nil }
     end
 
     context "regexes don't work: looking for sea*.ch will not match 'search'" do
       let(:node) { doc.xpath("//p")[0].children[0] }
       let(:query) { "sea*.ch" }
+
       it { expect(subject.node_query_match(node, query)).to eq nil }
     end
   end

@@ -14,7 +14,7 @@ module CitableLinkPresenter
   end
 
   def doi_path
-    doi.present? ? doi : ""
+    doi.presence || ""
   end
 
   def doi_url
@@ -22,7 +22,7 @@ module CitableLinkPresenter
   end
 
   def handle_path
-    hdl.present? ? hdl : HandleService.path(id)
+    hdl.presence || HandleService.path(id)
   end
 
   def handle_url

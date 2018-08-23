@@ -10,7 +10,9 @@ describe 'shared/_my_actions.html.erb' do
 
   context "a platform admin user" do
     let(:user) { create(:platform_admin) }
+
     before { render }
+
     it "shows the add content button" do
       expect(rendered).to have_link("New Monograph")
     end
@@ -18,9 +20,11 @@ describe 'shared/_my_actions.html.erb' do
 
   context "a non-privileged user" do
     let(:user) { create(:user) }
+
     before { render }
+
     it "does not show the add content button" do
-      expect(rendered).to_not have_link("New Monograph")
+      expect(rendered).not_to have_link("New Monograph")
     end
   end
 end

@@ -7,11 +7,11 @@
     </a>
 
     <ul class="dropdown-menu">
-      <% show_fulcrum_link = current_user && current_user.platform_admin? %>
+      <% show_fulcrum_link = current_user&.platform_admin? %>
       <% show_dashboard_link = current_user.groups.length.positive? %>
-      <% show_analytics_link = current_user && current_user.platform_admin? %>
+      <% show_analytics_link = current_user&.platform_admin? %>
       <% include_collections_link ||= can?(:create, Collection) %>
-      <% show_jobs_link = current_user && current_user.platform_admin? %>
+      <% show_jobs_link = current_user&.platform_admin? %>
       <%
         show_users_link = @press && (
           current_user.platform_admin? ||

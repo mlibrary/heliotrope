@@ -36,7 +36,7 @@ describe 'shared/_my_actions.html.erb' do
         expect(rendered).to have_link("Dashboard")
         expect(rendered).to have_link("Log Out")
         expect(rendered).to have_link("Jobs", href: resque_web_path)
-        expect(rendered).to_not have_link("Users", href: press_roles_path(press))
+        expect(rendered).not_to have_link("Users", href: press_roles_path(press))
       end
     end
   end # platform-wide admin user
@@ -51,7 +51,7 @@ describe 'shared/_my_actions.html.erb' do
       end
 
       it 'has the correct links' do
-        expect(rendered).to_not have_link("Analytics")
+        expect(rendered).not_to have_link("Analytics")
         expect(rendered).to have_link("Dashboard")
         expect(rendered).to have_link("Log Out")
         expect(rendered).to have_link("Users", href: press_roles_path(press))
@@ -60,16 +60,17 @@ describe 'shared/_my_actions.html.erb' do
 
     context 'within the scope of a different press' do
       let(:different_press) { create(:press) }
+
       before do
         assign(:press, different_press)
         render
       end
 
       it 'has the correct links' do
-        expect(rendered).to_not have_link("Analytics")
+        expect(rendered).not_to have_link("Analytics")
         expect(rendered).to have_link("Dashboard")
         expect(rendered).to have_link("Log Out")
-        expect(rendered).to_not have_link("Users", href: press_roles_path(different_press))
+        expect(rendered).not_to have_link("Users", href: press_roles_path(different_press))
       end
     end
   end # specific press admin user
@@ -84,25 +85,26 @@ describe 'shared/_my_actions.html.erb' do
       end
 
       it 'has the correct links' do
-        expect(rendered).to_not have_link("Analytics")
+        expect(rendered).not_to have_link("Analytics")
         expect(rendered).to have_link("Dashboard")
         expect(rendered).to have_link("Log Out")
-        expect(rendered).to_not have_link("Users")
+        expect(rendered).not_to have_link("Users")
       end
     end
 
     context 'within the scope of a different press' do
       let(:different_press) { create(:press) }
+
       before do
         assign(:press, different_press)
         render
       end
 
       it 'has the correct links' do
-        expect(rendered).to_not have_link("Analytics")
+        expect(rendered).not_to have_link("Analytics")
         expect(rendered).to have_link("Dashboard")
         expect(rendered).to have_link("Log Out")
-        expect(rendered).to_not have_link("Users", href: press_roles_path(different_press))
+        expect(rendered).not_to have_link("Users", href: press_roles_path(different_press))
       end
     end
   end # press editor
@@ -117,11 +119,11 @@ describe 'shared/_my_actions.html.erb' do
       end
 
       it 'has correct links' do
-        expect(rendered).to_not have_link("Fulcrum")
-        expect(rendered).to_not have_link("Dashboard")
-        expect(rendered).to_not have_link("Analytics")
-        expect(rendered).to_not have_link("Jobs", href: resque_web_path)
-        expect(rendered).to_not have_link("Users")
+        expect(rendered).not_to have_link("Fulcrum")
+        expect(rendered).not_to have_link("Dashboard")
+        expect(rendered).not_to have_link("Analytics")
+        expect(rendered).not_to have_link("Jobs", href: resque_web_path)
+        expect(rendered).not_to have_link("Users")
         expect(rendered).to     have_link("Log Out")
       end
     end
@@ -130,11 +132,11 @@ describe 'shared/_my_actions.html.erb' do
       before { render }
 
       it 'has correct links' do
-        expect(rendered).to_not have_link("Fulcrum")
-        expect(rendered).to_not have_link("Dashboard")
-        expect(rendered).to_not have_link("Analytics")
-        expect(rendered).to_not have_link("Jobs", href: resque_web_path)
-        expect(rendered).to_not have_link("Users")
+        expect(rendered).not_to have_link("Fulcrum")
+        expect(rendered).not_to have_link("Dashboard")
+        expect(rendered).not_to have_link("Analytics")
+        expect(rendered).not_to have_link("Jobs", href: resque_web_path)
+        expect(rendered).not_to have_link("Users")
         expect(rendered).to     have_link("Log Out")
       end
     end

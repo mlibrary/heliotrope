@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-feature "Monograph Catalog Facets" do
+describe "Monograph Catalog Facets" do
   before do
     stub_out_redis
   end
@@ -15,12 +15,14 @@ feature "Monograph Catalog Facets" do
   context "keywords" do
     let(:monograph) { create(:public_monograph, title: ["Yellow"], representative_id: cover.id) }
     let(:file_set1) { create(:public_file_set, keywords: ["cat", "dog", "elephant", "lizard", "monkey", "mouse", "tiger"]) }
+
     before do
       monograph.ordered_members << cover
       monograph.ordered_members << file_set1
       monograph.save!
     end
-    scenario "shows keywords in the intended order" do
+
+    it "shows keywords in the intended order" do
       visit monograph_catalog_facet_path(id: 'keywords_sim', monograph_id: monograph.id)
       expect(page).to have_selector '.facet-values li:first', text: "cat"
     end
@@ -49,7 +51,7 @@ feature "Monograph Catalog Facets" do
     let(:fs5) { build(:public_file_set, title: ['Sec 3 File 2'], section_title: s3_title) }
     let(:fs6) { build(:public_file_set, title: ['Sec 3 File 3'], section_title: s3_title) }
 
-    scenario "shows sections in intended order" do
+    it "shows sections in intended order" do
       visit monograph_catalog_facet_path(id: 'section_title_sim', monograph_id: monograph.id)
 
       # facet section order should be:
@@ -58,7 +60,7 @@ feature "Monograph Catalog Facets" do
       # "A 3"
       # so by order, not alphabetically or by frequency
       expect(page).to have_selector '.facet-values li:first', text: "C 1"
-      expect(page).to_not have_selector '.facet-values li:first', text: "A 3"
+      expect(page).not_to have_selector '.facet-values li:first', text: "A 3"
 
       expect(page).to have_selector '.facet-values li', text: "B 2"
       expect(page).to have_selector '.facet-values li', text: "A 3"
@@ -88,14 +90,14 @@ feature "Monograph Catalog Facets" do
     let(:fs5) { build(:public_file_set, title: ['File 5'], section_title: ['B 2']) }
     let(:fs6) { build(:public_file_set, title: ['File 6'], section_title: ['A 3']) }
 
-    scenario "shows sections in intended order" do
+    it "shows sections in intended order" do
       visit monograph_catalog_facet_path(id: 'section_title_sim', monograph_id: monograph.id)
 
       # facet section order should be enforced by the monograph's section_titles
       expect(page).to have_selector '.facet-values li:first', text: "C 1"
-      expect(page).to_not have_selector '.facet-values li:first', text: "A 3"
+      expect(page).not_to have_selector '.facet-values li:first', text: "A 3"
       expect(page.body).to match(/C 1.*B 2.*A 3/)
-      expect(page.body).to_not match(/A 3.*B 2.*C 1/)
+      expect(page.body).not_to match(/A 3.*B 2.*C 1/)
     end
   end
 
@@ -109,7 +111,7 @@ feature "Monograph Catalog Facets" do
 
     let(:fs) { create(:public_file_set, section_title: ["A Section with _Italicized Title_ Stuff"]) }
 
-    scenario "shows italics (emphasis) in section facet links" do
+    it "shows italics (emphasis) in section facet links" do
       visit monograph_catalog_path(id: monograph.id)
       # get text inside <em> tags
       italicized_text = page.first('#facet-section_title_sim li .facet_select em').text
@@ -136,25 +138,25 @@ feature "Monograph Catalog Facets" do
     let(:facets) { "#facets" }
     let(:selected_facets) { "#appliedParams" }
 
-    scenario "Select facets from resource_type (parent) and content_type (child)" do
+    it "Select facets from resource_type (parent) and content_type (child)" do
       visit monograph_catalog_path(id: monograph.id)
       # puts page.html
 
       # Initially no facets selected
-      expect(page).to_not have_css(selected_facets)
+      expect(page).not_to have_css(selected_facets)
 
       # Initial both facets rendered with facet_helper#render_facet_pivot_value
       within facets do
-        expect(page).to_not have_link "[remove]"
+        expect(page).not_to have_link "[remove]"
 
         resource_link = page.find_link(expected_resource_facet)
         expect(resource_link).to have_content(expected_resource_facet)
         expect(CGI.unescape(resource_link[:href])).to have_content("f[resource_type_sim][]=#{expected_resource_facet}")
-        expect(CGI.unescape(resource_link[:href])).to_not have_content("f[content_type_sim][]=#{expected_content_facet}")
+        expect(CGI.unescape(resource_link[:href])).not_to have_content("f[content_type_sim][]=#{expected_content_facet}")
 
         content_link = page.find_link(expected_content_facet)
         expect(content_link).to have_content(expected_content_facet)
-        expect(CGI.unescape(content_link[:href])).to_not have_content("f[resource_type_sim][]=#{expected_resource_facet}")
+        expect(CGI.unescape(content_link[:href])).not_to have_content("f[resource_type_sim][]=#{expected_resource_facet}")
         expect(CGI.unescape(content_link[:href])).to have_content("f[content_type_sim][]=#{expected_content_facet}")
 
         # Select resource_type parent facet
@@ -175,8 +177,8 @@ feature "Monograph Catalog Facets" do
         # Resource link rendered with facet_helper#render_selected_facet_pivot_value
         resource_link = page.find(:xpath, ".//a[@class='remove']")
         expect(resource_link).to have_content("[remove]")
-        expect(CGI.unescape(resource_link[:href])).to_not have_content("f[resource_type_sim][]=#{expected_resource_facet}")
-        expect(CGI.unescape(resource_link[:href])).to_not have_content("f[content_type_sim][]=#{expected_content_facet}")
+        expect(CGI.unescape(resource_link[:href])).not_to have_content("f[resource_type_sim][]=#{expected_resource_facet}")
+        expect(CGI.unescape(resource_link[:href])).not_to have_content("f[content_type_sim][]=#{expected_content_facet}")
 
         # Content link rendered with facet_helper#render_facet_pivot_value
         content_link = page.find_link(expected_content_facet)
@@ -203,13 +205,13 @@ feature "Monograph Catalog Facets" do
 
         resource_link = page.find(:xpath, ".//a[@class='remove'][contains(@href,'#{expected_content_facet}')]")
         expect(resource_link).to have_content("[remove]")
-        expect(CGI.unescape(resource_link[:href])).to_not have_content("f[resource_type_sim][]=#{expected_resource_facet}")
+        expect(CGI.unescape(resource_link[:href])).not_to have_content("f[resource_type_sim][]=#{expected_resource_facet}")
         expect(CGI.unescape(resource_link[:href])).to have_content("f[content_type_sim][]=#{expected_content_facet}")
 
         content_link = page.find(:xpath, ".//a[@class='remove'][contains(@href,'#{expected_resource_facet}')]")
         expect(content_link).to have_content("[remove]")
         expect(CGI.unescape(content_link[:href])).to have_content("f[resource_type_sim][]=#{expected_resource_facet}")
-        expect(CGI.unescape(content_link[:href])).to_not have_content("f[content_type_sim][]=#{expected_content_facet}")
+        expect(CGI.unescape(content_link[:href])).not_to have_content("f[content_type_sim][]=#{expected_content_facet}")
 
         # Unselect resource_type parent facet
         resource_link.click
@@ -235,28 +237,28 @@ feature "Monograph Catalog Facets" do
         # Content link rendered with facet_helper#render_selected_facet_pivot_value
         content_link = page.find(:xpath, ".//a[@class='remove']")
         expect(content_link).to have_content("[remove]")
-        expect(CGI.unescape(content_link[:href])).to_not have_content("f[resource_type_sim][]=#{expected_resource_facet}")
-        expect(CGI.unescape(content_link[:href])).to_not have_content("f[content_type_sim][]=#{expected_content_facet}")
+        expect(CGI.unescape(content_link[:href])).not_to have_content("f[resource_type_sim][]=#{expected_resource_facet}")
+        expect(CGI.unescape(content_link[:href])).not_to have_content("f[content_type_sim][]=#{expected_content_facet}")
 
         # Unselect content_type child facet
         content_link.click
       end
 
       # Return to initial condition of no facets selected
-      expect(page).to_not have_css(selected_facets)
+      expect(page).not_to have_css(selected_facets)
 
       # Both facets rendered with facet_helper#render_facet_pivot_value
       within facets do
-        expect(page).to_not have_link "[remove]"
+        expect(page).not_to have_link "[remove]"
 
         resource_link = page.find_link(expected_resource_facet)
         expect(resource_link).to have_content(expected_resource_facet)
         expect(CGI.unescape(resource_link[:href])).to have_content("f[resource_type_sim][]=#{expected_resource_facet}")
-        expect(CGI.unescape(resource_link[:href])).to_not have_content("f[content_type_sim][]=#{expected_content_facet}")
+        expect(CGI.unescape(resource_link[:href])).not_to have_content("f[content_type_sim][]=#{expected_content_facet}")
 
         content_link = page.find_link(expected_content_facet)
         expect(content_link).to have_content(expected_content_facet)
-        expect(CGI.unescape(content_link[:href])).to_not have_content("f[resource_type_sim][]=#{expected_resource_facet}")
+        expect(CGI.unescape(content_link[:href])).not_to have_content("f[resource_type_sim][]=#{expected_resource_facet}")
         expect(CGI.unescape(content_link[:href])).to have_content("f[content_type_sim][]=#{expected_content_facet}")
       end
     end
@@ -265,13 +267,15 @@ feature "Monograph Catalog Facets" do
   context "all facets" do
     let(:user) { create(:platform_admin) }
     let(:monograph) { create(:monograph, user: user, title: ["Yellow"], representative_id: cover.id) }
-    let(:file_set) { create(:public_file_set, resource_type: ['image'],
-                                              content_type: ['portrait'],
-                                              exclusive_to_platform: 'yes',
-                                              creator: ['McTesterson, Testy'],
-                                              sort_date: '1974-01-01',
-                                              keywords: ['stuff'],
-                                              section_title: ['A Section']) }
+    let(:file_set) {
+      create(:public_file_set, resource_type: ['image'],
+                               content_type: ['portrait'],
+                               exclusive_to_platform: 'yes',
+                               creator: ['McTesterson, Testy'],
+                               sort_date: '1974-01-01',
+                               keywords: ['stuff'],
+                               section_title: ['A Section'])
+    }
 
     before do
       cosign_login_as user
@@ -279,7 +283,7 @@ feature "Monograph Catalog Facets" do
       monograph.save!
     end
 
-    scenario "shows the correct facets" do
+    it "shows the correct facets" do
       visit monograph_catalog_path(id: monograph.id)
 
       # Selectors needed for assets/javascripts/ga_event_tracking.js

@@ -16,6 +16,7 @@ RSpec.describe FeaturedRepresentativesController, type: :controller do
         allow(UnpackJob).to receive_messages(perform_later: nil, perform_now: nil)
         post :save, params: { monograph_id: monograph.id, file_set_id: file_set.id, kind: 'epub' }
       end
+
       after { FeaturedRepresentative.destroy_all }
 
       it "saves the featured_representative" do
@@ -25,6 +26,7 @@ RSpec.describe FeaturedRepresentativesController, type: :controller do
 
     describe '#delete' do
       let(:fr) { create(:featured_representative, monograph_id: monograph.id, file_set_id: file_set.id, kind: 'epub') }
+
       before do
         delete :delete, params: { id: fr.id, monograph_id: monograph.id }
       end

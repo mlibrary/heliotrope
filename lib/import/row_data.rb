@@ -60,8 +60,8 @@ module Import
         end
       end
 
-      def strip_markdown(field_name, field_values, md)
-        field_name == "Keywords" ? field_values.map! { |value| md.render(value).strip! } : field_values
+      def strip_markdown(field_name, field_values, metadata)
+        field_name == "Keywords" ? field_values.map! { |value| metadata.render(value).strip! } : field_values
       end
 
       def downcase_restricted_values(field_name, field_values)

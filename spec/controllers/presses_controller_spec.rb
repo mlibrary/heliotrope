@@ -21,18 +21,22 @@ RSpec.describe PressesController, type: :controller do
   context 'unauthenticated user create/edit' do
     describe 'can\'t access new' do
       before { get :new }
+
       it { expect(response).to redirect_to new_user_session_path }
     end
 
     describe 'can\'t access edit' do
       let!(:press) { create(:press) }
+
       before { get :edit, params: { id: press.subdomain } }
+
       it { expect(response).to redirect_to new_user_session_path }
     end
   end
 
   context 'a platform-wide admin user create/edit' do
     let(:user) { create(:platform_admin) }
+
     before { cosign_sign_in user }
 
     describe '#new' do
@@ -58,19 +62,21 @@ RSpec.describe PressesController, type: :controller do
 
   context 'a press admin user create/edit' do
     let(:user) { create(:press_admin) }
+
     before { cosign_sign_in user }
 
     describe '#new' do
       before { get :new }
 
       it 'cannot access the form for a new press' do
-        expect(response).to_not be_success
+        expect(response).not_to be_success
       end
     end
 
     describe '#edit' do
       let(:press) { create :press }
       let(:user) { create(:press_admin, press: press) }
+
       before { get :edit, params: { id: press.subdomain } }
 
       it 'displays the form to edit the press' do

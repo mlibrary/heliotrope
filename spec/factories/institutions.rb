@@ -2,9 +2,9 @@
 
 FactoryBot.define do
   factory :institution do
-    identifier "MyString"
-    name "MyString"
-    site "MyString"
-    login "MyString"
+    identifier { "MyString" }
+    name { "MyString" }
+    site { "MyString" }
+    login { "MyString" }
   end
 end

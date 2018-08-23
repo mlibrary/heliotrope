@@ -2,6 +2,6 @@
 
 FactoryBot.define do
   factory :lessee do
-    identifier "MyString"
+    identifier { "MyString" }
   end
 end

@@ -12,7 +12,7 @@ RSpec.describe 'hyrax/file_sets/show' do
       monograph
     end
 
-    def view.parent_path(_)
+    def view.parent_path(_nil)
       "/concern/monographs/{monograph.id}"
     end
 
@@ -43,26 +43,34 @@ RSpec.describe 'hyrax/file_sets/show' do
     let(:can_edit) { false }
     let(:allow_download) { false }
     let(:allow_embed) { false }
+
     before do
       allow(view).to receive(:can?).with(:edit, file_set_presenter).and_return(can_edit)
       allow(file_set_presenter).to receive(:allow_embed?).and_return(allow_embed)
       render
     end
+
     context 'embedcode' do
       context 'no edit and no embed' do
-        it { expect(rendered).to_not match(/embedcode/) }
+        it { expect(rendered).not_to match(/embedcode/) }
       end
+
       context 'no edit and embed' do
         let(:allow_embed) { true }
+
         it { expect(rendered).to match(/embedcode/) }
       end
+
       context 'edit and no embed' do
         let(:can_edit) { true }
+
         it { expect(rendered).to match(/embedcode/) }
       end
+
       context 'edit and embed' do
         let(:can_edit) { true }
         let(:allow_embed) { true }
+
         it { expect(rendered).to match(/embedcode/) }
       end
     end
@@ -81,7 +89,7 @@ RSpec.describe 'hyrax/file_sets/show' do
       render
       expect(rendered).to have_css('ul.tabular.list-unstyled li.attribute.section_title', count: 3)
       expect(rendered).to match(/.*Chapter 1.*Chapter 2.*Chapter 3.*/)
-      expect(rendered).to_not match(/.*Chapter 3.*Chapter 1.*Chapter 2.*/)
+      expect(rendered).not_to match(/.*Chapter 3.*Chapter 1.*Chapter 2.*/)
     end
   end
 
@@ -96,7 +104,7 @@ RSpec.describe 'hyrax/file_sets/show' do
       render
       expect(rendered).to have_css('ul.tabular.list-unstyled li.attribute.section_title', count: 2)
       expect(rendered).to match(/Chapter 1.*Chapter 3/)
-      expect(rendered).to_not match(/Chapter 3.*Chapter 1/)
+      expect(rendered).not_to match(/Chapter 3.*Chapter 1/)
     end
   end
 end

@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-feature "Show a monograph" do
+describe "Show a monograph" do
   let(:creator) { ['Shakespeare, William'] }
   let(:first_name) { 'William' }
 
@@ -11,7 +11,7 @@ feature "Show a monograph" do
     create(:sipity_entity, proxy_for_global_id: monograph.to_global_id.to_s)
   end
 
-  scenario do
+  it do
     visit monograph_show_path(monograph)
     expect(page).to have_link 'Shakespeare, William'
   end

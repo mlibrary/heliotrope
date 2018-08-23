@@ -24,7 +24,7 @@ class Institution < ApplicationRecord
   before_create do
     begin
       Lessee.create!(identifier: identifier)
-    rescue
+    rescue StandardError
       errors.add(:identifier, "create lessee #{identifier} fail!")
       throw(:abort)
     end

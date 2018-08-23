@@ -117,6 +117,7 @@ RSpec.describe EPub::Publication do
 
     describe '#id' do
       subject { described_class.from_directory(directory).id }
+
       it 'returns noid' do
         is_expected.to eq noid
       end
@@ -175,7 +176,9 @@ RSpec.describe EPub::Publication do
 
       describe "#file" do
         subject { described_class.from_directory(@root_path).file(epub_file) }
+
         let(:epub_file) { "META-INF/container.xml" }
+
         it "returns the file path" do
           expect(subject).to eq "./tmp/rspec_derivatives/99/99/99/99/3-epub/META-INF/container.xml"
         end
@@ -183,6 +186,7 @@ RSpec.describe EPub::Publication do
 
       describe "#chapters" do
         subject { described_class.from_directory(@root_path) }
+
         it "has 3 chapters" do
           expect(subject.chapters.count).to be 3
         end
@@ -191,6 +195,7 @@ RSpec.describe EPub::Publication do
           # It's a little wrong to test this here, but Publication has the logic
           # that populates the Chapter object, so it's here. For now.
           subject { described_class.from_directory(@root_path).chapters[0] }
+
           it "has the id of" do
             expect(subject.id).to eq "Chapter01"
           end

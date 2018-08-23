@@ -7,6 +7,7 @@ describe RolesController, type: :controller do
 
   describe 'when user does not have access' do
     before { cosign_sign_in create(:user) }
+
     describe 'GET index' do
       it 'denies access' do
         get :index, params: { press_id: press }
@@ -106,17 +107,20 @@ describe RolesController, type: :controller do
   describe "GET #index2" do
     context 'unauthenticated user' do
       before { get :index2 }
+
       it { expect(response).to redirect_to('/login') }
     end
+
     context "authenticated user" do
       before do
         cosign_sign_in current_user
         get :index2
       end
+
       context "non-admin" do
         let(:current_user) { create(:user) }
 
-        it { expect(response).to_not be_unauthorized }
+        it { expect(response).not_to be_unauthorized }
         it { expect(response).to be_success }
       end
     end
@@ -127,8 +131,10 @@ describe RolesController, type: :controller do
 
     context 'unauthenticated user' do
       before { get :show, params: { id: role_id } }
+
       it { expect(response).to redirect_to('/login') }
     end
+
     context "authenticated user" do
       let(:current_user) { create(:user) }
 
@@ -136,45 +142,51 @@ describe RolesController, type: :controller do
         cosign_sign_in current_user
         get :show, params: { id: role_id }
       end
+
       context "role record not found" do
         it { expect(response).to be_unauthorized }
       end
+
       context "current user is user" do
         let(:current_user) { create(:editor, press: create(:press)) }
         let(:role_id) { current_user.roles.first.id }
 
-        it { expect(response).to_not be_unauthorized }
+        it { expect(response).not_to be_unauthorized }
         it { expect(response).to be_success }
       end
+
       context "current user is different user" do
         let(:current_user) { create(:user) }
         let(:user) { create(:editor, press: create(:press)) }
         let(:role_id) { user.roles.first.id }
 
-        it { expect(response).to have_http_status(302) }
+        it { expect(response).to have_http_status(:found) }
       end
+
       context "current user is press admin" do
         let(:current_user) { create(:press_admin, press: create(:press)) }
         let(:user) { create(:editor, press: create(:press)) }
         let(:role_id) { user.roles.first.id }
 
-        it { expect(response).to have_http_status(302) }
+        it { expect(response).to have_http_status(:found) }
       end
+
       context "current user is press admin and user has press role" do
         let(:current_user) { create(:press_admin, press: press) }
         let(:user) { create(:editor, press: press) }
         let(:role_id) { user.roles.first.id }
         let(:press) { create(:press) }
 
-        it { expect(response).to_not be_unauthorized }
+        it { expect(response).not_to be_unauthorized }
         it { expect(response).to be_success }
       end
+
       context "current user is platform admin" do
         let(:current_user) { create(:platform_admin) }
         let(:user) { create(:editor, press: create(:press)) }
         let(:role_id) { user.roles.first.id }
 
-        it { expect(response).to_not be_unauthorized }
+        it { expect(response).not_to be_unauthorized }
         it { expect(response).to be_success }
       end
     end

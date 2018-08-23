@@ -21,6 +21,7 @@ RSpec.describe FacetHelper do
 
     context 'items empty' do
       let(:items) { [] }
+
       it do
         rvalue = should_render_facet?(display_facet)
         expect(rvalue).to be false
@@ -29,9 +30,12 @@ RSpec.describe FacetHelper do
     end
 
     context 'three items' do
-      let(:items) { [Blacklight::Solr::Response::Facets::FacetItem.new("a"),
-                     Blacklight::Solr::Response::Facets::FacetItem.new("b"),
-                     Blacklight::Solr::Response::Facets::FacetItem.new("c")] }
+      let(:items) {
+        [Blacklight::Solr::Response::Facets::FacetItem.new("a"),
+         Blacklight::Solr::Response::Facets::FacetItem.new("b"),
+         Blacklight::Solr::Response::Facets::FacetItem.new("c")]
+      }
+
       it do
         rvalue = should_render_facet?(display_facet)
         expect(rvalue).to be true
@@ -40,9 +44,12 @@ RSpec.describe FacetHelper do
     end
 
     context 'three items with one blank' do
-      let(:items) { [Blacklight::Solr::Response::Facets::FacetItem.new("a"),
-                     Blacklight::Solr::Response::Facets::FacetItem.new(""),
-                     Blacklight::Solr::Response::Facets::FacetItem.new("c")] }
+      let(:items) {
+        [Blacklight::Solr::Response::Facets::FacetItem.new("a"),
+         Blacklight::Solr::Response::Facets::FacetItem.new(""),
+         Blacklight::Solr::Response::Facets::FacetItem.new("c")]
+      }
+
       it do
         rvalue = should_render_facet?(display_facet)
         expect(rvalue).to be true
@@ -51,9 +58,12 @@ RSpec.describe FacetHelper do
     end
 
     context 'three items with two blank' do
-      let(:items) { [Blacklight::Solr::Response::Facets::FacetItem.new(""),
-                     Blacklight::Solr::Response::Facets::FacetItem.new("b"),
-                     Blacklight::Solr::Response::Facets::FacetItem.new("")] }
+      let(:items) {
+        [Blacklight::Solr::Response::Facets::FacetItem.new(""),
+         Blacklight::Solr::Response::Facets::FacetItem.new("b"),
+         Blacklight::Solr::Response::Facets::FacetItem.new("")]
+      }
+
       it do
         rvalue = should_render_facet?(display_facet)
         expect(rvalue).to be true
@@ -62,9 +72,12 @@ RSpec.describe FacetHelper do
     end
 
     context 'three items with all blank' do
-      let(:items) { [Blacklight::Solr::Response::Facets::FacetItem.new(""),
-                     Blacklight::Solr::Response::Facets::FacetItem.new(""),
-                     Blacklight::Solr::Response::Facets::FacetItem.new("")] }
+      let(:items) {
+        [Blacklight::Solr::Response::Facets::FacetItem.new(""),
+         Blacklight::Solr::Response::Facets::FacetItem.new(""),
+         Blacklight::Solr::Response::Facets::FacetItem.new("")]
+      }
+
       it do
         rvalue = should_render_facet?(display_facet)
         expect(rvalue).to be false

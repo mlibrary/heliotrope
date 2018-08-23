@@ -6,6 +6,7 @@ RSpec.describe Hyrax::MonographPresenter do
   include ActionView::Helpers::UrlHelper
 
   before { Press.destroy_all }
+
   let(:press) { create(:press, subdomain: 'michigan') }
 
   let(:mono_doc) { ::SolrDocument.new(id: 'mono', has_model_ssim: ['Monograph']) }
@@ -14,6 +15,7 @@ RSpec.describe Hyrax::MonographPresenter do
 
   describe '#presenters' do
     subject { described_class.new(nil, nil) }
+
     it do
       is_expected.to be_a CCAnalyticsPresenter
       is_expected.to be_a OpenUrlPresenter
@@ -44,8 +46,10 @@ RSpec.describe Hyrax::MonographPresenter do
         ActiveFedora::SolrService.add([mono_doc.to_h, cover.to_h, blue_file.to_h, green_file.to_h])
         ActiveFedora::SolrService.commit
       end
+
       it { is_expected.to be true }
     end
+
     context 'does not have assets' do
       let(:ordered_ids) { [cover.id] }
 
@@ -54,23 +58,30 @@ RSpec.describe Hyrax::MonographPresenter do
         ActiveFedora::SolrService.add([mono_doc.to_h, cover.to_h])
         ActiveFedora::SolrService.commit
       end
+
       it { is_expected.to be false }
     end
   end
 
   describe '#monograph_coins_title?' do
     subject { presenter.monograph_coins_title? }
+
     context 'undef' do
       before { presenter.instance_eval('undef :monograph_coins_title') }
+
       it { is_expected.to be false }
     end
+
     context 'def' do
       context 'blank' do
         before { allow(presenter).to receive(:monograph_coins_title).and_return('') }
+
         it { is_expected.to be false }
       end
+
       context 'present' do
         before { allow(presenter).to receive(:monograph_coins_title).and_return('MONOGRAPH-COINS-TITLE') }
+
         it { is_expected.to be true }
       end
     end
@@ -78,76 +89,102 @@ RSpec.describe Hyrax::MonographPresenter do
 
   describe '#buy_url?' do
     context 'empty' do
-      before { allow(mono_doc).to receive(:buy_url).and_return([]) }
       subject { presenter.buy_url? }
+
+      before { allow(mono_doc).to receive(:buy_url).and_return([]) }
+
       it { expect(subject).to be false }
     end
+
     context 'url' do
-      before { allow(mono_doc).to receive(:buy_url).and_return(['url']) }
       subject { presenter.buy_url? }
+
+      before { allow(mono_doc).to receive(:buy_url).and_return(['url']) }
+
       it { expect(subject).to be true }
     end
   end
 
   describe '#buy_url' do
     context 'empty' do
-      before { allow(mono_doc).to receive(:buy_url).and_return([]) }
       subject { presenter.buy_url }
+
+      before { allow(mono_doc).to receive(:buy_url).and_return([]) }
+
       it { expect(subject).to be nil }
     end
+
     context 'url' do
-      before { allow(mono_doc).to receive(:buy_url).and_return(['url']) }
       subject { presenter.buy_url }
+
+      before { allow(mono_doc).to receive(:buy_url).and_return(['url']) }
+
       it { expect(subject).to eq 'url' }
     end
   end
 
   describe '#date_published' do
+    subject { presenter.date_published }
+
     before do
       allow(mono_doc).to receive(:date_published).and_return(['Oct 7th'])
     end
-    subject { presenter.date_published }
+
     it { is_expected.to eq ['Oct 7th'] }
   end
 
   describe '#authors' do
     describe "creator_display exists, creators/contributors don't" do
+      subject { presenter.authors }
+
       before do
         allow(mono_doc).to receive(:creator_display).and_return('A very elaborate description of editors and authors')
       end
-      subject { presenter.authors }
+
       it { is_expected.to eq 'A very elaborate description of editors and authors' }
     end
+
     before do
       allow(mono_doc).to receive(:creator).and_return(['Cat, Abe'])
       allow(mono_doc).to receive(:contributor).and_return(['Lastname, Thing', 'Feetys, Manny'])
       allow(mono_doc).to receive(:creator_display).and_return(nil)
     end
+
     describe "creators/contributors exist, creator_display doesn't" do
       subject { presenter.authors }
+
       it { is_expected.to eq 'Abe Cat, Thing Lastname and Manny Feetys' }
     end
+
     describe 'creators/contributors exist, as does creator_display' do
+      subject { presenter.authors }
+
       before do
         allow(mono_doc).to receive(:creator_display).and_return('A very elaborate description of editors and authors')
       end
-      subject { presenter.authors }
+
       it { is_expected.to eq 'A very elaborate description of editors and authors' }
     end
+
     describe 'the \heb\' press leaves author names reversed, joined with a semi-colon' do
+      subject { presenter.authors }
+
       before do
         allow(presenter).to receive(:subdomain).and_return('heb')
       end
-      subject { presenter.authors }
+
       it { is_expected.to eq 'Cat, Abe; Lastname, Thing; Feetys, Manny' }
     end
+
     context 'Solr doc creator values have text following a second comma' do
+      subject { presenter.authors }
+
       before do
         allow(mono_doc).to receive(:creator).and_return(['Man, Rocket, 1888-1968', 'Boop, Betty, some weird stuff'])
         allow(mono_doc).to receive(:contributor).and_return(['Love, Thomas'])
         allow(presenter).to receive(:subdomain).and_return('heb')
       end
-      subject { presenter.authors }
+
       it 'is included in authors method' do
         expect(subject).to eq 'Man, Rocket, 1888-1968; Boop, Betty, some weird stuff; Love, Thomas'
       end
@@ -155,11 +192,13 @@ RSpec.describe Hyrax::MonographPresenter do
   end
 
   describe '#authors?' do
+    subject { presenter.authors? }
+
     before do
       allow(mono_doc).to receive(:contributor).and_return([])
       allow(mono_doc).to receive(:creator_display).and_return(nil)
     end
-    subject { presenter.authors? }
+
     it { is_expected.to eq false }
   end
 
@@ -219,6 +258,7 @@ RSpec.describe Hyrax::MonographPresenter do
   context 'a monograph with no attached members' do
     describe '#ordered_file_sets_ids', :private do
       subject { presenter.ordered_file_sets_ids }
+
       it 'returns an empty array' do
         expect(subject.count).to eq 0
       end
@@ -226,6 +266,7 @@ RSpec.describe Hyrax::MonographPresenter do
 
     describe '#previous_file_sets_id?' do
       subject { presenter.previous_file_sets_id? 0 }
+
       it 'returns false' do
         expect(subject).to eq false
       end
@@ -233,6 +274,7 @@ RSpec.describe Hyrax::MonographPresenter do
 
     describe '#previous_file_sets_id' do
       subject { presenter.previous_file_sets_id 0 }
+
       it 'returns nil' do
         expect(subject).to eq nil
       end
@@ -240,6 +282,7 @@ RSpec.describe Hyrax::MonographPresenter do
 
     describe '#next_file_sets_id?' do
       subject { presenter.next_file_sets_id? 0 }
+
       it 'returns false' do
         expect(subject).to eq false
       end
@@ -247,6 +290,7 @@ RSpec.describe Hyrax::MonographPresenter do
 
     describe '#next_file_sets_id' do
       subject { presenter.next_file_sets_id 0 }
+
       it 'returns nil' do
         expect(subject).to eq nil
       end
@@ -254,11 +298,13 @@ RSpec.describe Hyrax::MonographPresenter do
 
     describe '#epub?' do
       subject { presenter.epub? }
+
       it { expect(subject).to be false }
     end
 
     describe '#epub' do
       subject { presenter.epub }
+
       it { expect(subject).to be nil }
     end
   end # context 'a monograph with no attached members' do
@@ -307,21 +353,25 @@ RSpec.describe Hyrax::MonographPresenter do
     context 'the first (non-representative) file' do
       describe '#previous_file_sets_id?' do
         subject { presenter.previous_file_sets_id? fs1_doc.id }
+
         it { is_expected.to be false }
       end
 
       describe '#previous_file_sets_id' do
         subject { presenter.previous_file_sets_id fs1_doc.id }
+
         it { is_expected.to eq nil }
       end
 
       describe '#next_file_sets_id?' do
         subject { presenter.next_file_sets_id? fs1_doc.id }
+
         it { is_expected.to eq true }
       end
 
       describe '#next_file_sets_id' do
         subject { presenter.next_file_sets_id fs1_doc.id }
+
         it { is_expected.to eq fs2_doc.id }
       end
     end
@@ -329,21 +379,25 @@ RSpec.describe Hyrax::MonographPresenter do
     context 'the 2nd file in the list' do
       describe '#previous_file_sets_id?' do
         subject { presenter.previous_file_sets_id? fs2_doc.id }
+
         it { is_expected.to eq true }
       end
 
       describe '#previous_file_sets_id' do
         subject { presenter.previous_file_sets_id fs2_doc.id }
+
         it { is_expected.to eq fs1_doc.id }
       end
 
       describe '#next_file_sets_id?' do
         subject { presenter.next_file_sets_id? fs2_doc.id }
+
         it { is_expected.to eq true }
       end
 
       describe '#next_file_sets_id' do
         subject { presenter.next_file_sets_id fs2_doc.id }
+
         it { is_expected.to eq fs3_doc.id }
       end
     end
@@ -351,21 +405,25 @@ RSpec.describe Hyrax::MonographPresenter do
     context 'the last file in the list' do
       describe '#previous_file_sets_id?' do
         subject { presenter.previous_file_sets_id? fs3_doc.id }
+
         it { is_expected.to eq true }
       end
 
       describe '#previous_file_sets_id' do
         subject { presenter.previous_file_sets_id fs3_doc.id }
+
         it { is_expected.to eq fs2_doc.id }
       end
 
       describe '#next_file_sets_id?' do
         subject { presenter.next_file_sets_id? fs3_doc.id }
+
         it { is_expected.to eq false }
       end
 
       describe '#next_file_sets_id' do
         subject { presenter.next_file_sets_id fs3_doc.id }
+
         it { is_expected.to eq nil }
       end
     end
@@ -380,57 +438,71 @@ RSpec.describe Hyrax::MonographPresenter do
 
     describe '#epub?' do
       subject { presenter.epub? }
+
       it { expect(subject).to be false }
     end
 
     describe '#epub' do
       subject { presenter.epub }
+
       it { expect(subject).to be nil }
     end
 
     context 'featured_representatives' do
-      let!(:fr1) { create(:featured_representative, monograph_id: presenter.id,
-                                                    file_set_id: fs2_doc.id,
-                                                    kind: 'epub') }
-      let!(:fr2) { create(:featured_representative, monograph_id: presenter.id,
-                                                    file_set_id: fs3_doc.id,
-                                                    kind: 'webgl') }
+      let!(:fr1) {
+        create(:featured_representative, monograph_id: presenter.id,
+                                         file_set_id: fs2_doc.id,
+                                         kind: 'epub')
+      }
+      let!(:fr2) {
+        create(:featured_representative, monograph_id: presenter.id,
+                                         file_set_id: fs3_doc.id,
+                                         kind: 'webgl')
+      }
+
       after do
         FeaturedRepresentative.destroy_all
       end
 
       describe '#featured_representatives' do
         subject { presenter.featured_representatives }
+
         it { expect(subject.count).to be 2 }
       end
 
       describe '#epub?' do
         subject { presenter.epub? }
+
         it { expect(subject).to be true }
       end
 
       describe '#epub' do
         subject { presenter.epub }
+
         it { expect(subject.id).to eq fs2_doc.id }
       end
 
       describe '#epub_id' do
         subject { presenter.epub_id }
+
         it { expect(subject).to eq fs2_doc.id }
       end
 
       describe '#webgl?' do
         subject { presenter.webgl? }
+
         it { expect(subject).to be true }
       end
 
       describe '#webgl' do
         subject { presenter.webgl }
+
         it { expect(subject.id).to eq fs3_doc.id }
       end
 
       describe '#webgl_id' do
         subject { presenter.webgl_id }
+
         it { expect(subject).to eq fs3_doc.id }
       end
     end
@@ -438,9 +510,11 @@ RSpec.describe Hyrax::MonographPresenter do
 
   describe "#citable_link" do
     context "has a DOI" do
-      let(:mono_doc) { SolrDocument.new(id: 'monograph_id',
-                                        has_model_ssim: ['Monograph'],
-                                        doi_ssim: ['10.NNNN.N/identifier']) }
+      let(:mono_doc) {
+        SolrDocument.new(id: 'monograph_id',
+                         has_model_ssim: ['Monograph'],
+                         doi_ssim: ['10.NNNN.N/identifier'])
+      }
 
       it "returns the doi url" do
         expect(presenter.citable_link).to eq 'https://doi.org/10.NNNN.N/identifier'
@@ -458,11 +532,13 @@ RSpec.describe Hyrax::MonographPresenter do
 
   describe '#creator' do
     context 'there are values in creator and contributor' do
+      subject { presenter.creator }
+
       before do
         allow(mono_doc).to receive(:creator).and_return(['Man, Rocket', 'Boop, Betty'])
         allow(mono_doc).to receive(:contributor).and_return(['Love, Thomas'])
       end
-      subject { presenter.creator }
+
       # contributors are not used any more in creator (and therefore citations)
       it 'only includes the values in creator' do
         expect(subject).to eq ['Man, Rocket', 'Boop, Betty']
@@ -470,11 +546,13 @@ RSpec.describe Hyrax::MonographPresenter do
     end
 
     context 'Solr doc creator values have text following a second comma' do
+      subject { presenter.creator }
+
       before do
         allow(mono_doc).to receive(:creator).and_return(['Man, Rocket, 1888-1968', 'Boop, Betty, some weird stuff'])
         allow(mono_doc).to receive(:contributor).and_return(['Love, Thomas'])
       end
-      subject { presenter.creator }
+
       it 'does not return this extra text' do
         expect(subject).to eq ['Man, Rocket', 'Boop, Betty']
       end

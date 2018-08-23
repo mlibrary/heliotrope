@@ -4,7 +4,7 @@ FactoryBot.define do
   factory :file_set do
     transient do
       user { FactoryBot.create(:user) }
-      content nil
+      content { nil }
     end
 
     after(:build) do |work, evaluator|
@@ -22,10 +22,10 @@ FactoryBot.define do
     # pad this one out so that string comparisons are consistent
     sequence(:resource_type) { |n| ["audio#{n.to_s.rjust(4, '0')}"] }
     date_uploaded { Hyrax::TimeService.time_in_utc }
-    visibility Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE
+    visibility { Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE }
 
     factory :public_file_set do
-      visibility Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC
+      visibility { Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC }
     end
   end
 end

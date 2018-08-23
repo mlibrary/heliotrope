@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-feature 'Press catalog sort' do
+describe 'Press catalog sort' do
   context 'Monograph results set end-to-end' do
     before do
       create(:press, subdomain: 'sort_press1')

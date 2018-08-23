@@ -21,6 +21,7 @@ RSpec.describe MinimalEpubJob, type: :job do
       let(:sm_epub) { File.join(root_path, epub.id + '.sm.epub') }
       let(:sm_dir) { File.join(root_path, epub.id + '.sm') }
       let(:sm_dir_testing) { sm_dir + '.testing' }
+
       before do
         # The UnpackJob actually calls the MinimalEpubJob
         # So to test, delete what the MinimalEpubJob created then run it alone

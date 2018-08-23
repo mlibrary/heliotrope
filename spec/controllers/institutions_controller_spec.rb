@@ -29,19 +29,21 @@ RSpec.describe InstitutionsController, type: :controller do
   # This should return the minimal set of attributes required to create a valid
   # Institution. As you add validations to Institution, be sure to
   # adjust the attributes here as well.
-  let(:valid_attributes) { {
-    identifier: 'identifier',
-    name: 'name',
-    site: 'site',
-    login: 'login'
-  } }
+  let(:valid_attributes) {
+    {
+      identifier: 'identifier',
+      name: 'name',
+      site: 'site',
+      login: 'login'
+    } }
 
-  let(:invalid_attributes) { {
-    identifier: '',
-    name: '',
-    site: '',
-    login: ''
-  } }
+  let(:invalid_attributes) {
+    {
+      identifier: '',
+      name: '',
+      site: '',
+      login: ''
+    } }
 
   # This should return the minimal set of values that should be in the session
   # in order to pass any filters (e.g. authentication) defined in
@@ -103,12 +105,13 @@ RSpec.describe InstitutionsController, type: :controller do
 
   describe "PUT #update" do
     context "with valid params" do
-      let(:new_attributes) { {
-        identifier: 'identifier', # institution identifier can not be updated
-        name: 'new_name',
-        site: 'new_site',
-        login: 'new_login'
-      } }
+      let(:new_attributes) {
+        {
+          identifier: 'identifier', # institution identifier can not be updated
+          name: 'new_name',
+          site: 'new_site',
+          login: 'new_login'
+        } }
 
       it "updates the requested institution" do
         institution = Institution.create! valid_attributes

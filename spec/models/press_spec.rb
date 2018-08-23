@@ -34,6 +34,7 @@ RSpec.describe Press, type: :model do
 
   describe "to_param" do
     subject { press.to_param }
+
     let(:press) { build(:press, subdomain: 'umich') }
 
     it { is_expected.to eq 'umich' }
@@ -41,7 +42,9 @@ RSpec.describe Press, type: :model do
 
   describe "roles" do
     subject { press.roles }
+
     let(:press) { build(:press) }
+
     it { is_expected.to eq [] }
   end
 

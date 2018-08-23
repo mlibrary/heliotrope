@@ -41,6 +41,7 @@ RSpec.describe "Lessees", type: :request do
 
     context 'api_v1_find_lessee_path' do
       let(:params) { { identifier: new_identifier } }
+
       describe 'GET /api/v1/lessee' do
         it 'not found' do
           get api_find_lessee_path, params: params, headers: headers

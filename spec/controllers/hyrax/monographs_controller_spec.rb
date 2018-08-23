@@ -22,6 +22,7 @@ describe Hyrax::MonographsController do
         context 'press parameter' do
           let(:subdomain) { "subdomain" }
           let(:form) { assigns(:form) }
+
           it 'handles missing press param' do
             get :new
             expect(form["press"]).to match(//)
@@ -83,7 +84,7 @@ describe Hyrax::MonographsController do
             expect {
               post :create, params: { monograph: { title: 'Title one',
                                                    press: press.subdomain } }
-            }.to change { Monograph.count }.by(1)
+            }.to change(Monograph, :count).by(1)
 
             expect(assigns[:curation_concern].title).to eq ['Title one']
             expect(assigns[:curation_concern].press).to eq press.subdomain
@@ -96,7 +97,7 @@ describe Hyrax::MonographsController do
             expect {
               post :create, params: { monograph: { title: ['Title one'],
                                                    press: press.subdomain } }
-            }.not_to change { Monograph.count }
+            }.not_to change(Monograph, :count)
 
             expect(response.status).to eq 401
             expect(response).to render_template :unauthorized
@@ -119,6 +120,7 @@ describe Hyrax::MonographsController do
       before do
         get :show, params: { id: monograph.id }
       end
+
       it do
         expect(response).to have_http_status(:success)
         expect(response).to render_template(:show)

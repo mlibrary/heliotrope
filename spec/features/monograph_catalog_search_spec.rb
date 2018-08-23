@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-feature 'Monograph Catalog Search' do
+describe 'Monograph Catalog Search' do
   let(:user) { create(:platform_admin) }
   let(:monograph) do
     m = build(:monograph, user: user,
@@ -18,23 +18,27 @@ feature 'Monograph Catalog Search' do
   end
 
   let(:cover) { create(:public_file_set, user: user) }
-  let(:fs1) { create(:file_set, title: ['Strange Marshes'],
-                                caption: ['onion'],
-                                alt_text: ['garlic'],
-                                description: ['tomato'],
-                                contributor: ['potato'],
-                                keywords: ['squash'],
-                                transcript: 'broccoli',
-                                translation: ['cauliflower']) }
+  let(:fs1) {
+    create(:file_set, title: ['Strange Marshes'],
+                      caption: ['onion'],
+                      alt_text: ['garlic'],
+                      description: ['tomato'],
+                      contributor: ['potato'],
+                      keywords: ['squash'],
+                      transcript: 'broccoli',
+                      translation: ['cauliflower'])
+  }
 
-  let(:fs2) { create(:file_set, title: ['Unruly Puddles'],
-                                caption: ['monkey'],
-                                alt_text: ['lizard'],
-                                description: ['elephant'],
-                                contributor: ['rhino'],
-                                keywords: ['snake'],
-                                transcript: 'tiger',
-                                translation: ['mouse']) }
+  let(:fs2) {
+    create(:file_set, title: ['Unruly Puddles'],
+                      caption: ['monkey'],
+                      alt_text: ['lizard'],
+                      description: ['elephant'],
+                      contributor: ['rhino'],
+                      keywords: ['snake'],
+                      transcript: 'tiger',
+                      translation: ['mouse'])
+  }
 
   before do
     cosign_login_as user
@@ -46,7 +50,7 @@ feature 'Monograph Catalog Search' do
     expect(page).to have_selector("form[action='/concern/monographs/#{monograph.id}?locale=en']")
   end
 
-  scenario 'searches the monograph catalog page' do
+  it 'searches the monograph catalog page' do
     visit monograph_catalog_path(monograph.id)
 
     # Selectors needed for assets/javascripts/ga_event_tracking.js
@@ -59,42 +63,42 @@ feature 'Monograph Catalog Search' do
     fill_in 'catalog_search', with: 'Unruly'
     click_button 'keyword-search-submit'
     expect(page).to have_content 'Unruly Puddles'
-    expect(page).to_not have_content 'Strange Marshes'
+    expect(page).not_to have_content 'Strange Marshes'
 
     fill_in 'catalog_search', with: 'monkey'
     click_button 'keyword-search-submit'
     expect(page).to have_content 'Unruly Puddles'
-    expect(page).to_not have_content 'Strange Marshes'
+    expect(page).not_to have_content 'Strange Marshes'
 
     fill_in 'catalog_search', with: 'lizard'
     click_button 'keyword-search-submit'
     expect(page).to have_content 'Unruly Puddles'
-    expect(page).to_not have_content 'Strange Marshes'
+    expect(page).not_to have_content 'Strange Marshes'
 
     fill_in 'catalog_search', with: 'elephant'
     click_button 'keyword-search-submit'
     expect(page).to have_content 'Unruly Puddles'
-    expect(page).to_not have_content 'Strange Marshes'
+    expect(page).not_to have_content 'Strange Marshes'
 
     fill_in 'catalog_search', with: 'rhino'
     click_button 'keyword-search-submit'
     expect(page).to have_content 'Unruly Puddles'
-    expect(page).to_not have_content 'Strange Marshes'
+    expect(page).not_to have_content 'Strange Marshes'
 
     fill_in 'catalog_search', with: 'snake'
     click_button 'keyword-search-submit'
     expect(page).to have_content 'Unruly Puddles'
-    expect(page).to_not have_content 'Strange Marshes'
+    expect(page).not_to have_content 'Strange Marshes'
 
     fill_in 'catalog_search', with: 'tiger'
     click_button 'keyword-search-submit'
     expect(page).to have_content 'Unruly Puddles'
-    expect(page).to_not have_content 'Strange Marshes'
+    expect(page).not_to have_content 'Strange Marshes'
 
     fill_in 'catalog_search', with: 'mouse'
     click_button 'keyword-search-submit'
     expect(page).to have_content 'Unruly Puddles'
-    expect(page).to_not have_content 'Strange Marshes'
+    expect(page).not_to have_content 'Strange Marshes'
 
     # Gallery view
     visit monograph_catalog_path id: monograph.id, view: 'gallery'

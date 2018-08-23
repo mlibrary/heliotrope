@@ -19,7 +19,7 @@ require 'active_support/core_ext'
 # autoload
 require 'active_support/dependencies'
 # lib
-ActiveSupport::Dependencies.autoload_paths << File.expand_path("../../../lib", __FILE__)
+ActiveSupport::Dependencies.autoload_paths << File.expand_path('../../lib', __dir__)
 
 # Use this setup block to configure all options available in EPub.
 EPub.configure do |config|

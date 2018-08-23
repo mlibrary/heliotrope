@@ -6,6 +6,7 @@ RSpec.describe PublishJob, type: :job do
   describe "perform" do
     let(:monograph) { build(:monograph) }
     let(:file_set) { create(:file_set) }
+
     before do
       monograph.members << file_set
       monograph.save!

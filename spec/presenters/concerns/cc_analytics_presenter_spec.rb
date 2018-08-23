@@ -25,6 +25,7 @@ RSpec.describe CCAnalyticsPresenter do
           OpenStruct.new(date: "20180107", pagePath: "/concern/thing", pageviews: "5")
         ]
       }
+
       it "when there are pageviews, it returns the pageviews since date_uploaded" do
         expect(presenter.pageviews_by_path("/concern/thing")).to eq 7
       end
@@ -48,6 +49,7 @@ RSpec.describe CCAnalyticsPresenter do
           OpenStruct.new(date: "20180107", pagePath: "/concern/789", pageviews: "5")
         ]
       }
+
       describe "aggregated counts (pageviews_by_ids)" do
         it "when there are pageviews, it returns the pageviews since date_uploaded" do
           expect(presenter.pageviews_by_ids(['123', '456'])).to eq 14
@@ -60,6 +62,7 @@ RSpec.describe CCAnalyticsPresenter do
           expect(presenter.pageviews_by_ids(['123', '456'])).to eq '?'
         end
       end
+
       describe "aggregated counts per day (timestamped_pageviews_by_ids) since date_uploaded" do
         it "when there are pageviews, it returns a hash of timestamps => pageviews and sets pageviews count" do
           expect(presenter.timestamped_pageviews_by_ids(['123', '456'])).to match a_hash_including(DateTime.strptime('20180102', '%Y%m%d').strftime('%Q').to_i => 2,
@@ -88,14 +91,18 @@ RSpec.describe CCAnalyticsPresenter do
     describe '#flot_daily_pageviews_zero_pad' do
       subject { presenter.flot_daily_pageviews_zero_pad(['foo', 'bar']) }
 
-      let(:pageviews_hash) { { 1_514_937_600_000 => 2,    # 20180103
-                               1_515_196_800_000 => 9,    # 20180106
-                               1_515_283_200_000 => 3 } } # 20180107
+      let(:pageviews_hash) {
+        { 1_514_937_600_000 => 2, # 20180103
+          1_515_196_800_000 => 9, # 20180106
+          1_515_283_200_000 => 3 }
+      } # 20180107
 
-      let(:graph_data) { [[1_514_764_800_000, 0], [1_514_851_200_000, 0], [1_514_937_600_000, 2],
-                          [1_515_024_000_000, 0], [1_515_110_400_000, 0], [1_515_196_800_000, 9],
-                          [1_515_283_200_000, 3], [1_515_369_600_000, 0], [1_515_456_000_000, 0],
-                          [1_515_542_400_000, 0]] }
+      let(:graph_data) {
+        [[1_514_764_800_000, 0], [1_514_851_200_000, 0], [1_514_937_600_000, 2],
+         [1_515_024_000_000, 0], [1_515_110_400_000, 0], [1_515_196_800_000, 9],
+         [1_515_283_200_000, 3], [1_515_369_600_000, 0], [1_515_456_000_000, 0],
+         [1_515_542_400_000, 0]]
+      }
 
       it 'returns pageview data for a Flot area graph (date_uploaded to "today", padded with 0 pageview days)' do
         allow(DateTime).to receive(:yesterday).and_return(DateTime.strptime('1515542400000', '%Q')) # 20180110
@@ -111,16 +118,20 @@ RSpec.describe CCAnalyticsPresenter do
     describe '#flot_pageviews_over_time, with activity in the last 30 days' do
       subject { presenter.flot_pageviews_over_time(['foo', 'bar']) }
 
-      let(:pageviews_hash) { { 1_514_937_600_000 => 2,    # 20180103
-                               1_515_196_800_000 => 9,    # 20180106
-                               1_515_283_200_000 => 3,    # 20180107
-                               1_515_542_400_000 => 6 } } # 20180110
+      let(:pageviews_hash) {
+        { 1_514_937_600_000 => 2, # 20180103
+          1_515_196_800_000 => 9,    # 20180106
+          1_515_283_200_000 => 3,    # 20180107
+          1_515_542_400_000 => 6 }
+      } # 20180110
 
-      let(:graph_data) { [[1_514_764_800_000, 0],
-                          [1_514_937_600_000, 2],
-                          [1_515_196_800_000, 11],
-                          [1_515_283_200_000, 14],
-                          [1_515_542_400_000, 20]] }
+      let(:graph_data) {
+        [[1_514_764_800_000, 0],
+         [1_514_937_600_000, 2],
+         [1_515_196_800_000, 11],
+         [1_515_283_200_000, 14],
+         [1_515_542_400_000, 20]]
+      }
 
       it 'returns pageview data where each value is the total views to date' do
         allow(presenter).to receive(:timestamped_pageviews_by_ids).and_return(pageviews_hash)
@@ -131,15 +142,19 @@ RSpec.describe CCAnalyticsPresenter do
     describe '#flot_pageviews_over_time, with no activity in the last 30 days' do
       subject { presenter.flot_pageviews_over_time(['foo', 'bar']) }
 
-      let(:pageviews_hash) { { 1_514_937_600_000 => 2,    # 20180103
-                               1_515_196_800_000 => 9,    # 20180106
-                               1_515_283_200_000 => 3 } } # 20180107
+      let(:pageviews_hash) {
+        { 1_514_937_600_000 => 2, # 20180103
+          1_515_196_800_000 => 9, # 20180106
+          1_515_283_200_000 => 3 }
+      }       # 20180107
 
-      let(:graph_data) { [[1_514_764_800_000, 0],
-                          [1_514_937_600_000, 2],
-                          [1_515_196_800_000, 11],
-                          [1_515_283_200_000, 14],
-                          [1_518_048_000_000, 14]] } # an added value for 20180208, "yesterday"
+      let(:graph_data) {
+        [[1_514_764_800_000, 0],
+         [1_514_937_600_000, 2],
+         [1_515_196_800_000, 11],
+         [1_515_283_200_000, 14],
+         [1_518_048_000_000, 14]]
+      }       # an added value for 20180208, "yesterday"
 
       it 'returns pageview data where each value is the total views to date, adding a final value for yesterday' do
         allow(presenter).to receive(:timestamped_pageviews_by_ids).and_return(pageviews_hash)

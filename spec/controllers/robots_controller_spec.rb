@@ -6,6 +6,7 @@ RSpec.describe RobotsController, type: :controller do
   describe "#robots" do
     context "with the test environment" do
       before { get :robots }
+
       it "denies robots" do
         expect(response.body).to match(/\nUser\-Agent: \*\n/)
         expect(response.body).to match(/\nDisallow: \/\n/)
@@ -18,6 +19,7 @@ RSpec.describe RobotsController, type: :controller do
         allow(Socket).to receive(:gethostname).and_return("nectar.umdl.umich.edu")
         get :robots
       end
+
       it "denies robots" do
         expect(response.body).to match(/\nUser\-Agent: \*\n/)
         expect(response.body).to match(/\nDisallow: \/\n/)
@@ -30,6 +32,7 @@ RSpec.describe RobotsController, type: :controller do
         allow(Socket).to receive(:gethostname).and_return("anything_but_nectar")
         get :robots
       end
+
       it "allows robots" do
         expect(response.body).to match(/\n# User\-Agent: \*\n/)
         expect(response.body).to match(/\n# Disallow: \/\n/)
