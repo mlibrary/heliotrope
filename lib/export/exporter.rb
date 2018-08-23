@@ -42,7 +42,7 @@ module Export
       manifest << export
       manifest.close
       @monograph.ordered_members.to_a.each do |member|
-        next if member.original_file.empty?
+        next unless member.original_file
         file = File.new(File.join(path, member.original_file.file_name.first), "wb")
         file.write(member.original_file.content.force_encoding("utf-8"))
         file.close
