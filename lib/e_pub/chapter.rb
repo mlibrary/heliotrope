@@ -33,10 +33,6 @@ module EPub
       @paragraphs ||= @doc.xpath("//p").map { |p| Paragraph.send(:new, p.text) }
     end
 
-    def presenter
-      ChapterPresenter.send(:new, self)
-    end
-
     def downloadable?
       # Currently only fixed layout epubs can have downloadable chapters.
       # For reflowable/non-page-image epubs, we'll need a different process,
@@ -108,10 +104,6 @@ module EPub
 
     def paragraphs
       []
-    end
-
-    def presenter
-      ChapterPresenter.send(:new, self)
     end
 
     def downloadable?

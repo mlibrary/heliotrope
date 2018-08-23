@@ -13,10 +13,6 @@ module EPub
 
     # Instance Methods
 
-    def presenter
-      ParagraphPresenter.send(:new, self)
-    end
-
     private
 
       def initialize(text)
