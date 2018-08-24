@@ -4,7 +4,7 @@ require 'prawn'
 
 module EPub
   class Chapter
-    attr_accessor :id, :href, :title, :basecfi, :doc, :paragraphs, :publication
+    attr_accessor :id, :href, :title, :basecfi, :doc, :publication
     private_class_method :new
 
     # Class Methods
@@ -27,10 +27,6 @@ module EPub
     # Instance Methods
     def title?
       @title.present?
-    end
-
-    def paragraphs
-      @paragraphs ||= @doc.xpath("//p").map { |p| Paragraph.send(:new, p.text) }
     end
 
     def downloadable?
@@ -100,10 +96,6 @@ module EPub
 
     def title
       ''
-    end
-
-    def paragraphs
-      []
     end
 
     def downloadable?
