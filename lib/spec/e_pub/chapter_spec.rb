@@ -45,10 +45,6 @@ RSpec.describe EPub::Chapter do
         it { expect(subject.paragraphs).to eq [] }
       end
 
-      describe "#presenter" do
-        it { expect(subject.presenter).to be_an_instance_of(EPub::ChapterPresenter) }
-      end
-
       describe "#downloadable" do
         it { expect(subject.downloadable?).to be false }
       end
@@ -80,14 +76,6 @@ RSpec.describe EPub::Chapter do
 
     it 'returns an array' do
       is_expected.to be_an_instance_of(Array)
-    end
-  end
-
-  describe '#presenter' do
-    subject { described_class.send(:new, chapter_params).presenter }
-
-    it 'returns a chapter presenter' do
-      is_expected.to be_an_instance_of(EPub::ChapterPresenter)
     end
   end
 

@@ -22,12 +22,4 @@ RSpec.describe EPub::Paragraph do
       is_expected.to be_an_instance_of(String)
     end
   end
-
-  describe '#presenter' do
-    subject { described_class.send(:new, "I am paragraph text").presenter }
-
-    it 'returns a chapter presenter' do
-      is_expected.to be_an_instance_of(EPub::ParagraphPresenter)
-    end
-  end
 end
