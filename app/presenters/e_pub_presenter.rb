@@ -5,6 +5,10 @@ class EPubPresenter < ApplicationPresenter
     @epub = epub
   end
 
+  def multi_rendition?
+    @epub.multi_rendition?
+  end
+
   def sections
     @epub.sections.map { |section| EPubSectionPresenter.new(section) }
   end

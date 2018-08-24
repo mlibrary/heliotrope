@@ -56,9 +56,9 @@ RSpec.describe EPub::Section do
       it { is_expected.to be_an_instance_of(EPub::SectionNullObject) }
 
       context 'args' do
-        let(:args) { { title: 'title', depth: 'depth', cfi: 'cfi', downloadable: true, unmarshaller_chapter: unmarshaller_chapter } }
-        let(:unmarshaller_chapter) { double('unmarshaller chapter', pages: pages) }
-        let(:pages) { double('pages') }
+        let(:args) { { title: 'title', depth: 'depth', cfi: 'cfi', unmarshaller_chapter: unmarshaller_chapter } }
+        let(:unmarshaller_chapter) { double('unmarshaller chapter', pages: pages, downloadable_pages: pages) }
+        let(:pages) { double('pages', count: 2) }
 
         before { allow(pages).to receive(:map).and_return(pages) }
 
