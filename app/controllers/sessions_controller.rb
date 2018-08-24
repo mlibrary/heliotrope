@@ -2,6 +2,8 @@
 
 # Replaces Devise SessionsController
 class SessionsController < ApplicationController
+  skip_before_action :store_user_location!
+
   def new
     # Called after HTTP_X_REMOTE_USER authentication
     if user_signed_in?
@@ -105,7 +107,7 @@ class SessionsController < ApplicationController
       URI("#{Settings.shibboleth.sp.url}/Login").tap do |url|
         url.query = URI.encode_www_form(
           target: shib_session_url(target),
-          entityID: entity_id
+          entityID: entity_id || Settings.shibboleth.default_idp.entity_id
         )
       end.to_s
     end
@@ -128,7 +130,7 @@ class SessionsController < ApplicationController
       if user_signed_in?
         redirect_to return_location
       elsif Settings.shibboleth.fallback_to_idp
-        redirect_to shib_login_url(Settings.shibboleth.default_idp.entity_id)
+        redirect_to sp_login_url
       else
         # Bail out and show a failure page. This should be changed to a proper
         # 403 error page (or really, a 500 because this reflects a
