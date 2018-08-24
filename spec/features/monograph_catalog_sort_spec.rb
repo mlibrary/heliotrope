@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-feature 'Monograph catalog sort' do
+describe 'Monograph catalog sort' do
   context 'FileSet results set' do
     let(:user) { create(:platform_admin) }
     let(:cover) { create(:file_set, title: ['Representative']) }
@@ -28,7 +28,7 @@ feature 'Monograph catalog sort' do
       allow_any_instance_of(::Blacklight::Configuration).to receive(:default_per_page).and_return(per_page)
     end
 
-    scenario 'displays paginated results and is ordered as expected' do
+    it 'displays paginated results and is ordered as expected' do
       visit monograph_catalog_path(id: monograph.id)
       # we expect to have per_page number of results on the page
       expect(page).to have_selector('#documents .document', count: per_page)

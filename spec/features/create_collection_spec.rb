@@ -2,14 +2,15 @@
 
 require 'rails_helper'
 
-feature 'Create a collection' do
+describe 'Create a collection' do
   context 'a logged in user' do
     let(:user) { create(:platform_admin) }
+
     before do
       cosign_login_as user
     end
 
-    scenario do
+    it do
       visit hyrax.new_dashboard_collection_path
       fill_in 'Title', with: 'Test collection'
       click_button 'Create Collection'

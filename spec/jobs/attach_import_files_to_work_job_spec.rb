@@ -39,20 +39,24 @@ RSpec.describe AttachImportFilesToWorkJob do
 
   context 'when files is empty' do
     let(:n) { 0 }
+
     it_behaves_like 'a file attacher'
   end
 
   context 'when files exist, which they always do (see importer)' do
     let(:n) { 3 }
+
     it_behaves_like 'a file attacher'
   end
 
   context 'when files exist and when they do not a.k.a. external resources' do
     let(:n) { 4 }
+
     before do
       files[1] = build(:uploaded_file, file: File.open('/dev/null'))
       files[3] = build(:uploaded_file, file: File.open(fixture_path + '/empty.txt'))
     end
+
     it_behaves_like 'a file attacher'
   end
 end

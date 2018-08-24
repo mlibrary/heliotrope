@@ -11,6 +11,7 @@ describe RepositoryPresenter do
 
   describe '#initialize' do
     subject { described_class.new(current_user) }
+
     it { expect(subject.current_user).to eq current_user }
   end
 
@@ -100,22 +101,27 @@ describe RepositoryPresenter do
 
     context 'nil publisher' do
       subject { described_class.new(current_user).monograph_ids }
+
       it do
         expect(subject).to be_a Array
         expect(subject.length).to eq 2
         expect(subject).to include(monograph1.id, monograph2.id)
       end
     end
+
     context 'first publisher' do
       subject { described_class.new(current_user).monograph_ids(publisher1) }
+
       it do
         expect(subject).to be_a Array
         expect(subject.length).to eq 1
         expect(subject).to include(monograph1.id)
       end
     end
+
     context 'second publisher' do
       subject { described_class.new(current_user).monograph_ids(publisher2) }
+
       it do
         expect(subject).to be_a Array
         expect(subject.length).to eq 1
@@ -132,6 +138,7 @@ describe RepositoryPresenter do
 
     context 'when monographs have no assets' do
       subject { described_class.new(current_user).asset_ids }
+
       it { expect(subject.length).to eq 0 }
     end
 
@@ -148,22 +155,27 @@ describe RepositoryPresenter do
 
       context 'nil publisher' do
         subject { described_class.new(current_user).asset_ids }
+
         it do
           expect(subject).to be_a Array
           expect(subject.length).to eq 2
           expect(subject).to include(asset1.id, asset2.id)
         end
       end
+
       context 'first publisher' do
         subject { described_class.new(current_user).asset_ids(publisher1) }
+
         it do
           expect(subject).to be_a Array
           expect(subject.length).to eq 1
           expect(subject).to include(asset1.id)
         end
       end
+
       context 'second publisher' do
         subject { described_class.new(current_user).asset_ids(publisher2) }
+
         it do
           expect(subject).to be_a Array
           expect(subject.length).to eq 1
@@ -185,22 +197,27 @@ describe RepositoryPresenter do
 
     context 'nil publisher' do
       subject { described_class.new(current_user).user_ids }
+
       it do
         expect(subject).to be_a Array
         expect(subject.length).to eq 2
         expect(subject).to include(user1.id, user2.id)
       end
     end
+
     context 'first publisher' do
       subject { described_class.new(current_user).user_ids(publisher1) }
+
       it do
         expect(subject).to be_a Array
         expect(subject.length).to eq 1
         expect(subject).to include(user1.id)
       end
     end
+
     context 'second publisher' do
       subject { described_class.new(current_user).user_ids(publisher2) }
+
       it do
         expect(subject).to be_a Array
         expect(subject.length).to eq 1

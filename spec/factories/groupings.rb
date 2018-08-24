@@ -2,6 +2,6 @@
 
 FactoryBot.define do
   factory :grouping do
-    identifier "MyString"
+    identifier { "MyString" }
   end
 end

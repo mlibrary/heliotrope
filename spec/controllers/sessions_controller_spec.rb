@@ -54,6 +54,7 @@ RSpec.describe SessionsController, type: :controller do
 
   describe '#discovery_feed/id' do
     let(:file_set) { create(:file_set, content: File.open(File.join(fixture_path, 'moby-dick.epub'))) }
+
     it 'gets parameterized discovery feed' do
       component = Component.create!(handle: HandleService.path(file_set.id))
       institution = Institution.create!(identifier: 'UM', name: 'Name', site: 'Site',

@@ -2,13 +2,15 @@
 
 require 'rails_helper'
 
-feature 'FileSet Search' do
+describe 'FileSet Search' do
   let(:user) { create(:platform_admin) }
   let(:cover) { create(:file_set) }
   let(:file) { File.open(fixture_path + '/csv/shipwreck.jpg') }
-  let(:file_set) { create(:public_file_set, user: user,
-                                            title: ["Blue"],
-                                            caption: ["Mr. Worf, It's better than music. It's jazz."])}
+  let(:file_set) {
+    create(:public_file_set, user: user,
+                             title: ["Blue"],
+                             caption: ["Mr. Worf, It's better than music. It's jazz."])
+  }
   let!(:monograph) do
     m = build(:monograph, title: ['Yellow'],
                           representative_id: cover.id)
@@ -30,7 +32,7 @@ feature 'FileSet Search' do
     file_set.update_index
   end
 
-  scenario 'searches the monograph catalog page, not the catalog page' do
+  it 'searches the monograph catalog page, not the catalog page' do
     visit hyrax_file_set_path(file_set)
     expect(page).to have_selector("form[action='/concern/monographs/#{monograph.id}?locale=en']")
 

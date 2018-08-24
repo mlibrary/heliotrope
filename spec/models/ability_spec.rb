@@ -70,6 +70,7 @@ describe Ability do
 
     context "PublisherPresenter" do
       let(:publisher) { double("publisher") }
+
       it { is_expected.to be_able_to(:read, PublisherPresenter.new(current_user, publisher)) }
     end
 
@@ -106,22 +107,23 @@ describe Ability do
     let(:current_user) { create(:press_admin, press: my_press) }
 
     it do
-      is_expected.to_not be_able_to(:create, Press.new)
+      is_expected.not_to be_able_to(:create, Press.new)
       is_expected.to     be_able_to(:update, my_press)
-      is_expected.to_not be_able_to(:update, other_press)
+      is_expected.not_to be_able_to(:update, other_press)
     end
 
     context "roles" do
       let(:my_press_role) { create(:role, resource: my_press) }
       let(:other_press_role) { create(:role) }
+
       it do
         is_expected.to be_able_to(:read, my_press_role)
         is_expected.to be_able_to(:update, my_press_role)
         is_expected.to be_able_to(:destroy, my_press_role)
 
-        is_expected.to_not be_able_to(:read, other_press_role)
-        is_expected.to_not be_able_to(:update, other_press_role)
-        is_expected.to_not be_able_to(:destroy, other_press_role)
+        is_expected.not_to be_able_to(:read, other_press_role)
+        is_expected.not_to be_able_to(:update, other_press_role)
+        is_expected.not_to be_able_to(:destroy, other_press_role)
       end
     end
 
@@ -131,7 +133,7 @@ describe Ability do
 
       it do
         is_expected.to be_able_to(:create, monograph_for_my_press)
-        is_expected.to_not be_able_to(:create, monograph_for_other_press)
+        is_expected.not_to be_able_to(:create, monograph_for_other_press)
       end
     end
 
@@ -141,41 +143,44 @@ describe Ability do
 
       it do
         is_expected.to be_able_to(:update, my_presenter)
-        is_expected.to_not be_able_to(:update, other_presenter)
+        is_expected.not_to be_able_to(:update, other_presenter)
       end
     end
 
     context "ApplicationPresenter" do
-      it { is_expected.to_not be_able_to(:read, ApplicationPresenter.new(current_user)) }
+      it { is_expected.not_to be_able_to(:read, ApplicationPresenter.new(current_user)) }
     end
 
     context "DashboardPresenter" do
-      it { is_expected.to_not be_able_to(:read, DashboardPresenter.new(current_user)) }
+      it { is_expected.not_to be_able_to(:read, DashboardPresenter.new(current_user)) }
     end
 
     context "PublisherPresenter" do
       let(:publisher) { double("publisher") }
-      it { is_expected.to_not be_able_to(:read, PublisherPresenter.new(current_user, publisher)) }
+
+      it { is_expected.not_to be_able_to(:read, PublisherPresenter.new(current_user, publisher)) }
     end
 
     context "PublishersPresenter" do
-      it { is_expected.to_not be_able_to(:read, PublishersPresenter.new(current_user)) }
+      it { is_expected.not_to be_able_to(:read, PublishersPresenter.new(current_user)) }
     end
 
     context "RepositoryPresenter" do
-      it { is_expected.to_not be_able_to(:read, RepositoryPresenter.new(current_user)) }
+      it { is_expected.not_to be_able_to(:read, RepositoryPresenter.new(current_user)) }
     end
 
     describe "RolePresenter" do
       let(:my_press_user) { create(:editor, press: my_press) }
       let(:other_press_user) { create(:editor, press: other_press) }
+
       it { is_expected.to     be_able_to(:read, RolePresenter.new(current_user.roles.first, current_user, current_user)) }
       it { is_expected.to     be_able_to(:read, RolePresenter.new(my_press_user.roles.first, my_press_user, current_user)) }
-      it { is_expected.to_not be_able_to(:read, RolePresenter.new(other_press_user.roles.first, other_press_user, current_user)) }
+      it { is_expected.not_to be_able_to(:read, RolePresenter.new(other_press_user.roles.first, other_press_user, current_user)) }
     end
 
     describe "RolesPresenter" do
       let(:another_user) { double("another_user") }
+
       it { is_expected.to be_able_to(:read, RolesPresenter.new(current_user, current_user)) }
       it { is_expected.to be_able_to(:read, RolesPresenter.new(another_user, current_user)) }
     end
@@ -183,9 +188,10 @@ describe Ability do
     describe "UserPresenter" do
       let(:my_press_user) { create(:editor, press: my_press) }
       let(:other_press_user) { create(:editor, press: other_press) }
+
       it { is_expected.to     be_able_to(:read, UserPresenter.new(current_user, current_user)) }
       it { is_expected.to     be_able_to(:read, UserPresenter.new(my_press_user, current_user)) }
-      it { is_expected.to_not be_able_to(:read, UserPresenter.new(other_press_user, current_user)) }
+      it { is_expected.not_to be_able_to(:read, UserPresenter.new(other_press_user, current_user)) }
     end
 
     describe "UsersPresenter" do
@@ -199,42 +205,45 @@ describe Ability do
     let(:monograph_for_my_press) { Monograph.new(press: my_press.subdomain) }
 
     it do
-      is_expected.to_not be_able_to(:create, Press.new)
-      is_expected.to_not be_able_to(:update, my_press)
-      is_expected.to_not be_able_to(:create, monograph_for_my_press)
+      is_expected.not_to be_able_to(:create, Press.new)
+      is_expected.not_to be_able_to(:update, my_press)
+      is_expected.not_to be_able_to(:create, monograph_for_my_press)
     end
 
     context "ApplicationPresenter" do
-      it { is_expected.to_not be_able_to(:read, ApplicationPresenter.new(current_user)) }
+      it { is_expected.not_to be_able_to(:read, ApplicationPresenter.new(current_user)) }
     end
 
     context "DashboardPresenter" do
-      it { is_expected.to_not be_able_to(:read, DashboardPresenter.new(current_user)) }
+      it { is_expected.not_to be_able_to(:read, DashboardPresenter.new(current_user)) }
     end
 
     context "PublisherPresenter" do
       let(:publisher) { double("publisher") }
-      it { is_expected.to_not be_able_to(:read, PublisherPresenter.new(current_user, publisher)) }
+
+      it { is_expected.not_to be_able_to(:read, PublisherPresenter.new(current_user, publisher)) }
     end
 
     context "PublishersPresenter" do
-      it { is_expected.to_not be_able_to(:read, PublishersPresenter.new(current_user)) }
+      it { is_expected.not_to be_able_to(:read, PublishersPresenter.new(current_user)) }
     end
 
     context "RepositoryPresenter" do
-      it { is_expected.to_not be_able_to(:read, RepositoryPresenter.new(current_user)) }
+      it { is_expected.not_to be_able_to(:read, RepositoryPresenter.new(current_user)) }
     end
 
     describe "RolePresenter" do
       let(:my_press_user) { create(:editor, press: my_press) }
       let(:other_press_user) { create(:editor, press: create(:press)) }
+
       it { is_expected.to     be_able_to(:read, RolePresenter.new(current_user.roles.first, current_user, current_user)) }
-      it { is_expected.to_not be_able_to(:read, RolePresenter.new(my_press_user.roles.first, my_press_user, current_user)) }
-      it { is_expected.to_not be_able_to(:read, RolePresenter.new(other_press_user.roles.first, other_press_user, current_user)) }
+      it { is_expected.not_to be_able_to(:read, RolePresenter.new(my_press_user.roles.first, my_press_user, current_user)) }
+      it { is_expected.not_to be_able_to(:read, RolePresenter.new(other_press_user.roles.first, other_press_user, current_user)) }
     end
 
     describe "RolesPresenter" do
       let(:another_user) { double("another_user") }
+
       it { is_expected.to be_able_to(:read, RolesPresenter.new(current_user, current_user)) }
       it { is_expected.to be_able_to(:read, RolesPresenter.new(another_user, current_user)) }
     end
@@ -242,14 +251,15 @@ describe Ability do
     describe "UserPresenter" do
       let(:my_press_user) { create(:editor, press: my_press) }
       let(:other_press_user) { create(:editor, press: create(:press)) }
+
       it { is_expected.to     be_able_to(:read, UserPresenter.new(current_user, current_user)) }
-      it { is_expected.to_not be_able_to(:read, UserPresenter.new(my_press_user, current_user)) }
-      it { is_expected.to_not be_able_to(:read, UserPresenter.new(other_press_user, current_user)) }
-      it { is_expected.to_not be_able_to(:read, UserPresenter.new(create(:user), current_user)) }
+      it { is_expected.not_to be_able_to(:read, UserPresenter.new(my_press_user, current_user)) }
+      it { is_expected.not_to be_able_to(:read, UserPresenter.new(other_press_user, current_user)) }
+      it { is_expected.not_to be_able_to(:read, UserPresenter.new(create(:user), current_user)) }
     end
 
     describe "UsersPresenter" do
-      it { is_expected.to_not be_able_to(:read, UsersPresenter.new(current_user)) }
+      it { is_expected.not_to be_able_to(:read, UsersPresenter.new(current_user)) }
     end
   end
 
@@ -259,97 +269,102 @@ describe Ability do
 
     context "creating" do
       it do
-        is_expected.to_not be_able_to(:create, Monograph.new)
-        is_expected.to_not be_able_to(:create, FileSet.new)
+        is_expected.not_to be_able_to(:create, Monograph.new)
+        is_expected.not_to be_able_to(:create, FileSet.new)
       end
     end
 
     context "presses" do
       it do
-        is_expected.to_not be_able_to(:create, Press.new)
+        is_expected.not_to be_able_to(:create, Press.new)
         is_expected.to     be_able_to(:index, Press)
         is_expected.to     be_able_to(:read, press)
-        is_expected.to_not be_able_to(:update, press)
+        is_expected.not_to be_able_to(:update, press)
       end
     end
 
     context "read/modify/destroy private things" do
       it do
-        is_expected.to_not be_able_to(:read, monograph)
-        is_expected.to_not be_able_to(:publish, monograph)
-        is_expected.to_not be_able_to(:update, monograph)
-        is_expected.to_not be_able_to(:destroy, monograph)
+        is_expected.not_to be_able_to(:read, monograph)
+        is_expected.not_to be_able_to(:publish, monograph)
+        is_expected.not_to be_able_to(:update, monograph)
+        is_expected.not_to be_able_to(:destroy, monograph)
 
-        is_expected.to_not be_able_to(:read, file_set)
-        is_expected.to_not be_able_to(:update, file_set)
-        is_expected.to_not be_able_to(:destroy, file_set)
+        is_expected.not_to be_able_to(:read, file_set)
+        is_expected.not_to be_able_to(:update, file_set)
+        is_expected.not_to be_able_to(:destroy, file_set)
       end
     end
 
     context "read/modify/destroy public things" do
       let(:monograph) { create(:public_monograph, user: creating_user, press: press.subdomain) }
       let(:file_set) { create(:public_file_set, user: creating_user) }
+
       it do
         is_expected.to be_able_to(:read, monograph)
-        is_expected.to_not be_able_to(:update, monograph)
-        is_expected.to_not be_able_to(:destroy, monograph)
-        is_expected.to_not be_able_to(:publish, monograph)
+        is_expected.not_to be_able_to(:update, monograph)
+        is_expected.not_to be_able_to(:destroy, monograph)
+        is_expected.not_to be_able_to(:publish, monograph)
 
         is_expected.to be_able_to(:read, file_set)
-        is_expected.to_not be_able_to(:update, file_set)
-        is_expected.to_not be_able_to(:destroy, file_set)
+        is_expected.not_to be_able_to(:update, file_set)
+        is_expected.not_to be_able_to(:destroy, file_set)
       end
     end
 
     context "admin only things" do
       let(:role) { create(:role) }
+
       it do
-        is_expected.to_not be_able_to(:read, role)
-        is_expected.to_not be_able_to(:update, role)
-        is_expected.to_not be_able_to(:destroy, role)
+        is_expected.not_to be_able_to(:read, role)
+        is_expected.not_to be_able_to(:update, role)
+        is_expected.not_to be_able_to(:destroy, role)
       end
     end
 
     context "ApplicationPresenter" do
-      it { is_expected.to_not be_able_to(:read, ApplicationPresenter.new(current_user)) }
+      it { is_expected.not_to be_able_to(:read, ApplicationPresenter.new(current_user)) }
     end
 
     context "DashboardPresenter" do
-      it { is_expected.to_not be_able_to(:read, DashboardPresenter.new(current_user)) }
+      it { is_expected.not_to be_able_to(:read, DashboardPresenter.new(current_user)) }
     end
 
     context "PublisherPresenter" do
       let(:publisher) { double("publisher") }
-      it { is_expected.to_not be_able_to(:read, PublisherPresenter.new(current_user, publisher)) }
+
+      it { is_expected.not_to be_able_to(:read, PublisherPresenter.new(current_user, publisher)) }
     end
 
     context "PublishersPresenter" do
-      it { is_expected.to_not be_able_to(:read, PublishersPresenter.new(current_user)) }
+      it { is_expected.not_to be_able_to(:read, PublishersPresenter.new(current_user)) }
     end
 
     context "RepositoryPresenter" do
-      it { is_expected.to_not be_able_to(:read, RepositoryPresenter.new(current_user)) }
+      it { is_expected.not_to be_able_to(:read, RepositoryPresenter.new(current_user)) }
     end
 
     describe "RolePresenter" do
       let(:another_user) { create(:editor, press: create(:press)) }
+
       it { is_expected.to     be_able_to(:read, RolePresenter.new(current_user.roles.first, current_user, current_user)) }
-      it { is_expected.to_not be_able_to(:read, RolePresenter.new(another_user.roles.first, another_user, current_user)) }
+      it { is_expected.not_to be_able_to(:read, RolePresenter.new(another_user.roles.first, another_user, current_user)) }
     end
 
     describe "RolesPresenter" do
       let(:another_user) { double("another_user") }
+
       it { is_expected.to be_able_to(:read, RolesPresenter.new(current_user, current_user)) }
       it { is_expected.to be_able_to(:read, RolesPresenter.new(another_user, current_user)) }
     end
 
     describe "UserPresenter" do
       it { is_expected.to     be_able_to(:read, UserPresenter.new(current_user, current_user)) }
-      it { is_expected.to_not be_able_to(:read, UserPresenter.new(create(:user), current_user)) }
+      it { is_expected.not_to be_able_to(:read, UserPresenter.new(create(:user), current_user)) }
     end
 
     describe "UsersPresenter" do
-      it { is_expected.to_not be_able_to(:read, UsersPresenter.new(current_user)) }
+      it { is_expected.not_to be_able_to(:read, UsersPresenter.new(current_user)) }
     end
   end
 end

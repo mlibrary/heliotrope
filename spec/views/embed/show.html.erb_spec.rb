@@ -20,9 +20,10 @@ RSpec.describe "embed/show.html.erb", type: :view do
       assign(:presenter, file_set_presenter)
       render
     end
+
     it {
-      expect(rendered).to_not have_tag('maincontent')
-      expect(rendered).to_not have_tag('asset')
+      expect(rendered).not_to have_tag('maincontent')
+      expect(rendered).not_to have_tag('asset')
       expect(rendered).to have_tag('figure')
       # logo links back to the Fulcrum asset page through the handle
       expect(rendered).to have_css("img[src*='fulcrum-white-50px']", count: 1)
@@ -40,9 +41,10 @@ RSpec.describe "embed/show.html.erb", type: :view do
       assign(:presenter, file_set_presenter)
       render
     end
+
     it {
-      expect(rendered).to_not have_tag('maincontent')
-      expect(rendered).to_not have_tag('asset')
+      expect(rendered).not_to have_tag('maincontent')
+      expect(rendered).not_to have_tag('asset')
       expect(rendered).to have_tag('figure')
       # logo links back to the Fulcrum asset page through the handle
       expect(rendered).to have_css("img[src*='fulcrum-white-50px']", count: 1)

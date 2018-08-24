@@ -41,6 +41,7 @@ RSpec.describe "Components", type: :request do
 
     context 'api_v1_find_component_path' do
       let(:params) { { handle: new_handle } }
+
       describe 'GET /api/v1/component' do
         it 'not found' do
           get api_find_component_path, params: params, headers: headers

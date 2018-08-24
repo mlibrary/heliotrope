@@ -44,7 +44,7 @@ RSpec.describe Devise::Strategies::KeycardAuthenticatable do
           allow(User).to receive(:find_by).and_return(nil)
           expect(User).to receive(:new).with(user_key: user_eid).and_return(new_user)
           expect(new_user).to receive(:populate_attributes).once
-          expect(Guest).to receive(:new).never
+          expect(Guest).not_to receive(:new)
         end
 
         it "authenticates succesfully" do
@@ -65,7 +65,7 @@ RSpec.describe Devise::Strategies::KeycardAuthenticatable do
           allow(User).to receive(:find_by).and_return(nil)
           expect(Guest).to receive(:new).with(user_key: user_eid).and_return(guest)
           expect(guest).to receive(:populate_attributes).once
-          expect(User).to receive(:new).never
+          expect(User).not_to receive(:new)
         end
 
         it "authenticates succesfully" do

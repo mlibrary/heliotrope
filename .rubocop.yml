@@ -4,114 +4,59 @@ inherit_from: .rubocop_todo.yml
 AllCops:
   DisplayCopNames: true
   Include:
+    - '**/*.rb'
     - '**/Rakefile'
     - '**/config.ru'
   Exclude:
+    - 'fulcrum/**/*'
     - 'db/**/*'
+    - 'log/**/*'
     - 'public/**/*'
     - 'ruumba/**/*'
-    - 'script/**/*'
-    - 'spec/internal/**/*'
-    - 'spec/test_app_templates/**/*'
+    - 'solr/**/*'
     - 'tmp/**/*'
+    - 'vagrant_scripts/**/*'
     - 'vendor/**/*'
-
-Layout/BlockEndNewline:
-  Exclude:
-    - 'spec/**/*'
 
 Layout/IndentationConsistency:
   EnforcedStyle: rails
 
-Layout/MultilineBlockLayout:
-  Exclude:
-    - 'spec/**/*'
-
-Lint/ImplicitStringConcatenation:
-  Exclude:
-    - 'lib/generators/sufia/**/*'
+Metrics/AbcSize:
+  Enabled: false
 
 Metrics/BlockLength:
   Exclude:
     - 'spec/**/*'
-
-Metrics/LineLength:
-  Enabled: false
-
-Metrics/AbcSize:
-  Enabled: false
-
-Metrics/MethodLength:
-  Enabled: false
 
 Metrics/ClassLength:
   Description: 'Avoid classes longer than 250 lines of code'
   Enabled: true
   Max: 250
 
+Metrics/LineLength:
+  Enabled: false
+
+Metrics/MethodLength:
+  Enabled: false
+
 Metrics/ParameterLists:
   CountKeywordArgs: false
 
-Performance/RedundantMerge:
-  Enabled: false
-
-Style/ZeroLengthPredicate:
-  Enabled: false
-
-Style/BlockDelimiters:
-  Exclude:
-    - 'spec/**/*'
-
-Style/FileName:
+Naming/FileName:
   Exclude:
     - 'Gemfile'
     - 'Vagrantfile'
 
-Style/CollectionMethods:
-  PreferredMethods:
-    collect: 'map'
-    collect!: 'map!'
-    inject: 'reduce'
-    detect: 'find'
-    find_all: 'select'
-
-Style/WordArray:
-  Enabled: false
-
-Style/RegexpLiteral:
-  Enabled: false
-
-Style/StringLiterals:
-  Enabled: false
-
-Style/ClassAndModuleChildren:
-  Enabled: false
-
-Style/Documentation:
-  Enabled: false
-
-Style/LineEndConcatenation:
-  Exclude:
-    - 'spec/test_app_templates/lib/generators/**/*'
-    - 'lib/generators/**/*'
-
-Style/SingleLineBlockParams:
-  Enabled: false
-
-Style/SignalException:
-  Enabled: false
-
-Style/ZeroLengthPredicate:
-  Enabled: false
-
 Rails:
   Enabled: true
 
-Rails/Date:
+Rails/LexicallyScopedActionFilter:
   Enabled: false
 
 Rails/TimeZone:
-  Enabled: false
+  Exclude:
+  - 'app/services/counter_service.rb'
+  - 'spec/**/*'
 
 Rails/Output:
   Exclude:
@@ -120,6 +65,15 @@ Rails/Output:
 
 RSpec/AnyInstance:
   Enabled: false
+
+RSpec/ContextWording:
+  Enabled: false
+
+RSpec/DescribeClass:
+  Exclude:
+    - 'spec/features/**/*'
+    - 'spec/routing/**/*'
+    - 'spec/views/**/*'
 
 RSpec/ExampleWording:
   CustomTransform:
@@ -136,10 +90,41 @@ RSpec/FilePath:
 RSpec/InstanceVariable:
   Enabled: false
 
-RSpec/NotToNot:
+RSpec/MultipleExpectations:
   Enabled: false
 
-RSpec/DescribeClass:
+RSpec/NamedSubject:
+  Enabled: false
+
+RSpec/NestedGroups:
+  Enabled: false
+
+RSpec/VerifiedDoubles:
+  Enabled: false
+
+Style/BlockDelimiters:
   Exclude:
-    - 'spec/routing/**/*'
-    - 'spec/views/**/*'
+    - 'spec/**/*'
+
+Style/CollectionMethods:
+  PreferredMethods:
+    collect: 'map'
+    collect!: 'map!'
+    inject: 'reduce'
+    detect: 'find'
+    find_all: 'select'
+
+Style/Documentation:
+  Enabled: false
+
+Style/LineEndConcatenation:
+  Exclude:
+    - 'spec/test_app_templates/lib/generators/**/*'
+    - 'lib/generators/**/*'
+
+Style/RegexpLiteral:
+  Enabled: false
+
+Style/StringLiterals:
+  Enabled: false
+

@@ -45,6 +45,7 @@ RSpec.describe UnpackJob, type: :job do
         # we need the epub already unpacked in order to store the epub-webgl map file
         described_class.perform_now(epub.id, 'epub')
       end
+
       after { FeaturedRepresentative.destroy_all }
 
       context "adding a webgl" do

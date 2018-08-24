@@ -7,8 +7,10 @@ RSpec.describe FulcrumController, type: :controller do
     context 'unauthenticated user' do
       before { get :index }
       # TODO: why no locale here?
+
       it { expect(response).to redirect_to('/login') }
     end
+
     context "authenticated user" do
       let(:user) { create :user }
 
@@ -16,7 +18,8 @@ RSpec.describe FulcrumController, type: :controller do
         cosign_sign_in user
         get :index
       end
-      it { expect(response).to_not be_unauthorized }
+
+      it { expect(response).not_to be_unauthorized }
       it { expect(response).to redirect_to("/fulcrum/home?locale=en") }
     end
   end
@@ -26,8 +29,10 @@ RSpec.describe FulcrumController, type: :controller do
 
     context 'unauthenticated user' do
       before { get :show, params: { locale: 'en', partial: partial } }
+
       it { expect(response).to redirect_to('/login') }
     end
+
     context "authenticated user" do
       let(:user) { create :user }
 
@@ -35,7 +40,8 @@ RSpec.describe FulcrumController, type: :controller do
         cosign_sign_in user
         get :show, params: { partial: partial }
       end
-      it { expect(response).to_not be_unauthorized }
+
+      it { expect(response).not_to be_unauthorized }
       it { expect(response).to be_success }
       context "invalid partial" do
         let(:partial) { 'invalid' }

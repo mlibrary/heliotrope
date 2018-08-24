@@ -63,6 +63,6 @@ class MonographIndexer < Hyrax::WorkIndexer
     # transliterate will take care of mapping accented chars to an ASCII equivalent
     value = ActiveSupport::Inflector.transliterate(value).downcase.gsub(/[^\w\s\d-]/, '')
     # return nil to ensure removal of Solr doc value if appropriate
-    value.present? ? value : nil
+    value.presence
   end
 end

@@ -15,14 +15,18 @@ describe CounterService do
         expect(described_class.from(controller, presenter)).to be_an_instance_of(described_class)
       end
     end
+
     context 'with the Hyrax::DownloadsController' do
       let!(:controller) { Hyrax::DownloadsController.new }
+
       it "creates a CounterService object" do
         expect(described_class.from(controller, presenter)).to be_an_instance_of(described_class)
       end
     end
+
     context "with the wrong controller or presenter" do
       before { allow(presenter.class).to receive(:name).and_return("OtherPresenter") }
+
       it "creates a CounterServiceNullObject" do
         expect(described_class.from(controller, presenter)).to be_an_instance_of(CounterServiceNullObject)
       end
@@ -37,10 +41,12 @@ describe CounterService do
 
   describe "the null object #count" do
     let(:controller) { CatalogController.new }
+
     before do
       @message = 'message'
       allow(Rails.logger).to receive(:error).with(any_args) { |value| @message = value }
     end
+
     it "responds with a logged error" do
       CounterServiceNullObject.new(controller, presenter).count
       expect(@message).not_to eq 'message'
@@ -63,6 +69,7 @@ describe CounterService do
   describe "#session" do
     let(:request) { double("request") }
     let(:now) { double("now") }
+
     before do
       allow(controller).to receive(:request).and_return(request)
       allow(controller.request).to receive(:remote_ip).and_return("99.99.99.99")
@@ -71,6 +78,7 @@ describe CounterService do
       allow(now).to receive(:strftime).with('%Y-%m-%d').and_return("2020-10-17")
       allow(now).to receive(:hour).and_return('13')
     end
+
     it "returns a session" do
       expect(described_class.from(controller, presenter).session).to eq "99.99.99.99|Mozilla/5.0|2020-10-17|13"
     end
@@ -82,35 +90,42 @@ describe CounterService do
         allow(HandleService).to receive(:path).and_return(true)
         allow(Component).to receive(:find_by).and_return(true)
       end
+
       it "is 'Controlled'" do
         # Right now, only epubs are "restricted" via Component/Product
         expect(described_class.from(controller, presenter).access_type).to eq 'Controlled'
       end
     end
+
     context "with an unrestricted epub" do
       before do
         allow(HandleService).to receive(:path).and_return(true)
         allow(Component).to receive(:find_by).and_return(false)
       end
+
       it "is OA_Gold" do
         expect(described_class.from(controller, presenter).access_type).to eq 'OA_Gold'
       end
     end
+
     context "with an asset with no permissions_expiration_date" do
       before do
         allow(HandleService).to receive(:path).and_return(true)
         allow(Component).to receive(:find_by).and_return(false)
       end
+
       it "is OA_Gold" do
         expect(described_class.from(controller, presenter).access_type).to eq 'OA_Gold'
       end
     end
+
     context "with an asset with a permissions_expiration_date" do
       before do
         allow(HandleService).to receive(:path).and_return(true)
         allow(Component).to receive(:find_by).and_return(false)
         allow(presenter).to receive(:permissions_expiration_date).and_return("2020-01-27")
       end
+
       it "is Controlled" do
         expect(described_class.from(controller, presenter).access_type).to eq 'Controlled'
       end
@@ -120,6 +135,7 @@ describe CounterService do
   describe "#count" do
     let(:request) { double("request") }
     let(:now) { double("now") }
+
     before do
       allow(controller).to receive(:request).and_return(request)
       allow(controller.request).to receive(:remote_ip).and_return("99.99.99.99")
@@ -135,9 +151,10 @@ describe CounterService do
 
     context "a user with NO institutions" do
       before { allow(controller).to receive(:current_institutions).and_return([]) }
+
       it "doesn't add COUNTER stats" do
         expect { described_class.from(controller, presenter).count }
-          .to change { CounterReport.count }
+          .to change(CounterReport, :count)
           .by(0)
       end
     end
@@ -148,6 +165,7 @@ describe CounterService do
         allow(presenter).to receive(:id).and_return('123454321')
         allow(presenter).to receive(:has_model).and_return("FileSet")
       end
+
       it "adds a COUNTER stat row" do
         described_class.from(controller, presenter).count(request: 1)
 
@@ -173,9 +191,10 @@ describe CounterService do
         allow(presenter).to receive(:id).and_return('123454321')
         allow(presenter).to receive(:has_model).and_return("FileSet")
       end
+
       it "creates 2 counter report rows" do
         expect { described_class.from(controller, presenter).count }
-          .to change { CounterReport.count }
+          .to change(CounterReport, :count)
           .by(2)
         expect(CounterReport.first.institution).to eq 12
         expect(CounterReport.second.institution).to eq 65

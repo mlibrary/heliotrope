@@ -39,6 +39,7 @@ RSpec.describe CreateWithImportFilesActor do
 
       context 'when files is empty' do
         let(:n) { 0 }
+
         it 'is successful' do
           expect(AttachImportFilesToWorkJob).not_to receive(:perform_later)
           middleware.public_send(mode, env)
@@ -47,6 +48,7 @@ RSpec.describe CreateWithImportFilesActor do
 
       context 'when files exist' do
         let(:n) { 3 }
+
         it 'is successful' do
           expect(AttachImportFilesToWorkJob).to receive(:perform_later).with(expected_env.curation_concern, expected_env.attributes.to_h.symbolize_keys, import_uploaded_files, import_uploaded_files_attributes)
           middleware.public_send(mode, env)

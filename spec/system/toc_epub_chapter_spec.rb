@@ -2,13 +2,14 @@
 
 require 'rails_helper'
 
-RSpec.describe "Cozy Sun Bear", type: :system do # rubocop:disable RSpec/DescribeClass
+RSpec.describe "Cozy Sun Bear", type: :system do
   let(:user) { create(:platform_admin) }
   let(:press) { create(:press, subdomain: 'blue', logo_path: Rack::Test::UploadedFile.new(File.open(Rails.root.join(fixture_path, 'csv', 'shipwreck.jpg')))) }
   let(:monograph) { create(:monograph, press: 'blue', user: user, visibility: "open", representative_id: cover.id) }
   let(:cover) { create(:file_set, content: File.open(File.join(fixture_path, 'csv', 'miranda.jpg'))) }
   let(:file_set) { create(:file_set, id: '999999999', content: File.open(File.join(fixture_path, 'fake_epub01.epub'))) }
   let!(:fr) { create(:featured_representative, monograph_id: monograph.id, file_set_id: file_set.id, kind: 'epub') }
+
   before do
     cosign_sign_in user
     stub_out_redis

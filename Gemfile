@@ -138,8 +138,6 @@ gem 'rsolr', '~> 2.0.1'
 # Use Zip to extract EPubs
 gem 'rubyzip'
 
-# bundle exec rake doc:rails generates the API under doc/api.
-gem 'sdoc', '~> 0.4.0', group: :doc
 gem 'sitemap_generator', '~> 6.0.1'
 
 gem 'sinatra', '~> 2.0.2'
@@ -148,6 +146,9 @@ gem 'sprockets', '~> 3.7.2'
 
 # sqlite for epub indexing
 gem 'sqlite3'
+
+# SwaggerClient - the Ruby gem for the COUNTER_SUSHI5_0 API
+gem 'swagger_client', git: 'https://github.com/mlibrary/swagger_client', branch: 'master'
 
 # Use Uglifier as compressor for JavaScript assets
 gem 'uglifier', '>= 3.2.0'
@@ -173,9 +174,9 @@ group :development, :test do
   gem 'rspec-context-private'
   gem 'rspec-html-matchers'
   gem 'rspec-rails'
-  gem 'rubocop', '~> 0.49.1'
-  gem 'rubocop-rspec', '~> 1.16.0'
-  gem 'ruumba'
+  gem 'rubocop'
+  gem 'rubocop-rspec'
+  gem 'ruumba', '0.1.2'
   gem 'solr_wrapper', '0.21.0'
 end
 

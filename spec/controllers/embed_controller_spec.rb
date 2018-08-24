@@ -8,6 +8,7 @@ RSpec.describe EmbedController, type: :controller do
       before do
         get :show
       end
+
       it { expect(response).to have_http_status(:unauthorized) }
     end
 
@@ -18,6 +19,7 @@ RSpec.describe EmbedController, type: :controller do
         allow(HandleService).to receive(:noid).with(hdl).and_return(nil)
         get :show, params: { hdl: hdl }
       end
+
       it { expect(response).to have_http_status(:unauthorized) }
     end
 
@@ -29,6 +31,7 @@ RSpec.describe EmbedController, type: :controller do
         allow(HandleService).to receive(:noid).with(hdl).and_return(noid)
         get :show, params: { hdl: hdl }
       end
+
       it { expect(response).to have_http_status(:unauthorized) }
     end
 
@@ -42,8 +45,9 @@ RSpec.describe EmbedController, type: :controller do
         allow(Hyrax::PresenterFactory).to receive(:build_for).with(ids: [noid], presenter_class: Hyrax::FileSetPresenter, presenter_args: anything).and_return([presenter])
         get :show, params: { hdl: hdl }
       end
+
       it do
-        expect(response).to_not have_http_status(:unauthorized)
+        expect(response).not_to have_http_status(:unauthorized)
         expect(response).to be_success
       end
     end

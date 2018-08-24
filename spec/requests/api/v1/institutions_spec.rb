@@ -46,6 +46,7 @@ RSpec.describe "Institutions", type: :request do
 
     context 'api_v1_find_institution_path' do
       let(:params) { { identifier: new_identifier } }
+
       describe 'GET /api/v1/institution' do
         it 'not found' do
           get api_find_institution_path, params: params, headers: headers

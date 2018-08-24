@@ -31,6 +31,7 @@ describe MonographCatalogController do
           expect(facet_field_content_type.show).to be_falsey
         end
       end
+
       context 'facet field resource_type' do
         expected_facet_field_resource_type = described_class.solr_name('resource_type', :facetable)
         expected_facet_field_content_type = described_class.solr_name('content_type', :facetable)
@@ -40,12 +41,13 @@ describe MonographCatalogController do
           expect(facet_field_resource_type.label).to eq("Format")
         end
         it 'has pivot' do
-          expect(facet_field_resource_type.pivot).to_not be_nil
+          expect(facet_field_resource_type.pivot).not_to be_nil
         end
         it 'pivot has expected facet field names' do
           expect(facet_field_resource_type.pivot).to eq([expected_facet_field_resource_type, expected_facet_field_content_type])
         end
       end
+
       context 'facet field contributor' do
         expected_facet_field = described_class.solr_name('contributor', :facetable)
         facet_field = blacklight_config.facet_fields[expected_facet_field]
@@ -64,24 +66,28 @@ describe MonographCatalogController do
     context 'no monograph exists with provided id' do
       context 'id never existed' do
         before { get :index, params: { id: 'not_a_monograph_id' } }
+
         it 'response is not successful' do
-          expect(response).to_not be_success
-          expect(response).to_not render_template('monograph_catalog/index')
+          expect(response).not_to be_success
+          expect(response).not_to render_template('monograph_catalog/index')
         end
         it 'shows 404 page' do
           expect(response.status).to equal 404
           expect(response.body).to have_title("404 - The page you were looking for doesn't exist")
         end
       end
+
       context 'deleted/tombstoned id' do
         let(:monograph) { create(:monograph) }
+
         before do
           monograph.destroy!
           get :index, params: { id: monograph.id }
         end
+
         it 'response is not successful' do
-          expect(response).to_not be_success
-          expect(response).to_not render_template('monograph_catalog/index')
+          expect(response).not_to be_success
+          expect(response).not_to render_template('monograph_catalog/index')
         end
         it 'shows 404 page' do
           expect(response.status).to equal 404
@@ -89,12 +95,15 @@ describe MonographCatalogController do
         end
       end
     end
+
     context 'when a monograph with the id exists' do
       context 'when a monograph is open/public' do
         let(:monograph) { create(:public_monograph) }
+
         before do
           get :index, params: { id: monograph.id }
         end
+
         it 'response is successful' do
           expect(response).to be_success
           expect(response).to render_template('monograph_catalog/index')
@@ -106,27 +115,33 @@ describe MonographCatalogController do
           expect(controller.instance_variable_get(:@monograph_presenter).solr_document.id).to eq monograph.id
         end
       end
+
       context 'when a monograph is draft/private' do
         context 'no user logged in' do
           let(:monograph) { create(:private_monograph) }
+
           before do
             get :index, params: { id: monograph.id }
           end
+
           it 'response is not successful' do
-            expect(response).to_not be_success
-            expect(response).to_not render_template('monograph_catalog/index')
+            expect(response).not_to be_success
+            expect(response).not_to render_template('monograph_catalog/index')
           end
           it 'redirects to login page' do
             expect(response).to redirect_to(new_user_session_path)
           end
         end
+
         context 'logged-in read user (depositor)' do
           let(:user) { create(:user) }
           let(:monograph) { create(:private_monograph, user: user) }
+
           before do
             cosign_sign_in user
             get :index, params: { id: monograph.id }
           end
+
           it 'response is successful' do
             expect(response).to be_success
             expect(response).to render_template('monograph_catalog/index')

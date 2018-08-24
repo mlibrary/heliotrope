@@ -2,6 +2,6 @@
 
 FactoryBot.define do
   factory :component do
-    handle "MyString"
+    handle { "MyString" }
   end
 end

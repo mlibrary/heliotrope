@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-feature 'Log In and Out' do
+describe 'Log In and Out' do
   # FIXME: There is a side effect between requests and tests where the
   # Authentications controller modifies ENV directly.
   before do
@@ -12,7 +12,7 @@ feature 'Log In and Out' do
   context "from /" do
     let!(:user) { create(:platform_admin, email: "wolverine@umich.edu") }
 
-    scenario "login in goes to /" do
+    it "login in goes to /" do
       visit new_user_session_path
 
       fill_in 'Email', with: 'wolverine@umich.edu'
@@ -29,7 +29,7 @@ feature 'Log In and Out' do
       cosign_login_as user
     end
 
-    scenario "logout goes to /" do
+    it "logout goes to /" do
       visit(hyrax.dashboard_path)
 
       click_link "Log Out"
@@ -59,7 +59,7 @@ feature 'Log In and Out' do
       file_set.update_index
     end
 
-    scenario "logging in returns to that asset page" do
+    it "logging in returns to that asset page" do
       visit hyrax_file_set_path(file_set)
 
       click_link "Log In"
@@ -69,7 +69,7 @@ feature 'Log In and Out' do
       expect(page).to have_current_path(hyrax_file_set_path(file_set))
     end
 
-    scenario "logging out returns to that asset page" do
+    it "logging out returns to that asset page" do
       cosign_login_as user
       visit hyrax_file_set_path(file_set)
 

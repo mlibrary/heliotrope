@@ -69,6 +69,7 @@ RSpec.describe EPub::Unmarshaller::Container do
                   </container>
                 XML
               end
+
               it { is_expected.to be_an_instance_of(described_class) }
               it { expect(subject.rootfiles).to contain_exactly instance_of(EPub::Unmarshaller::Rootfile) }
             end
@@ -88,6 +89,7 @@ RSpec.describe EPub::Unmarshaller::Container do
                   </container>
                 XML
               end
+
               it { is_expected.to be_an_instance_of(described_class) }
               it { expect(subject.rootfiles).to contain_exactly(instance_of(EPub::Unmarshaller::Rootfile), instance_of(EPub::Unmarshaller::Rootfile)) }
             end

@@ -70,7 +70,7 @@ describe Hyrax::Actors::MonographActor do
         attributes["visibility"] = Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE
         expect(middleware.update(env)).to be true
 
-        expect(curation_concern.read_groups).to_not include("public")
+        expect(curation_concern.read_groups).not_to include("public")
       end
     end
   end

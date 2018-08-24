@@ -12,21 +12,25 @@ RSpec.describe Devise::Strategies::HttpHeaderAuthenticatable do
       let(:production) { ActiveSupport::StringInquirer.new('production') }
 
       before { allow(Rails).to receive(:env).and_return(production) }
+
       context 'using REMOTE_USER' do
         let(:request) { double(headers: { 'REMOTE_USER' => 'abc123' }) }
 
         it { is_expected.not_to be_valid }
       end
+
       context 'using HTTP_REMOTE_USER' do
         let(:request) { double(headers: { 'HTTP_REMOTE_USER' => 'abc123' }) }
 
         it { is_expected.not_to be_valid }
       end
+
       context 'using HTTP_X_REMOTE_USER' do
         let(:request) { double(headers: { 'HTTP_X_REMOTE_USER' => 'abc123' }) }
 
         it { is_expected.to be_valid }
       end
+
       context 'using no header' do
         let(:request) { double(headers: {}) }
 
@@ -40,16 +44,19 @@ RSpec.describe Devise::Strategies::HttpHeaderAuthenticatable do
 
         it { is_expected.not_to be_valid }
       end
+
       context 'using HTTP_REMOTE_USER' do
         let(:request) { double(headers: { 'HTTP_REMOTE_USER' => 'abc123' }) }
 
         it { is_expected.not_to be_valid }
       end
+
       context 'using HTTP_X_REMOTE_USER' do
         let(:request) { double(headers: { 'HTTP_X_REMOTE_USER' => 'abc123' }) }
 
         it { is_expected.to be_valid }
       end
+
       context 'using no header' do
         let(:request) { double(headers: {}) }
 
@@ -63,6 +70,7 @@ RSpec.describe Devise::Strategies::HttpHeaderAuthenticatable do
 
     context 'without HTTP_X_REMOTE_USER header' do
       let(:header) { {} }
+
       it 'fails' do
         expect(subject).not_to be_valid
         expect(subject.authenticate!).to eq(:failure)
@@ -74,6 +82,7 @@ RSpec.describe Devise::Strategies::HttpHeaderAuthenticatable do
 
       context 'with a blank user' do
         let(:remote_user) { '' }
+
         it 'fails' do
           expect(subject).not_to be_valid
           expect(subject.authenticate!).to eq(:failure)
@@ -94,7 +103,7 @@ RSpec.describe Devise::Strategies::HttpHeaderAuthenticatable do
               it 'allocates new user' do
                 allow(Rails.configuration).to receive(:create_user_on_login).and_return(true)
                 expect(User).to receive(:new).with(user_key: user.user_key).once.and_return(user)
-                expect(Guest).to receive(:new).with(user_key: user.user_key).never
+                expect(Guest).not_to receive(:new).with(user_key: user.user_key)
                 expect(user).to receive(:populate_attributes).once
                 expect(subject).to be_valid
                 expect(subject.authenticate!).to eq(:success)
@@ -106,7 +115,7 @@ RSpec.describe Devise::Strategies::HttpHeaderAuthenticatable do
 
               it 'allocates new guest' do
                 allow(Rails.configuration).to receive(:create_user_on_login).and_return(false)
-                expect(User).to receive(:new).with(user_key: user.user_key).never
+                expect(User).not_to receive(:new).with(user_key: user.user_key)
                 expect(Guest).to receive(:new).with(user_key: user.user_key).once.and_return(user)
                 expect(user).to receive(:populate_attributes).once
                 expect(subject).to be_valid
@@ -121,9 +130,9 @@ RSpec.describe Devise::Strategies::HttpHeaderAuthenticatable do
             before { allow(User).to receive(:find_by).with(user_key: user.user_key).and_return(user) }
 
             it 'accepts the existing user' do
-              expect(User).to receive(:new).with(user_key: user.user_key).never
-              expect(Guest).to receive(:new).with(user_key: user.user_key).never
-              expect(user).to receive(:populate_attributes).never
+              expect(User).not_to receive(:new).with(user_key: user.user_key)
+              expect(Guest).not_to receive(:new).with(user_key: user.user_key)
+              expect(user).not_to receive(:populate_attributes)
               expect(subject).to be_valid
               expect(subject.authenticate!).to eq(:success)
             end

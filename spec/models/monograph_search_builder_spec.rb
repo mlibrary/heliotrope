@@ -22,18 +22,22 @@ describe MonographSearchBuilder do
         monograph.save!
         search_builder.blacklight_params['id'] = monograph.id
       end
+
       context "reprensentative id (cover)" do
         before { search_builder.filter_by_members(solr_params) }
+
         it "creates a query for the monograph's assets but without the representative_id" do
           expect(solr_params[:fq].first).not_to match(/{!terms f=id}#{cover.id},#{file1.id},#{file2.id}/)
           expect(solr_params[:fq].first).to match(/{!terms f=id}#{file1.id},#{file2.id}/)
         end
       end
+
       context 'epub' do
         before do
           FeaturedRepresentative.create!(monograph_id: monograph.id, file_set_id: file2.id, kind: 'epub')
           search_builder.filter_by_members(solr_params)
         end
+
         after { FeaturedRepresentative.destroy_all }
 
         let(:file2) { create(:file_set, content: File.open(File.join(fixture_path, 'moby-dick.epub'))) }
@@ -47,10 +51,12 @@ describe MonographSearchBuilder do
 
     context "a monograph with no assets" do
       let(:empty_monograph) { create(:monograph) }
+
       before do
         search_builder.blacklight_params['id'] = empty_monograph.id
         search_builder.filter_by_members(solr_params)
       end
+
       it "creates an empty query for the monograph's assets" do
         expect(solr_params[:fq].first).to eq("{!terms f=id}")
       end

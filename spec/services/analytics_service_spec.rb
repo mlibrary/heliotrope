@@ -48,6 +48,7 @@ describe AnalyticsService, :no_clean do
       token = OAuth2::AccessToken.new(nil, nil)
       allow(subject).to receive(:token).and_return(token)
     end
+
     it 'instantiates a user' do
       expect(subject.send(:user)).to be_a(Legato::User)
     end

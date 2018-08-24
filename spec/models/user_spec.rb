@@ -5,7 +5,9 @@ require 'rails_helper'
 RSpec.describe User do
   describe '#user_key' do
     subject { user.user_key }
+
     let(:user) { described_class.new(email: 'foo@example.com') }
+
     it { is_expected.to eq 'foo@example.com' }
   end
 
@@ -27,7 +29,9 @@ RSpec.describe User do
 
   describe "#total_file_views" do
     subject { user.total_file_views }
+
     let(:user) { create(:user) }
+
     it { is_expected.to eq 0 }
   end
 
@@ -90,11 +94,13 @@ RSpec.describe User do
 
     context "when a platform admin" do
       let(:user) { create(:platform_admin) }
+
       it { is_expected.to be true }
     end
 
     context "when a press admin" do
       let(:user) { create(:press_admin) }
+
       it { is_expected.to be false }
     end
   end
@@ -123,12 +129,15 @@ RSpec.describe User do
 
   describe '#token' do
     subject { user.token }
+
     let(:user) { build(:user) }
+
     it { is_expected.to eq(JsonWebToken.encode(email: user.email, pin: user.encrypted_password)) }
   end
 
   describe '#tokenize!' do
     let(:user) { build(:user) }
+
     it do
       old_token = user.token
       user.tokenize!

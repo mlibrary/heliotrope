@@ -7,13 +7,17 @@ describe SolrDocument do
 
   describe "#date_published" do
     subject { instance.date_published }
+
     let(:attributes) { { 'date_published_tesim' => ['Oct 20th'] } }
+
     it { is_expected.to eq ['Oct 20th'] }
   end
 
   describe "#allow_display_after_expiration" do
     subject { instance.allow_display_after_expiration }
+
     let(:attributes) { { 'allow_display_after_expiration_ssim' => ['yes'] } }
+
     it { is_expected.to eq 'yes' }
   end
 

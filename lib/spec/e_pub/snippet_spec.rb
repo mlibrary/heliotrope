@@ -37,6 +37,7 @@ RSpec.describe EPub::Snippet do
     let(:pos0) { 80 }
     let(:pos1) { 84 }
     let(:text) { "There are sentences in this paragraph about things. And more things. {{{HIT}}}And this *thing*. And other things. But nothing about stuff." }
+
     it "returns the correct *things* with surrounding sentences from a paragraph" do
       expect(described_class.from(node, pos0, pos1).parse_sentences(text)).to eq ['And more things.', 'And this *thing*.', 'And other things.']
     end
@@ -46,6 +47,7 @@ RSpec.describe EPub::Snippet do
     let(:node) { doc.xpath("//body/p/span/i[@class='thing']").children[0] }
     let(:pos0) { 9 } # the word 'third'
     let(:pos1) { 13 }
+
     it "returns a node's parent paragraph" do
       para = described_class.from(node, pos0, pos1).parent_paragraph(node)
       expect(para.name).to eq 'p'
@@ -57,6 +59,7 @@ RSpec.describe EPub::Snippet do
     let(:node) { doc.xpath("//body/blockqoute[@class='poem']").children[0] }
     let(:pos0) { 78 } # the word "annoying"
     let(:pos1) { 85 }
+
     it "returns 'body' since this poem has no parent paragraph" do
       para = described_class.from(node, pos0, pos1).parent_paragraph(node)
       expect(para.name).to eq 'body'
@@ -103,12 +106,14 @@ RSpec.describe EPub::Snippet do
   describe "#determine_size" do
     subject { described_class.from(node, pos0, pos1) }
     # For these tests these don't matter, we just need a valid object...
+
     let(:node) { doc.xpath("//p")[5].children[0] }
     let(:pos0) { 11 }
     let(:pos1) { 19 }
 
     context "with a single sentence" do
       let(:sentences) { ["A sentence."] }
+
       it "returns the sentence" do
         expect(subject.determine_size(sentences, 0)).to eq sentences
       end
@@ -120,6 +125,7 @@ RSpec.describe EPub::Snippet do
          'A very long and descriptive hit sentence all about the trails and tribulations of daily life complete with informative diagrams.',
          'A last sentence.']
       end
+
       it "returns only the hit sentence" do
         expect(subject.determine_size(sentences, 1)).to eq [sentences[1]]
       end
@@ -130,6 +136,7 @@ RSpec.describe EPub::Snippet do
         ['First sentence.',
          'A very long and descriptive hit sentence all about the trails and tribulations of daily life complete with informative diagrams.']
       end
+
       it "returns only the hit sentence" do
         expect(subject.determine_size(sentences, 1)).to eq [sentences[1]]
       end
@@ -137,6 +144,7 @@ RSpec.describe EPub::Snippet do
 
     context "with 2 short sentences with the hit as the last sentence" do
       let(:sentences) { ['First sentence.', 'Hit sentence.'] }
+
       it "returns the first and hit sentences in the right order" do
         expect(subject.determine_size(sentences, 1)).to eq sentences
       end
@@ -144,6 +152,7 @@ RSpec.describe EPub::Snippet do
 
     context "with 2 short sentences with the hit as the first sentence" do
       let(:sentences) { ['Hit sentence.', 'Last sentence.'] }
+
       it "returns the hit and last sentences in the right order" do
         expect(subject.determine_size(sentences, 0)).to eq sentences
       end
@@ -151,6 +160,7 @@ RSpec.describe EPub::Snippet do
 
     context "with 3 short sentences" do
       let(:sentences) { ['First sentence.', 'Hit sentence.', 'Last sentence'] }
+
       it "returns all three sentences" do
         expect(subject.determine_size(sentences, 1)).to eq sentences
       end
@@ -171,6 +181,7 @@ RSpec.describe EPub::Snippet do
     let(:node) { doc.xpath("//body/p")[3].children[4] }
     let(:pos0) { 10 }
     let(:pos1) { 26 }
+
     it "creates the snippet (which is only the one long sentence)" do
       expect(described_class.from(node, pos0, pos1).snippet).to eq "Interestingly, too, while Elijah Wood and Sean Astin were recorded with them for the Fellowship of the Ring commentary, and similarly joked around as carefree hobbits, the Two Towers commentary separates them from Monaghan and Boyd."
     end
@@ -180,6 +191,7 @@ RSpec.describe EPub::Snippet do
     let(:node) { doc.xpath("//p/i[@class='stuff']").children[0] }
     let(:pos0) { 0 }
     let(:pos1) { 7 }
+
     it "creates the two sentence snippet" do
       expect(described_class.from(node, pos0, pos1).snippet).to eq "Here is a sentence. The word searched is in the last sentence."
     end
@@ -199,9 +211,11 @@ RSpec.describe EPub::Snippet do
 
   describe "snippet for 'A one line paragraph'" do
     subject { described_class.from(node, pos0, pos1).snippet }
+
     let(:node) { doc.xpath("//p")[5].children[0] }
     let(:pos0) { 11 }
     let(:pos1) { 19 }
+
     it "creates the snippet" do
       expect(subject).to eq 'A one line paragraph.'
     end

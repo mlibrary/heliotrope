@@ -75,9 +75,9 @@ module EPub
 
     private
 
-      def initialize(epub_publication, db)
+      def initialize(epub_publication, database)
         @epub_publication = epub_publication
-        @db = db
+        @db = database
       end
   end
 

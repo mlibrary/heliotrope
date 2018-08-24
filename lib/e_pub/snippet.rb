@@ -75,12 +75,12 @@ module EPub
       rvalue
     end
 
-    def determine_size(sentences, i)
+    def determine_size(sentences, index)
       # Trying to determine the right size snippet and which sentences
       # out of a possible 3 to return. Fairly terrible.
-      first = sentences[i - 1]
-      hit   = sentences[i]
-      last  = sentences[i + 1]
+      first = sentences[index - 1]
+      hit   = sentences[index]
+      last  = sentences[index + 1]
       if sentences.length == 1
         [hit]
       elsif hit.length > SNIPPET_LENGTH

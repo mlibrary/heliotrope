@@ -6,9 +6,11 @@ RSpec.describe ReindexEpubJob, type: :job do
   describe "perform" do
     let(:epub) { create(:file_set, content: File.open(File.join(fixture_path, 'moby-dick.epub'))) }
     let(:db_file) { File.join(UnpackService.root_path_from_noid(epub.id, 'epub'), epub.id + '.db') }
+
     before do
       UnpackJob.perform_now(epub.id, 'epub')
     end
+
     it "reindexes the epub" do
       # The only thing that will really change here is the timestamp on the
       # .db sqlite file. So I guess test that

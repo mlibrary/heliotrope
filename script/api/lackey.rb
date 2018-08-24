@@ -7,7 +7,7 @@ require 'json'
 
 class Lackey
   def find_product(identifier:)
-    response = connection.get("product", { identifier: identifier })
+    response = connection.get("product", identifier: identifier)
     return response.body["id"] if response.success?
     nil
   rescue StandardError => e
@@ -57,7 +57,7 @@ class Lackey
   end
 
   def find_lessee(identifier:)
-    response = connection.get("lessee", { identifier: identifier })
+    response = connection.get("lessee", identifier: identifier)
     return response.body["id"] if response.success?
     nil
   rescue StandardError => e
@@ -119,15 +119,16 @@ class Lackey
   end
 
   private
+
     def connection
       @connection ||= Faraday.new("http://localhost:3000/api") do |conn|
         conn.headers = {
-            authorization: "Bearer #{ENV['HELIOTROPE_TOKEN']}",
+            authorization: "Bearer #{ENV['HELIOTROPE_TOKEN']}", # rubocop:disable Layout/IndentHash
             accept: "application/json, application/vnd.heliotrope.v1+json",
             content_type: "application/json"
         }
         conn.request :json
-        conn.response :json, :content_type => /\bjson$/
+        conn.response :json, content_type: /\bjson$/
         conn.adapter Faraday.default_adapter
       end
     end

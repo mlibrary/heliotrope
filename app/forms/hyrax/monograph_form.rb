@@ -38,7 +38,7 @@ module Hyrax
       end
     end
 
-    def self.model_attributes(_) # rubocop:disable Metrics/CyclomaticComplexity
+    def self.model_attributes(_nil) # rubocop:disable Metrics/CyclomaticComplexity
       attrs = super
       attrs[:title] = Array(attrs[:title]) if attrs[:title]
       attrs[:description] = Array(attrs[:description]) if attrs[:description]

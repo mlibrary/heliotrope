@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-feature 'Press Catalog' do
+describe 'Press Catalog' do
   before { Press.destroy_all }
 
   let(:umich) { create(:press, subdomain: 'umich') }
@@ -18,7 +18,7 @@ feature 'Press Catalog' do
       let!(:invisible) { create(:private_monograph, title: ['The Invisible Book'], press: umich.subdomain) }
       let!(:colors) { create(:public_monograph, title: ['Red and Blue are Colors'], press: psu.subdomain) }
 
-      scenario 'visits the catalog page for a press' do
+      it 'visits the catalog page for a press' do
         # The catalog for a certain press
         visit "/#{umich.subdomain}"
 
@@ -26,8 +26,8 @@ feature 'Press Catalog' do
         expect(page).to have_selector('#documents .document', count: 2)
         expect(page).to     have_link red.title.first
         expect(page).to     have_link blue.title.first
-        expect(page).to_not have_link invisible.title.first
-        expect(page).to_not have_link colors.title.first
+        expect(page).not_to have_link invisible.title.first
+        expect(page).not_to have_link colors.title.first
 
         # The Press Catalog is *always* gallery view
         expect(page).to have_selector('#documents.row.gallery')
@@ -37,7 +37,7 @@ feature 'Press Catalog' do
         expect(page).to have_content "Sort by Date Added (Newest First)"
 
         # Presses with less than 15 books will not have facets
-        expect(page).to_not have_selector(".facets-container")
+        expect(page).not_to have_selector(".facets-container")
 
         # Search within this press catalog
         fill_in 'q', with: 'Red'
@@ -49,9 +49,9 @@ feature 'Press Catalog' do
         # I should see search results for only this press
         expect(page).to have_selector('#documents .document', count: 1)
         expect(page).to     have_link red.title.first
-        expect(page).to_not have_link blue.title.first
-        expect(page).to_not have_link invisible.title.first
-        expect(page).to_not have_link colors.title.first
+        expect(page).not_to have_link blue.title.first
+        expect(page).not_to have_link invisible.title.first
+        expect(page).not_to have_link colors.title.first
 
         # thumbnail link
         expect(page).to have_selector("img[alt='Cover image for #{red_cover_alt_text.first}']")
@@ -66,14 +66,14 @@ feature 'Press Catalog' do
         expect(page).to have_selector('#catalog_search')
       end
 
-      scenario 'visits the catalog page for a press with the press name capitalized' do
+      it 'visits the catalog page for a press with the press name capitalized' do
         visit "/#{umich.subdomain.upcase}"
         # I should see only the public monographs for this press
         expect(page).to have_selector('#documents .document', count: 2)
         expect(page).to     have_link red.title.first
         expect(page).to     have_link blue.title.first
-        expect(page).to_not have_link invisible.title.first
-        expect(page).to_not have_link colors.title.first
+        expect(page).not_to have_link invisible.title.first
+        expect(page).not_to have_link colors.title.first
       end
 
       context 'with a press that also has "child presses"' do
@@ -84,42 +84,46 @@ feature 'Press Catalog' do
         let!(:green) { create(:public_monograph, title: ['The Green Book'], press: umich_child_2.subdomain) }
         let!(:hues) { create(:public_monograph, title: ['Purple and Green be Hues'], press: psu_child.subdomain) }
 
-        scenario 'visits the catalog page for a press' do
+        it 'visits the catalog page for a press' do
           visit "/#{umich.subdomain}"
           # I should see only the public monographs for umich press and its children
           expect(page).to have_selector('#documents .document', count: 4)
           expect(page).to     have_link red.title.first
           expect(page).to     have_link blue.title.first
-          expect(page).to_not have_link invisible.title.first
+          expect(page).not_to have_link invisible.title.first
           expect(page).to     have_link purple.title.first
           expect(page).to     have_link green.title.first
-          expect(page).to_not have_link colors.title.first
-          expect(page).to_not have_link hues.title.first
+          expect(page).not_to have_link colors.title.first
+          expect(page).not_to have_link hues.title.first
         end
       end
     end
 
     context 'with a monograph with multiple authors' do
-      let!(:monograph) { create(:public_monograph,
-                                title: ['The Two Authors\' Book'],
-                                creator: ['Johns, Jimmy (a role)'],
-                                contributor: ['Way, Sub (another role)'],
-                                press: umich.subdomain) }
+      let!(:monograph) {
+        create(:public_monograph,
+               title: ['The Two Authors\' Book'],
+               creator: ['Johns, Jimmy (a role)'],
+               contributor: ['Way, Sub (another role)'],
+               press: umich.subdomain)
+      }
 
-      scenario 'sees multiple author names on the press catalog page' do
+      it 'sees multiple author names on the press catalog page' do
         visit "/#{umich.subdomain}"
         expect(page).to have_content 'Jimmy Johns and Sub Way'
       end
     end
 
     context 'with a monograph with multiple authors in HEB-style format' do
-      let!(:monograph) { create(:public_monograph,
-                                title: ['The Three Authors\' Book'],
-                                creator: ["Johns, Jimmy, 1888-1968 (a role)\nAuthor, Second"],
-                                contributor: ['Way, Sub (another role)'],
-                                press: heb.subdomain) }
+      let!(:monograph) {
+        create(:public_monograph,
+               title: ['The Three Authors\' Book'],
+               creator: ["Johns, Jimmy, 1888-1968 (a role)\nAuthor, Second"],
+               contributor: ['Way, Sub (another role)'],
+               press: heb.subdomain)
+      }
 
-      scenario 'sees multiple "reversed" author names on the press catalog page, retaining birth/death years' do
+      it 'sees multiple "reversed" author names on the press catalog page, retaining birth/death years' do
         visit "/#{heb.subdomain}"
         expect(page).to have_content 'Johns, Jimmy, 1888-1968; Author, Second; Way, Sub'
       end
@@ -152,7 +156,7 @@ feature 'Press Catalog' do
         ActiveFedora::SolrService.commit
       end
 
-      scenario 'the press catalog page has facets' do
+      it 'the press catalog page has facets' do
         visit "/#{heb.subdomain}"
 
         # Presses with 15 or more books will have facets,

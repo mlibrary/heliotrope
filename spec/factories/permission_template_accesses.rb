@@ -5,11 +5,11 @@ FactoryBot.define do
     permission_template
 
     trait :manage do
-      access 'manage'
+      access { 'manage' }
     end
 
     trait :view do
-      access 'view'
+      access { 'view' }
     end
   end
 end

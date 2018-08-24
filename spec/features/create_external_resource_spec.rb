@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-feature 'Create an external resource' do
+describe 'Create an external resource' do
   context 'as a logged in user' do
     let(:user) { create(:platform_admin) }
     let!(:press) { create(:press) }
@@ -42,7 +42,7 @@ feature 'Create an external resource' do
       monograph.save!
     end
 
-    scenario do
+    it do
       visit edit_hyrax_file_set_path(file_set)
 
       fill_in 'Resource Type', with: 'image'
@@ -76,7 +76,7 @@ feature 'Create an external resource' do
       expect(page).to have_link(nil, href: "https://www.example.com/blah")
 
       # no image present on an external resource's FileSet page
-      expect(page).to_not have_css('div.image')
+      expect(page).not_to have_css('div.image')
     end
   end
 end

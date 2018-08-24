@@ -7,11 +7,13 @@ RSpec.describe MonographIndexer do
     subject { indexer.generate_solr_document }
 
     let(:indexer) { described_class.new(monograph) }
-    let(:monograph) { build(:monograph,
-                            title: ['"Blah"-de-blah-blah and Stuff!'],
-                            creator: ["Moose, Bullwinkle\nSquirrel, Rocky"],
-                            description: ["This is the abstract"],
-                            date_created: ['c.2018?']) }
+    let(:monograph) {
+      build(:monograph,
+            title: ['"Blah"-de-blah-blah and Stuff!'],
+            creator: ["Moose, Bullwinkle\nSquirrel, Rocky"],
+            description: ["This is the abstract"],
+            date_created: ['c.2018?'])
+    }
     let(:file_set) { create(:file_set) }
     let(:press_name) { Press.find_by(subdomain: monograph.press).name }
 
@@ -54,8 +56,11 @@ RSpec.describe MonographIndexer do
     subject { indexer.generate_solr_document }
 
     let(:indexer) { described_class.new(monograph) }
-    let(:monograph) { build(:monograph,
-                            contributor: ["Moose, Bullwinkle\nSquirrel, Rocky"])}
+    let(:monograph) {
+      build(:monograph,
+            contributor: ["Moose, Bullwinkle\nSquirrel, Rocky"])
+    }
+
     before do
       monograph.save!
     end

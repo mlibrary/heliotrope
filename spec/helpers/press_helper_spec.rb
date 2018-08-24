@@ -51,30 +51,35 @@ describe PressHelper do
 
   describe "#restricted_message" do
     let(:press) { create(:press, subdomain: "blah", restricted_message: "<b>No. Just No.</b>") }
+
     it "returns the restricted_message" do
       expect(restricted_message(press.subdomain)).to eq "<b>No. Just No.</b>"
     end
   end
 
   describe "when a child press has a parent" do
-    let(:press) { create(:press, subdomain: "blue",
-                                 name: "Blue Press",
-                                 logo_path: Rack::Test::UploadedFile.new(File.open(Rails.root.join('spec', 'fixtures', 'csv', 'import', 'shipwreck.jpg')), 'image/jpg'),
-                                 description: "This is Blue Press",
-                                 press_url: "http://blue.com",
-                                 google_analytics: "GA-ID-BLUE",
-                                 typekit: "BLUE-TYPEKIT",
-                                 footer_block_a: "blue-footer-a",
-                                 footer_block_b: "blue-footer-b",
-                                 footer_block_c: "blue-footer-c",
-                                 parent_id: nil) }
-    let(:child) { create(:press, subdomain: "maize",
-                                 name: "Maize Press",
-                                 logo_path: Rack::Test::UploadedFile.new(File.open(Rails.root.join('spec', 'fixtures', 'csv', 'import', 'miranda.jpg')), 'image/jpg'),
-                                 description: "This is Maize Press",
-                                 press_url: "http://blue.com/maize",
-                                 google_analytics: nil, # factorybot will fake a ga-id without this
-                                 parent_id: press.id) }
+    let(:press) {
+      create(:press, subdomain: "blue",
+                     name: "Blue Press",
+                     logo_path: Rack::Test::UploadedFile.new(File.open(Rails.root.join('spec', 'fixtures', 'csv', 'import', 'shipwreck.jpg')), 'image/jpg'),
+                     description: "This is Blue Press",
+                     press_url: "http://blue.com",
+                     google_analytics: "GA-ID-BLUE",
+                     typekit: "BLUE-TYPEKIT",
+                     footer_block_a: "blue-footer-a",
+                     footer_block_b: "blue-footer-b",
+                     footer_block_c: "blue-footer-c",
+                     parent_id: nil)
+    }
+    let(:child) {
+      create(:press, subdomain: "maize",
+                     name: "Maize Press",
+                     logo_path: Rack::Test::UploadedFile.new(File.open(Rails.root.join('spec', 'fixtures', 'csv', 'import', 'miranda.jpg')), 'image/jpg'),
+                     description: "This is Maize Press",
+                     press_url: "http://blue.com/maize",
+                     google_analytics: nil, # factorybot will fake a ga-id without this
+                     parent_id: press.id)
+    }
 
     context "when the child is missing a field" do
       it "uses the parent's field" do

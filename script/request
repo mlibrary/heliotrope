@@ -1,4 +1,5 @@
 #!/usr/bin/env ruby
+# frozen_string_literal: true
 
 require 'optparse'
 require 'ostruct'
@@ -9,7 +10,7 @@ list_lessees = false
 
 options = OpenStruct.new
 option_parser = OptionParser.new do |opts|
-  opts.banner = "Usage: #{$0} -l -p [-b <base_uri>] <token>"
+  opts.banner = "Usage: #{$PROGRAM_NAME} -l -p [-b <base_uri>] <token>"
   opts.on('-b', '--base [uri]', 'URL to api') do |base_uri|
     # def self.normalize_base_uri(url) #:nodoc:
     #   normalized_url = url.dup
@@ -38,7 +39,7 @@ end
 option_parser.parse!(ARGV)
 
 if ARGV.empty?
-  puts option_parser.help()
+  puts option_parser.help
 else
   begin
     Lackey.default_options[:base_uri] = options.base_uri if options.base_uri

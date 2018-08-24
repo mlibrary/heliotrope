@@ -11,6 +11,7 @@ describe DashboardPresenter do
 
   describe '#initialize' do
     subject { described_class.new(current_user) }
+
     it { expect(subject.current_user).to eq current_user }
   end
 end

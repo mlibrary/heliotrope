@@ -7,6 +7,7 @@ require 'rails_helper'
 # See #400
 describe Riiif::File do
   subject { described_class.new(path) }
+
   let(:path) { File.join(fixture_path, 'kitty.tif') }
 
   describe '#mime_type' do

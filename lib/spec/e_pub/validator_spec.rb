@@ -16,6 +16,7 @@ RSpec.describe EPub::Validator do
 
     describe "#container" do
       subject { described_class.from_directory(@root_path) }
+
       it "has the epub container information" do
         expect(subject.container.name).to eq 'document'
         expect(subject.container.xpath("//rootfile/@full-path").length).to eq 1
@@ -25,13 +26,17 @@ RSpec.describe EPub::Validator do
     describe "#content_file" do
       context "with a single rendition" do
         subject { described_class.from_directory(@root_path) }
+
         it "returns the content file" do
           expect(subject.content_file).to eq 'EPUB/content.opf'
         end
       end
+
       context "with multiple renditions" do
         # NOTE: we're emulating .remove_namespaces! here.
         # TODO: probably stop using .remove_namespaces!
+        subject { described_class.from_directory(@root_path) }
+
         before do
           File.open(File.join(@root_path, "META-INF/container.xml"), 'w') do |f|
             f.puts %(<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
@@ -49,7 +54,7 @@ RSpec.describe EPub::Validator do
             </container>)
           end
         end
-        subject { described_class.from_directory(@root_path) }
+
         it "has the correct OCR rendition" do
           expect(subject.content_file).to eq 'EPUB/content.opf'
         end
@@ -61,6 +66,7 @@ RSpec.describe EPub::Validator do
 
     describe "#content" do
       subject { described_class.from_directory(@root_path) }
+
       it "contains epub package information" do
         expect(subject.content.children[0].name).to eq "package"
       end
@@ -68,6 +74,7 @@ RSpec.describe EPub::Validator do
 
     describe "#toc" do
       subject { described_class.from_directory(@root_path) }
+
       it "contains the epub navigation element" do
         expect(subject.toc.xpath("//body/nav").any?).to be true
       end
@@ -75,11 +82,11 @@ RSpec.describe EPub::Validator do
   end
 
   describe "with an invalid epub" do
+    subject { described_class.from_directory("invalid_root_path") }
+
     before do
       allow(EPub.logger).to receive(:info).and_return(true)
     end
-
-    subject { described_class.from_directory("invalid_root_path") }
 
     it "is a ValidatorNullObject" do
       is_expected.to be_an_instance_of(EPub::ValidatorNullObject)

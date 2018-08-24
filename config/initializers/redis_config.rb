@@ -12,12 +12,12 @@ if defined?(PhusionPassenger)
       Redis.current.disconnect!
       Redis.current = begin
                         Redis.new(config.merge(thread_safe: true))
-                      rescue
+                      rescue StandardError
                         nil
                       end
       Resque.redis = Redis.current
       Resque.redis.namespace = "#{Hyrax.config.redis_namespace}:#{Rails.env}"
-      Resque.redis.client.reconnect if Resque.redis
+      Resque.redis&.client&.reconnect
     end
   end
 else
@@ -25,7 +25,7 @@ else
   require 'redis'
   Redis.current = begin
                     Redis.new(config.merge(thread_safe: true))
-                  rescue
+                  rescue StandardError
                     nil
                   end
 end

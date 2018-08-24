@@ -42,7 +42,7 @@ describe 'Routes', type: :routing do
   describe 'for production (and test)' do
     # temporarily disable devise registrations in production #266
     it 'has no password routes' do
-      expect(get: '/users/password/new').to_not be_routable
+      expect(get: '/users/password/new').not_to be_routable
       expect(get: '/users/password').to route_to(controller: 'users', action: 'show', id: 'password')
     end
     it 'has no registation routes' do

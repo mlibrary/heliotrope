@@ -48,7 +48,7 @@ class EPubsController < ApplicationController
 
   def search
     return head :not_found unless show?
-    if Rails.env == 'development'
+    if Rails.env.development?
       headers['Access-Control-Allow-Origin'] = '*'
       headers['Access-Control-Allow-Methods'] = 'GET'
       headers['Access-Control-Request-Method'] = '*'

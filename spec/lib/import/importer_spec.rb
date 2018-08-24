@@ -12,13 +12,15 @@ describe Import::Importer do
   let(:user) { create(:user, email: 'blah@example.com') }
   # let(:user_email) { '' }
   let(:press) { create(:press, subdomain: 'umich') }
-  let(:importer) { described_class.new(root_dir: root_dir,
-                                       user_email: user.email,
-                                       press: press.subdomain,
-                                       visibility: public_vis,
-                                       monograph_id: monograph_id,
-                                       quiet: true,
-                                       workflow: 'my_workflow') }
+  let(:importer) {
+    described_class.new(root_dir: root_dir,
+                        user_email: user.email,
+                        press: press.subdomain,
+                        visibility: public_vis,
+                        monograph_id: monograph_id,
+                        quiet: true,
+                        workflow: 'my_workflow')
+  }
   let(:monograph_id) { '' }
   let(:visibility) { public_vis }
 
@@ -68,6 +70,7 @@ describe Import::Importer do
 
     context 'with ldp:gone-ish or monograph not found' do
       let(:monograph_id) { 'validnoid' }
+
       it { expect { subject }.to raise_error(/No monograph found with id '#{monograph_id}'/) }
     end
 
@@ -145,14 +148,14 @@ describe Import::Importer do
       # It saves a nice chunk of time (> 10 secs) to test the "reimport" here as well. Ugly though.
       it 'imports the new monograph and files, or "reimports" them to a pre-existing monograph' do
         expect { importer.run }
-          .to change { Monograph.count }
+          .to change(Monograph, :count)
           .by(1)
-          .and(change { FileSet.count }
+          .and(change(FileSet, :count)
           .by(9))
 
         monograph = Monograph.first
 
-        expect(monograph.id.length).to_not eq 36 # GUID
+        expect(monograph.id.length).not_to eq 36 # GUID
         expect(monograph.id.length).to eq 9 # NOID
 
         expect(monograph.depositor).to eq user.email
@@ -197,9 +200,9 @@ describe Import::Importer do
 
         reimporter = described_class.new(root_dir: root_dir, user_email: user.email, monograph_id: monograph.id)
         expect { reimporter.run }
-          .to change { Monograph.count }
+          .to change(Monograph, :count)
           .by(0)
-          .and(change { FileSet.count }
+          .and(change(FileSet, :count)
           .by(9))
 
         # check it's indeed the same monograph
@@ -274,12 +277,15 @@ describe Import::Importer do
     end
 
     context "when the workflow doesn't have an admin_set" do
-      let(:importer) { described_class.new(root_dir: root_dir,
-                                           user_email: user.email,
-                                           press: press.subdomain,
-                                           visibility: public_vis,
-                                           monograph_id: monograph_id,
-                                           workflow: 'not_a_real_workflow') }
+      let(:importer) {
+        described_class.new(root_dir: root_dir,
+                            user_email: user.email,
+                            press: press.subdomain,
+                            visibility: public_vis,
+                            monograph_id: monograph_id,
+                            workflow: 'not_a_real_workflow')
+      }
+
       it 'raises an exception' do
         expect { importer.run }.to raise_error(/a corresponding AdminSet was not found. Make sure you've registered this workflow./)
       end

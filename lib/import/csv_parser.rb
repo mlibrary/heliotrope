@@ -78,7 +78,7 @@ module Import
       end
 
       def get_section_title(row)
-        row['Section'].blank? ? '://:MONOGRAPH://:' : row['Section']
+        row['Section'].presence || '://:MONOGRAPH://:'
       end
   end
 end

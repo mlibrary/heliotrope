@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-feature 'FileSet Browse' do
+describe 'FileSet Browse' do
   context 'Navigating forward/backward' do
     let(:user) { create(:platform_admin) }
     let(:cover) { create(:file_set, title: ['Representative']) }
@@ -22,14 +22,14 @@ feature 'FileSet Browse' do
       FileSet.all.each(&:save!)
     end
 
-    scenario 'navigation arrows' do
+    it 'navigation arrows' do
       # no arrow links from representative FileSet (cover)
       visit hyrax_file_set_path(monograph.ordered_members.to_a[0].id)
-      expect(page).to_not have_link(nil, href: monograph.ordered_members.to_a[1].id)
+      expect(page).not_to have_link(nil, href: monograph.ordered_members.to_a[1].id)
 
       # no arrow link to representative FileSet
       visit hyrax_file_set_path(monograph.ordered_members.to_a[1].id)
-      expect(page).to_not have_link(nil, href: monograph.ordered_members.to_a[0].id)
+      expect(page).not_to have_link(nil, href: monograph.ordered_members.to_a[0].id)
 
       # arrow links show on non-representative monograph FileSets
       visit hyrax_file_set_path(monograph.ordered_members.to_a[2].id)

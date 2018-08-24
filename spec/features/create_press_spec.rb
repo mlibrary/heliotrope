@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-feature 'Adding a new press' do
+describe 'Adding a new press' do
   context 'a logged in user' do
     let(:user) { create(:platform_admin) }
 
@@ -10,7 +10,7 @@ feature 'Adding a new press' do
       cosign_login_as user
     end
 
-    scenario 'creates a press' do
+    it 'creates a press' do
       visit new_press_path
       fill_in 'Publisher Name', with: 'Test Publisher'
       fill_in 'fulcrum.org Subdomain', with: 'testpub'
@@ -49,10 +49,10 @@ feature 'Adding a new press' do
       # Check that the default logo is being used, note that this logo is always used *once* in the...
       # right-side footer. The press logo is shown twice, so this logo appears 3 times for a logo-less press
       expect(page).to have_css("img[src*='fulcrum-white-50px']", count: 3)
-      expect(page).to_not have_css("img[src*='shipwreck']")
+      expect(page).not_to have_css("img[src*='shipwreck']")
 
       # no footer_block_c results in default copyright message
-      expect(page).to_not have_content 'Footer Block C Stuff'
+      expect(page).not_to have_content 'Footer Block C Stuff'
       expect(page).to have_css('.row.press-block-c .col-sm-12 p', text: '© Test Publisher 2017')
     end
   end

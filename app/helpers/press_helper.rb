@@ -38,81 +38,49 @@ module PressHelper
   def footer_block_a(subdomain)
     press = Press.where(subdomain: subdomain)&.first
     return if press.blank?
-    if press.footer_block_a.blank?
-      parent_press(press)&.footer_block_a
-    else
-      press.footer_block_a
-    end
+    press.footer_block_a.presence || parent_press(press)&.footer_block_a
   end
 
   def footer_block_b(subdomain)
     press = Press.where(subdomain: subdomain)&.first
     return if press.blank?
-    if press.footer_block_b.blank?
-      parent_press(press)&.footer_block_b
-    else
-      press.footer_block_b
-    end
+    press.footer_block_b.presence || parent_press(press)&.footer_block_b
   end
 
   def footer_block_c(subdomain)
     press = Press.where(subdomain: subdomain)&.first
     return if press.blank?
-    if press.footer_block_c.blank?
-      parent_press(press)&.footer_block_c
-    else
-      press.footer_block_c
-    end
+    press.footer_block_c.presence || parent_press(press)&.footer_block_c
   end
 
   def google_analytics(subdomain)
     press = Press.where(subdomain: subdomain)&.first
     return if press.blank?
-    if press.google_analytics.blank?
-      parent_press(press)&.google_analytics
-    else
-      press.google_analytics
-    end
+    press.google_analytics.presence || parent_press(press)&.google_analytics
   end
 
   def typekit(subdomain)
     press = Press.where(subdomain: subdomain)&.first
     return if press.blank?
-    if press.typekit.blank?
-      parent_press(press)&.typekit
-    else
-      press.typekit
-    end
+    press.typekit.presence || parent_press(press)&.typekit
   end
 
   def twitter(subdomain)
     press = Press.where(subdomain: subdomain)&.first
     return if press.blank?
-    if press.twitter.blank?
-      parent_press(press)&.twitter
-    else
-      press.twitter
-    end
+    press.twitter.presence || parent_press(press)&.twitter
   end
 
   def location(subdomain)
     press = Press.where(subdomain: subdomain)&.first
     return if press.blank?
-    if press.location.blank?
-      parent_press(press)&.location
-    else
-      press.location
-    end
+    press.location.presence || parent_press(press)&.location
   end
 
   def restricted_message(subdomain)
     press = Press.where(subdomain: subdomain)&.first
     return if press.blank?
-    if press.restricted_message.blank?
-      parent_press(press)&.restricted_message
-    else
-      press.restricted_message
-    end
+    press.restricted_message.presence || parent_press(press)&.restricted_message
   end
 
   private

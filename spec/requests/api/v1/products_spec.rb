@@ -42,6 +42,7 @@ RSpec.describe "Products", type: :request do
 
     context 'api_v1_find_product_path' do
       let(:params) { { identifier: new_identifier } }
+
       describe 'GET /api/v1/product' do
         it 'not found' do
           get api_find_product_path, params: params, headers: headers

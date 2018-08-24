@@ -42,6 +42,7 @@ RSpec.describe EPub::SqlLite do
 
   describe "#create_table" do
     before { subject.create_table }
+
     it "creates the chapters table" do
       rows = subject.db.execute "select name from sqlite_master where type='table' and name='chapters'"
       expect(rows[0][0]).to eq 'chapters'

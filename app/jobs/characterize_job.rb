@@ -6,7 +6,7 @@ class CharacterizeJob < ApplicationJob
   # @param [FileSet] file_set
   # @param [String] file_id identifier for a Hydra::PCDM::File
   # @param [String, NilClass] filepath the cached file within the Hyrax.config.working_path
-  def perform(file_set, file_id, filepath = nil) # rubocop:disable Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity
+  def perform(file_set, file_id, filepath = nil) # rubocop:disable Metrics/CyclomaticComplexity
     filename = Hyrax::WorkingDirectory.find_or_retrieve(file_id, file_set.id, filepath)
     raise LoadError, "#{file_set.class.characterization_proxy} was not found" unless file_set.characterization_proxy?
 
@@ -25,7 +25,7 @@ class CharacterizeJob < ApplicationJob
     Rails.logger.debug "Ran characterization on #{file_set.characterization_proxy.id} (#{file_set.characterization_proxy.mime_type})"
     file_set.characterization_proxy.save!
     file_set.update_index
-    file_set.parent.in_collections.each(&:update_index) if file_set.parent
+    file_set.parent&.in_collections&.each(&:update_index)
 
     # Heliotrope addition: allow "reversioned" FileSets to be Unpacked if needed
     kind = FeaturedRepresentative.where(file_set_id: file_set.id)&.first&.kind

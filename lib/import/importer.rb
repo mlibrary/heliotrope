@@ -122,11 +122,12 @@ module Import
         attrs['import_uploaded_files_attributes'] = attrs.delete('files_metadata')
 
         if reimporting
-          attrs.merge!('visibility' => reimport_mono.visibility)
+          attrs['visibility'] = reimport_mono.visibility
           Hyrax::CurationConcern.actor.update(Hyrax::Actors::Environment.new(@reimport_mono, Ability.new(user), attrs))
         else
-          attrs.merge!('press' => press_subdomain, 'visibility' => visibility)
-          attrs.merge!('admin_set_id' => admin_set_id) if admin_set_id
+          attrs['press'] = press_subdomain
+          attrs['visibility'] = visibility
+          attrs['admin_set_id'] = admin_set_id if admin_set_id
           Hyrax::CurationConcern.actor.create(Hyrax::Actors::Environment.new(Monograph.new, Ability.new(user), attrs))
         end
       end
@@ -145,7 +146,7 @@ module Import
       end
 
       def csv_files
-        fail "Directory not found: #{root_dir}" unless File.exist?(root_dir)
+        raise "Directory not found: #{root_dir}" unless File.exist?(root_dir)
         @csv_files ||= Dir.glob(File.join(root_dir, '*.csv'))
       end
 
@@ -188,7 +189,7 @@ module Import
               return admin_set.id
             end
           end
-          fail "You're trying to use the workflow #{@workflow} but a corresponding AdminSet was not found. Make sure you've registered this workflow."
+          raise "You're trying to use the workflow #{@workflow} but a corresponding AdminSet was not found. Make sure you've registered this workflow."
         end
       end
   end

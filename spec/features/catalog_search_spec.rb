@@ -2,12 +2,12 @@
 
 require 'rails_helper'
 
-feature 'Catalog search' do
+describe 'Catalog search' do
   context 'a user who is not logged in' do
     let!(:private_monograph) { create(:private_monograph) }
     let!(:public_monograph) { create(:public_monograph) }
 
-    scenario 'visits the catalog page' do
+    it 'visits the catalog page' do
       visit search_catalog_path
 
       # There should be this many search results total:

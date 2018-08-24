@@ -15,7 +15,9 @@ describe Export::Exporter do
 
     context 'monograph' do
       let(:monograph) { double('monograph') }
+
       before { allow(Monograph).to receive(:find).with(monograph_id).and_return(monograph) }
+
       it { is_expected.to be_an_instance_of(described_class) }
     end
   end

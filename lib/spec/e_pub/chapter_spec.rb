@@ -128,6 +128,7 @@ RSpec.describe EPub::Chapter do
             expect(subject.pdf.page_count).to be 3
           end
         end
+
         context "when not downloadable" do
           it do
             allow(publication).to receive(:multi_rendition).and_return(false)

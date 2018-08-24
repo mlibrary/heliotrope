@@ -4,6 +4,13 @@ Lint/AmbiguousBlockAssociation:
     - 'spec/controllers/hyrax/monographs_controller_spec.rb'
     - 'spec/controllers/roles_controller_spec.rb'
 
+Lint/DuplicateMethods:
+  Exclude:
+    - 'app/presenters/e_pub_download_presenter.rb'
+    - 'app/presenters/hyrax/file_set_presenter.rb'
+    - 'lib/e_pub/chapter.rb'
+    - 'lib/export/exporter.rb'
+
 Layout/EmptyLinesAroundBlockBody:
   Exclude:
     - 'config/initializers/mailboxer.rb'
@@ -32,9 +39,48 @@ Metrics/PerceivedComplexity:
     - 'app/models/riiif/file.rb'
     - 'app/services/downloads_controller_behavior.rb'
 
+Naming/HeredocDelimiterCase:
+  Exclude:
+    - 'spec/lib/export/exporter_spec.rb'
+    - 'spec/lib/import/importer_spec.rb'
+
+Naming/HeredocDelimiterNaming:
+  Exclude:
+    - 'app/presenters/hyrax/file_set_presenter.rb'
+    - 'lib/spec/e_pub/bridge_to_webgl_spec.rb'
+    - 'lib/spec/e_pub/cfi_spec.rb'
+    - 'lib/spec/e_pub/chapter_spec.rb'
+    - 'lib/spec/e_pub/chapter_presenter_spec.rb'
+    - 'lib/spec/e_pub/snippet_spec.rb'
+    - 'spec/presenters/hyrax/file_set_presenter_spec.rb'
+
+Naming/MemoizedInstanceVariableName:
+  Exclude:
+    - 'app/forms/hyrax/forms/batch_upload_form.rb'
+    - 'app/presenters/concerns/featured_representatives/file_set_presenter.rb'
+    - 'app/presenters/concerns/featured_representatives/monograph_presenter.rb'
+    - 'app/presenters/hyrax/file_set_presenter.rb'
+    - 'app/presenters/hyrax/monograph_presenter.rb'
+
+Performance/UnfreezeString:
+  Exclude:
+    - 'lib/export/exporter.rb'
+
 Rails/Exit:
   Exclude:
     - 'lib/**/*'
+
+Rails/HasManyOrHasOneDependent:
+  Exclude:
+    - 'app/models/component.rb'
+    - 'app/models/grouping.rb'
+    - 'app/models/lessee.rb'
+    - 'app/models/press.rb'
+    - 'app/models/product.rb'
+
+Rails/InverseOf:
+  Exclude:
+    - 'app/models/press.rb'
 
 Rails/OutputSafety:
   Exclude:
@@ -47,6 +93,11 @@ Rails/OutputSafety:
     - 'app/renderers/hyrax/renderers/markdown_attribute_renderer.rb'
     - 'app/views/shared/_brand_press_footer_block_b.html.erb'
 
+Rails/UnknownEnv:
+  Exclude:
+    - 'config/initializers/carrierwave.rb'
+    - 'spec/spec_helper.rb'
+
 Rails/SkipsModelValidations:
   Exclude:
     - 'spec/jobs/characterize_job_spec.rb'
@@ -55,37 +106,85 @@ RSpec/EmptyExampleGroup:
   Exclude:
     - 'spec/actors/hyrax/monograph_actor_spec.rb'
 
-RSpec/EmptyLineAfterFinalLet:
-  Enabled: false
-
-RSpec/EmptyLineAfterSubject:
-  Enabled: false
-
-RSpec/MultipleExpectations:
-  Enabled: false
-
 RSpec/ExampleLength:
   Enabled: true
   Max: 103 # default is 5
 
 RSpec/LetSetup:
-  Enabled: false
+  Exclude:
+    - 'spec/actors/featured_representative_actor_spec.rb'
+    - 'spec/controllers/e_pubs_controller_spec.rb'
+    - 'spec/controllers/hyrax/monographs_controller_spec.rb'
+    - 'spec/controllers/webgls_controller_spec.rb'
+    - 'spec/controllers/webgls_controller_spec.rb'
+    - 'spec/features/create_external_resource_spec.rb'
+    - 'spec/features/file_set_cardinality_spec.rb'
+    - 'spec/features/monograph_catalog_facets_spec.rb'
+    - 'spec/features/press_catalog_spec.rb'
+    - 'spec/features/show_monograph_spec.rb'
+    - 'spec/features/sign_in_out_spec.rb'
+    - 'spec/jobs/unpack_job_spec.rb'
+    - 'spec/models/featured_representative_spec.rb'
+    - 'spec/presenters/concerns/featured_representatives/file_set_presenter_spec.rb'
+    - 'spec/presenters/e_pub_download_presenter.rb'
+    - 'spec/presenters/hyrax/file_set_presenter_spec.rb'
+    - 'spec/presenters/hyrax/monograph_presenter_spec.rb'
+    - 'spec/system/toc_epub_chapter_spec.rb'
+    - 'spec/views/monograph_catalog/index.html.erb_spec.rb'
 
 RSpec/MessageSpies:
-  Enabled: false
-
-RSpec/NamedSubject:
-  Enabled: false
-
-RSpec/NestedGroups:
-  Enabled: false
+  Exclude:
+    - 'spec/actors/create_with_import_files_actor_spec.rb'
+    - 'spec/controllers/authentications_controller_spec.rb'
+    - 'spec/controllers/e_pubs_controller_spec.rb'
+    - 'spec/controllers/hyrax/file_sets_controller_spec.rb'
+    - 'spec/controllers/hyrax/monographs_controller_spec.rb'
+    - 'spec/controllers/jobs_controller_spec.rb'
+    - 'spec/controllers/sessions_controller_spec.rb'
+    - 'spec/jobs/attach_import_files_to_work_job_spec.rb'
+    - 'spec/jobs/characterize_job_spec.rb'
+    - 'spec/jobs/create_derivatives_job_spec.rb'
+    - 'spec/jobs/curation_concern_update_index_job_spec.rb'
+    - 'spec/jobs/hyrax/grant_read_to_members_job_spec.rb'
+    - 'spec/jobs/hyrax/revoke_edit_from_members_job_spec.rb'
+    - 'spec/lib/devise/http_header_authenticatable_spec.rb'
+    - 'spec/lib/devise/keycard_authenticatable_spec.rb'
+    - 'spec/models/riiif/file_spec.rb'
+    - 'spec/services/analytics_service_spec.rb'
 
 RSpec/SubjectStub:
   Exclude:
     - 'spec/models/riiif/file_spec.rb'
 
-RSpec/VerifiedDoubles:
-  Enabled: false
+Style/CommentedKeyword:
+  Exclude:
+    - 'spec/controllers/hyrax/monographs_controller_spec.rb'
+    - 'spec/controllers/monograph_catalog_controller_spec.rb'
+    - 'spec/features/press_catalog_spec.rb'
+    - 'spec/presenters/hyrax/monograph_presenter_spec.rb'
+    - 'spec/requests/api/v1/component_products_spec.rb'
+    - 'spec/requests/api/v1/lessee_products_spec.rb'
+    - 'spec/requests/api/v1/product_components_spec.rb'
+    - 'spec/requests/api/v1/product_lessees_spec.rb'
+    - 'spec/views/shared/_my_actions.html.erb_spec.rb'
+
+Style/DateTime:
+  Exclude:
+    - 'app/presenters/concerns/cc_analytics_presenter.rb'
+    - 'app/services/counter_service.rb'
+    - 'app/services/unpack_service.rb'
+    - 'spec/factories/monographs.rb'
+    - 'spec/features/press_catalog_spec.rb'
+    - 'spec/features/press_catalog_sort_spec.rb'
+    - 'spec/models/monograph_spec.rb'
+    - 'spec/presenters/concerns/cc_analytics_presenter_spec.rb'
+    - 'spec/views/monograph_catalog/index.html.erb_spec.rb'
+
+Style/EvalWithLocation:
+  Exclude:
+    - 'app/services/analytics_service.rb'
+    - 'spec/presenters/hyrax/monograph_presenter_spec.rb'
+    - 'spec/views/monograph_catalog/index.html.erb_spec.rb'
 
 Style/FrozenStringLiteralComment:
   Exclude:
@@ -108,3 +207,6 @@ Style/NumericLiterals:
 Style/RedundantReturn:
   Exclude:
     - 'app/presenters/concerns/analytics_presenter.rb'
+
+Style/WordArray:
+  Enabled: false
