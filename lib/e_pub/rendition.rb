@@ -30,7 +30,6 @@ module EPub
             title: header.text,
             depth: header.depth,
             cfi: "/6/#{index * 2}[#{idref}]!",
-            downloadable: @publication.downloadable?,
             unmarshaller_chapter: @unmarshaller_rootfile.content.chapter_from_title(header.text)
           }
           @sections << Section.from_rendition_args(self, args)

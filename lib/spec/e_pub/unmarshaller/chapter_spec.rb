@@ -33,8 +33,7 @@ RSpec.describe EPub::Unmarshaller::Chapter do
         it { expect(subject.title).to be_empty }
         it { expect(subject.pages).to be_empty }
 
-        context 'Span' do
-          let(:span_element) { chapter_list_doc.xpath(".//span").first }
+        context 'List Classes' do
           let(:chapter_list_doc) { Nokogiri::XML::Document.parse(chapter_list_xml).remove_namespaces! }
           let(:chapter_list_xml) do
             <<-XML
@@ -90,11 +89,24 @@ RSpec.describe EPub::Unmarshaller::Chapter do
             XML
           end
 
-          it { is_expected.to be_an_instance_of(described_class) }
-          it { expect(subject.title).to eq 'Frontmatter' }
-          it { expect(subject.pages).not_to be_empty }
-          it { expect(subject.pages.length).to eq 2 }
-          it { expect(subject.pages.first).to an_instance_of(EPub::Unmarshaller::Page) }
+          context 'Span' do
+            let(:span_element) { chapter_list_doc.xpath(".//span").first }
+
+            it { is_expected.to be_an_instance_of(described_class) }
+            it { expect(subject.title).to eq 'Frontmatter' }
+            it { expect(subject.pages).not_to be_empty }
+            it { expect(subject.pages.length).to eq 2 }
+            it { expect(subject.downloadable_pages).to be_empty }
+            it { expect(subject.pages.first).to an_instance_of(EPub::Unmarshaller::Page) }
+          end
+
+          context 'Chapter' do
+            let(:span_element) { chapter_list_doc.xpath(".//span")[2] }
+
+            it { expect(subject.title).to eq 'Chapter 1. Sharks and Marks: The Swindles and Seductions of Modernity (page 33)' }
+            it { expect(subject.pages.length).to eq 2 }
+            it { expect(subject.downloadable_pages.length).to eq 2 }
+          end
         end
       end
     end

@@ -40,11 +40,15 @@ module EPub
     end
 
     def downloadable?
-      @args[:downloadable] || false
+      downloadable_pages.count.positive? || false
     end
 
     def pages
       @pages ||= @args[:unmarshaller_chapter]&.pages&.map { |unmarshaller_page| Page.from_section_unmarshaller_page(self, unmarshaller_page) } || []
+    end
+
+    def downloadable_pages
+      @downloadable_pages ||= @args[:unmarshaller_chapter]&.downloadable_pages&.map { |unmarshaller_page| Page.from_section_unmarshaller_page(self, unmarshaller_page) } || []
     end
 
     private

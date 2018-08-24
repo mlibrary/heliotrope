@@ -24,7 +24,7 @@ RSpec.describe EPub::Rendition do
     let(:nav) { double('nav', tocs: [toc]) }
     let(:toc) { double('toc', id: 'toc', headers: [header]) }
     let(:header) { double('header', text: 'text', depth: 1, cfi: 'cfi', href: 'href') }
-    let(:chapter) { double('chapter', pages: [page]) }
+    let(:chapter) { double('chapter', pages: [page], downloadable_pages: [page]) }
     let(:page) { double('page', image: image) }
     let(:image) { double('image') }
 
