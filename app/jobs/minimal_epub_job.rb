@@ -3,7 +3,7 @@
 require 'zip'
 
 class MinimalEpubJob < ApplicationJob
-  queue_as :unpack
+  queue_as :minimize_epub
 
   def perform(root_path)
     epub = EPub::Publication.from_directory(root_path)
@@ -15,8 +15,13 @@ class MinimalEpubJob < ApplicationJob
     # Make a "minimal" epub that has no page images or sqlite index that we can
     # repack and send to CSB as a single file.
 
+    # The mimimize working directory
     minimal = File.join(root_path, epub.id + ".sm")
-    return if Dir.exist? minimal
+    # Clear the old .sm.epub if it exists.
+    sm_epub = minimal + '.epub'
+    FileUtils.rm sm_epub if Dir.exist? sm_epub
+
+    minimal = File.join(root_path, epub.id + ".sm")
 
     system("cd #{root_path}; rsync -a --exclude '[0-9]*.png' --exclude '*.db' . #{minimal}")
 
@@ -39,9 +44,11 @@ class MinimalEpubJob < ApplicationJob
     end
 
     # repack the minimal epub
-    sm_epub = minimal + '.epub'
     system("cd #{minimal}; zip -Xq #{sm_epub} mimetype")
     system("cd #{minimal}; zip -rgq #{sm_epub} META-INF")
     system("cd #{minimal}; zip -rgq #{sm_epub} OEBPS")
+
+    # remove the .sm working directory
+    FileUtils.remove_entry_secure minimal if Dir.exist? minimal
   end
 end
