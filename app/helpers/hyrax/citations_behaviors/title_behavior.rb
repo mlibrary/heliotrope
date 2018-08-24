@@ -11,8 +11,7 @@ module Hyrax
       def chicago_citation_title(title_text)
         process_title_parts(title_text) do |w, index|
           if (index.zero? && w.casecmp(w).zero?) || (w.length > 1 && w.casecmp(w).zero? && !EXPANDED_NOCAPS.include?(w))
-            # the split("-") will handle the capitalization of hyphenated words
-            w.split("-").map! { |x| ucfirst(x) }.join("-")
+            maybe_split_on_hyphens(w)
           else
             w
           end
@@ -24,7 +23,7 @@ module Hyrax
           if TITLE_NOCAPS.include? w
             w
           else
-            w.split("-").map! { |x| ucfirst(x) }.join("-")
+            maybe_split_on_hyphens(w)
           end
         end
       end
@@ -50,8 +49,21 @@ module Hyrax
         clean_end_punctuation(text.strip) + "."
       end
 
+      # this method to stop "non-word" hyphens being removed ;-)
+      # https://tools.lib.umich.edu/jira/browse/HELIO-2088
+      def maybe_split_on_hyphens(word)
+        if word.scan(/-/).count == word.length
+          word
+        else
+          # the split("-") will handle the capitalization of hyphenated words
+          word.split("-").map! { |x| ucfirst(x) }.join("-")
+        end
+      end
+
+      # https://tools.lib.umich.edu/jira/browse/HELIO-1991
       def ucfirst(word)
-        word.slice(0, 1).capitalize + word.slice(1..-1)
+        # to_s in case word is an empty string as it was for "non-word" hypens before HELIO-2088
+        word.slice(0, 1).capitalize + word.slice(1..-1).to_s
       end
     end
   end
