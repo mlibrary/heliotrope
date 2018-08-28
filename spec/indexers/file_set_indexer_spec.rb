@@ -6,7 +6,12 @@ describe FileSetIndexer do
   let(:indexer) { described_class.new(file_set2) }
   let(:monograph) { create(:monograph) }
   let(:file_set1) { create(:file_set) }
-  let(:file_set2) { create(:file_set, section_title: ['A section title'], description: ["This is the description"]) }
+  let(:file_set2) do
+    create(:file_set,
+           creator: ["Moose, Bullwinkle\nSquirrel, Rocky"],
+           section_title: ['A section title'],
+           description: ["This is the description"])
+  end
   let(:file) do
     Hydra::PCDM::File.new.tap do |f|
       f.content = 'foo'
@@ -26,6 +31,11 @@ describe FileSetIndexer do
 
   describe "indexing a file_set" do
     subject { indexer.generate_solr_document }
+
+    it "indexes all creators' names for access/search and faceting" do
+      expect(subject['creator_tesim']).to eq ['Moose, Bullwinkle', 'Squirrel, Rocky'] # search
+      expect(subject['creator_sim']).to eq ['Moose, Bullwinkle', 'Squirrel, Rocky'] # facet
+    end
 
     it "indexes it's section_title" do
       expect(subject['section_title_tesim']).to eq ['A section title']

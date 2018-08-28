@@ -38,9 +38,14 @@ RSpec.describe MonographIndexer do
       expect(subject['title_si']).to eq 'blah-de-blah-blah and stuff'
     end
 
-    it 'indexes the first creator\'s full_name' do
-      expect(subject['creator_full_name_tesim']).to eq 'Moose, Bullwinkle'
-      expect(subject['creator_full_name_sim']).to eq 'Moose, Bullwinkle'
+    it "indexes all creators' names for access/search and faceting" do
+      expect(subject['creator_tesim']).to eq ['Moose, Bullwinkle', 'Squirrel, Rocky'] # access/search
+      expect(subject['creator_sim']).to eq ['Moose, Bullwinkle', 'Squirrel, Rocky'] # facet
+    end
+
+    it "indexes first creator's name for access/search and (normalized) for sorting" do
+      expect(subject['creator_full_name_tesim']).to eq 'Moose, Bullwinkle' # access/search
+      expect(subject['creator_full_name_si']).to eq 'moose bullwinkle' # facet
     end
 
     it 'has description indexed by Hyrax::IndexesBasicMetadata' do
