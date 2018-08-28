@@ -758,10 +758,21 @@ $um-black-80: #342f2e;
     background-color: $um-grey-1;
     @include meta-serif;
 
+    padding-top: 20px;
+    padding-bottom: 20px;
+
+    .container {
+      margin-top: 1em;
+    }
+
+    p.lead {
+      font-size: 16px;
+    }
+
     .logo {
 
       img {
-        width: 84px;
+        width: 73px;
         margin-right: 3em;
       }
 
@@ -862,6 +873,50 @@ $um-black-80: #342f2e;
     .platform {
       background-color: $um-black-80;
     }
+  }
+
+  // EPUB Reader
+  #reader {
+
+    .cozy-control .cozy-h1 {
+      font-size: 1.5em;
+    }
+
+    .button {
+      @include epub-button-background-color($um-brand-color,$um-blue,$um-white);
+    }
+
+    .button--lg {
+      @include epub-button-background-color($um-brand-color,$um-blue,$um-white);
+    }
+
+    .button--sm {
+      @include epub-button-background-color($um-brand-color,$um-blue,$um-white);
+    }
+
+    i[class^='icon-chevron-'] {
+      @include epub-prev-next-color($um-brand-color);
+      transition: 0.2s ease-in;
+    }
+
+    i[class^='icon-chevron-']:hover {
+      @include epub-hover-prev-next-color($um-brand-color);
+      transition: 0.2s ease-in;
+    }
+
+    .cozy-control .logo {
+      background: $um-grey-1;
+      height: 46.6px;
+      width: 36px;
+      overflow: hidden;
+
+      img {
+        height: 36px;
+        margin-top: 6px;
+        margin-left: 11px;
+      }
+    }
+
   }
 
 }
