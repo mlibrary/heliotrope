@@ -55,39 +55,45 @@ class SessionsController < ApplicationController
   end
 
   def discovery_feed
-    id = params[:id] || ''
-    institutions = []
-    component = Component.find_by(handle: '2027/fulcrum.' + id)
-    if component.present?
-      lessees = component.lessees(true)
-      if lessees.present?
-        institutions = Institution.where(identifier: lessees.pluck(:identifier))
-      end
-    end
-    institutions = Set.new(institutions.map(&:entity_id))
-    feed = Rails.cache.fetch("disco:" + id, expires_in: 15.minutes) do
-      obj_disco_feed = unfiltered_discovery_feed
-      obj_filtered_disco_feed = obj_disco_feed
-      unless institutions.empty?
-        obj_filtered_disco_feed = []
-        obj_disco_feed.each do |entry|
-          obj_filtered_disco_feed << entry if entry["entityID"].in?(institutions)
-        end
-      end
-      obj_filtered_disco_feed
-    end
-    render json: feed
+    render json: if params[:id].present?
+                   filtered_discovery_feed(params[:id])
+                 else
+                   unfiltered_discovery_feed
+                 end
   end
 
   private
 
+    def filtered_discovery_feed(component_id = '')
+      Rails.cache.fetch("disco_feed:" + component_id, expires_in: 24.hours) do
+        obj_filtered_disco_feed = []
+        component = Component.find_by(handle: HandleService.path(component_id))
+        if component.present?
+          lessees = component.lessees(true)
+          if lessees.present?
+            institutions = Institution.where(identifier: lessees.pluck(:identifier))
+            institutions = Set.new(institutions.map(&:entity_id))
+            if institutions.present?
+              obj_disco_feed = unfiltered_discovery_feed
+              obj_disco_feed.each do |entry|
+                obj_filtered_disco_feed << entry if entry["entityID"].in?(institutions) # rubocop:disable Metrics/BlockNesting
+              end
+            end
+          end
+        end
+        obj_filtered_disco_feed
+      end
+    end
+
     def unfiltered_discovery_feed
-      json = if /^production$/i.match?(Rails.env)
-               Faraday.get("/Shibboleth.sso/DiscoFeed").body
-             else
-               File.read(Rails.root.join('config', 'discovery_feed.json'))
-             end
-      JSON.parse(json)
+      Rails.cache.fetch("disco_feed", expires_in: 24.hours) do
+        json = if Rails.env.production?
+                 Faraday.get(root_url(script_name: "/Shibboleth.sso/DiscoFeed").gsub!(/\/?\?locale=.*/, '')).body
+               else
+                 File.read(Rails.root.join('config', 'discovery_feed.json'))
+               end
+        JSON.parse(json)
+      end
     end
 
     def return_location
