@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
 class EPubsController < ApplicationController
-  before_action :set_presenter, only: %i[show download_chapter download_section search]
+  before_action :set_presenter, only: %i[show download_chapter download_section search access]
+  before_action :set_access_presenters, only: %i[access]
   before_action :set_show, only: %i[show download_chapter download_section]
 
   def show
@@ -113,6 +114,15 @@ class EPubsController < ApplicationController
       end
     end
 
+    def set_access_presenters
+      @monograph_presenter = nil
+      if @presenter.parent.present?
+        @monograph_presenter = Hyrax::PresenterFactory.build_for(ids: [@presenter.parent.id], presenter_class: Hyrax::MonographPresenter, presenter_args: current_ability).first
+      end
+      @institutions = component_institutions
+      @products = component_products
+    end
+
     def set_show
       return if show?
       @subscriber = nil
@@ -120,12 +130,7 @@ class EPubsController < ApplicationController
       if access?
         set_session_show
       else
-        @monograph_presenter = nil
-        if @presenter.parent.present?
-          @monograph_presenter = Hyrax::PresenterFactory.build_for(ids: [@presenter.parent.id], presenter_class: Hyrax::MonographPresenter, presenter_args: current_ability).first
-        end
-        @institutions = component_institutions
-        @products = component_products
+        set_access_presenters
         CounterService.from(self, @presenter).count(request: 1, turnaway: "No_License")
         render 'access'
       end

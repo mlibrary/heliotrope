@@ -75,11 +75,11 @@ RSpec.describe SessionsController, type: :controller do
       expect(JSON.parse(response.body).size).to be(1)
       expect(JSON.parse(response.body)[0]['entityID']).to eq('https://shibboleth.umich.edu/idp/shibboleth')
     end
-    it 'gets full discovery feed if given bogus id' do
+    it 'gets empty discovery feed if given bogus id' do
       get :discovery_feed, params: { id: 'bogus_id' }
       expect(response).to have_http_status(:success)
       expect { JSON.parse response.body }.not_to raise_error
-      expect(JSON.parse(response.body).size).to be > 1
+      expect(JSON.parse(response.body).size).to be 0
     end
   end
 end
