@@ -1,7 +1,7 @@
 <% @monograph_presenter.epub_presenter.sections.each do |section| %>
   <div class="row chapter">
     <div class="col-sm-12">
-      <h3><a href="<%= epub_path(id: @monograph_presenter.epub_id, anchor: section.cfi + "/4/1:0") %>"><%= section.title %></a></h3>
+      <h3><a href="<%= epub_path(id: @monograph_presenter.epub_id, anchor: section.cfi) %>"><%= section.title %></a></h3>
       <% if @monograph_presenter.epub_presenter.multi_rendition? %>
         <div class="btn-group download" role="group" aria-label="Read or Download Chapter">
           <% if section.downloadable? %>

@@ -49,7 +49,7 @@ RSpec.describe EPub::Rendition do
         it { expect(subject.sections.length).to eq 1 }
         it { expect(subject.sections.first.title).to eq 'text' }
         it { expect(subject.sections.first.level).to eq 1 }
-        it { expect(subject.sections.first.cfi).to eq '/6/2[idef]!' }
+        it { expect(subject.sections.first.cfi).to eq '/6/2[idef]!/4/1:0' }
         it { expect(subject.sections.first.downloadable?).to be true }
         it { expect(subject.sections.first.pages.length).to eq 1 }
         it { expect(subject.sections.first.pages.first).to be_an_instance_of(EPub::Page) }

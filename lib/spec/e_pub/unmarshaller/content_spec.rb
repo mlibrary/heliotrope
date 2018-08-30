@@ -60,14 +60,14 @@ RSpec.describe EPub::Unmarshaller::Content do
             end
             let(:toc_href) { content_doc.root.manifest.item("[@id='toc']")["href"] }
             let(:toc_path) { File.join(full_dir, toc_href) }
-            let(:href) { content_doc.root.manifest.item("[@id='1']")["href"] }
+            let(:href) { toc_doc.xpath('//a').first.attributes['href'].value }
             let(:idref) { content_doc.root.spine.itemref["idref"] }
 
             let(:toc_doc) { Nokogiri::Slop(toc_xml) }
             let(:toc_xml) do
               <<-XML
                 <nav>
-                  <a href="1.xhtml">Title</a>
+                  <a href="1.xhtml#one">Title</a>
                 </nav>
               XML
             end
@@ -82,6 +82,21 @@ RSpec.describe EPub::Unmarshaller::Content do
                 </nav>
               XML
             end
+            let(:chapter) do
+              <<-CHAPTER
+              <html>
+                <head>
+                  <title>On Things</title>
+                </head>
+                <body>
+                  <section id="one">
+                    <p>Some stuff about things</p>
+                  </section>
+                </body>
+              </html>
+              CHAPTER
+            end
+            let(:index) { 1 }
 
             before do
               allow(File).to receive(:open).with('')
@@ -89,12 +104,14 @@ RSpec.describe EPub::Unmarshaller::Content do
               allow(File).to receive(:open).with(full_path).and_return(content_xml)
               allow(File).to receive(:open).with(toc_path).and_return(toc_xml)
               allow(File).to receive(:open).with(chapter_list_path).and_return(chapter_list_xml)
+              allow(File).to receive(:open).with("./OEBPS/1.xhtml").and_return(chapter)
             end
 
             it { expect(subject.idref_with_index_from_href(href)).to eq [idref, 1] }
             it { expect(subject.chapter_from_title('title')).to be_an_instance_of(EPub::Unmarshaller::ChapterNullObject) }
             it { expect(subject.nav).to be_an_instance_of(EPub::Unmarshaller::Nav) }
             it { expect(subject.chapter_list).to be_an_instance_of(EPub::Unmarshaller::ChapterList) }
+            it { expect(subject.cfi_from_href_anchor_tag(idref, index, href)).to eq "/6/2[1]!/4/2[one]" }
           end
         end
       end

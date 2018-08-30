@@ -24,12 +24,16 @@ module EPub
         next unless /toc/i.match?(toc.id)
         toc.headers.each do |header|
           next if header.text.blank?
-          next if /.*#.*/.match?(header.href)
           idref, index = @unmarshaller_rootfile.content.idref_with_index_from_href(header.href)
+          cfi = if /.*#.*/.match?(header.href)
+                  @unmarshaller_rootfile.content.cfi_from_href_anchor_tag(idref, index, header.href)
+                else
+                  "/6/#{index * 2}[#{idref}]!/4/1:0"
+                end
           args = {
             title: header.text,
             depth: header.depth,
-            cfi: "/6/#{index * 2}[#{idref}]!",
+            cfi: cfi,
             unmarshaller_chapter: @unmarshaller_rootfile.content.chapter_from_title(header.text)
           }
           @sections << Section.from_rendition_args(self, args)

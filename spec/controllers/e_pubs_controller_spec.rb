@@ -513,7 +513,7 @@ RSpec.describe EPubsController, type: :controller do
         expect(document).to receive(:image).with(/images\/00000005\.png/, fit: [512, 692])
         expect(document).to receive(:render).and_return(rendered)
         expect(controller).to receive(:send_data).with(rendered, type: "application/pdf", disposition: "inline").and_call_original
-        get :download_section, params: { id: file_set.id, cfi: '/6/2[xhtml00000003]!', title: "This is Chapter One's Title" }
+        get :download_section, params: { id: file_set.id, cfi: '/6/2[xhtml00000003]!/4/1:0', title: "This is Chapter One's Title" }
         expect(response).to have_http_status(:success)
         expect(response.headers['Content-Type']).to eq 'application/pdf'
         expect(response.headers['Content-Disposition']).to eq 'inline'
