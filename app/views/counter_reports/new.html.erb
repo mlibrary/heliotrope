@@ -1,0 +1,15 @@
+<% content_for :head do %>
+  <meta name="turbolinks-cache-control" content="no-cache">
+<% end %>
+<div class="container">
+  <div class="row"><h1>COUNTER Reports</h1></div>
+  <div class="row"><hr></div>
+  <div class="row">
+    <%= form_tag(counter_reports_path, method: :get) do %>
+      <%= label_tag(:customer_id, "Customer ID:") %>
+      <%= select_tag(:customer_id, options_from_collection_for_select(Institution.all, :id, :name)) %>
+      <%= submit_tag("Reports") %>
+    <% end %>
+  </div>
+  <div class="row"><hr></div>
+</div>

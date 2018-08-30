@@ -10,9 +10,22 @@ platform_administrator_constraint = lambda do |request|
   current_user.present? && current_user.respond_to?(:platform_admin?) && current_user.platform_admin?
 end
 
+COUNTER_REPORT_ID_CONSTRAINT = { id: /dr|dr_d1|dr_d2|ir|ir_a1|ir_m1|pr|pr_p1|tr|tr_b1|tr_b2|tr_b3|tr_j1|tr_j2|tr_j3|tr_j4/i }.freeze
+
 Rails.application.routes.draw do
   namespace :api, constraints: ->(req) { req.format == :json } do
     resource :token, only: %i[show]
+
+    namespace :sushi do
+      scope module: :v5, constraints: API::Sushi::Version.new('v5', true) do
+        get '', controller: :service, action: :sushi
+        get 'status', controller: :service, action: :status
+        get 'members', controller: :service, action: :members
+        get 'reports', controller: :service, action: :reports
+        resources :reports, only: %i[show], constraints: COUNTER_REPORT_ID_CONSTRAINT
+      end
+    end
+
     scope module: :v1, constraints: API::Version.new('v1', true) do
       get 'lessee', controller: :lessees, action: :find, as: :find_lessee
       resources :lessees, only: %i[index show create destroy] do
@@ -54,6 +67,13 @@ Rails.application.routes.draw do
     resources :products do
       resources :components, only: %i[create destroy]
       resources :lessees, only: %i[create destroy]
+    end
+    resources :counter_reports, only: %i[index new], constraints: COUNTER_REPORT_ID_CONSTRAINT do
+      member do
+        get :form
+        post :form
+        post :show
+      end
     end
   end
 

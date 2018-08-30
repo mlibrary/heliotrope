@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-describe CounterService do
+RSpec.describe CounterService do
   # The CounterService gathers stats needed to build COUNTER v5 reports.
   # Fun time reading is here: https://www.projectcounter.org
   # See also HELIO-1376

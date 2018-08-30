@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-describe MarkdownService do
+RSpec.describe MarkdownService do
   describe '.markdown' do
     let(:html) { "\n\nThis is _italics_ and this is\n\na paragraph\n\n__bold__ a line\nbreak and this is ~~strikethrough~~" }
     let(:rvalue) { described_class.markdown(html) }
