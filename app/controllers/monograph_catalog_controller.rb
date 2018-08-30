@@ -22,7 +22,7 @@ class MonographCatalogController < ::CatalogController
     config.facet_fields.tap do
       # solr facet fields not to be displayed in the index (search results) view
       config.facet_fields.delete('human_readable_type_sim')
-      config.facet_fields.delete('creator_full_name_sim')
+      config.facet_fields.delete('creator_sim')
       config.facet_fields.delete('tag_sim')
       config.facet_fields.delete('subject_sim')
       config.facet_fields.delete('language_sim')
@@ -47,7 +47,7 @@ class MonographCatalogController < ::CatalogController
                            partial: 'custom_section_facet',
                            helper_method: :markdown_as_text_facet
     config.add_facet_field solr_name('keywords', :facetable), label: "Keyword", limit: 5, url_method: :facet_url_helper
-    config.add_facet_field solr_name('creator_full_name', :facetable), label: 'Creator', limit: 5, url_method: :facet_url_helper
+    config.add_facet_field solr_name('creator', :facetable), label: 'Creator', limit: 5, url_method: :facet_url_helper
     config.add_facet_field solr_name('content_type', :facetable), label: "Content", show: false
     config.add_facet_field solr_name('resource_type', :facetable), label: "Format", pivot: [solr_name('resource_type', :facetable), solr_name('content_type', :facetable)], url_method: :facet_url_helper
     config.add_facet_field solr_name('search_year', :facetable), label: "Year", limit: 5, url_method: :facet_url_helper

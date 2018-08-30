@@ -19,8 +19,8 @@ class MonographIndexer < Hyrax::WorkIndexer
       roleless_creators = [roleless_contributors&.shift] if roleless_creators.blank?
 
       solr_doc[Solrizer.solr_name('creator', :stored_searchable)] = roleless_creators
+      solr_doc[Solrizer.solr_name('creator', :facetable)] = roleless_creators
       solr_doc[Solrizer.solr_name('creator_full_name', :stored_searchable)] = roleless_creators&.first
-      solr_doc[Solrizer.solr_name('creator_full_name', :facetable)] = roleless_creators&.first
       solr_doc[Solrizer.solr_name('creator_full_name', :sortable)] = normalize_for_sort(roleless_creators&.first)
 
       solr_doc[Solrizer.solr_name('contributor', :stored_searchable)] = roleless_contributors

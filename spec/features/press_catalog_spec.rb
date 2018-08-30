@@ -131,9 +131,18 @@ describe 'Press Catalog' do
 
     context 'with a press with 15 or more open monographs' do
       before do
-        16.times do
+        16.times do |n|
           title = Faker::Book.title
-          name = Faker::Book.author
+          name1 = Faker::Book.author
+
+          # give 3 of the books a second creator, for a total of 16 + 3 = 19 creators
+          if [5, 10, 15].include? n
+            name2 = Faker::Book.author
+            creators = [name1, name2]
+          else
+            creators = name1
+          end
+
           date = Faker::Time.between(DateTime.now - 9999, DateTime.now)
           doc = ::SolrDocument.new(
             id: Random.rand(999_999_999),
@@ -142,8 +151,9 @@ describe 'Press Catalog' do
             read_access_group_ssim: "public",
             title_tesim: title,
             title_si: title,
-            creator_tesim: name,
-            creator_full_name_si: name,
+            creator_tesim: creators,
+            creator_sim: creators, # facetable
+            creator_full_name_si: name1,
             date_created_si: date.year,
             date_uploaded_dtsi: date,
             subject_sim: Faker::Pokemon.name,
@@ -166,6 +176,12 @@ describe 'Press Catalog' do
         # Only the heb press will have a publisher facet
         expect(page).to have_link "Publisher"
         expect(page).to have_selector("#facet-publisher_sim")
+
+        expect(page).to have_selector('#facet-creator_sim a.facet_select', count: 5) # 5 is limit in facet widget
+
+        # dedicated facet modal shows up to 20 values, we expect 19 creator names
+        find("a[href='/#{heb.subdomain}/facet?id=creator_sim&locale=en']").click
+        expect(page).to have_selector('.facet-label a.facet_select', count: 19)
       end
     end
   end # not logged in

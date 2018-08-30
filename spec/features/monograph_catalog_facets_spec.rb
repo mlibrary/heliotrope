@@ -271,9 +271,9 @@ describe "Monograph Catalog Facets" do
       create(:public_file_set, resource_type: ['image'],
                                content_type: ['portrait'],
                                exclusive_to_platform: 'yes',
-                               creator: ['McTesterson, Testy'],
+                               creator: ["McTesterson, Testy\nCoauthorson, Timmy"],
                                sort_date: '1974-01-01',
-                               keywords: ['stuff'],
+                               keywords: ['stuff', 'things'],
                                section_title: ['A Section'])
     }
 
@@ -289,8 +289,12 @@ describe "Monograph Catalog Facets" do
       # Selectors needed for assets/javascripts/ga_event_tracking.js
       # If these change, fix here then update ga_event_tracking.js
       expect(page).to have_selector('#facet-section_title_sim a.facet_select')
-      expect(page).to have_selector('#facet-keywords_sim a.facet_select')
-      expect(page).to have_selector('#facet-creator_full_name_sim a.facet_select')
+      expect(page).to have_selector('#facet-keywords_sim a.facet_select', count: 2)
+      expect(page).to have_selector('#facet-keywords_sim a.facet_select', text: 'stuff')
+      expect(page).to have_selector('#facet-keywords_sim a.facet_select', text: 'things')
+      expect(page).to have_selector('#facet-creator_sim a.facet_select', count: 2)
+      expect(page).to have_selector('#facet-creator_sim a.facet_select', text: 'McTesterson, Testy')
+      expect(page).to have_selector('#facet-creator_sim a.facet_select', text: 'Coauthorson, Timmy')
       expect(page).to have_selector('#facet-resource_type_sim a.facet_select')
       # content type is nested/pivoted under resource type
       expect(find('#facet-resource_type_sim-image a.facet_select').text).to eq 'portrait'

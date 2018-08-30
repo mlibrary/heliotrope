@@ -13,7 +13,7 @@ describe MonographCatalogController do
     end
 
     context 'facet_fields' do
-      expected_fields = %w[based_near section_title keywords creator_full_name content_type resource_type search_year exclusive_to_platform contributor]
+      expected_fields = %w[based_near section_title keywords creator content_type resource_type search_year exclusive_to_platform contributor]
       expected_facet_fields = expected_fields.map { |field| described_class.solr_name(field, :facetable) }
 
       it 'has expected facet fields' do

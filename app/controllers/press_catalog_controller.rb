@@ -18,7 +18,7 @@ class PressCatalogController < ::CatalogController
       config.facet_fields.delete('language_sim')
       config.facet_fields.delete('press_name_ssim')
       config.facet_fields.delete('subject_sim')
-      config.facet_fields.delete('creator_full_name_sim')
+      config.facet_fields.delete('creator_sim')
       config.facet_fields.delete('based_near_sim')
     end
 
@@ -66,7 +66,7 @@ class PressCatalogController < ::CatalogController
 
         # facets
         blacklight_config.add_facet_field Solrizer.solr_name('subject', :facetable), label: "Subject", limit: 10, url_method: :facet_url_helper
-        blacklight_config.add_facet_field Solrizer.solr_name('creator_full_name', :facetable), label: "Author", limit: 5, url_method: :facet_url_helper
+        blacklight_config.add_facet_field Solrizer.solr_name('creator', :facetable), label: "Author", limit: 5, url_method: :facet_url_helper
         if @press.subdomain == 'heb'
           blacklight_config.add_facet_field Solrizer.solr_name('publisher', :facetable), label: "Publisher", limit: 5, url_method: :facet_url_helper
         end

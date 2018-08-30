@@ -9,8 +9,8 @@ class FileSetIndexer < Hyrax::FileSetIndexer
 
       roleless_creators = multiline_names_minus_role('creator')
       solr_doc[Solrizer.solr_name('creator', :stored_searchable)] = roleless_creators
+      solr_doc[Solrizer.solr_name('creator', :facetable)] = roleless_creators
       solr_doc[Solrizer.solr_name('creator_full_name', :stored_searchable)] = roleless_creators&.first
-      solr_doc[Solrizer.solr_name('creator_full_name', :facetable)] = roleless_creators&.first
       primary_creator_role = first_creator_roles
       solr_doc[Solrizer.solr_name('primary_creator_role', :stored_searchable)] = primary_creator_role
       solr_doc[Solrizer.solr_name('primary_creator_role', :facetable)] = primary_creator_role
