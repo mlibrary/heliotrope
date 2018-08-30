@@ -1,0 +1,67 @@
+<% content_for :head do %>
+  <meta name="turbolinks-cache-control" content="no-cache">
+<% end %>
+<div class="container">
+  <div class="row"><h1><%= @title %></h1></div>
+  <div class="row"><hr></div>
+  <div class="row">
+    <form action=<%= customer_counter_report_path(customer_id: @customer_id, id: @id) %> method="put">
+      <div class="row">
+        <div class="col-sm-2">
+          <label for="institution">Institution</label></div>
+        <div class="col-sm-10">
+          <select name="institution">
+            <option value="1">One</option>
+            <option value="2">Two</option>
+            <option value="3">Three</option>
+          </select>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-2">
+          <label for="metrics">Metrics</label></div>
+        <div class="col-sm-10">
+          <select name="metrics" size="3" multiple>
+            <option value="1">One</option>
+            <option value="2">Two</option>
+            <option value="3">Three</option>
+          </select>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-2">
+          <label for="filters">Filters</label></div>
+        <div class="col-sm-10">
+          <select name="filters" size="3" multiple>
+            <option value="1">One</option>
+            <option value="2">Two</option>
+            <option value="3">Three</option>
+          </select>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-2">
+          <label for="metrics">Attributes</label></div>
+        <div class="col-sm-10">
+          <select name="attributes" size="3" multiple>
+            <option value="1">One</option>
+            <option value="2">Two</option>
+            <option value="3">Three</option>
+          </select>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-2"><label for="Start Date">Start Date</label></div>
+        <div class="col-sm-10"><input type="date" name="start_date"></div>
+      </div>
+      <div class="row">
+        <div class="col-sm-2"><label for="End Date">End Date</label></div>
+        <div class="col-sm-10"><input type="date" name="end_date"></div>
+      </div>
+      <div class="row">
+        <div class="col-sm-2"><label for="Submit">Submit</label></div>
+        <div class="col-sm-10"><input type="submit" value="Submit"></div>
+      </div>
+    </form>
+  </div>
+</div>
