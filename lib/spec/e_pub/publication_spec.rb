@@ -12,10 +12,10 @@ RSpec.describe EPub::Publication do
     it { expect(subject.downloadable?).to be false }
     it { expect(subject.single_rendition?).to be true }
     it { expect(subject.multi_rendition?).to be false }
+    it { expect(subject.labeled_rendition?('text')).to be false }
+    it { expect(subject.labeled_rendition('text')).to be_an_instance_of(EPub::RenditionNullObject) }
     it { expect(subject.renditions).to contain_exactly instance_of(EPub::RenditionNullObject) }
     it { expect(subject.rendition).to be_an_instance_of(EPub::RenditionNullObject) }
-    it { expect(subject.sections).to be subject.rendition.sections }
-    it { expect(subject.sections).to eq EPub::Rendition.null_object.sections }
   end
 
   describe '#from_unmarshaller_container' do
@@ -29,13 +29,13 @@ RSpec.describe EPub::Publication do
     context 'Unmarshaller Container' do
       let(:image_rootfile) { double('image rootfile') }
       let(:text_rootfile) { double('text rootfile') }
-      let(:image_rendition) { double('image rendition', label: 'Page Scan', sections: [image_section]) }
-      let(:text_rendition) { double('text rendition', label: 'Text', sections: [text_section]) }
-      let(:image_section) { double('image section') }
-      let(:text_section) { double('text section') }
+      let(:image_rendition) { double('image rendition', label: 'Page Scan') }
+      let(:text_rendition) { double('text rendition', label: 'Text') }
 
       before do
         allow(unmarshaller_container).to receive(:instance_of?).with(EPub::Unmarshaller::Container).and_return(true)
+        allow(image_rendition).to receive(:instance_of?).with(EPub::Rendition).and_return(true)
+        allow(text_rendition).to receive(:instance_of?).with(EPub::Rendition).and_return(true)
         allow(EPub::Rendition).to receive(:from_publication_unmarshaller_container_rootfile).with(subject, image_rootfile).and_return(image_rendition)
         allow(EPub::Rendition).to receive(:from_publication_unmarshaller_container_rootfile).with(subject, text_rootfile).and_return(text_rendition)
       end
@@ -47,11 +47,10 @@ RSpec.describe EPub::Publication do
         it { expect(subject.downloadable?).to be false }
         it { expect(subject.single_rendition?).to be true }
         it { expect(subject.multi_rendition?).to be false }
+        it { expect(subject.labeled_rendition?('text')).to be true }
+        it { expect(subject.labeled_rendition('text')).to be text_rendition }
         it { expect(subject.renditions.length).to eq 1 }
         it { expect(subject.rendition.label).to eq 'Text' }
-        it { expect(subject.sections).to be subject.rendition.sections }
-        it { expect(subject.sections.length).to eq 1 }
-        it { expect(subject.sections.first).to be text_section }
       end
 
       context 'multi rendition' do
@@ -61,11 +60,10 @@ RSpec.describe EPub::Publication do
         it { expect(subject.downloadable?).to be true }
         it { expect(subject.single_rendition?).to be false }
         it { expect(subject.multi_rendition?).to be true }
+        it { expect(subject.labeled_rendition?('Page Scan')).to be true }
+        it { expect(subject.labeled_rendition('page scan')).to be image_rendition }
         it { expect(subject.renditions.length).to eq 2 }
         it { expect(subject.rendition.label).to eq 'Text' }
-        it { expect(subject.sections).to be subject.rendition.sections }
-        it { expect(subject.sections.length).to eq 1 }
-        it { expect(subject.sections.first).to be text_section }
       end
     end
   end

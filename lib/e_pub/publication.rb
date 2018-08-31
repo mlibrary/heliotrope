@@ -33,8 +33,24 @@ module EPub
     # Unmarshaller
     #
 
-    def sections
-      @sections ||= rendition.sections
+    def single_rendition?
+      renditions.length == 1
+    end
+
+    def multi_rendition?
+      renditions.length > 1
+    end
+
+    def labeled_rendition?(label)
+      labeled_rendition(label).instance_of?(Rendition)
+    end
+
+    def labeled_rendition(label)
+      labeled_rendition = nil
+      renditions.each do |rendition|
+        labeled_rendition = rendition if /#{label}/i.match?(rendition.label)
+      end
+      labeled_rendition || Rendition.null_object
     end
 
     def rendition
@@ -44,14 +60,6 @@ module EPub
         @rendition = rendition if /text/i.match?(rendition.label)
       end
       @rendition
-    end
-
-    def single_rendition?
-      renditions.length == 1
-    end
-
-    def multi_rendition?
-      renditions.length > 1
     end
 
     def renditions

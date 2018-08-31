@@ -1,17 +1,17 @@
 # frozen_string_literal: true
 
 module EPub
-  class Section
+  class Interval
     private_class_method :new
 
     # Class Methods
 
     def self.from_rendition_cfi_title(rendition, cfi, title) # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
       return null_object unless rendition&.instance_of?(Rendition) && cfi&.instance_of?(String) && cfi.present? && title&.instance_of?(String) && title.present?
-      rendition.sections.each do |section|
-        next unless section.cfi == cfi
-        next unless section.title == title
-        return section
+      rendition.intervals.each do |interval|
+        next unless interval.cfi == cfi
+        next unless interval.title == title
+        return interval
       end
       null_object
     end
@@ -22,7 +22,7 @@ module EPub
     end
 
     def self.null_object
-      SectionNullObject.send(:new)
+      IntervalNullObject.send(:new)
     end
 
     # Instance Methods
@@ -44,11 +44,11 @@ module EPub
     end
 
     def pages
-      @pages ||= @args[:unmarshaller_chapter]&.pages&.map { |unmarshaller_page| Page.from_section_unmarshaller_page(self, unmarshaller_page) } || []
+      @pages ||= @args[:unmarshaller_chapter]&.pages&.map { |unmarshaller_page| Page.from_interval_unmarshaller_page(self, unmarshaller_page) } || []
     end
 
     def downloadable_pages
-      @downloadable_pages ||= @args[:unmarshaller_chapter]&.downloadable_pages&.map { |unmarshaller_page| Page.from_section_unmarshaller_page(self, unmarshaller_page) } || []
+      @downloadable_pages ||= @args[:unmarshaller_chapter]&.downloadable_pages&.map { |unmarshaller_page| Page.from_interval_unmarshaller_page(self, unmarshaller_page) } || []
     end
 
     private
@@ -59,7 +59,7 @@ module EPub
       end
   end
 
-  class SectionNullObject < Section
+  class IntervalNullObject < Interval
     private_class_method :new
 
     private

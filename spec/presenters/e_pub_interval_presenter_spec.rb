@@ -2,12 +2,12 @@
 
 require 'rails_helper'
 
-RSpec.describe EPubSectionPresenter do
+RSpec.describe EPubIntervalPresenter do
   describe 'attributes' do
     subject { presenter }
 
-    let(:presenter) { described_class.new(section) }
-    let(:section) { double('section', title: title, level: level, cfi: cfi, downloadable?: downloadable) }
+    let(:presenter) { described_class.new(interval) }
+    let(:interval) { double('interval', title: title, level: level, cfi: cfi, downloadable?: downloadable) }
     let(:title) { double('title') }
     let(:level) { double('level') }
     let(:cfi) { double('cfi') }

@@ -6,14 +6,15 @@ RSpec.describe EPubPresenter do
   subject { presenter }
 
   let(:presenter) { described_class.new(epub) }
-  let(:epub) { double('epub', sections: sections, multi_rendition?: true) }
-  let(:sections) { [section] }
-  let(:section) { double('section') }
+  let(:epub) { double('epub', rendition: rendition, multi_rendition?: true) }
+  let(:rendition) { double('rendition', intervals: intervals) }
+  let(:intervals) { [interval] }
+  let(:interval) { double('interval') }
 
-  describe '#sections' do
-    subject { presenter.sections.first }
+  describe '#intervals' do
+    subject { presenter.intervals.first }
 
-    it { is_expected.to be_an_instance_of(EPubSectionPresenter) }
+    it { is_expected.to be_an_instance_of(EPubIntervalPresenter) }
   end
 
   describe '#multi_rendition' do

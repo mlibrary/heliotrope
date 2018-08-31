@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 class EPubsController < ApplicationController
-  before_action :set_presenter, only: %i[show download_chapter download_section search access]
+  before_action :set_presenter, only: %i[show download_chapter download_interval search access]
   before_action :set_access_presenters, only: %i[access]
-  before_action :set_show, only: %i[show download_chapter download_section]
+  before_action :set_show, only: %i[show download_chapter download_interval]
 
   def show
     return render 'hyrax/base/unauthorized', status: :unauthorized unless show?
@@ -85,15 +85,15 @@ class EPubsController < ApplicationController
     send_data rendered_pdf, type: "application/pdf", disposition: "inline"
   end
 
-  def download_section
+  def download_interval
     return render 'hyrax/base/unauthorized', status: :unauthorized unless show?
     publication = EPub::Publication.from_directory(UnpackService.root_path_from_noid(params[:id], 'epub'))
-    section = EPub::Section.from_rendition_cfi_title(publication.rendition, params[:cfi], params[:title])
-    rendered_pdf = Rails.cache.fetch(pdf_cache_key(params[:id], section.title), expires_in: 30.days) do
-      pdf = EPub::Marshaller::PDF.from_publication_section(publication, section)
+    interval = EPub::Interval.from_rendition_cfi_title(publication.rendition, params[:cfi], params[:title])
+    rendered_pdf = Rails.cache.fetch(pdf_cache_key(params[:id], interval.title), expires_in: 30.days) do
+      pdf = EPub::Marshaller::PDF.from_publication_interval(publication, interval)
       pdf.document.render
     end
-    CounterService.from(self, @presenter).count(request: 1, section_type: "Chapter", section: section.title)
+    CounterService.from(self, @presenter).count(request: 1, section_type: "Chapter", section: interval.title)
     send_data rendered_pdf, type: "application/pdf", disposition: "inline"
   end
 

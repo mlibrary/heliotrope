@@ -489,7 +489,7 @@ RSpec.describe EPubsController, type: :controller do
       end
     end
 
-    describe '#download_section' do
+    describe '#download_interval' do
       let(:monograph) { create(:monograph) }
       let(:file_set) { create(:file_set, id: '999999998', content: File.open(File.join(fixture_path, 'fake_epub_multi_rendition.epub'))) }
       let!(:fr) { create(:featured_representative, monograph_id: monograph.id, file_set_id: file_set.id, kind: 'epub') }
@@ -507,13 +507,13 @@ RSpec.describe EPubsController, type: :controller do
 
       after { FeaturedRepresentative.destroy_all }
 
-      it 'sends the section as pdf' do
+      it 'sends the interval as pdf' do
         expect(document).to receive(:image).with(/images\/00000003\.png/, fit: [512, 692])
         expect(document).to receive(:image).with(/images\/00000004\.png/, fit: [512, 692])
         expect(document).to receive(:image).with(/images\/00000005\.png/, fit: [512, 692])
         expect(document).to receive(:render).and_return(rendered)
         expect(controller).to receive(:send_data).with(rendered, type: "application/pdf", disposition: "inline").and_call_original
-        get :download_section, params: { id: file_set.id, cfi: '/6/2[xhtml00000003]!/4/1:0', title: "This is Chapter One's Title" }
+        get :download_interval, params: { id: file_set.id, cfi: '/6/2[xhtml00000003]!/4/1:0', title: "This is Chapter One's Title" }
         expect(response).to have_http_status(:success)
         expect(response.headers['Content-Type']).to eq 'application/pdf'
         expect(response.headers['Content-Disposition']).to eq 'inline'
