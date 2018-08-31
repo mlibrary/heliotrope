@@ -33,8 +33,8 @@ module EPub
     # Unmarshaller
     #
 
-    def sections
-      @sections ||= rendition.sections
+    def intervals
+      @intervals ||= rendition.intervals
     end
 
     def rendition

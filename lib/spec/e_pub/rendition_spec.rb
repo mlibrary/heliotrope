@@ -10,7 +10,7 @@ RSpec.describe EPub::Rendition do
 
     it { is_expected.to be_an_instance_of(EPub::RenditionNullObject) }
     it { expect(subject.label).to eq EPub::Unmarshaller::Rootfile.null_object.label }
-    it { expect(subject.sections).to be_empty }
+    it { expect(subject.intervals).to be_empty }
   end
 
   describe '#from_publication_unmarshaller_container_rootfile' do
@@ -46,14 +46,14 @@ RSpec.describe EPub::Rendition do
 
         it { is_expected.to be_an_instance_of(described_class) }
         it { expect(subject.label).to be label }
-        it { expect(subject.sections.length).to eq 1 }
-        it { expect(subject.sections.first.title).to eq 'text' }
-        it { expect(subject.sections.first.level).to eq 1 }
-        it { expect(subject.sections.first.cfi).to eq '/6/2[idef]!/4/1:0' }
-        it { expect(subject.sections.first.downloadable?).to be true }
-        it { expect(subject.sections.first.pages.length).to eq 1 }
-        it { expect(subject.sections.first.pages.first).to be_an_instance_of(EPub::Page) }
-        it { expect(subject.sections.first.pages.first.image).to be image }
+        it { expect(subject.intervals.length).to eq 1 }
+        it { expect(subject.intervals.first.title).to eq 'text' }
+        it { expect(subject.intervals.first.level).to eq 1 }
+        it { expect(subject.intervals.first.cfi).to eq '/6/2[idef]!/4/1:0' }
+        it { expect(subject.intervals.first.downloadable?).to be true }
+        it { expect(subject.intervals.first.pages.length).to eq 1 }
+        it { expect(subject.intervals.first.pages.first).to be_an_instance_of(EPub::Page) }
+        it { expect(subject.intervals.first.pages.first.image).to be image }
       end
     end
   end

@@ -14,8 +14,8 @@ RSpec.describe EPub::Publication do
     it { expect(subject.multi_rendition?).to be false }
     it { expect(subject.renditions).to contain_exactly instance_of(EPub::RenditionNullObject) }
     it { expect(subject.rendition).to be_an_instance_of(EPub::RenditionNullObject) }
-    it { expect(subject.sections).to be subject.rendition.sections }
-    it { expect(subject.sections).to eq EPub::Rendition.null_object.sections }
+    it { expect(subject.intervals).to be subject.rendition.intervals }
+    it { expect(subject.intervals).to eq EPub::Rendition.null_object.intervals }
   end
 
   describe '#from_unmarshaller_container' do
@@ -29,10 +29,10 @@ RSpec.describe EPub::Publication do
     context 'Unmarshaller Container' do
       let(:image_rootfile) { double('image rootfile') }
       let(:text_rootfile) { double('text rootfile') }
-      let(:image_rendition) { double('image rendition', label: 'Page Scan', sections: [image_section]) }
-      let(:text_rendition) { double('text rendition', label: 'Text', sections: [text_section]) }
-      let(:image_section) { double('image section') }
-      let(:text_section) { double('text section') }
+      let(:image_rendition) { double('image rendition', label: 'Page Scan', intervals: [image_interval]) }
+      let(:text_rendition) { double('text rendition', label: 'Text', intervals: [text_interval]) }
+      let(:image_interval) { double('image interval') }
+      let(:text_interval) { double('text interval') }
 
       before do
         allow(unmarshaller_container).to receive(:instance_of?).with(EPub::Unmarshaller::Container).and_return(true)
@@ -49,9 +49,9 @@ RSpec.describe EPub::Publication do
         it { expect(subject.multi_rendition?).to be false }
         it { expect(subject.renditions.length).to eq 1 }
         it { expect(subject.rendition.label).to eq 'Text' }
-        it { expect(subject.sections).to be subject.rendition.sections }
-        it { expect(subject.sections.length).to eq 1 }
-        it { expect(subject.sections.first).to be text_section }
+        it { expect(subject.intervals).to be subject.rendition.intervals }
+        it { expect(subject.intervals.length).to eq 1 }
+        it { expect(subject.intervals.first).to be text_interval }
       end
 
       context 'multi rendition' do
@@ -63,9 +63,9 @@ RSpec.describe EPub::Publication do
         it { expect(subject.multi_rendition?).to be true }
         it { expect(subject.renditions.length).to eq 2 }
         it { expect(subject.rendition.label).to eq 'Text' }
-        it { expect(subject.sections).to be subject.rendition.sections }
-        it { expect(subject.sections.length).to eq 1 }
-        it { expect(subject.sections.first).to be text_section }
+        it { expect(subject.intervals).to be subject.rendition.intervals }
+        it { expect(subject.intervals.length).to eq 1 }
+        it { expect(subject.intervals.first).to be text_interval }
       end
     end
   end
