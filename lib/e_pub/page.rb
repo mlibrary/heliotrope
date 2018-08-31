@@ -6,9 +6,9 @@ module EPub
 
     # Class Methods
 
-    def self.from_interval_unmarshaller_page(interval, unmarshaller_page)
-      return null_object unless interval&.instance_of?(Interval) && unmarshaller_page&.instance_of?(Unmarshaller::Page)
-      new(interval, unmarshaller_page)
+    def self.from_section_unmarshaller_page(section, unmarshaller_page)
+      return null_object unless section&.instance_of?(Section) && unmarshaller_page&.instance_of?(Unmarshaller::Page)
+      new(section, unmarshaller_page)
     end
 
     def self.null_object
@@ -23,8 +23,8 @@ module EPub
 
     private
 
-      def initialize(interval, unmarshaller_page)
-        @interval = interval
+      def initialize(section, unmarshaller_page)
+        @section = section
         @unmarshaller_page = unmarshaller_page
       end
   end
@@ -35,7 +35,7 @@ module EPub
     private
 
       def initialize
-        super(Interval.null_object, Unmarshaller::Page.null_object)
+        super(Section.null_object, Unmarshaller::Page.null_object)
       end
   end
 end

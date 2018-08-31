@@ -17,9 +17,9 @@ module EPub
 
     # Instance Methods
 
-    def intervals
-      return @intervals unless @intervals.nil?
-      @intervals = []
+    def sections
+      return @sections unless @sections.nil?
+      @sections = []
       @unmarshaller_rootfile.content.nav.tocs.each do |toc|
         next unless /toc/i.match?(toc.id)
         toc.headers.each do |header|
@@ -36,11 +36,11 @@ module EPub
             cfi: cfi,
             unmarshaller_chapter: @unmarshaller_rootfile.content.chapter_from_title(header.text)
           }
-          @intervals << Interval.from_rendition_args(self, args)
+          @sections << Section.from_rendition_args(self, args)
         end
         break
       end
-      @intervals
+      @sections
     end
 
     def label

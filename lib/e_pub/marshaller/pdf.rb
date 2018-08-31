@@ -12,9 +12,9 @@ module EPub
         new(publication)
       end
 
-      def self.from_publication_interval(publication, interval)
-        return null_object unless publication.instance_of?(EPub::Publication) && interval.instance_of?(EPub::Interval)
-        new(publication, interval)
+      def self.from_publication_section(publication, section)
+        return null_object unless publication.instance_of?(EPub::Publication) && section.instance_of?(EPub::Section)
+        new(publication, section)
       end
 
       def self.null_object
@@ -29,10 +29,10 @@ module EPub
         if @publication.multi_rendition?
           @publication.renditions.each do |rendition|
             next unless /page scan/i.match?(rendition.label)
-            rendition.intervals.each do |interval|
-              next unless interval.cfi == @interval.cfi
-              next unless interval.title == @interval.title
-              interval.pages.each do |page|
+            rendition.sections.each do |section|
+              next unless section.cfi == @section.cfi
+              next unless section.title == @section.title
+              section.pages.each do |page|
                 doc.image page.image, fit: [512, 692] # minus 100 for the margin
               end
             end
@@ -43,9 +43,9 @@ module EPub
 
       private
 
-        def initialize(publication, interval = EPub::Interval.null_object)
+        def initialize(publication, section = EPub::Section.null_object)
           @publication = publication
-          @interval = interval
+          @section = section
         end
     end
 

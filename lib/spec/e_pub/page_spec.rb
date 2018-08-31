@@ -12,17 +12,17 @@ RSpec.describe EPub::Page do
     it { expect(subject.image).to be_empty }
   end
 
-  describe '#from_interval_unmarshaller_page' do
-    subject { described_class.from_interval_unmarshaller_page(interval, unmarshaller_page) }
+  describe '#from_section_unmarshaller_page' do
+    subject { described_class.from_section_unmarshaller_page(section, unmarshaller_page) }
 
-    let(:interval) { double('interval') }
+    let(:section) { double('section') }
     let(:unmarshaller_page) { double('unmarshaller page', image: image) }
     let(:image) { double('image') }
 
     it { is_expected.to be_an_instance_of(EPub::PageNullObject) }
 
-    context 'Interval' do
-      before { allow(interval).to receive(:instance_of?).with(EPub::Interval).and_return(true) }
+    context 'Section' do
+      before { allow(section).to receive(:instance_of?).with(EPub::Section).and_return(true) }
 
       it { is_expected.to be_an_instance_of(EPub::PageNullObject) }
 
