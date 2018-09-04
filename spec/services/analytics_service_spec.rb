@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-describe AnalyticsService, :no_clean do
+RSpec.describe AnalyticsService, :no_clean do
   before do
     described_class.send(:remove_instance_variable, :@config) if described_class.send(:instance_variable_defined?, :@config)
   end

@@ -1,0 +1,42 @@
+<% content_for :head do %>
+  <meta name="turbolinks-cache-control" content="no-cache">
+<% end %>
+<h1>COUNTER Reports</h1>
+<h2><%= @counter_report_service.description %></h2>
+<% if @counter_report_service.note.present? %>
+  <hr>
+  <div><%= @counter_report_service.note %></div>
+<% end %>
+<% @counter_report_service.alerts.each do |alert| %>
+  <div><span><%= alert.date_time %> ALERT: *** <%= alert.alert %> ***</span></div>
+<% end %>
+<hr>
+<div>
+  <span>System Status: </span>
+  <% if @counter_report_service.active? %>
+    <span>On-Line</span>
+  <% else %>
+    <span>Off-Line</span>
+  <% end %>
+</div>
+<% if @counter_report_service.active? %>
+  <% @counter_report_service.members.each do |member| %>
+    <hr>
+    <div>Customer_ID: <%= member.customer_id %></div>
+    <div>Name: <%= member.name %></div>
+    <div>Notes: <%= member.notes %></div>
+    <% member.institution_id.each do |institution| %>
+      <div><span><%= institution.type %>: <%= institution.value %></span></div>
+    <% end %>
+    <div>Requestor_ID: <%= member.requestor_id %></div>
+  <% end %>
+  <% @counter_report_service.reports.each do |report| %>
+    <hr>
+    <div>Report_Name: <%= link_to report.report_name, form_counter_report_path(report.report_id) %></div>
+    <div>Report_ID: <%= report.report_id %></div>
+    <div>Release: <%= report.release %></div>
+    <div>Report_Description: <%= report.report_description %></div>
+    <div>Path: <%= report.path %></div>
+  <% end %>
+<% end %>
+<hr>

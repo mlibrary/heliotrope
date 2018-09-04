@@ -21,6 +21,13 @@ AllCops:
 Layout/IndentationConsistency:
   EnforcedStyle: rails
 
+Lint/DuplicateMethods:
+  Exclude:
+  - 'app/presenters/e_pub_download_presenter.rb'
+  - 'app/presenters/hyrax/file_set_presenter.rb'
+  - 'lib/e_pub/chapter.rb'
+  - 'lib/export/exporter.rb'
+
 Metrics/AbcSize:
   Enabled: false
 
@@ -53,15 +60,22 @@ Rails:
 Rails/LexicallyScopedActionFilter:
   Enabled: false
 
+Rails/Output:
+  Exclude:
+    - 'lib/export/**/*'
+    - 'lib/import/**/*'
+
 Rails/TimeZone:
   Exclude:
   - 'app/services/counter_service.rb'
   - 'spec/**/*'
 
-Rails/Output:
-  Exclude:
-    - 'lib/export/**/*'
-    - 'lib/import/**/*'
+Rails/UnknownEnv:
+  Environments:
+  - production
+  - development
+  - test
+  - cucumber
 
 RSpec/AnyInstance:
   Enabled: false
