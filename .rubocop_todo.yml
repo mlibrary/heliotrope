@@ -4,13 +4,6 @@ Lint/AmbiguousBlockAssociation:
     - 'spec/controllers/hyrax/monographs_controller_spec.rb'
     - 'spec/controllers/roles_controller_spec.rb'
 
-Lint/DuplicateMethods:
-  Exclude:
-    - 'app/presenters/e_pub_download_presenter.rb'
-    - 'app/presenters/hyrax/file_set_presenter.rb'
-    - 'lib/e_pub/chapter.rb'
-    - 'lib/export/exporter.rb'
-
 Layout/EmptyLinesAroundBlockBody:
   Exclude:
     - 'config/initializers/mailboxer.rb'
@@ -92,11 +85,6 @@ Rails/OutputSafety:
     - 'app/renderers/hyrax/renderers/attribute_renderer.rb'
     - 'app/renderers/hyrax/renderers/markdown_attribute_renderer.rb'
     - 'app/views/shared/_brand_press_footer_block_b.html.erb'
-
-Rails/UnknownEnv:
-  Exclude:
-    - 'config/initializers/carrierwave.rb'
-    - 'spec/spec_helper.rb'
 
 Rails/SkipsModelValidations:
   Exclude:

@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-describe HandleService do
+RSpec.describe HandleService do
   subject { described_class }
 
   let(:invalidnoid) { 'invalidnoid' }

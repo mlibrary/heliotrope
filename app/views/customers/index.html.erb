@@ -1,0 +1,14 @@
+<p id="notice"><%= notice %></p>
+<div id="maincontent">
+  <div class="row">
+    <div class="col-md-12"><h1>Customers</h1></div>
+    <div class="col-md-12">
+      <% @customers.each do |customer| %>
+        <div class="col-md-1"><span class="glyphicon glyphicon-registration-mark" aria-hidden="true"></span></div>
+        <div class="col-md-5"><%= customer.name %></div>
+        <div class="col-md-6"><%= link_to 'Reports', customer_counter_reports_path(customer.id) %></div>
+      <% end %>
+    </div>
+    <div class="col-md-12"><br/></div>
+  </div>
+</div>

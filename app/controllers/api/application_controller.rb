@@ -30,7 +30,7 @@ module API
     private
 
       def authorize_request
-        @current_user = platform_admin_from_payload(payload_from_token(token_from_header))
+        @current_user = platform_admin_from_payload(payload_from_token(token_from_header_or_query))
       end
 
       def log_request_response(exception = nil)
@@ -68,6 +68,28 @@ module API
         raise("HTTP Authorization request header blank.") if request.headers['Authorization'].blank?
         token = request.headers['Authorization'].split(' ').last
         raise("HTTP Authorization request header hash corrupt.") if token.blank?
+        token
+      end
+
+      def token_from_query
+        raise("ApiKey query blank.") if request.params['apikey'].blank?
+        token = request.params['apikey'].split(' ').last
+        raise("ApiKey query hash corrupt.") if token.blank?
+        token
+      end
+
+      def token_from_header_or_query
+        token = begin
+                  token_from_header
+                rescue StandardError => _e
+                  nil
+                end
+        token ||= begin
+                    token_from_query
+                  rescue StandardError => _e
+                    nil
+                  end
+        raise "HTTP Authorization or ApiKey query blank or corrupt." if token.blank?
         token
       end
   end
