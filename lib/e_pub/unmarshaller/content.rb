@@ -65,28 +65,7 @@ module EPub
         doc = Nokogiri::XML::Document.parse(File.open(chapter)).remove_namespaces!
         node = doc.at_css(%([id="#{tag}"]))
 
-        indexes = []
-        this = node
-
-        while this && this.name != "body"
-          siblings = this.parent.element_children
-          idx = siblings.index(this)
-
-          indexes << if this.text?
-                       idx + 1
-                     else
-                       (idx + 1) * 2
-                     end
-
-          indexes[-1] = "#{indexes[-1]}[#{this['id']}]" if this['id']
-
-          this = this.parent
-        end
-        indexes.reverse!
-
-        return "/6/#{index * 2}[#{idref}]!/4/1:0" if indexes.length.zero?
-
-        "/6/#{index * 2}[#{idref}]!/4/#{indexes.join('/')}"
+        "/6/#{index * 2}[#{idref}]!" + EPub::CFI.from(node).cfi
       end
 
       private
