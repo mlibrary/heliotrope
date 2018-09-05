@@ -76,7 +76,7 @@ Rails.application.routes.draw do
   get 'epubs/:id/*file', controller: :e_pubs, action: :file, as: :epub_file
   get 'epub_search/:id', controller: :e_pubs, action: :search, as: :epub_search
   get 'epubs_download_chapter/:id', controller: :e_pubs, action: :download_chapter, as: :epub_download_chapter
-  get 'epubs_download_section/:id', controller: :e_pubs, action: :download_section, as: :epub_download_section
+  get 'epubs_download_interval/:id', controller: :e_pubs, action: :download_interval, as: :epub_download_interval
   get 'embed', controller: :embed, action: :show
   get 'fulcrum', controller: :fulcrum, action: :index, as: :fulcrum
   get 'fulcrum/:partial', controller: :fulcrum, action: :show, as: :partial_fulcrum

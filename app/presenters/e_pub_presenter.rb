@@ -9,7 +9,7 @@ class EPubPresenter < ApplicationPresenter
     @epub.multi_rendition?
   end
 
-  def sections
-    @epub.sections.map { |section| EPubSectionPresenter.new(section) }
+  def intervals
+    @epub.rendition.intervals.map { |interval| EPubIntervalPresenter.new(interval) }
   end
 end

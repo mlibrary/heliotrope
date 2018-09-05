@@ -31,11 +31,11 @@ RSpec.describe EPub::Marshaller::PDF do
     end
   end
 
-  describe '#from_publication_section' do
-    subject { described_class.from_publication_section(publication, section) }
+  describe '#from_publication_interval' do
+    subject { described_class.from_publication_interval(publication, interval) }
 
     let(:publication) { double('publication') }
-    let(:section) { double('section') }
+    let(:interval) { double('interval') }
 
     it { is_expected.to be_an_instance_of(EPub::Marshaller::PDFNullObject) }
 
@@ -44,12 +44,12 @@ RSpec.describe EPub::Marshaller::PDF do
 
       it { is_expected.to be_an_instance_of(EPub::Marshaller::PDFNullObject) }
 
-      context 'Section' do
-        before { allow(section).to receive(:instance_of?).with(EPub::Section).and_return(true) }
+      context 'Interval' do
+        before { allow(interval).to receive(:instance_of?).with(EPub::Interval).and_return(true) }
 
         context 'single rendition' do
           let(:publication) { double('publication', single_rendition?: true, multi_rendition?: false) }
-          let(:section) { double('section') }
+          let(:interval) { double('interval') }
 
           it { is_expected.to be_an_instance_of(described_class) }
           it { expect(subject.document).to be_an_instance_of(Prawn::Document) }
@@ -67,15 +67,15 @@ RSpec.describe EPub::Marshaller::PDF do
           let(:image_rendition) do
             double('image rendition',
                    label: 'Page Scan',
-                   sections: [section_1, section_2])
+                   intervals: [interval_1, interval_2])
           end
-          let(:section_1) { double('section 1', cfi: 'cfi 1') }
-          let(:section_2) { double('section 2', cfi: 'cfi 2', title: 'title 2', pages: [page_1, page_2]) }
+          let(:interval_1) { double('interval 1', cfi: 'cfi 1') }
+          let(:interval_2) { double('interval 2', cfi: 'cfi 2', title: 'title 2', pages: [page_1, page_2]) }
           let(:page_1) { double('page 1', image: image_1) }
           let(:page_2) { double('page 2', image: image_2) }
           let(:image_1) { 'path/to/image/1' }
           let(:image_2) { 'path/to/image/2' }
-          let(:section) { double('section', cfi: 'cfi 2', title: 'title 2') }
+          let(:interval) { double('interval', cfi: 'cfi 2', title: 'title 2') }
           let(:prawn_document) { double('prawn document', pages: []) }
 
           before do
