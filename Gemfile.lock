@@ -780,7 +780,7 @@ GEM
       oauth2
     ruby-progressbar (1.10.0)
     ruby_dep (1.5.0)
-    rubyzip (1.2.1)
+    rubyzip (1.2.2)
     ruumba (0.1.2)
       rubocop
     safe_yaml (1.0.4)
@@ -983,7 +983,7 @@ DEPENDENCIES
   rspec-rails
   rubocop
   rubocop-rspec
-  rubyzip
+  rubyzip (~> 1.2.2)
   ruumba (= 0.1.2)
   sass-rails (~> 5.0)
   selenium-webdriver
