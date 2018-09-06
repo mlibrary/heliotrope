@@ -1,4 +1,4 @@
-<% riiif_url = "/image-service/#{file_set.id}/info.json" %>
+<% riiif_url = "/image-service/#{file_set.id}/info.json#{file_set.image_cache_breaker}" %>
 <div id="image"></div>
 <script>
     var map, layer, timer;

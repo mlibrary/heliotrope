@@ -225,6 +225,14 @@ module Hyrax
       solr_document['original_checksum_ssim']
     end
 
+    def image_cache_breaker
+      # using the Solr doc's timestamp even though it'll change on any metadata update.
+      # More file-specific fields on the Solr doc can't be trusted to be ordered in a useful way on "reversioning".
+      # An alternative could be to pull the timestamp from the Hydra Derivatives thumbnail itself.
+      value = '?' + Time.strptime(solr_document['timestamp'], '%Y-%m-%dT%H:%M:%S.%L%Z').to_i.to_s if solr_document['timestamp'].present?
+      value.presence || ''
+    end
+
     def sample_rate
       solr_document['sample_rate_ssim']
     end
