@@ -10,12 +10,20 @@
 
   <% if @monograph_presenter.date_created.present? %>
     <meta name="citation_publication_date" content="<%= @monograph_presenter.date_created.first %>">
+    <meta name="citation_online_date" content="<%= @monograph_presenter.date_created.first %>">
   <% end %>
 
   <% if @monograph_presenter.isbn.present? %>
     <% @monograph_presenter.isbn.each do |isbn| %>
       <meta name="citation_isbn" content="<%= isbn.html_safe %>">
     <% end %>
+  <% end %>
+
+  <% if @monograph_presenter.doi.present? %>
+    <meta name="citation_doi" content="doi:<%= @monograph_presenter.doi_path %>">
+  <% else %>
+    <meta name="citation_hdl" content="<%= @monograph_presenter.handle_path %>">
+    <meta name="DC.Identifier" content="<%= @monograph_presenter.handle_url %>">
   <% end %>
 
   <% if @monograph_presenter.publisher.present? %>
