@@ -31,15 +31,15 @@ module EPub
         offset = 0
 
         while node_query_match(node, query, offset)
-          cfi = EPub::Cfi.from(node, query, offset)
-          snippet = EPub::Snippet.from(node, cfi.pos0, cfi.pos1).snippet
+          pos0 = node.content.index(/#{Regexp.escape(query)}\W/i, offset)
+          pos1 = pos0 + query.length
 
           result = OpenStruct.new
-          result.cfi = cfi.cfi
-          result.snippet = snippet
+          result.cfi = EPub::CFI.from(node, pos0, pos1).cfi
+          result.snippet = EPub::Snippet.from(node, pos0, pos1).snippet
           matches << result
 
-          offset = cfi.pos1 + 1
+          offset = pos1 + 1
         end
         matches
       end
