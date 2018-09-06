@@ -89,15 +89,23 @@ RSpec.describe EPub::Unmarshaller::Chapter do
             XML
           end
 
-          context 'Span' do
+          context 'Frontmatter' do
             let(:span_element) { chapter_list_doc.xpath(".//span").first }
 
             it { is_expected.to be_an_instance_of(described_class) }
             it { expect(subject.title).to eq 'Frontmatter' }
             it { expect(subject.pages).not_to be_empty }
             it { expect(subject.pages.length).to eq 2 }
-            it { expect(subject.downloadable_pages).to be_empty }
+            it { expect(subject.downloadable_pages.length).to eq 2 }
             it { expect(subject.pages.first).to an_instance_of(EPub::Unmarshaller::Page) }
+          end
+
+          context 'Part' do
+            let(:span_element) { chapter_list_doc.xpath(".//span")[1] }
+
+            it { expect(subject.title).to eq 'PART ONE: THE POLIT ON THE MOVE' }
+            it { expect(subject.pages.length).to eq 2 }
+            it { expect(subject.downloadable_pages.length).to eq 0 }
           end
 
           context 'Chapter' do

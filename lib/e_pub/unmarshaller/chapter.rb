@@ -38,7 +38,7 @@ module EPub
       def downloadable_pages
         return @pages unless @pages.nil?
         @pages = []
-        if @span_element.parent.present? && @span_element.parent.attributes['class']&.value == "chapter"
+        if @span_element.parent.present? && ["chapter", "frontmatter", "backmatter"].include?(@span_element.parent.attributes['class']&.value)
           @span_element.parent.xpath(".//a").each do |anchor|
             @pages << Page.from_chapter_span_parent_anchor_element(self, anchor)
           end
