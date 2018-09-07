@@ -1,0 +1,6 @@
+<%= f.input :press,
+            # The possible values for the press selector drop-down
+            collection: @form.select_press,
+            # collection: Hash[current_user.admin_presses.map { |press| [press.name, press.subdomain] }],
+            input_html: { class: 'required' },
+            required: f.object.required?(:press) %>

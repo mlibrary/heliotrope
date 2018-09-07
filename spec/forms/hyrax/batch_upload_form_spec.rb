@@ -2,27 +2,33 @@
 
 require 'rails_helper'
 
-describe Hyrax::MonographForm do
+describe Hyrax::Forms::BatchUploadForm do
   let(:user) { create(:user) }
-  let(:ability) { Ability.new(user) }
+  let(:controller) { instance_double(Hyrax::BatchUploadsController) }
   let(:monograph) { Monograph.new }
-  let(:form) { described_class.new(monograph, ability, Hyrax::MonographsController) }
+  let(:ability) { Ability.new(user) }
+  let(:form) { described_class.new(monograph, ability, controller) }
+
   let(:press1) { create(:press) }
   let(:press2) { create(:press) }
 
   describe 'terms' do
-    subject { described_class.terms }
+    subject { form.terms }
 
     it {
-      is_expected.to eq %i[title
-                           description
-                           creator
+      is_expected.to eq %i[creator
                            contributor
-                           creator_display
+                           description
+                           keyword
+                           license
+                           rights_statement
                            publisher
                            date_created
                            subject
                            language
+                           identifier
+                           based_near
+                           related_url
                            representative_id
                            thumbnail_id
                            files
@@ -34,65 +40,37 @@ describe Hyrax::MonographForm do
                            visibility_after_lease
                            visibility
                            ordered_member_ids
+                           source
                            in_works_ids
                            member_of_collection_ids
                            admin_set_id
-                           press
-                           series
-                           buy_url
-                           isbn
-                           doi
-                           hdl
-                           identifier
-                           copyright_holder
-                           holding_contact
-                           location
-                           section_titles]
+                           press]
     }
   end
 
   describe "#primary_terms" do
     subject { form.primary_terms }
 
-    it {
-      is_expected.to eq %i[title
-                           press
-                           creator
-                           publisher
-                           date_created
-                           location]
-    }
+    it { is_expected.to eq [:press] }
+    it { is_expected.not_to include(:title) }
   end
 
   describe "#secondary_terms" do
     subject { form.secondary_terms }
 
-    it {
-      is_expected.to eq %i[description
-                           contributor
-                           creator_display
-                           subject
-                           language
-                           series
-                           buy_url
-                           isbn
-                           doi
-                           hdl
-                           identifier
-                           copyright_holder
-                           holding_contact
-                           section_titles]
-    }
+    it { is_expected.not_to include(:title) } # title is per file, not per form
   end
 
   describe 'required_fields' do
-    subject { described_class.required_fields }
+    subject { form.required_fields }
 
-    it { is_expected.to eq %i[title press creator publisher date_created location] }
+    it { is_expected.to eq %i[press] }
   end
 
   describe 'select_press' do
     subject { form.select_press }
+
+    let(:monograph) { Monograph.new }
 
     before do
       create(:role, resource: press1, user: user, role: 'admin')
@@ -108,6 +86,7 @@ describe Hyrax::MonographForm do
   describe 'select_files' do
     subject { form.select_files }
 
+    let(:monograph) { Monograph.new }
     let(:file_set) { create(:file_set) }
 
     before do

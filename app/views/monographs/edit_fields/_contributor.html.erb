@@ -1,0 +1,5 @@
+<%= f.input :contributor,
+            as: :text,
+            input_html: { rows: '5' },
+            label: t('contributor'),
+            required: f.object.required?(:contributor) %>

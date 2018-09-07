@@ -33,7 +33,7 @@ describe 'Create a monograph' do
       # Authorship Metadata
       # # 'Authors' is ambiguous
       fill_in 'monograph[creator]', with: "Johns, Jimmy\nWay, Sub (editor)"
-      fill_in 'Additional Authors', with: 'Shoppe, Sandwich (another unused role)'
+      fill_in 'Contributor(s)', with: 'Shoppe, Sandwich (another unused role)'
 
       # Citation Metadata
       # publisher

@@ -1,0 +1,5 @@
+<%= f.input :creator_display,
+            as: :text,
+            input_html: { class: 'form-control' },
+            label: t('creator_display'),
+            required: f.object.required?(:creator_display) %>
