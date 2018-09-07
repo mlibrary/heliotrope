@@ -20,11 +20,8 @@ end
 module Riiif
   def Image.cache_key(id, options)
     str = options.to_h.merge(id: id).delete_if { |_, v| v.nil? }.to_s
-    # Use a MD5 digest to ensure the keys aren't too long.
-    # Added "digest_ssim" to "expire" image tiles if a file_set is updated with a new image as...
-    # Other fields (like "timestamp") change with any metadata edit, not just a file reversioning.
-    # An alternative could be to pull the timestamp from the Hydra Derivatives thumbnail itself
-    'riiif:' + Digest::MD5.hexdigest(str) + ActiveFedora::SolrService.query("{!terms f=id}#{id}", rows: 1).first["digest_ssim"]&.first&.split(':')&.last
+    # Add a timestamp to "expire" image tiles if a file_set is updated with a new image
+    'riiif:' + Digest::MD5.hexdigest(str) + ActiveFedora::SolrService.query("{!terms f=id}#{id}", rows: 1).first["timestamp"]
   end
 end
 
