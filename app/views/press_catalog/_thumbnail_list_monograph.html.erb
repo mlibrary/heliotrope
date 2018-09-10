@@ -2,7 +2,7 @@
 <div class="col-sm-3">
   <% presenter = Hyrax::MonographPresenter.new(document, current_ability) %>
   <a href="<%= polymorphic_path(url_for_document(document)) %>" >
-    <img class="img-responsive" src="/image-service/<%=document.representative_id%>/full/225,/0/default.jpg"
+    <img class="img-responsive" src="/image-service/<%=document.representative_id%>/full/225,/0/default.jpg<%= presenter.representative_presenter&.image_cache_breaker %>"
          alt="Cover image for <%= presenter.representative_alt_text %>">
   </a>
 </div>

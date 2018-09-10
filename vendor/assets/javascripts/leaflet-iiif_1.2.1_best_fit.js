@@ -4,6 +4,7 @@
  * by Jack Reed, @mejackreed
  * respinos's best-fit with fractional zoom patch. Yay!
  * https://raw.githubusercontent.com/mlibrary/Leaflet-IIIF/6b33090c1b31e926a2cc555dbad2f5a935cfc2cc/leaflet-iiif.js
+ * heliotrope note: there are 3 additional cache-breaking changes over the linked respinos version
  */
 
 L.TileLayer.Iiif = L.TileLayer.extend({
@@ -50,6 +51,9 @@ L.TileLayer.Iiif = L.TileLayer.extend({
         options = L.setOptions(this, options);
         this._infoDeferred = new $.Deferred();
         this._infoUrl = url;
+        // heliotrope: we'll be adding this to tile requests. 9 == length of 'info.json'.
+        cacheBreakerIndex = url.lastIndexOf('info.json?');
+        this._cacheBreaker = cacheBreakerIndex == -1 ? '' : url.substr(cacheBreakerIndex + 9);
         this._baseUrl = this._templateUrl();
         this._getInfo();
     },
@@ -67,8 +71,8 @@ L.TileLayer.Iiif = L.TileLayer.extend({
 
         var xDiff = (maxx - minx);
         var yDiff = (maxy - miny);
-
-        return L.Util.template(this._baseUrl, L.extend({
+        // heliotope: add additional cache-breaking URL parameter
+        return L.Util.template(this._baseUrl + this._cacheBreaker, L.extend({
             format: _this.options.tileFormat,
             quality: _this.quality,
             region: [minx, miny, xDiff, yDiff].join(','),
@@ -267,7 +271,8 @@ L.TileLayer.Iiif = L.TileLayer.extend({
     },
 
     _infoToBaseUrl: function() {
-        return this._id ? (this._id + '/') : this._infoUrl.replace('info.json', '');
+        // heliotope: remove additional cache-breaking URL parameter
+        return this._infoUrl.substring(0, this._infoUrl.indexOf('info.json'));
     },
     _templateUrl: function() {
         return this._infoToBaseUrl() + '{region}/{size}/{rotation}/{quality}.{format}';
