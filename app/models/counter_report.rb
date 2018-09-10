@@ -17,4 +17,24 @@ class CounterReport < ApplicationRecord
 
   # Every record should have a corresponding press id
   validates :press, presence: true
+
+  scope :unique, -> { select(:session, :noid).distinct }
+  scope :unique_by_title, -> { select(:session, :parent_noid).distinct }
+  scope :investigations, -> { where(investigation: 1) }
+  scope :requests, -> { where(request: 1) }
+  scope :controlled, -> { where(access_type: 'Controlled') }
+
+  scope :press, ->(press) { where(press: press) if press.present? }
+
+  def self.institution(institution_id)
+    where(institution: institution_id)
+  end
+
+  def self.start_date(start_date)
+    where("created_at > ?", start_date)
+  end
+
+  def self.end_date(end_date)
+    where("created_at < ?", end_date)
+  end
 end
