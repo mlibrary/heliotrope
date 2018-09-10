@@ -5,16 +5,15 @@
 # For Heliotrope we're inheriting from MonographsController and adjusting authorize_press
 
 module Hyrax
-  class BatchUploadsController < MonographsController
-    # include Hydra::Controller::ControllerBehavior
-    # include Hyrax::WorksControllerBehavior
-    self.curation_concern_type = ::Monograph
+  class BatchUploadsController < ApplicationController
+    include Hydra::Controller::ControllerBehavior
+    include Hyrax::WorksControllerBehavior
 
     before_action :authorize_press, only: [:create]
 
     # Gives the class of the form.
     class BatchUploadFormService < Hyrax::WorkFormService
-      def self.form_class(_nil = nil)
+      def self.form_class(_unused = nil)
         ::Hyrax::Forms::BatchUploadForm
       end
     end
@@ -100,8 +99,7 @@ module Hyrax
       end
 
       def authorize_press
-        curation_concern.press = params[:batch_upload_item][:press]
-        authorize!(:create, curation_concern)
+        authorize!(:create, Monograph.new(press: params[:batch_upload_item][:press]))
       end
   end
 end

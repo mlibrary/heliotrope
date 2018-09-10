@@ -305,9 +305,6 @@ footer.press {
   a, a:hover, a:active, a:visited, a:focus {
     text-decoration:none;
   }
-  .control-label.required {
-    color: #d33a35; // match 'incomplete' color, i.e. Hyrax $brand-danger Bootstrap override
-  }
 }
 
 ///////////////////////////////////

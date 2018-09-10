@@ -38,15 +38,12 @@ en:
             logo_path:
               blank: "You must upload a logo image"
               taken: "This logo image is already taken"
-  additional_authors: "Additional Authors"
   allow_display_after_expiration: "Allow Display After Expiration?"
   allow_download: "Allow Download?"
   allow_download_after_expiration: "Allow Download After Expiration?"
   allow_hi_res: "Allow Hi-Res?"
   alt_text: "Alternative Text"
   author: "Author"
-  author_first_name: "Author (first name)"
-  author_last_name: "Author (last name)"
   blacklight:
     search:
       fields:
@@ -58,7 +55,7 @@ en:
   caption: "Caption"
   citable_link: "Citable Link"
   content_type: "Content Type"
-  contributor: "Contributors"
+  contributor: "Contributor(s)"
   copyright_holder: "Copyright Holder"
   copyright_status: "Copyright Status"
   creator: "Creator(s)"
@@ -102,6 +99,9 @@ en:
   hdl: "Handle"
   holding_contact: "Holding Contact"
   hyrax:
+    batch_uploads:
+      files:
+        instructions: Each file will be uploaded to a separate new monograph resulting in one monograph per uploaded file.
     base:
       items:
         component: "Component"
@@ -232,36 +232,12 @@ en:
         transcript: :"transcript"
         translation: :"translation"
       monograph:
-        creator: "Authors"
-        authorship_metadata:
-          help_html: "You must add at least one author for citations"
-          legend_html: "* Authorship Metadata"
-        basic_metadata:
-          help_html: "General metadata for this title"
-          legend_html: "* Basic Metadata"
-        citable_links_metadata:
-          help_html: "Citable links and identifiers for this title"
-          legend_html: "Citable Links"
+        creator: "Creator(s)"
         citation_publisher: "Citation Publisher"
-        citation_metadata:
-          help_html: "Along with creator, these fields are required for auto-generated citations"
-          legend_html: "* Citation Metadata"
         date_created: "Publication Year" # used on :date_created for Monographs
         description: "Description"
-        hyrax_representatives:
-          legend_html: "Hyrax Representatives"
-          media:
-            help_html: "Select the file with media that represents this work (not currently used by Fulcrum)."
-            legend_html: "Media Representative"
-          thumbnail:
-            help_html: "Select the file to be used as the thumbnail for this work."
-            legend_html: "Thumbnail Representative"
-        isbn_metadata:
-          help_html: "ISBNs for this title"
-          legend_html: "ISBNs"
         language: "Language"
         location: "Publication Location"
-        required_message: "Field groups marked with * contain required metadata fields (colored red)."
         series: "Series"
         subject: "Subject"
         title: "Title"
@@ -270,7 +246,7 @@ en:
         transcript: "Transcripts must be formatted as WebVTT captions. <a href='https://developer.mozilla.org/en-US/docs/Web/API/WebVTT_API' target='_blank'>Get help with WebVTT formatting.</a>"
       monograph:
         citation_publisher: "The publisher name used in auto-generated citations."
-        creator: "Enter one citation author per line in the format \"Lastname, Firstname (optional role)\". Omit the comma for institutions etc."
+        creator: "Enter one citation name per line in the format \"Lastname, Firstname (optional role)\". Omit the comma for institutions etc."
         creator_display: "An optional free-text field allowing custom authorship display."
         date_created: "The 4-digit publication year used in auto-generated citations."
         description: "A free-text description of the work (markdown allowed)."

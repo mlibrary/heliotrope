@@ -6,10 +6,12 @@
 
 module Hyrax
   module Forms
-    class BatchUploadForm < Hyrax::MonographForm
+    class BatchUploadForm < Hyrax::Forms::WorkForm
       self.model_class = BatchUploadItem
       include HydraEditor::Form::Permissions
 
+      self.terms += %i[press]
+      self.required_fields = %i[press]
       self.terms -= %i[title resource_type]
 
       attr_accessor :payload_concern # a Class name: what is form creating a batch of?
@@ -69,6 +71,12 @@ module Hyrax
           @singular_route_key = ActiveSupport::Inflector.singularize(@route_key)
           @route_key << "_index" if @plural == @singular
         end
+      end
+
+      # The possible values for the press selector drop-down.
+      # @return [Hash] The press that this monograph belongs to.
+      def select_press
+        Hash[current_ability.current_user.admin_presses.map { |press| [press.name, press.subdomain] }]
       end
     end
   end
