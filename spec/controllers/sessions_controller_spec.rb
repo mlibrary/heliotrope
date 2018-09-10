@@ -45,6 +45,8 @@ RSpec.describe SessionsController, type: :controller do
 
   describe '#discovery_feed' do
     it 'gets full discovery feed' do
+      Institution.create!(identifier: '1', name: 'University of Michigan', site: 'Site', login: 'Login', entity_id: 'https://shibboleth.umich.edu/idp/shibboleth')
+      Institution.create!(identifier: '2', name: 'College', site: 'Site', login: 'Login', entity_id: 'https://shibboleth.college.edu/idp/shibboleth')
       get :discovery_feed
       expect(response).to be_success
       expect { JSON.parse response.body }.not_to raise_error
@@ -57,13 +59,13 @@ RSpec.describe SessionsController, type: :controller do
 
     it 'gets parameterized discovery feed' do
       component = Component.create!(handle: HandleService.path(file_set.id))
-      institution = Institution.create!(identifier: 'UM', name: 'Name', site: 'Site',
-                                        login: 'Login', entity_id: 'https://shibboleth.umich.edu/idp/shibboleth')
+      institution = Institution.create!(identifier: '1', name: 'University of Michigan', site: 'Site', login: 'Login', entity_id: 'https://shibboleth.umich.edu/idp/shibboleth')
+      Institution.create!(identifier: '2', name: 'College', site: 'Site', login: 'Login', entity_id: 'https://shibboleth.college.edu/idp/shibboleth')
       product = Product.create!(identifier: 'product', name: 'name', purchase: 'purchase')
       product.components << component
       grouping = Grouping.create!(identifier: 'grouping')
       product.lessees << grouping.lessee
-      lessee = Lessee.find_by(identifier: 'UM')
+      lessee = Lessee.find_by(identifier: '1')
       grouping.lessees << lessee
       institution.save!
       lessee.save!
@@ -76,6 +78,8 @@ RSpec.describe SessionsController, type: :controller do
       expect(JSON.parse(response.body)[0]['entityID']).to eq('https://shibboleth.umich.edu/idp/shibboleth')
     end
     it 'gets empty discovery feed if given bogus id' do
+      Institution.create!(identifier: '1', name: 'University of Michigan', site: 'Site', login: 'Login', entity_id: 'https://shibboleth.umich.edu/idp/shibboleth')
+      Institution.create!(identifier: '2', name: 'College', site: 'Site', login: 'Login', entity_id: 'https://shibboleth.college.edu/idp/shibboleth')
       get :discovery_feed, params: { id: 'bogus_id' }
       expect(response).to have_http_status(:success)
       expect { JSON.parse response.body }.not_to raise_error
