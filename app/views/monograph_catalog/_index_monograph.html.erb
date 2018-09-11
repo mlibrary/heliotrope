@@ -96,6 +96,9 @@
       <% if @monograph_presenter.aboutware? %>
         <li role="presentation"><a id="tab-aboutware" href="#aboutware" role="tab" data-toggle="tab" aria-controls="aboutware" aria-selected="false" tabindex="-1">About</a></li>
       <% end %>
+      <% if @monograph_presenter.peer_review? %>
+        <li role="presentation"><a id="tab-peer-review" href="#peer_review" role="tab" data-toggle="tab" aria-controls="peer_review" aria-selected="false" tabindex="-1">Peer Reviews</a></li>
+      <% end %>
       <li role="presentation"><a id="tab-stats" href="#stats" role="tab" data-toggle="tab" aria-controls="stats" aria-selected="false" tabindex="-1">Stats</a></li>
     </ul>
     <div id="tabs-content" class="tab-content monograph-assets-toc-epub-content" aria-live="polite">
@@ -164,6 +167,14 @@
             <h2 class="sr-only">Related Titles</h2>
             <%# this assumes that the "related" FileSet is an html doc %>
             <%= @monograph_presenter.related.file.content.force_encoding("UTF-8").html_safe %>
+          </div>
+        </section>
+      <% end %>
+      <% if @monograph_presenter.peer_review? %>
+        <section id="peer_review" class="tab-pane fade in peer_review row" role="tabpanel" aria-hidden="true" aria-labelledby="tab-peer-review" tabindex="0">
+          <div class="col-sm-12">
+            <%# this assumes that the "peer_review" FileSet is an html doc %>
+            <%= @monograph_presenter.peer_review.file.content.force_encoding("UTF-8").html_safe %>
           </div>
         </section>
       <% end %>

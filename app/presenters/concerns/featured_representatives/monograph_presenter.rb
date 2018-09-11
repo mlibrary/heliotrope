@@ -108,5 +108,18 @@ module FeaturedRepresentatives
     def mobi_id
       featured_representatives.map { |fr| fr.file_set_id if fr.kind == 'mobi' }.compact.first
     end
+
+    def peer_review?
+      featured_representatives.map(&:kind).include? 'peer_review'
+    end
+
+    def peer_review
+      solr_doc = ordered_member_docs.find { |doc| doc.id == peer_review_id }
+      Hyrax::FileSetPresenter.new(solr_doc, current_ability, request) if solr_doc.present?
+    end
+
+    def peer_review_id
+      featured_representatives.map { |fr| fr.file_set_id if fr.kind == 'peer_review' }.compact.first
+    end
   end
 end
