@@ -21,7 +21,8 @@ class TestMonographPresenter
       SolrDocument.new(id: 'dbid'),
       SolrDocument.new(id: 'aboutid'),
       SolrDocument.new(id: 'reviewsid'),
-      SolrDocument.new(id: 'relatedid')
+      SolrDocument.new(id: 'relatedid'),
+      SolrDocument.new(id: 'peerreviewid')
     ]
   end
 
@@ -47,7 +48,8 @@ RSpec.describe FeaturedRepresentatives::MonographPresenter do
             { monograph_id: 'mid', file_set_id: 'dbid', kind: 'database' },
             { monograph_id: 'mid', file_set_id: 'aboutid', kind: 'aboutware' },
             { monograph_id: 'mid', file_set_id: 'reviewsid', kind: 'reviews' },
-            { monograph_id: 'mid', file_set_id: 'relatedid', kind: 'related' }
+            { monograph_id: 'mid', file_set_id: 'relatedid', kind: 'related' },
+            { monograph_id: 'mid', file_set_id: 'peerreviewid', kind: 'peer_review' }
           ]
         )
       end
@@ -55,7 +57,7 @@ RSpec.describe FeaturedRepresentatives::MonographPresenter do
       after { FeaturedRepresentative.destroy_all }
 
       it "returns FeaturedRepresentatives" do
-        expect(subject.featured_representatives.count).to be 6
+        expect(subject.featured_representatives.count).to be 7
       end
     end
 
@@ -223,6 +225,33 @@ RSpec.describe FeaturedRepresentatives::MonographPresenter do
         end
       end
     end
+
+    context "peer_review methods" do
+      subject { TestMonographPresenter.new(SolrDocument.new(id: 'mid')) }
+
+      before { FeaturedRepresentative.create(monograph_id: 'mid', file_set_id: 'peerreviewid', kind: 'peer_review') }
+
+      after { FeaturedRepresentative.destroy_all }
+
+      describe "#peer_review?" do
+        it "has peer_review" do
+          expect(subject.peer_review?).to be true
+        end
+      end
+
+      describe "#peer_review_id" do
+        it "has a peer_review_id" do
+          expect(subject.peer_review_id).to eq 'peerreviewid'
+        end
+      end
+
+      describe "#peer_review" do
+        # This returns a FileSetPresenter, not a solr doc. TODO: inconsistency is bad. Consistently inconsistent OK tho?
+        it "returns a FileSetPresenter" do
+          expect(subject.peer_review).to be_an_instance_of(Hyrax::FileSetPresenter)
+        end
+      end
+    end
   end
 
   context "with no featured representatives" do
@@ -302,6 +331,18 @@ RSpec.describe FeaturedRepresentatives::MonographPresenter do
 
     describe '#related_id' do
       it { expect(subject.related_id).to be nil }
+    end
+
+    describe '#peer_review?' do
+      it { expect(subject.peer_review?).to be false }
+    end
+
+    describe '#peer_review' do
+      it { expect(subject.peer_review).to be nil }
+    end
+
+    describe '#peer_review_id' do
+      it { expect(subject.peer_review_id).to be nil }
     end
   end
 end
