@@ -14,4 +14,7 @@ class CounterReport < ApplicationRecord
   # from solr so we don't need to collect it in this table)
   # COUNTER v5 section 3.3.2
   validates :section_type, inclusion: { in: [nil, "", "Article", "Book", "Chapter", "Other", "Section"] }
+
+  # Every record should have a corresponding press id
+  validates :press, presence: true
 end

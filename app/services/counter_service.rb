@@ -30,7 +30,8 @@ class CounterService
       cr = CounterReport.new(session: session,
                              institution: institution.identifier,
                              noid: @presenter.id,
-                             model: @presenter.has_model)
+                             model: @presenter.has_model,
+                             press: Press.where(subdomain: @presenter.monograph.subdomain).first.id)
       # An "investigation" means to "view" (more or less)
       # A "request" means to "download" (mostly)
       # But when you log a "request", you also need to log an "investigation"
