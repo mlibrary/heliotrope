@@ -9,15 +9,14 @@ RSpec.describe 'Batch creation of monographs', type: :system do
 
   before do
     stub_out_redis
-    # Batch create sends the audit user a message. If this user is not found there will be an error stating:
-    # `ActiveModel::UnknownAttributeError: unknown attribute 'password' for User.`
-    allow(Hyrax.config).to receive(:audit_user_key).and_return(user.email)
     cosign_login_as user
     visit hyrax.new_batch_upload_path payload_concern: 'Monograph'
   end
 
   it "allows monograph creation by batch" do
     expect(Monograph.count).to eq(0)
+    # no audit_user created yet (see below)
+    expect(User.count).to eq(1)
 
     expect(page).to have_content "Add New Monographs by Batch"
     within("li.active") do
@@ -47,6 +46,11 @@ RSpec.describe 'Batch creation of monographs', type: :system do
     click_on('Save')
 
     expect(Monograph.count).to eq(2)
+    # Batch create sends the audit_user a message
+    # A User with email (key) of `Hyrax.config.audit_user_key` was created as required by Hyrax::AbstractMessageService
+    # see https://tools.lib.umich.edu/jira/browse/HELIO-2065
+    expect(User.count).to eq(2)
+    expect(User.last.user_key).to eq(Hyrax.config.audit_user_key)
 
     # should be on the dashboard "Works" page post-save, but to be sure...
     click_link 'Works'

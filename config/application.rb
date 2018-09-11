@@ -76,6 +76,9 @@ module Heliotrope
       Hyrax::FileSetsController.prepend FileSetsControllerBehavior
       # DownloadsControllerBehavior is in the services directory
       Hyrax::DownloadsController.prepend DownloadsControllerBehavior
+      # HeliotropeHyraxUserBehavior is in the models/concerns directory
+      # see https://tools.lib.umich.edu/jira/browse/HELIO-2065
+      Hyrax::User::ClassMethods.prepend HeliotropeHyraxUserBehavior
     end
   end
 end
