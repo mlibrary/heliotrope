@@ -12,5 +12,7 @@ FactoryBot.define do
     request { "" }
     turnaway { "" }
     access_type { "" }
+    press { 1 }
+    parent_noid { "ValidNoid" }
   end
 end

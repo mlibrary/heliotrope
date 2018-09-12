@@ -137,6 +137,7 @@ RSpec.describe CounterService do
     let(:now) { double("now") }
     let(:press) { create(:press) }
     let(:monograph) { double("monograph", subdomain: press.subdomain) }
+    let(:monograph_id) { 'mono12345' }
 
     before do
       allow(controller).to receive(:request).and_return(request)
@@ -167,6 +168,7 @@ RSpec.describe CounterService do
         allow(presenter).to receive(:id).and_return('123454321')
         allow(presenter).to receive(:has_model).and_return("FileSet")
         allow(presenter).to receive(:monograph).and_return(monograph)
+        allow(presenter).to receive(:monograph_id).and_return(monograph_id)
       end
 
       it "adds a COUNTER stat row" do
@@ -177,6 +179,7 @@ RSpec.describe CounterService do
         expect(cr.noid).to eq "123454321"
         expect(cr.model).to eq "FileSet"
         expect(cr.press).to eq press.id
+        expect(cr.parent_noid).to eq presenter.monograph_id
         expect(cr.session).to eq "99.99.99.99|Mozilla/5.0|2020-10-17|13"
         expect(cr.institution).to eq 495
         expect(cr.investigation).to eq 1
@@ -195,6 +198,7 @@ RSpec.describe CounterService do
         allow(presenter).to receive(:id).and_return('123454321')
         allow(presenter).to receive(:has_model).and_return("FileSet")
         allow(presenter).to receive(:monograph).and_return(monograph)
+        allow(presenter).to receive(:monograph_id).and_return(monograph_id)
       end
 
       it "creates 2 counter report rows" do
@@ -204,6 +208,8 @@ RSpec.describe CounterService do
         expect(CounterReport.first.institution).to eq 12
         expect(CounterReport.second.institution).to eq 65
         expect(CounterReport.first.press).to eq press.id
+        expect(CounterReport.first.parent_noid).to eq presenter.monograph_id
+        expect(CounterReport.second.parent_noid).to eq presenter.monograph_id
       end
     end
   end
