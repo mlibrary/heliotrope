@@ -66,6 +66,11 @@ Hyrax.config do |config|
   # For now turn off user notifications. When we decide about how to do things like
   # workflows we can turn them back on.
   config.realtime_notifications = false
+
+  # we're setting these with a method overwrite in models/concerns/heliotrope_hyrax_user_behavior.rb
+  # https://tools.lib.umich.edu/jira/browse/HELIO-2065
+  config.audit_user_key = 'fulcrum-system'
+  config.batch_user_key = 'fulcrum-system'
 end
 
 Date::DATE_FORMATS[:standard] = '%m/%d/%Y'
