@@ -1,6 +1,6 @@
 <div class="row">
   <% products.each do |product| %>
-    <div class="col-md-1"></div>
+    <div class="col-md-1"><%= link_to product.id, product %></div>
     <div class="col-md-5"><%= product.identifier %></div>
     <div class="col-md-6">
       <%= link_to(component_product_path(component, product), method: :delete, class: "btn btn-default") do %>

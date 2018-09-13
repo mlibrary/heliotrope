@@ -56,7 +56,7 @@ class SessionsController < ApplicationController
 
   def discovery_feed
     render json: if params[:id].present?
-                   filtered_discovery_feed(params[:id])
+                   component_discovery_feed(params[:id])
                  else
                    unfiltered_discovery_feed
                  end
@@ -64,33 +64,82 @@ class SessionsController < ApplicationController
 
   private
 
-    def filtered_discovery_feed(component_id = '')
-      Rails.cache.fetch("disco_feed:" + component_id, expires_in: 24.hours) do
-        obj_filtered_disco_feed = []
+    def component_discovery_feed(component_id = '')
+      Rails.cache.fetch("component_discovery_feed:" + component_id, expires_in: 15.minutes) do
+        component_discovery_feed = []
         component = Component.find_by(handle: HandleService.path(component_id))
         if component.present?
           lessees = component.lessees(true)
           if lessees.present?
-            institutions = Institution.where(identifier: lessees.pluck(:identifier))
-            institutions = Set.new(institutions.map(&:entity_id))
+            institutions = Set.new(Institution.where(identifier: lessees.pluck(:identifier)).map(&:entity_id))
             if institutions.present?
-              obj_disco_feed = unfiltered_discovery_feed
-              obj_disco_feed.each do |entry|
-                obj_filtered_disco_feed << entry if entry["entityID"].in?(institutions) # rubocop:disable Metrics/BlockNesting
+              filtered_discovery_feed.each do |entry|
+                component_discovery_feed << entry if entry["entityID"].in?(institutions) # rubocop:disable Metrics/BlockNesting
               end
             end
           end
         end
-        obj_filtered_disco_feed
+        component_discovery_feed
+      end
+    end
+
+    def filtered_discovery_feed
+      Rails.cache.fetch("filtered_discovery_feed", expires_in: 12.hours) do
+        filtered_discovery_feed = []
+        institutions = Set.new(Institution.where("entity_id <> ''").map(&:entity_id))
+        if institutions.present?
+          unfiltered_discovery_feed.each do |entry|
+            filtered_discovery_feed << entry if entry["entityID"].in?(institutions)
+          end
+        end
+        filtered_discovery_feed
       end
     end
 
     def unfiltered_discovery_feed
-      Rails.cache.fetch("disco_feed", expires_in: 24.hours) do
+      Rails.cache.fetch("unfiltered_discovery_feed", expires_in: 24.hours) do
         json = if Rails.env.production?
                  Faraday.get(root_url(script_name: "/Shibboleth.sso/DiscoFeed").gsub!(/\/?\?locale=.*/, '')).body
                else
-                 File.read(Rails.root.join('config', 'discovery_feed.json'))
+                 fake_discovery_feed = []
+                 Institution.where("entity_id <> ''").each do |institution|
+                   fake_discovery_feed << {
+                     "entityID" => institution.entity_id,
+                     "DisplayNames" => [
+                       {
+                         "value" => institution.name,
+                         "lang" => "en"
+                       }
+                     ],
+                     "Descriptions" => [
+                       {
+                         "value" => institution.name,
+                         "lang" => "en"
+                       }
+                     ],
+                     "InformationURLs" => [
+                       {
+                         "value" => "http://www.umich.edu/",
+                         "lang" => "en"
+                       }
+                     ],
+                     "PrivacyStatementURLs" => [
+                       {
+                         "value" => "http://documentation.its.umich.edu/node/262/",
+                         "lang" => "en"
+                       }
+                     ],
+                     "Logos" => [
+                       {
+                         "value" => "https://shibboleth.umich.edu/images/StackedBlockM-InC.png",
+                         "height" => "150",
+                         "width" => "300",
+                         "lang" => "en"
+                       }
+                     ]
+                   }
+                 end
+                 fake_discovery_feed.to_json
                end
         JSON.parse(json)
       end
