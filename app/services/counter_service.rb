@@ -32,6 +32,8 @@ class CounterService
                              noid: @presenter.id,
                              model: @presenter.has_model,
                              press: Press.where(subdomain: @presenter.monograph.subdomain).first.id)
+
+      cr.parent_noid = @presenter.monograph_id if @presenter.monograph_id.present?
       # An "investigation" means to "view" (more or less)
       # A "request" means to "download" (mostly)
       # But when you log a "request", you also need to log an "investigation"
