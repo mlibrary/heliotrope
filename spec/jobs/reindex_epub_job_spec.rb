@@ -4,7 +4,7 @@ require 'rails_helper'
 
 RSpec.describe ReindexEpubJob, type: :job do
   describe "perform" do
-    let(:epub) { create(:file_set, content: File.open(File.join(fixture_path, 'moby-dick.epub'))) }
+    let(:epub) { create(:file_set, content: File.open(File.join(fixture_path, 'fake_epub01.epub'))) }
     let(:db_file) { File.join(UnpackService.root_path_from_noid(epub.id, 'epub'), epub.id + '.db') }
 
     before do

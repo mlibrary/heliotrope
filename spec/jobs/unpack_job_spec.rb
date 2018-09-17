@@ -5,7 +5,7 @@ require 'rails_helper'
 RSpec.describe UnpackJob, type: :job do
   describe "perform" do
     context "with an epub" do
-      let(:epub) { create(:file_set, content: File.open(File.join(fixture_path, 'moby-dick.epub'))) }
+      let(:epub) { create(:file_set, content: File.open(File.join(fixture_path, 'fake_epub01.epub'))) }
       let(:root_path) { UnpackService.root_path_from_noid(epub.id, 'epub') }
 
       it "unzips the epub and creates the database" do
@@ -25,7 +25,7 @@ RSpec.describe UnpackJob, type: :job do
     end
 
     context "with an epub and pre-existing webgl" do
-      let(:epub) { create(:file_set, content: File.open(File.join(fixture_path, 'moby-dick.epub'))) }
+      let(:epub) { create(:file_set, content: File.open(File.join(fixture_path, 'fake_epub01.epub'))) }
       let!(:fre) { create(:featured_representative, monograph_id: 'mono_id', file_set_id: epub.id, kind: 'epub') }
       let!(:frw) { create(:featured_representative, monograph_id: 'mono_id', file_set_id: '123456789', kind: 'webgl') }
       let(:root_path) { UnpackService.root_path_from_noid(epub.id, 'epub') }
@@ -39,7 +39,7 @@ RSpec.describe UnpackJob, type: :job do
     end
 
     context "with a pre-existing epub" do
-      let(:epub) { create(:file_set, content: File.open(File.join(fixture_path, 'moby-dick.epub'))) }
+      let(:epub) { create(:file_set, content: File.open(File.join(fixture_path, 'fake_epub01.epub'))) }
 
       before do
         # we need the epub already unpacked in order to store the epub-webgl map file
