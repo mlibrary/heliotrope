@@ -44,6 +44,7 @@ describe Hyrax::MonographForm do
                            doi
                            hdl
                            identifier
+                           license
                            copyright_holder
                            holding_contact
                            location
@@ -79,6 +80,7 @@ describe Hyrax::MonographForm do
                            doi
                            hdl
                            identifier
+                           license
                            copyright_holder
                            holding_contact
                            section_titles]

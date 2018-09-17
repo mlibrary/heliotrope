@@ -6,7 +6,7 @@ module Hyrax
   class MonographForm < Hyrax::Forms::WorkForm
     self.model_class = ::Monograph
     # Hyrax::BasicMetadata fields are already included
-    self.terms -= %i[keyword related_url source based_near rights_statement license]
+    self.terms -= %i[keyword related_url source based_near rights_statement]
     # these will hold their order, bearing in mind that required_fields are automatically removed first
     self.terms += %i[press creator_display series buy_url isbn doi hdl copyright_holder
                      holding_contact location section_titles]
@@ -21,6 +21,8 @@ module Hyrax
     self.terms = self.terms.insert(self.terms.index(:contributor) + 1, :creator_display)
     self.terms.delete_at(self.terms.index(:identifier))
     self.terms = self.terms.insert(self.terms.index(:hdl) + 1, :identifier)
+    self.terms.delete_at(self.terms.index(:license))
+    self.terms = self.terms.insert(self.terms.index(:copyright_holder), :license)
 
     delegate :current_user, to: :current_ability
 
