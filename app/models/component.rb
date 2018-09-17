@@ -25,14 +25,8 @@ class Component < ApplicationRecord
     Product.where.not(id: products.map(&:id))
   end
 
-  def lessees(recursive = false)
+  def lessees
     return [] if products.blank?
-    records = Lessee.where(id: LesseesProduct.where(product_id: products.map(&:id)).map(&:lessee_id)).distinct
-    return records unless recursive
-    rvalue = []
-    records.each { |r| rvalue << r }
-    grouping_lessees = rvalue.select(&:grouping?)
-    grouping_lessees.each { |l| rvalue << l.grouping.lessees }
-    rvalue.flatten
+    Lessee.where(id: LesseesProduct.where(product_id: products.map(&:id)).map(&:lessee_id)).distinct
   end
 end

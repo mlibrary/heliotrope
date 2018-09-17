@@ -51,20 +51,4 @@ RSpec.describe Component, type: :model do
     expect(subject.update?).to be true
     expect(subject.destroy?).to be true
   end
-
-  it 'lessees recursive' do
-    n = 3
-    product = create(:product)
-    n.times { |i| product.lessees << create(:lessee, identifier: "product_lessee#{i}") }
-    grouping = create(:grouping, identifier: 'grouping')
-    n.times { |i| grouping.lessees << create(:lessee, identifier: "grouping_lessee#{i}") }
-    product.lessees << grouping.lessee
-    product.save!
-    subject.products << product
-    subject.save!
-    expected_lessees = []
-    product.lessees.each { |l| expected_lessees << l }
-    grouping.lessees.each { |l| expected_lessees << l }
-    expect(subject.lessees(true)).to eq(expected_lessees)
-  end
 end

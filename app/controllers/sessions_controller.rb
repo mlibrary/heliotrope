@@ -69,7 +69,7 @@ class SessionsController < ApplicationController
         component_discovery_feed = []
         component = Component.find_by(handle: HandleService.path(component_id))
         if component.present?
-          lessees = component.lessees(true)
+          lessees = component.lessees
           if lessees.present?
             institutions = Set.new(Institution.where(identifier: lessees.pluck(:identifier)).map(&:entity_id))
             if institutions.present?

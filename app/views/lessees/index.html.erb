@@ -7,9 +7,6 @@
         <% if lessee.institution? %>
           <div class="col-md-1"><span class="glyphicon glyphicon-registration-mark" aria-hidden="true"></span></div>
           <div class="col-md-5"><%= lessee.institution.name %></div>
-        <% elsif lessee.grouping? %>
-          <div class="col-md-1"><span class="glyphicon glyphicon-duplicate" aria-hidden="true"></span></div>
-          <div class="col-md-5"><%= lessee.grouping.identifier %></div>
         <% else %>
           <div class="col-md-1"></div>
           <div class="col-md-5"><%= lessee.identifier %></div>

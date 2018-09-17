@@ -59,17 +59,11 @@ RSpec.describe SessionsController, type: :controller do
 
     it 'gets parameterized discovery feed' do
       component = Component.create!(handle: HandleService.path(file_set.id))
-      institution = Institution.create!(identifier: '1', name: 'University of Michigan', site: 'Site', login: 'Login', entity_id: 'https://shibboleth.umich.edu/idp/shibboleth')
+      Institution.create!(identifier: '1', name: 'University of Michigan', site: 'Site', login: 'Login', entity_id: 'https://shibboleth.umich.edu/idp/shibboleth')
       Institution.create!(identifier: '2', name: 'College', site: 'Site', login: 'Login', entity_id: 'https://shibboleth.college.edu/idp/shibboleth')
       product = Product.create!(identifier: 'product', name: 'name', purchase: 'purchase')
       product.components << component
-      grouping = Grouping.create!(identifier: 'grouping')
-      product.lessees << grouping.lessee
-      lessee = Lessee.find_by(identifier: '1')
-      grouping.lessees << lessee
-      institution.save!
-      lessee.save!
-      grouping.save!
+      product.lessees << Lessee.find_by(identifier: '1')
       product.save!
       get :discovery_feed, params: { id: file_set.id }
       expect(response).to have_http_status(:success)

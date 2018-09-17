@@ -67,19 +67,6 @@ describe RepositoryPresenter do
     end
   end
 
-  describe '#grouping_ids' do
-    subject { described_class.new(current_user).grouping_ids }
-
-    let!(:grouping1) { create(:grouping, identifier: 'grouping1') }
-    let!(:grouping2) { create(:grouping, identifier: 'grouping2') }
-
-    it do
-      expect(subject).to be_a Array
-      expect(subject.length).to eq 2
-      expect(subject).to include(grouping1.id, grouping2.id)
-    end
-  end
-
   describe '#publisher_ids' do
     subject { described_class.new(current_user).publisher_ids }
 

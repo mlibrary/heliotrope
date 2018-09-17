@@ -35,10 +35,6 @@ class Institution < ApplicationRecord
       errors.add(:base, "institution has #{lessee.products.count} associated products!")
       throw(:abort)
     end
-    if lessee.groupings.present?
-      errors.add(:base, "institution is associated with #{lessee.groupings.count} groupings!")
-      throw(:abort)
-    end
   end
 
   after_destroy do
@@ -50,7 +46,7 @@ class Institution < ApplicationRecord
   end
 
   def destroy?
-    !(lessee? && (lessee.products.present? || lessee.groupings.present?))
+    !(lessee? && lessee.products.present?)
   end
 
   def lessee?

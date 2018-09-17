@@ -315,43 +315,6 @@ RSpec.describe EPubsController, type: :controller do
             end
           end
         end
-
-        context 'grouping' do
-          it "Open Access" do
-            session[:show_set] = []
-            get :show, params: { id: file_set.id }
-            expect(session[:show_set].include?(file_set.id)).to be true
-            expect(response).to have_http_status(:success)
-          end
-
-          context "Restricted Access" do
-            it "Anonymous User" do
-              Component.create!(handle: HandleService.path(file_set.id))
-
-              get :show, params: { id: file_set.id }
-              expect(session[:show_set].include?(file_set.id)).to be false
-              expect(response).to render_template(:access)
-            end
-
-            it "Subscribed Grouping" do
-              component = Component.create!(handle: HandleService.path(file_set.id))
-              institution = Institution.create!(identifier: dlpsInstitutionId, name: 'Name', site: 'Site', login: 'Login')
-              product = Product.create!(identifier: 'product', name: 'name', purchase: 'purchase')
-              product.components << component
-              grouping = Grouping.create!(identifier: 'grouping')
-              product.lessees << grouping.lessee
-              lessee = Lessee.find_by(identifier: dlpsInstitutionId)
-              grouping.lessees << lessee
-              institution.save!
-              lessee.save!
-              grouping.save!
-              product.save!
-              get :show, params: { id: file_set.id }
-              expect(session[:show_set].include?(file_set.id)).to be true
-              expect(response).to have_http_status(:success)
-            end
-          end
-        end
       end
 
       context 'user subscription' do
@@ -388,49 +351,6 @@ RSpec.describe EPubsController, type: :controller do
               product.components << component
               lessee = Lessee.create!(identifier: user.email)
               product.lessees << lessee
-              product.save!
-              get :show, params: { id: file_set.id }
-              expect(session[:show_set].include?(file_set.id)).to be true
-              expect(response).to have_http_status(:success)
-            end
-          end
-        end
-
-        context 'grouping' do
-          it "Open Access" do
-            session[:show_set] = []
-            get :show, params: { id: file_set.id }
-            expect(session[:show_set].include?(file_set.id)).to be true
-            expect(response).to have_http_status(:success)
-          end
-
-          context "Restricted Access" do
-            it "Anonymous User" do
-              Component.create!(handle: HandleService.path(file_set.id))
-              get :show, params: { id: file_set.id }
-              expect(session[:show_set].include?(file_set.id)).to be false
-              expect(response).to render_template(:access)
-            end
-
-            it "Authenticated User" do
-              Component.create!(handle: HandleService.path(file_set.id))
-              cosign_sign_in(user)
-              get :show, params: { id: file_set.id }
-              expect(session[:show_set].include?(file_set.id)).to be false
-              expect(response).to render_template(:access)
-            end
-
-            it "Subscribed Grouping" do
-              component = Component.create!(handle: HandleService.path(file_set.id))
-              cosign_sign_in(user)
-              product = Product.create!(identifier: 'product', name: 'name', purchase: 'purchase')
-              product.components << component
-              grouping = Grouping.create!(identifier: 'grouping')
-              product.lessees << grouping.lessee
-              lessee = Lessee.create!(identifier: user.email)
-              grouping.lessees << lessee
-              lessee.save!
-              grouping.save!
               product.save!
               get :show, params: { id: file_set.id }
               expect(session[:show_set].include?(file_set.id)).to be true
