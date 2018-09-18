@@ -1,9 +1,7 @@
 <div class="row">
   <% lessees.each do |lessee| %>
     <div class="col-md-1">
-      <% if lessee.grouping? %>
-        <span class="glyphicon glyphicon-duplicate" aria-hidden="true"></span>
-      <% elsif lessee.institution? %>
+      <% if lessee.institution? %>
         <span class="glyphicon glyphicon-registration-mark" aria-hidden="true"></span>
       <% end %>
     </div>

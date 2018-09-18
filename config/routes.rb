@@ -53,12 +53,8 @@ Rails.application.routes.draw do
         put :tokenize
       end
     end
-    resources :groupings do
-      resources :lessees, only: %i[create destroy]
-    end
     resources :institutions
     resources :lessees do
-      resources :groupings, only: %i[create destroy]
       resources :products, only: %i[create destroy]
     end
     resources :components do
