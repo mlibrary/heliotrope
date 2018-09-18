@@ -71,14 +71,11 @@ module Heliotrope
     config.cozy_epub_engine = 'epubjs'
 
     config.to_prepare do
-      # See the release notes for Hyrax 2 for an explanation of this Module#prepend
-      # FileSetsControllerBehavior is in the services directory
-      Hyrax::FileSetsController.prepend FileSetsControllerBehavior
-      # DownloadsControllerBehavior is in the services directory
-      Hyrax::DownloadsController.prepend DownloadsControllerBehavior
-      # HeliotropeHyraxUserBehavior is in the models/concerns directory
-      # see https://tools.lib.umich.edu/jira/browse/HELIO-2065
-      Hyrax::User::ClassMethods.prepend HeliotropeHyraxUserBehavior
+      # ensure overrides are loaded
+      # see https://bibwild.wordpress.com/2016/12/27/a-class_eval-monkey-patching-pattern-with-prepend/
+      Dir.glob(Rails.root.join('app', '**', '*_override*.rb')) do |c|
+        Rails.configuration.cache_classes ? require(c) : load(c)
+      end
     end
   end
 end

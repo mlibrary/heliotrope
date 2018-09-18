@@ -20,7 +20,6 @@ Metrics/ClassLength:
 Metrics/CyclomaticComplexity:
   Exclude:
     - 'app/models/riiif/file.rb'
-    - 'app/services/downloads_controller_behavior.rb'
     - 'app/presenters/hyrax/monograph_presenter.rb'
 
 Metrics/ModuleLength:
@@ -30,7 +29,6 @@ Metrics/ModuleLength:
 Metrics/PerceivedComplexity:
   Exclude:
     - 'app/models/riiif/file.rb'
-    - 'app/services/downloads_controller_behavior.rb'
 
 Naming/HeredocDelimiterCase:
   Exclude:
