@@ -27,6 +27,7 @@ describe 'Create a monograph' do
       fill_in 'Series', with: 'The Cereal Series'
       fill_in 'Section Titles', with: 'Intro\nChapter 1\nChapter 2'
       fill_in 'Buy Book URL(s)', with: 'http://www.example.com/buy'
+      select 'Creative Commons Public Domain Mark 1.0', from: 'License'
       fill_in 'Copyright Holder', with: 'Blahdy Blah Copyright Holder'
       fill_in 'Holding Contact', with: 'http://www.blahpresscompany.com/'
 
@@ -115,6 +116,8 @@ describe 'Create a monograph' do
       expect(page).to have_content 'Intro\nChapter 1\nChapter 2'
       # buy_url
       expect(page).to have_content 'http://www.example.com/buy'
+      # license
+      expect(page).to have_link("Creative Commons Public Domain Mark 1.0", href: "http://creativecommons.org/publicdomain/mark/1.0/")
       # copyright_holder
       expect(page).to have_content 'Blahdy Blah Copyright Holder'
       # holding_contact
