@@ -4,11 +4,19 @@ class CounterReporterService
   # See notes in HELIO-1376
   # https://tools.lib.umich.edu/jira/browse/HELIO-1376?focusedCommentId=898167&page=com.atlassian.jira.plugin.system.issuetabpanels%3Acomment-tabpanel#comment-898167
 
-  def self.pr_p1(params) # rubocop:disable Metrics/CyclomaticComplexity
+  def self.pr_p1(params) # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
     # Example pr_p1 report:
     # https://docs.google.com/spreadsheets/d/1fsF_JCuOelUs9s_cvu7x_Yn8FNsi5xK0CR3bu2X_dVI/edit#gid=1932253188
-    start_date  = Date.parse(params[:start_date]) || CounterReport.first.created_at
-    end_date    = Date.parse(params[:end_date]) || Time.now.utc
+    start_date  = if params[:start_date].present?
+                    Date.parse(params[:start_date])
+                  else
+                    CounterReport.first.created_at
+                  end
+    end_date    = if params[:end_date].present?
+                    Date.parse(params[:end_date])
+                  else
+                    Time.now.utc
+                  end
     press       = params[:press] || nil
     institution = params[:institution]
 
@@ -22,7 +30,7 @@ class CounterReporterService
       Report_Filters: "Access_Type=Controlled; Access_Method=Regular",
       Report_Attributes: "",
       Exceptions: "",
-      Reporting_Period: "#{start_date} to #{end_date}",
+      Reporting_Period: "#{start_date.year}-#{start_date.month} to #{end_date.year}-#{end_date.month}",
       Created: Time.zone.today.iso8601,
       Created_By: "Fulcrum"
     }
@@ -110,5 +118,39 @@ class CounterReporterService
     items << item
 
     { header: header, items: items }
+  end
+
+  def self.csv(report)
+    # CSV for COUNTER is just weird and not normal
+    # https://docs.google.com/spreadsheets/d/1fsF_JCuOelUs9s_cvu7x_Yn8FNsi5xK0CR3bu2X_dVI/edit#gid=1932253188
+    CSV.generate({}) do |csv|
+      row = []
+      # header rows
+      report[:header].each do |k, v|
+        row << k
+        row << v
+        1.upto(report[:items][0].length - 2).each do
+          row << ""
+        end
+        csv << row
+        row = []
+      end
+      # empty row
+      csv << 1.upto(report[:items][0].length).map { "" }
+      # item rows header
+      report[:items][0].each do |k, _|
+        row << k
+      end
+      csv << row
+      # items
+      row = []
+      report[:items].each do |item|
+        item.each do |_, v|
+          row << v
+        end
+        csv << row
+        row = []
+      end
+    end
   end
 end

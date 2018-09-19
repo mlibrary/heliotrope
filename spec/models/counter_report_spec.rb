@@ -52,8 +52,8 @@ RSpec.describe CounterReport, type: :model do
       it do
         expect(described_class.institution(1)
                               .investigations
-                              .start_date("2018-02-01")
-                              .end_date("2018-02-28")
+                              .start_date(Date.parse("2018-02-01"))
+                              .end_date(Date.parse("2018-02-28"))
                               .count).to eq 4
       end
     end
@@ -62,8 +62,8 @@ RSpec.describe CounterReport, type: :model do
       it do
         expect(described_class.institution(1)
                               .requests
-                              .start_date("2018-02-01")
-                              .end_date("2018-02-28")
+                              .start_date(Date.parse("2018-02-01"))
+                              .end_date(Date.parse("2018-02-28"))
                               .count).to eq 2
       end
     end
@@ -73,8 +73,8 @@ RSpec.describe CounterReport, type: :model do
         expect(described_class.institution(1)
                             .investigations
                             .unique
-                            .start_date("2018-02-01")
-                            .end_date("2018-02-28")
+                            .start_date(Date.parse("2018-02-01"))
+                            .end_date(Date.parse("2018-02-28"))
                             .count).to eq 4
       end
     end
@@ -84,8 +84,8 @@ RSpec.describe CounterReport, type: :model do
         expect(described_class.institution(1)
                               .requests
                               .unique
-                              .start_date("2018-02-01")
-                              .end_date("2018-02-28")
+                              .start_date(Date.parse("2018-02-01"))
+                              .end_date(Date.parse("2018-02-28"))
                               .count).to eq 2
       end
     end
@@ -95,8 +95,8 @@ RSpec.describe CounterReport, type: :model do
         expect(described_class.institution(1)
                               .investigations
                               .unique_by_title
-                              .start_date("2018-02-01")
-                              .end_date("2018-02-28")
+                              .start_date(Date.parse("2018-02-01"))
+                              .end_date(Date.parse("2018-02-28"))
                               .count).to eq 4
       end
     end
@@ -106,8 +106,8 @@ RSpec.describe CounterReport, type: :model do
         expect(described_class.institution(1)
                               .requests
                               .unique_by_title
-                              .start_date("2018-02-01")
-                              .end_date("2018-02-28")
+                              .start_date(Date.parse("2018-02-01"))
+                              .end_date(Date.parse("2018-02-28"))
                               .count).to eq 2
       end
     end

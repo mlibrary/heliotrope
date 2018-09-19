@@ -31,10 +31,10 @@ class CounterReport < ApplicationRecord
   end
 
   def self.start_date(start_date)
-    where("created_at > ?", start_date)
+    where("created_at > ?", start_date.beginning_of_month)
   end
 
   def self.end_date(end_date)
-    where("created_at < ?", end_date)
+    where("created_at < ?", end_date.end_of_month)
   end
 end

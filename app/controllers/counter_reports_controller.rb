@@ -3,6 +3,7 @@
 class CounterReportsController < ApplicationController
   before_action :set_counter_report_service, only: %i[index show edit update]
   before_action :set_counter_report, only: %i[show update]
+  before_action :set_presses_and_institutions, only: %i[index show]
 
   COUNTER_REPORT_TITLE = {
     pr: 'Platform Master Report',
@@ -23,36 +24,72 @@ class CounterReportsController < ApplicationController
     ir_m1: 'Multimedia Item Requests'
   }.freeze
 
-  # GET /customers/:customer_id/counter_reports
-  def index; end
+  def index
+    return render if params[:customer_id].present?
 
-  # GET /customers/:customer_id/counter_reports/:id/edit
+    @active_reports = { pr_p1: COUNTER_REPORT_TITLE[:pr_p1] }
+
+    render 'counter_reports/without_customer_id/index'
+  end
+
   def edit
     @customer_id = params[:customer_id]
     @id = params[:id]
   end
 
-  # PUT/PATCH /customers/:customer_id/counter_reports/:id
   def update
     respond_to do |format|
       format.html { redirect_to customer_counter_report_path(params[:customer_id], params[:id]), notice: 'COUNTER Report was successfully created.' }
-      # format.json { render :show, status: :ok, location: @counter_report }
     end
   end
 
-  # GET /customers/:customer_id/counter_reports/:id
-  def show; end
+  def show
+    return render if params[:customer_id].present?
+    # institutional 'guest' users can only see their institutions
+    # press admins can only see their presses
+    return render 'hyrax/base/unauthorized', status: :unauthorized unless authorized_insitutions_or_presses?
+
+    case params[:id]
+    when 'pr_p1'
+      @report = CounterReporterService.pr_p1(institution: params[:institution_identifier],
+                                             press: params[:press_id],
+                                             start_date: params[:start_date],
+                                             end_date: params[:end_date])
+    end
+
+    if params[:csv]
+      send_data CounterReporterService.csv(@report), filename: "Fulcrum_#{@title.gsub(/\s/, '_')}_#{Time.zone.today.strftime('%Y-%m-%d')}.csv"
+    else
+      render 'counter_reports/without_customer_id/show'
+    end
+  end
 
   private
 
+    def authorized_insitutions_or_presses?
+      return false unless @institutions.map(&:identifier).include?(params[:institution_identifier])
+      return false if @presses.present? && !@presses.map(&:id).include?(params[:press_id].to_i)
+      true
+    end
+
     # Use callbacks to share common setup or constraints between actions.
     def set_counter_report_service
-      @counter_report_service = CounterReportService.new(params[:customer_id], current_user.id)
+      @counter_report_service = CounterReportService.new(params[:customer_id], current_user.id) if params[:customer_id].present?
     end
 
     def set_counter_report
       @title = COUNTER_REPORT_TITLE[params[:id]&.downcase&.to_sym]
-      @counter_report = @counter_report_service.report(params[:id])
+      @counter_report = @counter_report_service.report(params[:id]) if params[:customer_id].present?
+    end
+
+    def set_presses_and_institutions
+      @presses = current_user&.admin_presses || []
+      @institutions = if @presses.present?
+                        Institution.all # over 1000 of these in production = fun
+                      else
+                        current_institutions
+                      end
+      return render 'hyrax/base/unauthorized', status: :unauthorized if params[:customer_id].nil? && @institutions.empty?
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.
