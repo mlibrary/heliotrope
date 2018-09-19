@@ -1,0 +1,8 @@
+<%# https://github.com/samvera/hyrax/blob/2.0-stable/app/views/records/edit_fields/_license.html.erb %>
+<%# changed :multi_value_select to :select %>
+<% license_service = Hyrax::LicenseService.new %>
+<%= f.input :license, as: :select,
+            collection: license_service.select_active_options,
+            include_blank: true,
+            item_helper: license_service.method(:include_current_value),
+            input_html: { class: 'form-control' } %>
