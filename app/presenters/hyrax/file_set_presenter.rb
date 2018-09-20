@@ -229,8 +229,13 @@ module Hyrax
       # using the Solr doc's timestamp even though it'll change on any metadata update.
       # More file-specific fields on the Solr doc can't be trusted to be ordered in a useful way on "reversioning".
       # An alternative could be to pull the timestamp from the Hydra Derivatives thumbnail itself.
-      value = '?' + Time.strptime(solr_document['timestamp'], '%Y-%m-%dT%H:%M:%S.%L%Z').to_i.to_s if solr_document['timestamp'].present?
-      value.presence || ''
+      value = ''
+      if solr_document['timestamp'].present?
+        # "2018-09-18T18:18:28.384Z" vs. "2018-09-18T18:18:28Z", see https://tools.lib.umich.edu/jira/browse/HELIO-2167
+        format = solr_document['timestamp'].length > 20 ? '%Y-%m-%dT%H:%M:%S.%L%Z' : '%Y-%m-%dT%H:%M:%S%Z'
+        value += '?' + Time.strptime(solr_document['timestamp'], format).to_i.to_s
+      end
+      value
     end
 
     def sample_rate
