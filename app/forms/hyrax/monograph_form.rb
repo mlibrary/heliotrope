@@ -42,14 +42,14 @@ module Hyrax
 
     # RE: below methods, see https://samvera.github.io/customize-metadata-other-customizations.html
     def self.multiple?(field)
-      if %i[title description creator contributor publisher date_created].include? field.to_sym
+      if %i[title description creator contributor publisher date_created license].include? field.to_sym
         false
       else
         super
       end
     end
 
-    def self.model_attributes(_nil) # rubocop:disable Metrics/CyclomaticComplexity
+    def self.model_attributes(_nil) # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
       attrs = super
       attrs[:title] = Array(attrs[:title]) if attrs[:title]
       attrs[:description] = Array(attrs[:description]) if attrs[:description]
@@ -57,6 +57,7 @@ module Hyrax
       attrs[:contributor] = Array(attrs[:contributor]) if attrs[:contributor]
       attrs[:publisher] = Array(attrs[:publisher]) if attrs[:publisher]
       attrs[:date_created] = Array(attrs[:date_created]) if attrs[:date_created]
+      attrs[:license] = Array(attrs[:license]) if attrs[:license]
       attrs
     end
 
@@ -81,6 +82,10 @@ module Hyrax
     end
 
     def date_created
+      super.first || ""
+    end
+
+    def license
       super.first || ""
     end
   end
