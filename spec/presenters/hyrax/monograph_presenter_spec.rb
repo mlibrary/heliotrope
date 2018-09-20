@@ -558,4 +558,28 @@ RSpec.describe Hyrax::MonographPresenter do
       end
     end
   end
+
+  describe '#license_icon' do
+    subject { presenter.license_icon }
+
+    context 'id/link has http/publicdomain combo' do
+      before do
+        allow(mono_doc).to receive(:license).and_return(['http://creativecommons.org/publicdomain/zero/1.0/'])
+      end
+
+      it 'gives the correct logo link' do
+        expect(subject).to eq 'https://i.creativecommons.org/p/zero/1.0/88x31.png'
+      end
+    end
+
+    context 'id/link has https/license combo' do
+      before do
+        allow(mono_doc).to receive(:license).and_return(['https://creativecommons.org/licenses/by-nc-nd/4.0/'])
+      end
+
+      it 'gives the correct logo link' do
+        expect(subject).to eq 'https://i.creativecommons.org/l/by-nc-nd/4.0/88x31.png'
+      end
+    end
+  end
 end

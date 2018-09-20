@@ -12,6 +12,9 @@
       <p><%= @monograph_presenter.permission_badge %>
       <%= @monograph_presenter.workflow.badge %></p>
     <% end %>
+    <% if @monograph_presenter.license? %>
+      <a rel="license" href="<%= @monograph_presenter.license.first %>"><img alt="Creative Commons License" style="border-width:0" src="<%= @monograph_presenter.license_icon %>" /></a>
+    <% end %>
     <% if @monograph_presenter.peer_review? %>
       <div><%= @monograph_presenter.peer_review.file.content.force_encoding("UTF-8").html_safe %></div>
     <% end %>

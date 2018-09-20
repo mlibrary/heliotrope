@@ -14,7 +14,7 @@ module Hyrax
     delegate :date_created, :date_modified, :date_uploaded, :location, :description,
              :creator_display, :creator_full_name, :contributor,
              :subject, :section_titles, :based_near, :publisher, :date_published, :language,
-             :isbn, :copyright_holder, :holding_contact, :has_model,
+             :isbn, :license, :copyright_holder, :holding_contact, :has_model,
              :buy_url, :embargo_release_date, :lease_expiration_date, :rights, :series,
              :visibility, :identifier, :doi, :handle,
              to: :solr_document
@@ -69,6 +69,18 @@ module Hyrax
 
     def creator_display?
       solr_document.creator_display.present?
+    end
+
+    def license?
+      solr_document.license.present?
+    end
+
+    def license_icon
+      # account for any mix of http/https links in config/authorities/licenses.yml
+      link = solr_document.license.first.sub('https', 'http')
+      link = link.sub('licenses', 'l')
+      link = link.sub('publicdomain', 'p')
+      link.sub('http://creativecommons', 'https://i.creativecommons') + '88x31.png'
     end
 
     def copyright_holder?
