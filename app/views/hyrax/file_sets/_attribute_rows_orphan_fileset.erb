@@ -19,7 +19,7 @@
         <%= presenter.attribute_to_html(:copyright_holder, render_as: :markdown, label: t('copyright_holder')) %>
         <%= presenter.attribute_to_html(:copyright_status, label: t('copyright_status')) %>
         <%= presenter.attribute_to_html(:rights_granted, label: t('rights_granted')) %>
-        <%= presenter.attribute_to_html(:rights_granted_creative_commons, label: t('rights_granted_creative_commons')) %>
+        <%= presenter.attribute_to_html(:license, render_as: :license, label: t('license')) %>
         <%= presenter.attribute_to_html(:credit_line, render_as: :markdown, label: t('credit_line')) %>
         <%= presenter.attribute_to_html(:holding_contact, render_as: :markdown, label: t('holding_contact')) %>
         <%# TECHNICAL %>

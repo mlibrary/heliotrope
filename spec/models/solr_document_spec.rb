@@ -57,6 +57,7 @@ describe SolrDocument do
   it { is_expected.to respond_to(:primary_creator_role) }
   it { is_expected.to respond_to(:resource_type) }
   it { is_expected.to respond_to(:rights_granted) }
+  it { is_expected.to respond_to(:license) }
   it { is_expected.to respond_to(:rights_granted_creative_commons) }
   it { is_expected.to respond_to(:section_title) }
   it { is_expected.to respond_to(:sort_date) }

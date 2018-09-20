@@ -81,7 +81,7 @@ describe Import::Importer do
       let(:file2) { create(:file_set, resource_type: ['image']) }
       let(:expected_manifest) do
         <<~eos
-          NOID,File Name,Link,Title,Resource Type,External Resource URL,Caption,Alternative Text,Copyright Holder,Allow High-Res Display?,Allow Download?,Copyright Status,Rights Granted,Rights Granted - Creative Commons,Permissions Expiration Date,After Expiration: Allow Display?,After Expiration: Allow Download?,Credit Line,Holding Contact,Exclusive to Fulcrum,Persistent ID - Display on Platform,DOI,Handle,Content Type,Creator(s),Additional Creator(s),Sort Date,Display Date,Description,Keywords,Section,Language,Transcript,Translation,Redirect to,Publisher,Subject,ISBN(s),Buy Book URL,Pub Year,Pub Location,Legacy ID,Series
+          NOID,File Name,Link,Title,Resource Type,External Resource URL,Caption,Alternative Text,Copyright Holder,Allow High-Res Display?,Allow Download?,Copyright Status,Rights Granted,CC License,Permissions Expiration Date,After Expiration: Allow Display?,After Expiration: Allow Download?,Credit Line,Holding Contact,Exclusive to Fulcrum,Persistent ID - Display on Platform,DOI,Handle,Content Type,Creator(s),Additional Creator(s),Sort Date,Display Date,Description,Keywords,Section,Language,Transcript,Translation,Redirect to,Publisher,Subject,ISBN(s),Buy Book URL,Pub Year,Pub Location,Legacy ID,Series
           instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder
           #{cover.id},,"=HYPERLINK(""#{Rails.application.routes.url_helpers.hyrax_file_set_url(cover)}"")",#{cover.title.first},#{cover.resource_type.first},,,,,,,,,,,,,,,,,,,,,,#{cover.sort_date},,,,,,,,,,,,,,,,
           #{file1.id},,"=HYPERLINK(""#{Rails.application.routes.url_helpers.hyrax_file_set_url(file1)}"")",#{file1.title.first},image,,,,,,,,,,,,,,,,,,,,,,#{file1.sort_date},,,,,,,,,,,,,,,,
@@ -170,12 +170,11 @@ describe Import::Importer do
         # The monograph cover/representative is the first file_set
         expect(file_sets[0].id).to eq monograph.representative_id
 
-        # Restricted-value fields get lowercased, apart from CC licenses
-        expect(file_sets[0].rights_granted_creative_commons).to eq 'Creative Commons Attribution-ShareAlike license, 3.0 Unported'
+        expect(file_sets[0].license).to eq ['https://creativecommons.org/licenses/by-sa/4.0/']
 
         expect(file_sets[1].title).to eq ['Monograph Miranda']
         expect(file_sets[1].external_resource_url).to eq nil
-        expect(file_sets[1].rights_granted_creative_commons).to eq 'Creative Commons Zero license (implies pd)'
+        expect(file_sets[1].license).to eq ['http://creativecommons.org/publicdomain/mark/1.0/']
         expect(file_sets[1].exclusive_to_platform).to eq 'yes'
 
         expect(file_sets[2].title).to eq ['日本語のファイル']

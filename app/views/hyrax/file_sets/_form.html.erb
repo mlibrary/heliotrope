@@ -39,7 +39,14 @@
           <%= f.input :redirect_to, input_html: { class: 'form-control' } %>
           <%= f.input :permissions_expiration_date, input_html: { class: 'form-control required' }, placeholder: 'YYYY-MM-DD' %>
           <%= f.input :rights_granted, input_html: { class: 'form-control' } %>
-          <%= f.input :rights_granted_creative_commons, input_html: { class: 'form-control' } %>
+          <%# https://github.com/samvera/hyrax/blob/2.0-stable/app/views/records/edit_fields/_license.html.erb %>
+          <%# changed :multi_value_select to :select %>
+          <% license_service = Hyrax::LicenseService.new %>
+          <%= f.input :license, as: :select,
+                      collection: license_service.select_active_options,
+                      include_blank: true,
+                      item_helper: license_service.method(:include_current_value),
+                      input_html: { class: 'form-control' } %>
           <%= f.input :credit_line, input_html: { class: 'form-control' } %>
           <%= f.input :holding_contact, as: :text, input_html: { class: 'form-control' } %>
           <%= f.input :allow_display_after_expiration, input_html: { class: 'form-control required' } %>

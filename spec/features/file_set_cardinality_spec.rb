@@ -34,7 +34,7 @@ describe 'FileSet Cardinality' do
                       keywords: ["dogs", "cats", "fish"],
                       permissions_expiration_date: "2020-01-01",
                       rights_granted: "Non-exclusive, North America, term-limited",
-                      rights_granted_creative_commons: "CC-BY",
+                      license: ['http://creativecommons.org/publicdomain/mark/1.0/'],
                       section_title: ["Chapter 2"],
                       sort_date: "1997-01-11",
                       transcript: "This is the transcript",
@@ -153,9 +153,9 @@ describe 'FileSet Cardinality' do
       expect(doc.rights_granted).to eql 'Non-exclusive, North America, term-limited'
       expect(find('#file_set_rights_granted')[:class]).not_to include 'multi-text-field'
 
-      expect(cover.rights_granted_creative_commons).to eql 'CC-BY'
-      expect(doc.rights_granted_creative_commons).to eql 'CC-BY'
-      expect(find('#file_set_rights_granted_creative_commons')[:class]).not_to include 'multi-text-field'
+      expect(cover.license).to match_array(['http://creativecommons.org/publicdomain/mark/1.0/'])
+      expect(doc.license).to eql ['http://creativecommons.org/publicdomain/mark/1.0/']
+      expect(find('#file_set_license')[:class]).not_to include 'multi-text-field'
 
       expect(cover.section_title).to match_array(["Chapter 2"])
       expect(doc.section_title).to match_array(["Chapter 2"])
