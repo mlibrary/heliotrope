@@ -33,6 +33,7 @@ RSpec.describe "Monograph Manifest", type: :request do
         it do
           get monograph_manifests_path(monograph)
           expect(response).to have_http_status(:ok)
+          expect(response).to render_template(:show)
         end
       end
     end

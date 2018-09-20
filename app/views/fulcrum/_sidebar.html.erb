@@ -7,6 +7,7 @@
   <li <%= "class=active" if partial.to_s == :components.to_s %>><a href="<%= main_app.partial_fulcrum_path(partial: :components) %>"><span class="glyphicon glyphicon-knight" aria-hidden="true"></span> Components</a></li>
   <li <%= "class=active" if partial.to_s == :lessees.to_s %>><a href="<%= main_app.partial_fulcrum_path(partial: :lessees) %>"><span class="glyphicon glyphicon-pawn" aria-hidden="true"></span> Lessees</a></li>
   <li <%= "class=active" if partial.to_s == :institutions.to_s %>><a href="<%= main_app.partial_fulcrum_path(partial: :institutions) %>"><span class="glyphicon glyphicon-registration-mark" aria-hidden="true"></span> Institutions</a></li>
+  <li <%= "class=active" if partial.to_s == :permits.to_s %>><a href="<%= main_app.partial_fulcrum_path(partial: :permits) %>"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span> Permits</a></li>
   <li <%= "class=active" if partial.to_s == :publishers.to_s %>><a href="<%= main_app.partial_fulcrum_path(partial: :publishers) %>"><span class="glyphicon glyphicon-tower" aria-hidden="true"></span> Publishers</a></li>
   <li <%= "class=active" if partial.to_s == :users.to_s %>><a href="<%= main_app.partial_fulcrum_path(partial: :users) %>"><span class="glyphicon glyphicon-user" aria-hidden="true"></span> Users</a></li>
 <% end %>

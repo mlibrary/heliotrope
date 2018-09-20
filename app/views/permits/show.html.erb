@@ -1,0 +1,36 @@
+<p id="notice"><%= notice %></p>
+<div id="maincontent">
+  <div class="row">
+    <div class="col-md-12"><h1>Permit</h1></div>
+    <div class="col-md-12"><br/></div>
+    <div class="col-md-2"><em>ID</em></div>
+    <div class="col-md-10"><%= @permit.id %></div>
+    <div class="col-md-2"><em>Agent Type</em></div>
+    <div class="col-md-10"><%= @permit.agent_type %></div>
+    <div class="col-md-2"><em>Agent ID</em></div>
+    <div class="col-md-10"><%= @permit.agent_id %></div>
+    <div class="col-md-2"><em>Agent Token</em></div>
+    <div class="col-md-10"><%= @permit.agent_token %></div>
+    <div class="col-md-2"><em>Credential Type</em></div>
+    <div class="col-md-10"><%= @permit.credential_type %></div>
+    <div class="col-md-2"><em>Credential ID</em></div>
+    <div class="col-md-10"><%= @permit.credential_id %></div>
+    <div class="col-md-2"><em>Credential Token</em></div>
+    <div class="col-md-10"><%= @permit.credential_token %></div>
+    <div class="col-md-2"><em>Resource Type</em></div>
+    <div class="col-md-10"><%= @permit.resource_type %></div>
+    <div class="col-md-2"><em>Resource ID</em></div>
+    <div class="col-md-10"><%= @permit.resource_id %></div>
+    <div class="col-md-2"><em>Resource Token</em></div>
+    <div class="col-md-10"><%= @permit.resource_token %></div>
+    <div class="col-md-2"><em>Zone ID</em></div>
+    <div class="col-md-10"><%= @permit.zone_id %></div>
+    <div class="col-md-12"><br/></div>
+    <div class="col-md-12">
+      <%= link_to 'Edit', edit_permit_path(@permit) %>
+      <span> | </span>
+      <%= link_to 'Back', permits_path %>
+    </div>
+    <div class="col-md-12"><br/></div>
+  </div>
+</div>

@@ -1,0 +1,28 @@
+<p id="notice"><%= notice %></p>
+<div id="maincontent">
+  <div class="row">
+    <div class="col-md-12"><h1>Permits</h1></div>
+    <div class="col-md-12">
+      <% @permits.each do |permit| %>
+        <div class="col-md-8">
+          <div class="col-md-1"><%= permit.id %></div>
+          <div class="col-md-3"><%= permit.agent_token %></div>
+          <div class="col-md-3"><%= permit.credential_token %></div>
+          <div class="col-md-3"><%= permit.resource_token %></div>
+          <div class="col-md-2"><%= permit.zone_id %></div>
+        </div>
+        <div class="col-md-2">
+          <div class="col-md-4"><%= link_to 'Show', permit %></div>
+          <div class="col-md-4"><%= link_to 'Edit', edit_permit_path(permit) %></div>
+          <div class="col-md-4"><%= link_to 'Destroy', permit, method: :delete, data: { confirm: 'Are you sure?' } %></div>
+        </div>
+      <% end %>
+    </div>
+    <div class="col-md-12"><br/></div>
+    <div class="col-md-12"><%= link_to 'New Permit', new_permit_path %></div>
+    <div class="col-md-12"><br/></div>
+  </div>
+  <div class="col-md-12"><br/></div>
+  <div class="col-md-12"><%= will_paginate @permits %></div>
+  <div class="col-md-12"><br/></div>
+</div>
