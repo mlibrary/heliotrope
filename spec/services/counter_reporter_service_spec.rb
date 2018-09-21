@@ -29,7 +29,7 @@ RSpec.describe CounterReporterService do
         expect(subject[:header][:Report_Filters]).to eq "Access_Type=Controlled; Access_Method=Regular"
         expect(subject[:header][:Report_Attributes]).to eq ""
         expect(subject[:header][:Exceptions]).to eq ""
-        expect(subject[:header][:Reporting_Period]).to eq "#{start_date} to #{end_date}"
+        expect(subject[:header][:Reporting_Period]).to eq "2018-1 to 2018-12"
         expect(subject[:header][:Created]).to eq Time.zone.today.iso8601
         expect(subject[:header][:Created_By]).to eq "Fulcrum"
       end
@@ -94,6 +94,44 @@ RSpec.describe CounterReporterService do
         expect(subject[:items][1]["Reporting_Period_Total"]).to eq 2 # Unique_Item_Requests
         expect(subject[:items][2]["Reporting_Period_Total"]).to eq 2 # Unique_Title_Requests
       end
+    end
+  end
+
+  describe '#csv' do
+    let(:report) { described_class.pr_p1(institution: institution, start_date: "2018-01-01", end_date: "2018-03-01") }
+    let(:institution) { 1 }
+    let(:institution_name) { double("institution_name", name: "U of Something") }
+    let(:created_date) { Time.zone.today.iso8601 }
+
+    before do
+      create(:counter_report, session: 1,  noid: 'a',  parent_noid: 'A', institution: 1, created_at: Time.parse("2018-01-02").utc, access_type: "Controlled", request: 1)
+      create(:counter_report, session: 6,  noid: 'b',  parent_noid: 'B', institution: 1, created_at: Time.parse("2018-02-11").utc, access_type: "Controlled", request: 1)
+    end
+
+    after { CounterReport.destroy_all }
+
+    it do
+      allow(Institution).to receive(:where).with(identifier: institution).and_return([institution_name])
+
+      expect(described_class.csv(report)).to eq <<~CSV
+        Report_Name,Platform Usage,"","","",""
+        Report_ID,PR_P1,"","","",""
+        Release,5,"","","",""
+        Institution_Name,U of Something,"","","",""
+        Institution_ID,1,"","","",""
+        Metric_Types,Total_Item_Requests; Unique_Item_Requests; Unique_Title_Requests,"","","",""
+        Report_Filters,Access_Type=Controlled; Access_Method=Regular,"","","",""
+        Report_Attributes,"","","","",""
+        Exceptions,"","","","",""
+        Reporting_Period,2018-1 to 2018-3,"","","",""
+        Created,#{created_date},"","","",""
+        Created_By,Fulcrum,"","","",""
+        "","","","","",""
+        Platform,Metric_Type,Reporting_Period_Total,Jan-2018,Feb-2018,Mar-2018
+        Fulcrum,Total_Item_Requests,2,1,1,0
+        Fulcrum,Unique_Item_Requests,2,1,1,0
+        Fulcrum,Unique_Title_Requests,2,1,1,0
+      CSV
     end
   end
 end

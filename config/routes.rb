@@ -69,6 +69,8 @@ Rails.application.routes.draw do
     end
   end
 
+  resources :counter_reports, only: %i[index show edit update], constraints: COUNTER_REPORT_ID_CONSTRAINT
+
   resources :institutions, only: [] do
     member do
       get :login

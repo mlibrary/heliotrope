@@ -1,0 +1,35 @@
+<% content_for :head do %>
+  <meta name="turbolinks-cache-control" content="no-cache">
+<% end %>
+
+<h1>COUNTER 5 Reports</h1>
+
+<% @active_reports.each do |report_id, report| %>
+<form action=<%= counter_report_path(id: report_id) %> method="show">
+<div class="form-row">
+  <div class="col-sm-2">
+    <h2><%= report %></h2>
+  </div>
+  <div class="col-sm-2 form-group">
+    <label for="institution_identifier">Institution</label>
+    <%= select_tag(:institution_identifier, options_for_select(@institutions.map { |i| [i.name, i.identifier] }), class: 'form-control') %>
+  </div>
+  <div class="col-sm-2 form-group">
+    <label for="press_id">Publisher</label>
+    <%= select_tag(:press_id, options_for_select(@presses.map { |p| [p.subdomain, p.id] }), class: 'form-control') %>
+  </div>
+  <div class="col-sm-2 form-group">
+    <label for="start_date">Start</label>
+    <input type="date" name="start_date" class="form-control" />
+  </div>
+  <div class="col-sm-2 form-group">
+    <label for="end_date">End</label>
+    <input type="date" name="end_date" class="form-control" />
+  </div>
+  <div class="col-sm-2 form-group" style="margin-top: 2em;">
+    <button type="submit" class="btn btn-primary">View</button>
+    <button type="submit" class="btn btn-primary" name="csv">CSV</button>
+  </div>
+</div>
+</form>
+<% end %>
