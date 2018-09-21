@@ -7,15 +7,32 @@ module Heliotrope
 
     self.terms += %i[creator contributor resource_type caption alt_text copyright_holder
                      description content_type date_created keywords
-                     language section_title
-                     copyright_status rights_granted rights_granted_creative_commons
+                     language section_title license
+                     copyright_status rights_granted
                      exclusive_to_platform permissions_expiration_date
                      allow_display_after_expiration allow_download_after_expiration
                      sort_date allow_download allow_hi_res credit_line
                      holding_contact external_resource_url doi hdl
                      display_date transcript translation redirect_to]
 
-    # the type of metadata customizations used on the Monograph form do not work here (`def self.multiple?` etc). Link:
-    # https://samvera.github.io/customize-metadata-other-customizations.html
+    # RE: below methods, see https://samvera.github.io/customize-metadata-other-customizations.html
+    # TODO: copy this to fix up some other Hyrax::BasicMetadata fields on FileSets which are undesirably multi-valued
+    def self.multiple?(field)
+      if %i[license].include? field.to_sym
+        false
+      else
+        super
+      end
+    end
+
+    def self.model_attributes(_nil)
+      attrs = super
+      attrs[:license] = Array(attrs[:license]) if attrs[:license]
+      attrs
+    end
+
+    def license
+      super.first || ""
+    end
   end
 end

@@ -44,7 +44,7 @@ describe 'Edit a file set' do
       fill_in 'Copyright Holder', with: 'University of Michigan'
       fill_in 'Copyright Status', with: 'in-copyright'
       fill_in 'Rights Granted', with: 'look but don\'t download!'
-      fill_in 'Rights Granted - Creative Commons', with: 'Creative Commons Attribution license, 3.0 Unported'
+      select 'Creative Commons Public Domain Mark 1.0', from: 'License'
       fill_in 'Exclusive to Platform?', with: 'yes1'
       fill_in 'Allow Display After Expiration?', with: 'no1'
       fill_in 'Allow Download After Expiration?', with: 'no2'
@@ -95,6 +95,7 @@ describe 'Edit a file set' do
       expect(page).to have_content 'Jimmy Johns, Wingperson M. Creator, Sub Way and Wingperson M. Contributor'
       expect(page).to have_content file_set_title
       expect(page).to have_content 'This is a caption for the image'
+      expect(page).to have_link("Creative Commons Public Domain Mark 1.0", href: "http://creativecommons.org/publicdomain/mark/1.0/")
       expect(page).to have_content 'University of Michigan'
       expect(page).to have_content 'Veggies es bonus vobis, external link proinde vos postulo essum magis internal link kohlrabi welsh onion daikon amaranth tatsoi tomatillo melon azuki bean garlic.'
       expect(page).to have_content 'screenshot'

@@ -32,7 +32,8 @@ module Import
           field_values = split_field_values(row[field[:field_name]], is_multivalued)
           field_values = strip_markdown(field[:field_name], field_values, md)
           if field[:acceptable_values]
-            downcase_restricted_values(field[:field_name], field_values)
+            # when using controlled vocabularies make everything lowercase (Yes/No etc)
+            field_values.map!(&:downcase)
             field_value_acceptable(field[:field_name], field[:acceptable_values], field_values, controlled_vocab_errors)
           end
           if field[:date_format]
@@ -62,11 +63,6 @@ module Import
 
       def strip_markdown(field_name, field_values, metadata)
         field_name == "Keywords" ? field_values.map! { |value| metadata.render(value).strip! } : field_values
-      end
-
-      def downcase_restricted_values(field_name, field_values)
-        # when using controlled vocabularies make everything lowercase (Yes/No etc) except the crazy CC license names
-        field_name == "Rights Granted - Creative Commons" ? field_values : field_values.map!(&:downcase)
       end
 
       def combine_existing_values(field_values, is_multivalued, existing_values)

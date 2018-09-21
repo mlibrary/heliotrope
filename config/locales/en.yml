@@ -113,6 +113,7 @@ en:
   keywords: "Keywords"
   last_modified: "Last Modified"
   lease_expiration_date: "Lease Expiration Date"
+  license: "CC License"
   manage_assets:
     monograph_link_text: "Organize Assets"
     section_link_text: "Organize Assets"
@@ -177,7 +178,6 @@ en:
   redirect_to: "Redirect to"
   resource_type: "Resource Type"
   rights_granted: "Rights Granted"
-  rights_granted_creative_commons: "Rights Granted - Creative Commons"
   role:
     admin: "Admin"
     editor: "Editor"
@@ -224,7 +224,6 @@ en:
         press: :"press"
         resource_type: :"resource_type"
         rights_granted: :"rights_granted"
-        rights_granted_creative_commons: :"rights_granted_creative_commons"
         section: :"section"
         section_title: :"section_title"
         section_titles: :"section_titles"
