@@ -1,0 +1,23 @@
+<% permits = Permit.all %>
+<h1>Permits</h1>
+<table class="table table-striped" summary="Permits List">
+  <tr>
+    <th>Permit <%= link_to(new_permit_path) do %>
+        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> New
+      <% end %>
+    </th>
+    <th>Agent</th>
+    <th>Credential</th>
+    <th>Resource</th>
+    <th>Zone</th>
+  </tr>
+  <% permits.each do |permit| %>
+    <tr>
+      <td><%= link_to permit.id, permit %></td>
+      <td><%= permit.agent_token %></td>
+      <td><%= permit.credential_token %></td>
+      <td><%= permit.resource_token %></td>
+      <td><%= permit.zone_id %></td>
+    </tr>
+  <% end %>
+</table>
