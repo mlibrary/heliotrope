@@ -71,6 +71,13 @@ Hyrax.config do |config|
   # https://tools.lib.umich.edu/jira/browse/HELIO-2065
   config.audit_user_key = 'fulcrum-system'
   config.batch_user_key = 'fulcrum-system'
+
+  # Options to control the file uploader
+  config.uploader = {
+    limitConcurrentUploads: 6,
+    maxNumberOfFiles: 600,
+    maxFileSize: 5.gigabytes
+  }
 end
 
 Date::DATE_FORMATS[:standard] = '%m/%d/%Y'
