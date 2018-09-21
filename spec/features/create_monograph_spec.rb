@@ -62,6 +62,9 @@ describe 'Create a monograph' do
       expect(page).to have_field('Citable Link', with: 'https://doi.org/<doi>')
       expect(page).to have_content '123-456-7890'
       expect(page).to have_content "Your files are being processed by Fulcrum in the background."
+      # CC license icon/link
+      expect(page).to have_css("img[src*='https://i.creativecommons.org/p/mark/1.0/88x31.png']", count: 1)
+      expect(page).to have_link(nil, href: "http://creativecommons.org/publicdomain/mark/1.0/")
 
       click_link 'Edit Monograph'
 
