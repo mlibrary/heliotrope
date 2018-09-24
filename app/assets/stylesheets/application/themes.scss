@@ -644,6 +644,354 @@ $iu-midnight: #006298;
 
 ///////////////////////////////////////////////
 //
+// Lever Press
+//
+///////////////////////////////////////////////
+// colors
+$lever-brand-color: #003352;
+$lever-accent-color: #78B3E0;
+
+$lever-link: #40658f;
+$lever-link-hover: #587abc;
+$lever-link-hover-2: #FC7753;
+
+$lever-grey-1: #EAEAEA;
+
+$lever-grey-2: #989C97;
+$lever-white: #FFF;
+$lever-black-80: #342f2e;
+
+
+// typography
+
+@mixin meta-serif {
+  font-family: "ff-meta-serif-web-pro", Georgia, "Times New Roman", serif;
+}
+
+@mixin scala-sans {
+  font-family: "ff-scala-sans-pro", Helvetica, Arial, sans-serif;
+}
+
+.leverpress {
+
+  // typography
+  @include meta-serif;
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5 {
+    @include scala-sans;
+    font-weight: 700;
+  }
+
+  // links
+  a {
+    color: $lever-link;
+  }
+
+  a:hover,
+  a:active {
+    color: $lever-link-hover;
+  }
+
+  // buttons
+
+  .btn-default {
+    @include button-background-color($lever-brand-color);
+    @include button-font-color($lever-accent-color);
+    @include scala-sans;
+  }
+
+  .btn-default:hover,
+  .btn-default:active {
+    @include button-hover-background-color($lever-accent-color);
+    @include button-hover-font-color($lever-brand-color);
+  }
+
+  // navigation menu
+  .navbar-default .navbar-nav > .open > a,
+  .navbar-default .navbar-nav > .open > a:hover,
+  .navbar-default .navbar-nav > .open > a:focus {
+    background-color: $lever-accent-color;
+  }
+
+  #brand-bar {
+    background-color: $lever-brand-color;
+
+    .navbar-brand {
+      color: $lever-white;
+      @include scala-sans;
+    }
+
+    .navbar-nav {
+      a#add-content,
+      a.login,
+      a.user-display-name,
+      a.language-dropdown {
+          @include scala-sans;
+          color: $lever-white;
+      }
+
+      .open > a,
+      .open > a:focus,
+      .open > a:hover {
+        @include scala-sans;
+        background-color: $lever-accent-color;
+      }
+    }
+
+    button.search-submit {
+      background-color: $lever-accent-color;
+      border-color: $lever-accent-color;
+      color: $lever-brand-color;
+    }
+
+  }
+
+  // press catalog
+
+  // jumbotron
+  .jumbotron {
+    background-color: $lever-grey-1;
+    font-weight: 200;
+    padding-top: 1.5em;
+    padding-bottom: 1em;
+    @include scala-sans;
+
+    p {
+      font-size: 20px;
+      margin-bottom: 1em;
+    }
+
+    ul {
+      padding-left: 10em;
+      font-size: 18px;
+    }
+
+    .container {
+      margin-top: 0;
+    }
+
+    .logo {
+
+      img {
+        width: 100px;
+        margin-right: 3em;
+      }
+
+    }
+
+  }
+
+  .press {
+    .results-container {
+
+      .documentHeader {
+        h3 {
+          font-weight: 600;
+        }
+        a {
+          color: #333;
+        }
+      }
+    }
+  }
+
+  //filters on press and monograph pages
+  .col-sm-3.facets-container,
+  #facet-panel-collapse {
+    padding-left: 0px;
+  }
+
+  .panel-group {
+    padding-left: 0px;
+  }
+
+  .panel-group .panel {
+    border-radius: 0px;
+  }
+
+  .panel-heading {
+    padding-top: 15px;
+  }
+
+  .panel-group .panel + .panel {
+    margin-top: 0px;
+  }
+
+  h3.panel-title a, a.more_facets_link {
+    color: $lever-brand-color;
+  }
+
+  .panel-heading.collapse-toggle .panel-title::after {
+    color: $lever-brand-color;
+  }
+
+  .panel-body {
+    background-color: #fafafa;
+  }
+
+  // sorts on press and monograph pages
+  #sort-dropdown .dropdown-toggle,
+  #per_page-dropdown .dropdown-toggle {
+    color: $lever-accent-color;
+    @include scala-sans;
+  }
+
+  #sort-dropdown .dropdown-toggle:hover,
+  #per_page-dropdown .dropdown-toggle:hover,
+  #sort-dropdown .dropdown-toggle:active,
+  #per_page-dropdown .dropdown-toggle:active {
+    color: $lever-brand-color;
+  }
+
+  #sort-dropdown .dropdown-toggle .caret,
+  #per_page-dropdown .dropdown-toggle .caret {
+    color: $lever-accent-color;
+  }
+
+  #sort-dropdown .dropdown-toggle:hover .caret,
+  #per_page-dropdown .dropdown-toggle:hover .caret,
+  #sort-dropdown .dropdown-toggle:active .caret,
+  #per_page-dropdown .dropdown-toggle:active .caret {
+    color: $lever-brand-color;
+  }
+
+  .open > .dropdown-menu {
+    @include scala-sans;
+  }
+
+  .constraints-container {
+    padding: 10px 20px;
+    border-radius: 0px;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+  }
+
+  // pagination
+
+  .pagination {
+     li a, li span {
+
+       background-color: $lever-brand-color;
+       border-color: $lever-brand-color;
+       color: $lever-accent-color;
+       @include scala-sans;
+     }
+
+     li>a:hover,
+     li>a:focus,
+     li>span:hover,
+     li>span:focus {
+       background-color: $lever-accent-color;
+       border-color: $lever-accent-color;
+       color: $lever-brand-color;
+       @include scala-sans;
+     }
+
+
+     .active>a,
+     .active>a:hover,
+     .active>a:focus,
+     .active>span,
+     .active>span:hover,
+     .active>span:focus {
+       background-color: $lever-accent-color;
+       border-color: $lever-accent-color;
+       color: $lever-brand-color;
+       @include scala-sans;
+     }
+
+     .disabled>span,
+     .disabled>span:hover,
+     .disabled>span:focus,
+     .disabled>a,
+     .disabled>a:hover,
+     .disabled>a:focus {
+       background-color: $lever-accent-color;
+       border-color: $lever-accent-color;
+       color: $lever-brand-color;
+       @include scala-sans;
+     }
+  }
+
+  //footer
+  footer {
+    @include scala-sans;
+
+    a,
+    a:hover,
+    a:active {
+      color: $lever-white;
+    }
+
+    .press-block-a a {
+      display: none;
+    }
+
+    .press-block-a,
+    .press-block-b {
+      background-color:  $lever-accent-color;
+      font-weight: 600;
+
+      a,
+      a:hover,
+      a:active {
+        color: $lever-brand-color;
+      }
+
+      img {
+        width: 75px;
+      }
+
+    }
+    .press-block-c {
+      background-color: $lever-brand-color;
+    }
+    .platform {
+      background-color: $lever-black-80;
+    }
+  }
+
+  // EPUB Reader
+  #reader {
+
+    .button {
+      @include epub-button-background-color($lever-brand-color,$lever-accent-color,$lever-white);
+    }
+
+    .button--lg {
+      @include epub-button-background-color($lever-brand-color,$lever-accent-color,$lever-white);
+    }
+
+    .button--sm {
+      @include epub-button-background-color($lever-brand-color,$lever-accent-color,$lever-white);
+    }
+
+    i[class^='icon-chevron-'] {
+      @include epub-prev-next-color($lever-brand-color);
+      transition: 0.2s ease-in;
+    }
+
+    i[class^='icon-chevron-']:hover {
+      @include epub-hover-prev-next-color($lever-accent-color);
+      transition: 0.2s ease-in;
+    }
+
+    .cozy-control .logo {
+      height: 47px;
+
+      img {
+        height: 47px;
+      }
+    }
+  }
+
+}
+///////////////////////////////////////////////
+//
 // University of Michigan Press
 //
 ///////////////////////////////////////////////
