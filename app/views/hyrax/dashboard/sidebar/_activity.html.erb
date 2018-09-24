@@ -1,0 +1,47 @@
+<li class="h5"><%= t('hyrax.admin.sidebar.activity') %></li>
+
+<li>
+  <%= menu.collapsable_section t('hyrax.admin.sidebar.user_activity'),
+                               icon_class: "fa fa-line-chart",
+                               id: 'collapseUserActivity',
+                               open: menu.user_activity_section? do %>
+    <%= menu.nav_link(hyrax.dashboard_profile_path(current_user),
+                      also_active_for: hyrax.edit_dashboard_profile_path(current_user)) do %>
+      <span class="fa fa-id-card"></span> <span class="sidebar-action-text"><%= t('hyrax.admin.sidebar.profile') %></span>
+    <% end %>
+
+    <%= menu.nav_link(hyrax.notifications_path) do %>
+      <span class="fa fa-bell"></span> <span class="sidebar-action-text"><%= t('hyrax.admin.sidebar.notifications') %></span>
+    <% end %>
+
+    <%= menu.nav_link(hyrax.transfers_path) do %>
+      <span class="fa fa-arrows-h"></span> <span class="sidebar-action-text"><%= t('hyrax.admin.sidebar.transfers') %></span>
+    <% end %>
+  <% end %>
+</li>
+
+<% if can? :read, :admin_dashboard %>
+<li>
+  <% #byebug %>
+  <%= menu.collapsable_section "Reports",
+                               icon_class: "fa fa-bar-chart",
+                               id: 'collapseReports',
+                               open: menu.report_section? do %>
+    <%= menu.nav_link(hyrax.admin_stats_path + ';partial=analytics') do %>
+      <span class="fa fa-google"></span> <span class="sidebar-action-text">Google Analytics</span>
+    <% end %>
+
+    <%= menu.nav_link(hyrax.admin_stats_path + ';partial=counter') do %>
+      <span class="fa fa-list-ol"></span> <span class="sidebar-action-text">COUNTER Reports</span>
+    <% end %>
+
+    <%= menu.nav_link(hyrax.admin_stats_path + ';partial=altmetric') do %>
+      <span class="fa fa-circle-o"></span> <span class="sidebar-action-text">Altmetric Reports</span>
+    <% end %>
+
+    <%= menu.nav_link(hyrax.admin_stats_path + ';partial=dimensions') do %>
+      <span class="fa fa-cubes"></span> <span class="sidebar-action-text">Dimensions Reports</span>
+    <% end %>
+  <% end %>
+</li>
+<% end %>

@@ -59,6 +59,12 @@ module PressHelper
     press.google_analytics.presence || parent_press(press)&.google_analytics
   end
 
+  def google_analytics_url(subdomain)
+    press = Press.where(subdomain: subdomain)&.first
+    return if press.blank?
+    press.google_analytics_url.presence || parent_press(press)&.google_analytics_url
+  end
+
   def typekit(subdomain)
     press = Press.where(subdomain: subdomain)&.first
     return if press.blank?

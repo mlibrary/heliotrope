@@ -95,7 +95,6 @@ Rails.application.routes.draw do
   get 'embed', controller: :embed, action: :show
   get 'fulcrum', controller: :fulcrum, action: :index, as: :fulcrum
   get 'fulcrum/:partial', controller: :fulcrum, action: :show, as: :partial_fulcrum
-  get 'analytics', controller: :analytics, action: :show
   get 'webgl/:id', controller: :webgls, action: :show, as: :webgl
   get 'webgl/:id/*file', controller: :webgls, action: :file, as: :webgl_file
   post 'featured_representatives', controller: :featured_representatives, action: :save

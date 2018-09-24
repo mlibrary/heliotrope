@@ -18,6 +18,7 @@ describe 'Adding a new press' do
       attach_file 'press[logo_path]', Rails.root.join('spec', 'fixtures', 'csv', 'import', 'shipwreck.jpg')
       fill_in 'Publisher\'s Current Website Address', with: 'https://example.com'
       fill_in 'Google Analytics Tracking ID', with: 'GA-87654321-1'
+      fill_in 'Google Analytics Data Studio URL', with: 'https://www.example.com/GA/ReadReadRead'
       fill_in 'Typekit ID', with: '2346553'
       # leaving footer block a blank to produce external link to the Publisher
       # fill_in 'Footer block a', with: '<div>Footer Block A Stuff</div>'
