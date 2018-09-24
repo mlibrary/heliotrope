@@ -23,7 +23,7 @@ module Import
       md = Redcarpet::Markdown.new(Redcarpet::Render::StripDown, space_after_headers: true)
       missing_fields_errors, controlled_vocab_errors, date_errors = Array.new(3) { [] }
 
-      fields = METADATA_FIELDS.select { |f| %i[universal file_set].include? f[:object] }
+      fields = METADATA_FIELDS.select { |f| %i[universal file_set].include? f[:object] } + FILE_SET_FLAG_FIELDS
       fields.each do |field|
         if row[field[:field_name]].present?
           is_multivalued = field[:multivalued]

@@ -48,4 +48,10 @@ METADATA_FIELDS ||=
     { object: :monograph, field_name: 'Series', metadata_name: 'series', multivalued: :yes_split }
   ].freeze
 
+# don't want to mix these with the ActiveFedora fields above
+FILE_SET_FLAG_FIELDS ||=
+  [
+    { object: :file_set, field_name: 'Representative Kind', metadata_name: 'representative_kind', required: false, multivalued: :no, acceptable_values: FeaturedRepresentative::KINDS + ['cover'] }
+  ].freeze
+
 MONO_FILENAME_FLAG ||= '://:MONOGRAPH://:'
