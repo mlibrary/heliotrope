@@ -80,7 +80,7 @@ module Hyrax
       link = solr_document.license.first.sub('https', 'http')
       link = link.sub('licenses', 'l')
       link = link.sub('publicdomain', 'p')
-      link.sub('http://creativecommons', 'https://i.creativecommons') + '88x31.png'
+      link.sub('http://creativecommons', 'https://i.creativecommons') + '80x15.png'
     end
 
     def copyright_holder?

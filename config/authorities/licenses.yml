@@ -13,26 +13,27 @@
 #      Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International license
 #      Creative Commons Attribution-ShareAlike 4.0 International license
 
+# note: there were some http links below from Hyrax, changed them all to https
 terms:
-    - id: http://creativecommons.org/licenses/by/3.0/us/
+    - id: https://creativecommons.org/licenses/by/3.0/us/
       term: Attribution 3.0 United States # Hyrax term
       active: false
-    - id: http://creativecommons.org/licenses/by-sa/3.0/us/
+    - id: https://creativecommons.org/licenses/by-sa/3.0/us/
       term: Attribution-ShareAlike 3.0 United States # Hyrax term
       active: false
-    - id: http://creativecommons.org/licenses/by-nc/3.0/us/
+    - id: https://creativecommons.org/licenses/by-nc/3.0/us/
       term: Attribution-NonCommercial 3.0 United States # Hyrax term
       active: false
-    - id: http://creativecommons.org/licenses/by-nd/3.0/us/
+    - id: https://creativecommons.org/licenses/by-nd/3.0/us/
       term: Attribution-NoDerivs 3.0 United States # Hyrax term
       active: false
-    - id: http://creativecommons.org/licenses/by-nc-nd/3.0/us/
+    - id: https://creativecommons.org/licenses/by-nc-nd/3.0/us/
       term: Attribution-NonCommercial-NoDerivs 3.0 United States # Hyrax term
       active: false
-    - id: http://creativecommons.org/licenses/by-nc-sa/3.0/us/
+    - id: https://creativecommons.org/licenses/by-nc-sa/3.0/us/
       term: Attribution-NonCommercial-ShareAlike 3.0 United States # Hyrax term
       active: false
-    - id: http://www.europeana.eu/portal/rights/rr-r.html
+    - id: https://www.europeana.eu/portal/rights/rr-r.html
       term: All rights reserved # Hyrax term
       active: false
     - id: https://creativecommons.org/licenses/by/3.0/
@@ -44,13 +45,13 @@ terms:
     - id: https://creativecommons.org/licenses/by-nc-nd/3.0/
       term: Creative Commons Attribution-NonCommercial-NoDerivatives license, 3.0 Unported # Heliotrope term
       active: true
-    - id: http://creativecommons.org/licenses/by-nc/3.0/
+    - id: https://creativecommons.org/licenses/by-nc/3.0/
       term: Creative Commons Attribution-NonCommercial license, 3.0 Unported # Heliotrope term
       active: true
-    - id: http://creativecommons.org/licenses/by-nc-sa/3.0/
+    - id: https://creativecommons.org/licenses/by-nc-sa/3.0/
       term: Creative Commons Attribution-NonCommercial-ShareAlike license, 3.0 Unported # Heliotrope term
       active: true
-    - id: http://creativecommons.org/licenses/by-sa/3.0/
+    - id: https://creativecommons.org/licenses/by-sa/3.0/
       term: Creative Commons Attribution-ShareAlike license, 3.0 Unported # Heliotrope term
       active: true
     - id: https://creativecommons.org/licenses/by/4.0/
@@ -77,10 +78,10 @@ terms:
       # term: Creative Commons BY-NC-SA Attribution-NonCommercial-ShareAlike 4.0 International # Hyrax term
       term: Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International license # Heliotrope term
       active: true
-    - id: http://creativecommons.org/publicdomain/zero/1.0/
+    - id: https://creativecommons.org/publicdomain/zero/1.0/
       # term: Creative Commons CC0 1.0 Universal # Hyrax term
       term: Creative Commons Zero license (implies pd) # Heliotrope term
       active: true
-    - id: http://creativecommons.org/publicdomain/mark/1.0/
+    - id: https://creativecommons.org/publicdomain/mark/1.0/
       term: Creative Commons Public Domain Mark 1.0 # Hyrax term
       active: true

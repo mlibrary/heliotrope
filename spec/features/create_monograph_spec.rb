@@ -63,8 +63,9 @@ describe 'Create a monograph' do
       expect(page).to have_content '123-456-7890'
       expect(page).to have_content "Your files are being processed by Fulcrum in the background."
       # CC license icon/link
-      expect(page).to have_css("img[src*='https://i.creativecommons.org/p/mark/1.0/88x31.png']", count: 1)
-      expect(page).to have_link(nil, href: "http://creativecommons.org/publicdomain/mark/1.0/")
+      expect(page).to have_css("img[src*='https://i.creativecommons.org/p/mark/1.0/80x15.png']", count: 1)
+      expect(page).to have_link(nil, href: 'https://creativecommons.org/publicdomain/mark/1.0/')
+      expect(page.find(:css, 'a[href="https://creativecommons.org/publicdomain/mark/1.0/"]')[:target]).to eq '_blank'
 
       click_link 'Edit Monograph'
 
@@ -120,7 +121,7 @@ describe 'Create a monograph' do
       # buy_url
       expect(page).to have_content 'http://www.example.com/buy'
       # license
-      expect(page).to have_link("Creative Commons Public Domain Mark 1.0", href: "http://creativecommons.org/publicdomain/mark/1.0/")
+      expect(page).to have_link("Creative Commons Public Domain Mark 1.0", href: "https://creativecommons.org/publicdomain/mark/1.0/")
       # copyright_holder
       expect(page).to have_content 'Blahdy Blah Copyright Holder'
       # holding_contact

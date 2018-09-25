@@ -95,7 +95,8 @@ describe 'Edit a file set' do
       expect(page).to have_content 'Jimmy Johns, Wingperson M. Creator, Sub Way and Wingperson M. Contributor'
       expect(page).to have_content file_set_title
       expect(page).to have_content 'This is a caption for the image'
-      expect(page).to have_link("Creative Commons Public Domain Mark 1.0", href: "http://creativecommons.org/publicdomain/mark/1.0/")
+      expect(page).to have_link('Creative Commons Public Domain Mark 1.0', href: 'https://creativecommons.org/publicdomain/mark/1.0/')
+      expect(find_link('Creative Commons Public Domain Mark 1.0')[:target]).to eq '_blank'
       expect(page).to have_content 'University of Michigan'
       expect(page).to have_content 'Veggies es bonus vobis, external link proinde vos postulo essum magis internal link kohlrabi welsh onion daikon amaranth tatsoi tomatillo melon azuki bean garlic.'
       expect(page).to have_content 'screenshot'
