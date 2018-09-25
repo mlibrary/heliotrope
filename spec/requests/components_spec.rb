@@ -37,6 +37,7 @@ RSpec.describe "Components", type: :request do
         it do
           get components_path
           expect(response).to have_http_status(:ok)
+          expect(response).to render_template(:index)
         end
       end
     end

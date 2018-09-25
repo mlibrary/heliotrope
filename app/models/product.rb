@@ -19,6 +19,10 @@ class Product < ApplicationRecord
       errors.add(:base, "product has #{lessees.count} associated lessees!")
       throw(:abort)
     end
+    if policies.present?
+      errors.add(:base, "product has #{permits.count} associated policies!")
+      throw(:abort)
+    end
   end
 
   def update?
@@ -35,5 +39,9 @@ class Product < ApplicationRecord
 
   def not_lessees
     Lessee.where.not(id: lessees.map(&:id))
+  end
+
+  def policies
+    Policy.resource_policies(self)
   end
 end

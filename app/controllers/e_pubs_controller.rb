@@ -1,8 +1,9 @@
 # frozen_string_literal: true
 
-class EPubsController < ApplicationController
+class EPubsController < CheckpointController
   before_action :set_presenter, only: %i[show download_chapter download_interval search access]
   before_action :set_access_presenters, only: %i[access]
+  before_action :set_policy, only: %i[show download_chapter download_interval]
   before_action :set_show, only: %i[show download_chapter download_interval]
 
   def show
@@ -121,6 +122,10 @@ class EPubsController < ApplicationController
       end
       @institutions = component_institutions
       @products = component_products
+    end
+
+    def set_policy
+      @policy = EPubPolicy.new(current_user, @presenter)
     end
 
     def set_show

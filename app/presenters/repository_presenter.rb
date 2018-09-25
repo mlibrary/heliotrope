@@ -1,6 +1,10 @@
 # frozen_string_literal: true
 
 class RepositoryPresenter < ApplicationPresenter
+  def policy_ids
+    Checkpoint::DB::Permit.dataset.map(&:id)
+  end
+
   def product_ids
     Product.all.map(&:id)
   end

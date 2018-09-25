@@ -7,20 +7,21 @@
       <% end %>
     </th>
     <th>Identifier</th>
+    <th>Name</th>
+    <th>Entity ID</th>
     <th>Products</th>
     <th>Components</th>
+    <th>Policies</th>
   </tr>
   <% institutions.each do |institution| %>
     <tr>
-      <td><%= link_to institution.name, institution_path(institution) %></td>
-      <td><%= link_to_if institution.lessee?, institution.identifier, lessee_path(institution.lessee) %></td>
-      <% if institution.lessee? %>
-        <td><%= institution.lessee.products.count() %></td>
-        <td><%= institution.lessee.components.count() %></td>
-      <% else %>
-        <td></td>
-        <td></td>
-      <% end %>
+      <td><%= link_to institution.id, institution_path(institution) %></td>
+      <td><%= institution.identifier %></td>
+      <td><%= institution.name %></td>
+      <td><%= institution.entity_id %></td>
+      <td><%= institution.products.count() %></td>
+      <td><%= institution.components.count() %></td>
+      <td><%= institution.policies.count() %></td>
     </tr>
   <% end %>
 </table>

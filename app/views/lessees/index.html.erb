@@ -4,13 +4,13 @@
     <div class="col-md-12"><h1>Lessees</h1></div>
     <div class="col-md-12">
       <% @lessees.each do |lessee| %>
-        <% if lessee.institution? %>
-          <div class="col-md-1"><span class="glyphicon glyphicon-registration-mark" aria-hidden="true"></span></div>
-          <div class="col-md-5"><%= lessee.institution.name %></div>
-        <% else %>
-          <div class="col-md-1"></div>
-          <div class="col-md-5"><%= lessee.identifier %></div>
-        <% end %>
+        <div class="col-md-1"><%= lessee.id %></div>
+        <div class="col-md-5">
+          <%= lessee.identifier %>
+          <% if lessee.institution? %>
+            <%= lessee.institution.name %>
+          <% end %>
+        </div>
         <div class="col-md-6">
           <div class="col-md-4"><%= link_to 'Show', lessee %></div>
           <div class="col-md-4"><%= link_to_if lessee.update?, 'Edit', edit_lessee_path(lessee) %></div>

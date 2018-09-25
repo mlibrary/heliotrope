@@ -60,4 +60,21 @@ class Institution < ApplicationRecord
   def shibboleth?
     entity_id.present?
   end
+
+  def products
+    return [] if policies.blank?
+    Product.find(id: policies.map(&:resource_id))
+  end
+
+  def components
+    components = []
+    products.each do |product|
+      components << product.components
+    end
+    components.flatten.uniq
+  end
+
+  def policies
+    Policy.agent_policies(self)
+  end
 end

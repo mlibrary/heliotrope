@@ -1,0 +1,14 @@
+<div class="row">
+  <% policies.each do |policy| %>
+    <div class="col-md-1"><%= link_to policy.id, policy %></div>
+    <div class="col-md-2"><%= policy.agent_token %></div>
+    <div class="col-md-2"><%= policy.credential_token %></div>
+    <div class="col-md-2"><%= policy.resource_token %></div>
+    <div class="col-md-1"><%= policy.zone_id %></div>
+    <div class="col-md-4">
+      <%= link_to(policy_path(policy), method: :delete, class: "btn btn-default") do %>
+        <span class="glyphicon glyphicon-minus" aria-hidden="true"></span> Remove
+      <% end %>
+    </div>
+  <% end %>
+</div>

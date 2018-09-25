@@ -9,7 +9,7 @@ class ApplicationPolicy
 
   def authorize!(action, message = nil)
     raise(NotActionError, action.to_s) unless action.to_s.end_with?('?')
-    return if @current_user.platform_admin?
+    return if @current_user&.platform_admin?
     return if public_send(action)
     return if action_permitted?(action.to_s.chomp('?').to_sym)
     raise(NotAuthorizedError, message)
@@ -26,8 +26,13 @@ class ApplicationPolicy
 
   protected
 
-    def action_permitted?(action, agent: PolicyAgent.new(User, @current_user), target: PolicyResource.new(@resource_class, @resource))
-      Checkpoint::Query::ActionPermitted.new(agent, action, target, authority: authority).true?
+    def action_permitted?(action)
+      policy_agent = PolicyAgent.new(User, @current_user)
+      policy_credential = PolicyCredential.new(:Action, action)
+      policy_resource = PolicyResource.new(@resource_class, @resource)
+      Checkpoint::Query::ActionPermitted.new(policy_agent.entity, policy_credential.entity, policy_resource.entity, authority: authority).true?
+    rescue StandardError
+      false
     end
 
     def authority

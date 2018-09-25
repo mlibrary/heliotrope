@@ -1,7 +1,7 @@
 <div class="row">
   <% products.each do |product| %>
-    <div class="col-md-1"></div>
-    <div class="col-md-5"><%= product.identifier %></div>
+    <div class="col-md-1"><%= link_to product.id, product_path(product) %></div>
+    <div class="col-md-5"><%= product.name %></div>
     <div class="col-md-6">
       <%= link_to(lessee_product_path(lessee, product), method: :delete, class: "btn btn-default") do %>
         <span class="glyphicon glyphicon-minus" aria-hidden="true"></span> Remove

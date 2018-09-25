@@ -6,8 +6,8 @@
     <div class="col-md-11"><%= @lessee.identifier %></div>
     <% if @lessee.institution? %>
       <div class="col-md-12"><h2>Institution</h2></div>
-      <div class="col-md-1"></div>
-      <div class="col-md-11"><%= link_to @lessee.institution.name, institution_path(@lessee.institution) %></div>
+      <div class="col-md-1"><%= link_to @lessee.institution.id, institution_path(@lessee.institution) %></div>
+      <div class="col-md-11"><%= @lessee.institution.name %></div>
     <% end %>
     <div class="col-md-12"><h2>Products</h2></div>
     <div class="col-md-12">
@@ -16,6 +16,10 @@
     <div class="col-md-12"><h2>Components</h2></div>
     <div class="col-md-12">
       <%= render partial: 'components', locals: { lessee: @lessee, components: @lessee.components } %>
+    </div>
+    <div class="col-md-12"><h2>Policies</h2></div>
+    <div class="col-md-12">
+      <%= render partial: 'policies', locals: { lessee: @lessee, policies: @lessee.policies } %>
     </div>
     <div class="col-md-12"><br/></div>
     <div class="col-md-12">
