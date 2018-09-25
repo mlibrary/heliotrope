@@ -1,46 +1,86 @@
+# These are our original values (in order) from both the Google Sheet drop-down and metadata_fields.rb
+#      Creative Commons Attribution license, 3.0 Unported
+#      Creative Commons Attribution-NoDerivatives license, 3.0 Unported
+#      Creative Commons Attribution-NonCommercial-NoDerivatives license, 3.0 Unported
+#      Creative Commons Attribution-NonCommercial license, 3.0 Unported
+#      Creative Commons Attribution-NonCommercial-ShareAlike license, 3.0 Unported
+#      Creative Commons Attribution-ShareAlike license, 3.0 Unported
+#      Creative Commons Zero license (implies pd)
+#      Creative Commons Attribution 4.0 International license
+#      Creative Commons Attribution-NoDerivatives 4.0 International license
+#      Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International license
+#      Creative Commons Attribution-NonCommercial 4.0 International license
+#      Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International license
+#      Creative Commons Attribution-ShareAlike 4.0 International license
+
 terms:
     - id: http://creativecommons.org/licenses/by/3.0/us/
-      term: Attribution 3.0 United States
+      term: Attribution 3.0 United States # Hyrax term
       active: false
     - id: http://creativecommons.org/licenses/by-sa/3.0/us/
-      term: Attribution-ShareAlike 3.0 United States
+      term: Attribution-ShareAlike 3.0 United States # Hyrax term
       active: false
     - id: http://creativecommons.org/licenses/by-nc/3.0/us/
-      term: Attribution-NonCommercial 3.0 United States
+      term: Attribution-NonCommercial 3.0 United States # Hyrax term
       active: false
     - id: http://creativecommons.org/licenses/by-nd/3.0/us/
-      term: Attribution-NoDerivs 3.0 United States
+      term: Attribution-NoDerivs 3.0 United States # Hyrax term
       active: false
     - id: http://creativecommons.org/licenses/by-nc-nd/3.0/us/
-      term: Attribution-NonCommercial-NoDerivs 3.0 United States
+      term: Attribution-NonCommercial-NoDerivs 3.0 United States # Hyrax term
       active: false
     - id: http://creativecommons.org/licenses/by-nc-sa/3.0/us/
-      term: Attribution-NonCommercial-ShareAlike 3.0 United States
+      term: Attribution-NonCommercial-ShareAlike 3.0 United States # Hyrax term
       active: false
     - id: http://www.europeana.eu/portal/rights/rr-r.html
-      term: All rights reserved
+      term: All rights reserved # Hyrax term
       active: false
+    - id: https://creativecommons.org/licenses/by/3.0/
+      term: Creative Commons Attribution license, 3.0 Unported # Heliotrope term
+      active: true
+    - id: https://creativecommons.org/licenses/by-nd/3.0/
+      term: Creative Commons Attribution-NoDerivatives license, 3.0 Unported # Heliotrope term
+      active: true
+    - id: https://creativecommons.org/licenses/by-nc-nd/3.0/
+      term: Creative Commons Attribution-NonCommercial-NoDerivatives license, 3.0 Unported # Heliotrope term
+      active: true
+    - id: http://creativecommons.org/licenses/by-nc/3.0/
+      term: Creative Commons Attribution-NonCommercial license, 3.0 Unported # Heliotrope term
+      active: true
+    - id: http://creativecommons.org/licenses/by-nc-sa/3.0/
+      term: Creative Commons Attribution-NonCommercial-ShareAlike license, 3.0 Unported # Heliotrope term
+      active: true
+    - id: http://creativecommons.org/licenses/by-sa/3.0/
+      term: Creative Commons Attribution-ShareAlike license, 3.0 Unported # Heliotrope term
+      active: true
     - id: https://creativecommons.org/licenses/by/4.0/
-      term: Creative Commons BY Attribution 4.0 International
+      # term: Creative Commons BY Attribution 4.0 International # Hyrax term
+      term: Creative Commons Attribution 4.0 International license # Heliotrope term
       active: true
     - id: https://creativecommons.org/licenses/by-sa/4.0/
-      term: Creative Commons BY-SA Attribution-ShareAlike 4.0 International
+      # term: Creative Commons BY-SA Attribution-ShareAlike 4.0 International # Hyrax term
+      term: Creative Commons Attribution-ShareAlike 4.0 International license # Heliotrope term
       active: true
     - id: https://creativecommons.org/licenses/by-nd/4.0/
-      term: Creative Commons BY-ND Attribution-NoDerivatives 4.0 International
+      # term: Creative Commons BY-ND Attribution-NoDerivatives 4.0 International # Hyrax term
+      term: Creative Commons Attribution-NoDerivatives 4.0 International license # Heliotrope term
       active: true
     - id: https://creativecommons.org/licenses/by-nc/4.0/
-      term: Creative Commons BY-NC Attribution-NonCommercial 4.0 International
+      # term: Creative Commons BY-NC Attribution-NonCommercial 4.0 International # Hyrax term
+      term: Creative Commons Attribution-NonCommercial 4.0 International license # Heliotrope term
       active: true
     - id: https://creativecommons.org/licenses/by-nc-nd/4.0/
-      term: Creative Commons BY-NC-ND Attribution-NonCommercial-NoDerivs 4.0 International
+      # term: Creative Commons BY-NC-ND Attribution-NonCommercial-NoDerivs 4.0 International # Hyrax term
+      term: Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International license # Heliotrope term
       active: true
     - id: https://creativecommons.org/licenses/by-nc-sa/4.0/
-      term: Creative Commons BY-NC-SA Attribution-NonCommercial-ShareAlike 4.0 International
+      # term: Creative Commons BY-NC-SA Attribution-NonCommercial-ShareAlike 4.0 International # Hyrax term
+      term: Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International license # Heliotrope term
       active: true
     - id: http://creativecommons.org/publicdomain/zero/1.0/
-      term: Creative Commons CC0 1.0 Universal
+      # term: Creative Commons CC0 1.0 Universal # Hyrax term
+      term: Creative Commons Zero license (implies pd) # Heliotrope term
       active: true
     - id: http://creativecommons.org/publicdomain/mark/1.0/
-      term: Creative Commons Public Domain Mark 1.0
+      term: Creative Commons Public Domain Mark 1.0 # Hyrax term
       active: true
