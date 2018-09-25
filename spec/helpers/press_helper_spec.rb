@@ -49,6 +49,16 @@ describe PressHelper do
     end
   end
 
+  describe "#google_analytics_url" do
+    context "when a press has a google_analytics URL" do
+      let(:press) { create(:press, subdomain: "ReadReadRead", google_analytics_url: 'https://www.example.com/GA/ReadReadRead') }
+
+      it "returns the ga URL" do
+        expect(google_analytics_url(press.subdomain)).to eq('https://www.example.com/GA/ReadReadRead')
+      end
+    end
+  end
+
   describe "#restricted_message" do
     let(:press) { create(:press, subdomain: "blah", restricted_message: "<b>No. Just No.</b>") }
 
@@ -65,6 +75,7 @@ describe PressHelper do
                      description: "This is Blue Press",
                      press_url: "http://blue.com",
                      google_analytics: "GA-ID-BLUE",
+                     google_analytics_url: 'https://www.example.com/GA/ReadReadRead',
                      typekit: "BLUE-TYPEKIT",
                      footer_block_a: "blue-footer-a",
                      footer_block_b: "blue-footer-b",
@@ -78,6 +89,7 @@ describe PressHelper do
                      description: "This is Maize Press",
                      press_url: "http://blue.com/maize",
                      google_analytics: nil, # factorybot will fake a ga-id without this
+                     google_analytics_url: nil,
                      parent_id: press.id)
     }
 
@@ -87,6 +99,7 @@ describe PressHelper do
         expect(footer_block_b(child.subdomain)).to eq press.footer_block_b
         expect(footer_block_c(child.subdomain)).to eq press.footer_block_c
         expect(google_analytics(child.subdomain)).to eq press.google_analytics
+        expect(google_analytics_url(child.subdomain)).to eq press.google_analytics_url
         expect(typekit(child.subdomain)).to eq press.typekit
       end
       it "does not use the parent's name, since a name is required for all presses" do

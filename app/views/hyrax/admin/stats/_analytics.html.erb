@@ -1,0 +1,30 @@
+<% provide :page_header do %>
+  <h1><span class="fa fa-google"></span> Google Analytics</h1>
+<% end %>
+
+<% presses = current_user.admin_presses.where.not(google_analytics_url: nil) %>
+<% if presses.size > 1 %>
+  <select onchange="document.getElementById('ga_iframe').src=this.value";">
+    <% selected = "selected" %>
+    <% presses.sort_by(&:name).each do |press| %>
+      <option value="<%= press.google_analytics_url %>" <%= selected %>>
+        <%= press.name %>
+      </option>
+      <% selected = '' %>
+    <% end %>
+  </select>
+<% end %>
+
+<% if presses.size.positive? %>
+  <div class="panel panel-default">
+    <div class="panel-body">
+      <div class="iframe-container">
+        <iframe src="<%= presses[0].google_analytics_url %>"
+                id="ga_iframe" class=".embed-responsive-item">
+        </iframe>
+      </div>
+    </div>
+  </div>
+<% else %>
+  None of the presses you administer have a Google Analytics URL.
+<% end %>
