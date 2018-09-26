@@ -37,7 +37,6 @@ RSpec.describe "Lessees", type: :request do
         it do
           get lessees_path
           expect(response).to have_http_status(:ok)
-          expect(response).to render_template(:index)
         end
       end
     end

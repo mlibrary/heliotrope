@@ -26,7 +26,6 @@ RSpec.describe "Products", type: :request do
       it do
         get help_product_path(product)
         expect(response).to have_http_status(:ok)
-        expect(response).to render_template(:help)
       end
     end
   end
@@ -57,7 +56,6 @@ RSpec.describe "Products", type: :request do
         it do
           get help_product_path(product)
           expect(response).to have_http_status(:ok)
-          expect(response).to render_template(:help)
         end
       end
     end
@@ -69,7 +67,6 @@ RSpec.describe "Products", type: :request do
         it do
           get products_path
           expect(response).to have_http_status(:ok)
-          expect(response).to render_template(:index)
         end
       end
 
@@ -85,7 +82,6 @@ RSpec.describe "Products", type: :request do
         it do
           get help_product_path(product)
           expect(response).to have_http_status(:ok)
-          expect(response).to render_template(:help)
         end
       end
     end
