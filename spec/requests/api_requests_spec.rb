@@ -37,7 +37,6 @@ RSpec.describe "APIRequests", type: :request do
         it do
           get api_requests_path
           expect(response).to have_http_status(:ok)
-          expect(response).to render_template(:index)
         end
       end
     end
