@@ -27,7 +27,8 @@ class CounterReportsController < ApplicationController
   def index
     return render if params[:customer_id].present?
 
-    @active_reports = { pr_p1: COUNTER_REPORT_TITLE[:pr_p1] }
+    @active_reports = { pr_p1: COUNTER_REPORT_TITLE[:pr_p1],
+                        tr_b1: COUNTER_REPORT_TITLE[:tr_b1] }
 
     render 'counter_reports/without_customer_id/index'
   end
@@ -52,6 +53,11 @@ class CounterReportsController < ApplicationController
     case params[:id]
     when 'pr_p1'
       @report = CounterReporterService.pr_p1(institution: params[:institution_identifier],
+                                             press: params[:press_id],
+                                             start_date: params[:start_date],
+                                             end_date: params[:end_date])
+    when 'tr_b1'
+      @report = CounterReporterService.tr_b1(institution: params[:institution_identifier],
                                              press: params[:press_id],
                                              start_date: params[:start_date],
                                              end_date: params[:end_date])
