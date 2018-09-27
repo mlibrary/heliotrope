@@ -76,10 +76,6 @@ module SolrDocumentExtensions
       Array(self[Solrizer.solr_name('rights_granted', :symbol)]).first
     end
 
-    def rights_granted_creative_commons
-      Array(self[Solrizer.solr_name('rights_granted_creative_commons', :symbol)]).first
-    end
-
     def section_title
       Array(self[Solrizer.solr_name('section_title', :stored_searchable)])
     end
