@@ -39,7 +39,7 @@ module Hyrax
              :rights_statement, :license, :embargo_release_date, :lease_expiration_date, :depositor, :tags,
              :title_or_label, :section_title,
              :allow_download, :allow_hi_res, :copyright_status, :rights_granted,
-             :rights_granted_creative_commons, :exclusive_to_platform, :permissions_expiration_date,
+             :exclusive_to_platform, :permissions_expiration_date,
              :allow_display_after_expiration, :allow_download_after_expiration, :credit_line,
              :holding_contact, :external_resource_url, :primary_creator_role,
              :display_date, :sort_date, :transcript, :translation, :file_format,

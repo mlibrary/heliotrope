@@ -71,7 +71,6 @@ class FileSet < ActiveFedora::Base
     index.as :symbol
   end
 
-  # TODO: Remove this to close HELIO-2147
   property :section_title, predicate: ::RDF::Vocab::DC.relation do |index|
     index.as :stored_searchable, :facetable
   end
