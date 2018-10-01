@@ -98,9 +98,9 @@ TypeAheadControl.prototype.draw = function(setFocus) {
         myThis.handleChange();
     };
 
-    if (null == setFocus || setFocus) {
-        this.textBox.focus();
-    }
+    // if (null == setFocus || setFocus) {
+    //     this.textBox.focus();
+    // }
 };
 
 //
