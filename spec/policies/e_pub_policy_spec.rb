@@ -3,39 +3,43 @@
 require 'rails_helper'
 
 RSpec.describe EPubPolicy do
-  subject(:e_pub_policy) { described_class.new(current_user, e_pub) }
+  subject { described_class.new(current_user, current_institutions, e_pub_id).authorize!(action) }
 
-  let(:current_user) { double('current user', id: 'current_user_id', platform_admin?: false) }
-  let(:e_pub) { double('e pub', id: 'e_pub_id') }
+  let(:current_user) { double('current_user', email: '') }
+  let(:current_institutions) { [] }
+  let(:e_pub_id) { 'validnoid' }
+  let(:action) { :action }
 
-  it { is_expected.to be_a_kind_of(ApplicationPolicy) }
+  it ':action denied' do expect { subject }.to raise_error(NotAuthorizedError) end
 
-  context 'checkpoint' do
-    let(:checkpoint) { double('checkpoint') }
-    let(:policy_agent) { double('policy agent', entity: agent_entity) }
-    let(:agent_entity) { double('agent entity') }
-    let(:policy_resource) { double('policy resource', entity: resource_entity) }
-    let(:resource_entity) { double('resource entity') }
+  describe ':show' do
+    let(:action) { :show }
 
-    before do
-      allow(Services).to receive(:checkpoint).and_return(checkpoint)
-      allow(checkpoint).to receive(:permits?).with(agent_entity, :action, resource_entity).and_return(permit)
-      allow(PolicyAgent).to receive(:new).with(User, current_user).and_return(policy_agent)
-      allow(PolicyResource).to receive(:new).with(EPub, e_pub).and_return(policy_resource)
-    end
+    it 'granted' do expect { subject }.not_to raise_error end
 
-    context 'unauthorized' do
-      let(:permit) { false }
+    context 'component' do
+      let(:component) { double('component') }
+      let(:actor) { { email: current_user.email, institutions: current_institutions } }
+      let(:authority) { double('authority') }
+      let(:actor_agent_resolver) { double('actor_agent_resolver') }
+      let(:component_resource_resolver) { double('component_resource_resolver') }
+      let(:query) { double('query', true?: false) }
 
-      it { expect { subject.authorize!(:action) }.to raise_error(NotActionError) }
-      it { expect { subject.authorize!(:action?) }.to raise_error(NotAuthorizedError) }
-    end
+      before do
+        allow(Component).to receive(:find_by).with(handle: HandleService.path(e_pub_id)).and_return(component)
+        allow(Checkpoint::Authority).to receive(:new).with(agent_resolver: actor_agent_resolver, resource_resolver: component_resource_resolver).and_return(authority)
+        allow(ActorAgentResolver).to receive(:new).and_return(actor_agent_resolver)
+        allow(ComponentResourceResolver).to receive(:new).and_return(component_resource_resolver)
+        allow(Checkpoint::Query::ActionPermitted).to receive(:new).with(actor, action, component, authority: authority).and_return(query)
+      end
 
-    context 'authorized' do
-      let(:permit) { true }
+      it 'not permitted' do expect { subject }.to raise_error(NotAuthorizedError) end
 
-      it { expect { subject.authorize!(:action) }.to raise_error(NotActionError) }
-      it { expect { subject.authorize!(:action?) }.not_to raise_error }
+      context 'query' do
+        let(:query) { double('query', true?: true) }
+
+        it 'permitted' do expect { subject }.not_to raise_error end
+      end
     end
   end
 end

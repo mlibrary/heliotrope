@@ -50,7 +50,6 @@ module Devise
               debug_log "Guest user: '#{user_key}'"
               User.guest(user_key: user_key)
             end
-          user.populate_attributes
           user
         end
 

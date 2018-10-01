@@ -13,6 +13,9 @@ host: localhost:3000
 # This supports convenient single sign-on account provisioning
 create_user_on_login: false
 
+# Toggle between legacy and checkpoint authorization for EPubs.
+e_pub_checkpoint_authorization: true
+
 keycard:
   database:
     adapter: sqlite

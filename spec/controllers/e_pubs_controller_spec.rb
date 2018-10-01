@@ -36,7 +36,7 @@ RSpec.describe EPubsController, type: :controller do
 
       context 'file epub' do
         let(:monograph) { create(:monograph) }
-        let(:file_set) { create(:file_set, content: File.open(File.join(fixture_path, 'moby-dick.epub'))) }
+        let(:file_set) { create(:file_set, content: File.open(File.join(fixture_path, 'fake_epub01.epub'))) }
         let!(:fr) { create(:featured_representative, monograph_id: monograph.id, file_set_id: file_set.id, kind: 'epub') }
 
         before do
@@ -64,7 +64,7 @@ RSpec.describe EPubsController, type: :controller do
 
       context "file epub and the user has an instituion" do
         let(:monograph) { create(:monograph) }
-        let(:file_set) { create(:file_set, content: File.open(File.join(fixture_path, 'moby-dick.epub'))) }
+        let(:file_set) { create(:file_set, content: File.open(File.join(fixture_path, 'fake_epub01.epub'))) }
         let!(:fr) { create(:featured_representative, monograph_id: monograph.id, file_set_id: file_set.id, kind: 'epub') }
         let(:keycard) { { dlpsInstitutionId: [institution.identifier] } }
         let(:institution) { double('institution', identifier: '9999') }
@@ -128,7 +128,7 @@ RSpec.describe EPubsController, type: :controller do
 
       context 'file epub' do
         let(:monograph) { create(:monograph) }
-        let(:file_set) { create(:file_set, content: File.open(File.join(fixture_path, 'moby-dick.epub'))) }
+        let(:file_set) { create(:file_set, content: File.open(File.join(fixture_path, 'fake_epub01.epub'))) }
         let!(:fr) { create(:featured_representative, monograph_id: monograph.id, file_set_id: file_set.id, kind: 'epub') }
 
         before do
@@ -266,7 +266,7 @@ RSpec.describe EPubsController, type: :controller do
   context "checkpoint" do
     describe '#set_show' do
       let(:monograph) { create(:monograph) }
-      let(:file_set) { create(:file_set, id: '999999999', content: File.open(File.join(fixture_path, 'moby-dick.epub'))) }
+      let(:file_set) { create(:file_set, id: '999999999', content: File.open(File.join(fixture_path, 'fake_epub01.epub'))) }
       let!(:fr) { create(:featured_representative, monograph_id: monograph.id, file_set_id: file_set.id, kind: 'epub') }
 
       before do
@@ -282,6 +282,7 @@ RSpec.describe EPubsController, type: :controller do
         get :show, params: { id: file_set.id }
         expect(session[:show_set].include?(file_set.id)).to be true
         expect(response).to have_http_status(:success)
+        expect(response).not_to render_template(:access)
       end
 
       context 'Restricted Access' do
@@ -298,6 +299,7 @@ RSpec.describe EPubsController, type: :controller do
         it 'Anonymous User' do
           get :show, params: { id: file_set.id }
           expect(session[:show_set].include?(file_set.id)).to be false
+          expect(response).to have_http_status(:success)
           expect(response).to render_template(:access)
         end
 
@@ -305,6 +307,7 @@ RSpec.describe EPubsController, type: :controller do
           cosign_sign_in(create(:user))
           get :show, params: { id: file_set.id }
           expect(session[:show_set].include?(file_set.id)).to be false
+          expect(response).to have_http_status(:success)
           expect(response).to render_template(:access)
         end
 
@@ -313,37 +316,30 @@ RSpec.describe EPubsController, type: :controller do
           get :show, params: { id: file_set.id }
           expect(session[:show_set].include?(file_set.id)).to be false
           expect(response).to have_http_status(:success)
+          expect(response).to render_template(:access)
         end
 
         it "Subscribed Institution" do
-          institution = Institution.create!(identifier: dlpsInstitutionId, name: 'Name', site: 'Site', login: 'Login')
+          _institution = Institution.create!(identifier: dlpsInstitutionId, name: 'Name', site: 'Site', login: 'Login')
           product = Product.create!(identifier: 'product', name: 'name', purchase: 'purchase')
           product.components << component
-          # lessee = Lessee.find_by(identifier: dlpsInstitutionId)
-          # product.lessees << lessee
           product.save!
-          agent = PolicyAgent.new(Institution, institution)
-          credential = PolicyCredential.new(:Action, :show)
-          resource = PolicyResource.new(Product, product)
-          Checkpoint::DB::Permit.from(agent, credential, resource, zone: Checkpoint::DB::Permit.default_zone).save
-          _permits = Checkpoint::DB::Permit.all
-
           get :show, params: { id: file_set.id }
           expect(session[:show_set].include?(file_set.id)).to be false
           expect(response).to have_http_status(:success)
+          expect(response).to render_template(:access)
         end
 
         it "Subscribed User" do
           user = create(:user)
           product = Product.create!(identifier: 'product', name: 'name', purchase: 'purchase')
           product.components << component
-          lessee = Lessee.create!(identifier: user.email)
-          product.lessees << lessee
           product.save!
           cosign_sign_in(user)
           get :show, params: { id: file_set.id }
-          expect(session[:show_set].include?(file_set.id)).to be true
+          expect(session[:show_set].include?(file_set.id)).to be false
           expect(response).to have_http_status(:success)
+          expect(response).to render_template(:access)
         end
       end
     end

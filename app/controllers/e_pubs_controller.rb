@@ -125,7 +125,7 @@ class EPubsController < CheckpointController
     end
 
     def set_policy
-      @policy = EPubPolicy.new(current_user, @presenter)
+      @policy = EPubPolicy.new(current_user, current_institutions, @presenter.id)
     end
 
     def set_show
@@ -162,6 +162,14 @@ class EPubsController < CheckpointController
     end
 
     def access?
+      return legacy_access? unless Rails.configuration.e_pub_checkpoint_authorization
+      @policy.authorize! :show
+      true
+    rescue StandardError
+      false
+    end
+
+    def legacy_access?
       component = Component.find_by(handle: publication.identifier)
       return true if component.blank?
       identifiers = current_institutions.map(&:identifier)
@@ -189,7 +197,7 @@ class EPubsController < CheckpointController
     def subscribers
       component = Component.find_by(handle: publication.identifier)
       return [] if component.blank?
-      component.lessees(true)
+      component.lessees
     end
 
     def subscriber
