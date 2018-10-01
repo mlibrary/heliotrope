@@ -1,0 +1,13 @@
+<div class="row">
+  <% policies.each do |policy| %>
+    <div class="col-md-1">
+      <%= link_to policy.id, permit_path(policy) %>
+    </div>
+    <div class="col-md-5">
+      <%= policy.identifier %>
+    </div>
+    <div class="col-md-6">
+      &nbsp;
+    </div>
+  <% end %>
+</div>

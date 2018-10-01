@@ -46,4 +46,8 @@ class Lessee < ApplicationRecord
   def institution
     Institution.find_by(identifier: identifier)
   end
+
+  def policies
+    Policy.agent_policies(self)
+  end
 end

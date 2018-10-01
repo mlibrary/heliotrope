@@ -63,7 +63,9 @@ Rails.application.routes.draw do
     resources :products do
       resources :components, only: %i[create destroy]
       resources :lessees, only: %i[create destroy]
+      resources :policies, only: %i[new]
     end
+    resources :policies
     resources :customers, only: %i[index] do
       resources :counter_reports, only: %i[index show edit update], constraints: COUNTER_REPORT_ID_CONSTRAINT
     end
@@ -127,7 +129,7 @@ Rails.application.routes.draw do
   get 'discovery_feed', controller: :sessions, action: :discovery_feed
   get 'discovery_feed/:id', controller: :sessions, action: :discovery_feed
 
-  unless /^production$/i.match?(Rails.env)
+  unless Rails.env.production?
     get 'Shibboleth.sso/Help', controller: :shibboleths, action: :help
     get 'Shibboleth.sso/Login', controller: :shibboleths, action: :new
   end

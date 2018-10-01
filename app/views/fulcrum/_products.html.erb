@@ -6,14 +6,20 @@
         <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> New
       <% end %>
     </th>
+    <th>Identifier</th>
+    <th>Name</th>
     <th>Components</th>
     <th>Lessees</th>
+    <th>Policies</th>
   </tr>
   <% products.each do |product| %>
     <tr>
-      <td><%= link_to product.identifier, product_path(product) %></td>
+      <td><%= link_to product.id, product_path(product) %></td>
+      <td><%= product.identifier %></td>
+      <td><%= product.name %></td>
       <td><%= product.components.count() %></td>
       <td><%= product.lessees.count() %></td>
+      <td><%= product.policies.count() %></td>
     </tr>
   <% end %>
 </table>

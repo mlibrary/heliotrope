@@ -18,6 +18,12 @@ describe CheckpointController do
       get :trigger
       expect(response).to be_unauthorized
     end
+
+    it "NotAuthorizedError with response unauthorized" do
+      controller.the_exception = NotAuthorizedError.new
+      get :trigger
+      expect(response).to be_unauthorized
+    end
   end
 
   describe '#current_ability' do

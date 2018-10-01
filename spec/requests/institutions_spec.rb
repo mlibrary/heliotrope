@@ -26,6 +26,7 @@ RSpec.describe "Institutions", type: :request do
       it do
         get help_institution_path(institution)
         expect(response).to have_http_status(:ok)
+        expect(response).to render_template(:help)
       end
     end
   end
@@ -56,6 +57,7 @@ RSpec.describe "Institutions", type: :request do
         it do
           get help_institution_path(institution)
           expect(response).to have_http_status(:ok)
+          expect(response).to render_template(:help)
         end
       end
     end
@@ -67,6 +69,7 @@ RSpec.describe "Institutions", type: :request do
         it do
           get institutions_path
           expect(response).to have_http_status(:ok)
+          expect(response).to render_template(:index)
         end
       end
 
@@ -82,6 +85,7 @@ RSpec.describe "Institutions", type: :request do
         it do
           get help_institution_path(institution)
           expect(response).to have_http_status(:ok)
+          expect(response).to render_template(:help)
         end
       end
     end

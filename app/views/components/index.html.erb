@@ -4,9 +4,14 @@
     <div class="col-md-12"><h1>Components</h1></div>
     <div class="col-md-12">
       <% @components.each do |component| %>
-        <div class="col-md-1"></div>
-        <div class="col-md-5"><%= component.handle %></div>
-        <div class="col-md-6">
+        <% noid = HandleService.noid(component.handle) %>
+        <% fileset = FileSet.find(noid) %>
+        <% monograph = fileset.parent %>
+        <div class="col-md-1"><%= component.id %></div>
+        <div class="col-md-3"><%= link_to component.handle, HandleService.url(fileset.id) %></div>
+        <div class="col-md-2"><%= link_to fileset.id, hyrax_file_set_path(fileset.id) %></div>
+        <div class="col-md-2"><%= link_to monograph.id, monograph_catalog_path(monograph.id) %></div>
+        <div class="col-md-4">
           <div class="col-md-4"><%= link_to 'Show', component %></div>
           <div class="col-md-4"><%= link_to_if component.update?, 'Edit', edit_component_path(component) %></div>
           <div class="col-md-4"><%= link_to_if component.destroy?, 'Destroy', component, method: :delete, data: { confirm: 'Are you sure?' } %></div>

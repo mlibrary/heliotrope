@@ -4,7 +4,9 @@ require 'rails_helper'
 require 'json'
 
 RSpec.describe EPubsController, type: :controller do
-  context "override show method" do
+  it { is_expected.to be_a_kind_of(CheckpointController) }
+
+  context "show" do
     let(:show) { true }
 
     before { allow_any_instance_of(described_class).to receive(:show?).and_return(show) }
@@ -261,7 +263,7 @@ RSpec.describe EPubsController, type: :controller do
     end
   end
 
-  context "no show override" do
+  context "checkpoint" do
     describe '#set_show' do
       let(:monograph) { create(:monograph) }
       let(:file_set) { create(:file_set, id: '999999999', content: File.open(File.join(fixture_path, 'moby-dick.epub'))) }
@@ -275,88 +277,73 @@ RSpec.describe EPubsController, type: :controller do
 
       after { FeaturedRepresentative.destroy_all }
 
-      context 'institution subscription' do
+      it 'Open Access' do
+        session[:show_set] = []
+        get :show, params: { id: file_set.id }
+        expect(session[:show_set].include?(file_set.id)).to be true
+        expect(response).to have_http_status(:success)
+      end
+
+      context 'Restricted Access' do
+        let(:component) { Component.create!(handle: HandleService.path(file_set.id)) }
         let(:keycard) { { dlpsInstitutionId: dlpsInstitutionId } }
         let(:dlpsInstitutionId) { 'institute' }
 
-        before { allow_any_instance_of(Keycard::Request::Attributes).to receive(:all).and_return(keycard) }
-
-        context 'institution' do
-          it "Open Access" do
-            session[:show_set] = []
-            get :show, params: { id: file_set.id }
-            expect(session[:show_set].include?(file_set.id)).to be true
-            expect(response).to have_http_status(:success)
-          end
-
-          context "Restricted Access" do
-            it "Anonymous User" do
-              session[:show_set] = []
-              Component.create!(handle: HandleService.path(file_set.id))
-
-              get :show, params: { id: file_set.id }
-              expect(session[:show_set].include?(file_set.id)).to be false
-              expect(response).to render_template(:access)
-            end
-
-            it "Subscribed Institution" do
-              session[:show_set] = []
-              component = Component.create!(handle: HandleService.path(file_set.id))
-
-              Institution.create!(identifier: dlpsInstitutionId, name: 'Name', site: 'Site', login: 'Login')
-              product = Product.create!(identifier: 'product', name: 'name', purchase: 'purchase')
-              product.components << component
-              lessee = Lessee.find_by(identifier: dlpsInstitutionId)
-              product.lessees << lessee
-              product.save!
-              get :show, params: { id: file_set.id }
-              expect(session[:show_set].include?(file_set.id)).to be true
-              expect(response).to have_http_status(:success)
-            end
-          end
+        before do
+          allow_any_instance_of(Keycard::Request::Attributes).to receive(:all).and_return(keycard)
+          component
+          session[:show_set] = []
         end
-      end
 
-      context 'user subscription' do
-        let(:user) { create(:user) }
+        it 'Anonymous User' do
+          get :show, params: { id: file_set.id }
+          expect(session[:show_set].include?(file_set.id)).to be false
+          expect(response).to render_template(:access)
+        end
 
-        context 'lessee' do
-          it "Open Access" do
-            session[:show_set] = []
-            get :show, params: { id: file_set.id }
-            expect(session[:show_set].include?(file_set.id)).to be true
-            expect(response).to have_http_status(:success)
-          end
+        it 'Authenticated User' do
+          cosign_sign_in(create(:user))
+          get :show, params: { id: file_set.id }
+          expect(session[:show_set].include?(file_set.id)).to be false
+          expect(response).to render_template(:access)
+        end
 
-          context "Restricted Access" do
-            it "Anonymous User" do
-              Component.create!(handle: HandleService.path(file_set.id))
-              get :show, params: { id: file_set.id }
-              expect(session[:show_set].include?(file_set.id)).to be false
-              expect(response).to render_template(:access)
-            end
+        it 'Platform Admin' do
+          cosign_sign_in(create(:platform_admin))
+          get :show, params: { id: file_set.id }
+          expect(session[:show_set].include?(file_set.id)).to be false
+          expect(response).to have_http_status(:success)
+        end
 
-            it "Authenticated User" do
-              Component.create!(handle: HandleService.path(file_set.id))
-              cosign_sign_in(user)
-              get :show, params: { id: file_set.id }
-              expect(session[:show_set].include?(file_set.id)).to be false
-              expect(response).to render_template(:access)
-            end
+        it "Subscribed Institution" do
+          institution = Institution.create!(identifier: dlpsInstitutionId, name: 'Name', site: 'Site', login: 'Login')
+          product = Product.create!(identifier: 'product', name: 'name', purchase: 'purchase')
+          product.components << component
+          # lessee = Lessee.find_by(identifier: dlpsInstitutionId)
+          # product.lessees << lessee
+          product.save!
+          agent = PolicyAgent.new(Institution, institution)
+          credential = PolicyCredential.new(:Action, :show)
+          resource = PolicyResource.new(Product, product)
+          Checkpoint::DB::Permit.from(agent, credential, resource, zone: Checkpoint::DB::Permit.default_zone).save
+          _permits = Checkpoint::DB::Permit.all
 
-            it "Subscribed User" do
-              component = Component.create!(handle: HandleService.path(file_set.id))
-              cosign_sign_in(user)
-              product = Product.create!(identifier: 'product', name: 'name', purchase: 'purchase')
-              product.components << component
-              lessee = Lessee.create!(identifier: user.email)
-              product.lessees << lessee
-              product.save!
-              get :show, params: { id: file_set.id }
-              expect(session[:show_set].include?(file_set.id)).to be true
-              expect(response).to have_http_status(:success)
-            end
-          end
+          get :show, params: { id: file_set.id }
+          expect(session[:show_set].include?(file_set.id)).to be false
+          expect(response).to have_http_status(:success)
+        end
+
+        it "Subscribed User" do
+          user = create(:user)
+          product = Product.create!(identifier: 'product', name: 'name', purchase: 'purchase')
+          product.components << component
+          lessee = Lessee.create!(identifier: user.email)
+          product.lessees << lessee
+          product.save!
+          cosign_sign_in(user)
+          get :show, params: { id: file_set.id }
+          expect(session[:show_set].include?(file_set.id)).to be true
+          expect(response).to have_http_status(:success)
         end
       end
     end

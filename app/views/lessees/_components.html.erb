@@ -1,6 +1,6 @@
 <div class="row">
   <% components.each do |component| %>
-    <div class="col-md-1"></div>
+    <div class="col-md-1"><%= link_to component.id, component_path(component) %></div>
     <div class="col-md-11"><%= link_to component.handle, HandleService.url(HandleService.noid(component.handle)) %></div>
   <% end %>
 </div>

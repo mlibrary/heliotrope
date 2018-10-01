@@ -1,0 +1,26 @@
+<% 
+  permits = Checkpoint::DB::Permit.dataset
+  policies = permits.map { |permit| Policy.new(permit) }
+%>
+<h1>Policies</h1>
+<table class="table table-striped" summary="Policies List">
+  <tr>
+    <th>Policy <%= link_to(new_policy_path) do %>
+        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> New
+      <% end %>
+    </th>
+    <th>Agent</th>
+    <th>Credential</th>
+    <th>Resource</th>
+    <th>Zone</th>
+  </tr>
+  <% policies.each do |policy| %>
+    <tr>
+      <td><%= link_to policy.id, policy_path(policy) %></td>
+      <td><%= policy.agent_token %></td>
+      <td><%= policy.credential_token %></td>
+      <td><%= policy.resource_token %></td>
+      <td><%= policy.zone_id %></td>
+    </tr>
+  <% end %>
+</table>

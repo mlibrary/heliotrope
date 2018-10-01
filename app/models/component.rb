@@ -29,4 +29,12 @@ class Component < ApplicationRecord
     return [] if products.blank?
     Lessee.where(id: LesseesProduct.where(product_id: products.map(&:id)).map(&:lessee_id)).distinct
   end
+
+  def policies
+    policies = []
+    products.each do |product|
+      policies << product.policies
+    end
+    policies.flatten
+  end
 end

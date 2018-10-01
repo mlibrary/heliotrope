@@ -55,6 +55,7 @@ RSpec.describe InstitutionsController, type: :controller do
       _institution = Institution.create! valid_attributes
       get :index, params: {}, session: valid_session
       expect(response).to be_success
+      expect(response).to render_template(:index)
     end
   end
 
@@ -63,6 +64,7 @@ RSpec.describe InstitutionsController, type: :controller do
       institution = Institution.create! valid_attributes
       get :show, params: { id: institution.to_param }, session: valid_session
       expect(response).to be_success
+      expect(response).to render_template(:show)
     end
   end
 
@@ -70,6 +72,7 @@ RSpec.describe InstitutionsController, type: :controller do
     it "returns a success response" do
       get :new, params: {}, session: valid_session
       expect(response).to be_success
+      expect(response).to render_template(:new)
     end
   end
 
@@ -78,6 +81,7 @@ RSpec.describe InstitutionsController, type: :controller do
       institution = Institution.create! valid_attributes
       get :edit, params: { id: institution.to_param }, session: valid_session
       expect(response).to be_success
+      expect(response).to render_template(:edit)
     end
   end
 
@@ -99,6 +103,7 @@ RSpec.describe InstitutionsController, type: :controller do
       it "returns a success response (i.e. to display the 'new' template)" do
         post :create, params: { institution: invalid_attributes }, session: valid_session
         expect(response).to be_success
+        expect(response).to render_template(:new)
       end
     end
   end
@@ -135,6 +140,7 @@ RSpec.describe InstitutionsController, type: :controller do
         institution = Institution.create! valid_attributes
         put :update, params: { id: institution.to_param, institution: invalid_attributes }, session: valid_session
         expect(response).to be_success
+        expect(response).to render_template(:edit)
       end
     end
   end

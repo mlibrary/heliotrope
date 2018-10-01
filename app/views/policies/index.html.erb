@@ -1,0 +1,28 @@
+<p id="notice"><%= notice %></p>
+<div id="maincontent">
+  <div class="row">
+    <div class="col-md-12"><h1>Policies</h1></div>
+    <div class="col-md-12">
+      <% @policies.each do |policy| %>
+        <div class="col-md-8">
+          <div class="col-md-1"><%= policy.id %></div>
+          <div class="col-md-3"><%= policy.agent_token %></div>
+          <div class="col-md-3"><%= policy.credential_token %></div>
+          <div class="col-md-3"><%= policy.resource_token %></div>
+          <div class="col-md-2"><%= policy.zone_id %></div>
+        </div>
+        <div class="col-md-2">
+          <div class="col-md-4"><%= link_to 'Show', policy %></div>
+          <div class="col-md-4"><%= link_to 'Edit', edit_policy_path(policy) %></div>
+          <div class="col-md-4"><%= link_to 'Destroy', policy, method: :delete, data: { confirm: 'Are you sure?' } %></div>
+        </div>
+      <% end %>
+    </div>
+    <div class="col-md-12"><br/></div>
+    <div class="col-md-12"><%= link_to 'New Policy', new_policy_path %></div>
+    <div class="col-md-12"><br/></div>
+  </div>
+  <div class="col-md-12"><br/></div>
+  <div class="col-md-12"><%= will_paginate @policies %></div>
+  <div class="col-md-12"><br/></div>
+</div>

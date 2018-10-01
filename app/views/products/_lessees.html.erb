@@ -1,15 +1,12 @@
 <div class="row">
   <% lessees.each do |lessee| %>
     <div class="col-md-1">
-      <% if lessee.institution? %>
-        <span class="glyphicon glyphicon-registration-mark" aria-hidden="true"></span>
-      <% end %>
+      <%= link_to lessee.id, lessee %>
     </div>
     <div class="col-md-5">
+      <%= lessee.identifier %>
       <% if lessee.institution? %>
         <%= lessee.institution.name %>
-      <% else %>
-        <%= lessee.identifier %>
       <% end %>
     </div>
     <div class="col-md-6">

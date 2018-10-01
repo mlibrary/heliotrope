@@ -6,14 +6,18 @@
         <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> New
       <% end %>
     </th>
+    <th>Handle</th>
     <th>Products</th>
     <th>Lessees</th>
+    <th>Policies</th>
   </tr>
   <% components.each do |component| %>
     <tr>
-      <td><%= link_to component.handle, component_path(component) %></td>
+      <td><%= link_to component.id, component_path(component) %></td>
+      <td><%= link_to component.handle, HandleService.url(HandleService.noid(component.handle)) %></td>
       <td><%= component.products.count() %></td>
       <td><%= component.lessees.count() %></td>
+      <td><%= component.policies.count() %></td>
     </tr>
   <% end %>
 </table>

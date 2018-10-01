@@ -1,36 +1,31 @@
-<% repository =  RepositoryPresenter.new(current_user) %>
 <h1>Fulcrum</h1>
 <table class="table table-striped" summary="Repository Global Stats">
   <tr>
-    <td>Products</td>
-    <td><%= repository.product_ids.count() %></td>
+    <td><%= link_to 'Policies',  policies_path %></td>
+    <td><%= Policy.count %></td>
   </tr>
   <tr>
-    <td>Components</td>
-    <td><%= repository.component_ids.count() %></td>
+    <td><%= link_to 'Products', products_path %></td>
+    <td><%= Product.count %></td>
   </tr>
   <tr>
-    <td>Lessees</td>
-    <td><%= repository.lessee_ids.count() %></td>
+    <td><%= link_to 'Components', components_path %></td>
+    <td><%= Component.count %></td>
   </tr>
   <tr>
-    <td>Institutions</td>
-    <td><%= repository.institution_ids.count() %></td>
+    <td><%= link_to 'Lessees', lessees_path %></td>
+    <td><%= Lessee.count %></td>
   </tr>
   <tr>
-    <td>Publishers</td>
-    <td><%= repository.publisher_ids.count() %></td>
+    <td><%= link_to 'Institutions', institutions_path %></td>
+    <td><%= Institution.count %></td>
   </tr>
   <tr>
-    <td>Users</td>
-    <td><%= repository.user_ids.count() %></td>
+    <td><%= link_to 'Publishers', presses_path %></td>
+    <td><%= Press.count %></td>
   </tr>
   <tr>
-    <td>Monographs</td>
-    <td><%= repository.monograph_ids.count() %></td>
-  </tr>
-  <tr>
-    <td>Assets</td>
-    <td><%= repository.asset_ids.count() %></td>
+    <td><%= link_to 'Users', users_path %></td>
+    <td><%= User.count %></td>
   </tr>
 </table>

@@ -1,0 +1,32 @@
+<%= simple_form_for(@policy) do |f| %>
+  <%= f.error_notification %>
+
+  <div class="form-inputs">
+    <div><%= f.label :agent_type %></div>
+    <%= f.collection_radio_buttons :agent_type, [%w[user User], %w[institution Institution]], :first, :last, checked: 'user' %>
+  </div>
+
+  <div class="form-inputs">
+    <%= f.input :agent_id, required: true %>
+  </div>
+
+  <div class="form-inputs">
+    <%= f.input :credential_type, input_html: { value: 'permission' }, readonly: true %>
+  </div>
+
+  <div class="form-inputs">
+    <%= f.input :credential_id, input_html: { value: 'show' }, readonly: true %>
+  </div>
+
+  <div class="form-inputs">
+    <%= f.input :resource_type, input_html: { value: 'product' }, readonly: true %>
+  </div>
+
+  <div class="form-inputs">
+    <%= f.input :resource_id, collection: Product.all, selected: Product.first.id %>
+  </div>
+
+  <div class="form-actions">
+    <%= f.button :submit %>
+  </div>
+<% end %>

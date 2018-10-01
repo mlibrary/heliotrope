@@ -13,7 +13,7 @@ RSpec.describe Component, type: :model do
     expect(subject.destroy?).to be true
   end
 
-  it 'products, not_products, and lessees' do
+  it 'products, not_products and lessees' do # TODO: Remove lessees
     n = 3
     products = []
     n.times { |i| products << create(:product, identifier: "product#{i}") }
@@ -44,6 +44,44 @@ RSpec.describe Component, type: :model do
       expect(subject.not_products.count).to eq(index)
       expect(subject.lessees).to eq(expected_lessees)
       expected_lessees.delete(lessees[index])
+      subject.products.delete(product)
+      subject.save!
+    end
+
+    expect(subject.update?).to be true
+    expect(subject.destroy?).to be true
+  end
+
+  it 'products, not_products and policies' do
+    n = 3
+    products = []
+    n.times { |i| products << create(:product, identifier: "product#{i}") }
+    policies = []
+    n.times { |i| policies << double("policy#{i}") }
+    n.times { |i| allow(products[i]).to receive(:policies).and_return([policies[i]]) }
+    expected_policies = []
+
+    expect(subject.update?).to be true
+    expect(subject.destroy?).to be true
+
+    products.each_with_index do |product, index|
+      expect(subject.products.count).to eq(index)
+      expect(subject.not_products.count).to eq(n - index)
+      expect(subject.policies).to eq(expected_policies)
+      expected_policies << policies[index]
+      subject.products << product
+      subject.save!
+      expect(subject.update?).to be true
+      expect(subject.destroy?).to be false
+    end
+
+    products.each_with_index do |product, index|
+      expect(subject.update?).to be true
+      expect(subject.destroy?).to be false
+      expect(subject.products.count).to eq(n - index)
+      expect(subject.not_products.count).to eq(index)
+      expect(subject.policies).to eq(expected_policies)
+      expected_policies.delete(policies[index])
       subject.products.delete(product)
       subject.save!
     end
