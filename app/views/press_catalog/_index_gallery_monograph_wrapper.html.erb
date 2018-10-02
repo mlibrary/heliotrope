@@ -1,7 +1,7 @@
 <% presenter = Hyrax::PresenterFactory.build_for(ids: [document.id], presenter_class: Hyrax::MonographPresenter, presenter_args: current_ability).first %>
 <div class="document col-xs-6 col-md-4">
   <div class="thumbnail">
-    <a href="<%= polymorphic_path(url_for_document(document)) %>" >
+    <a href="<%= polymorphic_path(url_for_document(document)) %>" data-turbolinks="false">
       <img class="img-responsive" src="/image-service/<%=document.representative_id%>/full/145,/0/default.jpg<%= presenter.representative_presenter&.image_cache_breaker %>"
            alt="Cover image for <%= presenter.representative_alt_text %>">
     </a>
