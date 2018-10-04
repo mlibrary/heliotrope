@@ -151,48 +151,53 @@ class CounterReporterService
       Created_By: "Fulcrum"
     }
 
-    rows = CounterReport.institution(institution)
-                        .requests
-                        .controlled
-                        .start_date(start_date)
-                        .end_date(end_date)
-                        .press(press)
-    # .to_a
-    # If you use the .to_a above you can use maps below instead of ActiveRecord
+    results = ActiveSupport::OrderedHash.new
+    this_month = start_date
+    until this_month > end_date
+      item_month = this_month.strftime("%b") + "-" + this_month.year.to_s
+      results[item_month] = {}
+      results[item_month][:total_item_requests] = CounterReport.institution(institution)
+                                                               .requests
+                                                               .controlled
+                                                               .start_date(this_month.beginning_of_month)
+                                                               .end_date(this_month.end_of_month)
+                                                               .press(press)
+                                                               .group('parent_noid')
+                                                               .count
+      results[item_month][:unique_title_requests] = CounterReport.institution(institution)
+                                                                 .requests
+                                                                 .controlled
+                                                                 .start_date(this_month.beginning_of_month)
+                                                                 .end_date(this_month.end_of_month)
+                                                                 .press(press)
+                                                                 .unique_by_title
+                                                                 .group('parent_noid')
+                                                                 .count
+      this_month = this_month.next_month
+    end
+
+    unique_parent_noids = results.values.map { |r| r[:total_item_requests].keys + r[:unique_title_requests].keys }.flatten.uniq
 
     items = []
-
-    monograph_presenters(rows).each do |presenter|
+    monograph_presenters(unique_parent_noids).sort_by(&:title).each do |presenter|
       # total item requests
       item = ActiveSupport::OrderedHash.new
       item["Title"] = presenter.title
       item["Publisher"] = presenter.publisher.first
       item["Publisher_ID"] = ""
       item["Platform"] = "Fulcrum"
-      item["DOI"] = presenter.citable_link # not sure if this is right....
+      item["DOI"] = presenter.citable_link
       item["Proprietary_ID"] = presenter.id
-      item["ISBN"] = presenter.isbn.join(";") # I guess just give all of them?
+      item["ISBN"] = presenter.isbn.join("; ")
       item["Print_ISSN"] = ""
       item["Online_ISSN"] = ""
       item["URI"] = Rails.application.routes.url_helpers.hyrax_monograph_url(presenter.id)
       item["Metric_Type"] = "Total_Item_Requests"
-      item["Reporting_Period_Total"] = rows.where(parent_noid: presenter.id).count
-      # Without ActiveRecord
-      # rows.map { |row| row if row.parent_noid == presenter.id }.compact.count
-      this_month = start_date
-      until this_month > end_date
-        item_month = this_month.strftime("%b") + "-" + this_month.year.to_s
-        item[item_month] = rows.where(parent_noid: presenter.id)
-                               .where("YEAR(created_at) = ? and MONTH(created_at) = ?", this_month.year, this_month.month)
-                               .count
-        # Without ActiveRecord
-        # item[item_month] = rows.map do |row|
-        #   row if row.parent_noid == presenter.id &&
-        #          row.created_at.between?(this_month.beginning_of_month, this_month.end_of_month)
-        # end.compact.length
-
-        this_month = this_month.next_month
+      item["Reporting_Period_Total"] = results.values.map { |r| r[:total_item_requests][presenter.id] }.compact.sum
+      results.each do |result|
+        item[result[0]] = result[1][:total_item_requests][presenter.id] || 0
       end
+
       items << item
 
       # unique title requests
@@ -201,29 +206,16 @@ class CounterReporterService
       item["Publisher"] = presenter.publisher.first
       item["Publisher_ID"] = ""
       item["Platform"] = "Fulcrum"
-      item["DOI"] = presenter.citable_link # not sure if this is right....
+      item["DOI"] = presenter.citable_link
       item["Proprietary_ID"] = presenter.id
-      item["ISBN"] = presenter.isbn.join(";") # I guess just give all of them?
+      item["ISBN"] = presenter.isbn.join("; ")
       item["Print_ISSN"] = ""
       item["Online_ISSN"] = ""
       item["URI"] = Rails.application.routes.url_helpers.hyrax_monograph_url(presenter.id)
       item["Metric_Type"] = "Unique_Title_Requests"
-      item["Reporting_Period_Total"] = rows.where(parent_noid: presenter.id).unique_by_title.count
-      # Without ActiveRecord: rows.map { |row| row if row.parent_noid == presenter.id }.compact.map(&:session).uniq.length
-      this_month = start_date
-      until this_month > end_date
-        item_month = this_month.strftime("%b") + "-" + this_month.year.to_s
-        item[item_month] = rows.where(parent_noid: presenter.id)
-                               .where("YEAR(created_at) = ? and MONTH(created_at) = ?", this_month.year, this_month.month)
-                               .unique_by_title
-                               .count
-        # Without ActiveRecord
-        # item[item_month] = rows.map do |row|
-        #   row if row.parent_noid == presenter.id &&
-        #          row.created_at.between?(this_month.beginning_of_month, this_month.end_of_month)
-        # end.compact.map(&:session).uniq.length
-
-        this_month = this_month.next_month
+      item["Reporting_Period_Total"] = results.values.map { |r| r[:unique_title_requests][presenter.id] }.compact.sum
+      results.each do |result|
+        item[result[0]] = result[1][:unique_title_requests][presenter.id] || 0
       end
 
       items << item
@@ -234,8 +226,13 @@ class CounterReporterService
     { header: header, items: items }
   end
 
-  def self.monograph_presenters(rows)
-    Hyrax::PresenterFactory.build_for(ids: rows.map(&:parent_noid).uniq, presenter_class: Hyrax::MonographPresenter, presenter_args: nil)
+  def self.monograph_presenters(unique_parent_noids)
+    # in hyrax PresenterFactory.load_docs has a hard coded limit of 1000 rows
+    presenters = []
+    until unique_parent_noids.empty?
+      presenters.concat(Hyrax::PresenterFactory.build_for(ids: unique_parent_noids.shift(999), presenter_class: Hyrax::MonographPresenter, presenter_args: nil))
+    end
+    presenters
   end
 
   def self.csv(report)

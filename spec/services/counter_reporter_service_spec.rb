@@ -213,13 +213,13 @@ RSpec.describe CounterReporterService do
         expect(subject[:items].length).to be 6
       end
 
-      it "each title has 2 rows" do
-        expect(subject[:items][0]["Title"]).to eq "Red"
-        expect(subject[:items][1]["Title"]).to eq "Red"
-        expect(subject[:items][2]["Title"]).to eq "Blue"
-        expect(subject[:items][3]["Title"]).to eq "Blue"
-        expect(subject[:items][4]["Title"]).to eq "Green"
-        expect(subject[:items][5]["Title"]).to eq "Green"
+      it "each title has 2 rows with titles in alphabetical order" do
+        expect(subject[:items][0]["Title"]).to eq "Blue"
+        expect(subject[:items][1]["Title"]).to eq "Blue"
+        expect(subject[:items][2]["Title"]).to eq "Green"
+        expect(subject[:items][3]["Title"]).to eq "Green"
+        expect(subject[:items][4]["Title"]).to eq "Red"
+        expect(subject[:items][5]["Title"]).to eq "Red"
       end
 
       it "each title has a metric type Total_Item_Requests and then metric type Unique_Title_Requests" do
@@ -232,38 +232,38 @@ RSpec.describe CounterReporterService do
       end
 
       it "each titles total requests are correct" do
-        # red total item requests
-        expect(subject[:items][0]["Reporting_Period_Total"]).to eq 2
-        # red unique title requests
-        expect(subject[:items][1]["Reporting_Period_Total"]).to eq 1
         # blue total item requests
-        expect(subject[:items][2]["Reporting_Period_Total"]).to eq 1
+        expect(subject[:items][0]["Reporting_Period_Total"]).to eq 1
         # blue unique title requests
-        expect(subject[:items][3]["Reporting_Period_Total"]).to eq 1
+        expect(subject[:items][1]["Reporting_Period_Total"]).to eq 1
         # green total item requests
-        expect(subject[:items][4]["Reporting_Period_Total"]).to eq 2
+        expect(subject[:items][2]["Reporting_Period_Total"]).to eq 2
         # green unique title requests
-        expect(subject[:items][5]["Reporting_Period_Total"]).to eq 2
+        expect(subject[:items][3]["Reporting_Period_Total"]).to eq 2
+        # red total item requests
+        expect(subject[:items][4]["Reporting_Period_Total"]).to eq 2
+        # red unique title requests
+        expect(subject[:items][5]["Reporting_Period_Total"]).to eq 1
       end
 
       it "each title's monthly reporting is correct" do
-        # red total item requests
-        expect(subject[:items][0]["Jan-2018"]).to eq 2
-        expect(subject[:items][0]["Mar-2018"]).to eq 0
-        # red unique title requests
-        expect(subject[:items][1]["Jan-2018"]).to eq 1
         # blue total item requests
-        expect(subject[:items][2]["Jan-2018"]).to eq 1
+        expect(subject[:items][0]["Jan-2018"]).to eq 1
         # blue unique title requests
-        expect(subject[:items][3]["Jan-2018"]).to eq 1
-        expect(subject[:items][3]["Jul-2018"]).to eq 0
+        expect(subject[:items][1]["Jan-2018"]).to eq 1
+        expect(subject[:items][1]["Jul-2018"]).to eq 0
         # green total item requests
-        expect(subject[:items][4]["May-2018"]).to eq 1
-        expect(subject[:items][4]["Nov-2018"]).to eq 1
-        expect(subject[:items][4]["Dec-2018"]).to eq 0
+        expect(subject[:items][2]["May-2018"]).to eq 1
+        expect(subject[:items][2]["Nov-2018"]).to eq 1
+        expect(subject[:items][2]["Dec-2018"]).to eq 0
         # green unique title requests
-        expect(subject[:items][5]["May-2018"]).to eq 1
-        expect(subject[:items][5]["Nov-2018"]).to eq 1
+        expect(subject[:items][3]["May-2018"]).to eq 1
+        expect(subject[:items][3]["Nov-2018"]).to eq 1
+        # red total item requests
+        expect(subject[:items][4]["Jan-2018"]).to eq 2
+        expect(subject[:items][4]["Mar-2018"]).to eq 0
+        # red unique title requests
+        expect(subject[:items][5]["Jan-2018"]).to eq 1
       end
     end
 
