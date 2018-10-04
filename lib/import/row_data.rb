@@ -15,7 +15,6 @@ module Import
         next if row[field[:field_name]].blank?
         is_multivalued = field[:multivalued]
         field_values = split_field_values(row[field[:field_name]], is_multivalued)
-        field_values = combine_existing_values(field_values, is_multivalued, attrs[field[:metadata_name]])
         attrs[field[:metadata_name]] = return_scalar_or_multivalued(field_values, is_multivalued)
       end
     end
@@ -63,21 +62,6 @@ module Import
 
       def strip_markdown(field_name, field_values, metadata)
         field_name == "Keywords" ? field_values.map! { |value| metadata.render(value).strip! } : field_values
-      end
-
-      def combine_existing_values(field_values, is_multivalued, existing_values)
-        # we now have multiple columns mapping to the same Fedora field (e.g. `identifier`), so have to aggregate
-        if existing_values.present?
-          if is_multivalued == :no
-            Array(existing_values.first + field_values.first)
-          elsif is_multivalued == :yes_multiline
-            Array(existing_values.first + "\n" + field_values.first)
-          else
-            existing_values + field_values
-          end
-        else
-          field_values
-        end
       end
 
       def return_scalar_or_multivalued(field_values, is_multivalued)

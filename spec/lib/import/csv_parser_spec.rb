@@ -24,7 +24,6 @@ describe Import::CSVParser do
 
     it 'collects attributes from the CSV file' do
       expect(subject['title']).to eq ['The Tempest: A Subtitle']
-      # testing aggregation of identifiers such as legacy handle and ID here
       expect(subject['identifier']).to eq ['http://www.example.com/handle', '999.999.9999']
       expect(subject['creator']).to eq ["Shakespeare, William\nPlaywright, Mr. Uncredited"]
       expect(subject['contributor']).to eq ["Christopher Marlowe\nSir Francis Bacon"]
