@@ -6,8 +6,9 @@ module Export
   class Exporter
     attr_reader :all_metadata
 
-    def initialize(monograph_id)
+    def initialize(monograph_id, columns = :all)
       @monograph = Monograph.find(monograph_id) if monograph_id.present?
+      @columns = columns
     end
 
     def export
@@ -50,6 +51,20 @@ module Export
       end
     end
 
+    def monograph_row
+      metadata_row(@monograph, :monograph)
+    end
+
+    def write_csv_header_rows(csv)
+      row1 = []
+      row2 = []
+      all_metadata.each do |field|
+        row1 << field[:field_name]
+        row2 << 'instruction placeholder'
+      end
+      csv << row1 << row2
+    end
+
     private
 
       def all_metadata
@@ -62,7 +77,12 @@ module Export
         file = [{ object: :file_set, field_name: 'File Name', metadata_name: 'label', required: true, multivalued: :no }]
         # We want the url in the exported CSV file (required doesn't matter here)
         url = [{ object: :universal, field_name: 'Link', metadata_name: 'url', required: true, multivalued: :no }]
-        @all_metadata = noid + file + url + METADATA_FIELDS
+
+        @all_metadata = if @columns == :monograph
+                          noid + url + METADATA_FIELDS.select { |f| %i[universal monograph].include? f[:object] }
+                        else
+                          noid + file + url + METADATA_FIELDS
+                        end
       end
 
       def metadata_row(item, object_type)
@@ -105,16 +125,6 @@ module Export
         else
           item.public_send(metadata_name)
         end
-      end
-
-      def write_csv_header_rows(csv)
-        row1 = []
-        row2 = []
-        all_metadata.each do |field|
-          row1 << field[:field_name]
-          row2 << 'instruction placeholder'
-        end
-        csv << row1 << row2
       end
   end
 end
