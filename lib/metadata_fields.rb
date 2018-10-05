@@ -24,7 +24,6 @@ METADATA_FIELDS ||=
     { object: :file_set, field_name: 'Credit Line', metadata_name: 'credit_line', required: false, multivalued: :no },
     { object: :universal, field_name: 'Holding Contact', metadata_name: 'holding_contact', required: false, multivalued: :no },
     { object: :file_set, field_name: 'Exclusive to Fulcrum', metadata_name: 'exclusive_to_platform', required: false, multivalued: :no, acceptable_values: ['yes', 'no'] },
-    { object: :universal, field_name: 'Persistent ID - Display on Platform', metadata_name: 'identifier', required: false, multivalued: :yes },
     { object: :universal, field_name: 'DOI', metadata_name: 'doi', required: false, multivalued: :no },
     { object: :universal, field_name: 'Handle', metadata_name: 'hdl', required: false, multivalued: :no },
     { object: :file_set, field_name: 'Content Type', metadata_name: 'content_type', required: false, multivalued: :yes_split },
@@ -45,7 +44,7 @@ METADATA_FIELDS ||=
     { object: :monograph, field_name: 'Buy Book URL', metadata_name: 'buy_url', multivalued: :yes },
     { object: :monograph, field_name: 'Pub Year', metadata_name: 'date_created', multivalued: :yes },
     { object: :monograph, field_name: 'Pub Location', metadata_name: 'location', multivalued: :no },
-    { object: :monograph, field_name: 'Legacy ID', metadata_name: 'identifier', multivalued: :yes },
+    { object: :universal, field_name: 'Identifier(s)', metadata_name: 'identifier', required: false, multivalued: :yes_split },
     { object: :monograph, field_name: 'Series', metadata_name: 'series', multivalued: :yes_split }
   ].freeze
 
