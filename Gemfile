@@ -98,8 +98,7 @@ gem 'faraday_middleware', '~>0.12.2'
 gem 'hyrax', '2.0.0'
 
 # Use Jekyll for blog and informational pages
-# See #937 before updating this version
-gem 'jekyll', '~> 3.1.3'
+gem 'jekyll', '~> 3.6.3'
 
 # Use jquery as the JavaScript library
 gem 'jquery-rails'
