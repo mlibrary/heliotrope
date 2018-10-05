@@ -81,7 +81,7 @@ module Export
         @all_metadata = if @columns == :monograph
                           noid + url + METADATA_FIELDS.select { |f| %i[universal monograph].include? f[:object] }
                         else
-                          noid + file + url + METADATA_FIELDS
+                          noid + file + url + METADATA_FIELDS + FILE_SET_FLAG_FIELDS
                         end
       end
 
@@ -93,10 +93,17 @@ module Export
         row
       end
 
-      def metadata_field_value(item, object_type, field) # rubocop:disable Metrics/CyclomaticComplexity
+      def metadata_field_value(item, object_type, field) # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
+        return representative_kind_or_cover(item) if object_type == :file_set && field[:field_name] == 'Representative Kind'
         return item_url(item, object_type) if field[:object] == :universal && field[:field_name] == 'Link'
         return field_value(item, field[:metadata_name], field[:multivalued]) if field[:object] == :universal || field[:object] == object_type
         return MONO_FILENAME_FLAG if object_type == :monograph && (['label', 'section_title'].include? field[:metadata_name])
+      end
+
+      def representative_kind_or_cover(item)
+        # I think we can ignore thumbnail_id, should always be the same as representative_id for us
+        return 'cover' if item.parent.representative_id == item.id
+        FeaturedRepresentative.where(file_set_id: item.id, monograph_id: @monograph.id).first&.kind
       end
 
       def item_url(item, item_type)

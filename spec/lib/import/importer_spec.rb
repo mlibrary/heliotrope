@@ -77,16 +77,16 @@ describe Import::Importer do
     context 'with monograph' do
       let(:monograph) { build(:monograph, representative_id: cover.id) }
       let(:cover) { create(:file_set) }
-      let(:file1) { create(:file_set, resource_type: ['video']) }
-      let(:file2) { create(:file_set, resource_type: ['image']) }
+      let(:file1) { create(:file_set) }
+      let(:file2) { create(:file_set) }
       let(:expected_manifest) do
         <<~eos
-          NOID,File Name,Link,Title,Resource Type,External Resource URL,Caption,Alternative Text,Copyright Holder,Allow High-Res Display?,Allow Download?,Copyright Status,Rights Granted,CC License,Permissions Expiration Date,After Expiration: Allow Display?,After Expiration: Allow Download?,Credit Line,Holding Contact,Exclusive to Fulcrum,DOI,Handle,Content Type,Creator(s),Additional Creator(s),Sort Date,Display Date,Description,Keywords,Section,Language,Transcript,Translation,Redirect to,Publisher,Subject,ISBN(s),Buy Book URL,Pub Year,Pub Location,Identifier(s),Series
-          instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder
-          #{cover.id},,"=HYPERLINK(""#{Rails.application.routes.url_helpers.hyrax_file_set_url(cover)}"")",#{cover.title.first},#{cover.resource_type.first},,,,,,,,,,,,,,,,,,,,,#{cover.sort_date},,,,,,,,,,,,,,,,
-          #{file1.id},,"=HYPERLINK(""#{Rails.application.routes.url_helpers.hyrax_file_set_url(file1)}"")",#{file1.title.first},image,,,,,,,,,,,,,,,,,,,,,#{file1.sort_date},,,,,,,,,,,,,,,,
-          #{file2.id},,"=HYPERLINK(""#{Rails.application.routes.url_helpers.hyrax_file_set_url(file2)}"")",NEW FILE TITLE,#{file2.resource_type.first},no,,,,,,,,,,,,,,,,,,,,2000-01-01,,,,,,,,,,,,,,,,
-          #{monograph.id},://:MONOGRAPH://:,"=HYPERLINK(""#{Rails.application.routes.url_helpers.hyrax_monograph_url(monograph)}"")",NEW MONOGRAPH TITLE,,,,,,,,,,,,,,,,,,,,,,,,,,://:MONOGRAPH://:,,,,,,,,,,,,
+          NOID,File Name,Link,Title,Resource Type,External Resource URL,Caption,Alternative Text,Copyright Holder,Allow High-Res Display?,Allow Download?,Copyright Status,Rights Granted,CC License,Permissions Expiration Date,After Expiration: Allow Display?,After Expiration: Allow Download?,Credit Line,Holding Contact,Exclusive to Fulcrum,DOI,Handle,Content Type,Creator(s),Additional Creator(s),Sort Date,Display Date,Description,Keywords,Section,Language,Transcript,Translation,Redirect to,Publisher,Subject,ISBN(s),Buy Book URL,Pub Year,Pub Location,Identifier(s),Series,Representative Kind
+          instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder
+          #{cover.id},,"=HYPERLINK(""#{Rails.application.routes.url_helpers.hyrax_file_set_url(cover)}"")",#{cover.title.first},#{cover.resource_type.first},,,,,,,,,,,,,,,,,,,,,#{cover.sort_date},,,,,,,,,,,,,,,,,
+          #{file1.id},,"=HYPERLINK(""#{Rails.application.routes.url_helpers.hyrax_file_set_url(file1)}"")",#{file1.title.first},pdf,,,,,,,,,,,,,,,,,,,,,#{file1.sort_date},,,,,,,,,,,,,,,,,pdf_ebook
+          #{file2.id},,"=HYPERLINK(""#{Rails.application.routes.url_helpers.hyrax_file_set_url(file2)}"")",NEW FILE TITLE,image,no,,,,,,,,,,,,,,,,,,,,2000-01-01,,,,,,,,,,,,,,,,,cover
+          #{monograph.id},://:MONOGRAPH://:,"=HYPERLINK(""#{Rails.application.routes.url_helpers.hyrax_monograph_url(monograph)}"")",NEW MONOGRAPH TITLE,,,,,,,,,,,,,,,,,,,,,,,,,,://:MONOGRAPH://:,,,,,,,,,,,,,
         eos
       end
       let(:monograph_id) { monograph.id }
@@ -99,11 +99,22 @@ describe Import::Importer do
         monograph.save!
       end
 
+      after { FeaturedRepresentative.destroy_all }
+
       it do
         is_expected.to be true
+
+        # import made file1 into a `pdf_ebook` representative
+        expect(FeaturedRepresentative.count).to eq(1)
+        expect(FeaturedRepresentative.where(monograph_id: monograph.id, kind: 'pdf_ebook').first.file_set_id).to eq(file1.id)
+
+        # import made file2 into the cover
+        m = Monograph.find(monograph_id)
+        expect(m.representative_id).to eq(file2.id)
+        expect(m.thumbnail_id).to eq(file2.id)
+
+        # subsequent export equals what was just imported
         actual_manifest = Export::Exporter.new(monograph_id).export
-        puts actual_manifest
-        puts expected_manifest
         expect(actual_manifest).to eq expected_manifest
       end
     end

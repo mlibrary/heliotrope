@@ -29,7 +29,7 @@ module Import
     end
 
     def metadata_field(key)
-      METADATA_FIELDS.each do |field|
+      (METADATA_FIELDS + FILE_SET_FLAG_FIELDS).each do |field|
         return field if key == field[:field_name]
       end
       nil
@@ -54,6 +54,25 @@ module Import
       false
     end
 
+    def set_representative_or_cover(monograph, file_set, representative_kind)
+      if representative_kind == 'cover'
+        monograph.representative_id = file_set.id
+        monograph.thumbnail_id = file_set.id
+        monograph.save!
+        return
+      end
+
+      current_representative = FeaturedRepresentative.where(monograph_id: monograph.id, file_set_id: file_set.id).first
+      if current_representative.present?
+        if current_representative.kind == representative_kind
+          return
+        else
+          current_representative.destroy!
+        end
+      end
+      FeaturedRepresentative.create!(monograph_id: monograph.id, file_set_id: file_set.id, kind: representative_kind)
+    end
+
     def import(manifest) # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
       return false if @reimport_mono.blank?
       monograph = @reimport_mono
@@ -72,9 +91,11 @@ module Import
               monograph[field[:metadata_name]] = metadata_field_value(field, value)
               monograph.save
             end
-          else
+          elsif metadata_file_set_field?(key)
             file_set = FileSet.find(noid)
-            if metadata_file_set_field?(key)
+            if key == 'Representative Kind'
+              set_representative_or_cover(monograph, file_set, value.strip.downcase)
+            else
               file_set[field[:metadata_name]] = metadata_field_value(field, value)
               file_set.save
             end
