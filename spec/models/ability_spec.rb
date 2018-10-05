@@ -50,6 +50,7 @@ describe Ability do
       is_expected.to be_able_to(:update, press)
 
       is_expected.to be_able_to(:manage, another_user)
+      is_expected.to be_able_to(:read, :admin_dashboard)
     end
 
     it "can read, update, publish or destroy a monograph created by another user" do
@@ -110,6 +111,7 @@ describe Ability do
       is_expected.not_to be_able_to(:create, Press.new)
       is_expected.to     be_able_to(:update, my_press)
       is_expected.not_to be_able_to(:update, other_press)
+      is_expected.to     be_able_to(:read, :admin_dashboard)
     end
 
     context "roles" do
@@ -208,6 +210,7 @@ describe Ability do
       is_expected.not_to be_able_to(:create, Press.new)
       is_expected.not_to be_able_to(:update, my_press)
       is_expected.not_to be_able_to(:create, monograph_for_my_press)
+      is_expected.not_to be_able_to(:read, :admin_dashboard)
     end
 
     context "ApplicationPresenter" do
@@ -319,6 +322,7 @@ describe Ability do
         is_expected.not_to be_able_to(:read, role)
         is_expected.not_to be_able_to(:update, role)
         is_expected.not_to be_able_to(:destroy, role)
+        is_expected.not_to be_able_to(:read, :admin_dashboard)
       end
     end
 

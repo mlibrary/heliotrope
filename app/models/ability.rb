@@ -43,6 +43,10 @@ class Ability
     can :update, Hyrax::FileSetPresenter do |p|
       @user.admin_presses.map(&:subdomain).include?(p.monograph.subdomain)
     end
+
+    can :read, :admin_dashboard do
+      @user.admin_presses.present?
+    end
   end
 
   def grant_platform_admin_abilities
