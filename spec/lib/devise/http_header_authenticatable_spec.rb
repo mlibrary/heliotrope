@@ -104,7 +104,6 @@ RSpec.describe Devise::Strategies::HttpHeaderAuthenticatable do
                 allow(Rails.configuration).to receive(:create_user_on_login).and_return(true)
                 expect(User).to receive(:new).with(user_key: user.user_key).once.and_return(user)
                 expect(Guest).not_to receive(:new).with(user_key: user.user_key)
-                expect(user).to receive(:populate_attributes).once
                 expect(subject).to be_valid
                 expect(subject.authenticate!).to eq(:success)
               end
@@ -117,7 +116,6 @@ RSpec.describe Devise::Strategies::HttpHeaderAuthenticatable do
                 allow(Rails.configuration).to receive(:create_user_on_login).and_return(false)
                 expect(User).not_to receive(:new).with(user_key: user.user_key)
                 expect(Guest).to receive(:new).with(user_key: user.user_key).once.and_return(user)
-                expect(user).to receive(:populate_attributes).once
                 expect(subject).to be_valid
                 expect(subject.authenticate!).to eq(:success)
               end
@@ -132,7 +130,6 @@ RSpec.describe Devise::Strategies::HttpHeaderAuthenticatable do
             it 'accepts the existing user' do
               expect(User).not_to receive(:new).with(user_key: user.user_key)
               expect(Guest).not_to receive(:new).with(user_key: user.user_key)
-              expect(user).not_to receive(:populate_attributes)
               expect(subject).to be_valid
               expect(subject.authenticate!).to eq(:success)
             end

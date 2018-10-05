@@ -32,11 +32,6 @@ class User < ApplicationRecord
   # Add our custom module to devise.
   devise :rememberable, :keycard_authenticatable
 
-  def populate_attributes
-    # TODO: Override this for HttpHeaderAuthenticatable
-    # Rails.logger.info "session[:identity] = #{session[:identity]}"
-  end
-
   alias_attribute :user_key, :email
 
   def role?

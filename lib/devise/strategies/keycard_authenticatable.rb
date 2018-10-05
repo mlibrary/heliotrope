@@ -71,15 +71,13 @@ module Devise
         def new_user
           return unless Rails.configuration.create_user_on_login
           User.new(user_key: user_eid).tap do |user|
-            debug_log "New user: '#{user_eid}'"
-            user.populate_attributes
+            debug_log "New user: '#{user_eid}'" if user
           end
         end
 
         def guest_user
           User.guest(user_key: user_eid).tap do |user|
-            debug_log "Guest user: '#{user_eid}'"
-            user.populate_attributes
+            debug_log "Guest user: '#{user_eid}'" if user
           end
         end
 

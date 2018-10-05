@@ -43,7 +43,6 @@ RSpec.describe Devise::Strategies::KeycardAuthenticatable do
           allow(Rails.configuration).to receive(:create_user_on_login).and_return(true)
           allow(User).to receive(:find_by).and_return(nil)
           expect(User).to receive(:new).with(user_key: user_eid).and_return(new_user)
-          expect(new_user).to receive(:populate_attributes).once
           expect(Guest).not_to receive(:new)
         end
 
@@ -64,7 +63,6 @@ RSpec.describe Devise::Strategies::KeycardAuthenticatable do
           allow(Rails.configuration).to receive(:create_user_on_login).and_return(false)
           allow(User).to receive(:find_by).and_return(nil)
           expect(Guest).to receive(:new).with(user_key: user_eid).and_return(guest)
-          expect(guest).to receive(:populate_attributes).once
           expect(User).not_to receive(:new)
         end
 
