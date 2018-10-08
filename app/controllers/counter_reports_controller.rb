@@ -27,8 +27,8 @@ class CounterReportsController < ApplicationController
   def index
     return render if params[:customer_id].present?
 
-    @active_reports = { pr_p1: COUNTER_REPORT_TITLE[:pr_p1] }
-    # tr_b1: COUNTER_REPORT_TITLE[:tr_b1] }
+    @active_reports = { pr_p1: COUNTER_REPORT_TITLE[:pr_p1],
+                        tr_b1: COUNTER_REPORT_TITLE[:tr_b1] }
 
     render 'counter_reports/without_customer_id/index'
   end
