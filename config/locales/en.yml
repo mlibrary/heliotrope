@@ -126,6 +126,8 @@ en:
       save: "Save"
     new:
       h1: "Upload Manifest"
+  metadata_template:
+    download: "Download CSV"
   mime_type: "Mime Type"
   monograph_catalog:
     index:

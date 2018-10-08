@@ -1,0 +1,333 @@
+# Files in the config/locales directory are used for internationalization
+# and are automatically loaded by Rails. If you want to use locales other
+# than English, add the necessary files in this directory.
+#
+# To use the locales, use `I18n.t`:
+#
+#     I18n.t 'hello'
+#
+# In views, this is aliased to just `t`:
+#
+#     <%= t('hello') %>
+#
+# To use a different locale, set it with `I18n.locale`:
+#
+#     I18n.locale = :es
+#
+# This would use the information in config/locales/es.yml.
+#
+# The following keys must be escaped otherwise they will not be retrieved by
+# the default I18n backend:
+#
+# true, false, on, off, yes, no
+#
+# Instead, surround them with single quotes.
+#
+# en:
+#   'true': 'foo'
+#
+# To learn more, please read the Rails Internationalization guide
+# available at http://guides.rubyonrails.org/i18n.html.
+
+en:
+  csv:
+    descriptions:
+      id: |
+        Fulcrum dev-only field. Assigned automatically on first import. Used to identify the item for editing.
+      # NB: file name gets stored in "label" on the FileSet object, so using that term here to make that obvious
+      label: |
+        This should be a unique name for a digital file, which includes the correct file extension, such as .tif, .jpg, .pdf, etc.
+
+        Please use alphanumerics and underscores only. Using symbols or diacritics in file names may cause uploading issues.
+
+        Examples:
+        --Fig01.tif
+        --Fig01_10.tiff
+        --Fig29.jpg
+
+        List the files in the order that they should display on the Fulcrum platform.
+
+        If the file will not be hosted on Fulcrum, but will instead be externally hosted, you may leave this column blank. Please record the persistent URL for the externally hosted file in the External Resource URL column.
+
+        For items that might appear in more than one place, for example in two different chapters, list the file once and identify all of the sections in the Sections column.
+      url: |
+        Fulcrum dev-only field. Holds a quick link to the item on Fulcrum for future editing.
+      title: |
+        REQUIRED FOR MONOGRAPH AUTO-CITATIONS
+
+        The formal title of the object shown in the digital asset; the title of a painting, photo, video, map, piece of music, etc.
+
+        The title will frequently be seen in the context of other metadata (dates, creator, credit line) associated with the digital asset, and should be brief, no more than 100 characters.
+
+        For titles that include italics, surround the text that should be italicized with underscores.
+
+        Examples:
+          --_Mona Lisa_
+          --Photo of juvenile wood frog
+          --Political map of Indonesia in 1965
+          --Excerpt from Beethoven's String Quartet Op. 59, No. 1
+          --_Kapellmeister Kreisler in Insanity_, drawing
+      resource_type: |
+        The type of resource the item is.
+
+        For example:
+        --image
+        --audio
+        --video
+
+        Please select from among the choices in the drop-down list.
+      external_resource_url: |
+        If the digital file is hosted externally, meaning that it will not be uploaded to Fulcrum's repository, add the URL to where the file actually resides on the web in this column.
+
+        If the file is being hosted on the Fulcrum repository, leave this field blank.
+      caption: |
+        REQUIRED FOR FULCRUM
+
+        The caption may be the same as what would appear in the book, if the item is also in the book. The caption may include whatever appropriate mix of metadata (such as date created, the creator's name, etc.), brief description, and required credit line.
+
+        For any text in the caption that should be italicized, surround the text that should be italicized with underscores.
+
+        Examples:
+        --Leonardo's _Mona Lisa_, also known as _La Giocanda_; photo by Marie Senechal; used by permission of the Musée du Louvre, Paris.
+        --Juvenile wood frog, photo by Scott Ham.
+        --Regional captial cities of Indonesia in 1965.
+        --Mstislav Dobuzhinsky, illustration for Blok’s _Balaganchik: Lyrical Scenes by Alexander Blok_, published in the journal _Torches (Fakely)_ 1 (1906): 197. Photo by the author.
+      alt_text: |
+        REQUIRED FOR FULCRUM
+
+        This is the hidden text that is read by assistive technology (e.g. screen readers) and machine readers (e.g. search engines) to understand the image.
+
+        Alt text should provide information necessary for understanding the image/file in context for readers who cannot access the original. This may include some description or, when image is already sufficiently described in the surrounding text, simply identifying information.
+
+        Alt text should be concise (ideally 140 characters or less) and cannot contain separate paragraphs or tables.
+
+        Information about alt text and how to write it can be found at the Describing Visual Resources Toolkit <https://describingvisualresources.org/guidelines/>.
+
+        Examples:
+        --Photo of a brown frog, seated on a wet twig, displaying typical dark brown head and light brown body with reddish stripes on the back.
+
+        --This bar chart shows how much support each major presidential candidate has. Candidate 1 is at 70%, Candidate 2 is at 63%, and Candidate 3 is at 60%. The differences between each are clear.
+
+        If the file is an externally hosted resource, you can leave this field empty.
+      copyright_holder: |
+        REQUIRED FOR FULCRUM
+
+        Identify the copyright holder of the item being hosted on the Fulcrum platform.
+
+        Examples:
+        --DC Comics, Inc.
+        --Acuff- Rose Music
+        --Scott Ham
+
+        Note that if you, as the author, created a resource, you own the copyright, and can list yourself. If an item is considered fair use or in the public domain, you should indicate this.
+      copyright_status: |
+        REQUIRED FOR FULCRUM
+
+        Using the drop-down list, select the copyright status of the item.
+      allow_hi_res: |
+        REQUIRED FOR FULCRUM
+
+        Indicate if permission has been given to display the digital asset in High-Res (Yes/No) on Fulcrum.
+
+        If the digital asset is externally hosted, select "Not hosted on the platform."
+      allow_download: |
+        REQUIRED FOR FULCRUM
+
+        Indicate if you have permission for the digital asset to be downloaded (Yes/No) from Fulcrum.
+
+        If the digital asset is externally hosted, select "Not hosted on the platform."
+      rights_granted: |
+        Indicate the rights granted for use of an item as specified by the rights holder who granted permission.
+
+        For example:
+        --World rights in all languages, all editions
+        --North American rights in English, for ten years
+
+        If a Creative Commons license has been obtained for this digital asset, fill out the Rights Granted - Creative Commons column. For items that are fair use or in the public domain, please indicate this.
+
+        For externally hosted files, you may leave this field blank.
+      license: |
+        If a Creative Commons license has been obtained for the digital asset, use the drop-down list to select the type of Creative Commons license.
+
+        If there is no Creative Commons license, this can be left blank.
+      permissions_expiration_date: |
+        If the permission obtained for the digital asset being hosted on the Fulcrum platform expires, please enter the expiration date.
+
+        Enter the expiration date in this way:  YYYY-MM-DD
+
+        If there is no expiration date, you can leave this empty.
+      allow_display_after_expiration: |
+        Using the drop-down list, select how the digital asset can be displayed on the Fulcrum platform after permissions expires (high-res, low-res, or none).
+
+        If the digital asset is externally hosted, select "Not hosted on the platform."
+
+        Selecting "None" means that the item record that displays the asset's metadata will remain, but the digital asset will no longer be displayed.
+      allow_download_after_expiration: |
+        Using the drop-down list, select if the digital asset can be downloaded from the Fulcrum platform after permissions expires (Yes/No).
+
+        If the digital asset is externally hosted, select "Not hosted on the platform."
+      credit_line: |
+        If the copyright holder granting permission for use requires a specific credit line, please include that exact credit line as provided by the rights holder.
+
+        If you are the copyright holder, please include very brief copyright information (ie. © John Doe, 1999.).
+
+        If the digital asset is externally hosted, this can be left blank.
+      holding_contact: |
+        This column should be used to enter the contact of the person or institution who holds the copyright to the object. If the original item is created by you, the author, then you are the Holding Contact.
+
+        Examples:
+        --Special Collections and University Archives, University of Oregon, Eugene
+        --Staatsbibliothek Bamberg website: https://www.staatsbibliothek-bamberg.de
+
+        Keep in mind that while the Copyright Holder, License, and Credit Line refer to the digital asset that is hosted on the Fulcrum platform, e.g. a photograph of a painting, the Holding Contact information is about the painting itself, e.g. the museum where it resides can be entered here.
+      exclusive_to_platform: |
+        This field is to highlight if the digital asset only appears on Fulcrum. If Yes is selected, the asset will be flagged as exclusive and will be identified as Exclusive to Fulcrum in the Exclusivity facet.
+
+        Select Yes if the digital asset will only appear on Fulcrum.
+
+        Select No if the digital asset will appear somewhere else, e.g., in the print book, ebook, or if it has been displayed elsewhere.
+
+        Select No if the digital asset is an externally hosted resource.
+      identifier: |
+        Any legacy system IDs that may be useful in administrative tasks can be added here.
+
+        Separate each with a semi-colon.
+      content_type: |
+        A more specific classification/description of the content, if needed.
+
+        For the purposes of the Fulcrum platform, assets can be filtered on Content Type.
+
+        Some examples include:
+        --drawing
+        --poltical map
+        --interview excerpt
+        --German folk tune
+        --performance
+      creator: |
+        REQUIRED FOR MONOGRAPH AUTO-CITATIONS
+
+        The name of an entity primarily responsible for generating the content or data that the digital item shows, not the digital item itself. If there are multiple primary creators, include them here.
+
+        These values are used in the generating the programmic citation.
+
+        Examples:
+        --Last name, First name
+        --Last name, First name; Last name, First name
+
+        You can also include the role, e.g. Editor, of the entity listed.
+
+        Examples:
+        --Last name, First name (editor)
+        --Last name, First name (editor); Last name, First name (editor)
+      contributor: |
+        If there are additional creators, you can inlcude them here. List them by Last name, First name, separated by a semicolon.
+
+        These values do not get used in the the generation of the programmic citation.
+
+        For example:
+        --Smith, Jane; Jones, Michael
+
+        You may also include the role of these additional creators in parentheses after the name.
+
+        For example:
+        --Smith, Jane (Director); Jones, Michael (Set Designer)
+      creator_display: |
+        Optional display-only override for custom authorship, which will be used on the search results and landing pages without affecting faceting etc.
+
+        Example:
+        John Smith and Nicola Jones (editors), written and crafted with Jimmy Johnson, Antonio Ferryman and Matthew Murphy
+      sort_date: |
+        A significant date or period of time associated with an event in the lifecycle of the resource (that is, the photo, musical example, map, etc. not the digital asset).
+
+        For example:
+        --the date a picture was taken
+        --the date a painting painted
+        --the date a musical performance was recorded
+
+        Sort Date needs to be entered using the convention below. Note that you can include only the year or an exact date with year/month/date. Do not enter date ranges here; you can do so in the Display Date column.
+        Year:
+              YYYY (e.g. 1997)
+        Year and month:
+              YYYY-MM (e.g. 1997-07)
+        Complete date:
+              YYYY-MM-DD (e.g. 1997-07-16)
+
+        This date will be indexed and used in sorting/faceting functionality on the Fulcrum platform.
+      display_date: |
+        A point or period of time associated with an event in the lifecycle of the resource (not the digital asset).
+
+        This version of date is what will display on the item record for the resource on the Fulcrum platform.
+
+        Beyond traditional dates and date ranges, you can also include circa and n.d. (no date) here.
+      description: |
+        This is a longer description of the digital asset.
+
+        For any text in the description that should be italicized, surround the text that should be italicized with underscores.
+      publisher: |
+        REQUIRED FOR MONOGRAPH AUTO-CITATIONS
+
+        Examples:
+          University of Michigan Press
+          New York University Press
+          Northwestern University Press
+      subject: |
+        Enter subjects/topics associated with the monograph, separated by a semi-colon.
+      isbn: |
+        Enter ISBNs associated with the monograph, separated by semi-colons.
+        The format may be entered in parentheses if available, e.g.:
+        09234000123 (E-Book); 09234000123 (paper)
+      buy_url: |
+        One or more URLs where the monograph can be purchased, separate them with semi-colons
+      date_created: |
+        REQUIRED FOR MONOGRAPH AUTO-CITATIONS
+
+        The first four digits found are pulled and used as the citation year, so a YYYY format is best.
+        If desired, a format like cYYYY or YYYY-MM-DD can be entered, from which the YYYY will be pulled.
+      location: |
+        REQUIRED FOR MONOGRAPH AUTO-CITATIONS
+
+        Used as publication location for monograph citations, e.g. for UofM Press enter "Ann Arbor, MI"
+      series: |
+        If the monograph is part of one or more series, enter them separated by semi-colons. These will be used in a Series facet.
+      keywords: |
+        The topic of the resource. Typically, the topic will be represented using keywords or key phrases. Be consistent in how you name keywords, e.g. WWII or WW2, not both.
+
+        Separate keywords with a semicolon.
+      section_title: |
+        Which section or chapter of a project is an item associated with? Items out to be listed in the order they appear.
+
+        Examples:
+        --Chapter 7
+        --Preface
+        --Conclusion
+        --Chapter 8: Pens and Paperclips
+
+        If the object can be related to more than one section, list all sections and separate with a semicolon.
+
+        Examples:
+        --Preface; Chapter 7; Chapter 9
+      language: |
+        The language of the resource.
+
+        Examples:
+        --English
+        --Russian
+        --Spanish
+
+        For multiple languages, separate with semicolons.
+      transcript: |
+        If there is a transcript of the digital asset, for example, a transcript for an audio interview, make the transcript its own file, put the file name here, and include the file with the rest of the digital assets for this metadata template.
+
+        WebVTT is the file format needed for audio or video transcripts.
+      translation: |
+        If there is a transcript of the digital asset, for example, a transcript for an audio interview, make the transcript its own file, put the file name here, and include the file with the rest of the digital assets for this metadata template.
+
+        WebVTT is the file format needed for audio or video transcripts.
+      doi: |
+        If a DOI (Digital Object Identifier) will be assigned and registered for the digital asset, enter the DOI you will be assigning. For example: 10.3998/3336451.0018.301.
+
+        Otherwise, you can leave blank.
+      hdl: |
+        Fulcrum dev-only field. Can be used to manually reassign an item's handle.
+      redirect_to: |
+        Fulcrum dev-only field. Can be used to redirect a FileSet.

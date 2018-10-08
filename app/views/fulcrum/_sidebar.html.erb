@@ -15,6 +15,7 @@
   <li <%= "class=active" if partial.to_s == :items.to_s %>><a href="<%= main_app.partial_fulcrum_path(partial: :assets) %>"><span class="glyphicon glyphicon-tags" aria-hidden="true"></span> Assets</a></li>
   <li <%= "class=active" if partial.to_s == :pages.to_s %>><a href="<%= main_app.partial_fulcrum_path(partial: :pages) %>"><span class="glyphicon glyphicon-file" aria-hidden="true"></span> Pages</a></li>
   <li <%= "class=active" if partial.to_s == :reports.to_s %>><a href="<%= main_app.partial_fulcrum_path(partial: :reports) %>"><span class="glyphicon glyphicon-stats" aria-hidden="true"></span> Reports</a></li>
+  <li <%= "class=active" if partial.to_s == :csv.to_s %>><a href="<%= main_app.partial_fulcrum_path(partial: :csv) %>"><span class="glyphicon glyphicon-file" aria-hidden="true"></span> CSV</a></li>
 </ul>
   <p class="nav nav-sidebar"><br/><br/><br/></p>
 <ul class="nav nav-sidebar" role="navigation">
