@@ -832,6 +832,10 @@ GEM
       tilt (~> 2.0)
     sitemap_generator (6.0.1)
       builder (~> 3.0)
+    skylight (3.0.0)
+      skylight-core (= 3.0.0)
+    skylight-core (3.0.0)
+      activesupport (>= 4.2.0)
     slop (4.6.2)
     solr_wrapper (0.21.0)
       faraday
@@ -990,6 +994,7 @@ DEPENDENCIES
   signet
   sinatra (~> 2.0.2)
   sitemap_generator (~> 6.0.1)
+  skylight
   solr_wrapper (= 0.21.0)
   spring
   spring-watcher-listen (~> 2.0.0)
