@@ -106,7 +106,7 @@ module Hyrax
     def allow_download?
       return false if external_resource?
       # safe navigation (&.) as current_Ability is nil in some specs, should match allow_download? logic in downloads_controller
-      allow_download == 'yes' || current_ability&.platform_admin? || current_ability&.can?(:edit, id)
+      allow_download&.casecmp('yes')&.zero? || current_ability&.platform_admin? || current_ability&.can?(:edit, id)
     end
 
     def allow_embed?
