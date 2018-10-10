@@ -94,16 +94,4 @@ class Policy
   def persisted?
     id.present?
   end
-
-  def agent
-    @agent ||= PolicyAgent.new(agent_type, agent_id)
-  end
-
-  def credential
-    @credential ||= PolicyCredential.new(credential_type, credential_id)
-  end
-
-  def resource
-    @resource ||= PolicyResource.new(resource_type, resource_id)
-  end
 end

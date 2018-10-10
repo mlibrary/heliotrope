@@ -13,8 +13,9 @@ class ActorAgentResolver < Checkpoint::Agent::Resolver
 
   def resolve(actor)
     agents = []
+    agents << agent_factory.from(OpenStruct.new(agent_type: :any, agent_id: :any)) # All actors
     agents << agent_factory.from(OpenStruct.new(agent_type: :email, agent_id: actor[:email].downcase)) if actor[:email].present?
-    actor[:institutions].map do |institution|
+    (actor[:institutions] || []).map do |institution|
       agents << agent_factory.from(OpenStruct.new(agent_type: :institution, agent_id: institution.identifier))
     end
     agents
