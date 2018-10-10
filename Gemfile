@@ -158,6 +158,9 @@ gem 'oauth'
 gem 'oauth2', '~> 1.2'
 gem 'signet'
 
+# performance profiling
+gem 'skylight'
+
 group :development, :test do
   gem 'byebug'
   # test coverage with coveralls

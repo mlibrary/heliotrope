@@ -99,7 +99,10 @@
       <% if @monograph_presenter.aboutware? %>
         <li role="presentation"><a id="tab-aboutware" href="#aboutware" role="tab" data-toggle="tab" aria-controls="aboutware" aria-selected="false" tabindex="-1">About</a></li>
       <% end %>
+      <!--
+      TODO: see https://tools.lib.umich.edu/jira/browse/HELIO-2224
       <li role="presentation"><a id="tab-stats" href="#stats" role="tab" data-toggle="tab" aria-controls="stats" aria-selected="false" tabindex="-1">Stats</a></li>
+      -->
     </ul>
     <div id="tabs-content" class="tab-content monograph-assets-toc-epub-content" aria-live="polite">
       <% if @monograph_presenter.epub? %>
@@ -170,10 +173,11 @@
           </div>
         </section>
       <% end %>
+      <!-- TODO: see https://tools.lib.umich.edu/jira/browse/HELIO-2224
       <section id="stats" class="tab-pane fade in stats row" role="tabpanel" aria-hidden="true" aria-labelledby="tab-stats" tabindex="0">
         <h2 class="sr-only">Stats</h2>
-        <%= render 'stats' %>
-      </section>
+        <#% render 'stats' %>
+      </section>!-->
     </div>
   </div>
 </div><!-- /.monograph-assets-toc-epub -->

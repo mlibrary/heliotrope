@@ -73,6 +73,9 @@ module Heliotrope
     # Set the epub engine for cozy-sun-bear
     config.cozy_epub_engine = 'epubjs'
 
+    # See https://github.com/mlibrary/umrdr/commit/4aa4e63349d6f3aa51d76f07aa20faeae6712719
+    config.skylight.probes -= ['middleware']
+
     config.to_prepare do
       # ensure overrides are loaded
       # see https://bibwild.wordpress.com/2016/12/27/a-class_eval-monkey-patching-pattern-with-prepend/
