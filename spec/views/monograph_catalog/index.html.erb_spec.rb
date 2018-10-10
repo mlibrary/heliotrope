@@ -168,17 +168,19 @@ RSpec.describe "monograph_catalog/index.html.erb", type: :view do
         end
       end
 
-      context 'pageviews' do
-        before do
-          allow(monograph_presenter).to receive(:pageviews).and_return("PAGEVIEWS")
-          render
-        end
-
-        it do
-          debug_puts subject.to_s
-          is_expected.to match t('pageviews_html')
-        end
-      end
+      # TODO: see https://tools.lib.umich.edu/jira/browse/HELIO-2224
+      #
+      # context 'pageviews' do
+      #   before do
+      #     allow(monograph_presenter).to receive(:pageviews).and_return("PAGEVIEWS")
+      #     render
+      #   end
+      #
+      #   it do
+      #     debug_puts subject.to_s
+      #     is_expected.to match t('pageviews_html')
+      #   end
+      # end
 
       context 'isbn' do
         before do
