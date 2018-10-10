@@ -82,7 +82,7 @@ RSpec.describe Hyrax::FileSetPresenter do
         allow(ability).to receive(:can?).with(:edit, 'fs').and_return(false)
       end
 
-      let(:fileset_doc) { SolrDocument.new(id: 'fs', has_model_ssim: ['FileSet'], allow_download_ssim: 'yes') }
+      let(:fileset_doc) { SolrDocument.new(id: 'fs', has_model_ssim: ['FileSet'], allow_download_ssim: 'Yes') }
 
       it { expect(presenter.allow_download?).to be true }
     end
