@@ -250,7 +250,7 @@ en:
         date_created: "The 4-digit publication year used in auto-generated citations."
         description: "A free-text description of the work (markdown allowed)."
         doi: "https://doi.org/<doi>"
-        hdl: "http://hdl.handle.net/<hdl>"
+        hdl: "https://hdl.handle.net/<hdl>"
         isbn: "Enter as many ISBN values as you want. Put the format in parentheses if needed, e.g. \"123-123456-1 (e-book)\"."
         language: "The language of the monograph's content."
         location: "The place name used in auto-generated citations."

@@ -18,7 +18,7 @@ module CitableLinkPresenter
   end
 
   def doi_url
-    "https://doi.org/" + doi_path
+    HandleService::DOI_ORG_PREFIX + doi_path
   end
 
   def handle_path
@@ -26,6 +26,6 @@ module CitableLinkPresenter
   end
 
   def handle_url
-    "http://hdl.handle.net/" + handle_path
+    HandleService::HANDLE_NET_PREFIX + handle_path
   end
 end

@@ -211,14 +211,14 @@ RSpec.describe "monograph_catalog/index.html.erb", type: :view do
 
       context 'handle' do
         before do
-          allow(monograph_presenter).to receive(:citable_link).and_return(["http://hdl.handle.net/2027/fulcrum.999999999"])
+          allow(monograph_presenter).to receive(:citable_link).and_return([HandleService.url("999999999")])
           render
         end
 
         it do
           debug_puts subject.to_s
           is_expected.to match t('citable_link')
-          is_expected.to match "http://hdl.handle.net/2027/fulcrum.999999999"
+          is_expected.to match HandleService.url("999999999")
         end
       end
     end

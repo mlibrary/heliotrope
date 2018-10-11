@@ -1,8 +1,13 @@
 # frozen_string_literal: true
 
 class HandleService
+  DOI_ORG_PREFIX = 'https://doi.org/'
+  HANDLE_NET_PREFIX = 'https://hdl.handle.net/'
+  HANDLE_NET_API_HANDLES = HANDLE_NET_PREFIX + 'api/handles/'
+  FULCRUM_PREFIX = '2027/fulcrum.'
+
   def self.noid(handle_path_or_url)
-    match = /^(.*)(2027\/fulcrum\.)(.*)$/i.match(handle_path_or_url || "")
+    match = /^(.*)(#{Regexp.escape(FULCRUM_PREFIX)})(.*)$/i.match(handle_path_or_url || "")
     return nil if match.nil?
     noid = /^[[:alnum:]]{9}$/i.match(match[3])
     return match[3] unless noid.nil?
@@ -12,11 +17,11 @@ class HandleService
   end
 
   def self.path(noid)
-    "2027/fulcrum.#{noid}"
+    FULCRUM_PREFIX + noid.to_s
   end
 
   def self.url(noid)
-    "http://hdl.handle.net/#{path(noid)}"
+    HANDLE_NET_PREFIX + path(noid)
   end
 
   def self.value(noid)
@@ -40,7 +45,7 @@ class HandleService
     # 2 : Error. Something unexpected went wrong during handle resolution. (HTTP 500 Internal Server Error)
     # 100 : Handle Not Found. (HTTP 404 Not Found)
     # 200 : Values Not Found. The handle exists but has no values (or no values according to the types and indices specified). (HTTP 200 OK)
-    response = Faraday.get("http://hdl.handle.net/api/handles/#{path(noid)}")
+    response = Faraday.get(HANDLE_NET_API_HANDLES + path(noid))
     url = nil
     if response.code == 200 && response['responseCode'] == 1
       response['values'].each do |value|

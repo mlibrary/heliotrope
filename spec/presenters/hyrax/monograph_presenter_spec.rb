@@ -517,7 +517,7 @@ RSpec.describe Hyrax::MonographPresenter do
       }
 
       it "returns the doi url" do
-        expect(presenter.citable_link).to eq 'https://doi.org/10.NNNN.N/identifier'
+        expect(presenter.citable_link).to eq HandleService::DOI_ORG_PREFIX + '10.NNNN.N/identifier'
       end
     end
 
