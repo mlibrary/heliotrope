@@ -1,0 +1,10 @@
+<% if @monograph_presenter.present? %>
+
+  <div class="metrics">
+    <script type='text/javascript' src='https://d1bxh8uas1mnw7.cloudfront.net/assets/embed.js'></script>
+    <div data-badge-type="1" <%= if @monograph_presenter.doi.present? %> data-doi="<%= @monograph_presenter.doi_path %>" <%= else %> data-handle="<%= @monograph_presenter.handle_path %>" <%= end %> data-hide-no-mentions="true" class="altmetric-embed"></div>
+    <% if @monograph_presenter.doi.present? %>
+      <span class="__dimensions_badge_embed__" data-doi="<%= @monograph_presenter.doi_path %>" data-hide-zero-citations="true" data-legend="hover-right" data-style="large_rectangle"></span><script async src="https://badge.dimensions.ai/badge.js" charset="utf-8"></script>
+    <% end %>
+  </div>
+<% end %>
