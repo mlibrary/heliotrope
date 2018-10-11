@@ -152,10 +152,12 @@ class SessionsController < ApplicationController
     end
 
     def shib_target
-      target = params[:resource] || return_location
+      target = params[:resource] || return_location || ""
       target = CGI.unescape(target)
-      return target if target.start_with?('/')
-      target.prepend('/')
+      match = /^(https?\:\/\/[^\/]+\/)(.*)$/i.match(target)
+      target = match[2] if match.present?
+      target = target.prepend('/') unless target.start_with?('/')
+      target
     end
 
     def sp_login_url(entity_id = params[:entityID], target = params[:resource])

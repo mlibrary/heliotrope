@@ -15,7 +15,7 @@ RSpec.describe SessionsController, type: :controller do
       end
 
       context 'stored location for user' do
-        before { allow_any_instance_of(SessionsController).to receive(:stored_location_for).with(:user).and_return('http://return_to_me') }
+        before { allow_any_instance_of(described_class).to receive(:stored_location_for).with(:user).and_return('http://return_to_me') }
 
         it { is_expected.to redirect_to 'http://return_to_me' }
       end
@@ -25,6 +25,43 @@ RSpec.describe SessionsController, type: :controller do
       before { allow_any_instance_of(described_class).to receive(:user_signed_in?).and_return(false) }
 
       it { is_expected.to redirect_to new_authentications_path }
+    end
+  end
+
+  describe '#shib_session' do
+    subject { get :shib_session, params: { resource: resource } }
+
+    let(:resource) { prefix + path }
+    let(:prefix) { '' }
+    let(:path) { '' }
+    let(:target) { '/' + path }
+
+    before { allow_any_instance_of(described_class).to receive(:authenticate_user!) }
+
+    it { is_expected.to redirect_to target }
+
+    context 'path' do
+      let(:path) { 'concern/noid' }
+
+      it { is_expected.to redirect_to target }
+
+      context 'root' do
+        let(:prefix) { '/' }
+
+        it { is_expected.to redirect_to target }
+      end
+
+      context 'http' do
+        let(:prefix) { 'HtTp://anything you want between the slashes/' }
+
+        it { is_expected.to redirect_to target }
+      end
+
+      context 'https' do
+        let(:prefix) { 'HtTpS://everything up to the slash/' }
+
+        it { is_expected.to redirect_to target }
+      end
     end
   end
 
