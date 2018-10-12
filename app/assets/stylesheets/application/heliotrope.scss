@@ -322,7 +322,7 @@ footer.press {
     -ms-flex-direction: row;
     flex-direction: row;
   }
-  
+
   figure.peer_review img {
     border: none !important;
     width: 85px;
@@ -332,6 +332,12 @@ footer.press {
 
   figure.peer_review figcaption {
     font-size: 11px;
+  }
+
+  .metrics {
+    .altmetric-embed {
+      padding-bottom: .5em;
+    }
   }
 
   .fulcrum_sidebar {
@@ -1075,6 +1081,18 @@ footer.press {
 
 .cozy-control .logo img {
   height: 54.4px;
+}
+
+.cozy-container-altmetric {
+  padding-top: .3em;
+  padding-right: .5em;
+  border: none;
+}
+
+.cozy-container-dimensions {
+  padding-top: .5em;
+  padding-right: .5em;
+  border-left: none !important;
 }
 
 .cozy-container .cozy-panel-navigator {

@@ -2,6 +2,10 @@
 <%# https://github.com/mlibrary/heliotrope/issues/1228 %>
 <% content_for :head do %>
   <meta name="turbolinks-cache-control" content="no-cache">
+  <script type="text/javascript" src="https://d1bxh8uas1mnw7.cloudfront.net/assets/embed.js"></script>
+  <% if @monograph_presenter.doi.present? %>
+    <script async src="https://badge.dimensions.ai/badge.js" charset="utf-8"></script>
+  <% end %>
   <% if @monograph_presenter.webgl? %>
     <%
 # load what we need to show the webgl/3-d model if needed
@@ -401,6 +405,21 @@ webgl = Webgl::Unity.from_directory(UnpackService.root_path_from_noid(webgl_id, 
             region: 'top.toolbar.left',
             template: '<button class="button--sm cozy-download" data-toggle="open" aria-label="Download book" role="button"><i id="download" class="oi" data-glyph="data-transfer-download" title="Download book" aria-hidden="true"></i></button>',
         }).addTo(reader);
+        <% end %>
+
+        // Altmetric and Dimensions widget
+        cozy.control.widget.panel({
+          region: 'top.toolbar.right',
+          className: 'cozy-container-altmetric',
+          template: '<div data-badge-popover="bottom" data-badge-type="1" data-isbn="<%= @monograph_presenter.isbn_noformat.first %>" data-hide-no-mentions="true" class="altmetric-embed"></div>',
+        }).addTo(reader);
+
+        <% if @monograph_presenter.doi.present? %>
+          cozy.control.widget.panel({
+            region: 'top.toolbar.right',
+            className: 'cozy-container-dimensions',
+            template: '<span class="__dimensions_badge_embed__" data-doi="<%= @monograph_presenter.doi_path %>" data-hide-zero-citations="true" data-legend="hover-bottom" data-style="large_rectangle"></span>',
+          }).addTo(reader);
         <% end %>
 
         // Fullscreen widget
