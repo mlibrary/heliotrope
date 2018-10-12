@@ -46,8 +46,7 @@ class MonographIndexer < Hyrax::WorkIndexer
     new_fileset_order.each_with_index do |id, new_index|
       former_position = existing_fileset_order.index(id)
       next unless former_position && former_position != new_index
-      # ReindexFileSetJob.perform_later(FileSet.find(id))
-      FileSet.find(id).update_index
+      CurationConcernUpdateIndexJob.perform_later(FileSet.find(id))
     end
   end
 
