@@ -18,8 +18,8 @@ RSpec.describe CitableLinkPresenter do
 
   let(:id) { 'validnoid' }
   let(:solr_document) { SolrDocument.new(hdl_ssim: [handle_path], doi_ssim: [doi_path]) }
-  let(:handle_url) { 'http://hdl.handle.net/' + handle_path }
-  let(:doi_url) { 'https://doi.org/' + doi_path }
+  let(:handle_url) { HandleService::HANDLE_NET_PREFIX + handle_path }
+  let(:doi_url) { HandleService::DOI_ORG_PREFIX + doi_path }
 
   let(:handle_path) { '' }
   let(:doi_path) { '' }

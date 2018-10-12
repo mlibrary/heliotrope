@@ -59,7 +59,7 @@ describe 'Create a monograph' do
       expect(page).to have_content press.name
       expect(page).to have_content 'Blahdy blah description works'
       expect(page).to have_content "Jimmy Johns, Sub Way and Sandwich Shoppe"
-      expect(page).to have_field('Citable Link', with: 'https://doi.org/<doi>')
+      expect(page).to have_field('Citable Link', with: HandleService::DOI_ORG_PREFIX + '<doi>')
       expect(page).to have_content '123-456-7890'
       expect(page).to have_content "Your files are being processed by Fulcrum in the background."
       # CC license icon/link

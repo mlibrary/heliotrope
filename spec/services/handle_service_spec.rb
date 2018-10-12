@@ -10,7 +10,7 @@ RSpec.describe HandleService do
 
   describe '#noid' do
     it { expect(subject.noid(nil)).to be nil }
-    it { expect(subject.noid("http://authority/path")).to be nil }
+    it { expect(subject.noid(described_class::HANDLE_NET_API_HANDLES + invalidnoid)).to be nil }
     it { expect(subject.noid(subject.path(invalidnoid))).to eq nil }
     it { expect(subject.noid(subject.path(validnoid))).to eq validnoid }
     it { expect(subject.noid(subject.url(validnoid))).to eq validnoid }
@@ -18,15 +18,15 @@ RSpec.describe HandleService do
   end
 
   describe '#path' do
-    it { expect(subject.path(nil)).to eq '2027/fulcrum.' }
-    it { expect(subject.path(invalidnoid)).to eq "2027/fulcrum.#{invalidnoid}" }
-    it { expect(subject.path(validnoid)).to eq "2027/fulcrum.#{validnoid}" }
+    it { expect(subject.path(nil)).to eq described_class::FULCRUM_PREFIX }
+    it { expect(subject.path(invalidnoid)).to eq described_class::FULCRUM_PREFIX + invalidnoid }
+    it { expect(subject.path(validnoid)).to eq described_class::FULCRUM_PREFIX + validnoid }
   end
 
   describe '#url' do
-    it { expect(subject.url(nil)).to eq "http://hdl.handle.net/#{subject.path(nil)}" }
-    it { expect(subject.url(invalidnoid)).to eq "http://hdl.handle.net/#{subject.path(invalidnoid)}" }
-    it { expect(subject.url(validnoid)).to eq "http://hdl.handle.net/#{subject.path(validnoid)}" }
+    it { expect(subject.url(nil)).to eq described_class::HANDLE_NET_PREFIX + subject.path(nil) }
+    it { expect(subject.url(invalidnoid)).to eq described_class::HANDLE_NET_PREFIX + subject.path(invalidnoid) }
+    it { expect(subject.url(validnoid)).to eq described_class::HANDLE_NET_PREFIX + subject.path(validnoid) }
   end
 
   describe '#value' do
@@ -34,7 +34,7 @@ RSpec.describe HandleService do
     let(:value) { double('value') }
 
     before do
-      allow(Faraday).to receive(:get).with("http://hdl.handle.net/api/handles/#{subject.path(validnoid)}").and_return(response)
+      allow(Faraday).to receive(:get).with(described_class::HANDLE_NET_API_HANDLES + subject.path(validnoid)).and_return(response)
       allow(response).to receive(:code).and_return(code)
       allow(response).to receive(:[]).with('responseCode').and_return(responseCode)
     end

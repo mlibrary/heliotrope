@@ -118,7 +118,7 @@ describe 'shared/_metadata.html.erb' do
       @presenter = Hyrax::FileSetPresenter.new(solr_document, nil)
       render
       expect(rendered).to match '10.3998/fulcrum.001'
-      expect(rendered).not_to match 'https://doi.org/'
+      expect(rendered).not_to match HandleService::DOI_ORG_PREFIX
     end
   end
 end
