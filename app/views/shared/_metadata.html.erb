@@ -13,9 +13,9 @@
     <meta name="citation_online_date" content="<%= @monograph_presenter.date_created.first %>">
   <% end %>
 
-  <% if @monograph_presenter.isbn.present? %>
-    <% @monograph_presenter.isbn.each do |isbn| %>
-      <meta name="citation_isbn" content="<%= isbn.html_safe %>">
+  <% if @monograph_presenter.isbn_noformat.present? %>
+    <% @monograph_presenter.isbn_noformat.each do |isbn_noformat| %>
+      <meta name="citation_isbn" content="<%= isbn_noformat.html_safe %>">
     <% end %>
   <% end %>
 

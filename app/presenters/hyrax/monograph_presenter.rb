@@ -95,6 +95,15 @@ module Hyrax
       solr_document.date_created.present?
     end
 
+    def isbn_noformat
+      isbns = []
+      isbn.each do |isbn|
+        isbn_removeformat = isbn.sub(/\(.+\)/, '').strip
+        isbns << isbn_removeformat if isbn_removeformat.present?
+      end
+      isbns
+    end
+
     def heb?
       Array(solr_document['press_tesim']).include?('heb')
     end
