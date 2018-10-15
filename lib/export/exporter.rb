@@ -55,12 +55,21 @@ module Export
       metadata_row(@monograph, :monograph)
     end
 
+    def blank_csv_sheet
+      buffer = String.new
+      CSV.generate(buffer) do |csv|
+        write_csv_header_rows(csv)
+      end
+      buffer
+    end
+
     def write_csv_header_rows(csv)
       row1 = []
       row2 = []
       all_metadata.each do |field|
         row1 << field[:field_name]
-        row2 << 'instruction placeholder'
+        # don't want to deal with the huge instruction/description fields in test
+        row2 << (Rails.env.test? ? 'instruction placeholder' : field[:description])
       end
       csv << row1 << row2
     end
@@ -69,19 +78,10 @@ module Export
 
       def all_metadata
         return @all_metadata if @all_metadata.present?
-        # Export the object id in the first column of the exported CSV file (required doesn't matter here)
-        noid = [{ object: :universal, field_name: 'NOID', metadata_name: 'id', required: true, multivalued: :no }]
-        # We need the file name in the exported CSV file (required doesn't matter here)
-        # Ideally this should be moved to metadata_fields.rb and the importer would be refactored (maybe)
-        # Aside: In the absence of a title the file name is used
-        file = [{ object: :file_set, field_name: 'File Name', metadata_name: 'label', required: true, multivalued: :no }]
-        # We want the url in the exported CSV file (required doesn't matter here)
-        url = [{ object: :universal, field_name: 'Link', metadata_name: 'url', required: true, multivalued: :no }]
-
         @all_metadata = if @columns == :monograph
-                          noid + url + METADATA_FIELDS.select { |f| %i[universal monograph].include? f[:object] }
+                          (ADMIN_METADATA_FIELDS + METADATA_FIELDS).select { |f| %i[universal monograph].include? f[:object] }
                         else
-                          noid + file + url + METADATA_FIELDS + FILE_SET_FLAG_FIELDS
+                          ADMIN_METADATA_FIELDS + METADATA_FIELDS + FILE_SET_FLAG_FIELDS
                         end
       end
 

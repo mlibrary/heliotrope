@@ -172,6 +172,8 @@ Rails.application.routes.draw do
     end
   end
 
+  get 'blank_csv_template', controller: :metadata_template, action: :export, as: :blank_csv_template
+
   mount Qa::Engine => '/authorities'
 
   resources :solr_documents, only: [:show], path: '/catalog', controller: 'catalog' do
