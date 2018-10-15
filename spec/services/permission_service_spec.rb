@@ -18,36 +18,39 @@ RSpec.describe PermissionService do
     end
   end
 
-  describe '#valid_email?' do
-    subject { permission_service.valid_email?(email) }
-
-    let(:email) { nil }
-
-    it { is_expected.to be false }
-
-    context 'valid' do
-      let(:email) { 'wolverine@umich.edu' }
-
-      it { is_expected.to be true }
-    end
-  end
-
   describe '#valid_agent?' do
     subject { permission_service.valid_agent?(agent_type, agent_id) }
 
     let(:agent_type) { nil }
     let(:agent_id) { nil }
 
+    it { expect(permission_service.valid_agent_type?(agent_type)).to be false }
     it { is_expected.to be false }
+
+    context 'any' do
+      let(:agent_type) { :any }
+
+      it { expect(permission_service.valid_agent_type?(agent_type)).to be true }
+      it { is_expected.to be false }
+
+      context 'valid' do
+        let(:agent_id) { 'any' }
+
+        it { is_expected.to be true }
+      end
+    end
 
     context 'email' do
       let(:agent_type) { :email }
 
+      it { expect(permission_service.valid_agent_type?(agent_type)).to be true }
+      it { expect(permission_service.valid_email?(agent_id)).to be false }
       it { is_expected.to be false }
 
       context 'valid' do
         let(:agent_id) { 'wolverine@umich.edu' }
 
+        it { expect(permission_service.valid_email?(agent_id)).to be true }
         it { is_expected.to be true }
       end
     end
@@ -55,6 +58,8 @@ RSpec.describe PermissionService do
     context 'institution' do
       let(:agent_type) { :institution }
 
+      it { expect(permission_service.valid_agent_type?(agent_type)).to be true }
+      it { expect(permission_service.valid_institution?(agent_id)).to be false }
       it { is_expected.to be false }
 
       context 'valid' do
@@ -63,22 +68,47 @@ RSpec.describe PermissionService do
 
         before { allow(Institution).to receive(:find_by).with(identifier: agent_id.to_s).and_return(institution) }
 
+        it { expect(permission_service.valid_institution?(agent_id)).to be true }
         it { is_expected.to be true }
       end
     end
   end
 
-  describe '#valid_noid?' do
-    subject { permission_service.valid_noid?(noid) }
+  describe '#valid_credential?' do
+    subject { permission_service.valid_credential?(credential_type, credential_id) }
 
-    let(:noid) { nil }
+    let(:credential_type) { nil }
+    let(:credential_id) { nil }
 
+    it { expect(permission_service.valid_credential_type?(credential_type)).to be false }
     it { is_expected.to be false }
 
-    context 'valid' do
-      let(:noid) { 'validnoid' }
+    context 'any' do
+      let(:credential_type) { :any }
 
-      it { is_expected.to be true }
+      it { expect(permission_service.valid_credential_type?(credential_type)).to be true }
+      it { is_expected.to be false }
+
+      context 'valid' do
+        let(:credential_id) { 'any' }
+
+        it { is_expected.to be true }
+      end
+    end
+
+    context 'permission' do
+      let(:credential_type) { :permission }
+
+      it { expect(permission_service.valid_credential_type?(credential_type)).to be true }
+      it { expect(permission_service.valid_permission?(credential_id)).to be false }
+      it { is_expected.to be false }
+
+      context 'valid' do
+        let(:credential_id) { :read }
+
+        it { expect(permission_service.valid_permission?(credential_id)).to be true }
+        it { is_expected.to be true }
+      end
     end
   end
 
@@ -88,16 +118,33 @@ RSpec.describe PermissionService do
     let(:resource_type) { nil }
     let(:resource_id) { nil }
 
+    it { expect(permission_service.valid_resource_type?(resource_type)).to be false }
     it { is_expected.to be false }
+
+    context 'any' do
+      let(:resource_type) { :any }
+
+      it { expect(permission_service.valid_resource_type?(resource_type)).to be true }
+      it { is_expected.to be false }
+
+      context 'valid' do
+        let(:resource_id) { 'any' }
+
+        it { is_expected.to be true }
+      end
+    end
 
     context 'noid' do
       let(:resource_type) { :noid }
 
+      it { expect(permission_service.valid_resource_type?(resource_type)).to be true }
+      it { expect(permission_service.valid_noid?(resource_id)).to be false }
       it { is_expected.to be false }
 
       context 'valid' do
         let(:resource_id) { 'validnoid' }
 
+        it { expect(permission_service.valid_noid?(resource_id)).to be true }
         it { is_expected.to be true }
       end
     end
@@ -105,6 +152,8 @@ RSpec.describe PermissionService do
     context 'product' do
       let(:resource_type) { :product }
 
+      it { expect(permission_service.valid_resource_type?(resource_type)).to be true }
+      it { expect(permission_service.valid_product?(resource_id)).to be false }
       it { is_expected.to be false }
 
       context 'valid' do
@@ -113,6 +162,7 @@ RSpec.describe PermissionService do
 
         before { allow(Product).to receive(:find_by).with(identifier: resource_id.to_s).and_return(product) }
 
+        it { expect(permission_service.valid_product?(resource_id)).to be true }
         it { is_expected.to be true }
       end
     end

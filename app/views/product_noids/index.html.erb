@@ -1,0 +1,21 @@
+<p id="notice"><%= notice %></p>
+<div id="maincontent">
+  <div class="row">
+    <div class="col-md-12"><h1>Product NOIDs</h1></div>
+    <div class="col-md-12">
+      <% @product_noids.each do |product_noid| %>
+        <div class="col-md-1"><%= product_noid.id %></div>
+        <div class="col-md-2"><%= product_noid.product %></div>
+        <div class="col-md-3"><%= product_noid.noid %></div>
+        <div class="col-md-6">
+          <div class="col-md-4"><%= link_to 'Show', product_noid %></div>
+          <div class="col-md-4"><%= link_to 'Edit', edit_product_noid_path(product_noid) %></div>
+          <div class="col-md-4"><%= link_to 'Destroy', product_noid, method: :delete, data: { confirm: 'Are you sure?' } %></div>
+        </div>
+      <% end %>
+    </div>
+    <div class="col-md-12"><br/></div>
+    <div class="col-md-12"><%= link_to 'New Product NOID', new_product_noid_path %></div>
+    <div class="col-md-12"><br/></div>
+  </div>
+</div>

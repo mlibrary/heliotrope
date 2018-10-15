@@ -7,18 +7,20 @@ RSpec.describe Policy, type: :model do
 
   let(:attributes) do
     {
-      agent_type: "agent_type",
-      agent_id: "agent_id",
-      agent_token: "agent_token",
-      credential_type: "credential_type",
-      credential_id: "credentail_id",
-      credential_token: "credential_token",
-      resource_type: "resource_type",
-      resource_id: "resource_id",
-      resource_token: "resource_token",
-      zone_id: "zone_id"
+      agent_type: 'any',
+      agent_id: 'any',
+      agent_token: 'any:any',
+      credential_type: 'permission',
+      credential_id: 'read',
+      credential_token: 'permission:read',
+      resource_type: 'any',
+      resource_id: 'any',
+      resource_token: 'any:any',
+      zone_id: Checkpoint::DB::Permit.default_zone
     }
   end
+
+  before { PermissionService.clear_permits_table }
 
   it do
     expect(policy.valid?).to be false
