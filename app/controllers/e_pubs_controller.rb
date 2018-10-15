@@ -163,10 +163,7 @@ class EPubsController < CheckpointController
 
     def access?
       return legacy_access? unless Rails.configuration.e_pub_checkpoint_authorization
-      @policy.authorize! :show
-      true
-    rescue StandardError
-      false
+      @policy.show?
     end
 
     def legacy_access?
