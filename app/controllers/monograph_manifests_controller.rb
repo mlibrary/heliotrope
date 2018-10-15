@@ -12,7 +12,7 @@ class MonographManifestsController < ApplicationController
     @monograph_manifest = MonographManifest.new(params[:id])
     if @monograph_manifest.explicit.persisted?
       notice = t('monograph_manifests.notice.perform_job')
-      UpdateMonographJob.perform_now(params[:id])
+      UpdateMonographJob.perform_later(current_user, params[:id])
     else
       notice = t('monograph_manifests.notice.no_manifest')
     end
