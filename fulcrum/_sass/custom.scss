@@ -58,15 +58,22 @@ p.header {
   line-height: 1.5em;
   color: #002C63;
   @include crete;
+  font-size: 2.3rem;
 }
 
 span.value {
   display: block;
-  font-size: 1.65rem;
+  font-size: 1.4rem;
   line-height: 1.2em;
   margin: 1.78rem 0 .75em 0;
   color: #002C63;
   @include crete;
+}
+
+.icon-block {
+  p.light {
+    font-size: .9rem;
+  }
 }
 
 
@@ -311,13 +318,31 @@ footer.page-footer {
     position: absolute;
     top: 40%;
   }
-  #index-banner .section, .parallax-container .section.sponsor {
-    top: -5%;
-  }
-  #index-banner .section, .parallax-container .section.phases {
-    top: 0%;
+  #index-banner .section {
+    top: -13%;
+    p.header {
+      margin-bottom: 0rem;
+    }
   }
 
+  .parallax-container .section.sponsor {
+    top: 0%;
+  }
+  .parallax-container .section.phases {
+    top: 10%;
+  }
+
+}
+
+@media only screen and (max-width : 700px ) {
+
+  #index-banner {
+    height: 400px;
+
+    p.header {
+      font-size: 2rem;
+    }
+  }
 }
 
 @media only screen and (max-width : 600px) {
@@ -339,7 +364,7 @@ footer.page-footer {
     margin-top: 0;
   }
 
-  #index-banner h1.zeta {
+  #index-banner .zeta {
     margin-top: 0;
     margin-bottom: 0;
   }

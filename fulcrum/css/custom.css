@@ -564,16 +564,20 @@ p.header {
   line-height: 1.5em;
   color: #002C63;
   font-family: "Crete Round", Merriweather, georgia, serif;
-  font-weight: 400; }
+  font-weight: 400;
+  font-size: 2.3rem; }
 
 span.value {
   display: block;
-  font-size: 1.65rem;
+  font-size: 1.4rem;
   line-height: 1.2em;
   margin: 1.78rem 0 .75em 0;
   color: #002C63;
   font-family: "Crete Round", Merriweather, georgia, serif;
   font-weight: 400; }
+
+.icon-block p.light {
+  font-size: .9rem; }
 
 .promo {
   margin-top: 2em; }
@@ -738,11 +742,21 @@ footer.page-footer {
     position: absolute;
     top: 40%; }
 
-  #index-banner .section, .parallax-container .section.sponsor {
-    top: -5%; }
+  #index-banner .section {
+    top: -13%; }
+    #index-banner .section p.header {
+      margin-bottom: 0rem; }
 
-  #index-banner .section, .parallax-container .section.phases {
-    top: 0%; } }
+  .parallax-container .section.sponsor {
+    top: 0%; }
+
+  .parallax-container .section.phases {
+    top: 10%; } }
+@media only screen and (max-width: 700px) {
+  #index-banner {
+    height: 400px; }
+    #index-banner p.header {
+      font-size: 2rem; } }
 @media only screen and (max-width: 600px) {
   .nav-container, .nav-container .container, .nav-container .column {
     height: 3.07rem; }
@@ -757,7 +771,7 @@ footer.page-footer {
     font-size: 0.95rem;
     margin-top: 0; }
 
-  #index-banner h1.zeta {
+  #index-banner .zeta {
     margin-top: 0;
     margin-bottom: 0; } }
 @media only screen and (max-width: 480px) {
