@@ -3,6 +3,23 @@
 require 'ostruct'
 
 class PermissionService
+  # Class Methods
+
+  # Needed only for rake tasks. Call it once and before any other method.
+  def self.database_initialize!
+    Checkpoint::DB.initialize!
+  end
+
+  def self.permits_table_empty?
+    Checkpoint::DB.db[:permits].count.zero?
+  end
+
+  def self.clear_permits_table
+    Checkpoint::DB.db[:permits].delete
+  end
+
+  # Instance Methods
+
   def initialize(agent_factory: Checkpoint::Agent, resource_factory: Checkpoint::Resource)
     @agent_factory = agent_factory
     @resource_factory = resource_factory

@@ -5,6 +5,19 @@ require 'rails_helper'
 RSpec.describe PermissionService do
   let(:permission_service) { described_class.new }
 
+  describe 'checkpoint permits table' do
+    it do
+      described_class.clear_permits_table
+      expect(described_class.permits_table_empty?).to be true
+      permission_service.permit_open_access
+      expect(permission_service.open_access?).to be true
+      expect(described_class.permits_table_empty?).to be false
+      described_class.clear_permits_table
+      expect(permission_service.open_access?).to be false
+      expect(described_class.permits_table_empty?).to be true
+    end
+  end
+
   describe '#valid_email?' do
     subject { permission_service.valid_email?(email) }
 
