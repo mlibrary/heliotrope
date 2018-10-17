@@ -2,9 +2,9 @@
 
 desc 'output handle-suitable URLs for a monograph'
 namespace :heliotrope do
-  task :monograph_urls, [:monograph_id] => :environment do |_t, args|
+  task :handles_single_monograph, [:monograph_id] => :environment do |_t, args|
     # Usage: Needs a valid monograph id as a parameter
-    # $ bundle exec rake "heliotrope:monograph_urls[q811kk573]"
+    # $ bundle exec rake "heliotrope:handles_single_monograph[q811kk573]"
 
     # Right now we're using this to generate handles outside of heliotrope
 
