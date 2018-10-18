@@ -1,25 +1,46 @@
-<% products =  Product.all %>
+<%
+  products = Product.filter(identifier_like: params[:identifier_like], name_like: params[:name_like]).order(identifier: :asc).page(params[:page])
+  size = 12
+%>
 <h1>Products</h1>
-<table class="table table-striped" summary="Product List">
-  <tr>
-    <th>Product <%= link_to(new_product_path) do %>
-        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> New
-      <% end %>
-    </th>
-    <th>Identifier</th>
-    <th>Name</th>
-    <th>Components</th>
-    <th>Lessees</th>
-    <th>Policies</th>
-  </tr>
-  <% products.each do |product| %>
+<form name="filter" method="get" action="<%= partial_fulcrum_path(:products) %>">
+  <table class="table table-striped" summary="Product List">
     <tr>
-      <td><%= link_to product.id, product_path(product) %></td>
-      <td><%= product.identifier %></td>
-      <td><%= product.name %></td>
-      <td><%= product.components.count() %></td>
-      <td><%= product.lessees.count() %></td>
-      <td><%= product.policies.count() %></td>
+      <th>
+        <%= link_to(new_product_path) do %>
+          <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> New
+        <% end %>
+      </th>
+      <th><label for="identifier_like">Identifier</label></th>
+      <th><label for="name_like">Name</label></th>
+      <th>NOIDs</th>
+      <th>Policies</th>
+      <th>Components</th>
+      <th>Lessees</th>
     </tr>
-  <% end %>
-</table>
+    <% products.each do |product| %>
+      <tr>
+        <td><%= link_to(product_path(product)) do %>
+            <span class="glyphicon glyphicon-sunglasses" aria-hidden="true"></span> Show
+          <% end %>
+        </td>
+        <td><%= product.identifier %></td>
+        <td><%= product.name %></td>
+        <td><%= product.noids.count() %></td>
+        <td><%= product.policies.count() %></td>
+        <td><%= product.components.count() %></td>
+        <td><%= product.lessees.count() %></td>
+      </tr>
+    <% end %>
+    <tr>
+      <td><button name="submit" type="submit" value="filter">Filter</button></td>
+      <td><input type="text" name="identifier_like" value="<%= params[:identifier_like] %>" size="<%= size %>"></td>
+      <td><input type="text" name="name_like" value="<%= params[:name_like] %>" size="<%= size %>"></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+  </table>
+</form>
+<%= paginate products %>

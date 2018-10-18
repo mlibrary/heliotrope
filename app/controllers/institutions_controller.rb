@@ -6,7 +6,7 @@ class InstitutionsController < ApplicationController
   # GET /institutions
   # GET /institutions.json
   def index
-    @institutions = Institution.all
+    @institutions = Institution.order(identifier: :asc).page(params[:page])
   end
 
   # GET /institutions/1
@@ -79,5 +79,10 @@ class InstitutionsController < ApplicationController
     # Never trust parameters from the scary internet, only allow the white list through.
     def institution_params
       params.require(:institution).permit(:identifier, :name, :entity_id, :site, :login)
+    end
+
+    # A list of the param names that can be used for filtering the Product list
+    def filtering_params(params)
+      params.slice(:identifier_like, :name_like, :entity_id_like)
     end
 end

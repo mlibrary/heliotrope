@@ -18,10 +18,6 @@
     <div class="col-md-12">
       <%= render partial: 'lessees', locals: { component: @component, lessees: @component.lessees } %>
     </div>
-    <div class="col-md-12"><h2>Policies</h2></div>
-    <div class="col-md-12">
-      <%= render partial: 'policies', locals: { component: @component, policies: @component.policies } %>
-    </div>
     <div class="col-md-12"><br/></div>
     <div class="col-md-12">
       <%= link_to_if @component.update?, 'Edit', edit_component_path(@component) %>

@@ -8,7 +8,7 @@ class FulcrumController < ApplicationController
 
   def show
     @partial = params[:partial]
-    if ['home', 'tokens', 'logs', 'policies', 'products', 'product_noids', 'components', 'lessees', 'institutions', 'publishers', 'users', 'monographs', 'assets', 'pages', 'reports', 'customize', 'settings', 'help', 'csv'].include? @partial
+    if ['home', 'products', 'product_noids', 'policies', 'components', 'lessees', 'institutions', 'publishers', 'users', 'tokens', 'logs', 'monographs', 'assets', 'pages', 'reports', 'customize', 'settings', 'help', 'csv'].include? @partial
       render
     else
       render 'hyrax/base/unauthorized', status: :unauthorized

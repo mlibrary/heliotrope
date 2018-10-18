@@ -6,7 +6,7 @@ class ComponentsController < ApplicationController
   # GET /components
   # GET /components.json
   def index
-    @components = Component.all
+    @components = Component.order(handle: :asc).page(params[:page])
   end
 
   # GET /components/1
@@ -89,5 +89,10 @@ class ComponentsController < ApplicationController
     # Never trust parameters from the scary internet, only allow the white list through.
     def component_params
       params.require(:component).permit(:handle)
+    end
+
+    # A list of the param names that can be used for filtering the Product list
+    def filtering_params(params)
+      params.slice(:handle_like)
     end
 end

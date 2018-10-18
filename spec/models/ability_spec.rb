@@ -65,10 +65,6 @@ describe Ability do
       it { is_expected.to be_able_to(:read, ApplicationPresenter.new(current_user)) }
     end
 
-    context "DashboardPresenter" do
-      it { is_expected.to be_able_to(:read, DashboardPresenter.new(current_user)) }
-    end
-
     context "PublisherPresenter" do
       let(:publisher) { double("publisher") }
 
@@ -153,10 +149,6 @@ describe Ability do
       it { is_expected.not_to be_able_to(:read, ApplicationPresenter.new(current_user)) }
     end
 
-    context "DashboardPresenter" do
-      it { is_expected.not_to be_able_to(:read, DashboardPresenter.new(current_user)) }
-    end
-
     context "PublisherPresenter" do
       let(:publisher) { double("publisher") }
 
@@ -215,10 +207,6 @@ describe Ability do
 
     context "ApplicationPresenter" do
       it { is_expected.not_to be_able_to(:read, ApplicationPresenter.new(current_user)) }
-    end
-
-    context "DashboardPresenter" do
-      it { is_expected.not_to be_able_to(:read, DashboardPresenter.new(current_user)) }
     end
 
     context "PublisherPresenter" do
@@ -328,10 +316,6 @@ describe Ability do
 
     context "ApplicationPresenter" do
       it { is_expected.not_to be_able_to(:read, ApplicationPresenter.new(current_user)) }
-    end
-
-    context "DashboardPresenter" do
-      it { is_expected.not_to be_able_to(:read, DashboardPresenter.new(current_user)) }
     end
 
     context "PublisherPresenter" do

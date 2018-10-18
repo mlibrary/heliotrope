@@ -46,13 +46,9 @@ Rails.application.routes.draw do
   end
 
   constraints platform_administrator_constraint do
+    get 'fulcrum', controller: :fulcrum, action: :index, as: :fulcrum
+    get 'fulcrum/:partial', controller: :fulcrum, action: :show, as: :partial_fulcrum
     resources :api_requests, only: %i[index show destroy]
-
-    resources :users, only: [] do
-      member do
-        put :tokenize
-      end
-    end
     resources :institutions
     resources :lessees do
       resources :products, only: %i[create destroy]
@@ -69,6 +65,23 @@ Rails.application.routes.draw do
     resources :policies, except: %i[edit update]
     resources :customers, only: %i[index] do
       resources :counter_reports, only: %i[index show edit update], constraints: COUNTER_REPORT_ID_CONSTRAINT
+    end
+    resource :manifests, path: 'concern/monographs/:id/manifest', only: %i[new edit update create destroy], as: :monograph_manifests
+    resource :monograph_manifests, path: 'concern/monographs/:id/manifest', only: [:show] do
+      member do
+        get :export
+        patch :import
+        get :preview
+      end
+    end
+    get 'blank_csv_template', controller: :metadata_template, action: :export, as: :blank_csv_template
+    scope module: :hyrax do
+      resources :users, only: %i[index show]
+    end
+    resources :users, only: [] do
+      member do
+        put :tokenize
+      end
     end
   end
 
@@ -95,8 +108,6 @@ Rails.application.routes.draw do
   get 'epubs_download_chapter/:id', controller: :e_pubs, action: :download_chapter, as: :epub_download_chapter
   get 'epubs_download_interval/:id', controller: :e_pubs, action: :download_interval, as: :epub_download_interval
   get 'embed', controller: :embed, action: :show
-  get 'fulcrum', controller: :fulcrum, action: :index, as: :fulcrum
-  get 'fulcrum/:partial', controller: :fulcrum, action: :show, as: :partial_fulcrum
   get 'webgl/:id', controller: :webgls, action: :show, as: :webgl
   get 'webgl/:id/*file', controller: :webgls, action: :file, as: :webgl_file
   post 'featured_representatives', controller: :featured_representatives, action: :save
@@ -108,7 +119,6 @@ Rails.application.routes.draw do
   constraints resque_web_constraint do
     mount ResqueWeb::Engine => "/resque"
   end
-
   # For anyone who doesn't meet resque_web_constraint,
   # fall through to this controller.
   get 'resque', controller: :jobs, action: :forbid
@@ -126,21 +136,20 @@ Rails.application.routes.draw do
   get 'shib_login(/*resource)', to: 'sessions#shib_login', as: :shib_login
   get 'shib_session(/*resource)', to: 'sessions#shib_session', as: :shib_session
   resource :authentications, only: %i[show new create destroy]
-
   get 'discovery_feed', controller: :sessions, action: :discovery_feed
   get 'discovery_feed/:id', controller: :sessions, action: :discovery_feed
-
   unless Rails.env.production?
     get 'Shibboleth.sso/Help', controller: :shibboleths, action: :help
     get 'Shibboleth.sso/Login', controller: :shibboleths, action: :new
   end
 
-  get 'users', controller: :users, action: :index, as: :users
-  get 'users/:id', controller: :users, action: :show, as: :user
-  get 'roles', controller: :roles, action: :index2, as: :roles
-  get 'roles/:id', controller: :roles, action: :show, as: :role
-
   get '/', to: redirect('/index.html')
+
+  # Hyrax routes we wish to hide need to be defined before mounting the Hyrax::Engine
+  # and they need to go somewhere so redirect them to root a.k.a. '/'
+  scope module: :hyrax do
+    resources :users, only: %i[index show], to: redirect('/')
+  end
 
   mount Hyrax::Engine, at: '/'
 
@@ -160,20 +169,6 @@ Rails.application.routes.draw do
       end
     end
   end
-
-  constraints platform_administrator_constraint do
-    resource :manifests, path: 'concern/monographs/:id/manifest', only: %i[new edit update create destroy], as: :monograph_manifests
-
-    resource :monograph_manifests, path: 'concern/monographs/:id/manifest', only: [:show] do
-      member do
-        get :export
-        patch :import
-        get :preview
-      end
-    end
-  end
-
-  get 'blank_csv_template', controller: :metadata_template, action: :export, as: :blank_csv_template
 
   mount Qa::Engine => '/authorities'
 

@@ -1,28 +1,40 @@
-<% lessees =  Lessee.all %>
+<%
+  lessees = Lessee.order(identifier: :asc).page(params[:page])
+  size = 24
+%>
 <h1>Lessees</h1>
-<table class="table table-striped" summary="Lessee List">
-  <tr>
-    <th>Lessee
-      <%= link_to(new_lessee_path) do %>
-        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> New
-      <% end %></th>
-    <th>Identifier</th>
-    <th>Products</th>
-    <th>Components</th>
-    <th>Policies</th>
-  </tr>
-  <% lessees.each do |lessee| %>
+<form name="filter" method="get" action="<%= partial_fulcrum_path(:lessees) %>">
+  <table class="table table-striped" summary="Lessee List">
     <tr>
-      <td><%= link_to lessee.id, lessee_path(lessee) %></td>
-      <td>
-        <%= lessee.identifier %>
-        <% if lessee.institution? %>
-          <%= lessee.institution.name %>
+      <th>
+        <%= link_to(new_lessee_path) do %>
+          <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> New
         <% end %>
-      </td>
-      <td><%= lessee.products.count() %></td>
-      <td><%= lessee.components.count() %></td>
-      <td><%= lessee.policies.count() %></td>
+      </th>
+      <th>Identifier</th>
+      <th>Institution</th>
+      <th>Products</th>
+      <th>Components</th>
     </tr>
-  <% end %>
-</table>
+    <% lessees.each do |lessee| %>
+      <tr>
+        <td><%= link_to(lessee_path(lessee)) do %>
+            <span class="glyphicon glyphicon-sunglasses" aria-hidden="true"></span> Show
+          <% end %>
+        </td>
+        <td><%= lessee.identifier %></td>
+        <td><% if lessee.institution? %><%= lessee.institution.name %><% end %></td>
+        <td><%= lessee.products.count() %></td>
+        <td><%= lessee.components.count() %></td>
+      </tr>
+    <% end %>
+    <tr>
+      <td><button name="submit" type="submit" value="filter">Filter</button></td>
+      <td><input type="text" name="identifier_like" value="<%= params[:identifier_like] %>" size="<%= size %>"></td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+  </table>
+</form>
+<%= paginate lessees %>

@@ -6,7 +6,7 @@ class ProductsController < ApplicationController
   # GET /products
   # GET /products.json
   def index
-    @products = Product.all
+    @products = Product.order(name: :asc).page(params[:page])
   end
 
   # GET /products/1
@@ -118,5 +118,10 @@ class ProductsController < ApplicationController
     # Never trust parameters from the scary internet, only allow the white list through.
     def product_params
       params.require(:product).permit(:identifier, :name, :purchase)
+    end
+
+    # A list of the param names that can be used for filtering the Product list
+    def filtering_params(params)
+      params.slice(:identifier_like, :name_like)
     end
 end

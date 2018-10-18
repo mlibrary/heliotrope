@@ -16,7 +16,7 @@
     </td>
   </tr>
 </table>
-<% users =  User.all %>
+<% users = User.order(email: :asc).page(params[:page]) %>
 <h2>Tokenize</h2>
 <table class="table table-striped" summary="Tokenize List">
   <tr>
@@ -38,3 +38,4 @@
     </tr>
   <% end %>
 </table>
+<%= paginate users %>

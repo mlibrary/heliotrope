@@ -1,5 +1,40 @@
-<% users = UsersPresenter.new(current_user) %>
+<%
+  users = User.filter(email_like: params[:email_like]).order(email: :asc).page(params[:page])
+  size = 24
+%>
 <h1>Users</h1>
-<% if can? :read, users %>
-    <%= render partial: "users/users", locals: { users: users } %>
-<% end %>
+<form name="filter" method="get" action="<%= partial_fulcrum_path(:users) %>">
+  <table class="table table-striped" summary="User List">
+    <tr>
+      <th>
+        <%#= link_to(new_user_path) do %>
+          <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> New
+        <%# end %>
+      </th>
+      <th><label for="email_like">EMail</label></th>
+      <th>Roles</th>
+    </tr>
+    <% users.each do |user| %>
+      <tr>
+        <td>
+          <%= link_to(hyrax.user_path(user)) do %>
+            <span class="glyphicon glyphicon-sunglasses" aria-hidden="true"></span> Show
+          <% end %>
+        </td>
+        <td><%= user.email %></td>
+        <td>
+          <% user_presenter = UserPresenter.new(current_user, user) %>
+         <%  if user_presenter.roles? %>
+            <%= render partial: 'roles/roles', locals: { roles: user_presenter.roles } %>
+          <% end %>
+        </td>
+      </tr>
+    <% end %>
+    <tr>
+      <td><button name="submit" type="submit" value="filter">Filter</button></td>
+      <td><input type="text" name="email_like" value="<%= params[:email_like] %>" size="<%= size %>"></td>
+      <td></td>
+    </tr>
+  </table>
+</form>
+<%= paginate users %>

@@ -25,15 +25,15 @@
   </div>
   <% if @institution.lessee? %>
     <div class="row">
+      <div class="col-md-12"><h2>Policies</h2></div>
+      <div class="col-md-12"><%= render partial: 'policies', locals: { institution: @institution, policies: @institution.policies } %></div>
+    </div>
+    <div class="row">
       <div class="col-md-12"><h2>Lessee</h2></div>
       <div class="col-md-1"><%= link_to @institution.lessee.id, lessee_path(@institution.lessee) %></div>
       <div class="col-md-11"><%= @institution.lessee.identifier %></div>
     </div>
-    <div class="row">
-      <div class="col-md-12"><h2>Policies</h2></div>
-      <div class="col-md-12"><%= render partial: 'policies', locals: { institution: @institution, policies: @institution.policies } %></div>
-    </div>
-<% end %>
+  <% end %>
   <div class="row">
     <div class="col-md-12"><br/></div>
     <div class="col-md-12">

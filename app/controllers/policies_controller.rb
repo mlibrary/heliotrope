@@ -10,7 +10,7 @@ class PoliciesController < ApplicationController
     per_page = params.fetch("per_page", 20).to_i
     total_entries = params.fetch("total_entries", Policy.count / per_page + 1).to_i
     permits = Checkpoint::DB::Permit.dataset.extension(:pagination).paginate(page, per_page, total_entries)
-    @policies = permits.map { |permit| Policy.new(permit) }.paginate(page: page, per_page: per_page, total_entries: total_entries)
+    @policies = Kaminari.paginate_array(permits.map { |permit| Policy.new(permit) }, total_count: total_entries).page(page).per(per_page)
   end
 
   # GET /policies/1

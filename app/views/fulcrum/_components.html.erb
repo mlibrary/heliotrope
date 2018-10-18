@@ -1,23 +1,48 @@
-<% components =  Component.all %>
+<%
+  components = Component.filter(handle_like: params[:handle_like]).order(handle: :asc).page(params[:page])
+  size = 24
+%>
 <h1>Components</h1>
-<table class="table table-striped" summary="Components List">
-  <tr>
-    <th>Component <%= link_to(new_component_path) do %>
-        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> New
-      <% end %>
-    </th>
-    <th>Handle</th>
-    <th>Products</th>
-    <th>Lessees</th>
-    <th>Policies</th>
-  </tr>
-  <% components.each do |component| %>
+<form name="filter" method="get" action="<%= partial_fulcrum_path(:components) %>">
+  <table class="table table-striped" summary="Components List">
     <tr>
-      <td><%= link_to component.id, component_path(component) %></td>
-      <td><%= link_to component.handle, HandleService.url(HandleService.noid(component.handle)) %></td>
-      <td><%= component.products.count() %></td>
-      <td><%= component.lessees.count() %></td>
-      <td><%= component.policies.count() %></td>
+      <th>
+        <%= link_to(new_component_path) do %>
+          <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> New
+        <% end %>
+      </th>
+      <th>Handle</th>
+      <th>FileSet</th>
+      <th>Monograph</th>
+      <th>Products</th>
+      <th>Lessees</th>
     </tr>
-  <% end %>
-</table>
+    <% components.each do |component| %>
+      <tr>
+        <%
+          file_set = FileSet.find(component.noid) if component.file_set?
+          monograph = file_set&.parent
+          monograph ||= Monograph.find(component.noid) if component.monograph?
+        %>
+        <td><%= link_to(component_path(component)) do %>
+            <span class="glyphicon glyphicon-sunglasses" aria-hidden="true"></span> Show
+          <% end %>
+        </td>
+        <td><%= link_to component.handle, HandleService.url(HandleService.noid(component.handle)) %></td>
+        <td><%= link_to_if file_set.present?, file_set&.id, hyrax_file_set_path(file_set&.id) %></td>
+        <td><%= link_to_if monograph.present?, monograph&.id, hyrax_monograph_path(monograph&.id) %></td>
+        <td><%= component.products.count() %></td>
+        <td><%= component.lessees.count() %></td>
+      </tr>
+    <% end %>
+    <tr>
+      <td><button name="submit" type="submit" value="filter">Filter</button></td>
+      <td><input type="text" name="handle_like" value="<%= params[:handle_like] %>" size="<%= size %>"></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+  </table>
+</form>
+<%= paginate components %>

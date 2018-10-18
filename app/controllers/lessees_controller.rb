@@ -6,7 +6,7 @@ class LesseesController < ApplicationController
   # GET /lessees
   # GET /lessees.json
   def index
-    @lessees = Lessee.all
+    @lessees = Lessee.order(identifier: :asc).page(params[:page])
   end
 
   # GET /lessees/1
@@ -89,5 +89,10 @@ class LesseesController < ApplicationController
     # Never trust parameters from the scary internet, only allow the white list through.
     def lessee_params
       params.require(:lessee).permit(:identifier)
+    end
+
+    # A list of the param names that can be used for filtering the Product list
+    def filtering_params(params)
+      params.slice(:identifier_like)
     end
 end

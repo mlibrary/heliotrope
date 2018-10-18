@@ -1,6 +1,10 @@
 # frozen_string_literal: true
 
 class Component < ApplicationRecord
+  include Filterable
+
+  scope :handle_like, ->(like) { where("handle like ?", "%#{like}%") }
+
   has_many :components_products
   has_many :products, through: :components_products
 
@@ -30,11 +34,19 @@ class Component < ApplicationRecord
     Lessee.where(id: LesseesProduct.where(product_id: products.map(&:id)).map(&:lessee_id)).distinct
   end
 
-  def policies
-    policies = []
-    products.each do |product|
-      policies << product.policies
-    end
-    policies.flatten
+  def noid
+    @noid ||= HandleService.noid(handle)
+  end
+
+  def monograph?
+    model = ActiveFedora::SolrService.query("{!terms f=id}#{noid}", rows: 1).first
+    return false if model.blank?
+    /Monograph/i.match?(model["has_model_ssim"]&.first)
+  end
+
+  def file_set?
+    model = ActiveFedora::SolrService.query("{!terms f=id}#{noid}", rows: 1).first
+    return false if model.blank?
+    /FileSet/i.match?(model["has_model_ssim"]&.first)
   end
 end

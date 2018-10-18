@@ -1,27 +1,36 @@
-<% institutions =  Institution.all %>
+<%
+  institutions = Institution.filter(identifier_like: params[:identifier_like], name_like: params[:name_like], entity_id_like: params[:entity_id_like]).order(identifier: :asc).page(params[:page])
+  size = 12
+%>
 <h1>Institutions</h1>
-<table class="table table-striped" summary="Institution List">
-  <tr>
-    <th>Institution <%= link_to(new_institution_path) do %>
-        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> New
-      <% end %>
-    </th>
-    <th>Identifier</th>
-    <th>Name</th>
-    <th>Entity ID</th>
-    <th>Products</th>
-    <th>Components</th>
-    <th>Policies</th>
-  </tr>
-  <% institutions.each do |institution| %>
+<form name="filter" method="get" action="<%= partial_fulcrum_path(:institutions) %>">
+  <table class="table table-striped" summary="Institution List">
     <tr>
-      <td><%= link_to institution.id, institution_path(institution) %></td>
-      <td><%= institution.identifier %></td>
-      <td><%= institution.name %></td>
-      <td><%= institution.entity_id %></td>
-      <td><%= institution.products.count() %></td>
-      <td><%= institution.components.count() %></td>
-      <td><%= institution.policies.count() %></td>
+      <th><%= link_to(new_institution_path) do %>
+          <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> New
+        <% end %>
+      </th>
+      <th><label for="identifier_like">Identifier</label></th>
+      <th><label for="name_like">Name</label></th>
+      <th><label for="entity_id_like">Entity ID</label></th>
     </tr>
-  <% end %>
-</table>
+    <% institutions.each do |institution| %>
+      <tr>
+        <td><%= link_to(institution_path(institution)) do %>
+            <span class="glyphicon glyphicon-sunglasses" aria-hidden="true"></span> Show
+          <% end %>
+        </td>
+        <td><%= institution.identifier %></td>
+        <td><%= institution.name %></td>
+        <td><%= institution.entity_id %></td>
+      </tr>
+    <% end %>
+    <tr>
+      <td><button name="submit" type="submit" value="filter">Filter</button></td>
+      <td><input type="text" name="identifier_like" value="<%= params[:identifier_like] %>" size="<%= size %>"></td>
+      <td><input type="text" name="name_like" value="<%= params[:name_like] %>" size="<%= size %>"></td>
+      <td><input type="text" name="entity_id_like" value="<%= params[:entity_id_like] %>" size="<%= 3 * size %>"></td>
+    </tr>
+  </table>
+</form>
+<%= paginate institutions %>
