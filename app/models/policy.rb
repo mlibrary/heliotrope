@@ -3,13 +3,30 @@
 class Policy
   include ActiveModel::Model
 
-  COLUMNS = %i[id agent_type agent_id agent_token credential_type credential_id credential_token resource_type resource_id resource_token zone_id].freeze
+  COLUMNS = %i[agent_type agent_id credential_type credential_id resource_type resource_id].freeze
 
   delegate :agent_type, :agent_id, :agent_token, :credential_type, :credential_id, :credential_token, :resource_type, :resource_id, :resource_token, :zone_id, to: :@permit
 
   validates_each COLUMNS do |record, attr, value|
-    next if attr == :id
     record.errors.add attr, 'must be present.' if value.blank?
+    case attr
+    when :agent_type
+      record.errors.add attr, 'invalid type.' unless PermissionService.new.valid_agent_type?(value)
+    when :agent_id
+      if PermissionService.new.valid_agent_type?(record.agent_type)
+        record.errors.add attr, 'invalid value.' unless PermissionService.new.valid_agent?(record.agent_type, value)
+      end
+    when :credential_type
+      record.errors.add attr, 'invalid type.' unless %i[permission].include?(value&.to_sym)
+    when :credential_id
+      record.errors.add attr, 'invalid value.' unless %i[read].include?(value&.to_sym)
+    when :resource_type
+      record.errors.add attr, 'invalid type.' unless PermissionService.new.valid_resource_type?(value)
+    when :resource_id
+      if PermissionService.new.valid_resource_type?(record.resource_type)
+        record.errors.add attr, 'invalid value.' unless PermissionService.new.valid_resource?(record.resource_type, value)
+      end
+    end
   end
 
   def self.create!(attributes)
@@ -63,18 +80,6 @@ class Policy
 
   def save(opts = {})
     save!(opts)
-  rescue Sequel::ValidationFailed
-    false
-  end
-
-  def update!(attributes)
-    @permit.set(attributes)
-    raise Sequel::ValidationFailed if invalid?
-    @permit.save_changes != false
-  end
-
-  def update(attributes)
-    update!(attributes)
   rescue Sequel::ValidationFailed
     false
   end

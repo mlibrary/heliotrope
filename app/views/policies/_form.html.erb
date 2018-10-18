@@ -3,7 +3,7 @@
 
   <div class="form-inputs">
     <div><%= f.label :agent_type %></div>
-    <%= f.collection_radio_buttons :agent_type, [%w[user User], %w[institution Institution]], :first, :last, checked: 'user' %>
+    <%= f.collection_radio_buttons :agent_type, [%w[any Any], %w[email Email], %w[institution Institution]], :first, :last %>
   </div>
 
   <div class="form-inputs">
@@ -15,15 +15,15 @@
   </div>
 
   <div class="form-inputs">
-    <%= f.input :credential_id, input_html: { value: 'show' }, readonly: true %>
+    <%= f.input :credential_id, input_html: { value: 'read' }, readonly: true %>
   </div>
 
   <div class="form-inputs">
-    <%= f.input :resource_type, input_html: { value: 'product' }, readonly: true %>
+    <%= f.collection_radio_buttons :resource_type, [%w[any Any], %w[noid NOID], %w[product Product]], :first, :last %>
   </div>
 
   <div class="form-inputs">
-    <%= f.input :resource_id, collection: Product.all, selected: Product.first.id %>
+    <%= f.input :resource_id, required: true %>
   </div>
 
   <div class="form-actions">

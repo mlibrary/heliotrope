@@ -27,16 +27,47 @@ class PermissionService
 
   # Agent Validation
 
+  def valid_agent_type?(type)
+    %i[any email institution].include?(type&.to_sym)
+  end
+
   def valid_email?(email)
-    /.+\@.+\..+/.match?(email.to_s)
+    /.+\@.+\..+/.match?(email&.to_s)
+  end
+
+  def valid_institution?(identifier)
+    Institution.find_by(identifier: identifier&.to_s).present?
   end
 
   def valid_agent?(agent_type, agent_id)
-    case agent_type
+    case agent_type&.to_sym
+    when :any
+      agent_id&.to_sym == :any
     when :email
       valid_email?(agent_id)
     when :institution
-      Institution.find_by(identifier: agent_id.to_s).present?
+      valid_institution?(agent_id)
+    else
+      false
+    end
+  end
+
+  # Credential Validation
+
+  def valid_credential_type?(type)
+    %i[any permission].include?(type&.to_sym)
+  end
+
+  def valid_permission?(permission)
+    permission&.to_sym == :read
+  end
+
+  def valid_credential?(credential_type, credential_id)
+    case credential_type&.to_sym
+    when :any
+      credential_id&.to_sym == :any
+    when :permission
+      valid_permission?(credential_id)
     else
       false
     end
@@ -44,16 +75,26 @@ class PermissionService
 
   # Resource Validation
 
+  def valid_resource_type?(type)
+    %i[any noid product].include?(type&.to_sym)
+  end
+
   def valid_noid?(noid)
-    /^[[:alnum:]]{9}$/.match?(noid.to_s)
+    /^[[:alnum:]]{9}$/.match?(noid&.to_s)
+  end
+
+  def valid_product?(identifier)
+    Product.find_by(identifier: identifier&.to_s).present?
   end
 
   def valid_resource?(resource_type, resource_id)
-    case resource_type
+    case resource_type&.to_sym
+    when :any
+      resource_id&.to_sym == :any
     when :noid
       valid_noid?(resource_id)
     when :product
-      Product.find_by(identifier: resource_id.to_s).present?
+      valid_product?(resource_id)
     else
       false
     end
@@ -66,11 +107,12 @@ class PermissionService
   end
 
   def permit_open_access
-    return if open_access?
+    return open_access_permit if open_access?
     agent = agent_factory.from(OpenStruct.new(agent_type: :any, agent_id: :any))
     resource = resource_factory.from(OpenStruct.new(resource_type: :any, resource_id: :any))
-    permit = Checkpoint::DB::Permit.from(agent, permission_read, resource)
+    permit = Checkpoint::DB::Permit.from(agent, permission_read, resource, zone: Checkpoint::DB::Permit.default_zone)
     permit.save
+    permit
   end
 
   def revoke_open_access
@@ -84,12 +126,12 @@ class PermissionService
   end
 
   def permit_open_access_resource(resource_type, resource_id)
-    return if open_access_resource?(resource_type, resource_id)
-    return unless valid_resource?(resource_type, resource_id)
+    return open_access_resource_permit(resource_type: resource_type, resource_id: resource_id) if open_access_resource?(resource_type, resource_id)
     agent = agent_factory.from(OpenStruct.new(agent_type: :any, agent_id: :any))
     resource = resource_factory.from(OpenStruct.new(resource_type: resource_type, resource_id: resource_id))
-    permit = Checkpoint::DB::Permit.from(agent, permission_read, resource)
+    permit = Checkpoint::DB::Permit.from(agent, permission_read, resource, zone: Checkpoint::DB::Permit.default_zone)
     permit.save
+    permit
   end
 
   def revoke_open_access_resource(resource_type, resource_id)
@@ -103,13 +145,12 @@ class PermissionService
   end
 
   def permit_read_access_resource(agent_type, agent_id, resource_type, resource_id)
-    return if read_access_resource?(agent_type, agent_id, resource_type, resource_id)
-    return unless valid_agent?(agent_type, agent_id)
-    return unless valid_resource?(resource_type, resource_id)
+    return read_access_resource_permit(agent_type: agent_type, agent_id: agent_id, resource_type: resource_type, resource_id: resource_id) if read_access_resource?(agent_type, agent_id, resource_type, resource_id)
     agent = agent_factory.from(OpenStruct.new(agent_type: agent_type, agent_id: sanitize_agent_id(agent_id)))
     resource = resource_factory.from(OpenStruct.new(resource_type: resource_type, resource_id: resource_id))
-    permit = Checkpoint::DB::Permit.from(agent, permission_read, resource)
+    permit = Checkpoint::DB::Permit.from(agent, permission_read, resource, zone: Checkpoint::DB::Permit.default_zone)
     permit.save
+    permit
   end
 
   def revoke_read_access_resource(agent_type, agent_id, resource_type, resource_id)
@@ -127,13 +168,13 @@ class PermissionService
     end
 
     def open_access_resource_permit(resource_type:, resource_id:)
-      return unless valid_resource?(resource_type, resource_id)
+      raise(ArgumentError, 'invalid resource') unless valid_resource?(resource_type, resource_id)
       Checkpoint::DB::Permit.where(agent_type: 'any', agent_id: 'any', credential_type: permission_read.type, credential_id: permission_read.id, resource_type: resource_type.to_s, resource_id: resource_id.to_s).first
     end
 
     def read_access_resource_permit(agent_type:, agent_id:, resource_type:, resource_id:)
-      return unless valid_agent?(agent_type, agent_id)
-      return unless valid_resource?(resource_type, resource_id)
+      raise(ArgumentError, 'invalid agent') unless valid_agent?(agent_type, agent_id)
+      raise(ArgumentError, 'invalid resource') unless valid_resource?(resource_type, resource_id)
       Checkpoint::DB::Permit.where(agent_type: agent_type.to_s, agent_id: sanitize_agent_id(agent_id).to_s, credential_type: permission_read.type, credential_id: permission_read.id, resource_type: resource_type.to_s, resource_id: resource_id.to_s).first
     end
 

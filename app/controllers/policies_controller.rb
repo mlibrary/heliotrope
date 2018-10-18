@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class PoliciesController < ApplicationController
-  before_action :set_policy, only: %i[show edit update destroy]
+  before_action :set_policy, only: %i[show destroy]
 
   # GET /policies
   # GET /policies.json
@@ -22,46 +22,34 @@ class PoliciesController < ApplicationController
     @policy = Policy.new
   end
 
-  # GET /policies/1/edit
-  def edit; end
-
   # POST /policies
   # POST /policies.json
-  # POST /products/product_id:/policies
-  def create # rubocop:disable Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity
-    if params[:product_id].present?
-      product = Product.find(params[:product_id])
-      permit = Checkpoint::DB::Permit.find(id: params[:id])
-      @policy = Policy.new(permit) if permit.present?
-      if product.present? && @policy.present? && !product.policies.include?(@policy)
-        product.policies << @policy
-      end
-      redirect_to product
-    else
-      @policy = Policy.new
-      @policy.set(policy_params.to_hash)
-      @policy.save if @policy.valid?
-      respond_to do |format|
-        if @policy.valid?
-          format.html { redirect_to @policy, notice: 'Policy was successfully created.' }
-          format.json { render :show, status: :created, location: @policy }
-        else
-          format.html { render :new }
-          format.json { render json: @policy.errors, status: :unprocessable_entity }
-        end
-      end
+  def create
+    permit = begin
+      PermissionService.new.permit_read_access_resource(policy_params[:agent_type].to_sym, policy_params[:agent_id], policy_params[:resource_type].to_sym, policy_params[:resource_id])
+    rescue ArgumentError => _e
+      nil
     end
-  end
-
-  # PATCH/PUT /policies/1
-  # PATCH/PUT /policies/1.json
-  def update
+    if permit.blank?
+      permit = Checkpoint::DB::Permit.new
+      permit.agent_type = policy_params[:agent_type]
+      permit.agent_id = policy_params[:agent_id]
+      permit.agent_token = policy_params[:agent_token]
+      permit.credential_type = policy_params[:credential_type]
+      permit.credential_id = policy_params[:credential_id]
+      permit.credential_token = policy_params[:credential_token]
+      permit.resource_type = policy_params[:resource_type]
+      permit.resource_id = policy_params[:resource_id]
+      permit.resource_token = policy_params[:resource_token]
+      permit.zone_id = policy_params[:zone_id]
+    end
+    @policy = Policy.new(permit)
     respond_to do |format|
-      if @policy.update(policy_params.to_hash)
-        format.html { redirect_to @policy, notice: 'Policy was successfully updated.' }
-        format.json { render :show, status: :ok, location: @policy }
+      if @policy.valid?
+        format.html { redirect_to @policy, notice: 'Policy was successfully created.' }
+        format.json { render :show, status: :created, location: @policy }
       else
-        format.html { render :edit }
+        format.html { render :new }
         format.json { render json: @policy.errors, status: :unprocessable_entity }
       end
     end
@@ -69,20 +57,11 @@ class PoliciesController < ApplicationController
 
   # DELETE /policies/1
   # DELETE /policies/1.json
-  # DELETE /products/product_id:/policies/:id
   def destroy
-    if params[:product_id].present?
-      product = Product.find(params[:product_id])
-      if product.present? && @policy.present? && product.policies.include?(@policy)
-        product.policies.delete(@policy)
-      end
-      redirect_to product
-    else
-      @policy.destroy
-      respond_to do |format|
-        format.html { redirect_to policies_url, notice: 'Policy was successfully destroyed.' }
-        format.json { head :no_content }
-      end
+    @policy.destroy
+    respond_to do |format|
+      format.html { redirect_to policies_url, notice: 'Policy was successfully destroyed.' }
+      format.json { head :no_content }
     end
   end
 

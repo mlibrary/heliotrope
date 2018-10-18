@@ -1,0 +1,19 @@
+<% product_noids =  ProductNoid.all %>
+<h1>Product NOIDs</h1>
+<table class="table table-striped" summary="Product Noid List">
+  <tr>
+    <th>Product NOID<%= link_to(new_product_noid_path) do %>
+        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> New
+      <% end %>
+    </th>
+    <th>Product</th>
+    <th>NOID</th>
+  </tr>
+  <% product_noids.each do |product_noid| %>
+    <tr>
+      <td><%= link_to product_noid.id, product_noid_path(product_noid) %></td>
+      <td><%= product_noid.product %></td>
+      <td><%= product_noid.noid %></td>
+    </tr>
+  <% end %>
+</table>

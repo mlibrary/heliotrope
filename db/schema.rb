@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180920173715) do
+ActiveRecord::Schema.define(version: 20181015140433) do
 
   create_table "api_requests", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.integer "user_id"
@@ -298,6 +298,14 @@ ActiveRecord::Schema.define(version: 20180920173715) do
     t.string "twitter"
     t.string "google_analytics_url"
     t.index ["parent_id"], name: "index_presses_on_parent_id"
+  end
+
+  create_table "product_noids", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.string "product"
+    t.string "noid"
+    t.index ["noid"], name: "index_product_noids_on_noid"
+    t.index ["product", "noid"], name: "index_product_noids_on_product_and_noid", unique: true
+    t.index ["product"], name: "index_product_noids_on_product"
   end
 
   create_table "products", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|

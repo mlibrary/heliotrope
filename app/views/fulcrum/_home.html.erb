@@ -9,6 +9,10 @@
     <td><%= Product.count %></td>
   </tr>
   <tr>
+    <td><%= link_to 'Product NOIDs', product_noids_path %></td>
+    <td><%= ProductNoid.count %></td>
+  </tr>
+  <tr>
     <td><%= link_to 'Components', components_path %></td>
     <td><%= Component.count %></td>
   </tr>
