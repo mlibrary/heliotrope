@@ -79,6 +79,7 @@ module CounterReporter
       CounterReport.institution(@params.institution)
                    .investigations
                    .access_type(@params.access_type)
+                   .turnaway
                    .start_date(month.beginning_of_month)
                    .end_date(month.end_of_month)
                    .press(@params.press)
@@ -90,6 +91,7 @@ module CounterReporter
       CounterReport.institution(@params.institution)
                    .investigations
                    .access_type(@params.access_type)
+                   .turnway
                    .start_date(month.beginning_of_month)
                    .end_date(month.end_of_month)
                    .press(@params.press)
@@ -102,6 +104,7 @@ module CounterReporter
       CounterReport.institution(@params.institution)
                    .investigations
                    .access_type(@params.access_type)
+                   .turnaway
                    .start_date(month.beginning_of_month)
                    .end_date(month.end_of_month)
                    .press(@params.press)
@@ -114,6 +117,7 @@ module CounterReporter
       CounterReport.institution(@params.institution)
                    .requests
                    .access_type(@params.access_type)
+                   .turnaway
                    .start_date(month.beginning_of_month)
                    .end_date(month.end_of_month)
                    .press(@params.press)
@@ -125,6 +129,7 @@ module CounterReporter
       CounterReport.institution(@params.institution)
                    .requests
                    .access_type(@params.access_type)
+                   .turnaway
                    .start_date(month.beginning_of_month)
                    .end_date(month.end_of_month)
                    .press(@params.press)
@@ -137,12 +142,27 @@ module CounterReporter
       CounterReport.institution(@params.institution)
                    .requests
                    .access_type(@params.access_type)
+                   .turnaway
                    .start_date(month.beginning_of_month)
                    .end_date(month.end_of_month)
                    .press(@params.press)
                    .unique_by_title
                    .group('parent_noid')
                    .count
+    end
+
+    def no_license(month)
+      CounterReport.institution(@params.institution)
+                   .turnaway("No_License")
+                   .start_date(month.beginning_of_month)
+                   .end_date(month.end_of_month)
+                   .press(@params.press)
+                   .group('parent_noid')
+                   .count
+    end
+
+    def limit_exceeded(_month)
+      raise "The Limit_Exceeded turnaway metric is not currently tracked/implemented"
     end
 
     def header

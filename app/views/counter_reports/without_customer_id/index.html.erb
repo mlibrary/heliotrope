@@ -5,8 +5,10 @@
 <h1>COUNTER 5 Reports</h1>
 
 <h2>Platform Usage (PR_P1)</h2>
-<%= render 'counter_reports/without_customer_id/pr_p1/form' %>
+<%= render 'counter_reports/without_customer_id/platform/standard_views/form', report_id: 'pr_p1' %>
 <h2>Title Master Report (TR)</h2>
-<%= render 'counter_reports/without_customer_id/tr/form' %>
+<%= render 'counter_reports/without_customer_id/title/form' %>
 <h2>Book Requests (Excluding OA_Gold) (TR_B1)</h2>
-<%= render 'counter_reports/without_customer_id/tr_b1/form' %>
+<%= render 'counter_reports/without_customer_id/title/standard_views/form', report_id: 'tr_b1' %>
+<h2>Access Denied by Book (TR_B2)</h2>
+<%= render 'counter_reports/without_customer_id/title/standard_views/form', report_id: 'tr_b2' %>

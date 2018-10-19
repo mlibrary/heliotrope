@@ -41,4 +41,8 @@ class CounterReport < ApplicationRecord
   def self.end_date(end_date)
     where("created_at < ?", end_date.end_of_month)
   end
+
+  def self.turnaway(turnaway = nil)
+    where(turnaway: turnaway)
+  end
 end
