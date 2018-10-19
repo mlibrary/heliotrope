@@ -198,6 +198,27 @@ RSpec.describe "Customers Counter Reports", type: :request do
           end
         end
       end
+
+      describe "GET /counter_report/tr" do
+        it do
+          get counter_report_path(id: 'tr'), params: { institution: 1, press: press_id, metric_type: 'Unique_Title_Investigations', access_type: 'OA_Gold' }
+          expect(response).to have_http_status(:ok)
+        end
+      end
+
+      describe "GET /counter_report/tr_b1" do
+        it do
+          get counter_report_path(id: 'tr_b1'), params: { institution: 1, press: press_id }
+          expect(response).to have_http_status(:ok)
+        end
+      end
+
+      describe "GET /counter_report/tr_b2" do
+        it do
+          get counter_report_path(id: 'tr_b2'), params: { institution: 1, press: press_id }
+          expect(response).to have_http_status(:ok)
+        end
+      end
     end
   end
 end

@@ -145,6 +145,20 @@ module CounterReporter
                    .count
     end
 
+    def no_license(month)
+      CounterReport.institution(@params.institution)
+                   .where(turnaway: "No_License")
+                   .start_date(month.beginning_of_month)
+                   .end_date(month.end_of_month)
+                   .press(@params.press)
+                   .group('parent_noid')
+                   .count
+    end
+
+    def limit_exceeded(_month)
+      raise "The Limit_Exceeded turnaway metric is not currently tracked/implemented"
+    end
+
     def header
       {
         Report_Name: @params.report_title,

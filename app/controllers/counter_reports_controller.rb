@@ -51,6 +51,8 @@ class CounterReportsController < ApplicationController
       @report = CounterReporterService.pr_p1(params)
     when 'tr_b1'
       @report = CounterReporterService.tr_b1(params)
+    when 'tr_b2'
+      @report = CounterReporterService.tr_b2(params)
     when 'tr'
       @report = CounterReporterService.tr(params)
     end
