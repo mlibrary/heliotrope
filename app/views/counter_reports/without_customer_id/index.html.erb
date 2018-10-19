@@ -2,49 +2,11 @@
   <meta name="turbolinks-cache-control" content="no-cache">
 <% end %>
 
-<script type="text/javascript">
-$(document).on('turbolinks:load', function() {
-  $('.start-date').datepicker({
-    dateFormat: "yy-mm-dd",
-    defaultDate: new Date(2018, 07, 01),
-    minDate: new Date(2018, 07, 01) // we only started tracking in August 2018
-  });
-  $('.end-date').datepicker({
-    dateFormat: "yy-mm-dd",
-    defaultDate: +0,
-    minDate: new Date(2018, 08, 01)
-  });
-});
-</script>
-
 <h1>COUNTER 5 Reports</h1>
 
-<% @active_reports.each do |report_id, report| %>
-<form action=<%= counter_report_path(id: report_id) %> method="show">
-<div class="row">
-  <div class="col-sm-2">
-    <h2><%= report %></h2>
-  </div>
-  <div class="col-sm-2 form-group">
-    <label for="institution_identifier">Institution</label>
-    <%= select_tag(:institution_identifier, options_for_select(@institutions.map { |i| [i.name, i.identifier] }), class: 'form-control') %>
-  </div>
-  <div class="col-sm-2 form-group">
-    <label for="press_id">Publisher</label>
-    <%= select_tag(:press_id, options_for_select(@presses.map { |p| [p.subdomain, p.id] }), class: 'form-control') %>
-  </div>
-  <div class="col-sm-2 form-group">
-    <label for="start_date">Start</label>
-    <input type="text" name="start_date" aria-label="Start date in yyyy-mm-dd format" class="start-date form-control" />
-  </div>
-  <div class="col-sm-2 form-group">
-    <label for="end_date">End</label>
-    <input type="text" name="end_date" aria-label="End date in yyyy-mm-dd format" class="end-date form-control" />
-  </div>
-  <div class="col-sm-2 form-group" style="margin-top: 2em;">
-    <button type="submit" class="btn btn-primary">View</button>
-    <button type="submit" class="btn btn-primary" name="csv">CSV</button>
-  </div>
-</div>
-</form>
-<% end %>
+<h2>Platform Usage (PR_P1)</h2>
+<%= render 'counter_reports/without_customer_id/pr_p1/form' %>
+<h2>Title Master Report (TR)</h2>
+<%= render 'counter_reports/without_customer_id/tr/form' %>
+<h2>Book Requests (Excluding OA_Gold) (TR_B1)</h2>
+<%= render 'counter_reports/without_customer_id/tr_b1/form' %>

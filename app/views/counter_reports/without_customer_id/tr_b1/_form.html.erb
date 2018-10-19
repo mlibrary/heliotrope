@@ -1,0 +1,24 @@
+<form action=<%= counter_report_path(id: 'tr_b1') %> method="show">
+<div class="row">
+  <div class="col-sm-2 form-group">
+    <label for="institution_identifier">Institution</label>
+    <%= select_tag(:institution, options_for_select(@institutions.map { |i| [i.name, i.identifier] }), class: 'form-control') %>
+  </div>
+  <div class="col-sm-2 form-group">
+    <label for="press_id">Publisher</label>
+    <%= select_tag(:press, options_for_select(@presses.map { |p| [p.subdomain, p.id] }), class: 'form-control') %>
+  </div>
+  <div class="col-sm-2 form-group">
+    <label for="start_date">Start</label>
+    <input type="text" name="start_date" aria-label="Start date in yyyy-mm-dd format" class="counter-start-date form-control" />
+  </div>
+  <div class="col-sm-2 form-group">
+    <label for="end_date">End</label>
+    <input type="text" name="end_date" aria-label="End date in yyyy-mm-dd format" class="counter-end-date form-control" />
+  </div>
+  <div class="col-sm-2 form-group" style="margin-top: 2em;">
+    <button type="submit" class="btn btn-primary">View</button>
+    <button type="submit" class="btn btn-primary" name="csv">CSV</button>
+  </div>
+</div>
+</form>

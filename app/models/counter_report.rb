@@ -26,6 +26,10 @@ class CounterReport < ApplicationRecord
 
   scope :press, ->(press) { where(press: press) if press.present? }
 
+  def self.access_type(access_type)
+    where(access_type: access_type)
+  end
+
   def self.institution(institution_id)
     where(institution: institution_id)
   end

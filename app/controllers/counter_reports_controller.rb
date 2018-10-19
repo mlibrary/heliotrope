@@ -26,10 +26,6 @@ class CounterReportsController < ApplicationController
 
   def index
     return render if params[:customer_id].present?
-
-    @active_reports = { pr_p1: COUNTER_REPORT_TITLE[:pr_p1],
-                        tr_b1: COUNTER_REPORT_TITLE[:tr_b1] }
-
     render 'counter_reports/without_customer_id/index'
   end
 
@@ -44,7 +40,7 @@ class CounterReportsController < ApplicationController
     end
   end
 
-  def show
+  def show # rubocop:disable Metrics/CyclomaticComplexity
     return render if params[:customer_id].present?
     # institutional 'guest' users can only see their institutions
     # press admins can only see their presses
@@ -52,15 +48,11 @@ class CounterReportsController < ApplicationController
 
     case params[:id]
     when 'pr_p1'
-      @report = CounterReporterService.pr_p1(institution: params[:institution_identifier],
-                                             press: params[:press_id],
-                                             start_date: params[:start_date],
-                                             end_date: params[:end_date])
+      @report = CounterReporterService.pr_p1(params)
     when 'tr_b1'
-      @report = CounterReporterService.tr_b1(institution: params[:institution_identifier],
-                                             press: params[:press_id],
-                                             start_date: params[:start_date],
-                                             end_date: params[:end_date])
+      @report = CounterReporterService.tr_b1(params)
+    when 'tr'
+      @report = CounterReporterService.tr(params)
     end
 
     if params[:csv]
@@ -73,8 +65,8 @@ class CounterReportsController < ApplicationController
   private
 
     def authorized_insitutions_or_presses?
-      return false unless @institutions.map(&:identifier).include?(params[:institution_identifier])
-      return false if @presses.present? && !@presses.map(&:id).include?(params[:press_id].to_i)
+      return false unless @institutions.map(&:identifier).include?(params[:institution])
+      return false if @presses.present? && !@presses.map(&:id).include?(params[:press].to_i)
       true
     end
 
@@ -101,5 +93,6 @@ class CounterReportsController < ApplicationController
     # Never trust parameters from the scary internet, only allow the white list through.
     def counter_report_params
       params.require(:counter_report).permit
+      params.permit(:institution, :press, :start_date, :end_date, :metric_type, :access_type, :access_method, :data_type, :yop)
     end
 end

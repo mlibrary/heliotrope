@@ -151,7 +151,7 @@ RSpec.describe "Customers Counter Reports", type: :request do
 
       describe "GET /counter_report/pr_p1" do
         it do
-          get counter_report_path(id: 'pr_p1'), params: { institution_identifier: 1 }
+          get counter_report_path(id: 'pr_p1'), params: { institution: 1 }
           expect(response).to have_http_status(:ok)
           expect(response).to render_template(:show)
         end
@@ -185,7 +185,7 @@ RSpec.describe "Customers Counter Reports", type: :request do
       describe "GET /counter_report/pr_p1" do
         context "the press admin's press" do
           it do
-            get counter_report_path(id: 'pr_p1'), params: { institution_identifier: 1, press_id: press_id }
+            get counter_report_path(id: 'pr_p1'), params: { institution: 1, press: press_id }
             expect(response).to have_http_status(:ok)
             expect(response).to render_template(:show)
           end
@@ -193,7 +193,7 @@ RSpec.describe "Customers Counter Reports", type: :request do
 
         context "a different press" do
           it do
-            get counter_report_path(id: 'pr_p1'), params: { institution_identifier: 1, press_id: 1_000_000_000 }
+            get counter_report_path(id: 'pr_p1'), params: { institution: 1, press: 1_000_000_000 }
             expect(response).to have_http_status(:unauthorized)
           end
         end
