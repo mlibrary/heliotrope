@@ -23,8 +23,16 @@
           %>
           <div class="col-md-1"><%= component.id %></div>
           <div class="col-md-3"><%= link_to component.handle, HandleService.url(component.noid) %></div>
-          <div class="col-md-2"><%= link_to_if file_set.present?, file_set&.id, hyrax_file_set_path(file_set&.id) %></div>
-          <div class="col-md-2"><%= link_to_if monograph.present?, monograph&.id, hyrax_monograph_path(monograph&.id) %></div>
+          <div class="col-md-2">
+            <% if file_set.present? %>
+              <%= link_to file_set.id, hyrax_file_set_path(file_set.id) %>
+            <% end %>
+          </div>
+          <div class="col-md-2">
+            <% if monograph.present? %>
+              <%= link_to monograph.id, hyrax_monograph_path(monograph.id) %>
+            <% end %>
+          </div>
           <div class="col-md-2">
             <div class="col-md-4"><%= link_to 'Show', component %></div>
             <div class="col-md-4"><%= link_to_if component.update?, 'Edit', edit_component_path(component) %></div>
