@@ -14,7 +14,7 @@ host: localhost:3000
 create_user_on_login: false
 
 # Toggle between legacy and checkpoint authorization for EPubs.
-e_pub_checkpoint_authorization: true
+e_pub_checkpoint_authorization: false
 
 keycard:
   database:

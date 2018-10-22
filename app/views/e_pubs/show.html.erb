@@ -69,6 +69,16 @@ webgl = Webgl::Unity.from_directory(UnpackService.root_path_from_noid(webgl_id, 
         // Book/chapter title widget
         cozy.control.title({ region: 'top.header.left' }).addTo(reader);
 
+
+        // MOBILE ONLY
+        // Close reader/Return to previous screen widget
+        cozy.control.widget.button({
+          region: 'top.toolbar.left',
+          data: { label: '<i class="icon-x oi" data-glyph="x" aria-hidden="true"></i>'},
+          template: '<button class="button--sm cozy-close mobile" data-toggle="button" data-slot="label" aria-label="Close reader"></button>',
+          onClick: function() { window.location = "<%= "#{@back_link}" %>"; }
+        }).addTo(reader);
+
         // Table of contents widget
         cozy.control.contents({ region: 'top.toolbar.left' }).addTo(reader);
 
@@ -362,7 +372,7 @@ webgl = Webgl::Unity.from_directory(UnpackService.root_path_from_noid(webgl_id, 
         <% if @monograph_presenter.assets? %>
         cozy.control.widget.button({
           region: 'top.toolbar.left',
-          template: '<button class="button--sm" data-toggle="button" aria-label="Media">Media</button>',
+          template: '<button class="button--sm media" data-toggle="button" aria-label="Media">Media</button>',
           onClick: function() { window.location = "<%= "#{main_app.monograph_catalog_url(@presenter.monograph_id) + "#media"}" %>"; }
         }).addTo(reader);
         <% end %>

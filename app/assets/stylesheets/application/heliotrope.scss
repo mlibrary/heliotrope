@@ -336,7 +336,7 @@ footer.press {
 
   .metrics {
     padding-top: .5em;
-    
+
     .altmetric-embed {
       padding-bottom: .5em;
     }
@@ -1057,6 +1057,11 @@ footer.press {
 	padding: .83em 1em !important;
 }
 
+.cozy-control button.button--sm.cozy-close.mobile {
+  display: none;
+}
+
+
 .cozy-control .btn-group {
   display: flex;
   flex: 1 1 auto;
@@ -1149,6 +1154,68 @@ footer.press {
 /* Feel free to be horrified at the bonkers-ness of this construct. */
 .cozy-panel-toolbar div.cozy-control:not(:first-of-type) {
   border-left: 1px solid white;
+}
+
+.cozy-panel-toolbar div.cozy-control:nth-of-type(2),
+.cozy-panel-toolbar div.cozy-control:nth-of-type(3) {
+  border-left: none;
+}
+
+@media screen and (max-width: 50em) {
+
+  .cozy-container i[class^='icon-'] {
+      font-size: 1.3rem !important;
+  }
+
+  .cozy-container i[class^='icon-chevron-'] {
+      font-size: 1.8em !important;
+  }
+
+  .cozy-container i.icon-comment-square {
+    font-size: 1.5rem !important;
+  }
+
+  .cozy-control button.button--sm.cozy-close.mobile {
+    display: flex;
+    padding: 0 .6em .4em !important;
+  }
+
+  .cozy-control button.button--sm.media,
+  .cozy-control.cozy-container-altmetric,
+  .cozy-control.cozy-container-dimensions {
+    display: none;
+  }
+
+  .cozy-container input[type="text"] {
+    width: auto !important;
+    max-width: 75px;
+  }
+
+  .cozy-control form.search {
+    width: auto;
+    max-width: 100px;
+  }
+
+  .cozy-control button.button--sm {
+    i.icon-menu {
+      padding-bottom: .3em;
+    }
+
+    i.icon-magnifying-glass,
+    i.icon-share-boxed {
+      padding-bottom: .1em;
+    }
+
+  }
+
+  .cozy-control-preferences button {
+    padding: 0 .5em 0 .5em !important;
+  }
+
+  .cozy-panel-toolbar div.cozy-control:nth-of-type(2) {
+    border-left: 1px solid white;
+  }
+
 }
 
 
