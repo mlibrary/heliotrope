@@ -371,7 +371,7 @@ webgl = Webgl::Unity.from_directory(UnpackService.root_path_from_noid(webgl_id, 
         cozy.control.widget.panel({
           region: 'top.toolbar.left',
           data: { title: "<%= @citable_link %>"},
-          template: '<div class="permalink-label"><label class="u-screenreader" for="permalink">Permalink</label><form><input data-slot="title" type="text" id="permalink" value="" readonly="readonly" onclick="this.select(); document.execCommand(\'copy\');"></form></div>',
+          template: '<div class="permalink-label"><label class="u-screenreader" for="permalink">Permalink</label><form><input data-slot="title" type="text" id="permalink" aria-label="citable link" value="" readonly="readonly" onclick="this.select(); document.execCommand(\'copy\');"></form></div>',
         }).addTo(reader);
 
         <% if @monograph_presenter.citations_ready? %>
