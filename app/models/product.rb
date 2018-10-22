@@ -1,6 +1,12 @@
 # frozen_string_literal: true
 
 class Product < ApplicationRecord
+  include Filterable
+
+  scope :identifier_like, ->(like) { where("identifier like ?", "%#{like}%") }
+  scope :name_like, ->(like) { where("name like ?", "%#{like}%") }
+  scope :entity_id_like, ->(like) { where("entity_id like ?", "%#{like}%") }
+
   has_many :components_products
   has_many :components, through: :components_products
   has_many :lessees_products
@@ -39,6 +45,10 @@ class Product < ApplicationRecord
 
   def not_lessees
     Lessee.where.not(id: lessees.map(&:id))
+  end
+
+  def noids
+    []
   end
 
   def policies

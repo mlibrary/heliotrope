@@ -1,16 +1,16 @@
 <h1>Fulcrum</h1>
 <table class="table table-striped" summary="Repository Global Stats">
   <tr>
-    <td><%= link_to 'Policies',  policies_path %></td>
-    <td><%= Policy.count %></td>
-  </tr>
-  <tr>
     <td><%= link_to 'Products', products_path %></td>
     <td><%= Product.count %></td>
   </tr>
   <tr>
     <td><%= link_to 'Product NOIDs', product_noids_path %></td>
     <td><%= ProductNoid.count %></td>
+  </tr>
+  <tr>
+    <td><%= link_to 'Policies', policies_path %></td>
+    <td><%= Policy.count %></td>
   </tr>
   <tr>
     <td><%= link_to 'Components', components_path %></td>

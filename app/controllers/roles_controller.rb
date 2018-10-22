@@ -13,18 +13,6 @@ class RolesController < ApplicationController
     authorize! :edit, role
   end
 
-  def index2
-    @roles = RolesPresenter.new(current_user, current_user)
-    authorize! :read, @roles
-  end
-
-  def show
-    role = Role.find(params[:id])
-    user = User.find(role.user_id)
-    @role = RolePresenter.new(role, user, current_user)
-    authorize! :read, @role
-  end
-
   def update_all
     authorize_nested_attributes! press_params[:roles_attributes], Role
 

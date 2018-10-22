@@ -17,10 +17,6 @@
     <div class="col-md-12">
       <%= render partial: 'components', locals: { lessee: @lessee, components: @lessee.components } %>
     </div>
-    <div class="col-md-12"><h2>Policies</h2></div>
-    <div class="col-md-12">
-      <%= render partial: 'policies', locals: { lessee: @lessee, policies: @lessee.policies } %>
-    </div>
     <div class="col-md-12"><br/></div>
     <div class="col-md-12">
       <%= link_to_if @lessee.update?, 'Edit', edit_lessee_path(@lessee) %>

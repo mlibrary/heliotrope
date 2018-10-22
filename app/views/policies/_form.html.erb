@@ -3,11 +3,11 @@
 
   <div class="form-inputs">
     <div><%= f.label :agent_type %></div>
-    <%= f.collection_radio_buttons :agent_type, [%w[any Any], %w[email Email], %w[institution Institution]], :first, :last %>
+    <%= f.collection_radio_buttons :agent_type, [%w[any Any], %w[email Email], %w[institution Institution]], :first, :last, checked: @policy.agent_type || 'any' %>
   </div>
 
   <div class="form-inputs">
-    <%= f.input :agent_id, required: true %>
+    <%= f.input :agent_id, required: true, input_html: { value: @policy.agent_id ||'any' } %>
   </div>
 
   <div class="form-inputs">
@@ -19,11 +19,11 @@
   </div>
 
   <div class="form-inputs">
-    <%= f.collection_radio_buttons :resource_type, [%w[any Any], %w[noid NOID], %w[product Product]], :first, :last %>
+    <%= f.collection_radio_buttons :resource_type, [%w[any Any], %w[noid NOID], %w[product Product]], :first, :last, checked: @policy.agent_type || 'any' %>
   </div>
 
   <div class="form-inputs">
-    <%= f.input :resource_id, required: true %>
+    <%= f.input :resource_id, required: true, input_html: { value: @policy.resource_id || 'any' } %>
   </div>
 
   <div class="form-actions">

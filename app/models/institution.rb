@@ -1,6 +1,12 @@
 # frozen_string_literal: true
 
 class Institution < ApplicationRecord
+  include Filterable
+
+  scope :identifier_like, ->(like) { where("identifier like ?", "%#{like}%") }
+  scope :name_like, ->(like) { where("name like ?", "%#{like}%") }
+  scope :entity_id_like, ->(like) { where("entity_id like ?", "%#{like}%") }
+
   validates :identifier, presence: true, allow_blank: false, uniqueness: true
   validates :name, presence: true, allow_blank: false
   # validates :entity_id, presence: true, allow_blank: false

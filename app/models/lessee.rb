@@ -1,6 +1,10 @@
 # frozen_string_literal: true
 
 class Lessee < ApplicationRecord
+  include Filterable
+
+  scope :identifier_like, ->(like) { where("identifier like ?", "%#{like}%") }
+
   has_many :lessees_products
   has_many :products, through: :lessees_products
 

@@ -1,7 +1,7 @@
 <% roles.all.each do |role| %>
   <ul>
     <% if can? :read, role %>
-      <li><%= link_to role.name, role_path(role.id) %></li>
+      <li><%= role.name %></li>
     <% end %>
   </ul>
 <% end %>

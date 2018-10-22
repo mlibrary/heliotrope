@@ -1,26 +1,57 @@
-<% 
-  permits = Checkpoint::DB::Permit.dataset
-  policies = permits.map { |permit| Policy.new(permit) }
+<%
+  permits = Checkpoint::DB::Permit
+  permits = permits.where(Sequel.like(:agent_type, "%#{params[:agent_type_like]}%")) if params[:agent_type_like].present?
+  permits = permits.where(Sequel.like(:agent_id, "%#{params[:agent_id_like]}%")) if params[:agent_id_like].present?
+  permits = permits.where(Sequel.like(:credential_type, "%#{params[:credential_type_like]}%")) if params[:credential_type_like].present?
+  permits = permits.where(Sequel.like(:credential_id, "%#{params[:credential_id_like]}%")) if params[:credential_id_like].present?
+  permits = permits.where(Sequel.like(:resource_type, "%#{params[:resource_type_like]}%")) if params[:resource_type_like].present?
+  permits = permits.where(Sequel.like(:resource_id, "%#{params[:resource_id_like]}%")) if params[:resource_id_like].present?
+  permits = permits.order(:agent_type, :agent_id)
+  policies = Kaminari.paginate_array(permits.map { |permit| Policy.new(permit) }).page(params[:page]).per(20)
+
+  size = 12
 %>
 <h1>Policies</h1>
-<table class="table table-striped" summary="Policies List">
-  <tr>
-    <th>Policy <%= link_to(new_policy_path) do %>
-        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> New
-      <% end %>
-    </th>
-    <th>Agent</th>
-    <th>Credential</th>
-    <th>Resource</th>
-    <th>Zone</th>
-  </tr>
-  <% policies.each do |policy| %>
+<form name="filter" method="get" action="<%= partial_fulcrum_path(:policies) %>">
+  <table class="table table-striped" summary="Policies List">
     <tr>
-      <td><%= link_to policy.id, policy_path(policy) %></td>
-      <td><%= policy.agent_token %></td>
-      <td><%= policy.credential_token %></td>
-      <td><%= policy.resource_token %></td>
-      <td><%= policy.zone_id %></td>
+      <th>
+        <%= link_to(new_policy_path) do %>
+          <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> New
+        <% end %>
+      </th>
+      <th><label for="agent_type_like">Agent Type</label></th>
+      <th><label for="agent_id_like">Agent ID</label></th>
+      <th><label for="credential_type_like">Credential Type</label></th>
+      <th><label for="credential_id_like">Credential ID</label></th>
+      <th><label for="resource_type_like">Resource Type</label></th>
+      <th><label for="resource_id_like">Resource ID</label></th>
     </tr>
-  <% end %>
-</table>
+    <% policies.each do |policy| %>
+      <tr>
+        <td>
+          <%= link_to(policy_path(policy), method: :delete, data: { confirm: 'Are you sure?' }) do %>
+            <span class="glyphicon glyphicon-minus" aria-hidden="true"></span> Destroy
+          <% end %>
+        </td>
+        <td><%= policy.agent_type %></td>
+        <td><%= policy.agent_id %></td>
+        <td><%= policy.credential_type %></td>
+        <td><%= policy.credential_id %></td>
+        <td><%= policy.resource_type %></td>
+        <td><%= policy.resource_id %></td>
+      </tr>
+    <% end %>
+    <tr>
+      <td><button name="submit" type="submit" value="filter">Filter</button></td>
+      <td><input type="text" name="agent_type_like" value="<%= params[:agent_type_like] %>" size="<%= size %>"></td>
+      <td><input type="text" name="agent_id_like" value="<%= params[:agent_id_like] %>" size="<%= size %>"></td>
+      <td><input type="text" name="credential_type_like" value="<%= params[:credential_type_like] %>" size="<%= size %>"></td>
+      <td><input type="text" name="credential_id_like" value="<%= params[:credential_id_like] %>" size="<%= size %>"></td>
+      <td><input type="text" name="resource_type_like" value="<%= params[:resource_type_like] %>" size="<%= size %>"></td>
+      <td><input type="text" name="resource_id_like" value="<%= params[:resource_id_like] %>" size="<%= size %>"></td>
+    </tr>
+  </table>
+</form>
+<%= paginate policies %>
+

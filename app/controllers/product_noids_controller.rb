@@ -6,7 +6,7 @@ class ProductNoidsController < ApplicationController
   # GET /product_noids
   # GET /product_noids.json
   def index
-    @product_noids = ProductNoid.all
+    @product_noids = ProductNoid.order(product: :asc).page(params[:page])
   end
 
   # GET /product_noids/1
@@ -70,5 +70,10 @@ class ProductNoidsController < ApplicationController
     # Never trust parameters from the scary internet, only allow the white list through.
     def product_noid_params
       params.require(:product_noid).permit(:product, :noid)
+    end
+
+    # A list of the param names that can be used for filtering the Product NOID list
+    def filtering_params(params)
+      params.slice(:product_like, :noid_like)
     end
 end
