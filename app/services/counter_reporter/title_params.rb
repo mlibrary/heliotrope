@@ -19,6 +19,8 @@ module CounterReporter
         tr_b1
       when 'tr'
         tr(params)
+      when 'tr_b2'
+        tr_b2
       end
     end
 
@@ -34,7 +36,8 @@ module CounterReporter
 
     def allowed_metric_types?
       allowed_types = %w[Total_Item_Investigations Unique_Item_Investigations Unique_Title_Investigations
-                         Total_Item_Requests Unique_Item_Requests Unique_Title_Requests]
+                         Total_Item_Requests Unique_Item_Requests Unique_Title_Requests
+                         No_License Limit_Exceeded]
       @metric_types.each do |metric_type|
         unless allowed_types.include?(metric_type)
           @errors << "Metric Type: '#{metric_type}' is not allowed"
@@ -85,6 +88,14 @@ module CounterReporter
         @access_type = params[:access_type] || ''
         @access_method = params[:access_method] || 'Regular'
         @yop = params[:yop] || nil
+      end
+
+      def tr_b2
+        @report_title = 'Access Denied by Book'
+        @metric_types = ['No_License']
+        @data_type = 'Book'
+        @access_type = 'Controlled'
+        @access_method = 'Regular'
       end
   end
 end

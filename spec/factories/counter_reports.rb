@@ -19,10 +19,6 @@ FactoryBot.define do
     section_type { "" }
     investigation { 1 }
     request { 0 }
-    turnaway do
-      ta = ["No_License", "", "", "", ""]
-      ta[Random.rand(5)]
-    end
     access_type do
       at = ["Controlled", "OA_Gold"]
       at[Random.rand(2)]

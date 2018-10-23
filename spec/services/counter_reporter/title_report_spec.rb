@@ -4,37 +4,40 @@ require 'rails_helper'
 
 RSpec.describe CounterReporter::TitleReport do
   describe '#report' do
+    subject { described_class.new(params_object).report }
+
+    let(:red) do
+      ::SolrDocument.new(id: 'red',
+                         has_model_ssim: ['Monograph'],
+                         title_tesim: ['Red'],
+                         publisher_tesim: ["R"],
+                         isbn_tesim: ['111', '222'],
+                         date_created_tesim: ['2000'])
+    end
+    let(:green) do
+      ::SolrDocument.new(id: 'green',
+                         has_model_ssim: ['Monograph'],
+                         title_tesim: ['Green'],
+                         publisher_tesim: ["G"],
+                         isbn_tesim: ['AAA', 'BBB'],
+                         date_created_tesim: ['2000'])
+    end
+    let(:blue) do
+      ::SolrDocument.new(id: 'blue',
+                         has_model_ssim: ['Monograph'],
+                         title_tesim: ['Blue'],
+                         publisher_tesim: ["B"],
+                         isbn_tesim: ['ZZZ', 'YYY'],
+                         date_created_tesim: ['1999'])
+    end
+
     context 'a full tr_b1 report' do
       # https://docs.google.com/spreadsheets/d/1fsF_JCuOelUs9s_cvu7x_Yn8FNsi5xK0CR3bu2X_dVI/edit#gid=1559300549
-      subject { described_class.new(params_object).report }
-
       let(:params_object) { CounterReporter::TitleParams.new('tr_b1', institution: institution, start_date: start_date, end_date: end_date) }
       let(:institution_name) { double("institution_name", name: "U of Something") }
       let(:start_date) { "2018-01-01" }
       let(:end_date) { "2018-12-01" }
       let(:institution) { 1 }
-
-      let(:red) do
-        ::SolrDocument.new(id: 'red',
-                           has_model_ssim: ['Monograph'],
-                           title_tesim: ['Red'],
-                           publisher_tesim: ["R"],
-                           isbn_tesim: ['111', '222'])
-      end
-      let(:green) do
-        ::SolrDocument.new(id: 'green',
-                           has_model_ssim: ['Monograph'],
-                           title_tesim: ['Green'],
-                           publisher_tesim: ["G"],
-                           isbn_tesim: ['AAA', 'BBB'])
-      end
-      let(:blue) do
-        ::SolrDocument.new(id: 'blue',
-                           has_model_ssim: ['Monograph'],
-                           title_tesim: ['Blue'],
-                           publisher_tesim: ["B"],
-                           isbn_tesim: ['ZZZ', 'YYY'])
-      end
 
       before do
         ActiveFedora::SolrService.add([red.to_h, green.to_h, blue.to_h])
@@ -128,8 +131,6 @@ RSpec.describe CounterReporter::TitleReport do
     end
 
     context "a tr report" do
-      subject { described_class.new(params_object).report }
-
       let(:params_object) do
         CounterReporter::TitleParams.new('tr', institution: institution,
                                                start_date: start_date,
@@ -145,31 +146,6 @@ RSpec.describe CounterReporter::TitleReport do
       let(:yop) { '2000' }
       let(:access_type) { 'OA_Gold' }
       let(:metric_type) { 'Total_Item_Investigations' }
-
-      let(:red) do
-        ::SolrDocument.new(id: 'red',
-                           has_model_ssim: ['Monograph'],
-                           title_tesim: ['Red'],
-                           publisher_tesim: ["R"],
-                           isbn_tesim: ['111', '222'],
-                           date_created_tesim: ['2000'])
-      end
-      let(:green) do
-        ::SolrDocument.new(id: 'green',
-                           has_model_ssim: ['Monograph'],
-                           title_tesim: ['Green'],
-                           publisher_tesim: ["G"],
-                           isbn_tesim: ['AAA', 'BBB'],
-                           date_created_tesim: ['2000'])
-      end
-      let(:blue) do
-        ::SolrDocument.new(id: 'blue',
-                           has_model_ssim: ['Monograph'],
-                           title_tesim: ['Blue'],
-                           publisher_tesim: ["B"],
-                           isbn_tesim: ['ZZZ', 'YYY'],
-                           date_created_tesim: ['1999'])
-      end
 
       before do
         ActiveFedora::SolrService.add([red.to_h, green.to_h, blue.to_h])
@@ -205,6 +181,66 @@ RSpec.describe CounterReporter::TitleReport do
           expect(subject[:items][0]["Feb-2018"]).to eq 2
           expect(subject[:items][1]["Jan-2018"]).to eq 2
           expect(subject[:items][1]["Feb-2018"]).to eq 0
+        end
+      end
+    end
+
+    context "a tr_b2 report" do
+      let(:params_object) { CounterReporter::TitleParams.new('tr_b2', params) }
+      let(:params) do
+        {
+          institution: institution,
+          start_date: start_date,
+          end_date: end_date
+        }
+      end
+      let(:institution_name) { double("institution_name", name: "U of Something") }
+      let(:start_date) { "2018-08-01" }
+      let(:end_date) { "2018-09-01" }
+      let(:institution) { 1 }
+
+      before do
+        ActiveFedora::SolrService.add([red.to_h, green.to_h, blue.to_h])
+        ActiveFedora::SolrService.commit
+
+        create(:counter_report, session: 1,  noid: 'a',  parent_noid: 'red',   institution: 1, created_at: Time.parse("2018-08-02").utc, access_type: "Controlled", turnaway: "No_License")
+        create(:counter_report, session: 1,  noid: 'a2', parent_noid: 'red',   institution: 1, created_at: Time.parse("2018-08-02").utc, access_type: "Controlled")
+        create(:counter_report, session: 1,  noid: 'b',  parent_noid: 'blue',  institution: 1, created_at: Time.parse("2018-08-02").utc, access_type: "Controlled", turnaway: "No_License")
+        create(:counter_report, session: 6,  noid: 'c',  parent_noid: 'green', institution: 1, created_at: Time.parse("2018-09-11").utc, access_type: "Controlled", turnaway: "No_License")
+        create(:counter_report, session: 7,  noid: 'c1', parent_noid: 'green', institution: 1, created_at: Time.parse("2018-09-13").utc, access_type: "Controlled", turnaway: "No_License")
+        create(:counter_report, session: 10, noid: 'a',  parent_noid: 'red',   institution: 2, created_at: Time.parse("2018-12-11").utc, access_type: "Controlled", turnaway: "No_License")
+
+        allow(Institution).to receive(:where).with(identifier: institution).and_return([institution_name])
+      end
+
+      context "items" do
+        it "has the correct number of items/titles" do
+          expect(subject[:items].length).to eq 3
+        end
+
+        it "has the correct titles in order" do
+          expect(subject[:items][0]["Title"]).to eq 'Blue'
+          expect(subject[:items][1]["Title"]).to eq 'Green'
+          expect(subject[:items][2]["Title"]).to eq 'Red'
+        end
+
+        it "has the 'No_License' metric_type" do
+          expect(subject[:items][0]["Metric_Type"]).to eq 'No_License'
+        end
+
+        it "has the correct counts" do
+          expect(subject[:items][0]["Reporting_Period_Total"]).to eq 1
+          expect(subject[:items][1]["Reporting_Period_Total"]).to eq 2
+          expect(subject[:items][2]["Reporting_Period_Total"]).to eq 1
+        end
+
+        it "has the correct monthly counts" do
+          expect(subject[:items][0]["Aug-2018"]).to eq 1
+          expect(subject[:items][0]["Sep-2018"]).to eq 0
+          expect(subject[:items][1]["Aug-2018"]).to eq 0
+          expect(subject[:items][1]["Sep-2018"]).to eq 2
+          expect(subject[:items][2]["Aug-2018"]).to eq 1
+          expect(subject[:items][2]["Sep-2018"]).to eq 0
         end
       end
     end
