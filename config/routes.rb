@@ -40,6 +40,8 @@ Rails.application.routes.draw do
         resources :components, only: %i[index show create update destroy]
         resources :lessees, only: %i[index show create update destroy]
       end
+      get 'individual', controller: :individuals, action: :find, as: :find_individual
+      resources :individuals, only: %i[index show create update destroy]
       get 'institution', controller: :institutions, action: :find, as: :find_institution
       resources :institutions, only: %i[index show create update destroy]
     end
@@ -49,6 +51,7 @@ Rails.application.routes.draw do
     get 'fulcrum', controller: :fulcrum, action: :index, as: :fulcrum
     get 'fulcrum/:partial', controller: :fulcrum, action: :show, as: :partial_fulcrum
     resources :api_requests, only: %i[index show destroy]
+    resources :individuals
     resources :institutions
     resources :lessees do
       resources :products, only: %i[create destroy]

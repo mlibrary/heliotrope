@@ -1,0 +1,7 @@
+<h1>Dashboard</h1>
+<ul>
+ <li><%= current_user.email %></li>
+<% current_institutions.each do |institution| %>
+  <li><%= institution.name %></li>
+<% end %>
+</ul>

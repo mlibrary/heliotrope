@@ -5,8 +5,7 @@ require 'rails_helper'
 RSpec.describe FulcrumController, type: :controller do
   describe "GET #index" do
     context 'unauthenticated user' do
-      before { get :index }
-      # TODO: why no locale here?
+      before { get :index, params: { locale: 'en' } }
 
       it { expect(response).to redirect_to('/login') }
     end
@@ -20,12 +19,12 @@ RSpec.describe FulcrumController, type: :controller do
       end
 
       it { expect(response).not_to be_unauthorized }
-      it { expect(response).to redirect_to("/fulcrum/home?locale=en") }
+      it { expect(response).to redirect_to("/fulcrum/dashboard?locale=en") }
     end
   end
 
   describe "GET #show" do
-    let(:partial) { 'home' }
+    let(:partial) { 'dashboard' }
 
     context 'unauthenticated user' do
       before { get :show, params: { locale: 'en', partial: partial } }
@@ -43,6 +42,7 @@ RSpec.describe FulcrumController, type: :controller do
 
       it { expect(response).not_to be_unauthorized }
       it { expect(response).to be_success }
+
       context "invalid partial" do
         let(:partial) { 'invalid' }
 

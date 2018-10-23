@@ -1,0 +1,36 @@
+<%
+  individuals = Individual.filter(identifier_like: params[:identifier_like], name_like: params[:name_like], entity_id_like: params[:entity_id_like]).order(identifier: :asc).page(params[:page])
+  size = 12
+%>
+<h1>Individuals</h1>
+<form name="filter" method="get" action="<%= partial_fulcrum_path(:individuals) %>">
+  <table class="table table-striped" summary="Individual List">
+    <tr>
+      <th><%= link_to(new_individual_path) do %>
+          <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> New
+        <% end %>
+      </th>
+      <th><label for="identifier_like">Identifier</label></th>
+      <th><label for="name_like">Name</label></th>
+      <th><label for="email_like">EMail</label></th>
+    </tr>
+    <% individuals.each do |individual| %>
+      <tr>
+        <td><%= link_to(individual_path(individual)) do %>
+            <span class="glyphicon glyphicon-sunglasses" aria-hidden="true"></span> Show
+          <% end %>
+        </td>
+        <td><%= individual.identifier %></td>
+        <td><%= individual.name %></td>
+        <td><%= individual.email %></td>
+      </tr>
+    <% end %>
+    <tr>
+      <td><button name="submit" type="submit" value="filter">Filter</button></td>
+      <td><input type="text" name="identifier_like" value="<%= params[:identifier_like] %>" size="<%= size %>"></td>
+      <td><input type="text" name="name_like" value="<%= params[:name_like] %>" size="<%= size %>"></td>
+      <td><input type="text" name="entity_id_like" value="<%= params[:email_like] %>" size="<%= 3 * size %>"></td>
+    </tr>
+  </table>
+</form>
+<%= paginate individuals %>

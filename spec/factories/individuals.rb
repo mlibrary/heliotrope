@@ -1,11 +1,9 @@
 # frozen_string_literal: true
 
 FactoryBot.define do
-  factory :institution do
+  factory :individual do
     identifier { "MyString" }
     name { "MyString" }
-    entity_id { "MyString" }
-    site { "MyString" }
-    login { "MyString" }
+    email { "MyString" }
   end
 end
