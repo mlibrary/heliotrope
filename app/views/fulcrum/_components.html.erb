@@ -29,8 +29,16 @@
           <% end %>
         </td>
         <td><%= link_to component.handle, HandleService.url(HandleService.noid(component.handle)) %></td>
-        <td><%= link_to_if file_set.present?, file_set&.id, hyrax_file_set_path(file_set&.id) %></td>
-        <td><%= link_to_if monograph.present?, monograph&.id, hyrax_monograph_path(monograph&.id) %></td>
+        <td>
+          <% if file_set.present? %>
+            <%= link_to file_set.id, hyrax_file_set_path(file_set.id) %>
+          <% end %>
+        </td>
+        <td>
+          <% if monograph.present? %>
+            <%= link_to monograph.id, hyrax_monograph_path(monograph.id) %>
+          <% end %>
+        </td>
         <td><%= component.products.count() %></td>
         <td><%= component.lessees.count() %></td>
       </tr>
