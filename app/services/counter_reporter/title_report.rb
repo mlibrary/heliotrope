@@ -16,24 +16,27 @@ module CounterReporter
         # should "yop"/year of publication be in the counter_report table?
         next if @params.yop.present? && @params.yop != presenter.date_created.first
         @params.metric_types.each do |metric_type|
-          item = ActiveSupport::OrderedHash.new
-          item["Title"] = presenter.title
-          item["Publisher"] = presenter.publisher.first
-          item["Publisher_ID"] = ""
-          item["Platform"] = "Fulcrum"
-          item["DOI"] = presenter.citable_link
-          item["Proprietary_ID"] = presenter.id
-          item["ISBN"] = presenter.isbn.join("; ")
-          item["Print_ISSN"] = ""
-          item["Online_ISSN"] = ""
-          item["URI"] = Rails.application.routes.url_helpers.hyrax_monograph_url(presenter.id)
-          item["Metric_Type"] = metric_type
-          item["Reporting_Period_Total"] = results.values.map { |r| r[metric_type.downcase][presenter.id] }.compact.sum
-          results.each do |result|
-            item[result[0]] = result[1][metric_type.downcase][presenter.id] || 0
-          end
+          @params.access_types.each do |access_type|
+            item = ActiveSupport::OrderedHash.new
+            item["Title"] = presenter.title
+            item["Publisher"] = presenter.publisher.first
+            item["Publisher_ID"] = ""
+            item["Platform"] = "Fulcrum"
+            item["DOI"] = presenter.citable_link
+            item["Proprietary_ID"] = presenter.id
+            item["ISBN"] = presenter.isbn.join("; ")
+            item["Print_ISSN"] = ""
+            item["Online_ISSN"] = ""
+            item["URI"] = Rails.application.routes.url_helpers.hyrax_monograph_url(presenter.id)
+            item["Access_Type"] = access_type if @params.report_type == 'tr_b3'
+            item["Metric_Type"] = metric_type
+            item["Reporting_Period_Total"] = results.values.map { |r| r[metric_type.downcase][access_type.downcase][presenter.id] }.compact.sum
+            results.each do |result|
+              item[result[0]] = result[1][metric_type.downcase][access_type.downcase][presenter.id] || 0
+            end
 
-          items << item
+            items << item
+          end
         end
       end
 
@@ -49,7 +52,10 @@ module CounterReporter
         item_month = this_month.strftime("%b") + "-" + this_month.year.to_s
         results[item_month] = {}
         @params.metric_types.each do |metric_type|
-          results[item_month][metric_type.downcase] = send(metric_type.downcase, this_month)
+          results[item_month][metric_type.downcase] = {}
+          @params.access_types.each do |access_type|
+            results[item_month][metric_type.downcase][access_type.downcase] = send(metric_type.downcase, this_month, access_type)
+          end
         end
         this_month = this_month.next_month
       end
@@ -60,7 +66,9 @@ module CounterReporter
       parent_noids = []
       results.values.each do |result|
         @params.metric_types.each do |metric_type|
-          parent_noids.concat(result[metric_type.downcase].keys)
+          @params.access_types.each do |access_type|
+            parent_noids.concat(result[metric_type.downcase][access_type.downcase].keys)
+          end
         end
       end
       parent_noids.uniq
@@ -75,10 +83,10 @@ module CounterReporter
       presenters
     end
 
-    def total_item_investigations(month)
+    def total_item_investigations(month, access_type = @params.access_types.first)
       CounterReport.institution(@params.institution)
                    .investigations
-                   .access_type(@params.access_type)
+                   .access_type(access_type)
                    .turnaway
                    .start_date(month.beginning_of_month)
                    .end_date(month.end_of_month)
@@ -87,48 +95,10 @@ module CounterReporter
                    .count
     end
 
-    def unique_item_investigations(month)
+    def unique_item_investigations(month, access_type = @params.access_types.first)
       CounterReport.institution(@params.institution)
                    .investigations
-                   .access_type(@params.access_type)
-                   .turnway
-                   .start_date(month.beginning_of_month)
-                   .end_date(month.end_of_month)
-                   .press(@params.press)
-                   .unique
-                   .group('parent_noid')
-                   .count
-    end
-
-    def unique_title_investigations(month)
-      CounterReport.institution(@params.institution)
-                   .investigations
-                   .access_type(@params.access_type)
-                   .turnaway
-                   .start_date(month.beginning_of_month)
-                   .end_date(month.end_of_month)
-                   .press(@params.press)
-                   .unique_by_title
-                   .group('parent_noid')
-                   .count
-    end
-
-    def total_item_requests(month)
-      CounterReport.institution(@params.institution)
-                   .requests
-                   .access_type(@params.access_type)
-                   .turnaway
-                   .start_date(month.beginning_of_month)
-                   .end_date(month.end_of_month)
-                   .press(@params.press)
-                   .group('parent_noid')
-                   .count
-    end
-
-    def unique_item_requests(month)
-      CounterReport.institution(@params.institution)
-                   .requests
-                   .access_type(@params.access_type)
+                   .access_type(access_type)
                    .turnaway
                    .start_date(month.beginning_of_month)
                    .end_date(month.end_of_month)
@@ -138,10 +108,10 @@ module CounterReporter
                    .count
     end
 
-    def unique_title_requests(month)
+    def unique_title_investigations(month, access_type = @params.access_types.first)
       CounterReport.institution(@params.institution)
-                   .requests
-                   .access_type(@params.access_type)
+                   .investigations
+                   .access_type(access_type)
                    .turnaway
                    .start_date(month.beginning_of_month)
                    .end_date(month.end_of_month)
@@ -151,7 +121,45 @@ module CounterReporter
                    .count
     end
 
-    def no_license(month)
+    def total_item_requests(month, access_type = @params.access_types.first)
+      CounterReport.institution(@params.institution)
+                   .requests
+                   .access_type(access_type)
+                   .turnaway
+                   .start_date(month.beginning_of_month)
+                   .end_date(month.end_of_month)
+                   .press(@params.press)
+                   .group('parent_noid')
+                   .count
+    end
+
+    def unique_item_requests(month, access_type = @params.access_types.first)
+      CounterReport.institution(@params.institution)
+                   .requests
+                   .access_type(access_type)
+                   .turnaway
+                   .start_date(month.beginning_of_month)
+                   .end_date(month.end_of_month)
+                   .press(@params.press)
+                   .unique
+                   .group('parent_noid')
+                   .count
+    end
+
+    def unique_title_requests(month, access_type = @params.access_types.first)
+      CounterReport.institution(@params.institution)
+                   .requests
+                   .access_type(access_type)
+                   .turnaway
+                   .start_date(month.beginning_of_month)
+                   .end_date(month.end_of_month)
+                   .press(@params.press)
+                   .unique_by_title
+                   .group('parent_noid')
+                   .count
+    end
+
+    def no_license(month, _access_type)
       CounterReport.institution(@params.institution)
                    .turnaway("No_License")
                    .start_date(month.beginning_of_month)
@@ -161,7 +169,7 @@ module CounterReporter
                    .count
     end
 
-    def limit_exceeded(_month)
+    def limit_exceeded(_month, _access_type)
       raise "The Limit_Exceeded turnaway metric is not currently tracked/implemented"
     end
 
@@ -173,7 +181,7 @@ module CounterReporter
         Institution_Name: Institution.where(identifier: @params.institution).first&.name,
         Institution_ID: @params.institution,
         Metric_Types: @params.metric_types.join("; "),
-        Report_Filters: "Data_Type=#{@params.data_type}; Access_Type=#{@params.access_type}; Access_Method=#{@params.access_method}",
+        Report_Filters: "Data_Type=#{@params.data_type}; Access_Type=#{@params.access_types.join('; ')}; Access_Method=#{@params.access_method}",
         Report_Attributes: "",
         Exceptions: "",
         Reporting_Period: "#{@params.start_date.year}-#{@params.start_date.month} to #{@params.end_date.year}-#{@params.end_date.month}",

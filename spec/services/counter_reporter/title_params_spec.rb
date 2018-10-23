@@ -24,7 +24,7 @@ RSpec.describe CounterReporter::TitleParams do
     end
 
     it "has the correct access_type" do
-      expect(subject.access_type).to eq 'Controlled'
+      expect(subject.access_types).to eq ['Controlled']
     end
   end
 
@@ -53,7 +53,7 @@ RSpec.describe CounterReporter::TitleParams do
     end
 
     it "has the correct access_type" do
-      expect(subject.access_type).to eq "OA_Gold"
+      expect(subject.access_types).to eq ['OA_Gold']
     end
   end
 

@@ -3,6 +3,41 @@
 require 'rails_helper'
 
 RSpec.describe CounterReporter::TitleReport do
+  describe "#results_by_month" do
+    subject { described_class.new(params_object).results_by_month }
+
+    let(:params_object) { CounterReporter::TitleParams.new('tr', params) }
+    let(:params) do
+      {
+        institution: institution,
+        metric_type: 'Total_Item_Investigations',
+        start_date: start_date,
+        end_date: end_date,
+        access_type: 'OA_Gold'
+      }
+    end
+    let(:start_date) { "2018-01-01" }
+    let(:end_date) { "2018-03-30" }
+    let(:institution) { 1 }
+
+    before do
+      create(:counter_report, session: 1,  noid: 'a',  parent_noid: 'red',   institution: 1, created_at: Time.parse("2018-01-02").utc, access_type: "OA_Gold")
+      create(:counter_report, session: 1,  noid: 'a2', parent_noid: 'red',   institution: 1, created_at: Time.parse("2018-01-02").utc, access_type: "OA_Gold")
+      create(:counter_report, session: 1,  noid: 'b',  parent_noid: 'blue',  institution: 1, created_at: Time.parse("2018-01-02").utc, access_type: "OA_Gold")
+      create(:counter_report, session: 6,  noid: 'c',  parent_noid: 'green', institution: 1, created_at: Time.parse("2018-02-11").utc, access_type: "OA_Gold")
+      create(:counter_report, session: 7,  noid: 'c1', parent_noid: 'green', institution: 1, created_at: Time.parse("2018-03-03").utc, access_type: "OA_Gold")
+      create(:counter_report, session: 10, noid: 'a',  parent_noid: 'red',   institution: 2, created_at: Time.parse("2018-11-11").utc, access_type: "OA_Gold")
+    end
+
+    it "has the correct results" do
+      # This data structure should be an object of some kind so that it's easier to work with.
+      # There's just so much data juggling but would a bunch of objects be better? IDK.
+      expect(subject).to eq("Jan-2018" => { "total_item_investigations" => { "oa_gold" => { "blue" => 1, "red" => 2 } } },
+                            "Feb-2018" => { "total_item_investigations" => { "oa_gold" => { "green" => 1 } } },
+                            "Mar-2018" => { "total_item_investigations" => { "oa_gold" => { "green" => 1 } } })
+    end
+  end
+
   describe '#report' do
     subject { described_class.new(params_object).report }
 
@@ -244,39 +279,112 @@ RSpec.describe CounterReporter::TitleReport do
         end
       end
     end
-  end
 
-  describe "#results_by_month" do
-    subject { described_class.new(params_object).results_by_month }
+    context "the full-on pain of a tr_b3 report" do
+      # This is this: https://docs.google.com/spreadsheets/d/1fsF_JCuOelUs9s_cvu7x_Yn8FNsi5xK0CR3bu2X_dVI/edit#gid=11711129
+      # From that example we want each metric (of 6) for each access_type (of 2) for each book.
+      # I don't really understand how a book can be both "Controlled" and then "OA_Gold", but that seems
+      # to be what the example is saying. Seems like a bunch of empty rows to me. But there it is. A monstrosity.
+      let(:purple) do
+        ::SolrDocument.new(id: 'purple',
+                           has_model_ssim: ['Monograph'],
+                           title_tesim: ['Purple'],
+                           publisher_tesim: ["P"],
+                           isbn_tesim: ['888'],
+                           date_created_tesim: ['1999'])
+      end
 
-    let(:params_object) { CounterReporter::TitleParams.new('tr', params) }
-    let(:params) do
-      {
-        institution: institution,
-        metric_type: 'Total_Item_Investigations',
-        start_date: start_date,
-        end_date: end_date,
-        access_type: 'OA_Gold'
-      }
-    end
-    let(:start_date) { "2018-01-01" }
-    let(:end_date) { "2018-03-30" }
-    let(:institution) { 1 }
+      let(:yellow) do
+        ::SolrDocument.new(id: 'yellow',
+                           has_model_ssim: ['Monograph'],
+                           title_tesim: ['Yellow'],
+                           publisher_tesim: ["Y"],
+                           isbn_tesim: ['999'],
+                           date_created_tesim: ['2010'])
+      end
 
-    before do
-      create(:counter_report, session: 1,  noid: 'a',  parent_noid: 'red',   institution: 1, created_at: Time.parse("2018-01-02").utc, access_type: "OA_Gold")
-      create(:counter_report, session: 1,  noid: 'a2', parent_noid: 'red',   institution: 1, created_at: Time.parse("2018-01-02").utc, access_type: "OA_Gold")
-      create(:counter_report, session: 1,  noid: 'b',  parent_noid: 'blue',  institution: 1, created_at: Time.parse("2018-01-02").utc, access_type: "OA_Gold")
-      create(:counter_report, session: 6,  noid: 'c',  parent_noid: 'green', institution: 1, created_at: Time.parse("2018-02-11").utc, access_type: "OA_Gold")
-      create(:counter_report, session: 7,  noid: 'c1', parent_noid: 'green', institution: 1, created_at: Time.parse("2018-03-03").utc, access_type: "OA_Gold")
-      create(:counter_report, session: 10, noid: 'a',  parent_noid: 'red',   institution: 2, created_at: Time.parse("2018-11-11").utc, access_type: "OA_Gold")
-    end
+      let(:params_object) { CounterReporter::TitleParams.new('tr_b3', params) }
+      let(:params) do
+        {
+          institution: institution,
+          start_date: start_date,
+          end_date: end_date
+        }
+      end
+      let(:institution_name) { double("institution_name", name: "U of Something") }
+      let(:start_date) { "2018-08-01" }
+      let(:end_date) { "2018-09-01" }
+      let(:institution) { 1 }
 
-    it "has the correct results" do
-      # this data structure should be an object of some kind so that it's easier to work with
-      expect(subject).to eq("Jan-2018" => { "total_item_investigations" => { "blue" => 1, "red" => 2 } },
-                            "Feb-2018" => { "total_item_investigations" => { "green" => 1 } },
-                            "Mar-2018" => { "total_item_investigations" => { "green" => 1 } })
+      before do
+        ActiveFedora::SolrService.add([red.to_h, green.to_h, blue.to_h, purple.to_h, yellow.to_h])
+        ActiveFedora::SolrService.commit
+
+        create(:counter_report, session: 1,  noid: 'a',  parent_noid: 'red',    institution: 1, created_at: Time.parse("2018-08-02").utc, access_type: "Controlled")
+        create(:counter_report, session: 1,  noid: 'a2', parent_noid: 'red',    institution: 1, created_at: Time.parse("2018-08-02").utc, access_type: "Controlled", request: 1)
+        create(:counter_report, session: 1,  noid: 'b',  parent_noid: 'blue',   institution: 1, created_at: Time.parse("2018-08-02").utc, access_type: "Controlled")
+        create(:counter_report, session: 2,  noid: 'p',  parent_noid: 'purple', institution: 1, created_at: Time.parse("2018-08-05").utc, access_type: "OA_Gold")
+        create(:counter_report, session: 2,  noid: 'y',  parent_noid: 'yellow', institution: 1, created_at: Time.parse("2018-08-05").utc, access_type: "OA_Gold")
+        create(:counter_report, session: 3,  noid: 'y2', parent_noid: 'yellow', institution: 1, created_at: Time.parse("2018-09-02").utc, access_type: "OA_Gold",    request: 1)
+        create(:counter_report, session: 6,  noid: 'c',  parent_noid: 'green',  institution: 1, created_at: Time.parse("2018-09-11").utc, access_type: "Controlled", request: 1)
+        create(:counter_report, session: 7,  noid: 'c1', parent_noid: 'green',  institution: 1, created_at: Time.parse("2018-09-13").utc, access_type: "Controlled")
+        create(:counter_report, session: 10, noid: 'a',  parent_noid: 'red',    institution: 2, created_at: Time.parse("2018-12-11").utc, access_type: "Controlled")
+
+        allow(Institution).to receive(:where).with(identifier: institution).and_return([institution_name])
+      end
+
+      it "has the correct number of items" do
+        expect(subject[:items].length).to be 60
+      end
+
+      it "has the titles in the correct order" do
+        expect(subject[:items][0]["Title"]).to eq "Blue"
+        expect(subject[:items][12]["Title"]).to eq "Green"
+        expect(subject[:items][24]["Title"]).to eq "Purple"
+        expect(subject[:items][36]["Title"]).to eq "Red"
+        expect(subject[:items][48]["Title"]).to eq "Yellow"
+      end
+
+      it "includes an Access_Type column" do
+        expect(subject[:items][0]["Access_Type"]).to eq "Controlled"
+        expect(subject[:items][1]["Access_Type"]).to eq "OA_Gold"
+      end
+
+      it "has the correct monthly counts" do
+        # blue
+        expect(subject[:items][0]["Aug-2018"]).to eq 1 # Controlled, Total_Item_Investigations
+        expect(subject[:items][2]["Aug-2018"]).to eq 1 # Controlled, Unique_Item_Investigations
+        expect(subject[:items][4]["Aug-2018"]).to eq 1 # Controlled, Unique_Title_Investigations
+        # green
+        expect(subject[:items][12]["Sep-2018"]).to eq 2 # Controlled, Total_Item_Investigations
+        expect(subject[:items][14]["Sep-2018"]).to eq 2 # Controlled, Unique_Item_Investigations
+        expect(subject[:items][16]["Sep-2018"]).to eq 2 # Controlled, Unique_Title_Investigations
+        expect(subject[:items][18]["Sep-2018"]).to eq 1 # Controlled, Total_Item_Requests
+        expect(subject[:items][20]["Sep-2018"]).to eq 1 # Controlled, Unique_Item_Requests
+        expect(subject[:items][22]["Sep-2018"]).to eq 1 # Controlled, Unique_Title_Requests
+        # purple
+        expect(subject[:items][25]["Aug-2018"]).to eq 1 # OA_Gold, Total_Item_Investigations
+        expect(subject[:items][27]["Aug-2018"]).to eq 1 # OA_Gold, Unique_Item_Investigations
+        expect(subject[:items][29]["Aug-2018"]).to eq 1 # OA_Gold, Unique_Title_Investigations
+        # red
+        expect(subject[:items][36]["Aug-2018"]).to eq 2 # Controlled, Total_Item_Investigations
+        expect(subject[:items][38]["Aug-2018"]).to eq 2 # Controlled, Unique_Item_Investigations
+        expect(subject[:items][40]["Aug-2018"]).to eq 1 # Controlled, Unique_Title_Investigations
+        expect(subject[:items][42]["Aug-2018"]).to eq 1 # Controlled, Total_Item_Requests
+        expect(subject[:items][44]["Aug-2018"]).to eq 1 # Controlled, Unique_Item_Requests
+        expect(subject[:items][46]["Aug-2018"]).to eq 1 # Controlled, Unique_Title_Requests
+        # yellow
+        expect(subject[:items][49]["Aug-2018"]).to eq 1 # OA_Gold, Total_Item_Investigations
+        expect(subject[:items][49]["Sep-2018"]).to eq 1 # OA_Gold, Total_Item_Investigations
+        expect(subject[:items][51]["Aug-2018"]).to eq 1 # OA_Gold, Unique_Item_Investigations
+        expect(subject[:items][51]["Sep-2018"]).to eq 1 # OA_Gold, Unique_Item_Investigations
+        expect(subject[:items][53]["Aug-2018"]).to eq 1 # OA_Gold, Unique_Title_Investigations
+        expect(subject[:items][53]["Sep-2018"]).to eq 1 # OA_Gold, Unique_Title_Investigations
+        expect(subject[:items][55]["Aug-2018"]).to eq 0 # OA_Gold, Total_Item_Requests
+        expect(subject[:items][55]["Sep-2018"]).to eq 1 # OA_Gold, Total_Item_Requests
+        expect(subject[:items][57]["Sep-2018"]).to eq 1 # OA_Gold, Unique_Item_Requests
+        expect(subject[:items][59]["Sep-2018"]).to eq 1 # OA_Gold, Unique_Title_Requests
+      end
     end
   end
 end
