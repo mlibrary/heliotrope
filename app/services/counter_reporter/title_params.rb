@@ -83,7 +83,7 @@ module CounterReporter
 
       def tr(params)
         @report_title = 'Title Master Report'
-        @metric_types = [params[:metric_type]] || []
+        @metric_types = [params[:metric_type]].flatten
         @data_type = params[:data_type] || 'Book'
         @access_type = params[:access_type] || ''
         @access_method = params[:access_method] || 'Regular'
