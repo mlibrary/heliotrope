@@ -1,17 +1,14 @@
 <ul class="nav nav-sidebar" role="navigation">
-  <li <%= "class=active" if partial.to_s == :home.to_s %>><a href="<%= main_app.partial_fulcrum_path(partial: :home) %>"><span class="glyphicon glyphicon-home" aria-hidden="true"></span> Home</a></li>
-<% if current_user.platform_admin? %>
+  <li <%= "class=active" if partial.to_s == :dashboard.to_s %>><a href="<%= main_app.partial_fulcrum_path(partial: :dashboard) %>"><span class="glyphicon glyphicon-dashboard" aria-hidden="true"></span> Dashboard</a></li>
   <li <%= "class=active" if partial.to_s == :products.to_s %>><a href="<%= main_app.partial_fulcrum_path(partial: :products) %>"><span class="glyphicon glyphicon-king" aria-hidden="true"></span> Products</a></li>
-  <li <%= "class=active" if partial.to_s == :product_noids.to_s %>><a href="<%= main_app.partial_fulcrum_path(partial: :product_noids) %>"><span class="glyphicon glyphicon-pawn" aria-hidden="true"></span> Product NOIDs</a></li>
-  <li <%= "class=active" if partial.to_s == :policies.to_s %>><a href="<%= main_app.partial_fulcrum_path(partial: :policies) %>"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span> Policies</a></li>
   <li <%= "class=active" if partial.to_s == :components.to_s %>><a href="<%= main_app.partial_fulcrum_path(partial: :components) %>"><span class="glyphicon glyphicon-knight" aria-hidden="true"></span> Components</a></li>
-  <li <%= "class=active" if partial.to_s == :lessees.to_s %>><a href="<%= main_app.partial_fulcrum_path(partial: :lessees) %>"><span class="glyphicon glyphicon-pawn" aria-hidden="true"></span> Lessees</a></li>
+  <li <%= "class=active" if partial.to_s == :individuals.to_s %>><a href="<%= main_app.partial_fulcrum_path(partial: :individuals) %>"><span class="glyphicon glyphicon-pawn" aria-hidden="true"></span> Individuals</a></li>
   <li <%= "class=active" if partial.to_s == :institutions.to_s %>><a href="<%= main_app.partial_fulcrum_path(partial: :institutions) %>"><span class="glyphicon glyphicon-registration-mark" aria-hidden="true"></span> Institutions</a></li>
   <li <%= "class=active" if partial.to_s == :publishers.to_s %>><a href="<%= main_app.partial_fulcrum_path(partial: :publishers) %>"><span class="glyphicon glyphicon-tower" aria-hidden="true"></span> Publishers</a></li>
   <li <%= "class=active" if partial.to_s == :users.to_s %>><a href="<%= main_app.partial_fulcrum_path(partial: :users) %>"><span class="glyphicon glyphicon-user" aria-hidden="true"></span> Users</a></li>
   <li <%= "class=active" if partial.to_s == :tokens.to_s %>><a href="<%= main_app.partial_fulcrum_path(partial: :tokens) %>"><span class="glyphicon glyphicon-star" aria-hidden="true"></span> Tokens</a></li>
   <li <%= "class=active" if partial.to_s == :logs.to_s %>><a href="<%= main_app.partial_fulcrum_path(partial: :logs) %>"><span class="glyphicon glyphicon-star-empty" aria-hidden="true"></span> Logs</a></li>
-<% end %>
+  <li <%= "class=active" if partial.to_s == :policies.to_s %>><a href="<%= main_app.partial_fulcrum_path(partial: :policies) %>"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span> Policies</a></li>
   <li <%= "class=active" if partial.to_s == :books.to_s %>><a href="<%= main_app.partial_fulcrum_path(partial: :monographs) %>"><span class="glyphicon glyphicon-book" aria-hidden="true"></span> Monographs</a></li>
   <li <%= "class=active" if partial.to_s == :items.to_s %>><a href="<%= main_app.partial_fulcrum_path(partial: :assets) %>"><span class="glyphicon glyphicon-tags" aria-hidden="true"></span> Assets</a></li>
   <li <%= "class=active" if partial.to_s == :pages.to_s %>><a href="<%= main_app.partial_fulcrum_path(partial: :pages) %>"><span class="glyphicon glyphicon-file" aria-hidden="true"></span> Pages</a></li>

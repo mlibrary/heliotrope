@@ -23,7 +23,7 @@
         </td>
         <td><%= user.email %></td>
         <td>
-          <% user_presenter = UserPresenter.new(current_user, user) %>
+          <% user_presenter = UserPresenter.new(user, current_user) %>
          <%  if user_presenter.roles? %>
             <%= render partial: 'roles/roles', locals: { roles: user_presenter.roles } %>
           <% end %>

@@ -60,7 +60,7 @@ module API
       end
 
       # @overload destroy
-      #   @example delete /api/components/:id
+      #   @example delete /api/institutions/:id
       #   @param [Hash] params { id: Number }
       # @return [ActionDispatch::Response]
       def destroy
@@ -77,7 +77,7 @@ module API
 
         # Never trust parameters from the scary internet, only allow the white list through.
         def institution_params
-          params.require(:institution).permit(:name, :site, :login, :identifier, :entity_id)
+          params.require(:institution).permit(:identifier, :name, :entity_id, :site, :login)
         end
     end
   end

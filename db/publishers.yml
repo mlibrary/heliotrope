@@ -36,7 +36,6 @@
   name: 'University of Minnesota Press'
   logo_path: 'minnesota.png'
   description: "Established in 1925, the University of Minnesota Press is recognized internationally for its innovative, boundary-breaking editorial program in the humanities and social sciences, and is committed to publishing books on the people, history, and natural environment of Minnesota and the Upper Midwest.<br/><br/>This page is the home of supplemental content for select University of Minnesota Press books. You can find the full catalog of Minnesota titles on the [publisher's website](https://www.upress.umn.edu/)."
-  subdomain: 'minnesota'
   press_url: 'https://www.upress.umn.edu/'
   typekit: 'vqj2dgv'
   google_analytics: 'UA-77847516-5'
