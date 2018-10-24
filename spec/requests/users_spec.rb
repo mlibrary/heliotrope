@@ -33,7 +33,7 @@ RSpec.describe "Users", type: :request do
         it do
           put tokenize_user_path(user.id)
           expect(response).to have_http_status(:found)
-          expect(response).to redirect_to(partial_fulcrum_path(:tokens))
+          expect(response).to redirect_to(fulcrum_partials_path(:tokens))
         end
       end
     end

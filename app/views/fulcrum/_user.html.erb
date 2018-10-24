@@ -1,0 +1,25 @@
+<% user = User.find_by(email: @identifier) %>
+<h1>User</h1>
+<table class="table table-striped" summary="User Detail">
+  <tr>
+    <th>Key</th>
+    <th>Value</th>
+  </tr>
+  <tr>
+    <td>identifier</td>
+    <td><%= user.email %></td>
+  </tr>
+  <tr>
+    <td>name</td>
+    <td><%= user.display_name %></td>
+  </tr>
+  <tr>
+    <td>email</td>
+    <td><%= user.email %></td>
+  </tr>
+</table>
+<% user_presenter = UserPresenter.new(user, current_user) %>
+<%  if user_presenter.roles? %>
+  <h2>Roles</h2>
+  <%= render partial: 'roles/roles', locals: { roles: user_presenter.roles } %>
+<% end %>

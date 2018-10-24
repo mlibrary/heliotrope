@@ -3,7 +3,7 @@
   size = 12
 %>
 <h1>Products</h1>
-<form name="filter" method="get" action="<%= partial_fulcrum_path(:products) %>">
+<form name="filter" method="get" action="<%= fulcrum_partials_path(:products) %>">
   <table class="table table-striped" summary="Product List">
     <tr>
       <th>
@@ -13,34 +13,28 @@
       </th>
       <th><label for="identifier_like">Identifier</label></th>
       <th><label for="name_like">Name</label></th>
-      <th>NOIDs</th>
-      <th>Policies</th>
       <th>Components</th>
-      <th>Lessees</th>
+      <th>Policies</th>
     </tr>
-    <% products.each do |product| %>
-      <tr>
-        <td><%= link_to(product_path(product)) do %>
-            <span class="glyphicon glyphicon-sunglasses" aria-hidden="true"></span> Show
-          <% end %>
-        </td>
-        <td><%= product.identifier %></td>
-        <td><%= product.name %></td>
-        <td><%= product.noids.count() %></td>
-        <td><%= product.policies.count() %></td>
-        <td><%= product.components.count() %></td>
-        <td><%= product.lessees.count() %></td>
-      </tr>
-    <% end %>
     <tr>
       <td><button name="submit" type="submit" value="filter">Filter</button></td>
       <td><input type="text" name="identifier_like" value="<%= params[:identifier_like] %>" size="<%= size %>"></td>
       <td><input type="text" name="name_like" value="<%= params[:name_like] %>" size="<%= size %>"></td>
       <td></td>
       <td></td>
-      <td></td>
-      <td></td>
     </tr>
+    <% products.each do |product| %>
+      <tr>
+        <td><%= link_to(fulcrum_partial_path(:products, Base64.urlsafe_encode64(product.identifier))) do %>
+            <span class="glyphicon glyphicon-sunglasses" aria-hidden="true"></span> Show
+          <% end %>
+        </td>
+        <td><%= product.identifier %></td>
+        <td><%= product.name %></td>
+        <td><%= product.components.count() %></td>
+        <td><%= product.policies.count() %></td>
+      </tr>
+    <% end %>
   </table>
 </form>
 <%= paginate products %>

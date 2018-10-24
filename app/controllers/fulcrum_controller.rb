@@ -3,13 +3,23 @@
 class FulcrumController < ApplicationController
   before_action :authenticate_user!
 
+  def dashboard
+    redirect_to action: :index, partials: :dashboard
+  end
+
   def index
-    redirect_to action: :show, partial: :dashboard
+    @partials = params[:partials]
+    if ['dashboard', 'products', 'components', 'individuals', 'institutions', 'publishers', 'users', 'tokens', 'logs', 'policies', 'monographs', 'assets', 'pages', 'reports', 'customize', 'settings', 'help', 'csv'].include? @partials
+      render
+    else
+      render 'hyrax/base/unauthorized', status: :unauthorized
+    end
   end
 
   def show
-    @partial = params[:partial]
-    if ['dashboard', 'products', 'components', 'individuals', 'institutions', 'publishers', 'users', 'tokens', 'logs', 'policies', 'monographs', 'assets', 'pages', 'reports', 'customize', 'settings', 'help', 'csv'].include? @partial
+    @partials = params[:partials]
+    if ['products', 'components', 'individuals', 'institutions', 'publishers', 'users'].include? @partials
+      @identifier = Base64.urlsafe_decode64(params[:id])
       render
     else
       render 'hyrax/base/unauthorized', status: :unauthorized
