@@ -64,7 +64,6 @@ Rails.application.routes.draw do
       resources :lessees, only: %i[create destroy]
       resources :policies, only: %i[new]
     end
-    resources :product_noids
     resources :policies, except: %i[edit update]
     resources :customers, only: %i[index] do
       resources :counter_reports, only: %i[index show edit update], constraints: COUNTER_REPORT_ID_CONSTRAINT
