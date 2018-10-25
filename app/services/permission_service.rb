@@ -28,23 +28,25 @@ class PermissionService
   # Agent Validation
 
   def valid_agent_type?(type)
-    %i[any email institution].include?(type&.to_sym)
+    %i[any individual institution].include?(type&.to_sym)
   end
 
-  def valid_email?(email)
-    /.+\@.+\..+/.match?(email&.to_s)
+  def valid_individual?(id)
+    return false if id.blank?
+    Individual.find(id).present?
   end
 
-  def valid_institution?(identifier)
-    Institution.find_by(identifier: identifier&.to_s).present?
+  def valid_institution?(id)
+    return false if id.blank?
+    Institution.find(id).present?
   end
 
   def valid_agent?(agent_type, agent_id)
     case agent_type&.to_sym
     when :any
       agent_id&.to_sym == :any
-    when :email
-      valid_email?(agent_id)
+    when :individual
+      valid_individual?(agent_id)
     when :institution
       valid_institution?(agent_id)
     else
@@ -76,23 +78,25 @@ class PermissionService
   # Resource Validation
 
   def valid_resource_type?(type)
-    %i[any noid product].include?(type&.to_sym)
+    %i[any component product].include?(type&.to_sym)
   end
 
-  def valid_noid?(noid)
-    /^[[:alnum:]]{9}$/.match?(noid&.to_s)
+  def valid_component?(id)
+    return false if id.blank?
+    Component.find(id).present?
   end
 
-  def valid_product?(identifier)
-    Product.find_by(identifier: identifier&.to_s).present?
+  def valid_product?(id)
+    return false if id.blank?
+    Product.find(id).present?
   end
 
   def valid_resource?(resource_type, resource_id)
     case resource_type&.to_sym
     when :any
       resource_id&.to_sym == :any
-    when :noid
-      valid_noid?(resource_id)
+    when :component
+      valid_component?(resource_id)
     when :product
       valid_product?(resource_id)
     else
@@ -146,7 +150,7 @@ class PermissionService
 
   def permit_read_access_resource(agent_type, agent_id, resource_type, resource_id)
     return read_access_resource_permit(agent_type: agent_type, agent_id: agent_id, resource_type: resource_type, resource_id: resource_id) if read_access_resource?(agent_type, agent_id, resource_type, resource_id)
-    agent = agent_factory.from(OpenStruct.new(agent_type: agent_type, agent_id: sanitize_agent_id(agent_id)))
+    agent = agent_factory.from(OpenStruct.new(agent_type: agent_type, agent_id: agent_id))
     resource = resource_factory.from(OpenStruct.new(resource_type: resource_type, resource_id: resource_id))
     permit = Checkpoint::DB::Permit.from(agent, permission_read, resource, zone: Checkpoint::DB::Permit.default_zone)
     permit.save
@@ -175,11 +179,7 @@ class PermissionService
     def read_access_resource_permit(agent_type:, agent_id:, resource_type:, resource_id:)
       raise(ArgumentError, 'invalid agent') unless valid_agent?(agent_type, agent_id)
       raise(ArgumentError, 'invalid resource') unless valid_resource?(resource_type, resource_id)
-      Checkpoint::DB::Permit.where(agent_type: agent_type.to_s, agent_id: sanitize_agent_id(agent_id).to_s, credential_type: permission_read.type, credential_id: permission_read.id, resource_type: resource_type.to_s, resource_id: resource_id.to_s).first
-    end
-
-    def sanitize_agent_id(agent_id)
-      valid_email?(agent_id) ? agent_id.downcase : agent_id
+      Checkpoint::DB::Permit.where(agent_type: agent_type.to_s, agent_id: agent_id.to_s, credential_type: permission_read.type, credential_id: permission_read.id, resource_type: resource_type.to_s, resource_id: resource_id.to_s).first
     end
 
     attr_reader :agent_factory, :resource_factory

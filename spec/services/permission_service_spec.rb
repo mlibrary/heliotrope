@@ -40,17 +40,20 @@ RSpec.describe PermissionService do
       end
     end
 
-    context 'email' do
-      let(:agent_type) { :email }
+    context 'individual' do
+      let(:agent_type) { :individual }
 
       it { expect(permission_service.valid_agent_type?(agent_type)).to be true }
-      it { expect(permission_service.valid_email?(agent_id)).to be false }
+      it { expect(permission_service.valid_individual?(agent_id)).to be false }
       it { is_expected.to be false }
 
       context 'valid' do
-        let(:agent_id) { 'wolverine@umich.edu' }
+        let(:agent_id) { double('agent_id') }
+        let(:individual) { double('individual') }
 
-        it { expect(permission_service.valid_email?(agent_id)).to be true }
+        before { allow(Individual).to receive(:find).with(agent_id).and_return(individual) }
+
+        it { expect(permission_service.valid_individual?(agent_id)).to be true }
         it { is_expected.to be true }
       end
     end
@@ -66,7 +69,7 @@ RSpec.describe PermissionService do
         let(:agent_id) { double('agent_id') }
         let(:institution) { double('institution') }
 
-        before { allow(Institution).to receive(:find_by).with(identifier: agent_id.to_s).and_return(institution) }
+        before { allow(Institution).to receive(:find).with(agent_id).and_return(institution) }
 
         it { expect(permission_service.valid_institution?(agent_id)).to be true }
         it { is_expected.to be true }
@@ -134,17 +137,20 @@ RSpec.describe PermissionService do
       end
     end
 
-    context 'noid' do
-      let(:resource_type) { :noid }
+    context 'component' do
+      let(:resource_type) { :component }
 
       it { expect(permission_service.valid_resource_type?(resource_type)).to be true }
-      it { expect(permission_service.valid_noid?(resource_id)).to be false }
+      it { expect(permission_service.valid_component?(resource_id)).to be false }
       it { is_expected.to be false }
 
       context 'valid' do
-        let(:resource_id) { 'validnoid' }
+        let(:resource_id) { double('resource_id') }
+        let(:component) { double('component') }
 
-        it { expect(permission_service.valid_noid?(resource_id)).to be true }
+        before { allow(Component).to receive(:find).with(resource_id).and_return(component) }
+
+        it { expect(permission_service.valid_component?(resource_id)).to be true }
         it { is_expected.to be true }
       end
     end
@@ -160,7 +166,7 @@ RSpec.describe PermissionService do
         let(:resource_id) { double('resource_id') }
         let(:product) { double('product') }
 
-        before { allow(Product).to receive(:find_by).with(identifier: resource_id.to_s).and_return(product) }
+        before { allow(Product).to receive(:find).with(resource_id).and_return(product) }
 
         it { expect(permission_service.valid_product?(resource_id)).to be true }
         it { is_expected.to be true }
@@ -180,8 +186,8 @@ RSpec.describe PermissionService do
   end
 
   describe 'open access resource' do
-    let(:resource_type) { :noid }
-    let(:resource_id) { 'validnoid' }
+    let(:resource_type) { :any }
+    let(:resource_id) { :any }
 
     it do
       expect(permission_service.open_access_resource?(resource_type, resource_id)).to be false
@@ -194,10 +200,10 @@ RSpec.describe PermissionService do
   end
 
   describe 'read access resource' do
-    let(:agent_type) { :email }
-    let(:agent_id) { 'wolverine@umich.edu' }
-    let(:resource_type) { :noid }
-    let(:resource_id) { 'validnoid' }
+    let(:agent_type) { :any }
+    let(:agent_id) { :any }
+    let(:resource_type) { :any }
+    let(:resource_id) { :any }
 
     it do
       expect(permission_service.read_access_resource?(agent_type, agent_id, resource_type, resource_id)).to be false
