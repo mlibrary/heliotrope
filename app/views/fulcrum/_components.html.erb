@@ -1,9 +1,9 @@
 <%
   components = Component.filter(handle_like: params[:handle_like]).order(handle: :asc).page(params[:page])
-  size = 24
+  size = 12
 %>
 <h1>Components</h1>
-<form name="filter" method="get" action="<%= partial_fulcrum_path(:components) %>">
+<form name="filter" method="get" action="<%= fulcrum_partials_path(:components) %>">
   <table class="table table-striped" summary="Components List">
     <tr>
       <th>
@@ -11,46 +11,50 @@
           <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> New
         <% end %>
       </th>
-      <th>Handle</th>
-      <th>FileSet</th>
-      <th>Monograph</th>
+      <th><label for="identifier_like">Identifier</label></th>
+      <th><label for="name_like">Name</label></th>
+      <th><label for="noid_like">Noid</label></th>
+      <th><label for="handle_like">Handle</label></th>
       <th>Products</th>
-      <th>Lessees</th>
+      <th>Policies</th>
+    </tr>
+    <tr>
+      <td><button name="submit" type="submit" value="filter">Filter</button></td>
+      <td><input type="text" name="identifier_like" value="<%= params[:identifier_like] %>" size="<%= size %>" aria-label="identifier_like"></td>
+      <td><input type="text" name="name_like" value="<%= params[:name_like] %>" size="<%= size %>" aria-label="name_like"></td>
+      <td><input type="text" name="noid_like" value="<%= params[:noid_like] %>" size="<%= size %>" aria-label="noid_like"></td>
+      <td><input type="text" name="handle_like" value="<%= params[:handle_like] %>" size="<%= 2 * size %>" aria-label="handle_like"></td>
+      <td></td>
+      <td></td>
     </tr>
     <% components.each do |component| %>
       <tr>
-        <%
-          file_set = FileSet.find(component.noid) if component.file_set?
-          monograph = file_set&.parent
-          monograph ||= Monograph.find(component.noid) if component.monograph?
-        %>
-        <td><%= link_to(component_path(component)) do %>
+        <td><%= link_to(fulcrum_partial_path(:components, Base64.urlsafe_encode64(component.noid))) do %>
             <span class="glyphicon glyphicon-sunglasses" aria-hidden="true"></span> Show
           <% end %>
         </td>
-        <td><%= link_to component.handle, HandleService.url(HandleService.noid(component.handle)) %></td>
+        <td><%= component.noid %></td>
+        <td><%= component.noid %></td>
         <td>
+          <%
+            file_set = FileSet.find(component.noid) if component.file_set?
+            monograph = file_set&.parent
+            monograph ||= Monograph.find(component.noid) if component.monograph?
+          %>
           <% if file_set.present? %>
             <%= link_to file_set.id, hyrax_file_set_path(file_set.id) %>
-          <% end %>
-        </td>
-        <td>
-          <% if monograph.present? %>
+          <% elsif monograph.present? %>
             <%= link_to monograph.id, hyrax_monograph_path(monograph.id) %>
+          <% else %>
+            <%= component.noid %>
           <% end %>
         </td>
+        <td><%= link_to component.handle, HandleService.url(HandleService.noid(component.handle)) %></td>
         <td><%= component.products.count() %></td>
-        <td><%= component.lessees.count() %></td>
+        <td><%= component.policies.count() %></td>
       </tr>
     <% end %>
-    <tr>
-      <td><button name="submit" type="submit" value="filter">Filter</button></td>
-      <td><input type="text" name="handle_like" value="<%= params[:handle_like] %>" size="<%= size %>"></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-    </tr>
+
   </table>
 </form>
 <%= paginate components %>

@@ -3,50 +3,73 @@
 require 'rails_helper'
 
 RSpec.describe FulcrumController, type: :controller do
-  describe "GET #index" do
-    context 'unauthenticated user' do
-      before { get :index, params: { locale: 'en' } }
+  let(:user) { create :user }
 
-      it { expect(response).to redirect_to('/login') }
+  describe "GET #dashboard" do
+    it 'anonymous' do
+      get :dashboard, params: { locale: 'en' }
+      expect(response).to redirect_to('/login')
     end
 
-    context "authenticated user" do
-      let(:user) { create :user }
+    it "authenticated" do
+      cosign_sign_in user
+      get :dashboard, params: { locale: 'en' }
+      expect(response).to redirect_to('/fulcrum/dashboard?locale=en')
+    end
+  end
 
-      before do
-        cosign_sign_in user
-        get :index
+  describe "GET #index" do
+    context 'invalid partials' do
+      it 'anonymous' do
+        get :index, params: { locale: 'en', partials: :invalids }
+        expect(response).to redirect_to('/login')
       end
 
-      it { expect(response).not_to be_unauthorized }
-      it { expect(response).to redirect_to("/fulcrum/dashboard?locale=en") }
+      it 'authenticated' do
+        cosign_sign_in user
+        get :index, params: { locale: 'en', partials: :invalids }
+        expect(response).to be_unauthorized
+      end
+    end
+
+    context 'valid partials' do
+      it 'anonymous' do
+        get :index, params: { locale: 'en', partials: :users }
+        expect(response).to redirect_to('/login')
+      end
+
+      it 'authenticated' do
+        cosign_sign_in user
+        get :index, params: { locale: 'en', partials: :users }
+        expect(response).to be_success
+      end
     end
   end
 
   describe "GET #show" do
-    let(:partial) { 'dashboard' }
-
-    context 'unauthenticated user' do
-      before { get :show, params: { locale: 'en', partial: partial } }
-
-      it { expect(response).to redirect_to('/login') }
-    end
-
-    context "authenticated user" do
-      let(:user) { create :user }
-
-      before do
-        cosign_sign_in user
-        get :show, params: { partial: partial }
+    context 'invalid partials' do
+      it 'anonymous' do
+        get :show, params: { locale: 'en', partials: :invalids, id: :invalid }
+        expect(response).to redirect_to('/login')
       end
 
-      it { expect(response).not_to be_unauthorized }
-      it { expect(response).to be_success }
+      it 'authenticated' do
+        cosign_sign_in user
+        get :show, params: { locale: 'en', partials: :invalids, id: :invalid }
+        expect(response).to be_unauthorized
+      end
+    end
 
-      context "invalid partial" do
-        let(:partial) { 'invalid' }
+    context 'valid partials' do
+      it 'anonymous' do
+        get :show, params: { locale: 'en', partials: :users, id: Base64.urlsafe_encode64(user.email) }
+        expect(response).to redirect_to('/login')
+      end
 
-        it { expect(response).to be_unauthorized }
+      it 'authenticated' do
+        cosign_sign_in user
+        get :show, params: { locale: 'en', partials: :users, id: Base64.urlsafe_encode64(user.email) }
+        expect(response).to be_success
       end
     end
   end

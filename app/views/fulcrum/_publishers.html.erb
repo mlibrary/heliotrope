@@ -3,7 +3,11 @@
 <h1>Publishers Summary</h1>
 <table id="myTable" class="table table-striped" summary="Respository Publishers Stats">
   <tr>
-    <th></th>
+    <th>
+      <%= link_to(new_press_path) do %>
+        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> New
+      <% end %>
+    </th>
     <th onclick="sortTable(1, false)">Publisher</th>
     <th onclick="sortTable(2, false)">Subdomain</th>
     <th onclick="sortTable(3, true)">Monographs</th>
