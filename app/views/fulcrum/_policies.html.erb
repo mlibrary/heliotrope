@@ -12,7 +12,7 @@
   size = 12
 %>
 <h1>Policies</h1>
-<form name="filter" method="get" action="<%= partial_fulcrum_path(:policies) %>">
+<form name="filter" method="get" action="<%= fulcrum_partials_path(:policies) %>">
   <table class="table table-striped" summary="Policies List">
     <tr>
       <th>
@@ -26,6 +26,15 @@
       <th><label for="credential_id_like">Credential ID</label></th>
       <th><label for="resource_type_like">Resource Type</label></th>
       <th><label for="resource_id_like">Resource ID</label></th>
+    </tr>
+    <tr>
+      <td><button name="submit" type="submit" value="filter">Filter</button></td>
+      <td><input type="text" name="agent_type_like" value="<%= params[:agent_type_like] %>" size="<%= size %>" aria-label="agent_type_like"></td>
+      <td><input type="text" name="agent_id_like" value="<%= params[:agent_id_like] %>" size="<%= size %>" aria-label="agent_id_like"></td>
+      <td><input type="text" name="credential_type_like" value="<%= params[:credential_type_like] %>" size="<%= size %>" aria-label="credential_type_like"></td>
+      <td><input type="text" name="credential_id_like" value="<%= params[:credential_id_like] %>" size="<%= size %>" aria-label="credential_id_like"></td>
+      <td><input type="text" name="resource_type_like" value="<%= params[:resource_type_like] %>" size="<%= size %>" aria-label="resource_type_like"></td>
+      <td><input type="text" name="resource_id_like" value="<%= params[:resource_id_like] %>" size="<%= size %>" aria-label="resource_id_like"></td>
     </tr>
     <% policies.each do |policy| %>
       <tr>
@@ -42,15 +51,6 @@
         <td><%= policy.resource_id %></td>
       </tr>
     <% end %>
-    <tr>
-      <td><button name="submit" type="submit" value="filter">Filter</button></td>
-      <td><input type="text" name="agent_type_like" value="<%= params[:agent_type_like] %>" size="<%= size %>"></td>
-      <td><input type="text" name="agent_id_like" value="<%= params[:agent_id_like] %>" size="<%= size %>"></td>
-      <td><input type="text" name="credential_type_like" value="<%= params[:credential_type_like] %>" size="<%= size %>"></td>
-      <td><input type="text" name="credential_id_like" value="<%= params[:credential_id_like] %>" size="<%= size %>"></td>
-      <td><input type="text" name="resource_type_like" value="<%= params[:resource_type_like] %>" size="<%= size %>"></td>
-      <td><input type="text" name="resource_id_like" value="<%= params[:resource_id_like] %>" size="<%= size %>"></td>
-    </tr>
   </table>
 </form>
 <%= paginate policies %>

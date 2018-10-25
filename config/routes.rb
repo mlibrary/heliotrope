@@ -48,8 +48,9 @@ Rails.application.routes.draw do
   end
 
   constraints platform_administrator_constraint do
-    get 'fulcrum', controller: :fulcrum, action: :index, as: :fulcrum
-    get 'fulcrum/:partial', controller: :fulcrum, action: :show, as: :partial_fulcrum
+    get 'fulcrum', controller: :fulcrum, action: :dashboard, as: :fulcrum
+    get 'fulcrum/:partials', controller: :fulcrum, action: :index, as: :fulcrum_partials
+    get 'fulcrum/:partials/:id', controller: :fulcrum, action: :show, as: :fulcrum_partial
     resources :api_requests, only: %i[index show destroy]
     resources :individuals
     resources :institutions
@@ -77,13 +78,13 @@ Rails.application.routes.draw do
       end
     end
     get 'blank_csv_template', controller: :metadata_template, action: :export, as: :blank_csv_template
-    scope module: :hyrax do
-      resources :users, only: %i[index show]
-    end
-    resources :users, only: [] do
+    resources :users, only: %i[new edit create update delete] do
       member do
         put :tokenize
       end
+    end
+    scope module: :hyrax do
+      resources :users, only: %i[index show]
     end
   end
 

@@ -49,4 +49,8 @@ class Component < ApplicationRecord
     return false if model.blank?
     /FileSet/i.match?(model["has_model_ssim"]&.first)
   end
+
+  def policies
+    Policy.resource_policies(self)
+  end
 end

@@ -1,0 +1,34 @@
+<% institution = Institution.find_by(identifier: @identifier) %>
+<h1>Institution</h1>
+<table class="table table-striped" summary="Institution Detail">
+  <tr>
+    <th>Key</th>
+    <th>Value</th>
+  </tr>
+  <tr>
+    <td>identifier</td>
+    <td><%= institution.identifier %></td>
+  </tr>
+  <tr>
+    <td>name</td>
+    <td><%= institution.name %></td>
+  </tr>
+  <tr>
+    <td>entity_id</td>
+    <td><%= institution.entity_id %></td>
+  </tr>
+  <tr>
+    <td>site</td>
+    <td><%= institution.site %></td>
+  </tr>
+  <tr>
+    <td>login</td>
+    <td><%= institution.login %></td>
+  </tr>
+</table>
+<h2>Policies</h2>
+<ul>
+  <% institution.policies.each do |policy| %>
+    <li><%= policy.id %></li>
+  <% end %>
+</ul>

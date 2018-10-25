@@ -1,2 +1,15 @@
-<%= content_for(:body_attributes, 'data-no-turbolink') %>
-<!-- Place holder for :index, currently being redirected to action :show, partial: fulcrum -->
+<!--<%#= content_for(:body_attributes, 'data-no-turbolink') %>-->
+<% provide :page_title, "Fulcrum #{@partials.capitalize}" %>
+<%= render 'shared/skip_links' %>
+<div id="dashboard" class="container-fluid">
+  <div class="row">
+    <div class="col col-sm-3 col-md-2" id="sidebar" role="navigation">
+      <%= render partial: 'sidebar', locals: { current_user: current_user, partials: @partials } %>
+    </div><!--/span-->
+    <div class="col col-sm-9 col-md-10 main">
+      <div id="maincontent" class="container col-sm-12 col-md-12">
+        <%= render partial: "#{@partials}", locals: { current_user: current_user } %>
+      </div>
+    </div>
+  </div><!--/row-->
+</div><!--/.container-->

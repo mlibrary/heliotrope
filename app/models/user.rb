@@ -5,6 +5,8 @@ class User < ApplicationRecord
 
   scope :email_like, ->(like) { where("email like ?", "%#{like}%") }
 
+  validates :email, presence: true, allow_blank: false, uniqueness: true
+
   # Connects this user object to Hydra behaviors.
   include Hydra::User
   # Connects this user object to Curation Concerns behaviors.
