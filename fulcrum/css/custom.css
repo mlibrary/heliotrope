@@ -700,6 +700,41 @@ footer.page-footer {
 .footer-menu {
   margin-top: 2.4rem; }
 
+.model {
+  border: solid 4px #002C63;
+  margin: 2em 1em; }
+  .model h3 {
+    margin-top: 0;
+    background-color: #002C63;
+    padding: .5em;
+    color: #FFF; }
+  .model p {
+    padding: .5em 1em; }
+
+h2#services {
+  margin-top: 3em; }
+
+.post-content ul.services-list {
+  display: flex;
+  flex-wrap: wrap;
+  padding-left: 0;
+  justify-content: space-evenly;
+  margin: 2em 0; }
+  .post-content ul.services-list li {
+    list-style-type: none;
+    padding: 1em;
+    border: 2px solid #002C63;
+    margin: 1em;
+    display: flex;
+    flex-basis: 15%;
+    font-size: .8em;
+    text-align: center;
+    flex-direction: column; }
+    .post-content ul.services-list li i.material-icons {
+      font-size: 2.5em;
+      padding-bottom: .2em;
+      color: #002C63; }
+
 .post-feature-image {
   margin-bottom: 40px; }
 
@@ -751,7 +786,10 @@ footer.page-footer {
     top: 0%; }
 
   .parallax-container .section.phases {
-    top: 10%; } }
+    top: 10%; }
+
+  .post-content ul.services-list li {
+    flex-basis: 30%; } }
 @media only screen and (max-width: 700px) {
   #index-banner {
     height: 400px; }

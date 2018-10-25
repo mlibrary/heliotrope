@@ -54,7 +54,7 @@ describe 'Adding a new press' do
 
       # no footer_block_c results in default copyright message
       expect(page).not_to have_content 'Footer Block C Stuff'
-      expect(page).to have_css('.row.press-block-c .col-sm-12 p', text: '© Test Publisher 2017')
+      expect(page).to have_css('.row.press-block-c .col-sm-12 p', text: "© Test Publisher #{Time.current.year}")
     end
   end
 end

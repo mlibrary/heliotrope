@@ -261,6 +261,54 @@ footer.page-footer {
   margin-top: 2.4rem;
 }
 
+// partner-with-us
+.model {
+  border: solid 4px $brand-color;
+  margin: 2em 1em;
+
+  h3 {
+    margin-top: 0;
+    background-color: $brand-color;
+    padding: .5em;
+    color: $white;
+  }
+
+  p {
+    padding: .5em 1em;
+  }
+}
+
+h2#services {
+  margin-top: 3em;
+}
+
+.post-content ul.services-list {
+  display: flex;
+  flex-wrap: wrap;
+  padding-left: 0;
+  justify-content: space-evenly;
+  margin: 2em 0;
+
+  li {
+    list-style-type: none;
+    padding: 1em;
+    border: 2px solid $brand-color;
+    margin: 1em;
+    display: flex;
+    flex-basis: 15%;
+    font-size: .8em;
+    text-align: center;
+    flex-direction: column;
+
+    i.material-icons {
+      font-size: 2.5em;
+      padding-bottom: .2em;
+      color: $brand-color;
+    }
+  }
+}
+
+
 // blog
 .post-feature-image {
   margin-bottom: 40px;
@@ -330,6 +378,10 @@ footer.page-footer {
   }
   .parallax-container .section.phases {
     top: 10%;
+  }
+
+  .post-content ul.services-list li {
+    flex-basis: 30%;
   }
 
 }
