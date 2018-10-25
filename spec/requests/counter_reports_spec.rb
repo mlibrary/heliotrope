@@ -169,7 +169,7 @@ RSpec.describe "Customers Counter Reports", type: :request do
         create(:counter_report, press: press_id, session: 1,  noid: 'a2', parent_noid: 'A', institution: 1, created_at: Time.parse("2018-01-02").utc, access_type: "Controlled", request: 1)
         # press admins have access to *all* institutions for their press only
         allow_any_instance_of(CounterReportsController).to receive(:current_institutions).and_return([])
-        allow(Institution).to receive(:all).and_return(institutions)
+        allow(Institution).to receive(:order).and_return(institutions)
         allow(Institution).to receive(:where).with(identifier: '1').and_return(institutions)
         cosign_sign_in(current_user)
       end
@@ -216,6 +216,13 @@ RSpec.describe "Customers Counter Reports", type: :request do
       describe "GET /counter_report/tr_b2" do
         it do
           get counter_report_path(id: 'tr_b2'), params: { institution: 1, press: press_id }
+          expect(response).to have_http_status(:ok)
+        end
+      end
+
+      describe "GET /counter_reports/tr_b3" do
+        it do
+          get counter_report_path(id: 'tr_b3'), params: { institution: 1, press: press_id }
           expect(response).to have_http_status(:ok)
         end
       end

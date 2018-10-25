@@ -53,6 +53,8 @@ class CounterReportsController < ApplicationController
       @report = CounterReporterService.tr_b1(params)
     when 'tr_b2'
       @report = CounterReporterService.tr_b2(params)
+    when 'tr_b3'
+      @report = CounterReporterService.tr_b3(params)
     when 'tr'
       @report = CounterReporterService.tr(params)
     end
@@ -85,7 +87,7 @@ class CounterReportsController < ApplicationController
     def set_presses_and_institutions
       @presses = current_user&.admin_presses || []
       @institutions = if @presses.present?
-                        Institution.all # over 1000 of these in production = fun
+                        Institution.order(:name) # over 1000 of these in production = fun
                       else
                         current_institutions
                       end

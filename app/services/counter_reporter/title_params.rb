@@ -3,7 +3,7 @@
 module CounterReporter
   class TitleParams
     attr_reader :report_type, :start_date, :end_date, :press, :institution,
-                :metric_types, :data_type, :access_type, :access_method, :yop,
+                :metric_types, :data_type, :access_types, :access_method, :yop,
                 :report_title, :errors
 
     def initialize(report_type, params)
@@ -21,6 +21,8 @@ module CounterReporter
         tr(params)
       when 'tr_b2'
         tr_b2
+      when 'tr_b3'
+        tr_b3
       end
     end
 
@@ -48,8 +50,10 @@ module CounterReporter
     end
 
     def allowed_access_types?
-      unless %w[Controlled OA_Gold].include?(@access_type)
-        @errors << "Access Type: '#{access_type}' is not allowed"
+      @access_types.each do |access_type|
+        unless %w[Controlled OA_Gold].include?(access_type)
+          @errors << "Access Type: '#{access_type}' is not allowed"
+        end
       end
       return false if @errors.present?
       true
@@ -77,7 +81,7 @@ module CounterReporter
         @report_title = 'Book Requests (Excluding OA_Gold)'
         @metric_types = ['Total_Item_Requests', 'Unique_Title_Requests']
         @data_type = 'Book'
-        @access_type = 'Controlled'
+        @access_types = ['Controlled']
         @access_method = 'Regular'
       end
 
@@ -85,7 +89,7 @@ module CounterReporter
         @report_title = 'Title Master Report'
         @metric_types = [params[:metric_type]].flatten
         @data_type = params[:data_type] || 'Book'
-        @access_type = params[:access_type] || ''
+        @access_types = [params[:access_type]].flatten
         @access_method = params[:access_method] || 'Regular'
         @yop = params[:yop] || nil
       end
@@ -94,7 +98,16 @@ module CounterReporter
         @report_title = 'Access Denied by Book'
         @metric_types = ['No_License']
         @data_type = 'Book'
-        @access_type = 'Controlled'
+        @access_types = ['Controlled']
+        @access_method = 'Regular'
+      end
+
+      def tr_b3
+        @report_title = 'Book Usage by Access Type'
+        @metric_types = %w[Total_Item_Investigations Unique_Item_Investigations Unique_Title_Investigations
+                           Total_Item_Requests Unique_Item_Requests Unique_Title_Requests]
+        @data_type = 'Book'
+        @access_types = %w[Controlled OA_Gold]
         @access_method = 'Regular'
       end
   end

@@ -134,6 +134,12 @@ class CounterReporterService
     CounterReporter::TitleReport.new(title_params).report
   end
 
+  def self.tr_b3(params)
+    title_params = CounterReporter::TitleParams.new('tr_b3', params)
+    return({ header: title_params.errors, items: [] }) unless title_params.validate!
+    CounterReporter::TitleReport.new(title_params).report
+  end
+
   def self.tr(params)
     # Example tr report:
     # https://docs.google.com/spreadsheets/d/1fsF_JCuOelUs9s_cvu7x_Yn8FNsi5xK0CR3bu2X_dVI/edit#gid=1709631407
