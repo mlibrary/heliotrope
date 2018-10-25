@@ -83,6 +83,6 @@ class UsersController < ApplicationController
 
     # A list of the param names that can be used for filtering the Product list
     def filtering_params(params)
-      params.slice(:email_like)
+      params.slice(:identifier_like, :name_like, :email_like)
     end
 end

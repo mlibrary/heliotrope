@@ -3,7 +3,18 @@
 desc 'Migrate legacy "permissions" to checkpoint permits.'
 namespace :heliotrope do
   task migrate_permissions: :environment do
-    puts 'Updating individuals ...'
+    puts "Updating ..."
+    puts 'Components ...'
+    Component.all.each do |component|
+      puts "component: #{component.handle}"
+      noid = HandleService.noid(component.handle)
+      model = NoidService.from_noid(noid)
+      component.identifier = noid || component.id
+      component.name = model.title
+      component.noid = noid
+      component.save
+    end
+    puts 'Individuals ...'
     Lessee.all.each do |lessee|
       next if lessee.institution?
       puts "individual: #{lessee.identifier}"

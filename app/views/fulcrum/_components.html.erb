@@ -1,5 +1,6 @@
 <%
-  components = Component.filter(handle_like: params[:handle_like]).order(handle: :asc).page(params[:page])
+  components = Component.filter(identifier_like: params[:identifier_like], name_like: params[:name_like], noid_like: params[:noid_like], handle_like: params[:handle_like]).order(handle: :asc).page(params[:page])
+  # TODO: order on identifier
   size = 12
 %>
 <h1>Components</h1>
@@ -33,8 +34,8 @@
             <span class="glyphicon glyphicon-sunglasses" aria-hidden="true"></span> Show
           <% end %>
         </td>
-        <td><%= component.noid %></td>
-        <td><%= component.noid %></td>
+        <td><%= component.identifier %></td>
+        <td><%= component.name %></td>
         <td>
           <%
             file_set = FileSet.find(component.noid) if component.file_set?

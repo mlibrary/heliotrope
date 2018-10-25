@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20181024183510) do
+ActiveRecord::Schema.define(version: 20181024194504) do
 
   create_table "api_requests", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.integer "user_id"
@@ -52,7 +52,11 @@ ActiveRecord::Schema.define(version: 20181024183510) do
     t.string "handle"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "identifier"
+    t.string "name"
+    t.string "noid"
     t.index ["handle"], name: "index_components_on_handle", unique: true
+    t.index ["identifier"], name: "index_components_on_identifier", unique: true
   end
 
   create_table "components_products", id: false, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|

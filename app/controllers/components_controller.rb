@@ -93,6 +93,6 @@ class ComponentsController < ApplicationController
 
     # A list of the param names that can be used for filtering the Product list
     def filtering_params(params)
-      params.slice(:handle_like)
+      params.slice(:identifier_like, :name_like, :noid_like, :handle_like)
     end
 end

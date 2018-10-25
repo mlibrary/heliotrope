@@ -1,5 +1,5 @@
 <%
-  individuals = Individual.filter(identifier_like: params[:identifier_like], name_like: params[:name_like], entity_id_like: params[:entity_id_like]).order(identifier: :asc).page(params[:page])
+  individuals = Individual.filter(identifier_like: params[:identifier_like], name_like: params[:name_like], email_like: params[:email_like]).order(identifier: :asc).page(params[:page])
   size = 24
 %>
 <h1>Individuals</h1>
