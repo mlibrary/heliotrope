@@ -331,3 +331,19 @@ en:
         Fulcrum dev-only field. Can be used to manually reassign an item's handle.
       redirect_to: |
         Fulcrum dev-only field. Can be used to redirect a FileSet.
+      representative_kind: |
+        Use this to assign a FileSet as one of its Monograph's "representatives".
+        Allowed representative values (as of 20181026) are:
+        epub, webgl, database, aboutware, pdf_ebook, mobi, reviews, related, peer_review and cover
+
+        You must ensure that the file is of an appropriate type to be used as the relevant representative:
+        -- epub: *.epub (archive file)
+        -- webgl: *.zip (WebGL archive file)
+        -- database: an external resource URL (see relevant column) with no actual file present
+        -- aboutware: *.html file
+        -- pdf_ebook: *.pdf file
+        -- mobi: *.mobi file
+        -- reviews: *.html file
+        -- related: *.html file
+        -- peer_review: *.html file
+        -- cover: image file like *.jpg (not JPG 2000), *.tiff, *.png
