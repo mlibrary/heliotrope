@@ -1,3 +1,4 @@
+<%# override of https://raw.githubusercontent.com/samvera/hyrax/v2.0.0/app/views/hyrax/base/_guts4form.html.erb %>
 <% # we will yield to content_for for each tab, e.g. :files_tab %>
 <% tabs ||= %w[metadata files relationships] # default tab order %>
 <div class="row">
@@ -53,4 +54,4 @@
       <%= render 'form_progress', f: f %>
     </div>
   </div>
-</div>
+<%# note this file is meant to have an unmatched div tag, see: https://tools.lib.umich.edu/jira/projects/HELIO/issues/HELIO-2263 %>
