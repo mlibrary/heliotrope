@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20181024194504) do
+ActiveRecord::Schema.define(version: 20181026193044) do
 
   create_table "api_requests", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.integer "user_id"
@@ -90,6 +90,8 @@ ActiveRecord::Schema.define(version: 20181024194504) do
     t.datetime "updated_at", null: false
     t.integer "press"
     t.string "parent_noid"
+    t.index ["access_type"], name: "index_counter_reports_on_access_type"
+    t.index ["institution"], name: "index_counter_reports_on_institution"
   end
 
   create_table "curation_concerns_operations", id: :integer, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
