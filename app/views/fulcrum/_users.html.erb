@@ -1,5 +1,5 @@
 <%
-  users = User.filter(email_like: params[:email_like]).order(email: :asc).page(params[:page])
+  users = User.filter(identifier_like: params[:identifier_like], name_like: params[:name_like]).order(email: :asc).page(params[:page])
   size = 24
 %>
 <h1>Users</h1>
