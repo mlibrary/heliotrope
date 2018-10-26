@@ -1,15 +1,13 @@
 <div id="maincontent">
-  <div class="row">
-    <div class="col-md-12"><h1>Editing User</h1></div>
-    <div class="col-md-12">
-      <%= render 'form', user: @user %>
-    </div>
-    <div class="col-md-12"><br/></div>
-    <div class="col-md-12">
-      <%= link_to 'Show', @user %>
-      <span> | </span>
-      <%= link_to 'Back', users_path %>
-    </div>
-    <div class="col-md-12"><br/></div>
+  <h1>Editing User</h1>
+  <div class="col-md-12">
+    <%= render 'form', user: @user %>
   </div>
+  <div class="col-md-12"><br/></div>
+  <div class="col-md-12">
+    <%= link_to 'Show', @user %>
+    <span> | </span>
+    <%= link_to 'Back', users_path %>
+  </div>
+  <div class="col-md-12"><br/></div>
 </div>

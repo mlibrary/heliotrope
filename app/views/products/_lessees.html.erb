@@ -1,38 +1,38 @@
-<div class="row">
-  <div class="row">
-    <b>
-      <div class="col-md-8">
-        <div class="col-md-1">ID</div>
-        <div class="col-md-5">Identifier</div>
-        <div class="col-md-6">Name</div>
-      </div>
-      <div class="col-md-2"><%= link_to 'New Lessee', new_lessee_path %></div>
-      <hr/>
-    </b>
+<b>
+  <div class="col-md-10">
+    <div class="col-md-1">ID</div>
+    <div class="col-md-3">Identifier</div>
+    <div class="col-md-3">Individual</div>
+    <div class="col-md-3">Institution</div>
+    <div class="col-md-2">Products</div>
   </div>
-  <% lessees.each do |lessee| %>
-    <div class="col-md-8">
-      <div class="col-md-1"><%= link_to lessee.id, lessee %></div>
-      <div class="col-md-5"><%= lessee.identifier %></div>
-      <div class="col-md-6"><% if lessee.institution? %><%= lessee.institution.name %><% end %></div>
-    </div>
+  <div class="col-md-2"><%= link_to 'New Lessee', new_lessee_path %></div>
+  <hr/>
+</b>
+<% lessees.each do |lessee| %>
+  <div class="col-md-10">
+    <div class="col-md-1"><%= link_to lessee.id, lessee %></div>
+    <div class="col-md-3"><%= lessee.identifier %></div>
+    <div class="col-md-3">&nbsp<%= link_to_if lessee.individual?, lessee.individual&.name, lessee.individual %></div>
+    <div class="col-md-3">&nbsp<%= link_to_if lessee.institution?, lessee.institution&.name, lessee.institution %></div>
+    <div class="col-md-2"><%= lessee.products.count() %></div>
+  </div>
+  <div class="col-md-2">
+    <%= link_to(product_lessee_path(product, lessee), method: :delete, class: "btn btn-default") do %>
+      <span class="glyphicon glyphicon-minus" aria-hidden="true"></span> Remove
+    <% end %>
+  </div>
+<% end %>
+<% if product.not_lessees.present? %>
+  <%= form_tag(product_lessees_path(product), method: :post) do %>
+    <div class="col-md-10">
+      <div class="col-md-1"></div>
+      <div class="col-md-11"><%= select_tag "id", options_from_collection_for_select(product.not_lessees, "id", "identifier") %></div>
+      </div>
     <div class="col-md-2">
-      <%= link_to(product_lessee_path(product, lessee), method: :delete, class: "btn btn-default") do %>
-        <span class="glyphicon glyphicon-minus" aria-hidden="true"></span> Remove
+      <%= button_tag(type: 'submit', class: 'btn btn-default') do %>
+        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Add
       <% end %>
     </div>
   <% end %>
-  <% if product.not_lessees.present? %>
-    <%= form_tag(product_lessees_path(product), method: :post) do %>
-      <div class="col-md-8">
-        <div class="col-md-1"></div>
-        <div class="col-md-11"><%= select_tag "id", options_from_collection_for_select(product.not_lessees, "id", "identifier") %></div>
-        </div>
-      <div class="col-md-2">
-        <%= button_tag(type: 'submit', class: 'btn btn-default') do %>
-          <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Add
-        <% end %>
-      </div>
-    <% end %>
-  <% end %>
-</div>
+<% end %>

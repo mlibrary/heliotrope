@@ -1,34 +1,30 @@
 <p id="notice"><%= notice %></p>
 <div id="maincontent">
-  <div class="row">
-    <div class="col-md-12"><h1>Lessees</h1></div>
-    <div class="col-md-12">
-      <div class="row">
-        <b>
-          <div class="col-md-1">ID</div>
-          <div class="col-md-3">Identifier</div>
-          <div class="col-md-3">Institution</div>
-          <div class="col-md-2"><%= link_to 'New Lessee', new_lessee_path %></div>
-          <div class="col-md-3"></div>
-          <hr/>
-        </b>
+  <h1>Lessees</h1>
+    <b>
+      <div class="col-md-10">
+        <div class="col-md-1">ID</div>
+        <div class="col-md-3">Identifier</div>
+        <div class="col-md-3">Individual</div>
+        <div class="col-md-3">Institution</div>
+        <div class="col-md-2">Products</div>
       </div>
-      <% @lessees.each do |lessee| %>
-        <div class="row">
-          <div class="col-md-1"><%= lessee.id %></div>
-          <div class="col-md-3"><%= lessee.identifier %></div>
-          <div class="col-md-3"><%= lessee.institution.name if lessee.institution? %></div>
-          <div class="col-md-2">
-            <div class="col-md-4"><%= link_to 'Show', lessee %></div>
-            <div class="col-md-4"><%= link_to_if lessee.update?, 'Edit', edit_lessee_path(lessee) %></div>
-            <div class="col-md-4"><%= link_to_if lessee.destroy?, 'Destroy', lessee, method: :delete, data: { confirm: 'Are you sure?' } %></div>
-          </div>
-          <div class="col-md-3"></div>
-        </div>
-      <% end %>
+      <div class="col-md-2"><%= link_to 'New Lessee', new_lessee_path %></div>
+      <div class="col-md-12"><hr/></div>
+    </b>
+  <% @lessees.each do |lessee| %>
+    <div class="col-md-10">
+      <div class="col-md-1"><%= lessee.id %></div>
+      <div class="col-md-3"><%= lessee.identifier %></div>
+      <div class="col-md-3">&nbsp<%= link_to_if lessee.individual?, lessee.individual&.name, lessee.individual %></div>
+      <div class="col-md-3">&nbsp<%= link_to_if lessee.institution?, lessee.institution&.name, lessee.institution %></div>
+      <div class="col-md-2"><%= lessee.products.count() %></div>
     </div>
-    <div class="col-md-12"><br/></div>
-    <div class="col-md-12"><%= paginate @lessees %></div>
-    <div class="col-md-12"><br/></div>
-  </div>
+    <div class="col-md-2">
+      <div class="col-md-4"><%= link_to 'Show', lessee %></div>
+      <div class="col-md-4"><%= link_to_if lessee.update?, 'Edit', edit_lessee_path(lessee) %></div>
+      <div class="col-md-4"><%= link_to_if lessee.destroy?, 'Destroy', lessee, method: :delete, data: { confirm: 'Are you sure?' } %></div>
+    </div>
+  <% end %>
+  <div class="col-md-12">&nbsp<%= paginate @lessees %></div>
 </div>

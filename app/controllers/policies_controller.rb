@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class PoliciesController < ApplicationController
-  before_action :set_policy, only: %i[show destroy]
+  before_action :set_policy, only: %i[show edit update destroy]
 
   # GET /policies
   # GET /policies.json

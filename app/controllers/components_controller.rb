@@ -88,7 +88,7 @@ class ComponentsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def component_params
-      params.require(:component).permit(:handle)
+      params.require(:component).permit(:identifier, :name, :noid, :handle)
     end
 
     # A list of the param names that can be used for filtering the Product list

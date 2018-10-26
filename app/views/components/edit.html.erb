@@ -1,15 +1,13 @@
 <div id="maincontent">
-  <div class="row">
-    <div class="col-md-12"><h1>Editing Component</h1></div>
-    <div class="col-md-12">
-      <%= render 'form', component: @component %>
-    </div>
-    <div class="col-md-12"><br/></div>
-    <div class="col-md-12">
-      <%= link_to 'Show', @component %>
-      <span> | </span>
-      <%= link_to 'Back', components_path %>
-    </div>
-    <div class="col-md-12"><br/></div>
+  <h1>Editing Component</h1>
+  <div class="col-md-12">
+    <%= render 'form', component: @component %>
   </div>
+  <div class="col-md-12"><br/></div>
+  <div class="col-md-12">
+    <%= link_to 'Show', @component %>
+    <span> | </span>
+    <%= link_to 'Back', components_path %>
+  </div>
+  <div class="col-md-12"><br/></div>
 </div>

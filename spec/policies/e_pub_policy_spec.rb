@@ -22,6 +22,6 @@ RSpec.describe EPubPolicy do
   context 'permitted' do
     let(:permits) { true }
 
-    it ':action permitted' do expect { subject }.not_to raise_error(NotAuthorizedError) end
+    it ':action permitted' do expect { subject }.not_to raise_error end
   end
 end
