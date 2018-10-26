@@ -1,26 +1,26 @@
 <% individual = Individual.find_by(identifier: @identifier) %>
 <h1>Individual</h1>
-<table class="table table-striped" summary="Individual Detail">
-  <tr>
-    <th>Key</th>
-    <th>Value</th>
-  </tr>
-  <tr>
-    <td>identifier</td>
-    <td><%= individual.identifier %></td>
-  </tr>
-  <tr>
-    <td>name</td>
-    <td><%= individual.name %></td>
-  </tr>
-  <tr>
-    <td>email</td>
-    <td><%= individual.email %></td>
-  </tr>
-</table>
+<div class="col-md-12">
+  <table class="table table-striped" summary="Individual Detail">
+    <tr>
+      <th>Key</th>
+      <th>Value</th>
+    </tr>
+    <tr>
+      <td>identifier</td>
+      <td><%= individual.identifier %></td>
+    </tr>
+    <tr>
+      <td>name</td>
+      <td><%= individual.name %></td>
+    </tr>
+    <tr>
+      <td>email</td>
+      <td><%= individual.email %></td>
+    </tr>
+  </table>
+</div>
 <h2>Policies</h2>
-<ul>
-  <% individual.policies.each do |policy| %>
-    <li><%= policy.id %></li>
-  <% end %>
-</ul>
+<div class="col-md-12">
+  <%= render partial: '/policies/policies', locals: { agent: individual, policies: individual.policies } %>
+</div>

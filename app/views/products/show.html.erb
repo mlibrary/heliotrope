@@ -8,16 +8,13 @@
     <div class="col-md-11"><%= @product.name %></div>
     <div class="col-md-1"><em>Purchase</em></div>
     <div class="col-md-11"><%= @product.purchase %></div>
-    <div class="col-md-12"><h2>Policies</h2></div>
-    <div class="col-md-12">
-      <%= render partial: 'policies', locals: { product: @product, policies: @product.policies } %>
-    </div>
-    <div class="col-md-12">
-      <%= link_to 'New Policy', new_product_policy_path(@product) %>
-    </div>
     <div class="col-md-12"><h2>Components</h2></div>
     <div class="col-md-12">
       <%= render partial: 'components', locals: { product: @product, components: @product.components } %>
+    </div>
+    <div class="col-md-12"><h2>Policies</h2></div>
+    <div class="col-md-12">
+      <%= render partial: '/policies/policies', locals: { resource: @product, policies: @product.policies } %>
     </div>
     <div class="col-md-12"><h2>Lessees</h2></div>
     <div class="col-md-12">

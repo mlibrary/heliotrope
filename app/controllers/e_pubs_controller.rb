@@ -198,10 +198,10 @@ class EPubsController < CheckpointController
     end
 
     def subscriber
-      @subscriber ||= valid_user_signed_in? ? Entity.new(type: :email, identifier: current_user.email) : Entity.null_object
+      @subscriber ||= valid_user_signed_in? ? Entity.new(current_user.email, current_user.email, type: :email, id: current_user.email) : Entity.null_object
     end
 
     def publication
-      @publication ||= Entity.new(type: :epub, identifier: HandleService.path(@presenter.id))
+      @publication ||= Entity.new(HandleService.path(@presenter.id), HandleService.path(@presenter.id), type: :epub, id: @presenter.id)
     end
 end

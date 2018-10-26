@@ -99,4 +99,48 @@ class Policy
   def persisted?
     id.present?
   end
+
+  def agent
+    @agent ||= case agent_type
+               when 'Individual'
+                 Individual.find(agent_id)
+               when 'Institution'
+                 Institution.find(agent_id)
+               else
+                 Entity.new(agent_type, agent_id, type: :any, id: :any)
+               end
+  end
+
+  # def agent_path
+  #   case agent_type
+  #   when 'Individual'
+  #     Rails.application.routes.url_helpers.individual_path(agent_id)
+  #   when 'Institution'
+  #     Rails.application.routes.url_helpers.institution_path(agent_id)
+  #   else
+  #     Rails.application.routes.url_helpers.users_path
+  #   end
+  # end
+
+  def resource
+    @resource ||= case resource_type
+                  when 'Component'
+                    Component.find(resource_id)
+                  when 'Product'
+                    Product.find(resource_id)
+                  else
+                    Entity.new(resource_type, resource_id, type: :any, id: :any)
+                  end
+  end
+
+  # def resource_path
+  #   case resource_type
+  #   when 'Component'
+  #     Rails.application.routes.url_helpers.component_path(resource_id)
+  #   when 'Product'
+  #     Rails.application.routes.url_helpers.product_path(resource_id)
+  #   else
+  #     Rails.application.routes.url_helpers.presses_path
+  #   end
+  # end
 end

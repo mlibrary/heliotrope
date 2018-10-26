@@ -30,17 +30,22 @@ namespace :heliotrope do
     PermissionService.clear_permits_table
     permission_service = PermissionService.new
     puts 'Migrating...'
+    agent_factory = Checkpoint::Agent
+    resource_factory = Checkpoint::Resource
+    permission_read = Checkpoint::Credential::Permission.new(:read)
     Product.all.each do |product|
       puts "product: #{product.identifier}"
       product.lessees.each do |lessee|
         if lessee.institution?
           puts "institution: #{lessee.identifier}"
           institution = Institution.find_by(identifier: lessee.identifier)
-          permission_service.permit_read_access_resource(:institution, institution.id, :product, product.id)
+          # permission_service.permit_read_access_resource(:institution, institution.id, :product, product.id)
+          Checkpoint::DB::Permit.from(agent_factory.from(institution), permission_read, resource_factory.from(product), zone: Checkpoint::DB::Permit.default_zone).save
         else
           puts "individual: #{lessee.identifier}"
           individual = Individual.find_by(identifier: lessee.identifier)
-          permission_service.permit_read_access_resource(:individual, individual.id, :product, product.id)
+          # permission_service.permit_read_access_resource(:individual, individual.id, :product, product.id)
+          Checkpoint::DB::Permit.from(agent_factory.from(individual), permission_read, resource_factory.from(product), zone: Checkpoint::DB::Permit.default_zone).save
         end
       end
     end

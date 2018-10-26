@@ -1,19 +1,13 @@
-<h1><%= current_user.email %></h1>
-<table class="table table-striped" summary="Tokenize List">
+<h1>Token</h1>
+<table class="table table-striped" summary="Token">
   <tr>
-    <th></th>
-    <th>Token</th>
-  </tr>
-  <tr>
-    <td>
+    <th>
       <%= link_to "New", main_app.tokenize_user_path(current_user.id),
                   method: :put, title: "New token",
                   data: { confirm: "Generate new token?" },
                   class: "btn btn-default" %>
-    </td>
-    <td>
-      <%= text_field(:user, :token, size: 120, value: current_user.token, disabled: true) %>
-    </td>
+    </th>
+    <th><%= text_field(:user, :token, size: 120, value: current_user.token, disabled: true) %></th>
   </tr>
 </table>
 <% users = User.order(email: :asc).page(params[:page]) %>

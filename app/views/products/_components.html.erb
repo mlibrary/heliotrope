@@ -1,22 +1,33 @@
-<div class="row">
-  <% components.each do |component| %>
+<b>
+  <div class="col-md-10">
+    <div class="col-md-1">ID</div>
+    <div class="col-md-11">Handle</div>
+  </div>
+  <div class="col-md-2"><%= link_to 'New Component', new_component_path %></div>
+  <hr/>
+</b>
+<% components.each do |component| %>
+  <div class="col-md-10">
     <div class="col-md-1"><%= link_to component.id, component %></div>
-    <div class="col-md-5"><%= link_to component.handle, HandleService.url(HandleService.noid(component.handle)) %></div>
-    <div class="col-md-6">
-      <%= link_to(product_component_path(product, component), method: :delete, class: "btn btn-default") do %>
-        <span class="glyphicon glyphicon-minus" aria-hidden="true"></span> Remove
+    <div class="col-md-11"><%= link_to component.handle, HandleService.url(HandleService.noid(component.handle)) %></div>
+  </div>
+  <div class="col-md-2">
+    <%= link_to(product_component_path(product, component), method: :delete, class: "btn btn-default") do %>
+      <span class="glyphicon glyphicon-minus" aria-hidden="true"></span> Remove
+    <% end %>
+  </div>
+<% end %>
+<% if product.not_components.present? %>
+  <%= form_tag(product_components_path(product), method: "post") do %>
+    <div class="col-md-10">
+      <div class="col-md-1"></div>
+      <div class="col-md-11"><%= select_tag "id", options_from_collection_for_select(product.not_components, "id", "handle") %></div>
+    </div>
+    <div class="col-md-2">
+      <%= button_tag(type: 'submit', class: 'btn btn-default') do %>
+        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Add
       <% end %>
     </div>
   <% end %>
-  <% if product.not_components.present? %>
-    <%= form_tag(product_components_path(product), method: "post") do %>
-      <div class="col-md-1"></div>
-      <div class="col-md-5"><%= select_tag "id", options_from_collection_for_select(product.not_components, "id", "handle") %></div>
-      <div class="col-md-6">
-        <%= button_tag(type: 'submit', class: 'btn btn-default') do %>
-          <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Add
-        <% end %>
-      </div>
-    <% end %>
-  <% end %>
-</div>
+<% end %>
+

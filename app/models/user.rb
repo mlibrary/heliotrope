@@ -104,4 +104,8 @@ class User < ApplicationRecord
   def self.guest(user_key:)
     Guest.new(user_key: user_key)
   end
+
+  def policies
+    Policy.agent_policies(self)
+  end
 end

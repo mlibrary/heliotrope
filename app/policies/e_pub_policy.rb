@@ -2,8 +2,8 @@
 
 class EPubPolicy
   def initialize(current_user, current_institutions, e_pub_id)
-    @actor = { email: current_user&.email, institutions: current_institutions }
-    @target = { noid: e_pub_id, products: Component.find_by(handle: HandleService.path(e_pub_id))&.products }
+    @actor = { user: current_user, institutions: current_institutions }
+    @target = { noid: e_pub_id }
   end
 
   def authorize!(action, message = nil)
@@ -25,7 +25,7 @@ class EPubPolicy
     end
 
     def authority
-      @authority ||= Checkpoint::Authority.new(agent_resolver: ActorAgentResolver.new, resource_resolver: TargetResourceResolver.new)
+      Services.checkpoint
     end
 
     attr_reader :actor, :target
