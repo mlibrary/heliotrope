@@ -61,7 +61,7 @@ METADATA_FIELDS ||=
 # Any fields related to "representative" relationships between FileSets and their parent Monograph
 FILE_SET_FLAG_FIELDS ||=
   [
-    { object: :file_set, field_name: 'Representative Kind', metadata_name: 'representative_kind', required: false, multivalued: :no, acceptable_values: FeaturedRepresentative::KINDS + ['cover'], description: I18n.t('csv.descriptions.title') }
+    { object: :file_set, field_name: 'Representative Kind', metadata_name: 'representative_kind', required: false, multivalued: :no, acceptable_values: FeaturedRepresentative::KINDS + ['cover'], description: I18n.t('csv.descriptions.representative_kind') }
   ].freeze
 
 MONO_FILENAME_FLAG ||= '://:MONOGRAPH://:'
