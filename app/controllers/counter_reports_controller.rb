@@ -47,6 +47,8 @@ class CounterReportsController < ApplicationController
     return render 'hyrax/base/unauthorized', status: :unauthorized unless authorized_insitutions_or_presses?
 
     case params[:id]
+    when 'pr'
+      @report = CounterReporterService.pr(params)
     when 'pr_p1'
       @report = CounterReporterService.pr_p1(params)
     when 'tr_b1'

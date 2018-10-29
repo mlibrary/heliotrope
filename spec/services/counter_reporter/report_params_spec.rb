@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe CounterReporter::TitleParams do
+RSpec.describe CounterReporter::ReportParams do
   context "a tr_b1 report" do
     subject { described_class.new('tr_b1', params) }
 

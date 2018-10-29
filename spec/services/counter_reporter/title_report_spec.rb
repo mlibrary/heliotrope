@@ -6,7 +6,7 @@ RSpec.describe CounterReporter::TitleReport do
   describe "#results_by_month" do
     subject { described_class.new(params_object).results_by_month }
 
-    let(:params_object) { CounterReporter::TitleParams.new('tr', params) }
+    let(:params_object) { CounterReporter::ReportParams.new('tr', params) }
     let(:params) do
       {
         institution: institution,
@@ -68,7 +68,7 @@ RSpec.describe CounterReporter::TitleReport do
 
     context 'a full tr_b1 report' do
       # https://docs.google.com/spreadsheets/d/1fsF_JCuOelUs9s_cvu7x_Yn8FNsi5xK0CR3bu2X_dVI/edit#gid=1559300549
-      let(:params_object) { CounterReporter::TitleParams.new('tr_b1', institution: institution, start_date: start_date, end_date: end_date) }
+      let(:params_object) { CounterReporter::ReportParams.new('tr_b1', institution: institution, start_date: start_date, end_date: end_date) }
       let(:institution_name) { double("institution_name", name: "U of Something") }
       let(:start_date) { "2018-01-01" }
       let(:end_date) { "2018-12-01" }
@@ -167,12 +167,12 @@ RSpec.describe CounterReporter::TitleReport do
 
     context "a tr report" do
       let(:params_object) do
-        CounterReporter::TitleParams.new('tr', institution: institution,
-                                               start_date: start_date,
-                                               end_date: end_date,
-                                               yop: yop,
-                                               metric_type: metric_type,
-                                               access_type: access_type)
+        CounterReporter::ReportParams.new('tr', institution: institution,
+                                                start_date: start_date,
+                                                end_date: end_date,
+                                                yop: yop,
+                                                metric_type: metric_type,
+                                                access_type: access_type)
       end
       let(:institution_name) { double("institution_name", name: "U of Something") }
       let(:start_date) { "2018-01-01" }
@@ -221,7 +221,7 @@ RSpec.describe CounterReporter::TitleReport do
     end
 
     context "a tr_b2 report" do
-      let(:params_object) { CounterReporter::TitleParams.new('tr_b2', params) }
+      let(:params_object) { CounterReporter::ReportParams.new('tr_b2', params) }
       let(:params) do
         {
           institution: institution,
@@ -303,7 +303,7 @@ RSpec.describe CounterReporter::TitleReport do
                            date_created_tesim: ['2010'])
       end
 
-      let(:params_object) { CounterReporter::TitleParams.new('tr_b3', params) }
+      let(:params_object) { CounterReporter::ReportParams.new('tr_b3', params) }
       let(:params) do
         {
           institution: institution,
