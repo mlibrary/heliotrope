@@ -98,8 +98,22 @@ html {
   }
 }
 
+// show link to asset on Fulcrum on hover
 figure:hover > div:nth-child(1), figure:active > div:nth-child(1) {
-  // show on hover
+  -webkit-opacity: 1;
+  -moz-opacity: 1;
+  opacity: 1;
+}
+
+// show link to asset on Fulcrum using k/b navigation
+.fulcrum-embed-link:focus-within {
+  -webkit-opacity: 1;
+  -moz-opacity: 1;
+  opacity: 1;
+}
+
+// show player controls if any focusable child element has the focus (k/b navigation)
+.able-wrapper .able .able-player.able-video:focus-within {
   -webkit-opacity: 1;
   -moz-opacity: 1;
   opacity: 1;
