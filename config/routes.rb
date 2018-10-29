@@ -86,6 +86,7 @@ Rails.application.routes.draw do
     scope module: :hyrax do
       resources :users, only: %i[index show]
     end
+    resources :entities, only: %i[index show]
   end
 
   resources :counter_reports, only: %i[index show edit update], constraints: COUNTER_REPORT_ID_CONSTRAINT

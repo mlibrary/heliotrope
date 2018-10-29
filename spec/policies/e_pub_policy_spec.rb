@@ -9,33 +9,19 @@ RSpec.describe EPubPolicy do
   let(:current_institutions) { nil }
   let(:e_pub_id) { nil }
   let(:action) { :action }
+  let(:checkpoint) { double('checkpoint') }
+  let(:permits) { false }
+
+  before do
+    allow(Services).to receive(:checkpoint).and_return(checkpoint)
+    allow(checkpoint).to receive(:permits?).with({ user: current_user, institutions: current_institutions }, action, noid: e_pub_id).and_return(permits)
+  end
 
   it ':action denied' do expect { subject }.to raise_error(NotAuthorizedError) end
 
-  context 'query' do
-    let(:actor) { { email: current_user.email, institutions: current_institutions } }
-    let(:target) { { noid: e_pub_id, products: component.products } }
-    let(:component) { double('component', products: products) }
-    let(:products) { nil }
-    let(:authority) { double('authority') }
-    let(:actor_agent_resolver) { double('actor_agent_resolver') }
-    let(:target_resource_resolver) { double('target_resource_resolver') }
-    let(:query) { double('query', true?: false) }
+  context 'permitted' do
+    let(:permits) { true }
 
-    before do
-      allow(Component).to receive(:find_by).with(handle: HandleService.path(e_pub_id)).and_return(component)
-      allow(Checkpoint::Authority).to receive(:new).with(agent_resolver: actor_agent_resolver, resource_resolver: target_resource_resolver).and_return(authority)
-      allow(ActorAgentResolver).to receive(:new).and_return(actor_agent_resolver)
-      allow(TargetResourceResolver).to receive(:new).and_return(target_resource_resolver)
-      allow(Checkpoint::Query::ActionPermitted).to receive(:new).with(actor, action, target, authority: authority).and_return(query)
-    end
-
-    it 'not permitted' do expect { subject }.to raise_error(NotAuthorizedError) end
-
-    context 'query' do
-      let(:query) { double('query', true?: true) }
-
-      it 'permitted' do expect { subject }.not_to raise_error end
-    end
+    it ':action permitted' do expect { subject }.not_to raise_error(NotAuthorizedError) end
   end
 end

@@ -30,5 +30,17 @@ Services = Canister.new
 # }
 #
 
-# Services.register(:checkpoint) { Checkpoint::Authority.new }
+Services.register(:checkpoint) do
+  # def initialize(
+  #     agent_resolver: Agent::Resolver.new,
+  #     credential_resolver: Credential::Resolver.new,
+  #     resource_resolver: Resource::Resolver.new,
+  #     permits: Permits.new)
+  # end
+  Checkpoint::Authority.new(
+    agent_resolver: ActorAgentResolver.new,
+    resource_resolver: TargetResourceResolver.new
+  )
+end
+
 Services.register(:request_attributes) { Keycard::Request::AttributesFactory.new }

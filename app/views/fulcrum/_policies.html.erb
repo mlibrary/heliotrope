@@ -39,7 +39,7 @@
     <% policies.each do |policy| %>
       <tr>
         <td>
-          <%= link_to(policy_path(policy), method: :delete, data: { confirm: 'Are you sure?' }) do %>
+          <%= link_to(policy_path(policy), method: :delete, class: "btn btn-default", data: { confirm: 'Are you sure?' }) do %>
             <span class="glyphicon glyphicon-minus" aria-hidden="true"></span> Destroy
           <% end %>
         </td>

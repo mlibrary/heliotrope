@@ -3,16 +3,18 @@
 class Entity
   include ActiveModel::Model
 
-  TYPES = %w[email epub].freeze
+  TYPES = %w[any email epub].freeze
 
-  attr_reader :type, :identifier
+  attr_reader :type, :id, :identifier, :name
 
   validates :type, presence: true, allow_blank: false, inclusion: { in: TYPES }
-  validates :identifier, presence: true, allow_blank: false
+  validates :id, presence: true, allow_blank: false
 
-  def initialize(type:, identifier:)
-    @type = type.to_s
-    @identifier = identifier.to_s
+  def initialize(identifier, name, type: :any, id: :any)
+    @type = type&.to_s
+    @id = id&.to_s
+    @identifier = identifier&.to_s
+    @name = name&.to_s
   end
 
   def self.null_object
@@ -22,10 +24,6 @@ class Entity
   def null_object?
     is_a? EntityNullObject
   end
-
-  def id
-    "#{type}:#{identifier}"
-  end
 end
 
 class EntityNullObject < Entity
@@ -34,7 +32,9 @@ class EntityNullObject < Entity
   private
 
     def initialize
-      @type = :null.to_s
-      @identifier = :null.to_s
+      @type = 'null_type'
+      @id = 'null_id'
+      @identifier = 'null_type:null_id'
+      @name = 'EntityNullObject'
     end
 end

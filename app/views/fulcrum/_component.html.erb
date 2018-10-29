@@ -1,36 +1,34 @@
 <% component = Component.find_by(handle: HandleService.path(@identifier)) %>
 <h1>Component</h1>
-<table class="table table-striped" summary="Component Detail">
-  <tr>
-    <th>Key</th>
-    <th>Value</th>
-  </tr>
-  <tr>
-    <td>identifier</td>
-    <td><%= component.identifier %></td>
-  </tr>
-  <tr>
-    <td>name</td>
-    <td><%= component.name %></td>
-  </tr>
-  <tr>
-    <td>noid</td>
-    <td><%= component.noid %></td>
-  </tr>
-  <tr>
-    <td>handle</td>
-    <td><%= component.handle %></td>
-  </tr>
-</table>
+<div class="col-md-12">
+  <table class="table table-striped" summary="Component Detail">
+    <tr>
+      <th>Key</th>
+      <th>Value</th>
+    </tr>
+    <tr>
+      <td>identifier</td>
+      <td><%= component.identifier %></td>
+    </tr>
+    <tr>
+      <td>name</td>
+      <td><%= component.name %></td>
+    </tr>
+    <tr>
+      <td>noid</td>
+      <td><%= component.noid %></td>
+    </tr>
+    <tr>
+      <td>handle</td>
+      <td><%= component.handle %></td>
+    </tr>
+  </table>
+</div>
 <h2>Products</h2>
-<ul>
-  <% component.products.each do |product| %>
-    <li><%= product.identifier %></li>
-  <% end %>
-</ul>
+<div class="col-md-12">
+  <%= render partial: '/components/products', locals: { component: component, products: component.products } %>
+</div>
 <h2>Policies</h2>
-<ul>
-  <% component.policies.each do |policy| %>
-    <li><%= policy.id %></li>
-  <% end %>
-</ul>
+<div class="col-md-12">
+  <%= render partial: '/policies/policies', locals: { resource: component, policies: component.policies } %>
+</div>
