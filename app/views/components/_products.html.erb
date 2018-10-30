@@ -1,16 +1,21 @@
 <b>
   <div class="col-md-10">
     <div class="col-md-1">ID</div>
-    <div class="col-md-5">Identifier</div>
-    <div class="col-md-6"></div>
+    <div class="col-md-3">Identifier</div>
+    <div class="col-md-3">Name</div>
+    <div class="col-md-3">Purchase</div>
+    <div class="col-md-2">Components</div>
   </div>
   <div class="col-md-2"><%= link_to 'New Product', new_product_path %></div>
-  <hr/>
+  <div class="col-md-12"><hr/></div>
 </b>
 <% products.each do |product| %>
   <div class="col-md-10">
     <div class="col-md-1"><%= link_to product.id, product %></div>
-    <div class="col-md-11"><%= product.identifier %></div>
+    <div class="col-md-3"><%= product.identifier %></div>
+    <div class="col-md-3"><%= product.name %></div>
+    <div class="col-md-3"><%= link_to product.purchase, product.purchase %></div>
+    <div class="col-md-2"><%= product.components.count() %></div>
   </div>
   <div class="col-md-2">
     <%= link_to(component_product_path(component, product), method: :delete, class: "btn btn-default") do %>
@@ -31,4 +36,3 @@
     </div>
   <% end %>
 <% end %>
-

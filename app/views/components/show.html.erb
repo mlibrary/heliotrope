@@ -1,29 +1,41 @@
 <p id="notice"><%= notice %></p>
 <div id="maincontent">
-  <div class="row">
-    <div class="col-md-12"><h1>Component</h1></div>
-    <% fileset = FileSet.find HandleService.noid(@component.handle) %>
-    <% monograph = fileset.parent %>
-    <div class="col-md-1"><em>Handle</em></div>
-    <div class="col-md-11"><%= link_to @component.handle, HandleService.url(fileset.id) %></div>
-    <div class="col-md-1"><em>FileSet</em></div>
-    <div class="col-md-11"><%= link_to fileset.id, hyrax_file_set_path(fileset.id) %></div>
-    <div class="col-md-1"><em>Monograph</em></div>
-    <div class="col-md-11"><%= link_to monograph.id, monograph_catalog_path(monograph.id) %></div>
-    <div class="col-md-12"><h2>Products</h2></div>
-    <div class="col-md-12">
-      <%= render partial: 'products', locals: { component: @component, products: @component.products } %>
-    </div>
-    <div class="col-md-12"><h2>Lessees</h2></div>
-    <div class="col-md-12">
-      <%= render partial: 'lessees', locals: { component: @component, lessees: @component.lessees } %>
-    </div>
-    <div class="col-md-12"><br/></div>
-    <div class="col-md-12">
-      <%= link_to_if @component.update?, 'Edit', edit_component_path(@component) %>
-      <span> | </span>
-      <%= link_to 'Back', components_path %>
-    </div>
-    <div class="col-md-12"><br/></div>
+  <%
+    fileset = FileSet.find HandleService.noid(@component.handle)
+    monograph = fileset.parent
+  %>
+  <h1>Component</h1>
+  <div class="col-md-1"><em>Identifier</em></div>
+  <div class="col-md-11">&nbsp<%= @component.identifier %></div>
+  <div class="col-md-1"><em>Name</em></div>
+  <div class="col-md-11">&nbsp<%= @component.name %></div>
+  <div class="col-md-1"><em>Noid</em></div>
+  <div class="col-md-11">&nbsp<%= @component.noid %></div>
+  <div class="col-md-1"><em>Handle</em></div>
+  <div class="col-md-11">&nbsp<%= link_to @component.handle, HandleService.url(fileset.id) %></div>
+  <div class="col-md-1"><em>FileSet</em></div>
+  <div class="col-md-11">&nbsp<%= link_to fileset.id, hyrax_file_set_path(fileset.id) %></div>
+  <div class="col-md-1"><em>Monograph</em></div>
+  <div class="col-md-11">&nbsp<%= link_to monograph.id, monograph_catalog_path(monograph.id) %></div>
+  <div class="col-md-12"><br/></div>
+  <h2>Products</h2>
+  <div class="col-md-12">
+    <%= render partial: 'products', locals: { component: @component, products: @component.products } %>
   </div>
+  <h2>Lessees</h2>
+  <div class="col-md-12">
+    <%= render partial: 'lessees', locals: { component: @component, lessees: @component.lessees } %>
+  </div>
+  <div class="col-md-12"><br/></div>
+  <h2>Policies</h2>
+  <div class="col-md-12">
+    <%= render partial: '/policies/policies', locals: { resource: @component, policies: @component.policies } %>
+  </div>
+  <div class="col-md-12"><br/></div>
+  <div class="col-md-12">
+    <%= link_to_if @component.update?, 'Edit', edit_component_path(@component) %>
+    <span> | </span>
+    <%= link_to 'Back', components_path %>
+  </div>
+  <div class="col-md-12"><br/></div>
 </div>

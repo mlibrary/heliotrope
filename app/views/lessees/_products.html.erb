@@ -1,22 +1,38 @@
-<div class="row">
-  <% products.each do |product| %>
-    <div class="col-md-1"><%= link_to product.id, product_path(product) %></div>
-    <div class="col-md-5"><%= product.name %></div>
-    <div class="col-md-6">
-      <%= link_to(lessee_product_path(lessee, product), method: :delete, class: "btn btn-default") do %>
-        <span class="glyphicon glyphicon-minus" aria-hidden="true"></span> Remove
+<b>
+  <div class="col-md-10">
+    <div class="col-md-1">ID</div>
+    <div class="col-md-3">Identifier</div>
+    <div class="col-md-3">Name</div>
+    <div class="col-md-3">Purchase</div>
+    <div class="col-md-2">Components</div>
+  </div>
+  <div class="col-md-2"><%= link_to 'New Product', new_product_path %></div>
+  <hr/>
+</b>
+<% products.each do |product| %>
+  <div class="col-md-10">
+    <div class="col-md-1"><%= link_to product.id, product %></div>
+    <div class="col-md-3"><%= product.identifier %></div>
+    <div class="col-md-3"><%= product.name %></div>
+    <div class="col-md-3"><%= link_to product.purchase, product.purchase %></div>
+    <div class="col-md-2"><%= product.components.count() %></div>
+  </div>
+  <div class="col-md-2">
+    <%= link_to(lessee_product_path(lessee, product), method: :delete, class: "btn btn-default") do %>
+      <span class="glyphicon glyphicon-minus" aria-hidden="true"></span> Remove
+    <% end %>
+  </div>
+<% end %>
+<% if lessee.not_products.present? %>
+  <%= form_tag(lessee_products_path(lessee), method: "post") do %>
+    <div class="col-md-10">
+      <div class="col-md-1"></div>
+      <div class="col-md-11"><%= select_tag "id", options_from_collection_for_select(lessee.not_products, "id", "identifier") %></div>
+    </div>
+    <div class="col-md-2">
+      <%= button_tag(type: 'submit',  class: 'btn btn-default') do %>
+        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Add
       <% end %>
     </div>
   <% end %>
-  <% if lessee.not_products.present? %>
-    <%= form_tag(lessee_products_path(lessee), method: "post") do %>
-      <div class="col-md-1"></div>
-      <div class="col-md-5"><%= select_tag "id", options_from_collection_for_select(lessee.not_products, "id", "identifier") %></div>
-      <div class="col-md-6">
-        <%= button_tag(type: 'submit', class: 'btn btn-default') do %>
-          <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Add
-        <% end %>
-      </div>
-    <% end %>
-  <% end %>
-</div>
+<% end %>

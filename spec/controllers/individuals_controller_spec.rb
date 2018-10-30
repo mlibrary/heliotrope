@@ -97,13 +97,14 @@ RSpec.describe IndividualsController, type: :controller do
 
   describe "PUT #update" do
     context "with valid params" do
-      let(:new_attributes) { { identifier: "new_identifier" } }
+      let(:new_attributes) { { name: "new_name", email: "new_email" } }
 
       it "updates the requested individual" do
         individual = Individual.create! valid_attributes
         put :update, params: { id: individual.to_param, individual: new_attributes }, session: valid_session
         individual.reload
-        expect(individual.identifier).to eq("new_identifier")
+        expect(individual.name).to eq(new_attributes[:name])
+        expect(individual.email).to eq(new_attributes[:email])
       end
 
       it "redirects to the individual" do

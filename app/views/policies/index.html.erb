@@ -1,37 +1,8 @@
 <p id="notice"><%= notice %></p>
 <div id="maincontent">
-  <div class="row">
-    <div class="col-md-12"><h1>Policies</h1></div>
-    <div class="col-md-12">
-      <div class="row">
-        <b>
-          <div class="col-md-8">
-            <div class="col-md-1">ID</div>
-            <div class="col-md-4">Agent</div>
-            <div class="col-md-2">Credential</div>
-            <div class="col-md-4">Resource</div>
-            <div class="col-md-1">Zone</div>
-          </div>
-          <div class="col-md-2"><%= link_to 'New Policy', new_policy_path %></div>
-          <hr/>
-        </b>
-      </div>
-      <% @policies.each do |policy| %>
-        <div class="col-md-8">
-          <div class="col-md-1"><%= policy.id %></div>
-          <div class="col-md-4"><%= policy.agent_token %></div>
-          <div class="col-md-2"><%= policy.credential_token %></div>
-          <div class="col-md-4"><%= policy.resource_token %></div>
-          <div class="col-md-1"><%= policy.zone_id %></div>
-        </div>
-        <div class="col-md-2">
-          <div class="col-md-4"><%= link_to 'Show', policy %></div>
-          <div class="col-md-4"><%= link_to 'Destroy', policy, method: :delete, data: { confirm: 'Are you sure?' } %></div>
-        </div>
-      <% end %>
-    </div>
+  <h1>Policies</h1>
+  <div class="col-md-12">
+    <%= render partial: 'policies', locals: { policies: @policies } %>
   </div>
-  <div class="col-md-12"><br/></div>
-  <div class="col-md-12"><%= paginate @policies %></div>
-  <div class="col-md-12"><br/></div>
+  <div class="col-md-12">&nbsp<%= paginate @policies %></div>
 </div>

@@ -1,28 +1,34 @@
 <p id="notice"><%= notice %></p>
 <div id="maincontent">
-  <div class="row">
-    <div class="col-md-12"><h1>Lessee</h1></div>
-    <div class="col-md-1"><em>Identifier</em></div>
-    <div class="col-md-11"><%= @lessee.identifier %></div>
-    <% if @lessee.institution? %>
-      <div class="col-md-12"><h2>Institution</h2></div>
-      <div class="col-md-1"><%= link_to @lessee.institution.id, institution_path(@lessee.institution) %></div>
-      <div class="col-md-11"><%= @lessee.institution.name %></div>
-    <% end %>
-    <div class="col-md-12"><h2>Products</h2></div>
-    <div class="col-md-12">
-      <%= render partial: 'products', locals: { lessee: @lessee, products: @lessee.products } %>
-    </div>
-    <div class="col-md-12"><h2>Components</h2></div>
-    <div class="col-md-12">
-      <%= render partial: 'components', locals: { lessee: @lessee, components: @lessee.components } %>
-    </div>
-    <div class="col-md-12"><br/></div>
-    <div class="col-md-12">
-      <%= link_to_if @lessee.update?, 'Edit', edit_lessee_path(@lessee) %>
-      <span> | </span>
-      <%= link_to 'Back', lessees_path %>
-    </div>
-    <div class="col-md-12"><br/></div>
+  <h1>Lessee</h1>
+  <div class="col-md-1"><em>Identifier</em></div>
+  <div class="col-md-11"><%= @lessee.identifier %></div>
+  <div class="col-md-12"><br/></div>
+  <% if @lessee.individual? %>
+    <h2>Individual</h2>
+    <div class="col-md-1"><%= link_to @lessee.individual.id, individual_path(@lessee.individual) %></div>
+    <div class="col-md-11"><%= @lessee.individual.name %></div>
+  <% end %>
+  <% if @lessee.institution? %>
+    <h2>Institution</h2>
+    <div class="col-md-1"><%= link_to @lessee.institution.id, institution_path(@lessee.institution) %></div>
+    <div class="col-md-11"><%= @lessee.institution.name %></div>
+  <% end %>
+  <div class="col-md-12"><br/></div>
+  <h2>Products</h2>
+  <div class="col-md-12">
+    <%= render partial: 'products', locals: { lessee: @lessee, products: @lessee.products } %>
   </div>
+  <div class="col-md-12"><br/></div>
+  <h2>Components</h2>
+  <div class="col-md-12">
+    <%= render partial: 'components', locals: { lessee: @lessee, components: @lessee.components } %>
+  </div>
+  <div class="col-md-12"><br/></div>
+  <div class="col-md-12">
+    <%= link_to_if @lessee.update?, 'Edit', edit_lessee_path(@lessee) %>
+    <span> | </span>
+    <%= link_to 'Back', lessees_path %>
+  </div>
+  <div class="col-md-12"><br/></div>
 </div>

@@ -43,6 +43,14 @@ class Lessee < ApplicationRecord
     Component.where(id: ComponentsProduct.where(product_id: products.map(&:id)).map(&:component_id)).distinct
   end
 
+  def individual?
+    individual.present?
+  end
+
+  def individual
+    Individual.find_by(identifier: identifier)
+  end
+
   def institution?
     institution.present?
   end

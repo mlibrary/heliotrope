@@ -1,4 +1,5 @@
 <h1>Dashboard</h1>
+<%= text_field(:user, :token, size: 120, value: current_user.token, disabled: true) %>
 <h2>User</h2>
 <ul>
   <li><%= current_user.email %></li>
@@ -15,8 +16,6 @@
     <li><%= key.to_s %>: <%= value.to_s %></li>
   <% end %>
 </ul>
-<h2>Token</h2>
-<%= text_field(:user, :token, size: 120, value: current_user.token, disabled: true) %>
 <h2>Policies</h2>
 <%= render partial: '/policies/policies', locals: { agent: current_user, policies: current_user.policies } %>
 
