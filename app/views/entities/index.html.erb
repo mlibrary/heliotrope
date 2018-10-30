@@ -1,0 +1,28 @@
+<p id="notice"><%= notice %></p>
+<div id="maincontent">
+  <h1>Entities</h1>
+  <div class="col-md-12">
+    <b>
+      <div class="col-md-10">
+        <div class="col-md-1">ID</div>
+        <div class="col-md-3">Type</div>
+        <div class="col-md-3">Identifier</div>
+        <div class="col-md-3">Name</div>
+        <div class="col-md-2">&nbsp</div>
+      </div>
+      <div class="col-md-2">&nbsp</div>
+      <hr/>
+    </b>
+    <% @entities.each do |entity| %>
+      <div class="col-md-10">
+        <div class="col-md-1"><%= entity.id %></div>
+        <div class="col-md-3"><%= entity.type %></div>
+        <div class="col-md-3"><%= entity.identifier %></div>
+        <div class="col-md-3"><%= entity.name %></div>
+        <div class="col-md-2">&nbsp</div>
+      </div>
+      <div class="col-md-2">&nbsp</div>
+    <% end %>
+  </div>
+  <div class="col-md-12"><br/></div>
+</div>

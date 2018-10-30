@@ -74,11 +74,45 @@ RSpec.describe PoliciesController, type: :controller do
         expect {
           post :create, params: { policy: valid_attributes }, session: valid_session
         }.to change(Policy, :count).by(1)
+        expect(response).to redirect_to(Policy.last)
       end
 
-      it "redirects to the created policy" do
-        post :create, params: { policy: valid_attributes }, session: valid_session
-        expect(response).to redirect_to(Policy.last)
+      context "with permission:any" do
+        before { valid_attributes[:credential_id] = 'any' }
+
+        it do
+          expect {
+            post :create, params: { policy: valid_attributes }, session: valid_session
+          }.to change(Policy, :count).by(1)
+          expect(response).to redirect_to(Policy.last)
+        end
+      end
+
+      context "with permission:unknown" do
+        before do
+          valid_attributes[:credential_id] = 'unknown'
+          allow(ValidationService).to receive(:valid_credential?).with(valid_attributes[:credential_type].to_sym, valid_attributes[:credential_id].to_sym).and_return(true)
+        end
+
+        it do
+          expect {
+            post :create, params: { policy: valid_attributes }, session: valid_session
+          }.to raise_error(ArgumentError)
+        end
+      end
+
+      context "with unknown:any" do
+        before do
+          valid_attributes[:credential_type] = 'unknown'
+          valid_attributes[:credential_id] = 'any'
+          allow(ValidationService).to receive(:valid_credential?).with(valid_attributes[:credential_type].to_sym, valid_attributes[:credential_id].to_sym).and_return(true)
+        end
+
+        it do
+          expect {
+            post :create, params: { policy: valid_attributes }, session: valid_session
+          }.to raise_error(ArgumentError)
+        end
       end
     end
 
@@ -97,11 +131,6 @@ RSpec.describe PoliciesController, type: :controller do
       expect {
         delete :destroy, params: { id: policy.to_param }, session: valid_session
       }.to change(Policy, :count).by(-1)
-    end
-
-    it "redirects to the policies list" do
-      policy = Policy.create! valid_attributes
-      delete :destroy, params: { id: policy.to_param }, session: valid_session
       expect(response).to redirect_to(policies_url)
     end
   end

@@ -142,3 +142,5 @@ Style/RegexpLiteral:
 Style/StringLiterals:
   Enabled: false
 
+Style/TernaryParentheses:
+  Enabled: false

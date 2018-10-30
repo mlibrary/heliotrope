@@ -157,4 +157,31 @@ RSpec.describe User do
 
     it { expect(subject.email).to eq(email) }
   end
+
+  describe '#policies' do
+    subject { user.policies }
+
+    let(:user) { build(:user) }
+    let(:policies) { double('policies') }
+
+    before { allow(Policy).to receive(:agent_policies).with(user).and_return(policies) }
+
+    it { is_expected.to be policies }
+  end
+
+  describe '#identifier' do
+    subject { user.identifier }
+
+    let(:user) { build(:user) }
+
+    it { is_expected.to be user.user_key }
+  end
+
+  describe '#name' do
+    subject { user.name }
+
+    let(:user) { build(:user) }
+
+    it { is_expected.to be user.display_name }
+  end
 end

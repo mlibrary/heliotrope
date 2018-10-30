@@ -1,13 +1,15 @@
-<h1>Dashboard</h1>
-<%= text_field(:user, :token, size: 120, value: current_user.token, disabled: true) %>
-<h2>User</h2>
+<h1>Individual</h1>
 <ul>
-  <li><%= current_user.email %></li>
+<li>email:<%= current_user.email %></li>
+<% user = User.find_by(email: current_user.email) %>
+<li>User:<%= (user.present?) ? "#{user.id} (#{user.name})" : '0 (guest)' %></li>
+<% individual = Individual.find_by(email: current_user.email) %>
+<li>Individual:<%= (individual.present?) ? "#{individual.id} (#{individual.name})" : 'n/a' %></li>
 </ul>
 <h2>Instituions</h2>
 <ul>
   <% current_institutions.each do |institution| %>
-    <li><%= institution.name %></li>
+    <li>Institution:<%= "#{institution.id} (#{institution.name})" %></li>
   <% end %>
 </ul>
 <h2>Keycard</h2>
@@ -16,6 +18,34 @@
     <li><%= key.to_s %>: <%= value.to_s %></li>
   <% end %>
 </ul>
-<h2>Policies</h2>
-<%= render partial: '/policies/policies', locals: { agent: current_user, policies: current_user.policies } %>
-
+<h2>Checkpoint</h2>
+<table class="table table-striped" summary="Policies List">
+  <tr>
+    <th>Agent</th>
+    <th>Credential</th>
+    <th>Resource</th>
+    <th>Zone</th>
+  </tr>
+  <% ActorAgentResolver.new.resolve(user: current_user, institutions: current_institutions).each do |agent| %>
+    <% policies = Checkpoint::DB::Permit.where(agent_token: agent.token.to_s).map { |permit| Policy.new(permit) } %>
+    <% if policies.count.positive? %>
+      <% policies.each do |policy| %>
+        <tr>
+          <td><%= policy.agent_token %></td>
+          <td><%= policy.credential_token %></td>
+          <td><%= policy.resource_token %></td>
+          <td><%= policy.zone_id %></td>
+        </tr>
+      <% end %>
+    <% else %>
+      <tr>
+        <td><%= agent.token  %></td>
+        <td>n/a</td>
+        <td>n/a</td>
+        <td>n/a</td>
+      </tr>
+    <% end %>
+  <% end %>
+</table>
+<h2>Token</h2>
+<%= text_field(:user, :token, size: 120, value: current_user.token, disabled: true) %>
