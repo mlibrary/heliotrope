@@ -78,7 +78,7 @@ Rails.application.routes.draw do
       end
     end
     get 'blank_csv_template', controller: :metadata_template, action: :export, as: :blank_csv_template
-    resources :users, only: %i[new edit create update delete] do
+    resources :users, only: %i[new edit create update destroy] do
       member do
         put :tokenize
       end
@@ -91,17 +91,9 @@ Rails.application.routes.draw do
 
   resources :counter_reports, only: %i[index show edit update], constraints: COUNTER_REPORT_ID_CONSTRAINT
 
-  resources :institutions, only: [] do
-    member do
-      get :login
-      get :help
-    end
-  end
-
   resources :products, only: [] do
     member do
       get :purchase
-      get :help
     end
   end
 

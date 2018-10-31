@@ -3,11 +3,49 @@
 require 'rails_helper'
 
 RSpec.describe Product, type: :model do
-  subject { described_class.new(identifier: identifier, name: name, purchase: purchase) }
+  subject { described_class.new(id: id, identifier: identifier, name: name, purchase: purchase) }
 
+  let(:id) { 1 }
   let(:identifier) { double('identifier') }
   let(:name) { double('name') }
   let(:purchase) { double('purchase') }
+
+  before do
+    PermissionService.clear_permits_table
+    allow(Product).to receive(:find).with(id).and_return(subject)
+  end
+
+  context 'before destroy' do
+    let(:product) { create(:product) }
+    let(:component) { create(:component) }
+    let(:lessee) { create(:lessee) }
+    let(:policy) { double('policy') }
+
+    before { allow(Policy).to receive(:resource_policies).with(product).and_return([policy]) }
+
+    it 'component present' do
+      product.components << component
+      expect(product.destroy).to be false
+      expect(product.errors.count).to eq 1
+      expect(product.errors.first[0]).to eq :base
+      expect(product.errors.first[1]).to eq "product has 1 associated components!"
+    end
+
+    it 'lessee present' do
+      product.lessees << lessee
+      expect(product.destroy).to be false
+      expect(product.errors.count).to eq 1
+      expect(product.errors.first[0]).to eq :base
+      expect(product.errors.first[1]).to eq "product has 1 associated lessees!"
+    end
+
+    it 'policies present' do
+      expect(product.destroy).to be false
+      expect(product.errors.count).to eq 1
+      expect(product.errors.first[0]).to eq :base
+      expect(product.errors.first[1]).to eq "product has 1 associated policies!"
+    end
+  end
 
   it do
     is_expected.to be_valid
@@ -73,5 +111,25 @@ RSpec.describe Product, type: :model do
 
     expect(subject.update?).to be true
     expect(subject.destroy?).to be true
+  end
+
+  it 'policies' do
+    permission_service = PermissionService.new
+
+    expect(subject.update?).to be true
+    expect(subject.destroy?).to be true
+    expect(subject.policies.first).to be nil
+
+    permit = permission_service.permit_open_access_resource(described_class, subject.id)
+
+    expect(subject.update?).to be true
+    expect(subject.destroy?).to be false
+    expect(subject.policies.first.permit).to eq permit
+
+    permission_service.revoke_open_access_resource(described_class, subject.id)
+
+    expect(subject.update?).to be true
+    expect(subject.destroy?).to be true
+    expect(subject.policies.first).to be nil
   end
 end

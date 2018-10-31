@@ -31,7 +31,7 @@ class PermissionService
     raise ArgumentError unless ValidationService.valid_agent_type?(agent_type)
     return OpenStruct.new(agent_type: agent_type, agent_id: agent_id) if agent_id&.to_s == 'any'
     raise ArgumentError unless ValidationService.valid_agent?(agent_type, agent_id)
-    case agent_type&.to_sym
+    case agent_type&.to_s&.to_sym
     when :Individual
       Individual.find(agent_id)
     when :Institution
@@ -60,7 +60,7 @@ class PermissionService
     raise ArgumentError unless ValidationService.valid_resource_type?(resource_type)
     return OpenStruct.new(resource_type: resource_type, resource_id: resource_id) if resource_id&.to_s == 'any'
     raise ArgumentError unless ValidationService.valid_resource?(resource_type, resource_id)
-    case resource_type&.to_sym
+    case resource_type&.to_s&.to_sym
     when :Component
       Component.find(resource_id)
     when :Product

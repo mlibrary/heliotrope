@@ -21,6 +21,10 @@ class Component < ApplicationRecord
       errors.add(:base, "component has #{products.count} associated products!")
       throw(:abort)
     end
+    if policies.present?
+      errors.add(:base, "component has #{policies.count} associated policies!")
+      throw(:abort)
+    end
   end
 
   def update?
@@ -28,7 +32,7 @@ class Component < ApplicationRecord
   end
 
   def destroy?
-    products.blank?
+    products.blank? && policies.blank?
   end
 
   def not_products
@@ -41,19 +45,17 @@ class Component < ApplicationRecord
   end
 
   def noid
+    return @noid if @noid.present?
+    @noid = super
     @noid ||= HandleService.noid(handle)
   end
 
   def monograph?
-    model = ActiveFedora::SolrService.query("{!terms f=id}#{noid}", rows: 1).first
-    return false if model.blank?
-    /Monograph/i.match?(model["has_model_ssim"]&.first)
+    NoidService.from_noid(noid).type == :monograph
   end
 
   def file_set?
-    model = ActiveFedora::SolrService.query("{!terms f=id}#{noid}", rows: 1).first
-    return false if model.blank?
-    /FileSet/i.match?(model["has_model_ssim"]&.first)
+    NoidService.from_noid(noid).type == :file_set
   end
 
   def policies

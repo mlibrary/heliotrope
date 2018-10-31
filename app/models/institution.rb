@@ -30,8 +30,8 @@ class Institution < ApplicationRecord
   before_create do
     begin
       Lessee.create!(identifier: identifier)
-    rescue StandardError
-      errors.add(:identifier, "create lessee #{identifier} fail!")
+    rescue StandardError => e
+      errors.add(:identifier, "create lessee #{identifier} fail! #{e}")
       throw(:abort)
     end
   end
@@ -39,6 +39,10 @@ class Institution < ApplicationRecord
   before_destroy do
     if lessee.products.present?
       errors.add(:base, "institution has #{lessee.products.count} associated products!")
+      throw(:abort)
+    end
+    if policies.present?
+      errors.add(:base, "institution has #{policies.count} associated policies!")
       throw(:abort)
     end
   end
@@ -52,24 +56,29 @@ class Institution < ApplicationRecord
   end
 
   def destroy?
-    !(lessee? && lessee.products.present?)
-  end
-
-  def lessee?
-    lessee.present?
-  end
-
-  def lessee
-    Lessee.find_by(identifier: identifier)
+    lessee&.products.blank? && policies.blank?
   end
 
   def shibboleth?
     entity_id.present?
   end
 
+  def lessee
+    Lessee.find_by(identifier: identifier)
+  end
+
+  def policies
+    Policy.agent_policies(self)
+  end
+
   def products
-    return [] if policies.blank?
-    Product.find(id: policies.map(&:resource_id))
+    products = []
+    products << lessee.products
+    policies.each do |policy|
+      next unless policy.resource_type == 'Product'
+      products << Product.find(policy.resource_id)
+    end
+    products.flatten.uniq
   end
 
   def components
@@ -77,10 +86,10 @@ class Institution < ApplicationRecord
     products.each do |product|
       components << product.components
     end
+    policies.each do |policy|
+      next unless policy.resource_type == 'Component'
+      components << Component.find(policy.resource_id)
+    end
     components.flatten.uniq
-  end
-
-  def policies
-    Policy.agent_policies(self)
   end
 end

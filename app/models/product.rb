@@ -26,7 +26,7 @@ class Product < ApplicationRecord
       throw(:abort)
     end
     if policies.present?
-      errors.add(:base, "product has #{permits.count} associated policies!")
+      errors.add(:base, "product has #{policies.count} associated policies!")
       throw(:abort)
     end
   end
@@ -36,7 +36,7 @@ class Product < ApplicationRecord
   end
 
   def destroy?
-    !(components.present? || lessees.present?)
+    components.blank? && lessees.blank? && policies.blank?
   end
 
   def not_components
@@ -45,10 +45,6 @@ class Product < ApplicationRecord
 
   def not_lessees
     Lessee.where.not(id: lessees.map(&:id))
-  end
-
-  def noids
-    []
   end
 
   def policies

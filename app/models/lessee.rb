@@ -12,10 +12,8 @@ class Lessee < ApplicationRecord
 
   before_validation(on: :update) do
     if identifier_changed?
-      if Institution.find_by(identifier: identifier_was).present?
-        errors.add(:identifier, "institution lessee identifier can not be changed!")
-        throw(:abort)
-      end
+      errors.add(:identifier, "lessee identifier can not be changed!")
+      throw(:abort)
     end
   end
 
@@ -27,11 +25,11 @@ class Lessee < ApplicationRecord
   end
 
   def update?
-    !institution?
+    !(individual? || institution?)
   end
 
   def destroy?
-    !(institution? || products.present?)
+    !(individual? || institution? || products.present?)
   end
 
   def not_products
@@ -57,9 +55,5 @@ class Lessee < ApplicationRecord
 
   def institution
     Institution.find_by(identifier: identifier)
-  end
-
-  def policies
-    Policy.agent_policies(self)
   end
 end
