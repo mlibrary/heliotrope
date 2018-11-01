@@ -2,28 +2,197 @@
   <%= f.error_notification %>
 
   <div class="form-inputs">
-    <div><%= f.label :agent_type %></div>
-    <%= f.collection_radio_buttons :agent_type, [%w[any Any], %w[email Email], %w[individual Individual], %w[institution Institution]], :first, :last, checked: @policy.agent_type || 'any' %>
-  </div>
 
-  <div class="form-inputs">
-    <%= f.input :agent_id, required: true, input_html: { value: @policy.agent_id || 'any' } %>
-  </div>
+    <!--  Agent Type-->
+    
+    <div class="row">
+      <div class="col-md-2">
+        <div class="form-group string optional policy_agent_type">
+          <input type="hidden" name="policy[agent_type]" value="" />
+          <label class="control-label string required" for="policy_agent_type">Agent Type</label>
+        </div>
+      </div>
+      <div class="col-md-2">
+        <label for="policy_agent_type_email">
+          <input type="radio" value="email" checked="checked" name="policy[agent_type]" id="policy_agent_type_email" />
+          <label class="collection_radio_buttons" for="policy_agent_type_email">eMail</label>
+        </label>
+      </div>
+      <div class="col-md-3">
+        <label for="policy_agent_type_user">
+          <input type="radio" value="User" name="policy[agent_type]" id="policy_agent_type_user" />
+          <label class="collection_radio_buttons" for="policy_agent_type_user">User</label>
+        </label>
+      </div>
+      <div class="col-md-2">
+        <label for="policy_agent_type_individual">
+          <input type="radio" value="Individual" name="policy[agent_type]" id="policy_agent_type_individual" />
+          <label class="collection_radio_buttons" for="policy_agent_type_individual">Individual</label>
+        </label>
+      </div>
+      <div class="col-md-2">
+        <label for="policy_agent_type_institution">
+          <input type="radio" value="Institution" name="policy[agent_type]" id="policy_agent_type_institution" />
+          <label class="collection_radio_buttons" for="policy_agent_type_institution">Institution</label>
+        </label>
+      </div>
+      <div class="col-md-1">
+        <label for="policy_agent_type_any">
+          <input type="radio" value="any" name="policy[agent_type]" id="policy_agent_type_any" />
+          <label class="collection_radio_buttons" for="policy_agent_type_any">Any</label>
+        </label>
+      </div>
+    </div>
+    
+    <!--  Agent ID-->
+    
+    <div class="row">
+      <div class="col-md-2">
+        <div class="form-group string optional policy_agent_id">
+          <input type="hidden" name="policy[agent_id]" value="" />
+          <label class="control-label string optional" for="policy_agent_id">Agent ID</label>
+        </div>
+      </div>
+      <div class="col-md-2">
+        <div class="form-group string optional policy_agent_email_id">
+          <input class="form-control string optional" type="text" name="policy[agent_email_id]" id="policy_mail_agent_id" />
+        </div>
+      </div>
+      <div class="col-md-3">
+          <label for="policy_agent_user_id">
+            <%= f.collection_select :agent_user_id, User.order(:email), :id, :email %>
+          </label>
+      </div>
+      <div class="col-md-2">
+        <label for="policy_agent_individual_id">
+          <%= f.collection_select :agent_individual_id, Individual.order(:email), :id, :email %>
+        </label>
+      </div>
+      <div class="col-md-2">
+        <label for="policy_agent_institution_id">
+          <%= f.collection_select :agent_institution_id, Institution.order(:name), :id, :name %>
+        </label>
+      </div>
+      <div class="col-md-1">
+        <label for="policy_agent_id_any">
+          <input type="checkbox" value="any" name="policy[agent_id]" id="policy_agent_id_any" />
+          <label class="collection_radio_buttons" for="policy_agent_id_any">Any</label>
+        </label>
+      </div>
+    </div>
 
-  <div class="form-inputs">
-    <%= f.input :credential_type, input_html: { value: 'permission' }, readonly: true %>
-  </div>
+    <!--  Credential Type-->
+    
+    <div class="row">
+      <div class="col-md-2">
+        <div class="form-group string optional policy_credential_type">
+          <input type="hidden" name="policy[credential_type]" value="" />
+          <label class="control-label string required" for="policy_credential_type">Credential Type</label>
+        </div>
+      </div>
+      <div class="col-md-2">
+        <label for="policy_credential_type_permission">
+          <input type="radio" value="permission" checked="checked" name="policy[credential_type]" id="policy_credential_type_permission" />
+          <label class="collection_radio_buttons" for="policy_credential_type_permission">permission</label>
+        </label>
+      </div>
+      <div class="col-md-3">&nbsp;</div>
+      <div class="col-md-2">&nbsp;</div>
+      <div class="col-md-2">&nbsp;</div>
+      <div class="col-md-1">&nbsp;</div>
+    </div>
 
-  <div class="form-inputs">
-    <%= f.input :credential_id, input_html: { value: 'read' }, readonly: true %>
-  </div>
+    <!--  Credential ID-->
+    
+    <div class="row">
+      <div class="col-md-2">
+        <div class="form-group string optional policy_credential_id">
+          <input type="hidden" name="policy[credential_id]" value="" />
+          <label class="control-label string optional" for="policy_credential_id">Credential ID</label>
+        </div>
+      </div>
+      <div class="col-md-2">
+        <label for="policy_credential_permission_id">
+          <select name="policy[credential_permission_id]" id="policy_credential_permission_id">
+            <option value="read">read</option>
+          </select>
+        </label>
+      </div>
+      <div class="col-md-7">&nbsp;</div>
+      <div class="col-md-1">
+        <label for="policy_credential_id_any">
+          <input type="checkbox" value="any" name="policy[credential_id]" id="policy_credential_id_any" />
+          <label class="collection_radio_buttons" for="policy_credential_id_any">Any</label>
+        </label>
+      </div>
+    </div>
 
-  <div class="form-inputs">
-    <%= f.collection_radio_buttons :resource_type, [%w[any Any], %w[noid NOID], %w[component Component], %w[product Product]], :first, :last, checked: @policy.agent_type || 'any' %>
-  </div>
+    <!--  Resource Type-->
 
-  <div class="form-inputs">
-    <%= f.input :resource_id, required: true, input_html: { value: @policy.resource_id || 'any' } %>
+    <div class="row">
+      <div class="col-md-2">
+        <div class="form-group string optional policy_resource_type">
+          <input type="hidden" name="policy[resource_type]" value="" />
+          <label class="control-label string required" for="policy_resource_type">Resource Type</label>
+        </div>
+      </div>
+      <div class="col-md-2">
+        <label for="policy_resource_type_noid">
+          <input type="radio" value="noid" checked="checked" name="policy[resource_type]" id="policy_resource_type_noid" />
+          <label class="collection_radio_buttons" for="policy_resource_type_noid">noid</label>
+        </label>
+      </div>
+      <div class="col-md-3">
+        <label for="policy_resource_type_component">
+          <input type="radio" value="Component" name="policy[resource_type]" id="policy_resource_type_component" />
+          <label class="collection_radio_buttons" for="policy_resource_type_component">Component</label>
+        </label>
+      </div>
+      <div class="col-md-4">
+        <label for="policy_resource_type_product">
+          <input type="radio" value="Product" name="policy[resource_type]" id="policy_resource_type_product" />
+          <label class="collection_radio_buttons" for="policy_resource_type_product">Product</label>
+        </label>
+      </div>
+      <div class="col-md-1">
+        <label for="policy_resource_type_any">
+          <input type="radio" value="any" name="policy[resource_type]" id="policy_resource_type_any" />
+          <label class="collection_radio_buttons" for="policy_resource_type_any">Any</label>
+        </label>
+      </div>
+    </div>
+
+    <!--  Resource ID-->
+
+    <div class="row">
+      <div class="col-md-2">
+        <div class="form-group string optional policy_resource_id">
+          <input type="hidden" name="policy[resource_id]" value="" />
+          <label class="control-label string optional" for="policy_resource_id">Resource ID</label>
+        </div>
+      </div>
+      <div class="col-md-2">
+        <div class="form-group string optional policy_resource_noid_id">
+          <input class="form-control string optional" type="text" name="policy[resource_noid_id]" id="policy_mail_resource_id" />
+        </div>
+      </div>
+      <div class="col-md-3">
+        <label for="policy_resource_component_id">
+          <%= f.collection_select :resource_component_id, Component.order(:handle), :id, :handle %>
+        </label>
+      </div>
+      <div class="col-md-4">
+        <label for="policy_resource_product_id">
+          <%= f.collection_select :resource_product_id, Product.order(:name), :id, :name %>
+        </label>
+      </div>
+      <div class="col-md-1">
+        <label for="policy_resource_id_any">
+          <input type="checkbox" value="any" name="policy[resource_id]" id="policy_resource_id_any" />
+          <label class="collection_radio_buttons" for="policy_resource_id_any">Any</label>
+        </label>
+      </div>
+    </div>
   </div>
 
   <div class="form-actions">

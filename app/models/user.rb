@@ -108,4 +108,12 @@ class User < ApplicationRecord
   def policies
     Policy.agent_policies(self)
   end
+
+  def identifier
+    user_key
+  end
+
+  def name
+    display_name
+  end
 end

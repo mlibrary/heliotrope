@@ -17,18 +17,9 @@
     <div class="col-md-3"><%= link_to policy.resource.identifier, policy.resource %></div>
     <div class="col-md-2"><%= policy.zone_id %></div>
   </div>
-<!--  <div class="col-md-2">-->
-    <%#= link_to(policy_path(policy), method: :delete, class: "btn btn-default", data: { confirm: 'Are you sure?' }) do %>
-<!--      <span class="glyphicon glyphicon-minus" aria-hidden="true"></span> Destroy-->
-    <%# end %>
-<!--  </div>-->
   <div class="col-md-2">
-    <div class="col-md-4"><%= link_to 'Show', policy %></div>
-    <div class="col-md-4"><%= link_to_if policy.update?, 'Edit', edit_policy_path(policy) %></div>
-    <div class="col-md-4"><%= link_to_if policy.destroy?, 'Destroy', policy, method: :delete, data: { confirm: 'Are you sure?' } %></div>
+    <%= link_to(policy_path(policy), method: :delete, class: "btn btn-default", data: { confirm: 'Are you sure?' }) do %>
+      <span class="glyphicon glyphicon-minus" aria-hidden="true"></span> Destroy
+    <% end %>
   </div>
 <% end %>
-
-<!--<div class="col-md-12">-->
-  <%#= link_to 'New Policy', new_product_policy_path(@product) %>
-<!--</div>-->

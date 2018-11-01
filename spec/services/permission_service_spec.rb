@@ -7,6 +7,7 @@ RSpec.describe PermissionService do
 
   describe 'checkpoint permits table' do
     it do
+      described_class.database_initialize!
       described_class.clear_permits_table
       expect(described_class.permits_table_empty?).to be true
       permission_service.permit_open_access
@@ -18,158 +19,192 @@ RSpec.describe PermissionService do
     end
   end
 
-  describe '#valid_agent?' do
-    subject { permission_service.valid_agent?(agent_type, agent_id) }
+  describe '#agent' do
+    subject { permission_service.agent(agent_type, agent_id) }
 
-    let(:agent_type) { nil }
-    let(:agent_id) { nil }
+    let(:agent_type) { 'agent_type' }
+    let(:agent_id) { 'agent_id' }
 
-    it { expect(permission_service.valid_agent_type?(agent_type)).to be false }
-    it { is_expected.to be false }
+    it { expect { subject }.to raise_error(ArgumentError) }
 
-    context 'any' do
-      let(:agent_type) { :any }
+    context 'valid arguments' do
+      before do
+        allow(ValidationService).to receive(:valid_agent_type?).with(agent_type).and_return(true)
+        allow(ValidationService).to receive(:valid_agent?).with(agent_type, agent_id).and_return(true)
+      end
 
-      it { expect(permission_service.valid_agent_type?(agent_type)).to be true }
-      it { is_expected.to be false }
-
-      context 'valid' do
-        let(:agent_id) { 'any' }
-
-        it { is_expected.to be true }
+      it 'is expected' do
+        expect(subject).to be_an_instance_of(OpenStruct)
+        expect(subject.agent_type).to eq agent_type
+        expect(subject.agent_id).to eq agent_id
       end
     end
 
-    context 'individual' do
-      let(:agent_type) { :individual }
+    [%w[any any], %w[email any], %w[email wolverine@umich.edu]].each do |type, id|
+      context "#{type}:#{id}" do
+        let(:agent_type) { type }
+        let(:agent_id) { id }
 
-      it { expect(permission_service.valid_agent_type?(agent_type)).to be true }
-      it { expect(permission_service.valid_individual?(agent_id)).to be false }
-      it { is_expected.to be false }
-
-      context 'valid' do
-        let(:agent_id) { double('agent_id') }
-        let(:individual) { double('individual') }
-
-        before { allow(Individual).to receive(:find).with(agent_id).and_return(individual) }
-
-        it { expect(permission_service.valid_individual?(agent_id)).to be true }
-        it { is_expected.to be true }
+        it 'is expected' do
+          expect(subject).to be_an_instance_of(OpenStruct)
+          expect(subject.agent_type).to eq agent_type
+          expect(subject.agent_id).to eq agent_id
+        end
       end
     end
 
-    context 'institution' do
-      let(:agent_type) { :institution }
+    [Individual, Institution].each do |klass|
+      context klass.to_s do
+        let(:agent_type) { klass.to_s }
 
-      it { expect(permission_service.valid_agent_type?(agent_type)).to be true }
-      it { expect(permission_service.valid_institution?(agent_id)).to be false }
-      it { is_expected.to be false }
+        context 'any' do
+          let(:agent_id) { 'any' }
 
-      context 'valid' do
-        let(:agent_id) { double('agent_id') }
-        let(:institution) { double('institution') }
+          it 'is expected' do
+            expect(subject).to be_an_instance_of(OpenStruct)
+            expect(subject.agent_type).to eq agent_type
+            expect(subject.agent_id).to eq agent_id
+          end
+        end
 
-        before { allow(Institution).to receive(:find).with(agent_id).and_return(institution) }
+        context 'instance' do
+          let(:agent_id) { 1 }
+          let(:instance) { klass.new(id: agent_id) }
 
-        it { expect(permission_service.valid_institution?(agent_id)).to be true }
-        it { is_expected.to be true }
+          before { allow(klass).to receive(:find).with(agent_id).and_return(instance) }
+
+          it 'is expected' do
+            expect(subject).to be_an_instance_of(klass)
+            expect(subject.id).to eq agent_id
+          end
+        end
       end
     end
   end
 
-  describe '#valid_credential?' do
-    subject { permission_service.valid_credential?(credential_type, credential_id) }
+  describe '#permission' do
+    subject { permission_service.permission(permission) }
 
-    let(:credential_type) { nil }
-    let(:credential_id) { nil }
+    let(:permission) { 'permission' }
 
-    it { expect(permission_service.valid_credential_type?(credential_type)).to be false }
-    it { is_expected.to be false }
+    it { expect { subject }.to raise_error(ArgumentError) }
 
-    context 'any' do
+    %w[any read].each do |permission|
+      context permission.to_s do
+        let(:permission) { permission }
+
+        it 'is expected' do
+          expect(subject).to be_an_instance_of(Checkpoint::Credential::Permission)
+          expect(subject.id).to eq permission
+        end
+      end
+    end
+  end
+
+  describe '#credential' do
+    subject { permission_service.credential(credential_type, credential_id) }
+
+    let(:credential_type) { 'credential_type' }
+    let(:credential_id) { 'credential_id' }
+
+    it { expect { subject }.to raise_error(ArgumentError) }
+
+    context 'valid arguments' do
+      before do
+        allow(ValidationService).to receive(:valid_credential_type?).with(credential_type).and_return(true)
+        allow(ValidationService).to receive(:valid_credential?).with(credential_type, credential_id).and_return(true)
+      end
+
+      it 'is expected' do
+        expect(subject).to be_an_instance_of(OpenStruct)
+        expect(subject.credential_type).to eq credential_type
+        expect(subject.credential_id).to eq credential_id
+      end
+    end
+
+    context 'any:any' do
       let(:credential_type) { :any }
+      let(:credential_id) { :any }
 
-      it { expect(permission_service.valid_credential_type?(credential_type)).to be true }
-      it { is_expected.to be false }
-
-      context 'valid' do
-        let(:credential_id) { 'any' }
-
-        it { is_expected.to be true }
-      end
+      it { expect { subject }.to raise_error(ArgumentError) }
     end
 
-    context 'permission' do
+    context 'permission:any' do
       let(:credential_type) { :permission }
+      let(:credential_id) { :any }
 
-      it { expect(permission_service.valid_credential_type?(credential_type)).to be true }
-      it { expect(permission_service.valid_permission?(credential_id)).to be false }
-      it { is_expected.to be false }
-
-      context 'valid' do
-        let(:credential_id) { :read }
-
-        it { expect(permission_service.valid_permission?(credential_id)).to be true }
-        it { is_expected.to be true }
+      it 'is expected' do
+        expect(subject).to be_an_instance_of(Checkpoint::Credential::Permission)
+        expect(subject.type).to eq credential_type.to_s
+        expect(subject.id).to eq credential_id.to_s
       end
     end
   end
 
-  describe '#valid_resource?' do
-    subject { permission_service.valid_resource?(resource_type, resource_id) }
+  describe '#resource' do
+    subject { permission_service.resource(resource_type, resource_id) }
 
-    let(:resource_type) { nil }
-    let(:resource_id) { nil }
+    let(:resource_type) { 'resource_type' }
+    let(:resource_id) { 'resource_id' }
 
-    it { expect(permission_service.valid_resource_type?(resource_type)).to be false }
-    it { is_expected.to be false }
+    it { expect { subject }.to raise_error(ArgumentError) }
 
-    context 'any' do
-      let(:resource_type) { :any }
+    context 'valid arguments' do
+      before do
+        allow(ValidationService).to receive(:valid_resource_type?).with(resource_type).and_return(true)
+        allow(ValidationService).to receive(:valid_resource?).with(resource_type, resource_id).and_return(true)
+      end
 
-      it { expect(permission_service.valid_resource_type?(resource_type)).to be true }
-      it { is_expected.to be false }
-
-      context 'valid' do
-        let(:resource_id) { 'any' }
-
-        it { is_expected.to be true }
+      it 'is expected' do
+        expect(subject).to be_an_instance_of(OpenStruct)
+        expect(subject.resource_type).to eq resource_type
+        expect(subject.resource_id).to eq resource_id
       end
     end
 
-    context 'component' do
-      let(:resource_type) { :component }
+    [%w[any any], %w[noid any], %w[noid validnoid]].each do |type, id|
+      context "#{type}:#{id}" do
+        let(:resource_type) { type }
+        let(:resource_id) { id }
+        let(:noid_service) { double('noid_service', :valid? => true) } # rubocop:disable Style/HashSyntax
 
-      it { expect(permission_service.valid_resource_type?(resource_type)).to be true }
-      it { expect(permission_service.valid_component?(resource_id)).to be false }
-      it { is_expected.to be false }
+        before do
+          allow(NoidService).to receive(:from_noid).with(resource_id).and_return(noid_service)
+        end
 
-      context 'valid' do
-        let(:resource_id) { double('resource_id') }
-        let(:component) { double('component') }
-
-        before { allow(Component).to receive(:find).with(resource_id).and_return(component) }
-
-        it { expect(permission_service.valid_component?(resource_id)).to be true }
-        it { is_expected.to be true }
+        it 'is expected' do
+          expect(subject).to be_an_instance_of(OpenStruct)
+          expect(subject.resource_type).to eq resource_type
+          expect(subject.resource_id).to eq resource_id
+        end
       end
     end
 
-    context 'product' do
-      let(:resource_type) { :product }
+    [Component, Product].each do |klass|
+      context klass.to_s do
+        let(:resource_type) { klass.to_s }
 
-      it { expect(permission_service.valid_resource_type?(resource_type)).to be true }
-      it { expect(permission_service.valid_product?(resource_id)).to be false }
-      it { is_expected.to be false }
+        context 'any' do
+          let(:resource_id) { 'any' }
 
-      context 'valid' do
-        let(:resource_id) { double('resource_id') }
-        let(:product) { double('product') }
+          it 'is expected' do
+            expect(subject).to be_an_instance_of(OpenStruct)
+            expect(subject.resource_type).to eq resource_type
+            expect(subject.resource_id).to eq resource_id
+          end
+        end
 
-        before { allow(Product).to receive(:find).with(resource_id).and_return(product) }
+        context 'instance' do
+          let(:resource_id) { 1 }
+          let(:instance) { klass.new(id: resource_id) }
 
-        it { expect(permission_service.valid_product?(resource_id)).to be true }
-        it { is_expected.to be true }
+          before { allow(klass).to receive(:find).with(resource_id).and_return(instance) }
+
+          it 'is expected' do
+            expect(subject).to be_an_instance_of(klass)
+            expect(subject.id).to eq resource_id
+          end
+        end
       end
     end
   end
@@ -212,6 +247,22 @@ RSpec.describe PermissionService do
       expect(permission_service.read_access_resource?(agent_type, agent_id, resource_type, resource_id)).to be true
       permission_service.revoke_read_access_resource(agent_type, agent_id, resource_type, resource_id)
       expect(permission_service.read_access_resource?(agent_type, agent_id, resource_type, resource_id)).to be false
+    end
+  end
+
+  describe 'any access resource' do
+    let(:agent_type) { :any }
+    let(:agent_id) { :any }
+    let(:resource_type) { :any }
+    let(:resource_id) { :any }
+
+    it do
+      expect(permission_service.any_access_resource?(agent_type, agent_id, resource_type, resource_id)).to be false
+      permission_service.permit_any_access_resource(agent_type, agent_id, resource_type, resource_id)
+      permission_service.permit_any_access_resource(agent_type, agent_id, resource_type, resource_id)
+      expect(permission_service.any_access_resource?(agent_type, agent_id, resource_type, resource_id)).to be true
+      permission_service.revoke_any_access_resource(agent_type, agent_id, resource_type, resource_id)
+      expect(permission_service.any_access_resource?(agent_type, agent_id, resource_type, resource_id)).to be false
     end
   end
 end

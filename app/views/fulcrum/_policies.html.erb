@@ -7,7 +7,7 @@
   permits = permits.where(Sequel.like(:resource_type, "%#{params[:resource_type_like]}%")) if params[:resource_type_like].present?
   permits = permits.where(Sequel.like(:resource_id, "%#{params[:resource_id_like]}%")) if params[:resource_id_like].present?
   permits = permits.order(:agent_type, :agent_id)
-  policies = Kaminari.paginate_array(permits.map { |permit| Policy.new(permit) }).page(params[:page]).per(20)
+  policies = Kaminari.paginate_array(permits.map { |permit| Policy.new(permit) }).page(params[:page]).per(10)
 
   size = 12
 %>

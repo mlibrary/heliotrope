@@ -18,6 +18,7 @@ class ActorAgentResolver < Checkpoint::Agent::Resolver
     if current_user.present?
       email = current_user.email&.downcase
       if email.present?
+        agents << agent_factory.from(OpenStruct.new(agent_type: :email, agent_id: email))
         user = User.find_by(email: email)
         agents << agent_factory.from(user) if user.present?
         individual = Individual.find_by(email: email)

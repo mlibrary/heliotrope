@@ -3,6 +3,12 @@
 class Policy
   include ActiveModel::Model
 
+  attr_reader :permit
+
+  attr_accessor :agent_email_id, :agent_user_id, :agent_individual_id, :agent_institution_id
+  attr_accessor :credential_permission_id
+  attr_accessor :resource_noid_id, :resource_component_id, :resource_product_id
+
   COLUMNS = %i[agent_type agent_id credential_type credential_id resource_type resource_id].freeze
 
   delegate :agent_type, :agent_id, :agent_token, :credential_type, :credential_id, :credential_token, :resource_type, :resource_id, :resource_token, :zone_id, to: :@permit
@@ -11,20 +17,20 @@ class Policy
     record.errors.add attr, 'must be present.' if value.blank?
     case attr
     when :agent_type
-      record.errors.add attr, 'invalid type.' unless PermissionService.new.valid_agent_type?(value)
+      record.errors.add attr, 'invalid type.' unless ValidationService.valid_agent_type?(value)
     when :agent_id
-      if PermissionService.new.valid_agent_type?(record.agent_type)
-        record.errors.add attr, 'invalid value.' unless PermissionService.new.valid_agent?(record.agent_type, value)
+      if ValidationService.valid_agent_type?(record.agent_type)
+        record.errors.add attr, 'invalid value.' unless ValidationService.valid_agent?(record.agent_type, value)
       end
     when :credential_type
       record.errors.add attr, 'invalid type.' unless %i[permission].include?(value&.to_sym)
     when :credential_id
-      record.errors.add attr, 'invalid value.' unless %i[read].include?(value&.to_sym)
+      record.errors.add attr, 'invalid value.' unless %i[any read].include?(value&.to_sym)
     when :resource_type
-      record.errors.add attr, 'invalid type.' unless PermissionService.new.valid_resource_type?(value)
+      record.errors.add attr, 'invalid type.' unless ValidationService.valid_resource_type?(value)
     when :resource_id
-      if PermissionService.new.valid_resource_type?(record.resource_type)
-        record.errors.add attr, 'invalid value.' unless PermissionService.new.valid_resource?(record.resource_type, value)
+      if ValidationService.valid_resource_type?(record.resource_type)
+        record.errors.add attr, 'invalid value.' unless ValidationService.valid_resource?(record.resource_type, value)
       end
     end
   end
@@ -56,9 +62,9 @@ class Policy
     Checkpoint::DB::Permit.where(agent_token: agent.token.to_s).map { |permit| Policy.new(permit) }
   end
 
-  def self.credential_policies(entity)
-    credential = Checkpoint::Credential.from(entity)
-    Checkpoint::DB::Permit.where(credential_token: credential.token.to_s).map { |permit| Policy.new(permit) }
+  def self.permission_policies(permission)
+    permission = PermissionService.new.permission(permission)
+    Checkpoint::DB::Permit.where(credential_token: permission.token.to_s).map { |permit| Policy.new(permit) }
   end
 
   def self.resource_policies(entity)
@@ -75,7 +81,7 @@ class Policy
   end
 
   def save!(opts = {})
-    @permit.save(opts)
+    @permit.save(opts) if valid?
   end
 
   def save(opts = {})
@@ -109,24 +115,10 @@ class Policy
   end
 
   def agent
-    @agent ||= case agent_type
-               when 'Individual'
-                 Individual.find(agent_id)
-               when 'Institution'
-                 Institution.find(agent_id)
-               else
-                 Entity.new(agent_type, agent_id, type: :any, id: :any)
-               end
+    @agent ||= Entity.new(agent_type, agent_id, type: :any, id: :any)
   end
 
   def resource
-    @resource ||= case resource_type
-                  when 'Component'
-                    Component.find(resource_id)
-                  when 'Product'
-                    Product.find(resource_id)
-                  else
-                    Entity.new(resource_type, resource_id, type: :any, id: :any)
-                  end
+    @resource ||= Entity.new(resource_type, resource_id, type: :any, id: :any)
   end
 end

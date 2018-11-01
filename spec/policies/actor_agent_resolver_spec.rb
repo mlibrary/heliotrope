@@ -34,49 +34,50 @@ RSpec.describe ActorAgentResolver do
   context 'current user' do
     let(:current_user) { User.new(email: current_email) }
     let(:current_email) { 'wolverine@umich.edu' }
+    let(:current_email_agent) { Checkpoint::Agent.from(OpenStruct.new(agent_type: :email, agent_id: current_email)) }
 
-    it { is_expected.to eq([any_actor]) }
+    it { is_expected.to eq([any_actor, current_email_agent]) }
 
     context 'user' do
       let(:user_email) { current_email }
 
-      it { is_expected.to eq([any_actor, user_agent]) }
+      it { is_expected.to eq([any_actor, current_email_agent, user_agent]) }
 
       context 'individual' do
         let(:individual_email) { current_email }
 
-        it { is_expected.to eq([any_actor, user_agent, individual_agent]) }
+        it { is_expected.to eq([any_actor, current_email_agent, user_agent, individual_agent]) }
 
         context 'institutions' do
           let(:current_institutions) { [institution_first, institution_last] }
 
-          it { is_expected.to eq([any_actor, user_agent, individual_agent, institution_first_agent, institution_last_agent]) }
+          it { is_expected.to eq([any_actor, current_email_agent, user_agent, individual_agent, institution_first_agent, institution_last_agent]) }
         end
       end
 
       context 'institutions' do
         let(:current_institutions) { [institution_first, institution_last] }
 
-        it { is_expected.to eq([any_actor, user_agent, institution_first_agent, institution_last_agent]) }
+        it { is_expected.to eq([any_actor, current_email_agent, user_agent, institution_first_agent, institution_last_agent]) }
       end
     end
 
     context 'individual' do
       let(:individual_email) { current_email }
 
-      it { is_expected.to eq([any_actor, individual_agent]) }
+      it { is_expected.to eq([any_actor, current_email_agent, individual_agent]) }
 
       context 'institutions' do
         let(:current_institutions) { [institution_first, institution_last] }
 
-        it { is_expected.to eq([any_actor, individual_agent, institution_first_agent, institution_last_agent]) }
+        it { is_expected.to eq([any_actor, current_email_agent, individual_agent, institution_first_agent, institution_last_agent]) }
       end
     end
 
     context 'institutions' do
       let(:current_institutions) { [institution_first, institution_last] }
 
-      it { is_expected.to eq([any_actor, institution_first_agent, institution_last_agent]) }
+      it { is_expected.to eq([any_actor, current_email_agent, institution_first_agent, institution_last_agent]) }
     end
   end
 

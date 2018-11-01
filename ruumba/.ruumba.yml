@@ -7,9 +7,6 @@ AllCops:
 # https://github.com/ericqweinstein/ruumba#fix-paths-and-unapplicable-cops
 # begin unapplicable cops
 
-Style/FrozenStringLiteralComment:
-  Enabled: false
-
 Layout/AlignHash:
   Enabled: false
 Layout/AlignParameters:
@@ -23,7 +20,22 @@ Layout/IndentationWidth:
 Layout/TrailingBlankLines:
   Enabled: false
 
+Style/FrozenStringLiteralComment:
+  Enabled: false
+
 # end unapplicable cops
+#
+# begin deviation from defaults
+
+Style/RedundantParentheses:
+  Enabled: false
+
+Style/TernaryParentheses:
+  Enabled: false
+
+# end deviation from defaults
+#
+# begin TODO: cops that need to be reevaluated
 
 Layout/BlockAlignment:
   Enabled: false
@@ -34,8 +46,6 @@ Layout/ExtraSpacing:
 Layout/FirstParameterIndentation:
   Enabled: false
 Layout/IndentationConsistency:
-  Enabled: false
-Layout/IndentationWidth:
   Enabled: false
 Layout/LeadingCommentSpace:
   Enabled: false
@@ -72,8 +82,6 @@ Style/AndOr:
 Style/ConditionalAssignment:
   Enabled: false
 Style/EmptyElse:
-  Enabled: false
-Style/FrozenStringLiteralComment:
   Enabled: false
 Style/HashSyntax:
   Enabled: false
