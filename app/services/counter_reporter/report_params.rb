@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
 module CounterReporter
-  class TitleParams
+  class ReportParams
     attr_reader :report_type, :start_date, :end_date, :press, :institution,
                 :metric_types, :data_type, :access_types, :access_method, :yop,
                 :report_title, :errors
 
-    def initialize(report_type, params)
+    def initialize(report_type, params) # rubocop:disable Metrics/CyclomaticComplexity
       @report_type = report_type
       @start_date  = make_start_date(params)
       @end_date    = make_end_date(params)
@@ -15,10 +15,14 @@ module CounterReporter
       @errors      = []
 
       case @report_type
-      when 'tr_b1'
-        tr_b1
+      when 'pr'
+        pr(params)
+      when 'pr_p1'
+        pr_p1
       when 'tr'
         tr(params)
+      when 'tr_b1'
+        tr_b1
       when 'tr_b2'
         tr_b2
       when 'tr_b3'
@@ -75,6 +79,22 @@ module CounterReporter
         else
           Time.now.utc
         end
+      end
+
+      def pr(params)
+        @report_title = ''
+        @metric_types = [params[:metric_type]].flatten
+        @data_type = params[:data_type] || 'Book'
+        @access_types = [params[:access_type]].flatten
+        @access_method = params[:access_method] || 'Regular'
+        @yop = params[:yop] || nil
+      end
+
+      def pr_p1
+        @report_title = 'Platform Usage'
+        @metric_types = ['Total_Item_Requests', 'Unique_Item_Requests', 'Unique_Title_Requests']
+        @access_types = ['Controlled']
+        @access_method = 'Regular'
       end
 
       def tr_b1
