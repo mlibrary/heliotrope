@@ -3,9 +3,32 @@
 require 'rails_helper'
 
 RSpec.describe Lessee, type: :model do
-  subject { described_class.new(identifier: "identifier") }
+  subject { described_class.new(id: id, identifier: "identifier") }
 
+  let(:id) { 1 }
   let(:identifier) { double('identifier') }
+
+  it 'before validation' do
+    lessee = create(:lessee, identifier: identifier)
+    lessee.identifier = 'new_identifier'
+    expect(lessee.save).to be false
+    expect(lessee.errors.count).to eq 1
+    expect(lessee.errors.first[0]).to eq :identifier
+    expect(lessee.errors.first[1]).to eq "lessee identifier can not be changed!"
+  end
+
+  context 'before destroy' do
+    let(:lessee) { create(:lessee) }
+    let(:product) { create(:product) }
+
+    it 'product present' do
+      lessee.products << product
+      expect(lessee.destroy).to be false
+      expect(lessee.errors.count).to eq 1
+      expect(lessee.errors.first[0]).to eq :base
+      expect(lessee.errors.first[1]).to eq "lessee has 1 associated products!"
+    end
+  end
 
   it do
     is_expected.to be_valid
@@ -57,11 +80,12 @@ RSpec.describe Lessee, type: :model do
 
     let(:identifier) { 'identifier' }
 
-    context 'non-instituion' do
+    context 'non-institution' do
       before { create(:lessee, identifier: identifier) }
 
       it do
         expect(subject.institution?).to be false
+        expect(subject.individual?).to be false
         expect(subject.update?).to be true
         expect(subject.destroy?).to be true
       end
@@ -72,6 +96,35 @@ RSpec.describe Lessee, type: :model do
 
       it do
         expect(subject.institution?).to be true
+        expect(subject.individual?).to be false
+        expect(subject.update?).to be false
+        expect(subject.destroy?).to be false
+      end
+    end
+  end
+
+  describe '#individual? and individual' do
+    subject { Lessee.find_by(identifier: identifier) }
+
+    let(:identifier) { 'identifier' }
+
+    context 'non-individual' do
+      before { create(:lessee, identifier: identifier) }
+
+      it do
+        expect(subject.individual?).to be false
+        expect(subject.institution?).to be false
+        expect(subject.update?).to be true
+        expect(subject.destroy?).to be true
+      end
+    end
+
+    context 'individual' do
+      before { create(:individual, identifier: identifier) }
+
+      it do
+        expect(subject.individual?).to be true
+        expect(subject.institution?).to be false
         expect(subject.update?).to be false
         expect(subject.destroy?).to be false
       end

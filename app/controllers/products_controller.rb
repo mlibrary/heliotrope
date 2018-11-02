@@ -105,9 +105,6 @@ class ProductsController < ApplicationController
     redirect_to @product.purchase
   end
 
-  # GET /products/1/help
-  def help; end
-
   private
 
     # Use callbacks to share common setup or constraints between actions.

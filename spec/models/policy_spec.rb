@@ -36,8 +36,6 @@ RSpec.describe Policy, type: :model do
   before { PermissionService.clear_permits_table }
 
   context 'Class' do
-    subject(:policy_class) { described_class }
-
     describe '#create (and #create!)' do
       subject { described_class.create(attributes) }
 

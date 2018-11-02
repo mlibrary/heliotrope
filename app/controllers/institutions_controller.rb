@@ -61,14 +61,6 @@ class InstitutionsController < ApplicationController
     end
   end
 
-  # GET /institutions/1/login
-  def login
-    redirect_to @institution.login
-  end
-
-  # GET /institutions/1/help
-  def help; end
-
   private
 
     # Use callbacks to share common setup or constraints between actions.

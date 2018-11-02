@@ -86,8 +86,6 @@ class Policy
 
   def save(opts = {})
     save!(opts)
-  rescue Sequel::ValidationFailed
-    false
   end
 
   def destroy
