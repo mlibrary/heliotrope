@@ -15,36 +15,37 @@ class CounterService
   end
 
   def self.allowed_controllers
-    # See https://tools.lib.umich.edu/jira/browse/HELIO-1376?focusedCommentId=897580&page=com.atlassian.jira.plugin.system.issuetabpanels%3Acomment-tabpanel#comment-897580
-    ["EPubsController", "Hyrax::FileSetsController", "Hyrax::DownloadsController"]
+    ["EPubsController", "Hyrax::FileSetsController", "Hyrax::DownloadsController", "MonographCatalogController"]
   end
 
   def self.allowed_presenters
-    # I'm not actually sure we'll ever count anything monograph related.
-    # If we do, add the controller and presenter
-    ["Hyrax::FileSetPresenter"]
+    ["Hyrax::FileSetPresenter", "Hyrax::MonographPresenter"]
   end
 
-  def count(opts = {})
+  def count(opts = {}) # rubocop:disable Metrics/CyclomaticComplexity
     @controller.current_institutions.each do |institution|
       cr = CounterReport.new(session: session,
                              institution: institution.identifier,
                              noid: @presenter.id,
-                             model: @presenter.has_model,
-                             press: Press.where(subdomain: @presenter.monograph.subdomain).first.id)
+                             model: @presenter.has_model)
 
-      cr.parent_noid = @presenter.monograph_id if @presenter.monograph_id.present?
-      # An "investigation" means to "view" (more or less)
-      # A "request" means to "download" (mostly)
-      # But when you log a "request", you also need to log an "investigation"
-      # So "investigation" is always true.
+      case @presenter.has_model
+      when 'FileSet'
+        cr.parent_noid = @presenter&.monograph_id
+        cr.press = Press.where(subdomain: @presenter.monograph.subdomain).first&.id
+        cr.access_type = access_type
+      when 'Monograph'
+        # A Monograph's parent_noid is itself to make some kinds of reporting easier
+        cr.parent_noid = @presenter.id
+        cr.press = Press.where(subdomain: @presenter.subdomain).first&.id
+        cr.access_type = opts[:access_type]
+      end
+
       cr.investigation = 1
       cr.section = opts[:section]           if opts[:section]
       cr.section_type = opts[:section_type] if opts[:section_type]
       cr.request = 1                        if opts[:request]
       cr.turnaway = "No_License"            if opts[:turnaway]
-      cr.access_type = access_type
-
       cr.save!
     end
   end
