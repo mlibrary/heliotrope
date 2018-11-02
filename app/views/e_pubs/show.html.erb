@@ -29,7 +29,7 @@ webgl = Webgl::Unity.from_directory(UnpackService.root_path_from_noid(webgl_id, 
   <% if defined? @presenter.file_set_coins_title %>
     <span class="Z3988" title="<%= @presenter.file_set_coins_title %>"></span>
   <% end %>
-
+  <div class="skip"></div>
   <div id="epub" class="<%= @subdomain %>">
     <div id="reader"></div>
 
@@ -38,6 +38,7 @@ webgl = Webgl::Unity.from_directory(UnpackService.root_path_from_noid(webgl_id, 
         //$("body").addClass("reading");
         var reader = cozy.reader('reader', {
           href: "<%= "#{main_app.epub_url.gsub!(/\?.*/, '')}/" %>",
+          skipLink: '.skip',
           useArchive: <%= @use_archive %>,
           download_links: <%= @epub_download_presenter.download_links.to_json.html_safe %>,
           loader_template: '<div class="fulcrum-loading"><div class="rect rect1"></div><div class="circle circ1"></div><div class="rect rect2"></div><div class="circle circ2"></div></div>',
@@ -80,7 +81,7 @@ webgl = Webgl::Unity.from_directory(UnpackService.root_path_from_noid(webgl_id, 
         }).addTo(reader);
 
         // Table of contents widget
-        cozy.control.contents({ region: 'top.toolbar.left' }).addTo(reader);
+        cozy.control.contents({ region: 'top.toolbar.left', skipLink: '.skip' }).addTo(reader);
 
         // Webgl/3-D model
         <% if @monograph_presenter.webgl? %>
