@@ -15,7 +15,7 @@ Hyrax::DownloadsController.class_eval do
           response.headers['X-Sendfile'] = file
           send_file file, derivative_download_options
         else
-          CounterService.from(self, presenter).count(request: 1) if presenter.multimedia?
+          CounterService.from(self, presenter).count(request: 1)
           self.status = 200
           send_file_headers! content_options.merge(disposition: 'attachment')
           response.headers['Content-Length'] ||= file.size.to_s
