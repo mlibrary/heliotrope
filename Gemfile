@@ -112,6 +112,9 @@ gem 'jwt'
 gem 'keycard', '~> 0.2.4'
 # gem 'keycard', git: 'https://github.com/mlibrary/keycard', branch: 'master'
 
+# For CVE-2018-16468
+gem "loofah", ">= 2.2.3"
+
 # Use MySQL as the database for Active Record
 gem 'mysql2', '~> 0.4.10'
 
