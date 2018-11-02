@@ -2,6 +2,8 @@
 Code: [![Build Status](https://travis-ci.org/mlibrary/heliotrope.svg?branch=master)](https://travis-ci.org/mlibrary/heliotrope)
 [![Coverage Status](https://coveralls.io/repos/github/mlibrary/heliotrope/badge.svg?branch=master)](https://coveralls.io/github/mlibrary/heliotrope?branch=master)
 
+Thanks to [Skylight](https://www.skylight.io/support/skylight-for-open-source): [![View performance data on Skylight](https://badges.skylight.io/status/TtaAmIlZOoFS.svg)](https://oss.skylight.io/app/applications/TtaAmIlZOoFS)
+
 Jump In: [Issue Tracker](https://tools.lib.umich.edu/jira/projects/HELIO/issues)
 
 # Table of Contents
