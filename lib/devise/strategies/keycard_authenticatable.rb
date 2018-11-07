@@ -61,23 +61,34 @@ module Devise
           @identity ||= Services.request_attributes.for(request).identity
         end
 
+        def user_eid_to_key
+          key = user_eid.downcase
+          if key.include?('@')
+            # friend+hotmail.com@umich.edu
+            match = /(^.+)(\+)(.+\..+)(@umich\.edu$)/.match(key)
+            return key if match.blank?
+            match[1] + '@' + match[3]
+          else
+            key + '@umich.edu'
+          end
+        end
+
         def existing_user
-          user_key = /@/.match?(user_eid) ? user_eid : "#{user_eid}@umich.edu"
-          User.find_by(user_key: user_key).tap do |user|
-            debug_log "Found user: '#{user_key}'" if user
+          User.find_by(user_key: user_eid_to_key).tap do |user|
+            debug_log "Found user: '#{user_eid_to_key}'" if user
           end
         end
 
         def new_user
           return unless Rails.configuration.create_user_on_login
-          User.new(user_key: user_eid).tap do |user|
-            debug_log "New user: '#{user_eid}'" if user
+          User.new(user_key: user_eid_to_key).tap do |user|
+            debug_log "New user: '#{user_eid_to_key}'" if user
           end
         end
 
         def guest_user
-          User.guest(user_key: user_eid).tap do |user|
-            debug_log "Guest user: '#{user_eid}'" if user
+          User.guest(user_key: user_eid_to_key).tap do |user|
+            debug_log "Guest user: '#{user_eid_to_key}'" if user
           end
         end
 
