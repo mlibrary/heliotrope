@@ -21,8 +21,8 @@ class Component < ApplicationRecord
       errors.add(:base, "component has #{products.count} associated products!")
       throw(:abort)
     end
-    if policies.present?
-      errors.add(:base, "component has #{policies.count} associated policies!")
+    if grants.present?
+      errors.add(:base, "component has #{grants.count} associated grants!")
       throw(:abort)
     end
   end
@@ -32,7 +32,7 @@ class Component < ApplicationRecord
   end
 
   def destroy?
-    products.blank? && policies.blank?
+    products.blank? && grants.blank?
   end
 
   def not_products
@@ -51,14 +51,22 @@ class Component < ApplicationRecord
   end
 
   def monograph?
-    NoidService.from_noid(noid).type == :monograph
+    Sighrax.factory(noid).is_a?(Sighrax::Monograph)
   end
 
   def file_set?
-    NoidService.from_noid(noid).type == :file_set
+    Sighrax.factory(noid).is_a?(Sighrax::Asset)
   end
 
-  def policies
-    Policy.resource_policies(self)
+  def grants
+    Grant.resource_grants(self)
+  end
+
+  def resource_type
+    :Component
+  end
+
+  def resource_id
+    id
   end
 end

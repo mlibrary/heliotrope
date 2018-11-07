@@ -25,8 +25,8 @@ class Product < ApplicationRecord
       errors.add(:base, "product has #{lessees.count} associated lessees!")
       throw(:abort)
     end
-    if policies.present?
-      errors.add(:base, "product has #{policies.count} associated policies!")
+    if grants.present?
+      errors.add(:base, "product has #{grants.count} associated grants!")
       throw(:abort)
     end
   end
@@ -36,7 +36,7 @@ class Product < ApplicationRecord
   end
 
   def destroy?
-    components.blank? && lessees.blank? && policies.blank?
+    components.blank? && lessees.blank? && grants.blank?
   end
 
   def not_components
@@ -47,7 +47,15 @@ class Product < ApplicationRecord
     Lessee.where.not(id: lessees.map(&:id))
   end
 
-  def policies
-    Policy.resource_policies(self)
+  def grants
+    Grant.resource_grants(self)
+  end
+
+  def resource_type
+    :Product
+  end
+
+  def resource_id
+    id
   end
 end

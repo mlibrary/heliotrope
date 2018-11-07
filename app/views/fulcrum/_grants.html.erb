@@ -7,16 +7,16 @@
   permits = permits.where(Sequel.like(:resource_type, "%#{params[:resource_type_like]}%")) if params[:resource_type_like].present?
   permits = permits.where(Sequel.like(:resource_id, "%#{params[:resource_id_like]}%")) if params[:resource_id_like].present?
   permits = permits.order(:agent_type, :agent_id)
-  policies = Kaminari.paginate_array(permits.map { |permit| Policy.new(permit) }).page(params[:page]).per(10)
+  grants = Kaminari.paginate_array(permits.map { |permit| Grant.new(permit) }).page(params[:page]).per(10)
 
   size = 12
 %>
-<h1>Policies</h1>
-<form name="filter" method="get" action="<%= fulcrum_partials_path(:policies) %>">
-  <table class="table table-striped" summary="Policies List">
+<h1>Grants</h1>
+<form name="filter" method="get" action="<%= fulcrum_partials_path(:grants) %>">
+  <table class="table table-striped" summary="Grants List">
     <tr>
       <th>
-        <%= link_to(new_policy_path) do %>
+        <%= link_to(new_grant_path) do %>
           <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> New
         <% end %>
       </th>
@@ -36,22 +36,22 @@
       <td><input type="text" name="resource_type_like" value="<%= params[:resource_type_like] %>" size="<%= size %>" aria-label="resource_type_like"></td>
       <td><input type="text" name="resource_id_like" value="<%= params[:resource_id_like] %>" size="<%= size %>" aria-label="resource_id_like"></td>
     </tr>
-    <% policies.each do |policy| %>
+    <% grants.each do |grant| %>
       <tr>
         <td>
-          <%= link_to(policy_path(policy), method: :delete, class: "btn btn-default", data: { confirm: 'Are you sure?' }) do %>
+          <%= link_to(grant_path(grant), method: :delete, class: "btn btn-default", data: { confirm: 'Are you sure?' }) do %>
             <span class="glyphicon glyphicon-minus" aria-hidden="true"></span> Destroy
           <% end %>
         </td>
-        <td><%= policy.agent_type %></td>
-        <td><%= policy.agent_id %></td>
-        <td><%= policy.credential_type %></td>
-        <td><%= policy.credential_id %></td>
-        <td><%= policy.resource_type %></td>
-        <td><%= policy.resource_id %></td>
+        <td><%= grant.agent_type %></td>
+        <td><%= grant.agent_id %></td>
+        <td><%= grant.credential_type %></td>
+        <td><%= grant.credential_id %></td>
+        <td><%= grant.resource_type %></td>
+        <td><%= grant.resource_id %></td>
       </tr>
     <% end %>
   </table>
 </form>
-<%= paginate policies %>
+<%= paginate grants %>
 

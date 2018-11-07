@@ -30,6 +30,10 @@ class ApplicationController < ActionController::Base
   # rescue_from CanCan::AccessDenied, with: :render_unauthorized # TODO: Might be needed
   # check_authorization unless: :devise_controller? || :checkpoint_controller?
 
+  def current_actor
+    current_user || Anonymous.new(request_attributes)
+  end
+
   def current_institutions?
     current_institutions.count.positive?
   end

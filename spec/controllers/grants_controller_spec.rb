@@ -2,9 +2,9 @@
 
 require 'rails_helper'
 
-RSpec.describe PoliciesController, type: :controller do
+RSpec.describe GrantsController, type: :controller do
   # This should return the minimal set of attributes required to create a valid
-  # Policy. As you add validations to Policy,
+  # Grant. As you add validations to Grant,
   # be sure to adjust the attributes here as well.
   let(:valid_attributes) do
     {
@@ -37,14 +37,14 @@ RSpec.describe PoliciesController, type: :controller do
 
   # This should return the minimal set of values that should be in the session
   # in order to pass any filters (e.g. authentication) defined in
-  # PoliciesController. Be sure to keep this updated too.
+  # GrantsController. Be sure to keep this updated too.
   let(:valid_session) { {} }
 
   before { PermissionService.clear_permits_table }
 
   describe "GET #index" do
     it "returns a success response" do
-      _policy = Policy.create! valid_attributes
+      _grant = Grant.create! valid_attributes
       get :index, params: {}, session: valid_session
       expect(response).to be_success
       expect(response).to render_template(:index)
@@ -53,8 +53,8 @@ RSpec.describe PoliciesController, type: :controller do
 
   describe "GET #show" do
     it "returns a success response" do
-      policy = Policy.create! valid_attributes
-      get :show, params: { id: policy.to_param }, session: valid_session
+      grant = Grant.create! valid_attributes
+      get :show, params: { id: grant.to_param }, session: valid_session
       expect(response).to be_success
       expect(response).to render_template(:show)
     end
@@ -70,11 +70,11 @@ RSpec.describe PoliciesController, type: :controller do
 
   describe "POST #create" do
     context "with valid params" do
-      it "creates a new Policy" do
+      it "creates a new Grant" do
         expect {
-          post :create, params: { policy: valid_attributes }, session: valid_session
-        }.to change(Policy, :count).by(1)
-        expect(response).to redirect_to(Policy.last)
+          post :create, params: { grant: valid_attributes }, session: valid_session
+        }.to change(Grant, :count).by(1)
+        expect(response).to redirect_to(Grant.last)
       end
 
       context "with permission:any" do
@@ -82,9 +82,9 @@ RSpec.describe PoliciesController, type: :controller do
 
         it do
           expect {
-            post :create, params: { policy: valid_attributes }, session: valid_session
-          }.to change(Policy, :count).by(1)
-          expect(response).to redirect_to(Policy.last)
+            post :create, params: { grant: valid_attributes }, session: valid_session
+          }.to change(Grant, :count).by(1)
+          expect(response).to redirect_to(Grant.last)
         end
       end
 
@@ -96,7 +96,7 @@ RSpec.describe PoliciesController, type: :controller do
 
         it do
           expect {
-            post :create, params: { policy: valid_attributes }, session: valid_session
+            post :create, params: { grant: valid_attributes }, session: valid_session
           }.to raise_error(ArgumentError)
         end
       end
@@ -110,7 +110,7 @@ RSpec.describe PoliciesController, type: :controller do
 
         it do
           expect {
-            post :create, params: { policy: valid_attributes }, session: valid_session
+            post :create, params: { grant: valid_attributes }, session: valid_session
           }.to raise_error(ArgumentError)
         end
       end
@@ -118,7 +118,7 @@ RSpec.describe PoliciesController, type: :controller do
 
     context "with invalid params" do
       it "returns a success response (i.e. to display the 'new' template)" do
-        post :create, params: { policy: invalid_attributes }, session: valid_session
+        post :create, params: { grant: invalid_attributes }, session: valid_session
         expect(response).to be_success
         expect(response).to render_template(:new)
       end
@@ -126,12 +126,12 @@ RSpec.describe PoliciesController, type: :controller do
   end
 
   describe "DELETE #destroy" do
-    it "destroys the requested policy" do
-      policy = Policy.create! valid_attributes
+    it "destroys the requested grant" do
+      grant = Grant.create! valid_attributes
       expect {
-        delete :destroy, params: { id: policy.to_param }, session: valid_session
-      }.to change(Policy, :count).by(-1)
-      expect(response).to redirect_to(policies_url)
+        delete :destroy, params: { id: grant.to_param }, session: valid_session
+      }.to change(Grant, :count).by(-1)
+      expect(response).to redirect_to(grants_url)
     end
   end
 end

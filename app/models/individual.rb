@@ -39,8 +39,8 @@ class Individual < ApplicationRecord
       errors.add(:base, "individual has #{lessee.products.count} associated products!")
       throw(:abort)
     end
-    if policies.present?
-      errors.add(:base, "individual has #{policies.count} associated policies!")
+    if grants.present?
+      errors.add(:base, "individual has #{grants.count} associated grants!")
       throw(:abort)
     end
   end
@@ -54,23 +54,23 @@ class Individual < ApplicationRecord
   end
 
   def destroy?
-    lessee&.products.blank? && policies.blank?
+    lessee&.products.blank? && grants.blank?
   end
 
   def lessee
     Lessee.find_by(identifier: identifier)
   end
 
-  def policies
-    Policy.agent_policies(self)
+  def grants
+    Grant.agent_grants(self)
   end
 
   def products
     products = []
     products << lessee.products
-    policies.each do |policy|
-      next unless policy.resource_type == 'Product'
-      products << Product.find(policy.resource_id)
+    grants.each do |grant|
+      next unless grant.resource_type == 'Product'
+      products << Product.find(grant.resource_id)
     end
     products.flatten.uniq
   end
@@ -80,10 +80,18 @@ class Individual < ApplicationRecord
     products.each do |product|
       components << product.components
     end
-    policies.each do |policy|
-      next unless policy.resource_type == 'Component'
-      components << Component.find(policy.resource_id)
+    grants.each do |grant|
+      next unless grant.resource_type == 'Component'
+      components << Component.find(grant.resource_id)
     end
     components.flatten.uniq
+  end
+
+  def agent_type
+    :Individual
+  end
+
+  def agent_id
+    id
   end
 end

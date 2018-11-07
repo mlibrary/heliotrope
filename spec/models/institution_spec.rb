@@ -15,6 +15,25 @@ RSpec.describe Institution, type: :model do
     allow(described_class).to receive(:find).with(id).and_return(subject)
   end
 
+  it { expect(subject.agent_type).to eq :Institution }
+  it { expect(subject.agent_id).to eq id }
+
+  describe '#shibboleth?' do
+    it { expect(subject.shibboleth?).to be true }
+
+    context 'nil' do
+      let(:entity_id) { nil }
+
+      it { expect(subject.shibboleth?).to be false }
+    end
+
+    context 'blank' do
+      let(:entity_id) { '' }
+
+      it { expect(subject.shibboleth?).to be false }
+    end
+  end
+
   context 'before validation' do
     it 'on create' do
       create(:lessee, identifier: identifier)
@@ -48,9 +67,9 @@ RSpec.describe Institution, type: :model do
   context 'before destroy' do
     let(:institution) { create(:institution) }
     let(:product) { create(:product) }
-    let(:policy) { double('policy') }
+    let(:grant) { double('grant') }
 
-    before { allow(Policy).to receive(:agent_policies).with(institution).and_return([policy]) }
+    before { allow(Grant).to receive(:agent_grants).with(institution).and_return([grant]) }
 
     it 'product present' do
       institution.lessee.products << product
@@ -60,11 +79,11 @@ RSpec.describe Institution, type: :model do
       expect(institution.errors.first[1]).to eq "institution has 1 associated products!"
     end
 
-    it 'policies present' do
+    it 'grants present' do
       expect(institution.destroy).to be false
       expect(institution.errors.count).to eq 1
       expect(institution.errors.first[0]).to eq :base
-      expect(institution.errors.first[1]).to eq "institution has 1 associated policies!"
+      expect(institution.errors.first[1]).to eq "institution has 1 associated grants!"
     end
   end
 
@@ -135,40 +154,22 @@ RSpec.describe Institution, type: :model do
     end
   end
 
-  it 'policies' do
-    permission_service = PermissionService.new
-
+  it 'grants' do
     expect(subject.update?).to be true
     expect(subject.destroy?).to be true
-    expect(subject.policies.first).to be nil
+    expect(subject.grants.first).to be nil
 
-    permit = permission_service.permit_read_access_resource(described_class, subject.id, :any, :any)
+    permit = PermissionService.permit_read_access_resource(described_class, subject.id, :any, :any)
 
     expect(subject.update?).to be true
     expect(subject.destroy?).to be false
-    expect(subject.policies.first.permit).to eq permit
+    expect(subject.grants.first.permit).to eq permit
 
-    permission_service.revoke_read_access_resource(described_class, subject.id, :any, :any)
+    PermissionService.revoke_read_access_resource(described_class, subject.id, :any, :any)
 
     expect(subject.update?).to be true
     expect(subject.destroy?).to be true
-    expect(subject.policies.first).to be nil
-  end
-
-  describe '#shibboleth?' do
-    it { expect(subject.shibboleth?).to be true }
-
-    context 'nil' do
-      let(:entity_id) { nil }
-
-      it { expect(subject.shibboleth?).to be false }
-    end
-
-    context 'blank' do
-      let(:entity_id) { '' }
-
-      it { expect(subject.shibboleth?).to be false }
-    end
+    expect(subject.grants.first).to be nil
   end
 
   context 'products and components' do
@@ -177,7 +178,7 @@ RSpec.describe Institution, type: :model do
     let(:product_1) { create(:product, identifier: 'product_1') }
     let(:component_a) { create(:component, identifier: 'component_a', handle: 'lessee_handle') }
     let(:product_2) { create(:product, identifier: 'product_2') }
-    let(:component_b) { create(:component, identifier: 'component_b', handle: 'policy_handle') }
+    let(:component_b) { create(:component, identifier: 'component_b', handle: 'grant_handle') }
 
     before do
       subject
@@ -196,10 +197,9 @@ RSpec.describe Institution, type: :model do
       expect(subject.products.count).to eq 1
       expect(subject.components.count).to eq 1
 
-      permission_service = PermissionService.new
       product_2
 
-      permission_service.permit_read_access_resource(described_class, subject.id, Product, product_2.id)
+      PermissionService.permit_read_access_resource(described_class, subject.id, Product, product_2.id)
       expect(subject.products.count).to eq 2
       expect(subject.components.count).to eq 1
 
@@ -207,7 +207,7 @@ RSpec.describe Institution, type: :model do
       expect(subject.products.count).to eq 2
       expect(subject.components.count).to eq 2
 
-      permission_service.permit_read_access_resource(described_class, subject.id, Product, product_1.id)
+      PermissionService.permit_read_access_resource(described_class, subject.id, Product, product_1.id)
       expect(subject.products.count).to eq 2
       expect(subject.components.count).to eq 2
 
@@ -223,11 +223,11 @@ RSpec.describe Institution, type: :model do
       expect(subject.products.count).to eq 0
       expect(subject.components.count).to eq 0
 
-      permission_service.permit_read_access_resource(described_class, subject.id, Component, component_b.id)
+      PermissionService.permit_read_access_resource(described_class, subject.id, Component, component_b.id)
       expect(subject.products.count).to eq 0
       expect(subject.components.count).to eq 1
 
-      permission_service.permit_read_access_resource(described_class, subject.id, Component, component_a.id)
+      PermissionService.permit_read_access_resource(described_class, subject.id, Component, component_a.id)
       expect(subject.products.count).to eq 0
       expect(subject.components.count).to eq 2
 

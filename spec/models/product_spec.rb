@@ -15,13 +15,16 @@ RSpec.describe Product, type: :model do
     allow(Product).to receive(:find).with(id).and_return(subject)
   end
 
+  it { expect(subject.resource_type).to eq :Product }
+  it { expect(subject.resource_id).to eq id }
+
   context 'before destroy' do
     let(:product) { create(:product) }
     let(:component) { create(:component) }
     let(:lessee) { create(:lessee) }
-    let(:policy) { double('policy') }
+    let(:grant) { double('grant') }
 
-    before { allow(Policy).to receive(:resource_policies).with(product).and_return([policy]) }
+    before { allow(Grant).to receive(:resource_grants).with(product).and_return([grant]) }
 
     it 'component present' do
       product.components << component
@@ -39,11 +42,11 @@ RSpec.describe Product, type: :model do
       expect(product.errors.first[1]).to eq "product has 1 associated lessees!"
     end
 
-    it 'policies present' do
+    it 'grants present' do
       expect(product.destroy).to be false
       expect(product.errors.count).to eq 1
       expect(product.errors.first[0]).to eq :base
-      expect(product.errors.first[1]).to eq "product has 1 associated policies!"
+      expect(product.errors.first[1]).to eq "product has 1 associated grants!"
     end
   end
 
@@ -113,23 +116,21 @@ RSpec.describe Product, type: :model do
     expect(subject.destroy?).to be true
   end
 
-  it 'policies' do
-    permission_service = PermissionService.new
-
+  it 'grants' do
     expect(subject.update?).to be true
     expect(subject.destroy?).to be true
-    expect(subject.policies.first).to be nil
+    expect(subject.grants.first).to be nil
 
-    permit = permission_service.permit_open_access_resource(described_class, subject.id)
+    permit = PermissionService.permit_open_access_resource(described_class, subject.id)
 
     expect(subject.update?).to be true
     expect(subject.destroy?).to be false
-    expect(subject.policies.first.permit).to eq permit
+    expect(subject.grants.first.permit).to eq permit
 
-    permission_service.revoke_open_access_resource(described_class, subject.id)
+    PermissionService.revoke_open_access_resource(described_class, subject.id)
 
     expect(subject.update?).to be true
     expect(subject.destroy?).to be true
-    expect(subject.policies.first).to be nil
+    expect(subject.grants.first).to be nil
   end
 end

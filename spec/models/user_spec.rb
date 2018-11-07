@@ -158,15 +158,15 @@ RSpec.describe User do
     it { expect(subject.email).to eq(email) }
   end
 
-  describe '#policies' do
-    subject { user.policies }
+  describe '#grants' do
+    subject { user.grants }
 
     let(:user) { build(:user) }
-    let(:policies) { double('policies') }
+    let(:grants) { double('grants') }
 
-    before { allow(Policy).to receive(:agent_policies).with(user).and_return(policies) }
+    before { allow(Grant).to receive(:agent_grants).with(user).and_return(grants) }
 
-    it { is_expected.to be policies }
+    it { is_expected.to be grants }
   end
 
   describe '#identifier' do
@@ -183,5 +183,37 @@ RSpec.describe User do
     let(:user) { build(:user) }
 
     it { is_expected.to be user.display_name }
+  end
+
+  describe '#agent_type' do
+    subject { user.agent_type }
+
+    let(:user) { build(:user) }
+
+    it { is_expected.to eq :User }
+  end
+
+  describe '#agent_id' do
+    subject { user.agent_id }
+
+    let(:user) { build(:user) }
+
+    it { is_expected.to be user.id }
+  end
+
+  describe '#institutions' do
+    subject { user.institutions }
+
+    let(:user) { build(:user) }
+
+    it { is_expected.to eq [] }
+  end
+
+  describe '#individual' do
+    subject { user.individual }
+
+    let(:user) { build(:user) }
+
+    it { is_expected.to be nil }
   end
 end

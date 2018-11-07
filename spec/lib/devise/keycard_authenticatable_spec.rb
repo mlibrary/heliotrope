@@ -8,6 +8,7 @@ RSpec.describe Devise::Strategies::KeycardAuthenticatable do
 
   before do
     allow(strategy).to receive(:identity).and_return(identity)
+    allow(strategy).to receive(:request_attributes).and_return(request_attributes)
     # The Rack/Warden stuff apparently has a nil env/session...
     # We just purge the log_me_in flag, so do the simplest stub we can.
     allow(strategy).to receive(:session).and_return({})
@@ -16,6 +17,7 @@ RSpec.describe Devise::Strategies::KeycardAuthenticatable do
   context "with a user_eid" do
     let(:user_eid) { 'user@domain' }
     let(:identity) { { user_eid: user_eid } }
+    let(:request_attributes) { double('request_attributes') }
 
     context "for an existing user" do
       let(:user) { double('User') }
@@ -23,6 +25,7 @@ RSpec.describe Devise::Strategies::KeycardAuthenticatable do
       before do
         allow(User).to receive(:find_by).and_return(user)
         allow(user).to receive(:identity=).with(identity)
+        allow(user).to receive(:request_attributes=).with(request_attributes)
       end
 
       it "authenticates succesfully" do
@@ -80,6 +83,7 @@ RSpec.describe Devise::Strategies::KeycardAuthenticatable do
 
   context "without a user_eid" do
     let(:identity) { {} }
+    let(:request_attributes) { {} }
 
     it "passes on authenticating" do
       expect(strategy).to receive(:pass)

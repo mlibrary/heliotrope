@@ -10,6 +10,18 @@ RSpec.describe Guest, type: :model do
 
   it { is_expected.to be_kind_of(User) }
 
+  describe '#agent_type' do
+    subject { user.agent_type }
+
+    it { is_expected.to eq :Guest }
+  end
+
+  describe '#agent_id' do
+    subject { user.agent_id }
+
+    it { is_expected.to be user.user_key }
+  end
+
   context 'save' do
     it { expect { user.save }.to change(User, :count).by(0) }
 

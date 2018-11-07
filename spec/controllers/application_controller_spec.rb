@@ -32,6 +32,32 @@ describe ApplicationController do
     end
   end
 
+  describe '#checkpoint_controller?' do
+    it { expect(controller.send(:checkpoint_controller?)).to be false }
+  end
+
+  describe '#current_actor' do
+    subject { controller.current_actor }
+
+    let(:current_user) {}
+
+    before { allow(controller).to receive(:current_user).and_return(current_user) }
+
+    it { is_expected.to be_an_instance_of(Anonymous) }
+
+    context 'Guest' do
+      let(:current_user) { User.guest(user_key: 'wolverine@umich.edu') }
+
+      it { is_expected.to be_an_instance_of(Guest) }
+    end
+
+    context 'User' do
+      let(:current_user) { create(:user) }
+
+      it { is_expected.to be_an_instance_of(User) }
+    end
+  end
+
   context 'institutions' do
     controller do
       def trigger; end
@@ -71,9 +97,5 @@ describe ApplicationController do
       it { expect(controller.current_institutions).not_to be_empty }
       it { expect(controller.current_institutions.first).to be institution }
     end
-  end
-
-  describe '#checkpoint_controller?' do
-    it { expect(controller.send(:checkpoint_controller?)).to be false }
   end
 end

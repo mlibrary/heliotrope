@@ -63,9 +63,9 @@ Rails.application.routes.draw do
     resources :products do
       resources :components, only: %i[create destroy]
       resources :lessees, only: %i[create destroy]
-      resources :policies, only: %i[new]
+      resources :grants, only: %i[new]
     end
-    resources :policies, except: %i[edit update]
+    resources :grants, except: %i[edit update]
     resources :customers, only: %i[index] do
       resources :counter_reports, only: %i[index show edit update], constraints: COUNTER_REPORT_ID_CONSTRAINT
     end

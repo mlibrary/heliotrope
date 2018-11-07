@@ -17,7 +17,7 @@
       <th><label for="noid_like">Noid</label></th>
       <th><label for="handle_like">Handle</label></th>
       <th>Products</th>
-      <th>Policies</th>
+      <th>Grants</th>
     </tr>
     <tr>
       <td><button name="submit" type="submit" value="filter">Filter</button></td>
@@ -52,7 +52,7 @@
         </td>
         <td><%= link_to component.handle, HandleService.url(HandleService.noid(component.handle)) %></td>
         <td><%= component.products.count() %></td>
-        <td><%= component.policies.count() %></td>
+        <td><%= component.grants.count() %></td>
       </tr>
     <% end %>
   </table>

@@ -3,46 +3,26 @@
 require 'rails_helper'
 
 RSpec.describe TargetResourceResolver do
-  subject { described_class.new.resolve(target) }
+  subject { described_class.new.expand(target) }
 
-  let(:target) { { noid: noid } }
-  let(:noid) {}
-  let(:any_target) { Checkpoint::Resource.from(OpenStruct.new(resource_type: :any, resource_id: :any)) }
-  let(:invalid_handle) { double('invalid_handle', valid?: false, noid: noid) }
-  let(:valid_handle) { double('valid_handle', valid?: true, noid: noid) }
+  let(:resolver) { Checkpoint::Resource::Resolver.new }
+  let(:target) { double('target', agent_type: 'target_type', agent_id: 'target_id', component: component, products: products) }
   let(:component) {}
+  let(:products) { [] }
 
-  before do
-    allow(NoidService).to receive(:from_noid).with(anything).and_return(invalid_handle)
-    allow(NoidService).to receive(:from_noid).with('101010101').and_return(valid_handle)
-    allow(Component).to receive(:find_by).with(noid: '101010101').and_return(component)
-  end
+  it { is_expected.to eq(resolver.expand(target)) }
 
-  it { is_expected.to be_an(Array) }
-  it { is_expected.to eq([any_target]) }
+  context 'component' do
+    let(:component) { double('component', agent_type: 'component_type', agent_id: 'component_id') }
 
-  context 'noid' do
-    let(:noid) { '101010101' }
-    let(:noid_resource) { Checkpoint::Resource.from(OpenStruct.new(resource_type: :noid, resource_id: noid)) }
+    it { is_expected.to eq(resolver.expand(target) + [resolver.convert(component)]) }
 
-    it { is_expected.to eq([any_target, noid_resource]) }
+    context 'products' do
+      let(:products) { [product_first, product_last] }
+      let(:product_first) { double('product_first', agent_type: 'product_type', agent_id: 'product_first') }
+      let(:product_last) { double('product_last', agent_type: 'product_type', agent_id: 'product_last') }
 
-    context 'component' do
-      let(:component) { Component.new(handle: HandleService.path(noid), products: products) }
-      let(:component_resource) { Checkpoint::Resource.from(component) }
-      let(:products) { [] }
-
-      it { is_expected.to eq([any_target, noid_resource, component_resource]) }
-
-      context 'products' do
-        let(:products) { [product_first, product_last] }
-        let(:product_first) { Product.new(identifier: 'first') }
-        let(:product_first_resource) { Checkpoint::Resource.from(product_first) }
-        let(:product_last) { Product.new(identifier: 'last') }
-        let(:product_last_resource) { Checkpoint::Resource.from(product_last) }
-
-        it { is_expected.to eq([any_target, noid_resource, component_resource, product_first_resource, product_last_resource]) }
-      end
+      it { is_expected.to eq(resolver.expand(target) + [resolver.convert(component), resolver.convert(product_first), resolver.convert(product_last)]) }
     end
   end
 end

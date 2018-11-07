@@ -14,7 +14,7 @@
       <th><label for="identifier_like">Identifier</label></th>
       <th><label for="name_like">Name</label></th>
       <th>Components</th>
-      <th>Policies</th>
+      <th>Grants</th>
     </tr>
     <tr>
       <td><button name="submit" type="submit" value="filter">Filter</button></td>
@@ -32,7 +32,7 @@
         <td><%= product.identifier %></td>
         <td><%= product.name %></td>
         <td><%= product.components.count() %></td>
-        <td><%= product.policies.count() %></td>
+        <td><%= product.grants.count() %></td>
       </tr>
     <% end %>
   </table>

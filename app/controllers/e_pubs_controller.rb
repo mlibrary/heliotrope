@@ -125,7 +125,7 @@ class EPubsController < CheckpointController
     end
 
     def set_policy
-      @policy = EPubPolicy.new(current_user, current_institutions, @presenter.id)
+      @policy = EPubPolicy.new(current_actor, Sighrax.factory(@presenter.id))
     end
 
     def set_show
@@ -198,10 +198,10 @@ class EPubsController < CheckpointController
     end
 
     def subscriber
-      @subscriber ||= valid_user_signed_in? ? Entity.new(current_user.email, current_user.email, type: :email, id: current_user.email) : Entity.null_object
+      @subscriber ||= OpenStruct.new(identifier: valid_user_signed_in? ? current_user.email : 'anonymous')
     end
 
     def publication
-      @publication ||= Entity.new(HandleService.path(@presenter.id), HandleService.path(@presenter.id), type: :epub, id: @presenter.id)
+      @publication ||= OpenStruct.new(identifier: HandleService.path(@presenter.id))
     end
 end

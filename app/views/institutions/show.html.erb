@@ -5,7 +5,7 @@
   <div class="col-md-11">&nbsp<%= @institution.identifier %></div>
   <div class="col-md-1"><em>Name</em></div>
   <div class="col-md-11">&nbsp<%= @institution.name %></div>
-  <div class="col-md-1"><em>Entity Id</em></div>
+  <div class="col-md-1"><em>Entity ID</em></div>
   <div class="col-md-11">&nbsp<%= @institution.entity_id %></div>
   <div class="col-md-1"><em>Site</em></div>
   <div class="col-md-11">&nbsp<%= @institution.site %></div>
@@ -16,9 +16,9 @@
   <div class="col-md-1"><%= link_to @institution.lessee.id, lessee_path(@institution.lessee) %></div>
   <div class="col-md-11"><%= @institution.lessee.identifier %></div>
   <div class="col-md-12"><br/></div>
-  <h2>Policies</h2>
+  <h2>Grants</h2>
   <div class="col-md-12">
-    <%= render partial: '/policies/policies', locals: { agent: @institution, policies: @institution.policies } %>
+    <%= render partial: '/grants/grants', locals: { agent: @institution, grants: @institution.grants } %>
   </div>
   <div class="col-md-12"><br/></div>
   <div class="col-md-12">
