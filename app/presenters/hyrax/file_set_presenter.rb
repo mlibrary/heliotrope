@@ -3,7 +3,7 @@
 module Hyrax
   class FileSetPresenter
     include TitlePresenter
-    include CCAnalyticsPresenter
+    include AnalyticsPresenter
     include CitableLinkPresenter
     include OpenUrlPresenter
     include ModelProxy
@@ -155,10 +155,6 @@ module Hyrax
     end
 
     # Google Analytics
-    def pageviews
-      @pageviews ||= pageviews_by_path(hyrax_file_set_path(id))
-    end
-
     def pageviews_over_time_graph_data
       [{ "label": "Total Pageviews", "data": flot_pageviews_over_time(id).to_a.sort }]
     end
