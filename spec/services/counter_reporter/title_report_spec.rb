@@ -165,7 +165,7 @@ RSpec.describe CounterReporter::TitleReport do
       end
     end
 
-    context "a tr report" do
+    context "a tr report including Year of Publications" do
       let(:params_object) do
         CounterReporter::ReportParams.new('tr', institution: institution,
                                                 start_date: start_date,
@@ -186,12 +186,14 @@ RSpec.describe CounterReporter::TitleReport do
         ActiveFedora::SolrService.add([red.to_h, green.to_h, blue.to_h])
         ActiveFedora::SolrService.commit
 
-        create(:counter_report, session: 1,  noid: 'a',  parent_noid: 'red',   institution: 1, created_at: Time.parse("2018-01-02").utc, access_type: "OA_Gold")
-        create(:counter_report, session: 1,  noid: 'a2', parent_noid: 'red',   institution: 1, created_at: Time.parse("2018-01-02").utc, access_type: "OA_Gold")
-        create(:counter_report, session: 1,  noid: 'b',  parent_noid: 'blue',  institution: 1, created_at: Time.parse("2018-01-02").utc, access_type: "OA_Gold")
-        create(:counter_report, session: 6,  noid: 'c',  parent_noid: 'green', institution: 1, created_at: Time.parse("2018-02-11").utc, access_type: "OA_Gold")
-        create(:counter_report, session: 7,  noid: 'c1', parent_noid: 'green', institution: 1, created_at: Time.parse("2018-02-13").utc, access_type: "OA_Gold")
-        create(:counter_report, session: 10, noid: 'a',  parent_noid: 'red',   institution: 2, created_at: Time.parse("2018-11-11").utc, access_type: "OA_Gold")
+        create(:counter_report, session: 1,  noid: 'a', parent_noid: 'red', institution: 1, created_at: Time.parse("2018-01-02").utc, access_type: "OA_Gold")
+        create(:counter_report, session: 1,  noid: 'a2', parent_noid: 'red', institution: 1, created_at: Time.parse("2018-01-02").utc, access_type: "OA_Gold")
+        # "blue" was published in 1999
+        create(:counter_report, session: 1,  noid: 'b', parent_noid: 'blue', institution: 1, created_at: Time.parse("2018-01-02").utc, access_type: "OA_Gold")
+        create(:counter_report, session: 6,  noid: 'c', parent_noid: 'green', institution: 1, created_at: Time.parse("2018-02-11").utc, access_type: "OA_Gold")
+        # A monograph investigation from the monograph_catalog page
+        create(:counter_report, session: 7,  noid: 'green', model: 'Monograph', parent_noid: 'green', institution: 1, created_at: Time.parse("2018-02-13").utc, access_type: "OA_Gold")
+        create(:counter_report, session: 10, noid: 'a', parent_noid: 'red', institution: 2, created_at: Time.parse("2018-11-11").utc, access_type: "OA_Gold")
 
         allow(Institution).to receive(:where).with(identifier: institution).and_return([institution_name])
       end

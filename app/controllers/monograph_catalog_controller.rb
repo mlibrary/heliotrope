@@ -2,6 +2,7 @@
 
 class MonographCatalogController < ::CatalogController
   before_action :load_presenter, only: %i[index facet]
+  after_action :add_counter_stat, only: %i[index]
 
   self.theme = 'curation_concerns'
   with_themed_layout 'catalog'
@@ -72,5 +73,18 @@ class MonographCatalogController < ::CatalogController
       monograph_id = params[:monograph_id] || params[:id]
       raise CanCan::AccessDenied unless current_ability&.can?(:read, monograph_id)
       @monograph_presenter = Hyrax::PresenterFactory.build_for(ids: [monograph_id], presenter_class: Hyrax::MonographPresenter, presenter_args: current_ability).first
+    end
+
+    def add_counter_stat
+      # HELIO-2292
+      epub = FeaturedRepresentative.where(monograph_id: @monograph_presenter.id, kind: 'epub').first
+      return if epub.blank?
+
+      access_type = if Component.find_by(handle: HandleService.path(epub.file_set_id))
+                      "Controlled"
+                    else
+                      "OA_Gold"
+                    end
+      CounterService.from(self, @monograph_presenter).count(access_type: access_type)
     end
 end
