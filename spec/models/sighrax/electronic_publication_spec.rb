@@ -8,7 +8,7 @@ RSpec.describe Sighrax::ElectronicPublication, type: :model do
   let(:noid) { double('noid') }
   let(:entity) { double('entity') }
 
-  it { is_expected.to be_a_kind_of(Sighrax::Asset) }
+  it { is_expected.to be_a_kind_of(Sighrax::FeaturedRepresentative) }
   it { expect(subject.resource_type).to eq :ElectronicPublication }
   it { expect(subject.resource_id).to eq noid }
 end

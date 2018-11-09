@@ -35,7 +35,7 @@ module Sighrax
       attr_reader :entity
 
       def type
-        @type ||= /(^.*\:\:)(.+$)/.match(self.class.to_s)[2].to_sym
+        @type ||= /^Sighrax::(.+$)/.match(self.class.to_s)[1].to_sym
       end
 
     private

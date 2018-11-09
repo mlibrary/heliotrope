@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Sighrax
-  class ElectronicPublication < Asset
+  class ElectronicPublication < FeaturedRepresentative
     private_class_method :new
 
     private

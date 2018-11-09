@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
 module Sighrax
-  class Model < Entity
+  class FeaturedRepresentative < Asset
     private_class_method :new
 
     protected
 
-      def model_type
-        entity['has_model_ssim'].first
+      def featured_representative
+        @featured_representative ||= ::FeaturedRepresentative.find_by(file_set_id: noid)
       end
 
     private
