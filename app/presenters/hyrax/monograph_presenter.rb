@@ -2,7 +2,7 @@
 
 module Hyrax
   class MonographPresenter < WorkShowPresenter
-    include CCAnalyticsPresenter
+    include AnalyticsPresenter
     include CitableLinkPresenter
     include OpenUrlPresenter
     include TitlePresenter

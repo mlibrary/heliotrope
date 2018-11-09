@@ -1,47 +1,12 @@
 # frozen_string_literal: true
 
-module CCAnalyticsPresenter
+module AnalyticsPresenter
   extend ActiveSupport::Concern
 
   attr_accessor :pageviews
 
   def ids_array(ids)
     ids.is_a?(Array) ? ids : [ids]
-  end
-
-  def pageviews_by_path(path)
-    start_time = date_uploaded.strftime('%Q').to_i
-    count = 0
-    pageviews = Rails.cache.read('ga_pageviews')
-    return '?' if pageviews.nil?
-    if pageviews.is_a?(Array)
-      pageviews.each do |entry|
-        timestamp = DateTime.strptime(entry[:date], '%Y%m%d').strftime('%Q').to_i
-        # block pageviews older than date_uploaded, likely from reused NOID
-        next unless timestamp >= start_time
-        count += entry[:pageviews].to_i if entry[:pagePath] == path
-      end
-    end
-    count
-  end
-
-  def pageviews_by_ids(ids)
-    ids = ids_array(ids)
-    start_time = date_uploaded.strftime('%Q').to_i
-    count = 0
-    pageviews = Rails.cache.read('ga_pageviews')
-    return '?' if pageviews.nil?
-    if pageviews.is_a?(Array)
-      pageviews.each do |entry|
-        timestamp = DateTime.strptime(entry[:date], '%Y%m%d').strftime('%Q').to_i
-        # block pageviews older than date_uploaded, likely from reused NOID
-        next unless timestamp >= start_time
-        ids.each do |id|
-          count += entry[:pageviews].to_i if entry[:pagePath].include? id
-        end
-      end
-    end
-    count
   end
 
   def timestamped_pageviews_by_ids(ids)
@@ -55,17 +20,14 @@ module CCAnalyticsPresenter
     end
 
     data = {}
-    # as this stuff looks expensive, going to do a count here as well and memoize it
     count = 0
-    if pageviews.is_a?(Array)
-      pageviews.each do |entry|
-        timestamp = DateTime.strptime(entry[:date], '%Y%m%d').strftime('%Q').to_i
-        # block pageviews older than date_uploaded, likely from reused NOID
-        next unless timestamp >= start_time
-        ids.each do |id|
-          next unless entry[:pagePath].include? id
-          views = entry[:pageviews].to_i
-          data[timestamp] = data[timestamp].blank? ? views : data[timestamp] + views
+    if pageviews.is_a? Hash
+      ids.each do |id|
+        next if pageviews[id].blank?
+        pageviews[id].each do |date, views|
+          timestamp = Date.strptime(date, '%Y%m%d').strftime('%Q').to_i
+          next unless timestamp >= start_time
+          data[timestamp] = views
           count += views
         end
       end
@@ -79,7 +41,7 @@ module CCAnalyticsPresenter
     return [] if data.blank?
     start_timestamp = date_uploaded.strftime('%Q').to_i
     # ensure that the graph ends yesterday (I don't think today can be in the cronjob-created cache anyway)
-    end_timestamp = DateTime.yesterday.strftime('%Q').to_i
+    end_timestamp = Date.yesterday.strftime('%Q').to_i
 
     # zero-pad data to fill in days with no page views
     i = start_timestamp
@@ -99,7 +61,7 @@ module CCAnalyticsPresenter
     start_timestamp = date_uploaded.strftime('%Q').to_i
     data.unshift([start_timestamp, 0]) if data[0][0] > start_timestamp
 
-    end_timestamp = DateTime.yesterday.strftime('%Q').to_i
+    end_timestamp = Date.yesterday.strftime('%Q').to_i
     # if there's been no activity in 30 days or more, add a final point to the graph
     data.push([end_timestamp, 0]) if end_timestamp - data.last[0] >= 2_592_000_000
 
