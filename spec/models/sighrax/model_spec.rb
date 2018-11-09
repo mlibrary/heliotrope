@@ -11,4 +11,10 @@ RSpec.describe Sighrax::Model, type: :model do
   it { is_expected.to be_a_kind_of(Sighrax::Entity) }
   it { expect(subject.resource_type).to eq :Model }
   it { expect(subject.resource_id).to eq noid }
+
+  describe '#model_type' do
+    let(:entity) { { 'has_model_ssim' => ['Model'] } }
+
+    it { expect(subject.send(:model_type)).to eq 'Model' }
+  end
 end
