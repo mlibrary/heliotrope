@@ -26,16 +26,43 @@ RSpec.describe ValidationService do
   end
 
   describe '#valid_noid?' do
-    let(:noid_service) { double('noid_service') }
-    let(:noid) { double('noid') }
-    let(:valid) { double('valid') }
+    let(:noid) { 'invalidnoid' }
+
+    it { expect(described_class.valid_noid?(noid)).to be false }
+
+    context 'valid' do
+      let(:noid) { 'validnoid' }
+
+      it { expect(described_class.valid_noid?(noid)).to be true }
+    end
+  end
+
+  describe "#valid_entity?" do
+    subject { described_class.valid_entity?(id) }
+
+    let(:id) { double('id') }
+    let(:valid_id) { false }
+    let(:entity) { double('entity', valid?: valid) }
+    let(:valid) { false }
 
     before do
-      allow(NoidService).to receive(:from_noid).with(noid).and_return(noid_service)
-      allow(noid_service).to receive(:valid?).and_return(valid)
+      allow(described_class).to receive(:valid_noid?).with(id).and_return(valid_id)
+      allow(Sighrax).to receive(:factory).with(id).and_return(entity)
     end
 
-    it { expect(described_class.valid_noid?(noid)).to be valid }
+    it { is_expected.to be false }
+
+    context 'valid id' do
+      let(:valid_id) { true }
+
+      it { is_expected.to be false }
+
+      context 'found' do
+        let(:valid) { true }
+
+        it { is_expected.to be true }
+      end
+    end
   end
 
   [Component, Individual, Institution, Product, User].each do |klass|
@@ -91,8 +118,8 @@ RSpec.describe ValidationService do
       end
     end
 
-    context 'email' do
-      let(:agent_type) { :email }
+    context 'Guest' do
+      let(:agent_type) { :Guest }
 
       it { expect(described_class.valid_agent_type?(agent_type)).to be true }
       it { is_expected.to be false }
@@ -260,8 +287,8 @@ RSpec.describe ValidationService do
       end
     end
 
-    context 'noid' do
-      let(:resource_type) { :noid }
+    context 'ElectronicPublication' do
+      let(:resource_type) { :ElectronicPublication }
 
       it { expect(described_class.valid_resource_type?(resource_type)).to be true }
       it { is_expected.to be false }
@@ -274,7 +301,7 @@ RSpec.describe ValidationService do
       end
 
       context 'valid' do
-        before { allow(described_class).to receive(:valid_noid?).with(resource_id).and_return(true) }
+        before { allow(described_class).to receive(:valid_entity?).with(resource_id).and_return(true) }
 
         it { is_expected.to be true }
       end

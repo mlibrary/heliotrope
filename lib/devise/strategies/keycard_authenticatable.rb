@@ -46,6 +46,7 @@ module Devise
           user = existing_user || new_user || guest_user
           if user
             user.identity = identity
+            user.request_attributes = request_attributes
             success!(user)
           else
             debug_log "Failed (no existing user and did not make a new/guest)"
@@ -57,8 +58,12 @@ module Devise
           identity[:user_eid]
         end
 
+        def request_attributes
+          @request_attributes ||= Services.request_attributes.for(request)
+        end
+
         def identity
-          @identity ||= Services.request_attributes.for(request).identity
+          @identity ||= request_attributes.identity
         end
 
         def user_eid_to_key

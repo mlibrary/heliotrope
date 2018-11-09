@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe Policy, type: :model do
+RSpec.describe Grant, type: :model do
   let(:valid_attributes) do
     {
       agent_type: 'any',
@@ -75,84 +75,72 @@ RSpec.describe Policy, type: :model do
       end
     end
 
-    context 'policies' do
-      let(:entity) { Entity.null_object }
-      let(:token) { "#{EntityNullObject}:#{entity.id}" }
+    context 'grants' do
+      let(:entity) { double('entity', id: 'id') }
+      let(:token) { "#{entity.class}:#{entity.id}" }
       let(:permit) { double('permit') }
       let(:permits) { [permit] }
-      let(:policy) { double('policy') }
-      let(:policies) { [policy] }
+      let(:grant) { double('grant') }
+      let(:grants) { [grant] }
 
-      before { allow(described_class).to receive(:new).with(permit).and_return(policy) }
+      before { allow(described_class).to receive(:new).with(permit).and_return(grant) }
 
-      it '#agent_policies' do
+      it '#agent_grants' do
         entity
         token
         allow(Checkpoint::DB::Permit).to receive(:where).with(agent_token: token).and_return(permits)
-        expect(described_class.agent_policies(entity)).to eq policies
+        expect(described_class.agent_grants(entity)).to eq grants
       end
 
-      it '#permission_policies' do
+      it '#permission_grants' do
         allow(Checkpoint::DB::Permit).to receive(:where).with(credential_token: 'permission:any').and_return(permits)
-        expect(described_class.permission_policies(:any)).to eq policies
+        expect(described_class.permission_grants(:any)).to eq grants
       end
 
-      it '#resource_policies' do
+      it '#resource_grants' do
         entity
         token
         allow(Checkpoint::DB::Permit).to receive(:where).with(resource_token: token).and_return(permits)
-        expect(described_class.resource_policies(entity)).to eq policies
+        expect(described_class.resource_grants(entity)).to eq grants
       end
     end
   end
 
   context 'Instance' do
-    subject(:policy) { described_class.new }
+    subject(:grant) { described_class.new }
 
     it 'invalid attributes' do
-      expect(policy.valid?).to be false
-      policy.set(invalid_attributes)
-      expect(policy.valid?).to be false
-      expect(policy.persisted?).to be false
-      policy.save
-      expect(policy.persisted?).to be false
-      expect { policy.reload }.to raise_error(Sequel::NoExistingObject)
-      expect(policy.persisted?).to be false
+      expect(grant.valid?).to be false
+      grant.set(invalid_attributes)
+      expect(grant.valid?).to be false
+      expect(grant.persisted?).to be false
+      grant.save
+      expect(grant.persisted?).to be false
+      expect { grant.reload }.to raise_error(Sequel::NoExistingObject)
+      expect(grant.persisted?).to be false
     end
 
     it 'valid attributes' do
-      expect(policy.valid?).to be false
-      policy.set(valid_attributes)
-      expect(policy.valid?).to be true
-      expect(policy.persisted?).to be false
-      policy.save
-      expect(policy.persisted?).to be true
-      policy.reload
-      expect(policy.persisted?).to be true
+      expect(grant.valid?).to be false
+      grant.set(valid_attributes)
+      expect(grant.valid?).to be true
+      expect(grant.persisted?).to be false
+      grant.save
+      expect(grant.persisted?).to be true
+      grant.reload
+      expect(grant.persisted?).to be true
     end
 
     describe '#update?' do
-      subject { policy.update? }
+      subject { grant.update? }
 
       it { is_expected.to be false }
     end
 
     describe '#destroy?' do
-      subject { policy.destroy? }
+      subject { grant.destroy? }
 
       it { is_expected.to be true }
-    end
-
-    describe '#agent' do
-      subject { policy.agent }
-
-      it { is_expected.to be_an_instance_of(Entity) }
-    end
-
-    describe '#resource' do
-      subject { policy.resource }
-
-      it { is_expected.to be_an_instance_of(Entity) }
     end
   end
 end

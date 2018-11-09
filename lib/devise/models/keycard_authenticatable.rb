@@ -13,10 +13,15 @@ module Devise
 
       included do
         attr_writer :identity
+        attr_writer :request_attributes
       end
 
       def identity
         @identity ||= {}
+      end
+
+      def request_attributes
+        @request_attributes ||= {}
       end
     end
   end

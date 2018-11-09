@@ -19,27 +19,27 @@
   <% end %>
 </ul>
 <h2>Checkpoint</h2>
-<table class="table table-striped" summary="Policies List">
+<table class="table table-striped" summary="Grants List">
   <tr>
     <th>Agent</th>
     <th>Credential</th>
     <th>Resource</th>
     <th>Zone</th>
   </tr>
-  <% ActorAgentResolver.new.resolve(user: current_user, institutions: current_institutions).each do |agent| %>
-    <% policies = Checkpoint::DB::Permit.where(agent_token: agent.token.to_s).map { |permit| Policy.new(permit) } %>
-    <% if policies.count.positive? %>
-      <% policies.each do |policy| %>
+  <% ActorAgentResolver.new.expand(current_actor).each do |agent| %>
+    <% grants = Checkpoint::DB::Permit.where(agent_token: agent.token.to_s).map { |permit| Grant.new(permit) } %>
+    <% if grants.count.positive? %>
+      <% grants.each do |grant| %>
         <tr>
-          <td><%= policy.agent_token %></td>
-          <td><%= policy.credential_token %></td>
-          <td><%= policy.resource_token %></td>
-          <td><%= policy.zone_id %></td>
+          <td><%= grant.agent_token %></td>
+          <td><%= grant.credential_token %></td>
+          <td><%= grant.resource_token %></td>
+          <td><%= grant.zone_id %></td>
         </tr>
       <% end %>
     <% else %>
       <tr>
-        <td><%= agent.token  %></td>
+        <td><%= agent.token %></td>
         <td>n/a</td>
         <td>n/a</td>
         <td>n/a</td>

@@ -16,12 +16,15 @@ RSpec.describe Component, type: :model do
     allow(Component).to receive(:find).with(id).and_return(subject)
   end
 
+  it { expect(subject.resource_type).to eq :Component }
+  it { expect(subject.resource_id).to eq id }
+
   context 'before destroy' do
     let(:component) { create(:component) }
     let(:product) { create(:product) }
-    let(:policy) { double('policy') }
+    let(:grant) { double('grant') }
 
-    before { allow(Policy).to receive(:resource_policies).with(component).and_return([policy]) }
+    before { allow(Grant).to receive(:resource_grants).with(component).and_return([grant]) }
 
     it 'product present' do
       component.products << product
@@ -31,11 +34,11 @@ RSpec.describe Component, type: :model do
       expect(component.errors.first[1]).to eq "component has 1 associated products!"
     end
 
-    it 'policies present' do
+    it 'grants present' do
       expect(component.destroy).to be false
       expect(component.errors.count).to eq 1
       expect(component.errors.first[0]).to eq :base
-      expect(component.errors.first[1]).to eq "component has 1 associated policies!"
+      expect(component.errors.first[1]).to eq "component has 1 associated grants!"
     end
   end
 
@@ -85,10 +88,7 @@ RSpec.describe Component, type: :model do
   end
 
   context 'noid' do
-    let(:noid_service) { double('noid_service', type: type) }
-    let(:type) { NoidService.null_object.type }
-
-    before { allow(NoidService).to receive(:from_noid).with(noid.to_s).and_return(noid_service) }
+    before { allow(Sighrax).to receive(:factory).with(noid.to_s).and_return(Sighrax::Model.send(:new, noid, {})) }
 
     it do
       expect(subject.noid).to eq noid.to_s
@@ -96,42 +96,42 @@ RSpec.describe Component, type: :model do
       expect(subject.file_set?).to be false
     end
 
-    context 'monograph' do
-      let(:type) { :monograph }
+    context '#monograph?' do
+      before { allow(Sighrax).to receive(:factory).with(noid.to_s).and_return(Sighrax::Monograph.send(:new, noid, {})) }
 
       it do
+        expect(subject.noid).to eq noid.to_s
         expect(subject.monograph?).to be true
         expect(subject.file_set?).to be false
       end
+    end
 
-      context 'file_set' do
-        let(:type) { :file_set }
+    context '#file_set?' do
+      before { allow(Sighrax).to receive(:factory).with(noid.to_s).and_return(Sighrax::Asset.send(:new, noid, {})) }
 
-        it do
-          expect(subject.monograph?).to be false
-          expect(subject.file_set?).to be true
-        end
+      it do
+        expect(subject.noid).to eq noid.to_s
+        expect(subject.monograph?).to be false
+        expect(subject.file_set?).to be true
       end
     end
   end
 
-  it 'policies' do
-    permission_service = PermissionService.new
-
+  it 'grants' do
     expect(subject.update?).to be true
     expect(subject.destroy?).to be true
-    expect(subject.policies.first).to be nil
+    expect(subject.grants.first).to be nil
 
-    permit = permission_service.permit_open_access_resource(described_class, subject.id)
+    permit = PermissionService.permit_open_access_resource(described_class, subject.id)
 
     expect(subject.update?).to be true
     expect(subject.destroy?).to be false
-    expect(subject.policies.first.permit).to eq permit
+    expect(subject.grants.first.permit).to eq permit
 
-    permission_service.revoke_open_access_resource(described_class, subject.id)
+    PermissionService.revoke_open_access_resource(described_class, subject.id)
 
     expect(subject.update?).to be true
     expect(subject.destroy?).to be true
-    expect(subject.policies.first).to be nil
+    expect(subject.grants.first).to be nil
   end
 end

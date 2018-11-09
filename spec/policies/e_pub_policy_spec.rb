@@ -3,18 +3,21 @@
 require 'rails_helper'
 
 RSpec.describe EPubPolicy do
-  subject(:e_pub_policy) { described_class.new(current_user, current_institutions, e_pub_id) }
+  subject(:e_pub_policy) { described_class.new(actor, target) }
 
-  let(:current_user) { double('current_user', email: nil) }
-  let(:current_institutions) { nil }
-  let(:e_pub_id) { nil }
+  let(:actor) { double('actor', agent_type: 'actor_type', agent_id: 'actor_id', individual: individual, institutions: institutions) }
+  let(:individual) {}
+  let(:institutions) { [] }
+  let(:target) { double('target', agent_type: 'target_type', agent_id: 'target_id', component: component, products: products) }
+  let(:component) {}
+  let(:products) { [] }
   let(:action) { :action }
   let(:checkpoint) { double('checkpoint') }
   let(:permits) { false }
 
   before do
     allow(Services).to receive(:checkpoint).and_return(checkpoint)
-    allow(checkpoint).to receive(:permits?).with({ user: current_user, institutions: current_institutions }, action, noid: e_pub_id).and_return(permits)
+    allow(checkpoint).to receive(:permits?).with(actor, action, target).and_return(permits)
   end
 
   describe '#authorize!' do
@@ -38,7 +41,7 @@ RSpec.describe EPubPolicy do
   describe '#show?' do
     subject { e_pub_policy.show? }
 
-    before { allow(checkpoint).to receive(:permits?).with({ user: current_user, institutions: current_institutions }, :read, noid: e_pub_id).and_return(permits) }
+    before { allow(checkpoint).to receive(:permits?).with(actor, :read, target).and_return(permits) }
 
     it { is_expected.to be false }
 

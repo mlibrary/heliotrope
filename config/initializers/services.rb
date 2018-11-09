@@ -44,3 +44,5 @@ Services.register(:checkpoint) do
 end
 
 Services.register(:request_attributes) { Keycard::Request::AttributesFactory.new }
+
+Services.register(:dlps_institution) { DlpsInstitution.new }

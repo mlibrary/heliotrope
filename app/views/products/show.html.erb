@@ -16,9 +16,9 @@
   <div class="col-md-12">
     <%= render partial: 'lessees', locals: { product: @product, lessees: @product.lessees } %>
   </div>
-  <h2>Policies</h2>
+  <h2>Grants</h2>
   <div class="col-md-12">
-    <%= render partial: '/policies/policies', locals: { resource: @product, policies: @product.policies } %>
+    <%= render partial: '/grants/grants', locals: { resource: @product, grants: @product.grants } %>
   </div>
   <div class="col-md-12"><br/></div>
   <div class="col-md-12">

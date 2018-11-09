@@ -105,8 +105,8 @@ class User < ApplicationRecord
     Guest.new(user_key: user_key)
   end
 
-  def policies
-    Policy.agent_policies(self)
+  def grants
+    Grant.agent_grants(self)
   end
 
   def identifier
@@ -115,5 +115,21 @@ class User < ApplicationRecord
 
   def name
     display_name
+  end
+
+  def agent_type
+    :User
+  end
+
+  def agent_id
+    id
+  end
+
+  def institutions
+    Services.dlps_institution.find(request_attributes)
+  end
+
+  def individual
+    Individual.find_by(email: email) if email.present?
   end
 end

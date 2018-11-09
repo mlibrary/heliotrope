@@ -2,13 +2,13 @@
 
 require 'rails_helper'
 
-RSpec.describe "Policies", type: :request do
-  let(:policy) { create(:policy) }
+RSpec.describe "Grants", type: :request do
+  let(:grant) { create(:grant) }
 
   context 'anonymous' do
-    describe "GET /policies" do
+    describe "GET /grants" do
       it do
-        get policies_path
+        get grants_path
         expect(response).to have_http_status(:found)
         expect(response).to redirect_to(presses_path)
       end
@@ -21,9 +21,9 @@ RSpec.describe "Policies", type: :request do
     context 'unauthorized' do
       let(:current_user) { create(:user) }
 
-      describe "GET /policies" do
+      describe "GET /grants" do
         it do
-          get policies_path
+          get grants_path
           expect(response).to have_http_status(:found)
           expect(response).to redirect_to(presses_path)
         end
@@ -33,9 +33,9 @@ RSpec.describe "Policies", type: :request do
     context 'authorized' do
       let(:current_user) { create(:platform_admin) }
 
-      describe "GET /policies" do
+      describe "GET /grants" do
         it do
-          get policies_path
+          get grants_path
           expect(response).to have_http_status(:ok)
           expect(response).to render_template(:index)
         end

@@ -18,35 +18,32 @@ class PermissionService
     Checkpoint::DB.db[:permits].delete
   end
 
-  # Instance Methods
-
-  def initialize(agent_factory: Checkpoint::Agent, resource_factory: Checkpoint::Resource)
-    @agent_factory = agent_factory
-    @resource_factory = resource_factory
-  end
-
   # Factories
 
-  def agent(agent_type, agent_id)
+  def self.agent(agent_type, agent_id) # rubocop:disable Metrics/CyclomaticComplexity
     raise ArgumentError unless ValidationService.valid_agent_type?(agent_type)
     return OpenStruct.new(agent_type: agent_type, agent_id: agent_id) if agent_id&.to_s == 'any'
     raise ArgumentError unless ValidationService.valid_agent?(agent_type, agent_id)
     case agent_type&.to_s&.to_sym
+    when :Guest
+      User.guest(user_key: agent_id)
     when :Individual
       Individual.find(agent_id)
     when :Institution
       Institution.find(agent_id)
+    when :User
+      User.find(agent_id)
     else
       OpenStruct.new(agent_type: agent_type, agent_id: agent_id)
     end
   end
 
-  def permission(permission)
+  def self.permission(permission)
     raise ArgumentError unless ValidationService.valid_permission?(permission)
     Checkpoint::Credential::Permission.new(permission)
   end
 
-  def credential(credential_type, credential_id)
+  def self.credential(credential_type, credential_id)
     raise ArgumentError unless ValidationService.valid_credential?(credential_type, credential_id)
     case credential_type&.to_sym
     when :permission
@@ -56,11 +53,13 @@ class PermissionService
     end
   end
 
-  def resource(resource_type, resource_id)
+  def self.resource(resource_type, resource_id) # rubocop:disable Metrics/CyclomaticComplexity
     raise ArgumentError unless ValidationService.valid_resource_type?(resource_type)
     return OpenStruct.new(resource_type: resource_type, resource_id: resource_id) if resource_id&.to_s == 'any'
     raise ArgumentError unless ValidationService.valid_resource?(resource_type, resource_id)
     case resource_type&.to_s&.to_sym
+    when :ElectronicPublication
+      Sighrax.factory(resource_id)
     when :Component
       Component.find(resource_id)
     when :Product
@@ -72,126 +71,111 @@ class PermissionService
 
   # Open Access a.k.a. any agent has permission:read for any resource
 
-  def open_access?
-    open_access_permit.present?
+  def self.open_access?
+    actor = agent(:any, :any)
+    target = resource(:any, :any)
+    permit?(actor, permission_read, target)
   end
 
-  def permit_open_access
-    return open_access_permit if open_access?
-    actor = agent_factory.from(agent(:any, :any))
-    target = resource_factory.from(resource(:any, :any))
-    permit = Checkpoint::DB::Permit.from(actor, permission_read, target, zone: Checkpoint::DB::Permit.default_zone)
-    permit.save
-    permit
+  def self.permit_open_access
+    actor = agent(:any, :any)
+    target = resource(:any, :any)
+    authority.permit!(actor, permission_read, target)
+    permit(actor, permission_read, target)
   end
 
-  def revoke_open_access
-    open_access_permit&.delete
+  def self.revoke_open_access
+    actor = agent(:any, :any)
+    target = resource(:any, :any)
+    authority.revoke!(actor, permission_read, target)
   end
 
   # Open Access Resource a.k.a. any agent has permission:read for resource
 
-  def open_access_resource?(resource_type, resource_id)
-    open_access_resource_permit(resource_type: resource_type, resource_id: resource_id).present?
+  def self.open_access_resource?(resource_type, resource_id)
+    actor = agent(:any, :any)
+    target = resource(resource_type, resource_id)
+    permit?(actor, permission_read, target)
   end
 
-  def permit_open_access_resource(resource_type, resource_id)
-    return open_access_resource_permit(resource_type: resource_type, resource_id: resource_id) if open_access_resource?(resource_type, resource_id)
-    actor = agent_factory.from(agent(:any, :any))
-    target = resource_factory.from(resource(resource_type, resource_id))
-    permit = Checkpoint::DB::Permit.from(actor, permission_read, target, zone: Checkpoint::DB::Permit.default_zone)
-    permit.save
-    permit
+  def self.permit_open_access_resource(resource_type, resource_id)
+    actor = agent(:any, :any)
+    target = resource(resource_type, resource_id)
+    authority.permit!(actor, permission_read, target)
+    permit(actor, permission_read, target)
   end
 
-  def revoke_open_access_resource(resource_type, resource_id)
-    open_access_resource_permit(resource_type: resource_type, resource_id: resource_id)&.delete
+  def self.revoke_open_access_resource(resource_type, resource_id)
+    actor = agent(:any, :any)
+    target = resource(resource_type, resource_id)
+    authority.revoke!(actor, permission_read, target)
   end
 
   # Read Access Resource a.k.a. agent has permission:read for resource
 
-  def read_access_resource?(agent_type, agent_id, resource_type, resource_id)
-    read_access_resource_permit(agent_type: agent_type, agent_id: agent_id, resource_type: resource_type, resource_id: resource_id).present?
+  def self.read_access_resource?(agent_type, agent_id, resource_type, resource_id)
+    actor = agent(agent_type, agent_id)
+    target = resource(resource_type, resource_id)
+    permit?(actor, permission_read, target)
   end
 
-  def permit_read_access_resource(agent_type, agent_id, resource_type, resource_id)
-    return read_access_resource_permit(agent_type: agent_type, agent_id: agent_id, resource_type: resource_type, resource_id: resource_id) if read_access_resource?(agent_type, agent_id, resource_type, resource_id)
-    actor = agent_factory.from(agent(agent_type, agent_id))
-    target = resource_factory.from(resource(resource_type, resource_id))
-    permit = Checkpoint::DB::Permit.from(actor, permission_read, target, zone: Checkpoint::DB::Permit.default_zone)
-    permit.save
-    permit
+  def self.permit_read_access_resource(agent_type, agent_id, resource_type, resource_id)
+    actor = agent(agent_type, agent_id)
+    target = resource(resource_type, resource_id)
+    authority.permit!(actor, permission_read, target)
+    permit(actor, permission_read, target)
   end
 
-  def revoke_read_access_resource(agent_type, agent_id, resource_type, resource_id)
-    read_access_resource_permit(agent_type: agent_type, agent_id: agent_id, resource_type: resource_type, resource_id: resource_id)&.delete
+  def self.revoke_read_access_resource(agent_type, agent_id, resource_type, resource_id)
+    actor = agent(agent_type, agent_id)
+    target = resource(resource_type, resource_id)
+    authority.revoke!(actor, permission_read, target)
   end
 
   # Any Access Resource a.k.a. agent has permission:any for resource
 
-  def any_access_resource?(agent_type, agent_id, resource_type, resource_id)
-    any_access_resource_permit(agent_type: agent_type, agent_id: agent_id, resource_type: resource_type, resource_id: resource_id).present?
+  def self.any_access_resource?(agent_type, agent_id, resource_type, resource_id)
+    actor = agent(agent_type, agent_id)
+    target = resource(resource_type, resource_id)
+    permit?(actor, permission_any, target)
   end
 
-  def permit_any_access_resource(agent_type, agent_id, resource_type, resource_id)
-    return any_access_resource_permit(agent_type: agent_type, agent_id: agent_id, resource_type: resource_type, resource_id: resource_id) if any_access_resource?(agent_type, agent_id, resource_type, resource_id)
-    actor = agent_factory.from(agent(agent_type, agent_id))
-    target = resource_factory.from(resource(resource_type, resource_id))
-    permit = Checkpoint::DB::Permit.from(actor, permission_any, target, zone: Checkpoint::DB::Permit.default_zone)
-    permit.save
-    permit
+  def self.permit_any_access_resource(agent_type, agent_id, resource_type, resource_id)
+    actor = agent(agent_type, agent_id)
+    target = resource(resource_type, resource_id)
+    authority.permit!(actor, permission_any, target)
+    permit(actor, permission_any, target)
   end
 
-  def revoke_any_access_resource(agent_type, agent_id, resource_type, resource_id)
-    any_access_resource_permit(agent_type: agent_type, agent_id: agent_id, resource_type: resource_type, resource_id: resource_id)&.delete
+  def self.revoke_any_access_resource(agent_type, agent_id, resource_type, resource_id)
+    actor = agent(agent_type, agent_id)
+    target = resource(resource_type, resource_id)
+    authority.revoke!(actor, permission_any, target)
   end
 
-  private
+  def self.permission_any
+    @permission_any ||= Checkpoint::Credential::Permission.new(:any)
+  end
 
-    def permission_any
-      @permission_any ||= Checkpoint::Credential::Permission.new(:any)
-    end
+  def self.permission_read
+    @permission_read ||= Checkpoint::Credential::Permission.new(:read)
+  end
 
-    def permission_read
-      @permission_read ||= Checkpoint::Credential::Permission.new(:read)
-    end
+  def self.authority
+    Services.checkpoint
+  end
 
-    def open_access_permit
-      actor = agent_factory.from(agent(:any, :any))
-      target = resource_factory.from(resource(:any, :any))
-      Checkpoint::DB::Permit.where(agent_type: actor.type, agent_id: actor.id,
-                                   credential_type: permission_read.type, credential_id: permission_read.id,
-                                   resource_type: target.type, resource_id: target.id).first
-    end
+  def self.permit?(actor, action, target)
+    permit(actor, action, target).present?
+  end
 
-    def open_access_resource_permit(resource_type:, resource_id:)
-      raise(ArgumentError, 'invalid resource') unless ValidationService.valid_resource?(resource_type, resource_id)
-      actor = agent_factory.from(agent(:any, :any))
-      target = resource_factory.from(resource(resource_type, resource_id))
-      Checkpoint::DB::Permit.where(agent_type: actor.type, agent_id: actor.id,
-                                   credential_type: permission_read.type, credential_id: permission_read.id,
-                                   resource_type: target.type, resource_id: target.id).first
-    end
-
-    def read_access_resource_permit(agent_type:, agent_id:, resource_type:, resource_id:)
-      raise(ArgumentError, 'invalid agent') unless ValidationService.valid_agent?(agent_type, agent_id)
-      raise(ArgumentError, 'invalid resource') unless ValidationService.valid_resource?(resource_type, resource_id)
-      actor = agent_factory.from(agent(agent_type, agent_id))
-      target = resource_factory.from(resource(resource_type, resource_id))
-      Checkpoint::DB::Permit.where(agent_type: actor.type, agent_id: actor.id,
-                                   credential_type: permission_read.type, credential_id: permission_read.id,
-                                   resource_type: target.type, resource_id: target.id).first
-    end
-
-    def any_access_resource_permit(agent_type:, agent_id:, resource_type:, resource_id:)
-      raise(ArgumentError, 'invalid agent') unless ValidationService.valid_agent?(agent_type, agent_id)
-      raise(ArgumentError, 'invalid resource') unless ValidationService.valid_resource?(resource_type, resource_id)
-      actor = agent_factory.from(agent(agent_type, agent_id))
-      target = resource_factory.from(resource(resource_type, resource_id))
-      Checkpoint::DB::Permit.where(agent_type: actor.type, agent_id: actor.id,
-                                   credential_type: permission_any.type, credential_id: permission_any.id,
-                                   resource_type: target.type, resource_id: target.id).first
-    end
-
-    attr_reader :agent_factory, :resource_factory
+  def self.permit(actor, action, target)
+    converted_actor = ActorAgentResolver.new.convert(actor)
+    converted_action = Checkpoint::Credential::Resolver.new.convert(action)
+    converted_target = TargetResourceResolver.new.convert(target)
+    record = Checkpoint::DB::Permit.where(agent_type: converted_actor.type, agent_id: converted_actor.id,
+                                          credential_type: converted_action.type, credential_id: converted_action.id,
+                                          resource_type: converted_target.type, resource_id: converted_target.id).first
+    record
+  end
 end

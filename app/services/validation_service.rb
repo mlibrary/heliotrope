@@ -16,10 +16,14 @@ class ValidationService
   end
 
   def self.valid_noid?(noid)
-    NoidService.from_noid(noid).valid?
+    /^[[:alnum:]]{9}$/.match?(noid)
   end
 
   # Object Validation
+
+  def self.valid_entity?(id)
+    valid_noid?(id) && Sighrax.factory(id).valid?
+  end
 
   def self.valid_component?(id)
     valid_id?(id) && Component.find(id).present?
@@ -44,7 +48,7 @@ class ValidationService
   # Agent Validation
 
   def self.valid_agent_type?(type)
-    %i[any email Individual Institution User].include?(type&.to_s&.to_sym)
+    %i[any Guest Individual Institution User].include?(type&.to_s&.to_sym)
   end
 
   def self.valid_agent?(agent_type, agent_id) # rubocop:disable  Metrics/CyclomaticComplexity
@@ -52,7 +56,7 @@ class ValidationService
     case agent_type&.to_s&.to_sym
     when :any
       any_id
-    when :email
+    when :Guest
       any_id || valid_email?(agent_id)
     when :Individual
       any_id || valid_individual?(agent_id)
@@ -92,7 +96,7 @@ class ValidationService
   # Resource Validation
 
   def self.valid_resource_type?(type)
-    %i[any noid Component Product].include?(type&.to_s&.to_sym)
+    %i[any ElectronicPublication Component Product].include?(type&.to_s&.to_sym)
   end
 
   def self.valid_resource?(resource_type, resource_id) # rubocop:disable  Metrics/CyclomaticComplexity
@@ -100,8 +104,8 @@ class ValidationService
     case resource_type&.to_s&.to_sym
     when :any
       any_id
-    when :noid
-      any_id || valid_noid?(resource_id)
+    when :ElectronicPublication
+      any_id || valid_entity?(resource_id)
     when :Component
       any_id || valid_component?(resource_id)
     when :Product

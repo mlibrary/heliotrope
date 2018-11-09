@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 class EPubPolicy
-  def initialize(current_user, current_institutions, e_pub_id)
-    @actor = { user: current_user, institutions: current_institutions }
-    @target = { noid: e_pub_id }
+  def initialize(actor, target)
+    @actor = actor
+    @target = target
   end
 
   def authorize!(action, message = nil)
@@ -12,6 +12,7 @@ class EPubPolicy
   end
 
   def show?
+    # return true if open_access?(target)
     action_permitted?(:read)
   end
 

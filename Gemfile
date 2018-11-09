@@ -77,8 +77,8 @@ gem 'canister', '~> 0.9.0'
 gem 'carrierwave', '~> 1.1.0'
 
 # Checkpoint provides authorization support
-gem 'checkpoint', '~> 1.0.3'
-# gem 'checkpoint', git: 'https://github.com/mlibrary/checkpoint', branch: 'master'
+# gem 'checkpoint', '~> 1.0.3'
+gem 'checkpoint', git: 'https://github.com/mlibrary/checkpoint', branch: 'master'
 
 # clamav only in production
 gem 'clamav', group: :production
