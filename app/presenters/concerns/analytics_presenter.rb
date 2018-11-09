@@ -36,22 +36,6 @@ module AnalyticsPresenter
     data # essentially a hash with 12am timestamp keys and pageview values for that day
   end
 
-  def flot_daily_pageviews_zero_pad(ids)
-    data = timestamped_pageviews_by_ids(ids)
-    return [] if data.blank?
-    start_timestamp = date_uploaded.strftime('%Q').to_i
-    # ensure that the graph ends yesterday (I don't think today can be in the cronjob-created cache anyway)
-    end_timestamp = Date.yesterday.strftime('%Q').to_i
-
-    # zero-pad data to fill in days with no page views
-    i = start_timestamp
-    while i <= end_timestamp
-      data[i] = 0 if data[i].blank?
-      i += 86_400_000 # 1 day in milliseconds
-    end
-    data.to_a.sort
-  end
-
   def flot_pageviews_over_time(ids)
     data = timestamped_pageviews_by_ids(ids)
     return [] if data.blank?
