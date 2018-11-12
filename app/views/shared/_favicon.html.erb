@@ -1,0 +1,37 @@
+<!--
+  HELIO-2226
+  1. Favicons should be square and at least 200 or 300 pixels.
+  2. Use https://www.favicon-generator.org/
+  3. Put the contents of the downloaded archive in a subdirectory:
+     app/assets/images/favicon/<press>
+  4. manifest.json links should probably be edited to "\/assets\/favicon\/press…"
+  5. browserconfig.xml links should probably be edited to "/assets/favicon/press…" also
+-->
+<% favicons = [{'file' => 'apple-icon-57x57.png', 'rel' => 'apple-touch-icon', 'sizes' => '57x57'},
+               {'file' => 'apple-icon-60x60.png', 'rel' => 'apple-touch-icon', 'sizes' => '60x60'},
+               {'file' => 'apple-icon-72x72.png', 'rel' => 'apple-touch-icon', 'sizes' => '72x72'},
+               {'file' => 'apple-icon-76x76.png', 'rel' => 'apple-touch-icon', 'sizes' => '76x76'},
+               {'file' => 'apple-icon-120x120.png', 'rel' => 'apple-touch-icon', 'sizes' => '120x120'},
+               {'file' => 'apple-icon-144x144.png', 'rel' => 'apple-touch-icon', 'sizes' => '144x144'},
+               {'file' => 'apple-icon-152x152.png', 'rel' => 'apple-touch-icon', 'sizes' => '152x152'},
+               {'file' => 'apple-icon-180x180.png', 'rel' => 'apple-touch-icon', 'sizes' => '180x180'},
+               {'file' => 'android-icon-192x192.png', 'rel' => 'icon', 'sizes' => '192x192', 'type' => 'image/png'},
+               {'file' => 'favicon-32x32.png', 'rel' => 'icon', 'sizes' => '32x32', 'type' => 'image/png'},
+               {'file' => 'favicon-96x96.png', 'rel' => 'icon', 'sizes' => '96x96', 'type' => 'image/png'},
+               {'file' => 'favicon-16x16.png', 'rel' => 'icon', 'sizes' => '16x16', 'type' => 'image/png'},
+               {'file' => 'manifest.json', 'rel' => 'manifest'}] %>
+<% subdir = press_subdomain.present? ? (press_subdomain + '/') : '' %>
+<% favicons.each do |f| %>
+  <% path = 'favicon/' + subdir + f['file'] %>
+  <% if Rails.application.assets.find_asset(path).nil? %>
+    <% path = 'favicon/' + f['file'] %>
+  <% end %>
+  <%= favicon_link_tag path, rel: f['rel'], sizes: f['sizes'], type: f['type'] %>
+<% end %>
+<meta name="msapplication-TileColor" content="#ffffff">
+<% path = 'favicon/' + subdir + 'ms-icon-144x144.png' %>
+<% if Rails.application.assets.find_asset(path).nil? %>
+  <% path = 'favicon/ms-icon-144x144.png' %>
+<% end %>
+<meta name="msapplication-TileImage" content="<%= '/assets/' + path %>">
+<meta name="theme-color" content="#ffffff">

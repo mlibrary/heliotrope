@@ -37,6 +37,8 @@ Style/TernaryParentheses:
 #
 # begin TODO: cops that need to be reevaluated
 
+Layout/AlignArray:
+  Enabled: false
 Layout/BlockAlignment:
   Enabled: false
 Layout/ClosingParenthesisIndentation:
