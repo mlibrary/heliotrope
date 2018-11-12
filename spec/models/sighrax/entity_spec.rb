@@ -33,8 +33,8 @@ RSpec.describe Sighrax::Entity, type: :model do
     context 'model' do
       let(:entity) do
         {
-          "has_model_ssim" => ['Unknown'],
-          "title_tesim" => ['Unknown Entity']
+          'has_model_ssim' => ['Unknown'],
+          'title_tesim' => ['Unknown Entity']
         }
       end
 

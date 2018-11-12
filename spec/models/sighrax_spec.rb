@@ -37,31 +37,38 @@ RSpec.describe Sighrax, type: :model do
         expect(subject.send(:entity)).to be entity
       end
 
-      context 'Monograph' do
-        let(:model_types) { ['Monograph'] }
-
-        it { is_expected.to be_an_instance_of(Sighrax::Monograph) }
-      end
-
-      context 'FileSet' do
-        let(:model_types) { ['FileSet'] }
-        let(:featured_representatitve) {}
-
-        before { allow(FeaturedRepresentative).to receive(:find_by).with(file_set_id: noid).and_return(featured_representatitve) }
-
-        it { is_expected.to be_an_instance_of(Sighrax::Asset) }
-
-        context 'ElectronicPublication' do
-          let(:featured_representatitve) { double('featured_representatitve', kind: 'epub') }
-
-          it { is_expected.to be_an_instance_of(Sighrax::ElectronicPublication) }
-        end
-      end
-
-      context 'Unknown' do
+      context 'Model' do
         let(:model_types) { ['Unknown'] }
 
         it { is_expected.to be_an_instance_of(Sighrax::Model) }
+
+        context 'Monograph' do
+          let(:model_types) { ['Monograph'] }
+
+          it { is_expected.to be_an_instance_of(Sighrax::Monograph) }
+        end
+
+        context 'Asset' do
+          let(:model_types) { ['FileSet'] }
+          let(:featured_representatitve) {}
+
+          before { allow(FeaturedRepresentative).to receive(:find_by).with(file_set_id: noid).and_return(featured_representatitve) }
+
+          it { is_expected.to be_an_instance_of(Sighrax::Asset) }
+
+          context 'FeaturedRepresentative' do
+            let(:featured_representatitve) { double('featured_representatitve', kind: kind) }
+            let(:kind) { 'unknown' }
+
+            it { is_expected.to be_an_instance_of(Sighrax::Asset) }
+
+            context 'ElectronicPublication' do
+              let(:kind) { 'epub' }
+
+              it { is_expected.to be_an_instance_of(Sighrax::ElectronicPublication) }
+            end
+          end
+        end
       end
     end
   end
