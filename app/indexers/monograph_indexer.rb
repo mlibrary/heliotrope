@@ -33,6 +33,10 @@ class MonographIndexer < Hyrax::WorkIndexer
       solr_doc[Solrizer.solr_name('ordered_member_ids', :symbol)] = object.ordered_member_ids
       solr_doc[Solrizer.solr_name('representative_id', :symbol)] = object.representative_id
       trigger_fileset_reindexing(existing_fileset_order, object.ordered_member_ids)
+
+      # isbn_ssim is a numeric-only, hyphenless, formatless, multivalued ISBN field for finding books which...
+      # is stored as a string in case leading zeros are used
+      solr_doc[Solrizer.solr_name('isbn', :symbol)] = clean_isbn
     end
   end
 
@@ -63,5 +67,14 @@ class MonographIndexer < Hyrax::WorkIndexer
     value = ActiveSupport::Inflector.transliterate(value).downcase.gsub(/[^\w\s\d-]/, '')
     # return nil to ensure removal of Solr doc value if appropriate
     value.presence
+  end
+
+  def clean_isbn
+    return nil if object.isbn.blank?
+    output = []
+    object.isbn.each do |val|
+      output << val.sub(/\s*\(.+\)$/, '').delete('^0-9').strip
+    end
+    output
   end
 end

@@ -2,12 +2,12 @@
 
 desc 'Take any number of Monograph NOIDs and output CSV to update them'
 namespace :heliotrope do
-  task edit_monographs_output_csv: :environment do |_t, args|
-    # Usage: bundle exec rails "heliotrope:edit_monographs_output_csv[/a_writable_folder/monographs.csv, noid1, noid2, noid3,...]"
-    output_monograph_csv(args)
+  task edit_monographs_output_csv_noid: :environment do |_t, args|
+    # Usage: bundle exec rails "heliotrope:edit_monographs_output_csv_noid[/a_writable_folder/monographs.csv, noid1, noid2, noid3,...]"
+    output_monograph_csv_noid(args)
   end
 
-  def output_monograph_csv(args)
+  def output_monograph_csv_noid(args)
     noid_chars = ('a'..'z').to_a + ('A'..'Z').to_a + ('0'..'9').to_a
     monographs = []
 
@@ -47,7 +47,7 @@ namespace :heliotrope do
         csv << exporter.monograph_row
       end
     end
-    # a generic message helps when calling this task from heliotrope:edit_monographs_via_csv
-    puts "Ran 'heliotrope:edit_monographs_output_csv': all monograph values written to #{file_path}"
+    # a generic message helps when calling this task from heliotrope:edit_monographs_via_csv_noid
+    puts "Ran 'heliotrope:edit_monographs_output_csv_noid': all monograph values written to #{file_path}"
   end
 end

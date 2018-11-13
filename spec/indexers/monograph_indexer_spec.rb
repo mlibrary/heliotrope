@@ -12,7 +12,8 @@ RSpec.describe MonographIndexer do
             title: ['"Blah"-de-blah-blah and Stuff!'],
             creator: ["Moose, Bullwinkle\nSquirrel, Rocky"],
             description: ["This is the abstract"],
-            date_created: ['c.2018?'])
+            date_created: ['c.2018?'],
+            isbn: ['978-0-252012345 (paper)', '978-0252023456 (hardcover)', '978-1-62820-123-9 (e-book)'])
     }
     let(:file_set) { create(:file_set) }
     let(:press_name) { Press.find_by(subdomain: monograph.press).name }
@@ -54,6 +55,10 @@ RSpec.describe MonographIndexer do
 
     it 'has a single-valued, cleaned-up date_created value to sort by' do
       expect(subject['date_created_si']).to eq '2018'
+    end
+
+    it 'has a multi-valued, cleaned-up isbn with which to find Monographs' do
+      expect(subject['isbn_ssim']).to match_array ['9780252012345', '9780252023456', '9781628201239']
     end
   end
 
