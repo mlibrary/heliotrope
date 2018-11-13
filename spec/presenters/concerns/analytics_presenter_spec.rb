@@ -46,29 +46,6 @@ RSpec.describe AnalyticsPresenter do
   end
 
   describe 'Flot graph data functions' do
-    describe '#flot_daily_pageviews_zero_pad' do
-      subject { presenter.flot_daily_pageviews_zero_pad(['foo', 'bar']) }
-
-      let(:pageviews_hash) {
-        { 1_514_937_600_000 => 2, # 20180103
-          1_515_196_800_000 => 9, # 20180106
-          1_515_283_200_000 => 3 }
-      } # 20180107
-
-      let(:graph_data) {
-        [[1_514_764_800_000, 0], [1_514_851_200_000, 0], [1_514_937_600_000, 2],
-         [1_515_024_000_000, 0], [1_515_110_400_000, 0], [1_515_196_800_000, 9],
-         [1_515_283_200_000, 3], [1_515_369_600_000, 0], [1_515_456_000_000, 0],
-         [1_515_542_400_000, 0]]
-      }
-
-      it 'returns pageview data for a Flot area graph (date_uploaded to "today", padded with 0 pageview days)' do
-        allow(Date).to receive(:yesterday).and_return(Date.strptime('1515542400000', '%Q')) # 20180110
-        allow(presenter).to receive(:timestamped_pageviews_by_ids).and_return(pageviews_hash)
-        expect(subject).to eq graph_data
-      end
-    end
-
     before do
       allow(Date).to receive(:yesterday).and_return(Date.strptime('1518048000000', '%Q')) # 20180208
     end
