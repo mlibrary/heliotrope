@@ -4,7 +4,7 @@
 
 <h1>COUNTER 5 Reports</h1>
 
-<h2>Platform Master Report</h2>
+<h2>Platform Master Report (PR)</h2>
 <%= render 'counter_reports/without_customer_id/master_view/form', report_id: 'pr' %>
 <h2>Platform Usage (PR_P1)</h2>
 <%= render 'counter_reports/without_customer_id/standard_view/form', report_id: 'pr_p1' %>
@@ -16,3 +16,7 @@
 <%= render 'counter_reports/without_customer_id/standard_view/form', report_id: 'tr_b2' %>
 <h2>Book Usage by Access Type (TR_B3)</h2>
 <%= render 'counter_reports/without_customer_id/standard_view/form', report_id: 'tr_b3' %>
+<h2>Item Master Report (IR)</h2>
+<%= render 'counter_reports/without_customer_id/master_view/form', report_id: 'ir' %>
+<h2>Multimedia Item Requests (IR_M1)</h2>
+<%= render 'counter_reports/without_customer_id/standard_view/form', report_id: 'ir_m1' %>

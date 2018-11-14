@@ -51,14 +51,18 @@ class CounterReportsController < ApplicationController
       @report = CounterReporterService.pr(params)
     when 'pr_p1'
       @report = CounterReporterService.pr_p1(params)
+    when 'tr'
+      @report = CounterReporterService.tr(params)
     when 'tr_b1'
       @report = CounterReporterService.tr_b1(params)
     when 'tr_b2'
       @report = CounterReporterService.tr_b2(params)
     when 'tr_b3'
       @report = CounterReporterService.tr_b3(params)
-    when 'tr'
-      @report = CounterReporterService.tr(params)
+    when 'ir'
+      @report = CounterReporterService.ir(params)
+    when 'ir_m1'
+      @report = CounterReporterService.ir_m1(params)
     end
 
     if params[:csv]

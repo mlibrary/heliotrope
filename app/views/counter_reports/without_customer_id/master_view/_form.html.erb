@@ -23,8 +23,10 @@
         <option value="Unique_Item_Investigations">Unique Item Investiations</option>
         <option value="Unique_Title_Investigations">Unique Title Investigations</option>
         <option value="Total_Item_Requests">Total Item Requests</option>
+        <% unless report_id == 'ir' %>
         <option value="Unique_Item_Requests">Unique Item Requests</option>
         <option value="Unique_Title_Requests">Unique Title Requests</option>
+        <% end %>
       </select>
     </div>
   </div>
@@ -53,12 +55,14 @@
       </select>
     </div>
   </div>
+  <% unless report_id == 'pr' %>
   <div class="form-group row">
     <label for="yop" class="col-sm-2 col-form-label">YOP</label>
     <div class="col-sm-2">
       <input type="text" name="yop" aria-label="Year of Publication" class="form-control" />
     </div>
   </div>
+  <% end %>
   <% if @presses.present? %>
   <div class="form-group row">
     <label for="press" class="col-sm-2 col-form-label">Publisher</label>

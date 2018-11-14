@@ -233,6 +233,20 @@ RSpec.describe "Customers Counter Reports", type: :request do
           expect(response).to have_http_status(:ok)
         end
       end
+
+      describe "GET /counter_reports/ir" do
+        it do
+          get counter_report_path(id: 'ir'), params: { institution: 1, press: press_id, metric_type: ['Total_Item_Requests', 'Unique_Item_Requests', 'Unique_Title_Requests'], access_type: 'OA_Gold' }
+          expect(response).to have_http_status(:ok)
+        end
+      end
+
+      describe "GET /counter_reports/ir_m1" do
+        it do
+          get counter_report_path(id: 'ir_m1'), params: { institution: 1, press: press_id }
+          expect(response).to have_http_status(:ok)
+        end
+      end
     end
   end
 end

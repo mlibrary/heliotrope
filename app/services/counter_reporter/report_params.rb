@@ -27,6 +27,10 @@ module CounterReporter
         tr_b2
       when 'tr_b3'
         tr_b3
+      when 'ir'
+        ir(params)
+      when 'ir_m1'
+        ir_m1
       end
     end
 
@@ -128,6 +132,23 @@ module CounterReporter
                            Total_Item_Requests Unique_Item_Requests Unique_Title_Requests]
         @data_type = 'Book'
         @access_types = %w[Controlled OA_Gold]
+        @access_method = 'Regular'
+      end
+
+      def ir(params)
+        @report_title = 'Item Master Report'
+        @metric_types = [params[:metric_type]].flatten
+        @data_type = params[:data_type] || 'Book'
+        @access_types = [params[:access_type]].flatten
+        @access_method = params[:access_method] || 'Regular'
+        @yop = params[:yop] || nil
+      end
+
+      def ir_m1
+        @report_title = 'Multimedia Item Requests'
+        @metric_types = ['Total_Item_Requests']
+        @data_type = 'Multimedia'
+        @access_types = ['OA_Gold', 'Controlled']
         @access_method = 'Regular'
       end
   end
