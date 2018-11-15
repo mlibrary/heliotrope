@@ -134,11 +134,13 @@ describe 'Press Catalog' do
         16.times do |n|
           title = Faker::Book.title
           name1 = Faker::Book.author
+          open_access = nil
 
           # give 3 of the books a second creator, for a total of 16 + 3 = 19 creators
           if [5, 10, 15].include? n
             name2 = Faker::Book.author
             creators = [name1, name2]
+            open_access = 'yes' # also make these open access to test that facet
           else
             creators = name1
           end
@@ -158,6 +160,7 @@ describe 'Press Catalog' do
             date_uploaded_dtsi: date,
             subject_sim: Faker::Pokemon.name,
             publisher_sim: Faker::Book.publisher,
+            open_access_sim: open_access, # facetable
             suppressed_bsi: false,
             visibility_ssi: 'open'
           )
@@ -173,9 +176,9 @@ describe 'Press Catalog' do
         # less than 15 don't
         expect(page).to have_selector(".facets-container")
 
-        # Only the heb press will have a publisher facet
         expect(page).to have_link "Publisher"
         expect(page).to have_selector("#facet-publisher_sim")
+        expect(page).to have_selector("#facet-open_access_sim")
 
         expect(page).to have_selector('#facet-creator_sim a.facet_select', count: 5) # 5 is limit in facet widget
 

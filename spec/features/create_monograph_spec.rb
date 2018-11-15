@@ -29,6 +29,8 @@ describe 'Create a monograph' do
       fill_in 'Buy Book URL(s)', with: 'http://www.example.com/buy'
       select 'Creative Commons Public Domain Mark 1.0', from: 'License'
       fill_in 'Copyright Holder', with: 'Blahdy Blah Copyright Holder'
+      fill_in 'Open Access?', with: 'yes'
+      fill_in 'Funder', with: 'Richie Rich'
       fill_in 'Holding Contact', with: 'http://www.blahpresscompany.com/'
 
       # Authorship Metadata
@@ -58,10 +60,11 @@ describe 'Create a monograph' do
       expect(page).to have_content 'Test monograph'
       expect(page).to have_content press.name
       expect(page).to have_content 'Blahdy blah description works'
-      expect(page).to have_content "Jimmy Johns, Sub Way and Sandwich Shoppe"
+      expect(page).to have_content 'Jimmy Johns, Sub Way and Sandwich Shoppe'
       expect(page).to have_field('Citable Link', with: HandleService::DOI_ORG_PREFIX + '<doi>')
       expect(page).to have_content '123-456-7890'
-      expect(page).to have_content "Your files are being processed by Fulcrum in the background."
+      expect(page).to have_content 'Your files are being processed by Fulcrum in the background.'
+      expect(page).to have_content 'Richie Rich' # funder
       # CC license icon/link
       expect(page).to have_css("img[src*='https://i.creativecommons.org/p/mark/1.0/80x15.png']", count: 1)
       expect(page).to have_link(nil, href: 'https://creativecommons.org/publicdomain/mark/1.0/')
@@ -126,6 +129,12 @@ describe 'Create a monograph' do
       expect(page).to have_content 'Blahdy Blah Copyright Holder'
       # holding_contact
       expect(page).to have_content 'http://www.blahpresscompany.com/'
+
+      # open access
+      expect(page).to have_css('li.attribute.open_access', text: 'yes', count: 1)
+      # funder
+      expect(page).to have_content 'Richie Rich'
+
       # Citation Metadata
       # publisher
       expect(page).to have_content 'Blah Press, Co.'

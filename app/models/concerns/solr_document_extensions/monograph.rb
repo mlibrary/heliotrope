@@ -36,5 +36,13 @@ module SolrDocumentExtensions
     def series
       Array(self[Solrizer.solr_name('series', :stored_searchable)])
     end
+
+    def open_access
+      Array(self[Solrizer.solr_name('open_access', :stored_searchable)]).first
+    end
+
+    def funder
+      Array(self[Solrizer.solr_name('funder', :stored_searchable)]).first
+    end
   end
 end

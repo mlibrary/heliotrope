@@ -35,6 +35,9 @@
         <span aria-label="copyright information" class="copyright">&copy; <%= @monograph_presenter.copyright_holder %></span>
        <% end %>
     <% end %>
+    <% if @monograph_presenter.funder? %>
+      <span aria-label="funder" class="funder"><i><%= @monograph_presenter.funder %></i></span>
+    <% end %>
     <div class="description">
       <%= render_markdown @monograph_presenter.description.first || '' %>
     </div>
