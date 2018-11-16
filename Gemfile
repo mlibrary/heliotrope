@@ -36,9 +36,8 @@ gem 'jbuilder', '~> 2.5'
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
 
-# Pinning Rack commit that resolves the large file upload issue
-# When 2.0.4 is out this might not be needed anymore
-gem 'rack', git: 'https://github.com/rack/rack.git', ref: 'ee01748'
+# HELIO-2318
+gem 'rack', '~> 2.0.6'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
