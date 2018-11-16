@@ -27,6 +27,9 @@ class EPubsController < CheckpointController
                      false
                    end
 
+    @press = Press.where(subdomain: @subdomain).first
+    @component = component
+
     CounterService.from(self, @presenter).count(request: 1)
 
     render layout: false
@@ -105,6 +108,18 @@ class EPubsController < CheckpointController
       @presenter.date_modified.to_s
   end
 
+  def share_link
+    presenter = Hyrax::PresenterFactory.build_for(ids: [params[:id]], presenter_class: Hyrax::FileSetPresenter, presenter_args: nil).first
+    subdomain = presenter.monograph.subdomain
+    if Press.where(subdomain: subdomain).first&.allow_share_links?
+      expire = Time.now.to_i + 48 * 3600 # 48 hours
+      token = JsonWebToken.encode(data: params[:id], exp: expire)
+      render plain: Rails.application.routes.url_helpers.epub_url(params[:id], share: token)
+    else
+      head :no_content
+    end
+  end
+
   private
 
     def set_presenter
@@ -162,12 +177,25 @@ class EPubsController < CheckpointController
     end
 
     def access?
+      return true if valid_share_link?
       return legacy_access? unless Rails.configuration.e_pub_checkpoint_authorization
       @policy.show?
     end
 
+    def valid_share_link?
+      @share = params[:share]
+      if @share.present?
+        begin
+          decoded = JsonWebToken.decode(@share)
+          return true if decoded[:data] == params[:id]
+        rescue JWT::ExpiredSignature
+          return false
+        end
+      end
+      false
+    end
+
     def legacy_access?
-      component = Component.find_by(handle: publication.identifier)
       return true if component.blank?
       identifiers = current_institutions.map(&:identifier)
       identifiers << subscriber.identifier
@@ -176,7 +204,6 @@ class EPubsController < CheckpointController
     end
 
     def component_institutions
-      component = Component.find_by(handle: publication.identifier)
       return [] if component.blank?
       lessees = component.lessees
       return [] if lessees.blank?
@@ -184,11 +211,14 @@ class EPubsController < CheckpointController
     end
 
     def component_products
-      component = Component.find_by(handle: publication.identifier)
       return [] if component.blank?
       products = component.products
       return [] if products.blank?
       products
+    end
+
+    def component
+      @component ||= Component.find_by(handle: publication.identifier)
     end
 
     def subscriber

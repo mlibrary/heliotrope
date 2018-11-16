@@ -17,6 +17,11 @@ class Press < ApplicationRecord
   # Get only presses that are "root" parents
   scope :parent_presses, -> { where(parent_id: nil) }
 
+  def allow_share_links?
+    return true if share_links == true
+    false
+  end
+
   def to_param
     subdomain
   end
