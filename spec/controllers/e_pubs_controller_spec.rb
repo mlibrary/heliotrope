@@ -286,7 +286,8 @@ RSpec.describe EPubsController, type: :controller do
       end
 
       context 'Restricted Access' do
-        let(:component) { Component.create!(handle: HandleService.path(file_set.id)) }
+        let(:epub) { Sighrax.factory(file_set.id) }
+        let(:component) { Component.create!(identifier: epub.resource_token, name: epub.title, noid: epub.noid, handle: HandleService.path(epub.noid)) }
         let(:keycard) { { dlpsInstitutionId: dlpsInstitutionId } }
         let(:dlpsInstitutionId) { 'institute' }
 

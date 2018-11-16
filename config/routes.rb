@@ -27,23 +27,23 @@ Rails.application.routes.draw do
     end
 
     scope module: :v1, constraints: API::Version.new('v1', true) do
-      get 'lessee', controller: :lessees, action: :find, as: :find_lessee
-      resources :lessees, only: %i[index show create destroy] do
-        resources :products, only: %i[index show create update destroy]
-      end
-      get 'component', controller: :components, action: :find, as: :find_component
-      resources :components, only: %i[index show create destroy] do
-        resources :products, only: %i[index show create update destroy]
-      end
       get 'product', controller: :products, action: :find, as: :find_product
-      resources :products, only: %i[index show create destroy] do
+      resources :products, only: %i[index show create update destroy] do
         resources :components, only: %i[index show create update destroy]
         resources :lessees, only: %i[index show create update destroy]
+      end
+      get 'component', controller: :components, action: :find, as: :find_component
+      resources :components, only: %i[index show create update destroy] do
+        resources :products, only: %i[index show create update destroy]
       end
       get 'individual', controller: :individuals, action: :find, as: :find_individual
       resources :individuals, only: %i[index show create update destroy]
       get 'institution', controller: :institutions, action: :find, as: :find_institution
       resources :institutions, only: %i[index show create update destroy]
+      get 'lessee', controller: :lessees, action: :find, as: :find_lessee
+      resources :lessees, only: %i[index show create destroy] do
+        resources :products, only: %i[index show create update destroy]
+      end
     end
   end
 
@@ -51,10 +51,14 @@ Rails.application.routes.draw do
     get 'fulcrum', controller: :fulcrum, action: :dashboard, as: :fulcrum
     get 'fulcrum/:partials', controller: :fulcrum, action: :index, as: :fulcrum_partials
     get 'fulcrum/:partials/:id', controller: :fulcrum, action: :show, as: :fulcrum_partial
-    resources :api_requests, only: %i[index show destroy]
+    resources :api_requests, only: %i[index show destroy] do
+      collection do
+        delete :truncate
+      end
+    end
     resources :individuals
     resources :institutions
-    resources :lessees do
+    resources :lessees, except: %i[update] do
       resources :products, only: %i[create destroy]
     end
     resources :components do
@@ -86,7 +90,6 @@ Rails.application.routes.draw do
     scope module: :hyrax do
       resources :users, only: %i[index show]
     end
-    resources :entities, only: %i[index show]
   end
 
   resources :counter_reports, only: %i[index show edit update], constraints: COUNTER_REPORT_ID_CONSTRAINT

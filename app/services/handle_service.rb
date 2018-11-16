@@ -3,7 +3,7 @@
 class HandleService
   DOI_ORG_PREFIX = 'https://doi.org/'
   HANDLE_NET_PREFIX = 'https://hdl.handle.net/'
-  HANDLE_NET_API_HANDLES = HANDLE_NET_PREFIX + 'api/handles/'
+  HANDLE_NET_API_HANDLES = (HANDLE_NET_PREFIX + 'api/handles/').freeze
   FULCRUM_PREFIX = '2027/fulcrum.'
 
   def self.noid(handle_path_or_url)
@@ -24,7 +24,7 @@ class HandleService
     HANDLE_NET_PREFIX + path(noid)
   end
 
-  def self.value(noid)
+  def self.value(noid) # rubocop:disable Metrics/CyclomaticComplexity
     # Proxy Server REST API
     #
     # The handle proxy REST API allows programmatic access to handle resolution using HTTP.
@@ -46,11 +46,22 @@ class HandleService
     # 100 : Handle Not Found. (HTTP 404 Not Found)
     # 200 : Values Not Found. The handle exists but has no values (or no values according to the types and indices specified). (HTTP 200 OK)
     response = Faraday.get(HANDLE_NET_API_HANDLES + path(noid))
+    body = JSON.parse(response.body)
     url = nil
-    if response.code == 200 && response['responseCode'] == 1
-      response['values'].each do |value|
+    if response.status == 200 && body['responseCode'] == 1
+      body['values'].each do |value|
         url ||= value['data']['value'] if value['type'] == 'URL'
       end
+      url ||= "1 : Success. (HTTP 200 OK)"
+    else
+      url = case body['responseCode']
+            when 2
+              "2 : Error. Something unexpected went wrong during handle resolution. (HTTP 500 Internal Server Error)"
+            when 100
+              "100 : Handle Not Found. (HTTP 404 Not Found)"
+            when 200
+              "200 : Values Not Found. The handle exists but has no values (or no values according to the types and indices specified). (HTTP 200 OK)"
+            end
     end
     url
   end

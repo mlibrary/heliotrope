@@ -6,6 +6,9 @@ RSpec.describe "Product Components", type: :request do
   def component_obj(component:)
     {
       "id" => component.id,
+      "identifier" => component.identifier,
+      "name" => component.name,
+      "noid" => component.noid,
       "handle" => component.handle,
       "url" => component_url(component, format: :json)
     }
@@ -17,14 +20,14 @@ RSpec.describe "Product Components", type: :request do
       "CONTENT_TYPE" => "application/json"
     }
   end
-  let(:product) { create(:product, identifier: product_identifier) }
+  let(:product) { create(:product, identifier: product_identifier, name: 'name') }
   let(:product_identifier) { 'product' }
-  let(:product2) { build(:product, id: product.id + 1, identifier: product2_identifier) }
+  let(:product2) { build(:product, id: product.id + 1, identifier: product2_identifier, name: 'name2') }
   let(:product2_identifier) { 'product2' }
-  let(:component) { create(:component, handle: handle) }
-  let(:handle) { 'component' }
-  let(:component2) { build(:component, id: component.id + 1, handle: handle2) }
-  let(:handle2) { 'component2' }
+  let(:component) { create(:component, identifier: component_identifier, name: 'name', noid: 'noid', handle: 'handle') }
+  let(:component_identifier) { 'component' }
+  let(:component2) { build(:component, id: component.id + 1, identifier: component2_identifier, name: 'name2', noid: 'noid2', handle: 'handle2') }
+  let(:component2_identifier) { 'component2' }
   let(:response_body) { JSON.parse(@response.body) }
   let(:response_hash) { HashWithIndifferentAccess.new response_body }
 
@@ -35,7 +38,7 @@ RSpec.describe "Product Components", type: :request do
 
   context 'unauthorized' do
     let(:input) { params.to_json }
-    let(:params) { { component: { handle: handle } } }
+    let(:params) { { component: { identifier: component_identifier, name: 'name', noid: 'noid', handle: 'handle' } } }
 
     it { get api_product_components_path(product), headers: headers; expect(response).to have_http_status(:unauthorized) } # rubocop:disable Style/Semicolon
     it { post api_product_components_path(product), params: input, headers: headers; expect(response).to have_http_status(:unauthorized) } # rubocop:disable Style/Semicolon
@@ -96,7 +99,7 @@ RSpec.describe "Product Components", type: :request do
 
       describe "POST /api/v1/products/:product_id/components" do # create
         let(:input) { params.to_json }
-        let(:params) { { component: { handle: handle2 } } }
+        let(:params) { { component: { identifier: component2_identifier, name: 'name2', noid: 'noid2', handle: 'handle2' } } }
 
         context 'blank handle' do
           let(:params) { { component: { handle: '' } } }
@@ -109,7 +112,7 @@ RSpec.describe "Product Components", type: :request do
             expect(response_hash[:exception]).not_to be_empty
             expect(response_hash[:exception]).to include("ActiveRecord::RecordNotFound: Couldn't find Product")
             product2 = Product.find_by(identifier: product2_identifier)
-            component2 = Component.find_by(handle: handle2)
+            component2 = Component.find_by(identifier: component2_identifier)
             expect(product2).to be_nil
             expect(component2).to be_nil
             expect(Product.all.count).to eq(1)
@@ -120,8 +123,8 @@ RSpec.describe "Product Components", type: :request do
             post api_product_components_path(product), params: input, headers: headers
             expect(response.content_type).to eq("application/json")
             expect(response).to have_http_status(:unprocessable_entity)
-            expect(response_body[:handle.to_s]).to eq(["can't be blank"])
-            component2 = Component.find_by(handle: handle2)
+            expect(response_body[:identifier.to_s]).to eq(["can't be blank"])
+            component2 = Component.find_by(identifier: component2_identifier)
             expect(product.components.count).to eq(0)
             expect(component2).to be_nil
             expect(Product.all.count).to eq(1)
@@ -134,8 +137,8 @@ RSpec.describe "Product Components", type: :request do
             post api_product_components_path(product), params: input, headers: headers
             expect(response.content_type).to eq("application/json")
             expect(response).to have_http_status(:unprocessable_entity)
-            expect(response_body[:handle.to_s]).to eq(["can't be blank"])
-            component2 = Component.find_by(handle: handle2)
+            expect(response_body[:identifier.to_s]).to eq(["can't be blank"])
+            component2 = Component.find_by(identifier: component2_identifier)
             expect(product.components.count).to eq(1)
             expect(product.components).not_to include(component2)
             expect(component2).to be_nil
@@ -153,7 +156,7 @@ RSpec.describe "Product Components", type: :request do
             expect(response_hash[:exception]).not_to be_empty
             expect(response_hash[:exception]).to include("ActiveRecord::RecordNotFound: Couldn't find Product")
             product2 = Product.find_by(identifier: product2_identifier)
-            component2 = Component.find_by(handle: handle2)
+            component2 = Component.find_by(identifier: component2_identifier)
             expect(product2).to be_nil
             expect(component2).to be_nil
             expect(Product.all.count).to eq(1)
@@ -164,8 +167,8 @@ RSpec.describe "Product Components", type: :request do
             post api_product_components_path(product), params: input, headers: headers
             expect(response.content_type).to eq("application/json")
             expect(response).to have_http_status(:created)
-            expect(response_body[:handle.to_s]).to eq(handle2)
-            component2 = Component.find_by(handle: handle2)
+            expect(response_body[:identifier.to_s]).to eq(component2_identifier)
+            component2 = Component.find_by(identifier: component2_identifier)
             expect(product.components.count).to eq(1)
             expect(product.components.first).to eq(component2)
             expect(component2.products.count).to eq(1)
@@ -180,8 +183,8 @@ RSpec.describe "Product Components", type: :request do
             post api_product_components_path(product), params: input, headers: headers
             expect(response.content_type).to eq("application/json")
             expect(response).to have_http_status(:created)
-            expect(response_body[:handle.to_s]).to eq(handle2)
-            component2 = Component.find_by(handle: handle2)
+            expect(response_body[:identifier.to_s]).to eq(component2_identifier)
+            component2 = Component.find_by(identifier: component2_identifier)
             expect(product.components.count).to eq(2)
             expect(product.components).to include(component2)
             expect(component2.products.count).to eq(1)
@@ -212,7 +215,7 @@ RSpec.describe "Product Components", type: :request do
             post api_product_components_path(product), params: input, headers: headers
             expect(response.content_type).to eq("application/json")
             expect(response).to have_http_status(:ok)
-            expect(response_body[:handle.to_s]).to eq(handle2)
+            expect(response_body[:identifier.to_s]).to eq(component2_identifier)
             expect(product.components.count).to eq(1)
             expect(product.components.first).to eq(component2)
             expect(component2.products.count).to eq(1)
@@ -227,7 +230,7 @@ RSpec.describe "Product Components", type: :request do
             post api_product_components_path(product), params: input, headers: headers
             expect(response.content_type).to eq("application/json")
             expect(response).to have_http_status(:ok)
-            expect(response_body[:handle.to_s]).to eq(handle2)
+            expect(response_body[:identifier.to_s]).to eq(component2_identifier)
             expect(product.components.count).to eq(2)
             expect(product.components).to include(component2)
             expect(component2.products.count).to eq(1)
@@ -243,7 +246,7 @@ RSpec.describe "Product Components", type: :request do
             post api_product_components_path(product), params: input, headers: headers
             expect(response.content_type).to eq("application/json")
             expect(response).to have_http_status(:ok)
-            expect(response_body[:handle.to_s]).to eq(handle2)
+            expect(response_body[:identifier.to_s]).to eq(component2_identifier)
             expect(product.components.count).to eq(2)
             expect(product.components).to include(component2)
             expect(component2.products.count).to eq(1)
@@ -302,7 +305,7 @@ RSpec.describe "Product Components", type: :request do
             get api_product_component_path(product, component), headers: headers
             expect(response.content_type).to eq("application/json")
             expect(response).to have_http_status(:ok)
-            expect(response_body[:handle.to_s]).to eq(handle)
+            expect(response_body[:identifier.to_s]).to eq(component_identifier)
             expect(Product.all.count).to eq(1)
             expect(Component.all.count).to eq(1)
           end
@@ -314,7 +317,7 @@ RSpec.describe "Product Components", type: :request do
             get api_product_component_path(product, component2), headers: headers
             expect(response.content_type).to eq("application/json")
             expect(response).to have_http_status(:ok)
-            expect(response_body[:handle.to_s]).to eq(handle2)
+            expect(response_body[:identifier.to_s]).to eq(component2_identifier)
             expect(Product.all.count).to eq(1)
             expect(Component.all.count).to eq(2)
           end
@@ -332,7 +335,7 @@ RSpec.describe "Product Components", type: :request do
               expect(response_hash[:exception]).not_to be_empty
               expect(response_hash[:exception]).to include("ActiveRecord::RecordNotFound: Couldn't find Product")
               product2 = Product.find_by(identifier: product2_identifier)
-              component2 = Component.find_by(handle: handle2)
+              component2 = Component.find_by(identifier: component2_identifier)
               expect(product2).to be_nil
               expect(component2).to be_nil
               expect(Product.all.count).to eq(1)
@@ -381,7 +384,7 @@ RSpec.describe "Product Components", type: :request do
               expect(response.body).not_to be_empty
               expect(response_hash[:exception]).not_to be_empty
               expect(response_hash[:exception]).to include("ActiveRecord::RecordNotFound: Couldn't find Component")
-              component2 = Component.find_by(handle: handle2)
+              component2 = Component.find_by(identifier: component2_identifier)
               expect(product2.components.count).to eq(0)
               expect(component2).to be_nil
               expect(Product.all.count).to eq(2)
@@ -392,7 +395,7 @@ RSpec.describe "Product Components", type: :request do
               send(verb, api_product_component_path(product2, component), headers: headers)
               expect(response.content_type).to eq("application/json")
               expect(response).to have_http_status(:ok)
-              expect(response_body[:handle.to_s]).to eq(handle)
+              expect(response_body[:identifier.to_s]).to eq(component_identifier)
               expect(product2.components.count).to eq(1)
               expect(product2.components.first).to eq(component)
               expect(component.products.count).to eq(1)
@@ -407,7 +410,7 @@ RSpec.describe "Product Components", type: :request do
               send(verb, api_product_component_path(product2, component), headers: headers)
               expect(response.content_type).to eq("application/json")
               expect(response).to have_http_status(:ok)
-              expect(response_body[:handle.to_s]).to eq(handle)
+              expect(response_body[:identifier.to_s]).to eq(component_identifier)
               expect(product2.components.count).to eq(1)
               expect(product2.components.first).to eq(component)
               expect(component.products.count).to eq(2)
@@ -424,7 +427,7 @@ RSpec.describe "Product Components", type: :request do
               send(verb, api_product_component_path(product2, component), headers: headers)
               expect(response.content_type).to eq("application/json")
               expect(response).to have_http_status(:ok)
-              expect(response_body[:handle.to_s]).to eq(handle)
+              expect(response_body[:identifier.to_s]).to eq(component_identifier)
               product2 = Product.find_by(identifier: product2_identifier)
               expect(product2.components.count).to eq(1)
               expect(product2.components.first).to eq(component)
@@ -446,7 +449,7 @@ RSpec.describe "Product Components", type: :request do
                 send(verb, api_product_component_path(product2, component2), headers: headers)
                 expect(response.content_type).to eq("application/json")
                 expect(response).to have_http_status(:ok)
-                expect(response_body[:handle.to_s]).to eq(handle2)
+                expect(response_body[:identifier.to_s]).to eq(component2_identifier)
                 expect(product2.components.count).to eq(1)
                 expect(product2.components.first).to eq(component2)
                 expect(component2.products.count).to eq(2)
@@ -466,7 +469,7 @@ RSpec.describe "Product Components", type: :request do
                 send(verb, api_product_component_path(product2, component2), headers: headers)
                 expect(response.content_type).to eq("application/json")
                 expect(response).to have_http_status(:ok)
-                expect(response_body[:handle.to_s]).to eq(handle2)
+                expect(response_body[:identifier.to_s]).to eq(component2_identifier)
                 expect(product2.components.count).to eq(2)
                 expect(product2.components.first).to eq(component)
                 expect(product2.components.last).to eq(component2)

@@ -11,10 +11,9 @@ class Component < ApplicationRecord
   has_many :components_products
   has_many :products, through: :components_products
 
-  # TODO: Uncomment validators and remove validates handle
-  # validates :identifier, presence: true, allow_blank: false, uniqueness: true
-  # validates :noid, presence: true, allow_blank: false
-  validates :handle, presence: true, allow_blank: false, uniqueness: true
+  validates :identifier, presence: true, allow_blank: false, uniqueness: true
+  validates :noid, presence: true, allow_blank: false
+  validates :handle, presence: true, allow_blank: false
 
   before_destroy do
     if products.present?

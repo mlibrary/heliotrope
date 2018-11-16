@@ -95,7 +95,8 @@ RSpec.describe SessionsController, type: :controller do
     let(:file_set) { create(:file_set, content: File.open(File.join(fixture_path, 'moby-dick.epub'))) }
 
     it 'gets parameterized discovery feed' do
-      component = Component.create!(handle: HandleService.path(file_set.id))
+      epub = Sighrax.factory(file_set.id)
+      component = Component.create!(identifier: epub.resource_token, name: epub.title, noid: epub.noid, handle: HandleService.path(epub.noid))
       Institution.create!(identifier: '1', name: 'University of Michigan', site: 'Site', login: 'Login', entity_id: 'https://shibboleth.umich.edu/idp/shibboleth')
       Institution.create!(identifier: '2', name: 'College', site: 'Site', login: 'Login', entity_id: 'https://shibboleth.college.edu/idp/shibboleth')
       product = Product.create!(identifier: 'product', name: 'name', purchase: 'purchase')

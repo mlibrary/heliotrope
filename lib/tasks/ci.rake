@@ -24,6 +24,15 @@ unless Rails.env.production?
     end
   end
 
+  desc "Run spec in testing directory"
+  task :testing_spec do
+    puts 'Running spec in testing...'
+    Dir.chdir('testing') do
+      RSpec::Core::RakeTask.new(:spec_testing)
+      Rake::Task['spec_testing'].invoke
+    end
+  end
+
   desc 'Run the ci build'
   task ci: %i[rubocop ruumba lib_spec] do
     require 'active_fedora/rake_support'

@@ -194,52 +194,6 @@ RSpec.describe "Lessees", type: :request do
     end
   end
 
-  describe '#update' do
-    subject { put "/lessees/#{target.id}", params: { lessee: lessee_params } }
-
-    let(:lessee_params) { { identifier: 'identifier' } }
-
-    it do
-      expect { subject }.to raise_error(ActionController::RoutingError)
-    end
-
-    context 'authenticated' do
-      before { cosign_sign_in(current_user) }
-
-      it do
-        expect { subject }.to raise_error(ActionController::RoutingError)
-      end
-
-      context 'authorized' do
-        before { allow_any_instance_of(ApplicationController).to receive(:authorize!) }
-
-        it do
-          expect { subject }.to raise_error(ActionController::RoutingError)
-        end
-
-        context 'platform administrator' do
-          let(:current_user) { create(:platform_admin) }
-
-          it do
-            expect { subject }.not_to raise_error
-            expect(response).to render_template(:edit)
-            expect(response).to have_http_status(:ok)
-          end
-
-          context 'invalid lessee params' do
-            let(:lessee_params) { { identifier: '' } }
-
-            it do
-              expect { subject }.not_to raise_error
-              expect(response).to render_template(:edit)
-              expect(response).to have_http_status(:ok)
-            end
-          end
-        end
-      end
-    end
-  end
-
   describe '#delete' do
     subject { delete "/lessees/#{target.id}" }
 

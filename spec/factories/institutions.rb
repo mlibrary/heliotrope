@@ -2,10 +2,10 @@
 
 FactoryBot.define do
   factory :institution do
-    identifier { "MyString" }
-    name { "MyString" }
-    entity_id { "MyString" }
-    site { "MyString" }
-    login { "MyString" }
+    sequence(:identifier) { |n| ["Identifier#{n}"] }
+    sequence(:name) { |n| ["Name#{n}"] }
+    sequence(:entity_id) { |n| ["Entity_ID#{n}"] }
+    sequence(:site) { |n| ["Site#{n}"] }
+    sequence(:login) { |n| ["Login#{n}"] }
   end
 end

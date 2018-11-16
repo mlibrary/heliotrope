@@ -1,30 +1,6 @@
 # frozen_string_literal: true
 
 class RepositoryPresenter < ApplicationPresenter
-  def policy_ids
-    Checkpoint::DB::Permit.dataset.map(&:id)
-  end
-
-  def product_ids
-    Product.all.map(&:id)
-  end
-
-  def component_ids
-    Component.all.map(&:id)
-  end
-
-  def lessee_ids
-    Lessee.all.map(&:id)
-  end
-
-  def institution_ids
-    Institution.all.map(&:id)
-  end
-
-  def publisher_ids
-    Press.all.map(&:id)
-  end
-
   def monograph_ids(publisher = nil)
     docs = ActiveFedora::SolrService.query("+has_model_ssim:Monograph", rows: 10_000)
     ids = []

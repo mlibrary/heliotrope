@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-describe Hyrax::FileSetsController do
+RSpec.describe Hyrax::FileSetsController, type: :controller do
   let(:user) { create(:platform_admin) }
   let(:press) { create(:press) }
   let(:monograph) { create(:monograph, user: user, press: press.subdomain) }

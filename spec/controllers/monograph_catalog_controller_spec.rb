@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-describe MonographCatalogController do
+RSpec.describe MonographCatalogController, type: :controller do
   describe 'blacklight_config' do
     blacklight_config = described_class.blacklight_config
 

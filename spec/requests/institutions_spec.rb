@@ -197,7 +197,7 @@ RSpec.describe "Institutions", type: :request do
   describe '#update' do
     subject { put "/institutions/#{target.id}", params: { institution: institution_params } }
 
-    let(:institution_params) { { identifier: 'identifier' } }
+    let(:institution_params) { { name: 'new_name' } }
 
     it do
       expect { subject }.to raise_error(ActionController::RoutingError)
@@ -222,12 +222,12 @@ RSpec.describe "Institutions", type: :request do
 
           it do
             expect { subject }.not_to raise_error
-            expect(response).to render_template(:edit)
-            expect(response).to have_http_status(:ok)
+            expect(response).to redirect_to(institution_path(Institution.find(target.id)))
+            expect(response).to have_http_status(:found)
           end
 
           context 'invalid institution params' do
-            let(:institution_params) { { identifier: '' } }
+            let(:institution_params) { { identifier: 'identifier' } }
 
             it do
               expect { subject }.not_to raise_error

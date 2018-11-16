@@ -65,20 +65,18 @@ module API
         end
       end
 
-      # @overload update
-      #   @example put /api/lessees/:id
-      #   @param [Hash] params { id: Number }
-      # @overload update
-      #   @example put /api/products/:product_id/lessees/:id
-      #   @param [Hash] params { product_id: Number, id: Number }
+      # @example put /api/products/:product_id/lessees/:id
+      # @param [Hash] params { product_id: Number, id: Number }
       # @return [ActionDispatch::Response] {Lessee}
       #   (See ./app/views/api/v1/lessees/show.json.jbuilder for details)
       def update
-        if params[:product_id].present?
-          update_product_lessee
-        else
-          update_lessee
+        set_product!
+        set_lessee!
+        unless @product.lessees.include?(@lessee)
+          @product.lessees << @lessee
+          @product.save
         end
+        render :show, status: :ok, location: @lessee
       end
 
       # @overload destroy
@@ -127,26 +125,6 @@ module API
             @product.save
           end
           render :show, status: status, location: @lessee
-        end
-
-        def update_lessee
-          status = :ok
-          if @lessee.blank?
-            @lessee = Lessee.new(identifier: params[:identifier])
-            return render json: @lessee.errors, status: :unprocessable_entity unless @lessee.save
-            status = :created
-          end
-          render :show, status: status, location: @lessee
-        end
-
-        def update_product_lessee
-          set_product!
-          set_lessee!
-          unless @product.lessees.include?(@lessee)
-            @product.lessees << @lessee
-            @product.save
-          end
-          render :show, status: :ok, location: @lessee
         end
 
         def set_product!

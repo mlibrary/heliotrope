@@ -1,3 +1,12 @@
 <h1>Logs</h1>
-
-<%= link_to "API Requests Log", api_requests_path %>
+<table>
+  <tr>
+    <td><%= link_to "API Requests Log", api_requests_path %></td>
+    <td>&nbsp;</td>
+    <td>
+      <%= link_to(truncate_api_requests_path, method: :delete, class: "btn btn-default", data: { confirm: 'Are you sure?' }) do %>
+        <span class="glyphicon glyphicon-minus" aria-hidden="true"></span> Destroy
+      <% end %>
+    </td>
+  </tr>
+</table>
