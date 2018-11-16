@@ -9,7 +9,14 @@ namespace :heliotrope do
     #    Expiration is set in config/initializers/riiif_initializer.rb
     #    This command cleans up everything in the cache that's been expired
     Rails.cache.cleanup
+    # It turns out that "Rails.cache.cleanup" is broken. It's fixed in rails 5.2,
+    # but for now we'll need to delete expired cached items. https://github.com/rails/rails/pull/30789
+    # Attempt to read each item, if it's expired it will be deleted
+    Dir.glob(Rails.root.join("tmp", "cache", "*", "*", "*")).each do |path|
+      Rails.cache.read(File.basename(path))
+    end
     Rails.logger.info("clean_cache cleaned up cache")
+
 
     # 2. IIIF stores it's "base" images in tmp/network_files
     #    These should be periodically cleaned up as well
