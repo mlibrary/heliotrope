@@ -29,8 +29,7 @@ module Import
 
       # look for unexpected column names which will be ignored. note: 'File Name' is not in METADATA_FIELDS.
       unexpecteds = rows[0].to_h.keys.map { |k| k&.strip } - (METADATA_FIELDS.pluck :field_name) - ['File Name']
-      attrs['row_errors'][0] = "\n***TITLE ROW HAS UNEXPECTED VALUES!*** These columns will be skipped:\n" +
-                               unexpecteds.join(', ')
+      attrs['row_errors'][0] = "\n***TITLE ROW HAS UNEXPECTED VALUES!*** These columns will be skipped:\n" + unexpecteds.join(', ') unless unexpecteds.count.zero?
 
       # human-readable row counter (3 accounts for the top two discarded rows)
       row_num = 3
