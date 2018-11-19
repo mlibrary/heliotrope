@@ -2,6 +2,9 @@
 
 FactoryBot.define do
   factory :component do
-    handle { "MyString" }
+    sequence(:identifier) { |n| ["Identifier#{n}"] }
+    sequence(:name) { |n| ["Name#{n}"] }
+    sequence(:noid) { |n| ["Noid#{n}"] }
+    sequence(:handle) { |n| ["Handle#{n}"] }
   end
 end

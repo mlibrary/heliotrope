@@ -27,6 +27,50 @@ RSpec.describe "Tokens", type: :request do
     expect(response_hash[:exception]).to include("RuntimeError: HTTP Authorization or ApiKey query blank or corrupt.")
   end
 
+  context 'rescue_from' do
+    let(:error) { StandardError }
+
+    before do
+      allow_any_instance_of(API::ApplicationController).to receive(:authorize_request).and_raise(error)
+      get api_token_path, headers: headers
+    end
+
+    it { expect(response).to be_unauthorized }
+
+    context 'ActiveRecord::RecordInvalid' do
+      let(:error) { ActiveRecord::RecordInvalid }
+
+      it { expect(response).to have_http_status(:unprocessable_entity) }
+    end
+
+    context 'ActiveRecord::RecordNotFound' do
+      let(:error) { ActiveRecord::RecordNotFound }
+
+      it { expect(response).to be_not_found }
+    end
+
+    context 'log_request_response' do
+      let(:api_request) { double('api_request', user: nil, action: nil, path: nil, params: nil, status: nil, exception: nil) }
+
+      before do
+        allow(APIRequest).to receive(:new).and_return(api_request)
+        allow(api_request).to receive(:user=).with(nil)
+        allow(api_request).to receive(:action=).with("GET")
+        allow(api_request).to receive(:path=).with("/api/token")
+        allow(api_request).to receive(:params=).with("{\"controller\":\"api/tokens\",\"action\":\"show\",\"token\":{}}")
+        allow(api_request).to receive(:status=).with(200)
+        allow(api_request).to receive(:exception=).with(StandardError)
+        allow(api_request).to receive(:save!).and_raise(StandardError)
+        allow(Rails.logger).to receive(:error).with("EXCEPTION StandardError API_REQUEST , , , , , ")
+        get api_token_path, headers: headers
+      end
+
+      it do
+        expect(Rails.logger).to have_received(:error)
+      end
+    end
+  end
+
   context 'authorization header' do
     before { headers["AUTHORIZATION"] = token }
 

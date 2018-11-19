@@ -92,7 +92,7 @@ RSpec.describe "Products", type: :request do
         let(:input) { params.to_json }
 
         context 'blank identifier' do
-          let(:params) { { product: { identifier: '', name: 'name', purchase: 'purchase' } } }
+          let(:params) { { product: { identifier: '', name: 'new_name', purchase: 'new_purchase' } } }
 
           it 'errors' do
             post api_products_path, params: input, headers: headers
@@ -104,7 +104,7 @@ RSpec.describe "Products", type: :request do
         end
 
         context 'unique identifier' do
-          let(:params) { { product: { identifier: new_identifier, name: 'name', purchase: 'purchase' } } }
+          let(:params) { { product: { identifier: new_identifier, name: 'new_name', purchase: 'new_purchase' } } }
 
           it 'creates product' do
             post api_products_path, params: input, headers: headers
@@ -117,7 +117,7 @@ RSpec.describe "Products", type: :request do
         end
 
         context 'existing identifier' do
-          let(:params) { { product: { identifier: identifier, name: 'name', purchase: 'purchase' } } }
+          let(:params) { { product: { identifier: identifier, name: 'new_name', purchase: 'new_purchase' } } }
 
           it 'does nothing' do
             post api_products_path, params: input, headers: headers
@@ -145,6 +145,48 @@ RSpec.describe "Products", type: :request do
           expect(response.content_type).to eq("application/json")
           expect(response).to have_http_status(:ok)
           expect(response_body).to eq(product_obj(product: product))
+        end
+      end
+
+      describe "PUT /api/v1/products/:id" do # update
+        let(:input) { params.to_json }
+
+        context 'does nothing' do
+          let(:params) { { product: { identifier: '', name: 'name', purchase: 'purchase' } } }
+
+          it 'errors' do
+            put api_product_path(product), params: input, headers: headers
+            expect(response.content_type).to eq("application/json")
+            expect(response).to have_http_status(:unprocessable_entity)
+            expect(response_body[:identifier.to_s]).to eq(["can't be blank"])
+            expect(Product.all.count).to eq(1)
+          end
+        end
+
+        context 'unique identifier' do
+          let(:params) { { product: { identifier: new_identifier, name: 'name', purchase: 'purchase' } } }
+
+          it 'updates product' do
+            put api_product_path(product), params: input, headers: headers
+            expect(response.content_type).to eq("application/json")
+            expect(response).to have_http_status(:ok)
+            expect(response_body[:identifier.to_s]).to eq(new_identifier)
+            expect(Product.find_by(identifier: new_identifier)).not_to be_nil
+            expect(Product.all.count).to eq(1)
+          end
+        end
+
+        context 'existing identifier' do
+          let(:params) { { product: { identifier: identifier, name: 'name', purchase: 'purchase' } } }
+
+          it 'does nothing' do
+            put api_product_path(product), params: input, headers: headers
+            expect(response.content_type).to eq("application/json")
+            expect(response).to have_http_status(:ok)
+            expect(response_body[:identifier.to_s]).to eq(identifier)
+            expect(Product.find_by(identifier: identifier)).not_to be_nil
+            expect(Product.all.count).to eq(1)
+          end
         end
       end
 

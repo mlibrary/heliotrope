@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-describe Hyrax::MonographsController do
+RSpec.describe Hyrax::MonographsController, type: :controller do
   context 'actions' do
     let(:monograph) { create(:monograph, user: user, press: press.subdomain) }
     let(:press) { build(:press) }

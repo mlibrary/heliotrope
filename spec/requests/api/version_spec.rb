@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe API::Version do
+RSpec.describe API::Version, type: :request do
   let(:default_version) { described_class.new('constraint_version', true).matches?(request) }
   let(:version) { described_class.new('constraint_version').matches?(request) }
   let(:request) { double('request', headers: headers) }

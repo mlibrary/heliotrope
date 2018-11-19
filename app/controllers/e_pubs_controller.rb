@@ -191,12 +191,6 @@ class EPubsController < CheckpointController
       products
     end
 
-    def subscribers
-      component = Component.find_by(handle: publication.identifier)
-      return [] if component.blank?
-      component.lessees
-    end
-
     def subscriber
       @subscriber ||= OpenStruct.new(identifier: valid_user_signed_in? ? current_user.email : 'anonymous')
     end

@@ -197,7 +197,7 @@ RSpec.describe "Individuals", type: :request do
   describe '#update' do
     subject { put "/individuals/#{target.id}", params: { individual: individual_params } }
 
-    let(:individual_params) { { identifier: 'identifier' } }
+    let(:individual_params) { { name: 'new_name' } }
 
     it do
       expect { subject }.to raise_error(ActionController::RoutingError)
@@ -222,12 +222,12 @@ RSpec.describe "Individuals", type: :request do
 
           it do
             expect { subject }.not_to raise_error
-            expect(response).to render_template(:edit)
-            expect(response).to have_http_status(:ok)
+            expect(response).to redirect_to(individual_path(Individual.find(target.id)))
+            expect(response).to have_http_status(:found)
           end
 
           context 'invalid individual params' do
-            let(:individual_params) { { identifier: '' } }
+            let(:individual_params) { { identifier: 'identifier' } }
 
             it do
               expect { subject }.not_to raise_error

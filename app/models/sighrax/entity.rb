@@ -26,6 +26,10 @@ module Sighrax
       noid
     end
 
+    def resource_token
+      resource_type.to_s + ':' + resource_id.to_s
+    end
+
     def title
       entity["title_tesim"]&.first || noid
     end

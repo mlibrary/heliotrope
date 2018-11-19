@@ -37,11 +37,6 @@ RSpec.describe APIRequestsController, type: :controller do
       expect {
         delete :destroy, params: { id: api_request.to_param }, session: valid_session
       }.to change(APIRequest, :count).by(-1)
-    end
-
-    it "redirects to the components list" do
-      api_request = APIRequest.create! valid_attributes
-      delete :destroy, params: { id: api_request.to_param }, session: valid_session
       expect(response).to redirect_to(api_requests_url)
     end
   end

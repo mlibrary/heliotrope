@@ -2,6 +2,6 @@
 
 FactoryBot.define do
   factory :lessee do
-    identifier { "MyString" }
+    sequence(:identifier) { |n| ["Identifier#{n}"] }
   end
 end

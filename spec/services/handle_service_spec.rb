@@ -31,44 +31,50 @@ RSpec.describe HandleService do
 
   describe '#value' do
     let(:response) { double('response') }
-    let(:value) { double('value') }
+    let(:body) { { responseCode: code, values: values }.to_json }
+    let(:values) { [] }
 
     before do
-      allow(Faraday).to receive(:get).with(described_class::HANDLE_NET_API_HANDLES + subject.path(validnoid)).and_return(response)
-      allow(response).to receive(:code).and_return(code)
-      allow(response).to receive(:[]).with('responseCode').and_return(responseCode)
+      allow(Faraday).to receive(:get).with(described_class::HANDLE_NET_API_HANDLES + described_class.path(validnoid)).and_return(response)
+      allow(response).to receive(:body).and_return(body)
+      allow(response).to receive(:status).and_return(status)
+    end
+
+    context '1' do
+      let(:code) { 1 }
+      let(:values) { [{ data: { value: 'url' }, type: 'URL' }] }
+      let(:status) { 200 }
+
+      it { expect(described_class.value(validnoid)).to eq "url" }
     end
 
     context '1 : Success. (HTTP 200 OK)' do
-      let(:responseCode) { 1 }
+      let(:code) { 1 }
+      let(:values) { [{ data: { value: 'doi' }, type: 'DOI' }] }
+      let(:status) { 200 }
+
+      it { expect(described_class.value(validnoid)).to eq "1 : Success. (HTTP 200 OK)" }
+    end
+
+    context '2' do
+      let(:code) { 2 }
+      let(:status) { 500 }
+
+      it { expect(described_class.value(validnoid)).to eq "2 : Error. Something unexpected went wrong during handle resolution. (HTTP 500 Internal Server Error)" }
+    end
+
+    context '100' do
+      let(:code) { 100 }
+      let(:status) { 404 }
+
+      it { expect(described_class.value(validnoid)).to eq "100 : Handle Not Found. (HTTP 404 Not Found)" }
+    end
+
+    context '200' do
       let(:code) { 200 }
+      let(:status) { 200 }
 
-      before do
-        allow(response).to receive(:[]).with('values').and_return([{ "type" => "URL", "data" => { "value" => value } }])
-      end
-
-      it { expect(subject.value(validnoid)).to eq value }
-    end
-
-    context '2 : Error. Something unexpected went wrong during handle resolution. (HTTP 500 Internal Server Error)' do
-      let(:responseCode) { 2 }
-      let(:code) { 500 }
-
-      it { expect(subject.value(validnoid)).to be nil }
-    end
-
-    context '100 : Handle Not Found. (HTTP 404 Not Found)' do
-      let(:responseCode) { 100 }
-      let(:code) { 404 }
-
-      it { expect(subject.value(validnoid)).to be nil }
-    end
-
-    context '200 : Values Not Found. The handle exists but has no values (or no values according to the types and indices specified). (HTTP 200 OK)' do
-      let(:responseCode) { 200 }
-      let(:code) { 200 }
-
-      it { expect(subject.value(validnoid)).to be nil }
+      it { expect(described_class.value(validnoid)).to eq "200 : Values Not Found. The handle exists but has no values (or no values according to the types and indices specified). (HTTP 200 OK)" }
     end
   end
 end

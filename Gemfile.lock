@@ -24,6 +24,15 @@ GIT
       json (~> 2.1, >= 2.1.0)
       typhoeus (~> 1.0, >= 1.0.1)
 
+GIT
+  remote: https://github.com/mlibrary/turnsole
+  revision: f85cb2cd7e4f6cc52ac05d6332d62017e84b748a
+  branch: checkpoint
+  specs:
+    turnsole (0.1.0)
+      faraday (~> 0.12.2)
+      faraday_middleware (~> 0.12.2)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -1002,6 +1011,7 @@ DEPENDENCIES
   swagger_client!
   therubyracer
   turbolinks (~> 5)
+  turnsole!
   tzinfo-data
   uglifier (>= 3.2.0)
   web-console (>= 3.3.0)

@@ -10,6 +10,7 @@ RSpec.describe Sighrax::Entity, type: :model do
 
   it { expect(subject.resource_type).to eq :Entity }
   it { expect(subject.resource_id).to eq noid }
+  it { expect(subject.resource_token).to eq "#{subject.resource_type}:#{subject.resource_id}" }
 
   context 'valid noid' do
     let(:noid) { 'validnoid' }

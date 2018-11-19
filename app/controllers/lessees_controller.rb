@@ -46,20 +46,6 @@ class LesseesController < ApplicationController
     end
   end
 
-  # PATCH/PUT /lessees/1
-  # PATCH/PUT /lessees/1.json
-  def update
-    respond_to do |format|
-      if @lessee.update(lessee_params)
-        format.html { redirect_to @lessee, notice: 'Lessee was successfully updated.' }
-        format.json { render :show, status: :ok, location: @lessee }
-      else
-        format.html { render :edit }
-        format.json { render json: @lessee.errors, status: :unprocessable_entity }
-      end
-    end
-  end
-
   # DELETE /lessees/1
   # DELETE /lessees/1.json
   # DELETE /products/product_id:/lessees/:id

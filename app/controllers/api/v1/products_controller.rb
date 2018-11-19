@@ -175,13 +175,11 @@ module API
         end
 
         def update_product
-          status = :ok
-          if @product.blank?
-            @product = Product.new(identifier: params[:identifier])
-            return render json: @product.errors, status: :unprocessable_entity unless @product.save
-            status = :created
+          if @product.update(product_params)
+            render :show, status: :ok, location: @product
+          else
+            render json: @product.errors, status: :unprocessable_entity
           end
-          render :show, status: status, location: @product
         end
 
         def update_component_product

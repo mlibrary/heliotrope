@@ -159,6 +159,23 @@ RSpec.describe "Individuals", type: :request do
         end
       end
 
+      describe "PUT /api/v1/individual" do # update
+        let(:params) { { individual: { identifier: identifier, name: 'updated_name' } } }
+
+        it 'does not update nonexistent individuals' do
+          put api_individual_path(new_individual.id), params: new_individual.to_json, headers: headers
+          expect(response).to have_http_status(:not_found)
+          expect(response.body).to be_empty
+        end
+
+        it 'updates' do
+          put api_individual_path(individual.id), params: params.to_json, headers: headers
+          expect(response.content_type).to eq("application/json")
+          expect(response).to have_http_status(:ok)
+          expect(response_body[:name.to_s]).to eq('updated_name')
+        end
+      end
+
       describe "DELETE /api/v1/individual/:id" do # destroy
         it 'does nothing' do
           delete api_individual_path(new_individual), headers: headers
@@ -178,23 +195,6 @@ RSpec.describe "Individuals", type: :request do
           expect(Individual.all.count).to eq(0)
           expect(Lessee.find_by(identifier: identifier)).to be_nil
           expect(Lessee.all.count).to eq(0)
-        end
-      end
-
-      describe "PUT /api/v1/individual" do # update
-        let(:params) { { individual: { identifier: identifier, name: 'updated_name' } } }
-
-        it 'does not update nonexistent individuals' do
-          put api_individual_path(new_individual.id), params: new_individual.to_json, headers: headers
-          expect(response).to have_http_status(:not_found)
-          expect(response.body).to be_empty
-        end
-
-        it 'updates' do
-          put api_individual_path(individual.id), params: params.to_json, headers: headers
-          expect(response.content_type).to eq("application/json")
-          expect(response).to have_http_status(:ok)
-          expect(response_body[:name.to_s]).to eq('updated_name')
         end
       end
     end

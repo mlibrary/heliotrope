@@ -25,7 +25,6 @@ class InstitutionsController < ApplicationController
   # POST /institutions.json
   def create
     @institution = Institution.new(institution_params)
-
     respond_to do |format|
       if @institution.save
         format.html { redirect_to @institution, notice: 'Institution was successfully created.' }

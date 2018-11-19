@@ -10,7 +10,7 @@ module API
       # @return [ActionDispatch::Response] {Component}
       #   (See ./app/views/api/v1/components/show.json.jbuilder for details)
       def find
-        @component = Component.find_by(handle: params[:handle])
+        @component = Component.find_by(identifier: params[:identifier])
         return head :not_found if @component.blank?
         render :show
       end
@@ -104,7 +104,7 @@ module API
 
         def create_component
           status = :ok
-          @component = Component.find_by(handle: component_params[:handle])
+          @component = Component.find_by(identifier: component_params[:identifier])
           if @component.blank?
             @component = Component.new(component_params)
             return render json: @component.errors, status: :unprocessable_entity unless @component.save
@@ -116,7 +116,7 @@ module API
         def create_product_component
           status = :ok
           set_product!
-          @component = Component.find_by(handle: component_params[:handle])
+          @component = Component.find_by(identifier: component_params[:identifier])
           if @component.blank?
             @component = Component.new(component_params)
             return render json: @component.errors, status: :unprocessable_entity unless @component.save
@@ -130,13 +130,11 @@ module API
         end
 
         def update_component
-          status = :ok
-          if @component.blank?
-            @component = Component.new(handle: params[:handle])
-            return render json: @component.errors, status: :unprocessable_entity unless @component.save
-            status = :created
+          if @component.update(component_params)
+            render :show, status: :ok, location: @component
+          else
+            render json: @component.errors, status: :unprocessable_entity
           end
-          render :show, status: status, location: @component
         end
 
         def update_product_component
@@ -164,7 +162,7 @@ module API
 
         # Never trust parameters from the scary internet, only allow the white list through.
         def component_params
-          params.require(:component).permit(:handle)
+          params.require(:component).permit(:identifier, :name, :noid, :handle)
         end
     end
   end

@@ -3,6 +3,12 @@
 require 'rails_helper'
 
 RSpec.describe AuthenticationsController, type: :controller do
+  describe '#show' do
+    subject { get :show }
+
+    it { is_expected.to render_template :show }
+  end
+
   describe '#new' do
     subject { get :new }
 

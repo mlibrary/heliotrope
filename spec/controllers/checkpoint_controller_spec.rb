@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-describe CheckpointController do
+RSpec.describe CheckpointController, type: :controller do
   context 'rescue_from exception' do
     controller do
       attr_accessor :the_exception

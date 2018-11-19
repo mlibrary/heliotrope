@@ -1,0 +1,33 @@
+#!/usr/bin/env ruby
+
+# frozen_string_literal: true
+
+require 'optparse'
+require 'ostruct'
+require "bundler/setup"
+require "turnsole"
+
+# options = OpenStruct.new
+option_parser = OptionParser.new do |opts|
+  opts.banner = "Usage: #{$PROGRAM_NAME} noid"
+  opts.on_tail('-h', '--help', 'Print this help message') do
+    puts opts
+    exit 0
+  end
+end
+option_parser.parse!(ARGV)
+
+if ARGV.empty?
+  puts option_parser.help
+else
+  begin
+    noid = ARGV[0]
+    puts "noid: #{noid}"
+    puts "path: #{Turnsole::Handle::Service.path(noid)}"
+    puts "url: #{Turnsole::Handle::Service.url(noid)}"
+    puts "value: #{Turnsole::Handle::Service.value(noid)}"
+  rescue StandardError => e
+    STDERR.puts e.message
+  end
+  exit!(0)
+end

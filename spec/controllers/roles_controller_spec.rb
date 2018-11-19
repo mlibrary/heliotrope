@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-describe RolesController, type: :controller do
+RSpec.describe RolesController, type: :controller do
   let(:press) { create(:press) }
 
   describe 'when user does not have access' do
