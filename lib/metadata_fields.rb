@@ -51,7 +51,7 @@ METADATA_FIELDS ||=
     { object: :monograph, field_name: 'Pub Location', metadata_name: 'location', multivalued: :no, description: I18n.t('csv.descriptions.location') },
     { object: :monograph, field_name: 'Series', metadata_name: 'series', multivalued: :yes_split, description: I18n.t('csv.descriptions.series') },
     { object: :file_set, field_name: 'Keywords', metadata_name: 'keywords', required: false, multivalued: :yes_split, description: I18n.t('csv.descriptions.keywords') },
-    { object: :file_set, field_name: 'Section', metadata_name: 'section_title', required: false, multivalued: :yes, description: I18n.t('csv.descriptions.section_title') },
+    { object: :file_set, field_name: 'Section', metadata_name: 'section_title', required: false, multivalued: :yes_split, description: I18n.t('csv.descriptions.section_title') },
     { object: :file_set, field_name: 'Language', metadata_name: 'language', required: false, multivalued: :yes_split, description: I18n.t('csv.descriptions.language') },
     { object: :file_set, field_name: 'Transcript', metadata_name: 'transcript', required: false, multivalued: :no, description: I18n.t('csv.descriptions.transcript') },
     { object: :file_set, field_name: 'Translation', metadata_name: 'translation', required: false, multivalued: :yes, description: I18n.t('csv.descriptions.translation') },

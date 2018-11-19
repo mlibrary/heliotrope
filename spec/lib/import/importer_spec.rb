@@ -200,6 +200,9 @@ describe Import::Importer do
         expect(file_sets[5].title).to eq ['Section 2 Shipwreck']
         expect(file_sets[5].section_title).to eq ['Act 2: Stirrin\' Up']
 
+        expect(file_sets[7].title).to eq ['Previous Shipwreck File (Again)']
+        expect(file_sets[7].section_title).to match_array ['Act 2: Stirrin\' Up', 'Act 3: External Stuffs']
+
         # filesets should have the same visibility as the parent monograph
         expect(file_sets[0].visibility).to eq monograph.visibility
         expect(file_sets[8].visibility).to eq monograph.visibility

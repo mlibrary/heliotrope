@@ -105,7 +105,7 @@ describe Import::CSVParser do
           'exclusive_to_platform' => 'yes',
           'content_type' => ['portrait', 'photograph'],
           'creator' => ['Smith'],
-          'section_title' => ['Act 2: Stirrin\' Up'],
+          'section_title' => ['Act 2: Stirrin\' Up', 'Act 3: External Stuffs'],
           'language' => ['Latin'] },
         { 'title' => ['External Bard Transcript'],
           'resource_type' => ['text'],
