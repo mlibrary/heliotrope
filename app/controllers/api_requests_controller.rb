@@ -28,7 +28,6 @@ class APIRequestsController < ApplicationController
 
   private
 
-    # Use callbacks to share common setup or constraints between actions.
     def set_api_request
       @api_request = APIRequest.find(params[:id])
     end

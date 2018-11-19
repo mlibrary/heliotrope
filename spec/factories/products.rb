@@ -2,8 +2,8 @@
 
 FactoryBot.define do
   factory :product do
-    sequence(:identifier) { |n| ["Identifier#{n}"] }
-    sequence(:name) { |n| ["Name#{n}"] }
-    sequence(:purchase) { |n| ["Purchase#{n}"] }
+    sequence(:identifier) { |n| "ProductIdentifier#{n}" }
+    sequence(:name) { |n| "ProductName#{n}" }
+    sequence(:purchase) { |n| "ProductPurchase#{n}" }
   end
 end

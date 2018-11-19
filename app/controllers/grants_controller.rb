@@ -3,8 +3,6 @@
 class GrantsController < ApplicationController
   before_action :set_grant, only: %i[show destroy]
 
-  # GET /grants
-  # GET /grants.json
   def index
     page = params.fetch("page", 1).to_i
     per_page = params.fetch("per_page", 20).to_i
@@ -15,17 +13,12 @@ class GrantsController < ApplicationController
     @grants = Kaminari.paginate_array(permits.map { |permit| Grant.new(permit) }, total_count: total_entries).page(page).per(per_page)
   end
 
-  # GET /grants/1
-  # GET /grants/1.json
   def show; end
 
-  # GET /grants/new
   def new
     @grant = Grant.new
   end
 
-  # POST /grants
-  # POST /grants.json
   def create # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
     agent_type = grant_params[:agent_type]&.to_s&.to_sym
     agent_id = grant_params[:agent_id]&.to_s&.to_sym if grant_params[:agent_id].present?
@@ -84,8 +77,6 @@ class GrantsController < ApplicationController
     end
   end
 
-  # DELETE /grants/1
-  # DELETE /grants/1.json
   def destroy
     @grant.destroy
     respond_to do |format|
@@ -96,13 +87,11 @@ class GrantsController < ApplicationController
 
   private
 
-    # Use callbacks to share common setup or constraints between actions.
     def set_grant
       permit = Checkpoint::DB::Permit.find(id: params[:id])
       @grant = Grant.new(permit) if permit.present?
     end
 
-    # Never trust parameters from the scary internet, only allow the white list through.
     def grant_params
       params.require(:grant).permit(
         :agent_type,

@@ -14,16 +14,18 @@
 <% components.each do |component| %>
   <%
     file_set = FileSet.find(component.noid) if component.file_set?
+    file_set_id = file_set&.id || 0
     monograph = file_set&.parent
     monograph ||= Monograph.find(component.noid) if component.monograph?
+    monograph_id = monograph&.id || 0
   %>
   <div class="col-md-10">
     <div class="col-md-1"><%= link_to component.id, component %></div>
     <div class="col-md-1"><%= component.identifier %></div>
     <div class="col-md-2"><%= component.name %></div>
     <div class="col-md-3"><%= link_to component.handle, HandleService.url(component.noid) %></div>
-    <div class="col-md-1">&nbsp<%= link_to_if file_set.present?,file_set.id, hyrax_file_set_path(file_set.id) %></div>
-    <div class="col-md-2">&nbsp<%= link_to_if monograph.present?, monograph.id, hyrax_monograph_path(monograph.id) %></div>
+    <div class="col-md-1">&nbsp<%= link_to_if file_set.present?,file_set_id, hyrax_file_set_path(file_set_id) %></div>
+    <div class="col-md-2">&nbsp<%= link_to_if monograph.present?, monograph_id, hyrax_monograph_path(monograph_id) %></div>
     <div class="col-md-2"><%= component.products.count() %></div>
   </div>
   <div class="col-md-2">

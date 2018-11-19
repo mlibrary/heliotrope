@@ -2,13 +2,15 @@
 
 module API
   module V1
+    # Individuals Controller
     class IndividualsController < API::ApplicationController
       before_action :set_individual, only: %i[show update destroy]
 
-      # @example get /api/individual?identifer=String
+      # Get individual by identifier
+      # @example
+      #   get /api/individual?identifier=String
       # @param [Hash] params { identifer: String }
-      # @return [ActionDispatch::Response] {Individual}
-      #   (See ./app/views/api/v1/individuals/show.json.jbuilder for details)
+      # @return [ActionDispatch::Response] {Individual} (see {show})
       def find
         @individual = Individual.find_by(identifier: params[:identifier])
         return head :not_found if @individual.blank?
@@ -16,66 +18,125 @@ module API
       end
 
       # @overload index
-      #   @example get /api/individuals
-      # @return [ActionDispatch::Response] array of {Individual}
-      #   (See ./app/views/api/v1/individual/index.json.jbuilder for details)
+      #   List individuals
+      #   @example
+      #     get /api/individuals
+      #   @return [ActionDispatch::Response] array of {Individual}
+      # @overload index
+      #   List product individuals
+      #   @example
+      #     get /api/products/:product_id/individuals
+      #   @param [Hash] params { product_id: Number }
+      #   @return [ActionDispatch::Response] array of {Individual}
+      #
+      #     (See ./app/views/api/v1/individual/index.json.jbuilder)
+      #
+      #     {include:file:app/views/api/v1/individuals/index.json.jbuilder}
+      #
+      #     (See ./app/views/api/v1/individual/_individual.json.jbuilder)
+      #
+      #     {include:file:app/views/api/v1/individuals/_individual.json.jbuilder}
       def index
-        @individuals = Individual.all
+        @individuals = if params[:product_id].present?
+                         set_product
+                         @product.individuals
+                       else
+                         Individual.all
+                       end
       end
 
-      # @overload show
-      #   @example get /api/individual/:id
-      #   @param [Hash] params { id: Number }
+      # Get individual by id
+      # @example
+      #   get /api/individual/:id
+      # @param [Hash] params { id: Number }
       # @return [ActionDispatch::Response] {Individual}
-      #   (See ./app/views/api/v1/individuals/show.json.jbuilder for details)
-      def show
-        return head :not_found if @individual.blank?
-      end
+      #
+      #   (See ./app/views/api/v1/individual/show.json.jbuilder)
+      #
+      #   {include:file:app/views/api/v1/individuals/show.json.jbuilder}
+      #
+      #   (See ./app/views/api/v1/individual/_individual.json.jbuilder)
+      #
+      #   {include:file:app/views/api/v1/individuals/_individual.json.jbuilder}
+      def show; end
 
-      # @overload create
+      # Create individual
+      # @example
       #   post /api/individuals
-      #   @param [Hash] params { individual: { identifier: String, name: String, email: String } }
-      # @return [ActionDispatch::Response] {Individual}
-      #   (See ./app/views/api/v1/individual/show.json.jbuilder for details)
+      # @param [Hash] params { individual: { identifier: String, name: String, email: String } }
+      # @return [ActionDispatch::Response] {Individual} (see {show})
       def create
-        status = :ok
         @individual = Individual.find_by(identifier: individual_params[:identifier])
-        if @individual.blank?
-          @individual = Individual.new(individual_params)
-          return render json: @individual.errors, status: :unprocessable_entity unless @individual.save
-          status = :created
+        if @individual.present?
+          @individual.errors.add(:identifier, "individual identifier #{individual_params[:identifier]} exists!")
+          return render json: @individual.errors, status: :unprocessable_entity
         end
-        render :show, status: status, location: @individual
+        @individual = Individual.new(individual_params)
+        return render json: @individual.errors, status: :unprocessable_entity unless @individual.save
+        render :show, status: :created, location: @individual
       end
 
       # @overload update
-      #   @example put /api/individuals/:id
-      #   @param [Hash] params { id: Number, individual: { name: String, email: String }}
-      # @return [ActionDispatch::Response] {Individual}
-      #   (See ./app/views/api/v1/individual/show.json.jbuilder for details)
+      #   Update individual
+      #   @example
+      #     put /api/individuals/:id
+      #   @param [Hash] params { id: Number, individual: { name: String, email: String } }
+      #   @return [ActionDispatch::Response] {Individual} (see {show})
+      # @overload update
+      #   Grant individual read access to product
+      #   @example
+      #     put /api/products/:product_id/individuals/:id
+      #   @param [Hash] params { product_id: Number, id: Number }
+      #   @return [ActionDispatch::Response]
       def update
-        return head :not_found if @individual.blank?
+        if params[:product_id].present?
+          set_product
+          unless @individual.lessee.products.include?(@product)
+            @individual.lessee.products << @product
+            @individual.save
+            PermissionService.permit_read_access_resource(@individual.agent_type, @individual.agent_id, @product.resource_type, @product.resource_id)
+          end
+          return head :ok
+        end
         return render json: @individual.errors, status: :unprocessable_entity unless @individual.update(individual_params)
         render :show, status: :ok, location: @individual
       end
 
       # @overload destroy
-      #   @example delete /api/individuals/:id
+      #   Delete individual
+      #   @example
+      #     delete /api/individuals/:id
       #   @param [Hash] params { id: Number }
-      # @return [ActionDispatch::Response]
+      #   @return [ActionDispatch::Response]
+      # @overload destroy
+      #   Revoke individual read access to product
+      #   @example
+      #     put /api/products/:product_id/individuals/:id
+      #   @param [Hash] params { product_id: Number, id: Number }
+      #   @return [ActionDispatch::Response]
       def destroy
-        return head :ok if @individual.blank?
-        @individual.destroy
+        if params[:product_id].present?
+          set_product
+          if @individual.lessee.products.include?(@product)
+            @individual.lessee.products.delete(@product)
+            PermissionService.revoke_read_access_resource(@individual.agent_type, @individual.agent_id, @product.resource_type, @product.resource_id)
+          end
+        else
+          return render json: @individual.errors, status: :accepted unless @individual.destroy
+        end
         head :ok
       end
 
       private
 
-        def set_individual
-          @individual = Individual.find_by(id: params[:id])
+        def set_product
+          @product = Product.find(params[:product_id])
         end
 
-        # Never trust parameters from the scary internet, only allow the white list through.
+        def set_individual
+          @individual = Individual.find(params[:id])
+        end
+
         def individual_params
           params.require(:individual).permit(:identifier, :name, :email)
         end

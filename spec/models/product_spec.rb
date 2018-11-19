@@ -116,6 +116,62 @@ RSpec.describe Product, type: :model do
     expect(subject.destroy?).to be true
   end
 
+  it 'individuals' do
+    n = 3
+    individuals = []
+    n.times { |i| individuals << create(:individual, identifier: "individual#{i}") }
+
+    expect(subject.update?).to be true
+    expect(subject.destroy?).to be true
+
+    individuals.each_with_index do |individual, index|
+      expect(subject.individuals.count).to eq(index)
+      subject.lessees << individual.lessee
+      subject.save!
+      expect(subject.update?).to be true
+      expect(subject.destroy?).to be false
+    end
+
+    individuals.each_with_index do |individual, index|
+      expect(subject.update?).to be true
+      expect(subject.destroy?).to be false
+      expect(subject.individuals.count).to eq(n - index)
+      subject.lessees.delete(individual.lessee)
+      subject.save!
+    end
+
+    expect(subject.update?).to be true
+    expect(subject.destroy?).to be true
+  end
+
+  it 'institutions' do
+    n = 3
+    institutions = []
+    n.times { |i| institutions << create(:institution, identifier: "institution#{i}") }
+
+    expect(subject.update?).to be true
+    expect(subject.destroy?).to be true
+
+    institutions.each_with_index do |institution, index|
+      expect(subject.institutions.count).to eq(index)
+      subject.lessees << institution.lessee
+      subject.save!
+      expect(subject.update?).to be true
+      expect(subject.destroy?).to be false
+    end
+
+    institutions.each_with_index do |institution, index|
+      expect(subject.update?).to be true
+      expect(subject.destroy?).to be false
+      expect(subject.institutions.count).to eq(n - index)
+      subject.lessees.delete(institution.lessee)
+      subject.save!
+    end
+
+    expect(subject.update?).to be true
+    expect(subject.destroy?).to be true
+  end
+
   it 'grants' do
     expect(subject.update?).to be true
     expect(subject.destroy?).to be true

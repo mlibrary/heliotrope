@@ -8,221 +8,338 @@ RSpec.describe "Products", type: :request do
       "id" => product.id,
       "identifier" => product.identifier,
       "name" => product.name,
+      "purchase" => product.purchase,
       "url" => product_url(product, format: :json)
     }
   end
-
   let(:headers) do
     {
       "ACCEPT" => "application/json, application/vnd.heliotrope.v1+json",
       "CONTENT_TYPE" => "application/json"
     }
   end
-  let(:new_product) { build(:product, id: product.id + 1, identifier: new_identifier) }
-  let(:new_identifier) { 'new_product' }
-  let(:product) { create(:product, identifier: identifier) }
-  let(:identifier) { 'product' }
+  let(:product) { create(:product) }
   let(:response_body) { JSON.parse(@response.body) }
 
-  before { product }
-
   context 'unauthorized' do
-    let(:input) { params.to_json }
-    let(:params) { { product: { identifier: new_identifier, name: 'name', purchase: 'purchase' } } }
-
-    it { get api_find_product_path, headers: headers; expect(response).to have_http_status(:unauthorized) } # rubocop:disable Style/Semicolon
+    it { get api_find_product_path, params: {}, headers: headers; expect(response).to have_http_status(:unauthorized) } # rubocop:disable Style/Semicolon
     it { get api_products_path, headers: headers; expect(response).to have_http_status(:unauthorized) } # rubocop:disable Style/Semicolon
-    it { post api_products_path, params: input, headers: headers; expect(response).to have_http_status(:unauthorized) } # rubocop:disable Style/Semicolon
-    it { get api_product_path(product), headers: headers; expect(response).to have_http_status(:unauthorized) } # rubocop:disable Style/Semicolon
-    it { delete api_product_path(product), headers: headers; expect(response).to have_http_status(:unauthorized) } # rubocop:disable Style/Semicolon
+    it { get api_component_products_path(1), headers: headers; expect(response).to have_http_status(:unauthorized) } # rubocop:disable Style/Semicolon
+    it { get api_individual_products_path(1), headers: headers; expect(response).to have_http_status(:unauthorized) } # rubocop:disable Style/Semicolon
+    it { get api_institution_products_path(1), headers: headers; expect(response).to have_http_status(:unauthorized) } # rubocop:disable Style/Semicolon
+    it { post api_products_path, params: {}, headers: headers; expect(response).to have_http_status(:unauthorized) } # rubocop:disable Style/Semicolon
+    it { get api_product_path(1), headers: headers; expect(response).to have_http_status(:unauthorized) } # rubocop:disable Style/Semicolon
+    it { put api_product_path(1), params: {}, headers: headers; expect(response).to have_http_status(:unauthorized) } # rubocop:disable Style/Semicolon
+    it { delete api_product_path(1), headers: headers; expect(response).to have_http_status(:unauthorized) } # rubocop:disable Style/Semicolon
   end
 
   context 'authorized' do
     before { allow_any_instance_of(API::ApplicationController).to receive(:authorize_request).and_return(nil) }
 
-    context 'api_v1_find_product_path' do
-      let(:params) { { identifier: new_identifier } }
+    describe 'GET /api/v1/product' do # find
+      it 'non existing not found' do
+        get api_find_product_path, params: { identifier: 'identifier' }, headers: headers
+        expect(response.content_type).to eq("application/json")
+        expect(response).to have_http_status(:not_found)
+        expect(response.body).to be_empty
+        expect(Product.count).to eq(0)
+      end
 
-      describe 'GET /api/v1/product' do
-        it 'not found' do
-          get api_find_product_path, params: params, headers: headers
-          expect(response.content_type).to eq("application/json")
-          expect(response).to have_http_status(:not_found)
-          expect(response.body).to be_empty
-        end
-
-        it 'found' do
-          new_product.save
-          get api_find_product_path, params: params, headers: headers
-          expect(response.content_type).to eq("application/json")
-          expect(response).to have_http_status(:ok)
-          expect(response.body).not_to be_empty
-          expect(response_body).to eq(product_obj(product: new_product))
-        end
+      it 'existing ok' do
+        get api_find_product_path, params: { identifier: product.identifier }, headers: headers
+        expect(response.content_type).to eq("application/json")
+        expect(response).to have_http_status(:ok)
+        expect(response_body).to eq(product_obj(product: product))
+        expect(Product.count).to eq(1)
       end
     end
 
-    context 'api_v1_products_path' do
-      describe "GET /api/v1/products" do # index
-        it 'empty' do
-          product.destroy!
-          get api_products_path, headers: headers
-          expect(response.content_type).to eq("application/json")
-          expect(response).to have_http_status(:ok)
-          expect(response_body).to eq([])
-        end
-
-        it 'product' do
-          get api_products_path, headers: headers
-          expect(response.content_type).to eq("application/json")
-          expect(response).to have_http_status(:ok)
-          expect(response_body).to eq([product_obj(product: product)])
-        end
-
-        it 'products' do
-          new_product.save!
-          get api_products_path, headers: headers
-          expect(response.content_type).to eq("application/json")
-          expect(response).to have_http_status(:ok)
-          expect(response_body).to eq([product_obj(product: product), product_obj(product: new_product)])
-        end
+    describe "GET /api/v1/products" do # index
+      it 'empty ok' do
+        get api_products_path, headers: headers
+        expect(response.content_type).to eq("application/json")
+        expect(response).to have_http_status(:ok)
+        expect(response_body).to eq([])
+        expect(Product.count).to eq(0)
       end
 
-      describe "POST /api/v1/products" do # create
-        let(:input) { params.to_json }
+      it 'product ok' do
+        product
+        get api_products_path, headers: headers
+        expect(response.content_type).to eq("application/json")
+        expect(response).to have_http_status(:ok)
+        expect(response_body).to eq([product_obj(product: product)])
+        expect(Product.count).to eq(1)
+      end
 
-        context 'blank identifier' do
-          let(:params) { { product: { identifier: '', name: 'new_name', purchase: 'new_purchase' } } }
-
-          it 'errors' do
-            post api_products_path, params: input, headers: headers
-            expect(response.content_type).to eq("application/json")
-            expect(response).to have_http_status(:unprocessable_entity)
-            expect(response_body[:identifier.to_s]).to eq(["can't be blank"])
-            expect(Product.all.count).to eq(1)
-          end
-        end
-
-        context 'unique identifier' do
-          let(:params) { { product: { identifier: new_identifier, name: 'new_name', purchase: 'new_purchase' } } }
-
-          it 'creates product' do
-            post api_products_path, params: input, headers: headers
-            expect(response.content_type).to eq("application/json")
-            expect(response).to have_http_status(:created)
-            expect(response_body[:identifier.to_s]).to eq(new_identifier)
-            expect(Product.find_by(identifier: new_identifier)).not_to be_nil
-            expect(Product.all.count).to eq(2)
-          end
-        end
-
-        context 'existing identifier' do
-          let(:params) { { product: { identifier: identifier, name: 'new_name', purchase: 'new_purchase' } } }
-
-          it 'does nothing' do
-            post api_products_path, params: input, headers: headers
-            expect(response.content_type).to eq("application/json")
-            expect(response).to have_http_status(:ok)
-            expect(response_body[:identifier.to_s]).to eq(identifier)
-            expect(Product.find_by(identifier: identifier)).not_to be_nil
-            expect(Product.all.count).to eq(1)
-          end
-        end
+      it 'products ok' do
+        product
+        new_product = create(:product)
+        get api_products_path, headers: headers
+        expect(response.content_type).to eq("application/json")
+        expect(response).to have_http_status(:ok)
+        expect(response_body).to eq([product_obj(product: product), product_obj(product: new_product)])
+        expect(Product.count).to eq(2)
       end
     end
 
-    context 'api_v1_product_path' do
-      describe "GET /api/v1/products/:id" do # show
-        it 'does nothing' do
-          get api_product_path(new_product), headers: headers
-          expect(response.content_type).to eq("application/json")
-          expect(response).to have_http_status(:not_found)
-          expect(response.body).to be_empty
-        end
+    describe "GET /api/v1/component/:component_id/products" do # index
+      let(:component) { create(:component) }
+      let(:new_product) { create(:product) }
 
-        it 'returns product' do
-          get api_product_path(product), headers: headers
-          expect(response.content_type).to eq("application/json")
-          expect(response).to have_http_status(:ok)
-          expect(response_body).to eq(product_obj(product: product))
-        end
+      before do
+        product
+        new_product
       end
 
-      describe "PUT /api/v1/products/:id" do # update
-        let(:input) { params.to_json }
-
-        context 'does nothing' do
-          let(:params) { { product: { identifier: '', name: 'name', purchase: 'purchase' } } }
-
-          it 'errors' do
-            put api_product_path(product), params: input, headers: headers
-            expect(response.content_type).to eq("application/json")
-            expect(response).to have_http_status(:unprocessable_entity)
-            expect(response_body[:identifier.to_s]).to eq(["can't be blank"])
-            expect(Product.all.count).to eq(1)
-          end
-        end
-
-        context 'unique identifier' do
-          let(:params) { { product: { identifier: new_identifier, name: 'name', purchase: 'purchase' } } }
-
-          it 'updates product' do
-            put api_product_path(product), params: input, headers: headers
-            expect(response.content_type).to eq("application/json")
-            expect(response).to have_http_status(:ok)
-            expect(response_body[:identifier.to_s]).to eq(new_identifier)
-            expect(Product.find_by(identifier: new_identifier)).not_to be_nil
-            expect(Product.all.count).to eq(1)
-          end
-        end
-
-        context 'existing identifier' do
-          let(:params) { { product: { identifier: identifier, name: 'name', purchase: 'purchase' } } }
-
-          it 'does nothing' do
-            put api_product_path(product), params: input, headers: headers
-            expect(response.content_type).to eq("application/json")
-            expect(response).to have_http_status(:ok)
-            expect(response_body[:identifier.to_s]).to eq(identifier)
-            expect(Product.find_by(identifier: identifier)).not_to be_nil
-            expect(Product.all.count).to eq(1)
-          end
-        end
+      it 'not_found' do
+        get api_component_products_path(1), headers: headers
+        expect(response.content_type).to eq("application/json")
+        expect(response).to have_http_status(:not_found)
+        expect(response_body[:exception.to_s]).to include("ActiveRecord::RecordNotFound: Couldn't find Component")
+        expect(Product.count).to eq(2)
       end
 
-      describe "DELETE /api/v1/products/:id" do # destroy
-        it 'does nothing' do
-          delete api_product_path(new_product), headers: headers
-          expect(response.content_type).to eq("application/json")
-          expect(response).to have_http_status(:ok)
-          expect(response.body).to be_empty
-          expect(Product.find_by(identifier: new_identifier)).to be_nil
-          expect(Product.all.count).to eq(1)
-        end
+      it 'empty ok' do
+        get api_component_products_path(component), headers: headers
+        expect(response.content_type).to eq("application/json")
+        expect(response).to have_http_status(:ok)
+        expect(response_body).to eq([])
+        expect(Product.count).to eq(2)
+      end
 
-        it 'deletes product' do
-          delete api_product_path(product), headers: headers
+      it 'product ok' do
+        product.components << component
+        get api_component_products_path(component), headers: headers
+        expect(response.content_type).to eq("application/json")
+        expect(response).to have_http_status(:ok)
+        expect(response_body).to eq([product_obj(product: product)])
+        expect(Product.count).to eq(2)
+      end
+
+      it 'products ok' do
+        product.components << component
+        new_product.components << component
+        get api_component_products_path(component), headers: headers
+        expect(response.content_type).to eq("application/json")
+        expect(response).to have_http_status(:ok)
+        expect(response_body).to eq([product_obj(product: product), product_obj(product: new_product)])
+        expect(Product.count).to eq(2)
+      end
+    end
+
+    describe "GET /api/v1/individual/:individual_id/products" do # index
+      let(:individual) { create(:individual) }
+      let(:new_product) { create(:product) }
+
+      before do
+        product
+        new_product
+      end
+
+      it 'not_found' do
+        get api_individual_products_path(1), headers: headers
+        expect(response.content_type).to eq("application/json")
+        expect(response).to have_http_status(:not_found)
+        expect(response_body[:exception.to_s]).to include("ActiveRecord::RecordNotFound: Couldn't find Individual")
+        expect(Product.count).to eq(2)
+      end
+
+      it 'empty ok' do
+        get api_individual_products_path(individual), headers: headers
+        expect(response.content_type).to eq("application/json")
+        expect(response).to have_http_status(:ok)
+        expect(response_body).to eq([])
+        expect(Product.count).to eq(2)
+      end
+
+      it 'product ok' do
+        product.lessees << individual.lessee
+        get api_individual_products_path(individual), headers: headers
+        expect(response.content_type).to eq("application/json")
+        expect(response).to have_http_status(:ok)
+        expect(response_body).to eq([product_obj(product: product)])
+        expect(Product.count).to eq(2)
+      end
+
+      it 'products ok' do
+        product.lessees << individual.lessee
+        new_product.lessees << individual.lessee
+        get api_individual_products_path(individual), headers: headers
+        expect(response.content_type).to eq("application/json")
+        expect(response).to have_http_status(:ok)
+        expect(response_body).to eq([product_obj(product: product), product_obj(product: new_product)])
+        expect(Product.count).to eq(2)
+      end
+    end
+
+    describe "GET /api/v1/institution/:institution_id/products" do # index
+      let(:institution) { create(:institution) }
+      let(:new_product) { create(:product) }
+
+      before do
+        product
+        new_product
+      end
+
+      it 'not_found' do
+        get api_institution_products_path(1), headers: headers
+        expect(response.content_type).to eq("application/json")
+        expect(response).to have_http_status(:not_found)
+        expect(response_body[:exception.to_s]).to include("ActiveRecord::RecordNotFound: Couldn't find Institution")
+        expect(Product.count).to eq(2)
+      end
+
+      it 'empty ok' do
+        get api_institution_products_path(institution), headers: headers
+        expect(response.content_type).to eq("application/json")
+        expect(response).to have_http_status(:ok)
+        expect(response_body).to eq([])
+        expect(Product.count).to eq(2)
+      end
+
+      it 'product ok' do
+        product.lessees << institution.lessee
+        get api_institution_products_path(institution), headers: headers
+        expect(response.content_type).to eq("application/json")
+        expect(response).to have_http_status(:ok)
+        expect(response_body).to eq([product_obj(product: product)])
+        expect(Product.count).to eq(2)
+      end
+
+      it 'products ok' do
+        product.lessees << institution.lessee
+        new_product.lessees << institution.lessee
+        get api_institution_products_path(institution), headers: headers
+        expect(response.content_type).to eq("application/json")
+        expect(response).to have_http_status(:ok)
+        expect(response_body).to eq([product_obj(product: product), product_obj(product: new_product)])
+        expect(Product.count).to eq(2)
+      end
+    end
+
+    describe "POST /api/v1/products" do # create
+      let(:params) { { product: { identifier: identifier, name: name, purchase: purchase } }.to_json }
+
+      context 'blank' do
+        let(:identifier) { '' }
+        let(:name) { '' }
+        let(:purchase) { '' }
+
+        it 'unprocessable_entity' do
+          post api_products_path, params: params, headers: headers
           expect(response.content_type).to eq("application/json")
-          expect(response).to have_http_status(:ok)
-          expect(response.body).to be_empty
-          expect(Product.find_by(identifier: identifier)).to be_nil
+          expect(response).to have_http_status(:unprocessable_entity)
+          expect(response_body[:identifier.to_s]).to eq(["can't be blank"])
+          expect(response_body[:name.to_s]).to eq(["can't be blank"])
+          expect(response_body[:purchase.to_s]).to be nil
           expect(Product.all.count).to eq(0)
         end
+      end
 
-        context 'product of lessee' do
-          let(:lessee) { create(:lessee) }
+      context 'non existing' do
+        let(:identifier) { 'identifier' }
+        let(:name) { 'name' }
+        let(:purchase) { 'purchase' }
 
-          it 'does nothing' do
-            product.lessees << lessee
-            product.save!
-            delete api_product_path(product), headers: headers
-            expect(response.content_type).to eq("application/json")
-            expect(response).to have_http_status(:accepted)
-            expect(response.body).to be_empty
-            expect(Product.find_by(identifier: identifier)).not_to be_nil
-            expect(Product.all.count).to eq(1)
-          end
+        it 'created' do
+          post api_products_path, params: params, headers: headers
+          expect(response.content_type).to eq("application/json")
+          expect(response).to have_http_status(:created)
+          expect(response_body[:identifier.to_s]).to eq(identifier)
+          expect(response_body[:name.to_s]).to eq(name)
+          expect(response_body[:purchase.to_s]).to eq(purchase)
+          expect(Product.count).to eq(1)
         end
+      end
+
+      context 'existing' do
+        let(:identifier) { product.identifier }
+        let(:name) { 'name' }
+        let(:purchase) { 'purchase' }
+
+        it 'unprocessable_entity' do
+          post api_products_path, params: params, headers: headers
+          expect(response.content_type).to eq("application/json")
+          expect(response).to have_http_status(:unprocessable_entity)
+          expect(response_body[:identifier.to_s]).to eq(["product identifier #{identifier} exists!"])
+          expect(Product.count).to eq(1)
+        end
+      end
+    end
+
+    describe "GET /api/v1/products/:id" do # show
+      it 'non existing not_found' do
+        get api_product_path(1), headers: headers
+        expect(response.content_type).to eq("application/json")
+        expect(response).to have_http_status(:not_found)
+        expect(response_body[:exception.to_s]).to include("ActiveRecord::RecordNotFound: Couldn't find Product")
+        expect(Product.count).to eq(0)
+      end
+
+      it 'existing ok' do
+        get api_product_path(product), headers: headers
+        expect(response.content_type).to eq("application/json")
+        expect(response).to have_http_status(:ok)
+        expect(response_body).to eq(product_obj(product: product))
+        expect(Product.count).to eq(1)
+      end
+    end
+
+    describe "PUT /api/v1/products/:id" do # update
+      it 'non existing not_found' do
+        put api_product_path(1), params: { product: { name: 'updated_name' } }.to_json, headers: headers
+        expect(response.content_type).to eq("application/json")
+        expect(response).to have_http_status(:not_found)
+        expect(response_body[:exception.to_s]).to include("ActiveRecord::RecordNotFound: Couldn't find Product")
+        expect(Product.count).to eq(0)
+      end
+
+      it 'existing ok' do
+        put api_product_path(product), params: { product: { name: 'updated_name' } }.to_json, headers: headers
+        expect(response.content_type).to eq("application/json")
+        expect(response).to have_http_status(:ok)
+        expect(response_body[:id.to_s]).to eq(product.id)
+        expect(response_body[:name.to_s]).to eq('updated_name')
+        expect(Product.count).to eq(1)
+      end
+
+      it 'existing update identifier unprocessable_entity' do
+        put api_product_path(product), params: { product: { identifier: '' } }.to_json, headers: headers
+        expect(response.content_type).to eq("application/json")
+        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response_body[:identifier.to_s]).to eq(["can't be blank"])
+        expect(Product.count).to eq(1)
+      end
+    end
+
+    describe "DELETE /api/v1/products/:id" do # destroy
+      let(:component) { create(:component) }
+
+      it 'non existing not_found' do
+        delete api_product_path(product.id + 1), headers: headers
+        expect(response.content_type).to eq("application/json")
+        expect(response).to have_http_status(:not_found)
+        expect(response_body[:exception.to_s]).to include("ActiveRecord::RecordNotFound: Couldn't find Product")
+        expect(Product.count).to eq(1)
+      end
+
+      it 'existing without components ok' do
+        delete api_product_path(product), headers: headers
+        expect(response.content_type).to eq("application/json")
+        expect(response).to have_http_status(:ok)
+        expect(response.body).to be_empty
+        expect(Product.count).to eq(0)
+      end
+
+      it 'existing with components accepted' do
+        product.components << component
+        product.save
+        delete api_product_path(product), headers: headers
+        expect(response.content_type).to eq("application/json")
+        expect(response).to have_http_status(:accepted)
+        expect(response_body[:base.to_s]).to include("product has 1 associated components!")
+        expect(Product.count).to eq(1)
       end
     end
   end

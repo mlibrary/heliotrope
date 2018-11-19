@@ -12,14 +12,14 @@
   <div class="col-md-1"><em>Login</em></div>
   <div class="col-md-11">&nbsp<%= @institution.login %></div>
   <div class="col-md-12"><br/></div>
-  <h2>Lessee</h2>
-  <div class="col-md-1"><%= link_to @institution.lessee.id, lessee_path(@institution.lessee) %></div>
-  <div class="col-md-11"><%= @institution.lessee.identifier %></div>
-  <div class="col-md-12"><br/></div>
   <h2>Grants</h2>
   <div class="col-md-12">
     <%= render partial: '/grants/grants', locals: { agent: @institution, grants: @institution.grants } %>
   </div>
+  <div class="col-md-12"><br/></div>
+  <h2>Lessee</h2>
+  <div class="col-md-1"><%= link_to @institution.lessee.id, lessee_path(@institution.lessee) %></div>
+  <div class="col-md-11"><%= @institution.lessee.identifier %></div>
   <div class="col-md-12"><br/></div>
   <div class="col-md-12">
     <%= link_to_if @institution.update?, 'Edit', edit_institution_path(@institution) %>

@@ -2,8 +2,8 @@
 
 FactoryBot.define do
   factory :individual do
-    sequence(:identifier) { |n| ["Identifier#{n}"] }
-    sequence(:name) { |n| ["Name#{n}"] }
-    sequence(:email) { |n| ["Email#{n}"] }
+    sequence(:identifier) { |n| "IndividualIdentifier#{n}" }
+    sequence(:name) { |n| "IndividualName#{n}" }
+    sequence(:email) { |n| "IndividualEmail#{n}" }
   end
 end

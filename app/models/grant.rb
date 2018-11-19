@@ -12,6 +12,7 @@ class Grant
   COLUMNS = %i[agent_type agent_id credential_type credential_id resource_type resource_id].freeze
 
   delegate :agent_type, :agent_id, :agent_token, :credential_type, :credential_id, :credential_token, :resource_type, :resource_id, :resource_token, :zone_id, to: :@permit
+  delegate :agent_type=, :agent_id=, :agent_token=, :credential_type=, :credential_id=, :credential_token=, :resource_type=, :resource_id=, :resource_token=, :zone_id=, to: :@permit
 
   validates_each COLUMNS do |record, attr, value|
     record.errors.add attr, 'must be present.' if value.blank?
@@ -33,6 +34,18 @@ class Grant
         record.errors.add attr, 'invalid value.' unless ValidationService.valid_resource?(record.resource_type, value)
       end
     end
+  end
+
+  def self.find(id)
+    permit = Checkpoint::DB::Permit.find(id: id)
+    return nil if permit.blank?
+    new(permit)
+  end
+
+  def self.find_by(agent_token:, credential_token:, resource_token:)
+    permit = Checkpoint::DB::Permit.where(agent_token: agent_token, credential_token: credential_token, resource_token: resource_token).first # rubocop:disable Rails/FindBy
+    return nil if permit.blank?
+    new(permit)
   end
 
   def self.create!(attributes)
@@ -59,17 +72,20 @@ class Grant
 
   def self.agent_grants(entity)
     agent = Checkpoint::Agent.new(entity)
-    Checkpoint::DB::Permit.where(agent_token: agent.token.to_s).map { |permit| Grant.new(permit) }
+    token = "#{agent.type}:#{agent.id}"
+    Checkpoint::DB::Permit.where(agent_token: token).map { |permit| Grant.new(permit) }
   end
 
   def self.permission_grants(permission)
     permission = PermissionService.permission(permission)
-    Checkpoint::DB::Permit.where(credential_token: permission.token.to_s).map { |permit| Grant.new(permit) }
+    token = "#{permission.type}:#{permission.id}"
+    Checkpoint::DB::Permit.where(credential_token: token).map { |permit| Grant.new(permit) }
   end
 
   def self.resource_grants(entity)
     resource = Checkpoint::Resource.new(entity)
-    Checkpoint::DB::Permit.where(resource_token: resource.token.to_s).map { |permit| Grant.new(permit) }
+    token = "#{resource.type}:#{resource.id}"
+    Checkpoint::DB::Permit.where(resource_token: token).map { |permit| Grant.new(permit) }
   end
 
   def initialize(permit = Checkpoint::DB::Permit.new)
@@ -81,15 +97,19 @@ class Grant
   end
 
   def save!(opts = {})
-    @permit.save(opts) if valid?
+    @permit.save(opts) if valid? && unique?
   end
 
   def save(opts = {})
     save!(opts)
   end
 
-  def destroy
+  def destroy!
     @permit.delete
+  end
+
+  def destroy
+    destroy!
   end
 
   def reload
@@ -110,5 +130,27 @@ class Grant
 
   def destroy?
     true
+  end
+
+  def unique?
+    unique.blank?
+  end
+
+  def unique
+    permit = Checkpoint::DB::Permit.where(
+      agent_type: agent_type.to_s,
+      agent_id: agent_id.to_s,
+      agent_token: agent_token.to_s,
+      credential_type: credential_type.to_s,
+      credential_id: credential_id.to_s,
+      credential_token: credential_token.to_s,
+      resource_type: resource_type.to_s,
+      resource_id: resource_id.to_s,
+      resource_token: resource_token.to_s,
+      zone_id: zone_id.to_s
+    )
+    permit = permit.first
+    return nil if permit.blank?
+    Grant.new(permit)
   end
 end

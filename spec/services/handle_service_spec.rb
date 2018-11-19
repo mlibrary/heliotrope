@@ -3,30 +3,28 @@
 require 'rails_helper'
 
 RSpec.describe HandleService do
-  subject { described_class }
-
   let(:invalidnoid) { 'invalidnoid' }
   let(:validnoid) { 'validnoid' }
 
   describe '#noid' do
-    it { expect(subject.noid(nil)).to be nil }
-    it { expect(subject.noid(described_class::HANDLE_NET_API_HANDLES + invalidnoid)).to be nil }
-    it { expect(subject.noid(subject.path(invalidnoid))).to eq nil }
-    it { expect(subject.noid(subject.path(validnoid))).to eq validnoid }
-    it { expect(subject.noid(subject.url(validnoid))).to eq validnoid }
-    it { expect(subject.noid(subject.url(validnoid) + "?key=value")).to eq validnoid }
+    it { expect(described_class.noid(nil)).to be nil }
+    it { expect(described_class.noid(described_class::HANDLE_NET_API_HANDLES + invalidnoid)).to be nil }
+    it { expect(described_class.noid(described_class.path(invalidnoid))).to eq nil }
+    it { expect(described_class.noid(described_class.path(validnoid))).to eq validnoid }
+    it { expect(described_class.noid(described_class.url(validnoid))).to eq validnoid }
+    it { expect(described_class.noid(described_class.url(validnoid) + "?key=value")).to eq validnoid }
   end
 
   describe '#path' do
-    it { expect(subject.path(nil)).to eq described_class::FULCRUM_PREFIX }
-    it { expect(subject.path(invalidnoid)).to eq described_class::FULCRUM_PREFIX + invalidnoid }
-    it { expect(subject.path(validnoid)).to eq described_class::FULCRUM_PREFIX + validnoid }
+    it { expect(described_class.path(nil)).to eq described_class::FULCRUM_PREFIX }
+    it { expect(described_class.path(invalidnoid)).to eq described_class::FULCRUM_PREFIX + invalidnoid }
+    it { expect(described_class.path(validnoid)).to eq described_class::FULCRUM_PREFIX + validnoid }
   end
 
   describe '#url' do
-    it { expect(subject.url(nil)).to eq described_class::HANDLE_NET_PREFIX + subject.path(nil) }
-    it { expect(subject.url(invalidnoid)).to eq described_class::HANDLE_NET_PREFIX + subject.path(invalidnoid) }
-    it { expect(subject.url(validnoid)).to eq described_class::HANDLE_NET_PREFIX + subject.path(validnoid) }
+    it { expect(described_class.url(nil)).to eq described_class::HANDLE_NET_PREFIX + described_class.path(nil) }
+    it { expect(described_class.url(invalidnoid)).to eq described_class::HANDLE_NET_PREFIX + described_class.path(invalidnoid) }
+    it { expect(described_class.url(validnoid)).to eq described_class::HANDLE_NET_PREFIX + described_class.path(validnoid) }
   end
 
   describe '#value' do
