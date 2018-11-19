@@ -65,6 +65,7 @@ class PressCatalogController < ::CatalogController
         blacklight_config.per_page = [10, 15, 50, 100]
 
         # facets
+        blacklight_config.add_facet_field Solrizer.solr_name('open_access', :facetable), label: "Open Access", limit: 1, url_method: :facet_url_helper
         blacklight_config.add_facet_field Solrizer.solr_name('subject', :facetable), label: "Subject", limit: 10, url_method: :facet_url_helper
         blacklight_config.add_facet_field Solrizer.solr_name('creator', :facetable), label: "Author", limit: 5, url_method: :facet_url_helper
         if @press.subdomain == 'heb'

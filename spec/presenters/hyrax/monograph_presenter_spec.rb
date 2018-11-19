@@ -582,4 +582,18 @@ RSpec.describe Hyrax::MonographPresenter do
       end
     end
   end
+
+  describe '#open_access?' do
+    context 'open_access != "yes" (not set)' do
+      it { expect(presenter.open_access?).to be false }
+    end
+
+    context 'allow_download == "yes"' do
+      before do
+        allow(mono_doc).to receive(:open_access).and_return(['YeS'])
+      end
+
+      it { expect(presenter.open_access?).to be true }
+    end
+  end
 end

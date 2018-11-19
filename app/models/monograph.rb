@@ -32,6 +32,14 @@ class Monograph < ActiveFedora::Base
     index.as :stored_searchable, :facetable
   end
 
+  property :open_access, predicate: ::RDF::URI.new('http://fulcrum.org/ns#OpenAccess'), multiple: false do |index|
+    index.as :stored_searchable, :facetable
+  end
+
+  property :funder, predicate: ::RDF::Vocab::SCHEMA.funder, multiple: false do |index|
+    index.as :stored_searchable
+  end
+
   include HeliotropeUniversalMetadata
   include ::Hyrax::WorkBehavior
   # This must come after the WorkBehavior because it finalizes the metadata

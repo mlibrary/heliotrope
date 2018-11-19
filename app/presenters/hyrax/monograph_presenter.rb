@@ -14,7 +14,7 @@ module Hyrax
     delegate :date_created, :date_modified, :date_uploaded, :location, :description,
              :creator_display, :creator_full_name, :contributor,
              :subject, :section_titles, :based_near, :publisher, :date_published, :language,
-             :isbn, :license, :copyright_holder, :holding_contact, :has_model,
+             :isbn, :license, :copyright_holder, :open_access, :funder, :holding_contact, :has_model,
              :buy_url, :embargo_release_date, :lease_expiration_date, :rights, :series,
              :visibility, :identifier, :doi, :handle,
              to: :solr_document
@@ -89,6 +89,14 @@ module Hyrax
 
     def holding_contact?
       solr_document.holding_contact.present?
+    end
+
+    def open_access?
+      solr_document.open_access&.first&.casecmp('yes')&.zero? || false
+    end
+
+    def funder?
+      solr_document.funder.present?
     end
 
     def date_created?
