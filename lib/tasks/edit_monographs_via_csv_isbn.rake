@@ -67,6 +67,10 @@ namespace :heliotrope do
           # in order to offer the ability to blank out metadata we need to merge in some nils
           attrs = blank_metadata.merge(attrs)
 
+          # TMM has some fields with HTML tags in it. This functionality will have to be manually tested as...
+          # part of HELIO-2298
+          attrs = maybe_convert_to_markdown(attrs)
+
           # TODO: decide if it's worth offering the user a chance to bow-out based on the messages, as is done in the importer
           if check_for_changes_isbn(monograph, attrs, ebook_isbn) && !backed_up
             backup_file = paranoid_backup_isbn(rows, args.input_file)
@@ -87,6 +91,22 @@ namespace :heliotrope do
     # note: 'NOID', 'Link' are not in METADATA_FIELDS, they're export-only fields.
     unexpecteds = rows[0].to_h.keys.map { |k| k&.strip } - monograph_fields.pluck(:field_name) - ['NOID', 'Link']
     puts "***TITLE ROW HAS UNEXPECTED VALUES!*** These columns will be skipped: #{unexpecteds.join(', ')}\n\n" if unexpecteds.present?
+  end
+
+  def maybe_convert_to_markdown(attrs)
+    attrs_out
+    attrs.each do |key, value|
+      if value.present?
+        attrs_out[value] = if ActionController::Base.helpers.strip_tags(value) != value
+                             HtmlToMarkdownService.convert(value)
+                           else
+                             value
+                           end
+      else
+        attrs_out[value] = nil
+      end
+    end
+    attrs_out
   end
 
   def check_for_changes_isbn(monograph, attrs, ebook_isbn)
