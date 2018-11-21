@@ -103,6 +103,7 @@ Rails.application.routes.draw do
   get 'epubs_access/:id', controller: :e_pubs, action: :access, as: :epub_access
   get 'epubs/:id', controller: :e_pubs, action: :show, as: :epub
   get 'epubs/:id/*file', controller: :e_pubs, action: :file, as: :epub_file
+  get 'epubs_share_link/:id', controller: :e_pubs, action: :share_link, as: :epub_share_link
   get 'epub_search/:id', controller: :e_pubs, action: :search, as: :epub_search
   get 'epubs_download_chapter/:id', controller: :e_pubs, action: :download_chapter, as: :epub_download_chapter
   get 'epubs_download_interval/:id', controller: :e_pubs, action: :download_interval, as: :epub_download_interval

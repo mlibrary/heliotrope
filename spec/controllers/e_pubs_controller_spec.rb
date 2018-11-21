@@ -43,12 +43,12 @@ RSpec.describe EPubsController, type: :controller do
           monograph.ordered_members << file_set
           monograph.save!
           file_set.save!
-          get :show, params: { id: file_set.id }
         end
 
         after { FeaturedRepresentative.destroy_all }
 
         it do
+          get :show, params: { id: file_set.id }
           expect(response).to have_http_status(:success)
           expect(response.body.empty?).to be true
         end
@@ -57,6 +57,7 @@ RSpec.describe EPubsController, type: :controller do
           let(:show) { false }
 
           it do
+            get :show, params: { id: file_set.id }
             expect(response).to have_http_status(:unauthorized)
           end
         end
@@ -423,6 +424,85 @@ RSpec.describe EPubsController, type: :controller do
         expect(response.headers['Content-Disposition']).to eq 'inline'
         expect(response.headers['Content-Transfer-Encoding']).to eq 'binary'
         expect(response.body.starts_with?("%PDF-1.3\n")).to be true
+      end
+    end
+
+    describe "#show" do
+      let(:monograph) { create(:monograph) }
+      let(:file_set) { create(:file_set, id: '888888888', content: File.open(File.join(fixture_path, 'fake_epub01.epub'))) }
+      let!(:fr) { create(:featured_representative, monograph_id: monograph.id, file_set_id: file_set.id, kind: 'epub') }
+
+      before do
+        monograph.ordered_members << file_set
+        monograph.save!
+        file_set.save!
+      end
+
+      context "A restricted epub with an anonymous user" do
+        let(:valid_share_token) do
+          JsonWebToken.encode(data: file_set.id, exp: Time.now.to_i + 48 * 3600)
+        end
+        let(:expired_share_token) do
+          JsonWebToken.encode(data: file_set.id, exp: Time.now.to_i - 1000)
+        end
+        let(:wrong_share_token) do
+          JsonWebToken.encode(data: 'wrongnoid', exp: Time.now.to_i + 48 * 3600)
+        end
+        let(:epub) { Sighrax.factory(file_set.id) }
+
+        before do
+          Component.create!(identifier: epub.resource_token, name: epub.title, noid: epub.noid, handle: HandleService.path(epub.noid))
+        end
+
+        it "with a valid share_link" do
+          get :show, params: { id: file_set.id, share: valid_share_token }
+          expect(response).to have_http_status(:success)
+          expect(response).to render_template(:show)
+        end
+
+        it "with an expired share_link" do
+          get :show, params: { id: file_set.id, share: expired_share_token }
+          expect(response).to have_http_status(:success)
+          expect(response).to render_template(:access)
+        end
+
+        it "with the wrong share link" do
+          get :show, params: { id: file_set.id, share: wrong_share_token }
+          expect(response).to have_http_status(:success)
+          expect(response).to render_template(:access)
+        end
+      end
+    end
+  end
+
+  describe '#share_link' do
+    let(:now) { Time.now }
+    let(:presenters) { double("presenters", first: presenter) }
+    let(:presenter) { double("presenter", monograph: monograph) }
+    let(:monograph) { double("monograph", subdomain: press.subdomain) }
+
+    before do
+      allow(Time).to receive(:now).and_return(now)
+      allow(Hyrax::PresenterFactory).to receive(:build_for).and_return(presenters)
+    end
+
+    context "when the press shares links" do
+      let(:press) { create(:press, subdomain: 'blah', share_links: true) }
+
+      it 'returns a share link with a valid JSON webtoken' do
+        get :share_link, params: { id: 'noid' }
+        expect(response).to have_http_status(:success)
+        expect(response.body).to eq "http://test.host/epubs/noid?share=#{JsonWebToken.encode(data: 'noid', exp: now.to_i + 48 * 3600)}"
+      end
+    end
+
+    context "when a press does not share links" do
+      let(:press) { create(:press, subdomain: 'urg') }
+
+      it 'returns nothing' do
+        get :share_link, params: { id: 'noid' }
+        expect(response).to have_http_status(:success)
+        expect(response.body).to be_empty
       end
     end
   end

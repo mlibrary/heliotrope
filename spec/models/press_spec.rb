@@ -40,6 +40,34 @@ RSpec.describe Press, type: :model do
     it { is_expected.to eq 'umich' }
   end
 
+  describe "#allow_share_links?" do
+    subject { press.allow_share_links? }
+
+    context "is set to true" do
+      let(:press) { build(:press, subdomain: 'blug', share_links: true) }
+
+      it "returns true" do
+        expect(subject).to be true
+      end
+    end
+
+    context "when not set" do
+      let(:press) { build(:press, subdomain: 'blug') }
+
+      it "returns false" do
+        expect(subject).to be false
+      end
+    end
+
+    context "when set to false" do
+      let(:press) { build(:press, subdomain: 'blug', share_links: false) }
+
+      it "returns false" do
+        expect(subject).to be false
+      end
+    end
+  end
+
   describe "roles" do
     subject { press.roles }
 

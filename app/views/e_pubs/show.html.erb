@@ -418,6 +418,25 @@ webgl = Webgl::Unity.from_directory(UnpackService.root_path_from_noid(webgl_id, 
         }).addTo(reader);
         <% end %>
 
+
+        // Restricted Share Link widget
+        <% if @component.present? && @press.allow_share_links? %>
+        cozy.control.widget.button({
+          region: 'top.toolbar.left',
+          template: '<button id="share-link-btn" class="button--sm cozy-close" data-toggle="button" data-slot="label" aria-label="Share Unrestricted Link"><i class="oi" data-glyph="link-intact" title="Share Unrestricted Link" aria-hidden="true"></i></button>',
+          onClick: function() {
+            $.get("<%= "#{epub_share_link_path(id: @presenter.id)}" %>", function(data) {
+              console.log("SHARE_LINK:", data);
+              if (data) {
+                copyToClipboard(data);
+                alert("The share link has been copied to your clipboard. This link enables non-logged in users to have access to this restricted work for 48 hours.\n\nShare link:\n\n" + data);
+              }
+            })
+          }
+        }).addTo(reader);
+        <% end %>
+
+
         // Altmetric and Dimensions widget
         cozy.control.widget.panel({
           region: 'top.toolbar.right',
