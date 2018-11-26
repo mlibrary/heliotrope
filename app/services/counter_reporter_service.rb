@@ -45,6 +45,18 @@ class CounterReporterService
     CounterReporter::TitleReport.new(title_params).report
   end
 
+  def self.ir(params)
+    item_params = CounterReporter::ReportParams.new('ir', params)
+    return({ header: title_params.errors, items: [] }) unless item_params.validate!
+    CounterReporter::ItemReport.new(item_params).report
+  end
+
+  def self.ir_m1(params)
+    item_params = CounterReporter::ReportParams.new('ir_m1', params)
+    return({ header: title_params.errors, items: [] }) unless item_params.validate!
+    CounterReporter::ItemReport.new(item_params).report
+  end
+
   def self.csv(report)
     # CSV for COUNTER is just weird and not normal
     # https://docs.google.com/spreadsheets/d/1fsF_JCuOelUs9s_cvu7x_Yn8FNsi5xK0CR3bu2X_dVI/edit#gid=1932253188
