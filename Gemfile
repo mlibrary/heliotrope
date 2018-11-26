@@ -124,6 +124,7 @@ gem 'pragmatic_segmenter', '~> 0.3'
 gem 'prawn', '~> 2.2'
 
 gem 'redcarpet', '~> 3.3.4'
+gem 'reverse_markdown'
 
 gem 'resque', '~> 1.26.0'
 gem 'resque-pool'
