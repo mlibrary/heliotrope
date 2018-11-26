@@ -6,6 +6,8 @@ RSpec.describe "Users", type: :request do
   let(:current_user) { User.guest(user_key: 'wolverine@umich.edu') }
   let(:target) { create(:user) }
 
+  before { target }
+
   describe '#index' do
     subject { get users_path }
 
@@ -40,6 +42,16 @@ RSpec.describe "Users", type: :request do
             expect { subject }.not_to raise_error
             expect(response).to render_template(:index)
             expect(response).to have_http_status(:ok)
+          end
+
+          context 'filtering' do
+            subject { get users_path, params: { identifier_like: target.identifier } }
+
+            it do
+              expect { subject }.not_to raise_error
+              expect(response).to render_template(:index)
+              expect(response).to have_http_status(:ok)
+            end
           end
         end
       end
@@ -252,7 +264,7 @@ RSpec.describe "Users", type: :request do
     end
   end
 
-  describe '#delete' do
+  describe '#destroy' do
     subject { delete "/users/#{target.id}" }
 
     it do

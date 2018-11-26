@@ -6,6 +6,8 @@ RSpec.describe "Products", type: :request do
   let(:current_user) { User.guest(user_key: 'wolverine@umich.edu') }
   let(:target) { create(:product, purchase: 'https://wolverine.umich.edu') }
 
+  before { target }
+
   describe '#index' do
     subject { get "/products" }
 
@@ -40,6 +42,16 @@ RSpec.describe "Products", type: :request do
             expect { subject }.not_to raise_error
             expect(response).to render_template(:index)
             expect(response).to have_http_status(:ok)
+          end
+
+          context 'filtering' do
+            subject { get "/products?identifier_like=#{target.identifier}" }
+
+            it do
+              expect { subject }.not_to raise_error
+              expect(response).to render_template(:index)
+              expect(response).to have_http_status(:ok)
+            end
           end
         end
       end
@@ -240,7 +252,7 @@ RSpec.describe "Products", type: :request do
     end
   end
 
-  describe '#delete' do
+  describe '#destroy' do
     subject { delete "/products/#{target.id}" }
 
     it do
@@ -269,6 +281,52 @@ RSpec.describe "Products", type: :request do
             expect(response).to redirect_to(products_path)
             expect(response).to have_http_status(:found)
             expect { Product.find(target.id) }.to raise_error(ActiveRecord::RecordNotFound)
+          end
+        end
+      end
+    end
+  end
+
+  describe "Components Products" do
+    let(:current_user) { User.guest(user_key: 'wolverine@umich.edu') }
+    let(:product) { create(:product) }
+    let(:component) { create(:component) }
+    let(:post_product) { post "/components/#{component.id}/products", params: { id: product.id } }
+    let(:delete_product) { delete "/components/#{component.id}/products/#{product.id}" }
+
+    it do
+      expect(component.products.count).to eq 0
+      expect(product.components.count).to eq 0
+      expect { post_product }.to raise_error(ActionController::RoutingError)
+      expect { delete_product }.to raise_error(ActionController::RoutingError)
+    end
+
+    context 'authenticated' do
+      before { cosign_sign_in(current_user) }
+
+      it do
+        expect { post_product }.to raise_error(ActionController::RoutingError)
+        expect { delete_product }.to raise_error(ActionController::RoutingError)
+      end
+
+      context 'authorized' do
+        before { allow_any_instance_of(ApplicationController).to receive(:authorize!) }
+
+        it do
+          expect { post_product }.to raise_error(ActionController::RoutingError)
+          expect { delete_product }.to raise_error(ActionController::RoutingError)
+        end
+
+        context 'platform administrator' do
+          let(:current_user) { create(:platform_admin) }
+
+          it do
+            expect { post_product }.not_to raise_error
+            expect(component.products.count).to eq 1
+            expect(product.components.count).to eq 1
+            expect { delete_product }.not_to raise_error
+            expect(component.products.count).to eq 0
+            expect(product.components.count).to eq 0
           end
         end
       end

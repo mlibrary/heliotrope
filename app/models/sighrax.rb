@@ -1,5 +1,11 @@
 # frozen_string_literal: true
 
+require_relative './sighrax/asset'
+require_relative './sighrax/electronic_publication'
+require_relative './sighrax/entity'
+require_relative './sighrax/model'
+require_relative './sighrax/monograph'
+
 module Sighrax
   class << self
     def factory(noid)
@@ -42,12 +48,3 @@ module Sighrax
       end
   end
 end
-
-#
-# Require Relative
-#
-require_relative './sighrax/asset'
-require_relative './sighrax/electronic_publication'
-require_relative './sighrax/entity'
-require_relative './sighrax/model'
-require_relative './sighrax/monograph'

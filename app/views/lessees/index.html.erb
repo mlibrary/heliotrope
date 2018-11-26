@@ -9,7 +9,7 @@
         <div class="col-md-3">Institution</div>
         <div class="col-md-2">Products</div>
       </div>
-      <div class="col-md-2"><%= link_to 'New Lessee', new_lessee_path %></div>
+      <div class="col-md-2">&nbsp;</div>
       <div class="col-md-12"><hr/></div>
     </b>
   <% @lessees.each do |lessee| %>
@@ -22,7 +22,7 @@
     </div>
     <div class="col-md-2">
       <div class="col-md-4"><%= link_to 'Show', lessee %></div>
-      <div class="col-md-4"><%= link_to_if lessee.update?, 'Edit', edit_lessee_path(lessee) %></div>
+      <div class="col-md-4">Edit</div>
       <div class="col-md-4"><%= link_to_if lessee.destroy?, 'Destroy', lessee, method: :delete, data: { confirm: 'Are you sure?' } %></div>
     </div>
   <% end %>

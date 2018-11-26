@@ -43,6 +43,14 @@ class Product < ApplicationRecord
     Component.where.not(id: components.map(&:id))
   end
 
+  def individuals
+    Individual.where(identifier: lessees.map(&:identifier))
+  end
+
+  def institutions
+    Institution.where(identifier: lessees.map(&:identifier))
+  end
+
   def not_lessees
     Lessee.where.not(id: lessees.map(&:id))
   end

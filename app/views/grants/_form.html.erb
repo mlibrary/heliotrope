@@ -13,9 +13,15 @@
         </div>
       </div>
       <div class="col-md-2">
-        <label for="grant_agent_type_guest">
-          <input type="radio" value="Guest" checked="checked" name="grant[agent_type]" id="grant_agent_type_guest" />
-          <label class="collection_radio_buttons" for="grant_agent_type_guest">Guest</label>
+        <label for="grant_agent_type_institution">
+          <input type="radio" value="Institution" checked="checked" name="grant[agent_type]" id="grant_agent_type_institution" />
+          <label class="collection_radio_buttons" for="grant_agent_type_institution">Institution</label>
+        </label>
+      </div>
+      <div class="col-md-2">
+        <label for="grant_agent_type_individual">
+          <input type="radio" value="Individual" name="grant[agent_type]" id="grant_agent_type_individual" />
+          <label class="collection_radio_buttons" for="grant_agent_type_individual">Individual</label>
         </label>
       </div>
       <div class="col-md-3">
@@ -25,15 +31,9 @@
         </label>
       </div>
       <div class="col-md-2">
-        <label for="grant_agent_type_individual">
-          <input type="radio" value="Individual" name="grant[agent_type]" id="grant_agent_type_individual" />
-          <label class="collection_radio_buttons" for="grant_agent_type_individual">Individual</label>
-        </label>
-      </div>
-      <div class="col-md-2">
-        <label for="grant_agent_type_institution">
-          <input type="radio" value="Institution" name="grant[agent_type]" id="grant_agent_type_institution" />
-          <label class="collection_radio_buttons" for="grant_agent_type_institution">Institution</label>
+        <label for="grant_agent_type_guest">
+          <input type="radio" value="Guest" name="grant[agent_type]" id="grant_agent_type_guest" />
+          <label class="collection_radio_buttons" for="grant_agent_type_guest">Guest</label>
         </label>
       </div>
       <div class="col-md-1">
@@ -54,24 +54,24 @@
         </div>
       </div>
       <div class="col-md-2">
-        <div class="form-group string optional grant_agent_guest_id">
-          <input class="form-control string optional" type="text" name="grant[agent_guest_id]" id="grant_agent_guest_id" />
-        </div>
-      </div>
-      <div class="col-md-3">
-          <label for="grant_agent_user_id">
-            <%= f.collection_select :agent_user_id, User.order(:email), :id, :email %>
-          </label>
+        <label for="grant_agent_institution_id">
+          <%= f.collection_select :agent_institution_id, Institution.order(:name), :id, :name %>
+        </label>
       </div>
       <div class="col-md-2">
         <label for="grant_agent_individual_id">
           <%= f.collection_select :agent_individual_id, Individual.order(:email), :id, :email %>
         </label>
       </div>
-      <div class="col-md-2">
-        <label for="grant_agent_institution_id">
-          <%= f.collection_select :agent_institution_id, Institution.order(:name), :id, :name %>
+      <div class="col-md-3">
+        <label for="grant_agent_user_id">
+          <%= f.collection_select :agent_user_id, User.order(:email), :id, :email %>
         </label>
+      </div>
+      <div class="col-md-2">
+        <div class="form-group string optional grant_agent_guest_id">
+          <input class="form-control string optional" type="text" name="grant[agent_guest_id]" id="grant_agent_guest_id" />
+        </div>
       </div>
       <div class="col-md-1">
         <label for="grant_agent_id_any">
@@ -136,10 +136,10 @@
           <label class="control-label string required" for="grant_resource_type">Resource Type</label>
         </div>
       </div>
-      <div class="col-md-2">
-        <label for="grant_resource_type_entity">
-          <input type="radio" value="Entity" checked="checked" name="grant[resource_type]" id="grant_resource_type_entity" />
-          <label class="collection_radio_buttons" for="grant_resource_type_entity">Entity</label>
+      <div class="col-md-4">
+        <label for="grant_resource_type_product">
+          <input type="radio" value="Product" checked="checked" name="grant[resource_type]" id="grant_resource_type_product" />
+          <label class="collection_radio_buttons" for="grant_resource_type_product">Product</label>
         </label>
       </div>
       <div class="col-md-3">
@@ -148,10 +148,10 @@
           <label class="collection_radio_buttons" for="grant_resource_type_component">Component</label>
         </label>
       </div>
-      <div class="col-md-4">
-        <label for="grant_resource_type_product">
-          <input type="radio" value="Product" name="grant[resource_type]" id="grant_resource_type_product" />
-          <label class="collection_radio_buttons" for="grant_resource_type_product">Product</label>
+      <div class="col-md-2">
+        <label for="grant_resource_type_entity">
+          <input type="radio" value="Entity" name="grant[resource_type]" id="grant_resource_type_entity" />
+          <label class="collection_radio_buttons" for="grant_resource_type_entity">Entity</label>
         </label>
       </div>
       <div class="col-md-1">
@@ -171,20 +171,20 @@
           <label class="control-label string optional" for="grant_resource_id">Resource ID</label>
         </div>
       </div>
-      <div class="col-md-2">
-        <div class="form-group string optional grant_resource_entity_id">
-          <input class="form-control string optional" type="text" name="grant[resource_id]" id="grant_resource_entity_id" />
-        </div>
+      <div class="col-md-4">
+        <label for="grant_resource_product_id">
+          <%= f.collection_select :resource_product_id, Product.order(:name), :id, :name %>
+        </label>
       </div>
       <div class="col-md-3">
         <label for="grant_resource_component_id">
           <%= f.collection_select :resource_component_id, Component.order(:handle), :id, :handle %>
         </label>
       </div>
-      <div class="col-md-4">
-        <label for="grant_resource_product_id">
-          <%= f.collection_select :resource_product_id, Product.order(:name), :id, :name %>
-        </label>
+      <div class="col-md-2">
+        <div class="form-group string optional grant_resource_entity_id">
+          <input class="form-control string optional" type="text" name="grant[resource_id]" id="grant_resource_entity_id" />
+        </div>
       </div>
       <div class="col-md-1">
         <label for="grant_resource_id_any">

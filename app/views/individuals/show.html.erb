@@ -8,14 +8,14 @@
   <div class="col-md-1"><em>eMail</em></div>
   <div class="col-md-11">&nbsp<%= @individual.email %></div>
   <div class="col-md-12"><br/></div>
-  <h2>Lessee</h2>
-  <div class="col-md-1"><%= link_to @individual.lessee.id, lessee_path(@individual.lessee) %></div>
-  <div class="col-md-11"><%= @individual.lessee.identifier %></div>
-  <div class="col-md-12"><br/></div>
   <h2>Grants</h2>
   <div class="col-md-12">
     <%= render partial: '/grants/grants', locals: { agent: @individual, grants: @individual.grants } %>
   </div>
+  <div class="col-md-12"><br/></div>
+  <h2>Lessee</h2>
+  <div class="col-md-1"><%= link_to @individual.lessee.id, lessee_path(@individual.lessee) %></div>
+  <div class="col-md-11"><%= @individual.lessee.identifier %></div>
   <div class="col-md-12"><br/></div>
   <div class="col-md-12">
     <%= link_to_if @individual.update?, 'Edit', edit_individual_path(@individual) %>

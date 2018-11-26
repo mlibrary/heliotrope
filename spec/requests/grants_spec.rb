@@ -39,6 +39,16 @@ RSpec.describe "Grants", type: :request do
           expect(response).to have_http_status(:ok)
           expect(response).to render_template(:index)
         end
+
+        context 'filtering' do
+          subject { get "/grants?resource_type=Product" }
+
+          it do
+            expect { subject }.not_to raise_error
+            expect(response).to render_template(:index)
+            expect(response).to have_http_status(:ok)
+          end
+        end
       end
     end
   end

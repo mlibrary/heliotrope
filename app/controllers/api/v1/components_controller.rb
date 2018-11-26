@@ -5,10 +5,12 @@ module API
     # Components Controller
     class ComponentsController < API::ApplicationController
       before_action :set_component, only: %i[show update destroy]
-      # @example get /api/component?handle=String
-      # @param [Hash] params { handle: String }
-      # @return [ActionDispatch::Response] {Component}
-      #   (See ./app/views/api/v1/components/show.json.jbuilder for details)
+
+      # Get component by identifier
+      # @example
+      #   get /api/component?identifier=String
+      # @param [Hash] params { identifer: String }
+      # @return [ActionDispatch::Response] {Component} (see {show})
       def find
         @component = Component.find_by(identifier: params[:identifier])
         return head :not_found if @component.blank?
@@ -16,151 +18,121 @@ module API
       end
 
       # @overload index
-      #   @example get /api/components
+      #   List components
+      #   @example
+      #     get /api/components
+      #   @return [ActionDispatch::Response] array of {Component}
       # @overload index
-      #   @example get /api/products/:product_id/components
+      #   List product components
+      #   @example
+      #     get /api/products/:product_id/components
       #   @param [Hash] params { product_id: Number }
-      # @return [ActionDispatch::Response] array of {Component}
-      #   (See ./app/views/api/v1/components/index.json.jbuilder for details)
+      #   @return [ActionDispatch::Response] array of {Component}
+      #
+      #     (See ./app/views/api/v1/component/index.json.jbuilder)
+      #
+      #     {include:file:app/views/api/v1/components/index.json.jbuilder}
+      #
+      #     (See ./app/views/api/v1/component/_component.json.jbuilder)
+      #
+      #     {include:file:app/views/api/v1/components/_component.json.jbuilder}
       def index
-        @components = []
-        if params[:product_id].present?
-          set_product!
-          @components = @product.components
-        else
-          @components = Component.all
-        end
+        @components = if params[:product_id].present?
+                        set_product
+                        @product.components
+                      else
+                        Component.all
+                      end
       end
 
-      # @overload show
-      #   @example get /api/components/:id
-      #   @param [Hash] params { id: Number }
-      # @overload show
-      #   @example get /api/products/:product_id/components/:id
-      #   @param [Hash] params { product_id: Number, id: Number }
+      # Get component by id
+      # @example
+      #   get /api/component/:id
+      # @param [Hash] params { id: Number }
       # @return [ActionDispatch::Response] {Component}
-      #   (See ./app/views/api/v1/components/show.json.jbuilder for details)
-      def show
-        return head :not_found if @component.blank?
-        if params[:product_id].present? # rubocop:disable Style/GuardClause
-          product = Product.find_by(id: params[:product_id])
-          return head :not_found if product.blank?
-          return head :not_found unless product.components.include?(@component)
-        end
-      end
+      #
+      #   (See ./app/views/api/v1/component/show.json.jbuilder)
+      #
+      #   {include:file:app/views/api/v1/components/show.json.jbuilder}
+      #
+      #   (See ./app/views/api/v1/component/_component.json.jbuilder)
+      #
+      #   {include:file:app/views/api/v1/components/_component.json.jbuilder}
+      def show; end
 
-      # @overload create
+      # Create component
+      # @example
       #   post /api/components
-      #   @param [Hash] params { component: { handle: String } }
-      # @overload create
-      #   post /api/products/:product_id/components
-      #   @param [Hash] params { product_id: Number, component: { handle: String } }
-      # @return [ActionDispatch::Response] {Component}
-      #   (See ./app/views/api/v1/components/show.json.jbuilder for details)
+      # @param [Hash] params { component: { identifier: String, name: String, noid: String, handle: String } }
+      # @return [ActionDispatch::Response] {Component} (see {show})
       def create
-        if params[:product_id].present?
-          create_product_component
-        else
-          create_component
+        @component = Component.find_by(identifier: component_params[:identifier])
+        if @component.present?
+          @component.errors.add(:identifier, "component identifier #{component_params[:identifier]} exists!")
+          return render json: @component.errors, status: :unprocessable_entity
         end
+        @component = Component.new(component_params)
+        return render json: @component.errors, status: :unprocessable_entity unless @component.save
+        render :show, status: :created, location: @component
       end
 
       # @overload update
-      #   @example put /api/components/:id
-      #   @param [Hash] params { id: Number }
+      #   Update component
+      #   @example
+      #     put /api/components/:id
+      #   @param [Hash] params { id: Number, component: { name: String, email: String } }
+      #   @return [ActionDispatch::Response] {Component} (see {show})
       # @overload update
-      #   @example put /api/products/:product_id/components/:id
+      #   Add component to product
+      #   @example
+      #     put /api/products/:product_id/components/:id
       #   @param [Hash] params { product_id: Number, id: Number }
-      # @return [ActionDispatch::Response] {Component}
-      #   (See ./app/views/api/v1/components/show.json.jbuilder for details)
+      #   @return [ActionDispatch::Response]
       def update
         if params[:product_id].present?
-          update_product_component
-        else
-          update_component
+          set_product
+          unless @component.products.include?(@product)
+            @component.products << @product
+            @component.save
+          end
+          return head :ok
         end
+        return render json: @component.errors, status: :unprocessable_entity unless @component.update(component_params)
+        render :show, status: :ok, location: @component
       end
 
       # @overload destroy
-      #   @example delete /api/components/:id
+      #   Delete component
+      #   @example
+      #     delete /api/components/:id
       #   @param [Hash] params { id: Number }
+      #   @return [ActionDispatch::Response]
       # @overload destroy
-      #   @example delete /api/products/:product_id/components/:id
+      #   Remove component from product
+      #   @example
+      #     put /api/products/:product_id/components/:id
       #   @param [Hash] params { product_id: Number, id: Number }
-      # @return [ActionDispatch::Response]
+      #   @return [ActionDispatch::Response]
       def destroy
         if params[:product_id].present?
-          set_product!
-          @product.components.delete(@component) if @product.components.include?(@component)
+          set_product
+          @component.products.delete(@product) if @component.products.include?(@product)
         else
-          return head :ok if @component.blank?
-          return head :accepted unless @component.products.empty?
-          @component.delete
+          return render json: @component.errors, status: :accepted unless @component.destroy
         end
         head :ok
       end
 
       private
 
-        def create_component
-          status = :ok
-          @component = Component.find_by(identifier: component_params[:identifier])
-          if @component.blank?
-            @component = Component.new(component_params)
-            return render json: @component.errors, status: :unprocessable_entity unless @component.save
-            status = :created
-          end
-          render :show, status: status, location: @component
+        def set_product
+          @product = Product.find(params[:product_id])
         end
 
-        def create_product_component
-          status = :ok
-          set_product!
-          @component = Component.find_by(identifier: component_params[:identifier])
-          if @component.blank?
-            @component = Component.new(component_params)
-            return render json: @component.errors, status: :unprocessable_entity unless @component.save
-            status = :created
-          end
-          unless @product.components.include?(@component)
-            @product.components << @component
-            @product.save
-          end
-          render :show, status: status, location: @component
-        end
-
-        def update_component
-          if @component.update(component_params)
-            render :show, status: :ok, location: @component
-          else
-            render json: @component.errors, status: :unprocessable_entity
-          end
-        end
-
-        def update_product_component
-          set_product!
-          set_component!
-          unless @product.components.include?(@component)
-            @product.components << @component
-            @product.save
-          end
-          render :show, status: :ok, location: @component
-        end
-
-        def set_product!
-          @product = Product.find_by!(id: params[:product_id])
-        end
-
-        def set_component!
-          @component = Component.find_by!(id: params[:id])
-        end
-
-        # Use callbacks to share common setup or constraints between actions.
         def set_component
-          @component = Component.find_by(id: params[:id])
+          @component = Component.find(params[:id])
         end
 
-        # Never trust parameters from the scary internet, only allow the white list through.
         def component_params
           params.require(:component).permit(:identifier, :name, :noid, :handle)
         end

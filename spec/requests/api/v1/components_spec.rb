@@ -13,217 +13,361 @@ RSpec.describe "Components", type: :request do
       "url" => component_url(component, format: :json)
     }
   end
-
   let(:headers) do
     {
       "ACCEPT" => "application/json, application/vnd.heliotrope.v1+json",
       "CONTENT_TYPE" => "application/json"
     }
   end
-  let(:new_component) { build(:component, id: component.id + 1, identifier: new_identifier, name: 'new_name', noid: 'new_noid', handle: 'new_handle') }
-  let(:new_identifier) { 'new_component' }
-  let(:component) { create(:component, identifier: identifier, name: 'name', noid: 'noid', handle: 'handle') }
-  let(:identifier) { 'component' }
+  let(:component) { create(:component) }
   let(:response_body) { JSON.parse(@response.body) }
 
-  before { component }
-
   context 'unauthorized' do
-    let(:input) { params.to_json }
-    let(:params) { { component: { identifier: new_identifier, name: 'new_name', noid: 'new_noid', handle: 'new_handle' } } }
-
-    it { get api_find_component_path, headers: headers; expect(response).to have_http_status(:unauthorized) } # rubocop:disable Style/Semicolon
+    it { get api_find_component_path, params: {}, headers: headers; expect(response).to have_http_status(:unauthorized) } # rubocop:disable Style/Semicolon
     it { get api_components_path, headers: headers; expect(response).to have_http_status(:unauthorized) } # rubocop:disable Style/Semicolon
-    it { post api_components_path, params: input, headers: headers; expect(response).to have_http_status(:unauthorized) } # rubocop:disable Style/Semicolon
-    it { get api_component_path(component), headers: headers; expect(response).to have_http_status(:unauthorized) } # rubocop:disable Style/Semicolon
-    it { delete api_component_path(component), headers: headers; expect(response).to have_http_status(:unauthorized) } # rubocop:disable Style/Semicolon
+    it { get api_component_products_path(1), headers: headers; expect(response).to have_http_status(:unauthorized) } # rubocop:disable Style/Semicolon
+    it { post api_components_path, params: {}, headers: headers; expect(response).to have_http_status(:unauthorized) } # rubocop:disable Style/Semicolon
+    it { get api_component_path(1), headers: headers; expect(response).to have_http_status(:unauthorized) } # rubocop:disable Style/Semicolon
+    it { put api_component_path(1), params: {}, headers: headers; expect(response).to have_http_status(:unauthorized) } # rubocop:disable Style/Semicolon
+    it { put api_product_component_path(1, 1), headers: headers; expect(response).to have_http_status(:unauthorized) } # rubocop:disable Style/Semicolon
+    it { delete api_component_path(1), headers: headers; expect(response).to have_http_status(:unauthorized) } # rubocop:disable Style/Semicolon
+    it { delete api_product_component_path(1, 1), headers: headers; expect(response).to have_http_status(:unauthorized) } # rubocop:disable Style/Semicolon
   end
 
   context 'authorized' do
     before { allow_any_instance_of(API::ApplicationController).to receive(:authorize_request).and_return(nil) }
 
-    context 'api_v1_find_component_path' do
-      let(:params) { { identifier: new_identifier } }
+    describe 'GET /api/v1/component' do
+      it 'non existing not_found' do
+        get api_find_component_path, params: { identifier: 'identifier' }, headers: headers
+        expect(response.content_type).to eq("application/json")
+        expect(response).to have_http_status(:not_found)
+        expect(response.body).to be_empty
+        expect(Component.count).to eq(0)
+      end
 
-      describe 'GET /api/v1/component' do
-        it 'not found' do
-          get api_find_component_path, params: params, headers: headers
+      it 'existing ok' do
+        get api_find_component_path, params: { identifier: component.identifier }, headers: headers
+        expect(response.content_type).to eq("application/json")
+        expect(response).to have_http_status(:ok)
+        expect(response_body).to eq(component_obj(component: component))
+        expect(Component.count).to eq(1)
+      end
+    end
+
+    describe "GET /api/v1/components" do # index
+      it 'empty ok' do
+        get api_components_path, headers: headers
+        expect(response.content_type).to eq("application/json")
+        expect(response).to have_http_status(:ok)
+        expect(response_body).to eq([])
+        expect(Component.count).to eq(0)
+      end
+
+      it 'component ok' do
+        component
+        get api_components_path, headers: headers
+        expect(response.content_type).to eq("application/json")
+        expect(response).to have_http_status(:ok)
+        expect(response_body).to eq([component_obj(component: component)])
+        expect(Component.count).to eq(1)
+      end
+
+      it 'components ok' do
+        component
+        new_component = create(:component)
+        get api_components_path, headers: headers
+        expect(response.content_type).to eq("application/json")
+        expect(response).to have_http_status(:ok)
+        expect(response_body).to eq([component_obj(component: component), component_obj(component: new_component)])
+        expect(Component.count).to eq(2)
+      end
+    end
+
+    describe "GET /api/v1/product/:product_id/components" do # index
+      let(:product) { create(:product) }
+      let(:new_component) { create(:component) }
+
+      before do
+        component
+        new_component
+      end
+
+      it 'not_found' do
+        get api_product_components_path(1), headers: headers
+        expect(response.content_type).to eq("application/json")
+        expect(response).to have_http_status(:not_found)
+        expect(response_body[:exception.to_s]).to include("ActiveRecord::RecordNotFound: Couldn't find Product")
+        expect(Component.count).to eq(2)
+      end
+
+      it 'empty ok' do
+        get api_product_components_path(product), headers: headers
+        expect(response.content_type).to eq("application/json")
+        expect(response).to have_http_status(:ok)
+        expect(response_body).to eq([])
+        expect(Component.count).to eq(2)
+      end
+
+      it 'product ok' do
+        product.components << component
+        get api_product_components_path(product), headers: headers
+        expect(response.content_type).to eq("application/json")
+        expect(response).to have_http_status(:ok)
+        expect(response_body).to eq([component_obj(component: component)])
+        expect(Component.count).to eq(2)
+      end
+
+      it 'products ok' do
+        product.components << component
+        product.components << new_component
+        get api_product_components_path(product), headers: headers
+        expect(response.content_type).to eq("application/json")
+        expect(response).to have_http_status(:ok)
+        expect(response_body).to eq([component_obj(component: component), component_obj(component: new_component)])
+        expect(Component.count).to eq(2)
+      end
+    end
+
+    describe "POST /api/v1/components" do # create
+      let(:params) { { component: { identifier: identifier, name: name, noid: noid, handle: handle } }.to_json }
+
+      context 'blank' do
+        let(:identifier) { '' }
+        let(:name) { '' }
+        let(:noid) { '' }
+        let(:handle) { '' }
+
+        it 'unprocessable_entity' do
+          post api_components_path, params: params, headers: headers
           expect(response.content_type).to eq("application/json")
-          expect(response).to have_http_status(:not_found)
-          expect(response.body).to be_empty
+          expect(response).to have_http_status(:unprocessable_entity)
+          expect(response_body[:identifier.to_s]).to eq(["can't be blank"])
+          expect(response_body[:name.to_s]).to be nil
+          expect(response_body[:noid.to_s]).to eq(["can't be blank"])
+          expect(response_body[:handle.to_s]).to eq(["can't be blank"])
+          expect(Component.count).to eq(0)
         end
+      end
 
-        it 'found' do
-          new_component.save
-          get api_find_component_path, params: params, headers: headers
+      context 'non existing' do
+        let(:identifier) { 'identifier' }
+        let(:name) { 'name' }
+        let(:noid) { 'noid' }
+        let(:handle) { 'handle' }
+
+        it 'created' do
+          post api_components_path, params: params, headers: headers
           expect(response.content_type).to eq("application/json")
-          expect(response).to have_http_status(:ok)
-          expect(response.body).not_to be_empty
-          expect(response_body).to eq(component_obj(component: new_component))
+          expect(response).to have_http_status(:created)
+          expect(response_body[:identifier.to_s]).to eq(identifier)
+          expect(response_body[:name.to_s]).to eq(name)
+          expect(response_body[:noid.to_s]).to eq(noid)
+          expect(response_body[:handle.to_s]).to eq(handle)
+          expect(Component.count).to eq(1)
+        end
+      end
+
+      context 'existing' do
+        let(:identifier) { component.identifier }
+        let(:name) { 'name' }
+        let(:noid) { 'noid' }
+        let(:handle) { 'handle' }
+
+        it 'unprocessable_entity' do
+          post api_components_path, params: params, headers: headers
+          expect(response.content_type).to eq("application/json")
+          expect(response).to have_http_status(:unprocessable_entity)
+          expect(response_body[:identifier.to_s]).to eq(["component identifier #{identifier} exists!"])
+          expect(Component.count).to eq(1)
         end
       end
     end
 
-    context 'api_v1_lessess_path' do
-      describe "GET /api/v1/components" do # index
-        it 'empty' do
-          component.destroy!
-          get api_components_path, headers: headers
+    describe "GET /api/v1/component/:id" do # show
+      it 'non existing not_found' do
+        get api_component_path(1), headers: headers
+        expect(response.content_type).to eq("application/json")
+        expect(response).to have_http_status(:not_found)
+        expect(response_body[:exception.to_s]).to include("ActiveRecord::RecordNotFound: Couldn't find Component")
+        expect(Component.count).to eq(0)
+      end
+
+      it 'existing ok' do
+        get api_component_path(component), headers: headers
+        expect(response.content_type).to eq("application/json")
+        expect(response).to have_http_status(:ok)
+        expect(response_body).to eq(component_obj(component: component))
+        expect(Component.count).to eq(1)
+      end
+    end
+
+    describe "PUT /api/v1/component" do # update
+      it 'non existing not_found' do
+        put api_component_path(1), params: { component: { name: 'updated_name' } }.to_json, headers: headers
+        expect(response.content_type).to eq("application/json")
+        expect(response).to have_http_status(:not_found)
+        expect(response_body[:exception.to_s]).to include("ActiveRecord::RecordNotFound: Couldn't find Component")
+        expect(Component.count).to eq(0)
+      end
+
+      it 'existing ok' do
+        put api_component_path(component.id), params: { component: { name: 'updated_name' } }.to_json, headers: headers
+        expect(response.content_type).to eq("application/json")
+        expect(response).to have_http_status(:ok)
+        expect(response_body[:id.to_s]).to eq(component.id)
+        expect(response_body[:name.to_s]).to eq('updated_name')
+        expect(Component.count).to eq(1)
+      end
+
+      it 'existing update identifier unprocessable_entity' do
+        put api_component_path(component.id), params: { component: { identifier: '' } }.to_json, headers: headers
+        expect(response.content_type).to eq("application/json")
+        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response_body[:identifier.to_s]).to eq(["can't be blank"])
+        expect(Component.count).to eq(1)
+      end
+    end
+
+    describe "PUT /api/v1/products/:product_id:/components/:id" do # update
+      context 'non existing product' do
+        it 'non existing component not_found' do
+          put api_product_component_path(1, 1), headers: headers
           expect(response.content_type).to eq("application/json")
-          expect(response).to have_http_status(:ok)
-          expect(response_body).to eq([])
+          expect(response).to have_http_status(:not_found)
+          expect(response_body[:exception.to_s]).to include("ActiveRecord::RecordNotFound: Couldn't find Component with")
+          expect(Component.count).to eq(0)
         end
 
-        it 'component' do
-          get api_components_path, headers: headers
+        it 'existing component not_found' do
+          put api_product_component_path(1, component), headers: headers
           expect(response.content_type).to eq("application/json")
-          expect(response).to have_http_status(:ok)
-          expect(response_body).to eq([component_obj(component: component)])
-        end
-
-        it 'components' do
-          new_component.save!
-          get api_components_path, headers: headers
-          expect(response.content_type).to eq("application/json")
-          expect(response).to have_http_status(:ok)
-          expect(response_body).to eq([component_obj(component: component), component_obj(component: new_component)])
+          expect(response).to have_http_status(:not_found)
+          expect(response_body[:exception.to_s]).to include("ActiveRecord::RecordNotFound: Couldn't find Product with")
+          expect(Component.count).to eq(1)
         end
       end
 
-      describe "POST /api/v1/components" do # create
-        let(:input) { params.to_json }
+      context 'existing product' do
+        let(:product) { create(:product) }
 
-        context 'blank identifier' do
-          let(:params) { { component: { identifier: '', name: 'new_name', noid: 'new_noid', handle: 'new_handle' } } }
-
-          it 'errors' do
-            post api_components_path, params: input, headers: headers
-            expect(response.content_type).to eq("application/json")
-            expect(response).to have_http_status(:unprocessable_entity)
-            expect(response_body[:identifier.to_s]).to eq(["can't be blank"])
-            expect(Component.all.count).to eq(1)
-          end
+        it 'non existing component not_found' do
+          put api_product_component_path(product, 1), headers: headers
+          expect(response.content_type).to eq("application/json")
+          expect(response).to have_http_status(:not_found)
+          expect(response_body[:exception.to_s]).to include("ActiveRecord::RecordNotFound: Couldn't find Component with")
+          expect(Component.count).to eq(0)
         end
 
-        context 'unique identifier' do
-          let(:params) { { component: { identifier: new_identifier, name: 'new_name', noid: 'new_noid', handle: 'new_handle' } } }
-
-          it 'creates component' do
-            post api_components_path, params: input, headers: headers
-            expect(response.content_type).to eq("application/json")
-            expect(response).to have_http_status(:created)
-            expect(response_body[:identifier.to_s]).to eq(new_identifier)
-            expect(Component.find_by(identifier: new_identifier)).not_to be_nil
-            expect(Component.all.count).to eq(2)
-          end
+        it 'existing component ok' do
+          put api_product_component_path(product, component), headers: headers
+          expect(response.content_type).to eq("application/json")
+          expect(response).to have_http_status(:ok)
+          expect(response.body).to be_empty
+          expect(product.components).to include(component)
+          expect(product.components.count).to eq(1)
+          expect(Component.count).to eq(1)
         end
 
-        context 'existing identifier' do
-          let(:params) { { component: { identifier: identifier, name: 'new_name', noid: 'new_noid', handle: 'new_handle' } } }
-
-          it 'does nothing' do
-            post api_components_path, params: input, headers: headers
-            expect(response.content_type).to eq("application/json")
-            expect(response).to have_http_status(:ok)
-            expect(response_body[:identifier.to_s]).to eq(identifier)
-            expect(Component.find_by(identifier: identifier)).not_to be_nil
-            expect(Component.all.count).to eq(1)
-          end
+        it 'existing component twice ok' do
+          put api_product_component_path(product, component), headers: headers
+          put api_product_component_path(product, component), headers: headers
+          expect(response.content_type).to eq("application/json")
+          expect(response).to have_http_status(:ok)
+          expect(response.body).to be_empty
+          expect(product.components).to include(component)
+          expect(product.components.count).to eq(1)
+          expect(Component.count).to eq(1)
         end
       end
     end
 
-    context 'api_v1_component_path' do
-      describe "GET /api/v1/components/:id" do # show
-        it 'does nothing' do
-          get api_component_path(new_component), headers: headers
+    describe "DELETE /api/v1/component/:id" do # destroy
+      let(:product) { create(:product) }
+
+      it 'non existing not_found' do
+        delete api_component_path(1), headers: headers
+        expect(response.content_type).to eq("application/json")
+        expect(response).to have_http_status(:not_found)
+        expect(response_body[:exception.to_s]).to include("ActiveRecord::RecordNotFound: Couldn't find Component")
+        expect(Component.count).to eq(0)
+      end
+
+      it 'existing without products ok' do
+        delete api_component_path(component), headers: headers
+        expect(response.content_type).to eq("application/json")
+        expect(response).to have_http_status(:ok)
+        expect(response.body).to be_empty
+        expect(Component.count).to eq(0)
+      end
+
+      it 'existing with products accepted' do
+        product.components << component
+        product.save
+        delete api_component_path(component), headers: headers
+        expect(response.content_type).to eq("application/json")
+        expect(response).to have_http_status(:accepted)
+        expect(response_body[:base.to_s]).to include("component has 1 associated products!")
+        expect(Component.count).to eq(1)
+      end
+    end
+
+    describe "DELETE /api/v1/products/:product_id:/components/:id" do # delete
+      context 'non existing product' do
+        it 'non existing component not_found' do
+          delete api_product_component_path(1, 1), headers: headers
           expect(response.content_type).to eq("application/json")
           expect(response).to have_http_status(:not_found)
-          expect(response.body).to be_empty
+          expect(response_body[:exception.to_s]).to include("ActiveRecord::RecordNotFound: Couldn't find Component with")
+          expect(Component.count).to eq(0)
         end
 
-        it 'returns component' do
-          get api_component_path(component), headers: headers
+        it 'existing component not_found' do
+          delete api_product_component_path(1, component), headers: headers
           expect(response.content_type).to eq("application/json")
-          expect(response).to have_http_status(:ok)
-          expect(response_body).to eq(component_obj(component: component))
+          expect(response).to have_http_status(:not_found)
+          expect(response_body[:exception.to_s]).to include("ActiveRecord::RecordNotFound: Couldn't find Product with")
+          expect(Component.count).to eq(1)
         end
       end
 
-      describe "PUT /api/v1/components/:id" do # update
-        let(:input) { params.to_json }
+      context 'existing product' do
+        let(:product) { create(:product) }
 
-        context 'does nothing' do
-          let(:params) { { component: { identifier: '', name: 'name', noid: 'noid', handle: 'handle' } } }
-
-          it 'errors' do
-            put api_component_path(component), params: input, headers: headers
-            expect(response.content_type).to eq("application/json")
-            expect(response).to have_http_status(:unprocessable_entity)
-            expect(response_body[:identifier.to_s]).to eq(["can't be blank"])
-            expect(Component.all.count).to eq(1)
-          end
+        before do
+          product.components << component
+          product.save
         end
 
-        context 'unique identifier' do
-          let(:params) { { component: { identifier: new_identifier, name: 'name', noid: 'noid', handle: 'handle' } } }
-
-          it 'updates component' do
-            put api_component_path(component), params: input, headers: headers
-            expect(response.content_type).to eq("application/json")
-            expect(response).to have_http_status(:ok)
-            expect(response_body[:identifier.to_s]).to eq(new_identifier)
-            expect(Component.find_by(identifier: new_identifier)).not_to be_nil
-            expect(Component.all.count).to eq(1)
-          end
+        it 'non existing component not_found' do
+          delete api_product_component_path(product, 1), headers: headers
+          expect(response.content_type).to eq("application/json")
+          expect(response).to have_http_status(:not_found)
+          expect(response_body[:exception.to_s]).to include("ActiveRecord::RecordNotFound: Couldn't find Component with")
+          expect(product.components).to include(component)
+          expect(product.components.count).to eq(1)
+          expect(Component.count).to eq(1)
         end
 
-        context 'existing identifier' do
-          let(:params) { { component: { identifier: identifier, name: 'name', noid: 'noid', handle: 'handle' } } }
-
-          it 'does nothing' do
-            put api_component_path(component), params: input, headers: headers
-            expect(response.content_type).to eq("application/json")
-            expect(response).to have_http_status(:ok)
-            expect(response_body[:identifier.to_s]).to eq(identifier)
-            expect(Component.find_by(identifier: identifier)).not_to be_nil
-            expect(Component.all.count).to eq(1)
-          end
-        end
-      end
-
-      describe "DELETE /api/v1/components/:id" do # destroy
-        it 'does nothing' do
-          delete api_component_path(new_component), headers: headers
+        it 'existing component ok' do
+          delete api_product_component_path(product, component), headers: headers
           expect(response.content_type).to eq("application/json")
           expect(response).to have_http_status(:ok)
           expect(response.body).to be_empty
-          expect(Component.find_by(identifier: new_identifier)).to be_nil
-          expect(Component.all.count).to eq(1)
+          expect(product.components).to include(component)
+          expect(product.components.count).to eq(0)
+          expect(Component.count).to eq(1)
         end
 
-        it 'deletes component' do
-          delete api_component_path(component), headers: headers
+        it 'existing component twice ok' do
+          delete api_product_component_path(product, component), headers: headers
+          delete api_product_component_path(product, component), headers: headers
           expect(response.content_type).to eq("application/json")
           expect(response).to have_http_status(:ok)
           expect(response.body).to be_empty
-          expect(Component.find_by(identifier: identifier)).to be_nil
-          expect(Component.all.count).to eq(0)
-        end
-
-        context 'component of product' do
-          let(:product) { create(:product) }
-
-          it 'does nothing' do
-            component.products << product
-            component.save!
-            delete api_component_path(component), headers: headers
-            expect(response.content_type).to eq("application/json")
-            expect(response).to have_http_status(:accepted)
-            expect(response.body).to be_empty
-            expect(Component.find_by(identifier: identifier)).not_to be_nil
-            expect(Component.all.count).to eq(1)
-          end
+          expect(product.components).to include(component)
+          expect(product.components.count).to eq(0)
+          expect(Component.count).to eq(1)
         end
       end
     end

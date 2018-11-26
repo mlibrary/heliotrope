@@ -29,21 +29,27 @@ Rails.application.routes.draw do
     scope module: :v1, constraints: API::Version.new('v1', true) do
       get 'product', controller: :products, action: :find, as: :find_product
       resources :products, only: %i[index show create update destroy] do
-        resources :components, only: %i[index show create update destroy]
-        resources :lessees, only: %i[index show create update destroy]
+        resources :components, only: %i[index update destroy]
+        resources :individuals, only: %i[index update destroy]
+        resources :institutions, only: %i[index update destroy]
+        resources :grants, only: %i[index]
       end
       get 'component', controller: :components, action: :find, as: :find_component
       resources :components, only: %i[index show create update destroy] do
-        resources :products, only: %i[index show create update destroy]
+        resources :products, only: %i[index]
       end
       get 'individual', controller: :individuals, action: :find, as: :find_individual
-      resources :individuals, only: %i[index show create update destroy]
-      get 'institution', controller: :institutions, action: :find, as: :find_institution
-      resources :institutions, only: %i[index show create update destroy]
-      get 'lessee', controller: :lessees, action: :find, as: :find_lessee
-      resources :lessees, only: %i[index show create destroy] do
-        resources :products, only: %i[index show create update destroy]
+      resources :individuals, only: %i[index show create update destroy] do
+        resources :products, only: %i[index]
+        resources :grants, only: %i[index]
       end
+      get 'institution', controller: :institutions, action: :find, as: :find_institution
+      resources :institutions, only: %i[index show create update destroy] do
+        resources :products, only: %i[index]
+        resources :grants, only: %i[index]
+      end
+      get 'grant', controller: :grants, action: :find, as: :find_grant
+      resources :grants, only: %i[index show create destroy]
     end
   end
 
@@ -58,15 +64,12 @@ Rails.application.routes.draw do
     end
     resources :individuals
     resources :institutions
-    resources :lessees, except: %i[update] do
-      resources :products, only: %i[create destroy]
-    end
+    resources :lessees, only: %i[index show]
     resources :components do
       resources :products, only: %i[create destroy]
     end
     resources :products do
       resources :components, only: %i[create destroy]
-      resources :lessees, only: %i[create destroy]
       resources :grants, only: %i[new]
     end
     resources :grants, except: %i[edit update]

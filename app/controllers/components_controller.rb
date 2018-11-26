@@ -3,28 +3,19 @@
 class ComponentsController < ApplicationController
   before_action :set_component, only: %i[show edit update destroy add remove]
 
-  # GET /components
-  # GET /components.json
   def index
-    @components = Component.order(handle: :asc).page(params[:page])
+    @components = Component.filter(filtering_params(params)).order(handle: :asc).page(params[:page])
   end
 
-  # GET /components/1
-  # GET /components/1.json
   def show; end
 
-  # GET /components/new
   def new
     @component = Component.new
   end
 
-  # GET /components/1/edit
   def edit; end
 
-  # POST /components
-  # POST /components.json
-  # POST /products/product_id:/components
-  def create # rubocop:disable Metrics/PerceivedComplexity
+  def create # rubocop:disable  Metrics/PerceivedComplexity
     if params[:product_id].present?
       product = Product.find(params[:product_id])
       @component = Component.find(params[:id])
@@ -46,8 +37,6 @@ class ComponentsController < ApplicationController
     end
   end
 
-  # PATCH/PUT /components/1
-  # PATCH/PUT /components/1.json
   def update
     respond_to do |format|
       if @component.update(component_params)
@@ -60,9 +49,6 @@ class ComponentsController < ApplicationController
     end
   end
 
-  # DELETE /components/1
-  # DELETE /components/1.json
-  # DELETE /products/product_id:/components/:id
   def destroy
     if params[:product_id].present?
       product = Product.find(params[:product_id])
@@ -81,17 +67,14 @@ class ComponentsController < ApplicationController
 
   private
 
-    # Use callbacks to share common setup or constraints between actions.
     def set_component
       @component = Component.find(params[:id])
     end
 
-    # Never trust parameters from the scary internet, only allow the white list through.
     def component_params
       params.require(:component).permit(:identifier, :name, :noid, :handle)
     end
 
-    # A list of the param names that can be used for filtering the Product list
     def filtering_params(params)
       params.slice(:identifier_like, :name_like, :noid_like, :handle_like)
     end

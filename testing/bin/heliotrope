@@ -12,11 +12,11 @@ products = false
 components = false
 individuals = false
 institutions = false
-lessees = false
+grants = false
 
 options = OpenStruct.new
 option_parser = OptionParser.new do |opts|
-  opts.banner = "Usage: #{$PROGRAM_NAME} -v -p -c -d -s -l [-b <base>] [-t <token>]"
+  opts.banner = "Usage: #{$PROGRAM_NAME} -v -p -c -d -s -g [-b <base>] [-t <token>]"
   opts.on('-v', '--verbose', 'Verbose') do
     verbose = true
   end
@@ -32,8 +32,8 @@ option_parser = OptionParser.new do |opts|
   opts.on('-s', '--institutions', 'Institutions') do
     institutions = true
   end
-  opts.on('-l', '--lessees', 'Lessees') do
-    lessees = true
+  opts.on('-g', '--grants', 'Grants') do
+    grants = true
   end
   opts.on('-b', '--base [url]', 'URL to api') do |url|
     options.base = url
@@ -61,7 +61,7 @@ begin
   response["components"] = service.components if components
   response["individuals"] = service.individuals if individuals
   response["institutions"] = service.institutions if institutions
-  response["lessees"] = service.lessees if lessees
+  response["grants"] = service.grants if grants
   puts response
 rescue StandardError => e
   STDERR.puts e.message
