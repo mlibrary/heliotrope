@@ -19,9 +19,25 @@ module Sighrax
                end
       return Entity.null_entity(noid) if entity.blank?
 
-      model_type = entity["has_model_ssim"]&.first
+      model_type = entity['has_model_ssim']&.first
       return Entity.send(:new, noid, entity) if model_type.blank?
       model_factory(noid, entity, model_type)
+    end
+
+    def hyrax_can?(actor, action, target)
+      return false if actor.is_a?(Anonymous)
+      return false unless /read/i.match?(action.to_s)
+      return false unless target.valid?
+      ability = Ability.new(actor)
+      ability.can?(action.to_s.to_sym, target.noid)
+    end
+
+    def published?(entity)
+      entity.valid? && entity['suppressed_bsi'] == false && /open/i.match?(entity['visibility_ssi'])
+    end
+
+    def restricted?(entity)
+      entity.valid? && Component.find_by(noid: entity.noid).present?
     end
 
     private

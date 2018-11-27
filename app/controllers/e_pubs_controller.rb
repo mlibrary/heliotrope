@@ -140,7 +140,7 @@ class EPubsController < CheckpointController
     end
 
     def set_policy
-      @policy = EPubPolicy.new(current_actor, Sighrax.factory(@presenter.id))
+      @policy = EPubPolicy.new(current_actor, Sighrax.factory(@presenter.id), valid_share_link?)
     end
 
     def set_show

@@ -72,4 +72,105 @@ RSpec.describe Sighrax, type: :model do
       end
     end
   end
+
+  describe '#hyrax_can?' do
+    subject { described_class.hyrax_can?(actor, action, target) }
+
+    let(:actor) { double('actor', is_a?: anonymous) }
+    let(:anonymous) { false }
+    let(:action) { :read }
+    let(:target) { double('target', valid?: valid, noid: 'noid') }
+    let(:valid) { true }
+    let(:ability) { double('ability') }
+    let(:can) { true }
+
+    before do
+      allow(Ability).to receive(:new).with(actor).and_return(ability)
+      allow(ability).to receive(:can?).with(action.to_s.to_sym, target.noid).and_return(can)
+    end
+
+    it { is_expected.to be true }
+
+    context 'anonymous' do
+      let(:anonymous) { true }
+
+      it { is_expected.to be false }
+    end
+
+    context 'non read action' do
+      let(:action) { :write }
+
+      it { is_expected.to be false }
+    end
+
+    context 'invalid target' do
+      let(:valid) { false }
+
+      it { is_expected.to be false }
+    end
+
+    context 'can not' do
+      let(:can) { false }
+
+      it { is_expected.to be false }
+    end
+  end
+
+  describe '#published?' do
+    subject { described_class.published?(entity) }
+
+    let(:entity) { double('entity', valid?: true) }
+    let(:suppressed) { true }
+    let(:visibility) { 'restricted' }
+
+    before do
+      allow(entity).to receive(:[]).with('suppressed_bsi').and_return(suppressed)
+      allow(entity).to receive(:[]).with('visibility_ssi').and_return(visibility)
+    end
+
+    it { is_expected.to be false }
+
+    context 'open' do
+      let(:visibility) { 'open' }
+
+      it { is_expected.to be false }
+
+      context 'unsuppressed' do
+        let(:suppressed) { false }
+
+        it { is_expected.to be true }
+      end
+    end
+
+    context 'unsuppressed' do
+      let(:suppressed) { false }
+
+      it { is_expected.to be false }
+
+      context 'open' do
+        let(:visibility) { 'open' }
+
+        it { is_expected.to be true }
+      end
+    end
+  end
+
+  describe '#restricted?' do
+    subject { described_class.restricted?(entity) }
+
+    let(:entity) { double('entity', valid?: true, noid: 'noid') }
+    let(:component) {}
+
+    before do
+      allow(Component).to receive(:find_by).with(noid: entity.noid).and_return(component)
+    end
+
+    it { is_expected.to be false }
+
+    context 'present?' do
+      let(:component) { double('component') }
+
+      it { is_expected.to be true }
+    end
+  end
 end
