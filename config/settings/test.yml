@@ -9,10 +9,6 @@ minter_path: <%= File.join(Rails.root, 'tmp', 'minter-state') %>
 resque_namespace: heliotrope-testing
 host: test.host
 
-# Should we create users automatically on first login?
-# This supports convenient single sign-on account provisioning
-create_user_on_login: false
-
 keycard:
   database:
     adapter: sqlite

@@ -119,14 +119,10 @@ RSpec.describe Sighrax, type: :model do
   describe '#published?' do
     subject { described_class.published?(entity) }
 
-    let(:entity) { double('entity', valid?: true) }
+    let(:entity) { double('entity', valid?: true, entity: doc) }
+    let(:doc) { { 'suppressed_bsi' => suppressed, 'visibility_ssi' => visibility } }
     let(:suppressed) { true }
     let(:visibility) { 'restricted' }
-
-    before do
-      allow(entity).to receive(:[]).with('suppressed_bsi').and_return(suppressed)
-      allow(entity).to receive(:[]).with('visibility_ssi').and_return(visibility)
-    end
 
     it { is_expected.to be false }
 

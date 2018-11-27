@@ -45,22 +45,26 @@ module Heliotrope
     # Set default host
     Rails.application.routes.default_url_options[:host] = config.hostname
 
-    # URL for logging the user in via shibbolleth
-    config.shibboleth_identity_provider_url = Settings.shibboleth_identity_provider_url
-
     # Affirmative login means that we only log someone into the application
     # when they actively initiate a login, even if they have an SSO session
     # that we recognize and could log them in automatically.
     #
+    # session[:log_me_in] flag is set true when login initiated by user
+    #
+    # See the KeycardAuthenticatable strategy for more detail.
+
     # Auto login means that, if we ever access a protected resource (such that
     # the Devise authenticate_user! filter is called), we will automatically
     # sign the user into the application if they have an SSO session active.
     #
     # See the KeycardAuthenticatable strategy for more detail.
-    config.auto_login = false
+    config.auto_login = Settings.auto_login && true
 
-    # Disable automatic account creation on Cosign logins unless
-    # enabled in config/settings.
+    # Automatic account creation on login
+    # Should we create users automatically on first login?
+    # This supports convenient single sign-on account provisioning
+    #
+    # See the KeycardAuthenticatable strategy for more detail.
     config.create_user_on_login = Settings.create_user_on_login && true
 
     # Use EPub Checkpoint authorization otherwise EPub Legacy authorization

@@ -7,7 +7,7 @@ class SessionsController < ApplicationController
   def new
     # Called after HTTP_X_REMOTE_USER authentication
     if user_signed_in?
-      Rails.logger.debug "[AUTHN] sessions#new, user signed in"
+      debug_log("new, user signed in: '#{current_user.try(:email) || '(null)'}'")
       # sign in successful - redirect back to where user came from (see Devise::Controllers::StoreLocation#stored_location_for)
       sign_in_static_cookie
       redirect_to return_location
@@ -20,6 +20,7 @@ class SessionsController < ApplicationController
 
   # Initiate a Shibboleth login through the Service Provider using the Default Identity Provider
   def default_login
+    debug_log("default_login")
     session[:log_me_in] = true
     session.delete(:dlpsInstitutionId)
     params[:entityID] = Settings.shibboleth.default_idp.entity_id
@@ -29,6 +30,7 @@ class SessionsController < ApplicationController
 
   # Initiate a Shibboleth login through the Service Provider
   def shib_login
+    debug_log("shib_login")
     session[:log_me_in] = true
     session.delete(:dlpsInstitutionId)
     redirect_to sp_login_url
@@ -36,16 +38,18 @@ class SessionsController < ApplicationController
 
   # Begin an application session based once Shibboleth login has happened
   def shib_session
+    debug_log("shib_session")
     authenticate_user!
     redirect_to shib_target
   end
 
   def create
+    debug_log("create")
     head :bad_request
   end
 
   def destroy
-    Rails.logger.debug "[AUTHN] sessions#destroy, user sign out"
+    debug_log("destroy, user sign out: '#{current_user.try(:email) || '(null)'}'")
     saved_return_location = return_location
     user_sign_out
     session.delete(:log_me_in)
@@ -185,14 +189,18 @@ class SessionsController < ApplicationController
     def production_fallback!
       session[:log_me_in] = true
       if user_signed_in?
+        debug_log("production_fallback! redirect_to return_location")
         redirect_to return_location
       elsif Settings.shibboleth.fallback_to_idp
+        debug_log("production_fallback! redirect_to sp_login_url")
         redirect_to sp_login_url
       else
-        # Bail out and show a failure page. This should be changed to a proper
-        # 403 error page (or really, a 500 because this reflects a
-        # configuration problem).
-        render
+        debug_log("production_fallback! render 500 because this reflects a configuration problem")
+        render file: Rails.root.join('public', '500.html'), status: :internal_server_error, layout: false
       end
+    end
+
+    def debug_log(msg)
+      Rails.logger.debug "[AUTHN] SessionsController -- #{msg}"
     end
 end
