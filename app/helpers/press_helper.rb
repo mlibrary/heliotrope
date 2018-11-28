@@ -89,6 +89,12 @@ module PressHelper
     press.restricted_message.presence || parent_press(press)&.restricted_message
   end
 
+  def show_ebc_banner?
+    current_ebc_product = Product.where(identifier: 'ebc_' + Time.current.year.to_s).first
+    return false if current_ebc_product.blank? || current_ebc_product.name.blank? || current_ebc_product.purchase.blank?
+    press_subdomain == 'michigan' && Greensub.actor_product_list(current_actor).collect(&:identifier).exclude?('ebc_' + Time.current.year.to_s)
+  end
+
   private
 
     def parent_press(child_press)

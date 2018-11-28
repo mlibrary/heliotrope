@@ -21,6 +21,7 @@
 //= require_tree ./idpselect
 //= require_tree ./application
 //  require application_survey
+//= require ebc_banner
 //= require application_message
 //= require hyrax
 // rails new <app> defaults ...

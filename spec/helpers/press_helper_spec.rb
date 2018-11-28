@@ -113,4 +113,46 @@ describe PressHelper do
       end
     end
   end
+
+  describe "#show_ebc_banner?" do
+    let(:current_ebc_identifier) { 'ebc_' + Time.current.year.to_s }
+    let(:product) do
+      create(:product, identifier: current_ebc_identifier,
+                       name: 'EBC BLAH',
+                       purchase: 'https://www.example.com')
+    end
+    let(:current_actor) { create(:user) }
+
+    context "when on press_subdomain returns 'michigan'" do
+      let(:press_subdomain) { 'michigan' }
+
+      it "returns true if the current EBC product exists and the user doesn't have access to it" do
+        allow(Product).to receive(:where).with(identifier: current_ebc_identifier).and_return([product])
+        allow(Greensub).to receive(:actor_product_list).and_return([])
+        expect(show_ebc_banner?).to eq true
+      end
+
+      it 'returns false if the current EBC product exists and the user has access to it' do
+        allow(Product).to receive(:where).with(identifier: current_ebc_identifier).and_return([product])
+        allow(Greensub).to receive(:actor_product_list).and_return([product])
+        expect(show_ebc_banner?).to eq false
+      end
+
+      it "returns false if the current EBC product doesn't exist" do
+        allow(Product).to receive(:where).with(identifier: current_ebc_identifier).and_return([])
+        allow(Greensub).to receive(:actor_product_list).and_return([])
+        expect(show_ebc_banner?).to eq false
+      end
+    end
+
+    context "when on another press catalog page" do
+      let(:press_subdomain) { 'blah' }
+
+      it "returns false even though the current EBC product exists and the user doesn't have access to it" do
+        allow(Product).to receive(:where).with(identifier: current_ebc_identifier).and_return([product])
+        allow(Greensub).to receive(:actor_product_list).and_return([])
+        expect(show_ebc_banner?).to eq false
+      end
+    end
+  end
 end
