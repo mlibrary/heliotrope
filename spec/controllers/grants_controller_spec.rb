@@ -91,7 +91,7 @@ RSpec.describe GrantsController, type: :controller do
       context "with permission:unknown" do
         before do
           valid_attributes[:credential_id] = 'unknown'
-          allow(ValidationService).to receive(:valid_credential?).with(valid_attributes[:credential_type].to_sym, valid_attributes[:credential_id].to_sym).and_return(true)
+          allow(ValidationService).to receive(:valid_credential?).with(valid_attributes[:credential_type].to_sym, valid_attributes[:credential_id]).and_return(true)
         end
 
         it do
@@ -105,7 +105,7 @@ RSpec.describe GrantsController, type: :controller do
         before do
           valid_attributes[:credential_type] = 'unknown'
           valid_attributes[:credential_id] = 'any'
-          allow(ValidationService).to receive(:valid_credential?).with(valid_attributes[:credential_type].to_sym, valid_attributes[:credential_id].to_sym).and_return(true)
+          allow(ValidationService).to receive(:valid_credential?).with(valid_attributes[:credential_type].to_sym, valid_attributes[:credential_id]).and_return(true)
         end
 
         it do
