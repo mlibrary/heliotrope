@@ -348,4 +348,36 @@ RSpec.describe ValidationService do
       end
     end
   end
+
+  describe '#valid_actor?' do
+    subject { described_class.valid_actor?(actor) }
+
+    let(:actor) {}
+
+    it { is_expected.to be false }
+
+    context 'Anonymous' do
+      let(:actor) { Anonymous.new({}) }
+
+      it { is_expected.to be true }
+    end
+
+    context 'User' do
+      let(:actor) { create(:user) }
+
+      it { is_expected.to be true }
+    end
+
+    context 'Guest' do
+      let(:actor) { User.guest(user_key: 'wolverine@umich.edu') }
+
+      it { is_expected.to be true }
+    end
+
+    context 'Object' do
+      let(:actor) { Object.new }
+
+      it { is_expected.to be false }
+    end
+  end
 end

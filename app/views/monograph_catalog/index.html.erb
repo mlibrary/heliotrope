@@ -277,7 +277,10 @@ round15 = %w[
         </div>
       </div>
     <% end %>
+  <% elsif show_ebc_banner? %>
+    <%= render 'shared/ebc_banner' %>
   <% end %>
+
   <!-- breadcrumbs -->
   <%= render 'shared/breadcrumbs' %>
 <% end %><!-- provide :page_header -->

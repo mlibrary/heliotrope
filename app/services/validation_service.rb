@@ -114,4 +114,14 @@ class ValidationService
       false
     end
   end
+
+  # Actor Validation
+
+  def self.valid_actor?(actor)
+    return false if actor.blank?
+    return true if actor.is_a?(Anonymous)
+    return true if actor.is_a?(User)
+    return true if actor.is_a?(Guest)
+    false
+  end
 end
