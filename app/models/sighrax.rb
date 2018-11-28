@@ -33,7 +33,7 @@ module Sighrax
     end
 
     def published?(entity)
-      entity.valid? && entity['suppressed_bsi'] == false && /open/i.match?(entity['visibility_ssi'])
+      entity.valid? && entity.entity['suppressed_bsi'] == false && /open/i.match?(entity.entity['visibility_ssi'])
     end
 
     def restricted?(entity)

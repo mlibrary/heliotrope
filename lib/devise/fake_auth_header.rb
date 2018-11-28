@@ -6,7 +6,7 @@
 # The reason to do this in the testing environment is to short circuit
 # calls to external servers.
 #
-# The reason to do this in the developement environment is the same as testing
+# The reason to do this in the development environment is the same as testing
 # plus it allows the developer to login in as different personas.
 #
 # The reason an environment variable is used is because this code is plain old ruby

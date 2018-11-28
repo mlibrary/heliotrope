@@ -74,7 +74,7 @@ class ApplicationController < ActionController::Base
 
     # register callback with warden to clear flash message
     Warden::Manager.after_authentication do |user, auth, _opts|
-      Rails.logger.debug "[AUTHN] Warden after_authentication (clearing flash): #{user}"
+      Rails.logger.debug "[AUTHN] Warden after_authentication (clearing flash): '#{user}'"
       auth.request.flash.clear
     end
 
@@ -90,7 +90,6 @@ class ApplicationController < ActionController::Base
     end
 
     def user_sign_out
-      Rails.logger.debug "[AUTHN] user_sign_out: #{current_user.try(:email) || '(no user)'}"
       sign_out(:user)
       session.destroy
       flash.clear

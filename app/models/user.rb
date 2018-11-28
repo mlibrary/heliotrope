@@ -19,17 +19,38 @@ class User < ApplicationRecord
   include Blacklight::User
 
   include Hyrax::WithEvents
+
   # Adds acts_as_messageable for user mailboxes
   include Mailboxer::Models::Messageable
 
   has_many :roles, dependent: :destroy
   has_many :presses, through: :roles, source: 'resource', source_type: "Press"
 
-  # Include default devise modules. Others available are:
-  # :registerable, :recoverable, :rememberable, :trackable, :validatable
-  # :confirmable, :lockable, :timeoutable and :omniauthable
-  # devise :database_authenticatable
-
+  # Register available devise modules. For the standard modules that Devise provides, this method is
+  # called from lib/devise/modules.rb. Third-party modules need to be added explicitly using this method.
+  #
+  # Note that adding a module using this method does not cause it to be used in the authentication
+  # process. That requires that the module be listed in the arguments passed to the 'devise' method
+  # in the model class definition.
+  #
+  # == Options:
+  #
+  #   +model+      - String representing the load path to a custom *model* for this module (to autoload.)
+  #   +controller+ - Symbol representing the name of an existing or custom *controller* for this module.
+  #   +route+      - Symbol representing the named *route* helper for this module.
+  #   +strategy+   - Symbol representing if this module got a custom *strategy*.
+  #   +insert_at+  - Integer representing the order in which this module's model will be included
+  #
+  # All values, except :model, accept also a boolean and will have the same name as the given module
+  # name.
+  #
+  # == Examples:
+  #
+  #   Devise.add_module(:party_module)
+  #   Devise.add_module(:party_module, strategy: true, controller: :sessions)
+  #   Devise.add_module(:party_module, model: 'party_module/model')
+  #   Devise.add_module(:party_module, insert_at: 0)
+  #
   # Authenticate users with Keycard. The Keycard.config.access setting
   # will determine exactly how that happens (direct, reverse proxy, Shibboleth).
   Devise.add_module(:keycard_authenticatable,
@@ -37,7 +58,10 @@ class User < ApplicationRecord
                     controller: :sessions,
                     model: 'devise/models/keycard_authenticatable')
 
-  # Add our custom module to devise.
+  # Devise modules
+  # :database_authenticatable, :registerable, :recoverable, :rememberable,
+  # :trackable, :validatable, :confirmable, :lockable, :timeoutable and :omniauthable
+
   devise :rememberable, :keycard_authenticatable
 
   alias_attribute :user_key, :email

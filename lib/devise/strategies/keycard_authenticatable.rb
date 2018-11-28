@@ -17,6 +17,8 @@ module Devise
       # Shibboleth. Otherwise, logging out can cycle back to a protected
       # resource and the Shibboleth session will still be open, causing a new
       # app session immediately.
+      #
+      # Called if the user doesn't already have a rails session cookie.
       def valid?
         Rails.configuration.auto_login || session[:log_me_in]
       end
@@ -24,6 +26,8 @@ module Devise
       # Look up and set the "current user" based on EID. This may be an
       # existing (persisted), new (unsaved, but saveable by the app), or guest
       # (unsaved, but will raise if save is attempted) User object.
+      #
+      # Called to authenticate user.
       def authenticate!
         if user_eid.present?
           set_user!
@@ -35,7 +39,7 @@ module Devise
 
       # Override and set to false for things like OmniAuth that technically
       # run through Authentication (user_set) very often, which would normally
-      # reset CSRF data in the session
+      # reset Cross-site request forgery (CSRF) data in the session
       def clean_up_csrf?
         false
       end
