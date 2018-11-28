@@ -112,10 +112,6 @@ module Hyrax
       isbns
     end
 
-    def heb?
-      Array(solr_document['press_tesim']).include?('heb')
-    end
-
     def heb_id
       solr_document.identifier.find { |e| /^heb[0-9]/ =~ e }
     end
