@@ -14,22 +14,22 @@ function storeTab() {
     // getting the monograph id from the URL path is not as reliable as using the
     // monograph presenter
     var monograph_id = page_url[3];
-    var previous_monograph_id = localStorage.getItem('monograph_id');
-    localStorage.setItem('monograph_id', monograph_id);
+    var previous_monograph_id = sessionStorage.getItem('monograph_id');
+    sessionStorage.setItem('monograph_id', monograph_id);
 
     if (monograph_id !== previous_monograph_id) {
-      localStorage.removeItem('lastTab');
+      sessionStorage.removeItem('lastTab');
     }
 
     // for bootstrap 3 use 'shown.bs.tab', for bootstrap 2 use 'shown' in the next line
     $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
       // save the latest tab; use cookies if you like 'em better:
-      localStorage.setItem('lastTab', $(e.target).attr('href'));
+      sessionStorage.setItem('lastTab', $(e.target).attr('href'));
     });
 
-    // go to the latest tab, apply aria semantics, if it exists in localStorage
+    // go to the latest tab, apply aria semantics, if it exists in sessionStorage
     // if not the first tab, unset aria semantics for first tab
-    var lastTab = localStorage.getItem('lastTab');
+    var lastTab = sessionStorage.getItem('lastTab');
     // If there is a value in the search field, heavy-handedly override
     // stored value so the media tab is visible on load.
     if ($('#catalog_search').val().length) {
