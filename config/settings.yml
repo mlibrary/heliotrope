@@ -1,5 +1,5 @@
 shibboleth:
-  fallback_to_idp: true
+  fallback_to_idp: false
   default_idp:
     entity_id: https://shibboleth.umich.edu/idp/shibboleth
   sp:
