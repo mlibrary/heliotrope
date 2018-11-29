@@ -15,7 +15,7 @@ module CounterReporter
       @params.metric_types.each do |metric_type|
         @params.access_types.each do |access_type|
           item = ActiveSupport::OrderedHash.new
-          item["Platform"] = "Fulcrum"
+          item["Platform"] = "Fulcrum/#{@params.press.name}"
           if @params.report_type == 'pr'
             item["Data_Type"] = @params.data_type
             item["Access_Type"] = access_type
@@ -59,7 +59,7 @@ module CounterReporter
                    .access_type(access_type)
                    .start_date(month.beginning_of_month)
                    .end_date(month.end_of_month)
-                   .press(@params.press)
+                   .press(@params.press.id)
                    .count
     end
 
@@ -70,7 +70,7 @@ module CounterReporter
                    .unique
                    .start_date(month.beginning_of_month)
                    .end_date(month.end_of_month)
-                   .press(@params.press)
+                   .press(@params.press.id)
                    .count
     end
 
@@ -81,7 +81,7 @@ module CounterReporter
                    .unique_by_title
                    .start_date(month.beginning_of_month)
                    .end_date(month.end_of_month)
-                   .press(@params.press)
+                   .press(@params.press.id)
                    .count
     end
 
@@ -91,7 +91,7 @@ module CounterReporter
                    .access_type(access_type)
                    .start_date(month.beginning_of_month)
                    .end_date(month.end_of_month)
-                   .press(@params.press)
+                   .press(@params.press.id)
                    .count
     end
 
@@ -102,7 +102,7 @@ module CounterReporter
                    .unique
                    .start_date(month.beginning_of_month)
                    .end_date(month.end_of_month)
-                   .press(@params.press)
+                   .press(@params.press.id)
                    .count
     end
 
@@ -113,7 +113,7 @@ module CounterReporter
                    .unique_by_title
                    .start_date(month.beginning_of_month)
                    .end_date(month.end_of_month)
-                   .press(@params.press)
+                   .press(@params.press.id)
                    .count
     end
 
@@ -130,7 +130,7 @@ module CounterReporter
         Exceptions: "",
         Reporting_Period: "#{@params.start_date.year}-#{@params.start_date.month} to #{@params.end_date.year}-#{@params.end_date.month}",
         Created: Time.zone.today.iso8601,
-        Created_By: "Fulcrum"
+        Created_By: "Fulcrum/#{@params.press.name}"
       }
     end
   end

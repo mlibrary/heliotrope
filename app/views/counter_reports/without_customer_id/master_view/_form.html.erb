@@ -21,10 +21,12 @@
       <select name="metric_type" aria-label="Metric Type" class="form-control">
         <option value="Total_Item_Investigations">Total Item Investigations</option>
         <option value="Unique_Item_Investigations">Unique Item Investiations</option>
-        <option value="Unique_Title_Investigations">Unique Title Investigations</option>
-        <option value="Total_Item_Requests">Total Item Requests</option>
         <% unless report_id == 'ir' %>
+        <option value="Unique_Title_Investigations">Unique Title Investigations</option>
+        <% end %>
+        <option value="Total_Item_Requests">Total Item Requests</option>
         <option value="Unique_Item_Requests">Unique Item Requests</option>
+        <% unless report_id == 'ir' %>
         <option value="Unique_Title_Requests">Unique Title Requests</option>
         <% end %>
       </select>
@@ -63,14 +65,12 @@
     </div>
   </div>
   <% end %>
-  <% if @presses.present? %>
   <div class="form-group row">
-    <label for="press" class="col-sm-2 col-form-label">Publisher</label>
+    <label for="press" class="col-sm-2 col-form-label">Platform</label>
     <div class="col-sm-2">
-      <%= select_tag(:press, options_for_select(@presses.map { |p| [p.subdomain, p.id] }), class: 'form-control') %>
+      <%= select_tag(:press, options_for_select(@presses.map { |p| [p.name, p.id] }), class: 'form-control') %>
     </div>
   </div>
-  <% end %>
   <div class="form-group row">
     <div class="col-sm-2">
       <button type="submit" class="btn btn-primary">View</button>

@@ -1,12 +1,12 @@
 <form action=<%= counter_report_path(id: report_id) %> method="show">
 <div class="row">
   <div class="col-sm-2 form-group">
-    <label for="institution_identifier">Institution</label>
+    <label for="institution">Institution</label>
     <%= select_tag(:institution, options_for_select(@institutions.map { |i| [i.name, i.identifier] }), class: 'form-control') %>
   </div>
   <div class="col-sm-2 form-group">
-    <label for="press_id">Publisher</label>
-    <%= select_tag(:press, options_for_select(@presses.map { |p| [p.subdomain, p.id] }), class: 'form-control') %>
+    <label for="press">Platform</label>
+    <%= select_tag(:press, options_for_select(@presses.map { |p| [p.name, p.id] }), class: 'form-control') %>
   </div>
   <div class="col-sm-2 form-group">
     <label for="start_date">Start</label>

@@ -3,6 +3,8 @@
 require 'rails_helper'
 
 RSpec.describe CounterReporter::TitleReport do
+  let(:press) { create(:press) }
+
   describe "#results_by_month" do
     subject { described_class.new(params_object).results_by_month }
 
@@ -10,6 +12,7 @@ RSpec.describe CounterReporter::TitleReport do
     let(:params) do
       {
         institution: institution,
+        press: press.id,
         metric_type: 'Total_Item_Investigations',
         start_date: start_date,
         end_date: end_date,
@@ -21,17 +24,15 @@ RSpec.describe CounterReporter::TitleReport do
     let(:institution) { 1 }
 
     before do
-      create(:counter_report, session: 1,  noid: 'a',  parent_noid: 'red',   institution: 1, created_at: Time.parse("2018-01-02").utc, access_type: "OA_Gold")
-      create(:counter_report, session: 1,  noid: 'a2', parent_noid: 'red',   institution: 1, created_at: Time.parse("2018-01-02").utc, access_type: "OA_Gold")
-      create(:counter_report, session: 1,  noid: 'b',  parent_noid: 'blue',  institution: 1, created_at: Time.parse("2018-01-02").utc, access_type: "OA_Gold")
-      create(:counter_report, session: 6,  noid: 'c',  parent_noid: 'green', institution: 1, created_at: Time.parse("2018-02-11").utc, access_type: "OA_Gold")
-      create(:counter_report, session: 7,  noid: 'c1', parent_noid: 'green', institution: 1, created_at: Time.parse("2018-03-03").utc, access_type: "OA_Gold")
-      create(:counter_report, session: 10, noid: 'a',  parent_noid: 'red',   institution: 2, created_at: Time.parse("2018-11-11").utc, access_type: "OA_Gold")
+      create(:counter_report, press: press.id, session: 1,  noid: 'a',  parent_noid: 'red',   institution: 1, created_at: Time.parse("2018-01-02").utc, access_type: "OA_Gold")
+      create(:counter_report, press: press.id, session: 1,  noid: 'a2', parent_noid: 'red',   institution: 1, created_at: Time.parse("2018-01-02").utc, access_type: "OA_Gold")
+      create(:counter_report, press: press.id, session: 1,  noid: 'b',  parent_noid: 'blue',  institution: 1, created_at: Time.parse("2018-01-02").utc, access_type: "OA_Gold")
+      create(:counter_report, press: press.id, session: 6,  noid: 'c',  parent_noid: 'green', institution: 1, created_at: Time.parse("2018-02-11").utc, access_type: "OA_Gold")
+      create(:counter_report, press: press.id, session: 7,  noid: 'c1', parent_noid: 'green', institution: 1, created_at: Time.parse("2018-03-03").utc, access_type: "OA_Gold")
+      create(:counter_report, press: press.id, session: 10, noid: 'a',  parent_noid: 'red',   institution: 2, created_at: Time.parse("2018-11-11").utc, access_type: "OA_Gold")
     end
 
     it "has the correct results" do
-      # This data structure should be an object of some kind so that it's easier to work with.
-      # There's just so much data juggling but would a bunch of objects be better? IDK.
       expect(subject).to eq("Jan-2018" => { "total_item_investigations" => { "oa_gold" => { "blue" => 1, "red" => 2 } } },
                             "Feb-2018" => { "total_item_investigations" => { "oa_gold" => { "green" => 1 } } },
                             "Mar-2018" => { "total_item_investigations" => { "oa_gold" => { "green" => 1 } } })
@@ -68,7 +69,7 @@ RSpec.describe CounterReporter::TitleReport do
 
     context 'a full tr_b1 report' do
       # https://docs.google.com/spreadsheets/d/1fsF_JCuOelUs9s_cvu7x_Yn8FNsi5xK0CR3bu2X_dVI/edit#gid=1559300549
-      let(:params_object) { CounterReporter::ReportParams.new('tr_b1', institution: institution, start_date: start_date, end_date: end_date) }
+      let(:params_object) { CounterReporter::ReportParams.new('tr_b1', press: press.id, institution: institution, start_date: start_date, end_date: end_date) }
       let(:institution_name) { double("institution_name", name: "U of Something") }
       let(:start_date) { "2018-01-01" }
       let(:end_date) { "2018-12-01" }
@@ -78,17 +79,21 @@ RSpec.describe CounterReporter::TitleReport do
         ActiveFedora::SolrService.add([red.to_h, green.to_h, blue.to_h])
         ActiveFedora::SolrService.commit
 
-        create(:counter_report, session: 1,  noid: 'a',  parent_noid: 'red',   institution: 1, created_at: Time.parse("2018-01-02").utc, access_type: "Controlled", request: 1)
-        create(:counter_report, session: 1,  noid: 'a2', parent_noid: 'red',   institution: 1, created_at: Time.parse("2018-01-02").utc, access_type: "Controlled", request: 1)
-        create(:counter_report, session: 1,  noid: 'b',  parent_noid: 'blue',  institution: 1, created_at: Time.parse("2018-01-02").utc, access_type: "Controlled", request: 1)
-        create(:counter_report, session: 6,  noid: 'c',  parent_noid: 'green', institution: 1, created_at: Time.parse("2018-05-11").utc, access_type: "Controlled", request: 1)
-        create(:counter_report, session: 7,  noid: 'c1', parent_noid: 'green', institution: 1, created_at: Time.parse("2018-11-03").utc, access_type: "Controlled", request: 1)
-        create(:counter_report, session: 10, noid: 'a',  parent_noid: 'red',   institution: 2, created_at: Time.parse("2018-11-11").utc, access_type: "Controlled", request: 1)
+        create(:counter_report, press: press.id, session: 1,  noid: 'a',  parent_noid: 'red',   institution: 1, created_at: Time.parse("2018-01-02").utc, access_type: "Controlled", request: 1)
+        create(:counter_report, press: press.id, session: 1,  noid: 'a2', parent_noid: 'red',   institution: 1, created_at: Time.parse("2018-01-02").utc, access_type: "Controlled", request: 1)
+        create(:counter_report, press: press.id, session: 1,  noid: 'b',  parent_noid: 'blue',  institution: 1, created_at: Time.parse("2018-01-02").utc, access_type: "Controlled", request: 1)
+        create(:counter_report, press: press.id, session: 6,  noid: 'c',  parent_noid: 'green', institution: 1, created_at: Time.parse("2018-05-11").utc, access_type: "Controlled", request: 1)
+        create(:counter_report, press: press.id, session: 7,  noid: 'c1', parent_noid: 'green', institution: 1, created_at: Time.parse("2018-11-03").utc, access_type: "Controlled", request: 1)
+        create(:counter_report, press: press.id, session: 10, noid: 'a',  parent_noid: 'red',   institution: 2, created_at: Time.parse("2018-11-11").utc, access_type: "Controlled", request: 1)
 
         allow(Institution).to receive(:where).with(identifier: institution).and_return([institution_name])
       end
 
       context "items" do
+        it "has the correct platform" do
+          expect(subject[:items][0]["Platform"]).to eq "Fulcrum/#{press.name}"
+        end
+
         it "has the correct number of items" do
           expect(subject[:items].length).to be 6
         end
@@ -160,7 +165,7 @@ RSpec.describe CounterReporter::TitleReport do
           expect(subject[:header][:Exceptions]).to eq ""
           expect(subject[:header][:Reporting_Period]).to eq "2018-1 to 2018-12"
           expect(subject[:header][:Created]).to eq Time.zone.today.iso8601
-          expect(subject[:header][:Created_By]).to eq "Fulcrum"
+          expect(subject[:header][:Created_By]).to eq "Fulcrum/#{press.name}"
         end
       end
     end
@@ -168,6 +173,7 @@ RSpec.describe CounterReporter::TitleReport do
     context "a tr report including Year of Publications" do
       let(:params_object) do
         CounterReporter::ReportParams.new('tr', institution: institution,
+                                                press: press.id,
                                                 start_date: start_date,
                                                 end_date: end_date,
                                                 yop: yop,
@@ -186,14 +192,14 @@ RSpec.describe CounterReporter::TitleReport do
         ActiveFedora::SolrService.add([red.to_h, green.to_h, blue.to_h])
         ActiveFedora::SolrService.commit
 
-        create(:counter_report, session: 1,  noid: 'a', parent_noid: 'red', institution: 1, created_at: Time.parse("2018-01-02").utc, access_type: "OA_Gold")
-        create(:counter_report, session: 1,  noid: 'a2', parent_noid: 'red', institution: 1, created_at: Time.parse("2018-01-02").utc, access_type: "OA_Gold")
+        create(:counter_report, press: press.id, session: 1,  noid: 'a', parent_noid: 'red', institution: 1, created_at: Time.parse("2018-01-02").utc, access_type: "OA_Gold")
+        create(:counter_report, press: press.id, session: 1,  noid: 'a2', parent_noid: 'red', institution: 1, created_at: Time.parse("2018-01-02").utc, access_type: "OA_Gold")
         # "blue" was published in 1999
-        create(:counter_report, session: 1,  noid: 'b', parent_noid: 'blue', institution: 1, created_at: Time.parse("2018-01-02").utc, access_type: "OA_Gold")
-        create(:counter_report, session: 6,  noid: 'c', parent_noid: 'green', institution: 1, created_at: Time.parse("2018-02-11").utc, access_type: "OA_Gold")
+        create(:counter_report, press: press.id, session: 1,  noid: 'b', parent_noid: 'blue', institution: 1, created_at: Time.parse("2018-01-02").utc, access_type: "OA_Gold")
+        create(:counter_report, press: press.id, session: 6,  noid: 'c', parent_noid: 'green', institution: 1, created_at: Time.parse("2018-02-11").utc, access_type: "OA_Gold")
         # A monograph investigation from the monograph_catalog page
-        create(:counter_report, session: 7,  noid: 'green', model: 'Monograph', parent_noid: 'green', institution: 1, created_at: Time.parse("2018-02-13").utc, access_type: "OA_Gold")
-        create(:counter_report, session: 10, noid: 'a', parent_noid: 'red', institution: 2, created_at: Time.parse("2018-11-11").utc, access_type: "OA_Gold")
+        create(:counter_report, press: press.id, session: 7,  noid: 'green', model: 'Monograph', parent_noid: 'green', institution: 1, created_at: Time.parse("2018-02-13").utc, access_type: "OA_Gold")
+        create(:counter_report, press: press.id, session: 10, noid: 'a', parent_noid: 'red', institution: 2, created_at: Time.parse("2018-11-11").utc, access_type: "OA_Gold")
 
         allow(Institution).to receive(:where).with(identifier: institution).and_return([institution_name])
       end
@@ -226,6 +232,7 @@ RSpec.describe CounterReporter::TitleReport do
       let(:params_object) { CounterReporter::ReportParams.new('tr_b2', params) }
       let(:params) do
         {
+          press: press.id,
           institution: institution,
           start_date: start_date,
           end_date: end_date
@@ -240,12 +247,12 @@ RSpec.describe CounterReporter::TitleReport do
         ActiveFedora::SolrService.add([red.to_h, green.to_h, blue.to_h])
         ActiveFedora::SolrService.commit
 
-        create(:counter_report, session: 1,  noid: 'a',  parent_noid: 'red',   institution: 1, created_at: Time.parse("2018-08-02").utc, access_type: "Controlled", turnaway: "No_License")
-        create(:counter_report, session: 1,  noid: 'a2', parent_noid: 'red',   institution: 1, created_at: Time.parse("2018-08-02").utc, access_type: "Controlled")
-        create(:counter_report, session: 1,  noid: 'b',  parent_noid: 'blue',  institution: 1, created_at: Time.parse("2018-08-02").utc, access_type: "Controlled", turnaway: "No_License")
-        create(:counter_report, session: 6,  noid: 'c',  parent_noid: 'green', institution: 1, created_at: Time.parse("2018-09-11").utc, access_type: "Controlled", turnaway: "No_License")
-        create(:counter_report, session: 7,  noid: 'c1', parent_noid: 'green', institution: 1, created_at: Time.parse("2018-09-13").utc, access_type: "Controlled", turnaway: "No_License")
-        create(:counter_report, session: 10, noid: 'a',  parent_noid: 'red',   institution: 2, created_at: Time.parse("2018-12-11").utc, access_type: "Controlled", turnaway: "No_License")
+        create(:counter_report, press: press.id, session: 1,  noid: 'a',  parent_noid: 'red',   institution: 1, created_at: Time.parse("2018-08-02").utc, access_type: "Controlled", turnaway: "No_License")
+        create(:counter_report, press: press.id, session: 1,  noid: 'a2', parent_noid: 'red',   institution: 1, created_at: Time.parse("2018-08-02").utc, access_type: "Controlled")
+        create(:counter_report, press: press.id, session: 1,  noid: 'b',  parent_noid: 'blue',  institution: 1, created_at: Time.parse("2018-08-02").utc, access_type: "Controlled", turnaway: "No_License")
+        create(:counter_report, press: press.id, session: 6,  noid: 'c',  parent_noid: 'green', institution: 1, created_at: Time.parse("2018-09-11").utc, access_type: "Controlled", turnaway: "No_License")
+        create(:counter_report, press: press.id, session: 7,  noid: 'c1', parent_noid: 'green', institution: 1, created_at: Time.parse("2018-09-13").utc, access_type: "Controlled", turnaway: "No_License")
+        create(:counter_report, press: press.id, session: 10, noid: 'a',  parent_noid: 'red',   institution: 2, created_at: Time.parse("2018-12-11").utc, access_type: "Controlled", turnaway: "No_License")
 
         allow(Institution).to receive(:where).with(identifier: institution).and_return([institution_name])
       end
@@ -308,6 +315,7 @@ RSpec.describe CounterReporter::TitleReport do
       let(:params_object) { CounterReporter::ReportParams.new('tr_b3', params) }
       let(:params) do
         {
+          press: press.id,
           institution: institution,
           start_date: start_date,
           end_date: end_date
@@ -322,15 +330,15 @@ RSpec.describe CounterReporter::TitleReport do
         ActiveFedora::SolrService.add([red.to_h, green.to_h, blue.to_h, purple.to_h, yellow.to_h])
         ActiveFedora::SolrService.commit
 
-        create(:counter_report, session: 1,  noid: 'a',  parent_noid: 'red',    institution: 1, created_at: Time.parse("2018-08-02").utc, access_type: "Controlled")
-        create(:counter_report, session: 1,  noid: 'a2', parent_noid: 'red',    institution: 1, created_at: Time.parse("2018-08-02").utc, access_type: "Controlled", request: 1)
-        create(:counter_report, session: 1,  noid: 'b',  parent_noid: 'blue',   institution: 1, created_at: Time.parse("2018-08-02").utc, access_type: "Controlled")
-        create(:counter_report, session: 2,  noid: 'p',  parent_noid: 'purple', institution: 1, created_at: Time.parse("2018-08-05").utc, access_type: "OA_Gold")
-        create(:counter_report, session: 2,  noid: 'y',  parent_noid: 'yellow', institution: 1, created_at: Time.parse("2018-08-05").utc, access_type: "OA_Gold")
-        create(:counter_report, session: 3,  noid: 'y2', parent_noid: 'yellow', institution: 1, created_at: Time.parse("2018-09-02").utc, access_type: "OA_Gold",    request: 1)
-        create(:counter_report, session: 6,  noid: 'c',  parent_noid: 'green',  institution: 1, created_at: Time.parse("2018-09-11").utc, access_type: "Controlled", request: 1)
-        create(:counter_report, session: 7,  noid: 'c1', parent_noid: 'green',  institution: 1, created_at: Time.parse("2018-09-13").utc, access_type: "Controlled")
-        create(:counter_report, session: 10, noid: 'a',  parent_noid: 'red',    institution: 2, created_at: Time.parse("2018-12-11").utc, access_type: "Controlled")
+        create(:counter_report, press: press.id, session: 1,  noid: 'a',  parent_noid: 'red',    institution: 1, created_at: Time.parse("2018-08-02").utc, access_type: "Controlled")
+        create(:counter_report, press: press.id, session: 1,  noid: 'a2', parent_noid: 'red',    institution: 1, created_at: Time.parse("2018-08-02").utc, access_type: "Controlled", request: 1)
+        create(:counter_report, press: press.id, session: 1,  noid: 'b',  parent_noid: 'blue',   institution: 1, created_at: Time.parse("2018-08-02").utc, access_type: "Controlled")
+        create(:counter_report, press: press.id, session: 2,  noid: 'p',  parent_noid: 'purple', institution: 1, created_at: Time.parse("2018-08-05").utc, access_type: "OA_Gold")
+        create(:counter_report, press: press.id, session: 2,  noid: 'y',  parent_noid: 'yellow', institution: 1, created_at: Time.parse("2018-08-05").utc, access_type: "OA_Gold")
+        create(:counter_report, press: press.id, session: 3,  noid: 'y2', parent_noid: 'yellow', institution: 1, created_at: Time.parse("2018-09-02").utc, access_type: "OA_Gold",    request: 1)
+        create(:counter_report, press: press.id, session: 6,  noid: 'c',  parent_noid: 'green',  institution: 1, created_at: Time.parse("2018-09-11").utc, access_type: "Controlled", request: 1)
+        create(:counter_report, press: press.id, session: 7,  noid: 'c1', parent_noid: 'green',  institution: 1, created_at: Time.parse("2018-09-13").utc, access_type: "Controlled")
+        create(:counter_report, press: press.id, session: 10, noid: 'a',  parent_noid: 'red',    institution: 2, created_at: Time.parse("2018-12-11").utc, access_type: "Controlled")
 
         allow(Institution).to receive(:where).with(identifier: institution).and_return([institution_name])
       end

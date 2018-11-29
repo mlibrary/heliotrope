@@ -21,7 +21,7 @@ module CounterReporter
             item["Title"] = presenter.title
             item["Publisher"] = presenter.publisher.first
             item["Publisher_ID"] = ""
-            item["Platform"] = "Fulcrum"
+            item["Platform"] = "Fulcrum/#{@params.press.name}"
             item["DOI"] = presenter.citable_link
             item["Proprietary_ID"] = presenter.id
             item["ISBN"] = presenter.isbn.join("; ")
@@ -90,7 +90,7 @@ module CounterReporter
                    .turnaway
                    .start_date(month.beginning_of_month)
                    .end_date(month.end_of_month)
-                   .press(@params.press)
+                   .press(@params.press.id)
                    .group('parent_noid')
                    .count
     end
@@ -102,7 +102,7 @@ module CounterReporter
                    .turnaway
                    .start_date(month.beginning_of_month)
                    .end_date(month.end_of_month)
-                   .press(@params.press)
+                   .press(@params.press.id)
                    .unique
                    .group('parent_noid')
                    .count
@@ -115,7 +115,7 @@ module CounterReporter
                    .turnaway
                    .start_date(month.beginning_of_month)
                    .end_date(month.end_of_month)
-                   .press(@params.press)
+                   .press(@params.press.id)
                    .unique_by_title
                    .group('parent_noid')
                    .count
@@ -128,7 +128,7 @@ module CounterReporter
                    .turnaway
                    .start_date(month.beginning_of_month)
                    .end_date(month.end_of_month)
-                   .press(@params.press)
+                   .press(@params.press.id)
                    .group('parent_noid')
                    .count
     end
@@ -140,7 +140,7 @@ module CounterReporter
                    .turnaway
                    .start_date(month.beginning_of_month)
                    .end_date(month.end_of_month)
-                   .press(@params.press)
+                   .press(@params.press.id)
                    .unique
                    .group('parent_noid')
                    .count
@@ -153,7 +153,7 @@ module CounterReporter
                    .turnaway
                    .start_date(month.beginning_of_month)
                    .end_date(month.end_of_month)
-                   .press(@params.press)
+                   .press(@params.press.id)
                    .unique_by_title
                    .group('parent_noid')
                    .count
@@ -164,7 +164,7 @@ module CounterReporter
                    .turnaway("No_License")
                    .start_date(month.beginning_of_month)
                    .end_date(month.end_of_month)
-                   .press(@params.press)
+                   .press(@params.press.id)
                    .group('parent_noid')
                    .count
     end
@@ -186,7 +186,7 @@ module CounterReporter
         Exceptions: "",
         Reporting_Period: "#{@params.start_date.year}-#{@params.start_date.month} to #{@params.end_date.year}-#{@params.end_date.month}",
         Created: Time.zone.today.iso8601,
-        Created_By: "Fulcrum"
+        Created_By: "Fulcrum/#{@params.press.name}"
       }
     end
   end
