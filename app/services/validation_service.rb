@@ -12,7 +12,7 @@ class ValidationService
   end
 
   def self.valid_id?(id)
-    !!id&.to_s&.to_i&.positive? # rubocop:disable Style/DoubleNegation
+    !!id&.to_i&.positive? # rubocop:disable Style/DoubleNegation
   end
 
   def self.valid_noid?(noid)

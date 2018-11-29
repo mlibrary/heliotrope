@@ -80,14 +80,14 @@ class PermissionService
   def self.permit_open_access
     actor = agent(:any, :any)
     target = resource(:any, :any)
-    authority.permit!(actor, permission_read, target)
+    authority.permit!(actor, permission_read, target) unless permit?(actor, permission_read, target)
     permit(actor, permission_read, target)
   end
 
   def self.revoke_open_access
     actor = agent(:any, :any)
     target = resource(:any, :any)
-    authority.revoke!(actor, permission_read, target)
+    authority.revoke!(actor, permission_read, target) if permit?(actor, permission_read, target)
   end
 
   # Open Access Resource a.k.a. any agent has permission:read for resource
@@ -101,14 +101,14 @@ class PermissionService
   def self.permit_open_access_resource(resource_type, resource_id)
     actor = agent(:any, :any)
     target = resource(resource_type, resource_id)
-    authority.permit!(actor, permission_read, target)
+    authority.permit!(actor, permission_read, target) unless permit?(actor, permission_read, target)
     permit(actor, permission_read, target)
   end
 
   def self.revoke_open_access_resource(resource_type, resource_id)
     actor = agent(:any, :any)
     target = resource(resource_type, resource_id)
-    authority.revoke!(actor, permission_read, target)
+    authority.revoke!(actor, permission_read, target) if permit?(actor, permission_read, target)
   end
 
   # Read Access Resource a.k.a. agent has permission:read for resource
@@ -122,14 +122,14 @@ class PermissionService
   def self.permit_read_access_resource(agent_type, agent_id, resource_type, resource_id)
     actor = agent(agent_type, agent_id)
     target = resource(resource_type, resource_id)
-    authority.permit!(actor, permission_read, target)
+    authority.permit!(actor, permission_read, target) unless permit?(actor, permission_read, target)
     permit(actor, permission_read, target)
   end
 
   def self.revoke_read_access_resource(agent_type, agent_id, resource_type, resource_id)
     actor = agent(agent_type, agent_id)
     target = resource(resource_type, resource_id)
-    authority.revoke!(actor, permission_read, target)
+    authority.revoke!(actor, permission_read, target) if permit?(actor, permission_read, target)
   end
 
   # Any Access Resource a.k.a. agent has permission:any for resource
@@ -143,14 +143,14 @@ class PermissionService
   def self.permit_any_access_resource(agent_type, agent_id, resource_type, resource_id)
     actor = agent(agent_type, agent_id)
     target = resource(resource_type, resource_id)
-    authority.permit!(actor, permission_any, target)
+    authority.permit!(actor, permission_any, target) unless permit?(actor, permission_any, target)
     permit(actor, permission_any, target)
   end
 
   def self.revoke_any_access_resource(agent_type, agent_id, resource_type, resource_id)
     actor = agent(agent_type, agent_id)
     target = resource(resource_type, resource_id)
-    authority.revoke!(actor, permission_any, target)
+    authority.revoke!(actor, permission_any, target) if permit?(actor, permission_any, target)
   end
 
   def self.permission_any

@@ -20,14 +20,14 @@ class GrantsController < ApplicationController
   end
 
   def create # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
-    agent_type = grant_params[:agent_type]&.to_s&.to_sym
-    agent_id = grant_params[:agent_id]&.to_s&.to_sym if grant_params[:agent_id].present?
+    agent_type = grant_params[:agent_type]&.to_sym
+    agent_id = grant_params[:agent_id] if grant_params[:agent_id].present?
     agent_id ||= (agent_type == :any) ? :any : grant_params["agent_#{agent_type.to_s.downcase}_id"]
-    credential_type = grant_params[:credential_type]&.to_s&.to_sym
-    credential_id = grant_params[:credential_id]&.to_s&.to_sym if grant_params[:credential_id].present?
+    credential_type = grant_params[:credential_type]&.to_sym
+    credential_id = grant_params[:credential_id] if grant_params[:credential_id].present?
     credential_id ||= (grant_params[:credential_id] == 'any') ? 'any' : grant_params["credential_#{credential_type.to_s.downcase}_id"]
-    resource_type = grant_params[:resource_type]&.to_s&.to_sym
-    resource_id = grant_params[:resource_id]&.to_s&.to_sym if grant_params[:resource_id].present?
+    resource_type = grant_params[:resource_type]&.to_sym
+    resource_id = grant_params[:resource_id] if grant_params[:resource_id].present?
     resource_id ||= (resource_type == :any) ? :any : grant_params["resource_#{resource_type.to_s.downcase}_id"]
 
     if resource_type == :Entity
@@ -51,7 +51,15 @@ class GrantsController < ApplicationController
                end
              end
 
-    if permit.blank?
+    if permit.present?
+      resource = PermissionService.resource(permit.resource_type, permit.resource_id)
+      if resource.is_a?(Product)
+        agent = PermissionService.agent(permit.agent_type, permit.agent_id)
+        if agent.is_a?(Individual) || agent.is_a?(Institution)
+          resource.lessees << agent.lessee unless resource.lessees.include?(agent.lessee) # rubocop:disable Metrics/BlockNesting
+        end
+      end
+    else
       permit = Checkpoint::DB::Permit.new
       permit.agent_type = grant_params[:agent_type]
       permit.agent_id = grant_params[:agent_id]
@@ -78,6 +86,13 @@ class GrantsController < ApplicationController
   end
 
   def destroy
+    resource = PermissionService.resource(@grant.resource_type, @grant.resource_id)
+    if resource.is_a?(Product)
+      agent = PermissionService.agent(@grant.agent_type, @grant.agent_id)
+      if agent.is_a?(Individual) || agent.is_a?(Institution)
+        resource.lessees.delete(agent.lessee) if resource.lessees.include?(agent.lessee)
+      end
+    end
     @grant.destroy
     respond_to do |format|
       format.html { redirect_to grants_url, notice: 'Grant was successfully destroyed.' }

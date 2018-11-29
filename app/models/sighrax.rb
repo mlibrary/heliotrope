@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-require_relative './sighrax/asset'
-require_relative './sighrax/electronic_publication'
-require_relative './sighrax/entity'
-require_relative './sighrax/model'
-require_relative './sighrax/monograph'
+require_dependency 'sighrax/asset'
+require_dependency 'sighrax/electronic_publication'
+require_dependency 'sighrax/entity'
+require_dependency 'sighrax/model'
+require_dependency 'sighrax/monograph'
 
 module Sighrax
   class << self
