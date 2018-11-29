@@ -17,7 +17,7 @@
       <div class="col-md-1"><%= institution.id %></div>
       <div class="col-md-1"><%= institution.identifier %></div>
       <div class="col-md-2"><%= institution.name %></div>
-      <div class="col-md-6"><%= link_to institution.entity_id, institution.entity_id %></div>
+      <div class="col-md-6"><%= institution.entity_id %></div>
       <div class="col-md-2"><%= link_to institution.lessee.id, lessee_path(institution.lessee) %></div>
     </div>
     <div class="col-md-2">
