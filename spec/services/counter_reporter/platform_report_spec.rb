@@ -3,10 +3,12 @@
 require 'rails_helper'
 
 RSpec.describe CounterReporter::PlatformReport do
+  let(:press) { create(:press) }
+
   describe "#header" do
     subject { described_class.new(params_object).report }
 
-    let(:params_object) { CounterReporter::ReportParams.new('pr_p1', institution: institution, start_date: start_date, end_date: end_date) }
+    let(:params_object) { CounterReporter::ReportParams.new('pr_p1', press: press.id, institution: institution, start_date: start_date, end_date: end_date) }
     let(:institution_name) { double("institution_name", name: "U of Something") }
     let(:start_date) { "2018-01-01" }
     let(:end_date) { "2018-02-01" }
@@ -25,7 +27,7 @@ RSpec.describe CounterReporter::PlatformReport do
       expect(subject[:header][:Exceptions]).to eq ""
       expect(subject[:header][:Reporting_Period]).to eq "2018-1 to 2018-2"
       expect(subject[:header][:Created]).to eq Time.zone.today.iso8601
-      expect(subject[:header][:Created_By]).to eq "Fulcrum"
+      expect(subject[:header][:Created_By]).to eq "Fulcrum/#{press.name}"
     end
   end
 
@@ -33,20 +35,24 @@ RSpec.describe CounterReporter::PlatformReport do
     context 'a pr_p1 report' do
       subject { described_class.new(params_object).report }
 
-      let(:params_object) { CounterReporter::ReportParams.new('pr_p1', institution: institution, start_date: start_date, end_date: end_date) }
+      let(:params_object) { CounterReporter::ReportParams.new('pr_p1', press: press.id, institution: institution, start_date: start_date, end_date: end_date) }
       let(:institution_name) { double("institution_name", name: "U of Something") }
       let(:start_date) { "2018-01-01" }
       let(:end_date) { "2018-02-01" }
       let(:institution) { 1 }
 
       before do
-        create(:counter_report, session: 1,  noid: 'a',  parent_noid: 'A', institution: 1, created_at: Time.parse("2018-01-02").utc, access_type: "Controlled")
-        create(:counter_report, session: 1,  noid: 'a',  parent_noid: 'A', institution: 1, created_at: Time.parse("2018-01-02").utc, access_type: "Controlled", request: 1)
-        create(:counter_report, session: 1,  noid: 'a2', parent_noid: 'A', institution: 1, created_at: Time.parse("2018-01-02").utc, access_type: "Controlled", request: 1)
-        create(:counter_report, session: 1,  noid: 'a',  parent_noid: 'A', institution: 1, created_at: Time.parse("2018-01-02").utc, access_type: "Controlled", request: 1)
-        create(:counter_report, session: 6,  noid: 'b',  parent_noid: 'B', institution: 1, created_at: Time.parse("2018-02-11").utc, access_type: "Controlled", request: 1)
-        create(:counter_report, session: 10, noid: 'b',  parent_noid: 'B', institution: 2, created_at: Time.parse("2018-11-11").utc, access_type: "Controlled", request: 1)
+        create(:counter_report, press: press.id, session: 1,  noid: 'a',  parent_noid: 'A', institution: 1, created_at: Time.parse("2018-01-02").utc, access_type: "Controlled")
+        create(:counter_report, press: press.id, session: 1,  noid: 'a',  parent_noid: 'A', institution: 1, created_at: Time.parse("2018-01-02").utc, access_type: "Controlled", request: 1)
+        create(:counter_report, press: press.id, session: 1,  noid: 'a2', parent_noid: 'A', institution: 1, created_at: Time.parse("2018-01-02").utc, access_type: "Controlled", request: 1)
+        create(:counter_report, press: press.id, session: 1,  noid: 'a',  parent_noid: 'A', institution: 1, created_at: Time.parse("2018-01-02").utc, access_type: "Controlled", request: 1)
+        create(:counter_report, press: press.id, session: 6,  noid: 'b',  parent_noid: 'B', institution: 1, created_at: Time.parse("2018-02-11").utc, access_type: "Controlled", request: 1)
+        create(:counter_report, press: press.id, session: 10, noid: 'b',  parent_noid: 'B', institution: 2, created_at: Time.parse("2018-11-11").utc, access_type: "Controlled", request: 1)
         allow(Institution).to receive(:where).with(identifier: institution).and_return([institution_name])
+      end
+
+      it "has the correct platform" do
+        expect(subject[:items][0]["Platform"]).to eq "Fulcrum/#{press.name}"
       end
 
       it "has the correct results" do
@@ -78,7 +84,7 @@ RSpec.describe CounterReporter::PlatformReport do
       context "for oa_gold, unique_title_investigations for a press" do
         let(:params_object) do
           CounterReporter::ReportParams.new('pr',
-                                            press: 1,
+                                            press: press.id,
                                             institution: institution,
                                             metric_type: 'Unique_Title_Investigations',
                                             access_type: 'OA_Gold',
@@ -87,11 +93,11 @@ RSpec.describe CounterReporter::PlatformReport do
         end
 
         before do
-          create(:counter_report, session: 1, press: 1, noid: 'a',  parent_noid: 'A', institution: 1, created_at: Time.parse("2018-01-02").utc, access_type: "OA_Gold")
-          create(:counter_report, session: 1, press: 1, noid: 'a2', parent_noid: 'A', institution: 1, created_at: Time.parse("2018-01-02").utc, access_type: "OA_Gold", request: 1)
-          create(:counter_report, session: 1, press: 1, noid: 'b',  parent_noid: 'B', institution: 1, created_at: Time.parse("2018-01-02").utc, access_type: "Controlled", request: 1)
-          create(:counter_report, session: 2, press: 1, noid: 'b',  parent_noid: 'B', institution: 1, created_at: Time.parse("2018-02-06").utc, access_type: "OA_Gold")
-          create(:counter_report, session: 3, press: 2, noid: 'c',  parent_noid: 'C', institution: 1, created_at: Time.parse("2018-02-09").utc, access_type: "OA_Gold")
+          create(:counter_report, session: 1, press: press.id, noid: 'a',  parent_noid: 'A', institution: 1, created_at: Time.parse("2018-01-02").utc, access_type: "OA_Gold")
+          create(:counter_report, session: 1, press: press.id, noid: 'a2', parent_noid: 'A', institution: 1, created_at: Time.parse("2018-01-02").utc, access_type: "OA_Gold", request: 1)
+          create(:counter_report, session: 1, press: press.id, noid: 'b',  parent_noid: 'B', institution: 1, created_at: Time.parse("2018-01-02").utc, access_type: "Controlled", request: 1)
+          create(:counter_report, session: 2, press: press.id, noid: 'b',  parent_noid: 'B', institution: 1, created_at: Time.parse("2018-02-06").utc, access_type: "OA_Gold")
+          create(:counter_report, session: 3, press: 2,        noid: 'c',  parent_noid: 'C', institution: 1, created_at: Time.parse("2018-02-09").utc, access_type: "OA_Gold")
         end
 
         it "has the correct results" do
@@ -105,6 +111,7 @@ RSpec.describe CounterReporter::PlatformReport do
       context "a multi metric_type report, controlled" do
         let(:params_object) do
           CounterReporter::ReportParams.new('pr',
+                                            press: press.id,
                                             institution: institution,
                                             metric_type: ['Total_Item_Investigations', 'Unique_Item_Investigations'],
                                             access_type: ['Controlled'],
@@ -113,12 +120,12 @@ RSpec.describe CounterReporter::PlatformReport do
         end
 
         before do
-          create(:counter_report, session: 1, press: 1, noid: 'a',  parent_noid: 'A', institution: 1, created_at: Time.parse("2018-01-02").utc, access_type: "Controlled")
-          create(:counter_report, session: 1, press: 1, noid: 'a2', parent_noid: 'A', institution: 1, created_at: Time.parse("2018-01-02").utc, access_type: "OA_Gold", request: 1)
-          create(:counter_report, session: 1, press: 1, noid: 'b',  parent_noid: 'B', institution: 1, created_at: Time.parse("2018-01-02").utc, access_type: "Controlled", request: 1)
-          create(:counter_report, session: 2, press: 1, noid: 'b',  parent_noid: 'B', institution: 1, created_at: Time.parse("2018-02-06").utc, access_type: "Controlled")
-          create(:counter_report, session: 2, press: 1, noid: 'b',  parent_noid: 'B', institution: 1, created_at: Time.parse("2018-02-06").utc, access_type: "Controlled")
-          create(:counter_report, session: 3, press: 2, noid: 'c',  parent_noid: 'C', institution: 1, created_at: Time.parse("2018-02-09").utc, access_type: "Controlled")
+          create(:counter_report, session: 1, press: press.id, noid: 'a',  parent_noid: 'A', institution: 1, created_at: Time.parse("2018-01-02").utc, access_type: "Controlled")
+          create(:counter_report, session: 1, press: press.id, noid: 'a2', parent_noid: 'A', institution: 1, created_at: Time.parse("2018-01-02").utc, access_type: "OA_Gold", request: 1)
+          create(:counter_report, session: 1, press: press.id, noid: 'b',  parent_noid: 'B', institution: 1, created_at: Time.parse("2018-01-02").utc, access_type: "Controlled", request: 1)
+          create(:counter_report, session: 2, press: press.id, noid: 'b',  parent_noid: 'B', institution: 1, created_at: Time.parse("2018-02-06").utc, access_type: "Controlled")
+          create(:counter_report, session: 2, press: press.id, noid: 'b',  parent_noid: 'B', institution: 1, created_at: Time.parse("2018-02-06").utc, access_type: "Controlled")
+          create(:counter_report, session: 3, press: press.id, noid: 'c',  parent_noid: 'C', institution: 1, created_at: Time.parse("2018-02-09").utc, access_type: "Controlled")
         end
 
         it "has the correct metric types in order" do

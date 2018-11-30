@@ -33,7 +33,7 @@ module CounterReporter
             item["Item"] = presenter.page_title
             item["Publisher"] = presenter.publisher.first || parent.publisher.first
             item["Publisher_ID"] = ""
-            item["Platform"] = "Fulcrum"
+            item["Platform"] = "Fulcrum/#{@params.press.name}"
             item["Authors"] = find_authors(presenter, parent)
             item["Publication_Date"] = presenter.date_created.first || parent.date_created.first
             item["Article_Version"] = ""
@@ -254,7 +254,7 @@ module CounterReporter
         Exceptions: "",
         Reporting_Period: "#{@params.start_date.year}-#{@params.start_date.month} to #{@params.end_date.year}-#{@params.end_date.month}",
         Created: Time.zone.today.iso8601,
-        Created_By: "Fulcrum"
+        Created_By: "Fulcrum/#{@params.press.name}"
       }
     end
   end

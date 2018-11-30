@@ -108,6 +108,8 @@ RSpec.describe CounterReporter::ItemReport do
   describe "#report" do
     subject { described_class.new(params_object).report }
 
+    let(:press) { create(:press) }
+
     let(:red) do
       ::SolrDocument.new(id: 'red',
                          has_model_ssim: ['Monograph'],
@@ -162,6 +164,7 @@ RSpec.describe CounterReporter::ItemReport do
     context "an ir report" do
       let(:params_object) do
         CounterReporter::ReportParams.new('ir', institution: institution,
+                                                press: press.id,
                                                 start_date: start_date,
                                                 end_date: end_date,
                                                 metric_type: metric_type,
@@ -179,19 +182,23 @@ RSpec.describe CounterReporter::ItemReport do
         ActiveFedora::SolrService.add([red.to_h, a.to_h, a2.to_h, green.to_h, c.to_h, blue.to_h, b.to_h])
         ActiveFedora::SolrService.commit
 
-        create(:counter_report, session: 1,  noid: 'a', model: 'FileSet', parent_noid: 'red', institution: 1, created_at: Time.parse("2018-01-02").utc, access_type: "Controlled", request: 1)
-        create(:counter_report, session: 1,  noid: 'a2', model: 'FileSet', parent_noid: 'red', institution: 1, created_at: Time.parse("2018-01-02").utc, access_type: "Controlled", request: 1, section: "Forward", section_type: "Chapter")
-        create(:counter_report, session: 1,  noid: 'b', model: 'FileSet', parent_noid: 'blue', institution: 1, created_at: Time.parse("2018-01-02").utc, access_type: "Controlled", request: 1, section: "Chapter R", section_type: "Chapter")
-        create(:counter_report, session: 1,  noid: 'b', model: 'FileSet', parent_noid: 'blue', institution: 1, created_at: Time.parse("2018-01-02").utc, access_type: "Controlled", request: 1, section: "Chapter X", section_type: "Chapter")
-        create(:counter_report, session: 6,  noid: 'c', model: 'FileSet', parent_noid: 'green', institution: 1, created_at: Time.parse("2018-02-11").utc, access_type: "Controlled", request: 1)
-        create(:counter_report, session: 6,  noid: 'c', model: 'FileSet', parent_noid: 'green', institution: 1, created_at: Time.parse("2018-02-11").utc, access_type: "Controlled", request: 1)
-        create(:counter_report, session: 7,  noid: 'green', model: 'Monograph', parent_noid: 'green', institution: 1, created_at: Time.parse("2018-02-13").utc, access_type: "Controlled")
-        create(:counter_report, session: 10, noid: 'a', model: 'FileSet', parent_noid: 'red', institution: 2, created_at: Time.parse("2018-11-11").utc, access_type: "Controlled", request: 1)
+        create(:counter_report, press: press.id, session: 1,  noid: 'a',     model: 'FileSet',   parent_noid: 'red',   institution: 1, created_at: Time.parse("2018-01-02").utc, access_type: "Controlled", request: 1)
+        create(:counter_report, press: press.id, session: 1,  noid: 'a2',    model: 'FileSet',   parent_noid: 'red',   institution: 1, created_at: Time.parse("2018-01-02").utc, access_type: "Controlled", request: 1, section: "Forward", section_type: "Chapter")
+        create(:counter_report, press: press.id, session: 1,  noid: 'b',     model: 'FileSet',   parent_noid: 'blue',  institution: 1, created_at: Time.parse("2018-01-02").utc, access_type: "Controlled", request: 1, section: "Chapter R", section_type: "Chapter")
+        create(:counter_report, press: press.id, session: 1,  noid: 'b',     model: 'FileSet',   parent_noid: 'blue',  institution: 1, created_at: Time.parse("2018-01-02").utc, access_type: "Controlled", request: 1, section: "Chapter X", section_type: "Chapter")
+        create(:counter_report, press: press.id, session: 6,  noid: 'c',     model: 'FileSet',   parent_noid: 'green', institution: 1, created_at: Time.parse("2018-02-11").utc, access_type: "Controlled", request: 1)
+        create(:counter_report, press: press.id, session: 6,  noid: 'c',     model: 'FileSet',   parent_noid: 'green', institution: 1, created_at: Time.parse("2018-02-11").utc, access_type: "Controlled", request: 1)
+        create(:counter_report, press: press.id, session: 7,  noid: 'green', model: 'Monograph', parent_noid: 'green', institution: 1, created_at: Time.parse("2018-02-13").utc, access_type: "Controlled")
+        create(:counter_report, press: press.id, session: 10, noid: 'a',     model: 'FileSet',   parent_noid: 'red',   institution: 2, created_at: Time.parse("2018-11-11").utc, access_type: "Controlled", request: 1)
 
         allow(Institution).to receive(:where).with(identifier: institution).and_return([institution_name])
       end
 
       context "items" do
+        it "has the correct platform" do
+          expect(subject[:items][0]["Platform"]). to eq "Fulcrum/#{press.name}"
+        end
+
         it "has to correct number of items" do
           expect(subject[:items].length).to eq 5
         end
@@ -228,6 +235,23 @@ RSpec.describe CounterReporter::ItemReport do
           expect(subject[:items][2]["Feb-2018"]).to eq 2
           expect(subject[:items][3]["Jan-2018"]).to eq 1
           expect(subject[:items][4]["Jan-2018"]).to eq 1
+        end
+      end
+
+      context "header" do
+        it do
+          expect(subject[:header][:Report_Name]).to eq "Item Master Report"
+          expect(subject[:header][:Report_ID]).to eq "IR"
+          expect(subject[:header][:Release]).to eq "5"
+          expect(subject[:header][:Institution_Name]).to eq institution_name.name
+          expect(subject[:header][:Institution_ID]).to eq institution
+          expect(subject[:header][:Metric_Types]).to eq "Total_Item_Requests"
+          expect(subject[:header][:Report_Filters]).to eq "Data_Type=Book; Access_Type=Controlled; Access_Method=Regular"
+          expect(subject[:header][:Report_Attributes]).to eq ""
+          expect(subject[:header][:Exceptions]).to eq ""
+          expect(subject[:header][:Reporting_Period]).to eq "2018-1 to 2018-2"
+          expect(subject[:header][:Created]).to eq Time.zone.today.iso8601
+          expect(subject[:header][:Created_By]).to eq "Fulcrum/#{press.name}"
         end
       end
     end

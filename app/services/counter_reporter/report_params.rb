@@ -10,7 +10,7 @@ module CounterReporter
       @report_type = report_type
       @start_date  = make_start_date(params)
       @end_date    = make_end_date(params)
-      @press       = params[:press] || nil
+      @press       = Press.where(id: params[:press]).first
       @institution = params[:institution]
       @errors      = []
 
@@ -35,11 +35,17 @@ module CounterReporter
     end
 
     def validate!
-      institution? && allowed_metric_types? && allowed_access_types?
+      press? && institution? && allowed_metric_types? && allowed_access_types?
     end
 
     def institution?
       @errors << "You must provide an Institution" if @institution.nil?
+      return false if @errors.present?
+      true
+    end
+
+    def press?
+      @errors << "You must provide a Press" if @press.nil?
       return false if @errors.present?
       true
     end

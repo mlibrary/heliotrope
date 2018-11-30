@@ -42,8 +42,8 @@ class CounterReportsController < ApplicationController
 
   def show # rubocop:disable Metrics/CyclomaticComplexity
     return render if params[:customer_id].present?
-    # institutional 'guest' users can only see their institutions
-    # press admins can only see their presses
+    # institutional 'guest' users can only see their institutions, but all presses
+    # press admins can only see their presses, but all institutions
     return render 'hyrax/base/unauthorized', status: :unauthorized unless authorized_insitutions_or_presses?
 
     case params[:id]
@@ -91,8 +91,8 @@ class CounterReportsController < ApplicationController
     end
 
     def set_presses_and_institutions
-      @presses = current_user&.admin_presses || []
-      @institutions = if @presses.present?
+      @presses = current_user&.admin_presses || Press.all
+      @institutions = if current_user&.admin_presses.present?
                         Institution.order(:name) # over 1000 of these in production = fun
                       else
                         current_institutions

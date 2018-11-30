@@ -3,13 +3,15 @@
 require 'rails_helper'
 
 RSpec.describe CounterReporterService do
+  let(:press) { create(:press) }
+
   describe '#csv' do
     let(:institution) { 1 }
     let(:institution_name) { double("institution_name", name: "U of Something") }
     let(:created_date) { Time.zone.today.iso8601 }
 
     context "with no data" do
-      let(:report) { described_class.tr_b1(institution: institution, start_date: "2018-01-01", end_date: "2018-03-01") }
+      let(:report) { described_class.tr_b1(press: press.id, institution: institution, start_date: "2018-01-01", end_date: "2018-03-01") }
 
       it "makes an empty report" do
         allow(Institution).to receive(:where).with(identifier: institution).and_return([institution_name])
@@ -26,7 +28,7 @@ RSpec.describe CounterReporterService do
           Exceptions,""
           Reporting_Period,2018-1 to 2018-3
           Created,#{created_date}
-          Created_By,Fulcrum
+          Created_By,Fulcrum/#{press.name}
 
           Report is empty,""
         CSV
@@ -34,11 +36,11 @@ RSpec.describe CounterReporterService do
     end
 
     context "with counter data" do
-      let(:report) { described_class.pr_p1(institution: institution, start_date: "2018-01-01", end_date: "2018-03-01") }
+      let(:report) { described_class.pr_p1(press: press.id, institution: institution, start_date: "2018-01-01", end_date: "2018-03-01") }
 
       before do
-        create(:counter_report, session: 1,  noid: 'a',  parent_noid: 'A', institution: 1, created_at: Time.parse("2018-01-02").utc, access_type: "Controlled", request: 1)
-        create(:counter_report, session: 6,  noid: 'b',  parent_noid: 'B', institution: 1, created_at: Time.parse("2018-02-11").utc, access_type: "Controlled", request: 1)
+        create(:counter_report, press: press.id, session: 1,  noid: 'a',  parent_noid: 'A', institution: 1, created_at: Time.parse("2018-01-02").utc, access_type: "Controlled", request: 1)
+        create(:counter_report, press: press.id, session: 6,  noid: 'b',  parent_noid: 'B', institution: 1, created_at: Time.parse("2018-02-11").utc, access_type: "Controlled", request: 1)
       end
 
       after { CounterReport.destroy_all }
@@ -58,12 +60,12 @@ RSpec.describe CounterReporterService do
           Exceptions,"","","","",""
           Reporting_Period,2018-1 to 2018-3,"","","",""
           Created,#{created_date},"","","",""
-          Created_By,Fulcrum,"","","",""
+          Created_By,Fulcrum/#{press.name},"","","",""
           "","","","","",""
           Platform,Metric_Type,Reporting_Period_Total,Jan-2018,Feb-2018,Mar-2018
-          Fulcrum,Total_Item_Requests,2,1,1,0
-          Fulcrum,Unique_Item_Requests,2,1,1,0
-          Fulcrum,Unique_Title_Requests,2,1,1,0
+          Fulcrum/#{press.name},Total_Item_Requests,2,1,1,0
+          Fulcrum/#{press.name},Unique_Item_Requests,2,1,1,0
+          Fulcrum/#{press.name},Unique_Title_Requests,2,1,1,0
         CSV
       end
     end

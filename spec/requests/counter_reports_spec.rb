@@ -95,6 +95,8 @@ RSpec.describe "Customers Counter Reports", type: :request do
   # Someday, time permitting, maybe we'll figure out what SUSHI wants, then we
   # can consolidate everything.
   context "with no customer id" do
+    let(:press) { create(:press) }
+
     context 'anonymous (no institutions)' do
       describe "GET /counter_reports" do
         it do
@@ -131,13 +133,13 @@ RSpec.describe "Customers Counter Reports", type: :request do
       end
     end
 
-    context 'guest user with institutions and no presses' do
+    context 'guest user with institutions' do
       let(:institutions) { [create(:institution, name: "blorf", identifier: 1), create(:institution, name: "ermoo", identifier: 2)] }
 
       before do
-        create(:counter_report, session: 1,  noid: 'a',  parent_noid: 'A', institution: 1, created_at: Time.parse("2018-01-02").utc, access_type: "Controlled")
-        create(:counter_report, session: 1,  noid: 'a',  parent_noid: 'A', institution: 1, created_at: Time.parse("2018-01-02").utc, access_type: "Controlled", request: 1)
-        create(:counter_report, session: 1,  noid: 'a2', parent_noid: 'A', institution: 1, created_at: Time.parse("2018-01-02").utc, access_type: "Controlled", request: 1)
+        create(:counter_report, press: press.id, session: 1,  noid: 'a',  parent_noid: 'A', institution: 1, created_at: Time.parse("2018-01-02").utc, access_type: "Controlled")
+        create(:counter_report, press: press.id, session: 1,  noid: 'a',  parent_noid: 'A', institution: 1, created_at: Time.parse("2018-01-02").utc, access_type: "Controlled", request: 1)
+        create(:counter_report, press: press.id, session: 1,  noid: 'a2', parent_noid: 'A', institution: 1, created_at: Time.parse("2018-01-02").utc, access_type: "Controlled", request: 1)
         allow_any_instance_of(CounterReportsController).to receive(:current_institutions).and_return(institutions)
       end
 
@@ -151,7 +153,7 @@ RSpec.describe "Customers Counter Reports", type: :request do
 
       describe "GET /counter_report/pr_p1" do
         it do
-          get counter_report_path(id: 'pr_p1'), params: { institution: 1 }
+          get counter_report_path(id: 'pr_p1'), params: { institution: 1, press: press.id }
           expect(response).to have_http_status(:ok)
           expect(response).to render_template(:show)
         end
