@@ -4,10 +4,10 @@
 class SessionsController < ApplicationController
   skip_before_action :store_user_location!
 
+  # Called after HTTP_X_REMOTE_USER authentication
   def new
-    # Called after HTTP_X_REMOTE_USER authentication
+    debug_log("new, user '#{current_user.try(:email) || '(null)'}'")
     if user_signed_in?
-      debug_log("new, user signed in: '#{current_user.try(:email) || '(null)'}'")
       # sign in successful - redirect back to where user came from (see Devise::Controllers::StoreLocation#stored_location_for)
       sign_in_static_cookie
       redirect_to return_location
@@ -20,25 +20,25 @@ class SessionsController < ApplicationController
 
   # Initiate a Shibboleth login through the Service Provider using the Default Identity Provider
   def default_login
-    debug_log("default_login")
     session[:log_me_in] = true
     session.delete(:dlpsInstitutionId)
     params[:entityID] = Settings.shibboleth.default_idp.entity_id
     params[:resource] = return_location
+    debug_log("default_login, entityID(#{params[:entityID]}) resource(#{params[:resource]})")
     redirect_to sp_login_url
   end
 
   # Initiate a Shibboleth login through the Service Provider
   def shib_login
-    debug_log("shib_login")
     session[:log_me_in] = true
     session.delete(:dlpsInstitutionId)
+    debug_log("shib_login, entityID(#{params[:entityID]}) resource(#{params[:resource]})")
     redirect_to sp_login_url
   end
 
   # Begin an application session based once Shibboleth login has happened
   def shib_session
-    debug_log("shib_session")
+    debug_log("shib_session, shib_target(#{shib_target})")
     authenticate_user!
     redirect_to shib_target
   end
@@ -49,7 +49,7 @@ class SessionsController < ApplicationController
   end
 
   def destroy
-    debug_log("destroy, user sign out: '#{current_user.try(:email) || '(null)'}'")
+    debug_log("destroy, user '#{current_user.try(:email) || '(null)'}'")
     saved_return_location = return_location
     user_sign_out
     session.delete(:log_me_in)

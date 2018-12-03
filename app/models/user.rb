@@ -62,7 +62,7 @@ class User < ApplicationRecord
   # :database_authenticatable, :registerable, :recoverable, :rememberable,
   # :trackable, :validatable, :confirmable, :lockable, :timeoutable and :omniauthable
 
-  devise :rememberable, :keycard_authenticatable
+  devise :keycard_authenticatable
 
   alias_attribute :user_key, :email
 

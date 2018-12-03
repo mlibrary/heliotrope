@@ -14,10 +14,11 @@ RSpec.describe Devise::Strategies::KeycardAuthenticatable do
     allow(strategy).to receive(:session).and_return({})
   end
 
-  context "with a user_eid" do
-    let(:user_eid) { 'user@domain' }
+  context "with a user_eid or identity_provider" do
     let(:identity) { { user_eid: user_eid } }
-    let(:request_attributes) { double('request_attributes') }
+    let(:user_eid) { 'user@domain' }
+    let(:request_attributes) { { identity_provider: identity_provider } }
+    let(:identity_provider) { 'https://shibboleth.umich.edu/idp/shibboleth' }
 
     context "for an existing user" do
       let(:user) { double('User') }
@@ -79,9 +80,30 @@ RSpec.describe Devise::Strategies::KeycardAuthenticatable do
         end
       end
     end
+
+    context "when user_eid is missing" do
+      let(:user_eid) {}
+      let(:guest) { User.guest(user_key: "guest@fulcrum.org") }
+
+      before do
+        allow(Rails.configuration).to receive(:create_user_on_login).and_return(false)
+        allow(User).to receive(:find_by).and_return(nil)
+        expect(Guest).to receive(:new).with(user_key: "guest@fulcrum.org").and_return(guest)
+        expect(User).not_to receive(:new)
+      end
+
+      it "authenticates succesfully" do
+        expect(strategy.authenticate!).to eq(:success)
+      end
+
+      it "sets the current user" do
+        strategy.authenticate!
+        expect(strategy.user).to eq(guest)
+      end
+    end
   end
 
-  context "without a user_eid" do
+  context "without a user_eid or identity_provider" do
     let(:identity) { {} }
     let(:request_attributes) { {} }
 

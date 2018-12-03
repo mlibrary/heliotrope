@@ -29,10 +29,10 @@ module Devise
       #
       # Called to authenticate user.
       def authenticate!
-        if user_eid.present?
+        if user_eid.present? || identity_provider.present?
           set_user!
         else
-          debug_log "Passing (no user_eid present)"
+          debug_log "Passing (insufficient data in request attributes '#{request_attributes}')"
           pass
         end
       end
@@ -47,7 +47,9 @@ module Devise
       private
 
         def set_user!
-          user = existing_user || new_user || guest_user
+          user = nil
+          user ||= existing_user || new_user || guest_user if user_eid.present?
+          user ||= guest_institution_user if identity_provider.present?
           if user
             user.identity = identity
             user.request_attributes = request_attributes
@@ -60,6 +62,10 @@ module Devise
 
         def user_eid
           identity[:user_eid]
+        end
+
+        def identity_provider
+          request_attributes[:identity_provider]
         end
 
         def request_attributes
@@ -98,6 +104,17 @@ module Devise
         def guest_user
           User.guest(user_key: user_eid_to_key).tap do |user|
             debug_log "Guest user: '#{user_eid_to_key}'" if user
+          end
+        end
+
+        def identity_provider_to_key
+          # institution = Institution.find_by(entity_id: identity_provider)
+          "guest@fulcrum.org"
+        end
+
+        def guest_institution_user
+          User.guest(user_key: identity_provider_to_key).tap do |user|
+            debug_log "Guest institution user: #{identity_provider}" if user
           end
         end
 
