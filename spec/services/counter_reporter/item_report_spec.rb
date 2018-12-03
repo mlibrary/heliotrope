@@ -255,5 +255,96 @@ RSpec.describe CounterReporter::ItemReport do
         end
       end
     end
+
+    context "an ir_m1 report" do
+      let(:params_object) do
+        CounterReporter::ReportParams.new('ir_m1', institution: institution,
+                                                   press: press.id,
+                                                   start_date: start_date,
+                                                   end_date: end_date)
+      end
+
+      let(:institution_name) { double("institution_name", name: "U of Something") }
+      let(:start_date) { "2018-01-01" }
+      let(:end_date) { "2018-02-01" }
+      let(:institution) { 1 }
+
+      let(:a) do
+        ::SolrDocument.new(id: 'a',
+                           has_model_ssim: ['FileSet'],
+                           title_tesim: ['A'],
+                           monograph_id_ssim: ['red'],
+                           mime_type_ssi: 'image/jpg')
+      end
+      let(:b) do
+        ::SolrDocument.new(id: 'b',
+                           has_model_ssim: ['FileSet'],
+                           title_tesim: ['B'],
+                           monograph_id_ssim: ['blue'],
+                           mime_type_ssi: 'video/mp4')
+      end
+      let(:c) do
+        ::SolrDocument.new(id: 'c',
+                           has_model_ssim: ['FileSet'],
+                           title_tesim: ['C'],
+                           monograph_id_ssim: ['green'],
+                           mime_type_ssi: 'audio/mp3')
+      end
+
+      before do
+        ActiveFedora::SolrService.add([red.to_h, a.to_h, a2.to_h, green.to_h, c.to_h, blue.to_h, b.to_h])
+        ActiveFedora::SolrService.commit
+
+        create(:counter_report, press: press.id, session: 1,  noid: 'a',     model: 'FileSet',   parent_noid: 'red',   institution: 1, created_at: Time.parse("2018-01-02").utc, access_type: "Controlled", request: 1)
+        create(:counter_report, press: press.id, session: 1,  noid: 'a2',    model: 'FileSet',   parent_noid: 'red',   institution: 1, created_at: Time.parse("2018-01-02").utc, access_type: "Controlled", request: 1, section: "Forward", section_type: "Chapter")
+        create(:counter_report, press: press.id, session: 1,  noid: 'b',     model: 'FileSet',   parent_noid: 'blue',  institution: 1, created_at: Time.parse("2018-01-02").utc, access_type: "Controlled", request: 1)
+        create(:counter_report, press: press.id, session: 1,  noid: 'b',     model: 'FileSet',   parent_noid: 'blue',  institution: 1, created_at: Time.parse("2018-01-02").utc, access_type: "Controlled", request: 1)
+        create(:counter_report, press: press.id, session: 6,  noid: 'c',     model: 'FileSet',   parent_noid: 'green', institution: 1, created_at: Time.parse("2018-02-11").utc, access_type: "Controlled", request: 1)
+        create(:counter_report, press: press.id, session: 6,  noid: 'c',     model: 'FileSet',   parent_noid: 'green', institution: 1, created_at: Time.parse("2018-02-11").utc, access_type: "Controlled", request: 1)
+        create(:counter_report, press: press.id, session: 7,  noid: 'green', model: 'Monograph', parent_noid: 'green', institution: 1, created_at: Time.parse("2018-02-13").utc, access_type: "Controlled")
+        create(:counter_report, press: press.id, session: 10, noid: 'a',     model: 'FileSet',   parent_noid: 'red',   institution: 2, created_at: Time.parse("2018-11-11").utc, access_type: "Controlled", request: 1)
+
+        allow(Institution).to receive(:where).with(identifier: institution).and_return([institution_name])
+      end
+
+      it "has to correct number of items" do
+        expect(subject[:items].length).to eq 6
+      end
+
+      it "has the correct titles in order" do
+        expect(subject[:items][0]["Parent_Title"]).to eq 'Blue'
+        expect(subject[:items][1]["Parent_Title"]).to eq 'Blue'
+        expect(subject[:items][2]["Parent_Title"]).to eq 'Green'
+        expect(subject[:items][3]["Parent_Title"]).to eq 'Green'
+        expect(subject[:items][4]["Parent_Title"]).to eq 'Red'
+        expect(subject[:items][5]["Parent_Title"]).to eq 'Red'
+      end
+
+      it 'has both OA_Gold and Controlled' do
+        expect(subject[:items][0]["Access_Type"]).to eq 'OA_Gold'
+        expect(subject[:items][1]["Access_Type"]).to eq 'Controlled'
+        expect(subject[:items][2]["Access_Type"]).to eq 'OA_Gold'
+        expect(subject[:items][3]["Access_Type"]).to eq 'Controlled'
+        expect(subject[:items][4]["Access_Type"]).to eq 'OA_Gold'
+        expect(subject[:items][5]["Access_Type"]).to eq 'Controlled'
+      end
+
+      it 'has the correct metric type' do
+        expect(subject[:items][0]["Metric_Type"]).to eq 'Total_Item_Requests'
+      end
+
+      it 'has the correct counts' do
+        expect(subject[:items][0]["Reporting_Period_Total"]).to eq 0
+        expect(subject[:items][1]["Reporting_Period_Total"]).to eq 2
+        expect(subject[:items][2]["Reporting_Period_Total"]).to eq 0
+        expect(subject[:items][3]["Reporting_Period_Total"]).to eq 2
+        expect(subject[:items][4]["Reporting_Period_Total"]).to eq 0
+        expect(subject[:items][5]["Reporting_Period_Total"]).to eq 1
+
+        expect(subject[:items][1]["Jan-2018"]).to eq 2
+        expect(subject[:items][3]["Feb-2018"]).to eq 2
+        expect(subject[:items][5]["Jan-2018"]).to eq 1
+      end
+    end
   end
 end
