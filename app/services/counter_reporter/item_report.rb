@@ -23,10 +23,12 @@ module CounterReporter
         comp_title  = key[3]
         parent      = parents[parent_noid]
         presenter   = file_sets[noid]
+
         next if parent.nil?
         next if presenter.nil? # deleted file_sets or something...
         next if @params.report_type == 'ir_m1' && !presenter.multimedia?
         next if @params.yop.present? && @params.yop != parent.date_created.first
+
         @params.metric_types.each do |metric_type|
           @params.access_types.each do |access_type|
             item = ActiveSupport::OrderedHash.new
