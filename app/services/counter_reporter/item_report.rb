@@ -16,7 +16,7 @@ module CounterReporter
       file_sets = presenters_for(Hyrax::FileSetPresenter, unique_noids(results))
       parents = presenters_for(Hyrax::MonographPresenter, unique_parent_noids(results))
 
-      unique_results(results).sort_by { |k, _v| parents[k[0]].present? ? parents[k[0]]&.title : "" }.each do |key, _reporting_period_total|
+      unique_results(results).sort_by { |k, _v| parents[k[0]].present? ? parents[k[0]]&.page_title : "" }.each do |key, _reporting_period_total|
         parent_noid = key[0]
         noid        = key[1]
         section     = key[2]
@@ -45,7 +45,7 @@ module CounterReporter
             item["Print_ISSN"] = ""
             item["Online_ISSN"] = ""
             item["URI"] = find_url(presenter)
-            item["Parent_Title"] = parent.title
+            item["Parent_Title"] = parent.page_title
             item["Parent_Data_Type"] = "Book"
             item["Parent_DOI"] = parent.citable_link
             item["Parent_Proprietary_ID"] = parent.id
