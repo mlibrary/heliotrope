@@ -12,13 +12,13 @@ module CounterReporter
       results = results_by_month
       items = []
 
-      monograph_presenters(unique_parent_noids(results)).sort_by(&:title).each do |presenter|
+      monograph_presenters(unique_parent_noids(results)).sort_by(&:page_title).each do |presenter|
         # should "yop"/year of publication be in the counter_report table?
         next if @params.yop.present? && @params.yop != presenter.date_created.first
         @params.metric_types.each do |metric_type|
           @params.access_types.each do |access_type|
             item = ActiveSupport::OrderedHash.new
-            item["Title"] = presenter.title
+            item["Title"] = presenter.page_title
             item["Publisher"] = presenter.publisher.first
             item["Publisher_ID"] = ""
             item["Platform"] = "Fulcrum/#{@params.press.name}"

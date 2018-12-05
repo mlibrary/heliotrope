@@ -45,7 +45,7 @@ RSpec.describe CounterReporter::TitleReport do
     let(:red) do
       ::SolrDocument.new(id: 'red',
                          has_model_ssim: ['Monograph'],
-                         title_tesim: ['Red'],
+                         title_tesim: ['_Red_'],
                          publisher_tesim: ["R"],
                          isbn_tesim: ['111', '222'],
                          date_created_tesim: ['2000'])
@@ -53,7 +53,7 @@ RSpec.describe CounterReporter::TitleReport do
     let(:green) do
       ::SolrDocument.new(id: 'green',
                          has_model_ssim: ['Monograph'],
-                         title_tesim: ['Green'],
+                         title_tesim: ['__Green__'],
                          publisher_tesim: ["G"],
                          isbn_tesim: ['AAA', 'BBB'],
                          date_created_tesim: ['2000'])
