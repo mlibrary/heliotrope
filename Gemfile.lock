@@ -26,7 +26,7 @@ GIT
 
 GIT
   remote: https://github.com/mlibrary/turnsole
-  revision: f85cb2cd7e4f6cc52ac05d6332d62017e84b748a
+  revision: 16a2ba05dc7dd414777255dc811553f026264fb1
   branch: checkpoint
   specs:
     turnsole (0.1.0)
