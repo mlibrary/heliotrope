@@ -7,7 +7,13 @@ RSpec.describe CounterService do
   # Fun time reading is here: https://www.projectcounter.org
   # See also HELIO-1376
   let(:controller) { Hyrax::FileSetsController.new }
-  let(:presenter) { Hyrax::FileSetPresenter.new(SolrDocument.new(id: 'id', has_model_ssim: ['FileSet'], permissions_expiration_date_ssim: []), nil) }
+  let(:presenter) do
+    Hyrax::FileSetPresenter.new(SolrDocument.new(id: 'id',
+                                                 has_model_ssim: ['FileSet'],
+                                                 permissions_expiration_date_ssim: [],
+                                                 visibility_ssi: 'open',
+                                                 read_access_group_ssim: ["public"]), nil)
+  end
 
   describe '#from' do
     context "with a correct controller and presenter" do
@@ -211,6 +217,30 @@ RSpec.describe CounterService do
           expect(CounterReport.second.parent_noid).to eq presenter.monograph_id
         end
       end
+
+      context "if the file_set is not 'published'/open" do
+        let(:presenter) do
+          Hyrax::FileSetPresenter.new(SolrDocument.new(id: 'id',
+                                                       has_model_ssim: ['FileSet'],
+                                                       permissions_expiration_date_ssim: [],
+                                                       visibility_ssi: 'restricted',
+                                                       read_access_group_ssim: []), nil)
+        end
+
+        before do
+          allow(controller).to receive(:current_institutions).and_return([Institution.new(identifier: 495, name: "a")])
+          allow(presenter).to receive(:id).and_return('123454321')
+          allow(presenter).to receive(:monograph).and_return(monograph)
+          allow(presenter).to receive(:monograph_id).and_return(monograph_id)
+        end
+
+        it "doesn't add COUNTER stats" do
+          expect(presenter.visibility).to eq 'restricted'
+          expect { described_class.from(controller, presenter).count }
+            .to change(CounterReport, :count)
+            .by(0)
+        end
+      end
     end
 
     context "monographs" do
@@ -218,7 +248,9 @@ RSpec.describe CounterService do
       let(:presenter) do
         Hyrax::MonographPresenter.new(SolrDocument.new(id: 'mono12456',
                                                        has_model_ssim: ['Monograph'],
-                                                       press_tesim: [press.subdomain]), nil)
+                                                       press_tesim: [press.subdomain],
+                                                       visibility_ssi: 'open',
+                                                       read_access_group_ssim: ["public"]), nil)
       end
 
       let(:request) { double("request") }
