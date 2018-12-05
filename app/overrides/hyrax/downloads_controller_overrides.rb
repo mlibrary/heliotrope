@@ -7,6 +7,7 @@ Hyrax::DownloadsController.class_eval do
         render plain: presenter.transcript
       elsif file.present? && (thumbnail? || jpeg? || video? || sound? || allow_download?)
         # See #401
+        CounterService.from(self, presenter).count(request: 1)
         if file.is_a? String
           # For derivatives stored on the local file system
           response.headers['Accept-Ranges'] = 'bytes'
@@ -15,7 +16,6 @@ Hyrax::DownloadsController.class_eval do
           response.headers['X-Sendfile'] = file
           send_file file, derivative_download_options
         else
-          CounterService.from(self, presenter).count(request: 1)
           self.status = 200
           send_file_headers! content_options.merge(disposition: 'attachment')
           response.headers['Content-Length'] ||= file.size.to_s
