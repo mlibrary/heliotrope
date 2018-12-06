@@ -64,8 +64,8 @@ RSpec.describe EPubsController, type: :controller do
       end
 
       context "file epub and the user has an instituion" do
-        let(:monograph) { create(:monograph) }
-        let(:file_set) { create(:file_set, content: File.open(File.join(fixture_path, 'fake_epub01.epub'))) }
+        let(:monograph) { create(:public_monograph) }
+        let(:file_set) { create(:public_file_set, content: File.open(File.join(fixture_path, 'fake_epub01.epub'))) }
         let!(:fr) { create(:featured_representative, monograph_id: monograph.id, file_set_id: file_set.id, kind: 'epub') }
         let(:keycard) { { dlpsInstitutionId: [institution.identifier] } }
         let(:institution) { double('institution', identifier: '9999') }

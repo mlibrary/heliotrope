@@ -23,6 +23,8 @@ class CounterService
   end
 
   def count(opts = {}) # rubocop:disable Metrics/CyclomaticComplexity
+    return if @presenter&.visibility == "restricted"
+
     @controller.current_institutions.each do |institution|
       cr = CounterReport.new(session: session,
                              institution: institution.identifier,
