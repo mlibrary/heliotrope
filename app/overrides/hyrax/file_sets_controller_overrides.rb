@@ -7,7 +7,11 @@ Hyrax::FileSetsController.class_eval do
     def show
       # local heliotrope change
       redirect_to redirect_link, status: :moved_permanently if redirect_link.present?
-      CounterService.from(self, presenter).count
+      if presenter.multimedia?
+        CounterService.from(self, presenter).count(request: 1)
+      else
+        CounterService.from(self, presenter).count
+      end
       respond_to do |wants|
         wants.html { presenter }
         wants.json { presenter }

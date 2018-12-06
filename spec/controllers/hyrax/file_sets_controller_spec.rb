@@ -102,4 +102,44 @@ RSpec.describe Hyrax::FileSetsController, type: :controller do
       post :update, params: { id: file_set, user_thumbnail: { use_default: '0' } }
     end
   end
+
+  context "counter report counts from the show page" do
+    let(:keycard) { { dlpsInstitutionId: [institution.identifier] } }
+    let(:institution) { double('institution', identifier: '9999') }
+
+    before do
+      allow_any_instance_of(Keycard::Request::Attributes).to receive(:all).and_return(keycard)
+      allow(Institution).to receive(:where).with(identifier: ['9999']).and_return([institution])
+      file_set.read_groups << "public"
+      file_set.visibility = "open"
+    end
+
+    context "a multimedia file_set" do
+      before do
+        Hydra::Works::AddFileToFileSet.call(file_set, File.open(fixture_path + '/csv/shipwreck.jpg'), :original_file)
+        file_set.save!
+      end
+
+      it "counts as an investigation and a request" do
+        get :show, params: { id: file_set.id }
+        cr = CounterReport.last
+        expect(cr.request).to eq 1
+        expect(cr.investigation).to eq 1
+      end
+    end
+
+    context "a non-multimedia file_set" do
+      before do
+        Hydra::Works::AddFileToFileSet.call(file_set, File.open(fixture_path + '/stuff.xlsx'), :original_file)
+        file_set.save!
+      end
+
+      it "counts only as an investigation" do
+        get :show, params: { id: file_set.id }
+        cr = CounterReport.last
+        expect(cr.request).to eq nil
+        expect(cr.investigation).to eq 1
+      end
+    end
+  end
 end
