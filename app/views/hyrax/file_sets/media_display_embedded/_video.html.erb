@@ -11,3 +11,22 @@
   <% end %>
   Your browser does not support the video tag.
 </video>
+
+<script>
+    $(document).ready(function() {
+      setupVideoAnalytics();
+    });
+
+    function setupVideoAnalytics() {
+      if (typeof(ga) == typeof(Function)) {
+        var video = $('#video').get(0)
+        video.addEventListener("play", function() {
+          ga('pressTracker.send', 'event', 'e_reader', 'play_video', window.location.href);
+        });
+        video.addEventListener("pause", function() {
+          ga('pressTracker.send', 'event', 'e_reader', 'stop_video', window.location.href);
+        });
+      }
+    }
+
+</script>

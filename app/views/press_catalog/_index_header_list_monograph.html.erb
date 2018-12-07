@@ -17,7 +17,7 @@
   <% if presenter.epub? %>
     <div class="row epub">
       <div class="col-sm-12">
-        <a class="btn btn-default btn-lg" href="<%= epub_path(presenter.epub, publisher: presenter.subdomain) %>" title="Read <%= presenter.title %>" data-turbolinks="false">Read</a>
+        <a id="monograph-read-btn" class="btn btn-default btn-lg" href="<%= epub_path(presenter.epub, publisher: presenter.subdomain) %>" title="Read <%= presenter.title %>" data-turbolinks="false">Read</a>
       </div>
     </div>
     <div class="row info">

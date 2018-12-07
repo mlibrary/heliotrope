@@ -1,6 +1,5 @@
 $(document).on('turbolinks:load', function() {
   // Register user events with google analytics
-
   if (typeof(ga) == typeof(Function)) {
     //
     // Press page
@@ -133,6 +132,54 @@ $(document).on('turbolinks:load', function() {
       var tab = $(this).attr('href').split('#')[1];
       ga('pressTracker.send', 'event', 'file_set_page', 'tab_' + tab, $('#asset-title').text());
     });
+
+    //
+    // EPUB tracking
+    //
+    // Read button on press and monograph pages
+    $('#monograph-read-btn').click(function() {
+      ga('pressTracker.send', 'event', which_category(), 'read_epub', $(this).attr('href'));
+    });
+
+    // ToC links
+    $('a.toc-link').click(function() {
+      ga('pressTracker.send', 'event', 'monograph_page', 'read_epub_ToC', $(this).attr('href'));
+    });
+
+    //
+    // E-Reader event tracking
+    // Citation, preferences, ToC selections handled in views/e_pubs/show.html.erb
+    //
+    // Forward and back navigation
+    $('i[class^="icon-chevron"]').parent('a').click(function() {
+      ga('pressTracker.send', 'event', 'e_reader', 'nav', window.location.href);
+    });
+
+    // Full screen
+    $('div.cozy-container-fullscreen button').click(function() {
+      ga('pressTracker.send', 'event', 'e_reader', 'fullscreen', window.location.href);
+    });
+
+    // Search
+    $('div.cozy-control form.search button.button--sm').click(function() {
+      ga('pressTracker.send', 'event', 'e_reader', 'search', $('#cozy-search-string').val());
+    });
+
+    // Range input (nav)
+    $('input#cozy-navigator-range-input').change(function() {
+      ga('pressTracker.send', 'event', 'e_reader', 'navbar', window.location.href);
+    });
+
+    // Close button
+    $('button.cozy-close').click(function() {
+      ga('pressTracker.send', 'event', 'e_reader', 'close', window.location.href);
+    });
+
+    // Feedback button
+    $('i.icon-comment-square').parent('a').click(function() {
+      ga('pressTracker.send', 'event', 'e_reader', 'feedback', window.location.href);
+    });
+
   }
 
   function which_category() {
