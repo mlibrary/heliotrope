@@ -1,0 +1,25 @@
+<b>
+  <div class="col-md-10">
+    <div class="col-md-1">Subscriber</div>
+    <div class="col-md-3"></div>
+    <div class="col-md-3"></div>
+    <div class="col-md-3"></div>
+    <div class="col-md-2">Products</div>
+  </div>
+  <div class="col-md-2">New Subscriber</div>
+  <hr/>
+</b>
+<% subscribers.each do |subscriber| %>
+  <div class="col-md-10">
+    <div class="col-md-1"><%= subscriber.identifier %></div>
+    <div class="col-md-3"></div>
+    <div class="col-md-3"></div>
+    <div class="col-md-3"></div>
+    <div class="col-md-2"><%= Greensub.subscriber_products(subscriber).count %></div>
+  </div>
+  <div class="col-md-2">
+    <%#= link_to(grant_path(grant), method: :delete, class: "btn btn-default", data: { confirm: 'Are you sure?' }) do %>
+      <span class="glyphicon glyphicon-minus" aria-hidden="true"></span> Destroy
+    <%# end %>
+  </div>
+<% end %>

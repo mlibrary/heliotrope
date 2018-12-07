@@ -56,10 +56,10 @@ RSpec.describe "Grants", type: :request do
         let(:individual) { create(:individual) }
         let(:institution) { create(:institution) }
 
-        before { PermissionService.clear_permits_table }
+        before { clear_grants_table }
 
         it do
-          expect(Grant.count).to be_zero
+          expect(grants_table_count).to be_zero
           expect(product.lessees.count).to be_zero
           expect(product.lessees).to be_empty
 
@@ -72,7 +72,7 @@ RSpec.describe "Grants", type: :request do
             resource_id: product.id
           } }
           product.reload
-          expect(Grant.count).to eq(1)
+          expect(grants_table_count).to eq(1)
           expect(product.lessees.count).to eq(1)
           expect(product.lessees).to match_array([individual.lessee])
 
@@ -85,7 +85,7 @@ RSpec.describe "Grants", type: :request do
             resource_id: product.id
           } }
           product.reload
-          expect(Grant.count).to eq(1)
+          expect(grants_table_count).to eq(1)
           expect(product.lessees.count).to eq(1)
           expect(product.lessees).to match_array([individual.lessee])
 
@@ -98,7 +98,7 @@ RSpec.describe "Grants", type: :request do
             resource_id: product.id
           } }
           product.reload
-          expect(Grant.count).to eq(2)
+          expect(grants_table_count).to eq(2)
           expect(product.lessees.count).to eq(2)
           expect(product.lessees).to match_array([individual.lessee, institution.lessee])
 
@@ -111,19 +111,19 @@ RSpec.describe "Grants", type: :request do
             resource_id: product.id
           } }
           product.reload
-          expect(Grant.count).to eq(2)
+          expect(grants_table_count).to eq(2)
           expect(product.lessees.count).to eq(2)
           expect(product.lessees).to match_array([individual.lessee, institution.lessee])
 
-          delete "/grants/#{Grant.last.id}"
+          delete "/grants/#{grants_table_last.id}"
           product.reload
-          expect(Grant.count).to eq(1)
+          expect(grants_table_count).to eq(1)
           expect(product.lessees.count).to eq(1)
           expect(product.lessees).to match_array([individual.lessee])
 
-          delete "/grants/#{Grant.last.id}"
+          delete "/grants/#{grants_table_last.id}"
           product.reload
-          expect(Grant.count).to be_zero
+          expect(grants_table_count).to be_zero
           expect(product.lessees.count).to be_zero
           expect(product.lessees).to be_empty
         end

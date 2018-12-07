@@ -1,13 +1,4 @@
 GIT
-  remote: https://github.com/mlibrary/checkpoint
-  revision: 4e26f9269ea1282b3471ee60d97ed25029fa92cc
-  branch: master
-  specs:
-    checkpoint (1.0.3)
-      ettin (~> 1.1)
-      sequel (~> 5.6)
-
-GIT
   remote: https://github.com/mlibrary/cozy-sun-bear
   revision: 514ade37ff42922627e119ec3b4c037369ff1569
   ref: 514ade37ff42922627e119ec3b4c037369ff1569
@@ -26,8 +17,8 @@ GIT
 
 GIT
   remote: https://github.com/mlibrary/turnsole
-  revision: 16a2ba05dc7dd414777255dc811553f026264fb1
-  branch: checkpoint
+  revision: 0677e0b8ee144cd9c2d9117aadf672b01d1d4453
+  branch: master
   specs:
     turnsole (0.1.0)
       faraday (~> 0.12.2)
@@ -185,6 +176,9 @@ GEM
       activemodel (>= 4.0.0)
       activesupport (>= 4.0.0)
       mime-types (>= 1.16)
+    checkpoint (1.1.0)
+      ettin (~> 1.1)
+      sequel (~> 5.6)
     childprocess (0.9.0)
       ffi (~> 1.0, >= 1.0.11)
     chromedriver-helper (1.2.0)
@@ -950,7 +944,7 @@ DEPENDENCIES
   canister (~> 0.9.0)
   capybara (~> 2.13)
   carrierwave (~> 1.1.0)
-  checkpoint!
+  checkpoint (~> 1.1.0)
   chromedriver-helper
   clamav
   coffee-rails (~> 4.2)

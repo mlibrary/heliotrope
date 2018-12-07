@@ -18,34 +18,5 @@
     <li><%= key.to_s %>: <%= value.to_s %></li>
   <% end %>
 </ul>
-<h2>Checkpoint</h2>
-<table class="table table-striped" summary="Grants List">
-  <tr>
-    <th>Agent</th>
-    <th>Credential</th>
-    <th>Resource</th>
-    <th>Zone</th>
-  </tr>
-  <% ActorAgentResolver.new.expand(current_actor).each do |agent| %>
-    <% grants = Checkpoint::DB::Permit.where(agent_token: agent.token.to_s).map { |permit| Grant.new(permit) } %>
-    <% if grants.count.positive? %>
-      <% grants.each do |grant| %>
-        <tr>
-          <td><%= grant.agent_token %></td>
-          <td><%= grant.credential_token %></td>
-          <td><%= grant.resource_token %></td>
-          <td><%= grant.zone_id %></td>
-        </tr>
-      <% end %>
-    <% else %>
-      <tr>
-        <td><%= agent.token %></td>
-        <td>n/a</td>
-        <td>n/a</td>
-        <td>n/a</td>
-      </tr>
-    <% end %>
-  <% end %>
-</table>
 <h2>Token</h2>
 <%= text_field(:user, :token, size: 120, value: current_user.token, disabled: true) %>

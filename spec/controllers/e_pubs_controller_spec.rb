@@ -63,7 +63,7 @@ RSpec.describe EPubsController, type: :controller do
         end
       end
 
-      context "file epub and the user has an instituion" do
+      context "file epub and the user has an institution" do
         let(:monograph) { create(:public_monograph) }
         let(:file_set) { create(:public_file_set, content: File.open(File.join(fixture_path, 'fake_epub01.epub'))) }
         let!(:fr) { create(:featured_representative, monograph_id: monograph.id, file_set_id: file_set.id, kind: 'epub') }
@@ -293,6 +293,7 @@ RSpec.describe EPubsController, type: :controller do
         let(:dlpsInstitutionId) { 'institute' }
 
         before do
+          clear_grants_table
           allow_any_instance_of(Keycard::Request::Attributes).to receive(:all).and_return(keycard)
           component
           session[:show_set] = []
@@ -322,26 +323,30 @@ RSpec.describe EPubsController, type: :controller do
         end
 
         it "Subscribed Institution" do
-          _institution = Institution.create!(identifier: dlpsInstitutionId, name: 'Name', site: 'Site', login: 'Login')
+          institution = create(:institution, identifier: dlpsInstitutionId)
           product = Product.create!(identifier: 'product', name: 'name', purchase: 'purchase')
           product.components << component
+          product.lessees << institution.lessee
           product.save!
           get :show, params: { id: file_set.id }
-          expect(session[:show_set].include?(file_set.id)).to be false
+          expect(session[:show_set].include?(file_set.id)).to be true
           expect(response).to have_http_status(:success)
-          expect(response).to render_template(:access)
+          expect(response).not_to render_template(:access)
         end
 
-        it "Subscribed User" do
-          user = create(:user)
+        it "Subscribed Individual" do
+          email = 'wolverine@umich.edu'
+          user = create(:user, email: email)
+          individual = create(:individual, identifier: email)
           product = Product.create!(identifier: 'product', name: 'name', purchase: 'purchase')
           product.components << component
+          product.lessees << individual.lessee
           product.save!
           cosign_sign_in(user)
           get :show, params: { id: file_set.id }
-          expect(session[:show_set].include?(file_set.id)).to be false
+          expect(session[:show_set].include?(file_set.id)).to be true
           expect(response).to have_http_status(:success)
-          expect(response).to render_template(:access)
+          expect(response).not_to render_template(:access)
         end
       end
     end

@@ -197,17 +197,21 @@ class EPubsController < CheckpointController
 
     def legacy_access?
       return true if component.blank?
+      products = component.products
+      return false if products.blank?
+      products_lessees = []
+      products.each { |product| products_lessees += product.lessees }
+      return false if products_lessees.blank?
       identifiers = current_institutions.map(&:identifier)
       identifiers << subscriber.identifier
       lessees = Lessee.where(identifier: identifiers.flatten)
-      lessees.any? { |lessee| component.lessees.include?(lessee) }
+      lessees.any? { |lessee| products_lessees.include?(lessee) }
     end
 
     def component_institutions
-      return [] if component.blank?
-      lessees = component.lessees
-      return [] if lessees.blank?
-      Institution.where(identifier: lessees.pluck(:identifier))
+      institutions = []
+      component_products.each { |product| institutions += product.institutions }
+      institutions.uniq
     end
 
     def component_products

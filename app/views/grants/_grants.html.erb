@@ -11,14 +11,14 @@
 </b>
 <% grants.each do |grant| %>
   <div class="col-md-10">
-    <div class="col-md-1"><%= link_to grant.id, grant %></div>
+    <div class="col-md-1"><%= grant.id %></div>
     <div class="col-md-3"><%= grant.agent_token %></div>
     <div class="col-md-3"><%= grant.credential_token %></div>
     <div class="col-md-3"><%= grant.resource_token %></div>
     <div class="col-md-2"><%= grant.zone_id %></div>
   </div>
   <div class="col-md-2">
-    <%= link_to(grant_path(grant), method: :delete, class: "btn btn-default", data: { confirm: 'Are you sure?' }) do %>
+    <%= link_to(grant_path(grant.id), method: :delete, class: "btn btn-default", data: { confirm: 'Are you sure?' }) do %>
       <span class="glyphicon glyphicon-minus" aria-hidden="true"></span> Destroy
     <% end %>
   </div>

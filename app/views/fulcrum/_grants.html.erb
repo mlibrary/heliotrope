@@ -1,13 +1,13 @@
 <%
-  permits = Checkpoint::DB::Permit
-  permits = permits.where(Sequel.like(:agent_type, "%#{params[:agent_type_like]}%")) if params[:agent_type_like].present?
-  permits = permits.where(Sequel.like(:agent_id, "%#{params[:agent_id_like]}%")) if params[:agent_id_like].present?
-  permits = permits.where(Sequel.like(:credential_type, "%#{params[:credential_type_like]}%")) if params[:credential_type_like].present?
-  permits = permits.where(Sequel.like(:credential_id, "%#{params[:credential_id_like]}%")) if params[:credential_id_like].present?
-  permits = permits.where(Sequel.like(:resource_type, "%#{params[:resource_type_like]}%")) if params[:resource_type_like].present?
-  permits = permits.where(Sequel.like(:resource_id, "%#{params[:resource_id_like]}%")) if params[:resource_id_like].present?
-  permits = permits.order(:agent_type, :agent_id)
-  grants = Kaminari.paginate_array(permits.map { |permit| Grant.new(permit) }).page(params[:page]).per(10)
+  grants = Checkpoint::DB::Grant
+  grants = grants.where(Sequel.like(:agent_type, "%#{params[:agent_type_like]}%")) if params[:agent_type_like].present?
+  grants = grants.where(Sequel.like(:agent_id, "%#{params[:agent_id_like]}%")) if params[:agent_id_like].present?
+  grants = grants.where(Sequel.like(:credential_type, "%#{params[:credential_type_like]}%")) if params[:credential_type_like].present?
+  grants = grants.where(Sequel.like(:credential_id, "%#{params[:credential_id_like]}%")) if params[:credential_id_like].present?
+  grants = grants.where(Sequel.like(:resource_type, "%#{params[:resource_type_like]}%")) if params[:resource_type_like].present?
+  grants = grants.where(Sequel.like(:resource_id, "%#{params[:resource_id_like]}%")) if params[:resource_id_like].present?
+  grants = grants.order(:agent_type, :agent_id)
+  grants = Kaminari.paginate_array(grants.to_a).page(params[:page]).per(10)
 
   size = 12
 %>
@@ -39,7 +39,7 @@
     <% grants.each do |grant| %>
       <tr>
         <td>
-          <%= link_to(grant_path(grant), method: :delete, class: "btn btn-default", data: { confirm: 'Are you sure?' }) do %>
+          <%= link_to(grant_path(grant.id), method: :delete, class: "btn btn-default", data: { confirm: 'Are you sure?' }) do %>
             <span class="glyphicon glyphicon-minus" aria-hidden="true"></span> Destroy
           <% end %>
         </td>

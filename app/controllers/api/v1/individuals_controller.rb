@@ -45,20 +45,32 @@ module API
                        end
       end
 
-      # Get individual by id
-      # @example
-      #   get /api/individual/:id
-      # @param [Hash] params { id: Number }
-      # @return [ActionDispatch::Response] {Individual}
+      # @overload show
+      #   Get individual by id
+      #   @example
+      #     get /api/individual/:id
+      #   @param [Hash] params { id: Number }
+      #   @return [ActionDispatch::Response] {Individual}
       #
-      #   (See ./app/views/api/v1/individual/show.json.jbuilder)
+      #     (See ./app/views/api/v1/individual/show.json.jbuilder)
       #
-      #   {include:file:app/views/api/v1/individuals/show.json.jbuilder}
+      #     {include:file:app/views/api/v1/individuals/show.json.jbuilder}
       #
-      #   (See ./app/views/api/v1/individual/_individual.json.jbuilder)
+      #     (See ./app/views/api/v1/individual/_individual.json.jbuilder)
       #
-      #   {include:file:app/views/api/v1/individuals/_individual.json.jbuilder}
-      def show; end
+      #     {include:file:app/views/api/v1/individuals/_individual.json.jbuilder}
+      # @overload show
+      #   Get product individual
+      #   @example
+      #     get /api/products/:product_id/individuals/:id
+      #   @param [Hash] params { product_id: Number, id: Number }
+      #   @return [ActionDispatch::Response]
+      def show
+        if params[:product_id].present? # rubocop:disable Style/GuardClause
+          set_product
+          return head :not_found unless @individual.products.include?(@product)
+        end
+      end
 
       # Create individual
       # @example
@@ -94,7 +106,7 @@ module API
           unless @individual.lessee.products.include?(@product)
             @individual.lessee.products << @product
             @individual.save
-            PermissionService.permit_read_access_resource(@individual.agent_type, @individual.agent_id, @product.resource_type, @product.resource_id)
+            Greensub.subscribe(@individual, @product)
           end
           return head :ok
         end
@@ -119,7 +131,7 @@ module API
           set_product
           if @individual.lessee.products.include?(@product)
             @individual.lessee.products.delete(@product)
-            PermissionService.revoke_read_access_resource(@individual.agent_type, @individual.agent_id, @product.resource_type, @product.resource_id)
+            Greensub.unsubscribe(@individual, @product)
           end
         else
           return render json: @individual.errors, status: :accepted unless @individual.destroy

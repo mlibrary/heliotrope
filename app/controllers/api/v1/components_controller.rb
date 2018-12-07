@@ -45,20 +45,32 @@ module API
                       end
       end
 
-      # Get component by id
-      # @example
-      #   get /api/component/:id
-      # @param [Hash] params { id: Number }
-      # @return [ActionDispatch::Response] {Component}
+      # @overload show
+      #   Get component by id
+      #   @example
+      #     get /api/component/:id
+      #   @param [Hash] params { id: Number }
+      #   @return [ActionDispatch::Response] {Component}
       #
-      #   (See ./app/views/api/v1/component/show.json.jbuilder)
+      #     (See ./app/views/api/v1/component/show.json.jbuilder)
       #
-      #   {include:file:app/views/api/v1/components/show.json.jbuilder}
+      #     {include:file:app/views/api/v1/components/show.json.jbuilder}
       #
-      #   (See ./app/views/api/v1/component/_component.json.jbuilder)
+      #     (See ./app/views/api/v1/component/_component.json.jbuilder)
       #
-      #   {include:file:app/views/api/v1/components/_component.json.jbuilder}
-      def show; end
+      #     {include:file:app/views/api/v1/components/_component.json.jbuilder}
+      # @overload show
+      #   Get product component
+      #   @example
+      #     get /api/products/:product_id/components/:id
+      #   @param [Hash] params { product_id: Number, id: Number }
+      #   @return [ActionDispatch::Response]
+      def show
+        if params[:product_id].present? # rubocop:disable Style/GuardClause
+          set_product
+          return head :not_found unless @component.products.include?(@product)
+        end
+      end
 
       # Create component
       # @example

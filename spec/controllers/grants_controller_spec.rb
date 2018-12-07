@@ -17,7 +17,7 @@ RSpec.describe GrantsController, type: :controller do
       resource_type: 'any',
       resource_id: 'any',
       resource_token: 'any:any',
-      zone_id: Checkpoint::DB::Permit.default_zone
+      zone_id: Checkpoint::DB::Grant.default_zone
     }
   end
   let(:invalid_attributes) do
@@ -40,11 +40,14 @@ RSpec.describe GrantsController, type: :controller do
   # GrantsController. Be sure to keep this updated too.
   let(:valid_session) { {} }
 
-  before { PermissionService.clear_permits_table }
+  let(:individual) { create(:individual) }
+  let(:product) { create(:product) }
+
+  before { clear_grants_table }
 
   describe "GET #index" do
     it "returns a success response" do
-      _grant = Grant.create! valid_attributes
+      Greensub.subscribe(individual, product)
       get :index, params: {}, session: valid_session
       expect(response).to be_success
       expect(response).to render_template(:index)
@@ -53,8 +56,8 @@ RSpec.describe GrantsController, type: :controller do
 
   describe "GET #show" do
     it "returns a success response" do
-      grant = Grant.create! valid_attributes
-      get :show, params: { id: grant.to_param }, session: valid_session
+      Greensub.subscribe(individual, product)
+      get :show, params: { id: grants_table_last.id }, session: valid_session
       expect(response).to be_success
       expect(response).to render_template(:show)
     end
@@ -71,20 +74,18 @@ RSpec.describe GrantsController, type: :controller do
   describe "POST #create" do
     context "with valid params" do
       it "creates a new Grant" do
-        expect {
-          post :create, params: { grant: valid_attributes }, session: valid_session
-        }.to change(Grant, :count).by(1)
-        expect(response).to redirect_to(Grant.last)
+        post :create, params: { grant: valid_attributes }, session: valid_session
+        expect(grants_table_count).to eq(1)
+        expect(response).to redirect_to(grants_url)
       end
 
       context "with permission:any" do
         before { valid_attributes[:credential_id] = 'any' }
 
         it do
-          expect {
-            post :create, params: { grant: valid_attributes }, session: valid_session
-          }.to change(Grant, :count).by(1)
-          expect(response).to redirect_to(Grant.last)
+          post :create, params: { grant: valid_attributes }, session: valid_session
+          expect(grants_table_count).to eq(1)
+          expect(response).to redirect_to(grants_url)
         end
       end
 
@@ -127,10 +128,9 @@ RSpec.describe GrantsController, type: :controller do
 
   describe "DELETE #destroy" do
     it "destroys the requested grant" do
-      grant = Grant.create! valid_attributes
-      expect {
-        delete :destroy, params: { id: grant.to_param }, session: valid_session
-      }.to change(Grant, :count).by(-1)
+      Greensub.subscribe(individual, product)
+      delete :destroy, params: { id: grants_table_last.id }, session: valid_session
+      expect(grants_table_count).to be_zero
       expect(response).to redirect_to(grants_url)
     end
   end

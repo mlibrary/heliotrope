@@ -76,8 +76,7 @@ gem 'canister', '~> 0.9.0'
 gem 'carrierwave', '~> 1.1.0'
 
 # Checkpoint provides authorization support
-# gem 'checkpoint', '~> 1.0.3'
-gem 'checkpoint', git: 'https://github.com/mlibrary/checkpoint', branch: 'master'
+gem 'checkpoint', '~> 1.1.0'
 
 # clamav only in production
 gem 'clamav', group: :production
@@ -109,7 +108,6 @@ gem 'jwt'
 
 # Keycard provides authentication support and user/request information
 gem 'keycard', '~> 0.2.4'
-# gem 'keycard', git: 'https://github.com/mlibrary/keycard', branch: 'master'
 
 # For CVE-2018-16468
 gem "loofah", ">= 2.2.3"
@@ -178,7 +176,7 @@ group :development, :test do
   gem 'ruumba', '0.1.2'
   gem 'solr_wrapper', '0.21.0'
   # Turnsole - the Ruby gem for the Heliotrope API
-  gem 'turnsole', git: 'https://github.com/mlibrary/turnsole', branch: 'checkpoint'
+  gem 'turnsole', git: 'https://github.com/mlibrary/turnsole', branch: 'master'
 end
 
 group :development do

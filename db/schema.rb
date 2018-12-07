@@ -631,7 +631,6 @@ ActiveRecord::Schema.define(version: 20181119202429) do
     t.index ["work_id"], name: "index_work_view_stats_on_work_id"
   end
 
-  add_foreign_key "api_requests", "users"
   add_foreign_key "components_products", "components"
   add_foreign_key "components_products", "products"
   add_foreign_key "curation_concerns_operations", "users"

@@ -39,8 +39,12 @@ class Individual < ApplicationRecord
       errors.add(:base, "individual has #{lessee.products.count} associated products!")
       throw(:abort)
     end
-    if grants.present?
-      errors.add(:base, "individual has #{grants.count} associated grants!")
+    if products.present?
+      errors.add(:base, "individual has #{products.count} associated products!")
+      throw(:abort)
+    end
+    if grants?
+      errors.add(:base, "individual has at least one associated grant!")
       throw(:abort)
     end
   end
@@ -54,37 +58,20 @@ class Individual < ApplicationRecord
   end
 
   def destroy?
-    lessee&.products.blank? && grants.blank?
+    products.blank? && !grants?
   end
 
   def lessee
     Lessee.find_by(identifier: identifier)
   end
 
-  def grants
-    Grant.agent_grants(self)
-  end
-
   def products
-    products = []
-    products << lessee.products
-    grants.each do |grant|
-      next unless grant.resource_type == 'Product'
-      products << Product.find(grant.resource_id)
-    end
-    products.flatten.uniq
+    products = (lessee&.products || []) + Greensub.subscriber_products(self)
+    products.uniq
   end
 
-  def components
-    components = []
-    products.each do |product|
-      components << product.components
-    end
-    grants.each do |grant|
-      next unless grant.resource_type == 'Component'
-      components << Component.find(grant.resource_id)
-    end
-    components.flatten.uniq
+  def grants?
+    Authority.agent_grants?(self)
   end
 
   def agent_type

@@ -20,8 +20,8 @@ class Component < ApplicationRecord
       errors.add(:base, "component has #{products.count} associated products!")
       throw(:abort)
     end
-    if grants.present?
-      errors.add(:base, "component has #{grants.count} associated grants!")
+    if grants?
+      errors.add(:base, "component has at least one associated grant!")
       throw(:abort)
     end
   end
@@ -31,16 +31,11 @@ class Component < ApplicationRecord
   end
 
   def destroy?
-    products.blank? && grants.blank?
+    products.blank? && !grants?
   end
 
   def not_products
     Product.where.not(id: products.map(&:id))
-  end
-
-  def lessees
-    return [] if products.blank?
-    Lessee.where(id: LesseesProduct.where(product_id: products.map(&:id)).map(&:lessee_id)).distinct
   end
 
   def noid
@@ -57,8 +52,8 @@ class Component < ApplicationRecord
     Sighrax.factory(noid).is_a?(Sighrax::Asset)
   end
 
-  def grants
-    Grant.resource_grants(self)
+  def grants?
+    Authority.resource_grants?(self)
   end
 
   def resource_type

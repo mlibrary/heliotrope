@@ -23,12 +23,12 @@
         </td>
         <td><%= publisher.name %></td>
         <td><%= link_to publisher.subdomain, "/#{publisher.subdomain}?locale=#{I18n.locale}" %></td>
-        <td><%= repository.monograph_ids(publisher).count() %>&nbsp;<%= link_to(concern_monographs_new_path(press: publisher.subdomain)) do %>
+        <td><%= repository.monograph_ids(publisher).count %>&nbsp;<%= link_to(concern_monographs_new_path(press: publisher.subdomain)) do %>
             <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Add
           <% end %>
         </td>
-        <td><%= repository.asset_ids(publisher).count() %></td>
-        <td><%= repository.user_ids(publisher).count() %></td>
+        <td><%= repository.asset_ids(publisher).count %></td>
+        <td><%= repository.user_ids(publisher).count %></td>
       </tr>
     <% end %>
   <% end %>

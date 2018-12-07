@@ -7,6 +7,10 @@
       <th>Value</th>
     </tr>
     <tr>
+      <td>id</td>
+      <td><%= component.id %></td>
+    </tr>
+    <tr>
       <td>identifier</td>
       <td><%= component.identifier %></td>
     </tr>
@@ -27,8 +31,4 @@
 <h2>Products</h2>
 <div class="col-md-12">
   <%= render partial: '/components/products', locals: { component: component, products: component.products } %>
-</div>
-<h2>Grants</h2>
-<div class="col-md-12">
-  <%= render partial: '/grants/grants', locals: { resource: component, grants: component.grants } %>
 </div>

@@ -24,8 +24,10 @@ RSpec.describe "Institutions", type: :request do
   context 'unauthorized' do
     it { get api_find_institution_path, params: {}, headers: headers; expect(response).to have_http_status(:unauthorized) } # rubocop:disable Style/Semicolon
     it { get api_institutions_path, headers: headers; expect(response).to have_http_status(:unauthorized) } # rubocop:disable Style/Semicolon
+    it { get api_product_institutions_path(1), headers: headers; expect(response).to have_http_status(:unauthorized) } # rubocop:disable Style/Semicolon
     it { post api_institutions_path, params: {}, headers: headers; expect(response).to have_http_status(:unauthorized) } # rubocop:disable Style/Semicolon
     it { get api_institution_path(1), headers: headers; expect(response).to have_http_status(:unauthorized) } # rubocop:disable Style/Semicolon
+    it { get api_product_institution_path(1, 1), headers: headers; expect(response).to have_http_status(:unauthorized) } # rubocop:disable Style/Semicolon
     it { put api_institution_path(1), params: {}, headers: headers; expect(response).to have_http_status(:unauthorized) } # rubocop:disable Style/Semicolon
     it { put api_product_institution_path(1, 1), headers: headers; expect(response).to have_http_status(:unauthorized) } # rubocop:disable Style/Semicolon
     it { delete api_institution_path(1), headers: headers; expect(response).to have_http_status(:unauthorized) } # rubocop:disable Style/Semicolon
@@ -81,7 +83,7 @@ RSpec.describe "Institutions", type: :request do
         get api_institutions_path, headers: headers
         expect(response.content_type).to eq("application/json")
         expect(response).to have_http_status(:ok)
-        expect(response_body).to eq([institution_obj(institution: institution), institution_obj(institution: new_institution)])
+        expect(response_body).to match_array([institution_obj(institution: institution), institution_obj(institution: new_institution)])
         expect(Institution.count).to eq(2)
         expect(Lessee.count).to eq(2)
       end
@@ -126,7 +128,7 @@ RSpec.describe "Institutions", type: :request do
         expect(institution_response_body).to eq([institution_obj(institution: institution)])
         put api_product_institution_path(product, new_institution), headers: headers
         get api_product_institutions_path(product), headers: headers
-        expect(institutions_response_body).to eq([institution_obj(institution: institution), institution_obj(institution: new_institution)])
+        expect(institutions_response_body).to match_array([institution_obj(institution: institution), institution_obj(institution: new_institution)])
         expect(Institution.count).to eq(2)
         expect(Lessee.count).to eq(2)
       end
@@ -202,6 +204,49 @@ RSpec.describe "Institutions", type: :request do
         expect(response_body).to eq(institution_obj(institution: institution))
         expect(Institution.count).to eq(1)
         expect(Lessee.count).to eq(1)
+      end
+    end
+
+    describe "GET /api/v1/products/:product_id:/institutions/:id" do # show
+      context 'non existing product' do
+        it 'non existing institution not_found' do
+          get api_product_institution_path(1, 1), headers: headers
+          expect(response.content_type).to eq("application/json")
+          expect(response).to have_http_status(:not_found)
+          expect(response_body[:exception.to_s]).to include("ActiveRecord::RecordNotFound: Couldn't find Institution with")
+          expect(Institution.count).to eq(0)
+        end
+
+        it 'existing institution not_found' do
+          get api_product_institution_path(1, institution), headers: headers
+          expect(response.content_type).to eq("application/json")
+          expect(response).to have_http_status(:not_found)
+          expect(response_body[:exception.to_s]).to include("ActiveRecord::RecordNotFound: Couldn't find Product with")
+          expect(Institution.count).to eq(1)
+        end
+      end
+
+      context 'existing product' do
+        let(:product) { create(:product) }
+
+        it 'non existing institution not_found' do
+          get api_product_institution_path(product, 1), headers: headers
+          expect(response.content_type).to eq("application/json")
+          expect(response).to have_http_status(:not_found)
+          expect(response_body[:exception.to_s]).to include("ActiveRecord::RecordNotFound: Couldn't find Institution with")
+          expect(Institution.count).to eq(0)
+        end
+
+        it 'existing institution ok' do
+          put api_product_institution_path(product, institution), headers: headers
+          get api_product_institution_path(product, institution), headers: headers
+          expect(response.content_type).to eq("application/json")
+          expect(response).to have_http_status(:ok)
+          expect(response_body).to eq(institution_obj(institution: institution))
+          expect(product.institutions).to include(institution)
+          expect(product.institutions.count).to eq(1)
+          expect(Institution.count).to eq(1)
+        end
       end
     end
 

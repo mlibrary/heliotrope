@@ -68,17 +68,22 @@ class SessionsController < ApplicationController
 
   private
 
-    def component_discovery_feed(component_id = '')
+    def component_discovery_feed(component_id = '') # rubocop:disable Metrics/CyclomaticComplexity
       Rails.cache.fetch("component_discovery_feed:" + component_id, expires_in: 15.minutes) do
         component_discovery_feed = []
         component = Component.find_by(handle: HandleService.path(component_id))
         if component.present?
-          lessees = component.lessees
-          if lessees.present?
-            institutions = Set.new(Institution.where(identifier: lessees.pluck(:identifier)).map(&:entity_id))
+          products = component.products
+          if products.present?
+            institutions = []
+            products.each { |product| institutions += product.institutions }
             if institutions.present?
-              filtered_discovery_feed.each do |entry|
-                component_discovery_feed << entry if entry["entityID"].in?(institutions) # rubocop:disable Metrics/BlockNesting
+              entity_ids = []
+              institutions.each { |institution| entity_ids << institution.entity_id if institution.entity_id.present? } # rubocop:disable Metrics/BlockNesting
+              if entity_ids.present? # rubocop:disable Metrics/BlockNesting
+                filtered_discovery_feed.each do |entry|
+                  component_discovery_feed << entry if entry["entityID"].in?(entity_ids) # rubocop:disable Metrics/BlockNesting
+                end
               end
             end
           end

@@ -4,13 +4,7 @@ class GrantsController < ApplicationController
   before_action :set_grant, only: %i[show destroy]
 
   def index
-    page = params.fetch("page", 1).to_i
-    per_page = params.fetch("per_page", 20).to_i
-    total_entries = Checkpoint::DB::Permit.count
-    permits = Checkpoint::DB::Permit
-    permits = permits.order { lower(agent_type) }.order_append(:agent_id)
-    permits = permits.extension(:pagination).paginate(page, per_page, total_entries)
-    @grants = Kaminari.paginate_array(permits.map { |permit| Grant.new(permit) }, total_count: total_entries).page(page).per(per_page)
+    @grants = Checkpoint::DB::Grant.all
   end
 
   def show; end
@@ -35,48 +29,49 @@ class GrantsController < ApplicationController
       resource_type = entity.type.to_sym
     end
 
-    permit = if ValidationService.valid_credential?(credential_type, credential_id)
-               case credential_type
-               when :permission
-                 case credential_id.to_s.to_sym
-                 when :any
-                   PermissionService.permit_any_access_resource(agent_type, agent_id, resource_type, resource_id)
-                 when :read
-                   PermissionService.permit_read_access_resource(agent_type, agent_id, resource_type, resource_id)
-                 else
-                   raise(ArgumentError)
-                 end
-               else
-                 raise(ArgumentError)
-               end
-             end
+    success = if ValidationService.valid_credential?(credential_type, credential_id)
+                case credential_type
+                when :permission
+                  case credential_id.to_s.to_sym
+                  when :any
+                    unless Authority.permits?(Authority.agent(agent_type, agent_id), Checkpoint::Credential::Permission.new(:any), Authority.resource(resource_type, resource_id)) # rubocop:disable Metrics/BlockNesting
+                      Authority.grant!(Authority.agent(agent_type, agent_id), Checkpoint::Credential::Permission.new(:any), Authority.resource(resource_type, resource_id))
+                    end
+                    true
+                  when :read
+                    unless Authority.permits?(Authority.agent(agent_type, agent_id), Checkpoint::Credential::Permission.new(:read), Authority.resource(resource_type, resource_id)) # rubocop:disable Metrics/BlockNesting
+                      Authority.grant!(Authority.agent(agent_type, agent_id), Checkpoint::Credential::Permission.new(:read), Authority.resource(resource_type, resource_id))
+                    end
+                    true
+                  else
+                    raise(ArgumentError)
+                  end
+                else
+                  raise(ArgumentError)
+                end
+              end
 
-    if permit.present?
-      resource = PermissionService.resource(permit.resource_type, permit.resource_id)
+    if success
+      resource = Authority.resource(resource_type, resource_id)
       if resource.is_a?(Product)
-        agent = PermissionService.agent(permit.agent_type, permit.agent_id)
+        agent = Authority.agent(agent_type, agent_id)
         if agent.is_a?(Individual) || agent.is_a?(Institution)
           resource.lessees << agent.lessee unless resource.lessees.include?(agent.lessee) # rubocop:disable Metrics/BlockNesting
         end
       end
-    else
-      permit = Checkpoint::DB::Permit.new
-      permit.agent_type = grant_params[:agent_type]
-      permit.agent_id = grant_params[:agent_id]
-      permit.agent_token = grant_params[:agent_token]
-      permit.credential_type = grant_params[:credential_type]
-      permit.credential_id = grant_params[:credential_id]
-      permit.credential_token = grant_params[:credential_token]
-      permit.resource_type = grant_params[:resource_type]
-      permit.resource_id = grant_params[:resource_id]
-      permit.resource_token = grant_params[:resource_token]
-      permit.zone_id = grant_params[:zone_id]
     end
 
-    @grant = Grant.new(permit)
+    @grant = Grant.new
+    @grant.agent_type = grant_params[:agent_type]
+    @grant.agent_id = grant_params[:agent_id]
+    @grant.credential_type = grant_params[:credential_type]
+    @grant.credential_id = grant_params[:credential_id]
+    @grant.resource_type = grant_params[:resource_type]
+    @grant.resource_id = grant_params[:resource_id]
+
     respond_to do |format|
-      if @grant.valid?
-        format.html { redirect_to @grant, notice: 'Grant was successfully created.' }
+      if success
+        format.html { redirect_to grants_path, notice: 'Grant was successfully created.' }
         format.json { render :show, status: :created, location: @grant }
       else
         format.html { render :new }
@@ -86,14 +81,14 @@ class GrantsController < ApplicationController
   end
 
   def destroy
-    resource = PermissionService.resource(@grant.resource_type, @grant.resource_id)
+    resource = Authority.resource(@grant.resource_type, @grant.resource_id)
     if resource.is_a?(Product)
-      agent = PermissionService.agent(@grant.agent_type, @grant.agent_id)
+      agent = Authority.agent(@grant.agent_type, @grant.agent_id)
       if agent.is_a?(Individual) || agent.is_a?(Institution)
         resource.lessees.delete(agent.lessee) if resource.lessees.include?(agent.lessee)
       end
     end
-    @grant.destroy
+    @grant.delete
     respond_to do |format|
       format.html { redirect_to grants_url, notice: 'Grant was successfully destroyed.' }
       format.json { head :no_content }
@@ -103,8 +98,7 @@ class GrantsController < ApplicationController
   private
 
     def set_grant
-      permit = Checkpoint::DB::Permit.find(id: params[:id])
-      @grant = Grant.new(permit) if permit.present?
+      @grant = Checkpoint::DB::Grant.where(id: params[:id]).first
     end
 
     def grant_params

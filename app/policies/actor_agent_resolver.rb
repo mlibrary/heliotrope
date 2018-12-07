@@ -16,11 +16,12 @@ class ActorAgentResolver < Checkpoint::Agent::Resolver
   private
 
     def individuals(actor)
-      return [] if actor.individual.blank?
+      return [] if actor.try(:individual).blank?
       [convert(actor.individual)]
     end
 
     def institutions(actor)
+      return [] if actor.try(:institutions).blank?
       actor.institutions.map { |institution| convert(institution) }
     end
 end

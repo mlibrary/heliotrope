@@ -16,11 +16,12 @@ class TargetResourceResolver < Checkpoint::Resource::Resolver
   private
 
     def components(entity)
-      return [] if entity.component.blank?
+      return [] if entity.try(:component).blank?
       [convert(entity.component)]
     end
 
     def products(entity)
+      return [] if entity.try(:products).blank?
       entity.products.map { |product| convert(product) }
     end
 end

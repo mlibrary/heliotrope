@@ -128,19 +128,19 @@ describe PressHelper do
 
       it "returns true if the current EBC product exists and the user doesn't have access to it" do
         allow(Product).to receive(:where).with(identifier: current_ebc_identifier).and_return([product])
-        allow(Greensub).to receive(:actor_product_list).and_return([])
+        allow(Greensub).to receive(:actor_products).and_return([])
         expect(show_ebc_banner?).to eq true
       end
 
       it 'returns false if the current EBC product exists and the user has access to it' do
         allow(Product).to receive(:where).with(identifier: current_ebc_identifier).and_return([product])
-        allow(Greensub).to receive(:actor_product_list).and_return([product])
+        allow(Greensub).to receive(:actor_products).and_return([product])
         expect(show_ebc_banner?).to eq false
       end
 
       it "returns false if the current EBC product doesn't exist" do
         allow(Product).to receive(:where).with(identifier: current_ebc_identifier).and_return([])
-        allow(Greensub).to receive(:actor_product_list).and_return([])
+        allow(Greensub).to receive(:actor_products).and_return([])
         expect(show_ebc_banner?).to eq false
       end
     end
@@ -150,7 +150,7 @@ describe PressHelper do
 
       it "returns false even though the current EBC product exists and the user doesn't have access to it" do
         allow(Product).to receive(:where).with(identifier: current_ebc_identifier).and_return([product])
-        allow(Greensub).to receive(:actor_product_list).and_return([])
+        allow(Greensub).to receive(:actor_products).and_return([])
         expect(show_ebc_banner?).to eq false
       end
     end
