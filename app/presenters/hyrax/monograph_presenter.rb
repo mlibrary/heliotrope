@@ -92,7 +92,7 @@ module Hyrax
     end
 
     def open_access?
-      solr_document.open_access&.first&.casecmp('yes')&.zero? || false
+      solr_document.open_access&.casecmp('yes')&.zero? || false
     end
 
     def funder?

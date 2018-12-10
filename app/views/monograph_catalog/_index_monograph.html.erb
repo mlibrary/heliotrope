@@ -38,6 +38,12 @@
     <% if @monograph_presenter.funder? %>
       <span aria-label="funder" class="funder"><i><%= @monograph_presenter.funder %></i></span>
     <% end %>
+    <% if @monograph_presenter.open_access? %>
+      <div class="open-access">
+        <%= image_tag 'oa-lock-logo.png', alt: "Open Access icon", class: 'img-responsive' %>
+        <span>OPEN ACCESS</span>
+      </div>
+    <% end %>
     <div class="description">
       <%= render_markdown @monograph_presenter.description.first || '' %>
     </div>
