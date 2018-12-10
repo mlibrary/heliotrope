@@ -8,6 +8,7 @@ class EmbedController < ApplicationController
     if @presenter.nil?
       render 'hyrax/base/unauthorized', status: :unauthorized
     else
+      CounterService.from(self, @presenter).count(request: 1)
       render layout: false
     end
   end
