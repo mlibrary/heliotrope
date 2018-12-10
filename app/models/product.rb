@@ -25,8 +25,8 @@ class Product < ApplicationRecord
       errors.add(:base, "product has #{lessees.count} associated lessees!")
       throw(:abort)
     end
-    if grants.present?
-      errors.add(:base, "product has #{grants.count} associated grants!")
+    if grants?
+      errors.add(:base, "product has at least one associated grant!")
       throw(:abort)
     end
   end
@@ -36,7 +36,7 @@ class Product < ApplicationRecord
   end
 
   def destroy?
-    components.blank? && lessees.blank? && grants.blank?
+    components.blank? && lessees.blank? && !grants?
   end
 
   def not_components
@@ -55,8 +55,12 @@ class Product < ApplicationRecord
     Lessee.where.not(id: lessees.map(&:id))
   end
 
-  def grants
-    Grant.resource_grants(self)
+  def subscribers
+    Greensub.product_subscribers(self)
+  end
+
+  def grants?
+    Authority.resource_grants?(self)
   end
 
   def resource_type

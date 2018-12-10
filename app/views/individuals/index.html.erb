@@ -7,7 +7,7 @@
       <div class="col-md-3">Identifier</div>
       <div class="col-md-3">Name</div>
       <div class="col-md-3">eMail</div>
-      <div class="col-md-2">Lessee</div>
+      <div class="col-md-2">Products</div>
     </div>
     <div class="col-md-2"><%= link_to 'New Individual', new_individual_path %></div>
     <div class="col-md-12"><hr/></div>
@@ -18,7 +18,7 @@
       <div class="col-md-3"><%= individual.identifier %></div>
       <div class="col-md-3"><%= individual.name %></div>
       <div class="col-md-3"><%= individual.email %></div>
-      <div class="col-md-2"><%= link_to individual.lessee.id, lessee_path(individual.lessee) %></div>
+      <div class="col-md-2"><%= Greensub.subscriber_products(individual).count %></div>
     </div>
     <div class="col-md-2">
       <div class="col-md-4"><%= link_to 'Show', individual %></div>

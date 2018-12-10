@@ -158,15 +158,16 @@ RSpec.describe User do
     it { expect(subject.email).to eq(email) }
   end
 
-  describe '#grants' do
-    subject { user.grants }
+  it '#grants?' do
+    user = create(:user)
+    product = create(:product)
+    expect(user.grants?).to be false
 
-    let(:user) { build(:user) }
-    let(:grants) { double('grants') }
+    Greensub.subscribe(user, product)
+    expect(user.grants?).to be true
 
-    before { allow(Grant).to receive(:agent_grants).with(user).and_return(grants) }
-
-    it { is_expected.to be grants }
+    Greensub.unsubscribe(user, product)
+    expect(user.grants?).to be false
   end
 
   describe '#identifier' do

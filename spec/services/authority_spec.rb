@@ -2,18 +2,30 @@
 
 require 'rails_helper'
 
-RSpec.describe PermissionService do
-  describe 'checkpoint permits table' do
-    it do
-      described_class.database_initialize!
-      described_class.clear_permits_table
-      expect(described_class.permits_table_empty?).to be true
-      described_class.permit_open_access
-      expect(described_class.open_access?).to be true
-      expect(described_class.permits_table_empty?).to be false
-      described_class.clear_permits_table
-      expect(described_class.open_access?).to be false
-      expect(described_class.permits_table_empty?).to be true
+RSpec.describe Authority do
+  let(:checkpoint) { double('checkpoint') }
+
+  before do
+    allow(Services).to receive(:checkpoint).and_return(checkpoint)
+  end
+
+  describe '#agent_grants?' do
+    subject { described_class.agent_grants?(agent) }
+
+    let(:agent) { double('agent') }
+    let(:resources) { [] }
+
+    before do
+      allow(checkpoint).to receive(:which).with(agent, Checkpoint::Credential::Permission.new(:read)).and_return(resources)
+    end
+
+    it { is_expected.to be false }
+
+    context 'resource' do
+      let(:resources) { [resource] }
+      let(:resource) { double('resource') }
+
+      it { is_expected.to be true }
     end
   end
 
@@ -108,6 +120,26 @@ RSpec.describe PermissionService do
     end
   end
 
+  describe '#credential_grants?' do
+    subject { described_class.credential_grants?(credential) }
+
+    let(:credential) { double('credential') }
+    let(:agents) { [] }
+
+    before do
+      allow(checkpoint).to receive(:who).with(credential, Checkpoint::Resource.all).and_return(agents)
+    end
+
+    it { is_expected.to be false }
+
+    context 'resource' do
+      let(:agents) { [agent] }
+      let(:agent) { double('agent') }
+
+      it { is_expected.to be true }
+    end
+  end
+
   describe '#permission' do
     subject { described_class.permission(permission) }
 
@@ -164,6 +196,26 @@ RSpec.describe PermissionService do
         expect(subject.type).to eq credential_type.to_s
         expect(subject.id).to eq credential_id.to_s
       end
+    end
+  end
+
+  describe '#resource_grants?' do
+    subject { described_class.resource_grants?(resource) }
+
+    let(:resource) { double('resource') }
+    let(:agents) { [] }
+
+    before do
+      allow(checkpoint).to receive(:who).with(Checkpoint::Credential::Permission.new(:read), resource).and_return(agents)
+    end
+
+    it { is_expected.to be false }
+
+    context 'resource' do
+      let(:agents) { [agent] }
+      let(:agent) { double('agent') }
+
+      it { is_expected.to be true }
     end
   end
 
@@ -257,63 +309,6 @@ RSpec.describe PermissionService do
           end
         end
       end
-    end
-  end
-
-  describe 'open access' do
-    it do
-      expect(described_class.open_access?).to be false
-      described_class.permit_open_access
-      described_class.permit_open_access
-      expect(described_class.open_access?).to be true
-      described_class.revoke_open_access
-      expect(described_class.open_access?).to be false
-    end
-  end
-
-  describe 'open access resource' do
-    let(:resource_type) { :any }
-    let(:resource_id) { :any }
-
-    it do
-      expect(described_class.open_access_resource?(resource_type, resource_id)).to be false
-      described_class.permit_open_access_resource(resource_type, resource_id)
-      described_class.permit_open_access_resource(resource_type, resource_id)
-      expect(described_class.open_access_resource?(resource_type, resource_id)).to be true
-      described_class.revoke_open_access_resource(resource_type, resource_id)
-      expect(described_class.open_access_resource?(resource_type, resource_id)).to be false
-    end
-  end
-
-  describe 'read access resource' do
-    let(:agent_type) { :any }
-    let(:agent_id) { :any }
-    let(:resource_type) { :any }
-    let(:resource_id) { :any }
-
-    it do
-      expect(described_class.read_access_resource?(agent_type, agent_id, resource_type, resource_id)).to be false
-      described_class.permit_read_access_resource(agent_type, agent_id, resource_type, resource_id)
-      described_class.permit_read_access_resource(agent_type, agent_id, resource_type, resource_id)
-      expect(described_class.read_access_resource?(agent_type, agent_id, resource_type, resource_id)).to be true
-      described_class.revoke_read_access_resource(agent_type, agent_id, resource_type, resource_id)
-      expect(described_class.read_access_resource?(agent_type, agent_id, resource_type, resource_id)).to be false
-    end
-  end
-
-  describe 'any access resource' do
-    let(:agent_type) { :any }
-    let(:agent_id) { :any }
-    let(:resource_type) { :any }
-    let(:resource_id) { :any }
-
-    it do
-      expect(described_class.any_access_resource?(agent_type, agent_id, resource_type, resource_id)).to be false
-      described_class.permit_any_access_resource(agent_type, agent_id, resource_type, resource_id)
-      described_class.permit_any_access_resource(agent_type, agent_id, resource_type, resource_id)
-      expect(described_class.any_access_resource?(agent_type, agent_id, resource_type, resource_id)).to be true
-      described_class.revoke_any_access_resource(agent_type, agent_id, resource_type, resource_id)
-      expect(described_class.any_access_resource?(agent_type, agent_id, resource_type, resource_id)).to be false
     end
   end
 end

@@ -1,6 +1,8 @@
 <p id="notice"><%= notice %></p>
 <div id="maincontent">
   <h1>Product</h1>
+  <div class="col-md-1"><em>ID</em></div>
+  <div class="col-md-11"><%= @product.id %></div>
   <div class="col-md-1"><em>Identifier</em></div>
   <div class="col-md-11">&nbsp<%= @product.identifier %></div>
   <div class="col-md-1"><em>Name</em></div>
@@ -12,9 +14,9 @@
   <div class="col-md-12">
     <%= render partial: 'components', locals: { product: @product, components: @product.components } %>
   </div>
-  <h2>Grants</h2>
+  <h2>Subscribers</h2>
   <div class="col-md-12">
-    <%= render partial: '/grants/grants', locals: { resource: @product, grants: @product.grants } %>
+    <%= render partial: '/products/subscribers', locals: { resource: @product, subscribers: Greensub.product_subscribers(@product) } %>
   </div>
   <h2>Lessees</h2>
   <div class="col-md-12">

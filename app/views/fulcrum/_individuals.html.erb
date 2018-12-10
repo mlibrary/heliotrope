@@ -13,7 +13,7 @@
       <th><label for="identifier_like">Identifier</label></th>
       <th><label for="name_like">Name</label></th>
       <th><label for="email_like">eMail</label></th>
-      <th>Grants</th>
+      <th>Products</th>
     </tr>
     <tr>
       <td><button name="submit" type="submit" value="filter">Filter</button></td>
@@ -31,7 +31,7 @@
         <td><%= individual.identifier %></td>
         <td><%= individual.name %></td>
         <td><%= individual.email %></td>
-        <td><%= individual.grants.count() %></td>
+        <td><%= Greensub.subscriber_products(individual).count %></td>
       </tr>
     <% end %>
   </table>

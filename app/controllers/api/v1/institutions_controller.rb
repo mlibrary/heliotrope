@@ -45,20 +45,32 @@ module API
                         end
       end
 
-      # Get institution by id
-      # @example
-      #   get /api/institution/:id
-      # @param [Hash] params { id: Number }
-      # @return [ActionDispatch::Response] {Institution}
+      # @overload show
+      #   Get institution by id
+      #   @example
+      #     get /api/institution/:id
+      #   @param [Hash] params { id: Number }
+      #   @return [ActionDispatch::Response] {Institution}
       #
-      #   (See ./app/views/api/v1/institution/show.json.jbuilder)
+      #     (See ./app/views/api/v1/institution/show.json.jbuilder)
       #
-      #   {include:file:app/views/api/v1/institutions/show.json.jbuilder}
+      #     {include:file:app/views/api/v1/institutions/show.json.jbuilder}
       #
-      #   (See ./app/views/api/v1/institution/_institution.json.jbuilder)
+      #     (See ./app/views/api/v1/institution/_institution.json.jbuilder)
       #
-      #   {include:file:app/views/api/v1/institutions/_institution.json.jbuilder}
-      def show; end
+      #     {include:file:app/views/api/v1/institutions/_institution.json.jbuilder}
+      # @overload show
+      #   Get product institution
+      #   @example
+      #     get /api/products/:product_id/institutions/:id
+      #   @param [Hash] params { product_id: Number, id: Number }
+      #   @return [ActionDispatch::Response]
+      def show
+        if params[:product_id].present? # rubocop:disable Style/GuardClause
+          set_product
+          return head :not_found unless @institution.products.include?(@product)
+        end
+      end
 
       # Create institution
       # @example
@@ -94,7 +106,7 @@ module API
           unless @institution.lessee.products.include?(@product)
             @institution.lessee.products << @product
             @institution.save
-            PermissionService.permit_read_access_resource(@institution.agent_type, @institution.agent_id, @product.resource_type, @product.resource_id)
+            Greensub.subscribe(@institution, @product)
           end
           return head :ok # rubocop:disable Style/RedundantReturn
         else
@@ -120,7 +132,7 @@ module API
           set_product
           if @institution.lessee.products.include?(@product)
             @institution.lessee.products.delete(@product)
-            PermissionService.revoke_read_access_resource(@institution.agent_type, @institution.agent_id, @product.resource_type, @product.resource_id)
+            Greensub.unsubscribe(@institution, @product)
           end
         else
           return render json: @institution.errors, status: :accepted unless @institution.destroy

@@ -28,6 +28,7 @@ RSpec.describe "Components", type: :request do
     it { get api_component_products_path(1), headers: headers; expect(response).to have_http_status(:unauthorized) } # rubocop:disable Style/Semicolon
     it { post api_components_path, params: {}, headers: headers; expect(response).to have_http_status(:unauthorized) } # rubocop:disable Style/Semicolon
     it { get api_component_path(1), headers: headers; expect(response).to have_http_status(:unauthorized) } # rubocop:disable Style/Semicolon
+    it { get api_product_component_path(1, 1), headers: headers; expect(response).to have_http_status(:unauthorized) } # rubocop:disable Style/Semicolon
     it { put api_component_path(1), params: {}, headers: headers; expect(response).to have_http_status(:unauthorized) } # rubocop:disable Style/Semicolon
     it { put api_product_component_path(1, 1), headers: headers; expect(response).to have_http_status(:unauthorized) } # rubocop:disable Style/Semicolon
     it { delete api_component_path(1), headers: headers; expect(response).to have_http_status(:unauthorized) } # rubocop:disable Style/Semicolon
@@ -199,6 +200,49 @@ RSpec.describe "Components", type: :request do
         expect(response).to have_http_status(:ok)
         expect(response_body).to eq(component_obj(component: component))
         expect(Component.count).to eq(1)
+      end
+    end
+
+    describe "GET /api/v1/products/:product_id:/components/:id" do # show
+      context 'non existing product' do
+        it 'non existing component not_found' do
+          get api_product_component_path(1, 1), headers: headers
+          expect(response.content_type).to eq("application/json")
+          expect(response).to have_http_status(:not_found)
+          expect(response_body[:exception.to_s]).to include("ActiveRecord::RecordNotFound: Couldn't find Component with")
+          expect(Component.count).to eq(0)
+        end
+
+        it 'existing component not_found' do
+          get api_product_component_path(1, component), headers: headers
+          expect(response.content_type).to eq("application/json")
+          expect(response).to have_http_status(:not_found)
+          expect(response_body[:exception.to_s]).to include("ActiveRecord::RecordNotFound: Couldn't find Product with")
+          expect(Component.count).to eq(1)
+        end
+      end
+
+      context 'existing product' do
+        let(:product) { create(:product) }
+
+        it 'non existing component not_found' do
+          get api_product_component_path(product, 1), headers: headers
+          expect(response.content_type).to eq("application/json")
+          expect(response).to have_http_status(:not_found)
+          expect(response_body[:exception.to_s]).to include("ActiveRecord::RecordNotFound: Couldn't find Component with")
+          expect(Component.count).to eq(0)
+        end
+
+        it 'existing component ok' do
+          put api_product_component_path(product, component), headers: headers
+          get api_product_component_path(product, component), headers: headers
+          expect(response.content_type).to eq("application/json")
+          expect(response).to have_http_status(:ok)
+          expect(response_body).to eq(component_obj(component: component))
+          expect(product.components).to include(component)
+          expect(product.components.count).to eq(1)
+          expect(Component.count).to eq(1)
+        end
       end
     end
 

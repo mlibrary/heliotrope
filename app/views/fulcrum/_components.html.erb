@@ -17,7 +17,6 @@
       <th><label for="noid_like">Noid</label></th>
       <th><label for="handle_like">Handle</label></th>
       <th>Products</th>
-      <th>Grants</th>
     </tr>
     <tr>
       <td><button name="submit" type="submit" value="filter">Filter</button></td>
@@ -25,7 +24,6 @@
       <td><input type="text" name="name_like" value="<%= params[:name_like] %>" size="<%= size %>" aria-label="name_like"></td>
       <td><input type="text" name="noid_like" value="<%= params[:noid_like] %>" size="<%= size %>" aria-label="noid_like"></td>
       <td><input type="text" name="handle_like" value="<%= params[:handle_like] %>" size="<%= 2 * size %>" aria-label="handle_like"></td>
-      <td></td>
       <td></td>
     </tr>
     <% components.each do |component| %>
@@ -51,8 +49,7 @@
           <% end %>
         </td>
         <td><%= link_to component.handle, HandleService.url(HandleService.noid(component.handle)) %></td>
-        <td><%= component.products.count() %></td>
-        <td><%= component.grants.count() %></td>
+        <td><%= component.products.count %></td>
       </tr>
     <% end %>
   </table>

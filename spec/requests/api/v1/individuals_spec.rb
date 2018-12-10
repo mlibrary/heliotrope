@@ -27,6 +27,7 @@ RSpec.describe "Individuals", type: :request do
     it { get api_product_individuals_path(1), headers: headers; expect(response).to have_http_status(:unauthorized) } # rubocop:disable Style/Semicolon
     it { post api_individuals_path, params: {}, headers: headers; expect(response).to have_http_status(:unauthorized) } # rubocop:disable Style/Semicolon
     it { get api_individual_path(1), headers: headers; expect(response).to have_http_status(:unauthorized) } # rubocop:disable Style/Semicolon
+    it { get api_product_individual_path(1, 1), headers: headers; expect(response).to have_http_status(:unauthorized) } # rubocop:disable Style/Semicolon
     it { put api_individual_path(1), params: {}, headers: headers; expect(response).to have_http_status(:unauthorized) } # rubocop:disable Style/Semicolon
     it { put api_product_individual_path(1, 1), headers: headers; expect(response).to have_http_status(:unauthorized) } # rubocop:disable Style/Semicolon
     it { delete api_individual_path(1), headers: headers; expect(response).to have_http_status(:unauthorized) } # rubocop:disable Style/Semicolon
@@ -82,7 +83,7 @@ RSpec.describe "Individuals", type: :request do
         get api_individuals_path, headers: headers
         expect(response.content_type).to eq("application/json")
         expect(response).to have_http_status(:ok)
-        expect(response_body).to eq([individual_obj(individual: individual), individual_obj(individual: new_individual)])
+        expect(response_body).to match_array([individual_obj(individual: individual), individual_obj(individual: new_individual)])
         expect(Individual.count).to eq(2)
         expect(Lessee.count).to eq(2)
       end
@@ -127,7 +128,7 @@ RSpec.describe "Individuals", type: :request do
         expect(individual_response_body).to eq([individual_obj(individual: individual)])
         put api_product_individual_path(product, new_individual), headers: headers
         get api_product_individuals_path(product), headers: headers
-        expect(individuals_response_body).to eq([individual_obj(individual: individual), individual_obj(individual: new_individual)])
+        expect(individuals_response_body).to match_array([individual_obj(individual: individual), individual_obj(individual: new_individual)])
         expect(Individual.count).to eq(2)
         expect(Lessee.count).to eq(2)
       end
@@ -203,6 +204,49 @@ RSpec.describe "Individuals", type: :request do
         expect(response_body).to eq(individual_obj(individual: individual))
         expect(Individual.count).to eq(1)
         expect(Lessee.count).to eq(1)
+      end
+    end
+
+    describe "GET /api/v1/products/:product_id:/individuals/:id" do # show
+      context 'non existing product' do
+        it 'non existing individual not_found' do
+          get api_product_individual_path(1, 1), headers: headers
+          expect(response.content_type).to eq("application/json")
+          expect(response).to have_http_status(:not_found)
+          expect(response_body[:exception.to_s]).to include("ActiveRecord::RecordNotFound: Couldn't find Individual with")
+          expect(Individual.count).to eq(0)
+        end
+
+        it 'existing individual not_found' do
+          get api_product_individual_path(1, individual), headers: headers
+          expect(response.content_type).to eq("application/json")
+          expect(response).to have_http_status(:not_found)
+          expect(response_body[:exception.to_s]).to include("ActiveRecord::RecordNotFound: Couldn't find Product with")
+          expect(Individual.count).to eq(1)
+        end
+      end
+
+      context 'existing product' do
+        let(:product) { create(:product) }
+
+        it 'non existing individual not_found' do
+          get api_product_individual_path(product, 1), headers: headers
+          expect(response.content_type).to eq("application/json")
+          expect(response).to have_http_status(:not_found)
+          expect(response_body[:exception.to_s]).to include("ActiveRecord::RecordNotFound: Couldn't find Individual with")
+          expect(Individual.count).to eq(0)
+        end
+
+        it 'existing individual ok' do
+          put api_product_individual_path(product, individual), headers: headers
+          get api_product_individual_path(product, individual), headers: headers
+          expect(response.content_type).to eq("application/json")
+          expect(response).to have_http_status(:ok)
+          expect(response_body).to eq(individual_obj(individual: individual))
+          expect(product.individuals).to include(individual)
+          expect(product.individuals.count).to eq(1)
+          expect(Individual.count).to eq(1)
+        end
       end
     end
 

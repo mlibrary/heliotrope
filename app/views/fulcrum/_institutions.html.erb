@@ -13,7 +13,7 @@
       <th><label for="identifier_like">Identifier</label></th>
       <th><label for="name_like">Name</label></th>
       <th><label for="entity_id_like">Entity ID</label></th>
-      <th>Grants</th>
+      <th>Products</th>
     </tr>
     <tr>
       <td><button name="submit" type="submit" value="filter">Filter</button></td>
@@ -31,7 +31,7 @@
         <td><%= institution.identifier %></td>
         <td><%= institution.name %></td>
         <td><%= institution.entity_id %></td>
-        <td><%= institution.grants.count() %></td>
+        <td><%= Greensub.subscriber_products(institution).count %></td>
       </tr>
     <% end %>
   </table>

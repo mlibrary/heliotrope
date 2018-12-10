@@ -7,6 +7,10 @@
       <th>Value</th>
     </tr>
     <tr>
+      <td>id</td>
+      <td><%= product.id %></td>
+    </tr>
+    <tr>
       <td>identifier</td>
       <td><%= product.identifier %></td>
     </tr>
@@ -24,7 +28,7 @@
 <div class="col-md-12">
   <%= render partial: '/products/components', locals: { product: product, components: product.components } %>
 </div>
-<h2>Grants</h2>
+<h2>Subscribers</h2>
 <div class="col-md-12">
-  <%= render partial: '/grants/grants', locals: { resource: product, grants: product.grants } %>
+  <%= render partial: '/products/subscribers', locals: { resource: product, subscribers: Greensub.product_subscribers(product) } %>
 </div>

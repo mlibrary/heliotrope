@@ -5,6 +5,8 @@
     monograph = fileset.parent
   %>
   <h1>Component</h1>
+  <div class="col-md-1"><em>ID</em></div>
+  <div class="col-md-11"><%= @component.id %></div>
   <div class="col-md-1"><em>Identifier</em></div>
   <div class="col-md-11">&nbsp<%= @component.identifier %></div>
   <div class="col-md-1"><em>Name</em></div>
@@ -21,14 +23,6 @@
   <h2>Products</h2>
   <div class="col-md-12">
     <%= render partial: 'products', locals: { component: @component, products: @component.products } %>
-  </div>
-  <h2>Grants</h2>
-  <div class="col-md-12">
-    <%= render partial: '/grants/grants', locals: { resource: @component, grants: @component.grants } %>
-  </div>
-  <h2>Lessees</h2>
-  <div class="col-md-12">
-    <%= render partial: 'lessees', locals: { component: @component, lessees: @component.lessees } %>
   </div>
   <div class="col-md-12"><br/></div>
   <div class="col-md-12">

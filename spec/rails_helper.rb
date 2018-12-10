@@ -31,6 +31,7 @@ ActiveRecord::Migration.maintain_test_schema!
 RSpec.configure do |config|
   config.fixture_path = "#{::Rails.root}/spec/fixtures"
 
+  config.include CheckpointSpecHelper
   config.include RequestSpecHelper, type: :request
 
   # If you're not using ActiveRecord, or you'd prefer not to run each of your
