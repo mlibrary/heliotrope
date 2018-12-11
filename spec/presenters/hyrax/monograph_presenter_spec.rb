@@ -588,9 +588,9 @@ RSpec.describe Hyrax::MonographPresenter do
       it { expect(presenter.open_access?).to be false }
     end
 
-    context 'allow_download == "yes"' do
+    context 'open_access == "yes"' do
       before do
-        allow(mono_doc).to receive(:open_access).and_return(['YeS'])
+        allow(mono_doc).to receive(:open_access).and_return('YeS')
       end
 
       it { expect(presenter.open_access?).to be true }
