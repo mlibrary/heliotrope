@@ -62,7 +62,11 @@ RSpec.describe CounterService do
 
   describe "#allowed_controllers" do
     it "limits the allowed controllers" do
-      expect(described_class.allowed_controllers).to eq ["EPubsController", "Hyrax::FileSetsController", "Hyrax::DownloadsController", "MonographCatalogController"]
+      expect(described_class.allowed_controllers).to eq ["EPubsController",
+                                                         "Hyrax::FileSetsController",
+                                                         "Hyrax::DownloadsController",
+                                                         "MonographCatalogController",
+                                                         "EmbedController"]
     end
   end
 

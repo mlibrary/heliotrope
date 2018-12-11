@@ -15,7 +15,7 @@ class CounterService
   end
 
   def self.allowed_controllers
-    ["EPubsController", "Hyrax::FileSetsController", "Hyrax::DownloadsController", "MonographCatalogController"]
+    ["EPubsController", "Hyrax::FileSetsController", "Hyrax::DownloadsController", "MonographCatalogController", "EmbedController"]
   end
 
   def self.allowed_presenters
