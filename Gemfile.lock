@@ -182,7 +182,7 @@ GEM
       sequel (~> 5.6)
     childprocess (0.9.0)
       ffi (~> 1.0, >= 1.0.11)
-    chromedriver-helper (1.2.0)
+    chromedriver-helper (2.1.0)
       archive-zip (~> 0.10)
       nokogiri (~> 1.8)
     clamav (0.4.1)
@@ -946,7 +946,7 @@ DEPENDENCIES
   capybara (~> 2.13)
   carrierwave (~> 1.1.0)
   checkpoint (~> 1.1.0)
-  chromedriver-helper
+  chromedriver-helper (~> 2.1.0)
   clamav
   coffee-rails (~> 4.2)
   config

@@ -33,6 +33,7 @@ RSpec.configure do |config|
 
   config.include CheckpointSpecHelper
   config.include RequestSpecHelper, type: :request
+  config.include SystemSpecHelper, type: :system
 
   # If you're not using ActiveRecord, or you'd prefer not to run each of your
   # examples within a transaction, remove the following line or assign false
@@ -53,14 +54,6 @@ RSpec.configure do |config|
   config.include RSpecHtmlMatchers
 end
 
-def cosign_sign_in(user)
-  sign_in user
-end
-
-def cosign_login_as(user)
-  login_as user
-end
-
 # Stub out anything that requires a redis connection,
 # such as background jobs and lock management.
 def stub_out_redis
@@ -71,7 +64,7 @@ def stub_out_redis
 end
 
 # For system specs
-Chromedriver.set_version "2.33"
+Chromedriver.set_version "2.36"
 # On system spec failure, don't dump the (binary!) screenshot to the console,
 # just save it to disk which is probably ~/tmp/screenshots
 ENV['RAILS_SYSTEM_TESTING_SCREENSHOT'] = "simple"

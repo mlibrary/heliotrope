@@ -6,7 +6,7 @@ RSpec.describe RolesController, type: :controller do
   let(:press) { create(:press) }
 
   describe 'when user does not have access' do
-    before { cosign_sign_in create(:user) }
+    before { sign_in create(:user) }
 
     describe 'GET index' do
       it 'denies access' do
@@ -21,7 +21,7 @@ RSpec.describe RolesController, type: :controller do
     let(:user) { create(:user) }
     let(:role) { admin.roles.first }
 
-    before { cosign_sign_in admin }
+    before { sign_in admin }
 
     describe "index" do
       it 'allows index' do

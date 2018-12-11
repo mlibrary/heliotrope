@@ -307,7 +307,7 @@ RSpec.describe EPubsController, type: :controller do
         end
 
         it 'Authenticated User' do
-          cosign_sign_in(create(:user))
+          sign_in(create(:user))
           get :show, params: { id: file_set.id }
           expect(session[:show_set].include?(file_set.id)).to be false
           expect(response).to have_http_status(:success)
@@ -315,7 +315,7 @@ RSpec.describe EPubsController, type: :controller do
         end
 
         it 'Platform Admin' do
-          cosign_sign_in(create(:platform_admin))
+          sign_in(create(:platform_admin))
           get :show, params: { id: file_set.id }
           expect(session[:show_set].include?(file_set.id)).to be false
           expect(response).to have_http_status(:success)
@@ -342,7 +342,7 @@ RSpec.describe EPubsController, type: :controller do
           product.components << component
           product.lessees << individual.lessee
           product.save!
-          cosign_sign_in(user)
+          sign_in(user)
           get :show, params: { id: file_set.id }
           expect(session[:show_set].include?(file_set.id)).to be true
           expect(response).to have_http_status(:success)

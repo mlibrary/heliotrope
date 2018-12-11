@@ -7,7 +7,7 @@ describe 'Create a collection' do
     let(:user) { create(:platform_admin) }
 
     before do
-      cosign_login_as user
+      login_as user
     end
 
     it do

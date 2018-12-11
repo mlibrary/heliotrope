@@ -278,7 +278,7 @@ describe "Monograph Catalog Facets" do
     }
 
     before do
-      cosign_login_as user
+      login_as user
       monograph.ordered_members = [cover, file_set]
       monograph.save!
     end

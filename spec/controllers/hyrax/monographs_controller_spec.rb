@@ -11,7 +11,7 @@ RSpec.describe Hyrax::MonographsController, type: :controller do
     end
 
     before do
-      cosign_sign_in user
+      sign_in user
       stub_out_redis
     end
 
@@ -113,7 +113,7 @@ RSpec.describe Hyrax::MonographsController, type: :controller do
     let(:monograph) { create(:monograph, user: user, press: press.subdomain) }
 
     before do
-      cosign_sign_in user
+      sign_in user
     end
 
     context 'monograph created' do

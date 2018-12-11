@@ -26,7 +26,7 @@ describe 'Log In and Out' do
     let!(:user) { create(:platform_admin, email: "wolverine@umich.edu") }
 
     before do
-      cosign_login_as user
+      login_as user
     end
 
     it "logout goes to /" do
@@ -70,7 +70,7 @@ describe 'Log In and Out' do
     end
 
     it "logging out returns to that asset page" do
-      cosign_login_as user
+      login_as user
       visit hyrax_file_set_path(file_set)
 
       within("footer") do

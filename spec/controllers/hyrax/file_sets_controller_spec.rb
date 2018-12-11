@@ -12,7 +12,7 @@ RSpec.describe Hyrax::FileSetsController, type: :controller do
     monograph.ordered_members << file_set
     monograph.save!
     file_set.save!
-    cosign_sign_in user
+    sign_in user
   end
 
   context 'tombstone' do

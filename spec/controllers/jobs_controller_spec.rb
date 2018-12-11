@@ -14,7 +14,7 @@ RSpec.describe JobsController, type: :controller do
     context 'when a non-authorized user is logged in' do
       let(:user) { create(:user) }
 
-      before { cosign_sign_in user }
+      before { sign_in user }
 
       it 'renders 404' do
         expect(controller).to receive(:render_404) { controller.head :ok }

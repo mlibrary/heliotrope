@@ -138,7 +138,7 @@ RSpec.describe MonographCatalogController, type: :controller do
           let(:monograph) { create(:private_monograph, user: user) }
 
           before do
-            cosign_sign_in user
+            sign_in user
             get :index, params: { id: monograph.id }
           end
 

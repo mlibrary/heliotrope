@@ -12,7 +12,7 @@ RSpec.describe FulcrumController, type: :controller do
     end
 
     it "authenticated" do
-      cosign_sign_in user
+      sign_in user
       get :dashboard, params: { locale: 'en' }
       expect(response).to redirect_to('/fulcrum/dashboard?locale=en')
     end
@@ -26,7 +26,7 @@ RSpec.describe FulcrumController, type: :controller do
       end
 
       it 'authenticated' do
-        cosign_sign_in user
+        sign_in user
         get :index, params: { locale: 'en', partials: :invalids }
         expect(response).to be_unauthorized
       end
@@ -39,7 +39,7 @@ RSpec.describe FulcrumController, type: :controller do
       end
 
       it 'authenticated' do
-        cosign_sign_in user
+        sign_in user
         get :index, params: { locale: 'en', partials: :users }
         expect(response).to be_success
       end
@@ -54,7 +54,7 @@ RSpec.describe FulcrumController, type: :controller do
       end
 
       it 'authenticated' do
-        cosign_sign_in user
+        sign_in user
         get :show, params: { locale: 'en', partials: :invalids, id: :invalid }
         expect(response).to be_unauthorized
       end
@@ -67,7 +67,7 @@ RSpec.describe FulcrumController, type: :controller do
       end
 
       it 'authenticated' do
-        cosign_sign_in user
+        sign_in user
         get :show, params: { locale: 'en', partials: :users, id: Base64.urlsafe_encode64(user.email) }
         expect(response).to be_success
       end

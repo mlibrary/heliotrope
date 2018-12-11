@@ -9,7 +9,7 @@ RSpec.describe 'Batch creation of monographs', type: :system do
 
   before do
     stub_out_redis
-    cosign_login_as user
+    login_as user
     visit hyrax.new_batch_upload_path payload_concern: 'Monograph'
   end
 
