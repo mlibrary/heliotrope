@@ -3,7 +3,7 @@
 module Greensub
   class << self
     def actor_products(actor)
-      products = actor.individual.products || []
+      products = actor.individual&.products || []
       actor.institutions.each do |institution|
         products += institution.products
       end
