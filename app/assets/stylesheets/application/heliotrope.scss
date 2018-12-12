@@ -392,6 +392,16 @@ footer.press {
       }
     }
 
+    .open-access {
+      display: flex;
+      align-items:center;
+      margin-top: 1em;
+      font-weight: bold;
+      font-stretch: condensed;
+      img {
+        margin-right: .5em;
+      }
+    }
   }
 
   // EPUB - MONOGRAPH INFORMATION
