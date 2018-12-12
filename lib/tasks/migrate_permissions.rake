@@ -9,7 +9,7 @@ namespace :heliotrope do
       puts "component: #{component.handle}"
       noid = HandleService.noid(component.handle)
       entity = Sighrax.factory(noid)
-      component.identifier = noid || component.id
+      component.identifier = component.handle || component.id
       component.name = entity.title
       component.noid = noid
       component.save
@@ -25,12 +25,10 @@ namespace :heliotrope do
     end
     puts 'Updated.'
     puts 'Initialize database'
-    PermissionService.database_initialize!
-    puts 'Clear permits table'
-    clear_grants_table
+    Checkpoint::DB.initialize!
+    puts 'Clear grants table'
+    Checkpoint::DB.db[:grants].delete
     puts 'Migrating...'
-    agent_factory = Checkpoint::Agent
-    resource_factory = Checkpoint::Resource
     permission_read = Checkpoint::Credential::Permission.new(:read)
     Product.all.each do |product|
       puts "product: #{product.identifier}"
@@ -38,13 +36,11 @@ namespace :heliotrope do
         if lessee.institution?
           puts "institution: #{lessee.identifier}"
           institution = Institution.find_by(identifier: lessee.identifier)
-          # PermissionService.permit_read_access_resource(:institution, institution.id, :product, product.id)
-          Checkpoint::DB::Grant.from(agent_factory.from(institution), permission_read, resource_factory.from(product), zone: Checkpoint::DB::Grant.default_zone).save
+          Checkpoint::DB::Grant.from(Checkpoint::Agent.new(institution), permission_read, Checkpoint::Resource.new(product)).save
         else
           puts "individual: #{lessee.identifier}"
           individual = Individual.find_by(identifier: lessee.identifier)
-          # PermissionService.permit_read_access_resource(:individual, individual.id, :product, product.id)
-          Checkpoint::DB::Grant.from(agent_factory.from(individual), permission_read, resource_factory.from(product), zone: Checkpoint::DB::Grant.default_zone).save
+          Checkpoint::DB::Grant.from(Checkpoint::Agent.new(individual), permission_read, Checkpoint::Resource.new(product)).save
         end
       end
     end
