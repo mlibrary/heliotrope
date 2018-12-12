@@ -17,12 +17,13 @@ GIT
 
 GIT
   remote: https://github.com/mlibrary/turnsole
-  revision: 0677e0b8ee144cd9c2d9117aadf672b01d1d4453
+  revision: bef4b8e7a521d7e6560497135ab2935d1b5352e1
   branch: master
   specs:
     turnsole (0.1.0)
-      faraday (~> 0.12.2)
-      faraday_middleware (~> 0.12.2)
+      faraday
+      faraday_middleware
+      httparty
 
 GEM
   remote: https://rubygems.org/

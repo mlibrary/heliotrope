@@ -16,7 +16,7 @@ RSpec.describe Individual, type: :model do
   it { expect(subject.agent_id).to eq id }
 
   context 'before validation' do
-    it 'on create' do
+    xit 'on create' do
       create(:lessee, identifier: identifier)
       individual = build(:individual, identifier: identifier)
       expect(individual.save).to be false
@@ -24,7 +24,7 @@ RSpec.describe Individual, type: :model do
       expect(individual.errors.first[0]).to eq :identifier
       expect(individual.errors.first[1]).to eq "lessee identifier identifier exists!"
     end
-    it 'on update' do
+    xit 'on update' do
       individual = create(:individual, identifier: identifier)
       individual.identifier = 'new_identifier'
       expect(individual.save).to be false
@@ -35,7 +35,7 @@ RSpec.describe Individual, type: :model do
   end
 
   context 'before create' do
-    it do
+    xit do
       create(:lessee, identifier: identifier)
       individual = build(:individual, identifier: identifier)
       expect(individual.save(validate: false)).to be false
