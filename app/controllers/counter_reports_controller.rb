@@ -91,7 +91,7 @@ class CounterReportsController < ApplicationController
     end
 
     def set_presses_and_institutions
-      @presses = current_user&.admin_presses || Press.all
+      @presses = current_user&.admin_presses || Press.order(:name)
       @institutions = if current_user&.admin_presses.present?
                         Institution.order(:name) # over 1000 of these in production = fun
                       else

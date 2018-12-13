@@ -102,7 +102,7 @@ class User < ApplicationRecord
 
   # Presses for which this user is an admin
   def admin_presses
-    platform_admin? ? Press.all : presses.where(['roles.role = ?', 'admin'])
+    platform_admin? ? Press.order(:name) : presses.where(['roles.role = ?', 'admin']).order(:name)
   end
 
   def platform_admin?
