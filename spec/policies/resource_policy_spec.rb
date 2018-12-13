@@ -20,6 +20,7 @@ RSpec.describe ResourcePolicy do
         before do
           allow(actor).to receive(:is_a?).with(User).and_return(true)
           allow(actor).to receive(:platform_admin?).and_return(false)
+          allow(actor).to receive(:sign_in_count).and_return(0)
         end
 
         it { is_expected.to be false }

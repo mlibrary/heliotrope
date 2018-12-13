@@ -1,7 +1,7 @@
 <p id="notice"><%= notice %></p>
 <div id="maincontent">
   <%
-    fileset = FileSet.find HandleService.noid(@component.handle)
+    fileset = FileSet.find @component.noid
     monograph = fileset.parent
   %>
   <h1>Component</h1>

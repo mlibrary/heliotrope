@@ -4,7 +4,7 @@ class ComponentsController < ApplicationController
   before_action :set_component, only: %i[show edit update destroy add remove]
 
   def index
-    @components = Component.filter(filtering_params(params)).order(handle: :asc).page(params[:page])
+    @components = Component.filter(filtering_params(params)).order(identifier: :asc).page(params[:page])
   end
 
   def show; end

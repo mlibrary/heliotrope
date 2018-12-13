@@ -2,22 +2,28 @@
 
 class ResourcePolicy < ApplicationPolicy
   def show?
-    actor.is_a?(User) && actor.platform_admin?
+    actor_platform_admin?
   end
 
   def create?
-    actor.is_a?(User) && actor.platform_admin?
+    actor_platform_admin?
   end
 
   def update?
-    actor.is_a?(User) && actor.platform_admin?
+    actor_platform_admin?
   end
 
   def destroy?
-    actor.is_a?(User) && actor.platform_admin?
+    actor_platform_admin?
   end
 
   def edit?
     update?
   end
+
+  private
+
+    def actor_platform_admin?
+      actor.is_a?(User) && actor.platform_admin? && Incognito.allow_platform_admin?(actor)
+    end
 end

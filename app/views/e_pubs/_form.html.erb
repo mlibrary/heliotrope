@@ -8,8 +8,9 @@
         data: { confirm: t('.destroy') },
         class: 'btn btn-default' %>
     <% else %>
+      <% epub = Sighrax.factory(member.id) %>
       <%= link_to t('.create'),
-        main_app.components_path(component: { handle: HandleService.path(member.id) }),
+        main_app.components_path(component: { identifier: HandleService.path(epub.noid), name: epub.title, noid: epub.noid, handle: HandleService.path(epub.noid) }),
         method: :post,
         title: t('.create'),
         data: { confirm: t('.create') },
