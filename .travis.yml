@@ -1,3 +1,4 @@
+dist: trusty
 language: ruby
 cache: bundler
 sudo: required
@@ -11,7 +12,8 @@ rvm:
   - 2.4.2
 jdk:
   - oraclejdk8
-
+addons:
+  chrome: stable
 env:
   global:
     - NOKOGIRI_USE_SYSTEM_LIBRARIES=true

@@ -15,7 +15,7 @@ RSpec.describe "Customers Counter Reports", type: :request do
     end
 
     context 'user' do
-      before { cosign_sign_in(current_user) }
+      before { sign_in(current_user) }
 
       context 'unauthorized' do
         let(:current_user) { create(:user) }
@@ -117,7 +117,7 @@ RSpec.describe "Customers Counter Reports", type: :request do
       let(:current_user) { create(:user) }
 
       describe "GET /counter_reports" do
-        before { cosign_sign_in(current_user) }
+        before { sign_in(current_user) }
 
         it do
           get counter_reports_path
@@ -173,7 +173,7 @@ RSpec.describe "Customers Counter Reports", type: :request do
         allow_any_instance_of(CounterReportsController).to receive(:current_institutions).and_return([])
         allow(Institution).to receive(:order).and_return(institutions)
         allow(Institution).to receive(:where).with(identifier: '1').and_return(institutions)
-        cosign_sign_in(current_user)
+        sign_in(current_user)
       end
 
       describe "GET /counter_reports" do

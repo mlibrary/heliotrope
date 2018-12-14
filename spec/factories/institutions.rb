@@ -2,7 +2,7 @@
 
 FactoryBot.define do
   factory :institution do
-    sequence(:identifier) { |n| "InstitutionIdentifier#{n}" }
+    sequence(:identifier) { |n| n }
     sequence(:name) { |n| "InstitutionName#{n}" }
     sequence(:entity_id) { |n| "InstitutionEntity_ID#{n}" }
     sequence(:site) { |n| "InstitutionSite#{n}" }

@@ -18,7 +18,7 @@ RSpec.describe "Institutions", type: :request do
     end
 
     context 'authenticated' do
-      before { cosign_sign_in(current_user) }
+      before { sign_in(current_user) }
 
       it do
         expect { subject }.not_to raise_error
@@ -66,7 +66,7 @@ RSpec.describe "Institutions", type: :request do
     end
 
     context 'authenticated' do
-      before { cosign_sign_in(current_user) }
+      before { sign_in(current_user) }
 
       it do
         expect { subject }.to raise_error(ActionController::RoutingError)
@@ -100,7 +100,7 @@ RSpec.describe "Institutions", type: :request do
     end
 
     context 'authenticated' do
-      before { cosign_sign_in(current_user) }
+      before { sign_in(current_user) }
 
       it do
         expect { subject }.to raise_error(ActionController::RoutingError)
@@ -134,7 +134,7 @@ RSpec.describe "Institutions", type: :request do
     end
 
     context 'authenticated' do
-      before { cosign_sign_in(current_user) }
+      before { sign_in(current_user) }
 
       it do
         expect { subject }.to raise_error(ActionController::RoutingError)
@@ -170,7 +170,7 @@ RSpec.describe "Institutions", type: :request do
     end
 
     context 'authenticated' do
-      before { cosign_sign_in(current_user) }
+      before { sign_in(current_user) }
 
       it do
         expect { subject }.to raise_error(ActionController::RoutingError)
@@ -216,7 +216,7 @@ RSpec.describe "Institutions", type: :request do
     end
 
     context 'authenticated' do
-      before { cosign_sign_in(current_user) }
+      before { sign_in(current_user) }
 
       it do
         expect { subject }.to raise_error(ActionController::RoutingError)
@@ -260,7 +260,7 @@ RSpec.describe "Institutions", type: :request do
     end
 
     context 'authenticated' do
-      before { cosign_sign_in(current_user) }
+      before { sign_in(current_user) }
 
       it do
         expect { subject }.to raise_error(ActionController::RoutingError)

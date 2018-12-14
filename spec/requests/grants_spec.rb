@@ -16,7 +16,7 @@ RSpec.describe "Grants", type: :request do
   end
 
   context 'user' do
-    before { cosign_sign_in(current_user) }
+    before { sign_in(current_user) }
 
     context 'unauthorized' do
       let(:current_user) { create(:user) }

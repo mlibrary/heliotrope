@@ -11,7 +11,7 @@ RSpec.describe "Cozy Sun Bear", type: :system do
   let!(:fr) { create(:featured_representative, monograph_id: monograph.id, file_set_id: file_set.id, kind: 'epub') }
 
   before do
-    cosign_sign_in user
+    sign_in user
     stub_out_redis
     monograph.ordered_members << cover
     monograph.ordered_members << file_set

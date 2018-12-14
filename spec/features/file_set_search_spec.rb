@@ -25,7 +25,7 @@ describe 'FileSet Search' do
   end
 
   before do
-    cosign_login_as user
+    login_as user
     stub_out_redis
     # Without this the file_set's solr_doc won't know it's monograph_id
     # which means you can't do things like @presenter.monograph.subdomain in the views

@@ -18,7 +18,7 @@ describe 'A monograph deposited by one user' do
   it "can be seen in the dashboard by other users who have edit access" do
     # This is mostly testing app/search_builders/hyrax/my/search_builder.rb which
     # is modified from what was in hyrax
-    cosign_login_as press_admin
+    login_as press_admin
     visit '/dashboard/my/works'
     # In vanilla hyrax users can only see works they've deposited
     # In heliotrope they can see monographs they have edit access to as well

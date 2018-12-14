@@ -41,7 +41,7 @@ describe 'Monograph Catalog Search' do
   }
 
   before do
-    cosign_login_as user
+    login_as user
     stub_out_redis
   end
 

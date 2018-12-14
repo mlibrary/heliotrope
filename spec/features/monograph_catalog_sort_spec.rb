@@ -16,7 +16,7 @@ describe 'Monograph catalog sort' do
 
     before do
       stub_out_redis
-      cosign_login_as user
+      login_as user
       monograph.ordered_members << cover
       monograph.ordered_members << fileset_outlier
       # sort_date here increments from 1900 thanks to the factory sequence
