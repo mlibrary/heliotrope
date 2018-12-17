@@ -35,6 +35,15 @@ function storeTab() {
     if ($('#catalog_search').val().length) {
       lastTab = '#media';
     }
+
+    // If the monograph page URL has an anchor (like the CSB Media button)
+    // then we override with similar heavy-handedness.
+    // https://stackoverflow.com/a/4108277
+    var stripped = document.location.href.split("#");
+    if (stripped.length > 1) {
+      lastTab = '#' + stripped[1];
+    }
+
     var firstTab = $('ul[role="tablist"]').children().first().children('a[role="tab"]').attr('href');
     if (lastTab) {
       $('a[href="' + lastTab + '"]').tab('show');
