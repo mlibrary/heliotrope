@@ -116,37 +116,50 @@ RSpec.describe Sighrax, type: :model do
     end
   end
 
+  describe '#deposited?' do
+    subject { described_class.deposited?(entity) }
+
+    let(:entity) { double('entity', valid?: true, entity: doc) }
+    let(:doc) { {} }
+
+    it { is_expected.to be true }
+
+    context "'suppressed_bsi' => false" do
+      let(:doc) { { 'suppressed_bsi' => false } }
+
+      it { is_expected.to be true }
+    end
+
+    context "'suppressed_bsi' => true" do
+      let(:doc) { { 'suppressed_bsi' => true } }
+
+      it { is_expected.to be false }
+    end
+  end
+
   describe '#published?' do
     subject { described_class.published?(entity) }
 
     let(:entity) { double('entity', valid?: true, entity: doc) }
-    let(:doc) { { 'suppressed_bsi' => suppressed, 'visibility_ssi' => visibility } }
-    let(:suppressed) { true }
-    let(:visibility) { 'restricted' }
+    let(:doc) { {} }
 
     it { is_expected.to be false }
 
-    context 'open' do
-      let(:visibility) { 'open' }
+    context "'visibility_ssi' => 'restricted'" do
+      let(:doc) { { 'visibility_ssi' => 'restricted' } }
 
       it { is_expected.to be false }
-
-      context 'unsuppressed' do
-        let(:suppressed) { false }
-
-        it { is_expected.to be true }
-      end
     end
 
-    context 'unsuppressed' do
-      let(:suppressed) { false }
+    context "'visibility_ssi' => 'open'" do
+      let(:doc) { { 'visibility_ssi' => 'open' } }
 
-      it { is_expected.to be false }
+      it { is_expected.to be true }
 
-      context 'open' do
-        let(:visibility) { 'open' }
+      context "'suppressed_bsi' => true" do
+        let(:doc) { { 'suppressed_bsi' => true, 'visibility_ssi' => 'open' } }
 
-        it { is_expected.to be true }
+        it { is_expected.to be false }
       end
     end
   end

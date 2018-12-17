@@ -13,7 +13,7 @@ class ApplicationPolicy
   protected
 
     def action_permitted?(action)
-      Checkpoint::Query::ActionPermitted.new(actor, action, target, authority: authority).true?
+      Checkpoint::Query::ActionPermitted.new(actor, action, target, authority: authority).true? && Incognito.allow_action_permitted?(actor)
     rescue StandardError => e
       Rails.logger.error "ApplicationPolicy::action_permitted?(#{action}) #{e}"
       false
@@ -24,4 +24,8 @@ class ApplicationPolicy
     end
 
     attr_reader :actor, :target
+
+    def debug_log(msg)
+      Rails.logger.debug "[POLICY] #{self.class} -- #{msg}"
+    end
 end

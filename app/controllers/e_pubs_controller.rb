@@ -222,14 +222,10 @@ class EPubsController < CheckpointController
     end
 
     def component
-      @component ||= Component.find_by(handle: publication.identifier)
+      @component ||= Component.find_by(noid: @presenter.id)
     end
 
     def subscriber
       @subscriber ||= OpenStruct.new(identifier: valid_user_signed_in? ? current_user.email : 'anonymous')
-    end
-
-    def publication
-      @publication ||= OpenStruct.new(identifier: HandleService.path(@presenter.id))
     end
 end

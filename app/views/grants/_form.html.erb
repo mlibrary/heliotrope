@@ -178,7 +178,7 @@
       </div>
       <div class="col-md-3">
         <label for="grant_resource_component_id">
-          <%= f.collection_select :resource_component_id, Component.order(:handle), :id, :handle %>
+          <%= f.collection_select :resource_component_id, Component.order(:name), :id, :name %>
         </label>
       </div>
       <div class="col-md-2">

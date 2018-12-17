@@ -5,68 +5,205 @@ require 'rails_helper'
 RSpec.describe EPubPolicy do
   subject(:e_pub_policy) { described_class.new(actor, target, share) }
 
-  let(:actor) { double('actor', agent_type: 'actor_type', agent_id: 'actor_id') }
-  let(:target) { double('target', agent_type: 'target_type', agent_id: 'target_id') }
+  let(:actor) { double('actor', agent_type: 'actor_type', agent_id: 'actor_id', individual: nil, institutions: [institution]) }
+  let(:institution) { double('institution', products: [product]) }
+  let(:product) { double('product') }
+  let(:target) { double('target', noid: noid, resource_type: 'target_type', resource_id: 'target_id') }
+  let(:noid) { 'validnoid' }
+  let(:component) { double('component', products: products) }
+  let(:products) { [] }
+
   let(:share) { false }
-  let(:show) { false }
-  let(:hyrax_can) { false }
-  let(:published) { false }
-  let(:restricted) { false }
-  let(:checkpoint) { double('checkpoint') }
+  let(:is_a_user) { false }
+  let(:hyrax_can_read) { false }
+  let(:hyrax_can_manage) { false }
+  let(:platform_admin) { false }
+  let(:allow_hyrax_can) { true }
+  let(:allow_platform_admin) { true }
 
   before do
-    allow(actor).to receive(:is_a?).with(User).and_return(false)
-    allow(actor).to receive(:platform_admin?).and_return(false)
-    allow(Sighrax).to receive(:hyrax_can?).with(actor, :read, target).and_return(hyrax_can)
+    allow(actor).to receive(:is_a?).with(User).and_return(is_a_user)
+    allow(actor).to receive(:platform_admin?).and_return(platform_admin)
+    allow(Sighrax).to receive(:hyrax_can?).with(actor, :read, target).and_return(hyrax_can_read)
+    allow(Sighrax).to receive(:hyrax_can?).with(actor, :manage, target).and_return(hyrax_can_manage)
     allow(Sighrax).to receive(:published?).with(target).and_return(published)
     allow(Sighrax).to receive(:restricted?).with(target).and_return(restricted)
-    allow(Services).to receive(:checkpoint).and_return(checkpoint)
+    allow(Component).to receive(:find_by).with(noid: noid).and_return(component)
+    allow(Incognito).to receive(:allow_hyrax_can?).with(actor).and_return(allow_hyrax_can)
+    allow(Incognito).to receive(:allow_platform_admin?).with(actor).and_return(allow_platform_admin)
   end
 
   describe '#show?' do
     subject { e_pub_policy.show? }
 
-    let(:permits) { false }
+    context 'unrestricted unpublished' do
+      let(:restricted) { false }
+      let(:published) { false }
 
-    before { allow(checkpoint).to receive(:permits?).with(actor, :read, target).and_return(permits) }
+      it { is_expected.to be false }
 
-    it { is_expected.to be false }
-
-    context 'super' do
-      before do
-        allow(actor).to receive(:is_a?).with(User).and_return(true)
-        allow(actor).to receive(:platform_admin?).and_return(true)
-      end
-
-      it { is_expected.to be true }
-    end
-
-    context 'hyrax_can?' do
-      let(:hyrax_can) { true }
-
-      it { is_expected.to be true }
-    end
-
-    context 'published?' do
-      let(:published) { true }
-
-      it { is_expected.to be true }
-
-      context 'restricted?' do
-        let(:restricted) { true }
+      context 'user' do
+        let(:is_a_user) { true }
 
         it { is_expected.to be false }
 
-        context 'share' do
-          let(:share) { true }
+        context 'hyrax_can_read' do
+          let(:hyrax_can_read) { true }
 
           it { is_expected.to be true }
+
+          context 'Incognito' do
+            let(:allow_hyrax_can) { false }
+
+            it { is_expected.to be false }
+          end
         end
 
-        context 'action_permitted?' do
-          let(:permits) { true }
+        context 'hyrax_can_manage' do
+          let(:hyrax_can_manage) { true }
 
           it { is_expected.to be true }
+
+          context 'Incognito' do
+            let(:allow_hyrax_can) { false }
+
+            it { is_expected.to be false }
+          end
+        end
+
+        context 'platform_admin' do
+          let(:platform_admin) { true }
+
+          it { is_expected.to be true }
+
+          context 'Incognito' do
+            let(:allow_platform_admin) { false }
+
+            it { is_expected.to be false }
+          end
+        end
+      end
+    end
+
+    context 'unrestricted published' do
+      let(:restricted) { false }
+      let(:published) { true }
+
+      it { is_expected.to be true }
+    end
+
+    context 'restricted unpublished' do
+      let(:restricted) { true }
+      let(:published) { false }
+
+      it { is_expected.to be false }
+
+      context 'share' do
+        let(:share) { true }
+
+        it { is_expected.to be false }
+      end
+
+      context 'subscriber' do
+        let(:products) { [product] }
+
+        it { is_expected.to be false }
+      end
+
+      context 'user' do
+        let(:is_a_user) { true }
+
+        it { is_expected.to be false }
+
+        context 'hyrax_can_read' do
+          let(:hyrax_can_read) { true }
+
+          it { is_expected.to be true }
+
+          context 'Incognito' do
+            let(:allow_hyrax_can) { false }
+
+            it { is_expected.to be false }
+          end
+        end
+
+        context 'hyrax_can_manage' do
+          let(:hyrax_can_manage) { true }
+
+          it { is_expected.to be true }
+
+          context 'Incognito' do
+            let(:allow_hyrax_can) { false }
+
+            it { is_expected.to be false }
+          end
+        end
+
+        context 'platform_admin' do
+          let(:platform_admin) { true }
+
+          it { is_expected.to be true }
+
+          context 'Incognito' do
+            let(:allow_platform_admin) { false }
+
+            it { is_expected.to be false }
+          end
+        end
+      end
+    end
+
+    context 'restricted published' do
+      let(:restricted) { true }
+      let(:published) { true }
+
+      it { is_expected.to be false }
+
+      context 'share' do
+        let(:share) { true }
+
+        it { is_expected.to be true }
+      end
+
+      context 'subscriber' do
+        let(:products) { [product] }
+
+        it { is_expected.to be true }
+      end
+
+      context 'user' do
+        let(:is_a_user) { true }
+
+        it { is_expected.to be false }
+
+        context 'hyrax_can_read' do
+          let(:hyrax_can_read) { true }
+
+          it { is_expected.to be false }
+        end
+
+        context 'hyrax_can_manage' do
+          let(:hyrax_can_manage) { true }
+
+          it { is_expected.to be true }
+
+          context 'Incognito' do
+            let(:allow_hyrax_can) { false }
+
+            it { is_expected.to be false }
+          end
+        end
+
+        context 'platform_admin' do
+          let(:platform_admin) { true }
+
+          it { is_expected.to be true }
+
+          context 'Incognito' do
+            let(:allow_platform_admin) { false }
+
+            it { is_expected.to be false }
+          end
         end
       end
     end

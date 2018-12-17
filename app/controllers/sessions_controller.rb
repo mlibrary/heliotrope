@@ -71,7 +71,7 @@ class SessionsController < ApplicationController
     def component_discovery_feed(component_id = '') # rubocop:disable Metrics/CyclomaticComplexity
       Rails.cache.fetch("component_discovery_feed:" + component_id, expires_in: 15.minutes) do
         component_discovery_feed = []
-        component = Component.find_by(handle: HandleService.path(component_id))
+        component = Component.find_by(noid: component_id)
         if component.present?
           products = component.products
           if products.present?

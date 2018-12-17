@@ -13,22 +13,21 @@ class Individual < ApplicationRecord
 
   before_validation(on: :create) do
     if Lessee.find_by(identifier: identifier).present?
-      # errors.add(:identifier, "lessee identifier #{identifier} exists!")
-      # throw(:abort)
+      errors.add(:identifier, "lessee identifier #{identifier} exists!")
+      throw(:abort)
     end
   end
 
   before_validation(on: :update) do
     if identifier_changed?
-      # errors.add(:identifier, "individual identifier can not be changed!")
-      # throw(:abort)
+      errors.add(:identifier, "individual identifier can not be changed!")
+      throw(:abort)
     end
   end
 
   before_create do
     begin
-      # Lessee.create!(identifier: identifier)
-      Lessee.find_or_create_by!(identifier: identifier)
+      Lessee.create!(identifier: identifier)
     rescue StandardError => e
       errors.add(:identifier, "create lessee #{identifier} fail! #{e}")
       throw(:abort)

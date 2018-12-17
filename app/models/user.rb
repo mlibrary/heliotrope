@@ -66,6 +66,11 @@ class User < ApplicationRecord
 
   alias_attribute :user_key, :email
 
+  # Guest factory
+  def self.guest(user_key:)
+    Guest.new(user_key: user_key)
+  end
+
   def role?
     roles.any?
   end
@@ -123,10 +128,6 @@ class User < ApplicationRecord
   def tokenize!
     self.encrypted_password = SecureRandom.urlsafe_base64(12)
     save!
-  end
-
-  def self.guest(user_key:)
-    Guest.new(user_key: user_key)
   end
 
   def identifier

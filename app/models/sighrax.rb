@@ -32,8 +32,13 @@ module Sighrax
       ability.can?(action.to_s.to_sym, target.noid)
     end
 
+    def deposited?(entity)
+      return true if entity.entity['suppressed_bsi'].blank?
+      !entity.entity['suppressed_bsi']
+    end
+
     def published?(entity)
-      entity.valid? && entity.entity['suppressed_bsi'] == false && /open/i.match?(entity.entity['visibility_ssi'])
+      entity.valid? && deposited?(entity) && /open/i.match?(entity.entity['visibility_ssi'])
     end
 
     def restricted?(entity)
