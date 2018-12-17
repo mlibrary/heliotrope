@@ -32,7 +32,7 @@ module Sighrax
     end
 
     def title
-      entity["title_tesim"]&.first || noid
+      entity['title_tesim']&.first || noid
     end
 
     protected

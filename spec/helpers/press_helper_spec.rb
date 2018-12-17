@@ -114,45 +114,140 @@ describe PressHelper do
     end
   end
 
-  describe "#show_ebc_banner?" do
-    let(:current_ebc_identifier) { 'ebc_' + Time.current.year.to_s }
-    let(:product) do
-      create(:product, identifier: current_ebc_identifier,
-                       name: 'EBC BLAH',
-                       purchase: 'https://www.example.com')
-    end
-    let(:current_actor) { create(:user) }
+  describe "#show_banner?" do
+    subject { show_banner?(actor, subdomain) }
 
-    context "when on press_subdomain returns 'michigan'" do
-      let(:press_subdomain) { 'michigan' }
+    let(:actor) { double('actor') }
+    let(:subdomain) { 'subdomain' }
+    let(:product) { double('product', name: 'name', purchase: 'purchase') }
+    let(:actor_products) { [] }
 
-      it "returns true if the current EBC product exists and the user doesn't have access to it" do
-        allow(Product).to receive(:where).with(identifier: current_ebc_identifier).and_return([product])
-        allow(Greensub).to receive(:actor_products).and_return([])
-        expect(show_ebc_banner?).to eq true
-      end
-
-      it 'returns false if the current EBC product exists and the user has access to it' do
-        allow(Product).to receive(:where).with(identifier: current_ebc_identifier).and_return([product])
-        allow(Greensub).to receive(:actor_products).and_return([product])
-        expect(show_ebc_banner?).to eq false
-      end
-
-      it "returns false if the current EBC product doesn't exist" do
-        allow(Product).to receive(:where).with(identifier: current_ebc_identifier).and_return([])
-        allow(Greensub).to receive(:actor_products).and_return([])
-        expect(show_ebc_banner?).to eq false
-      end
+    before do
+      allow(Product).to receive(:find_by).and_return(product)
+      allow(Greensub).to receive(:actor_products).with(actor).and_return(actor_products)
     end
 
-    context "when on another press catalog page" do
-      let(:press_subdomain) { 'blah' }
+    it { is_expected.to be false }
 
-      it "returns false even though the current EBC product exists and the user doesn't have access to it" do
-        allow(Product).to receive(:where).with(identifier: current_ebc_identifier).and_return([product])
-        allow(Greensub).to receive(:actor_products).and_return([])
-        expect(show_ebc_banner?).to eq false
+    context 'press catalog' do
+      before { allow(controller).to receive(:is_a?).with(PressCatalogController).and_return(true) }
+
+      it { is_expected.to be false }
+
+      context 'michigan' do
+        let(:subdomain) { 'michigan' }
+
+        it { is_expected.to be true }
+
+        context 'actor has product' do
+          let(:actor_products) { [product] }
+
+          it { is_expected.to be false }
+        end
       end
+
+      context 'heliotrope' do
+        let(:subdomain) { 'heliotrope' }
+
+        it { is_expected.to be true }
+
+        context 'actor has product' do
+          let(:actor_products) { [product] }
+
+          it { is_expected.to be false }
+        end
+      end
+    end
+
+    context 'monograph catalog' do
+      let(:monograph) { double('monograph', valid?: true, open_access?: open_access, epub_featured_representative: epub_featured_representative) }
+      let(:open_access) { false }
+      let(:epub_featured_representative) { double('epub_featured_representative') }
+      let(:product_include) { true }
+
+      before do
+        allow(controller).to receive(:is_a?).with(PressCatalogController).and_return(false)
+        allow(controller).to receive(:is_a?).with(MonographCatalogController).and_return(true)
+        allow(Greensub).to receive(:product_include?).with(product, epub_featured_representative).and_return(product_include)
+        allow(Sighrax).to receive(:factory).and_return(monograph)
+      end
+
+      it { is_expected.to be false }
+
+      context 'michigan' do
+        let(:subdomain) { 'michigan' }
+
+        it { is_expected.to be true }
+
+        context 'actor has product' do
+          let(:actor_products) { [product] }
+
+          it { is_expected.to be false }
+        end
+
+        context 'open access' do
+          let(:open_access) { true }
+
+          it { is_expected.to be false }
+        end
+
+        context 'not included in product' do
+          let(:product_include) { false }
+
+          it { is_expected.to be false }
+        end
+      end
+
+      context 'heliotrope' do
+        let(:subdomain) { 'heliotrope' }
+
+        it { is_expected.to be true }
+
+        context 'actor has product' do
+          let(:actor_products) { [product] }
+
+          it { is_expected.to be false }
+        end
+
+        context 'open access' do
+          let(:open_access) { true }
+
+          it { is_expected.to be false }
+        end
+
+        context 'not included in product' do
+          let(:product_include) { false }
+
+          it { is_expected.to be false }
+        end
+      end
+    end
+  end
+
+  describe "#banner_product" do
+    subject { banner_product(subdomain) }
+
+    let(:subdomain) { 'subdomain' }
+    let(:ebc_product) { create(:product, identifier: 'ebc_' + Time.current.year.to_s) }
+    let(:nag_product) { create(:product, identifier: 'nag_' + Time.current.year.to_s) }
+
+    before do
+      ebc_product
+      nag_product
+    end
+
+    it { is_expected.to be nil }
+
+    context 'michigan' do
+      let(:subdomain) { 'michigan' }
+
+      it { is_expected.to eq ebc_product }
+    end
+
+    context 'heliotrope' do
+      let(:subdomain) { 'heliotrope' }
+
+      it { is_expected.to eq nag_product }
     end
   end
 end
