@@ -411,16 +411,15 @@ webgl = Webgl::Unity.from_directory(UnpackService.root_path_from_noid(webgl_id, 
         }).addTo(reader);
 
         // Download widget
-        <% if @epub_download_presenter.download_links.length.positive? %>
+        <% if @epub_download_presenter.download_links.length.positive? && @share_link.nil? %>
         cozy.control.download({
             region: 'top.toolbar.left',
             template: '<button class="button--sm cozy-download" data-toggle="open" aria-label="Download book" role="button"><i id="download" class="oi" data-glyph="data-transfer-download" title="Download book" aria-hidden="true"></i></button>',
         }).addTo(reader);
         <% end %>
 
-
         // Restricted Share Link widget
-        <% if @component.present? && @press.allow_share_links? %>
+        <% if @component.present? && @press.allow_share_links? && @share_link.nil? %>
         cozy.control.widget.button({
           region: 'top.toolbar.left',
           template: '<button id="share-link-btn" class="button--sm cozy-close" data-toggle="button" data-slot="label" aria-label="Share Unrestricted Link"><i class="oi" data-glyph="link-intact" title="Share Unrestricted Link" aria-hidden="true"></i></button>',
