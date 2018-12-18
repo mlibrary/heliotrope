@@ -32,6 +32,8 @@ class EPubsController < CheckpointController
 
     CounterService.from(self, @presenter).count(request: 1)
 
+    log_share_link_use
+
     render layout: false
   end
 
@@ -114,6 +116,13 @@ class EPubsController < CheckpointController
     if Press.where(subdomain: subdomain).first&.allow_share_links?
       expire = Time.now.to_i + 48 * 3600 # 48 hours
       token = JsonWebToken.encode(data: params[:id], exp: expire)
+      ShareLinkLog.create(ip_address: request.ip,
+                          institution: current_institutions.map(&:name).join("|"),
+                          press: subdomain,
+                          title: presenter.monograph.title,
+                          noid: presenter.id,
+                          token: token,
+                          action: 'create')
       render plain: Rails.application.routes.url_helpers.epub_url(params[:id], share: token)
     else
       head :no_content
@@ -121,6 +130,17 @@ class EPubsController < CheckpointController
   end
 
   private
+
+    def log_share_link_use
+      return if @share_link.nil?
+      ShareLinkLog.create(ip_address: request.ip,
+                          institution: current_institutions.map(&:name).join("|"),
+                          press: @subdomain,
+                          title: @monograph_presenter.title,
+                          noid: @presenter.id,
+                          token: @share_link,
+                          action: 'use')
+    end
 
     def set_presenter
       @presenter = Hyrax::PresenterFactory.build_for(ids: [params[:id]], presenter_class: Hyrax::FileSetPresenter, presenter_args: nil).first
@@ -183,10 +203,10 @@ class EPubsController < CheckpointController
     end
 
     def valid_share_link?
-      @share = params[:share]
-      if @share.present?
+      @share_link = params[:share]
+      if @share_link.present?
         begin
-          decoded = JsonWebToken.decode(@share)
+          decoded = JsonWebToken.decode(@share_link)
           return true if decoded[:data] == params[:id]
         rescue JWT::ExpiredSignature
           return false

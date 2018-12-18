@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20181119202429) do
+ActiveRecord::Schema.define(version: 20181214194406) do
 
   create_table "api_requests", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.integer "user_id"
@@ -369,6 +369,18 @@ ActiveRecord::Schema.define(version: 20181119202429) do
     t.index ["user_id"], name: "index_searches_on_user_id"
   end
 
+  create_table "share_link_logs", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.string "ip_address"
+    t.string "institution"
+    t.string "press"
+    t.string "title"
+    t.string "noid"
+    t.string "token"
+    t.string "action"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "single_use_links", id: :integer, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.string "downloadKey"
     t.string "path"
@@ -631,6 +643,7 @@ ActiveRecord::Schema.define(version: 20181119202429) do
     t.index ["work_id"], name: "index_work_view_stats_on_work_id"
   end
 
+  add_foreign_key "api_requests", "users"
   add_foreign_key "components_products", "components"
   add_foreign_key "components_products", "products"
   add_foreign_key "curation_concerns_operations", "users"
