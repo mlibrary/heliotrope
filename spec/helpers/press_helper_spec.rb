@@ -117,25 +117,27 @@ describe PressHelper do
   describe "#show_banner?" do
     subject { show_banner?(actor, subdomain) }
 
+    def banner_product(_subdomain)
+      subdomain_product
+    end
+
     let(:actor) { double('actor') }
     let(:subdomain) { 'subdomain' }
-    let(:product) { double('product', name: 'name', purchase: 'purchase') }
+    let(:subdomain_product) { nil }
     let(:actor_products) { [] }
 
-    before do
-      allow(Product).to receive(:find_by).and_return(product)
-      allow(Greensub).to receive(:actor_products).with(actor).and_return(actor_products)
-    end
+    before { allow(Greensub).to receive(:actor_products).with(actor).and_return(actor_products) }
 
     it { is_expected.to be false }
 
-    context 'press catalog' do
-      before { allow(controller).to receive(:is_a?).with(PressCatalogController).and_return(true) }
+    context 'subdomain_product' do
+      let(:product) { double('product', name: 'name', purchase: 'purchase') }
+      let(:subdomain_product) { product }
 
       it { is_expected.to be false }
 
-      context 'michigan' do
-        let(:subdomain) { 'michigan' }
+      context 'press catalog' do
+        before { allow(controller).to receive(:is_a?).with(PressCatalogController).and_return(true) }
 
         it { is_expected.to be true }
 
@@ -146,60 +148,18 @@ describe PressHelper do
         end
       end
 
-      context 'heliotrope' do
-        let(:subdomain) { 'heliotrope' }
+      context 'monograph catalog' do
+        let(:monograph) { double('monograph', valid?: true, open_access?: open_access, epub_featured_representative: epub_featured_representative) }
+        let(:open_access) { false }
+        let(:epub_featured_representative) { double('epub_featured_representative') }
+        let(:product_include) { true }
 
-        it { is_expected.to be true }
-
-        context 'actor has product' do
-          let(:actor_products) { [product] }
-
-          it { is_expected.to be false }
+        before do
+          allow(controller).to receive(:is_a?).with(PressCatalogController).and_return(false)
+          allow(controller).to receive(:is_a?).with(MonographCatalogController).and_return(true)
+          allow(Greensub).to receive(:product_include?).with(product, epub_featured_representative).and_return(product_include)
+          allow(Sighrax).to receive(:factory).and_return(monograph)
         end
-      end
-    end
-
-    context 'monograph catalog' do
-      let(:monograph) { double('monograph', valid?: true, open_access?: open_access, epub_featured_representative: epub_featured_representative) }
-      let(:open_access) { false }
-      let(:epub_featured_representative) { double('epub_featured_representative') }
-      let(:product_include) { true }
-
-      before do
-        allow(controller).to receive(:is_a?).with(PressCatalogController).and_return(false)
-        allow(controller).to receive(:is_a?).with(MonographCatalogController).and_return(true)
-        allow(Greensub).to receive(:product_include?).with(product, epub_featured_representative).and_return(product_include)
-        allow(Sighrax).to receive(:factory).and_return(monograph)
-      end
-
-      it { is_expected.to be false }
-
-      context 'michigan' do
-        let(:subdomain) { 'michigan' }
-
-        it { is_expected.to be true }
-
-        context 'actor has product' do
-          let(:actor_products) { [product] }
-
-          it { is_expected.to be false }
-        end
-
-        context 'open access' do
-          let(:open_access) { true }
-
-          it { is_expected.to be false }
-        end
-
-        context 'not included in product' do
-          let(:product_include) { false }
-
-          it { is_expected.to be false }
-        end
-      end
-
-      context 'heliotrope' do
-        let(:subdomain) { 'heliotrope' }
 
         it { is_expected.to be true }
 
