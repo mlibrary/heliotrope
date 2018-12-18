@@ -34,6 +34,12 @@ module Greensub
       subscribers.compact
     end
 
+    def product_include?(product, entity)
+      return false unless product.present? && entity.present?
+      noids = product.components.map(&:noid)
+      noids.include?(entity.noid)
+    end
+
     private
 
       def permission_read

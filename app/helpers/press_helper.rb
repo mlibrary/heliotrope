@@ -89,10 +89,27 @@ module PressHelper
     press.restricted_message.presence || parent_press(press)&.restricted_message
   end
 
-  def show_ebc_banner?
-    current_ebc_product = Product.where(identifier: 'ebc_' + Time.current.year.to_s).first
-    return false if current_ebc_product.blank? || current_ebc_product.name.blank? || current_ebc_product.purchase.blank?
-    press_subdomain == 'michigan' && Greensub.actor_products(current_actor).collect(&:identifier).exclude?('ebc_' + Time.current.year.to_s)
+  def show_banner?(actor, subdomain) # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
+    return false unless controller.is_a?(PressCatalogController) || controller.is_a?(::MonographCatalogController)
+    return false if subdomain.blank?
+    return false unless /michigan/.match?(subdomain) || /heliotrope/.match?(subdomain)
+    product = banner_product(subdomain)
+    return false unless product.present? && product.name.present? && product.purchase.present?
+    return false if Greensub.actor_products(actor).include?(product)
+    return true if controller.is_a?(PressCatalogController)
+    monograph = Sighrax.factory(@monograph_presenter&.id)
+    return false unless monograph.valid?
+    return false if monograph.open_access?
+    Greensub.product_include?(product, monograph.epub_featured_representative)
+  end
+
+  def banner_product(subdomain)
+    case subdomain
+    when 'michigan'
+      Product.find_by(identifier: 'ebc_' + Time.current.year.to_s)
+    when 'heliotrope'
+      Product.find_by(identifier: 'nag_' + Time.current.year.to_s)
+    end
   end
 
   private

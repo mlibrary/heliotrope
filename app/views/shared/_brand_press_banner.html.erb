@@ -1,0 +1,18 @@
+<% banner_cookie_name = press_subdomain + "_shared_press_banner" %>
+<% product = banner_product(press_subdomain) %>
+<div class="alert alert-info alert-dismissible banner" role="alert" style="display: none;">
+  <button type="button" onclick="banner_button_no()" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&#x2715</span></button>
+  <p class="message">Our latest Ebook Collection (<%= product.name %>) is available for purchase now. Would you like to view it?</p>
+  <button type="button" onclick="banner_button_yes()" class="btn btn-primary btn-lg" data-dismiss="alert">Yes.</button>
+  <button type="button" onclick="banner_button_no()" class="btn btn-default btn-lg" data-dismiss="alert" aria-label="Close">No thanks.</button>
+</div>
+<script type="text/javascript">
+    function banner_button_yes(){
+        Cookies.set('<%= banner_cookie_name %>', 'clicked', { expires: 30 });
+        window.open("<%= product.purchase %>", "_blank");
+    }
+    function banner_button_no(){
+        Cookies.set('<%= banner_cookie_name %>', 'ignore', { expires: 15 });
+        location.href='#';
+    }
+</script>

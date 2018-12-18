@@ -97,4 +97,23 @@ RSpec.describe Greensub do
     expect(greensub.actor_products(actor).count).to eq 0
     expect(greensub.actor_products(actor)).to be_empty
   end
+
+  describe '#product_include?' do
+    subject { greensub.product_include?(product, entity) }
+
+    let(:product) { create(:product) }
+    let(:component) { create(:component) }
+    let(:entity) { double('entity', noid: noid) }
+    let(:noid) { 'validnoid' }
+
+    before { product.components << component }
+
+    it { is_expected.to be false }
+
+    context 'included' do
+      let(:noid) { component.noid }
+
+      it { is_expected.to be true }
+    end
+  end
 end
