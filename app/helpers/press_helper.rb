@@ -92,7 +92,6 @@ module PressHelper
   def show_banner?(actor, subdomain) # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
     return false unless controller.is_a?(PressCatalogController) || controller.is_a?(::MonographCatalogController)
     return false if subdomain.blank?
-    return false unless /michigan/.match?(subdomain) || /heliotrope/.match?(subdomain)
     product = banner_product(subdomain)
     return false unless product.present? && product.name.present? && product.purchase.present?
     return false if Greensub.actor_products(actor).include?(product)
