@@ -149,7 +149,7 @@ describe PressHelper do
       end
 
       context 'monograph catalog' do
-        let(:monograph) { double('monograph', valid?: true, open_access?: open_access, epub_featured_representative: epub_featured_representative) }
+        let(:monograph) { double('monograph', valid?: true, epub_featured_representative: epub_featured_representative) }
         let(:open_access) { false }
         let(:epub_featured_representative) { double('epub_featured_representative') }
         let(:product_include) { true }
@@ -159,6 +159,7 @@ describe PressHelper do
           allow(controller).to receive(:is_a?).with(MonographCatalogController).and_return(true)
           allow(Greensub).to receive(:product_include?).with(product, epub_featured_representative).and_return(product_include)
           allow(Sighrax).to receive(:factory).and_return(monograph)
+          allow(Sighrax).to receive(:open_access?).with(monograph).and_return(open_access)
         end
 
         it { is_expected.to be true }

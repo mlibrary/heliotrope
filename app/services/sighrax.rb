@@ -37,6 +37,10 @@ module Sighrax
       !entity.entity['suppressed_bsi']
     end
 
+    def open_access?(entity)
+      entity.valid? && /yes/i.match?(entity.entity['open_access_tesim']&.first)
+    end
+
     def published?(entity)
       entity.valid? && deposited?(entity) && /open/i.match?(entity.entity['visibility_ssi'])
     end

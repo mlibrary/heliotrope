@@ -8,11 +8,13 @@ RSpec.describe EPubPolicy do
   let(:actor) { double('actor', agent_type: 'actor_type', agent_id: 'actor_id', individual: nil, institutions: [institution]) }
   let(:institution) { double('institution', products: [product]) }
   let(:product) { double('product') }
-  let(:target) { double('target', noid: noid, resource_type: 'target_type', resource_id: 'target_id') }
+  let(:target) { double('target', noid: noid, resource_type: 'target_type', resource_id: 'target_id', parent: parent) }
   let(:noid) { 'validnoid' }
+  let(:parent) { double('parent') }
   let(:component) { double('component', products: products) }
   let(:products) { [] }
 
+  let(:open_access) { false }
   let(:share) { false }
   let(:is_a_user) { false }
   let(:hyrax_can_read) { false }
@@ -26,6 +28,8 @@ RSpec.describe EPubPolicy do
     allow(actor).to receive(:platform_admin?).and_return(platform_admin)
     allow(Sighrax).to receive(:hyrax_can?).with(actor, :read, target).and_return(hyrax_can_read)
     allow(Sighrax).to receive(:hyrax_can?).with(actor, :manage, target).and_return(hyrax_can_manage)
+    allow(Sighrax).to receive(:open_access?).with(target).and_return(false)
+    allow(Sighrax).to receive(:open_access?).with(parent).and_return(open_access)
     allow(Sighrax).to receive(:published?).with(target).and_return(published)
     allow(Sighrax).to receive(:restricted?).with(target).and_return(restricted)
     allow(Component).to receive(:find_by).with(noid: noid).and_return(component)
@@ -98,6 +102,12 @@ RSpec.describe EPubPolicy do
 
       it { is_expected.to be false }
 
+      context 'open access' do
+        let(:open_access) { true }
+
+        it { is_expected.to be false }
+      end
+
       context 'share' do
         let(:share) { true }
 
@@ -158,6 +168,12 @@ RSpec.describe EPubPolicy do
       let(:published) { true }
 
       it { is_expected.to be false }
+
+      context 'open access' do
+        let(:open_access) { true }
+
+        it { is_expected.to be true }
+      end
 
       context 'share' do
         let(:share) { true }

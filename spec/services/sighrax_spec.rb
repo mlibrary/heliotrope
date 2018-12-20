@@ -137,6 +137,27 @@ RSpec.describe Sighrax, type: :model do
     end
   end
 
+  describe '#open_access?' do
+    subject { described_class.open_access?(entity) }
+
+    let(:entity) { double('entity', valid?: true, entity: doc) }
+    let(:doc) { {} }
+
+    it { is_expected.to be false }
+
+    context "'open_access_tesim' => ''" do
+      let(:doc) { { 'open_access_tesim' => [''] } }
+
+      it { is_expected.to be false }
+    end
+
+    context "'open_access_tesim' => 'yes'" do
+      let(:doc) { { 'open_access_tesim' => ['yes'] } }
+
+      it { is_expected.to be true }
+    end
+  end
+
   describe '#published?' do
     subject { described_class.published?(entity) }
 
