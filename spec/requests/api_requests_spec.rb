@@ -110,7 +110,7 @@ RSpec.describe "APIRequests", type: :request do
             expect { subject }.not_to raise_error
             expect(response).to redirect_to(api_requests_path)
             expect(response).to have_http_status(:found)
-            expect(APIRequest.count).to eq(0)
+            expect(APIRequest.count).to eq(1)
           end
         end
       end

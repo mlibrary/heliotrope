@@ -22,6 +22,7 @@ RSpec.describe EPubPolicy do
   let(:platform_admin) { false }
   let(:allow_hyrax_can) { true }
   let(:allow_platform_admin) { true }
+  let(:sudo_actor) { false }
 
   before do
     allow(actor).to receive(:is_a?).with(User).and_return(is_a_user)
@@ -35,6 +36,7 @@ RSpec.describe EPubPolicy do
     allow(Component).to receive(:find_by).with(noid: noid).and_return(component)
     allow(Incognito).to receive(:allow_hyrax_can?).with(actor).and_return(allow_hyrax_can)
     allow(Incognito).to receive(:allow_platform_admin?).with(actor).and_return(allow_platform_admin)
+    allow(Incognito).to receive(:sudo_actor?).with(actor).and_return(sudo_actor)
   end
 
   describe '#show?' do
@@ -185,6 +187,12 @@ RSpec.describe EPubPolicy do
         let(:products) { [product] }
 
         it { is_expected.to be true }
+
+        context 'Incognito' do
+          let(:sudo_actor) { true }
+
+          it { is_expected.to be false }
+        end
       end
 
       context 'user' do
