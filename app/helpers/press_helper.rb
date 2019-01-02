@@ -98,7 +98,7 @@ module PressHelper
     return true if controller.is_a?(PressCatalogController)
     monograph = Sighrax.factory(@monograph_presenter&.id)
     return false unless monograph.valid?
-    return false if monograph.open_access?
+    return false if Sighrax.open_access?(monograph)
     Greensub.product_include?(product, monograph.epub_featured_representative)
   end
 

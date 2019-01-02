@@ -16,6 +16,10 @@ class EPubPolicy < ResourcePolicy
     value = Sighrax.published?(target)
     debug_log("published? #{value}")
     if value
+      value = Sighrax.open_access?(target) || Sighrax.open_access?(target.parent)
+      debug_log("open_access? #{value}")
+      return true if value
+
       value = Sighrax.restricted?(target)
       debug_log("restricted? #{value}")
       if value
