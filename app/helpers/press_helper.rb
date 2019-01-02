@@ -111,6 +111,10 @@ module PressHelper
     end
   end
 
+  def banner_message
+    controller.is_a?(PressCatalogController) ? 'press_catalog.banner' : 'monograph_catalog.banner'
+  end
+
   private
 
     def parent_press(child_press)
