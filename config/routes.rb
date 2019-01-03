@@ -57,6 +57,7 @@ Rails.application.routes.draw do
         delete :truncate
       end
     end
+    resources :share_link_logs, only: %i[index]
     resources :individuals
     resources :institutions
     resources :lessees, only: %i[index show]
