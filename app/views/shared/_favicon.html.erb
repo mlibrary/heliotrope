@@ -23,14 +23,14 @@
 <% subdir = press_subdomain.present? ? (press_subdomain + '/') : '' %>
 <% favicons.each do |f| %>
   <% path = 'favicon/' + subdir + f['file'] %>
-  <% if Rails.application.assets.find_asset(path).nil? %>
+  <% unless Rails.application.assets_manifest.find_sources(path).first.present? %>
     <% path = 'favicon/' + f['file'] %>
   <% end %>
   <%= favicon_link_tag path, rel: f['rel'], sizes: f['sizes'], type: f['type'] %>
 <% end %>
 <meta name="msapplication-TileColor" content="#ffffff">
 <% path = 'favicon/' + subdir + 'ms-icon-144x144.png' %>
-<% if Rails.application.assets.find_asset(path).nil? %>
+<% unless Rails.application.assets_manifest.find_sources(path).first.present? %>
   <% path = 'favicon/ms-icon-144x144.png' %>
 <% end %>
 <meta name="msapplication-TileImage" content="<%= '/assets/' + path %>">
