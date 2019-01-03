@@ -15,6 +15,8 @@ module Import
         next if row[field[:field_name]].blank?
         is_multivalued = field[:multivalued]
         field_values = split_field_values(row[field[:field_name]], is_multivalued)
+        # when using controlled vocabularies make everything lowercase (Yes/No etc)
+        field_values.map!(&:downcase) if field[:acceptable_values]
         attrs[field[:metadata_name]] = return_scalar_or_multivalued(field_values, is_multivalued)
       end
     end
