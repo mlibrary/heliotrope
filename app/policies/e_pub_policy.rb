@@ -31,7 +31,12 @@ class EPubPolicy < ResourcePolicy
         return true if share
 
         component = Component.find_by(noid: target.noid)
-        value = (Greensub.actor_products(actor) & component.products).any?
+        products = if Incognito.sudo_actor?(actor)
+                     Incognito.sudo_actor_products(actor)
+                   else
+                     Greensub.actor_products(actor)
+                   end
+        value = (products & component.products).any?
         debug_log("actor_products_intersect_component_products_any? #{value}")
         value
       else

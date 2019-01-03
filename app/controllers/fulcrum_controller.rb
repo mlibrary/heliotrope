@@ -9,7 +9,13 @@ class FulcrumController < ApplicationController
 
   def index
     @partials = params[:partials]
+    @individuals = []
+    @institutions = []
     if ['dashboard', 'products', 'components', 'individuals', 'institutions', 'publishers', 'users', 'tokens', 'logs', 'grants', 'monographs', 'assets', 'pages', 'reports', 'customize', 'settings', 'help', 'csv'].include? @partials
+      if /dashboard/.match?(@partials)
+        @individuals = Individual.where("identifier like ? or name like ?", "%#{params['individual_filter']}%", "%#{params['individual_filter']}%").map { |individual| ["#{individual.identifier} (#{individual.name})", individual.id] }
+        @institutions = Institution.where("identifier like ? or name like ?", "%#{params['institution_filter']}%", "%#{params['institution_filter']}%").map { |institution| ["#{institution.identifier} (#{institution.name})", institution.id] }
+      end
       incognito(incognito_params(params)) if /incognito/i.match?(params['submit'] || '')
       render
     else
@@ -30,13 +36,15 @@ class FulcrumController < ApplicationController
   private
 
     def incognito_params(params)
-      params.slice(:platform_admin, :hyrax_can, :action_permitted)
+      params.slice(:actor, :platform_admin, :hyrax_can, :action_permitted)
     end
 
-    def incognito(options)
-      Incognito.allow_all(current_actor)
+    def incognito(options) # rubocop:disable Metrics/CyclomaticComplexity
+      Incognito.reset(current_actor)
       options.each do |key, _value|
         case key
+        when 'actor'
+          Incognito.sudo_actor(current_actor, true, params[:individual_id] || 0, params[:institution_id] || 0)
         when 'platform_admin'
           Incognito.allow_platform_admin(current_actor, false)
         when 'hyrax_can'

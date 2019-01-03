@@ -20,6 +20,32 @@
 </ul>
 <h2>Incognito</h2>
 <form name="incognito" method="get" action="<%= fulcrum_partials_path(:dashboard) %>">
+  <input type="checkbox" id="actor" name="actor" value="sudo" <%= Incognito.sudo_actor?(current_actor) ? 'checked' : '' %>>
+  <b>Incognito</b>.sudo_actor? -> <b>true</b><br>
+  <ul>
+    <li>
+      <b>Incognito</b>.sudo_actor_individual
+      <%= select_tag "individual_id", options_for_select(@individuals, Incognito.sudo_actor_individual(current_actor)&.id), include_blank: '' %>
+      filter by
+      <input type="text" id="individual_filter" name="individual_filter" value=<%= params['individual_filter'] %>>
+      <button>filter</button>
+    </li>
+    <li>
+      <b>Incognito</b>.sudo_actor_institution
+      <%= select_tag "institution_id", options_for_select(@institutions, Incognito.sudo_actor_institution(current_actor)&.id), include_blank: '' %>
+      filter by
+      <input type="text" id="institution_filter" name="institution_filter" value=<%= params['institution_filter'] %>>
+      <button>filter</button>
+    </li>
+    <li>
+      <b>Products</b>
+      <% Incognito.sudo_actor_products(current_actor).each do |product| %>
+        <ul>
+          <li><%= link_to "#{product.identifier} (#{product.name})", product %></li>
+        </ul>
+      <% end %>
+    </li>
+  </ul>
   <input type="checkbox" id="platform_admin" name="platform_admin" value="mask" <%= !Incognito.allow_platform_admin?(current_actor) ? 'checked' : '' %>>
   <b>Incognito</b>.allow_platform_admin? -> <b>false</b><br>
   <input type="checkbox" id="hyrax_can" name="hyrax_can" value="mask" <%= !Incognito.allow_hyrax_can?(current_actor) ? 'checked' : '' %>>

@@ -8,8 +8,7 @@ class APIRequestsController < ApplicationController
   end
 
   def truncate
-    @api_requests = APIRequest.all
-    @api_requests.delete_all
+    APIRequest.where("created_at < ?", (Time.now.utc - 21.days)).delete_all
     respond_to do |format|
       format.html { redirect_to api_requests_url, notice: 'API Requests was successfully destroyed.' }
       format.json { head :no_content }

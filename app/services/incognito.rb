@@ -2,7 +2,7 @@
 
 module Incognito
   class << self
-    def allow_all(actor)
+    def reset(actor)
       return true if short_circuit?(actor)
       actor.sign_in_count = 0
       actor.save
@@ -43,6 +43,48 @@ module Incognito
       actor.sign_in_count = value ? actor.sign_in_count & ~4 : actor.sign_in_count | 4
       actor.save
       allow_action_permitted?(actor)
+    end
+
+    def sudo_actor?(actor)
+      return false if short_circuit?(actor)
+      !(actor.sign_in_count & 8).zero?
+    end
+
+    def sudo_actor(actor, value = false, individual_id = 0, institution_id = 0)
+      return false if short_circuit?(actor)
+      actor.sign_in_count = value ? actor.sign_in_count | 8 : actor.sign_in_count & ~8
+      actor.current_sign_in_ip = individual_id
+      actor.last_sign_in_ip = institution_id
+      actor.save
+      sudo_actor?(actor)
+    end
+
+    def sudo_actor_individual(actor)
+      return nil if short_circuit?(actor)
+      return nil if (actor.sign_in_count & 8).zero?
+      begin
+        Individual.find(actor.current_sign_in_ip.to_i)
+      rescue StandardError => _e
+        nil
+      end
+    end
+
+    def sudo_actor_institution(actor)
+      return nil if short_circuit?(actor)
+      return nil if (actor.sign_in_count & 8).zero?
+      begin
+        Institution.find(actor.last_sign_in_ip.to_i)
+      rescue StandardError => _e
+        nil
+      end
+    end
+
+    def sudo_actor_products(actor)
+      return [] if short_circuit?(actor)
+      return [] if (actor.sign_in_count & 8).zero?
+      products = Incognito.sudo_actor_individual(actor)&.products || []
+      products += Incognito.sudo_actor_institution(actor)&.products || []
+      products.uniq
     end
 
     private
