@@ -38,12 +38,8 @@ RSpec.describe "EPub Share Links", type: :system do
       expect(page.has_css?('.cozy-download')).to be true
       # share link button is present
       expect(page).to have_selector('#share-link-btn')
-
-      accept_alert do
-        # click to create a sharable link
-        find('#share-link-btn').click
-      end
-
+      # click to create a sharable link
+      find('#share-link-btn').click
       # log out
       visit presses_path
       within("footer") do

@@ -407,7 +407,7 @@ webgl = Webgl::Unity.from_directory(UnpackService.root_path_from_noid(webgl_id, 
         // Share widget
         cozy.control.widget.button({
           region: 'top.toolbar.left',
-          template: '<div class="btn-group"><button class="button--sm dropdown-toggle" data-toggle="dropdown" aria-label="Share book" aria-haspopup="true" aria-expanded="false"><i id="share" class="icon-share-boxed oi" data-glyph="share-boxed" title="Share book" aria-hidden="true"></i></button><ul class="dropdown-menu"><li><a href="http://twitter.com/intent/tweet?text=<%= @monograph_presenter.page_title %>&amp;url=<%= @citable_link %>" target="_blank">Twitter</a></li><li><a href="http://www.facebook.com/sharer.php?u=<%= @citable_link %>&amp;t=<%= @monograph_presenter.page_title %>" target="_blank">Facebook</a></li><li><a href="https://plus.google.com/share?url=<%= @citable_link %>" target="_blank">Google+</a></li><li><a href="http://www.reddit.com/submit?url=<%= @citable_link %>" target="_blank">Reddit</a></li><li><a href="http://www.mendeley.com/import/?url=<%= @citable_link %>" target="_blank">Mendeley</a></li><li><a href="http://www.citeulike.org/posturl?url=<%= @citable_link %>&amp;title=<%= @monograph_presenter.page_title %>" target="_blank">Cite U Like</a></li></ul></div>'
+          template: '<div class="btn-group"><button class="button--sm dropdown-toggle" data-toggle="dropdown" aria-label="Promote on social media and share this book" aria-haspopup="true" aria-expanded="false"><i id="share" class="icon-share-boxed oi" data-glyph="share-boxed" title="Promote on social media and share this book" aria-hidden="true"></i></button><ul class="dropdown-menu"><li><a href="http://twitter.com/intent/tweet?text=<%= @monograph_presenter.page_title %>&amp;url=<%= @citable_link %>" target="_blank">Twitter</a></li><li><a href="http://www.facebook.com/sharer.php?u=<%= @citable_link %>&amp;t=<%= @monograph_presenter.page_title %>" target="_blank">Facebook</a></li><li><a href="https://plus.google.com/share?url=<%= @citable_link %>" target="_blank">Google+</a></li><li><a href="http://www.reddit.com/submit?url=<%= @citable_link %>" target="_blank">Reddit</a></li><li><a href="http://www.mendeley.com/import/?url=<%= @citable_link %>" target="_blank">Mendeley</a></li><li><a href="http://www.citeulike.org/posturl?url=<%= @citable_link %>&amp;title=<%= @monograph_presenter.page_title %>" target="_blank">Cite U Like</a></li></ul></div>'
         }).addTo(reader);
 
         // Download widget
@@ -420,17 +420,55 @@ webgl = Webgl::Unity.from_directory(UnpackService.root_path_from_noid(webgl_id, 
 
         // Restricted Share Link widget
         <% if @component.present? && @press.allow_share_links? && @share_link.nil? %>
+        modal = reader.modal({
+                region: 'left',
+                title: 'Share Temporary Access to this Book',
+                template: '<p>The following URL can be shared with non-subscribing users to provide them with temporary access to this restricted work for 48 hours:</p> <blockquote id="share-link" style="padding: 8px; border-left: 4px solid black; background-color: #fff; word-wrap:break-word;"></blockquote><p>The URL can be copied to your clipboard using the button below or manually copied by highlighting the text.</p><p>After 48 hours the link will expire and no longer work.</p><div class="alert alert-info" id="message" style="display: none"></div>',
+                fraction: 0.5,
+                actions: [
+                  {
+                    label: 'Copy Link',
+                    callback: function(event) {
+                      document.designMode = "on";
+                      var link = self.modal._container.querySelector("#share-link");
+                      var message = self.modal._container.querySelector("#message");
+
+                      var range = document.createRange();
+                      range.selectNode(link);
+                      var sel = window.getSelection();
+                      sel.removeAllRanges();
+                      sel.addRange(range);
+
+                      // formatted.select();
+
+                      try {
+                        var flag = document.execCommand('copy');
+                      } catch(err) {
+                        console.log("AHOY COPY FAILED", err);
+                      }
+
+                      self.message.innerHTML = 'Success! Share link copied to your clipboard.';
+                      self.message.style.display = 'block';
+                      sel.removeAllRanges();
+                      range.detach();
+                      document.designMode = "off";
+                    }
+                  }
+                ]
+            })
+
         cozy.control.widget.button({
           region: 'top.toolbar.left',
-          template: '<button id="share-link-btn" class="button--sm cozy-close" data-toggle="button" data-slot="label" aria-label="Share Unrestricted Link"><i class="oi" data-glyph="link-intact" title="Share Unrestricted Link" aria-hidden="true"></i></button>',
+          template: '<button id="share-link-btn" class="button--sm cozy-share" data-toggle="button" data-slot="label" aria-label="Share a Readable Version"><i class="oi" data-glyph="link-intact" title="Share a Readable Version" aria-hidden="true"></i></button>',
           onClick: function() {
             $.get("<%= "#{epub_share_link_path(id: @presenter.id)}" %>", function(data) {
               console.log("SHARE_LINK:", data);
               if (data) {
-                copyToClipboard(data);
-                alert("The share link has been copied to your clipboard. This link enables non-logged in users to have access to this restricted work for 48 hours.\n\nShare link:\n\n" + data);
+                var bq = modal._container.querySelector("#share-link");
+                bq.innerText = data;
+                modal.activate();
               }
-            })
+            });
           }
         }).addTo(reader);
         <% end %>
