@@ -144,6 +144,38 @@ RSpec.describe CounterReporter::PlatformReport do
           expect(subject[:items][1]["Reporting_Period_Total"]).to eq 4
         end
       end
+
+      context "multi-institutional, Total_Item_Investigations, Controlled" do
+        let(:institution) { '*' }
+        let(:institution_name) { double("institution_name", name: "All Institutions") }
+        let(:params_object) do
+          CounterReporter::ReportParams.new('pr',
+                                            press: press.id,
+                                            institution: institution,
+                                            metric_type: ['Total_Item_Investigations'],
+                                            access_type: ['Controlled'],
+                                            start_date: start_date,
+                                            end_date: end_date)
+        end
+
+        before do
+          create(:counter_report, session: 1, press: press.id, noid: 'a',  parent_noid: 'A', institution: 1, created_at: Time.parse("2018-01-02").utc, access_type: "Controlled")
+          create(:counter_report, session: 1, press: press.id, noid: 'a2', parent_noid: 'A', institution: 2, created_at: Time.parse("2018-01-02").utc, access_type: "Controlled")
+          create(:counter_report, session: 1, press: press.id, noid: 'b',  parent_noid: 'B', institution: 3, created_at: Time.parse("2018-01-02").utc, access_type: "Controlled")
+          create(:counter_report, session: 2, press: press.id, noid: 'b',  parent_noid: 'B', institution: 4, created_at: Time.parse("2018-02-06").utc, access_type: "Controlled")
+          create(:counter_report, session: 2, press: press.id, noid: 'b',  parent_noid: 'B', institution: 5, created_at: Time.parse("2018-02-06").utc, access_type: "Controlled")
+          create(:counter_report, session: 3, press: press.id, noid: 'c',  parent_noid: 'C', institution: 5, created_at: Time.parse("2018-02-09").utc, access_type: "Controlled")
+        end
+
+        it "has the correct results" do
+          expect(subject[:items][0]["Reporting_Period_Total"]).to eq 6
+        end
+
+        it "has the correct header" do
+          expect(subject[:header][:Institution_Name]).to eq 'All Institutions'
+          expect(subject[:header][:Institution_ID]).to eq '*'
+        end
+      end
     end
   end
 end

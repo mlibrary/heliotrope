@@ -25,13 +25,10 @@ class CounterReport < ApplicationRecord
   scope :controlled, -> { where(access_type: 'Controlled') }
 
   scope :press, ->(press) { where(press: press) if press.present? }
+  scope :institution, ->(institution_id) { where(institution: institution_id) unless institution_id == '*' }
 
   def self.access_type(access_type)
     where(access_type: access_type)
-  end
-
-  def self.institution(institution_id)
-    where(institution: institution_id)
   end
 
   def self.start_date(start_date)
