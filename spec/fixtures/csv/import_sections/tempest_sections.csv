@@ -2,12 +2,12 @@ File Name,Title,Resource Type,Open Access?,Content Type,Language,External Resour
 ,"Title of the object
 A name given to the resource. Examples: title of a painting, photo, video.",,,,,,,,"An entity primarily responsible for making the resource. Examples: Author/authors; artists; photographers; institutional authors or producers, such as university or federal agency.
 ",,,,,,,
-://:MONOGRAPH://:,The Tempest: A Subtitle,,Yes,,,,,," Shakespeare, William; Playwright, Mr. Uncredited",Christopher Marlowe; Sir Francis Bacon,,://:MONOGRAPH://:,Dog;Cat;Mouse,134513451345; 1451-25423; 1451343513,http://www.example.com/handle; 999.999.9999,Series the First;Cereal Series; Serial the Third
+://:MONOGRAPH://:,The Tempest: A Subtitle,,Yes,,,,,," Shakespeare, William; Playwright, Mr. Uncredited (Editor)",Christopher Marlowe (ILLUSTRATOR); Sir Francis Bacon,,://:MONOGRAPH://:,Dog;Cat;Mouse,134513451345; 1451-25423 (E-Book); 1451343513,http://www.example.com/handle; 999.999.9999,Series the First;Cereal Series; Serial the Third
 shipwreck.jpg,Monograph Shipwreck,image,,portrait,English,,No,https://creativecommons.org/licenses/by-sa/4.0/,"Smith, Benjamin",,,,,,,
 miranda.jpg,Monograph Miranda, image,,audience materials,English; German,,yes,http://creativecommons.org/publicdomain/mark/1.0/,"Waterhouse, John William",,,,,,,
 ファイル.txt,日本語のファイル ,text,,portrait; illustration,Japanese,,yes,http://creativecommons.org/publicdomain/mark/1.0/,,,,,,,,
 shipwreck1.jpg,Section 1 Shipwreck,image,,audience materials,Russian,,Yes,http://creativecommons.org/publicdomain/mark/1.0/,Smith,,keyword1; keyword2;,Act 1: Calm Waters,,,,
-miranda1.jpg,Section 1 Miranda,image,,portrait,Russian; German; French,,yes,http://creativecommons.org/publicdomain/mark/1.0/,"Waterhouse, John William; Creator, A. Second",,regular; _italicized_,Act 1: Calm Waters,,,,
+miranda1.jpg,Section 1 Miranda,image,,portrait,Russian; German; French,,yes,http://creativecommons.org/publicdomain/mark/1.0/,"Waterhouse, John William; Creator, A. Second (EDITOR)",,regular; _italicized_,Act 1: Calm Waters,,,,
 shipwreck2.jpg,Section 2 Shipwreck,image,,audience materials,French,,yes,http://creativecommons.org/publicdomain/mark/1.0/,Smith,,,Act 2: Stirrin' Up,,,,
 miranda2.jpg,Section 2 Miranda,image,,illustration,English,,Yes,http://creativecommons.org/publicdomain/mark/1.0/,"Waterhouse, John William",,,Act 2: Stirrin' Up,,,,
 shipwreck1.jpg,Previous Shipwreck File (Again),image,,portrait; photograph,Latin,,yes,http://creativecommons.org/publicdomain/mark/1.0/,Smith,,,Act 2: Stirrin' Up; Act 3: External Stuffs,,,,

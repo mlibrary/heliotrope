@@ -25,10 +25,10 @@ describe Import::CSVParser do
     it 'collects attributes from the CSV file' do
       expect(subject['title']).to eq ['The Tempest: A Subtitle']
       expect(subject['identifier']).to eq ['http://www.example.com/handle', '999.999.9999']
-      expect(subject['creator']).to eq ["Shakespeare, William\nPlaywright, Mr. Uncredited"]
-      expect(subject['contributor']).to eq ["Christopher Marlowe\nSir Francis Bacon"]
+      expect(subject['creator']).to eq ["Shakespeare, William\nPlaywright, Mr. Uncredited (editor)"] # role was downcased
+      expect(subject['contributor']).to eq ["Christopher Marlowe (illustrator)\nSir Francis Bacon"] # role was downcased
       expect(subject['subject']).to eq ['Dog', 'Cat', 'Mouse']
-      expect(subject['isbn']).to eq ['134513451345', '1451-25423', '1451343513']
+      expect(subject['isbn']).to eq ['134513451345', '1451-25423 (e-book)', '1451343513'] # format was downcased
       expect(subject['series']).to eq ['Series the First', 'Cereal Series', 'Serial the Third']
       expect(subject['files']).to eq [
         'shipwreck.jpg',
@@ -79,7 +79,7 @@ describe Import::CSVParser do
           'license' => ['http://creativecommons.org/publicdomain/mark/1.0/'],
           'exclusive_to_platform' => 'yes',
           'content_type' => ['portrait'],
-          'creator' => ["Waterhouse, John William\nCreator, A. Second"],
+          'creator' => ["Waterhouse, John William\nCreator, A. Second (editor)"], # role was downcased
           'keywords' => ['regular', 'italicized'],
           'section_title' => ['Act 1: Calm Waters'],
           'language' => ['Russian', 'German', 'French'] },
