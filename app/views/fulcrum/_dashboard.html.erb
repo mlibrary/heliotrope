@@ -20,25 +20,25 @@
 </ul>
 <h2>Incognito</h2>
 <form name="incognito" method="get" action="<%= fulcrum_partials_path(:dashboard) %>">
-  <input type="checkbox" id="actor" name="actor" value="sudo" <%= Incognito.sudo_actor?(current_actor) ? 'checked' : '' %>>
-  <b>Incognito</b>.sudo_actor? -> <b>true</b><br>
+  <input input data-toggle="tooltip" title="override your individual and institution(s) products" type="checkbox" id="actor" name="actor" value="sudo" <%= Incognito.sudo_actor?(current_actor) ? 'checked' : '' %>>
+  <label for="actor">use individual and/or institution products</label><br>
   <ul>
     <li>
-      <b>Incognito</b>.sudo_actor_individual
+      Individual
       <%= select_tag "individual_id", options_for_select(@individuals, Incognito.sudo_actor_individual(current_actor)&.id), include_blank: '' %>
       filter by
       <input type="text" id="individual_filter" name="individual_filter" value=<%= params['individual_filter'] %>>
       <button>filter</button>
     </li>
     <li>
-      <b>Incognito</b>.sudo_actor_institution
+      Institution
       <%= select_tag "institution_id", options_for_select(@institutions, Incognito.sudo_actor_institution(current_actor)&.id), include_blank: '' %>
       filter by
       <input type="text" id="institution_filter" name="institution_filter" value=<%= params['institution_filter'] %>>
       <button>filter</button>
     </li>
     <li>
-      <b>Products</b>
+      Products
       <% Incognito.sudo_actor_products(current_actor).each do |product| %>
         <ul>
           <li><%= link_to "#{product.identifier} (#{product.name})", product %></li>
@@ -46,14 +46,19 @@
       <% end %>
     </li>
   </ul>
-  <input type="checkbox" id="platform_admin" name="platform_admin" value="mask" <%= !Incognito.allow_platform_admin?(current_actor) ? 'checked' : '' %>>
-  <b>Incognito</b>.allow_platform_admin? -> <b>false</b><br>
-  <input type="checkbox" id="hyrax_can" name="hyrax_can" value="mask" <%= !Incognito.allow_hyrax_can?(current_actor) ? 'checked' : '' %>>
-  <b>Incognito</b>.allow_hyrax_can? -> <b>false</b><br>
-  <input type="checkbox" id="action_permitted" name="action_permitted" value="mask" <%= !Incognito.allow_action_permitted?(current_actor) ? 'checked' : '' %>>
-  <b>Incognito</b>.allow_action_permitted? -> <b>false</b><br>
+  <input data-toggle="tooltip" title="hide your platform administrator role" type="checkbox" id="platform_admin" name="platform_admin" value="mask" <%= !Incognito.allow_platform_admin?(current_actor) ? 'checked' : '' %> />
+  <label for="platform_admin">force 'platform_admin?' to be false</label><br>
+  <input data-toggle="tooltip" title="hide your hyrax devise cancan abilities" type="checkbox" id="hyrax_can" name="hyrax_can" value="mask" <%= !Incognito.allow_hyrax_can?(current_actor) ? 'checked' : '' %> />
+  <label for="hyrax_can">force hyrax 'can?' to be false</label><br>
+  <input data-toggle="tooltip" title="hide your checkpoint credentials a.k.a. permissions" type="checkbox" id="action_permitted" name="action_permitted" value="mask" <%= !Incognito.allow_action_permitted?(current_actor) ? 'checked' : '' %> />
+  <label for="action_permitted">force 'action_permitted?' to be false</label><br>
   &nbsp;<br>
   <button name="submit" type="submit" value="incognito">Incognito</button>
 </form>
 <h2>Token</h2>
 <%= text_field(:user, :token, size: 120, value: current_user.token, disabled: true) %>
+<script>
+    $(function () {
+        $('[data-toggle="tooltip"]').tooltip()
+    })
+</script>
