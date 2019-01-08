@@ -75,12 +75,17 @@ module Hyrax
       solr_document.license.present?
     end
 
-    def license_icon
+    def license_link_content
       # account for any mix of http/https links in config/authorities/licenses.yml
-      link = solr_document.license.first.sub('https', 'http')
-      link = link.sub('licenses', 'l')
-      link = link.sub('publicdomain', 'p')
-      link.sub('http://creativecommons', 'https://i.creativecommons') + '80x15.png'
+      link_content = solr_document.license.first.sub('https', 'http')
+      # in-house outlier "All Rights Reserved" value, no icon
+      return 'All Rights Reserved' if link_content == 'http://www.press.umich.edu/about/licenses#all-rights-reserved'
+
+      link_content = link_content.sub('licenses', 'l')
+      link_content = link_content.sub('publicdomain', 'p')
+      link_content = link_content.sub('http://creativecommons', 'https://i.creativecommons') + '80x15.png'
+      link_content = '<img alt="Creative Commons License" style="border-width:0" src="' + link_content + '"/>'
+      link_content.html_safe # rubocop:disable Rails/OutputSafety
     end
 
     def copyright_holder?

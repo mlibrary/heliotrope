@@ -559,8 +559,18 @@ RSpec.describe Hyrax::MonographPresenter do
     end
   end
 
-  describe '#license_icon' do
-    subject { presenter.license_icon }
+  describe '#license_link_content' do
+    subject { presenter.license_link_content }
+
+    context 'All Rights Reserved' do
+      before do
+        allow(mono_doc).to receive(:license).and_return(['https://www.press.umich.edu/about/licenses#all-rights-reserved'])
+      end
+
+      it 'returns the correct text, no icon' do
+        expect(subject).to be 'All Rights Reserved'
+      end
+    end
 
     context 'id/link has http/publicdomain combo' do
       before do
@@ -568,7 +578,7 @@ RSpec.describe Hyrax::MonographPresenter do
       end
 
       it 'gives the correct logo link' do
-        expect(subject).to eq 'https://i.creativecommons.org/p/zero/1.0/80x15.png'
+        expect(subject).to eq '<img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/p/zero/1.0/80x15.png"/>'
       end
     end
 
@@ -578,7 +588,7 @@ RSpec.describe Hyrax::MonographPresenter do
       end
 
       it 'gives the correct logo link' do
-        expect(subject).to eq 'https://i.creativecommons.org/l/by-nc-nd/4.0/80x15.png'
+        expect(subject).to eq '<img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-nd/4.0/80x15.png"/>'
       end
     end
   end
