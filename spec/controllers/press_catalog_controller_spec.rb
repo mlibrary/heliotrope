@@ -3,9 +3,27 @@
 require 'rails_helper'
 
 RSpec.describe PressCatalogController, type: :controller do
-  let(:press) { create :press }
+  describe 'blacklight_config' do
+    subject(:blacklight_config) { described_class.blacklight_config }
+
+    it 'search_builder_class' do
+      expect(blacklight_config.search_builder_class).to be PressSearchBuilder
+    end
+  end
+
+  describe 'controller' do
+    it '#show_site_search?' do
+      expect(controller.show_site_search?).to equal false
+    end
+
+    it '#show_press_search?' do
+      expect(controller.show_press_search?).to equal true
+    end
+  end
 
   describe "GET #index" do
+    let(:press) { create :press }
+
     it "redirects to presses" do
       get :index, params: { subdomain: "subdomain" }
       expect(response).to redirect_to(presses_path)

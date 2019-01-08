@@ -4,63 +4,80 @@ require 'rails_helper'
 
 RSpec.describe MonographCatalogController, type: :controller do
   describe 'blacklight_config' do
-    blacklight_config = described_class.blacklight_config
+    subject(:blacklight_config) { described_class.blacklight_config }
 
-    context 'number of records per page' do
-      it 'defaults to 20' do
-        expect(blacklight_config.default_per_page).to eq 20
-      end
+    it 'search_builder_class' do
+      expect(blacklight_config.search_builder_class).to be MonographSearchBuilder
     end
 
-    context 'facet_fields' do
-      expected_fields = %w[based_near section_title keywords creator content_type resource_type search_year exclusive_to_platform contributor]
-      expected_facet_fields = expected_fields.map { |field| described_class.solr_name(field, :facetable) }
+    it 'default_per_page' do
+      expect(blacklight_config.default_per_page).to eq 20
+    end
 
-      it 'has expected facet fields' do
-        expect(blacklight_config.facet_fields).to include(*expected_facet_fields)
+    describe 'facet_fields' do
+      subject(:facet_fields) { blacklight_config.facet_fields }
+
+      let(:ordered_keys) {
+        [
+          described_class.solr_name('based_near', :facetable),
+          described_class.solr_name('press_name', :symbol),
+          described_class.solr_name('generic_type', :facetable),
+          described_class.solr_name('section_title', :facetable),
+          described_class.solr_name('keywords', :facetable),
+          described_class.solr_name('creator', :facetable),
+          described_class.solr_name('content_type', :facetable),
+          described_class.solr_name('resource_type', :facetable),
+          described_class.solr_name('search_year', :facetable),
+          described_class.solr_name('exclusive_to_platform', :facetable),
+          described_class.solr_name('contributor', :facetable),
+          described_class.solr_name('primary_creator_role', :facetable)
+        ]
+      }
+
+      it 'ordered keys' do
+        expect(facet_fields.keys).to eq(ordered_keys)
       end
 
-      context 'facet field content_type' do
-        expected_facet_field_content_type = described_class.solr_name('content_type', :facetable)
-        facet_field_content_type = blacklight_config.facet_fields[expected_facet_field_content_type]
+      describe 'content_type' do
+        subject(:facet_field) { facet_fields[described_class.solr_name('content_type', :facetable)] }
 
-        it 'has label' do
-          expect(facet_field_content_type.label).to eq("Content")
+        it 'label' do
+          expect(facet_field.label).to eq("Content")
         end
-        it 'show false' do
-          expect(facet_field_content_type.show).to be_falsey
-        end
-      end
-
-      context 'facet field resource_type' do
-        expected_facet_field_resource_type = described_class.solr_name('resource_type', :facetable)
-        expected_facet_field_content_type = described_class.solr_name('content_type', :facetable)
-        facet_field_resource_type = blacklight_config.facet_fields[expected_facet_field_resource_type]
-
-        it 'has label' do
-          expect(facet_field_resource_type.label).to eq("Format")
-        end
-        it 'has pivot' do
-          expect(facet_field_resource_type.pivot).not_to be_nil
-        end
-        it 'pivot has expected facet field names' do
-          expect(facet_field_resource_type.pivot).to eq([expected_facet_field_resource_type, expected_facet_field_content_type])
+        it 'show' do
+          expect(facet_field.show).to be false
         end
       end
 
-      context 'facet field contributor' do
-        expected_facet_field = described_class.solr_name('contributor', :facetable)
-        facet_field = blacklight_config.facet_fields[expected_facet_field]
+      describe 'resource_type' do
+        subject(:facet_field) { facet_fields[resource_type_facetable] }
 
-        it 'has label' do
+        let(:resource_type_facetable) { described_class.solr_name('resource_type', :facetable) }
+        let(:content_type_facetable) {  described_class.solr_name('content_type', :facetable) }
+
+        it 'label' do
+          expect(facet_field.label).to eq("Format")
+        end
+        it 'pivot' do
+          expect(facet_field.pivot).not_to be_nil
+        end
+        it 'pivot keys' do
+          expect(facet_field.pivot).to eq([resource_type_facetable, content_type_facetable])
+        end
+      end
+
+      describe 'contributor' do
+        subject(:facet_field) { facet_fields[described_class.solr_name('contributor', :facetable)] }
+
+        it 'label' do
           expect(facet_field.label).to eq("Contributor")
         end
-        it 'show false' do
-          expect(facet_field.show).to be_falsey
+        it 'show' do
+          expect(facet_field.show).to be false
         end
       end
     end
-  end # blacklight_config
+  end
 
   describe '#index' do
     context 'no monograph exists with provided id' do
@@ -155,5 +172,5 @@ RSpec.describe MonographCatalogController, type: :controller do
         end
       end
     end
-  end # #index
+  end
 end
