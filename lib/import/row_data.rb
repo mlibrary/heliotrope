@@ -15,6 +15,8 @@ module Import
         next if row[field[:field_name]].blank?
         is_multivalued = field[:multivalued]
         field_values = split_field_values(row[field[:field_name]], is_multivalued)
+        field_values = downcase_format(field[:field_name], field_values)
+        field_values = downcase_role(field[:field_name], field_values)
         # when using controlled vocabularies make everything lowercase (Yes/No etc)
         field_values.map!(&:downcase) if field[:acceptable_values]
         attrs[field[:metadata_name]] = return_scalar_or_multivalued(field_values, is_multivalued)
@@ -32,6 +34,8 @@ module Import
           # ensuring all values are arrays
           field_values = split_field_values(row[field[:field_name]], is_multivalued)
           field_values = strip_markdown(field[:field_name], field_values, md)
+          field_values = downcase_format(field[:field_name], field_values)
+          field_values = downcase_role(field[:field_name], field_values)
           if field[:acceptable_values]
             # when using controlled vocabularies make everything lowercase (Yes/No etc)
             field_values.map!(&:downcase)
@@ -55,7 +59,7 @@ module Import
         if is_multivalued == :yes_split
           sheet_value.split(';').map!(&:strip).reject(&:empty?)
         elsif is_multivalued == :yes_multiline
-          sheet_value.split(';').map!(&:strip).reject(&:empty?).join("\n")
+          Array(sheet_value.split(';').map!(&:strip).reject(&:empty?).join("\n"))
         else
           # force array for uniformity, ease of iteration in subsequent methods
           Array.wrap(sheet_value.strip)
@@ -64,6 +68,32 @@ module Import
 
       def strip_markdown(field_name, field_values, metadata)
         field_name == "Keywords" ? field_values.map! { |value| metadata.render(value).strip! } : field_values
+      end
+
+      def downcase_format(field_name, field_values)
+        return field_values unless field_name == 'ISBN(s)'
+        downcased_output_value = []
+
+        field_values.each do |value|
+          downcased_parens_value = value[/\(([^()]*)\)$/]&.downcase
+          downcased_output_value << (downcased_parens_value.present? ? value.sub(/\s*\(.+\)$/, '').strip + ' ' + downcased_parens_value : value)
+        end
+
+        downcased_output_value.presence
+      end
+
+      def downcase_role(field_name, field_values)
+        return field_values unless ['Creator(s)', 'Additional Creator(s)'].include? field_name
+
+        field_values = field_values.first.split(/\r?\n/).reject(&:blank?)
+        downcased_output_value = []
+
+        field_values.each do |value|
+          downcased_parens_value = value[/\(([^()]*)\)$/]&.downcase
+          downcased_output_value << (downcased_parens_value.present? ? value.sub(/\s*\(.+\)$/, '').strip + ' ' + downcased_parens_value : value)
+        end
+
+        downcased_output_value.present? ? Array(downcased_output_value.join("\n")) : nil
       end
 
       def return_scalar_or_multivalued(field_values, is_multivalued)
