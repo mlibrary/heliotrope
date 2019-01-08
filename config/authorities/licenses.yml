@@ -85,3 +85,6 @@ terms:
     - id: https://creativecommons.org/publicdomain/mark/1.0/
       term: Creative Commons Public Domain Mark 1.0 # Hyrax term
       active: true
+    - id: https://www.press.umich.edu/about/licenses#all-rights-reserved
+      term: All Rights Reserved # Heliotrope term
+      active: true

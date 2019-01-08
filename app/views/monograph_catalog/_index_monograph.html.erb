@@ -26,7 +26,7 @@
     <span aria-label="publication date" class="pubdate"><%= @monograph_presenter.date_created.first %></span>
     <% end %>
     <% if @monograph_presenter.license? %>
-      <a rel="license" href="<%= @monograph_presenter.license.first %>" target="_blank"><img alt="Creative Commons License" style="border-width:0" src="<%= @monograph_presenter.license_icon %>" /></a>
+      <a rel="license" href="<%= @monograph_presenter.license.first %>" target="_blank"><%= @monograph_presenter.license_link_content %></a>
     <% end %>
     <% if @monograph_presenter.copyright_holder? %>
        <% if @monograph_presenter.holding_contact? %>
