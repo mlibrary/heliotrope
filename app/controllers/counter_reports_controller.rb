@@ -93,7 +93,8 @@ class CounterReportsController < ApplicationController
     def set_presses_and_institutions
       @presses = current_user&.admin_presses || Press.order(:name)
       @institutions = if current_user&.admin_presses.present?
-                        Institution.order(:name) # over 1000 of these in production = fun
+                        # admins can get "all institutions" at once or each individual institution
+                        Institution.order(:name).to_a.unshift(Institution.new(name: "All Institutions (slow)", identifier: '*'))
                       else
                         current_institutions
                       end

@@ -118,11 +118,16 @@ module CounterReporter
     end
 
     def header
+      institution_name = if @params.institution == '*'
+                           "All Institutions"
+                         else
+                           Institution.where(identifier: @params.institution).first&.name
+                         end
       {
         Report_Name: @params.report_title,
         Report_ID: @params.report_type.upcase,
         Release: "5",
-        Institution_Name: Institution.where(identifier: @params.institution).first&.name,
+        Institution_Name: institution_name,
         Institution_ID: @params.institution,
         Metric_Types: @params.metric_types.join("; "),
         Report_Filters: "Access_Type=#{@params.access_types.join('; ')}; Access_Method=#{@params.access_method}",

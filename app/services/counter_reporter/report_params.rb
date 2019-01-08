@@ -92,7 +92,7 @@ module CounterReporter
       end
 
       def pr(params)
-        @report_title = ''
+        @report_title = 'Platform Master Report'
         @metric_types = [params[:metric_type]].flatten
         @data_type = params[:data_type] || 'Book'
         @access_types = [params[:access_type]].flatten
