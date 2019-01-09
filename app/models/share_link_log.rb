@@ -5,7 +5,7 @@ class ShareLinkLog < ApplicationRecord
 
   scope :ip_address_like, ->(like) { where("ip_address like ?", "%#{like}%") }
   scope :institution_like, ->(like) { where("institution like ?", "%#{like}%") }
-  scope :press_like, ->(like) { where("subdomain like ?", "%#{like}%") }
+  scope :press_like, ->(like) { where("press like ?", "%#{like}%") }
   scope :title_like, ->(like) { where("title like ?", "%#{like}%") }
   scope :noid_like, ->(like) { where("noid like ?", "%#{like}%") }
   scope :token_like, ->(like) { where("token like ?", "%#{like}%") }
