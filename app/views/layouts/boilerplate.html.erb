@@ -36,6 +36,8 @@
   <script>
     var heliotropeIncompatibleWebGlUser = false;
     if (bowser.mobile || bowser.tablet || bowser.msie) heliotropeIncompatibleWebGlUser = true;
+    // Suppress incompatible browser warning in Google search snippet.
+    if (bowser.googlebot) heliotropeIncompatibleWebGlUser = false;
   </script>
 
   </head>
