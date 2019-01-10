@@ -24,6 +24,11 @@ $(document).on('turbolinks:load', function() {
       ga('pressTracker.send', 'event', which_category(), 'click', $(this).attr('href'))
     });
 
+    // EBC banner links
+    $('#banner-librarians-link').click(function() {
+      ga('pressTracker.send', 'event', which_category(), 'click_banner', window.location.href);
+    });
+
     //
     // Search
     //
