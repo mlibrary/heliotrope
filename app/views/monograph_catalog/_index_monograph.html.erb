@@ -67,7 +67,8 @@
     <dl>
       <%= @monograph_presenter.attribute_to_html(:series, html_dl: true) %>
       <%= @monograph_presenter.attribute_to_html(:isbn, label: t('isbn'), html_dl: true) %>
-      <%= @monograph_presenter.attribute_to_html(:subject, html_dl: true) %>
+      <%= @monograph_presenter.attribute_to_html(:subject, html_dl: true, render_as: :catalog_facet_attribute,
+                                                 subdomain: @monograph_presenter.subdomain) %>
       <dt><%= t('citable_link') %></dt>
       <dd>
         <form>
