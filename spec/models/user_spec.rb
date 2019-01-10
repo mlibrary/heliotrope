@@ -181,9 +181,16 @@ RSpec.describe User do
   describe '#name' do
     subject { user.name }
 
-    let(:user) { build(:user) }
+    let(:user) { build(:user, display_name: display_name) }
+    let(:display_name) { 'display_name' }
 
-    it { is_expected.to be user.display_name }
+    it { is_expected.to eq display_name }
+
+    context 'blank display name' do
+      let(:display_name) {}
+
+      it { is_expected.to eq user.identifier }
+    end
   end
 
   describe '#agent_type' do

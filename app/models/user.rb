@@ -135,7 +135,7 @@ class User < ApplicationRecord
   end
 
   def name
-    display_name
+    display_name || identifier
   end
 
   def institutions
