@@ -15,8 +15,8 @@ class HeliotropeActor < Hyrax::Actors::AbstractActor
   end
 
   # @param [Hyrax::Actors::Environment] env
-  # @return [Boolean] true if update was successful
-  def destory(env)
+  # @return [Boolean] true if destroy was successful
+  def destroy(env)
     heliotrope_actor(:before, :destroy, env) && next_actor.destroy(env) && heliotrope_actor(:after, :destroy, env)
   end
 
