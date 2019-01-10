@@ -173,7 +173,7 @@ en:
   permissions_expiration_date: "Permissions Expiration Date"
   press: "Publisher"
   press_catalog:
-    banner: "You can access this collection through a library that has purchased it. More information about purchasing is available at <a href=\"https://www.press.umich.edu/librarians\">our website</a>. <a href=\"https://www.fulcrum.org/default_login?locale=en\">Try logging in</a> if you believe your library has already purchased this collection. Some titles are <a href=\"https://www.fulcrum.org/<%= press_subdomain %>?f[open_access_sim][]=yes&locale=en\"> available open access for all to view</a>."
+    banner: "You can access this collection through a library that has purchased it. More information about purchasing is available at <a href=\"https://www.press.umich.edu/librarians\">our website</a>. <a href=\"https://www.fulcrum.org/default_login?locale=en\">Try logging in</a> if you believe your library has already purchased this collection. Some titles are <a href=\"https://www.fulcrum.org/michigan?f[open_access_sim][]=yes&locale=en\"> available open access for all to view</a>."
     search:
       form:
         q:
