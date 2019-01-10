@@ -1,6 +1,11 @@
 # frozen_string_literal: true
 
 class Guest < User
+  def name
+    return super unless /guest\@fulcrum\.org/i.match?(user_key)
+    'member@' + (institutions.first&.name || institutions.first&.identifier || 'institution')
+  end
+
   def save(*_args, &_block)
     false
   end

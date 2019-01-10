@@ -10,6 +10,18 @@ RSpec.describe Guest, type: :model do
 
   it { is_expected.to be_kind_of(User) }
 
+  describe '#name' do
+    subject { user.name }
+
+    it { is_expected.to eq email }
+
+    context 'guest@fulcrum.org' do
+      let(:email) { 'guest@fulcrum.org' }
+
+      it { is_expected.to eq 'member@institution' }
+    end
+  end
+
   describe '#agent_type' do
     subject { user.agent_type }
 
