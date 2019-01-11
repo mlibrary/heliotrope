@@ -40,7 +40,17 @@ RSpec.describe "EPub Share Links", type: :system do
       expect(page).to have_selector('#share-link-btn')
       # click to create a sharable link
       find('#share-link-btn').click
-      # log out
+
+      # If the monograph is open access, do not show a share link
+      monograph.open_access = 'yes'
+      monograph.save!
+      visit epub_path(id: file_set.id)
+      # share link button is not present
+      expect(page).to have_no_selector('#share-link-btn')
+
+      # set back to no OA and log out
+      monograph.open_access = nil
+      monograph.save!
       visit presses_path
       within("footer") do
         click_link "Log Out"
