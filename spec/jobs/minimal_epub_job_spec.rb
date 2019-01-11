@@ -55,4 +55,22 @@ RSpec.describe MinimalEpubJob, type: :job do
       end
     end
   end
+
+  describe "#update_cover" do
+    let(:cover) { Rails.root.join('tmp', 'fake-cover.xhtml') }
+    let(:epub) { double("epub", id: '999999999') }
+
+    before do
+      File.open(cover, 'w') do |f|
+        f.puts '<img src="../images/9780472125616_cover.jpg"/>'
+      end
+    end
+
+    after { FileUtils.rm cover }
+
+    it "changes the cover's path" do
+      described_class.new.update_cover(cover, epub)
+      expect(IO.readlines(File.open(cover))[0].chomp).to eq '<img src="/epubs/999999999/OEBPS/images/9780472125616_cover.jpg"/>'
+    end
+  end
 end

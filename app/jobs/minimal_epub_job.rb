@@ -23,7 +23,7 @@ class MinimalEpubJob < ApplicationJob
 
     minimal = File.join(root_path, epub.id + ".sm")
 
-    system("cd #{root_path}; rsync -a --exclude '[0-9]*.png' --exclude '*.db' . #{minimal}")
+    system("cd #{root_path}; rsync -a --exclude '*.jpg' --exclude '[0-9]*.png' --exclude '*.db' . #{minimal}")
 
     # update the spine
     lines = File.readlines("#{minimal}/OEBPS/content_fixed_scan.opf").each do |line|
@@ -43,6 +43,10 @@ class MinimalEpubJob < ApplicationJob
       end
     end
 
+    # michigan pre-pag books have this for their covers for some reason
+    # with the cover as a jpg referenced as example "../images/9780472125616_cover.jpg"
+    update_cover("#{minimal}/OEBPS/xhtml/cover.xhtml", epub)
+
     # repack the minimal epub
     system("cd #{minimal}; zip -Xq #{sm_epub} mimetype")
     system("cd #{minimal}; zip -rgq #{sm_epub} META-INF")
@@ -50,5 +54,15 @@ class MinimalEpubJob < ApplicationJob
 
     # remove the .sm working directory
     FileUtils.remove_entry_secure minimal if Dir.exist? minimal
+  end
+
+  def update_cover(cover, epub)
+    return unless File.exist? cover
+    lines = File.readlines(cover).each do |line|
+      line.sub!(/src="\.\.\/(images.*?)"/, %(src="/epubs/#{epub.id}/OEBPS/\\1"))
+    end
+    File.open(cover, "w") do |f|
+      f.puts lines
+    end
   end
 end
