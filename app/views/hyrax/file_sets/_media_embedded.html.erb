@@ -5,7 +5,7 @@
     <a href="<%= @presenter.embed_fulcrum_logo_link %>"
        title='<%= @presenter.embed_fulcrum_logo_title %>'
        target="_blank">
-      <%= image_tag "fulcrum-white-50px.png", class: 'logo', alt: 'Fulcrum logo' %>
+      <%= image_tag "fulcrum-white-50px.png", class: 'logo', alt: @presenter.embed_fulcrum_logo_alt %>
     </a>
   </div>
   <%= render partial: @presenter.heliotrope_media_partial('media_display_embedded'), locals: { file_set: @presenter } %>
