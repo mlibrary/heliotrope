@@ -419,7 +419,7 @@ webgl = Webgl::Unity.from_directory(UnpackService.root_path_from_noid(webgl_id, 
         <% end %>
 
         // Restricted Share Link widget
-        <% if @component.present? && @press.allow_share_links? && @share_link.nil? %>
+        <% if @component.present? && @press.allow_share_links? && !@monograph_presenter.open_access? && @share_link.nil? %>
         modal = reader.modal({
                 region: 'left',
                 title: 'Share Temporary Access to this Book',
