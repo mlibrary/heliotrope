@@ -132,6 +132,10 @@ module Hyrax
       'View "' + page_title.delete('"') + '" on Fulcrum'
     end
 
+    def embed_fulcrum_logo_alt
+      page_title.delete('"')
+    end
+
     def embed_fulcrum_logo_link
       if !root_url.include?('fulcrum')
         hyrax_file_set_url(id)
