@@ -11,6 +11,8 @@ Layout/AlignHash:
   Enabled: false
 Layout/AlignParameters:
   Enabled: false
+Layout/CaseIndentation:
+  Enabled: false
 Layout/ElseAlignment:
   Enabled: false
 Layout/EndAlignment:
