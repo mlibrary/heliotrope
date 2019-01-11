@@ -26,6 +26,10 @@ module CitableLinkPresenter
   end
 
   def handle_url
-    HandleService::HANDLE_NET_PREFIX + handle_path
+    heb_handle || HandleService::HANDLE_NET_PREFIX + handle_path
+  end
+
+  def heb_handle
+    solr_document.identifier.find { |e| /2027\/heb\./ =~ e }
   end
 end

@@ -528,6 +528,18 @@ RSpec.describe Hyrax::MonographPresenter do
         expect(presenter.citable_link).to eq HandleService.url(mono_doc.id)
       end
     end
+
+    context "with HEB identifier" do
+      let(:mono_doc) {
+        SolrDocument.new(id: 'monograph_id',
+                         has_model_ssim: ['Monograph'],
+                         identifier_tesim: ['blah', 'http://hdl.handle.net/2027/heb.12345'])
+      }
+
+      it "returns the HEB handle url" do
+        expect(presenter.citable_link).to eq 'http://hdl.handle.net/2027/heb.12345'
+      end
+    end
   end
 
   describe '#creator' do
