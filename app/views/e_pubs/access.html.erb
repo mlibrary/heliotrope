@@ -6,96 +6,12 @@
 <div class="alert alert-danger">
   <p class="text-center"><em><%= @monograph_presenter.title %></em> is a restricted access online resource. <%= link_to 'Go back to previous page', :back %>.</p>
 </div>
-<div class="row restrict-title">
-  <h1 class="sr-only">Access Restricted, Please Login to Continue Reading</h1>
-  <div class="col-sm-12 col-center-block restrict-message">
-    <%= restricted_message(@monograph_presenter.subdomain)&.html_safe %>
-  </div>
-  <div class="row">
-    <div class="col-sm-4">
-      <div class="panel panel-danger">
-        <div class="panel-heading">
-          <h2 class="panel-title">Individual access</h2>
-        </div>
-        <div class="panel-body">
-          <% if current_user %>
-            <p>Not you? <%= current_user.email %></p>
-            <p>If you have purchased individual access you may try logging in again.</p>
-            <p class="text-center">
-              <a class="btn btn-default" href="<%= main_app.destroy_user_session_path %>">Sign Out</a>
-            </p>
-          <% else %>
-            <p>If you have purchased an individual subscription, login in using your University of Michigan Friend account.</p>
-            <p class="text-center">
-              <a class="btn btn-default" href="<%= main_app.default_login_path %>" data-turbolinks="false">Sign In as Individual</a>
-            </p>
-          <% end %>
-        </div>
-      </div>
-    </div>
-    <div class="col-sm-4">
-      <div class="panel panel-danger">
-        <div class="panel-heading">
-          <h2 class="panel-title">Institutional access</h2>
-        </div>
-        <div class="panel-body">
-          <% if current_institutions? %>
-            <p>Not your institution?</p>
-            <ul>
-              <% current_institutions.each do |institution| %>
-                <li><%= institution.name %></li>
-              <% end %>
-            </ul>
-          <% end %>
-          <!-- TODO: add an institutional access message that can provide a list of subscribers -->
-          <p>If your institution has purchased a subcription, you may attempt to login at the appropriate institution. <a href="https://www.humanitiesebook.org/subscriptions/institutions/subscribing-institutions/">See if your institution is a subscriber</a>.</p>
-          <div id="idpSelect" class="panel-body"></div>
-          <script>
-            idSelectUIParms = new IdPSelectUIParms();
-            idSelectUIParms.dataSource = '<%= '/discovery_feed/' + @presenter.id %>';
-            idSelectUIParms.defaultLogo = '<%= asset_path('fulcrum-logo.png') %>';
-            idSelectUIParms.defaultLogoWidth = 8;
-            idSelectUIParms.defaultLogoHeight = 16;
-            <%
-              target = if @monograph_presenter.present?
-                         monograph_catalog_path(@monograph_presenter.id)
-                       else
-                         hyrax_file_set_path(@presenter.id)
-                       end.gsub!(/\?locale=.*/, '')
-            %>
-            idSelectUIParms.defaultReturn = '<%= shib_login_url(target) %>';
-            idSelectUIParms.myEntityID = '<%= Settings.shibboleth.sp.entity_id %>';
-            idSelectUIParms.preferredIdP = ['<%= Settings.shibboleth.default_idp.entity_id %>'];
-            idSelectUIParms.ignoreURLParams = true; // TODO: Figure out why this is needed, or what needs to be fixed to remove it.
-            // idSelectUIParms.testGUI = true;
-            (new IdPSelectUI()).draw(idSelectUIParms);
-          </script>
-          <p><em>For other institutions that do not use the above login method:</em><p>
-          <ul>
-            <% @institutions.each do |institution| %>
-              <% unless institution.shibboleth? %>
-                <li><%= institution.name %></li>
-              <% end %>
-            <% end %>
-          </ul>
-          <p>You will need to access this resource on-campus or through your library's website.</p>
-        </div>
-      </div>
-    </div>
-    <div class="col-sm-4">
-      <div class="panel panel-danger">
-        <div class="panel-heading">
-          <h2 class="panel-title">Purchase a subscription</h2>
-        </div>
-        <div class="panel-body">
-          <p>You may purchase individual or institution access.</p>
-          <ul class="list-unstyled">
-            <% @products.each do |product| %>
-              <li><%= link_to product.name, product.purchase, target: '_blank' %></li>
-            <% end %>
-          </ul>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
+
+<%=
+  case @monograph_presenter.subdomain
+  when 'heb'
+    render partial: 'e_pubs/access/heb', locals: { presenter: @presenter, monograph_presenter: @monograph_presenter, institutions: @institutions, products: @products }
+  when 'michigan'
+    render partial: 'e_pubs/access/michigan', locals: { presenter: @presenter, monograph_presenter: @monograph_presenter, institutions: @institutions, products: @products }
+  end
+%>
