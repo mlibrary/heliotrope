@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+# TODO: merge fixes from edit_monograph_via_csv_isbn.rake and/or pull common functionality into one or more Service(s)
+
 desc 'Update any number of Monographs using provided CSV file'
 namespace :heliotrope do
   task :edit_monographs_via_csv_noid, [:input_file, :user_key] => :environment do |_t, args|
