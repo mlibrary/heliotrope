@@ -130,7 +130,7 @@ en:
     download: "Download CSV"
   mime_type: "Mime Type"
   monograph_catalog:
-    banner: "You can access this title through a library that has purchased it. More information about purchasing is available at <a href=\"https://www.press.umich.edu/librarians\">our website</a>. <a href=\"https://www.fulcrum.org/default_login?locale=en\">Try logging in</a> if you believe your library has already purchased this collection."
+    banner: "You can access this title through a library that has purchased it. More information about purchasing is available at <a href=\"https://www.press.umich.edu/librarians\" id=\"banner-librarians-link\">our website</a>. <a href=\"https://www.fulcrum.org/default_login?locale=en\">Try logging in</a> if you believe your library has already purchased this collection."
     index:
       buy: "Buy %{title}"
       buy_book: "Buy Book"
@@ -173,7 +173,7 @@ en:
   permissions_expiration_date: "Permissions Expiration Date"
   press: "Publisher"
   press_catalog:
-    banner: "You can access this collection through a library that has purchased it. More information about purchasing is available at <a href=\"https://www.press.umich.edu/librarians\">our website</a>. <a href=\"https://www.fulcrum.org/default_login?locale=en\">Try logging in</a> if you believe your library has already purchased this collection. Some titles are <a href=\"https://www.fulcrum.org/michigan?f[open_access_sim][]=yes&locale=en\"> available open access for all to view</a>."
+    banner: "You can access this collection through a library that has purchased it. More information about purchasing is available at <a href=\"https://www.press.umich.edu/librarians\" id=\"banner-librarians-link\">our website</a>. <a href=\"https://www.fulcrum.org/default_login?locale=en\">Try logging in</a> if you believe your library has already purchased this collection. Some titles are <a href=\"https://www.fulcrum.org/michigan?f[open_access_sim][]=yes&locale=en\"> available open access for all to view</a>."
     search:
       form:
         q:
