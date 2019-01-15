@@ -17,6 +17,7 @@
 //= require dataTables/bootstrap/3/jquery.dataTables.bootstrap
 // note: blacklight/blacklight must always be included after turbolinks
 //= require blacklight/blacklight
+//= require jszip.min
 //= require cozy-sun-bear-main
 //= require_tree ./idpselect
 //= require_tree ./application
