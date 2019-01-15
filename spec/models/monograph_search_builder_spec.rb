@@ -3,10 +3,10 @@
 require 'rails_helper'
 
 describe MonographSearchBuilder do
+  let(:search_builder) { described_class.new(context) }
   let(:config) { CatalogController.blacklight_config }
   let(:context) { double('context', blacklight_config: config) }
   let(:solr_params) { { fq: [] } }
-  let(:search_builder) { described_class.new(context) }
 
   describe "#filter_by_members" do
     context "a monograph with assets" do

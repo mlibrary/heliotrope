@@ -15,7 +15,7 @@ module Hyrax
     end
 
     def reindex
-      CurationConcernUpdateIndexJob.perform_later(curation_concern)
+      UpdateIndexJob.perform_later(curation_concern.id)
       redirect_to [main_app, curation_concern], notice: I18n.t('monograph_catalog.index.reindexing', title: curation_concern.title&.first)
     end
 

@@ -57,9 +57,14 @@ RSpec.describe MonographIndexer do
       expect(subject['date_created_si']).to eq '2018'
     end
 
-    it 'has a multi-valued, cleaned-up isbn with which to find Monographs' do
-      expect(subject['isbn_ssim']).to match_array ['9780252012345', '9780252023456', '9781628201239']
-    end
+    # 'isbn' is an isbn indexed multivalued field for finding books which is copied from 'isbn_tesim'
+    #   <copyField source="isbn_tesim" dest="isbn"/>
+    # the english text stored indexed multivalued field generated for the 'isbn' property a.k.a. object.isbn
+    # See './app/models/monograph.rb' and './solr/config/schema.xml' for details.
+    # Note: Since this happens server side it may not be possible to write a spec for this field.
+    # it 'has a multi-valued, cleaned-up isbn with which to find Monographs' do
+    #   expect(subject['isbn']).to match_array ['9780252012345', '9780252023456', '9781628201239']
+    # end
   end
 
   describe 'empty creator field' do

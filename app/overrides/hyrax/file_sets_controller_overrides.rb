@@ -65,5 +65,10 @@ Hyrax::FileSetsController.class_eval do
       # be necessary to check for overall success. Not going to bother with that for now, returning `true`.
       true
     end
+
+    def reindex
+      UpdateIndexJob.perform_later(params[:id])
+      redirect_to [main_app, @file_set], notice: "Reindexing Job Scheduled"
+    end
   end)
 end

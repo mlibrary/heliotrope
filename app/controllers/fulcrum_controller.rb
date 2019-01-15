@@ -7,11 +7,23 @@ class FulcrumController < ApplicationController
     redirect_to action: :index, partials: :dashboard
   end
 
+  def exec
+    case params[:cmd]
+    when 'reindex_everything'
+      ReindexJob.perform_later('everything')
+    when 'reindex_monographs'
+      ReindexJob.perform_later('monographs')
+    when 'reindex_file_sets'
+      ReindexJob.perform_later('file_sets')
+    end
+    redirect_to action: :index, partials: :dashboard
+  end
+
   def index
     @partials = params[:partials]
     @individuals = []
     @institutions = []
-    if ['dashboard', 'products', 'components', 'individuals', 'institutions', 'publishers', 'users', 'tokens', 'logs', 'grants', 'monographs', 'assets', 'pages', 'reports', 'customize', 'settings', 'help', 'csv'].include? @partials
+    if ['dashboard', 'products', 'components', 'individuals', 'institutions', 'publishers', 'users', 'tokens', 'logs', 'grants', 'monographs', 'assets', 'pages', 'reports', 'customize', 'settings', 'help', 'csv', 'jobs'].include? @partials
       if /dashboard/.match?(@partials)
         @individuals = Individual.where("identifier like ? or name like ?", "%#{params['individual_filter']}%", "%#{params['individual_filter']}%").map { |individual| ["#{individual.identifier} (#{individual.name})", individual.id] }
         @institutions = Institution.where("identifier like ? or name like ?", "%#{params['institution_filter']}%", "%#{params['institution_filter']}%").map { |institution| ["#{institution.identifier} (#{institution.name})", institution.id] }

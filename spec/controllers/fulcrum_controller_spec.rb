@@ -18,6 +18,19 @@ RSpec.describe FulcrumController, type: :controller do
     end
   end
 
+  describe "GET #exec" do
+    it 'anonymous' do
+      put :exec, params: { cmd: 'command', locale: 'en' }
+      expect(response).to redirect_to('/login')
+    end
+
+    it "authenticated" do
+      sign_in user
+      put :exec, params: { cmd: 'command', locale: 'en' }
+      expect(response).to redirect_to('/fulcrum/dashboard?locale=en')
+    end
+  end
+
   describe "GET #index" do
     context 'invalid partials' do
       it 'anonymous' do
