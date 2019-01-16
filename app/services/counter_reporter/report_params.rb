@@ -31,6 +31,8 @@ module CounterReporter
         ir(params)
       when 'ir_m1'
         ir_m1
+      when 'counter4_br2'
+        counter4_br2
       end
     end
 
@@ -156,6 +158,16 @@ module CounterReporter
         @data_type = 'Multimedia'
         @access_types = ['OA_Gold', 'Controlled']
         @access_method = 'Regular'
+      end
+
+      def counter4_br2
+        # Ideally this is very temporary
+        # COUNTER4 doesn't have metric types, but according to the COUNTER 5 spec this is:
+        # "R5 equivalent:  Total_Item_Requests AND Data_Type=Book AND Section_Type=Chapter|Section"
+        # So... sort of a Total_Item_Requests. We'll use that to get past validation but it's actually
+        # custom
+        @metric_types = ["Total_Item_Requests"]
+        @access_types = ["Controlled"]
       end
   end
 end
