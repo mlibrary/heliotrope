@@ -26,7 +26,7 @@
     <span aria-label="publication date" class="pubdate"><%= @monograph_presenter.date_created.first %></span>
     <% end %>
     <% if @monograph_presenter.license? %>
-      <a rel="license" href="<%= @monograph_presenter.license.first %>" target="_blank"><%= @monograph_presenter.license_link_content %></a>
+      <span class="license"><a aria-label="license" rel="license" href="<%= @monograph_presenter.license.first %>" target="_blank"><%= @monograph_presenter.license_link_content %></a></span>
     <% end %>
     <% if @monograph_presenter.copyright_holder? %>
        <% if @monograph_presenter.holding_contact? %>
@@ -48,13 +48,25 @@
       <%= render_markdown @monograph_presenter.description.first || '' %>
     </div>
     <% if @monograph_presenter.buy_url? || @monograph_presenter.epub? %>
-        <div class="btn-toolbar" role="toolbar" aria-label="">
-          <div class="btn-group" role="group" aria-label="">
+    <!-- TODO: add check for allow download of EPUB or PDF to line 50 -->
+        <div class="btn-toolbar" role="toolbar">
+          <div class="btn-group btn-group-lg" role="group">
             <% if @monograph_presenter.epub? %>
-                <a id="monograph-read-btn" href="<%= epub_path(@monograph_presenter.epub) %>" title="<%= t('monograph_catalog.index.read', title: @monograph_presenter.title) %>" class="btn btn-default btn-lg" data-turbolinks="false"><%= t('monograph_catalog.index.read_book') %></a>
+                <a id="monograph-read-btn" href="<%= epub_path(@monograph_presenter.epub) %>" title="<%= t('monograph_catalog.index.read', title: @monograph_presenter.title) %>" aria-label="<%= t('monograph_catalog.index.read', title: @monograph_presenter.title) %>" class="btn btn-default" data-turbolinks="false"><%= t('monograph_catalog.index.read_book') %></a>
+            <% end %>
+            <% if current_ability.platform_admin? %>
+                <!-- TODO: replace line 57 with 1) if EPUB or PDF rep is allow download and 2) checkpoint integration - only authorized users should see DL button -->
+                <div class="btn-group btn-group-lg">
+                  <button type="button" id="monograph-download-btn" target="_blank" title="<%= t('monograph_catalog.index.download', title: @monograph_presenter.title) %>" aria-label="<%= t('monograph_catalog.index.download', title: @monograph_presenter.title) %>" aria-haspopus="true" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><%= t('monograph_catalog.index.download_book') %> <span class="caret"></span></button>
+                  <!-- TODO: this may need to be more dynamic if coming from an array -->
+                  <ul class="dropdown-menu">
+                    <li><a href="#">EPUB (size)</a></li>
+                    <li><a href="#">PDF (size)</a></li>
+                  </ul>
+                </div>
             <% end %>
             <% if @monograph_presenter.buy_url? %>
-                <a id="monograph-buy-btn" href="<%= @monograph_presenter.buy_url %>" target="_blank" title="<%= t('monograph_catalog.index.buy', title: @monograph_presenter.title) %>" class="btn btn-default btn-lg" data-turbolinks="false"><%= t('monograph_catalog.index.buy_book') %></a>
+              <a id="monograph-buy-btn" href="<%= @monograph_presenter.buy_url %>" target="_blank" title="<%= t('monograph_catalog.index.buy', title: @monograph_presenter.title) %>" aria-label="<%= t('monograph_catalog.index.buy', title: @monograph_presenter.title) %>" class="btn btn-default" data-turbolinks="false"><%= t('monograph_catalog.index.buy_book') %></a>
             <% end %>
           </div><!-- /.btn-group -->
         </div><!-- /.btn-toolbar -->

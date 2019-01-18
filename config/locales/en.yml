@@ -132,12 +132,14 @@ en:
   monograph_catalog:
     banner: "You can access this title through a library that has purchased it. More information about purchasing is available at <a href=\"https://www.press.umich.edu/librarians\" id=\"banner-librarians-link\">our website</a>. <a href=\"https://www.fulcrum.org/default_login?locale=en\">Try logging in</a> if you believe your library has already purchased this collection."
     index:
-      buy: "Buy %{title}"
+      buy: "Buy a print copy of %{title}"
       buy_book: "Buy Book"
+      download: "Download %{title}"
+      download_book: "Download"
       show_page_button: "Manage Monograph and Files"
       edit_page_button: "Edit Monograph"
       home: "Home"
-      read: "Read %{title}"
+      read: "Start reading %{title}"
       read_book: "Read Book"
       reindex: "Reindex Monograph"
       reindexing: "Reindexing %{title}"

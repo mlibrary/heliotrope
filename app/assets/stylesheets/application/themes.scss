@@ -1081,17 +1081,22 @@ $um-black-80: #342f2e;
   }
 
   // links
-  a {
+  a,
+  button {
     color: $um-blue;
   }
 
   a:hover,
-  a:active {
+  a:active,
+  a:focus,
+  button:hover,
+  button:active,
+  button:focus {
     color: $um-accent-link;
   }
 
   // buttons
-  .btn {
+  .btn, .btn-group {
     @include meta;
   }
 
