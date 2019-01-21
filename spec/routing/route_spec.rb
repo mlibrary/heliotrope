@@ -15,7 +15,7 @@ describe 'Routes', type: :routing do
     end
 
     it 'has a press catalog' do
-      expect(get: '/umich').to route_to(controller: 'press_catalog', action: 'index', subdomain: 'umich')
+      expect(get: '/umich').to route_to(controller: 'press_catalog', action: 'index', press: 'umich')
     end
   end
 
