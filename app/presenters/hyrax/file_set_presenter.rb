@@ -116,6 +116,8 @@ module Hyrax
     def embed_code
       if video? || image?
         responsive_embed_code
+      elsif audio?
+        transcript.present? ? audio_transcript_embed_code : audio_embed_code
       else
         generic_embed_code
       end
@@ -152,6 +154,14 @@ module Hyrax
           </div>
         </div>
       END
+    end
+
+    def audio_embed_code
+      "<iframe src='#{embed_link}' title='#{page_title}' style='page-break-inside:avoid; -webkit-column-break-inside:avoid; break-inside:avoid; display:block; overflow:hidden; border-width:0; width:98%; max-width:98%; height:125px; margin:auto'></iframe>"
+    end
+
+    def audio_transcript_embed_code
+      "<iframe src='#{embed_link}' title='#{page_title}' style='page-break-inside:avoid; -webkit-column-break-inside:avoid; break-inside:avoid; display:block; overflow:hidden; border-width:0; width:98%; max-width:98%; height:375px; margin:auto'></iframe>"
     end
 
     def generic_embed_code

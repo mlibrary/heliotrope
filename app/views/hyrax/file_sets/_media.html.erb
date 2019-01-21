@@ -14,7 +14,7 @@
         </div>
     <% end %>
   </figure> <!-- /.image/media -->
-  <% if @presenter.transcript.present? %>
+  <% if !@presenter.audio? && @presenter.transcript.present? %>
       <div class="panel panel-default transcript">
         <div class="panel-heading">
           <h3 class="panel-title">Transcript</h3>
