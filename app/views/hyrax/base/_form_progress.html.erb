@@ -1,0 +1,58 @@
+<%# override of https://raw.githubusercontent.com/samvera/hyrax/v2.0.0/app/views/hyrax/base/_form_progress.html.erb %>
+<%# Cancel button no longer sends the hapless user to the dashboard when editing a work -- HELIO-2443 %>
+<aside id="form-progress" class="form-progress panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title"><%= t("hyrax.works.progress.header") %></h3>
+  </div>
+  <div class="list-group">
+    <div class="list-group-item">
+      <fieldset>
+        <legend class="legend-save-work"><%= t('.requirements') %></legend>
+        <ul class="requirements">
+          <li class="incomplete" id="required-metadata"><%= t('.required_descriptions') %></li>
+          <% if Hyrax.config.work_requires_files? %>
+            <li class="incomplete" id="required-files"><%= t('.required_files') %></li>
+          <% end %>
+          <% if Flipflop.active_deposit_agreement_acceptance? %>
+            <li class="incomplete" id="required-agreement"><%= t('.required_agreement') %></li>
+          <% end %>
+        </ul>
+      </fieldset>
+    </div>
+
+    <div class="set-access-controls list-group-item">
+      <%= render 'form_visibility_component', f: f %>
+    </div>
+    <% if Flipflop.proxy_deposit? && current_user.can_make_deposits_for.any? %>
+        <div class="list-group-item">
+          <%= f.input :on_behalf_of, collection: current_user.can_make_deposits_for.map(&:user_key), prompt: "Yourself" %>
+        </div>
+    <% end %>
+  </div>
+  <div class="panel-footer text-center">
+    <% if ::Flipflop.show_deposit_agreement? %>
+      <% if ::Flipflop.active_deposit_agreement_acceptance? %>
+        <label>
+          <%= check_box_tag 'agreement', 1, f.object.agreement_accepted, required: true %>
+          <%= t('hyrax.active_consent_to_agreement') %><br>
+          <%= link_to t('hyrax.pages.tabs.agreement_page'),
+                      hyrax.agreement_path,
+                      target: '_blank' %>
+        </label>
+      <% else %>
+        <%= t('hyrax.passive_consent_to_agreement') %><br>
+        <%= link_to t('hyrax.pages.tabs.agreement_page'),
+                    hyrax.agreement_path,
+                    target: '_blank' %>
+      <% end %>
+    <% end %>
+    <br>
+    <%= link_to t(:'helpers.action.cancel'),
+                params[:id].nil? ? hyrax.dashboard_path : main_app.monograph_catalog_path(params[:id]),
+                class: 'btn btn-default' %>
+    <%# TODO: If we start using ActionCable, we could listen for object updates and
+              alert the user that the object has changed by someone else %>
+    <%= f.input Hyrax::Actors::OptimisticLockValidator.version_field, as: :hidden if f.object.persisted? %>
+    <%= f.submit class: 'btn btn-primary', onclick: "confirmation_needed = false;", id: "with_files_submit", name: "save_with_files" %>
+  </div>
+</aside>
