@@ -130,7 +130,8 @@ module Export
           # ordered, newline-separated values. Need such to be semi-colon-separeated in a cell once again
           item.public_send(metadata_name).first.split(/\r?\n/).reject(&:blank?).join('; ')
         else
-          item.public_send(metadata_name)
+          # https://tools.lib.umich.edu/jira/browse/HELIO-2321
+          metadata_name == 'doi' ? 'https://doi.org/' + item.public_send(metadata_name) : item.public_send(metadata_name)
         end
       end
   end

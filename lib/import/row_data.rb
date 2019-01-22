@@ -17,6 +17,7 @@ module Import
         field_values = split_field_values(row[field[:field_name]], is_multivalued)
         field_values = downcase_format(field[:field_name], field_values)
         field_values = downcase_role(field[:field_name], field_values)
+        field_values = map_doi(field[:field_name], field_values)
         # when using controlled vocabularies make everything lowercase (Yes/No etc)
         field_values.map!(&:downcase) if field[:acceptable_values]
         attrs[field[:metadata_name]] = return_scalar_or_multivalued(field_values, is_multivalued)
@@ -36,6 +37,7 @@ module Import
           field_values = strip_markdown(field[:field_name], field_values, md)
           field_values = downcase_format(field[:field_name], field_values)
           field_values = downcase_role(field[:field_name], field_values)
+          field_values = map_doi(field[:field_name], field_values)
           if field[:acceptable_values]
             # when using controlled vocabularies make everything lowercase (Yes/No etc)
             field_values.map!(&:downcase)
@@ -68,6 +70,11 @@ module Import
 
       def strip_markdown(field_name, field_values, metadata)
         field_name == "Keywords" ? field_values.map! { |value| metadata.render(value).strip! } : field_values
+      end
+
+      def map_doi(field_name, field_values)
+        return field_values unless field_name == 'DOI'
+        field_values.map { |val| val.sub('https', 'http').sub('http://doi.org/', '') }
       end
 
       def downcase_format(field_name, field_values)
