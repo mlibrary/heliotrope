@@ -17,7 +17,9 @@
     <input type="text" name="end_date" aria-label="End date in yyyy-mm-dd format" class="counter-end-date form-control" />
   </div>
   <div class="col-sm-2 form-group" style="margin-top: 2em;">
+    <% unless report_id == 'counter4_br2' %>
     <button type="submit" class="btn btn-primary">View</button>
+    <% end %>
     <button type="submit" class="btn btn-primary" name="csv">CSV</button>
   </div>
 </div>

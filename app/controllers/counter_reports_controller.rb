@@ -21,7 +21,8 @@ class CounterReportsController < ApplicationController
     tr_j4: 'Journal Requests by YOP (Excluding OA_Gold)',
     ir: 'Item Master Report',
     ir_a1: 'Journal Article Requests',
-    ir_m1: 'Multimedia Item Requests'
+    ir_m1: 'Multimedia Item Requests',
+    counter4_br2: 'COUNTER4 BR2'
   }.freeze
 
   def index
@@ -40,7 +41,7 @@ class CounterReportsController < ApplicationController
     end
   end
 
-  def show # rubocop:disable Metrics/CyclomaticComplexity
+  def show # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
     return render if params[:customer_id].present?
     # institutional 'guest' users can only see their institutions, but all presses
     # press admins can only see their presses, but all institutions
@@ -63,6 +64,11 @@ class CounterReportsController < ApplicationController
       @report = CounterReporterService.ir(params)
     when 'ir_m1'
       @report = CounterReporterService.ir_m1(params)
+    when 'counter4_br2'
+      # only csv for this report
+      @report = CounterReporterService.counter4_br2(params)
+      send_data @report, filename: "Fulcrum_COUNTER4_BR2_#{Time.zone.today.strftime('%Y-%m-%d')}.csv"
+      return
     end
 
     if params[:csv]

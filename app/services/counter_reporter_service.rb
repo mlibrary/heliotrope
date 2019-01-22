@@ -95,4 +95,20 @@ class CounterReporterService
       end
     end
   end
+
+  # This COUNTER4 report is sort of it's own thing...
+  # See HELIO-2386
+  def self.counter4_br2(params)
+    params = CounterReporter::ReportParams.new('counter4_br2', params)
+    return({ header: params.errors, items: [] }) unless params.validate!
+    report = CounterReporter::Counter4BookReport.new(params).report
+    CSV.generate({}) do |csv|
+      report[:header].each do |row|
+        csv << row
+      end
+      report[:items].each do |row|
+        csv << row
+      end
+    end
+  end
 end
