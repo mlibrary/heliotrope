@@ -200,8 +200,8 @@ Rails.application.routes.draw do
   # Might fix #379 but need to check
   get '/favicon/favicon.ico', to: redirect('/favicon.ico')
 
-  get ':subdomain', controller: :press_catalog, action: :index, as: :press_catalog
-  get ':subdomain/facet', controller: :press_catalog, action: :facet
+  get ':press', controller: :press_catalog, action: :index, as: :press_catalog
+  get ':press/facet', controller: :press_catalog, action: :facet
 
   root 'presses#index'
 end
