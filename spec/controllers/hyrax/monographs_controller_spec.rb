@@ -65,7 +65,7 @@ RSpec.describe Hyrax::MonographsController, type: :controller do
 
       describe "reindex" do
         it 'is successful' do
-          expect(CurationConcernUpdateIndexJob).to receive(:perform_later).with(monograph)
+          expect(UpdateIndexJob).to receive(:perform_later).with(monograph.id)
           patch :reindex, params: { id: monograph }
           expect(response).to redirect_to Rails.application.routes.url_helpers.hyrax_monograph_path(monograph, locale: I18n.locale)
           expect(flash[:notice]).to eq I18n.t('monograph_catalog.index.reindexing', title: monograph.title&.first)

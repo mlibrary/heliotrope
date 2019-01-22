@@ -15,10 +15,10 @@ RSpec.describe CatalogController, type: :controller do
 
       # Fields to query
       it 'qf' do
-        expected_fields = %w[title creator creator_full_name creator_display subject description keywords contributor caption transcript translation alt_text identifier isbn]
-        expected_dynamic_fields = expected_fields.map { |field| described_class.solr_name(field, :stored_searchable) }
-        expected_dynamic_fields << described_class.solr_name('isbn', :symbol)
-        expect(default_solr_params[:qf].split(' ')).to match_array(expected_dynamic_fields)
+        expected_tesim_fields = %w[title creator creator_full_name creator_display subject description keywords contributor caption transcript translation alt_text identifier]
+        expected_fields = expected_tesim_fields.map { |field| described_class.solr_name(field, :stored_searchable) }
+        expected_fields << 'isbn'
+        expect(default_solr_params[:qf].split(' ')).to match_array(expected_fields)
       end
 
       # Select handler

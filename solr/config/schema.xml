@@ -184,6 +184,14 @@
         <filter class="solr.RemoveDuplicatesTokenFilterFactory"/>
       </analyzer>
     </fieldType>
+
+    <fieldType class="solr.TextField" name="isbn" positionIncrementGap="100">
+      <analyzer>
+        <tokenizer class="solr.KeywordTokenizerFactory"/>
+        <filter class="solr.PatternReplaceTokenFilterFactory" pattern="[^\dXx]" replacement=""/>
+        <filter class="solr.LowerCaseFilterFactory"/>
+      </analyzer>
+    </fieldType>
   </types>
 
 
@@ -198,6 +206,9 @@
 
     <field name="lat" type="tdouble" stored="true" indexed="true" multiValued="false"/>
     <field name="lng" type="tdouble" stored="true" indexed="true" multiValued="false"/>
+
+    <field name="isbn" type="isbn" stored="false" indexed="true" multiValued="true"/>
+    <copyField source="isbn_tesim" dest="isbn"/>
 
     <!-- NOTE:  not all possible Solr field types are represented in the dynamic fields -->
 

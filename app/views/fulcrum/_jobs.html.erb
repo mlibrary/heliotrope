@@ -1,0 +1,18 @@
+<h1>Jobs</h1>
+<ul>
+  <li>
+    <%= link_to(fulcrum_exec_path(:reindex_everything), method: :put, class: "btn btn-default", data: { confirm: 'Are you sure?' }) do %>
+      <span class="glyphicon glyphicon-wrench" aria-hidden="true"></span> Reindex Everything
+    <% end %>
+  </li>
+  <li>
+    <%= link_to(fulcrum_exec_path(:reindex_monographs), method: :put, class: "btn btn-default", data: { confirm: 'Are you sure?' }) do %>
+      <span class="glyphicon glyphicon-wrench" aria-hidden="true"></span> Reindex Monographs
+    <% end %>
+  </li>
+  <li>
+    <%= link_to(fulcrum_exec_path(:reindex_file_sets), method: :put, class: "btn btn-default", data: { confirm: 'Are you sure?' }) do %>
+      <span class="glyphicon glyphicon-wrench" aria-hidden="true"></span> Reindex Assets
+    <% end %>
+  </li>
+</ul>

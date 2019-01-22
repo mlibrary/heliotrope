@@ -50,6 +50,7 @@ Rails.application.routes.draw do
 
   constraints platform_administrator_constraint do
     get 'fulcrum', controller: :fulcrum, action: :dashboard, as: :fulcrum
+    put 'fulcrum/exec/:cmd', controller: :fulcrum, action: :exec, as: :fulcrum_exec
     get 'fulcrum/:partials', controller: :fulcrum, action: :index, as: :fulcrum_partials
     get 'fulcrum/:partials/:id', controller: :fulcrum, action: :show, as: :fulcrum_partial
     resources :api_requests, only: %i[index show destroy] do
