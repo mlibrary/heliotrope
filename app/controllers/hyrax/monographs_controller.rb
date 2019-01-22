@@ -24,6 +24,14 @@ module Hyrax
       @form[:press] = params[:press] unless params[:press].nil?
     end
 
+    def show
+      if current_ability&.can?(:edit, params[:id])
+        super
+      else
+        redirect_to main_app.monograph_catalog_path(params[:id])
+      end
+    end
+
     protected
 
       # The curation_concerns gem doesn't allow cancancan to

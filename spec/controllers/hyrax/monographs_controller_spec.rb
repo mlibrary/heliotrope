@@ -127,7 +127,6 @@ RSpec.describe Hyrax::MonographsController, type: :controller do
         expect(response).to render_template("hyrax/monographs/show")
       end
     end
-
     #
     # Currently returns 404 (:not_found)
     # ActionView::MissingTemplate: Missing template ./public/404.html
@@ -149,5 +148,18 @@ RSpec.describe Hyrax::MonographsController, type: :controller do
     #     expect(response.header["Location"]).to match "http://test.host/"
     #   end
     # end
+  end
+
+  context 'anonymous user' do
+    let(:press) { create(:press) }
+    let(:user) { create(:user) }
+    let(:monograph) { create(:monograph, user: user, press: press.subdomain) }
+
+    describe "#show" do
+      it 'is redirected' do
+        get :show, params: { id: monograph }
+        expect(response).to redirect_to Rails.application.routes.url_helpers.hyrax_monograph_path(monograph, locale: I18n.locale)
+      end
+    end
   end
 end
