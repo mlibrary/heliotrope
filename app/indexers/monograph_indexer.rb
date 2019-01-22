@@ -34,8 +34,8 @@ class MonographIndexer < Hyrax::WorkIndexer
       solr_doc[Solrizer.solr_name('representative_id', :symbol)] = object.representative_id
       trigger_fileset_reindexing(existing_fileset_order, object.ordered_member_ids)
 
-      # 'isbn' is an isbn indexed multivalued field for finding books which is copied from 'isbn_tesim'
-      #   <copyField source="isbn_tesim" dest="isbn"/>
+      # 'isbn_numeric' is an isbn indexed multivalued field for finding books which is copied from 'isbn_tesim'
+      #   <copyField source="isbn_tesim" dest="isbn_numeric"/>
       # the english text stored indexed multivalued field generated for the 'isbn' property a.k.a. object.isbn
       # See './app/models/monograph.rb' and './solr/config/schema.xml' for details.
       # Note: Since this happens server side it may not be possible to write a spec for this field.

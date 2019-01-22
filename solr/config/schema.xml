@@ -207,8 +207,8 @@
     <field name="lat" type="tdouble" stored="true" indexed="true" multiValued="false"/>
     <field name="lng" type="tdouble" stored="true" indexed="true" multiValued="false"/>
 
-    <field name="isbn" type="isbn" stored="false" indexed="true" multiValued="true"/>
-    <copyField source="isbn_tesim" dest="isbn"/>
+    <field name="isbn_numeric" type="isbn" stored="false" indexed="true" multiValued="true"/>
+    <copyField source="isbn_tesim" dest="isbn_numeric"/>
 
     <!-- NOTE:  not all possible Solr field types are represented in the dynamic fields -->
 

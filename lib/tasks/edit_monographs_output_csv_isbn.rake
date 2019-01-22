@@ -22,7 +22,7 @@ namespace :heliotrope do
     end
 
     isbns.each do |isbn|
-      matches = Monograph.where(isbn_ssim: isbn)
+      matches = Monograph.where(isbn_numeric: isbn)
       if matches.count.zero?
         puts "No Monograph found with ISBN #{isbn} ............ EXITING"
         return
