@@ -15,7 +15,7 @@ describe PressSearchBuilder do
       let(:press) { create(:press) }
 
       before do
-        search_builder.blacklight_params['subdomain'] = press.subdomain
+        search_builder.blacklight_params['press'] = press.subdomain
         search_builder.filter_by_press(solr_params)
       end
 
