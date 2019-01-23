@@ -15,6 +15,28 @@ RSpec.describe Hyrax::FileSetsController, type: :controller do
     sign_in user
   end
 
+  describe "#destroy" do
+    before { stub_out_redis }
+
+    context "featured_representative file_set" do
+      before { FeaturedRepresentative.create(monograph_id: monograph.id, file_set_id: file_set.id, kind: 'epub') }
+
+      it "deletes the featured_representative and the file_set" do
+        expect do
+          delete :destroy, params: { id: file_set }
+        end.to change { FeaturedRepresentative.all.count }.from(1).to(0)
+        expect(FileSet.all.count).to be 0
+      end
+    end
+
+    context "not a featured_representative" do
+      it "just deletes the file_set" do
+        delete :destroy, params: { id: file_set }
+        expect(FileSet.all.count).to be 0
+      end
+    end
+  end
+
   context 'tombstone' do
     context 'file set created' do
       before do
