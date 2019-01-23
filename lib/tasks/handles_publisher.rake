@@ -16,12 +16,13 @@ namespace :heliotrope do
     docs = ActiveFedora::SolrService.query(query, rows: 100_000) ;0
 
     docs.each do |m|
+      isbn_value = m['isbn_tesim']&.map { |val| val.sub(/\s*\(.+\)$/, '').delete('^0-9').strip } &.join('; ')
       # the Monograph row for HEB will have the HEB ID
       if args.publisher == 'heb'
         heb_id = m['identifier_tesim']&.find { |i| i[/^heb[0-9].*/] } || ''
-        puts "#{m.id},#{Rails.application.routes.url_helpers.hyrax_monograph_path(m.id)},#{heb_id},#{m['isbn_ssim']&.join('; ')},#{m['doi_ssim']&.first}"
+        puts "#{m.id},#{Rails.application.routes.url_helpers.hyrax_monograph_path(m.id)},#{heb_id},#{isbn_value},#{m['doi_ssim']&.first}"
       else
-        puts "#{m.id},#{Rails.application.routes.url_helpers.hyrax_monograph_path(m.id)},#{m['isbn_ssim']&.join('; ')},#{m['doi_ssim']&.first}"
+        puts "#{m.id},#{Rails.application.routes.url_helpers.hyrax_monograph_path(m.id)},#{isbn_value},#{m['doi_ssim']&.first}"
       end
 
       m['ordered_member_ids_ssim']&.each do |f| # f is just a string, each FileSet's NOID

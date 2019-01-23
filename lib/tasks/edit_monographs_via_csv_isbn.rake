@@ -51,7 +51,7 @@ namespace :heliotrope do
         puts "ISBN numbers missing on row #{row_num} ...................... SKIPPING ROW"
         next
       else
-        matches = Monograph.where(press_sim: 'michigan', isbn_ssim: clean_isbns) #, visibility_ssi: 'restricted')
+        matches = Monograph.where(press_sim: 'michigan', isbn_numeric: clean_isbns) #, visibility_ssi: 'restricted')
 
         if matches.count.zero?
           puts "No Monograph found using ISBN(s) '#{clean_isbns.join('; ')}' on row #{row_num} .......... SKIPPING ROW"

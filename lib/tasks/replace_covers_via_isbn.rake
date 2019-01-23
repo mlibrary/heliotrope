@@ -21,7 +21,7 @@ namespace :heliotrope do
         puts "No number present in image file #{image_base_name}#{image_extension} ...................... SKIPPING"
         next
       else
-        matches = Monograph.where(press_sim: args.publisher, isbn_ssim: isbn)
+        matches = Monograph.where(press_sim: args.publisher, isbn_numeric: isbn)
 
         if matches.count.zero?
           puts "No Monograph found for image file #{image_base_name}#{image_extension} ...................... SKIPPING"

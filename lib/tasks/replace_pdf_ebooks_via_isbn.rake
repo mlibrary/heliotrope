@@ -20,7 +20,7 @@ namespace :heliotrope do
         puts "No number present in PDF file #{pdf_base_name}.pdf ...................... SKIPPING"
         next
       else
-        matches = Monograph.where(press_sim: args.publisher, isbn_ssim: isbn)
+        matches = Monograph.where(press_sim: args.publisher, isbn_numeric: isbn)
 
         if matches.count.zero?
           puts "No Monograph found for PDF file #{pdf_base_name}.pdf ...................... SKIPPING"

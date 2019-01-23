@@ -57,8 +57,8 @@ RSpec.describe MonographIndexer do
       expect(subject['date_created_si']).to eq '2018'
     end
 
-    # 'isbn' is an isbn indexed multivalued field for finding books which is copied from 'isbn_tesim'
-    #   <copyField source="isbn_tesim" dest="isbn"/>
+    # 'isbn_numeric' is an isbn indexed multivalued field for finding books which is copied from 'isbn_tesim'
+    #   <copyField source="isbn_tesim" dest="isbn_numeric"/>
     # the english text stored indexed multivalued field generated for the 'isbn' property a.k.a. object.isbn
     # See './app/models/monograph.rb' and './solr/config/schema.xml' for details.
     # Note: Since this happens server side it may not be possible to write a spec for this field.
