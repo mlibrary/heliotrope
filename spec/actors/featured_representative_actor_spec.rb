@@ -33,15 +33,5 @@ describe FeaturedRepresentativeActor do
         expect { middleware.destroy(monograph_env) }.to change { FeaturedRepresentative.where(monograph_id: monograph.id).count }.from(1).to(0)
       end
     end
-
-    context "for a file_set" do
-      subject { middleware.destroy(file_set_env) }
-
-      let!(:fr) { FeaturedRepresentative.create(monograph_id: monograph.id, file_set_id: file_set.id, kind: 'epub') }
-
-      it 'removes the featured_representative' do
-        expect { middleware.destroy(file_set_env) }.to change { FeaturedRepresentative.where(file_set_id: file_set.id).count }.from(1).to(0)
-      end
-    end
   end
 end

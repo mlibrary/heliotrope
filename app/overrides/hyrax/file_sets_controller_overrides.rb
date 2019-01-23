@@ -19,6 +19,11 @@ Hyrax::FileSetsController.class_eval do
       end
     end
 
+    def destroy
+      FeaturedRepresentative.where(file_set_id: params[:id]).first&.destroy
+      super
+    end
+
     def redirect_link
       # there may be a use case in future for external redirection, but for right now it's just FileSet to FileSet
       link = file_set_doc['redirect_to_ssim']&.first
