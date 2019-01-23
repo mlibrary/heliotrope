@@ -41,6 +41,7 @@ describe Import::CSVParser do
         'shipwreck1.jpg',
         nil
       ]
+      expect(subject['doi']).to eq '10.3998/mpub.9999991.blah'
 
       expect(subject['files_metadata'].count).to eq 9
 
@@ -51,14 +52,16 @@ describe Import::CSVParser do
           'exclusive_to_platform' => 'no',
           'content_type' => ['portrait'],
           'creator' => ['Smith, Benjamin'],
-          'language' => ['English'] },
+          'language' => ['English'],
+          'doi' => '10.3998/mpub.9999992.blah' },
         { 'title' => ['Monograph Miranda'],
           'resource_type' => ['image'],
           'license' => ['http://creativecommons.org/publicdomain/mark/1.0/'],
           'exclusive_to_platform' => 'yes',
           'content_type' => ['audience materials'],
           'creator' => ['Waterhouse, John William'],
-          'language' => ['English', 'German'] },
+          'language' => ['English', 'German'],
+          'doi' => '10.3998/mpub.9999993.blah' },
         { 'title' => ['日本語のファイル'],
           'resource_type' => ['text'],
           'license' => ['http://creativecommons.org/publicdomain/mark/1.0/'],
