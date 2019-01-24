@@ -85,6 +85,72 @@ RSpec.describe Hyrax::FileSetsController, type: :controller do
     end
   end
 
+  context 'redirection of non-editors from cover/representative file_set show pages' do
+    let(:epub_monograph) {
+      create(:public_monograph,
+             user: user,
+             press: press.subdomain,
+             representative_id: cover.id,
+             thumbnail_id: thumbnail.id)
+    }
+    let(:epub) { create(:public_file_set) }
+    let(:cover) { create(:public_file_set) }
+    let(:thumbnail) { create(:public_file_set) }
+    let(:fre) { create(:featured_representative, monograph_id: epub_monograph.id, file_set_id: epub.id, kind: 'epub') }
+
+    before do
+      epub_monograph.ordered_members = [cover, thumbnail, epub]
+      epub_monograph.save!
+      [cover, thumbnail, epub].map(&:save!)
+    end
+
+    context 'editor tries to load show page of a cover/representative file_set' do
+      it 'representative loads its show page' do
+        get :show, params: { id: fre.file_set_id }
+        expect(response).to have_http_status(:success)
+        expect(response).to render_template(:show)
+        expect(response).to render_template("hyrax/file_sets/show")
+      end
+
+      it 'cover loads its show page' do
+        get :show, params: { id: cover.id }
+        expect(response).to have_http_status(:success)
+        expect(response).to render_template(:show)
+        expect(response).to render_template("hyrax/file_sets/show")
+      end
+
+      it 'thumbnail loads its show page' do
+        get :show, params: { id: thumbnail.id }
+        expect(response).to have_http_status(:success)
+        expect(response).to render_template(:show)
+        expect(response).to render_template("hyrax/file_sets/show")
+      end
+    end
+
+    context 'non-editor tries to load show page of a cover/representative file_set' do
+      let(:non_editor) { create(:user) }
+
+      before do
+        sign_in non_editor
+      end
+
+      it 'representative redirects to the monograph show page' do
+        get :show, params: { id: fre.file_set_id }
+        expect(response).to redirect_to Rails.application.routes.url_helpers.monograph_catalog_path(epub_monograph.id)
+      end
+
+      it 'cover redirects to the monograph show page' do
+        get :show, params: { id: cover.id }
+        expect(response).to redirect_to Rails.application.routes.url_helpers.monograph_catalog_path(epub_monograph.id)
+      end
+
+      it 'thumbnail redirects to the monograph show page' do
+        get :show, params: { id: thumbnail.id }
+        expect(response).to redirect_to Rails.application.routes.url_helpers.monograph_catalog_path(epub_monograph.id)
+      end
+    end
+  end
+
   context 'update the thumbnail' do
     let(:thumbnail_path) { File.join(fixture_path, 'csv', 'shipwreck.jpg') }
     let(:thumbnail_deriv_path) { Hyrax::DerivativePath.derivative_path_for_reference(file_set.id, 'thumbnail') }
