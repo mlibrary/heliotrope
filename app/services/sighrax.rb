@@ -65,7 +65,7 @@ module Sighrax
         featured_representative = FeaturedRepresentative.find_by(file_set_id: noid)
         return Asset.send(:new, noid, entity) if featured_representative.blank?
         case featured_representative.kind
-        when 'epub'
+        when 'epub', 'mobi', 'pdf_ebook'
           ElectronicPublication.send(:new, noid, entity)
         else
           Asset.send(:new, noid, entity)

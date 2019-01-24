@@ -22,11 +22,13 @@ RSpec.describe "monograph_catalog/index.html.erb", type: :view do
   let(:debug) { false }
   let(:current_ability) { double("ability") }
   let(:monograph_presenter) { Hyrax::MonographPresenter.new(SolrDocument.new(id: 'mono_id', title: ["Untitled"], has_model_ssim: ['Monograph']), current_ability) }
+  let(:ebook_download_presenter) { double("ebook_download_presenter") }
 
   before do
     stub_template "catalog/_search_sidebar" => "<!-- render-template-catalog/_search_sidebar -->"
     stub_template "catalog/_search_results" => "<!-- render-template-catalog/_search_results -->"
     assign(:monograph_presenter, monograph_presenter)
+    assign(:ebook_download_presenter, ebook_download_presenter)
     allow(view).to receive(:t).with(any_args) { |value| value }
     allow(monograph_presenter).to receive(:date_uploaded).and_return(DateTime.now)
     allow(monograph_presenter).to receive(:creator).and_return([])
@@ -199,6 +201,7 @@ RSpec.describe "monograph_catalog/index.html.erb", type: :view do
         before do
           allow(monograph_presenter).to receive(:buy_url?).and_return(true)
           allow(monograph_presenter).to receive(:buy_url).and_return("BUY-URL")
+          allow(ebook_download_presenter).to receive(:downloadable_ebooks?).and_return(false)
           render
         end
 
