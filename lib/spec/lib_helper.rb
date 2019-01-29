@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-# default spec helper
 require 'spec_helper'
 
 require 'zip'

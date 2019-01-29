@@ -15,30 +15,47 @@ unless Rails.env.production?
     task.options = { tmp_folder: "ruumba", arguments: ["--display-cop-names", "--config .ruumba.yml"] }
   end
 
-  desc "Run spec in lib directory"
+  desc "Run lib directory specs"
   task :lib_spec do
-    puts 'Running spec in lib...'
+    puts 'Running specs in lib ...'
     Dir.chdir('lib') do
       RSpec::Core::RakeTask.new(:spec_lib)
       Rake::Task['spec_lib'].invoke
     end
   end
 
-  desc "Run spec in testing directory"
-  task :testing_spec do
-    puts 'Running spec in testing...'
-    Dir.chdir('testing') do
-      RSpec::Core::RakeTask.new(:spec_testing)
-      Rake::Task['spec_testing'].invoke
+  require 'solr_wrapper'
+  desc "Run solr directory specs"
+  task :solr_spec do
+    puts 'Running specs in solr ...'
+    Dir.chdir('solr') do
+      SolrWrapper.wrap do |solr|
+        solr.with_collection(name: "hydra-test") do
+          RSpec::Core::RakeTask.new(:spec_solr)
+          Rake::Task['spec_solr'].invoke
+        end
+      end
     end
   end
 
   desc 'Run the ci build'
-  task ci: %i[rubocop ruumba lib_spec] do
+  task ci: %i[rubocop ruumba lib_spec solr_spec] do
     require 'active_fedora/rake_support'
     with_test_server do
       # run the tests
       Rake::Task['spec'].invoke
+    end
+  end
+
+  #
+  # The testing directory specs run against heliotrope-testing on nectar
+  #
+  desc "Run testing directory specs"
+  task :testing_spec do
+    puts 'Running specs in testing ...'
+    Dir.chdir('testing') do
+      RSpec::Core::RakeTask.new(:spec_testing)
+      Rake::Task['spec_testing'].invoke
     end
   end
 end
