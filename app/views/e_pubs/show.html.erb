@@ -40,7 +40,7 @@ webgl = Webgl::Unity.from_directory(UnpackService.root_path_from_noid(webgl_id, 
           href: "<%= "#{main_app.epub_url.gsub!(/\?.*/, '')}/" %>",
           skipLink: '.skip',
           useArchive: <%= @use_archive %>,
-          download_links: <%= @epub_download_presenter.download_links.to_json.html_safe %>,
+          download_links: <%= @ebook_download_presenter.csb_download_links.to_json.html_safe %>,
           loader_template: '<div class="fulcrum-loading"><div class="rect rect1"></div><div class="circle circ1"></div><div class="rect rect2"></div><div class="circle circ2"></div></div>',
           metadata: {
             doi: '<%= @citable_link %>',
@@ -411,7 +411,7 @@ webgl = Webgl::Unity.from_directory(UnpackService.root_path_from_noid(webgl_id, 
         }).addTo(reader);
 
         // Download widget
-        <% if @epub_download_presenter.download_links.length.positive? && @share_link.nil? %>
+        <% if @ebook_download_presenter.csb_download_links.length.positive? && @share_link.nil? %>
         cozy.control.download({
             region: 'top.toolbar.left',
             template: '<button class="button--sm cozy-download" data-toggle="open" aria-label="Download book" role="button"><i id="download" class="oi" data-glyph="data-transfer-download" title="Download book" aria-hidden="true"></i></button>',

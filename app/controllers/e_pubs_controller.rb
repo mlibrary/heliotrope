@@ -19,7 +19,7 @@ class EPubsController < CheckpointController
       @monograph_presenter = Hyrax::PresenterFactory.build_for(ids: [@presenter.parent.id], presenter_class: Hyrax::MonographPresenter, presenter_args: current_ability).first
     end
 
-    @epub_download_presenter = EPubDownloadPresenter.new(@presenter, @monograph_presenter, current_ability)
+    @ebook_download_presenter = EBookDownloadPresenter.new(@monograph_presenter, current_ability, current_actor)
 
     @use_archive = if File.exist?(File.join(UnpackService.root_path_from_noid(params[:id], 'epub'), params[:id] + ".sm.epub"))
                      true

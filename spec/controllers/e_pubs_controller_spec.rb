@@ -272,7 +272,7 @@ RSpec.describe EPubsController, type: :controller do
     let(:policy) { double('policy', show?: true) }
     let(:n) { 20 }
     let(:m) { 10 }
-    let(:presenter) { double('presenter', id: 'id', epub?: true, citable_link: 'link', monograph_id: 'mono_id') }
+    let(:presenter) { double('presenter', id: 'id', epub?: true, epub_id: '111111111', mobi_id: nil, pdf_ebook_id: nil, citable_link: 'link', monograph_id: 'mono_id') }
     let(:parent) { double('monograph_presenter', title: 'Title', subdomain: 'subdomain', id: 'mono_id') }
 
     before do
