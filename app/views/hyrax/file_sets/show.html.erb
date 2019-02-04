@@ -1,5 +1,5 @@
 <% provide :page_title, @presenter.page_title %>
-<% if parent.blank? %>
+<% if @presenter.parent.blank? %>
   <%= render "hyrax/file_sets/orphan_fileset", presenter: @presenter %>
 <% else %>
 <% provide :page_header do %>
@@ -51,7 +51,7 @@
       </div> <!-- /.asset-attributes -->
       <div class="row asset-actions">
         <div class="col-sm-12">
-          <%= render "show_actions", presenter: @presenter, parent: parent %>
+          <%= render "show_actions", presenter: @presenter, parent: @presenter.parent %>
         </div>
       </div> <!-- /.asset-actions -->
     </div> <!-- / file_sets metadata and actions -->

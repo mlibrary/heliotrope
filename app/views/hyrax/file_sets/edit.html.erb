@@ -1,6 +1,10 @@
 <% provide :page_title, curation_concern_page_title(curation_concern) %>
 <% provide :page_header do %>
-  <h1 class="lower">Edit <%= curation_concern %></h1>
+<div class="row">
+  <div class="col-xs-12 col-sm-12">
+    <h1><span class="fa fa-edit" aria-hidden="true"></span><%= t('.header', file_set: curation_concern) %></h1>
+  </div>
+</div>
 <% end %>
 
 <div class="row">

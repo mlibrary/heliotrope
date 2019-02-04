@@ -8,6 +8,7 @@ RSpec.describe "Monograph Manifest", type: :request do
   context 'anonymous' do
     describe "GET /concern/monographs/:id/manifest" do
       it do
+        skip "The /concern/monographs/:id/manifest route, if not intercepted by heliotrope, generates a IIIF manifest in Hyrax 2.1"
         expect { get monograph_manifests_path(monograph) }.to raise_error(ActionController::RoutingError)
       end
     end
@@ -21,6 +22,7 @@ RSpec.describe "Monograph Manifest", type: :request do
 
       describe "GET /concern/monographs/:id/manifest" do
         it do
+          skip "The /concern/monographs/:id/manifest routes, if not intercepted by heliotrope, generates a IIIF manifest in Hyrax 2.1"
           expect { get monograph_manifests_path(monograph) }.to raise_error(ActionController::RoutingError)
         end
       end

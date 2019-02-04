@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20181214194406) do
+ActiveRecord::Schema.define(version: 20190201204370) do
 
   create_table "api_requests", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.integer "user_id"
@@ -46,6 +46,28 @@ ActiveRecord::Schema.define(version: 20181214194406) do
     t.boolean "passed"
     t.index ["checked_uri"], name: "index_checksum_audit_logs_on_checked_uri"
     t.index ["file_set_id", "file_id"], name: "by_file_set_id_and_file_id"
+  end
+
+  create_table "collection_branding_infos", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.string "collection_id"
+    t.string "role"
+    t.string "local_path"
+    t.string "alt_text"
+    t.string "target_url"
+    t.integer "height"
+    t.integer "width"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "collection_type_participants", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.bigint "hyrax_collection_type_id"
+    t.string "agent_type"
+    t.string "agent_id"
+    t.string "access"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["hyrax_collection_type_id"], name: "hyrax_collection_type_id"
   end
 
   create_table "components", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
@@ -152,6 +174,23 @@ ActiveRecord::Schema.define(version: 20181214194406) do
     t.integer "user_id"
     t.index ["file_id"], name: "index_file_view_stats_on_file_id"
     t.index ["user_id"], name: "index_file_view_stats_on_user_id"
+  end
+
+  create_table "hyrax_collection_types", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.string "title"
+    t.text "description"
+    t.string "machine_id"
+    t.boolean "nestable", default: true, null: false
+    t.boolean "discoverable", default: true, null: false
+    t.boolean "sharable", default: true, null: false
+    t.boolean "allow_multiple_membership", default: true, null: false
+    t.boolean "require_membership", default: false, null: false
+    t.boolean "assigns_workflow", default: false, null: false
+    t.boolean "assigns_visibility", default: false, null: false
+    t.boolean "share_applies_to_new_works", default: true, null: false
+    t.boolean "brandable", default: true, null: false
+    t.string "badge_color", default: "#663333"
+    t.index ["machine_id"], name: "index_hyrax_collection_types_on_machine_id", unique: true
   end
 
   create_table "hyrax_features", id: :integer, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
@@ -282,17 +321,18 @@ ActiveRecord::Schema.define(version: 20181214194406) do
     t.string "access"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.index ["permission_template_id", "agent_id", "agent_type", "access"], name: "uk_permission_template_accesses", unique: true
     t.index ["permission_template_id"], name: "fk_rails_9c1ccdc6d5"
   end
 
   create_table "permission_templates", id: :integer, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
-    t.string "admin_set_id"
+    t.string "source_id"
     t.string "visibility"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.date "release_date"
     t.string "release_period"
-    t.index ["admin_set_id"], name: "index_permission_templates_on_admin_set_id", unique: true
+    t.index ["source_id"], name: "index_permission_templates_on_source_id", unique: true
   end
 
   create_table "presses", id: :integer, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
@@ -644,6 +684,7 @@ ActiveRecord::Schema.define(version: 20181214194406) do
   end
 
   add_foreign_key "api_requests", "users"
+  add_foreign_key "collection_type_participants", "hyrax_collection_types"
   add_foreign_key "components_products", "components"
   add_foreign_key "components_products", "products"
   add_foreign_key "curation_concerns_operations", "users"

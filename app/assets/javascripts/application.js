@@ -12,8 +12,8 @@
 //
 //= require common
 //= require ableplayer_turbolinks
-//= require jquery-ui/datepicker
 //= require dataTables/jquery.dataTables
+//= require jquery-ui/widgets/datepicker
 //= require dataTables/bootstrap/3/jquery.dataTables.bootstrap
 // note: blacklight/blacklight must always be included after turbolinks
 //= require blacklight/blacklight

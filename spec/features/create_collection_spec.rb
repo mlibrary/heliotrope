@@ -13,7 +13,7 @@ describe 'Create a collection' do
     it do
       visit hyrax.new_dashboard_collection_path
       fill_in 'Title', with: 'Test collection'
-      click_button 'Create Collection'
+      click_button 'Save'
       expect(page).to have_content 'Collection was successfully created.'
     end
   end
