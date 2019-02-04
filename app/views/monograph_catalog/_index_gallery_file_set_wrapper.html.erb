@@ -3,13 +3,13 @@
   <div class="thumbnail">
     <% if fs_presenter.use_glyphicon? %>
       <% icon_string = '<span class="' + fs_presenter.glyphicon_type + ' file-set-glyphicon" aria-hidden="true"></span>' %>
-      <% tn = render_thumbnail_tag(document, {}, :counter => document_counter_with_offset(document_counter)) %>
+      <% tn = render_thumbnail_tag(document, {}, counter: document_counter_with_offset(document_counter)) %>
       <%= tn.gsub(/<img.*>/, icon_string + '<br/>').html_safe %>
     <% else %>
-      <%= render_thumbnail_tag(document, {alt: fs_presenter.alt_text}, :counter => document_counter_with_offset(document_counter)) %>
+      <%= render_thumbnail_tag(document, {alt: fs_presenter.alt_text}, counter: document_counter_with_offset(document_counter)) %>
     <% end %>
     <div class="caption">
-      <%= render_document_partials document, blacklight_config.view_config(:gallery).partials, :document_counter => document_counter %>
+      <%= render_document_partials document, blacklight_config.view_config(:gallery).partials, document_counter: document_counter %>
     </div>
     <% if fs_presenter.external_resource? %>
       <div class="external-resource-link">
