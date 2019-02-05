@@ -6,7 +6,7 @@
            alt="Cover image for <%= presenter.representative_alt_text %>">
     </a>
     <div class="caption">
-      <%= render_document_partials document, blacklight_config.view_config(:gallery).partials, :document_counter => document_counter %>
+      <%= render_document_partials document, blacklight_config.view_config(:gallery).partials, document_counter: document_counter %>
       <p class="authors"><%= presenter.authors %></p>
     </div>
   </div>

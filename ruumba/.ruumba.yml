@@ -2,54 +2,36 @@ AllCops:
   TargetRubyVersion:
     2.3.1
 
-# These *must* stay "false" because they will never
-# work with ruumba:
+##############################################################################
+#
+# These *must* stay "false" because they will never work with ruumba:
 # https://github.com/ericqweinstein/ruumba#fix-paths-and-unapplicable-cops
-# begin unapplicable cops
+#
+# Inapplicable Cops
 
+Layout/AlignArray:
+  Enabled: false
 Layout/AlignHash:
   Enabled: false
 Layout/AlignParameters:
   Enabled: false
+Layout/BlockAlignment:
+  Enabled: false
 Layout/CaseIndentation:
+  Enabled: false
+Layout/ClosingParenthesisIndentation:
   Enabled: false
 Layout/ElseAlignment:
   Enabled: false
 Layout/EndAlignment:
-  Enabled: false
-Layout/IndentationWidth:
-  Enabled: false
-Layout/TrailingBlankLines:
-  Enabled: false
-
-Style/FrozenStringLiteralComment:
-  Enabled: false
-
-# end unapplicable cops
-#
-# begin deviation from defaults
-
-Style/RedundantParentheses:
-  Enabled: false
-
-Style/TernaryParentheses:
-  Enabled: false
-
-# end deviation from defaults
-#
-# begin TODO: cops that need to be reevaluated
-
-Layout/AlignArray:
-  Enabled: false
-Layout/BlockAlignment:
-  Enabled: false
-Layout/ClosingParenthesisIndentation:
   Enabled: false
 Layout/ExtraSpacing:
   Enabled: false
 Layout/FirstParameterIndentation:
   Enabled: false
 Layout/IndentationConsistency:
+  Enabled: false
+Layout/IndentationWidth:
   Enabled: false
 Layout/LeadingCommentSpace:
   Enabled: false
@@ -61,15 +43,9 @@ Layout/SpaceInsideHashLiteralBraces:
   Enabled: false
 Layout/SpaceInsideStringInterpolation:
   Enabled: false
+Layout/TrailingBlankLines:
+  Enabled: false
 
-Lint/AssignmentInCondition:
-  Enabled: false
-Lint/StringConversionInInterpolation:
-  Enabled: false
-Lint/UselessAssignment:
-  Enabled: false
-Lint/UnusedBlockArgument:
-  Enabled: false
 Lint/Void:
   Enabled: false
 
@@ -78,16 +54,22 @@ Metrics/BlockLength:
 Metrics/LineLength:
   Enabled: false
 
+Style/FrozenStringLiteralComment:
+  Enabled: false
+
+##############################################################################
+#
+# Deviations from Defaults
+
+Lint/AssignmentInCondition:
+  Enabled: false
+Lint/UselessAssignment:
+  Enabled: false
+
 Performance/StringReplacement:
   Enabled: false
 
-Style/AndOr:
-  Enabled: false
-Style/ConditionalAssignment:
-  Enabled: false
 Style/EmptyElse:
-  Enabled: false
-Style/HashSyntax:
   Enabled: false
 Style/IdenticalConditionalBranches:
   Enabled: false
@@ -95,19 +77,15 @@ Style/IfInsideElse:
   Enabled: false
 Style/IfUnlessModifier:
   Enabled: false
-Style/MethodCallWithoutArgsParentheses:
-  Enabled: false
 Style/Next:
   Enabled: false
-Style/PreferredHashMethods:
+Style/RedundantParentheses:
   Enabled: false
 Style/StringLiterals:
   Enabled: false
-Style/StringLiteralsInInterpolation:
-  Enabled: false
 Style/SymbolProc:
   Enabled: false
-Style/UnlessElse:
+Style/TernaryParentheses:
   Enabled: false
 Style/UnneededInterpolation:
   Enabled: false
