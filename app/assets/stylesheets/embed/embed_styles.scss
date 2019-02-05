@@ -2,7 +2,7 @@
 // HELIOTROPE EMBEDDED CONTENT STYLESHEET
 ///////////////////////////////////////////
 
-html, body, figure, #image, .able, .able-wrapper{
+html, body, figure, #image{
   margin: 0px;
   padding: 0px;
   border: 0px;
@@ -16,6 +16,7 @@ html {
 
 .able-wrapper {
   .able {
+    margin: 0px;
     box-shadow: 0 0 0 0 transparent;
     .able-player.able-video {
       // shunt the controls onto the video and hide them
@@ -117,4 +118,18 @@ figure:hover > div:nth-child(1), figure:active > div:nth-child(1) {
   -webkit-opacity: 1;
   -moz-opacity: 1;
   opacity: 1;
+}
+
+#audio-transcript-container {
+  .able-transcript-area {
+    height: 250px;
+    .able-window-toolbar {
+      height: 20px;
+      padding: 2px;
+    }
+  }
+
+  .able-transcript {
+    height: 225px;
+  }
 }

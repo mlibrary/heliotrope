@@ -873,6 +873,21 @@ footer.press {
 
   }
 
+  #audio-transcript-container {
+    .able-transcript-area {
+      height: 250px;
+      .able-window-toolbar {
+        height: 40px;
+        padding: 2px;
+      }
+    }
+
+    .able-transcript {
+      height: 207px;
+    }
+  }
+
+
   #transcript, .translation {
     width: 97%;
   }

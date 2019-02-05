@@ -1,8 +1,3 @@
-<%# https://github.com/mlibrary/heliotrope/issues/1084 %>
-<% content_for :head do %>
-  <meta name="turbolinks-cache-control" content="no-cache">
-<% end %>
-
 <audio id="audio"
        preload="auto"
        data-able-player
@@ -17,3 +12,21 @@
 <% if file_set.transcript.present? %>
   <div id="audio-transcript-container"></div>
 <% end %>
+
+<script>
+    $(document).ready(function() {
+        setupAudioAnalytics();
+    });
+
+    function setupAudioAnalytics() {
+        if (typeof(ga) == typeof(Function)) {
+            var audio = $('#audio').get(0)
+            audio.addEventListener("play", function() {
+                ga('pressTracker.send', 'event', 'e_reader', 'play_audio', window.location.href);
+            });
+            audio.addEventListener("pause", function() {
+                ga('pressTracker.send', 'event', 'e_reader', 'stop_audio', window.location.href);
+            });
+        }
+    }
+</script>
