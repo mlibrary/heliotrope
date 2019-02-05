@@ -43,12 +43,12 @@ RSpec.describe ReindexJob, type: :job do
     let(:target) { 'everything' }
 
     before do
-      allow(ActiveFedora::Base).to receive(:reindex_everything)
+      allow(RestfulFedora).to receive(:reindex_everything)
     end
 
     it 'executes perform' do
       perform_enqueued_jobs { job }
-      expect(ActiveFedora::Base).to have_received(:reindex_everything)
+      expect(RestfulFedora).to have_received(:reindex_everything)
     end
   end
 
