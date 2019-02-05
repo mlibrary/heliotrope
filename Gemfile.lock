@@ -827,6 +827,10 @@ GEM
     simple_form (3.5.0)
       actionpack (> 4, < 5.2)
       activemodel (> 4, < 5.2)
+    simple_solr_client (0.2.0)
+      httpclient
+      nokogiri
+      pry
     simplecov (0.16.1)
       docile (~> 1.1)
       json (>= 1.8, < 3)
@@ -998,6 +1002,7 @@ DEPENDENCIES
   sass-rails (~> 5.0)
   selenium-webdriver
   signet
+  simple_solr_client
   sinatra (~> 2.0.2)
   sitemap_generator (~> 6.0.1)
   skylight
@@ -1016,4 +1021,4 @@ DEPENDENCIES
   yard
 
 BUNDLED WITH
-   1.16.3
+   1.17.2

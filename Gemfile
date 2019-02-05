@@ -174,6 +174,7 @@ group :development, :test do
   gem 'rubocop'
   gem 'rubocop-rspec'
   gem 'ruumba', '0.1.2'
+  gem 'simple_solr_client'
   gem 'solr_wrapper', '0.21.0'
   # Turnsole - the Ruby gem for the Heliotrope API
   gem 'turnsole', git: 'https://github.com/mlibrary/turnsole', branch: 'master'

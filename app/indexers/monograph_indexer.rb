@@ -38,7 +38,6 @@ class MonographIndexer < Hyrax::WorkIndexer
       #   <copyField source="isbn_tesim" dest="isbn_numeric"/>
       # the english text stored indexed multivalued field generated for the 'isbn' property a.k.a. object.isbn
       # See './app/models/monograph.rb' and './solr/config/schema.xml' for details.
-      # Note: Since this happens server side it may not be possible to write a spec for this field.
     end
   end
 
