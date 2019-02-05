@@ -5,7 +5,9 @@ Hyrax::FileSetsController.class_eval do
     Hyrax::FileSetsController.form_class = ::Heliotrope::FileSetEditForm
 
     def show
-      # local heliotrope change
+      # local heliotrope changes
+      (redirect_to Rails.application.routes.url_helpers.monograph_catalog_path(presenter&.parent&.id)) && return if bounce_from_representatives?
+
       redirect_to redirect_link, status: :moved_permanently if redirect_link.present?
       if presenter.multimedia?
         CounterService.from(self, presenter).count(request: 1)
@@ -22,6 +24,12 @@ Hyrax::FileSetsController.class_eval do
     def destroy
       FeaturedRepresentative.where(file_set_id: params[:id]).first&.destroy
       super
+    end
+
+    def bounce_from_representatives?
+      # non-editors and search engines shouldn't see show pages for covers or "representative" FileSets
+      featured_rep = FeaturedRepresentative.where(file_set_id: params[:id]).first
+      !(can? :edit, params[:id]) && (featured_rep.present? || [presenter&.parent&.representative_id, presenter&.parent&.thumbnail_id].include?(params[:id]))
     end
 
     def redirect_link
