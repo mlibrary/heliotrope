@@ -59,6 +59,7 @@ $ git clone https://github.com/mlibrary/heliotrope.git
 $ cd heliotrope
 $ bundle install
 $ ./bin/bundle exec ./bin/setup
+$ rails checkpoint:migrate
 ```  
 See the [Wiki](https://github.com/mlibrary/heliotrope/wiki/Static-Pages-and-Blog) for information on [Jekyll](https://jekyllrb.com/) integration.
 
