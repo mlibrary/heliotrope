@@ -45,7 +45,7 @@ class CounterReportsController < ApplicationController
     return render if params[:customer_id].present?
     # institutional 'guest' users can only see their institutions, but all presses
     # press admins can only see their presses, but all institutions
-    return render 'hyrax/base/unauthorized', status: :unauthorized unless authorized_insitutions_or_presses?
+    return render 'counter_reports/unauthorized', status: :unauthorized unless authorized_insitutions_or_presses?
 
     case params[:id]
     when 'pr'
@@ -104,7 +104,7 @@ class CounterReportsController < ApplicationController
                       else
                         current_institutions
                       end
-      return render 'hyrax/base/unauthorized', status: :unauthorized if params[:customer_id].nil? && @institutions.empty?
+      return render 'counter_reports/unauthorized', status: :unauthorized if params[:customer_id].nil? && @institutions.empty?
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.
