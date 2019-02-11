@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe Sighrax, type: :model do
+RSpec.describe Sighrax do
   describe '#facotry' do
     subject { described_class.factory(noid) }
 

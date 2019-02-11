@@ -4,7 +4,7 @@ class ReindexJob < ApplicationJob
   def perform(target)
     case target
     when 'everything'
-      ActiveFedora::Base.reindex_everything
+      RestfulFedora.reindex_everything
     when 'monographs'
       Monograph.all.each do |monograph|
         UpdateIndexJob.perform_later(monograph.id)
