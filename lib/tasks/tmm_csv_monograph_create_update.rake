@@ -2,19 +2,12 @@
 
 require 'htmlentities'
 
-# TODO: merge fixes into edit_monograph_via_csv_noid.rake and/or pull common functionality into one or more Service(s)
-# TODO: offer publisher and visibility as options, maybe
-
-# note: I've left the call to Hyrax::CurationConcern.actor.update commented out as a rudimentary way to see what...
-#         changes will be made before triggering the updates
-
-desc 'Lookup Monographs via ISBNs and update them from a CSV file'
+desc 'Task to be called by a cron for Monographs create/edit from TMM CSV files (ISBN lookup)'
 namespace :heliotrope do
-  task :edit_monographs_via_csv_isbn, [:input_file, :user_key] => :environment do |_t, args|
-    # Usage: bundle exec rails "heliotrope:edit_monographs_via_csv_isbn[/path/to/monographs.csv, <user's email>]"
+  task :tmm_csv_monograph_create_update, [:input_file] => :environment do |_t, args|
+    # Usage: bundle exec rails "heliotrope:tmm_csv_monograph_create_update[/path/to/monographs.csv]"
 
     fail "CSV file not found '#{args.input_file}'" unless File.exist?(args.input_file)
-    fail "User not found '#{args.user_key}'" unless User.where(user_key: args.user_key).count == 1
 
     puts "Parsing file: #{args.input_file}"
     rows = CSV.read(args.input_file, encoding: 'windows-1252:utf-8', headers: true, skip_blanks: true).delete_if { |row| row.to_hash.values.all?(&:blank?) }
@@ -49,21 +42,18 @@ namespace :heliotrope do
         puts "ISBN numbers missing on row #{row_num} ...................... SKIPPING ROW"
         next
       else
-        matches = Monograph.where(isbn_numeric: clean_isbns)
+        matches = Monograph.where(press_sim: 'michigan', isbn_numeric: clean_isbns) #, visibility_ssi: 'restricted')
 
-        if matches.count.zero?
-          puts "No Monograph found using ISBN(s) '#{clean_isbns.join('; ')}' on row #{row_num} .......... SKIPPING ROW"
-          next
-        elsif matches.count > 1 # shouldn't happen
+        if matches.count > 1 # shouldn't happen
           puts "More than 1 Monograph found using ISBN(s) #{clean_isbns.join('; ')} on row #{row_num} ... SKIPPING ROW"
           matches.each { |m| puts Rails.application.routes.url_helpers.hyrax_monograph_url(m.id) }
           puts
           next
         else
-          monograph = matches.first
+          new_monograph = matches.count.zero?
+          monograph = new_monograph ? Monograph.new : matches.first
 
-          current_ability = Ability.new(User.where(user_key: args.user_key).first)
-          puts "User doesn't have edit privileges for Monograph with NOID #{monograph.id} on row #{row_num} ... SKIPPING ROW" unless current_ability.can?(:edit, monograph)
+          current_ability = Ability.new(User.batch_user)
 
           attrs = {}
           Import::RowData.new.data_for_monograph(row, attrs)
@@ -80,22 +70,32 @@ namespace :heliotrope do
           # TMM has some fields with HTML tags in it. This functionality will have to be manually tested as...
           # part of HELIO-2298
           attrs = maybe_convert_to_markdown(attrs)
-          attrs = cleanup_characters(attrs)
 
-          # TODO: decide if it's worth offering the user a chance to bow-out based on the messages, as is done in the importer
-          if check_for_changes_isbn(monograph, attrs, row_num)
-            backup_file = open_backup_file(args.input_file) if !backup_file_created
-            backup_file_created = true
+          # sending new_monograph param here because of a weird FCREPO bug that affects Hyrax work *creation* only
+          # https://github.com/samvera/hyrax/issues/3527
+          attrs = cleanup_characters(attrs, new_monograph)
 
-            CSV.open(backup_file, "a") do |csv|
-              exporter = Export::Exporter.new(monograph.id, :monograph)
-              csv << exporter.monograph_row
+          if new_monograph
+            puts "No Monograph found using ISBN(s) '#{clean_isbns.join('; ')}' on row #{row_num} .......... CREATING"
+            attrs['press'] = 'michigan'
+            attrs['visibility'] = 'restricted'
+            # attrs['admin_set_id'] = admin_set_id if admin_set_id
+
+            Hyrax::CurationConcern.actor.create(Hyrax::Actors::Environment.new(monograph, current_ability, attrs))
+          else
+            if check_for_changes_isbn(monograph, attrs, row_num)
+              backup_file = open_backup_file(args.input_file) if !backup_file_created
+              backup_file_created = true
+
+              CSV.open(backup_file, "a") do |csv|
+                exporter = Export::Exporter.new(monograph.id, :monograph)
+                csv << exporter.monograph_row
+              end
             end
+
+            Hyrax::CurationConcern.actor.update(Hyrax::Actors::Environment.new(monograph, current_ability, attrs))
           end
 
-          # TODO: Maybe use a simplified UpdateMonographJob, when things settle. Metadata-only's not too slow tho.
-          #### Hyrax::CurationConcern.actor.update(Hyrax::Actors::Environment.new(monograph, current_ability, attrs))
-          # puts attrs
         end
       end
     end
@@ -132,20 +132,20 @@ namespace :heliotrope do
 
   # this method expects HTMLEntities to have done its work in converting entities and decimal codes
   # TODO: this should happen somewhere else -- in RowData, or even in a before_save callback on both Monographs and FileSets?
-  def cleanup_characters(attrs)
+  def cleanup_characters(attrs, new_monograph)
     attrs_out = {}
     attrs.each do |key, value|
       # At this point the cardinality is as required by ActiveFedora, ready to be set. Store it for later.
       is_array = value.kind_of?(Array)
       # Array wrap for uniform processing.
-      cleaned_value = clean_values(Array(value))
+      cleaned_value = clean_values(Array(value), new_monograph)
       # back to expected AF cardinality
       attrs_out[key] = is_array ? cleaned_value : cleaned_value.first
     end
     attrs_out
   end
 
-  def clean_values(values)
+  def clean_values(values, new_monograph)
     cleaned_values = []
 
     values.each do |value|
@@ -154,6 +154,12 @@ namespace :heliotrope do
         # value = value.gsub('—', '--') # emdash
         value = value.gsub(/[‘’]/, "'") # left, right single quotation marks
         value = value.gsub(/[“”]/, '"') # left, right double quotation marks
+
+        # this line can be removed once this issue is closed. Note that the extra space...
+        # should be removed on the next edit run as the issue does not affect Work updating
+        # https://github.com/samvera/hyrax/issues/3527
+        value = value + ' ' if new_monograph && value.end_with?('"') && value.include?("\n")
+
         cleaned_values << value.gsub('…', '...') # horizontal ellipsis
       else
         cleaned_values << nil
@@ -162,7 +168,6 @@ namespace :heliotrope do
 
     cleaned_values
   end
-
 
   def check_for_changes_isbn(monograph, attrs, row_num)
     column_names = METADATA_FIELDS.pluck(:metadata_name).zip(METADATA_FIELDS.pluck(:field_name)).to_h
