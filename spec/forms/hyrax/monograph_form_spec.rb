@@ -25,6 +25,7 @@ describe Hyrax::MonographForm do
                            language
                            representative_id
                            thumbnail_id
+                           rendering_ids
                            files
                            visibility_during_embargo
                            embargo_release_date

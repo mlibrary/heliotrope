@@ -146,7 +146,7 @@ describe Import::Importer do
       }
     end
     let(:workflow) { Sipity::Workflow.find_by!(name: workflow_name, permission_template: permission_template) }
-    let(:permission_template) { create(:permission_template, admin_set_id: admin_set.id) }
+    let(:permission_template) { create(:permission_template, source_id: admin_set.id) }
 
     before do
       stub_out_redis

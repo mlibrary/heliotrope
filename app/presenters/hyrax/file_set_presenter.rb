@@ -363,5 +363,11 @@ module Hyrax
                   'default'
                 end
     end
+
+    # Hyrax 2.x update, needed for the monograph show page
+    # Which we're probably getting rid of anyway, but... well whatever
+    def user_can_perform_any_action?
+      current_ability.can?(:edit, id) || current_ability.can?(:destroy, id) || current_ability.can?(:download, id)
+    end
   end
 end

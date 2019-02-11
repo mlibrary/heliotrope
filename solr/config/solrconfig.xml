@@ -198,7 +198,7 @@
       <str>termsComponent</str>
     </arr>
   </requestHandler>
-  
+
 <!-- Spell Check
 
         The spell check component can return a list of alternative spelling
@@ -285,6 +285,8 @@
       -->
   </searchComponent>
 
+  <!-- TURN OFF SUGGEST - it causes performance issues -->
+   <!--
   <searchComponent name="suggest" class="solr.SuggestComponent">
     <lst name="suggester">
       <str name="name">mySuggester</str>
@@ -305,6 +307,7 @@
       <str>suggest</str>
     </arr>
   </requestHandler>
+  -->
 
   <requestHandler name="/update/extract" class="org.apache.solr.handler.extraction.ExtractingRequestHandler">
     <lst name="defaults">

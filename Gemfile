@@ -66,9 +66,8 @@ gem 'tzinfo-data', platforms: %i[mingw mswin x64_mingw jruby]
 #
 ##############################################################################
 
+# Currently used in the robots_controller, maybe not needed in the long run
 gem 'actionpack-page_caching', '~> 1.1.0'
-
-# gem 'active-fedora', '~> 11.3.1'
 
 # Canister provides containers
 gem 'canister', '~> 0.9.0'
@@ -93,7 +92,7 @@ gem 'devise-guests', '~> 0.3'
 gem 'faraday', '~>0.12.2'
 gem 'faraday_middleware', '~>0.12.2'
 
-gem 'hyrax', '2.0.0'
+gem 'hyrax', '2.4.1'
 
 # Use Jekyll for blog and informational pages
 gem 'jekyll', '~> 3.6.3'

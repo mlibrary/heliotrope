@@ -31,6 +31,7 @@ describe Hyrax::Forms::BatchUploadForm do
                            related_url
                            representative_id
                            thumbnail_id
+                           rendering_ids
                            files
                            visibility_during_embargo
                            embargo_release_date

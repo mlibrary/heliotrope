@@ -20,9 +20,9 @@ RSpec.describe Hyrax::CurationConcern do
       expect(middlewares[7]).to eq Hyrax::Actors::AddToWorkActor
       expect(middlewares[8]).to eq Hyrax::Actors::AttachMembersActor
       expect(middlewares[9]).to eq Hyrax::Actors::ApplyOrderActor
-      expect(middlewares[10]).to eq Hyrax::Actors::InterpretVisibilityActor
-      expect(middlewares[11]).to eq Hyrax::Actors::TransferRequestActor
-      expect(middlewares[12]).to eq Hyrax::Actors::DefaultAdminSetActor
+      expect(middlewares[10]).to eq Hyrax::Actors::DefaultAdminSetActor
+      expect(middlewares[11]).to eq Hyrax::Actors::InterpretVisibilityActor
+      expect(middlewares[12]).to eq Hyrax::Actors::TransferRequestActor
       expect(middlewares[13]).to eq Hyrax::Actors::ApplyPermissionTemplateActor
       expect(middlewares[14]).to eq Hyrax::Actors::CleanupFileSetsActor
       expect(middlewares[15]).to eq Hyrax::Actors::CleanupTrophiesActor

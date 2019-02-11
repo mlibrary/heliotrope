@@ -15,6 +15,8 @@ class ApplicationController < ActionController::Base
   # Adds a few additional behaviors into the application controller
   include Blacklight::Controller
   include Hydra::Controller::ControllerBehavior
+  # hyrax 2.1 upgrade
+  skip_after_action :discard_flash_if_xhr
 
   # Adds Hyrax behaviors to the application controller.
   include Hyrax::Controller
