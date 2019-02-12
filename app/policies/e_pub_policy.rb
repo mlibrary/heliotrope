@@ -36,6 +36,10 @@ class EPubPolicy < ResourcePolicy
                    else
                      Greensub.actor_products(actor)
                    end
+        debug_log("actor products: #{products.count}")
+        products.each { |product| debug_log("actor product: #{product.identifier}") }
+        debug_log("component products: #{component.products.count}")
+        component.products.each { |product| debug_log("component product: #{product.identifier}") }
         value = (products & component.products).any?
         debug_log("actor_products_intersect_component_products_any? #{value}")
         value

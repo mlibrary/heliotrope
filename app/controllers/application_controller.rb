@@ -36,6 +36,14 @@ class ApplicationController < ActionController::Base
     current_user || Anonymous.new(request_attributes)
   end
 
+  def current_user
+    user = super
+    if user && user.request_attributes == {}
+      user.request_attributes = request_attributes
+    end
+    user
+  end
+
   def current_institutions?
     current_institutions.count.positive?
   end

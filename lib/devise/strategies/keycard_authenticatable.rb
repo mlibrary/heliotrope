@@ -53,6 +53,7 @@ module Devise
           if user
             user.identity = identity
             user.request_attributes = request_attributes
+            debug_log "Success '#{user.request_attributes[:identity_provider]}'"
             success!(user)
           else
             debug_log "Failed (no existing user and did not make a new/guest)"
