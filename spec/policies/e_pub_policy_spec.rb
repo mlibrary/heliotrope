@@ -7,7 +7,7 @@ RSpec.describe EPubPolicy do
 
   let(:actor) { double('actor', agent_type: 'actor_type', agent_id: 'actor_id', individual: nil, institutions: [institution]) }
   let(:institution) { double('institution', products: [product]) }
-  let(:product) { double('product') }
+  let(:product) { double('product', identifier: 'product') }
   let(:target) { double('target', noid: noid, resource_type: 'target_type', resource_id: 'target_id', parent: parent) }
   let(:noid) { 'validnoid' }
   let(:parent) { double('parent') }

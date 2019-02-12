@@ -27,6 +27,7 @@ RSpec.describe Devise::Strategies::KeycardAuthenticatable do
         allow(User).to receive(:find_by).and_return(user)
         allow(user).to receive(:identity=).with(identity)
         allow(user).to receive(:request_attributes=).with(request_attributes)
+        allow(user).to receive(:request_attributes).and_return(request_attributes)
       end
 
       it "authenticates succesfully" do

@@ -17,7 +17,7 @@ RSpec.describe ReindexEpubJob, type: :job do
       old_timestamp = File.mtime(db_file).to_f
       old_size = File.size(db_file)
       described_class.perform_now(epub.id)
-      expect(old_timestamp < File.mtime(db_file).to_f).to be true
+      expect(old_timestamp <= File.mtime(db_file).to_f).to be true
       # Make sure the contents are the same
       expect(old_size == File.size(db_file)).to be true
     end
