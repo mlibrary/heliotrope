@@ -18,3 +18,7 @@
 # minter_path: <%= File.join(Rails.root, 'minter-state') %>
 # or
 # minter_path: /opt/minter-state
+#
+#
+# aptrust_bags_path is the directory in which bags for aptrust will be created
+# aptrust_bags_path: <%= File.join(Rails.root, 'aptrust-bags') %>

@@ -22,6 +22,48 @@ describe Export::Exporter do
     end
   end
 
+  describe '#export_bag' do
+    subject { described_class.new(monograph.id).export_bag }
+
+    let(:monograph) {
+      create(:monograph)
+    }
+
+    let(:monograph_bagit) {
+      File.join(Settings.aptrust_bags_path, "umich.#{@monograph.press}-#{@monograph.id}")
+    }
+
+    let(:monograph_data) {
+      File.join(Settings.aptrust_bags_path, "umich.#{@monograph.press}-#{@monograph.id}/data")
+    }
+
+    let(:monograph_aptrust_info) {
+      File.join(Settings.aptrust_bags_path, "umich.#{@monograph.press}-#{@monograph.id}/aptrust-info.txt")
+    }
+
+    let(:monograph_bag_info) {
+      File.join(Settings.aptrust_bags_path, "umich.#{@monograph.press}-#{@monograph.id}/bag-info.txt")
+    }
+
+    before do
+      Dir.mkdir(Settings.aptrust_bags_path) unless Dir.exist?(Settings.aptrust_bags_path)
+      Dir.mkdir("#{Settings.aptrust_bags_path}/data") unless Dir.exist?("#{Settings.aptrust_bags_path}/data")
+    end
+
+    after do
+      FileUtils.rm_rf("#{Settings.aptrust_bags_path}/data") if Dir.exist?("#{Settings.aptrust_bags_path}/data")
+      FileUtils.rm_rf(Settings.aptrust_bags_path) if Dir.exist?(Settings.aptrust_bags_path)
+    end
+
+    it do
+      expect(Dir.exist?(monograph_bagit)).to be false
+      expect(Dir.exist?(monograph_data)).to be false
+      subject
+      expect(Dir.exist?(monograph_bagit)).to be true
+      expect(Dir.exist?(monograph_data)).to be true
+    end
+  end
+
   describe '#export' do
     subject { described_class.new(monograph.id).export }
 

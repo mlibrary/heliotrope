@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'csv'
+require 'bagit'
 
 module Export
   class Exporter
@@ -9,6 +10,68 @@ module Export
     def initialize(monograph_id, columns = :all)
       @monograph = Monograph.find(monograph_id) if monograph_id.present?
       @columns = columns
+    end
+
+    def export_bag # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
+      ## create bag directory with valid, noid-based aptrust name
+      bag_name = "umich.#{@monograph.press}-#{@monograph.id}"
+      bag_pathname = "#{Settings.aptrust_bags_path}/#{bag_name}"
+
+      # On the first run these shouldn't be needed but...
+      # clean up bag and tar files
+      if File.exist?(bag_pathname)
+        puts "-- removing existing bag for #{bag_name}"
+        FileUtils.rm_rf(bag_pathname)
+      end
+
+      if File.exist?("#{bag_pathname}.tar")
+        puts "-- removing tar file for #{bag_name}"
+        FileUtils.rm_rf("#{bag_pathname}.tar")
+      end
+
+      puts "-- Archiving #{bag_name}"
+      bag = BagIt::Bag.new bag_pathname
+
+      # add bagit-info.txt file
+      timestamp = Time.now.utc.strftime("%Y-%m-%dT%H:%M:%SZ")
+      bag.write_bag_info(
+                          'Source-Organization' => 'University of Michigan',
+                          'Bag-Count' => '1',
+                          'Bagging-Date' => timestamp
+                        )
+
+      # add aptrust-info.txt file
+      # this is stuff that shows up in the APTrust web interface
+      # title, access, and descriptoin are required; Storage-Option defaults to Standard if not present
+      File.open(File.join(bag.bag_dir, 'aptrust-info.txt'), "w") do |io|
+        ti = (@monograph.title.blank? || @monograph.title.empty?) ? '' : @monograph.title.first
+        io.puts "Title: #{ti}"
+
+        io.puts "Access: Institution"
+        io.puts "Storage-Option: Standard"
+
+        des = (@monograph.description.blank? || @monograph.description.empty?) ? 'Description not available' : @monograph.description.first
+        io.puts "Description: #{des}"
+
+        pr = (@monograph.press.blank? || @monograph.press.empty?) ? '' : @monograph.press
+        io.puts "Press: #{pr}"
+
+        # I'm assuming Fulcrum will have a different type of music object at some point
+        io.puts "Type: monograph"
+      end
+
+      # put fulcrum files into data directory
+      extract("#{bag_dir}/data/")
+
+      # create manifests
+      bag.manifest!
+
+      # tar and remove bag directory
+      system("/bin/tar", "-cf", "#{bag_pathname}.tar", File.basename(bag_pathname))
+      FileUtils.rm_rf(bag_pathname)
+
+      # update database
+      ## write updated columns to db
     end
 
     def export
@@ -26,19 +89,23 @@ module Export
       buffer
     end
 
-    def extract # rubocop:disable Metrics/CyclomaticComplexity
+    def extract(use_dir = nil) # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
       return if @monograph.blank?
-      base = File.join(".", "extract")
-      FileUtils.mkdir(base) unless Dir.exist?(base)
-      press = File.join(base, @monograph.press.to_s)
-      FileUtils.mkdir(press) unless Dir.exist?(press)
-      path = File.join(press, @monograph.id.to_s)
-      if Dir.exist?(path)
-        puts "Overwrite #{path} directory? (Y/n):"
-        return unless /y/i.match?(STDIN.getch)
-        FileUtils.rm_rf(path)
+      if use_dir
+        path = "#{use_dir}/"
+      else
+        base = File.join(".", "extract")
+        FileUtils.mkdir(base) unless Dir.exist?(base)
+        press = File.join(base, @monograph.press.to_s)
+        FileUtils.mkdir(press) unless Dir.exist?(press)
+        path = File.join(press, @monograph.id.to_s)
+        if Dir.exist?(path)
+          puts "Overwrite #{path} directory? (Y/n):"
+          return unless /y/i.match?(STDIN.getch)
+          FileUtils.rm_rf(path)
+        end
+        FileUtils.mkdir(path)
       end
-      FileUtils.mkdir(path)
       manifest = File.new(File.join(path, @monograph.id.to_s + ".csv"), "w")
       manifest << export
       manifest.close
