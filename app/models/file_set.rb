@@ -99,4 +99,16 @@ class FileSet < ActiveFedora::Base
   def to_presenter
     ::Hyrax::FileSetPresenter.new(CatalogController.new.fetch(id).last, nil)
   end
+
+  # see https://tools.lib.umich.edu/jira/browse/HELIO-88
+  # I found it very difficult and unreliable to prepend these to ClassMethods here (in app/overrides):
+  # samvera/hydra-works/blob/master/lib/hydra/works/models/concerns/file_set/mime_types.rb
+  # ...but happily adding them to our FileSet model here works great!
+  def eps?
+    self.class.eps_mime_types.include? mime_type
+  end
+
+  def self.eps_mime_types
+    ['application/postscript']
+  end
 end

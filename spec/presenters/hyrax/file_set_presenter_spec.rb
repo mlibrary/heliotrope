@@ -410,6 +410,50 @@ RSpec.describe Hyrax::FileSetPresenter do
     end
   end
 
+  describe '#use_riiif_for_icon??' do
+    subject { presenter.use_riiif_for_icon? }
+
+    let(:fileset_doc) {
+      SolrDocument.new(id: 'fileset_id',
+                       has_model_ssim: ['FileSet'],
+                       mime_type_ssi: mime_type,
+                       external_resource_url_ssim: external_resource_url,
+                       thumbnail_path_ss: thumbnail_path)
+    }
+
+    context 'file has mime_type that uses hydra-derivatives thumbnail' do
+      let(:mime_type) { 'application/pdf' }
+      let(:external_resource_url) { '' }
+      let(:thumbnail_path) { ActionController::Base.helpers.image_path 'default.png' }
+
+      it { is_expected.to be false }
+    end
+
+    context 'file has mime_type that bypasses hydra-derivatives thumbnail creation' do
+      let(:mime_type) { 'application/postscript' }
+      let(:external_resource_url) { '' }
+      let(:thumbnail_path) { 'blah' }
+
+      it { is_expected.to be true }
+    end
+
+    context 'external resource' do
+      let(:mime_type) { nil }
+      let(:external_resource_url) { 'URL' }
+      let(:thumbnail_path) { nil }
+
+      it { is_expected.to be false }
+    end
+
+    context 'mystery file' do
+      let(:mime_type) { nil }
+      let(:external_resource_url) { nil }
+      let(:thumbnail_path) { nil }
+
+      it { is_expected.to be false }
+    end
+  end
+
   describe '#download_button_label' do
     subject { presenter.download_button_label }
 
