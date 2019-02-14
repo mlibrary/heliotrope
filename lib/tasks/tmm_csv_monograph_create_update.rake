@@ -18,6 +18,8 @@ namespace :heliotrope do
 
     row_num = 1
 
+    # need to ensure that we are finding Monographs from michigan's sub-presses (like gabii)
+    all_michigan_presses = Press.where(parent: Press.where(subdomain: 'michigan').first).map(&:subdomain).push('michigan')
     backup_file = ''
     backup_file_created = false
 
@@ -42,7 +44,7 @@ namespace :heliotrope do
         puts "ISBN numbers missing on row #{row_num} ...................... SKIPPING ROW"
         next
       else
-        matches = Monograph.where(press_sim: 'michigan', isbn_numeric: clean_isbns) #, visibility_ssi: 'restricted')
+        matches = Monograph.where(press_sim: all_michigan_presses, isbn_numeric: clean_isbns) #, visibility_ssi: 'restricted')
 
         if matches.count > 1 # shouldn't happen
           puts "More than 1 Monograph found using ISBN(s) #{clean_isbns.join('; ')} on row #{row_num} ... SKIPPING ROW"
