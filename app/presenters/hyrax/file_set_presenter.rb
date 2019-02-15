@@ -96,7 +96,7 @@ module Hyrax
 
     def multimedia?
       # currently just need this for COUNTER reports
-      audio? || video? || image?
+      audio? || video? || image? || eps?
     end
 
     def external_resource?
@@ -219,6 +219,10 @@ module Hyrax
       solr_document['height_is']
     end
 
+    def eps?
+      mime_type == 'application/postscript'
+    end
+
     def mime_type
       solr_document['mime_type_ssi']
     end
@@ -314,6 +318,11 @@ module Hyrax
       end
     end
 
+    def use_riiif_for_icon?
+      # sidestep hydra-derivatives and use riiif for FileSet icons
+      eps?
+    end
+
     def use_glyphicon?
       # If the thumbnail_path in Solr points to the assets directory, it is using a Hyrax default.
       # aside: Much of the thumbnail behavior can be examined by reading this page and its links to Hyrax code:
@@ -346,7 +355,7 @@ module Hyrax
       File.basename(label, '.*') + '.txt'
     end
 
-    def heliotrope_media_partial(directory = 'media_display')
+    def heliotrope_media_partial(directory = 'media_display') # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
       # we've diverged from the media_display_partial stuff in Hyrax, so check our asset-page partials here
       partial = 'hyrax/file_sets/' + directory + '/'
       partial + if external_resource?
@@ -359,6 +368,8 @@ module Hyrax
                   'audio'
                 elsif epub?
                   'epub'
+                elsif eps?
+                  'image_service'
                 else
                   'default'
                 end

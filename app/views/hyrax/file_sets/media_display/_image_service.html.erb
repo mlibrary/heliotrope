@@ -1,0 +1,13 @@
+<%# a partial that allows side-stepping hydra-derivatives by using riiif for FileSets %>
+<% if file_set.allow_download? %>
+  <%= link_to hyrax.download_path(file_set), target: "_new", title: file_set.download_button_label do %>
+    <%= image_tag '/image-service/' + file_set.id + '/full/350,/0/default.jpg' + file_set.image_cache_breaker,
+                  class: "img-responsive asset-page-image",
+                  alt: file_set.download_button_label + ', titled "' +  file_set.page_title.delete('"') + '"' %>
+  <% end %>
+<% else %>
+  <%= image_tag '/image-service/' + file_set.id + '/full/350,/0/default.jpg' + file_set.image_cache_breaker,
+                class: "img-responsive asset-page-image",
+                alt: 'Thumbnail of "' + file_set.page_title.delete('"') + '"',
+                role: 'presentation' %>
+<% end %>
