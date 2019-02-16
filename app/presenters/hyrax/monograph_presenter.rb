@@ -16,7 +16,7 @@ module Hyrax
              :subject, :section_titles, :based_near, :publisher, :date_published, :language,
              :isbn, :license, :copyright_holder, :open_access, :funder, :holding_contact, :has_model,
              :buy_url, :embargo_release_date, :lease_expiration_date, :rights, :series,
-             :visibility, :identifier, :doi, :handle,
+             :visibility, :identifier, :doi, :handle, :thumbnail_path,
              to: :solr_document
 
     def creator
@@ -239,6 +239,14 @@ module Hyrax
     def monograph_coins_title?
       return false unless defined? monograph_coins_title
       monograph_coins_title.present?
+    end
+
+    def monograph_thumbnail
+      if representative_id.present?
+        "/image-service/#{representative_id}/full/225,/0/default.jpg#{representative_presenter&.image_cache_breaker}"
+      else
+        thumbnail_path
+      end
     end
 
     # This overrides CC 1.6.2's work_show_presenter.rb which is recursive.

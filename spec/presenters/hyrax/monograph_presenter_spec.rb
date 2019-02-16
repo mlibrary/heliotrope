@@ -618,4 +618,22 @@ RSpec.describe Hyrax::MonographPresenter do
       it { expect(presenter.open_access?).to be true }
     end
   end
+
+  describe '#monograph_thumbnail?' do
+    before do
+      allow(mono_doc).to receive(:thumbnail_path).and_return('/assets/work.png')
+    end
+
+    context 'representative_id not set, uses Hyrax default' do
+      it { expect(presenter.monograph_thumbnail).to be '/assets/work.png' }
+    end
+
+    context 'representative_id set, uses image-service' do
+      before do
+        allow(mono_doc).to receive(:representative_id).and_return('999999999')
+      end
+
+      it { expect(presenter.monograph_thumbnail).to start_with '/image-service/999999999/full/225,/0/default.jpg' }
+    end
+  end
 end
