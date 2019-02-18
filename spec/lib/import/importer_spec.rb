@@ -265,6 +265,15 @@ describe Import::Importer do
       end
     end
 
+    context 'when the user_email is not present' do
+      let(:email_address) { 'non-existent' }
+      let(:importer) { described_class.new(root_dir: root_dir, press: press.subdomain) }
+
+      it 'uses the batch user' do
+        expect { importer.run }.to change { Monograph.where(depositor: User.batch_user_key).count }.by(1)
+      end
+    end
+
     context 'when the user_email doesn\'t match a pre-existing user' do
       let(:email_address) { 'non-existent' }
       let(:importer) { described_class.new(root_dir: root_dir, user_email: email_address, press: press.subdomain) }

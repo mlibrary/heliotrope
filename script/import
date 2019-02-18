@@ -23,7 +23,7 @@ def parse_inputs(args) # rubocop:disable Metrics/CyclomaticComplexity, Metrics/P
     inputs[:root_dir] = dir
   end
 
-  opts.on('-u USER', 'username (email) of the user to use as depositor of the content. (always required)') do |usr|
+  opts.on('-u [USER]', 'username (email) of the user to use as depositor of the content (defaults to batch user)') do |usr|
     inputs[:user_email] = usr
   end
 
@@ -69,7 +69,6 @@ def parse_inputs(args) # rubocop:disable Metrics/CyclomaticComplexity, Metrics/P
     raise "Error: using -m or --monograph_id (i.e. reimporting) excludes -p, -v, -n and -w"
   end
   raise "Error: The CSV directory is required" unless inputs[:root_dir]
-  raise "Error: Username (email) is required" unless inputs[:user_email]
   raise "Error: The Press required for importing new monographs, i.e. *not* reimporting" unless inputs[:press] || inputs[:monograph_id]
   inputs
 rescue StandardError => e
