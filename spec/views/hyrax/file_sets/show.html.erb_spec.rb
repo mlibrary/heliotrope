@@ -45,6 +45,8 @@ RSpec.describe 'hyrax/file_sets/show' do
     let(:allow_embed) { false }
 
     before do
+      # only mime_types that have an embed view will show the button to copy embed code
+      allow(file_set_presenter).to receive(:image?).and_return(true)
       allow(view).to receive(:can?).with(:edit, file_set_presenter).and_return(can_edit)
       allow(file_set_presenter).to receive(:allow_embed?).and_return(allow_embed)
       render
