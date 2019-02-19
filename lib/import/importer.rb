@@ -159,6 +159,7 @@ module Import
     private
 
       def validate_user
+        return if user_email.blank?
         raise "No user found with email '#{user_email}'. You must enter the email address of an actual user." if user.blank?
       end
 
@@ -186,7 +187,7 @@ module Import
       end
 
       def user
-        @user ||= User.find_by(email: user_email)
+        @user ||= (user_email.present? ? User.find_by(email: user_email) : User.batch_user)
       end
 
       def optional_early_exit(interaction, errors, test)
