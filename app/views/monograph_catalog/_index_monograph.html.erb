@@ -4,7 +4,7 @@
       <span class="Z3988" title="<%= @monograph_presenter.monograph_coins_title %>"></span>
   <% end %>
   <div class="col-sm-3 monograph-cover">
-    <img class="img-responsive" src="/image-service/<%= @monograph_presenter.representative_id %>/full/225,/0/default.jpg<%= @monograph_presenter.representative_presenter&.image_cache_breaker %>"
+    <img class="img-responsive" src="<%= @monograph_presenter.monograph_thumbnail %>"
          alt="Cover for <%= @monograph_presenter.representative_alt_text %>">
     <% if can? :edit, @monograph_presenter %>
       <a class="btn btn-default manage-monograph-button" href="<%= main_app.monograph_show_path(@monograph_presenter.id) %>" title="<%= t('monograph_catalog.index.show_page_button') %>" data-turbolinks="false"><%= t('monograph_catalog.index.show_page_button') %></a>
