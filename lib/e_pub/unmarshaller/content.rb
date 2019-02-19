@@ -57,17 +57,6 @@ module EPub
         @chapter_list
       end
 
-      def cfi_from_href_anchor_tag(idref, index, toc_href)
-        tag = toc_href.split('#').last
-
-        chapter_href = @content_doc.xpath(".//manifest/item[@id='#{idref}']").first.attributes["href"].value
-        chapter = File.join(File.dirname(@full_path), chapter_href)
-        doc = Nokogiri::XML::Document.parse(File.open(chapter)).remove_namespaces!
-        node = doc.at_css(%([id="#{tag}"]))
-
-        "/6/#{index * 2}[#{idref}]!" + EPub::CFI.from(node).cfi
-      end
-
       private
 
         def initialize(rootfile, full_path)

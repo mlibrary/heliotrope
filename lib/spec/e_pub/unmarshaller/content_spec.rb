@@ -111,7 +111,6 @@ RSpec.describe EPub::Unmarshaller::Content do
             it { expect(subject.chapter_from_title('title')).to be_an_instance_of(EPub::Unmarshaller::ChapterNullObject) }
             it { expect(subject.nav).to be_an_instance_of(EPub::Unmarshaller::Nav) }
             it { expect(subject.chapter_list).to be_an_instance_of(EPub::Unmarshaller::ChapterList) }
-            it { expect(subject.cfi_from_href_anchor_tag(idref, index, href)).to eq "/6/2[1]!/4/2[one]" }
           end
         end
       end
