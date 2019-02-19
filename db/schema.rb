@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190201204370) do
+ActiveRecord::Schema.define(version: 20190218193221) do
 
   create_table "api_requests", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.integer "user_id"
@@ -22,6 +22,27 @@ ActiveRecord::Schema.define(version: 20190201204370) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["user_id"], name: "index_api_requests_on_user_id"
+  end
+
+  create_table "aptrust_uploads", primary_key: "noid", id: :string, limit: 9, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.integer "row_number"
+    t.string "press", limit: 50
+    t.string "author", limit: 50
+    t.string "model", limit: 50, default: "monograph"
+    t.integer "bag_status", default: 0
+    t.integer "s3_status", default: 0
+    t.integer "apt_status", default: 0
+    t.datetime "date_monograph_modified"
+    t.datetime "date_fileset_modified"
+    t.datetime "date_bagged"
+    t.datetime "date_uploaded"
+    t.datetime "date_confirmed"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["apt_status"], name: "index_aptrust_uploads_on_apt_status"
+    t.index ["bag_status"], name: "index_aptrust_uploads_on_bag_status"
+    t.index ["noid"], name: "index_aptrust_uploads_on_noid", unique: true
+    t.index ["s3_status"], name: "index_aptrust_uploads_on_s3_status"
   end
 
   create_table "bookmarks", id: :integer, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
