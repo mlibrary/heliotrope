@@ -17,7 +17,7 @@
       <% end %>
       <li>
     <% end %>
-    <a class="toc-link" href="<%= epub_path(id: @monograph_presenter.epub_id, anchor: interval.cfi) %>"><%= interval.title %></a>
+    <a class="toc-link" href="<%= epub_path(id: @monograph_presenter.epub_id).gsub!(/\?.*/, '') + '#' + interval.cfi  %>"><%= interval.title %></a>
     <% if @monograph_presenter.epub_presenter.multi_rendition? %>
       <div class="btn-group download" role="group" aria-label="Read or Download Section">
         <% if interval.downloadable? %>

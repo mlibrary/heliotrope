@@ -22,7 +22,7 @@ module FeaturedRepresentatives
     end
 
     def epub_presenter
-      EPubPresenter.new(EPub::Publication.from_directory(UnpackService.root_path_from_noid(epub_id, 'epub')))
+      @epub_presenter ||= EPubPresenter.new(EPub::Publication.from_directory(UnpackService.root_path_from_noid(epub_id, 'epub')))
     end
 
     def webgl?
@@ -42,8 +42,9 @@ module FeaturedRepresentatives
     end
 
     def database
+      return @database if @database.present?
       solr_doc = ordered_member_docs.find { |doc| doc.id == database_id }
-      Hyrax::FileSetPresenter.new(solr_doc, current_ability, request) if solr_doc.present?
+      @database ||= Hyrax::FileSetPresenter.new(solr_doc, current_ability, request) if solr_doc.present?
     end
 
     def database_id
@@ -55,8 +56,9 @@ module FeaturedRepresentatives
     end
 
     def aboutware
+      return @aboutware if @aboutware.present?
       solr_doc = ordered_member_docs.find { |doc| doc.id == aboutware_id }
-      Hyrax::FileSetPresenter.new(solr_doc, current_ability, request) if solr_doc.present?
+      @aboutware ||= Hyrax::FileSetPresenter.new(solr_doc, current_ability, request) if solr_doc.present?
     end
 
     def aboutware_id
@@ -68,10 +70,9 @@ module FeaturedRepresentatives
     end
 
     def reviews
-      # This somewhat oddly returns a presenter not a solr_doc. Maybe they all should
-      # return presenters?
+      return @reviews if @reviews.present?
       solr_doc = ordered_member_docs.find { |doc| doc.id == reviews_id }
-      Hyrax::FileSetPresenter.new(solr_doc, current_ability, request) if solr_doc.present?
+      @reviews ||= Hyrax::FileSetPresenter.new(solr_doc, current_ability, request) if solr_doc.present?
     end
 
     def reviews_id
@@ -83,10 +84,9 @@ module FeaturedRepresentatives
     end
 
     def related
-      # This somewhat oddly returns a presenter not a solr_doc. Maybe they all should
-      # return presenters?
+      return @related if @related.present?
       solr_doc = ordered_member_docs.find { |doc| doc.id == related_id }
-      Hyrax::FileSetPresenter.new(solr_doc, current_ability, request) if solr_doc.present?
+      @related ||= Hyrax::FileSetPresenter.new(solr_doc, current_ability, request) if solr_doc.present?
     end
 
     def related_id
@@ -114,8 +114,9 @@ module FeaturedRepresentatives
     end
 
     def peer_review
+      return @peer_review if @peer_review.present?
       solr_doc = ordered_member_docs.find { |doc| doc.id == peer_review_id }
-      Hyrax::FileSetPresenter.new(solr_doc, current_ability, request) if solr_doc.present?
+      @peer_review ||= Hyrax::FileSetPresenter.new(solr_doc, current_ability, request) if solr_doc.present?
     end
 
     def peer_review_id
