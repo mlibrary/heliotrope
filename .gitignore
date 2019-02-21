@@ -48,6 +48,7 @@ dump.rdb
 /config/curation_concerns.yml
 /config/role_map.yml
 /config/skylight.yml
+/config/aptrust.yml
 
 # Google Analytics access keys
 *.p12

@@ -1,0 +1,23 @@
+# AWS S3 APTrust KEYS
+
+# Config for apt_upload and apt_download
+DownloadDir = Settings.APTrustRestore
+AptrustApiUser = "USER@umich.edu"
+AptrustApiKey = "ADD_USER_API_KEY_HERE"
+
+# Demo/Test AWS Credentials:
+# S3 Buckets:
+ReceivingBucket = 'aptrust.receiving.test.umich.edu'
+RestorationBucket = "aptrust.restore.test.umich.edu"
+
+AwsAccessKeyId = 123456789XYZ
+AwsSecretAccessKey = THIS KEY INCLUDES SPACES AND DOES NOT NEED QUOTES
+
+
+# Production AWS Credentials:
+# S3 Buckets:
+# ReceivingBucket = 'aptrust.receiving.umich.edu'
+# RestorationBucket = "aptrust.restore.umich.edu"
+
+# AwsAccessKeyId = 123456789XYZ
+# AwsSecretAccessKey = THIS KEY INCLUDES SPACES AND DOES NOT NEED QUOTES
