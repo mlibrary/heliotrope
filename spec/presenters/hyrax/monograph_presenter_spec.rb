@@ -628,12 +628,20 @@ RSpec.describe Hyrax::MonographPresenter do
       it { expect(presenter.monograph_thumbnail).to be '/assets/work.png' }
     end
 
-    context 'representative_id set, uses image-service' do
+    context 'representative_id set, uses image-service, default width' do
       before do
         allow(mono_doc).to receive(:representative_id).and_return('999999999')
       end
 
       it { expect(presenter.monograph_thumbnail).to start_with '/image-service/999999999/full/225,/0/default.jpg' }
+    end
+
+    context 'representative_id set, uses image-service, custom width' do
+      before do
+        allow(mono_doc).to receive(:representative_id).and_return('999999999')
+      end
+
+      it { expect(presenter.monograph_thumbnail(99)).to start_with '/image-service/999999999/full/99,/0/default.jpg' }
     end
   end
 end

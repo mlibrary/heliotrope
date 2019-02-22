@@ -241,9 +241,9 @@ module Hyrax
       monograph_coins_title.present?
     end
 
-    def monograph_thumbnail
+    def monograph_thumbnail(width = 225)
       if representative_id.present?
-        "/image-service/#{representative_id}/full/225,/0/default.jpg#{representative_presenter&.image_cache_breaker}"
+        "/image-service/#{representative_id}/full/#{width},/0/default.jpg#{representative_presenter&.image_cache_breaker}"
       else
         thumbnail_path
       end
