@@ -6,6 +6,8 @@ derivatives_path: <%= File.join(Rails.root, 'tmp', 'derivatives') %>
 uploads_path: <%= File.join(Rails.root, 'tmp', 'uploads') %>
 # minter_path tracks the ID of the last-created object
 minter_path: <%= File.join(Rails.root, 'tmp', 'minter-state') %>
+# aptrust_bags_path is the directory in which bags for aptrust will be created
+aptrust_bags_path: <%= "/hydra-dev/heliotrope-assets/aptrust-bags/" %>
 resque_namespace: heliotrope-development
 host: localhost:3000
 
