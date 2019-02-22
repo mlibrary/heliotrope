@@ -1,5 +1,5 @@
 <% if has_thumbnail?(document) && tn = render_thumbnail_tag(document, {}, counter: document_counter_with_offset(document_counter)) %>
   <div class="col-sm-3">
-    <a href="<%= polymorphic_path(url_for_document(document)) %>" ><img class="img-responsive" src="<%= presenter.monograph_thumbnail %>" alt="Cover image for <%= document.title.first %>"></a>
+    <a href="<%= polymorphic_path(url_for_document(document)) %>" ><img class="img-responsive" src="<%= presenter.monograph_thumbnail(225) %>" alt="Cover image for <%= document.title.first %>"></a>
   </div>
 <% end %>
