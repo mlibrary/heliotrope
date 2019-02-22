@@ -2,20 +2,33 @@
 
 require 'csv'
 require 'bagit'
+require 'aws-sdk-s3'
+
+BAG_STATUSES = { 'not_bagged' => 0, 'bagged' => 1, 'bagging_failed' => 3 }.freeze
+S3_STATUSES = { 'not_uploaded' => 0, 'uploaded' => 1, 'upload_failed' => 3 }.freeze
+APT_STATUSES = { 'not_checked' => 0, 'confirmed' => 1, 'pending' => 3, 'failed' => 4 }.freeze
 
 module Export
   class Exporter
-    attr_reader :all_metadata
+    attr_reader :all_metadata, :monograph, :columns, :aptrust
 
     def initialize(monograph_id, columns = :all)
       @monograph = Monograph.find(monograph_id) if monograph_id.present?
       @columns = columns
+      #  Use aws credentials for atrust
+      filename = Rails.root.join('config', 'aptrust.yml')
+      yaml = YAML.safe_load(File.read(filename)) if File.exist?(filename)
+      @aptrust = yaml || nil
     end
 
     def export_bag # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
       ## create bag directory with valid, noid-based aptrust name
       bag_name = "umich.#{@monograph.press}-#{@monograph.id}"
+      # bag_pathname = "./../heliotrope-assets/aptrust-bags/#{bag_name}"
       bag_pathname = "#{Settings.aptrust_bags_path}/#{bag_name}"
+
+      # DESKTOP TESTING ONLY
+      # bag_pathname = "./../heliotrope-assets/aptrust-bags/#{bag_name}"
 
       # On the first run these shouldn't be needed but...
       # clean up bag and tar files
@@ -67,11 +80,17 @@ module Export
       bag.manifest!
       # tar and remove bag directory
       Minitar.pack(bag_pathname, File.open("#{bag_pathname}.tar", 'wb'))
-      # system("/bin/tar", "-cf", "#{bag_pathname}.tar", File.basename(bag_pathname))
       FileUtils.rm_rf(bag_pathname)
 
-      # update database
-      ## write updated columns to db
+      # Upload the bag to the s3 bucket (umich A&E test bucket for now)
+      uploaded = send_to_s3("#{bag_pathname}.tar")
+
+      # Update AptrustUploads database if bag is processed
+      if uploaded
+        update_aptrust_db
+      else
+        puts "Upload failed for #{bag_pathname}.tar"
+      end
     end
 
     def export
@@ -139,6 +158,62 @@ module Export
         row2 << (Rails.env.test? ? 'instruction placeholder' : field[:description])
       end
       csv << row1 << row2
+    end
+
+    def send_to_s3(file)
+      Aws.config.update(
+        credentials: Aws::Credentials.new(@aptrust['AwsAccessKeyId'], @aptrust['AwsSecretAccessKey'])
+      )
+
+      # Set s3 with a region
+      s3 = Aws::S3::Resource.new(region: @aptrust['BucketRegion'])
+
+      # Get the aptrust test bucket by name
+      bucket_name = @aptrust['Bucket']
+      fulcrum_bucket = s3.bucket(bucket_name)
+
+      # Get just the file name
+      name = File.basename(file)
+
+      # Check if file is already in the bucket
+      if fulcrum_bucket.object(name).exists?
+        puts "#{name} already exists in the bucket: #{bucket_name} overwriting bag!"
+      end
+
+      begin
+        # Create the object to upload and upload it
+        obj = s3.bucket(bucket_name).object(name)
+        obj.upload_file(file)
+        success = true
+      rescue Aws::S3::Errors::ServiceError
+        puts "Upload of file {name} fails with s3 context #{s3.context}"
+        success = false
+      end
+      success
+    end
+
+    def update_aptrust_db
+      begin
+        record = AptrustUpload.find_by!(noid: @monograph.id)
+      rescue ActiveRecord::RecordNotFound => e
+        puts "In exporter with monograph #{@monograph.id}, find_record error is #{e} "
+        return
+      end
+
+      begin
+        current_date = Time.now.utc.strftime("%Y-%m-%dT%H:%M:%SZ")
+        record.update!(
+          bag_status: BAG_STATUSES['bagged'],
+          s3_status: S3_STATUSES['uploaded'],
+          apt_status: APT_STATUSES['not_checked'],
+          date_fileset_modified: nil,
+          date_bagged: current_date,
+          date_uploaded: current_date,
+          date_confirmed: nil
+        )
+      rescue ActiveRecord::RecordInvalid => e
+        puts "In exporter with monograph #{@monograph.id}, record.update error is #{e}"
+      end
     end
 
     private
