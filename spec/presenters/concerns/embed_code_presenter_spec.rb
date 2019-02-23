@@ -106,9 +106,6 @@ RSpec.describe EmbedCodePresenter do
     let(:audio_embed_code) {
       "<iframe src='#{presenter.embed_link}' title='#{presenter.page_title}' style='page-break-inside:avoid; -webkit-column-break-inside:avoid; break-inside:avoid; display:block; overflow:hidden; border-width:0; width:98%; max-width:98%; height:125px; margin:auto'></iframe>"
     }
-    let(:audio_transcript_embed_code) {
-      "<iframe src='#{presenter.embed_link}' title='#{presenter.page_title}' style='page-break-inside:avoid; -webkit-column-break-inside:avoid; break-inside:avoid; display:block; overflow:hidden; border-width:0; width:98%; max-width:98%; height:375px; margin:auto'></iframe>"
-    }
 
     before do
       allow(presenter).to receive(:width).and_return(1920)
@@ -159,7 +156,7 @@ RSpec.describe EmbedCodePresenter do
       context 'transcript present' do
         let(:transcript) { ['STUFF'] }
 
-        it { expect(presenter.embed_code).to eq audio_transcript_embed_code }
+        it { expect(presenter.embed_code).to eq audio_embed_code }
       end
     end
   end
