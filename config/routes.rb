@@ -49,6 +49,20 @@ Rails.application.routes.draw do
   end
 
   constraints platform_administrator_constraint do
+    namespace :greensub do
+      resources :products do
+        resources :components, only: %i[create destroy]
+        resources :grants, only: %i[new]
+      end
+      resources :components do
+        resources :products, only: %i[create destroy]
+      end
+      resources :institutions
+      resources :individuals
+      resources :grants, except: %i[edit update]
+      resources :lessees, only: %i[index show]
+    end
+
     get 'fulcrum', controller: :fulcrum, action: :dashboard, as: :fulcrum
     put 'fulcrum/exec/:cmd', controller: :fulcrum, action: :exec, as: :fulcrum_exec
     get 'fulcrum/:partials', controller: :fulcrum, action: :index, as: :fulcrum_partials
@@ -59,17 +73,6 @@ Rails.application.routes.draw do
       end
     end
     resources :share_link_logs, only: %i[index]
-    resources :individuals
-    resources :institutions
-    resources :lessees, only: %i[index show]
-    resources :components do
-      resources :products, only: %i[create destroy]
-    end
-    resources :products do
-      resources :components, only: %i[create destroy]
-      resources :grants, only: %i[new]
-    end
-    resources :grants, except: %i[edit update]
     resources :customers, only: %i[index] do
       resources :counter_reports, only: %i[index show edit update], constraints: COUNTER_REPORT_ID_CONSTRAINT
     end

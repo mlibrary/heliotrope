@@ -7,7 +7,7 @@
   <table class="table table-striped" summary="Product List">
     <tr>
       <th>
-        <%= link_to(new_product_path) do %>
+        <%= link_to(new_greensub_product_path) do %>
           <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> New
         <% end %>
       </th>
@@ -25,7 +25,7 @@
     </tr>
     <% products.each do |product| %>
       <tr>
-        <td><%= link_to(fulcrum_partial_path(:products, Base64.urlsafe_encode64(product.identifier))) do %>
+        <td><%= link_to(greensub_product_path(product)) do %>
             <span class="glyphicon glyphicon-sunglasses" aria-hidden="true"></span> Show
           <% end %>
         </td>

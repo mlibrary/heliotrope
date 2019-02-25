@@ -6,7 +6,7 @@
 <form name="filter" method="get" action="<%= fulcrum_partials_path(:institutions) %>">
   <table class="table table-striped" summary="Institution List">
     <tr>
-      <th><%= link_to(new_institution_path) do %>
+      <th><%= link_to(new_greensub_institution_path) do %>
           <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> New
         <% end %>
       </th>
@@ -24,7 +24,7 @@
     </tr>
     <% institutions.each do |institution| %>
       <tr>
-        <td><%= link_to(fulcrum_partial_path(:institutions, Base64.urlsafe_encode64(institution.identifier))) do %>
+        <td><%= link_to(greensub_institution_path(institution)) do %>
             <span class="glyphicon glyphicon-sunglasses" aria-hidden="true"></span> Show
           <% end %>
         </td>

@@ -1,0 +1,19 @@
+<p id="notice"><%= notice %></p>
+<div id="maincontent">
+  <h1>Product</h1>
+  <div class="col-md-1"><em>ID</em></div>
+  <div class="col-md-11">&nbsp<%= @product.id %></div>
+  <div class="col-md-1"><em>Identifier</em></div>
+  <div class="col-md-11">&nbsp<%= @product.identifier %></div>
+  <div class="col-md-1"><em>Name</em></div>
+  <div class="col-md-11">&nbsp<%= @product.name %></div>
+  <div class="col-md-1"><em>Purchase</em></div>
+  <div class="col-md-11">&nbsp<%= @product.purchase %></div>
+  <div class="col-md-12"><br/></div>
+  <div class="col-md-12">
+    <%= link_to_if @product.update?, 'Edit', edit_greensub_product_path(@product) %>
+    <span> | </span>
+    <%= link_to 'Back', greensub_products_path %>
+  </div>
+  <div class="col-md-12"><br/></div>
+</div>

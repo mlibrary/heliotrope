@@ -1,0 +1,25 @@
+<p id="notice"><%= notice %></p>
+<div id="maincontent">
+  <h1>Institution</h1>
+  <div class="col-md-1"><em>ID</em></div>
+  <div class="col-md-11">&nbsp<%= @institution.id %></div>
+  <div class="col-md-1"><em>Identifier</em></div>
+  <div class="col-md-11">&nbsp<%= @institution.identifier %></div>
+  <div class="col-md-1"><em>Name</em></div>
+  <div class="col-md-11">&nbsp<%= @institution.name %></div>
+  <div class="col-md-1"><em>Entity ID</em></div>
+  <div class="col-md-11">&nbsp<%= @institution.entity_id %></div>
+  <div class="col-md-1"><em>Site</em></div>
+  <div class="col-md-11">&nbsp<%= @institution.site %></div>
+  <div class="col-md-1"><em>Login</em></div>
+  <div class="col-md-11">&nbsp<%= @institution.login %></div>
+  <div class="col-md-1"><em>Lessee</em></div>
+  <div class="col-md-11">&nbsp<%= link_to @institution.lessee.id, greensub_lessee_path(@institution.lessee) %></div>
+  <div class="col-md-12"><br/></div>
+  <div class="col-md-12">
+    <%= link_to_if @institution.update?, 'Edit', edit_greensub_institution_path(@institution) %>
+    <span> | </span>
+    <%= link_to 'Back', greensub_institutions_path %>
+  </div>
+  <div class="col-md-12"><br/></div>
+</div>

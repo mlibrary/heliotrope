@@ -1,0 +1,25 @@
+<p id="notice"><%= notice %></p>
+<div id="maincontent">
+  <h1>Lessee</h1>
+  <div class="col-md-1"><em>ID</em></div>
+  <div class="col-md-11">&nbsp<%= @lessee.id %></div>
+  <div class="col-md-1"><em>Identifier</em></div>
+  <div class="col-md-11">&nbsp<%= @lessee.identifier %></div>
+  <div class="col-md-12"><br/></div>
+  <% if @lessee.individual? %>
+    <h2>Individual</h2>
+    <div class="col-md-1"><%= link_to @lessee.individual.id, greensub_individual_path(@lessee.individual) %></div>
+    <div class="col-md-11"><%= @lessee.individual.name %></div>
+  <% end %>
+  <% if @lessee.institution? %>
+    <h2>Institution</h2>
+    <div class="col-md-1"><%= link_to @lessee.institution.id, greensub_institution_path(@lessee.institution) %></div>
+    <div class="col-md-11"><%= @lessee.institution.name %></div>
+  <% end %>
+  <div class="col-md-12"><br/></div>
+  <div class="col-md-12">
+    <span>Edit | </span>
+    <%= link_to 'Back', greensub_lessees_path %>
+  </div>
+  <div class="col-md-12"><br/></div>
+</div>

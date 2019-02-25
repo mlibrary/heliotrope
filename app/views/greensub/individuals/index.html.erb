@@ -1,0 +1,30 @@
+<p id="notice"><%= notice %></p>
+<div id="maincontent">
+  <h1>Individuals</h1>
+  <b>
+    <div class="col-md-10">
+      <div class="col-md-1">ID</div>
+      <div class="col-md-3">Identifier</div>
+      <div class="col-md-3">Name</div>
+      <div class="col-md-3">eMail</div>
+      <div class="col-md-2">Products</div>
+    </div>
+    <div class="col-md-2"><%= link_to 'New Individual', new_greensub_individual_path %></div>
+    <div class="col-md-12"><hr/></div>
+  </b>
+  <% @individuals.each do |individual| %>
+    <div class="col-md-10">
+      <div class="col-md-1"><%= individual.id %></div>
+      <div class="col-md-3"><%= individual.identifier %></div>
+      <div class="col-md-3"><%= individual.name %></div>
+      <div class="col-md-3"><%= individual.email %></div>
+      <div class="col-md-2"><%= Greensub.subscriber_products(individual).count %></div>
+    </div>
+    <div class="col-md-2">
+      <div class="col-md-4"><%= link_to 'Show', greensub_individual_path(individual) %></div>
+      <div class="col-md-4"><%= link_to_if individual.update?, 'Edit', edit_greensub_individual_path(individual) %></div>
+      <div class="col-md-4"><%= link_to_if individual.destroy?, 'Destroy', greensub_individual_path(individual), method: :delete, data: { confirm: 'Are you sure?' } %></div>
+    </div>
+  <% end %>
+  <div class="col-md-12">&nbsp<%= paginate @individuals %></div>
+</div>

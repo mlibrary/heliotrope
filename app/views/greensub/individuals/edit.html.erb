@@ -1,0 +1,13 @@
+<div id="maincontent">
+  <h1>Editing Individual</h1>
+  <div class="col-md-12">
+    <%= render 'form', individual: @individual %>
+  </div>
+  <div class="col-md-12"><br/></div>
+  <div class="col-md-12">
+    <%= link_to 'Show', greensub_individual_path(@individual) %>
+    <span> | </span>
+    <%= link_to 'Back', greensub_individuals_path %>
+  </div>
+  <div class="col-md-12"><br/></div>
+</div>

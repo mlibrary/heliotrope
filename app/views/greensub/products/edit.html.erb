@@ -1,0 +1,15 @@
+<div id="maincontent">
+  <div class="row">
+    <div class="col-md-12"><h1>Editing Product</h1></div>
+    <div class="col-md-12">
+      <%= render 'form', product: @product %>
+    </div>
+    <div class="col-md-12"><br/></div>
+    <div class="col-md-12">
+      <%= link_to 'Show', greensub_product_path(@product) %>
+      <span> | </span>
+      <%= link_to 'Back', greensub_products_path %>
+    </div>
+    <div class="col-md-12"><br/></div>
+  </div>
+</div>

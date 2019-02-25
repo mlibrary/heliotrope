@@ -1,0 +1,15 @@
+<%= simple_form_for @institution, url: greensub_institutions_path do |f| %>
+  <%= f.error_notification %>
+
+  <div class="form-inputs">
+    <%= f.input :identifier %>
+    <%= f.input :name %>
+    <%= f.input :entity_id %>
+    <%= f.input :site %>
+    <%= f.input :login %>
+  </div>
+
+  <div class="form-actions">
+    <%= f.button :submit %>
+  </div>
+<% end %>

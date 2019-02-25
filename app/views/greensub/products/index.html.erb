@@ -1,0 +1,32 @@
+<p id="notice"><%= notice %></p>
+<div id="maincontent">
+  <h1>Products</h1>
+  <b>
+    <div class="col-md-10">
+      <div class="col-md-1">ID</div>
+      <div class="col-md-2">Identifier</div>
+      <div class="col-md-3">Name</div>
+      <div class="col-md-2">Components</div>
+      <div class="col-md-2">Subscribers</div>
+      <div class="col-md-2">Lessees</div>
+    </div>
+    <div class="col-md-2"><%= link_to 'New Product', new_greensub_product_path %></div>
+    <div class="col-md-12"><hr/></div>
+  </b>
+  <% @products.each do |product| %>
+    <div class="col-md-10">
+      <div class="col-md-1"><%= product.id %></div>
+      <div class="col-md-2"><%= product.identifier %></div>
+      <div class="col-md-3"><%= product.name %></div>
+      <div class="col-md-2"><%= product.components.count %></div>
+      <div class="col-md-2"><%= Greensub.product_subscribers(product).count %></div>
+      <div class="col-md-2"><%= product.lessees.count %></div>
+    </div>
+    <div class="col-md-2">
+      <div class="col-md-4"><%= link_to 'Show', greensub_product_path(product) %></div>
+      <div class="col-md-4"><%= link_to_if product.update?, 'Edit', edit_greensub_product_path(product) %></div>
+      <div class="col-md-4"><%= link_to_if product.destroy?, 'Destroy', greensub_product_path(product), method: :delete, data: { confirm: 'Are you sure?' } %></div>
+    </div>
+  <% end %>
+  <div class="col-md-12">&nbsp<%= paginate @products %></div>
+</div>

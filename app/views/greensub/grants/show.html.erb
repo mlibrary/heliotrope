@@ -1,0 +1,34 @@
+<p id="notice"><%= notice %></p>
+<div id="maincontent">
+  <h1>Grant</h1>
+  <div class="col-md-12"><br/></div>
+  <div class="col-md-2"><em>ID</em></div>
+  <div class="col-md-10"><%= @grant.id %></div>
+  <div class="col-md-2"><em>Agent Type</em></div>
+  <div class="col-md-10"><%= @grant.agent_type %></div>
+  <div class="col-md-2"><em>Agent ID</em></div>
+  <div class="col-md-10"><%= @grant.agent_id %></div>
+  <div class="col-md-2"><em>Agent Token</em></div>
+  <div class="col-md-10"><%= @grant.agent_token %></div>
+  <div class="col-md-2"><em>Credential Type</em></div>
+  <div class="col-md-10"><%= @grant.credential_type %></div>
+  <div class="col-md-2"><em>Credential ID</em></div>
+  <div class="col-md-10"><%= @grant.credential_id %></div>
+  <div class="col-md-2"><em>Credential Token</em></div>
+  <div class="col-md-10"><%= @grant.credential_token %></div>
+  <div class="col-md-2"><em>Resource Type</em></div>
+  <div class="col-md-10"><%= @grant.resource_type %></div>
+  <div class="col-md-2"><em>Resource ID</em></div>
+  <div class="col-md-10"><%= @grant.resource_id %></div>
+  <div class="col-md-2"><em>Resource Token</em></div>
+  <div class="col-md-10"><%= @grant.resource_token %></div>
+  <div class="col-md-2"><em>Zone ID</em></div>
+  <div class="col-md-10"><%= @grant.zone_id %></div>
+  <div class="col-md-12"><br/></div>
+  <div class="col-md-12">
+      Edit
+    <span> | </span>
+    <%= link_to 'Back', greensub_grants_path %>
+  </div>
+  <div class="col-md-12"><br/></div>
+</div>

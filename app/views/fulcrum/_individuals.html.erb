@@ -6,7 +6,7 @@
 <form name="filter" method="get" action="<%= fulcrum_partials_path(:individuals) %>">
   <table class="table table-striped" summary="Individual List">
     <tr>
-      <th><%= link_to(new_individual_path) do %>
+      <th><%= link_to(new_greensub_individual_path) do %>
           <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> New
         <% end %>
       </th>
@@ -24,7 +24,7 @@
     </tr>
     <% individuals.each do |individual| %>
       <tr>
-        <td><%= link_to(fulcrum_partial_path(:individuals, Base64.urlsafe_encode64(individual.identifier))) do %>
+        <td><%= link_to(greensub_individual_path(individual)) do %>
             <span class="glyphicon glyphicon-sunglasses" aria-hidden="true"></span> Show
           <% end %>
         </td>

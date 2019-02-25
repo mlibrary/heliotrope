@@ -1,0 +1,25 @@
+<b>
+  <div class="col-md-10">
+    <div class="col-md-1">ID</div>
+    <div class="col-md-3">Agent</div>
+    <div class="col-md-3">Credential</div>
+    <div class="col-md-3">Resource</div>
+    <div class="col-md-2">Zone</div>
+  </div>
+  <div class="col-md-2"><%= link_to 'New Grant', new_greensub_grant_path %></div>
+  <hr/>
+</b>
+<% grants.each do |grant| %>
+  <div class="col-md-10">
+    <div class="col-md-1"><%= grant.id %></div>
+    <div class="col-md-3"><%= grant.agent_token %></div>
+    <div class="col-md-3"><%= grant.credential_token %></div>
+    <div class="col-md-3"><%= grant.resource_token %></div>
+    <div class="col-md-2"><%= grant.zone_id %></div>
+  </div>
+  <div class="col-md-2">
+    <%= link_to(greensub_grant_path(grant.id), method: :delete, class: "btn btn-default", data: { confirm: 'Are you sure?' }) do %>
+      <span class="glyphicon glyphicon-minus" aria-hidden="true"></span> Destroy
+    <% end %>
+  </div>
+<% end %>

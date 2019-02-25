@@ -16,7 +16,7 @@
   <table class="table table-striped" summary="Grants List">
     <tr>
       <th>
-        <%= link_to(new_grant_path) do %>
+        <%= link_to(new_greensub_grant_path) do %>
           <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> New
         <% end %>
       </th>
@@ -39,7 +39,7 @@
     <% grants.each do |grant| %>
       <tr>
         <td>
-          <%= link_to(grant_path(grant.id), method: :delete, class: "btn btn-default", data: { confirm: 'Are you sure?' }) do %>
+          <%= link_to(greensub_grant_path(grant.id), method: :delete, class: "btn btn-default", data: { confirm: 'Are you sure?' }) do %>
             <span class="glyphicon glyphicon-minus" aria-hidden="true"></span> Destroy
           <% end %>
         </td>
