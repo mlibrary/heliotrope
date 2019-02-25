@@ -52,6 +52,8 @@ en:
         For items that might appear in more than one place, for example in two different chapters, list the file once and identify all of the sections in the Sections column.
       url: |
         Fulcrum dev-only field. Holds a quick link to the item on Fulcrum for future editing.
+      embed_code: |
+        Fulcrum dev-only field. Holds the embed code for assets in CSV exported from Fulcrum.
       title: |
         REQUIRED FOR MONOGRAPH AUTO-CITATIONS
 

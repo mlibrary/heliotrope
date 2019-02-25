@@ -163,6 +163,7 @@ module Export
       def metadata_field_value(item, object_type, field) # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
         return representative_kind_or_cover(item) if object_type == :file_set && field[:field_name] == 'Representative Kind'
         return item_url(item, object_type) if field[:object] == :universal && field[:field_name] == 'Link'
+        return file_set_embed_code(item) if object_type == :file_set && field[:field_name] == 'Embed Code'
         return field_value(item, field[:metadata_name], field[:multivalued]) if field[:object] == :universal || field[:object] == object_type
         return MONO_FILENAME_FLAG if object_type == :monograph && (['label', 'section_title'].include? field[:metadata_name])
       end
@@ -180,6 +181,10 @@ module Export
                  Rails.application.routes.url_helpers.hyrax_file_set_url(item)
                end
         '=HYPERLINK("' + link + '")'
+      end
+
+      def file_set_embed_code(file_set)
+        Hyrax::FileSetPresenter.new(SolrDocument.new(file_set.to_solr), nil).embed_code
       end
 
       def field_value(item, metadata_name, multivalued)

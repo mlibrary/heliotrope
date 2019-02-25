@@ -9,7 +9,8 @@ ADMIN_METADATA_FIELDS ||=
   [
     { object: :universal, field_name: 'NOID', metadata_name: 'id', required: true, multivalued: :no, description: I18n.t('csv.descriptions.id') },
     { object: :file_set, field_name: 'File Name', metadata_name: 'label', required: true, multivalued: :no, description: I18n.t('csv.descriptions.label') },
-    { object: :universal, field_name: 'Link', metadata_name: 'url', required: true, multivalued: :no, description: I18n.t('csv.descriptions.url') }
+    { object: :universal, field_name: 'Link', metadata_name: 'url', required: true, multivalued: :no, description: I18n.t('csv.descriptions.url') },
+    { object: :file_set, field_name: 'Embed Code', multivalued: :no, description: I18n.t('csv.descriptions.embed_code') }
   ].freeze
 
 # ActiveFedora fields we allow folks to set
