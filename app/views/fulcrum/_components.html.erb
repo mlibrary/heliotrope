@@ -28,7 +28,7 @@
     </tr>
     <% components.each do |component| %>
       <tr>
-        <td><%= link_to(fulcrum_partial_path(:components, Base64.urlsafe_encode64(component.noid))) do %>
+        <td><%= link_to(component_path(component)) do %>
             <span class="glyphicon glyphicon-sunglasses" aria-hidden="true"></span> Show
           <% end %>
         </td>

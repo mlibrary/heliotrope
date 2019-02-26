@@ -63,10 +63,10 @@ Rails.application.routes.draw do
     resources :institutions
     resources :lessees, only: %i[index show]
     resources :components do
-      resources :products, only: %i[create destroy]
+      resources :products, only: %i[index create destroy]
     end
     resources :products do
-      resources :components, only: %i[create destroy]
+      resources :components, only: %i[index create destroy]
       resources :grants, only: %i[new]
     end
     resources :grants, except: %i[edit update]

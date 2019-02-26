@@ -4,7 +4,13 @@ class ComponentsController < ApplicationController
   before_action :set_component, only: %i[show edit update destroy add remove]
 
   def index
-    @components = Component.filter(filtering_params(params)).order(identifier: :asc).page(params[:page])
+    if params[:product_id].present?
+      @product = Product.find(params[:product_id])
+      @components = @product.components
+    else
+      @components = Component.all
+    end
+    @components = @components.filter(filtering_params(params)).order(identifier: :asc).page(params[:page])
   end
 
   def show; end

@@ -9,19 +9,8 @@
   <div class="col-md-11">&nbsp<%= @product.name %></div>
   <div class="col-md-1"><em>Purchase</em></div>
   <div class="col-md-11">&nbsp<%= @product.purchase %></div>
-  <div class="col-md-12"><br/></div>
-  <h2>Components</h2>
-  <div class="col-md-12">
-    <%= render partial: 'components', locals: { product: @product, components: @product.components } %>
-  </div>
-  <h2>Subscribers</h2>
-  <div class="col-md-12">
-    <%= render partial: '/products/subscribers', locals: { resource: @product, subscribers: Greensub.product_subscribers(@product) } %>
-  </div>
-  <h2>Lessees</h2>
-  <div class="col-md-12">
-    <%= render partial: 'lessees', locals: { product: @product, lessees: @product.lessees } %>
-  </div>
+  <div class="col-md-1"><em>Components</em></div>
+  <div class="col-md-11">&nbsp<%= link_to @product.components.count, product_components_path(@product) %></div>
   <div class="col-md-12"><br/></div>
   <div class="col-md-12">
     <%= link_to_if @product.update?, 'Edit', edit_product_path(@product) %>
