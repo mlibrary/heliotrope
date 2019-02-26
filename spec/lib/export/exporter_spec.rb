@@ -4,6 +4,11 @@ require 'rails_helper'
 require 'export'
 
 describe Export::Exporter do
+  before do
+    # Don't print status messages during specs
+    allow($stdout).to receive(:puts)
+  end
+
   describe '#new' do
     subject { described_class.new(monograph_id) }
 
