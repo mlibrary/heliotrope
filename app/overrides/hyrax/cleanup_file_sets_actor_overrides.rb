@@ -39,6 +39,7 @@ Hyrax::Actors::CleanupFileSetsActor.class_eval do
       # fs.each(&:destroy)
       # ******************************** End Hyrax Version ************************************************* #
 
+      DeleteActiveFedoraObjectsJob.perform_later(Array(curation_concern.list_source.id), true)
       fs_ids = curation_concern.member_ids
       # Remove Work from Solr after it was removed from Fedora so that the
       # in_objects lookup does not break when FileSets are destroyed.
