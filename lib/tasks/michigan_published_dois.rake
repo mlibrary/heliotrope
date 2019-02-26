@@ -13,7 +13,7 @@ namespace :heliotrope do
     hits.each do |hit|
       next unless hit["suppressed_bsi"] == false && hit["visibility_ssi"] == "open"
       presenter = Hyrax::MonographPresenter.new(SolrDocument.new(hit), nil)
-      p "#{presenter.handle_url},#{presenter.doi_url}"
+      puts %Q|"#{presenter.handle_url}","#{presenter.doi_url}"|
     end
   end
 end
