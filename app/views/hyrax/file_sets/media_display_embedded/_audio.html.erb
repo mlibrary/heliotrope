@@ -1,3 +1,38 @@
+<script>
+  var timer;
+
+  $(document).ready(function() {
+    // give half a second for resize to take over
+    throttleIframeResize(500);
+    setupAudioAnalytics();
+  });
+
+  $(window).resize(function() {
+    throttleIframeResize(250);
+  });
+
+  function throttleIframeResize(milliseconds) {
+    clearTimeout (timer);
+    if(window.frameElement != null) {
+      body = document.querySelector('body');
+      console.log("AHOY RESIZED AUDIO IFRAME", body.offsetHeight, body.scrollHeight, window.frameElement);
+      window.frameElement.style.height = body.scrollHeight + 'px';
+    }
+  }
+
+  function setupAudioAnalytics() {
+    if (typeof(ga) == typeof(Function)) {
+      var audio = $('#audio').get(0)
+      audio.addEventListener("play", function() {
+        ga('pressTracker.send', 'event', 'e_reader', 'play_audio', window.location.href);
+      });
+      audio.addEventListener("pause", function() {
+        ga('pressTracker.send', 'event', 'e_reader', 'stop_audio', window.location.href);
+      });
+    }
+  }
+</script>
+
 <audio id="audio"
        preload="auto"
        data-able-player
@@ -12,21 +47,3 @@
 <% if file_set.transcript.present? %>
   <div id="audio-transcript-container"></div>
 <% end %>
-
-<script>
-    $(document).ready(function() {
-        setupAudioAnalytics();
-    });
-
-    function setupAudioAnalytics() {
-        if (typeof(ga) == typeof(Function)) {
-            var audio = $('#audio').get(0)
-            audio.addEventListener("play", function() {
-                ga('pressTracker.send', 'event', 'e_reader', 'play_audio', window.location.href);
-            });
-            audio.addEventListener("pause", function() {
-                ga('pressTracker.send', 'event', 'e_reader', 'stop_audio', window.location.href);
-            });
-        }
-    }
-</script>

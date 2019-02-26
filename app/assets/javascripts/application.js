@@ -12,6 +12,7 @@
 //
 //= require common
 //= require ableplayer_turbolinks
+//= require_tree ./common
 //= require dataTables/jquery.dataTables
 //= require jquery-ui/widgets/datepicker
 //= require dataTables/bootstrap/3/jquery.dataTables.bootstrap
