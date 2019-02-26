@@ -15,9 +15,11 @@ module API
     # @return [User] the authenticated and authorized {User} of the current request
     attr_reader :current_user
 
-    rescue_from ActiveRecord::RecordInvalid, ActiveRecord::RecordNotFound, StandardError do |exception|
+    rescue_from ActiveFedora::ObjectNotFoundError, ActiveRecord::RecordInvalid, ActiveRecord::RecordNotFound, StandardError do |exception|
       log_request_response(exception)
       case exception
+      when ActiveFedora::ObjectNotFoundError
+        render json: { exception: exception.inspect }, status: :not_found
       when ActiveRecord::RecordInvalid
         render json: { exception: exception.inspect }, status: :unprocessable_entity
       when ActiveRecord::RecordNotFound

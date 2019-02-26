@@ -9,7 +9,7 @@ module API
       # Get institution by identifier
       # @example
       #   get /api/institution?identifier=String
-      # @param [Hash] params { identifer: String }
+      # @param [Hash] params { identifier: String }
       # @return [ActionDispatch::Response] {Institution} (see {show})
       def find
         @institution = Institution.find_by(identifier: params[:identifier])
