@@ -1,26 +1,34 @@
 <p id="notice"><%= notice %></p>
 <div id="maincontent">
   <h1>Products</h1>
+  <form name="filter" method="get" action="<%= products_path %>">
   <b>
-    <div class="col-md-10">
-      <div class="col-md-1">ID</div>
-      <div class="col-md-2">Identifier</div>
-      <div class="col-md-3">Name</div>
-      <div class="col-md-2">Components</div>
-      <div class="col-md-2">Subscribers</div>
-      <div class="col-md-2">Lessees</div>
+    <div class="col-md-8">
+      <div class="col-md-2">ID</div>
+      <div class="col-md-5">Identifier</div>
+      <div class="col-md-5">Name</div>
+    </div>
+    <div class="col-md-2">
+      <div class="col-md-12">Components</div>
     </div>
     <div class="col-md-2"><%= link_to 'New Product', new_product_path %></div>
-    <div class="col-md-12"><hr/></div>
   </b>
+  <div class="col-md-8">
+    <% size = 24 %>
+    <div class="col-md-2"><button name="submit" type="submit" value="filter">Filter</button></div>
+    <div class="col-md-5"><input type="text" name="identifier_like" value="<%= params[:identifier_like] %>" size="<%= size %>" aria-label="identifier_like"></div>
+    <div class="col-md-5"><input type="text" name="name_like" value="<%= params[:name_like] %>" size="<%= size %>" aria-label="name_like"></div>
+  </div>
+  <div class="col-md-4">&nbsp;</div>
+  <div class="col-md-4">&nbsp;</div>
   <% @products.each do |product| %>
-    <div class="col-md-10">
-      <div class="col-md-1"><%= product.id %></div>
-      <div class="col-md-2"><%= product.identifier %></div>
-      <div class="col-md-3"><%= product.name %></div>
-      <div class="col-md-2"><%= product.components.count %></div>
-      <div class="col-md-2"><%= Greensub.product_subscribers(product).count %></div>
-      <div class="col-md-2"><%= product.lessees.count %></div>
+    <div class="col-md-8">
+      <div class="col-md-2"><%= product.id %></div>
+      <div class="col-md-5"><%= product.identifier %></div>
+      <div class="col-md-5"><%= product.name %></div>
+    </div>
+    <div class="col-md-2">
+      <div class="col-md-12"><%= link_to product.components.count, product_components_path(product) %></div>
     </div>
     <div class="col-md-2">
       <div class="col-md-4"><%= link_to 'Show', product %></div>
@@ -28,5 +36,6 @@
       <div class="col-md-4"><%= link_to_if product.destroy?, 'Destroy', product, method: :delete, data: { confirm: 'Are you sure?' } %></div>
     </div>
   <% end %>
+  </form>
   <div class="col-md-12">&nbsp<%= paginate @products %></div>
 </div>

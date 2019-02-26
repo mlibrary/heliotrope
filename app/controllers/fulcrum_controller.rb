@@ -37,7 +37,7 @@ class FulcrumController < ApplicationController
 
   def show
     @partials = params[:partials]
-    if ['products', 'components', 'individuals', 'institutions', 'publishers', 'users'].include? @partials
+    if ['users'].include? @partials
       @identifier = Base64.urlsafe_decode64(params[:id])
       render
     else

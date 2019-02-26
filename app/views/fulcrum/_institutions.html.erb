@@ -24,7 +24,7 @@
     </tr>
     <% institutions.each do |institution| %>
       <tr>
-        <td><%= link_to(fulcrum_partial_path(:institutions, Base64.urlsafe_encode64(institution.identifier))) do %>
+        <td><%= link_to(institution_path(institution)) do %>
             <span class="glyphicon glyphicon-sunglasses" aria-hidden="true"></span> Show
           <% end %>
         </td>

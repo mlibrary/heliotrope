@@ -1,6 +1,10 @@
 <p id="notice"><%= notice %></p>
 <div id="maincontent">
-  <h1>Components</h1>
+  <% if @product.present? %>
+    <h1>Product <%= link_to @product.id, product_path(@product) %> Components</h1>
+  <% else %>
+    <h1>Components</h1>
+  <% end %>
   <b>
     <div class="col-md-10">
       <div class="col-md-1">ID</div>
