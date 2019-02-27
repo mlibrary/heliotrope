@@ -161,6 +161,9 @@ module Export
       end
 
       def metadata_field_value(item, object_type, field) # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
+        # this gets around the FileSet's label not matching the original_file's name post-versioning
+        # safe navigation is important as we have fileless FileSets in production and specs
+        return item&.original_file&.file_name&.first if object_type == :file_set && field[:field_name] == 'File Name'
         return representative_kind_or_cover(item) if object_type == :file_set && field[:field_name] == 'Representative Kind'
         return item_url(item, object_type) if field[:object] == :universal && field[:field_name] == 'Link'
         return file_set_embed_code(item) if object_type == :file_set && field[:field_name] == 'Embed Code'
