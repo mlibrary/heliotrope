@@ -15,20 +15,19 @@ module Export
     def export_bag # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
       ## create bag directory with valid, noid-based aptrust name
       bag_name = "umich.#{@monograph.press}-#{@monograph.id}"
-      # bag_pathname = "#{Settings.aptrust_bags_path}#{bag_name}"
-      bag_pathname = "/Users/gordonl/n/heliotrope-assets/aptrust-bags/#{bag_name}"
+      bag_pathname = "#{Settings.aptrust_bags_path}/#{bag_name}"
 
       # On the first run these shouldn't be needed but...
       # clean up bag and tar files
-      # if File.exist?(bag_pathname)
-      #   puts "-- removing existing bag for #{bag_name}"
-      #   FileUtils.rm_rf(bag_pathname)
-      # end
+      if File.exist?(bag_pathname)
+        puts "-- removing existing bag for #{bag_name}"
+        FileUtils.rm_rf(bag_pathname)
+      end
 
-      # if File.exist?("#{bag_pathname}.tar")
-      #   puts "-- removing tar file for #{bag_name}"
-      #   FileUtils.rm_rf("#{bag_pathname}.tar")
-      # end
+      if File.exist?("#{bag_pathname}.tar")
+        puts "-- removing tar file for #{bag_name}"
+        FileUtils.rm_rf("#{bag_pathname}.tar")
+      end
 
       puts "-- Archiving #{bag_name}"
       bag = BagIt::Bag.new bag_pathname
