@@ -20,15 +20,18 @@ describe MonographSearchBuilder do
         monograph.ordered_members << file1
         monograph.ordered_members << file2
         monograph.save!
+        # cover.save!
+        # file1.save!
+        # file2.save!
         search_builder.blacklight_params['id'] = monograph.id
       end
 
       context "reprensentative id (cover)" do
         before { search_builder.filter_by_members(solr_params) }
 
-        it "creates a query for the monograph's assets but without the representative_id" do
-          expect(solr_params[:fq].first).not_to match(/{!terms f=id}#{cover.id},#{file1.id},#{file2.id}/)
-          expect(solr_params[:fq].first).to match(/{!terms f=id}#{file1.id},#{file2.id}/)
+        it "creates a query for file_sets with the monograph's id, but without the representative_id" do
+          expect(solr_params[:fq].first).to match(/{!terms f=monograph_id_ssim}#{monograph.id}/)
+          expect(solr_params[:fq].second).to match(/-id: #{cover.id}/)
         end
       end
 
@@ -38,13 +41,12 @@ describe MonographSearchBuilder do
           search_builder.filter_by_members(solr_params)
         end
 
-        after { FeaturedRepresentative.destroy_all }
-
         let(:file2) { create(:file_set, content: File.open(File.join(fixture_path, 'moby-dick.epub'))) }
 
-        it "creates a query for the monograph's assets but without the epub id" do
-          expect(solr_params[:fq].first).not_to match(/{!terms f=id}#{file1.id},#{file2.id}/)
-          expect(solr_params[:fq].first).to match(/{!terms f=id}#{file1.id}/)
+        it "creates a query for file_sets with the monograph's id but without the epub id" do
+          expect(solr_params[:fq].first).to match(/{!terms f=monograph_id_ssim}#{monograph.id}/)
+          expect(solr_params[:fq].second).to match(/-id: #{file2.id}/)
+          expect(solr_params[:fq].third).to match(/-id: #{cover.id}/)
         end
       end
     end
@@ -57,8 +59,8 @@ describe MonographSearchBuilder do
         search_builder.filter_by_members(solr_params)
       end
 
-      it "creates an empty query for the monograph's assets" do
-        expect(solr_params[:fq].first).to eq("{!terms f=id}")
+      it "still searches for file_sets with the monographs's id" do
+        expect(solr_params[:fq].first).to eq("{!terms f=monograph_id_ssim}#{empty_monograph.id}")
       end
     end
 
@@ -76,6 +78,9 @@ describe MonographSearchBuilder do
         monograph.ordered_members << file1
         monograph.ordered_members << file2
         monograph.save!
+        cover.save!
+        file1.save!
+        file2.save!
       end
 
       it "recieves the correct file_set after searching for italic" do

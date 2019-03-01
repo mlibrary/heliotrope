@@ -4,33 +4,24 @@ class MonographSearchBuilder < ::SearchBuilder
   self.default_processor_chain += [:filter_by_members]
 
   def filter_by_members(solr_parameters)
-    ids = if blacklight_params[:monograph_id]
-            # used for the facets "more" link and facet modal
-            asset_ids(blacklight_params[:monograph_id])
-          else
-            asset_ids(blacklight_params['id'])
-          end
+    monograph_id = blacklight_params[:monograph_id] || blacklight_params['id']
     solr_parameters[:fq] ||= []
-    solr_parameters[:fq] << "{!terms f=id}#{ids}"
+    solr_parameters[:fq] << "{!terms f=monograph_id_ssim}#{monograph_id}"
+
+    # We skip these in the blacklight results so they're not shown in the assets
+    # list on the monograph_catalog page
+    # solr_parameters[:fq] << "-id:(#{feat_reps_to_skip.map(&:file_set_id).join(',')})" if feat_reps_to_skip.present?
+    # solr_parameters[:fq] << "id:[* TO *] -id:(#{feat_reps_to_skip.map(&:file_set_id).join(',')})" if feat_reps_to_skip.present?
+    # ^^ TODO: how to do these as a single :fq?
+    featured_representatives(monograph_id).each do |rep|
+      solr_parameters[:fq] << "-id: #{rep.file_set_id}"
+    end
+
+    monograph = ActiveFedora::SolrService.query("{!terms f=id}#{monograph_id}", rows: 1).first
+    solr_parameters[:fq] << "-id: #{monograph['representative_id_ssim']&.first}" if monograph.present? && monograph['representative_id_ssim']&.first.present?
   end
 
   private
-
-    # Get the asset/fileset ids of the monograph
-    def asset_ids(id)
-      monograph = ActiveFedora::SolrService.query("{!terms f=id}#{id}", rows: 1)
-      return if monograph.blank?
-
-      ids = monograph.first['ordered_member_ids_ssim']
-      return if ids.blank?
-
-      ids.delete(monograph.first['representative_id_ssim']&.first)
-      featured_representatives(monograph.first['id']).each do |fr|
-        ids.delete(fr.file_set_id)
-      end
-
-      ids.join(',')
-    end
 
     def featured_representatives(id)
       FeaturedRepresentative.where(monograph_id: id)

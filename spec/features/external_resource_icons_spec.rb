@@ -17,6 +17,8 @@ describe "Monograph Catalog Facets" do
       monograph.ordered_members << cover
       monograph.ordered_members << file_set1
       monograph.save!
+      cover.save!
+      file_set1.save!
     end
 
     it "image shows picture icon in list view" do
@@ -44,6 +46,8 @@ describe "Monograph Catalog Facets" do
       monograph.ordered_members << cover
       monograph.ordered_members << file_set1
       monograph.save!
+      cover.save!
+      file_set1.save!
     end
 
     it "text shows file icon in list view" do
@@ -71,6 +75,8 @@ describe "Monograph Catalog Facets" do
       monograph.ordered_members << cover
       monograph.ordered_members << file_set1
       monograph.save!
+      cover.save!
+      file_set1.save!
     end
 
     it "video shows film icon in list view" do
@@ -98,6 +104,8 @@ describe "Monograph Catalog Facets" do
       monograph.ordered_members << cover
       monograph.ordered_members << file_set1
       monograph.save!
+      cover.save!
+      file_set1.save!
     end
 
     it "audio shows 'volume up' icon in list view" do

@@ -20,6 +20,8 @@ describe "Monograph Catalog Facets" do
       monograph.ordered_members << cover
       monograph.ordered_members << file_set1
       monograph.save!
+      cover.save!
+      file_set1.save!
     end
 
     it "shows keywords in the intended order" do
@@ -50,6 +52,10 @@ describe "Monograph Catalog Facets" do
     let(:fs4) { build(:public_file_set, title: ['Sec 3 File 1'], section_title: s3_title) }
     let(:fs5) { build(:public_file_set, title: ['Sec 3 File 2'], section_title: s3_title) }
     let(:fs6) { build(:public_file_set, title: ['Sec 3 File 3'], section_title: s3_title) }
+
+    before do
+      [cover, fs1, fs2, fs3, fs4, fs5, fs6].each(&:save!)
+    end
 
     it "shows sections in intended order" do
       visit monograph_catalog_facet_path(id: 'section_title_sim', monograph_id: monograph.id)
@@ -90,6 +96,10 @@ describe "Monograph Catalog Facets" do
     let(:fs5) { build(:public_file_set, title: ['File 5'], section_title: ['B 2']) }
     let(:fs6) { build(:public_file_set, title: ['File 6'], section_title: ['A 3']) }
 
+    before do
+      [cover, fs1, fs2, fs3, fs4, fs5, fs6].each(&:save!)
+    end
+
     it "shows sections in intended order" do
       visit monograph_catalog_facet_path(id: 'section_title_sim', monograph_id: monograph.id)
 
@@ -110,6 +120,10 @@ describe "Monograph Catalog Facets" do
     end
 
     let(:fs) { create(:public_file_set, section_title: ["A Section with _Italicized Title_ Stuff"]) }
+
+    before do
+      [cover, fs].each(&:save!)
+    end
 
     it "shows italics (emphasis) in section facet links" do
       visit monograph_catalog_path(id: monograph.id)
@@ -137,6 +151,10 @@ describe "Monograph Catalog Facets" do
     let(:file_set) { create(:public_file_set, resource_type: [expected_resource_facet], content_type: [expected_content_facet]) }
     let(:facets) { "#facets" }
     let(:selected_facets) { "#appliedParams" }
+
+    before do
+      [cover, file_set].each(&:save!)
+    end
 
     it "Select facets from resource_type (parent) and content_type (child)" do
       visit monograph_catalog_path(id: monograph.id)
@@ -281,6 +299,7 @@ describe "Monograph Catalog Facets" do
       login_as user
       monograph.ordered_members = [cover, file_set]
       monograph.save!
+      [cover, file_set].each(&:save!)
     end
 
     it "shows the correct facets" do

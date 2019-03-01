@@ -34,9 +34,9 @@ RSpec.describe Hyrax::MonographPresenter do
                          ordered_member_ids_ssim: ordered_ids)
     }
 
-    let(:cover) { ::SolrDocument.new(id: 'cover', has_model_ssim: ['FileSet']) }
-    let(:blue_file) { ::SolrDocument.new(id: 'blue', has_model_ssim: ['FileSet']) }
-    let(:green_file) { ::SolrDocument.new(id: 'green', has_model_ssim: ['FileSet']) }
+    let(:cover) { ::SolrDocument.new(id: 'cover', monograph_id_ssim: 'mono', has_model_ssim: ['FileSet']) }
+    let(:blue_file) { ::SolrDocument.new(id: 'blue', monograph_id_ssim: 'mono', has_model_ssim: ['FileSet']) }
+    let(:green_file) { ::SolrDocument.new(id: 'green', monograph_id_ssim: 'mono', has_model_ssim: ['FileSet']) }
 
     context 'has assets' do
       let(:ordered_ids) { [cover.id, blue_file.id, green_file.id] }
@@ -211,9 +211,9 @@ RSpec.describe Hyrax::MonographPresenter do
                          ordered_member_ids_ssim: ordered_ids)
     }
 
-    let(:cover) { ::SolrDocument.new(id: 'cover', has_model_ssim: ['FileSet']) }
-    let(:blue_file) { ::SolrDocument.new(id: 'blue', has_model_ssim: ['FileSet'], section_title_tesim: ['chapter 2']) }
-    let(:green_file) { ::SolrDocument.new(id: 'green', has_model_ssim: ['FileSet'], section_title_tesim: ['chapter 4']) }
+    let(:cover) { ::SolrDocument.new(id: 'cover', monograph_id_ssim: 'mono', has_model_ssim: ['FileSet']) }
+    let(:blue_file) { ::SolrDocument.new(id: 'blue', monograph_id_ssim: 'mono', has_model_ssim: ['FileSet'], section_title_tesim: ['chapter 2']) }
+    let(:green_file) { ::SolrDocument.new(id: 'green', monograph_id_ssim: 'mono', has_model_ssim: ['FileSet'], section_title_tesim: ['chapter 4']) }
 
     context 'monograph.ordered_members contains a non-file' do
       let(:non_file) { SolrDocument.new(id: 'NotAFile', has_model_ssim: ['Monograph']) } # It doesn't have section_title_tesim
@@ -231,7 +231,7 @@ RSpec.describe Hyrax::MonographPresenter do
     end
 
     context 'a fileset that belongs to more than 1 chapter' do
-      let(:red_file) { ::SolrDocument.new(id: 'red', has_model_ssim: ['FileSet'], section_title_tesim: ['chapter 1', 'chapter 3']) }
+      let(:red_file) { ::SolrDocument.new(id: 'red', monograph_id_ssim: 'mono', has_model_ssim: ['FileSet'], section_title_tesim: ['chapter 1', 'chapter 3']) }
 
       let(:ordered_ids) {
         # red_file appears in both chapter 1 and chapter 3
@@ -311,10 +311,10 @@ RSpec.describe Hyrax::MonographPresenter do
 
   context 'a monograph with attached members' do
     # the cover FileSet won't be included in the ordered_file_sets_ids
-    let(:cover_fileset_doc) { ::SolrDocument.new(id: 'cover', has_model_ssim: ['FileSet']) }
-    let(:fs1_doc) { ::SolrDocument.new(id: 'fs1', has_model_ssim: ['FileSet']) }
-    let(:fs2_doc) { ::SolrDocument.new(id: 'fs2', has_model_ssim: ['FileSet']) }
-    let(:fs3_doc) { ::SolrDocument.new(id: 'fs3', has_model_ssim: ['FileSet']) }
+    let(:cover_fileset_doc) { ::SolrDocument.new(id: 'cover', monograph_id_ssim: 'mono', has_model_ssim: ['FileSet']) }
+    let(:fs1_doc) { ::SolrDocument.new(id: 'fs1', monograph_id_ssim: 'mono', has_model_ssim: ['FileSet']) }
+    let(:fs2_doc) { ::SolrDocument.new(id: 'fs2', monograph_id_ssim: 'mono', has_model_ssim: ['FileSet']) }
+    let(:fs3_doc) { ::SolrDocument.new(id: 'fs3', monograph_id_ssim: 'mono', has_model_ssim: ['FileSet']) }
 
     let(:expected_id_count) { 3 }
 

@@ -88,6 +88,7 @@ RSpec.describe 'hyrax/file_sets/show' do
       monograph.ordered_members = []
       monograph.ordered_members << file_set1 << file_set2 << file_set3 << file_set
       monograph.save!
+      [file_set1, file_set2, file_set3, file_set].each(&:save!)
       render
       expect(rendered).to have_css('ul.tabular.list-unstyled li.attribute.section_title', count: 3)
       expect(rendered).to match(/.*Chapter 1.*Chapter 2.*Chapter 3.*/)
@@ -103,6 +104,7 @@ RSpec.describe 'hyrax/file_sets/show' do
       monograph.ordered_members = []
       monograph.ordered_members << file_set
       monograph.save!
+      file_set.save!
       render
       expect(rendered).to have_css('ul.tabular.list-unstyled li.attribute.section_title', count: 2)
       expect(rendered).to match(/Chapter 1.*Chapter 3/)

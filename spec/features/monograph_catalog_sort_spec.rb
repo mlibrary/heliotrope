@@ -23,6 +23,8 @@ describe 'Monograph catalog sort' do
       fileset_count.times { |index| monograph.ordered_members << FactoryBot.create(:file_set, sort_date: "#{1900 + index}-01-01") }
       monograph.save!
       monograph.ordered_members.to_a.each(&:save!)
+      cover.save!
+      fileset_outlier.save!
       # Stub the pagination to a low number so that we don't
       # have to create so many records to exercise pagination.
       allow_any_instance_of(::Blacklight::Configuration).to receive(:default_per_page).and_return(per_page)

@@ -222,13 +222,13 @@ module Hyrax
         @ordered_member_docs = []
         return @ordered_member_docs
       else
-        query_results = ActiveFedora::SolrService.query("{!terms f=id}#{ids.join(',')}", rows: ids.count)
+        query_results = ActiveFedora::SolrService.query("{!terms f=monograph_id_ssim}#{solr_document.id}", rows: ids.count)
 
         docs_hash = query_results.each_with_object({}) do |res, h|
           h[res['id']] = ::SolrDocument.new(res)
         end
 
-        @ordered_member_docs = ids.map { |id| docs_hash[id] }
+        @ordered_member_docs = ids.map { |id| docs_hash[id] }.compact
       end
     end
 
