@@ -13,13 +13,6 @@ class Institution < ApplicationRecord
   # validates :site, presence: true, allow_blank: false
   # validates :login, presence: true, allow_blank: false
 
-  before_validation(on: :create) do
-    if Lessee.find_by(identifier: identifier).present?
-      errors.add(:identifier, "lessee identifier #{identifier} exists!")
-      throw(:abort)
-    end
-  end
-
   before_validation(on: :update) do
     if identifier_changed?
       errors.add(:identifier, "institution identifier can not be changed!")
@@ -27,20 +20,7 @@ class Institution < ApplicationRecord
     end
   end
 
-  before_create do
-    begin
-      Lessee.create!(identifier: identifier)
-    rescue StandardError => e
-      errors.add(:identifier, "create lessee #{identifier} fail! #{e}")
-      throw(:abort)
-    end
-  end
-
   before_destroy do
-    if lessee.products.present?
-      errors.add(:base, "institution has #{lessee.products.count} associated products!")
-      throw(:abort)
-    end
     if products.present?
       errors.add(:base, "institution has #{products.count} associated products!")
       throw(:abort)
@@ -49,10 +29,6 @@ class Institution < ApplicationRecord
       errors.add(:base, "institution has at least one associated grant!")
       throw(:abort)
     end
-  end
-
-  after_destroy do
-    lessee.destroy!
   end
 
   def update?
@@ -67,13 +43,8 @@ class Institution < ApplicationRecord
     entity_id.present?
   end
 
-  def lessee
-    Lessee.find_by(identifier: identifier)
-  end
-
   def products
-    products = (lessee&.products || []) + Greensub.subscriber_products(self)
-    products.uniq
+    Greensub.subscriber_products(self)
   end
 
   def grants?

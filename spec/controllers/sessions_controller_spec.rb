@@ -94,15 +94,18 @@ RSpec.describe SessionsController, type: :controller do
   describe '#discovery_feed/id' do
     let(:file_set) { create(:file_set, content: File.open(File.join(fixture_path, 'moby-dick.epub'))) }
 
+    before { clear_grants_table }
+
     it 'gets parameterized discovery feed' do
       epub = Sighrax.factory(file_set.id)
       component = Component.create!(identifier: epub.resource_token, name: epub.title, noid: epub.noid, handle: HandleService.path(epub.noid))
-      Institution.create!(identifier: '1', name: 'University of Michigan', site: 'Site', login: 'Login', entity_id: 'https://shibboleth.umich.edu/idp/shibboleth')
-      Institution.create!(identifier: '2', name: 'College', site: 'Site', login: 'Login', entity_id: 'https://shibboleth.college.edu/idp/shibboleth')
+      institution1 = Institution.create!(identifier: '1', name: 'University of Michigan', site: 'Site', login: 'Login', entity_id: 'https://shibboleth.umich.edu/idp/shibboleth')
+      # To show that this institution is not used
+      institution2 = Institution.create!(identifier: '2', name: 'College', site: 'Site', login: 'Login', entity_id: 'https://shibboleth.college.edu/idp/shibboleth') # rubocop:disable Lint/UselessAssignment
       product = Product.create!(identifier: 'product', name: 'name', purchase: 'purchase')
       product.components << component
-      product.lessees << Lessee.find_by(identifier: '1')
       product.save!
+      Greensub.subscribe(institution1, product)
       get :discovery_feed, params: { id: file_set.id }
       expect(response).to have_http_status(:success)
       expect { JSON.parse response.body }.not_to raise_error

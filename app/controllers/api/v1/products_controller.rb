@@ -54,10 +54,10 @@ module API
                       @component.products
                     elsif params[:individual_id].present?
                       set_individual
-                      @individual.lessee.products
+                      @individual.products
                     elsif params[:institution_id].present?
                       set_institution
-                      @institution.lessee.products
+                      @institution.products
                     else
                       Product.all
                     end

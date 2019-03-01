@@ -67,9 +67,6 @@ module Heliotrope
     # See the KeycardAuthenticatable strategy for more detail.
     config.create_user_on_login = Settings.create_user_on_login && true
 
-    # Use EPub Checkpoint authorization otherwise EPub Legacy authorization
-    config.e_pub_checkpoint_authorization = Settings.e_pub_checkpoint_authorization && true
-
     # Never use /tmp, always use ~/tmp, #627 and http://stackoverflow.com/a/17068331
     tmpdir = Rails.root.join('tmp').to_s
     ENV['TMPDIR'] = tmpdir

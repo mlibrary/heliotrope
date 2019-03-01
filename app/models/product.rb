@@ -9,8 +9,6 @@ class Product < ApplicationRecord
 
   has_many :components_products
   has_many :components, through: :components_products
-  has_many :lessees_products
-  has_many :lessees, through: :lessees_products
 
   validates :identifier, presence: true, allow_blank: false, uniqueness: true
   validates :name, presence: true, allow_blank: false
@@ -19,10 +17,6 @@ class Product < ApplicationRecord
   before_destroy do
     if components.present?
       errors.add(:base, "product has #{components.count} associated components!")
-      throw(:abort)
-    end
-    if lessees.present?
-      errors.add(:base, "product has #{lessees.count} associated lessees!")
       throw(:abort)
     end
     if grants?
@@ -36,7 +30,7 @@ class Product < ApplicationRecord
   end
 
   def destroy?
-    components.blank? && lessees.blank? && !grants?
+    components.blank? && !grants?
   end
 
   def not_components
@@ -44,15 +38,11 @@ class Product < ApplicationRecord
   end
 
   def individuals
-    Individual.where(identifier: lessees.map(&:identifier))
+    @individuals ||= subscribers.map { |s| s if s.is_a?(Individual) }.compact
   end
 
   def institutions
-    Institution.where(identifier: lessees.map(&:identifier))
-  end
-
-  def not_lessees
-    Lessee.where.not(id: lessees.map(&:id))
+    @institutions ||= subscribers.map { |s| s if s.is_a?(Institution) }.compact
   end
 
   def subscribers

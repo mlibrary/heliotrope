@@ -103,11 +103,7 @@ module API
       def update
         if params[:product_id].present?
           set_product
-          unless @individual.lessee.products.include?(@product)
-            @individual.lessee.products << @product
-            @individual.save
-            Greensub.subscribe(@individual, @product)
-          end
+          Greensub.subscribe(@individual, @product)
           return head :ok
         end
         return render json: @individual.errors, status: :unprocessable_entity unless @individual.update(individual_params)
@@ -129,10 +125,7 @@ module API
       def destroy
         if params[:product_id].present?
           set_product
-          if @individual.lessee.products.include?(@product)
-            @individual.lessee.products.delete(@product)
-            Greensub.unsubscribe(@individual, @product)
-          end
+          Greensub.unsubscribe(@individual, @product)
         else
           return render json: @individual.errors, status: :accepted unless @individual.destroy
         end

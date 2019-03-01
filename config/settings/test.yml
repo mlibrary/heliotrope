@@ -13,8 +13,6 @@ aptrust_bags_path: <%= File.join(Rails.root, 'tmp', 'aptrust-bags') %>
 resque_namespace: heliotrope-testing
 host: test.host
 
-e_pub_checkpoint_authorization: true
-
 keycard:
   database:
     adapter: sqlite
