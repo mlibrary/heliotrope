@@ -4,13 +4,19 @@ require 'htmlentities'
 
 desc 'Task to be called by a cron for Monographs create/edit from TMM CSV files (ISBN lookup)'
 namespace :heliotrope do
-  task :tmm_csv_monograph_create_update, [:input_file] => :environment do |_t, args|
-    # Usage: bundle exec rails "heliotrope:tmm_csv_monograph_create_update[/path/to/monographs.csv]"
+  task :tmm_csv_monograph_create_update, [:tmm_csv_dir] => :environment do |_t, args|
+    # Usage: bundle exec rails "heliotrope:tmm_csv_monograph_create_update[/path/to/tmm_csv_dir]"
 
-    fail "CSV file not found '#{args.input_file}'" unless File.exist?(args.input_file)
+    unless Dir.exist?(args.tmm_csv_dir)
+      fail "CSV directory not found: '#{args.tmm_csv_dir}'"
+    end
 
-    puts "Parsing file: #{args.input_file}"
-    rows = CSV.read(args.input_file, encoding: 'windows-1252:utf-8', headers: true, skip_blanks: true).delete_if { |row| row.to_hash.values.all?(&:blank?) }
+    input_file = Dir.glob(File.join(args.tmm_csv_dir, "TMMEBCData_*#{Time.now.strftime('%Y-%m-%d')}.csv")).sort.last
+    fail "CSV file not found in directory '#{args.tmm_csv_dir}'" unless input_file.present?
+    fail "CSV file may accidentally be a backup as '#{input_file}' contains 'bak'. Exiting." if input_file.include? 'bak'
+
+    puts "Parsing file: #{input_file}"
+    rows = CSV.read(input_file, encoding: 'windows-1252:utf-8', headers: true, skip_blanks: true).delete_if { |row| row.to_hash.values.all?(&:blank?) }
 
     monograph_fields = METADATA_FIELDS.select { |f| %i[universal monograph].include? f[:object] }
 
@@ -84,9 +90,9 @@ namespace :heliotrope do
             # attrs['admin_set_id'] = admin_set_id if admin_set_id
 
             Hyrax::CurationConcern.actor.create(Hyrax::Actors::Environment.new(monograph, current_ability, attrs))
-          else
+          elsif monograph.press == 'michigan' # for now don't edit sub-press Monographs like Gabii
             if check_for_changes_isbn(monograph, attrs, row_num)
-              backup_file = open_backup_file(args.input_file) if !backup_file_created
+              backup_file = open_backup_file(input_file) if !backup_file_created
               backup_file_created = true
 
               CSV.open(backup_file, "a") do |csv|
@@ -152,8 +158,9 @@ namespace :heliotrope do
 
     values.each do |value|
        if value.present?
-        # value = value.gsub('–', '-') # endash
-        # value = value.gsub('—', '--') # emdash
+        value = value.gsub(/\r\n?/, "\n") # editors are on a mix of OS's so make line endings uniform
+        # value = value.gsub('–', '-') # endash, commented out as apparently editors want to use them
+        # value = value.gsub('—', '--') # emdash, commented out as apparently editors want to use them
         value = value.gsub(/[‘’]/, "'") # left, right single quotation marks
         value = value.gsub(/[“”]/, '"') # left, right double quotation marks
 
@@ -168,7 +175,8 @@ namespace :heliotrope do
       end
     end
 
-    cleaned_values
+    # you can set all AF fields to nil, but not [nil], so don't send that back!
+    cleaned_values == [nil] ? nil : cleaned_values
   end
 
   def check_for_changes_isbn(monograph, attrs, row_num)
@@ -191,22 +199,18 @@ namespace :heliotrope do
         end
       end
     changes_message = changes ? changes_message + "\n\n" : changes_message + '...................... NO CHANGES'
-    puts changes_message
+    puts changes_message if changes
     return changes
   end
 
-  # stolen from Exporter, with the addition of Array-wrapping on the multivalued AF fields, to enable...
-  # direct comparison with the ready-to-save AF data from RowData::data_for_monograph
   def field_value(item, metadata_name, multivalued)
     return if item.public_send(metadata_name).blank?
     if multivalued == :yes_split
       # Any intended order within a multi-valued field is lost after having been stored in an...
       # `ActiveTriples::Relation`, so I'm arbitrarily sorting them alphabetically.
       item.public_send(metadata_name).to_a.sort
-    elsif multivalued == :yes
-      # this is a multi-valued field but we're only using it to hold one value
-      Array(item.public_send(metadata_name).first)
-    elsif multivalued == :yes_multiline
+    elsif [:yes, :yes_multiline].include? multivalued
+      # `to_a` so we're not doing comparisons against `ActiveTriples::Relation`
       item.public_send(metadata_name).to_a
     else
       item.public_send(metadata_name)
