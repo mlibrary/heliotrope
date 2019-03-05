@@ -1,17 +1,30 @@
 <h1>Jobs</h1>
 <ul>
   <li>
-    <%= link_to(fulcrum_exec_path(:reindex_everything), method: :put, class: "btn btn-default", data: { confirm: 'Are you sure?' }) do %>
+    <form name="ingest" method="get" action="<%= fulcrum_exec_path(:ingest) %>">
+      <label for="token">Token</label>
+      <input type="text" id="token" name="token" value="JSON WEB TOKEN">
+      <label for="base">Base</label>
+      <input type="text" id="base" name="base" value="https://www.fulcrum.org/api">
+      <label for="source">Source</label>
+      <input type="text" id="source" name="source" value="validnoid">
+      <label for="target">Target</label>
+      <%= select_tag "target", options_for_select(Press.all.collect { |press| [press.subdomain, press.subdomain] }, 'heliotrope') %>
+      <button name="submit" type="submit" value="ingest">Ingest</button>
+    </form>
+  </li>
+  <li>
+    <%= link_to(fulcrum_exec_path(:reindex_everything), method: :get, class: "btn btn-default", data: { confirm: 'Are you sure?' }) do %>
       <span class="glyphicon glyphicon-wrench" aria-hidden="true"></span> Reindex Everything
     <% end %>
   </li>
   <li>
-    <%= link_to(fulcrum_exec_path(:reindex_monographs), method: :put, class: "btn btn-default", data: { confirm: 'Are you sure?' }) do %>
+    <%= link_to(fulcrum_exec_path(:reindex_monographs), method: :get, class: "btn btn-default", data: { confirm: 'Are you sure?' }) do %>
       <span class="glyphicon glyphicon-wrench" aria-hidden="true"></span> Reindex Monographs
     <% end %>
   </li>
   <li>
-    <%= link_to(fulcrum_exec_path(:reindex_file_sets), method: :put, class: "btn btn-default", data: { confirm: 'Are you sure?' }) do %>
+    <%= link_to(fulcrum_exec_path(:reindex_file_sets), method: :get, class: "btn btn-default", data: { confirm: 'Are you sure?' }) do %>
       <span class="glyphicon glyphicon-wrench" aria-hidden="true"></span> Reindex Assets
     <% end %>
   </li>

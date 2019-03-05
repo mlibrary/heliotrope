@@ -9,7 +9,7 @@ module API
       # Get component by identifier
       # @example
       #   get /api/component?identifier=String
-      # @param [Hash] params { identifer: String }
+      # @param [Hash] params { identifier: String }
       # @return [ActionDispatch::Response] {Component} (see {show})
       def find
         @component = Component.find_by(identifier: params[:identifier])

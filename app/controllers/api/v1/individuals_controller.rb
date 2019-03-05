@@ -9,7 +9,7 @@ module API
       # Get individual by identifier
       # @example
       #   get /api/individual?identifier=String
-      # @param [Hash] params { identifer: String }
+      # @param [Hash] params { identifier: String }
       # @return [ActionDispatch::Response] {Individual} (see {show})
       def find
         @individual = Individual.find_by(identifier: params[:identifier])

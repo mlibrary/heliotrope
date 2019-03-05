@@ -27,6 +27,13 @@ Rails.application.routes.draw do
     end
 
     scope module: :v1, constraints: API::Version.new('v1', true) do
+      get 'press', controller: :presses, action: :find, as: :find_press
+      resources :presses, only: %i[index show] do
+        resources :monographs, only: %i[index]
+      end
+      resources :monographs, only: %i[index show]
+      get 'monographs/:id/extract', controller: :monographs, action: :extract, as: :monograph_extract
+      get 'monographs/:id/manifest', controller: :monographs, action: :manifest, as: :monograph_manifest
       get 'product', controller: :products, action: :find, as: :find_product
       resources :products, only: %i[index show create update destroy] do
         resources :components, only: %i[index show update destroy]
@@ -50,7 +57,7 @@ Rails.application.routes.draw do
 
   constraints platform_administrator_constraint do
     get 'fulcrum', controller: :fulcrum, action: :dashboard, as: :fulcrum
-    put 'fulcrum/exec/:cmd', controller: :fulcrum, action: :exec, as: :fulcrum_exec
+    get 'fulcrum/exec/:cmd', controller: :fulcrum, action: :exec, as: :fulcrum_exec
     get 'fulcrum/:partials', controller: :fulcrum, action: :index, as: :fulcrum_partials
     get 'fulcrum/:partials/:id', controller: :fulcrum, action: :show, as: :fulcrum_partial
     resources :api_requests, only: %i[index show destroy] do

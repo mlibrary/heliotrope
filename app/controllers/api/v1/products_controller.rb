@@ -9,7 +9,7 @@ module API
       # Get product by identifier
       # @example
       #   get /api/product?identifier=String
-      # @param [Hash] params { identifer: String }
+      # @param [Hash] params { identifier: String }
       # @return [ActionDispatch::Response] {Product} (see {show})
       def find
         @product = Product.find_by(identifier: params[:identifier])
