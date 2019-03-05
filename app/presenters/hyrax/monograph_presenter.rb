@@ -76,15 +76,19 @@ module Hyrax
     end
 
     def license_link_content
-      # account for any mix of http/https links in config/authorities/licenses.yml
-      link_content = solr_document.license.first.sub('https', 'http')
+      # account for any (unexpected) mix of http/https links in config/authorities/licenses.yml
+      link_content = solr_document.license.first.sub('http:', 'https:')
       # in-house outlier "All Rights Reserved" value, no icon
-      return 'All Rights Reserved' if link_content == 'http://www.press.umich.edu/about/licenses#all-rights-reserved'
+      return 'All Rights Reserved' if link_content == 'https://www.press.umich.edu/about/licenses#all-rights-reserved'
+
+      # get term for use as alt text
+      term = Hyrax::LicenseService.new.select_active_options.detect { |a| a[1] == link_content }&.first
+      term ||= 'Creative Commons License'
 
       link_content = link_content.sub('licenses', 'l')
       link_content = link_content.sub('publicdomain', 'p')
-      link_content = link_content.sub('http://creativecommons', 'https://i.creativecommons') + '80x15.png'
-      link_content = '<img alt="Creative Commons License" style="border-width:0" src="' + link_content + '"/>'
+      link_content = link_content.sub('https://creativecommons', 'https://i.creativecommons') + '80x15.png'
+      link_content = '<img alt="' + term + '" style="border-width:0" src="' + link_content + '"/>'
       link_content.html_safe # rubocop:disable Rails/OutputSafety
     end
 

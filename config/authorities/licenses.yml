@@ -36,6 +36,9 @@ terms:
     - id: https://www.europeana.eu/portal/rights/rr-r.html
       term: All rights reserved # Hyrax term
       active: false
+    - id: https://creativecommons.org/licenses/by/2.0/
+      term: Creative Commons Attribution 2.0 Generic license # Heliotrope term
+      active: true
     - id: https://creativecommons.org/licenses/by/3.0/
       term: Creative Commons Attribution license, 3.0 Unported # Heliotrope term
       active: false
