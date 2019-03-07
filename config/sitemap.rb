@@ -44,6 +44,10 @@ SitemapGenerator::Sitemap.create do
       fs = ActiveFedora::SolrService.query("{!terms f=id}#{fsid}", rows: 1).first
       next unless fs['visibility_ssi'] == 'open'
       rep = FeaturedRepresentative.where(monograph_id: d['id'], file_set_id: fsid).first
+      # HELIO-2509: epubs get a special url, all other featured reps are redirects
+      # to their monograph_catalog page so don't need sitemap representation.
+      # However, eventually pdf_ebooks will need their own url too. I think.
+      next if rep&.kind.present? && rep&.kind != 'epub'
       url = if rep&.kind == 'epub'
               Rails.application.routes.url_helpers.epub_path(fsid)
             else
