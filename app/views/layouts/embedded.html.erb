@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!DOCTYPE html <%= 'style="height:100%;"' if @presenter.image? %>>
   <head>
     <title><%= content_for?(:page_title) ? yield(:page_title) : yield %></title>
     <!-- Ensure all links open outside the iframe, in a new tab -->
@@ -8,7 +8,7 @@
     <!-- Javascript -->
     <%= javascript_include_tag 'embed' %>
   </head>
-  <body>
+  <body <%= 'style="height:100%;"' if @presenter.image? %>>
     <%= content_for?(:body) ? yield(:body) : yield %>
   </body>
 </html>
