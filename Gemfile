@@ -42,6 +42,7 @@ gem 'rack', '~> 2.0.6'
 # HELIO-2404
 gem 'bagit'
 gem 'minitar', '~>0.8'
+gem 'aws-sdk-s3', '~> 1'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console

@@ -969,6 +969,7 @@ PLATFORMS
 
 DEPENDENCIES
   actionpack-page_caching (~> 1.1.0)
+  aws-sdk-s3 (~> 1)
   bagit
   bootstrap-sass (>= 3.4.1)
   byebug

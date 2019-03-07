@@ -28,7 +28,7 @@ describe Export::Exporter do
   end
 
   describe '#export_bag' do
-    subject { described_class.new(monograph.id).export_bag }
+    subject { described_class.new(monograph.id) }
 
     let(:monograph) {
       create(:monograph, press: 'blue')
@@ -53,6 +53,7 @@ describe Export::Exporter do
     before do
       Dir.mkdir(Settings.aptrust_bags_path) unless Dir.exist?(Settings.aptrust_bags_path)
       Dir.mkdir("#{Settings.aptrust_bags_path}/data") unless Dir.exist?("#{Settings.aptrust_bags_path}/data")
+      allow(subject).to receive(:send_to_s3).and_return(false) # rubocop:disable RSpec/SubjectStub:
     end
 
     after do
@@ -61,11 +62,48 @@ describe Export::Exporter do
     end
 
     it do
-      subject
+      subject.export_bag
       expect(File.exist?("#{monograph_bagit}.tar")).to be true
       expect(Dir.exist?(monograph_bagit)).to be false
       expect(Dir.exist?(monograph_data)).to be false
     end
+  end
+
+  describe "#update_aptrust_db" do
+    subject { described_class.new(monograph.id) }
+
+    let(:monograph) { create(:monograph) }
+
+    before do
+      AptrustUpload.create(noid: monograph.id, title: monograph.title.first)
+    end
+
+    it "updates the table" do
+      expect(AptrustUpload.count).to eq 1
+      subject.update_aptrust_db
+      expect(AptrustUpload.count).to eq 1
+      record = AptrustUpload.first
+      expect(record.bag_status).to eq BAG_STATUSES['bagged']
+    end
+  end
+
+  describe "#initialize" do
+    subject { described_class.new(monograph.id) }
+
+    let(:monograph) { create(:monograph) }
+
+    it "initializes" do
+      expect(subject.monograph.id).to eq monograph.id
+      expect(subject.columns).to eq :all
+      expect(subject.aptrust["AwsAccessKeyId"]).not_to be_empty
+      expect(subject.aptrust['AwsSecretAccessKey']).not_to be_empty
+      expect(subject.aptrust['BucketRegion']).not_to be_empty
+      expect(subject.aptrust['Bucket']).not_to be_empty
+    end
+  end
+
+  describe "#send_to_s3" do
+    skip "Test is needed here"
   end
 
   describe '#export' do
