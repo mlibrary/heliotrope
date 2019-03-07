@@ -16,7 +16,7 @@
     if(window.frameElement != null) {
       body = document.querySelector('body');
       console.log("AHOY RESIZED AUDIO IFRAME", body.offsetHeight, body.scrollHeight, window.frameElement);
-      window.frameElement.style.height = body.scrollHeight + 'px';
+      window.frameElement.style.height = (body.scrollHeight + <%= file_set.audio_without_transcript? ? '45' : '0' %>) + 'px'; // 45px for vertical volume bar
     }
   }
 
@@ -33,6 +33,9 @@
   }
 </script>
 
+<% if file_set.transcript.present? %>
+  <div id="audio-transcript-container"></div>
+<% end %>
 <audio id="audio"
        preload="auto"
        data-able-player
@@ -44,6 +47,3 @@
   <% end %>
   Your browser does not support the audio tag.
 </audio>
-<% if file_set.transcript.present? %>
-  <div id="audio-transcript-container"></div>
-<% end %>

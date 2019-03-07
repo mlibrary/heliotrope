@@ -91,4 +91,8 @@ module EmbedCodePresenter
     percentage = !width_ok? || !height_ok? ? 75 : (height.to_f * 100.0 / width.to_f).round(2)
     (percentage % 1).zero? ? percentage.to_i : percentage
   end
+
+  def audio_without_transcript?
+    audio? && transcript.blank?
+  end
 end

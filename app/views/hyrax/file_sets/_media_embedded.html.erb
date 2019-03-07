@@ -1,6 +1,6 @@
 <figure title="<%= @presenter.alt_text.first %>">
   <%# note that the fulcrum-embed-link hover display relies on it being the first child of <figure> %>
-  <div class="fulcrum-embed-link<%= ' leaflet-embed' if @presenter.image? %>">
+  <div class="fulcrum-embed-link<%= ' audio no-transcript' if @presenter.audio_without_transcript? %>">
     <%# note embed_fulcrum_logo_title is double-quoted, <base target="_blank"> in embedded.html.erb doesn't work here %>
     <a href="<%= @presenter.embed_fulcrum_logo_link %>"
        title='<%= @presenter.embed_fulcrum_logo_title %>'
@@ -8,6 +8,8 @@
       <%= image_tag "fulcrum-white-50px.png", class: 'logo', alt: @presenter.embed_fulcrum_logo_alt %>
     </a>
   </div>
+  <div class="fulcrum-media-wrapper<%= ' audio no-transcript' if @presenter.audio_without_transcript? %>">
   <%= render partial: @presenter.heliotrope_media_partial('media_display_embedded'), locals: { file_set: @presenter } %>
+  </div>
 </figure>
 <%= render 'shared/ga' %>
