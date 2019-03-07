@@ -2,11 +2,14 @@
 // HELIOTROPE EMBEDDED CONTENT STYLESHEET
 ///////////////////////////////////////////
 
-html, body, figure, #image{
+html, body, figure, #image {
   margin: 0px;
   padding: 0px;
   border: 0px;
   width: 100%;
+  // the Leaflet embed needs this on html, body and figure, but it's messing with the automatic...
+  // iframe height for audio embeds, so I've inlined it on the erb templates if @presenter.image?
+  // height: 100%;
 }
 
 html {
