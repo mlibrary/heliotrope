@@ -24,7 +24,6 @@ module Export
     def export_bag # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
       ## create bag directory with valid, noid-based aptrust name
       bag_name = "umich.fulcrum-#{@monograph.press}-#{@monograph.id}"
-      # bag_pathname = "./../heliotrope-assets/aptrust-bags/#{bag_name}"
       bag_pathname = "#{Settings.aptrust_bags_path}/#{bag_name}"
 
       # DESKTOP TESTING ONLY
@@ -78,12 +77,20 @@ module Export
 
       # create manifests
       bag.manifest!
+
       # tar and remove bag directory
-      Minitar.pack(bag_pathname, File.open("#{bag_pathname}.tar", 'wb'))
-      FileUtils.rm_rf(bag_pathname)
+      # but first change to the aptrust-bags directory
+      restore_dir = Dir.pwd
+      Dir.chdir(Settings.aptrust_bags_path)
+
+      Minitar.pack(bag_name, File.open("#{bag_name}.tar", 'wb'))
+      FileUtils.rm_rf(bag_name)
 
       # Upload the bag to the s3 bucket (umich A&E test bucket for now)
-      uploaded = send_to_s3("#{bag_pathname}.tar")
+      uploaded = send_to_s3("#{bag_name}.tar")
+
+      # now restore the previous directory
+      Dir.chdir(restore_dir)
 
       # Update AptrustUploads database if bag is processed
       if uploaded
