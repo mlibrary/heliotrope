@@ -35,19 +35,19 @@ describe Export::Exporter do
     }
 
     let(:monograph_bagit) {
-      File.join(Settings.aptrust_bags_path, "umich.#{monograph.press}-#{monograph.id}")
+      File.join(Settings.aptrust_bags_path, "umich.fulcrum-#{monograph.press}-#{monograph.id}")
     }
 
     let(:monograph_data) {
-      File.join(Settings.aptrust_bags_path, "umich.#{monograph.press}-#{monograph.id}/data")
+      File.join(Settings.aptrust_bags_path, "umich.fulcrum-#{monograph.press}-#{monograph.id}/data")
     }
 
     let(:monograph_aptrust_info) {
-      File.join(Settings.aptrust_bags_path, "umich.#{monograph.press}-#{monograph.id}/aptrust-info.txt")
+      File.join(Settings.aptrust_bags_path, "umich.fulcrum-#{monograph.press}-#{monograph.id}/aptrust-info.txt")
     }
 
     let(:monograph_bag_info) {
-      File.join(Settings.aptrust_bags_path, "umich.#{monograph.press}-#{monograph.id}/bag-info.txt")
+      File.join(Settings.aptrust_bags_path, "umich.fulcrum-#{monograph.press}-#{monograph.id}/bag-info.txt")
     }
 
     before do
