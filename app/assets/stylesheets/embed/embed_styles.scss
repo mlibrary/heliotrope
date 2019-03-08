@@ -16,6 +16,11 @@ html {
   overflow:hidden;
 }
 
+.fulcrum-media-wrapper.audio.no-transcript {
+  // space for the volume bar
+  margin-top: 45px;
+}
+
 .able-wrapper {
   .able {
     margin: 0px;
@@ -82,13 +87,14 @@ html {
   transition: all 2s ease;
   .logo {
     width: 100%;
-    height: 100%;
+    height: auto;
   }
 }
 
-.leaflet-embed {
-  // same as leaflet map background #ddd
-  background: rgba(221, 221, 221, 0.8);
+.fulcrum-embed-link.audio.no-transcript {
+  // get it on the player but out of the way of the volume bar
+  margin-top:45px;
+  padding-right: 40px;
 }
 
 .able-modal-dialog{

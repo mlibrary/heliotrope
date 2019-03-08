@@ -159,5 +159,38 @@ RSpec.describe EmbedCodePresenter do
         it { expect(presenter.embed_code).to eq audio_embed_code }
       end
     end
+
+    context '#audio_without_transcript?' do
+      let(:transcript) { nil }
+      let(:file_set_doc) { SolrDocument.new(id: 'fileset_id', has_model_ssim: ['FileSet'], mime_type_ssi: mime_type, transcript_tesim: transcript) }
+
+      context 'audio file' do
+        let(:mime_type) { 'audio/mp3' }
+
+        context 'no transcript present' do
+          it { expect(presenter.audio_without_transcript?).to eq true }
+        end
+
+        context 'transcript present' do
+          let(:transcript) { ['STUFF'] }
+
+          it { expect(presenter.audio_without_transcript?).to eq false }
+        end
+      end
+
+      context 'non-audio file' do
+        let(:mime_type) { 'blerg' }
+
+        context 'no transcript present' do
+          it { expect(presenter.audio_without_transcript?).to eq false }
+        end
+
+        context 'transcript present' do
+          let(:transcript) { ['STUFF'] }
+
+          it { expect(presenter.audio_without_transcript?).to eq false }
+        end
+      end
+    end
   end
 end
