@@ -23,7 +23,7 @@ module Export
 
     def export_bag # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
       ## create bag directory with valid, noid-based aptrust name
-      bag_name = "umich.#{@monograph.press}-#{@monograph.id}"
+      bag_name = "umich.fulcrum-#{@monograph.press}-#{@monograph.id}"
       # bag_pathname = "./../heliotrope-assets/aptrust-bags/#{bag_name}"
       bag_pathname = "#{Settings.aptrust_bags_path}/#{bag_name}"
 
