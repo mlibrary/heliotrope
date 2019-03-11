@@ -214,7 +214,7 @@ en:
 
         The name of an entity primarily responsible for generating the content or data that the digital item shows, not the digital item itself. If there are multiple primary creators, include them here.
 
-        These values are used in the generating the programmic citation.
+        These values are used in the generating the programmatic citation.
 
         Examples:
         --Last name, First name
@@ -226,9 +226,9 @@ en:
         --Last name, First name (editor)
         --Last name, First name (editor); Last name, First name (editor)
       contributor: |
-        If there are additional creators, you can inlcude them here. List them by Last name, First name, separated by a semicolon.
+        If there are additional creators, you can inlclude them here. List them by Last name, First name, separated by a semicolon.
 
-        These values do not get used in the the generation of the programmic citation.
+        These values do not get used in the the generation of the programmatic citation.
 
         For example:
         --Smith, Jane; Jones, Michael
