@@ -2737,3 +2737,326 @@ $psu-gray-1: #3F4550;
     }
   }
 }
+///////////////////////////////////////////////
+//
+// Rekihaku - National Museum of Japanese History
+//
+///////////////////////////////////////////////
+// colors
+$reki-brand-color: #111;
+$reki-accent-color: #d5d6d2;
+$reki-link: #665833;
+$reki-link-hover: #408;
+$reki-accent-footer: #989c97;
+
+$reki-accent-link: #989c97;
+
+$reki-grey-1: #d5d6d2;
+$reki-grey-2: #989c97;
+$reki-grey-3: #655a52;
+$reki-grey-4: #ccc;
+$reki-white: #fff;
+$reki-black-80: #342f2e;
+
+// typography
+@import url('https://fonts.googleapis.com/css?family=Open+Sans:300,400,400i,600,600i,700');
+@import url('https://fonts.googleapis.com/css?family=Roboto+Mono');
+
+@mixin open-sans {
+  font-family: 'Open Sans', Arial, sans-serif;
+}
+
+@mixin mono {
+  font-family: 'Roboto Mono', monospace;
+}
+
+.rekihaku {
+
+  // typography
+  @include open-sans;
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5 {
+    font-weight: 700;
+  }
+
+  // links
+  a {
+    color: $reki-link;
+  }
+
+  a:hover,
+  a:active {
+    color: $reki-link-hover;
+  }
+
+  // buttons
+
+  .btn-default {
+    @include button-background-color($reki-brand-color);
+    @include button-font-color($reki-white);
+  }
+
+  .download {
+    .btn-default {
+      @include button-background-color($reki-brand-color);
+    }
+  }
+
+  .btn-default:hover,
+  .btn-default:active {
+    @include button-hover-background-color($reki-link-hover);
+    @include button-hover-font-color($reki-white);
+  }
+
+  // navigation menu
+  .navbar-default .navbar-nav > .open > a,
+  .navbar-default .navbar-nav > .open > a:hover,
+  .navbar-default .navbar-nav > .open > a:focus {
+    background-color: $reki-grey-2;
+    color: $reki-brand-color;
+  }
+
+  #brand-bar {
+    background-color: $reki-brand-color;
+
+    .navbar-brand {
+      color: $reki-white;
+      @include mono;
+      text-transform: uppercase;
+      letter-spacing: 4px;
+    }
+
+    .navbar-nav {
+      a#add-content,
+      a.login,
+      a.user-display-name,
+      a.language-dropdown {
+          color: $reki-white;
+      }
+
+      .open > a,
+      .open > a:focus,
+      .open > a:hover {
+        background-color: $heb-grey-4;
+        color: $reki-brand-color;
+      }
+    }
+
+    button.search-submit {
+      background-color: $reki-grey-4;
+      border-color: $reki-grey-4;
+      color: $reki-brand-color;
+    }
+
+  }
+
+  // press catalog
+
+  // jumbotron
+  .jumbotron {
+    background-color: $reki-accent-color;
+    font-weight: 200;
+    padding-top: 1.5em;
+    padding-bottom: 1em;
+
+    p {
+      font-size: 16px;
+      margin-bottom: 0;
+    }
+
+    .container {
+      margin-top: 0;
+    }
+
+    .logo {
+
+      img {
+        width: 100px;
+        margin-right: 3em;
+      }
+
+    }
+
+  }
+
+  .press {
+    .results-container {
+
+      .documentHeader {
+        h3 {
+          font-weight: 600;
+        }
+        a {
+          color: #333;
+        }
+      }
+    }
+  }
+
+  //filters on press and monograph pages
+  .col-sm-3.facets-container,
+  #facet-panel-collapse {
+    padding-left: 0px;
+  }
+
+  .panel-group {
+    padding-left: 0px;
+  }
+
+  .panel-group .panel {
+    border-radius: 0px;
+  }
+
+  .panel-heading {
+    padding-top: 15px;
+  }
+
+  .panel-group .panel + .panel {
+    margin-top: 0px;
+  }
+
+  h3.panel-title a, a.more_facets_link {
+    color: #333;
+  }
+
+  .panel-heading.collapse-toggle .panel-title::after {
+    color: #333;
+  }
+
+  .panel-body {
+    background-color: #fafafa;
+  }
+
+  // sorts on press and monograph pages
+  #sort-dropdown .dropdown-toggle,
+  #per_page-dropdown .dropdown-toggle {
+    color: $reki-white;
+  }
+
+  #sort-dropdown .dropdown-toggle:hover,
+  #per_page-dropdown .dropdown-toggle:hover,
+  #sort-dropdown .dropdown-toggle:active,
+  #per_page-dropdown .dropdown-toggle:active {
+    color: $reki-white;
+  }
+
+  .constraints-container {
+    padding: 10px 20px;
+    border-radius: 0px;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+  }
+
+  // pagination
+
+  .pagination {
+     li a, li span {
+
+       background-color: $reki-brand-color;
+       border-color: $reki-brand-color;
+       color: $reki-white;
+     }
+
+     li>a:hover,
+     li>a:focus,
+     li>span:hover,
+     li>span:focus {
+       background-color: $reki-link-hover;
+       border-color: $reki-link-hover;
+       color: $reki-white;
+     }
+
+
+     .active>a,
+     .active>a:hover,
+     .active>a:focus,
+     .active>span,
+     .active>span:hover,
+     .active>span:focus {
+       background-color: $reki-grey-4;
+       border-color: $reki-grey-4;
+       color: $reki-brand-color;
+     }
+
+     .disabled>span,
+     .disabled>span:hover,
+     .disabled>span:focus,
+     .disabled>a,
+     .disabled>a:hover,
+     .disabled>a:focus {
+       background-color: $reki-grey-4;
+       border-color: $reki-grey-4;
+       color: $reki-brand-color;
+     }
+  }
+
+  //footer
+  footer {
+    a,
+    a:hover,
+    a:active {
+      color: $reki-grey-1;
+    }
+    .press-block-a,
+    .press-block-b {
+      background-color:  $reki-accent-color;
+      font-weight: 600;
+
+      a,
+      a:hover,
+      a:active {
+        color: #333;
+      }
+
+      img {
+        width: 100px;
+      }
+
+    }
+    .press-block-c {
+      background-color: $reki-brand-color;
+    }
+    .platform {
+      background-color: $reki-black-80;
+    }
+  }
+
+  // EPUB Reader
+  #reader {
+
+    .button {
+      @include epub-button-background-color($reki-brand-color,$reki-link-hover,$reki-white);
+    }
+
+    .button--lg {
+      @include epub-button-background-color($reki-brand-color,$reki-link-hover,$reki-white);
+    }
+
+    .button--sm {
+      @include epub-button-background-color($reki-brand-color,$reki-link-hover,$reki-white);
+    }
+
+    i[class^='icon-chevron-'] {
+      @include epub-prev-next-color($reki-grey-2);
+      transition: 0.2s ease-in;
+    }
+
+    i[class^='icon-chevron-']:hover {
+      @include epub-hover-prev-next-color($reki-brand-color);
+      transition: 0.2s ease-in;
+    }
+
+    .cozy-control .logo {
+      height: 47px;
+
+      img {
+        height: 47px;
+      }
+    }
+  }
+
+}
