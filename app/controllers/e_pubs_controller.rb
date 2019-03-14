@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class EPubsController < CheckpointController
+  protect_from_forgery except: :file
   before_action :set_presenter, only: %i[show download_chapter download_interval search access]
   before_action :set_access_presenters, only: %i[access]
   before_action :set_policy, only: %i[show download_chapter download_interval]
