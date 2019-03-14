@@ -106,8 +106,10 @@ module Hyrax
 
     def allow_download?
       return false if external_resource?
+      # AbilityCheckpoint erroneously returns true for can?(:edit, ...) whereas Ability returns a sane value.
+      return true if !current_ability.instance_of?(AbilityCheckpoint) && current_ability&.can?(:edit, id)
       # safe navigation (&.) as current_Ability is nil in some specs, should match allow_download? logic in downloads_controller
-      allow_download&.casecmp('yes')&.zero? || current_ability&.platform_admin? || current_ability&.can?(:edit, id)
+      allow_download&.casecmp('yes')&.zero? || current_ability&.platform_admin?
     end
 
     # Google Analytics
