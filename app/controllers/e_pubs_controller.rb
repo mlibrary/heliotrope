@@ -199,7 +199,6 @@ class EPubsController < CheckpointController
 
     def access?
       return true if valid_share_link?
-      return legacy_access? unless Rails.configuration.e_pub_checkpoint_authorization
       @policy.show?
     end
 
@@ -214,19 +213,6 @@ class EPubsController < CheckpointController
         end
       end
       false
-    end
-
-    def legacy_access?
-      return true if component.blank?
-      products = component.products
-      return false if products.blank?
-      products_lessees = []
-      products.each { |product| products_lessees += product.lessees }
-      return false if products_lessees.blank?
-      identifiers = current_institutions.map(&:identifier)
-      identifiers << subscriber.identifier
-      lessees = Lessee.where(identifier: identifiers.flatten)
-      lessees.any? { |lessee| products_lessees.include?(lessee) }
     end
 
     def component_institutions

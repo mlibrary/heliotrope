@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190226164337) do
+ActiveRecord::Schema.define(version: 20190301150614) do
 
   create_table "api_requests", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.integer "user_id"
@@ -255,21 +255,6 @@ ActiveRecord::Schema.define(version: 20190226164337) do
     t.datetime "updated_at", null: false
     t.index ["uploaded_file_id"], name: "index_job_io_wrappers_on_uploaded_file_id"
     t.index ["user_id"], name: "index_job_io_wrappers_on_user_id"
-  end
-
-  create_table "lessees", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
-    t.string "identifier"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["identifier"], name: "index_lessees_on_identifier", unique: true
-  end
-
-  create_table "lessees_products", id: false, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
-    t.bigint "product_id"
-    t.bigint "lessee_id"
-    t.index ["lessee_id"], name: "index_lessees_products_on_lessee_id"
-    t.index ["product_id", "lessee_id"], name: "index_lessees_products_on_product_id_and_lessee_id", unique: true
-    t.index ["product_id"], name: "index_lessees_products_on_product_id"
   end
 
   create_table "mailboxer_conversation_opt_outs", id: :integer, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
@@ -710,8 +695,6 @@ ActiveRecord::Schema.define(version: 20190226164337) do
   add_foreign_key "components_products", "components"
   add_foreign_key "components_products", "products"
   add_foreign_key "curation_concerns_operations", "users"
-  add_foreign_key "lessees_products", "lessees"
-  add_foreign_key "lessees_products", "products"
   add_foreign_key "mailboxer_conversation_opt_outs", "mailboxer_conversations", column: "conversation_id", name: "mb_opt_outs_on_conversations_id"
   add_foreign_key "mailboxer_notifications", "mailboxer_conversations", column: "conversation_id", name: "notifications_on_conversation_id"
   add_foreign_key "mailboxer_receipts", "mailboxer_notifications", column: "notification_id", name: "receipts_on_notification_id"

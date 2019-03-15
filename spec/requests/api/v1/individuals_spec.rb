@@ -21,6 +21,8 @@ RSpec.describe "Individuals", type: :request do
   let(:individual) { create(:individual) }
   let(:response_body) { JSON.parse(@response.body) }
 
+  before { clear_grants_table }
+
   context 'unauthorized' do
     it { get api_find_individual_path, params: {}, headers: headers; expect(response).to have_http_status(:unauthorized) } # rubocop:disable Style/Semicolon
     it { get api_individuals_path, headers: headers; expect(response).to have_http_status(:unauthorized) } # rubocop:disable Style/Semicolon
@@ -44,7 +46,6 @@ RSpec.describe "Individuals", type: :request do
         expect(response).to have_http_status(:not_found)
         expect(response.body).to be_empty
         expect(Individual.count).to eq(0)
-        expect(Lessee.count).to eq(0)
       end
 
       it 'existing ok' do
@@ -53,7 +54,6 @@ RSpec.describe "Individuals", type: :request do
         expect(response).to have_http_status(:ok)
         expect(response_body).to eq(individual_obj(individual: individual))
         expect(Individual.count).to eq(1)
-        expect(Lessee.count).to eq(1)
       end
     end
 
@@ -64,7 +64,6 @@ RSpec.describe "Individuals", type: :request do
         expect(response).to have_http_status(:ok)
         expect(response_body).to eq([])
         expect(Individual.count).to eq(0)
-        expect(Lessee.count).to eq(0)
       end
 
       it 'individual ok' do
@@ -74,7 +73,6 @@ RSpec.describe "Individuals", type: :request do
         expect(response).to have_http_status(:ok)
         expect(response_body).to eq([individual_obj(individual: individual)])
         expect(Individual.count).to eq(1)
-        expect(Lessee.count).to eq(1)
       end
 
       it 'individuals ok' do
@@ -85,7 +83,6 @@ RSpec.describe "Individuals", type: :request do
         expect(response).to have_http_status(:ok)
         expect(response_body).to match_array([individual_obj(individual: individual), individual_obj(individual: new_individual)])
         expect(Individual.count).to eq(2)
-        expect(Lessee.count).to eq(2)
       end
     end
 
@@ -100,7 +97,6 @@ RSpec.describe "Individuals", type: :request do
         expect(response).to have_http_status(:ok)
         expect(response_body).to eq([])
         expect(Individual.count).to eq(0)
-        expect(Lessee.count).to eq(0)
       end
 
       it 'individual ok' do
@@ -113,7 +109,6 @@ RSpec.describe "Individuals", type: :request do
         get api_product_individuals_path(product), headers: headers
         expect(individual_response_body).to eq([individual_obj(individual: individual)])
         expect(Individual.count).to eq(1)
-        expect(Lessee.count).to eq(1)
       end
 
       it 'individuals ok' do
@@ -130,7 +125,6 @@ RSpec.describe "Individuals", type: :request do
         get api_product_individuals_path(product), headers: headers
         expect(individuals_response_body).to match_array([individual_obj(individual: individual), individual_obj(individual: new_individual)])
         expect(Individual.count).to eq(2)
-        expect(Lessee.count).to eq(2)
       end
     end
 
@@ -150,7 +144,6 @@ RSpec.describe "Individuals", type: :request do
           expect(response_body[:name.to_s]).to eq(["can't be blank"])
           expect(response_body[:email.to_s]).to eq(["can't be blank"])
           expect(Individual.count).to eq(0)
-          expect(Lessee.count).to eq(0)
         end
       end
 
@@ -167,7 +160,6 @@ RSpec.describe "Individuals", type: :request do
           expect(response_body[:name.to_s]).to eq(name)
           expect(response_body[:email.to_s]).to eq(email)
           expect(Individual.count).to eq(1)
-          expect(Lessee.count).to eq(1)
         end
       end
 
@@ -182,7 +174,6 @@ RSpec.describe "Individuals", type: :request do
           expect(response).to have_http_status(:unprocessable_entity)
           expect(response_body[:identifier.to_s]).to eq(["individual identifier #{identifier} exists!"])
           expect(Individual.count).to eq(1)
-          expect(Lessee.count).to eq(1)
         end
       end
     end
@@ -194,7 +185,6 @@ RSpec.describe "Individuals", type: :request do
         expect(response).to have_http_status(:not_found)
         expect(response_body[:exception.to_s]).to include("ActiveRecord::RecordNotFound: Couldn't find Individual")
         expect(Individual.count).to eq(0)
-        expect(Lessee.count).to eq(0)
       end
 
       it 'existing ok' do
@@ -203,7 +193,6 @@ RSpec.describe "Individuals", type: :request do
         expect(response).to have_http_status(:ok)
         expect(response_body).to eq(individual_obj(individual: individual))
         expect(Individual.count).to eq(1)
-        expect(Lessee.count).to eq(1)
       end
     end
 
@@ -214,7 +203,6 @@ RSpec.describe "Individuals", type: :request do
           expect(response.content_type).to eq("application/json")
           expect(response).to have_http_status(:not_found)
           expect(response_body[:exception.to_s]).to include("ActiveRecord::RecordNotFound: Couldn't find Individual with")
-          expect(Individual.count).to eq(0)
         end
 
         it 'existing individual not_found' do
@@ -222,7 +210,6 @@ RSpec.describe "Individuals", type: :request do
           expect(response.content_type).to eq("application/json")
           expect(response).to have_http_status(:not_found)
           expect(response_body[:exception.to_s]).to include("ActiveRecord::RecordNotFound: Couldn't find Product with")
-          expect(Individual.count).to eq(1)
         end
       end
 
@@ -234,7 +221,6 @@ RSpec.describe "Individuals", type: :request do
           expect(response.content_type).to eq("application/json")
           expect(response).to have_http_status(:not_found)
           expect(response_body[:exception.to_s]).to include("ActiveRecord::RecordNotFound: Couldn't find Individual with")
-          expect(Individual.count).to eq(0)
         end
 
         it 'existing individual ok' do
@@ -245,7 +231,6 @@ RSpec.describe "Individuals", type: :request do
           expect(response_body).to eq(individual_obj(individual: individual))
           expect(product.individuals).to include(individual)
           expect(product.individuals.count).to eq(1)
-          expect(Individual.count).to eq(1)
         end
       end
     end
@@ -256,8 +241,6 @@ RSpec.describe "Individuals", type: :request do
         expect(response.content_type).to eq("application/json")
         expect(response).to have_http_status(:not_found)
         expect(response_body[:exception.to_s]).to include("ActiveRecord::RecordNotFound: Couldn't find Individual")
-        expect(Individual.count).to eq(0)
-        expect(Lessee.count).to eq(0)
       end
 
       it 'existing ok' do
@@ -266,8 +249,6 @@ RSpec.describe "Individuals", type: :request do
         expect(response).to have_http_status(:ok)
         expect(response_body[:id.to_s]).to eq(individual.id)
         expect(response_body[:name.to_s]).to eq('updated_name')
-        expect(Individual.count).to eq(1)
-        expect(Lessee.count).to eq(1)
       end
 
       it 'existing update identifier unprocessable_entity' do
@@ -275,8 +256,6 @@ RSpec.describe "Individuals", type: :request do
         expect(response.content_type).to eq("application/json")
         expect(response).to have_http_status(:unprocessable_entity)
         expect(response_body[:identifier.to_s]).to eq(["individual identifier can not be changed!"])
-        expect(Individual.count).to eq(1)
-        expect(Lessee.count).to eq(1)
       end
     end
 
@@ -287,8 +266,6 @@ RSpec.describe "Individuals", type: :request do
           expect(response.content_type).to eq("application/json")
           expect(response).to have_http_status(:not_found)
           expect(response_body[:exception.to_s]).to include("ActiveRecord::RecordNotFound: Couldn't find Individual with")
-          expect(Individual.count).to eq(0)
-          expect(Lessee.count).to eq(0)
         end
 
         it 'existing individual not_found' do
@@ -296,8 +273,6 @@ RSpec.describe "Individuals", type: :request do
           expect(response.content_type).to eq("application/json")
           expect(response).to have_http_status(:not_found)
           expect(response_body[:exception.to_s]).to include("ActiveRecord::RecordNotFound: Couldn't find Product with")
-          expect(Individual.count).to eq(1)
-          expect(Lessee.count).to eq(1)
         end
       end
 
@@ -309,8 +284,6 @@ RSpec.describe "Individuals", type: :request do
           expect(response.content_type).to eq("application/json")
           expect(response).to have_http_status(:not_found)
           expect(response_body[:exception.to_s]).to include("ActiveRecord::RecordNotFound: Couldn't find Individual with")
-          expect(Individual.count).to eq(0)
-          expect(Lessee.count).to eq(0)
         end
 
         it 'existing individual ok' do
@@ -318,10 +291,7 @@ RSpec.describe "Individuals", type: :request do
           expect(response.content_type).to eq("application/json")
           expect(response).to have_http_status(:ok)
           expect(response.body).to be_empty
-          expect(product.lessees).to include(individual.lessee)
-          expect(product.lessees.count).to eq(1)
-          expect(Individual.count).to eq(1)
-          expect(Lessee.count).to eq(1)
+          expect(Greensub.subscribed?(individual, product)).to be true
         end
 
         it 'existing individual twice ok' do
@@ -330,10 +300,8 @@ RSpec.describe "Individuals", type: :request do
           expect(response.content_type).to eq("application/json")
           expect(response).to have_http_status(:ok)
           expect(response.body).to be_empty
-          expect(product.lessees).to include(individual.lessee)
-          expect(product.lessees.count).to eq(1)
-          expect(Individual.count).to eq(1)
-          expect(Lessee.count).to eq(1)
+          expect(Greensub.subscribed?(individual, product)).to be true
+          expect(grants_table_count).to eq(1)
         end
       end
     end
@@ -347,7 +315,6 @@ RSpec.describe "Individuals", type: :request do
         expect(response).to have_http_status(:not_found)
         expect(response_body[:exception.to_s]).to include("ActiveRecord::RecordNotFound: Couldn't find Individual")
         expect(Individual.count).to eq(1)
-        expect(Lessee.count).to eq(1)
       end
 
       it 'existing without products ok' do
@@ -356,18 +323,15 @@ RSpec.describe "Individuals", type: :request do
         expect(response).to have_http_status(:ok)
         expect(response.body).to be_empty
         expect(Individual.count).to eq(0)
-        expect(Lessee.count).to eq(0)
       end
 
       it 'existing with products accepted' do
-        product.lessees << individual.lessee
-        product.save
+        Greensub.subscribe(individual, product)
         delete api_individual_path(individual), headers: headers
         expect(response.content_type).to eq("application/json")
         expect(response).to have_http_status(:accepted)
         expect(response_body[:base.to_s]).to include("individual has 1 associated products!")
         expect(Individual.count).to eq(1)
-        expect(Lessee.count).to eq(1)
       end
     end
 
@@ -378,8 +342,6 @@ RSpec.describe "Individuals", type: :request do
           expect(response.content_type).to eq("application/json")
           expect(response).to have_http_status(:not_found)
           expect(response_body[:exception.to_s]).to include("ActiveRecord::RecordNotFound: Couldn't find Individual with")
-          expect(Individual.count).to eq(0)
-          expect(Lessee.count).to eq(0)
         end
 
         it 'existing individual not_found' do
@@ -387,28 +349,19 @@ RSpec.describe "Individuals", type: :request do
           expect(response.content_type).to eq("application/json")
           expect(response).to have_http_status(:not_found)
           expect(response_body[:exception.to_s]).to include("ActiveRecord::RecordNotFound: Couldn't find Product with")
-          expect(Individual.count).to eq(1)
-          expect(Lessee.count).to eq(1)
         end
       end
 
       context 'existing product' do
         let(:product) { create(:product) }
 
-        before do
-          product.lessees << individual.lessee
-          product.save
-        end
+        before { Greensub.subscribe(individual, product) }
 
         it 'non existing individual not_found' do
           delete api_product_individual_path(product, 1), headers: headers
           expect(response.content_type).to eq("application/json")
           expect(response).to have_http_status(:not_found)
           expect(response_body[:exception.to_s]).to include("ActiveRecord::RecordNotFound: Couldn't find Individual with")
-          expect(product.lessees).to include(individual.lessee)
-          expect(product.lessees.count).to eq(1)
-          expect(Individual.count).to eq(1)
-          expect(Lessee.count).to eq(1)
         end
 
         it 'existing individual ok' do
@@ -416,10 +369,7 @@ RSpec.describe "Individuals", type: :request do
           expect(response.content_type).to eq("application/json")
           expect(response).to have_http_status(:ok)
           expect(response.body).to be_empty
-          expect(product.lessees).to include(individual.lessee)
-          expect(product.lessees.count).to eq(0)
-          expect(Individual.count).to eq(1)
-          expect(Lessee.count).to eq(1)
+          expect(Greensub.subscribed?(individual, product)).to be false
         end
 
         it 'existing individual twice ok' do
@@ -428,10 +378,7 @@ RSpec.describe "Individuals", type: :request do
           expect(response.content_type).to eq("application/json")
           expect(response).to have_http_status(:ok)
           expect(response.body).to be_empty
-          expect(product.lessees).to include(individual.lessee)
-          expect(product.lessees.count).to eq(0)
-          expect(Individual.count).to eq(1)
-          expect(Lessee.count).to eq(1)
+          expect(Greensub.subscribed?(individual, product)).to be false
         end
       end
     end

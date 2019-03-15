@@ -15,6 +15,7 @@ module Greensub
     end
 
     def subscribe(subscriber, product)
+      return if subscribed?(subscriber, product)
       Authority.grant!(subscriber, permission_read, product) unless Authority.permits?(subscriber, permission_read, product)
     end
 

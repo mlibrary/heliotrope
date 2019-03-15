@@ -21,6 +21,8 @@ RSpec.describe "Products", type: :request do
   let(:product) { create(:product) }
   let(:response_body) { JSON.parse(@response.body) }
 
+  before { clear_grants_table }
+
   context 'unauthorized' do
     it { get api_find_product_path, params: {}, headers: headers; expect(response).to have_http_status(:unauthorized) } # rubocop:disable Style/Semicolon
     it { get api_products_path, headers: headers; expect(response).to have_http_status(:unauthorized) } # rubocop:disable Style/Semicolon
@@ -154,7 +156,7 @@ RSpec.describe "Products", type: :request do
       end
 
       it 'product ok' do
-        product.lessees << individual.lessee
+        Greensub.subscribe(individual, product)
         get api_individual_products_path(individual), headers: headers
         expect(response.content_type).to eq("application/json")
         expect(response).to have_http_status(:ok)
@@ -163,8 +165,8 @@ RSpec.describe "Products", type: :request do
       end
 
       it 'products ok' do
-        product.lessees << individual.lessee
-        new_product.lessees << individual.lessee
+        Greensub.subscribe(individual, product)
+        Greensub.subscribe(individual, new_product)
         get api_individual_products_path(individual), headers: headers
         expect(response.content_type).to eq("application/json")
         expect(response).to have_http_status(:ok)
@@ -199,7 +201,7 @@ RSpec.describe "Products", type: :request do
       end
 
       it 'product ok' do
-        product.lessees << institution.lessee
+        Greensub.subscribe(institution, product)
         get api_institution_products_path(institution), headers: headers
         expect(response.content_type).to eq("application/json")
         expect(response).to have_http_status(:ok)
@@ -208,8 +210,8 @@ RSpec.describe "Products", type: :request do
       end
 
       it 'products ok' do
-        product.lessees << institution.lessee
-        new_product.lessees << institution.lessee
+        Greensub.subscribe(institution, product)
+        Greensub.subscribe(institution, new_product)
         get api_institution_products_path(institution), headers: headers
         expect(response.content_type).to eq("application/json")
         expect(response).to have_http_status(:ok)

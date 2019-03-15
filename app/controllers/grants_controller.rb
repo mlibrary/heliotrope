@@ -51,16 +51,6 @@ class GrantsController < ApplicationController
                 end
               end
 
-    if success
-      resource = Authority.resource(resource_type, resource_id)
-      if resource.is_a?(Product)
-        agent = Authority.agent(agent_type, agent_id)
-        if agent.is_a?(Individual) || agent.is_a?(Institution)
-          resource.lessees << agent.lessee unless resource.lessees.include?(agent.lessee) # rubocop:disable Metrics/BlockNesting
-        end
-      end
-    end
-
     @grant = Grant.new
     @grant.agent_type = grant_params[:agent_type]
     @grant.agent_id = grant_params[:agent_id]
@@ -81,13 +71,6 @@ class GrantsController < ApplicationController
   end
 
   def destroy
-    resource = Authority.resource(@grant.resource_type, @grant.resource_id)
-    if resource.is_a?(Product)
-      agent = Authority.agent(@grant.agent_type, @grant.agent_id)
-      if agent.is_a?(Individual) || agent.is_a?(Institution)
-        resource.lessees.delete(agent.lessee) if resource.lessees.include?(agent.lessee)
-      end
-    end
     @grant.delete
     respond_to do |format|
       format.html { redirect_to grants_url, notice: 'Grant was successfully destroyed.' }

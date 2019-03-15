@@ -11,13 +11,6 @@ class Individual < ApplicationRecord
   validates :name, presence: true, allow_blank: false
   validates :email, presence: true, allow_blank: false, uniqueness: true
 
-  before_validation(on: :create) do
-    if Lessee.find_by(identifier: identifier).present?
-      errors.add(:identifier, "lessee identifier #{identifier} exists!")
-      throw(:abort)
-    end
-  end
-
   before_validation(on: :update) do
     if identifier_changed?
       errors.add(:identifier, "individual identifier can not be changed!")
@@ -25,20 +18,7 @@ class Individual < ApplicationRecord
     end
   end
 
-  before_create do
-    begin
-      Lessee.create!(identifier: identifier)
-    rescue StandardError => e
-      errors.add(:identifier, "create lessee #{identifier} fail! #{e}")
-      throw(:abort)
-    end
-  end
-
   before_destroy do
-    if lessee.products.present?
-      errors.add(:base, "individual has #{lessee.products.count} associated products!")
-      throw(:abort)
-    end
     if products.present?
       errors.add(:base, "individual has #{products.count} associated products!")
       throw(:abort)
@@ -49,10 +29,6 @@ class Individual < ApplicationRecord
     end
   end
 
-  after_destroy do
-    lessee.destroy!
-  end
-
   def update?
     true
   end
@@ -61,13 +37,8 @@ class Individual < ApplicationRecord
     products.blank? && !grants?
   end
 
-  def lessee
-    Lessee.find_by(identifier: identifier)
-  end
-
   def products
-    products = (lessee&.products || []) + Greensub.subscriber_products(self)
-    products.uniq
+    Greensub.subscriber_products(self)
   end
 
   def grants?

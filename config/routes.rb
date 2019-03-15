@@ -68,7 +68,6 @@ Rails.application.routes.draw do
     resources :share_link_logs, only: %i[index]
     resources :individuals
     resources :institutions
-    resources :lessees, only: %i[index show]
     resources :components do
       resources :products, only: %i[index create destroy]
     end
