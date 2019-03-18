@@ -462,6 +462,7 @@ RSpec.describe EPubsController, type: :controller do
     let(:entity) { double('entity') }
     let(:policy) { double('policy') }
     let(:access) { true }
+    let(:share_link_expiration_time) { 28 * 24 * 3600 } # 28 days in seconds
 
     before do
       allow(Sighrax).to receive(:factory).with('noid').and_return(entity)
@@ -478,7 +479,7 @@ RSpec.describe EPubsController, type: :controller do
       it 'returns a share link with a valid JSON webtoken and logs the creation' do
         get :share_link, params: { id: 'noid' }
         expect(response).to have_http_status(:success)
-        expect(response.body).to eq "http://test.host/epubs/noid?share=#{JsonWebToken.encode(data: 'noid', exp: now.to_i + 48 * 3600)}"
+        expect(response.body).to eq "http://test.host/epubs/noid?share=#{JsonWebToken.encode(data: 'noid', exp: now.to_i + share_link_expiration_time)}"
         expect(ShareLinkLog.count).to eq 1
         expect(ShareLinkLog.last.action).to eq 'create'
       end
