@@ -124,7 +124,7 @@ class EPubsController < CheckpointController
     presenter = Hyrax::PresenterFactory.build_for(ids: [@noid], presenter_class: Hyrax::FileSetPresenter, presenter_args: nil).first
     subdomain = presenter.monograph.subdomain
     if Press.where(subdomain: subdomain).first&.allow_share_links?
-      expire = Time.now.to_i + 48 * 3600 # 48 hours
+      expire = Time.now.to_i + 28 * 24 * 3600 # 28 days in seconds
       token = JsonWebToken.encode(data: @noid, exp: expire)
       ShareLinkLog.create(ip_address: request.ip,
                           institution: current_institutions.map(&:name).join("|"),
