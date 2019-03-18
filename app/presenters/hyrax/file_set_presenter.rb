@@ -106,8 +106,13 @@ module Hyrax
 
     def allow_download?
       return false if external_resource?
+      Rails.logger.debug("[EBOOK DOWNLOAD] current_ability class #{current_ability.class}")
+      Rails.logger.debug("[EBOOK DOWNLOAD] current_ability.instance_of?(AbilityCheckpoint) #{current_ability.instance_of?(AbilityCheckpoint)}")
+      Rails.logger.debug("[EBOOK DOWNLOAD] current_ability&.can?(:edit, #{id}) #{current_ability&.can?(:edit, id)}")
       # AbilityCheckpoint erroneously returns true for can?(:edit, ...) whereas Ability returns a sane value.
       return true if !current_ability.instance_of?(AbilityCheckpoint) && current_ability&.can?(:edit, id)
+      Rails.logger.debug("[EBOOK DOWNLOAD] allow_download&.casecmp('yes')&.zero? #{allow_download&.casecmp('yes')&.zero?}")
+      Rails.logger.debug("[EBOOK DOWNLOAD] current_ability&.platform_admin? #{current_ability&.platform_admin?}")
       # safe navigation (&.) as current_Ability is nil in some specs, should match allow_download? logic in downloads_controller
       allow_download&.casecmp('yes')&.zero? || current_ability&.platform_admin?
     end
