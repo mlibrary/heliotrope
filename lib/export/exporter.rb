@@ -22,12 +22,15 @@ module Export
     end
 
     def export_bag # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
+      desktop_development = false
       ## create bag directory with valid, noid-based aptrust name
       bag_name = "umich.fulcrum-#{@monograph.press}-#{@monograph.id}"
-      bag_pathname = "#{Settings.aptrust_bags_path}/#{bag_name}"
 
-      # DESKTOP TESTING ONLY
-      # bag_pathname = "./../heliotrope-assets/aptrust-bags/#{bag_name}"
+      bag_pathname = if desktop_development
+                       "./../heliotrope-assets/aptrust-bags/#{bag_name}"
+                     else
+                       "#{Settings.aptrust_bags_path}/#{bag_name}"
+                     end
 
       # On the first run these shouldn't be needed but...
       # clean up bag and tar files
@@ -81,7 +84,12 @@ module Export
       # tar and remove bag directory
       # but first change to the aptrust-bags directory
       restore_dir = Dir.pwd
-      Dir.chdir(Settings.aptrust_bags_path)
+
+      if desktop_development
+        Dir.chdir("./../heliotrope-assets/aptrust-bags/")
+      else
+        Dir.chdir(Settings.aptrust_bags_path)
+      end
 
       Minitar.pack(bag_name, File.open("#{bag_name}.tar", 'wb'))
       FileUtils.rm_rf(bag_name)
@@ -102,6 +110,7 @@ module Export
 
     def export
       return String.new if @monograph.blank?
+
       rows = []
       @monograph.ordered_members.to_a.each do |member|
         rows << metadata_row(member, :file_set)
@@ -117,6 +126,7 @@ module Export
 
     def extract(use_dir = nil) # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
       return if @monograph.blank?
+
       if use_dir
         path = "#{use_dir}/"
       else
@@ -137,6 +147,7 @@ module Export
       manifest.close
       @monograph.ordered_members.to_a.each do |member|
         next unless member.original_file
+
         filename = CGI.unescape(member.original_file.file_name.first)
         file = File.new(File.join(path, filename), "wb")
         file.write(member.original_file.content.force_encoding("utf-8"))
@@ -185,6 +196,8 @@ module Export
       # Check if file is already in the bucket
       if fulcrum_bucket.object(name).exists?
         puts "#{name} already exists in the bucket: #{bucket_name} overwriting bag!"
+      else
+        puts "Creating a brand new bag for #{name} in bucket: #{bucket_name}"
       end
 
       begin
@@ -227,6 +240,7 @@ module Export
 
       def all_metadata
         return @all_metadata if @all_metadata.present?
+
         @all_metadata = if @columns == :monograph
                           (ADMIN_METADATA_FIELDS + METADATA_FIELDS).select { |f| %i[universal monograph].include? f[:object] }
                         else
@@ -256,6 +270,7 @@ module Export
       def representative_kind_or_cover(item)
         # I think we can ignore thumbnail_id, should always be the same as representative_id for us
         return 'cover' if item.parent.representative_id == item.id
+
         FeaturedRepresentative.where(file_set_id: item.id, monograph_id: @monograph.id).first&.kind
       end
 
@@ -274,6 +289,7 @@ module Export
 
       def field_value(item, metadata_name, multivalued)
         return if item.public_send(metadata_name).blank?
+
         if multivalued == :yes_split
           # Any intended order within a multi-valued field is lost after having been stored in an...
           # `ActiveTriples::Relation`, so I'm arbitrarily sorting them alphabetically on export.
