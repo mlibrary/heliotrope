@@ -31,6 +31,10 @@ module Sighrax
       resource_type.to_s + ':' + resource_id.to_s
     end
 
+    def parent
+      self.class.null_entity
+    end
+
     def title
       entity['title_tesim']&.first || noid
     end

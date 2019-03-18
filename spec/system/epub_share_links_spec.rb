@@ -8,6 +8,7 @@ RSpec.describe "EPub Share Links", type: :system do
   let(:monograph) { create(:public_monograph, press: press.subdomain, user: platform_admin, visibility: "open", representative_id: cover.id) }
   let(:cover) { create(:public_file_set, content: File.open(File.join(fixture_path, 'csv', 'miranda.jpg'))) }
   let(:file_set) { create(:public_file_set, allow_download: 'yes', content: File.open(File.join(fixture_path, 'fake_epub_multi_rendition.epub'))) }
+  let(:parent) { Sighrax.factory(monograph.id) }
   let(:epub) { Sighrax.factory(file_set.id) }
 
   before do
@@ -19,7 +20,7 @@ RSpec.describe "EPub Share Links", type: :system do
     file_set.save!
     FeaturedRepresentative.create!(monograph_id: monograph.id, file_set_id: file_set.id, kind: 'epub')
     UnpackJob.perform_now(file_set.id, 'epub')
-    Component.create!(identifier: epub.resource_token, name: epub.title, noid: epub.noid)
+    Component.create!(identifier: parent.resource_token, name: parent.title, noid: parent.noid)
   end
 
   def take_failed_screenshot

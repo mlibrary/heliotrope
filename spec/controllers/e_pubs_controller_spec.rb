@@ -283,8 +283,9 @@ RSpec.describe EPubsController, type: :controller do
       end
 
       context 'Restricted Access' do
+        let(:parent) { Sighrax.factory(monograph.id) }
         let(:epub) { Sighrax.factory(file_set.id) }
-        let(:component) { Component.create!(identifier: epub.resource_token, name: epub.title, noid: epub.noid) }
+        let(:component) { Component.create!(identifier: parent.resource_token, name: parent.title, noid: parent.noid) }
         let(:keycard) { { dlpsInstitutionId: dlpsInstitutionId } }
         let(:dlpsInstitutionId) { 'institute' }
 
@@ -420,10 +421,11 @@ RSpec.describe EPubsController, type: :controller do
         let(:wrong_share_token) do
           JsonWebToken.encode(data: 'wrongnoid', exp: Time.now.to_i + 48 * 3600)
         end
+        let(:parent) { Sighrax.factory(monograph.id) }
         let(:epub) { Sighrax.factory(file_set.id) }
 
         before do
-          Component.create!(identifier: epub.resource_token, name: epub.title, noid: epub.noid)
+          Component.create!(identifier: parent.resource_token, name: parent.title, noid: parent.noid)
         end
 
         it "with a valid share_link" do
@@ -456,10 +458,11 @@ RSpec.describe EPubsController, type: :controller do
 
   describe '#share_link' do
     let(:now) { Time.now }
-    let(:presenters) { double("presenters", first: presenter) }
-    let(:presenter) { double("presenter", id: 'fileset_id', monograph: monograph) }
-    let(:monograph) { double("monograph", subdomain: press.subdomain, title: ["A Thing"]) }
+    let(:presenters) { double('presenters', first: presenter) }
+    let(:presenter) { double('presenter', id: 'fileset_id', monograph: monograph) }
+    let(:monograph) { double('monograph', id: 'monograph_id', subdomain: press.subdomain, title: ['A Thing']) }
     let(:entity) { double('entity') }
+    let(:parent) { double('parent', noid: monograph.id) }
     let(:policy) { double('policy') }
     let(:access) { true }
     let(:share_link_expiration_time) { 28 * 24 * 3600 } # 28 days in seconds
@@ -467,13 +470,14 @@ RSpec.describe EPubsController, type: :controller do
     before do
       allow(Sighrax).to receive(:factory).with('noid').and_return(entity)
       allow(entity).to receive(:is_a?).with(Sighrax::ElectronicPublication).and_return(true)
+      allow(entity).to receive(:parent).and_return(parent)
       allow(EPubPolicy).to receive(:new).and_return(policy)
       allow(policy).to receive(:show?).and_return(access)
       allow(Time).to receive(:now).and_return(now)
       allow(Hyrax::PresenterFactory).to receive(:build_for).and_return(presenters)
     end
 
-    context "when the press shares links" do
+    context 'when the press shares links' do
       let(:press) { create(:press, subdomain: 'blah', share_links: true) }
 
       it 'returns a share link with a valid JSON webtoken and logs the creation' do
@@ -499,7 +503,7 @@ RSpec.describe EPubsController, type: :controller do
       end
     end
 
-    context "when a press does not share links" do
+    context 'when a press does not share links' do
       let(:press) { create(:press, subdomain: 'urg') }
 
       it 'returns nothing' do
