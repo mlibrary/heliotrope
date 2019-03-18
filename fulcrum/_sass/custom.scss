@@ -157,7 +157,11 @@ p.blurb {
   }
 
   a:hover, a:active {
-    border-bottom: 3px solid transparent;
+    border-bottom: 0px solid transparent;
+  }
+
+  a.btn-large {
+    height: auto;
   }
 }
 
