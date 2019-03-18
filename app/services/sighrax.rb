@@ -3,8 +3,10 @@
 require_dependency 'sighrax/asset'
 require_dependency 'sighrax/electronic_publication'
 require_dependency 'sighrax/entity'
+require_dependency 'sighrax/mobipocket'
 require_dependency 'sighrax/model'
 require_dependency 'sighrax/monograph'
+require_dependency 'sighrax/portable_document_format'
 
 module Sighrax
   class << self
@@ -65,8 +67,12 @@ module Sighrax
         featured_representative = FeaturedRepresentative.find_by(file_set_id: noid)
         return Asset.send(:new, noid, entity) if featured_representative.blank?
         case featured_representative.kind
-        when 'epub', 'mobi', 'pdf_ebook'
+        when 'epub'
           ElectronicPublication.send(:new, noid, entity)
+        when 'mobi'
+          Mobipocket.send(:new, noid, entity)
+        when 'pdf_ebook'
+          PortableDocumentFormat.send(:new, noid, entity)
         else
           Asset.send(:new, noid, entity)
         end
