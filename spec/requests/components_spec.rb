@@ -4,7 +4,7 @@ require 'rails_helper'
 
 RSpec.describe "Components", type: :request do
   let(:current_user) { User.guest(user_key: 'wolverine@umich.edu') }
-  let(:target) { create(:component, identifier: noid, name: noid,  noid: noid, handle: HandleService.path(noid)) }
+  let(:target) { create(:component, identifier: noid, name: noid,  noid: noid) }
   let(:noid) { 'validnoid' }
   let(:file_set) { double('file_set', id: noid, parent: monograph) }
   let(:monograph) { double('monograph', id: noid) }
@@ -170,7 +170,7 @@ RSpec.describe "Components", type: :request do
   describe '#create' do
     subject { post "/components", params: { component: component_params } }
 
-    let(:component_params) { { identifier: new_noid, name: new_noid, noid: new_noid, handle: HandleService.path(new_noid) } }
+    let(:component_params) { { identifier: new_noid, name: new_noid, noid: new_noid } }
     let(:new_noid) { 'noid_noid' }
 
     it do
@@ -217,7 +217,7 @@ RSpec.describe "Components", type: :request do
   describe '#update' do
     subject { put "/components/#{target.id}", params: { component: component_params } }
 
-    let(:component_params) { { identifier: 'identifier', name: noid, noid: noid, handle: HandleService.path(noid) } }
+    let(:component_params) { { identifier: 'identifier', name: noid, noid: noid } }
 
     it do
       expect { subject }.to raise_error(ActionController::RoutingError)

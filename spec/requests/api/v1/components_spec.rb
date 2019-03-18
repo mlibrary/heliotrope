@@ -9,7 +9,6 @@ RSpec.describe "Components", type: :request do
       "identifier" => component.identifier,
       "name" => component.name,
       "noid" => component.noid,
-      "handle" => component.handle,
       "url" => component_url(component, format: :json)
     }
   end
@@ -131,13 +130,12 @@ RSpec.describe "Components", type: :request do
     end
 
     describe "POST /api/v1/components" do # create
-      let(:params) { { component: { identifier: identifier, name: name, noid: noid, handle: handle } }.to_json }
+      let(:params) { { component: { identifier: identifier, name: name, noid: noid } }.to_json }
 
       context 'blank' do
         let(:identifier) { '' }
         let(:name) { '' }
         let(:noid) { '' }
-        let(:handle) { '' }
 
         it 'unprocessable_entity' do
           post api_components_path, params: params, headers: headers
@@ -146,7 +144,6 @@ RSpec.describe "Components", type: :request do
           expect(response_body[:identifier.to_s]).to eq(["can't be blank"])
           expect(response_body[:name.to_s]).to be nil
           expect(response_body[:noid.to_s]).to eq(["can't be blank"])
-          expect(response_body[:handle.to_s]).to eq(["can't be blank"])
           expect(Component.count).to eq(0)
         end
       end
@@ -155,7 +152,6 @@ RSpec.describe "Components", type: :request do
         let(:identifier) { 'identifier' }
         let(:name) { 'name' }
         let(:noid) { 'noid' }
-        let(:handle) { 'handle' }
 
         it 'created' do
           post api_components_path, params: params, headers: headers
@@ -164,7 +160,6 @@ RSpec.describe "Components", type: :request do
           expect(response_body[:identifier.to_s]).to eq(identifier)
           expect(response_body[:name.to_s]).to eq(name)
           expect(response_body[:noid.to_s]).to eq(noid)
-          expect(response_body[:handle.to_s]).to eq(handle)
           expect(Component.count).to eq(1)
         end
       end
@@ -173,7 +168,6 @@ RSpec.describe "Components", type: :request do
         let(:identifier) { component.identifier }
         let(:name) { 'name' }
         let(:noid) { 'noid' }
-        let(:handle) { 'handle' }
 
         it 'unprocessable_entity' do
           post api_components_path, params: params, headers: headers

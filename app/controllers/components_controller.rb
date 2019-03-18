@@ -78,10 +78,10 @@ class ComponentsController < ApplicationController
     end
 
     def component_params
-      params.require(:component).permit(:identifier, :name, :noid, :handle)
+      params.require(:component).permit(:identifier, :name, :noid)
     end
 
     def filtering_params(params)
-      params.slice(:identifier_like, :name_like, :noid_like, :handle_like)
+      params.slice(:identifier_like, :name_like, :noid_like)
     end
 end

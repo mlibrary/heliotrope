@@ -1,5 +1,5 @@
 <%
-  components = Component.filter(identifier_like: params[:identifier_like], name_like: params[:name_like], noid_like: params[:noid_like], handle_like: params[:handle_like]).order(handle: :asc).page(params[:page])
+  components = Component.filter(identifier_like: params[:identifier_like], name_like: params[:name_like], noid_like: params[:noid_like]).order(handle: :asc).page(params[:page])
   # TODO: order on identifier
   size = 12
 %>
@@ -15,7 +15,6 @@
       <th><label for="identifier_like">Identifier</label></th>
       <th><label for="name_like">Name</label></th>
       <th><label for="noid_like">Noid</label></th>
-      <th><label for="handle_like">Handle</label></th>
       <th>Products</th>
     </tr>
     <tr>
@@ -23,7 +22,6 @@
       <td><input type="text" name="identifier_like" value="<%= params[:identifier_like] %>" size="<%= size %>" aria-label="identifier_like"></td>
       <td><input type="text" name="name_like" value="<%= params[:name_like] %>" size="<%= size %>" aria-label="name_like"></td>
       <td><input type="text" name="noid_like" value="<%= params[:noid_like] %>" size="<%= size %>" aria-label="noid_like"></td>
-      <td><input type="text" name="handle_like" value="<%= params[:handle_like] %>" size="<%= 2 * size %>" aria-label="handle_like"></td>
       <td></td>
     </tr>
     <% components.each do |component| %>
@@ -48,7 +46,6 @@
             <%= component.noid %>
           <% end %>
         </td>
-        <td><%= link_to component.handle, HandleService.url(HandleService.noid(component.handle)) %></td>
         <td><%= component.products.count %></td>
       </tr>
     <% end %>
