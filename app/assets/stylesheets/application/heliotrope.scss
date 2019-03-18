@@ -136,6 +136,23 @@ div.skip {
   .active {
     color: $gray-60 !important;
   }
+
+  .breadcrumb li + ::before {
+    border-right: 0.1em solid #ccc;
+    content: '' !important;
+    display: inline-block;
+    height: 0.8em;
+    margin: 0 0.6em;
+    transform: rotate(15deg);
+  }
+
+  .breadcrumb li {
+    margin-left: -.6em;
+  }
+
+  .breadcrumb li:first-child {
+    margin-left: 0;
+  }
 }
 
 //////////////////////////////////
