@@ -5,9 +5,9 @@ require 'rails_helper'
 RSpec.describe "EPub Share Links", type: :system do
   let(:platform_admin) { create(:platform_admin) }
   let(:press) { create(:press, subdomain: 'blue', share_links: true, logo_path: Rack::Test::UploadedFile.new(File.open(Rails.root.join(fixture_path, 'csv', 'shipwreck.jpg')))) }
-  let(:monograph) { create(:monograph, press: press.subdomain, user: platform_admin, visibility: "open", representative_id: cover.id) }
-  let(:cover) { create(:file_set, content: File.open(File.join(fixture_path, 'csv', 'miranda.jpg'))) }
-  let(:file_set) { create(:file_set, allow_download: 'yes', content: File.open(File.join(fixture_path, 'fake_epub_multi_rendition.epub'))) }
+  let(:monograph) { create(:public_monograph, press: press.subdomain, user: platform_admin, visibility: "open", representative_id: cover.id) }
+  let(:cover) { create(:public_file_set, content: File.open(File.join(fixture_path, 'csv', 'miranda.jpg'))) }
+  let(:file_set) { create(:public_file_set, allow_download: 'yes', content: File.open(File.join(fixture_path, 'fake_epub_multi_rendition.epub'))) }
   let(:epub) { Sighrax.factory(file_set.id) }
 
   before do

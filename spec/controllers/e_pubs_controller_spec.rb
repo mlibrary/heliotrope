@@ -6,16 +6,16 @@ require 'json'
 RSpec.describe EPubsController, type: :controller do
   it { is_expected.to be_a_kind_of(CheckpointController) }
 
-  context "show" do
-    let(:show) { true }
-    let(:policy) { double('policy', show?: true) }
+  context 'policy' do
+    let(:policy) { double('policy') }
+    let(:access) { true }
 
     before do
-      allow_any_instance_of(described_class).to receive(:show?).and_return(show)
       allow(EPubPolicy).to receive(:new).and_return(policy)
+      allow(policy).to receive(:show?).and_return(access)
     end
 
-    describe "#show" do
+    describe '#show' do
       context 'not found' do
         before { get :show, params: { id: :id } }
 
@@ -39,8 +39,8 @@ RSpec.describe EPubsController, type: :controller do
       end
 
       context 'file epub' do
-        let(:monograph) { create(:monograph) }
-        let(:file_set) { create(:file_set, content: File.open(File.join(fixture_path, 'fake_epub01.epub'))) }
+        let(:monograph) { create(:public_monograph) }
+        let(:file_set) { create(:public_file_set, content: File.open(File.join(fixture_path, 'fake_epub01.epub'))) }
         let!(:fr) { create(:featured_representative, monograph_id: monograph.id, file_set_id: file_set.id, kind: 'epub') }
 
         before do
@@ -58,11 +58,12 @@ RSpec.describe EPubsController, type: :controller do
         end
 
         context 'access denied' do
-          let(:show) { false }
+          let(:access) { false }
 
           it do
             get :show, params: { id: file_set.id }
-            expect(response).to have_http_status(:unauthorized)
+            expect(response).to have_http_status(:found)
+            expect(response).to redirect_to(epub_access_url)
           end
         end
       end
@@ -99,14 +100,11 @@ RSpec.describe EPubsController, type: :controller do
       end
     end
 
-    describe "#file" do
+    describe '#file' do
       context 'not found' do
         before { get :file, params: { id: :id, file: 'META-INF/container', format: 'xml' } }
 
-        it do
-          expect(response).to have_http_status(:success)
-          expect(response.body.empty?).to be true
-        end
+        it { expect(response).to have_http_status(:unauthorized) }
       end
 
       context 'file nil' do
@@ -114,10 +112,7 @@ RSpec.describe EPubsController, type: :controller do
 
         before { get :file, params: { id: file_set.id, file: 'META-INF/container', format: 'xml' } }
 
-        it do
-          expect(response).to have_http_status(:success)
-          expect(response.body.empty?).to be true
-        end
+        it { expect(response).to have_http_status(:unauthorized) }
       end
 
       context 'file not epub' do
@@ -125,15 +120,12 @@ RSpec.describe EPubsController, type: :controller do
 
         before { get :file, params: { id: file_set.id, file: 'META-INF/container', format: 'xml' } }
 
-        it do
-          expect(response).to have_http_status(:success)
-          expect(response.body.empty?).to be true
-        end
+        it { expect(response).to have_http_status(:unauthorized) }
       end
 
       context 'file epub' do
-        let(:monograph) { create(:monograph) }
-        let(:file_set) { create(:file_set, content: File.open(File.join(fixture_path, 'fake_epub01.epub'))) }
+        let(:monograph) { create(:public_monograph) }
+        let(:file_set) { create(:public_file_set, content: File.open(File.join(fixture_path, 'fake_epub01.epub'))) }
         let!(:fr) { create(:featured_representative, monograph_id: monograph.id, file_set_id: file_set.id, kind: 'epub') }
 
         before do
@@ -151,6 +143,8 @@ RSpec.describe EPubsController, type: :controller do
           it do
             expect(response).to have_http_status(:success)
             expect(response.body.empty?).to be true
+            expect(response.header['Content-Type']).to be_nil
+            expect(response.header['X-Sendfile']).to be_empty
           end
         end
 
@@ -165,10 +159,10 @@ RSpec.describe EPubsController, type: :controller do
           end
 
           context 'access denied' do
-            let(:show) { false }
+            let(:access) { false }
 
             it do
-              expect(response).to have_http_status(:success)
+              expect(response).to have_http_status(:no_content)
               expect(response.body.empty?).to be true
             end
           end
@@ -176,9 +170,9 @@ RSpec.describe EPubsController, type: :controller do
       end
     end
 
-    describe "GET #search" do
-      let(:monograph) { create(:monograph) }
-      let(:file_set) { create(:file_set, id: '999999999', content: File.open(File.join(fixture_path, 'moby-dick.epub'))) }
+    describe '#search' do
+      let(:monograph) { create(:public_monograph) }
+      let(:file_set) { create(:public_file_set, id: '999999999', content: File.open(File.join(fixture_path, 'moby-dick.epub'))) }
       let!(:fr) { create(:featured_representative, monograph_id: monograph.id, file_set_id: file_set.id, kind: 'epub') }
 
       before do
@@ -216,7 +210,7 @@ RSpec.describe EPubsController, type: :controller do
         end
 
         context 'access denied' do
-          let(:show) { false }
+          let(:access) { false }
 
           it do
             expect(response).to have_http_status(:not_found)
@@ -268,33 +262,8 @@ RSpec.describe EPubsController, type: :controller do
     end
   end
 
-  describe 'session[:set_show]' do
-    let(:policy) { double('policy', show?: true) }
-    let(:n) { 20 }
-    let(:m) { 10 }
-    let(:presenter) { double('presenter', id: 'id', epub?: true, epub_id: '111111111', mobi_id: nil, pdf_ebook_id: nil, citable_link: 'link', monograph_id: 'mono_id') }
-    let(:parent) { double('monograph_presenter', title: 'Title', subdomain: 'subdomain', id: 'mono_id') }
-
-    before do
-      allow(EPubPolicy).to receive(:new).and_return(policy)
-      allow(Hyrax::PresenterFactory).to receive(:build_for).and_return([presenter])
-      allow(presenter).to receive(:parent).and_return(parent)
-      allow(presenter).to receive(:monograph).and_return(parent)
-    end
-
-    it 'buffers m ids' do
-      session[:show_set] = []
-      n.times do |i|
-        get :show, params: { id: i }
-        expect(response).to have_http_status(:success)
-        expect(session[:show_set].include?(i.to_s)).to be true
-        expect(session[:show_set].length).to be <= m
-      end
-    end
-  end
-
   context "checkpoint" do
-    describe '#set_show' do
+    describe '#show' do
       let(:monograph) { create(:public_monograph) }
       let(:file_set) { create(:public_file_set, id: '999999999', content: File.open(File.join(fixture_path, 'fake_epub01.epub'))) }
       let!(:fr) { create(:featured_representative, monograph_id: monograph.id, file_set_id: file_set.id, kind: 'epub') }
@@ -308,11 +277,9 @@ RSpec.describe EPubsController, type: :controller do
       after { FeaturedRepresentative.destroy_all }
 
       it 'Open Access' do
-        session[:show_set] = []
         get :show, params: { id: file_set.id }
-        expect(session[:show_set].include?(file_set.id)).to be true
         expect(response).to have_http_status(:success)
-        expect(response).not_to render_template(:access)
+        expect(response).to render_template(:show)
       end
 
       context 'Restricted Access' do
@@ -325,28 +292,24 @@ RSpec.describe EPubsController, type: :controller do
           clear_grants_table
           allow_any_instance_of(Keycard::Request::Attributes).to receive(:all).and_return(keycard)
           component
-          session[:show_set] = []
         end
 
         it 'Anonymous User' do
           get :show, params: { id: file_set.id }
-          expect(session[:show_set].include?(file_set.id)).to be false
-          expect(response).to have_http_status(:success)
-          expect(response).to render_template(:access)
+          expect(response).to have_http_status(:found)
+          expect(response).to redirect_to(epub_access_url)
         end
 
         it 'Authenticated User' do
           sign_in(create(:user))
           get :show, params: { id: file_set.id }
-          expect(session[:show_set].include?(file_set.id)).to be false
-          expect(response).to have_http_status(:success)
-          expect(response).to render_template(:access)
+          expect(response).to have_http_status(:found)
+          expect(response).to redirect_to(epub_access_url)
         end
 
         it 'Platform Admin' do
           sign_in(create(:platform_admin))
           get :show, params: { id: file_set.id }
-          expect(session[:show_set].include?(file_set.id)).to be true
           expect(response).to have_http_status(:success)
           expect(response).to render_template(:show)
         end
@@ -358,7 +321,6 @@ RSpec.describe EPubsController, type: :controller do
           product.save!
           Greensub.subscribe(institution, product)
           get :show, params: { id: file_set.id }
-          expect(session[:show_set].include?(file_set.id)).to be true
           expect(response).to have_http_status(:success)
           expect(response).to render_template(:show)
         end
@@ -373,7 +335,6 @@ RSpec.describe EPubsController, type: :controller do
           Greensub.subscribe(individual, product)
           sign_in(user)
           get :show, params: { id: file_set.id }
-          expect(session[:show_set].include?(file_set.id)).to be true
           expect(response).to have_http_status(:success)
           expect(response).to render_template(:show)
         end
@@ -390,6 +351,7 @@ RSpec.describe EPubsController, type: :controller do
         monograph.save!
         file_set.save!
         UnpackJob.perform_now(file_set.id, 'epub')
+        allow_any_instance_of(EPubPolicy).to receive(:show?).and_return(true)
       end
 
       after { FeaturedRepresentative.destroy_all }
@@ -416,7 +378,7 @@ RSpec.describe EPubsController, type: :controller do
         monograph.save!
         file_set.save!
         UnpackJob.perform_now(file_set.id, 'epub')
-        allow_any_instance_of(described_class).to receive(:show?).and_return(true)
+        allow_any_instance_of(EPubPolicy).to receive(:show?).and_return(true)
         allow(Prawn::Document).to receive(:new).and_return(document)
       end
 
@@ -437,9 +399,9 @@ RSpec.describe EPubsController, type: :controller do
       end
     end
 
-    describe "#show" do
-      let(:monograph) { create(:monograph) }
-      let(:file_set) { create(:file_set, id: '888888888', content: File.open(File.join(fixture_path, 'fake_epub01.epub'))) }
+    describe "#show share link" do
+      let(:monograph) { create(:public_monograph) }
+      let(:file_set) { create(:public_file_set, id: '888888888', content: File.open(File.join(fixture_path, 'fake_epub01.epub'))) }
       let!(:fr) { create(:featured_representative, monograph_id: monograph.id, file_set_id: file_set.id, kind: 'epub') }
 
       before do
@@ -477,14 +439,16 @@ RSpec.describe EPubsController, type: :controller do
 
         it "with an expired share_link" do
           get :show, params: { id: file_set.id, share: expired_share_token }
-          expect(response).to have_http_status(:success)
-          expect(response).to render_template(:access)
+          expect(response).to have_http_status(:found)
+          expect(response).to redirect_to(epub_access_url)
+          expect(ShareLinkLog.count).to eq 0
         end
 
         it "with the wrong share link" do
           get :show, params: { id: file_set.id, share: wrong_share_token }
-          expect(response).to have_http_status(:success)
-          expect(response).to render_template(:access)
+          expect(response).to have_http_status(:found)
+          expect(response).to redirect_to(epub_access_url)
+          expect(ShareLinkLog.count).to eq 0
         end
       end
     end
@@ -495,8 +459,15 @@ RSpec.describe EPubsController, type: :controller do
     let(:presenters) { double("presenters", first: presenter) }
     let(:presenter) { double("presenter", id: 'fileset_id', monograph: monograph) }
     let(:monograph) { double("monograph", subdomain: press.subdomain, title: ["A Thing"]) }
+    let(:entity) { double('entity') }
+    let(:policy) { double('policy') }
+    let(:access) { true }
 
     before do
+      allow(Sighrax).to receive(:factory).with('noid').and_return(entity)
+      allow(entity).to receive(:is_a?).with(Sighrax::ElectronicPublication).and_return(true)
+      allow(EPubPolicy).to receive(:new).and_return(policy)
+      allow(policy).to receive(:show?).and_return(access)
       allow(Time).to receive(:now).and_return(now)
       allow(Hyrax::PresenterFactory).to receive(:build_for).and_return(presenters)
     end

@@ -67,6 +67,18 @@ RSpec.describe Sighrax do
 
               it { is_expected.to be_an_instance_of(Sighrax::ElectronicPublication) }
             end
+
+            context 'Mobipocket' do
+              let(:kind) { 'mobi' }
+
+              it { is_expected.to be_an_instance_of(Sighrax::Mobipocket) }
+            end
+
+            context 'PortableDocumentFormat' do
+              let(:kind) { 'pdf_ebook' }
+
+              it { is_expected.to be_an_instance_of(Sighrax::PortableDocumentFormat) }
+            end
           end
         end
       end
