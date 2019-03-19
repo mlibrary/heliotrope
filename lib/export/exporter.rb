@@ -75,6 +75,8 @@ module Export
         io.puts "Type: monograph"
       end
 
+      puts "About to call extract for bag #{bag_name}"
+
       # put fulcrum files into data directory
       extract("#{bag.bag_dir}/data/")
 
@@ -91,7 +93,14 @@ module Export
         Dir.chdir(Settings.aptrust_bags_path)
       end
 
-      Minitar.pack(bag_name, File.open("#{bag_name}.tar", 'wb'))
+      puts "About to call minitar for bag #{bag_name}"
+
+      begin
+        Minitar.pack(bag_name, File.open("#{bag_name}.tar", 'wb'))
+      rescue StandardError => error
+        puts "Error for Minitar in lib/export/exporter.rb: #{error}"
+      end
+
       FileUtils.rm_rf(bag_name)
 
       # Upload the bag to the s3 bucket (umich A&E test bucket for now)
@@ -138,6 +147,7 @@ module Export
         if Dir.exist?(path)
           puts "Overwrite #{path} directory? (Y/n):"
           return unless /y/i.match?(STDIN.getch)
+
           FileUtils.rm_rf(path)
         end
         FileUtils.mkdir(path)
