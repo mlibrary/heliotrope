@@ -162,7 +162,9 @@ describe Import::Importer do
           .to change(Monograph, :count)
           .by(1)
           .and(change(FileSet, :count)
-          .by(9))
+          .by(11))
+          .and(change(Hyrax::UploadedFile, :count)
+          .by(8)) # none for the 3 new external resources
 
         monograph = Monograph.first
 
@@ -186,23 +188,32 @@ describe Import::Importer do
 
         expect(file_sets[1].title).to eq ['Monograph Miranda']
         expect(file_sets[1].external_resource_url).to eq nil
-        expect(file_sets[1].license).to eq ['http://creativecommons.org/publicdomain/mark/1.0/']
+        expect(file_sets[1].license).to eq ['https://creativecommons.org/publicdomain/mark/1.0/']
         expect(file_sets[1].exclusive_to_platform).to eq 'yes'
 
-        expect(file_sets[2].title).to eq ['日本語のファイル']
+        expect(file_sets[2].title).to eq ['External Bard Transcript 1']
+        expect(file_sets[2].external_resource_url).to eq 'http://external/resource/url1'
+
+        expect(file_sets[3].title).to eq ['日本語のファイル']
+
+        expect(file_sets[4].title).to eq ['External Bard Transcript 2']
+        expect(file_sets[4].external_resource_url).to eq 'http://external/resource/url2'
 
         # FileSets w/ sections
-        expect(file_sets[3].title).to eq ['Section 1 Shipwreck']
-        expect(file_sets[3].section_title).to eq ['Act 1: Calm Waters']
+        expect(file_sets[5].title).to eq ['Section 1 Shipwreck']
+        expect(file_sets[5].section_title).to eq ['Act 1: Calm Waters']
 
-        expect(file_sets[4].title).to eq ['Section 1 Miranda']
-        expect(file_sets[4].section_title).to eq ['Act 1: Calm Waters']
+        expect(file_sets[6].title).to eq ['Section 1 Miranda']
+        expect(file_sets[6].section_title).to eq ['Act 1: Calm Waters']
 
-        expect(file_sets[5].title).to eq ['Section 2 Shipwreck']
-        expect(file_sets[5].section_title).to eq ['Act 2: Stirrin\' Up']
+        expect(file_sets[7].title).to eq ['Section 2 Shipwreck']
+        expect(file_sets[7].section_title).to eq ['Act 2: Stirrin\' Up']
 
-        expect(file_sets[7].title).to eq ['Previous Shipwreck File (Again)']
-        expect(file_sets[7].section_title).to match_array ['Act 2: Stirrin\' Up', 'Act 3: External Stuffs']
+        expect(file_sets[9].title).to eq ['Previous Shipwreck File (Again)']
+        expect(file_sets[9].section_title).to match_array ['Act 2: Stirrin\' Up', 'Act 3: External Stuffs']
+
+        expect(file_sets[10].title).to eq ['External Bard Transcript 3']
+        expect(file_sets[10].external_resource_url).to eq 'http://external/resource/url3'
 
         # filesets should have the same visibility as the parent monograph
         expect(file_sets[0].visibility).to eq monograph.visibility
@@ -217,14 +228,17 @@ describe Import::Importer do
           .to change(Monograph, :count)
           .by(0)
           .and(change(FileSet, :count)
-          .by(9))
+          .by(11))
+          .and(change(Hyrax::UploadedFile, :count)
+          .by(8)) # none for the 3 new external resources
 
         # check it's indeed the same monograph
         expect(Monograph.first.id).to eq monograph.id
 
         # check counts explicitly
         expect(Monograph.count).to eq(1)
-        expect(FileSet.count).to eq(18)
+        expect(FileSet.count).to eq(22)
+        expect(Hyrax::UploadedFile.count).to eq(16) # none for the 6 total external resources
 
         # grab all FileSets again
         file_sets = Monograph.first.ordered_members.to_a
@@ -233,26 +247,28 @@ describe Import::Importer do
         expect(file_sets[0].id).to eq monograph.representative_id
 
         # check order/existence of new files
-        expect(file_sets[9].title).to eq ['Monograph Shipwreck']
-        expect(file_sets[10].title).to eq ['Monograph Miranda']
-        expect(file_sets[11].title).to eq ['日本語のファイル']
-        expect(file_sets[12].title).to eq ['Section 1 Shipwreck']
-        expect(file_sets[13].title).to eq ['Section 1 Miranda']
-        expect(file_sets[14].title).to eq ['Section 2 Shipwreck']
-        expect(file_sets[15].title).to eq ['Section 2 Miranda']
-        expect(file_sets[16].title).to eq ['Previous Shipwreck File (Again)']
-        expect(file_sets[17].title).to eq ['External Bard Transcript']
+        expect(file_sets[11].title).to eq ['Monograph Shipwreck']
+        expect(file_sets[12].title).to eq ['Monograph Miranda']
+        expect(file_sets[13].title).to eq ['External Bard Transcript 1']
+        expect(file_sets[14].title).to eq ['日本語のファイル']
+        expect(file_sets[15].title).to eq ['External Bard Transcript 2']
+        expect(file_sets[16].title).to eq ['Section 1 Shipwreck']
+        expect(file_sets[17].title).to eq ['Section 1 Miranda']
+        expect(file_sets[18].title).to eq ['Section 2 Shipwreck']
+        expect(file_sets[19].title).to eq ['Section 2 Miranda']
+        expect(file_sets[20].title).to eq ['Previous Shipwreck File (Again)']
+        expect(file_sets[21].title).to eq ['External Bard Transcript 3']
 
         # check monograph visibility doesn't change
         expect(Monograph.first.visibility).to eq monograph.visibility
 
         # old filesets should have the same visibility as the parent monograph
         expect(file_sets[0].visibility).to eq monograph.visibility
-        expect(file_sets[8].visibility).to eq monograph.visibility
+        expect(file_sets[10].visibility).to eq monograph.visibility
 
         # new filesets should have the same visibility as the parent monograph
-        expect(file_sets[10].visibility).to eq monograph.visibility
-        expect(file_sets[15].visibility).to eq monograph.visibility
+        expect(file_sets[11].visibility).to eq monograph.visibility
+        expect(file_sets[21].visibility).to eq monograph.visibility
       end
     end
 

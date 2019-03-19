@@ -34,7 +34,6 @@ RSpec.describe CreateWithImportFilesActor do
     context "on #{mode}" do
       before do
         allow(terminator).to receive(mode).and_return(true)
-        allow(Hyrax::UploadedFile).to receive(:find).with(import_uploaded_files_ids).and_return(import_uploaded_files)
       end
 
       context 'when files is empty' do
@@ -48,6 +47,10 @@ RSpec.describe CreateWithImportFilesActor do
 
       context 'when files exist' do
         let(:n) { 3 }
+
+        before do
+          allow(Hyrax::UploadedFile).to receive(:find).and_return(*import_uploaded_files)
+        end
 
         it 'is successful' do
           expect(AttachImportFilesToWorkJob).to receive(:perform_later).with(expected_env.curation_concern, expected_env.attributes.to_h.symbolize_keys, import_uploaded_files, import_uploaded_files_attributes)

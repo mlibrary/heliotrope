@@ -134,14 +134,11 @@ module Import
 
         # Wrap files in UploadedFile wrappers using /dev/null for external resources
         uploaded_files = attrs.delete('files').map do |filename|
-          if filename.present?
+          if filename.present? # "External Resources" are FileSets without a file
             Hyrax::UploadedFile.create(file: File.new(find_file(filename)), user: user)
-          else
-            # "External Resources" are FileSets without a file
-            Hyrax::UploadedFile.create(file: File.new("/dev/null"), user: user) # TODO: Is File.new("/dev/null") really good here?
           end
         end
-        attrs['import_uploaded_files_ids'] = uploaded_files.map(&:id)
+        attrs['import_uploaded_files_ids'] = uploaded_files.map { |f| f&.id }
         attrs['import_uploaded_files_attributes'] = attrs.delete('files_metadata')
 
         if reimporting
