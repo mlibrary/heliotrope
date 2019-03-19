@@ -120,24 +120,31 @@ module Export
     def export
       return String.new if @monograph.blank?
 
+      puts "Entered export for noid #{@monograph.id}"
+
+      puts "About to build rows array for ordered_members in export for noid #{@monograph.id}"
       rows = []
       @monograph.ordered_members.to_a.each do |member|
         rows << metadata_row(member, :file_set)
       end
+
+      puts "About to add to rows array for metadata_row in export for noid #{@monograph.id}"
       rows << metadata_row(@monograph, :monograph)
       buffer = String.new
       CSV.generate(buffer) do |csv|
         write_csv_header_rows(csv)
         rows.each { |row| csv << row if row.present? }
       end
+      puts "Done in export, returning bugger for noid #{@monograph.id}"
       buffer
     end
 
     def extract(use_dir = nil) # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
       return if @monograph.blank?
-
+      puts "Entered extract for noid #{@monograph.id}"
       if use_dir
         path = "#{use_dir}/"
+        puts "In exporter.rb use_dir is: #{use_dir}"
       else
         base = File.join(".", "extract")
         FileUtils.mkdir(base) unless Dir.exist?(base)
@@ -152,17 +159,24 @@ module Export
         end
         FileUtils.mkdir(path)
       end
+      puts "About to create manifest in extract with use_dir #{use_dir}"
       manifest = File.new(File.join(path, @monograph.id.to_s + ".csv"), "w")
+      puts "About to call export from extract for noid #{@monograph.id}"
       manifest << export
+      puts "After call to export from extract for noid #{@monograph.id}"
       manifest.close
+      puts "About to write files from ordered_members in extract for noid #{@monograph.id}"
       @monograph.ordered_members.to_a.each do |member|
         next unless member.original_file
 
         filename = CGI.unescape(member.original_file.file_name.first)
+        puts "About to write file #{filename} from ordered_members in extract for noid #{@monograph.id}"
         file = File.new(File.join(path, filename), "wb")
         file.write(member.original_file.content.force_encoding("utf-8"))
         file.close
+        puts "Done to writing file #{filename} from ordered_members in extract"
       end
+      puts "Done in extract for noid #{@monograph.id}"
     end
 
     def monograph_row
