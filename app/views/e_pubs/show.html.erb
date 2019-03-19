@@ -58,8 +58,8 @@ webgl = Webgl::Unity.from_directory(UnpackService.root_path_from_noid(webgl_id, 
         // Press brand widget
         // TODO: only show logo for publishers that also have CSS overrides. Currently only HEB has this.
         <% if defined? @subdomain %>
-        // only include logos for heb, nyupress, leverpress and gabii at this point
-        <% if %w[heb nyupress gabii michigan leverpress].include? @subdomain %>
+        // only include logos for heb, nyupress, leverpress, rekihaku and gabii at this point
+        <% if %w[heb nyupress gabii michigan leverpress rekihaku].include? @subdomain %>
         cozy.control.widget.panel({
           region: 'top.header.left',
           template: '<div class="logo"><%= link_to (image_tag logo(@subdomain), role: 'link', alt: @subdomain + ' catalog on Fulcrum'), URI.join(main_app.root_url, @subdomain).to_s %>',
