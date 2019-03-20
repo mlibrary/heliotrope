@@ -51,7 +51,7 @@ RSpec.describe Product, type: :model do
     it 'components and not_components' do
       n = 3
       components = []
-      n.times { |i| components << create(:component, handle: "component#{i}") }
+      n.times { components << create(:component) }
 
       expect(subject.update?).to be true
       expect(subject.destroy?).to be true

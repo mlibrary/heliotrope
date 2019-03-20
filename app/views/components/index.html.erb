@@ -8,9 +8,8 @@
   <b>
     <div class="col-md-10">
       <div class="col-md-1">ID</div>
-      <div class="col-md-1">Identifier</div>
-      <div class="col-md-2">Name</div>
-      <div class="col-md-3">Handle</div>
+      <div class="col-md-2">Identifier</div>
+      <div class="col-md-4">Name</div>
       <div class="col-md-1">FileSet</div>
       <div class="col-md-2">Monograph</div>
       <div class="col-md-2">Products</div>
@@ -28,9 +27,8 @@
     %>
     <div class="col-md-10">
       <div class="col-md-1"><%= component.id %></div>
-      <div class="col-md-1"><%= component.identifier %></div>
-      <div class="col-md-2"><%= component.name %></div>
-      <div class="col-md-3"><%= link_to component.handle, HandleService.url(component.noid) %></div>
+      <div class="col-md-2"><%= component.identifier %></div>
+      <div class="col-md-4"><%= component.name %></div>
       <div class="col-md-1">&nbsp<%= link_to_if file_set.present?, file_set_id, hyrax_file_set_path(file_set_id) %></div>
       <div class="col-md-2">&nbsp<%= link_to_if monograph.present?, monograph_id, hyrax_monograph_path(monograph_id) %></div>
       <div class="col-md-2"><%= component.products.count %></div>

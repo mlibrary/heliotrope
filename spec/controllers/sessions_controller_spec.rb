@@ -98,7 +98,7 @@ RSpec.describe SessionsController, type: :controller do
 
     it 'gets parameterized discovery feed' do
       epub = Sighrax.factory(file_set.id)
-      component = Component.create!(identifier: epub.resource_token, name: epub.title, noid: epub.noid, handle: HandleService.path(epub.noid))
+      component = Component.create!(identifier: epub.resource_token, name: epub.title, noid: epub.noid)
       institution1 = Institution.create!(identifier: '1', name: 'University of Michigan', site: 'Site', login: 'Login', entity_id: 'https://shibboleth.umich.edu/idp/shibboleth')
       # To show that this institution is not used
       institution2 = Institution.create!(identifier: '2', name: 'College', site: 'Site', login: 'Login', entity_id: 'https://shibboleth.college.edu/idp/shibboleth') # rubocop:disable Lint/UselessAssignment

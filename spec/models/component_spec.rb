@@ -3,7 +3,7 @@
 require 'rails_helper'
 
 RSpec.describe Component, type: :model do
-  subject { described_class.new(id: id, identifier: identifier, name: name, noid: noid, handle: handle) }
+  subject { described_class.new(id: id, identifier: identifier, name: name, noid: noid) }
 
   let(:id) { 1 }
   let(:identifier) { double('identifier') }

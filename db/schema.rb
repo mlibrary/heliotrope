@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190301150614) do
+ActiveRecord::Schema.define(version: 20190318182925) do
 
   create_table "api_requests", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.integer "user_id"
@@ -93,14 +93,13 @@ ActiveRecord::Schema.define(version: 20190301150614) do
   end
 
   create_table "components", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
-    t.string "handle"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "identifier"
     t.string "name"
     t.string "noid"
-    t.index ["handle"], name: "index_components_on_handle", unique: true
     t.index ["identifier"], name: "index_components_on_identifier", unique: true
+    t.index ["noid"], name: "index_components_on_noid", unique: true
   end
 
   create_table "components_products", id: false, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|

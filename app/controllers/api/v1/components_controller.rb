@@ -75,7 +75,7 @@ module API
       # Create component
       # @example
       #   post /api/components
-      # @param [Hash] params { component: { identifier: String, name: String, noid: String, handle: String } }
+      # @param [Hash] params { component: { identifier: String, name: String, noid: String } }
       # @return [ActionDispatch::Response] {Component} (see {show})
       def create
         @component = Component.find_by(identifier: component_params[:identifier])
@@ -146,7 +146,7 @@ module API
         end
 
         def component_params
-          params.require(:component).permit(:identifier, :name, :noid, :handle)
+          params.require(:component).permit(:identifier, :name, :noid)
         end
     end
   end

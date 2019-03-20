@@ -284,7 +284,7 @@ RSpec.describe EPubsController, type: :controller do
 
       context 'Restricted Access' do
         let(:epub) { Sighrax.factory(file_set.id) }
-        let(:component) { Component.create!(identifier: epub.resource_token, name: epub.title, noid: epub.noid, handle: HandleService.path(epub.noid)) }
+        let(:component) { Component.create!(identifier: epub.resource_token, name: epub.title, noid: epub.noid) }
         let(:keycard) { { dlpsInstitutionId: dlpsInstitutionId } }
         let(:dlpsInstitutionId) { 'institute' }
 
@@ -423,7 +423,7 @@ RSpec.describe EPubsController, type: :controller do
         let(:epub) { Sighrax.factory(file_set.id) }
 
         before do
-          Component.create!(identifier: epub.resource_token, name: epub.title, noid: epub.noid, handle: HandleService.path(epub.noid))
+          Component.create!(identifier: epub.resource_token, name: epub.title, noid: epub.noid)
         end
 
         it "with a valid share_link" do
