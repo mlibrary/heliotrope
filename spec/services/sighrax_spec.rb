@@ -34,7 +34,6 @@ RSpec.describe Sighrax do
       it do
         is_expected.to be_an_instance_of(Sighrax::Entity)
         expect(subject.noid).to be noid
-        # expect(subject.send(:data)).to be data
         expect(subject.data).to be data
       end
 
@@ -86,6 +85,124 @@ RSpec.describe Sighrax do
     end
   end
 
+  describe '#access?' do
+    subject { described_class.access?(actor, target) }
+
+    let(:actor) { double('actor') }
+    let(:target) { double('target', noid: noid) }
+    let(:noid) { double('noid') }
+    let(:component) { double('component', products: [component_product]) }
+    let(:component_product) { double('component_product') }
+    let(:greensub_product) { double('greensub_product') }
+    let(:sudo_actor) { false }
+    let(:incognito_product) { double('incognito_product') }
+
+    before do
+      allow(Component).to receive(:find_by).with(noid: noid).and_return(component)
+      allow(Greensub).to receive(:actor_products).with(actor).and_return([greensub_product])
+      allow(Incognito).to receive(:sudo_actor?).with(actor).and_return(sudo_actor)
+      allow(Incognito).to receive(:sudo_actor_products).with(actor).and_return([incognito_product])
+    end
+
+    it { is_expected.to be false }
+
+    context 'product intersection' do
+      let(:product) { double('product') }
+      let(:greensub_product) { product }
+      let(:component_product) { product }
+
+      it { is_expected.to be true }
+
+      context 'incognito' do
+        let(:sudo_actor) { true }
+
+        it { is_expected.to be false }
+
+        context 'product intersection' do
+          let(:incognito_product) { product }
+
+          it { is_expected.to be true }
+        end
+      end
+    end
+  end
+
+  describe '#allow_download?' do
+    subject { described_class.allow_download?(entity) }
+
+    let(:entity) { double('entity', valid?: true, data: data) }
+    let(:data) { { 'allow_download_ssim' => ['yes'] } }
+    let(:downloadable) { true }
+
+    before { allow(described_class).to receive(:downloadable?).with(entity).and_return(downloadable) }
+
+    it { is_expected.to be true }
+
+    context 'do not allow download' do
+      let(:data) { { 'allow_download_ssim' => ['anything but yes'] } }
+
+      it { is_expected.to be false }
+    end
+
+    context 'non downloadable' do
+      let(:downloadable) { false }
+
+      it { is_expected.to be false }
+    end
+  end
+
+  describe '#deposited?' do
+    subject { described_class.deposited?(entity) }
+
+    let(:entity) { double('entity', valid?: true, data: data) }
+    let(:data) { {} }
+
+    it { is_expected.to be true }
+
+    context "'suppressed_bsi' => false" do
+      let(:data) { { 'suppressed_bsi' => false } }
+
+      it { is_expected.to be true }
+    end
+
+    context "'suppressed_bsi' => true" do
+      let(:data) { { 'suppressed_bsi' => true } }
+
+      it { is_expected.to be false }
+    end
+  end
+
+  describe '#downloadable?' do
+    subject { described_class.downloadable?(entity) }
+
+    let(:entity) { double('entity', valid?: true, data: data) }
+    let(:data) { {} }
+    let(:asset) { true }
+
+    before { allow(entity).to receive(:is_a?).with(Sighrax::Asset).and_return(asset) }
+
+    it { is_expected.to be true }
+
+    context 'external resource url' do
+      let(:data) { { 'external_resource_url_ssim' => url } }
+      let(:url) { 'url' }
+
+      it { is_expected.to be false }
+
+      context 'blank url' do
+        let(:url) { '' }
+
+        it { is_expected.to be true }
+      end
+    end
+
+    context 'non asset' do
+      let(:asset) { false }
+
+      it { is_expected.to be false }
+    end
+  end
+
   describe '#hyrax_can?' do
     subject { described_class.hyrax_can?(actor, action, target) }
 
@@ -94,10 +211,12 @@ RSpec.describe Sighrax do
     let(:action) { :action }
     let(:target) { double('target', valid?: valid, noid: 'noid') }
     let(:valid) { true }
+    let(:allow_hyrax_can) { true }
     let(:ability) { double('ability') }
     let(:can) { true }
 
     before do
+      allow(Incognito).to receive(:allow_hyrax_can?).with(actor).and_return(allow_hyrax_can)
       allow(Ability).to receive(:new).with(actor).and_return(ability)
       allow(ability).to receive(:can?).with(action, target.noid).and_return(can)
     end
@@ -123,32 +242,17 @@ RSpec.describe Sighrax do
         it { is_expected.to be false }
       end
 
+      context 'do not allow hyrax_can' do
+        let(:allow_hyrax_can) { false }
+
+        it { is_expected.to be false }
+      end
+
       context 'can not' do
         let(:can) { false }
 
         it { is_expected.to be false }
       end
-    end
-  end
-
-  describe '#deposited?' do
-    subject { described_class.deposited?(entity) }
-
-    let(:entity) { double('entity', valid?: true, data: data) }
-    let(:data) { {} }
-
-    it { is_expected.to be true }
-
-    context "'suppressed_bsi' => false" do
-      let(:data) { { 'suppressed_bsi' => false } }
-
-      it { is_expected.to be true }
-    end
-
-    context "'suppressed_bsi' => true" do
-      let(:data) { { 'suppressed_bsi' => true } }
-
-      it { is_expected.to be false }
     end
   end
 
@@ -161,7 +265,7 @@ RSpec.describe Sighrax do
     it { is_expected.to be false }
 
     context "'open_access_tesim' => ''" do
-      let(:data) { { 'open_access_tesim' => [''] } }
+      let(:data) { { 'open_access_tesim' => ['anything but yes'] } }
 
       it { is_expected.to be false }
     end
@@ -170,6 +274,41 @@ RSpec.describe Sighrax do
       let(:data) { { 'open_access_tesim' => ['yes'] } }
 
       it { is_expected.to be true }
+    end
+  end
+
+  describe '#platform_admin?' do
+    subject { described_class.platform_admin?(actor) }
+
+    let(:actor) { double('actor') }
+    let(:user) { false }
+    let(:platform_admin) { false }
+    let(:allow_platform_admin) { true }
+
+    before do
+      allow(actor).to receive(:is_a?).with(User).and_return(user)
+      allow(actor).to receive(:platform_admin?).and_return(platform_admin)
+      allow(Incognito).to receive(:allow_platform_admin?).with(actor).and_return(allow_platform_admin)
+    end
+
+    it { is_expected.to be false }
+
+    context 'user' do
+      let(:user) { true }
+
+      it { is_expected.to be false }
+
+      context 'platform_admin' do
+        let(:platform_admin) { true }
+
+        it { is_expected.to be true }
+
+        context 'incognito' do
+          let(:allow_platform_admin) { false }
+
+          it { is_expected.to be false }
+        end
+      end
     end
   end
 
