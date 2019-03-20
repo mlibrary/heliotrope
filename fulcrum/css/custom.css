@@ -634,7 +634,9 @@ p.blurb {
   display: block;
   text-align: center; }
 .partners a:hover, .partners a:active {
-  border-bottom: 3px solid transparent; }
+  border-bottom: 0px solid transparent; }
+.partners a.btn-large {
+  height: auto; }
 
 hr.brand {
   content: '';

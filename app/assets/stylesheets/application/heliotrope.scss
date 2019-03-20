@@ -136,7 +136,56 @@ div.skip {
   .active {
     color: $gray-60 !important;
   }
+
+  .breadcrumb li + ::before {
+    border-right: 0.1em solid #ccc;
+    content: '' !important;
+    display: inline-block;
+    height: 0.8em;
+    margin: 0 0.6em;
+    transform: rotate(15deg);
+  }
+
+  .breadcrumb li {
+    margin-left: -.6em;
+  }
+
+  .breadcrumb li:first-child {
+    margin-left: 0;
+  }
 }
+
+//////////////////////////////////
+// SURVEY
+///////////////////////////////////
+.survey {
+  font-size: 1.5em;
+
+  .message {
+      padding-bottom: 1em;
+  }
+
+  a.btn-primary, a.btn-primary:hover, a.btn-primary:active {
+      color: #fff;
+  }
+
+  a.btn-default, a.btn-default:active, a.btn-default:hover {
+      color: inherit;
+      background-color: #d9edf7;
+      border-color: #d9edf7;
+  }
+
+  a.close {
+      color: #31708f;
+      opacity: .75;
+  }
+
+  a.close:active, a.close:hover {
+      color: #31708f;
+      opacity: 1;
+  }
+}
+
 ///////////////////////////////////
 // FOOTER
 ///////////////////////////////////
@@ -575,44 +624,6 @@ footer.press {
       margin-top: 11px;
       right: 20px;
     }
-  }
-
-
-  // SUPPLEMENTAL MATERIALS ONLY - MONOGRAPH INFORMATION
- .monograph-info {
-
-    h2 {
-      font-size: 1.5em;
-    }
-
-    h3 {
-      font-size: 1.3em;
-    }
-
-    .description,
-    .isbn {
-      margin-bottom: 1.5em;
-    }
-
-  }
-
-  .top-panel-heading {
-    padding-top: 0;
-    padding-left: 0;
-  }
-
-  #sortAndPerPage {
-    border-bottom: none;
-  }
-
-  .pagination {
-
-    a.disabled {
-      color: #333333;
-      pointer-events: none;
-      cursor: default;
-    }
-
   }
 
   // MONOGRAPH ASSETS - LIST VIEW
