@@ -103,7 +103,7 @@ module API
       def update
         if params[:product_id].present?
           set_product
-          Greensub.subscribe(@individual, @product)
+          Greensub.subscribe(subscriber: @individual, target: @product)
           return head :ok
         end
         return render json: @individual.errors, status: :unprocessable_entity unless @individual.update(individual_params)
@@ -125,7 +125,7 @@ module API
       def destroy
         if params[:product_id].present?
           set_product
-          Greensub.unsubscribe(@individual, @product)
+          Greensub.unsubscribe(subscriber: @individual, target: @product)
         else
           return render json: @individual.errors, status: :accepted unless @individual.destroy
         end

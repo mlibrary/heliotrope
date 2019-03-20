@@ -320,7 +320,7 @@ RSpec.describe EPubsController, type: :controller do
           product = Product.create!(identifier: 'product', name: 'name', purchase: 'purchase')
           product.components << component
           product.save!
-          Greensub.subscribe(institution, product)
+          Greensub.subscribe(subscriber: institution, target: product)
           get :show, params: { id: file_set.id }
           expect(response).to have_http_status(:success)
           expect(response).to render_template(:show)
@@ -333,7 +333,7 @@ RSpec.describe EPubsController, type: :controller do
           product = Product.create!(identifier: 'product', name: 'name', purchase: 'purchase')
           product.components << component
           product.save!
-          Greensub.subscribe(individual, product)
+          Greensub.subscribe(subscriber: individual, target: product)
           sign_in(user)
           get :show, params: { id: file_set.id }
           expect(response).to have_http_status(:success)

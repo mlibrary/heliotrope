@@ -163,10 +163,10 @@ RSpec.describe User do
     product = create(:product)
     expect(user.grants?).to be false
 
-    Greensub.subscribe(user, product)
+    Greensub.subscribe(subscriber: user, target: product)
     expect(user.grants?).to be true
 
-    Greensub.unsubscribe(user, product)
+    Greensub.unsubscribe(subscriber: user, target: product)
     expect(user.grants?).to be false
   end
 

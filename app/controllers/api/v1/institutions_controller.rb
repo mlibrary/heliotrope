@@ -103,7 +103,7 @@ module API
       def update
         if params[:product_id].present?
           set_product
-          Greensub.subscribe(@institution, @product)
+          Greensub.subscribe(subscriber: @institution, target: @product)
           return head :ok # rubocop:disable Style/RedundantReturn
         else
           return render json: @institution.errors, status: :unprocessable_entity unless @institution.update(institution_params)
@@ -126,7 +126,7 @@ module API
       def destroy
         if params[:product_id].present?
           set_product
-          Greensub.unsubscribe(@institution, @product)
+          Greensub.unsubscribe(subscriber: @institution, target: @product)
         else
           return render json: @institution.errors, status: :accepted unless @institution.destroy
         end
