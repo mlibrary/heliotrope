@@ -2827,7 +2827,7 @@ $reki-black-80: #342f2e;
       color: $reki-white;
       @include mono;
       text-transform: uppercase;
-      letter-spacing: 4px;
+      letter-spacing: 2px;
     }
 
     .navbar-nav {
@@ -2875,7 +2875,7 @@ $reki-black-80: #342f2e;
     .logo {
 
       img {
-        width: 100px;
+        width: 280px;
         margin-right: 3em;
       }
 
@@ -3013,9 +3013,14 @@ $reki-black-80: #342f2e;
       }
 
       img {
-        width: 100px;
+        width: 160px;
       }
 
+    }
+    .press-block-a {
+      @include mono;
+      text-transform: uppercase;
+      letter-spacing: 2px;
     }
     .press-block-c {
       background-color: $reki-brand-color;
