@@ -55,7 +55,7 @@ RSpec.describe Hyrax::DownloadsController, type: :controller do
       context "and an edit user is logged in" do
         before { sign_in user }
 
-        it "shows the unauthorized message" do
+        it "sends the file" do
           get :show, params: { id: file_set.id, use_route: 'downloads' }
           expect(response).to have_http_status(:ok)
           expect(response.body).to eq file_set.original_file.content
