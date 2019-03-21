@@ -99,7 +99,7 @@ module PressHelper
     monograph = Sighrax.factory(@monograph_presenter&.id)
     return false unless monograph.valid?
     return false if Sighrax.open_access?(monograph)
-    Greensub.product_include?(product, monograph.epub_featured_representative)
+    Greensub.product_include?(product, monograph)
   end
 
   def banner_product(subdomain)

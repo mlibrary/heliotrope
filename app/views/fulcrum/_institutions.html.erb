@@ -31,7 +31,7 @@
         <td><%= institution.identifier %></td>
         <td><%= institution.name %></td>
         <td><%= institution.entity_id %></td>
-        <td><%= Greensub.subscriber_products(institution).count %></td>
+        <td><%= link_to institution.products.count, institution_products_path(institution) %></td>
       </tr>
     <% end %>
   </table>

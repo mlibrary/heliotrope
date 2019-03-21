@@ -13,6 +13,7 @@ RSpec.describe EBookDownloadPresenter do
   let(:epub_doc) { SolrDocument.new(id: '111111111', visibility_ssi: 'open', monograph_id_ssim: 'mono_id', has_model_ssim: ['FileSet'], file_size_lts: 20_000, allow_download_ssim: 'yes') }
   let(:mobi_doc) { SolrDocument.new(id: '222222222', visibility_ssi: 'open', monograph_id_ssim: 'mono_id', has_model_ssim: ['FileSet'], file_size_lts: 30_000, allow_download_ssim: 'yes') }
   let(:pdfe_doc) { SolrDocument.new(id: '333333333', visibility_ssi: 'open', monograph_id_ssim: 'mono_id', has_model_ssim: ['FileSet'], file_size_lts: 40_000, allow_download_ssim: 'yes') }
+  let(:policy) { double('policy', show?: true) }
 
   before do
     create(:featured_representative, file_set_id: '111111111', monograph_id: 'mono_id', kind: 'epub')
@@ -20,6 +21,7 @@ RSpec.describe EBookDownloadPresenter do
     create(:featured_representative, file_set_id: '333333333', monograph_id: 'mono_id', kind: 'pdf_ebook')
     ActiveFedora::SolrService.add([epub_doc.to_h, mobi_doc.to_h, pdfe_doc.to_h])
     ActiveFedora::SolrService.commit
+    allow(EPubPolicy).to receive(:new).with(current_actor, anything).and_return(policy)
   end
 
   context "formats" do
@@ -45,9 +47,24 @@ RSpec.describe EBookDownloadPresenter do
       end
     end
 
+    context "with a downloadable ebook" do
+      let(:epub_doc) { SolrDocument.new(id: '111111111', visibility_ssi: 'restricted', monograph_id_ssim: 'mono_id', has_model_ssim: ['FileSet'], file_size_lts: 20_000, allow_download_ssim: 'no') }
+      let(:mobi_doc) { SolrDocument.new(id: '222222222', visibility_ssi: 'restricted', monograph_id_ssim: 'mono_id', has_model_ssim: ['FileSet'], file_size_lts: 30_000, allow_download_ssim: 'no') }
+      let(:pdfe_doc) { SolrDocument.new(id: '333333333', visibility_ssi: 'open', monograph_id_ssim: 'mono_id', has_model_ssim: ['FileSet'], file_size_lts: 40_000, allow_download_ssim: 'yes') }
+
+      before do
+        ActiveFedora::SolrService.add([epub_doc.to_h, mobi_doc.to_h, pdfe_doc.to_h])
+        ActiveFedora::SolrService.commit
+      end
+
+      it "returns true" do
+        expect(subject.downloadable_ebooks?).to be true
+      end
+    end
+
     context "with no downloadable ebooks" do
-      let(:epub_doc) { SolrDocument.new(id: '111111111', visibility_ssi: 'restricted', monograph_id_ssim: 'mono_id', has_model_ssim: ['FileSet'], file_size_lts: 20_000, allow_download_ssim: 'yes') }
-      let(:mobi_doc) { SolrDocument.new(id: '222222222', visibility_ssi: 'restricted', monograph_id_ssim: 'mono_id', has_model_ssim: ['FileSet'], file_size_lts: 30_000, allow_download_ssim: 'yes') }
+      let(:epub_doc) { SolrDocument.new(id: '111111111', visibility_ssi: 'restricted', monograph_id_ssim: 'mono_id', has_model_ssim: ['FileSet'], file_size_lts: 20_000, allow_download_ssim: 'no') }
+      let(:mobi_doc) { SolrDocument.new(id: '222222222', visibility_ssi: 'restricted', monograph_id_ssim: 'mono_id', has_model_ssim: ['FileSet'], file_size_lts: 30_000, allow_download_ssim: 'no') }
       let(:pdfe_doc) { SolrDocument.new(id: '333333333', visibility_ssi: 'open', monograph_id_ssim: 'mono_id', has_model_ssim: ['FileSet'], file_size_lts: 40_000, allow_download_ssim: 'no') }
 
       before do

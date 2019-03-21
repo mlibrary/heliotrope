@@ -1,6 +1,5 @@
 <%
-  components = Component.filter(identifier_like: params[:identifier_like], name_like: params[:name_like], noid_like: params[:noid_like]).order(handle: :asc).page(params[:page])
-  # TODO: order on identifier
+  components = Component.filter(identifier_like: params[:identifier_like], name_like: params[:name_like], noid_like: params[:noid_like]).order(identifier: :asc).page(params[:page])
   size = 12
 %>
 <h1>Components</h1>
@@ -34,19 +33,28 @@
         <td><%= component.name %></td>
         <td>
           <%
-            file_set = FileSet.find(component.noid) if component.file_set?
-            monograph = file_set&.parent
-            monograph ||= Monograph.find(component.noid) if component.monograph?
+            entity = Sighrax.factory(component.noid)
+            file_set_id = 0
+            monograph_id = 0
+            if entity.is_a?(Sighrax::Monograph)
+              monograph = entity
+              monograph_id = entity.noid
+            else
+              file_set = entity
+              file_set_id = entity.noid
+              monograph = entity.parent
+              monograph_id = monograph.noid
+            end
           %>
           <% if file_set.present? %>
-            <%= link_to file_set.id, hyrax_file_set_path(file_set.id) %>
+            <%= link_to file_set_id, hyrax_file_set_path(file_set_id) %>
           <% elsif monograph.present? %>
-            <%= link_to monograph.id, hyrax_monograph_path(monograph.id) %>
+            <%= link_to monograph_id, hyrax_monograph_path(monograph_id) %>
           <% else %>
             <%= component.noid %>
           <% end %>
         </td>
-        <td><%= component.products.count %></td>
+        <td><%= link_to component.products.count, component_products_path(component) %></td>
       </tr>
     <% end %>
   </table>

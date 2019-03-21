@@ -31,7 +31,7 @@
         <td><%= individual.identifier %></td>
         <td><%= individual.name %></td>
         <td><%= individual.email %></td>
-        <td><%= Greensub.subscriber_products(individual).count %></td>
+        <td><%= link_to individual.products.count, individual_products_path(individual) %></td>
       </tr>
     <% end %>
   </table>

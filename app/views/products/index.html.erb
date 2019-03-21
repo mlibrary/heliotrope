@@ -1,6 +1,14 @@
 <p id="notice"><%= notice %></p>
 <div id="maincontent">
-  <h1>Products</h1>
+  <% if @component.present? %>
+    <h1>Component <%= link_to @component.id, component_path(@component) %> Products</h1>
+  <% elsif @individual.present? %>
+    <h1>Individual <%= link_to @individual.id, individual_path(@individual) %> Products</h1>
+  <% elsif @institution.present? %>
+    <h1>Institution <%= link_to @institution.id, institution_path(@institution) %> Products</h1>
+  <% else %>
+    <h1>Products</h1>
+  <% end %>
   <form name="filter" method="get" action="<%= products_path %>">
   <b>
     <div class="col-md-8">

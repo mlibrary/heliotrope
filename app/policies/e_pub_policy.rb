@@ -2,6 +2,7 @@
 
 class EPubPolicy < ResourcePolicy
   def initialize(actor, target, share = false)
+    target = target.parent
     super(actor, target)
     @share = share
   end
@@ -16,7 +17,7 @@ class EPubPolicy < ResourcePolicy
     value = Sighrax.published?(target)
     debug_log("published? #{value}")
     if value
-      value = Sighrax.open_access?(target) || Sighrax.open_access?(target.parent)
+      value = Sighrax.open_access?(target)
       debug_log("open_access? #{value}")
       return true if value
 

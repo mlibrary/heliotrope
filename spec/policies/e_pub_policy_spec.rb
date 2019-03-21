@@ -8,9 +8,9 @@ RSpec.describe EPubPolicy do
   let(:actor) { double('actor', agent_type: 'actor_type', agent_id: 'actor_id', individual: nil, institutions: [institution]) }
   let(:institution) { double('institution', products: [product]) }
   let(:product) { double('product', identifier: 'product') }
-  let(:target) { double('target', noid: noid, resource_type: 'target_type', resource_id: 'target_id', parent: parent) }
+  let(:target) { double('target', parent: parent) }
+  let(:parent) { double('parent', noid: noid, resource_type: 'parent_type', resource_id: 'parent_id') }
   let(:noid) { 'validnoid' }
-  let(:parent) { double('parent') }
   let(:component) { double('component', products: products) }
   let(:products) { [] }
 
@@ -27,12 +27,11 @@ RSpec.describe EPubPolicy do
   before do
     allow(actor).to receive(:is_a?).with(User).and_return(is_a_user)
     allow(actor).to receive(:platform_admin?).and_return(platform_admin)
-    allow(Sighrax).to receive(:hyrax_can?).with(actor, :read, target).and_return(hyrax_can_read)
-    allow(Sighrax).to receive(:hyrax_can?).with(actor, :manage, target).and_return(hyrax_can_manage)
-    allow(Sighrax).to receive(:open_access?).with(target).and_return(false)
+    allow(Sighrax).to receive(:hyrax_can?).with(actor, :read, parent).and_return(hyrax_can_read)
+    allow(Sighrax).to receive(:hyrax_can?).with(actor, :manage, parent).and_return(hyrax_can_manage)
     allow(Sighrax).to receive(:open_access?).with(parent).and_return(open_access)
-    allow(Sighrax).to receive(:published?).with(target).and_return(published)
-    allow(Sighrax).to receive(:restricted?).with(target).and_return(restricted)
+    allow(Sighrax).to receive(:published?).with(parent).and_return(published)
+    allow(Sighrax).to receive(:restricted?).with(parent).and_return(restricted)
     allow(Component).to receive(:find_by).with(noid: noid).and_return(component)
     allow(Incognito).to receive(:allow_hyrax_can?).with(actor).and_return(allow_hyrax_can)
     allow(Incognito).to receive(:allow_platform_admin?).with(actor).and_return(allow_platform_admin)

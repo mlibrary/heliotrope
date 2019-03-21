@@ -18,7 +18,7 @@
       <div class="col-md-1"><%= institution.identifier %></div>
       <div class="col-md-3"><%= institution.name %></div>
       <div class="col-md-5"><%= institution.entity_id %></div>
-      <div class="col-md-2"><%= Greensub.subscriber_products(institution).count %></div>
+      <div class="col-md-2"><%= link_to institution.products.count, institution_products_path(institution) %></div>
     </div>
     <div class="col-md-2">
       <div class="col-md-4"><%= link_to 'Show', institution %></div>

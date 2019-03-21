@@ -2,17 +2,17 @@
 <div id="maincontent">
   <h1>Individual</h1>
   <div class="col-md-1"><em>ID</em></div>
-  <div class="col-md-11"><%= @individual.id %></div>
+  <div class="col-md-11">&nbsp;<%= @individual.id %></div>
   <div class="col-md-1"><em>Identifier</em></div>
-  <div class="col-md-11">&nbsp<%= @individual.identifier %></div>
+  <div class="col-md-11">&nbsp;<%= @individual.identifier %></div>
   <div class="col-md-1"><em>Name</em></div>
-  <div class="col-md-11">&nbsp<%= @individual.name %></div>
+  <div class="col-md-11">&nbsp;<%= @individual.name %></div>
   <div class="col-md-1"><em>eMail</em></div>
-  <div class="col-md-11">&nbsp<%= @individual.email %></div>
+  <div class="col-md-11">&nbsp;<%= @individual.email %></div>
   <div class="col-md-12"><br/></div>
   <h2>Products</h2>
   <div class="col-md-12">
-    <%= render partial: '/individuals/products', locals: { individual: @individual, products: Greensub.subscriber_products(@individual) } %>
+    <%= render partial: '/individuals/products', locals: { individual: @individual, products: @individual.products } %>
   </div>
   <div class="col-md-12"><br/></div>
   <div class="col-md-12">

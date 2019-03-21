@@ -147,6 +147,7 @@ class EPubsController < CheckpointController
     def setup
       @noid = params[:id]
       entity = Sighrax.factory(@noid)
+      @parent_noid = entity.parent.noid
       raise(NotAuthorizedError, "Non Electronic Publication") unless entity.is_a?(Sighrax::ElectronicPublication)
       @presenter = Hyrax::PresenterFactory.build_for(ids: [@noid], presenter_class: Hyrax::FileSetPresenter, presenter_args: nil).first
       @share_link = params[:share] || session[:share_link]
@@ -191,7 +192,7 @@ class EPubsController < CheckpointController
     end
 
     def component
-      @component ||= Component.find_by(noid: @noid)
+      @component ||= Component.find_by(noid: @parent_noid)
     end
 
     def search_cache_key(id, query)
