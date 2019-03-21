@@ -10,8 +10,8 @@ module Sighrax
 
     private
 
-      def initialize(noid, entity)
-        super(noid, entity)
+      def initialize(noid, data)
+        super(noid, data)
       end
   end
 end

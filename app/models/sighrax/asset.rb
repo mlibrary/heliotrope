@@ -5,13 +5,13 @@ module Sighrax
     private_class_method :new
 
     def parent
-      Sighrax.factory(entity['monograph_id_ssim']&.first)
+      Sighrax.factory(data['monograph_id_ssim']&.first)
     end
 
     private
 
-      def initialize(noid, entity)
-        super(noid, entity)
+      def initialize(noid, data)
+        super(noid, data)
       end
   end
 end

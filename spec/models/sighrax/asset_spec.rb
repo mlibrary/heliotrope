@@ -3,10 +3,10 @@
 require 'rails_helper'
 
 RSpec.describe Sighrax::Asset, type: :model do
-  subject { described_class.send(:new, noid, entity) }
+  subject { described_class.send(:new, noid, data) }
 
   let(:noid) { double('noid') }
-  let(:entity) { {} }
+  let(:data) { {} }
 
   it { is_expected.to be_a_kind_of(Sighrax::Model) }
   it { expect(subject.resource_type).to eq :Asset }
@@ -14,7 +14,7 @@ RSpec.describe Sighrax::Asset, type: :model do
   it { expect(subject.parent).to be_a_kind_of(Sighrax::NullEntity) }
 
   describe '#parent' do
-    let(:entity) { { 'monograph_id_ssim' => [noid] } }
+    let(:data) { { 'monograph_id_ssim' => [noid] } }
     let(:parent) { double('parent') }
 
     before { allow(Sighrax).to receive(:factory).with(noid).and_return(parent) }

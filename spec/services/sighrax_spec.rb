@@ -23,18 +23,19 @@ RSpec.describe Sighrax do
     end
 
     context 'Entity' do
-      let(:entity) { double('entity') }
+      let(:data) { double('data') }
       let(:model_types) {}
 
       before do
-        allow(ActiveFedora::SolrService).to receive(:query).and_return([entity])
-        allow(entity).to receive(:[]).with('has_model_ssim').and_return(model_types)
+        allow(ActiveFedora::SolrService).to receive(:query).and_return([data])
+        allow(data).to receive(:[]).with('has_model_ssim').and_return(model_types)
       end
 
       it do
         is_expected.to be_an_instance_of(Sighrax::Entity)
         expect(subject.noid).to be noid
-        expect(subject.send(:entity)).to be entity
+        # expect(subject.send(:data)).to be data
+        expect(subject.data).to be data
       end
 
       context 'Model' do
@@ -90,7 +91,7 @@ RSpec.describe Sighrax do
 
     let(:actor) { double('actor', is_a?: anonymous) }
     let(:anonymous) { false }
-    let(:action) { :read }
+    let(:action) { :action }
     let(:target) { double('target', valid?: valid, noid: 'noid') }
     let(:valid) { true }
     let(:ability) { double('ability') }
@@ -98,52 +99,54 @@ RSpec.describe Sighrax do
 
     before do
       allow(Ability).to receive(:new).with(actor).and_return(ability)
-      allow(ability).to receive(:can?).with(action.to_s.to_sym, target.noid).and_return(can)
+      allow(ability).to receive(:can?).with(action, target.noid).and_return(can)
     end
 
-    it { is_expected.to be true }
+    context 'user can' do
+      it { is_expected.to be true }
 
-    context 'anonymous' do
-      let(:anonymous) { true }
+      context 'anonymous' do
+        let(:anonymous) { true }
 
-      it { is_expected.to be false }
-    end
+        it { is_expected.to be false }
+      end
 
-    context 'non read action' do
-      let(:action) { :write }
+      context 'invalid action' do
+        let(:action) { 'action' }
 
-      it { is_expected.to be false }
-    end
+        it { is_expected.to be false }
+      end
 
-    context 'invalid target' do
-      let(:valid) { false }
+      context 'invalid target' do
+        let(:valid) { false }
 
-      it { is_expected.to be false }
-    end
+        it { is_expected.to be false }
+      end
 
-    context 'can not' do
-      let(:can) { false }
+      context 'can not' do
+        let(:can) { false }
 
-      it { is_expected.to be false }
+        it { is_expected.to be false }
+      end
     end
   end
 
   describe '#deposited?' do
     subject { described_class.deposited?(entity) }
 
-    let(:entity) { double('entity', valid?: true, entity: doc) }
-    let(:doc) { {} }
+    let(:entity) { double('entity', valid?: true, data: data) }
+    let(:data) { {} }
 
     it { is_expected.to be true }
 
     context "'suppressed_bsi' => false" do
-      let(:doc) { { 'suppressed_bsi' => false } }
+      let(:data) { { 'suppressed_bsi' => false } }
 
       it { is_expected.to be true }
     end
 
     context "'suppressed_bsi' => true" do
-      let(:doc) { { 'suppressed_bsi' => true } }
+      let(:data) { { 'suppressed_bsi' => true } }
 
       it { is_expected.to be false }
     end
@@ -152,19 +155,19 @@ RSpec.describe Sighrax do
   describe '#open_access?' do
     subject { described_class.open_access?(entity) }
 
-    let(:entity) { double('entity', valid?: true, entity: doc) }
-    let(:doc) { {} }
+    let(:entity) { double('entity', valid?: true, data: data) }
+    let(:data) { {} }
 
     it { is_expected.to be false }
 
     context "'open_access_tesim' => ''" do
-      let(:doc) { { 'open_access_tesim' => [''] } }
+      let(:data) { { 'open_access_tesim' => [''] } }
 
       it { is_expected.to be false }
     end
 
     context "'open_access_tesim' => 'yes'" do
-      let(:doc) { { 'open_access_tesim' => ['yes'] } }
+      let(:data) { { 'open_access_tesim' => ['yes'] } }
 
       it { is_expected.to be true }
     end
@@ -173,24 +176,24 @@ RSpec.describe Sighrax do
   describe '#published?' do
     subject { described_class.published?(entity) }
 
-    let(:entity) { double('entity', valid?: true, entity: doc) }
-    let(:doc) { {} }
+    let(:entity) { double('entity', valid?: true, data: data) }
+    let(:data) { {} }
 
     it { is_expected.to be false }
 
     context "'visibility_ssi' => 'restricted'" do
-      let(:doc) { { 'visibility_ssi' => 'restricted' } }
+      let(:data) { { 'visibility_ssi' => 'restricted' } }
 
       it { is_expected.to be false }
     end
 
     context "'visibility_ssi' => 'open'" do
-      let(:doc) { { 'visibility_ssi' => 'open' } }
+      let(:data) { { 'visibility_ssi' => 'open' } }
 
       it { is_expected.to be true }
 
       context "'suppressed_bsi' => true" do
-        let(:doc) { { 'suppressed_bsi' => true, 'visibility_ssi' => 'open' } }
+        let(:data) { { 'suppressed_bsi' => true, 'visibility_ssi' => 'open' } }
 
         it { is_expected.to be false }
       end
