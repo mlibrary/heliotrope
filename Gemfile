@@ -97,7 +97,7 @@ gem 'config'
 # Use gem version of cozy-sun-bear
 gem 'cozy-sun-bear', git: 'https://github.com/mlibrary/cozy-sun-bear', ref: 'eccf588f811e0de91912f40731017baf8f00cad7'
 
-gem 'devise'
+gem 'devise', '~> 4.6.0'
 gem 'devise-guests', '~> 0.3'
 
 gem 'faraday', '~>0.12.2'
