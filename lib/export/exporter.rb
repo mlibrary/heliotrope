@@ -33,18 +33,18 @@ module Export
                      end
 
       # On the first run these shouldn't be needed but...
-      # clean up bag and tar files
+      # clean up old bag and tar files
       if File.exist?(bag_pathname)
-        puts "-- removing existing bag for #{bag_name}"
+        puts "APTRUST: removing existing bag for #{bag_name}"
         FileUtils.rm_rf(bag_pathname)
       end
 
       if File.exist?("#{bag_pathname}.tar")
-        puts "-- removing tar file for #{bag_name}"
+        puts "APTRUST: removing tar file for #{bag_name}"
         FileUtils.rm_rf("#{bag_pathname}.tar")
       end
 
-      puts "-- Archiving #{bag_name}"
+      puts "APTRUST: Archiving #{bag_name}"
       bag = BagIt::Bag.new bag_pathname
 
       # add bagit-info.txt file
@@ -101,50 +101,49 @@ module Export
         puts "Error for Minitar in lib/export/exporter.rb: #{error}"
       end
 
-      FileUtils.rm_rf(bag_name)
-
       # Upload the bag to the s3 bucket (umich A&E test bucket for now)
       uploaded = send_to_s3("#{bag_name}.tar")
 
-      # now restore the previous directory
-      Dir.chdir(restore_dir)
-
       # Update AptrustUploads database if bag is processed
       if uploaded
-        update_aptrust_db
+        update_aptrust_db(true)
+        FileUtils.rm_rf(bag_name)
       else
-        puts "Upload failed for #{bag_pathname}.tar"
+        update_aptrust_db(false)
+        puts "APTRUST: Upload failed for #{bag_pathname}.tar"
+        puts "APTRUST: Bag directory is not deleted at #{bag_pathname}"
       end
+
+      # Remove the tarred bag regardless if the bag upload succeeded or failed
+      FileUtils.rm_rf("#{bag_name}.tar")
+
+      # now restore the previous directory
+      Dir.chdir(restore_dir)
     end
 
     def export
       return String.new if @monograph.blank?
 
-      puts "Entered export for noid #{@monograph.id}"
-
-      puts "About to build rows array for ordered_members in export for noid #{@monograph.id}"
       rows = []
       @monograph.ordered_members.to_a.each do |member|
         rows << metadata_row(member, :file_set)
       end
 
-      puts "About to add to rows array for metadata_row in export for noid #{@monograph.id}"
       rows << metadata_row(@monograph, :monograph)
       buffer = String.new
       CSV.generate(buffer) do |csv|
         write_csv_header_rows(csv)
         rows.each { |row| csv << row if row.present? }
       end
-      puts "Done in export, returning bugger for noid #{@monograph.id}"
+
       buffer
     end
 
     def extract(use_dir = nil) # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
       return if @monograph.blank?
-      puts "Entered extract for noid #{@monograph.id}"
+
       if use_dir
         path = "#{use_dir}/"
-        puts "In exporter.rb use_dir is: #{use_dir}"
       else
         base = File.join(".", "extract")
         FileUtils.mkdir(base) unless Dir.exist?(base)
@@ -159,24 +158,24 @@ module Export
         end
         FileUtils.mkdir(path)
       end
-      puts "About to create manifest in extract with use_dir #{use_dir}"
+
       manifest = File.new(File.join(path, @monograph.id.to_s + ".csv"), "w")
-      puts "About to call export from extract for noid #{@monograph.id}"
       manifest << export
-      puts "After call to export from extract for noid #{@monograph.id}"
       manifest.close
-      puts "About to write files from ordered_members in extract for noid #{@monograph.id}"
+
       @monograph.ordered_members.to_a.each do |member|
         next unless member.original_file
 
-        filename = CGI.unescape(member.original_file.file_name.first)
-        puts "About to write file #{filename} from ordered_members in extract for noid #{@monograph.id}"
-        file = File.new(File.join(path, filename), "wb")
-        file.write(member.original_file.content.force_encoding("utf-8"))
-        file.close
-        puts "Done to writing file #{filename} from ordered_members in extract"
+        begin
+          filename = CGI.unescape(member.original_file.file_name.first)
+          file = File.new(File.join(path, filename), "wb")
+          file.write(member.original_file.content.force_encoding("utf-8"))
+        rescue NoMemoryError => e
+          puts "APTRUST:lib/export/exporter.rb method extract failed with NoMemoryError: #{e}"
+        ensure
+          file.close
+        end
       end
-      puts "Done in extract for noid #{@monograph.id}"
     end
 
     def monograph_row
@@ -219,9 +218,9 @@ module Export
 
       # Check if file is already in the bucket
       if fulcrum_bucket.object(name).exists?
-        puts "#{name} already exists in the bucket: #{bucket_name} overwriting bag!"
+        puts "APTRUST: #{name} already exists in the s3 bucket: #{bucket_name} overwriting bag!"
       else
-        puts "Creating a brand new bag for #{name} in bucket: #{bucket_name}"
+        puts "APTRUST: Creating a brand new bag for #{name} in s3 bucket: #{bucket_name}"
       end
 
       begin
@@ -230,25 +229,33 @@ module Export
         obj.upload_file(file)
         success = true
       rescue Aws::S3::Errors::ServiceError
-        puts "Upload of file {name} fails with s3 context #{s3.context}"
+        puts "APTRUST: Upload of file {name} fails with s3 context #{s3.context}"
         success = false
       end
       success
     end
 
-    def update_aptrust_db
+    def update_aptrust_db(result)
       begin
         record = AptrustUpload.find_by!(noid: @monograph.id)
       rescue ActiveRecord::RecordNotFound => e
-        puts "In exporter with monograph #{@monograph.id}, find_record error is #{e} "
+        puts "APTRUST: In exporter with monograph #{@monograph.id}, find_record error is #{e} "
         return
+      end
+
+      if result
+        bag_status = BAG_STATUSES['bagged']
+        upload_status = S3_STATUSES['uploaded']
+      else
+        bag_status = BAG_STATUSES['not_bagged']
+        upload_status = S3_STATUSES['upload_failed']
       end
 
       begin
         current_date = Time.now.utc.strftime("%Y-%m-%dT%H:%M:%SZ")
         record.update!(
-          bag_status: BAG_STATUSES['bagged'],
-          s3_status: S3_STATUSES['uploaded'],
+          bag_status: bag_status,
+          s3_status: upload_status,
           apt_status: APT_STATUSES['not_checked'],
           date_fileset_modified: nil,
           date_bagged: current_date,
@@ -256,7 +263,7 @@ module Export
           date_confirmed: nil
         )
       rescue ActiveRecord::RecordInvalid => e
-        puts "In exporter with monograph #{@monograph.id}, record.update error is #{e}"
+        puts "APTRUST: In exporter with monograph #{@monograph.id}, record.update error is #{e}"
       end
     end
 
