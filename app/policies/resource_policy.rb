@@ -24,6 +24,6 @@ class ResourcePolicy < ApplicationPolicy
   private
 
     def actor_platform_admin?
-      actor.is_a?(User) && actor.platform_admin? && Incognito.allow_platform_admin?(actor)
+      @actor_platform_admin ||= Sighrax.platform_admin?(actor)
     end
 end

@@ -25,4 +25,12 @@ class Press < ApplicationRecord
   def to_param
     subdomain
   end
+
+  def agent_type
+    :Press
+  end
+
+  def agent_id
+    id
+  end
 end
