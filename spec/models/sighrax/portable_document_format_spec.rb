@@ -3,10 +3,10 @@
 require 'rails_helper'
 
 RSpec.describe Sighrax::PortableDocumentFormat, type: :model do
-  subject { described_class.send(:new, noid, entity) }
+  subject { described_class.send(:new, noid, data) }
 
   let(:noid) { double('noid') }
-  let(:entity) { double('entity') }
+  let(:data) { double('data') }
 
   it { is_expected.to be_a_kind_of(Sighrax::Asset) }
   it { expect(subject.resource_type).to eq :PortableDocumentFormat }

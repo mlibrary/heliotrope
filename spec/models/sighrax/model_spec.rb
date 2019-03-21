@@ -3,10 +3,10 @@
 require 'rails_helper'
 
 RSpec.describe Sighrax::Model, type: :model do
-  subject { described_class.send(:new, noid, entity) }
+  subject { described_class.send(:new, noid, data) }
 
   let(:noid) { double('noid') }
-  let(:entity) { double('entity') }
+  let(:data) { double('data') }
 
   it { is_expected.to be_a_kind_of(Sighrax::Entity) }
   it { expect(subject.resource_type).to eq :Model }
@@ -14,7 +14,7 @@ RSpec.describe Sighrax::Model, type: :model do
   it { expect(subject.parent).to be_a_kind_of(Sighrax::NullEntity) }
 
   describe '#model_type' do
-    let(:entity) { { 'has_model_ssim' => ['Model'] } }
+    let(:data) { { 'has_model_ssim' => ['Model'] } }
 
     it { expect(subject.send(:model_type)).to eq 'Model' }
   end

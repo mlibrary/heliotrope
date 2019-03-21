@@ -5,7 +5,7 @@ module Sighrax
     private_class_method :new
 
     attr_reader :noid
-    attr_reader :entity
+    attr_reader :data
 
     # Class Methods
 
@@ -36,7 +36,7 @@ module Sighrax
     end
 
     def title
-      entity['title_tesim']&.first || noid
+      data['title_tesim']&.first || noid
     end
 
     protected
@@ -47,9 +47,9 @@ module Sighrax
 
     private
 
-      def initialize(noid, entity)
+      def initialize(noid, data)
         @noid = noid
-        @entity = entity
+        @data = data
       end
   end
 

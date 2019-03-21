@@ -3,10 +3,10 @@
 require 'rails_helper'
 
 RSpec.describe Sighrax::Entity, type: :model do
-  subject { described_class.send(:new, noid, entity) }
+  subject { described_class.send(:new, noid, data) }
 
   let(:noid) { double('noid') }
-  let(:entity) { double('entity') }
+  let(:data) { double('data') }
 
   it { expect(subject.resource_type).to eq :Entity }
   it { expect(subject.resource_id).to eq noid }
@@ -14,14 +14,14 @@ RSpec.describe Sighrax::Entity, type: :model do
 
   context 'valid noid' do
     let(:noid) { 'validnoid' }
-    let(:entity) { {} }
+    let(:data) { {} }
 
-    before { allow(ActiveFedora::SolrService).to receive(:query).with("{!terms f=id}#{noid}", rows: 1).and_return([entity]) }
+    before { allow(ActiveFedora::SolrService).to receive(:query).with("{!terms f=id}#{noid}", rows: 1).and_return([data]) }
 
     it { is_expected.to be_an_instance_of(Sighrax::Entity) }
 
     context 'entity' do
-      let(:entity) { { "solr" => "document" } }
+      let(:data) { { "solr" => "document" } }
 
       it 'is expected' do
         is_expected.to be_an_instance_of(described_class)
@@ -32,7 +32,7 @@ RSpec.describe Sighrax::Entity, type: :model do
     end
 
     context 'model' do
-      let(:entity) do
+      let(:data) do
         {
           'has_model_ssim' => ['Unknown'],
           'title_tesim' => ['Unknown Entity']

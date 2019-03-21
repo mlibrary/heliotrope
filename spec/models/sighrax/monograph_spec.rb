@@ -3,10 +3,10 @@
 require 'rails_helper'
 
 RSpec.describe Sighrax::Monograph, type: :model do
-  subject { described_class.send(:new, noid, entity) }
+  subject { described_class.send(:new, noid, data) }
 
   let(:noid) { 'validnoid' }
-  let(:entity) { {} }
+  let(:data) { {} }
 
   it { is_expected.to be_a_kind_of(Sighrax::Model) }
   it { expect(subject.resource_type).to eq :Monograph }

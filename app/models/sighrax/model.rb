@@ -11,13 +11,13 @@ module Sighrax
     protected
 
       def model_type
-        entity['has_model_ssim'].first
+        data['has_model_ssim'].first
       end
 
     private
 
-      def initialize(noid, entity)
-        super(noid, entity)
+      def initialize(noid, data)
+        super(noid, data)
       end
   end
 end
