@@ -32,7 +32,7 @@ RSpec.describe Individual, type: :model do
     let(:component) { create(:component) }
 
     it 'grant product present' do
-      Greensub.subscribe(individual, product)
+      Greensub.subscribe(subscriber: individual, target: product)
       expect(individual.destroy).to be false
       expect(individual.errors.count).to eq 1
       expect(individual.errors.first[0]).to eq :base
@@ -58,13 +58,13 @@ RSpec.describe Individual, type: :model do
       expect(subject.destroy?).to be true
       expect(subject.grants?).to be false
 
-      Greensub.subscribe(subject, product)
+      Greensub.subscribe(subscriber: subject, target: product)
 
       expect(subject.update?).to be true
       expect(subject.destroy?).to be false
       expect(subject.grants?).to be true
 
-      Greensub.unsubscribe(subject, product)
+      Greensub.unsubscribe(subscriber: subject, target: product)
 
       expect(subject.update?).to be true
       expect(subject.destroy?).to be true
@@ -92,13 +92,13 @@ RSpec.describe Individual, type: :model do
 
         product_2
 
-        Greensub.subscribe(subject, product_2)
+        Greensub.subscribe(subscriber: subject, target: product_2)
         expect(subject.products.count).to eq 1
 
         product_2.components << component_b
         expect(subject.products.count).to eq 1
 
-        Greensub.subscribe(subject, product_1)
+        Greensub.subscribe(subscriber: subject, target: product_1)
         expect(subject.products.count).to eq 2
 
         product_1.components << component_b
@@ -107,10 +107,10 @@ RSpec.describe Individual, type: :model do
         clear_grants_table
         expect(subject.products.count).to eq 0
 
-        Greensub.subscribe(subject, component_b)
+        Greensub.subscribe(subscriber: subject, target: component_b)
         expect(subject.products.count).to eq 0
 
-        Greensub.subscribe(subject, component_a)
+        Greensub.subscribe(subscriber: subject, target: component_a)
         expect(subject.products.count).to eq 0
 
         clear_grants_table

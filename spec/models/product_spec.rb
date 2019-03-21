@@ -27,7 +27,7 @@ RSpec.describe Product, type: :model do
 
     it 'grants present' do
       individual = create(:individual)
-      Greensub.subscribe(individual, product)
+      Greensub.subscribe(subscriber: individual, target: product)
       expect(product.destroy).to be false
       expect(product.errors.count).to eq 1
       expect(product.errors.first[0]).to eq :base
@@ -87,28 +87,28 @@ RSpec.describe Product, type: :model do
       expect(subject.destroy?).to be true
       expect(subject.grants?).to be false
 
-      Greensub.subscribe(individual, subject)
+      Greensub.subscribe(subscriber: individual, target: subject)
       expect(subject.subscribers).to match_array([individual])
 
       expect(subject.update?).to be true
       expect(subject.destroy?).to be false
       expect(subject.grants?).to be true
 
-      Greensub.subscribe(institution, subject)
+      Greensub.subscribe(subscriber: institution, target: subject)
       expect(subject.subscribers).to match_array([individual, institution])
 
       expect(subject.update?).to be true
       expect(subject.destroy?).to be false
       expect(subject.grants?).to be true
 
-      Greensub.unsubscribe(individual, subject)
+      Greensub.unsubscribe(subscriber: individual, target: subject)
       expect(subject.subscribers).to match_array([institution])
 
       expect(subject.update?).to be true
       expect(subject.destroy?).to be false
       expect(subject.grants?).to be true
 
-      Greensub.unsubscribe(institution, subject)
+      Greensub.unsubscribe(subscriber: institution, target: subject)
       expect(subject.subscribers).to be_empty
 
       expect(subject.update?).to be true

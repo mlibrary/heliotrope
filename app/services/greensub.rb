@@ -10,17 +10,17 @@ module Greensub
       products.uniq
     end
 
-    def subscribed?(subscriber, product)
-      Authority.permits?(subscriber, permission_read, product)
+    def subscribed?(subscriber:, target:)
+      Authority.permits?(subscriber, permission_read, target)
     end
 
-    def subscribe(subscriber, product)
-      return if subscribed?(subscriber, product)
-      Authority.grant!(subscriber, permission_read, product) unless Authority.permits?(subscriber, permission_read, product)
+    def subscribe(subscriber:, target:)
+      return if subscribed?(subscriber: subscriber, target: target)
+      Authority.grant!(subscriber, permission_read, target) unless Authority.permits?(subscriber, permission_read, target)
     end
 
-    def unsubscribe(subscriber, product)
-      Authority.revoke!(subscriber, permission_read, product) if Authority.permits?(subscriber, permission_read, product)
+    def unsubscribe(subscriber:, target:)
+      Authority.revoke!(subscriber, permission_read, target) if Authority.permits?(subscriber, permission_read, target)
     end
 
     def subscriber_products(subscriber)
@@ -35,7 +35,7 @@ module Greensub
       subscribers.compact
     end
 
-    def product_include?(product, entity)
+    def product_include?(product:, entity:)
       return false unless product.present? && entity.present?
       noids = product.components.map(&:noid)
       noids.include?(entity.noid)

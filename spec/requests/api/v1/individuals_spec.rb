@@ -291,7 +291,7 @@ RSpec.describe "Individuals", type: :request do
           expect(response.content_type).to eq("application/json")
           expect(response).to have_http_status(:ok)
           expect(response.body).to be_empty
-          expect(Greensub.subscribed?(individual, product)).to be true
+          expect(Greensub.subscribed?(subscriber: individual, target: product)).to be true
         end
 
         it 'existing individual twice ok' do
@@ -300,7 +300,7 @@ RSpec.describe "Individuals", type: :request do
           expect(response.content_type).to eq("application/json")
           expect(response).to have_http_status(:ok)
           expect(response.body).to be_empty
-          expect(Greensub.subscribed?(individual, product)).to be true
+          expect(Greensub.subscribed?(subscriber: individual, target: product)).to be true
           expect(grants_table_count).to eq(1)
         end
       end
@@ -326,7 +326,7 @@ RSpec.describe "Individuals", type: :request do
       end
 
       it 'existing with products accepted' do
-        Greensub.subscribe(individual, product)
+        Greensub.subscribe(subscriber: individual, target: product)
         delete api_individual_path(individual), headers: headers
         expect(response.content_type).to eq("application/json")
         expect(response).to have_http_status(:accepted)
@@ -355,7 +355,7 @@ RSpec.describe "Individuals", type: :request do
       context 'existing product' do
         let(:product) { create(:product) }
 
-        before { Greensub.subscribe(individual, product) }
+        before { Greensub.subscribe(subscriber: individual, target: product) }
 
         it 'non existing individual not_found' do
           delete api_product_individual_path(product, 1), headers: headers
@@ -369,7 +369,7 @@ RSpec.describe "Individuals", type: :request do
           expect(response.content_type).to eq("application/json")
           expect(response).to have_http_status(:ok)
           expect(response.body).to be_empty
-          expect(Greensub.subscribed?(individual, product)).to be false
+          expect(Greensub.subscribed?(subscriber: individual, target: product)).to be false
         end
 
         it 'existing individual twice ok' do
@@ -378,7 +378,7 @@ RSpec.describe "Individuals", type: :request do
           expect(response.content_type).to eq("application/json")
           expect(response).to have_http_status(:ok)
           expect(response.body).to be_empty
-          expect(Greensub.subscribed?(individual, product)).to be false
+          expect(Greensub.subscribed?(subscriber: individual, target: product)).to be false
         end
       end
     end

@@ -28,7 +28,7 @@ RSpec.describe Component, type: :model do
     end
 
     it 'grants present' do
-      Greensub.subscribe(individual, component)
+      Greensub.subscribe(subscriber: individual, target: component)
       expect(component.destroy).to be false
       expect(component.errors.count).to eq 1
       expect(component.errors.first[0]).to eq :base
@@ -116,13 +116,13 @@ RSpec.describe Component, type: :model do
       expect(subject.destroy?).to be true
       expect(subject.grants?).to be false
 
-      Greensub.subscribe(individual, subject)
+      Greensub.subscribe(subscriber: individual, target: subject)
 
       expect(subject.update?).to be true
       expect(subject.destroy?).to be false
       expect(subject.grants?).to be true
 
-      Greensub.unsubscribe(individual, subject)
+      Greensub.unsubscribe(subscriber: individual, target: subject)
 
       expect(subject.update?).to be true
       expect(subject.destroy?).to be true

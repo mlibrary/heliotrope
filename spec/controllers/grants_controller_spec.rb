@@ -47,7 +47,7 @@ RSpec.describe GrantsController, type: :controller do
 
   describe "GET #index" do
     it "returns a success response" do
-      Greensub.subscribe(individual, product)
+      Greensub.subscribe(subscriber: individual, target: product)
       get :index, params: {}, session: valid_session
       expect(response).to be_success
       expect(response).to render_template(:index)
@@ -56,7 +56,7 @@ RSpec.describe GrantsController, type: :controller do
 
   describe "GET #show" do
     it "returns a success response" do
-      Greensub.subscribe(individual, product)
+      Greensub.subscribe(subscriber: individual, target: product)
       get :show, params: { id: grants_table_last.id }, session: valid_session
       expect(response).to be_success
       expect(response).to render_template(:show)
@@ -128,7 +128,7 @@ RSpec.describe GrantsController, type: :controller do
 
   describe "DELETE #destroy" do
     it "destroys the requested grant" do
-      Greensub.subscribe(individual, product)
+      Greensub.subscribe(subscriber: individual, target: product)
       delete :destroy, params: { id: grants_table_last.id }, session: valid_session
       expect(grants_table_count).to be_zero
       expect(response).to redirect_to(grants_url)

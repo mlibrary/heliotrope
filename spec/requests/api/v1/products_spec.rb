@@ -156,7 +156,7 @@ RSpec.describe "Products", type: :request do
       end
 
       it 'product ok' do
-        Greensub.subscribe(individual, product)
+        Greensub.subscribe(subscriber: individual, target: product)
         get api_individual_products_path(individual), headers: headers
         expect(response.content_type).to eq("application/json")
         expect(response).to have_http_status(:ok)
@@ -165,8 +165,8 @@ RSpec.describe "Products", type: :request do
       end
 
       it 'products ok' do
-        Greensub.subscribe(individual, product)
-        Greensub.subscribe(individual, new_product)
+        Greensub.subscribe(subscriber: individual, target: product)
+        Greensub.subscribe(subscriber: individual, target: new_product)
         get api_individual_products_path(individual), headers: headers
         expect(response.content_type).to eq("application/json")
         expect(response).to have_http_status(:ok)
@@ -201,7 +201,7 @@ RSpec.describe "Products", type: :request do
       end
 
       it 'product ok' do
-        Greensub.subscribe(institution, product)
+        Greensub.subscribe(subscriber: institution, target: product)
         get api_institution_products_path(institution), headers: headers
         expect(response.content_type).to eq("application/json")
         expect(response).to have_http_status(:ok)
@@ -210,8 +210,8 @@ RSpec.describe "Products", type: :request do
       end
 
       it 'products ok' do
-        Greensub.subscribe(institution, product)
-        Greensub.subscribe(institution, new_product)
+        Greensub.subscribe(subscriber: institution, target: product)
+        Greensub.subscribe(subscriber: institution, target: new_product)
         get api_institution_products_path(institution), headers: headers
         expect(response.content_type).to eq("application/json")
         expect(response).to have_http_status(:ok)
