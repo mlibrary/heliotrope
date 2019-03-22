@@ -102,6 +102,10 @@ RSpec.describe MonographCatalogController, type: :controller do
           get :index, params: { id: monograph.id }
         end
 
+        after do
+          ActiveFedora::Cleaner.clean! # Sweep away tombstone a.k.a. LDP::Gone
+        end
+
         it 'response is not successful' do
           expect(response).not_to be_success
           expect(response).not_to render_template('monograph_catalog/index')
