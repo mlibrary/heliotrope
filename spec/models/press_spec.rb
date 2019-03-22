@@ -114,4 +114,20 @@ RSpec.describe Press, type: :model do
       end
     end
   end
+
+  describe '#agent_type' do
+    subject { press.agent_type }
+
+    let(:press) { build(:press) }
+
+    it { is_expected.to eq :Press }
+  end
+
+  describe '#agent_id' do
+    subject { press.agent_id }
+
+    let(:press) { build(:press) }
+
+    it { is_expected.to be press.id }
+  end
 end
