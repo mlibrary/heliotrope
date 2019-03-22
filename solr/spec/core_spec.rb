@@ -16,16 +16,38 @@ RSpec.describe 'solr core' do
     it { expect(field_types.map(&:name)).to match_array(expected_field_type_names) }
 
     describe 'isbn' do
-      let(:isbn) { core.schema.field_type('isbn') }
-      let(:isbn_input) { ['978-0-252012345 (paper)', '978-0252023456 (hardcover)', '978-1-62820-123-9 (e-book)'] }
-      let(:isbn_indexed) { ['9780252012345', '9780252023456', '9781628201239'] }
 
-      it do
-        expect(isbn.solr_class).to eq('solr.TextField')
-        expect(isbn.position_increment_gap).to eq('100')
-        isbn_input.each_with_index do |input, index|
-          expect(isbn.index_tokens(input)).to eq([isbn_indexed[index]])
-          expect(isbn.query_tokens(input)).to eq(isbn.index_tokens(input))
+      context 'properties' do
+        let(:isbn) { core.schema.field_type('isbn') }
+
+        it do
+          expect(isbn.solr_class).to eq('solr.TextField')
+          expect(isbn.position_increment_gap).to eq('100')
+        end
+      end
+
+      context 'valid input' do
+        let(:isbn) { core.schema.field_type('isbn') }
+        let(:isbn_input) { ['978-0-252012345 (paper)', '978-0252023456 (hardcover)', '978-1-62820-123-9 (e-book)'] }
+        let(:isbn_indexed) { ['9780252012345', '9780252023456', '9781628201239'] }
+
+        it do
+          isbn_input.each_with_index do |input, index|
+            expect(isbn.index_tokens(input)).to eq([isbn_indexed[index]])
+            expect(isbn.query_tokens(input)).to eq(isbn.index_tokens(input))
+          end
+        end
+      end
+
+      context 'invalid input' do
+        let(:isbn) { core.schema.field_type('isbn') }
+        let(:isbn_input) { ['978-03-2012 (paper)', '978-025202342342356 (hardcover)', 'blank', ''] }
+
+        it do
+          isbn_input.each_with_index do |input, _index|
+            expect(isbn.index_tokens(input)).to eq([])
+            expect(isbn.query_tokens(input)).to eq([])
+          end
         end
       end
     end
