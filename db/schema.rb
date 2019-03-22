@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190318182925) do
+ActiveRecord::Schema.define(version: 20190322154748) do
 
   create_table "api_requests", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.integer "user_id"
@@ -22,6 +22,14 @@ ActiveRecord::Schema.define(version: 20190318182925) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["user_id"], name: "index_api_requests_on_user_id"
+  end
+
+  create_table "aptrust_logs", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.string "noid"
+    t.string "status"
+    t.string "repo"
+    t.string "stage"
+    t.string "action"
   end
 
   create_table "aptrust_uploads", primary_key: "noid", id: :string, limit: 9, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
@@ -689,8 +697,6 @@ ActiveRecord::Schema.define(version: 20190318182925) do
     t.index ["work_id"], name: "index_work_view_stats_on_work_id"
   end
 
-  add_foreign_key "api_requests", "users"
-  add_foreign_key "collection_type_participants", "hyrax_collection_types"
   add_foreign_key "components_products", "components"
   add_foreign_key "components_products", "products"
   add_foreign_key "curation_concerns_operations", "users"
