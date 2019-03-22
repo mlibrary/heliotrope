@@ -22,7 +22,7 @@ describe Import::CSVParser do
   describe '#attributes' do
     subject { parser.attributes }
 
-    it 'collects attributes from the CSV file' do
+    it 'collects attributes from the CSV file' do # rubocop:disable RSpec/ExampleLength
       expect(subject['title']).to eq ['The Tempest: A Subtitle']
       expect(subject['identifier']).to eq ['http://www.example.com/handle', '999.999.9999']
       expect(subject['creator']).to eq ["Shakespeare, William\nPlaywright, Mr. Uncredited (editor)"] # role was downcased
@@ -33,7 +33,9 @@ describe Import::CSVParser do
       expect(subject['files']).to eq [
         'shipwreck.jpg',
         'miranda.jpg',
+        nil,
         'ファイル.txt',
+        nil,
         'shipwreck1.jpg',
         'miranda1.jpg',
         'shipwreck2.jpg',
@@ -43,7 +45,7 @@ describe Import::CSVParser do
       ]
       expect(subject['doi']).to eq '10.3998/mpub.9999991.blah'
 
-      expect(subject['files_metadata'].count).to eq 9
+      expect(subject['files_metadata'].count).to eq 11
 
       expect(subject['files_metadata']).to eq [
         { 'title' => ['Monograph Shipwreck'],
@@ -56,21 +58,37 @@ describe Import::CSVParser do
           'doi' => '10.3998/mpub.9999992.blah' },
         { 'title' => ['Monograph Miranda'],
           'resource_type' => ['image'],
-          'license' => ['http://creativecommons.org/publicdomain/mark/1.0/'],
+          'license' => ['https://creativecommons.org/publicdomain/mark/1.0/'],
           'exclusive_to_platform' => 'yes',
           'content_type' => ['audience materials'],
           'creator' => ['Waterhouse, John William'],
           'language' => ['English', 'German'],
           'doi' => '10.3998/mpub.9999993.blah' },
+        { 'title' => ['External Bard Transcript 1'],
+          'resource_type' => ['text'],
+          'external_resource_url' => 'http://external/resource/url1',
+          'exclusive_to_platform' => 'no',
+          'content_type' => ['Interview Transcript'],
+          'creator' => ['L\'Interviewere, Bob'],
+          'keywords' => ['interview'],
+          'language' => ['English'] },
         { 'title' => ['日本語のファイル'],
           'resource_type' => ['text'],
-          'license' => ['http://creativecommons.org/publicdomain/mark/1.0/'],
+          'license' => ['https://creativecommons.org/publicdomain/mark/1.0/'],
           'exclusive_to_platform' => 'yes',
           'content_type' => ['portrait', 'illustration'],
           'language' => ['Japanese'] },
+        { 'title' => ['External Bard Transcript 2'],
+          'resource_type' => ['text'],
+          'external_resource_url' => 'http://external/resource/url2',
+          'exclusive_to_platform' => 'no',
+          'content_type' => ['Interview Transcript'],
+          'creator' => ['L\'Interviewere, Bob'],
+          'keywords' => ['interview'],
+          'language' => ['English'] },
         { 'title' => ['Section 1 Shipwreck'],
           'resource_type' => ['image'],
-          'license' => ['http://creativecommons.org/publicdomain/mark/1.0/'],
+          'license' => ['https://creativecommons.org/publicdomain/mark/1.0/'],
           'exclusive_to_platform' => 'yes',
           'content_type' => ['audience materials'],
           'creator' => ['Smith'],
@@ -79,7 +97,7 @@ describe Import::CSVParser do
           'language' => ['Russian'] },
         { 'title' => ['Section 1 Miranda'],
           'resource_type' => ['image'],
-          'license' => ['http://creativecommons.org/publicdomain/mark/1.0/'],
+          'license' => ['https://creativecommons.org/publicdomain/mark/1.0/'],
           'exclusive_to_platform' => 'yes',
           'content_type' => ['portrait'],
           'creator' => ["Waterhouse, John William\nCreator, A. Second (editor)"], # role was downcased
@@ -88,7 +106,7 @@ describe Import::CSVParser do
           'language' => ['Russian', 'German', 'French'] },
         { 'title' => ['Section 2 Shipwreck'],
           'resource_type' => ['image'],
-          'license' => ['http://creativecommons.org/publicdomain/mark/1.0/'],
+          'license' => ['https://creativecommons.org/publicdomain/mark/1.0/'],
           'exclusive_to_platform' => 'yes',
           'content_type' => ['audience materials'],
           'creator' => ['Smith'],
@@ -96,7 +114,7 @@ describe Import::CSVParser do
           'language' => ['French'] },
         { 'title' => ['Section 2 Miranda'],
           'resource_type' => ['image'],
-          'license' => ['http://creativecommons.org/publicdomain/mark/1.0/'],
+          'license' => ['https://creativecommons.org/publicdomain/mark/1.0/'],
           'exclusive_to_platform' => 'yes',
           'content_type' => ['illustration'],
           'creator' => ['Waterhouse, John William'],
@@ -104,15 +122,15 @@ describe Import::CSVParser do
           'language' => ['English'] },
         { 'title' => ['Previous Shipwreck File (Again)'],
           'resource_type' => ['image'],
-          'license' => ['http://creativecommons.org/publicdomain/mark/1.0/'],
+          'license' => ['https://creativecommons.org/publicdomain/mark/1.0/'],
           'exclusive_to_platform' => 'yes',
           'content_type' => ['portrait', 'photograph'],
           'creator' => ['Smith'],
           'section_title' => ['Act 2: Stirrin\' Up', 'Act 3: External Stuffs'],
           'language' => ['Latin'] },
-        { 'title' => ['External Bard Transcript'],
+        { 'title' => ['External Bard Transcript 3'],
           'resource_type' => ['text'],
-          'external_resource_url' => 'http://external/resource/url',
+          'external_resource_url' => 'http://external/resource/url3',
           'exclusive_to_platform' => 'no',
           'content_type' => ['Interview Transcript'],
           'creator' => ['L\'Interviewere, Bob'],

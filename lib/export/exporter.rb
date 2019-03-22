@@ -164,7 +164,9 @@ module Export
       manifest.close
 
       @monograph.ordered_members.to_a.each do |member|
-        next unless member.original_file
+        # The importer is written to exit on zero-size files. We shouldn't have any in the system in future, see:
+        # https://tools.lib.umich.edu/jira/browse/HELIO-2246
+        next if fileless_fileset(member)
 
         begin
           filename = CGI.unescape(member.original_file.file_name.first)
@@ -290,12 +292,21 @@ module Export
       def metadata_field_value(item, object_type, field) # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
         # this gets around the FileSet's label not matching the original_file's name post-versioning
         # safe navigation is important as we have fileless FileSets in production and specs
-        return item&.original_file&.file_name&.first if object_type == :file_set && field[:field_name] == 'File Name'
+        return file_name(item) if object_type == :file_set && field[:field_name] == 'File Name'
         return representative_kind_or_cover(item) if object_type == :file_set && field[:field_name] == 'Representative Kind'
         return item_url(item, object_type) if field[:object] == :universal && field[:field_name] == 'Link'
         return file_set_embed_code(item) if object_type == :file_set && field[:field_name] == 'Embed Code'
         return field_value(item, field[:metadata_name], field[:multivalued]) if field[:object] == :universal || field[:object] == object_type
         return MONO_FILENAME_FLAG if object_type == :monograph && (['label', 'section_title'].include? field[:metadata_name])
+      end
+
+      def file_name(item)
+        # ensure no entry appears in the "File Name" column for "fileless FileSets"
+        fileless_fileset(item) ? nil : item&.original_file&.file_name&.first
+      end
+
+      def fileless_fileset(file_set)
+        file_set.external_resource_url.present? || file_set.original_file.blank? || file_set&.original_file&.size&.zero?
       end
 
       def representative_kind_or_cover(item)

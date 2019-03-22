@@ -33,7 +33,8 @@ class CreateWithImportFilesActor < Hyrax::Actors::AbstractActor
       return true if files_ids.blank?
       work = env.curation_concern
       work_attributes = env.attributes.to_h.symbolize_keys
-      files = Hyrax::UploadedFile.find(files_ids)
+      # we don't want a Hyrax::UploadedFile for external resources, so they're nil here
+      files = files_ids.map { |fid| fid.blank? ? nil : Hyrax::UploadedFile.find(fid) }
       AttachImportFilesToWorkJob.perform_later(work, work_attributes, files, files_attributes)
       true
     end

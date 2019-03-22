@@ -6,7 +6,7 @@ class AttachImportFilesToWorkJob < ApplicationJob
   # @param [Hash<attributes>] work_attributes - a hash of work attributes a.k.a env.attributes
   # @param [Array<UploadedFile>] files - an array of files to attach
   # @param [Array<attributes>] files_attributes - an array of file attributes to apply
-  def perform(work, work_attributes, files, files_attributes)
+  def perform(work, work_attributes, files, files_attributes) # rubocop:disable Metrics/CyclomaticComplexity
     validate_files!(files)
     user = User.find_by_user_key(work.depositor) # rubocop:disable Rails/DynamicFindBy # BUG? file depositor ignored
     work_visibility_attributes = visibility_attributes(work_attributes)
@@ -24,10 +24,13 @@ class AttachImportFilesToWorkJob < ApplicationJob
       end
 
       actor.update_metadata(files_attributes[i])
-      actor.create_content(file)
+      file.present? ? actor.create_content(file) : external_resource_label_title(f)
       actor.attach_to_work(work)
+      # external resources are missing out on an asynchronous save from jobs kicked off...
+      # in create_content which amazingly *need* to happen after attach_to_work.
+      f.save if file.blank?
       actor.file_set.permissions_attributes = work_permissions
-      file.update(file_set_uri: actor.file_set.uri)
+      file.update(file_set_uri: actor.file_set.uri) if file.present?
 
       next if representative_kind.blank?
       FeaturedRepresentative.where(monograph_id: work.id, file_set_id: f.id).destroy_all
@@ -48,6 +51,8 @@ class AttachImportFilesToWorkJob < ApplicationJob
 
     def validate_files!(uploaded_files)
       uploaded_files.each do |uploaded_file|
+        # we don't want a Hyrax::UploadedFile created for external resources, they're nil
+        next if uploaded_file.nil?
         next if uploaded_file.is_a? Hyrax::UploadedFile
         raise ArgumentError, "Hyrax::UploadedFile required, but #{uploaded_file.class} received: #{uploaded_file.inspect}"
       end
@@ -58,5 +63,10 @@ class AttachImportFilesToWorkJob < ApplicationJob
       monograph.representative_id = cover_noid
       monograph.thumbnail_id = cover_noid
       monograph.save!
+    end
+
+    def external_resource_label_title(file_set)
+      file_set.label = file_set.external_resource_url || '< external link >'
+      file_set.title = [file_set.label] if file_set.title.blank?
     end
 end
