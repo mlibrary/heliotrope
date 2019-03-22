@@ -189,6 +189,7 @@
       <analyzer>
         <tokenizer class="solr.KeywordTokenizerFactory"/>
         <filter class="solr.PatternReplaceTokenFilterFactory" pattern="[^\dXx]" replacement=""/>
+        <filter class="solr.LengthFilterFactory" min="10" max="13"/>
         <filter class="solr.LowerCaseFilterFactory"/>
       </analyzer>
     </fieldType>
