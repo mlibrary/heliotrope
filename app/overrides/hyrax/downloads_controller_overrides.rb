@@ -64,8 +64,7 @@ Hyrax::DownloadsController.class_eval do
     end
 
     def allow_download?
-      # should match 'show button' allow_download? logic in file_set_presenter
-      presenter.allow_download? || current_user&.platform_admin? || current_user&.can?(:edit, params[:id])
+      EntityPolicy.new(current_actor, Sighrax.factory(params[:id])).download?
     end
 
     def thumbnail?
