@@ -170,12 +170,11 @@ module Export
 
         begin
           filename = CGI.unescape(member.original_file.file_name.first)
-          file = File.new(File.join(path, filename), "wb")
-          file.write(member.original_file.content.force_encoding("utf-8"))
+          File.open File.join(path, filename), "wb" do |dest|
+            member.original_file.stream.each { |chunk| dest.write(chunk) }
+          end
         rescue NoMemoryError => e
           puts "APTRUST:lib/export/exporter.rb method extract failed with NoMemoryError: #{e}"
-        ensure
-          file.close
         end
       end
     end
