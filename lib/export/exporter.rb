@@ -302,7 +302,7 @@ module Export
 
       def file_name(item)
         # ensure no entry appears in the "File Name" column for "fileless FileSets"
-        fileless_fileset(item) ? nil : item&.original_file&.file_name&.first
+        fileless_fileset(item) ? nil : CGI.unescape(item&.original_file&.file_name&.first)
       end
 
       def fileless_fileset(file_set)
