@@ -61,21 +61,15 @@ module Export
       File.open(File.join(bag.bag_dir, 'aptrust-info.txt'), "w") do |io|
         ti = (@monograph.title.blank? || @monograph.title.empty?) ? '' : @monograph.title.first
         io.puts "Title: #{ti}"
-
         io.puts "Access: Institution"
         io.puts "Storage-Option: Standard"
-
-        des = (@monograph.description.blank? || @monograph.description.empty?) ? 'Description not available' : @monograph.description.first
-        io.puts "Description: #{des}"
-
+        io.puts "Description: This bag contains all of the data and metadata related to a Monograph which has been exported from the Fulcrum publishing platform hosted at https://www.fulcrum.org. The data folder contains a Fulcrum manifest in the form of a CSV file named with the NOID assigned to this Monograph in the Fulcrum repository. This manifest is exported directly from Fulcrum's heliotrope application (https://github.com/mlibrary/heliotrope) and can be used for re-import as well. The first two rows contain column headers and human-readable field descriptions, respectively.{{ The final row contains descriptive metadata for the Monograph; other rows contain metadata for Assets, which may be components of the Monograph or material supplemental to it.}}"
         pr = (@monograph.press.blank? || @monograph.press.empty?) ? '' : @monograph.press
         io.puts "Press: #{pr}"
-
         # I'm assuming Fulcrum will have a different type of music object at some point
+        # TO DO: Should be using model from solr data for Type
         io.puts "Type: monograph"
       end
-
-      puts "About to call extract for bag #{bag_name}"
 
       # put fulcrum files into data directory
       extract("#{bag.bag_dir}/data/")
@@ -92,8 +86,6 @@ module Export
       else
         Dir.chdir(Settings.aptrust_bags_path)
       end
-
-      puts "About to call minitar for bag #{bag_name}"
 
       begin
         Minitar.pack(bag_name, File.open("#{bag_name}.tar", 'wb'))
@@ -241,7 +233,7 @@ module Export
       begin
         record = AptrustUpload.find_by!(noid: @monograph.id)
       rescue ActiveRecord::RecordNotFound => e
-        puts "APTRUST: In exporter with monograph #{@monograph.id}, find_record error is #{e} "
+        puts "APTRUST: In exporter with monograph #{@monograph.id}, update_aptrust_db find_record error is #{e} "
         return
       end
 
@@ -265,7 +257,7 @@ module Export
           date_confirmed: nil
         )
       rescue ActiveRecord::RecordInvalid => e
-        puts "APTRUST: In exporter with monograph #{@monograph.id}, record.update error is #{e}"
+        puts "APTRUST: In exporter with monograph #{@monograph.id}, update_aptrust_db record.update error is #{e}"
       end
     end
 
