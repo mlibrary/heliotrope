@@ -121,14 +121,6 @@ RSpec.describe Hyrax::FileSetPresenter do
     end
   end
 
-  describe '#subdomain' do
-    let(:fileset_doc) { SolrDocument.new(id: 'fs', press_tesim: 'yellow') }
-
-    it "returns the press subdomain" do
-      expect(presenter.subdomain).to eq 'yellow'
-    end
-  end
-
   describe '#label' do
     let(:file_set) { create(:file_set, label: 'filename.tif') }
     let(:fileset_doc) { SolrDocument.new(file_set.to_solr) }

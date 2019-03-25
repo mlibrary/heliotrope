@@ -47,18 +47,6 @@ module Hyrax
              :label, :redirect_to, :has_model, :date_modified, :visibility,
              to: :solr_document
 
-    def subdomain
-      Array(solr_document['press_tesim']).first
-    end
-
-    def press
-      Array(solr_document['press_name_ssim']).first
-    end
-
-    def press_url
-      Press.find_by(subdomain: subdomain).press_url
-    end
-
     def monograph_id
       Array(solr_document['monograph_id_ssim']).first
     end
