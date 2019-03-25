@@ -1035,6 +1035,351 @@ $lever-black-80: #342f2e;
 }
 ///////////////////////////////////////////////
 //
+// Maize Books
+//
+///////////////////////////////////////////////
+// colors
+$maize-brand-color: #002e5e;
+$maize-accent-color: #e4e1df;
+
+$maize-accent-footer: #989c97;
+
+$maize-accent-link: #00274c;
+
+$maize-grey-1: #e5e5e5;
+$maize-grey-2: #d5d6d2;
+$maize-grey-3: #989c97;
+$maize-grey-4: #655a52;
+$maize-yellow: #ffcb05;
+$maize-blue: #40658f;
+$maize-blue-2: #1d3160;
+$maize-white: #fff;
+$maize-black-80: #342f2e;
+
+// typography
+@mixin benton {
+  font-family: benton-sans, sans-serif;
+}
+
+@mixin synthese {
+  font-family: synthese, sans-serif;
+}
+
+.maizebooks {
+
+  // typography
+  @include benton;
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5 {
+    @include benton;
+    font-weight: 700;
+  }
+
+  // links
+  a {
+    color: $maize-accent-link;
+  }
+
+  a:hover,
+  a:active,
+  a:focus {
+    color: $maize-blue;
+    text-decoration: underline;
+  }
+
+  // buttons
+  .btn, .btn-default {
+    @include benton;
+    background-color: $maize-brand-color;
+    border-color: $maize-accent-link;
+    color: $maize-white;
+  }
+
+  .btn:hover,
+  .btn:active,
+  .btn-default:hover,
+  .btn-default:active {
+    background-color: $maize-white;
+    color: $maize-brand-color;
+    text-decoration: none;
+  }
+
+  // navigation menu
+  .navbar-default .navbar-nav > .open > a,
+  .navbar-default .navbar-nav > .open > a:hover,
+  .navbar-default .navbar-nav > .open > a:focus {
+    background-color: $maize-white;
+  }
+
+  #brand-bar {
+    background-color: $maize-brand-color;
+    border-color: $maize-brand-color;
+
+    .navbar-brand {
+      color: $maize-white;
+      @include synthese;
+      font-weight: 300;
+      text-transform: uppercase;
+      letter-spacing: unset;
+      font-size: 2.3em;
+      -o-transition: .3s; 
+        -ms-transition: .3s; 
+        -moz-transition: .3s; 
+        -webkit-transition: .3s;
+        transition: .3s;
+    }
+
+    .navbar-brand:hover,
+    .navbar-brand:active,
+    .navbar-brand:focus {
+      color: $maize-yellow;
+      text-decoration: none;
+    }
+
+    .navbar-nav {
+      a#add-content,
+      a.login,
+      a.user-display-name,
+      a.language-dropdown {
+          color: $maize-white;
+      }
+
+      .open > a,
+      .open > a:focus,
+      .open > a:hover,
+      .open > a#add-content {
+        background-color: $maize-white;
+        color: $maize-brand-color;
+      }
+    }
+
+    button.search-submit {
+      background-color: $maize-grey-2;
+      border-color: $maize-grey-1;
+      color: $maize-brand-color;
+    }
+
+  }
+
+  // breadcrumbs
+  .breadcrumbs {
+    @include benton;
+  }
+
+  // press catalog
+
+  // jumbotron
+  .jumbotron {
+    background-color: $maize-grey-1;
+    @include benton;
+    font-weight: 300;
+
+    padding-top: 20px;
+    padding-bottom: 20px;
+
+    .container {
+      margin-top: 1em;
+    }
+
+    p.lead {
+      font-size: 20px;
+      a {
+        text-decoration: underline;
+      }
+    }
+
+    p.publisher-info a {
+      text-decoration: underline;
+    }
+
+    .logo {
+
+      img {
+        display: none;
+      }
+
+    }
+
+  }
+
+  // monograph catalog
+  #sort-dropdown .dropdown-toggle, #per_page-dropdown .dropdown-toggle {
+    background-color: $maize-brand-color;
+    color: $maize-white;
+  }
+
+  #sort-dropdown .dropdown-toggle,
+  #per_page-dropdown .dropdown-toggle {
+    background-color: $maize-brand-color;
+    color: $maize-white;
+    border-color: $maize-accent-link;
+
+  }
+
+  #sort-dropdown .dropdown-toggle:hover,
+  #per_page-dropdown .dropdown-toggle:hover,
+  #sort-dropdown .dropdown-toggle:active,
+  #per_page-dropdown .dropdown-toggle:active {
+    background-color: $maize-white;
+    color: $maize-brand-color;
+  }
+
+  #sort-dropdown .dropdown-toggle .caret,
+  #per_page-dropdown .dropdown-toggle .caret {
+    color: $maize-white;
+  }
+
+  #sort-dropdown .dropdown-toggle:hover .caret,
+  #per_page-dropdown .dropdown-toggle:hover .caret,
+  #sort-dropdown .dropdown-toggle:active .caret,
+  #per_page-dropdown .dropdown-toggle:active .caret {
+    color: $maize-brand-color;
+  }
+
+  // monograph
+  .monograph {
+    .documentHeader {
+      p {
+        @include benton;
+      }
+    }
+
+    .authors, .copyright {
+      @include benton;
+    }
+  }
+
+  // pagination
+  .page_links {
+    @include benton;
+  }
+
+  .pagination {
+    @include benton;
+     li a, li span {
+       color: $maize-white;
+       background-color: $maize-brand-color;
+     }
+
+     .active>a,
+     .active>a:hover,
+     .active>a:focus,
+     .active>span,
+     .active>span:hover,
+     .active>span:focus {
+       background-color: $maize-white;
+       border-color: $maize-grey-1;
+       color: $maize-brand-color;
+     }
+  }
+
+  // assets
+  .asset-navigation {
+    @include benton;
+  }
+
+  .asset {
+    ul.nav-tabs li {
+      @include benton;
+    }
+  }
+
+  //footer
+  footer {
+    a,
+    a:hover,
+    a:active {
+      color: $maize-white;
+    }
+    .press-block-a,
+    .press-block-b {
+      background-color:  $maize-brand-color;
+
+      a,
+      a:hover,
+      a:active {
+        color: $maize-white;
+      }
+
+      img {
+        width: 110px;
+        margin-top: 30px;
+      }
+
+      p {
+        @include benton;
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: unset;
+        
+        a.brand {
+          display:none;
+        }
+      }
+
+    }
+    .press-block-c {
+      background-color: $maize-grey-1;
+      color: $maize-brand-color;
+      @include synthese;
+      text-transform: uppercase;
+    }
+    .platform {
+      background-color: $maize-black-80;
+    }
+  }
+
+  // EPUB Reader
+  #epub {
+    font-family: benton-sans, arial, sans-serif !important;
+  }
+
+  #reader {
+    @include benton;
+
+    .cozy-control .cozy-h1 {
+      @include benton;
+      font-size: 1.5em;
+    }
+
+    .cozy-container input[type="text"] {
+      font-family: benton-sans, arial, sans-serif !important;
+    }
+
+    .button {
+      @include epub-button-background-color($maize-brand-color,$maize-blue,$maize-white);
+      @include benton;
+    }
+
+    .button--lg {
+      @include epub-button-background-color($maize-brand-color,$maize-blue,$maize-white);
+      @include benton;
+    }
+
+    .button--sm {
+      @include epub-button-background-color($maize-brand-color,$maize-blue,$maize-white);
+      @include benton;
+    }
+
+    i[class^='icon-chevron-'] {
+      @include epub-prev-next-color($maize-brand-color);
+      transition: 0.2s ease-in;
+    }
+
+    i[class^='icon-chevron-']:hover {
+      @include epub-hover-prev-next-color($maize-brand-color);
+      transition: 0.2s ease-in;
+    }
+
+  }
+
+}
+///////////////////////////////////////////////
+//
 // University of Michigan Press
 //
 ///////////////////////////////////////////////
