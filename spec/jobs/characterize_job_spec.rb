@@ -72,6 +72,7 @@ describe CharacterizeJob do
 
       expect(file_set.original_file.height).to eq []
       expect(file_set.original_file.width).to eq []
+      expect(file_set.original_file.original_checksum).to eq []
     end
   end
 
