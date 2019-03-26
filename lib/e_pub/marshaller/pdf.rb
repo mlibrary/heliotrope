@@ -41,6 +41,27 @@ module EPub
         doc
       end
 
+      def watermark!(doc, text)
+        t1 = Process.clock_gettime(Process::CLOCK_MONOTONIC)
+        doc.create_stamp('WATERMARK') do
+          doc.fill_color '555555'
+          doc.stroke_color '555555'
+          doc.font "Times-Roman"
+          doc.transparent(0.75) do
+            doc.text_box text, size: 12, width: 300, height: 90, align: :left, valign: :center, at: [0, 50]
+            doc.rectangle [-10, 45], 320, 80
+            doc.stroke
+          end
+        end
+        doc.page_count.times do |i|
+          doc.go_to_page i
+          doc.stamp 'WATERMARK'
+        end
+        t2 = Process.clock_gettime(Process::CLOCK_MONOTONIC)
+        Rails.logger.debug("[PDF WARERMARK] took #{t2 - t1} seconds")
+        doc
+      end
+
       private
 
         def initialize(publication, interval = EPub::Interval.null_object)

@@ -12,7 +12,6 @@ class EPubsController < CheckpointController
     @back_link = params[:publisher].present? ? URI.join(main_app.root_url, params[:publisher]).to_s : main_app.monograph_catalog_url(@presenter.monograph_id)
     @subdomain = @presenter.monograph.subdomain
     @search_url = main_app.epub_search_url(@noid, q: '').gsub!(/locale=en&/, '')
-    @monograph_presenter = @presenter.parent
 
     @ebook_download_presenter = EBookDownloadPresenter.new(@monograph_presenter, current_ability, current_actor)
 
@@ -109,13 +108,31 @@ class EPubsController < CheckpointController
 
     rendered_pdf = Rails.cache.fetch(pdf_cache_key(@noid, interval.title), expires_in: 30.days) do
       pdf = EPub::Marshaller::PDF.from_publication_interval(publication, interval)
-      pdf.document.render
+      pdf.watermark!(pdf.document, watermark_text).render
     end
     CounterService.from(self, @presenter).count(request: 1, section_type: "Chapter", section: interval.title) if rendered_pdf.present?
     send_data rendered_pdf, type: "application/pdf", disposition: "inline"
   rescue StandardError => e
     Rails.logger.error "EPubsController.download_interval raised #{e}"
     head :no_content
+  end
+
+  def watermark_text
+    Prawn::Font::AFM.hide_m17n_warning = true
+    author = @monograph_presenter.creator[0] || ''
+    title = @monograph_presenter.title || ''
+    date = @monograph_presenter.date_created[0] || ''
+    publisher = @presenter.parent.publisher[0] || ''
+    "#{author}; #{title}\n" \
+    "Copyright © #{date}. #{publisher}. All rights reserved.\n" \
+    "Downloaded on behalf of #{watermark_origin}"
+  end
+
+  def watermark_origin
+    origin = Incognito.sudo_actor_institution(current_actor)&.name
+    origin ||= current_institutions.join(', ') if current_institutions.count.positive?
+    origin ||= request.remote_ip
+    origin
   end
 
   def share_link
@@ -153,6 +170,7 @@ class EPubsController < CheckpointController
       @share_link = params[:share] || session[:share_link]
       session[:share_link] = @share_link
       @policy = EPubPolicy.new(current_actor, entity, valid_share_link?)
+      @monograph_presenter = @presenter.parent
     end
 
     def log_share_link_use
@@ -204,7 +222,8 @@ class EPubsController < CheckpointController
 
     def pdf_cache_key(id, chapter_title)
       "pdf:" +
-        Digest::MD5.hexdigest(chapter_title) +
+        Digest::MD5.hexdigest(chapter_title) + '-' +
+        Digest::MD5.hexdigest(watermark_origin) +
         id +
         @presenter.date_modified.to_s
     end
