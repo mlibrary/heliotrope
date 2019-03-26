@@ -162,12 +162,11 @@ module Export
 
         begin
           filename = CGI.unescape(member.original_file.file_name.first)
-          file = File.new(File.join(path, filename), "wb")
-          file.write(member.original_file.content.force_encoding("utf-8"))
+          File.open File.join(path, filename), "wb" do |dest|
+            member.original_file.stream.each { |chunk| dest.write(chunk) }
+          end
         rescue NoMemoryError => e
           puts "APTRUST:lib/export/exporter.rb method extract failed with NoMemoryError: #{e}"
-        ensure
-          file.close
         end
       end
     end
@@ -294,7 +293,7 @@ module Export
 
       def file_name(item)
         # ensure no entry appears in the "File Name" column for "fileless FileSets"
-        fileless_fileset(item) ? nil : item&.original_file&.file_name&.first
+        fileless_fileset(item) ? nil : CGI.unescape(item&.original_file&.file_name&.first)
       end
 
       def fileless_fileset(file_set)

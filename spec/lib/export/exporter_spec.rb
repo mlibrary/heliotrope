@@ -71,6 +71,7 @@ describe Export::Exporter do
     let(:file1) { create(:file_set, doi: 'mpub.222222222.blah') }
     let(:file2) { create(:file_set) }
     let(:file3) { create(:file_set) }
+    let(:file4) { create(:file_set) }
 
     let(:original_file) do
       Hydra::PCDM::File.new do |f|
@@ -79,6 +80,14 @@ describe Export::Exporter do
         f.mime_type = 'image/tiff'
         f.width = 200
         f.height = 150
+      end
+    end
+
+    let(:original_file_non_ascii) do
+      Hydra::PCDM::File.new do |f|
+        f.content = File.open(File.join(fixture_path, 'csv', 'import_sections', 'ファイル.txt'))
+        f.original_name = 'ファイル.txt'
+        f.mime_type = 'application/txt'
       end
     end
 
@@ -91,6 +100,7 @@ describe Export::Exporter do
         #{file1.id},,"=HYPERLINK(""#{Rails.application.routes.url_helpers.hyrax_file_set_url(file1)}"")",,#{file1.title.first},#{file1.resource_type.first},,,,,,,,,,,,,,,,,,,,,,,#{file1.sort_date},,,,,,,,,,,,,,,https://doi.org/mpub.222222222.blah,,,
         #{file2.id},,"=HYPERLINK(""#{Rails.application.routes.url_helpers.hyrax_file_set_url(file2)}"")",,#{file2.title.first},#{file2.resource_type.first},,,,,,,,,,,,,,,,,,,,,,,#{file2.sort_date},,,,,,,,,,,,,,,,,,cover
         #{file3.id},kitty.tif,"=HYPERLINK(""#{Rails.application.routes.url_helpers.hyrax_file_set_url(file3)}"")","#{file3_presenter.embed_code}",#{file3.title.first},#{file3.resource_type.first},,,,,,,,,,,,,,,,,,,,,,,#{file3.sort_date},,,,,,,,,,,,,,,,,,epub
+        #{file4.id},ファイル.txt,"=HYPERLINK(""#{Rails.application.routes.url_helpers.hyrax_file_set_url(file4)}"")",,#{file4.title.first},#{file4.resource_type.first},,,,,,,,,,,,,,,,,,,,,,,#{file4.sort_date},,,,,,,,,,,,,,,,,,
         #{monograph.id},://:MONOGRAPH://:,"=HYPERLINK(""#{Rails.application.routes.url_helpers.hyrax_monograph_url(monograph)}"")",,#{monograph.title.first},,,,,,,,,,,,,,,,,,,,,"First, Ms Joan; Second, Mr Tom","Doe, Jane; Joe, G.I.",,,,,,,,,,,,,://:MONOGRAPH://:,,,,https://doi.org/mpub.111111111.blah,,,
       eos
     end
@@ -98,9 +108,12 @@ describe Export::Exporter do
     before do
       file3.original_file = original_file
       file3.save!
+      file4.original_file = original_file_non_ascii
+      file4.save!
       monograph.ordered_members << file1
       monograph.ordered_members << file2
       monograph.ordered_members << file3
+      monograph.ordered_members << file4
       monograph.representative_id = file2.id
       monograph.thumbnail_id = file2.id
       monograph.save!
