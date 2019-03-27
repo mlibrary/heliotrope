@@ -2,8 +2,9 @@
 
 # Config for apt_upload and apt_download
 DownloadDir: Settings.APTrustRestore
+AptrustApiUrl: "ADD_DEMO_OR_REPO_URL_HERE"
 AptrustApiUser: "USER@umich.edu"
-AptrustApiKey: "ADD_USER_API_KEY_HERE"
+AptrustApiKey: "ADD_USER_DEMO_OR_REPO_API_KEY_HERE"
 
 Bucket: "s3 bucket"
 BucketRegion: "s3 bucket region"
