@@ -5,13 +5,13 @@ require 'rails_helper'
 RSpec.describe Sighrax::Model, type: :model do
   subject { described_class.send(:new, noid, data) }
 
-  let(:noid) { double('noid') }
-  let(:data) { double('data') }
+  let(:noid) { 'validnoid' }
+  let(:data) { {} }
 
+  it { is_expected.to be_an_instance_of(described_class) }
   it { is_expected.to be_a_kind_of(Sighrax::Entity) }
   it { expect(subject.resource_type).to eq :Model }
-  it { expect(subject.resource_id).to eq noid }
-  it { expect(subject.parent).to be_a_kind_of(Sighrax::NullEntity) }
+  it { expect { subject.send(:model_type) }.to raise_error(NoMethodError, "undefined method `first' for nil:NilClass") }
 
   describe '#model_type' do
     let(:data) { { 'has_model_ssim' => ['Model'] } }

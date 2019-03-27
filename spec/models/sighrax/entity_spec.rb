@@ -3,48 +3,40 @@
 require 'rails_helper'
 
 RSpec.describe Sighrax::Entity, type: :model do
-  subject { described_class.send(:new, noid, data) }
+  context 'null entity' do
+    subject { described_class.null_entity }
 
-  let(:noid) { double('noid') }
-  let(:data) { double('data') }
+    it { is_expected.to be_an_instance_of(Sighrax::NullEntity) }
+    it { expect(subject.noid).to eq 'null_noid' }
+    it { expect(subject.data).to eq({}) }
+    it { expect(subject.valid?).to be false }
+    it { expect(subject.resource_type).to eq :NullEntity }
+    it { expect(subject.resource_id).to eq 'null_noid' }
+    it { expect(subject.resource_token).to eq "#{subject.resource_type}:#{subject.resource_id}" }
+    it { expect(subject.parent).to be_an_instance_of(Sighrax::NullEntity) }
+    it { expect(subject.title).to eq 'null_noid' }
+  end
 
-  it { expect(subject.resource_type).to eq :Entity }
-  it { expect(subject.resource_id).to eq noid }
-  it { expect(subject.resource_token).to eq "#{subject.resource_type}:#{subject.resource_id}" }
+  context 'entity' do
+    subject(:entity) { described_class.send(:new, noid, data) }
 
-  context 'valid noid' do
     let(:noid) { 'validnoid' }
     let(:data) { {} }
 
-    before { allow(ActiveFedora::SolrService).to receive(:query).with("{!terms f=id}#{noid}", rows: 1).and_return([data]) }
+    it { is_expected.to be_an_instance_of(described_class) }
+    it { expect(subject.noid).to eq noid }
+    it { expect(subject.data).to eq data }
+    it { expect(subject.valid?).to be true }
+    it { expect(subject.resource_type).to eq :Entity }
+    it { expect(subject.resource_id).to eq noid }
+    it { expect(subject.resource_token).to eq "#{subject.resource_type}:#{subject.resource_id}" }
+    it { expect(subject.parent).to be_an_instance_of(Sighrax::NullEntity) }
+    it { expect(subject.title).to eq noid }
 
-    it { is_expected.to be_an_instance_of(Sighrax::Entity) }
+    context 'with title' do
+      let(:data) { { 'title_tesim' => ['Title'] } }
 
-    context 'entity' do
-      let(:data) { { "solr" => "document" } }
-
-      it 'is expected' do
-        is_expected.to be_an_instance_of(described_class)
-        expect(subject.valid?).to be true
-        expect(subject.noid).to eq noid
-        expect(subject.title).to eq noid
-      end
-    end
-
-    context 'model' do
-      let(:data) do
-        {
-          'has_model_ssim' => ['Unknown'],
-          'title_tesim' => ['Unknown Entity']
-        }
-      end
-
-      it 'is expected' do
-        is_expected.to be_an_instance_of(described_class)
-        expect(subject.valid?).to be true
-        expect(subject.noid).to eq noid
-        expect(subject.title).to eq 'Unknown Entity'
-      end
+      it { expect(subject.title).to eq 'Title' }
     end
   end
 end

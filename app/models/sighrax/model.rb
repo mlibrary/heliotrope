@@ -4,10 +4,6 @@ module Sighrax
   class Model < Entity
     private_class_method :new
 
-    def parent
-      Entity.null_entity
-    end
-
     protected
 
       def model_type
