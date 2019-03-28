@@ -9,8 +9,7 @@ module Authority
     # Agent
 
     def agent_grants?(agent)
-      return true unless authority.which(agent, Checkpoint::Credential::Permission.new(:read)).empty?
-      false
+      authority.which(agent, :read).any?
     end
 
     def agent(agent_type, agent_id) # rubocop:disable Metrics/CyclomaticComplexity
@@ -34,8 +33,7 @@ module Authority
     # Credential
 
     def credential_grants?(credential)
-      return true unless authority.who(credential, Checkpoint::Resource.all).empty?
-      false
+      authority.who(credential, Checkpoint::Resource.all).any?
     end
 
     def permission(permission)
@@ -56,8 +54,7 @@ module Authority
     # Resource
 
     def resource_grants?(resource)
-      return true unless authority.who(Checkpoint::Credential::Permission.new(:read), resource).empty?
-      false
+      authority.who(:read, resource).any?
     end
 
     def resource(resource_type, resource_id) # rubocop:disable Metrics/CyclomaticComplexity

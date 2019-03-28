@@ -1,28 +1,28 @@
 # frozen_string_literal: true
 
-class GrantsController < ApplicationController
-  before_action :set_grant, only: %i[show destroy]
+class RantsController < ApplicationController
+  before_action :set_rant, only: %i[show destroy]
 
   def index
-    @grants = Checkpoint::DB::Grant.all
+    @rants = Checkpoint::DB::Grant.all
   end
 
   def show; end
 
   def new
-    @grant = Grant.new
+    @rant = Rant.new
   end
 
   def create # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
-    agent_type = grant_params[:agent_type]&.to_sym
-    agent_id = grant_params[:agent_id] if grant_params[:agent_id].present?
-    agent_id ||= (agent_type == :any) ? :any : grant_params["agent_#{agent_type.to_s.downcase}_id"]
-    credential_type = grant_params[:credential_type]&.to_sym
-    credential_id = grant_params[:credential_id] if grant_params[:credential_id].present?
-    credential_id ||= (grant_params[:credential_id] == 'any') ? 'any' : grant_params["credential_#{credential_type.to_s.downcase}_id"]
-    resource_type = grant_params[:resource_type]&.to_sym
-    resource_id = grant_params[:resource_id] if grant_params[:resource_id].present?
-    resource_id ||= (resource_type == :any) ? :any : grant_params["resource_#{resource_type.to_s.downcase}_id"]
+    agent_type = rant_params[:agent_type]&.to_sym
+    agent_id = rant_params[:agent_id] if rant_params[:agent_id].present?
+    agent_id ||= (agent_type == :any) ? :any : rant_params["agent_#{agent_type.to_s.downcase}_id"]
+    credential_type = rant_params[:credential_type]&.to_sym
+    credential_id = rant_params[:credential_id] if rant_params[:credential_id].present?
+    credential_id ||= (rant_params[:credential_id] == 'any') ? 'any' : rant_params["credential_#{credential_type.to_s.downcase}_id"]
+    resource_type = rant_params[:resource_type]&.to_sym
+    resource_id = rant_params[:resource_id] if rant_params[:resource_id].present?
+    resource_id ||= (resource_type == :any) ? :any : rant_params["resource_#{resource_type.to_s.downcase}_id"]
 
     if resource_type == :Entity
       entity = Sighrax.factory(resource_id)
@@ -51,41 +51,41 @@ class GrantsController < ApplicationController
                 end
               end
 
-    @grant = Grant.new
-    @grant.agent_type = grant_params[:agent_type]
-    @grant.agent_id = grant_params[:agent_id]
-    @grant.credential_type = grant_params[:credential_type]
-    @grant.credential_id = grant_params[:credential_id]
-    @grant.resource_type = grant_params[:resource_type]
-    @grant.resource_id = grant_params[:resource_id]
+    @rant = Rant.new
+    @rant.agent_type = rant_params[:agent_type]
+    @rant.agent_id = rant_params[:agent_id]
+    @rant.credential_type = rant_params[:credential_type]
+    @rant.credential_id = rant_params[:credential_id]
+    @rant.resource_type = rant_params[:resource_type]
+    @rant.resource_id = rant_params[:resource_id]
 
     respond_to do |format|
       if success
-        format.html { redirect_to grants_path, notice: 'Grant was successfully created.' }
+        format.html { redirect_to rants_path, notice: 'Grant was successfully created.' }
         format.json { render :show, status: :created, location: @grant }
       else
         format.html { render :new }
-        format.json { render json: @grant.errors, status: :unprocessable_entity }
+        format.json { render json: @rant.errors, status: :unprocessable_entity }
       end
     end
   end
 
   def destroy
-    @grant.delete
+    @rant.delete
     respond_to do |format|
-      format.html { redirect_to grants_url, notice: 'Grant was successfully destroyed.' }
+      format.html { redirect_to rants_url, notice: 'Grant was successfully destroyed.' }
       format.json { head :no_content }
     end
   end
 
   private
 
-    def set_grant
-      @grant = Checkpoint::DB::Grant.where(id: params[:id]).first
+    def set_rant
+      @rant = Checkpoint::DB::Grant.where(id: params[:id]).first
     end
 
-    def grant_params
-      params.require(:grant).permit(
+    def rant_params
+      params.require(:rant).permit(
         :agent_type,
         :agent_id, :agent_guest_id, :agent_user_id, :agent_individual_id, :agent_institution_id,
         :credential_type,

@@ -2,13 +2,13 @@
 
 require 'rails_helper'
 
-RSpec.describe "Grants", type: :request do
-  let(:grant) { create(:grant) }
+RSpec.describe "Rants", type: :request do
+  let(:rant) { create(:rant) }
 
   context 'anonymous' do
-    describe "GET /grants" do
+    describe "GET /rants" do
       it do
-        get grants_path
+        get rants_path
         expect(response).to have_http_status(:found)
         expect(response).to redirect_to(presses_path)
       end
@@ -21,9 +21,9 @@ RSpec.describe "Grants", type: :request do
     context 'unauthorized' do
       let(:current_user) { create(:user) }
 
-      describe "GET /grants" do
+      describe "GET /rants" do
         it do
-          get grants_path
+          get rants_path
           expect(response).to have_http_status(:found)
           expect(response).to redirect_to(presses_path)
         end
@@ -33,15 +33,15 @@ RSpec.describe "Grants", type: :request do
     context 'authorized' do
       let(:current_user) { create(:platform_admin) }
 
-      describe "GET /grants" do
+      describe "GET /rants" do
         it do
-          get grants_path
+          get rants_path
           expect(response).to have_http_status(:ok)
           expect(response).to render_template(:index)
         end
 
         context 'filtering' do
-          subject { get "/grants?resource_type=Product" }
+          subject { get "/rants?resource_type=Product" }
 
           it do
             expect { subject }.not_to raise_error

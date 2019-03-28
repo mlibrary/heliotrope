@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe GrantsController, type: :controller do
+RSpec.describe RantsController, type: :controller do
   # This should return the minimal set of attributes required to create a valid
   # Grant. As you add validations to Grant,
   # be sure to adjust the attributes here as well.
@@ -74,18 +74,18 @@ RSpec.describe GrantsController, type: :controller do
   describe "POST #create" do
     context "with valid params" do
       it "creates a new Grant" do
-        post :create, params: { grant: valid_attributes }, session: valid_session
+        post :create, params: { rant: valid_attributes }, session: valid_session
         expect(grants_table_count).to eq(1)
-        expect(response).to redirect_to(grants_url)
+        expect(response).to redirect_to(rants_url)
       end
 
       context "with permission:any" do
         before { valid_attributes[:credential_id] = 'any' }
 
         it do
-          post :create, params: { grant: valid_attributes }, session: valid_session
+          post :create, params: { rant: valid_attributes }, session: valid_session
           expect(grants_table_count).to eq(1)
-          expect(response).to redirect_to(grants_url)
+          expect(response).to redirect_to(rants_url)
         end
       end
 
@@ -97,7 +97,7 @@ RSpec.describe GrantsController, type: :controller do
 
         it do
           expect {
-            post :create, params: { grant: valid_attributes }, session: valid_session
+            post :create, params: { rant: valid_attributes }, session: valid_session
           }.to raise_error(ArgumentError)
         end
       end
@@ -111,7 +111,7 @@ RSpec.describe GrantsController, type: :controller do
 
         it do
           expect {
-            post :create, params: { grant: valid_attributes }, session: valid_session
+            post :create, params: { rant: valid_attributes }, session: valid_session
           }.to raise_error(ArgumentError)
         end
       end
@@ -119,7 +119,7 @@ RSpec.describe GrantsController, type: :controller do
 
     context "with invalid params" do
       it "returns a success response (i.e. to display the 'new' template)" do
-        post :create, params: { grant: invalid_attributes }, session: valid_session
+        post :create, params: { rant: invalid_attributes }, session: valid_session
         expect(response).to be_success
         expect(response).to render_template(:new)
       end
@@ -131,7 +131,7 @@ RSpec.describe GrantsController, type: :controller do
       Greensub.subscribe(subscriber: individual, target: product)
       delete :destroy, params: { id: grants_table_last.id }, session: valid_session
       expect(grants_table_count).to be_zero
-      expect(response).to redirect_to(grants_url)
+      expect(response).to redirect_to(rants_url)
     end
   end
 end

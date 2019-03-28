@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
-class Grant
+# Because Grant clashes with Checkpoint's Grant
+class Rant
   include ActiveModel::Model
 
   attr_accessor :agent_type
