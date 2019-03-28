@@ -65,20 +65,6 @@ describe Ability do
       it { is_expected.to be_able_to(:read, ApplicationPresenter.new(current_user)) }
     end
 
-    context "PublisherPresenter" do
-      let(:publisher) { double("publisher") }
-
-      it { is_expected.to be_able_to(:read, PublisherPresenter.new(current_user, publisher)) }
-    end
-
-    context "PublishersPresenter" do
-      it { is_expected.to be_able_to(:read, PublishersPresenter.new(current_user)) }
-    end
-
-    context "RepositoryPresenter" do
-      it { is_expected.to be_able_to(:read, RepositoryPresenter.new(current_user)) }
-    end
-
     context "RolePresenter" do
       it { is_expected.to be_able_to(:read, RolePresenter.new(current_user.roles.first, current_user, current_user)) }
       it { is_expected.to be_able_to(:read, RolePresenter.new(another_user.roles.first, another_user, current_user)) }
@@ -149,20 +135,6 @@ describe Ability do
       it { is_expected.not_to be_able_to(:read, ApplicationPresenter.new(current_user)) }
     end
 
-    context "PublisherPresenter" do
-      let(:publisher) { double("publisher") }
-
-      it { is_expected.not_to be_able_to(:read, PublisherPresenter.new(current_user, publisher)) }
-    end
-
-    context "PublishersPresenter" do
-      it { is_expected.not_to be_able_to(:read, PublishersPresenter.new(current_user)) }
-    end
-
-    context "RepositoryPresenter" do
-      it { is_expected.not_to be_able_to(:read, RepositoryPresenter.new(current_user)) }
-    end
-
     describe "RolePresenter" do
       let(:my_press_user) { create(:editor, press: my_press) }
       let(:other_press_user) { create(:editor, press: other_press) }
@@ -207,20 +179,6 @@ describe Ability do
 
     context "ApplicationPresenter" do
       it { is_expected.not_to be_able_to(:read, ApplicationPresenter.new(current_user)) }
-    end
-
-    context "PublisherPresenter" do
-      let(:publisher) { double("publisher") }
-
-      it { is_expected.not_to be_able_to(:read, PublisherPresenter.new(current_user, publisher)) }
-    end
-
-    context "PublishersPresenter" do
-      it { is_expected.not_to be_able_to(:read, PublishersPresenter.new(current_user)) }
-    end
-
-    context "RepositoryPresenter" do
-      it { is_expected.not_to be_able_to(:read, RepositoryPresenter.new(current_user)) }
     end
 
     describe "RolePresenter" do
@@ -316,20 +274,6 @@ describe Ability do
 
     context "ApplicationPresenter" do
       it { is_expected.not_to be_able_to(:read, ApplicationPresenter.new(current_user)) }
-    end
-
-    context "PublisherPresenter" do
-      let(:publisher) { double("publisher") }
-
-      it { is_expected.not_to be_able_to(:read, PublisherPresenter.new(current_user, publisher)) }
-    end
-
-    context "PublishersPresenter" do
-      it { is_expected.not_to be_able_to(:read, PublishersPresenter.new(current_user)) }
-    end
-
-    context "RepositoryPresenter" do
-      it { is_expected.not_to be_able_to(:read, RepositoryPresenter.new(current_user)) }
     end
 
     describe "RolePresenter" do

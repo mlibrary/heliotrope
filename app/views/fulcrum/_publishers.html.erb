@@ -1,5 +1,3 @@
-<% repository =  RepositoryPresenter.new(current_user) %>
-<% publishers =  PublishersPresenter.new(current_user) %>
 <h1>Publishers Summary</h1>
 <table id="myTable" class="table table-striped" summary="Respository Publishers Stats">
   <tr>
@@ -14,25 +12,24 @@
     <th onclick="sortTable(4, true)">Assets</th>
     <th onclick="sortTable(5, true)">Users</th>
   </tr>
-  <% publishers.all.each do |publisher| %>
-    <% if can? :read, publisher %>
-      <tr>
-        <td><%= link_to(edit_press_path(publisher.subdomain)) do %>
-            <span class="glyphicon glyphicon-edit" aria-hidden="true"></span> Edit
-          <% end %>
-        </td>
-        <td><%= publisher.name %></td>
-        <td><%= link_to publisher.subdomain, "/#{publisher.subdomain}?locale=#{I18n.locale}" %></td>
-        <td><%= repository.monograph_ids(publisher).count %>&nbsp;<%= link_to(concern_monographs_new_path(press: publisher.subdomain)) do %>
-            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Add
-          <% end %>
-        </td>
-        <td><%= repository.asset_ids(publisher).count %></td>
-        <td><%= repository.user_ids(publisher).count %></td>
-      </tr>
-    <% end %>
+  <% @publishers_stats[:presses].each do |press| %>
+    <tr>
+      <td><%= link_to(edit_press_path(press[:subdomain])) do %>
+          <span class="glyphicon glyphicon-edit" aria-hidden="true"></span> Edit
+        <% end %>
+      </td>
+      <td><%= press[:name] %></td>
+      <td><%= link_to press[:subdomain], "/#{press[:subdomain]}?locale=#{I18n.locale}" %></td>
+      <td><%= press[:monographs] %>&nbsp;<%= link_to(concern_monographs_new_path(press: press[:subdomain])) do %>
+          <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Add
+        <% end %>
+      </td>
+      <td><%= press[:assets] %></td>
+      <td><%= press[:users] %></td>
+    </tr>
   <% end %>
 </table>
+<p><b><em>Publisher stats last calculated <%= @publishers_stats[:timestamp] %></em></b></p>
 <script>
   function sortTable(n, number) {
     var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
