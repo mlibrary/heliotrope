@@ -59,16 +59,19 @@ module Export
       # this is stuff that shows up in the APTrust web interface
       # title, access, and descriptoin are required; Storage-Option defaults to Standard if not present
       File.open(File.join(bag.bag_dir, 'aptrust-info.txt'), "w") do |io|
-        ti = (@monograph.title.blank? || @monograph.title.empty?) ? '' : @monograph.title.first
+        ti = @monograph.title.blank? ? '' : @monograph.title.first[0..255]
         io.puts "Title: #{ti}"
         io.puts "Access: Institution"
         io.puts "Storage-Option: Standard"
         io.puts "Description: This bag contains all of the data and metadata related to a Monograph which has been exported from the Fulcrum publishing platform hosted at https://www.fulcrum.org. The data folder contains a Fulcrum manifest in the form of a CSV file named with the NOID assigned to this Monograph in the Fulcrum repository. This manifest is exported directly from Fulcrum's heliotrope application (https://github.com/mlibrary/heliotrope) and can be used for re-import as well. The first two rows contain column headers and human-readable field descriptions, respectively.{{ The final row contains descriptive metadata for the Monograph; other rows contain metadata for Assets, which may be components of the Monograph or material supplemental to it.}}"
-        pr = (@monograph.press.blank? || @monograph.press.empty?) ? '' : @monograph.press
+        pub = @monograph.publisher.blank? ? '' : @monograph.publisher[0..49]
+        io.puts "Press-Name: #{pub}"
+        pr = @monograph.press.blank? ? '' : @monograph.press[0..49]
         io.puts "Press: #{pr}"
-        # I'm assuming Fulcrum will have a different type of music object at some point
-        # TO DO: Should be using model from solr data for Type
-        io.puts "Type: monograph"
+        ides = @monograph.description.blank? ? '' : @monograph.description[0..49]
+        io.puts "Item: #{ides}"
+        creat = @monograph.creator.blank? ? '' : @monograph.creator[0..49]
+        io.puts "Creator/Author: #{creat}"
       end
 
       # put fulcrum files into data directory
