@@ -92,13 +92,21 @@ RSpec.describe SessionsController, type: :controller do
   end
 
   describe '#discovery_feed/id' do
-    let(:file_set) { create(:file_set, content: File.open(File.join(fixture_path, 'moby-dick.epub'))) }
+    let(:monograph) do
+      create(:public_monograph) do |m|
+        m.ordered_members << file_set
+        m.save!
+        file_set.save!
+        m
+      end
+    end
+    let(:file_set) { create(:public_file_set) }
 
     before { clear_grants_table }
 
     it 'gets parameterized discovery feed' do
-      epub = Sighrax.factory(file_set.id)
-      component = Component.create!(identifier: epub.resource_token, name: epub.title, noid: epub.noid)
+      m = Sighrax.factory(monograph.id)
+      component = Component.create!(identifier: m.resource_token, name: m.title, noid: m.noid)
       institution1 = Institution.create!(identifier: '1', name: 'University of Michigan', site: 'Site', login: 'Login', entity_id: 'https://shibboleth.umich.edu/idp/shibboleth')
       # To show that this institution is not used
       institution2 = Institution.create!(identifier: '2', name: 'College', site: 'Site', login: 'Login', entity_id: 'https://shibboleth.college.edu/idp/shibboleth') # rubocop:disable Lint/UselessAssignment
@@ -112,6 +120,7 @@ RSpec.describe SessionsController, type: :controller do
       expect(JSON.parse(response.body).size).to be(1)
       expect(JSON.parse(response.body)[0]['entityID']).to eq('https://shibboleth.umich.edu/idp/shibboleth')
     end
+
     it 'gets empty discovery feed if given bogus id' do
       Institution.create!(identifier: '1', name: 'University of Michigan', site: 'Site', login: 'Login', entity_id: 'https://shibboleth.umich.edu/idp/shibboleth')
       Institution.create!(identifier: '2', name: 'College', site: 'Site', login: 'Login', entity_id: 'https://shibboleth.college.edu/idp/shibboleth')

@@ -23,6 +23,14 @@ end
 Keycard::DB.config.readonly = true if Settings.keycard&.readonly
 Keycard.config.access = Settings.keycard&.access || :direct
 
+# Note: we do not require db/grant because Sequel requires the connection
+# to be set up before defining the model classes. The arrangement here
+# assumes that DB.initialize! will have been called if the default model
+# is to be used. In tests, that is done by spec/sequel_helper.rb. In an
+# application, there should be an initializer that reads whatever appropriate
+# configuration and does the initialization.
+Checkpoint::DB.initialize!
+
 Services = Canister.new
 
 # Services.register(:presenters) {

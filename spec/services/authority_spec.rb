@@ -16,7 +16,7 @@ RSpec.describe Authority do
     let(:resources) { [] }
 
     before do
-      allow(checkpoint).to receive(:which).with(agent, Checkpoint::Credential::Permission.new(:read)).and_return(resources)
+      allow(checkpoint).to receive(:which).with(agent, :read).and_return(resources)
     end
 
     it { is_expected.to be false }
@@ -206,7 +206,7 @@ RSpec.describe Authority do
     let(:agents) { [] }
 
     before do
-      allow(checkpoint).to receive(:who).with(Checkpoint::Credential::Permission.new(:read), resource).and_return(agents)
+      allow(checkpoint).to receive(:who).with(:read, resource).and_return(agents)
     end
 
     it { is_expected.to be false }
