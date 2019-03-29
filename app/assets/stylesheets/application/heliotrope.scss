@@ -583,14 +583,20 @@ footer.press {
 
     ul.toc li {
       line-height: 3em;
+      border-bottom: 1px solid #eee;
+      display: flex;
+      flex-direction: column;
+    }
+
+    ul.toc li .section-container {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
     }
 
     a.toc-link {
-      display: inline-block;
-    }
-
-    ul.toc li {
-      border-bottom: 1px solid #eee;
+     /* display: inline-block; */
+     max-width: 80%;
     }
 
     ul.toc li:first-child {
@@ -618,11 +624,11 @@ footer.press {
     }
 
     .download {
-      display: inline-block;
+      /* display: inline-block; */
       padding: 0;
-      position: absolute;
+      /* position: absolute; */
       margin-top: 11px;
-      right: 20px;
+      /* right: 20px; */
     }
   }
 
@@ -1331,7 +1337,7 @@ footer.press {
     }
   }
 
-  .monograph-assets-toc-epub {
+  .monograph .monograph-assets-toc-epub {
     a.toc-link {
       max-width: 65%;
       line-height: 2em;
@@ -1384,7 +1390,7 @@ footer.press {
     }
   }
 
-  .monograph-assets-toc-epub {
+  .monograph .monograph-assets-toc-epub {
     a.toc-link {
       max-width: 57%;
       line-height: 1.5em;
