@@ -36,6 +36,10 @@ class Component < ApplicationRecord
     Product.where.not(id: products.map(&:id))
   end
 
+  def not_products_like(like = '')
+    Product.where.not(id: products.map(&:id)).where("identifier like ?", "%#{like}%").order(:identifier)
+  end
+
   def noid
     return @noid if @noid.present?
     @noid = super

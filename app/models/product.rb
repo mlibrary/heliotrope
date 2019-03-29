@@ -5,7 +5,7 @@ class Product < ApplicationRecord
 
   scope :identifier_like, ->(like) { where("identifier like ?", "%#{like}%") }
   scope :name_like, ->(like) { where("name like ?", "%#{like}%") }
-  scope :entity_id_like, ->(like) { where("entity_id like ?", "%#{like}%") }
+  scope :purchase_like, ->(like) { where("purchase like ?", "%#{like}%") }
 
   has_many :components_products
   has_many :components, through: :components_products
@@ -35,6 +35,10 @@ class Product < ApplicationRecord
 
   def not_components
     Component.where.not(id: components.map(&:id))
+  end
+
+  def not_components_like(like = '')
+    Component.where.not(id: components.map(&:id)).where("identifier like ?", "%#{like}%").order(:identifier)
   end
 
   def individuals

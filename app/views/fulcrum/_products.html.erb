@@ -1,7 +1,4 @@
-<%
-  products = Product.filter(identifier_like: params[:identifier_like], name_like: params[:name_like]).order(identifier: :asc).page(params[:page])
-  size = 12
-%>
+<% products = Product.filter(identifier_like: params[:identifier_like], name_like: params[:name_like], purchase_like: params[:purchase_like]).order(identifier: :asc).page(params[:page]) %>
 <h1>Products</h1>
 <form name="filter" method="get" action="<%= fulcrum_partials_path(:products) %>">
   <table class="table table-striped" summary="Product List">
@@ -11,24 +8,36 @@
           <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> New
         <% end %>
       </th>
-      <th><label for="identifier_like">Identifier</label></th>
-      <th><label for="name_like">Name</label></th>
-      <th>Components</th>
-    </tr>
-    <tr>
-      <td><button name="submit" type="submit" value="filter">Filter</button></td>
-      <td><input type="text" name="identifier_like" value="<%= params[:identifier_like] %>" size="<%= size %>" aria-label="identifier_like"></td>
-      <td><input type="text" name="name_like" value="<%= params[:name_like] %>" size="<%= size %>" aria-label="name_like"></td>
-      <td></td>
+      <th>
+        <% size = 24 %>
+        <div class="col-md-12">
+          <div class="col-md-2"><label for="identifier_like">Identifier</label></div><div class="col-md-10"><input type="text" name="identifier_like" value="<%= params[:identifier_like] %>" size="<%= size %>" aria-label="identifier_like"></div>
+        </div>
+        <div class="col-md-12">
+          <div class="col-md-2"><label for="name_like">Name</label></div><div class="col-md-10"><input type="text" name="name_like" value="<%= params[:name_like] %>" size="<%= size %>" aria-label="name_like"></div></div>
+        </div>
+        <div class="col-md-12">
+          <div class="col-md-2"><label for="purchase_like">Purchase</label></div><div class="col-md-10"><input type="text" name="purchase_like" value="<%= params[:purchase_like] %>" size="<%= size %>" aria-label="purchase_like"></div></div>
+        </div>
+      </th>
+      <th>
+        <div>Components</div>
+        <div>&nbsp;</div>
+        <div><button name="submit" type="submit" value="filter">Filter</button></div>
+      </th>
     </tr>
     <% products.each do |product| %>
       <tr>
-        <td><%= link_to(product_path(product)) do %>
+        <td>
+          <%= link_to(product_path(product)) do %>
             <span class="glyphicon glyphicon-sunglasses" aria-hidden="true"></span> Show
           <% end %>
         </td>
-        <td><%= product.identifier %></td>
-        <td><%= product.name %></td>
+        <td>
+          <div class="col-md-12"><%= product.identifier %></div>
+          <div class="col-md-12"><%= product.name %></div>
+          <div class="col-md-12"><%= link_to product.purchase, product.purchase %>&nbsp;</div>
+        </td>
         <td><%= link_to product.components.count, product_components_path(product) %></td>
       </tr>
     <% end %>
