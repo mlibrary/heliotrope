@@ -62,7 +62,8 @@ Rails.application.configure do
 
   # Use the lowest log level to ensure availability of diagnostic information
   # when problems arise.
-  config.log_level = :debug
+  # Setting this in the top-level environment.rb, see HELIO-2068
+  # config.log_level = Settings.log_level || 0
 
   # Prepend all log lines with the following tags.
   config.log_tags = [:request_id]
