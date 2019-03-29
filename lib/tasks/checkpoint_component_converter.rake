@@ -11,7 +11,7 @@ namespace :heliotrope do
         parent.noid
       elsif ValidationService.valid_noid?(HandleService.noid(identifier))
         parent.noid
-      elsif
+      else
         identifier
       end
     end
@@ -68,7 +68,7 @@ namespace :heliotrope do
       child = Sighrax.factory(component.noid)
       parent = child.parent
       component.identifier = identifier(component)
-      component.name = parent.title
+      component.name = parent.title[0,128]
       component.noid = parent.noid
       component.save!
       component.reload
