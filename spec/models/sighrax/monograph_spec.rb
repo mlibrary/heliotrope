@@ -8,10 +8,10 @@ RSpec.describe Sighrax::Monograph, type: :model do
   let(:noid) { 'validnoid' }
   let(:data) { {} }
 
+  it { is_expected.to be_an_instance_of(described_class) }
   it { is_expected.to be_a_kind_of(Sighrax::Model) }
   it { expect(subject.resource_type).to eq :Monograph }
-  it { expect(subject.resource_id).to eq noid }
-  it { expect(subject.epub_featured_representative).to be_a(Sighrax::NullEntity) }
+  it { expect(subject.epub_featured_representative).to be_an_instance_of(Sighrax::NullEntity) }
 
   describe '#epub_featured_representative' do
     let(:epub_featured_representative) { double('epub_featured_representative', file_set_id: 'file_set_id') }
