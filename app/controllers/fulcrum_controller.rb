@@ -2,6 +2,7 @@
 
 class FulcrumController < ApplicationController
   before_action :authenticate_user!
+  before_action :publisher_stats
 
   def dashboard
     redirect_to action: :index, partials: :dashboard
@@ -21,14 +22,22 @@ class FulcrumController < ApplicationController
     redirect_to action: :index, partials: :dashboard
   end
 
-  def index
+  def index # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
     @partials = params[:partials]
     @individuals = []
     @institutions = []
+    @publishers_stats = { presses: [], timestampe: Time.now.utc.to_s }
     if ['dashboard', 'products', 'components', 'individuals', 'institutions', 'publishers', 'users', 'tokens', 'logs', 'grants', 'monographs', 'assets', 'pages', 'reports', 'customize', 'settings', 'help', 'csv', 'jobs'].include? @partials
       if /dashboard/.match?(@partials)
         @individuals = Individual.where("identifier like ? or name like ?", "%#{params['individual_filter']}%", "%#{params['individual_filter']}%").map { |individual| ["#{individual.identifier} (#{individual.name})", individual.id] }
         @institutions = Institution.where("identifier like ? or name like ?", "%#{params['institution_filter']}%", "%#{params['institution_filter']}%").map { |institution| ["#{institution.identifier} (#{institution.name})", institution.id] }
+      end
+      if /publishers/.match?(@partials)
+        begin
+          @publishers_stats = YAML.load(File.read(publisher_stats_file)) || { presses: [], timestampe: Time.now.utc.to_s } # rubocop:disable Security/YAMLLoad
+        rescue StandardError => e
+          Rails.logger.error(e.message)
+        end
       end
       incognito(incognito_params(params)) if /incognito/i.match?(params['submit'] || '')
       render
@@ -48,6 +57,14 @@ class FulcrumController < ApplicationController
   end
 
   private
+
+    def publisher_stats_file
+      Rails.root.join('tmp', 'publisher_stats.yml')
+    end
+
+    def publisher_stats
+      PublisherStatsJob.perform_later(publisher_stats_file.to_s) unless File.exist?(publisher_stats_file) && File.mtime(publisher_stats_file) > (Time.now.utc - 1.day)
+    end
 
     def incognito_params(params)
       params.slice(:actor, :platform_admin, :hyrax_can, :action_permitted)
