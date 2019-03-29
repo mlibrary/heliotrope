@@ -41,10 +41,11 @@ gem 'jbuilder', '~> 2.5'
 # HELIO-2318
 gem 'rack', '~> 2.0.6'
 
-# HELIO-2404
+# HELIO-2404 APTRUST PRESERVATION
 gem 'bagit'
 gem 'minitar', '~>0.8'
 gem 'aws-sdk-s3', '~> 1'
+gem 'typhoeus', '~> 1.1'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console

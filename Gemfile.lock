@@ -1044,6 +1044,7 @@ DEPENDENCIES
   swagger_client!
   therubyracer
   turbolinks (~> 5)
+  typhoeus (~> 1.1)
   tzinfo-data
   uglifier (>= 3.2.0)
   web-console (>= 3.3.0)
