@@ -28,4 +28,9 @@
       <span class="glyphicon glyphicon-wrench" aria-hidden="true"></span> Reindex Assets
     <% end %>
   </li>
+  <li>
+    <%= link_to(fulcrum_exec_path(:rebuild_fedora_contains), method: :get, class: "btn btn-default", data: { confirm: 'Are you sure?' }) do %>
+      <span class="glyphicon glyphicon-wrench" aria-hidden="true"></span> Bulid Fedora Contains
+    <% end %>
+  </li>
 </ul>

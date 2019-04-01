@@ -1,0 +1,39 @@
+<% fedora_contains = Fighrax::FedoraContain.filter(model_like: params[:model_like], title_like: params[:title_like], noid_like: params[:noid_like]).page(params[:page]) %>
+<h1>Fedora Contains</h1>
+<form name="filter" method="get" action="<%= fulcrum_partials_path(:contains) %>">
+  <table class="table table-striped" summary="Filter">
+    <tr>
+      <th>
+        <div><label for="model_like">Model</label> <input type="text" name="model_like" value="<%= params[:model_like] %>" aria-label="model_like"></div>
+        <div><label for="noid_like">NOID</label> <input type="text" name="noid_like" value="<%= params[:noid_like] %>" aria-label="noid_like"></div>
+      </th>
+      <th>
+        <div><label for="title_like">Title</label> <input type="text" name="title_like" value="<%= params[:title_like] %>" aria-label="title_like"></div>
+        <div><button name="submit" type="submit" value="filter">Filter</button></div>
+      </th>
+    </tr>
+    <% fedora_contains.each do |fedora_contain| %>
+      <tr>
+        <td>
+          <div>Fighrax::<%= Fighrax.factory(fedora_contain.uri).resource_type %></div>
+          <div>Sighrax::<%= Sighrax.factory(fedora_contain.noid).resource_type %></div>
+        </td>
+        <td>
+          <div><%= fedora_contain.uri %></div>
+          <div><%= fedora_contain.noid %></div>
+          <div>
+            <% case fedora_contain.model %>
+            <% when "Monograph" %>
+              <div><%= link_to fedora_contain.title, monograph_catalog_path(fedora_contain.noid) %></div>
+            <% when "FileSet" %>
+              <div><%= link_to fedora_contain.title, hyrax_file_set_path(fedora_contain.noid) %></div>
+            <% else %>
+              <div>&nbsp;</div>
+            <% end %>
+          </div>
+        </td>
+      </tr>
+    <% end %>
+  </table>
+</form>
+<%= paginate fedora_contains %>

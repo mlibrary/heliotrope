@@ -185,6 +185,26 @@ ActiveRecord::Schema.define(version: 20190401161317) do
     t.index ["work_id"], name: "index_featured_works_on_work_id"
   end
 
+  create_table "fedora_contains", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.string "uri", null: false
+    t.string "noid", null: false
+    t.string "model"
+    t.string "title"
+    t.bigint "fedora_node_id", null: false
+    t.index ["fedora_node_id"], name: "index_fedora_contains_on_fedora_node_id"
+    t.index ["noid"], name: "index_fedora_contains_on_noid"
+    t.index ["uri"], name: "index_fedora_contains_on_uri"
+  end
+
+  create_table "fedora_nodes", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.string "uri", null: false
+    t.string "noid", null: false
+    t.string "model"
+    t.json "jsonld", null: false
+    t.index ["noid"], name: "index_fedora_nodes_on_noid"
+    t.index ["uri"], name: "index_fedora_nodes_on_uri"
+  end
+
   create_table "file_download_stats", id: :integer, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.datetime "date"
     t.integer "downloads"
@@ -699,11 +719,11 @@ ActiveRecord::Schema.define(version: 20190401161317) do
     t.index ["work_id"], name: "index_work_view_stats_on_work_id"
   end
 
-  add_foreign_key "api_requests", "users"
   add_foreign_key "collection_type_participants", "hyrax_collection_types"
   add_foreign_key "components_products", "components"
   add_foreign_key "components_products", "products"
   add_foreign_key "curation_concerns_operations", "users"
+  add_foreign_key "fedora_contains", "fedora_nodes"
   add_foreign_key "mailboxer_conversation_opt_outs", "mailboxer_conversations", column: "conversation_id", name: "mb_opt_outs_on_conversations_id"
   add_foreign_key "mailboxer_notifications", "mailboxer_conversations", column: "conversation_id", name: "notifications_on_conversation_id"
   add_foreign_key "mailboxer_receipts", "mailboxer_notifications", column: "notification_id", name: "receipts_on_notification_id"

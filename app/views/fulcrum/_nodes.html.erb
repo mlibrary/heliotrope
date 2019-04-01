@@ -1,0 +1,37 @@
+<% fedora_nodes = Fighrax::FedoraNode.filter(model_like: params[:model_like], jsonld_like: params[:jsonld_like], noid_like: params[:noid_like]).page(params[:page]) %>
+<h1>Fedora Nodes</h1>
+<form name="filter" method="get" action="<%= fulcrum_partials_path(:nodes) %>">
+  <table class="table table-striped" summary="Filter">
+    <tr>
+      <th>
+        <div><label for="model_like">Model</label> <input type="text" name="model_like" value="<%= params[:model_like] %>" aria-label="model_like"></div>
+        <div><label for="noid_like">NOID</label> <input type="text" name="noid_like" value="<%= params[:noid_like] %>" aria-label="noid_like"></div>
+      </th>
+      <th>
+        <div><label for="jsonld_like">JSONLD</label></div>
+        <div><input type="text" name="jsonld_like" value="<%= params[:jsonld_like] %>" aria-label="jsonld_like"></div>
+        <div>&nbsp;</div>
+        <div><button name="submit" type="submit" value="filter">Filter</button></div>
+      </th>
+    </tr>
+    <% fedora_nodes.each do |fedora_node| %>
+      <tr>
+        <td>
+          <div>
+            <div><%= fedora_node.model %></div>
+            <% case fedora_node.model %>
+            <% when "Monograph" %>
+              <div><%= link_to fedora_node.noid, monograph_catalog_path(fedora_node.noid) %></div>
+            <% when "FileSet" %>
+              <div><%= link_to fedora_node.noid, hyrax_file_set_path(fedora_node.noid) %></div>
+            <% else %>
+              <div><%= fedora_node.noid %></div>
+            <% end %>
+          </div>
+        </td>
+        <td><div><%= fedora_node.jsonld %></div></td>
+      </tr>
+    <% end %>
+  </table>
+</form>
+<%= paginate fedora_nodes %>
