@@ -19,6 +19,15 @@ class ValidationService
     /^[[:alnum:]]{9}$/.match?(noid)
   end
 
+  def self.valid_uri?(uri)
+    # URI = scheme:[//authority]path[?query][#fragment]
+    # where authority = [userinfo@]host[:port]
+    _parsed_uri = URI(uri)
+    true
+  rescue URI::InvalidURIError
+    false
+  end
+
   # Object Validation
 
   def self.valid_entity?(id)

@@ -37,6 +37,24 @@ RSpec.describe ValidationService do
     end
   end
 
+  describe '#valid_uri?' do
+    let(:uri) { '' }
+
+    it { expect(described_class.valid_uri?(uri)).to be true }
+
+    context 'invalid' do
+      let(:uri) { 'valid uri' }
+
+      it { expect(described_class.valid_uri?(uri)).to be false }
+    end
+
+    context 'valid' do
+      let(:uri) { 'valid_uri' }
+
+      it { expect(described_class.valid_uri?(uri)).to be true }
+    end
+  end
+
   describe "#valid_entity?" do
     subject { described_class.valid_entity?(id) }
 
