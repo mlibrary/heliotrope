@@ -19,6 +19,10 @@ module Sighrax
       !instance_of?(NullEntity)
     end
 
+    def uri
+      ActiveFedora::Base.id_to_uri(noid)
+    end
+
     def resource_type
       type
     end

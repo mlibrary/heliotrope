@@ -10,6 +10,7 @@ RSpec.describe Sighrax::Entity, type: :model do
     it { expect(subject.noid).to eq 'null_noid' }
     it { expect(subject.data).to eq({}) }
     it { expect(subject.valid?).to be false }
+    it { expect(subject.uri).to eq ActiveFedora::Base.id_to_uri('null_noid') }
     it { expect(subject.resource_type).to eq :NullEntity }
     it { expect(subject.resource_id).to eq 'null_noid' }
     it { expect(subject.resource_token).to eq "#{subject.resource_type}:#{subject.resource_id}" }
@@ -27,6 +28,7 @@ RSpec.describe Sighrax::Entity, type: :model do
     it { expect(subject.noid).to eq noid }
     it { expect(subject.data).to eq data }
     it { expect(subject.valid?).to be true }
+    it { expect(subject.uri).to eq ActiveFedora::Base.id_to_uri(noid) }
     it { expect(subject.resource_type).to eq :Entity }
     it { expect(subject.resource_id).to eq noid }
     it { expect(subject.resource_token).to eq "#{subject.resource_type}:#{subject.resource_id}" }
