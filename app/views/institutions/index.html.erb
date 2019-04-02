@@ -1,24 +1,36 @@
 <p id="notice"><%= notice %></p>
 <div id="maincontent">
   <h1>Institutions</h1>
-  <b>
-    <div class="col-md-10">
-      <div class="col-md-1">ID</div>
-      <div class="col-md-1">Identifier</div>
-      <div class="col-md-3">Name</div>
-      <div class="col-md-5">Entity ID</div>
-      <div class="col-md-2">Products</div>
-    </div>
-    <div class="col-md-2"><%= link_to 'New Institution', new_institution_path %></div>
-    <div class="col-md-12"><hr/></div>
-  </b>
+  <form name="filter" method="get" action="<%= institutions_path %>">
+    <b>
+      <div class="col-md-12"><hr/></div>
+      <div class="col-md-10">
+        <div class="col-md-1">
+          <div>ID</div>
+          <div>&nbsp;</div>
+        </div>
+        <div class="col-md-9">
+          <% size = 24 %>
+          <div><div class="col-md-2">Identifier</div><div class="col-md-10"><input type="text" name="identifier_like" value="<%= params[:identifier_like] %>" size="<%= size %>" aria-label="identifier_like"></div></div>
+          <div><div class="col-md-2">Name</div><div class="col-md-10"><input type="text" name="name_like" value="<%= params[:name_like] %>" size="<%= size %>" aria-label="name_like"></div></div>
+          <div><div class="col-md-2">Entity ID</div><div class="col-md-10"><input type="text" name="entity_id_like" value="<%= params[:entity_id_like] %>" size="<%= size %>" aria-label="entity_id_like"></div></div>
+        </div>
+        <div class="col-md-2"><div>Products</div><div>&nbsp;</div><div><button name="submit" type="submit" value="filter">Filter</button></div>
+        </div>
+      </div>
+      <div class="col-md-2"><%= link_to 'New Institution', new_institution_path %></div>
+      <div class="col-md-12"><hr/></div>
+    </b>
+  </form>
   <% @institutions.each do |institution| %>
     <div class="col-md-10">
       <div class="col-md-1"><%= institution.id %></div>
-      <div class="col-md-1"><%= institution.identifier %></div>
-      <div class="col-md-3"><%= institution.name %></div>
-      <div class="col-md-5"><%= institution.entity_id %></div>
-      <div class="col-md-2"><%= link_to institution.products.count, institution_products_path(institution) %></div>
+      <div class="col-md-9">
+        <div><%= institution.identifier %></div>
+        <div><%= institution.name %></div>
+        <div><%= institution.entity_id %></div>
+      </div>
+      <div class="col-md-2"><%= institution.products.count %></div>
     </div>
     <div class="col-md-2">
       <div class="col-md-4"><%= link_to 'Show', institution %></div>

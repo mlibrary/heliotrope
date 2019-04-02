@@ -1,26 +1,31 @@
-<%
-  individuals = Individual.filter(identifier_like: params[:identifier_like], name_like: params[:name_like], email_like: params[:email_like]).order(identifier: :asc).page(params[:page])
-  size = 24
-%>
+<% individuals = Individual.filter(identifier_like: params[:identifier_like], name_like: params[:name_like], email_like: params[:email_like]).order(identifier: :asc).page(params[:page]) %>
 <h1>Individuals</h1>
 <form name="filter" method="get" action="<%= fulcrum_partials_path(:individuals) %>">
   <table class="table table-striped" summary="Individual List">
     <tr>
-      <th><%= link_to(new_individual_path) do %>
+      <th>
+        <%= link_to(new_individual_path) do %>
           <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> New
         <% end %>
       </th>
-      <th><label for="identifier_like">Identifier</label></th>
-      <th><label for="name_like">Name</label></th>
-      <th><label for="email_like">eMail</label></th>
-      <th>Products</th>
-    </tr>
-    <tr>
-      <td><button name="submit" type="submit" value="filter">Filter</button></td>
-      <td><input type="text" name="identifier_like" value="<%= params[:identifier_like] %>" size="<%= size %>" aria-label="identifier_like"></td>
-      <td><input type="text" name="name_like" value="<%= params[:name_like] %>" size="<%= size %>" aria-label="name_like"></td>
-      <td><input type="text" name="email_like" value="<%= params[:email_like] %>" size="<%= size %>" aria-label="email_like"></td>
-      <td></td>
+      <th>
+        <% size = 24 %>
+        <div class="col-md-12">
+          <div class="col-md-2"><label for="identifier_like">Identifier</label></div><div class="col-md-10"><input type="text" name="identifier_like" value="<%= params[:identifier_like] %>" size="<%= size %>" aria-label="identifier_like"></div>
+        </div>
+        <div class="col-md-12">
+          <div class="col-md-2"><label for="name_like">Name</label></div><div class="col-md-10"><input type="text" name="name_like" value="<%= params[:name_like] %>" size="<%= size %>" aria-label="name_like"></div></div>
+        </div>
+      </th>
+      <th>
+        <div><label for="email_like">eMail</label></div>
+        <div><input type="text" name="email_like" value="<%= params[:email_like] %>" size="<%= size %>" aria-label="email_like"></div>
+      </th>
+      <th>
+        <div>Products</div>
+        <div>&nbsp;</div>
+        <div><button name="submit" type="submit" value="filter">Filter</button></div>
+      </th>
     </tr>
     <% individuals.each do |individual| %>
       <tr>
@@ -28,10 +33,12 @@
             <span class="glyphicon glyphicon-sunglasses" aria-hidden="true"></span> Show
           <% end %>
         </td>
-        <td><%= individual.identifier %></td>
-        <td><%= individual.name %></td>
+        <td>
+          <div><%= individual.identifier %></div>
+          <div><%= individual.name %></div>
+        </td>
         <td><%= individual.email %></td>
-        <td><%= link_to individual.products.count, individual_products_path(individual) %></td>
+        <td><%= individual.products.count %></td>
       </tr>
     <% end %>
   </table>
