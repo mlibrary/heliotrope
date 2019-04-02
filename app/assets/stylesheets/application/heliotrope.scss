@@ -98,16 +98,21 @@ div.skip {
 
   .message {
     padding-bottom: 1em;
+    a {
+      text-decoration: underline;
+    }
   }
 
   a.btn-primary, a.btn-primary:hover, a.btn-primary:active {
     color: #fff;
+    text-decoration: none;
   }
 
   a.btn-default, a.btn-default:active, a.btn-default:hover {
     color: inherit;
     background-color: #d9edf7;
     border-color: #d9edf7;
+    text-decoration: none;
   }
 
   a.close {
