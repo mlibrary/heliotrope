@@ -34,9 +34,17 @@ namespace :aptrust do
 
     def find_record(noid)
       begin
-        record = AptrustUpload.find_by!(noid: noid)
+        record = AptrustUpload.find(noid)
       rescue ActiveRecord::RecordNotFound => e
         record = nil
+      end
+      # Ugh, if record got saved without a press it will cause problems
+      # so kill it.
+      unless record.nil?
+        if record.press.blank?
+          record.destroy
+          record = nil
+        end
       end
       record
     end
@@ -60,27 +68,31 @@ namespace :aptrust do
                                           'title_tesim', 
                                           'date_uploaded_dtsi', 
                                           'has_model_ssim'])
-      puts "solr_monographs count is: #{solr_monographs.count}"
+      puts "In update_record, solr_monographs count is: #{solr_monographs.count}"
       data = solr_monographs.first
-        begin
-          record.update!(
-                          # noid:  up_doc[:id], # this is already in record
-                          press: data['press_tesim'].first[0..49],
-                          author: data["creator_tesim"].first[0..49],
-                          title: data["title_tesim"].first[0..249],
-                          model: data["has_model_ssim"].first[0..49],
-                          bag_status: BAG_STATUSES['not_bagged'],
-                          s3_status: S3_STATUSES['not_uploaded'],
-                          apt_status: APT_STATUSES['not_checked'],
-                          date_monograph_modified: data['date_modified_dtsi'],
-                          date_fileset_modified: nil,
-                          date_bagged: nil,
-                          date_uploaded: nil,
-                          date_confirmed: nil
-                        )
-        rescue ActiveRecord::RecordInvalid => e
-          record = nil
-        end
+      return nil? if data['press_tesim'].blank?
+      return nil? if data['creator_tesim'].blank?
+      return nil? if data['title_tesim'].blank?
+      return nil? if data['has_model_ssim'].blank?
+      begin
+        record.update!(
+                        # noid:  up_doc[:id], # this is already in record
+                        press: data['press_tesim'].first[0..49],
+                        author: data["creator_tesim"].first[0..49],
+                        title: data["title_tesim"].first[0..249],
+                        model: data["has_model_ssim"].first[0..49],
+                        bag_status: BAG_STATUSES['not_bagged'],
+                        s3_status: S3_STATUSES['not_uploaded'],
+                        apt_status: APT_STATUSES['not_checked'],
+                        date_monograph_modified: data['date_modified_dtsi'],
+                        date_fileset_modified: nil,
+                        date_bagged: nil,
+                        date_uploaded: nil,
+                        date_confirmed: nil
+                      )
+      rescue ActiveRecord::RecordInvalid => e
+        record = nil
+      end
       record
     end
 
