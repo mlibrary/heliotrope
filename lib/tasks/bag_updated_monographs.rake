@@ -70,10 +70,10 @@ namespace :aptrust do
                                           'has_model_ssim'])
       puts "In update_record, solr_monographs count is: #{solr_monographs.count}"
       data = solr_monographs.first
-      return nil? if data['press_tesim'].blank?
-      return nil? if data['creator_tesim'].blank?
-      return nil? if data['title_tesim'].blank?
-      return nil? if data['has_model_ssim'].blank?
+      return nil if data['press_tesim'].blank?
+      return nil if data['creator_tesim'].blank?
+      return nil if data['title_tesim'].blank?
+      return nil if data['has_model_ssim'].blank?
       begin
         record.update!(
                         # noid:  up_doc[:id], # this is already in record
