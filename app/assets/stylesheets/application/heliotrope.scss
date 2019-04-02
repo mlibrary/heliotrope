@@ -98,16 +98,21 @@ div.skip {
 
   .message {
     padding-bottom: 1em;
+    a {
+      text-decoration: underline;
+    }
   }
 
   a.btn-primary, a.btn-primary:hover, a.btn-primary:active {
     color: #fff;
+    text-decoration: none;
   }
 
   a.btn-default, a.btn-default:active, a.btn-default:hover {
     color: inherit;
     background-color: #d9edf7;
     border-color: #d9edf7;
+    text-decoration: none;
   }
 
   a.close {
@@ -583,14 +588,19 @@ footer.press {
 
     ul.toc li {
       line-height: 3em;
+      border-bottom: 1px solid #eee;
+      display: flex;
+      flex-direction: column;
+    }
+
+    ul.toc li .section-container {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
     }
 
     a.toc-link {
-      display: inline-block;
-    }
-
-    ul.toc li {
-      border-bottom: 1px solid #eee;
+     max-width: 80%;
     }
 
     ul.toc li:first-child {
@@ -618,11 +628,8 @@ footer.press {
     }
 
     .download {
-      display: inline-block;
       padding: 0;
-      position: absolute;
       margin-top: 11px;
-      right: 20px;
     }
   }
 
@@ -1331,7 +1338,7 @@ footer.press {
     }
   }
 
-  .monograph-assets-toc-epub {
+  .monograph .monograph-assets-toc-epub {
     a.toc-link {
       max-width: 65%;
       line-height: 2em;
@@ -1384,7 +1391,7 @@ footer.press {
     }
   }
 
-  .monograph-assets-toc-epub {
+  .monograph .monograph-assets-toc-epub {
     a.toc-link {
       max-width: 57%;
       line-height: 1.5em;
