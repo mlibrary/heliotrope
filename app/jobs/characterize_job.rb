@@ -16,6 +16,8 @@ class CharacterizeJob < ApplicationJob
     # I don't get it. Just reset them. We need accurate height/width for riiif and leaflet
     file_set.original_file.height = []
     file_set.original_file.width  = []
+    # Same with original_checksum. We can't trust the ordering (which fedora won't do)
+    file_set.original_file.original_checksum = []
     # Also in case of a file update, clear out the riiif cached base image if one exisits
     cached_file = Rails.root.join('tmp', 'network_files', Digest::MD5.hexdigest(file_set.original_file.uri.to_s))
     File.delete(cached_file) if File.exist?(cached_file)
