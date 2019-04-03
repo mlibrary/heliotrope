@@ -22,8 +22,6 @@
     <!-- search -->
     <% if show_site_search? %>
       <%= render 'shared/site_search' %>
-    <% elsif respond_to?(:show_press_search?) && show_press_search? %>
-      <%= render 'press_catalog/press_search' %>
     <% end %>
 
     <div class="collapse navbar-collapse" id="brand-bar-nav">

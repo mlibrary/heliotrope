@@ -1,0 +1,26 @@
+<% if params[:id].present? && params['controller'] == 'monograph_catalog' %>
+  <% catalog_url = main_app.monograph_catalog_path(params[:id]) %>
+  <% search_label = t('monograph_catalog.search.form.q.label', monograph_name: @monograph_presenter.page_title) %>
+  <% placeholder = t('monograph_catalog.search.form.q.placeholder') %>
+  <div class="facets sidenav">
+    <h2 class="panel-heading facets-heading">
+      <%= t('blacklight.search.facets.title') %>
+    </h2>
+    <%= form_tag catalog_url, method: :get, class: "search-form panel-body" do %>
+      <fieldset>
+        <%= render_hash_as_hidden_fields(search_state.params_for_search.except(:q, :search_field, :qt, :page, :utf8, :partial)) %>
+        <div class="input-group">
+          <%= label_tag :catalog_search, search_label, class: "sr-only" %>
+          <%= text_field_tag(:q, params[:q], class: "q search-query form-control", id: "resources_search",
+                             placeholder: placeholder, tabindex: "0", type: "search") %>
+          <div class="input-group-btn">
+            <button type="submit" class="search-submit btn btn-primary" id="resources-search-submit" tabindex="0">
+              <i class="glyphicon glyphicon-search"></i><span class="sr-only">Search</span>
+            </button>
+          </div>
+        </div>
+      </fieldset>
+    <% end %>
+  </div>
+<% end %>
+<%= render 'facets' %>

@@ -146,8 +146,8 @@ en:
     search:
       form:
         q:
-          label: "Search for assets within %{monograph_name}"
-          placeholder: "Search assets"
+          label: "Search for resources within %{monograph_name}"
+          placeholder: "Search resources"
   monograph_manifests:
     notice:
       perform_job: "Performing monograph update job."

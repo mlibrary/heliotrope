@@ -13,11 +13,7 @@ RSpec.describe PressCatalogController, type: :controller do
 
   describe 'controller' do
     it '#show_site_search?' do
-      expect(controller.show_site_search?).to equal false
-    end
-
-    it '#show_press_search?' do
-      expect(controller.show_press_search?).to equal true
+      expect(controller.show_site_search?).to equal true
     end
   end
 

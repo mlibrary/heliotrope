@@ -57,46 +57,46 @@ describe 'Monograph Catalog Search' do
     # If these change, fix here then update ga_event_tracking.js
     expect(page).to have_selector('#documents .document h4.index_title a')
     expect(page).to have_selector('#monograph-buy-btn')
-    expect(page).to have_selector('#keyword-search-submit')
-    expect(page).to have_selector('#catalog_search')
+    expect(page).to have_selector('#resources-search-submit')
+    expect(page).to have_selector('#resources_search')
 
-    fill_in 'catalog_search', with: 'Unruly'
-    click_button 'keyword-search-submit'
+    fill_in 'resources_search', with: 'Unruly'
+    click_button 'resources-search-submit'
     expect(page).to have_content 'Unruly Puddles'
     expect(page).not_to have_content 'Strange Marshes'
 
-    fill_in 'catalog_search', with: 'monkey'
-    click_button 'keyword-search-submit'
+    fill_in 'resources_search', with: 'monkey'
+    click_button 'resources-search-submit'
     expect(page).to have_content 'Unruly Puddles'
     expect(page).not_to have_content 'Strange Marshes'
 
-    fill_in 'catalog_search', with: 'lizard'
-    click_button 'keyword-search-submit'
+    fill_in 'resources_search', with: 'lizard'
+    click_button 'resources-search-submit'
     expect(page).to have_content 'Unruly Puddles'
     expect(page).not_to have_content 'Strange Marshes'
 
-    fill_in 'catalog_search', with: 'elephant'
-    click_button 'keyword-search-submit'
+    fill_in 'resources_search', with: 'elephant'
+    click_button 'resources-search-submit'
     expect(page).to have_content 'Unruly Puddles'
     expect(page).not_to have_content 'Strange Marshes'
 
-    fill_in 'catalog_search', with: 'rhino'
-    click_button 'keyword-search-submit'
+    fill_in 'resources_search', with: 'rhino'
+    click_button 'resources-search-submit'
     expect(page).to have_content 'Unruly Puddles'
     expect(page).not_to have_content 'Strange Marshes'
 
-    fill_in 'catalog_search', with: 'snake'
-    click_button 'keyword-search-submit'
+    fill_in 'resources_search', with: 'snake'
+    click_button 'resources-search-submit'
     expect(page).to have_content 'Unruly Puddles'
     expect(page).not_to have_content 'Strange Marshes'
 
-    fill_in 'catalog_search', with: 'tiger'
-    click_button 'keyword-search-submit'
+    fill_in 'resources_search', with: 'tiger'
+    click_button 'resources-search-submit'
     expect(page).to have_content 'Unruly Puddles'
     expect(page).not_to have_content 'Strange Marshes'
 
-    fill_in 'catalog_search', with: 'mouse'
-    click_button 'keyword-search-submit'
+    fill_in 'resources_search', with: 'mouse'
+    click_button 'resources-search-submit'
     expect(page).to have_content 'Unruly Puddles'
     expect(page).not_to have_content 'Strange Marshes'
 

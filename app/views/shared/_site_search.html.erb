@@ -1,11 +1,7 @@
-<% if params['controller'] == 'monograph_catalog' %>
-  <% catalog_url = main_app.monograph_catalog_path(params[:id]) %>
-  <% search_label = t('monograph_catalog.search.form.q.label', monograph_name: @monograph_presenter.page_title) %>
-  <% placeholder = t('monograph_catalog.search.form.q.placeholder') %>
-<% elsif params['controller'] == 'hyrax/file_sets' && !@presenter.nil? && @presenter.monograph.present? %>
-  <% catalog_url = main_app.monograph_catalog_path(@presenter.monograph_id) %>
-  <% search_label = t('monograph_catalog.search.form.q.label', monograph_name: @presenter.monograph_presenter.page_title) %>
-  <% placeholder = t('monograph_catalog.search.form.q.placeholder') %>
+<% if press_subdomain.present? %>
+  <% catalog_url = main_app.press_catalog_path(press_subdomain) %>
+  <% search_label = t('press_catalog.search.form.q.label', press_name: name(press_subdomain)) %>
+  <% placeholder = t('press_catalog.search.form.q.placeholder', press_name: name(press_subdomain)) %>
 <% else %>
   <% catalog_url = main_app.search_catalog_path %>
   <% search_label = t('hyrax.search.form.q.label', application_name: application_name) %>

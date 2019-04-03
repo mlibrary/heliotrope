@@ -31,9 +31,9 @@ function storeTab() {
     // if not the first tab, unset aria semantics for first tab
     var lastTab = sessionStorage.getItem('lastTab');
     // If there is a value in the search field, heavy-handedly override
-    // stored value so the media tab is visible on load.
-    if ($('#catalog_search').val().length) {
-      lastTab = '#media';
+    // stored value so the resources tab is visible on load.
+    if ($('#resources_search').val().length) {
+      lastTab = '#resources';
     }
 
     // If the monograph page URL has an anchor (like the CSB Media button)
