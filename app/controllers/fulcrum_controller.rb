@@ -2,7 +2,6 @@
 
 class FulcrumController < ApplicationController
   before_action :authenticate_user!
-  before_action :publisher_stats
 
   def dashboard
     redirect_to action: :index, partials: :dashboard
@@ -33,6 +32,7 @@ class FulcrumController < ApplicationController
         @institutions = Institution.where("identifier like ? or name like ?", "%#{params['institution_filter']}%", "%#{params['institution_filter']}%").map { |institution| ["#{institution.identifier} (#{institution.name})", institution.id] }
       end
       if /publishers/.match?(@partials)
+        publisher_stats
         begin
           @publishers_stats = YAML.load(File.read(publisher_stats_file)) || { presses: [], timestampe: Time.now.utc.to_s } # rubocop:disable Security/YAMLLoad
         rescue StandardError => e
