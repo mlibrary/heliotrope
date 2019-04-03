@@ -322,6 +322,8 @@ RSpec.describe Hyrax::MonographPresenter do
       ::SolrDocument.new(
         id: 'mono',
         has_model_ssim: ['Monograph'],
+        press_tesim: ['press_tesim'],
+        press_name_ssim: ['press_name_ssim'],
         # representative_id has a rather different Solr name!
         hasRelatedMediaFragment_ssim: cover_fileset_doc.id,
         ordered_member_ids_ssim: [cover_fileset_doc.id, fs1_doc.id, fs2_doc.id, fs3_doc.id]
@@ -486,6 +488,36 @@ RSpec.describe Hyrax::MonographPresenter do
         subject { presenter.epub_id }
 
         it { expect(subject).to eq fs2_doc.id }
+      end
+
+      context 'press' do
+        let(:press) { double('press', press_url: 'press_url') }
+
+        before { allow(Press).to receive(:find_by).with(subdomain: 'press_tesim').and_return(press) }
+
+        describe '#subdomain' do
+          subject { presenter.subdomain }
+
+          it { is_expected.to eq('press_tesim') }
+        end
+
+        describe '#press' do
+          subject { presenter.press }
+
+          it { is_expected.to eq('press_name_ssim') }
+        end
+
+        describe '#press_obj' do
+          subject { presenter.press_obj }
+
+          it { is_expected.to be press }
+        end
+
+        describe '#press_url' do
+          subject { presenter.press_url }
+
+          it { is_expected.to eq('press_url') }
+        end
       end
 
       describe '#webgl?' do

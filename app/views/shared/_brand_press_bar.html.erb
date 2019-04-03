@@ -9,11 +9,11 @@
         <span class="icon-bar"></span>
       </button>
       <% if defined?(@press.name) %>
-        <a class="navbar-brand" href="/<%= @press.subdomain %>"><%= @press.name %></a>
+        <a class="navbar-brand" href="<%= main_app.press_catalog_path(@press) %>"><%= @press.name %></a>
       <% elsif defined?(@monograph_presenter.press) %>
-        <a class="navbar-brand" href="/<%= @monograph_presenter.subdomain %>"><%= @monograph_presenter.press %></a>
+        <a class="navbar-brand" href="<%= main_app.press_catalog_path(@monograph_presenter.press_obj) %>"><%= @monograph_presenter.press %></a>
       <% elsif defined?(@presenter.monograph.press) %>
-        <a class="navbar-brand" href="/<%= @presenter.monograph.subdomain %>"><%= @presenter.monograph.press %></a>
+        <a class="navbar-brand" href="<%= main_app.press_catalog_path(@presenter.monograph.press_obj) %>"><%= @presenter.monograph.press %></a>
       <% else %>
         <a class="navbar-brand" href="#">University Press</a>
       <% end %>

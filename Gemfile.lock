@@ -493,6 +493,8 @@ GEM
     keycard (0.2.4)
       sequel
     kramdown (1.17.0)
+    launchy (2.4.3)
+      addressable (~> 2.3)
     ld-patch (0.3.3)
       ebnf (~> 1.1)
       rdf (>= 2.2, < 4.0)
@@ -999,6 +1001,7 @@ DEPENDENCIES
   jquery-turbolinks
   jwt
   keycard (~> 0.2.4)
+  launchy (~> 2.4.3)
   legato (~> 0.3)
   listen (>= 3.0.5, < 3.2)
   loofah (>= 2.2.3)

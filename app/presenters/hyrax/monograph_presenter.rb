@@ -165,8 +165,12 @@ module Hyrax
       Array(solr_document['press_name_ssim']).first
     end
 
-    def press_url
-      Press.find_by(subdomain: subdomain).press_url
+    def press_obj
+      Press.find_by(subdomain: subdomain)
+    end
+
+    def press_url # rubocop:disable Rails/Delegate
+      press_obj.press_url
     end
 
     def previous_file_sets_id?(file_sets_id)

@@ -44,10 +44,10 @@ module BreadcrumbsHelper
       crumbs = []
       if press.parent_id.present?
         parent = Press.find(press.parent_id)
-        crumbs << { href: "/#{parent.subdomain}", text: translate('monograph_catalog.index.home'), class: "" }
-        crumbs << { href: "/#{press.subdomain}", text: press.name, class: "" }
+        crumbs << { href: main_app.press_catalog_path(parent), text: translate('monograph_catalog.index.home'), class: "" }
+        crumbs << { href: main_app.press_catalog_path(press), text: press.name, class: "" }
       else
-        crumbs << { href: "/#{press.subdomain}", text: translate('monograph_catalog.index.home'), class: "" }
+        crumbs << { href: main_app.press_catalog_path(press), text: translate('monograph_catalog.index.home'), class: "" }
       end
       crumbs
     end
