@@ -82,7 +82,7 @@ class MonographCatalogController < ::CatalogController
       epub = FeaturedRepresentative.where(monograph_id: @monograph_presenter.id, kind: 'epub').first
       return if epub.blank?
 
-      access_type = if Component.find_by(noid: epub.file_set_id)
+      access_type = if Greensub::Component.find_by(noid: epub.file_set_id)
                       "Controlled"
                     else
                       "OA_Gold"

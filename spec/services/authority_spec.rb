@@ -90,9 +90,12 @@ RSpec.describe Authority do
       end
     end
 
-    [Individual, Institution, User].each do |klass|
+    [Greensub::Individual, Greensub::Institution, User].each do |klass|
+      relative_klass_match = /^Greensub::(.+$)/.match(klass.to_s)
+      relative_klass = relative_klass_match[1].to_sym if relative_klass_match.present?
+      relative_klass ||= klass
       context klass.to_s do
-        let(:agent_type) { klass.to_s.to_sym }
+        let(:agent_type) { relative_klass.to_s.to_sym }
 
         context 'any' do
           let(:agent_id) { 'any' }
@@ -254,8 +257,11 @@ RSpec.describe Authority do
     end
 
     [Sighrax::ElectronicPublication].each do |klass|
+      relative_klass_match = /^Sighrax::(.+$)/.match(klass.to_s)
+      relative_klass = relative_klass_match[1].to_sym if relative_klass_match.present?
+      relative_klass ||= klass
       context klass.to_s do
-        let(:resource_type) { klass.to_s.sub('Sighrax::', '').to_sym }
+        let(:resource_type) { relative_klass.to_s.to_sym }
 
         context 'any' do
           let(:resource_id) { 'any' }
@@ -282,9 +288,12 @@ RSpec.describe Authority do
       end
     end
 
-    [Component, Product].each do |klass|
+    [Greensub::Component, Greensub::Product].each do |klass|
+      relative_klass_match = /^Greensub::(.+$)/.match(klass.to_s)
+      relative_klass = relative_klass_match[1].to_sym if relative_klass_match.present?
+      relative_klass ||= klass
       context klass.to_s do
-        let(:resource_type) { klass.to_s.to_sym }
+        let(:resource_type) { relative_klass.to_s.to_sym }
 
         context 'any' do
           let(:resource_id) { 'any' }

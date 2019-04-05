@@ -80,7 +80,7 @@ RSpec.describe EPubsController, type: :controller do
           monograph.save!
           file_set.save!
           allow_any_instance_of(Keycard::Request::Attributes).to receive(:all).and_return(keycard)
-          allow(Institution).to receive(:where).with(identifier: ['9999']).and_return([institution])
+          allow(Greensub::Institution).to receive(:where).with(identifier: ['9999']).and_return([institution])
 
           get :show, params: { id: file_set.id }
         end
@@ -285,7 +285,7 @@ RSpec.describe EPubsController, type: :controller do
       context 'Restricted Access' do
         let(:parent) { Sighrax.factory(monograph.id) }
         let(:epub) { Sighrax.factory(file_set.id) }
-        let(:component) { Component.create!(identifier: parent.resource_token, name: parent.title, noid: parent.noid) }
+        let(:component) { Greensub::Component.create!(identifier: parent.resource_token, name: parent.title, noid: parent.noid) }
         let(:keycard) { { dlpsInstitutionId: dlpsInstitutionId } }
         let(:dlpsInstitutionId) { 'institute' }
 
@@ -315,9 +315,9 @@ RSpec.describe EPubsController, type: :controller do
           expect(response).to render_template(:show)
         end
 
-        it "Subscribed Institution" do
+        it "Subscribed Greensub::Institution" do
           institution = create(:institution, identifier: dlpsInstitutionId)
-          product = Product.create!(identifier: 'product', name: 'name', purchase: 'purchase')
+          product = Greensub::Product.create!(identifier: 'product', name: 'name', purchase: 'purchase')
           product.components << component
           product.save!
           Greensub.subscribe(subscriber: institution, target: product)
@@ -330,7 +330,7 @@ RSpec.describe EPubsController, type: :controller do
           email = 'wolverine@umich.edu'
           user = create(:user, email: email)
           individual = create(:individual, identifier: email, email: email)
-          product = Product.create!(identifier: 'product', name: 'name', purchase: 'purchase')
+          product = Greensub::Product.create!(identifier: 'product', name: 'name', purchase: 'purchase')
           product.components << component
           product.save!
           Greensub.subscribe(subscriber: individual, target: product)
@@ -425,7 +425,7 @@ RSpec.describe EPubsController, type: :controller do
         let(:epub) { Sighrax.factory(file_set.id) }
 
         before do
-          Component.create!(identifier: parent.resource_token, name: parent.title, noid: parent.noid)
+          Greensub::Component.create!(identifier: parent.resource_token, name: parent.title, noid: parent.noid)
         end
 
         it "with a valid share_link" do

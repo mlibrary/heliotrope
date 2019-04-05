@@ -50,7 +50,7 @@ class ApplicationController < ActionController::Base
 
   def current_institutions
     if session[:dlpsInstitutionId]
-      insts = Institution.where(identifier: session[:dlpsInstitutionId]).to_a
+      insts = Greensub::Institution.where(identifier: session[:dlpsInstitutionId]).to_a
     else
       insts = (ip_based_institutions + shib_institutions).uniq
       session[:dlpsInstitutionId] = insts.map(&:identifier).map(&:to_s)
@@ -66,13 +66,13 @@ class ApplicationController < ActionController::Base
 
     def ip_based_institutions
       ids = request_attributes[:dlpsInstitutionId] || []
-      Institution.where(identifier: ids).to_a
+      Greensub::Institution.where(identifier: ids).to_a
     end
 
     def shib_institutions
       entity_id = request_attributes[:identity_provider]
       if entity_id
-        Institution.where(entity_id: entity_id).to_a
+        Greensub::Institution.where(entity_id: entity_id).to_a
       else
         []
       end

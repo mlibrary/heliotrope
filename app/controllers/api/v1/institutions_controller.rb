@@ -10,9 +10,9 @@ module API
       # @example
       #   get /api/institution?identifier=String
       # @param [Hash] params { identifier: String }
-      # @return [ActionDispatch::Response] {Institution} (see {show})
+      # @return [ActionDispatch::Response] {Greensub::Institution} (see {show})
       def find
-        @institution = Institution.find_by(identifier: params[:identifier])
+        @institution = Greensub::Institution.find_by(identifier: params[:identifier])
         return head :not_found if @institution.blank?
         render :show
       end
@@ -21,13 +21,13 @@ module API
       #   List institutions
       #   @example
       #     get /api/institutions
-      #   @return [ActionDispatch::Response] array of {Institution}
+      #   @return [ActionDispatch::Response] array of {Greensub::Institution}
       # @overload index
       #   List product institutions
       #   @example
       #     get /api/products/:product_id/institutions
       #   @param [Hash] params { product_id: Number }
-      #   @return [ActionDispatch::Response] array of {Institution}
+      #   @return [ActionDispatch::Response] array of {Greensub::Institution}
       #
       #     (See ./app/views/api/v1/institution/index.json.jbuilder)
       #
@@ -41,7 +41,7 @@ module API
                           set_product
                           @product.institutions
                         else
-                          Institution.all
+                          Greensub::Institution.all
                         end
       end
 
@@ -50,7 +50,7 @@ module API
       #   @example
       #     get /api/institution/:id
       #   @param [Hash] params { id: Number }
-      #   @return [ActionDispatch::Response] {Institution}
+      #   @return [ActionDispatch::Response] {Greensub::Institution}
       #
       #     (See ./app/views/api/v1/institution/show.json.jbuilder)
       #
@@ -76,14 +76,14 @@ module API
       # @example
       #   post /api/institutions
       # @param [Hash] params { institution: { identifier: String, name: String, entity_id: String } }
-      # @return [ActionDispatch::Response] {Institution} (see {show})
+      # @return [ActionDispatch::Response] {Greensub::Institution} (see {show})
       def create
-        @institution = Institution.find_by(identifier: institution_params[:identifier])
+        @institution = Greensub::Institution.find_by(identifier: institution_params[:identifier])
         if @institution.present?
           @institution.errors.add(:identifier, "institution identifier #{institution_params[:identifier]} exists!")
           return render json: @institution.errors, status: :unprocessable_entity
         end
-        @institution = Institution.new(institution_params)
+        @institution = Greensub::Institution.new(institution_params)
         return render json: @institution.errors, status: :unprocessable_entity unless @institution.save
         render :show, status: :created, location: @institution
       end
@@ -93,7 +93,7 @@ module API
       #   @example
       #     put /api/institutions/:id
       #   @param [Hash] params { id: Number, institution: { name: String, email: String } }
-      #   @return [ActionDispatch::Response] {Institution} (see {show})
+      #   @return [ActionDispatch::Response] {Greensub::Institution} (see {show})
       # @overload update
       #   Grant institution read access to product
       #   @example
@@ -136,11 +136,11 @@ module API
       private
 
         def set_product
-          @product = Product.find(params[:product_id])
+          @product = Greensub::Product.find(params[:product_id])
         end
 
         def set_institution
-          @institution = Institution.find(params[:id])
+          @institution = Greensub::Institution.find(params[:id])
         end
 
         def institution_params

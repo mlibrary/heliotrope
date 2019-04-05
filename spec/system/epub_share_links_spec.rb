@@ -20,7 +20,7 @@ RSpec.describe "EPub Share Links", type: :system do
     file_set.save!
     FeaturedRepresentative.create!(monograph_id: monograph.id, file_set_id: file_set.id, kind: 'epub')
     UnpackJob.perform_now(file_set.id, 'epub')
-    Component.create!(identifier: parent.resource_token, name: parent.title, noid: parent.noid)
+    Greensub::Component.create!(identifier: parent.resource_token, name: parent.title, noid: parent.noid)
   end
 
   def take_failed_screenshot

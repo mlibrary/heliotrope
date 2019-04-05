@@ -68,10 +68,10 @@ RSpec.describe ApplicationController, type: :controller do
 
     before do
       allow_any_instance_of(Keycard::Request::Attributes).to receive(:all).and_return(keycard)
-      allow(Institution).to receive(:where).with(identifier: []).and_return([])
-      allow(Institution).to receive(:where).with(identifier: 'identifier').and_return([institution])
-      allow(Institution).to receive(:where).with(identifier: ['identifier']).and_return([institution])
-      allow(Institution).to receive(:where).with(entity_id: 'https://entity.id').and_return([institution])
+      allow(Greensub::Institution).to receive(:where).with(identifier: []).and_return([])
+      allow(Greensub::Institution).to receive(:where).with(identifier: 'identifier').and_return([institution])
+      allow(Greensub::Institution).to receive(:where).with(identifier: ['identifier']).and_return([institution])
+      allow(Greensub::Institution).to receive(:where).with(entity_id: 'https://entity.id').and_return([institution])
       request.env["HTTP_ACCEPT"] = 'application/json'
       routes.draw { get "trigger" => "anonymous#trigger" }
       get :trigger

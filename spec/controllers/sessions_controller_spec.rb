@@ -82,8 +82,8 @@ RSpec.describe SessionsController, type: :controller do
 
   describe '#discovery_feed' do
     it 'gets full discovery feed' do
-      Institution.create!(identifier: '1', name: 'University of Michigan', site: 'Site', login: 'Login', entity_id: 'https://shibboleth.umich.edu/idp/shibboleth')
-      Institution.create!(identifier: '2', name: 'College', site: 'Site', login: 'Login', entity_id: 'https://shibboleth.college.edu/idp/shibboleth')
+      Greensub::Institution.create!(identifier: '1', name: 'University of Michigan', site: 'Site', login: 'Login', entity_id: 'https://shibboleth.umich.edu/idp/shibboleth')
+      Greensub::Institution.create!(identifier: '2', name: 'College', site: 'Site', login: 'Login', entity_id: 'https://shibboleth.college.edu/idp/shibboleth')
       get :discovery_feed
       expect(response).to be_success
       expect { JSON.parse response.body }.not_to raise_error
@@ -106,11 +106,11 @@ RSpec.describe SessionsController, type: :controller do
 
     it 'gets parameterized discovery feed' do
       m = Sighrax.factory(monograph.id)
-      component = Component.create!(identifier: m.resource_token, name: m.title, noid: m.noid)
-      institution1 = Institution.create!(identifier: '1', name: 'University of Michigan', site: 'Site', login: 'Login', entity_id: 'https://shibboleth.umich.edu/idp/shibboleth')
+      component = Greensub::Component.create!(identifier: m.resource_token, name: m.title, noid: m.noid)
+      institution1 = Greensub::Institution.create!(identifier: '1', name: 'University of Michigan', site: 'Site', login: 'Login', entity_id: 'https://shibboleth.umich.edu/idp/shibboleth')
       # To show that this institution is not used
-      institution2 = Institution.create!(identifier: '2', name: 'College', site: 'Site', login: 'Login', entity_id: 'https://shibboleth.college.edu/idp/shibboleth') # rubocop:disable Lint/UselessAssignment
-      product = Product.create!(identifier: 'product', name: 'name', purchase: 'purchase')
+      institution2 = Greensub::Institution.create!(identifier: '2', name: 'College', site: 'Site', login: 'Login', entity_id: 'https://shibboleth.college.edu/idp/shibboleth') # rubocop:disable Lint/UselessAssignment
+      product = Greensub::Product.create!(identifier: 'product', name: 'name', purchase: 'purchase')
       product.components << component
       product.save!
       Greensub.subscribe(subscriber: institution1, target: product)
@@ -122,8 +122,8 @@ RSpec.describe SessionsController, type: :controller do
     end
 
     it 'gets empty discovery feed if given bogus id' do
-      Institution.create!(identifier: '1', name: 'University of Michigan', site: 'Site', login: 'Login', entity_id: 'https://shibboleth.umich.edu/idp/shibboleth')
-      Institution.create!(identifier: '2', name: 'College', site: 'Site', login: 'Login', entity_id: 'https://shibboleth.college.edu/idp/shibboleth')
+      Greensub::Institution.create!(identifier: '1', name: 'University of Michigan', site: 'Site', login: 'Login', entity_id: 'https://shibboleth.umich.edu/idp/shibboleth')
+      Greensub::Institution.create!(identifier: '2', name: 'College', site: 'Site', login: 'Login', entity_id: 'https://shibboleth.college.edu/idp/shibboleth')
       get :discovery_feed, params: { id: 'bogus_id' }
       expect(response).to have_http_status(:success)
       expect { JSON.parse response.body }.not_to raise_error

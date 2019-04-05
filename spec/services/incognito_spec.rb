@@ -16,8 +16,8 @@ RSpec.describe Incognito do
     allow(actor).to receive(:platform_admin?).and_return(admin)
     allow(actor).to receive(:individual).and_return(individual)
     allow(actor).to receive(:institutions).and_return(institutions)
-    allow(Individual).to receive(:find).with(individual.id).and_return(individual)
-    allow(Institution).to receive(:find).with(institution.id).and_return(institution)
+    allow(Greensub::Individual).to receive(:find).with(individual.id).and_return(individual)
+    allow(Greensub::Institution).to receive(:find).with(institution.id).and_return(institution)
     allow(individual).to receive(:products).and_return([product])
     allow(institution).to receive(:products).and_return([product])
   end

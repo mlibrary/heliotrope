@@ -80,7 +80,7 @@ RSpec.describe EmbedController, type: :controller do
         ActiveFedora::SolrService.add([monograph.to_h, file_set.to_h])
         ActiveFedora::SolrService.commit
         allow_any_instance_of(Keycard::Request::Attributes).to receive(:all).and_return(keycard)
-        allow(Institution).to receive(:where).with(identifier: ['9999']).and_return([institution])
+        allow(Greensub::Institution).to receive(:where).with(identifier: ['9999']).and_return([institution])
         allow(HandleService).to receive(:noid).with(hdl).and_return('file_set_noid')
       end
 

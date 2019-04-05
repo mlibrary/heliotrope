@@ -27,8 +27,8 @@ class SushiService
     member = ::SwaggerClient::SUSHIConsortiumMemberList.new
     member.customer_id = @customer_id
     member.requestor_id = User.find(@requestor_id)&.email
-    member.name = Institution.find(@customer_id).name
-    member.notes = Institution.find(@customer_id).entity_id
+    member.name = Greensub::Institution.find(@customer_id).name
+    member.notes = Greensub::Institution.find(@customer_id).entity_id
     member.institution_id = []
     [member]
   end

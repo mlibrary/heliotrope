@@ -171,8 +171,8 @@ RSpec.describe "Customers Counter Reports", type: :request do
         create(:counter_report, press: press_id, session: 1,  noid: 'a2', parent_noid: 'A', institution: 1, created_at: Time.parse("2018-01-02").utc, access_type: "Controlled", request: 1)
         # press admins have access to *all* institutions for their press only
         allow_any_instance_of(CounterReportsController).to receive(:current_institutions).and_return([])
-        allow(Institution).to receive(:order).and_return(institutions)
-        allow(Institution).to receive(:where).with(identifier: '1').and_return(institutions)
+        allow(Greensub::Institution).to receive(:order).and_return(institutions)
+        allow(Greensub::Institution).to receive(:where).with(identifier: '1').and_return(institutions)
         sign_in(current_user)
       end
 

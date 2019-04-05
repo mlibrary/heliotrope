@@ -14,7 +14,7 @@ RSpec.describe CounterReporterService do
       let(:report) { described_class.tr_b1(press: press.id, institution: institution, start_date: "2018-01-01", end_date: "2018-03-01") }
 
       it "makes an empty report" do
-        allow(Institution).to receive(:where).with(identifier: institution).and_return([institution_name])
+        allow(Greensub::Institution).to receive(:where).with(identifier: institution).and_return([institution_name])
 
         expect(described_class.csv(report)).to eq <<~CSV
           Report_Name,Book Requests (Excluding OA_Gold)
@@ -46,7 +46,7 @@ RSpec.describe CounterReporterService do
       after { CounterReport.destroy_all }
 
       it "makes the csv report" do
-        allow(Institution).to receive(:where).with(identifier: institution).and_return([institution_name])
+        allow(Greensub::Institution).to receive(:where).with(identifier: institution).and_return([institution_name])
 
         expect(described_class.csv(report)).to eq <<~CSV
           Report_Name,Platform Usage,"","","",""

@@ -83,8 +83,11 @@ RSpec.describe ValidationService do
     end
   end
 
-  [Component, Individual, Institution, Product, User].each do |klass|
-    method = "valid_#{klass.to_s.downcase}?".to_sym
+  [Greensub::Component, Greensub::Individual, Greensub::Institution, Greensub::Product, User].each do |klass|
+    relative_klass_match = /^Greensub::(.+$)/.match(klass.to_s)
+    relative_klass = relative_klass_match[1].to_sym if relative_klass_match.present?
+    relative_klass ||= klass
+    method = "valid_#{relative_klass.to_s.downcase}?".to_sym
 
     describe "##{method}" do
       subject { described_class.send(method, id) }

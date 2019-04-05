@@ -143,7 +143,7 @@ class User < ApplicationRecord
   end
 
   def individual
-    Individual.find_by(email: email) if email.present?
+    Greensub::Individual.find_by(email: email) if email.present?
   end
 
   def grants?

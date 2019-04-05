@@ -55,12 +55,12 @@
       </div>
       <div class="col-md-2">
         <label for="grant_agent_institution_id">
-          <%= f.collection_select :agent_institution_id, Institution.order(:name), :id, :name %>
+          <%= f.collection_select :agent_institution_id, Greensub::Institution.order(:name), :id, :name %>
         </label>
       </div>
       <div class="col-md-2">
         <label for="grant_agent_individual_id">
-          <%= f.collection_select :agent_individual_id, Individual.order(:email), :id, :email %>
+          <%= f.collection_select :agent_individual_id, Greensub::Individual.order(:email), :id, :email %>
         </label>
       </div>
       <div class="col-md-3">
@@ -173,12 +173,12 @@
       </div>
       <div class="col-md-4">
         <label for="grant_resource_product_id">
-          <%= f.collection_select :resource_product_id, Product.order(:name), :id, :name %>
+          <%= f.collection_select :resource_product_id, Greensub::Product.order(:name), :id, :name %>
         </label>
       </div>
       <div class="col-md-3">
         <label for="grant_resource_component_id">
-          <%= f.collection_select :resource_component_id, Component.order(:name), :id, :name %>
+          <%= f.collection_select :resource_component_id, Greensub::Component.order(:name), :id, :name %>
         </label>
       </div>
       <div class="col-md-2">

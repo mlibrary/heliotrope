@@ -1,5 +1,11 @@
 # frozen_string_literal: true
 
+require_dependency 'greensub/component'
+require_dependency 'greensub/components_product'
+require_dependency 'greensub/individual'
+require_dependency 'greensub/institution'
+require_dependency 'greensub/product'
+
 module Greensub
   class << self
     def actor_products(actor)

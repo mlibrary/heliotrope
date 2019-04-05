@@ -1,0 +1,13 @@
+<div id="maincontent">
+  <h1>Editing Institution</h1>
+  <div class="col-md-12">
+    <%= render 'form', institution: @institution %>
+  </div>
+  <div class="col-md-12"><br/></div>
+  <div class="col-md-12">
+    <%= link_to 'Show', greensub_institution_path(@institution) %>
+    <span> | </span>
+    <%= link_to 'Back', greensub_institutions_path %>
+  </div>
+  <div class="col-md-12"><br/></div>
+</div>

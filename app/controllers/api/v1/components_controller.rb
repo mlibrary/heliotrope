@@ -10,9 +10,9 @@ module API
       # @example
       #   get /api/component?identifier=String
       # @param [Hash] params { identifier: String }
-      # @return [ActionDispatch::Response] {Component} (see {show})
+      # @return [ActionDispatch::Response] {Greensub::Component} (see {show})
       def find
-        @component = Component.find_by(identifier: params[:identifier])
+        @component = Greensub::Component.find_by(identifier: params[:identifier])
         return head :not_found if @component.blank?
         render :show
       end
@@ -21,13 +21,13 @@ module API
       #   List components
       #   @example
       #     get /api/components
-      #   @return [ActionDispatch::Response] array of {Component}
+      #   @return [ActionDispatch::Response] array of {Greensub::Component}
       # @overload index
       #   List product components
       #   @example
       #     get /api/products/:product_id/components
       #   @param [Hash] params { product_id: Number }
-      #   @return [ActionDispatch::Response] array of {Component}
+      #   @return [ActionDispatch::Response] array of {Greensub::Component}
       #
       #     (See ./app/views/api/v1/component/index.json.jbuilder)
       #
@@ -41,7 +41,7 @@ module API
                         set_product
                         @product.components
                       else
-                        Component.all
+                        Greensub::Component.all
                       end
       end
 
@@ -50,7 +50,7 @@ module API
       #   @example
       #     get /api/component/:id
       #   @param [Hash] params { id: Number }
-      #   @return [ActionDispatch::Response] {Component}
+      #   @return [ActionDispatch::Response] {Greensub::Component}
       #
       #     (See ./app/views/api/v1/component/show.json.jbuilder)
       #
@@ -76,14 +76,14 @@ module API
       # @example
       #   post /api/components
       # @param [Hash] params { component: { identifier: String, name: String, noid: String } }
-      # @return [ActionDispatch::Response] {Component} (see {show})
+      # @return [ActionDispatch::Response] {Greensub::Component} (see {show})
       def create
-        @component = Component.find_by(identifier: component_params[:identifier])
+        @component = Greensub::Component.find_by(identifier: component_params[:identifier])
         if @component.present?
           @component.errors.add(:identifier, "component identifier #{component_params[:identifier]} exists!")
           return render json: @component.errors, status: :unprocessable_entity
         end
-        @component = Component.new(component_params)
+        @component = Greensub::Component.new(component_params)
         return render json: @component.errors, status: :unprocessable_entity unless @component.save
         render :show, status: :created, location: @component
       end
@@ -93,7 +93,7 @@ module API
       #   @example
       #     put /api/components/:id
       #   @param [Hash] params { id: Number, component: { name: String, email: String } }
-      #   @return [ActionDispatch::Response] {Component} (see {show})
+      #   @return [ActionDispatch::Response] {Greensub::Component} (see {show})
       # @overload update
       #   Add component to product
       #   @example
@@ -138,11 +138,11 @@ module API
       private
 
         def set_product
-          @product = Product.find(params[:product_id])
+          @product = Greensub::Product.find(params[:product_id])
         end
 
         def set_component
-          @component = Component.find(params[:id])
+          @component = Greensub::Component.find(params[:id])
         end
 
         def component_params

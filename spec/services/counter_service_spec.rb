@@ -98,11 +98,11 @@ RSpec.describe CounterService do
     context "with a restricted epub" do
       before do
         allow(HandleService).to receive(:path).and_return(true)
-        allow(Component).to receive(:find_by).and_return(true)
+        allow(Greensub::Component).to receive(:find_by).and_return(true)
       end
 
       it "is 'Controlled'" do
-        # Right now, only epubs are "restricted" via Component/Product
+        # Right now, only epubs are "restricted" via Greensub::Component/Product
         expect(described_class.from(controller, presenter).access_type).to eq 'Controlled'
       end
     end
@@ -110,7 +110,7 @@ RSpec.describe CounterService do
     context "with an unrestricted epub" do
       before do
         allow(HandleService).to receive(:path).and_return(true)
-        allow(Component).to receive(:find_by).and_return(false)
+        allow(Greensub::Component).to receive(:find_by).and_return(false)
       end
 
       it "is OA_Gold" do
@@ -121,7 +121,7 @@ RSpec.describe CounterService do
     context "with an asset with no permissions_expiration_date" do
       before do
         allow(HandleService).to receive(:path).and_return(true)
-        allow(Component).to receive(:find_by).and_return(false)
+        allow(Greensub::Component).to receive(:find_by).and_return(false)
       end
 
       it "is OA_Gold" do
@@ -132,7 +132,7 @@ RSpec.describe CounterService do
     context "with an asset with a permissions_expiration_date" do
       before do
         allow(HandleService).to receive(:path).and_return(true)
-        allow(Component).to receive(:find_by).and_return(false)
+        allow(Greensub::Component).to receive(:find_by).and_return(false)
         allow(presenter).to receive(:permissions_expiration_date).and_return("2020-01-27")
       end
 
@@ -158,7 +158,7 @@ RSpec.describe CounterService do
         allow(now).to receive(:strftime).with('%Y-%m-%d').and_return("2020-10-17")
         allow(now).to receive(:hour).and_return('13')
         allow(HandleService).to receive(:path).and_return(true)
-        allow(Component).to receive(:find_by).and_return(false)
+        allow(Greensub::Component).to receive(:find_by).and_return(false)
       end
 
       after { CounterReport.destroy_all }
@@ -175,7 +175,7 @@ RSpec.describe CounterService do
 
       context "a user with an institution downloading an asset" do
         before do
-          allow(controller).to receive(:current_institutions).and_return([Institution.new(identifier: 495, name: "a")])
+          allow(controller).to receive(:current_institutions).and_return([Greensub::Institution.new(identifier: 495, name: "a")])
           allow(presenter).to receive(:id).and_return('123454321')
           allow(presenter).to receive(:monograph).and_return(monograph)
           allow(presenter).to receive(:monograph_id).and_return(monograph_id)
@@ -203,8 +203,8 @@ RSpec.describe CounterService do
 
       context "a user with 2 institutions" do
         before do
-          allow(controller).to receive(:current_institutions).and_return([Institution.new(identifier: 12, name: "a"),
-                                                                          Institution.new(identifier: 65, name: "b")])
+          allow(controller).to receive(:current_institutions).and_return([Greensub::Institution.new(identifier: 12, name: "a"),
+                                                                          Greensub::Institution.new(identifier: 65, name: "b")])
           allow(presenter).to receive(:id).and_return('123454321')
           allow(presenter).to receive(:monograph).and_return(monograph)
           allow(presenter).to receive(:monograph_id).and_return(monograph_id)
@@ -232,7 +232,7 @@ RSpec.describe CounterService do
         end
 
         before do
-          allow(controller).to receive(:current_institutions).and_return([Institution.new(identifier: 495, name: "a")])
+          allow(controller).to receive(:current_institutions).and_return([Greensub::Institution.new(identifier: 495, name: "a")])
           allow(presenter).to receive(:id).and_return('123454321')
           allow(presenter).to receive(:monograph).and_return(monograph)
           allow(presenter).to receive(:monograph_id).and_return(monograph_id)
@@ -269,7 +269,7 @@ RSpec.describe CounterService do
         allow(now).to receive(:strftime).with('%Y-%m-%d').and_return("2020-10-17")
         allow(now).to receive(:hour).and_return('13')
 
-        allow(controller).to receive(:current_institutions).and_return([Institution.new(identifier: 1, name: "a")])
+        allow(controller).to receive(:current_institutions).and_return([Greensub::Institution.new(identifier: 1, name: "a")])
       end
 
       it "adds a Monograph COUNTER stat row" do

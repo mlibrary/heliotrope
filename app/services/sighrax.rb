@@ -28,7 +28,7 @@ module Sighrax
 
     def access?(actor, target)
       products = actor_products(actor)
-      component = Component.find_by(noid: target.noid)
+      component = Greensub::Component.find_by(noid: target.noid)
       component_products = component&.products || []
       (products & component_products).any?
     end
@@ -76,7 +76,7 @@ module Sighrax
 
     def restricted?(entity)
       return true unless entity.valid?
-      Component.find_by(noid: entity.noid).present?
+      Greensub::Component.find_by(noid: entity.noid).present?
     end
 
     private
