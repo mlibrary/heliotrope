@@ -194,3 +194,8 @@ group :development do
   # Yay! A Ruby Documentation Tool
   gem 'yard'
 end
+
+group :development do
+  # Capybara save_and_open_page thingy
+  gem 'launchy', '~>2.4.3'
+end

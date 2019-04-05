@@ -5,7 +5,6 @@ require 'rails_helper'
 describe 'Create an external resource' do
   context 'as a logged in user' do
     let(:user) { create(:platform_admin) }
-    let!(:press) { create(:press) }
 
     # We need to be able to accept "fileless" file_sets, which will
     # just be links to "external resources". Right now in Hyrax there's

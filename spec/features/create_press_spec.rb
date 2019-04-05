@@ -24,7 +24,7 @@ describe 'Adding a new press' do
       # fill_in 'Footer block a', with: '<div>Footer Block A Stuff</div>'
       fill_in 'Footer block c', with: '<div>Footer Block C Stuff</div>'
       click_button 'Save'
-      expect(page).to have_link 'Test Publisher', href: 'testpub'
+      expect(page).to have_link 'Test Publisher', href: '/testpub?locale=en'
       click_link 'Test Publisher'
       expect(page).to have_content 'Test Publisher'
       expect(page).to have_content 'A Test Publisher description'
