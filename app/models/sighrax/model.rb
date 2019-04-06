@@ -7,7 +7,7 @@ module Sighrax
     protected
 
       def model_type
-        data['has_model_ssim'].first
+        Array(data['has_model_ssim']).first
       end
 
     private
