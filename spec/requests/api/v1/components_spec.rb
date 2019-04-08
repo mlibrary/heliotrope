@@ -131,29 +131,28 @@ RSpec.describe "Components", type: :request do
 
     describe "POST /api/v1/components" do # create
       let(:params) { { component: { identifier: identifier, name: name, noid: noid } }.to_json }
+      let(:identifier) { '' }
+      let(:name) { '' }
+      let(:noid) { 'noid' }
+      let(:entity) { double('entity', valid?: valid) }
+      let(:valid) { true }
 
-      context 'blank' do
-        let(:identifier) { '' }
-        let(:name) { '' }
-        let(:noid) { '' }
+      before { allow(Sighrax).to receive(:factory).with(noid).and_return(entity) }
 
-        it 'unprocessable_entity' do
-          post api_components_path, params: params, headers: headers
-          expect(response.content_type).to eq("application/json")
-          expect(response).to have_http_status(:unprocessable_entity)
-          expect(response_body[:identifier.to_s]).to eq(["can't be blank"])
-          expect(response_body[:name.to_s]).to be nil
-          expect(response_body[:noid.to_s]).to eq(["can't be blank"])
-          expect(Greensub::Component.count).to eq(0)
-        end
+      it 'blank identifier' do
+        post api_components_path, params: params, headers: headers
+        expect(response.content_type).to eq("application/json")
+        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response_body[:identifier.to_s]).to eq(["can't be blank"])
+        expect(response_body[:name.to_s]).to be nil
+        expect(response_body[:noid.to_s]).to be nil
+        expect(Greensub::Component.count).to eq(0)
       end
 
-      context 'non existing' do
+      context 'identifier' do
         let(:identifier) { 'identifier' }
-        let(:name) { 'name' }
-        let(:noid) { 'noid' }
 
-        it 'created' do
+        it 'existing noid' do
           post api_components_path, params: params, headers: headers
           expect(response.content_type).to eq("application/json")
           expect(response).to have_http_status(:created)
@@ -162,14 +161,26 @@ RSpec.describe "Components", type: :request do
           expect(response_body[:noid.to_s]).to eq(noid)
           expect(Greensub::Component.count).to eq(1)
         end
+
+        context 'non existing noid' do
+          let(:valid) { false }
+
+          it do
+            post api_components_path, params: params, headers: headers
+            expect(response.content_type).to eq("application/json")
+            expect(response).to have_http_status(:unprocessable_entity)
+            expect(response_body[:identifier.to_s]).to be nil
+            expect(response_body[:name.to_s]).to be nil
+            expect(response_body[:noid.to_s]).to eq(["component noid '#{noid}' does not exists!"])
+            expect(Greensub::Component.count).to eq(0)
+          end
+        end
       end
 
-      context 'existing' do
+      context 'existing identifier' do
         let(:identifier) { component.identifier }
-        let(:name) { 'name' }
-        let(:noid) { 'noid' }
 
-        it 'unprocessable_entity' do
+        it do
           post api_components_path, params: params, headers: headers
           expect(response.content_type).to eq("application/json")
           expect(response).to have_http_status(:unprocessable_entity)
@@ -241,8 +252,17 @@ RSpec.describe "Components", type: :request do
     end
 
     describe "PUT /api/v1/component" do # update
+      let(:params) { { component: { identifier: identifier, name: name, noid: noid } }.to_json }
+      let(:identifier) { 'updated_identifier' }
+      let(:name) { 'updated_name' }
+      let(:noid) { 'updated_noid' }
+      let(:entity) { double('entity', valid?: valid) }
+      let(:valid) { true }
+
+      before { allow(Sighrax).to receive(:factory).with(noid).and_return(entity) }
+
       it 'non existing not_found' do
-        put api_component_path(1), params: { component: { name: 'updated_name' } }.to_json, headers: headers
+        put api_component_path(1), params: params, headers: headers
         expect(response.content_type).to eq("application/json")
         expect(response).to have_http_status(:not_found)
         expect(response_body[:exception.to_s]).to include("ActiveRecord::RecordNotFound: Couldn't find Greensub::Component")
@@ -250,7 +270,7 @@ RSpec.describe "Components", type: :request do
       end
 
       it 'existing ok' do
-        put api_component_path(component.id), params: { component: { name: 'updated_name' } }.to_json, headers: headers
+        put api_component_path(component.id), params: params, headers: headers
         expect(response.content_type).to eq("application/json")
         expect(response).to have_http_status(:ok)
         expect(response_body[:id.to_s]).to eq(component.id)
@@ -258,12 +278,28 @@ RSpec.describe "Components", type: :request do
         expect(Greensub::Component.count).to eq(1)
       end
 
-      it 'existing update identifier unprocessable_entity' do
-        put api_component_path(component.id), params: { component: { identifier: '' } }.to_json, headers: headers
-        expect(response.content_type).to eq("application/json")
-        expect(response).to have_http_status(:unprocessable_entity)
-        expect(response_body[:identifier.to_s]).to eq(["can't be blank"])
-        expect(Greensub::Component.count).to eq(1)
+      context 'existing update identifier unprocessable_entity' do
+        let(:identifier) { '' }
+
+        it do
+          put api_component_path(component.id), params: params, headers: headers
+          expect(response.content_type).to eq("application/json")
+          expect(response).to have_http_status(:unprocessable_entity)
+          expect(response_body[:identifier.to_s]).to eq(["can't be blank"])
+          expect(Greensub::Component.count).to eq(1)
+        end
+      end
+
+      context 'existing update noid unprocessable_entity' do
+        let(:valid) { false }
+
+        it do
+          put api_component_path(component.id), params: params, headers: headers
+          expect(response.content_type).to eq("application/json")
+          expect(response).to have_http_status(:unprocessable_entity)
+          expect(response_body[:noid.to_s]).to eq(["component noid '#{noid}' does not exists!"])
+          expect(Greensub::Component.count).to eq(1)
+        end
       end
     end
 
