@@ -11,7 +11,7 @@ RSpec.describe Sighrax::Model, type: :model do
   it { is_expected.to be_an_instance_of(described_class) }
   it { is_expected.to be_a_kind_of(Sighrax::Entity) }
   it { expect(subject.resource_type).to eq :Model }
-  it { expect { subject.send(:model_type) }.to raise_error(NoMethodError, "undefined method `first' for nil:NilClass") }
+  it { expect(subject.send(:model_type)).to be_nil }
 
   describe '#model_type' do
     let(:data) { { 'has_model_ssim' => ['Model'] } }

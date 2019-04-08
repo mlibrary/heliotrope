@@ -40,7 +40,7 @@ module Sighrax
     end
 
     def title
-      data['title_tesim']&.first || noid
+      Array(data['title_tesim']).first || noid
     end
 
     protected
