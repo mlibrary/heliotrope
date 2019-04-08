@@ -2,7 +2,7 @@
   <% if can? :edit, member.id %>
     <% if member.component? %>
       <%= link_to t('.destroy'),
-        main_app.component_path(member.component),
+        main_app.greensub_component_path(member.component),
         method: :delete,
         title: t('.destroy'),
         data: { confirm: t('.destroy') },
@@ -10,7 +10,7 @@
     <% else %>
       <% epub = Sighrax.factory(member.id) %>
       <%= link_to t('.create'),
-        main_app.components_path(component: { identifier: HandleService.path(epub.noid), name: epub.title, noid: epub.noid, handle: HandleService.path(epub.noid) }),
+        main_app.greensub_components_path(greensub_component: { identifier: HandleService.path(epub.noid), name: epub.title, noid: epub.noid }),
         method: :post,
         title: t('.create'),
         data: { confirm: t('.create') },
