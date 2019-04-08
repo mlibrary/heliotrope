@@ -9,7 +9,7 @@ RSpec.describe "Institutions", type: :request do
       "identifier" => institution.identifier,
       "name" => institution.name,
       "entity_id" => institution.entity_id,
-      "url" => institution_url(institution, format: :json)
+      "url" => greensub_institution_url(institution, format: :json)
     }
   end
   let(:headers) do
@@ -45,7 +45,7 @@ RSpec.describe "Institutions", type: :request do
         expect(response.content_type).to eq("application/json")
         expect(response).to have_http_status(:not_found)
         expect(response.body).to be_empty
-        expect(Institution.count).to eq(0)
+        expect(Greensub::Institution.count).to eq(0)
       end
 
       it 'existing ok' do
@@ -53,7 +53,7 @@ RSpec.describe "Institutions", type: :request do
         expect(response.content_type).to eq("application/json")
         expect(response).to have_http_status(:ok)
         expect(response_body).to eq(institution_obj(institution: institution))
-        expect(Institution.count).to eq(1)
+        expect(Greensub::Institution.count).to eq(1)
       end
     end
 
@@ -63,7 +63,7 @@ RSpec.describe "Institutions", type: :request do
         expect(response.content_type).to eq("application/json")
         expect(response).to have_http_status(:ok)
         expect(response_body).to eq([])
-        expect(Institution.count).to eq(0)
+        expect(Greensub::Institution.count).to eq(0)
       end
 
       it 'institution ok' do
@@ -72,7 +72,7 @@ RSpec.describe "Institutions", type: :request do
         expect(response.content_type).to eq("application/json")
         expect(response).to have_http_status(:ok)
         expect(response_body).to eq([institution_obj(institution: institution)])
-        expect(Institution.count).to eq(1)
+        expect(Greensub::Institution.count).to eq(1)
       end
 
       it 'institutions ok' do
@@ -82,7 +82,7 @@ RSpec.describe "Institutions", type: :request do
         expect(response.content_type).to eq("application/json")
         expect(response).to have_http_status(:ok)
         expect(response_body).to match_array([institution_obj(institution: institution), institution_obj(institution: new_institution)])
-        expect(Institution.count).to eq(2)
+        expect(Greensub::Institution.count).to eq(2)
       end
     end
 
@@ -96,7 +96,7 @@ RSpec.describe "Institutions", type: :request do
         expect(response.content_type).to eq("application/json")
         expect(response).to have_http_status(:ok)
         expect(response_body).to eq([])
-        expect(Institution.count).to eq(0)
+        expect(Greensub::Institution.count).to eq(0)
       end
 
       it 'institution ok' do
@@ -108,7 +108,7 @@ RSpec.describe "Institutions", type: :request do
         put api_product_institution_path(product, institution), headers: headers
         get api_product_institutions_path(product), headers: headers
         expect(institution_response_body).to eq([institution_obj(institution: institution)])
-        expect(Institution.count).to eq(1)
+        expect(Greensub::Institution.count).to eq(1)
       end
 
       it 'institutions ok' do
@@ -124,7 +124,7 @@ RSpec.describe "Institutions", type: :request do
         put api_product_institution_path(product, new_institution), headers: headers
         get api_product_institutions_path(product), headers: headers
         expect(institutions_response_body).to match_array([institution_obj(institution: institution), institution_obj(institution: new_institution)])
-        expect(Institution.count).to eq(2)
+        expect(Greensub::Institution.count).to eq(2)
       end
     end
 
@@ -143,7 +143,7 @@ RSpec.describe "Institutions", type: :request do
           expect(response_body[:identifier.to_s]).to eq(["can't be blank"])
           expect(response_body[:name.to_s]).to eq(["can't be blank"])
           expect(response_body[:entity_id.to_s]).to be nil
-          expect(Institution.count).to eq(0)
+          expect(Greensub::Institution.count).to eq(0)
         end
       end
 
@@ -159,7 +159,7 @@ RSpec.describe "Institutions", type: :request do
           expect(response_body[:identifier.to_s]).to eq(identifier)
           expect(response_body[:name.to_s]).to eq(name)
           expect(response_body[:entity_id.to_s]).to eq(entity_id)
-          expect(Institution.count).to eq(1)
+          expect(Greensub::Institution.count).to eq(1)
         end
       end
 
@@ -173,7 +173,7 @@ RSpec.describe "Institutions", type: :request do
           expect(response.content_type).to eq("application/json")
           expect(response).to have_http_status(:unprocessable_entity)
           expect(response_body[:identifier.to_s]).to eq(["institution identifier #{identifier} exists!"])
-          expect(Institution.count).to eq(1)
+          expect(Greensub::Institution.count).to eq(1)
         end
       end
     end
@@ -183,8 +183,8 @@ RSpec.describe "Institutions", type: :request do
         get api_institution_path(1), headers: headers
         expect(response.content_type).to eq("application/json")
         expect(response).to have_http_status(:not_found)
-        expect(response_body[:exception.to_s]).to include("ActiveRecord::RecordNotFound: Couldn't find Institution")
-        expect(Institution.count).to eq(0)
+        expect(response_body[:exception.to_s]).to include("ActiveRecord::RecordNotFound: Couldn't find Greensub::Institution")
+        expect(Greensub::Institution.count).to eq(0)
       end
 
       it 'existing ok' do
@@ -192,7 +192,7 @@ RSpec.describe "Institutions", type: :request do
         expect(response.content_type).to eq("application/json")
         expect(response).to have_http_status(:ok)
         expect(response_body).to eq(institution_obj(institution: institution))
-        expect(Institution.count).to eq(1)
+        expect(Greensub::Institution.count).to eq(1)
       end
     end
 
@@ -202,14 +202,14 @@ RSpec.describe "Institutions", type: :request do
           get api_product_institution_path(1, 1), headers: headers
           expect(response.content_type).to eq("application/json")
           expect(response).to have_http_status(:not_found)
-          expect(response_body[:exception.to_s]).to include("ActiveRecord::RecordNotFound: Couldn't find Institution with")
+          expect(response_body[:exception.to_s]).to include("ActiveRecord::RecordNotFound: Couldn't find Greensub::Institution with")
         end
 
         it 'existing institution not_found' do
           get api_product_institution_path(1, institution), headers: headers
           expect(response.content_type).to eq("application/json")
           expect(response).to have_http_status(:not_found)
-          expect(response_body[:exception.to_s]).to include("ActiveRecord::RecordNotFound: Couldn't find Product with")
+          expect(response_body[:exception.to_s]).to include("ActiveRecord::RecordNotFound: Couldn't find Greensub::Product with")
         end
       end
 
@@ -220,7 +220,7 @@ RSpec.describe "Institutions", type: :request do
           get api_product_institution_path(product, 1), headers: headers
           expect(response.content_type).to eq("application/json")
           expect(response).to have_http_status(:not_found)
-          expect(response_body[:exception.to_s]).to include("ActiveRecord::RecordNotFound: Couldn't find Institution with")
+          expect(response_body[:exception.to_s]).to include("ActiveRecord::RecordNotFound: Couldn't find Greensub::Institution with")
         end
 
         it 'existing institution ok' do
@@ -240,7 +240,7 @@ RSpec.describe "Institutions", type: :request do
         put api_institution_path(1), params: { institution: { name: 'updated_name' } }.to_json, headers: headers
         expect(response.content_type).to eq("application/json")
         expect(response).to have_http_status(:not_found)
-        expect(response_body[:exception.to_s]).to include("ActiveRecord::RecordNotFound: Couldn't find Institution")
+        expect(response_body[:exception.to_s]).to include("ActiveRecord::RecordNotFound: Couldn't find Greensub::Institution")
       end
 
       it 'existing ok' do
@@ -265,14 +265,14 @@ RSpec.describe "Institutions", type: :request do
           put api_product_institution_path(1, 1), headers: headers
           expect(response.content_type).to eq("application/json")
           expect(response).to have_http_status(:not_found)
-          expect(response_body[:exception.to_s]).to include("ActiveRecord::RecordNotFound: Couldn't find Institution with")
+          expect(response_body[:exception.to_s]).to include("ActiveRecord::RecordNotFound: Couldn't find Greensub::Institution with")
         end
 
         it 'existing institution not_found' do
           put api_product_institution_path(1, institution), headers: headers
           expect(response.content_type).to eq("application/json")
           expect(response).to have_http_status(:not_found)
-          expect(response_body[:exception.to_s]).to include("ActiveRecord::RecordNotFound: Couldn't find Product with")
+          expect(response_body[:exception.to_s]).to include("ActiveRecord::RecordNotFound: Couldn't find Greensub::Product with")
         end
       end
 
@@ -283,7 +283,7 @@ RSpec.describe "Institutions", type: :request do
           put api_product_institution_path(product, 1), headers: headers
           expect(response.content_type).to eq("application/json")
           expect(response).to have_http_status(:not_found)
-          expect(response_body[:exception.to_s]).to include("ActiveRecord::RecordNotFound: Couldn't find Institution with")
+          expect(response_body[:exception.to_s]).to include("ActiveRecord::RecordNotFound: Couldn't find Greensub::Institution with")
         end
 
         it 'existing institution ok' do
@@ -313,8 +313,8 @@ RSpec.describe "Institutions", type: :request do
         delete api_institution_path(institution.id + 1), headers: headers
         expect(response.content_type).to eq("application/json")
         expect(response).to have_http_status(:not_found)
-        expect(response_body[:exception.to_s]).to include("ActiveRecord::RecordNotFound: Couldn't find Institution")
-        expect(Institution.count).to eq(1)
+        expect(response_body[:exception.to_s]).to include("ActiveRecord::RecordNotFound: Couldn't find Greensub::Institution")
+        expect(Greensub::Institution.count).to eq(1)
       end
 
       it 'existing without products ok' do
@@ -322,7 +322,7 @@ RSpec.describe "Institutions", type: :request do
         expect(response.content_type).to eq("application/json")
         expect(response).to have_http_status(:ok)
         expect(response.body).to be_empty
-        expect(Institution.count).to eq(0)
+        expect(Greensub::Institution.count).to eq(0)
       end
 
       it 'existing with products accepted' do
@@ -331,7 +331,7 @@ RSpec.describe "Institutions", type: :request do
         expect(response.content_type).to eq("application/json")
         expect(response).to have_http_status(:accepted)
         expect(response_body[:base.to_s]).to include("institution has 1 associated products!")
-        expect(Institution.count).to eq(1)
+        expect(Greensub::Institution.count).to eq(1)
       end
     end
 
@@ -341,14 +341,14 @@ RSpec.describe "Institutions", type: :request do
           delete api_product_institution_path(1, 1), headers: headers
           expect(response.content_type).to eq("application/json")
           expect(response).to have_http_status(:not_found)
-          expect(response_body[:exception.to_s]).to include("ActiveRecord::RecordNotFound: Couldn't find Institution with")
+          expect(response_body[:exception.to_s]).to include("ActiveRecord::RecordNotFound: Couldn't find Greensub::Institution with")
         end
 
         it 'existing institution not_found' do
           delete api_product_institution_path(1, institution), headers: headers
           expect(response.content_type).to eq("application/json")
           expect(response).to have_http_status(:not_found)
-          expect(response_body[:exception.to_s]).to include("ActiveRecord::RecordNotFound: Couldn't find Product with")
+          expect(response_body[:exception.to_s]).to include("ActiveRecord::RecordNotFound: Couldn't find Greensub::Product with")
         end
       end
 
@@ -361,7 +361,7 @@ RSpec.describe "Institutions", type: :request do
           delete api_product_institution_path(product, 1), headers: headers
           expect(response.content_type).to eq("application/json")
           expect(response).to have_http_status(:not_found)
-          expect(response_body[:exception.to_s]).to include("ActiveRecord::RecordNotFound: Couldn't find Institution with")
+          expect(response_body[:exception.to_s]).to include("ActiveRecord::RecordNotFound: Couldn't find Greensub::Institution with")
         end
 
         it 'existing institution ok' do

@@ -191,7 +191,7 @@ RSpec.describe CounterReporter::ItemReport do
         create(:counter_report, press: press.id, session: 7,  noid: 'green', model: 'Monograph', parent_noid: 'green', institution: 1, created_at: Time.parse("2018-02-13").utc, access_type: "Controlled")
         create(:counter_report, press: press.id, session: 10, noid: 'a',     model: 'FileSet',   parent_noid: 'red',   institution: 2, created_at: Time.parse("2018-11-11").utc, access_type: "Controlled", request: 1)
 
-        allow(Institution).to receive(:where).with(identifier: institution).and_return([institution_name])
+        allow(Greensub::Institution).to receive(:where).with(identifier: institution).and_return([institution_name])
       end
 
       context "items" do
@@ -304,7 +304,7 @@ RSpec.describe CounterReporter::ItemReport do
         create(:counter_report, press: press.id, session: 7,  noid: 'green', model: 'Monograph', parent_noid: 'green', institution: 1, created_at: Time.parse("2018-02-13").utc, access_type: "Controlled")
         create(:counter_report, press: press.id, session: 10, noid: 'a',     model: 'FileSet',   parent_noid: 'red',   institution: 2, created_at: Time.parse("2018-11-11").utc, access_type: "Controlled", request: 1)
 
-        allow(Institution).to receive(:where).with(identifier: institution).and_return([institution_name])
+        allow(Greensub::Institution).to receive(:where).with(identifier: institution).and_return([institution_name])
       end
 
       it "has to correct number of items" do

@@ -15,7 +15,7 @@ RSpec.describe CounterReporter::PlatformReport do
     let(:institution) { 1 }
 
     it "has the correct header" do
-      allow(Institution).to receive(:where).with(identifier: institution).and_return([institution_name])
+      allow(Greensub::Institution).to receive(:where).with(identifier: institution).and_return([institution_name])
       expect(subject[:header][:Report_Name]).to eq "Platform Usage"
       expect(subject[:header][:Report_ID]).to eq "PR_P1"
       expect(subject[:header][:Release]).to eq "5"
@@ -48,7 +48,7 @@ RSpec.describe CounterReporter::PlatformReport do
         create(:counter_report, press: press.id, session: 1,  noid: 'a',  parent_noid: 'A', institution: 1, created_at: Time.parse("2018-01-02").utc, access_type: "Controlled", request: 1)
         create(:counter_report, press: press.id, session: 6,  noid: 'b',  parent_noid: 'B', institution: 1, created_at: Time.parse("2018-02-11").utc, access_type: "Controlled", request: 1)
         create(:counter_report, press: press.id, session: 10, noid: 'b',  parent_noid: 'B', institution: 2, created_at: Time.parse("2018-11-11").utc, access_type: "Controlled", request: 1)
-        allow(Institution).to receive(:where).with(identifier: institution).and_return([institution_name])
+        allow(Greensub::Institution).to receive(:where).with(identifier: institution).and_return([institution_name])
       end
 
       it "has the correct platform" do

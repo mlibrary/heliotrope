@@ -145,7 +145,7 @@ RSpec.describe "APIRequests", type: :request do
             expect { subject }.not_to raise_error
             expect(response).to redirect_to(api_requests_path)
             expect(response).to have_http_status(:found)
-            expect { Product.find(target.id) }.to raise_error(ActiveRecord::RecordNotFound)
+            expect { Greensub::Product.find(target.id) }.to raise_error(ActiveRecord::RecordNotFound)
           end
         end
       end

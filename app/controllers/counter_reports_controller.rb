@@ -100,7 +100,7 @@ class CounterReportsController < ApplicationController
       @presses = current_user&.admin_presses || Press.order(:name)
       @institutions = if current_user&.admin_presses.present?
                         # admins can get "all institutions" at once or each individual institution
-                        Institution.order(:name).to_a.unshift(Institution.new(name: "All Institutions (slow)", identifier: '*'))
+                        Greensub::Institution.order(:name).to_a.unshift(Greensub::Institution.new(name: "All Institutions (slow)", identifier: '*'))
                       else
                         current_institutions
                       end

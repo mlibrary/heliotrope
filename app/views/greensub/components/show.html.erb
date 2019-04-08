@@ -1,0 +1,42 @@
+<p id="notice"><%= notice %></p>
+<div id="maincontent">
+  <%
+    entity = Sighrax.factory(@component.noid)
+    file_set_id = 0
+    monograph_id = 0
+    if entity.is_a?(Sighrax::Monograph)
+      monograph = entity
+      monograph_id = entity.noid
+    else
+      file_set = entity
+      file_set_id = entity.noid
+      monograph = entity.parent
+      monograph_id = monograph.noid
+    end
+  %>
+  <h1>Component</h1>
+  <div class="col-md-1"><em>ID</em></div>
+  <div class="col-md-11">&nbsp;<%= @component.id %></div>
+  <div class="col-md-1"><em>Identifier</em></div>
+  <div class="col-md-11">&nbsp;<%= @component.identifier %></div>
+  <div class="col-md-1"><em>Name</em></div>
+  <div class="col-md-11">&nbsp;<%= @component.name %></div>
+  <div class="col-md-1"><em>Noid</em></div>
+  <div class="col-md-11">&nbsp;<%= @component.noid %></div>
+  <div class="col-md-1"><em>FileSet</em></div>
+  <div class="col-md-11">&nbsp;<%= link_to_if file_set.present?, file_set_id, hyrax_file_set_path(file_set_id) %></div>
+  <div class="col-md-1"><em>Monograph</em></div>
+  <div class="col-md-11">&nbsp;<%= link_to_if monograph.present?, monograph_id, monograph_catalog_path(monograph_id) %></div>
+  <div class="col-md-12"><br/></div>
+  <h2>Products</h2>
+  <div class="col-md-12">
+    <%= render partial: 'products', locals: { component: @component, products: @component.products } %>
+  </div>
+  <div class="col-md-12"><br/></div>
+  <div class="col-md-12">
+    <%= link_to_if @component.update?, 'Edit', edit_greensub_component_path(@component) %>
+    <span> | </span>
+    <%= link_to 'Back', greensub_components_path %>
+  </div>
+  <div class="col-md-12"><br/></div>
+</div>

@@ -197,7 +197,7 @@ RSpec.describe Hyrax::FileSetsController, type: :controller do
 
     before do
       allow_any_instance_of(Keycard::Request::Attributes).to receive(:all).and_return(keycard)
-      allow(Institution).to receive(:where).with(identifier: ['9999']).and_return([institution])
+      allow(Greensub::Institution).to receive(:where).with(identifier: ['9999']).and_return([institution])
       file_set.read_groups << "public"
       file_set.visibility = "open"
     end

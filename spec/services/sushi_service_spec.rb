@@ -12,7 +12,7 @@ RSpec.describe SushiService do
 
   before do
     allow(User).to receive(:find).with(requestor_id).and_return(current_user)
-    allow(Institution).to receive(:find).with(customer_id).and_return(institution)
+    allow(Greensub::Institution).to receive(:find).with(customer_id).and_return(institution)
   end
 
   describe '#status' do

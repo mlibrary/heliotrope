@@ -9,7 +9,7 @@ RSpec.describe "Individuals", type: :request do
       "identifier" => individual.identifier,
       "name" => individual.name,
       "email" => individual.email,
-      "url" => individual_url(individual, format: :json)
+      "url" => greensub_individual_url(individual, format: :json)
     }
   end
   let(:headers) do
@@ -45,7 +45,7 @@ RSpec.describe "Individuals", type: :request do
         expect(response.content_type).to eq("application/json")
         expect(response).to have_http_status(:not_found)
         expect(response.body).to be_empty
-        expect(Individual.count).to eq(0)
+        expect(Greensub::Individual.count).to eq(0)
       end
 
       it 'existing ok' do
@@ -53,7 +53,7 @@ RSpec.describe "Individuals", type: :request do
         expect(response.content_type).to eq("application/json")
         expect(response).to have_http_status(:ok)
         expect(response_body).to eq(individual_obj(individual: individual))
-        expect(Individual.count).to eq(1)
+        expect(Greensub::Individual.count).to eq(1)
       end
     end
 
@@ -63,7 +63,7 @@ RSpec.describe "Individuals", type: :request do
         expect(response.content_type).to eq("application/json")
         expect(response).to have_http_status(:ok)
         expect(response_body).to eq([])
-        expect(Individual.count).to eq(0)
+        expect(Greensub::Individual.count).to eq(0)
       end
 
       it 'individual ok' do
@@ -72,7 +72,7 @@ RSpec.describe "Individuals", type: :request do
         expect(response.content_type).to eq("application/json")
         expect(response).to have_http_status(:ok)
         expect(response_body).to eq([individual_obj(individual: individual)])
-        expect(Individual.count).to eq(1)
+        expect(Greensub::Individual.count).to eq(1)
       end
 
       it 'individuals ok' do
@@ -82,7 +82,7 @@ RSpec.describe "Individuals", type: :request do
         expect(response.content_type).to eq("application/json")
         expect(response).to have_http_status(:ok)
         expect(response_body).to match_array([individual_obj(individual: individual), individual_obj(individual: new_individual)])
-        expect(Individual.count).to eq(2)
+        expect(Greensub::Individual.count).to eq(2)
       end
     end
 
@@ -96,7 +96,7 @@ RSpec.describe "Individuals", type: :request do
         expect(response.content_type).to eq("application/json")
         expect(response).to have_http_status(:ok)
         expect(response_body).to eq([])
-        expect(Individual.count).to eq(0)
+        expect(Greensub::Individual.count).to eq(0)
       end
 
       it 'individual ok' do
@@ -108,7 +108,7 @@ RSpec.describe "Individuals", type: :request do
         put api_product_individual_path(product, individual), headers: headers
         get api_product_individuals_path(product), headers: headers
         expect(individual_response_body).to eq([individual_obj(individual: individual)])
-        expect(Individual.count).to eq(1)
+        expect(Greensub::Individual.count).to eq(1)
       end
 
       it 'individuals ok' do
@@ -124,7 +124,7 @@ RSpec.describe "Individuals", type: :request do
         put api_product_individual_path(product, new_individual), headers: headers
         get api_product_individuals_path(product), headers: headers
         expect(individuals_response_body).to match_array([individual_obj(individual: individual), individual_obj(individual: new_individual)])
-        expect(Individual.count).to eq(2)
+        expect(Greensub::Individual.count).to eq(2)
       end
     end
 
@@ -143,7 +143,7 @@ RSpec.describe "Individuals", type: :request do
           expect(response_body[:identifier.to_s]).to eq(["can't be blank"])
           expect(response_body[:name.to_s]).to eq(["can't be blank"])
           expect(response_body[:email.to_s]).to eq(["can't be blank"])
-          expect(Individual.count).to eq(0)
+          expect(Greensub::Individual.count).to eq(0)
         end
       end
 
@@ -159,7 +159,7 @@ RSpec.describe "Individuals", type: :request do
           expect(response_body[:identifier.to_s]).to eq(identifier)
           expect(response_body[:name.to_s]).to eq(name)
           expect(response_body[:email.to_s]).to eq(email)
-          expect(Individual.count).to eq(1)
+          expect(Greensub::Individual.count).to eq(1)
         end
       end
 
@@ -173,7 +173,7 @@ RSpec.describe "Individuals", type: :request do
           expect(response.content_type).to eq("application/json")
           expect(response).to have_http_status(:unprocessable_entity)
           expect(response_body[:identifier.to_s]).to eq(["individual identifier #{identifier} exists!"])
-          expect(Individual.count).to eq(1)
+          expect(Greensub::Individual.count).to eq(1)
         end
       end
     end
@@ -183,8 +183,8 @@ RSpec.describe "Individuals", type: :request do
         get api_individual_path(1), headers: headers
         expect(response.content_type).to eq("application/json")
         expect(response).to have_http_status(:not_found)
-        expect(response_body[:exception.to_s]).to include("ActiveRecord::RecordNotFound: Couldn't find Individual")
-        expect(Individual.count).to eq(0)
+        expect(response_body[:exception.to_s]).to include("ActiveRecord::RecordNotFound: Couldn't find Greensub::Individual")
+        expect(Greensub::Individual.count).to eq(0)
       end
 
       it 'existing ok' do
@@ -192,7 +192,7 @@ RSpec.describe "Individuals", type: :request do
         expect(response.content_type).to eq("application/json")
         expect(response).to have_http_status(:ok)
         expect(response_body).to eq(individual_obj(individual: individual))
-        expect(Individual.count).to eq(1)
+        expect(Greensub::Individual.count).to eq(1)
       end
     end
 
@@ -202,14 +202,14 @@ RSpec.describe "Individuals", type: :request do
           get api_product_individual_path(1, 1), headers: headers
           expect(response.content_type).to eq("application/json")
           expect(response).to have_http_status(:not_found)
-          expect(response_body[:exception.to_s]).to include("ActiveRecord::RecordNotFound: Couldn't find Individual with")
+          expect(response_body[:exception.to_s]).to include("ActiveRecord::RecordNotFound: Couldn't find Greensub::Individual with")
         end
 
         it 'existing individual not_found' do
           get api_product_individual_path(1, individual), headers: headers
           expect(response.content_type).to eq("application/json")
           expect(response).to have_http_status(:not_found)
-          expect(response_body[:exception.to_s]).to include("ActiveRecord::RecordNotFound: Couldn't find Product with")
+          expect(response_body[:exception.to_s]).to include("ActiveRecord::RecordNotFound: Couldn't find Greensub::Product with")
         end
       end
 
@@ -220,7 +220,7 @@ RSpec.describe "Individuals", type: :request do
           get api_product_individual_path(product, 1), headers: headers
           expect(response.content_type).to eq("application/json")
           expect(response).to have_http_status(:not_found)
-          expect(response_body[:exception.to_s]).to include("ActiveRecord::RecordNotFound: Couldn't find Individual with")
+          expect(response_body[:exception.to_s]).to include("ActiveRecord::RecordNotFound: Couldn't find Greensub::Individual with")
         end
 
         it 'existing individual ok' do
@@ -240,7 +240,7 @@ RSpec.describe "Individuals", type: :request do
         put api_individual_path(1), params: { individual: { name: 'updated_name' } }.to_json, headers: headers
         expect(response.content_type).to eq("application/json")
         expect(response).to have_http_status(:not_found)
-        expect(response_body[:exception.to_s]).to include("ActiveRecord::RecordNotFound: Couldn't find Individual")
+        expect(response_body[:exception.to_s]).to include("ActiveRecord::RecordNotFound: Couldn't find Greensub::Individual")
       end
 
       it 'existing ok' do
@@ -265,14 +265,14 @@ RSpec.describe "Individuals", type: :request do
           put api_product_individual_path(1, 1), headers: headers
           expect(response.content_type).to eq("application/json")
           expect(response).to have_http_status(:not_found)
-          expect(response_body[:exception.to_s]).to include("ActiveRecord::RecordNotFound: Couldn't find Individual with")
+          expect(response_body[:exception.to_s]).to include("ActiveRecord::RecordNotFound: Couldn't find Greensub::Individual with")
         end
 
         it 'existing individual not_found' do
           put api_product_individual_path(1, individual), headers: headers
           expect(response.content_type).to eq("application/json")
           expect(response).to have_http_status(:not_found)
-          expect(response_body[:exception.to_s]).to include("ActiveRecord::RecordNotFound: Couldn't find Product with")
+          expect(response_body[:exception.to_s]).to include("ActiveRecord::RecordNotFound: Couldn't find Greensub::Product with")
         end
       end
 
@@ -283,7 +283,7 @@ RSpec.describe "Individuals", type: :request do
           put api_product_individual_path(product, 1), headers: headers
           expect(response.content_type).to eq("application/json")
           expect(response).to have_http_status(:not_found)
-          expect(response_body[:exception.to_s]).to include("ActiveRecord::RecordNotFound: Couldn't find Individual with")
+          expect(response_body[:exception.to_s]).to include("ActiveRecord::RecordNotFound: Couldn't find Greensub::Individual with")
         end
 
         it 'existing individual ok' do
@@ -313,8 +313,8 @@ RSpec.describe "Individuals", type: :request do
         delete api_individual_path(individual.id + 1), headers: headers
         expect(response.content_type).to eq("application/json")
         expect(response).to have_http_status(:not_found)
-        expect(response_body[:exception.to_s]).to include("ActiveRecord::RecordNotFound: Couldn't find Individual")
-        expect(Individual.count).to eq(1)
+        expect(response_body[:exception.to_s]).to include("ActiveRecord::RecordNotFound: Couldn't find Greensub::Individual")
+        expect(Greensub::Individual.count).to eq(1)
       end
 
       it 'existing without products ok' do
@@ -322,7 +322,7 @@ RSpec.describe "Individuals", type: :request do
         expect(response.content_type).to eq("application/json")
         expect(response).to have_http_status(:ok)
         expect(response.body).to be_empty
-        expect(Individual.count).to eq(0)
+        expect(Greensub::Individual.count).to eq(0)
       end
 
       it 'existing with products accepted' do
@@ -331,7 +331,7 @@ RSpec.describe "Individuals", type: :request do
         expect(response.content_type).to eq("application/json")
         expect(response).to have_http_status(:accepted)
         expect(response_body[:base.to_s]).to include("individual has 1 associated products!")
-        expect(Individual.count).to eq(1)
+        expect(Greensub::Individual.count).to eq(1)
       end
     end
 
@@ -341,14 +341,14 @@ RSpec.describe "Individuals", type: :request do
           delete api_product_individual_path(1, 1), headers: headers
           expect(response.content_type).to eq("application/json")
           expect(response).to have_http_status(:not_found)
-          expect(response_body[:exception.to_s]).to include("ActiveRecord::RecordNotFound: Couldn't find Individual with")
+          expect(response_body[:exception.to_s]).to include("ActiveRecord::RecordNotFound: Couldn't find Greensub::Individual with")
         end
 
         it 'existing individual not_found' do
           delete api_product_individual_path(1, individual), headers: headers
           expect(response.content_type).to eq("application/json")
           expect(response).to have_http_status(:not_found)
-          expect(response_body[:exception.to_s]).to include("ActiveRecord::RecordNotFound: Couldn't find Product with")
+          expect(response_body[:exception.to_s]).to include("ActiveRecord::RecordNotFound: Couldn't find Greensub::Product with")
         end
       end
 
@@ -361,7 +361,7 @@ RSpec.describe "Individuals", type: :request do
           delete api_product_individual_path(product, 1), headers: headers
           expect(response.content_type).to eq("application/json")
           expect(response).to have_http_status(:not_found)
-          expect(response_body[:exception.to_s]).to include("ActiveRecord::RecordNotFound: Couldn't find Individual with")
+          expect(response_body[:exception.to_s]).to include("ActiveRecord::RecordNotFound: Couldn't find Greensub::Individual with")
         end
 
         it 'existing individual ok' do

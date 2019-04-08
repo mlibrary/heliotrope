@@ -76,7 +76,7 @@ class SessionsController < ApplicationController
     def component_discovery_feed(component_id = '') # rubocop:disable Metrics/CyclomaticComplexity
       Rails.cache.fetch("component_discovery_feed:" + component_id, expires_in: 15.minutes) do
         component_discovery_feed = []
-        component = Component.find_by(noid: component_id)
+        component = Greensub::Component.find_by(noid: component_id)
         if component.present?
           products = component.products
           if products.present?
@@ -100,7 +100,7 @@ class SessionsController < ApplicationController
     def filtered_discovery_feed
       Rails.cache.fetch("filtered_discovery_feed", expires_in: 12.hours) do
         filtered_discovery_feed = []
-        institutions = Set.new(Institution.where("entity_id <> ''").map(&:entity_id))
+        institutions = Set.new(Greensub::Institution.where("entity_id <> ''").map(&:entity_id))
         if institutions.present?
           unfiltered_discovery_feed.each do |entry|
             filtered_discovery_feed << entry if entry["entityID"].in?(institutions)
@@ -116,7 +116,7 @@ class SessionsController < ApplicationController
                  Faraday.get(root_url(script_name: "/Shibboleth.sso/DiscoFeed").gsub!(/\/?\?locale=.*/, '')).body
                else
                  fake_discovery_feed = []
-                 Institution.where("entity_id <> ''").each do |institution|
+                 Greensub::Institution.where("entity_id <> ''").each do |institution|
                    fake_discovery_feed << {
                      "entityID" => institution.entity_id,
                      "DisplayNames" => [

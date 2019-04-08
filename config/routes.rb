@@ -56,6 +56,21 @@ Rails.application.routes.draw do
   end
 
   constraints platform_administrator_constraint do
+    namespace :greensub do
+      resources :individuals do
+        resources :products, only: %i[index]
+      end
+      resources :institutions do
+        resources :products, only: %i[index]
+      end
+      resources :components do
+        resources :products, only: %i[index create destroy]
+      end
+      resources :products do
+        resources :components, only: %i[index create destroy]
+        resources :grants, only: %i[new]
+      end
+    end
     get 'fulcrum', controller: :fulcrum, action: :dashboard, as: :fulcrum
     get 'fulcrum/exec/:cmd', controller: :fulcrum, action: :exec, as: :fulcrum_exec
     get 'fulcrum/:partials', controller: :fulcrum, action: :index, as: :fulcrum_partials
@@ -66,19 +81,6 @@ Rails.application.routes.draw do
       end
     end
     resources :share_link_logs, only: %i[index]
-    resources :individuals do
-      resources :products, only: %i[index]
-    end
-    resources :institutions do
-      resources :products, only: %i[index]
-    end
-    resources :components do
-      resources :products, only: %i[index create destroy]
-    end
-    resources :products do
-      resources :components, only: %i[index create destroy]
-      resources :grants, only: %i[new]
-    end
     resources :grants, except: %i[edit update]
     resources :customers, only: %i[index] do
       resources :counter_reports, only: %i[index show edit update], constraints: COUNTER_REPORT_ID_CONSTRAINT
@@ -104,9 +106,11 @@ Rails.application.routes.draw do
 
   resources :counter_reports, only: %i[index show edit update], constraints: COUNTER_REPORT_ID_CONSTRAINT
 
-  resources :products, only: [] do
-    member do
-      get :purchase
+  namespace :greensub do
+    resources :products, only: [] do
+      member do
+        get :purchase
+      end
     end
   end
 

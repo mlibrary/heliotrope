@@ -65,7 +65,7 @@ class CounterService
     # COUNTER v5 section 3.5.3 seems to indicate that we need this
     # for epubs as well as multimedia (TR and IR reports).
     # For epubs, if they are restricted
-    if Component.find_by(noid: @presenter.id)
+    if Greensub::Component.find_by(noid: @presenter.id)
       "Controlled"
     # For assets if they have a permissions_expiration_date at any time, past of present
     elsif @presenter&.permissions_expiration_date.present?

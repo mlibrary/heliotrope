@@ -63,7 +63,7 @@ module Incognito
       return nil if short_circuit?(actor)
       return nil if (actor.sign_in_count & 8).zero?
       begin
-        Individual.find(actor.current_sign_in_ip.to_i)
+        Greensub::Individual.find(actor.current_sign_in_ip.to_i)
       rescue StandardError => _e
         nil
       end
@@ -73,7 +73,7 @@ module Incognito
       return nil if short_circuit?(actor)
       return nil if (actor.sign_in_count & 8).zero?
       begin
-        Institution.find(actor.last_sign_in_ip.to_i)
+        Greensub::Institution.find(actor.last_sign_in_ip.to_i)
       rescue StandardError => _e
         nil
       end

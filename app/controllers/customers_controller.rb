@@ -4,7 +4,7 @@ class CustomersController < ApplicationController
   before_action :set_customer, only: %i[show]
 
   def index
-    @customers = Institution.all
+    @customers = Greensub::Institution.all
   end
 
   def show; end
@@ -12,7 +12,7 @@ class CustomersController < ApplicationController
   private
 
     def set_customer
-      @customer = Institution.find(params[:id])
+      @customer = Greensub::Institution.find(params[:id])
     end
 
     def customer_params

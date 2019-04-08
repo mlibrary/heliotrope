@@ -1,10 +1,10 @@
-<% institutions = Institution.filter(identifier_like: params[:identifier_like], name_like: params[:name_like], entity_id_like: params[:entity_id_like]).order(identifier: :asc).page(params[:page]) %>
+<% institutions = Greensub::Institution.filter(identifier_like: params[:identifier_like], name_like: params[:name_like], entity_id_like: params[:entity_id_like]).order(identifier: :asc).page(params[:page]) %>
 <h1>Institutions</h1>
 <form name="filter" method="get" action="<%= fulcrum_partials_path(:institutions) %>">
   <table class="table table-striped" summary="Institution List">
     <tr>
       <th>
-          <%= link_to(new_institution_path) do %>
+          <%= link_to(new_greensub_institution_path) do %>
             <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> New
           <% end %>
       </th>
@@ -31,7 +31,7 @@
     <% institutions.each do |institution| %>
       <tr>
         <td>
-          <%= link_to(institution_path(institution)) do %>
+          <%= link_to(greensub_institution_path(institution)) do %>
             <span class="glyphicon glyphicon-sunglasses" aria-hidden="true"></span> Show
           <% end %>
         </td>

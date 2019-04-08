@@ -221,7 +221,7 @@ RSpec.describe CounterReporter::Counter4BookReport do
       # skip wrong institution, out of date range
       create(:counter_report, press: press.id, session: 10, noid: 'a',     model: 'FileSet',   parent_noid: 'red',   institution: 2, created_at: Time.parse("2018-11-11").utc, access_type: "Controlled", request: 1)
 
-      allow(Institution).to receive(:where).with(identifier: institution).and_return([institution_name])
+      allow(Greensub::Institution).to receive(:where).with(identifier: institution).and_return([institution_name])
     end
 
     it "has the correct header" do

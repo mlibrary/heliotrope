@@ -9,7 +9,7 @@ RSpec.describe "Products", type: :request do
       "identifier" => product.identifier,
       "name" => product.name,
       "purchase" => product.purchase,
-      "url" => product_url(product, format: :json)
+      "url" => greensub_product_url(product, format: :json)
     }
   end
   let(:headers) do
@@ -44,7 +44,7 @@ RSpec.describe "Products", type: :request do
         expect(response.content_type).to eq("application/json")
         expect(response).to have_http_status(:not_found)
         expect(response.body).to be_empty
-        expect(Product.count).to eq(0)
+        expect(Greensub::Product.count).to eq(0)
       end
 
       it 'existing ok' do
@@ -52,7 +52,7 @@ RSpec.describe "Products", type: :request do
         expect(response.content_type).to eq("application/json")
         expect(response).to have_http_status(:ok)
         expect(response_body).to eq(product_obj(product: product))
-        expect(Product.count).to eq(1)
+        expect(Greensub::Product.count).to eq(1)
       end
     end
 
@@ -62,7 +62,7 @@ RSpec.describe "Products", type: :request do
         expect(response.content_type).to eq("application/json")
         expect(response).to have_http_status(:ok)
         expect(response_body).to eq([])
-        expect(Product.count).to eq(0)
+        expect(Greensub::Product.count).to eq(0)
       end
 
       it 'product ok' do
@@ -71,7 +71,7 @@ RSpec.describe "Products", type: :request do
         expect(response.content_type).to eq("application/json")
         expect(response).to have_http_status(:ok)
         expect(response_body).to eq([product_obj(product: product)])
-        expect(Product.count).to eq(1)
+        expect(Greensub::Product.count).to eq(1)
       end
 
       it 'products ok' do
@@ -81,7 +81,7 @@ RSpec.describe "Products", type: :request do
         expect(response.content_type).to eq("application/json")
         expect(response).to have_http_status(:ok)
         expect(response_body).to eq([product_obj(product: product), product_obj(product: new_product)])
-        expect(Product.count).to eq(2)
+        expect(Greensub::Product.count).to eq(2)
       end
     end
 
@@ -98,8 +98,8 @@ RSpec.describe "Products", type: :request do
         get api_component_products_path(1), headers: headers
         expect(response.content_type).to eq("application/json")
         expect(response).to have_http_status(:not_found)
-        expect(response_body[:exception.to_s]).to include("ActiveRecord::RecordNotFound: Couldn't find Component")
-        expect(Product.count).to eq(2)
+        expect(response_body[:exception.to_s]).to include("ActiveRecord::RecordNotFound: Couldn't find Greensub::Component")
+        expect(Greensub::Product.count).to eq(2)
       end
 
       it 'empty ok' do
@@ -107,7 +107,7 @@ RSpec.describe "Products", type: :request do
         expect(response.content_type).to eq("application/json")
         expect(response).to have_http_status(:ok)
         expect(response_body).to eq([])
-        expect(Product.count).to eq(2)
+        expect(Greensub::Product.count).to eq(2)
       end
 
       it 'product ok' do
@@ -116,7 +116,7 @@ RSpec.describe "Products", type: :request do
         expect(response.content_type).to eq("application/json")
         expect(response).to have_http_status(:ok)
         expect(response_body).to eq([product_obj(product: product)])
-        expect(Product.count).to eq(2)
+        expect(Greensub::Product.count).to eq(2)
       end
 
       it 'products ok' do
@@ -126,7 +126,7 @@ RSpec.describe "Products", type: :request do
         expect(response.content_type).to eq("application/json")
         expect(response).to have_http_status(:ok)
         expect(response_body).to eq([product_obj(product: product), product_obj(product: new_product)])
-        expect(Product.count).to eq(2)
+        expect(Greensub::Product.count).to eq(2)
       end
     end
 
@@ -143,8 +143,8 @@ RSpec.describe "Products", type: :request do
         get api_individual_products_path(1), headers: headers
         expect(response.content_type).to eq("application/json")
         expect(response).to have_http_status(:not_found)
-        expect(response_body[:exception.to_s]).to include("ActiveRecord::RecordNotFound: Couldn't find Individual")
-        expect(Product.count).to eq(2)
+        expect(response_body[:exception.to_s]).to include("ActiveRecord::RecordNotFound: Couldn't find Greensub::Individual")
+        expect(Greensub::Product.count).to eq(2)
       end
 
       it 'empty ok' do
@@ -152,7 +152,7 @@ RSpec.describe "Products", type: :request do
         expect(response.content_type).to eq("application/json")
         expect(response).to have_http_status(:ok)
         expect(response_body).to eq([])
-        expect(Product.count).to eq(2)
+        expect(Greensub::Product.count).to eq(2)
       end
 
       it 'product ok' do
@@ -161,7 +161,7 @@ RSpec.describe "Products", type: :request do
         expect(response.content_type).to eq("application/json")
         expect(response).to have_http_status(:ok)
         expect(response_body).to eq([product_obj(product: product)])
-        expect(Product.count).to eq(2)
+        expect(Greensub::Product.count).to eq(2)
       end
 
       it 'products ok' do
@@ -171,7 +171,7 @@ RSpec.describe "Products", type: :request do
         expect(response.content_type).to eq("application/json")
         expect(response).to have_http_status(:ok)
         expect(response_body).to eq([product_obj(product: product), product_obj(product: new_product)])
-        expect(Product.count).to eq(2)
+        expect(Greensub::Product.count).to eq(2)
       end
     end
 
@@ -188,8 +188,8 @@ RSpec.describe "Products", type: :request do
         get api_institution_products_path(1), headers: headers
         expect(response.content_type).to eq("application/json")
         expect(response).to have_http_status(:not_found)
-        expect(response_body[:exception.to_s]).to include("ActiveRecord::RecordNotFound: Couldn't find Institution")
-        expect(Product.count).to eq(2)
+        expect(response_body[:exception.to_s]).to include("ActiveRecord::RecordNotFound: Couldn't find Greensub::Institution")
+        expect(Greensub::Product.count).to eq(2)
       end
 
       it 'empty ok' do
@@ -197,7 +197,7 @@ RSpec.describe "Products", type: :request do
         expect(response.content_type).to eq("application/json")
         expect(response).to have_http_status(:ok)
         expect(response_body).to eq([])
-        expect(Product.count).to eq(2)
+        expect(Greensub::Product.count).to eq(2)
       end
 
       it 'product ok' do
@@ -206,7 +206,7 @@ RSpec.describe "Products", type: :request do
         expect(response.content_type).to eq("application/json")
         expect(response).to have_http_status(:ok)
         expect(response_body).to eq([product_obj(product: product)])
-        expect(Product.count).to eq(2)
+        expect(Greensub::Product.count).to eq(2)
       end
 
       it 'products ok' do
@@ -216,7 +216,7 @@ RSpec.describe "Products", type: :request do
         expect(response.content_type).to eq("application/json")
         expect(response).to have_http_status(:ok)
         expect(response_body).to eq([product_obj(product: product), product_obj(product: new_product)])
-        expect(Product.count).to eq(2)
+        expect(Greensub::Product.count).to eq(2)
       end
     end
 
@@ -235,7 +235,7 @@ RSpec.describe "Products", type: :request do
           expect(response_body[:identifier.to_s]).to eq(["can't be blank"])
           expect(response_body[:name.to_s]).to eq(["can't be blank"])
           expect(response_body[:purchase.to_s]).to be nil
-          expect(Product.all.count).to eq(0)
+          expect(Greensub::Product.all.count).to eq(0)
         end
       end
 
@@ -251,7 +251,7 @@ RSpec.describe "Products", type: :request do
           expect(response_body[:identifier.to_s]).to eq(identifier)
           expect(response_body[:name.to_s]).to eq(name)
           expect(response_body[:purchase.to_s]).to eq(purchase)
-          expect(Product.count).to eq(1)
+          expect(Greensub::Product.count).to eq(1)
         end
       end
 
@@ -265,7 +265,7 @@ RSpec.describe "Products", type: :request do
           expect(response.content_type).to eq("application/json")
           expect(response).to have_http_status(:unprocessable_entity)
           expect(response_body[:identifier.to_s]).to eq(["product identifier #{identifier} exists!"])
-          expect(Product.count).to eq(1)
+          expect(Greensub::Product.count).to eq(1)
         end
       end
     end
@@ -275,8 +275,8 @@ RSpec.describe "Products", type: :request do
         get api_product_path(1), headers: headers
         expect(response.content_type).to eq("application/json")
         expect(response).to have_http_status(:not_found)
-        expect(response_body[:exception.to_s]).to include("ActiveRecord::RecordNotFound: Couldn't find Product")
-        expect(Product.count).to eq(0)
+        expect(response_body[:exception.to_s]).to include("ActiveRecord::RecordNotFound: Couldn't find Greensub::Product")
+        expect(Greensub::Product.count).to eq(0)
       end
 
       it 'existing ok' do
@@ -284,7 +284,7 @@ RSpec.describe "Products", type: :request do
         expect(response.content_type).to eq("application/json")
         expect(response).to have_http_status(:ok)
         expect(response_body).to eq(product_obj(product: product))
-        expect(Product.count).to eq(1)
+        expect(Greensub::Product.count).to eq(1)
       end
     end
 
@@ -293,8 +293,8 @@ RSpec.describe "Products", type: :request do
         put api_product_path(1), params: { product: { name: 'updated_name' } }.to_json, headers: headers
         expect(response.content_type).to eq("application/json")
         expect(response).to have_http_status(:not_found)
-        expect(response_body[:exception.to_s]).to include("ActiveRecord::RecordNotFound: Couldn't find Product")
-        expect(Product.count).to eq(0)
+        expect(response_body[:exception.to_s]).to include("ActiveRecord::RecordNotFound: Couldn't find Greensub::Product")
+        expect(Greensub::Product.count).to eq(0)
       end
 
       it 'existing ok' do
@@ -303,7 +303,7 @@ RSpec.describe "Products", type: :request do
         expect(response).to have_http_status(:ok)
         expect(response_body[:id.to_s]).to eq(product.id)
         expect(response_body[:name.to_s]).to eq('updated_name')
-        expect(Product.count).to eq(1)
+        expect(Greensub::Product.count).to eq(1)
       end
 
       it 'existing update identifier unprocessable_entity' do
@@ -311,7 +311,7 @@ RSpec.describe "Products", type: :request do
         expect(response.content_type).to eq("application/json")
         expect(response).to have_http_status(:unprocessable_entity)
         expect(response_body[:identifier.to_s]).to eq(["can't be blank"])
-        expect(Product.count).to eq(1)
+        expect(Greensub::Product.count).to eq(1)
       end
     end
 
@@ -322,8 +322,8 @@ RSpec.describe "Products", type: :request do
         delete api_product_path(product.id + 1), headers: headers
         expect(response.content_type).to eq("application/json")
         expect(response).to have_http_status(:not_found)
-        expect(response_body[:exception.to_s]).to include("ActiveRecord::RecordNotFound: Couldn't find Product")
-        expect(Product.count).to eq(1)
+        expect(response_body[:exception.to_s]).to include("ActiveRecord::RecordNotFound: Couldn't find Greensub::Product")
+        expect(Greensub::Product.count).to eq(1)
       end
 
       it 'existing without components ok' do
@@ -331,7 +331,7 @@ RSpec.describe "Products", type: :request do
         expect(response.content_type).to eq("application/json")
         expect(response).to have_http_status(:ok)
         expect(response.body).to be_empty
-        expect(Product.count).to eq(0)
+        expect(Greensub::Product.count).to eq(0)
       end
 
       it 'existing with components accepted' do
@@ -341,7 +341,7 @@ RSpec.describe "Products", type: :request do
         expect(response.content_type).to eq("application/json")
         expect(response).to have_http_status(:accepted)
         expect(response_body[:base.to_s]).to include("product has 1 associated components!")
-        expect(Product.count).to eq(1)
+        expect(Greensub::Product.count).to eq(1)
       end
     end
   end

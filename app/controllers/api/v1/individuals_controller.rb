@@ -10,9 +10,9 @@ module API
       # @example
       #   get /api/individual?identifier=String
       # @param [Hash] params { identifier: String }
-      # @return [ActionDispatch::Response] {Individual} (see {show})
+      # @return [ActionDispatch::Response] {Greensub::Individual} (see {show})
       def find
-        @individual = Individual.find_by(identifier: params[:identifier])
+        @individual = Greensub::Individual.find_by(identifier: params[:identifier])
         return head :not_found if @individual.blank?
         render :show
       end
@@ -21,13 +21,13 @@ module API
       #   List individuals
       #   @example
       #     get /api/individuals
-      #   @return [ActionDispatch::Response] array of {Individual}
+      #   @return [ActionDispatch::Response] array of {Greensub::Individual}
       # @overload index
       #   List product individuals
       #   @example
       #     get /api/products/:product_id/individuals
       #   @param [Hash] params { product_id: Number }
-      #   @return [ActionDispatch::Response] array of {Individual}
+      #   @return [ActionDispatch::Response] array of {Greensub::Individual}
       #
       #     (See ./app/views/api/v1/individual/index.json.jbuilder)
       #
@@ -41,7 +41,7 @@ module API
                          set_product
                          @product.individuals
                        else
-                         Individual.all
+                         Greensub::Individual.all
                        end
       end
 
@@ -50,7 +50,7 @@ module API
       #   @example
       #     get /api/individual/:id
       #   @param [Hash] params { id: Number }
-      #   @return [ActionDispatch::Response] {Individual}
+      #   @return [ActionDispatch::Response] {Greensub::Individual}
       #
       #     (See ./app/views/api/v1/individual/show.json.jbuilder)
       #
@@ -76,14 +76,14 @@ module API
       # @example
       #   post /api/individuals
       # @param [Hash] params { individual: { identifier: String, name: String, email: String } }
-      # @return [ActionDispatch::Response] {Individual} (see {show})
+      # @return [ActionDispatch::Response] {Greensub::Individual} (see {show})
       def create
-        @individual = Individual.find_by(identifier: individual_params[:identifier])
+        @individual = Greensub::Individual.find_by(identifier: individual_params[:identifier])
         if @individual.present?
           @individual.errors.add(:identifier, "individual identifier #{individual_params[:identifier]} exists!")
           return render json: @individual.errors, status: :unprocessable_entity
         end
-        @individual = Individual.new(individual_params)
+        @individual = Greensub::Individual.new(individual_params)
         return render json: @individual.errors, status: :unprocessable_entity unless @individual.save
         render :show, status: :created, location: @individual
       end
@@ -93,7 +93,7 @@ module API
       #   @example
       #     put /api/individuals/:id
       #   @param [Hash] params { id: Number, individual: { name: String, email: String } }
-      #   @return [ActionDispatch::Response] {Individual} (see {show})
+      #   @return [ActionDispatch::Response] {Greensub::Individual} (see {show})
       # @overload update
       #   Grant individual read access to product
       #   @example
@@ -135,11 +135,11 @@ module API
       private
 
         def set_product
-          @product = Product.find(params[:product_id])
+          @product = Greensub::Product.find(params[:product_id])
         end
 
         def set_individual
-          @individual = Individual.find(params[:id])
+          @individual = Greensub::Individual.find(params[:id])
         end
 
         def individual_params

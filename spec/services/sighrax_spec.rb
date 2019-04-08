@@ -98,7 +98,7 @@ RSpec.describe Sighrax do
     let(:incognito_product) { double('incognito_product') }
 
     before do
-      allow(Component).to receive(:find_by).with(noid: noid).and_return(component)
+      allow(Greensub::Component).to receive(:find_by).with(noid: noid).and_return(component)
       allow(Greensub).to receive(:actor_products).with(actor).and_return([greensub_product])
       allow(Incognito).to receive(:sudo_actor?).with(actor).and_return(sudo_actor)
       allow(Incognito).to receive(:sudo_actor_products).with(actor).and_return([incognito_product])
@@ -346,7 +346,7 @@ RSpec.describe Sighrax do
     let(:component) {}
 
     before do
-      allow(Component).to receive(:find_by).with(noid: entity.noid).and_return(component)
+      allow(Greensub::Component).to receive(:find_by).with(noid: entity.noid).and_return(component)
     end
 
     it { is_expected.to be false }

@@ -105,9 +105,9 @@ module PressHelper
   def banner_product(subdomain)
     case subdomain
     when 'michigan'
-      Product.find_by(identifier: 'ebc_' + Time.current.year.to_s)
+      Greensub::Product.find_by(identifier: 'ebc_' + Time.current.year.to_s)
     when 'heliotrope'
-      Product.find_by(identifier: 'nag_' + Time.current.year.to_s)
+      Greensub::Product.find_by(identifier: 'nag_' + Time.current.year.to_s)
     end
   end
 

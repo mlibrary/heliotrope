@@ -64,7 +64,7 @@ RSpec.describe "Sushi Service", type: :request do
         context 'params customer_id' do
           let(:institution) { double('institution', name: 'name', entity_id: 'entity_id') }
 
-          before { allow(Institution).to receive(:find).with(customer_id).and_return(institution) }
+          before { allow(Greensub::Institution).to receive(:find).with(customer_id).and_return(institution) }
 
           it do
             get api_sushi_members_path, params: params, headers: headers

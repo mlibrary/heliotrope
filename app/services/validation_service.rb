@@ -35,19 +35,19 @@ class ValidationService
   end
 
   def self.valid_component?(id)
-    valid_id?(id) && Component.find(id).present?
+    valid_id?(id) && Greensub::Component.find(id).present?
   end
 
   def self.valid_individual?(id)
-    valid_id?(id) && Individual.find(id).present?
+    valid_id?(id) && Greensub::Individual.find(id).present?
   end
 
   def self.valid_institution?(id)
-    valid_id?(id) && Institution.find(id).present?
+    valid_id?(id) && Greensub::Institution.find(id).present?
   end
 
   def self.valid_product?(id)
-    valid_id?(id) && Product.find(id).present?
+    valid_id?(id) && Greensub::Product.find(id).present?
   end
 
   def self.valid_user?(id)

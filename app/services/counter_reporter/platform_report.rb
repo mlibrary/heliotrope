@@ -121,7 +121,7 @@ module CounterReporter
       institution_name = if @params.institution == '*'
                            "All Institutions"
                          else
-                           Institution.where(identifier: @params.institution).first&.name
+                           Greensub::Institution.where(identifier: @params.institution).first&.name
                          end
       {
         Report_Name: @params.report_title,

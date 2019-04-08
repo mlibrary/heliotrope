@@ -3,7 +3,7 @@
 <li>email:<%= current_user.email %></li>
 <% user = User.find_by(email: current_user.email) %>
 <li>User:<%= (user.present?) ? "#{user.id} (#{user.name})" : '0 (guest)' %></li>
-<% individual = Individual.find_by(email: current_user.email) %>
+<% individual = Greensub::Individual.find_by(email: current_user.email) %>
 <li>Individual:<%= (individual.present?) ? "#{individual.id} (#{individual.name})" : 'n/a' %></li>
 </ul>
 <h2>Instituions</h2>

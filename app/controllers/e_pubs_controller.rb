@@ -192,7 +192,7 @@ class EPubsController < CheckpointController
     end
 
     def component
-      @component ||= Component.find_by(noid: @parent_noid)
+      @component ||= Greensub::Component.find_by(noid: @parent_noid)
     end
 
     def search_cache_key(id, query)

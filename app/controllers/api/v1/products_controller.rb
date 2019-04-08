@@ -10,9 +10,9 @@ module API
       # @example
       #   get /api/product?identifier=String
       # @param [Hash] params { identifier: String }
-      # @return [ActionDispatch::Response] {Product} (see {show})
+      # @return [ActionDispatch::Response] {Greensub::Product} (see {show})
       def find
-        @product = Product.find_by(identifier: params[:identifier])
+        @product = Greensub::Product.find_by(identifier: params[:identifier])
         return head :not_found if @product.blank?
         render :show
       end
@@ -21,25 +21,25 @@ module API
       #   List products
       #   @example
       #     get /api/products
-      #   @return [ActionDispatch::Response] array of {Product}
+      #   @return [ActionDispatch::Response] array of {Greensub::Product}
       # @overload index
       #   List component products
       #   @example
       #     get /api/components/:component_id/products
       #   @param [Hash] params { component_id: Number }
-      #   @return [ActionDispatch::Response] array of {Product}
+      #   @return [ActionDispatch::Response] array of {Greensub::Product}
       # @overload index
       #   List individual products
       #   @example
       #     get /api/individual/:individual_id/products
       #   @param [Hash] params { individual_id: Number }
-      #   @return [ActionDispatch::Response] array of {Product}
+      #   @return [ActionDispatch::Response] array of {Greensub::Product}
       # @overload index
       #   List institution products
       #   @example
       #     get /api/institution/:instituion_id/products
       #   @param [Hash] params { instituion_id: Number }
-      #   @return [ActionDispatch::Response] array of {Product}
+      #   @return [ActionDispatch::Response] array of {Greensub::Product}
       #
       #     (See ./app/views/api/v1/product/index.json.jbuilder)
       #
@@ -59,7 +59,7 @@ module API
                       set_institution
                       @institution.products
                     else
-                      Product.all
+                      Greensub::Product.all
                     end
       end
 
@@ -67,7 +67,7 @@ module API
       # @example
       #   get /api/product/:id
       # @param [Hash] params { id: Number }
-      # @return [ActionDispatch::Response] {Product}
+      # @return [ActionDispatch::Response] {Greensub::Product}
       #
       #   (See ./app/views/api/v1/product/show.json.jbuilder)
       #
@@ -82,14 +82,14 @@ module API
       # @example
       #   post /api/products
       # @param [Hash] params { product: { identifier: String, name: String, email: String } }
-      # @return [ActionDispatch::Response] {Product} (see {show})
+      # @return [ActionDispatch::Response] {Greensub::Product} (see {show})
       def create
-        @product = Product.find_by(identifier: product_params[:identifier])
+        @product = Greensub::Product.find_by(identifier: product_params[:identifier])
         if @product.present?
           @product.errors.add(:identifier, "product identifier #{product_params[:identifier]} exists!")
           return render json: @product.errors, status: :unprocessable_entity
         end
-        @product = Product.new(product_params)
+        @product = Greensub::Product.new(product_params)
         return render json: @product.errors, status: :unprocessable_entity unless @product.save
         render :show, status: :created, location: @product
       end
@@ -98,7 +98,7 @@ module API
       # @example
       #   put /api/products/:id
       # @param [Hash] params { id: Number, product: { name: String, purchase: String } }
-      # @return [ActionDispatch::Response] {Product} (see {show})
+      # @return [ActionDispatch::Response] {Greensub::Product} (see {show})
       def update
         return render json: @product.errors, status: :unprocessable_entity unless @product.update(product_params)
         render :show, status: :ok, location: @product
@@ -117,19 +117,19 @@ module API
       private
 
         def set_component
-          @component = Component.find(params[:component_id])
+          @component = Greensub::Component.find(params[:component_id])
         end
 
         def set_individual
-          @individual = Individual.find(params[:individual_id])
+          @individual = Greensub::Individual.find(params[:individual_id])
         end
 
         def set_institution
-          @institution = Institution.find(params[:institution_id])
+          @institution = Greensub::Institution.find(params[:institution_id])
         end
 
         def set_product
-          @product = Product.find(params[:id])
+          @product = Greensub::Product.find(params[:id])
         end
 
         def product_params

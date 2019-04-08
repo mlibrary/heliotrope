@@ -32,7 +32,7 @@ RSpec.describe EPubPolicy do
     allow(Sighrax).to receive(:open_access?).with(parent).and_return(open_access)
     allow(Sighrax).to receive(:published?).with(parent).and_return(published)
     allow(Sighrax).to receive(:restricted?).with(parent).and_return(restricted)
-    allow(Component).to receive(:find_by).with(noid: noid).and_return(component)
+    allow(Greensub::Component).to receive(:find_by).with(noid: noid).and_return(component)
     allow(Incognito).to receive(:allow_hyrax_can?).with(actor).and_return(allow_hyrax_can)
     allow(Incognito).to receive(:allow_platform_admin?).with(actor).and_return(allow_platform_admin)
     allow(Incognito).to receive(:sudo_actor?).with(actor).and_return(sudo_actor)

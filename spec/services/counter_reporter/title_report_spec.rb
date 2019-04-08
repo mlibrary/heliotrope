@@ -86,7 +86,7 @@ RSpec.describe CounterReporter::TitleReport do
         create(:counter_report, press: press.id, session: 7,  noid: 'c1', parent_noid: 'green', institution: 1, created_at: Time.parse("2018-11-03").utc, access_type: "Controlled", request: 1)
         create(:counter_report, press: press.id, session: 10, noid: 'a',  parent_noid: 'red',   institution: 2, created_at: Time.parse("2018-11-11").utc, access_type: "Controlled", request: 1)
 
-        allow(Institution).to receive(:where).with(identifier: institution).and_return([institution_name])
+        allow(Greensub::Institution).to receive(:where).with(identifier: institution).and_return([institution_name])
       end
 
       context "items" do
@@ -201,7 +201,7 @@ RSpec.describe CounterReporter::TitleReport do
         create(:counter_report, press: press.id, session: 7,  noid: 'green', model: 'Monograph', parent_noid: 'green', institution: 1, created_at: Time.parse("2018-02-13").utc, access_type: "OA_Gold")
         create(:counter_report, press: press.id, session: 10, noid: 'a', parent_noid: 'red', institution: 2, created_at: Time.parse("2018-11-11").utc, access_type: "OA_Gold")
 
-        allow(Institution).to receive(:where).with(identifier: institution).and_return([institution_name])
+        allow(Greensub::Institution).to receive(:where).with(identifier: institution).and_return([institution_name])
       end
 
       context "items" do
@@ -254,7 +254,7 @@ RSpec.describe CounterReporter::TitleReport do
         create(:counter_report, press: press.id, session: 7,  noid: 'c1', parent_noid: 'green', institution: 1, created_at: Time.parse("2018-09-13").utc, access_type: "Controlled", turnaway: "No_License")
         create(:counter_report, press: press.id, session: 10, noid: 'a',  parent_noid: 'red',   institution: 2, created_at: Time.parse("2018-12-11").utc, access_type: "Controlled", turnaway: "No_License")
 
-        allow(Institution).to receive(:where).with(identifier: institution).and_return([institution_name])
+        allow(Greensub::Institution).to receive(:where).with(identifier: institution).and_return([institution_name])
       end
 
       context "items" do
@@ -340,7 +340,7 @@ RSpec.describe CounterReporter::TitleReport do
         create(:counter_report, press: press.id, session: 7,  noid: 'c1', parent_noid: 'green',  institution: 1, created_at: Time.parse("2018-09-13").utc, access_type: "Controlled")
         create(:counter_report, press: press.id, session: 10, noid: 'a',  parent_noid: 'red',    institution: 2, created_at: Time.parse("2018-12-11").utc, access_type: "Controlled")
 
-        allow(Institution).to receive(:where).with(identifier: institution).and_return([institution_name])
+        allow(Greensub::Institution).to receive(:where).with(identifier: institution).and_return([institution_name])
       end
 
       it "has the correct number of items" do

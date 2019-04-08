@@ -31,7 +31,7 @@ class EPubPolicy < ResourcePolicy
         debug_log("share #{share}")
         return true if share
 
-        component = Component.find_by(noid: target.noid)
+        component = Greensub::Component.find_by(noid: target.noid)
         products = if Incognito.sudo_actor?(actor)
                      Incognito.sudo_actor_products(actor)
                    else

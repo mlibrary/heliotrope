@@ -20,9 +20,9 @@ module Authority
       when :Guest
         User.guest(user_key: agent_id)
       when :Individual
-        Individual.find(agent_id)
+        Greensub::Individual.find(agent_id)
       when :Institution
-        Institution.find(agent_id)
+        Greensub::Institution.find(agent_id)
       when :User
         User.find(agent_id)
       else
@@ -65,9 +65,9 @@ module Authority
       when :ElectronicPublication
         Sighrax.factory(resource_id)
       when :Component
-        Component.find(resource_id)
+        Greensub::Component.find(resource_id)
       when :Product
-        Product.find(resource_id)
+        Greensub::Product.find(resource_id)
       else
         OpenStruct.new(resource_type: resource_type, resource_id: resource_id)
       end
