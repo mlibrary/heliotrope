@@ -30,15 +30,15 @@ class CatalogController < ApplicationController
 
     # solr fields that will be treated as facets by the blacklight application
     #   The ordering of the field names is the order of the display
-    config.add_facet_field solr_name('human_readable_type', :facetable)
+    config.add_facet_field solr_name('human_readable_type', :facetable), label: 'Type', limit: 5
     config.add_facet_field solr_name('creator', :facetable), label: 'Author', limit: 5, url_method: :facet_url_helper
-    config.add_facet_field solr_name('tag', :facetable), limit: 5
-    config.add_facet_field solr_name('subject', :facetable), limit: 5
-    config.add_facet_field solr_name('language', :facetable), limit: 5, url_method: :facet_url_helper
-    config.add_facet_field solr_name('based_near', :facetable), limit: 5
+    config.add_facet_field solr_name('tag', :facetable), label: 'Tag', limit: 5
+    config.add_facet_field solr_name('subject', :facetable), label: 'Subject', limit: 5
+    config.add_facet_field solr_name('language', :facetable), label: 'Language', limit: 5, url_method: :facet_url_helper
+    config.add_facet_field solr_name('based_near', :facetable), label: 'Near', limit: 5
     # config.add_facet_field solr_name('publisher', :facetable), limit: 5
     # config.add_facet_field solr_name('file_format', :facetable), limit: 5
-    config.add_facet_field 'press_name_ssim', label: "Publisher", limit: 5
+    config.add_facet_field 'press_name_ssim', label: 'Publisher', limit: 5
     config.add_facet_field 'generic_type_sim', show: false, single: true
 
     # Have BL send all facet field names to Solr, which has been the default
