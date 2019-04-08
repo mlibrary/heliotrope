@@ -4,6 +4,8 @@ module Sighrax
   class Model < Entity
     private_class_method :new
 
+    attr_reader :presenter
+
     protected
 
       def model_type
@@ -14,6 +16,7 @@ module Sighrax
 
       def initialize(noid, data)
         super(noid, data)
+        @presenter = self.class.null_entity
       end
   end
 end

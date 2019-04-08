@@ -7,6 +7,10 @@ class FileSetIndexer < Hyrax::FileSetIndexer
       solr_doc[Solrizer.solr_name('title', :sortable)] = object&.title&.first&.downcase&.gsub(/[^\w\s\d-]/, '')
       solr_doc[Solrizer.solr_name('resource_type', :sortable)] = object&.resource_type&.first
 
+      # now that the exporter pulls directly from Solr, we need suitable values for creator/contributor
+      solr_doc['importable_creator_ss'] = importable_names('creator')
+      solr_doc['importable_contributor_ss'] = importable_names('contributor')
+
       roleless_creators = multiline_names_minus_role('creator')
       solr_doc[Solrizer.solr_name('creator', :stored_searchable)] = roleless_creators
       solr_doc[Solrizer.solr_name('creator', :facetable)] = roleless_creators
@@ -30,6 +34,11 @@ class FileSetIndexer < Hyrax::FileSetIndexer
         solr_doc[Solrizer.solr_name('search_year', :facetable)] = object.sort_date[0, 4]
       end
     end
+  end
+
+  def importable_names(field)
+    value = object.public_send(field).first
+    value.present? ? value.split(/\r?\n/).reject(&:blank?).join('; ') : value
   end
 
   def multiline_names_minus_role(field)
