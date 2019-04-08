@@ -50,6 +50,9 @@ dump.rdb
 /config/skylight.yml
 /config/aptrust.yml
 
+# Configuration file for automated systems tests.
+/testing/testing.yml
+
 # Google Analytics access keys
 *.p12
 

@@ -1,0 +1,5 @@
+testing:
+  source_url: 'https://www.fulcrum.org/'
+  source_token: ''
+  target_url: 'https://heliotrope-testing.hydra.lib.umich.edu/'
+  target_token: ''

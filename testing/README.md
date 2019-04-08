@@ -1,11 +1,13 @@
-# System Testing
-## Shell Envirionment Variables
-<table>
-	<tr><th>Variable</th><th>Description</th></tr>
-	<tr><td>HELIOTROPE_TESTING_API</td><td>Testing target API endpoint. e.g. http://localhost:3000/api </td></tr>
-	<tr><td>HELIOTROPE_TESTING_TOKEN</td><td>JSON Web Token of platform administrator user</td></tr>
-</table>
-
+# Testing
+## Configuration
+./testing/testing.yml
+```yaml
+testing:
+  source_url: 'https://www.fulcrum.org/'
+  source_token: ''
+  target_url: 'https://heliotrope-testing.hydra.lib.umich.edu/'
+  target_token: ''
+```
 ## Rake Task
 To run testing specs
 
