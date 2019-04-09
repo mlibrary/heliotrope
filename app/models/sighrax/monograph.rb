@@ -4,6 +4,10 @@ module Sighrax
   class Monograph < Model
     private_class_method :new
 
+    def children
+      Array(data['ordered_member_ids_ssim']).map { |noid| Sighrax.factory(noid) }
+    end
+
     def epub_featured_representative
       Sighrax.factory(FeaturedRepresentative.find_by(monograph_id: noid, kind: 'epub')&.file_set_id)
     end
@@ -12,7 +16,6 @@ module Sighrax
 
       def initialize(noid, data)
         super(noid, data)
-        @presenter = Hyrax::PresenterFactory.build_for(ids: [noid], presenter_class: Hyrax::MonographPresenter, presenter_args: nil)&.first || self.class.null_entity
       end
   end
 end

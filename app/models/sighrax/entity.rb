@@ -5,7 +5,6 @@ module Sighrax
     private_class_method :new
 
     attr_reader :noid
-    attr_reader :data
 
     # Class Methods
 
@@ -35,15 +34,21 @@ module Sighrax
       resource_type.to_s + ':' + resource_id.to_s
     end
 
+    def title
+      noid
+    end
+
     def parent
       self.class.null_entity
     end
 
-    def title
-      Array(data['title_tesim']).first || noid
+    def children
+      []
     end
 
     protected
+
+      attr_reader :data
 
       def type
         @type ||= /^Sighrax::(.+$)/.match(self.class.to_s)[1].to_sym

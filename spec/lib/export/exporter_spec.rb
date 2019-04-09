@@ -51,7 +51,7 @@ describe Export::Exporter do
     let(:monograph) { create(:monograph) }
 
     it "initializes" do
-      expect(subject.monograph.data.id).to eq monograph.id
+      expect(subject.monograph.noid).to eq monograph.id
       expect(subject.columns).to eq :all
       expect(subject.aptrust["AwsAccessKeyId"]).not_to be_empty
       expect(subject.aptrust['AwsSecretAccessKey']).not_to be_empty

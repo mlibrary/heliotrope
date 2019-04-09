@@ -130,4 +130,10 @@ RSpec.describe Press, type: :model do
 
     it { is_expected.to be press.id }
   end
+
+  describe '#null_press' do
+    subject { described_class.null_press }
+
+    it { is_expected.to be_an_instance_of(NullPress) }
+  end
 end

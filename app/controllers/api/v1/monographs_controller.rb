@@ -76,7 +76,7 @@ module API
         extract_dir = File.join(extract_path, noid)
         FileUtils.rm_rf(extract_dir) if Dir.exist?(extract_dir)
         FileUtils.mkdir(extract_dir)
-        Export::Exporter.new(noid).extract(extract_dir)
+        Export::Exporter.new(noid).extract(extract_dir, true)
         extract_zip = File.join(extract_path, "#{noid}.zip")
         FileUtils.rm_rf(extract_zip) if File.exist?(extract_zip)
         Zip::File.open(extract_zip, Zip::File::CREATE) do |zipfile|

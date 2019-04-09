@@ -6,8 +6,8 @@ class OutputMonographFilesJob < ApplicationJob
   def perform(noid, path)
     monograph = Sighrax.factory(noid)
 
-    monograph.data['ordered_member_ids_ssim']&.each do |member_id|
-      presenter = Sighrax.factory(member_id).presenter
+    monograph.children.each do |member|
+      presenter = Sighrax.hyrax_presenter(member)
 
       # The importer is written to exit on zero-size files. We shouldn't have any in the system in future, see:
       # https://tools.lib.umich.edu/jira/browse/HELIO-2246
@@ -17,7 +17,7 @@ class OutputMonographFilesJob < ApplicationJob
 
       begin
         File.open File.join(path, filename), "wb" do |dest|
-          FileSet.find(member_id).original_file.stream.each { |chunk| dest.write(chunk) }
+          FileSet.find(member.noid).original_file.stream.each { |chunk| dest.write(chunk) }
         end
       rescue NoMemoryError => e
         Rails.logger.error "OutputMonographFilesJob failed with NoMemoryError: #{e}"

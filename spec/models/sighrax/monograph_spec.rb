@@ -12,7 +12,6 @@ RSpec.describe Sighrax::Monograph, type: :model do
   it { is_expected.to be_a_kind_of(Sighrax::Model) }
   it { expect(subject.resource_type).to eq :Monograph }
   it { expect(subject.epub_featured_representative).to be_an_instance_of(Sighrax::NullEntity) }
-  it { expect(subject.presenter).to be_an_instance_of(Sighrax::NullEntity) }
 
   describe '#epub_featured_representative' do
     let(:epub_featured_representative) { double('epub_featured_representative', file_set_id: 'file_set_id') }
@@ -24,12 +23,5 @@ RSpec.describe Sighrax::Monograph, type: :model do
     end
 
     it { expect(subject.epub_featured_representative).to be electronic_publication }
-  end
-
-  describe '#presenter' do
-    let(:monograph) { create(:monograph) }
-    let(:noid) { monograph.id }
-
-    it { expect(subject.presenter).to be_an_instance_of(Hyrax::MonographPresenter) }
   end
 end
