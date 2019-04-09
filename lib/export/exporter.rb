@@ -6,7 +6,7 @@ require 'aws-sdk-s3'
 
 BAG_STATUSES = { 'not_bagged' => 0, 'bagged' => 1, 'bagging_failed' => 3 }.freeze
 S3_STATUSES = { 'not_uploaded' => 0, 'uploaded' => 1, 'upload_failed' => 3 }.freeze
-APT_STATUSES = { 'not_checked' => 0, 'confirmed' => 1, 'pending' => 3, 'failed' => 4 }.freeze
+APT_STATUSES = { 'not_checked' => 0, 'confirmed' => 1, 'pending' => 3, 'failed' => 4, 'not_found' => 5, 'bad_response' => 6 }.freeze
 
 module Export
   class Exporter
@@ -22,15 +22,11 @@ module Export
     end
 
     def export_bag # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
-      desktop_development = false
       ## create bag directory with valid, noid-based aptrust name
-      bag_name = "umich.fulcrum-#{@monograph.presenter.press}-#{@monograph.presenter.id}"
 
-      bag_pathname = if desktop_development
-                       "./../heliotrope-assets/aptrust-bags/#{bag_name}"
-                     else
-                       "#{Settings.aptrust_bags_path}/#{bag_name}"
-                     end
+      bag_name = "fulcrum.org.#{@monograph.press}-#{@monograph.id}"
+
+      bag_pathname = "#{Settings.aptrust_bags_path}/#{bag_name}"
 
       # On the first run these shouldn't be needed but...
       # clean up old bag and tar files
@@ -55,9 +51,9 @@ module Export
         'Bagging-Date' => timestamp
       )
 
-      # add aptrust-info.txt file
-      # this is stuff that shows up in the APTrust web interface
-      # title, access, and descriptoin are required; Storage-Option defaults to Standard if not present
+      # Add aptrust-info.txt file
+      # this is text that shows up in the APTrust web interface
+      # title, access, and description are required; Storage-Option defaults to Standard if not present
       File.open(File.join(bag.bag_dir, 'aptrust-info.txt'), "w") do |io|
         ti = @monograph.title.blank? ? '' : @monograph.title.first[0..255]
         io.puts "Title: #{ti}"
@@ -68,8 +64,9 @@ module Export
         io.puts "Press-Name: #{pub}"
         pr = @monograph.press.blank? ? '' : @monograph.press[0..49]
         io.puts "Press: #{pr}"
+        # 'Item Description' may be helpful when looking at Pharos web UI
         ides = @monograph.description.blank? ? '' : @monograph.description[0..49]
-        io.puts "Item: #{ides}"
+        io.puts "Item Description: #{ides}"
         creat = @monograph.creator.blank? ? '' : @monograph.creator[0..49]
         io.puts "Creator/Author: #{creat}"
       end
@@ -77,18 +74,13 @@ module Export
       # put fulcrum files into data directory
       extract("#{bag.bag_dir}/data/")
 
-      # create manifests
+      # Create manifests
       bag.manifest!
 
-      # tar and remove bag directory
+      # Tar and remove bag directory
       # but first change to the aptrust-bags directory
       restore_dir = Dir.pwd
-
-      if desktop_development
-        Dir.chdir("./../heliotrope-assets/aptrust-bags/")
-      else
-        Dir.chdir(Settings.aptrust_bags_path)
-      end
+      Dir.chdir(Settings.aptrust_bags_path)
 
       begin
         Minitar.pack(bag_name, File.open("#{bag_name}.tar", 'wb'))
@@ -112,7 +104,7 @@ module Export
       # Remove the tarred bag regardless if the bag upload succeeded or failed
       FileUtils.rm_rf("#{bag_name}.tar")
 
-      # now restore the previous directory
+      # Now restore the previous directory
       Dir.chdir(restore_dir)
     end
 
