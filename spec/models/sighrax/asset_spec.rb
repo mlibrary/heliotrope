@@ -12,6 +12,7 @@ RSpec.describe Sighrax::Asset, type: :model do
   it { is_expected.to be_a_kind_of(Sighrax::Model) }
   it { expect(subject.resource_type).to eq :Asset }
   it { expect(subject.parent).to be_an_instance_of(Sighrax::NullEntity) }
+  it { expect(subject.presenter).to be_an_instance_of(Sighrax::NullEntity) }
 
   describe '#parent' do
     let(:data) { { 'monograph_id_ssim' => [noid] } }
@@ -20,5 +21,12 @@ RSpec.describe Sighrax::Asset, type: :model do
     before { allow(Sighrax).to receive(:factory).with(noid).and_return(parent) }
 
     it { expect(subject.parent).to be parent }
+  end
+
+  describe '#presenter' do
+    let(:file_set) { create(:file_set) }
+    let(:noid) { file_set.id }
+
+    it { expect(subject.presenter).to be_an_instance_of(Hyrax::FileSetPresenter) }
   end
 end

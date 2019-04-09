@@ -53,6 +53,7 @@ RSpec.configure do |config|
     if Rails.env.test? || Rails.env.cucumber?
       FileUtils.rm_rf(Dir[Rails.root.join('tmp', 'spec', 'uploads')])
       FileUtils.rm_rf(Dir[Rails.root.join('tmp', 'rspec_derivatives')])
+      FileUtils.rm_rf(Dir[Rails.root.join('tmp', 'spec', 'rspec_output_monograph_files_job')])
     end
   end
 

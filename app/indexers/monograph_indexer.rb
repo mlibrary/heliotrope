@@ -10,6 +10,11 @@ class MonographIndexer < Hyrax::WorkIndexer
       solr_doc[Solrizer.solr_name('press_name', :symbol)] = press_name
 
       solr_doc[Solrizer.solr_name('title', :sortable)] = normalize_for_sort(object&.title&.first)
+
+      # now that the exporter pulls directly from Solr, we need suitable values for creator/contributor
+      solr_doc['importable_creator_ss'] = importable_names('creator')
+      solr_doc['importable_contributor_ss'] = importable_names('contributor')
+
       roleless_creators = multiline_names_minus_role('creator')
       roleless_contributors = multiline_names_minus_role('contributor')
 
@@ -24,6 +29,7 @@ class MonographIndexer < Hyrax::WorkIndexer
       solr_doc[Solrizer.solr_name('creator_full_name', :sortable)] = normalize_for_sort(roleless_creators&.first)
 
       solr_doc[Solrizer.solr_name('contributor', :stored_searchable)] = roleless_contributors
+
       # probably we'll need more substantial cleanup here, for now discard anything that isn't a number as...
       # HEB often has stuff like 'c1999' in the Publication Year (`date_created`)
       solr_doc[Solrizer.solr_name('date_created', :sortable)] = object.date_created&.first&.gsub(/[^0-9]/, '')
@@ -39,6 +45,11 @@ class MonographIndexer < Hyrax::WorkIndexer
       # the english text stored indexed multivalued field generated for the 'isbn' property a.k.a. object.isbn
       # See './app/models/monograph.rb' and './solr/config/schema.xml' for details.
     end
+  end
+
+  def importable_names(field)
+    value = object.public_send(field).first
+    value.present? ? value.split(/\r?\n/).reject(&:blank?).join('; ') : value
   end
 
   def existing_filesets

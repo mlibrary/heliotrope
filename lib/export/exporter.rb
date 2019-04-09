@@ -13,7 +13,7 @@ module Export
     attr_reader :all_metadata, :monograph, :columns, :aptrust
 
     def initialize(monograph_id, columns = :all)
-      @monograph = Monograph.find(monograph_id) if monograph_id.present?
+      @monograph = Sighrax.factory(monograph_id)
       @columns = columns
       #  Use aws credentials for atrust
       filename = Rails.root.join('config', 'aptrust.yml')
@@ -24,7 +24,7 @@ module Export
     def export_bag # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
       desktop_development = false
       ## create bag directory with valid, noid-based aptrust name
-      bag_name = "umich.fulcrum-#{@monograph.press}-#{@monograph.id}"
+      bag_name = "umich.fulcrum-#{@monograph.presenter.press}-#{@monograph.presenter.id}"
 
       bag_pathname = if desktop_development
                        "./../heliotrope-assets/aptrust-bags/#{bag_name}"
@@ -117,14 +117,15 @@ module Export
     end
 
     def export
-      return String.new if @monograph.blank?
+      return String.new if @monograph.instance_of?(Sighrax::NullEntity)
 
       rows = []
-      @monograph.ordered_members.to_a.each do |member|
-        rows << metadata_row(member, :file_set)
+      @monograph.data['ordered_member_ids_ssim']&.each do |member_id|
+        member = Sighrax.factory(member_id).presenter
+        rows << metadata_row(member, @monograph.presenter.representative_id)
       end
 
-      rows << metadata_row(@monograph, :monograph)
+      rows << metadata_row(@monograph.presenter)
       buffer = String.new
       CSV.generate(buffer) do |csv|
         write_csv_header_rows(csv)
@@ -142,9 +143,9 @@ module Export
       else
         base = File.join(".", "extract")
         FileUtils.mkdir(base) unless Dir.exist?(base)
-        press = File.join(base, @monograph.press.to_s)
+        press = File.join(base, @monograph.presenter.subdomain.to_s)
         FileUtils.mkdir(press) unless Dir.exist?(press)
-        path = File.join(press, @monograph.id.to_s)
+        path = File.join(press, @monograph.presenter.id.to_s)
         if Dir.exist?(path)
           puts "Overwrite #{path} directory? (Y/n):"
           return unless /y/i.match?(STDIN.getch)
@@ -154,28 +155,15 @@ module Export
         FileUtils.mkdir(path)
       end
 
-      manifest = File.new(File.join(path, @monograph.id.to_s + ".csv"), "w")
+      manifest = File.new(File.join(path, @monograph.presenter.id.to_s + ".csv"), "w")
       manifest << export
       manifest.close
 
-      @monograph.ordered_members.to_a.each do |member|
-        # The importer is written to exit on zero-size files. We shouldn't have any in the system in future, see:
-        # https://tools.lib.umich.edu/jira/browse/HELIO-2246
-        next if fileless_fileset(member)
-
-        begin
-          filename = CGI.unescape(member.original_file.file_name.first)
-          File.open File.join(path, filename), "wb" do |dest|
-            member.original_file.stream.each { |chunk| dest.write(chunk) }
-          end
-        rescue NoMemoryError => e
-          puts "APTRUST:lib/export/exporter.rb method extract failed with NoMemoryError: #{e}"
-        end
-      end
+      OutputMonographFilesJob.perform_later(@monograph.data.id, File.join(Dir.pwd, path))
     end
 
     def monograph_row
-      metadata_row(@monograph, :monograph)
+      metadata_row(@monograph)
     end
 
     def blank_csv_sheet
@@ -233,9 +221,9 @@ module Export
 
     def update_aptrust_db(result)
       begin
-        record = AptrustUpload.find_by!(noid: @monograph.id)
+        record = AptrustUpload.find_by!(noid: @monograph.presenter.id)
       rescue ActiveRecord::RecordNotFound => e
-        puts "APTRUST: In exporter with monograph #{@monograph.id}, update_aptrust_db find_record error is #{e} "
+        puts "APTRUST: In exporter with monograph #{@monograph.presenter.id}, update_aptrust_db find_record error is #{e} "
         return
       end
 
@@ -259,7 +247,7 @@ module Export
           date_confirmed: nil
         )
       rescue ActiveRecord::RecordInvalid => e
-        puts "APTRUST: In exporter with monograph #{@monograph.id}, update_aptrust_db record.update error is #{e}"
+        puts "APTRUST: In exporter with monograph #{@monograph.presenter.id}, update_aptrust_db record.update error is #{e}"
       end
     end
 
@@ -275,19 +263,21 @@ module Export
                         end
       end
 
-      def metadata_row(item, object_type)
+      def metadata_row(item, parent_rep = nil)
         row = []
+        return row if item.instance_of?(Sighrax::NullEntity)
+        object_type = item.has_model == 'Monograph' ? :monograph : :file_set
         all_metadata.each do |field|
-          row << metadata_field_value(item, object_type, field)
+          row << metadata_field_value(item, object_type, field, parent_rep)
         end
         row
       end
 
-      def metadata_field_value(item, object_type, field) # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
+      def metadata_field_value(item, object_type, field, parent_rep) # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
         # this gets around the FileSet's label not matching the original_file's name post-versioning
         # safe navigation is important as we have fileless FileSets in production and specs
         return file_name(item) if object_type == :file_set && field[:field_name] == 'File Name'
-        return representative_kind_or_cover(item) if object_type == :file_set && field[:field_name] == 'Representative Kind'
+        return representative_kind_or_cover(item, parent_rep) if object_type == :file_set && field[:field_name] == 'Representative Kind'
         return item_url(item, object_type) if field[:object] == :universal && field[:field_name] == 'Link'
         return file_set_embed_code(item) if object_type == :file_set && field[:field_name] == 'Embed Code'
         return field_value(item, field[:metadata_name], field[:multivalued]) if field[:object] == :universal || field[:object] == object_type
@@ -296,51 +286,69 @@ module Export
 
       def file_name(item)
         # ensure no entry appears in the "File Name" column for "fileless FileSets"
-        fileless_fileset(item) ? nil : CGI.unescape(item&.original_file&.file_name&.first)
+        fileless_fileset(item) ? nil : CGI.unescape(item&.original_name&.first)
       end
 
       def fileless_fileset(file_set)
-        file_set.external_resource_url.present? || file_set.original_file.blank? || file_set&.original_file&.size&.zero?
+        file_set.external_resource_url.present? || file_set.file_size.blank? || file_set.file_size.zero?
       end
 
-      def representative_kind_or_cover(item)
+      def representative_kind_or_cover(item, parent_rep)
         # I think we can ignore thumbnail_id, should always be the same as representative_id for us
-        return 'cover' if item.parent.representative_id == item.id
+        return 'cover' if parent_rep == item.id
 
-        FeaturedRepresentative.where(file_set_id: item.id, monograph_id: @monograph.id).first&.kind
+        FeaturedRepresentative.where(file_set_id: item.id, monograph_id: @monograph.presenter.id).first&.kind
       end
 
       def item_url(item, item_type)
         link = if item_type == :monograph
-                 Rails.application.routes.url_helpers.hyrax_monograph_url(item)
+                 Rails.application.routes.url_helpers.hyrax_monograph_url(item.id)
                else
-                 Rails.application.routes.url_helpers.hyrax_file_set_url(item)
+                 Rails.application.routes.url_helpers.hyrax_file_set_url(item.id)
                end
         '=HYPERLINK("' + link + '")'
       end
 
       def file_set_embed_code(file_set)
-        Hyrax::FileSetPresenter.new(SolrDocument.new(file_set.to_solr), nil).embed_code
+        file_set.embed_code
       end
 
-      def field_value(item, metadata_name, multivalued)
+      def field_value(item, metadata_name, multivalued) # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
         return if item.public_send(metadata_name).blank?
+        value = Array.wrap(item.public_send(metadata_name))
 
         if multivalued == :yes_split
           # Any intended order within a multi-valued field is lost after having been stored in an...
           # `ActiveTriples::Relation`, so I'm arbitrarily sorting them alphabetically on export.
           # Items whose order must be preserved should never be stored in an `ActiveTriples::Relation`.
-          item.public_send(metadata_name).sort.join('; ')
+          value.sort.join('; ')
         elsif multivalued == :yes
           # this is a multi-valued field but we're only using it to hold one value
-          item.public_send(metadata_name).first
+          # Because of TitlePresenter, the title value returned by the presenter will be HTML
+          # I don't want to convert HTML to Markdown here, so taking title from the Solr doc
+          case metadata_name
+          when 'title'
+            return item.solr_document['title_tesim'].first
+          else
+            return value.first
+          end
         elsif multivalued == :yes_multiline
-          # this is a multi-valued field but we're only using the first one to hold a string containing...
-          # ordered, newline-separated values. Need such to be semi-colon-separeated in a cell once again
-          item.public_send(metadata_name).first.split(/\r?\n/).reject(&:blank?).join('; ')
+          # note1: this is a multi-valued field but we're only using the first one to hold a string containing...
+          #        ordered, newline-separated values. Need such to be semi-colon-separated in a cell once again
+          # note2: now making `item` a presenter for speed. Given that there was no clean value on the Solr doc...
+          #        these were specifically indexed for the exporter
+          case metadata_name
+          when 'creator'
+            return item.solr_document['importable_creator_ss']
+          when 'contributor'
+            return item.solr_document['importable_contributor_ss']
+          else
+            # shouldn't happen as creator/contributor are the only :yes_multiline fields
+            return value.first
+          end
         else
           # https://tools.lib.umich.edu/jira/browse/HELIO-2321
-          metadata_name == 'doi' ? 'https://doi.org/' + item.public_send(metadata_name) : item.public_send(metadata_name)
+          metadata_name == 'doi' ? 'https://doi.org/' + value.first : value.first
         end
       end
   end

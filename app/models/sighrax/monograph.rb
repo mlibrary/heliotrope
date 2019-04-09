@@ -12,6 +12,7 @@ module Sighrax
 
       def initialize(noid, data)
         super(noid, data)
+        @presenter = Hyrax::PresenterFactory.build_for(ids: [noid], presenter_class: Hyrax::MonographPresenter, presenter_args: nil)&.first || self.class.null_entity
       end
   end
 end
