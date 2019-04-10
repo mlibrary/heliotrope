@@ -6,7 +6,7 @@ require 'fakefs/spec_helpers'
 # Since we lifted this out of CC 1.6.2, we'll need to run the tests too
 
 describe CharacterizeJob do
-  let(:file_set)    { FileSet.new(id: file_set_id) }
+  let(:file_set)    { FileSet.new(id: file_set_id, title: ['previous_file.jpg'], label: 'previous_file.jpg', date_modified: 'previous_mod_date') }
   let(:file_set_id) { 'abc12345' }
   let(:file_path)   { Rails.root + 'tmp' + 'uploads' + 'ab' + 'c1' + '23' + '45' + 'abc12345' + 'picture.png' }
   let(:filename)    { file_path.to_s }
@@ -16,6 +16,9 @@ describe CharacterizeJob do
       f.original_name = 'picture.png'
       f.height = '111'
       f.width = '222'
+      f.file_size = '123456'
+      f.format_label = ["Portable Network Graphics"]
+      f.original_checksum = ['asdf123456']
       f.save!
     end
   end
@@ -62,17 +65,24 @@ describe CharacterizeJob do
     end
   end
 
-  context "when there's a file with preexisting height and width" do
+  context "FileSet with unwanted, preexisting characterization metadata getting new version" do
     it "resets the height and width" do
       allow(Hydra::Works::CharacterizationService).to receive(:run).with(file, filename)
-      allow(file).to receive(:save!)
-      allow(file_set).to receive(:update_index)
+      expect(file).to receive(:save!)
+      expect(file_set).to receive(:update_index)
       allow(CreateDerivativesJob).to receive(:perform_later).with(file_set, file.id, filename)
+      allow(file_set).to receive(:original_checksum).and_return(['qwerty789'])
+      allow(Hyrax::TimeService).to receive(:time_in_utc).and_return('Tue, 10 Apr 2019 20:20:20 +0000')
       described_class.perform_now(file_set, file.id)
 
       expect(file_set.original_file.height).to eq []
       expect(file_set.original_file.width).to eq []
       expect(file_set.original_file.original_checksum).to eq []
+      expect(file_set.original_file.file_size).to eq []
+      expect(file_set.original_file.format_label).to eq []
+      expect(file_set.label).to eq 'picture.png'
+      expect(file_set.title).to eq ['picture.png']
+      expect(file_set.date_modified).to eq 'Tue, 10 Apr 2019 20:20:20 +0000'
     end
   end
 
