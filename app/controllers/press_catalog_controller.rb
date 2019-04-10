@@ -27,15 +27,8 @@ class PressCatalogController < ::CatalogController
   end
 
   def show_site_search?
-    false
-  end
-
-  # The search box should scope the search results to the
-  # current press, not a site-wide search.
-  def show_press_search?
     true
   end
-  helper_method :show_press_search?
 
   def facet
     super

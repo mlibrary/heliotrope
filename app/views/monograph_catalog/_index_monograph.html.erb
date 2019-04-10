@@ -103,9 +103,9 @@
       <% end %>
       <% if @monograph_presenter.assets? %>
         <% if @monograph_presenter.epub? %>
-          <li role="presentation"><a id="tab-media" href="#media" role="tab" data-toggle="tab" aria-controls="media" aria-selected="false" tabindex="-1">Media</a></li>
+          <li role="presentation"><a id="tab-resources" href="#resources" role="tab" data-toggle="tab" aria-controls="resources" aria-selected="false" tabindex="-1">Resources</a></li>
         <% else %>
-          <li role="presentation" class="active"><a id="tab-media" href="#media" data-toggle="tab" role="tab" aria-controls="media" aria-selected="true"  tabindex="0">Media</a></li>
+          <li role="presentation" class="active"><a id="tab-resources" href="#resources" data-toggle="tab" role="tab" aria-controls="resources" aria-selected="true"  tabindex="0">Resources</a></li>
         <% end %>
       <% end %>
       <% if @monograph_presenter.reviews? %>
@@ -136,11 +136,11 @@
       <% end %>
       <% if @monograph_presenter.assets? %>
         <% if @monograph_presenter.epub? %>
-        <section id="media" class="tab-pane fade in media row" role="tabpanel" aria-hidden="true" aria-labelledby="tab-media" tabindex="0">
+        <section id="resources" class="tab-pane fade in resources row" role="tabpanel" aria-hidden="true" aria-labelledby="tab-resources" tabindex="0">
         <% else %>
-        <section id="media" class="tab-pane fade in active media row" role="tabpanel" aria-hidden="false" aria-labelledby="tab-media" tabindex="0">
+        <section id="resources" class="tab-pane fade in active resources row" role="tabpanel" aria-hidden="false" aria-labelledby="tab-resources" tabindex="0">
         <% end %>
-          <h2 class="sr-only">Media</h2>
+          <h2 class="sr-only">Resources</h2>
           <div class="col-sm-3 fulcrum_sidebar">
             <%= render 'catalog/search_sidebar' %>
           </div>

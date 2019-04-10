@@ -369,12 +369,12 @@ webgl = Webgl::Unity.from_directory(UnpackService.root_path_from_noid(webgl_id, 
         }).addTo(reader);
         <% end %>
 
-        // Media
+        // Resources
         <% if @monograph_presenter.assets? %>
         cozy.control.widget.button({
           region: 'top.toolbar.left',
-          template: '<button class="button--sm media" data-toggle="button" aria-label="Media">Media</button>',
-          onClick: function() { window.location = "<%= "#{main_app.monograph_catalog_url(@presenter.monograph_id) + '#media'}" %>"; }
+          template: '<button class="button--sm media" data-toggle="button" aria-label="Resources">Resources</button>',
+          onClick: function() { window.location = "<%= "#{main_app.monograph_catalog_url(@presenter.monograph_id) + '#resources'}" %>"; }
         }).addTo(reader);
         <% end %>
 
