@@ -3,10 +3,13 @@
 require 'csv'
 require 'bagit'
 require 'aws-sdk-s3'
+require 'active_support'
+require 'active_support/time'
+ENV["TZ"] = "US/Eastern"
 
-BAG_STATUSES = { 'not_bagged' => 0, 'bagged' => 1, 'bagging_failed' => 3 }.freeze
+BAG_STATUSES = { 'not_bagged' => 0, 'bagged' => 1, 'bagging_failed' => 3 } .freeze
 S3_STATUSES = { 'not_uploaded' => 0, 'uploaded' => 1, 'upload_failed' => 3 }.freeze
-APT_STATUSES = { 'not_checked' => 0, 'confirmed' => 1, 'pending' => 3, 'failed' => 4, 'not_found' => 5, 'bad_response' => 6 }.freeze
+APT_STATUSES = { 'not_checked' => 0, 'confirmed' => 1, 'pending' => 3, 'failed' => 4, 'not_found' => 5, 'bad_aptrust_response_code' => 6 }.freeze
 
 module Export
   class Exporter
@@ -24,23 +27,23 @@ module Export
     def export_bag # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
       ## create bag directory with valid, noid-based aptrust name
 
-      bag_name = "fulcrum.org.#{@monograph.press}-#{@monograph.id}"
+      if @monograph.presenter.subdomain.to_s.blank?
+        puts "In Exporter.rb export_bag, @monograph.presenter.press is blank!"
+        return
+      end
+
+      bag_name = "fulcrum.org.#{@monograph.presenter.subdomain}-#{@monograph.presenter.id}"
+      puts "bag_name: #{bag_name}"
 
       bag_pathname = "#{Settings.aptrust_bags_path}/#{bag_name}"
+      puts "bag_pathname: #{bag_pathname}"
 
       # On the first run these shouldn't be needed but...
       # clean up old bag and tar files
-      if File.exist?(bag_pathname)
-        puts "APTRUST: removing existing bag for #{bag_name}"
-        FileUtils.rm_rf(bag_pathname)
-      end
+      FileUtils.rm_rf(bag_pathname) if File.exist?(bag_pathname)
+      FileUtils.rm_rf("#{bag_pathname}.tar") if File.exist?("#{bag_pathname}.tar")
 
-      if File.exist?("#{bag_pathname}.tar")
-        puts "APTRUST: removing tar file for #{bag_name}"
-        FileUtils.rm_rf("#{bag_pathname}.tar")
-      end
-
-      puts "APTRUST: Archiving #{bag_name}"
+      puts "In lib/export/exporter.rb, archiving #{bag_name}"
       bag = BagIt::Bag.new bag_pathname
 
       # add bagit-info.txt file
@@ -55,19 +58,19 @@ module Export
       # this is text that shows up in the APTrust web interface
       # title, access, and description are required; Storage-Option defaults to Standard if not present
       File.open(File.join(bag.bag_dir, 'aptrust-info.txt'), "w") do |io|
-        ti = @monograph.title.blank? ? '' : @monograph.title.first[0..255]
+        ti = @monograph.presenter.title.blank? ? '' : @monograph.presenter.title.first[0..255]
         io.puts "Title: #{ti}"
         io.puts "Access: Institution"
         io.puts "Storage-Option: Standard"
-        io.puts "Description: This bag contains all of the data and metadata related to a Monograph which has been exported from the Fulcrum publishing platform hosted at https://www.fulcrum.org. The data folder contains a Fulcrum manifest in the form of a CSV file named with the NOID assigned to this Monograph in the Fulcrum repository. This manifest is exported directly from Fulcrum's heliotrope application (https://github.com/mlibrary/heliotrope) and can be used for re-import as well. The first two rows contain column headers and human-readable field descriptions, respectively.{{ The final row contains descriptive metadata for the Monograph; other rows contain metadata for Assets, which may be components of the Monograph or material supplemental to it.}}"
-        pub = @monograph.publisher.blank? ? '' : @monograph.publisher[0..49]
+        io.puts "Description: This bag contains all of the data and metadata related to a Monograph which has been exported from the Fulcrum publishing platform hosted at https://www.fulcrum.org. The data folder contains a Fulcrum manifest in the form of a CSV file named with the NOID assigned to this Monograph in the Fulcrum repository. This manifest is exported directly from Fulcrum's heliotrope application (https://github.com/mlibrary/heliotrope) and can be used for re-import as well. The first two rows contain column headers and human-readable field descriptions, respectively. {{ The final row contains descriptive metadata for the Monograph; other rows contain metadata for Assets, which may be components of the Monograph or material supplemental to it.}}"
+        pub = @monograph.presenter.publisher.blank? ? '' : @monograph.presenter.publisher.first[0..249]
         io.puts "Press-Name: #{pub}"
-        pr = @monograph.press.blank? ? '' : @monograph.press[0..49]
+        pr = @monograph.presenter.press.blank? ? '' : @monograph.presenter.press[0..249]
         io.puts "Press: #{pr}"
         # 'Item Description' may be helpful when looking at Pharos web UI
-        ides = @monograph.description.blank? ? '' : @monograph.description[0..49]
+        ides = @monograph.presenter.description.blank? ? '' : @monograph.presenter.description.first.squish[0..249]
         io.puts "Item Description: #{ides}"
-        creat = @monograph.creator.blank? ? '' : @monograph.creator[0..49]
+        creat = @monograph.presenter.creator.blank? ? '' : @monograph.presenter.creator.first[0..249]
         io.puts "Creator/Author: #{creat}"
       end
 
@@ -194,9 +197,9 @@ module Export
 
       # Check if file is already in the bucket
       if fulcrum_bucket.object(name).exists?
-        puts "APTRUST: #{name} already exists in the s3 bucket: #{bucket_name} overwriting bag!"
-      else
-        puts "APTRUST: Creating a brand new bag for #{name} in s3 bucket: #{bucket_name}"
+        # puts "APTRUST: #{name} already exists in the s3 bucket: #{bucket_name} overwriting bag!"
+        # else
+        # puts "APTRUST: Creating a brand new bag for #{name} in s3 bucket: #{bucket_name}"
       end
 
       begin
@@ -211,7 +214,7 @@ module Export
       success
     end
 
-    def update_aptrust_db(result)
+    def update_aptrust_db(uploaded)
       begin
         record = AptrustUpload.find_by!(noid: @monograph.presenter.id)
       rescue ActiveRecord::RecordNotFound => e
@@ -219,23 +222,25 @@ module Export
         return
       end
 
-      if result
+      if uploaded
         bag_status = BAG_STATUSES['bagged']
         upload_status = S3_STATUSES['uploaded']
+        bagged_date = upload_date = Time.now.utc.strftime("%Y-%m-%dT%H:%M:%SZ")
       else
         bag_status = BAG_STATUSES['not_bagged']
         upload_status = S3_STATUSES['upload_failed']
+        bagged_date = record.date_uploaded
+        upload_date = record.date_uploaded
       end
 
       begin
-        current_date = Time.now.utc.strftime("%Y-%m-%dT%H:%M:%SZ")
         record.update!(
           bag_status: bag_status,
           s3_status: upload_status,
           apt_status: APT_STATUSES['not_checked'],
           date_fileset_modified: nil,
-          date_bagged: current_date,
-          date_uploaded: current_date,
+          date_bagged: bagged_date,
+          date_uploaded: upload_date,
           date_confirmed: nil
         )
       rescue ActiveRecord::RecordInvalid => e

@@ -5,6 +5,7 @@ require 'json'
 require 'time'
 require 'active_support'
 require 'active_support/time'
+ENV["TZ"] = "US/Eastern"
 
 desc "rake export monographs bags for a given press id"
 namespace :aptrust do
@@ -14,7 +15,7 @@ namespace :aptrust do
 
     BAG_STATUSES = { 'not_bagged' => 0, 'bagged' => 1, 'bagging_failed' => 3 } .freeze
     S3_STATUSES = { 'not_uploaded' => 0, 'uploaded' => 1, 'upload_failed' => 3 }.freeze
-    APT_STATUSES = { 'not_checked' => 0, 'confirmed' => 1, 'pending' => 3, 'failed' => 4, 'not_found' => 5, 'bad_response' => 6 }.freeze
+    APT_STATUSES = { 'not_checked' => 0, 'confirmed' => 1, 'pending' => 3, 'failed' => 4, 'not_found' => 5, 'bad_aptrust_response_code' => 6 }.freeze
 
     # SAVING FOR POSSIBLE LATER USE
     # upload_docs = ActiveFedora::SolrService.query("+has_model_ssim:Monograph AND +press_sim:#{args.press_id} AND +visibility_ssi:'open'",
@@ -29,10 +30,11 @@ namespace :aptrust do
     # subsequent runs:
     # - use Solr calls to pull all *published* Monographs with their mod dates and child ids
     def monographs_solr_all_published
-      docs = ActiveFedora::SolrService.query("+has_model_ssim:Monograph", rows: 100_000)
+      docs = ActiveFedora::SolrService.query("+has_model_ssim:Monograph",
+       rows: 100000)
       published_docs = docs.select { |doc| doc["suppressed_bsi"] == false && doc["visibility_ssi"] == "open" }
 
-      puts "back from gathering published_docs with document count #{published_docs.count}" unless published_docs.nil?
+      # puts "back from gathering published_docs with document count #{published_docs.count}" unless published_docs.nil?
       published_docs
     end
 
@@ -43,71 +45,6 @@ namespace :aptrust do
         record = nil
       end
       record
-    end
-
-    # def find_or_create_record(pdoc)
-    #   # First we'll find or create the record associated with this 
-    #   # published document or "pdoc"
-    #   begin
-    #     record = AptrustUpload.find_or_create_by!(noid: pdoc[:id])
-    #   rescue ActiveRecord::RecordNotFound => e
-    #     record = nil
-    #   end
-    #   return nil if record.nil?
-
-    #   # Second we will test the info in our pdoc to make sure it is
-    #   # complete enough for the aptrust_upload db row of this noid.
-    #   # It is not, then return nil.
-
-    #   if pdoc.count != 1
-    #     puts "In find_or_create_record, pdoc count should be 1 but is: #{pdoc.count}"
-    #     return nil
-    #   end
-
-    #   if pdoc['press_tesim'].blank?
-    #     puts "In find_or_create_record press_tesim was blank!"
-    #     return nil
-    #   end
-
-    #   if pdoc['title_tesim'].blank?
-    #     puts "In find_or_create_record title_tesim was blank!"
-    #     return nil
-    #   end
-
-    #   if pdoc['has_model_ssim'].blank?
-    #     puts "In find_or_create_record has_model_ssim was blank!"
-    #     return nil
-    #   end
-
-    #   # Third we will update the record with some the pdoc info
-    #   begin
-    #     record.update!(
-    #                     # noid:  up_doc[:id], # this is already in record
-    #                     press: pdoc['press_tesim'].first[0..49],
-    #                     author: pdoc["creator_tesim"].first[0..49],
-    #                     title: pdoc["title_tesim"].first[0..249],
-    #                     model: pdoc["has_model_ssim"].first[0..49],
-    #                     date_monograph_modified: pdoc['date_modified_dtsi'],
-    #                   )
-    #   rescue ActiveRecord::RecordInvalid => e
-    #     record = nil
-    #   end
-    #   record
-    # end
-
-    def validate_or_kill_record(record)
-      # Ugh, if record got saved without a press it will cause problems
-      # so kill it.
-      rtn_val = record
-      chk_list = [ 'noid', 'press', 'model', 'bag_status', 's3_status', 'apt_status']
-      chk_list.each do |item|
-        if record[item].blank?
-          puts "In validate_or_kill_record, record.#{item} was blank for noid #{record.id}"
-          record.destroy
-          rtn_val = nil
-        end
-      end
-      rtn_val
     end
 
     def create_record(noid)
@@ -127,38 +64,57 @@ namespace :aptrust do
                                           'creator_tesim',
                                           'identifier_tesim',
                                           'title_tesim',
-                                          'date_uploaded_dtsi',
+                                          'date_modified_dtsi',
                                           'has_model_ssim'])
-      puts "In update_record, solr_monographs count is: #{solr_monographs.count}"
+      # puts "In update_record, solr_monographs count is: #{solr_monographs.count}"
       data = solr_monographs.first
 
       if data['press_tesim'].blank?
         puts "In update_record press_tesim was blank!"
         return nil
+      else
+        press = data['press_tesim'].first[0..49]
       end
 
       if data['title_tesim'].blank?
         puts "In update_record title_tesim was blank!"
         return nil
+      else
+        title = data['title_tesim'].first[0..249]
       end
 
       if data['has_model_ssim'].blank?
         puts "In update_record has_model_ssim was blank!"
         return nil
+      else
+        model = data['has_model_ssim'].first[0..49]
+      end
+
+      # These we just need to adjust, but not return nil
+      if data['creator_tesim'].blank?
+        puts "In update_record creator_tesim was blank!"
+        creator = ''
+      else
+        creator = data['creator_tesim'].first[0..49]
+      end
+
+      if data['date_modified_dtsi'].blank?
+        date_mod = nil
+      else
+        date_mod = data['date_modified_dtsi']
       end
 
       begin
         record.update!(
                         # noid:  up_doc[:id], # this is already in record
-                        press: data['press_tesim'].first[0..49],
-                        author: data["creator_tesim"].first[0..49],
-                        title: data["title_tesim"].first[0..249],
-                        model: data["has_model_ssim"].first[0..49],
+                        press: press,
+                        author: creator,
+                        title: title,
+                        model: model,
                         bag_status: BAG_STATUSES['not_bagged'],
                         s3_status: S3_STATUSES['not_uploaded'],
                         apt_status: APT_STATUSES['not_checked'],
-                        date_monograph_modified: data['date_modified_dtsi'],
-                        date_fileset_modified: nil,
+                        date_monograph_modified: date_mod,
                         date_bagged: nil,
                         date_uploaded: nil,
                         date_confirmed: nil
@@ -167,15 +123,6 @@ namespace :aptrust do
         record = nil
       end
       record
-    end
-
-    def create_bag(record)
-      if record.nil?
-        puts "WARNING: nil record for noid in create_bag. We should never see this error!"
-      else
-        exporter = Export::Exporter.new(record.id, :monograph)
-        exporter.export_bag
-      end
     end
 
     def check_mono_mod_date(record, pdoc)
@@ -225,29 +172,29 @@ namespace :aptrust do
       base_apt_url = @aptrust['AptrustApiUrl']
       bag_name = "umich.fulcrum-#{record['press']}-#{record['id']}.tar"
 
-      updated_after = Time.zone.parse(record['date_uploaded'].to_s) - (60 * 60 * 24)
+      updated_after = Time.parse(record['date_uploaded'].to_s) - (60 * 60 * 24)
       updated_after = updated_after.iso8601
 
       this_url = base_apt_url + "items/?per_page=200&action=ingest&name=#{bag_name}&updated_after=#{updated_after}"
-      puts "this_url: #{this_url}"
+      # puts "this_url: #{this_url}"
 
       response = Typhoeus.get(this_url, headers: heads)
 
-      unless response.nil?
-        puts "response.body: #{response.body}"
-        puts "response.code: #{response.code}"
-        puts "response.total_time: #{response.total_time}"
-        # puts "response.headers: #{response.headers}"
-      end
+      # unless response.nil?
+      #   puts "response.body: #{response.body}"
+      #   puts "response.code: #{response.code}"
+      #   puts "response.total_time: #{response.total_time}"
+      #   # puts "response.headers: #{response.headers}"
+      # end
 
       apt_key = ''
 
-      if response.code != 200 || response.body.empty?
-        apt_key = 'bad_response'
-        puts "In update_db_aptrust_status we got a bad response from aptrust"
-      elsif response.body['count'].to_i.zero? || response.body['results'].empty?
+      if response.code != 200
+        apt_key = 'bad_aptrust_response_code'
+        puts "In update_db_aptrust_status we got a response.code (#{response.code}) from aptrust"
+      elsif response.body['count'].to_i.zero?  || response.body['results'].empty?
         apt_key = 'not_found'
-        puts "In update_db_aptrust_status we got a bad response from aptrust"
+        puts "In update_db_aptrust_status we got empty response results from aptrust"
       else
         # Keep parsing and update record
         parsed = JSON.parse(response.response_body)
@@ -302,8 +249,7 @@ namespace :aptrust do
       end
 
       # Update the db, using the apt_key
-      puts "record: #{record}"
-      puts "Updating the apt_status of noid #{record.id} to #{apt_key}"
+      puts "Updating the apt_status of DB record for noid #{record.id} to #{apt_key}"
       begin
         record.update!(
                         apt_status: APT_STATUSES[apt_key]
@@ -314,10 +260,27 @@ namespace :aptrust do
       record
     end
 
+    def validate_or_kill_record(record)
+      # Ugh, if record got saved without a press it will cause problems
+      # so kill it.
+      rtn_val = record
+      chk_list = ['noid', 'press', 'model', 'bag_status', 's3_status', 'apt_status']
+      chk_list.each do |item|
+        if record[item].blank?
+          puts "In validate_or_kill_record, record.#{item} was blank for noid #{record.id}"
+          record.destroy
+          rtn_val = nil
+          next
+        end
+      end
+      rtn_val
+    end
+
     def build_record_and_bag(noid)
+      # puts "In build_record_and_bag working with noid #{noid}"
       record = find_record(noid)
       if record.nil?
-        puts "In build_record_and_bag, could not find a record for noid #{noid}, will try to create one"
+        # puts "In build_record_and_bag, could not find a record for noid #{noid}, will try to create one"
         record = create_record(noid)
         if record.nil?
           puts "In build_record_and_bag, create_record failed for noid: #{noid}"
@@ -336,48 +299,52 @@ namespace :aptrust do
       record = validate_or_kill_record(record)
       if record.nil?
         puts "In build_record_and_bag, validate_or_kill_record failed for noid: #{noid}"
-        return nil        
+        return nil
+      else
+        # puts "In build_record_and_bag, about to create a bag for noid #{noid} and record #{record}"
+        exporter = Export::Exporter.new(record.id, :monograph)
+        exporter.export_bag
       end
+      record
+    end
 
-      puts "In build_record_and_bag, about to create a bag for noid #{noid} and record #{record}"
-      create_bag(record)
-    end    
+    puts "Starting task bag_updated_monographs."
 
     solr_monographs = monographs_solr_all_published
 
     abort "WARNING in aptrust:bag_updated_monographs published_docs is NIL!" if solr_monographs.nil?
 
-    # SORT SOLR PUBLISHED MONOGRAPHS INTO ARRAYS
-    create_bag_ids = []
-
     # Check solr docs for ones that represent new or update monographs
     # pdoc means published monograph
     solr_monographs.each do |pdoc|
+      noid = pdoc[:id]
       puts "             "
-      puts "Checking on pdoc id #{pdoc[:id]} ===================="
-      record = find_record(pdoc[:id])
+      puts "Checking on pdoc id #{noid} ===================="
+      record = find_record(noid)
       if record.nil?
         # We didn't find a record, so we need a record and a bag
-        create_bag_ids << pdoc[:id]
+        puts "In solr_monographs.each, no DB record for noid #{pdoc[:id]}"
+        puts "build_record_and_bag returned nil" if build_record_and_bag(noid).nil?
       elsif record.bag_status == BAG_STATUSES['not_bagged']
         # There is a db record but this noid hasn't been bagged yet
-        create_bag_ids << pdoc[:id]
+        puts "In solr_monographs.each, DB record bagged status is 'not bagged' for noid #{pdoc[:id]}"
+        puts "build_record_and_bag returned nil" if build_record_and_bag(noid).nil?
       elsif check_mono_mod_date(record, pdoc)
         # if doc modified date is more recent that db bagged date
-        create_bag_ids << pdoc[:id]
+        puts "In solr_monographs.each, pdoc mod date is more recent than record mod date for noid #{pdoc[:id]}"
+        puts "build_record_and_bag returned nil" if build_record_and_bag(noid).nil?
       elsif check_mono_fileset_mod_dates(record, pdoc)
         # If any of the docs filesets modified date is more recent that db bagged date
-        create_bag_ids << pdoc[:id]
+        puts "In solr_monographs.each, a fileset mod date is more recent than record mod date for noid #{pdoc[:id]}"
+        puts "build_record_and_bag returned nil" if build_record_and_bag(noid).nil?
       else
         # Otherwise check deposit for this pdoc in aptrust and update DB
+        puts "In solr_monographs.each, about to check deposit status for noid #{pdoc[:id]}"
         check = update_db_aptrust_status(record)
         puts "Error return from update_db_aptrust_status in solr_monographs.each" if check.nil?
       end
     end
 
-    # CREATE BAGS
-    create_bag_ids.each do |noid|
-      puts "build_record_and_bag returned nil" if build_record_and_bag(noid).nil?
-    end
+    puts "Task bag_updated_monographs complete."
   end
 end
