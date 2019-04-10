@@ -2,6 +2,7 @@
 
 require 'typhoeus'
 require 'json'
+require 'bagit'
 require 'time'
 require 'active_support'
 require 'active_support/time'
@@ -38,24 +39,6 @@ namespace :aptrust do
       published_docs
     end
 
-    def find_record(noid)
-      begin
-        record = AptrustUpload.find_by!(noid: noid)
-      rescue ActiveRecord::RecordNotFound => e
-        record = nil
-      end
-      record
-    end
-
-    def create_record(noid)
-      begin
-        record = AptrustUpload.create!(noid:  noid)
-      rescue AptrustUpload::RecordInvalid => e
-        record = nil
-      end
-      record
-    end
-
     def update_record(record)
       solr_monographs = ActiveFedora::SolrService.query("+has_model_ssim:Monograph",
                                       fq: "id:#{record.id}",
@@ -70,21 +53,21 @@ namespace :aptrust do
       data = solr_monographs.first
 
       if data['press_tesim'].blank?
-        puts "In update_record press_tesim was blank!"
+        apt_log(record.id.to_s, 'rake - update_record', 'building record', 'error', "In update_record press_tesim was blank, returning nil")
         return nil
       else
         press = data['press_tesim'].first[0..49]
       end
 
       if data['title_tesim'].blank?
-        puts "In update_record title_tesim was blank!"
+        apt_log(record.id.to_s, 'rake - update_record', 'building record', 'error', "In update_record title_tesim was blank, returning nil")
         return nil
       else
         title = data['title_tesim'].first[0..249]
       end
 
       if data['has_model_ssim'].blank?
-        puts "In update_record has_model_ssim was blank!"
+        apt_log(record.id.to_s, 'rake - update_record', 'building record', 'error', "In update_record has_model_ssim was blank, returning nil")
         return nil
       else
         model = data['has_model_ssim'].first[0..49]
@@ -92,13 +75,14 @@ namespace :aptrust do
 
       # These we just need to adjust, but not return nil
       if data['creator_tesim'].blank?
-        puts "In update_record creator_tesim was blank!"
+        apt_log(record.id.to_s, 'rake - update_record', 'building record', 'warn', "In update_record creator_tesim was blank")
         creator = ''
       else
         creator = data['creator_tesim'].first[0..49]
       end
 
       if data['date_modified_dtsi'].blank?
+        apt_log(record.id.to_s, 'rake - update_record', 'building record', 'warn', "In update_record date_modified_dtsi was blank")
         date_mod = nil
       else
         date_mod = data['date_modified_dtsi']
@@ -191,10 +175,10 @@ namespace :aptrust do
 
       if response.code != 200
         apt_key = 'bad_aptrust_response_code'
-        puts "In update_db_aptrust_status we got a response.code (#{response.code}) from aptrust"
-      elsif response.body['count'].to_i.zero?  || response.body['results'].empty?
+        apt_log(record.id.to_s, 'rake - update_db_aptrust_status', 'DB update', 'warn', "In update_db_aptrust_status we got non-200 response.code (#{response.code}) from aptrust")
+      elsif response.body['count'].to_i.zero? || response.body['results'].empty?
         apt_key = 'not_found'
-        puts "In update_db_aptrust_status we got empty response results from aptrust"
+        apt_log(record.id.to_s, 'rake - update_db_aptrust_status', 'DB update', 'warn', "In update_db_aptrust_status we got empty response results from aptrust")
       else
         # Keep parsing and update record
         parsed = JSON.parse(response.response_body)
@@ -235,16 +219,16 @@ namespace :aptrust do
         when 'Success'
           apt_key = 'confirmed' if apt_stage == 'ingest_complete'
           apt_key = 'pending' if apt_stage == 'ingest_could_fail'
-          puts "In update_db_aptrust_status, #{apt_key} deposit for record: #{record['id']} bag: #{bag_name}"
+          apt_log(record.id.to_s, 'rake - update_db_aptrust_status', 'DB update', 'okay', "In update_db_aptrust_status, #{apt_key} deposit for record: #{record['id']} bag: #{bag_name}")
         when 'Started', 'Pending'
           apt_key = 'pending'
-          puts "In update_db_aptrust_status, pending deposit for record: #{record['id']} bag: #{bag_name}"
+          apt_log(record.id.to_s, 'rake - update_db_aptrust_status', 'DB update', 'okay', "In update_db_aptrust_status, pending deposit for record: #{record['id']} bag: #{bag_name}")
         when 'Failed', 'Cancelled'
           apt_key = 'failed'
-          puts "In update_db_aptrust_status, failed deposit for record: #{record['id']} bag: #{bag_name}"
+          apt_log(record.id.to_s, 'rake - update_db_aptrust_status', 'DB update', 'okay', "In update_db_aptrust_status, failed deposit for record: #{record['id']} bag: #{bag_name}")
         else
           apt_key = 'failed'
-          puts "In update_db_aptrust_status, (else) failed deposit for record: #{record['id']} bag: #{bag_name}"
+          apt_log(record.id.to_s, 'rake - update_db_aptrust_status', 'DB update', 'okay', "In update_db_aptrust_status, (else) failed deposit for record: #{record['id']} bag: #{bag_name}")
         end
       end
 
@@ -278,10 +262,10 @@ namespace :aptrust do
 
     def build_record_and_bag(noid)
       # puts "In build_record_and_bag working with noid #{noid}"
-      record = find_record(noid)
+      record = AptrustUpload.find_by(noid: noid)
       if record.nil?
         # puts "In build_record_and_bag, could not find a record for noid #{noid}, will try to create one"
-        record = create_record(noid)
+        record = AptrustUpload.create(noid:  noid)
         if record.nil?
           puts "In build_record_and_bag, create_record failed for noid: #{noid}"
           return nil
@@ -308,41 +292,63 @@ namespace :aptrust do
       record
     end
 
+    def apt_log(noid, where, stage, status, action)
+      begin
+        AptrustLog.create(noid: noid,
+                        where: where,
+                        stage: stage,
+                        status: status,
+                        action: action)
+      rescue AptrustUpload::RecordInvalid => e
+        puts "DB error #{e} when trying to log to AptrustLog with noid: #{noid} where: #{where} stage: #{stage} status: #{status} action: #{action}"
+      end
+    end
+
     puts "Starting task bag_updated_monographs."
+
+    apt_log('na', 'bag_updated_monographs', 'before getting solr_monographs', 'okay', "Starting task bag_updated_monographs.")
 
     solr_monographs = monographs_solr_all_published
 
-    abort "WARNING in aptrust:bag_updated_monographs published_docs is NIL!" if solr_monographs.nil?
+    if solr_monographs.nil?
+      apt_log('na', 'bag_updated_monographs', 'after getting solr_monographs', 'error', "WARNING aborted because solr_monographs is NIL!")
+      abort "WARNING in aptrust:bag_updated_monographs task solr_monographs is NIL!" 
+    end
 
     # Check solr docs for ones that represent new or update monographs
     # pdoc means published monograph
-    solr_monographs.each do |pdoc|
-      noid = pdoc[:id]
-      puts "             "
-      puts "Checking on pdoc id #{noid} ===================="
-      record = find_record(noid)
-      if record.nil?
-        # We didn't find a record, so we need a record and a bag
-        puts "In solr_monographs.each, no DB record for noid #{pdoc[:id]}"
-        puts "build_record_and_bag returned nil" if build_record_and_bag(noid).nil?
-      elsif record.bag_status == BAG_STATUSES['not_bagged']
-        # There is a db record but this noid hasn't been bagged yet
-        puts "In solr_monographs.each, DB record bagged status is 'not bagged' for noid #{pdoc[:id]}"
-        puts "build_record_and_bag returned nil" if build_record_and_bag(noid).nil?
-      elsif check_mono_mod_date(record, pdoc)
-        # if doc modified date is more recent that db bagged date
-        puts "In solr_monographs.each, pdoc mod date is more recent than record mod date for noid #{pdoc[:id]}"
-        puts "build_record_and_bag returned nil" if build_record_and_bag(noid).nil?
-      elsif check_mono_fileset_mod_dates(record, pdoc)
-        # If any of the docs filesets modified date is more recent that db bagged date
-        puts "In solr_monographs.each, a fileset mod date is more recent than record mod date for noid #{pdoc[:id]}"
-        puts "build_record_and_bag returned nil" if build_record_and_bag(noid).nil?
-      else
-        # Otherwise check deposit for this pdoc in aptrust and update DB
-        puts "In solr_monographs.each, about to check deposit status for noid #{pdoc[:id]}"
-        check = update_db_aptrust_status(record)
-        puts "Error return from update_db_aptrust_status in solr_monographs.each" if check.nil?
+    begin
+      solr_monographs.each do |pdoc|
+        noid = pdoc[:id].to_s
+        puts "Checking on pdoc with noid: #{noid} ===================="
+        apt_log(noid, 'bag_updated_monographs - solr_monographs.each', 'begining checks', 'okay', "Checking on pdoc with noid: #{noid}")
+        record = AptrustUpload.find_by(noid: noid)
+        if record.nil?
+          # We didn't find a record, so we need a record and a bag
+          apt_log(noid, 'bag_updated_monographs - solr_monographs.each', 'checking record exists', 'okay', "No DB record for noid, so we need to create a record and a bag")
+          build_record_and_bag(noid)
+        elsif record.bag_status == BAG_STATUSES['not_bagged']
+          # There is a db record but this noid hasn't been bagged yet
+          apt_log(noid, 'bag_updated_monographs - solr_monographs.each', 'checking record bag status', 'okay', "DB record bagged status is 'not bagged' for noid, so update record and recreate bag")
+          build_record_and_bag(noid)
+        elsif check_mono_mod_date(record, pdoc)
+          # if doc modified date is more recent that db bagged date
+          apt_log(noid, 'bag_updated_monographs - solr_monographs.each', 'check_mono_mod_date', 'okay', "pdoc mod date is more recent than record mod date, so update record and recreate bag")
+          build_record_and_bag(noid)
+        elsif check_mono_fileset_mod_dates(record, pdoc)
+          # If any of the docs filesets modified date is more recent that db bagged date
+          apt_log(noid, 'bag_updated_monographs - solr_monographs.each', 'check_mono_fileset_mod_dates', 'okay', "a fileset mod date is more recent than record mod date, so update record and recreate bag")
+          build_record_and_bag(noid)
+        else
+          # Otherwise check deposit for this pdoc in aptrust and update DB
+          apt_log(noid, 'bag_updated_monographs - solr_monographs.each', 'update_db_aptrust_status', 'okay', "about try to confirming deposit status")
+          check = update_db_aptrust_status(record)
+          apt_log(noid, 'bag_updated_monographs - solr_monographs.each', 'after update_db_aptrust_status', 'error', "there was a problem checking deposit status") if check.nil?
+        end
       end
+    rescue StandardError => e
+      apt_log('na', 'bag_updated_monographs - solr_monographs.each', 'checking published monographs', 'error', "Rescue StandardError failed with error: #{e}")
+      abort "Rescue StandardError failed with error: #{e}"
     end
 
     puts "Task bag_updated_monographs complete."

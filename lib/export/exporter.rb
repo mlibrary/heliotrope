@@ -33,17 +33,18 @@ module Export
       end
 
       bag_name = "fulcrum.org.#{@monograph.presenter.subdomain}-#{@monograph.presenter.id}"
-      puts "bag_name: #{bag_name}"
 
       bag_pathname = "#{Settings.aptrust_bags_path}/#{bag_name}"
-      puts "bag_pathname: #{bag_pathname}"
 
       # On the first run these shouldn't be needed but...
       # clean up old bag and tar files
       FileUtils.rm_rf(bag_pathname) if File.exist?(bag_pathname)
       FileUtils.rm_rf("#{bag_pathname}.tar") if File.exist?("#{bag_pathname}.tar")
 
-      puts "In lib/export/exporter.rb, archiving #{bag_name}"
+      apt_log(@monograph.presenter.id.to_s, 'exporter - export_bag', 'pre-bag', 'okay', 'About to make bag')
+
+      FileUtils.mkdir_p(Settings.aptrust_bags_path) unless Dir.exist?(Settings.aptrust_bags_path)
+
       bag = BagIt::Bag.new bag_pathname
 
       # add bagit-info.txt file
@@ -58,19 +59,19 @@ module Export
       # this is text that shows up in the APTrust web interface
       # title, access, and description are required; Storage-Option defaults to Standard if not present
       File.open(File.join(bag.bag_dir, 'aptrust-info.txt'), "w") do |io|
-        ti = @monograph.presenter.title.blank? ? '' : @monograph.presenter.title.first[0..255]
+        ti = @monograph.presenter.title.blank? ? '' : @monograph.presenter.title.first.squish[0..255]
         io.puts "Title: #{ti}"
         io.puts "Access: Institution"
         io.puts "Storage-Option: Standard"
         io.puts "Description: This bag contains all of the data and metadata related to a Monograph which has been exported from the Fulcrum publishing platform hosted at https://www.fulcrum.org. The data folder contains a Fulcrum manifest in the form of a CSV file named with the NOID assigned to this Monograph in the Fulcrum repository. This manifest is exported directly from Fulcrum's heliotrope application (https://github.com/mlibrary/heliotrope) and can be used for re-import as well. The first two rows contain column headers and human-readable field descriptions, respectively. {{ The final row contains descriptive metadata for the Monograph; other rows contain metadata for Assets, which may be components of the Monograph or material supplemental to it.}}"
-        pub = @monograph.presenter.publisher.blank? ? '' : @monograph.presenter.publisher.first[0..249]
+        pub = @monograph.presenter.publisher.blank? ? '' : @monograph.presenter.publisher.first.squish[0..249]
         io.puts "Press-Name: #{pub}"
-        pr = @monograph.presenter.press.blank? ? '' : @monograph.presenter.press[0..249]
+        pr = @monograph.presenter.press.blank? ? '' : @monograph.presenter.press.squish[0..249]
         io.puts "Press: #{pr}"
         # 'Item Description' may be helpful when looking at Pharos web UI
         ides = @monograph.presenter.description.blank? ? '' : @monograph.presenter.description.first.squish[0..249]
         io.puts "Item Description: #{ides}"
-        creat = @monograph.presenter.creator.blank? ? '' : @monograph.presenter.creator.first[0..249]
+        creat = @monograph.presenter.creator.blank? ? '' : @monograph.presenter.creator.first.squish[0..249]
         io.puts "Creator/Author: #{creat}"
       end
 
@@ -88,7 +89,7 @@ module Export
       begin
         Minitar.pack(bag_name, File.open("#{bag_name}.tar", 'wb'))
       rescue StandardError => error
-        puts "Error for Minitar in lib/export/exporter.rb: #{error}"
+        apt_log(@monograph.presenter.id.to_s, 'exporter - export_bag', 'tarring', 'error', "Error for Minitar in lib/export/exporter.rb: #{error}")
       end
 
       # Upload the bag to the s3 bucket (umich A&E test bucket for now)
@@ -97,14 +98,16 @@ module Export
       # Update AptrustUploads database if bag is processed
       if uploaded
         update_aptrust_db(true)
-        FileUtils.rm_rf(bag_name)
+        apt_log(@monograph.presenter.id.to_s, 'exporter - export_bag', 'post-upload', 'okay', 'Upload success')
+        puts "Upload success for bag #{bag_pathname}"
       else
         update_aptrust_db(false)
-        puts "APTRUST: Upload failed for #{bag_pathname}.tar"
-        puts "APTRUST: Bag directory is not deleted at #{bag_pathname}"
+        apt_log(@monograph.presenter.id.to_s, 'exporter - export_bag', 'post-upload', 'error', "APTRUST: Upload failed for #{bag_pathname}.tar.")
+        puts "Upload failure for bag #{bag_pathname}"
       end
 
-      # Remove the tarred bag regardless if the bag upload succeeded or failed
+      # Remove the bag_dir and tarred bag
+      FileUtils.rm_rf(bag_name)
       FileUtils.rm_rf("#{bag_name}.tar")
 
       # Now restore the previous directory
@@ -196,19 +199,15 @@ module Export
       name = File.basename(file)
 
       # Check if file is already in the bucket
-      if fulcrum_bucket.object(name).exists?
-        # puts "APTRUST: #{name} already exists in the s3 bucket: #{bucket_name} overwriting bag!"
-        # else
-        # puts "APTRUST: Creating a brand new bag for #{name} in s3 bucket: #{bucket_name}"
-      end
-
+      msg = fulcrum_bucket.object(name).exists? ? "bag #{name} already exists in the s3 bucket: #{bucket_name} overwriting bag!" : "creating a brand new bag for #{name} in s3 bucket: #{bucket_name}"
+      apt_log(@monograph.presenter.id.to_s, 'exporter - send_to_s3', 'pre-upload', 'okay', msg)
       begin
         # Create the object to upload and upload it
         obj = s3.bucket(bucket_name).object(name)
         obj.upload_file(file)
         success = true
       rescue Aws::S3::Errors::ServiceError
-        puts "APTRUST: Upload of file {name} fails with s3 context #{s3.context}"
+        apt_log(@monograph.presenter.id.to_s, 'exporter - send_to_s3', 'post-upload', 'error', "Upload of file #{name} failed with s3 context #{s3.context}")
         success = false
       end
       success
@@ -218,7 +217,7 @@ module Export
       begin
         record = AptrustUpload.find_by!(noid: @monograph.presenter.id)
       rescue ActiveRecord::RecordNotFound => e
-        puts "APTRUST: In exporter with monograph #{@monograph.presenter.id}, update_aptrust_db find_record error is #{e} "
+        apt_log(@monograph.presenter.id.to_s, 'exporter - update_aptrust_db', 'post-upload', 'error', "In exporter with monograph #{@monograph.presenter.id}, update_aptrust_db find_record error is #{e}")
         return
       end
 
@@ -244,8 +243,18 @@ module Export
           date_confirmed: nil
         )
       rescue ActiveRecord::RecordInvalid => e
-        puts "APTRUST: In exporter with monograph #{@monograph.presenter.id}, update_aptrust_db record.update error is #{e}"
+        apt_log(@monograph.presenter.id.to_s, 'exporter - update_aptrust_db', 'post-upload', 'error', "In exporter with monograph #{@monograph.presenter.id}, update_aptrust_db record update error is #{e}")
       end
+    end
+
+    def apt_log(noid, where, stage, status, action)
+      AptrustLog.create(noid: noid,
+                        where: where,
+                        stage: stage,
+                        status: status,
+                        action: action)
+    rescue AptrustUpload::RecordInvalid => e
+      puts "DB error #{e} when trying to log to AptrustLog with noid: #{noid} where: #{where} stage: #{stage} status: #{status} action: #{action}"
     end
 
     private
