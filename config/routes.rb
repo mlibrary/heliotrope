@@ -80,6 +80,7 @@ Rails.application.routes.draw do
         delete :truncate
       end
     end
+    resources :aptrust_logs, only: %i[index]
     resources :share_link_logs, only: %i[index]
     resources :grants, except: %i[edit update]
     resources :customers, only: %i[index] do
