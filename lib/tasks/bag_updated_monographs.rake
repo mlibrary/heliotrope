@@ -154,7 +154,7 @@ namespace :aptrust do
       heads["X-Pharos-API-Key"] = @aptrust['AptrustApiKey']
 
       base_apt_url = @aptrust['AptrustApiUrl']
-      bag_name = "umich.fulcrum-#{record['press']}-#{record['id']}.tar"
+      bag_name = "fulcrum.org.#{record['press']}-#{record['id']}.tar"
 
       updated_after = Time.parse(record['date_uploaded'].to_s) - (60 * 60 * 24)
       updated_after = updated_after.iso8601
@@ -176,14 +176,15 @@ namespace :aptrust do
       if response.code != 200
         apt_key = 'bad_aptrust_response_code'
         apt_log(record.id.to_s, 'rake - update_db_aptrust_status', 'DB update', 'warn', "In update_db_aptrust_status we got non-200 response.code (#{response.code}) from aptrust")
-      elsif response.body['count'].to_i.zero? || response.body['results'].empty?
+        # removed 'response.body['count'].to_i.zero? ||' from the following line
+      elsif response.body['results'].blank?
         apt_key = 'not_found'
         apt_log(record.id.to_s, 'rake - update_db_aptrust_status', 'DB update', 'warn', "In update_db_aptrust_status we got empty response results from aptrust")
       else
         # Keep parsing and update record
         parsed = JSON.parse(response.response_body)
 
-        return nil if parsed["results"].blank?
+        # Now we know we have results to work with.
         # We might get back more than one matching aptrust record
         # the following handles that possibility by find the most current one
         saved_results = {}
@@ -234,6 +235,8 @@ namespace :aptrust do
 
       # Update the db, using the apt_key
       puts "Updating the apt_status of DB record for noid #{record.id} to #{apt_key}"
+      apt_log(record.id.to_s, 'rake - update_db_aptrust_status', 'DB update', 'okay', "Updating the apt_status of DB record for noid #{record.id} to #{apt_key}")
+
       begin
         record.update!(
                         apt_status: APT_STATUSES[apt_key]
@@ -320,7 +323,7 @@ namespace :aptrust do
     begin
       solr_monographs.each do |pdoc|
         noid = pdoc[:id].to_s
-        puts "Checking on pdoc with noid: #{noid} ===================="
+        puts "Checking on published monograph with noid: #{noid}"
         apt_log(noid, 'bag_updated_monographs - solr_monographs.each', 'begining checks', 'okay', "Checking on pdoc with noid: #{noid}")
         record = AptrustUpload.find_by(noid: noid)
         if record.nil?
