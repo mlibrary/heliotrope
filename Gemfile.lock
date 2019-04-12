@@ -1,7 +1,7 @@
 GIT
   remote: https://github.com/mlibrary/cozy-sun-bear
-  revision: d8e417aa44dc46c640908b2a8defc72073896741
-  ref: d8e417aa44dc46c640908b2a8defc72073896741
+  revision: d1c1314be41ec57fa90e46257f999a640a896fb9
+  ref: d1c1314be41ec57fa90e46257f999a640a896fb9
   specs:
     cozy-sun-bear (0.1.0)
       railties (>= 3.1.1)
