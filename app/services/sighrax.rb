@@ -8,7 +8,7 @@ require_dependency 'sighrax/model'
 require_dependency 'sighrax/monograph'
 require_dependency 'sighrax/portable_document_format'
 
-module Sighrax
+module Sighrax # rubocop:disable Metrics/ModuleLength
   class << self
     def factory(noid)
       noid = noid&.to_s
@@ -21,34 +21,42 @@ module Sighrax
              end
       return Entity.null_entity(noid) if data.blank?
 
-      model_type = data['has_model_ssim']&.first
+      model_type = Array(data['has_model_ssim']).first
       return Entity.send(:new, noid, data) if model_type.blank?
       model_factory(noid, data, model_type)
     end
+
+    def press(entity)
+      if entity.is_a?(Sighrax::Monograph)
+        Press.find_by(subdomain: Sighrax.hyrax_presenter(entity).subdomain)
+      elsif entity.is_a?(Sighrax::Asset)
+        if entity.parent.is_a?(Sighrax::Monograph)
+          Press.find_by(subdomain: Sighrax.hyrax_presenter(entity.parent).subdomain)
+        else
+          Press.null_press
+        end
+      else
+        Press.null_press
+      end
+    end
+
+    def hyrax_presenter(entity)
+      if entity.is_a?(Sighrax::Monograph)
+        Hyrax::PresenterFactory.build_for(ids: [entity.noid], presenter_class: Hyrax::MonographPresenter, presenter_args: nil)&.first
+      elsif entity.is_a?(Sighrax::Asset)
+        Hyrax::PresenterFactory.build_for(ids: [entity.noid], presenter_class: Hyrax::FileSetPresenter, presenter_args: nil)&.first
+      else
+        Hyrax::Presenter.send(:new, entity.noid)
+      end
+    end
+
+    # Checkpoint Helpers
 
     def access?(actor, target)
       products = actor_products(actor)
       component = Greensub::Component.find_by(noid: target.noid)
       component_products = component&.products || []
       (products & component_products).any?
-    end
-
-    def allow_download?(entity)
-      return false unless entity.valid?
-      return false unless downloadable?(entity)
-      /^yes$/i.match?(entity.data['allow_download_ssim']&.first)
-    end
-
-    def deposited?(entity)
-      return false unless entity.valid?
-      return true if entity.data['suppressed_bsi'].blank?
-      entity.data['suppressed_bsi'].blank?
-    end
-
-    def downloadable?(entity)
-      return false unless entity.valid?
-      return false if entity.data['external_resource_url_ssim'].present?
-      entity.is_a?(Sighrax::Asset)
     end
 
     def hyrax_can?(actor, action, target)
@@ -60,18 +68,38 @@ module Sighrax
       ability.can?(action, target.noid)
     end
 
-    def open_access?(entity)
-      return false unless entity.valid?
-      /^yes$/i.match?(entity.data['open_access_tesim']&.first)
-    end
-
     def platform_admin?(actor)
       actor.is_a?(User) && actor.platform_admin? && Incognito.allow_platform_admin?(actor)
     end
 
+    # Entity Helpers
+
+    def allow_download?(entity)
+      return false unless entity.valid?
+      return false unless downloadable?(entity)
+      /^yes$/i.match?(Array(solr_document(entity)['allow_download_ssim']).first)
+    end
+
+    def deposited?(entity)
+      return false unless entity.valid?
+      return true if Array(solr_document(entity)['suppressed_bsi']).empty?
+      Array(solr_document(entity)['suppressed_bsi']).first.blank?
+    end
+
+    def downloadable?(entity)
+      return false unless entity.valid?
+      return false if Array(solr_document(entity)['external_resource_url_ssim']).first.present?
+      entity.is_a?(Sighrax::Asset)
+    end
+
+    def open_access?(entity)
+      return false unless entity.valid?
+      /^yes$/i.match?(Array(solr_document(entity)['open_access_tesim']).first)
+    end
+
     def published?(entity)
       return false unless entity.valid?
-      deposited?(entity) && /open/i.match?(entity.data['visibility_ssi'])
+      deposited?(entity) && /open/i.match?(Array(solr_document(entity)['visibility_ssi']).first)
     end
 
     def restricted?(entity)
@@ -113,6 +141,10 @@ module Sighrax
         else
           Greensub.actor_products(actor)
         end
+      end
+
+      def solr_document(entity)
+        entity.send(:data)
       end
   end
 end

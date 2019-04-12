@@ -33,4 +33,8 @@ class Press < ApplicationRecord
   def agent_id
     id
   end
+
+  def self.null_press
+    NullPress.new
+  end
 end

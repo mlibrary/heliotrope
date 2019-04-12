@@ -4,7 +4,9 @@ module Sighrax
   class Model < Entity
     private_class_method :new
 
-    attr_reader :presenter
+    def title
+      Array(data['title_tesim']).first || super
+    end
 
     protected
 
@@ -16,7 +18,6 @@ module Sighrax
 
       def initialize(noid, data)
         super(noid, data)
-        @presenter = self.class.null_entity
       end
   end
 end

@@ -13,7 +13,7 @@ APT_STATUSES = { 'not_checked' => 0, 'confirmed' => 1, 'pending' => 3, 'failed' 
 
 module Export
   class Exporter
-    attr_reader :all_metadata, :monograph, :columns, :aptrust
+    attr_reader :all_metadata, :monograph, :monograph_presenter, :columns, :aptrust
 
     def initialize(monograph_id, columns = :all)
       @monograph = Sighrax.factory(monograph_id)
@@ -27,12 +27,12 @@ module Export
     def export_bag # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
       ## create bag directory with valid, noid-based aptrust name
 
-      if @monograph.presenter.subdomain.to_s.blank?
-        puts "In Exporter.rb export_bag, @monograph.presenter.press is blank!"
+      if monograph_presenter.subdomain.to_s.blank?
+        puts "In Exporter.rb export_bag, monograph_presenter.press is blank!"
         return
       end
 
-      bag_name = "fulcrum.org.#{@monograph.presenter.subdomain}-#{@monograph.presenter.id}"
+      bag_name = "fulcrum.org.#{monograph_presenter.subdomain}-#{monograph_presenter.id}"
 
       bag_pathname = "#{Settings.aptrust_bags_path}/#{bag_name}"
 
@@ -41,7 +41,7 @@ module Export
       FileUtils.rm_rf(bag_pathname) if File.exist?(bag_pathname)
       FileUtils.rm_rf("#{bag_pathname}.tar") if File.exist?("#{bag_pathname}.tar")
 
-      apt_log(@monograph.presenter.id.to_s, 'exporter - export_bag', 'pre-bag', 'okay', 'About to make bag')
+      apt_log(monograph_presenter.id.to_s, 'exporter - export_bag', 'pre-bag', 'okay', 'About to make bag')
 
       FileUtils.mkdir_p(Settings.aptrust_bags_path) unless Dir.exist?(Settings.aptrust_bags_path)
 
@@ -59,19 +59,19 @@ module Export
       # this is text that shows up in the APTrust web interface
       # title, access, and description are required; Storage-Option defaults to Standard if not present
       File.open(File.join(bag.bag_dir, 'aptrust-info.txt'), "w") do |io|
-        ti = @monograph.presenter.title.blank? ? '' : @monograph.presenter.title.first.squish[0..255]
+        ti = monograph_presenter.title.blank? ? '' : monograph_presenter.title.first.squish[0..255]
         io.puts "Title: #{ti}"
         io.puts "Access: Institution"
         io.puts "Storage-Option: Standard"
         io.puts "Description: This bag contains all of the data and metadata related to a Monograph which has been exported from the Fulcrum publishing platform hosted at https://www.fulcrum.org. The data folder contains a Fulcrum manifest in the form of a CSV file named with the NOID assigned to this Monograph in the Fulcrum repository. This manifest is exported directly from Fulcrum's heliotrope application (https://github.com/mlibrary/heliotrope) and can be used for re-import as well. The first two rows contain column headers and human-readable field descriptions, respectively. {{ The final row contains descriptive metadata for the Monograph; other rows contain metadata for Assets, which may be components of the Monograph or material supplemental to it.}}"
-        pub = @monograph.presenter.publisher.blank? ? '' : @monograph.presenter.publisher.first.squish[0..249]
+        pub = monograph_presenter.publisher.blank? ? '' : monograph_presenter.publisher.first.squish[0..249]
         io.puts "Press-Name: #{pub}"
-        pr = @monograph.presenter.press.blank? ? '' : @monograph.presenter.press.squish[0..249]
+        pr = monograph_presenter.press.blank? ? '' : monograph_presenter.press.squish[0..249]
         io.puts "Press: #{pr}"
         # 'Item Description' may be helpful when looking at Pharos web UI
-        ides = @monograph.presenter.description.blank? ? '' : @monograph.presenter.description.first.squish[0..249]
+        ides = monograph_presenter.description.blank? ? '' : monograph_presenter.description.first.squish[0..249]
         io.puts "Item Description: #{ides}"
-        creat = @monograph.presenter.creator.blank? ? '' : @monograph.presenter.creator.first.squish[0..249]
+        creat = monograph_presenter.creator.blank? ? '' : monograph_presenter.creator.first.squish[0..249]
         io.puts "Creator/Author: #{creat}"
       end
 
@@ -89,7 +89,7 @@ module Export
       begin
         Minitar.pack(bag_name, File.open("#{bag_name}.tar", 'wb'))
       rescue StandardError => error
-        apt_log(@monograph.presenter.id.to_s, 'exporter - export_bag', 'tarring', 'error', "Error for Minitar in lib/export/exporter.rb: #{error}")
+        apt_log(monograph_presenter.id.to_s, 'exporter - export_bag', 'tarring', 'error', "Error for Minitar in lib/export/exporter.rb: #{error}")
       end
 
       # Upload the bag to the s3 bucket (umich A&E test bucket for now)
@@ -98,11 +98,11 @@ module Export
       # Update AptrustUploads database if bag is processed
       if uploaded
         update_aptrust_db(true)
-        apt_log(@monograph.presenter.id.to_s, 'exporter - export_bag', 'post-upload', 'okay', 'Upload success')
+        apt_log(monograph_presenter.id.to_s, 'exporter - export_bag', 'post-upload', 'okay', 'Upload success')
         puts "Upload success for bag #{bag_pathname}"
       else
         update_aptrust_db(false)
-        apt_log(@monograph.presenter.id.to_s, 'exporter - export_bag', 'post-upload', 'error', "APTRUST: Upload failed for #{bag_pathname}.tar.")
+        apt_log(monograph_presenter.id.to_s, 'exporter - export_bag', 'post-upload', 'error', "APTRUST: Upload failed for #{bag_pathname}.tar.")
         puts "Upload failure for bag #{bag_pathname}"
       end
 
@@ -115,15 +115,15 @@ module Export
     end
 
     def export
-      return String.new if @monograph.instance_of?(Sighrax::NullEntity)
+      return String.new if monograph.instance_of?(Sighrax::NullEntity)
 
       rows = []
-      @monograph.data['ordered_member_ids_ssim']&.each do |member_id|
-        member = Sighrax.factory(member_id).presenter
-        rows << metadata_row(member, @monograph.presenter.representative_id)
+      monograph.children.each do |member|
+        member_presenter = Sighrax.hyrax_presenter(member)
+        rows << metadata_row(member_presenter, monograph_presenter.representative_id)
       end
 
-      rows << metadata_row(@monograph.presenter)
+      rows << metadata_row(monograph_presenter)
       buffer = String.new
       CSV.generate(buffer) do |csv|
         write_csv_header_rows(csv)
@@ -133,17 +133,24 @@ module Export
       buffer
     end
 
-    def extract(use_dir = nil) # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
-      return if @monograph.blank?
+    def extract(use_dir = nil, now = false) # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
+      return unless monograph.valid?
+
+      job_path = nil
 
       if use_dir
         path = "#{use_dir}/"
+        job_path = if path[0] == '/'
+                     path
+                   else
+                     File.join(Dir.pwd, path)
+                   end
       else
         base = File.join(".", "extract")
         FileUtils.mkdir(base) unless Dir.exist?(base)
-        press = File.join(base, @monograph.presenter.subdomain.to_s)
+        press = File.join(base, monograph_presenter.subdomain.to_s)
         FileUtils.mkdir(press) unless Dir.exist?(press)
-        path = File.join(press, @monograph.presenter.id.to_s)
+        path = File.join(press, monograph.noid.to_s)
         if Dir.exist?(path)
           puts "Overwrite #{path} directory? (Y/n):"
           return unless /y/i.match?(STDIN.getch)
@@ -151,17 +158,22 @@ module Export
           FileUtils.rm_rf(path)
         end
         FileUtils.mkdir(path)
+        job_path = File.join(Dir.pwd, path)
       end
 
-      manifest = File.new(File.join(path, @monograph.presenter.id.to_s + ".csv"), "w")
+      manifest = File.new(File.join(path, monograph.noid.to_s + ".csv"), "w")
       manifest << export
       manifest.close
 
-      OutputMonographFilesJob.perform_later(@monograph.data.id, File.join(Dir.pwd, path))
+      if now
+        OutputMonographFilesJob.perform_now(monograph.noid, job_path)
+      else
+        OutputMonographFilesJob.perform_later(monograph.noid, job_path)
+      end
     end
 
     def monograph_row
-      metadata_row(@monograph)
+      metadata_row(monograph)
     end
 
     def blank_csv_sheet
@@ -200,14 +212,14 @@ module Export
 
       # Check if file is already in the bucket
       msg = fulcrum_bucket.object(name).exists? ? "bag #{name} already exists in the s3 bucket: #{bucket_name} overwriting bag!" : "creating a brand new bag for #{name} in s3 bucket: #{bucket_name}"
-      apt_log(@monograph.presenter.id.to_s, 'exporter - send_to_s3', 'pre-upload', 'okay', msg)
+      apt_log(monograph_presenter.id.to_s, 'exporter - send_to_s3', 'pre-upload', 'okay', msg)
       begin
         # Create the object to upload and upload it
         obj = s3.bucket(bucket_name).object(name)
         obj.upload_file(file)
         success = true
       rescue Aws::S3::Errors::ServiceError
-        apt_log(@monograph.presenter.id.to_s, 'exporter - send_to_s3', 'post-upload', 'error', "Upload of file #{name} failed with s3 context #{s3.context}")
+        apt_log(monograph_presenter.id.to_s, 'exporter - send_to_s3', 'post-upload', 'error', "Upload of file #{name} failed with s3 context #{s3.context}")
         success = false
       end
       success
@@ -215,9 +227,9 @@ module Export
 
     def update_aptrust_db(uploaded)
       begin
-        record = AptrustUpload.find_by!(noid: @monograph.presenter.id)
+        record = AptrustUpload.find_by!(noid: monograph.noid)
       rescue ActiveRecord::RecordNotFound => e
-        apt_log(@monograph.presenter.id.to_s, 'exporter - update_aptrust_db', 'post-upload', 'error', "In exporter with monograph #{@monograph.presenter.id}, update_aptrust_db find_record error is #{e}")
+        apt_log(monograph_presenter.id.to_s, 'exporter - update_aptrust_db', 'post-upload', 'error', "In exporter with monograph #{monograph_presenter.id}, update_aptrust_db find_record error is #{e}")
         return
       end
 
@@ -243,7 +255,7 @@ module Export
           date_confirmed: nil
         )
       rescue ActiveRecord::RecordInvalid => e
-        apt_log(@monograph.presenter.id.to_s, 'exporter - update_aptrust_db', 'post-upload', 'error', "In exporter with monograph #{@monograph.presenter.id}, update_aptrust_db record update error is #{e}")
+        apt_log(monograph_presenter.id.to_s, 'exporter - update_aptrust_db', 'post-upload', 'error', "In exporter with monograph #{monograph_presenter.id}, update_aptrust_db record update error is #{e}")
       end
     end
 
@@ -258,6 +270,10 @@ module Export
     end
 
     private
+
+      def monograph_presenter
+        @monograph_presenter ||= Sighrax.hyrax_presenter(monograph)
+      end
 
       def all_metadata
         return @all_metadata if @all_metadata.present?
@@ -303,7 +319,7 @@ module Export
         # I think we can ignore thumbnail_id, should always be the same as representative_id for us
         return 'cover' if parent_rep == item.id
 
-        FeaturedRepresentative.where(file_set_id: item.id, monograph_id: @monograph.presenter.id).first&.kind
+        FeaturedRepresentative.where(file_set_id: item.id, monograph_id: monograph.noid).first&.kind
       end
 
       def item_url(item, item_type)

@@ -25,6 +25,15 @@ RSpec.describe Sighrax do
       expect(child.noid).to eq(file_set.id)
     end
 
+    it '#parent' do
+      expect(child.parent).to be_an_instance_of(Sighrax::Monograph)
+      expect(child.parent.noid).to eq(monograph.id)
+    end
+
+    it '#children' do
+      expect(child.children).to be_empty
+    end
+
     it '#title' do
       expect(child.title).not_to be_empty
       expect(child.title).to eq(child_presenter.title)
@@ -35,6 +44,16 @@ RSpec.describe Sighrax do
     it 'is the monograph' do
       expect(parent).to be_an_instance_of(Sighrax::Monograph)
       expect(parent.noid).to eq(monograph.id)
+    end
+
+    it '#parent' do
+      expect(parent.parent).to be_an_instance_of(Sighrax::NullEntity)
+    end
+
+    it '#children' do
+      expect(parent.children.count).to eq(1)
+      expect(parent.children[0]).to be_a_kind_of(Sighrax::Asset)
+      expect(parent.children[0].noid).to eq(file_set.id)
     end
 
     it '#title' do
