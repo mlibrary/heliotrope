@@ -32,7 +32,7 @@ module Devise
         if user_eid.present? || identity_provider.present?
           set_user!
         else
-          debug_log "Passing (insufficient data in request attributes '#{request_attributes}')"
+          debug_log "Passing (insufficient data in request attributes '#{request_attributes.all}')"
           pass
         end
       end
