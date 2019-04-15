@@ -104,6 +104,8 @@ module Turnsole
           }
           conn.request :json
           conn.response :json, content_type: /\bjson$/
+          conn.options[:open_timeout] = 60 # seconds, 1 minute, opening a connection
+          conn.options[:timeout] = 600 # seconds, 10 minutes, waiting for response
           conn.adapter Faraday.default_adapter
         end
       end

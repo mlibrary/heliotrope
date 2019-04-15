@@ -7,11 +7,7 @@ require 'json'
 module RestfulFedora
   class Service
     def contains
-      response = connection.get do |request|
-        request.url RestfulFedora.base_path
-        request.options[:timeout] = 3600 # 1 hour
-        request.options[:open_timeout] = 4800 # 1.5 hours
-      end
+      response = connection.get(RestfulFedora.base_path)
       return [] unless response.success? && response.body.present? && response.body.first.present? && response.body.first.is_a?(Hash)
       ldp_contains = response.body.first["http://www.w3.org/ns/ldp#contains"] || []
       ldp_contains.map { |h| h["@id"] }
@@ -31,6 +27,8 @@ module RestfulFedora
           }
           conn.request :json
           conn.response :json, content_type: /\bjson$/
+          conn.options[:open_timeout] = 60 # seconds, 1 minute, opening a connection
+          conn.options[:timeout] = 600 # seconds, 10 minutes, waiting for response
           conn.adapter Faraday.default_adapter
         end
       end
