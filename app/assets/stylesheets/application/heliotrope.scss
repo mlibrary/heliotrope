@@ -1125,6 +1125,23 @@ footer.press {
     font-size: .9em !important;
 }
 
+.cozy-control button.button--sm.annotation i {
+  font-size: 1.1em !important;
+  margin-top: 1px;
+}
+
+.cozy-control .annotation-count {
+  position: relative;
+  right: 14px;
+  color: #fff;
+  top: 1px;
+  height: 20px;
+  width: 20px;
+  border-radius: 50%;
+  display: block;
+  font-size: .7em;
+}
+
 .cozy-container input[type="radio"] {
   margin: 7px 7px 0 2em;
 }
@@ -1150,6 +1167,12 @@ footer.press {
   display: none;
 }
 
+.cozy-panel-header {
+  .cozy-panel-right {
+    flex-direction: row-reverse;
+    
+  }
+}
 
 .cozy-control .btn-group {
   display: flex;
@@ -1210,6 +1233,7 @@ footer.press {
 .panel-open.panel-right .cozy-module-book-cover {
   width: 50vw
 }
+
 .panel-open.panel-right .cozy-module-right {
   right: 50vw;
 }
@@ -1226,6 +1250,17 @@ footer.press {
   right: 0;
   top: 0;
   bottom: 0;
+}
+
+.special-panel.cozy-module-annotator {
+  left: 50vw;
+
+  .hypothesis-panel iframe.h-sidebar-iframe {
+    height: 100%;
+    width: 100%;
+    border: 0;
+  }
+
 }
 
 #gameContainer {
