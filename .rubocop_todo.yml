@@ -133,6 +133,7 @@ RSpec/MessageSpies:
     - 'spec/jobs/curation_concern_update_index_job_spec.rb'
     - 'spec/jobs/hyrax/grant_read_to_members_job_spec.rb'
     - 'spec/jobs/hyrax/revoke_edit_from_members_job_spec.rb'
+    - 'spec/jobs/hyrax/grant_edit_to_members_job_spec.rb'
     - 'spec/lib/devise/http_header_authenticatable_spec.rb'
     - 'spec/lib/devise/keycard_authenticatable_spec.rb'
     - 'spec/models/riiif/file_spec.rb'

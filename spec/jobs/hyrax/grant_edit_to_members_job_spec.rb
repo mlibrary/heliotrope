@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe Hyrax::RevokeEditFromMembersJob do
+RSpec.describe Hyrax::GrantEditToMembersJob do
   let(:depositor) { create(:user) }
   let(:work) { build(:monograph) }
   let(:file_set_ids) { ['xyz123abc', 'abc789zyx'] }
@@ -13,7 +13,7 @@ RSpec.describe Hyrax::RevokeEditFromMembersJob do
 
   it 'loops over FileSet IDs, spawning a job for each' do
     file_set_ids.each do |file_set_id|
-      expect(Hyrax::RevokeEditJob).to receive(:perform_later).with(file_set_id, depositor.user_key).once
+      expect(Hyrax::GrantEditJob).to receive(:perform_now).with(file_set_id, depositor.user_key).once
     end
     described_class.perform_now(work, depositor.user_key)
   end
