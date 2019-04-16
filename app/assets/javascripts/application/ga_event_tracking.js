@@ -86,9 +86,20 @@ $(document).on('turbolinks:load', function() {
       ga('pressTracker.send', 'event', 'monograph_page', 'facet_exclusivity', $(this).text());
     });
 
+    // e-book download
+    $('ul.monograph-catalog-rep-downloads li a').click(function() {
+      var type = $(this).attr('data-rep-type');
+      ga('pressTracker.send', 'event', 'monograph_page', 'download_representative_' + type, window.location.href);
+    });
+
     //
     // File Set/Asset page
     //
+    // download
+    $('a.btn-heliotrope-download').click(function() {
+      ga('pressTracker.send', 'event', 'file_set_page', 'download', $('#asset-title').text());
+    });
+
     // Leaflet image pan and zoom buttons
     $('a.leaflet-control-zoom-in').click(function() {
       ga('pressTracker.send', 'event', 'file_set_page', 'zoom_in', $('#asset-title').text());
@@ -185,6 +196,14 @@ $(document).on('turbolinks:load', function() {
       ga('pressTracker.send', 'event', 'e_reader', 'feedback', window.location.href);
     });
 
+    // e-book download (dynamically-added modal, hence delegated `on()` binding)
+    $("body").on('click', '.cozy-modal-download footer button', function(e) {
+      if($('div.cozy-modal-download input[name="format"][value="EPUB"]').is(':checked')) {
+        ga('pressTracker.send', 'event', 'e_reader', 'download_representative_epub', window.location.href);
+      } else if($('div.cozy-modal-download input[name="format"][value="PDF"]').is(':checked')) {
+        ga('pressTracker.send', 'event', 'e_reader', 'download_representative_pdf', window.location.href);
+      }
+    })
   }
 
   function which_category() {

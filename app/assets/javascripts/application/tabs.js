@@ -32,7 +32,7 @@ function storeTab() {
     var lastTab = sessionStorage.getItem('lastTab');
     // If there is a value in the search field, heavy-handedly override
     // stored value so the resources tab is visible on load.
-    if ($('#resources_search').val().length) {
+    if ($('#resources_search').val() !== undefined) {
       lastTab = '#resources';
     }
 
