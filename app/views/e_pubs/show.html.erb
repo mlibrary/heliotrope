@@ -567,15 +567,15 @@ webgl = Webgl::Unity.from_directory(UnpackService.root_path_from_noid(webgl_id, 
             if (epub_ga_listeners[button.id]) { break; }
             button.addEventListener('click', function() {
               var selection;
-              var radios = document.querySelectorAll(".cozy-modal-citatation div main form fieldset label input");
-              for(var i = 0, n = radios.length; i < n; i++) {
-                if (radios[i].checked) {
-                  selection = i;
+              var radios = document.querySelectorAll(".cozy-modal-citation div main form fieldset label input");
+              for(var j = 0, n = radios.length; j < n; j++) {
+                if (radios[j].checked) {
+                  selection = j;
                   break;
                 }
               }
-              if (i !== undefined) {
-                ga('pressTracker.send', 'event', 'e_reader', 'citation', window.location.href, i);
+              if (selection !== undefined) {
+                ga('pressTracker.send', 'event', 'e_reader', 'citation', window.location.href, selection);
               }
             });
             epub_ga_listeners[button.id] = 1;
