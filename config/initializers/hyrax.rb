@@ -18,7 +18,8 @@ Hyrax.config do |config|
   # Requires a Google Analytics id and OAuth2 keyfile.  See README for more info
   # config.analytics = false
 
-  # Specify a Google Analytics tracking ID to gather usage statistics
+  # Specify a Google Analytics tracking ID to gather usage statistics. NB: this is left here for posterity only...
+  # as heliotrope pulls the GA tracking ID from Rails.application.secrets.google_analytics_id
   # config.google_analytics_id = 'UA-99999999-1'
 
   # Specify a date you wish to start collecting Google Analytic statistics for.
