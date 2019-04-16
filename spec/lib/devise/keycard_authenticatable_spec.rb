@@ -106,7 +106,13 @@ RSpec.describe Devise::Strategies::KeycardAuthenticatable do
 
   context "without a user_eid or identity_provider" do
     let(:identity) { {} }
-    let(:request_attributes) { {} }
+    let(:request_attributes) { double('request_attributes') }
+    let(:attributes) { {} }
+
+    before do
+      allow(request_attributes).to receive(:[]).with(:identity_provider).and_return(nil)
+      allow(request_attributes).to receive(:all).and_return(attributes)
+    end
 
     it "passes on authenticating" do
       expect(strategy).to receive(:pass)
