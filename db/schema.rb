@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190401161317) do
+ActiveRecord::Schema.define(version: 20190416183400) do
 
   create_table "api_requests", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.integer "user_id"
@@ -35,7 +35,6 @@ ActiveRecord::Schema.define(version: 20190401161317) do
   end
 
   create_table "aptrust_uploads", primary_key: "noid", id: :string, limit: 9, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
-    t.integer "row_number"
     t.string "press", limit: 50
     t.string "author", limit: 50
     t.string "model", limit: 50, default: "monograph"
@@ -43,7 +42,6 @@ ActiveRecord::Schema.define(version: 20190401161317) do
     t.integer "s3_status", default: 0
     t.integer "apt_status", default: 0
     t.datetime "date_monograph_modified"
-    t.datetime "date_fileset_modified"
     t.datetime "date_bagged"
     t.datetime "date_uploaded"
     t.datetime "date_confirmed"
@@ -699,8 +697,6 @@ ActiveRecord::Schema.define(version: 20190401161317) do
     t.index ["work_id"], name: "index_work_view_stats_on_work_id"
   end
 
-  add_foreign_key "api_requests", "users"
-  add_foreign_key "collection_type_participants", "hyrax_collection_types"
   add_foreign_key "components_products", "components"
   add_foreign_key "components_products", "products"
   add_foreign_key "curation_concerns_operations", "users"
