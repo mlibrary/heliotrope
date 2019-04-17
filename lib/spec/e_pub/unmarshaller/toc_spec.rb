@@ -9,7 +9,7 @@ RSpec.describe EPub::Unmarshaller::TOC do
     subject { described_class.null_object }
 
     it { is_expected.to be_an_instance_of(EPub::Unmarshaller::TOCNullObject) }
-    it { expect(subject.id).to be_zero }
+    it { expect(subject.id).to eq "toc" }
     it { expect(subject.headers).to be_empty }
   end
 
