@@ -28,7 +28,7 @@ module Export
       ## create bag directory with valid, noid-based aptrust name
 
       if monograph_presenter.subdomain.to_s.blank?
-        puts "In Exporter.rb export_bag, monograph_presenter.press is blank!"
+        apt_log(monograph_presenter.id.to_s, 'exporter - export_bag', 'check on press', 'fail', "In Exporter.rb export_bag, monograph_presenter.press is blank!")
         return
       end
 
@@ -99,11 +99,9 @@ module Export
       if uploaded
         update_aptrust_db(true)
         apt_log(monograph_presenter.id.to_s, 'exporter - export_bag', 'post-upload', 'okay', 'Upload success')
-        puts "Upload success for bag #{bag_pathname}"
       else
         update_aptrust_db(false)
         apt_log(monograph_presenter.id.to_s, 'exporter - export_bag', 'post-upload', 'error', "APTRUST: Upload failed for #{bag_pathname}.tar.")
-        puts "Upload failure for bag #{bag_pathname}"
       end
 
       # Remove the bag_dir and tarred bag
@@ -249,7 +247,6 @@ module Export
           bag_status: bag_status,
           s3_status: upload_status,
           apt_status: APT_STATUSES['not_checked'],
-          date_fileset_modified: nil,
           date_bagged: bagged_date,
           date_uploaded: upload_date,
           date_confirmed: nil
