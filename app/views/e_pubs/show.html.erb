@@ -558,66 +558,6 @@ webgl = Webgl::Unity.from_directory(UnpackService.root_path_from_noid(webgl_id, 
         // Navigator widgets
         cozy.control.navigator({ region: 'bottom.navigator' }).addTo(reader);
 
-        // Google Analytics events
-        var epub_ga_listeners = {};
-        reader.on('ready:contents', function(contents) {
-          var buttons = document.querySelectorAll(".cozy-modal-citation div footer button");
-          for(var i = 0, n = buttons.length; i < n; i++) {
-            var button = buttons[i];
-            if (epub_ga_listeners[button.id]) { break; }
-            button.addEventListener('click', function() {
-              var selection;
-              var radios = document.querySelectorAll(".cozy-modal-citation div main form fieldset label input");
-              for(var j = 0, n = radios.length; j < n; j++) {
-                if (radios[j].checked) {
-                  selection = j;
-                  break;
-                }
-              }
-              if (selection !== undefined) {
-                ga('pressTracker.send', 'event', 'e_reader', 'citation', window.location.href, selection);
-              }
-            });
-            epub_ga_listeners[button.id] = 1;
-          }
-          buttons = document.querySelectorAll(".cozy-modal-preferences div footer button");
-          for(var i = 0, n = buttons.length; i < n; i++) {
-            var button = buttons[i];
-            if (epub_ga_listeners[button.id]) { break; }
-            button.addEventListener('click', function() {
-              var textSize;
-              var display;
-              var ranges = document.querySelectorAll(".cozy-modal-preferences div main form fieldset p input");
-              if (ranges.length) {
-                textSize = ranges[0].value;
-              }
-              var radios = document.querySelectorAll(".cozy-modal-preferences div main form fieldset label input");
-              for(var i = 0, n = radios.length; i < n; i++) {
-                if (radios[i].checked) {
-                  display = i;
-                  break;
-                }
-              }
-              if (textSize !== undefined && display !== undefined) {
-                ga('pressTracker.send', 'event', 'e_reader', 'preferences', window.location.href);
-                // Send as one or two events? One, I guess.
-                //ga('pressTracker.send', 'event', 'e_reader', 'preferences', window.location.href, textSize);
-                //ga('pressTracker.send', 'event', 'e_reader', 'preferences', window.location.href, display);
-              }
-            });
-            epub_ga_listeners[button.id] = 1;
-          }
-          var links = document.querySelectorAll(".cozy-modal-contents div main ul li a");
-          for(var i = 0, n = links.length; i < n; i++) {
-            var link = links[i];
-            if (epub_ga_listeners[link.href]) { break; }
-            link.addEventListener('click', function() {
-              ga('pressTracker.send', 'event', 'e_reader', 'toc', this.href);
-            });
-            epub_ga_listeners[link.href] = 1;
-          }
-        }); // reader.on('ready:contents', …)
-
         <% if @monograph_presenter.webgl? %>
           open_panel();
         <% end %>

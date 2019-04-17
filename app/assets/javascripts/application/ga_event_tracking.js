@@ -203,7 +203,28 @@ $(document).on('turbolinks:load', function() {
       } else if($('div.cozy-modal-download input[name="format"][value="PDF"]').is(':checked')) {
         ga('pressTracker.send', 'event', 'e_reader', 'download_representative_pdf', window.location.href);
       }
-    })
+    });
+
+    // citation copying (dynamically-added modal, hence delegated `on()` binding)
+    $("body").on('click', '.cozy-modal-citation footer button', function(e) {
+      if($('div.cozy-modal-citation input[name="format"][value="MLA"]').is(':checked')) {
+        ga('pressTracker.send', 'event', 'e_reader', 'citation_mla', window.location.href);
+      } else if($('div.cozy-modal-citation input[name="format"][value="APA"]').is(':checked')) {
+        ga('pressTracker.send', 'event', 'e_reader', 'citation_apa', window.location.href);
+      } else if($('div.cozy-modal-citation input[name="format"][value="Chicago"]').is(':checked')) {
+        ga('pressTracker.send', 'event', 'e_reader', 'citation_chicago', window.location.href);
+      }
+    });
+
+    // preferences (dynamically-added modal, hence delegated `on()` binding)
+    $("body").on('click', '.cozy-modal-preferences footer button', function(e) {
+      ga('pressTracker.send', 'event', 'e_reader', 'preferences', window.location.href);
+    });
+
+    // TOC (dynamically-added modal, hence delegated `on()` binding)
+    $("body").on('click', '.cozy-modal-contents ul li a', function(e) {
+      ga('pressTracker.send', 'event', 'e_reader', 'toc', this.href);
+    });
   }
 
   function which_category() {
