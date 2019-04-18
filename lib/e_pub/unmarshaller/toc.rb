@@ -19,7 +19,7 @@ module EPub
       # Instance Methods
 
       def id
-        @toc_element["id"] || 0
+        @toc_element["id"] || "toc"
       end
 
       def headers
