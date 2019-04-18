@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doi_batch xmlns="http://www.crossref.org/schema/4.3.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="4.3.0" xsi:schemaLocation="http://www.crossref.org/schema/4.3.0 http://www.crossref.org/schema/deposit/crossref4.3.0.xsd">
+<head>
+  <doi_batch_id>
+    <!-- DOI BATCH ID -->
+  </doi_batch_id>
+  <timestamp>
+    <!-- TIMESTAMP -->
+  </timestamp>
+  <depositor>
+    <name>scpo</name>
+    <email_address>mpub.xref@gmail.com</email_address>
+  </depositor>
+  <registrant>MPublishing</registrant>
+</head>
+<body>
+  <book book_type="">
+    <book_metadata language="en">
+      <contributors>
+        <!-- CONTRIBUTORS -->
+      </contributors>
+      <titles>
+        <title>
+          <!-- TITLE -->
+        </title>
+      </titles>
+      <publication_date>
+        <!-- PUBLICATION_DATE -->
+      </publication_date>
+      <!-- PRINT ISBN -->
+      <!-- ELECTRONIC ISBN -->
+      <publisher>
+        <publisher_name>
+          <!-- PUBLISHER_NAME -->
+        </publisher_name>
+      </publisher>
+      <doi_data>
+        <doi>
+          <!-- DOI -->
+        </doi>
+        <resource>
+          <!-- RESOURCE -->
+        </resource>
+      </doi_data>
+    </book_metadata>
+  </book>
+</body>
+</doi_batch>

@@ -282,5 +282,26 @@ module Hyrax
     def assets?
       ordered_file_sets_ids.present?
     end
+
+    def creators_with_roles
+      # Wherein we hopelessly try to make structure out of an unstructured string
+      # Used for sending XML to crossref to make DOIs
+      creators = []
+      solr_document["importable_creator_ss"].split(";").each do |creator|
+        # Last, First (Role)
+        creator.match(/(.*?),(.*?)\((.*?)\)$/) do |m|
+          creators << OpenStruct.new(lastname: m[1].strip, firstname: m[2].strip, role: m[3])
+        end && next
+        # Last, First
+        creator.match(/(.*?),(.*?)$/) do |m|
+          creators << OpenStruct.new(lastname: m[1].strip, firstname: m[2].strip, role: "author")
+        end && next
+        # Last
+        creator.match(/(.*?)$/) do |m|
+          creators << OpenStruct.new(lastname: m[1].strip, firstname: "", role: "author")
+        end && next
+      end
+      creators
+    end
   end
 end
