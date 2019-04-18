@@ -657,7 +657,9 @@ RSpec.describe Hyrax::MonographPresenter do
     end
 
     context 'representative_id not set, uses Hyrax default' do
-      it { expect(presenter.monograph_thumbnail).to be '/assets/work.png' }
+      it {
+        expect(presenter.monograph_thumbnail).to eq '<img class="img-responsive" src="/assets/work.png" style="max-width:225px" alt="Cover image for ">'
+      }
     end
 
     context 'representative_id set, uses image-service, default width' do
@@ -665,7 +667,9 @@ RSpec.describe Hyrax::MonographPresenter do
         allow(mono_doc).to receive(:representative_id).and_return('999999999')
       end
 
-      it { expect(presenter.monograph_thumbnail).to start_with '/image-service/999999999/full/225,/0/default.jpg' }
+      it {
+        expect(presenter.monograph_thumbnail).to start_with '<img class="img-responsive" src="/image-service/999999999/full/225,/0/default.jpg" alt="Cover image for ">'
+      }
     end
 
     context 'representative_id set, uses image-service, custom width' do
@@ -673,7 +677,9 @@ RSpec.describe Hyrax::MonographPresenter do
         allow(mono_doc).to receive(:representative_id).and_return('999999999')
       end
 
-      it { expect(presenter.monograph_thumbnail(99)).to start_with '/image-service/999999999/full/99,/0/default.jpg' }
+      it {
+        expect(presenter.monograph_thumbnail(99)).to start_with '<img class="img-responsive" src="/image-service/999999999/full/99,/0/default.jpg" alt="Cover image for ">'
+      }
     end
   end
 end
