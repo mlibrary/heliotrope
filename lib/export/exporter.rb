@@ -81,6 +81,24 @@ module Export
       # Create manifests
       bag.manifest!
 
+      # Make sure the bag is valid before proceeding
+      record = AptrustUpload.find_by!(noid: monograph_presenter.id)
+      if bag.valid?
+        apt_log(monograph_presenter.id.to_s, 'exporter - export_bag', 'bag validation', 'okay', "Current bag is valid in lib/export/exporter.rb")
+        record.update!(
+          bag_status: BAG_STATUSES['bagged']
+        )
+        puts "Bag is valid"  
+      else
+        apt_log(monograph_presenter.id.to_s, 'exporter - export_bag', 'bag validation', 'error', "Current bag is not valid in lib/export/exporter.rb")
+        record.update!(
+          bag_status: BAG_STATUSES['bagging_failed'],
+          s3_status: S3_STATUSES['not_uploaded'],
+          apt_status: APT_STATUSES['not_checked']
+        )
+        puts "bag is NOT valid"
+      end
+
       # Tar and remove bag directory
       # but first change to the aptrust-bags directory
       restore_dir = Dir.pwd
@@ -225,7 +243,7 @@ module Export
 
     def update_aptrust_db(uploaded)
       begin
-        record = AptrustUpload.find_by!(noid: monograph.noid)
+        record = AptrustUpload.find_by!(noid: monograph_presenter.id)
       rescue ActiveRecord::RecordNotFound => e
         apt_log(monograph_presenter.id.to_s, 'exporter - update_aptrust_db', 'post-upload', 'error', "In exporter with monograph #{monograph_presenter.id}, update_aptrust_db find_record error is #{e}")
         return
