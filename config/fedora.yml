@@ -1,3 +1,8 @@
+devproque:
+  user: fedoraAdmin
+  password: fedoraAdmin
+  url: <%= ENV['FEDORA_URL'] || "http://127.0.0.1:#{ENV.fetch('FCREPO_DEVELOPMENT_PORT', 8984)}/rest" %>
+  base_path: /dev
 development:
   user: fedoraAdmin
   password: fedoraAdmin

@@ -1,4 +1,6 @@
 # This is a sample config file that points to a solr server for each environment
+devproque:
+  url: <%= ENV['SOLR_URL'] || "http://127.0.0.1:#{ENV.fetch('SOLR_DEVELOPMENT_PORT', 8983)}/solr/hydra-development" %>
 development:
   url: <%= ENV['SOLR_URL'] || "http://127.0.0.1:#{ENV.fetch('SOLR_DEVELOPMENT_PORT', 8983)}/solr/hydra-development" %>
 test:
