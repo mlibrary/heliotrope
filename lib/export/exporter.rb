@@ -32,9 +32,16 @@ module Export
         return
       end
 
-      bag_name = "fulcrum.org.#{monograph_presenter.subdomain}-#{monograph_presenter.id}"
+      bag_name = "#{monograph_presenter.subdomain}-#{monograph_presenter.id}"
 
-      bag_pathname = "#{Settings.aptrust_bags_path}/#{bag_name}"
+      FileUtils.mkdir_p(Settings.aptrust_bags_path) unless Dir.exist?(Settings.aptrust_bags_path)
+
+      # Tar and remove bag directory
+      # but first change to the aptrust-bags directory
+      restore_dir = Dir.pwd
+      Dir.chdir(Settings.aptrust_bags_path)
+
+      bag_pathname = "./#{bag_name}"
 
       # On the first run these shouldn't be needed but...
       # clean up old bag and tar files
@@ -42,17 +49,17 @@ module Export
       FileUtils.rm_rf("#{bag_pathname}.tar") if File.exist?("#{bag_pathname}.tar")
 
       apt_log(monograph_presenter.id.to_s, 'exporter - export_bag', 'pre-bag', 'okay', 'About to make bag')
-
-      FileUtils.mkdir_p(Settings.aptrust_bags_path) unless Dir.exist?(Settings.aptrust_bags_path)
-
       bag = BagIt::Bag.new bag_pathname
 
       # add bagit-info.txt file
+      internal_desc = monograph_presenter.description.blank? ? '' : monograph_presenter.description.first.squish[0..249]
       timestamp = Time.now.utc.strftime("%Y-%m-%dT%H:%M:%SZ")
       bag.write_bag_info(
         'Source-Organization' => 'University of Michigan',
         'Bag-Count' => '1',
-        'Bagging-Date' => timestamp
+        'Bagging-Date' => timestamp,
+        'Internal-Sender-Description' => internal_desc,
+        'Internal-Sender-Identifier'  => monograph_presenter.id.to_s
       )
 
       # Add aptrust-info.txt file
@@ -75,7 +82,7 @@ module Export
         io.puts "Creator/Author: #{creat}"
       end
 
-      # put fulcrum files into data directory
+      # put fulcrum object's files into data directory
       extract("#{bag.bag_dir}/data/")
 
       # Create manifests
@@ -98,11 +105,6 @@ module Export
         return
       end
 
-      # Tar and remove bag directory
-      # but first change to the aptrust-bags directory
-      restore_dir = Dir.pwd
-      Dir.chdir(Settings.aptrust_bags_path)
-
       begin
         Minitar.pack(bag_name, File.open("#{bag_name}.tar", 'wb'))
       rescue StandardError => error
@@ -122,8 +124,8 @@ module Export
       end
 
       # Remove the bag_dir and tarred bag
-      FileUtils.rm_rf(bag_name)
-      FileUtils.rm_rf("#{bag_name}.tar")
+      FileUtils.rm_rf(bag_pathname) if File.exist?(bag_pathname)
+      FileUtils.rm_rf("#{bag_pathname}.tar") if File.exist?("#{bag_pathname}.tar")
 
       # Now restore the previous directory
       Dir.chdir(restore_dir)
