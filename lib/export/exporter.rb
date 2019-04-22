@@ -88,7 +88,6 @@ module Export
         record.update!(
           bag_status: BAG_STATUSES['bagged']
         )
-        puts "Bag is valid"  
       else
         apt_log(monograph_presenter.id.to_s, 'exporter - export_bag', 'bag validation', 'error', "Current bag is not valid in lib/export/exporter.rb")
         record.update!(
@@ -96,7 +95,7 @@ module Export
           s3_status: S3_STATUSES['not_uploaded'],
           apt_status: APT_STATUSES['not_checked']
         )
-        puts "bag is NOT valid"
+        return
       end
 
       # Tar and remove bag directory

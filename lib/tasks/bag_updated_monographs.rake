@@ -258,7 +258,7 @@ namespace :aptrust do
 
     if solr_docs_published.nil?
       apt_log('na', 'bag_updated_monographs', 'after getting solr_monographs', 'error', "WARNING aborted because solr_docs_published is NIL!")
-      abort "WARNING in aptrust:bag_updated_monographs task solr_docs_published is NIL!" 
+      abort "WARNING in aptrust:bag_updated_monographs task solr_docs_published is NIL!"
     end
 
     # Check solr docs for ones that represent new or update monographs
@@ -277,7 +277,7 @@ namespace :aptrust do
           apt_log(noid, 'bag_updated_monographs - solr_docs_published.each', 'checking record bag status', 'okay', "DB record bagged status is 'not bagged' for noid, so update record and recreate bag")
           build_record_and_bag(pdoc)
         elsif record.date_monograph_modified.nil?
-          # If the record doesn't have a modified date we can do the next test
+          # If the record doesn't have a modified date we can use in the next test
           # so create a record and a new bag
           apt_log(noid, 'bag_updated_monographs - solr_docs_published.each', 'check for missing modified date', 'okay', "Record mod date is missing, so update record and recreate bag")
           build_record_and_bag(pdoc)
