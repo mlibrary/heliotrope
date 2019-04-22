@@ -52,15 +52,16 @@ module Export
       bag = BagIt::Bag.new bag_pathname
 
       # add bagit-info.txt file
-      pub = monograph_presenter.publisher.blank? ? '' : monograph_presenter.publisher.first.squish[0..55]
-      internal_sender_description = "This bag contains all of the data and metadata in\n\ta Monograph from #{pub}\n\twhich has been exported from the Fulcrum publishing\n\tplatform hosted at www.fulcrum.org."
+      # The length of the following 'internal_sender_description' does not work with the current bagit gem, maybe later.
+      # pub = monograph_presenter.publisher.blank? ? '' : monograph_presenter.publisher.first.squish[0..55]
+      # internal_sender_description = "This bag contains all of the data and metadata in a Monograph from #{pub} which has been exported from the Fulcrum publishing platform hosted at www.fulcrum.org."
       timestamp = Time.now.utc.strftime("%Y-%m-%dT%H:%M:%SZ")
       time_i8601 = Time.parse(timestamp).iso8601
       bag.write_bag_info(
         'Source-Organization' => 'University of Michigan',
         'Bag-Count' => '1',
         'Bagging-Date' => time_i8601,
-        'Internal-Sender-Description' => internal_sender_description,
+        'Internal-Sender-Description' => "Bag for a monograph hosted at www.fulcrum.org",
         'Internal-Sender-Identifier'  => monograph_presenter.id.to_s
       )
 
@@ -78,7 +79,8 @@ module Export
         pr = monograph_presenter.press.blank? ? '' : monograph_presenter.press.squish[0..249]
         io.puts "Press: #{pr}"
         # 'Item Description' may be helpful when looking at Pharos web UI
-        ides = monograph_presenter.description.blank? ? '' : monograph_presenter.description.first.squish[0..246] + '...'
+        ellipsis = monograph_presenter.description.first.squish.length > 249 ? '...' : ''
+        ides = monograph_presenter.description.blank? ? '' : monograph_presenter.description.first.squish[0..246] + ellipsis
         io.puts "Item Description: #{ides}"
         creat = monograph_presenter.creator.blank? ? '' : monograph_presenter.creator.first.squish[0..249]
         io.puts "Creator/Author: #{creat}"

@@ -36,16 +36,16 @@ namespace :aptrust do
     def collect_solr_docs_published
       solr_docs_published = ActiveFedora::SolrService.query("+has_model_ssim:Monograph AND +visibility_ssi:open AND -suppressed_bsi:true",
       fl: [
-        'id',
-        'press_tesim',
-        'creator_tesim',
-        'identifier_tesim',
-        'title_tesim',
-        'date_modified_dtsi',
-        'has_model_ssim',
-        'suppressed_bsi',
-        'visibility_ssi'
-      ],
+            'id',
+            'press_tesim',
+            'creator_tesim',
+            'identifier_tesim',
+            'title_tesim',
+            'date_modified_dtsi',
+            'has_model_ssim',
+            'suppressed_bsi',
+            'visibility_ssi'
+          ],
       rows: 100_000)
 
       if solr_docs_published.nil?
@@ -256,11 +256,13 @@ namespace :aptrust do
 
     def apt_log(noid, where, stage, status, action)
       begin
-        AptrustLog.create(noid: noid,
-                        where: where,
-                        stage: stage,
-                        status: status,
-                        action: action)
+        AptrustLog.create(
+                          noid: noid,
+                          where: where,
+                          stage: stage,
+                          status: status,
+                          action: action
+                         )
       rescue AptrustUpload::RecordInvalid => e
         puts "DB error #{e} when trying to log to AptrustLog with noid: #{noid} where: #{where} stage: #{stage} status: #{status} action: #{action}"
       end
