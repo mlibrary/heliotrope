@@ -33,84 +33,22 @@ namespace :aptrust do
 
     # Using Seth's method below: 1. Grab monographs, 2. Use select on the array of all monographs
     # to get the ones that are visible and not suppressed.
-    def monographs_solr_all_published
-      docs = ActiveFedora::SolrService.query("+has_model_ssim:Monograph",
-       rows: 100000)
-      published_docs = docs.select { |doc| doc["suppressed_bsi"] == false && doc["visibility_ssi"] == "open" }
-
-      apt_log('na', 'monographs_solr_all_published', 'prep', 'okay', "back from gathering published_docs with document count #{published_docs.count}") unless published_docs.nil?
-      published_docs
-    end
-
-    # Before update_record is called we have decided to create a new bag so
-    # we reset the bag_status, s3_status, and apt_status to their initial state.
-    def update_record(record)
-      solr_monographs = ActiveFedora::SolrService.query("+has_model_ssim:Monograph",
-                                      fq: "id:#{record.id}",
+    def solr_docs_published
+      solr_docs = ActiveFedora::SolrService.query("+has_model_ssim:Monograph",
                                       fl: ['id',
                                           'press_tesim',
                                           'creator_tesim',
                                           'identifier_tesim',
                                           'title_tesim',
                                           'date_modified_dtsi',
-                                          'has_model_ssim'])
-      data = solr_monographs.first
+                                          'has_model_ssim',
+                                          'suppressed_bsi',
+                                          'visibility_ssi'],
+                                          rows: 100000)
+      solr_docs_published = solr_docs.select { |doc| doc['suppressed_bsi'] == false && doc['visibility_ssi'] == "open" }
 
-      if data['press_tesim'].blank?
-        apt_log(record.id.to_s, 'rake - update_record', 'building record', 'error', "In update_record press_tesim was blank, returning nil")
-        return nil
-      else
-        press = data['press_tesim'].first[0..49]
-      end
-
-      if data['title_tesim'].blank?
-        apt_log(record.id.to_s, 'rake - update_record', 'building record', 'error', "In update_record title_tesim was blank, returning nil")
-        return nil
-      else
-        title = data['title_tesim'].first[0..249]
-      end
-
-      if data['has_model_ssim'].blank?
-        apt_log(record.id.to_s, 'rake - update_record', 'building record', 'error', "In update_record has_model_ssim was blank, returning nil")
-        return nil
-      else
-        model = data['has_model_ssim'].first[0..49]
-      end
-
-      # These we just need to adjust, but not return nil
-      if data['creator_tesim'].blank?
-        apt_log(record.id.to_s, 'rake - update_record', 'building record', 'warn', "In update_record creator_tesim was blank")
-        creator = ''
-      else
-        creator = data['creator_tesim'].first[0..49]
-      end
-
-      if data['date_modified_dtsi'].blank?
-        apt_log(record.id.to_s, 'rake - update_record', 'building record', 'warn', "In update_record date_modified_dtsi was blank")
-        date_mod = nil
-      else
-        date_mod = data['date_modified_dtsi']
-      end
-
-      begin
-        record.update!(
-                        # noid:  up_doc[:id], # this is already in record
-                        press: press,
-                        author: creator,
-                        title: title,
-                        model: model,
-                        bag_status: BAG_STATUSES['not_bagged'],
-                        s3_status: S3_STATUSES['not_uploaded'],
-                        apt_status: APT_STATUSES['not_checked'],
-                        date_monograph_modified: date_mod,
-                        date_bagged: nil,
-                        date_uploaded: nil,
-                        date_confirmed: nil
-                      )
-      rescue ActiveRecord::RecordInvalid => e
-        record = nil
-      end
-      record
+      apt_log('na', 'solr_docs_published', 'prep', 'okay', "back from gathering published_docs with document count #{solr_docs_published.count}") unless solr_docs_published.nil?
+      solr_docs_published
     end
 
     def check_mono_mod_date(record, pdoc)
@@ -250,47 +188,57 @@ namespace :aptrust do
       record
     end
 
-    def validate_or_kill_record(record)
-      # Ugh, if record got saved without a press it will cause problems
-      # so kill it.
-      rtn_val = record
-      chk_list = ['noid', 'press', 'model', 'bag_status', 's3_status', 'apt_status']
-      chk_list.each do |item|
-        if record[item].blank?
-          record.destroy
-          rtn_val = nil
-          next
-        end
-      end
-      rtn_val
-    end
-
-    def build_record_and_bag(noid)
+    def build_record_and_bag(pdoc)
+      noid = pdoc[:id].to_s
       record = AptrustUpload.find_by(noid: noid)
+      apt_log(noid, 'build_record_and_bag', 'find record', 'warn', "Couldn't find a record for noid: #{noid}, will try to create one") if record.nil?
+
+      record = AptrustUpload.create(noid: noid) if record.nil?
       if record.nil?
-        record = AptrustUpload.create(noid: noid)
-        if record.nil?
-          apt_log(noid, 'build_record_and_bag', 'create record', 'fail', "create_record failed for noid: #{noid}")
-          return nil
-        else
-          # Good so far, let's update the record with solr data
-          record = update_record(record)
-          if record.nil?
-            apt_log(noid, 'build_record_and_bag', 'update_record', 'fail', "Could not update_record a record for noid #{noid}")
-           return nil
-         end
-        end
+        apt_log(noid, 'build_record_and_bag', 'create record', 'fail', "Couldn't create a record for noid: #{noid}")
+        return nil
       end
 
-      # Found or created a record but is it good?
-      if validate_or_kill_record(record).nil?
-        apt_log(noid, 'build_record_and_bag', 'validate_or_kill_record', 'fail', "Record failed validation for noid #{noid} so it was deleted.")
-        return nil
-      else
-        apt_log(noid, 'build_record_and_bag', 'about to bag', 'okay', "About to create a bag for noid #{noid} and record #{record}")
-        exporter = Export::Exporter.new(noid, :monograph)
-        exporter.export_bag
+      # Good so far, let's try to update the record with solr data
+      # first check that the solr record is sufficently complete
+      pdoc_okay = true
+      chk_list = ['press_tesim', 'title_tesim', 'has_model_ssim', 'date_modified_dtsi']
+      chk_list.each do |item|
+        if pdoc_okay && pdoc[item].blank?
+          apt_log(noid, 'build_record_and_bag', 'checking pdoc', 'error', "pdoc #{item} was blank, returning nil")
+          pdoc_okay = false
+        end
       end
+      return nil unless pdoc_okay
+
+      # creator might be blank, that's okay but note it in log
+      if pdoc['creator_tesim'].blank?
+        apt_log(noid, 'build_record_and_bag', 'building record', 'warn', "In update_record creator_tesim was blank")
+        creator = ''
+      else
+        creator = pdoc['creator_tesim'].first[0..49]
+      end
+
+      # pdoc doc is good so proceed to update
+      # Before build_record_and_bag is called we have decided to create a new bag so
+      # we reset the bag_status, s3_status, and apt_status to their initial states
+      record.update!(
+                      press: pdoc['press_tesim'].first[0..49],
+                      author: creator,
+                      title: pdoc['title_tesim'].first[0..249],
+                      model: pdoc['has_model_ssim'].first[0..49],
+                      bag_status: BAG_STATUSES['not_bagged'],
+                      s3_status: S3_STATUSES['not_uploaded'],
+                      apt_status: APT_STATUSES['not_checked'],
+                      date_monograph_modified: pdoc['date_modified_dtsi'],
+                      date_bagged: nil,
+                      date_uploaded: nil,
+                      date_confirmed: nil
+                    )
+
+      apt_log(noid, 'build_record_and_bag', 'about to bag', 'okay', "About to create a bag for noid #{noid} and record #{record}")
+      exporter = Export::Exporter.new(noid, :monograph)
+      exporter.export_bag
       record
     end
 
@@ -308,53 +256,49 @@ namespace :aptrust do
 
     apt_log('na', 'bag_updated_monographs', 'before getting solr_monographs', 'okay', "Starting task bag_updated_monographs.")
 
-    solr_monographs = monographs_solr_all_published
-
-    if solr_monographs.nil?
-      apt_log('na', 'bag_updated_monographs', 'after getting solr_monographs', 'error', "WARNING aborted because solr_monographs is NIL!")
-      abort "WARNING in aptrust:bag_updated_monographs task solr_monographs is NIL!" 
+    if solr_docs_published.nil?
+      apt_log('na', 'bag_updated_monographs', 'after getting solr_monographs', 'error', "WARNING aborted because solr_docs_published is NIL!")
+      abort "WARNING in aptrust:bag_updated_monographs task solr_docs_published is NIL!" 
     end
 
     # Check solr docs for ones that represent new or update monographs
     # pdoc means published monograph
     begin
-      solr_monographs.each do |pdoc|
+      solr_docs_published.each do |pdoc|
         noid = pdoc[:id].to_s
-        apt_log(noid, 'bag_updated_monographs - solr_monographs.each', 'begining checks', 'okay', "Checking on pdoc with noid: #{noid}")
+        apt_log(noid, 'bag_updated_monographs - solr_docs_published.each', 'begining checks', 'okay', "Checking on pdoc with noid: #{noid}")
         record = AptrustUpload.find_by(noid: noid)
         if record.nil?
           # We didn't find a record, so we need a record and a bag
-          apt_log(noid, 'bag_updated_monographs - solr_monographs.each', 'checking record exists', 'okay', "No DB record for noid, so we need to create a record and a bag")
-          build_record_and_bag(noid)
+          apt_log(noid, 'bag_updated_monographs - solr_docs_published.each', 'checking record exists', 'okay', "No DB record for noid, so we need to create a record and a bag")
+          build_record_and_bag(pdoc)
         elsif record.bag_status == BAG_STATUSES['not_bagged']
           # There is a db record but this noid hasn't been bagged yet
-          apt_log(noid, 'bag_updated_monographs - solr_monographs.each', 'checking record bag status', 'okay', "DB record bagged status is 'not bagged' for noid, so update record and recreate bag")
-          build_record_and_bag(noid)
+          apt_log(noid, 'bag_updated_monographs - solr_docs_published.each', 'checking record bag status', 'okay', "DB record bagged status is 'not bagged' for noid, so update record and recreate bag")
+          build_record_and_bag(pdoc)
         elsif record.date_monograph_modified.nil?
           # If the record doesn't have a modified date we can do the next test
           # so create a record and a new bag
-          apt_log(noid, 'bag_updated_monographs - solr_monographs.each', 'check for missing modified date', 'okay', "Record mod date is missing, so update record and recreate bag")
-          build_record_and_bag(noid)
+          apt_log(noid, 'bag_updated_monographs - solr_docs_published.each', 'check for missing modified date', 'okay', "Record mod date is missing, so update record and recreate bag")
+          build_record_and_bag(pdoc)
         elsif check_mono_mod_date(record, pdoc)
           # If doc modified date is more recent that db bagged date
-          apt_log(noid, 'bag_updated_monographs - solr_monographs.each', 'check_mono_mod_date', 'okay', "pdoc mod date is more recent than record mod date, so update record and recreate bag")
-          build_record_and_bag(noid)
+          apt_log(noid, 'bag_updated_monographs - solr_docs_published.each', 'check_mono_mod_date', 'okay', "pdoc mod date is more recent than record mod date, so update record and recreate bag")
+          build_record_and_bag(pdoc)
         elsif check_mono_fileset_mod_dates(record, pdoc)
           # If any of the docs filesets modified date is more recent that db bagged date
-          apt_log(noid, 'bag_updated_monographs - solr_monographs.each', 'check_mono_fileset_mod_dates', 'okay', "a fileset mod date is more recent than record mod date, so update record and recreate bag")
-          build_record_and_bag(noid)
+          apt_log(noid, 'bag_updated_monographs - solr_docs_published.each', 'check_mono_fileset_mod_dates', 'okay', "a fileset mod date is more recent than record mod date, so update record and recreate bag")
+          build_record_and_bag(pdoc)
         elsif record.apt_status != APT_STATUSES['confirmed']
           # Otherwise check deposit for this pdoc in aptrust and update DB
-          apt_log(noid, 'bag_updated_monographs - solr_monographs.each', 'update_db_aptrust_status', 'okay', "about try to confirming deposit status")
-          check = update_db_aptrust_status(record)
-          apt_log(noid, 'bag_updated_monographs - solr_monographs.each', 'after update_db_aptrust_status', 'error', "there was a problem checking deposit status") if check.nil?
+          apt_log(noid, 'bag_updated_monographs - solr_docs_published.each', 'after update_db_aptrust_status', 'error', "there was a problem checking deposit status") if update_db_aptrust_status(record).nil?
         else
           # We don't need to do anything pdoc and record are all good.
-          apt_log(noid, 'bag_updated_monographs - solr_monographs.each', 'after all checks', 'okay', "Record for noid #{noid} doesn't need a new bag or any updating.")
+          apt_log(noid, 'bag_updated_monographs - solr_docs_published.each', 'after all checks', 'okay', "Record for noid #{noid} doesn't need a new bag or any updating.")
         end
       end
     rescue StandardError => e
-      apt_log('na', 'bag_updated_monographs - solr_monographs.each', 'checking published monographs', 'error', "Rescue StandardError failed with error: #{e}")
+      apt_log('na', 'bag_updated_monographs - solr_docs_published.each', 'checking published monographs', 'error', "Rescue StandardError failed with error: #{e}")
       abort "Rescue StandardError failed with error: #{e}"
     end
 
