@@ -2,21 +2,6 @@
 
 class PublisherStatsJob < ApplicationJob
   def perform(stats_file)
-    return if File.exist?(stats_file) && File.mtime(stats_file) > (Time.now.utc - 10.minutes)
-    FileUtils.touch(stats_file)
-
-    presses = []
-    Press.order(:name).each do |press|
-      presses.push(
-        subdomain: press.subdomain,
-        name: press.name,
-        monographs: 0,
-        assets: 0,
-        users: 0
-      )
-    end
-    File.open(stats_file, 'w') { |file| file.write({ presses: presses, timestamp: Time.now.utc.to_s }.to_yaml) }
-
     presses = []
     Press.order(:name).each do |press|
       presses.push(

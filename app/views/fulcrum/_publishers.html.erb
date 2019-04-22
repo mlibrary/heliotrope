@@ -29,7 +29,12 @@
     </tr>
   <% end %>
 </table>
-<p><b><em>Publisher stats last calculated <%= @publishers_stats[:timestamp] %></em></b></p>
+<form name="refresh" method="get" action="<%= fulcrum_partials_path(:refresh) %>">
+  <p>
+    <button name="submit" type="submit" value="refresh">Refresh</button>
+    <b><em>Publisher stats last calculated <%= @publishers_stats[:timestamp] %></em></b>
+  </p>
+</form>
 <script>
   function sortTable(n, number) {
     var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;

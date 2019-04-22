@@ -26,18 +26,21 @@ class FulcrumController < ApplicationController
     @individuals = []
     @institutions = []
     @publishers_stats = { presses: [], timestampe: Time.now.utc.to_s }
-    if ['dashboard', 'products', 'components', 'individuals', 'institutions', 'publishers', 'users', 'tokens', 'logs', 'grants', 'monographs', 'assets', 'pages', 'reports', 'customize', 'settings', 'help', 'csv', 'jobs'].include? @partials
+    if ['dashboard', 'products', 'components', 'individuals', 'institutions', 'publishers', 'users', 'tokens', 'logs', 'grants', 'monographs', 'assets', 'pages', 'reports', 'customize', 'settings', 'help', 'csv', 'jobs', 'refresh'].include? @partials
       if /dashboard/.match?(@partials)
         @individuals = Greensub::Individual.where("identifier like ? or name like ?", "%#{params['individual_filter']}%", "%#{params['individual_filter']}%").map { |individual| ["#{individual.identifier} (#{individual.name})", individual.id] }
         @institutions = Greensub::Institution.where("identifier like ? or name like ?", "%#{params['institution_filter']}%", "%#{params['institution_filter']}%").map { |institution| ["#{institution.identifier} (#{institution.name})", institution.id] }
       end
       if /publishers/.match?(@partials)
-        publisher_stats
         begin
           @publishers_stats = YAML.load(File.read(publisher_stats_file)) || { presses: [], timestampe: Time.now.utc.to_s } # rubocop:disable Security/YAMLLoad
         rescue StandardError => e
           Rails.logger.error(e.message)
         end
+      end
+      if /refresh/.match?(@partials)
+        publisher_stats
+        return redirect_to action: :index, partials: :publishers
       end
       incognito(incognito_params(params)) if /incognito/i.match?(params['submit'] || '')
       render
@@ -63,7 +66,7 @@ class FulcrumController < ApplicationController
     end
 
     def publisher_stats
-      PublisherStatsJob.perform_later(publisher_stats_file.to_s) unless File.exist?(publisher_stats_file) && File.mtime(publisher_stats_file) > (Time.now.utc - 1.day)
+      PublisherStatsJob.perform_now(publisher_stats_file.to_s)
     end
 
     def incognito_params(params)
