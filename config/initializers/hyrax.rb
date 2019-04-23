@@ -79,6 +79,9 @@ Hyrax.config do |config|
     maxNumberOfFiles: 600,
     maxFileSize: 5.gigabytes
   }
+
+  # https://tools.lib.umich.edu/jira/browse/HELIO-2688
+  config.work_requires_files = false
 end
 
 Date::DATE_FORMATS[:standard] = '%m/%d/%Y'
