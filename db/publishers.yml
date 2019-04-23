@@ -68,3 +68,9 @@
   press_url: 'http://www.psupress.org'
   typekit: 'cbh1mev'
   google_analytics: 'UA-77847516-7'
+
+- subdomain: testing
+  production: false
+  name: 'Testing Press'
+  description: "Testing Press dedicated to automated systems tests."
+  press_url: 'https://www.lib.umich.edu'
