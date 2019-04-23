@@ -603,6 +603,28 @@ RSpec.describe Hyrax::MonographPresenter do
     end
   end
 
+  describe "#creators_with_roles" do
+    subject { presenter.creators_with_roles }
+
+    let(:mono_doc) {
+      SolrDocument.new(id: 'monograph_id',
+                       has_model_ssim: ['Monograph'],
+                       importable_creator_ss: "Fett, Boba (bounty hunter); Lane, Lois; Chewbaka")
+    }
+
+    it "returns firstname, lastname and role (or the default of 'author')" do
+      expect(subject[0].lastname).to eq "Fett"
+      expect(subject[0].firstname).to eq "Boba"
+      expect(subject[0].role).to eq "bounty hunter"
+      expect(subject[1].lastname).to eq "Lane"
+      expect(subject[1].firstname).to eq "Lois"
+      expect(subject[1].role).to eq "author"
+      expect(subject[2].lastname).to eq "Chewbaka"
+      expect(subject[2].firstname).to eq ""
+      expect(subject[2].role).to eq "author"
+    end
+  end
+
   describe '#license_link_content' do
     subject { presenter.license_link_content }
 
