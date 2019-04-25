@@ -49,6 +49,7 @@ dump.rdb
 /config/role_map.yml
 /config/skylight.yml
 /config/aptrust.yml
+/config/crossref.yml
 
 # Configuration file for automated systems tests.
 /testing/testing.yml
