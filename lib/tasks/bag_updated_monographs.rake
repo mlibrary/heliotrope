@@ -33,21 +33,33 @@ namespace :aptrust do
 
     # Using Seth's method below: 1. Grab monographs, 2. Use select on the array of all monographs
     # to get the ones that are visible and not suppressed.
-    def solr_docs_published
-      solr_docs = ActiveFedora::SolrService.query("+has_model_ssim:Monograph",
-                                      fl: ['id',
-                                          'press_tesim',
-                                          'creator_tesim',
-                                          'identifier_tesim',
-                                          'title_tesim',
-                                          'date_modified_dtsi',
-                                          'has_model_ssim',
-                                          'suppressed_bsi',
-                                          'visibility_ssi'],
-                                          rows: 100000)
-      solr_docs_published = solr_docs.select { |doc| doc['suppressed_bsi'] == false && doc['visibility_ssi'] == "open" }
+    def collect_solr_docs_published
+      solr_docs_published = ActiveFedora::SolrService.query("+has_model_ssim:Monograph AND +visibility_ssi:open AND -suppressed_bsi:true",
+      fl: [
+        'id',
+        'press_tesim',
+        'creator_tesim',
+        'identifier_tesim',
+        'title_tesim',
+        'date_modified_dtsi',
+        'has_model_ssim',
+        'suppressed_bsi',
+        'visibility_ssi'
+      ],
+      rows: 100_000)
 
-      apt_log('na', 'solr_docs_published', 'prep', 'okay', "back from gathering published_docs with document count #{solr_docs_published.count}") unless solr_docs_published.nil?
+      if solr_docs_published.nil?
+        apt_log('na', 'collect_solr_docs_published', 'collect published', 'error', "ABORT in aptrust:bag_updated_monographs collect_solr_docs_published NIL")
+        abort "ABORT in aptrust:bag_updated_monographs collect_solr_docs_published NIL!"
+      end
+
+      if solr_docs_published.count.zero?
+        apt_log('na', 'collect_solr_docs_published', 'collect published', 'error', "ABORT in aptrust:bag_updated_monographs collect_solr_docs_published count zero!")
+        abort "ABORT in aptrust:bag_updated_monographs collect_solr_docs_published count zero!"
+      end
+
+       apt_log('na', 'bag_updated_monographs', 'after getting solr_monographs', 'okay', "solr doc published count is #{solr_docs_published.count}")
+
       solr_docs_published
     end
 
@@ -96,7 +108,7 @@ namespace :aptrust do
       heads["X-Pharos-API-Key"] = @aptrust['AptrustApiKey']
 
       base_apt_url = @aptrust['AptrustApiUrl']
-      bag_name = "fulcrum.org.#{record['press']}-#{record['id']}.tar"
+      bag_name = "#{record['press']}-#{record['id']}.tar"
 
       updated_after = Time.parse(record['date_uploaded'].to_s) - (60 * 60 * 24)
       updated_after = updated_after.iso8601
@@ -256,10 +268,7 @@ namespace :aptrust do
 
     apt_log('na', 'bag_updated_monographs', 'before getting solr_monographs', 'okay', "Starting task bag_updated_monographs.")
 
-    if solr_docs_published.nil?
-      apt_log('na', 'bag_updated_monographs', 'after getting solr_monographs', 'error', "WARNING aborted because solr_docs_published is NIL!")
-      abort "WARNING in aptrust:bag_updated_monographs task solr_docs_published is NIL!"
-    end
+    solr_docs_published = collect_solr_docs_published
 
     # Check solr docs for ones that represent new or update monographs
     # pdoc means published monograph

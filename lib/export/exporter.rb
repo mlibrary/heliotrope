@@ -32,9 +32,16 @@ module Export
         return
       end
 
-      bag_name = "fulcrum.org.#{monograph_presenter.subdomain}-#{monograph_presenter.id}"
+      bag_name = "#{monograph_presenter.subdomain}-#{monograph_presenter.id}"
 
-      bag_pathname = "#{Settings.aptrust_bags_path}/#{bag_name}"
+      FileUtils.mkdir_p(Settings.aptrust_bags_path) unless Dir.exist?(Settings.aptrust_bags_path)
+
+      # Tar and remove bag directory
+      # but first change to the aptrust-bags directory
+      restore_dir = Dir.pwd
+      Dir.chdir(Settings.aptrust_bags_path)
+
+      bag_pathname = "./#{bag_name}"
 
       # On the first run these shouldn't be needed but...
       # clean up old bag and tar files
@@ -42,24 +49,26 @@ module Export
       FileUtils.rm_rf("#{bag_pathname}.tar") if File.exist?("#{bag_pathname}.tar")
 
       apt_log(monograph_presenter.id.to_s, 'exporter - export_bag', 'pre-bag', 'okay', 'About to make bag')
-
-      FileUtils.mkdir_p(Settings.aptrust_bags_path) unless Dir.exist?(Settings.aptrust_bags_path)
-
       bag = BagIt::Bag.new bag_pathname
 
       # add bagit-info.txt file
+      pub = monograph_presenter.publisher.blank? ? '' : monograph_presenter.publisher.first.squish[0..55]
+      internal_sender_description = "This bag contains all of the data and metadata in\n\ta Monograph from #{pub}\n\twhich has been exported from the Fulcrum publishing\n\tplatform hosted at www.fulcrum.org."
       timestamp = Time.now.utc.strftime("%Y-%m-%dT%H:%M:%SZ")
+      time_i8601 = Time.parse(timestamp).iso8601
       bag.write_bag_info(
         'Source-Organization' => 'University of Michigan',
         'Bag-Count' => '1',
-        'Bagging-Date' => timestamp
+        'Bagging-Date' => time_i8601,
+        'Internal-Sender-Description' => internal_sender_description,
+        'Internal-Sender-Identifier'  => monograph_presenter.id.to_s
       )
 
       # Add aptrust-info.txt file
       # this is text that shows up in the APTrust web interface
       # title, access, and description are required; Storage-Option defaults to Standard if not present
       File.open(File.join(bag.bag_dir, 'aptrust-info.txt'), "w") do |io|
-        ti = monograph_presenter.title.blank? ? '' : monograph_presenter.title.first.squish[0..255]
+        ti = monograph_presenter.title.blank? ? '' : monograph_presenter.title.squish[0..255]
         io.puts "Title: #{ti}"
         io.puts "Access: Institution"
         io.puts "Storage-Option: Standard"
@@ -69,13 +78,13 @@ module Export
         pr = monograph_presenter.press.blank? ? '' : monograph_presenter.press.squish[0..249]
         io.puts "Press: #{pr}"
         # 'Item Description' may be helpful when looking at Pharos web UI
-        ides = monograph_presenter.description.blank? ? '' : monograph_presenter.description.first.squish[0..249]
+        ides = monograph_presenter.description.blank? ? '' : monograph_presenter.description.first.squish[0..246] + '...'
         io.puts "Item Description: #{ides}"
         creat = monograph_presenter.creator.blank? ? '' : monograph_presenter.creator.first.squish[0..249]
         io.puts "Creator/Author: #{creat}"
       end
 
-      # put fulcrum files into data directory
+      # put fulcrum object's files into data directory
       extract("#{bag.bag_dir}/data/")
 
       # Create manifests
@@ -98,11 +107,6 @@ module Export
         return
       end
 
-      # Tar and remove bag directory
-      # but first change to the aptrust-bags directory
-      restore_dir = Dir.pwd
-      Dir.chdir(Settings.aptrust_bags_path)
-
       begin
         Minitar.pack(bag_name, File.open("#{bag_name}.tar", 'wb'))
       rescue StandardError => error
@@ -122,8 +126,8 @@ module Export
       end
 
       # Remove the bag_dir and tarred bag
-      FileUtils.rm_rf(bag_name)
-      FileUtils.rm_rf("#{bag_name}.tar")
+      FileUtils.rm_rf(bag_pathname) if File.exist?(bag_pathname)
+      FileUtils.rm_rf("#{bag_pathname}.tar") if File.exist?("#{bag_pathname}.tar")
 
       # Now restore the previous directory
       Dir.chdir(restore_dir)
