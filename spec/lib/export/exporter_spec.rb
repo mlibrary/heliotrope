@@ -128,9 +128,45 @@ describe Export::Exporter do
 
     it do
       actual = subject
-      # puts actual
       expect(actual.empty?).to be false
       expect(actual).to match expected
+    end
+  end
+
+  describe '#monograph_row' do
+    # for ease of comparison with output (and specs above) we'll pass the generated array through CSV.generate_line
+    subject { CSV.generate_line(described_class.new(monograph.id, rows).monograph_row) }
+
+    let(:monograph) { create(:monograph, creator: ["First, Ms Joan (editor)\nSecond, Mr Tom (editor)\nThird Author, Lady"], contributor: ["Doe, Jane (illustrator)\nJoe, G.I."], doi: 'mpub.111111111.blah') }
+
+    context 'when there is no `columns` parameter in exporter initializer (default)' do
+      let(:rows) { nil }
+      let(:expected) do
+        <<~eos
+          #{monograph.id},://:MONOGRAPH://:,"=HYPERLINK(""#{Rails.application.routes.url_helpers.hyrax_monograph_url(monograph)}"")",,#{monograph.title.first},,,,,,,,,,,,,,,,,,,,,"First, Ms Joan (editor); Second, Mr Tom (editor); Third Author, Lady","Doe, Jane (illustrator); Joe, G.I.",,,,,,,,,,,,,://:MONOGRAPH://:,,,,https://doi.org/mpub.111111111.blah,,,
+        eos
+      end
+
+      it 'outputs a row containing all fields' do
+        actual = subject
+        expect(actual.empty?).to be false
+        expect(actual).to match expected
+      end
+    end
+
+    context 'when there is a `columns` parameter of `:monograph` in exporter initializer' do
+      let(:rows) { :monograph }
+      let(:expected) do
+        <<~eos
+          #{monograph.id},"=HYPERLINK(""#{Rails.application.routes.url_helpers.hyrax_monograph_url(monograph)}"")",#{monograph.title.first},,,,,,,"First, Ms Joan (editor); Second, Mr Tom (editor); Third Author, Lady","Doe, Jane (illustrator); Joe, G.I.",,,,,,,,,,https://doi.org/mpub.111111111.blah,
+        eos
+      end
+
+      it 'outputs a row containing only Monograph and universal fields' do
+        actual = subject
+        expect(actual.empty?).to be false
+        expect(actual).to match expected
+      end
     end
   end
 end
