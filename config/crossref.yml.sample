@@ -1,0 +1,4 @@
+crossref:
+  deposit_url: https://test.crossref.org/servlet/deposit
+  login_id: id
+  login_passwd: passwd
