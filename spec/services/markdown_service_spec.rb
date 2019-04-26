@@ -64,5 +64,9 @@ RSpec.describe MarkdownService do
     it 'renders paragraphs' do
       expect(described_class.markdown_as_text("\n\n\n\n\nfirst paragraph\nsecond paragraph\n\nthird paragraph\n\n\n\n\n")).to eq('first paragraph second paragraph third paragraph')
     end
+
+    it 'removes HTML tags as well as Markdown with optional parameter' do
+      expect(described_class.markdown_as_text('_italics_ and <em>Emphasised Text</em>', true)).to eq('italics and Emphasised Text')
+    end
   end
 end

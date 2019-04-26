@@ -89,4 +89,16 @@ RSpec.describe TitlePresenter do
       end
     end
   end
+
+  describe '#to_s' do
+    subject { monograph_presenter.to_s }
+
+    let(:monograph_presenter) { Hyrax::MonographPresenter.new(solr_document, nil) }
+    let(:markdown_title) { 'A Title with __Markdown__ and some <em>HTML Tags</em>: Bad for CitationsBehavior' }
+    let(:markup_and_tag_free_title) { 'A Title with Markdown and some HTML Tags: Bad for CitationsBehavior' }
+
+    it 'strips Markdown and HTML tags' do
+      is_expected.to eq markup_and_tag_free_title
+    end
+  end
 end

@@ -48,7 +48,8 @@ class MarkdownService
     lax_spacing:                  true,
     no_intra_emphasis:            true,
     strikethrough:                true,
-    tables:                       true
+    tables:                       true,
+    space_after_headers:          true
   }
 
   self.md = Redcarpet::Markdown.new(CustomMarkdownRenderer.new(render_options), extensions)
@@ -63,9 +64,14 @@ class MarkdownService
   end
 
   mattr_accessor :sd
-  self.sd = Redcarpet::Markdown.new(Redcarpet::Render::StripDown.new, strikethrough: true, escape_html: false)
+  self.sd = Redcarpet::Markdown.new(Redcarpet::Render::StripDown.new,
+                                    strikethrough: true,
+                                    escape_html: false,
+                                    space_after_headers: true)
 
-  def self.markdown_as_text(value)
-    sd.render(value).gsub(/\n$/, '').tr("\n", ' ')
+  def self.markdown_as_text(value, strip_tags = false)
+    markdown_removed = sd.render(value).gsub(/\n$/, '').tr("\n", ' ')
+    # now remove any HTML tags as well, if desired
+    strip_tags ? ActionController::Base.helpers.strip_tags(markdown_removed) : markdown_removed
   end
 end
