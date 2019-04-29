@@ -193,4 +193,31 @@ RSpec.describe Hyrax::DownloadsController, type: :controller do
       expect { get :show, params: { id: file_set.id, use_route: 'downloads' } }.not_to raise_error
     end
   end
+
+  describe "#disposition" do
+    context "a pdf asset" do
+      let(:presenter) { double("presenter", pdf_ebook?: false, file_format: "pdf (Portable Document Format)") }
+
+      it "is inline" do
+        expect(subject.disposition(presenter)).to eq "inline"
+      end
+    end
+
+    context "not a pdf" do
+      let(:presenter) { double("presenter", pdf_ebook?: false, file_format: "jpeg (JPEG File Interchange Format, JPEG EXIF)") }
+
+      it "is attachment" do
+        expect(subject.disposition(presenter)).to eq "attachment"
+      end
+    end
+
+    context "a pdf_ebook" do
+      # Users shouldn't get here, the file_set show page isn't normally user accessible
+      let(:presenter) { double("presenter", pdf_ebook?: true, file_format: "pdf (Portable Document Format)") }
+
+      it "is attachment" do
+        expect(subject.disposition(presenter)).to eq "attachment"
+      end
+    end
+  end
 end
