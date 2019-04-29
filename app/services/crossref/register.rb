@@ -23,9 +23,19 @@ module Crossref
           login_passwd: @config['login_passwd']
         }
       )
-      resp = request.run
+      response = request.run
       tmp.unlink
-      resp
+      submission = CrossrefSubmissionLog.new(doi_batch_id: doi_batch_id,
+                                             initial_http_status: response.code,
+                                             initial_http_message: response.body,
+                                             submission_xml: @xml)
+      submission.status = if response.code == 200
+                            "submitted"
+                          else
+                            "error"
+                          end
+      submission.save!
+      response
     end
 
     private

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190416183400) do
+ActiveRecord::Schema.define(version: 20190426155705) do
 
   create_table "api_requests", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.integer "user_id"
@@ -143,6 +143,17 @@ ActiveRecord::Schema.define(version: 20190416183400) do
     t.string "parent_noid"
     t.index ["access_type"], name: "index_counter_reports_on_access_type"
     t.index ["institution"], name: "index_counter_reports_on_institution"
+  end
+
+  create_table "crossref_submission_logs", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.string "doi_batch_id"
+    t.integer "initial_http_status"
+    t.text "initial_http_message"
+    t.text "submission_xml"
+    t.string "status"
+    t.text "response_xml"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "curation_concerns_operations", id: :integer, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
@@ -336,7 +347,6 @@ ActiveRecord::Schema.define(version: 20190416183400) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.index ["permission_template_id", "agent_id", "agent_type", "access"], name: "uk_permission_template_accesses", unique: true
-    t.index ["permission_template_id"], name: "fk_rails_9c1ccdc6d5"
   end
 
   create_table "permission_templates", id: :integer, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
@@ -697,6 +707,8 @@ ActiveRecord::Schema.define(version: 20190416183400) do
     t.index ["work_id"], name: "index_work_view_stats_on_work_id"
   end
 
+  add_foreign_key "api_requests", "users"
+  add_foreign_key "collection_type_participants", "hyrax_collection_types"
   add_foreign_key "components_products", "components"
   add_foreign_key "components_products", "products"
   add_foreign_key "curation_concerns_operations", "users"
