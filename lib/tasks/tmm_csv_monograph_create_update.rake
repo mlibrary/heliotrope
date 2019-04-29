@@ -121,8 +121,10 @@ namespace :heliotrope do
     attrs_out = {}
     attrs.each do |key, value|
       if value.present?
-        # it looks like `description` is the only field with HTML in it, so no point doing the clever thing for now
-        attrs_out[key] = if key.downcase == 'description' # if ActionController::Base.helpers.strip_tags(value) != value
+        # TODO: maybe stop converting HTML to Markdown as HTML should work just fine in Fulcrum fields, theoretically
+        #       otherwise a check like this might be better than listing fields:
+        #       if ActionController::Base.helpers.strip_tags(value) != value
+        attrs_out[key] = if ['title', 'description'].include? key.downcase
                            # 1) HTMLEntities is cleaning up the many HTML entity and decimal codes in the TMM HTML data
                            # 2) the calls to gsub are getting rid of an inordiante number of non-breaking spaces,...
                            # which appear in large numbers in the TMM data for seemingly no reason.

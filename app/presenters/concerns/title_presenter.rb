@@ -3,8 +3,13 @@
 module TitlePresenter
   extend ActiveSupport::Concern
 
+  # used as a title starting point by Hyrax::CitationsBehaviors, strip Markdown and HTML tags
+  def to_s
+    MarkdownService.markdown_as_text(md_title, true)
+  end
+
   def page_title
-    MarkdownService.markdown_as_text(md_title)
+    to_s
   end
 
   def title
@@ -15,7 +20,6 @@ module TitlePresenter
 
     def md_title
       md = solr_document&.title&.first
-      md = 'Title' if md.blank?
-      md
+      md.presence || 'Title'
     end
 end

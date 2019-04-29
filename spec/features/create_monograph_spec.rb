@@ -17,7 +17,7 @@ describe 'Create a monograph' do
 
       # Monograph form
       # Basic Metadata
-      fill_in 'monograph[title]', with: 'Test monograph'
+      fill_in 'monograph[title]', with: '#hashtag Test monograph with _MD Italics_ and <em>HTML Italics</em>'
       select press.name, from: 'Publisher'
       fill_in 'Description', with: 'Blahdy blah description works'
       expect(page).to have_css('input.monograph_subject', count: 1)
@@ -57,7 +57,11 @@ describe 'Create a monograph' do
       click_button 'Save'
 
       # Monograph catalog page
-      expect(page).to have_content 'Test monograph'
+      expect(page.title).to eq '#hashtag Test monograph with MD Italics and HTML Italics'
+      expect(page).to have_content '#hashtag Test monograph with MD Italics and HTML Italics'
+      # get text inside <em> tags
+      italicized_text = page.first('.col-sm-9.monograph-metadata h1 em').text
+      expect(italicized_text).to eq 'MD Italics'
       expect(page).to have_content press.name
       expect(page).to have_content 'Blahdy blah description works'
       expect(page).to have_content 'Jimmy Johns, Sub Way and Sandwich Shoppe'
@@ -105,10 +109,15 @@ describe 'Create a monograph' do
       click_link 'Manage Monograph and Files'
 
       # On Monograph show page
-
+      expect(page.title).to eq '#hashtag Test monograph with MD Italics and HTML Italics'
       # Basic Metadata
       # title
-      expect(page).to have_content 'Test monograph'
+      expect(page).to have_content '#hashtag Test monograph with MD Italics and HTML Italics'
+      # get text inside <em> tags
+      italicized_text = page.first('.col-xs-12 header h1 em').text
+      expect(italicized_text).to eq 'MD Italics'
+      italicized_text = page.all('.col-xs-12 header h1 em').last.text
+      expect(italicized_text).to eq 'HTML Italics'
       # press
       expect(page).to have_content press.name
       # description
@@ -154,11 +163,11 @@ describe 'Create a monograph' do
       expect(page).to have_content '<identifier>'
 
       # MLA citation
-      expect(page).to have_content 'Johns, Jimmy, and Sub Way. Test Monograph. Ann Arbor, MI.'
+      expect(page).to have_content 'Johns, Jimmy, and Sub Way. #hashtag Test Monograph with MD Italics and HTML Italics. Ann Arbor, MI.'
       # APA citation
-      expect(page).to have_content 'Johns, J., & Way, S. (2001). Test monograph. Ann Arbor, MI.: Blah Press, Co.'
+      expect(page).to have_content 'Johns, J., & Way, S. (2001). #hashtag Test monograph with MD Italics and HTML Italics. Ann Arbor, MI.: Blah Press, Co.'
       # Chicago citation
-      expect(page).to have_content 'Johns, Jimmy, and Sub Way. 2001. Test Monograph. Ann Arbor, MI.: Blah Press, Co.'
+      expect(page).to have_content 'Johns, Jimmy, and Sub Way. 2001. #hashtag Test Monograph with MD Italics and HTML Italics. Ann Arbor, MI.: Blah Press, Co.'
     end
   end
 end

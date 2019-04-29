@@ -40,7 +40,7 @@ RSpec.describe "monograph_catalog/index.html.erb", type: :view do
     let(:page_title) { 'PAGE-TITLE' }
 
     before do
-      allow(monograph_presenter).to receive(:title).and_return(page_title)
+      allow(monograph_presenter).to receive(:page_title).and_return(page_title)
       render
     end
 
