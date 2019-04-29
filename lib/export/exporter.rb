@@ -194,7 +194,7 @@ module Export
     end
 
     def monograph_row
-      metadata_row(monograph)
+      metadata_row(monograph_presenter)
     end
 
     def blank_csv_sheet
