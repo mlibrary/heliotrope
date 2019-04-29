@@ -15,9 +15,11 @@ RSpec.describe RestfulSolr::Service do
       expect(contains.count).to eq(3)
       expect(contains).to include(monograph.id)
       objects = contains.map { |id| RestfulFedora.id_to_object(id) }
-      expect(objects.any? { |obj| obj.is_a?(Monograph) }).to be true
-      expect(objects.any? { |obj| obj.is_a?(Hydra::AccessControl) }).to be true
-      expect(objects.any? { |obj| obj.is_a?(Hydra::AccessControls::Permission) }).to be true
+      expect(objects).to contain_exactly(
+        a_kind_of(Monograph),
+        a_kind_of(Hydra::AccessControl),
+        a_kind_of(Hydra::AccessControls::Permission)
+      )
     end
   end
 end

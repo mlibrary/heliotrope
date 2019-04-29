@@ -17,8 +17,10 @@ RSpec.describe RestfulFedora::Service do
       ids = paths.map { |path| RestfulFedora.path_to_id(path) }
       expect(ids).to include(monograph.id)
       objects = ids.map { |id| RestfulFedora.id_to_object(id) }
-      expect(objects.any? { |obj| obj.is_a?(Monograph) }).to be true
-      expect(objects.any? { |obj| obj.is_a?(Hydra::AccessControl) }).to be true
+      expect(objects).to contain_exactly(
+        a_kind_of(Monograph),
+        a_kind_of(Hydra::AccessControl)
+      )
     end
   end
 end
