@@ -17,7 +17,7 @@ Hyrax::DownloadsController.class_eval do
         else
           CounterService.from(self, presenter).count(request: 1)
           self.status = 200
-          send_file_headers! content_options.merge(disposition: 'attachment')
+          send_file_headers! content_options.merge(disposition: disposition(presenter))
           response.headers['Content-Length'] ||= file.size.to_s
           response.headers['Last-Modified'] = asset.modified_date.utc.strftime("%a, %d %b %Y %T GMT")
           stream_body file.stream
@@ -25,6 +25,11 @@ Hyrax::DownloadsController.class_eval do
       else
         render 'hyrax/base/unauthorized', status: :unauthorized
       end
+    end
+
+    def disposition(presenter)
+      return "inline" if presenter.pdf_ebook? == false && presenter.file_format&.match?(/^pdf/i)
+      "attachment"
     end
 
     # going to tweak this function from Hyrax to return the thumbnail if the full-size screenshot is empty
