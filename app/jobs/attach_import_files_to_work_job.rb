@@ -10,7 +10,7 @@ class AttachImportFilesToWorkJob < ApplicationJob
   # @param [Array<attributes>] files_attributes - an array of file attributes to apply
   def perform(work, work_attributes, files, files_attributes)
     validate_files!(files)
-    @ordered_members = work.ordered_members.to_a
+    new_ordered_members = []
     @cover_noid = nil
 
     user = User.find_by_user_key(work.depositor) # rubocop:disable Rails/DynamicFindBy
@@ -23,7 +23,7 @@ class AttachImportFilesToWorkJob < ApplicationJob
       # Unlike Hyrax::Actors::FileSetActor, this will not attach the file_set
       # to the ordered_members array of the work, which is super slow if
       # we have to do it FOR EACH file_set. Instead it attaches all the file_sets
-      # at the end, ourside of this .each_with_index loop via
+      # at the end, outside of this .each_with_index loop via
       # add_ordered_members(user, work) See:
       # https://gist.github.com/geekscruff/a9ee3cbddef3e38cf51f94582f6425c6
       actor = Hyrax::Actors::FileSetOrderedMembersActor.new(f, user)
@@ -34,18 +34,19 @@ class AttachImportFilesToWorkJob < ApplicationJob
       actor.update_metadata(files_attributes[i])
       file.present? ? actor.create_content(file) : external_resource_label_title(f)
       actor.attach_to_work(work)
+
       # external resources are missing out on an asynchronous save from jobs kicked off...
       # in create_content which amazingly *need* to happen after attach_to_work.
       f.save if file.blank?
       actor.file_set.permissions_attributes = work_permissions
       file.update(file_set_uri: actor.file_set.uri) if file.present?
-      ordered_members << actor.file_set
+      new_ordered_members << actor.file_set
 
       add_representative(work, f, representative_kind) if representative_kind.present?
     end
 
     representative_image(work, @cover_noid) if @cover_noid.present?
-    add_ordered_members(user, work)
+    add_ordered_members(user, work, new_ordered_members)
   end
 
   private
@@ -56,8 +57,8 @@ class AttachImportFilesToWorkJob < ApplicationJob
     # Hyrax AttachFilesToWorkJob, Hyrax AttachFilesToWorkWithOrderedMembersJob and
     # various Heliotrope additions, mostly related to FeaturedRepresentatives, external_resources
     # and adding metadata to file_sets on ingest
-    def add_ordered_members(user, work)
-      actor = Hyrax::Actors::OrderedMembersActor.new(ordered_members, user)
+    def add_ordered_members(user, work, new_ordered_members)
+      actor = Hyrax::Actors::OrderedMembersActor.new(new_ordered_members, user)
       actor.attach_ordered_members_to_work(work)
       # Hyrax::Actors::OrderedMembersActor does not spawn a job. So if we're
       # here, ordered_members have been attached
