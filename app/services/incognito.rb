@@ -1,5 +1,33 @@
 # frozen_string_literal: true
 
+# The Incognito Service Module allows platform administrators
+# to mask and/or alter their Checkpoint credentials!!!
+
+# WARNING! DO NOT USE THE INCOGNITO SERVICE MODULE!!!
+# WARNING! DO NOT USE THE INCOGNITO SERVICE MODULE!!!
+# WARNING! DO NOT USE THE INCOGNITO SERVICE MODULE!!!
+
+# The private method short_circuit? returns false when actor is a platform administrator
+
+# actor.sign_in_count bit flags
+#   0x01 allow_platform_admin? returns false
+#   0x02 allow_hyrax_can? returns false
+#   0x04 allow_action_permitted? returns false
+#   0x08 sudo_actor? returns true and ...
+#     actor.current_sign_in_ip is substituted for individual_id
+#     actor.last_sign_in_ip is substituted for institution_id
+
+# The reset method assigns zero to actor.sign_in_count which nullifies the Incognito affect!!!
+
+# WARNING! DO NOT USE THE INCOGNITO SERVICE MODULE!!!
+# WARNING! DO NOT USE THE INCOGNITO SERVICE MODULE!!!
+# WARNING! DO NOT USE THE INCOGNITO SERVICE MODULE!!!
+
+# The Incognito Service Module allows platform administrators
+# to mask and/or alter their Checkpoint credentials!!!
+
+# Look under app/policies for usage examples.
+
 module Incognito
   class << self
     def reset(actor)

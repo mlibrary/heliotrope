@@ -26,6 +26,10 @@ module Sighrax # rubocop:disable Metrics/ModuleLength
       model_factory(noid, data, model_type)
     end
 
+    def policy(current_actor, entity)
+      EntityPolicy.new(current_actor, entity)
+    end
+
     def press(entity)
       if entity.is_a?(Sighrax::Monograph)
         Press.find_by(subdomain: Sighrax.hyrax_presenter(entity).subdomain)
@@ -105,6 +109,12 @@ module Sighrax # rubocop:disable Metrics/ModuleLength
     def restricted?(entity)
       return true unless entity.valid?
       Greensub::Component.find_by(noid: entity.noid).present?
+    end
+
+    def watermarkable?(entity)
+      return false unless entity.valid?
+      return false if Array(solr_document(entity)['external_resource_url_ssim']).first.present?
+      entity.is_a?(Sighrax::PortableDocumentFormat)
     end
 
     private

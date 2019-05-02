@@ -92,6 +92,9 @@ gem 'checkpoint', '~> 1.1.0'
 # clamav only in production
 gem 'clamav', group: :production
 
+# Watermark/Stamp Existing PDF
+gem 'combine_pdf', '~> 1.0'
+
 # use config gem to pull in settings from .yml files
 gem 'config'
 
