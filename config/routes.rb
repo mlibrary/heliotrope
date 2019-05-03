@@ -55,6 +55,12 @@ Rails.application.routes.draw do
     end
   end
 
+  namespace :api do # no json constraints
+    scope module: :v1, constraints: API::Version.new('v1', true) do
+      post 'crossref_register', controller: :crossref_registrations, action: :create
+    end
+  end
+
   constraints platform_administrator_constraint do
     namespace :greensub do
       resources :individuals do
