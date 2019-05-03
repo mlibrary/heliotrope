@@ -20,4 +20,4 @@ With this launch come two new optional features on Fulcrum, including:
 
 <img class="responsive-img" alt="Screenshot of Promissory Notes on Fulcrum, showing the book summary page with Creative Commons license and Peer Review status icons." src="/img/blog/2018-10-09-lever-press-2.jpg" style="margin-top: 1em;"/>
 
-You can freely read [Promissory Notes on Fulcrum now](http://hdl.handle.net/2027/fulcrum.m613mz330). We are excited to publish other forthcoming titles for Lever Press in the coming months. If you are interested in talking more about a potential partnership with Fulcrum, please email [fulcrum-info@umich.edu](mailto:fulcrum-info@umich.edu).
+You can freely read [Promissory Notes on Fulcrum now](https://hdl.handle.net/2027/fulcrum.m613mz330). We are excited to publish other forthcoming titles for Lever Press in the coming months. If you are interested in talking more about a potential partnership with Fulcrum, please email [fulcrum-info@umich.edu](mailto:fulcrum-info@umich.edu).

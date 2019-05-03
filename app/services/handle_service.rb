@@ -37,7 +37,7 @@ class HandleService
     #
     #     The API returns JSON.
     #
-    #     For example, http://hdl.handle.net/api/handles/4263537/4000
+    #     For example, https://hdl.handle.net/api/handles/4263537/4000
     #
     # Response Codes
     #
