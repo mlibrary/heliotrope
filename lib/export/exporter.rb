@@ -32,7 +32,7 @@ module Export
         return
       end
 
-      bag_name = "#{monograph_presenter.subdomain}-#{monograph_presenter.id}"
+      bag_name = "fulcrum.org.#{monograph_presenter.subdomain}-#{monograph_presenter.id}"
 
       FileUtils.mkdir_p(Settings.aptrust_bags_path) unless Dir.exist?(Settings.aptrust_bags_path)
 
@@ -62,7 +62,7 @@ module Export
         'Bag-Count' => '1',
         'Bagging-Date' => time_i8601,
         'Internal-Sender-Description' => "Bag for a monograph hosted at www.fulcrum.org",
-        'Internal-Sender-Identifier'  => monograph_presenter.id.to_s
+        'Internal-Sender-Identifier' => monograph_presenter.id.to_s
       )
 
       # Add aptrust-info.txt file
@@ -79,8 +79,7 @@ module Export
         pr = monograph_presenter.press.blank? ? '' : monograph_presenter.press.squish[0..249]
         io.puts "Press: #{pr}"
         # 'Item Description' may be helpful when looking at Pharos web UI
-        ellipsis = monograph_presenter.description.first.squish.length > 249 ? '...' : ''
-        ides = monograph_presenter.description.blank? ? '' : monograph_presenter.description.first.squish[0..246] + ellipsis
+        ides = monograph_presenter.description.first.blank? ? '' : monograph_presenter.description.first.squish[0..249]
         io.puts "Item Description: #{ides}"
         creat = monograph_presenter.creator.blank? ? '' : monograph_presenter.creator.first.squish[0..249]
         io.puts "Creator/Author: #{creat}"
@@ -308,6 +307,7 @@ module Export
       def metadata_row(item, parent_rep = nil)
         row = []
         return row if item.instance_of?(Sighrax::NullEntity)
+
         object_type = item.has_model == 'Monograph' ? :monograph : :file_set
         all_metadata.each do |field|
           row << metadata_field_value(item, object_type, field, parent_rep)
@@ -357,6 +357,7 @@ module Export
 
       def field_value(item, metadata_name, multivalued) # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
         return if item.public_send(metadata_name).blank?
+
         value = Array.wrap(item.public_send(metadata_name))
 
         if multivalued == :yes_split
