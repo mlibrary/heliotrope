@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190426155705) do
+ActiveRecord::Schema.define(version: 20190506144028) do
 
   create_table "api_requests", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.integer "user_id"
@@ -378,6 +378,7 @@ ActiveRecord::Schema.define(version: 20190426155705) do
     t.string "twitter"
     t.string "google_analytics_url"
     t.boolean "share_links", default: false
+    t.boolean "watermark", default: false
     t.index ["parent_id"], name: "index_presses_on_parent_id"
   end
 

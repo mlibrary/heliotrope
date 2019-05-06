@@ -8,9 +8,6 @@ class EbooksController < CheckpointController
     return redirect_to(hyrax.download_path(params[:id])) unless Sighrax.watermarkable?(@entity) && @press_policy.watermark_download?
     begin
       watermarked = Rails.cache.fetch(cache_key, expires_in: 30.days) do
-        # Toolbox.watermark(@entity.content, @entity.media_type, title: @entity.parent.title, press: @press.name, request_origin: request_origin)
-        t1 = Process.clock_gettime(Process::CLOCK_MONOTONIC)
-
         text = <<~WATERMARK
           #{@entity.parent.title}
           Copyright \u00A9 #{@press.name}. All rights reserved.
@@ -21,12 +18,8 @@ class EbooksController < CheckpointController
         stamp = CombinePDF.parse(watermark(text)).pages[0]
         pdf.stamp_pages(stamp)
 
-        t2 = Process.clock_gettime(Process::CLOCK_MONOTONIC)
-        Rails.logger.debug("[PDF WATERMARK] took #{t2 - t1} seconds")
-
         pdf.to_pdf
       end
-
       send_data watermarked, type: @entity.media_type, filename: @entity.filename
     rescue StandardError => e
       Rails.logger.error "EbooksController.download raised #{e}"

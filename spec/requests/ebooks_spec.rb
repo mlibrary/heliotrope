@@ -62,7 +62,6 @@ RSpec.describe "PDF EBooks", type: :request do
             )
           end
           let(:parent) { instance_double(Sighrax::Entity, title: 'title') }
-          let(:content) { double('content') }
 
           before do
             allow(entity).to receive(:content).and_return(File.read(Rails.root.join(fixture_path, entity.filename)))
