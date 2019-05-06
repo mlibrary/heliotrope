@@ -59,7 +59,7 @@
                   <ul class="dropdown-menu monograph-catalog-rep-downloads">
                   <% @ebook_download_presenter.ebook_presenters.each do |ebook| %>
                     <% if @ebook_download_presenter.downloadable?(ebook) %>
-                      <li><a data-rep-type="<%= ebook.ebook_format.downcase %>" href="<%= hyrax.download_path(ebook.id) %>" target="_blank"><%= ebook.ebook_format %> (<%= number_to_human_size(ebook.file_size) %>)</a></li>
+                      <li><a data-rep-type="<%= ebook.ebook_format.downcase %>" href="<%= download_ebook_path(ebook.id) %>" target="_blank"><%= ebook.ebook_format %> (<%= number_to_human_size(ebook.file_size) %>)</a></li>
                     <% end %>
                   <% end %>
                   </ul>

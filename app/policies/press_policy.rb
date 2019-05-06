@@ -5,7 +5,11 @@ class PressPolicy < ApplicationPolicy
 
   def interval_download?
     return true if actor_platform_admin?
-    /^heb$/.match?(press.subdomain)
+    /^heb$/.match?(press.subdomain) || /^heliotrope$/.match?(press.subdomain)
+  end
+
+  def watermark_download?
+    /^ebc$/.match?(press.subdomain) || /^gabii$/.match?(press.subdomain) || /^heliotrope$/.match?(press.subdomain)
   end
 
   private

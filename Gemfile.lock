@@ -185,6 +185,8 @@ GEM
       execjs
     coffee-script-source (1.12.2)
     colorator (1.1.0)
+    combine_pdf (1.0.16)
+      ruby-rc4 (>= 0.1.5)
     commonjs (0.2.7)
     concurrent-ruby (1.1.5)
     config (1.7.0)
@@ -809,6 +811,7 @@ GEM
       multipart-post
       oauth2
     ruby-progressbar (1.10.0)
+    ruby-rc4 (0.1.5)
     ruby_dep (1.5.0)
     rubyzip (1.2.2)
     ruumba (0.1.2)
@@ -983,6 +986,7 @@ DEPENDENCIES
   chromedriver-helper (~> 2.1.0)
   clamav
   coffee-rails (~> 4.2)
+  combine_pdf (~> 1.0)
   config
   coveralls
   cozy-sun-bear!

@@ -58,6 +58,43 @@ RSpec.describe ApplicationController, type: :controller do
     end
   end
 
+  context 'institution' do
+    controller do
+      def trigger; end
+    end
+
+    let(:institutions) { [] }
+
+    before do
+      allow(controller).to receive(:current_institutions).and_return(institutions)
+      request.env["HTTP_ACCEPT"] = 'application/json'
+      routes.draw { get "trigger" => "anonymous#trigger" }
+      get :trigger
+    end
+
+    it { expect(controller.current_institutions?).to be false }
+    it { expect(controller.current_institution).to be nil }
+    it { expect(controller.current_institutions).to be institutions }
+
+    context 'institution' do
+      let(:institutions) { [institution] }
+      let(:institution) { create(:institution) }
+
+      it { expect(controller.current_institutions?).to be true }
+      it { expect(controller.current_institution).to be institution }
+    end
+
+    context 'institutions' do
+      let(:institutions) { [institution_05, institution_10, institution_2] }
+      let(:institution_05) { create(:institution, identifier: "05") }
+      let(:institution_10) { create(:institution, identifier: "10") }
+      let(:institution_2) { create(:institution, identifier: "2") }
+
+      it { expect(controller.current_institutions?).to be true }
+      it { expect(controller.current_institution).to be institution_2 }
+    end
+  end
+
   context 'institutions' do
     controller do
       def trigger; end

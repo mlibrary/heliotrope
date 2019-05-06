@@ -31,4 +31,22 @@ RSpec.describe PressPolicy do
       it { is_expected.to be true }
     end
   end
+
+  describe '#watermark_download?' do
+    subject { press_policy.watermark_download? }
+
+    it { is_expected.to be false }
+
+    context 'ebc' do
+      let(:subdomain) { 'ebc' }
+
+      it { is_expected.to be true }
+    end
+
+    context 'heliotrope' do
+      let(:subdomain) { 'heliotrope' }
+
+      it { is_expected.to be true }
+    end
+  end
 end

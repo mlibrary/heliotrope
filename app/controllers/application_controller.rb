@@ -44,6 +44,22 @@ class ApplicationController < ActionController::Base
     user
   end
 
+  def current_institution
+    insts = current_institutions
+    the_inst = insts.first
+    insts.each do |inst|
+      begin
+        left = the_inst.identifier.to_i
+        right = inst.identifier.to_i
+        next if left <= right
+        the_inst = inst
+      rescue StandardError => e
+        Rails.logger.debug("ApplicationController.current_institution error" + e)
+      end
+    end
+    the_inst
+  end
+
   def current_institutions?
     current_institutions.count.positive?
   end

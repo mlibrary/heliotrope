@@ -85,6 +85,17 @@ RSpec.describe Sighrax do
     end
   end
 
+  describe '#policy' do
+    subject { described_class.policy(actor, entity) }
+
+    let(:actor) { double('actor') }
+    let(:entity) { described_class.factory(noid) }
+    let(:noid) { 'validnoid' }
+    let(:data) { {} }
+
+    it { is_expected.to be_an_instance_of(EntityPolicy) }
+  end
+
   describe '#press' do
     subject { described_class.press(entity) }
 
@@ -458,6 +469,45 @@ RSpec.describe Sighrax do
           end
 
           it { is_expected.to be true }
+        end
+      end
+    end
+
+    describe '#watermarkable?' do
+      subject { described_class.watermarkable?(entity) }
+
+      before { allow(entity).to receive(:is_a?).and_return(false) }
+
+      it { is_expected.to be false }
+
+      context 'Entity' do
+        let(:data) { { "non_empty_solr_document" => "otherwise factory will return NullEntity!" } }
+
+        it { is_expected.to be false }
+
+        context 'Asset' do
+          before { allow(entity).to receive(:is_a?).with(Sighrax::Asset).and_return(true) }
+
+          it { is_expected.to be false }
+
+          context 'Portable Document Format' do
+            before { allow(entity).to receive(:is_a?).with(Sighrax::PortableDocumentFormat).and_return(true) }
+
+            it { is_expected.to be true }
+
+            context 'external resource url' do
+              let(:data) { { 'external_resource_url_ssim' => url } }
+              let(:url) { 'url' }
+
+              it { is_expected.to be false }
+
+              context 'blank url' do
+                let(:url) { '' }
+
+                it { is_expected.to be true }
+              end
+            end
+          end
         end
       end
     end
