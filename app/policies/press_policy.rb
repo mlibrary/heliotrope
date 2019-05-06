@@ -9,7 +9,7 @@ class PressPolicy < ApplicationPolicy
   end
 
   def watermark_download?
-    /^ebc$/.match?(press.subdomain) || /^gabii$/.match?(press.subdomain) || /^heliotrope$/.match?(press.subdomain)
+    press.watermark
   end
 
   private

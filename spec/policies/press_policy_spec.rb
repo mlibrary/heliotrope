@@ -6,8 +6,9 @@ RSpec.describe PressPolicy do
   subject(:press_policy) { described_class.new(actor, press) }
 
   let(:actor) { double('actor', agent_type: 'actor_type', agent_id: 'actor_id') }
-  let(:press) { double('press', subdomain: subdomain, agent_type: 'press_type', agent_id: 'press_id') }
+  let(:press) { double('press', subdomain: subdomain, agent_type: 'press_type', agent_id: 'press_id', watermark: watermark) }
   let(:subdomain) { 'subdomain' }
+  let(:watermark) { false }
   let(:platform_admin) { false }
 
   before do
@@ -37,14 +38,8 @@ RSpec.describe PressPolicy do
 
     it { is_expected.to be false }
 
-    context 'ebc' do
-      let(:subdomain) { 'ebc' }
-
-      it { is_expected.to be true }
-    end
-
-    context 'heliotrope' do
-      let(:subdomain) { 'heliotrope' }
+    context 'watermark' do
+      let(:watermark) { true }
 
       it { is_expected.to be true }
     end
