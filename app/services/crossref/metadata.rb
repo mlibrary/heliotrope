@@ -73,6 +73,8 @@ module Crossref
     end
 
     def isbns
+      noisbn && return if work.isbn.empty?
+
       work.isbn.each do |isbn_type|
         isbn, media_type = isbn_media_type(isbn_type)
         next if isbn.blank?
@@ -86,6 +88,14 @@ module Crossref
         isbn_node.content = isbn
         document.at_css('publication_date').add_next_sibling(isbn_node)
       end
+    end
+
+    def noisbn
+      noisbn = Nokogiri::XML::Node.new('noisbn', document)
+      # 'reason' is required if you don't have an isbn (which really should never happen)
+      # https://data.crossref.org/reports/help/schema_doc/4.4.0/schema_4_4_0.html#noisbn
+      noisbn['reason'] = "monograph"
+      document.at_css('publication_date').add_next_sibling(noisbn)
     end
 
     def isbn_media_type(isbn_type)

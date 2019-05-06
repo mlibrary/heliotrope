@@ -166,12 +166,43 @@ RSpec.describe Crossref::Metadata do
   end
 
   describe "#isbns" do
-    subject { described_class.new(monograph.id) }
+    context "with isbns" do
+      subject { described_class.new(monograph.id) }
 
-    it "has isbns with correct media types" do
-      subject.isbns
-      expect(subject.document.at_css('isbn[media_type="electronic"]').content).to eq "1234567890"
-      expect(subject.document.at_css('isbn[media_type="print"]').content).to eq "0987654321"
+      it "has isbns with correct media types" do
+        subject.isbns
+        expect(subject.document.at_css('isbn[media_type="electronic"]').content).to eq "1234567890"
+        expect(subject.document.at_css('isbn[media_type="print"]').content).to eq "0987654321"
+        expect(subject.document.at_css('noisbn')).to be nil
+      end
+    end
+
+    context "without isbns" do
+      # crossref allows submiting without isbns. We probably won't do this, but you can
+      subject { described_class.new(no_isbns.id) }
+
+      let(:no_isbns) do
+        ::SolrDocument.new(id: '111111111',
+                           has_model_ssim: ['Monograph'],
+                           title_tesim: ['A Title'],
+                           creator_tesim: ["Last, First (editor)\nSecondLast, SecondFirst (editor)"],
+                           importable_creator_ss: "Last, First (editor); SecondLast, SecondFirst (editor)",
+                           press_tesim: [press.subdomain],
+                           date_created_tesim: ['9999'])
+      end
+
+      before do
+        ActiveFedora::SolrService.add([no_isbns.to_h])
+        ActiveFedora::SolrService.commit
+        allow(subject.work).to receive(:creator_display?).and_return(false)
+      end
+
+      it "has an empty noisbn element" do
+        subject.isbns
+        expect(subject.document.at_css('isbn')).to be nil
+        expect(subject.document.at_css('noisbn').name).to eq 'noisbn'
+        expect(subject.document.at_css('noisbn').content).to eq ""
+      end
     end
   end
 

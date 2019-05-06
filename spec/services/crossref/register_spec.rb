@@ -9,17 +9,7 @@ RSpec.describe Crossref::Register do
     doc.to_xml
   end
 
-  describe "#initialize" do
-    subject { described_class.new(xml) }
-
-    context "config" do
-      it "loads the correct fields from crossref.yml" do
-        expect(subject.config['deposit_url']).not_to be nil
-        expect(subject.config['login_id']).not_to be nil
-        expect(subject.config['login_passwd']).not_to be nil
-      end
-    end
-  end
+  before { allow(CrossrefPollJob).to receive_messages(perform_later: nil, perform_now: nil) }
 
   describe "#post" do
     subject { described_class.new(xml).post }
