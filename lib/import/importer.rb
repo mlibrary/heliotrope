@@ -124,6 +124,9 @@ module Import
           end
         end
 
+        # we've removed the Hyrax behavior where it sets the representative/thumbnail to the first file attached
+        maybe_set_cover(attrs)
+
         admin_set_id = check_for_admin_set if @workflow.present?
         puts "You are using workflow '#{@workflow}' that has an AdminSet id of #{admin_set_id}" if admin_set_id
 
@@ -211,6 +214,18 @@ module Import
             end
           end
           raise "You're trying to use the workflow #{@workflow} but a corresponding AdminSet was not found. Make sure you've registered this workflow."
+        end
+      end
+
+      def maybe_set_cover(attrs)
+        if attrs['files_metadata'].none? { |metadata| metadata['representative_kind'] == 'cover' }
+          # flag first image found as the cover to maintain expected behavior for FMSL CSV imports
+          attrs['files'].each_with_index do |file, i|
+            if ['.bmp', '.jpg', '.jpeg', '.png', '.gif'].include?(File.extname(file).downcase)
+              attrs['files_metadata'][i]['representative_kind'] = 'cover'
+              break
+            end
+          end
         end
       end
   end

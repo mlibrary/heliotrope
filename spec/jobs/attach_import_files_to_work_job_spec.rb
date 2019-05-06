@@ -32,8 +32,8 @@ RSpec.describe AttachImportFilesToWorkJob do
       expect(monograph.file_sets.count).to eq n
       expect(monograph.file_sets.map(&:visibility)).to all(eq monograph.visibility)
       expect(monograph.ordered_members.to_a.map(&:uri).map(&:to_s)).to eq files.map(&:file_set_uri)
-      expect(monograph.representative_id).to eq monograph.ordered_members.to_a.first&.id
-      expect(monograph.thumbnail_id).to eq monograph.ordered_members.to_a.first&.id
+      expect(monograph.representative_id).to be_nil
+      expect(monograph.thumbnail_id).to be_nil
     end
   end
 
