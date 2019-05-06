@@ -121,17 +121,10 @@ module Hyrax
       isbns
     end
 
-    def heb_id
-      solr_document.identifier.find { |e| /^heb[0-9]/ =~ e }
-    end
-
-    def heb_id?
-      heb_id.present?
-    end
-
+    # Dependent upon CitableLinkPresenter
     def heb_dlxs_link
-      return unless heb_id?
-      "https://quod.lib.umich.edu/cgi/t/text/text-idx?c=acls;idno=#{heb_id}"
+      return unless heb?
+      "https://quod.lib.umich.edu/cgi/t/text/text-idx?c=acls;idno=#{heb_url}"
     end
 
     def unreverse_names(comma_separated_names)

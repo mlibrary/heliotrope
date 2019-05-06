@@ -23,7 +23,7 @@ webgl = Webgl::Unity.from_directory(UnpackService.root_path_from_noid(webgl_id, 
 
   // Take user to a POI when passed a string from WebGL
   function goToParagraph(p) {
-    var paragraphHandle = "http://hdl.handle.net/2027/fulcrum.9231782/" + "par" + p;
+    var paragraphHandle = "https://hdl.handle.net/2027/fulcrum.9231782/" + "par" + p;
     $('#paragraphHandle').html('<a href="' + paragraphHandle + '" target="_blank">' + paragraphHandle + '</a>');
     $('#goToParagraphModal').modal();
   }
@@ -33,7 +33,7 @@ webgl = Webgl::Unity.from_directory(UnpackService.root_path_from_noid(webgl_id, 
     if ($('#webgl-tab').hasClass('active')) {
 
       if (heliotropeIncompatibleWebGlUser === true) {
-        $('#gameContainer').html('<div id="epub-webgl-mobile-message">Sorry, it looks like your device or browser is not compatible with WebGL.<br />Please check our <a href="http://hdl.handle.net/2027/fulcrum.9231782/about">compatibility requirements</a>.</div>');
+        $('#gameContainer').html('<div id="epub-webgl-mobile-message">Sorry, it looks like your device or browser is not compatible with WebGL.<br />Please check our <a href="https://hdl.handle.net/2027/fulcrum.9231782/about">compatibility requirements</a>.</div>');
       }
       else if (typeof gameInstance === 'undefined' ) {
 
@@ -77,7 +77,7 @@ webgl = Webgl::Unity.from_directory(UnpackService.root_path_from_noid(webgl_id, 
     $("a[href='#webgl']").bind('click', function() {
 
       if (heliotropeIncompatibleWebGlUser === true) {
-        $('#gameContainer').html('<div id="epub-webgl-mobile-message">Sorry, it looks like your device or browser is not compatible with WebGL.<br />Please check our <a href="http://hdl.handle.net/2027/fulcrum.9231782/about">compatibility requirements</a>.</div>');
+        $('#gameContainer').html('<div id="epub-webgl-mobile-message">Sorry, it looks like your device or browser is not compatible with WebGL.<br />Please check our <a href="https://hdl.handle.net/2027/fulcrum.9231782/about">compatibility requirements</a>.</div>');
       }
       else if (typeof gameInstance === 'undefined' ) {
 

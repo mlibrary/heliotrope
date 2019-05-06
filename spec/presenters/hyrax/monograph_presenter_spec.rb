@@ -18,6 +18,7 @@ RSpec.describe Hyrax::MonographPresenter do
 
     it do
       is_expected.to be_a AnalyticsPresenter
+      is_expected.to be_a CitableLinkPresenter
       is_expected.to be_a OpenUrlPresenter
       is_expected.to be_a TitlePresenter
     end
@@ -540,37 +541,17 @@ RSpec.describe Hyrax::MonographPresenter do
     end
   end # context 'a monograph with attached members' do
 
-  describe "#citable_link" do
-    context "has a DOI" do
-      let(:mono_doc) {
-        SolrDocument.new(id: 'monograph_id',
-                         has_model_ssim: ['Monograph'],
-                         doi_ssim: ['10.NNNN.N/identifier'])
-      }
+  # Dependent upon CitableLinkPresenter
+  describe '#heb_dlxs_link' do
+    subject { presenter.heb_dlxs_link }
 
-      it "returns the doi url" do
-        expect(presenter.citable_link).to eq HandleService::DOI_ORG_PREFIX + '10.NNNN.N/identifier'
-      end
-    end
+    it { is_expected.to be nil }
 
-    context "with no DOI" do
-      let(:mono_doc) { SolrDocument.new(id: 'monograph_id', has_model_ssim: ['Monograph']) }
+    context 'heb' do
+      let(:mono_doc) { ::SolrDocument.new(id: 'mono', has_model_ssim: ['Monograph'], identifier_tesim: [heb_handle]) }
+      let(:heb_handle) { 'hTtP://Hdl.Handle.Net/2027/HeB.IdenTifier' }
 
-      it "returns the handle url" do
-        expect(presenter.citable_link).to eq HandleService.url(mono_doc.id)
-      end
-    end
-
-    context "with HEB identifier" do
-      let(:mono_doc) {
-        SolrDocument.new(id: 'monograph_id',
-                         has_model_ssim: ['Monograph'],
-                         identifier_tesim: ['blah', 'http://hdl.handle.net/2027/heb.12345'])
-      }
-
-      it "returns the HEB handle url" do
-        expect(presenter.citable_link).to eq 'http://hdl.handle.net/2027/heb.12345'
-      end
+      it { is_expected.to eq "https://quod.lib.umich.edu/cgi/t/text/text-idx?c=acls;idno=#{presenter.heb_url}" }
     end
   end
 
