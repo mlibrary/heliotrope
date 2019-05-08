@@ -39,12 +39,14 @@ Naming/HeredocDelimiterCase:
 Naming/HeredocDelimiterNaming:
   Exclude:
     - 'app/presenters/concerns/embed_code_presenter.rb'
+    - 'app/presenters/concerns/social_share_widget_presenter.rb'
     - 'lib/spec/e_pub/bridge_to_webgl_spec.rb'
     - 'lib/spec/e_pub/cfi_spec.rb'
     - 'lib/spec/e_pub/chapter_spec.rb'
     - 'lib/spec/e_pub/chapter_presenter_spec.rb'
     - 'lib/spec/e_pub/snippet_spec.rb'
     - 'spec/presenters/concerns/embed_code_presenter_spec.rb'
+    - 'spec/presenters/concerns/social_share_widget_presenter_spec.rb'
 
 Naming/MemoizedInstanceVariableName:
   Exclude:

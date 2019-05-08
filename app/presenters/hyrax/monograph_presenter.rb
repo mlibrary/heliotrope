@@ -6,6 +6,7 @@ module Hyrax
     include CitableLinkPresenter
     include OpenUrlPresenter
     include TitlePresenter
+    include SocialShareWidgetPresenter
     include FeaturedRepresentatives::MonographPresenter
     include ActionView::Helpers::UrlHelper
 

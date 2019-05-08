@@ -39,7 +39,7 @@ RSpec.describe EPubsController, type: :controller do
       end
 
       context 'file epub' do
-        let(:monograph) { create(:public_monograph) }
+        let(:monograph) { create(:public_monograph, title: ['A book with _emphasis_ n <em>stuff</em>']) }
         let(:file_set) { create(:public_file_set, content: File.open(File.join(fixture_path, 'fake_epub01.epub'))) }
         let!(:fr) { create(:featured_representative, monograph_id: monograph.id, file_set_id: file_set.id, kind: 'epub') }
 
@@ -53,6 +53,7 @@ RSpec.describe EPubsController, type: :controller do
 
         it do
           get :show, params: { id: file_set.id }
+          expect(assigns(:title)).to eq('A book with emphasis n stuff')
           expect(response).to have_http_status(:success)
           expect(response.body.empty?).to be true
         end

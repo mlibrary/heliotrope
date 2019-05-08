@@ -75,7 +75,7 @@ RSpec.describe "monograph_catalog/index.html.erb", type: :view do
     let!(:press) { create(:press, subdomain: subdomain) }
 
     before do
-      allow(monograph_presenter).to receive(:page_title).and_return(page_title)
+      allow(monograph_presenter).to receive(:title).and_return(page_title)
       allow(monograph_presenter).to receive(:subdomain).and_return(subdomain)
       render
     end
