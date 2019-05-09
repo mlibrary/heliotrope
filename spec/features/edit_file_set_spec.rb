@@ -24,8 +24,14 @@ describe 'Edit a file set' do
     end
 
     let(:file) { File.open(fixture_path + '/csv/shipwreck.jpg') }
-    let(:file_set_title) { "Test FileSet Title" }
+    let(:file_set_title) { '#hashtag Test FileSet Title with _MD Italics_ and <em>HTML Italics</em>' }
+    let(:file_set_display_title) { '#hashtag Test FileSet Title with <em>MD Italics</em> and <em>HTML Italics</em>' }
+    let(:file_set_page_title) { '#hashtag Test FileSet Title with MD Italics and HTML Italics' }
+
     let(:file_set) { create(:public_file_set, user: user, title: [file_set_title]) }
+
+    let(:file_set_share_link) { "https://hdl.handle.net/2027/fulcrum.#{file_set.id}" }
+    let(:url_escaped_title) { '%23hashtag+Test+FileSet+Title+with+MD+Italics+and+HTML+Italics' }
 
     before do
       login_as user
@@ -35,7 +41,7 @@ describe 'Edit a file set' do
       monograph.save!
     end
 
-    it do
+    it do # rubocop:disable RSpec/ExampleLength
       visit edit_hyrax_file_set_path(file_set)
 
       fill_in 'Resource Type', with: 'image'
@@ -86,14 +92,54 @@ describe 'Edit a file set' do
       expect(page).to have_current_path(hyrax_monograph_path(monograph, locale: 'en'))
       # Order in FileSet's section_title has been taken from Monograph's section_titles
       expect(page).to have_content 'From C 1 and Test section with Italicized Title therein'
-      click_link file_set_title
+
+      # check styled title is visible
+      title_link = find("h4 a[href='/concern/file_sets/#{file_set.id}?locale=en']")
+      expect(title_link).to have_content '#hashtag Test FileSet Title with MD Italics and HTML Italics'
+      # check that the sentence includes the emphasised text
+      expect(title_link).to have_css('em', text: 'MD Italics')
+      expect(title_link).to have_css('em', text: 'HTML Italics')
+
+      title_link.click
 
       expect(page).to have_current_path(hyrax_file_set_path(file_set, locale: 'en'))
 
       # On FileSet Page
+      expect(page.title).to eq file_set_page_title
+      heading_title = find('h1#asset-title')
+      expect(heading_title).to have_content '#hashtag Test FileSet Title with MD Italics and HTML Italics'
+      expect(heading_title).to have_css('em', text: 'MD Italics')
+      expect(heading_title).to have_css('em', text: 'HTML Italics')
+
+      # check breadcrumbs
+      linked_crumbs = page.all('ol.breadcrumb li a')
+      expect(linked_crumbs.count).to eq 2
+      expect(linked_crumbs[0]).to have_content 'Home'
+      expect(linked_crumbs[1]).to have_content 'Test monograph'
+      unlinked_crumb = page.all('ol.breadcrumb li.active')
+      expect(unlinked_crumb.count).to eq 1
+      expect(unlinked_crumb.first).to have_content '#hashtag Test FileSet Title with MD Italics and HTML Italics'
+      expect(unlinked_crumb.first).to have_css('em', text: 'MD Italics')
+      expect(unlinked_crumb.first).to have_css('em', text: 'HTML Italics')
+
+      # check share links
+      share_links = page.all('.btn-group.share ul li a')
+      expect(share_links.count).to eq 6
+      expect(share_links[0].text).to eq 'Twitter'
+      expect(share_links[0]['href']).to eq("http://twitter.com/intent/tweet?text=#{url_escaped_title}&url=#{file_set_share_link}")
+      expect(share_links[1].text).to eq 'Facebook'
+      expect(share_links[1]['href']).to eq("http://www.facebook.com/sharer.php?u=#{file_set_share_link}&t=#{url_escaped_title}")
+      expect(share_links[2].text).to eq 'Google+'
+      expect(share_links[2]['href']).to eq("https://plus.google.com/share?url=#{file_set_share_link}")
+      expect(share_links[3].text).to eq 'Reddit'
+      expect(share_links[3]['href']).to eq("http://www.reddit.com/submit?url=#{file_set_share_link}")
+      expect(share_links[4].text).to eq 'Mendeley'
+      expect(share_links[4]['href']).to eq("http://www.mendeley.com/import/?url=#{file_set_share_link}")
+      expect(share_links[5].text).to eq 'Cite U Like'
+      expect(share_links[5]['href']).to eq("http://www.citeulike.org/posturl?url=#{file_set_share_link}&title=#{url_escaped_title}")
+
       # FileSet page also has authors
       expect(page).to have_content 'Jimmy Johns, Wingperson M. Creator, Sub Way and Wingperson M. Contributor'
-      expect(page).to have_content file_set_title
       expect(page).to have_content 'This is a caption for the image'
       expect(page).to have_link('Creative Commons Public Domain Mark 1.0', href: 'https://creativecommons.org/publicdomain/mark/1.0/')
       expect(find_link('Creative Commons Public Domain Mark 1.0')[:target]).to eq '_blank'
@@ -139,11 +185,25 @@ describe 'Edit a file set' do
       # check facet results - bug #772
       # multi-word primary creator role facet
       click_link 'on screen talent'
-      expect(page).to have_content file_set_title
-      click_link file_set_title
+
+      # check styled title is visible
+      title_link = find("h4 a[href='/concern/file_sets/#{file_set.id}?locale=en']")
+      expect(title_link).to have_content '#hashtag Test FileSet Title with MD Italics and HTML Italics'
+      # check that the link includes the emphasised text
+      expect(title_link).to have_css('em', text: 'MD Italics')
+      expect(title_link).to have_css('em', text: 'HTML Italics')
+
+      title_link.click
+
       # double html encoding breaking facet with apostrophe
       click_link 'Conor O\'Neill\'s'
-      expect(page).to have_content file_set_title
+
+      # check styled title is visible
+      title_link = find("h4 a[href='/concern/file_sets/#{file_set.id}?locale=en']")
+      expect(title_link).to have_content '#hashtag Test FileSet Title with MD Italics and HTML Italics'
+      # check that the link includes the emphasised text
+      expect(title_link).to have_css('em', text: 'MD Italics')
+      expect(title_link).to have_css('em', text: 'HTML Italics')
     end
   end
 end

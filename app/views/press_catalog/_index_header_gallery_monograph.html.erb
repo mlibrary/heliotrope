@@ -3,6 +3,6 @@
   <div class="documentHeader">
     <h3 class="index_title">
       <% counter = document_counter_with_offset(document_counter) %>
-      <%= render_markdown link_to_document document, document_show_link_field(document), counter: counter %>
+      <%= render_markdown link_to_document document, render_markdown(document.title.first), counter: counter %>
     </h3>
   </div>

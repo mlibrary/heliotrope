@@ -407,7 +407,7 @@ webgl = Webgl::Unity.from_directory(UnpackService.root_path_from_noid(webgl_id, 
         // Share widget
         cozy.control.widget.button({
           region: 'top.toolbar.left',
-          template: '<div class="btn-group"><button class="button--sm dropdown-toggle" data-toggle="dropdown" aria-label="Promote on social media and share this book" aria-haspopup="true" aria-expanded="false"><i id="share" class="icon-share-boxed oi" data-glyph="share-boxed" title="Promote on social media and share this book" aria-hidden="true"></i></button><ul class="dropdown-menu"><li><a href="http://twitter.com/intent/tweet?text=<%= @monograph_presenter.page_title %>&amp;url=<%= @citable_link %>" target="_blank">Twitter</a></li><li><a href="http://www.facebook.com/sharer.php?u=<%= @citable_link %>&amp;t=<%= @monograph_presenter.page_title %>" target="_blank">Facebook</a></li><li><a href="https://plus.google.com/share?url=<%= @citable_link %>" target="_blank">Google+</a></li><li><a href="http://www.reddit.com/submit?url=<%= @citable_link %>" target="_blank">Reddit</a></li><li><a href="http://www.mendeley.com/import/?url=<%= @citable_link %>" target="_blank">Mendeley</a></li><li><a href="http://www.citeulike.org/posturl?url=<%= @citable_link %>&amp;title=<%= @monograph_presenter.page_title %>" target="_blank">Cite U Like</a></li></ul></div>'
+          template: '<%= @monograph_presenter.social_share_widget_template %>'
         }).addTo(reader);
 
         // Download widget

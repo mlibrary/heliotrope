@@ -101,4 +101,15 @@ RSpec.describe TitlePresenter do
       is_expected.to eq markup_and_tag_free_title
     end
   end
+
+  describe '#url_title' do
+    subject { presenter.url_title }
+
+    let(:markdown_title) { '#hashtag: A subtitle and _markdown_ and <em>HTML Tags</em> and stuff' }
+    let(:urlable_markup_free_title) { '%23hashtag%3A+A+subtitle+and+markdown+and+HTML+Tags+and+stuff' }
+
+    it 'CGI escapes and strips Markdown and HTML tags' do
+      is_expected.to eq urlable_markup_free_title
+    end
+  end
 end

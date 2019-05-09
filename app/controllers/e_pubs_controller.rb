@@ -7,7 +7,7 @@ class EPubsController < CheckpointController
   def show
     return redirect_to epub_access_url unless @policy.show?
 
-    @title = @presenter.parent.present? ? @presenter.parent.title : @presenter.title
+    @title = @presenter.parent.present? ? @presenter.parent.page_title : @presenter.page_title
     @citable_link = @presenter.citable_link
     @back_link = params[:publisher].present? ? URI.join(main_app.root_url, params[:publisher]).to_s : main_app.monograph_catalog_url(@presenter.monograph_id)
     @subdomain = @presenter.monograph.subdomain

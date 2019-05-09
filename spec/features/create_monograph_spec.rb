@@ -17,7 +17,7 @@ describe 'Create a monograph' do
 
       # Monograph form
       # Basic Metadata
-      fill_in 'monograph[title]', with: '#hashtag Test monograph with _MD Italics_ and <em>HTML Italics</em>'
+      fill_in 'monograph[title]', with: '#hashtag Test Monograph Title with _MD Italics_ and <em>HTML Italics</em>'
       select press.name, from: 'Publisher'
       fill_in 'Description', with: 'Blahdy blah description works'
       expect(page).to have_css('input.monograph_subject', count: 1)
@@ -57,8 +57,8 @@ describe 'Create a monograph' do
       click_button 'Save'
 
       # Monograph catalog page
-      expect(page.title).to eq '#hashtag Test monograph with MD Italics and HTML Italics'
-      expect(page).to have_content '#hashtag Test monograph with MD Italics and HTML Italics'
+      expect(page.title).to eq '#hashtag Test Monograph Title with MD Italics and HTML Italics'
+      expect(page).to have_content '#hashtag Test Monograph Title with MD Italics and HTML Italics'
       # get text inside <em> tags
       italicized_text = page.first('.col-sm-9.monograph-metadata h1 em').text
       expect(italicized_text).to eq 'MD Italics'
@@ -73,6 +73,16 @@ describe 'Create a monograph' do
       expect(page).to have_css("img[src*='https://i.creativecommons.org/p/mark/1.0/80x15.png']", count: 1)
       expect(page).to have_link(nil, href: 'https://creativecommons.org/publicdomain/mark/1.0/')
       expect(page.find(:css, 'a[href="https://creativecommons.org/publicdomain/mark/1.0/"]')[:target]).to eq '_blank'
+
+      # check breadcrumbs
+      linked_crumbs = page.all('ol.breadcrumb li a')
+      expect(linked_crumbs.count).to eq 1
+      expect(linked_crumbs[0]).to have_content 'Home'
+      unlinked_crumb = page.all('ol.breadcrumb li.active')
+      expect(unlinked_crumb.count).to eq 1
+      expect(unlinked_crumb.first).to have_content '#hashtag Test Monograph Title with MD Italics and HTML Italics'
+      expect(unlinked_crumb.first).to have_css('em', text: 'MD Italics')
+      expect(unlinked_crumb.first).to have_css('em', text: 'HTML Italics')
 
       click_link 'Edit Monograph'
 
@@ -109,10 +119,10 @@ describe 'Create a monograph' do
       click_link 'Manage Monograph and Files'
 
       # On Monograph show page
-      expect(page.title).to eq '#hashtag Test monograph with MD Italics and HTML Italics'
+      expect(page.title).to eq '#hashtag Test Monograph Title with MD Italics and HTML Italics'
       # Basic Metadata
       # title
-      expect(page).to have_content '#hashtag Test monograph with MD Italics and HTML Italics'
+      expect(page).to have_content '#hashtag Test Monograph Title with MD Italics and HTML Italics'
       # get text inside <em> tags
       italicized_text = page.first('.col-xs-12 header h1 em').text
       expect(italicized_text).to eq 'MD Italics'
@@ -163,11 +173,11 @@ describe 'Create a monograph' do
       expect(page).to have_content '<identifier>'
 
       # MLA citation
-      expect(page).to have_content 'Johns, Jimmy, and Sub Way. #hashtag Test Monograph with MD Italics and HTML Italics. Ann Arbor, MI.'
+      expect(page).to have_content 'Johns, Jimmy, and Sub Way. #hashtag Test Monograph Title with MD Italics and HTML Italics. Ann Arbor, MI.'
       # APA citation
-      expect(page).to have_content 'Johns, J., & Way, S. (2001). #hashtag Test monograph with MD Italics and HTML Italics. Ann Arbor, MI.: Blah Press, Co.'
+      expect(page).to have_content 'Johns, J., & Way, S. (2001). #hashtag Test Monograph Title with MD Italics and HTML Italics. Ann Arbor, MI.: Blah Press, Co.'
       # Chicago citation
-      expect(page).to have_content 'Johns, Jimmy, and Sub Way. 2001. #hashtag Test Monograph with MD Italics and HTML Italics. Ann Arbor, MI.: Blah Press, Co.'
+      expect(page).to have_content 'Johns, Jimmy, and Sub Way. 2001. #hashtag Test Monograph Title with MD Italics and HTML Italics. Ann Arbor, MI.: Blah Press, Co.'
     end
   end
 end

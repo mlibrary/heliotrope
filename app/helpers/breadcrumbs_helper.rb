@@ -19,7 +19,7 @@ module BreadcrumbsHelper
       return [] if press.blank?
 
       crumbs = possible_parent(press)
-      crumbs << { href: "", text: presenter.page_title, class: "active" }
+      crumbs << { href: "", text: presenter.title, class: "active" }
     end
 
     def breadcrumbs_for_monograph_show_page(subdomain, presenter)
@@ -27,7 +27,7 @@ module BreadcrumbsHelper
       return [] if press.blank?
 
       crumbs = possible_parent(press)
-      crumbs << { href: main_app.monograph_catalog_path(presenter.id), text: presenter.page_title, class: "" }
+      crumbs << { href: main_app.monograph_catalog_path(presenter.id), text: presenter.title, class: "" }
       crumbs << { href: "", text: 'Show', class: "active" }
     end
 
@@ -36,8 +36,8 @@ module BreadcrumbsHelper
       return [] if press.blank?
 
       crumbs = possible_parent(press)
-      crumbs << { href: main_app.monograph_catalog_path(presenter.monograph_id), text: presenter.monograph.page_title, class: "" }
-      crumbs << { href: "", text: presenter.page_title, class: "active" }
+      crumbs << { href: main_app.monograph_catalog_path(presenter.monograph_id), text: presenter.monograph.title, class: "" }
+      crumbs << { href: "", text: presenter.title, class: "active" }
     end
 
     def possible_parent(press)
