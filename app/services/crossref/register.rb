@@ -4,13 +4,12 @@ module Crossref
   class Register
     attr_reader :xml, :config
 
-    def initialize(xml)
+    def initialize(xml, config = Crossref::Config)
       @xml = xml
-      @config = load_config
+      @config = config.load_config
     end
 
     def post
-      # Tempfile foolishness just to make POST work. I'm tired of fighting with it.
       tmp = Tempfile.new(doi_batch_id)
       tmp.write(@xml)
       tmp.close
@@ -24,10 +23,10 @@ module Crossref
         }
       )
       response = request.run
-      tmp.unlink
       submission = CrossrefSubmissionLog.new(doi_batch_id: doi_batch_id,
                                              initial_http_status: response.code,
                                              initial_http_message: response.body,
+                                             file_name: File.basename(tmp),
                                              submission_xml: @xml)
       submission.status = if response.code == 200
                             "submitted"
@@ -35,6 +34,12 @@ module Crossref
                             "error"
                           end
       submission.save!
+      tmp.unlink
+
+      if submission.status == "submitted"
+        CrossrefPollJob.perform_later(CrossrefSubmissionLog.where(status: "submitted").to_a)
+      end
+
       response
     end
 
@@ -43,16 +48,6 @@ module Crossref
       def doi_batch_id
         doc = Nokogiri::XML(@xml)
         doc.at_css('doi_batch_id').content
-      end
-
-      def load_config
-        filename = Rails.root.join('config', 'crossref.yml')
-        yaml = YAML.safe_load(File.read(filename)) if File.exist?(filename)
-        unless yaml
-          Rails.logger.error("Unable to fetch any keys from #{filename}.")
-          return {}
-        end
-        yaml.fetch("crossref")
       end
   end
 end
