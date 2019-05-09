@@ -1,0 +1,19 @@
+<component parent_relation="isPartOf">
+  <titles>
+    <title>
+      <!-- TITLE -->
+    </title>
+  </titles>
+  <description>
+    <!-- DESCRIPTION -->
+  </description>
+  <format mime_type=""/>
+  <doi_data>
+    <doi>
+      <!-- DOI -->
+    </doi>
+    <resource>
+      <!-- RESOURCE -->
+    </resource>
+  </doi_data>
+</component>

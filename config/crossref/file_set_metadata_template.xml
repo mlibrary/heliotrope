@@ -1,0 +1,22 @@
+<doi_batch xmlns="http://www.crossref.org/schema/4.3.7" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="4.3.7" xsi:schemaLocation="http://www.crossref.org/schema/4.3.7 http://www.crossref.org/schema/deposit/crossref4.3.7.xsd">
+  <head>
+    <doi_batch_id>
+      <!-- DOI_BATCH_ID -->
+    </doi_batch_id>
+    <timestamp>
+      <!-- TIMESTAMP -->
+    </timestamp>
+    <depositor>
+      <depositor_name>scpo</name>
+      <email_address>mpub.xref@gmail.com</email_address>
+    </depositor>
+    <registrant>MPublishing</registrant>
+  </head>
+  <body>
+    <sa_component parent_doi="">
+      <component_list>
+        <!-- COMPONENTS -->
+      </component_list>
+    </sa_component>
+  </body>
+</doi_batch>

@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe Crossref::Metadata do
+RSpec.describe Crossref::MonographMetadata do
   let(:press) { create(:press, subdomain: "blue", name: "The Blue Press") }
 
   let(:monograph) do
