@@ -62,6 +62,7 @@ def stub_out_redis
   allow(ContentEventJob).to receive_messages(perform_later: nil, perform_now: nil)
   allow(ContentDeleteEventJob).to receive_messages(perform_later: nil, perform_now: nil)
   allow_any_instance_of(Hyrax::Actors::FileSetActor).to receive(:acquire_lock_for).and_yield
+  allow_any_instance_of(AttachImportFilesToWorkJob).to receive(:acquire_lock_for).and_yield
 end
 
 # For system specs

@@ -10,6 +10,7 @@ namespace :heliotrope do
 
     # need to ensure that we are finding Monographs from sub-presses (like gabii)
     all_presses = Press.where(parent: Press.where(subdomain: args.publisher).first).map(&:subdomain).push(args.publisher)
+    all_presses = '("' + all_presses.join('" OR "') + '")'
 
     Pathname(args.monograph_files_dir).children.each do |mono_dir|
       next if !mono_dir.directory? || mono_dir.basename.to_s.start_with?('.')
@@ -19,7 +20,7 @@ namespace :heliotrope do
         next
       end
 
-      docs = ActiveFedora::SolrService.query("+has_model_ssim:Monograph AND +isbn_numeric:#{isbn}", rows: 100_000)
+      docs = ActiveFedora::SolrService.query("+has_model_ssim:Monograph AND +isbn_numeric:#{isbn} AND +press_sim:#{all_presses}", rows: 100_000)
 
       if docs.count > 1 # shouldn't happen
         puts "More than 1 Monograph found using ISBN in #{mono_dir.basename} ... SKIPPING ROW"
