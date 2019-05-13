@@ -6,7 +6,7 @@ RSpec.describe "ShareLinkLogs", type: :request do
   let(:current_user) { User.guest(user_key: 'wolverine@umich.edu') }
 
   describe '#index' do
-    subject { get "/api_requests" }
+    subject { get "/share_link_logs" }
 
     it do
       expect { subject }.not_to raise_error

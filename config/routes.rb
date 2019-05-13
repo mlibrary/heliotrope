@@ -88,6 +88,8 @@ Rails.application.routes.draw do
     end
     resources :aptrust_logs, only: %i[index]
     resources :share_link_logs, only: %i[index]
+    resources :crossref_submission_logs, only: %i[index]
+    get 'crossref_submission_logs/:id/:file', controller: :crossref_submission_logs, action: :show, as: :crossref_submission_log_file
     resources :grants, except: %i[edit update]
     resources :customers, only: %i[index] do
       resources :counter_reports, only: %i[index show edit update], constraints: COUNTER_REPORT_ID_CONSTRAINT
