@@ -108,7 +108,7 @@ namespace :aptrust do
       heads["X-Pharos-API-Key"] = @aptrust['AptrustApiKey']
 
       base_apt_url = @aptrust['AptrustApiUrl']
-      bag_name = "#{record['press']}-#{record['id']}.tar"
+      bag_name = "fulcrum.org.#{record['press']}-#{record['id']}.tar"
 
       updated_after = Time.parse(record['date_uploaded'].to_s) - (60 * 60 * 24)
       updated_after = updated_after.iso8601
