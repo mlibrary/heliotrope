@@ -8,9 +8,10 @@ class EbooksController < CheckpointController
     return redirect_to(hyrax.download_path(params[:id])) unless Sighrax.watermarkable?(@entity) && @press_policy.watermark_download?
     begin
       watermarked = Rails.cache.fetch(cache_key, expires_in: 30.days) do
+        presenter = Sighrax.hyrax_presenter(@entity.parent)
         text = <<~WATERMARK
-          #{@entity.parent.title}
-          Copyright \u00A9 #{@press.name}. All rights reserved.
+          #{presenter.creator_display}, #{presenter.title}
+          #{presenter.date_created.first}. #{presenter.publisher.first}
           Downloaded on behalf of #{request_origin}
         WATERMARK
 
