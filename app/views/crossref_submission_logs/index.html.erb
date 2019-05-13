@@ -1,0 +1,68 @@
+<% size = 10 %>
+<%
+def row_class(status)
+  return "danger" if status == "error"
+  return "success" if status == "success"
+  "default"
+end
+%>
+<div id="maincontent">
+  <div class="row">
+    <div class="col-md-12"><h1>Crossref Submission Log</h1></div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <div class="row">
+        <form name="filter" method="get" action="<%=  %>">
+          <table class="table table-striped table-responsive" summary="Share Links List">
+            <tr>
+              <th></th>
+              <th label for="doi_batch_id_like">DOI batch id</th>
+              <th label for="file_name_like">File Name</th>
+              <th>Initial HTTP Status</th>
+              <th>Initial HTTP Message</th>
+              <th>Submission XML</th>
+              <th label for="status_like">Status</th>
+              <th>Response XML</th>
+              <th label for="created_at_like">Created</th>
+              <th label for="updated_at_like">Updated</th>
+            </tr>
+            <tr>
+              <td><button name="submit" type="submit" value="filter">Filter</button></td>
+              <td><input type="text" name="doi_batch_id_like" value="<%= params[:doi_batch_id_like] %>" size="<%= size %>" aria-label="doi_batch_id_like"></td>
+              <td><input type="text" name="file_name_like" value="<%= params[:file_name_like] %>" size="<%= size %>" aria-label="file_name_like"></td>
+              <td>&nbsp;</td>
+              <td>&nbsp;</td>
+              <td>&nbsp;</td>
+              <td><input type="text" name="status_like" value="<%= params[:status_like] %>" size="<%= size %>" aria-label="status_like"></td>
+              <td>&nbsp;</td>
+              <td><input type="text" name="created_at_like" value="<%= params[:created_at_like] %>" size="<%= size %>" aria-label="created_at_like"></td>
+              <td><input type="text" name="updated_at_like" value="<%= params[:updated_at_like] %>" size"<%= size %>" aria-label="update_at_like"></td>
+            </tr>
+            <% @crossref_submission_logs.each do |log| %>
+              <tr class="<%= row_class(log.status) %>">
+                <td></td>
+                <td><%= log.doi_batch_id %></td>
+                <td><%= log.file_name %></td>
+                <td><%= log.initial_http_status %></td>
+                <td><a href="<%= crossref_submission_log_file_path(log.id, file: "initial_http_message") %>">http msg</a></td>
+                <td><a href="<%= crossref_submission_log_file_path(log.id, file: "submission_xml") %>">submission xml</a></td>
+                <td><%= log.status %></td>
+                <td>
+                  <% if log.response_xml.present? %>
+                    <a href="<%= crossref_submission_log_file_path(log.id, file: "response_xml") %>">response xml</a>
+                  <% end %>
+                </td>
+                <td><%= log.created_at %></td>
+                <td><%= log.updated_at %></td>
+              </tr>
+            <% end %>
+          </table>
+        </form>
+      </div>
+      <div class="row">
+        <%= paginate @crossref_submission_logs %>
+      </div>
+    </div>
+  </div>
+</div>

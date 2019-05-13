@@ -6,7 +6,7 @@ FactoryBot.define do
     initial_http_status { 1 }
     initial_http_message { "MyText" }
     submission_xml { "MyText" }
-    status { "MyString" }
+    status { "success" }
     response_xml { "MyText" }
   end
 end
