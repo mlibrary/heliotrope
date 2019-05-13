@@ -110,7 +110,8 @@ namespace :aptrust do
       base_apt_url = @aptrust['AptrustApiUrl']
       bag_name = "fulcrum.org.#{record['press']}-#{record['id']}.tar"
 
-      updated_after = Time.parse(record['date_uploaded'].to_s) - (60 * 60 * 24)
+      date_uploaded = Time.parse(record['date_uploaded'].to_s)
+      updated_after = date_uploaded - 2.day
       updated_after = updated_after.iso8601
 
       this_url = base_apt_url + "items/?per_page=200&action=ingest&name=#{bag_name}&updated_after=#{updated_after}"
