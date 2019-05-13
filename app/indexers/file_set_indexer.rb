@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class FileSetIndexer < Hyrax::FileSetIndexer
+  attr_reader :monograph
+
   def generate_solr_document
     super.tap do |solr_doc|
       # Removing punctuation so that a title starting with quotes doesn't always come first
@@ -24,11 +26,12 @@ class FileSetIndexer < Hyrax::FileSetIndexer
       # These are apparently not necessarily integers all the time, so index them as symbols
       index_technical_metadata(solr_doc, object.original_file) if object.original_file.present?
 
-      object.in_works.each do |work|
-        index_monograph_metadata(solr_doc, work) if work.is_a?(Monograph)
-      end
+      # Neither we nor Hyrax have FileSets attached to more than one Monograph/Work and we haven't had...
+      # "intermediate" Works (a.k.a. "Sections") in a really long time. So grab the one and only parent *once* here.
+      @monograph ||= object.in_works.first
 
-      index_monograph_position(solr_doc) if object.in_works.present?
+      index_monograph_metadata(solr_doc) if @monograph.present?
+      index_monograph_position(solr_doc) if @monograph.present?
       if object.sort_date.present?
         solr_doc[Solrizer.solr_name('search_year', :sortable)] = object.sort_date[0, 4]
         solr_doc[Solrizer.solr_name('search_year', :facetable)] = object.sort_date[0, 4]
@@ -65,18 +68,14 @@ class FileSetIndexer < Hyrax::FileSetIndexer
   end
 
   # Make sure the asset is aware of its monograph
-  def index_monograph_metadata(solr_doc, work)
-    solr_doc[Solrizer.solr_name('monograph_id', :symbol)] = work.id
+  def index_monograph_metadata(solr_doc)
+    solr_doc[Solrizer.solr_name('monograph_id', :symbol)] = @monograph.id
   end
 
   def index_monograph_position(solr_doc)
-    # try to walk back to get the monograph's id
-    parent = object.in_works.first
     # avoid nil errors here on first pass of reindex_everything if parent not yet indexed
-    return if parent.blank?
-
-    fileset_order = parent.ordered_member_ids
-
+    return if @monograph.blank?
+    fileset_order = @monograph.ordered_member_ids
     solr_doc['monograph_position_isi'] = fileset_order.index(object.id) if fileset_order.present?
   end
 end
