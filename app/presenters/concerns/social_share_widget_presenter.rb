@@ -12,7 +12,6 @@ module SocialShareWidgetPresenter
         <ul class="dropdown-menu">
           <li>#{social_share_link(:twitter)}</li>
           <li>#{social_share_link(:facebook)}</li>
-          <li>#{social_share_link(:google)}</li>
           <li>#{social_share_link(:reddit)}</li>
           <li>#{social_share_link(:mendeley)}</li>
           <li>#{social_share_link(:citeulike)}</li>
@@ -25,14 +24,12 @@ module SocialShareWidgetPresenter
     social_share_widget_template_content.gsub(/(?:\n\r?|\r\n?)/, '').html_safe # rubocop:disable Rails/OutputSafety
   end
 
-  def social_share_link(platform = nil) # rubocop:disable Metrics/CyclomaticComplexity
+  def social_share_link(platform = nil)
     case platform
     when :twitter
       "<a href=\"http://twitter.com/intent/tweet?text=#{url_title}&url=#{citable_link}\" target=\"_blank\">Twitter</a>"
     when :facebook
       "<a href=\"http://www.facebook.com/sharer.php?u=#{citable_link}&t=#{url_title}\" target=\"_blank\">Facebook</a>"
-    when :google
-      "<a href=\"https://plus.google.com/share?url=#{citable_link}\" target=\"_blank\">Google+</a>"
     when :reddit
       "<a href=\"http://www.reddit.com/submit?url=#{citable_link}\" target=\"_blank\">Reddit</a>"
     when :mendeley
