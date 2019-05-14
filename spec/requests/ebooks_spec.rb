@@ -62,8 +62,10 @@ RSpec.describe "PDF EBooks", type: :request do
             )
           end
           let(:parent) { instance_double(Sighrax::Entity, title: 'title') }
+          let(:presenter) { instance_double(Hyrax::MonographPresenter, creator_display: 'creator', title: 'title', date_created: ['created'], publisher: ['publisher']) }
 
           before do
+            allow(Sighrax).to receive(:hyrax_presenter).with(parent).and_return(presenter)
             allow(entity).to receive(:content).and_return(File.read(Rails.root.join(fixture_path, entity.filename)))
           end
 
