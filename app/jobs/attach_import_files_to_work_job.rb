@@ -2,6 +2,8 @@
 
 # Creates FileSets with uploaded files and their attributes and attaches them to the work.
 class AttachImportFilesToWorkJob < ApplicationJob
+  include Hyrax::Lockable
+
   queue_as :attach_files
   attr_reader :cover_noid, :ordered_members
   # @param [ActiveFedora::Base] work - the work object
@@ -108,9 +110,11 @@ class AttachImportFilesToWorkJob < ApplicationJob
 
     # default behavior sets to the first FileSet but it can optionally be assigned in the CSV, which happens here
     def representative_image(monograph, cover_noid)
-      monograph.representative_id = cover_noid
-      monograph.thumbnail_id = cover_noid
-      monograph.save!
+      acquire_lock_for(monograph.id) do
+        monograph.representative_id = cover_noid
+        monograph.thumbnail_id = cover_noid
+        monograph.save!
+      end
     end
 
     def external_resource_label_title(file_set)
