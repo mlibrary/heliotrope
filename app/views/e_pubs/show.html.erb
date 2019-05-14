@@ -411,6 +411,7 @@ webgl = Webgl::Unity.from_directory(UnpackService.root_path_from_noid(webgl_id, 
         }
 
         // 3D model toggler
+        var panel_toggle = cozy.control.widget.toggle({
           region: 'top.toolbar.left',
           template: '<button class="button--sm" id="webgl" data-toggle="button" aria-label="3D Model">3D Model</button>',
           states: [{
