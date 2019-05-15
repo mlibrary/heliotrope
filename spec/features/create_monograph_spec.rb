@@ -18,7 +18,7 @@ describe 'Create a monograph' do
       # Monograph form
       # Basic Metadata
       fill_in 'monograph[title]', with: '#hashtag Test Monograph Title with _MD Italics_ and <em>HTML Italics</em>'
-      select press.name, from: 'Publisher'
+      select press.name, from: I18n.t('press')
       fill_in 'Description', with: 'Blahdy blah description works'
       expect(page).to have_css('input.monograph_subject', count: 1)
       fill_in 'Subject', with: 'red stuff'
@@ -40,7 +40,7 @@ describe 'Create a monograph' do
 
       # Citation Metadata
       # publisher
-      fill_in 'Publisher', with: 'Blah Press, Co.'
+      fill_in I18n.t(:publisher), with: 'Blah Press, Co.'
       # date_created
       fill_in 'Publication Year', with: '2001'
       # location
