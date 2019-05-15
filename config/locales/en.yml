@@ -173,7 +173,7 @@ en:
   original_checksum: "Original Checksum"
   pageviews_html: "<strong>%{count}</strong> views since %{date}"
   permissions_expiration_date: "Permissions Expiration Date"
-  press: "Publisher"
+  press: "Publisher (Fulcrum subdivision)"
   press_catalog:
     banner: "You can access this collection through a library that has purchased it. More information about purchasing is available at <a href=\"https://www.press.umich.edu/librarians\" id=\"banner-librarians-link\">our website</a>. <a href=\"https://www.fulcrum.org/default_login?locale=en\">Try logging in</a> if you believe your library has already purchased this collection. Some titles are <a href=\"https://www.fulcrum.org/michigan?f[open_access_sim][]=yes&locale=en\"> available open access for all to view</a>."
     search:
@@ -181,7 +181,7 @@ en:
         q:
           label: "Search for works within %{press_name}"
           placeholder: "Search works"
-  publisher: "Publisher"
+  publisher: "Publisher (citation value)"
   redirect_to: "Redirect to"
   resource_type: "Resource Type"
   rights_granted: "Rights Granted"
@@ -230,6 +230,7 @@ en:
         open_access: "Open Access?"
         permissions_expiration_date: :"permissions_expiration_date"
         press: :"press"
+        publisher: :"publisher"
         resource_type: :"resource_type"
         rights_granted: :"rights_granted"
         section: :"section"
@@ -258,7 +259,7 @@ en:
         date_created: "The 4-digit publication year used in auto-generated citations."
         description: "A free-text description of the work (markdown allowed)."
         doi: "https://doi.org/ is automatically prepended"
-        hdl: "https://hdl.handle.net/&lthdl&gt;"
+        hdl: "https://hdl.handle.net/ is automatically prepended"
         isbn: "Enter as many ISBN values as you want. Put the format in parentheses if needed, e.g. \"123-123456-1 (e-book)\"."
         language: "The language of the monograph's content."
         location: "The place name used in auto-generated citations."
