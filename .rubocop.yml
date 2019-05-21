@@ -89,6 +89,7 @@ RSpec/DescribeClass:
     - 'spec/features/**/*'
     - 'spec/routing/**/*'
     - 'spec/views/**/*'
+    - 'lib/spec/integrations/**/*'
     - 'testing/spec/**/*'
 
 RSpec/ExampleWording:

@@ -54,7 +54,11 @@ module EPub
       def file_url(href)
         # This works due to a change in CSB
         # https://github.com/mlibrary/cozy-sun-bear/commit/8875fb87669d23363d5bb6bb244f291a13793971
-        "/#{File.dirname(@publication.content_file)}/#{href.gsub('#', '%23')}"
+        # "/#{File.dirname(@publication.content_file)}/#{href.gsub('#', '%23')}"
+        root_array = Pathname(@unmarshaller_rootfile.container.root_path).each_filename.to_a
+        nav_array = Pathname(@unmarshaller_rootfile.content.nav.full_path).each_filename.to_a
+        path_array = nav_array - root_array
+        "/#{File.dirname(File.join(path_array))}/#{href.gsub('#', '%23')}"
       end
 
       def initialize(publication, unmarshaller_rootfile)
