@@ -5,6 +5,8 @@ module EPub
     class Nav
       private_class_method :new
 
+      attr_reader :full_path
+
       # Class Methods
 
       def self.from_content_nav_full_path(content, full_path)

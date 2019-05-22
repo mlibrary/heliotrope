@@ -5,6 +5,8 @@ module EPub
     class Rootfile
       private_class_method :new
 
+      attr_reader :container
+
       # Class Methods
 
       def self.from_container_rootfile_element(container, rootfile_element)
