@@ -5,11 +5,11 @@ require 'rails_helper'
 RSpec.describe CrossrefPollJob, type: :job do
   context "crossref responses" do
     let(:file_name) { 'file1' }
-    let(:submissions) { [create(:crossref_submission_log, file_name: 'file1', status: 'submitted')] }
     let(:fetch) { double('fetch', fetch: response) }
     let(:response) { double('response', body: xml) }
 
     before do
+      create(:crossref_submission_log, file_name: 'file1', status: 'submitted')
       allow(Crossref::CheckSubmission).to receive(:new).with(file_name).and_return(fetch)
     end
 
@@ -35,7 +35,7 @@ RSpec.describe CrossrefPollJob, type: :job do
       end
 
       it "changes the submission status to success" do
-        described_class.perform_now(submissions, 0)
+        described_class.perform_now
         expect(CrossrefSubmissionLog.first.status).to eq 'success'
       end
     end
@@ -62,7 +62,7 @@ RSpec.describe CrossrefPollJob, type: :job do
       end
 
       it "changes the submission status to error" do
-        described_class.perform_now(submissions, 0)
+        described_class.perform_now
         expect(CrossrefSubmissionLog.first.status).to eq 'error'
       end
     end
@@ -78,9 +78,9 @@ RSpec.describe CrossrefPollJob, type: :job do
         XML
       end
 
-      it "will be re-run a number of times and eventually set submission status to adandoned" do
-        described_class.perform_now(submissions, 0)
-        expect(CrossrefSubmissionLog.first.status).to eq 'abandoned'
+      it "does not change submission status" do
+        described_class.perform_now
+        expect(CrossrefSubmissionLog.first.status).to eq 'submitted'
       end
     end
   end
@@ -95,25 +95,8 @@ RSpec.describe CrossrefPollJob, type: :job do
 
     it "does not query crossref" do
       allow(Crossref::CheckSubmission).to receive(:new)
-      described_class.perform_now(submissions, 0)
+      described_class.perform_now
       expect(Crossref::CheckSubmission).not_to have_received(:new)
-    end
-  end
-
-  context "when there are too many tries" do
-    let(:submissions) do
-      [
-        create(:crossref_submission_log, file_name: 'file1', status: 'submitted'),
-        create(:crossref_submission_log, file_name: 'file2', status: 'submitted')
-      ]
-    end
-
-    it "does not query crossref and statuses are set to 'abandoned'" do
-      allow(Crossref::CheckSubmission).to receive(:new)
-      described_class.perform_now(submissions, 0, 5)
-      expect(Crossref::CheckSubmission).not_to have_received(:new)
-      expect(CrossrefSubmissionLog.first.status).to eq 'abandoned'
-      expect(CrossrefSubmissionLog.second.status).to eq 'abandoned'
     end
   end
 end
