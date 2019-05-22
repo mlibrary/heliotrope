@@ -1,5 +1,6 @@
 crossref:
   deposit_url: https://test.crossref.org/servlet/deposit
   check_url:  https://test.crossref.org/servlet/submissionDownload
+  search_url: https://api.crossref.org/works
   login_id: id
   login_passwd: passwd

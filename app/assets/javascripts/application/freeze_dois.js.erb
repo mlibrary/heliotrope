@@ -1,0 +1,26 @@
+$(document).on('turbolinks:load', function() {
+  // If a DOI is registered, we need to disable the DOI input field.
+  // DOIs should never by edited once registered.
+  if (window.location.href.match(/edit/)) {
+    var doi_field = $('#monograph_doi');
+    if (doi_field.length === 0) {
+      doi_field = $('#file_set_doi');
+    }
+    //console.log(doi_field);
+    //console.log(doi_field.val());
+    if (doi_field !== undefined && doi_field.val() !== undefined) {
+      encoded_doi = encodeURIComponent(doi_field.val())
+      var url = "<%=  Crossref::Config.load_config['search_url'] %>" + "/" + encoded_doi;
+      console.log(url);
+      $.get(url)
+        .done(function(data) {
+          // Success means we disable the field
+          console.log("The doi", doi_field.val(), "is registered")
+          doi_field.prop('disabled', true);
+        })
+        .fail(function() {
+          console.log("The doi", doi_field.val(), "is not registered");
+        });
+    }
+  }
+});
