@@ -8,7 +8,7 @@ require 'active_support'
 require 'active_support/time'
 ENV["TZ"] = "US/Eastern"
 
-desc "rake export monographs bags for a given press id"
+desc "rake export monographs bags if they are changed or new"
 namespace :aptrust do
   task :bag_updated_monographs => :environment do |_t, args|
     # Usage:
@@ -126,18 +126,16 @@ namespace :aptrust do
       #   # puts "response.headers: #{response.headers}"
       # end
 
+      parsed = JSON.parse(response.body) unless (response.body.nil? || response.body.empty?)
       apt_key = ''
 
       if response.code != 200
         apt_key = 'bad_aptrust_response_code'
         apt_log(record.id.to_s, 'rake - update_db_aptrust_status', 'DB update', 'warn', "In update_db_aptrust_status we got non-200 response.code (#{response.code}) from aptrust")
-      elsif response.body['results'].blank?
+      elsif parsed['count'].zero?
         apt_key = 'not_found'
-        apt_log(record.id.to_s, 'rake - update_db_aptrust_status', 'DB update', 'warn', "In update_db_aptrust_status we got empty response results from aptrust")
+        apt_log(record.id.to_s, 'rake - update_db_aptrust_status', 'DB update', 'warn', "In update_db_aptrust_status we got a response count of zero from aptrust indicating the bag wasn't found in APTrust.")
       else
-        # Keep parsing and update record
-        parsed = JSON.parse(response.response_body)
-
         # Now we know we have results to work with.
         # We might get back more than one matching aptrust record
         # the following handles that possibility by find the most current one
