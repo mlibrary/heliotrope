@@ -14,6 +14,7 @@ RSpec.describe Crossref::Config do
       it "has the correct fields" do
         expect(subject['deposit_url']).not_to be nil
         expect(subject['check_url']).not_to be nil
+        expect(subject['search_url']).not_to be nil
         expect(subject['login_id']).not_to be nil
         expect(subject['login_passwd']).not_to be nil
       end
