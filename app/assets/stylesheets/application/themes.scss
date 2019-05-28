@@ -301,6 +301,13 @@ $heb-black-80: #342f2e;
     box-shadow: none;
   }
 
+  // search resources on monograph pages
+  button.search-submit {
+    background-color: $heb-grey-4;
+    border-color: $heb-grey-4;
+    color: $heb-brand-color;
+  }
+
   // pagination
 
   .pagination {
@@ -580,6 +587,13 @@ $iu-midnight: #006298;
     .authors, .copyright {
       @include benton-bold;
     }
+
+    button.search-submit {
+      background-color: $iu-accent-color;
+      border-color: $iu-accent-color;
+      color: $iu-brand-color;
+    }
+
   }
 
   // pagination
@@ -872,6 +886,13 @@ $lever-black-80: #342f2e;
     border-radius: 0px;
     -webkit-box-shadow: none;
     box-shadow: none;
+  }
+
+  // search button
+  button.search-submit {
+    background-color: $lever-accent-color;
+    border-color: $lever-accent-color;
+    color: $lever-brand-color;
   }
 
   // pagination
@@ -1541,6 +1562,12 @@ $um-black-80: #342f2e;
     .authors, .copyright {
       @include meta;
     }
+
+    button.search-submit {
+      background-color: $um-accent-color;
+      border-color: $um-accent-color;
+      color: $um-brand-color;
+    }
   }
 
   // pagination
@@ -2185,6 +2212,11 @@ $umn-white: #fff;
     .authors, .copyright {
       @include brandon;
     }
+
+    button.search-submit {
+      background-color: $umn-accent-footer-aqua;
+      border-color: $umn-accent-footer-aqua;
+    }
   }
 
   // pagination
@@ -2401,6 +2433,11 @@ $fulcrum-light-2: #bec4cc;
 
     .authors, .copyright {
       @include freight-sans-semi-bold;
+    }
+
+    button.search-submit {
+      background-color: $nw-purple-60;
+      border-color: $nw-purple-60;
     }
 
     // pagination
@@ -2627,6 +2664,11 @@ $nyu-gray-2: #342f2e;
       color: $nyu-brand-accent;
   }
 
+  button.search-submit {
+    color: $nyu-jumbotron;
+    background-color: $nyu-brand-color;
+    border-color: $nyu-brand-color;
+  }
   // pagination
 
   .pagination {
@@ -2908,6 +2950,12 @@ $psu-gray-1: #3F4550;
 
     .authors, .copyright {
       @include proxima-nova;
+    }
+
+    button.search-submit {
+      background-color: $psu-brand-accent;
+      border-color: $psu-brand-accent;
+      color: $psu-button-foreground;
     }
   }
 
@@ -3276,6 +3324,13 @@ $reki-black-80: #342f2e;
 
   .panel-body {
     background-color: #fafafa;
+  }
+
+  // search resources
+  button.search-submit {
+    background-color: $reki-grey-4;
+    border-color: $reki-grey-4;
+    color: $reki-brand-color;
   }
 
   // sorts on press and monograph pages
