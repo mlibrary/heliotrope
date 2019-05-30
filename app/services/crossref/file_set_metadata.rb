@@ -44,6 +44,7 @@ module Crossref
     def components
       presenters.each_with_index do |presenter, index|
         next if presenter.external_resource?
+        next if monograph_representative?(presenter)
         fragment = Nokogiri::XML.fragment(@component_file)
         fragment.at_css('title').content = presenter.page_title
         fragment.at_css('description').content = presenter.description.first || presenter.caption.first || ""
@@ -88,6 +89,14 @@ module Crossref
 
       def timestamp
         Time.current.strftime("%Y%m%d%H%M%S")
+      end
+
+      def monograph_representative?(presenter)
+        return true if presenter.epub?
+        return true if presenter.mobi?
+        return true if presenter.pdf_ebook?
+        return true if presenter.id == presenter.parent.representative_id
+        false
       end
   end
 end

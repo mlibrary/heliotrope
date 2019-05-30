@@ -15,7 +15,8 @@ RSpec.describe Crossref::FileSetMetadata do
                        isbn_tesim: ["1234567890 (ebook)", "0987654321 (hardcover)"],
                        date_created_tesim: ['9999'],
                        doi_ssim: ['10.9985/blue.999999999'],
-                       ordered_member_ids_ssim: ['111111111', '222222222', '333333333'])
+                       ordered_member_ids_ssim: ['111111111', '222222222', '333333333', '444444444', '555555555'],
+                       hasRelatedMediaFragment_ssim: ['555555555'])
   end
 
   let(:fs1) do
@@ -45,9 +46,28 @@ RSpec.describe Crossref::FileSetMetadata do
                        mime_type_ssi: "image/jpg")
   end
 
+  # will be skipped: no dois for epubs
+  let(:fs4) do
+    ::SolrDocument.new(id: '444444444',
+                       has_model_ssim: ['FileSet'],
+                       monograph_id_ssim: '999999999',
+                       title_tesim: ["EPUB"],
+                       mime_type_ssi: "epub")
+  end
+
+  # will be skipped, no dois for covers
+  let(:fs5) do
+    ::SolrDocument.new(id: '555555555',
+                       has_model_ssim: ['FileSet'],
+                       monograph_id_ssim: '999999999',
+                       title_tesim: ["Cover"],
+                       mime_type_ssi: "image/jpg")
+  end
+
   before do
-    ActiveFedora::SolrService.add([monograph.to_h, fs1.to_h, fs2.to_h, fs3.to_h])
+    ActiveFedora::SolrService.add([monograph.to_h, fs1.to_h, fs2.to_h, fs3.to_h, fs4.to_h, fs5.to_h])
     ActiveFedora::SolrService.commit
+    FeaturedRepresentative.create(monograph_id: '999999999', file_set_id: '444444444', kind: 'epub')
   end
 
   describe "#build" do
@@ -66,6 +86,10 @@ RSpec.describe Crossref::FileSetMetadata do
       expect(subject.at_css('doi_batch_id').content).to eq "#{press.subdomain}-#{monograph.id}-filesets-#{timestamp}"
       expect(subject.at_css('timestamp').content).to eq timestamp
       expect(subject.at_css('sa_component').attribute('parent_doi').value).to eq monograph.doi
+
+      expect(described_class.new('999999999').presenters.length).to eq 5
+      # no DOIs for covers, epubs (or mobi or pdf_ebook)
+      expect(subject.xpath("//component_list/component").length).to eq 3
 
       [fs1, fs2, fs3].each_with_index do |fs, i|
         expect(subject.xpath("//component_list/component")[i].at_css('title').content).to eq fs.title.first
