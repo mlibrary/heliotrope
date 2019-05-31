@@ -266,6 +266,149 @@ footer.page-footer {
 }
 
 // partner-with-us
+.tagline {
+  margin-top: 2em;
+
+  h1 {
+    margin-bottom: .1em;
+  }
+  p {
+    margin-top: 0;
+    margin-bottom: 2.3em;
+    font-size: 1.25em;
+  }
+
+  a.btn-large {
+    height: auto;
+  }
+}
+.partnership {
+  width: 90%;
+  margin: 4em auto;
+}
+.partnership-table {
+  margin-top: 60px;
+  width: 100%;
+  margin: 30px 0;
+  border-spacing: 0;
+  border-collapse: collapse;
+  border: 1px solid $brand-color;
+
+  caption {
+    position: static;
+  }
+  
+  .visuallyhidden {
+    border: 0;
+    clip: rect(0 0 0 0);
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    padding: 0;
+    position: absolute;
+    width: 1px;
+    white-space: nowrap;
+  }
+  
+  thead th {
+    padding-left: 10px;
+    padding-right: 10px;
+    vertical-align: top;
+    padding-top: 40px;
+    padding-bottom: 40px;
+  }
+  
+  th, td {
+    padding: 10px 15px;
+    border: 1px solid $light-2;
+  }
+  
+  tr:hover, td:hover {
+    background-color: $light-1;
+  }
+  
+  th {
+    background-color: $light-1;
+    font-weight: 400;
+  }
+  
+  .heading--1 {
+     -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    display: block;
+    margin-bottom: 0.625em;
+    font-size: 1.1em;
+    line-height: 1.222;
+    font-weight: 700;
+    color: $brand-color;
+    @include crete;
+  }
+
+  thead p:not(.heading--1) {
+    font-size: .75em;
+    line-height: 1rem;
+  }
+  
+  .heading--2 {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    display: block;
+    color: $brand-color;
+    font-size: 0.875em;
+    line-height: 1.222;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  
+  p:not(.heading--1) {
+    font-size: 0.8em;
+  }
+  
+  p {
+    margin: 0;
+  }
+  
+  th[scope="row"] {
+    background-color: transparent;
+    font-size: .9em;
+  }
+  
+ .pricing-table__feature-value i {
+   color: $brand-color;
+ }
+
+ .example p {
+   font-size: .75em;
+   line-height: 1.05rem;
+ }
+
+  tbody th {
+    width: 33%;
+    text-align: left;
+  }
+  tbody td {
+    width: 16.666666667%;
+    text-align: center;
+  }
+}
+
+.monthly-price {
+  display: flex;
+  justify-content: center;
+  align-items: baseline;
+}
+
+.feature-name, dt {
+  color: $dark-2;
+}
+
+.feature-label__description {
+  font-size: 0.85em;
+  color: #637381;
+  margin-left: 0;
+}
+
 .model {
   border: solid 4px $brand-color;
   margin: 2em 1em;
