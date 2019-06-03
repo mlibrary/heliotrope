@@ -4,18 +4,17 @@ require 'rails_helper'
 
 RSpec.describe EPubIntervalPresenter do
   describe 'attributes' do
-    subject { presenter }
+    subject(:presenter) { described_class.new(interval) }
 
-    let(:presenter) { described_class.new(interval) }
-    let(:interval) { double('interval', title: title, level: level, cfi: cfi, downloadable?: downloadable) }
+    let(:interval) { instance_double(EPub::Interval, 'interval', title: title, level: level, cfi: cfi, downloadable?: downloadable) }
     let(:title) { double('title') }
     let(:level) { double('level') }
     let(:cfi) { double('cfi') }
     let(:downloadable) { double('downloadable') }
 
-    it { expect(subject.title).to be title }
-    it { expect(subject.level).to be level }
-    it { expect(subject.cfi).to be cfi }
-    it { expect(subject.downloadable?).to be downloadable }
+    it '#title' do; expect(presenter.title).to be title; end
+    it '#level' do; expect(presenter.level).to be level; end
+    it '#cfi' do; expect(presenter.cfi).to be cfi; end
+    it '#downloadable?' do; expect(presenter.downloadable?).to be downloadable; end
   end
 end

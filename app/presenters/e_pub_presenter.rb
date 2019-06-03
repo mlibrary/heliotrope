@@ -5,8 +5,16 @@ class EPubPresenter < ApplicationPresenter
     @epub = epub
   end
 
+  def id
+    @epub.id
+  end
+
   def multi_rendition?
     @epub.multi_rendition?
+  end
+
+  def intervals?
+    @epub.rendition.intervals.count.positive?
   end
 
   def intervals
