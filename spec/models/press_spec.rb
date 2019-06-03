@@ -68,6 +68,28 @@ RSpec.describe Press, type: :model do
     end
   end
 
+  describe "#create_dois?" do
+    subject { press.create_dois? }
+
+    context "is set to true" do
+      let(:press) { build(:press, doi_creation: true) }
+
+      it { expect(subject).to be true }
+    end
+
+    context "is set to false" do
+      let(:press) { build(:press, doi_creation: false) }
+
+      it { expect(subject).to be false }
+    end
+
+    context "defaults to false" do
+      let(:press) { build(:press) }
+
+      it { expect(subject).to be false }
+    end
+  end
+
   describe "roles" do
     subject { press.roles }
 

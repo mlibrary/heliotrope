@@ -3,8 +3,6 @@
 require 'rails_helper'
 
 RSpec.describe Crossref::FileSetMetadata do
-  let(:press) { create(:press, subdomain: "blue", name: "The Blue Press") }
-
   let(:monograph) do
     ::SolrDocument.new(id: '999999999',
                        has_model_ssim: ['Monograph'],
@@ -76,9 +74,20 @@ RSpec.describe Crossref::FileSetMetadata do
     FeaturedRepresentative.create(monograph_id: '999999999', file_set_id: '444444444', kind: 'epub')
   end
 
+  describe "#new" do
+    context "when the Press cannot register DOIs" do
+      let(:press) { create(:press, subdomain: "blue", name: "The Blue Press") }
+
+      it "raises an error" do
+        expect { described_class.new('999999999') }.to raise_error("Press blue can not make automatic DOIs")
+      end
+    end
+  end
+
   describe "#build" do
     subject { described_class.new('999999999').build }
 
+    let(:press) { create(:press, subdomain: "blue", name: "The Blue Press", doi_creation: true) }
     let(:timestamp) { "20190419111616" }
 
     before do

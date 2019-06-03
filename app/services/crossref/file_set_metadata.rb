@@ -7,6 +7,7 @@ module Crossref
     def initialize(work_noid)
       @work = Sighrax.hyrax_presenter(Sighrax.factory(work_noid))
       raise "Work #{work.id} does not have a DOI" if @work.doi.blank?
+      raise "Press #{work.subdomain} can not make automatic DOIs" unless Press.where(subdomain: @work.subdomain).first&.create_dois?
 
       @document = Nokogiri::XML(File.read(Rails.root.join("config", "crossref", "file_set_metadata_template.xml")))
       @component_file = File.read(Rails.root.join("config", "crossref", "component_template.xml"))
