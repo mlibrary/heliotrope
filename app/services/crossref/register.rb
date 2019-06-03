@@ -36,10 +36,6 @@ module Crossref
       submission.save!
       tmp.unlink
 
-      if submission.status == "submitted"
-        CrossrefPollJob.perform_later(CrossrefSubmissionLog.where(status: "submitted").to_a)
-      end
-
       response
     end
 

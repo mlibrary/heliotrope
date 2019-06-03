@@ -47,12 +47,20 @@ module Crossref
         next if monograph_representative?(presenter)
         fragment = Nokogiri::XML.fragment(@component_file)
         fragment.at_css('title').content = presenter.page_title
-        fragment.at_css('description').content = presenter.description.first || presenter.caption.first || ""
+        fragment.at_css('description').content = description(presenter)
         fragment.at_css('format').attribute('mime_type').value = presenter.mime_type
         fragment.at_css('doi').content = doi(presenter, index)
         fragment.at_css('resource').content = presenter.handle_url
         document.at_css('component_list') << fragment
       end
+    end
+
+    # See HELIO-2739
+    def description(presenter)
+      desc = presenter.description.first || presenter.caption.first || ""
+      desc += " #{presenter.creator.join(', ')}." if presenter.creator.present?
+      desc += " #{presenter.contributor.join(', ')}." if presenter.contributor.present?
+      desc
     end
 
     def doi(presenter, index)

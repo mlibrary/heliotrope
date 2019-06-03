@@ -24,6 +24,8 @@ RSpec.describe Crossref::FileSetMetadata do
                        has_model_ssim: ['FileSet'],
                        monograph_id_ssim: '999999999',
                        title_tesim: ["FS 1"],
+                       creator_tesim: ["Last, First"],
+                       contributor_tesim: ["First Last", "A Place", "Actor, An (actor)"],
                        description_tesim: ["FS 1 Description"],
                        mime_type_ssi: "image/jpg")
   end
@@ -33,6 +35,8 @@ RSpec.describe Crossref::FileSetMetadata do
                        has_model_ssim: ['FileSet'],
                        monograph_id_ssim: '999999999',
                        title_tesim: ["FS 2"],
+                       creator_tesim: ["Last, First"],
+                       contributor_tesim: ["First Last", "A Place", "Actor, An (actor)"],
                        description_tesim: ["FS 2 Description"],
                        mime_type_ssi: "image/jpg")
   end
@@ -42,6 +46,8 @@ RSpec.describe Crossref::FileSetMetadata do
                        has_model_ssim: ['FileSet'],
                        monograph_id_ssim: '999999999',
                        title_tesim: ["FS 3"],
+                       creator_tesim: ["Last, First"],
+                       contributor_tesim: ["First Last", "A Place", "Actor, An (actor)"],
                        caption_tesim: ["FS 3 Caption"],
                        mime_type_ssi: "image/jpg")
   end
@@ -92,11 +98,14 @@ RSpec.describe Crossref::FileSetMetadata do
       expect(subject.xpath("//component_list/component").length).to eq 3
 
       [fs1, fs2, fs3].each_with_index do |fs, i|
+        # See HELIO-2739 for names in description
+        names = "Last, First. First Last, A Place, Actor, An (actor)."
+
         expect(subject.xpath("//component_list/component")[i].at_css('title').content).to eq fs.title.first
         if i == 2
-          expect(subject.xpath("//component_list/component")[i].at_css('description').content).to eq fs.caption.first
+          expect(subject.xpath("//component_list/component")[i].at_css('description').content).to eq fs.caption.first + " #{names}"
         else
-          expect(subject.xpath("//component_list/component")[i].at_css('description').content).to eq fs.description.first
+          expect(subject.xpath("//component_list/component")[i].at_css('description').content).to eq fs.description.first + " #{names}"
         end
         expect(subject.xpath("//component_list/component")[i].at_css('format').attribute('mime_type').value).to eq fs.mime_type
         expect(subject.xpath("//component_list/component")[i].at_css('doi').content).to eq "#{monograph.doi}.cmp.#{i + 1}"
