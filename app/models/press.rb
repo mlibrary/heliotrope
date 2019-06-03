@@ -22,6 +22,11 @@ class Press < ApplicationRecord
     false
   end
 
+  def create_dois?
+    return true if doi_creation == true
+    false
+  end
+
   def to_param
     subdomain
   end
