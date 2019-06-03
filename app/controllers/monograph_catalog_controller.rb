@@ -73,6 +73,7 @@ class MonographCatalogController < ::CatalogController
       monograph_id = params[:monograph_id] || params[:id]
       raise CanCan::AccessDenied unless current_ability&.can?(:read, monograph_id)
       @monograph_presenter = Hyrax::PresenterFactory.build_for(ids: [monograph_id], presenter_class: Hyrax::MonographPresenter, presenter_args: current_ability).first
+      @monograph_policy = MonographPolicy.new(current_actor, Sighrax.factory(monograph_id))
       @press_policy = PressPolicy.new(current_actor, Press.find_by(subdomain: @monograph_presenter.subdomain))
       @ebook_download_presenter = EBookDownloadPresenter.new(@monograph_presenter, current_ability, current_actor)
     end

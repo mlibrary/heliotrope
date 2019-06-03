@@ -5,7 +5,7 @@ require 'rails_helper'
 RSpec.describe MinimalEpubJob, type: :job do
   describe "perform" do
     context "if the epub is not first unpacked" do
-      let(:epub) { create(:file_set, content: File.open(File.join(fixture_path, 'fake_epub_muilti_rendition.epub'))) }
+      let(:epub) { create(:file_set, content: File.open(File.join(fixture_path, 'fake_epub_multi_rendition.epub'))) }
       let(:root_path) { UnpackService.root_path_from_noid(epub.id, 'epub') }
       let(:sm_epub) { File.join(root_path, epub.id + ".sm.epub") }
 
@@ -16,7 +16,7 @@ RSpec.describe MinimalEpubJob, type: :job do
     end
 
     context "if the epub has been unpacked" do
-      let(:epub) { create(:file_set, content: File.open(File.join(fixture_path, 'fake_epub_muilti_rendition.epub'))) }
+      let(:epub) { create(:file_set, content: File.open(File.join(fixture_path, 'fake_epub_multi_rendition.epub'))) }
       let(:root_path) { UnpackService.root_path_from_noid(epub.id, 'epub') }
       let(:sm_epub) { File.join(root_path, epub.id + '.sm.epub') }
       let(:sm_dir) { File.join(root_path, epub.id + '.sm') }

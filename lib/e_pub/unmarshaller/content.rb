@@ -24,7 +24,7 @@ module EPub
         idref ||= base_href_idref[href]
         idref ||= up_one_href_idref[href]
         index = idref_index[idref]
-        return [idref, index] if idref.present? && index.positive?
+        return [idref, index] if idref.present? && index.present? && index.positive?
         ['', 0]
       end
 
