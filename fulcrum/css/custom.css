@@ -702,6 +702,110 @@ footer.page-footer {
 .footer-menu {
   margin-top: 2.4rem; }
 
+.tagline {
+  margin-top: 2em; }
+  .tagline h1 {
+    margin-bottom: .1em; }
+  .tagline p {
+    margin-top: 0;
+    margin-bottom: 2.3em;
+    font-size: 1.25em; }
+  .tagline a.btn-large {
+    height: auto; }
+
+.partnership {
+  width: 90%;
+  margin: 4em auto; }
+
+.partnership-table {
+  margin-top: 60px;
+  width: 100%;
+  margin: 30px 0;
+  border-spacing: 0;
+  border-collapse: collapse;
+  border: 1px solid #002C63; }
+  .partnership-table caption {
+    position: static; }
+  .partnership-table .visuallyhidden {
+    border: 0;
+    clip: rect(0 0 0 0);
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    padding: 0;
+    position: absolute;
+    width: 1px;
+    white-space: nowrap; }
+  .partnership-table thead th {
+    padding-left: 10px;
+    padding-right: 10px;
+    vertical-align: top;
+    padding-top: 40px;
+    padding-bottom: 40px; }
+  .partnership-table th, .partnership-table td {
+    padding: 10px 15px;
+    border: 1px solid #BEC4CC; }
+  .partnership-table tr:hover, .partnership-table td:hover {
+    background-color: #E9EEF5; }
+  .partnership-table th {
+    background-color: #E9EEF5;
+    font-weight: 400; }
+  .partnership-table .heading--1 {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    display: block;
+    margin-bottom: 0.625em;
+    font-size: 1.1em;
+    line-height: 1.222;
+    font-weight: 700;
+    color: #002C63;
+    font-family: "Crete Round", Merriweather, georgia, serif;
+    font-weight: 400; }
+  .partnership-table thead p:not(.heading--1) {
+    font-size: .75em;
+    line-height: 1rem; }
+  .partnership-table .heading--2 {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    display: block;
+    color: #002C63;
+    font-size: 0.875em;
+    line-height: 1.222;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em; }
+  .partnership-table p:not(.heading--1) {
+    font-size: 0.8em; }
+  .partnership-table p {
+    margin: 0; }
+  .partnership-table th[scope="row"] {
+    background-color: transparent;
+    font-size: .9em; }
+  .partnership-table .pricing-table__feature-value i {
+    color: #002C63; }
+  .partnership-table .example p {
+    font-size: .75em;
+    line-height: 1.05rem; }
+  .partnership-table tbody th {
+    width: 33%;
+    text-align: left; }
+  .partnership-table tbody td {
+    width: 16.666666667%;
+    text-align: center; }
+
+.monthly-price {
+  display: flex;
+  justify-content: center;
+  align-items: baseline; }
+
+.feature-name, dt {
+  color: #31343B; }
+
+.feature-label__description {
+  font-size: 0.85em;
+  color: #637381;
+  margin-left: 0; }
+
 .model {
   border: solid 4px #002C63;
   margin: 2em 1em; }
