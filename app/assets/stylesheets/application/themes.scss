@@ -3467,3 +3467,356 @@ $reki-black-80: #342f2e;
   }
 
 }
+///////////////////////////////////////////////
+//
+// University of Sussex Library
+//
+///////////////////////////////////////////////
+// colors
+$sussex-brand-color: #dc582a;
+$sussex-accent-color: #00afaa;
+$sussex-link: #d3273e;
+$sussex-accent-link: #df465a; 
+$sussex-blue: #1e428a;
+$sussex-green: #013035;
+$sussex-grey-1: #d6d2c4;
+$sussex-grey-2: #94a596;
+$sussex-grey-3: #f4f4f4;
+$sussex-white: #fff;
+$sussex-black-80: #342f2e;
+
+// typography
+@mixin franklin {
+  font-family: franklin-gothic-urw, arial, 'helvetica neue', sans-serif;
+}
+
+.sussex {
+
+  // typography
+  @include franklin;
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5 {
+    font-weight: 700;
+  }
+
+  // links
+  a {
+    color: $sussex-link;
+  }
+
+  a:hover,
+  a:active {
+    color: $sussex-accent-link;
+  }
+
+  // buttons
+
+  .btn-default {
+    @include button-background-color($sussex-white);
+    @include button-font-color($sussex-link);
+    border-color: $sussex-link;
+  }
+
+
+  .btn-default:hover,
+  .btn-default:active {
+    @include button-hover-background-color($sussex-link);
+    @include button-hover-font-color($sussex-white);
+  }
+
+  // navigation menu
+  .navbar-default .navbar-nav > .open > a,
+  .navbar-default .navbar-nav > .open > a:hover,
+  .navbar-default .navbar-nav > .open > a:focus {
+    background-color: $sussex-grey-3;
+  }
+
+  #brand-bar {
+    background-color: $sussex-white;
+    border-bottom: 2px solid $sussex-accent-color;
+
+    .navbar-brand {
+      color: $sussex-brand-color;
+      font-weight: 400;
+      text-transform: uppercase;
+      letter-spacing: 1.75px;
+    }
+
+    .navbar-nav {
+      a#add-content,
+      a.login,
+      a.user-display-name,
+      a.language-dropdown {
+          color: $sussex-link;
+      }
+
+      .open > a,
+      .open > a:focus,
+      .open > a:hover {
+        background-color: $sussex-grey-3;
+      }
+    }
+
+    button.search-submit {
+      background-color: $sussex-link;
+      border-color: $sussex-link;
+      color: $sussex-white;
+    }
+
+  }
+
+  // press catalog
+
+  // jumbotron
+  .jumbotron {
+    background-color: $sussex-grey-3;
+    font-weight: 400;
+    padding-top: 1.5em;
+    padding-bottom: 1em;
+
+    p {
+      font-size: 16px;
+      margin-bottom: 0;
+    }
+
+    .container {
+      margin-top: 0;
+    }
+
+    .logo {
+
+      img {
+        width: 115px;
+        margin-right: 3em;
+      }
+
+    }
+
+  }
+
+  .press {
+    .results-container {
+
+      .documentHeader {
+        h3 {
+          font-weight: 600;
+        }
+        a {
+          color: #333;
+        }
+      }
+    }
+  }
+
+  //filters on press and monograph pages
+  .col-sm-3.facets-container,
+  #facet-panel-collapse {
+    padding-left: 0px;
+  }
+
+  .panel-group {
+    padding-left: 0px;
+  }
+
+  .panel-group .panel {
+    border-radius: 0px;
+  }
+
+  .panel-heading {
+    padding-top: 15px;
+  }
+
+  .panel-group .panel + .panel {
+    margin-top: 0px;
+  }
+
+  h3.panel-title a, a.more_facets_link {
+    color: #333;
+  }
+
+  .panel-heading.collapse-toggle .panel-title::after {
+    color: #333;
+  }
+
+  .panel-body {
+    background-color: #fafafa;
+  }
+
+  .search-form.panel-body {
+    background-color: #fff;
+  }
+
+  // sorts on press and monograph pages
+  #sort-dropdown .dropdown-toggle,
+  #per_page-dropdown .dropdown-toggle {
+    color: $sussex-link;
+  }
+
+  #sort-dropdown .dropdown-toggle:hover,
+  #per_page-dropdown .dropdown-toggle:hover,
+  #sort-dropdown .dropdown-toggle:active,
+  #per_page-dropdown .dropdown-toggle:active {
+    color: $sussex-white;
+
+    .caret {
+      color: $sussex-white;
+    }
+
+  }
+
+  // search resources
+  button.search-submit {
+    background-color: $sussex-link;
+    border-color: $sussex-link;
+    color: $sussex-white;
+  }
+  
+  .constraints-container {
+    padding: 10px 20px;
+    border-radius: 0px;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+  }
+
+
+  // pagination
+
+  .pagination {
+     li a, li span {
+
+       background-color: $sussex-link;
+       border-color: $sussex-link;
+       color: $sussex-white;
+     }
+
+     li>a:hover,
+     li>a:focus,
+     li>span:hover,
+     li>span:focus {
+       background-color: $sussex-white;
+       border-color: $sussex-white;
+       color: $sussex-link;
+     }
+
+
+     .active>a,
+     .active>a:hover,
+     .active>a:focus,
+     .active>span,
+     .active>span:hover,
+     .active>span:focus {
+       background-color: $sussex-white;
+       border-color: $sussex-white;
+       color: $sussex-link;
+     }
+
+     .disabled>span,
+     .disabled>span:hover,
+     .disabled>span:focus,
+     .disabled>a,
+     .disabled>a:hover,
+     .disabled>a:focus {
+      background-color: $sussex-white;
+      border-color: $sussex-white;
+      color: $sussex-link;
+     }
+  }
+
+  //footer
+  footer {
+    a,
+    a:hover,
+    a:active {
+      color: $sussex-white;
+    }
+    .press-block-a,
+    .press-block-b {
+      background-color:  $sussex-grey-3;
+      font-weight: 400;
+      border-top: 2px solid $sussex-accent-color;
+
+      a,
+      a:hover,
+      a:active {
+        display:none;
+      }
+
+      img {
+        width: 75px;
+      }
+
+    }
+    .press-block-c {
+      background-color: $sussex-accent-color;
+      color: $sussex-white;
+      text-transform: uppercase;
+      letter-spacing: 1.75px;
+
+      img {
+        width: auto !important;
+        margin-right: 1em;
+        height: 25px;
+      }
+    }
+    .platform {
+       background-color: $sussex-black-80;
+       border-top: 2px solid $sussex-accent-color;
+    }
+  }
+
+  // EPUB Reader
+  #reader {
+
+    .button {
+      @include epub-button-background-color($sussex-link,$sussex-accent-link,$sussex-white);
+    }
+
+    .button--lg {
+      @include epub-button-background-color($sussex-link,$sussex-accent-link,$sussex-white);
+    }
+
+    .button--sm {
+      @include epub-button-background-color($sussex-link,$sussex-accent-link,$sussex-white);
+    }
+
+    i[class^='icon-chevron-'] {
+      @include epub-prev-next-color($sussex-grey-1);
+      transition: 0.2s ease-in;
+    }
+
+    i[class^='icon-chevron-']:hover {
+      @include epub-hover-prev-next-color($sussex-brand-color);
+      transition: 0.2s ease-in;
+    }
+
+    .cozy-control .logo {
+      height: 47px;
+
+      img {
+        height: 47px;
+      }
+    }
+  }
+
+}
+
+@media(max-width: 768px) {
+  .sussex .monograph .message {
+    padding: 1.5em;
+
+    .wrapper {
+      width: auto;
+    }
+    .text {
+      width: 70%;
+    }
+    .dismiss {
+      width: 20%;
+      padding-left: 10%;
+    }
+  }
+}
