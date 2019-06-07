@@ -8,7 +8,7 @@ $(document).on('turbolinks:load', function() {
     }
     //console.log(doi_field);
     //console.log(doi_field.val());
-    if (doi_field !== undefined && doi_field.val() !== undefined) {
+    if (doi_field !== undefined && doi_field.val() !== undefined && doi_field.val() !== "") {
       encoded_doi = encodeURIComponent(doi_field.val())
       var url = "<%=  Crossref::Config.load_config['search_url'] %>" + "/" + encoded_doi;
       console.log(url);
