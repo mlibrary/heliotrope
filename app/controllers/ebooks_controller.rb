@@ -49,7 +49,7 @@ class EbooksController < CheckpointController
     end
 
     def watermark(text)
-      size = 9
+      size = 7
       height = (text.lines.count + 1) * size
       width = 0
       text.lines.each do |line|
@@ -59,7 +59,7 @@ class EbooksController < CheckpointController
       pdf = Prawn::Document.new do
         Prawn::Font::AFM.hide_m17n_warning = true
         font('Times-Roman', size: size) do
-          bounding_box([0, height], width: width, height: height) do
+          bounding_box([-20, 0], width: width, height: height) do
             transparent(0.5) do
               fill_color "ffffff"
               stroke_color "ffffff"
