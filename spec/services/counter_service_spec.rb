@@ -7,12 +7,26 @@ RSpec.describe CounterService do
   # Fun time reading is here: https://www.projectcounter.org
   # See also HELIO-1376
   let(:controller) { Hyrax::FileSetsController.new }
-  let(:presenter) do
-    Hyrax::FileSetPresenter.new(SolrDocument.new(id: 'id',
-                                                 has_model_ssim: ['FileSet'],
-                                                 permissions_expiration_date_ssim: [],
-                                                 visibility_ssi: 'open',
-                                                 read_access_group_ssim: ["public"]), nil)
+  let(:fs_doc) do
+    SolrDocument.new(id: 'id',
+                     has_model_ssim: ['FileSet'],
+                     permissions_expiration_date_ssim: [],
+                     visibility_ssi: 'open',
+                     read_access_group_ssim: ["public"],
+                     monograph_id_ssim: 'mono_id')
+  end
+  let(:mono_doc) do
+    SolrDocument.new(id: 'mono_id',
+                     has_model_ssim: ['Monograph'],
+                     visibility_ssi: 'open',
+                     read_access_group_ssim: ["public"])
+  end
+  let(:presenter) { Hyrax::FileSetPresenter.new(fs_doc, nil) }
+  let(:monograph) { Hyrax::MonographPresenter.new(mono_doc, nil) }
+
+  before do
+    ActiveFedora::SolrService.add([mono_doc.to_h, fs_doc.to_h])
+    ActiveFedora::SolrService.commit
   end
 
   describe '#from' do
@@ -98,11 +112,10 @@ RSpec.describe CounterService do
     context "with a restricted epub" do
       before do
         allow(HandleService).to receive(:path).and_return(true)
-        allow(Greensub::Component).to receive(:find_by).and_return(true)
+        allow(Greensub::Component).to receive(:find_by).with(noid: monograph.id).and_return(true)
       end
 
       it "is 'Controlled'" do
-        # Right now, only epubs are "restricted" via Greensub::Component/Product
         expect(described_class.from(controller, presenter).access_type).to eq 'Controlled'
       end
     end
@@ -110,7 +123,7 @@ RSpec.describe CounterService do
     context "with an unrestricted epub" do
       before do
         allow(HandleService).to receive(:path).and_return(true)
-        allow(Greensub::Component).to receive(:find_by).and_return(false)
+        allow(Greensub::Component).to receive(:find_by).with(noid: monograph.id).and_return(false)
       end
 
       it "is OA_Gold" do
@@ -121,7 +134,7 @@ RSpec.describe CounterService do
     context "with an asset with no permissions_expiration_date" do
       before do
         allow(HandleService).to receive(:path).and_return(true)
-        allow(Greensub::Component).to receive(:find_by).and_return(false)
+        allow(Greensub::Component).to receive(:find_by).with(noid: monograph.id).and_return(false)
       end
 
       it "is OA_Gold" do
@@ -132,7 +145,7 @@ RSpec.describe CounterService do
     context "with an asset with a permissions_expiration_date" do
       before do
         allow(HandleService).to receive(:path).and_return(true)
-        allow(Greensub::Component).to receive(:find_by).and_return(false)
+        allow(Greensub::Component).to receive(:find_by).with(noid: monograph.id).and_return(false)
         allow(presenter).to receive(:permissions_expiration_date).and_return("2020-01-27")
       end
 
@@ -147,7 +160,7 @@ RSpec.describe CounterService do
       let(:request) { double("request") }
       let(:now) { double("now") }
       let(:press) { create(:press) }
-      let(:monograph) { double("monograph", subdomain: press.subdomain) }
+      let(:monograph) { double("monograph", id: monograph_id, subdomain: press.subdomain) }
       let(:monograph_id) { 'mono12345' }
 
       before do
@@ -158,7 +171,7 @@ RSpec.describe CounterService do
         allow(now).to receive(:strftime).with('%Y-%m-%d').and_return("2020-10-17")
         allow(now).to receive(:hour).and_return('13')
         allow(HandleService).to receive(:path).and_return(true)
-        allow(Greensub::Component).to receive(:find_by).and_return(false)
+        allow(Greensub::Component).to receive(:find_by).with(noid: monograph_id).and_return(false)
       end
 
       after { CounterReport.destroy_all }
@@ -272,16 +285,31 @@ RSpec.describe CounterService do
         allow(controller).to receive(:current_institutions).and_return([Greensub::Institution.new(identifier: 1, name: "a")])
       end
 
-      it "adds a Monograph COUNTER stat row" do
-        expect { described_class.from(controller, presenter).count(access_type: 'Controlled') }
-          .to change(CounterReport, :count)
-          .by(1)
-        expect(CounterReport.first.noid).to eq presenter.id
-        expect(CounterReport.first.parent_noid).to eq presenter.id
-        expect(CounterReport.first.model).to eq 'Monograph'
-        expect(CounterReport.first.investigation).to eq 1
-        expect(CounterReport.first.request).to be_nil
-        expect(CounterReport.first.access_type).to eq 'Controlled'
+      context "if restricted" do
+        before { allow(Greensub::Component).to receive(:find_by).with(noid: presenter.id).and_return(true) }
+
+        it "adds a Controlled Monograph COUNTER stat row" do
+          expect { described_class.from(controller, presenter).count }
+            .to change(CounterReport, :count)
+            .by(1)
+          expect(CounterReport.first.noid).to eq presenter.id
+          expect(CounterReport.first.parent_noid).to eq presenter.id
+          expect(CounterReport.first.model).to eq 'Monograph'
+          expect(CounterReport.first.investigation).to eq 1
+          expect(CounterReport.first.request).to be_nil
+          expect(CounterReport.first.access_type).to eq 'Controlled'
+        end
+      end
+
+      context "if not restricted" do
+        before { allow(Greensub::Component).to receive(:find_by).with(noid: presenter.id).and_return(false) }
+
+        it "adds a OA_Gold Monograph COUNTER stat row" do
+          expect { described_class.from(controller, presenter).count }
+            .to change(CounterReport, :count)
+            .by(1)
+          expect(CounterReport.first.access_type).to eq 'OA_Gold'
+        end
       end
     end
   end
