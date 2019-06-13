@@ -24,7 +24,7 @@ module Import
       end
     end
 
-    def data_for_asset(row_num, row, file_attrs, errors)
+    def data_for_asset(row_num, row, file_attrs, errors) # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
       md = Redcarpet::Markdown.new(Redcarpet::Render::StripDown, space_after_headers: true)
       missing_fields_errors, controlled_vocab_errors, date_errors = Array.new(3) { [] }
 
@@ -48,7 +48,8 @@ module Import
             next if field_values.blank?
           end
           file_attrs[field[:metadata_name]] = return_scalar_or_multivalued(field_values, is_multivalued)
-        elsif field[:required] == true
+        # a cover or FeaturedRepresentative FileSet missing metadata is normal, so don't bother the user in those cases
+        elsif field[:required] == true && row[field['Representative Kind']].blank?
           missing_fields_errors << field[:field_name]
         end
       end
