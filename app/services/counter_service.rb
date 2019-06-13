@@ -35,14 +35,13 @@ class CounterService
       when 'FileSet'
         cr.parent_noid = @presenter&.monograph_id
         cr.press = Press.where(subdomain: @presenter.monograph.subdomain).first&.id
-        cr.access_type = access_type
       when 'Monograph'
         # A Monograph's parent_noid is itself to make some kinds of reporting easier
         cr.parent_noid = @presenter.id
         cr.press = Press.where(subdomain: @presenter.subdomain).first&.id
-        cr.access_type = opts[:access_type]
       end
 
+      cr.access_type = access_type
       cr.investigation = 1
       cr.section = opts[:section]           if opts[:section]
       cr.section_type = opts[:section_type] if opts[:section_type]
@@ -64,11 +63,18 @@ class CounterService
   def access_type
     # COUNTER v5 section 3.5.3 seems to indicate that we need this
     # for epubs as well as multimedia (TR and IR reports).
-    # For epubs, if they are restricted
-    if Greensub::Component.find_by(noid: @presenter.id)
+    # Currently, in Checkpoint, we are restricting at the Monograph level,
+    # not the FileSet level. So we want to always use the Monograph to determine
+    # access_type.
+    noid = if @presenter.is_a? Hyrax::MonographPresenter
+             @presenter.id
+           else
+             @presenter.parent.id
+           end
+    if Greensub::Component.find_by(noid: noid)
       "Controlled"
-    # For assets if they have a permissions_expiration_date at any time, past of present
-    elsif @presenter&.permissions_expiration_date.present?
+      # For assets if they have a permissions_expiration_date at any time, past or present
+    elsif @presenter.is_a?(Hyrax::FileSetPresenter) && @presenter&.permissions_expiration_date.present?
       "Controlled"
     else
       "OA_Gold"

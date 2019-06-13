@@ -80,14 +80,7 @@ class MonographCatalogController < ::CatalogController
 
     def add_counter_stat
       # HELIO-2292
-      epub = FeaturedRepresentative.where(monograph_id: @monograph_presenter.id, kind: 'epub').first
-      return if epub.blank?
-
-      access_type = if Greensub::Component.find_by(noid: epub.file_set_id)
-                      "Controlled"
-                    else
-                      "OA_Gold"
-                    end
-      CounterService.from(self, @monograph_presenter).count(access_type: access_type)
+      return unless @monograph_presenter.epub? || @monograph_presenter.pdf_ebook? || @monograph_presenter.mobi?
+      CounterService.from(self, @monograph_presenter).count
     end
 end
