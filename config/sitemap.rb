@@ -48,6 +48,7 @@ SitemapGenerator::Sitemap.create do
       # to their monograph_catalog page so don't need sitemap representation.
       # However, eventually pdf_ebooks will need their own url too. I think.
       next if rep&.kind.present? && rep&.kind != 'epub'
+      next unless EPubPolicy.new(Anonymous.new({}), Sighrax.factory(fsid)).show?
       url = if rep&.kind == 'epub'
               Rails.application.routes.url_helpers.epub_path(fsid)
             else
