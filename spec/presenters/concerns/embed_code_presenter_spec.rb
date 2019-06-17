@@ -70,7 +70,7 @@ RSpec.describe EmbedCodePresenter do
       <<~END
         <div style='width:auto; page-break-inside:avoid; -webkit-column-break-inside:avoid; break-inside:avoid; max-width:1920px; margin:auto'>
           <div style='overflow:hidden; padding-bottom:60%; position:relative; height:0;'><!-- actual image height: 1080px -->
-            <iframe src='#{presenter.embed_link}' title='#{presenter.page_title}' style='overflow:hidden; border-width:0; left:0; top:0; width:100%; height:100%; position:absolute;'></iframe>
+            <iframe src='#{presenter.embed_link}' title='#{presenter.embed_code_title}' style='overflow:hidden; border-width:0; left:0; top:0; width:100%; height:100%; position:absolute;'></iframe>
           </div>
         </div>
       END
@@ -79,7 +79,7 @@ RSpec.describe EmbedCodePresenter do
       <<~END
         <div style='width:auto; page-break-inside:avoid; -webkit-column-break-inside:avoid; break-inside:avoid; max-width:400px; margin:auto'>
           <div style='overflow:hidden; padding-bottom:60%; position:relative; height:0;'>
-            <iframe src='#{presenter.embed_link}' title='#{presenter.page_title}' style='overflow:hidden; border-width:0; left:0; top:0; width:100%; height:100%; position:absolute;'></iframe>
+            <iframe src='#{presenter.embed_link}' title='#{presenter.embed_code_title}' style='overflow:hidden; border-width:0; left:0; top:0; width:100%; height:100%; position:absolute;'></iframe>
           </div>
         </div>
       END
@@ -88,7 +88,7 @@ RSpec.describe EmbedCodePresenter do
       <<~END
         <div style='width:auto; page-break-inside:avoid; -webkit-column-break-inside:avoid; break-inside:avoid; max-width:1920px; margin:auto'>
           <div style='overflow:hidden; padding-bottom:56.25%; position:relative; height:0;'><!-- actual video height: 1080px -->
-            <iframe src='#{presenter.embed_link}' title='#{presenter.page_title}' style='overflow:hidden; border-width:0; left:0; top:0; width:100%; height:100%; position:absolute;'></iframe>
+            <iframe src='#{presenter.embed_link}' title='#{presenter.embed_code_title}' style='overflow:hidden; border-width:0; left:0; top:0; width:100%; height:100%; position:absolute;'></iframe>
           </div>
         </div>
       END
@@ -97,14 +97,14 @@ RSpec.describe EmbedCodePresenter do
       <<~END
         <div style='width:auto; page-break-inside:avoid; -webkit-column-break-inside:avoid; break-inside:avoid; max-width:400px; margin:auto'>
           <div style='overflow:hidden; padding-bottom:75%; position:relative; height:0;'>
-            <iframe src='#{presenter.embed_link}' title='#{presenter.page_title}' style='overflow:hidden; border-width:0; left:0; top:0; width:100%; height:100%; position:absolute;'></iframe>
+            <iframe src='#{presenter.embed_link}' title='#{presenter.embed_code_title}' style='overflow:hidden; border-width:0; left:0; top:0; width:100%; height:100%; position:absolute;'></iframe>
           </div>
         </div>
       END
     }
 
     let(:audio_embed_code) {
-      "<iframe src='#{presenter.embed_link}' title='#{presenter.page_title}' style='page-break-inside:avoid; -webkit-column-break-inside:avoid; break-inside:avoid; display:block; overflow:hidden; border-width:0; width:98%; max-width:98%; height:125px; margin:auto'></iframe>"
+      "<iframe src='#{presenter.embed_link}' title='#{presenter.embed_code_title}' style='page-break-inside:avoid; -webkit-column-break-inside:avoid; break-inside:avoid; display:block; overflow:hidden; border-width:0; width:98%; max-width:98%; height:125px; margin:auto'></iframe>"
     }
 
     before do

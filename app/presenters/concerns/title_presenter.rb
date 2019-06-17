@@ -21,6 +21,10 @@ module TitlePresenter
     MarkdownService.markdown(md_title)
   end
 
+  def embed_code_title
+    CGI.escapeHTML(page_title)
+  end
+
   private
 
     def md_title
