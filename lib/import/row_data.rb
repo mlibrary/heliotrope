@@ -8,27 +8,11 @@ module Import
   class RowData
     attr_reader :row, :attrs
 
-    def data_for_monograph(row, attrs)
-      fields = METADATA_FIELDS.select { |f| %i[universal monograph].include? f[:object] }
-      fields.each do |field|
-        # no error-checking for monograph stuff right now
-        next if row[field[:field_name]].blank?
-        is_multivalued = field[:multivalued]
-        field_values = split_field_values(row[field[:field_name]], is_multivalued)
-        field_values = downcase_format(field[:field_name], field_values)
-        field_values = downcase_role(field[:field_name], field_values)
-        field_values = map_doi(field[:field_name], field_values)
-        # when using controlled vocabularies make everything lowercase (Yes/No etc)
-        field_values.map!(&:downcase) if field[:acceptable_values]
-        attrs[field[:metadata_name]] = return_scalar_or_multivalued(field_values, is_multivalued)
-      end
-    end
-
-    def data_for_asset(row_num, row, file_attrs, errors) # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
+    def field_values(object, row, attrs, errors = {}, row_num = 0) # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
       md = Redcarpet::Markdown.new(Redcarpet::Render::StripDown, space_after_headers: true)
       missing_fields_errors, controlled_vocab_errors, date_errors = Array.new(3) { [] }
 
-      fields = METADATA_FIELDS.select { |f| %i[universal file_set].include? f[:object] } + FILE_SET_FLAG_FIELDS
+      fields = METADATA_FIELDS.select { |f| [:universal, object].include? f[:object] } + FILE_SET_FLAG_FIELDS
       fields.each do |field|
         if row[field[:field_name]].present?
           is_multivalued = field[:multivalued]
@@ -47,13 +31,15 @@ module Import
             field_values = field_check_dates(field[:field_name], field_values, date_errors)
             next if field_values.blank?
           end
-          file_attrs[field[:metadata_name]] = return_scalar_or_multivalued(field_values, is_multivalued)
+          attrs[field[:metadata_name]] = return_scalar_or_multivalued(field_values, is_multivalued)
         # a cover or FeaturedRepresentative FileSet missing metadata is normal, so don't bother the user in those cases
         elsif field[:required] == true && row[field['Representative Kind']].blank?
           missing_fields_errors << field[:field_name]
         end
       end
-      combine_field_errors(errors, row_num, missing_fields_errors, controlled_vocab_errors, date_errors)
+      # These checks were designed to check FileSet metadata. We never set, e.g. required fields on Monograph...
+      # metadata so don't bother with errors on the Monograph row.
+      combine_field_errors(errors, row_num, missing_fields_errors, controlled_vocab_errors, date_errors) if object == :file_set
     end
 
     private

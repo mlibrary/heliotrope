@@ -50,10 +50,10 @@ module Import
 
         if asset_data?(row)
           file_attrs = {}
-          row_data.data_for_asset(row_num, row, file_attrs, attrs['row_errors'])
+          row_data.field_values(:file_set, row, file_attrs, attrs['row_errors'], row_num)
           attach_asset(row, attrs, file_attrs)
         else
-          row_data.data_for_monograph(row, attrs)
+          row_data.field_values(:monograph, row, attrs)
         end
         row_num += 1
       end
