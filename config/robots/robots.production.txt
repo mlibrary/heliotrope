@@ -6,4 +6,7 @@
 # User-Agent: *
 # Disallow: /
 
+User-agent: *
+Crawl-delay: 10
+
 Sitemap: https://fulcrum.org/sitemaps/sitemap.xml.gz
