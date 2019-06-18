@@ -63,7 +63,7 @@ namespace :heliotrope do
           current_ability = Ability.new(User.batch_user)
 
           attrs = {}
-          Import::RowData.new.data_for_monograph(row, attrs)
+          Import::RowData.new.field_values(:monograph, row, attrs)
 
           # blank Monograph titles caused problems. We don't allow them in the importer and shouldn't here either.
           if attrs['title'].blank?

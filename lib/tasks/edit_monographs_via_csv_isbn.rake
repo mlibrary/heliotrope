@@ -66,7 +66,7 @@ namespace :heliotrope do
           puts "User doesn't have edit privileges for Monograph with NOID #{monograph.id} on row #{row_num} ... SKIPPING ROW" unless current_ability.can?(:edit, monograph)
 
           attrs = {}
-          Import::RowData.new.data_for_monograph(row, attrs)
+          Import::RowData.new.field_values(:monograph, row, attrs)
 
           # blank Monograph titles caused problems. We don't allow them in the importer and shouldn't here either.
           if attrs['title'].blank?
@@ -189,7 +189,7 @@ namespace :heliotrope do
   end
 
   # stolen from Exporter, with the addition of Array-wrapping on the multivalued AF fields, to enable...
-  # direct comparison with the ready-to-save AF data from RowData::data_for_monograph
+  # direct comparison with the ready-to-save AF data from RowData::field_values
   def field_value(item, metadata_name, multivalued)
     return if item.public_send(metadata_name).blank?
     if multivalued == :yes_split

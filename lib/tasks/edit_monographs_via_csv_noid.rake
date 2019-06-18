@@ -54,7 +54,7 @@ namespace :heliotrope do
           puts "User doesn't have edit privileges for Monograph with NOID #{noid} on row #{row_num} ... SKIPPING ROW" unless current_ability.can?(:edit, monograph)
 
           attrs = {}
-          Import::RowData.new.data_for_monograph(row, attrs)
+          Import::RowData.new.field_values(:monograph, row, attrs)
 
           if attrs['title'].blank?
             puts "Monograph title is blank on row #{row_num} ............ SKIPPING ROW"
