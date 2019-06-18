@@ -43,6 +43,7 @@ SitemapGenerator::Sitemap.create do
     d['file_set_ids_ssim'].each do |fsid|
       fs = ActiveFedora::SolrService.query("{!terms f=id}#{fsid}", rows: 1).first
       next unless fs['visibility_ssi'] == 'open'
+      next unless fs['mime_type_ssi'] == 'application/epub+zip' || fs['mime_type_ssi'] == 'application/pdf'
       rep = FeaturedRepresentative.where(monograph_id: d['id'], file_set_id: fsid).first
       # HELIO-2509: epubs get a special url, all other featured reps are redirects
       # to their monograph_catalog page so don't need sitemap representation.
