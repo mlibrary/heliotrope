@@ -5,8 +5,10 @@ require 'sitemap_generator'
 
 # Set the host name for URL creation
 SitemapGenerator::Sitemap.default_host = "https://fulcrum.org"
-# SitemapGenerator::Sitemap.public_path = 'public/sitemaps'
-SitemapGenerator::Sitemap.sitemaps_path = 'sitemaps/'
+
+# we want these in the shared directory where they won't get blown away each time
+# see https://github.com/kjvarga/sitemap_generator#deployments--capistrano
+SitemapGenerator::Sitemap.public_path = 'public/sitemaps'
 
 SitemapGenerator::Sitemap.create do
   # Put links creation logic here.
@@ -42,7 +44,7 @@ SitemapGenerator::Sitemap.create do
     next unless d['visibility_ssi'] == 'open'
     d['file_set_ids_ssim'].each do |fsid|
       fs = ActiveFedora::SolrService.query("{!terms f=id}#{fsid}", rows: 1).first
-      next unless fs['visibility_ssi'] == 'open'
+      next unless fs.present? && fs['visibility_ssi'] == 'open'
       rep = FeaturedRepresentative.where(monograph_id: d['id'], file_set_id: fsid).first
 
       # "featured representative" file_sets that are not epubs don't need to be in sitemaps
