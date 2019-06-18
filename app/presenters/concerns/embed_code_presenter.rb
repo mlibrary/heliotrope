@@ -31,7 +31,7 @@ module EmbedCodePresenter
   end
 
   def embed_fulcrum_logo_alt
-    page_title.delete('"')
+    embed_code_title
   end
 
   def embed_fulcrum_logo_link
@@ -46,7 +46,7 @@ module EmbedCodePresenter
     <<~END
       <div style='width:auto; page-break-inside:avoid; -webkit-column-break-inside:avoid; break-inside:avoid; max-width:#{embed_width}px; margin:auto'>
         <div style='overflow:hidden; padding-bottom:#{padding_bottom}%; position:relative; height:0;'>#{embed_height_string}
-          <iframe src='#{embed_link}' title='#{page_title}' style='overflow:hidden; border-width:0; left:0; top:0; width:100%; height:100%; position:absolute;'></iframe>
+          <iframe src='#{embed_link}' title='#{embed_code_title}' style='overflow:hidden; border-width:0; left:0; top:0; width:100%; height:100%; position:absolute;'></iframe>
         </div>
       </div>
     END
@@ -54,7 +54,7 @@ module EmbedCodePresenter
 
   def audio_embed_code
     # `height: 125px` allows for Able Player's controls. Both the controls and the audio-transcript-container div take up 375px of height, but the iframe should auto-adjust its height as required
-    "<iframe src='#{embed_link}' title='#{page_title}' style='page-break-inside:avoid; -webkit-column-break-inside:avoid; break-inside:avoid; display:block; overflow:hidden; border-width:0; width:98%; max-width:98%; height:125px; margin:auto'></iframe>"
+    "<iframe src='#{embed_link}' title='#{embed_code_title}' style='page-break-inside:avoid; -webkit-column-break-inside:avoid; break-inside:avoid; display:block; overflow:hidden; border-width:0; width:98%; max-width:98%; height:125px; margin:auto'></iframe>"
   end
 
   def embed_width
