@@ -21,7 +21,7 @@ module EPub
       # node.content.index(/#{query}\W/i, offset)
       # Allowing regexes really messes up CFIs and highlighting and isn't really
       # appropriate for this simple search feature
-      node.content.index(/#{Regexp.escape(query)}\W/i, offset)
+      node.content.index(/#{Regexp.escape(query)}($|\W)/i, offset)
     end
 
     private
@@ -31,7 +31,7 @@ module EPub
         offset = 0
 
         while node_query_match(node, query, offset)
-          pos0 = node.content.index(/#{Regexp.escape(query)}\W/i, offset)
+          pos0 = node.content.index(/#{Regexp.escape(query)}($|\W)/i, offset)
           pos1 = pos0 + query.length
 
           result = OpenStruct.new
