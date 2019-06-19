@@ -44,17 +44,23 @@ SitemapGenerator::Sitemap.create do
       fs = ActiveFedora::SolrService.query("{!terms f=id}#{fsid}", rows: 1).first
       next unless fs['visibility_ssi'] == 'open'
       rep = FeaturedRepresentative.where(monograph_id: d['id'], file_set_id: fsid).first
-      # HELIO-2509: epubs get a special url, all other featured reps are redirects
-      # to their monograph_catalog page so don't need sitemap representation.
-      # However, eventually pdf_ebooks will need their own url too. I think.
+
+      # "featured representative" file_sets that are not epubs don't need to be in sitemaps
       next if rep&.kind.present? && rep&.kind != 'epub'
-      url = if rep&.kind == 'epub'
-              Rails.application.routes.url_helpers.epub_path(fsid)
-            else
-              Rails.application.routes.url_helpers.hyrax_file_set_path(fsid)
-            end
+
+      # epubs, if they are not restricted by checkpoint, get a special ereader url.
+      # if they are restricted by checkpoint, they shouldn't be in sitemaps since google can't access them
+      if rep&.kind == 'epub' && EPubPolicy.new(Anonymous.new({}), Sighrax.factory(fsid)).show?
+        url = Rails.application.routes.url_helpers.epub_path(fsid)
+        add url, lastmod: d['date_modified_dtsi'], priority: 0.5, changefreq: 'monthly'
+        next
+      end
+
+      # the majority of FileSets won't be featured reps at all, so get a 'normal' url
+      url = Rails.application.routes.url_helpers.hyrax_file_set_path(fsid)
       add url, lastmod: d['date_modified_dtsi'], priority: 0.5, changefreq: 'monthly'
     end
+    # monographs are always in sitemaps (unless they're in Draft)
     url = Rails.application.routes.url_helpers.hyrax_monograph_path(d['id'])
     add url, lastmod: d['date_modified_dtsi'], priority: 1, changefreq: 'monthly'
   end
