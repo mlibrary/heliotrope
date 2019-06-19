@@ -83,6 +83,27 @@ module Heliotrope
       Dir.glob(Rails.root.join('app', '**', '*_override*.rb')) do |c|
         Rails.configuration.cache_classes ? require(c) : load(c)
       end
+
+      # Here we swap out some of the default actor stack, from Hyrax, located
+      # (in Hyrax itself) at app/services/default_middleware_stack.rb
+
+      # Insert actor after obtaining lock so we are first in line!
+      Hyrax::CurationConcern.actor_factory.insert_after(Hyrax::Actors::OptimisticLockValidator, HeliotropeActor)
+      # Maybe register DOIs on update
+      Hyrax::CurationConcern.actor_factory.insert_after(HeliotropeActor, RegisterFileSetDoisActor)
+      # Heliotrope "importer" style CreateWithFilesActor
+      Hyrax::CurationConcern.actor_factory.insert_after(RegisterFileSetDoisActor, CreateWithImportFilesActor)
+      # Destroy FeaturedRepresentatives on delete
+      Hyrax::CurationConcern.actor_factory.insert_after(Hyrax::Actors::CleanupTrophiesActor, FeaturedRepresentativeActor)
+
+      # NOTE: New call order is:
+      # ...
+      # middleware.use Hyrax::Actors::OptimisticLockValidator
+      # middleware.use HeliotropeActor
+      # middleware.use RegisterFileSetDoisActor
+      # middleware.use CreateWithImportFilesActor
+      # middleware.use Hyrax::Actors::CreateWithRemoteFilesActor
+      # ...
     end
   end
 end
