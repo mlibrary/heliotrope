@@ -36,7 +36,7 @@ $(document).on('turbolinks:load', function() {
   // need to set this to false here for Turbolinks browser back/forward button (restoration) events
   heliotropeStatsAlreadyDrawn = false;
 
-  if ($('#stats-tab').hasClass('active')) {
+  if ($('#stats-tab').hasClass('active') || window.location.hash == '#stats') {
     throttleHeliotropeStatFlot(250);
   }
 
