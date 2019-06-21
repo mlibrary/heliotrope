@@ -9,6 +9,6 @@ class ShareLinkLog < ApplicationRecord
   scope :title_like, ->(like) { where("title like ?", "%#{like}%") }
   scope :noid_like, ->(like) { where("noid like ?", "%#{like}%") }
   scope :token_like, ->(like) { where("token like ?", "%#{like}%") }
-  scope :action_like, ->(like) { where("token like ?", "%#{like}%") }
-  scope :created_like, ->(like) { where("created_at like ?", "%#{like}") }
+  scope :action_like, ->(like) { where("action like ?", "%#{like}%") }
+  scope :created_like, ->(like) { where("DATE_FORMAT(created_at,'%Y-%m-%d %T') like ?", "%#{like}%") }
 end
