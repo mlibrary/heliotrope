@@ -2519,7 +2519,346 @@ $fulcrum-light-2: #bec4cc;
 
 
 }
+///////////////////////////////////////////////
+//
+// NCID
+//
+///////////////////////////////////////////////
+// colors
+$ncid-brand-color: #00274c;
+$ncid-accent-color: #a8a8a8;
 
+$ncid-accent-footer: #2e7c8e;
+
+$ncid-accent-link: #f46036;
+
+$ncid-grey-1: #e5e5e5;
+$ncid-grey-2: #d5d6d2;
+$ncid-grey-3: #989c97;
+$ncid-grey-4: #655a52;
+$ncid-yellow: #ffcb05;
+$ncid-white: #fff;
+$ncid-black-80: #342f2e;
+
+// typography
+@mixin proxima-nova {
+  font-family: proxima-nova, sans-serif;
+}
+
+@mixin skolar {
+  font-family: skolar-latin, serif;
+}
+
+.ncid {
+
+  // typography
+  @include proxima-nova();
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5 {
+    @include skolar;
+    font-weight: 700;
+  }
+
+  // links
+  a {
+    color: $ncid-accent-link;
+  }
+
+  a:hover,
+  a:active,
+  a:focus {
+    color: $ncid-brand-color;
+    text-decoration: underline;
+  }
+
+  // buttons
+  .btn, .btn-default {
+    background-color: $ncid-brand-color;
+    border-color: $ncid-brand-color;
+    color: $ncid-white;
+  }
+
+  .btn:hover,
+  .btn:active,
+  .btn-default:hover,
+  .btn-default:active {
+    background-color: $ncid-white;
+    color: $ncid-brand-color;
+    text-decoration: none;
+  }
+
+  // navigation menu
+  .navbar-default .navbar-nav > .open > a,
+  .navbar-default .navbar-nav > .open > a:hover,
+  .navbar-default .navbar-nav > .open > a:focus {
+    background-color: $ncid-white;
+  }
+
+  #brand-bar {
+    background-color: $ncid-brand-color;
+    border-color: $ncid-brand-color;
+
+    .navbar-brand {
+      color: $ncid-white;
+      font-size: 1.5em;
+      font-weight: bold;
+      letter-spacing: .6px;
+      -o-transition: .3s;
+        -ms-transition: .3s;
+        -moz-transition: .3s;
+        -webkit-transition: .3s;
+        transition: .3s;
+    }
+
+    .navbar-brand:hover,
+    .navbar-brand:active,
+    .navbar-brand:focus {
+      color: $ncid-accent-link;
+      text-decoration: none;
+    }
+
+    .navbar-nav {
+      a#add-content,
+      a.login,
+      a.user-display-name,
+      a.language-dropdown {
+          color: $ncid-white;
+      }
+
+      .open > a,
+      .open > a:focus,
+      .open > a:hover,
+      .open > a#add-content {
+        background-color: $ncid-white;
+        color: $ncid-brand-color;
+      }
+    }
+
+    button.search-submit {
+      background-color: $ncid-grey-2;
+      border-color: $ncid-grey-1;
+      color: $ncid-brand-color;
+    }
+
+  }
+
+  // breadcrumbs
+  .breadcrumbs {
+    @include proxima-nova;
+  }
+
+  // press catalog
+
+  // jumbotron
+  .jumbotron {
+    background-color: $ncid-grey-1;
+    @include proxima-nova;
+    font-weight: 300;
+
+    padding-top: 20px;
+    padding-bottom: 20px;
+
+    .container {
+      margin-top: 1em;
+    }
+
+    p.lead {
+      font-size: 20px;
+      a {
+        text-decoration: underline;
+      }
+    }
+
+    p.publisher-info a {
+      text-decoration: underline;
+    }
+
+    .logo {
+
+      img {
+        
+      }
+
+    }
+
+  }
+
+  // monograph catalog
+  #sort-dropdown .dropdown-toggle, #per_page-dropdown .dropdown-toggle {
+    background-color: $ncid-brand-color;
+    color: $ncid-white;
+  }
+
+  #sort-dropdown .dropdown-toggle,
+  #per_page-dropdown .dropdown-toggle {
+    background-color: $ncid-brand-color;
+    color: $ncid-white;
+    border-color: $ncid-brand-color;
+
+  }
+
+  #sort-dropdown .dropdown-toggle:hover,
+  #per_page-dropdown .dropdown-toggle:hover,
+  #sort-dropdown .dropdown-toggle:active,
+  #per_page-dropdown .dropdown-toggle:active {
+    background-color: $ncid-white;
+    color: $ncid-brand-color;
+  }
+
+  #sort-dropdown .dropdown-toggle .caret,
+  #per_page-dropdown .dropdown-toggle .caret {
+    color: $ncid-white;
+  }
+
+  #sort-dropdown .dropdown-toggle:hover .caret,
+  #per_page-dropdown .dropdown-toggle:hover .caret,
+  #sort-dropdown .dropdown-toggle:active .caret,
+  #per_page-dropdown .dropdown-toggle:active .caret {
+    color: $ncid-brand-color;
+  }
+
+  // monograph
+  .monograph {
+    .documentHeader {
+      p {
+        @include proxima-nova;
+      }
+    }
+
+    .authors, .copyright {
+      @include proxima-nova;
+    }
+  }
+
+  // pagination
+  .page_links {
+    @include proxima-nova;
+  }
+
+  .pagination {
+    @include proxima-nova;
+     li a, li span {
+       color: $ncid-white;
+       background-color: $ncid-brand-color;
+     }
+
+     .active>a,
+     .active>a:hover,
+     .active>a:focus,
+     .active>span,
+     .active>span:hover,
+     .active>span:focus {
+       background-color: $ncid-white;
+       border-color: $ncid-grey-1;
+       color: $ncid-brand-color;
+     }
+  }
+
+  // assets
+  .asset-navigation {
+    @include proxima-nova;
+  }
+
+  .asset {
+    ul.nav-tabs li {
+      @include proxima-nova;
+    }
+  }
+
+  //footer
+  footer {
+    a,
+    a:hover,
+    a:active {
+      color: $ncid-white;
+    }
+    .press-block-a,
+    .press-block-b {
+      background-color:  $ncid-brand-color;
+
+      a,
+      a:hover,
+      a:active {
+        color: $ncid-white;
+      }
+
+      img {
+        width: 110px;
+        margin-top: 30px;
+      }
+
+      p {
+        @include proxima-nova;
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: unset;
+
+        a.brand {
+          
+        }
+      }
+
+    }
+    .press-block-c {
+      background-color: $ncid-grey-1;
+      color: $ncid-brand-color;
+      font-weight: bold; 
+      letter-spacing: .6px;
+    }
+    .platform {
+      background-color: $ncid-black-80;
+    }
+  }
+
+  // EPUB Reader
+  #epub {
+    font-family: proxima-nova, arial, sans-serif !important;
+  }
+
+  #reader {
+    @include proxima-nova;
+
+    .cozy-control .cozy-h1 {
+      @include skolar;
+      font-size: 1.5em;
+    }
+
+    .cozy-container input[type="text"] {
+      font-family: proxima-nova, arial, sans-serif !important;
+    }
+
+    .button {
+      @include epub-button-background-color($ncid-brand-color,$ncid-accent-color,$ncid-white);
+      @include proxima-nova;
+    }
+
+    .button--lg {
+      @include epub-button-background-color($ncid-brand-color,$ncid-accent-color,$ncid-white);
+      @include proxima-nova;
+    }
+
+    .button--sm {
+      @include epub-button-background-color($ncid-brand-color,$ncid-accent-color,$ncid-white);
+      @include proxima-nova;
+    }
+
+    i[class^='icon-chevron-'] {
+      @include epub-prev-next-color($ncid-brand-color);
+      transition: 0.2s ease-in;
+    }
+
+    i[class^='icon-chevron-']:hover {
+      @include epub-hover-prev-next-color($ncid-brand-color);
+      transition: 0.2s ease-in;
+    }
+
+  }
+
+}
 ///////////////////////////////////////////////
 //
 // NYU Press
