@@ -22,13 +22,11 @@
             </div>
           </div>
         <% else %>
-          <span class="facet-values">
-            <% if facet_in_params?(item.field, item) %>
-              <%= render_selected_facet_pivot_value(item.field, item) %>
-            <% else %>
-              <%= render_facet_pivot_value(item.field, item, display_facet) %>
-            <% end -%>
-          </span>
+          <% if facet_in_params?(item.field, item) %>
+            <%= render_selected_facet_pivot_value(item.field, item) %>
+          <% else %>
+            <%= render_facet_pivot_value(item.field, item, display_facet) %>
+          <% end -%>
         <% end %>
       </li>
     <% end %>

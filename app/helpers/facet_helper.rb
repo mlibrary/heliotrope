@@ -150,7 +150,7 @@ module FacetHelper
   # @option options [Array<String>]  an array of classes to add to count span.
   # @return [String]
   def render_facet_pivot_count(num, options = {})
-    classes = (options[:classes] || []) << "facet-pivot-count"
+    classes = (options[:classes] || []) << "facet-count"
     content_tag("span", t('blacklight.search.facets.count', number: number_with_delimiter(num)), class: classes)
   end
 
