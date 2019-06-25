@@ -22,6 +22,7 @@ module Import
           field_values = downcase_format(field[:field_name], field_values)
           field_values = downcase_role(field[:field_name], field_values)
           field_values = map_doi(field[:field_name], field_values)
+          field_values = map_cc_license(field[:field_name], field_values)
           if field[:acceptable_values]
             # when using controlled vocabularies make everything lowercase (Yes/No etc)
             field_values.map!(&:downcase)
@@ -62,6 +63,14 @@ module Import
       def map_doi(field_name, field_values)
         return field_values unless field_name == 'DOI'
         field_values.map { |val| val.sub('https', 'http').sub('http://doi.org/', '') }
+      end
+
+      def map_cc_license(field_name, field_values)
+        return field_values unless field_name == 'CC License'
+        field_values.map do |val|
+          match = Hyrax::LicenseService.new.select_active_options.find { |license| val == license[0] }
+          match.present? ? match[1] : val
+        end
       end
 
       def downcase_format(field_name, field_values)

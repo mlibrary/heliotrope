@@ -4,13 +4,13 @@ A name given to the resource. Examples: title of a painting, photo, video.",,,,,
 ",,,,,,,,
 ://:MONOGRAPH://:,The Tempest: A Subtitle,,Yes,,,,,," Shakespeare, William; Playwright, Mr. Uncredited (Editor)",Christopher Marlowe (ILLUSTRATOR); Sir Francis Bacon,,://:MONOGRAPH://:,Dog;Cat;Mouse,134513451345; 1451-25423 (E-Book); 1451343513,http://www.example.com/handle; 999.999.9999,Series the First;Cereal Series; Serial the Third,10.3998/mpub.9999991.blah
 shipwreck.jpg,Monograph Shipwreck,image,,portrait,English,,No,https://creativecommons.org/licenses/by-sa/4.0/,"Smith, Benjamin",,,,,,,,https://doi.org/10.3998/mpub.9999992.blah
-miranda.jpg,Monograph Miranda, image,,audience materials,English; German,,yes,https://creativecommons.org/publicdomain/mark/1.0/,"Waterhouse, John William",,,,,,,,http://doi.org/10.3998/mpub.9999993.blah
+miranda.jpg,Monograph Miranda, image,,audience materials,English; German,,yes,Creative Commons Public Domain Mark 1.0,"Waterhouse, John William",,,,,,,,http://doi.org/10.3998/mpub.9999993.blah
 ,External Bard Transcript 1,text,,Interview Transcript,English,http://external/resource/url1,no,,"L'Interviewere, Bob",,interview,,,,,,
 ファイル.txt,日本語のファイル ,text,,portrait; illustration,Japanese,,yes,https://creativecommons.org/publicdomain/mark/1.0/,,,,,,,,,
 ,External Bard Transcript 2,text,,Interview Transcript,English,http://external/resource/url2,no,,"L'Interviewere, Bob",,interview,,,,,,
 shipwreck1.jpg,Section 1 Shipwreck,image,,audience materials,Russian,,Yes,https://creativecommons.org/publicdomain/mark/1.0/,Smith,,keyword1; keyword2;,Act 1: Calm Waters,,,,,
-miranda1.jpg,Section 1 Miranda,image,,portrait,Russian; German; French,,yes,https://creativecommons.org/publicdomain/mark/1.0/,"Waterhouse, John William; Creator, A. Second (EDITOR)",,regular; _italicized_,Act 1: Calm Waters,,,,,
+miranda1.jpg,Section 1 Miranda,image,,portrait,Russian; German; French,,yes,Creative Commons Public Domain Mark 1.0,"Waterhouse, John William; Creator, A. Second (EDITOR)",,regular; _italicized_,Act 1: Calm Waters,,,,,
 shipwreck2.jpg,Section 2 Shipwreck,image,,audience materials,French,,yes,https://creativecommons.org/publicdomain/mark/1.0/,Smith,,,Act 2: Stirrin' Up,,,,,
-miranda2.jpg,Section 2 Miranda,image,,illustration,English,,Yes,https://creativecommons.org/publicdomain/mark/1.0/,"Waterhouse, John William",,,Act 2: Stirrin' Up,,,,,
+miranda2.jpg,Section 2 Miranda,image,,illustration,English,,Yes,Creative Commons Public Domain Mark 1.0,"Waterhouse, John William",,,Act 2: Stirrin' Up,,,,,
 shipwreck1.jpg,Previous Shipwreck File (Again),image,,portrait; photograph,Latin,,yes,https://creativecommons.org/publicdomain/mark/1.0/,Smith,,,Act 2: Stirrin' Up; Act 3: External Stuffs,,,,,
 ,External Bard Transcript 3,text,,Interview Transcript,English,http://external/resource/url3,no,,"L'Interviewere, Bob",,interview,Act 3: External Stuffs,,,,,
