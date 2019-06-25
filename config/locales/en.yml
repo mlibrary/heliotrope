@@ -269,3 +269,14 @@ en:
   sort_date: "Sort Date"
   transcript: "Transcript"
   translation: "Translation(s)"
+  # views.pagination.aria.* from HELIO-1989. May be removed when Blacklight changes are backported to Hyrax.
+  views:
+    pagination:
+      aria:
+        container_label: 'pagination links'
+        current_page: 'Current Page, Page %{page}'
+        go_to_page: 'Go to page %{page}'
+        go_to_previous_page: 'Go to previous page'
+        go_to_next_page: 'Go to next page'
+        go_to_first_page: 'Go to first page'
+        go_to_last_page: 'Go to last page'
