@@ -10,14 +10,18 @@ class EbooksController < CheckpointController
       watermarked = Rails.cache.fetch(cache_key, expires_in: 30.days) do
         presenter = Sighrax.hyrax_presenter(@entity.parent)
         text = <<~WATERMARK
-          #{presenter.creator_display}, #{presenter.title}
+          #{wrap_text(CGI.unescapeHTML(presenter.creator_display) + ', ' + CGI.unescapeHTML(presenter.title), 100)}
           #{presenter.date_created.first}. #{presenter.publisher.first}
           Downloaded on behalf of #{request_origin}
         WATERMARK
 
         pdf = CombinePDF.parse(@entity.content, allow_optional_content: true)
-        stamp = CombinePDF.parse(watermark(text)).pages[0]
-        pdf.stamp_pages(stamp)
+        stamps = {} # Cache of stamps with potentially different media boxes
+        pdf.pages.each do |page|
+          stamp = stamps[page[:MediaBox].to_s] || CombinePDF.parse(watermark(text, page[:MediaBox])).pages[0]
+          page << stamp
+          stamps[page[:MediaBox].to_s] = stamp
+        end
 
         pdf.to_pdf
       end
@@ -48,7 +52,21 @@ class EbooksController < CheckpointController
       @request_origin ||= current_institution&.name || request.remote_ip
     end
 
-    def watermark(text)
+    def wrap_text(text, max)
+      words = text.gsub(/\s+/m, ' ').strip.split(' ')
+      lines = ['']
+      words.each do |word|
+        if lines[-1].length + word.length < max || lines[-1].length.zero?
+          lines[-1] += ' ' if lines[-1].length.positive?
+          lines[-1] += word
+        else
+          lines << word
+        end
+      end
+      lines.join("\n")
+    end
+
+    def watermark(text, media_box)
       size = 7
       height = (text.lines.count + 1) * size
       width = 0
@@ -59,7 +77,7 @@ class EbooksController < CheckpointController
       pdf = Prawn::Document.new do
         Prawn::Font::AFM.hide_m17n_warning = true
         font('Times-Roman', size: size) do
-          bounding_box([-20, 0], width: width, height: height) do
+          bounding_box([-20 + media_box[0], 0 + media_box[1]], width: width, height: height) do
             transparent(0.5) do
               fill_color "ffffff"
               stroke_color "ffffff"
