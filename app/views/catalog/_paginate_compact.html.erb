@@ -1,0 +1,7 @@
+<%# Call with a Blacklight::Solr::Response or any other kaminari-compatible collection
+    to render Blacklight's compact pagination info component:
+
+        <%= render :partial => "paginate_compact", :object => @response
+-%>
+<% # HELIO-1989. May be removed when Blacklight changes are backported to Hyrax. (No changes in this file.) -%>
+<%= paginate paginate_compact, page_entries_info: page_entries_info(paginate_compact), theme: :blacklight_compact %>
