@@ -195,7 +195,7 @@ end
 group :development do
   gem 'pry-rails', '~> 0.3.4'
   # Yay! A Ruby Documentation Tool
-  gem 'yard'
+  gem 'yard', '>= 0.9.20'
 end
 
 group :development do

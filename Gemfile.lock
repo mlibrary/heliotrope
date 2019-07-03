@@ -958,7 +958,7 @@ GEM
     xml-simple (1.1.5)
     xpath (3.1.0)
       nokogiri (~> 1.8)
-    yard (0.9.16)
+    yard (0.9.20)
 
 PLATFORMS
   ruby
@@ -1046,7 +1046,7 @@ DEPENDENCIES
   tzinfo-data
   uglifier (>= 3.2.0)
   web-console (>= 3.3.0)
-  yard
+  yard (>= 0.9.20)
 
 BUNDLED WITH
    1.17.2
