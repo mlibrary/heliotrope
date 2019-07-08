@@ -86,7 +86,7 @@ module Export
       end
 
       # put fulcrum object's files into data directory
-      extract("#{bag.bag_dir}/data/")
+      extract("#{bag.bag_dir}/data/", true)
 
       # Create manifests
       bag.manifest!
