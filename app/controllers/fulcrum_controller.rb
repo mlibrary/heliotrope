@@ -9,6 +9,8 @@ class FulcrumController < ApplicationController
 
   def exec
     case params[:cmd]
+    when 'deposit'
+      AptrustDepositJob.perform_now(params[:noid])
     when 'ingest'
       ExtractIngestJob.perform_later(params[:token], params[:base], params[:source], params[:target])
     when 'reindex_everything'

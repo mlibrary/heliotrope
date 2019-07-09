@@ -38,5 +38,5 @@
       <div class="col-md-4"><%= link_to_if institution.destroy?, 'Destroy', greensub_institution_path(institution), method: :delete, data: { confirm: 'Are you sure?' } %></div>
     </div>
   <% end %>
-  <div class="col-md-12">&nbsp<%= paginate @institutions %></div>
+  <div class="col-md-12">&nbsp;<%= paginate @institutions %></div>
 </div>
