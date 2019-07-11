@@ -45,6 +45,13 @@ RSpec.describe MarkdownService do
   end
 
   describe '.markdown_as_text' do
+    # Ideally we should have this test that a HTML-tag looking thing can get through but...
+    # right now that is truncated by all strippers (differently, depending on circumstances!).
+    # We have content like `<blah` in production. For now don't test stuff like `<blah`, see
+    # https://tools.lib.umich.edu/jira/browse/HELIO-2827
+    # let(:input_title) { 'Test <symbol and> & symbol' }
+    let(:text_with_html_symbols) { 'Test > symbol and & symbol' }
+
     it 'renders italics' do
       expect(described_class.markdown_as_text('_italics_')).to eq('italics')
     end
@@ -67,6 +74,10 @@ RSpec.describe MarkdownService do
 
     it 'removes HTML tags as well as Markdown with optional parameter' do
       expect(described_class.markdown_as_text('_italics_ and <em>Emphasised Text</em>', true)).to eq('italics and Emphasised Text')
+    end
+
+    it "doesn't use HTML entities for &, < and >" do
+      expect(described_class.markdown_as_text(text_with_html_symbols)).to eq(text_with_html_symbols)
     end
   end
 end

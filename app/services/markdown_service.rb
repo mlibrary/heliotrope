@@ -72,6 +72,6 @@ class MarkdownService
   def self.markdown_as_text(value, strip_tags = false)
     markdown_removed = sd.render(value).gsub(/\n$/, '').tr("\n", ' ')
     # now remove any HTML tags as well, if desired
-    strip_tags ? ActionController::Base.helpers.strip_tags(markdown_removed) : markdown_removed
+    strip_tags ? Loofah.fragment(markdown_removed).text(encode_special_chars: false) : markdown_removed
   end
 end

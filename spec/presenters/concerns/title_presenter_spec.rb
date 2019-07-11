@@ -54,6 +54,19 @@ RSpec.describe TitlePresenter do
         is_expected.to eq expected_output_title_as_text
       end
     end
+
+    context 'with HTML syntax characters' do
+      # Ideally we should have this test that a HTML-tag looking thing can get through but...
+      # right now that is truncated by all strippers (differently, depending on circumstances!).
+      # We have content like `<blah` in production. For now don't test stuff like `<blah`, see
+      # https://tools.lib.umich.edu/jira/browse/HELIO-2827
+      # let(:input_title) { 'Test <symbol and> & symbol' }
+      let(:input_title) { 'Test > symbol and & symbol' }
+
+      it 'does not use HTML entities in page title' do
+        is_expected.to eq input_title
+      end
+    end
   end
 
   describe '#title' do
