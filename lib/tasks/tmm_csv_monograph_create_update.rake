@@ -98,9 +98,8 @@ namespace :heliotrope do
                 exporter = Export::Exporter.new(monograph.id, :monograph)
                 csv << exporter.monograph_row
               end
+              Hyrax::CurationConcern.actor.update(Hyrax::Actors::Environment.new(monograph, current_ability, attrs))
             end
-
-            Hyrax::CurationConcern.actor.update(Hyrax::Actors::Environment.new(monograph, current_ability, attrs))
           end
 
         end
