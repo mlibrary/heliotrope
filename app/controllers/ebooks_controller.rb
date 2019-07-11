@@ -41,7 +41,14 @@ class EbooksController < CheckpointController
       @entity.noid + '-' +
         Digest::MD5.hexdigest(@entity.resource_token) + '-' +
         Digest::MD5.hexdigest(@entity.parent.title) + '-' +
-        Digest::MD5.hexdigest(request_origin)
+        Digest::MD5.hexdigest(request_origin) + '-' +
+        cache_key_timestamp
+    end
+
+    def cache_key_timestamp
+      ActiveFedora::SolrService.query("{!terms f=id}#{@entity.noid}", rows: 1).first['timestamp']
+    rescue # rubocop:disable Style/RescueStandardError
+      ''
     end
 
     def request_origin
