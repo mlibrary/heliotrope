@@ -97,8 +97,17 @@ module FeaturedRepresentatives
       featured_representatives.map(&:kind).include? 'pdf_ebook'
     end
 
+    def pdf_ebook
+      ordered_member_docs.find { |doc| doc.id == pdf_ebook_id }
+    end
+
     def pdf_ebook_id
       featured_representatives.map { |fr| fr.file_set_id if fr.kind == 'pdf_ebook' }.compact.first
+    end
+
+    def pdf_ebook_presenter
+      entity = Sighrax.factory(pdf_ebook_id)
+      @pdf_ebook_presenter ||= PDFEbookPresenter.new(PDFEbook::Publication.from_string_id(entity.content, pdf_ebook_id))
     end
 
     def mobi?

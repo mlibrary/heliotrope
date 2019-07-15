@@ -125,7 +125,7 @@
       <li role="presentation"><a id="tab-stats" href="#stats" role="tab" data-toggle="tab" aria-controls="stats" aria-selected="false" tabindex="-1">Stats</a></li>
     </ul>
     <div id="tabs-content" class="tab-content monograph-assets-toc-epub-content" aria-live="polite">
-      <% if @monograph_presenter.epub? %>
+      <% if @monograph_presenter.epub? || @monograph_presenter.pdf_ebook? %>
         <section id="toc" class="tab-pane active fade in toc row" role="tabpanel" aria-hidden="false" aria-labelledby="tab-toc" tabindex="0">
           <div class="col-sm-12">
             <h2 class="sr-only">Table of Contents</h2>
