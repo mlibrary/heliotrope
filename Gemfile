@@ -129,6 +129,9 @@ gem "loofah", ">= 2.2.3"
 # Use MySQL as the database for Active Record
 gem 'mysql2', '~> 0.4.10'
 
+# Read PDF ToC
+gem 'origami'
+
 # Force epub search results to be sentences
 gem 'pragmatic_segmenter', '~> 0.3'
 

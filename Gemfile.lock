@@ -186,6 +186,7 @@ GEM
       execjs
     coffee-script-source (1.12.2)
     colorator (1.1.0)
+    colorize (0.8.1)
     combine_pdf (1.0.16)
       ruby-rc4 (>= 0.1.5)
     commonjs (0.2.7)
@@ -598,6 +599,8 @@ GEM
       rack (>= 1.2, < 3)
     openseadragon (0.5.0)
       rails (> 3.2.0)
+    origami (2.1.0)
+      colorize (~> 0.7)
     orm_adapter (0.5.0)
     os (1.0.1)
     parallel (1.12.1)
@@ -1004,6 +1007,7 @@ DEPENDENCIES
   mysql2 (~> 0.4.10)
   oauth
   oauth2 (~> 1.2)
+  origami
   pragmatic_segmenter (~> 0.3)
   prawn (~> 2.2)
   pry-rails (~> 0.3.4)
