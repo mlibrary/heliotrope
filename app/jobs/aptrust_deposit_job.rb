@@ -17,7 +17,7 @@ class AptrustDepositJob < ApplicationJob
         begin
           AptrustDeposit.find_by(noid: monograph_id)&.delete
           success = deposit(tar(bag(monograph)))
-          AptrustDeposit.create(noid: monograph_id, identifier: identifier(monograph))
+          AptrustDeposit.create(noid: monograph_id, identifier: identifier(monograph)) if success
         rescue StandardError => e
           Rails.logger.error("AptrustDepositJob(#{monograph_id} #{e}")
           success = false

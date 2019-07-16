@@ -59,6 +59,17 @@ RSpec.describe AptrustDepositJob, type: :job do
           expect(AptrustDeposit).to have_received(:create).with(noid: monograph_id, identifier: 'identifier')
         end
 
+        context 'when deposit fails' do
+          before { allow(job).to receive(:deposit).with('tar').and_return(false) }
+
+          it do
+            is_expected.to be false
+            expect(AptrustDeposit).to have_received(:find_by).with(noid: monograph_id)
+            expect(record).to have_received(:delete)
+            expect(AptrustDeposit).not_to have_received(:create).with(noid: monograph_id, identifier: 'identifier')
+          end
+        end
+
         context 'when standard error' do
           before { allow(job).to receive(:bag).with(monograph).and_raise(StandardError) }
 
