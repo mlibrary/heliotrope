@@ -1,0 +1,30 @@
+<p id="notice"><%= notice %></p>
+<div id="maincontent">
+  <h1>APTrust Deposits</h1>
+  <form name="filter" method="get" action="<%= aptrust_deposits_path %>">
+    <b>
+      <div class="col-md-12"><hr/></div>
+      <div class="col-md-10">
+        <% size = 24 %>
+        <div class="col-md-3">Timestamp</div>
+        <div class="col-md-3"><div>NOID</div><div><input type="text" name="noid_like" value="<%= params[:noid_like] %>" size="<%= size %>" aria-label="noid_like"></div></div>
+        <div class="col-md-6"><div>Identifier</div><div><input type="text" name="identifier_like" value="<%= params[:identifier_like] %>" size="<%= size %>" aria-label="identifier_like"></div></div>
+      </div>
+      <div class="col-md-2"><div>&nbsp;</div><div><button name="submit" type="submit" value="filter">Filter</button></div></div>
+      <div class="col-md-12"><hr/></div>
+    </b>
+  </form>
+  <% @aptrust_deposits.each do |aptrust_deposit| %>
+    <div class="col-md-10">
+      <div class="col-md-3"><%= aptrust_deposit.created_at %></div>
+      <div class="col-md-3"><%= aptrust_deposit.noid %></div>
+      <div class="col-md-6"><%= aptrust_deposit.identifier %></div>
+    </div>
+    <div class="col-md-2">
+      <%= link_to(aptrust_deposit_path(aptrust_deposit.id), method: :delete, class: "btn btn-default", data: { confirm: 'Are you sure?' }) do %>
+        <span class="glyphicon glyphicon-minus" aria-hidden="true"></span> Destroy
+      <% end %>
+    </div>
+  <% end %>
+  <div class="col-md-12">&nbsp;<%= paginate @aptrust_deposits %></div>
+</div>

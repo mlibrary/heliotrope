@@ -86,6 +86,7 @@ Rails.application.routes.draw do
         delete :truncate
       end
     end
+    resources :aptrust_deposits, only: %i[index destroy]
     resources :aptrust_logs, only: %i[index]
     resources :share_link_logs, only: %i[index]
     resources :crossref_submission_logs, only: %i[index]
