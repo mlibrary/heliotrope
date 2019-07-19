@@ -125,6 +125,9 @@ webgl = Webgl::Unity.from_directory(UnpackService.root_path_from_noid(webgl_id, 
           useArchive: <%= @use_archive %>,
           download_links: <%= @ebook_download_presenter.csb_download_links.to_json.html_safe %>,
           loader_template: '<div class="fulcrum-loading"><div class="rect rect1"></div><div class="circle circ1"></div><div class="rect rect2"></div><div class="circle circ2"></div></div>',
+          <% if %w[michigan].include? @subdomain %>
+          injectStylesheet: '/css/fulcrum_enhanced_display.css',
+          <% end %>
           metadata: {
             doi: '<%= @citable_link %>',
             location: 'Ann Arbor, MI'
