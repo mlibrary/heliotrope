@@ -270,6 +270,8 @@ module Hyrax
                   'epub'
                 elsif eps?
                   'image_service'
+                elsif map?
+                  'map'
                 else
                   'default'
                 end

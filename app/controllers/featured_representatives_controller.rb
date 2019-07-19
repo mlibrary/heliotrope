@@ -13,7 +13,7 @@ class FeaturedRepresentativesController < ApplicationController
                                      file_set_id: params[:file_set_id],
                                      kind: params[:kind])
 
-      if ['epub', 'webgl'].include? params[:kind]
+      if ['epub', 'webgl', 'map'].include? params[:kind]
         UnpackJob.perform_later(params[:file_set_id], params[:kind])
       end
     end

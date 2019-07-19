@@ -174,6 +174,17 @@ RSpec.describe AptrustDepositJob, type: :job do
     describe '#deposit' do
       subject { job.deposit(filename) }
 
+      let(:file) { instance_double(File, 'file') }
+      let(:yaml) do
+        {
+          'BucketRegion' => 's3 bucket region',
+          'Bucket' => 's3 bucket',
+          'AwsAccessKeyId' => 'aws access key id',
+          'AwsSecretAccessKey' => 'aws secret access key'
+        }
+      end
+      let(:credentials) { instance_double(Aws::Credentials, 'credentials') }
+      let(:config) { double('config') }
       let(:filename) { 'dir.tar' }
       let(:resource) { instance_double(Aws::S3::Resource, 'resource') }
       let(:bucket) { double('bucket') }
@@ -181,6 +192,12 @@ RSpec.describe AptrustDepositJob, type: :job do
       let(:boolean) { double('boolean') }
 
       before do
+        allow(Aws::Credentials).to receive(:new).with('aws access key id', 'aws secret access key').and_return(credentials)
+        allow(Aws).to receive(:config).and_return(config)
+        allow(config).to receive(:update).with(credentials: credentials).and_return(nil)
+        allow(File).to receive(:read).with(Rails.root.join('config', 'aptrust.yml')).and_return(file)
+        allow(YAML).to receive(:safe_load).with(file).and_return(yaml)
+        allow(Aws).to receive(:config).and_return(config)
         allow(Aws::S3::Resource).to receive(:new).with(region: 's3 bucket region').and_return(resource)
         allow(resource).to receive(:bucket).with('s3 bucket').and_return(bucket)
         allow(bucket).to receive(:object).with(File.basename(filename)).and_return(obj)

@@ -10,9 +10,12 @@ RSpec.describe Hyrax::FileSetPresenter do
   describe '#presenters' do
     subject { described_class.new(nil, nil) }
 
-    it do
-      is_expected.to be_a TitlePresenter
-    end
+    it { is_expected.to be_a TitlePresenter }
+    it { is_expected.to be_a AnalyticsPresenter }
+    it { is_expected.to be_a CitableLinkPresenter }
+    it { is_expected.to be_a EmbedCodePresenter }
+    it { is_expected.to be_a OpenUrlPresenter }
+    it { is_expected.to be_a FeaturedRepresentatives::FileSetPresenter }
   end
 
   describe "#citable_link" do
@@ -127,24 +130,6 @@ RSpec.describe Hyrax::FileSetPresenter do
 
     it "returns the label" do
       expect(presenter.label).to eq 'filename.tif'
-    end
-  end
-
-  describe '#epub?' do
-    subject { presenter.epub? }
-
-    let(:fileset_doc) { SolrDocument.new(id: 'fileset_id', monograph_id_ssim: 'monograph_id', has_model_ssim: ['FileSet']) }
-
-    context "featured_representative.kind == 'epub'" do
-      let!(:fr) { create(:featured_representative, monograph_id: 'monograph_id', file_set_id: 'fileset_id', kind: 'epub') }
-
-      after { FeaturedRepresentative.destroy_all }
-
-      it { is_expected.to be true }
-    end
-
-    context 'not an epub featured_representative' do
-      it { is_expected.to be false }
     end
   end
 
@@ -358,6 +343,27 @@ RSpec.describe Hyrax::FileSetPresenter do
 
     let(:external_resource_url) { '' }
     let(:fileset_doc) { SolrDocument.new(mime_type_ssi: mime_type, external_resource_url_ssim: external_resource_url) }
+
+    context 'with featured representative' do
+      let(:mime_type) { 'general/specific' }
+
+      FeaturedRepresentative::KINDS.each do |kind|
+        context kind.to_s do
+          before do
+            if presenter.respond_to?("#{kind}?".to_sym)
+              allow(presenter).to receive("#{kind}?".to_sym).and_return(true)
+            end
+          end
+
+          case kind
+          when 'epub', 'map'
+            it { is_expected.to eq "hyrax/file_sets/media_display/#{kind}" }
+          else
+            it { is_expected.to eq 'hyrax/file_sets/media_display/default' }
+          end
+        end
+      end
+    end
 
     context "with an image" do
       let(:mime_type) { 'image/tiff' }

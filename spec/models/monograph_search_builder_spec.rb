@@ -27,24 +27,25 @@ describe MonographSearchBuilder do
         before { search_builder.filter_by_members(solr_params) }
 
         it "creates a query for the monograph's assets but without the representative_id" do
-          expect(solr_params[:fq].first).not_to match(/{!terms f=id}#{cover.id},#{file1.id},#{file2.id}/)
-          expect(solr_params[:fq].first).to match(/{!terms f=id}#{file1.id},#{file2.id}/)
+          expect(solr_params[:fq].first).to match(/^{!terms f=id}#{file1.id},#{file2.id}$/)
         end
       end
 
-      context 'epub' do
-        before do
-          FeaturedRepresentative.create!(monograph_id: monograph.id, file_set_id: file2.id, kind: 'epub')
-          search_builder.filter_by_members(solr_params)
-        end
+      FeaturedRepresentative::KINDS.each do |kind|
+        context kind do
+          before { FeaturedRepresentative.create!(monograph_id: monograph.id, file_set_id: file2.id, kind: kind) }
 
-        after { FeaturedRepresentative.destroy_all }
+          after { FeaturedRepresentative.destroy_all }
 
-        let(:file2) { create(:file_set, content: File.open(File.join(fixture_path, 'moby-dick.epub'))) }
-
-        it "creates a query for the monograph's assets but without the epub id" do
-          expect(solr_params[:fq].first).not_to match(/{!terms f=id}#{file1.id},#{file2.id}/)
-          expect(solr_params[:fq].first).to match(/{!terms f=id}#{file1.id}/)
+          it "creates a query for the monograph's assets" do
+            search_builder.filter_by_members(solr_params)
+            case kind
+            when 'map'
+              expect(solr_params[:fq].first).to match(/^{!terms f=id}#{file1.id},#{file2.id}$/)
+            else
+              expect(solr_params[:fq].first).to match(/^{!terms f=id}#{file1.id}$/)
+            end
+          end
         end
       end
     end

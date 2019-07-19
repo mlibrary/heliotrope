@@ -12,15 +12,33 @@ RSpec.describe FeaturedRepresentativesController, type: :controller do
     let(:user) { create(:platform_admin) }
 
     describe '#save' do
-      before do
-        allow(UnpackJob).to receive_messages(perform_later: nil, perform_now: nil)
-        post :save, params: { monograph_id: monograph.id, file_set_id: file_set.id, kind: 'epub' }
-      end
+      before { allow(UnpackJob).to receive_messages(perform_later: nil, perform_now: nil) }
 
       after { FeaturedRepresentative.destroy_all }
 
-      it "saves the featured_representative" do
-        expect(FeaturedRepresentative.all.count).to be 1
+      it "saves the featured representative" do
+        post :save, params: { monograph_id: monograph.id, file_set_id: file_set.id, kind: 'epub' }
+        expect(UnpackJob).to have_received(:perform_later).with(file_set.id, 'epub')
+        expect(FeaturedRepresentative.all.count).to eq(1)
+      end
+
+      it 'nops on double save' do
+        create(:featured_representative, monograph_id: monograph.id, file_set_id: file_set.id, kind: 'epub')
+        post :save, params: { monograph_id: monograph.id, file_set_id: file_set.id, kind: 'epub' }
+        expect(UnpackJob).not_to have_received(:perform_later).with(file_set.id, 'epub')
+        expect(FeaturedRepresentative.all.count).to eq(1)
+      end
+
+      FeaturedRepresentative::KINDS.each do |kind|
+        it 'unpacks some kinds' do
+          post :save, params: { monograph_id: monograph.id, file_set_id: file_set.id, kind: kind }
+          case kind
+          when 'epub', 'webgl', 'map'
+            expect(UnpackJob).to have_received(:perform_later).with(file_set.id, kind)
+          else
+            expect(UnpackJob).not_to have_received(:perform_later).with(file_set.id, kind)
+          end
+        end
       end
     end
 
@@ -32,7 +50,7 @@ RSpec.describe FeaturedRepresentativesController, type: :controller do
       end
 
       it "deletes the featured_representative" do
-        expect(FeaturedRepresentative.all.count).to be 0
+        expect(FeaturedRepresentative.all.count).to eq(0)
       end
     end
   end
@@ -52,7 +70,7 @@ RSpec.describe FeaturedRepresentativesController, type: :controller do
       after { FeaturedRepresentative.destroy_all }
 
       it "saves the featured_representative" do
-        expect(FeaturedRepresentative.all.count).to be 1
+        expect(FeaturedRepresentative.all.count).to eq(1)
       end
     end
 
@@ -64,7 +82,7 @@ RSpec.describe FeaturedRepresentativesController, type: :controller do
       end
 
       it "deletes the featured_representative" do
-        expect(FeaturedRepresentative.all.count).to be 0
+        expect(FeaturedRepresentative.all.count).to eq(0)
       end
     end
   end

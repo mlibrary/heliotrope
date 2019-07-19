@@ -55,7 +55,7 @@ class CharacterizeJob < ApplicationJob
     if kind.blank? && file_set.parent&.press == 'heb'
       kind = maybe_set_featured_representative(file_set)
     end
-    if kind.present? && ['epub', 'webgl'].include?(kind)
+    if kind.present? && ['epub', 'webgl', 'map'].include?(kind)
       UnpackJob.perform_later(file_set.id, kind)
     end
 

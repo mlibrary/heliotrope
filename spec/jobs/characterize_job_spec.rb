@@ -105,6 +105,47 @@ describe CharacterizeJob do
     end
   end
 
+  context "featured representative" do
+    let(:file_path) { Rails.root + 'tmp' + 'uploads' + 'ab' + 'c1' + '23' + '45' + 'abc12345' + file_type }
+    let(:file) do
+      Hydra::PCDM::File.new.tap do |f|
+        f.content = 'foo'
+        f.original_name = file_type
+        f.save!
+      end
+    end
+    let(:monograph) { build(:monograph, id: 'mono_id', press: 'press') }
+
+    before do
+      allow(Hydra::Works::CharacterizationService).to receive(:run).with(file, filename)
+      allow(file).to receive(:save!)
+      allow(file_set).to receive(:update_index)
+      allow(CreateDerivativesJob).to receive(:perform_later).with(file_set, file.id, filename)
+      allow(file_set).to receive(:parent).and_return(monograph)
+    end
+
+    after { FeaturedRepresentative.destroy_all }
+
+    FeaturedRepresentative::KINDS.each do |kind|
+      context kind.to_s do
+        let(:file_type) { "file.#{kind}" }
+
+        before { allow(UnpackJob).to receive(:perform_later).and_return(true) }
+
+        it "unpacks some kinds" do
+          create(:featured_representative, monograph_id: monograph.id, file_set_id: file_set.id, kind: kind)
+          described_class.perform_now(file_set, file.id)
+          case kind
+          when 'epub', 'webgl', 'map'
+            expect(UnpackJob).to have_received(:perform_later).with(file_set.id, kind)
+          else
+            expect(UnpackJob).not_to have_received(:perform_later).with(file_set.id, kind)
+          end
+        end
+      end
+    end
+  end
+
   context "#maybe_set_featured_representative" do
     let(:file_path) { Rails.root + 'tmp' + 'uploads' + 'ab' + 'c1' + '23' + '45' + 'abc12345' + heb_file_type }
     let(:file) do

@@ -4,7 +4,7 @@
     <b><%= member.featured_representative.kind %></b>
   </div>
   <div class="col-sm-4">
-    <% if !member.component? && (can? :edit, member.id) %>
+    <% if can? :edit, member.id %>
       <%= link_to "Unset", main_app.featured_representatives_path(id: member.featured_representative.id, monograph_id: member.monograph.id),
           method: :delete, title: "Delete #{member.featured_representative.kind}",
           data: { confirm: "Unset Featured Representative?" },

@@ -4,6 +4,18 @@ require 'rails_helper'
 
 RSpec.describe UnpackJob, type: :job do
   describe "perform" do
+    context "with a map" do
+      let(:map) { create(:file_set, content: File.open(File.join(fixture_path, 'fake-map.zip'))) }
+      let(:root_path) { UnpackService.root_path_from_noid(map.id, 'map') }
+
+      after { FileUtils.rm_rf(root_path) }
+
+      it "unzips the map" do
+        described_class.perform_now(map.id, 'map')
+        expect(File.exist?(File.join(root_path, 'index.html'))).to be true
+      end
+    end
+
     context "with an epub" do
       let(:epub) { create(:file_set, content: File.open(File.join(fixture_path, 'fake_epub01.epub'))) }
       let(:root_path) { UnpackService.root_path_from_noid(epub.id, 'epub') }

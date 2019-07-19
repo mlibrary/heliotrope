@@ -26,7 +26,7 @@ class MonographSearchBuilder < ::SearchBuilder
 
       ids.delete(monograph.first['representative_id_ssim']&.first)
       featured_representatives(monograph.first['id']).each do |fr|
-        ids.delete(fr.file_set_id)
+        ids.delete(fr.file_set_id) unless /^map$/i.match?(fr.kind)
       end
 
       ids.join(',')

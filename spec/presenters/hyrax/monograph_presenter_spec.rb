@@ -5,13 +5,9 @@ require 'rails_helper'
 RSpec.describe Hyrax::MonographPresenter do
   include ActionView::Helpers::UrlHelper
 
-  before { Press.destroy_all }
-
-  let(:press) { create(:press, subdomain: 'michigan') }
-
+  let(:presenter) { described_class.new(mono_doc, ability) }
   let(:mono_doc) { ::SolrDocument.new(id: 'mono', has_model_ssim: ['Monograph']) }
   let(:ability) { double('ability') }
-  let(:presenter) { described_class.new(mono_doc, ability) }
 
   describe '#presenters' do
     subject { described_class.new(nil, nil) }
@@ -21,6 +17,7 @@ RSpec.describe Hyrax::MonographPresenter do
       is_expected.to be_a CitableLinkPresenter
       is_expected.to be_a OpenUrlPresenter
       is_expected.to be_a TitlePresenter
+      is_expected.to be_a FeaturedRepresentatives::MonographPresenter
     end
   end
 
@@ -256,7 +253,7 @@ RSpec.describe Hyrax::MonographPresenter do
     end
   end
 
-  context 'a monograph with no attached members' do
+  context 'a monograph without attached members' do
     describe '#ordered_file_sets_ids', :private do
       subject { presenter.ordered_file_sets_ids }
 
@@ -296,18 +293,6 @@ RSpec.describe Hyrax::MonographPresenter do
         expect(subject).to eq nil
       end
     end
-
-    describe '#epub?' do
-      subject { presenter.epub? }
-
-      it { expect(subject).to be false }
-    end
-
-    describe '#epub' do
-      subject { presenter.epub }
-
-      it { expect(subject).to be nil }
-    end
   end # context 'a monograph with no attached members' do
 
   context 'a monograph with attached members' do
@@ -340,16 +325,26 @@ RSpec.describe Hyrax::MonographPresenter do
     describe '#ordered_file_sets_ids' do
       subject { presenter.ordered_file_sets_ids }
 
-      it 'returns an array of expected size' do
-        expect(subject.count).to eq expected_id_count
-      end
+      it { expect(subject).to contain_exactly('fs1', 'fs2', 'fs3') }
 
-      it 'the first element of the array is as expected' do
-        expect(subject.first).to eq 'fs1'
-      end
+      context 'featured representatives' do
+        FeaturedRepresentative::KINDS.each do |kind|
+          context kind.to_s do
+            let(:featured_representative) { instance_double(FeaturedRepresentative, 'featured_representative', file_set_id: 'fs2', kind: kind) }
 
-      it 'the last element of the array is as expected' do
-        expect(subject.last).to eq 'fs3'
+            before do
+              allow(FeaturedRepresentative).to receive(:where).with(monograph_id: 'mono').and_return([featured_representative])
+              allow(FeaturedRepresentative).to receive(:find_by).with(file_set_id: 'fs2').and_return(featured_representative)
+            end
+
+            case kind
+            when 'map'
+              it { expect(subject).to contain_exactly('fs1', 'fs2', 'fs3') }
+            else
+              it { expect(subject).to contain_exactly('fs1', 'fs3') }
+            end
+          end
+        end
       end
     end
 
@@ -438,108 +433,38 @@ RSpec.describe Hyrax::MonographPresenter do
         expect(subject.class).to eq Hyrax::FileSetPresenter
       end
     end
-
-    describe '#epub?' do
-      subject { presenter.epub? }
-
-      it { expect(subject).to be false }
-    end
-
-    describe '#epub' do
-      subject { presenter.epub }
-
-      it { expect(subject).to be nil }
-    end
-
-    context 'featured_representatives' do
-      let!(:fr1) {
-        create(:featured_representative, monograph_id: presenter.id,
-                                         file_set_id: fs2_doc.id,
-                                         kind: 'epub')
-      }
-      let!(:fr2) {
-        create(:featured_representative, monograph_id: presenter.id,
-                                         file_set_id: fs3_doc.id,
-                                         kind: 'webgl')
-      }
-
-      after do
-        FeaturedRepresentative.destroy_all
-      end
-
-      describe '#featured_representatives' do
-        subject { presenter.featured_representatives }
-
-        it { expect(subject.count).to be 2 }
-      end
-
-      describe '#epub?' do
-        subject { presenter.epub? }
-
-        it { expect(subject).to be true }
-      end
-
-      describe '#epub' do
-        subject { presenter.epub }
-
-        it { expect(subject.id).to eq fs2_doc.id }
-      end
-
-      describe '#epub_id' do
-        subject { presenter.epub_id }
-
-        it { expect(subject).to eq fs2_doc.id }
-      end
-
-      context 'press' do
-        let(:press) { double('press', press_url: 'press_url') }
-
-        before { allow(Press).to receive(:find_by).with(subdomain: 'press_tesim').and_return(press) }
-
-        describe '#subdomain' do
-          subject { presenter.subdomain }
-
-          it { is_expected.to eq('press_tesim') }
-        end
-
-        describe '#press' do
-          subject { presenter.press }
-
-          it { is_expected.to eq('press_name_ssim') }
-        end
-
-        describe '#press_obj' do
-          subject { presenter.press_obj }
-
-          it { is_expected.to be press }
-        end
-
-        describe '#press_url' do
-          subject { presenter.press_url }
-
-          it { is_expected.to eq('press_url') }
-        end
-      end
-
-      describe '#webgl?' do
-        subject { presenter.webgl? }
-
-        it { expect(subject).to be true }
-      end
-
-      describe '#webgl' do
-        subject { presenter.webgl }
-
-        it { expect(subject.id).to eq fs3_doc.id }
-      end
-
-      describe '#webgl_id' do
-        subject { presenter.webgl_id }
-
-        it { expect(subject).to eq fs3_doc.id }
-      end
-    end
   end # context 'a monograph with attached members' do
+
+  context 'press' do
+    let(:mono_doc) { ::SolrDocument.new(id: 'mono', has_model_ssim: ['Monograph'], press_tesim: ['subdomain'], press_name_ssim: ['name']) }
+    let(:press) { instance_double(Press, 'press', press_url: 'url') }
+
+    before { allow(Press).to receive(:find_by).with(subdomain: mono_doc['press_tesim'].first).and_return(press) }
+
+    describe '#subdomain' do
+      subject { presenter.subdomain }
+
+      it { is_expected.to eq('subdomain') }
+    end
+
+    describe '#press' do
+      subject { presenter.press }
+
+      it { is_expected.to eq('name') }
+    end
+
+    describe '#press_obj' do
+      subject { presenter.press_obj }
+
+      it { is_expected.to be press }
+    end
+
+    describe '#press_url' do
+      subject { presenter.press_url }
+
+      it { is_expected.to eq('url') }
+    end
+  end
 
   # Dependent upon CitableLinkPresenter
   describe '#heb_dlxs_link' do
