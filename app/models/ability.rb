@@ -23,6 +23,8 @@ class Ability
   def grant_press_admin_abilities
     can :manage, Role, resource_id: @user.admin_roles.pluck(:resource_id), resource_type: 'Press'
 
+    can :manage, FeaturedRepresentative
+
     can %i[create update], Monograph do |m|
       @user.admin_presses.map(&:subdomain).include?(m.press)
     end

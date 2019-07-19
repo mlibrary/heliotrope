@@ -6,8 +6,9 @@ module Hyrax
     self.curation_concern_type = ::Monograph
     self.show_presenter = Hyrax::MonographPresenter
 
-    skip_authorize_resource only: [:create]
+    skip_authorize_resource only: %i[create new]
     before_action :authorize_press, only: [:create]
+    before_action :authorize_press_admin, only: [:new]
 
     def publish
       PublishJob.perform_later(curation_concern)
@@ -47,6 +48,10 @@ module Hyrax
       def authorize_press
         curation_concern.press = params[:monograph][:press]
         authorize!(:create, curation_concern)
+      end
+
+      def authorize_press_admin
+        raise CanCan::AccessDenied unless current_ability.current_user.platform_admin? || current_ability.current_user.admin_presses.any?
       end
   end
 end
