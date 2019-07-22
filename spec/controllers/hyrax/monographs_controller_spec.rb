@@ -104,6 +104,18 @@ RSpec.describe Hyrax::MonographsController, type: :controller do
           end
         end
       end
+
+      describe "#new" do
+        before do
+          get :new
+        end
+
+        it 'is successful' do
+          expect(response).to have_http_status(:success)
+          expect(response).to render_template(:new)
+          expect(response).to render_template("layouts/hyrax/dashboard")
+        end
+      end
     end # press-level admin
   end # actions
 
@@ -159,6 +171,13 @@ RSpec.describe Hyrax::MonographsController, type: :controller do
       it 'is redirected' do
         get :show, params: { id: monograph }
         expect(response).to redirect_to Rails.application.routes.url_helpers.hyrax_monograph_path(monograph, locale: I18n.locale)
+      end
+    end
+
+    describe "#new" do
+      it 'is redirected' do
+        get :new
+        expect(response).to have_http_status(:found)
       end
     end
   end
