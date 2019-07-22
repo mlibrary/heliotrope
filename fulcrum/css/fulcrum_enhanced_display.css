@@ -1,0 +1,15 @@
+/* SPECIAL STYLESHEET USED TO DISPLAY EMBEDDED 
+   MEDIA in U-M PRESS EPUB FILES on FULCRUM */
+
+/* Hide default media blocks, such as image thumbnails */
+.default-media-display {
+    display: none !important;
+}
+/* Display enhanced media blocks, such as Fulcrum embedded audio/video/images */
+.enhanced-media-display {
+    display: block !important;
+}
+/* Display enhanced media inline, such as links to Fulcrum resource pages */
+span.enhanced-media-display {
+    display: inline !important;
+}
