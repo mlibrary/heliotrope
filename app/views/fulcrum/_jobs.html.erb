@@ -15,9 +15,16 @@
   </li>
   <li>
     <form name="deposit" method="get" action="<%= fulcrum_exec_path(:deposit) %>">
-      <label for="noid">Noid</label>
-      <input type="text" id="noid" name="noid" value="validnoid">
+      <label for="deposit_noid">APTrust Deposit</label>
+      <input type="text" id="deposit_noid" name="noid" value="validnoid">
       <button name="submit" type="submit" value="deposit">Deposit</button>
+    </form>
+  </li>
+  <li>
+    <form name="verify" method="get" action="<%= fulcrum_exec_path(:verify) %>">
+      <label for="verify_noid">APTrust Verify</label>
+      <input type="text" id="verify_noid" name="noid" value="validnoid">
+      <button name="submit" type="submit" value="verify">Verify</button>
     </form>
   </li>
   <li>

@@ -7,8 +7,10 @@ class FulcrumController < ApplicationController
     redirect_to action: :index, partials: :dashboard
   end
 
-  def exec
+  def exec # rubocop:disable Metrics/CyclomaticComplexity
     case params[:cmd]
+    when 'verify'
+      AptrustVerifyJob.perform_now(params[:noid])
     when 'deposit'
       AptrustDepositJob.perform_now(params[:noid])
     when 'ingest'

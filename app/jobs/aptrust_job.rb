@@ -5,9 +5,12 @@ class AptrustJob < ApplicationJob
     rvalue = 0
     Rails.logger.debug "Aptrust Job Deposit Monographs ..."
     monograph_docs.each do |monograph_doc|
-      next if deposit_up_to_date?(monograph_doc)
-      AptrustDepositJob.perform_now(monograph_doc['id'])
-      rvalue += 1
+      if deposit_up_to_date?(monograph_doc)
+        AptrustVerifyJob.perform_now(monograph_doc['id'])
+      else
+        AptrustDepositJob.perform_now(monograph_doc['id'])
+        rvalue += 1
+      end
     end
     Rails.logger.debug "Aptrust Job Deposited #{rvalue} Monographs"
     rvalue

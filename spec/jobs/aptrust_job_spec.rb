@@ -43,11 +43,13 @@ RSpec.describe AptrustJob, type: :job do
       before do
         allow(job).to receive(:monograph_docs).and_return([monograph_doc])
         allow(job).to receive(:deposit_up_to_date?).with(monograph_doc).and_return(up_to_date)
+        allow(AptrustVerifyJob).to receive(:perform_now).with(monograph_doc['id'])
         allow(AptrustDepositJob).to receive(:perform_now).with(monograph_doc['id'])
       end
 
       it do
         is_expected.to eq(0)
+        expect(AptrustVerifyJob).to have_received(:perform_now).with(monograph_doc['id'])
         expect(AptrustDepositJob).not_to have_received(:perform_now).with(monograph_doc['id'])
       end
 
@@ -56,6 +58,7 @@ RSpec.describe AptrustJob, type: :job do
 
         it do
           is_expected.to eq(1)
+          expect(AptrustVerifyJob).not_to have_received(:perform_now).with(monograph_doc['id'])
           expect(AptrustDepositJob).to have_received(:perform_now).with(monograph_doc['id'])
         end
       end
