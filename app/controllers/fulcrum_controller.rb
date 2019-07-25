@@ -9,12 +9,14 @@ class FulcrumController < ApplicationController
 
   def exec # rubocop:disable Metrics/CyclomaticComplexity
     case params[:cmd]
+    when 'ingest'
+      ExtractIngestJob.perform_later(params[:token], params[:base], params[:source], params[:target])
     when 'verify'
       AptrustVerifyJob.perform_now(params[:noid])
     when 'deposit'
       AptrustDepositJob.perform_now(params[:noid])
-    when 'ingest'
-      ExtractIngestJob.perform_later(params[:token], params[:base], params[:source], params[:target])
+    when 'unpack'
+      UnpackJob.perform_now(params[:noid], params[:kind])
     when 'reindex_everything'
       ReindexJob.perform_later('everything')
     when 'reindex_monographs'

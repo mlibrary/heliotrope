@@ -1,0 +1,7 @@
+<% content_for :head do %>
+  <meta name="turbolinks-cache-control" content="no-cache">
+<% end %>
+
+<iframe height=600px width=100% src=<%= "#{main_app.map_file_url(file_set.id, file: 'index', format: 'html')}" %> allowfullscreen>
+  Your browser doesn't support iframes!
+</iframe>
