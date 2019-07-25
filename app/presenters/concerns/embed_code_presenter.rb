@@ -4,7 +4,7 @@ module EmbedCodePresenter
   extend ActiveSupport::Concern
 
   def embeddable_type?
-    image? || video? || audio?
+    image? || video? || audio? || map?
   end
 
   def allow_embed?
@@ -12,7 +12,7 @@ module EmbedCodePresenter
   end
 
   def embed_code
-    if video? || image?
+    if video? || image? || map?
       responsive_embed_code
     elsif audio?
       audio_embed_code
