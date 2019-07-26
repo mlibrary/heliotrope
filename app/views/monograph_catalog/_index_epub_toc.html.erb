@@ -21,7 +21,7 @@
       <li>
     <% end %>
     <div class="section-container">
-      <a class="toc-link" href="<%= epub_path(id: epub_presenter.id).gsub!(/\?.*/, '') + '#' + interval.cfi  %>"><%= interval.title %></a>
+      <a class="toc-link" href="<%= epub_path(id: epub_presenter.id) + '#' + interval.cfi  %>" data-turbolinks="false"><%= interval.title %></a>
       <% if @press_policy.interval_read_button?(interval) %>
         <div class="btn-group download" role="group" aria-label="Read or Download Section">
           <% if interval.downloadable? && @press_policy.interval_download_button?(interval) && epub_policy.show? %>

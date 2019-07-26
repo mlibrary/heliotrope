@@ -17,6 +17,7 @@ class TestMonographPresenter
   def ordered_member_docs
     [
       SolrDocument.new(id: 'epubid'),
+      SolrDocument.new(id: 'pdfebookid'),
       SolrDocument.new(id: 'webglid'),
       SolrDocument.new(id: 'dbid'),
       SolrDocument.new(id: 'aboutid'),
@@ -61,7 +62,7 @@ RSpec.describe FeaturedRepresentatives::MonographPresenter do
       end
     end
 
-    context "epub methods" do
+    context "EPUB representative" do
       subject { TestMonographPresenter.new(SolrDocument.new(id: 'mid')) }
 
       before { FeaturedRepresentative.create(monograph_id: 'mid', file_set_id: 'epubid', kind: 'epub') }
@@ -69,13 +70,13 @@ RSpec.describe FeaturedRepresentatives::MonographPresenter do
       after { FeaturedRepresentative.destroy_all }
 
       describe "#epub?" do
-        it "has an epub" do
+        it "returns true" do
           expect(subject.epub?).to be true
         end
       end
 
       describe "#epub_id" do
-        it "return the epub_id" do
+        it "returns the epub_id" do
           expect(subject.epub_id).to eq 'epubid'
         end
       end
@@ -89,6 +90,187 @@ RSpec.describe FeaturedRepresentatives::MonographPresenter do
       describe "#epub_presenter" do
         it "returns a presenter" do
           expect(subject.epub_presenter).to be_an_instance_of(EPubPresenter)
+        end
+      end
+
+      describe "#pdf_ebook?" do
+        it "returns false" do
+          expect(subject.pdf_ebook?).to be false
+        end
+      end
+
+      describe "#pdf_ebook_id" do
+        it "returns nil" do
+          expect(subject.pdf_ebook_id).to be nil
+        end
+      end
+
+      describe "#pdf_ebook" do
+        it "returns nil" do
+          expect(subject.pdf_ebook).to be nil
+        end
+      end
+
+      describe "#reader_ebook?" do
+        it "returns true" do
+          expect(subject.reader_ebook?).to be true
+        end
+      end
+
+      describe "#reader_ebook_id" do
+        it "returns the epub's id" do
+          expect(subject.reader_ebook_id).to eq 'epubid'
+        end
+      end
+
+      describe "#reader_ebook" do
+        it "returns the epub's solr_doc" do
+          expect(subject.epub['id']).to eq 'epubid'
+        end
+      end
+    end
+
+    context "PDF representative" do
+      subject { TestMonographPresenter.new(SolrDocument.new(id: 'mid')) }
+
+      before do
+        FeaturedRepresentative.create(monograph_id: 'mid', file_set_id: 'pdfebookid', kind: 'pdf_ebook')
+      end
+
+      after { FeaturedRepresentative.destroy_all }
+
+      describe "#epub?" do
+        it "returns false" do
+          expect(subject.epub?).to be false
+        end
+      end
+
+      describe "#epub_id" do
+        it "returns nil" do
+          expect(subject.epub_id).to be nil
+        end
+      end
+
+      describe "#epub" do
+        it "returns nil" do
+          expect(subject.epub).to be nil
+        end
+      end
+
+      describe "#pdf_ebook?" do
+        it "returns true" do
+          expect(subject.pdf_ebook?).to be true
+        end
+      end
+
+      describe "#pdf_ebook_id" do
+        it "returns the pdf_ebook_id" do
+          expect(subject.pdf_ebook_id).to eq 'pdfebookid'
+        end
+      end
+
+      describe "#pdf_ebook" do
+        it "returns the pdf_ebook's solr_doc" do
+          expect(subject.pdf_ebook['id']).to eq 'pdfebookid'
+        end
+      end
+
+      describe "#pdf_ebook_presenter" do
+        it "returns a presenter" do
+          expect(subject.pdf_ebook_presenter).to be_an_instance_of(PDFEbookPresenter)
+        end
+      end
+
+      describe "#reader_ebook?" do
+        it "is true" do
+          expect(subject.reader_ebook?).to be true
+        end
+      end
+
+      describe "#reader_ebook_id" do
+        it "returns the pdf_ebook's id" do
+          expect(subject.reader_ebook_id).to eq 'pdfebookid'
+        end
+      end
+
+      describe "#reader_ebook" do
+        it "returns the pdf_ebook's solr_doc" do
+          expect(subject.reader_ebook['id']).to eq 'pdfebookid'
+        end
+      end
+    end
+
+    context "Both EPUB and PDF representatives" do
+      subject { TestMonographPresenter.new(SolrDocument.new(id: 'mid')) }
+
+      before do
+        FeaturedRepresentative.create(monograph_id: 'mid', file_set_id: 'pdfebookid', kind: 'pdf_ebook')
+        FeaturedRepresentative.create(monograph_id: 'mid', file_set_id: 'epubid', kind: 'epub')
+      end
+
+      describe "#epub?" do
+        it "returns true" do
+          expect(subject.epub?).to be true
+        end
+      end
+
+      describe "#epub_id" do
+        it "returns the epub_id" do
+          expect(subject.epub_id).to eq 'epubid'
+        end
+      end
+
+      describe "#epub" do
+        it "returns the epub's solr_doc" do
+          expect(subject.epub['id']).to eq 'epubid'
+        end
+      end
+
+      describe "#epub_presenter" do
+        it "returns a presenter" do
+          expect(subject.epub_presenter).to be_an_instance_of(EPubPresenter)
+        end
+      end
+
+      describe "#pdf_ebook?" do
+        it "returns true" do
+          expect(subject.pdf_ebook?).to be true
+        end
+      end
+
+      describe "#pdf_ebook_id" do
+        it "returns the pdf_ebook_id" do
+          expect(subject.pdf_ebook_id).to eq 'pdfebookid'
+        end
+      end
+
+      describe "#pdf_ebook" do
+        it "returns the pdf_ebook's solr_doc" do
+          expect(subject.pdf_ebook['id']).to eq 'pdfebookid'
+        end
+      end
+
+      describe "#pdf_ebook_presenter" do
+        it "returns a presenter" do
+          expect(subject.pdf_ebook_presenter).to be_an_instance_of(PDFEbookPresenter)
+        end
+      end
+
+      describe "#reader_ebook?" do
+        it "is true" do
+          expect(subject.reader_ebook?).to be true
+        end
+      end
+
+      describe "#reader_ebook_id" do
+        it "returns the epub's id, giving precedence to the epub" do
+          expect(subject.reader_ebook_id).to eq 'epubid'
+        end
+      end
+
+      describe "#reader_ebook" do
+        it "returns the epub's solr_doc, giving precedence to the epub" do
+          expect(subject.epub['id']).to eq 'epubid'
         end
       end
     end
