@@ -1,12 +1,34 @@
 # frozen_string_literal: true
 
 module FeaturedRepresentatives
-  module MonographPresenter
+  module MonographPresenter # rubocop:disable Metrics/ModuleLength
     extend ActiveSupport::Concern
     attr_reader :frs
 
     def featured_representatives
       @frs ||= FeaturedRepresentative.where(monograph_id: id)
+    end
+
+    def reader_ebook?
+      reader_ebook_id.present?
+    end
+
+    def reader_ebook_id
+      return @reader_ebook_id if @reader_ebook_id.present?
+      epub_id = nil
+      pdf_ebook_id = nil
+      featured_representatives.each do |fr|
+        if fr.kind == 'epub'
+          epub_id = fr.file_set_id
+        elsif fr.kind == 'pdf_ebook'
+          pdf_ebook_id = fr.file_set_id
+        end
+      end
+      @reader_ebook_id ||= (epub_id || pdf_ebook_id)
+    end
+
+    def reader_ebook
+      ordered_member_docs.find { |doc| doc.id == reader_ebook_id }
     end
 
     def epub?

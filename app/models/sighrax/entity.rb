@@ -46,6 +46,10 @@ module Sighrax
       []
     end
 
+    def content
+      ''
+    end
+
     protected
 
       attr_reader :data
