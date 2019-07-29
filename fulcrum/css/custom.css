@@ -712,12 +712,14 @@ footer.page-footer {
     padding-bottom: .5em; }
     .team ul li span.image img {
       border-radius: 50%;
+      border: 1px solid #e5e5e5;
       max-width: 150px;
       height: auto; }
     .team ul li span.image i {
       max-width: 150px;
       font-size: 150px;
       border-radius: 50%;
+      border: 1px solid #e5e5e5;
       color: #FFF;
       background: #BEC4CC; }
   .team ul li span.title, .team ul li span.email {
