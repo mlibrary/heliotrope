@@ -441,29 +441,37 @@ $heb-black-80: #342f2e;
 //
 ///////////////////////////////////////////////
 // colors
-$primary: #64b145;
-$two: #ed1b68;
-$three: #148ec2;
-$four: #244c9e;
-$five: #69c9ca;
-$six: #676c72;
-$seven: #a47434;
-$eight: #cac52f;
+$a2ru-brand-color: #64b145;
+$a2ru-link: #ed1b68;
+$a2ru-accent-link: #A10941;
+$a2ru-black-80: #333;
+$a2ru-blue-light: #148ec2;
+$a2ru-blue-dark: #244c9e;
+$a2ru-aqua: #69c9ca;
+$a2ru-grey-1: #676c72;
+$a2ru-grey-2: #efefef;
+$a2ru-brown: #a47434;
+$a2ru-yellow: #cac52f;
+$a2ru-white: #fafafa;
 
 // typography
-@import url('https://fonts.googleapis.com/css?family=Rubik:400,400i,500,500i&display=swap');
+@import url('https://fonts.googleapis.com/css?family=Rubik:300,400,400i,500,500i&display=swap');
+
+@mixin rubik {
+  font-family: 'Rubik', sans-serif;
+}
 
 .a2ru {
 
   // typography
-  @include franklin;
+  @include rubik;
 
   h1,
   h2,
   h3,
   h4,
   h5 {
-    font-weight: 700;
+    font-weight: 500;
   }
 
   // links
@@ -495,18 +503,16 @@ $eight: #cac52f;
   .navbar-default .navbar-nav > .open > a,
   .navbar-default .navbar-nav > .open > a:hover,
   .navbar-default .navbar-nav > .open > a:focus {
-    background-color: $a2ru-grey-3;
+    background-color: $a2ru-grey-2;
   }
 
   #brand-bar {
     background-color: $a2ru-white;
-    border-bottom: 2px solid $a2ru-accent-color;
+    border-bottom: 2px solid $a2ru-link;
 
     .navbar-brand {
       color: $a2ru-brand-color;
       font-weight: 400;
-      text-transform: uppercase;
-      letter-spacing: 1.75px;
     }
 
     .navbar-nav {
@@ -520,13 +526,13 @@ $eight: #cac52f;
       .open > a,
       .open > a:focus,
       .open > a:hover {
-        background-color: $a2ru-grey-3;
+        background-color: $a2ru-grey-2;
       }
     }
 
     button.search-submit {
-      background-color: $a2ru-link;
-      border-color: $a2ru-link;
+      background-color: $a2ru-grey-1;
+      border-color: $a2ru-grey-1;
       color: $a2ru-white;
     }
 
@@ -536,8 +542,8 @@ $eight: #cac52f;
 
   // jumbotron
   .jumbotron {
-    background-color: $a2ru-grey-3;
-    font-weight: 400;
+    background-color: $a2ru-grey-2;
+    font-weight: 300;
     padding-top: 1.5em;
     padding-bottom: 1em;
 
@@ -553,7 +559,7 @@ $eight: #cac52f;
     .logo {
 
       img {
-        width: 115px;
+        width: 300px;
         margin-right: 3em;
       }
 
@@ -698,23 +704,27 @@ $eight: #cac52f;
     }
     .press-block-a,
     .press-block-b {
-      background-color:  $a2ru-grey-3;
+      background-color:  $a2ru-grey-2;
       font-weight: 400;
-      border-top: 2px solid $a2ru-accent-color;
 
       a,
       a:hover,
       a:active {
-        display:none;
+        color: $a2ru-link;
       }
 
       img {
-        width: 75px;
+        width: 125px;
       }
 
     }
+    .press-block-a a,
+    .press-block-a a:hover,
+    .press-block-a  a:active {
+      display: none;
+    }
     .press-block-c {
-      background-color: $a2ru-accent-color;
+      background-color: $a2ru-brand-color;
       color: $a2ru-white;
       text-transform: uppercase;
       letter-spacing: 1.75px;
@@ -727,7 +737,6 @@ $eight: #cac52f;
     }
     .platform {
        background-color: $a2ru-black-80;
-       border-top: 2px solid $a2ru-accent-color;
     }
   }
 
