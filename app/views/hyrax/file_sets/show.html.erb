@@ -31,15 +31,12 @@
     <% if defined? @presenter.file_set_coins_title %>
       <span class="Z3988" title="<%= @presenter.file_set_coins_title %>"></span>
     <% end %>
-    <!-- file_sets _media -->
-    <div class="col-sm-6">
-      <%= render "media", presenter: @presenter %>
-    </div> <!-- / file_sets _media -->
     <!-- file_sets metadata and actions -->
-    <div class="col-sm-6">
+    <div class="col-sm-6 col-sm-push-6">
       <div class="row asset-attributes">
         <div class="col-sm-12">
           <h1 id="asset-title"><%= @presenter.title %></h1>
+          <div class="skip"><a href="#media" data-turbolinks="false">Skip to media</a></div>
           <span class="section">From <em><%= link_to @presenter.monograph.title, main_app.monograph_catalog_path(@presenter.monograph_id) %></em>
             <% if @presenter.monograph.authors? %>
               by <%= render_markdown @presenter.monograph.authors %>
@@ -55,5 +52,9 @@
         </div>
       </div> <!-- /.asset-actions -->
     </div> <!-- / file_sets metadata and actions -->
+    <!-- file_sets _media -->
+    <div id="media" class="col-sm-6 col-sm-pull-6">
+      <%= render "media", presenter: @presenter %>
+    </div> <!-- / file_sets _media -->
   </div> <!-- /.asset -->
 <% end %>
