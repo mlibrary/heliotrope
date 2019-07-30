@@ -436,6 +436,365 @@ $heb-black-80: #342f2e;
 }
 ///////////////////////////////////////////////
 //
+// A2RU - Alliance for the Arts in Research
+// Universities
+//
+///////////////////////////////////////////////
+// colors
+$a2ru-brand-color: #64b145;
+$a2ru-link: #ed1b68;
+$a2ru-accent-link: #A10941;
+$a2ru-black-80: #333;
+$a2ru-blue-light: #148ec2;
+$a2ru-blue-dark: #244c9e;
+$a2ru-aqua: #69c9ca;
+$a2ru-grey-1: #676c72;
+$a2ru-grey-2: #efefef;
+$a2ru-brown: #a47434;
+$a2ru-yellow: #cac52f;
+$a2ru-white: #fafafa;
+
+// typography
+@import url('https://fonts.googleapis.com/css?family=Rubik:300,400,400i,500,500i&display=swap');
+
+@mixin rubik {
+  font-family: 'Rubik', sans-serif;
+}
+
+.a2ru {
+
+  // typography
+  @include rubik;
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5 {
+    font-weight: 500;
+  }
+
+  // links
+  a {
+    color: $a2ru-link;
+  }
+
+  a:hover,
+  a:active {
+    color: $a2ru-accent-link;
+  }
+
+  // buttons
+
+  .btn-default {
+    @include button-background-color($a2ru-white);
+    @include button-font-color($a2ru-link);
+    border-color: $a2ru-link;
+  }
+
+
+  .btn-default:hover,
+  .btn-default:active {
+    @include button-hover-background-color($a2ru-link);
+    @include button-hover-font-color($a2ru-white);
+  }
+
+  // navigation menu
+  .navbar-default .navbar-nav > .open > a,
+  .navbar-default .navbar-nav > .open > a:hover,
+  .navbar-default .navbar-nav > .open > a:focus {
+    background-color: $a2ru-grey-2;
+  }
+
+  #brand-bar {
+    background-color: $a2ru-white;
+    border-bottom: 2px solid $a2ru-link;
+
+    .navbar-brand {
+      color: $a2ru-brand-color;
+      font-weight: 400;
+    }
+
+    .navbar-nav {
+      a#add-content,
+      a.login,
+      a.user-display-name,
+      a.language-dropdown {
+          color: $a2ru-link;
+      }
+
+      .open > a,
+      .open > a:focus,
+      .open > a:hover {
+        background-color: $a2ru-grey-2;
+      }
+    }
+
+    button.search-submit {
+      background-color: $a2ru-grey-1;
+      border-color: $a2ru-grey-1;
+      color: $a2ru-white;
+    }
+
+  }
+
+  // press catalog
+
+  // jumbotron
+  .jumbotron {
+    background-color: $a2ru-grey-2;
+    font-weight: 300;
+    padding-top: 1.5em;
+    padding-bottom: 1em;
+
+    p {
+      font-size: 16px;
+      margin-bottom: 0;
+    }
+
+    .container {
+      margin-top: 0;
+    }
+
+    .logo {
+
+      img {
+        width: 300px;
+        margin-right: 3em;
+      }
+
+    }
+
+  }
+
+  .press {
+    .results-container {
+
+      .documentHeader {
+        h3 {
+          font-weight: 600;
+        }
+        a {
+          color: #333;
+        }
+      }
+    }
+  }
+
+  //filters on press and monograph pages
+  .col-sm-3.facets-container,
+  #facet-panel-collapse {
+    padding-left: 0px;
+  }
+
+  .panel-group {
+    padding-left: 0px;
+  }
+
+  .panel-group .panel {
+    border-radius: 0px;
+  }
+
+  .panel-heading {
+    padding-top: 15px;
+  }
+
+  .panel-group .panel + .panel {
+    margin-top: 0px;
+  }
+
+  h3.panel-title a, a.more_facets_link {
+    color: #333;
+  }
+
+  .panel-heading.collapse-toggle .panel-title::after {
+    color: #333;
+  }
+
+  .panel-body {
+    background-color: #fafafa;
+  }
+
+  .search-form.panel-body {
+    background-color: #fff;
+  }
+
+  // sorts on press and monograph pages
+  #sort-dropdown .dropdown-toggle,
+  #per_page-dropdown .dropdown-toggle {
+    color: $a2ru-link;
+  }
+
+  #sort-dropdown .dropdown-toggle:hover,
+  #per_page-dropdown .dropdown-toggle:hover,
+  #sort-dropdown .dropdown-toggle:active,
+  #per_page-dropdown .dropdown-toggle:active {
+    color: $a2ru-white;
+
+    .caret {
+      color: $a2ru-white;
+    }
+
+  }
+
+  // search resources
+  button.search-submit {
+    background-color: $a2ru-link;
+    border-color: $a2ru-link;
+    color: $a2ru-white;
+  }
+  
+  .constraints-container {
+    padding: 10px 20px;
+    border-radius: 0px;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+  }
+
+
+  // pagination
+
+  .pagination {
+     li a, li span {
+
+       background-color: $a2ru-link;
+       border-color: $a2ru-link;
+       color: $a2ru-white;
+     }
+
+     li>a:hover,
+     li>a:focus,
+     li>span:hover,
+     li>span:focus {
+       background-color: $a2ru-white;
+       border-color: $a2ru-white;
+       color: $a2ru-link;
+     }
+
+
+     .active>a,
+     .active>a:hover,
+     .active>a:focus,
+     .active>span,
+     .active>span:hover,
+     .active>span:focus {
+       background-color: $a2ru-white;
+       border-color: $a2ru-white;
+       color: $a2ru-link;
+     }
+
+     .disabled>span,
+     .disabled>span:hover,
+     .disabled>span:focus,
+     .disabled>a,
+     .disabled>a:hover,
+     .disabled>a:focus {
+      background-color: $a2ru-white;
+      border-color: $a2ru-white;
+      color: $a2ru-link;
+     }
+  }
+
+  //footer
+  footer {
+    a,
+    a:hover,
+    a:active {
+      color: $a2ru-white;
+    }
+    .press-block-a,
+    .press-block-b {
+      background-color:  $a2ru-grey-2;
+      font-weight: 400;
+
+      a,
+      a:hover,
+      a:active {
+        color: $a2ru-link;
+      }
+
+      img {
+        width: 125px;
+      }
+
+    }
+    .press-block-a a,
+    .press-block-a a:hover,
+    .press-block-a  a:active {
+      display: none;
+    }
+    .press-block-c {
+      background-color: $a2ru-brand-color;
+      color: $a2ru-white;
+      text-transform: uppercase;
+      letter-spacing: 1.75px;
+
+      img {
+        width: auto !important;
+        margin-right: 1em;
+        height: 25px;
+      }
+    }
+    .platform {
+       background-color: $a2ru-black-80;
+    }
+  }
+
+  // EPUB Reader
+  #reader {
+
+    .button {
+      @include epub-button-background-color($a2ru-link,$a2ru-accent-link,$a2ru-white);
+    }
+
+    .button--lg {
+      @include epub-button-background-color($a2ru-link,$a2ru-accent-link,$a2ru-white);
+    }
+
+    .button--sm {
+      @include epub-button-background-color($a2ru-link,$a2ru-accent-link,$a2ru-white);
+    }
+
+    i[class^='icon-chevron-'] {
+      @include epub-prev-next-color($a2ru-grey-1);
+      transition: 0.2s ease-in;
+    }
+
+    i[class^='icon-chevron-']:hover {
+      @include epub-hover-prev-next-color($a2ru-brand-color);
+      transition: 0.2s ease-in;
+    }
+
+    .cozy-control .logo {
+      height: 47px;
+
+      img {
+        height: 47px;
+      }
+    }
+  }
+
+}
+
+@media(max-width: 768px) {
+  .a2ru .monograph .message {
+    padding: 1.5em;
+
+    .wrapper {
+      width: auto;
+    }
+    .text {
+      width: 70%;
+    }
+    .dismiss {
+      width: 20%;
+      padding-left: 10%;
+    }
+  }
+}
+
+///////////////////////////////////////////////
+//
 // Indiana University Press
 //
 ///////////////////////////////////////////////
