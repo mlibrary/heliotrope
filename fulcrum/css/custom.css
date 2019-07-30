@@ -702,6 +702,31 @@ footer.page-footer {
 .footer-menu {
   margin-top: 2.4rem; }
 
+.team ul li {
+  list-style: none !important;
+  text-align: center;
+  margin-bottom: 2em !important;
+  font-size: .9em; }
+  .team ul li span.image {
+    display: block;
+    padding-bottom: .5em; }
+    .team ul li span.image img {
+      border-radius: 50%;
+      border: 1px solid #e5e5e5;
+      max-width: 150px;
+      height: auto; }
+    .team ul li span.image i {
+      max-width: 150px;
+      font-size: 150px;
+      border-radius: 50%;
+      border: 1px solid #e5e5e5;
+      color: #FFF;
+      background: #BEC4CC; }
+  .team ul li span.title, .team ul li span.email {
+    display: block;
+    font-weight: 300;
+    font-size: .8em; }
+
 .tagline {
   margin-top: 2em; }
   .tagline h1 {

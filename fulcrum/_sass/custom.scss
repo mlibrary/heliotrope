@@ -265,6 +265,44 @@ footer.page-footer {
   margin-top: 2.4rem;
 }
 
+// About
+.team {
+  ul li {
+    list-style: none !important;
+    text-align: center;
+    margin-bottom: 2em !important;
+    font-size: .9em;
+
+    span.image {
+      display: block;
+      padding-bottom: .5em;
+    
+      img {
+        border-radius: 50%;
+        border: 1px solid #e5e5e5;
+        max-width: 150px;
+        height: auto;
+      }
+
+      i {
+        max-width: 150px;
+        font-size: 150px;
+        border-radius: 50%;
+        border: 1px solid #e5e5e5;
+        color:  #FFF;
+        background:  #BEC4CC;
+      }
+
+    }
+
+    span.title, span.email {
+      display: block;
+      font-weight: 300;
+      font-size: .8em;
+    }
+  }
+}
+
 // partner-with-us
 .tagline {
   margin-top: 2em;
