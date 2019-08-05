@@ -8,6 +8,7 @@ class MapsController < ApplicationController
     filename = filepath + '/' + params[:file] + '.' + params[:format]
     filename = filename.to_s.sub(/releases\/\d+/, "current")
     response.headers['X-Sendfile'] = filename
+    response.headers.except! 'X-Frame-Options'
     send_file filename, disposition: 'inline'
   rescue StandardError => e
     Rails.logger.info("MapsController.file#{filename} raised #{e}")

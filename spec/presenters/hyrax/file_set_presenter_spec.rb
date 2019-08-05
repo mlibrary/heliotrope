@@ -418,7 +418,35 @@ RSpec.describe Hyrax::FileSetPresenter do
   describe '#heliotrope_media_partial for embedded assets' do
     subject { presenter.heliotrope_media_partial('media_display_embedded') }
 
-    let(:fileset_doc) { SolrDocument.new(mime_type_ssi: mime_type, external_resource_url_ssim: '') }
+    let(:fileset_doc) { SolrDocument.new(mime_type_ssi: mime_type, resource_type_tesim: [resource_type], external_resource_url_ssim: external_resource_url) }
+    let(:mime_type) { nil }
+    let(:resource_type) { nil }
+    let(:external_resource_url) { '' }
+
+    context 'with featured representative' do
+      FeaturedRepresentative::KINDS.each do |kind|
+        context kind.to_s do
+          before do
+            if presenter.respond_to?("#{kind}?".to_sym)
+              allow(presenter).to receive("#{kind}?".to_sym).and_return(true)
+            end
+          end
+
+          case kind
+          when 'epub'
+            it { is_expected.to eq "hyrax/file_sets/media_display_embedded/#{kind}" }
+          else
+            it { is_expected.to eq 'hyrax/file_sets/media_display_embedded/default' }
+          end
+        end
+      end
+    end
+
+    context "with a map" do
+      let(:resource_type) { 'map' }
+
+      it { is_expected.to eq 'hyrax/file_sets/media_display_embedded/map' }
+    end
 
     context "with an image" do
       let(:mime_type) { 'image/tiff' }
