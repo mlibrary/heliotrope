@@ -20,108 +20,61 @@ class TestFileSetPresenter
 end
 
 RSpec.describe FeaturedRepresentatives::FileSetPresenter do
-  context "if a featured_representative's kind is epub" do
-    subject { TestFileSetPresenter.new(SolrDocument.new(id: 'fid1', monograph_id: 'mid')) }
+  let(:presenter) { TestFileSetPresenter.new(SolrDocument.new(id: 'fid1', monograph_id: 'mid')) }
 
-    let!(:fr) { create(:featured_representative, file_set_id: 'fid1', monograph_id: 'mid', kind: 'epub') }
+  context 'non featured representative file set' do
+    describe '#featured_representative' do
+      subject { presenter.featured_representative }
 
-    after { FeaturedRepresentative.destroy_all }
-
-    describe "#featured_representative?" do
-      it "is a featured_representative" do
-        expect(subject.featured_representative?).to be true
-      end
+      it { is_expected.to be nil }
     end
 
-    describe "#featured_representative" do
-      it "returns the featured_representative" do
-        expect(subject.featured_representative.file_set_id).to eq 'fid1'
-        expect(subject.featured_representative).to be_an_instance_of(FeaturedRepresentative)
-      end
+    describe '#featured_representative?' do
+      subject { presenter.featured_representative? }
+
+      it { is_expected.to be false }
     end
 
-    describe "#epub?" do
-      it "is an epub" do
-        expect(subject.epub?).to be true
+    FeaturedRepresentative::KINDS.each do |kind|
+      next unless TestFileSetPresenter.new(nil).respond_to?("#{kind}?".to_sym)
+      describe "##{kind}?" do
+        subject { presenter.send("#{kind}?".to_sym) }
+
+        it { is_expected.to be false }
       end
     end
   end
 
-  context "if a featured_representatives's kind is webgl" do
-    subject { TestFileSetPresenter.new(SolrDocument.new(id: 'fid2', monograph_id: 'mid')) }
+  context 'featured representative file set' do
+    let(:featured_representative) { instance_double(FeaturedRepresentative, 'featured_representative', kind: kind) }
+    let(:kind) { 'kind' }
 
-    let!(:fr) { create(:featured_representative, file_set_id: 'fid2', monograph_id: 'mid', kind: 'webgl') }
+    before { allow(FeaturedRepresentative).to receive(:where).with(monograph_id: 'mid', file_set_id: 'fid1').and_return([featured_representative]) }
 
-    after { FeaturedRepresentative.destroy_all }
+    describe '#featured_representative' do
+      subject { presenter.featured_representative }
 
-    describe "#webgl?" do
-      it "is a webgl" do
-        expect(subject.webgl?).to be true
-      end
-    end
-  end
-
-  context "if the file_set is not a featured_representative" do
-    subject { TestFileSetPresenter.new(SolrDocument.new(id: 'fid', monograph_id: 'mid')) }
-
-    describe "#featured_representative?" do
-      it "is false" do
-        expect(subject.featured_representative?).to be false
-      end
+      it { is_expected.to be featured_representative }
     end
 
-    describe "#featured_representative" do
-      it "is nil" do
-        expect(subject.featured_representative).to be nil
-      end
+    describe '#featured_representative?' do
+      subject { presenter.featured_representative? }
+
+      it { is_expected.to be true }
     end
 
-    describe "epub?" do
-      it "is false" do
-        expect(subject.epub?).to be false
-      end
-    end
+    FeaturedRepresentative::KINDS.each do |kind|
+      next unless TestFileSetPresenter.new(nil).respond_to?("#{kind}?".to_sym)
+      describe "##{kind}?" do
+        subject { presenter.send("#{kind}?".to_sym) }
 
-    describe "webgl?" do
-      it "is false" do
-        expect(subject.webgl?).to be false
-      end
-    end
-  end
+        it { is_expected.to be false }
 
-  describe '#component' do
-    subject { presenter }
+        context kind.to_s do
+          let(:kind) { kind }
 
-    let(:presenter) { TestFileSetPresenter.new(SolrDocument.new(id: 'fid1', monograph_id: 'mid')) }
-    let!(:fr) { create(:featured_representative, file_set_id: 'fid1', monograph_id: 'mid', kind: kind) }
-    let(:kind) { 'aboutware' }
-
-    after { FeaturedRepresentative.destroy_all }
-
-    it { expect(subject.component?).to be false }
-    it { expect(subject.component).to be 0 }
-
-    context 'component' do
-      let(:component) { double("component", id: id) }
-      let(:id) { double("id", positive?: true) }
-
-      before { allow(Greensub::Component).to receive(:find_by).with(noid: fr.monograph_id).and_return(component) }
-
-      it { expect(subject.component?).to be false }
-      it { expect(subject.component).to be 0 }
-
-      context 'epub' do
-        let(:kind) { 'epub' }
-
-        it { expect(subject.component?).to be true }
-        it { expect(subject.component).to be id }
-      end
-
-      context 'webgl' do
-        let(:kind) { 'webgl' }
-
-        it { expect(subject.component?).to be false }
-        it { expect(subject.component).to be 0 }
+          it { is_expected.to be true }
+        end
       end
     end
   end

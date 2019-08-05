@@ -6,7 +6,8 @@ require 'fakefs/spec_helpers'
 # Since we lifted this out of CC 1.6.2, we'll need to run the tests too
 
 describe CharacterizeJob do
-  let(:file_set)    { FileSet.new(id: file_set_id, title: ['previous_file.jpg'], label: 'previous_file.jpg', date_modified: 'previous_mod_date') }
+  let(:file_set) { FileSet.new(id: file_set_id, title: ['previous_file.jpg'], label: 'previous_file.jpg', date_modified: 'previous_mod_date', resource_type: [resource_type]) }
+  let(:resource_type) { 'resource_type' }
   let(:file_set_id) { 'abc12345' }
   let(:file_path)   { Rails.root + 'tmp' + 'uploads' + 'ab' + 'c1' + '23' + '45' + 'abc12345' + 'picture.png' }
   let(:filename)    { file_path.to_s }
@@ -102,6 +103,86 @@ describe CharacterizeJob do
       described_class.perform_now(file_set, file.id)
 
       expect(cached_file.exist?).to be false
+    end
+  end
+
+  context "featured representative" do
+    let(:file_path) { Rails.root + 'tmp' + 'uploads' + 'ab' + 'c1' + '23' + '45' + 'abc12345' + file_type }
+    let(:file) do
+      Hydra::PCDM::File.new.tap do |f|
+        f.content = 'foo'
+        f.original_name = file_type
+        f.save!
+      end
+    end
+    let(:monograph) { build(:monograph, id: 'mono_id', press: 'press') }
+
+    before do
+      allow(Hydra::Works::CharacterizationService).to receive(:run).with(file, filename)
+      allow(file).to receive(:save!)
+      allow(file_set).to receive(:update_index)
+      allow(CreateDerivativesJob).to receive(:perform_later).with(file_set, file.id, filename)
+      allow(file_set).to receive(:parent).and_return(monograph)
+    end
+
+    after { FeaturedRepresentative.destroy_all }
+
+    FeaturedRepresentative::KINDS.each do |kind|
+      context kind.to_s do
+        let(:file_type) { "file.#{kind}" }
+
+        before { allow(UnpackJob).to receive(:perform_later).and_return(true) }
+
+        it "unpacks some kinds" do
+          create(:featured_representative, monograph_id: monograph.id, file_set_id: file_set.id, kind: kind)
+          described_class.perform_now(file_set, file.id)
+          case kind
+          when 'epub', 'webgl'
+            expect(UnpackJob).to have_received(:perform_later).with(file_set.id, kind)
+          else
+            expect(UnpackJob).not_to have_received(:perform_later).with(file_set.id, kind)
+          end
+        end
+      end
+    end
+  end
+
+  context 'resource type' do
+    let(:file_path) { Rails.root + 'tmp' + 'uploads' + 'ab' + 'c1' + '23' + '45' + 'abc12345' + file_type }
+    let(:file_type) { 'file.zip' }
+    let(:file) do
+      Hydra::PCDM::File.new.tap do |f|
+        f.content = 'foo'
+        f.original_name = file_type
+        f.save!
+      end
+    end
+    let(:monograph) { build(:monograph, id: 'mono_id', press: 'press') }
+
+    before do
+      allow(Hydra::Works::CharacterizationService).to receive(:run).with(file, filename)
+      allow(file).to receive(:save!)
+      allow(file_set).to receive(:update_index)
+      allow(CreateDerivativesJob).to receive(:perform_later).with(file_set, file.id, filename)
+      allow(file_set).to receive(:parent).and_return(monograph)
+    end
+
+    %w[map foo].each do |resource_type|
+      context resource_type do
+        let(:resource_type) { resource_type }
+
+        before { allow(UnpackJob).to receive(:perform_later).and_return(true) }
+
+        it "unpacks some resource types" do
+          described_class.perform_now(file_set, file.id)
+          case resource_type
+          when 'map'
+            expect(UnpackJob).to have_received(:perform_later).with(file_set.id, resource_type)
+          else
+            expect(UnpackJob).not_to have_received(:perform_later).with(file_set.id, resource_type)
+          end
+        end
+      end
     end
   end
 

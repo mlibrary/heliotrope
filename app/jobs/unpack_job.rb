@@ -28,6 +28,8 @@ class UnpackJob < ApplicationJob
     when 'webgl'
       unpack_webgl(id, root_path, file)
       epub_webgl_bridge(id, root_path, kind)
+    when 'map'
+      unpack_map(id, root_path, file)
     else
       Rails.logger.error("Can't unpack #{kind} for #{id}")
     end
@@ -90,5 +92,19 @@ class UnpackJob < ApplicationJob
         FileUtils.mkdir_p(dir) unless Dir.exist?(dir)
         dir = File.join(dir, sub_dir)
       end
+    end
+
+    def unpack_map(id, root_path, file)
+      Zip::File.open(file.path) do |zip_file|
+        zip_file.each do |entry|
+          # We don't want to include the root directory, it could be named anything.
+          parts = entry.name.split(File::SEPARATOR)
+          without_parent = parts.slice(1, parts.length).join(File::SEPARATOR)
+          make_path_entry(root_path, without_parent)
+          entry.extract(File.join(root_path, without_parent))
+        end
+      end
+    rescue Zip::Error
+      raise "Map #{id} is corrupt."
     end
 end

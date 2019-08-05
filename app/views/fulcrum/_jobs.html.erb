@@ -28,6 +28,15 @@
     </form>
   </li>
   <li>
+    <form name="unpack" method="get" action="<%= fulcrum_exec_path(:unpack) %>">
+      <label for="unpack_noid">NOID</label>
+      <input type="text" id="unpack_noid" name="noid" value="validnoid">
+      <label for="unpack_kind">Kind</label>
+      <input type="text" id="unpack_kind" name="kind" value="kind">
+      <button name="submit" type="submit" value="unpack">Unpack</button>
+    </form>
+  </li>
+  <li>
     <%= link_to(fulcrum_exec_path(:reindex_everything), method: :get, class: "btn btn-default", data: { confirm: 'Are you sure?' }) do %>
       <span class="glyphicon glyphicon-wrench" aria-hidden="true"></span> Reindex Everything
     <% end %>

@@ -123,6 +123,10 @@ module Hyrax
       mime_type == 'application/postscript'
     end
 
+    def map?
+      /^map$/i.match?(resource_type.first)
+    end
+
     def mime_type
       solr_document['mime_type_ssi']
     end
@@ -270,6 +274,8 @@ module Hyrax
                   'epub'
                 elsif eps?
                   'image_service'
+                elsif map?
+                  'map'
                 else
                   'default'
                 end

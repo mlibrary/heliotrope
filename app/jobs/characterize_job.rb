@@ -57,6 +57,8 @@ class CharacterizeJob < ApplicationJob
     end
     if kind.present? && ['epub', 'webgl'].include?(kind)
       UnpackJob.perform_later(file_set.id, kind)
+    elsif /^map$/i.match?(file_set.resource_type.first)
+      UnpackJob.perform_later(file_set.id, 'map')
     end
 
     CreateDerivativesJob.perform_later(file_set, file_id, filename)
