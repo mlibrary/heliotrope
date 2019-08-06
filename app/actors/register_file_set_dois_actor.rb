@@ -7,6 +7,9 @@ class RegisterFileSetDoisActor < Hyrax::Actors::AbstractActor
     # 3. If we are *not* updating/adding any file_sets
     # 4. If the Monograph already has a DOI
     # Then: create DOIs for the FileSets
+    # UPDATE: 5. If there are 'eligibile' files_set that need DOIs (more than
+    # just "monography" file_sets like the cover, epub, pdf_ebook or mobi)
+    # see HELIO-2812
 
     # HELIO-2659, HELIO-2742
 
@@ -30,6 +33,7 @@ class RegisterFileSetDoisActor < Hyrax::Actors::AbstractActor
       return true unless private_to_public?(current_visibility, env.attributes['visibility'])
       return true if file_sets?(env)
       return true unless monograph_has_doi?(env)
+      return true if no_eligible_file_sets?(env)
 
       # Crossref::FileSetMetadata *may* add dois to FileSets and then send them
       # to BatchSaveJob to save them. So it's better if no other FileSet ops are happening,
@@ -58,5 +62,17 @@ class RegisterFileSetDoisActor < Hyrax::Actors::AbstractActor
 
     def monograph_has_doi?(env)
       env.curation_concern.doi.present?
+    end
+
+    def no_eligible_file_sets?(env)
+      # If the only FileSets a Monograph currently has are direct representatives of
+      # the Monograph like the Cover or EPUB (or any book-like Fileset like a mobi or pdf_ebook)
+      # then don't send anything to crossref. Those FileSets do not need DOIs
+      ineligible_ids = FeaturedRepresentative.where(monograph_id: env.curation_concern.id)
+                                             .where(kind: ['epub', 'pdf_ebook', 'mobi'])
+                                             .map(&:file_set_id)
+      ineligible_ids << env.curation_concern.representative_id
+
+      return true if ineligible_ids.sort == env.curation_concern.member_ids.sort
     end
 end

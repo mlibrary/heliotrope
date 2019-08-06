@@ -91,6 +91,31 @@ describe RegisterFileSetDoisActor do
       end
     end
 
+    context "if the mongraph has no 'eligible' file_sets" do
+      let(:press) { create(:press, doi_creation: true) }
+      let(:attributes) do
+        {
+          visibility: Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC
+        }
+      end
+
+      # FileSets that "represent" the Monograph, that are basically the "same" as
+      # the Monograph like: the cover, the epub (or any kind of "booK" type) do
+      # not need DOIs as the Monograph DOI applies for them.
+      before do
+        monograph.representative_id = fs1.id
+        FeaturedRepresentative.create(monograph_id: monograph.id, file_set_id: fs2.id, kind: 'epub')
+        FeaturedRepresentative.create(monograph_id: monograph.id, file_set_id: fs3.id, kind: 'pdf_ebook')
+        monograph.save!
+      end
+
+      it "DOI creation is NOT called" do
+        allow(Crossref::FileSetMetadata).to receive(:new)
+        expect(middleware.update(env)).to be true
+        expect(Crossref::FileSetMetadata).not_to have_received(:new)
+      end
+    end
+
     context "if press can make DOIs AND private -> public AND no file_sets AND monograph has DOI" do
       let(:press) { create(:press, doi_creation: true) }
       let(:attributes) do
