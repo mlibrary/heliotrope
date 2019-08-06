@@ -42,7 +42,7 @@ module PDFEbook
             @obj_to_page[p.no] = i
           end
         end
-        iterate_outlines(@pdf.Catalog.Outlines[:First]&.solve, 1)
+        @pdf.Catalog.Outlines.present? ? iterate_outlines(@pdf.Catalog.Outlines[:First]&.solve, 1) : []
       end
 
       # Takes Origami::OutlineItem and 1-based depth

@@ -46,12 +46,12 @@
     <div class="description">
       <%= render_markdown @monograph_presenter.description.first || '' %>
     </div>
-    <% if @monograph_presenter.buy_url? || @monograph_presenter.epub? %>
+    <% if @monograph_presenter.buy_url? || @monograph_presenter.reader_ebook? %>
     <!-- TODO: add check for allow download of EPUB or PDF to line 50 -->
         <div class="btn-toolbar" role="toolbar">
           <div class="btn-group btn-group-lg" role="group">
-            <% if @monograph_presenter.epub? %>
-                <a id="monograph-read-btn" href="<%= epub_path(@monograph_presenter.epub) %>" title="<%= t('monograph_catalog.index.read', title: @monograph_presenter.title) %>" aria-label="<%= t('monograph_catalog.index.read', title: @monograph_presenter.title) %>" class="btn btn-default" data-turbolinks="false"><%= t('monograph_catalog.index.read_book') %></a>
+            <% if @monograph_presenter.reader_ebook? %>
+                <a id="monograph-read-btn" href="<%= epub_path(@monograph_presenter.reader_ebook) %>" title="<%= t('monograph_catalog.index.read', title: @monograph_presenter.title) %>" aria-label="<%= t('monograph_catalog.index.read', title: @monograph_presenter.title) %>" class="btn btn-default" data-turbolinks="false"><%= t('monograph_catalog.index.read_book') %></a>
             <% end %>
             <% if @ebook_download_presenter.downloadable_ebooks? %>
                 <div class="btn-group btn-group-lg">

@@ -1,0 +1,13 @@
+<!DOCTYPE html %>
+  <head>
+    <title><%= content_for?(:page_title) ? yield(:page_title) : yield %></title>
+    <%= content_for?(:head) ? yield(:head) : yield %>
+    <!-- CSS -->
+    <%= stylesheet_link_tag 'mozilla-pdf-viewer' %>
+    <!-- Javascript -->
+    <%#= javascript_include_tag 'mozilla-pdf-viewer' %>
+  </head>
+  <body id="outerContainer">
+    <%= content_for?(:body) ? yield(:body) : yield %>
+  </body>
+</html>

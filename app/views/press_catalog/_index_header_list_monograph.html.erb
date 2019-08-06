@@ -14,10 +14,10 @@
     </div>
   </div>
 
-  <% if presenter.epub? %>
+  <% if presenter.reader_ebook? %>
     <div class="row epub">
       <div class="col-sm-12">
-        <a id="monograph-read-btn" class="btn btn-default btn-lg" href="<%= epub_path(presenter.epub, publisher: presenter.subdomain) %>" title="Read <%= presenter.title %>" data-turbolinks="false">Read</a>
+        <a id="monograph-read-btn" class="btn btn-default btn-lg" href="<%= epub_path(presenter.reader_ebook, publisher: presenter.subdomain) %>" title="Read <%= presenter.title %>" data-turbolinks="false">Read</a>
       </div>
     </div>
     <div class="row info">

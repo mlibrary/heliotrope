@@ -1,0 +1,7 @@
+/* A place to put mozilla-pdf-viwer-specific styles
+ *
+ * require common
+ *= require_tree ./application
+ *= require cozy-sun-bear-main
+ * require_tree ./mozilla-pdf-viewer
+*/
