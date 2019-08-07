@@ -36,10 +36,10 @@ module PDFEbook
       end
 
       def extract_intervals
-        # Map of PDF page object number to 0-based linear page number
+        # Map of PDF page object number to a page number (pages start from 1)
         if @obj_to_page.empty?
           @pdf.pages.each_with_index do |p, i|
-            @obj_to_page[p.no] = i
+            @obj_to_page[p.no] = i + 1
           end
         end
         @pdf.Catalog.Outlines.present? ? iterate_outlines(@pdf.Catalog.Outlines[:First]&.solve, 1) : []

@@ -31,7 +31,7 @@ RSpec.describe PDFEbook::Publication do
             expect(subject.level).to eq 1
           end
           it "has the cfi of" do
-            expect(subject.cfi).to eq 'page=0'
+            expect(subject.cfi).to eq 'page=1'
           end
         end
 
@@ -45,7 +45,7 @@ RSpec.describe PDFEbook::Publication do
             expect(subject.level).to eq 2
           end
           it "has the cfi of" do
-            expect(subject.cfi).to eq 'page=5'
+            expect(subject.cfi).to eq 'page=6'
           end
         end
       end
