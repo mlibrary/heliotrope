@@ -90,8 +90,8 @@ RSpec.describe EBookDownloadPresenter do
     allow(current_ability).to receive(:platform_admin?).and_return(false)
     allow(current_ability).to receive(:can?).and_return(false)
 
-    expect(subject.csb_download_links).to eq [{ format: "EPUB", size: "19.5 KB", href: "/downloads/111111111" },
-                                              { format: "MOBI", size: "29.3 KB", href: "/downloads/222222222" },
-                                              { format: "PDF",  size: "39.1 KB", href: "/downloads/333333333" }]
+    expect(subject.csb_download_links).to eq [{ format: "EPUB", size: "19.5 KB", href: "/ebooks/111111111/download" },
+                                              { format: "MOBI", size: "29.3 KB", href: "/ebooks/222222222/download" },
+                                              { format: "PDF",  size: "39.1 KB", href: "/ebooks/333333333/download" }]
   end
 end

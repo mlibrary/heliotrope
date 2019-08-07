@@ -59,7 +59,7 @@ class EBookDownloadPresenter < ApplicationPresenter
       links << {
         format: ebook.ebook_format,
         size: ActiveSupport::NumberHelper.number_to_human_size(ebook.file_size),
-        href: Hyrax::Engine.routes.url_helpers.download_path(ebook.id)
+        href: Rails.application.routes.url_helpers.download_ebook_path(ebook.id)
       }
     end
 
