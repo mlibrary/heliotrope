@@ -6,6 +6,6 @@
       <%= link_to_document document, render_markdown(document.title.first), counter: counter %>
     </h4>
     <% if document.section_title.present? %>
-      <p>From <%= render_markdown @monograph_presenter.display_section_titles document.section_title %></p>
+      <p>From <%= render_markdown @presenter.display_section_titles document.section_title %></p>
     <% end %>
   </div>

@@ -1,6 +1,6 @@
 <%
   level = 0
-  epub_presenter = @monograph_presenter.epub? ? @monograph_presenter.epub_presenter : @monograph_presenter.pdf_ebook_presenter
+  epub_presenter = @presenter.epub? ? @presenter.epub_presenter : @presenter.pdf_ebook_presenter
   epub_policy = @monograph_policy.epub_policy
 %>
   <% epub_presenter.intervals.each do |interval| %>

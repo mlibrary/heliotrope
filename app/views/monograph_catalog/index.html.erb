@@ -1,4 +1,4 @@
-<% provide :page_title, @monograph_presenter.page_title %>
+<% provide :page_title, @presenter.page_title %>
 <% provide :page_class, 'search monograph' %>
 <% provide :page_header do %>
   <%# render 'shared/survey' %>
@@ -6,7 +6,7 @@
   <%= render 'shared/breadcrumbs' %>
 <% end %><!-- provide :page_header -->
 <%= render 'index_monograph' %>
-<% if @monograph_presenter.webgl? %>
+<% if @presenter.webgl? %>
   <script>
     if (heliotropeIncompatibleWebGlUser === true ) {
       $('#webgl-message').html('<div class="webgl alert alert-danger alert-dismissable" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><p><strong>Sorry!</strong> This publication has interactive features that are not compatible with your browser or device. <a href="#aboutware">Learn more here</a>. If you continue on, you can still read the publication but the 3D model will not load.</p></div>');
@@ -16,7 +16,7 @@
   </script>
 <% end %>
 
-<% if @monograph_presenter.workflow.state != "deposited" && @monograph_presenter.workflow.actions.present? %>
+<% if @presenter.workflow.state != "deposited" && @presenter.workflow.actions.present? %>
   <div class="workflow-actions">
     <div id="workflow_controls"class="panel panel-default workflow-affix">
       <div class="panel-heading">
@@ -25,11 +25,11 @@
         </a>
       </div>
       <div id="workflow_controls_collapse" class="row panel-body panel-collapse collapse">
-        <%= form_tag hyrax_workflow_action_path(@monograph_presenter), method: :put do %>
+        <%= form_tag hyrax_workflow_action_path(@presenter), method: :put do %>
           <div class="col-sm-3 workflow-actions">
             <h3>Actions</h3>
 
-            <% @monograph_presenter.workflow.actions.each do |key, label| %>
+            <% @presenter.workflow.actions.each do |key, label| %>
               <div class="radio">
                 <label>
                   <input type="radio" name="workflow_action[name]" id="workflow_action_name_<%= key %>" value="<%= key %>">
@@ -48,7 +48,7 @@
 
             <h4>Previous Comments</h4>
             <dl>
-              <% @monograph_presenter.workflow.comments.each do |comment| %>
+              <% @presenter.workflow.comments.each do |comment| %>
                 <dt><%= comment.name_of_commentor %></dt>
                 <dd><%= comment.comment %></dd>
               <% end %>

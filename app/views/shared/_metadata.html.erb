@@ -1,36 +1,36 @@
-<% if @monograph_presenter.present? %>
+<% if controller_name == "monograph_catalog" %>
 
-  <meta name="citation_title" content="<%= @monograph_presenter.page_title.html_safe %>">
+  <meta name="citation_title" content="<%= @presenter.page_title.html_safe %>">
 
-  <% if @monograph_presenter.present? %>
-    <% @monograph_presenter.creator.each do |creator_name| %>
+  <% if @presenter.present? %>
+    <% @presenter.creator.each do |creator_name| %>
       <meta name="citation_author" content="<%= creator_name.html_safe %>">
     <% end %>
   <% end %>
 
-  <% if @monograph_presenter.date_created.present? %>
-    <meta name="citation_publication_date" content="<%= @monograph_presenter.date_created.first %>">
-    <meta name="citation_online_date" content="<%= @monograph_presenter.date_created.first %>">
+  <% if @presenter.date_created.present? %>
+    <meta name="citation_publication_date" content="<%= @presenter.date_created.first %>">
+    <meta name="citation_online_date" content="<%= @presenter.date_created.first %>">
   <% end %>
 
-  <% if @monograph_presenter.isbn_noformat.present? %>
-    <% @monograph_presenter.isbn_noformat.each do |isbn_noformat| %>
+  <% if @presenter.isbn_noformat.present? %>
+    <% @presenter.isbn_noformat.each do |isbn_noformat| %>
       <meta name="citation_isbn" content="<%= isbn_noformat.html_safe %>">
     <% end %>
   <% end %>
 
-  <% if @monograph_presenter.doi.present? %>
-    <meta name="citation_doi" content="doi:<%= @monograph_presenter.doi_path %>">
+  <% if @presenter.doi.present? %>
+    <meta name="citation_doi" content="doi:<%= @presenter.doi_path %>">
   <% else %>
-    <meta name="citation_hdl" content="<%= @monograph_presenter.handle_path %>">
-    <meta name="DC.Identifier" content="<%= @monograph_presenter.handle_url %>">
+    <meta name="citation_hdl" content="<%= @presenter.handle_path %>">
+    <meta name="DC.Identifier" content="<%= @presenter.handle_url %>">
   <% end %>
 
-  <% if @monograph_presenter.publisher.present? %>
-    <meta name="citation_publisher" content="<%= @monograph_presenter.publisher.first %>">
+  <% if @presenter.publisher.present? %>
+    <meta name="citation_publisher" content="<%= @presenter.publisher.first %>">
   <% end %>
 
-<% elsif @presenter.present? && @presenter.class == Hyrax::FileSetPresenter %>
+<% elsif controller_name == "file_sets" %>
 
   <meta name="citation_title" content="<%= @presenter.page_title.html_safe %>">
 
@@ -41,10 +41,6 @@
   <% if @presenter.sort_date.present? %>
     <meta name="citation_publication_date" content="<%= @presenter.sort_date[0,4] %>">
   <% end %>
-
-<% end %>
-
-<% if @presenter.present? && @presenter.class == Hyrax::FileSetPresenter %>
 
   <% if @presenter.doi.present? %>
     <meta name="citation_doi" content="<%= @presenter.doi_path %>">

@@ -2,13 +2,17 @@
 
 module BreadcrumbsHelper
   def breadcrumbs
-    crumbs = if @presenter&.class == Hyrax::FileSetPresenter
+    return [] if @presenter.nil?
+
+    crumbs = case controller_name
+             when "file_sets"
                breadcrumbs_for_file_set(@presenter.monograph.subdomain, @presenter)
-             elsif @presenter&.class == Hyrax::MonographPresenter
+             when "monographs"
                breadcrumbs_for_monograph_show_page(@presenter.subdomain, @presenter)
-             elsif @monograph_presenter.present?
-               breadcrumbs_for_monograph(@monograph_presenter.subdomain, @monograph_presenter)
+             when "monograph_catalog"
+               breadcrumbs_for_monograph(@presenter.subdomain, @presenter)
              end
+
     crumbs || []
   end
 

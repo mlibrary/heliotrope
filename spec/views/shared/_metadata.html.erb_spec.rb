@@ -21,8 +21,10 @@ describe 'shared/_metadata.html.erb' do
     }
 
     it 'has the correct metadata' do
-      @monograph_presenter = Hyrax::MonographPresenter.new(solr_document, nil)
+      @presenter = Hyrax::MonographPresenter.new(solr_document, nil)
+      allow(controller).to receive(:controller_name).and_return("monograph_catalog")
       render
+
       expect(rendered).to match 'Sun Moon Dog'
       expect(rendered).to match 'Doggie, Boutros-Boutros'
       expect(rendered).to match 'Meow, Chairman'
@@ -41,7 +43,8 @@ describe 'shared/_metadata.html.erb' do
     }
 
     it 'has no citation_publication_date' do
-      @monograph_presenter = Hyrax::MonographPresenter.new(solr_document, nil)
+      @presenter = Hyrax::MonographPresenter.new(solr_document, nil)
+      allow(controller).to receive(:controller_name).and_return("monograph_catalog")
       render
       expect(rendered).not_to match('citation_publication_date')
     end
@@ -58,7 +61,8 @@ describe 'shared/_metadata.html.erb' do
     }
 
     it 'renders the characters correctly' do
-      @monograph_presenter = Hyrax::MonographPresenter.new(solr_document, nil)
+      @presenter = Hyrax::MonographPresenter.new(solr_document, nil)
+      allow(controller).to receive(:controller_name).and_return("monograph_catalog")
       render
       expect(rendered).to match(%q(Bob's “Smart” Dog’s "Rött" Äpple))
     end
@@ -76,7 +80,8 @@ describe 'shared/_metadata.html.erb' do
     }
 
     it 'creators are cited but contributors are not' do
-      @monograph_presenter = Hyrax::MonographPresenter.new(solr_document, nil)
+      @presenter = Hyrax::MonographPresenter.new(solr_document, nil)
+      allow(controller).to receive(:controller_name).and_return("monograph_catalog")
       render
       expect(rendered).to match 'Blug Shoeman'
       expect(rendered).to match 'Melissa Allen'
@@ -95,6 +100,7 @@ describe 'shared/_metadata.html.erb' do
 
     it 'has the correct metadata' do
       @presenter = Hyrax::FileSetPresenter.new(solr_document, nil)
+      allow(controller).to receive(:controller_name).and_return("file_sets")
       render
       expect(rendered).to match 'Bark Bark Boop'
       expect(rendered).to match 'Noodles, Mr. Ramen'
@@ -116,6 +122,7 @@ describe 'shared/_metadata.html.erb' do
 
     it 'has the doi metadata (but not the doi url)' do
       @presenter = Hyrax::FileSetPresenter.new(solr_document, nil)
+      allow(controller).to receive(:controller_name).and_return("file_sets")
       render
       expect(rendered).to match '10.3998/fulcrum.001'
       expect(rendered).not_to match HandleService::DOI_ORG_PREFIX

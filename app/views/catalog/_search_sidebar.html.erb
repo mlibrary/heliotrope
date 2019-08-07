@@ -1,6 +1,6 @@
 <% if params[:id].present? && params['controller'] == 'monograph_catalog' %>
   <% catalog_url = main_app.monograph_catalog_path(params[:id]) %>
-  <% search_label = t('monograph_catalog.search.form.q.label', monograph_name: @monograph_presenter.page_title) %>
+  <% search_label = t('monograph_catalog.search.form.q.label', monograph_name: @presenter.page_title) %>
   <% placeholder = t('monograph_catalog.search.form.q.placeholder') %>
   <div class="facets sidenav">
     <h2 class="panel-heading facets-heading">

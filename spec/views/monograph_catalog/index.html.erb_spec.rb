@@ -21,17 +21,17 @@ RSpec.describe "monograph_catalog/index.html.erb", type: :view do
 
   let(:debug) { false }
   let(:current_ability) { double("ability") }
-  let(:monograph_presenter) { Hyrax::MonographPresenter.new(SolrDocument.new(id: 'mono_id', title: ["Untitled"], has_model_ssim: ['Monograph']), current_ability) }
+  let(:presenter) { Hyrax::MonographPresenter.new(SolrDocument.new(id: 'mono_id', title: ["Untitled"], has_model_ssim: ['Monograph']), current_ability) }
   let(:ebook_download_presenter) { double("ebook_download_presenter") }
 
   before do
     stub_template "catalog/_search_sidebar" => "<!-- render-template-catalog/_search_sidebar -->"
     stub_template "catalog/_search_results" => "<!-- render-template-catalog/_search_results -->"
-    assign(:monograph_presenter, monograph_presenter)
+    assign(:presenter, presenter)
     assign(:ebook_download_presenter, ebook_download_presenter)
     allow(view).to receive(:t).with(any_args) { |value| value }
-    allow(monograph_presenter).to receive(:date_uploaded).and_return(DateTime.now)
-    allow(monograph_presenter).to receive(:creator).and_return([])
+    allow(presenter).to receive(:date_uploaded).and_return(DateTime.now)
+    allow(presenter).to receive(:creator).and_return([])
   end
 
   describe 'provide: page_title' do
@@ -40,7 +40,7 @@ RSpec.describe "monograph_catalog/index.html.erb", type: :view do
     let(:page_title) { 'PAGE-TITLE' }
 
     before do
-      allow(monograph_presenter).to receive(:page_title).and_return(page_title)
+      allow(presenter).to receive(:page_title).and_return(page_title)
       render
     end
 
@@ -75,8 +75,9 @@ RSpec.describe "monograph_catalog/index.html.erb", type: :view do
     let!(:press) { create(:press, subdomain: subdomain) }
 
     before do
-      allow(monograph_presenter).to receive(:title).and_return(page_title)
-      allow(monograph_presenter).to receive(:subdomain).and_return(subdomain)
+      allow(presenter).to receive(:title).and_return(page_title)
+      allow(presenter).to receive(:subdomain).and_return(subdomain)
+      allow(controller).to receive(:controller_name).and_return("monograph_catalog")
       render
     end
 
@@ -90,7 +91,7 @@ RSpec.describe "monograph_catalog/index.html.erb", type: :view do
   end
 
   describe 'index_monograph' do
-    before { allow(monograph_presenter).to receive(:epub?).and_return(false) }
+    before { allow(presenter).to receive(:epub?).and_return(false) }
 
     context 'partial' do
       subject { response.body }
@@ -113,7 +114,7 @@ RSpec.describe "monograph_catalog/index.html.erb", type: :view do
 
       context 'default' do
         before do
-          monograph_presenter.instance_eval('undef :monograph_coins_title')
+          presenter.instance_eval('undef :monograph_coins_title')
           render
         end
 
@@ -133,8 +134,8 @@ RSpec.describe "monograph_catalog/index.html.erb", type: :view do
 
       context 'monograph_coins_title?' do
         before do
-          allow(monograph_presenter).to receive(:monograph_coins_title?).and_return(true)
-          allow(monograph_presenter).to receive(:monograph_coins_title).and_return(monograph_coins_title)
+          allow(presenter).to receive(:monograph_coins_title?).and_return(true)
+          allow(presenter).to receive(:monograph_coins_title).and_return(monograph_coins_title)
           render
         end
 
@@ -159,8 +160,8 @@ RSpec.describe "monograph_catalog/index.html.erb", type: :view do
 
       context 'authors?' do
         before do
-          allow(monograph_presenter).to receive(:authors?).and_return(true)
-          allow(monograph_presenter).to receive(:authors).and_return(authors)
+          allow(presenter).to receive(:authors?).and_return(true)
+          allow(presenter).to receive(:authors).and_return(authors)
           render
         end
 
@@ -174,7 +175,7 @@ RSpec.describe "monograph_catalog/index.html.erb", type: :view do
       #
       # context 'pageviews' do
       #   before do
-      #     allow(monograph_presenter).to receive(:pageviews).and_return("PAGEVIEWS")
+      #     allow(presenter).to receive(:pageviews).and_return("PAGEVIEWS")
       #     render
       #   end
       #
@@ -186,7 +187,7 @@ RSpec.describe "monograph_catalog/index.html.erb", type: :view do
 
       context 'isbn' do
         before do
-          allow(monograph_presenter).to receive(:isbn).and_return(["ISBN-HARDCOVER", "ISBN-PAPER", "ISBN-EBOOK"])
+          allow(presenter).to receive(:isbn).and_return(["ISBN-HARDCOVER", "ISBN-PAPER", "ISBN-EBOOK"])
           render
         end
 
@@ -199,8 +200,8 @@ RSpec.describe "monograph_catalog/index.html.erb", type: :view do
 
       context 'buy_url?' do
         before do
-          allow(monograph_presenter).to receive(:buy_url?).and_return(true)
-          allow(monograph_presenter).to receive(:buy_url).and_return("BUY-URL")
+          allow(presenter).to receive(:buy_url?).and_return(true)
+          allow(presenter).to receive(:buy_url).and_return("BUY-URL")
           allow(ebook_download_presenter).to receive(:downloadable_ebooks?).and_return(false)
           render
         end
@@ -214,7 +215,7 @@ RSpec.describe "monograph_catalog/index.html.erb", type: :view do
 
       context 'handle' do
         before do
-          allow(monograph_presenter).to receive(:citable_link).and_return([HandleService.url("999999999")])
+          allow(presenter).to receive(:citable_link).and_return([HandleService.url("999999999")])
           render
         end
 

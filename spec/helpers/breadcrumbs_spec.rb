@@ -4,7 +4,7 @@ require 'rails_helper'
 
 RSpec.describe BreadcrumbsHelper do
   let!(:press) { create(:press, subdomain: "blue", name: "Blue Press") }
-  let(:monograph_presenter) {
+  let(:presenter) {
     Hyrax::MonographPresenter.new(SolrDocument.new(id: 1,
                                                    title_tesim: ["Monograph Title"],
                                                    press_tesim: "blue",
@@ -12,9 +12,11 @@ RSpec.describe BreadcrumbsHelper do
   }
 
   describe "when on a monograph catalog page" do
+    let(:controller_name) { 'monograph_catalog' }
+
     context "with no parent press" do
       it "returns the right breadcrumbs" do
-        @monograph_presenter = monograph_presenter
+        @presenter = presenter
         expect(breadcrumbs).to match_array([{ href: "/blue",
                                               text: "Home",
                                               class: "" },
@@ -28,7 +30,7 @@ RSpec.describe BreadcrumbsHelper do
       let(:parent) { create(:press, subdomain: "maize", name: "Maize Press") }
 
       it "returns the right breadcrumbs" do
-        @monograph_presenter = monograph_presenter
+        @presenter = presenter
         press.parent_id = parent.id
         press.save!
         expect(breadcrumbs).to match_array([{ href: "/maize",
@@ -45,9 +47,11 @@ RSpec.describe BreadcrumbsHelper do
   end
 
   describe "when on a monograph show page" do
+    let(:controller_name) { 'monographs' }
+
     context "with no parent press" do
       it "returns the right breadcrumbs" do
-        @presenter = monograph_presenter
+        @presenter = presenter
         expect(breadcrumbs).to match_array([{ href: "/blue",
                                               text: "Home",
                                               class: "" },
@@ -64,7 +68,7 @@ RSpec.describe BreadcrumbsHelper do
       let(:parent) { create(:press, subdomain: "maize", name: "Maize Press") }
 
       it "returns the right breadcrumbs" do
-        @presenter = monograph_presenter
+        @presenter = presenter
         press.parent_id = parent.id
         press.save!
         expect(breadcrumbs).to match_array([{ href: "/maize",
@@ -90,11 +94,12 @@ RSpec.describe BreadcrumbsHelper do
                                                    has_model_ssim: ["FileSet"],
                                                    monograph_id_ssim: 1), nil)
     }
+    let(:controller_name) { 'file_sets' }
 
     context "with no parent press" do
       it "returns the right breadcrumbs" do
         @presenter = file_set_presenter
-        @presenter.monograph_presenter = monograph_presenter
+        allow(@presenter).to receive(:monograph).and_return(presenter)
         expect(breadcrumbs).to match_array([{ href: "/blue",
                                               text: "Home",
                                               class: "" },
@@ -112,7 +117,7 @@ RSpec.describe BreadcrumbsHelper do
 
       it "returns the right breadcrumbs" do
         @presenter = file_set_presenter
-        @presenter.monograph_presenter = monograph_presenter
+        allow(@presenter).to receive(:monograph).and_return(presenter)
         press.parent_id = parent.id
         press.save!
         expect(breadcrumbs).to match_array([{ href: "/maize",

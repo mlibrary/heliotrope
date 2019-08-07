@@ -72,15 +72,15 @@ class MonographCatalogController < ::CatalogController
     def load_presenter
       monograph_id = params[:monograph_id] || params[:id]
       raise CanCan::AccessDenied unless current_ability&.can?(:read, monograph_id)
-      @monograph_presenter = Hyrax::PresenterFactory.build_for(ids: [monograph_id], presenter_class: Hyrax::MonographPresenter, presenter_args: current_ability).first
+      @presenter = Hyrax::PresenterFactory.build_for(ids: [monograph_id], presenter_class: Hyrax::MonographPresenter, presenter_args: current_ability).first
       @monograph_policy = MonographPolicy.new(current_actor, Sighrax.factory(monograph_id))
-      @press_policy = PressPolicy.new(current_actor, Press.find_by(subdomain: @monograph_presenter.subdomain))
-      @ebook_download_presenter = EBookDownloadPresenter.new(@monograph_presenter, current_ability, current_actor)
+      @press_policy = PressPolicy.new(current_actor, Press.find_by(subdomain: @presenter.subdomain))
+      @ebook_download_presenter = EBookDownloadPresenter.new(@presenter, current_ability, current_actor)
     end
 
     def add_counter_stat
       # HELIO-2292
-      return unless @monograph_presenter.epub? || @monograph_presenter.pdf_ebook? || @monograph_presenter.mobi?
-      CounterService.from(self, @monograph_presenter).count
+      return unless @presenter.epub? || @presenter.pdf_ebook? || @presenter.mobi?
+      CounterService.from(self, @presenter).count
     end
 end
