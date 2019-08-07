@@ -46,11 +46,21 @@ module PDFEbook
       end
 
       # Takes Origami::OutlineItem and 1-based depth
-      def iterate_outlines(outline, depth)
+      def iterate_outlines(outline, depth) # rubocop:disable Metrics/CyclomaticComplexity
         intervals = []
         until outline.nil?
           page = nil
-          page = outline&.[](:A)&.solve&.[](:D)&.[](0)&.solve # Origami::Page
+          page = outline&.[](:A)&.solve&.[](:D)
+          if page.is_a?(Origami::Reference) # skips external links
+            begin
+              target = page.solve
+            rescue Origami::InvalidReferenceError
+              outline = outline[:Next]&.solve
+              next
+            end
+            page = target
+          end
+          page = page&.[](0)&.solve # gets to Origami::Page
           page ||= outline[:Dest]&.solve&.[](0)&.solve
           unless page.nil?
             page_number = @obj_to_page[page.no] || 0
