@@ -1,5 +1,5 @@
 <!-- survey -->
-<% presenter = @monograph_presenter || @presenter %>
+<% presenter = @presenter %>
 <% asset_link_needed = presenter.class == Hyrax::FileSetPresenter %>
 <% link_params = '?Book=' + (asset_link_needed ? presenter.monograph.page_title + '&Asset=' + presenter.page_title : presenter.page_title) %>
 <div class="alert alert-info alert-dismissible survey" role="alert" style="display: none;">

@@ -17,7 +17,7 @@ describe PressHelper do
       let(:mono_doc) { SolrDocument.new(id: 'mono', has_model_ssim: ['Monograph'], press_tesim: ["Book O' Rama"]) }
 
       it "returns the press subdomain from the monograph_presenter" do
-        @monograph_presenter = Hyrax::MonographPresenter.new(mono_doc, nil)
+        @presenter = Hyrax::MonographPresenter.new(mono_doc, nil)
         expect(press_subdomain).to eq("Book O' Rama")
       end
     end

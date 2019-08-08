@@ -10,8 +10,8 @@
       </button>
       <% if defined?(@press.name) %>
         <a class="navbar-brand" href="<%= main_app.press_catalog_path(@press) %>"><%= @press.name %></a>
-      <% elsif defined?(@monograph_presenter.press) %>
-        <a class="navbar-brand" href="<%= main_app.press_catalog_path(@monograph_presenter.press_obj) %>"><%= @monograph_presenter.press %></a>
+      <% elsif defined?(@presenter.press) %>
+        <a class="navbar-brand" href="<%= main_app.press_catalog_path(@presenter.press_obj) %>"><%= @presenter.press %></a>
       <% elsif defined?(@presenter.monograph.press) %>
         <a class="navbar-brand" href="<%= main_app.press_catalog_path(@presenter.monograph.press_obj) %>"><%= @presenter.monograph.press %></a>
       <% else %>

@@ -39,6 +39,7 @@ describe 'Create an external resource' do
       Hydra::Works::AddFileToFileSet.call(file_set, file, :original_file)
       monograph.ordered_members << file_set
       monograph.save!
+      file_set.save!
     end
 
     it do
