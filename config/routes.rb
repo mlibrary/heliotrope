@@ -241,6 +241,5 @@ Rails.application.routes.draw do
   # keep Mozilla PDF viewer stuff happy but somewhat tidy in its own Jekyll-deployed directory
   pdf_viewer_build_date = '20190621'
   get '/build(/*file)', to: redirect("/mozilla-pdf-viewer/build/%{file}?#{pdf_viewer_build_date}"), format: false
-  get '/dist(/*file)', to: redirect("/mozilla-pdf-viewer/dist/%{file}?#{pdf_viewer_build_date}"), format: false
   get '/web(/*file)', to: redirect("/mozilla-pdf-viewer/web/%{file}?#{pdf_viewer_build_date}"), format: false
 end
