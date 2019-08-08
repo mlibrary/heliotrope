@@ -13,51 +13,12 @@ RSpec.describe Hyrax::MonographPresenter do
     subject { described_class.new(nil, nil) }
 
     it do
+      is_expected.to be_a CommonWorkPresenter
       is_expected.to be_a AnalyticsPresenter
       is_expected.to be_a CitableLinkPresenter
       is_expected.to be_a OpenUrlPresenter
       is_expected.to be_a TitlePresenter
       is_expected.to be_a FeaturedRepresentatives::MonographPresenter
-    end
-  end
-
-  describe '#assets?' do
-    subject { presenter.assets? }
-
-    let(:mono_doc) {
-      ::SolrDocument.new(id: 'mono',
-                         has_model_ssim: ['Monograph'],
-                         # representative_id has a rather different Solr name!
-                         hasRelatedMediaFragment_ssim: cover.id,
-                         ordered_member_ids_ssim: ordered_ids)
-    }
-
-    let(:cover) { ::SolrDocument.new(id: 'cover', has_model_ssim: ['FileSet']) }
-    let(:blue_file) { ::SolrDocument.new(id: 'blue', has_model_ssim: ['FileSet']) }
-    let(:green_file) { ::SolrDocument.new(id: 'green', has_model_ssim: ['FileSet']) }
-
-    context 'has assets' do
-      let(:ordered_ids) { [cover.id, blue_file.id, green_file.id] }
-
-      before do
-        # SolrService.add takes hashes not docs!
-        ActiveFedora::SolrService.add([mono_doc.to_h, cover.to_h, blue_file.to_h, green_file.to_h])
-        ActiveFedora::SolrService.commit
-      end
-
-      it { is_expected.to be true }
-    end
-
-    context 'does not have assets' do
-      let(:ordered_ids) { [cover.id] }
-
-      before do
-        # SolrService.add takes hashes not docs!
-        ActiveFedora::SolrService.add([mono_doc.to_h, cover.to_h])
-        ActiveFedora::SolrService.commit
-      end
-
-      it { is_expected.to be false }
     end
   end
 
@@ -571,38 +532,6 @@ RSpec.describe Hyrax::MonographPresenter do
       end
 
       it { expect(presenter.open_access?).to be true }
-    end
-  end
-
-  describe '#monograph_thumbnail?' do
-    before do
-      allow(mono_doc).to receive(:thumbnail_path).and_return('/assets/work.png')
-    end
-
-    context 'representative_id not set, uses Hyrax default' do
-      it {
-        expect(presenter.monograph_thumbnail).to eq '<img class="img-responsive" src="/assets/work.png" style="max-width:225px" alt="Cover image for ">'
-      }
-    end
-
-    context 'representative_id set, uses image-service, default width' do
-      before do
-        allow(mono_doc).to receive(:representative_id).and_return('999999999')
-      end
-
-      it {
-        expect(presenter.monograph_thumbnail).to start_with '<img class="img-responsive" src="/image-service/999999999/full/225,/0/default.jpg" alt="Cover image for ">'
-      }
-    end
-
-    context 'representative_id set, uses image-service, custom width' do
-      before do
-        allow(mono_doc).to receive(:representative_id).and_return('999999999')
-      end
-
-      it {
-        expect(presenter.monograph_thumbnail(99)).to start_with '<img class="img-responsive" src="/image-service/999999999/full/99,/0/default.jpg" alt="Cover image for ">'
-      }
     end
   end
 end

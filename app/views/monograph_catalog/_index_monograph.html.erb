@@ -4,7 +4,7 @@
       <span class="Z3988" title="<%= @presenter.monograph_coins_title %>"></span>
   <% end %>
   <div class="col-sm-3 monograph-cover">
-    <%= raw @presenter.monograph_thumbnail(225) %>
+    <%= raw @presenter.work_thumbnail(225) %>
     <% if can? :edit, @presenter %>
       <a class="btn btn-default manage-monograph-button" href="<%= main_app.monograph_show_path(@presenter.id) %>" title="<%= t('monograph_catalog.index.show_page_button') %>" data-turbolinks="false"><%= t('monograph_catalog.index.show_page_button') %></a>
       <a class="btn btn-default manage-monograph-button" href="<%= main_app.edit_hyrax_monograph_path(@presenter.id) %>" title="<%= t('monograph_catalog.index.edit_page_button') %>" data-turbolinks="false"><%= t('monograph_catalog.index.edit_page_button') %></a>
