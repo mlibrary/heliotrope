@@ -669,6 +669,11 @@
 
     console.log("YO HEY DER");
 
+    // distinguish these buttons from the links underneath, too much CSS to add otherwise, methinks
+    var element = document.getElementById("viewThumbnail");
+    element.classList.add("cozy-control", "button--lg");
+    var element = document.getElementById("viewOutline");
+    element.classList.add("cozy-control", "button--lg");
   </script>
 
 

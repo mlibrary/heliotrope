@@ -32,17 +32,29 @@ html, body {
 }
 
 .cozy-modal-contents-container .modal__container {
-  width: 200px;
+  width: 400px;
 }
 
 .cozy-modal-contents {
-  width: 200px;
+  width: 400px;
 }
 
 .modal__container div[role="document"] {
   display: grid;
   height: 100%;
   grid-template-rows: auto 1fr;
+}
+
+#toolbarSidebar {
+  text-align: center;
+}
+
+#viewThumbnail {
+  margin: 0px 15px 0px auto;
+}
+
+#viewAttachments {
+  display: none;
 }
 
 #sidebarContent {
@@ -142,8 +154,7 @@ a:focus > .thumbnail > .thumbnailSelectionRing,
 
 #outlineView,
 #attachmentsView {
-  position: absolute;
-  width: 192px;
+  width: 392px;
   top: 0;
   bottom: 0;
   overflow: auto;
