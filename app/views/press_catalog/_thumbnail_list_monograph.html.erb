@@ -2,7 +2,7 @@
   <div class="col-sm-3">
     <% presenter = Hyrax::MonographPresenter.new(document, current_ability) %>
     <a href="<%= polymorphic_path(url_for_document(document)) %>" >
-      <%= raw presenter.monograph_thumbnail(225) %>
+      <%= raw presenter.work_thumbnail(225) %>
     </a>
   </div>
 <% end %>

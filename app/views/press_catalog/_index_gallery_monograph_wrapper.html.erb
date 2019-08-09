@@ -2,7 +2,7 @@
 <div class="document col-xs-6 col-md-4">
   <div class="thumbnail">
     <a href="<%= polymorphic_path(url_for_document(document)) %>" data-turbolinks="false">
-      <%= raw presenter.monograph_thumbnail(145) %>
+      <%= raw presenter.work_thumbnail(145) %>
     </a>
     <div class="caption">
       <%= render_document_partials document, blacklight_config.view_config(:gallery).partials, document_counter: document_counter %>
