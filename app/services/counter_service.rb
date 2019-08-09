@@ -34,7 +34,7 @@ class CounterService
       case @presenter.has_model
       when 'FileSet'
         cr.parent_noid = @presenter&.monograph_id
-        cr.press = Press.where(subdomain: @presenter.monograph.subdomain).first&.id
+        cr.press = Press.where(subdomain: @presenter.parent.subdomain).first&.id
       when 'Monograph'
         # A Monograph's parent_noid is itself to make some kinds of reporting easier
         cr.parent_noid = @presenter.id

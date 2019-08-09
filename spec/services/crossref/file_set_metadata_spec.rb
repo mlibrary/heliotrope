@@ -14,6 +14,7 @@ RSpec.describe Crossref::FileSetMetadata do
                        date_created_tesim: ['9999'],
                        doi_ssim: ['10.9985/blue.999999999'],
                        ordered_member_ids_ssim: ['111111111', '222222222', '333333333', '444444444', '555555555'],
+                       member_ids_ssim: ['111111111', '222222222', '333333333', '444444444', '555555555'],
                        hasRelatedMediaFragment_ssim: ['555555555'])
   end
 

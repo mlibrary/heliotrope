@@ -7,6 +7,7 @@ RSpec.describe CounterService do
   # Fun time reading is here: https://www.projectcounter.org
   # See also HELIO-1376
   let(:controller) { Hyrax::FileSetsController.new }
+  let(:press) { create(:press) }
   let(:fs_doc) do
     SolrDocument.new(id: 'id',
                      has_model_ssim: ['FileSet'],
@@ -19,6 +20,8 @@ RSpec.describe CounterService do
     SolrDocument.new(id: 'mono_id',
                      has_model_ssim: ['Monograph'],
                      visibility_ssi: 'open',
+                     member_ids_ssim: ['id'],
+                     press_tesim: [press.subdomain],
                      read_access_group_ssim: ["public"])
   end
   let(:presenter) { Hyrax::FileSetPresenter.new(fs_doc, nil) }
@@ -159,9 +162,6 @@ RSpec.describe CounterService do
     context "file_sets" do
       let(:request) { double("request") }
       let(:now) { double("now") }
-      let(:press) { create(:press) }
-      let(:monograph) { double("monograph", id: monograph_id, subdomain: press.subdomain) }
-      let(:monograph_id) { 'mono12345' }
 
       before do
         allow(controller).to receive(:request).and_return(request)
@@ -171,7 +171,7 @@ RSpec.describe CounterService do
         allow(now).to receive(:strftime).with('%Y-%m-%d').and_return("2020-10-17")
         allow(now).to receive(:hour).and_return('13')
         allow(HandleService).to receive(:path).and_return(true)
-        allow(Greensub::Component).to receive(:find_by).with(noid: monograph_id).and_return(false)
+        allow(Greensub::Component).to receive(:find_by).with(noid: monograph.id).and_return(false)
       end
 
       after { CounterReport.destroy_all }
@@ -189,9 +189,6 @@ RSpec.describe CounterService do
       context "a user with an institution downloading an asset" do
         before do
           allow(controller).to receive(:current_institutions).and_return([Greensub::Institution.new(identifier: 495, name: "a")])
-          allow(presenter).to receive(:id).and_return('123454321')
-          allow(presenter).to receive(:monograph).and_return(monograph)
-          allow(presenter).to receive(:monograph_id).and_return(monograph_id)
         end
 
         it "adds a COUNTER stat row" do
@@ -199,7 +196,7 @@ RSpec.describe CounterService do
 
           cr = CounterReport.first
 
-          expect(cr.noid).to eq "123454321"
+          expect(cr.noid).to eq presenter.id
           expect(cr.model).to eq "FileSet"
           expect(cr.press).to eq press.id
           expect(cr.parent_noid).to eq presenter.monograph_id
@@ -218,9 +215,6 @@ RSpec.describe CounterService do
         before do
           allow(controller).to receive(:current_institutions).and_return([Greensub::Institution.new(identifier: 12, name: "a"),
                                                                           Greensub::Institution.new(identifier: 65, name: "b")])
-          allow(presenter).to receive(:id).and_return('123454321')
-          allow(presenter).to receive(:monograph).and_return(monograph)
-          allow(presenter).to receive(:monograph_id).and_return(monograph_id)
         end
 
         it "creates 2 counter report rows" do
@@ -246,9 +240,6 @@ RSpec.describe CounterService do
 
         before do
           allow(controller).to receive(:current_institutions).and_return([Greensub::Institution.new(identifier: 495, name: "a")])
-          allow(presenter).to receive(:id).and_return('123454321')
-          allow(presenter).to receive(:monograph).and_return(monograph)
-          allow(presenter).to receive(:monograph_id).and_return(monograph_id)
         end
 
         it "doesn't add COUNTER stats" do

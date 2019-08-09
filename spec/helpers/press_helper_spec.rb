@@ -23,8 +23,13 @@ describe PressHelper do
     end
 
     context "when on a file_set page" do
-      let(:monograph) { create(:monograph, press: "Booksplosion!") }
-      let(:file_set_doc) { SolrDocument.new(id: "fileset1", has_model_ssim: ['FileSet'], monograph_id_ssim: [monograph.id]) }
+      let(:mono_doc) { SolrDocument.new(id: 'mono', press_tesim: ["Booksplosion!"], has_model_ssim: ['Monograph'], member_ids_ssim: ['fileset1']) }
+      let(:file_set_doc) { SolrDocument.new(id: "fileset1", has_model_ssim: ['FileSet']) }
+
+      before do
+        ActiveFedora::SolrService.add([mono_doc.to_h, file_set_doc.to_h])
+        ActiveFedora::SolrService.commit
+      end
 
       it "returns the press subdomain from the file_set presenter" do
         @presenter = Hyrax::FileSetPresenter.new(file_set_doc, nil)

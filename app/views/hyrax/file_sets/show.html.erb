@@ -37,9 +37,9 @@
         <div class="col-sm-12">
           <h1 id="asset-title"><%= @presenter.title %></h1>
           <div class="skip"><a href="#media" data-turbolinks="false">Skip to media</a></div>
-          <span class="section">From <em><%= link_to @presenter.monograph.title, main_app.monograph_catalog_path(@presenter.monograph_id) %></em>
-            <% if @presenter.monograph.authors? %>
-              by <%= render_markdown @presenter.monograph.authors %>
+          <span class="section">From <em><%= link_to @presenter.parent.title, main_app.monograph_catalog_path(@presenter.monograph_id) %></em>
+            <% if @presenter.parent.authors? %>
+              by <%= render_markdown @presenter.parent.authors %>
             <% end %>
           </span>
           <br />

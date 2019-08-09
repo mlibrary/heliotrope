@@ -55,15 +55,15 @@ RSpec.describe Hyrax::FileSetPresenter do
     end
 
     it "has a monograph" do
-      expect(presenter.monograph).to be_an_instance_of(Hyrax::MonographPresenter)
+      expect(presenter.parent).to be_an_instance_of(Hyrax::MonographPresenter)
     end
 
     it "has it's monograph's id" do
-      expect(presenter.monograph.id).to eq monograph.id
+      expect(presenter.parent.id).to eq monograph.id
     end
 
     it "has the monograph's creator" do
-      expect(presenter.monograph.creator).to match_array(creator)
+      expect(presenter.parent.creator).to match_array(creator)
     end
   end
 

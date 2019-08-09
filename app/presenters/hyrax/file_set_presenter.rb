@@ -52,31 +52,27 @@ module Hyrax
     end
 
     def parent
-      monograph
-    end
-
-    def monograph
-      @monograph_presenter ||= Hyrax::PresenterFactory.build_for(ids: [monograph_id], presenter_class: Hyrax::MonographPresenter, presenter_args: current_ability).first
+      @parent_presenter ||= fetch_parent_presenter
     end
 
     def subjects
-      monograph.subject
+      parent.subject
     end
 
     def previous_id?
-      monograph.previous_file_sets_id? id
+      parent.previous_file_sets_id? id
     end
 
     def previous_id
-      monograph.previous_file_sets_id id
+      parent.previous_file_sets_id id
     end
 
     def next_id?
-      monograph.next_file_sets_id? id
+      parent.next_file_sets_id? id
     end
 
     def next_id
-      monograph.next_file_sets_id id
+      parent.next_file_sets_id id
     end
 
     def link_name
@@ -286,5 +282,24 @@ module Hyrax
     def user_can_perform_any_action?
       current_ability.can?(:edit, id) || current_ability.can?(:destroy, id) || current_ability.can?(:download, id)
     end
+
+    private
+
+      def fetch_parent_presenter
+        # If we had FileSets with more then one parent this would not work and we'd need something
+        # more like https://github.com/samvera/hyrax/blob/master/app/presenters/hyrax/file_set_presenter.rb#L98-L104
+        @parent_document ||= ActiveFedora::SolrService.query("{!field f=member_ids_ssim}#{id}").first
+
+        presenter_class = case @parent_document["has_model_ssim"].first
+                          when "Monograph"
+                            Hyrax::MonographPresenter
+                          else
+                            WorkShowPresenter
+                          end
+
+        Hyrax::PresenterFactory.build_for(ids: [@parent_document["id"]],
+                                          presenter_class: presenter_class,
+                                          presenter_args: current_ability).first
+      end
   end
 end

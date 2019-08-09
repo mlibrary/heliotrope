@@ -12,10 +12,10 @@ describe Ability do
   let(:file_set) { create(:file_set, user: creating_user) }
 
   let(:monograph_presenter) do
-    Hyrax::MonographPresenter.new(SolrDocument.new(id: monograph.id, press_tesim: press.subdomain), described_class.new(creating_user))
+    Hyrax::PresenterFactory.build_for(ids: [monograph.id], presenter_class: Hyrax::MonographPresenter, presenter_args: described_class.new(creating_user)).first
   end
   let(:file_set_presenter) do
-    Hyrax::FileSetPresenter.new(SolrDocument.new(id: file_set.id, monograph_id_ssim: monograph.id), described_class.new(creating_user))
+    Hyrax::PresenterFactory.build_for(ids: [file_set.id], presenter_class: Hyrax::FileSetPresenter, presenter_args: described_class.new(creating_user)).first
   end
 
   describe 'a platform-wide admin user' do
@@ -26,6 +26,11 @@ describe Ability do
     let(:another_user_monograph) { create(:monograph, user: another_user, press: press.subdomain) }
     let(:another_user_monograph_presenter) do
       Hyrax::MonographPresenter.new(SolrDocument.new(id: another_user_monograph.id, press_tesim: press.subdomain), described_class.new(another_user))
+    end
+
+    before do
+      monograph.ordered_members << file_set
+      monograph.save!
     end
 
     it do

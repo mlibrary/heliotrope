@@ -1,7 +1,7 @@
 <!-- survey -->
 <% presenter = @presenter %>
 <% asset_link_needed = presenter.class == Hyrax::FileSetPresenter %>
-<% link_params = '?Book=' + (asset_link_needed ? presenter.monograph.page_title + '&Asset=' + presenter.page_title : presenter.page_title) %>
+<% link_params = '?Book=' + (asset_link_needed ? presenter.parent.page_title + '&Asset=' + presenter.page_title : presenter.page_title) %>
 <div class="alert alert-info alert-dismissible survey" role="alert" style="display: none;">
   <button type="button" onclick="survey_button_no()" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&#x2715</span></button>
   <p class="message">Got two minutes? Help us improve your experience on Fulcrum by answering a few questions about your visit.</p>
