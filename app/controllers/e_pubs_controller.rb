@@ -10,7 +10,7 @@ class EPubsController < CheckpointController
     @title = @presenter.parent.present? ? @presenter.parent.page_title : @presenter.page_title
     @citable_link = @presenter.citable_link
     @back_link = params[:publisher].present? ? URI.join(main_app.root_url, params[:publisher]).to_s : main_app.monograph_catalog_url(@presenter.monograph_id)
-    @subdomain = @presenter.monograph.subdomain
+    @subdomain = @presenter.parent.subdomain
     @monograph_presenter = @presenter.parent
 
     @ebook_download_presenter = EBookDownloadPresenter.new(@monograph_presenter, current_ability, current_actor)
@@ -134,14 +134,14 @@ class EPubsController < CheckpointController
     return head :no_content unless @policy.show?
 
     presenter = Hyrax::PresenterFactory.build_for(ids: [@noid], presenter_class: Hyrax::FileSetPresenter, presenter_args: nil).first
-    subdomain = presenter.monograph.subdomain
+    subdomain = presenter.parent.subdomain
     if Press.where(subdomain: subdomain).first&.allow_share_links?
       expire = Time.now.to_i + 28 * 24 * 3600 # 28 days in seconds
       token = JsonWebToken.encode(data: @noid, exp: expire)
       ShareLinkLog.create(ip_address: request.ip,
                           institution: current_institutions.map(&:name).join("|"),
                           press: subdomain,
-                          title: presenter.monograph.title,
+                          title: presenter.parent.title,
                           noid: presenter.id,
                           token: token,
                           action: 'create')

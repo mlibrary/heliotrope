@@ -43,7 +43,7 @@ class Ability
     end
 
     can :update, Hyrax::FileSetPresenter do |p|
-      @user.admin_presses.map(&:subdomain).include?(p.monograph.subdomain)
+      @user.admin_presses.map(&:subdomain).include?(p.parent.subdomain)
     end
 
     can :read, :admin_dashboard do

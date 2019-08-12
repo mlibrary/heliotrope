@@ -460,7 +460,7 @@ RSpec.describe EPubsController, type: :controller do
   describe '#share_link' do
     let(:now) { Time.now }
     let(:presenters) { double('presenters', first: presenter) }
-    let(:presenter) { double('presenter', id: 'fileset_id', monograph: monograph) }
+    let(:presenter) { double('presenter', id: 'fileset_id', parent: monograph) }
     let(:monograph) { double('monograph', id: 'monograph_id', subdomain: press.subdomain, title: ['A Thing']) }
     let(:entity) { double('entity') }
     let(:parent) { double('parent', noid: monograph.id) }

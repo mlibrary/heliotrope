@@ -12,8 +12,8 @@
         <a class="navbar-brand" href="<%= main_app.press_catalog_path(@press) %>"><%= @press.name %></a>
       <% elsif defined?(@presenter.press) %>
         <a class="navbar-brand" href="<%= main_app.press_catalog_path(@presenter.press_obj) %>"><%= @presenter.press %></a>
-      <% elsif defined?(@presenter.monograph.press) %>
-        <a class="navbar-brand" href="<%= main_app.press_catalog_path(@presenter.monograph.press_obj) %>"><%= @presenter.monograph.press %></a>
+      <% elsif defined?(@presenter.parent.press) %>
+        <a class="navbar-brand" href="<%= main_app.press_catalog_path(@presenter.parent.press_obj) %>"><%= @presenter.parent.press %></a>
       <% else %>
         <a class="navbar-brand" href="#">University Press</a>
       <% end %>

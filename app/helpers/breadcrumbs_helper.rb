@@ -6,7 +6,7 @@ module BreadcrumbsHelper
 
     crumbs = case controller_name
              when "file_sets"
-               breadcrumbs_for_file_set(@presenter.monograph.subdomain, @presenter)
+               breadcrumbs_for_file_set(@presenter.parent.subdomain, @presenter)
              when "monographs"
                breadcrumbs_for_monograph_show_page(@presenter.subdomain, @presenter)
              when "monograph_catalog"
@@ -40,7 +40,7 @@ module BreadcrumbsHelper
       return [] if press.blank?
 
       crumbs = possible_parent(press)
-      crumbs << { href: main_app.monograph_catalog_path(presenter.monograph_id), text: presenter.monograph.title, class: "" }
+      crumbs << { href: main_app.monograph_catalog_path(presenter.monograph_id), text: presenter.parent.title, class: "" }
       crumbs << { href: "", text: presenter.title, class: "active" }
     end
 

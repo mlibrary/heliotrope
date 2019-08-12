@@ -7,8 +7,8 @@ module PressHelper
       @press.subdomain
     elsif defined?(@presenter.subdomain)
       @presenter.subdomain
-    elsif defined?(@presenter.monograph.subdomain)
-      @presenter.monograph.subdomain
+    elsif defined?(@presenter.parent.subdomain)
+      @presenter.parent.subdomain
     end
   end
 

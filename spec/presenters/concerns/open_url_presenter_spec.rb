@@ -5,13 +5,15 @@ require 'rails_helper'
 RSpec.describe OpenUrlPresenter do
   let(:mono_doc) {
     SolrDocument.new(id: '1',
+                     has_model_ssim: ['Monograph'],
                      title_tesim: ['Stuff'],
                      creator_full_name_tesim: ['Worm, Bird'],
                      description_tesim: ['Things about Stuff'],
                      subject_tesim: ['Birds', 'Bionics', 'Hats'],
                      date_published_tesim: ['1776'],
                      isbn_tesim: ['123-456-7890'],
-                     publisher_tesim: ['MERP'])
+                     publisher_tesim: ['MERP'],
+                     member_ids_ssim: ['2'])
   }
 
   let(:file_set_doc) {
@@ -22,6 +24,11 @@ RSpec.describe OpenUrlPresenter do
                      sort_date_tesim: ['2025-01-01'],
                      monograph_id_ssim: ['1'])
   }
+
+  before do
+    ActiveFedora::SolrService.add([mono_doc.to_h, file_set_doc.to_h])
+    ActiveFedora::SolrService.commit
+  end
 
   describe "#monograph_coins_title" do
     let(:presenter) { Hyrax::MonographPresenter.new(mono_doc, nil) }
@@ -45,8 +52,6 @@ RSpec.describe OpenUrlPresenter do
     let(:presenter) { Hyrax::FileSetPresenter.new(file_set_doc, nil) }
 
     it "has the correct metadata" do
-      allow(presenter).to receive(:monograph).and_return(Hyrax::MonographPresenter.new(mono_doc, nil))
-
       kevs = presenter.file_set_coins_title
 
       expect(CGI.unescape(kevs)).to match("rft.au=Ronald, Ron")

@@ -62,7 +62,8 @@ RSpec.describe EmbedController, type: :controller do
                            publisher_tesim: ["R Pub"],
                            isbn_tesim: ['111', '222'],
                            date_created_tesim: ['2000'],
-                           press_tesim: press.subdomain)
+                           press_tesim: press.subdomain,
+                           member_ids_ssim: ['file_set_noid'])
       end
       let(:file_set) do
         ::SolrDocument.new(id: 'file_set_noid',
