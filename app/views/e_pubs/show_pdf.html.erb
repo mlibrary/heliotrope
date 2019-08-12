@@ -6,34 +6,13 @@
     <script async src="https://badge.dimensions.ai/badge.js" charset="utf-8"></script>
   <% end %>
 
-
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="google" content="notranslate">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
-  <!-- Latest compiled and minified CSS -->
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
-
-  <!-- Optional theme -->
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap-theme.min.css" integrity="sha384-6pzBo3FDv/PJ8r2KRkGHifhEocL+1X2rVCTTkUfGk7/0pbek5mMa1upzvWbrUbOZ" crossorigin="anonymous">
-
-<!--  <link rel="stylesheet" type="text/css" href="/mozilla-pdf-viewer/dist/cozy-sun-bear.css">-->
-<!--  <link rel="stylesheet" type="text/css" href="https://www.fulcrum.org/assets/application-83a66c8e506d84524bedf4a1716fee181b8275665194c3abf2750369ad96224a.css">-->
-
   <link rel="resource" type="application/l10n" href="locale/locale.properties">
 
-  <script type="text/javascript" src="https://code.jquery.com/jquery-3.4.1.js"></script>
   <script src="/mozilla-pdf-viewer/build/pdf.js"></script>
-  <!-- <script src="viewer.js"></script>
-  <script type="text/javascript" src="patch.js"></script> -->
-
-  <script type="text/javascript" src="/mozilla-pdf-viewer/dist/cozy-sun-bear.js"></script>
-
-  <link rel="stylesheet" type="text/css" href="/mozilla-pdf-viewer/web/cozy-honey-bear-reader.css">
-
-
-
-
 
 <% end %>
 
@@ -690,6 +669,11 @@
 
     console.log("YO HEY DER");
 
+    // distinguish these buttons from the links underneath, too much CSS to add otherwise, methinks
+    var element = document.getElementById("viewThumbnail");
+    element.classList.add("cozy-control", "button--lg");
+    var element = document.getElementById("viewOutline");
+    element.classList.add("cozy-control", "button--lg");
   </script>
 
 

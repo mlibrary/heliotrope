@@ -3,5 +3,5 @@
  * require common
  *= require_tree ./application
  *= require cozy-sun-bear-main
- * require_tree ./mozilla-pdf-viewer
+ *= require_tree ./mozilla-pdf-viewer
 */

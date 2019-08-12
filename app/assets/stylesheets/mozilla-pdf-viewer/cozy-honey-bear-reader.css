@@ -1,3 +1,12 @@
+/*  Note that this file is overriding the Mozilla PDF Viewer stuff                                     */
+/*  But it seems to be happy in the asset pipeline                                                     */
+/*  We just need to make sure any Mozilla images are referenced with, e.g.:                            */
+/*  url(/mozilla-pdf-viewer/web/images/blah.jpg)                                                       */
+/*  If we encounter any trouble this file can be dumped into `fulcrum/mozilla-pdf-viewer/web/`         */
+/*  And included directly in `app/views/e_pubs/show_pdf.html.erb` right at the end of...               */
+/*  `content_for :head` like this:                                                                     */
+/*  <link rel="stylesheet" type="text/css" href="/mozilla-pdf-viewer/web/cozy-honey-bear-reader.css">  */
+
 /* --- HELIOTROPE STYLES --- */
 
 html, body {
@@ -16,26 +25,6 @@ html, body {
     padding: .83em 1em !important;
 }
 
-.michigan #mainContainer .button--sm {
-    color: #fff;
-    background: #00274c;
-        background-position-x: 0%;
-        background-position-y: 0%;
-        background-repeat: repeat;
-        background-image: none;
-        background-size: auto;
-    background-image: linear-gradient(to right, #40658f 50%, #00274c 50%);
-    background-position: -100%;
-    background-size: 201%;
-    background-repeat: no-repeat;
-}
-
-.michigan #mainContainer .cozy-control .logo img {
-    height: 36px;
-    margin-top: 6px;
-    margin-left: 11px;
-}
-
 /* --- HONEY BEAR --- */
 
 .cozy-module-book-epub {
@@ -43,17 +32,29 @@ html, body {
 }
 
 .cozy-modal-contents-container .modal__container {
-  width: 200px;
+  width: 400px;
 }
 
 .cozy-modal-contents {
-  width: 200px;
+  width: 400px;
 }
 
 .modal__container div[role="document"] {
   display: grid;
   height: 100%;
   grid-template-rows: auto 1fr;
+}
+
+#toolbarSidebar {
+  text-align: center;
+}
+
+#viewThumbnail {
+  margin: 0px 15px 0px auto;
+}
+
+#viewAttachments {
+  display: none;
 }
 
 #sidebarContent {
@@ -153,8 +154,7 @@ a:focus > .thumbnail > .thumbnailSelectionRing,
 
 #outlineView,
 #attachmentsView {
-  position: absolute;
-  width: 192px;
+  width: 392px;
   top: 0;
   bottom: 0;
   overflow: auto;
@@ -451,8 +451,8 @@ a:focus > .thumbnail > .thumbnailSelectionRing,
   overflow: visible;
   border: 9px solid transparent;
   background-clip: content-box;
-  -o-border-image: url(images/shadow.png) 9 9 repeat;
-     border-image: url(images/shadow.png) 9 9 repeat;
+  -o-border-image: url(/mozilla-pdf-viewer/web/images/shadow.png) 9 9 repeat;
+     border-image: url(/mozilla-pdf-viewer/web/images/shadow.png) 9 9 repeat;
   background-color: white;
   box-sizing: content-box;
 }
@@ -527,7 +527,7 @@ a:focus > .thumbnail > .thumbnailSelectionRing,
   top: 0;
   right: 0;
   bottom: 0;
-  background: url('images/loading-icon.gif') center no-repeat;
+  background: url('/mozilla-pdf-viewer/web/images/loading-icon.gif') center no-repeat;
 }
 
 .pdfPresentationMode .pdfViewer {
