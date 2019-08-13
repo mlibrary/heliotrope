@@ -1,0 +1,8 @@
+<% provide :page_title, @presenter.page_title %>
+<% provide :page_class, 'search score' %>
+<% provide :page_header do %>
+  <%# render 'shared/survey' %>
+  <!-- breadcrumbs -->
+  <%= render 'shared/breadcrumbs' %>
+<% end %><!-- provide :page_header -->
+<%= render 'index_score' %>

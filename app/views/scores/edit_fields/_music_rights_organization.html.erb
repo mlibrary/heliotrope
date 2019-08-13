@@ -1,0 +1,116 @@
+<div class="form-group check_boxes required score_music_rights_organization">
+  <label class="control-label check_boxes required">* Music rights organization </label>
+  <span class="checkbox">
+    <label for="score_music_rights_organization_bmi">
+      <input class="check_boxes required form-check-input"
+             type="checkbox"
+             value="BMI"
+             name="score[music_rights_organization][]"
+             id="score_music_rights_organization_bmi"
+             <%= "checked" if @form.music_rights_organization.include?('BMI') %>>
+      BMI
+    </label>
+  </span>
+  <span class="checkbox">
+    <label for="score_music_rights_organization_ascap">
+      <input class="check_boxes required form-check-input"
+             type="checkbox"
+             value="ASCAP"
+             name="score[music_rights_organization][]"
+             id="score_music_rights_organization_ascap"
+             <%= "checked" if @form.music_rights_organization.include?('ASCAP') %>>
+      ASCAP
+    </label>
+  </span>
+  <span class="checkbox">
+    <label for="score_music_rights_organization_apra">
+      <input class="check_boxes required form-check-input"
+             type="checkbox"
+             value="APRA"
+             name="score[music_rights_organization][]"
+             id="score_music_rights_organization_apra"
+             <%= "checked" if @form.music_rights_organization.include?('APRA') %>>
+      APRA
+    </label>
+  </span>
+  <span class="checkbox">
+    <label for="score_music_rights_organization_sabam">
+      <input class="check_boxes required form-check-input"
+             type="checkbox"
+             value="SABAM"
+             name="score[music_rights_organization][]"
+             id="score_music_rights_organization_sabam"
+             <%= "checked" if @form.music_rights_organization.include?('SABAM') %>>
+      SABAM
+    </label>
+  </span>
+  <span class="checkbox">
+    <label for="score_music_rights_organization_socan">
+      <input class="check_boxes required form-check-input"
+             type="checkbox"
+             value="SOCAN"
+             name="score[music_rights_organization][]"
+             id="score_music_rights_organization_socan"
+             <%= "checked" if @form.music_rights_organization.include?('SOCAN') %>>
+      SOCAN
+    </label>
+  </span>
+  <span class="checkbox">
+    <label for="score_music_rights_organization_koda">
+      <input class="check_boxes required form-check-input"
+             type="checkbox"
+             value="KODA"
+             name="score[music_rights_organization][]"
+             id="score_music_rights_organization_koda"
+             <%= "checked" if @form.music_rights_organization.include?('KODA') %>>
+      KODA
+    </label>
+  </span>
+  <span class="checkbox">
+    <label for="score_music_rights_organization_gema">
+      <input class="check_boxes required form-check-input"
+             type="checkbox"
+             value="GEMA"
+             name="score[music_rights_organization][]"
+             id="score_music_rights_organization_gema"
+             <%= "checked" if @form.music_rights_organization.include?('GEMA') %>>
+      GEMA
+    </label>
+  </span>
+  <span class="checkbox">
+    <label for="score_music_rights_organization_buma">
+      <input class="check_boxes required form-check-input"
+             type="checkbox"
+             value="BUMA"
+             name="score[music_rights_organization][]"
+             id="score_music_rights_organization_buma"
+             <%= "checked" if @form.music_rights_organization.include?('BUMA') %>>
+      BUMA
+    </label>
+  </span>
+  <span class="checkbox">
+    <label for="score_music_rights_organization_rao">
+      <input class="check_boxes required form-check-input"
+             type="checkbox"
+             value="RAO"
+             name="score[music_rights_organization][]"
+             id="score_music_rights_organization_rao"
+             <%= "checked" if @form.music_rights_organization.include?('RAO') %>>
+      RAO
+    </label>
+  </span>
+  <span class="checkbox">
+    <label for="score_other_music_rights_organization">
+      <input class="check_boxes required form-check-input"
+             type="checkbox"
+             value=""
+             name="score[music_rights_organization][]"
+             id="score_other_music_rights_organization"
+             <%= "checked" if @form.other_music_rights_organization_value.present? %>>
+      <input type="text"
+             class="string required form-control"
+             name="score[music_rights_organization][]"
+             value="<%= @form.other_music_rights_organization_value.first if @form.other_music_rights_organization_value.present? %>">
+    </label>
+  </span>
+</div>

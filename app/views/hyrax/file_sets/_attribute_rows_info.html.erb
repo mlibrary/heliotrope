@@ -1,16 +1,23 @@
 <p><%= presenter.attribute_to_html(:description, render_as: :markdown, label: '') %></p>
-<%= presenter.attribute_to_html(:creator, label: t('creator'), render_as: :monograph_facet, monograph_id: presenter.parent.id) %>
-<%= presenter.attribute_to_html(:primary_creator_role, label: t('creator_role'), render_as: :monograph_facet, monograph_id: presenter.parent.id) %>
-<%= presenter.attribute_to_html(:contributor, label: t('contributor'), render_as: :monograph_facet, monograph_id: presenter.parent.id) %>
-<%= presenter.attribute_to_html(:subjects) %>
-<%= presenter.attribute_to_html(:display_date, render_as: :markdown, label: t('display_date')) %>
-<%= presenter.attribute_to_html(:section_title,
-                                label: t('section_title'),
-                                render_as: :monograph_facet,
-                                monograph_id: presenter.parent.id,
-                                markdown: true,
-                                sort_by: presenter.parent.ordered_section_titles) %>
-<%= presenter.attribute_to_html(:keywords, render_as: :monograph_facet, monograph_id: presenter.parent.id) %>
-<%= presenter.attribute_to_html(:content_type, label: t('content_type'), render_as: :monograph_facet, monograph_id: presenter.parent.id) %>
-<%= presenter.attribute_to_html(:language, render_as: :monograph_facet, monograph_id: presenter.parent.id) %>
-<%= presenter.attribute_to_html(:redirect_to) %>
+<% if presenter.parent.is_a?(Hyrax::MonographPresenter) %>
+  <%= presenter.attribute_to_html(:creator, label: t('creator'), render_as: :monograph_facet, monograph_id: presenter.parent.id) %>
+  <%= presenter.attribute_to_html(:primary_creator_role, label: t('creator_role'), render_as: :monograph_facet, monograph_id: presenter.parent.id) %>
+  <%= presenter.attribute_to_html(:contributor, label: t('contributor'), render_as: :monograph_facet, monograph_id: presenter.parent.id) %>
+  <%= presenter.attribute_to_html(:subjects) %>
+  <%= presenter.attribute_to_html(:display_date, render_as: :markdown, label: t('display_date')) %>
+  <%= presenter.attribute_to_html(:section_title,
+                                  label: t('section_title'),
+                                  render_as: :monograph_facet,
+                                  monograph_id: presenter.parent.id,
+                                  markdown: true,
+                                  sort_by: presenter.parent.ordered_section_titles) %>
+  <%= presenter.attribute_to_html(:keywords, render_as: :monograph_facet, monograph_id: presenter.parent.id) %>
+  <%= presenter.attribute_to_html(:content_type, label: t('content_type'), render_as: :monograph_facet, monograph_id: presenter.parent.id) %>
+  <%= presenter.attribute_to_html(:language, render_as: :monograph_facet, monograph_id: presenter.parent.id) %>
+  <%= presenter.attribute_to_html(:redirect_to) %>
+<% end %>
+
+<% if presenter.parent.is_a?(Hyrax::ScorePresenter) %>
+  <%= presenter.attribute_to_html(:creator, label: t('performer')) %>
+  <%= presenter.attribute_to_html(:score_version) %>
+<% end %>

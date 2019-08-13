@@ -16,6 +16,7 @@
   <% if can? :edit, member.id %>
     <% if member.parent.present? %>
       <%= form_tag(main_app.featured_representatives_path, method: "post") do %>
+        <fieldset id="<%= member.id %>">
         <div class="row">
           <div class="col-sm-8">
             <%= select_tag(:kind, options_for_select(FeaturedRepresentative.kinds - member.parent.featured_representatives.map(&:kind)), class: 'form-control') %>
@@ -27,6 +28,7 @@
             <%= submit_tag("Set", class: 'btn btn-default') %>
           </div>
         </div>
+        </fieldset>
       <% end %>
     <% end  %>
   <% end %>

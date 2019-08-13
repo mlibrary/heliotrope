@@ -1,0 +1,4 @@
+<%= f.input :bass_bells_required, as: :check_boxes,
+    collection: ScoresQa::BassBellsRequiredService.select_all_options,
+    input_html: { class: 'form-check-input' }
+%>

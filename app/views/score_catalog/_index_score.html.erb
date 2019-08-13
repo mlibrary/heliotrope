@@ -1,0 +1,115 @@
+<div id="maincontent" class="row monograph-info-epub">
+  <% if @presenter.monograph_coins_title? %>
+      <!-- COinS for Zotero, etc -->
+      <span class="Z3988" title="<%= @presenter.monograph_coins_title %>"></span>
+  <% end %>
+  <div class="col-sm-3 monograph-cover">
+    <%= raw @presenter.work_thumbnail(225) %>
+    <% if can? :edit, @presenter %>
+      <a class="btn btn-default manage-monograph-button" href="<%= main_app.score_show_path(@presenter.id) %>" title="<%= t('score_catalog.index.show_page_button') %>" data-turbolinks="false"><%= t('score_catalog.index.show_page_button') %></a>
+      <a class="btn btn-default manage-monograph-button" href="<%= main_app.edit_hyrax_score_path(@presenter.id) %>" title="<%= t('score_catalog.index.edit_page_button') %>" data-turbolinks="false"><%= t('score_catalog.index.edit_page_button') %></a>
+      <p><%= @presenter.permission_badge %>
+      <%= @presenter.workflow.badge %></p>
+    <% end %>
+  </div><!-- /.monograph-cover -->
+  <div class="col-sm-9 monograph-metadata">
+    <h1><%= @presenter.title %></h1>
+    <span class="authors"><%= @presenter.composer %></span>
+    <% if @presenter.date_created? %>
+    <span aria-label="publication date" class="pubdate"><%= @presenter.date_created.first %></span>
+    <% end %>
+    <% if @presenter.license? %>
+      <span class="license"><a aria-label="license" rel="license" href="<%= @presenter.license.first %>" target="_blank"><%= @presenter.license_link_content %></a></span>
+    <% end %>
+    <div class="description">
+      <%= @presenter.description.first || '' %>
+    </div>
+    <% if @presenter.reader_ebook? %>
+    <!-- TODO: add check for allow download of EPUB or PDF to line 50 -->
+        <div class="btn-toolbar" role="toolbar">
+          <div class="btn-group btn-group-lg" role="group">
+            <% if @presenter.reader_ebook? %>
+                <a id="monograph-read-btn" href="<%= epub_path(@presenter.reader_ebook) %>" title="<%= t('monograph_catalog.index.read', title: @presenter.title) %>" aria-label="<%= t('monograph_catalog.index.read', title: @presenter.title) %>" class="btn btn-default" data-turbolinks="false"><%= t('monograph_catalog.index.read_book') %></a>
+            <% end %>
+            <% if @ebook_download_presenter.downloadable_ebooks? %>
+                <div class="btn-group btn-group-lg">
+                  <button type="button" id="monograph-download-btn" target="_blank" title="<%= t('monograph_catalog.index.download', title: @presenter.title) %>" aria-label="<%= t('monograph_catalog.index.download', title: @presenter.title) %>" aria-haspopus="true" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><%= t('monograph_catalog.index.download_book') %> <span class="caret"></span></button>
+                  <ul class="dropdown-menu monograph-catalog-rep-downloads">
+                  <% @ebook_download_presenter.ebook_presenters.each do |ebook| %>
+                    <% if @ebook_download_presenter.downloadable?(ebook) %>
+                      <li><a data-rep-type="<%= ebook.ebook_format.downcase %>" href="<%= download_ebook_path(ebook.id) %>" target="_blank"><%= ebook.ebook_format %> (<%= number_to_human_size(ebook.file_size) %>)</a></li>
+                    <% end %>
+                  <% end %>
+                  </ul>
+                </div>
+            <% end %>
+          </div><!-- /.btn-group -->
+        </div><!-- /.btn-toolbar -->
+    <% end %>
+
+  <div class="additional-metadata">
+    <h3>Score Information</h3>
+    <dl>
+      <%= @presenter.attribute_to_html(:octave_compass, html_dl: true) %>
+      <%= @presenter.attribute_to_html(:bass_bells_required, html_dl: true) %>
+      <%= @presenter.attribute_to_html(:bass_bells_omitted, html_dl: true) %>
+      <%= @presenter.attribute_to_html(:solo, html_dl: true) %>
+      <%= @presenter.attribute_to_html(:amplified_electronics, html_dl: true) %>
+      <%= @presenter.attribute_to_html(:electronics_without_adjustment, html_dl: true) %>
+      <%= @presenter.attribute_to_html(:musical_presentation, html_dl: true) %>
+      <%= @presenter.attribute_to_html(:recommended_for_students, html_dl: true) %>
+      <%= @presenter.attribute_to_html(:composer_diversity, html_dl: true) %>
+      <%= @presenter.attribute_to_html(:appropriate_occasion, html_dl: true) %>
+      <%= @presenter.attribute_to_html(:number_of_movements, html_dl: true) %>
+      <%= @presenter.attribute_to_html(:premiere_status, html_dl: true) %>
+    </dl>
+  </div>
+
+  </div><!-- /.monograph-metadata -->
+</div><!-- /.monograph-info-epub -->
+
+<div class="row monograph-assets-toc-epub">
+  <div class="col-sm-12" id="tabs">
+    <ul class="nav nav-tabs" role="tablist">
+      <% if @presenter.reader_ebook? %>
+        <li role="presentation" class="active"><a id="tab-toc" href="#toc" data-toggle="tab" role="tab" aria-controls="toc" aria-selected="true" tabindex="0">Table of Contents</a></li>
+      <% end %>
+      <% if @presenter.assets? %>
+        <% if @presenter.reader_ebook? %>
+          <li role="presentation"><a id="tab-resources" href="#resources" role="tab" data-toggle="tab" aria-controls="resources" aria-selected="false" tabindex="-1">Resources</a></li>
+        <% else %>
+          <li role="presentation" class="active"><a id="tab-resources" href="#resources" data-toggle="tab" role="tab" aria-controls="resources" aria-selected="true"  tabindex="0">Resources</a></li>
+        <% end %>
+      <% end %>
+      <li role="presentation"><a id="tab-stats" href="#stats" role="tab" data-toggle="tab" aria-controls="stats" aria-selected="false" tabindex="-1">Stats</a></li>
+    </ul>
+    <div id="tabs-content" class="tab-content monograph-assets-toc-epub-content" aria-live="polite">
+      <% if @presenter.reader_ebook? %>
+        <section id="toc" class="tab-pane active fade in toc row" role="tabpanel" aria-hidden="false" aria-labelledby="tab-toc" tabindex="0">
+          <div class="col-sm-12">
+            <h2 class="sr-only">Table of Contents</h2>
+            <%= render 'index_epub_toc' %>
+          </div>
+        </section>
+      <% end %>
+      <% if @presenter.assets? %>
+        <% if @presenter.reader_ebook? %>
+        <section id="resources" class="tab-pane fade in resources row" role="tabpanel" aria-hidden="true" aria-labelledby="tab-resources" tabindex="0">
+        <% else %>
+        <section id="resources" class="tab-pane fade in active resources row" role="tabpanel" aria-hidden="false" aria-labelledby="tab-resources" tabindex="0">
+        <% end %>
+          <h2 class="sr-only">Resources</h2>
+          <div class="col-sm-12">
+            <div class="content">
+              <%= render 'score_catalog/search_results' %>
+            </div><!-- /.content -->
+          </div>
+        </section>
+      <% end %>
+      <section id="stats" class="tab-pane fade in stats row" role="tabpanel" aria-hidden="true" aria-labelledby="tab-stats" tabindex="0">
+        <h2 class="sr-only">Stats</h2>
+        <%= render 'stats' %>
+      </section>
+    </div>
+  </div>
+</div><!-- /.monograph-assets-toc-epub -->

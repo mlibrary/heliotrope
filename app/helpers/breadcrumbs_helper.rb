@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module BreadcrumbsHelper
-  def breadcrumbs
+  def breadcrumbs # rubocop:disable Metrics/CyclomaticComplexity
     return [] if @presenter.nil?
 
     crumbs = case controller_name
@@ -10,6 +10,8 @@ module BreadcrumbsHelper
              when "monographs"
                breadcrumbs_for_monograph_show_page(@presenter.subdomain, @presenter)
              when "monograph_catalog"
+               breadcrumbs_for_monograph(@presenter.subdomain, @presenter)
+             when "score_catalog"
                breadcrumbs_for_monograph(@presenter.subdomain, @presenter)
              end
 
@@ -40,7 +42,11 @@ module BreadcrumbsHelper
       return [] if press.blank?
 
       crumbs = possible_parent(press)
-      crumbs << { href: main_app.monograph_catalog_path(presenter.monograph_id), text: presenter.parent.title, class: "" }
+      crumbs << if presenter.parent.is_a? Hyrax::MonographPresenter
+                  { href: main_app.monograph_catalog_path(presenter.parent.id), text: presenter.parent.title, class: "" }
+                elsif presenter.parent.is_a? Hyrax::ScorePresenter
+                  { href: main_app.score_catalog_path(presenter.parent.id), text: presenter.parent.title, class: "" }
+                end
       crumbs << { href: "", text: presenter.title, class: "active" }
     end
 

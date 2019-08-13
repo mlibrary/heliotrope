@@ -1,7 +1,14 @@
 <% provide :page_title, @press.name %>
 <% provide :page_class, 'press' %>
+<%
+works = if @press.subdomain == Services.score_press
+          "Musical Scores"
+        else
+          "Books"
+        end
+%>
 <div id="maincontent">
-  <h2>Books</h2>
+  <h2><%= works %> </h2>
   <% if has_facet_values?  %>
   <div class="row">
     <div class="col-sm-3 facets-container">

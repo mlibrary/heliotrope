@@ -172,6 +172,7 @@ en:
   open_access: "Open Access?"
   original_checksum: "Original Checksum"
   pageviews_html: "<strong>%{count}</strong> views since %{date}"
+  performer: "Performer"
   permissions_expiration_date: "Permissions Expiration Date"
   press: "Publisher (Fulcrum subdivision)"
   press_catalog:
@@ -194,6 +195,10 @@ en:
       role: "Role"
       actions: "Actions"
   sample_rate: "Sample Rate"
+  score_catalog:
+    index:
+      show_page_button: "Manage Score and Files"
+      edit_page_button: "Edit Score"
   section: "Section"
   section_title: "Related Section"
   section_titles: "Section Titles"
@@ -249,6 +254,9 @@ en:
         series: "Series"
         subject: "Subject"
         title: "Title"
+      score:
+        creator: "Composer"
+        license: "Creative Commons License"
     hints:
       defaults:
         transcript: "Transcripts must be formatted as WebVTT captions. <a href='https://developer.mozilla.org/en-US/docs/Web/API/WebVTT_API' target='_blank'>Get help with WebVTT formatting.</a>"

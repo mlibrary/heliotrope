@@ -1,0 +1,8 @@
+pt-BR:
+  hyrax:
+    icons:
+      score:     'fa fa-file-text-o'
+    select_type:
+      score:
+        description:        "Score trabalhos"
+        name:               "Score"

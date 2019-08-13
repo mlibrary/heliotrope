@@ -304,4 +304,14 @@ describe Ability do
       it { is_expected.not_to be_able_to(:read, UsersPresenter.new(current_user)) }
     end
   end
+
+  context "a press_admin for a press with the Score work type" do
+    let(:press) { create(:press, subdomain: Services.score_press) }
+    let(:current_user) { create(:press_admin, press: press) }
+
+    it do
+      is_expected.not_to be_able_to(:create, Monograph.new)
+      is_expected.to be_able_to(:create, Score.new)
+    end
+  end
 end

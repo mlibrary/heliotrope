@@ -1,0 +1,83 @@
+<div class="form-group check_boxes required score_appropriate_occasion">
+  <label class="control-label check_boxes required">Appropriate occasion </label>
+  <span class="checkbox">
+    <label for="score_appropriate_occasion_celebration">
+      <input class="check_boxes required form-check-input"
+             type="checkbox"
+             value="celebration"
+             name="score[appropriate_occasion][]"
+             id="score_appropriate_occasion_celebration"
+             <%= "checked" if @form.appropriate_occasion.include?('celebration') %>>
+      celebration
+    </label>
+  </span>
+  <span class="checkbox">
+    <label for="score_appropriate_occasion_worship_christian">
+      <input class="check_boxes required form-check-input"
+             type="checkbox"
+             value="workship (Christian)"
+             name="score[appropriate_occasion][]"
+             id="score_appropriate_occasion_worship_christian"
+             <%= "checked" if @form.appropriate_occasion.include?('worship (Chirstian)') %>>
+      worship (Chirstian)
+    </label>
+  </span>
+  <span class="checkbox">
+    <label for="score_appropriate_occasion_worship_non_christian">
+      <input class="check_boxes required form-check-input"
+             type="checkbox"
+             value="worship (non-Chirstian)"
+             name="score[appropriate_occasion][]"
+             id="score_appropriate_occasion_worship_non_christian"
+             <%= "checked" if @form.appropriate_occasion.include?('worship (non-Chirstian)') %>>
+      worship (non-Chirstian)
+    </label>
+  </span>
+  <span class="checkbox">
+    <label for="score_appropriate_occasion_cultural_diversity">
+      <input class="check_boxes required form-check-input"
+             type="checkbox"
+             value="cultural diversity"
+             name="score[appropriate_occasion][]"
+             id="score_appropriate_occasion_cultural_diversity"
+             <%= "checked" if @form.appropriate_occasion.include?('cultural diversity') %>>
+      cultural diversity
+    </label>
+  </span>
+  <span class="checkbox">
+    <label for="score_appropriate_occasion_memorial">
+      <input class="check_boxes required form-check-input"
+             type="checkbox"
+             value="memorial"
+             name="score[appropriate_occasion][]"
+             id="score_appropriate_occasion_memorial"
+             <%= "checked" if @form.appropriate_occasion.include?('memorial') %>>
+      memorial
+    </label>
+  </span>
+  <span class="checkbox">
+    <label for="score_appropriate_occasion_social_justice">
+      <input class="check_boxes required form-check-input"
+             type="checkbox"
+             value="social justice"
+             name="score[appropriate_occasion][]"
+             id="score_appropriate_occasion_social_justice"
+             <%= "checked" if @form.appropriate_occasion.include?('social justice') %>>
+      social justice
+    </label>
+  </span>
+  <span class="checkbox">
+    <label for="score_other_appropriate_occasion">
+      <input class="check_boxes required form-check-input"
+             type="checkbox"
+             value=""
+             name="score[appropriate_occasion][]"
+             id="score_other_appropriate_occasion"
+             <%= "checked" if @form.other_appropriate_occasion_value.present? %>>
+      <input type="text"
+             class="string required form-control"
+             name="score[appropriate_occasion][]"
+             value="<%= @form.other_appropriate_occasion_value.first if @form.other_appropriate_occasion_value.present? %>">
+    </label>
+  </span>
+</div>

@@ -12,6 +12,7 @@ en:
     monographs:
       show:
         last_modified: "Last Modified"
+    product_twitter_handle: ""
     visibility:
       private:
         text: "Draft"

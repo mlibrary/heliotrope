@@ -1,0 +1,66 @@
+<% flash[:alert] = "This FileSet has no parent monograph. Metadata edits work but return URI errors." if curation_concern.parent.blank? %>
+<%= simple_form_for [main_app, curation_concern],
+                    html: { multipart: true },
+                    wrapper_mappings: { multifile: :horizontal_file_input } do |f| %>
+  <div class="row">
+    <div class="col-md-12">
+      <fieldset class="required">
+        <legend>Your File&#8217;s Title</legend>
+          <%= f.input :title, input_html: { multiple: true, value: curation_concern.title.first, class: 'form-control required' } %>
+      </fieldset>
+      <fieldset class="required">
+        <legend>Required Information</legend>
+          <%= f.input :resource_type, input_html: { multiple: true, value: curation_concern.resource_type.first, class: 'form-control required' } %>
+          <%= f.input :caption, input_html: { multiple: true, value: curation_concern.caption.first, class: 'form-control required' } %>
+          <%= f.input :alt_text, input_html: { multiple: true, value: curation_concern.alt_text.first, class: 'form-control required' } %>
+          <%= f.input :exclusive_to_platform, input_html: { class: 'form-control required' } %>
+          <%= f.input :copyright_holder, input_html: { class: 'form-control required' } %>
+          <%= f.input :copyright_status, input_html: { class: 'form-control required' } %>
+          <%= f.input :allow_hi_res, input_html: { class: 'form-control required' } %>
+          <%= f.input :allow_download, input_html: { class: 'form-control required' } %>
+      </fieldset>
+      <fieldset class="optional">
+        <legend>Optional Information</legend>
+          <%= f.input :external_resource_url, input_html: { class: 'form-control' } %>
+          <%= f.input :description, as: :text, input_html: { multiple: true, value: curation_concern.description.first, class: 'form-control' } %>
+          <%= f.input :content_type, as: :multi_value, input_html: { class: 'form-control' } %>
+          <%= f.input :creator,  as: :text, input_html: { multiple: true, rows: '5', value: curation_concern.creator.first } %>
+          <%= f.input :contributor,  as: :text, input_html: { multiple: true, rows: '5', value: curation_concern.contributor.first } %>
+          <%= f.input :date_created, input_html: { multiple: true, value: curation_concern.date_created.first, class: 'form-control' } %>
+          <%= f.input :sort_date, input_html: { class: 'form-control' }, placeholder: 'YYYY-MM-DD' %>
+          <%= f.input :display_date, as: :multi_value, label: 'Display Date', input_html: { class: 'form-control' } %>
+          <%= f.input :keywords, as: :multi_value, input_html: { class: 'form-control' } %>
+          <%= f.input :language, as: :multi_value, input_html: { class: 'form-control' } %>
+          <%= f.input :transcript, as: :text, input_html: { class: 'form-control' } %>
+          <%= f.input :translation, as: :text, input_html: { multiple: true, value: curation_concern.translation.first, class: 'form-control' } %>
+          <%= f.input :section_title, as: :multi_value, input_html: { class: 'form-control' } %>
+          <%= f.input :doi, input_html: { class: 'form-control' } %>
+          <%= f.input :hdl, input_html: { class: 'form-control' } %>
+          <%= f.input :redirect_to, input_html: { class: 'form-control' } %>
+          <%= f.input :permissions_expiration_date, input_html: { class: 'form-control required' }, placeholder: 'YYYY-MM-DD' %>
+          <%= f.input :rights_granted, input_html: { class: 'form-control' } %>
+          <%# https://github.com/samvera/hyrax/blob/2.0-stable/app/views/records/edit_fields/_license.html.erb %>
+          <%# changed :multi_value_select to :select %>
+          <% license_service = Hyrax::LicenseService.new %>
+          <%= f.input :license, as: :select,
+                      collection: license_service.select_active_options,
+                      include_blank: true,
+                      item_helper: license_service.method(:include_current_value),
+                      input_html: { class: 'form-control' } %>
+          <%= f.input :credit_line, input_html: { class: 'form-control' } %>
+          <%= f.input :holding_contact, as: :text, input_html: { class: 'form-control' } %>
+          <%= f.input :allow_display_after_expiration, input_html: { class: 'form-control required' } %>
+          <%= f.input :allow_download_after_expiration, input_html: { class: 'form-control required' } %>
+      </fieldset>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12 form-actions">
+      <%= f.submit(
+        (curation_concern.persisted? ? "Update Attached File" : %(Attach to #{parent.human_readable_type})),
+        class: 'btn btn-primary'
+      ) %>
+      <%= link_to 'Cancel', curation_concern.parent.present? ? parent_path(curation_concern.parent) : Rails.application.routes.url_helpers.hyrax_file_set_path(curation_concern.id), class: 'btn btn-link' %>
+    </div>
+  </div>
+<% end %>

@@ -799,6 +799,24 @@ footer.press {
   }
 
 }
+
+///////////////////////////////////
+// SCORE... Hacks. For now.
+////////////////////////////////////
+.score .monograph-info-epub .monograph-metadata .additional-metadata {
+  ul {
+    padding-left: 0;
+  }
+  dt {
+    clear: both;
+    width: 12em;
+  }
+  dt, dd {
+    display: inline-block;
+    float: left
+  }
+}
+
 ///////////////////////////////////
 // ASSET/RESOURCE PAGES
 ///////////////////////////////////
@@ -1186,7 +1204,7 @@ footer.press {
 .cozy-panel-header {
   .cozy-panel-right {
     flex-direction: row-reverse;
-    
+
   }
 }
 

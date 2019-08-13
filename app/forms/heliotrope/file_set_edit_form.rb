@@ -15,6 +15,12 @@ module Heliotrope
                      holding_contact external_resource_url doi hdl
                      display_date transcript translation redirect_to]
 
+    # Per HELIO-2912, we dump json into this:
+    self.terms += %i[extra_type_properties]
+    # These are "temporary" and have to do with flavor of FileSet
+    # They are turned into json then removed from params in the controller override
+    self.terms += %i[score_version]
+
     # RE: below methods, see https://samvera.github.io/customize-metadata-other-customizations.html
     # TODO: copy this to fix up some other Hyrax::BasicMetadata fields on FileSets which are undesirably multi-valued
     def self.multiple?(field)

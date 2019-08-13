@@ -1,0 +1,35 @@
+<% # header bar for doc items in index view -%>
+<% presenter = Hyrax::MonographPresenter.new(document, current_ability) %>
+<div class="col-sm-9">
+  <div class="row documentHeader">
+    <div class="col-sm-12">
+      <h3 class="index_title">
+        <% counter = document_counter_with_offset(document_counter) %>
+        <%= render_markdown link_to_document document, render_markdown(document.title.first), counter: counter %>
+      </h3>
+      <% if presenter.authors? %>
+        <span class="authors"><%= render_markdown presenter.authors %></span>
+      <% end %>
+      <p><%= render_markdown document.description.first || '' %></p>
+    </div>
+  </div>
+
+  <% if presenter.reader_ebook? %>
+    <div class="row epub">
+      <div class="col-sm-12">
+        <a id="monograph-read-btn" class="btn btn-default btn-lg" href="<%= epub_path(presenter.reader_ebook, publisher: presenter.subdomain) %>" title="Read <%= presenter.title %>" data-turbolinks="false">Read</a>
+      </div>
+    </div>
+    <div class="row info">
+      <div class="col-sm-12">
+        <a class="btn btn-default" href="<%= polymorphic_path(url_for_document(document)) %>" data-turbolinks="false">More Info</a>
+      </div>
+    </div>
+  <% else %>
+    <div class="row">
+      <div class="col-sm-12">
+        <a class="btn btn-default" href="<%= polymorphic_path(url_for_document(document)) %>" data-turbolinks="false">View book materials</a>
+      </div>
+    </div>
+  <% end %>
+</div>

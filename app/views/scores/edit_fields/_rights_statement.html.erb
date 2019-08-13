@@ -1,0 +1,4 @@
+<%= f.input :rights_statement, as: :select,
+    collection: ScoresQa::RightsStatementService.select_all_options,
+    input_html: { class: 'form-check-input' }
+%>

@@ -26,7 +26,11 @@ class Ability
     can :manage, FeaturedRepresentative
 
     can %i[create update], Monograph do |m|
-      @user.admin_presses.map(&:subdomain).include?(m.press)
+      @user.admin_presses.pluck(:subdomain).include?(m.press) && !only_scores
+    end
+
+    can %i[create update], Score do
+      @user.admin_presses.pluck(:subdomain).include?(Services.score_press)
     end
 
     can %i[create update], ::Hyrax::FileSet do |f|
@@ -39,7 +43,11 @@ class Ability
 
     # For the different view presenters
     can :update, Hyrax::MonographPresenter do |p|
-      @user.admin_presses.map(&:subdomain).include?(p.subdomain)
+      @user.admin_presses.map(&:subdomain).include?(p.subdomain) && !only_scores
+    end
+
+    can :update, Hyrax::ScorePresenter do
+      @user.admin_presses.pluck(:subdomain).include?(Services.score_press)
     end
 
     can :update, Hyrax::FileSetPresenter do |p|
@@ -68,5 +76,13 @@ class Ability
 
   def admin_for?(press)
     @user.admin_presses.include?(press)
+  end
+
+  def press_admin?
+    @user.admin_presses.count.positive?
+  end
+
+  def only_scores
+    @user.admin_presses.count == 1 && @user.admin_presses.pluck(:subdomain).first == Services.score_press
   end
 end

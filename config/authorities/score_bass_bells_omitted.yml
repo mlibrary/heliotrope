@@ -1,0 +1,5 @@
+terms:
+    - id: 'C#3'
+      term: 'omit C#3'
+    - id: 'C#3 and D#3'
+      term: 'omit both C#3 and D#3'

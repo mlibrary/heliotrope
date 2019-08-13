@@ -15,6 +15,37 @@ describe 'shared/_my_actions.html.erb' do
 
     it "shows the add content button" do
       expect(rendered).to have_link("New Monograph")
+      expect(rendered).to have_link("New Score")
+    end
+  end
+
+  context "a press admin for Monographs" do
+    let(:press) { create(:press) }
+    let(:user) { create(:press_admin, press: press) }
+
+    before { render }
+
+    it "shows the monograph add content button" do
+      expect(rendered).to have_link("New Monograph")
+    end
+
+    xit "does not show the score add content button" do
+      expect(rendered).not_to have_link("New Score")
+    end
+  end
+
+  xcontext "a press admin for Scores" do
+    let(:press) { create(:press, subdomain: Services.score_press) }
+    let(:user) { create(:press_admin, press: press) }
+
+    before { render }
+
+    it "shows the score add content button" do
+      expect(rendered).to have_link("New Score")
+    end
+
+    it "does not show the monograph add content button" do
+      expect(rendered).not_to have_link("New Monograph")
     end
   end
 
