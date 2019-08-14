@@ -17,12 +17,21 @@ html, body {
   margin: 0;
 }
 
+.cozy-panel-header .cozy-control {
+  height: 47px;
+}
+
+.cozy-panel-toolbar .cozy-control {
+  height: 38px;
+}
+
 .cozy-control button.button--sm.cozy-close.mobile {
-    display: none;
+  display: none;
 }
 
 .cozy-control button.button--sm.cozy-close {
-    padding: .83em 1em !important;
+  height: 46.5px;
+  padding: .83em 1em !important;
 }
 
 /* --- HONEY BEAR --- */
