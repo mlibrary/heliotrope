@@ -1,0 +1,22 @@
+<%# pulled from https://raw.githubusercontent.com/samvera/hyrax/2.5.1/app/views/hyrax/base/_form_metadata.html.erb %> %>
+<div class="base-terms">
+  <% f.object.primary_terms.each do |term| %>
+    <%= render_edit_field_partial(term, f: f) %>
+  <% end %>
+</div>
+<% if f.object.display_additional_fields? %>
+  <%= link_to t('hyrax.works.form.additional_fields'),
+              '#extended-terms',
+              class: 'btn btn-default additional-fields',
+              data: { toggle: 'collapse' },
+              role: "button",
+              'aria-expanded'=> "false",
+              'aria-controls'=> "extended-terms" %>
+  <div id="extended-terms" class='collapse'>
+    <%# HELIO-1039, HELIO-2841 %>
+    <%# render 'form_media', f: f %>
+    <% f.object.secondary_terms.each do |term| %>
+      <%= render_edit_field_partial(term, f: f) %>
+    <% end %>
+  </div>
+<% end %>
