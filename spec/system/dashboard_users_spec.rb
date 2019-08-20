@@ -9,9 +9,9 @@ RSpec.describe 'Dashboard User Types', type: :system do
       expect(page.has_css?('li.my-actions')).to be false
 
       visit main_app.fulcrum_path
-      # If you're not a platform_admin, the /fulcrum route doesn't even exist for you
-      # and you get pushed to the default press route
-      expect(page).to have_content "The press \"fulcrum\" doesn't exist!"
+      # If you're not a platform_admin, the /fulcrum route doesn't even exist for you and you get a 404
+      expect(page).to have_current_path(fulcrum_path)
+      expect(page).to have_title "404 - The page you were looking for doesn't exist"
 
       visit hyrax.dashboard_path
       # in production this goes to shibboleth login but in dev/test it goes to fake HTTP authentication login page
@@ -29,15 +29,16 @@ RSpec.describe 'Dashboard User Types', type: :system do
 
     it "has the institution but does not get a dashboard" do
       visit presses_path
-      expect(page.has_css?('li.my-actions')).to be true
-      expect(find('.user-display-name').text).to eq institution.name
+      expect(page).to have_current_path(presses_path)
+      expect(page).to have_title "404 - The page you were looking for doesn't exist"
 
       visit hyrax.dashboard_path
       expect(page).to have_content("You need to sign in or sign up before continuing.")
       expect(page).to have_content("Fake HTTP Authentication")
 
       visit main_app.fulcrum_path
-      expect(page).to have_content "The press \"fulcrum\" doesn't exist!"
+      expect(page).to have_current_path(fulcrum_path)
+      expect(page).to have_title "404 - The page you were looking for doesn't exist"
     end
   end
 
@@ -53,7 +54,8 @@ RSpec.describe 'Dashboard User Types', type: :system do
       expect(page).not_to have_content("Reports")
 
       visit main_app.fulcrum_path
-      expect(page).to have_content "The press \"fulcrum\" doesn't exist!"
+      expect(page).to have_current_path(fulcrum_path)
+      expect(page).to have_title "404 - The page you were looking for doesn't exist"
     end
   end
 
@@ -69,7 +71,8 @@ RSpec.describe 'Dashboard User Types', type: :system do
       expect(page).not_to have_content("Reports")
 
       visit main_app.fulcrum_path
-      expect(page).to have_content "The press \"fulcrum\" doesn't exist!"
+      expect(page).to have_current_path(fulcrum_path)
+      expect(page).to have_title "404 - The page you were looking for doesn't exist"
     end
   end
 
@@ -87,7 +90,8 @@ RSpec.describe 'Dashboard User Types', type: :system do
 
     it "has no fulcrum dashboard" do
       visit main_app.fulcrum_path
-      expect(page).to have_content "The press \"fulcrum\" doesn't exist!"
+      expect(page).to have_current_path(fulcrum_path)
+      expect(page).to have_title "404 - The page you were looking for doesn't exist"
     end
 
     it "has a hyrax dashboard with reports for only their presses" do

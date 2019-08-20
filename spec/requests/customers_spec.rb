@@ -7,8 +7,8 @@ RSpec.describe "Customers", type: :request do
     describe "GET /customers" do
       it do
         get customers_path
-        expect(response).to have_http_status(:found)
-        expect(response).to redirect_to(presses_path)
+        expect(response).to render_template(file: Rails.root.join('public', '404.html').to_s)
+        expect(response).to have_http_status(:not_found)
       end
     end
   end
@@ -22,8 +22,8 @@ RSpec.describe "Customers", type: :request do
       describe "GET /customers" do
         it do
           get customers_path
-          expect(response).to have_http_status(:found)
-          expect(response).to redirect_to(presses_path)
+          expect(response).to render_template(file: Rails.root.join('public', '404.html').to_s)
+          expect(response).to have_http_status(:not_found)
         end
       end
     end
@@ -34,8 +34,8 @@ RSpec.describe "Customers", type: :request do
       describe "GET /customers" do
         it do
           get customers_path
-          expect(response).to have_http_status(:ok)
           expect(response).to render_template(:index)
+          expect(response).to have_http_status(:ok)
         end
       end
     end

@@ -13,8 +13,8 @@ RSpec.describe "AptrustDeposits", type: :request do
 
     it do
       expect { subject }.not_to raise_error
-      expect(response).to redirect_to('/presses?locale=en')
-      expect(response).to have_http_status(:found)
+      expect(response).to render_template(file: Rails.root.join('public', '404.html').to_s)
+      expect(response).to have_http_status(:not_found)
     end
 
     context 'authenticated' do
@@ -22,8 +22,8 @@ RSpec.describe "AptrustDeposits", type: :request do
 
       it do
         expect { subject }.not_to raise_error
-        expect(response).to redirect_to('/presses?locale=en')
-        expect(response).to have_http_status(:found)
+        expect(response).to render_template(file: Rails.root.join('public', '404.html').to_s)
+        expect(response).to have_http_status(:not_found)
       end
 
       context 'authorized' do
@@ -31,8 +31,8 @@ RSpec.describe "AptrustDeposits", type: :request do
 
         it do
           expect { subject }.not_to raise_error
-          expect(response).to redirect_to('/presses?locale=en')
-          expect(response).to have_http_status(:found)
+          expect(response).to render_template(file: Rails.root.join('public', '404.html').to_s)
+          expect(response).to have_http_status(:not_found)
         end
 
         context 'platform administrator' do
