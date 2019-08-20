@@ -562,6 +562,10 @@
         }
 
         $.getScript("/web/viewer.js", function() {
+          // stop Mozilla viewer messing with page title, also alters external link behavior, apparently
+          // https://github.com/mozilla/pdf.js/blob/85acc9acac4c7699303216727a6300a6097e4dd3/web/app.js#L136
+          window.PDFViewerApplication.isViewerEmbedded = true;
+
           self.PDFViewerApplication = window.PDFViewerApplication;
 
           self.PDFViewerApplication.open(self.options.href).then(function() {
@@ -655,7 +659,10 @@
     var reader = new PDFReader('mainContainer', {
       // href: location.search.replace('?file=', ''),
       href: '<%= "#{@presenter.id}/file" %>',
-      download_links: <%= @ebook_download_presenter.csb_download_links.to_json.html_safe %>
+      download_links: <%= @ebook_download_presenter.csb_download_links.to_json.html_safe %>,
+      metadata: {
+        title: '<%= raw escape_javascript(@monograph_presenter.page_title) %>'
+      }
     });
 
     <%= render "cozy_controls_top", presenter: @presenter, monograph_presenter: @monograph_presenter %>
