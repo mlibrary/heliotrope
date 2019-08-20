@@ -129,6 +129,9 @@ gem "loofah", ">= 2.2.3"
 # Use MySQL as the database for Active Record
 gem 'mysql2', '~> 0.4.10'
 
+# CVE-2019-5477
+gem "nokogiri", ">= 1.10.4"
+
 # Read PDF ToC
 gem 'origami'
 
