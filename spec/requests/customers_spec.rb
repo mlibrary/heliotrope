@@ -8,7 +8,7 @@ RSpec.describe "Customers", type: :request do
       it do
         get customers_path
         expect(response).to have_http_status(:found)
-        expect(response).to redirect_to(presses_path)
+        expect(response).to redirect_to(root_path)
       end
     end
   end
@@ -23,7 +23,7 @@ RSpec.describe "Customers", type: :request do
         it do
           get customers_path
           expect(response).to have_http_status(:found)
-          expect(response).to redirect_to(presses_path)
+          expect(response).to redirect_to(root_path)
         end
       end
     end

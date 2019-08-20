@@ -10,7 +10,7 @@ RSpec.describe "ShareLinkLogs", type: :request do
 
     it do
       expect { subject }.not_to raise_error
-      expect(response).to redirect_to('/presses?locale=en')
+      expect(response).to redirect_to(root_path)
       expect(response).to have_http_status(:found)
     end
 
@@ -19,7 +19,7 @@ RSpec.describe "ShareLinkLogs", type: :request do
 
       it do
         expect { subject }.not_to raise_error
-        expect(response).to redirect_to('/presses?locale=en')
+        expect(response).to redirect_to(root_path)
         expect(response).to have_http_status(:found)
       end
 
@@ -28,7 +28,7 @@ RSpec.describe "ShareLinkLogs", type: :request do
 
         it do
           expect { subject }.not_to raise_error
-          expect(response).to redirect_to('/presses?locale=en')
+          expect(response).to redirect_to(root_path)
           expect(response).to have_http_status(:found)
         end
 

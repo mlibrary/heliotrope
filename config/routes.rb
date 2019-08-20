@@ -216,6 +216,11 @@ Rails.application.routes.draw do
     end
   end
 
+  # TODO: remove this after the page is no longer cached, see:
+  # http://webcache.googleusercontent.com/search?q=cache:4gTpdFGraY4J:fulcrum.org/%253Ca%2520href%3D+&cd=1&hl=en&ct=clnk&gl=us
+  # ...also maybe figure out where exactly this `http://fulcrum.org/<a href=` came from. Likely a view or static site typo.
+  get '/blah', to: redirect('/404.html', status: 404)
+
   get '/presses' => 'presses#index'
   resources :presses, only: %i[new create edit update]
   resources :presses, path: '/', only: %i[index edit] do

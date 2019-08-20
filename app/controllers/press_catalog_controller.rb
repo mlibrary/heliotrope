@@ -40,8 +40,15 @@ class PressCatalogController < ::CatalogController
       @press = Press.find_by(subdomain: params['press'])
       return @press unless @press.nil?
 
-      flash[:error] = "The press \"#{params['press']}\" doesn't exist!"
-      redirect_to presses_path
+      # TODO: remove this block after the page is no longer indexed/cached, see:
+      # http://webcache.googleusercontent.com/search?q=cache:4gTpdFGraY4J:fulcrum.org/%253Ca%2520href%3D+&cd=1&hl=en&ct=clnk&gl=us
+      # ...also maybe figure out where exactly this `http://fulcrum.org/<a href=` came from. Likely a view or static site typo/error?
+      if params['press'] == '<a href='
+        render file: Rails.root.join('public', '404.html'), status: :not_found, layout: false
+        return
+      end
+
+      redirect_to root_path
     end
 
     def open_monographs

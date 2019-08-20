@@ -22,7 +22,7 @@ RSpec.describe PressCatalogController, type: :controller do
 
     it "redirects to presses" do
       get :index, params: { press: "press" }
-      expect(response).to redirect_to(presses_path)
+      expect(response).to redirect_to(root_path)
     end
     it "returns http success" do
       get :index, params: { press: press }

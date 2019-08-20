@@ -10,8 +10,8 @@ RSpec.describe 'Dashboard User Types', type: :system do
 
       visit main_app.fulcrum_path
       # If you're not a platform_admin, the /fulcrum route doesn't even exist for you
-      # and you get pushed to the default press route
-      expect(page).to have_content "The press \"fulcrum\" doesn't exist!"
+      # and you get pushed to root_path
+      expect(page).to have_current_path(root_path, ignore_query: true)
 
       visit hyrax.dashboard_path
       # in production this goes to shibboleth login but in dev/test it goes to fake HTTP authentication login page
@@ -37,7 +37,7 @@ RSpec.describe 'Dashboard User Types', type: :system do
       expect(page).to have_content("Fake HTTP Authentication")
 
       visit main_app.fulcrum_path
-      expect(page).to have_content "The press \"fulcrum\" doesn't exist!"
+      expect(page).to have_current_path(root_path, ignore_query: true)
     end
   end
 
@@ -53,7 +53,7 @@ RSpec.describe 'Dashboard User Types', type: :system do
       expect(page).not_to have_content("Reports")
 
       visit main_app.fulcrum_path
-      expect(page).to have_content "The press \"fulcrum\" doesn't exist!"
+      expect(page).to have_current_path(root_path, ignore_query: true)
     end
   end
 
@@ -69,7 +69,7 @@ RSpec.describe 'Dashboard User Types', type: :system do
       expect(page).not_to have_content("Reports")
 
       visit main_app.fulcrum_path
-      expect(page).to have_content "The press \"fulcrum\" doesn't exist!"
+      expect(page).to have_current_path(root_path, ignore_query: true)
     end
   end
 
@@ -87,7 +87,7 @@ RSpec.describe 'Dashboard User Types', type: :system do
 
     it "has no fulcrum dashboard" do
       visit main_app.fulcrum_path
-      expect(page).to have_content "The press \"fulcrum\" doesn't exist!"
+      expect(page).to have_current_path(root_path, ignore_query: true)
     end
 
     it "has a hyrax dashboard with reports for only their presses" do
