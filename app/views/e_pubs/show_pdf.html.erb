@@ -10,7 +10,7 @@
   <meta name="google" content="notranslate">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
-  <link rel="resource" type="application/l10n" href="locale/locale.properties">
+  <link rel="resource" type="application/l10n" href="/web/locale/locale.properties">
 
   <script src="/mozilla-pdf-viewer/build/pdf.js"></script>
 
@@ -22,7 +22,6 @@
   <% end %>
   <div class="skip"></div>
     <div id="epub" class="<%= @subdomain %>">
-      <div id="reader"></div>
       <div id="mainContainer"></div>
     </div>
 
@@ -340,6 +339,38 @@
 
   <script type="text/javascript">
 
+    // jQuery.getScript makes it difficult to debug scripts;
+    // this version makes the script visible in browser debuggers.
+    jQuery.extend({
+        loadScript: function(url, callback) {
+          var head = document.getElementsByTagName("head")[0];
+          var script = document.createElement("script");
+          script.src = url;
+
+          // Handle Script loading
+          {
+             var done = false;
+
+             // Attach handlers for all browsers
+             script.onload = script.onreadystatechange = function(){
+                if ( !done && (!this.readyState ||
+                      this.readyState == "loaded" || this.readyState == "complete") ) {
+                   done = true;
+                   if (callback)
+                      callback();
+
+                   // Handle memory leak in IE
+                   script.onload = script.onreadystatechange = null;
+                }
+             };
+          }
+
+          head.appendChild(script);
+
+          // We handle everything using the script element injection
+          return undefined;
+       },
+    });
     cozy.Control.Preferences.prototype._createPanel = function() {
       var self = this;
       if ( this._modal._container.querySelector('form') ) { return; }
@@ -532,6 +563,9 @@
         this._reader.on('updateContents', function(data) {
 
           this._pdfSidebar = this._reader.PDFViewerApplication.pdfSidebar;
+          this._pdfSidebar.thumbnailButton.removeAttribute('tabindex');
+          this._pdfSidebar.outlineButton.removeAttribute('tabindex');
+          this._pdfSidebar.attachmentsButton.removeAttribute('tabindex');
 
           $(this._control).on('click', function(event) {
             self._reader.tracking.action('contents/open');
@@ -561,11 +595,10 @@
           reset: function() { /* NOP */ }
         }
 
-        $.getScript("/web/viewer.js", function() {
+        $.loadScript("/web/viewer.js", function() {
           // stop Mozilla viewer messing with page title, also alters external link behavior, apparently
           // https://github.com/mozilla/pdf.js/blob/85acc9acac4c7699303216727a6300a6097e4dd3/web/app.js#L136
           window.PDFViewerApplication.isViewerEmbedded = true;
-
           self.PDFViewerApplication = window.PDFViewerApplication;
 
           self.PDFViewerApplication.open(self.options.href).then(function() {
@@ -586,6 +619,13 @@
                   var pageNumber = evt.pageNumber;
                   self.fire('relocated', { start: pageNumber });
                 });
+
+                self.pdfViewer.eventBus.on('scalechanging', function(evt) {
+                  var currentScale = parseInt(self.options.text_size, 10) / 100.0;
+                  if ( evt.scale != currentScale ) {
+                    self.pdfViewer.currentScale = currentScale;
+                  }
+                })
 
                 self.PDFViewerApplication.pdfDocument.getMetadata().then(function(data) {
                   console.log("AHOY getMetadata", data);
@@ -637,6 +677,35 @@
         return { start: { cfi: this.PDFViewerApplication.page } };
       },
 
+      next: function() {
+        if ( this.PDFViewerApplication.page < this.PDFViewerApplication.pagesCount ) {
+          this.PDFViewerApplication.page++;
+        }
+      },
+
+      prev: function() {
+        if ( this.PDFViewerApplication.page > 1 ) {
+          this.PDFViewerApplication.page--;
+        }
+      },
+
+      _scroll: function(delta) {
+        switch(delta) {
+          case 'PREV':
+            this.prev();
+            break;
+          case 'NEXT':
+            this.next();
+            break;
+          case 'HOME':
+            this.PDFViewerApplication.page = 1;
+            break;
+          case 'END':
+            this.PDFViewerApplication.page = this.PDFViewerApplication.pagesCount;
+            break;
+        }
+      },
+
       gotoPage: function(cfi) {
         if ( typeof(cfi) == "string" ) {
           cfi = { start: cfi.replace('epubcfi(', '').replace(')','') };
@@ -671,8 +740,6 @@
 
     // start reader
     reader.start();
-
-    console.log("YO HEY DER");
 
     // distinguish these buttons from the links underneath, too much CSS to add otherwise, methinks
     var element = document.getElementById("viewThumbnail");

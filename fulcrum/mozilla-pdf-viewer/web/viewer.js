@@ -2362,6 +2362,69 @@ function webViewerKeyDown(evt) {
   var cmd = (evt.ctrlKey ? 1 : 0) | (evt.altKey ? 2 : 0) | (evt.shiftKey ? 4 : 0) | (evt.metaKey ? 8 : 0);
   var pdfViewer = PDFViewerApplication.pdfViewer;
   var isViewerInPresentationMode = pdfViewer && pdfViewer.isInPresentationMode;
+  var curElement = document.activeElement || document.querySelector(':focus');
+  var curElementTagName = curElement && curElement.tagName.toUpperCase();
+
+  if (curElementTagName === 'INPUT' || curElementTagName === 'TEXTAREA' || curElementTagName === 'SELECT') {
+    if (evt.keyCode !== 27) {
+      return;
+    }
+  }
+
+  if (cmd === 0) {
+    var turnPage = 0,
+        turnOnlyIfPageFit = false;
+
+    switch (evt.keyCode) {
+      case 36:
+        if (isViewerInPresentationMode || PDFViewerApplication.page > 1) {
+          PDFViewerApplication.page = 1;
+          handled = true;
+          ensureViewerFocused = true;
+        }
+
+        break;
+
+      case 35:
+        if (isViewerInPresentationMode || PDFViewerApplication.page < PDFViewerApplication.pagesCount) {
+          PDFViewerApplication.page = PDFViewerApplication.pagesCount;
+          handled = true;
+          ensureViewerFocused = true;
+        }
+
+        break;
+
+      case 82:
+        PDFViewerApplication.rotatePages(90);
+        break;
+    }
+  }
+
+  if (!handled && !isViewerInPresentationMode) {
+    if (evt.keyCode >= 33 && evt.keyCode <= 40 || evt.keyCode === 32 && curElementTagName !== 'BUTTON') {
+      ensureViewerFocused = true;
+    }
+  }
+
+  if (ensureViewerFocused && !pdfViewer.containsElement(curElement)) {
+    pdfViewer.focus();
+  }
+
+  if (handled) {
+    evt.preventDefault();
+  }
+}
+
+function webViewerKeyDown_ORIG(evt) {
+  if (PDFViewerApplication.overlayManager.active) {
+    return;
+  }
+
+  var handled = false,
+      ensureViewerFocused = false;
+  var cmd = (evt.ctrlKey ? 1 : 0) | (evt.altKey ? 2 : 0) | (evt.shiftKey ? 4 : 0) | (evt.metaKey ? 8 : 0);
+  var pdfViewer = PDFViewerApplication.pdfViewer;
+  var isViewerInPresentationMode = pdfViewer && pdfViewer.isInPresentationMode;
 
   if (cmd === 1 || cmd === 8 || cmd === 5 || cmd === 12) {
     switch (evt.keyCode) {
@@ -15530,3 +15593,4 @@ _app.PDFPrintServiceFactory.instance = {
 
 /***/ })
 /******/ ]);
+//# sourceMappingURL=viewer.js.map

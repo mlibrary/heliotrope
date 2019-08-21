@@ -69,6 +69,8 @@ html, body {
 #sidebarContent {
   overflow: auto;
   height: 100%;
+  flex-grow: 1;
+  margin-top: 1rem;
 }
 
 .modal__content {
@@ -78,11 +80,26 @@ html, body {
 
 .cozy-modal-contents .modal__content {
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
 
 #fileInput {
   display: none;
 }
+
+.cozy-container .button--lg.toggled {
+  background: transparent;
+  color: #000;
+  outline: 4px solid #000;
+  /*box-shadow: 0 0 0 6px rgba(0, 0, 0, 0.25);*/
+}
+
+.cozy-container .button--lg.toggled:focus {
+  color: #000;
+  outline: 0;
+}
+
 
 /* --- FROM VIEWER.CSS --- */
 
