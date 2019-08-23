@@ -53,7 +53,7 @@ class EPubsController < CheckpointController
 
       send_file file
     elsif @entity.is_a?(Sighrax::PortableDocumentFormat)
-      send_data @presenter.file.content, filename: @presenter.file.label, type: "application/pdf", disposition: "inline"
+      send_data @presenter.file.content, filename: @presenter.label, type: "application/pdf", disposition: "inline"
     end
   rescue StandardError => e
     Rails.logger.info("EPubsController.file raised #{e}")
