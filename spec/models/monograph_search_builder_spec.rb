@@ -43,6 +43,22 @@ describe MonographSearchBuilder do
           end
         end
       end
+
+      context 'tombstone' do
+        let(:entity) { instance_double(Sighrax::Entity, 'entity') }
+
+        before do
+          allow(Sighrax).to receive(:factory)
+          allow(Sighrax).to receive(:factory).with(file2.id).and_return(entity)
+          allow(Sighrax).to receive(:tombstone?)
+          allow(Sighrax).to receive(:tombstone?).with(entity).and_return(true)
+        end
+
+        it "creates a query for the monograph's assets without tombstone" do
+          search_builder.filter_by_members(solr_params)
+          expect(solr_params[:fq].first).to match(/^{!terms f=id}#{file1.id}$/)
+        end
+      end
     end
 
     context "a monograph with no assets" do

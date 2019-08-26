@@ -29,7 +29,11 @@ class MonographSearchBuilder < ::SearchBuilder
         ids.delete(fr.file_set_id)
       end
 
-      ids.join(',')
+      ids.select { |mid| !tombstone?(mid) }.join(',')
+    end
+
+    def tombstone?(id)
+      Sighrax.tombstone?(Sighrax.factory(id))
     end
 
     def featured_representatives(id)

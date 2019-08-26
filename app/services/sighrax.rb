@@ -111,6 +111,13 @@ module Sighrax # rubocop:disable Metrics/ModuleLength
       Greensub::Component.find_by(noid: entity.noid).present?
     end
 
+    def tombstone?(entity)
+      return false unless entity.valid?
+      expiration_date = Array(solr_document(entity)['permissions_expiration_date_ssim']).first
+      return false if expiration_date.blank?
+      Time.parse(expiration_date).utc < Time.now.utc
+    end
+
     def watermarkable?(entity)
       return false unless entity.valid?
       return false if Array(solr_document(entity)['external_resource_url_ssim']).first.present?

@@ -473,6 +473,36 @@ RSpec.describe Sighrax do
       end
     end
 
+    describe '#tombstone?' do
+      subject { described_class.tombstone?(entity) }
+
+      it { is_expected.to be false }
+
+      context 'Entity' do
+        let(:data) { { "non_empty_solr_document" => "otherwise factory will return NullEntity!" } }
+
+        it { is_expected.to be false }
+
+        context 'yesterday' do
+          let(:data) { { "permissions_expiration_date_ssim" => Date.yesterday.to_s } }
+
+          it { is_expected.to be true }
+        end
+
+        context 'today' do
+          let(:data) { { "permissions_expiration_date_ssim" => Time.zone.today.to_s } }
+
+          it { is_expected.to be true }
+        end
+
+        context 'tomorrow' do
+          let(:data) { { "permissions_expiration_date_ssim" => Date.tomorrow.to_s } }
+
+          it { is_expected.to be false }
+        end
+      end
+    end
+
     describe '#watermarkable?' do
       subject { described_class.watermarkable?(entity) }
 

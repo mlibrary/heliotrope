@@ -18,6 +18,21 @@ RSpec.describe Hyrax::FileSetPresenter do
     it { is_expected.to be_a FeaturedRepresentatives::FileSetPresenter }
   end
 
+  describe '#tombstone?' do
+    subject { presenter.tombstone? }
+
+    let(:fileset_doc) { SolrDocument.new(id: 'file_set_id', has_model_ssim: ['FileSet']) }
+    let(:entity) { 'entity' }
+    let(:tombstone) { 'boolean' }
+
+    before do
+      allow(Sighrax).to receive(:factory).with('file_set_id').and_return(entity)
+      allow(Sighrax).to receive(:tombstone?).with(entity).and_return(tombstone)
+    end
+
+    it { is_expected.to be tombstone }
+  end
+
   describe "#citable_link" do
     context "has a DOI" do
       let(:fileset_doc) {
@@ -88,6 +103,18 @@ RSpec.describe Hyrax::FileSetPresenter do
       let(:fileset_doc) { SolrDocument.new(id: 'fs', has_model_ssim: ['FileSet'], allow_download_ssim: 'Yes') }
 
       it { expect(presenter.allow_download?).to be true }
+
+      context 'tombstone' do
+        let(:entity) { 'entity' }
+        let(:tombstone) { 'boolean' }
+
+        before do
+          allow(Sighrax).to receive(:factory).with('fs').and_return(entity)
+          allow(Sighrax).to receive(:tombstone?).with(entity).and_return(true)
+        end
+
+        it { expect(presenter.allow_download?).to be false }
+      end
     end
 
     context 'external resource overrides everything to hide download button' do

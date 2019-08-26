@@ -1,3 +1,6 @@
+<% if @presenter.tombstone? %>
+  Rights have expired. This resource can no longer be displayed.
+<% else %>
   <figure title="<%= @presenter.alt_text.first %>">
     <%= render partial: @presenter.heliotrope_media_partial, locals: { file_set: @presenter } %>
     <figcaption<%= ' class="text-center"'.html_safe if @presenter.center_caption? %>><%= @presenter.attribute_to_html(:caption, render_as: :markdown, label: '') %></figcaption>
@@ -35,3 +38,4 @@
     </div>
   </div><!-- /.translation panel -->
   <% end %>
+<%end %>
