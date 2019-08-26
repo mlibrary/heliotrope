@@ -800,7 +800,7 @@ footer.press {
 
 }
 ///////////////////////////////////
-// ASSET PAGES
+// ASSET/RESOURCE PAGES
 ///////////////////////////////////
 .asset-navigation {
   a.previous span {
@@ -862,6 +862,17 @@ footer.press {
     overflow:hidden;
   }
 
+  // MAPS
+
+  .map {
+    h1 {
+      margin-bottom: 1em;
+    }
+
+    iframe {
+      border: 0;
+    }
+  }
 
   // AUDIO and VIDEO - Able Player
   .able-wrapper {

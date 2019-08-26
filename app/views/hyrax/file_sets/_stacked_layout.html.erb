@@ -1,0 +1,29 @@
+    <!-- file_sets title and _media -->
+    <div class="col-sm-12 map">
+        <div class="row asset-attributes">
+            <div class="col-sm-12">
+                <h1 id="asset-title"><%= @presenter.title %></h1>
+            </div>
+        </div> <!-- /.asset-attributes -->
+        <!-- file_sets _media -->
+        <div id="media" class="row">
+            <%= render "media", presenter: @presenter %>
+        </div>
+    </div> <!-- / file_sets title and _media -->
+    <!-- file_sets metadata and actions -->
+    <div class="col-sm-12 map">
+        <div class="row asset-attributes">
+            <span class="section">From <em><%= link_to @presenter.parent.title, main_app.monograph_catalog_path(@presenter.monograph_id) %></em>
+            <% if @presenter.parent.authors? %>
+              by <%= render_markdown @presenter.parent.authors %>
+            <% end %>
+          </span>
+          <br />
+          <%= render "attributes", presenter: @presenter %>
+        </div> <!-- /.asset-attributes -->
+        <div class="row asset-actions">
+            <div class="col-sm-12">
+                <%= render "show_actions", presenter: @presenter, parent: @presenter.parent %>
+            </div>
+        </div> <!-- /.asset-actions -->
+    </div> <!-- / file_sets metadata and actions -->
