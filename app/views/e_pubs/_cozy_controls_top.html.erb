@@ -13,7 +13,7 @@
           <% if %w[heb nyupress gabii michigan leverpress rekihaku sussex].include? @subdomain %>
             cozy.control.widget.panel({
               region: 'top.header.left',
-              template: '<div class="logo"><%= link_to (image_tag logo(@subdomain), role: 'link', alt: @subdomain + ' catalog on Fulcrum'), URI.join(main_app.root_url, @subdomain).to_s %>',
+              template: '<div class="logo"><%= link_to (image_tag logo(@subdomain), role: 'link', alt: @subdomain + ' catalog on Fulcrum'), URI.join(main_app.root_url, @subdomain).to_s %></div>',
               data: { title: "<%= @subdomain %>" }
             }).addTo(reader);
           <% end %>
