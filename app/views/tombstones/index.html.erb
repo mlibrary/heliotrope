@@ -14,8 +14,8 @@
       <div class="col-md-3"><%= link_to tombstone['monograph_id_ssim'].first, monograph_catalog_path(tombstone['monograph_id_ssim'].first) %></div>
       <div class="col-md-3"><%= link_to tombstone['id'], hyrax_file_set_path(tombstone['id']) %></div>
       <div class="col-md-2"><%= "#{tombstone['permissions_expiration_date_ssim']&.first}" %></div>
-      <div class="col-md-2"><%= "#{tombstone['allow_display_after_expiration_ssim']}" %></div>
-      <div class="col-md-2"><%= "#{tombstone['allow_download_after_expiration_ssim']}" %></div>
+      <div class="col-md-2"><%= "#{tombstone['allow_display_after_expiration_ssim']&.first}" %></div>
+      <div class="col-md-2"><%= "#{tombstone['allow_download_after_expiration_ssim']&.first}" %></div>
     </div>
 <% end %>
   <div class="col-md-12"><br></div>
