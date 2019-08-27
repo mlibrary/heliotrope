@@ -20,11 +20,12 @@ RSpec.describe PressCatalogController, type: :controller do
   describe "GET #index" do
     let(:press) { create :press }
 
-    it "redirects to presses" do
+    it "returns http 'not found' when press param is not a known Press subdomain" do
       get :index, params: { press: "press" }
-      expect(response).to redirect_to(presses_path)
+      expect(response).to render_template(file: Rails.root.join('public', '404.html').to_s)
+      expect(response).to have_http_status(:not_found)
     end
-    it "returns http success" do
+    it "returns http 'success' when press param is a known Press subdomain" do
       get :index, params: { press: press }
       expect(response).to have_http_status(:success)
     end

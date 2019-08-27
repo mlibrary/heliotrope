@@ -1,9 +1,15 @@
 # frozen_string_literal: true
 
 class PressesController < ApplicationController
-  load_and_authorize_resource find_by: :subdomain
+  load_and_authorize_resource find_by: :subdomain, except: [:index]
 
   def index
+    # get `/presses` out of search engine indexes, only show Presses index to platform and press admins
+    if current_user.blank? || !(current_ability&.current_user&.platform_admin? || current_ability&.current_user&.admin_presses&.any?)
+      render file: Rails.root.join('public', '404.html'), status: :not_found, layout: false
+      return
+    end
+
     authorize!(:index, Press)
     @presses = Press.all
   end

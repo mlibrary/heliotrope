@@ -3,10 +3,43 @@
 require 'rails_helper'
 
 RSpec.describe PressesController, type: :controller do
+  let!(:press) { create(:press) }
+
   describe "#index" do
-    context "as a signed in user" do
+    context "as anonymous user" do
+      it 'shows the presses' do
+        get :index
+        expect(response).to be_not_found
+        expect(assigns[:presses]).to be_nil
+      end
+    end
+
+    context "as a signed in regular user" do
       let(:user) { create(:user) }
-      let!(:press) { create(:press) }
+
+      before { sign_in user }
+
+      it 'shows the presses' do
+        get :index
+        expect(response).to be_not_found
+        expect(assigns[:presses]).to be_nil
+      end
+    end
+
+    context "as a signed in press admin" do
+      let(:user) { create(:press_admin) }
+
+      before { sign_in user }
+
+      it 'shows the presses' do
+        get :index
+        expect(response).to be_success
+        expect(assigns[:presses]).to include press
+      end
+    end
+
+    context "as a signed in platform admin" do
+      let(:user) { create(:platform_admin) }
 
       before { sign_in user }
 
@@ -26,8 +59,6 @@ RSpec.describe PressesController, type: :controller do
     end
 
     describe 'can\'t access edit' do
-      let!(:press) { create(:press) }
-
       before { get :edit, params: { id: press.subdomain } }
 
       it { expect(response).to redirect_to new_user_session_path }
@@ -49,8 +80,6 @@ RSpec.describe PressesController, type: :controller do
     end
 
     describe '#edit' do
-      let(:press) { create :press }
-
       before { get :edit, params: { id: press.subdomain } }
 
       it 'displays the form to edit the press' do
@@ -74,7 +103,6 @@ RSpec.describe PressesController, type: :controller do
     end
 
     describe '#edit' do
-      let(:press) { create :press }
       let(:user) { create(:press_admin, press: press) }
 
       before { get :edit, params: { id: press.subdomain } }
