@@ -31,30 +31,14 @@
     <% if defined? @presenter.file_set_coins_title %>
       <span class="Z3988" title="<%= @presenter.file_set_coins_title %>"></span>
     <% end %>
-    <!-- file_sets metadata and actions -->
-    <div class="col-sm-6 col-sm-push-6">
-      <div class="row asset-attributes">
-        <div class="col-sm-12">
-          <h1 id="asset-title"><%= @presenter.title %></h1>
-          <div class="skip"><a href="#media" data-turbolinks="false">Skip to media</a></div>
-          <span class="section">From <em><%= link_to @presenter.parent.title, main_app.monograph_catalog_path(@presenter.monograph_id) %></em>
-            <% if @presenter.parent.authors? %>
-              by <%= render_markdown @presenter.parent.authors %>
-            <% end %>
-          </span>
-          <br />
-          <%= render "attributes", presenter: @presenter %>
-        </div>
-      </div> <!-- /.asset-attributes -->
-      <div class="row asset-actions">
-        <div class="col-sm-12">
-          <%= render "show_actions", presenter: @presenter, parent: @presenter.parent %>
-        </div>
-      </div> <!-- /.asset-actions -->
-    </div> <!-- / file_sets metadata and actions -->
-    <!-- file_sets _media -->
-    <div id="media" class="col-sm-6 col-sm-pull-6">
-      <%= render "media", presenter: @presenter %>
-    </div> <!-- / file_sets _media -->
+    
+    <% if @presenter.map? %>
+      <!-- map file_set --> 
+      <%= render "stacked_layout", presenter: @presenter %> 
+    <% else %>
+      <!-- image, a/v, doc, or external resource file_set -->
+      <%= render "side_by_side_layout", presenter: @presenter %>
+    <% end %>
+
   </div> <!-- /.asset -->
 <% end %>
