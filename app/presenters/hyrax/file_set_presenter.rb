@@ -88,6 +88,10 @@ module Hyrax
       external_resource_url.present?
     end
 
+    def tombstone?
+      Sighrax.tombstone?(Sighrax.factory(id))
+    end
+
     def allow_download?
       return false if external_resource?
       Rails.logger.debug("[EBOOK DOWNLOAD] current_ability class #{current_ability.class}")
@@ -98,7 +102,9 @@ module Hyrax
       Rails.logger.debug("[EBOOK DOWNLOAD] allow_download&.casecmp('yes')&.zero? #{allow_download&.casecmp('yes')&.zero?}")
       Rails.logger.debug("[EBOOK DOWNLOAD] current_ability&.platform_admin? #{current_ability&.platform_admin?}")
       # safe navigation (&.) as current_Ability is nil in some specs, should match allow_download? logic in downloads_controller
-      allow_download&.casecmp('yes')&.zero? || current_ability&.platform_admin?
+      return true if current_ability&.platform_admin?
+      return false if tombstone?
+      allow_download&.casecmp('yes')&.zero?
     end
 
     # Google Analytics

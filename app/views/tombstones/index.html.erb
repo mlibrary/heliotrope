@@ -1,0 +1,22 @@
+<p id="notice"><%= notice %></p>
+<div id="maincontent">
+  <h1>Tombstones</h1>
+  <div class="col-md-12">
+    <div class="col-md-3">Monograph</div>
+    <div class="col-md-3">FileSet</div>
+    <div class="col-md-2">Expiration</div>
+    <div class="col-md-2">Display</div>
+    <div class="col-md-2">Download</div>
+  </div>
+  <div class="col-md-12"><hr/></div>
+  <% @tombstones.each do |tombstone| %>
+    <div class="col-md-12">
+      <div class="col-md-3"><%= link_to tombstone['monograph_id_ssim'].first, monograph_catalog_path(tombstone['monograph_id_ssim'].first) %></div>
+      <div class="col-md-3"><%= link_to tombstone['id'], hyrax_file_set_path(tombstone['id']) %></div>
+      <div class="col-md-2"><%= "#{tombstone['permissions_expiration_date_ssim']&.first}" %></div>
+      <div class="col-md-2"><%= "#{tombstone['allow_display_after_expiration_ssim']}" %></div>
+      <div class="col-md-2"><%= "#{tombstone['allow_download_after_expiration_ssim']}" %></div>
+    </div>
+<% end %>
+  <div class="col-md-12"><br></div>
+</div>

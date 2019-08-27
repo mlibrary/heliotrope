@@ -1,3 +1,6 @@
+<% if @presenter.tombstone? %>
+  Rights have expired. This resource can no longer be displayed.
+<% else %>
 <figure title="<%= @presenter.alt_text.first %>">
   <%# note that the fulcrum-embed-link hover display relies on it being the first child of <figure> %>
   <div class="fulcrum-embed-link<%= ' audio no-transcript' if @presenter.audio_without_transcript? %>">
@@ -13,3 +16,4 @@
   </div>
 </figure>
 <%= render 'shared/ga' %>
+<% end %>
