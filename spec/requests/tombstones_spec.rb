@@ -7,8 +7,7 @@ RSpec.describe "Tombstones", type: :request do
     describe "GET /tombstones" do
       it do
         get customers_path
-        expect(response).to have_http_status(:found)
-        expect(response).to redirect_to(presses_path)
+        expect(response).to have_http_status(:not_found)
       end
     end
   end
@@ -22,8 +21,7 @@ RSpec.describe "Tombstones", type: :request do
       describe "GET /tombstones" do
         it do
           get customers_path
-          expect(response).to have_http_status(:found)
-          expect(response).to redirect_to(presses_path)
+          expect(response).to have_http_status(:not_found)
         end
       end
     end
