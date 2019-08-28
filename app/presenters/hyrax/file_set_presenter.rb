@@ -153,10 +153,11 @@ module Hyrax
       solr_document['original_checksum_ssim']
     end
 
-    def image_cache_breaker
+    def browser_cache_breaker
       # using the Solr doc's timestamp even though it'll change on any metadata update.
       # More file-specific fields on the Solr doc can't be trusted to be ordered in a useful way on "reversioning".
-      # An alternative could be to pull the timestamp from the Hydra Derivatives thumbnail itself.
+      # An alternative could be to pull the timestamp from the Hydra Derivatives thumbnail itself, for files that...
+      # actually get one, of course.
       value = ''
       if solr_document['timestamp'].present?
         # "2018-09-18T18:18:28.384Z" vs. "2018-09-18T18:18:28Z", see https://tools.lib.umich.edu/jira/browse/HELIO-2167

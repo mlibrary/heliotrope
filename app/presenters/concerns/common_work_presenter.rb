@@ -42,7 +42,7 @@ module CommonWorkPresenter
 
   def work_thumbnail_src(width = 255)
     if representative_id.present?
-      "\"/image-service/#{representative_id}/full/#{width},/0/default.png#{representative_presenter&.image_cache_breaker}\""
+      "\"/image-service/#{representative_id}/full/#{width},/0/default.png#{representative_presenter&.browser_cache_breaker}\""
     else
       "\"#{thumbnail_path}\" style=\"max-width:#{width}px\""
     end

@@ -885,7 +885,7 @@
 
     var reader = new PDFReader('mainContainer', {
       // href: location.search.replace('?file=', ''),
-      href: '<%= "#{@presenter.id}/file" %>',
+      href: '<%= "#{@presenter.id}/file#{@presenter.browser_cache_breaker}" %>',
       download_links: <%= @ebook_download_presenter.csb_download_links.to_json.html_safe %>,
       metadata: {
         title: '<%= raw escape_javascript(@parent_presenter.page_title) %>'
