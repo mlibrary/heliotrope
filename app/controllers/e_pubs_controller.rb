@@ -51,6 +51,10 @@ class EPubsController < CheckpointController
       send_file file
     elsif @entity.is_a?(Sighrax::PortableDocumentFormat)
       response.headers['Content-Length'] ||= @presenter.file.size.to_s
+      # Prevent Rack::ETag from calculating a digest over body with a Last-Modified response header
+      # any Solr document save will change this, see definition of browser_cache_breaker
+      response.headers['Cache-Control'] = 'max-age=31536000, private'
+      response.headers['Last-Modified'] = Time.strptime(@presenter.browser_cache_breaker, '?%s').utc.strftime("%a, %d %b %Y %T GMT")
       send_data @presenter.file.content, filename: @presenter.label, type: "application/pdf", disposition: "inline"
     end
   rescue StandardError => e
