@@ -6,7 +6,7 @@ RSpec.describe "Tombstones", type: :request do
   context 'anonymous' do
     describe "GET /tombstones" do
       it do
-        get customers_path
+        get tombstones_path
         expect(response).to have_http_status(:not_found)
       end
     end
@@ -20,7 +20,7 @@ RSpec.describe "Tombstones", type: :request do
 
       describe "GET /tombstones" do
         it do
-          get customers_path
+          get tombstones_path
           expect(response).to have_http_status(:not_found)
         end
       end
@@ -31,7 +31,7 @@ RSpec.describe "Tombstones", type: :request do
 
       describe "GET /tombstones" do
         it do
-          get customers_path
+          get tombstones_path
           expect(response).to have_http_status(:ok)
           expect(response).to render_template(:index)
         end
