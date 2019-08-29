@@ -18,6 +18,10 @@ class EntityPolicy < ResourcePolicy
     debug_log("hyrax_can(:edit)? #{value}")
     return true if value
 
+    value = Sighrax.tombstone?(target)
+    debug_log("tombstone? #{value}")
+    return false if value
+
     value = Sighrax.allow_download?(target)
     debug_log("allow_download? #{value}")
     return false unless value
