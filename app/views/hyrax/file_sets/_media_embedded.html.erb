@@ -1,5 +1,5 @@
 <% if @presenter.tombstone? %>
-  Rights have expired. This resource can no longer be displayed.
+  <%= render partial: 'media_tombstone', locals: { presenter: @presenter } %>
 <% else %>
 <figure title="<%= @presenter.alt_text.first %>">
   <%# note that the fulcrum-embed-link hover display relies on it being the first child of <figure> %>

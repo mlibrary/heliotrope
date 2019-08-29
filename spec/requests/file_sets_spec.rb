@@ -42,6 +42,7 @@ RSpec.describe "FileSets", type: :request do
         expect(response).to render_template(:show)
         expect(response).to have_rendered('_side_by_side_layout')
         expect(response).not_to have_rendered('_stacked_layout')
+        expect(response).not_to have_rendered('_media_tombstone')
       end
 
       context 'map' do
@@ -53,6 +54,20 @@ RSpec.describe "FileSets", type: :request do
           expect(response).to render_template(:show)
           expect(response).not_to have_rendered('_side_by_side_layout')
           expect(response).to have_rendered('_stacked_layout')
+          expect(response).not_to have_rendered('_media_tombstone')
+        end
+      end
+
+      context 'tombstone' do
+        before { allow(Sighrax).to receive(:tombstone?).with(anything).and_return(true) }
+
+        it do
+          get hyrax_file_set_path(file_set.id)
+          expect(response).to have_http_status(:ok)
+          expect(response).to render_template(:show)
+          expect(response).to have_rendered('_side_by_side_layout')
+          expect(response).not_to have_rendered('_stacked_layout')
+          expect(response).to have_rendered('_media_tombstone')
         end
       end
     end
