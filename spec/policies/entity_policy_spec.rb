@@ -36,58 +36,67 @@ RSpec.describe EntityPolicy do
 
           it { is_expected.to be true }
 
-          context 'deny download' do
+          context 'tombstone' do
             let(:hyrax_can_edit) { false }
-            let(:allow_download) { false }
+            let(:tombstone) { true }
 
-            before { allow(Sighrax).to receive(:allow_download?).with(target).and_return(allow_download) }
+            before { allow(Sighrax).to receive(:tombstone?).with(target).and_return(tombstone) }
 
             it { is_expected.to be false }
 
-            context 'unpublished' do
-              let(:allow_download) { true }
-              let(:published) { false }
+            context 'deny download' do
+              let(:tombstone) { false }
+              let(:allow_download) { false }
 
-              before { allow(Sighrax).to receive(:published?).with(target).and_return(published) }
+              before { allow(Sighrax).to receive(:allow_download?).with(target).and_return(allow_download) }
 
               it { is_expected.to be false }
 
-              context 'instance of asset' do
-                let(:published) { true }
-                let(:instance_of_asset) { true }
+              context 'unpublished' do
+                let(:allow_download) { true }
+                let(:published) { false }
 
-                before { allow(target).to receive(:instance_of?).with(Sighrax::Asset).and_return(instance_of_asset) }
+                before { allow(Sighrax).to receive(:published?).with(target).and_return(published) }
 
-                it { is_expected.to be true }
+                it { is_expected.to be false }
 
-                context 'open access' do
-                  let(:instance_of_asset) { false }
-                  let(:open_access) { true }
+                context 'instance of asset' do
+                  let(:published) { true }
+                  let(:instance_of_asset) { true }
 
-                  before { allow(Sighrax).to receive(:open_access?).with(parent).and_return(open_access) }
+                  before { allow(target).to receive(:instance_of?).with(Sighrax::Asset).and_return(instance_of_asset) }
 
                   it { is_expected.to be true }
 
-                  context 'unrestricted' do
-                    let(:open_access) { false }
-                    let(:restricted) { false }
+                  context 'open access' do
+                    let(:instance_of_asset) { false }
+                    let(:open_access) { true }
 
-                    before { allow(Sighrax).to receive(:restricted?).with(parent).and_return(restricted) }
+                    before { allow(Sighrax).to receive(:open_access?).with(parent).and_return(open_access) }
 
                     it { is_expected.to be true }
 
-                    context 'restricted' do
-                      let(:restricted) { true }
-                      let(:access) { false }
+                    context 'unrestricted' do
+                      let(:open_access) { false }
+                      let(:restricted) { false }
 
-                      before { allow(Sighrax).to receive(:access?).with(actor, parent).and_return(access) }
+                      before { allow(Sighrax).to receive(:restricted?).with(parent).and_return(restricted) }
 
-                      it { is_expected.to be false }
+                      it { is_expected.to be true }
 
-                      context 'access' do
-                        let(:access) { true }
+                      context 'restricted' do
+                        let(:restricted) { true }
+                        let(:access) { false }
 
-                        it { is_expected.to be true }
+                        before { allow(Sighrax).to receive(:access?).with(actor, parent).and_return(access) }
+
+                        it { is_expected.to be false }
+
+                        context 'access' do
+                          let(:access) { true }
+
+                          it { is_expected.to be true }
+                        end
                       end
                     end
                   end
