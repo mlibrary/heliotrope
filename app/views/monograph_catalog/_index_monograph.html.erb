@@ -4,7 +4,19 @@
       <span class="Z3988" title="<%= @presenter.monograph_coins_title %>"></span>
   <% end %>
   <div class="col-sm-3 monograph-cover">
-    <%= raw @presenter.work_thumbnail(225) %>
+    <% if @presenter.representative_id.present? %>
+      <!-- Image trigger modal -->
+      <button type="button" class="btn btn-link" data-toggle="modal" data-target="#modalImage">
+        <%= raw @presenter.work_thumbnail(225) %>
+      </button>
+
+      <!-- Modal image trigger close -->
+      <div class="modal fade" id="modalImage" tabindex="-1" role="dialog" aria-labelledby="modalImageLabel">
+        <%= image_tag(riiif.image_path(@presenter.representative_id, :full, :full, 0), alt: @presenter.representative_alt_text, type: "button", data: { dismiss: "modal" }) %>
+      </div>
+    <% else %>
+      <%= raw @presenter.work_thumbnail(225) %>
+    <% end %>
     <% if can? :edit, @presenter %>
       <a class="btn btn-default manage-monograph-button" href="<%= main_app.monograph_show_path(@presenter.id) %>" title="<%= t('monograph_catalog.index.show_page_button') %>" data-turbolinks="false"><%= t('monograph_catalog.index.show_page_button') %></a>
       <a class="btn btn-default manage-monograph-button" href="<%= main_app.edit_hyrax_monograph_path(@presenter.id) %>" title="<%= t('monograph_catalog.index.edit_page_button') %>" data-turbolinks="false"><%= t('monograph_catalog.index.edit_page_button') %></a>
