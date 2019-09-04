@@ -837,6 +837,12 @@ footer.press {
     margin-top: 20px;
   }
 
+  // MEDIA TOMBSTONE
+  .tombstone {
+    font-style: italic;
+    font-size: 1.5em;
+  }
+
   // LEAFLET/IMAGES
   #image {
     height: 540px;
@@ -915,7 +921,6 @@ footer.press {
       height: 207px;
     }
   }
-
 
   #transcript, .translation {
     width: 97%;
