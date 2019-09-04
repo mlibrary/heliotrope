@@ -792,6 +792,358 @@ $a2ru-white: #fafafa;
     }
   }
 }
+///////////////////////////////////////////////
+//
+// British Archaelogical Reports - BAR
+//
+///////////////////////////////////////////////
+// colors
+$barpublishing-brand-color: #c53827;
+$barpublishing-link: #3b5999;
+$barpublishing-accent-link: #2d4474;
+$barpublishing-black-80: #333;
+$barpublishing-slate: #42606f;
+$barpublishing-grey-1: #9ba1a7;
+$barpublishing-white: #fafafa;
+
+// typography
+
+@mixin helvetica {
+  font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif;
+}
+
+@mixin georgia {
+  font-family: Georgia, 'Times New Roman', Times, serif;
+}
+
+.barpublishing {
+
+  // typography
+  @include helvetica;
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5 {
+    font-weight: 500;
+  }
+
+  // links
+  a {
+    color: $barpublishing-link;
+  }
+
+  a:hover,
+  a:active {
+    color: $barpublishing-accent-link;
+  }
+
+  // buttons
+
+  .btn-default {
+    @include button-background-color($barpublishing-slate);
+    @include button-font-color($barpublishing-white);
+    border-color: $barpublishing-slate;
+  }
+
+
+  .btn-default:hover,
+  .btn-default:active {
+    @include button-hover-background-color($barpublishing-grey-1);
+    @include button-hover-font-color($barpublishing-black-80);
+  }
+
+  // navigation menu
+  .navbar-default .navbar-nav > .open > a,
+  .navbar-default .navbar-nav > .open > a:hover,
+  .navbar-default .navbar-nav > .open > a:focus {
+    background-color: $barpublishing-grey-1;
+  }
+
+  #brand-bar {
+    background-color: $barpublishing-brand-color;
+
+    .navbar-brand {
+      @include georgia;
+      color: $barpublishing-white;
+      font-weight: 500;
+      text-transform: uppercase;
+      font-size: 1.8em;
+      letter-spacing: 2px;
+    }
+
+    .navbar-nav {
+      a#add-content,
+      a.login,
+      a.user-display-name,
+      a.language-dropdown {
+          color: $barpublishing-white;
+      }
+
+      .open > a,
+      .open > a:focus,
+      .open > a:hover {
+        background-color: $barpublishing-grey-1;
+      }
+    }
+
+    button.search-submit {
+      background-color: $barpublishing-slate;
+      border-color: $barpublishing-slate;
+      color: $barpublishing-white;
+    }
+
+  }
+
+  // press catalog
+
+  // jumbotron
+  .jumbotron {
+    font-weight: 300;
+    padding-top: 1.5em;
+    padding-bottom: 1em;
+
+    p {
+      font-size: 16px;
+      margin-bottom: 0;
+    }
+
+    .container {
+      margin-top: 0;
+    }
+
+    .logo {
+
+      img {
+        width: 190px;
+        margin-right: 3em;
+      }
+
+    }
+
+  }
+
+  .press {
+    .results-container {
+
+      .documentHeader {
+        h3 {
+          font-weight: 600;
+        }
+        a {
+          color: $barpublishing-slate;
+        }
+      }
+    }
+  }
+
+  //filters on press and monograph pages
+  .col-sm-3.facets-container,
+  #facet-panel-collapse {
+    padding-left: 0px;
+  }
+
+  .panel-group {
+    padding-left: 0px;
+  }
+
+  .panel-group .panel {
+    border-radius: 0px;
+  }
+
+  .panel-heading {
+    padding-top: 15px;
+  }
+
+  .panel-group .panel + .panel {
+    margin-top: 0px;
+  }
+
+  h3.panel-title a, a.more_facets_link {
+    color: #333;
+  }
+
+  .panel-heading.collapse-toggle .panel-title::after {
+    color: #333;
+  }
+
+  .panel-body {
+    background-color: #fafafa;
+  }
+
+  .search-form.panel-body {
+    background-color: #fff;
+  }
+
+  // sorts on press and monograph pages
+  #sort-dropdown .dropdown-toggle,
+  #per_page-dropdown .dropdown-toggle {
+    color: $barpublishing-white;
+  }
+
+  #sort-dropdown .dropdown-toggle:hover,
+  #per_page-dropdown .dropdown-toggle:hover,
+  #sort-dropdown .dropdown-toggle:active,
+  #per_page-dropdown .dropdown-toggle:active {
+    color: $barpublishing-black-80;
+
+    .caret {
+      color: $barpublishing-black-80;
+    }
+
+  }
+
+  // search resources
+  button.search-submit {
+    background-color: $barpublishing-slate;
+    border-color: $barpublishing-slate;
+    color: $barpublishing-white;
+  }
+  
+  .constraints-container {
+    padding: 10px 20px;
+    border-radius: 0px;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+  }
+
+
+  // pagination
+
+  .pagination {
+     li a, li span {
+
+       background-color: $barpublishing-slate;
+       border-color: $barpublishing-slate;
+       color: $barpublishing-white;
+     }
+
+     li>a:hover,
+     li>a:focus,
+     li>span:hover,
+     li>span:focus {
+       background-color: $barpublishing-grey-1;
+       border-color: $barpublishing-slate;
+       color: $barpublishing-black-80;
+     }
+
+
+     .active>a,
+     .active>a:hover,
+     .active>a:focus,
+     .active>span,
+     .active>span:hover,
+     .active>span:focus {
+       background-color: $barpublishing-grey-1;
+       border-color: $barpublishing-slate;
+       color: $barpublishing-black-80;
+     }
+
+     .disabled>span,
+     .disabled>span:hover,
+     .disabled>span:focus,
+     .disabled>a,
+     .disabled>a:hover,
+     .disabled>a:focus {
+      background-color: $barpublishing-grey-1;
+      border-color: $barpublishing-slate;
+      color: $barpublishing-black-80;
+     }
+  }
+
+  //footer
+  footer {
+    a,
+    a:hover,
+    a:active {
+      color: $barpublishing-white;
+    }
+    .press-block-a,
+    .press-block-b {
+      background-color:  $barpublishing-slate;
+      font-weight: 400;
+
+      a,
+      a:hover,
+      a:active {
+        color: $barpublishing-white;
+      }
+
+      img {
+        width: 125px;
+      }
+
+    }
+
+    .press-block-c {
+      background-color: $barpublishing-brand-color;
+      color: $barpublishing-white;
+
+      img {
+        width: auto !important;
+        margin-right: 1em;
+        height: 25px;
+      }
+    }
+    .platform {
+       background-color: $barpublishing-black-80;
+    }
+  }
+
+  // EPUB Reader
+  #reader, .cozy-reader {
+
+    .button {
+      @include epub-button-background-color($barpublishing-brand-color,$barpublishing-slate,$barpublishing-white);
+    }
+
+    .button--lg {
+      @include epub-button-background-color($barpublishing-brand-color,$barpublishing-slate,$barpublishing-white);
+    }
+
+    .button--sm {
+      @include epub-button-background-color($barpublishing-brand-color,$barpublishing-slate,$barpublishing-white);
+    }
+
+    i[class^='icon-chevron-'] {
+      @include epub-prev-next-color($barpublishing-brand-color);
+      transition: 0.2s ease-in;
+    }
+
+    i[class^='icon-chevron-']:hover {
+      @include epub-hover-prev-next-color($barpublishing-slate);
+      transition: 0.2s ease-in;
+    }
+
+    .cozy-control .logo {
+      height: 47px;
+
+      img {
+        height: 47px;
+      }
+    }
+  }
+
+}
+
+@media(max-width: 768px) {
+  .barpublishing .monograph .message {
+    padding: 1.5em;
+
+    .wrapper {
+      width: auto;
+    }
+    .text {
+      width: 70%;
+    }
+    .dismiss {
+      width: 20%;
+      padding-left: 10%;
+    }
+  }
+}
+
 
 ///////////////////////////////////////////////
 //
