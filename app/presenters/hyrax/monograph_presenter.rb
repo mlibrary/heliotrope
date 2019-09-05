@@ -197,7 +197,7 @@ module Hyrax
     end
 
     def pageviews_over_time_graph_data
-      [{ "label": "Total Pageviews", "data": flot_pageviews_over_time(monograph_analytics_ids).to_a.sort }]
+      [{ "label": "Total Pageviews", "data": flot_pageviews_over_time([monograph_analytics_ids]).to_a.sort }]
     end
 
     def buy_url?
