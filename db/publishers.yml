@@ -13,6 +13,7 @@
   name: 'Heliotrope Press'
   description: "Heliotrope Press"
   press_url: 'https://www.fulcrum.org'
+  google_analytics: 'UA-77847516-9'
 
 - subdomain: indiana
   production: true

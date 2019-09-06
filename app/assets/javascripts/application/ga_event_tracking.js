@@ -109,18 +109,18 @@ $(document).on('turbolinks:load', function() {
     });
     $('a.leaflet-control-pan-up').click(function() {
       ga('pressTracker.send', 'event', 'file_set_page', 'pan_up', $('#asset-title').text());
-
     });
     $('a.leaflet-control-pan-down').click(function() {
       ga('pressTracker.send', 'event', 'file_set_page', 'pan_down', $('#asset-title').text());
-
     });
     $('a.leaflet-control-pan-left').click(function() {
       ga('pressTracker.send', 'event', 'file_set_page', 'pan_left', $('#asset-title').text());
-
     });
     $('a.leaflet-control-pan-right').click(function() {
       ga('pressTracker.send', 'event', 'file_set_page', 'pan_right', $('#asset-title').text());
+    });
+    $('a.leaflet-control-zoom-fullscreen').click(function() {
+      ga('pressTracker.send', 'event', 'file_set_page', 'fullscreen', $('#asset-title').text());
     });
 
     // video and audio
