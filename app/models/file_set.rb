@@ -90,7 +90,7 @@ class FileSet < ActiveFedora::Base
 
   # Depending on what "flavor" of file_set you are, this blob of json will have certain fields
   # See HELIO-2912
-  property :extra_type_properties, predicate: ::RDF::URI.new('http://fulcrum.org/ns#ExtraTypeProperties'), multiple: false
+  property :extra_json_properties, predicate: ::RDF::URI.new('http://fulcrum.org/ns#ExtraJSONProperties'), multiple: false
 
   include GlobalID::Identification
   include HeliotropeUniversalMetadata

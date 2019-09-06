@@ -84,8 +84,7 @@ class PressCatalogController < ::CatalogController
       blacklight_config.add_facet_field Solrizer.solr_name('bass_bells_required', :facetable), label: 'Bass Bells Required'
       blacklight_config.add_facet_field Solrizer.solr_name('solo', :facetable), label: 'Solo'
       blacklight_config.add_facet_field Solrizer.solr_name('musical_presentation', :facetable), label: 'Musical Presentation'
-      blacklight_config.add_facet_field Solrizer.solr_name('composer_gender', :facetable), label: 'Composer Gender'
-      blacklight_config.add_facet_field Solrizer.solr_name('composer_ethnicity', :facetable), label: 'Composer Ethnicity'
+      blacklight_config.add_facet_field Solrizer.solr_name('composer_diversity', :facetable), lable: 'Composer Diversity'
       blacklight_config.add_facet_field Solrizer.solr_name('appropriate_occasion', :facetable), label: 'Appropriate Occasion'
     end
 
