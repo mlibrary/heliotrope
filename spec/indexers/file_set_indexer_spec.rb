@@ -3,34 +3,35 @@
 require 'rails_helper'
 
 describe FileSetIndexer do
-  let(:indexer) { described_class.new(file_set2) }
-  let(:monograph) { create(:monograph) }
-  let(:file_set1) { create(:file_set) }
-  let(:file_set2) do
-    create(:file_set,
-           creator: ["Moose, Bullwinkle\nSquirrel, Rocky"],
-           section_title: ['A section title'],
-           description: ["This is the description"])
-  end
-  let(:file) do
-    Hydra::PCDM::File.new.tap do |f|
-      f.content = 'foo'
-      f.original_name = 'picture.png'
-      f.sample_rate = 44
-      f.duration = '12:01'
-      f.original_checksum = '12345'
-      f.save!
-    end
-  end
-
-  before do
-    allow(file_set2).to receive(:original_file).and_return(file)
-    monograph.ordered_members << file_set1 << file_set2
-    monograph.save!
-  end
-
   describe "indexing a file_set" do
     subject { indexer.generate_solr_document }
+
+    let(:indexer) { described_class.new(file_set2) }
+    let(:monograph) { create(:monograph) }
+    let(:file_set1) { create(:file_set) }
+    let(:file_set2) do
+      create(:file_set,
+             creator: ["Moose, Bullwinkle\nSquirrel, Rocky"],
+             section_title: ['A section title'],
+             description: ["This is the description"],
+             extra_type_properties: { whatever_you_want: "Homer Simpson", score_version: "7" }.to_json)
+    end
+    let(:file) do
+      Hydra::PCDM::File.new.tap do |f|
+        f.content = 'foo'
+        f.original_name = 'picture.png'
+        f.sample_rate = 44
+        f.duration = '12:01'
+        f.original_checksum = '12345'
+        f.save!
+      end
+    end
+
+    before do
+      allow(file_set2).to receive(:original_file).and_return(file)
+      monograph.ordered_members << file_set1 << file_set2
+      monograph.save!
+    end
 
     it "indexes all creators' names for access/search and faceting" do
       expect(subject['creator_tesim']).to eq ['Moose, Bullwinkle', 'Squirrel, Rocky'] # search
@@ -73,6 +74,11 @@ describe FileSetIndexer do
 
     it 'has description indexed by Hyrax::IndexesBasicMetadata' do
       expect(subject['description_tesim'].first).to eq 'This is the description'
+    end
+
+    it "indexes the extra_type_properties" do
+      expect(subject['whatever_you_want_tesim']).to eq "Homer Simpson"
+      expect(subject['score_version_tesim']).to eq "7"
     end
   end
 end

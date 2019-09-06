@@ -1,0 +1,19 @@
+<%# see https://github.com/samvera/hyrax/blob/1e504c200fd9c39120f514ac33cd42cd843de9fa/app/presenters/hyrax/stats_usage_presenter.rb %>
+<%= javascript_tag do %>
+    var heliotrope_item_stats = <%= @presenter.pageviews_over_time_graph_data.to_json.html_safe %>;
+<% end %>
+
+<div class="row">
+  <div class="col-sm-12">
+    <div class="alert alert-info">
+      <i class="glyphicon glyphicon-signal large-icon"></i>
+      <%= t('pageviews_html', count: number_with_delimiter(@presenter.pageviews_count), date: @presenter.date_uploaded.strftime("%B %d, %Y")) %>
+    </div>
+    <div class="stats-container usage">
+      <div id="usage-stats" class="stats-placeholder"></div>
+    </div>
+    <div class="stats-container overview">
+      <div id="overview" class="stats-placeholder"></div>
+    </div>
+  </div>
+</div>

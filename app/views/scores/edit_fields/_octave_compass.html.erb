@@ -1,0 +1,4 @@
+<%= f.input :octave_compass, as: :check_boxes,
+    collection: ScoresQa::OctaveCompassService.select_all_options,
+    input_html: { class: 'form-check-input' }
+%>

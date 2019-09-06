@@ -1,0 +1,33 @@
+<%
+  level = 0
+  epub_presenter = @presenter.epub? ? @presenter.epub_presenter : @presenter.pdf_ebook_presenter
+%>
+  <% epub_presenter.intervals.each do |interval| %>
+    <% if interval.level > level %>
+      <% level += 1 %>
+      <ul class="toc section">
+        <li>
+    <% elsif interval.level == level %>
+       </li>
+       <li>
+    <% else %>
+      </li>
+      <% while interval.level < level %>
+        <% level -= 1 %>
+        </ul>
+        </li>
+      <% end %>
+      <li>
+    <% end %>
+    <div class="section-container">
+      <a class="toc-link" href="<%= epub_path(id: epub_presenter.id) + '#' + interval.cfi  %>" data-turbolinks="false"><%= interval.title %></a>
+        <div class="btn-group download" role="group" aria-label="Read or Download Section">
+            <a class="btn btn-default btn-sm" href="<%= epub_download_interval_path(id: epub_presenter.id, cfi: interval.cfi, title: interval.title) %>" data-turbolinks="false">
+              <i id="download" class="oi" data-glyph="data-transfer-download" title="Download section" aria-hidden="true"></i> Download</a>
+          <a class="btn btn-default btn-sm" href="<%= epub_path(id: epub_presenter.id, anchor: interval.cfi + "/4/1:0") %>">
+            <span class="glyphicon glyphicon-book" title="Read section" aria-hidden="true"></span> Read</a>
+        </div>
+    </div>
+  <% end %>
+  </li>
+</ul>

@@ -56,9 +56,18 @@ Hyrax::FileSetsController.class_eval do
         if params[:file_set].key?(:files)
           actor.update_content(params[:file_set][:files].first)
         else
+          process_extra_type_properties
           update_metadata
         end
       end
+    end
+
+    # See HELIO-2912. We're trying a thing here...
+    # Special properties for certain flavors of FileSet are added as json
+    def process_extra_type_properties
+      json = {}
+      json[:score_version] = params[:file_set].delete(:score_version) if params[:file_set][:score_version].present?
+      params[:file_set][:extra_type_properties] = json.to_json
     end
 
     def change_thumbnail

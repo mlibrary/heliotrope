@@ -1,0 +1,61 @@
+<div class="form-group check_boxes required score_amplifed_electronics">
+  <label class="control-label check_boxes required">* Amplified electronics needed </label>
+  <span class="checkbox">
+    <label for="score_amplifed_electronics_no">
+      <input class="check_boxes required form-check-input"
+             type="checkbox"
+             value="Optional"
+             name="score[amplified_electronics][]"
+             id="score_amplifed_electronic_no"
+             <%= "checked" if @form.amplified_electronics.include?('No') %>>
+      No
+    </label>
+  </span>
+  <span class="checkbox">
+    <label for="score_amplifed_electronics_optional">
+      <input class="check_boxes required form-check-input"
+             type="checkbox"
+             value="Optional"
+             name="score[amplified_electronics][]"
+             id="score_amplifed_electronic_optional"
+             <%= "checked" if @form.amplified_electronics.include?('Optional') %>>
+      Optional
+    </label>
+  </span>
+  <span class="checkbox">
+    <label for="score_amplifed_electronics_fixed_media">
+      <input class="check_boxes required form-check-input"
+             type="checkbox"
+             value="Fixed Media"
+             name="score[amplified_electronics][]"
+             id="score_amplifed_electronic_fixed_media"
+             <%= "checked" if @form.amplified_electronics.include?('Fixed Media') %>>
+      Fixed Media
+    </label>
+  </span>
+  <span class="checkbox">
+    <label for="score_amplifed_electronics_live_processing">
+      <input class="check_boxes required form-check-input"
+             type="checkbox"
+             value="Live Processing"
+             name="score[amplified_electronics][]"
+             id="score_amplifed_electronic_live_processing"
+             <%= "checked" if @form.amplified_electronics.include?('Live Processing') %>>
+      Live Processing
+    </label>
+  </span>
+  <span class="checkbox">
+    <label for="score_other_amplified_electronic">
+      <input class="check_boxes required form-check-input"
+             type="checkbox"
+             value=""
+             name="score[amplified_electronics][]"
+             id="score_other_amplified_electronic"
+             <%= "checked" if @form.other_amplified_electronic_value.present? %>>
+      <input type="text"
+             class="string required form-control"
+             name="score[amplified_electronics][]"
+             value="<%= @form.other_amplified_electronic_value.first if @form.other_amplified_electronic_value.present? %>">
+    </label>
+  </span>
+</div>

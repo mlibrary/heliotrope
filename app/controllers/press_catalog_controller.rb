@@ -52,24 +52,44 @@ class PressCatalogController < ::CatalogController
     end
 
     def conditional_blacklight_configuration
-      if open_monographs >= 15
-        # per page
-        blacklight_config.default_per_page = 15
-        blacklight_config.per_page = [10, 15, 50, 100]
+      if @press.subdomain == Services.score_press
+        musical_score
+      else
+        if open_monographs >= 15
+          # per page
+          blacklight_config.default_per_page = 15
+          blacklight_config.per_page = [10, 15, 50, 100]
 
-        # facets
-        # Sort HEB facets alphabetically, others by count
-        sort = (@press.subdomain == 'heb') ? 'index' : 'count'
-        blacklight_config.add_facet_field Solrizer.solr_name('open_access', :facetable), label: "Open Access", limit: 1, url_method: :facet_url_helper, sort: sort
-        blacklight_config.add_facet_field Solrizer.solr_name('subject', :facetable), label: "Subject", limit: 10, url_method: :facet_url_helper, sort: sort
-        blacklight_config.add_facet_field Solrizer.solr_name('creator', :facetable), label: "Author", limit: 5, url_method: :facet_url_helper, sort: sort
-        if @press.subdomain == 'heb'
-          blacklight_config.add_facet_field Solrizer.solr_name('publisher', :facetable), label: "Publisher", limit: 5, url_method: :facet_url_helper, sort: sort
+          # facets
+          # Sort HEB facets alphabetically, others by count
+          sort = (@press.subdomain == 'heb') ? 'index' : 'count'
+          blacklight_config.add_facet_field Solrizer.solr_name('open_access', :facetable), label: "Open Access", limit: 1, url_method: :facet_url_helper, sort: sort
+          blacklight_config.add_facet_field Solrizer.solr_name('subject', :facetable), label: "Subject", limit: 10, url_method: :facet_url_helper, sort: sort
+          blacklight_config.add_facet_field Solrizer.solr_name('creator', :facetable), label: "Author", limit: 5, url_method: :facet_url_helper, sort: sort
+          if @press.subdomain == 'heb'
+            blacklight_config.add_facet_field Solrizer.solr_name('publisher', :facetable), label: "Publisher", limit: 5, url_method: :facet_url_helper, sort: sort
+          end
+          blacklight_config.add_facet_field Solrizer.solr_name('series', :facetable), label: "Series", limit: 5, url_method: :facet_url_helper, sort: sort
+          blacklight_config.add_facet_fields_to_solr_request!
         end
-        blacklight_config.add_facet_field Solrizer.solr_name('series', :facetable), label: "Series", limit: 5, url_method: :facet_url_helper, sort: sort
-        blacklight_config.add_facet_fields_to_solr_request!
-      end
 
+        search_or_browse
+        monograph_sort_fields
+      end
+    end
+
+    def musical_score
+      blacklight_config.add_facet_field Solrizer.solr_name('creator', :facetable), label: 'Composer'
+      blacklight_config.add_facet_field Solrizer.solr_name('octave_compass', :facetable), label: 'Octave Compass'
+      blacklight_config.add_facet_field Solrizer.solr_name('bass_bells_required', :facetable), label: 'Bass Bells Required'
+      blacklight_config.add_facet_field Solrizer.solr_name('solo', :facetable), label: 'Solo'
+      blacklight_config.add_facet_field Solrizer.solr_name('musical_presentation', :facetable), label: 'Musical Presentation'
+      blacklight_config.add_facet_field Solrizer.solr_name('composer_gender', :facetable), label: 'Composer Gender'
+      blacklight_config.add_facet_field Solrizer.solr_name('composer_ethnicity', :facetable), label: 'Composer Ethnicity'
+      blacklight_config.add_facet_field Solrizer.solr_name('appropriate_occasion', :facetable), label: 'Appropriate Occasion'
+    end
+
+    def search_or_browse
       # sort fields
       if params[:q].present?
         # if this is a search, relevance/score is default
@@ -78,6 +98,9 @@ class PressCatalogController < ::CatalogController
         # if it's a "browse", then it's date_uploaded
         blacklight_config.add_sort_field 'date_uploaded desc', sort: "#{Solrizer.solr_name('date_uploaded', :stored_sortable, type: :date)} desc", label: "Date Added (Newest First)"
       end
+    end
+
+    def monograph_sort_fields
       blacklight_config.add_sort_field 'author asc', sort: "#{Solrizer.solr_name('creator_full_name', :sortable)} asc", label: "Author (A-Z)"
       blacklight_config.add_sort_field 'author desc', sort: "#{Solrizer.solr_name('creator_full_name', :sortable)} desc", label: "Author (Z-A)"
       blacklight_config.add_sort_field 'year desc', sort: "#{Solrizer.solr_name('date_created', :sortable)} desc", label: "Publication Date (Newest First)"

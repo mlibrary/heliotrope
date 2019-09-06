@@ -189,6 +189,10 @@ Style/GuardClause:
   Exclude:
     - 'lib/import/importer.rb'
 
+Style/InverseMethods:
+  Exclude:
+    - 'app/models/monograph_search_builder.rb' # line 32 is failing *locally*  for me but not on travis??? IDK why... same cop versions???
+
 Style/NumericLiterals:
   Exclude:
     - 'config/initializers/mailboxer.rb'

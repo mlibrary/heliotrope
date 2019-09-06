@@ -289,6 +289,11 @@ module Hyrax
       current_ability.can?(:edit, id) || current_ability.can?(:destroy, id) || current_ability.can?(:download, id)
     end
 
+    # Score file_sets things, see HELIO-2912 and the FileSetIndexer
+    def score_version
+      solr_document['score_version_tesim']
+    end
+
     private
 
       def fetch_parent_presenter
@@ -299,6 +304,8 @@ module Hyrax
         presenter_class = case @parent_document["has_model_ssim"].first
                           when "Monograph"
                             Hyrax::MonographPresenter
+                          when "Score"
+                            Hyrax::ScorePresenter
                           else
                             WorkShowPresenter
                           end

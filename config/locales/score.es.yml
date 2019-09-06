@@ -1,0 +1,10 @@
+es:
+  hyrax:
+    icons:
+      score:     'fa fa-file-text-o'
+    select_type:
+      score:
+        # TODO: translate `human_name` into Spanish
+        description:        "Score trabajos"
+        name:               "Score"
+        # TODO: translate `human_name` into Spanish

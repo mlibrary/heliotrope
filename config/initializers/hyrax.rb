@@ -3,6 +3,8 @@
 Hyrax.config do |config|
   # Injected via `rails g curation_concerns:work Monograph`
   config.register_curation_concern :monograph
+  # Injected via `rails g hyrax:work Score`
+  config.register_curation_concern :score
   # Should schema.org microdata be displayed?
   # config.display_microdata = true
 

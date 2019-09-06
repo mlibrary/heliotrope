@@ -1,0 +1,10 @@
+zh:
+  hyrax:
+    icons:
+      score:     'fa fa-file-text-o'
+    select_type:
+      score:
+        # TODO: translate `human_name` into Chinese
+        description:        "Score 作品"
+        name:               "Score"
+        # TODO: translate `human_name` into Chinese

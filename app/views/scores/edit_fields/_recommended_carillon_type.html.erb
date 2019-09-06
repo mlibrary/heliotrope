@@ -1,0 +1,4 @@
+<%= f.input :recommended_carillon_type, as: :check_boxes,
+    collection: ScoresQa::RecommendedCarillonTypeService.select_all_options,
+    input_html: { class: 'form-check-input' }
+%>

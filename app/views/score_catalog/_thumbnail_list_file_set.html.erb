@@ -1,0 +1,16 @@
+<% fs_presenter = Hyrax::FileSetPresenter.new(document, nil, nil) %>
+<%- if has_thumbnail?(document) && tn = render_thumbnail_tag(document, {alt: fs_presenter.alt_text}, counter: document_counter_with_offset(document_counter)) %>
+  <div class="document-thumbnail col-sm-3">
+    <% if fs_presenter.use_riiif_for_icon? %>
+      <% icon_string = '<img src="/image-service/' + fs_presenter.id + '/full/200,/0/default.jpg' + fs_presenter&.image_cache_breaker + '" >' %>
+      <%= tn.gsub(/<img.*>/, icon_string).html_safe %>
+    <% elsif fs_presenter.use_glyphicon? %>
+      <%= tn.gsub(/<img.*>/, fs_presenter.gylphicon + "<br/></a>".html_safe).html_safe %>
+      <% if fs_presenter.external_resource? %>
+        <a class="external-resource-link" href="<%= document.external_resource_url %>" target="_blank"><span class="glyphicon glyphicon-share" aria-hidden="true"></span> View External Object</a>
+      <% end %>
+    <% else %>
+      <%= tn %>
+    <% end %>
+  </div>
+<% end %>
