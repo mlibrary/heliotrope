@@ -4,8 +4,9 @@
 #  `rails generate hyrax:work Score`
 require 'rails_helper'
 
-RSpec.describe Hyrax::Actors::ScoreActor do
-  it "has tests" do
-    skip "Add your tests here"
+describe Hyrax::Actors::ScoreActor do
+  it_behaves_like "a group permission actor for works" do
+    let(:user) { create(:platform_admin) }
+    let(:curation_concern) { build(:score, user: user) }
   end
 end
