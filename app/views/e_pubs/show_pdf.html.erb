@@ -705,7 +705,7 @@
           cfi = { start: cfi.replace('epubcfi(', '').replace(')','') };
         }
         var pageNum = cfi.start;
-        this.pdfViewer.currentPageLabel = pageNum;
+        this.pdfViewer.currentPageNumber = pageNum;
       },
 
       reopen: function(options) {
