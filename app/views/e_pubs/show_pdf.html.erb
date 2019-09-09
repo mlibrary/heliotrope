@@ -390,20 +390,53 @@
           }.bind(this));
         }
 
+        this._preview = form.querySelector(`#x${this._id}-preview > div`);
+
         var currentScale = this._control._reader.options.scale;
         this._inputs.querySelector('input[value="' + currentScale + '"]').checked = true;
         this._current.scale = currentScale;
+
+        this._inputs.addEventListener('change', function(event) {
+          var target = event.target;
+          if ( target.tagName == 'INPUT' ) {
+            this._updatePreview();
+          }
+        }.bind(this));
+
+        this._updatePreview();
       },
 
       updateForm: function(form, options, saveable) {
         var input = this._inputs.querySelector("input:checked");
         options.scale = saveable.scale = input.value;
       },
+
+      _updatePreview: function() {
+        var current = this._inputs.querySelector('input:checked').value;
+        var scale = ( parseFloat(current, 10) );
+        if ( isNaN(scale) ) {
+          scale = '1.0';
+        }
+        this._preview.parentNode.dataset.scale = current;
+        this._preview.style.transform = "scale(" + scale + ")";
+      },
+
       template: function() {
         var html = '<fieldset class="cozy-fieldset-pdf-scale">' + 
           '<legend>Zoom In/Out</legend>' + 
-          '<style>.cozy-fieldset-pdf-scale label { margin: 0.5 0 !important; }</style>' + 
-          '<ul id="x${this._id}-list">' + 
+          '<style>' + 
+            '.cozy-fieldset-pdf-scale label { margin: 0.5 0 !important; }' + 
+            '.cozy-fieldset-pdf-scale .preview--text_size[data-scale="auto"] { height: auto; }' + 
+            '.cozy-fieldset-pdf-scale .preview--text_size[data-scale="page-fit"] { height: auto; width: 60%; }' + 
+            '.cozy-fieldset-pdf-scale .preview--text_size[data-scale="page-width"] { width: 60%; }' + 
+            '.cozy-fieldset-pdf-scale .preview--text_size[data-scale="page-actual"] > div { width: 150%; transform: scale(1.5) !important; }' + 
+          '</style>' + 
+          '<div class="preview--text_size" id="x${this._id}-preview">' +
+            '<div style="transform-origin: top left">' +
+              '‘Yes, that’s it,’ said the Hatter with a sigh: ‘it’s always tea-time, and we’ve no time to wash the things between whiles.’' + 
+            '</div>' +
+          '</div>' +
+          '<ul id="x${this._id}-list" style="margin-top: 1rem">' + 
             '<li><label><input type="radio" name="scaleSelect" value="auto" /> Automatic Zoom</label></li>' + 
             '<li><label><input type="radio" name="scaleSelect" value="page-actual" /> Actual Size</label></li>' + 
             '<li><label><input type="radio" name="scaleSelect" value="page-fit" /> Page Fit</label></li>' + 
@@ -651,8 +684,6 @@
 
           self.PDFViewerApplication.open(self.options.href).then(function() {
             self.pdfViewer = this.PDFViewerApplication.pdfViewer;
-            // reset the zoom to "auto"
-            // self.PDFViewerApplication.zoomReset();
 
             self.pdfViewer = this.PDFViewerApplication.pdfViewer;
             var setupInterval = setInterval(function() {
@@ -677,18 +708,13 @@
                   var currentScaleValue = self.options.scale;
                   if ( currentScaleValue == 1.0 ) { currentScaleValue = 'auto'; }
                   var currentScale = parseFloat(currentScaleValue);
-                  console.log("AHOY scalechanging", evt.scale, evt.presetValue, currentScale, currentScaleValue);
+                  // console.log("AHOY scalechanging", evt.scale, evt.presetValue, currentScale, currentScaleValue);
                   if ( currentScale > 0 && evt.scale != currentScale ) {
                     self.pdfViewer.currentScaleValue = currentScaleValue;
                   }
-                  // if ( evt.presetValue && evt.presetValue )
-                  // if ( evt.scale != currentScale && evt.presetValue != 'auto' ) {
-                  //   self.pdfViewer.currentScaleValue = currentScale;
-                  // }
                 })
 
                 self.PDFViewerApplication.pdfDocument.getMetadata().then(function(data) {
-                  console.log("AHOY getMetadata", data);
                   var metadata = {};
                   metadata.layout = 'pdf';
 
@@ -813,14 +839,13 @@
     <%= render "cozy_controls_bottom", presenter: @presenter, monograph_presenter: @monograph_presenter %>
 
     // start reader
-    reader.start(function() {
-      // distinguish these buttons from the links underneath, too much CSS to add otherwise, methinks
-      var element = document.getElementById("viewThumbnail");
-      element.classList.add("cozy-control", "button--lg");
-      var element = document.getElementById("viewOutline");
-      element.classList.add("cozy-control", "button--lg");
-    });
+    reader.start();
 
+    // distinguish these buttons from the links underneath, too much CSS to add otherwise, methinks
+    var element = document.getElementById("viewThumbnail");
+    element.classList.add("cozy-control", "button--lg");
+    var element = document.getElementById("viewOutline");
+    element.classList.add("cozy-control", "button--lg");
   </script>
 
 
