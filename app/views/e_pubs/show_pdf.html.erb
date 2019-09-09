@@ -371,13 +371,67 @@
           return undefined;
        },
     });
+
+    cozy.Control.Preferences.fieldset.PDFScale = cozy.Control.Preferences.fieldset.Scale.extend({
+      options: {},
+
+      intialize: function(control, options) {
+        cozy.Control.Preferences.fieldset.Scale.prototype.onAdd.apply(this, arguments);
+      },
+
+      initializeForm: function(form) {
+        // EOT
+        if ( ! this._inputs ) {
+          this._inputs = form.querySelector('#x' + this._id + '-list');
+          this._actionReset = form.querySelector('#x' + this._id + '-reset');
+          this._actionReset.addEventListener('click', function(event) {
+            event.preventDefault();
+            this._inputs.querySelector('input[value="auto"]').checked = true;
+          }.bind(this));
+        }
+
+        var currentScale = this._control._reader.options.scale;
+        this._inputs.querySelector('input[value="' + currentScale + '"]').checked = true;
+        this._current.scale = currentScale;
+      },
+
+      updateForm: function(form, options, saveable) {
+        var input = this._inputs.querySelector("input:checked");
+        options.scale = saveable.scale = input.value;
+      },
+      template: function() {
+        var html = '<fieldset class="cozy-fieldset-pdf-scale">' + 
+          '<legend>Zoom In/Out</legend>' + 
+          '<style>.cozy-fieldset-pdf-scale label { margin: 0.5 0 !important; }</style>' + 
+          '<ul id="x${this._id}-list">' + 
+            '<li><label><input type="radio" name="scaleSelect" value="auto" /> Automatic Zoom</label></li>' + 
+            '<li><label><input type="radio" name="scaleSelect" value="page-actual" /> Actual Size</label></li>' + 
+            '<li><label><input type="radio" name="scaleSelect" value="page-fit" /> Page Fit</label></li>' + 
+            '<li><label><input type="radio" name="scaleSelect" value="page-width" /> Page Width</label></li>' + 
+            '<li><label><input type="radio" name="scaleSelect" value="0.5" /> 50%</label></li>' + 
+            '<li><label><input type="radio" name="scaleSelect" value="0.75" /> 75%</label></li>' + 
+            '<li><label><input type="radio" name="scaleSelect" value="1" /> 100%</label></li>' + 
+            '<li><label><input type="radio" name="scaleSelect" value="1.25" /> 125%</label></li>' + 
+            '<li><label><input type="radio" name="scaleSelect" value="1.5" /> 150%</label></li>' + 
+            '<li><label><input type="radio" name="scaleSelect" value="2" /> 200%</label></li>' + 
+            '<li><label><input type="radio" name="scaleSelect" value="3" /> 300%</label></li>' + 
+            '<li><label><input type="radio" name="scaleSelect" value="4" /> 400%</label></li>' + 
+          '</ul>' + 
+          '<p style="margin-top: 1.5rem">' + 
+            '<button id="x${this._id}-reset" class="reset button--inline" style="margin-left: 8px">Reset</button>' + 
+          '</p>' + 
+        '</fieldset>'
+        return html.replace(/\$\{this._id\}/g, this._id);
+      }
+    });
+
     cozy.Control.Preferences.prototype._createPanel = function() {
       var self = this;
       if ( this._modal._container.querySelector('form') ) { return; }
 
       var template = '';
       var possible_fieldsets = [];
-      possible_fieldsets.push('TextSize');
+      possible_fieldsets.push('PDFScale');
       this._fieldsets = [];
       possible_fieldsets.forEach(function(cls) {
         var fieldset = new cozy.Control.Preferences.fieldset[cls](this);
@@ -600,13 +654,18 @@
             // reset the zoom to "auto"
             // self.PDFViewerApplication.zoomReset();
 
-            self.pdfViewer.currentScaleValue = 1.2;
-            self.options.text_size = "120";
-
             self.pdfViewer = this.PDFViewerApplication.pdfViewer;
             var setupInterval = setInterval(function() {
               if ( self.PDFViewerApplication.pdfDocument != null ) {
                 clearInterval(setupInterval);
+
+                // --- reset the zoom?
+                // self.pdfViewer.currentScaleValue = 'auto';
+                // self.options.scale = 'auto';
+
+                // --- or update to what was stored
+                self.options.scale = self.pdfViewer.currentScaleValue;
+
 
                 // add events to viewer
                 self.PDFViewerApplication.eventBus.on('pagechanging', function(evt) {
@@ -615,10 +674,17 @@
                 });
 
                 self.pdfViewer.eventBus.on('scalechanging', function(evt) {
-                  var currentScale = parseInt(self.options.text_size, 10) / 100.0;
-                  if ( evt.scale != currentScale ) {
-                    self.pdfViewer.currentScale = currentScale;
+                  var currentScaleValue = self.options.scale;
+                  if ( currentScaleValue == 1.0 ) { currentScaleValue = 'auto'; }
+                  var currentScale = parseFloat(currentScaleValue);
+                  console.log("AHOY scalechanging", evt.scale, evt.presetValue, currentScale, currentScaleValue);
+                  if ( currentScale > 0 && evt.scale != currentScale ) {
+                    self.pdfViewer.currentScaleValue = currentScaleValue;
                   }
+                  // if ( evt.presetValue && evt.presetValue )
+                  // if ( evt.scale != currentScale && evt.presetValue != 'auto' ) {
+                  //   self.pdfViewer.currentScaleValue = currentScale;
+                  // }
                 })
 
                 self.PDFViewerApplication.pdfDocument.getMetadata().then(function(data) {
@@ -709,10 +775,24 @@
       },
 
       reopen: function(options) {
-        this.options.text_size = options.text_size;
-        var currentScale = this.pdfViewer.currentScale;
-        var newScale = parseInt(options.text_size) / 100.0;
-        this.pdfViewer.currentScale = newScale;
+        this.options.scale = options.scale;
+        var newScale = this.options.scale;
+        // var currentScale = this.pdfViewer.currentScaleValue;
+        // var newScale = parseInt(options.scale) / 100.0;
+        // if ( newScale == 1.0 ) { newScale = 'auto'; }
+        // else {
+        //   // calculate what 'auto' would be
+        //   var currentPage = reader.pdfViewer._pages[reader.pdfViewer._currentPageNumber - 1];
+        //   var hPadding = 40; var vPadding = 5;
+        //   var pageWidthScale = (reader.pdfViewer.container.clientWidth - hPadding) /
+        //                        currentPage.width * currentPage.scale;
+        //   var pageHeightScale = (reader.pdfViewer.container.clientHeight - vPadding) /
+        //                         currentPage.height * currentPage.scale;
+        //   var horizontalScale = pageWidthScale;
+        //   newScale = Math.min(1.25, horizontalScale) * newScale;
+        // }
+        // this.options._currentScaleValue = newScale;
+        this.pdfViewer.currentScaleValue = newScale;
       },
 
       EOT: true
@@ -733,13 +813,14 @@
     <%= render "cozy_controls_bottom", presenter: @presenter, monograph_presenter: @monograph_presenter %>
 
     // start reader
-    reader.start();
+    reader.start(function() {
+      // distinguish these buttons from the links underneath, too much CSS to add otherwise, methinks
+      var element = document.getElementById("viewThumbnail");
+      element.classList.add("cozy-control", "button--lg");
+      var element = document.getElementById("viewOutline");
+      element.classList.add("cozy-control", "button--lg");
+    });
 
-    // distinguish these buttons from the links underneath, too much CSS to add otherwise, methinks
-    var element = document.getElementById("viewThumbnail");
-    element.classList.add("cozy-control", "button--lg");
-    var element = document.getElementById("viewOutline");
-    element.classList.add("cozy-control", "button--lg");
   </script>
 
 
