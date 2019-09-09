@@ -11,26 +11,9 @@
       </button>
 
       <!-- Modal image trigger close -->
-      <div class="modal fade" id="modalImage" tabindex="-1" role="dialog" aria-label="Select the escape key to close the modal window">
+      <div class="modal" id="modalImage" tabindex="-1" role="dialog" aria-label="Select the escape key to close the modal window">
         <%= image_tag(riiif.image_path(@presenter.representative_id, :full, :full, 0), alt: '') %>
       </div>
-
-      <script type="text/javascript">
-          $(document).on('turbolinks:load', function() {
-              console.log("javascript");
-
-              $('#modalImage').on('show.bs.modal', function () {
-                  console.log("hello world!");
-                  $('#modalImage').focus();
-              });
-
-              $('#modalImage').on('shown.bs.modal', function () {
-                  console.log("goodbye world!");
-                  $('#modalImage').focus();
-
-              });
-          });
-      </script>
     <% else %>
       <%= raw @presenter.work_thumbnail(225) %>
     <% end %>
