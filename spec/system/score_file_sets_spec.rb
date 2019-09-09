@@ -24,7 +24,7 @@ RSpec.describe "Score FileSets and PDF reader", type: :system do
                       creator: ["Ida No"],
                       title: ["Kitty"],
                       description: ["Just a file"],
-                      extra_type_properties: { score_version: "eleventy-three" }.to_json,
+                      extra_json_properties: { score_version: "eleventy-three" }.to_json,
                       edit_groups: ['admin', 'carillon_admin'])
   end
   let(:pdf) do
@@ -50,8 +50,8 @@ RSpec.describe "Score FileSets and PDF reader", type: :system do
 
     click_on('Kitty')
 
-    # Make sure the score specific file_set fields (like score_version) that are json in extra_type_properties
-    # show up on the file_set page.
+    # Make sure the score specific file_set fields (like score_version) that are
+    # in extra_json_properties show up on the file_set page.
     expect(page).to have_content('Score version')
     expect(page).to have_content('eleventy-three')
 

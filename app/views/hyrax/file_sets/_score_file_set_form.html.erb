@@ -23,7 +23,7 @@
                  type="text"
                  name="file_set[score_version]"
                  id="file_set_score_version"
-                 value="<%= JSON.parse(curation_concern.extra_type_properties)["score_version"] if curation_concern.extra_type_properties.present? %>">
+                 value="<%= JSON.parse(curation_concern.extra_json_properties)["score_version"] if curation_concern.extra_json_properties.present? %>">
         </div>
         <%= f.input :copyright_holder, input_html: { class: 'form-control optional' } %>
         <%= f.input :copyright_status, input_html: { class: 'form-control optional' } %>

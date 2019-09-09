@@ -37,7 +37,7 @@ class FileSetIndexer < Hyrax::FileSetIndexer
         solr_doc[Solrizer.solr_name('search_year', :facetable)] = object.sort_date[0, 4]
       end
 
-      index_extra_type_properties(solr_doc) if object.extra_type_properties.present?
+      index_extra_json_properties(solr_doc) if object.extra_json_properties.present?
     end
   end
 
@@ -85,9 +85,9 @@ class FileSetIndexer < Hyrax::FileSetIndexer
   # Instead of creating child nested works, or just adding a while bunch of fields to FileSets.
   # So there's no schema for this. Be careful what you stuff into it I guess.
   # See HELIO-2912
-  def index_extra_type_properties(solr_doc)
-    JSON.parse(object.extra_type_properties).each do |k, v|
-      # everything gets _tesim (until we need them not to)
+  def index_extra_json_properties(solr_doc)
+    JSON.parse(object.extra_json_properties).each do |k, v|
+      # everything is shallow and gets _tesim (until we need them not to)
       solr_doc["#{k}_tesim"] = v if v.present?
     end
   end
