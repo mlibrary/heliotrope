@@ -191,6 +191,7 @@ Rails.application.routes.draw do
   get 'concern/monographs/:id/show', controller: 'hyrax/monographs', action: :show, as: :monograph_show
   patch 'concern/monographs/:id/reindex', controller: 'hyrax/monographs', action: :reindex, as: :monograph_reindex
   get 'monograph_catalog/facet/:id', controller: :monograph_catalog, action: :facet, as: :monograph_catalog_facet
+  post 'concern/monographs/:id/representative', controller: :monograph_catalog, action: :representative, as: :monograph_catalog_representative
 
   get 'concern/scores/new', controller: 'hyrax/scores', action: :new
   get 'concern/scores/:id', controller: :score_catalog, action: :index, as: :score_catalog

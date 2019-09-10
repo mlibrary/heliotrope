@@ -47,6 +47,16 @@ module Hyrax
              :label, :redirect_to, :has_model, :date_modified, :visibility,
              to: :solr_document
 
+    def asset?
+      return false if representative?
+      return false if featured_representative?
+      true
+    end
+
+    def representative?
+      (id == parent.thumbnail_id) || (id == parent.representative_id)
+    end
+
     def monograph_id
       Array(solr_document['monograph_id_ssim']).first
     end

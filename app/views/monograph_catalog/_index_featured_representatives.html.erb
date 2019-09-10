@@ -1,0 +1,23 @@
+<% if can? :edit, presenter.id %>
+  <% if presenter.representative_presenter.present? %>
+    <div>
+      <h4>Representative</h4>
+      <hr/>
+      <h4 class="index_title"><%= link_to presenter.representative_presenter %></h4>
+      <%= render partial: 'index_file_set_footer', locals: { document: presenter.representative_presenter } %>
+      <div>&nbsp;</div>
+    </div>
+  <% end %>
+  <% if presenter.featured_representatives.present? %>
+    <div>
+      <h4>Featured Representative(s)</h4>
+      <% presenter.featured_representatives.each do |fr| %>
+        <hr/>
+        <% file_set_presenter = Sighrax.hyrax_presenter(Sighrax.factory(fr.file_set_id), current_ability) %>
+        <h4 class="index_title"><%= link_to file_set_presenter %></h4>
+        <%= render partial: 'index_file_set_footer', locals: { document: file_set_presenter } %>
+      <% end %>
+      <div>&nbsp;</div>
+    </div>
+  <% end %>
+<% end %>

@@ -18,6 +18,54 @@ RSpec.describe Hyrax::FileSetPresenter do
     it { is_expected.to be_a FeaturedRepresentatives::FileSetPresenter }
   end
 
+  describe '#asset?' do
+    subject { presenter.asset? }
+
+    let(:fileset_doc) { SolrDocument.new(id: 'file_set_id', has_model_ssim: ['FileSet']) }
+
+    before do
+      allow(presenter).to receive(:representative?).and_return(false)
+      allow(presenter).to receive(:featured_representative?).and_return(false)
+    end
+
+    it { is_expected.to be true }
+
+    context 'representative' do
+      before { allow(presenter).to receive(:representative?).and_return(true) }
+
+      it { is_expected.to be false }
+    end
+
+    context 'featured_representative' do
+      before { allow(presenter).to receive(:featured_representative?).and_return(true) }
+
+      it { is_expected.to be false }
+    end
+  end
+
+  describe '#representative?' do
+    subject { presenter.representative? }
+
+    let(:fileset_doc) { SolrDocument.new(id: 'file_set_id', has_model_ssim: ['FileSet']) }
+    let(:parent) { instance_double(Hyrax::MonographPresenter, 'parent', thumbnail_id: 'thumbnail_id', representative_id: 'representative_id') }
+
+    before { allow(presenter).to receive(:parent).and_return(parent) }
+
+    it { is_expected.to be false }
+
+    context 'thumbnail' do
+      let(:parent) { instance_double(Hyrax::MonographPresenter, 'parent', thumbnail_id: 'file_set_id', representative_id: 'representative_id') }
+
+      it { is_expected.to be true }
+    end
+
+    context 'representative' do
+      let(:parent) { instance_double(Hyrax::MonographPresenter, 'parent', thumbnail_id: 'thumbnail_id', representative_id: 'file_set_id') }
+
+      it { is_expected.to be true }
+    end
+  end
+
   describe '#tombstone?' do
     subject { presenter.tombstone? }
 

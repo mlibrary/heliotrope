@@ -12,8 +12,9 @@ module Hyrax
 
     private
 
-      def initialize(noid)
+      def initialize(noid, current_ability = nil)
         @noid = noid
+        @ability = current_ability
       end
   end
 

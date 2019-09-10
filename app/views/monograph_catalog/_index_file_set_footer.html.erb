@@ -1,0 +1,17 @@
+<%
+  if can? :edit, document.id
+    presenter = Sighrax.hyrax_presenter(Sighrax.factory(document.id), current_ability)
+%>
+  <div>
+    <%= presenter.id %>
+    <%= presenter.permission_badge %>
+    <%= render "hyrax/file_sets/actions", file_set: presenter %>
+    <%= render "featured_representatives/form", member: presenter %>
+    <% if presenter.asset? %>
+      <%= form_tag(monograph_catalog_representative_path, method: "post") do %>
+        <%= hidden_field_tag(:representative_id, presenter.id) %>
+        <%= submit_tag("Set as Representative", class: 'btn btn-default') %>
+      <% end %>
+    <% end %>
+  </div>
+<% end %>

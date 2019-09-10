@@ -67,6 +67,16 @@ class MonographCatalogController < ::CatalogController
     super
   end
 
+  def representative
+    if params[:representative_id].present? && current_ability.can?(:edit, params[:id])
+      monograph = Monograph.find(params[:id])
+      monograph.thumbnail_id = params[:representative_id]
+      monograph.representative_id = params[:representative_id]
+      monograph.save!
+    end
+    redirect_to monograph_catalog_path(params[:id])
+  end
+
   private
 
     def load_presenter

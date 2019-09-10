@@ -45,15 +45,15 @@ module Sighrax # rubocop:disable Metrics/ModuleLength
       end
     end
 
-    def hyrax_presenter(entity)
+    def hyrax_presenter(entity, current_ability = nil)
       if entity.is_a?(Sighrax::Monograph)
-        Hyrax::PresenterFactory.build_for(ids: [entity.noid], presenter_class: Hyrax::MonographPresenter, presenter_args: nil)&.first
+        Hyrax::PresenterFactory.build_for(ids: [entity.noid], presenter_class: Hyrax::MonographPresenter, presenter_args: current_ability)&.first
       elsif entity.is_a?(Sighrax::Score)
-        Hyrax::PresenterFactory.build_for(ids: [entity.noid], presenter_class: Hyrax::ScorePresenter, presenter_args: nil)&.first
+        Hyrax::PresenterFactory.build_for(ids: [entity.noid], presenter_class: Hyrax::ScorePresenter, presenter_args: current_ability)&.first
       elsif entity.is_a?(Sighrax::Asset)
-        Hyrax::PresenterFactory.build_for(ids: [entity.noid], presenter_class: Hyrax::FileSetPresenter, presenter_args: nil)&.first
+        Hyrax::PresenterFactory.build_for(ids: [entity.noid], presenter_class: Hyrax::FileSetPresenter, presenter_args: current_ability)&.first
       else
-        Hyrax::Presenter.send(:new, entity.noid)
+        Hyrax::Presenter.send(:new, entity.noid, current_ability)
       end
     end
 

@@ -27,6 +27,8 @@ RSpec.describe "monograph_catalog/index.html.erb", type: :view do
   before do
     stub_template "catalog/_search_sidebar" => "<!-- render-template-catalog/_search_sidebar -->"
     stub_template "catalog/_search_results" => "<!-- render-template-catalog/_search_results -->"
+    stub_template "monograph_catalog/_index_file_set_footer" => "<!-- render-template-monograph_catalog/_index_file_set_footer -->"
+    stub_template "monograph_catalog/_index_featured_representatives" => "<!-- render-template-monograph_catalog/_index_featured_representatives -->"
     assign(:presenter, presenter)
     assign(:ebook_download_presenter, ebook_download_presenter)
     allow(view).to receive(:t).with(any_args) { |value| value }

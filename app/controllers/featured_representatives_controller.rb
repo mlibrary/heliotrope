@@ -21,7 +21,7 @@ class FeaturedRepresentativesController < ApplicationController
     if Sighrax.factory(params[:work_id]).is_a?(Sighrax::Score)
       redirect_to score_show_path(params[:work_id])
     else
-      redirect_to monograph_show_path(params[:work_id])
+      redirect_to monograph_catalog_path(params[:work_id])
     end
   end
 
@@ -31,7 +31,7 @@ class FeaturedRepresentativesController < ApplicationController
     if Sighrax.factory(params[:work_id]).is_a?(Sighrax::Score)
       redirect_to score_show_path(params[:work_id])
     else
-      redirect_to monograph_show_path(params[:work_id])
+      redirect_to monograph_catalog_path(params[:work_id])
     end
   end
 end
