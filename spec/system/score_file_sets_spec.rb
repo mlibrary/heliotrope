@@ -15,8 +15,7 @@ RSpec.describe "Score FileSets and PDF reader", type: :system do
                    octave_compass: ['2', '2.5', '3'],
                    solo: "yes",
                    amplified_electronics: ["Optional"],
-                   musical_presentation: "Traditional concert",
-                   edit_groups: ['admin', 'carillon_admin']) # <= this will get done in the actor later in HELIO-2918
+                   musical_presentation: "Traditional concert")
   end
   let(:cover) { create(:file_set, content: File.open(File.join(fixture_path, 'csv', 'miranda.jpg'))) }
   let(:file_set) do
@@ -29,8 +28,7 @@ RSpec.describe "Score FileSets and PDF reader", type: :system do
   end
   let(:pdf) do
     create(:file_set, content: File.open(File.join(fixture_path, 'hello.pdf')),
-                      title: ['PDF EBook'],
-                      edit_groups: ['admin', 'carillon_admin']) # <= ditto.
+                      title: ['PDF EBook'])
   end
 
   before do
