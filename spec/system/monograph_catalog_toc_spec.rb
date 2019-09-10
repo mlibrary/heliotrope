@@ -8,7 +8,7 @@ RSpec.describe "Monograph Catalog TOC", type: :system do
   let(:monograph) { create(:monograph, press: press.subdomain, user: platform_admin, visibility: "open", representative_id: cover.id) }
   let(:cover) { create(:file_set, content: File.open(File.join(fixture_path, 'csv', 'miranda.jpg'))) }
   let(:file_set) { create(:file_set, id: '999999999', allow_download: 'no', content: File.open(File.join(fixture_path, epub))) }
-  let(:fr) { create(:featured_representative, monograph_id: monograph.id, file_set_id: file_set.id, kind: 'epub') }
+  let(:fr) { create(:featured_representative, work_id: monograph.id, file_set_id: file_set.id, kind: 'epub') }
 
   before do
     stub_out_redis

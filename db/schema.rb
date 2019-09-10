@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190717185419) do
+ActiveRecord::Schema.define(version: 20190909175832) do
 
   create_table "api_requests", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.integer "user_id"
@@ -187,7 +187,7 @@ ActiveRecord::Schema.define(version: 20190717185419) do
   end
 
   create_table "featured_representatives", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
-    t.string "monograph_id"
+    t.string "work_id"
     t.string "file_set_id"
     t.string "kind"
     t.datetime "created_at", null: false

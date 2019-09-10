@@ -72,7 +72,7 @@ RSpec.describe Crossref::FileSetMetadata do
   before do
     ActiveFedora::SolrService.add([monograph.to_h, fs1.to_h, fs2.to_h, fs3.to_h, fs4.to_h, fs5.to_h])
     ActiveFedora::SolrService.commit
-    FeaturedRepresentative.create(monograph_id: '999999999', file_set_id: '444444444', kind: 'epub')
+    FeaturedRepresentative.create(work_id: '999999999', file_set_id: '444444444', kind: 'epub')
   end
 
   describe "#new" do

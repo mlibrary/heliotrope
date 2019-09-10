@@ -106,7 +106,7 @@ describe Import::Importer do
 
         # import made file1 into a `pdf_ebook` representative
         expect(FeaturedRepresentative.count).to eq(1)
-        expect(FeaturedRepresentative.where(monograph_id: monograph.id, kind: 'pdf_ebook').first.file_set_id).to eq(file1.id)
+        expect(FeaturedRepresentative.where(work_id: monograph.id, kind: 'pdf_ebook').first.file_set_id).to eq(file1.id)
 
         # import made file2 into the cover
         m = Monograph.find(monograph_id)

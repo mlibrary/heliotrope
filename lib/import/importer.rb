@@ -62,7 +62,7 @@ module Import
         return
       end
 
-      current_representative = FeaturedRepresentative.where(monograph_id: monograph.id, file_set_id: file_set.id).first
+      current_representative = FeaturedRepresentative.where(work_id: monograph.id, file_set_id: file_set.id).first
       if current_representative.present?
         if current_representative.kind == representative_kind
           return
@@ -70,7 +70,7 @@ module Import
           current_representative.destroy!
         end
       end
-      FeaturedRepresentative.create!(monograph_id: monograph.id, file_set_id: file_set.id, kind: representative_kind)
+      FeaturedRepresentative.create!(work_id: monograph.id, file_set_id: file_set.id, kind: representative_kind)
     end
 
     def import(manifest) # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity

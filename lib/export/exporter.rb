@@ -339,7 +339,7 @@ module Export
         # I think we can ignore thumbnail_id, should always be the same as representative_id for us
         return 'cover' if parent_rep == item.id
 
-        FeaturedRepresentative.where(file_set_id: item.id, monograph_id: monograph.noid).first&.kind
+        FeaturedRepresentative.where(file_set_id: item.id, work_id: monograph.noid).first&.kind
       end
 
       def item_url(item, item_type)

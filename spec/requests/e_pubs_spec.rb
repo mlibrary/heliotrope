@@ -99,7 +99,7 @@ RSpec.describe "EPubs", type: :request do
   end
 
   context 'Featured Electronic Publication' do
-    let(:fre) { create(:featured_representative, monograph_id: monograph.id, file_set_id: epub.id, kind: 'epub') }
+    let(:fre) { create(:featured_representative, work_id: monograph.id, file_set_id: epub.id, kind: 'epub') }
     let(:policy) { double('policy') }
 
     before do

@@ -6,7 +6,7 @@ module FeaturedRepresentatives
     attr_reader :frs
 
     def featured_representatives
-      @frs ||= FeaturedRepresentative.where(monograph_id: id)
+      @frs ||= FeaturedRepresentative.where(work_id: id)
     end
 
     def reader_ebook?

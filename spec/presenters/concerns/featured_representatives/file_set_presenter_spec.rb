@@ -49,7 +49,7 @@ RSpec.describe FeaturedRepresentatives::FileSetPresenter do
     let(:featured_representative) { instance_double(FeaturedRepresentative, 'featured_representative', kind: kind) }
     let(:kind) { 'kind' }
 
-    before { allow(FeaturedRepresentative).to receive(:where).with(monograph_id: 'mid', file_set_id: 'fid1').and_return([featured_representative]) }
+    before { allow(FeaturedRepresentative).to receive(:where).with(work_id: 'mid', file_set_id: 'fid1').and_return([featured_representative]) }
 
     describe '#featured_representative' do
       subject { presenter.featured_representative }

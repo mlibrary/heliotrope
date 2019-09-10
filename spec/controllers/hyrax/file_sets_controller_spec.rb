@@ -19,7 +19,7 @@ RSpec.describe Hyrax::FileSetsController, type: :controller do
     before { stub_out_redis }
 
     context "featured_representative file_set" do
-      before { FeaturedRepresentative.create(monograph_id: monograph.id, file_set_id: file_set.id, kind: 'epub') }
+      before { FeaturedRepresentative.create(work_id: monograph.id, file_set_id: file_set.id, kind: 'epub') }
 
       it "deletes the featured_representative and the file_set" do
         expect do
@@ -96,7 +96,7 @@ RSpec.describe Hyrax::FileSetsController, type: :controller do
     let(:epub) { create(:public_file_set) }
     let(:cover) { create(:public_file_set) }
     let(:thumbnail) { create(:public_file_set) }
-    let(:fre) { create(:featured_representative, monograph_id: epub_monograph.id, file_set_id: epub.id, kind: 'epub') }
+    let(:fre) { create(:featured_representative, work_id: epub_monograph.id, file_set_id: epub.id, kind: 'epub') }
 
     before do
       epub_monograph.ordered_members = [cover, thumbnail, epub]

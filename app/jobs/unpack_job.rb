@@ -40,14 +40,14 @@ class UnpackJob < ApplicationJob
     def epub_webgl_bridge(id, root_path, kind)
       # Edge case for epubs with POI (Point of Interest) to map to CFI for a webgl (gabii)
       # See 1630
-      monograph_id = FeaturedRepresentative.where(file_set_id: id)&.first&.monograph_id
+      monograph_id = FeaturedRepresentative.where(file_set_id: id)&.first&.work_id
       case kind
       when 'epub'
-        if FeaturedRepresentative.where(monograph_id: monograph_id, kind: 'webgl')&.first.present?
+        if FeaturedRepresentative.where(work_id: monograph_id, kind: 'webgl')&.first.present?
           EPub::BridgeToWebgl.construct_bridge(EPub::Publication.from_directory(root_path))
         end
       when 'webgl'
-        epub_id = FeaturedRepresentative.where(monograph_id: monograph_id, kind: 'epub')&.first&.file_set_id
+        epub_id = FeaturedRepresentative.where(work_id: monograph_id, kind: 'epub')&.first&.file_set_id
         if epub_id.present?
           EPub::BridgeToWebgl.construct_bridge(EPub::Publication.from_directory(UnpackService.root_path_from_noid(epub_id, 'epub')))
         end

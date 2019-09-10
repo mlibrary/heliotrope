@@ -3,11 +3,11 @@
 class FeaturedRepresentative < ApplicationRecord
   KINDS = %w[epub webgl database aboutware pdf_ebook mobi reviews related peer_review].freeze
 
-  validates :monograph_id, presence: true
+  validates :work_id, presence: true
   validates :file_set_id, presence: true
   validates :kind, inclusion: { in: KINDS }
-  validates :kind, uniqueness: { scope: %i[monograph_id file_set_id],
-                                 message: "Only 1 type of Kind can be used for each Monograph's FileSet" }
+  validates :kind, uniqueness: { scope: %i[work_id file_set_id],
+                                 message: "Only 1 type of Kind can be used for each Work's FileSet" }
 
   def self.kinds
     KINDS

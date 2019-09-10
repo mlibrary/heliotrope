@@ -8,7 +8,7 @@ RSpec.describe "Cozy Sun Bear", type: :system do
   let(:monograph) { create(:monograph, press: press.subdomain, user: user, visibility: "open", representative_id: cover.id) }
   let(:cover) { create(:file_set, content: File.open(File.join(fixture_path, 'csv', 'miranda.jpg'))) }
   let(:file_set) { create(:file_set, id: '999999999', allow_download: 'yes', content: File.open(File.join(fixture_path, 'fake_epub01.epub'))) }
-  let!(:fr) { create(:featured_representative, monograph_id: monograph.id, file_set_id: file_set.id, kind: 'epub') }
+  let!(:fr) { create(:featured_representative, work_id: monograph.id, file_set_id: file_set.id, kind: 'epub') }
 
   before do
     sign_in user

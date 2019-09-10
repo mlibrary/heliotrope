@@ -11,7 +11,7 @@ RSpec.describe WebglsController, type: :controller do
     context "when the file_set is a webgl" do
       let(:monograph) { create(:monograph) }
       let(:file_set) { create(:file_set, content: File.open(File.join(fixture_path, 'fake-game.zip'))) }
-      let!(:fr) { create(:featured_representative, monograph_id: monograph.id, file_set_id: file_set.id, kind: 'webgl') }
+      let!(:fr) { create(:featured_representative, work_id: monograph.id, file_set_id: file_set.id, kind: 'webgl') }
 
       before do
         monograph.ordered_members << file_set
@@ -40,7 +40,7 @@ RSpec.describe WebglsController, type: :controller do
     context "the file_set is a webgl" do
       let(:monograph) { create(:monograph) }
       let(:file_set) { create(:file_set, content: File.open(File.join(fixture_path, 'fake-game.zip'))) }
-      let!(:fr) { create(:featured_representative, monograph_id: monograph.id, file_set_id: file_set.id, kind: 'webgl') }
+      let!(:fr) { create(:featured_representative, work_id: monograph.id, file_set_id: file_set.id, kind: 'webgl') }
 
       before do
         monograph.ordered_members << file_set

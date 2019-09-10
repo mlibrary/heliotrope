@@ -104,8 +104,8 @@ describe RegisterFileSetDoisActor do
       # not need DOIs as the Monograph DOI applies for them.
       before do
         monograph.representative_id = fs1.id
-        FeaturedRepresentative.create(monograph_id: monograph.id, file_set_id: fs2.id, kind: 'epub')
-        FeaturedRepresentative.create(monograph_id: monograph.id, file_set_id: fs3.id, kind: 'pdf_ebook')
+        FeaturedRepresentative.create(work_id: monograph.id, file_set_id: fs2.id, kind: 'epub')
+        FeaturedRepresentative.create(work_id: monograph.id, file_set_id: fs3.id, kind: 'pdf_ebook')
         monograph.save!
       end
 

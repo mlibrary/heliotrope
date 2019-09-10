@@ -26,8 +26,8 @@ RSpec.describe UnpackJob, type: :job do
 
     context "with an epub and pre-existing webgl" do
       let(:epub) { create(:file_set, content: File.open(File.join(fixture_path, 'fake_epub01.epub'))) }
-      let!(:fre) { create(:featured_representative, monograph_id: 'mono_id', file_set_id: epub.id, kind: 'epub') }
-      let!(:frw) { create(:featured_representative, monograph_id: 'mono_id', file_set_id: '123456789', kind: 'webgl') }
+      let!(:fre) { create(:featured_representative, work_id: 'mono_id', file_set_id: epub.id, kind: 'epub') }
+      let!(:frw) { create(:featured_representative, work_id: 'mono_id', file_set_id: '123456789', kind: 'webgl') }
       let(:root_path) { UnpackService.root_path_from_noid(epub.id, 'epub') }
 
       after { FeaturedRepresentative.destroy_all }
@@ -50,8 +50,8 @@ RSpec.describe UnpackJob, type: :job do
 
       context "adding a webgl" do
         let(:webgl) { create(:file_set, content: File.open(File.join(fixture_path, 'fake-game.zip'))) }
-        let!(:fre) { create(:featured_representative, monograph_id: 'mono_id', file_set_id: epub.id, kind: 'epub') }
-        let!(:frw) { create(:featured_representative, monograph_id: 'mono_id', file_set_id: webgl.id, kind: 'webgl') }
+        let!(:fre) { create(:featured_representative, work_id: 'mono_id', file_set_id: epub.id, kind: 'epub') }
+        let!(:frw) { create(:featured_representative, work_id: 'mono_id', file_set_id: webgl.id, kind: 'webgl') }
         # The root_path of the epub, not the webgl is used to test
         let(:root_path) { UnpackService.root_path_from_noid(epub.id, 'epub') }
 

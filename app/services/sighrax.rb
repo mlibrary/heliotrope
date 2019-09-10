@@ -6,6 +6,7 @@ require_dependency 'sighrax/entity'
 require_dependency 'sighrax/mobipocket'
 require_dependency 'sighrax/model'
 require_dependency 'sighrax/monograph'
+require_dependency 'sighrax/score'
 require_dependency 'sighrax/portable_document_format'
 
 module Sighrax # rubocop:disable Metrics/ModuleLength
@@ -47,6 +48,8 @@ module Sighrax # rubocop:disable Metrics/ModuleLength
     def hyrax_presenter(entity)
       if entity.is_a?(Sighrax::Monograph)
         Hyrax::PresenterFactory.build_for(ids: [entity.noid], presenter_class: Hyrax::MonographPresenter, presenter_args: nil)&.first
+      elsif entity.is_a?(Sighrax::Score)
+        Hyrax::PresenterFactory.build_for(ids: [entity.noid], presenter_class: Hyrax::ScorePresenter, presenter_args: nil)&.first
       elsif entity.is_a?(Sighrax::Asset)
         Hyrax::PresenterFactory.build_for(ids: [entity.noid], presenter_class: Hyrax::FileSetPresenter, presenter_args: nil)&.first
       else
@@ -129,6 +132,8 @@ module Sighrax # rubocop:disable Metrics/ModuleLength
       def model_factory(noid, data, model_type)
         if /^Monograph$/i.match?(model_type)
           Monograph.send(:new, noid, data)
+        elsif /^Score$/i.match?(model_type)
+          Score.send(:new, noid, data)
         elsif /^FileSet$/i.match?(model_type)
           file_set_factory(noid, data)
         else
