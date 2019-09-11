@@ -47,6 +47,18 @@ unless Rails.env.production?
     end
   end
 
+  desc 'system specs only, really only used to test testing or whatever'
+  task :system_spec do
+    puts 'Running system specs ...'
+    require 'active_fedora/rake_support'
+    with_test_server do
+      RSpec::Core::RakeTask.new(:spec_system) do |t|
+        t.pattern = "system/*_spec.rb"
+      end
+      Rake::Task['spec_system'].invoke
+    end
+  end
+
   #
   # The testing directory specs run against heliotrope-testing on nectar
   #

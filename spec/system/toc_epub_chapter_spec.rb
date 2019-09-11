@@ -21,11 +21,6 @@ RSpec.describe "Cozy Sun Bear", type: :system do
     UnpackJob.perform_now(file_set.id, 'epub')
   end
 
-  # Comment this method out to see screenshots on failures in tmp/screenshots
-  def take_failed_screenshot
-    false
-  end
-
   it "clicking on a chapter link takes you to the correct chapter in CSB" do
     visit monograph_catalog_path(monograph)
     # should have an epub download button for the platform_admin
@@ -36,7 +31,6 @@ RSpec.describe "Cozy Sun Bear", type: :system do
     # Clicking on chapter 2 in the ToC
     click_on "Shields up!"
     # Takes you to chapter 2 in CSB
-    expect(page).to have_content "This is a Thing" # The epub's title
     # Don't `sleep` to wait for CSB to load everything, instead have a test that
     # needs something CSB creates. Capybara will handle the rest.
     expect(page).to have_selector('iframe')
