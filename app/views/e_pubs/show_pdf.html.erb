@@ -371,13 +371,100 @@
           return undefined;
        },
     });
+
+    cozy.Control.Preferences.fieldset.PDFScale = cozy.Control.Preferences.fieldset.Scale.extend({
+      options: {},
+
+      intialize: function(control, options) {
+        cozy.Control.Preferences.fieldset.Scale.prototype.onAdd.apply(this, arguments);
+      },
+
+      initializeForm: function(form) {
+        // EOT
+        if ( ! this._inputs ) {
+          this._inputs = form.querySelector('#x' + this._id + '-list');
+          this._actionReset = form.querySelector('#x' + this._id + '-reset');
+          this._actionReset.addEventListener('click', function(event) {
+            event.preventDefault();
+            this._inputs.querySelector('input[value="auto"]').checked = true;
+          }.bind(this));
+        }
+
+        this._preview = form.querySelector(`#x${this._id}-preview > div`);
+
+        var currentScale = this._control._reader.options.scale;
+        this._inputs.querySelector('input[value="' + currentScale + '"]').checked = true;
+        this._current.scale = currentScale;
+
+        this._inputs.addEventListener('change', function(event) {
+          var target = event.target;
+          if ( target.tagName == 'INPUT' ) {
+            this._updatePreview();
+          }
+        }.bind(this));
+
+        this._updatePreview();
+      },
+
+      updateForm: function(form, options, saveable) {
+        var input = this._inputs.querySelector("input:checked");
+        options.scale = saveable.scale = input.value;
+      },
+
+      _updatePreview: function() {
+        var current = this._inputs.querySelector('input:checked').value;
+        var scale = ( parseFloat(current, 10) );
+        if ( isNaN(scale) ) {
+          scale = '1.0';
+        }
+        this._preview.parentNode.dataset.scale = current;
+        this._preview.style.transform = "scale(" + scale + ")";
+      },
+
+      template: function() {
+        var html = '<fieldset class="cozy-fieldset-pdf-scale">' + 
+          '<legend>Zoom In/Out</legend>' + 
+          '<style>' + 
+            '.cozy-fieldset-pdf-scale label { margin: 0.5 0 !important; }' + 
+            '.cozy-fieldset-pdf-scale .preview--text_size[data-scale="auto"] { height: auto; }' + 
+            '.cozy-fieldset-pdf-scale .preview--text_size[data-scale="page-fit"] { height: auto; width: 60%; }' + 
+            '.cozy-fieldset-pdf-scale .preview--text_size[data-scale="page-width"] { width: 60%; }' + 
+            '.cozy-fieldset-pdf-scale .preview--text_size[data-scale="page-actual"] > div { width: 150%; transform: scale(1.5) !important; }' + 
+          '</style>' + 
+          '<div class="preview--text_size" id="x${this._id}-preview">' +
+            '<div style="transform-origin: top left">' +
+              '‘Yes, that’s it,’ said the Hatter with a sigh: ‘it’s always tea-time, and we’ve no time to wash the things between whiles.’' + 
+            '</div>' +
+          '</div>' +
+          '<ul id="x${this._id}-list" style="margin-top: 1rem">' + 
+            '<li><label><input type="radio" name="scaleSelect" value="auto" /> Automatic Zoom</label></li>' + 
+            '<li><label><input type="radio" name="scaleSelect" value="page-actual" /> Actual Size</label></li>' + 
+            '<li><label><input type="radio" name="scaleSelect" value="page-fit" /> Page Fit</label></li>' + 
+            '<li><label><input type="radio" name="scaleSelect" value="page-width" /> Page Width</label></li>' + 
+            '<li><label><input type="radio" name="scaleSelect" value="0.5" /> 50%</label></li>' + 
+            '<li><label><input type="radio" name="scaleSelect" value="0.75" /> 75%</label></li>' + 
+            '<li><label><input type="radio" name="scaleSelect" value="1" /> 100%</label></li>' + 
+            '<li><label><input type="radio" name="scaleSelect" value="1.25" /> 125%</label></li>' + 
+            '<li><label><input type="radio" name="scaleSelect" value="1.5" /> 150%</label></li>' + 
+            '<li><label><input type="radio" name="scaleSelect" value="2" /> 200%</label></li>' + 
+            '<li><label><input type="radio" name="scaleSelect" value="3" /> 300%</label></li>' + 
+            '<li><label><input type="radio" name="scaleSelect" value="4" /> 400%</label></li>' + 
+          '</ul>' + 
+          '<p style="margin-top: 1.5rem">' + 
+            '<button id="x${this._id}-reset" class="reset button--inline" style="margin-left: 8px">Reset</button>' + 
+          '</p>' + 
+        '</fieldset>'
+        return html.replace(/\$\{this._id\}/g, this._id);
+      }
+    });
+
     cozy.Control.Preferences.prototype._createPanel = function() {
       var self = this;
       if ( this._modal._container.querySelector('form') ) { return; }
 
       var template = '';
       var possible_fieldsets = [];
-      possible_fieldsets.push('TextSize');
+      possible_fieldsets.push('PDFScale');
       this._fieldsets = [];
       possible_fieldsets.forEach(function(cls) {
         var fieldset = new cozy.Control.Preferences.fieldset[cls](this);
@@ -597,16 +684,19 @@
 
           self.PDFViewerApplication.open(self.options.href).then(function() {
             self.pdfViewer = this.PDFViewerApplication.pdfViewer;
-            // reset the zoom to "auto"
-            // self.PDFViewerApplication.zoomReset();
-
-            self.pdfViewer.currentScaleValue = 1.2;
-            self.options.text_size = "120";
 
             self.pdfViewer = this.PDFViewerApplication.pdfViewer;
             var setupInterval = setInterval(function() {
               if ( self.PDFViewerApplication.pdfDocument != null ) {
                 clearInterval(setupInterval);
+
+                // --- reset the zoom?
+                // self.pdfViewer.currentScaleValue = 'auto';
+                // self.options.scale = 'auto';
+
+                // --- or update to what was stored
+                self.options.scale = self.pdfViewer.currentScaleValue;
+
 
                 // add events to viewer
                 self.PDFViewerApplication.eventBus.on('pagechanging', function(evt) {
@@ -615,14 +705,16 @@
                 });
 
                 self.pdfViewer.eventBus.on('scalechanging', function(evt) {
-                  var currentScale = parseInt(self.options.text_size, 10) / 100.0;
-                  if ( evt.scale != currentScale ) {
-                    self.pdfViewer.currentScale = currentScale;
+                  var currentScaleValue = self.options.scale;
+                  if ( currentScaleValue == 1.0 ) { currentScaleValue = 'auto'; }
+                  var currentScale = parseFloat(currentScaleValue);
+                  // console.log("AHOY scalechanging", evt.scale, evt.presetValue, currentScale, currentScaleValue);
+                  if ( currentScale > 0 && evt.scale != currentScale ) {
+                    self.pdfViewer.currentScaleValue = currentScaleValue;
                   }
                 })
 
                 self.PDFViewerApplication.pdfDocument.getMetadata().then(function(data) {
-                  console.log("AHOY getMetadata", data);
                   var metadata = {};
                   metadata.layout = 'pdf';
 
@@ -709,10 +801,24 @@
       },
 
       reopen: function(options) {
-        this.options.text_size = options.text_size;
-        var currentScale = this.pdfViewer.currentScale;
-        var newScale = parseInt(options.text_size) / 100.0;
-        this.pdfViewer.currentScale = newScale;
+        this.options.scale = options.scale;
+        var newScale = this.options.scale;
+        // var currentScale = this.pdfViewer.currentScaleValue;
+        // var newScale = parseInt(options.scale) / 100.0;
+        // if ( newScale == 1.0 ) { newScale = 'auto'; }
+        // else {
+        //   // calculate what 'auto' would be
+        //   var currentPage = reader.pdfViewer._pages[reader.pdfViewer._currentPageNumber - 1];
+        //   var hPadding = 40; var vPadding = 5;
+        //   var pageWidthScale = (reader.pdfViewer.container.clientWidth - hPadding) /
+        //                        currentPage.width * currentPage.scale;
+        //   var pageHeightScale = (reader.pdfViewer.container.clientHeight - vPadding) /
+        //                         currentPage.height * currentPage.scale;
+        //   var horizontalScale = pageWidthScale;
+        //   newScale = Math.min(1.25, horizontalScale) * newScale;
+        // }
+        // this.options._currentScaleValue = newScale;
+        this.pdfViewer.currentScaleValue = newScale;
       },
 
       EOT: true
