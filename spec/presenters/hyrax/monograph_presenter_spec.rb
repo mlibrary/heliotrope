@@ -294,7 +294,7 @@ RSpec.describe Hyrax::MonographPresenter do
             let(:featured_representative) { instance_double(FeaturedRepresentative, 'featured_representative', file_set_id: 'fs2', kind: kind) }
 
             before do
-              allow(FeaturedRepresentative).to receive(:where).with(monograph_id: 'mono').and_return([featured_representative])
+              allow(FeaturedRepresentative).to receive(:where).with(work_id: 'mono').and_return([featured_representative])
               allow(FeaturedRepresentative).to receive(:find_by).with(file_set_id: 'fs2').and_return(featured_representative)
             end
 

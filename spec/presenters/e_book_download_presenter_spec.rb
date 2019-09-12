@@ -16,9 +16,9 @@ RSpec.describe EBookDownloadPresenter do
   let(:policy) { double('policy', show?: true) }
 
   before do
-    create(:featured_representative, file_set_id: '111111111', monograph_id: 'mono_id', kind: 'epub')
-    create(:featured_representative, file_set_id: '222222222', monograph_id: 'mono_id', kind: 'mobi')
-    create(:featured_representative, file_set_id: '333333333', monograph_id: 'mono_id', kind: 'pdf_ebook')
+    create(:featured_representative, file_set_id: '111111111', work_id: 'mono_id', kind: 'epub')
+    create(:featured_representative, file_set_id: '222222222', work_id: 'mono_id', kind: 'mobi')
+    create(:featured_representative, file_set_id: '333333333', work_id: 'mono_id', kind: 'pdf_ebook')
     ActiveFedora::SolrService.add([epub_doc.to_h, mobi_doc.to_h, pdfe_doc.to_h])
     ActiveFedora::SolrService.commit
     allow(EPubPolicy).to receive(:new).with(current_actor, anything).and_return(policy)

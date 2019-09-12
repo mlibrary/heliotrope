@@ -68,7 +68,7 @@ class RegisterFileSetDoisActor < Hyrax::Actors::AbstractActor
       # If the only FileSets a Monograph currently has are direct representatives of
       # the Monograph like the Cover or EPUB (or any book-like Fileset like a mobi or pdf_ebook)
       # then don't send anything to crossref. Those FileSets do not need DOIs
-      ineligible_ids = FeaturedRepresentative.where(monograph_id: env.curation_concern.id)
+      ineligible_ids = FeaturedRepresentative.where(work_id: env.curation_concern.id)
                                              .where(kind: ['epub', 'pdf_ebook', 'mobi'])
                                              .map(&:file_set_id)
       ineligible_ids << env.curation_concern.representative_id

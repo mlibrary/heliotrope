@@ -75,7 +75,7 @@ class CharacterizeJob < ApplicationJob
            end
 
     if kind.present?
-      FeaturedRepresentative.create!(monograph_id: file_set.parent.id,
+      FeaturedRepresentative.create!(work_id: file_set.parent.id,
                                      file_set_id: file_set.id,
                                      kind: kind)
     end

@@ -1,33 +1,35 @@
 <% if member.featured_representative? %>
-<div class="row">
-  <div class="col-sm-8">
-    <b><%= member.featured_representative.kind %></b>
+<fieldset id="<%= member.id %>">
+  <div class="row">
+    <div class="col-sm-8">
+      <b><%= member.featured_representative.kind %></b>
+    </div>
+    <div class="col-sm-4">
+      <% if can? :edit, member.id %>
+            <%= link_to "Unset", main_app.featured_representatives_path(file_set_id: member.featured_representative.id, work_id: member.parent.id),
+            method: :delete, title: "Delete #{member.featured_representative.kind}",
+            data: { confirm: "Unset Featured Representative?" },
+            class: "btn btn-default" %>
+      <% end %>
+    </div>
   </div>
-  <div class="col-sm-4">
-    <% if can? :edit, member.id %>
-      <%= link_to "Unset", main_app.featured_representatives_path(id: member.featured_representative.id, monograph_id: member.parent.id),
-          method: :delete, title: "Delete #{member.featured_representative.kind}",
-          data: { confirm: "Unset Featured Representative?" },
-          class: "btn btn-default" %>
-    <% end %>
-  </div>
-</div>
+</fieldset>
 <% else %>
   <% if can? :edit, member.id %>
     <% if member.parent.present? %>
       <%= form_tag(main_app.featured_representatives_path, method: "post") do %>
         <fieldset id="<%= member.id %>">
-        <div class="row">
-          <div class="col-sm-8">
-            <%= select_tag(:kind, options_for_select(FeaturedRepresentative.kinds - member.parent.featured_representatives.map(&:kind)), class: 'form-control') %>
+          <div class="row">
+            <div class="col-sm-8">
+              <%= select_tag(:kind, options_for_select(FeaturedRepresentative.kinds - member.parent.featured_representatives.map(&:kind)), class: 'form-control') %>
 
-            <%= hidden_field_tag(:file_set_id, member.id) %>
-            <%= hidden_field_tag(:monograph_id, member.parent.id) %>
+              <%= hidden_field_tag(:file_set_id, member.id) %>
+              <%= hidden_field_tag(:work_id, member.parent.id) %>
+            </div>
+            <div class="col-sm-4">
+              <%= submit_tag("Set", class: 'btn btn-default') %>
+            </div>
           </div>
-          <div class="col-sm-4">
-            <%= submit_tag("Set", class: 'btn btn-default') %>
-          </div>
-        </div>
         </fieldset>
       <% end %>
     <% end  %>

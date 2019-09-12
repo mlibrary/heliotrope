@@ -33,7 +33,7 @@ describe MonographSearchBuilder do
 
       FeaturedRepresentative::KINDS.each do |kind|
         context kind do
-          before { FeaturedRepresentative.create!(monograph_id: monograph.id, file_set_id: file2.id, kind: kind) }
+          before { FeaturedRepresentative.create!(work_id: monograph.id, file_set_id: file2.id, kind: kind) }
 
           after { FeaturedRepresentative.destroy_all }
 

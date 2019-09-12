@@ -17,21 +17,21 @@ RSpec.describe FeaturedRepresentativesController, type: :controller do
       after { FeaturedRepresentative.destroy_all }
 
       it "saves the featured representative" do
-        post :save, params: { monograph_id: monograph.id, file_set_id: file_set.id, kind: 'epub' }
+        post :save, params: { work_id: monograph.id, file_set_id: file_set.id, kind: 'epub' }
         expect(UnpackJob).to have_received(:perform_later).with(file_set.id, 'epub')
         expect(FeaturedRepresentative.all.count).to eq(1)
       end
 
       it 'nops on double save' do
-        create(:featured_representative, monograph_id: monograph.id, file_set_id: file_set.id, kind: 'epub')
-        post :save, params: { monograph_id: monograph.id, file_set_id: file_set.id, kind: 'epub' }
+        create(:featured_representative, work_id: monograph.id, file_set_id: file_set.id, kind: 'epub')
+        post :save, params: { work_id: monograph.id, file_set_id: file_set.id, kind: 'epub' }
         expect(UnpackJob).not_to have_received(:perform_later).with(file_set.id, 'epub')
         expect(FeaturedRepresentative.all.count).to eq(1)
       end
 
       FeaturedRepresentative::KINDS.each do |kind|
         it 'unpacks some kinds' do
-          post :save, params: { monograph_id: monograph.id, file_set_id: file_set.id, kind: kind }
+          post :save, params: { work_id: monograph.id, file_set_id: file_set.id, kind: kind }
           case kind
           when 'epub', 'webgl'
             expect(UnpackJob).to have_received(:perform_later).with(file_set.id, kind)
@@ -43,10 +43,10 @@ RSpec.describe FeaturedRepresentativesController, type: :controller do
     end
 
     describe '#delete' do
-      let(:fr) { create(:featured_representative, monograph_id: monograph.id, file_set_id: file_set.id, kind: 'epub') }
+      let(:fr) { create(:featured_representative, work_id: monograph.id, file_set_id: file_set.id, kind: 'epub') }
 
       before do
-        delete :delete, params: { id: fr.id, monograph_id: monograph.id }
+        delete :delete, params: { file_set_id: fr.id, work_id: monograph.id }
       end
 
       it "deletes the featured_representative" do
@@ -64,7 +64,7 @@ RSpec.describe FeaturedRepresentativesController, type: :controller do
     describe '#save' do
       before do
         allow(UnpackJob).to receive_messages(perform_later: nil, perform_now: nil)
-        post :save, params: { monograph_id: monograph.id, file_set_id: file_set.id, kind: 'epub' }
+        post :save, params: { work_id: monograph.id, file_set_id: file_set.id, kind: 'epub' }
       end
 
       after { FeaturedRepresentative.destroy_all }
@@ -75,10 +75,10 @@ RSpec.describe FeaturedRepresentativesController, type: :controller do
     end
 
     describe '#delete' do
-      let(:fr) { create(:featured_representative, monograph_id: monograph.id, file_set_id: file_set.id, kind: 'epub') }
+      let(:fr) { create(:featured_representative, work_id: monograph.id, file_set_id: file_set.id, kind: 'epub') }
 
       before do
-        delete :delete, params: { id: fr.id, monograph_id: monograph.id }
+        delete :delete, params: { file_set_id: fr.id, work_id: monograph.id }
       end
 
       it "deletes the featured_representative" do

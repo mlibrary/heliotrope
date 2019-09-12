@@ -134,7 +134,7 @@ describe CharacterizeJob do
         before { allow(UnpackJob).to receive(:perform_later).and_return(true) }
 
         it "unpacks some kinds" do
-          create(:featured_representative, monograph_id: monograph.id, file_set_id: file_set.id, kind: kind)
+          create(:featured_representative, work_id: monograph.id, file_set_id: file_set.id, kind: kind)
           described_class.perform_now(file_set, file.id)
           case kind
           when 'epub', 'webgl'

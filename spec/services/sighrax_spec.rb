@@ -48,6 +48,12 @@ RSpec.describe Sighrax do
           it { is_expected.to be_an_instance_of(Sighrax::Monograph) }
         end
 
+        context 'Score' do
+          let(:model_types) { ['Score'] }
+
+          it { is_expected.to be_a_instance_of(Sighrax::Score) }
+        end
+
         context 'Asset' do
           let(:model_types) { ['FileSet'] }
           let(:featured_representatitve) {}
@@ -166,6 +172,13 @@ RSpec.describe Sighrax do
       let(:monograph) { create(:public_monograph) }
 
       it { is_expected.to be_an_instance_of(Hyrax::MonographPresenter) }
+    end
+
+    context 'Score' do
+      let(:noid) { score.id }
+      let(:score) { create(:public_score) }
+
+      it { is_expected.to be_an_instance_of(Hyrax::ScorePresenter) }
     end
 
     context 'Asset' do

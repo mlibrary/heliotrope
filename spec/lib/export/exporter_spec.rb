@@ -121,7 +121,7 @@ describe Export::Exporter do
       monograph.representative_id = file2.id
       monograph.thumbnail_id = file2.id
       monograph.save!
-      FeaturedRepresentative.create!(monograph_id: monograph.id, file_set_id: file3.id, kind: 'epub')
+      FeaturedRepresentative.create!(work_id: monograph.id, file_set_id: file3.id, kind: 'epub')
     end
 
     after { FeaturedRepresentative.destroy_all }

@@ -5,11 +5,11 @@ class FeaturedRepresentativesController < ApplicationController
   load_and_authorize_resource
 
   def save
-    fr = FeaturedRepresentative.where(monograph_id: params[:monograph_id],
+    fr = FeaturedRepresentative.where(work_id: params[:work_id],
                                       file_set_id: params[:file_set_id],
                                       kind: params[:kind]).first
     if fr.blank?
-      FeaturedRepresentative.create!(monograph_id: params[:monograph_id],
+      FeaturedRepresentative.create!(work_id: params[:work_id],
                                      file_set_id: params[:file_set_id],
                                      kind: params[:kind])
 
@@ -17,12 +17,21 @@ class FeaturedRepresentativesController < ApplicationController
         UnpackJob.perform_later(params[:file_set_id], params[:kind])
       end
     end
-    redirect_to monograph_show_path(params[:monograph_id])
+
+    if Sighrax.factory(params[:work_id]).is_a?(Sighrax::Score)
+      redirect_to score_show_path(params[:work_id])
+    else
+      redirect_to monograph_show_path(params[:work_id])
+    end
   end
 
   def delete
-    fr = FeaturedRepresentative.where(id: params[:id]).first
+    fr = FeaturedRepresentative.where(id: params[:file_set_id]).first
     fr.destroy if fr.present?
-    redirect_to monograph_show_path(params[:monograph_id])
+    if Sighrax.factory(params[:work_id]).is_a?(Sighrax::Score)
+      redirect_to score_show_path(params[:work_id])
+    else
+      redirect_to monograph_show_path(params[:work_id])
+    end
   end
 end

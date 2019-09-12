@@ -104,8 +104,8 @@ class AttachImportFilesToWorkJob < ApplicationJob
         @cover_noid = file_set.id
         return
       end
-      FeaturedRepresentative.where(monograph_id: work.id, file_set_id: file_set.id).destroy_all
-      FeaturedRepresentative.create!(monograph_id: work.id, file_set_id: file_set.id, kind: kind)
+      FeaturedRepresentative.where(work_id: work.id, file_set_id: file_set.id).destroy_all
+      FeaturedRepresentative.create!(work_id: work.id, file_set_id: file_set.id, kind: kind)
     end
 
     # default behavior sets to the first FileSet but it can optionally be assigned in the CSV, which happens here

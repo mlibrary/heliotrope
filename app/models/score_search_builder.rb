@@ -35,7 +35,7 @@ class ScoreSearchBuilder < ::SearchBuilder
     end
 
     def featured_representatives(id)
-      FeaturedRepresentative.where(monograph_id: id)
+      FeaturedRepresentative.where(work_id: id)
     end
 
     def work_types

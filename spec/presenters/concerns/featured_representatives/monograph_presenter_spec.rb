@@ -44,13 +44,13 @@ RSpec.describe FeaturedRepresentatives::MonographPresenter do
       before do
         FeaturedRepresentative.create(
           [
-            { monograph_id: 'mid', file_set_id: 'epubid', kind: 'epub' },
-            { monograph_id: 'mid', file_set_id: 'webglid', kind: 'webgl' },
-            { monograph_id: 'mid', file_set_id: 'dbid', kind: 'database' },
-            { monograph_id: 'mid', file_set_id: 'aboutid', kind: 'aboutware' },
-            { monograph_id: 'mid', file_set_id: 'reviewsid', kind: 'reviews' },
-            { monograph_id: 'mid', file_set_id: 'relatedid', kind: 'related' },
-            { monograph_id: 'mid', file_set_id: 'peerreviewid', kind: 'peer_review' }
+            { work_id: 'mid', file_set_id: 'epubid', kind: 'epub' },
+            { work_id: 'mid', file_set_id: 'webglid', kind: 'webgl' },
+            { work_id: 'mid', file_set_id: 'dbid', kind: 'database' },
+            { work_id: 'mid', file_set_id: 'aboutid', kind: 'aboutware' },
+            { work_id: 'mid', file_set_id: 'reviewsid', kind: 'reviews' },
+            { work_id: 'mid', file_set_id: 'relatedid', kind: 'related' },
+            { work_id: 'mid', file_set_id: 'peerreviewid', kind: 'peer_review' }
           ]
         )
       end
@@ -65,7 +65,7 @@ RSpec.describe FeaturedRepresentatives::MonographPresenter do
     context "EPUB representative" do
       subject { TestMonographPresenter.new(SolrDocument.new(id: 'mid')) }
 
-      before { FeaturedRepresentative.create(monograph_id: 'mid', file_set_id: 'epubid', kind: 'epub') }
+      before { FeaturedRepresentative.create(work_id: 'mid', file_set_id: 'epubid', kind: 'epub') }
 
       after { FeaturedRepresentative.destroy_all }
 
@@ -134,7 +134,7 @@ RSpec.describe FeaturedRepresentatives::MonographPresenter do
       subject { TestMonographPresenter.new(SolrDocument.new(id: 'mid')) }
 
       before do
-        FeaturedRepresentative.create(monograph_id: 'mid', file_set_id: 'pdfebookid', kind: 'pdf_ebook')
+        FeaturedRepresentative.create(work_id: 'mid', file_set_id: 'pdfebookid', kind: 'pdf_ebook')
       end
 
       after { FeaturedRepresentative.destroy_all }
@@ -204,8 +204,8 @@ RSpec.describe FeaturedRepresentatives::MonographPresenter do
       subject { TestMonographPresenter.new(SolrDocument.new(id: 'mid')) }
 
       before do
-        FeaturedRepresentative.create(monograph_id: 'mid', file_set_id: 'pdfebookid', kind: 'pdf_ebook')
-        FeaturedRepresentative.create(monograph_id: 'mid', file_set_id: 'epubid', kind: 'epub')
+        FeaturedRepresentative.create(work_id: 'mid', file_set_id: 'pdfebookid', kind: 'pdf_ebook')
+        FeaturedRepresentative.create(work_id: 'mid', file_set_id: 'epubid', kind: 'epub')
       end
 
       describe "#epub?" do
@@ -278,7 +278,7 @@ RSpec.describe FeaturedRepresentatives::MonographPresenter do
     context "webgl methods" do
       subject { TestMonographPresenter.new(SolrDocument.new(id: 'mid')) }
 
-      before { FeaturedRepresentative.create(monograph_id: 'mid', file_set_id: 'webglid', kind: 'webgl') }
+      before { FeaturedRepresentative.create(work_id: 'mid', file_set_id: 'webglid', kind: 'webgl') }
 
       after { FeaturedRepresentative.destroy_all }
 
@@ -304,7 +304,7 @@ RSpec.describe FeaturedRepresentatives::MonographPresenter do
     context "database methods" do
       subject { TestMonographPresenter.new(SolrDocument.new(id: 'mid')) }
 
-      before { FeaturedRepresentative.create(monograph_id: 'mid', file_set_id: 'dbid', kind: 'database') }
+      before { FeaturedRepresentative.create(work_id: 'mid', file_set_id: 'dbid', kind: 'database') }
 
       after { FeaturedRepresentative.destroy_all }
 
@@ -330,7 +330,7 @@ RSpec.describe FeaturedRepresentatives::MonographPresenter do
     context "aboutware methods" do
       subject { TestMonographPresenter.new(SolrDocument.new(id: 'mid')) }
 
-      before { FeaturedRepresentative.create(monograph_id: 'mid', file_set_id: 'aboutid', kind: 'aboutware') }
+      before { FeaturedRepresentative.create(work_id: 'mid', file_set_id: 'aboutid', kind: 'aboutware') }
 
       after { FeaturedRepresentative.destroy_all }
 
@@ -357,7 +357,7 @@ RSpec.describe FeaturedRepresentatives::MonographPresenter do
     context "reviews methods" do
       subject { TestMonographPresenter.new(SolrDocument.new(id: 'mid')) }
 
-      before { FeaturedRepresentative.create(monograph_id: 'mid', file_set_id: 'reviewsid', kind: 'reviews') }
+      before { FeaturedRepresentative.create(work_id: 'mid', file_set_id: 'reviewsid', kind: 'reviews') }
 
       after { FeaturedRepresentative.destroy_all }
 
@@ -384,7 +384,7 @@ RSpec.describe FeaturedRepresentatives::MonographPresenter do
     context "related methods" do
       subject { TestMonographPresenter.new(SolrDocument.new(id: 'mid')) }
 
-      before { FeaturedRepresentative.create(monograph_id: 'mid', file_set_id: 'relatedid', kind: 'related') }
+      before { FeaturedRepresentative.create(work_id: 'mid', file_set_id: 'relatedid', kind: 'related') }
 
       after { FeaturedRepresentative.destroy_all }
 
@@ -411,7 +411,7 @@ RSpec.describe FeaturedRepresentatives::MonographPresenter do
     context "peer_review methods" do
       subject { TestMonographPresenter.new(SolrDocument.new(id: 'mid')) }
 
-      before { FeaturedRepresentative.create(monograph_id: 'mid', file_set_id: 'peerreviewid', kind: 'peer_review') }
+      before { FeaturedRepresentative.create(work_id: 'mid', file_set_id: 'peerreviewid', kind: 'peer_review') }
 
       after { FeaturedRepresentative.destroy_all }
 
