@@ -50,7 +50,24 @@ describe 'shared/_metadata.html.erb' do
     end
   end
 
-  context 'when the monograph has special characters' do
+  context 'when the monograph title has HTML characters' do
+    let(:solr_document) {
+      SolrDocument.new(id: '1',
+                       has_model_ssim: ['Monograph'],
+                       title_tesim: [%q(Bob's Red "Appleish" Flavour Ketchup is > Heinz Ketchup)],
+                       creator_full_name_tesim: ['Bob'],
+                       publisher_tesim: ['Swedish Red Apple'])
+    }
+
+    it 'escapes the characters correctly for use in meta tag parameter values' do
+      @presenter = Hyrax::MonographPresenter.new(solr_document, nil)
+      allow(controller).to receive(:controller_name).and_return("monograph_catalog")
+      render
+      expect(rendered).to match('Bob&#39;s Red &quot;Appleish&quot; Flavour Ketchup is &gt; Heinz Ketchup')
+    end
+  end
+
+  context 'when the monograph title has special characters' do
     # See #870
     let(:solr_document) {
       SolrDocument.new(id: '1',
@@ -64,7 +81,7 @@ describe 'shared/_metadata.html.erb' do
       @presenter = Hyrax::MonographPresenter.new(solr_document, nil)
       allow(controller).to receive(:controller_name).and_return("monograph_catalog")
       render
-      expect(rendered).to match(%q(Bob's “Smart” Dog’s "Rött" Äpple))
+      expect(rendered).to match('Bob&#39;s “Smart” Dog’s &quot;Rött&quot; Äpple')
     end
   end
 
