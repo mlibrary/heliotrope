@@ -103,8 +103,8 @@ gem 'config'
 # Use gem version of cozy-sun-bear
 gem 'cozy-sun-bear', git: 'https://github.com/mlibrary/cozy-sun-bear', ref: '214715e2f187ccdc47ec06b876c462c3f7693079'
 
-gem 'devise', '~> 4.6.0'
-gem 'devise-guests', '~> 0.3'
+gem 'devise', '>= 4.7.1'
+gem 'devise-guests', '~> 0.7'
 
 gem 'faraday', '~>0.12.2'
 gem 'faraday_middleware', '~>0.12.2'
