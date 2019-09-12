@@ -13,6 +13,9 @@ rvm:
 jdk:
   - oraclejdk8
 addons:
+  apt:
+    packages:
+      - dpkg # fix for travis issue https://github.com/travis-ci/travis-ci/issues/9361
   chrome: stable
 env:
   global:

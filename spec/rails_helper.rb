@@ -66,16 +66,23 @@ def stub_out_redis
 end
 
 # For system specs
-Chromedriver.set_version "2.36"
+
 # On system spec failure, don't dump the (binary!) screenshot to the console,
 # just save it to disk which is probably ~/tmp/screenshots
 ENV['RAILS_SYSTEM_TESTING_SCREENSHOT'] = "simple"
 
 require 'capybara/rspec'
+require 'webdrivers'
+require 'selenium-webdriver'
+
+# Needed for session/cookies, in version 4 we won't need this anymore
+Webdrivers.cache_time = 86_400
+
 # We need a large screen size for CozySunBear system specs in order to get 2-up
 # pages and other things
 # https://stackoverflow.com/a/47290251
-Capybara.register_driver :selenium_chrome_headless do |app|
+
+Capybara.register_driver :headless_chrome do |app|
   options = Selenium::WebDriver::Chrome::Options.new
   [
     "headless",
@@ -85,3 +92,5 @@ Capybara.register_driver :selenium_chrome_headless do |app|
 
   Capybara::Selenium::Driver.new(app, browser: :chrome, options: options)
 end
+
+Capybara.javascript_driver = :headless_chrome

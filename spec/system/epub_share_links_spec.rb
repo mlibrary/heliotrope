@@ -23,10 +23,6 @@ RSpec.describe "EPub Share Links", type: :system do
     Greensub::Component.create!(identifier: parent.resource_token, name: parent.title, noid: parent.noid)
   end
 
-  def take_failed_screenshot
-    false
-  end
-
   context "depending on if you are using a share link to access an epub" do
     it "there's an epub download button and share link button, or not" do
       sign_in platform_admin
@@ -34,7 +30,6 @@ RSpec.describe "EPub Share Links", type: :system do
       # For a platform_admin (or other authed user)
       visit epub_path(id: file_set.id)
 
-      expect(page).to have_content("This is the Title")
       # download epub button is present
       expect(page.has_css?('.cozy-download')).to be true
       # share link button is present
@@ -60,7 +55,6 @@ RSpec.describe "EPub Share Links", type: :system do
       # For an anon user following a share link
       visit epub_path(id: file_set.id, share: ShareLinkLog.last.token)
 
-      expect(page).to have_content("This is the Title")
       # download epub button is not present
       expect(page.has_css?('.cozy-download')).to be false
       # share link button is not present
