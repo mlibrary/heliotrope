@@ -7,27 +7,22 @@ RSpec.describe AnalyticsPresenter do
   let(:presenter) { Hyrax::FileSetPresenter.new(fileset_doc, ability) }
   let(:fileset_doc) { SolrDocument.new(id: 'fs') }
 
-  before do
-    allow(fileset_doc).to receive(:date_uploaded).and_return(Date.strptime('1514764800000', '%Q')) # 20180101
-  end
-
   describe "#timestamped_pageviews_by_ids" do
-    before { allow(Rails.cache).to receive(:read).and_return(pageviews) }
-
-    let(:pageviews) do
-      {
-        "111111111" => { "20170102" => 1, "20180102" => 2, "20180104" => 9 },
-        "222222222" => { "20180105" => 3, "20160105" => 1 },
-        "333333333" => { "20180107" => 5 }
-      }
+    before do
+      create(:google_analytics_history, noid: '111111111', original_date: "20170102", page_path: 'concern/thing/1', pageviews: 1)
+      create(:google_analytics_history, noid: '111111111', original_date: "20180102", page_path: 'concern/thing/1', pageviews: 2)
+      create(:google_analytics_history, noid: '111111111', original_date: "20180104", page_path: 'concern/thing/1', pageviews: 9)
+      create(:google_analytics_history, noid: '222222222', original_date: "20180105", page_path: 'concern/thing/2', pageviews: 3)
+      create(:google_analytics_history, noid: '222222222', original_date: "20160105", page_path: 'concern/thing/2', pageviews: 1)
+      create(:google_analytics_history, noid: '333333333', original_date: "20180107", page_path: 'concern/thing/3', pageviews: 5)
     end
 
-    context "aggregated counts per day (timestamped_pageviews_by_ids) since date_uploaded" do
+    context "aggregated counts per day (timestamped_pageviews_by_ids)" do
       it "when there are pageviews, it returns a hash of timestamps => pageviews and sets pageviews count" do
         expect(presenter.timestamped_pageviews_by_ids(['111111111', '222222222'])).to match a_hash_including(Date.strptime('20180102', '%Y%m%d').strftime('%Q').to_i => 2,
                                                                                                              Date.strptime('20180104', '%Y%m%d').strftime('%Q').to_i => 9,
                                                                                                              Date.strptime('20180105', '%Y%m%d').strftime('%Q').to_i => 3)
-        expect(presenter.pageviews).to eq 14
+        expect(presenter.pageviews).to eq 16
       end
       it "when there are no pageviews, it returns an empty hash and sets pageviews count" do
         pageviews_hash = presenter.timestamped_pageviews_by_ids(['12X', '89Y'])
@@ -35,18 +30,12 @@ RSpec.describe AnalyticsPresenter do
         expect(pageviews_hash.keys.count).to eq 0
         expect(presenter.pageviews).to eq 0
       end
-      it "when there is no cache, it returns an empty hash and sets pageviews count to '?'" do
-        allow(Rails.cache).to receive(:read).and_return(nil)
-        pageviews_hash = presenter.timestamped_pageviews_by_ids(['111111111', '222222222'])
-        expect(pageviews_hash).to be_a(Hash)
-        expect(pageviews_hash.keys.count).to eq 0
-        expect(presenter.pageviews).to eq '?'
-      end
     end
   end
 
   describe 'Flot graph data functions' do
     before do
+      allow(fileset_doc).to receive(:date_uploaded).and_return(Date.strptime('1514764800000', '%Q')) # 20180101
       allow(Date).to receive(:yesterday).and_return(Date.strptime('1518048000000', '%Q')) # 20180208
     end
 

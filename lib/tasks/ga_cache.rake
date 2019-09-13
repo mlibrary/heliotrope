@@ -11,32 +11,7 @@ namespace :heliotrope do
         # To change this we'd need to add the "account_id" (not GA id) in a config file somewhere
         profile = AnalyticsService.profile(ga_id)
         if profile.present?
-          # If you don't give a date range, you get one month by default
-          # If you don't give a limit, you get 1000 rows by default
-          # Also: GA will only return up to 10_000 rows for any request
-          pageviews = {}
-          total_results = Pageview.results(profile, start_date: '2016-01-01', end_date: Date.yesterday).total_results
-          offset = 1
-
-          while total_results.positive?
-            Pageview.results(profile, start_date: '2016-01-01', end_date: Date.yesterday, limit: 10_000, offset: offset).each do |entry|
-              page_path = entry.pagePath.gsub(/\?.*$/, "")
-              noid = find_match(page_path)
-              next if noid.nil?
-
-              pageviews[noid] = {} unless pageviews[noid].is_a? Hash
-              if pageviews[noid][entry.date].present?
-                pageviews[noid][entry.date] = pageviews[noid][entry.date] + entry.pageviews.to_i
-              else
-                pageviews[noid][entry.date] = entry.pageviews.to_i
-              end
-            end
-            offset += 10_000
-            total_results -= 10_000
-          end
-
-          Rails.cache.write('ga_pageviews', pageviews)
-          Rails.logger.info("Wrote ga_pageviews to cache")
+          # Pageviews used to be here but are now in their own task, add_ga_history.rake
 
           GASessions.results(profile, start_date: '2016-01-01', end_date: Date.today, limit: 1).each do |entry|
             Rails.cache.write('ga_sessions', entry.sessions)
@@ -78,22 +53,4 @@ namespace :heliotrope do
       end
     end
   end
-end
-
-def regex_mapping
-  [
-    Regexp.new("^/concern/file_sets/([a-z0-9]{9})$"),
-    Regexp.new("^/concern/monographs/([a-z0-9]{9})$"),
-    Regexp.new("^/epub/([a-z0-9]{9})$"),
-    Regexp.new("^/epubs_download_.*?/([a-z0-9]{9})$")
-  ]
-end
-
-def find_match(url)
-  regex_mapping.each do |regex|
-    if regex.match?(url)
-      return regex.match(url)[1]
-    end
-  end
-  return nil
 end

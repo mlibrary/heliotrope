@@ -12,26 +12,19 @@ module AnalyticsPresenter
   def timestamped_pageviews_by_ids(ids)
     # we want the output here to be structured for Flot as used in Hyrax, with unixtimes in milliseconds
     ids = ids_array(ids)
-    start_time = date_uploaded.strftime('%Q').to_i
-    pageviews = Rails.cache.read('ga_pageviews')
-    if pageviews.nil?
-      @pageviews ||= '?'
+    data = {}
+    count = 0
+    GoogleAnalyticsHistory.where(noid: ids).each do |r|
+      timestamp = Date.strptime(r.original_date, '%Y%m%d').strftime('%Q').to_i
+      data[timestamp] = r.pageviews
+      count += r.pageviews
+    end
+
+    if count.zero?
+      @pageviews = 0
       return {}
     end
 
-    data = {}
-    count = 0
-    if pageviews.is_a? Hash
-      ids.each do |id|
-        next if pageviews[id].blank?
-        pageviews[id].each do |date, views|
-          timestamp = Date.strptime(date, '%Y%m%d').strftime('%Q').to_i
-          next unless timestamp >= start_time
-          data[timestamp] = views
-          count += views
-        end
-      end
-    end
     @pageviews ||= count
     data # essentially a hash with 12am timestamp keys and pageview values for that day
   end

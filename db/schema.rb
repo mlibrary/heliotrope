@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190909175832) do
+ActiveRecord::Schema.define(version: 20190916160819) do
 
   create_table "api_requests", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.integer "user_id"
@@ -223,6 +223,16 @@ ActiveRecord::Schema.define(version: 20190909175832) do
     t.integer "user_id"
     t.index ["file_id"], name: "index_file_view_stats_on_file_id"
     t.index ["user_id"], name: "index_file_view_stats_on_user_id"
+  end
+
+  create_table "google_analytics_histories", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.string "noid"
+    t.string "original_date"
+    t.text "page_path"
+    t.integer "pageviews"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["noid"], name: "index_google_analytics_histories_on_noid"
   end
 
   create_table "hyrax_collection_types", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
