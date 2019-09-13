@@ -794,6 +794,361 @@ $a2ru-white: #fafafa;
 }
 ///////////////////////////////////////////////
 //
+// Amherst College Press
+//
+///////////////////////////////////////////////
+// colors
+$amherst-brand-color: #311a4d;
+$amherst-light-blue: #64dfeb;
+$amherst-link: #6837A3;
+$amherst-accent-link: #311a4d;
+$amherst-med-purple: #6837A3;
+$amherst-lighter-blue: #6DF2FF;
+$amherst-black-80: #333;
+$amherst-grey-1: #9ba1a7;
+$amherst-white: #fafafa;
+
+// typography
+
+@mixin brandon {
+  font-family: brandon-grotesque, sans-serif;
+}
+
+@mixin abril {
+  font-family: abril-text, serif;
+}
+
+.amherst {
+
+  // typography
+  @include brandon;
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5 {
+    font-weight: 500;
+    @include abril;
+  }
+
+  // links
+  a {
+    color: $amherst-link;
+  }
+
+  a:hover,
+  a:active {
+    color: $amherst-accent-link;
+  }
+
+  // buttons
+
+  .btn-default {
+    @include button-background-color($amherst-brand-color);
+    @include button-font-color($amherst-white);
+    border-color: $amherst-brand-color;
+  }
+
+
+  .btn-default:hover,
+  .btn-default:active {
+    @include button-hover-background-color($amherst-link);
+    @include button-font-color($amherst-white);
+  }
+
+  // navigation menu
+  .navbar-default .navbar-nav > .open > a,
+  .navbar-default .navbar-nav > .open > a:hover,
+  .navbar-default .navbar-nav > .open > a:focus {
+    background-color: $amherst-grey-1;
+  }
+
+  #brand-bar {
+    background-color: $amherst-brand-color;
+
+    .navbar-brand {
+      @include abril;
+      color: $amherst-white;
+      font-weight: 500;
+      font-size: 1.8em;
+      letter-spacing: -1px;
+    }
+
+    .navbar-nav {
+      a#add-content,
+      a.login,
+      a.user-display-name,
+      a.language-dropdown {
+          color: $amherst-white;
+      }
+
+      .open > a,
+      .open > a:focus,
+      .open > a:hover {
+        background-color: $amherst-grey-1;
+      }
+    }
+
+    button.search-submit {
+      background-color: $amherst-light-blue;
+      border-color: $amherst-light-blue;
+      color: $amherst-brand-color;
+    }
+
+  }
+
+  // press catalog
+
+  // jumbotron
+  .jumbotron {
+    padding-top: 1.5em;
+    padding-bottom: 1em;
+
+    p {
+      font-size: 19px;
+      margin-bottom: 0;
+      font-weight: 400;
+    }
+
+    .container {
+      margin-top: 0;
+    }
+
+    .logo {
+
+      img {
+        width: 190px;
+        margin-right: 3em;
+      }
+
+    }
+
+  }
+
+  .press {
+    .results-container {
+
+      .documentHeader {
+        h3 {
+          font-weight: 600;
+        }
+        a {
+          color: $amherst-brand-color;
+        }
+      }
+    }
+  }
+
+  //filters on press and monograph pages
+  .col-sm-3.facets-container,
+  #facet-panel-collapse {
+    padding-left: 0px;
+  }
+
+  .panel-group {
+    padding-left: 0px;
+  }
+
+  .panel-group .panel {
+    border-radius: 0px;
+  }
+
+  .panel-heading {
+    padding-top: 15px;
+  }
+
+  .panel-group .panel + .panel {
+    margin-top: 0px;
+  }
+
+  h3.panel-title a, a.more_facets_link {
+    color: #333;
+  }
+
+  .panel-heading.collapse-toggle .panel-title::after {
+    color: #333;
+  }
+
+  .panel-body {
+    background-color: #fafafa;
+  }
+
+  .search-form.panel-body {
+    background-color: #fff;
+  }
+
+  // sorts on press and monograph pages
+  #sort-dropdown .dropdown-toggle,
+  #per_page-dropdown .dropdown-toggle {
+    color: $amherst-white;
+  }
+
+  #sort-dropdown .dropdown-toggle:hover,
+  #per_page-dropdown .dropdown-toggle:hover,
+  #sort-dropdown .dropdown-toggle:active,
+  #per_page-dropdown .dropdown-toggle:active {
+    color: $amherst-white;
+
+    .caret {
+      color: $amherst-white;
+    }
+
+  }
+
+  // search resources
+  button.search-submit {
+    background-color: $amherst-brand-color;
+    border-color: $amherst-brand-color;
+    color: $amherst-white;
+  }
+  
+  .constraints-container {
+    padding: 10px 20px;
+    border-radius: 0px;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+  }
+
+
+  // pagination
+
+  .pagination {
+     li a, li span {
+
+       background-color: $amherst-brand-color;
+       border-color: $amherst-brand-color;
+       color: $amherst-white;
+     }
+
+     li>a:hover,
+     li>a:focus,
+     li>span:hover,
+     li>span:focus {
+       background-color: $amherst-link;
+       border-color: $amherst-link;
+       color: $amherst-white;
+     }
+
+
+     .active>a,
+     .active>a:hover,
+     .active>a:focus,
+     .active>span,
+     .active>span:hover,
+     .active>span:focus {
+       background-color: $amherst-link;
+       border-color: $amherst-link;
+       color: $amherst-white;
+     }
+
+     .disabled>span,
+     .disabled>span:hover,
+     .disabled>span:focus,
+     .disabled>a,
+     .disabled>a:hover,
+     .disabled>a:focus {
+      background-color: $amherst-link;
+      border-color: $amherst-link;
+      color: $amherst-white;
+     }
+  }
+
+  //footer
+  footer {
+    a,
+    a:hover,
+    a:active {
+      color: $amherst-white;
+    }
+    .press-block-a,
+    .press-block-b {
+      background-color:  $amherst-brand-color;
+      font-weight: 400;
+
+      a,
+      a:hover,
+      a:active {
+        color: $amherst-white;
+      }
+
+      img {
+        width: 125px;
+      }
+
+    }
+
+    .press-block-c {
+      background-color: $amherst-light-blue;
+      color: $amherst-brand-color;
+
+      img {
+        width: auto !important;
+        margin-right: 1em;
+        height: 25px;
+      }
+    }
+    .platform {
+       background-color: $amherst-black-80;
+    }
+  }
+
+  // EPUB Reader
+  #reader, .cozy-reader {
+
+    .button {
+      @include epub-button-background-color($amherst-brand-color,$amherst-link,$amherst-white);
+    }
+
+    .button--lg {
+      @include epub-button-background-color($amherst-brand-color,$amherst-link,$amherst-white);
+    }
+
+    .button--sm {
+      @include epub-button-background-color($amherst-brand-color,$amherst-link,$amherst-white);
+    }
+
+    i[class^='icon-chevron-'] {
+      @include epub-prev-next-color($amherst-brand-color);
+      transition: 0.2s ease-in;
+    }
+
+    i[class^='icon-chevron-']:hover {
+      @include epub-hover-prev-next-color($amherst-link);
+      transition: 0.2s ease-in;
+    }
+
+    .cozy-control .logo {
+      height: 47px;
+
+      img {
+        height: 47px;
+      }
+    }
+  }
+
+}
+
+@media(max-width: 768px) {
+  .amherst .monograph .message {
+    padding: 1.5em;
+
+    .wrapper {
+      width: auto;
+    }
+    .text {
+      width: 70%;
+    }
+    .dismiss {
+      width: 20%;
+      padding-left: 10%;
+    }
+  }
+}
+
+
+///////////////////////////////////////////////
+//
 // British Archaelogical Reports - BAR
 //
 ///////////////////////////////////////////////
@@ -900,13 +1255,13 @@ $barpublishing-white: #fafafa;
 
   // jumbotron
   .jumbotron {
-    font-weight: 400;
     padding-top: 1.5em;
     padding-bottom: 1em;
 
     p {
       font-size: 16px;
       margin-bottom: 0;
+      font-weight: 400;
     }
 
     .container {
