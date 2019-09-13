@@ -22,6 +22,7 @@ RSpec.describe 'hyrax/file_sets/show' do
     monograph.save!
     assign(:presenter, file_set_presenter)
     allow(ability).to receive(:platform_admin?).and_return(false)
+    allow(ability).to receive(:can?).with(:read, anything).and_return(true)
     allow(file_set_presenter).to receive(:embed_code).and_return("embed code")
     allow(view).to receive(:parent).and_return(monograph)
     # allow(view).to receive(:can?).with(:edit, file_set_presenter).and_return(false)
