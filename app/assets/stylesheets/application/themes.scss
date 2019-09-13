@@ -982,6 +982,10 @@ $amherst-white: #fafafa;
   #sort-dropdown .dropdown-toggle,
   #per_page-dropdown .dropdown-toggle {
     color: $amherst-white;
+
+    .caret {
+      color: $amherst-white;
+    }
   }
 
   #sort-dropdown .dropdown-toggle:hover,
@@ -1335,6 +1339,10 @@ $barpublishing-white: #fafafa;
   #sort-dropdown .dropdown-toggle,
   #per_page-dropdown .dropdown-toggle {
     color: $barpublishing-white;
+
+    .caret {
+      color: $barpublishing-white;
+    }
   }
 
   #sort-dropdown .dropdown-toggle:hover,
