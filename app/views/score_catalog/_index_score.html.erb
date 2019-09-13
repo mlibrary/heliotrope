@@ -33,7 +33,7 @@
             <% end %>
             <% if @ebook_download_presenter.downloadable_ebooks? %>
                 <div class="btn-group btn-group-lg">
-                  <button type="button" id="monograph-download-btn" target="_blank" title="<%= t('monograph_catalog.index.download', title: @presenter.title) %>" aria-label="<%= t('monograph_catalog.index.download', title: @presenter.title) %>" aria-haspopus="true" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><%= t('monograph_catalog.index.download_book') %> <span class="caret"></span></button>
+                  <button type="button" id="monograph-download-btn" target="_blank" title="<%= t('monograph_catalog.index.download', title: @presenter.title) %>" aria-label="<%= t('monograph_catalog.index.download', title: @presenter.title) %>" aria-haspopup="true" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><%= t('monograph_catalog.index.download_book') %> <span class="caret"></span></button>
                   <ul class="dropdown-menu monograph-catalog-rep-downloads">
                   <% @ebook_download_presenter.ebook_presenters.each do |ebook| %>
                     <% if @ebook_download_presenter.downloadable?(ebook) %>
