@@ -2,5 +2,6 @@
  *
  *= require leaflet_1.4.0
  *= require L.Control.Pan
+ *= require Control.FullScreen
  *= require ableplayer
  */

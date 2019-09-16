@@ -1,0 +1,1 @@
+Since there is no 'official' convention for naming Leaflet plugins I'd like to start a convention of storing the unzipped downloaded release folder under 'vendor' and copying the necessary files to their appropriate locations under 'vendor/assets'.  This way the next developer will know what version of the plugin is being used as well as what files belong to which plugin.
