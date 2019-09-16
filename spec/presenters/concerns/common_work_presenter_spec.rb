@@ -58,26 +58,27 @@ RSpec.describe CommonWorkPresenter do
                          ordered_member_ids_ssim: ordered_ids)
     }
 
-    let(:cover) { ::SolrDocument.new(id: 'cover', has_model_ssim: ['FileSet']) }
-    let(:blue_file) { ::SolrDocument.new(id: 'blue', has_model_ssim: ['FileSet']) }
-    let(:green_file) { ::SolrDocument.new(id: 'green', has_model_ssim: ['FileSet']) }
+    let(:cover) { ::SolrDocument.new(id: 'cover', has_model_ssim: ['FileSet'], visibility_ssi: 'open') }
+    let(:blue_file) { ::SolrDocument.new(id: 'blue', has_model_ssim: ['FileSet'], visibility_ssi: 'open') }
+    let(:green_file) { ::SolrDocument.new(id: 'green', has_model_ssim: ['FileSet'], visibility_ssi: 'open') }
+    let(:red_file) { ::SolrDocument.new(id: 'red', has_model_ssim: ['FileSet'], visibility_ssi: 'restricted') }
 
-    context 'has assets' do
-      let(:ordered_ids) { [cover.id, blue_file.id, green_file.id] }
+    context 'has some open-visibility non-representative assets' do
+      let(:ordered_ids) { [cover.id, blue_file.id, green_file.id, red_file.id] }
 
       before do
-        ActiveFedora::SolrService.add([solr_document.to_h, cover.to_h, blue_file.to_h, green_file.to_h])
+        ActiveFedora::SolrService.add([solr_document.to_h, cover.to_h, blue_file.to_h, green_file.to_h, red_file.to_h])
         ActiveFedora::SolrService.commit
       end
 
       it { is_expected.to be true }
     end
 
-    context 'does not have assets' do
-      let(:ordered_ids) { [cover.id] }
+    context 'has no open-visibility non-representative assets' do
+      let(:ordered_ids) { [cover.id, red_file.id] }
 
       before do
-        ActiveFedora::SolrService.add([solr_document.to_h, cover.to_h])
+        ActiveFedora::SolrService.add([solr_document.to_h, cover.to_h, red_file.to_h])
         ActiveFedora::SolrService.commit
       end
 

@@ -9,6 +9,8 @@ RSpec.describe Hyrax::MonographPresenter do
   let(:mono_doc) { ::SolrDocument.new(id: 'mono', has_model_ssim: ['Monograph']) }
   let(:ability) { double('ability') }
 
+  before { allow(ability).to receive(:can?).with(:read, anything).and_return(true) }
+
   describe '#presenters' do
     subject { described_class.new(nil, nil) }
 

@@ -7,13 +7,14 @@ module CommonWorkPresenter
     ordered_file_sets_ids.present?
   end
 
-  def ordered_file_sets_ids
+  def ordered_file_sets_ids # rubocop:disable Metrics/CyclomaticComplexity
     return @ordered_file_sets_ids if @ordered_file_sets_ids
     file_sets_ids = []
     ordered_member_docs.each do |doc|
       next if doc['has_model_ssim'] != ['FileSet'].freeze
       next if doc.id == representative_id
       next if featured_representatives.map(&:file_set_id).include?(doc.id)
+      next if doc['visibility_ssi'] != 'open' && !current_ability&.can?(:read, doc.id)
 
       file_sets_ids.append doc.id
     end
