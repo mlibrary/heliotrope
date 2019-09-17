@@ -135,12 +135,20 @@ module Import
         # if there is a command-line monograph title then use it
         attrs['title'] = Array(monograph_title) if monograph_title.present?
 
-        # Wrap files in UploadedFile wrappers using /dev/null for external resources
-        uploaded_files = attrs.delete('files').map do |filename|
+        # Find file's absolute path and verify it exist?
+        absolute_filenames = attrs.delete('files').map do |filename|
           if filename.present? # "External Resources" are FileSets without a file
-            Hyrax::UploadedFile.create(file: File.new(find_file(filename)), user: user)
+            find_file(filename) # Raise on error!
           end
         end
+
+        # Wrap files in UploadedFile wrappers using nil for external resources
+        uploaded_files = absolute_filenames.map do |filename|
+          if filename.present? # "External Resources" are FileSets without a file
+            Hyrax::UploadedFile.create(file: File.new(filename), user: user)
+          end
+        end
+
         attrs['import_uploaded_files_ids'] = uploaded_files.map { |f| f&.id }
         attrs['import_uploaded_files_attributes'] = attrs.delete('files_metadata')
 

@@ -329,5 +329,31 @@ describe Import::Importer do
         expect { importer.run }.to raise_error(/a corresponding AdminSet was not found. Make sure you've registered this workflow./)
       end
     end
+
+    context '#file_file' do
+      context 'when the file doesnt exist' do
+        let(:root_dir) { File.join(fixture_path, 'csv', 'import_missing_file') }
+
+        it 'raises an exception' do
+          expect { importer.run }.to raise_error(/not found anywhere under/)
+        end
+      end
+
+      context 'when the file is empty' do
+        let(:root_dir) { File.join(fixture_path, 'csv', 'import_empty_file') }
+
+        it 'raises an exception' do
+          expect { importer.run }.to raise_error(/Zero-size file found/)
+        end
+      end
+
+      context 'when multiple files exist' do
+        let(:root_dir) { File.join(fixture_path, 'csv', 'import_multiple_files') }
+
+        it 'raises an exception' do
+          expect { importer.run }.to raise_error(/More than one file found with name/)
+        end
+      end
+    end
   end
 end
