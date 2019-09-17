@@ -29,11 +29,29 @@
         <div class="btn-toolbar" role="toolbar">
           <div class="btn-group btn-group-lg" role="group">
             <% if @presenter.reader_ebook? %>
-                <a id="monograph-read-btn" href="<%= epub_path(@presenter.reader_ebook) %>" title="<%= t('monograph_catalog.index.read', title: @presenter.title) %>" aria-label="<%= t('monograph_catalog.index.read', title: @presenter.title) %>" class="btn btn-default" data-turbolinks="false"><%= t('monograph_catalog.index.read_book') %></a>
+                <a id="monograph-read-btn"
+                   href="<%= epub_path(@presenter.reader_ebook) %>"
+                   title="<%= t('monograph_catalog.index.read', title: @presenter.page_title) %>"
+                   aria-label="<%= t('monograph_catalog.index.read', title: @presenter.page_title) %>"
+                   class="btn btn-default"
+                   data-turbolinks="false">
+                   <%= t('monograph_catalog.index.read_book') %>
+                </a>
             <% end %>
             <% if @ebook_download_presenter.downloadable_ebooks? %>
                 <div class="btn-group btn-group-lg">
-                  <button type="button" id="monograph-download-btn" target="_blank" title="<%= t('monograph_catalog.index.download', title: @presenter.title) %>" aria-label="<%= t('monograph_catalog.index.download', title: @presenter.title) %>" aria-haspopus="true" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><%= t('monograph_catalog.index.download_book') %> <span class="caret"></span></button>
+                  <button type="button"
+                          id="monograph-download-btn"
+                          target="_blank"
+                          title="<%= t('monograph_catalog.index.download', title: @presenter.page_title) %>"
+                          aria-label="<%= t('monograph_catalog.index.download', title: @presenter.page_title) %>"
+                          aria-haspopup="true"
+                          class="btn btn-default dropdown-toggle"
+                          data-toggle="dropdown"
+                          aria-expanded="false">
+                          <%= t('monograph_catalog.index.download_book') %>
+                          <span class="caret"></span>
+                  </button>
                   <ul class="dropdown-menu monograph-catalog-rep-downloads">
                   <% @ebook_download_presenter.ebook_presenters.each do |ebook| %>
                     <% if @ebook_download_presenter.downloadable?(ebook) %>
