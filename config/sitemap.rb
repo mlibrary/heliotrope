@@ -45,7 +45,7 @@ SitemapGenerator::Sitemap.create do
     d['file_set_ids_ssim'].each do |fsid|
       fs = ActiveFedora::SolrService.query("{!terms f=id}#{fsid}", rows: 1).first
       next unless fs.present? && fs['visibility_ssi'] == 'open'
-      rep = FeaturedRepresentative.where(monograph_id: d['id'], file_set_id: fsid).first
+      rep = FeaturedRepresentative.where(work_id: d['id'], file_set_id: fsid).first
 
       # "featured representative" file_sets that are not epubs don't need to be in sitemaps
       next if rep&.kind.present? && rep&.kind != 'epub'

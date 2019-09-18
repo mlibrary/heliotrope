@@ -64,7 +64,7 @@ namespace :heliotrope do
       end
 
       if epub_file_paths.count == 1
-        file_set_id = FeaturedRepresentative.where(monograph_id: doc.id, kind: 'epub').first&.file_set_id
+        file_set_id = FeaturedRepresentative.where(work_id: doc.id, kind: 'epub').first&.file_set_id
 
         if file_set_id.blank?
           puts "    No epub found. Adding epub using #{epub_file_paths.first}"
@@ -84,7 +84,7 @@ namespace :heliotrope do
       end
 
       if pdf_file_paths.count == 1
-        file_set_id = FeaturedRepresentative.where(monograph_id: doc.id, kind: 'pdf_ebook').first&.file_set_id
+        file_set_id = FeaturedRepresentative.where(work_id: doc.id, kind: 'pdf_ebook').first&.file_set_id
 
         if file_set_id.blank?
           puts "    No pdf_ebook found. Adding pdf_ebook using #{pdf_file_paths.first}"
