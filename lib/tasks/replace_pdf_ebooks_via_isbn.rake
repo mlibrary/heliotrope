@@ -31,7 +31,7 @@ namespace :heliotrope do
         else
           monograph = matches.first
 
-          current_pdf_rep = FeaturedRepresentative.where(monograph_id: monograph.id, kind: 'pdf_ebook').first&.file_set_id
+          current_pdf_rep = FeaturedRepresentative.where(work_id: monograph.id, kind: 'pdf_ebook').first&.file_set_id
 
           if current_pdf_rep.present?
             # here we replace the current pdf_ebook representative FileSet's file and recharacterize, create new derivatives

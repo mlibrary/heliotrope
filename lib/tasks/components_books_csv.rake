@@ -15,7 +15,7 @@ namespace :heliotrope do
     docs = ActiveFedora::SolrService.query(query, rows: 100_000) ;0
 
     docs.each do |m|
-      rep = FeaturedRepresentative.where(monograph_id: m.id, kind: args.ebook_format).first
+      rep = FeaturedRepresentative.where(work_id: m.id, kind: args.ebook_format).first
       puts "#{rep.file_set_id},#{m['doi_ssim']&.first}" if rep.present?
     end
 
