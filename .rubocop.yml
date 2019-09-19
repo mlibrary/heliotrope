@@ -1,4 +1,7 @@
 require: rubocop-rspec
+inherit_gem:
+  rubocop-rails_config:
+    - config/rails.yml
 inherit_from: .rubocop_todo.yml
 
 AllCops:
@@ -19,7 +22,7 @@ AllCops:
     - 'vendor/**/*'
 
 Layout/IndentationConsistency:
-  EnforcedStyle: rails
+  EnforcedStyle: indented_internal_methods
 
 Lint/DuplicateMethods:
   Exclude:
