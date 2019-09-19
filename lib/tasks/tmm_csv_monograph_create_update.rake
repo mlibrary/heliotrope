@@ -86,7 +86,6 @@ namespace :heliotrope do
             puts "No Monograph found using ISBN(s) '#{clean_isbns.join('; ')}' on row #{row_num} .......... CREATING"
             attrs['press'] = 'michigan'
             attrs['visibility'] = 'restricted'
-            # attrs['admin_set_id'] = admin_set_id if admin_set_id
 
             Hyrax::CurationConcern.actor.create(Hyrax::Actors::Environment.new(monograph, current_ability, attrs))
           elsif monograph.press == 'michigan' # for now don't edit sub-press Monographs like Gabii
