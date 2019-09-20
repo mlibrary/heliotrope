@@ -151,9 +151,6 @@ RSpec/SubjectStub:
   Exclude:
     - 'spec/models/riiif/file_spec.rb'
 
-Style/CollectionMethods:
-  Enabled: false
-
 Style/CommentedKeyword:
   Exclude:
     - 'spec/controllers/hyrax/monographs_controller_spec.rb'
@@ -198,12 +195,6 @@ Style/GuardClause:
   Exclude:
     - 'lib/import/importer.rb'
 
-Style/HashSyntax:
-  Enabled: false
-
-Style/IfUnlessModifier:
-  Enabled: false
-
 Style/NumericLiterals:
   Exclude:
     - 'config/initializers/mailboxer.rb'
@@ -211,6 +202,3 @@ Style/NumericLiterals:
 Style/RedundantReturn:
   Exclude:
     - 'app/presenters/concerns/analytics_presenter.rb'
-
-Style/WordArray:
-  Enabled: false
