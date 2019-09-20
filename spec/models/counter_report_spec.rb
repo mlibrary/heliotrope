@@ -25,7 +25,7 @@ RSpec.describe CounterReport, type: :model do
       create(:counter_report, session: 2, noid: 'c')
     end
 
-    after { CounterReport.destroy_all }
+    after { described_class.destroy_all }
 
     it do
       expect(described_class.unique.length).to eq 4
@@ -46,7 +46,7 @@ RSpec.describe CounterReport, type: :model do
       create(:counter_report, session: 4, noid: 'c', parent_noid: 'C', institution: 1, created_at: Time.parse("2018-02-02").utc, request: 1)
     end
 
-    after { CounterReport.destroy_all }
+    after { described_class.destroy_all }
 
     context "Total_Item_Investigations for Institution 1 in February" do
       it do

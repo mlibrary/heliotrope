@@ -90,9 +90,6 @@ Rails/SkipsModelValidations:
   Exclude:
     - 'spec/jobs/characterize_job_spec.rb'
 
-RSpec/DescribedClass:
-  Enabled: false
-
 RSpec/EmptyExampleGroup:
   Exclude:
     - 'spec/actors/hyrax/monograph_actor_spec.rb'
@@ -100,9 +97,6 @@ RSpec/EmptyExampleGroup:
 RSpec/ExampleLength:
   Enabled: true
   Max: 103 # default is 5
-
-RSpec/ImplicitSubject:
-  Enabled: false
 
 RSpec/LetSetup:
   Exclude:

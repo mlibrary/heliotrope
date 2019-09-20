@@ -127,10 +127,10 @@ RSpec.describe Press, type: :model do
 
         context "while there are many presses now, we can get a list of 'root' or 'ultimate parent' presses" do
           it "there is only be one parent press" do
-            expect(Press.parent_presses.count).to be 1
+            expect(described_class.parent_presses.count).to be 1
           end
           it "there are 4 presses total" do
-            expect(Press.all.count).to be 4
+            expect(described_class.all.count).to be 4
           end
         end
       end
