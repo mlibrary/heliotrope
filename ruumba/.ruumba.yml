@@ -74,9 +74,6 @@ Lint/AssignmentInCondition:
 Lint/UselessAssignment:
   Enabled: false
 
-Performance/StringReplacement:
-  Enabled: false
-
 Style/EmptyElse:
   Enabled: false
 Style/IdenticalConditionalBranches:

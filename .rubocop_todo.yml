@@ -69,7 +69,9 @@ Rails/HasManyOrHasOneDependent:
     - 'app/models/product.rb'
 
 Rails/HelperInstanceVariable:
-  Enabled: false
+  Exclude:
+    - 'app/helpers/breadcrumbs_helper.rb'
+    - 'app/helpers/press_helper.rb'
 
 Rails/InverseOf:
   Exclude:
