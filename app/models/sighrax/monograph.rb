@@ -13,7 +13,6 @@ module Sighrax
     end
 
     private
-
       def initialize(noid, data)
         super(noid, data)
       end

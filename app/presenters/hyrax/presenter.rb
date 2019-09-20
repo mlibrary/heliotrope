@@ -11,7 +11,6 @@ module Hyrax
     end
 
     private
-
       def initialize(noid)
         @noid = noid
       end
@@ -21,7 +20,6 @@ module Hyrax
     private_class_method :new
 
     private
-
       def initialize(noid)
         super(noid)
       end

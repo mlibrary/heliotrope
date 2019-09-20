@@ -41,7 +41,6 @@ module Webgl
     end
 
     private
-
       def initialize(opts)
         @id       = opts[:id]
         @progress = opts[:progress]

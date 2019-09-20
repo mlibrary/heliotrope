@@ -26,12 +26,12 @@ module EPub
           next if header.text.blank?
           idref, index = @unmarshaller_rootfile.content.idref_with_index_from_href(header.href)
           cfi = if /.*#.*/.match?(header.href)
-                  # Don't use the CFI for multi level TOCs that have url fragments/anchors where
-                  # the TOC might be very large and take a long time to calculate all the CFIs. See HELIO-2461
-                  file_url(header.href)
-                else
-                  "/6/#{index * 2}[#{idref}]!/4/1:0"
-                end
+            # Don't use the CFI for multi level TOCs that have url fragments/anchors where
+            # the TOC might be very large and take a long time to calculate all the CFIs. See HELIO-2461
+            file_url(header.href)
+          else
+            "/6/#{index * 2}[#{idref}]!/4/1:0"
+          end
           args = {
             title: header.text,
             depth: header.depth,
@@ -50,7 +50,6 @@ module EPub
     end
 
     private
-
       def file_url(href)
         # This works due to a change in CSB
         # https://github.com/mlibrary/cozy-sun-bear/commit/8875fb87669d23363d5bb6bb244f291a13793971
@@ -71,7 +70,6 @@ module EPub
     private_class_method :new
 
     private
-
       def initialize
         super(Publication.null_object, Unmarshaller::Rootfile.null_object)
       end

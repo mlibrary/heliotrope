@@ -68,7 +68,6 @@ class MonographCatalogController < ::CatalogController
   end
 
   private
-
     def load_presenter
       monograph_id = params[:monograph_id] || params[:id]
       raise CanCan::AccessDenied unless current_ability&.can?(:read, monograph_id)

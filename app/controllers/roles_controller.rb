@@ -26,7 +26,6 @@ class RolesController < ApplicationController
   end
 
   protected
-
     def press_params
       params.require(:press).permit(roles_attributes: %i[id user_key role _destroy])
     end

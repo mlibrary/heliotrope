@@ -94,7 +94,7 @@ RSpec.describe ValidationService do
 
       let(:id) { double('id') }
       let(:valid_id) { false }
-      let(:object) {}
+      let(:object) { }
 
       before do
         allow(described_class).to receive(:valid_id?).with(id).and_return(valid_id)
@@ -373,7 +373,7 @@ RSpec.describe ValidationService do
   describe '#valid_actor?' do
     subject { described_class.valid_actor?(actor) }
 
-    let(:actor) {}
+    let(:actor) { }
 
     it { is_expected.to be false }
 

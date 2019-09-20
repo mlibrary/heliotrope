@@ -2,7 +2,6 @@ module Hyrax
   module Renderers
     class CatalogFacetAttributeRenderer < AttributeRenderer
       private
-
         def li_value(value)
           if options[:markdown]
             link_to(MarkdownService.markdown(value), search_path(value))

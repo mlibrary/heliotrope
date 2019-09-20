@@ -91,7 +91,6 @@ module Turnsole
     end
 
     private
-
       #
       # Connection
       #

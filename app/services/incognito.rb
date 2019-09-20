@@ -116,7 +116,6 @@ module Incognito
     end
 
     private
-
       def short_circuit?(actor)
         !(actor.is_a?(User) && actor.platform_admin?)
       end

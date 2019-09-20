@@ -79,7 +79,6 @@ module Crossref
     end
 
     private
-
       def save_dois_to_file_sets
         # Can you imagine how long this would take for a work with 2000+ file_sets?
         # It could be hours. Pass to a job I guess.

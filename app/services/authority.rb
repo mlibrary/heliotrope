@@ -74,7 +74,6 @@ module Authority
     end
 
     private
-
       def authority
         Services.checkpoint
       end

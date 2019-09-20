@@ -28,7 +28,6 @@ module PDFEbook
     end
 
     private
-
       def initialize(file, id)
         @pdf = Origami::PDF.read(file, verbosity: Origami::Parser::VERBOSE_QUIET)
         @id = id

@@ -67,7 +67,6 @@ module Greensub
     end
 
     private
-
       def type
         @type ||= /^Greensub::(.+$)/.match(self.class.to_s)[1].to_sym
       end

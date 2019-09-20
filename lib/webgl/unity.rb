@@ -26,7 +26,6 @@ module Webgl
     end
 
     private
-
       def initialize(webgl)
         @id = webgl.id
         @unity_progress = webgl.progress
@@ -40,7 +39,6 @@ module Webgl
     private_class_method :new
 
     private
-
       def initialize
         @id = nil
         @unity_progress = nil

@@ -50,7 +50,6 @@ module Greensub
     end
 
     private
-
       def set_individual
         @individual = Individual.find(params[:id])
       end

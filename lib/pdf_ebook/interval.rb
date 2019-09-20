@@ -41,7 +41,6 @@ module PDFEbook
     end
 
     private
-
       def initialize(args)
         @args = args
       end
@@ -51,7 +50,6 @@ module PDFEbook
     private_class_method :new
 
     private
-
       def initialize
         super({})
       end

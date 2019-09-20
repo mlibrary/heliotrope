@@ -51,7 +51,6 @@ module Sighrax
     end
 
     protected
-
       attr_reader :data
 
       def type
@@ -59,7 +58,6 @@ module Sighrax
       end
 
     private
-
       def initialize(noid, data)
         @noid = noid
         @data = data
@@ -70,7 +68,6 @@ module Sighrax
     private_class_method :new
 
     private
-
       def initialize(noid)
         super(noid, {})
       end

@@ -16,7 +16,6 @@ class PublisherStatsJob < ApplicationJob
   end
 
   private
-
     def monograph_ids(press = nil)
       docs = ActiveFedora::SolrService.query("+has_model_ssim:Monograph", rows: 10_000)
       ids = []

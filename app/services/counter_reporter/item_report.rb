@@ -105,10 +105,10 @@ module CounterReporter
           @params.access_types.each do |access_type|
             result[metric_type.downcase][access_type.downcase].each do |k, v|
               ur[k] = if ur[k].present?
-                        ur[k] + v.to_i
-                      else
-                        v.to_i
-                      end
+                ur[k] + v.to_i
+              else
+                v.to_i
+              end
             end
           end
         end
@@ -245,10 +245,10 @@ module CounterReporter
 
     def header
       institution_name = if @params.institution == '*'
-                           "All Institutions"
-                         else
-                           Greensub::Institution.where(identifier: @params.institution).first&.name
-                         end
+        "All Institutions"
+      else
+        Greensub::Institution.where(identifier: @params.institution).first&.name
+      end
       {
         Report_Name: @params.report_title,
         Report_ID: @params.report_type.upcase,

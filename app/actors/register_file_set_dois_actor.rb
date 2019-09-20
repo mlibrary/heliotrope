@@ -27,7 +27,6 @@ class RegisterFileSetDoisActor < Hyrax::Actors::AbstractActor
   end
 
   private
-
     def create_dois(env, current_visibility)
       return true unless press_can_make_dois?(env)
       return true unless private_to_public?(current_visibility, env.attributes['visibility'])

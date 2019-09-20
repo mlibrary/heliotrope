@@ -50,17 +50,17 @@ module API
       #     {include:file:app/views/api/v1/products/_product.json.jbuilder}
       def index
         @products = if params[:component_id].present?
-                      set_component
-                      @component.products
-                    elsif params[:individual_id].present?
-                      set_individual
-                      @individual.products
-                    elsif params[:institution_id].present?
-                      set_institution
-                      @institution.products
-                    else
-                      Greensub::Product.all
-                    end
+          set_component
+          @component.products
+        elsif params[:individual_id].present?
+          set_individual
+          @individual.products
+        elsif params[:institution_id].present?
+          set_institution
+          @institution.products
+        else
+          Greensub::Product.all
+        end
       end
 
       # Get product by id
@@ -115,7 +115,6 @@ module API
       end
 
       private
-
         def set_component
           @component = Greensub::Component.find(params[:component_id])
         end

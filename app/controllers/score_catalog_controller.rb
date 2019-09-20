@@ -21,7 +21,6 @@ class ScoreCatalogController < ::CatalogController
   end
 
   private
-
     def load_presenter
       score_id = params[:score_id] || params[:id]
       raise CanCan::AccessDenied unless current_ability&.can?(:read, score_id)

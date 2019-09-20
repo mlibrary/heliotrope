@@ -9,13 +9,11 @@ module Sighrax
     end
 
     protected
-
       def model_type
         Array(data['has_model_ssim']).first
       end
 
     private
-
       def initialize(noid, data)
         super(noid, data)
       end

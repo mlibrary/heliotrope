@@ -11,7 +11,6 @@ class CheckpointController < ApplicationController
   end
 
   private
-
     def checkpoint_controller?
       true # Override of ApplicationController
     end

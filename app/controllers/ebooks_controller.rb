@@ -33,7 +33,6 @@ class EbooksController < CheckpointController
   end
 
   private
-
     def setup
       @entity = Sighrax.factory(params[:id])
       @policy = Sighrax.policy(current_actor, @entity)

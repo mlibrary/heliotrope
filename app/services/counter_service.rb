@@ -67,10 +67,10 @@ class CounterService
     # not the FileSet level. So we want to always use the Monograph to determine
     # access_type.
     noid = if @presenter.is_a? Hyrax::MonographPresenter
-             @presenter.id
-           else
-             @presenter.parent.id
-           end
+      @presenter.id
+    else
+      @presenter.parent.id
+    end
     if Greensub::Component.find_by(noid: noid)
       "Controlled"
       # For assets if they have a permissions_expiration_date at any time, past or present
@@ -82,7 +82,6 @@ class CounterService
   end
 
   private
-
     def initialize(controller, presenter)
       @controller = controller
       @presenter = presenter

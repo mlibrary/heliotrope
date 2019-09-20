@@ -24,7 +24,7 @@ RSpec.describe Sighrax do
 
     context 'Entity' do
       let(:data) { double('data') }
-      let(:model_types) {}
+      let(:model_types) { }
 
       before do
         allow(ActiveFedora::SolrService).to receive(:query).and_return([data])
@@ -56,7 +56,7 @@ RSpec.describe Sighrax do
 
         context 'Asset' do
           let(:model_types) { ['FileSet'] }
-          let(:featured_representatitve) {}
+          let(:featured_representatitve) { }
 
           before { allow(FeaturedRepresentative).to receive(:find_by).with(file_set_id: noid).and_return(featured_representatitve) }
 

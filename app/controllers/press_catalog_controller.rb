@@ -35,7 +35,6 @@ class PressCatalogController < ::CatalogController
   end
 
   private
-
     def load_press
       @press = Press.find_by(subdomain: params['press'])
 

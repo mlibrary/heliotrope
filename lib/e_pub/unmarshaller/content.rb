@@ -58,7 +58,6 @@ module EPub
       end
 
       private
-
         def initialize(rootfile, full_path)
           @rootfile = rootfile
           @full_path = full_path
@@ -121,7 +120,6 @@ module EPub
       private_class_method :new
 
       private
-
         def initialize
           super(Rootfile.null_object, '')
         end

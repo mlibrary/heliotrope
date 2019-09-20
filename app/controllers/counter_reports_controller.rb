@@ -79,7 +79,6 @@ class CounterReportsController < ApplicationController
   end
 
   private
-
     def authorized_insitutions_or_presses?
       return false unless @institutions.map(&:identifier).include?(params[:institution])
       return false if @presses.present? && !@presses.map(&:id).include?(params[:press].to_i)
@@ -99,11 +98,11 @@ class CounterReportsController < ApplicationController
     def set_presses_and_institutions
       @presses = current_user&.admin_presses || Press.order(:name)
       @institutions = if current_user&.admin_presses.present?
-                        # admins can get "all institutions" at once or each individual institution
-                        Greensub::Institution.order(:name).to_a.unshift(Greensub::Institution.new(name: "All Institutions (slow)", identifier: '*'))
-                      else
-                        current_institutions
-                      end
+        # admins can get "all institutions" at once or each individual institution
+        Greensub::Institution.order(:name).to_a.unshift(Greensub::Institution.new(name: "All Institutions (slow)", identifier: '*'))
+      else
+        current_institutions
+      end
       return render 'counter_reports/unauthorized', status: :unauthorized if params[:customer_id].nil? && @institutions.empty?
     end
 

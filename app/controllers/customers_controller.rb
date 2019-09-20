@@ -10,7 +10,6 @@ class CustomersController < ApplicationController
   def show; end
 
   private
-
     def set_customer
       @customer = Greensub::Institution.find(params[:id])
     end

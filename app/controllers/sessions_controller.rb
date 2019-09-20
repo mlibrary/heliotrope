@@ -72,7 +72,6 @@ class SessionsController < ApplicationController
   end
 
   private
-
     def component_discovery_feed(component_id = '') # rubocop:disable Metrics/CyclomaticComplexity
       Rails.cache.fetch("component_discovery_feed:" + component_id, expires_in: 15.minutes) do
         component_discovery_feed = []
@@ -113,48 +112,48 @@ class SessionsController < ApplicationController
     def unfiltered_discovery_feed
       Rails.cache.fetch("unfiltered_discovery_feed", expires_in: 24.hours) do
         json = if Rails.env.production?
-                 Faraday.get(root_url(script_name: "/Shibboleth.sso/DiscoFeed").gsub!(/\/?\?locale=.*/, '')).body
-               else
-                 fake_discovery_feed = []
-                 Greensub::Institution.where("entity_id <> ''").each do |institution|
-                   fake_discovery_feed << {
-                     "entityID" => institution.entity_id,
-                     "DisplayNames" => [
-                       {
-                         "value" => institution.name,
-                         "lang" => "en"
-                       }
-                     ],
-                     "Descriptions" => [
-                       {
-                         "value" => institution.name,
-                         "lang" => "en"
-                       }
-                     ],
-                     "InformationURLs" => [
-                       {
-                         "value" => "http://www.umich.edu/",
-                         "lang" => "en"
-                       }
-                     ],
-                     "PrivacyStatementURLs" => [
-                       {
-                         "value" => "http://documentation.its.umich.edu/node/262/",
-                         "lang" => "en"
-                       }
-                     ],
-                     "Logos" => [
-                       {
-                         "value" => "https://shibboleth.umich.edu/images/StackedBlockM-InC.png",
-                         "height" => "150",
-                         "width" => "300",
-                         "lang" => "en"
-                       }
-                     ]
-                   }
-                 end
-                 fake_discovery_feed.to_json
-               end
+          Faraday.get(root_url(script_name: "/Shibboleth.sso/DiscoFeed").gsub!(/\/?\?locale=.*/, '')).body
+        else
+          fake_discovery_feed = []
+          Greensub::Institution.where("entity_id <> ''").each do |institution|
+            fake_discovery_feed << {
+              "entityID" => institution.entity_id,
+              "DisplayNames" => [
+                {
+                  "value" => institution.name,
+                  "lang" => "en"
+                }
+              ],
+              "Descriptions" => [
+                {
+                  "value" => institution.name,
+                  "lang" => "en"
+                }
+              ],
+              "InformationURLs" => [
+                {
+                  "value" => "http://www.umich.edu/",
+                  "lang" => "en"
+                }
+              ],
+              "PrivacyStatementURLs" => [
+                {
+                  "value" => "http://documentation.its.umich.edu/node/262/",
+                  "lang" => "en"
+                }
+              ],
+              "Logos" => [
+                {
+                  "value" => "https://shibboleth.umich.edu/images/StackedBlockM-InC.png",
+                  "height" => "150",
+                  "width" => "300",
+                  "lang" => "en"
+                }
+              ]
+            }
+          end
+          fake_discovery_feed.to_json
+        end
         JSON.parse(json)
       end
     end

@@ -6,7 +6,6 @@ class DlpsInstitution
   end
 
   private
-
     def ip_based_institutions(request_attributes)
       ids = request_attributes[:dlpsInstitutionId]
       return [] if ids.blank?

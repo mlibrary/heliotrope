@@ -14,7 +14,6 @@ class TargetResourceResolver < Checkpoint::Resource::Resolver
   end
 
   private
-
     def components(entity)
       return [] if entity.try(:component).blank?
       [convert(entity.component)]

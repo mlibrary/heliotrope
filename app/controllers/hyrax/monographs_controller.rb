@@ -34,7 +34,6 @@ module Hyrax
     end
 
     protected
-
       # The curation_concerns gem doesn't allow cancancan to
       # populate the monograph with the params because it uses an
       # actor to build the monograph instead.  See here:

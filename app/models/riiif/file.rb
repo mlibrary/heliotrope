@@ -36,10 +36,10 @@ module Riiif
 
     def extract(options)
       command = if mime_type.match(/tiff/) && tifftopnm
-                  extract_tifftopnm(options)
-                else
-                  extract_imagemagick(options)
-                end
+        extract_tifftopnm(options)
+      else
+        extract_imagemagick(options)
+      end
       execute(command)
     end
 
@@ -87,7 +87,6 @@ module Riiif
     end
 
     private
-
       def execute(command)
         out = nil
         benchmark("Riiif executed #{command}") do

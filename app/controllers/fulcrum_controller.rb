@@ -66,7 +66,6 @@ class FulcrumController < ApplicationController
   end
 
   private
-
     def publisher_stats_file
       Rails.root.join('tmp', 'publisher_stats.yml')
     end

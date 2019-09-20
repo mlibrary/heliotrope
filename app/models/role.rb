@@ -27,7 +27,6 @@ class Role < ApplicationRecord
   end
 
   protected
-
     def user_must_exist
       errors.add(:user_key, 'User must sign up first.') if user.blank?
     end

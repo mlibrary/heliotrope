@@ -24,10 +24,10 @@ module Hyrax
         markup = ''
         return markup if values.blank? && !options[:include_empty]
         markup << if label.empty?
-                    %(<tr><td colspan="2"><ul class='tabular list-unstyled'>)
-                  else
-                    %(<tr><th>#{label}</th>\n<td><ul class='tabular list-unstyled'>)
-                  end
+          %(<tr><td colspan="2"><ul class='tabular list-unstyled'>)
+        else
+          %(<tr><th>#{label}</th>\n<td><ul class='tabular list-unstyled'>)
+        end
         attributes = microdata_object_attributes(field).merge(class: "attribute #{field}")
 
         maybe_sort_values
@@ -76,7 +76,6 @@ module Hyrax
       end
 
       private
-
         def attribute_value_to_html(value)
           if microdata_value_attributes(field).present?
             "<span#{html_attributes(microdata_value_attributes(field))}>#{li_value(value)}</span>"

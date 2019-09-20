@@ -74,7 +74,6 @@ module EPub
     end
 
     private
-
       def initialize(epub_publication, database)
         @epub_publication = epub_publication
         @db = database
@@ -94,7 +93,6 @@ module EPub
     end
 
     private
-
       def initialize
         @epub_publication = EPub::PublicationNullObject.send(:new)
         @db = nil

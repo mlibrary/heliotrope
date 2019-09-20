@@ -67,12 +67,12 @@ module EmbedCodePresenter
 
   def embed_height_string
     media_type = if video?
-                   ' video'
-                 elsif image?
-                   ' image'
-                 else
-                   ''
-                 end
+      ' video'
+    elsif image?
+      ' image'
+    else
+      ''
+    end
     height_ok? ? "<!-- actual#{media_type} height: #{embed_height}px -->" : ''
   end
 

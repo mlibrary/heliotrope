@@ -10,7 +10,6 @@ class FeaturedRepresentativeActor < Hyrax::Actors::AbstractActor
   end
 
   private
-
     def cleanup_featured_representative(env)
       # Apparently this only gets called on Works, not FileSets
       # FileSet deletion is handled in the overridden hyrax FileSetController

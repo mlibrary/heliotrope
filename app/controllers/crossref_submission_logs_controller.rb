@@ -14,7 +14,6 @@ class CrossrefSubmissionLogsController < ApplicationController
   end
 
   private
-
     def allowed_show_params(filename)
       ['submission_xml', 'response_xml', 'initial_http_message'].include? filename
     end

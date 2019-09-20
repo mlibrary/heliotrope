@@ -20,11 +20,11 @@ module Import
       attrs['row_errors'] = {}
 
       rows = if stream.present?
-               CSV.parse(stream, headers: true, skip_blanks: true).delete_if { |row| row.to_hash.values.all?(&:blank?) }
-             else
-               puts "Parsing file: #{file}"
-               CSV.read(file, headers: true, skip_blanks: true).delete_if { |row| row.to_hash.values.all?(&:blank?) }
-             end
+        CSV.parse(stream, headers: true, skip_blanks: true).delete_if { |row| row.to_hash.values.all?(&:blank?) }
+      else
+        puts "Parsing file: #{file}"
+        CSV.read(file, headers: true, skip_blanks: true).delete_if { |row| row.to_hash.values.all?(&:blank?) }
+      end
       row_data = RowData.new
 
       # look for unexpected column names which will be ignored. note: 'File Name' is not in METADATA_FIELDS.
@@ -61,7 +61,6 @@ module Import
     end
 
     private
-
       def missing_file_name?(row)
         row['File Name'].blank? && row['External Resource URL'].blank?
       end

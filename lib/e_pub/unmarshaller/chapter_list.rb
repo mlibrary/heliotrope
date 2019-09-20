@@ -30,7 +30,6 @@ module EPub
       end
 
       private
-
         def initialize(content, full_path)
           @content = content
           @full_path = full_path
@@ -46,7 +45,6 @@ module EPub
       private_class_method :new
 
       private
-
         def initialize
           super(Content.null_object, '')
         end

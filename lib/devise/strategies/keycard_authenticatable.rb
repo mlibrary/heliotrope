@@ -45,7 +45,6 @@ module Devise
       end
 
       private
-
         def set_user!
           user = nil
           user ||= existing_user || new_user || guest_user if user_eid.present?

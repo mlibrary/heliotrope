@@ -32,7 +32,6 @@ class CustomerNullObject < Customer
   private_class_method :new
 
   private
-
     def initialize
       super(nil)
     end

@@ -22,7 +22,6 @@ module EPub
     end
 
     private
-
       def initialize(interval, unmarshaller_page)
         @interval = interval
         @unmarshaller_page = unmarshaller_page
@@ -33,7 +32,6 @@ module EPub
     private_class_method :new
 
     private
-
       def initialize
         super(Interval.null_object, Unmarshaller::Page.null_object)
       end

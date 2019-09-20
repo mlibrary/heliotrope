@@ -6,7 +6,6 @@ class AptrustLogsController < ApplicationController
   end
 
   private
-
     def filtering_params(params)
       params.slice(:noid_like, :where_like, :stage_like, :status_like, :action_like)
     end

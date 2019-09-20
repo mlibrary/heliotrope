@@ -160,7 +160,6 @@ module Import
     end
 
     private
-
       def validate_user
         return if user_email.blank?
         raise "No user found with email '#{user_email}'. You must enter the email address of an actual user." if user.blank?

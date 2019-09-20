@@ -14,7 +14,6 @@ class ActorAgentResolver < Checkpoint::Agent::Resolver
   end
 
   private
-
     def individuals(actor)
       return [] if actor.try(:individual).blank?
       [convert(actor.individual)]

@@ -83,7 +83,7 @@ RSpec.describe Devise::Strategies::KeycardAuthenticatable do
     end
 
     context "when user_eid is missing" do
-      let(:user_eid) {}
+      let(:user_eid) { }
       let(:guest) { User.guest(user_key: "guest@fulcrum.org") }
 
       before do

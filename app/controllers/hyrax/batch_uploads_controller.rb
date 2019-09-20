@@ -38,7 +38,6 @@ module Hyrax
     end
 
     private
-
       def respond_with_batch_upload_disabled
         respond_to do |wants|
           wants.json do

@@ -128,7 +128,6 @@ module Sighrax # rubocop:disable Metrics/ModuleLength
     end
 
     private
-
       def model_factory(noid, data, model_type)
         if /^Monograph$/i.match?(model_type)
           Monograph.send(:new, noid, data)

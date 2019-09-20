@@ -11,12 +11,12 @@ class EBookDownloadPresenter < ApplicationPresenter
     @ebook_presenters = Hyrax::PresenterFactory.build_for(ids: [@monograph.epub_id, @monograph.mobi_id, @monograph.pdf_ebook_id], presenter_class: Hyrax::FileSetPresenter, presenter_args: @current_ability).compact
     @ebook_presenters.each do |ebook|
       ebook_format = if ebook.epub?
-                       "EPUB"
-                     elsif ebook.mobi?
-                       "MOBI"
-                     elsif ebook.pdf_ebook?
-                       "PDF"
-                     end
+        "EPUB"
+      elsif ebook.mobi?
+        "MOBI"
+      elsif ebook.pdf_ebook?
+        "PDF"
+      end
       ebook.class_eval { attr_accessor "ebook_format" }
       ebook.instance_variable_set(:@ebook_format, ebook_format)
     end

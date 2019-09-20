@@ -42,7 +42,6 @@ module EPub
       end
 
       private
-
         def initialize(publication, interval = EPub::Interval.null_object)
           @publication = publication
           @interval = interval
@@ -53,7 +52,6 @@ module EPub
       private_class_method :new
 
       private
-
         def initialize
           super(EPub::Publication.null_object)
         end

@@ -12,7 +12,6 @@ module Devise
       end
 
       protected
-
         # Remote user is coming back from cosign as uniquename.
         # Append @umich.edu to this value to satisfy user model validations
         def remote_user(headers)

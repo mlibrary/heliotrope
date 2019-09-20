@@ -47,7 +47,6 @@ module EPub
       end
 
       private
-
         def initialize(chapter_list, span_element)
           @chapter_list = chapter_list
           @span_element = span_element
@@ -58,7 +57,6 @@ module EPub
       private_class_method :new
 
       private
-
         def initialize
           super(ChapterList.null_object, Nokogiri::XML::Element.new('span', Nokogiri::XML::Document.parse(nil)))
         end

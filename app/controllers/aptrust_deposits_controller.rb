@@ -16,7 +16,6 @@ class AptrustDepositsController < ApplicationController
   end
 
   private
-
     def set_aptrust_deposit
       @aptrust_deposit = AptrustDeposit.find(params[:id])
     end

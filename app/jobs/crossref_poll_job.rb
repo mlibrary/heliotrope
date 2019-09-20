@@ -23,16 +23,15 @@ class CrossrefPollJob < ApplicationJob
   end
 
   private
-
     def update_status(submission, doc)
       status = submission.status
       batch_status = doc.at_css('doi_batch_diagnostic')&.attribute('status')&.value
       if batch_status == "completed"
         status = if doc.at_css('batch_data/failure_count').content != "0"
-                   "error"
-                 else
-                   "success"
-                 end
+          "error"
+        else
+          "success"
+        end
       end
       status
     end

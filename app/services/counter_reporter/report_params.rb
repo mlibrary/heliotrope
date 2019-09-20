@@ -76,7 +76,6 @@ module CounterReporter
     end
 
     private
-
       def make_start_date(params)
         if params[:start_date].present?
           Date.parse(params[:start_date])

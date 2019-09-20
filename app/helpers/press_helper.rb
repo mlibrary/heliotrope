@@ -116,7 +116,6 @@ module PressHelper
   end
 
   private
-
     def parent_press(child_press)
       Press.find(child_press.parent_id) if child_press.parent_id.present?
     end

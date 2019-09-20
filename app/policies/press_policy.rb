@@ -22,7 +22,6 @@ class PressPolicy < ApplicationPolicy
   end
 
   private
-
     def actor_platform_admin?
       @actor_platform_admin ||= Sighrax.platform_admin?(actor)
     end

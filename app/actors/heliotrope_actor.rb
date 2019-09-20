@@ -21,7 +21,6 @@ class HeliotropeActor < Hyrax::Actors::AbstractActor
   end
 
   private
-
     # :heliotrope_actor callback define in config/initializers/hyrax_callbacks.rb
     def heliotrope_actor(temporal, action, env)
       Hyrax.config.callback.run(:heliotrope_actor, temporal, action, env.curation_concern, env.user) if temporal == :before

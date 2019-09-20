@@ -52,7 +52,6 @@ class AttachImportFilesToWorkJob < ApplicationJob
   end
 
   private
-
     # Add all file_sets as ordered_members in a single action
     # HELIOTROPE: This is copied out of hyrax's AttachFilesToWorkWithOrderedMembersJob
     # which makes this job a FrankenJob(!) combination of:

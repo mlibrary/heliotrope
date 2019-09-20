@@ -46,7 +46,6 @@ module Hyrax
     end
 
     private
-
       def find_renderer_class(name)
         renderer = nil
         ['Renderer', 'AttributeRenderer'].each do |suffix|

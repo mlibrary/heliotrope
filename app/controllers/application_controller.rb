@@ -75,7 +75,6 @@ class ApplicationController < ActionController::Base
   end
 
   private
-
     def request_attributes
       @request_attributes ||= Services.request_attributes.for(request)
     end
