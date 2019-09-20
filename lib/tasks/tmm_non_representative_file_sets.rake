@@ -59,7 +59,7 @@ namespace :heliotrope do
       if existing_resources.count.zero?
         '  Monograph has no files. Attempting import.'
         importer = Import::Importer.new(root_dir: resources_folder.to_s, user_email: User.batch_user_key, monograph_id: doc.id,
-                                        press: nil, visibility: nil, monograph_title: nil, quiet: true, workflow: nil)
+                                        press: nil, visibility: nil, monograph_title: nil, quiet: true)
         importer.run
       else
         '  Monograph has files. Comparing to files on disk.'

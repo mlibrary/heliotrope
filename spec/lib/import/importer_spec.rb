@@ -18,8 +18,7 @@ describe Import::Importer do
                         press: press.subdomain,
                         visibility: public_vis,
                         monograph_id: monograph_id,
-                        quiet: true,
-                        workflow: 'my_workflow')
+                        quiet: true)
   }
   let(:monograph_id) { '' }
   let(:visibility) { public_vis }
@@ -121,38 +120,8 @@ describe Import::Importer do
   end
 
   describe '#run' do
-    let(:workflow_name) { 'my_workflow' }
-    let(:admin_set) { create(:admin_set, edit_users: [user.user_key]) }
-    let(:one_step_workflow) do
-      {
-        workflows: [
-          {
-            name: workflow_name,
-            label: "One-step mediated deposit workflow",
-            description: "A single-step workflow for mediated deposit",
-            actions: [
-              {
-                name: "deposit", from_states: [], transition_to: "pending_review"
-              }, {
-                name: "approve", from_states: [{ names: ["pending_review"], roles: ["approving"] }],
-                transition_to: "deposited",
-                methods: ["Hyrax::Workflow::ActivateObject"]
-              }, {
-                name: "leave_a_comment", from_states: [{ names: ["pending_review"], roles: ["approving"] }]
-              }
-            ]
-          }
-        ]
-      }
-    end
-    let(:workflow) { Sipity::Workflow.find_by!(name: workflow_name, permission_template: permission_template) }
-    let(:permission_template) { create(:permission_template, source_id: admin_set.id) }
-
     before do
       stub_out_redis
-      Hyrax::Workflow::WorkflowImporter.generate_from_hash(data: one_step_workflow, permission_template: permission_template)
-      permission_template.available_workflows.first.update!(active: true)
-      Hyrax::Workflow::PermissionGenerator.call(roles: 'approving', workflow: workflow, agents: user)
     end
 
     context 'when the importer runs successfully' do
@@ -172,7 +141,7 @@ describe Import::Importer do
         expect(monograph.id.length).to eq 9 # NOID
 
         expect(monograph.depositor).to eq user.email
-        expect(monograph.admin_set_id).to eq admin_set.id
+        expect(monograph.admin_set_id).to eq 'admin_set/default'
 
         expect(monograph.visibility).to eq public_vis
         expect(monograph.open_access).to eq 'yes' # acceptable_values are downcased
@@ -312,21 +281,6 @@ describe Import::Importer do
 
       it 'raises an exception' do
         expect { importer.run }.to raise_error(/No press found with subdomain: 'incorrect press'/)
-      end
-    end
-
-    context "when the workflow doesn't have an admin_set" do
-      let(:importer) {
-        described_class.new(root_dir: root_dir,
-                            user_email: user.email,
-                            press: press.subdomain,
-                            visibility: public_vis,
-                            monograph_id: monograph_id,
-                            workflow: 'not_a_real_workflow')
-      }
-
-      it 'raises an exception' do
-        expect { importer.run }.to raise_error(/a corresponding AdminSet was not found. Make sure you've registered this workflow./)
       end
     end
 
