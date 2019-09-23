@@ -33,10 +33,10 @@ class EPubPolicy < ResourcePolicy
 
         component = Greensub::Component.find_by(noid: target.noid)
         products = if Incognito.sudo_actor?(actor)
-          Incognito.sudo_actor_products(actor)
-        else
-          Greensub.actor_products(actor)
-        end
+                     Incognito.sudo_actor_products(actor)
+                   else
+                     Greensub.actor_products(actor)
+                   end
         debug_log("actor products: #{products.count}")
         products.each { |product| debug_log("actor product: #{product.identifier}") }
         debug_log("component products: #{component.products.count}")
@@ -59,5 +59,6 @@ class EPubPolicy < ResourcePolicy
   end
 
   protected
+
     attr_reader :share
 end

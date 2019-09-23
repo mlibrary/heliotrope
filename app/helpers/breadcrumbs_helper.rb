@@ -13,12 +13,13 @@ module BreadcrumbsHelper
                breadcrumbs_for_monograph(@presenter.subdomain, @presenter)
              when "score_catalog"
                breadcrumbs_for_monograph(@presenter.subdomain, @presenter)
-    end
+             end
 
     crumbs || []
   end
 
   private
+
     def breadcrumbs_for_monograph(subdomain, presenter)
       press = Press.where(subdomain: subdomain)&.first
       return [] if press.blank?
@@ -42,10 +43,10 @@ module BreadcrumbsHelper
 
       crumbs = possible_parent(press)
       crumbs << if presenter.parent.is_a? Hyrax::MonographPresenter
-        { href: main_app.monograph_catalog_path(presenter.parent.id), text: presenter.parent.title, class: "" }
-      elsif presenter.parent.is_a? Hyrax::ScorePresenter
-        { href: main_app.score_catalog_path(presenter.parent.id), text: presenter.parent.title, class: "" }
-      end
+                  { href: main_app.monograph_catalog_path(presenter.parent.id), text: presenter.parent.title, class: "" }
+                elsif presenter.parent.is_a? Hyrax::ScorePresenter
+                  { href: main_app.score_catalog_path(presenter.parent.id), text: presenter.parent.title, class: "" }
+                end
       crumbs << { href: "", text: presenter.title, class: "active" }
     end
 

@@ -36,6 +36,7 @@ class UnpackJob < ApplicationJob
   end
 
   private
+
     def epub_webgl_bridge(id, root_path, kind)
       # Edge case for epubs with POI (Point of Interest) to map to CFI for a webgl (gabii)
       # See 1630

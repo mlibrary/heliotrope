@@ -30,6 +30,7 @@ module Devise
       end
 
       private
+
         def user_key
           remote_user(request.headers)
         end

@@ -32,6 +32,7 @@ module EPub
       end
 
       private
+
         def initialize(nav, toc_element)
           @nav = nav
           @toc_element = toc_element
@@ -42,6 +43,7 @@ module EPub
       private_class_method :new
 
       private
+
         def initialize
           super(Nav.null_object, Nokogiri::XML::Element.new('toc', Nokogiri::XML::Document.parse(nil)))
         end

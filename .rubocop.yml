@@ -24,6 +24,12 @@ AllCops:
 Layout/IndentationConsistency:
   EnforcedStyle: indented_internal_methods
 
+Layout/EmptyLinesAroundAccessModifier:
+  EnforcedStyle: around
+
+Layout/EndAlignment:
+  EnforcedStyleAlignWith: keyword
+
 Lint/DuplicateMethods:
   Exclude:
   - 'app/presenters/e_pub_download_presenter.rb'
@@ -136,6 +142,9 @@ Style/CollectionMethods:
 
 Style/Documentation:
   Enabled: false
+
+Style/InverseMethods:
+  Enabled: true
 
 Style/LineEndConcatenation:
   Exclude:

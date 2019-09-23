@@ -97,6 +97,7 @@ module EPub
     end
 
     private
+
       def initialize(node, pos0, pos1)
         @node = node
         @pos0 = pos0

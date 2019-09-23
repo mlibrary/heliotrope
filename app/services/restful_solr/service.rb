@@ -18,6 +18,7 @@ module RestfulSolr
     end
 
     private
+
       def connection
         @connection ||= Faraday.new(@base) do |conn|
           conn.headers = {

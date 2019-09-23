@@ -27,14 +27,15 @@ module EPub
       def content
         return @content unless @content.nil?
         full_path = if @rootfile_element&.attribute('full-path')&.value
-          File.join(@container.root_path, @rootfile_element.attribute('full-path').value)
-        else
-          ''
-        end
+                      File.join(@container.root_path, @rootfile_element.attribute('full-path').value)
+                    else
+                      ''
+                    end
         @content = Content.from_rootfile_full_path(self, full_path)
       end
 
       private
+
         def initialize(container, rootfile_element)
           @container = container
           @rootfile_element = rootfile_element
@@ -45,6 +46,7 @@ module EPub
       private_class_method :new
 
       private
+
         def initialize
           super(Container.null_object, Nokogiri::XML::Element.new('rootfile', Nokogiri::XML::Document.parse(nil)))
         end

@@ -26,6 +26,7 @@ module TitlePresenter
   end
 
   private
+
     def md_title
       md = solr_document&.title&.first
       md.presence || 'Title'

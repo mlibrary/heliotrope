@@ -38,11 +38,11 @@ module API
       #     {include:file:app/views/api/v1/components/_component.json.jbuilder}
       def index
         @components = if params[:product_id].present?
-          set_product
-          @product.components
-        else
-          Greensub::Component.all
-        end
+                        set_product
+                        @product.components
+                      else
+                        Greensub::Component.all
+                      end
       end
 
       # @overload show
@@ -144,6 +144,7 @@ module API
       end
 
       private
+
         def set_product
           @product = Greensub::Product.find(params[:product_id])
         end

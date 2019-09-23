@@ -30,6 +30,7 @@ module API
     end
 
     private
+
       def authorize_request
         @current_user = platform_admin_from_payload(payload_from_token(token_from_header_or_query))
       end

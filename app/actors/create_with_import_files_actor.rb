@@ -19,6 +19,7 @@ class CreateWithImportFilesActor < Hyrax::Actors::AbstractActor
   end
 
   private
+
     def create_with_import_files(env, files_ids, files_attributes)
       with_import_files(env, files_ids, files_attributes)
     end

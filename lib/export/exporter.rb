@@ -161,10 +161,10 @@ module Export
       if use_dir
         path = "#{use_dir}/"
         job_path = if path[0] == '/'
-          path
-        else
-          File.join(Dir.pwd, path)
-        end
+                     path
+                   else
+                     File.join(Dir.pwd, path)
+                   end
       else
         base = File.join(".", "extract")
         FileUtils.mkdir(base) unless Dir.exist?(base)
@@ -289,6 +289,7 @@ module Export
     end
 
     private
+
       def monograph_presenter
         @monograph_presenter ||= Sighrax.hyrax_presenter(monograph)
       end
@@ -297,10 +298,10 @@ module Export
         return @all_metadata if @all_metadata.present?
 
         @all_metadata = if @columns == :monograph
-          (ADMIN_METADATA_FIELDS + METADATA_FIELDS).select { |f| %i[universal monograph].include? f[:object] }
-        else
-          ADMIN_METADATA_FIELDS + METADATA_FIELDS + FILE_SET_FLAG_FIELDS
-        end
+                          (ADMIN_METADATA_FIELDS + METADATA_FIELDS).select { |f| %i[universal monograph].include? f[:object] }
+                        else
+                          ADMIN_METADATA_FIELDS + METADATA_FIELDS + FILE_SET_FLAG_FIELDS
+                        end
       end
 
       def metadata_row(item, parent_rep = nil)
@@ -343,10 +344,10 @@ module Export
 
       def item_url(item, item_type)
         link = if item_type == :monograph
-          Rails.application.routes.url_helpers.hyrax_monograph_url(item.id)
-        else
-          Rails.application.routes.url_helpers.hyrax_file_set_url(item.id)
-        end
+                 Rails.application.routes.url_helpers.hyrax_monograph_url(item.id)
+               else
+                 Rails.application.routes.url_helpers.hyrax_file_set_url(item.id)
+               end
         '=HYPERLINK("' + link + '")'
       end
 

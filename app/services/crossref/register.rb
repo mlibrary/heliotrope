@@ -29,10 +29,10 @@ module Crossref
                                              file_name: File.basename(tmp),
                                              submission_xml: @xml)
       submission.status = if response.code == 200
-        "submitted"
-      else
-        "error"
-      end
+                            "submitted"
+                          else
+                            "error"
+                          end
       submission.save!
       tmp.unlink
 
@@ -40,6 +40,7 @@ module Crossref
     end
 
     private
+
       def doi_batch_id
         doc = Nokogiri::XML(@xml)
         doc.at_css('doi_batch_id').content

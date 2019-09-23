@@ -17,6 +17,7 @@ module RequestSpecHelper
   end
 
   private
+
     def warden_scope(resource)
       resource.class.name.underscore.to_sym
     end

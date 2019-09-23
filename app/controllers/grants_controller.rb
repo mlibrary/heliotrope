@@ -30,26 +30,26 @@ class GrantsController < ApplicationController
     end
 
     success = if ValidationService.valid_credential?(credential_type, credential_id)
-      case credential_type
-      when :permission
-        case credential_id.to_s.to_sym
-        when :any
-          unless Authority.permits?(Authority.agent(agent_type, agent_id), Checkpoint::Credential::Permission.new(:any), Authority.resource(resource_type, resource_id)) # rubocop:disable Metrics/BlockNesting
-            Authority.grant!(Authority.agent(agent_type, agent_id), Checkpoint::Credential::Permission.new(:any), Authority.resource(resource_type, resource_id))
-          end
-          true
-        when :read
-          unless Authority.permits?(Authority.agent(agent_type, agent_id), Checkpoint::Credential::Permission.new(:read), Authority.resource(resource_type, resource_id)) # rubocop:disable Metrics/BlockNesting
-            Authority.grant!(Authority.agent(agent_type, agent_id), Checkpoint::Credential::Permission.new(:read), Authority.resource(resource_type, resource_id))
-          end
-          true
-        else
-          raise(ArgumentError)
-        end
-      else
-        raise(ArgumentError)
-      end
-    end
+                case credential_type
+                when :permission
+                  case credential_id.to_s.to_sym
+                  when :any
+                    unless Authority.permits?(Authority.agent(agent_type, agent_id), Checkpoint::Credential::Permission.new(:any), Authority.resource(resource_type, resource_id)) # rubocop:disable Metrics/BlockNesting
+                      Authority.grant!(Authority.agent(agent_type, agent_id), Checkpoint::Credential::Permission.new(:any), Authority.resource(resource_type, resource_id))
+                    end
+                    true
+                  when :read
+                    unless Authority.permits?(Authority.agent(agent_type, agent_id), Checkpoint::Credential::Permission.new(:read), Authority.resource(resource_type, resource_id)) # rubocop:disable Metrics/BlockNesting
+                      Authority.grant!(Authority.agent(agent_type, agent_id), Checkpoint::Credential::Permission.new(:read), Authority.resource(resource_type, resource_id))
+                    end
+                    true
+                  else
+                    raise(ArgumentError)
+                  end
+                else
+                  raise(ArgumentError)
+                end
+              end
 
     @grant = Grant.new
     @grant.agent_type = grant_params[:agent_type]
@@ -79,6 +79,7 @@ class GrantsController < ApplicationController
   end
 
   private
+
     def set_grant
       @grant = Checkpoint::DB::Grant.where(id: params[:id]).first
     end

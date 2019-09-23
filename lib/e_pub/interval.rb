@@ -52,6 +52,7 @@ module EPub
     end
 
     private
+
       def initialize(rendition, args)
         @rendition = rendition
         @args = args
@@ -62,6 +63,7 @@ module EPub
     private_class_method :new
 
     private
+
       def initialize
         super(Rendition.null_object, unmarshaller_chapter: Unmarshaller::Chapter.null_object)
       end

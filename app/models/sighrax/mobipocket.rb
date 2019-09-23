@@ -5,6 +5,7 @@ module Sighrax
     private_class_method :new
 
     private
+
       def initialize(noid, data)
         super(noid, data)
       end

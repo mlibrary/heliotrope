@@ -48,6 +48,7 @@ module Greensub
     end
 
     private
+
       def permission_read
         @permission_read ||= Checkpoint::Credential::Permission.new(:read)
       end

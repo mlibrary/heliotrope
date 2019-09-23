@@ -34,6 +34,7 @@ class MonographManifestsController < ApplicationController
   end
 
   private
+
     def monograph_manifest_params
       params.require(:monograph_manifest).permit
     end

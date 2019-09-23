@@ -49,6 +49,7 @@ module API
       def show; end
 
       private
+
         def set_press
           @press = Press.find(params[:id])
         end

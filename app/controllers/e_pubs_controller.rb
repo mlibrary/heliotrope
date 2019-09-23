@@ -18,10 +18,10 @@ class EPubsController < CheckpointController
     if @entity.is_a?(Sighrax::ElectronicPublication)
       @search_url = main_app.epub_search_url(@noid, q: '').gsub!(/locale=en&/, '')
       @use_archive = if File.exist?(File.join(UnpackService.root_path_from_noid(@noid, 'epub'), @noid + ".sm.epub"))
-        true
-      else
-        false
-      end
+                       true
+                     else
+                       false
+                     end
     end
 
     @press = Press.where(subdomain: @subdomain).first
@@ -155,6 +155,7 @@ class EPubsController < CheckpointController
   end
 
   private
+
     def setup
       @noid = params[:id]
       @entity = Sighrax.factory(@noid)

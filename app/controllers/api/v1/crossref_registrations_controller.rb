@@ -19,6 +19,7 @@ module API
       end
 
       private
+
         # Only log exceptions, we do crossref specific logging
         # in the CrossrefSubmissionLog from Crossref::Register
         def log_request_response(exception = nil)

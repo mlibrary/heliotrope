@@ -48,6 +48,7 @@ module EPub
     end
 
     private
+
       def initialize(opts)
         @id           = opts[:id]
         @container    = opts[:container]

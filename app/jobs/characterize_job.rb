@@ -72,7 +72,7 @@ class CharacterizeJob < ApplicationJob
              "related"
            when "reviews.html"
              "reviews"
-    end
+           end
 
     if kind.present?
       FeaturedRepresentative.create!(work_id: file_set.parent.id,

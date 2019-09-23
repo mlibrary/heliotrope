@@ -151,6 +151,7 @@ module EPub
     end
 
     private
+
       def initialize(valid_epub, unmarshaller_container = Unmarshaller::Container.null_object)
         @id = valid_epub.id
         @content_file = valid_epub.content_file
@@ -186,6 +187,7 @@ module EPub
     end
 
     private
+
       def initialize
         super(Validator.null_object, Unmarshaller::Container.null_object)
       end

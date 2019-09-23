@@ -31,6 +31,7 @@ module EPub
       end
 
       private
+
         def initialize(toc, anchor_element)
           @toc = toc
           @anchor_element = anchor_element
@@ -41,6 +42,7 @@ module EPub
       private_class_method :new
 
       private
+
         def initialize
           super(TOC.null_object, Nokogiri::XML::Element.new('a', Nokogiri::XML::Document.parse(nil)))
         end

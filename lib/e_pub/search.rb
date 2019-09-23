@@ -25,6 +25,7 @@ module EPub
     end
 
     private
+
       def find_selection(node, query)
         matches = []
         offset = 0
@@ -49,10 +50,10 @@ module EPub
 
         node.children.each do |child|
           targets << if child.text? && node_query_match(child, query)
-            find_selection(child, query)
-          else
-            find_targets(child, query)
-          end
+                       find_selection(child, query)
+                     else
+                       find_targets(child, query)
+                     end
         end
         targets.compact
       end

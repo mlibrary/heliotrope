@@ -50,6 +50,7 @@ module Greensub
     end
 
     private
+
       def set_institution
         @institution = Institution.find(params[:id])
       end

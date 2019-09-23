@@ -73,6 +73,7 @@ module Greensub
     end
 
     private
+
       def set_component
         @component = Component.find(params[:id])
       end

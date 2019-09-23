@@ -10,6 +10,7 @@ module Testing
       end
 
       private
+
         def turnsole
           @turnsole ||= Turnsole::Service.new(Testing.config.source_token, Testing.config.source_url + 'api/')
         end

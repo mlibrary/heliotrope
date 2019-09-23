@@ -20,13 +20,14 @@ module EPub
 
       def image
         @image ||= if @page_doc.xpath(".//img").first&.attribute('src')&.value
-          File.join(File.dirname(@full_path), @page_doc.xpath(".//img").first.attribute('src').value)
-        else
-          ''
-        end
+                     File.join(File.dirname(@full_path), @page_doc.xpath(".//img").first.attribute('src').value)
+                   else
+                     ''
+                   end
       end
 
       private
+
         def initialize(chapter, anchor_element)
           @chapter = chapter
           @anchor_element = anchor_element
@@ -48,6 +49,7 @@ module EPub
       private_class_method :new
 
       private
+
         def initialize
           super(Chapter.null_object, Nokogiri::XML::Element.new('a', Nokogiri::XML::Document.parse(nil)))
         end

@@ -11,6 +11,7 @@ class ApplicationPolicy
   end
 
   protected
+
     def action_permitted?(action)
       Checkpoint::Query::ActionPermitted.new(actor, action, target, authority: authority).true? && Incognito.allow_action_permitted?(actor)
     rescue StandardError => e

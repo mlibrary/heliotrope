@@ -80,6 +80,7 @@ module EPub
     end
 
     private
+
       def initialize(opts)
         @id = opts[:id]
         @href = opts[:href]
@@ -114,6 +115,7 @@ module EPub
     end
 
     private
+
       def initialize; end
   end
 end

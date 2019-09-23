@@ -28,10 +28,10 @@ module EPub
         idx = siblings.index(this)
 
         indexes << if this.text?
-          idx + 1
-        else
-          (idx + 1) * 2
-        end
+                     idx + 1
+                   else
+                     (idx + 1) * 2
+                   end
 
         indexes[-1] = "#{indexes[-1]}[#{this['id']}]" if this['id']
 

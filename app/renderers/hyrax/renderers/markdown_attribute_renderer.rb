@@ -12,10 +12,10 @@ module Hyrax
         end
 
         markup << if label.empty?
-          %(<tr><td colspan="2"><ul class='tabular list-unstyled'>)
-        else
-          %(<tr><th>#{label}</th>\n<td><ul class='tabular list-unstyled'>)
-        end
+                    %(<tr><td colspan="2"><ul class='tabular list-unstyled'>)
+                  else
+                    %(<tr><th>#{label}</th>\n<td><ul class='tabular list-unstyled'>)
+                  end
         attributes = microdata_object_attributes(field).merge(class: "attribute #{field}")
         markup_values.each do |value|
           markup << "<li#{html_attributes(attributes)}>#{attribute_value_to_html(value)}</li>"

@@ -44,6 +44,7 @@ module Import
     end
 
     private
+
       def split_field_values(sheet_value, is_multivalued)
         if is_multivalued == :yes_split
           sheet_value.split(';').map!(&:strip).reject(&:empty?)

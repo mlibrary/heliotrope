@@ -61,7 +61,7 @@ class HandleService
               "100 : Handle Not Found. (HTTP 404 Not Found)"
             when 200
               "200 : Values Not Found. The handle exists but has no values (or no values according to the types and indices specified). (HTTP 200 OK)"
-      end
+            end
     end
     url
   end

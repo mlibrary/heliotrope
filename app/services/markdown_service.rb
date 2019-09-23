@@ -20,6 +20,7 @@ class CustomMarkdownRenderer < Redcarpet::Render::HTML
   end
 
   private
+
     def external_link?(link)
       if link.start_with?('/') ||
          link.include?('fulcrum.org') ||

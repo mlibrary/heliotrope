@@ -63,10 +63,10 @@ module CounterReporter
         results.each do |result|
           # item << result[1][presenter.id].presence || 0
           item << if result[1][presenter.id].present? # rubocop:disable Rails/Presence
-            result[1][presenter.id]
-          else
-            0
-          end
+                    result[1][presenter.id]
+                  else
+                    0
+                  end
         end
 
         items << item
@@ -103,10 +103,10 @@ module CounterReporter
       results.clone.each do |k, v|
         v.clone.each do |ids, count|
           results[k][ids[0]] = if results[k][ids[0]].present?
-            results[k][ids[0]] + count
-          else
-            results[k][ids[0]] = count
-          end
+                                 results[k][ids[0]] + count
+                               else
+                                 results[k][ids[0]] = count
+                               end
           results[k].delete(ids)
         end
       end

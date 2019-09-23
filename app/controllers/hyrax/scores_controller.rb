@@ -32,6 +32,7 @@ module Hyrax
     end
 
     private
+
       def authorize_press
         curation_concern.press = Services.score_press
         authorize!(:create, curation_concern)

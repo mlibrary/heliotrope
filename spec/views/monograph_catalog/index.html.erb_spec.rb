@@ -10,10 +10,10 @@ RSpec.describe "monograph_catalog/index.html.erb", type: :view do
   I18n.load_path += Dir[Rails.root.join('config', 'locales', '*.yml').to_s]
   def t(value)
     translation = if value[0] == '.'
-      I18n.t('monograph_catalog.index' + value)
-    else
-      I18n.t(value)
-    end
+                    I18n.t('monograph_catalog.index' + value)
+                  else
+                    I18n.t(value)
+                  end
     debug_puts "t(#{value}) #{translation}"
     raise translation if /translation missing/.match? translation
     value

@@ -18,6 +18,7 @@ module Hyrax
     end
 
     private
+
       # Filter the member ids and return only the FileSet ids (filter out child works)
       # @return [Array<String>] the file set ids
       # HELIOTROPE override

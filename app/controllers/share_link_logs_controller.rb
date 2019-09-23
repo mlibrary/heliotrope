@@ -6,6 +6,7 @@ class ShareLinkLogsController < ApplicationController
   end
 
   private
+
     def filtering_params(params)
       params.slice(:ip_address_like, :institution_like, :press_like, :title_like, :noid_like, :token_like, :action_like, :created_like)
     end

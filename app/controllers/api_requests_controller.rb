@@ -26,6 +26,7 @@ class APIRequestsController < ApplicationController
   end
 
   private
+
     def set_api_request
       @api_request = APIRequest.find(params[:id])
     end

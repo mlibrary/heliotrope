@@ -38,11 +38,11 @@ module API
       #     {include:file:app/views/api/v1/institutions/_institution.json.jbuilder}
       def index
         @institutions = if params[:product_id].present?
-          set_product
-          @product.institutions
-        else
-          Greensub::Institution.all
-        end
+                          set_product
+                          @product.institutions
+                        else
+                          Greensub::Institution.all
+                        end
       end
 
       # @overload show
@@ -134,6 +134,7 @@ module API
       end
 
       private
+
         def set_product
           @product = Greensub::Product.find(params[:product_id])
         end

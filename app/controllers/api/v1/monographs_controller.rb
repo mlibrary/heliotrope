@@ -26,11 +26,11 @@ module API
       #     {include:file:app/views/api/v1/monographs/_monograph.json.jbuilder}
       def index
         @monographs = if params[:press_id].present?
-          set_press
-          Monograph.where(press: @press.subdomain)
-        else
-          Monograph.all
-        end
+                        set_press
+                        Monograph.where(press: @press.subdomain)
+                      else
+                        Monograph.all
+                      end
       end
 
       # Get monograph by id
@@ -92,6 +92,7 @@ module API
       end
 
       private
+
         def manifest_path
           return @manifest_path if @manifest_path.present?
           @manifest_path = Rails.root.join('tmp', 'export', 'manifest')

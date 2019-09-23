@@ -44,6 +44,7 @@ class ManifestsController < ApplicationController
   end
 
   private
+
     def manifest_params
       params.require(:manifest).permit(:csv)
     end

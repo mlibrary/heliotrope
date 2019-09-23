@@ -25,6 +25,7 @@ module EPub
       end
 
       private
+
         def initialize(root_path)
           @root_path = root_path
           @full_path = File.join(@root_path, 'META-INF/container.xml')
@@ -40,6 +41,7 @@ module EPub
       private_class_method :new
 
       private
+
         def initialize
           super('.')
         end

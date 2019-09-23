@@ -33,6 +33,7 @@ class ExtractIngestJob < ApplicationJob
   end
 
   private
+
     def manifest_path
       return @manifest_path if @manifest_path.present?
       @manifest_path = Rails.root.join('tmp', 'import', 'manifest')

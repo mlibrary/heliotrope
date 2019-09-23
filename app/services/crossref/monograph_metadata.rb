@@ -25,10 +25,10 @@ module Crossref
 
     def book_type
       document.at_css("book").attribute("book_type").value = if edited_book?
-        "edited_book"
-      else
-        "monograph"
-      end
+                                                               "edited_book"
+                                                             else
+                                                               "monograph"
+                                                             end
     end
 
     def contributors
@@ -81,10 +81,10 @@ module Crossref
 
         isbn_node = Nokogiri::XML::Node.new('isbn', document)
         isbn_node['media_type'] = if probably_ebook?(media_type)
-          "electronic"
-        else
-          "print"
-        end
+                                    "electronic"
+                                  else
+                                    "print"
+                                  end
         isbn_node.content = isbn
         document.at_css('publication_date').add_next_sibling(isbn_node)
       end
@@ -132,6 +132,7 @@ module Crossref
     end
 
     private
+
       def timestamp
         Time.current.strftime("%Y%m%d%H%M%S")
       end

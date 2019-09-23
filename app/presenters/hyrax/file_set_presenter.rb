@@ -265,22 +265,22 @@ module Hyrax
       # we've diverged from the media_display_partial stuff in Hyrax, so check our asset-page partials here
       partial = 'hyrax/file_sets/' + directory + '/'
       partial + if external_resource?
-        'external_resource'
-      elsif image?
-        'leaflet_image'
-      elsif video?
-        'video'
-      elsif audio?
-        'audio'
-      elsif epub?
-        'epub'
-      elsif eps?
-        'image_service'
-      elsif map?
-        'map'
-      else
-        'default'
-      end
+                  'external_resource'
+                elsif image?
+                  'leaflet_image'
+                elsif video?
+                  'video'
+                elsif audio?
+                  'audio'
+                elsif epub?
+                  'epub'
+                elsif eps?
+                  'image_service'
+                elsif map?
+                  'map'
+                else
+                  'default'
+                end
     end
 
     # Hyrax 2.x update, needed for the monograph show page
@@ -295,6 +295,7 @@ module Hyrax
     end
 
     private
+
       def fetch_parent_presenter
         # If we had FileSets with more then one parent this would not work and we'd need something
         # more like https://github.com/samvera/hyrax/blob/master/app/presenters/hyrax/file_set_presenter.rb#L98-L104
@@ -307,7 +308,7 @@ module Hyrax
                             Hyrax::ScorePresenter
                           else
                             WorkShowPresenter
-        end
+                          end
 
         Hyrax::PresenterFactory.build_for(ids: [@parent_document["id"]],
                                           presenter_class: presenter_class,
