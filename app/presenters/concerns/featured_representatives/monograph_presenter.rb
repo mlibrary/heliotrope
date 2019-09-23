@@ -9,6 +9,16 @@ module FeaturedRepresentatives
       @frs ||= FeaturedRepresentative.where(work_id: id)
     end
 
+    def toc?
+      if epub?
+        epub_presenter.intervals?
+      elsif pdf_ebook?
+        pdf_ebook_presenter.intervals?
+      else
+        false
+      end
+    end
+
     def reader_ebook?
       reader_ebook_id.present?
     end
