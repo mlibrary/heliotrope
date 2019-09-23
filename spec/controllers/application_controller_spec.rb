@@ -39,7 +39,7 @@ RSpec.describe ApplicationController, type: :controller do
   describe '#current_actor' do
     subject { controller.current_actor }
 
-    let(:current_user) {}
+    let(:current_user) { }
 
     before { allow(controller).to receive(:current_user).and_return(current_user) }
 

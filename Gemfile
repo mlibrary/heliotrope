@@ -193,8 +193,9 @@ group :development, :test do
   gem 'rspec-context-private'
   gem 'rspec-html-matchers'
   gem 'rspec-rails'
-  gem 'rubocop'
-  gem 'rubocop-rspec'
+  gem 'rubocop', '~> 0.74'
+  gem 'rubocop-rspec', '~> 1.35'
+  gem 'rubocop-rails_config', '~> 0.7.2'
   gem 'ruumba', '0.1.2'
   gem 'simple_solr_client'
   gem 'solr_wrapper', '0.21.0'
@@ -208,5 +209,5 @@ end
 
 group :development do
   # Capybara save_and_open_page thingy
-  gem 'launchy', '~>2.4.3'
+  gem 'launchy', '~> 2.4.3'
 end

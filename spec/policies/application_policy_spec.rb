@@ -12,10 +12,10 @@ RSpec.describe ApplicationPolicy do
   subject(:application_policy) { TestPolicy.new(actor, target) }
 
   let(:actor) { double('actor', agent_type: 'actor_type', agent_id: 'actor_id', individual: individual, institutions: institutions) }
-  let(:individual) {}
+  let(:individual) { }
   let(:institutions) { [] }
   let(:target) { double('target', agent_type: 'target_type', agent_id: 'target_id', component: component, products: products) }
-  let(:component) {}
+  let(:component) { }
   let(:products) { [] }
   let(:checkpoint) { double('checkpoint') }
   let(:permits) { false }

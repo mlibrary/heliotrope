@@ -7,7 +7,7 @@ RSpec.describe ActorAgentResolver do
 
   let(:resolver) { Checkpoint::Agent::Resolver.new }
   let(:actor) { double('actor', agent_type: 'actor_type', agent_id: 'actor_id', individual: individual, institutions: institutions) }
-  let(:individual) {}
+  let(:individual) { }
   let(:institutions) { [] }
 
   it { is_expected.to eq(resolver.expand(actor)) }

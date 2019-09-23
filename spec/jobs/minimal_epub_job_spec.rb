@@ -10,7 +10,7 @@ RSpec.describe MinimalEpubJob, type: :job do
       let(:sm_epub) { File.join(root_path, epub.id + ".sm.epub") }
 
       it "does nothing" do
-        MinimalEpubJob.perform_now(root_path)
+        described_class.perform_now(root_path)
         expect(File.exist?(sm_epub)).to be false
       end
     end
@@ -36,7 +36,7 @@ RSpec.describe MinimalEpubJob, type: :job do
         # Part of MinimalEpubJob is deleting the .sm working directory when done.
         # For testing however it's better if we have those files to examine.
         allow(FileUtils).to receive(:remove_entry_secure).with(sm_dir).and_return(true)
-        MinimalEpubJob.perform_now(root_path)
+        described_class.perform_now(root_path)
         # But we'll move them so we can test that the deletion of .sm happened too
         FileUtils.move sm_dir, sm_dir_testing
 

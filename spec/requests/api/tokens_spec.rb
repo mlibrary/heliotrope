@@ -75,7 +75,7 @@ RSpec.describe "Tokens", type: :request do
     before { headers["AUTHORIZATION"] = token }
 
     context 'missing token' do
-      let(:token) {}
+      let(:token) { }
 
       it do
         expect(token).to be_nil
@@ -156,7 +156,7 @@ RSpec.describe "Tokens", type: :request do
 
   context 'apikey query' do
     context 'missing token' do
-      let(:token) {}
+      let(:token) { }
 
       it do
         expect(token).to be_nil

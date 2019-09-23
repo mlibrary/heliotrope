@@ -187,7 +187,7 @@ RSpec.describe User do
     it { is_expected.to eq display_name }
 
     context 'blank display name' do
-      let(:display_name) {}
+      let(:display_name) { }
 
       it { is_expected.to eq user.identifier }
     end

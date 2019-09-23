@@ -1,12 +1,9 @@
 # Put any overides here
+
 Lint/AmbiguousBlockAssociation:
   Exclude:
     - 'spec/controllers/hyrax/monographs_controller_spec.rb'
     - 'spec/controllers/roles_controller_spec.rb'
-
-Layout/EmptyLinesAroundBlockBody:
-  Exclude:
-    - 'config/initializers/mailboxer.rb'
 
 Metrics/BlockLength:
   Enabled: true
@@ -70,6 +67,11 @@ Rails/HasManyOrHasOneDependent:
     - 'app/models/lessee.rb'
     - 'app/models/press.rb'
     - 'app/models/product.rb'
+
+Rails/HelperInstanceVariable:
+  Exclude:
+    - 'app/helpers/breadcrumbs_helper.rb'
+    - 'app/helpers/press_helper.rb'
 
 Rails/InverseOf:
   Exclude:
@@ -189,10 +191,6 @@ Style/GuardClause:
   Exclude:
     - 'lib/import/importer.rb'
 
-Style/InverseMethods:
-  Exclude:
-    - 'app/models/monograph_search_builder.rb' # line 32 is failing *locally*  for me but not on travis??? IDK why... same cop versions???
-
 Style/NumericLiterals:
   Exclude:
     - 'config/initializers/mailboxer.rb'
@@ -200,6 +198,3 @@ Style/NumericLiterals:
 Style/RedundantReturn:
   Exclude:
     - 'app/presenters/concerns/analytics_presenter.rb'
-
-Style/WordArray:
-  Enabled: false

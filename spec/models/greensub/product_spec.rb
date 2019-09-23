@@ -38,7 +38,7 @@ RSpec.describe Greensub::Product, type: :model do
   context 'methods' do
     before do
       clear_grants_table
-      allow(Greensub::Product).to receive(:find).with(id).and_return(subject)
+      allow(described_class).to receive(:find).with(id).and_return(subject)
     end
 
     it do

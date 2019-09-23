@@ -7,7 +7,7 @@ RSpec.describe TargetResourceResolver do
 
   let(:resolver) { Checkpoint::Resource::Resolver.new }
   let(:target) { double('target', resource_type: 'target_type', resource_id: 'target_id', component: component, products: products) }
-  let(:component) {}
+  let(:component) { }
   let(:products) { [] }
 
   it { is_expected.to eq(resolver.expand(target)) }

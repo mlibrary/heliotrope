@@ -164,7 +164,7 @@ describe 'Edit a file set' do
       expect(page.has_field?('Citable Link', with: HandleService.url(file_set.id))).to be true
 
       # order in FileSet's section_title has been taken from Monograph's section_titles
-      assert_equal page.all('.list-unstyled .section_title a').collect(&:text), ['C 1', 'Test section with Italicized Title therein']
+      assert_equal page.all('.list-unstyled .section_title a').map(&:text), ['C 1', 'Test section with Italicized Title therein']
 
       # check facets
       expect(page).to have_link("Conor O'Neill's", href: "/concern/monographs/" + monograph.id + "?f%5Bkeywords_sim%5D%5B%5D=Conor+O%27Neill%27s")

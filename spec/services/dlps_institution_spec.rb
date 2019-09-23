@@ -12,8 +12,8 @@ describe DlpsInstitution do
 
     context 'request_attributes' do
       let(:request_attributes) { { dlpsInstitutionId: ids, identity_provider: entity_id } }
-      let(:ids) {}
-      let(:entity_id) {}
+      let(:ids) { }
+      let(:entity_id) { }
 
       it { is_expected.to eq [] }
 
