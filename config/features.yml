@@ -1,2 +1,16 @@
+proxy_deposit:
+  enabled: false
+transfer_works:
+  enabled: false
 assign_admin_set:
   enabled: false
+show_deposit_agreement:
+  enabled: false
+active_deposit_agreement_acceptance:
+  enabled: false
+batch_upload:
+  enabled: false
+hide_private_items:
+  enabled: false
+hide_users_list:
+  enabled: true

@@ -58,7 +58,6 @@ RSpec.describe 'Create a Score', type: :system do
 
       choose('score_visibility_open')
       expect(page).to have_content('Please note, making something visible to the world (i.e. marking this as Public) may be viewed as publishing which could impact your ability to')
-      check('agreement')
 
       click_on('Save')
 

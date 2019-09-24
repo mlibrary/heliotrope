@@ -183,6 +183,8 @@ Rails.application.routes.draw do
   scope module: :hyrax do
     resources :users, only: %i[index show], to: redirect('/')
   end
+  # don't show the Hyrax deposit agreement here, which we never needed or set up fully (i.e. no institution_name)
+  get '/agreement', to: 'application#page_not_found'
 
   mount Hyrax::Engine, at: '/'
 
