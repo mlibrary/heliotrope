@@ -29,7 +29,7 @@ class MonographSearchBuilder < ::SearchBuilder
         ids.delete(fr.file_set_id)
       end
 
-      ids.select { |mid| !tombstone?(mid) }.join(',')
+      ids.reject { |mid| tombstone?(mid) }.join(',')
     end
 
     def tombstone?(id)

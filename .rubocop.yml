@@ -1,4 +1,7 @@
 require: rubocop-rspec
+inherit_gem:
+  rubocop-rails_config:
+    - config/rails.yml
 inherit_from: .rubocop_todo.yml
 
 AllCops:
@@ -18,8 +21,17 @@ AllCops:
     - 'vagrant_scripts/**/*'
     - 'vendor/**/*'
 
+Layout/AlignArray:
+  Enabled: true
+
 Layout/IndentationConsistency:
-  EnforcedStyle: rails
+  EnforcedStyle: indented_internal_methods
+
+Layout/EmptyLinesAroundAccessModifier:
+  EnforcedStyle: around
+
+Layout/EndAlignment:
+  EnforcedStyleAlignWith: keyword
 
 Lint/DuplicateMethods:
   Exclude:
@@ -133,6 +145,9 @@ Style/CollectionMethods:
 
 Style/Documentation:
   Enabled: false
+
+Style/InverseMethods:
+  Enabled: true
 
 Style/LineEndConcatenation:
   Exclude:

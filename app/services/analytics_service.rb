@@ -87,7 +87,7 @@ module AnalyticsService
   # In Sufia the GA ID is read from config, but for Heliotrope we pass it in.
   def self.profile(id)
     Rails.logger.error("Missing/invalid analytics config or .p12 file") && return unless config.valid? && File.exist?(config.privkey_path)
-    user.profiles.detect do |profile|
+    user.profiles.find do |profile|
       profile.web_property_id == id
     end
   end

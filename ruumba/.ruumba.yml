@@ -9,6 +9,8 @@ AllCops:
 #
 # Inapplicable Cops
 
+Layout/AlignArguments:
+  Enabled: false
 Layout/AlignArray:
   Enabled: false
 Layout/AlignHash:
@@ -23,11 +25,13 @@ Layout/ClosingParenthesisIndentation:
   Enabled: false
 Layout/ElseAlignment:
   Enabled: false
+Layout/EmptyLineAfterGuardClause:
+  Enabled: false
 Layout/EndAlignment:
   Enabled: false
 Layout/ExtraSpacing:
   Enabled: false
-Layout/FirstParameterIndentation:
+Layout/IndentFirstArgument:
   Enabled: false
 Layout/IndentationConsistency:
   Enabled: false
@@ -54,6 +58,10 @@ Metrics/BlockLength:
 Metrics/LineLength:
   Enabled: false
 
+Naming/FileName:
+  Exclude:
+    - 'app/views/layouts/mozilla-pdf-viewer.html.erb.rb'
+
 Style/FrozenStringLiteralComment:
   Enabled: false
 
@@ -64,9 +72,6 @@ Style/FrozenStringLiteralComment:
 Lint/AssignmentInCondition:
   Enabled: false
 Lint/UselessAssignment:
-  Enabled: false
-
-Performance/StringReplacement:
   Enabled: false
 
 Style/EmptyElse:
