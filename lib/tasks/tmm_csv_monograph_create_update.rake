@@ -11,7 +11,7 @@ namespace :heliotrope do
     fail "CSV directory not found: '#{args.tmm_csv_dir}'" unless Dir.exist?(args.tmm_csv_dir)
 
     input_file = Dir.glob(File.join(args.tmm_csv_dir, "TMMEBCData_*#{Time.now.strftime('%Y-%m-%d')}.csv")).sort.last
-    fail "CSV file not found in directory '#{args.tmm_csv_dir}'" unless input_file.present?
+    fail "CSV file not found in directory '#{args.tmm_csv_dir}'" if input_file.blank?
     fail "CSV file may accidentally be a backup as '#{input_file}' contains 'bak'. Exiting." if input_file.include? 'bak'
 
     puts "Parsing file: #{input_file}"
@@ -29,11 +29,14 @@ namespace :heliotrope do
     backup_file_created = false
 
     # used to enable deletion of existing values
-    blank_metadata = monograph_fields.pluck(:metadata_name).map{ |name| [name, nil] }.to_h
+    blank_metadata = monograph_fields.pluck(:metadata_name).map { |name| [name, nil] }.to_h
 
     rows.each do |row|
       row_num += 1
 
+      # For now this is the only place where we set a Monograph's press from a CSV column. Handle separately.
+      # Every row should have a press set, but fall back to 'michigan'
+      press = row['Press'].present? && all_michigan_presses.include?(row['Press'].strip) ? row['Press'].strip : 'michigan'
       clean_isbns = []
 
       # ISBN(s) is a multi-valued field with entries separated by a ';'
@@ -64,6 +67,7 @@ namespace :heliotrope do
 
           attrs = {}
           Import::RowData.new.field_values(:monograph, row, attrs)
+          attrs['press'] = press
 
           # blank Monograph titles caused problems. We don't allow them in the importer and shouldn't here either.
           if attrs['title'].blank?
@@ -83,12 +87,11 @@ namespace :heliotrope do
           attrs = cleanup_characters(attrs, new_monograph)
 
           if new_monograph
-            puts "No Monograph found using ISBN(s) '#{clean_isbns.join('; ')}' on row #{row_num} .......... CREATING"
-            attrs['press'] = 'michigan'
+            puts "No Monograph found using ISBN(s) '#{clean_isbns.join('; ')}' on row #{row_num} .......... CREATING in press '#{attrs['press']}'"
             attrs['visibility'] = 'restricted'
 
             Hyrax::CurationConcern.actor.create(Hyrax::Actors::Environment.new(monograph, current_ability, attrs))
-          elsif monograph.press == 'michigan' # for now don't edit sub-press Monographs like Gabii
+          elsif monograph.press != 'gabii' # don't edit Gabii monographs with this script
             if check_for_changes_isbn(monograph, attrs, row_num)
               backup_file = open_backup_file(input_file) if !backup_file_created
               backup_file_created = true
@@ -110,8 +113,9 @@ namespace :heliotrope do
 
   def check_for_unexpected_columns_isbn(rows, monograph_fields)
     # look for unexpected column names which will be ignored.
-    # note: 'NOID', 'Link' are not in METADATA_FIELDS, they're export-only fields.
-    unexpecteds = rows[0].to_h.keys.map { |k| k&.strip } - monograph_fields.pluck(:field_name) - ['NOID', 'Link']
+    # note: 'NOID', 'Link' are not in METADATA_FIELDS, they're export-only ADMIN_METADATA_FIELDS.
+    # 'Press' is a new exception as TMM now provides michigan sub-press Monograph metadata
+    unexpecteds = rows[0].to_h.keys.map { |k| k&.strip } - monograph_fields.pluck(:field_name) - ['NOID', 'Link', 'Press']
     puts "***TITLE ROW HAS UNEXPECTED VALUES!*** These columns will be skipped: #{unexpecteds.join(', ')}\n\n" if unexpecteds.present?
   end
 
@@ -124,7 +128,7 @@ namespace :heliotrope do
         #       if ActionController::Base.helpers.strip_tags(value) != value
         attrs_out[key] = if ['title', 'description'].include? key.downcase
                            # 1) HTMLEntities is cleaning up the many HTML entity and decimal codes in the TMM HTML data
-                           # 2) the calls to gsub are getting rid of an inordiante number of non-breaking spaces,...
+                           # 2) the calls to gsub are getting rid of an inordinate number of non-breaking spaces,...
                            # which appear in large numbers in the TMM data for seemingly no reason.
                            Array(HtmlToMarkdownService.convert(HTMLEntities.new.decode(value.first.gsub('&#160;', ' ').gsub('&nbsp;', ' '))))
                          else
@@ -156,7 +160,7 @@ namespace :heliotrope do
     cleaned_values = []
 
     values.each do |value|
-       if value.present?
+      if value.present?
         value = value.gsub(/\r\n?/, "\n") # editors are on a mix of OS's so make line endings uniform
         # value = value.gsub('–', '-') # endash, commented out as apparently editors want to use them
         # value = value.gsub('—', '--') # emdash, commented out as apparently editors want to use them
@@ -183,23 +187,33 @@ namespace :heliotrope do
     changes = false
     changes_message = "Checking Monograph with ISBNs #{monograph.isbn.join('; ')} and NOID #{monograph.id} on row #{row_num}"
 
+    # check press separately, it's not in METADATA_FIELDS
+    press_changing = false
+    if monograph.press != attrs['press']
+      changes_message += "\n*** Press changing from #{monograph.press} to #{attrs['press']} ***"
+      press_changing = true
+    end
+
     attrs.each do |key, value|
-        multivalued = METADATA_FIELDS.select { |x| x[:metadata_name] == key }.first[:multivalued]
-        current_value = field_value(monograph, key, multivalued)
+      next if key == 'press'
+      multivalued = METADATA_FIELDS.select { |x| x[:metadata_name] == key }.first[:multivalued]
+      current_value = field_value(monograph, key, multivalued)
 
-        # to make the "orderless" array comparison meaningful, we sort the new values just as we do in the...
-        # stolen-from-Exporter field_value method below
-        value = value&.sort if multivalued == :yes_split
+      # to make the "orderless" array comparison meaningful, we sort the new values just as we do in the...
+      # stolen-from-Exporter field_value method below
+      value = value&.sort if multivalued == :yes_split
 
-        if value != current_value
-          changes_message = "\n" + changes_message + "\nnote: only fields with pending changes are shown\n" if !changes
-          changes = true
-          changes_message += "\n*** #{column_names[key]} ***\nCURRENT VALUE: #{current_value}\n    NEW VALUE: #{value}"
-        end
+      if value != current_value
+        changes_message = "\n" + changes_message + "\nnote: only fields with pending changes are shown\n" if !changes
+        changes = true
+        changes_message += "\n*** #{column_names[key]} ***\nCURRENT VALUE: #{current_value}\n    NEW VALUE: #{value}"
       end
+    end
+
+    changes ||= press_changing
     changes_message = changes ? changes_message + "\n\n" : changes_message + '...................... NO CHANGES'
     puts changes_message if changes
-    return changes
+    changes
   end
 
   def field_value(item, metadata_name, multivalued)
@@ -229,6 +243,6 @@ namespace :heliotrope do
       exporter.write_csv_header_rows(csv)
     end
 
-    return backup_file
+    backup_file
   end
 end
