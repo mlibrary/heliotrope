@@ -38,6 +38,7 @@ module AnalyticsPresenter
     start_timestamp = date_uploaded.strftime('%Q').to_i
     data.unshift([start_timestamp, 0]) if data[0][0] > start_timestamp
 
+    # note that with `config.time_zone` not set, Date.yesterday is relative to UTC time, which is OK here
     end_timestamp = Date.yesterday.strftime('%Q').to_i
     # if there's been no activity in 30 days or more, add a final point to the graph
     data.push([end_timestamp, 0]) if end_timestamp - data.last[0] >= 2_592_000_000

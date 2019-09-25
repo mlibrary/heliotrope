@@ -118,7 +118,7 @@ module Sighrax # rubocop:disable Metrics/ModuleLength
       return false unless entity.valid?
       expiration_date = Array(solr_document(entity)['permissions_expiration_date_ssim']).first
       return false if expiration_date.blank?
-      Time.parse(expiration_date).utc < Time.now.utc
+      Date.parse(expiration_date) <= Time.now.utc.to_date
     end
 
     def watermarkable?(entity)
