@@ -116,21 +116,7 @@
         }).addTo(reader);
         <% end %>
 
-        // Fullscreen widget
-        cozy.control.widget.button({
-          region: 'top.toolbar.right',
-          className: 'cozy-container-fullscreen',
-          template: '<button class="button--sm" data-toggle="button" data-slot="label" aria-label="Full screen"></button>',
-          data: { label: '<i id="fullscreen" class="icon-fullscreen-enter oi" data-glyph="fullscreen-enter" title="Fullscreen Mode" aria-hidden="true"></i>' },
-          onClick: function() {
-            reader.requestFullscreen();
-            if (!window.screenTop && !window.screenY) {
-              $('#fullscreen').attr('data-glyph', 'fullscreen-enter');
-            } else {
-              $('#fullscreen').attr('data-glyph', 'fullscreen-exit');
-            }
-          }
-        }).addTo(reader);
+        cozy.control.fullscreen({ region: 'top.toolbar.right' }).addTo(reader);
 
         // Reading preferences widget - webgl gets custom preferences
         <% if @monograph_presenter.webgl? %>
