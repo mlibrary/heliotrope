@@ -9,6 +9,10 @@ RSpec.describe 'Batch creation of monographs', type: :system do
 
   before do
     stub_out_redis
+    # Considerable work was put into getting basic batch Monograph creation working, but we've never used it as...
+    # part of our production workflow. Until we have an actual use case for it, it's disabled in `config/features.yml`.
+    # For the sake of keeping this spec running, we'll stub the Flipflop return value.
+    allow(Flipflop).to receive(:batch_upload?).and_return(true)
     login_as user
     visit hyrax.new_batch_upload_path payload_concern: 'Monograph'
   end
@@ -33,7 +37,7 @@ RSpec.describe 'Batch creation of monographs', type: :system do
       attach_file("files[]", fixture_path + '/csv/miranda.jpg', visible: false)
     end
 
-    check('agreement') # Deposit Agreement
+    # check('agreement') # Deposit Agreement, currently disabled in `config/features.yml`
     choose('batch_upload_item_visibility_open') # Visibility (not strictly necessary to pass this test)
 
     click_link "Descriptions" # switch tab

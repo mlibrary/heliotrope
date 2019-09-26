@@ -32,6 +32,10 @@ class ApplicationController < ActionController::Base
   # rescue_from CanCan::AccessDenied, with: :render_unauthorized # TODO: Might be needed
   # check_authorization unless: :devise_controller? || :checkpoint_controller?
 
+  def page_not_found
+    render file: Rails.root.join('public', '404.html'), status: :not_found, layout: false
+  end
+
   def current_actor
     current_user || Anonymous.new(request_attributes)
   end
