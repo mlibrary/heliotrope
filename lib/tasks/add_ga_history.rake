@@ -6,6 +6,7 @@ namespace :heliotrope do
     # Usage: bundle exec rails "heliotrope:add_ga_history[2018-01-01, 2018-03-31]"
 
     # Or: don't supply dates and just get yesterday's data
+    # note that with `config.time_zone` not set, Date.yesterday is relative to UTC time, which is OK here
     start_date = args.start_date || Date.yesterday
     end_date = args.end_date || Date.yesterday
 

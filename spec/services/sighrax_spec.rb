@@ -497,19 +497,19 @@ RSpec.describe Sighrax do
         it { is_expected.to be false }
 
         context 'yesterday' do
-          let(:data) { { "permissions_expiration_date_ssim" => Date.yesterday.to_s } }
+          let(:data) { { "permissions_expiration_date_ssim" => (Time.now.utc.to_date - 1).to_s } }
 
           it { is_expected.to be true }
         end
 
         context 'today' do
-          let(:data) { { "permissions_expiration_date_ssim" => Time.zone.today.to_s } }
+          let(:data) { { "permissions_expiration_date_ssim" => Time.now.utc.to_date.to_s } }
 
           it { is_expected.to be true }
         end
 
         context 'tomorrow' do
-          let(:data) { { "permissions_expiration_date_ssim" => Date.tomorrow.to_s } }
+          let(:data) { { "permissions_expiration_date_ssim" => (Time.now.utc.to_date + 1).to_s } }
 
           it { is_expected.to be false }
         end
