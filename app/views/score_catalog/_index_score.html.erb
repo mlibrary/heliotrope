@@ -13,7 +13,7 @@
     <% end %>
   </div><!-- /.monograph-cover -->
   <div class="col-sm-9 monograph-metadata">
-    <h1><%= @presenter.title %></h1>
+    <h1 id="work-title"><%= @presenter.title %></h1>
     <span class="authors"><%= @presenter.composer %></span>
     <% if @presenter.date_created? %>
     <span aria-label="publication date" class="pubdate"><%= @presenter.date_created.first %></span>
