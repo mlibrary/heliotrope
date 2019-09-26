@@ -453,7 +453,7 @@
           '<p style="margin-top: 1.5rem">' + 
             '<button id="x${this._id}-reset" class="reset button--inline" style="margin-left: 8px">Reset</button>' + 
           '</p>' + 
-        '</fieldset>'
+        '</fieldset>';
         return html.replace(/\$\{this._id\}/g, this._id);
       }
     });
@@ -470,13 +470,13 @@
         var fieldset = new cozy.Control.Preferences.fieldset[cls](this);
         template += fieldset.template();
         this._fieldsets.push(fieldset);
-      }.bind(this))
+      }.bind(this));
 
       template = '<form>' + template + '</form>';
 
       this._modal._container.querySelector('main').innerHTML = template;
       this._form = this._modal._container.querySelector('form');
-    }
+    };
 
     var PDFPreferences = cozy.Control.Preferences.extend({
 
@@ -562,11 +562,11 @@
       _getMatch: function(string, term, index) {
         if(index >= 0)
         {
-          var _ws = [" ","\t"]
+          var _ws = [" ","\t"];
 
-          var whitespace = 0
-          var rightLimit = 0
-          var leftLimit = 0
+          var whitespace = 0;
+          var rightLimit = 0;
+          var leftLimit = 0;
 
           var whitespaceLimit = 8; // 4
 
@@ -577,7 +577,7 @@
             if(_ws.indexOf(string.charAt(rightLimit)) >= 0){whitespace += 1}
           }
 
-          whitespace = 0
+          whitespace = 0;
           // left trim index
           for(leftLimit = index; whitespace < whitespaceLimit; leftLimit--)
           {
@@ -600,29 +600,43 @@
 
       EOT: true
 
-    })
+    });
 
     var PDFContents = cozy.Control.Contents.extend({
       _bindEvents: function() {
         var self = this;
 
         this._control.setAttribute('id', 'sidebarToggle');
-        var template =
-          '<div id="toolbarSidebar">' +
-          '<div class="splitToolbarButton toggled">' +
-          '<button id="viewThumbnail" class="toolbarButton toggled" title="Show Thumbnails" tabindex="-1">Thumbnails</button>' +
-          '<button id="viewOutline" class="toolbarButton" title="Show Table of Contents (double-click to expand/collapse all items)" tabindex="-1">Table of Contents</button>' +
-          '<button id="viewAttachments" class="toolbarButton" title="Show Attachments" tabindex="-1">Attachments</button>' +
-          '</div>' +
-          '</div>' +
-          '<div id="sidebarContent">' +
-          '<div id="thumbnailView">' +
-          '</div>' +
-          '<div id="outlineView" class="hidden">' +
-          '</div>' +
-          '<div id="attachmentsView" class="hidden">' +
-          '</div>' +
-          '</div>';
+
+        <% if @monograph_presenter.pdf_ebook_presenter.intervals? %>
+          var template =
+            '<div id="toolbarSidebar">' +
+              '<div class="splitToolbarButton toggled">' +
+                '<button id="viewOutline" class="toolbarButton toggled" title="Show Table of Contents (double-click to expand/collapse all items)" tabindex="-1">Table of Contents</button>' +
+                '<button id="viewThumbnail" class="toolbarButton" title="Show Thumbnails" tabindex="-1">Thumbnails</button>' +
+                '<button id="viewAttachments" class="toolbarButton" title="Show Attachments" tabindex="-1">Attachments</button>' +
+              '</div>' +
+            '</div>' +
+            '<div id="sidebarContent">' +
+              '<div id="outlineView"></div>' +
+              '<div id="thumbnailView" class="hidden"></div>' +
+              '<div id="attachmentsView" class="hidden"></div>' +
+            '</div>';
+        <% else %>
+          var template =
+            '<div id="toolbarSidebar">' +
+              '<div class="splitToolbarButton toggled hidden">' +
+                '<button id="viewOutline" class="toolbarButton" title="Show Table of Contents (double-click to expand/collapse all items)" tabindex="-1">Table of Contents</button>' +
+                '<button id="viewThumbnail" class="toolbarButton toggled" title="Show Thumbnails" tabindex="-1">Thumbnails</button>' +
+                '<button id="viewAttachments" class="toolbarButton" title="Show Attachments" tabindex="-1">Attachments</button>' +
+              '</div>' +
+            '</div>' +
+            '<div id="sidebarContent">' +
+              '<div id="outlineView" class="hidden"></div>' +
+              '<div id="thumbnailView"></div>' +
+              '<div id="attachmentsView" class="hidden"></div>' +
+            '</div>';
+        <% end %>
 
         this._modal = this._reader.modal({
           template: template,
@@ -644,14 +658,14 @@
         this._reader.on('updateContents', function(data) {
 
           this._pdfSidebar = this._reader.PDFViewerApplication.pdfSidebar;
-          this._pdfSidebar.thumbnailButton.removeAttribute('tabindex');
           this._pdfSidebar.outlineButton.removeAttribute('tabindex');
+          this._pdfSidebar.thumbnailButton.removeAttribute('tabindex');
           this._pdfSidebar.attachmentsButton.removeAttribute('tabindex');
 
           $(this._control).on('click', function(event) {
             self._reader.tracking.action('contents/open');
             self._modal.activate();
-          })
+          });
 
           this._pdfSidebar.eventBus.on('pagechanging', function(evt) {
             if ( this._pdfSidebar.isOpen ) {
@@ -674,7 +688,7 @@
 
         this.annotations = {
           reset: function() { /* NOP */ }
-        }
+        };
 
         $.loadScript("/web/viewer.js", function() {
           // stop Mozilla viewer messing with page title, also alters external link behavior, apparently
@@ -712,7 +726,7 @@
                   if ( currentScale > 0 && evt.scale != currentScale ) {
                     self.pdfViewer.currentScaleValue = currentScaleValue;
                   }
-                })
+                });
 
                 self.PDFViewerApplication.pdfDocument.getMetadata().then(function(data) {
                   var metadata = {};
@@ -733,16 +747,16 @@
                   self.locations = { total: self.PDFViewerApplication.pagesCount };
                   self.locations.locationFromCfi = function(pageNum) {
                     return pageNum;
-                  }
+                  };
                   self.locations.percentageFromCfi = function(pageNum) {
                     return ( pageNum / self.locations.total );
-                  }
+                  };
                   self.locations.cfiFromPercentage = function(percent) {
                     var pageNum = Math.round(self.locations.total * percent);
                     if ( pageNum < 1 ) { pageNum = 1; }
                     if ( pageNum > this._total ) { pageNum = this._total; }
                     return { start: pageNum };
-                  }
+                  };
 
                   self.fire('updateLocations',  self.locations);
                   self.fire('relocated', self.currentLocation());
@@ -842,14 +856,13 @@
     reader.start();
 
     // distinguish these buttons from the links underneath, too much CSS to add otherwise, methinks
-    var element = document.getElementById("viewThumbnail");
-    element.classList.add("cozy-control", "button--lg");
     var element = document.getElementById("viewOutline");
+    element.classList.add("cozy-control", "button--lg");
+    var element = document.getElementById("viewThumbnail");
     element.classList.add("cozy-control", "button--lg");
   </script>
 
 
   <%= render 'shared/ga' %>
 <% end %>
-<%#= render template: 'layouts/boilerplate' %>
 <%= render template: 'layouts/mozilla-pdf-viewer' %>

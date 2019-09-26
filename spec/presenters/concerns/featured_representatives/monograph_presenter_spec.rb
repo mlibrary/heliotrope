@@ -128,6 +128,16 @@ RSpec.describe FeaturedRepresentatives::MonographPresenter do
           expect(subject.epub['id']).to eq 'epubid'
         end
       end
+
+      describe '#toc?' do
+        let(:epub_presenter) { instance_double(EPubPresenter, 'epub_presenter', intervals?: 'boolean') }
+
+        before { allow(EPubPresenter).to receive(:new).with(anything).and_return(epub_presenter) }
+
+        it 'returns epub_presenter.intervals?' do
+          expect(subject.toc?).to eq 'boolean'
+        end
+      end
     end
 
     context "PDF representative" do
@@ -196,6 +206,16 @@ RSpec.describe FeaturedRepresentatives::MonographPresenter do
       describe "#reader_ebook" do
         it "returns the pdf_ebook's solr_doc" do
           expect(subject.reader_ebook['id']).to eq 'pdfebookid'
+        end
+      end
+
+      describe '#toc?' do
+        let(:pdf_ebook_presenter) { instance_double(PDFEbookPresenter, 'pdf_ebook_presenter', intervals?: 'boolean') }
+
+        before { allow(PDFEbookPresenter).to receive(:new).with(anything).and_return(pdf_ebook_presenter) }
+
+        it 'returns pdf_ebook_presenter.intervals?' do
+          expect(subject.toc?).to eq 'boolean'
         end
       end
     end
@@ -271,6 +291,16 @@ RSpec.describe FeaturedRepresentatives::MonographPresenter do
       describe "#reader_ebook" do
         it "returns the epub's solr_doc, giving precedence to the epub" do
           expect(subject.epub['id']).to eq 'epubid'
+        end
+      end
+
+      describe '#toc?' do
+        let(:epub_presenter) { instance_double(EPubPresenter, 'epub_presenter', intervals?: 'boolean') }
+
+        before { allow(EPubPresenter).to receive(:new).with(anything).and_return(epub_presenter) }
+
+        it 'returns epub_presenter.intervals?' do
+          expect(subject.toc?).to eq 'boolean'
         end
       end
     end
