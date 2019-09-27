@@ -300,6 +300,13 @@ describe "Monograph Catalog Facets" do
       expect(find('#facet-resource_type_sim-image a.facet_select').text).to eq 'portrait'
       expect(page).to have_selector('#facet-search_year_sim a.facet_select')
       expect(page).to have_selector('#facet-exclusive_to_platform_sim a.facet_select')
+
+      # Selector needed for assets/javascripts/application/ga_event_tracking.js
+      # If these change, fix here then update ga_event_tracking.js
+      # Given this
+      # find('#facet-creator_sim a.facet_select', text: 'McTesterson, Testy')
+      # We should have this
+      expect(page).to have_selector(:xpath, "//div/div/h3/a", text: "Creator")
     end
   end
 end

@@ -149,6 +149,12 @@ RSpec.describe "Monograph Catalog TOC", type: :system do
             expect(page).to have_xpath(".//span[@title='Read section']")
             expect(page).not_to have_xpath(".//i[@title='Download section']")
           end
+
+          # Selectors needed for assets/javascripts/application/ga_event_tracking.js
+          # If these change, fix here then update ga_event_tracking.js
+          expect(page).to have_css('#tab-toc')
+          expect(page).to have_css('#tab-stats')
+          expect(page).to have_selector('ul.nav.nav-tabs li a', count: 2)
         end
       end
     end

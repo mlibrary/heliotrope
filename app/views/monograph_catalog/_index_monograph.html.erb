@@ -38,7 +38,7 @@
     <% end %>
   </div><!-- /.monograph-cover -->
   <div class="col-sm-9 monograph-metadata">
-    <h1><%= @presenter.title %></h1>
+    <h1 id="work-title"><%= @presenter.title %></h1>
     <% if @presenter.authors? %>
         <span class="authors"><%= render_markdown @presenter.authors %></span>
     <% end %>

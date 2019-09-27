@@ -41,55 +41,45 @@ $(document).on('turbolinks:load', function() {
     });
 
     //
-    // Monograph page
+    // Work page
     //
     // monograph catalog listing of file_sets/assets
     // This is *very* close the press_page catalog listing, it's just h4 instead of h2!
     $('#documents .document h4.index_title a').click(function() {
-      ga('pressTracker.send', 'event', 'monograph_page', 'click', $(this).text());
+      ga('pressTracker.send', 'event', which_category(), 'click', $(this).text());
     });
 
     // buy button
     $('#monograph-buy-btn').click(function() {
-      ga('pressTracker.send', 'event', 'monograph_page', 'click_buy', $(this).attr('href'))
+      ga('pressTracker.send', 'event', which_category(), 'click_buy', $(this).attr('href'))
     });
 
     // sort
     $('#sort-dropdown ul.dropdown-menu li a').click(function() {
       //console.log($(this).attr('href').split("?")[1]);
-      ga('pressTracker.send', 'event', 'monograph_page', 'sort', $(this).attr('href').split("?")[1]);
-    });
-
-    // facets
-    //$('#facets a.facet_select').mouseover(function() {
-    //  console.log($(this).text());
-    //});
-    // Repeating/hard coding this to get a little more detail in the 'action', but
-    // probably could DRY it out with a little work...
-    // Also, this doesn't work in the facet modal yet, just the top 5...
-    $('#facet-section_title_sim a.facet_select').click(function() {
-      ga('pressTracker.send', 'event', 'monograph_page', 'facet_section', $(this).text());
-    });
-    $('#facet-keywords_sim a.facet_select').click(function() {
-      ga('pressTracker.send', 'event', 'monograph_page', 'facet_keywords', $(this).text());
-    });
-    $('#facet-creator_full_name_sim a.facet_select').click(function() {
-      ga('pressTracker.send', 'event', 'monograph_page', 'facet_creator', $(this).text());
-    });
-    $('#facet-resource_type_sim a.facet_select').click(function() {
-      ga('pressTracker.send', 'event', 'monograph_page', 'facet_format', $(this).text());
-    });
-    $('#facet-search_year_sim a.facet_select').click(function() {
-      ga('pressTracker.send', 'event', 'monograph_page', 'facet_year', $(this).text());
-    });
-    $('#facet-exclusive_to_platform_sim a.facet_select').click(function() {
-      ga('pressTracker.send', 'event', 'monograph_page', 'facet_exclusivity', $(this).text());
+      ga('pressTracker.send', 'event', which_category(), 'sort', $(this).attr('href').split("?")[1]);
     });
 
     // e-book download
     $('ul.monograph-catalog-rep-downloads li a').click(function() {
       var type = $(this).attr('data-rep-type');
-      ga('pressTracker.send', 'event', 'monograph_page', 'download_representative_' + type, window.location.href);
+      ga('pressTracker.send', 'event', which_category(), 'download_representative_' + type, window.location.href);
+    });
+
+    // tabs
+    $('ul.nav.nav-tabs li a').click(function() {
+      var tab = $(this).attr('href').split('#')[1];
+      ga('pressTracker.send', 'event', which_category(), 'tab_' + tab, $('#work-title').text());
+    });
+
+
+    //
+    // Facets for Press and Work pages
+    //
+    $('#facets a.facet_select').on('click', function() {
+      var facet_name = $(this).parents()[5].children[0].innerText
+      var action = "facet_" + facet_name.toLowerCase().split(" ").join("_")
+      ga('pressTracker.send', 'event', which_category(), action, $(this).text());
     });
 
     //
@@ -159,7 +149,7 @@ $(document).on('turbolinks:load', function() {
 
     // ToC links
     $('a.toc-link').click(function() {
-      ga('pressTracker.send', 'event', 'monograph_page', 'read_epub_ToC', $(this).attr('href'));
+      ga('pressTracker.send', 'event', which_category(), 'read_epub_ToC', $(this).attr('href'));
     });
 
     //
@@ -233,6 +223,7 @@ $(document).on('turbolinks:load', function() {
     var url = window.location.href.split("?")[0];
     var category = 'press_page';
     if (url.match(/monograph/g)) { category = 'monograph_page' }
+    if (url.match(/score/g)) { category = 'score_page' }
     if (url.match(/file_set/g))  { category = 'file_set_page'  }
     return category
   }
