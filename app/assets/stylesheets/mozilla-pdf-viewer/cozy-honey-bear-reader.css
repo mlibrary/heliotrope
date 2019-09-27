@@ -477,10 +477,12 @@ a:focus > .thumbnail > .thumbnailSelectionRing,
   overflow: visible;
   border: 9px solid transparent;
   background-clip: content-box;
-  -o-border-image: url(/mozilla-pdf-viewer/web/images/shadow.png) 9 9 repeat;
-     border-image: url(/mozilla-pdf-viewer/web/images/shadow.png) 9 9 repeat;
+/*  -o-border-image: url(/mozilla-pdf-viewer/web/images/shadow.png) 9 9 repeat;
+     border-image: url(/mozilla-pdf-viewer/web/images/shadow.png) 9 9 repeat;*/
   background-color: white;
   box-sizing: content-box;
+  box-shadow: 0px 10px 13px -7px #000000, 0px 6px 15px 5px rgba(0,0,0,0);
+  margin-bottom: 2rem;
 }
 
 .pdfViewer.removePageBorders .page {
