@@ -552,7 +552,7 @@
           var text = findController._pageContents[i];
           matches.forEach(function(match, index) {
             var snippet = self._getMatch(text, self.searchString, match);
-            self._data.search_results.push({ cfi: i + 1, matchIdx: match, snippet: snippet });
+            self._data.search_results.push({ cfi: 'page=' + ( i + 1 ), matchIdx: match, snippet: snippet });
           })
         }
 
@@ -690,16 +690,48 @@
           reset: function() { /* NOP */ }
         };
 
+        // turn off the default updateLocation handler
+        this.off('updateLocation');
+
+        this.on('updateLocation', function(location) {
+          var tmp_href = window.location.href.split('#');
+          tmp_href[1] = location.start.substr(8, location.start.length - 8 - 1);
+          var context = [{ cfi: location.start }, '', tmp_href.join('#')];
+          var tracking = { cfi: location.start, href: location.href, action: self.tracking.action()};
+          if ( tracking.action && tracking.action.match(/\/go\/link/) ) {
+            history.pushState.apply(history, context);
+          } else {
+            history.replaceState.apply(history, context);
+          }
+          if ( location.percentage ) {
+            var p = Math.ceil(location.percentage * 100);
+            document.title = `${p}% - ${self._original_document_title}`;
+          }
+          self.fire('trackPageview', tracking)
+        })
+
         $.loadScript("/web/viewer.js", function() {
           // stop Mozilla viewer messing with page title, also alters external link behavior, apparently
           // https://github.com/mozilla/pdf.js/blob/85acc9acac4c7699303216727a6300a6097e4dd3/web/app.js#L136
           window.PDFViewerApplication.isViewerEmbedded = true;
+          window.PDFViewerApplication.setTitle = function(title) { /* NOP */ }
           self.PDFViewerApplication = window.PDFViewerApplication;
 
           self.PDFViewerApplication.open(self.options.href).then(function() {
             self.pdfViewer = this.PDFViewerApplication.pdfViewer;
 
-            self.pdfViewer = this.PDFViewerApplication.pdfViewer;
+            // monkeypatch the PDFLinkService to be able to track when _it_ 
+            // thinks clicks are worth of pushing onto history so we can 
+            // tell when to push links onto history.
+            self.PDFViewerApplication.pdfLinkService.pdfHistory = {
+              pushCurrentPosition: function() { /* NO OP */ },
+              push: function(context) {
+                self.tracking.action('contents/go/link');
+                self._will_be_setting_zoom_to = context.explicitDest[4];
+                self._will_be_setting_zoom_from = self.pdfViewer.currentScaleValue;
+              }
+            }
+
             var setupInterval = setInterval(function() {
               if ( self.PDFViewerApplication.pdfDocument != null ) {
                 clearInterval(setupInterval);
@@ -716,14 +748,18 @@
                 self.PDFViewerApplication.eventBus.on('pagechanging', function(evt) {
                   var pageNumber = evt.pageNumber;
                   self.fire('relocated', { start: pageNumber });
+                  self.fire('updateLocation', { 
+                    start: 'epubcfi(page=' + pageNumber + ')',
+                    href: self.options.href + '#page=' + pageNumber,
+                    percentage: ( pageNumber / self.PDFViewerApplication.pagesCount )
+                  });
                 });
 
                 self.pdfViewer.eventBus.on('scalechanging', function(evt) {
                   var currentScaleValue = self.options.scale;
-                  if ( currentScaleValue == 1.0 ) { currentScaleValue = 'auto'; }
-                  var currentScale = parseFloat(currentScaleValue);
-                  // console.log("AHOY scalechanging", evt.scale, evt.presetValue, currentScale, currentScaleValue);
-                  if ( currentScale > 0 && evt.scale != currentScale ) {
+                  if ( self._will_be_setting_zoom_to && self._will_be_setting_zoom_from ) {
+                    // and clear these
+                    self._will_be_setting_zoom_to = self._will_be_setting_zoom_from = null;
                     self.pdfViewer.currentScaleValue = currentScaleValue;
                   }
                 });
@@ -806,12 +842,20 @@
         }
       },
 
-      gotoPage: function(cfi) {
-        if ( typeof(cfi) == "string" ) {
-          cfi = { start: cfi.replace('epubcfi(', '').replace(')','') };
+      gotoPage: function(value) {
+        var pageNum;
+        if ( typeof(value) == "string" ) {
+          if ( value.indexOf('epubcfi') > -1 ) {
+            pageNum = value.replace('epubcfi(page=','').replace(')', '');
+          } else {
+            pageNum = value.replace('page=','');
+          }
+        } else if ( typeof(value) == 'object' && value.start ) {
+          pageNum = value.start;
+        } else {
+          pageNum = value;
         }
-        var pageNum = cfi.start;
-        this.pdfViewer.currentPageNumber = pageNum;
+        this.pdfViewer.currentPageNumber = parseInt(pageNum, 10);
       },
 
       reopen: function(options) {
