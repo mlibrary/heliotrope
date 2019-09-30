@@ -9,11 +9,14 @@ class EPubsController < CheckpointController
 
     @title = @presenter.parent.present? ? @presenter.parent.page_title : @presenter.page_title
     @citable_link = @presenter.citable_link
-    @back_link = params[:publisher].present? ? URI.join(main_app.root_url, params[:publisher]).to_s : main_app.monograph_catalog_url(@presenter.monograph_id)
     @subdomain = @presenter.parent.subdomain
-    @monograph_presenter = @presenter.parent
-
-    @ebook_download_presenter = EBookDownloadPresenter.new(@monograph_presenter, current_ability, current_actor)
+    @parent_presenter = @presenter.parent
+    @back_link = if params[:publisher].present?
+                   URI.join(main_app.root_url, params[:publisher]).to_s
+                 else
+                   @presenter.parent.catalog_url
+                 end
+    @ebook_download_presenter = EBookDownloadPresenter.new(@parent_presenter, current_ability, current_actor)
 
     if @entity.is_a?(Sighrax::ElectronicPublication)
       @search_url = main_app.epub_search_url(@noid, q: '').gsub!(/locale=en&/, '')
@@ -61,7 +64,7 @@ class EPubsController < CheckpointController
   end
 
   def access
-    @monograph_presenter = @presenter.parent
+    @parent_presenter = @presenter.parent
     @institutions = component_institutions
     @products = component_products
     CounterService.from(self, @presenter).count(request: 1, turnaway: "No_License")
@@ -172,7 +175,7 @@ class EPubsController < CheckpointController
       ShareLinkLog.create(ip_address: request.ip,
                           institution: current_institutions.map(&:name).join("|"),
                           press: @subdomain,
-                          title: @monograph_presenter.title,
+                          title: @parent_presenter.title,
                           noid: @noid,
                           token: @share_link,
                           action: 'use')

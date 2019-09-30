@@ -3,7 +3,7 @@
 <% content_for :head do %>
   <meta name="turbolinks-cache-control" content="no-cache">
   <script type="text/javascript" src="https://d1bxh8uas1mnw7.cloudfront.net/assets/embed.js"></script>
-  <% if @monograph_presenter.doi.present? %>
+  <% if @parent_presenter.doi.present? %>
     <script async src="https://badge.dimensions.ai/badge.js" charset="utf-8"></script>
   <% end %>
   <% if defined? @subdomain %>
@@ -28,10 +28,10 @@
       <script src="https://cdn.hypothes.is/hypothesis"></script>
     <% end %>
   <% end %>
-  <% if @monograph_presenter.webgl? %>
+  <% if @parent_presenter.webgl? %>
     <%
 # load what we need to show the webgl/3-d model if needed
-webgl_id = @monograph_presenter.webgl_id
+webgl_id = @parent_presenter.webgl_id
 webgl = Webgl::Unity.from_directory(UnpackService.root_path_from_noid(webgl_id, 'webgl'))
 @unity_loader = "/webgl/#{webgl_id}/#{webgl.unity_loader}"
 @unity_json = "/webgl/#{webgl_id}/#{webgl.unity_json}"
@@ -135,11 +135,11 @@ webgl = Webgl::Unity.from_directory(UnpackService.root_path_from_noid(webgl_id, 
           }
         });
 
-        <%= render "cozy_controls_top", presenter: @presenter, monograph_presenter: @monograph_presenter %>
+        <%= render "cozy_controls_top", presenter: @presenter, parent_presenter: @parent_presenter %>
 
-        <%= render "webgl_specific", presenter: @presenter, monograph_presenter: @monograph_presenter %>
+        <%= render "webgl_specific", presenter: @presenter, parent_presenter: @parent_presenter %>
 
-        <%= render "cozy_controls_bottom", presenter: @presenter, monograph_presenter: @monograph_presenter %>
+        <%= render "cozy_controls_bottom", presenter: @presenter, parent_presenter: @parent_presenter %>
 
         // Annotation widget checks and initialization
         <% if %w[leverpress].include? @subdomain %>
@@ -170,13 +170,13 @@ webgl = Webgl::Unity.from_directory(UnpackService.root_path_from_noid(webgl_id, 
 
         <% end %>
 
-        <% if @monograph_presenter.webgl? %>
+        <% if @parent_presenter.webgl? %>
           open_panel();
         <% end %>
 
         // Initiate EPUB Reader
         reader.start(function() {
-          <% if @monograph_presenter.webgl? %>
+          <% if @parent_presenter.webgl? %>
             fetch_poi();
           <% end %>
           <% if %w[leverpress].include? @subdomain %>
