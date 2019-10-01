@@ -126,6 +126,8 @@ describe Import::Importer do
 
     context 'when the importer runs successfully' do
       # It saves a nice chunk of time (> 10 secs) to test the "reimport" here as well. Ugly though.
+      let(:reimport_root_dir) { File.join(fixture_path, 'csv', 'reimport') }
+
       it 'imports the new monograph and files, or "reimports" them to a pre-existing monograph' do
         expect { importer.run }
           .to change(Monograph, :count)
@@ -133,7 +135,7 @@ describe Import::Importer do
           .and(change(FileSet, :count)
           .by(11))
           .and(change(Hyrax::UploadedFile, :count)
-          .by(8)) # none for the 3 new external resources
+          .by(8)) # none for the 3 external resources
 
         monograph = Monograph.first
 
@@ -192,41 +194,35 @@ describe Import::Importer do
         # *************** Start "reimport" tests ***************
         # ******************************************************
 
-        reimporter = described_class.new(root_dir: root_dir, user_email: user.email, monograph_id: monograph.id)
+        reimporter = described_class.new(root_dir: reimport_root_dir, user_email: user.email, monograph_id: monograph.id)
         expect { reimporter.run }
           .to change(Monograph, :count)
           .by(0)
           .and(change(FileSet, :count)
-          .by(11))
+          .by(2))
           .and(change(Hyrax::UploadedFile, :count)
-          .by(8)) # none for the 3 new external resources
+          .by(2)) # none for the 3 new external resources
 
         # check it's indeed the same monograph
         expect(Monograph.first.id).to eq monograph.id
 
         # check counts explicitly
         expect(Monograph.count).to eq(1)
-        expect(FileSet.count).to eq(22)
-        expect(Hyrax::UploadedFile.count).to eq(16) # none for the 6 total external resources
+        expect(FileSet.count).to eq(13)
+        expect(Hyrax::UploadedFile.count).to eq(10) # none for the 3 external resources
+
+        # monograph variable needs to be refreshed post-reimport
+        monograph = Monograph.first
 
         # grab all FileSets again
-        file_sets = Monograph.first.ordered_members.to_a
+        file_sets = monograph.ordered_members.to_a
 
         # The monograph cover/representative is still the first file_set
         expect(file_sets[0].id).to eq monograph.representative_id
 
         # check order/existence of new files
-        expect(file_sets[11].title).to eq ['Monograph Shipwreck']
-        expect(file_sets[12].title).to eq ['Monograph Miranda']
-        expect(file_sets[13].title).to eq ['External Bard Transcript 1']
-        expect(file_sets[14].title).to eq ['日本語のファイル']
-        expect(file_sets[15].title).to eq ['External Bard Transcript 2']
-        expect(file_sets[16].title).to eq ['Section 1 Shipwreck']
-        expect(file_sets[17].title).to eq ['Section 1 Miranda']
-        expect(file_sets[18].title).to eq ['Section 2 Shipwreck']
-        expect(file_sets[19].title).to eq ['Section 2 Miranda']
-        expect(file_sets[20].title).to eq ['Previous Shipwreck File (Again)']
-        expect(file_sets[21].title).to eq ['External Bard Transcript 3']
+        expect(file_sets[11].title).to eq ['Cute Kitty']
+        expect(file_sets[12].title).to eq ['Scary Whale']
 
         # check monograph visibility doesn't change
         expect(Monograph.first.visibility).to eq monograph.visibility
@@ -237,7 +233,7 @@ describe Import::Importer do
 
         # new filesets should have the same visibility as the parent monograph
         expect(file_sets[11].visibility).to eq monograph.visibility
-        expect(file_sets[21].visibility).to eq monograph.visibility
+        expect(file_sets[12].visibility).to eq monograph.visibility
       end
     end
 

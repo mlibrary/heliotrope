@@ -108,7 +108,8 @@ class AttachImportFilesToWorkJob < ApplicationJob
       FeaturedRepresentative.create!(work_id: work.id, file_set_id: file_set.id, kind: kind)
     end
 
-    # default behavior sets to the first FileSet but it can optionally be assigned in the CSV, which happens here
+    # We've disabled the default Hyrax behavior which sets these to the first FileSet.
+    # They can optionally be assigned from the CSV 'Representative Kind' column, which happens here.
     def representative_image(monograph, cover_noid)
       acquire_lock_for(monograph.id) do
         monograph.representative_id = cover_noid
