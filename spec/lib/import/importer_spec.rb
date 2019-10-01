@@ -164,6 +164,7 @@ describe Import::Importer do
 
         expect(file_sets[3].title).to eq ['External Bard Transcript 1']
         expect(file_sets[3].external_resource_url).to eq 'http://external/resource/url1'
+        expect(file_sets[3].sort_date).to eq '2010-11-12' # model save succeeded though entered in CSV with wrong separator
 
         expect(file_sets[4].title).to eq ['日本語のファイル']
 
