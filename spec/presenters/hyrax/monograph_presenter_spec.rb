@@ -126,20 +126,6 @@ RSpec.describe Hyrax::MonographPresenter do
 
       it { is_expected.to eq 'A very elaborate description of editors and authors' }
     end
-
-    context 'Solr doc creator values have text following a second comma' do
-      subject { presenter.authors }
-
-      before do
-        allow(mono_doc).to receive(:creator).and_return(['Man, Rocket, 1888-1968', 'Boop, Betty, some weird stuff'])
-        allow(mono_doc).to receive(:contributor).and_return(['Love, Thomas'])
-        allow(presenter).to receive(:subdomain).and_return('heb')
-      end
-
-      it 'is included in authors method' do
-        expect(subject).to eq 'Man, Rocket, 1888-1968; Boop, Betty, some weird stuff; Love, Thomas'
-      end
-    end
   end
 
   describe '#authors?' do
