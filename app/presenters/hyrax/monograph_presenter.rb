@@ -141,11 +141,7 @@ module Hyrax
 
     def authors
       return creator_display if creator_display?
-      if subdomain != 'heb'
-        [unreverse_names(solr_document.creator), unreverse_names(contributor)].flatten.to_sentence(last_word_connector: ' and ')
-      else
-        [solr_document.creator, contributor].flatten.join('; ')
-      end
+      [unreverse_names(solr_document.creator), unreverse_names(contributor)].flatten.to_sentence(last_word_connector: ' and ')
     end
 
     def authors?

@@ -114,21 +114,6 @@ describe 'Press Catalog' do
       end
     end
 
-    context 'with a monograph with multiple authors in HEB-style format' do
-      let!(:monograph) {
-        create(:public_monograph,
-               title: ['The Three Authors\' Book'],
-               creator: ["Johns, Jimmy, 1888-1968 (a role)\nAuthor, Second"],
-               contributor: ['Way, Sub (another role)'],
-               press: heb.subdomain)
-      }
-
-      it 'sees multiple "reversed" author names on the press catalog page, retaining birth/death years' do
-        visit "/#{heb.subdomain}"
-        expect(page).to have_content 'Johns, Jimmy, 1888-1968; Author, Second; Way, Sub'
-      end
-    end
-
     context 'with a press with 15 or more open monographs' do
       before do
         16.times do |n|
