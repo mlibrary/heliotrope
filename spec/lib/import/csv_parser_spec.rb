@@ -109,7 +109,7 @@ describe Import::CSVParser do
           'language' => ['Russian', 'German', 'French'] },
         { 'title' => ['Section 2 Shipwreck'],
           'resource_type' => ['image'],
-          'license' => ['https://creativecommons.org/publicdomain/mark/1.0/'],
+          'license' => ['https://creativecommons.org/licenses/by-nc-nd/3.0/'], # an inactive id from licenses.yml
           'exclusive_to_platform' => 'yes',
           'content_type' => ['audience materials'],
           'creator' => ['Smith'],
@@ -125,7 +125,7 @@ describe Import::CSVParser do
           'language' => ['English'] },
         { 'title' => ['Previous Shipwreck File (Again)'],
           'resource_type' => ['image'],
-          'license' => ['https://creativecommons.org/publicdomain/mark/1.0/'],
+          'license' => ['https://creativecommons.org/licenses/by-sa/3.0/'], # an inactive id from licenses.yml
           'exclusive_to_platform' => 'yes',
           'content_type' => ['portrait', 'photograph'],
           'creator' => ['Smith'],

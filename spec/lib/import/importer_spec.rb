@@ -178,9 +178,11 @@ describe Import::Importer do
         expect(file_sets[7].section_title).to eq ['Act 1: Calm Waters']
 
         expect(file_sets[8].title).to eq ['Section 2 Shipwreck']
+        expect(file_sets[8].license).to eq ['https://creativecommons.org/licenses/by-nc-nd/3.0/'] # an inactive id from licenses.yml
         expect(file_sets[8].section_title).to eq ['Act 2: Stirrin\' Up']
 
         expect(file_sets[10].title).to eq ['Previous Shipwreck File (Again)']
+        expect(file_sets[10].license).to eq ['https://creativecommons.org/licenses/by-sa/3.0/'] # an inactive id from licenses.yml
         expect(file_sets[10].section_title).to match_array ['Act 2: Stirrin\' Up', 'Act 3: External Stuffs']
 
         expect(file_sets[11].title).to eq ['External Bard Transcript 3']
