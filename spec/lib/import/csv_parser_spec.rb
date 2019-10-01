@@ -31,6 +31,7 @@ describe Import::CSVParser do
       expect(subject['isbn']).to eq ['134513451345', '1451-25423 (e-book)', '1451343513'] # format was downcased
       expect(subject['series']).to eq ['Series the First', 'Cereal Series', 'Serial the Third']
       expect(subject['files']).to eq [
+        nil,
         'shipwreck.jpg',
         'miranda.jpg',
         nil,
@@ -45,9 +46,11 @@ describe Import::CSVParser do
       ]
       expect(subject['doi']).to eq '10.3998/mpub.9999991.blah'
 
-      expect(subject['files_metadata'].count).to eq 11
+      expect(subject['files_metadata'].count).to eq 12
 
       expect(subject['files_metadata']).to eq [
+        { 'title' => ['External Resource FileSet'],
+          'external_resource_url' => 'http://www.blah.com' },
         { 'title' => ['Monograph Shipwreck'],
           'resource_type' => ['image'],
           'license' => ['https://creativecommons.org/licenses/by-sa/4.0/'],

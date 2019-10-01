@@ -133,9 +133,9 @@ describe Import::Importer do
           .to change(Monograph, :count)
           .by(1)
           .and(change(FileSet, :count)
-          .by(11))
+          .by(12))
           .and(change(Hyrax::UploadedFile, :count)
-          .by(8)) # none for the 3 external resources
+          .by(8)) # none for the 4 external resources
 
         monograph = Monograph.first
 
@@ -149,42 +149,42 @@ describe Import::Importer do
         expect(monograph.open_access).to eq 'yes' # acceptable_values are downcased
         file_sets = monograph.ordered_members.to_a
 
-        expect(file_sets[0].title).to eq ['Monograph Shipwreck']
+        expect(file_sets[0].title).to eq ['External Resource FileSet']
         expect(file_sets[0].depositor).to eq user.email
 
-        # The monograph cover/representative is the first file_set
-        expect(file_sets[0].id).to eq monograph.representative_id
+        expect(file_sets[1].title).to eq ['Monograph Shipwreck']
+        # The monograph cover/representative is the first image file_set
+        expect(file_sets[1].id).to eq monograph.representative_id
+        expect(file_sets[1].license).to eq ['https://creativecommons.org/licenses/by-sa/4.0/']
 
-        expect(file_sets[0].license).to eq ['https://creativecommons.org/licenses/by-sa/4.0/']
+        expect(file_sets[2].title).to eq ['Monograph Miranda']
+        expect(file_sets[2].external_resource_url).to eq nil
+        expect(file_sets[2].license).to eq ['https://creativecommons.org/publicdomain/mark/1.0/']
+        expect(file_sets[2].exclusive_to_platform).to eq 'yes'
 
-        expect(file_sets[1].title).to eq ['Monograph Miranda']
-        expect(file_sets[1].external_resource_url).to eq nil
-        expect(file_sets[1].license).to eq ['https://creativecommons.org/publicdomain/mark/1.0/']
-        expect(file_sets[1].exclusive_to_platform).to eq 'yes'
+        expect(file_sets[3].title).to eq ['External Bard Transcript 1']
+        expect(file_sets[3].external_resource_url).to eq 'http://external/resource/url1'
 
-        expect(file_sets[2].title).to eq ['External Bard Transcript 1']
-        expect(file_sets[2].external_resource_url).to eq 'http://external/resource/url1'
+        expect(file_sets[4].title).to eq ['日本語のファイル']
 
-        expect(file_sets[3].title).to eq ['日本語のファイル']
-
-        expect(file_sets[4].title).to eq ['External Bard Transcript 2']
-        expect(file_sets[4].external_resource_url).to eq 'http://external/resource/url2'
+        expect(file_sets[5].title).to eq ['External Bard Transcript 2']
+        expect(file_sets[5].external_resource_url).to eq 'http://external/resource/url2'
 
         # FileSets w/ sections
-        expect(file_sets[5].title).to eq ['Section 1 Shipwreck']
-        expect(file_sets[5].section_title).to eq ['Act 1: Calm Waters']
-
-        expect(file_sets[6].title).to eq ['Section 1 Miranda']
+        expect(file_sets[6].title).to eq ['Section 1 Shipwreck']
         expect(file_sets[6].section_title).to eq ['Act 1: Calm Waters']
 
-        expect(file_sets[7].title).to eq ['Section 2 Shipwreck']
-        expect(file_sets[7].section_title).to eq ['Act 2: Stirrin\' Up']
+        expect(file_sets[7].title).to eq ['Section 1 Miranda']
+        expect(file_sets[7].section_title).to eq ['Act 1: Calm Waters']
 
-        expect(file_sets[9].title).to eq ['Previous Shipwreck File (Again)']
-        expect(file_sets[9].section_title).to match_array ['Act 2: Stirrin\' Up', 'Act 3: External Stuffs']
+        expect(file_sets[8].title).to eq ['Section 2 Shipwreck']
+        expect(file_sets[8].section_title).to eq ['Act 2: Stirrin\' Up']
 
-        expect(file_sets[10].title).to eq ['External Bard Transcript 3']
-        expect(file_sets[10].external_resource_url).to eq 'http://external/resource/url3'
+        expect(file_sets[10].title).to eq ['Previous Shipwreck File (Again)']
+        expect(file_sets[10].section_title).to match_array ['Act 2: Stirrin\' Up', 'Act 3: External Stuffs']
+
+        expect(file_sets[11].title).to eq ['External Bard Transcript 3']
+        expect(file_sets[11].external_resource_url).to eq 'http://external/resource/url3'
 
         # filesets should have the same visibility as the parent monograph
         expect(file_sets[0].visibility).to eq monograph.visibility
@@ -208,8 +208,8 @@ describe Import::Importer do
 
         # check counts explicitly
         expect(Monograph.count).to eq(1)
-        expect(FileSet.count).to eq(13)
-        expect(Hyrax::UploadedFile.count).to eq(10) # none for the 3 external resources
+        expect(FileSet.count).to eq(14)
+        expect(Hyrax::UploadedFile.count).to eq(10) # none for the 4 external resources
 
         # monograph variable needs to be refreshed post-reimport
         monograph = Monograph.first
@@ -217,23 +217,23 @@ describe Import::Importer do
         # grab all FileSets again
         file_sets = monograph.ordered_members.to_a
 
-        # The monograph cover/representative is still the first file_set
-        expect(file_sets[0].id).to eq monograph.representative_id
+        # The monograph cover/representative is the same as before the reimport
+        expect(file_sets[1].id).to eq monograph.representative_id
 
         # check order/existence of new files
-        expect(file_sets[11].title).to eq ['Cute Kitty']
-        expect(file_sets[12].title).to eq ['Scary Whale']
+        expect(file_sets[12].title).to eq ['Cute Kitty']
+        expect(file_sets[13].title).to eq ['Scary Whale']
 
         # check monograph visibility doesn't change
         expect(Monograph.first.visibility).to eq monograph.visibility
 
         # old filesets should have the same visibility as the parent monograph
         expect(file_sets[0].visibility).to eq monograph.visibility
-        expect(file_sets[10].visibility).to eq monograph.visibility
+        expect(file_sets[11].visibility).to eq monograph.visibility
 
         # new filesets should have the same visibility as the parent monograph
-        expect(file_sets[11].visibility).to eq monograph.visibility
         expect(file_sets[12].visibility).to eq monograph.visibility
+        expect(file_sets[13].visibility).to eq monograph.visibility
       end
     end
 
