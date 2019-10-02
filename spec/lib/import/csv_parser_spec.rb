@@ -31,6 +31,7 @@ describe Import::CSVParser do
       expect(subject['isbn']).to eq ['134513451345', '1451-25423 (e-book)', '1451343513'] # format was downcased
       expect(subject['series']).to eq ['Series the First', 'Cereal Series', 'Serial the Third']
       expect(subject['files']).to eq [
+        nil,
         'shipwreck.jpg',
         'miranda.jpg',
         nil,
@@ -45,15 +46,18 @@ describe Import::CSVParser do
       ]
       expect(subject['doi']).to eq '10.3998/mpub.9999991.blah'
 
-      expect(subject['files_metadata'].count).to eq 11
+      expect(subject['files_metadata'].count).to eq 12
 
       expect(subject['files_metadata']).to eq [
+        { 'title' => ['External Resource FileSet'],
+          'external_resource_url' => 'http://www.blah.com' },
         { 'title' => ['Monograph Shipwreck'],
           'resource_type' => ['image'],
           'license' => ['https://creativecommons.org/licenses/by-sa/4.0/'],
           'exclusive_to_platform' => 'no',
           'content_type' => ['portrait'],
           'creator' => ['Smith, Benjamin'],
+          'sort_date' => '2001-02-03',
           'language' => ['English'],
           'doi' => '10.3998/mpub.9999992.blah' },
         { 'title' => ['Monograph Miranda'],
@@ -70,6 +74,7 @@ describe Import::CSVParser do
           'exclusive_to_platform' => 'no',
           'content_type' => ['Interview Transcript'],
           'creator' => ['L\'Interviewere, Bob'],
+          'sort_date' => '2010-11-12',
           'keywords' => ['interview'],
           'language' => ['English'] },
         { 'title' => ['日本語のファイル'],
@@ -92,6 +97,7 @@ describe Import::CSVParser do
           'exclusive_to_platform' => 'yes',
           'content_type' => ['audience materials'],
           'creator' => ['Smith'],
+          'sort_date' => '2019-10-01',
           'keywords' => ['keyword1', 'keyword2'],
           'section_title' => ['Act 1: Calm Waters'],
           'language' => ['Russian'] },
@@ -106,7 +112,7 @@ describe Import::CSVParser do
           'language' => ['Russian', 'German', 'French'] },
         { 'title' => ['Section 2 Shipwreck'],
           'resource_type' => ['image'],
-          'license' => ['https://creativecommons.org/publicdomain/mark/1.0/'],
+          'license' => ['https://creativecommons.org/licenses/by-nc-nd/3.0/'], # an inactive id from licenses.yml
           'exclusive_to_platform' => 'yes',
           'content_type' => ['audience materials'],
           'creator' => ['Smith'],
@@ -122,7 +128,7 @@ describe Import::CSVParser do
           'language' => ['English'] },
         { 'title' => ['Previous Shipwreck File (Again)'],
           'resource_type' => ['image'],
-          'license' => ['https://creativecommons.org/publicdomain/mark/1.0/'],
+          'license' => ['https://creativecommons.org/licenses/by-sa/3.0/'], # an inactive id from licenses.yml
           'exclusive_to_platform' => 'yes',
           'content_type' => ['portrait', 'photograph'],
           'creator' => ['Smith'],
@@ -134,6 +140,7 @@ describe Import::CSVParser do
           'exclusive_to_platform' => 'no',
           'content_type' => ['Interview Transcript'],
           'creator' => ['L\'Interviewere, Bob'],
+          'sort_date' => '2019-01-01',
           'keywords' => ['interview'],
           'section_title' => ['Act 3: External Stuffs'],
           'language' => ['English'] }

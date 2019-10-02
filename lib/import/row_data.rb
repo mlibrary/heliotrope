@@ -68,7 +68,8 @@ module Import
       def map_cc_license(field_name, field_values)
         return field_values unless field_name == 'CC License'
         field_values.map do |val|
-          match = Hyrax::LicenseService.new.select_active_options.find { |license| val == license[0] }
+          # `select_all_options` rather than `select_active_options` as, unlike the UI edit forms, was allow all values here
+          match = Hyrax::LicenseService.new.select_all_options.find { |license| val == license[0] }
           match.present? ? match[1] : val
         end
       end
@@ -126,16 +127,17 @@ module Import
 
       def output_date(date_string)
         y = m = d = ''
-        if date_string[/\d{4}-\d{2}-\d{2}/]
+        date_string.gsub!('/', '-')
+        if date_string[/\A\d{4}-\d{2}-\d{2}\z/]
           y, m, d = date_string.split '-'
-        elsif date_string[/\d{4}-\d{2}/]
+        elsif date_string[/\A\d{4}-\d{2}\z/]
           y, m = date_string.split '-'
           d = '01'
-        elsif date_string[/\d{4}/]
+        elsif date_string[/\A\d{4}\z/]
           y = date_string
           m = d = '01'
         end
-        return nil unless Date.valid_date?(y.to_i, m.to_i, d.to_i)
+        return nil unless (y + m + d).length == 8 && Date.valid_date?(y.to_i, m.to_i, d.to_i)
         y + '-' + m + '-' + d
       end
 

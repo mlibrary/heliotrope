@@ -85,3 +85,6 @@ lib/.yardoc
 # Ignore documentation directory
 /doc
 lib/doc
+
+# Ignore LibreOffice lock files
+.~lock*

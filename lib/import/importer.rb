@@ -123,8 +123,10 @@ module Import
           end
         end
 
-        # we've removed the Hyrax behavior where it sets the representative/thumbnail to the first file attached
-        maybe_set_cover(attrs)
+        # We've removed the Hyrax behavior where it sets the representative/thumbnail to the first file of any kind...
+        # (not just image files) that gets attached to the new Work. However we want backwards-compatibility with our...
+        # old imports, so we'll look for an image to assign even without the 'Representative Kind' field set to 'cover'.
+        maybe_set_cover(attrs) unless reimporting
 
         optional_early_exit(interaction, attrs.delete('row_errors'), test)
 
@@ -213,7 +215,8 @@ module Import
         if attrs['files_metadata'].none? { |metadata| metadata['representative_kind'] == 'cover' }
           # flag first image found as the cover to maintain expected behavior for FMSL CSV imports
           attrs['files'].each_with_index do |file, i|
-            if ['.bmp', '.jpg', '.jpeg', '.png', '.gif'].include?(File.extname(file).downcase)
+            next if file.blank? # external resources
+            if ['.bmp', '.jpg', '.jpeg', '.png', '.gif', '.tif', '.tiff'].include?(File.extname(file).downcase)
               attrs['files_metadata'][i]['representative_kind'] = 'cover'
               break
             end
