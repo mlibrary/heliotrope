@@ -155,7 +155,7 @@ gem 'riiif', '1.4.1'
 gem 'rsolr', '~> 2.0.1'
 
 # Use Zip to extract EPubs
-gem 'rubyzip', '~> 1.2.2'
+gem "rubyzip", ">= 1.3.0"
 
 gem 'sitemap_generator', '~> 6.0.1'
 
