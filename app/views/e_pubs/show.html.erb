@@ -74,12 +74,12 @@ webgl = Webgl::Unity.from_directory(UnpackService.root_path_from_noid(webgl_id, 
               cozy.Control.Widget.Toggle.prototype.initialize.apply(this, arguments);
 
               this.options.states = [{
-                stateName: 'open-annotator',
-                onClick: this.closeAnnotator.bind(this)
-              },
-              {
                 stateName: 'close-annotator',
                 onClick: this.openAnnotator.bind(this)
+              },
+              {
+                stateName: 'open-annotator',
+                onClick: this.closeAnnotator.bind(this)
               }];
             },
 
@@ -91,8 +91,9 @@ webgl = Webgl::Unity.from_directory(UnpackService.root_path_from_noid(webgl_id, 
             },
 
             openAnnotator: function(self, reader) {
-              this.options.$panel.parents("body").addClass("panel-open");
+              this.options.$panel.parents("body").addClass("panel-open panel-right");
               this.options.$panel.show();
+              $(".hypothesis-panel").css({ display: 'block', height: '100%' });
               self.state('open-annotator');
             },
 
@@ -157,8 +158,6 @@ webgl = Webgl::Unity.from_directory(UnpackService.root_path_from_noid(webgl_id, 
             }, 100);
           }
 
-          // the panel has to be created first
-          $("body").addClass("panel-open panel-right");
           var $main = $(".cozy-module-main");
           var $panel = $('<div class="special-panel cozy-module-annotator"></div>').appendTo($main);
 
@@ -181,9 +180,7 @@ webgl = Webgl::Unity.from_directory(UnpackService.root_path_from_noid(webgl_id, 
             fetch_poi();
           <% end %>
           <% if %w[leverpress].include? @subdomain %>
-            var $hypothesis_panel = $(".hypothesis-panel");
-            $hypothesis_panel.css({ display: 'block', height: '100%' });
-            $panel.append($hypothesis_panel);
+            $panel.append($(".hypothesis-panel"));
           <% end %>
         });
       }
