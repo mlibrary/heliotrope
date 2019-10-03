@@ -1,5 +1,5 @@
         // Table of contents widget
-        <% if @monograph_presenter.epub? %>
+        <% if @parent_presenter.epub? %>
         cozy.control.contents({ region: 'top.toolbar.left', skipLink: '.skip' }).addTo(reader);
         <% else %>
         var contents = new PDFContents({ region: 'top.toolbar.left', skipLink: '.skip' });
@@ -7,11 +7,11 @@
         <% end %>
 
         // Resources
-        <% if @monograph_presenter.assets? %>
+        <% if @parent_presenter.assets? %>
         cozy.control.widget.button({
           region: 'top.toolbar.left',
           template: '<button class="button--sm media" data-toggle="button" aria-label="Resources">Resources</button>',
-          onClick: function() { window.location = "<%= "#{main_app.monograph_catalog_url(@presenter.monograph_id) + '#resources'}" %>"; }
+          onClick: function() { window.location = "<%= "#{@parent_presenter.catalog_url + '#resources'}" %>"; }
         }).addTo(reader);
         <% end %>
 
@@ -22,20 +22,20 @@
           template: '<div class="permalink-label"><label class="u-screenreader" for="permalink">Permalink</label><form><input data-slot="title" type="text" id="permalink" aria-label="citable link" value="" readonly="readonly" onclick="this.select(); document.execCommand(\'copy\');"></form></div>',
         }).addTo(reader);
 
-        <% if @monograph_presenter.citations_ready? %>
+        <% if @parent_presenter.citations_ready? %>
         // Citation widget
         // see: https://github.com/mlibrary/cozy-sun-bear/wiki/Metadata-and-Citations
         var my_citations = [
-          {format: 'MLA', text: "<%= export_as_mla_citation(@monograph_presenter).gsub('"', '\"').html_safe %>" },
-          {format: 'APA', text: "<%= export_as_apa_citation(@monograph_presenter).gsub('"', '\"').html_safe %>" },
-          {format: 'Chicago', text: "<%= export_as_chicago_citation(@monograph_presenter).gsub('"', '\"').html_safe %>" }
+          {format: 'MLA', text: "<%= export_as_mla_citation(@parent_presenter).gsub('"', '\"').html_safe %>" },
+          {format: 'APA', text: "<%= export_as_apa_citation(@parent_presenter).gsub('"', '\"').html_safe %>" },
+          {format: 'Chicago', text: "<%= export_as_chicago_citation(@parent_presenter).gsub('"', '\"').html_safe %>" }
         ]
         cozy.control.citation({ region: 'top.toolbar.left', citations: my_citations }).addTo(reader);
         <% end %>
 
         // Search widget
         <% unless Heliotrope::Application.config.cozy_epub_engine == 'readium' %>
-          <% if @monograph_presenter.epub? %>
+          <% if @parent_presenter.epub? %>
           cozy.control.search({
             region: 'top.toolbar.left',
             searchUrl: "<%= @search_url %>"
@@ -49,7 +49,7 @@
         // Share widget
         cozy.control.widget.button({
           region: 'top.toolbar.left',
-          template: '<%= @monograph_presenter.social_share_widget_template %>'
+          template: '<%= @parent_presenter.social_share_widget_template %>'
         }).addTo(reader);
 
         // Download widget
@@ -61,7 +61,7 @@
         <% end %>
 
         // Restricted Share Link widget
-        <% if @component.present? && @press.allow_share_links? && !@monograph_presenter.open_access? && @share_link.nil? %>
+        <% if @component.present? && @press.allow_share_links? && !@parent_presenter.open_access? && @share_link.nil? %>
         modal = reader.modal({
                 region: 'left',
                 title: 'Share Temporary Access to this Book',
@@ -116,10 +116,11 @@
         }).addTo(reader);
         <% end %>
 
+        // Fullscreen
         cozy.control.fullscreen({ region: 'top.toolbar.right' }).addTo(reader);
 
         // Reading preferences widget - webgl gets custom preferences
-        <% if @monograph_presenter.webgl? %>
+        <% if @parent_presenter.webgl? %>
         // Add accessibility mode to preferences
         cozy.control.preferences({
           region: 'top.toolbar.right',
@@ -148,7 +149,7 @@
         <% end %>
 
         // Paging widgets
-        <% if @monograph_presenter.pdf_ebook? %>
+        <% if @parent_presenter.pdf_ebook? %>
         var action = cozy.control.pagePrevious({ region: 'left.sidebar' }).addTo(reader);
         action._control.setAttribute('id', 'previous');
         action = cozy.control.pageNext({ region: 'right.sidebar' }).addTo(reader);
@@ -162,10 +163,10 @@
         cozy.control.widget.panel({
           region: 'bottom.navigator.left',
           className: 'cozy-panel-feedback',
-          <% if @monograph_presenter.webgl? %>
+          <% if @parent_presenter.webgl? %>
           template: '<a href="https://docs.google.com/forms/d/e/1FAIpQLSehtWeYRAmb12pLcQV0WXDvsQgdEsI6H-gbj4HumdySrmwhZg/viewform?usp=sf_link" target="_blank" title="Report a problem or share feedback"><i class="icon-comment-square oi" data-glyph="comment-square" aria-hidden="true"></i></a>',
           <% else %>
-          template: '<a href="https://umich.qualtrics.com/jfe/form/SV_3KSLynPij0fqrD7?publisher=<%= @subdomain %>&noid=<%= @presenter.id %>&title=<%= @monograph_presenter.page_title %>&url=<%= request.original_url %>" target="_blank" title="Report a problem or share feedback"><i class="icon-comment-square oi" data-glyph="comment-square" aria-hidden="true"></i></a>',
+          template: '<a href="https://umich.qualtrics.com/jfe/form/SV_3KSLynPij0fqrD7?publisher=<%= @subdomain %>&noid=<%= @presenter.id %>&title=<%= @parent_presenter.page_title %>&url=<%= request.original_url %>" target="_blank" title="Report a problem or share feedback"><i class="icon-comment-square oi" data-glyph="comment-square" aria-hidden="true"></i></a>',
           <% end %>
         }).addTo(reader);
 

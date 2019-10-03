@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'rails_helper'
+require 'rake'
 
 RSpec.describe "Score FileSets and PDF reader", type: :system do
   let(:press) { create(:press, subdomain: Services.score_press) }
@@ -49,6 +50,10 @@ RSpec.describe "Score FileSets and PDF reader", type: :system do
     cover.save!
     file_set.save!
     pdf.save!
+    # We need to make sure the mozilla-pdf-viewer stuff is in /public
+    allow($stdout).to receive(:puts)
+    Heliotrope::Application.load_tasks
+    Rake::Task['jekyll:deploy'].invoke
   end
 
   it do
@@ -79,7 +84,19 @@ RSpec.describe "Score FileSets and PDF reader", type: :system do
     expect(page).to have_content('Read Book')
 
     # Make sure the ereader loads.
-    # TODO: HELIO-2924
+    click_on('Read Book')
+    # These are from show_pdf.html.erb, not the moz pdf code
+    expect(page).to have_selector('#epub')
+    expect(page).to have_selector('#mozilla-pdf-viewer-ui', visible: false)
+
+    # The loading spinner is now hidden so the moz stuff *should* be done loading
+    expect(page).to have_selector('.cozy-module-book-loading', visible: false)
+    # Get the title directly from CSB, so it should be loaded
+    expect(page.evaluate_script("reader._original_document_title")).to eq "A Title"
+
+    # Get the actual text from the PDF.
+    # Oddly, the dummy.pdf has the word "Dummy" in 2 different spans: <span>Dumm</span><span>y</span>
+    expect(page).to have_content('Dumm y PDF')
 
     # And then finally un-set the pdf_ebook to make sure that's all working
     # since I don't think we test that elsewhere.

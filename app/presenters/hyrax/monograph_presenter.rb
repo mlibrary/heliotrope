@@ -204,6 +204,10 @@ module Hyrax
       solr_document.buy_url.first if buy_url?
     end
 
+    def catalog_url
+      Rails.application.routes.url_helpers.monograph_catalog_path(id)
+    end
+
     def monograph_coins_title?
       return false unless defined? monograph_coins_title
       monograph_coins_title.present?

@@ -62,11 +62,23 @@ module Hyrax
       link_content.html_safe # rubocop:disable Rails/OutputSafety
     end
 
+    def catalog_url
+      Rails.application.routes.url_helpers.score_catalog_path(id)
+    end
+
     #
     # Methods we need because they're called from a partial or the
     # FileSetPresenter but are (currently) no-ops for Scores
     #
     def monograph_coins_title?; end
+
+    def isbn_noformat
+      []
+    end
+
+    def citations_ready?
+      false
+    end
 
     def creator_full_name; end
 

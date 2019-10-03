@@ -2,16 +2,16 @@
   <meta name="turbolinks-cache-control" content="no-cache">
 <% end %>
 
-<% provide :page_title, @title || "Access Restricted to #{@monograph_presenter.title}" %>
+<% provide :page_title, @title || "Access Restricted to #{@parent_presenter.title}" %>
 <div class="alert alert-danger">
-  <p class="text-center"><em><%= @monograph_presenter.title %></em> is a restricted access online resource. <%= link_to 'Go back to previous page', :back %>.</p>
+  <p class="text-center"><em><%= @parent_presenter.title %></em> is a restricted access online resource. <%= link_to 'Go back to previous page', :back %>.</p>
 </div>
 
 <%=
-  case @monograph_presenter.subdomain
+  case @parent_presenter.subdomain
   when 'heb'
-    render partial: 'e_pubs/access/heb', locals: { presenter: @presenter, monograph_presenter: @monograph_presenter, institutions: @institutions, products: @products }
+    render partial: 'e_pubs/access/heb', locals: { presenter: @presenter, monograph_presenter: @parent_presenter, institutions: @institutions, products: @products }
   when 'michigan'
-    render partial: 'e_pubs/access/michigan', locals: { presenter: @presenter, monograph_presenter: @monograph_presenter, institutions: @institutions, products: @products }
+    render partial: 'e_pubs/access/michigan', locals: { presenter: @presenter, monograph_presenter: @parent_presenter, institutions: @institutions, products: @products }
   end
 %>

@@ -1,5 +1,5 @@
         // Webgl/3-D model
-        <% if @monograph_presenter.webgl? %>
+        <% if @parent_presenter.webgl? %>
 
         var gameInstance;
         var gameReady = false;
@@ -276,10 +276,10 @@
 
         // Database
         // This is a very specific case of an externally hosted database that is related to the epub
-        <% if @monograph_presenter.database? %>
+        <% if @parent_presenter.database? %>
         cozy.control.widget.button({
           region: 'top.toolbar.left',
           template: '<button class="button--sm" data-toggle="button" aria-label="Database">Database</button>',
-          onClick: function() { window.location = "<%= "#{@monograph_presenter&.database&.external_resource_url}" %>"; }
+          onClick: function() { window.location = "<%= "#{@parent_presenter&.database&.external_resource_url}" %>"; }
         }).addTo(reader);
         <% end %>

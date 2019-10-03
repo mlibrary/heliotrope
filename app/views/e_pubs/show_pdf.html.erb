@@ -2,7 +2,7 @@
 <%# https://github.com/mlibrary/heliotrope/issues/1228 %>
 <% content_for :head do %>
   <meta name="turbolinks-cache-control" content="no-cache">
-  <% if @monograph_presenter.doi.present? %>
+  <% if @parent_presenter.doi.present? %>
     <script async src="https://badge.dimensions.ai/badge.js" charset="utf-8"></script>
   <% end %>
 
@@ -422,37 +422,37 @@
       },
 
       template: function() {
-        var html = '<fieldset class="cozy-fieldset-pdf-scale">' + 
-          '<legend>Zoom In/Out</legend>' + 
-          '<style>' + 
-            '.cozy-fieldset-pdf-scale label { margin: 0.5 0 !important; }' + 
-            '.cozy-fieldset-pdf-scale .preview--text_size[data-scale="auto"] { height: auto; }' + 
-            '.cozy-fieldset-pdf-scale .preview--text_size[data-scale="page-fit"] { height: auto; width: 60%; }' + 
-            '.cozy-fieldset-pdf-scale .preview--text_size[data-scale="page-width"] { width: 60%; }' + 
-            '.cozy-fieldset-pdf-scale .preview--text_size[data-scale="page-actual"] > div { width: 150%; transform: scale(1.5) !important; }' + 
-          '</style>' + 
+        var html = '<fieldset class="cozy-fieldset-pdf-scale">' +
+          '<legend>Zoom In/Out</legend>' +
+          '<style>' +
+            '.cozy-fieldset-pdf-scale label { margin: 0.5 0 !important; }' +
+            '.cozy-fieldset-pdf-scale .preview--text_size[data-scale="auto"] { height: auto; }' +
+            '.cozy-fieldset-pdf-scale .preview--text_size[data-scale="page-fit"] { height: auto; width: 60%; }' +
+            '.cozy-fieldset-pdf-scale .preview--text_size[data-scale="page-width"] { width: 60%; }' +
+            '.cozy-fieldset-pdf-scale .preview--text_size[data-scale="page-actual"] > div { width: 150%; transform: scale(1.5) !important; }' +
+          '</style>' +
           '<div class="preview--text_size" id="x${this._id}-preview">' +
             '<div style="transform-origin: top left">' +
-              '‘Yes, that’s it,’ said the Hatter with a sigh: ‘it’s always tea-time, and we’ve no time to wash the things between whiles.’' + 
+              '‘Yes, that’s it,’ said the Hatter with a sigh: ‘it’s always tea-time, and we’ve no time to wash the things between whiles.’' +
             '</div>' +
           '</div>' +
-          '<ul id="x${this._id}-list" style="margin-top: 1rem">' + 
-            '<li><label><input type="radio" name="scaleSelect" value="auto" /> Automatic Zoom</label></li>' + 
-            '<li><label><input type="radio" name="scaleSelect" value="page-actual" /> Actual Size</label></li>' + 
-            '<li><label><input type="radio" name="scaleSelect" value="page-fit" /> Page Fit</label></li>' + 
-            '<li><label><input type="radio" name="scaleSelect" value="page-width" /> Page Width</label></li>' + 
-            '<li><label><input type="radio" name="scaleSelect" value="0.5" /> 50%</label></li>' + 
-            '<li><label><input type="radio" name="scaleSelect" value="0.75" /> 75%</label></li>' + 
-            '<li><label><input type="radio" name="scaleSelect" value="1" /> 100%</label></li>' + 
-            '<li><label><input type="radio" name="scaleSelect" value="1.25" /> 125%</label></li>' + 
-            '<li><label><input type="radio" name="scaleSelect" value="1.5" /> 150%</label></li>' + 
-            '<li><label><input type="radio" name="scaleSelect" value="2" /> 200%</label></li>' + 
-            '<li><label><input type="radio" name="scaleSelect" value="3" /> 300%</label></li>' + 
-            '<li><label><input type="radio" name="scaleSelect" value="4" /> 400%</label></li>' + 
-          '</ul>' + 
-          '<p style="margin-top: 1.5rem">' + 
-            '<button id="x${this._id}-reset" class="reset button--inline" style="margin-left: 8px">Reset</button>' + 
-          '</p>' + 
+          '<ul id="x${this._id}-list" style="margin-top: 1rem">' +
+            '<li><label><input type="radio" name="scaleSelect" value="auto" /> Automatic Zoom</label></li>' +
+            '<li><label><input type="radio" name="scaleSelect" value="page-actual" /> Actual Size</label></li>' +
+            '<li><label><input type="radio" name="scaleSelect" value="page-fit" /> Page Fit</label></li>' +
+            '<li><label><input type="radio" name="scaleSelect" value="page-width" /> Page Width</label></li>' +
+            '<li><label><input type="radio" name="scaleSelect" value="0.5" /> 50%</label></li>' +
+            '<li><label><input type="radio" name="scaleSelect" value="0.75" /> 75%</label></li>' +
+            '<li><label><input type="radio" name="scaleSelect" value="1" /> 100%</label></li>' +
+            '<li><label><input type="radio" name="scaleSelect" value="1.25" /> 125%</label></li>' +
+            '<li><label><input type="radio" name="scaleSelect" value="1.5" /> 150%</label></li>' +
+            '<li><label><input type="radio" name="scaleSelect" value="2" /> 200%</label></li>' +
+            '<li><label><input type="radio" name="scaleSelect" value="3" /> 300%</label></li>' +
+            '<li><label><input type="radio" name="scaleSelect" value="4" /> 400%</label></li>' +
+          '</ul>' +
+          '<p style="margin-top: 1.5rem">' +
+            '<button id="x${this._id}-reset" class="reset button--inline" style="margin-left: 8px">Reset</button>' +
+          '</p>' +
         '</fieldset>';
         return html.replace(/\$\{this._id\}/g, this._id);
       }
@@ -608,7 +608,7 @@
 
         this._control.setAttribute('id', 'sidebarToggle');
 
-        <% if @monograph_presenter.pdf_ebook_presenter.intervals? %>
+        <% if @parent_presenter.pdf_ebook_presenter.intervals? %>
           var template =
             '<div id="toolbarSidebar">' +
               '<div class="splitToolbarButton toggled">' +
@@ -888,13 +888,13 @@
       href: '<%= "#{@presenter.id}/file" %>',
       download_links: <%= @ebook_download_presenter.csb_download_links.to_json.html_safe %>,
       metadata: {
-        title: '<%= raw escape_javascript(@monograph_presenter.page_title) %>'
+        title: '<%= raw escape_javascript(@parent_presenter.page_title) %>'
       }
     });
 
-    <%= render "cozy_controls_top", presenter: @presenter, monograph_presenter: @monograph_presenter %>
+    <%= render "cozy_controls_top", presenter: @presenter, parent_presenter: @parent_presenter %>
 
-    <%= render "cozy_controls_bottom", presenter: @presenter, monograph_presenter: @monograph_presenter %>
+    <%= render "cozy_controls_bottom", presenter: @presenter, parent_presenter: @parent_presenter %>
 
     // start reader
     reader.start();
