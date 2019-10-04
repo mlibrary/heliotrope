@@ -19,7 +19,7 @@
     <span aria-label="publication date" class="pubdate"><%= @presenter.date_created.first %></span>
     <% end %>
     <% if @presenter.license? %>
-      <span class="license"><a aria-label="license" rel="license" href="<%= @presenter.license.first %>" target="_blank"><%= @presenter.license_link_content %></a></span>
+      <span class="license"><a aria-label="<%= @presenter.license_alt_text %>" rel="license" href="<%= @presenter.license.first %>" target="_blank"><%= @presenter.license_link_content %></a></span>
     <% end %>
     <div class="description">
       <%= @presenter.description.first || '' %>
