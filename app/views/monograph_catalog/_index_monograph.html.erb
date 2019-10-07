@@ -133,39 +133,52 @@
   </div><!-- /.monograph-metadata -->
 </div><!-- /.monograph-info-epub -->
 
+<!-- See app/assets/javascripts/application/tabs.js -->
 <div class="row monograph-assets-toc-epub">
   <div class="col-sm-12" id="tabs">
     <ul class="nav nav-tabs" role="tablist">
-      <% if @presenter.reader_ebook? %>
-        <li role="presentation" class="active"><a id="tab-toc" href="#toc" data-toggle="tab" role="tab" aria-controls="toc" aria-selected="true" tabindex="0">Table of Contents</a></li>
+      <% if @presenter.toc? %>
+        <li role="presentation">
+          <a id="tab-toc" href="#toc" aria-controls="toc" role="tab" data-toggle="tab" aria-selected="false" tabindex="-1">Table of Contents</a>
+        </li>
       <% end %>
       <% if @presenter.assets? %>
-        <% if @presenter.reader_ebook? %>
-          <li role="presentation"><a id="tab-resources" href="#resources" role="tab" data-toggle="tab" aria-controls="resources" aria-selected="false" tabindex="-1">Resources</a></li>
-        <% else %>
-          <li role="presentation" class="active"><a id="tab-resources" href="#resources" data-toggle="tab" role="tab" aria-controls="resources" aria-selected="true"  tabindex="0">Resources</a></li>
-        <% end %>
+        <li role="presentation">
+          <a id="tab-resources" href="#resources" aria-controls="resources" role="tab" data-toggle="tab" aria-selected="false" tabindex="-1">Resources</a>
+        </li>
       <% end %>
       <% if @presenter.reviews? %>
-        <li role="presentation"><a id="tab-reviews" href="#reviews" role="tab" data-toggle="tab" aria-controls="reviews" aria-selected="false" tabindex="-1">Reviews</a></li>
+        <li role="presentation">
+          <a id="tab-reviews" href="#reviews" aria-controls="reviews" role="tab" data-toggle="tab" aria-selected="false" tabindex="-1">Reviews</a>
+        </li>
       <% end %>
       <% if @presenter.related? %>
-        <li role="presentation"><a id="tab-related" href="#related" role="tab" data-toggle="tab" aria-controls="related" aria-selected="false" tabindex="-1">Related Titles</a></li>
+        <li role="presentation">
+          <a id="tab-related" href="#related" aria-controls="related" role="tab" data-toggle="tab" aria-selected="false" tabindex="-1">Related Titles</a>
+        </li>
       <% end %>
       <% if @presenter.webgl? %>
-        <li role="presentation"><a id="tab-webgl" href="#webgl" role="tab" data-toggle="tab" aria-controls="webgl" aria-selected="false" tabindex="-1">3-D Model</a></li>
+        <li role="presentation">
+          <a id="tab-webgl" href="#webgl" aria-controls="webgl" role="tab" data-toggle="tab" aria-selected="false" tabindex="-1">3-D Model</a>
+        </li>
       <% end %>
       <% if @presenter.database? %>
-        <li role="presentation"><a id="tab-database" href="#database" role="tab" data-toggle="tab" aria-controls="database" aria-selected="false" tabindex="-1">Database</a></li>
+        <li role="presentation">
+          <a id="tab-database" href="#database" aria-controls="database" role="tab" data-toggle="tab" aria-selected="false" tabindex="-1">Database</a>
+        </li>
       <% end %>
       <% if @presenter.aboutware? %>
-        <li role="presentation"><a id="tab-aboutware" href="#aboutware" role="tab" data-toggle="tab" aria-controls="aboutware" aria-selected="false" tabindex="-1">About</a></li>
+        <li role="presentation">
+          <a id="tab-aboutware" href="#aboutware" aria-controls="aboutware" role="tab" data-toggle="tab" aria-selected="false" tabindex="-1">About</a>
+        </li>
       <% end %>
-      <li role="presentation"><a id="tab-stats" href="#stats" role="tab" data-toggle="tab" aria-controls="stats" aria-selected="false" tabindex="-1">Stats</a></li>
+        <li role="presentation">
+          <a id="tab-stats" href="#stats" aria-controls="stats" role="tab" data-toggle="tab" aria-selected="false" tabindex="-1">Stats</a>
+        </li>
     </ul>
     <div id="tabs-content" class="tab-content monograph-assets-toc-epub-content" aria-live="polite">
-      <% if @presenter.reader_ebook? %>
-        <section id="toc" class="tab-pane active fade in toc row" role="tabpanel" aria-hidden="false" aria-labelledby="tab-toc" tabindex="0">
+      <% if @presenter.toc? %>
+        <section id="toc" class="tab-pane fade toc row" role="tabpanel" aria-hidden="true" aria-labelledby="tab-toc" tabindex="0">
           <div class="col-sm-12">
             <h2 class="sr-only">Table of Contents</h2>
             <%= render 'index_epub_toc' %>
@@ -173,11 +186,7 @@
         </section>
       <% end %>
       <% if @presenter.assets? %>
-        <% if @presenter.reader_ebook? %>
-        <section id="resources" class="tab-pane fade in resources row" role="tabpanel" aria-hidden="true" aria-labelledby="tab-resources" tabindex="0">
-        <% else %>
-        <section id="resources" class="tab-pane fade in active resources row" role="tabpanel" aria-hidden="false" aria-labelledby="tab-resources" tabindex="0">
-        <% end %>
+        <section id="resources" class="tab-pane fade resources row" role="tabpanel" aria-hidden="true" aria-labelledby="tab-resources" tabindex="0">
           <h2 class="sr-only">Resources</h2>
           <div class="col-sm-3 fulcrum_sidebar">
             <%= render 'catalog/search_sidebar' %>
@@ -190,7 +199,7 @@
         </section>
       <% end %>
       <% if @presenter.webgl? %>
-        <section id="webgl" class="tab-pane fade in webgl row" role="tabpanel" aria-hidden="true" aria-labelledby="tab-webgl" tabindex="0">
+        <section id="webgl" class="tab-pane fade webgl row" role="tabpanel" aria-hidden="true" aria-labelledby="tab-webgl" tabindex="0">
           <div class="col-sm-12">
             <h2 class="sr-only">3D Model</h2>
             <%= render 'webgls/tab' %>
@@ -198,7 +207,7 @@
         </section>
       <% end %>
       <% if @presenter.database? %>
-        <section id="database" class="tab-pane fade in database row" role="tabpanel" aria-hidden="true" aria-labelledby="tab-database" tabindex="0">
+        <section id="database" class="tab-pane fade database row" role="tabpanel" aria-hidden="true" aria-labelledby="tab-database" tabindex="0">
           <div class="col-sm-12">
             <h2 class="sr-only">Database</h2>
             <a href="<%= @presenter&.database&.external_resource_url %>" target="_blank">Click to open external database <span class="glyphicon glyphicon-share" aria-hidden="true" aria-label="Link to external database"></span></a>
@@ -206,7 +215,7 @@
         </section>
       <% end %>
       <% if @presenter.aboutware? %>
-        <section id="aboutware" class="tab-pane fade in aboutware row" role="tabpanel" aria-hidden="true" aria-labelledby="tab-aboutware" tabindex="0">
+        <section id="aboutware" class="tab-pane fade aboutware row" role="tabpanel" aria-hidden="true" aria-labelledby="tab-aboutware" tabindex="0">
           <div class="col-sm-12">
             <h2 class="sr-only">About</h2>
             <%# this assumes that the "aboutware" FileSet is an html doc %>
@@ -215,7 +224,7 @@
         </section>
       <% end %>
       <% if @presenter.reviews? %>
-        <section id="reviews" class="tab-pane fade in reviews row" role="tabpanel" aria-hidden="true" aria-labelledby="tab-reviews" tabindex="0">
+        <section id="reviews" class="tab-pane fade reviews row" role="tabpanel" aria-hidden="true" aria-labelledby="tab-reviews" tabindex="0">
           <div class="col-sm-12">
             <h2 class="sr-only">Reviews</h2>
             <%# this assumes that the "reviews" FileSet is an html doc %>
@@ -224,7 +233,7 @@
         </section>
       <% end %>
       <% if @presenter.related? %>
-        <section id="related" class="tab-pane fade in related row" role="tabpanel" aria-hidden="true" aria-labelledby="tab-related" tabindex="0">
+        <section id="related" class="tab-pane fade related row" role="tabpanel" aria-hidden="true" aria-labelledby="tab-related" tabindex="0">
           <div class="col-sm-12">
             <h2 class="sr-only">Related Titles</h2>
             <%# this assumes that the "related" FileSet is an html doc %>
@@ -232,10 +241,10 @@
           </div>
         </section>
       <% end %>
-      <section id="stats" class="tab-pane fade in stats row" role="tabpanel" aria-hidden="true" aria-labelledby="tab-stats" tabindex="0">
-        <h2 class="sr-only">Stats</h2>
-        <%= render 'stats' %>
-      </section>
+        <section id="stats" class="tab-pane fade stats row" role="tabpanel" aria-hidden="true" aria-labelledby="tab-stats" tabindex="0">
+          <h2 class="sr-only">Stats</h2>
+          <%= render 'stats' %>
+        </section>
     </div>
   </div>
 </div><!-- /.monograph-assets-toc-epub -->
