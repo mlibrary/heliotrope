@@ -7,7 +7,7 @@ def should_render_field?(_facet_config, _display_facet)
   true
 end
 
-RSpec.describe FacetHelper do
+RSpec.describe FacetsHelper do
   describe '#facet_pagination_sort_index_label' do
     subject { helper.facet_pagination_sort_index_label(facet_field) }
 
@@ -117,36 +117,60 @@ RSpec.describe FacetHelper do
   end
 
   describe "#should_collapse_facet?" do
-    let(:facet_field) { Blacklight::Configuration::FacetField.new(field: "field").normalize! }
+    subject { helper.should_collapse_facet?(facet_field, display_facet) }
 
-    # If blacklight changes how the collapse method works,
-    # we want to detect that change.
-    it 'responds to collapse method' do
-      expect(facet_field.respond_to?(:collapse)).to be true
-    end
+    let(:facet_field) { object_double(Blacklight::Configuration::FacetField.new(field: 'field').normalize!, 'facet_field', key: 'key', collapse: 'collapse') }
+    let(:display_facet) { instance_double(Blacklight::Solr::Response::Facets::FacetField, 'display_facet', items: items) }
+    let(:items) { [] }
 
-    it 'not in params and not collapse' do
-      allow(helper).to receive(:facet_field_in_params?).and_return(false)
-      facet_field.collapse = false
-      expect(helper.should_collapse_facet?(facet_field)).to be false
-    end
+    it { is_expected.to eq 'collapse' }
 
-    it 'not in params and collapse' do
-      allow(helper).to receive(:facet_field_in_params?).and_return(false)
-      facet_field.collapse = true
-      expect(helper.should_collapse_facet?(facet_field)).to be true
-    end
+    context 'params[:f].present' do
+      let(:facets) { instance_double(ActionController::Parameters, 'facets') }
 
-    it 'in params and not collapse' do
-      allow(helper).to receive(:facet_field_in_params?).and_return(true)
-      facet_field.collapse = false
-      expect(helper.should_collapse_facet?(facet_field)).to be false
-    end
+      before do
+        allow(params).to receive(:[]).with(:f).and_return(facets)
+        allow(helper).to receive(:facet_field_in_params?).with('key').and_return(false)
+      end
 
-    it 'in params and collapse' do
-      allow(helper).to receive(:facet_field_in_params?).and_return(true)
-      facet_field.collapse = true
-      expect(helper.should_collapse_facet?(facet_field)).to be false
+      it { is_expected.to eq 'collapse' }
+
+      context 'facet field in params' do
+        before { allow(helper).to receive(:facet_field_in_params?).with('key').and_return(true) }
+
+        it { is_expected.to eq false }
+      end
+
+      context 'item field present' do
+        let(:items) { [item] }
+        let(:item) { double('item', field: 'field', items: item_items) }
+        let(:item_items) { [] }
+
+        before { allow(helper).to receive(:facet_field_in_params?).with('field').and_return(false) }
+
+        it { is_expected.to eq 'collapse' }
+
+        context 'item field in params' do
+          before { allow(helper).to receive(:facet_field_in_params?).with('field').and_return(true) }
+
+          it { is_expected.to eq false }
+        end
+
+        context 'item items present' do
+          let(:item_items) { [item_item] }
+          let(:item_item) { double('item_item', field: 'field_field') }
+
+          before { allow(helper).to receive(:facet_field_in_params?).with('field_field').and_return(false) }
+
+          it { is_expected.to eq 'collapse' }
+
+          context 'items item field in params' do
+            before { allow(helper).to receive(:facet_field_in_params?).with('field_field').and_return(true) }
+
+            it { is_expected.to eq false }
+          end
+        end
+      end
     end
   end
 

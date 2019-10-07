@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module FacetHelper
+module FacetsHelper # rubocop:disable Metrics/ModuleLength
   include Blacklight::FacetsHelperBehavior
 
   def facet_pagination_sort_index_label(facet_field)
@@ -88,9 +88,66 @@ module FacetHelper
   #   - if the facet is configured not to collapse, don't collapse
   #
   # @param [Blacklight::Configuration::FacetField] facet_field
+  # @param [Blacklight::Solr::Response::Facets::FacetField] display_facet
   # @return [Boolean]
-  def should_collapse_facet?(facet_field)
-    !facet_field_in_params?(facet_field) && facet_field.collapse
+  def should_collapse_facet?(facet_field, display_facet) # rubocop:disable  Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity
+    return facet_field.collapse if params[:f].blank?
+    return false if facet_field_in_params?(facet_field.key)
+    # NOTE: Assumes maximum pivot facet depth of 2
+    display_facet.items.each do |item|
+      if item.items.present?
+        item.items.each do |item_item|
+          next if item_item.field.blank?
+          return false if facet_field_in_params?(item_item.field)
+        end
+      end
+      next if item.field.blank?
+      return false if facet_field_in_params?(item.field)
+    end
+    facet_field.collapse
+  end
+
+  ##
+  # Standard display of a facet value in a list. Used in both _facets sidebar
+  # partial and catalog/facet expanded list. Will output facet value name as
+  # a link to add that to your restrictions, with count in parens.
+  #
+  # @param [Blacklight::Solr::Response::Facets::FacetField] facet_field
+  # @param [Blacklight::Solr::Response::Facets::FacetItem] item
+  # @param [Hash] options
+  # @option options [Boolean] :suppress_link display the facet, but don't link to it
+  # @return [String]
+  def render_facet_value(facet_field, item, options = {})
+    facet_config = facet_configuration_for_field(facet_field)
+    path = path_for_facet(facet_field, item)
+    content_tag(:span, class: 'facet-label') do
+      if options[:suppress_link]
+        content_tag(:span, facet_display_value(facet_field, item), class: 'facet_select')
+      else
+        link_to(path, class: 'facet_select', 'data-ga-event-action': "facet_#{facet_config.label.downcase}", 'data-ga-event-label': facet_display_value(facet_field, item)) do
+          content_tag(:span, "Add filter #{facet_config.label}: ", class: 'sr-only') +
+            content_tag(:span, facet_display_value(facet_field, item)) +
+              content_tag(:span, " to constrain search results to #{item.hits} #{item.hits == 1 ? 'item' : 'items'}", class: 'sr-only')
+        end
+      end
+    end + render_facet_count(item.hits)
+  end
+
+  ##
+  # Standard display of a SELECTED facet value (e.g. without a link and with a remove button)
+  # @see #render_facet_value
+  # @param [Blacklight::Solr::Response::Facets::FacetField] facet_field
+  # @param [String] item
+  def render_selected_facet_value(facet_field, item)
+    facet_config = facet_configuration_for_field(facet_field)
+    remove_href = search_action_path(search_state.remove_facet_params(facet_field, item))
+    content_tag(:span, class: "facet-label") do
+      link_to(remove_href, class: "selected remove") do
+        content_tag(:span, "Remove constraint #{facet_config.label}: ", class: 'sr-only') +
+          content_tag(:span, facet_display_value(facet_field, item)) +
+            content_tag(:span, '', class: "glyphicon glyphicon-remove")
+      end
+    end + render_facet_count(item.hits, classes: ["selected"])
   end
 
   ##
@@ -123,7 +180,7 @@ module FacetHelper
   # @param [Hash] options
   # @option options [Boolean] :suppress_link display the facet, but don't link to it
   # @return [String]
-  def render_facet_pivot_value(facet_field, item, parent, options = {})
+  def render_facet_pivot_value(facet_field, item, parent, options = {}) # rubocop:disable Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity
     p = search_state.add_facet_params_and_redirect(facet_field, item) # Default behavior is to include parent field, but we only want the parent field if it is selected!
     if parent.class == Blacklight::Solr::Response::Facets::FacetItem
       p[:f][parent.field] = p[:f][parent.field].uniq # if parent is selected it will be included twice so force it to be unique a.k.a. singular
@@ -131,10 +188,26 @@ module FacetHelper
       p[:f].delete(parent.field) if p[:f][parent.field].empty? # Remove field if empty
       p.delete(:f) if p[:f].empty? # Remove filter if empty
     end
+    facet_config = facet_configuration_for_field(facet_field)
     path = search_action_path(p)
-    content_tag(:span, class: "facet-label") do
-      link_to_unless(options[:suppress_link], facet_display_value(facet_field, item), path, class: "facet_select")
-    end + render_facet_pivot_count(item.hits)
+    if options[:suppress_link]
+      content_tag(:div, facet_display_value(facet_field, item), class: 'facet_select')
+    else
+      content_tag(:span, class: "facet-label") do
+        ga_event_action = "facet_" + facet_config.label.downcase
+        ga_event_label = facet_display_value(facet_field, item)
+        if item.items.blank? && parent.class == Blacklight::Solr::Response::Facets::FacetItem
+          parent_config = facet_configuration_for_field(parent.field)
+          ga_event_action = 'facet_' + parent_config.label.downcase + '_' + facet_config.label.downcase
+          ga_event_label = facet_display_value(parent.field, parent) + '_' + facet_display_value(facet_field, item)
+        end
+        link_to(path, class: 'facet_select', 'data-ga-event-action': ga_event_action, 'data-ga-event-label': ga_event_label) do
+          content_tag(:span, "Add filter #{facet_config.label}: ", class: 'sr-only') +
+              content_tag(:span, facet_display_value(facet_field, item)) +
+                content_tag(:span, " to constrain results to #{item.hits} #{item.hits == 1 ? 'item' : 'items'}", class: 'sr-only')
+        end
+      end + render_facet_count(item.hits)
+    end
   end
 
   ##
@@ -150,13 +223,14 @@ module FacetHelper
     p[:f][facet_field].delete(item.value) # Remove self from selected
     p[:f].delete(facet_field) if p[:f][facet_field].empty? # Remove field if empty
     p.delete(:f) if p[:f].empty? # Remove filter if empty
+    facet_config = facet_configuration_for_field(facet_field)
     remove_href = search_action_path(p)
     content_tag(:span, class: "facet-label") do
-      content_tag(:span, facet_display_value(facet_field, item), class: "selected") +
-        # remove link
-        link_to(remove_href, class: "remove") do
-          content_tag(:span, '', class: "glyphicon glyphicon-remove") + content_tag(:span, '[remove]', class: 'sr-only')
-        end
+      link_to(remove_href, class: "selected remove") do
+        content_tag(:span, "Remove filter #{facet_config.label}: ", class: 'sr-only') +
+          content_tag(:span, facet_display_value(facet_field, item)) +
+            content_tag(:span, '', class: "glyphicon glyphicon-remove")
+      end
     end + render_facet_count(item.hits, classes: ["selected"])
   end
 

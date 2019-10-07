@@ -23,6 +23,8 @@ Layout/CaseIndentation:
   Enabled: false
 Layout/ClosingParenthesisIndentation:
   Enabled: false
+Layout/CommentIndentation:
+  Enabled: false
 Layout/ElseAlignment:
   Enabled: false
 Layout/EmptyLineAfterGuardClause:
@@ -37,7 +39,11 @@ Layout/IndentationConsistency:
   Enabled: false
 Layout/IndentationWidth:
   Enabled: false
+Layout/InitialIndentation:
+  Enabled: false
 Layout/LeadingCommentSpace:
+  Enabled: false
+Layout/MultilineMethodCallBraceLayout:
   Enabled: false
 Layout/SpaceAfterComma:
   Enabled: false

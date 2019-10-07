@@ -2,6 +2,30 @@ $(document).on('turbolinks:load', function() {
   // Register user events with google analytics
   if (typeof(ga) == typeof(Function)) {
     //
+    // data-ga-event-* elements
+    //
+    //  data-ga-event-category if undefined then which_category()
+    //  data-ga-event-action is required
+    //  data-ga-event-label is recommended
+    //  data-ga-event-value is optional (non-negative integer a.k.a. greater than or equal to zero)
+    //
+    $('[data-ga-event-action]').each (function(index, element) {
+      $(element).click(function() {
+        if ($(element).data('ga-event-category' === undefined)) {
+          press_tracker_event(which_category(),
+            $(element).data('ga-event-action'),
+            $(element).data('ga-event-label'),
+            $(element).data('ga-event-value'));
+        } else {
+          press_tracker_event($(element).data('ga-event-category'),
+            $(element).data('ga-event-action'),
+            $(element).data('ga-event-label'),
+            $(element).data('ga-event-value'));
+        }
+      });
+    });
+
+    //
     // Press page
     //
     // header link
@@ -68,16 +92,6 @@ $(document).on('turbolinks:load', function() {
     $('ul.nav.nav-tabs li a').click(function() {
       var tab = $(this).attr('href').split('#')[1];
       press_tracker_event(which_category(), 'tab_' + tab, $('#work-title').text());
-    });
-
-
-    //
-    // Facets for Press and Work pages
-    //
-    $('#facets a.facet_select').on('click', function() {
-      var facet_name = $(this).parents()[5].children[0].innerText;
-      var action = "facet_" + facet_name.toLowerCase().split(" ").join("_");
-      press_tracker_event(which_category(), action, $(this).text());
     });
 
     //
