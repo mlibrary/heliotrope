@@ -85,4 +85,79 @@ RSpec.describe CommonWorkPresenter do
       it { is_expected.to be false }
     end
   end
+
+  describe '#license?' do
+    subject { presenter.license? }
+
+    let(:solr_document) { instance_double(SolrDocument, 'solr_document', license: [license]) }
+    let(:license) { }
+
+    it { is_expected.to be false }
+
+    context 'license' do
+      let(:license) { 'license' }
+
+      it { is_expected.to be true }
+    end
+  end
+
+  describe '#license_alt_text' do
+    subject { presenter.license_alt_text }
+
+    let(:solr_document) { instance_double(SolrDocument, 'solr_document', license: [license]) }
+    let(:license) { }
+
+    it { is_expected.to eq('Creative Commons License') }
+
+    context 'All Rights Reserved' do
+      let(:license) { 'https://www.press.umich.edu/about/licenses#all-rights-reserved' }
+
+      it { is_expected.to eq('All Rights Reserved') }
+    end
+
+    context 'http license' do
+      let(:license) { 'http://creativecommons.org/publicdomain/zero/1.0/' }
+
+      it { is_expected.to eq 'Creative Commons Zero license (implies pd)' }
+    end
+
+    context 'https license' do
+      let(:license) { 'https://creativecommons.org/licenses/by-nc-nd/4.0/' }
+
+      it { is_expected.to eq 'Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International license' }
+    end
+  end
+
+  describe '#license_link_content' do
+    subject { presenter.license_link_content }
+
+    let(:solr_document) { instance_double(SolrDocument, 'solr_document', license: [license]) }
+    let(:license) { }
+
+    it { is_expected.to eq('Creative Commons License') }
+
+    context 'All Rights Reserved' do
+      let(:license) { 'https://www.press.umich.edu/about/licenses#all-rights-reserved' }
+
+      it 'returns the correct text, no icon' do
+        expect(subject).to be 'All Rights Reserved'
+      end
+    end
+
+    context 'http license' do
+      let(:license) { 'http://creativecommons.org/publicdomain/zero/1.0/' }
+
+      it 'gives the correct logo link' do
+        expect(subject).to eq '<img alt="Creative Commons Zero license (implies pd)" style="border-width:0" src="https://i.creativecommons.org/p/zero/1.0/80x15.png"/>'
+      end
+    end
+
+    context 'https license' do
+      let(:license) { 'https://creativecommons.org/licenses/by-nc-nd/4.0/' }
+
+      it 'gives the correct logo link' do
+        expect(subject).to eq '<img alt="Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International license" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-nd/4.0/80x15.png"/>'
+      end
+    end
+  end
 end
