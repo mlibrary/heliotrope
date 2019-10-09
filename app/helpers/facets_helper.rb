@@ -120,17 +120,16 @@ module FacetsHelper # rubocop:disable Metrics/ModuleLength
   def render_facet_value(facet_field, item, options = {})
     facet_config = facet_configuration_for_field(facet_field)
     path = path_for_facet(facet_field, item)
-    content_tag(:span, class: 'facet-label') do
-      if options[:suppress_link]
-        content_tag(:span, facet_display_value(facet_field, item), class: 'facet_select')
-      else
+    if options[:suppress_link]
+      content_tag(:span, facet_display_value(facet_field, item), class: 'facet-label') +
+        render_facet_count(item.hits)
+    else
+      content_tag(:span, class: 'facet-label') do
         link_to(path, class: 'facet_select', 'data-ga-event-action': "facet_#{facet_config.label.downcase}", 'data-ga-event-label': facet_display_value(facet_field, item)) do
-          content_tag(:span, "Add filter #{facet_config.label}: ", class: 'sr-only') +
-            content_tag(:span, facet_display_value(facet_field, item)) +
-              content_tag(:span, " to constrain search results to #{item.hits} #{item.hits == 1 ? 'item' : 'items'}", class: 'sr-only')
+          content_tag(:span, facet_display_value(facet_field, item), 'aria-label': "Add #{facet_config.label} filter: #{facet_display_value(facet_field, item)} to constrain search results to #{item.hits} #{item.hits == 1 ? 'item' : 'items'}.")
         end
-      end
-    end + render_facet_count(item.hits)
+      end + render_facet_count(item.hits)
+    end
   end
 
   ##
@@ -143,11 +142,23 @@ module FacetsHelper # rubocop:disable Metrics/ModuleLength
     remove_href = search_action_path(search_state.remove_facet_params(facet_field, item))
     content_tag(:span, class: "facet-label") do
       link_to(remove_href, class: "selected remove") do
-        content_tag(:span, "Remove constraint #{facet_config.label}: ", class: 'sr-only') +
-          content_tag(:span, facet_display_value(facet_field, item)) +
-            content_tag(:span, '', class: "glyphicon glyphicon-remove")
+        content_tag(:span, facet_display_value(facet_field, item), 'aria-label': "Remove #{facet_config.label} filter: #{facet_display_value(facet_field, item)}.") +
+          content_tag(:span, '', class: "glyphicon glyphicon-remove")
       end
-    end + render_facet_count(item.hits, classes: ["selected"])
+    end + render_facet_count(item.hits, classes: ['selected'])
+  end
+
+  ##
+  # Renders a count value for facet limits. Can be over-ridden locally
+  # to change style. And can be called by plugins to get consistent display.
+  #
+  # @param [Integer] num number of facet results
+  # @param [Hash] options
+  # @option options [Array<String>]  an array of classes to add to count span.
+  # @return [String]
+  def render_facet_count(num, options = {})
+    classes = (options[:classes] || []) << "facet-count"
+    content_tag(:span, t('blacklight.search.facets.count', number: number_with_delimiter(num)), class: classes, 'aria-hidden': true)
   end
 
   ##
@@ -191,7 +202,8 @@ module FacetsHelper # rubocop:disable Metrics/ModuleLength
     facet_config = facet_configuration_for_field(facet_field)
     path = search_action_path(p)
     if options[:suppress_link]
-      content_tag(:div, facet_display_value(facet_field, item), class: 'facet_select')
+      content_tag(:div, facet_display_value(facet_field, item), class: 'facet-label facet_select') +
+          + render_facet_count(item.hits, classes: ['selected'])
     else
       content_tag(:span, class: "facet-label") do
         ga_event_action = "facet_" + facet_config.label.downcase
@@ -202,9 +214,7 @@ module FacetsHelper # rubocop:disable Metrics/ModuleLength
           ga_event_label = facet_display_value(parent.field, parent) + '_' + facet_display_value(facet_field, item)
         end
         link_to(path, class: 'facet_select', 'data-ga-event-action': ga_event_action, 'data-ga-event-label': ga_event_label) do
-          content_tag(:span, "Add filter #{facet_config.label}: ", class: 'sr-only') +
-              content_tag(:span, facet_display_value(facet_field, item)) +
-                content_tag(:span, " to constrain results to #{item.hits} #{item.hits == 1 ? 'item' : 'items'}", class: 'sr-only')
+          content_tag(:span, facet_display_value(facet_field, item), 'aria-label': "Add #{facet_config.label} filter: #{facet_display_value(facet_field, item)} to constrain search results to #{item.hits} #{item.hits == 1 ? 'item' : 'items'}.")
         end
       end + render_facet_count(item.hits)
     end
@@ -227,23 +237,10 @@ module FacetsHelper # rubocop:disable Metrics/ModuleLength
     remove_href = search_action_path(p)
     content_tag(:span, class: "facet-label") do
       link_to(remove_href, class: "selected remove") do
-        content_tag(:span, "Remove filter #{facet_config.label}: ", class: 'sr-only') +
-          content_tag(:span, facet_display_value(facet_field, item)) +
-            content_tag(:span, '', class: "glyphicon glyphicon-remove")
+        content_tag(:span, facet_display_value(facet_field, item), 'aria-label': "Remove #{facet_config.label} filter: #{facet_display_value(facet_field, item)}.") +
+          content_tag(:span, '', class: "glyphicon glyphicon-remove")
       end
     end + render_facet_count(item.hits, classes: ["selected"])
-  end
-
-  # Renders a count value for facet limits. Can be over-ridden locally
-  # to change style. And can be called by plugins to get consistent display.
-  #
-  # @param [Integer] num number of facet results
-  # @param [Hash] options
-  # @option options [Array<String>]  an array of classes to add to count span.
-  # @return [String]
-  def render_facet_pivot_count(num, options = {})
-    classes = (options[:classes] || []) << "facet-count"
-    content_tag("span", t('blacklight.search.facets.count', number: number_with_delimiter(num)), class: classes)
   end
 
   ## ...Blacklight Helper Pivot Extension End

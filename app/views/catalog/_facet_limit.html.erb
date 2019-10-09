@@ -4,7 +4,7 @@
 
   <% unless paginator.last_page? || params[:action] == "facet" %>
     <li class="more_facets_link">
-      <%= link_to t("more_#{field_name}_html", scope: 'blacklight.search.facets', default: :more_html, field_name: facet_field.label),
+      <%= link_to t("more_#{field_name}_html", scope: 'blacklight.search.facets', default: :more_html, field_name: facet_field.label.pluralize),
         search_facet_path(id: field_name, monograph_id: params[:monograph_id] || params[:id]), class: "more_facets_link" %>
     </li>
   <% end %>
