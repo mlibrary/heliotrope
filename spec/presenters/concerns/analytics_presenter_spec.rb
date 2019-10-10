@@ -10,6 +10,7 @@ RSpec.describe AnalyticsPresenter do
   describe "#timestamped_pageviews_by_ids" do
     before do
       create(:google_analytics_history, noid: '111111111', original_date: "20170102", page_path: 'concern/thing/1', pageviews: 1)
+      create(:google_analytics_history, noid: '111111111', original_date: "20170102", page_path: 'concern/thing/1?stuff', pageviews: 4)
       create(:google_analytics_history, noid: '111111111', original_date: "20180102", page_path: 'concern/thing/1', pageviews: 2)
       create(:google_analytics_history, noid: '111111111', original_date: "20180104", page_path: 'concern/thing/1', pageviews: 9)
       create(:google_analytics_history, noid: '222222222', original_date: "20180105", page_path: 'concern/thing/2', pageviews: 3)
@@ -19,10 +20,12 @@ RSpec.describe AnalyticsPresenter do
 
     context "aggregated counts per day (timestamped_pageviews_by_ids)" do
       it "when there are pageviews, it returns a hash of timestamps => pageviews and sets pageviews count" do
-        expect(presenter.timestamped_pageviews_by_ids(['111111111', '222222222'])).to match a_hash_including(Date.strptime('20180102', '%Y%m%d').strftime('%Q').to_i => 2,
+        expect(presenter.timestamped_pageviews_by_ids(['111111111', '222222222'])).to match a_hash_including(Date.strptime('20170102', '%Y%m%d').strftime('%Q').to_i => 5,
+                                                                                                             Date.strptime('20180102', '%Y%m%d').strftime('%Q').to_i => 2,
                                                                                                              Date.strptime('20180104', '%Y%m%d').strftime('%Q').to_i => 9,
-                                                                                                             Date.strptime('20180105', '%Y%m%d').strftime('%Q').to_i => 3)
-        expect(presenter.pageviews).to eq 16
+                                                                                                             Date.strptime('20180105', '%Y%m%d').strftime('%Q').to_i => 3,
+                                                                                                             Date.strptime('20160105', '%Y%m%d').strftime('%Q').to_i => 1)
+        expect(presenter.pageviews).to eq 20
       end
       it "when there are no pageviews, it returns an empty hash and sets pageviews count" do
         pageviews_hash = presenter.timestamped_pageviews_by_ids(['12X', '89Y'])

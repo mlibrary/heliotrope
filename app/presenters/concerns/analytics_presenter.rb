@@ -16,7 +16,11 @@ module AnalyticsPresenter
     count = 0
     GoogleAnalyticsHistory.where(noid: ids).each do |r|
       timestamp = Date.strptime(r.original_date, '%Y%m%d').strftime('%Q').to_i
-      data[timestamp] = r.pageviews
+      if data[timestamp].present?
+        data[timestamp] += r.pageviews
+      else
+        data[timestamp] = r.pageviews
+      end
       count += r.pageviews
     end
 
