@@ -2350,6 +2350,11 @@ $maize-black-80: #342f2e;
     .authors, .copyright {
       @include benton;
     }
+    
+    .monograph-cover button {
+      background-color: transparent;
+      border-color: transparent;
+    }
   }
 
   // pagination
@@ -2963,6 +2968,11 @@ $gabii-link-hover:    #1e5667;
       .monograph-assets-toc-epub-content {
         font-size: 18px;
       }
+    }
+    
+    .monograph-cover button {
+      background-color: transparent;
+      border-color: transparent;
     }
   }
 
