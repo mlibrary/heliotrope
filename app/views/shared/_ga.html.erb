@@ -1,5 +1,4 @@
-
-<% ga_id = google_analytics(press_subdomain) %>
+<% ga_ids = all_google_analytics(press_subdomain) %>
 
 <% ga_url = 'https://www.google-analytics.com/analytics.js' %>
 <% if Rails.env.development? %>
@@ -22,7 +21,7 @@
 
     ga('create', '<%= Rails.application.secrets.google_analytics_id %>', 'auto');
     ga('send', 'pageview');
-    <% unless ga_id.nil? %>
+    <% ga_ids.each do |ga_id| %>
       ga('create', '<%= ga_id %>', 'auto', 'pressTracker')
       ga('pressTracker.send', 'pageview')
     <% end %>
