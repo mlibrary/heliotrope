@@ -59,7 +59,7 @@ namespace :heliotrope do
       # EPUBs
       epub_file_paths = Pathname.glob(mono_dir + '*.epub')
       if epub_file_paths.count > 1
-        puts "    More than one PDF file found in #{mono_dir.basename} ... SKIPPING EPUB PROCESSING"
+        puts "    More than one EPUB file found in #{mono_dir.basename} ... SKIPPING EPUB PROCESSING"
         next
       end
 
