@@ -1,4 +1,5 @@
-new_batch_upload_path<%= simple_form_for [main_app, @form],
+<%# Remove once our Hyrax version has this https://github.com/samvera/hyrax/pull/4080 %>
+<%= simple_form_for [main_app, @form],
                     html: {
                       data: { behavior: 'work-form',
                               'param-key' => @form.model_name.param_key },
@@ -16,7 +17,7 @@ new_batch_upload_path<%= simple_form_for [main_app, @form],
   <% end %>
   <% if Flipflop.batch_upload? && f.object.new_record? %>
     <% provide :metadata_tab do %>
-      <p class="switch-upload-type"><%= t('.batch_upload_hint') %> <%= link_to t('.batch_link'), hyrax.new_batch_upload_path(payload_concern: @form.model.class) %></p>
+      <p class="switch-upload-type">To create a separate work for each of the files, go to <%= link_to 'Batch upload', hyrax.new_batch_upload_path(payload_concern: @form.model.class) %></p>
     <% end %>
   <% end %>
   <%= render 'hyrax/base/guts4form', f: f %>
