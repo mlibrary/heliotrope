@@ -41,26 +41,26 @@
     function setupLeafletAnalytics() {
       if (typeof(ga) == typeof(Function)) {
         $('a.leaflet-control-pan-left').click(function() {
-          ga('pressTracker.send', 'event', 'e_reader', 'leaflet_pan_left', window.location.href);
+          press_tracker_event('e_reader', 'leaflet_pan_left', window.location.href);
         });
         $('a.leaflet-control-pan-right').click(function() {
-          ga('pressTracker.send', 'event', 'e_reader', 'leaflet_pan_right', window.location.href);
+          press_tracker_event('e_reader', 'leaflet_pan_right', window.location.href);
         });
         $('a.leaflet-control-pan-up').click(function() {
-          ga('pressTracker.send', 'event', 'e_reader', 'leaflet_pan_up', window.location.href);
+          press_tracker_event('e_reader', 'leaflet_pan_up', window.location.href);
         });
-        $('a.leaflet-control-pan-right').click(function() {
-          ga('pressTracker.send', 'event', 'e_reader', 'leaflet_pan_down', window.location.href);
+        $('a.leaflet-control-pan-down').click(function() {
+          press_tracker_event('e_reader', 'leaflet_pan_down', window.location.href);
         });
         $('a.leaflet-control-zoom-in').click(function() {
-          ga('pressTracker.send', 'event', 'e_reader', 'leaflet_zoom_in', window.location.href);
+          press_tracker_event('e_reader', 'leaflet_zoom_in', window.location.href);
         });
         $('a.leaflet-control-zoom-out').click(function() {
-          ga('pressTracker.send', 'event', 'e_reader', 'leaflet_zoom_out', window.location.href);
+          press_tracker_event('e_reader', 'leaflet_zoom_out', window.location.href);
         });
         // TODO: fix https://tools.lib.umich.edu/jira/browse/HELIO-2961
         // $('a.leaflet-control-zoom-fullscreen').click(function() {
-        //   ga('pressTracker.send', 'event', 'e_reader', 'fullscreen', window.location.href);
+        //   press_tracker_event('e_reader', 'fullscreen', window.location.href);
         // });
       }
     }

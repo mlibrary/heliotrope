@@ -6,7 +6,7 @@ $(document).on('turbolinks:load', function() {
     //
     // header link
     $('a.navbar-brand').click(function() {
-      ga('pressTracker.send', 'event', which_category(), 'click', $(this).attr('href'))
+      press_tracker_event(which_category(), 'click', $(this).attr('href'))
     });
 
     // press catalog listing of monographs, titles and title buttons
@@ -15,18 +15,18 @@ $(document).on('turbolinks:load', function() {
       var title = $(value).find('h4.index_title a').text();
 
       $(value).find('h4.index_title a').click(function() {
-        ga('pressTracker.send', 'event', 'press_page', 'click', title)
+        press_tracker_event('press_page', 'click', title)
       });
     });
 
     // footer links
     $('footer.press a').click(function() {
-      ga('pressTracker.send', 'event', which_category(), 'click', $(this).attr('href'))
+      press_tracker_event(which_category(), 'click', $(this).attr('href'))
     });
 
     // EBC banner links
     $('#banner-librarians-link').click(function() {
-      ga('pressTracker.send', 'event', which_category(), 'click_banner', window.location.href);
+      press_tracker_event(which_category(), 'click_banner', window.location.href);
     });
 
     //
@@ -37,7 +37,7 @@ $(document).on('turbolinks:load', function() {
     //
     $('#keyword-search-submit').click(function() {
       // console.log(which_category());
-      ga('pressTracker.send', 'event', which_category(), 'search', $('#catalog_search').val());
+      press_tracker_event(which_category(), 'search', $('#catalog_search').val());
     });
 
     //
@@ -46,30 +46,30 @@ $(document).on('turbolinks:load', function() {
     // monograph catalog listing of file_sets/assets
     // This is *very* close the press_page catalog listing, it's just h4 instead of h2!
     $('#documents .document h4.index_title a').click(function() {
-      ga('pressTracker.send', 'event', which_category(), 'click', $(this).text());
+      press_tracker_event(which_category(), 'click', $(this).text());
     });
 
     // buy button
     $('#monograph-buy-btn').click(function() {
-      ga('pressTracker.send', 'event', which_category(), 'click_buy', $(this).attr('href'))
+      press_tracker_event(which_category(), 'click_buy', $(this).attr('href'))
     });
 
     // sort
     $('#sort-dropdown ul.dropdown-menu li a').click(function() {
       //console.log($(this).attr('href').split("?")[1]);
-      ga('pressTracker.send', 'event', which_category(), 'sort', $(this).attr('href').split("?")[1]);
+      press_tracker_event(which_category(), 'sort', $(this).attr('href').split("?")[1]);
     });
 
     // e-book download
     $('ul.monograph-catalog-rep-downloads li a').click(function() {
       var type = $(this).attr('data-rep-type');
-      ga('pressTracker.send', 'event', which_category(), 'download_representative_' + type, window.location.href);
+      press_tracker_event(which_category(), 'download_representative_' + type, window.location.href);
     });
 
     // tabs
     $('ul.nav.nav-tabs li a').click(function() {
       var tab = $(this).attr('href').split('#')[1];
-      ga('pressTracker.send', 'event', which_category(), 'tab_' + tab, $('#work-title').text());
+      press_tracker_event(which_category(), 'tab_' + tab, $('#work-title').text());
     });
 
 
@@ -79,7 +79,7 @@ $(document).on('turbolinks:load', function() {
     $('#facets a.facet_select').on('click', function() {
       var facet_name = $(this).parents()[5].children[0].innerText
       var action = "facet_" + facet_name.toLowerCase().split(" ").join("_")
-      ga('pressTracker.send', 'event', which_category(), action, $(this).text());
+      press_tracker_event(which_category(), action, $(this).text());
     });
 
     //
@@ -87,56 +87,56 @@ $(document).on('turbolinks:load', function() {
     //
     // download
     $('a.btn-heliotrope-download').click(function() {
-      ga('pressTracker.send', 'event', 'file_set_page', 'download', $('#asset-title').text());
+      press_tracker_event('file_set_page', 'download', $('#asset-title').text());
     });
 
     // Leaflet image pan and zoom buttons
     $('a.leaflet-control-zoom-in').click(function() {
-      ga('pressTracker.send', 'event', 'file_set_page', 'zoom_in', $('#asset-title').text());
+      press_tracker_event('file_set_page', 'zoom_in', $('#asset-title').text());
     });
     $('a.leaflet-control-zoom-out').click(function() {
-      ga('pressTracker.send', 'event', 'file_set_page', 'zoom_out', $('#asset-title').text());
+      press_tracker_event('file_set_page', 'zoom_out', $('#asset-title').text());
     });
     $('a.leaflet-control-pan-up').click(function() {
-      ga('pressTracker.send', 'event', 'file_set_page', 'pan_up', $('#asset-title').text());
+      press_tracker_event('file_set_page', 'pan_up', $('#asset-title').text());
     });
     $('a.leaflet-control-pan-down').click(function() {
-      ga('pressTracker.send', 'event', 'file_set_page', 'pan_down', $('#asset-title').text());
+      press_tracker_event('file_set_page', 'pan_down', $('#asset-title').text());
     });
     $('a.leaflet-control-pan-left').click(function() {
-      ga('pressTracker.send', 'event', 'file_set_page', 'pan_left', $('#asset-title').text());
+      press_tracker_event('file_set_page', 'pan_left', $('#asset-title').text());
     });
     $('a.leaflet-control-pan-right').click(function() {
-      ga('pressTracker.send', 'event', 'file_set_page', 'pan_right', $('#asset-title').text());
+      press_tracker_event('file_set_page', 'pan_right', $('#asset-title').text());
     });
     $('a.leaflet-control-zoom-fullscreen').click(function() {
-      ga('pressTracker.send', 'event', 'file_set_page', 'fullscreen', $('#asset-title').text());
+      press_tracker_event('file_set_page', 'fullscreen', $('#asset-title').text());
     });
 
     // video and audio
     var video = $('#video').get(0)
     if (video) {
       video.addEventListener("play", function() {
-        ga('pressTracker.send', 'event', 'file_set_page', 'play_video', $('#asset-title').text());
+        press_tracker_event('file_set_page', 'play_video', $('#asset-title').text());
       });
       video.addEventListener("pause", function() {
-        ga('pressTracker.send', 'event', 'file_set_page', 'stop_video', $('#asset-title').text());
+        press_tracker_event('file_set_page', 'stop_video', $('#asset-title').text());
       });
     }
     var audio = $('#audio').get(0)
     if (audio) {
       audio.addEventListener("play", function() {
-        ga('pressTracker.send', 'event', 'file_set_page', 'start_audio', $('#asset-title').text());
+        press_tracker_event('file_set_page', 'start_audio', $('#asset-title').text());
       });
       audio.addEventListener("pause", function() {
-        ga('pressTracker.send', 'event', 'file_set_page', 'stop_audio', $('#asset-title').text());
+        press_tracker_event('file_set_page', 'stop_audio', $('#asset-title').text());
       });
     }
 
     // tabs
     $('ul.nav.nav-tabs li a').click(function() {
       var tab = $(this).attr('href').split('#')[1];
-      ga('pressTracker.send', 'event', 'file_set_page', 'tab_' + tab, $('#asset-title').text());
+      press_tracker_event('file_set_page', 'tab_' + tab, $('#asset-title').text());
     });
 
     //
@@ -144,12 +144,12 @@ $(document).on('turbolinks:load', function() {
     //
     // Read button on press and monograph pages
     $('#monograph-read-btn').click(function() {
-      ga('pressTracker.send', 'event', which_category(), 'read_epub', $(this).attr('href'));
+      press_tracker_event(which_category(), 'read_epub', $(this).attr('href'));
     });
 
     // ToC links
     $('a.toc-link').click(function() {
-      ga('pressTracker.send', 'event', which_category(), 'read_epub_ToC', $(this).attr('href'));
+      press_tracker_event(which_category(), 'read_epub_ToC', $(this).attr('href'));
     });
 
     //
@@ -158,62 +158,62 @@ $(document).on('turbolinks:load', function() {
     //
     // Forward and back navigation
     $('i[class^="icon-chevron"]').parent('a').click(function() {
-      ga('pressTracker.send', 'event', 'e_reader', 'nav', window.location.href);
+      press_tracker_event('e_reader', 'nav', window.location.href);
     });
 
     // Full screen
     $('div.cozy-container-fullscreen button').click(function() {
-      ga('pressTracker.send', 'event', 'e_reader', 'fullscreen', window.location.href);
+      press_tracker_event('e_reader', 'fullscreen', window.location.href);
     });
 
     // Search
     $('div.cozy-control form.search button.button--sm').click(function() {
-      ga('pressTracker.send', 'event', 'e_reader', 'search', $('#cozy-search-string').val());
+      press_tracker_event('e_reader', 'search', $('#cozy-search-string').val());
     });
 
     // Range input (nav)
     $('input#cozy-navigator-range-input').change(function() {
-      ga('pressTracker.send', 'event', 'e_reader', 'navbar', window.location.href);
+      press_tracker_event('e_reader', 'navbar', window.location.href);
     });
 
     // Close button
     $('button.cozy-close').click(function() {
-      ga('pressTracker.send', 'event', 'e_reader', 'close', window.location.href);
+      press_tracker_event('e_reader', 'close', window.location.href);
     });
 
     // Feedback button
     $('i.icon-comment-square').parent('a').click(function() {
-      ga('pressTracker.send', 'event', 'e_reader', 'feedback', window.location.href);
+      press_tracker_event('e_reader', 'feedback', window.location.href);
     });
 
     // e-book download (dynamically-added modal, hence delegated `on()` binding)
     $("body").on('click', '.cozy-modal-download footer button', function(e) {
       if($('div.cozy-modal-download input[name="format"][value="EPUB"]').is(':checked')) {
-        ga('pressTracker.send', 'event', 'e_reader', 'download_representative_epub', window.location.href);
+        press_tracker_event('e_reader', 'download_representative_epub', window.location.href);
       } else if($('div.cozy-modal-download input[name="format"][value="PDF"]').is(':checked')) {
-        ga('pressTracker.send', 'event', 'e_reader', 'download_representative_pdf', window.location.href);
+        press_tracker_event('e_reader', 'download_representative_pdf', window.location.href);
       }
     });
 
     // citation copying (dynamically-added modal, hence delegated `on()` binding)
     $("body").on('click', '.cozy-modal-citation footer button', function(e) {
       if($('div.cozy-modal-citation input[name="format"][value="MLA"]').is(':checked')) {
-        ga('pressTracker.send', 'event', 'e_reader', 'citation_mla', window.location.href);
+        press_tracker_event('e_reader', 'citation_mla', window.location.href);
       } else if($('div.cozy-modal-citation input[name="format"][value="APA"]').is(':checked')) {
-        ga('pressTracker.send', 'event', 'e_reader', 'citation_apa', window.location.href);
+        press_tracker_event('e_reader', 'citation_apa', window.location.href);
       } else if($('div.cozy-modal-citation input[name="format"][value="Chicago"]').is(':checked')) {
-        ga('pressTracker.send', 'event', 'e_reader', 'citation_chicago', window.location.href);
+        press_tracker_event('e_reader', 'citation_chicago', window.location.href);
       }
     });
 
     // preferences (dynamically-added modal, hence delegated `on()` binding)
     $("body").on('click', '.cozy-modal-preferences footer button', function(e) {
-      ga('pressTracker.send', 'event', 'e_reader', 'preferences', window.location.href);
+      press_tracker_event('e_reader', 'preferences', window.location.href);
     });
 
     // TOC (dynamically-added modal, hence delegated `on()` binding)
     $("body").on('click', '.cozy-modal-contents ul li a', function(e) {
-      ga('pressTracker.send', 'event', 'e_reader', 'toc', this.href);
+      press_tracker_event('e_reader', 'toc', this.href);
     });
   }
 
