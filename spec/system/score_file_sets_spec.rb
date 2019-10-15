@@ -96,7 +96,11 @@ RSpec.describe "Score FileSets and PDF reader", type: :system do
 
     # Get the actual text from the PDF.
     # Oddly, the dummy.pdf has the word "Dummy" in 2 different spans: <span>Dumm</span><span>y</span>
-    expect(page).to have_content('Dumm y PDF')
+    # conorom 20191016: I've seen this check fail, both on a laptop (with too much stuff open) and on Travis.
+    # The failure screenshot in dev was of the loading spinner, so I guess the check above which says:
+    # `have_selector('.cozy-module-book-loading', visible: false)` doesn't mean this next check is ready to go?
+    # Sticking a max wait of 60 seconds on it to see if that stops it failing.
+    expect(page).to have_content('Dumm y PDF', wait: 60)
 
     # And then finally un-set the pdf_ebook to make sure that's all working
     # since I don't think we test that elsewhere.
