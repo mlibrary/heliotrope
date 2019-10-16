@@ -303,7 +303,7 @@ footer.page-footer {
   }
 }
 
-// partner-with-us
+// Partner With Us
 .tagline {
   margin-top: 2em;
 
@@ -491,6 +491,31 @@ h2#services {
       color: $brand-color;
     }
   }
+}
+
+// Accessibility
+.help {
+  background: #F7F7F8;
+  padding: 1em;
+  border-left: 4px solid #a0a0a05b;
+  margin: 2em auto;
+  width: 80%;
+
+  
+  h2 {
+    margin-top: 0;
+    margin-bottom: 0.625em;
+    font-size: 1.45em;
+  }
+
+  p {
+    font-size: .95em;
+    line-height: 1.4rem;
+  }
+}
+
+.toc ol {
+  list-style: none;
 }
 
 

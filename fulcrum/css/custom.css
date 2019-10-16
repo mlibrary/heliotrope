@@ -866,6 +866,23 @@ h2#services {
       padding-bottom: .2em;
       color: #002C63; }
 
+.help {
+  background: #F7F7F8;
+  padding: 1em;
+  border-left: 4px solid #a0a0a05b;
+  margin: 2em auto;
+  width: 80%; }
+  .help h2 {
+    margin-top: 0;
+    margin-bottom: 0.625em;
+    font-size: 1.45em; }
+  .help p {
+    font-size: .95em;
+    line-height: 1.4rem; }
+
+.toc ol {
+  list-style: none; }
+
 .post-feature-image {
   margin-bottom: 40px; }
 
