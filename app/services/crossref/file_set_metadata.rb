@@ -101,9 +101,7 @@ module Crossref
       end
 
       def monograph_representative?(presenter)
-        return true if presenter.epub?
-        return true if presenter.mobi?
-        return true if presenter.pdf_ebook?
+        return true if presenter.featured_representative?
         return true if presenter.id == presenter.parent.representative_id
         false
       end
