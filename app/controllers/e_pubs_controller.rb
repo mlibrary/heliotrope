@@ -8,9 +8,10 @@ class EPubsController < CheckpointController
     return redirect_to epub_access_url unless @policy.show?
 
     @title = @presenter.parent.present? ? @presenter.parent.page_title : @presenter.page_title
-    @citable_link = @presenter.citable_link
-    @subdomain = @presenter.parent.subdomain
     @parent_presenter = @presenter.parent
+    @citable_link = @parent_presenter.citable_link
+    @subdomain = @presenter.parent.subdomain
+
     @back_link = if params[:publisher].present?
                    URI.join(main_app.root_url, params[:publisher]).to_s
                  else

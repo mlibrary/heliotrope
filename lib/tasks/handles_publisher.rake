@@ -26,12 +26,7 @@ namespace :heliotrope do
       end
 
       m['ordered_member_ids_ssim']&.each do |f| # f is just a string, each FileSet's NOID
-        featured_representative = FeaturedRepresentative.where(work_id: m.id, file_set_id: f).first
-        if featured_representative&.kind == 'epub'
-          puts "#{f},#{Rails.application.routes.url_helpers.epub_path(f)}"
-        else
-          puts "#{f},#{Rails.application.routes.url_helpers.hyrax_file_set_path(f)}"
-        end
+        puts "#{f},#{Rails.application.routes.url_helpers.hyrax_file_set_path(f)}"
       end
     end
 
