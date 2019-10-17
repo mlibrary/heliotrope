@@ -33,7 +33,7 @@ task sample_iiif_urls: :environment do
     # Get 100 different tiles for each tiff
     100.times do
       x, y, w, h = random_region(info)
-      urls << "#{Rails.application.routes.url_helpers.root_url}/image-service/#{id}/#{x},#{y},#{w},#{h}/full/0/default.jpg"
+      urls << "#{Rails.application.routes.url_helpers.root_url}/image-service/#{id}/#{x},#{y},#{w},#{h}/full/0/default.png"
     end
   end
 
