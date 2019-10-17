@@ -24,10 +24,10 @@
     if (typeof(ga) == typeof(Function)) {
       var audio = $('#audio').get(0)
       audio.addEventListener("play", function() {
-        ga('pressTracker.send', 'event', 'e_reader', 'play_audio', window.location.href);
+        press_tracker_event('e_reader', 'play_audio', window.location.href);
       });
       audio.addEventListener("pause", function() {
-        ga('pressTracker.send', 'event', 'e_reader', 'stop_audio', window.location.href);
+        press_tracker_event('e_reader', 'stop_audio', window.location.href);
       });
     }
   }

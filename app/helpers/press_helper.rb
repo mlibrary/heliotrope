@@ -115,6 +115,12 @@ module PressHelper
     controller.is_a?(PressCatalogController) ? 'press_catalog.banner' : 'monograph_catalog.banner'
   end
 
+  def all_google_analytics(subdomain)
+    press = Press.where(subdomain: subdomain)&.first
+    return [] if press.blank?
+    [press.google_analytics, parent_press(press)&.google_analytics].compact
+  end
+
   private
 
     def parent_press(child_press)

@@ -1,5 +1,4 @@
-
-<% ga_id = google_analytics(press_subdomain) %>
+<% ga_ids = all_google_analytics(press_subdomain) %>
 
 <% ga_url = 'https://www.google-analytics.com/analytics.js' %>
 <% if Rails.env.development? %>
@@ -20,14 +19,27 @@
     m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
     })(window,document,'script','<%= ga_url %>','ga');
 
+    window.ga_press_trackers = [];
     ga('create', '<%= Rails.application.secrets.google_analytics_id %>', 'auto');
     ga('send', 'pageview');
-    <% unless ga_id.nil? %>
-      ga('create', '<%= ga_id %>', 'auto', 'pressTracker')
-      ga('pressTracker.send', 'pageview')
+    <% suffix = 1 %>
+    <% ga_ids.each do |ga_id| %>
+      ga('create', '<%= ga_id %>', 'auto', '<%= "pressTracker#{suffix}" %>')
+      ga('<%= "pressTracker#{suffix}" %>.send', 'pageview')
+      window.ga_press_trackers.push('<%= "pressTracker#{suffix}" %>');
+      <% suffix += 1 %>
     <% end %>
     <% if Rails.env.development? %>
       window.ga_debug = {trace: true};
     <% end %>
+
+    function press_tracker_event(eventCategory, eventAction, eventLabel, eventValue) {
+      for (var i = 0; i < window.ga_press_trackers.length; i++) {
+        <% if ga_do_debug %>
+          console.log('[GA] sending tracking event for ' + ga_press_trackers[i]);
+        <% end %>
+        ga(window.ga_press_trackers[i] + '.send', 'event', eventCategory, eventAction, eventLabel, eventValue);
+      }
+    }
   </script>
 <% end %>

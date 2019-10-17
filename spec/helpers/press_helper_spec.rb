@@ -119,6 +119,15 @@ describe PressHelper do
     end
   end
 
+  describe "#all_google_analytics with two GA ids" do
+    let(:press) { create(:press, subdomain: "blue", google_analytics: "GA-ID-BLUE") }
+    let(:child) { create(:press, subdomain: "maize", google_analytics: "GA-ID-MAIZE", parent_id: press.id) }
+
+    it "returns both Google analytics ids" do
+      expect(all_google_analytics(child.subdomain)).to match_array [press.google_analytics, child.google_analytics]
+    end
+  end
+
   describe "#show_banner?" do
     subject { show_banner?(actor, subdomain) }
 
