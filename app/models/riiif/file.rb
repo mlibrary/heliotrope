@@ -57,8 +57,10 @@ module Riiif
         command << "pnmscalefixed -ysize #{h}"       if h.present? && w.blank?
       end
 
-      # ignore quality
-      command << "pnmtojpeg -quality 95"
+      # Ignoring dubiously-named options[:quality] here (more like color depth?). All our calls use 'default' anyway.
+      # See https://iiif.io/api/image/2.1/#quality
+      # Which is unrelated to JPEG quality (inverse of compression level, essentially) as passed to pnmtojpeg.
+      command << (options[:format] == 'png' ? 'pnmtopng' : 'pnmtojpeg -quality 95')
       command.join(' | ')
     end
 

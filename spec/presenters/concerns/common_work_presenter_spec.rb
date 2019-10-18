@@ -34,7 +34,7 @@ RSpec.describe CommonWorkPresenter do
       let(:solr_document) { ::SolrDocument.new(id: 'mono', has_model_ssim: ['Monograph'], hasRelatedMediaFragment_ssim: ['999999999']) }
 
       it {
-        expect(presenter.work_thumbnail).to start_with '<img class="img-responsive" src="/image-service/999999999/full/225,/0/default.jpg" alt="Cover image for ">'
+        expect(presenter.work_thumbnail).to start_with '<img class="img-responsive" src="/image-service/999999999/full/225,/0/default.png" alt="Cover image for ">'
       }
     end
 
@@ -42,7 +42,7 @@ RSpec.describe CommonWorkPresenter do
       let(:solr_document) { ::SolrDocument.new(id: 'mono', has_model_ssim: ['Monograph'], hasRelatedMediaFragment_ssim: ['999999999']) }
 
       it {
-        expect(presenter.work_thumbnail(99)).to start_with '<img class="img-responsive" src="/image-service/999999999/full/99,/0/default.jpg" alt="Cover image for ">'
+        expect(presenter.work_thumbnail(99)).to start_with '<img class="img-responsive" src="/image-service/999999999/full/99,/0/default.png" alt="Cover image for ">'
       }
     end
   end
