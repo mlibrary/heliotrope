@@ -6,22 +6,20 @@ $(document).on('turbolinks:load', function() {
     //
     // header link
     $('a.navbar-brand').click(function() {
-      press_tracker_event(which_category(), 'click', $(this).attr('href'))
+      press_tracker_event(which_category(), 'click', $(this).attr('href'));
     });
 
     // press catalog listing of monographs, titles and title buttons
     $('#documents .document').each(function(index, value) {
-
-      var title = $(value).find('h4.index_title a').text();
-
-      $(value).find('h4.index_title a').click(function() {
-        press_tracker_event('press_page', 'click', title)
+      var title = $(value).find('a h3.index_title').text();
+      $(value).find('a').click(function() {
+        press_tracker_event('press_page', 'click', title);
       });
     });
 
     // footer links
     $('footer.press a').click(function() {
-      press_tracker_event(which_category(), 'click', $(this).attr('href'))
+      press_tracker_event(which_category(), 'click', $(this).attr('href'));
     });
 
     // EBC banner links
@@ -51,7 +49,7 @@ $(document).on('turbolinks:load', function() {
 
     // buy button
     $('#monograph-buy-btn').click(function() {
-      press_tracker_event(which_category(), 'click_buy', $(this).attr('href'))
+      press_tracker_event(which_category(), 'click_buy', $(this).attr('href'));
     });
 
     // sort
@@ -77,8 +75,8 @@ $(document).on('turbolinks:load', function() {
     // Facets for Press and Work pages
     //
     $('#facets a.facet_select').on('click', function() {
-      var facet_name = $(this).parents()[5].children[0].innerText
-      var action = "facet_" + facet_name.toLowerCase().split(" ").join("_")
+      var facet_name = $(this).parents()[5].children[0].innerText;
+      var action = "facet_" + facet_name.toLowerCase().split(" ").join("_");
       press_tracker_event(which_category(), action, $(this).text());
     });
 

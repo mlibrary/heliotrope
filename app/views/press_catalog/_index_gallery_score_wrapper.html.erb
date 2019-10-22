@@ -1,12 +1,6 @@
-<% presenter = Hyrax::PresenterFactory.build_for(ids: [document.id], presenter_class: Hyrax::MonographPresenter, presenter_args: current_ability).first %>
-<div class="document col-xs-6 col-md-4">
-  <div class="thumbnail">
-    <a href="<%= polymorphic_path(url_for_document(document)) %>" data-turbolinks="false">
-      <%= raw presenter.work_thumbnail(145) %>
-    </a>
-    <div class="caption">
-      <%= render_document_partials document, blacklight_config.view_config(:gallery).partials, document_counter: document_counter %>
-      <p class="authors"><%= presenter.authors %></p>
-    </div>
-  </div>
-</div>
+<% # container for document in index gallery view -%>
+<% presenter = Hyrax::PresenterFactory.build_for(ids: [document.id], presenter_class: Hyrax::ScorePresenter, presenter_args: current_ability).first %>
+<% counter = document_counter_with_offset(document_counter) %>
+<%= render partial: "index_gallery", locals: { document: document, counter: counter, presenter: presenter } %>
+
+
