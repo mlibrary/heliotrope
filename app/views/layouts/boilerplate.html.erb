@@ -27,6 +27,7 @@
 
     <!-- Javascript -->
     <%= javascript_include_tag 'application' %>
+    <%= javascript_include_tag 'https://umich.edu/apis/umcookieconsent/umcookieconsent.js' %>
 
   <% if content_for?(:head) %>
     <%= yield(:head) %>
@@ -38,6 +39,12 @@
     if (bowser.mobile || bowser.tablet || bowser.msie) heliotropeIncompatibleWebGlUser = true;
     // Suppress incompatible browser warning in Google search snippet.
     if (bowser.googlebot) heliotropeIncompatibleWebGlUser = false;
+
+    window.umcookieconsent = {
+      // Uncomment to simulate access outside US
+      // law: { countryCode: 'UK' },
+      content: { href: 'https://www.lib.umich.edu/library-administration/user-privacy-policy-university-library' }
+     };
   </script>
 
   </head>
