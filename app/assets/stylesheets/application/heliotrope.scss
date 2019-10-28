@@ -1401,6 +1401,12 @@ footer.press {
 }
 
 ///////////////////////////////////
+// COOKIE PREFS (overrides UM branding)
+///////////////////////////////////
+.cc-btn.cc-allow {  background-color: #00AFEC !important;  color: #fff !important;}
+.cc-btn.cc-allow:hover {  background-color: #73d2f4 !important;  color: #002C63 !important; }
+
+///////////////////////////////////
 // RESPONSIVE MEDIA QUERIES
 ///////////////////////////////////
 @media(max-width: 992px) {
