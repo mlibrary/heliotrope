@@ -57,13 +57,6 @@ shared_examples "a group permission actor for works" do
         expect(curation_concern.edit_groups).to match_array ["heliotrope_admin", "heliotrope_editor"]
       end
 
-      it "updates with a new group" do
-        (attributes["edit_groups"] ||= []).push("anotherpress_editor")
-        expect(middleware.update(env)).to be true
-
-        expect(curation_concern.edit_groups).to match_array ["heliotrope_admin", "heliotrope_editor", "anotherpress_editor"]
-      end
-
       it "updates to private" do
         attributes["visibility"] = Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE
         expect(middleware.update(env)).to be true
