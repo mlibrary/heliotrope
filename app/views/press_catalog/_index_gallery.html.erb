@@ -1,0 +1,14 @@
+<% # container for document in index gallery view -%>
+<div class="document col-xs-6 col-md-4">
+  <%= link_to(url_for_document(document), document_link_params(document, counter: counter)) do %>
+    <div class="thumbnail">
+      <img class=\"img-responsive\" src=<%= raw presenter.work_thumbnail_src(145) %> alt="">
+    </div>
+    <div class="caption">
+      <h3 class="index_title">
+        <%= render_markdown(document.title.first) %>
+      </h3>
+      <p aria-label="By <%= presenter.authors %>" class="authors"><%= presenter.authors %></p>
+    </div>
+  <% end %>
+</div>

@@ -3,6 +3,9 @@
 require 'rails_helper'
 
 describe 'Press catalog sort' do
+  let(:title_selector) { '.document .caption h3.index_title' }
+  let(:author_selector) { '.document .caption p.authors' }
+
   context 'Monograph results set end-to-end' do
     before do
       create(:press, subdomain: 'sort_press1')
@@ -52,76 +55,76 @@ describe 'Press catalog sort' do
     end
 
     it 'is sorted by "Date Added (Newest First)" by default' do
-      assert_equal page.all('.documentHeader .index_title a').map(&:text), ['Zebra',
-                                                                            'silverfish',
-                                                                            'Cormorant',
-                                                                            'baboon',
-                                                                            'Manatee',
-                                                                            'aardvark']
+      assert_equal page.all(title_selector).map(&:text), ['Zebra',
+                                                          'silverfish',
+                                                          'Cormorant',
+                                                          'baboon',
+                                                          'Manatee',
+                                                          'aardvark']
     end
 
     it 'is sortable by "Author (A-Z)"' do
       click_link 'Author (A-Z)'
       # names reversed by `authors` method in MonographPresenter
-      assert_equal page.all('.document .thumbnail .caption p').map(&:text), ['Rita Andrea',
-                                                                             'Renée Andrée',
-                                                                             'ruth andrew',
-                                                                             'Guy Gulliver',
-                                                                             'Barry Hopeful',
-                                                                             '"Headbutt" Zidane']
+      assert_equal page.all(author_selector).map(&:text), ['Rita Andrea',
+                                                           'Renée Andrée',
+                                                           'ruth andrew',
+                                                           'Guy Gulliver',
+                                                           'Barry Hopeful',
+                                                           '"Headbutt" Zidane']
     end
 
     it 'is sortable by "Author (Z-A)"' do
       click_link 'Author (Z-A)'
       # names reversed by `authors` method in MonographPresenter
-      assert_equal page.all('.document .thumbnail .caption p').map(&:text), ['"Headbutt" Zidane',
-                                                                             'Barry Hopeful',
-                                                                             'Guy Gulliver',
-                                                                             'ruth andrew',
-                                                                             'Renée Andrée',
-                                                                             'Rita Andrea']
+      assert_equal page.all(author_selector).map(&:text), ['"Headbutt" Zidane',
+                                                           'Barry Hopeful',
+                                                           'Guy Gulliver',
+                                                           'ruth andrew',
+                                                           'Renée Andrée',
+                                                           'Rita Andrea']
     end
 
     it 'is sortable by "Publication Date (Newest First)"' do
       click_link 'Publication Date (Newest First)'
       # using corresponding titles to check position as pub year isn't shown in results page (or set here)
-      assert_equal page.all('.documentHeader .index_title a').map(&:text), ['silverfish',
-                                                                            'aardvark',
-                                                                            'Manatee',
-                                                                            'Cormorant',
-                                                                            'baboon',
-                                                                            'Zebra']
+      assert_equal page.all(title_selector).map(&:text), ['silverfish',
+                                                          'aardvark',
+                                                          'Manatee',
+                                                          'Cormorant',
+                                                          'baboon',
+                                                          'Zebra']
     end
 
     it 'is sortable by "Publication Date (Oldest First)"' do
       click_link 'Publication Date (Oldest First)'
       # using corresponding titles to check position as pub year isn't shown in results page (or set here)
-      assert_equal page.all('.documentHeader .index_title a').map(&:text), ['Zebra',
-                                                                            'baboon',
-                                                                            'Cormorant',
-                                                                            'Manatee',
-                                                                            'aardvark',
-                                                                            'silverfish']
+      assert_equal page.all(title_selector).map(&:text), ['Zebra',
+                                                          'baboon',
+                                                          'Cormorant',
+                                                          'Manatee',
+                                                          'aardvark',
+                                                          'silverfish']
     end
 
     it 'is sortable by "Title (A-Z)"' do
       click_link 'Title (A-Z)'
-      assert_equal page.all('.documentHeader .index_title a').map(&:text), ['aardvark',
-                                                                            'baboon',
-                                                                            'Cormorant',
-                                                                            'Manatee',
-                                                                            'silverfish',
-                                                                            'Zebra']
+      assert_equal page.all(title_selector).map(&:text), ['aardvark',
+                                                          'baboon',
+                                                          'Cormorant',
+                                                          'Manatee',
+                                                          'silverfish',
+                                                          'Zebra']
     end
 
     it 'is sortable by "Title (Z-A)"' do
       click_link 'Title (Z-A)'
-      assert_equal page.all('.documentHeader .index_title a').map(&:text), ['Zebra',
-                                                                            'silverfish',
-                                                                            'Manatee',
-                                                                            'Cormorant',
-                                                                            'baboon',
-                                                                            'aardvark']
+      assert_equal page.all(title_selector).map(&:text), ['Zebra',
+                                                          'silverfish',
+                                                          'Manatee',
+                                                          'Cormorant',
+                                                          'baboon',
+                                                          'aardvark']
     end
   end
 
@@ -233,76 +236,76 @@ describe 'Press catalog sort' do
     end
 
     it 'is sorted by "Date Added (Newest First)" by default' do
-      assert_equal page.all('.documentHeader .index_title a').map(&:text), ['aardvark',
-                                                                            'Manatee',
-                                                                            'baboon',
-                                                                            'Zebra',
-                                                                            'silverfish',
-                                                                            'Cormorant']
+      assert_equal page.all(title_selector).map(&:text), ['aardvark',
+                                                          'Manatee',
+                                                          'baboon',
+                                                          'Zebra',
+                                                          'silverfish',
+                                                          'Cormorant']
     end
 
     it 'is sortable by "Author (A-Z)"' do
       click_link 'Author (A-Z)'
       # names reversed by `authors` method in MonographPresenter
-      assert_equal page.all('.document .thumbnail .caption p').map(&:text), ['Guy Gulliver',
-                                                                             'Barry Hopeful',
-                                                                             'Smiley Quinn',
-                                                                             'Maria Rodrigues',
-                                                                             'Jim Smith',
-                                                                             'John Thomas']
+      assert_equal page.all(author_selector).map(&:text), ['Guy Gulliver',
+                                                           'Barry Hopeful',
+                                                           'Smiley Quinn',
+                                                           'Maria Rodrigues',
+                                                           'Jim Smith',
+                                                           'John Thomas']
     end
 
     it 'is sortable by "Author (Z-A)"' do
       click_link 'Author (Z-A)'
       # names reversed by `authors` method in MonographPresenter
-      assert_equal page.all('.document .thumbnail .caption p').map(&:text), ['John Thomas',
-                                                                             'Jim Smith',
-                                                                             'Maria Rodrigues',
-                                                                             'Smiley Quinn',
-                                                                             'Barry Hopeful',
-                                                                             'Guy Gulliver']
+      assert_equal page.all(author_selector).map(&:text), ['John Thomas',
+                                                           'Jim Smith',
+                                                           'Maria Rodrigues',
+                                                           'Smiley Quinn',
+                                                           'Barry Hopeful',
+                                                           'Guy Gulliver']
     end
 
     it 'is sortable by "Publication Date (Newest First)"' do
       click_link 'Publication Date (Newest First)'
       # using corresponding titles to check position as pub year isn't shown in results page (or set here)
-      assert_equal page.all('.documentHeader .index_title a').map(&:text), ['Manatee',
-                                                                            'silverfish',
-                                                                            'Zebra',
-                                                                            'aardvark',
-                                                                            'Cormorant',
-                                                                            'baboon']
+      assert_equal page.all(title_selector).map(&:text), ['Manatee',
+                                                          'silverfish',
+                                                          'Zebra',
+                                                          'aardvark',
+                                                          'Cormorant',
+                                                          'baboon']
     end
 
     it 'is sortable by "Publication Date (Oldest First)"' do
       click_link 'Publication Date (Oldest First)'
       # using corresponding titles to check position as pub year isn't shown in results page (or set here)
-      assert_equal page.all('.documentHeader .index_title a').map(&:text), ['baboon',
-                                                                            'Cormorant',
-                                                                            'aardvark',
-                                                                            'Zebra',
-                                                                            'silverfish',
-                                                                            'Manatee']
+      assert_equal page.all(title_selector).map(&:text), ['baboon',
+                                                          'Cormorant',
+                                                          'aardvark',
+                                                          'Zebra',
+                                                          'silverfish',
+                                                          'Manatee']
     end
 
     it 'is sortable by "Title (A-Z)"' do
       click_link 'Title (A-Z)'
-      assert_equal page.all('.documentHeader .index_title a').map(&:text), ['aardvark',
-                                                                            'baboon',
-                                                                            'Cormorant',
-                                                                            'Manatee',
-                                                                            'silverfish',
-                                                                            'Zebra']
+      assert_equal page.all(title_selector).map(&:text), ['aardvark',
+                                                          'baboon',
+                                                          'Cormorant',
+                                                          'Manatee',
+                                                          'silverfish',
+                                                          'Zebra']
     end
 
     it 'is sortable by "Title (Z-A)"' do
       click_link 'Title (Z-A)'
-      assert_equal page.all('.documentHeader .index_title a').map(&:text), ['Zebra',
-                                                                            'silverfish',
-                                                                            'Manatee',
-                                                                            'Cormorant',
-                                                                            'baboon',
-                                                                            'aardvark']
+      assert_equal page.all(title_selector).map(&:text), ['Zebra',
+                                                          'silverfish',
+                                                          'Manatee',
+                                                          'Cormorant',
+                                                          'baboon',
+                                                          'aardvark']
     end
   end
 end

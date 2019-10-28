@@ -9,8 +9,8 @@ class PressCatalogController < ::CatalogController
 
   configure_blacklight do |config|
     config.search_builder_class = PressSearchBuilder
-    config.index.partials = %i[thumbnail index_header]
-    config.view.gallery.partials = %i[index_header index]
+    config.index.partials = %i[index]
+    config.view.gallery.partials = %i[index]
 
     config.facet_fields.tap do
       # solr facet fields not to be displayed in the index (search results) view
@@ -21,9 +21,6 @@ class PressCatalogController < ::CatalogController
       config.facet_fields.delete('creator_sim')
       config.facet_fields.delete('based_near_sim')
     end
-
-    config.index.partials = %i[thumbnail index_header]
-    config.view.gallery.partials = %i[index_header index]
   end
 
   def show_site_search?
