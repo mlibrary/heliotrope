@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190916160819) do
+ActiveRecord::Schema.define(version: 20191025183154) do
 
   create_table "api_requests", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.integer "user_id"
@@ -71,6 +71,10 @@ ActiveRecord::Schema.define(version: 20190916160819) do
     t.datetime "updated_at", null: false
     t.string "document_type"
     t.index ["user_id"], name: "index_bookmarks_on_user_id"
+  end
+
+  create_table "checkpoint_schema", id: false, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.integer "version", default: 0, null: false
   end
 
   create_table "checksum_audit_logs", id: :integer, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
@@ -378,6 +382,19 @@ ActiveRecord::Schema.define(version: 20190916160819) do
     t.index ["source_id"], name: "index_permission_templates_on_source_id", unique: true
   end
 
+  create_table "permits", id: :integer, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.string "agent_type", limit: 100, null: false
+    t.string "agent_id", limit: 100, null: false
+    t.string "agent_token", limit: 201, null: false
+    t.string "credential_type", limit: 100, null: false
+    t.string "credential_id", limit: 100, null: false
+    t.string "credential_token", limit: 201, null: false
+    t.string "resource_type", limit: 100, null: false
+    t.string "resource_id", limit: 100, null: false
+    t.string "resource_token", limit: 201, null: false
+    t.string "zone_id", limit: 100, null: false
+  end
+
   create_table "presses", id: :integer, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.string "name"
     t.string "logo_path"
@@ -399,6 +416,7 @@ ActiveRecord::Schema.define(version: 20190916160819) do
     t.boolean "share_links", default: false
     t.boolean "watermark", default: false
     t.boolean "doi_creation", default: false
+    t.string "readership_map_url"
     t.index ["parent_id"], name: "index_presses_on_parent_id"
   end
 
@@ -435,8 +453,8 @@ ActiveRecord::Schema.define(version: 20190916160819) do
   end
 
   create_table "roles", id: :integer, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
-    t.string "resource_type"
     t.integer "resource_id"
+    t.string "resource_type"
     t.integer "user_id"
     t.string "role"
     t.datetime "created_at", null: false
@@ -728,6 +746,8 @@ ActiveRecord::Schema.define(version: 20190916160819) do
     t.index ["work_id"], name: "index_work_view_stats_on_work_id"
   end
 
+  add_foreign_key "api_requests", "users"
+  add_foreign_key "collection_type_participants", "hyrax_collection_types"
   add_foreign_key "components_products", "components"
   add_foreign_key "components_products", "products"
   add_foreign_key "curation_concerns_operations", "users"

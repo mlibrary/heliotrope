@@ -243,6 +243,7 @@ Rails.application.routes.draw do
 
   get ':press', controller: :press_catalog, action: :index, as: :press_catalog
   get ':press/facet', controller: :press_catalog, action: :facet
+  get ':press/statistics', controller: :press_statistics, action: :index, as: :press_statistics
 
   root 'presses#index'
 

@@ -2,7 +2,7 @@
   <h1><span class="fa fa-google"></span> Google Analytics</h1>
 <% end %>
 
-<% presses = current_user.admin_presses.where.not(google_analytics_url: nil).sort_by(&:name) %>
+<% presses = current_user.admin_presses.where.not(google_analytics_url: [nil, '']).sort_by(&:name) %>
 <% if presses.size > 1 %>
   <label class="sr-only" for="publisher_report">Select Publisher for Google Analytics Report</label>
   <select id="publisher_report" onchange="document.getElementById('ga_iframe').src=this.value;">

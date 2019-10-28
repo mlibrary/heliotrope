@@ -19,5 +19,13 @@
           <% end %>
         </p>
         <% end %>
+        <% # Don't show jumbotron link to stats page when on the stats page. %>
+        <% if request.original_url != press_statistics_url(@press) %>
+          <% if @press.google_analytics_url.present? || @press.readership_map_url.present? %>
+            <p class="lead">
+              <%= link_to 'Publisher Statistics', press_statistics_path(@press) %>
+            </p>
+          <% end %>
+        <% end %>
       </div>
     </div>
