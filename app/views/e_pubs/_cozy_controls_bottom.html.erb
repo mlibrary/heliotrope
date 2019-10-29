@@ -15,13 +15,6 @@
         }).addTo(reader);
         <% end %>
 
-        // Permalink widget
-        cozy.control.widget.panel({
-          region: 'top.toolbar.left',
-          data: { title: "<%= @citable_link %>"},
-          template: '<div class="permalink-label"><label class="u-screenreader" for="permalink">Permalink</label><form><input data-slot="title" type="text" id="permalink" aria-label="citable link" value="" readonly="readonly" onclick="this.select(); document.execCommand(\'copy\');"></form></div>',
-        }).addTo(reader);
-
         <% if @parent_presenter.citations_ready? %>
         // Citation widget
         // see: https://github.com/mlibrary/cozy-sun-bear/wiki/Metadata-and-Citations
