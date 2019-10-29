@@ -36,6 +36,17 @@ html, body {
 
 /* --- HONEY BEAR --- */
 
+#loadingBar.helio-loading-bar {
+  position: absolute;
+  width: 100%;
+  height: 15px;
+}
+
+.helio-loading-bar .progress {
+  background-color: #00afec;
+  width: 0;
+}
+
 .cozy-module-book-epub {
   overflow: auto;
 }

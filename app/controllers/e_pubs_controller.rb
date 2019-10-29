@@ -50,6 +50,7 @@ class EPubsController < CheckpointController
 
       send_file file
     elsif @entity.is_a?(Sighrax::PortableDocumentFormat)
+      response.headers['Content-Length'] ||= @presenter.file.size.to_s
       send_data @presenter.file.content, filename: @presenter.label, type: "application/pdf", disposition: "inline"
     end
   rescue StandardError => e
