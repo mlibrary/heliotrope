@@ -794,6 +794,411 @@ $a2ru-white: #fafafa;
 }
 ///////////////////////////////////////////////
 //
+// Against the Grain (ATG)
+// - Charleston Briefings (CB)
+// - Charleston Voices (CV)
+//
+///////////////////////////////////////////////
+// colors
+$atg-brand-color: #333;
+$atg-accent-color: #2c4a2c;
+$atg-link: #800000;
+$atg-link-active: #cc0000;
+
+$atg-grey-1: #d5d6d2;
+$atg-grey-2: #989c97;
+$atg-grey-3: #655a52;
+$atg-grey-4: #ccc;
+$atg-grey-5: #ddd;
+$atg-grey-6: #eeedeb;
+$atg-white: #fff;
+$atg-black-80: #342f2e;
+
+// typography
+@import url('https://fonts.googleapis.com/css?family=Open+Sans:400,400i,700,700i|Roboto:400,400i,700,700i&display=swap');
+
+@mixin open-sans {
+  font-family: 'Open Sans', Arial, sans-serif;
+}
+
+@mixin roboto {
+  font-family: 'Roboto', Helvetica, sans-serif;
+}
+
+.atg {
+
+  // typography
+  @include roboto;
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5 {
+    font-weight: 700;
+    @include open-sans;
+  }
+
+  // links
+  a {
+    color: $atg-link;
+  }
+
+  a:hover,
+  a:active {
+    color: $atg-link-active;
+  }
+
+  // buttons
+
+  .btn-default {
+    @include button-background-color($atg-brand-color);
+    @include button-font-color($atg-white);
+  }
+
+  .download {
+    .btn-default {
+      @include button-background-color($atg-brand-color);
+    }
+  }
+
+  .btn-default:hover,
+  .btn-default:active {
+    @include button-hover-background-color($atg-grey-4);
+    @include button-hover-font-color($atg-brand-color);
+  }
+
+  // navigation menu
+  .navbar-default .navbar-nav > .open > a,
+  .navbar-default .navbar-nav > .open > a:hover,
+  .navbar-default .navbar-nav > .open > a:focus {
+    background-color: $atg-grey-2;
+  }
+
+  #brand-bar {
+    background-color: $atg-brand-color;
+    border-color: $atg-brand-color;
+    @include open-sans;
+
+    .navbar-brand {
+      color: $atg-white;
+    }
+
+    .navbar-nav {
+      a#add-content,
+      a.login,
+      a.user-display-name,
+      a.language-dropdown {
+          color: $atg-white;
+      }
+
+      .open > a,
+      .open > a:focus,
+      .open > a:hover {
+        background-color: $atg-grey-4;
+      }
+    }
+
+    button.search-submit {
+      background-color: $atg-grey-4;
+      border-color: $atg-grey-4;
+      color: $atg-brand-color;
+    }
+
+  }
+
+  // press catalog
+
+  // jumbotron
+  .jumbotron {
+    background-color: $atg-grey-6;
+    padding-top: 1.5em;
+    padding-bottom: 1em;
+
+    p {
+      font-size: 14px;
+    }
+
+    .logo.pull-left {
+
+      float: none !important;
+      margin-bottom: 2.5em;
+
+      img {
+        width: 35%;
+        margin: 0 auto;
+        display: block;
+      }
+
+    }
+
+    .lead {
+      text-align: center;
+      font-size: 16px;
+    }
+
+    .container {
+      margin-top: 0;
+    }
+
+  }
+
+  .press {
+    .results-container {
+
+      .documentHeader {
+        h3 {
+          font-weight: 600;
+        }
+        a {
+          color: #333;
+        }
+      }
+    }
+  }
+
+  .monograph {
+    .message {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      z-index: 5000;
+      background-color: #002C63;
+      width: 100%;
+      padding: 3em;
+      color: #FFF;
+      display: flex;
+      display: -webkit-flex;
+      transition-duration: 0.5s;
+
+      .wrapper {
+        width: 85%;
+        margin: 0 auto;
+        display: flex;
+        display: -webkit-flex;
+        flex-direction: row;
+        -webkit-flex-direction: row;
+      }
+
+      .text {
+        width: 85%;
+      }
+
+      .dismiss {
+        display: flex;
+        display: -webkit-flex;
+        width: 12%;
+        justify-content: flex-end;
+        -webkit-justify-content: flex-end;
+      }
+
+      a {
+        color: #00AFEC;
+        text-decoration: underline;
+      }
+
+      button.dismiss {
+        text-decoration: none;
+        color: #FFF;
+        background: transparent;
+        border: 0;
+        font-size: 2em;
+        padding: 0;
+        width: 100%;
+      }
+    }
+  }
+
+  //filters on press and monograph pages
+  .col-sm-3.facets-container,
+  #facet-panel-collapse {
+    padding-left: 0px;
+  }
+
+  .panel-group {
+    padding-left: 0px;
+  }
+
+  .panel-group .panel {
+    border-radius: 0px;
+  }
+
+  .panel-heading {
+    padding-top: 15px;
+  }
+
+  .panel-group .panel + .panel {
+    margin-top: 0px;
+  }
+
+  h3.panel-title a, a.more_facets_link {
+    color: #333;
+  }
+
+  .panel-heading.collapse-toggle .panel-title::after {
+    color: #333;
+  }
+
+  .panel-body {
+    background-color: #fafafa;
+  }
+
+  .search-form.panel-body {
+    background-color: #fff;
+  }
+
+  // sorts on press and monograph pages
+  #sort-dropdown .dropdown-toggle,
+  #per_page-dropdown .dropdown-toggle {
+    color: $atg-white;
+  }
+
+  #sort-dropdown .dropdown-toggle:hover,
+  #per_page-dropdown .dropdown-toggle:hover,
+  #sort-dropdown .dropdown-toggle:active,
+  #per_page-dropdown .dropdown-toggle:active {
+    color: $atg-brand-color;
+  }
+
+  .constraints-container {
+    padding: 10px 20px;
+    border-radius: 0px;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+  }
+
+  // search resources on monograph pages
+  button.search-submit {
+    background-color: $atg-grey-4;
+    border-color: $atg-grey-4;
+    color: $atg-brand-color;
+  }
+
+  // pagination
+
+  .pagination {
+     li a, li span {
+
+       background-color: $atg-brand-color;
+       border-color: $atg-brand-color;
+       color: $atg-white;
+     }
+
+     li>a:hover,
+     li>a:focus,
+     li>span:hover,
+     li>span:focus {
+       background-color: $atg-grey-4;
+       border-color: $atg-grey-4;
+       color: $atg-brand-color;
+     }
+
+
+     .active>a,
+     .active>a:hover,
+     .active>a:focus,
+     .active>span,
+     .active>span:hover,
+     .active>span:focus {
+       background-color: $atg-grey-4;
+       border-color: $atg-grey-4;
+       color: $atg-brand-color;
+     }
+
+     .disabled>span,
+     .disabled>span:hover,
+     .disabled>span:focus,
+     .disabled>a,
+     .disabled>a:hover,
+     .disabled>a:focus {
+       background-color: $atg-grey-4;
+       border-color: $atg-grey-4;
+       color: $atg-brand-color;
+     }
+  }
+
+  //footer
+  footer {
+
+    .press-block-a,
+    .press-block-b {
+      background-color:  $atg-grey-1;
+      font-weight: 600;
+
+      a,
+      a:hover,
+      a:active {
+        color: #333;
+      }
+
+      img {
+        width: 250px;
+      }
+
+    }
+    .press-block-c {
+      background-color: $atg-accent-color;
+      @include open-sans;
+    }
+    .platform {
+      background-color: $atg-black-80;
+    }
+  }
+
+  // EPUB Reader
+  #reader {
+
+    .button {
+      @include epub-button-background-color($atg-brand-color,$atg-grey-2,$atg-white);
+    }
+
+    .button--lg {
+      @include epub-button-background-color($atg-brand-color,$atg-grey-2,$atg-white);
+    }
+
+    .button--sm {
+      @include epub-button-background-color($atg-brand-color,$atg-grey-2,$atg-white);
+    }
+
+    i[class^='icon-chevron-'] {
+      @include epub-prev-next-color($atg-grey-2);
+      transition: 0.2s ease-in;
+    }
+
+    i[class^='icon-chevron-']:hover {
+      @include epub-hover-prev-next-color($atg-brand-color);
+      transition: 0.2s ease-in;
+    }
+
+    .cozy-control .logo {
+      height: 47px;
+
+      img {
+        height: 47px;
+      }
+    }
+  }
+
+}
+
+@media(max-width: 768px) {
+  .atg .monograph .message {
+    padding: 1.5em;
+
+    .wrapper {
+      width: auto;
+    }
+    .text {
+      width: 70%;
+    }
+    .dismiss {
+      width: 20%;
+      padding-left: 10%;
+    }
+  }
+}
+///////////////////////////////////////////////
+//
 // Amherst College Press
 //
 ///////////////////////////////////////////////
