@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190916160819) do
+ActiveRecord::Schema.define(version: 20191025183154) do
 
   create_table "api_requests", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.integer "user_id"
@@ -399,6 +399,7 @@ ActiveRecord::Schema.define(version: 20190916160819) do
     t.boolean "share_links", default: false
     t.boolean "watermark", default: false
     t.boolean "doi_creation", default: false
+    t.string "readership_map_url"
     t.index ["parent_id"], name: "index_presses_on_parent_id"
   end
 

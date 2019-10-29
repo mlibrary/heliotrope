@@ -64,6 +64,16 @@ describe PressHelper do
     end
   end
 
+  describe "#readership_map_url" do
+    context "when a press has a readership map URL" do
+      let(:press) { create(:press, subdomain: "ReadReadRead", readership_map_url: 'https://www.example.com/Map/ReadReadRead') }
+
+      it "returns the map URL" do
+        expect(readership_map_url(press.subdomain)).to eq('https://www.example.com/Map/ReadReadRead')
+      end
+    end
+  end
+
   describe "#restricted_message" do
     let(:press) { create(:press, subdomain: "blah", restricted_message: "<b>No. Just No.</b>") }
 

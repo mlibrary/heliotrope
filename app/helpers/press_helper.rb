@@ -65,6 +65,12 @@ module PressHelper
     press.google_analytics_url.presence || parent_press(press)&.google_analytics_url
   end
 
+  def readership_map_url(subdomain)
+    press = Press.where(subdomain: subdomain)&.first
+    return if press.blank?
+    press.readership_map_url.presence || parent_press(press)&.readership_map_url
+  end
+
   def typekit(subdomain)
     press = Press.where(subdomain: subdomain)&.first
     return if press.blank?
