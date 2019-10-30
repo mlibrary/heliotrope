@@ -22,5 +22,21 @@
         layer = L.tileLayer.iiif("<%= riiif_url %>", { bestFit: true } );
         layer.addTo(map);
         L.control.pan({ panOffset: 150 }).addTo(map);
+        // Detect fullscreen toggling
+        // Doesn't zoom in/out unless the browser has had a chance
+        // to enter fullscreen, hence the timeout.
+        // "TypeError: The expression cannot be converted to return the specified type."
+        // that prevents fullscreen toggle predates the code below,
+        // I suspect a bug in vendor/leaflet.fullscreen-1.5.1/Control.FullScreen.js
+        map.on('enterFullscreen', function() {
+          setTimeout(function() {
+            try { layer._fitBounds(); } catch (err) {}
+            }, 1000);
+        });
+        map.on('exitFullscreen', function() {
+          setTimeout(function() {
+            try { layer._fitBounds(); } catch (err) {}
+            }, 1000);
+        });
     });
 </script>
