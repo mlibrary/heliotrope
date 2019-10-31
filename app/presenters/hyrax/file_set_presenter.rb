@@ -107,6 +107,14 @@ module Hyrax
       allow_download&.casecmp('yes')&.zero?
     end
 
+    def allow_high_res_display?
+      if tombstone?
+        allow_display_after_expiration&.downcase == 'high-res'
+      else
+        allow_hi_res&.downcase == 'yes'
+      end
+    end
+
     # Google Analytics
     def pageviews_over_time_graph_data
       [{ "label": "Total Pageviews", "data": flot_pageviews_over_time(id).to_a.sort }]

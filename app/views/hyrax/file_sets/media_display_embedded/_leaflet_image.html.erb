@@ -25,11 +25,13 @@
           zoom: 0,
           scrollWheelZoom: false,
           // TODO: fix https://tools.lib.umich.edu/jira/browse/HELIO-2961
+<%# if file_set.allow_high_res_display? %>
           // fullscreenControl: true,
           // fullscreenControlOptions: { // optional
           //     title:"View in fullscreen mode",
           //     titleCancel:"Exit fullscreen mode"
           // },
+<%# end %>
           attributionControl: false
         });
         layer = L.tileLayer.iiif("<%= riiif_url %>", { bestFit: true });

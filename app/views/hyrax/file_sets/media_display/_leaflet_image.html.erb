@@ -13,11 +13,13 @@
             crs: L.CRS.Simple,
             zoom: 0,
             scrollWheelZoom: false,
+<% if file_set.allow_high_res_display? %>
             fullscreenControl: true,
             fullscreenControlOptions: { // optional
                 title:"View in fullscreen mode",
                 titleCancel:"Exit fullscreen mode"
             }
+<% end %>
         });
         layer = L.tileLayer.iiif("<%= riiif_url %>", { bestFit: true } );
         layer.addTo(map);

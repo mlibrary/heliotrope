@@ -151,6 +151,73 @@ RSpec.describe Hyrax::FileSetPresenter do
     end
   end
 
+  describe '#allow_high_res_display?' do
+    context 'allow_hi_res != "yes"' do
+      context "it's not set" do
+        let(:fileset_doc) { SolrDocument.new(id: 'fs', has_model_ssim: ['FileSet']) }
+        it { expect(presenter.allow_high_res_display?).to be false }
+
+        context 'admin user' do
+          before do
+            allow(ability).to receive(:platform_admin?).and_return(false)
+            allow(ability).to receive(:can?).with(:edit, 'fs').and_return(false)
+          end
+          it { expect(presenter.allow_high_res_display?).to be false }
+        end
+
+        context 'tombstone with allow_display_after_expiration == "high-res"' do
+          let(:entity) { 'entity' }
+          let(:tombstone) { 'boolean' }
+          let(:fileset_doc) { SolrDocument.new(id: 'fs', has_model_ssim: ['FileSet'], allow_display_after_expiration_ssim: 'high-res') }
+
+          before do
+            allow(Sighrax).to receive(:factory).with('fs').and_return(entity)
+            allow(Sighrax).to receive(:tombstone?).with(entity).and_return(true)
+          end
+
+          it 'allows high-res in spite of the missing allow_hi_res_ssim value' do
+            expect(presenter.allow_high_res_display?).to be true
+          end
+        end
+      end
+
+      context 'set to anything other than "yes"' do
+        let(:fileset_doc) { SolrDocument.new(id: 'fs', has_model_ssim: ['FileSet'], allow_hi_res_ssim: 'nO') }
+        it { expect(presenter.allow_high_res_display?).to be false }
+
+        context 'admin user' do
+          before do
+            allow(ability).to receive(:platform_admin?).and_return(false)
+            allow(ability).to receive(:can?).with(:edit, 'fs').and_return(false)
+          end
+          it { expect(presenter.allow_high_res_display?).to be false }
+        end
+
+        context 'tombstone with allow_display_after_expiration == "high-res"' do
+          let(:entity) { 'entity' }
+          let(:tombstone) { 'boolean' }
+          let(:fileset_doc) { SolrDocument.new(id: 'fs', has_model_ssim: ['FileSet'], allow_display_after_expiration_ssim: 'high-res') }
+
+          before do
+            allow(Sighrax).to receive(:factory).with('fs').and_return(entity)
+            allow(Sighrax).to receive(:tombstone?).with(entity).and_return(true)
+          end
+
+          it 'allows high-res in spite of the original allow_hi_res_ssim value' do
+            expect(presenter.allow_high_res_display?).to be true
+          end
+        end
+      end
+    end
+
+    context 'allow_hi_res == "yes" (case insensitive)' do
+      context "it's not set" do
+        let(:fileset_doc) { SolrDocument.new(id: 'fs', has_model_ssim: ['FileSet'], allow_hi_res_ssim: 'YeS') }
+        it { expect(presenter.allow_high_res_display?).to be true }
+      end
+    end
+  end
+
   describe '#label' do
     let(:file_set) { create(:file_set, label: 'filename.tif') }
     let(:fileset_doc) { SolrDocument.new(file_set.to_solr) }
