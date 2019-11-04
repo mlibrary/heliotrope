@@ -19,14 +19,7 @@ class EPubsController < CheckpointController
                  end
     @ebook_download_presenter = EBookDownloadPresenter.new(@parent_presenter, current_ability, current_actor)
 
-    if @entity.is_a?(Sighrax::ElectronicPublication)
-      @search_url = main_app.epub_search_url(@noid, q: '').gsub!(/locale=en&/, '')
-      @use_archive = if File.exist?(File.join(UnpackService.root_path_from_noid(@noid, 'epub'), @noid + ".sm.epub"))
-                       true
-                     else
-                       false
-                     end
-    end
+    @search_url = main_app.epub_search_url(@noid, q: '').gsub!(/locale=en&/, '') if @entity.is_a?(Sighrax::ElectronicPublication)
 
     @press = Press.where(subdomain: @subdomain).first
     @component = component
