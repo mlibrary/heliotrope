@@ -1,0 +1,48 @@
+<% provide :page_title, "#{@press.name} Statistics" %>
+<% provide :page_class, 'press' %>
+<% ga_url = @press.google_analytics_url %>
+<% map_url = @press.readership_map_url %>
+
+<div class="row monograph-assets-toc-epub">
+  <div class="col-sm-12" id="tabs">
+    <ul class="nav nav-tabs" role="tablist">
+      <% if ga_url.present? %>
+        <li role="presentation">
+          <a id="tab-analytics" href="#analytics" aria-controls="toc" role="tab" data-toggle="tab" aria-selected="false" tabindex="-1">Google Analytics</a>
+        </li>
+      <% end %>
+      <% if map_url.present? %>
+        <li role="presentation">
+          <a id="tab-map" href="#map" aria-controls="resources" role="tab" data-toggle="tab" aria-selected="false" tabindex="-1">Readership Map</a>
+        </li>
+      <% end %>
+    </ul>
+    <div id="tabs-content" class="tab-content monograph-assets-toc-epub-content" aria-live="polite">
+      <% if ga_url.present? %>
+        <section id="analytics" class="tab-pane fade toc row" role="tabpanel" aria-hidden="true" aria-labelledby="tab-toc" tabindex="0">
+          <div class="col-sm-12">
+            <h2 class="sr-only">Google Analytics</h2>
+            <div class="panel panel-default">
+              <div class="panel-body">
+                <div class="iframe-container">
+                  <iframe src="<%= ga_url %>" id="ga_iframe" class=".embed-responsive-item"></iframe>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      <% end %>
+      <% if map_url.present? %>
+        <section id="map" class="tab-pane fade resources row" role="tabpanel" aria-hidden="true" aria-labelledby="tab-resources" tabindex="0">
+          <h2 class="sr-only">Readership Map</h2>
+          <div class="panel panel-default">
+            <div class="panel-body">
+              <div class="iframe-container">
+                <iframe src="<%= map_url %>" id="map_iframe" class=".embed-responsive-item"></iframe>
+              </div>
+            </div>
+          </div>
+        </section>
+      <% end %>
+  </div>
+</div>
