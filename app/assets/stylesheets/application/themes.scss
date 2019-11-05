@@ -2462,40 +2462,6 @@ $lever-black-80: #342f2e;
   // EPUB Reader
   #reader {
 
-    .button {
-      @include epub-button-background-color($lever-brand-color,$lever-accent-color,$lever-white);
-    }
-
-    .button--lg {
-      @include epub-button-background-color($lever-brand-color,$lever-accent-color,$lever-white);
-    }
-
-    .button--sm {
-      @include epub-button-background-color($lever-brand-color,$lever-accent-color,$lever-white);
-    }
-
-    i[class^='icon-chevron-'] {
-      @include epub-prev-next-color($lever-brand-color);
-      transition: 0.2s ease-in;
-    }
-
-    i[class^='icon-chevron-']:hover {
-      @include epub-hover-prev-next-color($lever-accent-color);
-      transition: 0.2s ease-in;
-    }
-
-    .cozy-control .logo {
-      height: 47px;
-
-      img {
-        height: 47px;
-      }
-    }
-  }
-
-  // EPUB Reader
-  #reader {
-
     .cozy-control .cozy-h1 {
       font-size: 1.5em;
     }
