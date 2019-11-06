@@ -77,12 +77,12 @@ describe 'Press Catalog' do
       end
 
       context 'with a press that also has "child presses"' do
-        let(:umich_child_1) { create(:press, subdomain: 'umich_child_1', parent_id: umich.id) }
-        let(:umich_child_2) { create(:press, subdomain: 'umich_child_2', parent_id: umich.id) }
-        let(:psu_child) { create(:press, subdomain: 'psu_child', parent_id: psu.id) }
-        let!(:purple) { create(:public_monograph, title: ['The Purple Book'], press: umich_child_1.subdomain) }
-        let!(:green) { create(:public_monograph, title: ['The Green Book'], press: umich_child_2.subdomain) }
-        let!(:hues) { create(:public_monograph, title: ['Purple and Green be Hues'], press: psu_child.subdomain) }
+        let(:umichchild1) { create(:press, subdomain: 'umichchild1', parent_id: umich.id) }
+        let(:umichchild2) { create(:press, subdomain: 'umichchild2', parent_id: umich.id) }
+        let(:psuchild) { create(:press, subdomain: 'psuchild', parent_id: psu.id) }
+        let!(:purple) { create(:public_monograph, title: ['The Purple Book'], press: umichchild1.subdomain) }
+        let!(:green) { create(:public_monograph, title: ['The Green Book'], press: umichchild2.subdomain) }
+        let!(:hues) { create(:public_monograph, title: ['Purple and Green be Hues'], press: psuchild.subdomain) }
 
         it 'visits the catalog page for a press' do
           visit "/#{umich.subdomain}"

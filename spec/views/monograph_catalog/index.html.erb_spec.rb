@@ -71,7 +71,7 @@ RSpec.describe "monograph_catalog/index.html.erb", type: :view do
     subject { view.view_flow.content[:page_header] }
 
     let(:page_title) { 'PAGE-TITLE' }
-    let(:subdomain) { 'SUBDOMAIN' }
+    let(:subdomain) { 'subdomain' }
     let!(:press) { create(:press, subdomain: subdomain) }
 
     before do

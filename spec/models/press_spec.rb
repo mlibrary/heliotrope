@@ -8,7 +8,7 @@ RSpec.describe Press, type: :model do
 
     it 'must have a subdomain' do
       expect(press.valid?).to eq false
-      expect(press.errors.messages[:subdomain]).to eq ["can't be blank"]
+      expect(press.errors.messages[:subdomain]).to eq ["can't be blank", "2 to 32 lowercase alphanumeric ascii characters"]
     end
 
     it 'must have a name' do
