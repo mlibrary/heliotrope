@@ -14,23 +14,23 @@ module PressHelper
 
   def press_subdomains(subdomain)
     press = Press.where(subdomain: subdomain)&.first
-    return if press.blank?
-    [press.subdomain, parent_press(press)&.subdomain].compact
+    return [] if press.blank?
+    [press.subdomain.presence, parent_press(press)&.subdomain.presence].compact
   end
 
   def name(subdomain)
     press = Press.where(subdomain: subdomain)&.first
-    press.name if press.present?
+    press&.name.presence || ''
   end
 
   def logo(subdomain)
     press = Press.where(subdomain: subdomain)&.first
-    press.present? ? press.logo_path_url : 'fulcrum-white-50px.png'
+    press&.logo_path_url.presence || 'fulcrum-white-50px.png'
   end
 
   def url(subdomain)
     press = Press.where(subdomain: subdomain)&.first
-    press.press_url if press.present?
+    press&.press_url.presence || ''
   end
 
   # These are not required. If there's no value we'll try to get the parent's (if one exists)
@@ -38,61 +38,61 @@ module PressHelper
   def footer_block_a(subdomain)
     press = Press.where(subdomain: subdomain)&.first
     return if press.blank?
-    press.footer_block_a.presence || parent_press(press)&.footer_block_a
+    press.footer_block_a.presence || parent_press(press)&.footer_block_a.presence
   end
 
   def footer_block_b(subdomain)
     press = Press.where(subdomain: subdomain)&.first
     return if press.blank?
-    press.footer_block_b.presence || parent_press(press)&.footer_block_b
+    press.footer_block_b.presence || parent_press(press)&.footer_block_b.presence
   end
 
   def footer_block_c(subdomain)
     press = Press.where(subdomain: subdomain)&.first
     return if press.blank?
-    press.footer_block_c.presence || parent_press(press)&.footer_block_c
+    press.footer_block_c.presence || parent_press(press)&.footer_block_c.presence
   end
 
   def google_analytics(subdomain)
     press = Press.where(subdomain: subdomain)&.first
     return if press.blank?
-    press.google_analytics.presence || parent_press(press)&.google_analytics
+    press.google_analytics.presence || parent_press(press)&.google_analytics.presence
   end
 
   def google_analytics_url(subdomain)
     press = Press.where(subdomain: subdomain)&.first
     return if press.blank?
-    press.google_analytics_url.presence || parent_press(press)&.google_analytics_url
+    press.google_analytics_url.presence || parent_press(press)&.google_analytics_url.presence
   end
 
   def readership_map_url(subdomain)
     press = Press.where(subdomain: subdomain)&.first
     return if press.blank?
-    press.readership_map_url.presence || parent_press(press)&.readership_map_url
+    press.readership_map_url.presence || parent_press(press)&.readership_map_url.presence
   end
 
   def typekit(subdomain)
     press = Press.where(subdomain: subdomain)&.first
     return if press.blank?
-    press.typekit.presence || parent_press(press)&.typekit
+    press.typekit.presence || parent_press(press)&.typekit.presence
   end
 
   def twitter(subdomain)
     press = Press.where(subdomain: subdomain)&.first
     return if press.blank?
-    press.twitter.presence || parent_press(press)&.twitter
+    press.twitter.presence || parent_press(press)&.twitter.presence
   end
 
   def location(subdomain)
     press = Press.where(subdomain: subdomain)&.first
     return if press.blank?
-    press.location.presence || parent_press(press)&.location
+    press.location.presence || parent_press(press)&.location.presence
   end
 
   def restricted_message(subdomain)
     press = Press.where(subdomain: subdomain)&.first
     return if press.blank?
-    press.restricted_message.presence || parent_press(press)&.restricted_message
+    press.restricted_message.presence || parent_press(press)&.restricted_message.presence
   end
 
   def show_banner?(actor, subdomain) # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
@@ -124,7 +124,7 @@ module PressHelper
   def all_google_analytics(subdomain)
     press = Press.where(subdomain: subdomain)&.first
     return [] if press.blank?
-    [press.google_analytics, parent_press(press)&.google_analytics].compact
+    [press.google_analytics.presence, parent_press(press)&.google_analytics.presence].compact
   end
 
   private
