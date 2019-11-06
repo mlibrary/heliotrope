@@ -68,6 +68,11 @@ describe 'Monograph catalog sort' do
       first_fileset_link_text = page.first('.documentHeader .index_title a').text
       # lowest year is the third ordered member, the first to use the factory's sequence and set to '1900'
       expect(first_fileset_link_text).to eq expected_ordered_members[2].title.first
+
+      click_link "First Appearance"
+      first_fileset_link_text = page.first('.documentHeader .index_title a').text
+      # essentially default sort, sans score, ascending so first is shown first
+      expect(first_fileset_link_text).to eq expected_ordered_members[1].title.first
     end
   end
 end
