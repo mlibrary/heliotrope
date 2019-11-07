@@ -112,34 +112,31 @@
         // Fullscreen
         cozy.control.fullscreen({ region: 'top.toolbar.right' }).addTo(reader);
 
-        // Reading preferences widget - webgl gets custom preferences
-        <% if @parent_presenter.webgl? %>
-        // Add accessibility mode to preferences
+        // Preferences and Settings
         cozy.control.preferences({
-          region: 'top.toolbar.right',
-          fields: [
-            {
-              label: 'Accessibility Mode',
-              name: 'accessibility-mode',
-              inputs: [
-                { value: 'off', label: 'Off' },
-                { value: 'on', label: 'On'}
-              ],
-              value: heliotropeIncompatibleWebGlUser === true ? 'on' : 'off',
-              callback: function(value) {
-                if (value == 'on') {
-                  a11y_on();
-                } else {
-                  a11y_off();
-                }
-              },
-              hint: 'When Accessibility Mode is "On", the publication is read without the 3D model. All links to stratigraphic units point to external database records.'
-            }
-          ]
+          <% if @parent_presenter.webgl? %>
+            fields: [
+              {
+                label: 'Accessibility Mode',
+                name: 'accessibility-mode',
+                inputs: [
+                  { value: 'off', label: 'Off' },
+                  { value: 'on', label: 'On'}
+                ],
+                value: heliotropeIncompatibleWebGlUser === true ? 'on' : 'off',
+                callback: function(value) {
+                  if (value == 'on') {
+                    a11y_on();
+                  } else {
+                    a11y_off();
+                  }
+                },
+                hint: 'When Accessibility Mode is "On", the publication is read without the 3D model. All links to stratigraphic units point to external database records.'
+              }
+            ],
+          <% end %>
+          region: 'top.toolbar.right'
         }).addTo(reader);
-        <% else %>
-        cozy.control.preferences({ region: 'top.toolbar.right' }).addTo(reader);
-        <% end %>
 
         // Paging widgets
         <% if @parent_presenter.pdf_ebook? %>
