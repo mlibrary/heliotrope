@@ -7,6 +7,6 @@ FactoryBot.define do
     sequence(:press_url) { |n| "http://www.external_link_to_press#{n}" }
     sequence(:google_analytics) { |n| "UA-87654321-#{n}" }
     logo_path { nil }
-    sequence(:subdomain) { |_n| "press-#{srand}" }
+    sequence(:subdomain) { |_n| "press#{rand(100_000_000)}" }
   end
 end

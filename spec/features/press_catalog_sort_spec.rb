@@ -8,50 +8,50 @@ describe 'Press catalog sort' do
 
   context 'Monograph results set end-to-end' do
     before do
-      create(:press, subdomain: 'sort_press1')
+      create(:press, subdomain: 'sortpress1')
       create(:public_monograph,
-             press: 'sort_press1',
+             press: 'sortpress1',
              title: ['silverfish'],
              date_uploaded: DateTime.new(2018, 11, 3, 4, 5, 0, '+0'),
              creator: ["Hopeful, Barry"],
              date_created: ['20180101'])
 
       create(:public_monograph,
-             press: 'sort_press1',
+             press: 'sortpress1',
              title: ['Cormorant'],
              date_uploaded: DateTime.new(2018, 10, 3, 4, 5, 0, '+0'),
              creator: ['Zidane, "Headbutt"'],
              date_created: ['2015-01-01T00:00'])
 
       create(:public_monograph,
-             press: 'sort_press1',
+             press: 'sortpress1',
              title: ['Zebra'],
              date_uploaded: DateTime.new(2018, 12, 3, 4, 5, 0, '+0'),
              creator: ["Andrée, Renée"],
              date_created: ['2013MMDD'])
 
       create(:public_monograph,
-             press: 'sort_press1',
+             press: 'sortpress1',
              title: ['aardvark'],
              date_uploaded: DateTime.new(2018, 7, 3, 4, 5, 0, '+0'),
              creator: ["Andrea, Rita"],
              date_created: ['2017'])
 
       create(:public_monograph,
-             press: 'sort_press1',
+             press: 'sortpress1',
              title: ['Manatee'],
              date_uploaded: DateTime.new(2018, 8, 3, 4, 5, 0, '+0'),
              creator: ["Gulliver, Guy"],
              date_created: ['2016/05/05'])
 
       create(:public_monograph,
-             press: 'sort_press1',
+             press: 'sortpress1',
              title: ['baboon'],
              date_uploaded: DateTime.new(2018, 9, 3, 4, 5, 0, '+0'),
              creator: ["andrew, ruth"],
              date_created: ['2014'])
 
-      visit "/sort_press1"
+      visit "/sortpress1"
     end
 
     it 'is sorted by "Date Added (Newest First)" by default' do
@@ -140,7 +140,7 @@ describe 'Press catalog sort' do
         # need these 4 fields to get this doc to show on catalog page
         id: '111111111',
         has_model_ssim: 'Monograph',
-        press_sim: "sort_press2",
+        press_sim: "sortpress2",
         read_access_group_ssim: "public",
         # inexact dynamicField usage summary: *_si for sorting, *_tesim for display, *_dtsi for sortable date
         # note: you can never sort by multi-valued Solr fields, e.g. with an 'm' in the suffix per schema.xml
@@ -156,7 +156,7 @@ describe 'Press catalog sort' do
       ::SolrDocument.new(
         id: '222222222',
         has_model_ssim: 'Monograph',
-        press_sim: "sort_press2",
+        press_sim: "sortpress2",
         read_access_group_ssim: "public",
         title_tesim: 'Cormorant',
         title_si: 'cormorant', # this is downcased on indexing, otherwise sort will have caps first
@@ -170,7 +170,7 @@ describe 'Press catalog sort' do
       ::SolrDocument.new(
         id: '333333333',
         has_model_ssim: 'Monograph',
-        press_sim: "sort_press2",
+        press_sim: "sortpress2",
         read_access_group_ssim: "public",
         title_tesim: 'Zebra',
         title_si: 'zebra', # this is downcased on indexing, otherwise sort will have caps first
@@ -184,7 +184,7 @@ describe 'Press catalog sort' do
       ::SolrDocument.new(
         id: '444444444',
         has_model_ssim: 'Monograph',
-        press_sim: "sort_press2",
+        press_sim: "sortpress2",
         read_access_group_ssim: "public",
         title_tesim: 'aardvark',
         title_si: 'aardvark',
@@ -198,7 +198,7 @@ describe 'Press catalog sort' do
       ::SolrDocument.new(
         id: '555555555',
         has_model_ssim: 'Monograph',
-        press_sim: "sort_press2",
+        press_sim: "sortpress2",
         read_access_group_ssim: "public",
         title_tesim: 'Manatee',
         title_si: 'manatee', # this is downcased on indexing, otherwise sort will have caps first
@@ -212,7 +212,7 @@ describe 'Press catalog sort' do
       ::SolrDocument.new(
         id: '666666666',
         has_model_ssim: 'Monograph',
-        press_sim: "sort_press2",
+        press_sim: "sortpress2",
         read_access_group_ssim: "public",
         title_tesim: 'baboon',
         title_si: 'baboon',
@@ -224,7 +224,7 @@ describe 'Press catalog sort' do
     }
 
     before do
-      create(:press, subdomain: 'sort_press2')
+      create(:press, subdomain: 'sortpress2')
       ActiveFedora::SolrService.add([mono_doc_1.to_h,
                                      mono_doc_2.to_h,
                                      mono_doc_3.to_h,
@@ -232,7 +232,7 @@ describe 'Press catalog sort' do
                                      mono_doc_5.to_h,
                                      mono_doc_6.to_h])
       ActiveFedora::SolrService.commit
-      visit "/sort_press2"
+      visit "/sortpress2"
     end
 
     it 'is sorted by "Date Added (Newest First)" by default' do

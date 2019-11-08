@@ -29,8 +29,8 @@ RSpec.describe "Monograph Catalog TOC", type: :system do
   context 'free flow epub' do
     let(:epub) { 'moby-dick.epub' }
 
-    context 'non_heb subdomain' do
-      let(:subdomain) { 'non_heb' }
+    context 'nonheb subdomain' do
+      let(:subdomain) { 'nonheb' }
 
       context 'when authorized' do
         it 'has no buttons' do
@@ -93,8 +93,8 @@ RSpec.describe "Monograph Catalog TOC", type: :system do
   context 'page image epub' do
     let(:epub) { 'the-whale.epub' }
 
-    context 'non_heb subdomain' do
-      let(:subdomain) { 'non_heb' }
+    context 'nonheb subdomain' do
+      let(:subdomain) { 'nonheb' }
 
       context 'when authorized' do
         it 'has Read button' do

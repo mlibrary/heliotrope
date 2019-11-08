@@ -3,7 +3,7 @@
 class Press < ApplicationRecord
   mount_uploader :logo_path, LogoPathUploader
   validates :name, presence: true, uniqueness: true
-  validates :subdomain, presence: true, uniqueness: true
+  validates :subdomain, presence: true, uniqueness: true, format: { with: /\A([a-z]|\d){2,32}\z/, message: '2 to 32 lowercase alphanumeric ascii characters' }
   validates :description, presence: true, uniqueness: true
   # don't want to add a gem for this right now, this will at least prevent relative links
   validates :press_url, presence: true, uniqueness: true, format: URI.regexp(%w[http https])

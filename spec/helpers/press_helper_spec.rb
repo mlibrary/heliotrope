@@ -46,7 +46,7 @@ describe PressHelper do
 
   describe "#google_analytics" do
     context "when a press has a google_analytics id" do
-      let(:press) { create(:press, subdomain: "ReadReadRead", google_analytics: '1-XX') }
+      let(:press) { create(:press, subdomain: "readreadread", google_analytics: '1-XX') }
 
       it "returns the ga id" do
         expect(google_analytics(press.subdomain)).to eq("1-XX")
@@ -56,20 +56,20 @@ describe PressHelper do
 
   describe "#google_analytics_url" do
     context "when a press has a google_analytics URL" do
-      let(:press) { create(:press, subdomain: "ReadReadRead", google_analytics_url: 'https://www.example.com/GA/ReadReadRead') }
+      let(:press) { create(:press, subdomain: "readreadread", google_analytics_url: 'https://www.example.com/GA/readreadread') }
 
       it "returns the ga URL" do
-        expect(google_analytics_url(press.subdomain)).to eq('https://www.example.com/GA/ReadReadRead')
+        expect(google_analytics_url(press.subdomain)).to eq('https://www.example.com/GA/readreadread')
       end
     end
   end
 
   describe "#readership_map_url" do
     context "when a press has a readership map URL" do
-      let(:press) { create(:press, subdomain: "ReadReadRead", readership_map_url: 'https://www.example.com/Map/ReadReadRead') }
+      let(:press) { create(:press, subdomain: "readreadread", readership_map_url: 'https://www.example.com/Map/readreadread') }
 
       it "returns the map URL" do
-        expect(readership_map_url(press.subdomain)).to eq('https://www.example.com/Map/ReadReadRead')
+        expect(readership_map_url(press.subdomain)).to eq('https://www.example.com/Map/readreadread')
       end
     end
   end
@@ -90,7 +90,7 @@ describe PressHelper do
                      description: "This is Blue Press",
                      press_url: "http://blue.com",
                      google_analytics: "GA-ID-BLUE",
-                     google_analytics_url: 'https://www.example.com/GA/ReadReadRead',
+                     google_analytics_url: 'https://www.example.com/GA/readreadread',
                      typekit: "BLUE-TYPEKIT",
                      footer_block_a: "blue-footer-a",
                      footer_block_b: "blue-footer-b",
