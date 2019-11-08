@@ -173,11 +173,11 @@ describe 'Create a monograph' do
       expect(page).to have_content '<identifier>'
 
       # MLA citation
-      expect(page).to have_content 'Johns, Jimmy, and Sub Way. #hashtag Test Monograph Title with MD Italics and HTML Italics. Ann Arbor, MI.'
+      expect(page).to have_content 'Johns, Jimmy, and Sub Way. #hashtag Test Monograph Title with MD Italics and HTML Italics. E-book, Ann Arbor, MI.'
       # APA citation
-      expect(page).to have_content 'Johns, J., & Way, S. (2001). #hashtag Test Monograph Title with MD Italics and HTML Italics. Ann Arbor, MI.: Blah Press, Co.'
+      expect(page).to have_content 'Johns, J., & Way, S. (2001). #hashtag Test Monograph Title with MD Italics and HTML Italics. https://doi.org/'
       # Chicago citation
-      expect(page).to have_content 'Johns, Jimmy, and Sub Way. 2001. #hashtag Test Monograph Title with MD Italics and HTML Italics. Ann Arbor, MI.: Blah Press, Co.'
+      expect(page).to have_content 'Johns, Jimmy, and Sub Way. #hashtag Test Monograph Title with MD Italics and HTML Italics. Ann Arbor, MI.: Blah Press, Co., 2001'
     end
   end
 end
