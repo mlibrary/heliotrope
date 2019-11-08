@@ -48,7 +48,7 @@ webgl = Webgl::Unity.from_directory(UnpackService.root_path_from_noid(webgl_id, 
 
 <% provide :body do %>
   <% if defined? @presenter.file_set_coins_title %>
-    <span class="Z3988" title="<%= @presenter.file_set_coins_title %>"></span>
+    <span class="Z3988" title="<%= @presenter.file_set_coins_title %>" aria-hidden="true"></span>
   <% end %>
   <div class="skip"></div>
   <div id="epub" class="<%= @subdomain %>">
