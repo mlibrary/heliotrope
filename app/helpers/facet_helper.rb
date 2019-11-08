@@ -3,6 +3,24 @@
 module FacetHelper
   include Blacklight::FacetsHelperBehavior
 
+  def facet_pagination_sort_index_label(facet_field)
+    case facet_field.key
+    when 'search_year_sim'
+      'By Year'
+    else
+      t('blacklight.search.facets.sort.index')
+    end
+  end
+
+  def facet_pagination_sort_count_label(facet_field)
+    case facet_field.key
+    when 'search_year_sim'
+      'Number of Items Available'
+    else
+      t('blacklight.search.facets.sort.count')
+    end
+  end
+
   def facet_url_helper(facet_field, item)
     # called from the facet modal from the monograph_catalog page
     if params[:monograph_id]
