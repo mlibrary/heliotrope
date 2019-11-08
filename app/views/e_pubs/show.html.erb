@@ -149,9 +149,12 @@ webgl = Webgl::Unity.from_directory(UnpackService.root_path_from_noid(webgl_id, 
             }, 100);
           }
 
+          var $panel = $('.annotator-frame');
+
           // pass the reference to the panel
           var annotation_tool = new AnnotationTool({
             region: 'top.toolbar.left',
+            $panel: $panel
           })
           annotation_tool.addTo(reader);
 
