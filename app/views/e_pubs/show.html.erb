@@ -14,13 +14,12 @@
         window.hypothesisConfig = function () {
           return {
             openSidebar: false,
-            theme: 'classic', // "clean" or "classic"
+            theme: 'clean', // "clean" or "classic"
             enableMultiFrameSupport: true,
             onLayoutChange: function(state) {
               var $frame = $('.annotator-frame');
               var $reader = $("#reader");
             },
-            externalContainerSelector: '.hypothesis-panel',
             enableExperimentalNewNoteButton: true
           };
         };
@@ -55,18 +54,13 @@ webgl = Webgl::Unity.from_directory(UnpackService.root_path_from_noid(webgl_id, 
   <div id="epub" class="<%= @subdomain %>">
     <div id="reader"></div>
 
-    <% if %w[leverpress].include? @subdomain %>
-    <%# annotation widget counter %>
-      <div class="hypothesis-panel" style="display:none;"></div>
-    <% end %>
-
     <script type="text/javascript">
       if ( true ) {
 
         <% if %w[leverpress].include? @subdomain %>
-          // Create custom Annotator tool that is aware of its state
+          // Create custom annotator button that is aware of its state
           AnnotationTool = cozy.Control.Widget.Toggle.extend({
-            defaultTemplate: '<button class="button--sm annotation" data-toggle="button" aria-label="Open Annotations"><i class="fa fa-pencil" title="Open and close annotation panel" aria-hidden="true"></i></button><div class="annotation-count" data-hypothesis-annotation-count></div>',
+            defaultTemplate: '<button data-hypothesis-trigger class="button--sm annotation" data-toggle="button" aria-label="Open Annotations"><i class="fa fa-pencil" title="Open and close annotation panel" aria-hidden="true"></i></button><div class="annotation-count" data-hypothesis-annotation-count></div>',
 
 
             initialize: function(options) {
@@ -91,15 +85,12 @@ webgl = Webgl::Unity.from_directory(UnpackService.root_path_from_noid(webgl_id, 
             },
 
             openAnnotator: function(self, reader) {
-              this.options.$panel.parents("body").addClass("panel-open panel-right");
-              this.options.$panel.show();
-              $(".hypothesis-panel").css({ display: 'block', height: '100%' });
+              this.options.$panel.removeClass("annotator-collapsed");
               self.state('open-annotator');
             },
 
             closeAnnotator: function(self, reader) {
-              this.options.$panel.hide();
-              this.options.$panel.parents("body").removeClass("panel-open");
+              this.options.$panel.addClass("annotator-collapsed");
               self.state('close-annotator');
             },
 
@@ -158,13 +149,9 @@ webgl = Webgl::Unity.from_directory(UnpackService.root_path_from_noid(webgl_id, 
             }, 100);
           }
 
-          var $main = $(".cozy-module-main");
-          var $panel = $('<div class="special-panel cozy-module-annotator"></div>').appendTo($main);
-
           // pass the reference to the panel
           var annotation_tool = new AnnotationTool({
             region: 'top.toolbar.left',
-            $panel: $panel,
           })
           annotation_tool.addTo(reader);
 
@@ -178,9 +165,6 @@ webgl = Webgl::Unity.from_directory(UnpackService.root_path_from_noid(webgl_id, 
         reader.start(function() {
           <% if @parent_presenter.webgl? %>
             fetch_poi();
-          <% end %>
-          <% if %w[leverpress].include? @subdomain %>
-            $panel.append($(".hypothesis-panel"));
           <% end %>
         });
       }
