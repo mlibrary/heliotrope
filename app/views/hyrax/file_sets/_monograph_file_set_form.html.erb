@@ -60,7 +60,7 @@
         (curation_concern.persisted? ? "Update Attached File" : %(Attach to #{parent.human_readable_type})),
         class: 'btn btn-primary'
       ) %>
-      <%= link_to 'Cancel', curation_concern.parent.present? ? parent_path(curation_concern.parent) : Rails.application.routes.url_helpers.hyrax_file_set_path(curation_concern.id), class: 'btn btn-link' %>
+      <%= link_to 'Cancel', Rails.application.routes.url_helpers.hyrax_file_set_path(curation_concern.id), class: 'btn btn-link' %>
     </div>
   </div>
 <% end %>
