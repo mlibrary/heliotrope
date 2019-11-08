@@ -14,8 +14,28 @@ module Tmm
 
     def self.replace(file_set_id:, new_file_path:)
       file_set = FileSet.find file_set_id
+
+      # Eradicate all Files from the FileSet a.k.a. delete all the file versions and their tombstones from Fedora
+      file_set.files.each do |file|
+        file.delete(eradicate: true)
+      end
+
+      # Reload the FileSet with all files eradicated a.k.a. file_set.files.blank? === true.
+      file_set = FileSet.find file_set_id
+
+      # Cleanup the FileSet metadata
+      now = Hyrax::TimeService.time_in_utc
+      file_set.date_uploaded = now
+      file_set.date_modified = now
+      file_set.label = File.basename(new_file_path)
+      file_set.title = [File.basename(new_file_path)]
+      file_set.save!
+
+      # Add the new file
       Hydra::Works::AddFileToFileSet.call(file_set, File.open(new_file_path), :original_file)
-      CharacterizeJob.perform_later(file_set, file_set.original_file.id, nil)
+
+      # Queue Characterize Job
+      CharacterizeJob.perform_later(file_set, file_set.original_file.id)
     end
 
     def self.replace?(file_set_id:, new_file_path:)
