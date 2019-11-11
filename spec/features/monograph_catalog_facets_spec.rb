@@ -7,24 +7,60 @@ describe "Monograph Catalog Facets" do
     stub_out_redis
   end
 
+  let(:facets) { "#facets" }
+  let(:selected_facets) { "#appliedParams" }
   let(:cover) { create(:public_file_set) }
   let!(:sipity_entity) do
     create(:sipity_entity, proxy_for_global_id: monograph.to_global_id.to_s)
   end
 
   context "keywords" do
-    let(:monograph) { create(:public_monograph, title: ["Yellow"], representative_id: cover.id) }
-    let(:file_set1) { create(:public_file_set, keywords: ["cat", "dog", "elephant", "lizard", "monkey", "mouse", "tiger"]) }
-
-    before do
-      monograph.ordered_members << cover
-      monograph.ordered_members << file_set1
-      monograph.save!
+    let(:monograph) do
+      m = build(:public_monograph, title: ["Yellow"], representative_id: cover.id)
+      m.ordered_members = [cover, file_set]
+      m.save!
+      m
     end
+    let(:file_set) { create(:public_file_set, keywords: %w[cat dog elephant lizard monkey mouse tiger]) }
 
     it "shows keywords in the intended order" do
-      visit monograph_catalog_facet_path(id: 'keywords_sim', monograph_id: monograph.id)
-      expect(page).to have_selector '.facet-values li:first', text: "cat"
+      visit monograph_catalog_path(id: monograph.id)
+
+      expect(page).to have_selector 'ul.facet-values li:nth-child(1)', text: 'cat'
+      expect(page).to have_selector 'ul.facet-values li:nth-child(2)', text: 'dog'
+      expect(page).to have_selector 'ul.facet-values li:nth-child(3)', text: 'elephant'
+      expect(page).to have_selector 'ul.facet-values li:nth-child(4)', text: 'lizard'
+      expect(page).to have_selector 'ul.facet-values li:nth-child(5)', text: 'monkey'
+      expect(page).to have_selector 'ul.facet-values li:nth-child(6)', text: 'more'
+
+      # Initially no facets selected
+      expect(page).not_to have_css(selected_facets)
+      # Facets rendered with facet_helper#render_facet_value
+
+      within facets do
+        cat_link = page.find_link('cat')
+        expect(cat_link).to have_content('cat')
+        expect(CGI.unescape(cat_link[:href])).to have_content("f[keywords_sim][]=cat")
+        expect(cat_link[:'data-ga-event-category']).to be nil
+        expect(cat_link[:'data-ga-event-action']).to eq("facet_keyword")
+        expect(cat_link[:'data-ga-event-label']).to eq('cat')
+        expect(cat_link[:'data-ga-event-value']).to be nil
+        cat_link.click
+      end
+
+      # Cat facet selected
+      expect(page).to have_css(selected_facets)
+      # Cat facet rendered with facet_helper#render_selected_facet_value
+
+      within facets do
+        cat_link = page.find_link('cat')
+        expect(cat_link).to have_content('cat')
+        expect(CGI.unescape(cat_link[:href])).not_to have_content("f[keywords_sim][]=cat")
+        expect(cat_link[:'data-ga-event-category']).to be nil
+        expect(cat_link[:'data-ga-event-action']).to be nil
+        expect(cat_link[:'data-ga-event-label']).to be nil
+        expect(cat_link[:'data-ga-event-value']).to be nil
+      end
     end
   end
 
@@ -131,12 +167,10 @@ describe "Monograph Catalog Facets" do
       m.save!
       m
     end
-    let(:cover) { create(:public_file_set) }
+    # let(:cover) { create(:public_file_set) }
     let(:expected_resource_facet) { 'resource_facet' }
     let(:expected_content_facet) { 'content_facet' }
     let(:file_set) { create(:public_file_set, resource_type: [expected_resource_facet], content_type: [expected_content_facet]) }
-    let(:facets) { "#facets" }
-    let(:selected_facets) { "#appliedParams" }
 
     it "Select facets from resource_type (parent) and content_type (child)" do
       visit monograph_catalog_path(id: monograph.id)
@@ -147,17 +181,25 @@ describe "Monograph Catalog Facets" do
 
       # Initial both facets rendered with facet_helper#render_facet_pivot_value
       within facets do
-        expect(page).not_to have_link "[remove]"
+        expect(page).not_to have_link "Remove"
 
         resource_link = page.find_link(expected_resource_facet)
         expect(resource_link).to have_content(expected_resource_facet)
         expect(CGI.unescape(resource_link[:href])).to have_content("f[resource_type_sim][]=#{expected_resource_facet}")
         expect(CGI.unescape(resource_link[:href])).not_to have_content("f[content_type_sim][]=#{expected_content_facet}")
+        expect(resource_link[:'data-ga-event-category']).to be nil
+        expect(resource_link[:'data-ga-event-action']).to eq("facet_format")
+        expect(resource_link[:'data-ga-event-label']).to eq(expected_resource_facet)
+        expect(resource_link[:'data-ga-event-value']).to be nil
 
         content_link = page.find_link(expected_content_facet)
         expect(content_link).to have_content(expected_content_facet)
         expect(CGI.unescape(content_link[:href])).not_to have_content("f[resource_type_sim][]=#{expected_resource_facet}")
         expect(CGI.unescape(content_link[:href])).to have_content("f[content_type_sim][]=#{expected_content_facet}")
+        expect(content_link[:'data-ga-event-category']).to be nil
+        expect(content_link[:'data-ga-event-action']).to eq("facet_format_content")
+        expect(content_link[:'data-ga-event-label']).to eq(expected_resource_facet + '_' + expected_content_facet)
+        expect(content_link[:'data-ga-event-value']).to be nil
 
         # Select resource_type parent facet
         resource_link.click
@@ -172,11 +214,12 @@ describe "Monograph Catalog Facets" do
       end
 
       within facets do
-        expect(page).to have_link "[remove]", count: 1
+        # save_and_open_page
+        expect(page).to have_link "Remove", count: 1
 
         # Resource link rendered with facet_helper#render_selected_facet_pivot_value
-        resource_link = page.find(:xpath, ".//a[@class='remove']")
-        expect(resource_link).to have_content("[remove]")
+        resource_link = page.find(:xpath, ".//a[@class='selected remove']")
+        expect(resource_link).to have_content("Remove")
         expect(CGI.unescape(resource_link[:href])).not_to have_content("f[resource_type_sim][]=#{expected_resource_facet}")
         expect(CGI.unescape(resource_link[:href])).not_to have_content("f[content_type_sim][]=#{expected_content_facet}")
 
@@ -201,17 +244,25 @@ describe "Monograph Catalog Facets" do
 
       # Both facets rendered with facet_helper#render_selected_facet_pivot_value
       within facets do
-        expect(page).to have_link "[remove]", count: 2
+        expect(page).to have_link "Remove", count: 2
 
-        resource_link = page.find(:xpath, ".//a[@class='remove'][contains(@href,'#{expected_content_facet}')]")
-        expect(resource_link).to have_content("[remove]")
+        resource_link = page.find(:xpath, ".//a[@class='selected remove'][contains(@href,'#{expected_content_facet}')]")
+        expect(resource_link).to have_content("Remove")
         expect(CGI.unescape(resource_link[:href])).not_to have_content("f[resource_type_sim][]=#{expected_resource_facet}")
         expect(CGI.unescape(resource_link[:href])).to have_content("f[content_type_sim][]=#{expected_content_facet}")
+        expect(resource_link[:'data-ga-event-category']).to be nil
+        expect(resource_link[:'data-ga-event-action']).to be nil
+        expect(resource_link[:'data-ga-event-label']).to be nil
+        expect(resource_link[:'data-ga-event-value']).to be nil
 
-        content_link = page.find(:xpath, ".//a[@class='remove'][contains(@href,'#{expected_resource_facet}')]")
-        expect(content_link).to have_content("[remove]")
+        content_link = page.find(:xpath, ".//a[@class='selected remove'][contains(@href,'#{expected_resource_facet}')]")
+        expect(content_link).to have_content("Remove")
         expect(CGI.unescape(content_link[:href])).to have_content("f[resource_type_sim][]=#{expected_resource_facet}")
         expect(CGI.unescape(content_link[:href])).not_to have_content("f[content_type_sim][]=#{expected_content_facet}")
+        expect(content_link[:'data-ga-event-category']).to be nil
+        expect(content_link[:'data-ga-event-action']).to be nil
+        expect(content_link[:'data-ga-event-label']).to be nil
+        expect(content_link[:'data-ga-event-value']).to be nil
 
         # Unselect resource_type parent facet
         resource_link.click
@@ -226,7 +277,7 @@ describe "Monograph Catalog Facets" do
       end
 
       within facets do
-        expect(page).to have_link "[remove]", count: 1
+        expect(page).to have_link "Remove", count: 1
 
         # Resource link rendered with facet_helper#render_facet_pivot_value
         resource_link = page.find_link(expected_resource_facet)
@@ -235,8 +286,8 @@ describe "Monograph Catalog Facets" do
         expect(CGI.unescape(resource_link[:href])).to have_content("f[content_type_sim][]=#{expected_content_facet}")
 
         # Content link rendered with facet_helper#render_selected_facet_pivot_value
-        content_link = page.find(:xpath, ".//a[@class='remove']")
-        expect(content_link).to have_content("[remove]")
+        content_link = page.find(:xpath, ".//a[@class='selected remove']")
+        expect(content_link).to have_content("Remove")
         expect(CGI.unescape(content_link[:href])).not_to have_content("f[resource_type_sim][]=#{expected_resource_facet}")
         expect(CGI.unescape(content_link[:href])).not_to have_content("f[content_type_sim][]=#{expected_content_facet}")
 
@@ -249,7 +300,7 @@ describe "Monograph Catalog Facets" do
 
       # Both facets rendered with facet_helper#render_facet_pivot_value
       within facets do
-        expect(page).not_to have_link "[remove]"
+        expect(page).not_to have_link "Remove"
 
         resource_link = page.find_link(expected_resource_facet)
         expect(resource_link).to have_content(expected_resource_facet)
@@ -265,8 +316,7 @@ describe "Monograph Catalog Facets" do
   end
 
   context "all facets" do
-    let(:user) { create(:platform_admin) }
-    let(:monograph) { create(:monograph, user: user, title: ["Yellow"], representative_id: cover.id) }
+    let(:monograph) { create(:public_monograph, title: ["Yellow"], representative_id: cover.id) }
     let(:file_set) {
       create(:public_file_set, resource_type: ['image'],
                                content_type: ['portrait'],
@@ -278,7 +328,6 @@ describe "Monograph Catalog Facets" do
     }
 
     before do
-      login_as user
       monograph.ordered_members = [cover, file_set]
       monograph.save!
     end
@@ -286,8 +335,6 @@ describe "Monograph Catalog Facets" do
     it "shows the correct facets" do
       visit monograph_catalog_path(id: monograph.id)
 
-      # Selectors needed for assets/javascripts/ga_event_tracking.js
-      # If these change, fix here then update ga_event_tracking.js
       expect(page).to have_selector('#facet-section_title_sim a.facet_select')
       expect(page).to have_selector('#facet-keywords_sim a.facet_select', count: 2)
       expect(page).to have_selector('#facet-keywords_sim a.facet_select', text: 'stuff')
@@ -296,17 +343,11 @@ describe "Monograph Catalog Facets" do
       expect(page).to have_selector('#facet-creator_sim a.facet_select', text: 'McTesterson, Testy')
       expect(page).to have_selector('#facet-creator_sim a.facet_select', text: 'Coauthorson, Timmy')
       expect(page).to have_selector('#facet-resource_type_sim a.facet_select')
+
       # content type is nested/pivoted under resource type
-      expect(find('#facet-resource_type_sim-image a.facet_select').text).to eq 'portrait'
+      expect(find('#facet-resource_type_sim-image a.facet_select').text).to eq 'Add filter Content: portrait to constrain results to 1 item'
       expect(page).to have_selector('#facet-search_year_sim a.facet_select')
       expect(page).to have_selector('#facet-exclusive_to_platform_sim a.facet_select')
-
-      # Selector needed for assets/javascripts/application/ga_event_tracking.js
-      # If these change, fix here then update ga_event_tracking.js
-      # Given this
-      # find('#facet-creator_sim a.facet_select', text: 'McTesterson, Testy')
-      # We should have this
-      expect(page).to have_selector(:xpath, "//div/div/h3/a", text: "Creator")
     end
   end
 end
