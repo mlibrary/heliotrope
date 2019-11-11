@@ -15,7 +15,7 @@
             </div>
             <div tabindex="0" role="button" class="panel-heading facet-field-heading collapse-toggle <%= "collapsed" if should_collapse_facet?(facet_field, display_facet) %>" data-toggle="collapse" data-target="#facet-<%= item.field %>-<%= item.value %>" aria-expanded="<%= !should_collapse_facet?(facet_field, display_facet) %>">
               <span class="sr-only">Filter search results by</span>
-              <span class="panel-title"><%= facet_display_value(facet_field, item).capitalize %> <%= facet_field_label(item.items.first.field) %></span>
+              <h3 class="panel-title"><%= facet_display_value(facet_field, item).capitalize %> <%= facet_field_label(item.items.first.field) %></h3>
             </div>
             <div id="facet-<%= item.field %>-<%= item.value %>" class="panel-collapse facet-content <%= should_collapse_facet?(facet_field, display_facet) ? 'collapse' : 'in' %>">
               <div class="panel-body">
