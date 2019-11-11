@@ -11,7 +11,7 @@ end
 gem 'rails', '~> 5.1.6.2'
 # HELIO-2566
 gem 'actionview', ">= 5.1.6.2"
-gem 'rails-html-sanitizer', '~> 1.0.4'
+gem 'rails-html-sanitizer', '~> 1.3.0'
 
 # Use sqlite3 as the database for Active Record
 # gem 'sqlite3'
@@ -124,9 +124,6 @@ gem 'jwt'
 
 # Keycard provides authentication support and user/request information
 gem 'keycard', '~> 0.2.4'
-
-# For CVE-2018-16468
-gem "loofah", ">= 2.2.3"
 
 # Use MySQL as the database for Active Record
 gem 'mysql2', '~> 0.4.10'
