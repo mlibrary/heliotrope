@@ -21,6 +21,4 @@
  <% if presenter.editor? %>
    <%= link_to "Publish This #{@presenter.human_readable_type}", [main_app, :publish, @presenter], class: 'btn btn-primary', data: { confirm: "Publish this #{@presenter.human_readable_type}?" }, method: :post %>
  <% end %>
- <!-- COinS hook for Zotero -->
- <span class="Z3988" title="<%= export_as_openurl_ctx_kev(presenter) %>"></span>
 </div>

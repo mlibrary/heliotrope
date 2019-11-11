@@ -29,7 +29,7 @@
   <div id="maincontent" class="row asset">
     <!-- COinS for Zotero, etc -->
     <% if defined? @presenter.file_set_coins_title %>
-      <span class="Z3988" title="<%= @presenter.file_set_coins_title %>"></span>
+      <span class="Z3988" title="<%= @presenter.file_set_coins_title %>" aria-hidden="true"></span>
     <% end %>
     
     <% if @presenter.map? %>
