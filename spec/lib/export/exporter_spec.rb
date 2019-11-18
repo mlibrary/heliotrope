@@ -27,24 +27,6 @@ describe Export::Exporter do
     end
   end
 
-  describe "#update_aptrust_db" do
-    subject { described_class.new(monograph.id) }
-
-    let(:monograph) { create(:monograph) }
-
-    before do
-      AptrustUpload.create(noid: monograph.id, title: monograph.title.first)
-    end
-
-    it "updates the table" do
-      expect(AptrustUpload.count).to eq 1
-      subject.update_aptrust_db(true)
-      expect(AptrustUpload.count).to eq 1
-      record = AptrustUpload.first
-      expect(record.bag_status).to eq BAG_STATUSES['bagged']
-    end
-  end
-
   describe "#initialize" do
     subject { described_class.new(monograph.id) }
 
@@ -53,15 +35,7 @@ describe Export::Exporter do
     it "initializes" do
       expect(subject.monograph.noid).to eq monograph.id
       expect(subject.columns).to eq :all
-      expect(subject.aptrust["AwsAccessKeyId"]).not_to be_empty
-      expect(subject.aptrust['AwsSecretAccessKey']).not_to be_empty
-      expect(subject.aptrust['BucketRegion']).not_to be_empty
-      expect(subject.aptrust['Bucket']).not_to be_empty
     end
-  end
-
-  describe "#send_to_s3" do
-    skip "Test is needed here"
   end
 
   describe '#export' do
