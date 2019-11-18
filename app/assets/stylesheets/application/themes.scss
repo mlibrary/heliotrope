@@ -39,6 +39,30 @@
 @mixin epub-hover-prev-next-color($theme-epub-hover-prev-next-color) {
   color: $theme-epub-hover-prev-next-color
 }
+
+///////////////////////////////////////////////
+//
+// Heliotrope
+//
+///////////////////////////////////////////////
+$heliotrope-color: #002C63;
+$heliotrope-background: #f1f1f1;
+$heliotrope-highlight: #fff;
+$heliotrope-highlight-background: #002c63;
+
+.heliotrope {
+
+  // EPUB Reader
+  #reader {
+
+    .button--sm.cozy-preferences {
+      @include epub-button-background-color($heliotrope-background, $heliotrope-highlight-background, $heliotrope-highlight);
+      color: $heliotrope-color;
+    }
+  }
+
+}
+
 ///////////////////////////////////////////////
 //
 // ACLS Humanities E-Book
@@ -397,6 +421,11 @@ $heb-black-80: #342f2e;
       @include epub-button-background-color($heb-brand-color,$heb-grey-2,$heb-white);
     }
 
+    .button--sm.cozy-preferences {
+      @include epub-button-background-color(#f1f1f1,$heb-grey-2,$heb-white);
+      color: $heb-brand-color;
+    }
+
     i[class^='icon-chevron-'] {
       @include epub-prev-next-color($heb-grey-2);
       transition: 0.2s ease-in;
@@ -753,6 +782,11 @@ $a2ru-white: #fafafa;
 
     .button--sm {
       @include epub-button-background-color($a2ru-link,$a2ru-accent-link,$a2ru-white);
+    }
+
+    .button--sm.cozy-preferences {
+      @include epub-button-background-color(#f1f1f1,$a2ru-accent-link,$a2ru-white);
+      color: $a2ru-link;
     }
 
     i[class^='icon-chevron-'] {
@@ -1160,6 +1194,11 @@ $atg-black-80: #342f2e;
       @include epub-button-background-color($atg-brand-color,$atg-grey-2,$atg-white);
     }
 
+    .button--sm.cozy-preferences {
+      @include epub-button-background-color(#f1f1f1,$atg-grey-2,$atg-white);
+      color: $atg-brand-color;
+    }
+
     i[class^='icon-chevron-'] {
       @include epub-prev-next-color($atg-grey-2);
       transition: 0.2s ease-in;
@@ -1517,6 +1556,11 @@ $amherst-white: #fafafa;
       @include epub-button-background-color($amherst-brand-color,$amherst-link,$amherst-white);
     }
 
+    .button--sm.cozy-preferences {
+      @include epub-button-background-color(#f1f1f1,$atg-grey-2,$atg-white);
+      color: $amherst-brand-color;
+    }
+
     i[class^='icon-chevron-'] {
       @include epub-prev-next-color($amherst-brand-color);
       transition: 0.2s ease-in;
@@ -1872,6 +1916,11 @@ $barpublishing-white: #fafafa;
 
     .button--sm {
       @include epub-button-background-color($barpublishing-brand-color,$barpublishing-slate,$barpublishing-white);
+    }
+
+    .button--sm.cozy-preferences {
+      @include epub-button-background-color(#f1f1f1,$barpublishing-slate,$barpublishing-white);
+      color: $barpublishing-brand-color;
     }
 
     i[class^='icon-chevron-'] {
@@ -2478,6 +2527,11 @@ $lever-black-80: #342f2e;
       @include epub-button-background-color($lever-brand-color,$lever-accent-color,$lever-white);
     }
 
+    .button--sm.cozy-preferences {
+      @include epub-button-background-color(#f1f1f1,$lever-accent-color,$lever-white);
+      color: $lever-brand-color;
+    }
+
     i[class^='icon-chevron-'] {
       @include epub-prev-next-color($lever-brand-color);
       transition: 0.2s ease-in;
@@ -2840,6 +2894,11 @@ $maize-black-80: #342f2e;
       @include benton;
     }
 
+    .button--sm.cozy-preferences {
+      @include epub-button-background-color(#f1f1f1,$maize-blue,$maize-white);
+      color: $maize-brand-color;
+    }
+
     i[class^='icon-chevron-'] {
       @include epub-prev-next-color($maize-brand-color);
       transition: 0.2s ease-in;
@@ -3114,6 +3173,11 @@ $um-black-80: #342f2e;
 
     .button--sm {
       @include epub-button-background-color($um-brand-color,$um-blue,$um-white);
+    }
+
+    .button--sm.cozy-preferences {
+      @include epub-button-background-color(#f1f1f1,$um-blue,$um-white);
+      color: $um-brand-color;
     }
 
     i[class^='icon-chevron-'] {
@@ -3462,6 +3526,11 @@ $gabii-link-hover:    #1e5667;
 
     .button--sm {
       @include epub-button-background-color($gabii-brand-color,$gabii-accent-color,$gabii-white);
+    }
+
+    .button--sm.cozy-preferences {
+      @include epub-button-background-color(#f1f1f1,$gabii-accent-color,$gabii-white);
+      color: $gabii-brand-color;
     }
 
     .button:hover,
@@ -4301,6 +4370,12 @@ $ncid-black-80: #342f2e;
       @include proxima-nova;
     }
 
+    .button--sm.cozy-preferences {
+      @include epub-button-background-color(#f1f1f1,$ncid-accent-color,$ncid-white);
+      @include proxima-nova;
+      color: $ncid-brand-color;
+    }
+
     i[class^='icon-chevron-'] {
       @include epub-prev-next-color($ncid-brand-color);
       transition: 0.2s ease-in;
@@ -4539,6 +4614,11 @@ $nyu-gray-2: #342f2e;
 
     .button--sm {
       @include epub-button-background-color($nyu-brand-color,$nyu-brand-color-2,$nyu-brand-accent);
+    }
+
+    .button--sm.cozy-preferences {
+      @include epub-button-background-color(#f1f1f1,$nyu-brand-color-2,$nyu-brand-accent);
+      color: $nyu-brand-color;
     }
 
     i[class^='icon-chevron-'] {
@@ -5241,6 +5321,11 @@ $reki-black-80: #342f2e;
       @include epub-button-background-color($reki-brand-color,$reki-link-hover,$reki-white);
     }
 
+    .button--sm.cozy-preferences {
+      @include epub-button-background-color(#f1f1f1,$reki-link-hover,$reki-white);
+      color: $reki-brand-color;
+    }
+
     i[class^='icon-chevron-'] {
       @include epub-prev-next-color($reki-grey-2);
       transition: 0.2s ease-in;
@@ -5575,6 +5660,11 @@ $sussex-black-80: #342f2e;
 
     .button--sm {
       @include epub-button-background-color($sussex-link,$sussex-accent-link,$sussex-white);
+    }
+
+    .button--sm.cozy-preferences {
+      @include epub-button-background-color(#f1f1f1,$sussex-accent-link,$sussex-white);
+      color: $sussex-link;
     }
 
     i[class^='icon-chevron-'] {

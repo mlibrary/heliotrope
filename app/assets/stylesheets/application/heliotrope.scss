@@ -1148,6 +1148,22 @@ footer.press {
   }
 }
 
+#reader {
+  .button--sm.cozy-preferences {
+    color: #002C63;
+    background: #f1f1f1;
+    background-image: linear-gradient(to right, #002C63 50%, #f1f1f1 50%);
+    background-position: -100%;
+    background-size: 201%;
+    background-repeat: no-repeat;
+    &:hover, &:focus, &:active {
+      color: #fff;
+      background-position: 0;
+      transition: 0.2s ease-in;
+    }
+  }
+}
+
 .cozy-container i[class^='icon-'] {
     font-size: 2rem !important;
 }
@@ -1362,10 +1378,6 @@ footer.press {
       padding-bottom: .1em;
     }
 
-  }
-
-  .cozy-control-preferences button {
-    padding: 0 .5em 0 .5em !important;
   }
 
   .cozy-panel-toolbar div.cozy-control:nth-of-type(2) {
