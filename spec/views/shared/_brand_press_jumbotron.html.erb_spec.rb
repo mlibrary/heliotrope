@@ -8,7 +8,7 @@ describe 'shared/_brand_press_jumbotron.html.erb' do
     it 'renders link to statistics page' do
       assign(:press, press)
       render
-      expect(rendered).to have_link('Publisher Statistics', href: press_statistics_path(press))
+      expect(rendered).to have_link(t('press_catalog.statistics'), href: press_statistics_path(press))
     end
   end
 
@@ -17,7 +17,7 @@ describe 'shared/_brand_press_jumbotron.html.erb' do
     it 'renders link to statistics page' do
       assign(:press, press)
       render
-      expect(rendered).to have_link('Publisher Statistics', href: press_statistics_path(press))
+      expect(rendered).to have_link(t('press_catalog.statistics'), href: press_statistics_path(press))
     end
   end
 
@@ -26,7 +26,7 @@ describe 'shared/_brand_press_jumbotron.html.erb' do
     it 'suppresses link to statistics page' do
       assign(:press, press)
       render
-      expect(rendered).not_to have_link('Publisher Statistics', href: press_statistics_path(press))
+      expect(rendered).not_to have_link(t('press_catalog.statistics'), href: press_statistics_path(press))
     end
   end
 end

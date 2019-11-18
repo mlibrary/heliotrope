@@ -182,6 +182,7 @@ en:
         q:
           label: "Search for works within %{press_name}"
           placeholder: "Search works"
+    statistics: "Visualize Impact and Engagement"
   publisher: "Publisher (citation value)"
   redirect_to: "Redirect to"
   resource_type: "Resource Type"

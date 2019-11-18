@@ -3,7 +3,6 @@
 module BreadcrumbsHelper
   def breadcrumbs # rubocop:disable Metrics/CyclomaticComplexity
     return [] if @presenter.nil?
-
     crumbs = case controller_name
              when "file_sets"
                breadcrumbs_for_file_set(@presenter.parent.subdomain, @presenter)
@@ -13,6 +12,8 @@ module BreadcrumbsHelper
                breadcrumbs_for_monograph(@presenter.subdomain, @presenter)
              when "score_catalog"
                breadcrumbs_for_monograph(@presenter.subdomain, @presenter)
+             when "press_statistics"
+               breadcrumbs_for_press_statistics(@presenter.subdomain, @presenter)
              end
 
     crumbs || []
@@ -48,6 +49,14 @@ module BreadcrumbsHelper
                   { href: main_app.score_catalog_path(presenter.parent.id), text: presenter.parent.title, class: "" }
                 end
       crumbs << { href: "", text: presenter.title, class: "active" }
+    end
+
+    def breadcrumbs_for_press_statistics(subdomain, presenter)
+      press = Press.where(subdomain: subdomain)&.first
+      return [] if press.blank?
+
+      crumbs = possible_parent(press)
+      crumbs << { href: "", text: t('press_catalog.statistics'), class: "active" }
     end
 
     def possible_parent(press)
