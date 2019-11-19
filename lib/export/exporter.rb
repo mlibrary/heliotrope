@@ -1,137 +1,14 @@
 # frozen_string_literal: true
 
 require 'csv'
-require 'bagit'
-require 'aws-sdk-s3'
-require 'active_support'
-require 'active_support/time'
-ENV["TZ"] = "US/Eastern"
-
-BAG_STATUSES = { 'not_bagged' => 0, 'bagged' => 1, 'bagging_failed' => 3 } .freeze
-S3_STATUSES = { 'not_uploaded' => 0, 'uploaded' => 1, 'upload_failed' => 3 }.freeze
-APT_STATUSES = { 'not_checked' => 0, 'confirmed' => 1, 'pending' => 3, 'failed' => 4, 'not_found' => 5, 'bad_aptrust_response_code' => 6 }.freeze
 
 module Export
   class Exporter
-    attr_reader :all_metadata, :monograph, :monograph_presenter, :columns, :aptrust
+    attr_reader :all_metadata, :monograph, :monograph_presenter, :columns
 
     def initialize(monograph_id, columns = :all)
       @monograph = Sighrax.factory(monograph_id)
       @columns = columns
-      #  Use aws credentials for atrust
-      filename = Rails.root.join('config', 'aptrust.yml')
-      yaml = YAML.safe_load(File.read(filename)) if File.exist?(filename)
-      @aptrust = yaml || nil
-    end
-
-    def export_bag # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
-      ## create bag directory with valid, noid-based aptrust name
-
-      if monograph_presenter.subdomain.to_s.blank?
-        apt_log(monograph_presenter.id.to_s, 'exporter - export_bag', 'check on press', 'fail', "In Exporter.rb export_bag, monograph_presenter.press is blank!")
-        return
-      end
-
-      bag_name = "fulcrum.org.#{monograph_presenter.subdomain}-#{monograph_presenter.id}"
-
-      FileUtils.mkdir_p(Settings.aptrust_bags_path) unless Dir.exist?(Settings.aptrust_bags_path)
-
-      # Tar and remove bag directory
-      # but first change to the aptrust-bags directory
-      restore_dir = Dir.pwd
-      Dir.chdir(Settings.aptrust_bags_path)
-
-      bag_pathname = "./#{bag_name}"
-
-      # On the first run these shouldn't be needed but...
-      # clean up old bag and tar files
-      FileUtils.rm_rf(bag_pathname) if File.exist?(bag_pathname)
-      FileUtils.rm_rf("#{bag_pathname}.tar") if File.exist?("#{bag_pathname}.tar")
-
-      apt_log(monograph_presenter.id.to_s, 'exporter - export_bag', 'pre-bag', 'okay', 'About to make bag')
-      bag = BagIt::Bag.new bag_pathname
-
-      # add bagit-info.txt file
-      # The length of the following 'internal_sender_description' does not work with the current bagit gem, maybe later.
-      # pub = monograph_presenter.publisher.blank? ? '' : monograph_presenter.publisher.first.squish[0..55]
-      # internal_sender_description = "This bag contains all of the data and metadata in a Monograph from #{pub} which has been exported from the Fulcrum publishing platform hosted at www.fulcrum.org."
-      timestamp = Time.now.utc.strftime("%Y-%m-%dT%H:%M:%SZ")
-      time_i8601 = Time.parse(timestamp).iso8601
-      bag.write_bag_info(
-        'Source-Organization' => 'University of Michigan',
-        'Bag-Count' => '1',
-        'Bagging-Date' => time_i8601,
-        'Internal-Sender-Description' => "Bag for a monograph hosted at www.fulcrum.org",
-        'Internal-Sender-Identifier' => monograph_presenter.id.to_s
-      )
-
-      # Add aptrust-info.txt file
-      # this is text that shows up in the APTrust web interface
-      # title, access, and description are required; Storage-Option defaults to Standard if not present
-      File.open(File.join(bag.bag_dir, 'aptrust-info.txt'), "w") do |io|
-        ti = monograph_presenter.title.blank? ? '' : monograph_presenter.title.squish[0..255]
-        io.puts "Title: #{ti}"
-        io.puts "Access: Institution"
-        io.puts "Storage-Option: Standard"
-        io.puts "Description: This bag contains all of the data and metadata related to a Monograph which has been exported from the Fulcrum publishing platform hosted at https://www.fulcrum.org. The data folder contains a Fulcrum manifest in the form of a CSV file named with the NOID assigned to this Monograph in the Fulcrum repository. This manifest is exported directly from Fulcrum's heliotrope application (https://github.com/mlibrary/heliotrope) and can be used for re-import as well. The first two rows contain column headers and human-readable field descriptions, respectively. {{ The final row contains descriptive metadata for the Monograph; other rows contain metadata for Assets, which may be components of the Monograph or material supplemental to it.}}"
-        pub = monograph_presenter.publisher.blank? ? '' : monograph_presenter.publisher.first.squish[0..249]
-        io.puts "Press-Name: #{pub}"
-        pr = monograph_presenter.press.blank? ? '' : monograph_presenter.press.squish[0..249]
-        io.puts "Press: #{pr}"
-        # 'Item Description' may be helpful when looking at Pharos web UI
-        ides = monograph_presenter.description.first.blank? ? '' : monograph_presenter.description.first.squish[0..249]
-        io.puts "Item Description: #{ides}"
-        creat = monograph_presenter.creator.blank? ? '' : monograph_presenter.creator.first.squish[0..249]
-        io.puts "Creator/Author: #{creat}"
-      end
-
-      # put fulcrum object's files into data directory
-      extract("#{bag.bag_dir}/data/", true)
-
-      # Create manifests
-      bag.manifest!
-
-      # Make sure the bag is valid before proceeding
-      record = AptrustUpload.find_by!(noid: monograph_presenter.id)
-      if bag.valid?
-        apt_log(monograph_presenter.id.to_s, 'exporter - export_bag', 'bag validation', 'okay', "Current bag is valid in lib/export/exporter.rb")
-        record.update!(
-          bag_status: BAG_STATUSES['bagged']
-        )
-      else
-        apt_log(monograph_presenter.id.to_s, 'exporter - export_bag', 'bag validation', 'error', "Current bag is not valid in lib/export/exporter.rb")
-        record.update!(
-          bag_status: BAG_STATUSES['bagging_failed'],
-          s3_status: S3_STATUSES['not_uploaded'],
-          apt_status: APT_STATUSES['not_checked']
-        )
-        return
-      end
-
-      begin
-        Minitar.pack(bag_name, File.open("#{bag_name}.tar", 'wb'))
-      rescue StandardError => error
-        apt_log(monograph_presenter.id.to_s, 'exporter - export_bag', 'tarring', 'error', "Error for Minitar in lib/export/exporter.rb: #{error}")
-      end
-
-      # Upload the bag to the s3 bucket (umich A&E test bucket for now)
-      uploaded = send_to_s3("#{bag_name}.tar")
-
-      # Update AptrustUploads database if bag is processed
-      if uploaded
-        update_aptrust_db(true)
-        apt_log(monograph_presenter.id.to_s, 'exporter - export_bag', 'post-upload', 'okay', 'Upload success')
-      else
-        update_aptrust_db(false)
-        apt_log(monograph_presenter.id.to_s, 'exporter - export_bag', 'post-upload', 'error', "APTRUST: Upload failed for #{bag_pathname}.tar.")
-      end
-
-      # Remove the bag_dir and tarred bag
-      FileUtils.rm_rf(bag_pathname) if File.exist?(bag_pathname)
-      FileUtils.rm_rf("#{bag_pathname}.tar") if File.exist?("#{bag_pathname}.tar")
-
-      # Now restore the previous directory
-      Dir.chdir(restore_dir)
     end
 
     def export
@@ -213,79 +90,6 @@ module Export
         row2 << (Rails.env.test? ? 'instruction placeholder' : field[:description])
       end
       csv << row1 << row2
-    end
-
-    def send_to_s3(file)
-      Aws.config.update(
-        credentials: Aws::Credentials.new(@aptrust['AwsAccessKeyId'], @aptrust['AwsSecretAccessKey'])
-      )
-
-      # Set s3 with a region
-      s3 = Aws::S3::Resource.new(region: @aptrust['BucketRegion'])
-
-      # Get the aptrust test bucket by name
-      bucket_name = @aptrust['Bucket']
-      fulcrum_bucket = s3.bucket(bucket_name)
-
-      # Get just the file name
-      name = File.basename(file)
-
-      # Check if file is already in the bucket
-      msg = fulcrum_bucket.object(name).exists? ? "bag #{name} already exists in the s3 bucket: #{bucket_name} overwriting bag!" : "creating a brand new bag for #{name} in s3 bucket: #{bucket_name}"
-      apt_log(monograph_presenter.id.to_s, 'exporter - send_to_s3', 'pre-upload', 'okay', msg)
-      begin
-        # Create the object to upload and upload it
-        obj = s3.bucket(bucket_name).object(name)
-        obj.upload_file(file)
-        success = true
-      rescue Aws::S3::Errors::ServiceError
-        apt_log(monograph_presenter.id.to_s, 'exporter - send_to_s3', 'post-upload', 'error', "Upload of file #{name} failed with s3 context #{s3.context}")
-        success = false
-      end
-      success
-    end
-
-    def update_aptrust_db(uploaded)
-      begin
-        record = AptrustUpload.find_by!(noid: monograph_presenter.id)
-      rescue ActiveRecord::RecordNotFound => e
-        apt_log(monograph_presenter.id.to_s, 'exporter - update_aptrust_db', 'post-upload', 'error', "In exporter with monograph #{monograph_presenter.id}, update_aptrust_db find_record error is #{e}")
-        return
-      end
-
-      if uploaded
-        bag_status = BAG_STATUSES['bagged']
-        upload_status = S3_STATUSES['uploaded']
-        bagged_date = upload_date = Time.now.utc.strftime("%Y-%m-%dT%H:%M:%SZ")
-      else
-        bag_status = BAG_STATUSES['not_bagged']
-        upload_status = S3_STATUSES['upload_failed']
-        bagged_date = record.date_uploaded
-        upload_date = record.date_uploaded
-      end
-
-      begin
-        record.update!(
-          bag_status: bag_status,
-          s3_status: upload_status,
-          apt_status: APT_STATUSES['not_checked'],
-          date_bagged: bagged_date,
-          date_uploaded: upload_date,
-          date_confirmed: nil
-        )
-      rescue ActiveRecord::RecordInvalid => e
-        apt_log(monograph_presenter.id.to_s, 'exporter - update_aptrust_db', 'post-upload', 'error', "In exporter with monograph #{monograph_presenter.id}, update_aptrust_db record update error is #{e}")
-      end
-    end
-
-    def apt_log(noid, where, stage, status, action)
-      AptrustLog.create(noid: noid,
-                        where: where,
-                        stage: stage,
-                        status: status,
-                        action: action)
-    rescue AptrustUpload::RecordInvalid => e
-      puts "DB error #{e} when trying to log to AptrustLog with noid: #{noid} where: #{where} stage: #{stage} status: #{status} action: #{action}"
     end
 
     private
