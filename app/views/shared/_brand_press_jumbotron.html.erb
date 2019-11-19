@@ -20,9 +20,11 @@
         </p>
         <% end %>
         <% if @press.google_analytics_url.present? || @press.readership_map_url.present? %>
-          <p class="lead">
-            <%= link_to 'Publisher Statistics', press_statistics_path(@press) %>
-          </p>
+          <% unless controller&.class == PressStatisticsController %>
+            <p class="lead">
+              <%= link_to t('press_catalog.statistics'), press_statistics_path(@press) %>
+            </p>
+          <% end %>
         <% end %>
       </div>
     </div>
