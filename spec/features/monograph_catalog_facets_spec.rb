@@ -181,8 +181,6 @@ describe "Monograph Catalog Facets" do
 
       # Initial both facets rendered with facet_helper#render_facet_pivot_value
       within facets do
-        expect(page).not_to have_link "Remove"
-
         resource_link = page.find_link(expected_resource_facet)
         expect(resource_link).to have_content(expected_resource_facet)
         expect(CGI.unescape(resource_link[:href])).to have_content("f[resource_type_sim][]=#{expected_resource_facet}")
@@ -214,12 +212,9 @@ describe "Monograph Catalog Facets" do
       end
 
       within facets do
-        # save_and_open_page
-        expect(page).to have_link "Remove", count: 1
-
         # Resource link rendered with facet_helper#render_selected_facet_pivot_value
         resource_link = page.find(:xpath, ".//a[@class='selected remove']")
-        expect(resource_link).to have_content("Remove")
+        expect(resource_link).to have_content(expected_resource_facet)
         expect(CGI.unescape(resource_link[:href])).not_to have_content("f[resource_type_sim][]=#{expected_resource_facet}")
         expect(CGI.unescape(resource_link[:href])).not_to have_content("f[content_type_sim][]=#{expected_content_facet}")
 
@@ -244,10 +239,8 @@ describe "Monograph Catalog Facets" do
 
       # Both facets rendered with facet_helper#render_selected_facet_pivot_value
       within facets do
-        expect(page).to have_link "Remove", count: 2
-
         resource_link = page.find(:xpath, ".//a[@class='selected remove'][contains(@href,'#{expected_content_facet}')]")
-        expect(resource_link).to have_content("Remove")
+        expect(resource_link).to have_content(expected_resource_facet)
         expect(CGI.unescape(resource_link[:href])).not_to have_content("f[resource_type_sim][]=#{expected_resource_facet}")
         expect(CGI.unescape(resource_link[:href])).to have_content("f[content_type_sim][]=#{expected_content_facet}")
         expect(resource_link[:'data-ga-event-category']).to be nil
@@ -256,7 +249,7 @@ describe "Monograph Catalog Facets" do
         expect(resource_link[:'data-ga-event-value']).to be nil
 
         content_link = page.find(:xpath, ".//a[@class='selected remove'][contains(@href,'#{expected_resource_facet}')]")
-        expect(content_link).to have_content("Remove")
+        expect(content_link).to have_content(expected_content_facet)
         expect(CGI.unescape(content_link[:href])).to have_content("f[resource_type_sim][]=#{expected_resource_facet}")
         expect(CGI.unescape(content_link[:href])).not_to have_content("f[content_type_sim][]=#{expected_content_facet}")
         expect(content_link[:'data-ga-event-category']).to be nil
@@ -277,8 +270,6 @@ describe "Monograph Catalog Facets" do
       end
 
       within facets do
-        expect(page).to have_link "Remove", count: 1
-
         # Resource link rendered with facet_helper#render_facet_pivot_value
         resource_link = page.find_link(expected_resource_facet)
         expect(resource_link).to have_content(expected_resource_facet)
@@ -287,7 +278,7 @@ describe "Monograph Catalog Facets" do
 
         # Content link rendered with facet_helper#render_selected_facet_pivot_value
         content_link = page.find(:xpath, ".//a[@class='selected remove']")
-        expect(content_link).to have_content("Remove")
+        expect(content_link).to have_content(expected_content_facet)
         expect(CGI.unescape(content_link[:href])).not_to have_content("f[resource_type_sim][]=#{expected_resource_facet}")
         expect(CGI.unescape(content_link[:href])).not_to have_content("f[content_type_sim][]=#{expected_content_facet}")
 
@@ -300,8 +291,6 @@ describe "Monograph Catalog Facets" do
 
       # Both facets rendered with facet_helper#render_facet_pivot_value
       within facets do
-        expect(page).not_to have_link "Remove"
-
         resource_link = page.find_link(expected_resource_facet)
         expect(resource_link).to have_content(expected_resource_facet)
         expect(CGI.unescape(resource_link[:href])).to have_content("f[resource_type_sim][]=#{expected_resource_facet}")
@@ -345,7 +334,7 @@ describe "Monograph Catalog Facets" do
       expect(page).to have_selector('#facet-resource_type_sim a.facet_select')
 
       # content type is nested/pivoted under resource type
-      expect(find('#facet-resource_type_sim-image a.facet_select').text).to eq 'Add filter Content: portrait to constrain results to 1 item'
+      expect(find('#facet-resource_type_sim-image a.facet_select').text).to eq 'portrait'
       expect(page).to have_selector('#facet-search_year_sim a.facet_select')
       expect(page).to have_selector('#facet-exclusive_to_platform_sim a.facet_select')
     end
