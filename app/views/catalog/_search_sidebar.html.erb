@@ -10,12 +10,12 @@
       <fieldset>
         <%= render_hash_as_hidden_fields(search_state.params_for_search.except(:q, :search_field, :qt, :page, :utf8, :partial)) %>
         <div class="input-group">
-          <%= label_tag :catalog_search, search_label, class: "sr-only" %>
+          <%= label_tag :resources_search, search_label, class: "sr-only" %>
           <%= text_field_tag(:q, params[:q], class: "q search-query form-control", id: "resources_search",
                              placeholder: placeholder, tabindex: "0", type: "search") %>
           <div class="input-group-btn">
             <button type="submit" class="search-submit btn btn-primary" id="resources-search-submit" tabindex="0">
-              <i class="glyphicon glyphicon-search"></i><span class="sr-only">Search</span>
+              <i class="glyphicon glyphicon-search"></i><span class="sr-only">Search resources</span>
             </button>
           </div>
         </div>

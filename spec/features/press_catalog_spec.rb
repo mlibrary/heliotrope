@@ -169,7 +169,8 @@ describe 'Press Catalog' do
 
         # dedicated facet modal shows up to 20 values, we expect 19 creator names
         find("a[href='/#{heb.subdomain}/facet?id=creator_sim&locale=en']").click
-        expect(page).to have_selector('.facet-label a.facet_select', count: 19)
+        # save_and_open_page
+        expect(page).to have_selector('a.facet-anchor.facet_select', count: 19)
       end
     end
   end # not logged in

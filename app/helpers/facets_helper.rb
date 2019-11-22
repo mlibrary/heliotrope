@@ -124,11 +124,10 @@ module FacetsHelper # rubocop:disable Metrics/ModuleLength
       content_tag(:span, facet_display_value(facet_field, item), class: 'facet-label') +
         render_facet_count(item.hits)
     else
-      content_tag(:span, class: 'facet-label') do
-        link_to(path, class: 'facet_select', 'data-ga-event-action': "facet_#{facet_config.label.downcase}", 'data-ga-event-label': facet_display_value(facet_field, item)) do
-          content_tag(:span, facet_display_value(facet_field, item), 'aria-label': "Add #{facet_config.label} filter: #{facet_display_value(facet_field, item)} to constrain search results to #{item.hits} #{item.hits == 1 ? 'item' : 'items'}.")
-        end
-      end + render_facet_count(item.hits)
+      link_to(path, class: 'facet-anchor facet_select', 'data-ga-event-action': "facet_#{facet_config.label.downcase}", 'data-ga-event-label': facet_display_value(facet_field, item), 'aria-label': "#{facet_display_value(facet_field, item)} filter #{item.hits}") do
+        content_tag(:span, facet_display_value(facet_field, item), class: 'facet-label') +
+          render_facet_count(item.hits)
+      end
     end
   end
 
@@ -138,14 +137,11 @@ module FacetsHelper # rubocop:disable Metrics/ModuleLength
   # @param [Blacklight::Solr::Response::Facets::FacetField] facet_field
   # @param [String] item
   def render_selected_facet_value(facet_field, item)
-    facet_config = facet_configuration_for_field(facet_field)
     remove_href = search_action_path(search_state.remove_facet_params(facet_field, item))
-    content_tag(:span, class: "facet-label") do
-      link_to(remove_href, class: "selected remove") do
-        content_tag(:span, facet_display_value(facet_field, item), 'aria-label': "Remove #{facet_config.label} filter: #{facet_display_value(facet_field, item)}.") +
-          content_tag(:span, '', class: "glyphicon glyphicon-remove")
-      end
-    end + render_facet_count(item.hits, classes: ['selected'])
+    link_to(remove_href, class: 'facet-anchor selected remove', 'aria-label': "Remove #{facet_display_value(facet_field, item)} filter") do
+      content_tag(:span, facet_display_value(facet_field, item), class: 'facet-label') +
+        content_tag(:span, '', class: 'glyphicon glyphicon-remove')
+    end
   end
 
   ##
@@ -157,8 +153,7 @@ module FacetsHelper # rubocop:disable Metrics/ModuleLength
   # @option options [Array<String>]  an array of classes to add to count span.
   # @return [String]
   def render_facet_count(num, options = {})
-    classes = (options[:classes] || []) << "facet-count"
-    content_tag(:span, t('blacklight.search.facets.count', number: number_with_delimiter(num)), class: classes, 'aria-hidden': true)
+    content_tag(:span, t('blacklight.search.facets.count', number: number_with_delimiter(num)))
   end
 
   ##
@@ -205,18 +200,17 @@ module FacetsHelper # rubocop:disable Metrics/ModuleLength
       content_tag(:div, facet_display_value(facet_field, item), class: 'facet-label facet_select') +
           + render_facet_count(item.hits, classes: ['selected'])
     else
-      content_tag(:span, class: "facet-label") do
-        ga_event_action = "facet_" + facet_config.label.downcase
-        ga_event_label = facet_display_value(facet_field, item)
-        if item.items.blank? && parent.class == Blacklight::Solr::Response::Facets::FacetItem
-          parent_config = facet_configuration_for_field(parent.field)
-          ga_event_action = 'facet_' + parent_config.label.downcase + '_' + facet_config.label.downcase
-          ga_event_label = facet_display_value(parent.field, parent) + '_' + facet_display_value(facet_field, item)
-        end
-        link_to(path, class: 'facet_select', 'data-ga-event-action': ga_event_action, 'data-ga-event-label': ga_event_label) do
-          content_tag(:span, facet_display_value(facet_field, item), 'aria-label': "Add #{facet_config.label} filter: #{facet_display_value(facet_field, item)} to constrain search results to #{item.hits} #{item.hits == 1 ? 'item' : 'items'}.")
-        end
-      end + render_facet_count(item.hits)
+      ga_event_action = "facet_" + facet_config.label.downcase
+      ga_event_label = facet_display_value(facet_field, item)
+      if item.items.blank? && parent.class == Blacklight::Solr::Response::Facets::FacetItem
+        parent_config = facet_configuration_for_field(parent.field)
+        ga_event_action = 'facet_' + parent_config.label.downcase + '_' + facet_config.label.downcase
+        ga_event_label = facet_display_value(parent.field, parent) + '_' + facet_display_value(facet_field, item)
+      end
+      link_to(path, class: 'facet-anchor facet_select', 'data-ga-event-action': ga_event_action, 'data-ga-event-label': ga_event_label, 'aria-label': "#{facet_display_value(facet_field, item)} filter #{item.hits}") do
+        content_tag(:span, facet_display_value(facet_field, item), class: 'facet-label') +
+          render_facet_count(item.hits)
+      end
     end
   end
 
@@ -233,14 +227,11 @@ module FacetsHelper # rubocop:disable Metrics/ModuleLength
     p[:f][facet_field].delete(item.value) # Remove self from selected
     p[:f].delete(facet_field) if p[:f][facet_field].empty? # Remove field if empty
     p.delete(:f) if p[:f].empty? # Remove filter if empty
-    facet_config = facet_configuration_for_field(facet_field)
     remove_href = search_action_path(p)
-    content_tag(:span, class: "facet-label") do
-      link_to(remove_href, class: "selected remove") do
-        content_tag(:span, facet_display_value(facet_field, item), 'aria-label': "Remove #{facet_config.label} filter: #{facet_display_value(facet_field, item)}.") +
-          content_tag(:span, '', class: "glyphicon glyphicon-remove")
-      end
-    end + render_facet_count(item.hits, classes: ["selected"])
+    link_to(remove_href, class: 'facet-anchor selected remove', 'aria-label': "Remove #{facet_display_value(facet_field, item)} filter") do
+      content_tag(:span, facet_display_value(facet_field, item), class: 'facet-label') +
+        content_tag(:span, '', class: 'glyphicon glyphicon-remove')
+    end
   end
 
   ## ...Blacklight Helper Pivot Extension End
