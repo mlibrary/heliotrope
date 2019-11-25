@@ -3,6 +3,18 @@
 <% ga_url = @press.google_analytics_url %>
 <% map_url = @press.readership_map_url %>
 
+<% if map_url.present? %>
+  <script type="text/javascript">
+    // Evil hack for Chrome browsers dropping pins but not loading map background.
+    // Appends a cache busting parameter to the URL to force a reload.
+    window.addEventListener('load', function() {
+      var iframe = document.getElementById('map_iframe');
+      var suffix = Math.floor((Math.random()*1000000)+1);
+      iframe.src = "<%= map_url %>&uid=" + suffix;
+    });
+  </script>
+<% end %>
+
 <%= render 'shared/breadcrumbs' %>
 
   <div class="row monograph-assets-toc-epub">
