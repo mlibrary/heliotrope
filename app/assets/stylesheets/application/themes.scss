@@ -406,7 +406,7 @@ $heb-black-80: #342f2e;
     }
   }
 
-  // EPUB Reader
+  // e-book reader
   #reader {
 
     .button {
@@ -443,6 +443,12 @@ $heb-black-80: #342f2e;
         height: 47px;
       }
     }
+
+    // PDF loading progress bar
+    .helio-loading-bar .progress {
+      background-color: $heb-brand-color;
+    }
+
   }
 
 }
@@ -672,7 +678,7 @@ $a2ru-white: #fafafa;
     border-color: $a2ru-link;
     color: $a2ru-white;
   }
-  
+
   .constraints-container {
     padding: 10px 20px;
     border-radius: 0px;
@@ -769,7 +775,7 @@ $a2ru-white: #fafafa;
     }
   }
 
-  // EPUB Reader
+  // e-book reader
   #reader {
 
     .button {
@@ -806,6 +812,12 @@ $a2ru-white: #fafafa;
         height: 47px;
       }
     }
+
+    // PDF loading progress bar
+    .helio-loading-bar .progress {
+      background-color: $a2ru-brand-color;
+    }
+
   }
 
 }
@@ -1179,7 +1191,7 @@ $atg-black-80: #342f2e;
     }
   }
 
-  // EPUB Reader
+  // e-book reader
   #reader {
 
     .button {
@@ -1216,6 +1228,12 @@ $atg-black-80: #342f2e;
         height: 47px;
       }
     }
+
+    // PDF loading progress bar
+    .helio-loading-bar .progress {
+      background-color: $atg-brand-color;
+    }
+
   }
 
 }
@@ -1450,7 +1468,7 @@ $amherst-white: #fafafa;
     border-color: $amherst-brand-color;
     color: $amherst-white;
   }
-  
+
   .constraints-container {
     padding: 10px 20px;
     border-radius: 0px;
@@ -1541,8 +1559,8 @@ $amherst-white: #fafafa;
     }
   }
 
-  // EPUB Reader
-  #reader, .cozy-reader {
+  // e-book reader
+  #reader {
 
     .button {
       @include epub-button-background-color($amherst-brand-color,$amherst-link,$amherst-white);
@@ -1578,6 +1596,12 @@ $amherst-white: #fafafa;
         height: 47px;
       }
     }
+
+    // PDF loading progress bar
+    .helio-loading-bar .progress {
+      background-color: $amherst-brand-color;
+    }
+
   }
 
 }
@@ -1812,7 +1836,7 @@ $barpublishing-white: #fafafa;
     border-color: $barpublishing-slate;
     color: $barpublishing-white;
   }
-  
+
   .constraints-container {
     padding: 10px 20px;
     border-radius: 0px;
@@ -1903,8 +1927,8 @@ $barpublishing-white: #fafafa;
     }
   }
 
-  // EPUB Reader
-  #reader, .cozy-reader {
+  // e-book reader
+  #reader {
 
     .button {
       @include epub-button-background-color($barpublishing-brand-color,$barpublishing-slate,$barpublishing-white);
@@ -1940,6 +1964,12 @@ $barpublishing-white: #fafafa;
         height: 47px;
       }
     }
+
+    // PDF download progress bar
+    .helio-loading-bar .progress {
+      background-color: $barpublishing-brand-color;
+    }
+
   }
 
 }
@@ -2508,7 +2538,7 @@ $lever-black-80: #342f2e;
     }
   }
 
-  // EPUB Reader
+  // e-book reader
   #reader {
 
     .cozy-control .cozy-h1 {
@@ -2552,6 +2582,11 @@ $lever-black-80: #342f2e;
         margin-top: 6px;
         margin-left: 11px;
       }
+    }
+
+    // PDF download progress bar
+    .helio-loading-bar .progress {
+      background-color: $lever-brand-color;
     }
 
   }
@@ -2775,7 +2810,7 @@ $maize-black-80: #342f2e;
     .authors, .copyright {
       @include benton;
     }
-    
+
     .monograph-cover button {
       background-color: transparent;
       border-color: transparent;
@@ -2862,7 +2897,7 @@ $maize-black-80: #342f2e;
     }
   }
 
-  // EPUB Reader
+  // e-book reader
   #epub {
     font-family: benton-sans, arial, sans-serif !important;
   }
@@ -2907,6 +2942,11 @@ $maize-black-80: #342f2e;
     i[class^='icon-chevron-']:hover {
       @include epub-hover-prev-next-color($maize-brand-color);
       transition: 0.2s ease-in;
+    }
+
+    // PDF loading progress bar
+    .helio-loading-bar .progress {
+      background-color: $maize-brand-color;
     }
 
   }
@@ -3156,7 +3196,7 @@ $um-black-80: #342f2e;
     }
   }
 
-  // EPUB Reader
+  // e-book reader
   #reader {
 
     .cozy-control .cozy-h1 {
@@ -3201,6 +3241,11 @@ $um-black-80: #342f2e;
         margin-top: 6px;
         margin-left: 11px;
       }
+    }
+
+    // PDF loading progress bar
+    .helio-loading-bar .progress {
+      background-color: $um-brand-color;
     }
 
   }
@@ -3404,7 +3449,7 @@ $gabii-link-hover:    #1e5667;
         font-size: 18px;
       }
     }
-    
+
     .monograph-cover button {
       background-color: transparent;
       border-color: transparent;
@@ -3484,7 +3529,7 @@ $gabii-link-hover:    #1e5667;
     }
   }
 
-  // EPUB Reader
+  // e-book reader
   #reader {
 
     .hint {
@@ -3600,6 +3645,11 @@ $gabii-link-hover:    #1e5667;
         }
 
       }
+    }
+
+    // PDF loading progress bar
+    .helio-loading-bar .progress {
+      background-color: $gabii-brand-color;
     }
 
   }
@@ -4204,7 +4254,7 @@ $ncid-black-80: #342f2e;
     .logo {
 
       img {
-        
+
       }
 
     }
@@ -4322,7 +4372,7 @@ $ncid-black-80: #342f2e;
         letter-spacing: unset;
 
         a.brand {
-          
+
         }
       }
 
@@ -4330,7 +4380,7 @@ $ncid-black-80: #342f2e;
     .press-block-c {
       background-color: $ncid-grey-1;
       color: $ncid-brand-color;
-      font-weight: bold; 
+      font-weight: bold;
       letter-spacing: .6px;
     }
     .platform {
@@ -4338,7 +4388,7 @@ $ncid-black-80: #342f2e;
     }
   }
 
-  // EPUB Reader
+  // e-book reader
   #epub {
     font-family: proxima-nova, arial, sans-serif !important;
   }
@@ -4384,6 +4434,11 @@ $ncid-black-80: #342f2e;
     i[class^='icon-chevron-']:hover {
       @include epub-hover-prev-next-color($ncid-brand-color);
       transition: 0.2s ease-in;
+    }
+
+    // PDF loading progress bar
+    .helio-loading-bar .progress {
+      background-color: $ncid-brand-color;
     }
 
   }
@@ -4597,7 +4652,7 @@ $nyu-gray-2: #342f2e;
     }
   }
 
-  // EPUB Reader
+  // e-book reader
   #reader {
 
     .cozy-control .cozy-h1 {
@@ -4642,6 +4697,11 @@ $nyu-gray-2: #342f2e;
         margin-top: .5em;
         margin-left: .55em;
       }
+    }
+
+    // PDF loading progress bar
+    .helio-loading-bar .progress {
+      background-color: $nyu-brand-color;
     }
 
   }
@@ -5306,7 +5366,7 @@ $reki-black-80: #342f2e;
     }
   }
 
-  // EPUB Reader
+  // e-book reader
   #reader {
 
     .button {
@@ -5343,6 +5403,12 @@ $reki-black-80: #342f2e;
         height: 47px;
       }
     }
+
+    // PDF loading progress bar
+    .helio-loading-bar .progress {
+      background-color: $reki-brand-color;
+    }
+
   }
 
 }
@@ -5355,7 +5421,7 @@ $reki-black-80: #342f2e;
 $sussex-brand-color: #dc582a;
 $sussex-accent-color: #00afaa;
 $sussex-link: #d3273e;
-$sussex-accent-link: #df465a; 
+$sussex-accent-link: #df465a;
 $sussex-blue: #1e428a;
 $sussex-green: #013035;
 $sussex-grey-1: #d6d2c4;
@@ -5553,7 +5619,7 @@ $sussex-black-80: #342f2e;
     border-color: $sussex-link;
     color: $sussex-white;
   }
-  
+
   .constraints-container {
     padding: 10px 20px;
     border-radius: 0px;
@@ -5647,7 +5713,7 @@ $sussex-black-80: #342f2e;
     }
   }
 
-  // EPUB Reader
+  // e-book reader
   #reader {
 
     .button {
@@ -5684,6 +5750,12 @@ $sussex-black-80: #342f2e;
         height: 47px;
       }
     }
+
+    // PDF loading progress bar
+    .helio-loading-bar .progress {
+      background-color: $sussex-brand-color;
+    }
+
   }
 
 }

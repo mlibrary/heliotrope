@@ -21,8 +21,13 @@
     <span class="Z3988" title="<%= @presenter.file_set_coins_title %>" aria-hidden="true"></span>
   <% end %>
   <div class="skip"></div>
+  <!-- `role="status"` implies `aria-live="polite"` but redundancy is recommended for maximum compatibility -->
+  <!-- see https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/ARIA_Live_Regions -->
+  <div id="pdfLoadingProgressBar" role="status" aria-live="polite" aria-atomic="true" class="sr-only"></div>
     <div id="epub" class="<%= @subdomain %>">
-      <div id="mainContainer"></div>
+      <div id="reader">
+        <div id="mainContainer"></div>
+      </div>
     </div>
 
     <div id="mozilla-pdf-viewer-ui" style="display: none">
@@ -216,12 +221,6 @@
                 <option title="" value="4" data-l10n-id="page_scale_percent" data-l10n-args='{ "scale": 400 }'>400%</option>
               </select>
             </span>
-            </div>
-          </div>
-          <div id="loadingBar">
-            <div class="progress">
-              <div class="glimmer">
-              </div>
             </div>
           </div>
         </div>
@@ -708,7 +707,44 @@
             document.title = `${p}% - ${self._original_document_title}`;
           }
           self.fire('trackPageview', tracking)
-        })
+        });
+
+        // use the viewer.js loading (download progress) bar, with tweaked styles. The div structure here is from viewer.js
+        // note, the screen reader `aria-live` stuff is on #pdfLoadingProgressBar above because:
+        //   1) no chance of MutationObserver infinite loops by altering the observed element in the callback
+        //   2) many sources say the `aria-live` element must be present on the document to be picked up before changes are made
+        //   3) it's a hidden `class="sr-only"` element (with dynamically-changing percentage text), whereas this one is visible
+        $('<div id="loadingBar" class="helio-loading-bar" aria-hidden="true"><div id="helioPdfProgressBar" class="progress" ><div class="glimmer"></div></div></div>').prependTo('.cozy-module-main');
+        var helioPdfProgressBar = document.querySelector("#helioPdfProgressBar");
+        var helioPdfProgressBarAnnounce = document.querySelector("#pdfLoadingProgressBar");
+
+        var observerOptions = {
+          attributes: true,
+          attributeFilter: ['style']
+        };
+
+        var lastAnnounceTime;
+
+        var observer = new MutationObserver(function() {
+          var progressBarWidth = helioPdfProgressBar.style.width;
+          var helioPdfProgressBarAnnouncement = progressBarWidth + ' loaded';
+          var helioPdfProgressBarPercent = parseInt(progressBarWidth, 10);
+
+          if(!lastAnnounceTime) {
+            helioPdfProgressBarAnnounce.innerHTML = 'PDF loading started';
+            lastAnnounceTime = $.now();
+          }
+          else if ($.now() - lastAnnounceTime > 5000) { // wait 5 seconds minimum between spoken updates
+            helioPdfProgressBarAnnounce.innerHTML = helioPdfProgressBarAnnouncement;
+            lastAnnounceTime = $.now();
+          }
+
+          if (helioPdfProgressBarPercent === 100) {
+            helioPdfProgressBarAnnounce.innerHTML = 'PDF loading complete';
+            this.disconnect();
+          }
+        });
+        observer.observe(helioPdfProgressBar, observerOptions);
 
         $.loadScript("/web/viewer.js", function() {
           // stop Mozilla viewer messing with page title, also alters external link behavior, apparently
@@ -720,8 +756,8 @@
           self.PDFViewerApplication.open(self.options.href).then(function() {
             self.pdfViewer = this.PDFViewerApplication.pdfViewer;
 
-            // monkeypatch the PDFLinkService to be able to track when _it_ 
-            // thinks clicks are worth of pushing onto history so we can 
+            // monkeypatch the PDFLinkService to be able to track when _it_
+            // thinks clicks are worth of pushing onto history so we can
             // tell when to push links onto history.
             self.PDFViewerApplication.pdfLinkService.pdfHistory = {
               pushCurrentPosition: function() { /* NO OP */ },
@@ -748,7 +784,7 @@
                 self.PDFViewerApplication.eventBus.on('pagechanging', function(evt) {
                   var pageNumber = evt.pageNumber;
                   self.fire('relocated', { start: pageNumber });
-                  self.fire('updateLocation', { 
+                  self.fire('updateLocation', {
                     start: 'epubcfi(page=' + pageNumber + ')',
                     href: self.options.href + '#page=' + pageNumber,
                     percentage: ( pageNumber / self.PDFViewerApplication.pagesCount )
