@@ -51,6 +51,18 @@
   background-color:#367c36 !important;
 }
 
+.alert {
+  a.close {
+    color: #31708f;
+    opacity: .85;
+  }
+
+  a.close:active, a.close:hover {
+    color: #31708f;
+    opacity: 1;
+  }
+}
+
 ///////////////////////////////////
 // COLORS
 ///////////////////////////////////
