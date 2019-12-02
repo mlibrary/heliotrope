@@ -39,6 +39,7 @@
 
 /////////////////////////////////////////////////
 // BOOTSTRAP OVERRIDES FOR WCAG AA/AAA COMPLIANCE
+// See https://infoguides.wtamu.edu/bootstrap/helpers
 /////////////////////////////////////////////////
 .alert-info {
   background-color:#d9edf7;
@@ -46,9 +47,20 @@
   color:#235067;
 }
 
-// OK for AA, too light for AAA. #2C632C would work.
+.label-info {
+  background-color:#20809d !important; // 175d72 for AAA
+}
+
 .label-success {
-  background-color:#367c36 !important;
+  background-color:#3a833a !important; // 2c632c for AAA
+}
+
+.label-warning {
+  background-color:#a4660e !important; // 7b4c09 fpr AAA
+}
+
+.label-danger {
+  background-color: #d4403a !important; // a72925 for AAA
 }
 
 ///////////////////////////////////
