@@ -63,6 +63,18 @@
   background-color: #d4403a !important; // a72925 for AAA
 }
 
+.alert {
+  a.close {
+    color: #31708f;
+    opacity: .85;
+  }
+
+  a.close:active, a.close:hover {
+    color: #31708f;
+    opacity: 1;
+  }
+}
+
 ///////////////////////////////////
 // COLORS
 ///////////////////////////////////
