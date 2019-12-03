@@ -1,16 +1,15 @@
 <div id="tabs">
   <ul class="nav nav-tabs" role="tablist">
-    <li role="presentation" class="active"><a id="tab-info" href="#info" data-toggle="tab" role="tab" aria-controls="info" aria-selected="true" tabindex="0">Info</a></li>
-    <li role="presentation"><a id="tab-permissions" href="#permissions" data-toggle="tab" role="tab" aria-controls="permissions" aria-selected="false"   tabindex="-1">Permissions</a></li>
-    <li id="stats-tab" role="presentation"><a id="tab-stats" href="#stats" data-toggle="tab" role="tab" aria-controls="stats" aria-selected="false" tabindex="-1">Stats</a></li>
+    <li role="presentation" class="active"><h2><a id="tab-info" href="#info" data-toggle="tab" role="tab" aria-controls="info" aria-selected="true" tabindex="0">Info</a></h2></li>
+    <li role="presentation"><h2><a id="tab-permissions" href="#permissions" data-toggle="tab" role="tab" aria-controls="permissions" aria-selected="false" tabindex="-1">Permissions</a></h2></li>
+    <li id="stats-tab" role="presentation"><h2><a id="tab-stats" href="#stats" data-toggle="tab" role="tab" aria-controls="stats" aria-selected="false" tabindex="-1">Stats</a></h2></li>
     <% unless presenter.external_resource? || presenter.tombstone? %>
-    <li role="presentation"><a id="tab-technical-info" href="#technical-info" data-toggle="tab" role="tab" aria-controls="technical-info" aria-selected="false"   tabindex="-1">Technical Info</a></li>
+      <li role="presentation"><h2><a id="tab-technical-info" href="#technical-info" data-toggle="tab" role="tab" aria-controls="technical-info" aria-selected="false" tabindex="-1">Technical Info</a></h2></li>
     <% end %>
   </ul>
 
   <div id="tabs-content" class="tab-content" aria-live="polite">
     <section id="info" class="tab-pane fade in active" role="tabpanel" aria-hidden="false" aria-labelledby="tab-info" tabindex="0">
-      <h2 class="sr-only">Info</h2>
       <table class="table <%= dom_class(presenter) %> attributes" <%= presenter.microdata_type_to_html %>>
         <tbody>
           <%= render 'attribute_rows_info', presenter: presenter %>
@@ -27,25 +26,20 @@
       </table>
     </section> <!-- /.info panel -->
     <section id="permissions" class="tab-pane fade" role="tabpanel" aria-hidden="true" aria-labelledby="tab-permissions" tabindex="0">
-      <h2 class="sr-only">Permissions</h2>
       <table class="table <%= dom_class(presenter) %> attributes" <%= presenter.microdata_type_to_html %>>
         <tbody>
           <%= render 'attribute_rows_permissions', presenter: presenter %>
         </tbody>
       </table>
     </section> <!-- /.permissions panel -->
-
     <section id="stats" class="tab-pane fade" role="tabpanel" aria-hidden="true" aria-labelledby="tab-stats" tabindex="0">
-      <h2 class="sr-only">Stats</h2>
       <table class="table <%= dom_class(presenter) %> attributes" <%= presenter.microdata_type_to_html %>>
         <tbody>
           <%= render 'attribute_rows_stats', presenter: presenter %>
         </tbody>
       </table>
     </section>  <!-- /.stats panel -->
-
     <section id="technical-info" class="tab-pane fade" role="tabpanel" aria-hidden="true" aria-labelledby="tab-technical-info" tabindex="0">
-      <h2 class="sr-only">Technical Info</h2>
       <table class="table <%= dom_class(presenter) %> attributes" <%= presenter.microdata_type_to_html %>>
         <tbody>
          <%= render 'attribute_rows_technical', presenter: presenter %>

@@ -22,20 +22,19 @@
       <ul class="nav nav-tabs" role="tablist">
         <% if ga_url.present? %>
           <li role="presentation">
-            <a id="tab-analytics" href="#analytics" aria-controls="toc" role="tab" data-toggle="tab" aria-selected="false" tabindex="-1">Google Analytics</a>
+            <h2><a id="tab-analytics" href="#analytics" aria-controls="analytics" role="tab" data-toggle="tab" aria-selected="false" tabindex="-1">Google Analytics</a></h2>
           </li>
         <% end %>
         <% if map_url.present? %>
           <li role="presentation">
-            <a id="tab-map" href="#map" aria-controls="resources" role="tab" data-toggle="tab" aria-selected="false" tabindex="-1">Readership Map</a>
+            <h2><a id="tab-map" href="#map" aria-controls="map" role="tab" data-toggle="tab" aria-selected="false" tabindex="-1">Readership Map</a></h2>
           </li>
         <% end %>
       </ul>
       <div id="tabs-content" class="tab-content monograph-assets-toc-epub-content" aria-live="polite">
         <% if ga_url.present? %>
-          <section id="analytics" class="tab-pane fade toc row" role="tabpanel" aria-hidden="true" aria-labelledby="tab-toc" tabindex="0">
+          <section id="analytics" class="tab-pane fade toc row" role="tabpanel" aria-hidden="true" aria-labelledby="tab-analytics" tabindex="0">
             <div class="col-sm-12">
-              <h2 class="sr-only">Google Analytics</h2>
               <% if @press.subdomain == 'michigan' %>
                 <p class="press-stats-text">
                   The Google Analytics report shows basic usage data including users, sessions, pageviews, popular titles, and user location.
@@ -52,8 +51,7 @@
           </section>
         <% end %>
         <% if map_url.present? %>
-          <section id="map" class="tab-pane fade resources row" role="tabpanel" aria-hidden="true" aria-labelledby="tab-resources" tabindex="0">
-            <h2 class="sr-only">Readership Map</h2>
+          <section id="map" class="tab-pane fade resources row" role="tabpanel" aria-hidden="true" aria-labelledby="tab-map" tabindex="0">
             <% if @press.subdomain == 'michigan' %>
               <p class="press-stats-text">
                 The Readership Map replays every view or download of books or media components that occurred the previous day.
