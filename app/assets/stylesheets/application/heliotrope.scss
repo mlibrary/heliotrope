@@ -383,6 +383,12 @@ footer.press {
 #facet-panel-collapse {
   padding-left: 0px;
 }
+
+.facet-anchor {
+  display: flex;
+  justify-content: space-between;
+}
+
 .facets-container {
   .panel-group {
     padding-left: 0px;
