@@ -417,6 +417,10 @@ $heb-black-80: #342f2e;
       @include epub-button-background-color($heb-brand-color,$heb-grey-2,$heb-white);
     }
 
+    .button--inline {
+      @include epub-button-background-color($heb-brand-color,$heb-grey-2,$heb-white);
+    }
+
     .button--sm {
       @include epub-button-background-color($heb-brand-color,$heb-grey-2,$heb-white);
     }
@@ -783,6 +787,10 @@ $a2ru-white: #fafafa;
     }
 
     .button--lg {
+      @include epub-button-background-color($a2ru-link,$a2ru-accent-link,$a2ru-white);
+    }
+
+    .button--inline {
       @include epub-button-background-color($a2ru-link,$a2ru-accent-link,$a2ru-white);
     }
 
@@ -1202,6 +1210,10 @@ $atg-black-80: #342f2e;
       @include epub-button-background-color($atg-brand-color,$atg-grey-2,$atg-white);
     }
 
+    .button--inline {
+      @include epub-button-background-color($atg-brand-color,$atg-grey-2,$atg-white);
+    }
+
     .button--sm {
       @include epub-button-background-color($atg-brand-color,$atg-grey-2,$atg-white);
     }
@@ -1570,6 +1582,10 @@ $amherst-white: #fafafa;
       @include epub-button-background-color($amherst-brand-color,$amherst-link,$amherst-white);
     }
 
+    .button--inline {
+      @include epub-button-background-color($amherst-brand-color,$amherst-link,$amherst-white);
+    }
+
     .button--sm {
       @include epub-button-background-color($amherst-brand-color,$amherst-link,$amherst-white);
     }
@@ -1935,6 +1951,10 @@ $barpublishing-white: #fafafa;
     }
 
     .button--lg {
+      @include epub-button-background-color($barpublishing-brand-color,$barpublishing-slate,$barpublishing-white);
+    }
+
+    .button--inline {
       @include epub-button-background-color($barpublishing-brand-color,$barpublishing-slate,$barpublishing-white);
     }
 
@@ -2553,6 +2573,10 @@ $lever-black-80: #342f2e;
       @include epub-button-background-color($lever-brand-color,$lever-accent-color,$lever-white);
     }
 
+    .button--inline {
+      @include epub-button-background-color($lever-brand-color,$lever-accent-color,$lever-white);
+    }
+
     .button--sm {
       @include epub-button-background-color($lever-brand-color,$lever-accent-color,$lever-white);
     }
@@ -2924,6 +2948,11 @@ $maize-black-80: #342f2e;
       @include benton;
     }
 
+    .button--inline {
+      @include epub-button-background-color($maize-brand-color,$maize-blue,$maize-white);
+      @include benton;
+    }
+
     .button--sm {
       @include epub-button-background-color($maize-brand-color,$maize-blue,$maize-white);
       @include benton;
@@ -3208,6 +3237,10 @@ $um-black-80: #342f2e;
     }
 
     .button--lg {
+      @include epub-button-background-color($um-brand-color,$um-blue,$um-white);
+    }
+
+    .button--inline {
       @include epub-button-background-color($um-brand-color,$um-blue,$um-white);
     }
 
@@ -3569,6 +3602,10 @@ $gabii-link-hover:    #1e5667;
       @include epub-button-background-color($gabii-brand-color,$gabii-accent-color,$gabii-white);
     }
 
+    .button--inline {
+      @include epub-button-background-color($gabii-brand-color,$gabii-accent-color,$gabii-white);
+    }
+
     .button--sm {
       @include epub-button-background-color($gabii-brand-color,$gabii-accent-color,$gabii-white);
     }
@@ -3580,6 +3617,7 @@ $gabii-link-hover:    #1e5667;
 
     .button:hover,
     .button--lg:hover,
+    .button--inline:hover,
     .button--sm:hover {
       color: $gabii-brand-color;
     }
@@ -4415,6 +4453,11 @@ $ncid-black-80: #342f2e;
       @include proxima-nova;
     }
 
+    .button--inline {
+      @include epub-button-background-color($ncid-brand-color,$ncid-accent-color,$ncid-white);
+      @include proxima-nova;
+    }
+
     .button--sm {
       @include epub-button-background-color($ncid-brand-color,$ncid-accent-color,$ncid-white);
       @include proxima-nova;
@@ -4664,6 +4707,10 @@ $nyu-gray-2: #342f2e;
     }
 
     .button--lg {
+      @include epub-button-background-color($nyu-brand-color,$nyu-brand-color-2,$nyu-brand-accent);
+    }
+
+    .button--inline {
       @include epub-button-background-color($nyu-brand-color,$nyu-brand-color-2,$nyu-brand-accent);
     }
 
@@ -5377,6 +5424,10 @@ $reki-black-80: #342f2e;
       @include epub-button-background-color($reki-brand-color,$reki-link-hover,$reki-white);
     }
 
+    .button--inline {
+      @include epub-button-background-color($reki-brand-color,$reki-link-hover,$reki-white);
+    }
+
     .button--sm {
       @include epub-button-background-color($reki-brand-color,$reki-link-hover,$reki-white);
     }
@@ -5721,6 +5772,10 @@ $sussex-black-80: #342f2e;
     }
 
     .button--lg {
+      @include epub-button-background-color($sussex-link,$sussex-accent-link,$sussex-white);
+    }
+
+    .button--inline {
       @include epub-button-background-color($sussex-link,$sussex-accent-link,$sussex-white);
     }
 
