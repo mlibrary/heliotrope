@@ -942,7 +942,7 @@ GEM
     tzinfo (1.2.5)
       thread_safe (~> 0.1)
     uber (0.1.0)
-    uglifier (4.1.18)
+    uglifier (3.2.0)
       execjs (>= 0.3.0, < 3)
     unicode (0.4.4.4)
     unicode-display_width (1.6.0)
@@ -1052,7 +1052,7 @@ DEPENDENCIES
   turbolinks (~> 5)
   typhoeus (~> 1.1)
   tzinfo-data
-  uglifier (>= 3.2.0)
+  uglifier (~> 3.2)
   web-console (>= 3.3.0)
   webdrivers (~> 3.0)
   yard (>= 0.9.20)
