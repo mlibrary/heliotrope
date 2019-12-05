@@ -168,7 +168,7 @@ gem 'sqlite3'
 gem 'swagger_client', git: 'https://github.com/mlibrary/swagger_client', branch: 'master'
 
 # Use Uglifier as compressor for JavaScript assets
-gem 'uglifier', '>= 3.2.0'
+gem 'uglifier', '~> 3.2'
 
 # Talking to Google Analytics
 gem 'legato', '~> 0.3'
