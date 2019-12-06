@@ -616,7 +616,7 @@ GEM
       pry (>= 0.10.4)
     public_suffix (4.0.1)
     pul_uv_rails (2.0.1)
-    puma (3.12.0)
+    puma (3.12.2)
     qa (2.2.0)
       activerecord-import
       deprecation
@@ -1014,7 +1014,7 @@ DEPENDENCIES
   pragmatic_segmenter (~> 0.3)
   prawn (~> 2.2)
   pry-rails (~> 0.3.4)
-  puma (~> 3.7)
+  puma (~> 3.12)
   rack (~> 2.0.6)
   rails (~> 5.1.6.2)
   rails-controller-testing
