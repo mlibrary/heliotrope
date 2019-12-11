@@ -9,6 +9,7 @@ en:
         set_representative: "Set Representative"
     directory:
       suffix: ""
+    institution_name: "University of Michigan"
     monographs:
       show:
         last_modified: "Last Modified"
