@@ -23,7 +23,7 @@ module EPub
       end
 
       def headers
-        return headers unless @headers.nil?
+        return @headers unless @headers.nil?
         @headers = []
         @toc_element.xpath('.//a').each do |anchor|
           @headers << Header.from_toc_anchor_element(self, anchor)

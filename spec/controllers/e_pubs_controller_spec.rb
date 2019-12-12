@@ -193,12 +193,12 @@ RSpec.describe EPubsController, type: :controller do
           expect(JSON.parse(response.body)["q"]).to eq "White Whale"
           expect(JSON.parse(response.body)["search_results"].length).to eq 105
           expect(JSON.parse(response.body)["search_results"][0]["cfi"]).to eq "/6/84[xchapter_036]!/4/2/42,/1:66,/1:77"
-          expect(JSON.parse(response.body)["search_results"][0]["snippet"]).to eq "“All ye mast-headers have before now heard me give orders about a white whale. Look ye! d’ye see this Spanish ounce of gold?\"—holding up a broad bright coin to the sun—\"it is a sixteen dollar piece, men. D’ye see it? Mr. Starbuck, hand me yon top-maul.”"
+          expect(JSON.parse(response.body)["search_results"][0]["snippet"]).to eq "“All ye mast-headers have before now heard me give orders about a white whale. Look ye! d’ye see this Spanish ounce of"
           # Only show unique snippets, duplicate neighbor snippets are blank so
           # that they don't display in cozy-sun-bear while we still send all CFIs
           # to get search highlighting
           @snippets = JSON.parse(response.body)["search_results"].map { |result| result["snippet"].presence }.compact
-          expect(@snippets.length).to eq 93
+          expect(@snippets.length).to eq 102
         end
       end
 

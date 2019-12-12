@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'pragmatic_segmenter'
+require 'byebug'
 
 # This class is supposed to show the search term in context, so surrounded
 # by sentences (not sentence fragments). It's unfortunatly a little involved...
@@ -10,7 +11,9 @@ module EPub
     private_class_method :new
     attr_accessor :node, :pos0, :pos1
 
-    SNIPPET_LENGTH = 50
+    # This is not an "exact" length, but will be used as sort of a
+    # guideline. Weird snippets might still sneak through...
+    SNIPPET_LENGTH = 120
 
     def self.from(node, pos0, pos1)
       if node.try(:text?) && pos0.integer? && pos1.integer?
@@ -25,78 +28,136 @@ module EPub
     end
 
     def snippet
-      # We're only going to get at most 3 sentences for context with the middle
-      # sentence containing the search term. Some people write really long sentences
-      # though... not sure how great this will be...
-      sentences = parse_sentences(parse_fragments(parent_paragraph(@node)))
-      sentences.join(" ")
-    end
+      original_text = node.text
+      # mark the hit without using markup in a really dumb way
+      node.content = if node.text.length < @pos1 + 1
+                       node.text.insert(@pos0, "{{{HIT~") + "~HIT}}}"
+                     else
+                       node.content = node.text.insert(@pos0, "{{{HIT~").insert(@pos1 + 8, "~HIT}}}")
+                     end
+      # get some surrounding text if possible
+      fragment = text_available(node)
+      # attempt (poorly) to remove footnotes
+      fragment = remove_possible_footnotes(fragment)
+      # adjust if there's too much text
+      text = adjust_length(fragment.text.squish)
 
-    def parent_paragraph(current_node)
-      until current_node.name == "p" || current_node.name == "body"
-        current_node = current_node.parent
-      end
-      current_node
-    end
+      # remove the hit indicator
+      text.gsub!('{{{HIT~', '')
+      text.gsub!('~HIT}}}', '')
+      # Important! Clean up the original node! It's global to the EPub::Publication
+      node.content = original_text
 
-    def parse_fragments(para, fragments = [])
-      para.children.each do |child|
-        if child.text?
-          fragment = OpenStruct.new
-          fragment.text = child.text
-          # This is really cheesy, adding the string "{{{HIT}}}"
-          # to track the fragment with the actual search string
-          # in it compared to the text of the rest of the paragraph.
-          # We need a way to know which sentence the search query
-          # is in without using markup/nokogiri.
-          fragment.text.insert(@pos0 - 1, "{{{HIT}}}") if child == @node
-          fragments << fragment
-        elsif child.name == "sup" && child.children[0].name == "a"
-          # Footnotes seem to really mess up sentence determinations, so skip them
-          # These might be marked up differently in different epubs so this is a WIP
-          # http://www.idpf.org/epub/30/spec/epub30-contentdocs.html#sec-contentdocs-vocab-association
-          next
-        else
-          parse_fragments(child, fragments)
-        end
-      end
-      fragments.map(&:text).join("")
-    end
-
-    def parse_sentences(text)
-      sentences = PragmaticSegmenter::Segmenter.new(text: text).segment
-      rvalue = []
-      sentences.each_index do |i|
-        if sentences[i].match?(/\{\{\{HIT\}\}\}/)
-          sentences[i].gsub!(/\{\{\{HIT\}\}\}/, '')
-          rvalue = determine_size(sentences, i)
-        end
-      end
-      rvalue
-    end
-
-    def determine_size(sentences, index)
-      # Trying to determine the right size snippet and which sentences
-      # out of a possible 3 to return. Fairly terrible.
-      first = sentences[index - 1]
-      hit   = sentences[index]
-      last  = sentences[index + 1]
-      if sentences.length == 1
-        [hit]
-      elsif hit.length > SNIPPET_LENGTH
-        [hit]
-      elsif sentences.length == 2
-        if last.nil?
-          [first, hit]
-        else
-          [hit, last]
-        end
-      else
-        [first, hit, last]
-      end
+      text
     end
 
     private
+
+      def adjust_length(text) # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
+        # We want words around the hit to give context.
+        # Prefer sentences.
+        # Prefer context to surround the hit evenly, before and after as opposed
+        # to having more context up front or more context after (I guess?).
+        # Prefer whole words, not bits of words.
+        sentences = PragmaticSegmenter::Segmenter.new(text: text).segment
+        # PragmaticSegmenter will turn this: {{{HIT~Honk!~HIT}}} into this: ["{{{HIT~Honk!", "~HIT}}}"]
+        # which makes sense since the search term contains a sentence terminator. So just find the hit
+        # using the first "{{{HIT~" part.
+        idx = sentences.find_index { |s| s =~ /{{{HIT~/ }
+
+        rvalue = ""
+        # The characters: "{{{HIT~~HIT}}}" = 14
+        if sentences[idx].length > SNIPPET_LENGTH + 14
+          # Break up a big sentence
+          rvalue = shorten(sentences[idx])
+        else
+          # Add to a smaller sentence
+          # Return it if it's all we have
+          return sentences[idx] if sentences.length == 1
+          if sentences.length == 2
+            rvalue = shorten(sentences.join(" "))
+          else
+            context = sentences[idx]
+            context = context + " " + sentences[idx + 1] if sentences[idx + 1].present?
+            context = sentences[idx - 1] + " " + context if sentences[idx - 1].present? && sentences[idx - 1] != sentences.last
+            rvalue = shorten(context)
+          end
+        end
+
+        rvalue
+      end
+
+      def shorten(str) # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
+        before, hit, after = str.partition(/\s?{{{HIT~.*~HIT}}}\s?/)
+        befores = before.split(" ")
+        afters = after.split(" ")
+        if befores.join(" ").length > afters.join(" ").length
+          # more context before the hit, reduce it
+          until (befores.join(" ") + hit + afters.join(" ")).length <= SNIPPET_LENGTH + 14 || befores.length == 0
+            befores.shift
+          end
+        else
+          # more context after the hit, reduce it
+          until (befores.join(" ") + hit + afters.join(" ")).length <= SNIPPET_LENGTH + 14 || afters.length == 0
+            afters.pop
+          end
+        end
+
+        rvalue = befores.join(" ") + hit + afters.join(" ")
+        return rvalue unless rvalue.length > SNIPPET_LENGTH + 14
+        # If it's still too long, shorten the other end too.
+        return rvalue if befores == 0 && afters == 0 # but short-circuit if something very wrong is happening
+        shorten(rvalue)
+      end
+
+      def remove_possible_footnotes(fragment) # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
+        # Recursivly examine text and elements in the fragment.
+        # If there's a sentence end, immediatly followed by a link (no whitespace
+        # in between), remove the link and it's contents. This will probably not go well.
+        # Hopefully it will work most of the time. There is no reliable markup
+        # for footnotes across epubs so this is all best guess.
+        # This should work for:
+        # <p>Here is a footnote!<a href="#">99</a></p>
+        # <p>Bob says "Here is a footnote."<a href="#">99</a></p>
+        # <p>There is a footnote?<sup><a href="#">99</a></sup></p>
+        # ...
+        # Classic whack-a-mole.
+        fragment.children.each do |node|
+          if node.try(:text?)
+            if node.next && node.next.name == "a"
+              node.next.remove if sentence_ending(node.text)
+            end
+            if node.next && node.next.name == "sup" && node.next.children[0]&.name == "a"
+              node.next.remove if sentence_ending(node.next.previous_sibling.text)
+            end
+          end
+          remove_possible_footnotes(node) unless node.children.empty?
+        end
+        fragment
+      end
+
+      def sentence_ending(text) # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
+        # Without AI, this will never be right.
+        # But maybe it will work with basic english most of the time.
+        # If a footnote happens in the middle of a sentence, there's no way
+        # to differentiate it from a normal link. Oh well.
+        return true if text.strip.ends_with?('.')
+        return true if text.strip.ends_with?('?')
+        return true if text.strip.ends_with?('!')
+        return true if text.strip.ends_with?('."')
+        return true if text.strip.ends_with?('?"')
+        return true if text.strip.ends_with?('!"')
+        return true if text.strip.ends_with?('.”')
+        return true if text.strip.ends_with?('?”')
+        return true if text.strip.ends_with?('!”')
+        return true if text.strip.ends_with?('.’”') # yeah, this happens
+        false
+      end
+
+      def text_available(node)
+        return node if node.text.squish.length >= SNIPPET_LENGTH
+        text_available(node.parent)
+      end
 
       def initialize(node, pos0, pos1)
         @node = node
@@ -115,18 +176,6 @@ module EPub
     end
 
     def snippet
-      ""
-    end
-
-    def parse_sentences
-      []
-    end
-
-    def parent_paragraph
-      Nokogiri::XML("<html><p></p></html>").xpath("//p")[0]
-    end
-
-    def parse_fragments
       ""
     end
   end
