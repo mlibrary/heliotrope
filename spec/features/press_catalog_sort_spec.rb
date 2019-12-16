@@ -128,6 +128,78 @@ describe 'Press catalog sort' do
     end
   end
 
+  context 'Sort by Publication Date tie-break' do
+    before do
+      create(:press, subdomain: 'sortpress2')
+
+      create(:public_monograph,
+             press: 'sortpress2',
+             title: ['Date Published Tie-Break Test 1'],
+             date_uploaded: DateTime.new(2018, 7, 3, 4, 5, 0, '+0'),
+             creator: ['blah'],
+             date_created: ['2010'])
+
+      create(:public_monograph,
+             press: 'sortpress2',
+             title: ['Date Published Tie-Break Test 2'],
+             date_uploaded: DateTime.new(2018, 8, 3, 4, 5, 0, '+0'),
+             creator: ['blah'],
+             date_created: ['2014'],
+             date_published: [DateTime.new(2019, 12, 16, 4, 3, 0, '+0')])
+
+      create(:public_monograph,
+             press: 'sortpress2',
+             title: ['Date Published Tie-Break Test 3'],
+             date_uploaded: DateTime.new(2018, 9, 3, 4, 5, 0, '+0'),
+             creator: ['blah'],
+             date_created: ['2014'],
+             date_published: [DateTime.new(2019, 12, 16, 4, 2, 0, '+0')])
+
+      create(:public_monograph,
+             press: 'sortpress2',
+             title: ['Date Published Tie-Break Test 4'],
+             date_uploaded: DateTime.new(2018, 10, 3, 4, 5, 0, '+0'),
+             creator: ['blah'],
+             date_created: ['2014'],
+             date_published: [DateTime.new(2019, 12, 16, 4, 1, 0, '+0')])
+
+      create(:public_monograph,
+             press: 'sortpress2',
+             title: ['Date Published Tie-Break Test 5'],
+             date_uploaded: DateTime.new(2018, 11, 3, 4, 5, 0, '+0'),
+             creator: ['blah'],
+             date_created: ['2016/05/05'])
+
+      visit "/sortpress2"
+    end
+
+    it 'is sorted by "Date Added (Newest First)" by default' do
+      assert_equal page.all(title_selector).map(&:text), ['Date Published Tie-Break Test 5',
+                                                          'Date Published Tie-Break Test 4',
+                                                          'Date Published Tie-Break Test 3',
+                                                          'Date Published Tie-Break Test 2',
+                                                          'Date Published Tie-Break Test 1']
+    end
+
+    it 'uses date_published to tie-break "Publication Date (Newest First)"' do
+      click_link 'Publication Date (Newest First)'
+      assert_equal page.all(title_selector).map(&:text), ['Date Published Tie-Break Test 5',
+                                                          'Date Published Tie-Break Test 2',
+                                                          'Date Published Tie-Break Test 3',
+                                                          'Date Published Tie-Break Test 4',
+                                                          'Date Published Tie-Break Test 1']
+    end
+
+    it 'uses date_published to tie-break "Publication Date (Oldest First)"' do
+      click_link 'Publication Date (Oldest First)'
+      assert_equal page.all(title_selector).map(&:text), ['Date Published Tie-Break Test 1',
+                                                          'Date Published Tie-Break Test 4',
+                                                          'Date Published Tie-Break Test 3',
+                                                          'Date Published Tie-Break Test 2',
+                                                          'Date Published Tie-Break Test 5']
+    end
+  end
+
   context 'Monograph results set using Solr Docs' do
     # note: The spec above is more appropriate as it incorporates manipulation being done in indexer/presenter, like...
     # sort normalization. I'm doing this additional pure-Solr test for fun, but also because:
@@ -140,7 +212,7 @@ describe 'Press catalog sort' do
         # need these 4 fields to get this doc to show on catalog page
         id: '111111111',
         has_model_ssim: 'Monograph',
-        press_sim: "sortpress2",
+        press_sim: "sortpress3",
         read_access_group_ssim: "public",
         # inexact dynamicField usage summary: *_si for sorting, *_tesim for display, *_dtsi for sortable date
         # note: you can never sort by multi-valued Solr fields, e.g. with an 'm' in the suffix per schema.xml
@@ -156,7 +228,7 @@ describe 'Press catalog sort' do
       ::SolrDocument.new(
         id: '222222222',
         has_model_ssim: 'Monograph',
-        press_sim: "sortpress2",
+        press_sim: "sortpress3",
         read_access_group_ssim: "public",
         title_tesim: 'Cormorant',
         title_si: 'cormorant', # this is downcased on indexing, otherwise sort will have caps first
@@ -170,7 +242,7 @@ describe 'Press catalog sort' do
       ::SolrDocument.new(
         id: '333333333',
         has_model_ssim: 'Monograph',
-        press_sim: "sortpress2",
+        press_sim: "sortpress3",
         read_access_group_ssim: "public",
         title_tesim: 'Zebra',
         title_si: 'zebra', # this is downcased on indexing, otherwise sort will have caps first
@@ -184,7 +256,7 @@ describe 'Press catalog sort' do
       ::SolrDocument.new(
         id: '444444444',
         has_model_ssim: 'Monograph',
-        press_sim: "sortpress2",
+        press_sim: "sortpress3",
         read_access_group_ssim: "public",
         title_tesim: 'aardvark',
         title_si: 'aardvark',
@@ -198,7 +270,7 @@ describe 'Press catalog sort' do
       ::SolrDocument.new(
         id: '555555555',
         has_model_ssim: 'Monograph',
-        press_sim: "sortpress2",
+        press_sim: "sortpress3",
         read_access_group_ssim: "public",
         title_tesim: 'Manatee',
         title_si: 'manatee', # this is downcased on indexing, otherwise sort will have caps first
@@ -212,7 +284,7 @@ describe 'Press catalog sort' do
       ::SolrDocument.new(
         id: '666666666',
         has_model_ssim: 'Monograph',
-        press_sim: "sortpress2",
+        press_sim: "sortpress3",
         read_access_group_ssim: "public",
         title_tesim: 'baboon',
         title_si: 'baboon',
@@ -224,7 +296,7 @@ describe 'Press catalog sort' do
     }
 
     before do
-      create(:press, subdomain: 'sortpress2')
+      create(:press, subdomain: 'sortpress3')
       ActiveFedora::SolrService.add([mono_doc_1.to_h,
                                      mono_doc_2.to_h,
                                      mono_doc_3.to_h,
@@ -232,7 +304,7 @@ describe 'Press catalog sort' do
                                      mono_doc_5.to_h,
                                      mono_doc_6.to_h])
       ActiveFedora::SolrService.commit
-      visit "/sortpress2"
+      visit "/sortpress3"
     end
 
     it 'is sorted by "Date Added (Newest First)" by default' do
