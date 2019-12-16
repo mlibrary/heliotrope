@@ -5,7 +5,7 @@ sudo: required
 bundler_args: --without production
 before_install:
   - gem update --system
-  - gem install bundler --pre
+  - gem install bundler:1.17.3
 before_script:
   - bin/bundle exec bin/travis
 rvm:
