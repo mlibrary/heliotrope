@@ -14,7 +14,8 @@ $(document).on('turbolinks:load', function() {
       tab.removeAttribute('tabindex');
       // Set the selected state
       tab.setAttribute('aria-selected', 'true');
-      tab.parentNode.setAttribute('class', 'active');
+      tab.setAttribute('aria-expanded', 'true');
+      tab.closest('li').setAttribute('class', 'active');
       var index = Array.prototype.indexOf.call(tabs, tab);
       // $(panels[index]).tab('show');
       panels[index].setAttribute('aria-hidden', 'false');
@@ -23,7 +24,8 @@ $(document).on('turbolinks:load', function() {
     var unselectTab = function unselectTab(tab, index) {
       tab.setAttribute('tabindex', '-1');
       tab.setAttribute('aria-selected', 'false');
-      tab.parentNode.removeAttribute('class', 'active');
+      tab.setAttribute('aria-expanded', 'false');
+      tab.closest('li').removeAttribute('class', 'active');
       panels[index].setAttribute('aria-hidden', 'true');
     };
 
