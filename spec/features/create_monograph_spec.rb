@@ -16,6 +16,12 @@ describe 'Create a monograph' do
       visit new_hyrax_monograph_path
 
       # Monograph form
+
+      # HELIO-3094
+      expect(page).not_to have_selector '#monograph_visibility_authenticated' # institutional access
+      expect(page).not_to have_selector '#monograph_visibility_embargo'
+      expect(page).not_to have_selector '#monograph_visibility_lease'
+
       # Basic Metadata
       fill_in 'monograph[title]', with: '#hashtag Test Monograph Title with _MD Italics_ and <em>HTML Italics</em>'
       select press.name, from: I18n.t('press')

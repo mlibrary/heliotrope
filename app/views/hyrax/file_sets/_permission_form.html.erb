@@ -1,4 +1,4 @@
-<%# pulled from https://github.com/samvera/hyrax/blob/51e68aa734bc5efea52f5fc83141647c820db3a8/app/views/hyrax/file_sets/_permission_form.html.erb#L1 %>
+<%# heliotrope: pulled from https://github.com/samvera/hyrax/blob/51e68aa734bc5efea52f5fc83141647c820db3a8/app/views/hyrax/file_sets/_permission_form.html.erb#L1 %>
 <% depositor = f.object.depositor %>
 <% public_perm = f.object.permissions.map { |perm| perm.access if perm.agent_name == "public" }.compact.first %>
 <% public_perm = true if params[:controller] == 'batch' %>
