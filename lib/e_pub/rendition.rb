@@ -3,7 +3,7 @@
 module EPub
   class Rendition
     private_class_method :new
-
+    attr_reader :unmarshaller_rootfile
     # Class Methods
 
     def self.from_publication_unmarshaller_container_rootfile(publication, unmarshaller_rootfile)
