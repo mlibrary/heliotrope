@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require 'pragmatic_segmenter'
-require 'byebug'
 
 # This class is supposed to show the search term in context, so surrounded
 # by sentences (not sentence fragments). It's unfortunatly a little involved...
