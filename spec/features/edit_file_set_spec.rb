@@ -44,6 +44,11 @@ describe 'Edit a file set' do
     it do # rubocop:disable RSpec/ExampleLength
       visit edit_hyrax_file_set_path(file_set)
 
+      # HELIO-3094
+      expect(page).not_to have_selector '#file_set_visibility_authenticated' # institutional access
+      expect(page).not_to have_selector '#file_set_visibility_embargo'
+      expect(page).not_to have_selector '#file_set_visibility_lease'
+
       fill_in 'Resource Type', with: 'image'
       fill_in 'Caption', with: 'This is a caption for the image'
       fill_in 'Alternative Text', with: 'This is some alt text for the image'

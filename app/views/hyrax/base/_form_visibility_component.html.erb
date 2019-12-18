@@ -1,0 +1,27 @@
+<%# heliotrope: pulled from https://github.com/samvera/hyrax/blob/51e68aa734bc5efea52f5fc83141647c820db3a8/app/views/hyrax/base/_form_visibility_component.html.erb#L1 %>
+<% if f.object.embargo_release_date %>
+  <%= render 'form_permission_under_embargo', f: f %>
+<% elsif f.object.lease_expiration_date %>
+  <%= render 'form_permission_under_lease', f: f %>
+<% else %>
+    <fieldset>
+      <legend class="legend-save-work">Visibility</legend>
+      <ul class="visibility">
+        <li class="radio">
+          <label>
+            <%= f.radio_button :visibility, Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC, data: { 'target': '#collapsePublic' } %>
+            <%= visibility_badge(Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC) %>
+            <%# heliotrope: don't show public visibility message and warning message aimed at public users %>
+          </label>
+        </li>
+        <%# heliotrope: embargo, lease, institution stuff removed here %>
+        <li class="radio">
+          <label>
+            <%= f.radio_button :visibility, Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE %>
+            <%= visibility_badge(Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE) %>
+            <%# heliotrope: don't show public visibility message and warning message aimed at public users %>
+          </label>
+        </li>
+      </ul>
+    </fieldset>
+<% end %>

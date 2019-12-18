@@ -1,4 +1,4 @@
-<%# pulled from https://github.com/samvera/hyrax/blob/51e68aa734bc5efea52f5fc83141647c820db3a8/app/views/hyrax/base/_form_permission.html.erb#L1 %>
+<%# heliotrope: pulled from https://github.com/samvera/hyrax/blob/51e68aa734bc5efea52f5fc83141647c820db3a8/app/views/hyrax/base/_form_permission.html.erb#L1 %>
 <% # This is used by works and by FileSet and the layout (col-6 vs col-12) is different for both %>
 <% if f.object.embargo_release_date %>
   <%= render 'form_permission_under_embargo', f: f %>
@@ -16,7 +16,7 @@
         <%= f.radio_button :visibility, Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC %>
         <%= visibility_badge(Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC) %>
       </label>
-      <%# embargo, lease, institution stuff removed here %>
+      <%# heliotrope: embargo, lease, institution stuff removed here %>
       <label class="radio">
         <%= f.radio_button :visibility, Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE %>
         <%= visibility_badge(Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE) %>
