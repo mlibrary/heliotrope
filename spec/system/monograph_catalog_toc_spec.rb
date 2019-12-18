@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe "Monograph Catalog TOC", type: :system do
+RSpec.describe "Monograph Catalog TOC", type: :system, browser: true do
   let(:platform_admin) { create(:platform_admin) }
   let(:press) { create(:press, subdomain: subdomain) }
   let(:monograph) { create(:monograph, press: press.subdomain, user: platform_admin, visibility: "open", representative_id: cover.id) }

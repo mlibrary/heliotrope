@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe 'Batch creation of monographs', type: :system do
+RSpec.describe 'Batch creation of monographs', type: :system, browser: true do
   let(:user) { create(:press_admin) }
   let(:users_press) { user.presses.first }
   let(:other_press) { create(:press) }

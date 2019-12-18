@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe 'Dashboard User Types', type: :system do
+RSpec.describe 'Dashboard User Types', type: :system, browser: true do
   context "an anonymous user" do
     it "has no user dropdown menu and no dashboards" do
       visit presses_path
