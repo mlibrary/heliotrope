@@ -37,6 +37,11 @@ RSpec.describe 'Batch creation of monographs', type: :system do
       attach_file("files[]", fixture_path + '/csv/miranda.jpg', visible: false)
     end
 
+    # HELIO-3094
+    expect(page).not_to have_selector '#batch_upload_item_visibility_authenticated' # institutional access
+    expect(page).not_to have_selector '#batch_upload_item_visibility_embargo'
+    expect(page).not_to have_selector '#batch_upload_item_visibility_lease'
+
     # check('agreement') # Deposit Agreement, currently disabled in `config/features.yml`
     choose('batch_upload_item_visibility_open') # Visibility (not strictly necessary to pass this test)
 
