@@ -56,6 +56,11 @@ RSpec.describe 'Create a Score', type: :system do
       fill_in('Number of movements', with: '23')
       check 'North America' # Premiere Status
 
+      # HELIO-3094
+      expect(page).not_to have_selector '#score_visibility_authenticated' # institutional access
+      expect(page).not_to have_selector '#score_visibility_embargo'
+      expect(page).not_to have_selector '#score_visibility_lease'
+
       choose('score_visibility_open')
 
       click_on('Save')
