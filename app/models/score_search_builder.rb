@@ -18,24 +18,24 @@ class ScoreSearchBuilder < ::SearchBuilder
 
   private
 
-    # Get the asset/fileset ids of the monograph
+    # Get the asset/fileset ids of the score
     def asset_ids(id)
-      score = ActiveFedora::SolrService.query("{!terms f=id}#{id}", rows: 1)
+      score = Hyrax::PresenterFactory.build_for(ids: [id], presenter_class: Hyrax::ScorePresenter, presenter_args: nil).first
       return if score.blank?
 
-      ids = score.first['ordered_member_ids_ssim']
-      return if ids.blank?
+      docs = score.ordered_member_docs
+      return if docs.blank?
 
-      ids.delete(score.first['representative_id_ssim']&.first)
-      featured_representatives(score.first['id']).each do |fr|
-        ids.delete(fr.file_set_id)
+      ids = []
+      docs.each do |doc|
+        fp = Hyrax::FileSetPresenter.new(doc, nil)
+        next if fp.featured_representative?
+        next if fp.id == score.representative_id
+        next if Sighrax.tombstone?(Sighrax.presenter_factory(fp))
+        ids << fp.id
       end
 
-      ids.join(',')
-    end
-
-    def featured_representatives(id)
-      FeaturedRepresentative.where(work_id: id)
+      ids.join(",")
     end
 
     def work_types

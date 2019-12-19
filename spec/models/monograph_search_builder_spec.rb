@@ -10,62 +10,78 @@ describe MonographSearchBuilder do
 
   describe "#filter_by_members" do
     context "a monograph with assets" do
-      let(:monograph) { create(:monograph, representative_id: cover.id) }
-      let(:cover) { create(:file_set) }
-      let(:file1) { create(:file_set) }
-      let(:file2) { create(:file_set) }
+      let(:monograph) do
+        ::SolrDocument.new(id: 'mono',
+                           has_model_ssim: ['Monograph'],
+                           # representative_id has a rather different Solr name!
+                           hasRelatedMediaFragment_ssim: cover.id,
+                           ordered_member_ids_ssim: [cover_noid, file1_noid, file2_noid])
+      end
+
+      let(:cover_noid) { 'cover1234' }
+      let(:file1_noid) { '111111111' }
+      let(:file2_noid) { '222222222' }
+
+      let(:cover) { ::SolrDocument.new(id: cover_noid, has_model_ssim: ['FileSet'], monograph_id_ssim: ['mono'], visibility_ssi: 'open') }
+      let(:file1) { ::SolrDocument.new(id: file1_noid, has_model_ssim: ['FileSet'], monograph_id_ssim: ['mono'], visibility_ssi: 'open') }
+      let(:file2) { ::SolrDocument.new(id: file2_noid, has_model_ssim: ['FileSet'], monograph_id_ssim: ['mono'], visibility_ssi: 'open') }
 
       before do
-        monograph.ordered_members << cover
-        monograph.ordered_members << file1
-        monograph.ordered_members << file2
-        monograph.save!
-        search_builder.blacklight_params['id'] = monograph.id
+        ActiveFedora::SolrService.add([monograph.to_h, cover.to_h, file1.to_h, file2.to_h])
+        ActiveFedora::SolrService.commit
+        search_builder.blacklight_params['id'] = "mono"
       end
 
       context "reprensentative id (cover)" do
         before { search_builder.filter_by_members(solr_params) }
 
         it "creates a query for the monograph's assets but without the representative_id" do
-          expect(solr_params[:fq].first).to match(/^{!terms f=id}#{file1.id},#{file2.id}$/)
+          expect(solr_params[:fq].first).to match(/^{!terms f=id}#{file1_noid},#{file2_noid}$/)
         end
       end
 
       FeaturedRepresentative::KINDS.each do |kind|
         context kind do
-          before { FeaturedRepresentative.create!(work_id: monograph.id, file_set_id: file2.id, kind: kind) }
-
-          after { FeaturedRepresentative.destroy_all }
+          before { FeaturedRepresentative.create!(work_id: "mono", file_set_id: file2_noid, kind: kind) }
 
           it "creates a query for the monograph's assets" do
             search_builder.filter_by_members(solr_params)
-            expect(solr_params[:fq].first).to match(/^{!terms f=id}#{file1.id}$/)
+            expect(solr_params[:fq].first).to match(/^{!terms f=id}#{file1_noid}$/)
           end
         end
       end
 
       context 'tombstone' do
-        let(:entity) { instance_double(Sighrax::Entity, 'entity') }
+        let(:file2) do
+          ::SolrDocument.new(id: file2_noid,
+                             has_model_ssim: ['FileSet'],
+                             permissions_expiration_date_ssim: Time.now.yesterday.utc.to_s,
+                             monograph_id_ssim: ['mono'],
+                             visibility_ssi: 'open')
+        end
 
         before do
-          allow(Sighrax).to receive(:factory)
-          allow(Sighrax).to receive(:factory).with(file2.id).and_return(entity)
-          allow(Sighrax).to receive(:tombstone?)
-          allow(Sighrax).to receive(:tombstone?).with(entity).and_return(true)
+          ActiveFedora::SolrService.add([file2.to_h])
+          ActiveFedora::SolrService.commit
         end
 
         it "creates a query for the monograph's assets without tombstone" do
           search_builder.filter_by_members(solr_params)
-          expect(solr_params[:fq].first).to match(/^{!terms f=id}#{file1.id}$/)
+          expect(solr_params[:fq].first).to match(/^{!terms f=id}#{file1_noid}$/)
         end
       end
     end
 
     context "a monograph with no assets" do
-      let(:empty_monograph) { create(:monograph) }
+      let(:monograph) do
+        ::SolrDocument.new(id: 'mono',
+                           has_model_ssim: ['Monograph'])
+      end
 
       before do
-        search_builder.blacklight_params['id'] = empty_monograph.id
+        ActiveFedora::SolrService.add([monograph.to_h])
+        ActiveFedora::SolrService.commit
+        search_builder.blacklight_params['id'] = 'mono'
         search_builder.filter_by_members(solr_params)
       end
 
@@ -78,16 +94,20 @@ describe MonographSearchBuilder do
     # We're testing search, not really the search_builder...
     # For #386
     context "a monograph with file_sets with markdown content" do
-      let(:monograph) { create(:monograph, representative_id: cover.id) }
-      let(:cover) { create(:file_set, title: ["Blue"], description: ["italic _elephant_"]) }
-      let(:file1) { create(:file_set, title: ["Red"], description: ["bold __spider__"]) }
-      let(:file2) { create(:file_set, title: ["Yellow"], description: ["strikethrough ~~lizard~~"]) }
+      let(:monograph) do
+        ::SolrDocument.new(id: 'mono',
+                           has_model_ssim: ['Monograph'],
+                           # representative_id has a rather different Solr name!
+                           hasRelatedMediaFragment_ssim: cover.id,
+                           ordered_member_ids_ssim: ["cover", "file1", "file2"])
+      end
+      let(:cover) { ::SolrDocument.new(id: 'cover', has_model_ssim: ['FileSet'], title_tesim: ["Blue"], description_tesim: ["italic _elephant_"], visibility_ssi: 'open') }
+      let(:file1) { ::SolrDocument.new(id: 'file1', has_model_ssim: ['FileSet'], title_tesim: ["Red"], description_tesim: ["bold __spider__"], visibility_ssi: 'open') }
+      let(:file2) { ::SolrDocument.new(id: 'file2', has_model_ssim: ['FileSet'], title_tesim: ["Yellow"], description_tesim: ["strikethrough ~~lizard~~"], visibility_ssi: 'open') }
 
       before do
-        monograph.ordered_members << cover
-        monograph.ordered_members << file1
-        monograph.ordered_members << file2
-        monograph.save!
+        ActiveFedora::SolrService.add([monograph.to_h, cover.to_h, file1.to_h, file2.to_h])
+        ActiveFedora::SolrService.commit
       end
 
       it "recieves the correct file_set after searching for italic" do
