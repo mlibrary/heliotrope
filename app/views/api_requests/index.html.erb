@@ -1,32 +1,36 @@
 <p id="notice"><%= notice %></p>
 <div id="maincontent">
+  <h1>API Requests</h1>
   <div class="row">
-    <div class="col-md-12"><h1>API Requests</h1></div>
-    <div class="col-md-12">
-      <div class="row">
-        <b>
-          <div class="col-md-2">Timestamp</div>
-          <div class="col-md-1">User ID</div>
-          <div class="col-md-4">Request</div>
-          <div class="col-md-1">Response</div>
-          <div class="col-md-3">Exception</div>
-          <div class="col-md-1"></div>
-          <hr/>
-        </b>
-      </div>
-      <% @api_requests.each do |api_request| %>
-        <div class="row">
-          <div class="col-md-2"><%= api_request.created_at %></div>
-          <div class="col-md-1"><%= api_request.user_id %></div>
-          <div class="col-md-4"><%= api_request.action %> <%= api_request.path %></div>
-          <div class="col-md-1"><%= api_request.status %></div>
-          <div class="col-md-3"><%= api_request.exception %></div>
-          <div class="col-md-1"><%= link_to 'Show', api_request %></div>
-        </div>
-      <% end %>
-    </div>
-    <div class="col-md-12"><br/></div>
-    <div class="col-md-12"><%= paginate @api_requests %></div>
-    <div class="col-md-12"><br/></div>
+    <form name="filter" method="get" action="<%= api_requests_path %>">
+      <b>
+        <div class="col-md-12"><hr/></div>
+        <% size = 6 %>
+        <div class="col-md-2"><div>Timestamp</div><div><input type="text" name="created_at_like" value="<%= params[:created_at_like] %>" size="<%= size * 3 %>" aria-label="created_at_like"></div></div>
+        <div class="col-md-1"><div>User</div><div><input type="text" name="user_id_like" value="<%= params[:user_id_like] %>" size="<%= size %>" aria-label="user_id_like"></div></div>
+        <div class="col-md-1"><div>Action</div><div><input type="text" name="action_like" value="<%= params[:action_like] %>" size="<%= size  %>" aria-label="action_like"></div></div>
+        <div class="col-md-3"><div>Request</div><div><input type="text" name="path_like" value="<%= params[:path_like] %>" size="<%= size * 4 %>" aria-label="path_like"></div></div>
+        <div class="col-md-1"><div>Response</div><div><input type="text" name="status_like" value="<%= params[:status_like] %>" size="<%= size %>" aria-label="status_like"></div></div>
+        <div class="col-md-3"><div>Exception</div><div><input type="text" name="exception_like" value="<%= params[:exception_like] %>" size="<%= size * 4 %>" aria-label="exception_like"></div></div>
+        <div class="col-md-1"><button name="submit" type="submit" value="filter">Filter</button></div>
+        <div class="col-md-12"><hr/></div>
+      </b>
+    </form>
   </div>
+  <div class="row">
+    <% @api_requests.each do |api_request| %>
+      <div class="row">
+        <div class="col-md-2"><%= api_request.created_at %></div>
+        <div class="col-md-1"><%= api_request.user_id %></div>
+        <div class="col-md-1"><%= api_request.action %></div>
+        <div class="col-md-3"><%= api_request.path %></div>
+        <div class="col-md-1"><%= api_request.status %></div>
+        <div class="col-md-3"><%= api_request.exception %></div>
+        <div class="col-md-1"><%= link_to 'Show', api_request %></div>
+      </div>
+    <% end %>
+  </div>
+  <div class="col-md-12"><br/></div>
+  <div class="col-md-12"><%= paginate @api_requests %></div>
+  <div class="col-md-12"><br/></div>
 </div>

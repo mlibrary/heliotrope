@@ -84,7 +84,12 @@ module API
           return render json: @individual.errors, status: :unprocessable_entity
         end
         @individual = Greensub::Individual.new(individual_params)
-        return render json: @individual.errors, status: :unprocessable_entity unless @individual.save
+        begin
+          @individual.save!
+        rescue StandardError => e
+          @individual.errors.add(:exception, e.to_s)
+          return render json: @individual.errors, status: :unprocessable_entity
+        end
         render :show, status: :created, location: @individual
       end
 

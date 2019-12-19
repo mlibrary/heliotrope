@@ -84,7 +84,12 @@ module API
           return render json: @institution.errors, status: :unprocessable_entity
         end
         @institution = Greensub::Institution.new(institution_params)
-        return render json: @institution.errors, status: :unprocessable_entity unless @institution.save
+        begin
+          @institution.save!
+        rescue StandardError => e
+          @institution.errors.add(:exception, e.to_s)
+          return render json: @institution.errors, status: :unprocessable_entity
+        end
         render :show, status: :created, location: @institution
       end
 

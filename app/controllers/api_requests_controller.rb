@@ -4,7 +4,7 @@ class APIRequestsController < ApplicationController
   before_action :set_api_request, only: %i[show destroy]
 
   def index
-    @api_requests = APIRequest.order(created_at: :desc).page(params[:page])
+    @api_requests = APIRequest.filter(filtering_params(params)).order(created_at: :desc).page(params[:page])
   end
 
   def truncate
@@ -29,5 +29,9 @@ class APIRequestsController < ApplicationController
 
     def set_api_request
       @api_request = APIRequest.find(params[:id])
+    end
+
+    def filtering_params(params)
+      params.slice(:user_id_like, :action_like, :path_like, :params_like, :status_like, :exception_like, :created_at_like)
     end
 end
