@@ -52,11 +52,11 @@ html, body {
 }
 
 .cozy-modal-contents-container .modal__container {
-  width: 400px;
+  width: 40%;
 }
 
 .cozy-modal-contents {
-  width: 400px;
+  width: 40%;
 }
 
 .modal__container div[role="document"] {
@@ -200,7 +200,6 @@ a:focus > .thumbnail > .thumbnailSelectionRing,
 
 #outlineView,
 #attachmentsView {
-  width: 392px;
   top: 0;
   bottom: 0;
   overflow: auto;
@@ -213,10 +212,23 @@ a:focus > .thumbnail > .thumbnailSelectionRing,
   padding: 4px 4px 0;
 }
 #attachmentsView {
+  width: 392px;
   padding: 3px 4px 0;
 }
 
+#outlineView .outlineItem a {
+  display: block;
+  padding: 1em 1em 1em 1.2em;
+  border-top: 1px solid #ccc;
+  border-bottom: 1px solid transparent;
+  transition: background 0.2s, box-shadow 0.3s;
+}
 
+#outlineView .outlineItem a:hover {
+  background-color: #e8e8e8;
+  border-top: 1px solid #000;
+  border-bottom: 1px solid #000;
+}
 
 /* TEXT LAYER */
 
