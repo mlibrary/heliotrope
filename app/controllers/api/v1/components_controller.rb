@@ -88,7 +88,12 @@ module API
           @component.errors.add(:noid, "component noid '#{component_params[:noid]}' does not exists!")
           return render json: @component.errors, status: :unprocessable_entity
         end
-        return render json: @component.errors, status: :unprocessable_entity unless @component.save
+        begin
+          @component.save!
+        rescue StandardError => e
+          @component.errors.add(:exception, e.to_s)
+          return render json: @component.errors, status: :unprocessable_entity
+        end
         render :show, status: :created, location: @component
       end
 

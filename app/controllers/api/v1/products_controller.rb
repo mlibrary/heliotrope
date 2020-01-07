@@ -90,7 +90,12 @@ module API
           return render json: @product.errors, status: :unprocessable_entity
         end
         @product = Greensub::Product.new(product_params)
-        return render json: @product.errors, status: :unprocessable_entity unless @product.save
+        begin
+          @product.save!
+        rescue StandardError => e
+          @product.errors.add(:exception, e.to_s)
+          return render json: @product.errors, status: :unprocessable_entity
+        end
         render :show, status: :created, location: @product
       end
 
