@@ -39,7 +39,7 @@ gem 'jbuilder', '~> 2.5'
 # gem 'capistrano-rails', group: :development
 
 # HELIO-2318
-gem 'rack', '~> 2.0.6'
+gem 'rack', '~> 2.0.8'
 
 # HELIO-2404 APTRUST PRESERVATION
 gem 'bagit'
