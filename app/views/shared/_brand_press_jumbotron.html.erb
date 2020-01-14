@@ -1,4 +1,5 @@
 <!-- Main jumbotron for a primary heading image -->
+    <% unless @press.navigation_block.present? %>
     <div class="jumbotron">
       <h1 class="sr-only"><%= @press.name %></h1>
       <div class="container">
@@ -28,3 +29,4 @@
         <% end %>
       </div>
     </div>
+    <% end %>

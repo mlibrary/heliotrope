@@ -53,6 +53,12 @@ module PressHelper
     press.footer_block_c.presence || parent_press(press)&.footer_block_c.presence
   end
 
+  def navigation_block(subdomain)
+    press = Press.where(subdomain: subdomain)&.first
+    return if press.blank?
+    press.navigation_block.presence || parent_press(press)&.navigation_block.presence
+  end
+
   def google_analytics(subdomain)
     press = Press.where(subdomain: subdomain)&.first
     return if press.blank?

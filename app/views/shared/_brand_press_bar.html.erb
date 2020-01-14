@@ -26,6 +26,9 @@
 
     <div class="collapse navbar-collapse" id="brand-bar-nav">
       <div class="navbar-right">
+        <% if navigation_block(press_subdomain).present? %>
+          <%= navigation_block(press_subdomain).html_safe %>
+        <% end %>
         <% if current_user && show_site_actions? %>
           <%= render 'shared/my_actions' %>
         <% elsif current_institutions? %>
