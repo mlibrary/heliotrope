@@ -1,15 +1,15 @@
 <div id="tabs">
   <ul class="nav nav-tabs" role="tablist">
-    <li role="presentation" class="active"><h2><a id="tab-info" href="#info" data-toggle="tab" role="tab" aria-controls="info" aria-selected="true" tabindex="0">Info</a></h2></li>
-    <li role="presentation"><h2><a id="tab-permissions" href="#permissions" data-toggle="tab" role="tab" aria-controls="permissions" aria-selected="false" tabindex="-1">Permissions</a></h2></li>
-    <li id="stats-tab" role="presentation"><h2><a id="tab-stats" href="#stats" data-toggle="tab" role="tab" aria-controls="stats" aria-selected="false" tabindex="-1">Stats</a></h2></li>
+    <li role="presentation" class="active"><h2><a id="tab-info" href="#info" data-toggle="tab" role="tab" aria-controls="info" aria-selected="true" tabindex="-1">Info</a></h2></li>
+    <li role="presentation"><h2><a id="tab-permissions" href="#permissions" data-toggle="tab" role="tab" aria-controls="permissions" aria-selected="false" aria-expanded="false" tabindex="-1">Permissions</a></h2></li>
+    <li id="stats-tab" role="presentation"><h2><a id="tab-stats" href="#stats" data-toggle="tab" role="tab" aria-controls="stats" aria-selected="false" aria-expanded="false" tabindex="-1">Stats</a></h2></li>
     <% unless presenter.external_resource? || presenter.tombstone? %>
-      <li role="presentation"><h2><a id="tab-technical-info" href="#technical-info" data-toggle="tab" role="tab" aria-controls="technical-info" aria-selected="false" tabindex="-1">Technical Info</a></h2></li>
+      <li role="presentation"><h2><a id="tab-technical-info" href="#technical-info" data-toggle="tab" role="tab" aria-controls="technical-info" aria-selected="false" aria-expanded="false" tabindex="-1">Technical Info</a></h2></li>
     <% end %>
   </ul>
 
   <div id="tabs-content" class="tab-content" aria-live="polite">
-    <section id="info" class="tab-pane fade in active" role="tabpanel" aria-hidden="false" aria-labelledby="tab-info" tabindex="0">
+    <section id="info" class="tab-pane fade active" role="tabpanel" aria-hidden="false" aria-labelledby="tab-info" tabindex="0">
       <table class="table <%= dom_class(presenter) %> attributes" <%= presenter.microdata_type_to_html %>>
         <tbody>
           <%= render 'attribute_rows_info', presenter: presenter %>

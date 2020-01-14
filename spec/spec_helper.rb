@@ -44,9 +44,9 @@ RSpec.configure do |config|
 
   # System specs (new in rails 5.1) use headless chrome and Capybara
   config.before(:each, type: :system) do
-    driven_by :selenium_chrome_headless
+    driven_by :selenium_chrome_headless, screen_size: [1200, 1200]
     # If you actually want to watch these happen in the browser (and have chrome installed)
-    # driven_by :selenium_chrome
+    # driven_by :selenium_chrome, screen_size: [1200, 1200]
   end
   # exclude system specs by default because of HELIO-3046 (frequent-yet-random Travis failures... timing?)
   # to include them add a `-t browser` or `--tag browser`, e.g. `bundle exec rspec -t browser` or for just...
