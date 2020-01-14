@@ -33,7 +33,7 @@ RSpec.describe FeaturedRepresentativesController, type: :controller do
         it 'unpacks some kinds' do
           post :save, params: { work_id: monograph.id, file_set_id: file_set.id, kind: kind }
           case kind
-          when 'epub', 'webgl'
+          when 'epub', 'webgl', 'pdf_ebook'
             expect(UnpackJob).to have_received(:perform_later).with(file_set.id, kind)
           else
             expect(UnpackJob).not_to have_received(:perform_later).with(file_set.id, kind)

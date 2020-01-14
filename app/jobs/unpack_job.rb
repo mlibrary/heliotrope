@@ -5,7 +5,7 @@ require 'zip'
 class UnpackJob < ApplicationJob
   queue_as :unpack
 
-  def perform(id, kind)
+  def perform(id, kind) # rubocop:disable Metrics/CyclomaticComplexity
     file_set = FileSet.find id
     raise "No file_set for #{id}" if file_set.nil?
 
@@ -14,6 +14,8 @@ class UnpackJob < ApplicationJob
     # A rake task run via nightly cron will delete these so we can avoid
     # problems with puma holding open file handles making deletion fail, HELIO-2015
     FileUtils.move(root_path, UnpackService.remove_path_from_noid(id, kind)) if Dir.exist? root_path
+    # "Unpacked" PDFs are files, not directories
+    FileUtils.move("#{root_path}.pdf", UnpackService.remove_path_from_noid(id, kind)) if File.exist? "#{root_path}.pdf"
 
     file = Tempfile.new(id)
     file.write(file_set.original_file.content.force_encoding("utf-8"))
@@ -29,12 +31,24 @@ class UnpackJob < ApplicationJob
       epub_webgl_bridge(id, root_path, kind)
     when 'map'
       unpack_map(id, root_path, file)
+    when 'pdf_ebook'
+      unpack_pdf(id, root_path, file)
     else
       Rails.logger.error("Can't unpack #{kind} for #{id}")
     end
   end
 
   private
+
+    def unpack_pdf(id, root_path, file)
+      # Need to make the dir for some tests to pass. This shouldn't ever be an issue
+      # in real usage, but I'll put it here and not in the specs in case really weird
+      # things happen with hydra-derivatives. I guess.
+      FileUtils.mkdir_p File.dirname root_path unless Dir.exist? File.dirname root_path
+      FileUtils.move(file, "#{root_path}.pdf")
+      # This is weird, but perms are -rw------- and they need to be -rw-rw-r--
+      File.chmod 0664, "#{root_path}.pdf"
+    end
 
     def epub_webgl_bridge(id, root_path, kind)
       # Edge case for epubs with POI (Point of Interest) to map to CFI for a webgl (gabii)

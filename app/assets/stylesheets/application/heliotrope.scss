@@ -1192,6 +1192,9 @@ footer.press {
       transition: 0.2s ease-in;
     }
   }
+  .helio-loading-bar .progress {
+    z-index: 99999;
+  }
 }
 
 .cozy-container i[class^='icon-'] {
@@ -1545,7 +1548,3 @@ footer.press {
   margin: 0;
   font-weight: bold;
 }
-
-
-
-
