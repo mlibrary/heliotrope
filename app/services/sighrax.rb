@@ -20,11 +20,35 @@ module Sighrax # rubocop:disable Metrics/ModuleLength
              rescue StandardError => _e
                nil
              end
+
+      Rails.logger.debug("[SIGHRAX] Solr get #{noid}")
       return Entity.null_entity(noid) if data.blank?
 
       model_type = Array(data['has_model_ssim']).first
       return Entity.send(:new, noid, data) if model_type.blank?
       model_factory(noid, data, model_type)
+    end
+
+    # Since we're starting to add logic to Sighrax that we want in different
+    # contexts (tombstone and subscription access, etc) we'll add different factories
+    # so we don't need redundant solr calls to get the same information.
+    def solr_factory(document)
+      document = document.to_h.with_indifferent_access
+      noid = document['id']
+      return Entity.null_entity(noid) unless ValidationService.valid_noid?(noid)
+
+      model_type = document['has_model_ssim'].first
+      return Entity.send(:new, noid, data) if model_type.blank?
+      model_factory(noid, document, model_type)
+    end
+
+    def presenter_factory(presenter)
+      noid = presenter.id
+      return Entity.null_entity(noid) unless ValidationService.valid_noid?(noid)
+
+      model_type = presenter.solr_document['has_model_ssim'].first
+      return Entity.send(:new, noid, data) if model_type.blank?
+      model_factory(noid, presenter.solr_document, model_type)
     end
 
     def policy(current_actor, entity)
@@ -47,11 +71,11 @@ module Sighrax # rubocop:disable Metrics/ModuleLength
 
     def hyrax_presenter(entity)
       if entity.is_a?(Sighrax::Monograph)
-        Hyrax::PresenterFactory.build_for(ids: [entity.noid], presenter_class: Hyrax::MonographPresenter, presenter_args: nil)&.first
+        Hyrax::MonographPresenter.new(SolrDocument.new(entity.send(:data)), nil)
       elsif entity.is_a?(Sighrax::Score)
-        Hyrax::PresenterFactory.build_for(ids: [entity.noid], presenter_class: Hyrax::ScorePresenter, presenter_args: nil)&.first
+        Hyrax::ScorePresenter.new(SolrDocument.new(entity.send(:data)), nil)
       elsif entity.is_a?(Sighrax::Asset)
-        Hyrax::PresenterFactory.build_for(ids: [entity.noid], presenter_class: Hyrax::FileSetPresenter, presenter_args: nil)&.first
+        Hyrax::FileSetPresenter.new(SolrDocument.new(entity.send(:data)), nil)
       else
         Hyrax::Presenter.send(:new, entity.noid)
       end

@@ -3,7 +3,7 @@
 require 'rails_helper'
 
 RSpec.describe Sighrax do
-  describe '#facotry' do
+  describe '#factory' do
     subject { described_class.factory(noid) }
 
     let(:noid) { 'validnoid' }
@@ -86,6 +86,120 @@ RSpec.describe Sighrax do
               it { is_expected.to be_an_instance_of(Sighrax::PortableDocumentFormat) }
             end
           end
+        end
+      end
+    end
+  end
+
+  describe '#solr_factory' do
+    subject { described_class.solr_factory(document) }
+
+    context 'Monograph' do
+      let(:document) { ::SolrDocument.new(id: 'validnoid', has_model_ssim: ['Monograph']) }
+
+      it { is_expected.to be_an_instance_of(Sighrax::Monograph) }
+    end
+
+    context 'Score' do
+      let(:document) { ::SolrDocument.new(id: 'validnoid', has_model_ssim: ['Score']) }
+
+      it { is_expected.to be_an_instance_of(Sighrax::Score) }
+    end
+
+    context 'Asset' do
+      let(:document) { ::SolrDocument.new(id: 'validnoid', has_model_ssim: ['FileSet']) }
+      let(:featured_representatitve) { }
+
+      before do
+        allow(FeaturedRepresentative).to receive(:find_by).with(file_set_id: document['id']).and_return(featured_representatitve)
+      end
+
+      it { is_expected.to be_an_instance_of(Sighrax::Asset) }
+
+      context 'FeaturedRepresentative' do
+        let(:featured_representatitve) { double('featured_representatitve', kind: kind) }
+        let(:kind) { 'unknown' }
+
+        it { is_expected.to be_an_instance_of(Sighrax::Asset) }
+
+        context 'ElectronicPublication' do
+          let(:kind) { 'epub' }
+
+          it { is_expected.to be_an_instance_of(Sighrax::ElectronicPublication) }
+        end
+
+        context 'Mobipocket' do
+          let(:kind) { 'mobi' }
+
+          it { is_expected.to be_an_instance_of(Sighrax::Mobipocket) }
+        end
+
+        context 'PortableDocumentFormat' do
+          let(:kind) { 'pdf_ebook' }
+
+          it { is_expected.to be_an_instance_of(Sighrax::PortableDocumentFormat) }
+        end
+      end
+    end
+  end
+
+  describe '#presenter_factory' do
+    subject { described_class.presenter_factory(presenter) }
+
+    before do
+      ActiveFedora::SolrService.add([document.to_h])
+      ActiveFedora::SolrService.commit
+    end
+
+    context 'Monograph' do
+      let(:document) { ::SolrDocument.new(id: 'validnoid', has_model_ssim: ['Monograph']) }
+      let(:presenter) { Hyrax::MonographPresenter.new(document, nil) }
+
+      it { is_expected.to be_an_instance_of(Sighrax::Monograph) }
+    end
+
+    context 'Score' do
+      let(:document) { ::SolrDocument.new(id: 'validnoid', has_model_ssim: ['Score']) }
+      let(:presenter) { Hyrax::ScorePresenter.new(document, nil) }
+
+      it { is_expected.to be_an_instance_of(Sighrax::Score) }
+    end
+
+    context 'Asset' do
+      let(:document) { ::SolrDocument.new(id: 'validnoid', has_model_ssim: ['FileSet']) }
+      let(:presenter) { Hyrax::FileSetPresenter.new(document, nil) }
+      let(:featured_representatitve) { }
+
+      before do
+        ActiveFedora::SolrService.add([document.to_h])
+        ActiveFedora::SolrService.commit
+        allow(FeaturedRepresentative).to receive(:find_by).with(file_set_id: document['id']).and_return(featured_representatitve)
+      end
+
+      it { is_expected.to be_an_instance_of(Sighrax::Asset) }
+
+      context 'FeaturedRepresentative' do
+        let(:featured_representatitve) { double('featured_representatitve', kind: kind) }
+        let(:kind) { 'unknown' }
+
+        it { is_expected.to be_an_instance_of(Sighrax::Asset) }
+
+        context 'ElectronicPublication' do
+          let(:kind) { 'epub' }
+
+          it { is_expected.to be_an_instance_of(Sighrax::ElectronicPublication) }
+        end
+
+        context 'Mobipocket' do
+          let(:kind) { 'mobi' }
+
+          it { is_expected.to be_an_instance_of(Sighrax::Mobipocket) }
+        end
+
+        context 'PortableDocumentFormat' do
+          let(:kind) { 'pdf_ebook' }
+
+          it { is_expected.to be_an_instance_of(Sighrax::PortableDocumentFormat) }
         end
       end
     end

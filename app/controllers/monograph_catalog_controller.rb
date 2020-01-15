@@ -76,6 +76,8 @@ class MonographCatalogController < ::CatalogController
       @monograph_policy = MonographPolicy.new(current_actor, Sighrax.factory(monograph_id))
       @press_policy = PressPolicy.new(current_actor, Press.find_by(subdomain: @presenter.subdomain))
       @ebook_download_presenter = EBookDownloadPresenter.new(@presenter, current_ability, current_actor)
+      # This can be used if you need see something in the solr log... this is pretty noticable
+      # ActiveFedora::SolrService.query("{!terms f=id},,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,", rows: 99_999)
     end
 
     def add_counter_stat

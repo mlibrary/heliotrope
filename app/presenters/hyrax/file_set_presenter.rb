@@ -306,22 +306,16 @@ module Hyrax
     private
 
       def fetch_parent_presenter
-        # If we had FileSets with more then one parent this would not work and we'd need something
-        # more like https://github.com/samvera/hyrax/blob/master/app/presenters/hyrax/file_set_presenter.rb#L98-L104
-        @parent_document ||= ActiveFedora::SolrService.query("{!field f=member_ids_ssim}#{id}").first
+        @parent_document ||= ActiveFedora::SolrService.query("{!field f=member_ids_ssim}#{id}", rows: 1).first
 
-        presenter_class = case @parent_document["has_model_ssim"].first
-                          when "Monograph"
-                            Hyrax::MonographPresenter
-                          when "Score"
-                            Hyrax::ScorePresenter
-                          else
-                            WorkShowPresenter
-                          end
-
-        Hyrax::PresenterFactory.build_for(ids: [@parent_document["id"]],
-                                          presenter_class: presenter_class,
-                                          presenter_args: current_ability).first
+        case @parent_document["has_model_ssim"].first
+        when "Monograph"
+          Hyrax::MonographPresenter.new(::SolrDocument.new(@parent_document), current_ability)
+        when "Score"
+          Hyrax::ScorePresenter.new(::SolrDocument.new(@parent_document), current_ability)
+        else
+          WorkShowPresenter.new(::SolrDocument.new(@parent_document), current_ability)
+        end
       end
   end
 end
