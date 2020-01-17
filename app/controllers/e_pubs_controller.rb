@@ -37,7 +37,7 @@ class EPubsController < CheckpointController
     end
   end
 
-  def file
+  def file # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
     return head :no_content unless @policy.show?
 
     if @entity.is_a?(Sighrax::ElectronicPublication)
@@ -50,12 +50,20 @@ class EPubsController < CheckpointController
 
       send_file file
     elsif @entity.is_a?(Sighrax::PortableDocumentFormat)
-      response.headers['Content-Length'] ||= @presenter.file.size.to_s
-      # Prevent Rack::ETag from calculating a digest over body with a Last-Modified response header
-      # any Solr document save will change this, see definition of browser_cache_breaker
-      response.headers['Cache-Control'] = 'max-age=31536000, private'
-      response.headers['Last-Modified'] = Time.strptime(@presenter.browser_cache_breaker, '?%s').utc.strftime("%a, %d %b %Y %T GMT")
-      send_data @presenter.file.content, filename: @presenter.label, type: "application/pdf", disposition: "inline"
+      pdf = UnpackService.root_path_from_noid(@noid, 'pdf_ebook') + ".pdf"
+      if File.exist? pdf
+        response.headers['Accept-Ranges'] = 'bytes'
+        pdf.gsub!(/releases\/\d+/, "current")
+        response.headers['X-Sendfile'] = pdf
+        send_file pdf
+      else
+        response.headers['Content-Length'] ||= @presenter.file.size.to_s
+        # Prevent Rack::ETag from calculating a digest over body with a Last-Modified response header
+        # any Solr document save will change this, see definition of browser_cache_breaker
+        response.headers['Cache-Control'] = 'max-age=31536000, private'
+        response.headers['Last-Modified'] = Time.strptime(@presenter.browser_cache_breaker, '?%s').utc.strftime("%a, %d %b %Y %T GMT")
+        send_data @presenter.file.content, filename: @presenter.label, type: "application/pdf", disposition: "inline"
+      end
     end
   rescue StandardError => e
     Rails.logger.info("EPubsController.file raised #{e}")

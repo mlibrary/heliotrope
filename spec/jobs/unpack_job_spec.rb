@@ -24,6 +24,16 @@ RSpec.describe UnpackJob, type: :job do
       end
     end
 
+    context "with a pdf_ebook" do
+      let(:pdf_ebook) { create(:file_set, content: File.open(File.join(fixture_path, 'dummy.pdf'))) }
+      let(:root_path) { UnpackService.root_path_from_noid(pdf_ebook.id, 'pdf_ebook') }
+
+      it "makes the pdf_ebook derivative" do
+        described_class.perform_now(pdf_ebook.id, 'pdf_ebook')
+        expect(File.exist?("#{root_path}.pdf"))
+      end
+    end
+
     context "with an epub and pre-existing webgl" do
       let(:epub) { create(:file_set, content: File.open(File.join(fixture_path, 'fake_epub01.epub'))) }
       let!(:fre) { create(:featured_representative, work_id: 'mono_id', file_set_id: epub.id, kind: 'epub') }

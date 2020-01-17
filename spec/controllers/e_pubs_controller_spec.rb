@@ -169,6 +169,47 @@ RSpec.describe EPubsController, type: :controller do
           end
         end
       end
+
+      context 'file pdf' do
+        let(:monograph) { create(:public_monograph) }
+        let(:file_set) { create(:public_file_set, content: File.open(File.join(fixture_path, 'dummy.pdf'))) }
+        let!(:fr) { create(:featured_representative, work_id: monograph.id, file_set_id: file_set.id, kind: 'pdf_ebook') }
+
+        before do
+          monograph.ordered_members << file_set
+          monograph.save!
+          file_set.save!
+        end
+
+        context 'pdf is not unpacked (exists only in fedora)' do
+          before { get :file, params: { id: file_set.id, file: 'file' } }
+
+          it do
+            expect(response).to have_http_status(:success)
+            expect(response.body.empty?).to be false
+            expect(response.header['X-Sendfile']).to be_nil
+            expect(response.header['Accept-Ranges']).to be_nil
+          end
+        end
+
+        context 'pdf is unpacked (exists in derivatives directory)' do
+          before do
+            UnpackJob.perform_now(file_set.id, 'pdf_ebook')
+          end
+
+          after do
+            FileUtils.remove_entry_secure(UnpackService.root_path_from_noid(file_set.id, 'pdf_ebook') + '.pdf')
+          end
+
+          it do
+            get :file, params: { id: file_set.id, file: 'file' }
+            expect(response).to have_http_status(:success)
+            expect(response.body.empty?).to be false
+            expect(response.header['X-Sendfile']).to include("#{file_set.id.last}-pdf_ebook.pdf")
+            expect(response.header['Accept-Ranges']).to eq 'bytes'
+          end
+        end
+      end
     end
 
     describe '#search' do

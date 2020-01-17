@@ -3,7 +3,7 @@
 desc 'Removes old/reversioned epub or webgl derivatives'
 namespace :heliotrope do
   task remove_reversioned_derivatives: :environment do
-    ['epub', 'webgl'].each do |kind|
+    ['epub', 'webgl', 'pdf_ebook'].each do |kind|
       FeaturedRepresentative.where(kind: kind).each do |fr|
         root_path = UnpackService.root_path_from_noid(fr.file_set_id, kind)
         removes = root_path.sub(/\/*.\-#{kind}$/, '/') + "TO-BE-REMOVED-"

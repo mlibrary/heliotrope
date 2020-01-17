@@ -54,6 +54,7 @@ RSpec.describe "Score FileSets and PDF reader", type: :system do
     allow($stdout).to receive(:puts)
     Heliotrope::Application.load_tasks
     Rake::Task['jekyll:deploy'].invoke
+    allow(UnpackJob).to receive(:perform_later).and_return(:perform_now)
   end
 
   it do
