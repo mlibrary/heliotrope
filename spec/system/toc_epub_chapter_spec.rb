@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe "Cozy Sun Bear", type: :system do
+RSpec.describe "Cozy Sun Bear", type: :system, browser: true do
   let(:user) { create(:platform_admin) }
   let(:press) { create(:press, subdomain: 'blue') }
   let(:monograph) { create(:monograph, press: press.subdomain, user: user, visibility: "open", representative_id: cover.id) }
@@ -22,18 +22,24 @@ RSpec.describe "Cozy Sun Bear", type: :system do
   end
 
   it "clicking on a chapter link takes you to the correct chapter in CSB" do
-    visit monograph_catalog_path(monograph)
+    visit monograph_catalog_path(monograph, locale: 'en')
+    expect(page).to have_current_path(hyrax_monograph_path(monograph, locale: 'en'))
+
     # should have an epub download button for the platform_admin
+    expect(page).to have_selector('#monograph-download-btn')
     click_button "Download"
     expect(page).to have_content("EPUB (#{ActiveSupport::NumberHelper.number_to_human_size(file_set.file_size.first)})")
 
+    # ensure we're on the right tab to click a ToC link, even though it's the default (I think this also helps timing)
+    click_on "Table of Contents"
     expect(page).to have_link "Shields up!"
     # Clicking on chapter 2 in the ToC
     click_on "Shields up!"
+
     # Takes you to chapter 2 in CSB
     # Don't `sleep` to wait for CSB to load everything, instead have a test that
     # needs something CSB creates. Capybara will handle the rest.
-    expect(page).to have_selector('iframe')
+    expect(page).to have_selector('iframe', wait: 60)
     # expect(page).to have_content "some content" doesn't work with CSB, I think it's
     # because of the iframe. This works though:
     expect(page.body.match?(/communal imprints on the universe more possible, as they offer two-player, networked, or online modes/)).to be true

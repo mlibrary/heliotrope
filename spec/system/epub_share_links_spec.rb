@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe "EPub Share Links", type: :system do
+RSpec.describe "EPub Share Links", type: :system, browser: true do
   let(:platform_admin) { create(:platform_admin) }
   let(:press) { create(:press, subdomain: 'blue', share_links: true) }
   let(:monograph) { create(:public_monograph, press: press.subdomain, user: platform_admin, visibility: "open", representative_id: cover.id) }

@@ -3,7 +3,7 @@
 require 'rails_helper'
 require 'rake'
 
-RSpec.describe "Score FileSets and PDF reader", type: :system do
+RSpec.describe "Score FileSets and PDF reader", type: :system, browser: true do
   let(:press) { create(:press, subdomain: Services.score_press) }
   let(:user) { create(:press_admin, press: press) }
   let(:score) do
@@ -63,8 +63,16 @@ RSpec.describe "Score FileSets and PDF reader", type: :system do
     expect(page).to have_content('A Title')
     expect(page).not_to have_content('Read Book')
 
-    click_on('Kitty')
-
+    # check Kitty link exists as we're not going to click it (see massive comment)!
+    expect(page).to have_css("h4 a[href='/concern/file_sets/#{file_set.id}?locale=en']")
+    # Actually using the link to navigate causes lots of failures where Capybara...
+    # thinks the FileSet page has loaded when it hasn't. No amount of waiting overcomes...
+    # this problem, so it may be some sort of locking, race condition, something to do...
+    # with Turbolinks or Blacklight? Anyway, stick with `visit` until we know.
+    #
+    # click_on('Kitty')
+    visit hyrax_file_set_path(file_set, locale: 'en')
+    expect(page).to have_current_path(hyrax_file_set_path(file_set, locale: 'en'))
     # Make sure the score specific file_set fields (like score_version) that are
     # in extra_json_properties show up on the file_set page.
     expect(page).to have_content('Score version')

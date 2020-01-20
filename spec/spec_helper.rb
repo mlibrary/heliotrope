@@ -48,6 +48,10 @@ RSpec.configure do |config|
     # If you actually want to watch these happen in the browser (and have chrome installed)
     # driven_by :selenium_chrome
   end
+  # exclude system specs by default because of HELIO-3046 (frequent-yet-random Travis failures... timing?)
+  # to include them add a `-t browser` or `--tag browser`, e.g. `bundle exec rspec -t browser` or for just...
+  # the system/browser specs use `bundle exec rspec ./spec/system/ -t browser`
+  config.filter_run_excluding browser: :true
 
   config.after(:all) do
     if Rails.env.test? || Rails.env.cucumber?

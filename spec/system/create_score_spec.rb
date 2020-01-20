@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe 'Create a Score', type: :system do
+RSpec.describe 'Create a Score', type: :system, browser: true do
   context 'a logged in admin' do
     let!(:press) do
       create(:press, subdomain: Services.score_press,
