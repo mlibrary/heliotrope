@@ -49,7 +49,7 @@ module Crossref
         fragment = Nokogiri::XML.fragment(@component_file)
         fragment.at_css('title').content = presenter.page_title
         fragment.at_css('description').content = description(presenter)
-        fragment.at_css('format').attribute('mime_type').value = presenter.mime_type
+        fragment.at_css('format').attribute('mime_type').value = mime_type(presenter.mime_type)
         fragment.at_css('doi').content = doi(presenter, index)
         fragment.at_css('resource').content = presenter.handle_url
         document.at_css('component_list') << fragment
@@ -76,6 +76,16 @@ module Crossref
       file_set_doi = "#{work.doi}.cmp.#{index + 1}"
       file_sets_to_save[presenter.id] = { doi: file_set_doi }
       file_set_doi
+    end
+
+    def mime_type(mime)
+      # Why can't you have "text/csv" as a valid mime_type in crossref?
+      # Who knows? But you can't, sadly.
+      # http://data.crossref.org/reports/help/schema_doc/doi_resources4.3.6/4_3_6.html#mime_type.atts
+      # https://tools.lib.umich.edu/jira/browse/HELIO-3163
+      # This is of course not right, but what can you do?
+      return "application/vnd.ms-excel" if mime == "text/csv"
+      mime
     end
 
     private
