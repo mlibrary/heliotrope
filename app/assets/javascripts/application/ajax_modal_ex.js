@@ -7,7 +7,9 @@ if (Blacklight.ajaxModal === undefined) {
 }
 
 Blacklight.onLoad(function() {
-  $('body').on('show.bs.modal', function () {
+  $('#ajax-modal').attr('hidden', true);
+
+  $('#ajax-modal').on('show.bs.modal', function () {
     if (!$('body').data('Blacklight.ajaxModelEx.lastFocusedElement')) {
       $('body').data('Blacklight.ajaxModelEx.lastFocusedElement', $(document.activeElement));
       $('body').children().attr('hidden', true);
@@ -15,16 +17,16 @@ Blacklight.onLoad(function() {
     }
   });
 
-  $('body').on('shown.bs.modal', function () {
+  $('#ajax-modal').on('shown.bs.modal', function () {
     $('.ajax-modal-close').focus();
   });
 
-  $('body').on('hide.bs.modal', function () {
+  $('#ajax-modal').on('hide.bs.modal', function () {
     $('body').children().attr('hidden', false);
     $('#ajax-modal').attr('hidden', true);
   });
 
-  $('body').on('hidden.bs.modal', function () {
+  $('#ajax-modal').on('hidden.bs.modal', function () {
     $('body').data('Blacklight.ajaxModelEx.lastFocusedElement').focus();
     $('body').data('Blacklight.ajaxModelEx.lastFocusedElement', null);
   });
