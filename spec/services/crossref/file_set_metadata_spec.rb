@@ -48,7 +48,7 @@ RSpec.describe Crossref::FileSetMetadata do
                        creator_tesim: ["Last, First"],
                        contributor_tesim: ["First Last", "A Place", "Actor, An (actor)"],
                        caption_tesim: ["FS 3 Caption"],
-                       mime_type_ssi: "image/jpg")
+                       mime_type_ssi: "text/csv")
   end
 
   # will be skipped: no dois for epubs
@@ -134,10 +134,12 @@ RSpec.describe Crossref::FileSetMetadata do
         expect(subject.xpath("//component_list/component")[i].at_css('title').content).to eq fs.title.first
         if i == 2
           expect(subject.xpath("//component_list/component")[i].at_css('description').content).to eq fs.caption.first + " #{names}"
+          expect(subject.xpath("//component_list/component")[i].at_css('format').attribute('mime_type').value).to eq "application/vnd.ms-excel"
         else
           expect(subject.xpath("//component_list/component")[i].at_css('description').content).to eq fs.description.first + " #{names}"
+          expect(subject.xpath("//component_list/component")[i].at_css('format').attribute('mime_type').value).to eq fs.mime_type
         end
-        expect(subject.xpath("//component_list/component")[i].at_css('format').attribute('mime_type').value).to eq fs.mime_type
+
         expect(subject.xpath("//component_list/component")[i].at_css('doi').content).to eq "#{monograph.doi}.cmp.#{i + 1}"
         expect(subject.xpath("//component_list/component")[i].at_css('resource').content).to eq "https://hdl.handle.net/2027/fulcrum.#{fs.id}"
       end
