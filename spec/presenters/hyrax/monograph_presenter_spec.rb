@@ -112,9 +112,17 @@ RSpec.describe Hyrax::MonographPresenter do
     end
 
     describe "creators/contributors exist, creator_display doesn't" do
-      subject { presenter.authors }
+      describe 'default (contributors included)' do
+        subject { presenter.authors }
 
-      it { is_expected.to eq 'Abe Cat, Thing Lastname and Manny Feetys' }
+        it { is_expected.to eq 'Abe Cat, Thing Lastname and Manny Feetys' }
+      end
+
+      describe 'contributors excluded' do
+        subject { presenter.authors(false) }
+
+        it { is_expected.to eq 'Abe Cat' }
+      end
     end
 
     describe 'creators/contributors exist, as does creator_display' do

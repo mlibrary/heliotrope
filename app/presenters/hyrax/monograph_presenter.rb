@@ -118,9 +118,10 @@ module Hyrax
       comma_separated_name.split(',').map(&:strip).reverse.join(' ')
     end
 
-    def authors
+    def authors(include_contributors = true)
       return creator_display if creator_display?
-      [unreverse_names(solr_document.creator), unreverse_names(contributor)].flatten.to_sentence(last_word_connector: ' and ')
+      authorship_names = include_contributors ? [unreverse_names(solr_document.creator), unreverse_names(contributor)] : [unreverse_names(solr_document.creator)]
+      authorship_names.flatten.to_sentence(last_word_connector: ' and ')
     end
 
     def authors?

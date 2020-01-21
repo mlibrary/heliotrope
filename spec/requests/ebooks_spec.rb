@@ -46,7 +46,7 @@ RSpec.describe "PDF EBooks", type: :request do
           expect(response).to redirect_to(hyrax.download_path(noid))
         end
 
-        context 'watermark_download?' do
+        describe 'watermark_download?' do
           let(:watermark_download) { true }
           let(:entity) do
             instance_double(
@@ -62,20 +62,37 @@ RSpec.describe "PDF EBooks", type: :request do
             )
           end
           let(:parent) { instance_double(Sighrax::Entity, title: 'title') }
-          let(:presenter) { instance_double(Hyrax::MonographPresenter, creator_display: 'creator', title: 'title', date_created: ['created'], publisher: ['publisher']) }
 
           before do
-            allow(Sighrax).to receive(:hyrax_presenter).with(parent).and_return(presenter)
             allow(entity).to receive(:content).and_return(File.read(Rails.root.join(fixture_path, entity.filename)))
           end
 
-          it do
-            expect { subject }.not_to raise_error
-            expect(response).to have_http_status(:ok)
-            expect(response.body).not_to be_empty
-            expect(response.body).not_to eq File.read(Rails.root.join(fixture_path, entity.filename))
-            expect(response.header['Content-Type']).to eq(entity.media_type)
-            expect(response.header['Content-Disposition']).to eq("attachment; filename=\"#{entity.filename}\"")
+          context 'presenter returns an authors value' do
+            let(:presenter) { instance_double(Hyrax::MonographPresenter, authors?: true, authors: 'creator blah', title: 'title', date_created: ['created'], publisher: ['publisher']) }
+
+            it 'uses it in the watermark' do
+              allow(Sighrax).to receive(:hyrax_presenter).with(parent).and_return(presenter)
+              expect { subject }.not_to raise_error
+              expect(response).to have_http_status(:ok)
+              expect(response.body).not_to be_empty
+              expect(response.body).not_to eq File.read(Rails.root.join(fixture_path, entity.filename))
+              expect(response.header['Content-Type']).to eq(entity.media_type)
+              expect(response.header['Content-Disposition']).to eq("attachment; filename=\"#{entity.filename}\"")
+            end
+          end
+
+          context 'presenter does not return an authors value' do
+            let(:presenter) { instance_double(Hyrax::MonographPresenter, authors?: false, title: 'title', date_created: ['created'], publisher: ['publisher']) }
+
+            it "doesn't raise an error" do
+              allow(Sighrax).to receive(:hyrax_presenter).with(parent).and_return(presenter)
+              expect { subject }.not_to raise_error
+              expect(response).to have_http_status(:ok)
+              expect(response.body).not_to be_empty
+              expect(response.body).not_to eq File.read(Rails.root.join(fixture_path, entity.filename))
+              expect(response.header['Content-Type']).to eq(entity.media_type)
+              expect(response.header['Content-Disposition']).to eq("attachment; filename=\"#{entity.filename}\"")
+            end
           end
         end
       end

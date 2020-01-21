@@ -10,7 +10,7 @@ class EbooksController < CheckpointController
       watermarked = Rails.cache.fetch(cache_key, expires_in: 30.days) do
         presenter = Sighrax.hyrax_presenter(@entity.parent)
         text = <<~WATERMARK
-          #{wrap_text(CGI.unescapeHTML(presenter.creator_display) + ', ' + CGI.unescapeHTML(presenter.title), 100)}
+          #{wrap_text(watermark_authorship(presenter) + CGI.unescapeHTML(presenter.title), 100)}
           #{presenter.date_created.first}. #{presenter.publisher.first}
           Downloaded on behalf of #{request_origin}
         WATERMARK
@@ -39,6 +39,11 @@ class EbooksController < CheckpointController
       @policy = Sighrax.policy(current_actor, @entity)
       @press = Sighrax.press(@entity)
       @press_policy = PressPolicy.new(current_actor, @press)
+    end
+
+    def watermark_authorship(presenter)
+      # presenter.authors can only be missing now if creator itself is blank, which would break citations as well
+      presenter.authors? ? CGI.unescapeHTML(presenter.authors(false)) + ', ' : ''
     end
 
     def cache_key
