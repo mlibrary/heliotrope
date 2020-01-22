@@ -30,7 +30,7 @@ RSpec.describe UnpackJob, type: :job do
 
       it "makes the pdf_ebook derivative" do
         described_class.perform_now(pdf_ebook.id, 'pdf_ebook')
-        expect(File.exist?("#{root_path}.pdf"))
+        expect(File.exist?("#{root_path}.pdf")).to be true
       end
     end
 

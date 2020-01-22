@@ -1,8 +1,10 @@
 # frozen_string_literal: true
 
 require 'zip'
+require 'open3'
 
 class UnpackJob < ApplicationJob
+  include Open3
   queue_as :unpack
 
   def perform(id, kind) # rubocop:disable Metrics/CyclomaticComplexity
@@ -45,7 +47,21 @@ class UnpackJob < ApplicationJob
       # in real usage, but I'll put it here and not in the specs in case really weird
       # things happen with hydra-derivatives. I guess.
       FileUtils.mkdir_p File.dirname root_path unless Dir.exist? File.dirname root_path
-      FileUtils.move(file, "#{root_path}.pdf")
+      if system("which qpdf > /dev/null 2>&1")
+        # "Linearize" the pdf for x-sendfile and byte ranges, HELIO-3165
+        # It's ok to linearize a pdf that's already been linearized
+        command = "qpdf --linearize #{file.path} #{root_path}.pdf"
+        stdin, stdout, stderr, wait_thr = popen3(command)
+        stdin.close
+        stdout.binmode
+        out = stdout.read
+        stdout.close
+        err = stderr.read
+        stderr.close
+        raise "Unable to execute command \"#{command}\"\n#{err}\n#{out}" unless wait_thr.value.success?
+      else
+        FileUtils.move(file, "#{root_path}.pdf")
+      end
       # This is weird, but perms are -rw------- and they need to be -rw-rw-r--
       File.chmod 0664, "#{root_path}.pdf"
     end
