@@ -29,6 +29,37 @@
     <%= javascript_include_tag 'application' %>
     <%= javascript_include_tag 'https://umich.edu/apis/umcookieconsent/umcookieconsent.js' %>
 
+    <%# See comments in HELIO-3046. While working on HELIO-3162 this seemed to help system spec behavior locally %>
+    <% if Rails.env.test? %>
+      <%# https://github.com/teamcapybara/capybara/issues/1706#issuecomment-224371471 %>
+      <%= javascript_tag do %>
+        $.support.transition = false; // disable Bootstrap animations
+        $.fx.off = true; // disable jQuery animations
+      <% end %>
+      <%# https://marcgg.com/blog/2015/01/05/css-animations-failing-capybara-specs/ %>
+      <style type="text/css">
+        * {
+          transition-property: none !important;
+          -o-transition-property: none !important;
+          -moz-transition-property: none !important;
+          -ms-transition-property: none !important;
+          -webkit-transition-property: none !important;
+
+          transform: none !important;
+          -o-transform: none !important;
+          -moz-transform: none !important;
+          -ms-transform: none !important;
+          -webkit-transform: none !important;
+
+          animation: none !important;
+          -o-animation: none !important;
+          -moz-animation: none !important;
+          -ms-animation: none !important;
+          -webkit-animation: none !important;
+        }
+      </style>
+    <% end %>
+
   <% if content_for?(:head) %>
     <%= yield(:head) %>
   <% end %>
