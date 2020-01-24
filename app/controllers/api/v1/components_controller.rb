@@ -6,13 +6,25 @@ module API
     class ComponentsController < API::ApplicationController
       before_action :set_component, only: %i[show update destroy]
 
-      # Get component by identifier
-      # @example
-      #   get /api/component?identifier=String
-      # @param [Hash] params { identifier: String }
-      # @return [ActionDispatch::Response] {Greensub::Component} (see {show})
+      # @overload find
+      #   Get component by identifier
+      #   @example
+      #     get /api/component?identifier=String
+      #   @param [Hash] params { identifier: String }
+      #   @return [ActionDispatch::Response] {Greensub::Component} (see {show})
+      # @overload find
+      #   Get component by noid
+      #   @example
+      #     get /api/component?noid=String
+      #   @param [Hash] params { noid: String }
+      #   @return [ActionDispatch::Response] {Greensub::Component} (see {show})
       def find
-        @component = Greensub::Component.find_by(identifier: params[:identifier])
+        if params[:identifier].present? && params[:noid].present?
+          @component = Greensub::Component.find_by(identifier: params[:identifier], noid: params[:noid])
+        else
+          @component = Greensub::Component.find_by(identifier: params[:identifier]) if params[:identifier].present?
+          @component ||= Greensub::Component.find_by(noid: params[:noid]) if params[:noid].present?
+        end
         return head :not_found if @component.blank?
         render :show
       end

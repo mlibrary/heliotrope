@@ -38,16 +38,55 @@ RSpec.describe "Components", type: :request do
     before { allow_any_instance_of(API::ApplicationController).to receive(:authorize_request).and_return(nil) }
 
     describe 'GET /api/v1/component' do
-      it 'non existing not_found' do
-        get api_find_component_path, params: { identifier: 'identifier' }, headers: headers
+      it 'non existing find by identifier not_found' do
+        get api_find_component_path, params: { identifier: 'identifier', noid: 'noid' }, headers: headers
         expect(response.content_type).to eq("application/json")
         expect(response).to have_http_status(:not_found)
         expect(response.body).to be_empty
         expect(Greensub::Component.count).to eq(0)
       end
 
-      it 'existing ok' do
+      it 'non existing find by noid not_found' do
+        get api_find_component_path, params: { noid: 'noid' }, headers: headers
+        expect(response.content_type).to eq("application/json")
+        expect(response).to have_http_status(:not_found)
+        expect(response.body).to be_empty
+        expect(Greensub::Component.count).to eq(0)
+      end
+
+      it 'existing find by identifier and noid ok' do
+        get api_find_component_path, params: { identifier: component.identifier, noid: component.noid }, headers: headers
+        expect(response.content_type).to eq("application/json")
+        expect(response).to have_http_status(:ok)
+        expect(response_body).to eq(component_obj(component: component))
+        expect(Greensub::Component.count).to eq(1)
+      end
+
+      it 'existing find by identifier and wrong noid not_found' do
+        get api_find_component_path, params: { identifier: component.identifier, noid: 'noid' }, headers: headers
+        expect(response).to have_http_status(:not_found)
+        expect(response.body).to be_empty
+        expect(Greensub::Component.count).to eq(1)
+      end
+
+      it 'existing find by wrong identifier and noid not_found' do
+        get api_find_component_path, params: { identifier: 'identifier', noid: component.noid }, headers: headers
+        expect(response.content_type).to eq("application/json")
+        expect(response).to have_http_status(:not_found)
+        expect(response.body).to be_empty
+        expect(Greensub::Component.count).to eq(1)
+      end
+
+      it 'existing find by identifier ok' do
         get api_find_component_path, params: { identifier: component.identifier }, headers: headers
+        expect(response.content_type).to eq("application/json")
+        expect(response).to have_http_status(:ok)
+        expect(response_body).to eq(component_obj(component: component))
+        expect(Greensub::Component.count).to eq(1)
+      end
+
+      it 'existing find by noid ok' do
+        get api_find_component_path, params: { noid: component.noid }, headers: headers
         expect(response.content_type).to eq("application/json")
         expect(response).to have_http_status(:ok)
         expect(response_body).to eq(component_obj(component: component))
