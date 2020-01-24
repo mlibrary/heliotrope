@@ -51,6 +51,8 @@ en:
           resource_type_sim: Format
         show:
           contributor: Contributor(s)
+  breadcumbs:
+    home: "Home"
   buy_url: "Buy Book URL(s)"
   caption: "Caption"
   citable_link: "Citable Link"
@@ -134,6 +136,7 @@ en:
     index:
       buy: "Buy a print copy of %{title}"
       buy_book: "Buy Book"
+      catalog: "Catalog"
       download: "Download %{title}"
       download_book: "Download"
       show_page_button: "Manage Monograph and Files"
