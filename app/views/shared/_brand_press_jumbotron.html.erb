@@ -1,32 +1,30 @@
-<!-- Main jumbotron for a primary heading image -->
-    <% unless @press.navigation_block.present? %>
-    <div class="jumbotron">
-      <h1 class="sr-only"><%= @press.name %></h1>
-      <div class="container">
-        <% if @press.logo_path && !@press.new_record? %>
-          <div class="logo pull-left">
-            <%= image_tag logo(@press.subdomain), alt: @press.name %>
-          </div>
-        <% end %>
-
-        <p class="lead"><%= render_markdown @press.description if @press.description.present? %></p>
-        <% if @press.location.present? || @press.twitter.present? %>
-        <p class="publisher-info">
-          <% if @press.location.present? %>
-            <span class="location"><span class="glyphicon glyphicon-map-marker" aria-hidden="true"></span> <%= @press.location %></span>
-          <% end %>
-          <% if @press.twitter.present? %>
-            <span class="twitter"><a href="https://twitter.com/<%= @press.twitter %>">@<%= @press.twitter %></a></span>
-          <% end %>
-        </p>
-        <% end %>
-        <% if @press.google_analytics_url.present? || @press.readership_map_url.present? %>
-          <% unless controller&.class == PressStatisticsController %>
-            <p class="lead">
-              <%= link_to t('press_catalog.statistics'), press_statistics_path(@press) %>
-            </p>
-          <% end %>
-        <% end %>
+<!-- Main jumbotron for a primary heading image -->    
+<div class="jumbotron">
+  <h1 class="sr-only"><%= @press.name %></h1>
+  <div class="container">
+    <% if @press.logo_path && !@press.new_record? %>
+      <div class="logo pull-left">
+        <%= image_tag logo(@press.subdomain), alt: @press.name %>
       </div>
-    </div>
     <% end %>
+
+    <p class="lead"><%= render_markdown @press.description if @press.description.present? %></p>
+    <% if @press.location.present? || @press.twitter.present? %>
+    <p class="publisher-info">
+      <% if @press.location.present? %>
+        <span class="location"><span class="glyphicon glyphicon-map-marker" aria-hidden="true"></span> <%= @press.location %></span>
+      <% end %>
+      <% if @press.twitter.present? %>
+        <span class="twitter"><a href="https://twitter.com/<%= @press.twitter %>">@<%= @press.twitter %></a></span>
+      <% end %>
+    </p>
+    <% end %>
+    <% if @press.google_analytics_url.present? || @press.readership_map_url.present? %>
+      <% unless controller&.class == PressStatisticsController %>
+        <p class="lead">
+          <%= link_to t('press_catalog.statistics'), press_statistics_path(@press) %>
+        </p>
+      <% end %>
+    <% end %>
+  </div>
+</div>
