@@ -1,0 +1,22 @@
+<footer class="press">
+  <div class="container">
+    <div class="row">
+        <div class="col-md-6 press-block-a">
+            <%= render 'shared/brand_press_footer_block_a' %>
+        </div>
+        <div class="press-block-b">
+            <%= render 'shared/brand_press_footer_block_b' %>
+        </div>
+    </div>
+    <div class="row press-block-c">
+        <div class="col-md-6">
+            <%= render 'shared/brand_press_footer_block_c' %>
+        </div>
+        <div class="col-md-6 text-right">
+            <small>Powered by</small> <a href="https://fulcrum.org/"><%= image_tag "fulcrum-full-white.svg", class: 'fulcrum', alt: 'Fulcrum logo', height: '20', width: 'auto' %></a>
+        </div>
+
+    </div>
+  </div>
+</footer>
+<%= render 'shared/ga' %>

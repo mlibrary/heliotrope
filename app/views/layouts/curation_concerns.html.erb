@@ -16,11 +16,23 @@
   </div>
 
   <% if defined?(@press.subdomain) && !@press.new_record? %>
-    <%= render 'shared/brand_press_footer' %>
+    <% if @press.subdomain == 'leverpress' %>
+      <%= render 'shared/brand_press_footer_lever' %>
+    <% else %>
+      <%= render 'shared/brand_press_footer' %>
+    <% end %>
   <% elsif defined?(@presenter.subdomain) %>
-    <%= render 'shared/brand_press_footer' %>
+    <% if @presenter.subdomain == 'leverpress' %>
+      <%= render 'shared/brand_press_footer_lever' %>
+    <% else %>
+      <%= render 'shared/brand_press_footer' %>
+    <% end %>
   <% elsif defined?(@presenter.parent.subdomain) %>
-    <%= render 'shared/brand_press_footer' %>
+    <% if @presenter.parent.subdomain == 'leverpress' %>
+      <%= render 'shared/brand_press_footer_lever' %>
+    <% else %>
+      <%= render 'shared/brand_press_footer' %>
+    <% end %>
   <% else %>
     <%= render 'shared/footer' %>
   <% end %>
