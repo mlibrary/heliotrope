@@ -11,9 +11,9 @@ module BreadcrumbsHelper
     aboutware_home if has_aboutware?
 
     if press.parent_id.present?
-      parent_press
+      crumb_parent_press
     else
-      press_home
+      crumb_press_home
     end
 
     case controller_name
@@ -55,7 +55,7 @@ module BreadcrumbsHelper
       @crumbs << { href: "", text: t('press_catalog.statistics'), class: "active" }
     end
 
-    def parent_press
+    def crumb_parent_press
       parent = Press.find(press.parent_id)
       if has_aboutware?
         @crumbs << { href: main_app.press_catalog_path(parent), text: t('monograph_catalog.index.catalog'), class: "" }
@@ -65,7 +65,7 @@ module BreadcrumbsHelper
       @crumbs << { href: main_app.press_catalog_path(press), text: press.name, class: "" }
     end
 
-    def press_home
+    def crumb_press_home
       if has_aboutware?
         @crumbs << { href: main_app.press_catalog_path(press), text: t('monograph_catalog.index.catalog'), class: "" }
       else
