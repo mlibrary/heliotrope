@@ -89,40 +89,47 @@
 <div class="row monograph-assets-toc-epub">
   <div class="col-sm-12" id="tabs">
     <ul class="nav nav-tabs" role="tablist">
-      <% if @presenter.reader_ebook? %>
-        <li role="presentation" class="active"><h2><a id="tab-toc" href="#toc" data-toggle="tab" role="tab" aria-controls="toc" aria-selected="true" tabindex="0">Table of Contents</a></h2></li>
+      <% if @presenter.toc? %>
+        <li role="presentation">
+          <h2>
+            <a id="tab-toc" href="#toc" aria-controls="toc" role="tab" data-toggle="tab" aria-selected="false" aria-expanded="false" tabindex="-1">Table of Contents</a>
+          </h2>
+        </li>
       <% end %>
       <% if @presenter.assets? %>
-        <% if @presenter.reader_ebook? %>
-          <li role="presentation"><h2><a id="tab-resources" href="#resources" role="tab" data-toggle="tab" aria-controls="resources" aria-selected="false" tabindex="-1">Resources</a></h2></li>
-        <% else %>
-          <li role="presentation" class="active"><h2><a id="tab-resources" href="#resources" data-toggle="tab" role="tab" aria-controls="resources" aria-selected="true"  tabindex="0">Resources</a></h2></li>
-        <% end %>
+        <li role="presentation">
+          <h2>
+            <a id="tab-resources" href="#resources" aria-controls="resources" role="tab" data-toggle="tab" aria-selected="false" aria-expanded="false" tabindex="-1">Resources</a>
+          </h2>
+        </li>
       <% end %>
-      <li role="presentation"><h2><a id="tab-stats" href="#stats" role="tab" data-toggle="tab" aria-controls="stats" aria-selected="false" tabindex="-1">Stats</a></h2></li>
+      <li role="presentation">
+        <h2>
+          <a id="tab-stats" href="#stats" aria-controls="stats" role="tab" data-toggle="tab" aria-selected="false" aria-expanded="false" tabindex="-1">Stats</a>
+        </h2>
+      </li>
     </ul>
     <div id="tabs-content" class="tab-content monograph-assets-toc-epub-content" aria-live="polite">
-      <% if @presenter.reader_ebook? %>
-        <section id="toc" class="tab-pane active fade in toc row" role="tabpanel" aria-hidden="false" aria-labelledby="tab-toc" tabindex="0">
+      <% if @presenter.toc? %>
+        <section id="toc" class="tab-pane fade toc row" role="tabpanel" aria-hidden="true" aria-labelledby="tab-toc" tabindex="0">
           <div class="col-sm-12">
             <%= render 'index_epub_toc' %>
           </div>
         </section>
       <% end %>
       <% if @presenter.assets? %>
-        <% if @presenter.reader_ebook? %>
-        <section id="resources" class="tab-pane fade in resources row" role="tabpanel" aria-hidden="true" aria-labelledby="tab-resources" tabindex="0">
-        <% else %>
-        <section id="resources" class="tab-pane fade in active resources row" role="tabpanel" aria-hidden="false" aria-labelledby="tab-resources" tabindex="0">
-        <% end %>
-          <div class="col-sm-12">
+        <section id="resources" class="tab-pane fade resources row" role="tabpanel" aria-hidden="true" aria-labelledby="tab-resources" tabindex="0">
+          <div class="col-sm-3 fulcrum_sidebar">
+            <%= render 'catalog/search_sidebar' %>
+          </div>
+          <div class="col-sm-9">
             <div class="content">
-              <%= render 'score_catalog/search_results' %>
+              <%= render 'catalog/search_results' %>
             </div><!-- /.content -->
           </div>
         </section>
       <% end %>
-      <section id="stats" class="tab-pane fade in stats row" role="tabpanel" aria-hidden="true" aria-labelledby="tab-stats" tabindex="0">
+      <section id="stats" class="tab-pane fade stats row" role="tabpanel" aria-hidden="true" aria-labelledby="tab-stats" tabindex="0">
         <%= render 'stats' %>
       </section>
     </div>
