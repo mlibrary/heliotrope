@@ -9,16 +9,14 @@
         <span class="icon-bar"></span>
       </button>
 
-      <% if defined?(@press.name) %>
-        <a class="navbar-brand" href="<%= main_app.press_catalog_path(@press) %>">         
+      <% if defined?(@press.navigation_block) %>
+        <a class="navbar-brand" href="<%= @press.press_url %>">
             <%= image_tag "LeverLogo.svg", class: 'navbar-brand-logo', alt: 'Lever Press', height: '70', width: 'auto' %><%= @press.name %>
         </a>
-      <% elsif defined?(@presenter.press) %>
-        <a class="navbar-brand" href="<%= main_app.press_catalog_path(@presenter.press_obj) %>"><%= @presenter.press %></a>
-      <% elsif defined?(@presenter.parent.press) %>
-        <a class="navbar-brand" href="<%= main_app.press_catalog_path(@presenter.parent.press_obj) %>"><%= @presenter.parent.press %></a>
       <% else %>
-        <a class="navbar-brand" href="#">University Press</a>
+        <a class="navbar-brand" href="<%= main_app.press_catalog_path(@press) %>">
+            <%= image_tag "LeverLogo.svg", class: 'navbar-brand-logo', alt: 'Lever Press', height: '70', width: 'auto' %><%= @press.name %>
+        </a>
       <% end %>
     </div>
 
