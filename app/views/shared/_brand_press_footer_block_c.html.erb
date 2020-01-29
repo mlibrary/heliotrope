@@ -1,7 +1,5 @@
-<div class="col-sm-12">
-  <% if footer_block_c(press_subdomain).present? %>
-    <p><%= render_markdown footer_block_c(press_subdomain) %></p>
-  <% else %>
-    <p>&copy; <%= name(press_subdomain) %> <%= Time.current.year %></p>
-  <% end %>
-</div>
+<% if footer_block_c(press_subdomain).present? %>
+  <%= render_markdown footer_block_c(press_subdomain) %>
+<% else %>
+  <p>&copy; <%= name(press_subdomain) %> <%= Time.current.year %></p>
+<% end %>

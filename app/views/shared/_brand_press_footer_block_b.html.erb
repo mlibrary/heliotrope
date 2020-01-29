@@ -1,13 +1,4 @@
-<div class="col-sm-4 press-block-b col">
-  <% if footer_block_b(press_subdomain).present? %>
-    <%= footer_block_b(press_subdomain).html_safe %> 
-  <% else %>
-  <!-- <ul class="list-unstyled">
-    <li><a href="#">Home</a></li>
-    <li><a href="#">Search</a></li>
-    <li><a href="#">Browse All Books</a></li>
-    <li><a href="#">Browse All Book Materials</a></li>
-    <li><a href="#">About</a></li>
-  </ul> -->
-  <% end %>
-</div>
+<% if footer_block_b(press_subdomain).present? %>
+  <%= footer_block_b(press_subdomain).html_safe %> 
+<% else %>
+<% end %>

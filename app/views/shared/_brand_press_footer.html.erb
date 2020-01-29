@@ -1,16 +1,18 @@
 <footer class="press">
   <div class="container-fluid">
     <div class="row col-wrap">
-
-      <%= render 'shared/brand_press_footer_block_a' %>
-
-      <%= render 'shared/brand_press_footer_block_b' %>
-
+      <div class="col-sm-4 press-block-a col">
+        <%= render 'shared/brand_press_footer_block_a' %>
+      </div>
+      <div class="col-sm-4 press-block-b col">
+        <%= render 'shared/brand_press_footer_block_b' %>
+      </div>
       <%= render 'shared/brand_fulcrum_footer_block' %>
-
     </div>
     <div class="row press-block-c">
-      <%= render 'shared/brand_press_footer_block_c' %>
+      <div class="col-sm-12">
+        <%= render 'shared/brand_press_footer_block_c' %>
+      </div>
     </div>
   </div>
 </footer>

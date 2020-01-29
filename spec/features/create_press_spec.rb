@@ -35,7 +35,7 @@ describe 'Adding a new press' do
       expect(page).to have_css("img[src*='fulcrum-white-50px']", count: 1)
 
       expect(page).to have_link 'Test Publisher', href: 'https://example.com'
-      expect(page).to have_css("script[src='https://use.typekit.net/2346553.js']", visible: false)
+      expect(page).to have_css("link[href='https://use.typekit.net/2346553.css']", visible: false)
       # leaving footer block a blank to produce external link to the Publisher
       # expect(page).to have_content 'Footer Block A Stuff'
       expect(page).to have_content 'Footer Block C Stuff'

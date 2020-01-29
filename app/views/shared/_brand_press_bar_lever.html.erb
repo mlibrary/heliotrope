@@ -1,0 +1,33 @@
+<nav id="brand-bar" class="navbar navbar-default navbar-fixed-top">
+  <div class="container">
+    <!-- brand and toggle grouped together -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#brand-bar-nav" aria-expanded="false" aria-controls="navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+
+      <% if defined?(@press.navigation_block) %>
+        <a class="navbar-brand" href="<%= @press.press_url %>">
+            <%= image_tag "LeverLogo.svg", class: 'navbar-brand-logo', alt: 'Lever Press', height: '70', width: 'auto' %><%= @press.name %>
+        </a>
+      <% else %>
+        <a class="navbar-brand" href="<%= main_app.press_catalog_path(@press) %>">
+            <%= image_tag "LeverLogo.svg", class: 'navbar-brand-logo', alt: 'Lever Press', height: '70', width: 'auto' %><%= @press.name %>
+        </a>
+      <% end %>
+    </div>
+
+      <%= render 'shared/site_search' %>
+
+    <div class="collapse navbar-collapse" id="brand-bar-nav">
+      <div class="navbar-right">
+        <% if navigation_block(press_subdomain).present? %>
+          <%= navigation_block(press_subdomain).html_safe %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</nav>

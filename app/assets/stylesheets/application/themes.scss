@@ -2248,12 +2248,20 @@ $lever-brand-color: #003352;
 $lever-accent-color: #78B3E0;
 
 $lever-link: #40658f;
-$lever-link-hover: #587abc;
+$lever-link-hover: #28405a;
 $lever-link-hover-2: #FC7753;
+
+$lever-button-hover: #001b2c;
+$lever-button-hover-border:#00131f;
 
 $lever-grey-1: #EAEAEA;
 
+$lever-nav-brand: rgba(0,0,0,.9);
+$lever-nav: #343a40;
+$lever-nav-hover: #1d2124;
 $lever-grey-2: #989C97;
+$lever-grey-3: #f8f9fa;
+$lever-grey-4: #dee2e6;
 $lever-white: #FFF;
 $lever-black-80: #342f2e;
 
@@ -2296,92 +2304,92 @@ $lever-black-80: #342f2e;
 
   .btn-default {
     @include button-background-color($lever-brand-color);
-    @include button-font-color($lever-accent-color);
+    @include button-font-color($lever-white);
     @include scala-sans;
   }
 
   .btn-default:hover,
   .btn-default:active {
-    @include button-hover-background-color($lever-accent-color);
-    @include button-hover-font-color($lever-brand-color);
+    @include button-hover-background-color($lever-button-hover);
+    @include button-hover-font-color($lever-white);
+  }
+
+  // container
+  #main {
+    margin-top: 7.5em;
   }
 
   // navigation menu
-  .navbar-default .navbar-nav > .open > a,
-  .navbar-default .navbar-nav > .open > a:hover,
-  .navbar-default .navbar-nav > .open > a:focus {
-    background-color: $lever-accent-color;
+  .navbar > .container .navbar-brand {
+    margin-left: 0;
   }
 
   #brand-bar {
-    background-color: $lever-brand-color;
+    background-color: $lever-grey-3;
+    border-bottom: 1px solid $lever-grey-4;
+    min-height: 6.9rem;
 
     .navbar-brand {
-      color: $lever-white;
+      color: $lever-nav-brand;
       @include scala-sans;
+      font-size: 1.8em;
+      height: unset;      
+      line-height: unset;
+      padding: 1.3rem 1.6rem 1.3rem 1.5rem;
+
+      img {
+        display: inline;
+        margin-right: .55rem;
+        vertical-align: middle;
+        
+      }
     }
+    
 
-    .navbar-nav {
-      a#add-content,
-      a.login,
-      a.user-display-name,
-      a.language-dropdown {
-          @include scala-sans;
-          color: $lever-white;
-      }
-
-      .open > a,
-      .open > a:focus,
-      .open > a:hover {
-        @include scala-sans;
-        background-color: $lever-accent-color;
-      }
+    form.search-form {
+      padding-top: 2.2rem;
+      padding-left: 7rem;
     }
 
     button.search-submit {
-      background-color: $lever-accent-color;
-      border-color: $lever-accent-color;
-      color: $lever-brand-color;
+      background-color: $lever-brand-color;
+      border-color: $lever-brand-color;
+      color: $lever-grey-4;
     }
 
+    .navbar-toggle {
+      padding: 1.2rem 1.5rem;
+      margin: 3rem 1.8rem;
+    }
+
+  }
+
+  .navbar-right {
+    margin-right: 0;
+  }
+
+  .navbar-default .navbar-nav {
+    @include scala-sans;  
+    list-style: none;
+    font-size: 1.64rem;
+    padding-top: 3.5rem;
+    padding-right: 1.45rem;
+
+    a {
+      color: $lever-nav;
+      padding-right: .8rem;
+      padding-left: .8rem;
+    }
+
+    a:hover {
+      color: $lever-nav-hover;
+      text-decoration: none;
+    }
   }
 
   // press catalog
-
-  // jumbotron
-  .jumbotron {
-    background-color: $lever-grey-1;
-    font-weight: 200;
-    padding-top: 1.5em;
-    padding-bottom: 1em;
-    @include scala-sans;
-
-    p {
-      font-size: 20px;
-      margin-bottom: 1em;
-    }
-
-    ul {
-      padding-left: 10em;
-      font-size: 18px;
-    }
-
-    .container {
-      margin-top: 0;
-    }
-
-    .logo {
-
-      img {
-        width: 100px;
-        margin-right: 3em;
-      }
-
-    }
-
-  }
-
   .press {
+    
     .results-container {
 
       .document {
@@ -2432,7 +2440,7 @@ $lever-black-80: #342f2e;
   // sorts on press and monograph pages
   #sort-dropdown .dropdown-toggle,
   #per_page-dropdown .dropdown-toggle {
-    color: $lever-accent-color;
+    color: $lever-white;
     @include scala-sans;
   }
 
@@ -2440,19 +2448,19 @@ $lever-black-80: #342f2e;
   #per_page-dropdown .dropdown-toggle:hover,
   #sort-dropdown .dropdown-toggle:active,
   #per_page-dropdown .dropdown-toggle:active {
-    color: $lever-brand-color;
+    color: $lever-white;
   }
 
   #sort-dropdown .dropdown-toggle .caret,
   #per_page-dropdown .dropdown-toggle .caret {
-    color: $lever-accent-color;
+    color: $lever-white;
   }
 
   #sort-dropdown .dropdown-toggle:hover .caret,
   #per_page-dropdown .dropdown-toggle:hover .caret,
   #sort-dropdown .dropdown-toggle:active .caret,
   #per_page-dropdown .dropdown-toggle:active .caret {
-    color: $lever-brand-color;
+    color: $lever-white;
   }
 
   .open > .dropdown-menu {
@@ -2468,19 +2476,18 @@ $lever-black-80: #342f2e;
 
   // search button
   button.search-submit {
-    background-color: $lever-accent-color;
-    border-color: $lever-accent-color;
-    color: $lever-brand-color;
+    background-color: $lever-brand-color;
+    border-color: $lever-brand-color;
+    color: $lever-white;
   }
 
   // pagination
-
   .pagination {
      li a, li span {
 
        background-color: $lever-brand-color;
        border-color: $lever-brand-color;
-       color: $lever-accent-color;
+       color: $lever-white;
        @include scala-sans;
      }
 
@@ -2488,9 +2495,9 @@ $lever-black-80: #342f2e;
      li>a:focus,
      li>span:hover,
      li>span:focus {
-       background-color: $lever-accent-color;
-       border-color: $lever-accent-color;
-       color: $lever-brand-color;
+       background-color: $lever-button-hover;
+       border-color: $lever-button-hover-border;
+       color: $lever-white;
        @include scala-sans;
      }
 
@@ -2501,9 +2508,9 @@ $lever-black-80: #342f2e;
      .active>span,
      .active>span:hover,
      .active>span:focus {
-       background-color: $lever-accent-color;
-       border-color: $lever-accent-color;
-       color: $lever-brand-color;
+       background-color: $lever-button-hover;
+       border-color: $lever-button-hover-border;
+       color: $lever-white;
        @include scala-sans;
      }
 
@@ -2520,42 +2527,81 @@ $lever-black-80: #342f2e;
      }
   }
 
+  // breadcrumbs
+  .breadcrumbs {
+    @include scala-sans;
+  }
+
   //footer
   footer {
+    border-top: 1px solid rgba(0,0,0,.125);
+    background-color: $lever-brand-color;
+    padding: 3.5em;
+
     @include scala-sans;
 
-    a,
-    a:hover,
-    a:active {
-      color: $lever-white;
+    a {
+      color: #f8f9fa;
     }
 
-    .press-block-a a {
-      display: none;
+    a:hover,
+    a:active {
+      color: #dae0e5;
+      text-decoration: underline;
+    }
+
+    h5 {
+      font-size: 1.5em;
+    }
+
+    .fulcrum {
+      height: 20px;
+      width: auto;
+      vertical-align: baseline;
+    }
+
+    .block {
+      display: block;
+      height: 100px;
+      width: auto;
+    }
+
+    p.social {
+      padding-top: .4em;
+      a {
+        padding-right: 0.75em;
+        svg {
+          display: inline-block;
+          vertical-align: middle;
+          fill: $lever-accent-color;
+        }
+      }
+    }
+
+    .press-block-a, .press-block-b, .press-block-c {
+      background-color: $lever-brand-color;
     }
 
     .press-block-a,
-    .press-block-b {
-      background-color:  $lever-accent-color;
-      font-weight: 600;
-
-      a,
-      a:hover,
-      a:active {
-        color: $lever-brand-color;
-      }
-
-      img {
-        width: 75px;
-      }
-
-    }
     .press-block-c {
-      background-color: $lever-brand-color;
+      small {
+        @include meta-serif;
+      }
     }
-    .platform {
-      background-color: $lever-black-80;
+
+    .press-block-a {
+      small {
+        display: block;
+      }
     }
+
+    .press-block-b {
+      ul {
+        @include meta-serif;
+        font-size: 1.1em;
+      }
+    }
+
   }
 
   // e-book reader
@@ -2613,6 +2659,84 @@ $lever-black-80: #342f2e;
       background-color: $lever-brand-color;
     }
 
+  }
+
+  @media only screen and (max-width: 1220px) {
+    .navbar-default .navbar-nav {
+      padding-left: 0px;
+    }
+
+    #brand-bar form.search-form {
+      padding-left: 0;
+      width: 200px;
+    }
+
+  }
+  
+  @media only screen and (max-width : 992px) {
+    #main {
+      margin-top: 11.5em;
+    }
+    
+    .navbar-header {
+      float: none;
+    }
+  
+    .navbar-toggle {
+      display: block;
+    }
+  
+    .navbar-collapse {
+      border-top: 1px solid transparent;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.1);
+    }
+  
+    .navbar-collapse.collapse {
+      display: none!important;
+    }
+  
+    .navbar-default .navbar-nav {
+      padding-top: 0;
+      padding-right: 0;
+      margin-top: 0;
+    }
+
+    .navbar-nav>li {
+      float: none;
+    }
+  
+    .navbar-nav>li>a {
+      padding-top: 10px;
+      padding-bottom: 10px;
+      line-height: 3.5rem;
+    }
+
+    .navbar-collapse.collapse.in { 
+      display: block!important;
+    }
+  
+    .collapsing {
+      overflow: hidden!important;
+    }
+
+    #brand-bar form.search-form, .navbar-form {
+      padding: 10px 0;
+      margin: 0;
+      width: 100%;
+      border: 0;
+      float: none !important;
+    }
+
+    .navbar-form .input-group .input-group-btn {
+      width: 1%;
+    }
+  
+  }
+
+  @media only screen and (max-width : 768px) {
+    .navbar-nav {
+      float: right;
+    }
   }
 
 }
