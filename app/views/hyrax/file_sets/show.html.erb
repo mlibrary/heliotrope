@@ -31,10 +31,10 @@
     <% if defined? @presenter.file_set_coins_title %>
       <span class="Z3988" title="<%= @presenter.file_set_coins_title %>" aria-hidden="true"></span>
     <% end %>
-    
-    <% if @presenter.map? %>
-      <!-- map file_set --> 
-      <%= render "stacked_layout", presenter: @presenter %> 
+
+    <% if @presenter.interactive_map? %>
+      <!-- map file_set -->
+      <%= render "stacked_layout", presenter: @presenter %>
     <% else %>
       <!-- image, a/v, doc, or external resource file_set -->
       <%= render "side_by_side_layout", presenter: @presenter %>

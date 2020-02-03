@@ -167,7 +167,7 @@ describe CharacterizeJob do
       allow(file_set).to receive(:parent).and_return(monograph)
     end
 
-    %w[map foo].each do |resource_type|
+    %w[interactive\ map map foo].each do |resource_type|
       context resource_type do
         let(:resource_type) { resource_type }
 
@@ -176,8 +176,10 @@ describe CharacterizeJob do
         it "unpacks some resource types" do
           described_class.perform_now(file_set, file.id)
           case resource_type
-          when 'map'
+          when 'interactive_map'
             expect(UnpackJob).to have_received(:perform_later).with(file_set.id, resource_type)
+          when 'map'
+            expect(UnpackJob).not_to have_received(:perform_later).with(file_set.id, resource_type)
           else
             expect(UnpackJob).not_to have_received(:perform_later).with(file_set.id, resource_type)
           end

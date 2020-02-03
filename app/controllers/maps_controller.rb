@@ -4,7 +4,7 @@ class MapsController < ApplicationController
   protect_from_forgery except: :file
 
   def file
-    filepath = UnpackService.root_path_from_noid(params[:id], 'map')
+    filepath = UnpackService.root_path_from_noid(params[:id], 'interactive_map')
     filename = filepath + '/' + params[:file] + '.' + params[:format]
     filename = filename.to_s.sub(/releases\/\d+/, "current")
     response.headers['X-Sendfile'] = filename

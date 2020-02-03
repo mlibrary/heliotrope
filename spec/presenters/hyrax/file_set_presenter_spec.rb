@@ -460,9 +460,9 @@ RSpec.describe Hyrax::FileSetPresenter do
     end
 
     context "with a map" do
-      let(:resource_type) { 'map' }
+      let(:resource_type) { 'interactive map' }
 
-      it { is_expected.to eq 'hyrax/file_sets/media_display/map' }
+      it { is_expected.to eq 'hyrax/file_sets/media_display/interactive_map' }
     end
 
     context "with an image" do
@@ -537,9 +537,9 @@ RSpec.describe Hyrax::FileSetPresenter do
     end
 
     context "with a map" do
-      let(:resource_type) { 'map' }
+      let(:resource_type) { 'interactive map' }
 
-      it { is_expected.to eq 'hyrax/file_sets/media_display_embedded/map' }
+      it { is_expected.to eq 'hyrax/file_sets/media_display_embedded/interactive_map' }
     end
 
     context "with an image" do
@@ -616,8 +616,8 @@ RSpec.describe Hyrax::FileSetPresenter do
     end
   end
 
-  describe '#map?' do
-    subject { presenter.map? }
+  describe '#interactive_map?' do
+    subject { presenter.interactive_map? }
 
     let(:fileset_doc) {
       SolrDocument.new(id: 'fileset_id',
@@ -628,8 +628,20 @@ RSpec.describe Hyrax::FileSetPresenter do
 
     it { is_expected.to be false }
 
+    context 'blah' do
+      let(:resource_type) { 'MaP' }
+
+      it { is_expected.to be false }
+    end
+
     context 'map' do
       let(:resource_type) { 'MaP' }
+
+      it { is_expected.to be false }
+    end
+
+    context 'interactive map' do
+      let(:resource_type) { 'Interactive MaP' }
 
       it { is_expected.to be true }
     end

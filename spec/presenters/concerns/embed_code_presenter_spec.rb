@@ -41,6 +41,12 @@ RSpec.describe EmbedCodePresenter do
     context 'map' do
       let(:resource_type) { 'map' }
 
+      it { is_expected.to be false }
+    end
+
+    context 'interactive map' do
+      let(:resource_type) { 'interactive map' }
+
       it { is_expected.to be true }
     end
 
@@ -146,7 +152,7 @@ RSpec.describe EmbedCodePresenter do
     end
 
     context 'map FileSet' do
-      let(:resource_type) { 'map' }
+      let(:resource_type) { 'interactive map' }
 
       it { expect(presenter.embed_code).to eq map_embed_code }
     end
@@ -164,7 +170,7 @@ RSpec.describe EmbedCodePresenter do
     end
 
     context 'dimensionless map FileSet' do
-      let(:resource_type) { 'map' }
+      let(:resource_type) { 'interactive map' }
 
       it { expect(dimensionless_presenter.embed_code).to eq dimensionless_map_embed_code }
     end
