@@ -254,8 +254,8 @@ module Hyrax
     end
 
     def download_button_label
-      download_label = 'Download'
       extension = File.extname(label).delete('.').upcase if label.present?
+      download_label = extension == 'PDF' ? 'View' : 'Download'
       size = ActiveSupport::NumberHelper.number_to_human_size(file_size) if file_size.present?
       download_label += ' ' + extension if extension.present?
       download_label += ' (' + size + ')' if size.present?
