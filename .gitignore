@@ -50,6 +50,7 @@ dump.rdb
 /config/skylight.yml
 /config/aptrust.yml
 /config/crossref.yml
+/config/box.yml
 
 # Configuration file for automated systems tests.
 /testing/testing.yml
