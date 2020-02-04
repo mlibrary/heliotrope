@@ -136,7 +136,7 @@ en:
     index:
       buy: "Buy a print copy of %{title}"
       buy_book: "Buy Book"
-      catalog: "Catalog"
+      catalog: "Books"
       download: "Download %{title}"
       download_book: "Download"
       show_page_button: "Manage Monograph and Files"

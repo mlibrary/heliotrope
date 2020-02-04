@@ -2530,6 +2530,11 @@ $lever-black-80: #342f2e;
   // breadcrumbs
   .breadcrumbs {
     @include scala-sans;
+
+    .breadcrumb {
+      background-color: $lever-grey-3;
+      border-color: $lever-grey-4;
+    }
   }
 
   //footer
