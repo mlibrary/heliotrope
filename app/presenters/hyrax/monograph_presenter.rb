@@ -108,6 +108,10 @@ module Hyrax
       "https://quod.lib.umich.edu/cgi/t/text/text-idx?c=acls;idno=#{heb_url}"
     end
 
+    def bar_number
+      identifier&.find { |i| i[/^bar_number:.*/] }&.gsub('bar_number:', '')&.strip
+    end
+
     def unreverse_names(comma_separated_names)
       forward_names = []
       comma_separated_names.each { |n| forward_names << unreverse_name(n) }
