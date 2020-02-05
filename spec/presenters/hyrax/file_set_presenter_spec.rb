@@ -430,6 +430,15 @@ RSpec.describe Hyrax::FileSetPresenter do
 
       it { is_expected.to eq 'Download' }
     end
+
+    context 'File is a PDF' do
+      let(:label) { 'book.pdf' }
+      let(:file_size) { 20_202_000 }
+
+      it 'says "View" instead of "Download"' do
+        is_expected.to eq 'View PDF (19.3 MB)'
+      end
+    end
   end
 
   describe '#heliotrope_media_partial' do
