@@ -137,7 +137,7 @@ describe CharacterizeJob do
           create(:featured_representative, work_id: monograph.id, file_set_id: file_set.id, kind: kind)
           described_class.perform_now(file_set, file.id)
           case kind
-          when 'epub', 'webgl'
+          when 'epub', 'webgl', 'pdf_ebook'
             expect(UnpackJob).to have_received(:perform_later).with(file_set.id, kind)
           else
             expect(UnpackJob).not_to have_received(:perform_later).with(file_set.id, kind)
