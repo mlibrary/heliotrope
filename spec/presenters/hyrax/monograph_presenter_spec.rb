@@ -422,6 +422,24 @@ RSpec.describe Hyrax::MonographPresenter do
     end
   end
 
+  describe '#bar_number' do
+    let(:mono_doc) { ::SolrDocument.new(id: 'mono', has_model_ssim: ['Monograph'], identifier_tesim: identifier) }
+
+    subject { presenter.bar_number }
+
+    context 'No `bar_number: NNNN` is present in identifier' do
+      let(:identifier) { ["http://www.example.com/doi", "999.999.9999"] }
+
+      it { is_expected.to be nil }
+    end
+
+    context 'A `bar_number: NNNN` is present in identifier' do
+      let(:identifier) { ["http://www.example.com/doi", "999.999.9999", "bar_number: S20156"] }
+
+      it { is_expected.to eq 'S20156' }
+    end
+  end
+
   describe '#creator' do
     context 'there are values in creator and contributor' do
       subject { presenter.creator }
