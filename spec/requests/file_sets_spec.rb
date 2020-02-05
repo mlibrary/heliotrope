@@ -46,7 +46,7 @@ RSpec.describe "FileSets", type: :request do
       end
 
       context 'map' do
-        let(:resource_type) { 'map' }
+        let(:resource_type) { 'interactive map' }
 
         it do
           get hyrax_file_set_path(file_set.id)

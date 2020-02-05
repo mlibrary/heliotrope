@@ -133,8 +133,8 @@ module Hyrax
       mime_type == 'application/postscript'
     end
 
-    def map?
-      /^map$/i.match?(resource_type.first)
+    def interactive_map?
+      /^interactive map$/i.match?(resource_type.first)
     end
 
     def mime_type
@@ -285,8 +285,8 @@ module Hyrax
                   'epub'
                 elsif eps?
                   'image_service'
-                elsif map?
-                  'map'
+                elsif interactive_map?
+                  'interactive_map'
                 else
                   'default'
                 end

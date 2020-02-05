@@ -31,7 +31,7 @@ class UnpackJob < ApplicationJob
     when 'webgl'
       unpack_webgl(id, root_path, file)
       epub_webgl_bridge(id, root_path, kind)
-    when 'map'
+    when 'interactive_map'
       unpack_map(id, root_path, file)
     when 'pdf_ebook'
       unpack_pdf(id, root_path, file)

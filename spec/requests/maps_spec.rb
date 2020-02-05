@@ -14,7 +14,7 @@ RSpec.describe "Maps", type: :request do
       end
 
       context 'file.ext' do
-        let(:filepath) { UnpackService.root_path_from_noid(noid, 'map') }
+        let(:filepath) { UnpackService.root_path_from_noid(noid, 'interactive_map') }
 
         before do
           FileUtils.mkdir_p(filepath)
