@@ -11,10 +11,6 @@ RSpec.describe Hyrax::CitationsBehaviors::NameBehavior do
     expect(given_name_first('Flavigny')).to eq 'Flavigny'
   end
 
-  it 'gets surname_first(Flavigny) as Flavigny' do
-    expect(surname_first('Flavigny')).to eq 'Flavigny'
-  end
-
   it 'gets abbreviate_name(Flavigny) as Flavigny' do
     expect(abbreviate_name('Flavigny')).to eq 'Flavigny'
   end
@@ -26,23 +22,22 @@ RSpec.describe Hyrax::CitationsBehaviors::NameBehavior do
     expect(given_name_first('John Dvorak')).to eq 'John Dvorak'
   end
 
-  it 'gets surname_first(John Dvorak) as Dvorak, John' do
-    expect(surname_first('John Dvorak')).to eq 'Dvorak, John'
-  end
-
-  it 'gets abbreviate_name(John Dvorak) as Dvorak, J.' do
-    expect(abbreviate_name('John Dvorak')).to eq 'Dvorak, J.'
-  end
-
   it 'gets given_name_first(J. Dvorak) as J. Dvorak' do
     expect(given_name_first('J. Dvorak')).to eq 'J. Dvorak'
   end
 
-  it 'gets surname_first(J. Dvorak) as Dvorak, J.' do
-    expect(surname_first('J. Dvorak')).to eq 'Dvorak, J.'
+  # In Hyrax::CitationsBehaviors::NameBehavior abbreviate_name() calls surname_first()
+  # we actually never have a need for surname_first() unless there is bad metadata present and we should...
+  # eventually have checks in place to find those automagically
+  it 'gets abbreviate_name(John Dvorak) as John Dvorak' do
+    expect(abbreviate_name('John Dvorak')).to eq 'John Dvorak'
   end
 
-  it 'gets abbreviate_name(J. Dvorak) as Dvorak, J.' do
-    expect(abbreviate_name('J. Dvorak')).to eq 'Dvorak, J.'
+  it 'gets abbreviate_name(J. Dvorak) as J. Dvorak' do
+    expect(abbreviate_name('J. Dvorak')).to eq 'J. Dvorak'
+  end
+
+  it 'gets abbreviate_name(Dvorak, John) as Dvorak, J.' do
+    expect(abbreviate_name('Dvorak, John')).to eq 'Dvorak, J.'
   end
 end

@@ -32,7 +32,7 @@ module Hyrax
         public
 
         def format_authors(authors_list = [])
-          authors_list = Array.wrap(authors_list).map { |name| abbreviate_name(surname_first(name)).strip }
+          authors_list = Array.wrap(authors_list).map { |name| abbreviate_name(name).strip }
           text = ''
           text << authors_list.first if authors_list.first
           authors_list[1..-1].each do |author|

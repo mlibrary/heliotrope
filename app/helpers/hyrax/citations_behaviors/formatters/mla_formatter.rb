@@ -33,7 +33,7 @@ module Hyrax
 
         def concatenate_authors_from(authors_list)
           text = ''
-          text << surname_first(authors_list.first)
+          text << authors_list.first
           if authors_list.length > 1
             if authors_list.length < 4
               authors_list[1...-1].each do |author|

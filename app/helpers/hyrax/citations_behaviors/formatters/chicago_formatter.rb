@@ -16,14 +16,14 @@ module Hyrax
           pub_info = setup_pub_info(work, true)
           text << " #{whitewash(pub_info)}." if pub_info.present?
           text << " #{work.citable_link}."
-          text << (work.pdf_ebook? ? ' PDF.' : ' EPUB.')
+          text << (work.epub? ? ' EPUB.' : (work.pdf_ebook? ? ' PDF.' : ''))
           text.html_safe # rubocop:disable Rails/OutputSafety
         end
 
         def format_authors(authors_list = [])
           return '' if authors_list.blank?
           text = ''
-          text << surname_first(authors_list.first) if authors_list.first
+          text << authors_list.first if authors_list.first
           authors_list[1..6].each_with_index do |author, index|
             text << if index + 2 == authors_list.length # we've skipped the first author
                       ", and #{given_name_first(author)}."
