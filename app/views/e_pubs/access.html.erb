@@ -8,10 +8,7 @@
 </div>
 
 <%=
-  case @parent_presenter.subdomain
-  when 'heb'
-    render partial: 'e_pubs/access/heb', locals: { presenter: @presenter, monograph_presenter: @parent_presenter, institutions: @institutions, products: @products }
-  when 'michigan'
-    render partial: 'e_pubs/access/michigan', locals: { presenter: @presenter, monograph_presenter: @parent_presenter, institutions: @institutions, products: @products }
+  if lookup_context.find_all("e_pubs/access/_#{@parent_presenter.subdomain}").any?
+    render partial: "e_pubs/access/#{@parent_presenter.subdomain}", locals: { presenter: @presenter, monograph_presenter: @parent_presenter, institutions: @institutions, products: @products }
   end
 %>
