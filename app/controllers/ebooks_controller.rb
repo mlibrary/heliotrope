@@ -25,6 +25,7 @@ class EbooksController < CheckpointController
 
         pdf.to_pdf
       end
+      CounterService.from(self, Sighrax.hyrax_presenter(@entity)).count(request: 1)
       send_data watermarked, type: @entity.media_type, filename: @entity.filename
     rescue StandardError => e
       Rails.logger.error "EbooksController.download raised #{e}"

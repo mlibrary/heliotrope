@@ -62,13 +62,24 @@ RSpec.describe "PDF EBooks", type: :request do
             )
           end
           let(:parent) { instance_double(Sighrax::Entity, title: 'title') }
+          let(:entity_presenter) { double("entity_presenter") }
+          let(:counter_service) { double("counter_service") }
 
           before do
             allow(entity).to receive(:content).and_return(File.read(Rails.root.join(fixture_path, entity.filename)))
+            allow(Sighrax).to receive(:hyrax_presenter).with(entity).and_return(entity_presenter)
+            allow(CounterService).to receive(:from).and_return(counter_service)
+            allow(counter_service).to receive(:count).with(request: 1).and_return(true)
           end
 
           context 'presenter returns an authors value' do
-            let(:presenter) { instance_double(Hyrax::MonographPresenter, authors?: true, authors: 'creator blah', title: 'title', date_created: ['created'], publisher: ['publisher']) }
+            let(:presenter) do
+              instance_double(Hyrax::MonographPresenter, authors?: true,
+                                                         authors: 'creator blah',
+                                                         title: 'title',
+                                                         date_created: ['created'],
+                                                         publisher: ['publisher'])
+            end
 
             it 'uses it in the watermark' do
               allow(Sighrax).to receive(:hyrax_presenter).with(parent).and_return(presenter)
