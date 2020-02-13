@@ -1,0 +1,4 @@
+<% # container for document in index gallery view -%>
+<% presenter = Hyrax::ScorePresenter.new(document, current_ability) %>
+<% counter = document_counter_with_offset(document_counter) %>
+<%= render partial: "index_list", locals: { document: document, counter: counter, presenter: presenter } %>

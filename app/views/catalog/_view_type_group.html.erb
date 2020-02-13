@@ -1,5 +1,4 @@
-<% unless controller_name == 'press_catalog' %>
-  <% if show_sort_and_per_page? && has_alternative_views? %>
+<% if show_sort_and_per_page? && has_alternative_views? %>
   <div class="view-type btn-group">
     <span class="sr-only"><%= t('blacklight.search.view_title') %></span>
     <div class="view-type-group btn-group">
@@ -11,5 +10,4 @@
       <% end %>
     </div>
   </div>
-  <% end %>
 <% end %>
