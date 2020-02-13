@@ -118,7 +118,7 @@
     <dl>
       <%= @presenter.attribute_to_html(:series, html_dl: true) %>
       <%= @presenter.attribute_to_html(:isbn, label: t('isbn'), html_dl: true) %>
-      <%= @presenter.attribute_to_html(:bar_number, label: 'BAR number', html_dl: true) %>
+      <%= @presenter.attribute_to_html(:bar_number, label: t('bar_number'), html_dl: true) %>
       <%= @presenter.attribute_to_html(:subject, html_dl: true, render_as: :catalog_facet_attribute,
                                                  subdomain: @presenter.subdomain) %>
 
