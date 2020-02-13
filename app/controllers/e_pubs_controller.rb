@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class EPubsController < CheckpointController
+  include Watermark::Watermarkable
+
   protect_from_forgery except: :file
   before_action :setup
 
@@ -119,22 +121,46 @@ class EPubsController < CheckpointController
     head :no_content
   end
 
-  def download_interval
+  def download_interval # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
     return head :no_content unless @policy.show?
 
-    publication = EPub::Publication.from_directory(UnpackService.root_path_from_noid(@noid, 'epub'))
-    cfi = params[:cfi]
-    title = params[:title]
-    interval = EPub::Interval.from_rendition_cfi_title(publication.rendition, cfi, title)
+    if @entity.is_a?(Sighrax::ElectronicPublication)
+      publication = EPub::Publication.from_directory(UnpackService.root_path_from_noid(@noid, 'epub'))
+      cfi = params[:cfi]
+      title = params[:title]
+      interval = EPub::Interval.from_rendition_cfi_title(publication.rendition, cfi, title)
 
-    return head :no_content if interval.is_a?(EPub::IntervalNullObject)
+      return head :no_content if interval.is_a?(EPub::IntervalNullObject)
 
-    rendered_pdf = Rails.cache.fetch(pdf_cache_key(@noid, interval.title), expires_in: 30.days) do
-      pdf = EPub::Marshaller::PDF.from_publication_interval(publication, interval)
-      pdf.document.render
+      rendered_pdf = Rails.cache.fetch(pdf_cache_key(@noid, interval.title), expires_in: 30.days) do
+        pdf = EPub::Marshaller::PDF.from_publication_interval(publication, interval)
+        pdf.document.render
+      end
+
+      CounterService.from(self, @presenter).count(request: 1, section_type: "Chapter", section: interval.title) if rendered_pdf.present?
+      send_data rendered_pdf, type: "application/pdf", disposition: "inline"
+    elsif @entity.is_a?(Sighrax::PortableDocumentFormat)
+      return head :no_content if params[:title].blank? || params[:chapter_index].blank?
+
+      chapter_dir = UnpackService.root_path_from_noid(@noid, 'pdf_ebook_chapters')
+      chapter_file_name = params[:chapter_index] + '.pdf'
+      chapter_download_name = params[:chapter_index] + '_' + params[:title].gsub(/[^0-9A-Za-z\-]/, ' ').squish.gsub(' ', '_') + '.pdf'
+
+      return head :no_content if !File.exist?(File.join(chapter_dir, chapter_file_name))
+
+      file = File.join(chapter_dir, chapter_file_name)
+      presenter = Sighrax.hyrax_presenter(@entity.parent)
+
+      text = <<~WATERMARK
+          #{wrap_text(watermark_authorship(presenter) + CGI.unescapeHTML(presenter.title), 120)}
+          #{wrap_text(params[:title], 120)}
+          #{presenter.date_created.first}. #{presenter.publisher.first}
+          Downloaded on behalf of #{request_origin}
+      WATERMARK
+
+      CounterService.from(self, @presenter).count(request: 1, section_type: "Chapter", section: params[:title])
+      send_data watermark_pdf(@entity, text, 7, IO.binread(file)), type: @entity.media_type, filename: chapter_download_name, disposition: "inline"
     end
-    CounterService.from(self, @presenter).count(request: 1, section_type: "Chapter", section: interval.title) if rendered_pdf.present?
-    send_data rendered_pdf, type: "application/pdf", disposition: "inline"
   rescue StandardError => e
     Rails.logger.error "EPubsController.download_interval raised #{e}"
     head :no_content
@@ -229,5 +255,12 @@ class EPubsController < CheckpointController
         Digest::MD5.hexdigest(chapter_title) +
         id +
         @presenter.date_modified.to_s
+    end
+
+    # pdf_ebooks reps' chapters can be re-unpacked without ever touching Solr/Fedora
+    def cache_key_timestamp
+      File.mtime(UnpackService.root_path_from_noid(@entity.noid, 'pdf_ebook_chapters')).to_i
+    rescue # rubocop:disable Style/RescueStandardError
+      ''
     end
 end

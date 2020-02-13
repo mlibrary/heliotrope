@@ -5,9 +5,9 @@ module PDFEbook
     private_class_method :new
 
     # Class Methods
-    def self.from_title_level_cfi(title, level, cfi)
+    def self.from_title_level_cfi(id, index, title, level, cfi)
       return null_object unless title&.instance_of?(String) && cfi&.instance_of?(String)
-      new(title: title, depth: level, cfi: cfi)
+      new(id: id, index: index, title: title, depth: level, cfi: cfi)
     end
 
     def self.null_object
@@ -29,7 +29,7 @@ module PDFEbook
     end
 
     def downloadable?
-      false
+      File.exist?(File.join(UnpackService.root_path_from_noid(@args[:id], 'pdf_ebook_chapters'), @args[:index].to_s + '.pdf'))
     end
 
     def pages

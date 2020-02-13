@@ -298,6 +298,42 @@ RSpec.describe "EPubs", type: :request do
         end
       end
 
+      describe 'GET /epubs_download_interval/:id with a FeaturedRepresentative of kind pdf_ebook' do
+        let(:fre) { create(:featured_representative, work_id: monograph.id, file_set_id: epub.id, kind: 'pdf_ebook') }
+
+        subject { get "/epubs_download_interval/#{epub.id}" }
+
+        it do
+          expect { subject }.not_to raise_error
+          expect(response).to have_http_status(:no_content)
+          expect(response.body).to be_empty
+        end
+
+        context 'chapter download' do
+          subject { get "/epubs_download_interval/#{epub.id}?title=title;chapter_index=0" }
+
+          let(:interval) { double('interval', title: 'title') }
+          let(:pdf) { double('pdf', document: document) }
+          let(:document) { double('document', render: rendered_pdf) }
+          let(:rendered_pdf) { 'rendered_pdf' }
+
+          before do
+            allow(PDFEbook::Interval).to receive(:from_title_level_cfi).with(epub.id, 0, 'title', 1, 5).and_return(interval)
+            allow(UnpackService).to receive(:root_path_from_noid).and_return(fixture_path)
+            allow(counter_service).to receive(:count).with(request: 1, section: 'title', section_type: 'Chapter')
+          end
+
+          it do
+            expect { subject }.not_to raise_error
+            expect(response).to have_http_status(:ok)
+            # watermarking will change the file content and PDF 'producer' metadata
+            expect(response.body).not_to eq File.read(Rails.root.join(fixture_path, '0.pdf'))
+            expect(response.body).to include('Producer (Ruby CombinePDF')
+            expect(counter_service).to have_received(:count).with(request: 1, section: 'title', section_type: 'Chapter')
+          end
+        end
+      end
+
       describe 'GET /epubs_search/:id' do
         subject { get "/epubs_search/#{epub.id}" }
 

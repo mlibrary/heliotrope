@@ -1,9 +1,9 @@
 <%
   level = 0
   epub_presenter = @presenter.epub? ? @presenter.epub_presenter : @presenter.pdf_ebook_presenter
-  epub_policy = @monograph_policy.epub_policy
+  epub_policy = @presenter.epub? ? @monograph_policy.epub_policy : @monograph_policy.pdf_ebook_policy
 %>
-  <% epub_presenter.intervals.each do |interval| %>
+  <% epub_presenter.intervals.each_with_index do |interval, index| %>
     <% if interval.level > level %>
       <% level += 1 %>
       <ul class="toc section">
@@ -25,11 +25,19 @@
       <% if @press_policy.interval_read_button?(interval) %>
         <div class="btn-group download" role="group" aria-label="Read or Download Section">
           <% if interval.downloadable? && @press_policy.interval_download_button?(interval) && epub_policy.show? %>
-            <a class="btn btn-default btn-sm" href="<%= epub_download_interval_path(id: epub_presenter.id, cfi: interval.cfi, title: interval.title) %>" data-turbolinks="false">
+            <% if @presenter.epub? %>
+              <a class="btn btn-default btn-sm" href="<%= epub_download_interval_path(id: epub_presenter.id, cfi: interval.cfi, title: interval.title) %>" data-turbolinks="false">
+            <% else %>
+              <a class="btn btn-default btn-sm" href="<%= epub_download_interval_path(id: epub_presenter.id, title: interval.title, chapter_index: index) %>" data-turbolinks="false">
+            <% end %>
               <i id="download" class="oi" data-glyph="data-transfer-download" title="Download section" aria-hidden="true"></i> Download</a>
           <% end %>
-          <a class="btn btn-default btn-sm" href="<%= epub_path(id: epub_presenter.id, anchor: interval.cfi + "/4/1:0") %>">
-            <span class="glyphicon glyphicon-book" title="Read section" aria-hidden="true"></span> Read</a>
+          <% if @presenter.epub? %>
+            <a class="btn btn-default btn-sm" href="<%= epub_path(id: epub_presenter.id, anchor: interval.cfi + "/4/1:0") %>">
+          <% else %>
+            <a class="btn btn-default btn-sm" href="<%= epub_path(id: epub_presenter.id) + '#' + interval.cfi %>" data-turbolinks="false">
+          <% end %>
+              <span class="glyphicon glyphicon-book" title="Read section" aria-hidden="true"></span> Read</a>
         </div>
       <% end %>
     </div>

@@ -25,12 +25,15 @@ RSpec.describe UnpackJob, type: :job do
     end
 
     context "with a pdf_ebook" do
-      let(:pdf_ebook) { create(:file_set, content: File.open(File.join(fixture_path, 'dummy.pdf'))) }
+      let(:pdf_ebook) { create(:file_set, content: File.open(File.join(fixture_path, 'lorum_ipsum_toc.pdf'))) }
       let(:root_path) { UnpackService.root_path_from_noid(pdf_ebook.id, 'pdf_ebook') }
+      let(:chapters_dir) { UnpackService.root_path_from_noid(pdf_ebook.id, 'pdf_ebook_chapters') }
 
-      it "makes the pdf_ebook derivative" do
+      it "makes the pdf_ebook and chapter files derivatives" do
         described_class.perform_now(pdf_ebook.id, 'pdf_ebook')
         expect(File.exist?("#{root_path}.pdf")).to be true
+        expect(Dir.exist?(chapters_dir)).to be true
+        expect(Dir.glob(File.join(chapters_dir, '**', '*')).select { |file| File.file?(file) }.count).to eq 6
       end
     end
 

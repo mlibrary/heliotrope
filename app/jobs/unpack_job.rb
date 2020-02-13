@@ -47,23 +47,93 @@ class UnpackJob < ApplicationJob
       # in real usage, but I'll put it here and not in the specs in case really weird
       # things happen with hydra-derivatives. I guess.
       FileUtils.mkdir_p File.dirname root_path unless Dir.exist? File.dirname root_path
+
+      linearize_pdf(root_path, file)
+      create_pdf_chapters(id, root_path, file)
+    end
+
+    def create_pdf_chapters(id, root_path, file) # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
+      return unless system("which pdfseparate > /dev/null 2>&1") && system("which pdfunite > /dev/null 2>&1")
+
+      # Grab the ToC as is done for the catalog ToC tab... note the force_encoding("utf-8") is not done here cause...
+      # it's not done in Sighrax::Asset.content() which feeds the normal ToC creation, so I assume it's OK without...
+      # for this purpose
+      pdf_ebook_presenter = PDFEbookPresenter.new(PDFEbook::Publication.from_string_id(FileSet.find(id).original_file.content, id))
+      return unless pdf_ebook_presenter.intervals?
+
+      chapters = []
+      pdf_ebook_presenter.intervals.each do |interval|
+        chapters << { level: interval.level,
+                      start_page: interval.cfi.gsub('page=', '').to_i }
+      end
+
+      # Naively run through and assume each section ends on the page before the next one starts.
+      # This makes books with a cleaner layout look better at the expense of a few problem corner cases.
+      last_level = 0
+      chapters_out = []
+      chapters.each_with_index do |chapter, index|
+        chapters_out[index] = chapter
+
+        if index.zero?
+        elsif chapter[:level] > last_level
+        elsif chapter[:level] == last_level
+          chapters_out[index - 1][:end_page] = chapters_out[index - 1][:start_page] == chapter[:start_page] ? chapter[:start_page] : chapter[:start_page] - 1
+        elsif chapter[:level] < last_level
+          # if we just moved back up to a higher ToC level (lower number!), the last chapter/section is finished,...
+          # as are any previous sections on this higher ToC level
+          chapters_out[index - 1][:end_page] = chapters_out[index - 1][:start_page] == chapter[:start_page] ? chapter[:start_page] : chapter[:start_page] - 1
+          chapters_out.map do |chapter_out|
+            if chapter_out[:end_page].blank? && chapter_out[:level] == chapter[:level]
+              chapter_out[:end_page] = chapters_out[index - 1][:start_page] == chapter[:start_page] ? chapter[:start_page] : chapter[:start_page] - 1
+              break
+            end
+          end
+        end
+        last_level = chapter[:level]
+      end
+
+      chapter_dir = File.join(root_path + '_chapters')
+      # if there is a pre-existing chapter_dir schedule it for deletion
+      FileUtils.move(chapter_dir, UnpackService.remove_path_from_noid(id, 'pdf_ebook_chapters')) if Dir.exist? chapter_dir
+      FileUtils.mkdir_p chapter_dir unless Dir.exist? chapter_dir
+
+      chapters_out.each_with_index do |chapter_out, index|
+        # some very dodgy ToC's can tie up a worker for a very, very long time with links to page 0, `pdfunite` eventually fails somehow
+        raise "This ToC has bookmarks pointing to page 0" if chapter_out[:start_page] == 0 || chapter_out[:end_page] == 0
+        # now that Travis is using Xenial the default poppler-utils allows the %06d format specifier, zero-padding...
+        # to 6 digits and bypassing sort problems when assembling the pages into section files
+        if chapter_out[:end_page].present?
+          run_command("pdfseparate -f #{chapter_out[:start_page]} -l #{chapter_out[:end_page]} #{file.path} #{chapter_dir}/#{id}_page_%06d.pdf")
+        else
+          run_command("pdfseparate -f #{chapter_out[:start_page]} #{file.path} #{chapter_dir}/#{id}_page_%06d.pdf")
+        end
+        run_command("pdfunite #{chapter_dir}/#{id}_page_*.pdf #{chapter_dir}/#{index}.pdf")
+        # clean up page files before next chapter is built
+        Dir.glob("#{chapter_dir}/#{id}_page_*.pdf").each { |page_file| File.delete(page_file) }
+      end
+    end
+
+    def linearize_pdf(root_path, file)
       if system("which qpdf > /dev/null 2>&1")
         # "Linearize" the pdf for x-sendfile and byte ranges, HELIO-3165
         # It's ok to linearize a pdf that's already been linearized
-        command = "qpdf --linearize #{file.path} #{root_path}.pdf"
-        stdin, stdout, stderr, wait_thr = popen3(command)
-        stdin.close
-        stdout.binmode
-        out = stdout.read
-        stdout.close
-        err = stderr.read
-        stderr.close
-        raise "Unable to execute command \"#{command}\"\n#{err}\n#{out}" unless wait_thr.value.success?
+        run_command("qpdf --linearize #{file.path} #{root_path}.pdf")
       else
-        FileUtils.move(file, "#{root_path}.pdf")
+        FileUtils.copy(file, "#{root_path}.pdf")
       end
       # This is weird, but perms are -rw------- and they need to be -rw-rw-r--
       File.chmod 0664, "#{root_path}.pdf"
+    end
+
+    def run_command(command)
+      stdin, stdout, stderr, wait_thr = popen3(command)
+      stdin.close
+      stdout.binmode
+      out = stdout.read
+      stdout.close
+      err = stderr.read
+      stderr.close
+      raise "Unable to execute command \"#{command}\"\n#{err}\n#{out}" unless wait_thr.value.success?
     end
 
     def epub_webgl_bridge(id, root_path, kind)

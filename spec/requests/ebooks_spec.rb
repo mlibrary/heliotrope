@@ -86,9 +86,12 @@ RSpec.describe "PDF EBooks", type: :request do
               expect { subject }.not_to raise_error
               expect(response).to have_http_status(:ok)
               expect(response.body).not_to be_empty
+              # watermarking will change the file content and PDF 'producer' metadata
               expect(response.body).not_to eq File.read(Rails.root.join(fixture_path, entity.filename))
+              expect(response.body).to include('Producer (Ruby CombinePDF')
               expect(response.header['Content-Type']).to eq(entity.media_type)
               expect(response.header['Content-Disposition']).to eq("attachment; filename=\"#{entity.filename}\"")
+              expect(counter_service).to have_received(:count).with(request: 1)
             end
           end
 
@@ -103,6 +106,7 @@ RSpec.describe "PDF EBooks", type: :request do
               expect(response.body).not_to eq File.read(Rails.root.join(fixture_path, entity.filename))
               expect(response.header['Content-Type']).to eq(entity.media_type)
               expect(response.header['Content-Disposition']).to eq("attachment; filename=\"#{entity.filename}\"")
+              expect(counter_service).to have_received(:count).with(request: 1)
             end
           end
         end
