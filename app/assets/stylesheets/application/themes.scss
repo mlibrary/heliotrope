@@ -3827,19 +3827,116 @@ $gabii-link-hover:    #1e5667;
 // University of Michigan - UMMAA
 //
 //////////////////////////////////////////////
-
 .ummaa {
 
-// jumbotron
-
+  // jumbotron
   .jumbotron {
     .logo {
-
-	img {
+	    img {
      	  width: 180px;
-   	}
-     } 	
-   }
+   	  }
+    } 	
+  }
+}
+///////////////////////////////////////////////
+//
+// University of Michigan - LRCCS, CJS, CSAS
+// CSEAS
+// 
+// Kenneth G. Lieberthal and Richard H. Rogel 
+// Center for Chinese Studies
+// Center for Japanese Studies
+// Center for South Asian Studies
+//
+//////////////////////////////////////////////
+.lrccs, .cjs, .csas, .cseas {
+  // navigation bar
+  .navbar {
+    min-height: 90px;
+  }
+
+  #brand-bar .navbar-brand {
+    max-width: 350px;
+  }
+
+  .search-form {
+    padding-top: 1.5em;
+  }
+
+  .navbar-right {
+    padding-top: 1em;
+  }
+
+  // jumbotron
+  .jumbotron {
+    p.lead {
+      font-size: 14px;
+    }
+
+    .logo {
+	    img {
+     	  width: 150px;
+   	  }
+    } 	
+  }
+
+  // footer
+  footer .press-block-a img {
+    width: 100%;
+  }
+
+  @media only screen and (max-width : 992px) {
+
+    #brand-bar form.search-form, .navbar-form {
+      width: 200px;
+    }
+  
+  }
+
+  @media only screen and (max-width : 768px) {
+    #brand-bar form.search-form, .navbar-form {
+      padding: 10px 0;
+      margin: 0;
+      width: 100%;
+      border: 0;
+      float: none !important;
+    }
+
+    .navbar-form .input-group .input-group-btn {
+      width: 1%;
+    }
+    
+    #brand-bar .navbar-brand {
+      max-width: 250px;
+    }
+
+    .navbar-header {
+      min-height: 9em;
+    }
+  }
+}
+///////////////////////////////////////////////
+//
+// University of Michigan - CJS
+//
+// Center for Japanese Studies
+// (overrides to styles in LRCCS)
+//
+//////////////////////////////////////////////
+.cjs {
+  // navigation bar
+  .navbar {
+    min-height: 70px;
+  }
+
+  .search-form {
+    padding-top: 10px;
+  }
+
+  .navbar-right {
+    padding-top: 10px;
+  }
+
 }
 ///////////////////////////////////////////////
 //
