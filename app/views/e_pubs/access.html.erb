@@ -12,6 +12,8 @@
   when 'heb'
     render partial: 'e_pubs/access/heb', locals: { presenter: @presenter, monograph_presenter: @parent_presenter, institutions: @institutions, products: @products }
   when 'michigan'
-    render partial: 'e_pubs/access/michigan', locals: { presenter: @presenter, monograph_presenter: @parent_presenter, institutions: @institutions, products: @products }
+    render partial: 'e_pubs/access/michigan', locals: { presenter: @presenter, monograph_presenter: @monograph_presenter, institutions: @institutions, products: @products }
+  when 'barpublishing'
+    render partial: 'e_pubs/access/barpublishing', locals: { presenter: @presenter, monograph_presenter: @monograph_presenter, institutions: @institutions, products: @products }
   end
 %>
