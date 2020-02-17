@@ -49,18 +49,33 @@ class PressCatalogController < ::CatalogController
       render file: Rails.root.join('public', '404.html'), status: :not_found, layout: false
     end
 
-    def open_monographs
+    def all_works
       children = @press.children.pluck(:subdomain)
       presses = children.push(@press.subdomain).uniq
-      docs = ActiveFedora::SolrService.query("{!terms f=press_sim}#{presses.map(&:downcase).join(',')}", rows: 100_000)
-      docs.select { |doc| doc["suppressed_bsi"] == false && doc["visibility_ssi"] == "open" }.count
+      ActiveFedora::SolrService.query("{!terms f=press_sim}#{presses.map(&:downcase).join(',')}", rows: 100_000)
+    end
+
+    def active_works
+      all_works.select { |doc| doc["suppressed_bsi"] == false }
+    end
+
+    def open_works
+      all_works.select { |doc| doc["suppressed_bsi"] == false && doc["visibility_ssi"] == "open" }
+    end
+
+    def display_works
+      if Sighrax.platform_admin?(current_actor) || Sighrax.press_admin?(current_actor, @press) || Sighrax.press_editor?(current_actor, @press)
+        active_works
+      else
+        open_works
+      end
     end
 
     def conditional_blacklight_configuration
       if @press.subdomain == Services.score_press
         musical_score
       else
-        if open_monographs >= 15
+        if display_works.count >= 15
           # per page
           blacklight_config.default_per_page = 15
           blacklight_config.per_page = [10, 15, 50, 100]

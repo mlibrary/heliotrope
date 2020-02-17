@@ -398,7 +398,9 @@ RSpec.describe Sighrax do
         end
       end
     end
+  end
 
+  context 'Role Helpers' do
     describe '#platform_admin?' do
       subject { described_class.platform_admin?(actor) }
 
@@ -430,6 +432,70 @@ RSpec.describe Sighrax do
 
             it { is_expected.to be false }
           end
+        end
+      end
+    end
+
+    describe '#press_admin?' do
+      subject { described_class.press_admin?(actor, press) }
+
+      let(:actor) { double('actor') }
+      let(:press) { instance_double(Press, 'press') }
+      let(:user) { false }
+      let(:admins) { instance_double(ActiveRecord::Relation, 'admins') }
+      let(:press_admins) { instance_double(ActiveRecord::Relation, 'press_admins') }
+      let(:any_press_admins) { false }
+
+      before do
+        allow(actor).to receive(:is_a?).with(User).and_return(user)
+        allow(actor).to receive(:admin_roles).and_return(admins)
+        allow(admins).to receive(:where).with(resource: press).and_return(press_admins)
+        allow(press_admins).to receive(:any?).and_return(any_press_admins)
+      end
+
+      it { is_expected.to be false }
+
+      context 'user' do
+        let(:user) { true }
+
+        it { is_expected.to be false }
+
+        context 'press_admin' do
+          let(:any_press_admins) { true }
+
+          it { is_expected.to be true }
+        end
+      end
+    end
+
+    describe '#press_editor?' do
+      subject { described_class.press_editor?(actor, press) }
+
+      let(:actor) { double('actor') }
+      let(:press) { instance_double(Press, 'press') }
+      let(:user) { false }
+      let(:editors) { instance_double(ActiveRecord::Relation, 'editors') }
+      let(:press_editors) { instance_double(ActiveRecord::Relation, 'press_editors') }
+      let(:any_press_editors) { false }
+
+      before do
+        allow(actor).to receive(:is_a?).with(User).and_return(user)
+        allow(actor).to receive(:editor_roles).and_return(editors)
+        allow(editors).to receive(:where).with(resource: press).and_return(press_editors)
+        allow(press_editors).to receive(:any?).and_return(any_press_editors)
+      end
+
+      it { is_expected.to be false }
+
+      context 'user' do
+        let(:user) { true }
+
+        it { is_expected.to be false }
+
+        context 'press_editor' do
+          let(:any_press_editors) { true }
+
+          it { is_expected.to be true }
         end
       end
     end

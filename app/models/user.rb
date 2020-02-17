@@ -71,10 +71,6 @@ class User < ApplicationRecord
     Guest.new(user_key: user_key)
   end
 
-  def role?
-    roles.any?
-  end
-
   # Override Hydra
   # current_user.groups is used in lot of places like
   # blacklight-access-controls, hydra-access-controls, hyrax.
@@ -97,12 +93,20 @@ class User < ApplicationRecord
     end
   end
 
+  def role?
+    roles.any?
+  end
+
   def press_roles
     roles.where(resource_type: 'Press')
   end
 
   def admin_roles
     press_roles.where(role: 'admin')
+  end
+
+  def editor_roles
+    press_roles.where(role: 'editor')
   end
 
   # Presses for which this user is an admin

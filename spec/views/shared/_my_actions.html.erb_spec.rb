@@ -74,7 +74,7 @@ describe 'shared/_my_actions.html.erb' do
   end # specific press admin user
 
   context 'a press editor' do
-    let(:user) { create(:editor) }
+    let(:user) { create(:press_editor) }
 
     context 'within the scope of their press' do
       before do
