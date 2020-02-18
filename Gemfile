@@ -102,7 +102,7 @@ gem 'combine_pdf', '~> 1.0'
 gem 'config'
 
 # Use gem version of cozy-sun-bear
-gem 'cozy-sun-bear', git: 'https://github.com/mlibrary/cozy-sun-bear', ref: 'b5b8da0513d3f44afbf0d2cfe67c8dc930be262c'
+gem 'cozy-sun-bear', git: 'https://github.com/mlibrary/cozy-sun-bear', ref: '27fcb744bb03f2d0791ace4b0882178706ca8969'
 
 gem 'devise', '>= 4.7.1'
 gem 'devise-guests', '~> 0.7'
