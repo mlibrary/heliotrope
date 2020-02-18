@@ -9,6 +9,8 @@ class MonographCatalogController < ::CatalogController
 
   configure_blacklight do |config|
     config.search_builder_class = MonographSearchBuilder
+    config.index.partials = %i[thumbnail index_header index]
+    config.view.gallery.partials = %i[index_header index]
 
     config.default_per_page = 20
     config.add_sort_field 'relevance', sort: "score desc, monograph_position_isi asc", label: "First Appearance"
@@ -57,14 +59,18 @@ class MonographCatalogController < ::CatalogController
     config.add_facet_field solr_name('contributor', :facetable), label: "Contributor", show: false
     config.add_facet_field solr_name('primary_creator_role', :facetable), label: "Creator Role", show: false
     config.add_facet_fields_to_solr_request!
-
-    config.index.partials = %i[thumbnail index_header index]
-
-    config.view.gallery.partials = %i[index_header index]
   end
 
   def facet
     super
+  end
+
+  # If the params specify a view, then store it in the session. If the params
+  # do not specifiy the view, set the view parameter to the value stored in the
+  # session. This enables a user with a session to do subsequent searches and have
+  # them default to the last used view.
+  def store_preferred_view
+    session[:preferred_monograph_view] = params[:view] if params[:view]
   end
 
   private

@@ -302,23 +302,29 @@ footer.press {
       border-bottom: none;
       padding-top: 2em;
 
-      h3 {
-        font-size: 24px;
+      .thumbnail {
+        text-align: left;
+        border: none;
+        border-radius: 0px;
+        padding: 0px;
+
+        img {
+          margin-left: 0;
+          margin-right: 0;
+          border: 2px solid #eeeeee;
+        }
       }
 
-      .authors {
-        display: block;
-        font-size: 18px;
-        font-weight: 700;
-        padding-bottom: 1.5em;
-      }
+      .caption {
+        h3.index_title {
+          font-size: 16px;
+        }
 
-      .epub {
-        padding-bottom: 1em;
+        .authors {
+          font-size: 13px;
+        }
       }
-
     }
-
   }
 
   // Gallery View (Default)

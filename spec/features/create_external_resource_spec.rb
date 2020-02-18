@@ -61,8 +61,12 @@ describe 'Create an external resource' do
       # check the direct links to the external resource from both list and gallery views
       visit monograph_catalog_path(monograph)
 
-      expect(page).to have_link('View External Object', href: "https://www.example.com/blah")
       click_link 'Gallery'
+      expect(find('#documents')['class']).to include('gallery')
+      expect(page).to have_link('View External Object', href: "https://www.example.com/blah")
+
+      click_link 'List'
+      expect(find('#documents')['class']).to include('documents-list')
       expect(page).to have_link('View External Object', href: "https://www.example.com/blah")
 
       # On FileSet Page
