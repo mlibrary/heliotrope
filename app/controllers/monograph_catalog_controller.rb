@@ -76,14 +76,17 @@ class MonographCatalogController < ::CatalogController
   private
 
     def load_presenter
+      retries ||= 0
       monograph_id = params[:monograph_id] || params[:id]
       raise CanCan::AccessDenied unless current_ability&.can?(:read, monograph_id)
       @presenter = Hyrax::PresenterFactory.build_for(ids: [monograph_id], presenter_class: Hyrax::MonographPresenter, presenter_args: current_ability).first
-      @monograph_policy = MonographPolicy.new(current_actor, Sighrax.from_noid(monograph_id))
+      @monograph_policy = MonographPolicy.new(current_actor, Sighrax.from_presenter(@presenter))
       @press_policy = PressPolicy.new(current_actor, Press.find_by(subdomain: @presenter.subdomain))
       @ebook_download_presenter = EBookDownloadPresenter.new(@presenter, current_ability, current_actor)
-      # This can be used if you need see something in the solr log... this is pretty noticable
-      # ActiveFedora::SolrService.query("{!terms f=id},,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,", rows: 99_999)
+    rescue RSolr::Error::ConnectionRefused, RSolr::Error::Http => e
+      Rails.logger.error(%Q|[RSOLR ERROR TRY:#{retries}] #{e} #{e.backtrace.join("\n")}|)
+      retries += 1
+      retry if retries < 3
     end
 
     def add_counter_stat
