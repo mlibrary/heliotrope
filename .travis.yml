@@ -1,4 +1,4 @@
-dist: trusty
+dist: xenial
 language: ruby
 cache: bundler
 sudo: required
@@ -11,12 +11,14 @@ before_script:
 rvm:
   - 2.4.2
 jdk:
-  - oraclejdk8
+  - openjdk8
 addons:
   apt:
     packages:
       - dpkg # fix for travis issue https://github.com/travis-ci/travis-ci/issues/9361
   chrome: stable
+services:
+  - mysql
 env:
   global:
     - NOKOGIRI_USE_SYSTEM_LIBRARIES=true
