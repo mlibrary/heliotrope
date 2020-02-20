@@ -3,6 +3,7 @@
 require_dependency 'sighrax/asset'
 require_dependency 'sighrax/electronic_publication'
 require_dependency 'sighrax/entity'
+require_dependency 'sighrax/interactive_map'
 require_dependency 'sighrax/mobipocket'
 require_dependency 'sighrax/model'
 require_dependency 'sighrax/monograph'
@@ -165,15 +166,26 @@ module Sighrax # rubocop:disable Metrics/ModuleLength
 
       def file_set_factory(noid, data)
         featured_representative = FeaturedRepresentative.find_by(file_set_id: noid)
-        return Asset.send(:new, noid, data) if featured_representative.blank?
+        if featured_representative.blank?
+          file_set_resource_type_factory(noid, data)
+        else
+          case featured_representative.kind
+          when 'epub'
+            ElectronicPublication.send(:new, noid, data)
+          when 'mobi'
+            Mobipocket.send(:new, noid, data)
+          when 'pdf_ebook'
+            PortableDocumentFormat.send(:new, noid, data)
+          else
+            Asset.send(:new, noid, data)
+          end
+        end
+      end
 
-        case featured_representative.kind
-        when 'epub'
-          ElectronicPublication.send(:new, noid, data)
-        when 'mobi'
-          Mobipocket.send(:new, noid, data)
-        when 'pdf_ebook'
-          PortableDocumentFormat.send(:new, noid, data)
+      def file_set_resource_type_factory(noid, data)
+        case Array(data['resource_type_tesim']).first
+        when /^interactive map$/i
+          InteractiveMap.send(:new, noid, data)
         else
           Asset.send(:new, noid, data)
         end
