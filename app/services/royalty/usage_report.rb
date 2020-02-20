@@ -5,6 +5,7 @@
 module Royalty
   class UsageReport
     include Royalty::Reportable
+    include ActionView::Helpers::NumberHelper
 
     def initialize(subdomain, start_date, end_date)
       @subdomain = subdomain
@@ -16,7 +17,11 @@ module Royalty
     def report
       items = item_report[:items]
       items = update_results(items)
-
+      items = remove_extra_lines(items)
+      @total_hits_all_rightsholders = total_hits_all_rightsholders(items)
+      # now that the math is done, format numbers
+      items = format_numbers(items)
+      # create and sent reports
       reports = copyholder_reports(items)
       reports = combined_report(reports, items)
       send_reports(reports)
@@ -34,7 +39,7 @@ module Royalty
             "Report Name": "Royalty Usage Summary Report",
             "Rightsholder Name": "All Rights Holders",
             "Reporting Period": "#{@start_date.strftime("%Y%m")} to #{@end_date.strftime("%Y%m")}",
-            "Total Hits (All Rights Holders)": total_hits_all_rightsholders(all_items).to_s,
+            "Total Hits (All Titles, All Rights Holders)": number_with_delimiter(@total_hits_all_rightsholders),
           },
           items: all_items
         }
@@ -44,7 +49,7 @@ module Royalty
       def copyholder_reports(all_items)
         reports = {}
         items_by_copyholders(all_items).each do |copyholder, items|
-          name = "#{copyholder.split(" ").join("_")}.usage.#{@start_date.strftime("%Y%m")}-#{@end_date.strftime("%Y%m")}.csv"
+          name = copyholder.gsub(/[^0-9A-z.\-]/, '_') + ".usage.#{@start_date.strftime("%Y%m")}-#{@end_date.strftime("%Y%m")}.csv"
           reports[name] = {
             header: {
               "Collection Name": @press.name,
@@ -52,7 +57,7 @@ module Royalty
               "Rightsholder Name": copyholder,
               "Reporting Period": "#{@start_date.strftime("%Y%m")} to #{@end_date.strftime("%Y%m")}",
               # Total Hits (All Rights Holders): [total of all Total Item Requests for all content types, regardless of rightsholder, for the period]
-              "Total Hits (All Rights Holders)": total_hits_all_rightsholders(all_items).to_s,
+              "Total Hits (All Titles, All Rights Holders)": number_with_delimiter(@total_hits_all_rightsholders),
             },
             items: items
           }
@@ -60,11 +65,21 @@ module Royalty
         reports
       end
 
+      def remove_extra_lines(items)
+        # When a COUNTER5 Item Report is created with both OA_Gold *and* Controlled access_types,
+        # there is one entire row for OA_Gold and one entire row for Controlled for each item. Since a book is
+        # always either OA_Gold *OR* Controlled, one of these rows is empty: it has no hits/Reporting_Period_Total
+        # It's weird and confusing, but that's how it works in COUNTER5.
+        # For these reports though, we're going to remove the "extra" row, either OA
+        # or Controlled, if the row has no Hits. It will make the resulting report easier to read, probably.
+        items.map { |item| item["Hits"] == 0 ? nil : item }.compact
+      end
+
       def update_results(items)
         items.each do |item|
           # Reporting_Period_Total:
           # Change label to Hits
-          item["Hits"] = item.delete("Reporting_Period_Total")
+          item.transform_keys! { |k| k == "Reporting_Period_Total" ? "Hits" : k }
           # Access_Type: modify the values as follows:
           # OA_Gold -> OA
           # (Controlled can remain Controlled)
