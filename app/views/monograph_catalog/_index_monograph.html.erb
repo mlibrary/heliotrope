@@ -55,8 +55,8 @@
         <span aria-label="copyright information" class="copyright">&copy; <%= @presenter.copyright_holder %></span>
        <% end %>
     <% end %>
-    <% if @presenter.funder? %>
-      <span aria-label="funder" class="funder"><i><%= @presenter.funder %></i></span>
+    <% if @presenter.funder_display? %>
+      <span aria-label="funder display" class="funder_display"><i><%= @presenter.funder_display %></i></span>
     <% end %>
     <% if @presenter.open_access? %>
       <div class="open-access">

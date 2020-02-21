@@ -12,7 +12,7 @@ describe 'Create a monograph' do
       stub_out_redis
     end
 
-    it do
+    it do # rubocop:disable RSpec/ExampleLength
       visit new_hyrax_monograph_path
 
       # Monograph form
@@ -37,6 +37,7 @@ describe 'Create a monograph' do
       fill_in 'Copyright Holder', with: 'Blahdy Blah Copyright Holder'
       fill_in 'Open Access?', with: 'yes'
       fill_in 'Funder', with: 'Richie Rich'
+      fill_in 'Funder Display', with: 'Made possible by Rich Richie'
       fill_in 'Holding Contact', with: 'http://www.blahpresscompany.com/'
 
       # Authorship Metadata
@@ -74,7 +75,9 @@ describe 'Create a monograph' do
       expect(page).to have_field('Citable Link', with: HandleService::DOI_ORG_PREFIX + '<doi>')
       expect(page).to have_content '123-456-7890'
       expect(page).to have_content 'Your files are being processed by Fulcrum in the background.'
-      expect(page).to have_content 'Richie Rich' # funder
+      expect(page).not_to have_content 'Richie Rich' # funder
+      expect(page).to have_content 'Made possible by Rich Richie' # funder_display
+
       # CC license icon/link
       expect(page).to have_css("img[src*='https://i.creativecommons.org/p/mark/1.0/80x15.png']", count: 1)
       expect(page).to have_link(nil, href: 'https://creativecommons.org/publicdomain/mark/1.0/')
@@ -159,6 +162,9 @@ describe 'Create a monograph' do
       expect(page).to have_css('li.attribute.open_access', text: 'yes', count: 1)
       # funder
       expect(page).to have_content 'Richie Rich'
+      # funder display
+      expect(page).to have_content 'Made possible by Rich Richie'
+
 
       # Citation Metadata
       # publisher

@@ -44,5 +44,9 @@ module SolrDocumentExtensions
     def funder
       Array(self[Solrizer.solr_name('funder', :stored_searchable)]).first
     end
+
+    def funder_display
+      Array(self[Solrizer.solr_name('funder_display', :stored_searchable)]).first
+    end
   end
 end

@@ -6,7 +6,8 @@
 <%= presenter.attribute_to_html(:buy_url, render_as: :markdown) %>
 <%= presenter.attribute_to_html(:copyright_holder) %>
 <%= presenter.attribute_to_html(:open_access, label: t('open_access')) %>
-<%= presenter.attribute_to_html(:funder) %>
+<%= presenter.attribute_to_html(:funder, label: t('funder')) %>
+<%= presenter.attribute_to_html(:funder_display, label: t('funder_display')) %>
 <%= presenter.attribute_to_html(:holding_contact) %>
 
 <%= presenter.attribute_to_html(:creator_full_name, label: t('author'), render_as: :linked) %>
