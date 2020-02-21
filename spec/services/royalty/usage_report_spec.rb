@@ -37,6 +37,18 @@ RSpec.describe Royalty::UsageReport do
        "Apr-2019": 0,
        "May-2019": 0,
        "Jun-2019": 0,
+     }.with_indifferent_access,
+     { "Parent_Proprietary_ID": "AAAAAAAAA",
+       "Proprietary_ID": "333333333",
+       "Access_Type": "Controlled",
+       "Section_Type": "",
+       "Reporting_Period_Total": 0,
+       "Jan-2019": 0,
+       "Feb-2019": 0,
+       "Mar-2019": 0,
+       "Apr-2019": 0,
+       "May-2019": 0,
+       "Jun-2019": 0,
      }.with_indifferent_access]
   end
 
@@ -75,6 +87,10 @@ RSpec.describe Royalty::UsageReport do
       ActiveFedora::SolrService.commit
       allow(CounterReporter::ItemReport).to receive(:new).and_return(counter_report)
       allow(counter_report).to receive(:report).and_return(item_report)
+      # we want some bigger numbers here to double check formatting, so...
+      items[0]["Reporting_Period_Total"] = 100
+      items[0]["Apr-2019"] = 25
+      items[0]["Jun-2019"] = 75
     end
 
     it "sends the reports" do
@@ -82,6 +98,14 @@ RSpec.describe Royalty::UsageReport do
       allow(ftp).to receive(:mkdir).with("Library PTG Box/HEB/HEB Royalty Reports/2019-01_to_2019-06").and_return(true)
       @reports = subject
       expect(@reports.keys).to eq ["Copyright_A.usage.201901-201906.csv", "Copyright_B.usage.201901-201906.csv", "usage_combined.201901-201906.csv"]
+      expect(@reports["Copyright_A.usage.201901-201906.csv"][:items].length).to eq 2
+      expect(@reports["Copyright_B.usage.201901-201906.csv"][:items].length).to eq 1
+      # note that the "Proprietary_ID": "333333333" and "Access_Type": "Controlled" row has
+      # been removed by the remove_extra_lines method
+      expect(@reports["usage_combined.201901-201906.csv"][:items].length).to eq 3
+      # make sure we have the right formatting for larger numbers (commas)
+      expect(@reports["usage_combined.201901-201906.csv"][:header][:"Total Hits (All Titles, All Rights Holders)"]).to eq "2,634"
+      expect(@reports["usage_combined.201901-201906.csv"][:items][0]["Jun-2019"]).to eq "1,875"
     end
   end
 

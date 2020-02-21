@@ -5,6 +5,7 @@ require 'net/ftp'
 module Royalty
   module Reportable
     extend ActiveSupport::Concern
+    include ActionView::Helpers::NumberHelper
 
     def box_config
       return @box_config if @box_config.present?
@@ -22,7 +23,7 @@ module Royalty
       begin
         ftp.mkdir(dir)
       rescue Net::FTPPermError => e
-        Rails.logger.info "[ROYALTY REPORTS] #{dir} already exists: #{e}"
+        Rails.logger.info "[ROYALTY REPORTS] #{dir} already exists (THIS IS OK!): #{e}"
       end
       ftp.chdir(dir)
       reports.each do |name, report|
@@ -31,9 +32,18 @@ module Royalty
         file.close
         ftp.putbinaryfile(file, name)
         file.unlink
+        Rails.logger.info("[ROYALTY REPORTS] Put #{name}")
       end
     rescue StandardError => e
       Rails.logger.error "[ROYALTY REPORTS] FTP Error: #{e}\n#{e.backtrace.join("\n")}"
+    end
+
+    def format_numbers(items)
+      items.each do |item|
+        item["Hits"] = number_with_delimiter(item["Hits"])
+        item.map { |k, v| item[k] = number_with_delimiter(v) if k.match(/\w{3}-\d{4}/) } # matches "Jan-2019" or whatever
+      end
+      items
     end
 
     def items_by_copyholders(items)

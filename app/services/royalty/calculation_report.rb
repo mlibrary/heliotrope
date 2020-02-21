@@ -22,15 +22,27 @@ module Royalty
 
       items = calculate_royalty(items)
       @total_royalty_all_rightsholders = total_royalties_all_rightsholders(items)
-      # now that all the math is done, we can make currencies
+      @total_hits_all_rightsholders = total_hits_all_rightsholders(items)
+      # now that all the math is done, we can make currencies and formats
       items = format_royalty(items)
-
+      items = format_numbers(items)
+      # an extra picky bit
+      items = rename_hits_heading(items)
+      # make and send reports
       reports = copyholder_reports(items)
       send_reports(reports)
       reports
     end
 
     private
+
+      def rename_hits_heading(items)
+        # Change the column heading 'Hits' to 'Total Title Hits'
+        items.each do |item|
+          item.transform_keys! { |k| k == "Hits" ? "Total Title Hits" : k }
+        end
+        items
+      end
 
       def format_royalty(items)
         items.each do |item|
@@ -43,7 +55,7 @@ module Royalty
       def copyholder_reports(all_items)
         reports = {}
         items_by_copyholders(all_items).each do |copyholder, items|
-          name = "#{copyholder.split(" ").join("_")}.calc.#{@start_date.strftime("%Y%m")}-#{@end_date.strftime("%Y%m")}.csv"
+          name = copyholder.gsub(/[^0-9A-z.\-]/, '_') + ".calc.#{@start_date.strftime("%Y%m")}-#{@end_date.strftime("%Y%m")}.csv"
           reports[name] = {
             header: {
               "Collection Name": @press.name,
@@ -51,10 +63,10 @@ module Royalty
               "Rightsholder Name": copyholder,
               "Reporting Period": "#{@start_date.strftime("%Y%m")} to #{@end_date.strftime("%Y%m")}",
               # Total Hits (All Rights Holders): [total of all Total Item Requests for all content types, regardless of rightsholder, for the period]
-              "Total Hits (All Rights Holders)": total_hits_all_rightsholders(all_items).to_s,
+              "Total Hits (Non-OA Titles, All Rights Holders)": number_with_delimiter(@total_hits_all_rightsholders),
               # This number will ultimately be the same as the provided @total_royalties param
               # but we'll do the math of adding up the individual royalties as a sort of check
-              "Total Royalties Shared (All Rights Holders)": number_to_currency(total_royalties_all_rightsholders(all_items), unit: "")
+              "Total Royalties Shared (All Rights Holders)": number_to_currency(@total_royalty_all_rightsholders, unit: "")
             },
             items: items
           }
@@ -92,8 +104,8 @@ module Royalty
             monographs[noid]["Authors"] = item["Authors"]
             monographs[noid]["Publisher"] = item["Publisher"]
             monographs[noid]["DOI"] = item["Parent_DOI"]
-            monographs[noid]["Hits"] = item["Hits"].to_i
             monographs[noid]["Royalty Earning"] = 0.00  # will calculate this elsewhere
+            monographs[noid]["Hits"] = item["Hits"].to_i
             item.each do |k, v|
               if k.match(/\w{3}-\d{4}/)
                 monographs[noid][k] = v.to_i

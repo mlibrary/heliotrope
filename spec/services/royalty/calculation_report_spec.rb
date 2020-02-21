@@ -12,13 +12,13 @@ RSpec.describe Royalty::CalculationReport do
           "Parent_DOI": "http://doi.org/a",
           "Publisher": "Flub",
           "Section_Type": "Chapter",
-          "Reporting_Period_Total": 4,
+          "Reporting_Period_Total": 100,
           "Jan-2019": 0,
           "Feb-2019": 0,
           "Mar-2019": 0,
-          "Apr-2019": 1,
+          "Apr-2019": 25,
           "May-2019": 0,
-          "Jun-2019": 3,
+          "Jun-2019": 75,
        }.with_indifferent_access,
         { "Parent_Proprietary_ID": "BBBBBBBBB",
           "Proprietary_ID": "222222222",
@@ -51,7 +51,7 @@ RSpec.describe Royalty::CalculationReport do
           "Jun-2019": 0,
         }.with_indifferent_access]
      end
-    subject { described_class.new(press.subdomain, "2019-01-01", "2019-06-30", 100.00).report }
+    subject { described_class.new(press.subdomain, "2019-01-01", "2019-06-30", 1000.00).report }
 
     let(:press) { create(:press, subdomain: "blue") }
     let(:mono1) do
@@ -95,17 +95,17 @@ RSpec.describe Royalty::CalculationReport do
 
       expect(@reports.keys).to eq ["Copyright_A.calc.201901-201906.csv", "Copyright_B.calc.201901-201906.csv"]
 
-      expect(@reports["Copyright_A.calc.201901-201906.csv"][:header][:"Total Royalties Shared (All Rights Holders)"]).to eq "100.00"
-      expect(@reports["Copyright_A.calc.201901-201906.csv"][:header][:"Total Hits (All Rights Holders)"]).to eq "235"
+      expect(@reports["Copyright_A.calc.201901-201906.csv"][:header][:"Total Royalties Shared (All Rights Holders)"]).to eq "1,000.00"
+      expect(@reports["Copyright_A.calc.201901-201906.csv"][:header][:"Total Hits (Non-OA Titles, All Rights Holders)"]).to eq "2,635"
 
       expect(@reports["Copyright_A.calc.201901-201906.csv"][:items][0]["Parent_Proprietary_ID"]).to eq "AAAAAAAAA"
-      expect(@reports["Copyright_A.calc.201901-201906.csv"][:items][0]["Hits"]).to eq 110
+      expect(@reports["Copyright_A.calc.201901-201906.csv"][:items][0]["Total Title Hits"]).to eq "2,510"
 
       expect(@reports["Copyright_B.calc.201901-201906.csv"][:items][0]["Parent_Proprietary_ID"]).to eq "BBBBBBBBB"
-      expect(@reports["Copyright_B.calc.201901-201906.csv"][:items][0]["Hits"]).to eq 125
-      # 46.81 + 53.19
+      expect(@reports["Copyright_B.calc.201901-201906.csv"][:items][0]["Total Title Hits"]).to eq "125"
+
       expect(@reports["Copyright_A.calc.201901-201906.csv"][:items][0]["Royalty Earning"].to_f +
-             @reports["Copyright_B.calc.201901-201906.csv"][:items][0]["Royalty Earning"].to_f).to eq 100.0
+             @reports["Copyright_B.calc.201901-201906.csv"][:items][0]["Royalty Earning"].to_f).to eq 1000.0
     end
   end
 
