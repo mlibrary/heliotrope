@@ -30,7 +30,7 @@
     <div class="col-md-10">
       <div class="col-md-1"><%= component.id %></div>
       <div class="col-md-8"><div><%= component.identifier %></div><div><%= component.name %></div>&nbsp;</div>
-      <% if Sighrax.factory(component.noid).is_a?(Sighrax::Monograph) %>
+      <% if Sighrax.from_noid(component.noid).is_a?(Sighrax::Monograph) %>
         <div class="col-md-2">&nbsp;<%= link_to component.noid, hyrax_monograph_path(component.noid) %></div>
       <% else %>
         <div class="col-md-2">&nbsp;<%= link_to component.noid, hyrax_file_set_path(component.noid) %></div>

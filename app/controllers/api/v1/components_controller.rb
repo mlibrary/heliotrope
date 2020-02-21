@@ -96,7 +96,7 @@ module API
           return render json: @component.errors, status: :unprocessable_entity
         end
         @component = Greensub::Component.new(component_params)
-        unless Sighrax.factory(component_params[:noid]).valid?
+        unless Sighrax.from_noid(component_params[:noid]).valid?
           @component.errors.add(:noid, "component noid '#{component_params[:noid]}' does not exists!")
           return render json: @component.errors, status: :unprocessable_entity
         end
@@ -130,7 +130,7 @@ module API
           end
           return head :ok
         end
-        unless Sighrax.factory(component_params[:noid]).valid?
+        unless Sighrax.from_noid(component_params[:noid]).valid?
           @component.errors.add(:noid, "component noid '#{component_params[:noid]}' does not exists!")
           return render json: @component.errors, status: :unprocessable_entity
         end

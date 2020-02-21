@@ -52,7 +52,7 @@ SitemapGenerator::Sitemap.create do
 
       # epubs, if they are not restricted by checkpoint, get a special ereader url.
       # if they are restricted by checkpoint, they shouldn't be in sitemaps since google can't access them
-      if rep&.kind == 'epub' && EPubPolicy.new(Anonymous.new({}), Sighrax.factory(fsid)).show?
+      if rep&.kind == 'epub' && EPubPolicy.new(Anonymous.new({}), Sighrax.from_noid(fsid)).show?
         url = Rails.application.routes.url_helpers.epub_path(fsid)
         add url, lastmod: d['date_modified_dtsi'], priority: 0.5, changefreq: 'monthly'
         next

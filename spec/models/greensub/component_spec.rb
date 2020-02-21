@@ -80,7 +80,7 @@ RSpec.describe Greensub::Component, type: :model do
     end
 
     context 'noid' do
-      before { allow(Sighrax).to receive(:factory).with(noid.to_s).and_return(Sighrax::Model.send(:new, noid, {})) }
+      before { allow(Sighrax).to receive(:from_noid).with(noid.to_s).and_return(Sighrax::Model.send(:new, noid, {})) }
 
       it do
         expect(subject.noid).to eq noid.to_s
@@ -89,7 +89,7 @@ RSpec.describe Greensub::Component, type: :model do
       end
 
       context '#monograph?' do
-        before { allow(Sighrax).to receive(:factory).with(noid.to_s).and_return(Sighrax::Monograph.send(:new, noid, {})) }
+        before { allow(Sighrax).to receive(:from_noid).with(noid.to_s).and_return(Sighrax::Monograph.send(:new, noid, {})) }
 
         it do
           expect(subject.noid).to eq noid.to_s
@@ -99,7 +99,7 @@ RSpec.describe Greensub::Component, type: :model do
       end
 
       context '#file_set?' do
-        before { allow(Sighrax).to receive(:factory).with(noid.to_s).and_return(Sighrax::Asset.send(:new, noid, {})) }
+        before { allow(Sighrax).to receive(:from_noid).with(noid.to_s).and_return(Sighrax::Asset.send(:new, noid, {})) }
 
         it do
           expect(subject.noid).to eq noid.to_s

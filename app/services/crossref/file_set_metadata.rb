@@ -5,7 +5,7 @@ module Crossref
     attr_reader :work, :document, :component_file, :presenters, :file_sets_to_save
 
     def initialize(work_noid)
-      @work = Sighrax.hyrax_presenter(Sighrax.factory(work_noid))
+      @work = Sighrax.hyrax_presenter(Sighrax.from_noid(work_noid))
       raise "Work #{work.id} does not have a DOI" if @work.doi.blank?
       raise "Press #{work.subdomain} can not make automatic DOIs" unless Press.where(subdomain: @work.subdomain).first&.create_dois?
 

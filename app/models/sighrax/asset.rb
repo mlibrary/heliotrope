@@ -5,7 +5,7 @@ module Sighrax
     private_class_method :new
 
     def parent
-      Sighrax.factory(Array(data['monograph_id_ssim']).first)
+      Sighrax.from_noid(Array(data['monograph_id_ssim']).first)
     end
 
     def content

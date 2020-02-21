@@ -5,7 +5,7 @@ module Crossref
     attr_reader :work, :document
 
     def initialize(noid)
-      @work = Sighrax.hyrax_presenter(Sighrax.factory(noid))
+      @work = Sighrax.hyrax_presenter(Sighrax.from_noid(noid))
       @document = Nokogiri::XML(File.read(Rails.root.join("config", "crossref", "monograph_metadata_template.xml")))
     end
 

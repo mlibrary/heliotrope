@@ -325,8 +325,8 @@ RSpec.describe EPubsController, type: :controller do
       end
 
       context 'Restricted Access' do
-        let(:parent) { Sighrax.factory(monograph.id) }
-        let(:epub) { Sighrax.factory(file_set.id) }
+        let(:parent) { Sighrax.from_noid(monograph.id) }
+        let(:epub) { Sighrax.from_noid(file_set.id) }
         let(:component) { Greensub::Component.create!(identifier: parent.resource_token, name: parent.title, noid: parent.noid) }
         let(:keycard) { { dlpsInstitutionId: dlpsInstitutionId } }
         let(:dlpsInstitutionId) { 'institute' }
@@ -463,8 +463,8 @@ RSpec.describe EPubsController, type: :controller do
         let(:wrong_share_token) do
           JsonWebToken.encode(data: 'wrongnoid', exp: Time.now.to_i + 48 * 3600)
         end
-        let(:parent) { Sighrax.factory(monograph.id) }
-        let(:epub) { Sighrax.factory(file_set.id) }
+        let(:parent) { Sighrax.from_noid(monograph.id) }
+        let(:epub) { Sighrax.from_noid(file_set.id) }
 
         before do
           Greensub::Component.create!(identifier: parent.resource_token, name: parent.title, noid: parent.noid)
@@ -510,7 +510,7 @@ RSpec.describe EPubsController, type: :controller do
     let(:share_link_expiration_time) { 28 * 24 * 3600 } # 28 days in seconds
 
     before do
-      allow(Sighrax).to receive(:factory).with('noid').and_return(entity)
+      allow(Sighrax).to receive(:from_noid).with('noid').and_return(entity)
       allow(entity).to receive(:is_a?).with(Sighrax::ElectronicPublication).and_return(true)
       allow(entity).to receive(:parent).and_return(parent)
       allow(EPubPolicy).to receive(:new).and_return(policy)

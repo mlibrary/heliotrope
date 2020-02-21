@@ -47,11 +47,11 @@ module Greensub
     end
 
     def monograph?
-      Sighrax.factory(noid).is_a?(Sighrax::Monograph)
+      Sighrax.from_noid(noid).is_a?(Sighrax::Monograph)
     end
 
     def file_set?
-      Sighrax.factory(noid).is_a?(Sighrax::Asset)
+      Sighrax.from_noid(noid).is_a?(Sighrax::Asset)
     end
 
     def grants?

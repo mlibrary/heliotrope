@@ -65,7 +65,7 @@ RSpec.describe ValidationService do
 
     before do
       allow(described_class).to receive(:valid_noid?).with(id).and_return(valid_id)
-      allow(Sighrax).to receive(:factory).with(id).and_return(entity)
+      allow(Sighrax).to receive(:from_noid).with(id).and_return(entity)
     end
 
     it { is_expected.to be false }

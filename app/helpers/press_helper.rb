@@ -108,7 +108,7 @@ module PressHelper
     return false unless product.present? && product.name.present? && product.purchase.present?
     return false if Greensub.actor_products(actor).include?(product)
     return true if controller.is_a?(PressCatalogController)
-    monograph = Sighrax.factory(@presenter&.id)
+    monograph = Sighrax.from_noid(@presenter&.id)
     return false unless monograph.valid?
     return false if Sighrax.open_access?(monograph)
     Greensub.product_include?(product: product, entity: monograph)

@@ -8,7 +8,7 @@ ENV["TZ"] = "US/Eastern"
 
 class AptrustDepositJob < ApplicationJob
   def perform(monograph_id)
-    monograph = Sighrax.factory(monograph_id)
+    monograph = Sighrax.from_noid(monograph_id)
     return false unless monograph.is_a?(Sighrax::Monograph)
 
     Dir.mktmpdir(["deposit", monograph.noid], Rails.root.join('tmp')) do |dir|

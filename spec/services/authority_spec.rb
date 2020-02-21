@@ -277,7 +277,7 @@ RSpec.describe Authority do
           let(:resource_id) { 'validnoid' }
           let(:instance) { klass.send(:new, resource_id, nil) }
 
-          before { allow(Sighrax).to receive(:factory).with(resource_id).and_return(instance) }
+          before { allow(Sighrax).to receive(:from_noid).with(resource_id).and_return(instance) }
 
           it 'is expected' do
             expect(subject).to be_an_instance_of(klass)

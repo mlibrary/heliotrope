@@ -19,7 +19,7 @@ RSpec.describe Sighrax::Monograph, type: :model do
 
     before do
       allow(FeaturedRepresentative).to receive(:find_by).with(work_id: noid, kind: 'epub').and_return(epub_featured_representative)
-      allow(Sighrax).to receive(:factory).with(epub_featured_representative.file_set_id).and_return(electronic_publication)
+      allow(Sighrax).to receive(:from_noid).with(epub_featured_representative.file_set_id).and_return(electronic_publication)
     end
 
     it { expect(subject.epub_featured_representative).to be electronic_publication }

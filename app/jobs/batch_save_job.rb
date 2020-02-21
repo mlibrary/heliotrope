@@ -15,7 +15,7 @@ class BatchSaveJob < ApplicationJob
     return if data.blank?
 
     data.each do |noid, values|
-      entity = Sighrax.factory(noid)
+      entity = Sighrax.from_noid(noid)
       if entity.is_a?(Sighrax::Monograph)
         m = Monograph.find(noid)
         values.each do |k, v|

@@ -2,7 +2,7 @@
 
 class AptrustVerifyJob < ApplicationJob
   def perform(monograph_id)
-    monograph = Sighrax.factory(monograph_id)
+    monograph = Sighrax.from_noid(monograph_id)
     return false unless monograph.is_a?(Sighrax::Monograph)
 
     record = AptrustDeposit.find_by(noid: monograph_id)

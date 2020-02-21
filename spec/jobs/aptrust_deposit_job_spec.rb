@@ -10,7 +10,7 @@ RSpec.describe AptrustDepositJob, type: :job do
   describe 'job queue' do
     subject(:job) { described_class.perform_later(monograph_id) }
 
-    before { allow(Sighrax).to receive(:factory).with(monograph_id).and_call_original }
+    before { allow(Sighrax).to receive(:from_noid).with(monograph_id).and_call_original }
 
     after do
       clear_enqueued_jobs
@@ -25,7 +25,7 @@ RSpec.describe AptrustDepositJob, type: :job do
 
     it 'executes perform' do
       perform_enqueued_jobs { job }
-      expect(Sighrax).to have_received(:factory).with(monograph_id)
+      expect(Sighrax).to have_received(:from_noid).with(monograph_id)
     end
   end
 
@@ -42,7 +42,7 @@ RSpec.describe AptrustDepositJob, type: :job do
         let(:record) { instance_double(AptrustDeposit, 'record') }
 
         before do
-          allow(Sighrax).to receive(:factory).with(monograph_id).and_return(monograph)
+          allow(Sighrax).to receive(:from_noid).with(monograph_id).and_return(monograph)
           allow(AptrustDeposit).to receive(:find_by).with(noid: monograph_id).and_return(record)
           allow(record).to receive(:delete)
           allow(job).to receive(:identifier).with(monograph).and_return('identifier')

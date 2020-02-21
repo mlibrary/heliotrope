@@ -25,7 +25,7 @@ class GrantsController < ApplicationController
     resource_id ||= (resource_type == :any) ? :any : grant_params["resource_#{resource_type.to_s.downcase}_id"]
 
     if resource_type == :Entity
-      entity = Sighrax.factory(resource_id)
+      entity = Sighrax.from_noid(resource_id)
       resource_type = entity.type.to_sym
     end
 

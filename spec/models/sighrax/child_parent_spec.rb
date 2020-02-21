@@ -12,7 +12,7 @@ RSpec.describe Sighrax do
     end
   end
   let(:file_set) { create(:public_file_set) }
-  let(:child) { described_class.factory(file_set.id) }
+  let(:child) { described_class.from_noid(file_set.id) }
   let(:parent) { child.parent }
   let(:child_presenter) { Hyrax::FileSetPresenter.new(SolrDocument.new(file_set.to_solr), nil, nil) }
   let(:parent_presenter) { Hyrax::MonographPresenter.new(SolrDocument.new(monograph.to_solr), nil) }

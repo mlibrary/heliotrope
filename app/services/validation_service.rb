@@ -31,7 +31,7 @@ class ValidationService
   # Object Validation
 
   def self.valid_entity?(id)
-    valid_noid?(id) && Sighrax.factory(id).valid?
+    valid_noid?(id) && Sighrax.from_noid(id).valid?
   end
 
   def self.valid_component?(id)

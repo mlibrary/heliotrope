@@ -105,7 +105,7 @@ RSpec.describe SessionsController, type: :controller do
     before { clear_grants_table }
 
     it 'gets parameterized discovery feed' do
-      m = Sighrax.factory(monograph.id)
+      m = Sighrax.from_noid(monograph.id)
       component = Greensub::Component.create!(identifier: m.resource_token, name: m.title, noid: m.noid)
       institution1 = Greensub::Institution.create!(identifier: '1', name: 'University of Michigan', site: 'Site', login: 'Login', entity_id: 'https://shibboleth.umich.edu/idp/shibboleth')
       # To show that this institution is not used

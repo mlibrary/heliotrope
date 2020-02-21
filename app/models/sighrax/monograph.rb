@@ -5,11 +5,11 @@ module Sighrax
     private_class_method :new
 
     def children
-      Array(data['ordered_member_ids_ssim']).map { |noid| Sighrax.factory(noid) }
+      Array(data['ordered_member_ids_ssim']).map { |noid| Sighrax.from_noid(noid) }
     end
 
     def epub_featured_representative
-      Sighrax.factory(FeaturedRepresentative.find_by(work_id: noid, kind: 'epub')&.file_set_id)
+      Sighrax.from_noid(FeaturedRepresentative.find_by(work_id: noid, kind: 'epub')&.file_set_id)
     end
 
     private

@@ -89,7 +89,7 @@ module Hyrax
     end
 
     def tombstone?
-      Sighrax.tombstone?(Sighrax.factory(id))
+      Sighrax.tombstone?(Sighrax.from_noid(id))
     end
 
     def allow_download?

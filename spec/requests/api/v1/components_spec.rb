@@ -176,7 +176,7 @@ RSpec.describe "Components", type: :request do
       let(:entity) { double('entity', valid?: valid) }
       let(:valid) { true }
 
-      before { allow(Sighrax).to receive(:factory).with(noid).and_return(entity) }
+      before { allow(Sighrax).to receive(:from_noid).with(noid).and_return(entity) }
 
       it 'blank identifier' do
         post api_components_path, params: params, headers: headers
@@ -298,7 +298,7 @@ RSpec.describe "Components", type: :request do
       let(:entity) { double('entity', valid?: valid) }
       let(:valid) { true }
 
-      before { allow(Sighrax).to receive(:factory).with(noid).and_return(entity) }
+      before { allow(Sighrax).to receive(:from_noid).with(noid).and_return(entity) }
 
       it 'non existing not_found' do
         put api_component_path(1), params: params, headers: headers

@@ -3,14 +3,15 @@
 require 'rails_helper'
 
 RSpec.describe Sighrax do
-  describe '#factory' do
-    subject { described_class.factory(noid) }
+  describe '#from_noid' do
+    subject { described_class.from_noid(noid) }
 
     let(:noid) { 'validnoid' }
 
     it 'null_entity' do
       is_expected.to be_an_instance_of(Sighrax::NullEntity)
       expect(subject.noid).to be noid
+      expect(subject.send(:data)).to be_empty
     end
 
     context 'standard error' do
@@ -19,46 +20,93 @@ RSpec.describe Sighrax do
       it 'null_entity' do
         is_expected.to be_an_instance_of(Sighrax::NullEntity)
         expect(subject.noid).to be noid
+        expect(subject.send(:data)).to be_empty
       end
     end
 
-    context 'Entity' do
-      let(:data) { double('data') }
-      let(:model_types) { }
+    context 'solr document' do
+      let(:document) { instance_double(SolrDocument, 'document') }
+      let(:entity) { instance_double(Sighrax::Entity, 'entity') }
 
       before do
-        allow(ActiveFedora::SolrService).to receive(:query).and_return([data])
-        allow(data).to receive(:[]).with('has_model_ssim').and_return(model_types)
+        allow(ActiveFedora::SolrService).to receive(:query).with("{!terms f=id}#{noid}", rows: 1).and_return([document])
+        allow(described_class).to receive(:from_solr_document).with(document).and_return(entity)
       end
 
-      it do
-        is_expected.to be_an_instance_of(Sighrax::Entity)
-        expect(subject.noid).to be noid
-        expect(subject.send(:data)).to be data
+      it 'from_solr_document' do
+        is_expected.to be entity
+        expect(described_class).to have_received(:from_solr_document).with(document)
       end
+    end
+  end
+
+  describe '#from_presenter' do
+    subject { described_class.from_presenter(presenter) }
+
+    let(:presenter) { double('presenter') }
+    let(:document) { instance_double(SolrDocument, 'document') }
+    let(:entity) { instance_double(Sighrax::Entity, 'entity') }
+
+    before do
+      allow(presenter).to receive(:solr_document).and_return(document)
+      allow(described_class).to receive(:from_solr_document).with(document).and_return(entity)
+    end
+
+    it 'from_solr_document' do
+      is_expected.to be entity
+      expect(described_class).to have_received(:from_solr_document).with(document)
+    end
+  end
+
+  describe '#from_solr_document' do
+    subject { described_class.from_solr_document(document) }
+
+    let(:document) { }
+
+    it { is_expected.to be_an_instance_of(Sighrax::NullEntity) }
+    it { expect(subject.noid).to be nil }
+    it { expect(subject.send(:data)).to be_empty }
+
+    context 'NullEntity' do
+      let(:document) { ::SolrDocument.new(id: 'invalidnoid') }
+
+      it { is_expected.to be_an_instance_of(Sighrax::NullEntity) }
+      it { expect(subject.noid).to eq(document.id) }
+      it { expect(subject.send(:data)).to be_empty }
+    end
+
+    context 'Entity' do
+      let(:document) { ::SolrDocument.new(id: 'validnoid') }
+
+      it { is_expected.to be_an_instance_of(Sighrax::Entity) }
+      it { expect(subject.noid).to eq(document.id) }
+      it { expect(subject.send(:data)).to eq(document.to_h.with_indifferent_access) }
 
       context 'Model' do
-        let(:model_types) { ['Unknown'] }
+        let(:document) { ::SolrDocument.new(id: 'validnoid', has_model_ssim: [model_type]) }
+        let(:model_type) { 'unknown' }
 
         it { is_expected.to be_an_instance_of(Sighrax::Model) }
 
         context 'Monograph' do
-          let(:model_types) { ['Monograph'] }
+          let(:model_type) { 'Monograph' }
 
           it { is_expected.to be_an_instance_of(Sighrax::Monograph) }
         end
 
         context 'Score' do
-          let(:model_types) { ['Score'] }
+          let(:model_type) { 'Score' }
 
-          it { is_expected.to be_a_instance_of(Sighrax::Score) }
+          it { is_expected.to be_an_instance_of(Sighrax::Score) }
         end
 
         context 'Asset' do
-          let(:model_types) { ['FileSet'] }
+          let(:model_type) { 'FileSet' }
           let(:featured_representatitve) { }
 
-          before { allow(FeaturedRepresentative).to receive(:find_by).with(file_set_id: noid).and_return(featured_representatitve) }
+          before do
+            allow(FeaturedRepresentative).to receive(:find_by).with(file_set_id: document['id']).and_return(featured_representatitve)
+          end
 
           it { is_expected.to be_an_instance_of(Sighrax::Asset) }
 
@@ -91,125 +139,11 @@ RSpec.describe Sighrax do
     end
   end
 
-  describe '#solr_factory' do
-    subject { described_class.solr_factory(document) }
-
-    context 'Monograph' do
-      let(:document) { ::SolrDocument.new(id: 'validnoid', has_model_ssim: ['Monograph']) }
-
-      it { is_expected.to be_an_instance_of(Sighrax::Monograph) }
-    end
-
-    context 'Score' do
-      let(:document) { ::SolrDocument.new(id: 'validnoid', has_model_ssim: ['Score']) }
-
-      it { is_expected.to be_an_instance_of(Sighrax::Score) }
-    end
-
-    context 'Asset' do
-      let(:document) { ::SolrDocument.new(id: 'validnoid', has_model_ssim: ['FileSet']) }
-      let(:featured_representatitve) { }
-
-      before do
-        allow(FeaturedRepresentative).to receive(:find_by).with(file_set_id: document['id']).and_return(featured_representatitve)
-      end
-
-      it { is_expected.to be_an_instance_of(Sighrax::Asset) }
-
-      context 'FeaturedRepresentative' do
-        let(:featured_representatitve) { double('featured_representatitve', kind: kind) }
-        let(:kind) { 'unknown' }
-
-        it { is_expected.to be_an_instance_of(Sighrax::Asset) }
-
-        context 'ElectronicPublication' do
-          let(:kind) { 'epub' }
-
-          it { is_expected.to be_an_instance_of(Sighrax::ElectronicPublication) }
-        end
-
-        context 'Mobipocket' do
-          let(:kind) { 'mobi' }
-
-          it { is_expected.to be_an_instance_of(Sighrax::Mobipocket) }
-        end
-
-        context 'PortableDocumentFormat' do
-          let(:kind) { 'pdf_ebook' }
-
-          it { is_expected.to be_an_instance_of(Sighrax::PortableDocumentFormat) }
-        end
-      end
-    end
-  end
-
-  describe '#presenter_factory' do
-    subject { described_class.presenter_factory(presenter) }
-
-    before do
-      ActiveFedora::SolrService.add([document.to_h])
-      ActiveFedora::SolrService.commit
-    end
-
-    context 'Monograph' do
-      let(:document) { ::SolrDocument.new(id: 'validnoid', has_model_ssim: ['Monograph']) }
-      let(:presenter) { Hyrax::MonographPresenter.new(document, nil) }
-
-      it { is_expected.to be_an_instance_of(Sighrax::Monograph) }
-    end
-
-    context 'Score' do
-      let(:document) { ::SolrDocument.new(id: 'validnoid', has_model_ssim: ['Score']) }
-      let(:presenter) { Hyrax::ScorePresenter.new(document, nil) }
-
-      it { is_expected.to be_an_instance_of(Sighrax::Score) }
-    end
-
-    context 'Asset' do
-      let(:document) { ::SolrDocument.new(id: 'validnoid', has_model_ssim: ['FileSet']) }
-      let(:presenter) { Hyrax::FileSetPresenter.new(document, nil) }
-      let(:featured_representatitve) { }
-
-      before do
-        ActiveFedora::SolrService.add([document.to_h])
-        ActiveFedora::SolrService.commit
-        allow(FeaturedRepresentative).to receive(:find_by).with(file_set_id: document['id']).and_return(featured_representatitve)
-      end
-
-      it { is_expected.to be_an_instance_of(Sighrax::Asset) }
-
-      context 'FeaturedRepresentative' do
-        let(:featured_representatitve) { double('featured_representatitve', kind: kind) }
-        let(:kind) { 'unknown' }
-
-        it { is_expected.to be_an_instance_of(Sighrax::Asset) }
-
-        context 'ElectronicPublication' do
-          let(:kind) { 'epub' }
-
-          it { is_expected.to be_an_instance_of(Sighrax::ElectronicPublication) }
-        end
-
-        context 'Mobipocket' do
-          let(:kind) { 'mobi' }
-
-          it { is_expected.to be_an_instance_of(Sighrax::Mobipocket) }
-        end
-
-        context 'PortableDocumentFormat' do
-          let(:kind) { 'pdf_ebook' }
-
-          it { is_expected.to be_an_instance_of(Sighrax::PortableDocumentFormat) }
-        end
-      end
-    end
-  end
-
   describe '#policy' do
     subject { described_class.policy(actor, entity) }
 
     let(:actor) { double('actor') }
-    let(:entity) { described_class.factory(noid) }
+    let(:entity) { described_class.from_noid(noid) }
     let(:noid) { 'validnoid' }
     let(:data) { {} }
 
@@ -219,14 +153,14 @@ RSpec.describe Sighrax do
   describe '#press' do
     subject { described_class.press(entity) }
 
-    let(:entity) { described_class.factory(noid) }
+    let(:entity) { described_class.from_noid(noid) }
     let(:noid) { 'validnoid' }
     let(:data) { {} }
 
     it { is_expected.to be_an_instance_of(NullPress) }
 
     context 'Entity' do
-      let(:data) { { "non_empty_solr_document" => "otherwise factory will return NullEntity!" } }
+      let(:data) { ::SolrDocument.new(id: noid) }
 
       before { allow(ActiveFedora::SolrService).to receive(:query).with("{!terms f=id}#{noid}", rows: 1).and_return([data]) }
 
@@ -267,14 +201,14 @@ RSpec.describe Sighrax do
   describe '#hyrax_presenter' do
     subject { described_class.hyrax_presenter(entity) }
 
-    let(:entity) { described_class.factory(noid) }
+    let(:entity) { described_class.from_noid(noid) }
     let(:noid) { 'validnoid' }
     let(:data) { {} }
 
     it { is_expected.to be_an_instance_of(Hyrax::Presenter) }
 
     context 'Entity' do
-      let(:data) { { "non_empty_solr_document" => "otherwise factory will return NullEntity!" } }
+      let(:data) { ::SolrDocument.new(id: noid) }
 
       before { allow(ActiveFedora::SolrService).to receive(:query).with("{!terms f=id}#{noid}", rows: 1).and_return([data]) }
 
@@ -502,7 +436,7 @@ RSpec.describe Sighrax do
   end
 
   context 'Entity Helpers' do
-    let(:entity) { described_class.factory(noid) }
+    let(:entity) { described_class.from_noid(noid) }
     let(:noid) { 'validnoid' }
     let(:data) { {} }
 
@@ -514,7 +448,7 @@ RSpec.describe Sighrax do
       it { is_expected.to be false }
 
       context 'Entity' do
-        let(:data) { { 'allow_download_ssim' => ['yes'] } }
+        let(:data) { ::SolrDocument.new(id: noid, 'allow_download_ssim' => ['yes']) }
         let(:downloadable) { true }
 
         before { allow(described_class).to receive(:downloadable?).with(entity).and_return(downloadable) }
@@ -522,7 +456,7 @@ RSpec.describe Sighrax do
         it { is_expected.to be true }
 
         context 'do not allow download' do
-          let(:data) { { 'allow_download_ssim' => ['anything but yes'] } }
+          let(:data) { ::SolrDocument.new(id: noid, 'allow_download_ssim' => ['anything but yes']) }
 
           it { is_expected.to be false }
         end
@@ -541,18 +475,18 @@ RSpec.describe Sighrax do
       it { is_expected.to be false }
 
       context 'Entity' do
-        let(:data) { { "non_empty_solr_document" => "otherwise factory will return NullEntity!" } }
+        let(:data) { ::SolrDocument.new(id: noid) }
 
         it { is_expected.to be true }
 
         context "'suppressed_bsi' => false" do
-          let(:data) { { 'suppressed_bsi' => false } }
+          let(:data) { ::SolrDocument.new(id: noid, 'suppressed_bsi' => false) }
 
           it { is_expected.to be true }
         end
 
         context "'suppressed_bsi' => true" do
-          let(:data) { { 'suppressed_bsi' => true } }
+          let(:data) { ::SolrDocument.new(id: noid, 'suppressed_bsi' => true) }
 
           it { is_expected.to be false }
         end
@@ -565,7 +499,7 @@ RSpec.describe Sighrax do
       it { is_expected.to be false }
 
       context 'Entity' do
-        let(:data) { { "non_empty_solr_document" => "otherwise factory will return NullEntity!" } }
+        let(:data) { ::SolrDocument.new(id: noid) }
 
         it { is_expected.to be false }
 
@@ -577,7 +511,7 @@ RSpec.describe Sighrax do
           it { is_expected.to be true }
 
           context 'external resource url' do
-            let(:data) { { 'external_resource_url_ssim' => url } }
+            let(:data) { ::SolrDocument.new(id: noid, 'external_resource_url_ssim' => url) }
             let(:url) { 'url' }
 
             it { is_expected.to be false }
@@ -598,18 +532,18 @@ RSpec.describe Sighrax do
       it { is_expected.to be false }
 
       context 'Entity' do
-        let(:data) { { "non_empty_solr_document" => "otherwise factory will return NullEntity!" } }
+        let(:data) { ::SolrDocument.new(id: noid) }
 
         it { is_expected.to be false }
 
         context "'open_access_tesim' => ''" do
-          let(:data) { { 'open_access_tesim' => ['anything but yes'] } }
+          let(:data) { ::SolrDocument.new(id: noid, 'open_access_tesim' => ['anything but yes']) }
 
           it { is_expected.to be false }
         end
 
         context "'open_access_tesim' => 'yes'" do
-          let(:data) { { 'open_access_tesim' => ['yes'] } }
+          let(:data) { ::SolrDocument.new(id: noid, 'open_access_tesim' => ['yes']) }
 
           it { is_expected.to be true }
         end
@@ -622,23 +556,23 @@ RSpec.describe Sighrax do
       it { is_expected.to be false }
 
       context 'Entity' do
-        let(:data) { { "non_empty_solr_document" => "otherwise factory will return NullEntity!" } }
+        let(:data) { ::SolrDocument.new(id: noid) }
 
         it { is_expected.to be false }
 
         context "'visibility_ssi' => 'restricted'" do
-          let(:data) { { 'visibility_ssi' => 'restricted' } }
+          let(:data) { ::SolrDocument.new(id: noid, 'visibility_ssi' => 'restricted') }
 
           it { is_expected.to be false }
         end
 
         context "'visibility_ssi' => 'open'" do
-          let(:data) { { 'visibility_ssi' => 'open' } }
+          let(:data) { ::SolrDocument.new(id: noid, 'visibility_ssi' => 'open') }
 
           it { is_expected.to be true }
 
           context "'suppressed_bsi' => true" do
-            let(:data) { { 'suppressed_bsi' => true, 'visibility_ssi' => 'open' } }
+            let(:data) { ::SolrDocument.new(id: noid, 'visibility_ssi' => 'open', 'suppressed_bsi' => true) }
 
             it { is_expected.to be false }
           end
@@ -652,7 +586,7 @@ RSpec.describe Sighrax do
       it { is_expected.to be true }
 
       context 'Entity' do
-        let(:data) { { "non_empty_solr_document" => "otherwise factory will return NullEntity!" } }
+        let(:data) { ::SolrDocument.new(id: noid) }
 
         context 'Component' do
           let(:component) { double('component') }
@@ -672,24 +606,24 @@ RSpec.describe Sighrax do
       it { is_expected.to be false }
 
       context 'Entity' do
-        let(:data) { { "non_empty_solr_document" => "otherwise factory will return NullEntity!" } }
+        let(:data) { ::SolrDocument.new(id: noid) }
 
         it { is_expected.to be false }
 
         context 'yesterday' do
-          let(:data) { { "permissions_expiration_date_ssim" => (Time.now.utc.to_date - 1).to_s } }
+          let(:data) { ::SolrDocument.new(id: noid, "permissions_expiration_date_ssim" => (Time.now.utc.to_date - 1).to_s) }
 
           it { is_expected.to be true }
         end
 
         context 'today' do
-          let(:data) { { "permissions_expiration_date_ssim" => Time.now.utc.to_date.to_s } }
+          let(:data) { ::SolrDocument.new(id: noid,  "permissions_expiration_date_ssim" => Time.now.utc.to_date.to_s) }
 
           it { is_expected.to be true }
         end
 
         context 'tomorrow' do
-          let(:data) { { "permissions_expiration_date_ssim" => (Time.now.utc.to_date + 1).to_s } }
+          let(:data) { ::SolrDocument.new(id: noid,  "permissions_expiration_date_ssim" => (Time.now.utc.to_date + 1).to_s) }
 
           it { is_expected.to be false }
         end
@@ -704,7 +638,7 @@ RSpec.describe Sighrax do
       it { is_expected.to be false }
 
       context 'Entity' do
-        let(:data) { { "non_empty_solr_document" => "otherwise factory will return NullEntity!" } }
+        let(:data) { ::SolrDocument.new(id: noid) }
 
         it { is_expected.to be false }
 
@@ -719,7 +653,7 @@ RSpec.describe Sighrax do
             it { is_expected.to be true }
 
             context 'external resource url' do
-              let(:data) { { 'external_resource_url_ssim' => url } }
+              let(:data) { ::SolrDocument.new(id: noid, 'external_resource_url_ssim' => url) }
               let(:url) { 'url' }
 
               it { is_expected.to be false }
