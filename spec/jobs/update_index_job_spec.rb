@@ -11,7 +11,7 @@ RSpec.describe UpdateIndexJob, type: :job do
   let(:entity) { double('entity') }
 
   before do
-    allow(Sighrax).to receive(:factory).with(noid).and_return(entity)
+    allow(Sighrax).to receive(:from_noid).with(noid).and_return(entity)
     allow(entity).to receive(:is_a?).and_return(false)
   end
 
@@ -28,7 +28,7 @@ RSpec.describe UpdateIndexJob, type: :job do
 
   it 'executes perform' do
     perform_enqueued_jobs { job }
-    expect(Sighrax).to have_received(:factory).with(noid)
+    expect(Sighrax).to have_received(:from_noid).with(noid)
   end
 
   context 'Monograph' do

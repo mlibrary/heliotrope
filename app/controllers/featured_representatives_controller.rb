@@ -18,7 +18,7 @@ class FeaturedRepresentativesController < ApplicationController
       end
     end
 
-    if Sighrax.factory(params[:work_id]).is_a?(Sighrax::Score)
+    if Sighrax.from_noid(params[:work_id]).is_a?(Sighrax::Score)
       redirect_to score_show_path(params[:work_id])
     else
       redirect_to monograph_show_path(params[:work_id])
@@ -28,7 +28,7 @@ class FeaturedRepresentativesController < ApplicationController
   def delete
     fr = FeaturedRepresentative.where(id: params[:file_set_id]).first
     fr.destroy if fr.present?
-    if Sighrax.factory(params[:work_id]).is_a?(Sighrax::Score)
+    if Sighrax.from_noid(params[:work_id]).is_a?(Sighrax::Score)
       redirect_to score_show_path(params[:work_id])
     else
       redirect_to monograph_show_path(params[:work_id])

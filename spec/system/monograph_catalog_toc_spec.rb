@@ -44,7 +44,7 @@ RSpec.describe "Monograph Catalog TOC", type: :system, browser: true do
       end
 
       context 'when unauthorized' do
-        let(:parent) { Sighrax.factory(monograph.id) }
+        let(:parent) { Sighrax.from_noid(monograph.id) }
 
         before { Greensub::Component.create!(identifier: parent.resource_token, name: parent.title, noid: parent.noid) }
 
@@ -74,7 +74,7 @@ RSpec.describe "Monograph Catalog TOC", type: :system, browser: true do
       end
 
       context 'when unauthorized' do
-        let(:parent) { Sighrax.factory(monograph.id) }
+        let(:parent) { Sighrax.from_noid(monograph.id) }
 
         before { Greensub::Component.create!(identifier: parent.resource_token, name: parent.title, noid: parent.noid) }
 
@@ -108,7 +108,7 @@ RSpec.describe "Monograph Catalog TOC", type: :system, browser: true do
       end
 
       context 'when unauthorized' do
-        let(:parent) { Sighrax.factory(monograph.id) }
+        let(:parent) { Sighrax.from_noid(monograph.id) }
 
         before { Greensub::Component.create!(identifier: parent.resource_token, name: parent.title, noid: parent.noid) }
 
@@ -138,7 +138,7 @@ RSpec.describe "Monograph Catalog TOC", type: :system, browser: true do
       end
 
       context 'when unauthorized' do
-        let(:parent) { Sighrax.factory(monograph.id) }
+        let(:parent) { Sighrax.from_noid(monograph.id) }
 
         before { Greensub::Component.create!(identifier: parent.resource_token, name: parent.title, noid: parent.noid) }
 

@@ -181,7 +181,7 @@ describe PressHelper do
           allow(controller).to receive(:is_a?).with(PressCatalogController).and_return(false)
           allow(controller).to receive(:is_a?).with(MonographCatalogController).and_return(true)
           allow(Greensub).to receive(:product_include?).with(product: product, entity: monograph).and_return(product_include)
-          allow(Sighrax).to receive(:factory).and_return(monograph)
+          allow(Sighrax).to receive(:from_noid).and_return(monograph)
           allow(Sighrax).to receive(:open_access?).with(monograph).and_return(open_access)
         end
 

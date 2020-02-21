@@ -138,7 +138,7 @@ module FeaturedRepresentatives
     end
 
     def pdf_ebook_presenter
-      entity = Sighrax.factory(pdf_ebook_id)
+      entity = Sighrax.from_noid(pdf_ebook_id)
       @pdf_ebook_presenter ||= PDFEbookPresenter.new(PDFEbook::Publication.from_string_id(entity.content, pdf_ebook_id))
     end
 

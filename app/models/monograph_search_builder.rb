@@ -29,7 +29,7 @@ class MonographSearchBuilder < ::SearchBuilder
         fp = Hyrax::FileSetPresenter.new(doc, nil)
         next if fp.featured_representative?
         next if fp.id == monograph.representative_id
-        next if Sighrax.tombstone?(Sighrax.presenter_factory(fp))
+        next if Sighrax.tombstone?(Sighrax.from_presenter(fp))
         ids << fp.id
       end
 

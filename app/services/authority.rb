@@ -63,7 +63,7 @@ module Authority
       raise ArgumentError unless ValidationService.valid_resource?(resource_type, resource_id)
       case resource_type&.to_s&.to_sym
       when :ElectronicPublication
-        Sighrax.factory(resource_id)
+        Sighrax.from_noid(resource_id)
       when :Component
         Greensub::Component.find(resource_id)
       when :Product

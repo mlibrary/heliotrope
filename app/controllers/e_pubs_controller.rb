@@ -168,7 +168,7 @@ class EPubsController < CheckpointController
 
     def setup
       @noid = params[:id]
-      @entity = Sighrax.factory(@noid)
+      @entity = Sighrax.from_noid(@noid)
       @parent_noid = @entity.parent.noid
       raise(NotAuthorizedError, "Non Electronic Publication") unless @entity.is_a?(Sighrax::ElectronicPublication) || @entity.is_a?(Sighrax::PortableDocumentFormat)
       @presenter = Hyrax::PresenterFactory.build_for(ids: [@noid], presenter_class: Hyrax::FileSetPresenter, presenter_args: nil).first

@@ -4,7 +4,7 @@ class OutputMonographFilesJob < ApplicationJob
   # @param [noid] NOID of Monograph whose files are being extracted
   # @param [path] string, path of directory to extract to
   def perform(noid, path)
-    monograph = Sighrax.factory(noid)
+    monograph = Sighrax.from_noid(noid)
 
     monograph.children.each do |member|
       presenter = Sighrax.hyrax_presenter(member)

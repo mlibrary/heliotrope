@@ -11,44 +11,30 @@ require_dependency 'sighrax/portable_document_format'
 
 module Sighrax # rubocop:disable Metrics/ModuleLength
   class << self
-    def factory(noid)
+    def from_noid(noid)
       noid = noid&.to_s
-      return Entity.null_entity(noid) unless ValidationService.valid_noid?(noid)
-
       data = begin
-               ActiveFedora::SolrService.query("{!terms f=id}#{noid}", rows: 1).first
-             rescue StandardError => _e
-               nil
-             end
-
-      Rails.logger.debug("[SIGHRAX] Solr get #{noid}")
+        ActiveFedora::SolrService.query("{!terms f=id}#{noid}", rows: 1).first
+      rescue StandardError => _e
+        nil
+      end
       return Entity.null_entity(noid) if data.blank?
 
-      model_type = Array(data['has_model_ssim']).first
-      return Entity.send(:new, noid, data) if model_type.blank?
-      model_factory(noid, data, model_type)
+      from_solr_document(data)
     end
 
-    # Since we're starting to add logic to Sighrax that we want in different
-    # contexts (tombstone and subscription access, etc) we'll add different factories
-    # so we don't need redundant solr calls to get the same information.
-    def solr_factory(document)
+    def from_presenter(presenter)
+      from_solr_document(presenter.solr_document)
+    end
+
+    def from_solr_document(document)
       document = document.to_h.with_indifferent_access
       noid = document['id']
       return Entity.null_entity(noid) unless ValidationService.valid_noid?(noid)
 
-      model_type = document['has_model_ssim'].first
-      return Entity.send(:new, noid, data) if model_type.blank?
+      model_type = Array(document['has_model_ssim']).first
+      return Entity.send(:new, noid, document) if model_type.blank?
       model_factory(noid, document, model_type)
-    end
-
-    def presenter_factory(presenter)
-      noid = presenter.id
-      return Entity.null_entity(noid) unless ValidationService.valid_noid?(noid)
-
-      model_type = presenter.solr_document['has_model_ssim'].first
-      return Entity.send(:new, noid, data) if model_type.blank?
-      model_factory(noid, presenter.solr_document, model_type)
     end
 
     def policy(current_actor, entity)

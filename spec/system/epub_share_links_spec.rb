@@ -8,8 +8,8 @@ RSpec.describe "EPub Share Links", type: :system, browser: true do
   let(:monograph) { create(:public_monograph, press: press.subdomain, user: platform_admin, visibility: "open", representative_id: cover.id) }
   let(:cover) { create(:public_file_set, content: File.open(File.join(fixture_path, 'csv', 'miranda.jpg'))) }
   let(:file_set) { create(:public_file_set, allow_download: 'yes', content: File.open(File.join(fixture_path, 'fake_epub_multi_rendition.epub'))) }
-  let(:parent) { Sighrax.factory(monograph.id) }
-  let(:epub) { Sighrax.factory(file_set.id) }
+  let(:parent) { Sighrax.from_noid(monograph.id) }
+  let(:epub) { Sighrax.from_noid(file_set.id) }
 
   before do
     stub_out_redis

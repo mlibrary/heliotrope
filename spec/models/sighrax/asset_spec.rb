@@ -17,7 +17,7 @@ RSpec.describe Sighrax::Asset, type: :model do
     let(:data) { { 'monograph_id_ssim' => [noid] } }
     let(:parent) { double('parent') }
 
-    before { allow(Sighrax).to receive(:factory).with(noid).and_return(parent) }
+    before { allow(Sighrax).to receive(:from_noid).with(noid).and_return(parent) }
 
     it { expect(subject.parent).to be parent }
   end

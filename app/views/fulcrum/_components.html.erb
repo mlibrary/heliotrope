@@ -39,7 +39,7 @@
         </td>
         <td>
           <%
-            entity = Sighrax.factory(component.noid)
+            entity = Sighrax.from_noid(component.noid)
             file_set_id = 0
             monograph_id = 0
             if entity.is_a?(Sighrax::Monograph)

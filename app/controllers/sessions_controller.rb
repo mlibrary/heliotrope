@@ -60,7 +60,7 @@ class SessionsController < ApplicationController
 
   def discovery_feed
     render json: if params[:id].present?
-                   child = Sighrax.factory(params[:id])
+                   child = Sighrax.from_noid(params[:id])
                    noid = child.noid
                    unless child.is_a?(Sighrax::Monograph)
                      noid = child.parent.noid

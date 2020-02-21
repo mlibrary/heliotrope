@@ -26,7 +26,7 @@ RSpec.describe Hyrax::FileSetPresenter do
     let(:tombstone) { 'boolean' }
 
     before do
-      allow(Sighrax).to receive(:factory).with('file_set_id').and_return(entity)
+      allow(Sighrax).to receive(:from_noid).with('file_set_id').and_return(entity)
       allow(Sighrax).to receive(:tombstone?).with(entity).and_return(tombstone)
     end
 
@@ -109,7 +109,7 @@ RSpec.describe Hyrax::FileSetPresenter do
         let(:tombstone) { 'boolean' }
 
         before do
-          allow(Sighrax).to receive(:factory).with('fs').and_return(entity)
+          allow(Sighrax).to receive(:from_noid).with('fs').and_return(entity)
           allow(Sighrax).to receive(:tombstone?).with(entity).and_return(true)
         end
 
@@ -171,7 +171,7 @@ RSpec.describe Hyrax::FileSetPresenter do
           let(:fileset_doc) { SolrDocument.new(id: 'fs', has_model_ssim: ['FileSet'], allow_display_after_expiration_ssim: 'high-res') }
 
           before do
-            allow(Sighrax).to receive(:factory).with('fs').and_return(entity)
+            allow(Sighrax).to receive(:from_noid).with('fs').and_return(entity)
             allow(Sighrax).to receive(:tombstone?).with(entity).and_return(true)
           end
 
@@ -199,7 +199,7 @@ RSpec.describe Hyrax::FileSetPresenter do
           let(:fileset_doc) { SolrDocument.new(id: 'fs', has_model_ssim: ['FileSet'], allow_display_after_expiration_ssim: 'high-res') }
 
           before do
-            allow(Sighrax).to receive(:factory).with('fs').and_return(entity)
+            allow(Sighrax).to receive(:from_noid).with('fs').and_return(entity)
             allow(Sighrax).to receive(:tombstone?).with(entity).and_return(true)
           end
 

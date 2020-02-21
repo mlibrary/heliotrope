@@ -36,7 +36,7 @@ class EbooksController < CheckpointController
   private
 
     def setup
-      @entity = Sighrax.factory(params[:id])
+      @entity = Sighrax.from_noid(params[:id])
       @policy = Sighrax.policy(current_actor, @entity)
       @press = Sighrax.press(@entity)
       @press_policy = PressPolicy.new(current_actor, @press)

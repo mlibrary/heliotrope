@@ -7,7 +7,7 @@ module Export
     attr_reader :all_metadata, :monograph, :monograph_presenter, :columns
 
     def initialize(monograph_id, columns = :all)
-      @monograph = Sighrax.factory(monograph_id)
+      @monograph = Sighrax.from_noid(monograph_id)
       @columns = columns
     end
 
