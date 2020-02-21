@@ -22,7 +22,7 @@ FactoryBot.define do
       end
     end
 
-    factory :editor do
+    factory :press_editor do
       after(:create) do |user, evaluator|
         user.roles.create role: 'editor', resource: evaluator.press
       end

@@ -99,8 +99,20 @@ module Sighrax # rubocop:disable Metrics/ModuleLength
       ability.can?(action, target.noid)
     end
 
+    # Role Helpers
+
     def platform_admin?(actor)
       actor.is_a?(User) && actor.platform_admin? && Incognito.allow_platform_admin?(actor)
+    end
+
+    def press_admin?(actor, press)
+      return false unless actor.is_a?(User)
+      actor.admin_roles.where(resource: press).any?
+    end
+
+    def press_editor?(actor, press)
+      return false unless actor.is_a?(User)
+      actor.editor_roles.where(resource: press).any?
     end
 
     # Entity Helpers

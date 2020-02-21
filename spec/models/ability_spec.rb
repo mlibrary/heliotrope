@@ -141,8 +141,8 @@ describe Ability do
     end
 
     describe "RolePresenter" do
-      let(:my_press_user) { create(:editor, press: my_press) }
-      let(:other_press_user) { create(:editor, press: other_press) }
+      let(:my_press_user) { create(:press_editor, press: my_press) }
+      let(:other_press_user) { create(:press_editor, press: other_press) }
 
       it { is_expected.to     be_able_to(:read, RolePresenter.new(current_user.roles.first, current_user, current_user)) }
       it { is_expected.to     be_able_to(:read, RolePresenter.new(my_press_user.roles.first, my_press_user, current_user)) }
@@ -157,8 +157,8 @@ describe Ability do
     end
 
     describe "UserPresenter" do
-      let(:my_press_user) { create(:editor, press: my_press) }
-      let(:other_press_user) { create(:editor, press: other_press) }
+      let(:my_press_user) { create(:press_editor, press: my_press) }
+      let(:other_press_user) { create(:press_editor, press: other_press) }
 
       it { is_expected.to     be_able_to(:read, UserPresenter.new(current_user, current_user)) }
       it { is_expected.to     be_able_to(:read, UserPresenter.new(my_press_user, current_user)) }
@@ -172,7 +172,7 @@ describe Ability do
 
   describe 'a press editor' do
     let(:my_press) { create(:press) }
-    let(:current_user) { create(:editor, press: my_press) }
+    let(:current_user) { create(:press_editor, press: my_press) }
     let(:monograph_for_my_press) { Monograph.new(press: my_press.subdomain) }
 
     it do
@@ -187,8 +187,8 @@ describe Ability do
     end
 
     describe "RolePresenter" do
-      let(:my_press_user) { create(:editor, press: my_press) }
-      let(:other_press_user) { create(:editor, press: create(:press)) }
+      let(:my_press_user) { create(:press_editor, press: my_press) }
+      let(:other_press_user) { create(:press_editor, press: create(:press)) }
 
       it { is_expected.to     be_able_to(:read, RolePresenter.new(current_user.roles.first, current_user, current_user)) }
       it { is_expected.not_to be_able_to(:read, RolePresenter.new(my_press_user.roles.first, my_press_user, current_user)) }
@@ -203,8 +203,8 @@ describe Ability do
     end
 
     describe "UserPresenter" do
-      let(:my_press_user) { create(:editor, press: my_press) }
-      let(:other_press_user) { create(:editor, press: create(:press)) }
+      let(:my_press_user) { create(:press_editor, press: my_press) }
+      let(:other_press_user) { create(:press_editor, press: create(:press)) }
 
       it { is_expected.to     be_able_to(:read, UserPresenter.new(current_user, current_user)) }
       it { is_expected.not_to be_able_to(:read, UserPresenter.new(my_press_user, current_user)) }
@@ -282,7 +282,7 @@ describe Ability do
     end
 
     describe "RolePresenter" do
-      let(:another_user) { create(:editor, press: create(:press)) }
+      let(:another_user) { create(:press_editor, press: create(:press)) }
 
       it { is_expected.to     be_able_to(:read, RolePresenter.new(current_user.roles.first, current_user, current_user)) }
       it { is_expected.not_to be_able_to(:read, RolePresenter.new(another_user.roles.first, another_user, current_user)) }
