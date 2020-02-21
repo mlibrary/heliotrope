@@ -8,8 +8,8 @@ module Hyrax
     # Hyrax::BasicMetadata fields are already included
     self.terms -= %i[keyword related_url source based_near rights_statement]
     # these will hold their order, bearing in mind that required_fields are automatically removed first
-    self.terms += %i[press creator_display series buy_url isbn doi hdl copyright_holder open_access funder
-                     holding_contact location section_titles]
+    self.terms += %i[press creator_display series buy_url isbn doi hdl copyright_holder open_access
+                     funder funder_display holding_contact location section_titles]
 
     self.required_fields = %i[title press creator publisher date_created location]
     self.required_fields -= %i[keyword rights]

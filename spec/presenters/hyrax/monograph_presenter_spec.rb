@@ -504,4 +504,24 @@ RSpec.describe Hyrax::MonographPresenter do
       it { expect(presenter.open_access?).to be true }
     end
   end
+
+  describe '#funder?' do
+    it { expect(presenter.funder?).to be false }
+
+    context 'funder' do
+      before { allow(mono_doc).to receive(:funder).and_return('Funder') }
+
+      it { expect(presenter.funder?).to be true }
+    end
+  end
+
+  describe '#funder_display?' do
+    it { expect(presenter.funder_display?).to be false }
+
+    context 'funder_display' do
+      before { allow(mono_doc).to receive(:funder_display).and_return('Funder Display') }
+
+      it { expect(presenter.funder_display?).to be true }
+    end
+  end
 end

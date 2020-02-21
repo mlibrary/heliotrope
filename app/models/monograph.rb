@@ -37,6 +37,10 @@ class Monograph < ActiveFedora::Base
   end
 
   property :funder, predicate: ::RDF::Vocab::SCHEMA.funder, multiple: false do |index|
+    index.as :stored_searchable, :facetable
+  end
+
+  property :funder_display, predicate: ::RDF::URI.new('http://fulcrum.org/ns#FunderDisplay'), multiple: false do |index|
     index.as :stored_searchable
   end
 

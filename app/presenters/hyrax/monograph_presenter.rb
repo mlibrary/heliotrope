@@ -16,7 +16,7 @@ module Hyrax
     delegate :date_created, :date_modified, :date_uploaded, :location, :description,
              :creator_display, :creator_full_name, :contributor,
              :subject, :section_titles, :based_near, :publisher, :date_published, :language,
-             :isbn, :license, :copyright_holder, :open_access, :funder, :holding_contact, :has_model,
+             :isbn, :license, :copyright_holder, :open_access, :funder, :funder_display, :holding_contact, :has_model,
              :buy_url, :embargo_release_date, :lease_expiration_date, :rights, :series,
              :visibility, :identifier, :doi, :handle, :thumbnail_path,
              to: :solr_document
@@ -87,6 +87,10 @@ module Hyrax
 
     def funder?
       solr_document.funder.present?
+    end
+
+    def funder_display?
+      solr_document.funder_display.present?
     end
 
     def date_created?

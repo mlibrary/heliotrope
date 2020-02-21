@@ -93,6 +93,8 @@ en:
   external_resource_url: "External Resource URL"
   file_format: "File Format"
   file_size: "File Size"
+  funder: "Funder"
+  funder_display: "Funder Display"
   helpers:
     submit:
       role:
@@ -254,6 +256,8 @@ en:
         citation_publisher: "Citation Publisher"
         date_created: "Publication Year" # used on :date_created for Monographs
         description: "Description"
+        funder: "Funder"
+        funder_display: "Funder Display"
         language: "Language"
         location: "Publication Location"
         series: "Series"

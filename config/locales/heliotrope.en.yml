@@ -129,7 +129,9 @@ en:
       open_access: |
         Indicate if this item is "open access". Allowed values: Yes/No, but "No" is the default and need not be entered.
       funder: |
-        The person(s) or organization funding an open access item. Free text.
+        The person(s) or organization funding an open access item (facet). Free text.
+      funder_display: |
+        The person(s) or organization funding an open access item (display). Free text.
       allow_hi_res: |
         REQUIRED FOR FULCRUM
 

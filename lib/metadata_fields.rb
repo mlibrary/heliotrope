@@ -25,6 +25,7 @@ METADATA_FIELDS ||=
     { object: :file_set, field_name: 'Copyright Status', metadata_name: 'copyright_status', required: true, multivalued: :no, acceptable_values: ['in-copyright', 'public domain', 'status unknown'], description: I18n.t('csv.descriptions.copyright_status') },
     { object: :monograph, field_name: 'Open Access?', metadata_name: 'open_access', required: false, multivalued: :no, acceptable_values: ['yes', 'no'], description: I18n.t('csv.descriptions.open_access') },
     { object: :monograph, field_name: 'Funder', metadata_name: 'funder', required: false, multivalued: :no, description: I18n.t('csv.descriptions.funder') },
+    { object: :monograph, field_name: 'Funder Display', metadata_name: 'funder_display', required: false, multivalued: :no, description: I18n.t('csv.descriptions.funder_display') },
     { object: :file_set, field_name: 'Allow High-Res Display?', metadata_name: 'allow_hi_res', required: true, multivalued: :no, acceptable_values: ['yes', 'no', 'not hosted on the platform'], description: I18n.t('csv.descriptions.allow_hi_res') },
     { object: :file_set, field_name: 'Allow Download?', metadata_name: 'allow_download', required: true, multivalued: :no, acceptable_values: ['yes', 'no', 'not hosted on the platform'], description: I18n.t('csv.descriptions.allow_download') },
     { object: :file_set, field_name: 'Rights Granted', metadata_name: 'rights_granted', required: false, multivalued: :no, description: I18n.t('csv.descriptions.rights_granted') },
