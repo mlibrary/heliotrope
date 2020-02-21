@@ -47,6 +47,15 @@ Hyrax::FileSetsController.class_eval do
       ActiveFedora::SolrService.query("{!terms f=id}#{params[:id]}", rows: 1)&.first || {}
     end
 
+    # this is provided so that implementing application can override this behavior and map params to different attributes
+    def update_metadata
+      file_attributes = form_class.model_attributes(attributes)
+      if /^interactive map$/i.match?(file_attributes['resource_type'].first)
+        UnpackJob.perform_later(params[:id], 'interactive_map') unless Sighrax.from_noid(params[:id]).is_a?(Sighrax::InteractiveMap)
+      end
+      actor.update_metadata(file_attributes)
+    end
+
     def attempt_update
       if wants_to_revert?
         actor.revert_content(params[:revision])

@@ -101,14 +101,33 @@ RSpec.describe Sighrax do
         end
 
         context 'Asset' do
+          let(:document) { ::SolrDocument.new(id: 'validnoid', has_model_ssim: [model_type], resource_type_tesim: [resource_type]) }
           let(:model_type) { 'FileSet' }
+          let(:resource_type) { }
           let(:featured_representatitve) { }
 
-          before do
-            allow(FeaturedRepresentative).to receive(:find_by).with(file_set_id: document['id']).and_return(featured_representatitve)
-          end
+          before { allow(FeaturedRepresentative).to receive(:find_by).with(file_set_id: document['id']).and_return(featured_representatitve) }
 
           it { is_expected.to be_an_instance_of(Sighrax::Asset) }
+
+          context 'ResourceTypes' do
+            let(:resource_type) { 'unknown' }
+
+            it { is_expected.to be_an_instance_of(Sighrax::Asset) }
+
+            context 'interactive map' do
+              let(:resource_type) { 'interactive map' }
+
+              it { is_expected.to be_an_instance_of(Sighrax::InteractiveMap) }
+
+              context 'FeaturedRepresentative' do
+                let(:featured_representatitve) { double('featured_representatitve', kind: kind) }
+                let(:kind) { 'unknown' }
+
+                it { is_expected.to be_an_instance_of(Sighrax::Asset) }
+              end
+            end
+          end
 
           context 'FeaturedRepresentative' do
             let(:featured_representatitve) { double('featured_representatitve', kind: kind) }
