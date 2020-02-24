@@ -172,6 +172,7 @@ GEM
       sequel (~> 5.6)
     childprocess (0.9.0)
       ffi (~> 1.0, >= 1.0.11)
+    clamav (0.4.1)
     clipboard-rails (1.7.1)
     coderay (1.1.2)
     coffee-rails (4.2.2)
@@ -985,6 +986,7 @@ DEPENDENCIES
   capybara (~> 2.18)
   carrierwave (~> 1.1.0)
   checkpoint (~> 1.1.0)
+  clamav
   coffee-rails (~> 4.2)
   combine_pdf (~> 1.0)
   config

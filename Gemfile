@@ -93,7 +93,8 @@ gem 'checkpoint', '~> 1.1.0'
 
 # clamav only in production
 # 2019-11-26: temporary remove -sethajoh
-# gem 'clamav', group: :production
+# And put it back, 2019-02-24, see HELIO-3230
+gem 'clamav', group: :production
 
 # Watermark/Stamp Existing PDF
 gem 'combine_pdf', '~> 1.0'
