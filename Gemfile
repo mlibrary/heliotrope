@@ -92,8 +92,7 @@ gem 'carrierwave', '~> 1.1.0'
 gem 'checkpoint', '~> 1.1.0'
 
 # clamav only in production
-# 2019-11-26: temporary remove -sethajoh
-# gem 'clamav', group: :production
+gem 'clamby', '~> 1.5.1', group: :production
 
 # Watermark/Stamp Existing PDF
 gem 'combine_pdf', '~> 1.0'
