@@ -130,7 +130,8 @@ gem 'keycard', '~> 0.2.4'
 gem 'mysql2', '~> 0.4.10'
 
 # CVE-2019-5477
-gem "nokogiri", ">= 1.10.4"
+# CVE-2020-7595
+gem "nokogiri", ">= 1.10.8"
 
 # Read PDF ToC
 gem 'origami'
