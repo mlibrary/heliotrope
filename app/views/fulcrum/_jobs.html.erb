@@ -14,6 +14,28 @@
     </form>
   </li>
   <li>
+    <form name="unpack" method="get" action="<%= fulcrum_exec_path(:unpack) %>">
+      <label for="unpack_noid">NOID</label>
+      <input type="text" id="unpack_noid" name="noid" value="validnoid">
+      <label for="unpack_kind">Kind</label>
+      <input type="text" id="unpack_kind" name="kind" value="kind">
+      <button name="submit" type="submit" value="unpack">Unpack</button>
+    </form>
+  </li>
+  <li>
+    <form name="handle" method="get" action="<%= fulcrum_exec_path(:handle) %>">
+      <label for="handle_noid">NOID</label>
+      <input type="text" id="unpack_noid" name="noid" value="validnoid">
+      <label for="job">Action</label>
+      <select name="job" id="job">
+        <option value="create">create</option>
+        <option value="delete">delete</option>
+        <option selected="selected" value="verify">verify</option>
+      </select>
+      <button name="submit" type="submit" value="handle">Handle</button>
+    </form>
+  </li>
+  <li>
     <form name="deposit" method="get" action="<%= fulcrum_exec_path(:deposit) %>">
       <label for="deposit_noid">APTrust Deposit</label>
       <input type="text" id="deposit_noid" name="noid" value="validnoid">
@@ -25,15 +47,6 @@
       <label for="verify_noid">APTrust Verify</label>
       <input type="text" id="verify_noid" name="noid" value="validnoid">
       <button name="submit" type="submit" value="verify">Verify</button>
-    </form>
-  </li>
-  <li>
-    <form name="unpack" method="get" action="<%= fulcrum_exec_path(:unpack) %>">
-      <label for="unpack_noid">NOID</label>
-      <input type="text" id="unpack_noid" name="noid" value="validnoid">
-      <label for="unpack_kind">Kind</label>
-      <input type="text" id="unpack_kind" name="kind" value="kind">
-      <button name="submit" type="submit" value="unpack">Unpack</button>
     </form>
   </li>
   <li>

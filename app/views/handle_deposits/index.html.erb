@@ -1,0 +1,22 @@
+<p id="notice"><%= notice %></p>
+<div id="maincontent">
+  <h1>Handle Deposits</h1>
+  <div class="col-md-12">
+    <div class="col-md-2">ID</div>
+    <div class="col-md-2">Noid</div>
+    <div class="col-md-3">Action</div>
+    <div class="col-md-3">Verified</div>
+    <div class="col-md-2">Sigma</div>
+  </div>
+  <div class="col-md-12"><hr/></div>
+  <% @handle_deposits.each do |handle_deposit| %>
+    <div class="col-md-12">
+      <div class="col-md-2"><%= "#{handle_deposit.id}" %></div>
+      <div class="col-md-2"><%= "#{handle_deposit.noid}" %></div>
+      <div class="col-md-3"><%= "#{handle_deposit.action}" %></div>
+      <div class="col-md-3"><%= "#{handle_deposit.verified}" %></div>
+      <div class="col-md-2"><%= "#{handle_deposit.sigma}" %></div>
+    </div>
+  <% end %>
+  <div class="col-md-12"><br></div>
+</div>

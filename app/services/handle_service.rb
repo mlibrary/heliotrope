@@ -65,4 +65,12 @@ class HandleService
     end
     url
   end
+
+  def self.update(noid, url)
+    "TODO: UPDATE_OR_CREATE HANDLE RECORD"
+  end
+
+  def self.delete(noid)
+    "TODO: DELETE HANDLE RECORD"
+  end
 end
