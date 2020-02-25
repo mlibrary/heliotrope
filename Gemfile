@@ -110,7 +110,7 @@ gem 'devise-guests', '~> 0.7'
 gem 'faraday', '~>0.12.2'
 gem 'faraday_middleware', '~>0.12.2'
 
-gem 'hyrax', '2.5.1'
+gem 'hyrax', '2.7.0'
 
 # Use Jekyll for blog and informational pages
 gem 'jekyll', '~> 3.6.3'
