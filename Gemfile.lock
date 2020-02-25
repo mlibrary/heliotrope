@@ -582,7 +582,7 @@ GEM
     noid-rails (3.0.1)
       actionpack (>= 5.0.0, < 6)
       noid (~> 0.9)
-    nokogiri (1.10.5)
+    nokogiri (1.10.8)
       mini_portile2 (~> 2.4.0)
     nokogumbo (2.0.2)
       nokogiri (~> 1.8, >= 1.8.4)
@@ -1010,7 +1010,7 @@ DEPENDENCIES
   listen (>= 3.0.5, < 3.2)
   minitar (~> 0.8)
   mysql2 (~> 0.4.10)
-  nokogiri (>= 1.10.4)
+  nokogiri (>= 1.10.8)
   oauth
   oauth2 (~> 1.2)
   origami
