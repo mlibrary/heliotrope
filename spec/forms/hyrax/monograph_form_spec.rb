@@ -49,6 +49,7 @@ describe Hyrax::MonographForm do
                            copyright_holder
                            open_access
                            funder
+                           funder_display
                            holding_contact
                            location
                            section_titles]
@@ -87,6 +88,7 @@ describe Hyrax::MonographForm do
                            copyright_holder
                            open_access
                            funder
+                           funder_display
                            holding_contact
                            section_titles]
     }
