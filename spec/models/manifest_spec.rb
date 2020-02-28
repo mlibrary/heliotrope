@@ -3,8 +3,31 @@
 require 'rails_helper'
 
 RSpec.describe Manifest, type: :model do
-  let(:monograph) { create(:monograph) }
-  let(:current_user) { double("current user") }
+  let(:monograph) do
+    create(:public_monograph) do |m|
+      m.ordered_members << file_set
+      m.save!
+      m
+    end
+  end
+  let(:file_set) do
+    create(:public_file_set) do |f|
+      f.original_file = original_file
+      f.save!
+      f
+    end
+  end
+  let(:original_file) do
+    Hydra::PCDM::File.new do |f|
+      f.content = File.open(File.join(fixture_path, 'kitty.tif'))
+      f.original_name = 'kitty.tif'
+      f.mime_type = 'image/tiff'
+      f.file_size = File.size(File.join(fixture_path, 'kitty.tif'))
+      f.width = 200
+      f.height = 150
+    end
+  end
+  let(:current_user) { create(:platform_admin) }
 
   # NOTE: #create is dependent on Carrierwave and was not tested.
 
@@ -49,7 +72,7 @@ RSpec.describe Manifest, type: :model do
 
     expect(implicit == explicit).to be true
 
-    expect(explicit.table_rows.count).to eq 1
+    expect(explicit.table_rows.count).to eq 2
     expect(explicit.table_rows[0].count).to eq 4
     expect(explicit.table_rows[0][3]["title"].first).to eq monograph.title.first
 

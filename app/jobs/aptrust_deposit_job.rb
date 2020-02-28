@@ -109,7 +109,7 @@ class AptrustDepositJob < ApplicationJob
       s3 = Aws::S3::Resource.new(region: aptrust['BucketRegion'])
       success = s3.bucket(aptrust['Bucket']).object(File.basename(filename)).upload_file(filename)
     rescue Aws::S3::Errors::ServiceError => e
-      Rails.logger.error "Upload of file #{filename} failed in s3 context #{s3.context} with error #{e}"
+      Rails.logger.error "Upload of file #{filename} failed in #{e.context} with error #{e}"
       success = false
     end
     success

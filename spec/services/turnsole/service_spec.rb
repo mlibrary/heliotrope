@@ -17,6 +17,26 @@ RSpec.describe Turnsole::Service do
     allow(Faraday).to receive(:new).with(base).and_return(faraday)
   end
 
+  describe '#connection' do
+    let(:base) { 'http://test.host' }
+    let(:token) { 'token' }
+
+    before do
+      allow(Faraday).to receive(:new).with(base).and_call_original
+    end
+
+    it 'configured for json' do
+      conn = service.send(:connection)
+
+      expect(conn).to be_a(Faraday::Connection)
+      expect(conn.headers['Accept']).to eq('application/json, application/vnd.heliotrope.v1+json')
+      expect(conn.headers['Authorization']).to eq('Bearer token')
+      expect(conn.headers['Content-Type']).to eq('application/json')
+      expect(conn.options['open_timeout']).to eq(60)
+      expect(conn.options['timeout']).to eq(600)
+    end
+  end
+
   describe '#find_press' do
     subject { service.find_press(subdomain) }
 
@@ -62,6 +82,12 @@ RSpec.describe Turnsole::Service do
       let(:success) { true }
 
       it { is_expected.to eq(body) }
+
+      context 'Standard Error' do
+        before { allow(faraday).to receive(:get).with('presses').and_raise(StandardError) }
+
+        it { is_expected.to be_empty }
+      end
     end
   end
 
@@ -122,7 +148,7 @@ RSpec.describe Turnsole::Service do
           allow(faraday).to receive(:get).with("presses/#{id}/monographs").and_raise(StandardError)
         end
 
-        it { is_expected.to eq([]) }
+        it { is_expected.to be_empty }
       end
     end
   end
@@ -140,6 +166,12 @@ RSpec.describe Turnsole::Service do
       let(:success) { true }
 
       it { is_expected.to eq(body) }
+
+      context 'Standard Error' do
+        before { allow(faraday).to receive(:get).with('monographs').and_raise(StandardError) }
+
+        it { is_expected.to be_empty }
+      end
     end
   end
 
