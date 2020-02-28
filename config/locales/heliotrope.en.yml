@@ -283,7 +283,7 @@ en:
       isbn: |
         Enter ISBNs associated with the monograph, separated by semi-colons.
         The format may be entered in parentheses if available, e.g.:
-        09234000123 (E-Book); 09234000123 (paper)
+        123-123456-1 (hardcover), 123-123459-4 (paper), 123-123457-2 (ebook), 123-123458-3 (open access)
       buy_url: |
         One or more URLs where the monograph can be purchased, separate them with semi-colons
       date_created: |
