@@ -14,7 +14,7 @@ class EPubPresenter < ApplicationPresenter
   end
 
   def intervals?
-    @epub.rendition.intervals.count.positive?
+    @epub&.rendition&.intervals&.count&.positive?
   end
 
   def intervals

@@ -14,7 +14,7 @@ class PDFEbookPresenter < ApplicationPresenter
   end
 
   def intervals?
-    @pdf_ebook.intervals.count.positive?
+    @pdf_ebook&.intervals&.count&.positive?
   end
 
   def intervals
