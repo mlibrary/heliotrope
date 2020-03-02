@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20200113154152) do
+ActiveRecord::Schema.define(version: 20200225162723) do
 
   create_table "api_requests", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.integer "user_id"
@@ -203,6 +203,14 @@ ActiveRecord::Schema.define(version: 20200113154152) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["noid"], name: "index_google_analytics_histories_on_noid"
+  end
+
+  create_table "handle_deposits", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.string "noid", null: false
+    t.string "action", default: "create", null: false
+    t.boolean "verified", default: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "hyrax_collection_types", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|

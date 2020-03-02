@@ -8,6 +8,19 @@ RSpec.describe PublisherStatsJob, type: :job do
   subject(:job) { described_class.perform_later(stats_file) }
 
   let(:stats_file) { Rails.root.join('tmp', 'publisher_stats.yml').to_s }
+  let(:user) { create(:press_editor, press: press) }
+  let(:press) { create(:press) }
+  let(:monograph) do
+    create(:public_monograph, user: user, press: press.subdomain) do |m|
+      m.ordered_members << file_set
+      m.save!
+      file_set.save!
+      m
+    end
+  end
+  let(:file_set) { create(:public_file_set) }
+
+  before { monograph }
 
   after do
     clear_enqueued_jobs

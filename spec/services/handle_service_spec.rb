@@ -75,4 +75,21 @@ RSpec.describe HandleService do
       it { expect(described_class.value(validnoid)).to eq "200 : Values Not Found. The handle exists but has no values (or no values according to the types and indices specified). (HTTP 200 OK)" }
     end
   end
+
+  describe '#update' do
+    subject { described_class.update(noid, url) }
+
+    let(:noid) { 'validnoid' }
+    let(:url) { "url" }
+
+    it { is_expected.to be "TODO: UPDATE_OR_CREATE HANDLE RECORD" }
+  end
+
+  describe '#delete' do
+    subject { described_class.delete(noid) }
+
+    let(:noid) { 'validnoid' }
+
+    it { is_expected.to be "TODO: DELETE HANDLE RECORD" }
+  end
 end

@@ -11,12 +11,21 @@ class FulcrumController < ApplicationController
     case params[:cmd]
     when 'ingest'
       ExtractIngestJob.perform_later(params[:token], params[:base], params[:source], params[:target])
+    when 'unpack'
+      UnpackJob.perform_now(params[:noid], params[:kind])
+    when 'handle'
+      case params[:job]
+      when 'create'
+        HandleCreateJob.perform_now(params[:noid])
+      when 'delete'
+        HandleDeleteJob.perform_now(params[:noid])
+      when 'verify'
+        HandleVerifyJob.perform_now(params[:noid])
+      end
     when 'verify'
       AptrustVerifyJob.perform_now(params[:noid])
     when 'deposit'
       AptrustDepositJob.perform_now(params[:noid])
-    when 'unpack'
-      UnpackJob.perform_now(params[:noid], params[:kind])
     when 'reindex_everything'
       ReindexJob.perform_later('everything')
     when 'reindex_monographs'

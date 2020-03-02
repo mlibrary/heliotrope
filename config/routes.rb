@@ -95,6 +95,7 @@ Rails.application.routes.draw do
       resources :counter_reports, only: %i[index show edit update], constraints: COUNTER_REPORT_ID_CONSTRAINT
     end
     resources :tombstones, only: %i[index]
+    resources :handle_deposits, only: %i[index]
     resource :manifests, path: 'concern/monographs/:id/manifest', only: %i[new edit update create destroy], as: :monograph_manifests
     resource :monograph_manifests, path: 'concern/monographs/:id/manifest', only: [:show] do
       member do

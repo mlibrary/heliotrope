@@ -104,6 +104,19 @@ module Sighrax # rubocop:disable Metrics/ModuleLength
 
     # Entity Helpers
 
+    def url(entity)
+      case entity
+      when Sighrax::Monograph
+        Rails.application.routes.url_helpers.hyrax_monograph_url(entity.noid)
+      when Sighrax::Score
+        Rails.application.routes.url_helpers.hyrax_score_url(entity.noid)
+      when Sighrax::Asset
+        Rails.application.routes.url_helpers.hyrax_file_set_url(entity.noid)
+      else
+        nil
+      end
+    end
+
     def allow_download?(entity)
       return false unless entity.valid?
       return false unless downloadable?(entity)

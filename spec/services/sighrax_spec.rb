@@ -461,6 +461,30 @@ RSpec.describe Sighrax do
 
     before { allow(ActiveFedora::SolrService).to receive(:query).with("{!terms f=id}#{noid}", rows: 1).and_return([data]) }
 
+    describe '#url' do
+      subject { described_class.url(entity) }
+
+      it { is_expected.to be nil }
+
+      context 'monograph' do
+        let(:entity) { Sighrax::Monograph.send(:new, noid, data) }
+
+        it { is_expected.to eq "http://test.host/concern/monographs/validnoid" }
+      end
+
+      context 'score' do
+        let(:entity) { Sighrax::Score.send(:new, noid, data) }
+
+        it { is_expected.to eq "http://test.host/concern/scores/validnoid" }
+      end
+
+      context 'asset' do
+        let(:entity) { Sighrax::Asset.send(:new, noid, data) }
+
+        it { is_expected.to eq "http://test.host/concern/file_sets/validnoid" }
+      end
+    end
+
     describe '#allow_download?' do
       subject { described_class.allow_download?(entity) }
 

@@ -9,6 +9,6 @@ RSpec.describe Sighrax::Score, type: :model do
   let(:data) { {} }
 
   it { is_expected.to be_an_instance_of(described_class) }
-  it { is_expected.to be_a_kind_of(Sighrax::Model) }
+  it { is_expected.to be_a_kind_of(Sighrax::Work) }
   it { expect(subject.resource_type).to eq :Score }
 end

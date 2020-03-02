@@ -21,5 +21,22 @@ RSpec.describe ReindexEpubJob, type: :job do
       # Make sure the contents are the same
       expect(old_size == File.size(db_file)).to be true
     end
+
+    context 'SQLite3 Exception' do
+      let(:logger) { instance_double(ActiveSupport::Logger, 'logger') }
+
+      before do
+        allow(EPub::SqlLite).to receive(:from_directory).with(anything).and_raise(SQLite3::Exception)
+        allow(Rails).to receive(:logger).and_return(logger)
+        allow(logger).to receive(:error).with("EPub Index #{db_file} not updated")
+        allow(logger).to receive(:error).with("SQLite3::Exception")
+      end
+
+      it 'logs error' do
+        described_class.perform_now(epub.id)
+        expect(logger).to have_received(:error).with("EPub Index #{db_file} not updated")
+        expect(logger).to have_received(:error).with("SQLite3::Exception")
+      end
+    end
   end
 end
