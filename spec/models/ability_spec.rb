@@ -106,9 +106,9 @@ describe Ability do
       let(:other_press_role) { create(:role) }
 
       it do
-        is_expected.to be_able_to(:read, my_press_role)
-        is_expected.to be_able_to(:update, my_press_role)
-        is_expected.to be_able_to(:destroy, my_press_role)
+        is_expected.to     be_able_to(:read, my_press_role)
+        is_expected.to     be_able_to(:update, my_press_role)
+        is_expected.to     be_able_to(:destroy, my_press_role)
 
         is_expected.not_to be_able_to(:read, other_press_role)
         is_expected.not_to be_able_to(:update, other_press_role)
@@ -121,7 +121,7 @@ describe Ability do
       let(:monograph_for_other_press) { Monograph.new(press: other_press.subdomain) }
 
       it do
-        is_expected.to be_able_to(:create, monograph_for_my_press)
+        is_expected.to     be_able_to(:create, monograph_for_my_press)
         is_expected.not_to be_able_to(:create, monograph_for_other_press)
       end
     end
@@ -131,7 +131,7 @@ describe Ability do
       let(:other_presenter) { Hyrax::MonographPresenter.new(SolrDocument.new(id: 'other_id', press_tesim: other_press.subdomain), subject) }
 
       it do
-        is_expected.to be_able_to(:update, my_presenter)
+        is_expected.to     be_able_to(:update, my_presenter)
         is_expected.not_to be_able_to(:update, other_presenter)
       end
     end

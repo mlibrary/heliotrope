@@ -216,6 +216,24 @@ RSpec.describe AptrustDepositJob, type: :job do
       end
 
       it { is_expected.to be boolean }
+
+      context 'Service Error' do
+        let(:logger) { instance_double(ActiveSupport::Logger, 'logger') }
+        let(:error_msg) { "Upload of file #{filename} failed in #{context} with error #{message}" }
+        let(:context) { 'CONTEXT' }
+        let(:message) { 'MESSAGE' }
+
+        before do
+          allow(obj).to receive(:upload_file).with(filename).and_raise(Aws::S3::Errors::ServiceError.new(context, message))
+          allow(Rails).to receive(:logger).and_return(logger)
+          allow(logger).to receive(:error).with(error_msg)
+        end
+
+        it do
+          is_expected.to be false
+          expect(logger).to have_received(:error).with(error_msg)
+        end
+      end
     end
   end
 end

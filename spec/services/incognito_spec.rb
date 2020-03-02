@@ -79,5 +79,35 @@ RSpec.describe Incognito do
       expect(incognito.sudo_actor_institution(actor)&.id).to be institution.id
       expect(incognito.sudo_actor_products(actor)).to eq [product]
     end
+
+    context 'Individual.find Standard Error' do
+      before { allow(Greensub::Individual).to receive(:find).with(individual.id).and_raise(StandardError) }
+
+      it do
+        expect(incognito.reset(actor)).to be true
+        expect(incognito.sudo_actor?(actor)).to be false
+        expect(incognito.sudo_actor(actor, true, individual.id, institution.id)).to be true
+        expect(incognito.sudo_actor?(actor)).to be true
+        expect(incognito.sudo_actor_individual(actor)&.id).to be nil
+        expect(incognito.sudo_actor_institution(actor)&.id).to be institution.id
+        expect(incognito.sudo_actor_products(actor)).to eq [product]
+      end
+    end
+
+    context 'Institution.find Standard Error' do
+      before { allow(Greensub::Institution).to receive(:find).with(institution.id).and_raise(StandardError) }
+
+      it do
+        expect(incognito.reset(actor)).to be true
+        expect(incognito.sudo_actor?(actor)).to be false
+        expect(incognito.sudo_actor(actor, true, individual.id, institution.id)).to be true
+        expect(incognito.sudo_actor?(actor)).to be true
+        expect(incognito.sudo_actor_individual(actor)&.id).to be individual.id
+        expect(incognito.sudo_actor_institution(actor)&.id).to be nil
+        expect(incognito.sudo_actor_products(actor)).to eq [product]
+
+        expect(incognito.sudo_actor_institution(actor)).to be nil
+      end
+    end
   end
 end

@@ -15,6 +15,26 @@ RSpec.describe Aptrust::Service do
     allow(Faraday).to receive(:new).with('aptrust_api_url').and_return(connection)
   end
 
+  describe '#connection' do
+    let(:yaml) { { 'AptrustApiUrl' => 'http://test.host', 'AptrustApiUser' => 'User', 'AptrustApiKey' => 'Key' } }
+
+    before do
+      allow(Faraday).to receive(:new).with('http://test.host').and_call_original
+    end
+
+    it 'configured for json' do
+      conn = described_class.new.send(:connection)
+
+      expect(conn).to be_a(Faraday::Connection)
+      expect(conn.headers['Accept']).to eq('application/json')
+      expect(conn.headers['Content-Type']).to eq('application/json')
+      expect(conn.headers['X-Pharos-API-User']).to eq('User')
+      expect(conn.headers['X-Pharos-API-Key']).to eq('Key')
+      expect(conn.options['open_timeout']).to eq(60)
+      expect(conn.options['timeout']).to eq(60)
+    end
+  end
+
   describe '#ingest_status' do
     subject(:ingest_status) { described_class.new.ingest_status(identifier) }
 
