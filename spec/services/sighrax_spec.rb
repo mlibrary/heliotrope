@@ -483,6 +483,12 @@ RSpec.describe Sighrax do
 
         it { is_expected.to eq "http://test.host/concern/file_sets/validnoid" }
       end
+
+      context 'interactive map' do
+        let(:entity) { Sighrax::InteractiveMap.send(:new, noid, data) }
+
+        it { is_expected.to eq "http://test.host/concern/file_sets/validnoid" }
+      end
     end
 
     describe '#allow_download?' do
