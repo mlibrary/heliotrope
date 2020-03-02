@@ -277,7 +277,7 @@ en:
         description: "A free-text description of the work (markdown allowed)."
         doi: "https://doi.org/ is automatically prepended"
         hdl: "https://hdl.handle.net/ is automatically prepended"
-        isbn: "Enter as many ISBN values as you want. Put the format in parentheses if needed, e.g. \"123-123456-1 (e-book)\"."
+        isbn: "Enter as many ISBN values as you want. Put the format in parentheses. Label the format according to the following rules: 123-123456-1 (hardcover), 123-123459-4 (paper), 123-123457-2 (ebook), 123-123458-3 (open access)"
         language: "The language of the monograph's content."
         location: "The place name used in auto-generated citations."
         press: "The monograph's publisher/press on Fulcrum."
