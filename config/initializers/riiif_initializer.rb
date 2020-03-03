@@ -6,7 +6,7 @@ Riiif::Image.file_resolver = Riiif::HTTPFileResolver.new
 # This tells RIIIF how to resolve the identifier to a URI in Fedora
 Riiif::Image.file_resolver.id_to_uri = lambda do |id|
   # This is slow. TODO: find an alternative if possible
-  FileSet.find(id).files.first.uri.to_s || ''
+  FileSet.find(id).files.first&.uri.to_s || ''
 end
 
 # In order to return the info.json endpoint, we have to have the full height and width of
