@@ -14,7 +14,9 @@ namespace :heliotrope do
 
     Pathname(args.monograph_files_dir).children.each do |mono_dir|
       next if !mono_dir.directory? || mono_dir.basename.to_s.start_with?('.')
-      isbn = mono_dir.basename.to_s.sub(/\s*\(.+\)$/, '').delete('^0-9').strip
+
+      # note we're taking the first 10 or more contiguous digits in the file name to be an ISBN
+      isbn = mono_dir.basename.to_s[/[0-9]{10,}/]
       if isbn.blank?
         puts "NO ISBN FOUND FOR #{mono_dir} ... SKIPPING"
         next
@@ -59,7 +61,7 @@ namespace :heliotrope do
       # EPUBs
       epub_file_paths = Pathname.glob(mono_dir + '*.epub')
       if epub_file_paths.count > 1
-        puts "    More than one PDF file found in #{mono_dir.basename} ... SKIPPING EPUB PROCESSING"
+        puts "    More than one EPUB file found in #{mono_dir.basename} ... SKIPPING EPUB PROCESSING"
         next
       end
 
