@@ -18,9 +18,9 @@ RSpec.describe CitableLinkPresenter do
 
   let(:id) { 'validnoid' }
   let(:solr_document) { SolrDocument.new(hdl_ssim: [handle_path], doi_ssim: [doi_path], identifier_tesim: ['UUID', heb_handle, 'GUID']) }
-  let(:handle_url) { HandleService::HANDLE_NET_PREFIX + handle_path }
-  let(:heb_url) { HandleService::HANDLE_NET_PREFIX + heb_path }
-  let(:doi_url) { HandleService::DOI_ORG_PREFIX + doi_path }
+  let(:handle_url) { HandleNet::HANDLE_NET_PREFIX + handle_path }
+  let(:heb_url) { HandleNet::HANDLE_NET_PREFIX + heb_path }
+  let(:doi_url) { HandleNet::DOI_ORG_PREFIX + doi_path }
 
   let(:heb_handle) { '' }
   let(:handle_path) { '' }
@@ -28,15 +28,15 @@ RSpec.describe CitableLinkPresenter do
   let(:doi_path) { '' }
 
   it 'default' do
-    expect(subject.citable_link).to eq HandleService.url(id)
+    expect(subject.citable_link).to eq HandleNet.url(id)
     expect(subject.doi?).to be false
     expect(subject.doi_path).to eq doi_path
     expect(subject.doi_url).to eq doi_url
     expect(subject.heb?).to be false
     expect(subject.heb_path).to eq heb_path
     expect(subject.heb_url).to eq heb_url
-    expect(subject.handle_path).to eq HandleService.path(id)
-    expect(subject.handle_url).to eq HandleService.url(id)
+    expect(subject.handle_path).to eq HandleNet.path(id)
+    expect(subject.handle_url).to eq HandleNet.url(id)
   end
 
   context 'explicit handle' do

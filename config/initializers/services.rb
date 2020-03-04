@@ -56,3 +56,11 @@ Services.register(:request_attributes) { Keycard::Request::AttributesFactory.new
 Services.register(:dlps_institution) { DlpsInstitution.new }
 
 Services.register(:score_press) { 'carillon' }
+
+Services.register(:handle_service) do
+  HandleService.new(
+    url: Settings.handle_service.url,
+    user: Settings.handle_service.user,
+    password: Settings.handle_service.password
+  )
+end

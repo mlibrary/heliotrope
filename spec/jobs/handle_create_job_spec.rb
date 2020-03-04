@@ -97,14 +97,14 @@ RSpec.describe HandleCreateJob, type: :job do
 
       before do
         allow(Sighrax).to receive(:url).with(model).and_return(model_url)
-        allow(HandleService).to receive(:value).with(model.noid).and_return(url)
-        allow(HandleService).to receive(:update).with(model.noid, model_url).and_return(rvalue)
+        allow(HandleNet).to receive(:value).with(model.noid).and_return(url)
+        allow(HandleNet).to receive(:create_or_update).with(model.noid, model_url).and_return(rvalue)
       end
 
       it 'handle service update' do
         is_expected.to be rvalue
-        expect(HandleService).to have_received(:value).with(model.noid)
-        expect(HandleService).to have_received(:update).with(model.noid, model_url)
+        expect(HandleNet).to have_received(:value).with(model.noid)
+        expect(HandleNet).to have_received(:create_or_update).with(model.noid, model_url)
       end
 
       context 'handle exist' do
@@ -112,8 +112,8 @@ RSpec.describe HandleCreateJob, type: :job do
 
         it 'handle service value' do
           is_expected.to eq(model_url)
-          expect(HandleService).to have_received(:value).with(model.noid)
-          expect(HandleService).not_to have_received(:update).with(model.noid, model_url)
+          expect(HandleNet).to have_received(:value).with(model.noid)
+          expect(HandleNet).not_to have_received(:create_or_update).with(model.noid, model_url)
         end
       end
     end

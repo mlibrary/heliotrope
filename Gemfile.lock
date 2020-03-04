@@ -7,6 +7,14 @@ GIT
       railties (>= 3.1.1)
 
 GIT
+  remote: https://github.com/mlibrary/handle_rest
+  revision: 944fa06a119072f060d986862c34dea7215ebd29
+  ref: 944fa06a119072f060d986862c34dea7215ebd29
+  specs:
+    handle_rest (0.0.1)
+      faraday
+
+GIT
   remote: https://github.com/mlibrary/swagger_client
   revision: 0de4ce928f0f8da7956b710ffd78975b2c150f3d
   branch: master
@@ -1000,6 +1008,7 @@ DEPENDENCIES
   faraday (~> 0.12.2)
   faraday_middleware (~> 0.12.2)
   fcrepo_wrapper (= 0.5.2)
+  handle_rest!
   hyrax (= 2.7.0)
   jbuilder (~> 2.5)
   jekyll (~> 3.6.3)

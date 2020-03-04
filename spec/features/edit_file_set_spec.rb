@@ -167,7 +167,7 @@ describe 'Edit a file set' do
       expect(page).to have_content 'Here is what that means'
       expect(page).to have_content 'A Nice Museum'
       expect(page).to have_content 'Unauthorized use prohibited. A Nice Museum.'
-      expect(page.has_field?('Citable Link', with: HandleService.url(file_set.id))).to be true
+      expect(page.has_field?('Citable Link', with: HandleNet.url(file_set.id))).to be true
 
       # order in FileSet's section_title has been taken from Monograph's section_titles
       assert_equal page.all('.list-unstyled .section_title a').map(&:text), ['C 1', 'Test section with Italicized Title therein']

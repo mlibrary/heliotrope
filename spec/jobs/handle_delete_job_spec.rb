@@ -42,7 +42,7 @@ RSpec.describe HandleDeleteJob, type: :job do
       end
 
       it 'logs warning' do
-        is_expected.to eq "TODO: DELETE HANDLE RECORD"
+        is_expected.to be false
         expect(logger).to have_received(:warn).with("HandleDeleteJob #{model_id} is NOT kind of Sighrax::Model")
         expect(logger).not_to have_received(:error).with("HandleDeleteJob #{model_id} StandardError")
       end
@@ -94,12 +94,12 @@ RSpec.describe HandleDeleteJob, type: :job do
       let(:rvalue) { double('rvalue') }
 
       before do
-        allow(HandleService).to receive(:delete).with(model.noid).and_return(rvalue)
+        allow(HandleNet).to receive(:delete).with(model.noid).and_return(rvalue)
       end
 
       it 'handle service delete' do
         is_expected.to be rvalue
-        expect(HandleService).to have_received(:delete).with(model.noid)
+        expect(HandleNet).to have_received(:delete).with(model.noid)
       end
     end
   end
