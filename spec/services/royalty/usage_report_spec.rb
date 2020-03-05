@@ -7,13 +7,13 @@ RSpec.describe Royalty::UsageReport do
     [{ "Proprietary_ID": "111111111",
        "Parent_Proprietary_ID": "AAAAAAAAA",
        "Section_Type": "Chapter",
-       "Reporting_Period_Total": 4,
+       "Reporting_Period_Total": 2300,
        "Jan-2019": 0,
        "Feb-2019": 0,
        "Mar-2019": 0,
-       "Apr-2019": 1,
+       "Apr-2019": 1000,
        "May-2019": 0,
-       "Jun-2019": 3,
+       "Jun-2019": 1300,
     }.with_indifferent_access,
      { "Parent_Proprietary_ID": "BBBBBBBBB",
        "Proprietary_ID": "222222222",
@@ -87,10 +87,6 @@ RSpec.describe Royalty::UsageReport do
       ActiveFedora::SolrService.commit
       allow(CounterReporter::ItemReport).to receive(:new).and_return(counter_report)
       allow(counter_report).to receive(:report).and_return(item_report)
-      # we want some bigger numbers here to double check formatting, so...
-      items[0]["Reporting_Period_Total"] = 100
-      items[0]["Apr-2019"] = 25
-      items[0]["Jun-2019"] = 75
     end
 
     it "sends the reports" do
@@ -104,8 +100,8 @@ RSpec.describe Royalty::UsageReport do
       # been removed by the remove_extra_lines method
       expect(@reports["usage_combined.201901-201906.csv"][:items].length).to eq 3
       # make sure we have the right formatting for larger numbers (commas)
-      expect(@reports["usage_combined.201901-201906.csv"][:header][:"Total Hits (All Titles, All Rights Holders)"]).to eq "2,634"
-      expect(@reports["usage_combined.201901-201906.csv"][:items][0]["Jun-2019"]).to eq "1,875"
+      expect(@reports["usage_combined.201901-201906.csv"][:header][:"Total Hits (All Titles, All Rights Holders)"]).to eq "2,314"
+      expect(@reports["usage_combined.201901-201906.csv"][:items][0]["Jun-2019"]).to eq "1,300"
     end
   end
 
@@ -114,21 +110,7 @@ RSpec.describe Royalty::UsageReport do
 
     it "changes 'Reporting_Period_Total' label to 'Hits'" do
       expect(subject[0]["Reporting_Period_Total"]).to be nil
-      expect(subject[0]["Hits"]).to eq 100
-    end
-
-    it "multiplies Chapter hits by 25" do
-      expect(subject[0]["Hits"]).to eq 100
-      expect(subject[0]["Apr-2019"]).to eq 25
-      expect(subject[0]["Jun-2019"]).to eq 75
-
-      expect(subject[1]["Hits"]).to eq 125
-      expect(subject[1]["Mar-2019"]).to eq 50
-      expect(subject[1]["May-2019"]).to eq 0
-      expect(subject[1]["Jun-2019"]).to eq 25
-
-      expect(subject[2]["Hits"]).to eq 9
-      expect(subject[2]["Jan-2019"]).to eq 3
+      expect(subject[0]["Hits"]).to eq 2300
     end
 
     it "turns OA_Gold to OA" do
