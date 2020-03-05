@@ -48,6 +48,7 @@ module PDFEbook
       # Takes Origami::OutlineItem and 1-based depth
       def iterate_outlines(outline, depth) # rubocop:disable Metrics/CyclomaticComplexity
         intervals = []
+        index = 0
         until outline.nil?
           page = nil
           page = outline&.[](:A)&.solve&.[](:D)
@@ -64,7 +65,8 @@ module PDFEbook
           page ||= outline[:Dest]&.solve&.[](0)&.solve
           unless page.nil?
             page_number = @obj_to_page[page.no] || 0
-            intervals << PDFEbook::Interval.from_title_level_cfi(outline[:Title].to_utf8, depth, "page=#{page_number}")
+            intervals << PDFEbook::Interval.from_title_level_cfi(id, index, outline[:Title].to_utf8, depth, "page=#{page_number}")
+            index += 1
           end
           unless outline[:First]&.solve.nil? # Child outline
             intervals += iterate_outlines(outline[:First].solve, depth + 1)

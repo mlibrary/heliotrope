@@ -16,6 +16,7 @@ addons:
   apt:
     packages:
       - dpkg # fix for travis issue https://github.com/travis-ci/travis-ci/issues/9361
+      - poppler-utils
   chrome: stable
 services:
   - mysql
