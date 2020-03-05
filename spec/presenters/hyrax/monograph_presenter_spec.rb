@@ -94,6 +94,39 @@ RSpec.describe Hyrax::MonographPresenter do
     it { is_expected.to eq ['Oct 7th'] }
   end
 
+  describe '#date_created (catalog page citation pub date)' do
+    subject { presenter.date_created }
+
+    context 'clean 4 digit year' do
+      let(:mono_doc) { ::SolrDocument.new(id: 'mono', has_model_ssim: ['Monograph'], date_created_tesim: ['1999']) }
+      it { is_expected.to eq ['1999'] }
+    end
+
+    context "HEB-style 4 digit year with 'circa c', which persists" do
+      let(:mono_doc) { ::SolrDocument.new(id: 'mono', has_model_ssim: ['Monograph'], date_created_tesim: ['c1999']) }
+      it { is_expected.to eq ['c1999'] }
+    end
+
+    context 'YYYY-MM-DD' do
+      let(:mono_doc) { ::SolrDocument.new(id: 'mono', has_model_ssim: ['Monograph'], date_created_tesim: ['1999-05-06']) }
+      it { is_expected.to eq ['1999'] }
+    end
+
+    context 'YYYY-MM-DD with some sub-day custom sort number for catalog sort' do
+      let(:mono_doc) { ::SolrDocument.new(id: 'mono',
+                                          has_model_ssim: ['Monograph'],
+                                          date_created_tesim: ['1999-05-06-2']) }
+      it { is_expected.to eq ['1999'] }
+    end
+
+    context 'a mess' do
+      let(:mono_doc) { ::SolrDocument.new(id: 'mono',
+                                          has_model_ssim: ['Monograph'],
+                                          date_created_tesim: ['this was pubbed on 1999-05-06 LOLZ 123456']) }
+      it { is_expected.to eq ['1999'] }
+    end
+  end
+
   describe '#authors' do
     describe "creator_display exists, creators/contributors don't" do
       subject { presenter.authors }
