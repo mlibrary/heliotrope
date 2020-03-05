@@ -4153,7 +4153,368 @@ $umn-white: #fff;
   }
 
 }
+///////////////////////////////////////////////
+//
+// University of North Carolina Press
+//
+///////////////////////////////////////////////
+// colors
+$unc-brand-color: #0D7686;
+$unc-accent-color: #7FA3A8;
+$unc-link: #72260D;
+$unc-link-hover: #ef4b4b;
+$unc-accent-color-light: #CEE7EA;
+$unc-grey-1: #4D4B4B;
 
+$unc-grey-2: #333;
+$unc-black: #000;
+
+$unc-white: #fff;
+$unc-black-80: #342f2e;
+
+// typography
+@mixin alegreya-sans {
+  font-family: alegreya-sans, Arial, sans-serif;
+}
+
+@mixin alegreya-sans-sc {
+  font-family: alegreya-sans-sc, Arial, sans-serif;
+}
+
+@mixin alegreya {
+  font-family: alegreya, Georgia, serif;
+}
+
+.uncpress {
+
+  // typography
+  @include alegreya;
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5 {
+    font-weight: 700;
+    @include alegreya-sans;
+  }
+
+  // links
+  a {
+    color: $unc-link;
+  }
+
+  a:hover,
+  a:active {
+    color: $unc-link-hover;
+  }
+
+  // buttons
+
+  .btn-default {
+    @include button-background-color($unc-brand-color);
+    @include button-font-color($unc-white);
+    @include alegreya-sans;
+  }
+
+  .download {
+    .btn-default {
+      @include button-background-color($unc-brand-color);
+    }
+  }
+
+  .btn-default:hover,
+  .btn-default:active {
+    @include button-hover-background-color($unc-accent-color);
+    @include button-hover-font-color($unc-white);
+  }
+
+  // navigation menu
+  .navbar-default .navbar-nav > .open > a,
+  .navbar-default .navbar-nav > .open > a:hover,
+  .navbar-default .navbar-nav > .open > a:focus {
+    background-color: $unc-white;
+  }
+
+  #brand-bar {
+    background-color: $unc-white;
+    border-bottom: 8px solid $unc-brand-color;
+
+    .navbar-brand {
+      color: $unc-black;
+      font-weight: 500;
+      @include alegreya-sans-sc;
+      text-transform: uppercase;
+      letter-spacing: .5px;
+    }
+
+    .navbar-nav {
+      a#add-content,
+      a.login,
+      a.user-display-name,
+      a.language-dropdown {
+          color: $unc-black;
+          @include alegreya-sans;
+      }
+
+      .open > a,
+      .open > a:focus,
+      .open > a:hover {
+        background-color: $unc-accent-color-light;
+      }
+    }
+
+    button.search-submit {
+      background-color: $unc-link; 
+      color: $unc-white;
+      height: 34px;
+    }
+
+  }
+
+  // press catalog
+
+// jumbotron
+.jumbotron {
+  background-color: $unc-accent-color-light;
+    padding-top: 1.5em;
+    padding-bottom: 1em;
+    @include alegreya-sans;
+
+    p {
+      font-size: 16px;
+      text-align: justify;
+    }
+
+    .container {
+      margin-top: 0;
+    }
+
+  .logo.pull-left {
+
+      float: none !important;
+      margin-bottom: 2.5em;
+
+    img {
+      width: auto;
+      margin: 0 auto;
+      display: block;
+    }
+
+  }
+
+  .lead {
+    text-align: justify;
+  }
+
+}
+
+  .press {
+    .results-container {
+
+      .document {
+        h3 {
+          font-weight: 700;
+        }
+        a {
+          color: $unc-grey-2;
+        }
+      }
+    }
+  }
+
+  //filters on press and monograph pages
+  .col-sm-3.facets-container,
+  #facet-panel-collapse {
+    padding-left: 0px;
+  }
+
+  .panel-group {
+    padding-left: 0px;
+  }
+
+  .panel-group .panel {
+    border-radius: 0px;
+  }
+
+  .panel-heading {
+    padding-top: 15px;
+  }
+
+  .panel-group .panel + .panel {
+    margin-top: 0px;
+  }
+
+  h3.panel-title a, a.more_facets_link {
+    color: $unc-grey-2;
+  }
+
+  .panel-heading.collapse-toggle .panel-title::after {
+    color: $unc-grey-2;
+  }
+
+  .panel-body {
+    background-color: #fafafa;
+  }
+
+  .search-form.panel-body {
+    background-color: #fff;
+  }
+
+  // sorts on press and monograph pages
+  #sort-dropdown .dropdown-toggle,
+  #per_page-dropdown .dropdown-toggle {
+    color: $unc-white;
+  }
+
+  #sort-dropdown .dropdown-toggle:hover,
+  #per_page-dropdown .dropdown-toggle:hover,
+  #sort-dropdown .dropdown-toggle:active,
+  #per_page-dropdown .dropdown-toggle:active {
+    color: $unc-white;
+  }
+
+  #sort-dropdown .dropdown-toggle .caret,
+  #per_page-dropdown .dropdown-toggle .caret {
+    color: $unc-white;
+  }
+
+  #sort-dropdown .dropdown-toggle:hover .caret,
+  #per_page-dropdown .dropdown-toggle:hover .caret,
+  #sort-dropdown .dropdown-toggle:active .caret,
+  #per_page-dropdown .dropdown-toggle:active .caret {
+    color: $unc-white;
+  }
+
+  .constraints-container {
+    padding: 10px 20px;
+    border-radius: 0px;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+  }
+
+  // search resources on monograph pages
+  button.search-submit {
+    background-color: $unc-link;
+    border-color: $unc-link;
+    color: $unc-white;
+  }
+
+  // pagination
+
+  .pagination {
+     li a, li span {
+
+       background-color: $unc-brand-color;
+       border-color: $unc-brand-color;
+       color: $unc-white;
+     }
+
+     li>a:hover,
+     li>a:focus,
+     li>span:hover,
+     li>span:focus {
+       background-color: $unc-accent-color;
+       border-color: $unc-accent-color;
+       color: $unc-white;
+     }
+
+
+     .active>a,
+     .active>a:hover,
+     .active>a:focus,
+     .active>span,
+     .active>span:hover,
+     .active>span:focus {
+      background-color: $unc-accent-color;
+      border-color: $unc-accent-color;
+      color: $unc-white;
+     }
+
+     .disabled>span,
+     .disabled>span:hover,
+     .disabled>span:focus,
+     .disabled>a,
+     .disabled>a:hover,
+     .disabled>a:focus {
+      background-color: $unc-accent-color;
+      border-color: $unc-accent-color;
+      color: $unc-white;
+     }
+  }
+
+  //footer
+  footer {
+ 
+    .press-block-a,
+    .press-block-b {
+      background-color:  $unc-accent-color-light;
+      font-weight: 600;
+
+      img {
+        height: 50px;
+        width: auto;
+      }
+
+    }
+    .press-block-c {
+      background-color: $unc-brand-color;
+    }
+    .platform {
+      background-color: $heb-black-80;
+    }
+  }
+
+  // e-book reader
+  #reader {
+
+    .button {
+      @include epub-button-background-color($unc-brand-color,$unc-accent-color,$unc-white);
+    }
+
+    .button--lg {
+      @include epub-button-background-color($unc-brand-color,$unc-accent-color,$unc-white);
+    }
+
+    .button--inline {
+      @include epub-button-background-color($unc-brand-color,$unc-accent-color,$unc-white);
+    }
+
+    .button--sm {
+      @include epub-button-background-color($unc-brand-color,$unc-accent-color,$unc-white);
+    }
+
+    .button--sm.cozy-preferences {
+      @include epub-button-background-color($unc-brand-color,$unc-accent-color,$unc-white);
+      color: $unc-white;
+    }
+
+    i[class^='icon-chevron-'] {
+      @include epub-prev-next-color($unc-grey-1);
+      transition: 0.2s ease-in;
+    }
+
+    i[class^='icon-chevron-']:hover {
+      @include epub-hover-prev-next-color($unc-brand-color);
+      transition: 0.2s ease-in;
+    }
+
+    .cozy-control .logo {
+      height: 47px;
+
+      img {
+        height: 47px;
+      }
+    }
+
+    // PDF loading progress bar
+    .helio-loading-bar .progress {
+      background-color: $unc-brand-color;
+    }
+
+  }
+
+}
 ///////////////////////////////////////////////
 //
 // Northwestern University Press
