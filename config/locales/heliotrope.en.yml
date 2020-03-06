@@ -315,7 +315,7 @@ en:
         Examples:
         --Preface; Chapter 7; Chapter 9
       language: |
-        The language of the resource.
+        The language of the Monograph or resource.
 
         Examples:
         --English
