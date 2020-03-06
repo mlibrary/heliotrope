@@ -13,7 +13,7 @@ module Hyrax
 
     attr_accessor :pageviews
 
-    delegate :date_created, :date_modified, :date_uploaded, :location, :description,
+    delegate :date_modified, :date_uploaded, :location, :description,
              :creator_display, :creator_full_name, :contributor,
              :subject, :section_titles, :based_near, :publisher, :date_published, :language,
              :isbn, :license, :copyright_holder, :open_access, :funder, :funder_display, :holding_contact, :has_model,
@@ -93,8 +93,18 @@ module Hyrax
       solr_document.funder_display.present?
     end
 
+    def date_created
+      # Only show the first 4 contiguous digits of this, which is the citation publication date, because...
+      # for sorting we also allow `-MM-DD` and, in theory, other digits appended (see MonographIndexer)
+      # optionally take a 'c' right next to that, as almost 3000 HEB titles have stuff like c1996 in here
+      #
+      # wrap this in an array as CitationsBehavior calls `.first` on it, though since we first started using...
+      # CitationsBehavior we have copied pretty much all of it into heliotrope so could change that if we wanted to
+      Array(solr_document['date_created_tesim']&.first.to_s[/c?[0-9]{4}/])
+    end
+
     def date_created?
-      solr_document.date_created.present?
+      date_created.present?
     end
 
     def isbn_noformat
