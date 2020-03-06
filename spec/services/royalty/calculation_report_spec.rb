@@ -12,13 +12,13 @@ RSpec.describe Royalty::CalculationReport do
           "Parent_DOI": "http://doi.org/a",
           "Publisher": "Flub",
           "Section_Type": "Chapter",
-          "Reporting_Period_Total": 100,
+          "Reporting_Period_Total": 1001,
           "Jan-2019": 0,
           "Feb-2019": 0,
           "Mar-2019": 0,
-          "Apr-2019": 25,
+          "Apr-2019": 250,
           "May-2019": 0,
-          "Jun-2019": 75,
+          "Jun-2019": 751,
        }.with_indifferent_access,
         { "Parent_Proprietary_ID": "BBBBBBBBB",
           "Proprietary_ID": "222222222",
@@ -96,13 +96,13 @@ RSpec.describe Royalty::CalculationReport do
       expect(@reports.keys).to eq ["Copyright_A.calc.201901-201906.csv", "Copyright_B.calc.201901-201906.csv"]
 
       expect(@reports["Copyright_A.calc.201901-201906.csv"][:header][:"Total Royalties Shared (All Rights Holders)"]).to eq "1,000.00"
-      expect(@reports["Copyright_A.calc.201901-201906.csv"][:header][:"Total Hits (Non-OA Titles, All Rights Holders)"]).to eq "2,635"
+      expect(@reports["Copyright_A.calc.201901-201906.csv"][:header][:"Total Hits (Non-OA Titles, All Rights Holders)"]).to eq "1,016"
 
       expect(@reports["Copyright_A.calc.201901-201906.csv"][:items][0]["Parent_Proprietary_ID"]).to eq "AAAAAAAAA"
-      expect(@reports["Copyright_A.calc.201901-201906.csv"][:items][0]["Total Title Hits"]).to eq "2,510"
+      expect(@reports["Copyright_A.calc.201901-201906.csv"][:items][0]["Total Title Hits"]).to eq "1,011"
 
       expect(@reports["Copyright_B.calc.201901-201906.csv"][:items][0]["Parent_Proprietary_ID"]).to eq "BBBBBBBBB"
-      expect(@reports["Copyright_B.calc.201901-201906.csv"][:items][0]["Total Title Hits"]).to eq "125"
+      expect(@reports["Copyright_B.calc.201901-201906.csv"][:items][0]["Total Title Hits"]).to eq "5"
 
       expect(@reports["Copyright_A.calc.201901-201906.csv"][:items][0]["Royalty Earning"].to_f +
              @reports["Copyright_B.calc.201901-201906.csv"][:items][0]["Royalty Earning"].to_f).to eq 1000.0
@@ -118,13 +118,13 @@ RSpec.describe Royalty::CalculationReport do
           "Parent_DOI": "http://doi.org/a",
           "Publisher": "Flub",
           "Section_Type": "Chapter",
-          "Hits": 100,
+          "Hits": 1001,
           "Jan-2019": 0,
           "Feb-2019": 0,
           "Mar-2019": 0,
-          "Apr-2019": 25,
+          "Apr-2019": 250,
           "May-2019": 0,
-          "Jun-2019": 75,
+          "Jun-2019": 751,
        }.with_indifferent_access,
         { "Parent_Proprietary_ID": "BBBBBBBBB",
           "Proprietary_ID": "222222222",
@@ -158,7 +158,7 @@ RSpec.describe Royalty::CalculationReport do
         }.with_indifferent_access]
      end
 
-    subject { described_class.new("test", "2019-01-01", "2019-07-31", "1.75").send(:by_monographs, items) }
+    subject { described_class.new("test", "2019-01-01", "2019-07-31", "1750").send(:by_monographs, items) }
 
     it "returns a flatten/condensed list of monographs (not items) but with correct hit counts" do
       expect(subject.length).to be 2
@@ -168,14 +168,14 @@ RSpec.describe Royalty::CalculationReport do
       expect(subject[0]["Authors"]).to eq "Some One"
       expect(subject[0]["Publisher"]).to eq "Flub"
       expect(subject[0]["DOI"]).to eq "http://doi.org/a"
-      expect(subject[0]["Hits"]).to be 110
+      expect(subject[0]["Hits"]).to be 1011
       expect(subject[0]["Royalty Earning"]).to eq 0.00
       expect(subject[0]["Jan-2019"]).to be 3
       expect(subject[0]["Feb-2019"]).to be 3
       expect(subject[0]["Mar-2019"]).to be 3
-      expect(subject[0]["Apr-2019"]).to be 26
+      expect(subject[0]["Apr-2019"]).to be 251
       expect(subject[0]["May-2019"]).to be 0
-      expect(subject[0]["Jun-2019"]).to be 75
+      expect(subject[0]["Jun-2019"]).to be 751
 
       expect(subject[1]["Parent_Proprietary_ID"]).to eq "BBBBBBBBB"
       expect(subject[1]["Title"]).to eq "B"

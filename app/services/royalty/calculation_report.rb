@@ -131,11 +131,6 @@ module Royalty
           # Reporting_Period_Total:
           # Change label to Hits
           item["Hits"] = item.delete("Reporting_Period_Total")
-          # IF ‘Section_Type’ = Chapter: Multiply the value by 25
-          if item["Section_Type"] == "Chapter"
-            item["Hits"] = item["Hits"].to_i * 25
-            item.map { |k, v| item[k] = v.to_i * 25 if k.match(/\w{3}-\d{4}/) } # matches "Jan-2019" or whatever
-          end
         end
 
         items
