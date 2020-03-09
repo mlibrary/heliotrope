@@ -39,7 +39,7 @@ SitemapGenerator::Sitemap.create do
   # add '/static/about_project', changefreq: 'monthly'
   # add '/static/rights', changefreq: 'monthly'
 
-  docs = ActiveFedora::SolrService.query("+has_model_ssim:Monograph AND -(press_sim:demo OR press_sim:monitoringservicetarget)", rows: 100_000)
+  docs = ActiveFedora::SolrService.query("+has_model_ssim:Monograph AND -(press_sim:demo OR press_sim:heliotrope OR press_sim:monitoringservicetarget)", rows: 100_000)
   docs.each do |d|
     next unless d['visibility_ssi'] == 'open'
     d['file_set_ids_ssim'].each do |fsid|
