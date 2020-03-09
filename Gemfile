@@ -109,6 +109,9 @@ gem 'devise-guests', '~> 0.7'
 gem 'faraday', '~>0.12.2'
 gem 'faraday_middleware', '~>0.12.2'
 
+# Use gem version of handle_rest
+gem 'handle_rest', git: 'https://github.com/mlibrary/handle_rest', ref: '944fa06a119072f060d986862c34dea7215ebd29'
+
 gem 'hyrax', '2.7.0'
 
 # Use Jekyll for blog and informational pages

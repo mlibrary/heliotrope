@@ -20,7 +20,7 @@ module EmbedCodePresenter
   end
 
   def embed_link
-    embed_url(hdl: HandleService.path(id))
+    embed_url(hdl: HandleNet.path(id))
   end
 
   def embed_fulcrum_logo_title

@@ -115,7 +115,7 @@ RSpec.describe CounterService do
   describe "#access_type" do
     context "with a restricted epub" do
       before do
-        allow(HandleService).to receive(:path).and_return(true)
+        allow(HandleNet).to receive(:path).and_return(true)
         allow(Greensub::Component).to receive(:find_by).with(noid: monograph.id).and_return(true)
       end
 
@@ -126,7 +126,7 @@ RSpec.describe CounterService do
 
     context "with an unrestricted epub" do
       before do
-        allow(HandleService).to receive(:path).and_return(true)
+        allow(HandleNet).to receive(:path).and_return(true)
         allow(Greensub::Component).to receive(:find_by).with(noid: monograph.id).and_return(false)
       end
 
@@ -137,7 +137,7 @@ RSpec.describe CounterService do
 
     context "with an asset with no permissions_expiration_date" do
       before do
-        allow(HandleService).to receive(:path).and_return(true)
+        allow(HandleNet).to receive(:path).and_return(true)
         allow(Greensub::Component).to receive(:find_by).with(noid: monograph.id).and_return(false)
       end
 
@@ -148,7 +148,7 @@ RSpec.describe CounterService do
 
     context "with an asset with a permissions_expiration_date" do
       before do
-        allow(HandleService).to receive(:path).and_return(true)
+        allow(HandleNet).to receive(:path).and_return(true)
         allow(Greensub::Component).to receive(:find_by).with(noid: monograph.id).and_return(false)
         allow(presenter).to receive(:permissions_expiration_date).and_return("2020-01-27")
       end
@@ -171,7 +171,7 @@ RSpec.describe CounterService do
         allow(DateTime).to receive(:now).and_return(now)
         allow(now).to receive(:strftime).with('%Y-%m-%d').and_return("2020-10-17")
         allow(now).to receive(:hour).and_return('13')
-        allow(HandleService).to receive(:path).and_return(true)
+        allow(HandleNet).to receive(:path).and_return(true)
         allow(Greensub::Component).to receive(:find_by).with(noid: monograph.id).and_return(false)
       end
 

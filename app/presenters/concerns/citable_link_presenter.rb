@@ -24,7 +24,7 @@ module CitableLinkPresenter
   end
 
   def doi_url
-    HandleService::DOI_ORG_PREFIX + doi_path
+    HandleNet::DOI_ORG_PREFIX + doi_path
   end
 
   def heb?
@@ -43,14 +43,14 @@ module CitableLinkPresenter
   end
 
   def heb_url
-    HandleService::HANDLE_NET_PREFIX + heb_path
+    HandleNet::HANDLE_NET_PREFIX + heb_path
   end
 
   def handle_path
-    hdl.presence || HandleService.path(id)
+    hdl.presence || HandleNet.path(id)
   end
 
   def handle_url
-    HandleService::HANDLE_NET_PREFIX + handle_path
+    HandleNet::HANDLE_NET_PREFIX + handle_path
   end
 end

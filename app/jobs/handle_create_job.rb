@@ -17,8 +17,8 @@ class HandleCreateJob < ApplicationJob
 
   def create_handle(model)
     model_url = Sighrax.url(model) || "https://#{model.noid}"
-    service_url = HandleService.value(model.noid)
+    service_url = HandleNet.value(model.noid)
     return service_url if /^#{Regexp.escape(model_url)}$/i.match?(service_url)
-    HandleService.update(model.noid, model_url)
+    HandleNet.create_or_update(model.noid, model_url)
   end
 end

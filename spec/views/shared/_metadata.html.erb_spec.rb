@@ -142,7 +142,7 @@ describe 'shared/_metadata.html.erb' do
       allow(controller).to receive(:controller_name).and_return("file_sets")
       render
       expect(rendered).to match '10.3998/fulcrum.001'
-      expect(rendered).not_to match HandleService::DOI_ORG_PREFIX
+      expect(rendered).not_to match HandleNet::DOI_ORG_PREFIX
     end
   end
 end

@@ -42,7 +42,7 @@ RSpec.describe Hyrax::FileSetPresenter do
       }
 
       it "returns the doi url" do
-        expect(presenter.citable_link).to eq HandleService::DOI_ORG_PREFIX + '10.NNNN.N/identifier'
+        expect(presenter.citable_link).to eq HandleNet::DOI_ORG_PREFIX + '10.NNNN.N/identifier'
       end
     end
 
@@ -50,7 +50,7 @@ RSpec.describe Hyrax::FileSetPresenter do
       let(:fileset_doc) { SolrDocument.new(id: 'fileset_id', has_model_ssim: ['FileSet']) }
 
       it "returns the handle url" do
-        expect(presenter.citable_link).to eq HandleService.url(fileset_doc.id)
+        expect(presenter.citable_link).to eq HandleNet.url(fileset_doc.id)
       end
     end
   end

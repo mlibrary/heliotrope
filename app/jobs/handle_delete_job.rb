@@ -15,6 +15,6 @@ class HandleDeleteJob < ApplicationJob
   end
 
   def delete_handle(model)
-    HandleService.delete(model.noid)
+    HandleNet.delete(model.noid)
   end
 end

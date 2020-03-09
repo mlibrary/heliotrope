@@ -31,7 +31,7 @@ class HandleVerifyJob < ApplicationJob
   def verify_handle_create(model)
     model_url = Sighrax.url(model)
     model_url ||= "https://www.fulcrum.org/#{model.noid}"
-    service_url = HandleService.value(model.noid)
+    service_url = HandleNet.value(model.noid)
     /^#{Regexp.escape(model_url)}$/i.match?(service_url)
   rescue StandardError => e
     Rails.logger.error("HandleVerifyJob #{model.noid} verify handle create #{e}")
@@ -40,7 +40,7 @@ class HandleVerifyJob < ApplicationJob
 
   def verify_handle_delete(model)
     handle_not_found = "100 : Handle Not Found. (HTTP 404 Not Found)"
-    service_url = HandleService.value(model.noid)
+    service_url = HandleNet.value(model.noid)
     /^#{Regexp.escape(handle_not_found)}$/i.match?(service_url)
   rescue StandardError => e
     Rails.logger.error("HandleVerifyJob #{model.noid} verify handle delete #{e}")

@@ -27,3 +27,8 @@ checkpoint:
     pool: 5
     timeout: 5000
 
+handle_service:
+  instantiate: false
+  url: https://hdl.handle.net/api/handles
+  user: admin
+  password: secret

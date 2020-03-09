@@ -16,7 +16,7 @@ RSpec.describe EmbedController, type: :controller do
       let(:hdl) { 'hdl' }
 
       before do
-        allow(HandleService).to receive(:noid).with(hdl).and_return(nil)
+        allow(HandleNet).to receive(:noid).with(hdl).and_return(nil)
         get :show, params: { hdl: hdl }
       end
 
@@ -28,7 +28,7 @@ RSpec.describe EmbedController, type: :controller do
       let(:noid) { 'noid' }
 
       before do
-        allow(HandleService).to receive(:noid).with(hdl).and_return(noid)
+        allow(HandleNet).to receive(:noid).with(hdl).and_return(noid)
         get :show, params: { hdl: hdl }
       end
 
@@ -41,7 +41,7 @@ RSpec.describe EmbedController, type: :controller do
       let(:presenter) { object_double("presenter") }
 
       before do
-        allow(HandleService).to receive(:noid).with(hdl).and_return(noid)
+        allow(HandleNet).to receive(:noid).with(hdl).and_return(noid)
         allow(Hyrax::PresenterFactory).to receive(:build_for).with(ids: [noid], presenter_class: Hyrax::FileSetPresenter, presenter_args: anything).and_return([presenter])
         get :show, params: { hdl: hdl }
       end
@@ -82,7 +82,7 @@ RSpec.describe EmbedController, type: :controller do
         ActiveFedora::SolrService.commit
         allow_any_instance_of(Keycard::Request::Attributes).to receive(:all).and_return(keycard)
         allow(Greensub::Institution).to receive(:where).with(identifier: ['9999']).and_return([institution])
-        allow(HandleService).to receive(:noid).with(hdl).and_return('file_set_noid')
+        allow(HandleNet).to receive(:noid).with(hdl).and_return('file_set_noid')
       end
 
       it "counts the file_set" do

@@ -180,7 +180,7 @@ RSpec.describe HandleVerifyJob, type: :job do
 
       before do
         allow(Sighrax).to receive(:url).with(model).and_return(model_url)
-        allow(HandleService).to receive(:value).with(model.noid).and_return(service_url)
+        allow(HandleNet).to receive(:value).with(model.noid).and_return(service_url)
         allow(Rails).to receive(:logger).and_return(logger)
         allow(logger).to receive(:error).with(error_msg)
       end
@@ -199,7 +199,7 @@ RSpec.describe HandleVerifyJob, type: :job do
         end
 
         context 'when standard error' do
-          before { allow(HandleService).to receive(:value).with(model.noid).and_raise(StandardError) }
+          before { allow(HandleNet).to receive(:value).with(model.noid).and_raise(StandardError) }
 
           it 'not verified and logs error' do
             is_expected.to be false
@@ -218,7 +218,7 @@ RSpec.describe HandleVerifyJob, type: :job do
       let(:error_msg) { "HandleVerifyJob #{model.noid} verify handle delete StandardError" }
 
       before do
-        allow(HandleService).to receive(:value).with(model.noid).and_return(service_url)
+        allow(HandleNet).to receive(:value).with(model.noid).and_return(service_url)
         allow(Rails).to receive(:logger).and_return(logger)
         allow(logger).to receive(:error).with(error_msg)
       end
@@ -237,7 +237,7 @@ RSpec.describe HandleVerifyJob, type: :job do
         end
 
         context 'when standard error' do
-          before { allow(HandleService).to receive(:value).with(model.noid).and_raise(StandardError) }
+          before { allow(HandleNet).to receive(:value).with(model.noid).and_raise(StandardError) }
 
           it 'not verified and logs error' do
             is_expected.to be false
