@@ -475,6 +475,353 @@ $heb-black-80: #342f2e;
 }
 ///////////////////////////////////////////////
 //
+// Art History Publication Initiative
+//
+///////////////////////////////////////////////
+// colors
+$ahpi-brand-color: #80561B;
+$ahpi-brand-light: #a76f20;
+$ahpi-accent-color: #000;
+$ahpi-grey-1: #d5d6d2;
+$ahpi-grey-2: #c3c5c7;
+$ahpi-grey-3: #989c97;
+$ahpi-grey-4: #655a52;
+$ahpi-grey-5: #ccc;
+$ahpi-black-80: #342f2e;
+$ahpi-white: #fff;
+
+// typography
+@import url('https://fonts.googleapis.com/css?family=Cardo|Lato:300,400&display=swap');
+@mixin lato {
+  font-family: 'Lato', sans-serif;  
+}
+@mixin cardo {
+  font-family: 'Cardo', serif;
+}
+
+.ahpi {
+
+  // typography
+  @include cardo;
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5 {
+    font-weight: 700;
+    @include lato;
+  }
+
+  // links
+  a {
+    color: $ahpi-brand-color;
+  }
+
+  a:hover,
+  a:active {
+    color: $ahpi-brand-light;
+  }
+
+  // buttons
+
+  .btn-default {
+    @include button-background-color($ahpi-accent-color);
+    @include button-font-color($ahpi-white);
+  }
+
+  .download {
+    .btn-default {
+      @include button-background-color($ahpi-accent-color);
+    }
+  }
+
+  .btn-default:hover,
+  .btn-default:active {
+    @include button-hover-background-color($ahpi-black-80);
+    @include button-hover-font-color($ahpi-white);
+  }
+
+  // navigation menu
+  .navbar-default .navbar-nav > .open > a,
+  .navbar-default .navbar-nav > .open > a:hover,
+  .navbar-default .navbar-nav > .open > a:focus {
+    background-color: $ahpi-grey-1;
+    color: $ahpi-accent-color;
+  }
+
+  #brand-bar {
+    background-color: $ahpi-brand-color;
+    border-color: $ahpi-brand-color;
+
+    .navbar-brand {
+      color: $ahpi-white;
+      @include lato;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+    }
+
+    .navbar-nav {
+      a#add-content,
+      a.login,
+      a.user-display-name,
+      a.language-dropdown {
+          color: $ahpi-white;
+      }
+
+      .open > a,
+      .open > a:focus,
+      .open > a:hover {
+        background-color: $ahpi-grey-1;
+        color: $ahpi-accent-color;
+      }
+    }
+
+    button.search-submit {
+      background-color: $ahpi-accent-color;
+      border-color: $ahpi-accent-color;
+      color: $ahpi-white;
+    }
+
+  }
+
+  // press catalog
+
+  // jumbotron
+  .jumbotron {
+    background-color: $ahpi-grey-1;
+    padding-top: 1.5em;
+    padding-bottom: 1em;
+    @include lato;
+
+    p {
+      font-size: 20px;
+      margin-bottom: 0;
+      font-weight: 300;
+    }
+
+    .container {
+      margin-top: 0;
+    }
+
+    .logo {
+
+      img {
+        width: 150px;
+        margin-right: 2em;
+      }
+
+    }
+
+  }
+
+  .press {
+    .results-container {
+
+      .document {
+        h3 {
+          font-weight: 600;
+        }
+        a {
+          color: #333;
+        }
+      }
+    }
+  }
+
+  //filters on press and monograph pages
+  .col-sm-3.facets-container,
+  #facet-panel-collapse {
+    padding-left: 0px;
+  }
+
+  .panel-group {
+    padding-left: 0px;
+  }
+
+  .panel-group .panel {
+    border-radius: 0px;
+  }
+
+  .panel-heading {
+    padding-top: 15px;
+  }
+
+  .panel-group .panel + .panel {
+    margin-top: 0px;
+  }
+
+  h3.panel-title a, a.more_facets_link {
+    color: #333;
+  }
+
+  .panel-heading.collapse-toggle .panel-title::after {
+    color: #333;
+  }
+
+  .panel-body {
+    background-color: #fafafa;
+  }
+
+  // search resources
+  button.search-submit {
+    background-color: $ahpi-accent-color;
+    border-color: $ahpi-accent-color;
+    color: $ahpi-white;
+  }
+
+  // sorts on press and monograph pages
+  #sort-dropdown .dropdown-toggle,
+  #per_page-dropdown .dropdown-toggle {
+    color: $ahpi-white;
+  }
+
+  #sort-dropdown .dropdown-toggle:hover,
+  #per_page-dropdown .dropdown-toggle:hover,
+  #sort-dropdown .dropdown-toggle:active,
+  #per_page-dropdown .dropdown-toggle:active {
+    color: $ahpi-white;
+  }
+
+  .constraints-container {
+    padding: 10px 20px;
+    border-radius: 0px;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+  }
+
+  // pagination
+
+  .pagination {
+     li a, li span {
+
+       background-color: $ahpi-accent-color;
+       border-color: $ahpi-accent-color;
+       color: $ahpi-white;
+     }
+
+     li>a:hover,
+     li>a:focus,
+     li>span:hover,
+     li>span:focus {
+       background-color: $ahpi-black-80;
+       border-color: $ahpi-black-80;
+       color: $ahpi-white;
+     }
+
+
+     .active>a,
+     .active>a:hover,
+     .active>a:focus,
+     .active>span,
+     .active>span:hover,
+     .active>span:focus {
+      background-color: $ahpi-black-80;
+      border-color: $ahpi-black-80;
+      color: $ahpi-white;
+     }
+
+     .disabled>span,
+     .disabled>span:hover,
+     .disabled>span:focus,
+     .disabled>a,
+     .disabled>a:hover,
+     .disabled>a:focus {
+      background-color: $ahpi-black-80;
+      border-color: $ahpi-black-80;
+      color: $ahpi-white;
+     }
+  }
+
+  //footer
+  footer {
+    a,
+    a:hover,
+    a:active {
+      color: $ahpi-white;
+    }
+    .press-block-a,
+    .press-block-b {
+      background-color:  $ahpi-grey-1;
+
+      a,
+      a:hover,
+      a:active {
+        color: $ahpi-accent-color;
+      }
+
+      img {
+        width: 120px;
+      }
+
+    }
+    .press-block-a {
+      @include lato;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+    .press-block-c {
+      background-color: $ahpi-brand-color;
+      @include lato;
+    }
+    .platform {
+      background-color: $ahpi-accent-color;
+    }
+  }
+
+  // e-book reader
+  #reader {
+
+    .button {
+      @include epub-button-background-color($ahpi-accent-color,$ahpi-black-80,$ahpi-white);
+    }
+
+    .button--lg {
+      @include epub-button-background-color($ahpi-accent-color,$ahpi-black-80,$ahpi-white);
+    }
+
+    .button--inline {
+      @include epub-button-background-color($ahpi-accent-color,$ahpi-black-80,$ahpi-white);
+    }
+
+    .button--sm {
+      @include epub-button-background-color($ahpi-accent-color,$ahpi-black-80,$ahpi-white);
+    }
+
+    .button--sm.cozy-preferences {
+      @include epub-button-background-color($ahpi-accent-color,$ahpi-black-80,$ahpi-white);
+      color: $ahpi-brand-color;
+    }
+
+    i[class^='icon-chevron-'] {
+      @include epub-prev-next-color($ahpi-black-80);
+      transition: 0.2s ease-in;
+    }
+
+    i[class^='icon-chevron-']:hover {
+      @include epub-hover-prev-next-color($ahpi-accent-color);
+      transition: 0.2s ease-in;
+    }
+
+    .cozy-control .logo {
+      height: 47px;
+
+      img {
+        height: 47px;
+      }
+    }
+
+    // PDF loading progress bar
+    .helio-loading-bar .progress {
+      background-color: $ahpi-brand-color;
+    }
+
+  }
+
+}
+
+///////////////////////////////////////////////
+//
 // A2RU - Alliance for the Arts in Research
 // Universities
 //
