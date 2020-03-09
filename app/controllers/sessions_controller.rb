@@ -113,7 +113,9 @@ class SessionsController < ApplicationController
     def unfiltered_discovery_feed
       Rails.cache.fetch("unfiltered_discovery_feed", expires_in: 24.hours) do
         json = if Rails.env.production?
-                 Faraday.get(root_url(script_name: "/Shibboleth.sso/DiscoFeed").gsub!(/\/?\?locale=.*/, '')).body
+                 # Faraday.get(root_url(script_name: "/Shibboleth.sso/DiscoFeed").gsub!(/\/?\?locale=.*/, '')).body
+                 # AE-7532 Static DiscoFeed temporary work around
+                 Faraday.get(root_url(script_name: "/DiscoFeed").gsub!(/\/?\?locale=.*/, '')).body
                else
                  fake_discovery_feed = []
                  Greensub::Institution.where("entity_id <> ''").each do |institution|
