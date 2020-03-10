@@ -95,9 +95,15 @@ class FileSet < ActiveFedora::Base
   include GlobalID::Identification
   include HeliotropeUniversalMetadata
   include ::Hyrax::FileSetBehavior
+  # This must come after the FileSetBehavior because it finalizes the metadata
+  # schema (by adding accepts_nested_attributes)
   include ::Hyrax::BasicMetadata
 
   self.indexer = ::FileSetIndexer
+
+  after_create :after_create_jobs
+  after_destroy :after_destroy_jobs
+
   # Cast to a SolrDocument by querying from Solr
   # Hyrax Heliotrope override: cast to an actual presenter, not just a solr_doc
   def to_presenter
@@ -115,4 +121,14 @@ class FileSet < ActiveFedora::Base
   def self.eps_mime_types
     ['application/postscript']
   end
+
+  private
+
+    def after_create_jobs
+      HandleCreateJob.perform_later(id)
+    end
+
+    def after_destroy_jobs
+      HandleDeleteJob.perform_later(id)
+    end
 end
