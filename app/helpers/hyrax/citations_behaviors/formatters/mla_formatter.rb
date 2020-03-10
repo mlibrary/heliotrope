@@ -20,6 +20,19 @@ module Hyrax
           text.html_safe # rubocop:disable Rails/OutputSafety
         end
 
+        def structure(work)
+          struct = {}
+          # setup formatted author list
+          authors = author_list(work).reject(&:blank?)
+          struct[:author] = format_authors(authors)
+          # setup title
+          title_info = setup_title_info(work)
+          struct[:title] = mla_citation_title(title_info)
+          # Publication
+          struct[:publisher] = add_publisher_text_for(work)
+          struct
+        end
+
         def format_authors(authors_list = [])
           return '' if authors_list.blank?
           authors_list = Array.wrap(authors_list)

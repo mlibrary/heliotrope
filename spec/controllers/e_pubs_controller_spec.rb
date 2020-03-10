@@ -414,7 +414,7 @@ RSpec.describe EPubsController, type: :controller do
       let(:file_set) { create(:file_set, id: '999999998', content: File.open(File.join(fixture_path, 'fake_epub_multi_rendition.epub'))) }
       let!(:fr) { create(:featured_representative, work_id: monograph.id, file_set_id: file_set.id, kind: 'epub') }
       let(:document) { double('document') }
-      let(:rendered) { "%PDF-1.3\n" }
+      let(:rendered) { +"%PDF-1.3\ntrailer<</Root<</Pages<</Kids[<</MediaBox[0 0 3 3]>>]>>>>>>" }
 
       before do
         monograph.ordered_members << file_set
@@ -432,7 +432,6 @@ RSpec.describe EPubsController, type: :controller do
         expect(document).to receive(:image).with(/images\/00000004\.png/, fit: [512, 692])
         expect(document).to receive(:image).with(/images\/00000005\.png/, fit: [512, 692])
         expect(document).to receive(:render).and_return(rendered)
-        expect(controller).to receive(:send_data).with(rendered, type: "application/pdf", disposition: "inline").and_call_original
         get :download_interval, params: { id: file_set.id, cfi: '/6/2[xhtml00000003]!/4/1:0', title: "This is Chapter One's Title" }
         expect(response).to have_http_status(:success)
         expect(response.headers['Content-Type']).to eq 'application/pdf'
