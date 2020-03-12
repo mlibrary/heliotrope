@@ -147,9 +147,7 @@ $ ./bin/bundle exec ./bin/rails lib_spec
 $ ./bin/bundle exec rspec
 ```
 #### System specs
-By default, _system_ (headless chrome javascript tests) specs are excluded from `rake ci`. This is done because because of a timing bug we're having with Travis CI and system specs.
-To run ALL specs, including the system specs, do: `bundle exec rspec -t browser`
-Do run JUST the system specs, do: `bundle exec rspec ./spec/system/ -t browser`
+System specs are skipped on Travis due to frequent timing failures. This won't affect running `rspec` locally either directly or through the `ci` task. 
 
 
 ## Running specs individually
