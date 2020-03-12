@@ -144,7 +144,7 @@ $(document).on('turbolinks:load', function() {
       // the presence of these query parameters indicate the user is interacting with results (sorting, paging)
       var blacklight_params = ['page', 'per_page', 'sort', 'view'];
       var blacklight_param_found = false;
-      window.location.search.substring(1).split('&').forEach((queryNameValue) => {
+      window.location.search.substring(1).split('&').forEach(function(queryNameValue) {
         if (blacklight_params.includes(queryNameValue.split('=')[0])) {
           blacklight_param_found = true;
         }
