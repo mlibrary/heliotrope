@@ -65,7 +65,7 @@ RSpec.describe PressesController, type: :controller do
     end
   end
 
-  context 'a platform-wide admin user create/edit' do
+  context 'a platform-wide admin user create/edit/destroy' do
     let(:user) { create(:platform_admin) }
 
     before { sign_in user }
@@ -85,6 +85,28 @@ RSpec.describe PressesController, type: :controller do
       it 'displays the form to edit the press' do
         expect(response).to render_template :edit
         expect(response).to be_success
+      end
+    end
+
+    describe '#destroy' do
+      before { delete :destroy, params: { id: press.subdomain } }
+
+      it 'deletes the press' do
+        expect(response).to redirect_to(fulcrum_partials_path(:refresh))
+        expect(Press.count).to eq(0)
+      end
+    end
+
+    describe '#destroy not' do
+      before do
+        press.children << create(:press)
+        press.save
+        delete :destroy, params: { id: press.subdomain }
+      end
+
+      it 'does NOT deletes the press' do
+        expect(response).to redirect_to(fulcrum_partials_path(:refresh))
+        expect(Press.count).to eq(2)
       end
     end
   end
@@ -110,6 +132,15 @@ RSpec.describe PressesController, type: :controller do
       it 'displays the form to edit the press' do
         expect(response).to render_template :edit
         expect(response).to be_success
+      end
+    end
+
+    describe '#destroy' do
+      before { delete :destroy, params: { id: press.subdomain } }
+
+      it 'deletes the press' do
+        expect(response).to render_template :unauthorized
+        expect(response).to be_unauthorized
       end
     end
   end
