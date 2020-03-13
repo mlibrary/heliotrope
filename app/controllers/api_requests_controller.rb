@@ -4,6 +4,7 @@ class APIRequestsController < ApplicationController
   before_action :set_api_request, only: %i[show destroy]
 
   def index
+    APIRequest.where("created_at < ?", (Time.now.utc - 21.days)).delete_all
     @api_requests = APIRequest.filter(filtering_params(params)).order(created_at: :desc).page(params[:page])
   end
 

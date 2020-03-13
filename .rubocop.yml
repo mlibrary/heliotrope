@@ -88,7 +88,6 @@ Rails/UnknownEnv:
   - development
   - test
   - cucumber
-  - devproque
 
 RSpec/AnyInstance:
   Enabled: false

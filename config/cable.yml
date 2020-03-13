@@ -1,6 +1,3 @@
-devproque:
-  adapter: async
-
 development:
   adapter: async
 

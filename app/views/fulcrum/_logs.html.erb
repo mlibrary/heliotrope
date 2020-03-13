@@ -1,27 +1,6 @@
 <h1>Logs</h1>
-<table>
-  <tr>
-    <td><%= link_to "API Requests Log", api_requests_path %></td>
-    <td>&nbsp;</td>
-    <td>
-      <%= link_to(truncate_api_requests_path, method: :delete, class: "btn btn-default", data: { confirm: 'Are you sure?' }) do %>
-        <span class="glyphicon glyphicon-minus" aria-hidden="true"></span> Destroy
-      <% end %>
-    </td>
-  </tr>
-  <tr>
-    <td><%= link_to "Share Link Log", share_link_logs_path %></td>
-    <td>&nbsp;</td>
-    <td>&nbsp;</td>
-  </tr>
-  <tr>
-    <td><%= link_to "Crossref Submission Log", crossref_submission_logs_path %></td>
-    <td>&nbsp;</td>
-    <td>&nbsp;</td>
-  </tr>
-  <tr>
-    <td><%= link_to "APTrust Deposits", aptrust_deposits_path %></td>
-    <td>&nbsp;</td>
-    <td>&nbsp;</td>
-  </tr>
-</table>
+<ul>
+  <li><%= link_to "API Requests Log", api_requests_path %></li>
+  <li><%= link_to "Crossref Submission Log", crossref_submission_logs_path %></li>
+  <li><%= link_to "Share Link Log", share_link_logs_path %></li>
+</ul>

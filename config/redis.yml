@@ -1,6 +1,3 @@
-devproque:
-  host: localhost
-  port: 6379
 development:
   host: localhost
   port: 6379
