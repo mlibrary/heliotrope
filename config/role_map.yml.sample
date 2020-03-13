@@ -1,9 +1,3 @@
-devproque:
-  admin:
-  - admin@fulcrum.org
-  archivist:
-  - archivist1@example.com
-
 development:
   admin:
     - admin@fulcrum.org

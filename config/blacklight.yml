@@ -1,6 +1,3 @@
-devproque:
-  adapter: solr
-  url: <%= ENV['SOLR_URL'] || "http://127.0.0.1:#{ENV.fetch('SOLR_DEVELOPMENT_PORT', 8983)}/solr/hydra-development" %>
 development:
   adapter: solr
   url: <%= ENV['SOLR_URL'] || "http://127.0.0.1:#{ENV.fetch('SOLR_DEVELOPMENT_PORT', 8983)}/solr/hydra-development" %>
