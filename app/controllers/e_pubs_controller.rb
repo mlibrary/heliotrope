@@ -131,14 +131,13 @@ class EPubsController < CheckpointController
       interval = EPub::Interval.from_rendition_cfi_title(publication.rendition, cfi, title)
 
       return head :no_content if interval.is_a?(EPub::IntervalNullObject)
-
       rendered_pdf = Rails.cache.fetch(pdf_cache_key(@noid, interval.title), expires_in: 30.days) do
         pdf = EPub::Marshaller::PDF.from_publication_interval(publication, interval)
         pdf.document.render
       end
 
       CounterService.from(self, @presenter).count(request: 1, section_type: "Chapter", section: interval.title) if rendered_pdf.present?
-      send_data rendered_pdf, type: "application/pdf", disposition: "inline"
+      send_data watermark_pdf(@entity, 7, rendered_pdf), type: "application/pdf", disposition: "inline"
     elsif @entity.is_a?(Sighrax::PortableDocumentFormat)
       return head :no_content if params[:title].blank? || params[:chapter_index].blank?
 
@@ -149,17 +148,9 @@ class EPubsController < CheckpointController
       return head :no_content if !File.exist?(File.join(chapter_dir, chapter_file_name))
 
       file = File.join(chapter_dir, chapter_file_name)
-      presenter = Sighrax.hyrax_presenter(@entity.parent)
-
-      text = <<~WATERMARK
-          #{wrap_text(watermark_authorship(presenter) + CGI.unescapeHTML(presenter.title), 120)}
-          #{wrap_text(params[:title], 120)}
-          #{presenter.date_created.first}. #{presenter.publisher.first}
-          Downloaded on behalf of #{request_origin}
-      WATERMARK
 
       CounterService.from(self, @presenter).count(request: 1, section_type: "Chapter", section: params[:title])
-      send_data watermark_pdf(@entity, text, 7, IO.binread(file)), type: @entity.media_type, filename: chapter_download_name, disposition: "inline"
+      send_data watermark_pdf(@entity, 7, IO.binread(file)), type: @entity.media_type, filename: chapter_download_name, disposition: "inline"
     end
   rescue StandardError => e
     Rails.logger.error "EPubsController.download_interval raised #{e}"

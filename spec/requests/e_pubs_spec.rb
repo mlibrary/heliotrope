@@ -280,7 +280,7 @@ RSpec.describe "EPubs", type: :request do
           let(:interval) { double('interval', title: 'title') }
           let(:pdf) { double('pdf', document: document) }
           let(:document) { double('document', render: rendered_pdf) }
-          let(:rendered_pdf) { 'rendered_pdf' }
+          let(:rendered_pdf) { +"%PDF-1.\ntrailer<</Root<</Pages<</Kids[<</MediaBox[0 0 3 3]>>]>>>>>>" }
 
           before do
             allow(publication).to receive(:rendition).and_return(rendition)
@@ -292,7 +292,8 @@ RSpec.describe "EPubs", type: :request do
           it do
             expect { subject }.not_to raise_error
             expect(response).to have_http_status(:ok)
-            expect(response.body).to eq(rendered_pdf)
+            # watermarking will change the file content and PDF 'producer' metadata
+            expect(response.body).not_to eq(rendered_pdf)
             expect(counter_service).to have_received(:count).with(request: 1, section: 'title', section_type: 'Chapter')
           end
         end
@@ -313,9 +314,6 @@ RSpec.describe "EPubs", type: :request do
           subject { get "/epubs_download_interval/#{epub.id}?title=title;chapter_index=0" }
 
           let(:interval) { double('interval', title: 'title') }
-          let(:pdf) { double('pdf', document: document) }
-          let(:document) { double('document', render: rendered_pdf) }
-          let(:rendered_pdf) { 'rendered_pdf' }
 
           before do
             allow(PDFEbook::Interval).to receive(:from_title_level_cfi).with(epub.id, 0, 'title', 1, 5).and_return(interval)

@@ -76,8 +76,11 @@ RSpec.describe "PDF EBooks", type: :request do
             let(:presenter) do
               instance_double(Hyrax::MonographPresenter, authors?: true,
                                                          authors: 'creator blah',
+                                                         creator: ['Creator, A.', 'Destroyer, Z.'],
                                                          title: 'title',
                                                          date_created: ['created'],
+                                                         based_near_label: ['Somewhere'],
+                                                         citable_link: 'www.example.com/something',
                                                          publisher: ['publisher'])
             end
 
@@ -96,7 +99,13 @@ RSpec.describe "PDF EBooks", type: :request do
           end
 
           context 'presenter does not return an authors value' do
-            let(:presenter) { instance_double(Hyrax::MonographPresenter, authors?: false, title: 'title', date_created: ['created'], publisher: ['publisher']) }
+            let(:presenter) { instance_double(Hyrax::MonographPresenter, authors?: false,
+                                                                         creator: [],
+                                                                         title: 'title',
+                                                                         date_created: ['created'],
+                                                                         based_near_label: ['Somewhere'],
+                                                                         citable_link: 'www.example.com/something',
+                                                                         publisher: ['publisher']) }
 
             it "doesn't raise an error" do
               allow(Sighrax).to receive(:hyrax_presenter).with(parent).and_return(presenter)
