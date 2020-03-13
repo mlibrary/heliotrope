@@ -123,6 +123,7 @@ describe BreadcrumbsHelper, type: :helper do
           it "returns the right breadcrumbs" do
             press.press_url = "http://bookbonanza.edu"
             press.navigation_block = '<nav><a href="stuff">stuff</a><a href="things">things</a></nav>'
+            press.aboutware = true
             press.save!
             @presenter = file_set_presenter
             expect(breadcrumbs).to match_array([{ href: press.press_url,
@@ -170,6 +171,7 @@ describe BreadcrumbsHelper, type: :helper do
             press.parent_id = parent.id
             press.press_url = "http://bookbonanza.edu"
             press.navigation_block = '<nav><a href="stuff">stuff</a><a href="things">things</a></nav>'
+            press.aboutware = true
             press.save!
             expect(breadcrumbs).to match_array([{ href: press.press_url,
                                                   text: "Home",

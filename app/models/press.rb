@@ -27,6 +27,18 @@ class Press < ApplicationRecord
     false
   end
 
+  # HELIO-3275
+  # "aboutware" means:
+  #   * don't show the jumbotron on the press page
+  #   * changes breadcrumbs to include the "aboutware" website
+  # "aboutware" IS NOT neccessarily
+  #   * show the special complex navigation_block
+  # In other words, you can have a navigation_block and NOT have "aboutware"
+  def aboutware?
+    return true if aboutware == true
+    false
+  end
+
   def to_param
     subdomain
   end
