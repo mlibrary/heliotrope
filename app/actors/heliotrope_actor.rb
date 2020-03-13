@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# First in line after Hyrax::Actors::OptimisticLockValidator (see: config/initializers/hyrax_actor_factory.rb)
+# First in line after Hyrax::Actors::OptimisticLockValidator (see: config/application_spec.rb)
 class HeliotropeActor < Hyrax::Actors::AbstractActor
   # @param [Hyrax::Actors::Environment] env
   # @return [Boolean] true if create was successful

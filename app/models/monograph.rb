@@ -52,5 +52,18 @@ class Monograph < ActiveFedora::Base
 
   self.indexer = ::MonographIndexer
 
+  after_create :after_create_jobs
+  after_destroy :after_destroy_jobs
+
   validates :title, presence: { message: 'Your work must have a title.' }
+
+  private
+
+    def after_create_jobs
+      HandleCreateJob.perform_later(id)
+    end
+
+    def after_destroy_jobs
+      HandleDeleteJob.perform_later(id)
+    end
 end

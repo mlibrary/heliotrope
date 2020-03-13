@@ -51,4 +51,22 @@ describe FileSet do
       end
     end
   end
+
+  context 'handles' do
+    let(:file_set) { build(:file_set, id: noid) }
+    let(:noid) { 'validnoid' }
+
+    before do
+      ActiveFedora::Cleaner.clean!
+      allow(HandleCreateJob).to receive(:perform_later).with(noid)
+      allow(HandleDeleteJob).to receive(:perform_later).with(noid)
+    end
+
+    it 'creates a handle after create and deletes the handle after destroy' do
+      file_set.save
+      expect(HandleCreateJob).to have_received(:perform_later).with(noid)
+      file_set.destroy
+      expect(HandleDeleteJob).to have_received(:perform_later).with(noid)
+    end
+  end
 end

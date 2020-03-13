@@ -97,4 +97,17 @@ class Score < ActiveFedora::Base
   # This must be included at the end, because it finalizes the metadata
   # schema (by adding accepts_nested_attributes)
   include ::Hyrax::BasicMetadata
+
+  after_create :after_create_jobs
+  after_destroy :after_destroy_jobs
+
+  private
+
+    def after_create_jobs
+      HandleCreateJob.perform_later(id)
+    end
+
+    def after_destroy_jobs
+      HandleDeleteJob.perform_later(id)
+    end
 end

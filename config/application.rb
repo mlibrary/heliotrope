@@ -95,15 +95,6 @@ module Heliotrope
       Hyrax::CurationConcern.actor_factory.insert_after(RegisterFileSetDoisActor, CreateWithImportFilesActor)
       # Destroy FeaturedRepresentatives on delete
       Hyrax::CurationConcern.actor_factory.insert_after(Hyrax::Actors::CleanupTrophiesActor, FeaturedRepresentativeActor)
-
-      # NOTE: New call order is:
-      # ...
-      # middleware.use Hyrax::Actors::OptimisticLockValidator
-      # middleware.use HeliotropeActor
-      # middleware.use RegisterFileSetDoisActor
-      # middleware.use CreateWithImportFilesActor
-      # middleware.use Hyrax::Actors::CreateWithRemoteFilesActor
-      # ...
     end
   end
 end

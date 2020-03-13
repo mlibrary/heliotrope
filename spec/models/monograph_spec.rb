@@ -22,4 +22,22 @@ describe Monograph do
     expect(mono.valid?).to eq false
     expect(mono.errors.messages[:press]).to eq ['You must select a press.']
   end
+
+  context 'handles' do
+    let(:monograph) { build(:monograph, id: noid) }
+    let(:noid) { 'validnoid' }
+
+    before do
+      ActiveFedora::Cleaner.clean!
+      allow(HandleCreateJob).to receive(:perform_later).with(noid)
+      allow(HandleDeleteJob).to receive(:perform_later).with(noid)
+    end
+
+    it 'creates a handle after create and deletes the handle after destroy' do
+      monograph.save
+      expect(HandleCreateJob).to have_received(:perform_later).with(noid)
+      monograph.destroy
+      expect(HandleDeleteJob).to have_received(:perform_later).with(noid)
+    end
+  end
 end

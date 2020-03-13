@@ -10,16 +10,16 @@ RSpec.describe Hyrax::CurationConcern do
 
     it do
       expect(middlewares.count).to eq 21
-      expect(middlewares[0]).to eq Hyrax::Actors::TransactionalRequest
-      expect(middlewares[1]).to eq Hyrax::Actors::OptimisticLockValidator
-      expect(middlewares[2]).to eq HeliotropeActor
-      expect(middlewares[3]).to eq RegisterFileSetDoisActor
-      expect(middlewares[4]).to eq CreateWithImportFilesActor
-      expect(middlewares[5]).to eq Hyrax::Actors::CreateWithRemoteFilesActor
-      expect(middlewares[6]).to eq Hyrax::Actors::CreateWithFilesActor
-      expect(middlewares[7]).to eq Hyrax::Actors::CollectionsMembershipActor
-      expect(middlewares[8]).to eq Hyrax::Actors::AddToWorkActor
-      expect(middlewares[9]).to eq Hyrax::Actors::AttachMembersActor
+      expect(middlewares[ 0]).to eq Hyrax::Actors::TransactionalRequest
+      expect(middlewares[ 1]).to eq Hyrax::Actors::OptimisticLockValidator
+      expect(middlewares[ 2]).to eq HeliotropeActor
+      expect(middlewares[ 3]).to eq RegisterFileSetDoisActor
+      expect(middlewares[ 4]).to eq CreateWithImportFilesActor
+      expect(middlewares[ 5]).to eq Hyrax::Actors::CreateWithRemoteFilesActor
+      expect(middlewares[ 6]).to eq Hyrax::Actors::CreateWithFilesActor
+      expect(middlewares[ 7]).to eq Hyrax::Actors::CollectionsMembershipActor
+      expect(middlewares[ 8]).to eq Hyrax::Actors::AddToWorkActor
+      expect(middlewares[ 9]).to eq Hyrax::Actors::AttachMembersActor
       expect(middlewares[10]).to eq Hyrax::Actors::ApplyOrderActor
       expect(middlewares[11]).to eq Hyrax::Actors::DefaultAdminSetActor
       expect(middlewares[12]).to eq Hyrax::Actors::InterpretVisibilityActor
