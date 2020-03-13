@@ -9,7 +9,7 @@ module HyraxHelper
   #
   # @return [Symbol]
   def default_document_index_view_type
-    controller.is_a?(PressCatalogController) ? :gallery : :list
+    controller.is_a?(PressCatalogController) && defined?(press.default_list_view) && !press.default_list_view ? :gallery : :list
   end
 
   # Get the current "view type" (and ensure it is a valid type)
