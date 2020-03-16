@@ -9,6 +9,14 @@
         <%= render_markdown(document.title.first) %>
       </h3>
       <p aria-label="By <%= presenter.authors %>" class="authors"><%= presenter.authors %></p>
+      <% if press.subdomain == 'barpublishing' %>
+        <% if presenter.date_created.length.positive? %>
+          <p><strong><%= presenter.date_created[0] %></strong></p>
+        <% end %>
+        <% if presenter.bar_number&.length&.positive? %>
+          <p><strong><%= t('bar_number') %>: </strong> <%= presenter.bar_number %></p>
+        <% end %>
+      <% end %>
     </div>
   <% end %>
 </div>
