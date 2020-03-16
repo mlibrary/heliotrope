@@ -17,10 +17,6 @@ default: &default
   #shost: localhost
   #port: 3306
 
-devproque:
-  <<: *default
-  database: heliotrope_development
-
 development:
   <<: *default
   database: heliotrope_development

@@ -2,14 +2,14 @@
 <ul>
   <li>
     <form name="ingest" method="get" action="<%= fulcrum_exec_path(:ingest) %>">
-      <label for="token">Token</label>
-      <input type="text" id="token" name="token" value="JSON WEB TOKEN">
-      <label for="base">Base</label>
+      <label for="ingest_noid">NOID</label>
+      <input type="text" id="ingest_noid" name="noid" value="validnoid">
+      <label for="base">Base&nbsp&nbsp&nbsp</label>
       <input type="text" id="base" name="base" value="https://www.fulcrum.org/api">
-      <label for="source">Source</label>
-      <input type="text" id="source" name="source" value="validnoid">
       <label for="target">Target</label>
       <%= select_tag "target", options_for_select(Press.all.collect { |press| [press.subdomain, press.subdomain] }, 'heliotrope') %>
+      <label for="token">Token</label>
+      <input type="text" id="token" name="token" value="JSON WEB TOKEN">
       <button name="submit" type="submit" value="ingest">Ingest</button>
     </form>
   </li>
@@ -17,17 +17,22 @@
     <form name="unpack" method="get" action="<%= fulcrum_exec_path(:unpack) %>">
       <label for="unpack_noid">NOID</label>
       <input type="text" id="unpack_noid" name="noid" value="validnoid">
-      <label for="unpack_kind">Kind</label>
-      <input type="text" id="unpack_kind" name="kind" value="kind">
+      <label for="kind">Kind&nbsp&nbsp&nbsp</label>
+      <select name="kind" id="kind">
+        <option value="epub">epub</option>
+        <option value="interactive_map">interactive_map</option>
+        <option value="pdf_ebook">pdf_ebook</option>
+        <option value="webgl">webgl</option>
+      </select>
       <button name="submit" type="submit" value="unpack">Unpack</button>
     </form>
   </li>
   <li>
     <form name="handle" method="get" action="<%= fulcrum_exec_path(:handle) %>">
       <label for="handle_noid">NOID</label>
-      <input type="text" id="unpack_noid" name="noid" value="validnoid">
-      <label for="job">Action</label>
-      <select name="job" id="job">
+      <input type="text" id="handle_noid" name="noid" value="validnoid">
+      <label for="handle_job">Action</label>
+      <select name="job" id="handle_job">
         <option value="create">create</option>
         <option value="delete">delete</option>
         <option selected="selected" value="verify">verify</option>
@@ -36,17 +41,15 @@
     </form>
   </li>
   <li>
-    <form name="deposit" method="get" action="<%= fulcrum_exec_path(:deposit) %>">
-      <label for="deposit_noid">APTrust Deposit</label>
-      <input type="text" id="deposit_noid" name="noid" value="validnoid">
-      <button name="submit" type="submit" value="deposit">Deposit</button>
-    </form>
-  </li>
-  <li>
-    <form name="verify" method="get" action="<%= fulcrum_exec_path(:verify) %>">
-      <label for="verify_noid">APTrust Verify</label>
-      <input type="text" id="verify_noid" name="noid" value="validnoid">
-      <button name="submit" type="submit" value="verify">Verify</button>
+    <form name="aptrust" method="get" action="<%= fulcrum_exec_path(:aptrust) %>">
+      <label for="aptrust_noid">NOID</label>
+      <input type="text" id="aptrust_noid" name="noid" value="validnoid">
+      <label for="aptrust_job">Action</label>
+      <select name="job" id="aptrust_job">
+        <option value="deposit">deposit</option>
+        <option selected="selected" value="verify">verify</option>
+      </select>
+      <button name="submit" type="submit" value="aptrust">Aptrust</button>
     </form>
   </li>
   <li>
