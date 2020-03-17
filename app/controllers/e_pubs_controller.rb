@@ -160,16 +160,15 @@ class EPubsController < CheckpointController
   def share_link
     return head :no_content unless @policy.show?
 
-    presenter = Hyrax::PresenterFactory.build_for(ids: [@noid], presenter_class: Hyrax::FileSetPresenter, presenter_args: nil).first
-    subdomain = presenter.parent.subdomain
+    subdomain = @presenter.parent.subdomain
     if Press.where(subdomain: subdomain).first&.allow_share_links?
       expire = Time.now.to_i + 28 * 24 * 3600 # 28 days in seconds
       token = JsonWebToken.encode(data: @noid, exp: expire)
       ShareLinkLog.create(ip_address: request.ip,
                           institution: current_institutions.map(&:name).join("|"),
                           press: subdomain,
-                          title: presenter.parent.title,
-                          noid: presenter.id,
+                          title: @presenter.parent.title,
+                          noid: @presenter.id,
                           token: token,
                           action: 'create')
       render plain: Rails.application.routes.url_helpers.epub_url(@noid, share: token)
@@ -185,10 +184,10 @@ class EPubsController < CheckpointController
 
     def setup
       @noid = params[:id]
-      @entity = Sighrax.from_noid(@noid)
+      @presenter = Hyrax::PresenterFactory.build_for(ids: [@noid], presenter_class: Hyrax::FileSetPresenter, presenter_args: nil).first
+      @entity = Sighrax.from_presenter(@presenter)
       @parent_noid = @entity.parent.noid
       raise(NotAuthorizedError, "Non Electronic Publication") unless @entity.is_a?(Sighrax::ElectronicPublication) || @entity.is_a?(Sighrax::PortableDocumentFormat)
-      @presenter = Hyrax::PresenterFactory.build_for(ids: [@noid], presenter_class: Hyrax::FileSetPresenter, presenter_args: nil).first
       @share_link = params[:share] || session[:share_link]
       session[:share_link] = @share_link
       @policy = EPubPolicy.new(current_actor, @entity, valid_share_link?)
