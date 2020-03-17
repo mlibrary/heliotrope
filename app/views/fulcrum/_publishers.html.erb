@@ -11,6 +11,7 @@
     <th onclick="sortTable(3, true)">Monographs</th>
     <th onclick="sortTable(4, true)">Assets</th>
     <th onclick="sortTable(5, true)">Users</th>
+    <th></th>
   </tr>
   <% @publishers_stats[:presses].each do |press| %>
     <tr>
@@ -26,6 +27,13 @@
       </td>
       <td><%= press[:assets] %></td>
       <td><%= press[:users] %></td>
+      <td>
+        <% if press[:trash] %>
+          <%= link_to(press_path(press[:subdomain]), method: :delete, class: "btn btn-default", data: { confirm: 'Are you sure?' }) do %>
+            <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+          <% end %>
+      <% end %>
+      </td>
     </tr>
   <% end %>
 </table>

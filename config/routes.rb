@@ -225,7 +225,7 @@ Rails.application.routes.draw do
   end
 
   get '/presses' => 'presses#index'
-  resources :presses, only: %i[new create edit update]
+  resources :presses, only: %i[new create edit update destroy]
   resources :presses, path: '/', only: %i[index edit] do
     resources :roles, path: 'users', only: %i[index create destroy] do
       collection do

@@ -37,6 +37,19 @@ class PressesController < ApplicationController
     end
   end
 
+  def destroy?
+    publisher = Sighrax::Publisher.from_press(@press)
+    !(publisher.children.present? || publisher.user_ids.present? || publisher.work_noids.present?)
+  end
+
+  def destroy
+    @press.destroy if destroy?
+    respond_to do |format|
+      format.html { redirect_to fulcrum_partials_path(:refresh), notice: "Publisher was #{@press.destroyed? ? 'successfully': 'NOT'} destroyed." }
+      format.json { head :no_content }
+    end
+  end
+
   private
 
     def press_params
