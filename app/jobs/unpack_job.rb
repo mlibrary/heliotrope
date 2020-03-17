@@ -48,8 +48,9 @@ class UnpackJob < ApplicationJob
       # things happen with hydra-derivatives. I guess.
       FileUtils.mkdir_p File.dirname root_path unless Dir.exist? File.dirname root_path
 
-      linearize_pdf(root_path, file)
+      # in general `qpf` (linearize_pdf) raises (sometimes insignificant) errors the most, so do it last
       create_pdf_chapters(id, root_path, file)
+      linearize_pdf(root_path, file)
     end
 
     def create_pdf_chapters(id, root_path, file) # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
@@ -133,7 +134,8 @@ class UnpackJob < ApplicationJob
       stdout.close
       err = stderr.read
       stderr.close
-      raise "Unable to execute command \"#{command}\"\n#{err}\n#{out}" unless wait_thr.value.success?
+      # https://tools.lib.umich.edu/jira/browse/HELIO-3247
+      raise "Unable to execute command \"#{command}\"\n#{err}\n#{out}" unless wait_thr.value.success? || err.include?('operation succeeded with warnings')
     end
 
     def epub_webgl_bridge(id, root_path, kind)
