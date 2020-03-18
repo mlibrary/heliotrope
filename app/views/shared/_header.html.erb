@@ -13,7 +13,7 @@
   </hgroup>
 </header>
 <% if defined?(@press.subdomain) && controller_name == "press_catalog" %>
-  <% unless @press.navigation_block.present? %>
+  <% unless @press.aboutware? %>
     <%= render 'shared/brand_press_jumbotron' %>
   <% end %>
 <% end %>

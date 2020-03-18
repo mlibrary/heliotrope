@@ -78,7 +78,7 @@ module BreadcrumbsHelper
     end
 
     def has_aboutware?
-      press.navigation_block.present?
+      press.aboutware?
     end
 
     def press

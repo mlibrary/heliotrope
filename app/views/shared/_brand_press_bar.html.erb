@@ -26,6 +26,8 @@
 
     <div class="collapse navbar-collapse" id="brand-bar-nav">
       <div class="navbar-right">
+        <!-- show special navigation if it exists -->
+        <!-- NOTE: this is not neccessarily the same as "aboutware" see HELIO-3275 -->
         <% if navigation_block(press_subdomain).present? %>
           <%= navigation_block(press_subdomain).html_safe %>
         <% end %>
