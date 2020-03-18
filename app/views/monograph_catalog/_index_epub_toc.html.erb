@@ -26,16 +26,16 @@
         <div class="btn-group download" role="group" aria-label="Read or Download Section">
           <% if interval.downloadable? && @press_policy.interval_download_button?(interval) && epub_policy.show? %>
             <% if @presenter.epub? %>
-              <a class="btn btn-default btn-sm" href="<%= epub_download_interval_path(id: epub_presenter.id, cfi: interval.cfi, title: interval.title) %>" data-turbolinks="false">
+              <a class="btn btn-default btn-sm toc-download-link" href="<%= epub_download_interval_path(id: epub_presenter.id, cfi: interval.cfi, title: interval.title) %>" data-turbolinks="false">
             <% else %>
-              <a class="btn btn-default btn-sm" href="<%= epub_download_interval_path(id: epub_presenter.id, title: interval.title, chapter_index: index) %>" data-turbolinks="false">
+              <a class="btn btn-default btn-sm toc-download-link" href="<%= epub_download_interval_path(id: epub_presenter.id, title: interval.title, chapter_index: index) %>" data-turbolinks="false">
             <% end %>
               <i id="download" class="oi" data-glyph="data-transfer-download" title="Download section" aria-hidden="true"></i> Download</a>
           <% end %>
           <% if @presenter.epub? %>
-            <a class="btn btn-default btn-sm" href="<%= epub_path(id: epub_presenter.id, anchor: interval.cfi + "/4/1:0") %>">
+            <a class="btn btn-default btn-sm toc-link" href="<%= epub_path(id: epub_presenter.id, anchor: interval.cfi + "/4/1:0") %>">
           <% else %>
-            <a class="btn btn-default btn-sm" href="<%= epub_path(id: epub_presenter.id) + '#' + interval.cfi %>" data-turbolinks="false">
+            <a class="btn btn-default btn-sm toc-link" href="<%= epub_path(id: epub_presenter.id) + '#' + interval.cfi %>" data-turbolinks="false">
           <% end %>
               <span class="glyphicon glyphicon-book" title="Read section" aria-hidden="true"></span> Read</a>
         </div>

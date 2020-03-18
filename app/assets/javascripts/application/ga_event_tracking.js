@@ -1,6 +1,6 @@
 $(document).on('turbolinks:load', function() {
   // Register user events with google analytics
-  if (typeof(ga) == typeof(Function)) {
+  if (1) {
     //
     // data-ga-event-* elements
     //
@@ -162,6 +162,11 @@ $(document).on('turbolinks:load', function() {
     // ToC links
     $('a.toc-link').click(function() {
       press_tracker_event(which_category(), 'read_epub_ToC', $(this).attr('href'));
+    });
+
+    // ToC download links
+    $('a.toc-download-link').click(function() {
+      press_tracker_event(which_category(), 'download_epub_ToC', $(this).attr('href'));
     });
 
     //
