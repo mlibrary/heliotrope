@@ -40,7 +40,7 @@ class EBookDownloadPresenter < ApplicationPresenter
     # Get rid of value temp variable when debug logging is no longer needed
     value = ebook_presenter.allow_download?
     Rails.logger.debug("[EBOOK DOWNLOAD] ebook_presenter.allow_download? #{value}")
-    value && EPubPolicy.new(current_actor, Sighrax.from_noid(ebook_presenter.id)).show?
+    value && EntityPolicy.new(current_actor, Sighrax.from_presenter(ebook_presenter)).download?
   end
 
   def downloadable_ebooks?

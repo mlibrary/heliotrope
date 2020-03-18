@@ -182,6 +182,20 @@ RSpec.describe EPubPolicy do
         it { is_expected.to be true }
       end
 
+      context 'allow read product' do
+        let(:products) { [read_product] }
+        let(:read_product) { instance_double(Greensub::Product, 'read_product', identifier: 'read_product_identifier') }
+
+        before do
+          Settings.allow_read_products = [read_product.identifier]
+          allow(Greensub::Product).to receive(:where).with(identifier: Settings.allow_read_products).and_return([read_product])
+        end
+
+        after { Settings.allow_read_products = nil }
+
+        it { is_expected.to be true }
+      end
+
       context 'subscriber' do
         let(:products) { [product] }
 
