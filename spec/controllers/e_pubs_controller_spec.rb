@@ -17,7 +17,12 @@ RSpec.describe EPubsController, type: :controller do
 
     describe '#show' do
       context 'not found' do
-        before { get :show, params: { id: :id } }
+        let(:presenter) { double('presenter', solr_document: {}) }
+
+        before do
+          allow(Hyrax::PresenterFactory).to receive(:build_for).and_return([presenter])
+          get :show, params: { id: :id }
+        end
 
         it { expect(response).to have_http_status(:unauthorized) }
       end
@@ -103,7 +108,12 @@ RSpec.describe EPubsController, type: :controller do
 
     describe '#file' do
       context 'not found' do
-        before { get :file, params: { id: :id, file: 'META-INF/container', format: 'xml' } }
+        let(:presenter) { double('presenter', solr_document: {}) }
+
+        before do
+          allow(Hyrax::PresenterFactory).to receive(:build_for).and_return([presenter])
+          get :file, params: { id: :id, file: 'META-INF/container', format: 'xml' }
+        end
 
         it { expect(response).to have_http_status(:unauthorized) }
       end
@@ -498,33 +508,40 @@ RSpec.describe EPubsController, type: :controller do
   end
 
   describe '#share_link' do
-    let(:now) { Time.now }
-    let(:presenters) { double('presenters', first: presenter) }
-    let(:presenter) { double('presenter', id: 'fileset_id', parent: monograph) }
-    let(:monograph) { double('monograph', id: 'monograph_id', subdomain: press.subdomain, title: ['A Thing']) }
-    let(:entity) { double('entity') }
-    let(:parent) { double('parent', noid: monograph.id) }
+    let(:mono) do
+      ::SolrDocument.new(id: '111111111',
+                         has_model_ssim: ['Monograph'],
+                         title_tesim: ['_Red_'],
+                         press_tesim: press.subdomain,
+                         member_ids_ssim: ['222222222'])
+    end
+    let(:epub) do
+      ::SolrDocument.new(id: '222222222',
+                         has_model_ssim: ['FileSet'],
+                         title_tesim: ['Blue'],
+                         monograph_id_ssim: ['111111111'])
+    end
     let(:policy) { double('policy') }
     let(:access) { true }
     let(:share_link_expiration_time) { 28 * 24 * 3600 } # 28 days in seconds
+    let(:now) { Time.now }
 
     before do
-      allow(Sighrax).to receive(:from_noid).with('noid').and_return(entity)
-      allow(entity).to receive(:is_a?).with(Sighrax::ElectronicPublication).and_return(true)
-      allow(entity).to receive(:parent).and_return(parent)
+      FeaturedRepresentative.create(work_id: '111111111', file_set_id: '222222222', kind: 'epub')
+      ActiveFedora::SolrService.add([mono.to_h, epub.to_h])
+      ActiveFedora::SolrService.commit
       allow(EPubPolicy).to receive(:new).and_return(policy)
       allow(policy).to receive(:show?).and_return(access)
       allow(Time).to receive(:now).and_return(now)
-      allow(Hyrax::PresenterFactory).to receive(:build_for).and_return(presenters)
     end
 
     context 'when the press shares links' do
       let(:press) { create(:press, subdomain: 'blah', share_links: true) }
 
       it 'returns a share link with a valid JSON webtoken and logs the creation' do
-        get :share_link, params: { id: 'noid' }
+        get :share_link, params: { id: '222222222' }
         expect(response).to have_http_status(:success)
-        expect(response.body).to eq "http://test.host/epubs/noid?share=#{JsonWebToken.encode(data: 'noid', exp: now.to_i + share_link_expiration_time)}"
+        expect(response.body).to eq "http://test.host/epubs/222222222?share=#{JsonWebToken.encode(data: '222222222', exp: now.to_i + share_link_expiration_time)}"
         expect(ShareLinkLog.count).to eq 1
         expect(ShareLinkLog.last.action).to eq 'create'
       end
@@ -536,7 +553,7 @@ RSpec.describe EPubsController, type: :controller do
         before { allow_any_instance_of(described_class).to receive(:current_institutions).and_return([inst1, inst2]) }
 
         it 'logs the institutions' do
-          get :share_link, params: { id: 'noid' }
+          get :share_link, params: { id: '222222222' }
           expect(response).to have_http_status(:success)
           expect(ShareLinkLog.count).to eq 1
           expect(ShareLinkLog.last.institution).to eq "U of M|O of U"
@@ -548,7 +565,7 @@ RSpec.describe EPubsController, type: :controller do
       let(:press) { create(:press, subdomain: 'urg') }
 
       it 'returns nothing' do
-        get :share_link, params: { id: 'noid' }
+        get :share_link, params: { id: '222222222' }
         expect(response).to have_http_status(:success)
         expect(response.body).to be_empty
         expect(ShareLinkLog.count).to eq 0
