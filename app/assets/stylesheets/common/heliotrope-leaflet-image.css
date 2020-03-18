@@ -8,3 +8,7 @@
     outline: 6px auto -webkit-focus-ring-color;
     outline-offset: -3px;
 }
+
+.leaflet-bar a, .leaflet-bar a:hover {
+    text-decoration: none !important;
+}
