@@ -32,3 +32,7 @@ handle_service:
   url: https://hdl.handle.net/api/handles
   user: admin
   password: secret
+
+# List of Greensub Products to allow read access to everyone.
+allow_read_products:
+  - allow_read_product

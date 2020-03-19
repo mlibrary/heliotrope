@@ -212,7 +212,7 @@ describe PressHelper do
     subject { banner_product(subdomain) }
 
     let(:subdomain) { 'subdomain' }
-    let(:ebc_product) { create(:product, identifier: 'ebc_' + Time.current.year.to_s) }
+    let(:ebc_product) { create(:product, identifier: 'ebc_backlist') }
     let(:nag_product) { create(:product, identifier: 'nag_' + Time.current.year.to_s) }
 
     before do
