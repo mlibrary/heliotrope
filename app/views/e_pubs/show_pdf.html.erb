@@ -391,9 +391,15 @@
 
         this._preview = form.querySelector(`#x${this._id}-preview > div`);
 
-        var currentScale = this._control._reader.options.scale;
-        this._inputs.querySelector('input[value="' + currentScale + '"]').checked = true;
-        this._current.scale = currentScale;
+        (async() => {
+          while(!this._control._reader.options.scale ||
+                !this._inputs.querySelector('input[value="' + this._control._reader.options.scale + '"]'))
+            await new Promise(resolve => setTimeout(resolve, 200));
+          var currentScale = this._control._reader.options.scale;
+          this._inputs.querySelector('input[value="' + currentScale + '"]').checked = true;
+          this._current.scale = currentScale;
+          this._updatePreview();
+        })();
 
         this._inputs.addEventListener('change', function(event) {
           var target = event.target;
@@ -402,7 +408,6 @@
           }
         }.bind(this));
 
-        this._updatePreview();
       },
 
       updateForm: function(form, options, saveable) {
