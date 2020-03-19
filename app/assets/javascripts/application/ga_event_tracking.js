@@ -164,6 +164,11 @@ $(document).on('turbolinks:load', function() {
       press_tracker_event(which_category(), 'read_epub_ToC', $(this).attr('href'));
     });
 
+    // ToC download links
+    $('a.toc-download-link').click(function() {
+      press_tracker_event(which_category(), 'download_epub_ToC', $(this).attr('href'));
+    });
+
     //
     // E-Reader event tracking
     // Citation, preferences, ToC selections handled in views/e_pubs/show.html.erb
