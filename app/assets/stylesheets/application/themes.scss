@@ -2443,7 +2443,73 @@ $barpublishing-white: #fff;
 
   }
 
+  @media only screen and (max-width : 992px) {
+    
+    .navbar-header {
+      float: none;
+      margin-bottom: 3em;
+    }
+  
+    .navbar-toggle {
+      display: block;
+    }
+  
+    .navbar-collapse {
+      border-top: 1px solid transparent;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.1);
+    }
+  
+    .navbar-collapse.collapse {
+      display: none!important;
+    }
+
+    .barpublishing #brand-bar .custom-nav {
+      padding-top: 1em;
+      padding-left: 1em;
+    }
+  
+    .navbar-default .navbar-nav {
+      padding-top: 0;
+      padding-right: 0;
+      margin-top: 0;
+    }
+
+    .navbar-nav>li {
+      float: none;
+    }
+  
+    .navbar-nav>li>a {
+      padding-top: 10px;
+      padding-bottom: 10px;
+      line-height: 3.5rem;
+    }
+
+    .navbar-collapse.collapse.in { 
+      display: block!important;
+    }
+  
+    .collapsing {
+      overflow: hidden!important;
+    }
+
+    #brand-bar form.search-form, .navbar-form {
+      padding: 10px 0;
+      margin: 0;
+      width: 100%;
+      border: 0;
+      float: none !important;
+    }
+
+    .navbar-form .input-group .input-group-btn {
+      width: 1%;
+    }
+  
+  }
+
+
 }
+
+
 
 @media(max-width: 768px) {
   .barpublishing .monograph .message {
