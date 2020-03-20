@@ -1993,18 +1993,25 @@ $amherst-white: #fafafa;
 //
 ///////////////////////////////////////////////
 // colors
-$barpublishing-brand-color: #c42b24;
-$barpublishing-link: #3b5999;
-$barpublishing-accent-link: #2d4474;
+$barpublishing-brand-color: #d40b13;
+$barpublishing-link: #000;
+$barpublishing-link-hover: #d40b13;
+
+$barpublishing-grey-1:#dfdfdf;
+$barpublishing-grey-2:#aeaeae;
+$barpublishing-grey-3:#606060;
+
+$barpublishing-background: #fafafa;
+
 $barpublishing-black-80: #333;
 $barpublishing-slate: #42606f;
 $barpublishing-grey-1: #9ba1a7;
-$barpublishing-white: #fafafa;
+$barpublishing-white: #fff;
 
 // typography
 
-@mixin helvetica {
-  font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif;
+@mixin arial {
+  font-family: Arial,sans-serif;
 }
 
 @mixin georgia {
@@ -2014,39 +2021,41 @@ $barpublishing-white: #fafafa;
 .barpublishing {
 
   // typography
-  @include helvetica;
+  @include arial;
 
   h1,
   h2,
   h3,
   h4,
   h5 {
-    font-weight: 500;
+    font-weight: 600;
   }
 
   // links
   a {
-    color: $barpublishing-link;
+    color: $barpublishing-link-hover;
   }
 
   a:hover,
   a:active {
-    color: $barpublishing-accent-link;
+    color: $barpublishing-link-hover;
+    text-decoration: underline;
   }
 
   // buttons
 
   .btn-default {
-    @include button-background-color($barpublishing-slate);
+    @include button-background-color($barpublishing-grey-3);
     @include button-font-color($barpublishing-white);
-    border-color: $barpublishing-slate;
+    border-color: $barpublishing-grey-3;
   }
 
 
   .btn-default:hover,
   .btn-default:active {
-    @include button-hover-background-color($barpublishing-grey-1);
-    @include button-hover-font-color($barpublishing-black-80);
+    @include button-hover-background-color($barpublishing-brand-color);
+    @include button-font-color($barpublishing-white);
+    text-decoration: none;
   }
 
   // navigation menu
@@ -2058,14 +2067,13 @@ $barpublishing-white: #fafafa;
 
   #brand-bar {
     background-color: $barpublishing-brand-color;
+    border: 0;
+    border-radius: 0;
+    min-height: 100px;
 
     .navbar-brand {
-      @include georgia;
+      @include arial;
       color: $barpublishing-white;
-      font-weight: 500;
-      text-transform: uppercase;
-      font-size: 1.8em;
-      letter-spacing: 2px;
     }
 
     .navbar-nav {
@@ -2084,9 +2092,38 @@ $barpublishing-white: #fafafa;
     }
 
     button.search-submit {
-      background-color: $barpublishing-slate;
-      border-color: $barpublishing-slate;
+      background-color: $barpublishing-grey-3;
+      border-color: $barpublishing-grey-3;
       color: $barpublishing-white;
+      height: 34px;
+    }
+
+    form.search-form {
+      float: right !important;
+      padding-top: 3.2em;
+    }
+
+    .custom-nav {
+      display: inline-block;
+      padding-top: 5em;
+
+      li::after {
+        content: "|";
+        color: $barpublishing-white;
+      }
+
+      li:last-of-type::after {
+        content: "";
+      }
+
+      a {
+        color: $barpublishing-white;
+        padding-right: 10px;
+      }
+
+      a:hover, a:active {
+        text-decoration: underline;
+      }
     }
 
   }
@@ -2095,13 +2132,27 @@ $barpublishing-white: #fafafa;
 
   // jumbotron
   .jumbotron {
-    padding-top: 1.5em;
-    padding-bottom: 1em;
+    background: url(/assets/bar-jumbotron.png) no-repeat center;
+    height: 340px;
+    padding: 0;
+    background-color: $barpublishing-grey-2;
 
     p {
-      font-size: 16px;
+      float: right;
+      text-align: right;
+      font-size: 20px;
       margin-bottom: 0;
-      font-weight: 400;
+      font-weight: 500;
+      @include georgia;
+      color: $barpublishing-white;
+      max-width: 282px;
+      padding-top: 170px;
+      filter: drop-shadow(0 0 30px #333);
+
+      span {
+        font-size: 32px;
+        display: block;
+      }
     }
 
     .container {
@@ -2111,8 +2162,7 @@ $barpublishing-white: #fafafa;
     .logo {
 
       img {
-        width: 190px;
-        margin-right: 3em;
+        display: none;
       }
 
     }
@@ -2127,8 +2177,23 @@ $barpublishing-white: #fafafa;
           font-weight: 600;
         }
         a {
-          color: $barpublishing-slate;
+          color: $barpublishing-link;
         }
+        a:hover, a:active {
+          color: $barpublishing-link-hover;
+          text-decoration: none;
+        }
+        p.authors {
+          margin-bottom: 2px;
+          color: $barpublishing-grey-3;
+        }
+        span.pub-date, span.bar-number {
+          font-size: 13px;
+          display: block;
+          margin-bottom: 2px;
+          color: $barpublishing-grey-3;
+        }
+
       }
     }
   }
@@ -2156,11 +2221,11 @@ $barpublishing-white: #fafafa;
   }
 
   h3.panel-title a, a.more_facets_link {
-    color: #333;
+    color: #000;
   }
 
   .panel-heading.collapse-toggle .panel-title::after {
-    color: #333;
+    color: #000;
   }
 
   .panel-body {
@@ -2185,18 +2250,18 @@ $barpublishing-white: #fafafa;
   #per_page-dropdown .dropdown-toggle:hover,
   #sort-dropdown .dropdown-toggle:active,
   #per_page-dropdown .dropdown-toggle:active {
-    color: $barpublishing-black-80;
+    color: $barpublishing-white;
 
     .caret {
-      color: $barpublishing-black-80;
+      color: $barpublishing-white;
     }
 
   }
 
   // search resources
   button.search-submit {
-    background-color: $barpublishing-slate;
-    border-color: $barpublishing-slate;
+    background-color: $barpublishing-grey-3;
+    border-color: $barpublishing-grey-3;
     color: $barpublishing-white;
   }
 
@@ -2213,8 +2278,8 @@ $barpublishing-white: #fafafa;
   .pagination {
      li a, li span {
 
-       background-color: $barpublishing-slate;
-       border-color: $barpublishing-slate;
+       background-color: $barpublishing-grey-3;
+       border-color: $barpublishing-grey-3;
        color: $barpublishing-white;
      }
 
@@ -2222,9 +2287,9 @@ $barpublishing-white: #fafafa;
      li>a:focus,
      li>span:hover,
      li>span:focus {
-       background-color: $barpublishing-grey-1;
-       border-color: $barpublishing-slate;
-       color: $barpublishing-black-80;
+       background-color: $barpublishing-brand-color;
+       border-color: $barpublishing-brand-color;
+       color: $barpublishing-white;
      }
 
 
@@ -2234,9 +2299,9 @@ $barpublishing-white: #fafafa;
      .active>span,
      .active>span:hover,
      .active>span:focus {
-       background-color: $barpublishing-grey-1;
-       border-color: $barpublishing-slate;
-       color: $barpublishing-black-80;
+       background-color: $barpublishing-grey-2;
+       border-color: $barpublishing-grey-2;
+       color: $barpublishing-white;
      }
 
      .disabled>span,
@@ -2245,22 +2310,60 @@ $barpublishing-white: #fafafa;
      .disabled>a,
      .disabled>a:hover,
      .disabled>a:focus {
-      background-color: $barpublishing-grey-1;
-      border-color: $barpublishing-slate;
-      color: $barpublishing-black-80;
+      background-color: $barpublishing-grey-2;
+      border-color: $barpublishing-grey-2;
+      color: $barpublishing-white;
      }
   }
 
   //footer
   footer {
+    border-top: 20px solid $barpublishing-grey-2;
+    background-color: $barpublishing-brand-color;
+
     a,
     a:hover,
     a:active {
       color: $barpublishing-white;
     }
+
+    .press-block-a {
+      .custom-footer {
+        img { 
+          margin-bottom: 20px;
+        }
+        span {
+          display: block;
+        }
+        span.phone {
+          margin-bottom: 5px;
+          font-weight: 600;
+        }
+        span.web {
+          margin-bottom: 20px;
+        }
+      
+        p.social {
+          a {
+            padding-right: 0.75em;
+            svg {
+              display: inline-block;
+              vertical-align: middle;
+              fill: $barpublishing-white;
+            }
+          }
+          a:hover {
+            svg {
+              filter: opacity(50%);
+            }
+          }
+        }
+
+      }
+    }
     .press-block-a,
     .press-block-b {
-      background-color:  $barpublishing-slate;
+      background-color:  $barpublishing-brand-color;
       font-weight: 400;
 
       a,
@@ -2270,7 +2373,7 @@ $barpublishing-white: #fafafa;
       }
 
       img {
-        width: 125px;
+        width: 175px;
       }
 
     }
@@ -2281,12 +2384,13 @@ $barpublishing-white: #fafafa;
 
       img {
         width: auto !important;
-        margin-right: 1em;
+        margin-right: 0;
         height: 25px;
+        vertical-align: baseline;
       }
     }
     .platform {
-       background-color: $barpublishing-black-80;
+       background-color: $barpublishing-brand-color;
     }
   }
 

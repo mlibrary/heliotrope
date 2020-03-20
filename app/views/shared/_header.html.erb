@@ -2,8 +2,8 @@
 <header id="banner" role="banner">
   <hgroup>
     <% if press_subdomain.present? %>
-      <% if press_subdomain == 'leverpress' %>
-        <%= render 'shared/brand_press_bar_lever' %>
+      <% if press_subdomain == 'leverpress' || 'barpublishing' %>
+        <%= render 'shared/brand_press_bar_custom' %>
       <% else %>
         <%= render 'shared/brand_press_bar' %>
       <% end %>

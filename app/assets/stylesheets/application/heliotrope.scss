@@ -302,6 +302,10 @@ footer.press {
       border-bottom: none;
       padding-top: 2em;
 
+      a {
+        display: inline-block; 
+      }
+
       .thumbnail {
         text-align: left;
         border: none;

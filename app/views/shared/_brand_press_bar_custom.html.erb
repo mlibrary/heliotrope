@@ -1,4 +1,10 @@
-<nav id="brand-bar" class="navbar navbar-default navbar-fixed-top">
+<% if press_subdomain.present? %>
+  <% if press_subdomain == 'leverpress' %>
+    <nav id="brand-bar" class="navbar navbar-default navbar-fixed-top">
+  <% else %>
+    <nav id="brand-bar" class="navbar navbar-default">
+  <% end %>
+<% end %>
   <div class="container">
     <!-- brand and toggle grouped together -->
     <div class="navbar-header">
@@ -9,14 +15,16 @@
         <span class="icon-bar"></span>
       </button>
 
-      <% if defined?(@press.navigation_block) %>
-        <a class="navbar-brand" href="<%= @press.press_url %>">
+      <% if press_subdomain.present? %>
+        <% if press_subdomain == 'leverpress' %>
+          <a class="navbar-brand" href="<%= @press.press_url %>">
             <%= image_tag "LeverLogo.svg", class: 'navbar-brand-logo', alt: 'Lever Press', height: '70', width: 'auto' %><%= @press.name %>
-        </a>
-      <% else %>
+          </a>
+        <% elsif press_subdomain == 'barpublishing' %>
         <a class="navbar-brand" href="<%= main_app.press_catalog_path(@press) %>">
-            <%= image_tag "LeverLogo.svg", class: 'navbar-brand-logo', alt: 'Lever Press', height: '70', width: 'auto' %><%= @press.name %>
+            <%= image_tag "bar-digital-logo.png", class: 'navbar-brand-logo', alt: 'BAR Publishing', height: '70', width: 'auto' %>
         </a>
+        <% end %>
       <% end %>
     </div>
 
