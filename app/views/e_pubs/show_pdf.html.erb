@@ -849,18 +849,6 @@
         return { start: { cfi: this.PDFViewerApplication.page } };
       },
 
-      next: function() {
-        if ( this.PDFViewerApplication.page < this.PDFViewerApplication.pagesCount ) {
-          this.PDFViewerApplication.page++;
-        }
-      },
-
-      prev: function() {
-        if ( this.PDFViewerApplication.page > 1 ) {
-          this.PDFViewerApplication.page--;
-        }
-      },
-
       _scroll: function(delta) {
         switch(delta) {
           case 'PREV':
