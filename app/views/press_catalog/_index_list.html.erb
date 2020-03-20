@@ -1,7 +1,7 @@
 <% # container for document in index list view -%>
 <%= link_to(url_for_document(document), document_link_params(document, counter: counter)) do %>
   <div class="col-sm-2 thumbnail">
-    <img class="img-responsive" src=<%= raw presenter.work_thumbnail_src %> alt="">
+    <img class="img-responsive" src=<%= raw presenter.work_thumbnail_src(145) %> alt="">
   </div>
   <div class="col-sm-10 caption">
     <h3 class="index_title">

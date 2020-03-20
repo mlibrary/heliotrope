@@ -1453,7 +1453,7 @@ footer.press {
 ///////////////////////////////////
 // RESPONSIVE MEDIA QUERIES
 ///////////////////////////////////
-@media(max-width: 992px) {
+@media only screen and (max-width: 992px) {
   .press {
     .page_links {
       display: block;
@@ -1478,7 +1478,7 @@ footer.press {
   }
 }
 
-@media(max-width: 768px) {
+@media only screen and (max-width: 768px) {
 
   .press {
     #facets .top-panel-heading {
@@ -1506,7 +1506,7 @@ footer.press {
 
 }
 
-@media(max-width: 460px) {
+@media only screen and (max-width: 460px) {
   .press {
     .search-widgets {
       clear: right;
