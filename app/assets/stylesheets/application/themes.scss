@@ -2132,7 +2132,7 @@ $barpublishing-white: #fff;
 
   // jumbotron
   .jumbotron {
-    background: url(/assets/bar-jumbotron.png) no-repeat center;
+    background: image-url("bar-jumbotron.png") no-repeat center;
     height: 340px;
     padding: 0;
     background-color: $barpublishing-grey-2;
