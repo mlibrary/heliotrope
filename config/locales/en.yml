@@ -135,7 +135,7 @@ en:
     download: "Download CSV"
   mime_type: "Mime Type"
   monograph_catalog:
-    banner: "To support remote teaching and research during the COVID-19 global health event, titles in this collection are free-to-read until April 30, 2020. Librarians can <a href=\"https://umich.qualtrics.com/jfe/form/SV_cTNlZAMty6ReTg9\" id=\"banner-qualtrics-link\">find more information and register for updates here</a>. Please note that titles are only downloadable by patrons of purchasing libraries, with the exception of <a href=\"https://www.fulcrum.org/michigan?f[open_access_sim][]=yes&locale=en\" id=\"banner-openaccess-link\">some titles that are open access</a>. Information about purchasing (including special pricing) is available at <a href=\"https://www.press.umich.edu/librarians\" id=\"banner-librarians-link\">our website</a>."
+    banner: "To support remote teaching and research during the COVID-19 global health event, titles in this collection are free-to-read until April 30, 2020. We encourage librarians to quickly <a href=\"https://umich.qualtrics.com/jfe/form/SV_cTNlZAMty6ReTg9\">register</a> their libraries to receive collection updates and communications. Please note that titles are only downloadable by patrons of purchasing libraries, with the exception of some titles that are open access."
     index:
       buy: "Buy a print copy of %{title}"
       buy_book: "Buy Book"
@@ -182,7 +182,7 @@ en:
   permissions_expiration_date: "Permissions Expiration Date"
   press: "Publisher (Fulcrum subdivision)"
   press_catalog:
-    banner: "To support remote teaching and research during the COVID-19 global health event, titles in this collection are free-to-read until April 30, 2020. Librarians can <a href=\"https://umich.qualtrics.com/jfe/form/SV_cTNlZAMty6ReTg9\" id=\"banner-qualtrics-link\">find more information and register for updates here</a>. Please note that titles are only downloadable by patrons of purchasing libraries, with the exception of <a href=\"https://www.fulcrum.org/michigan?f[open_access_sim][]=yes&locale=en\" id=\"banner-openaccess-link\">some titles that are open access</a>. Information about purchasing (including special pricing) is available at <a href=\"https://www.press.umich.edu/librarians\" id=\"banner-librarians-link\">our website</a>."
+    banner: "To support remote teaching and research during the COVID-19 global health event, titles in this collection are free-to-read until April 30, 2020. We encourage librarians to quickly <a href=\"https://umich.qualtrics.com/jfe/form/SV_cTNlZAMty6ReTg9\">register</a> their libraries to receive collection updates and communications. Please note that titles are only downloadable by patrons of purchasing libraries, with the exception of some titles that are open access."
     search:
       form:
         q:
