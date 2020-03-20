@@ -2398,23 +2398,23 @@ $barpublishing-white: #fff;
   #reader {
 
     .button {
-      @include epub-button-background-color($barpublishing-brand-color,$barpublishing-slate,$barpublishing-white);
+      @include epub-button-background-color($barpublishing-brand-color,$barpublishing-grey-3,$barpublishing-white);
     }
 
     .button--lg {
-      @include epub-button-background-color($barpublishing-brand-color,$barpublishing-slate,$barpublishing-white);
+      @include epub-button-background-color($barpublishing-brand-color,$barpublishing-grey-3,$barpublishing-white);
     }
 
     .button--inline {
-      @include epub-button-background-color($barpublishing-brand-color,$barpublishing-slate,$barpublishing-white);
+      @include epub-button-background-color($barpublishing-brand-color,$barpublishing-grey-3,$barpublishing-white);
     }
 
     .button--sm {
-      @include epub-button-background-color($barpublishing-brand-color,$barpublishing-slate,$barpublishing-white);
+      @include epub-button-background-color($barpublishing-brand-color,$barpublishing-grey-3,$barpublishing-white);
     }
 
     .button--sm.cozy-preferences {
-      @include epub-button-background-color(#f1f1f1,$barpublishing-slate,$barpublishing-white);
+      @include epub-button-background-color(#f1f1f1,$barpublishing-grey-3,$barpublishing-white);
       color: $barpublishing-brand-color;
     }
 
@@ -2424,7 +2424,7 @@ $barpublishing-white: #fff;
     }
 
     i[class^='icon-chevron-']:hover {
-      @include epub-hover-prev-next-color($barpublishing-slate);
+      @include epub-hover-prev-next-color($barpublishing-grey-3);
       transition: 0.2s ease-in;
     }
 
