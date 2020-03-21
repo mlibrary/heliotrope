@@ -1,4 +1,7 @@
-<!DOCTYPE html <%= 'style="height:100%;"' if @presenter.image? %>>
+<% style = '' %>
+<% style = "height:100%;" if @presenter.image? %>
+<% style = "height:100%;overflow:scroll;" if @presenter&.interactive_map? %>
+<!DOCTYPE html <%= "style=\"#{style}\"".html_safe if style.length.positive? %>>
   <head>
     <title><%= content_for?(:page_title) ? yield(:page_title) : yield %></title>
     <!-- Ensure all links open outside the iframe, in a new tab -->
@@ -8,7 +11,7 @@
     <!-- Javascript -->
     <%= javascript_include_tag 'embed' %>
   </head>
-  <body <%= 'style="height:100%;"' if @presenter.image? %>>
+  <body <%= "style=\"#{style}\"".html_safe if style.length.positive? %>>
     <%= content_for?(:body) ? yield(:body) : yield %>
   </body>
 </html>
