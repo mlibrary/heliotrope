@@ -120,6 +120,10 @@ module PressHelper
       Greensub::Product.find_by(identifier: 'ebc_backlist')
     when 'heliotrope'
       Greensub::Product.find_by(identifier: 'nag_' + Time.current.year.to_s)
+    else
+      parent = Sighrax::Publisher.from_subdomain(subdomain).parent
+      return nil unless parent.valid?
+      banner_product(parent.subdomain)
     end
   end
 
