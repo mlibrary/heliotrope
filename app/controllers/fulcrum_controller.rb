@@ -29,6 +29,8 @@ class FulcrumController < ApplicationController
       when 'verify'
         AptrustVerifyJob.perform_now(params[:noid])
       end
+    when 'recache_in_common_metadata'
+      RecacheInCommonMetadataJob.perform_later
     when 'reindex_everything'
       ReindexJob.perform_later('everything')
     when 'reindex_monographs'

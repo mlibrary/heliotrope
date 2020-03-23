@@ -80,54 +80,67 @@ RSpec.describe SessionsController, type: :controller do
     end
   end
 
-  describe '#discovery_feed' do
-    it 'gets full discovery feed' do
-      Greensub::Institution.create!(identifier: '1', name: 'University of Michigan', site: 'Site', login: 'Login', entity_id: 'https://shibboleth.umich.edu/idp/shibboleth')
-      Greensub::Institution.create!(identifier: '2', name: 'College', site: 'Site', login: 'Login', entity_id: 'https://shibboleth.college.edu/idp/shibboleth')
-      get :discovery_feed
-      expect(response).to be_success
-      expect { JSON.parse response.body }.not_to raise_error
-      expect(JSON.parse(response.body).size).to be > 1
+  context 'discovery feed' do
+    let(:job) { instance_double(RecacheInCommonMetadataJob, 'job', download_xml: true, parse_xml: true, load_json: feed) }
+    let(:feed) do
+      JSON.parse(
+        <<~DISCO_FEED
+          [
+          {"entityID":"https://shibboleth.umich.edu/idp/shibboleth","Descriptions":[{"value":"The University of Michigan","lang":"en"}],"DisplayNames":[{"value":"University of Michigan","lang":"en"}],"InformationURLs":[{"value":"http://www.umich.edu/","lang":"en"}],"Logos":[{"value":"https://shibboleth.umich.edu/images/StackedBlockM-InC.png","lang":"en"}],"PrivacyStatementURLs":[{"value":"https://documentation.its.umich.edu/node/262/","lang":"en"}]},
+          {"entityID":"urn:mace:incommon:msu.edu","Descriptions":[],"DisplayNames":[{"value":"Michigan State University","lang":"en"}],"InformationURLs":[],"Logos":[{"value":"https://brand.msu.edu/_files/images/masthead-helmet-green.png","lang":"en"}],"PrivacyStatementURLs":[{"value":"https://msu.edu/privacy/","lang":"en"}]}
+          ]
+        DISCO_FEED
+      )
     end
-  end
+    let(:institution1) { Greensub::Institution.create(identifier: '1', name: 'University of Michigan', site: 'Site', login: 'Login', entity_id: 'https://shibboleth.umich.edu/idp/shibboleth') }
+    let(:institution2) { Greensub::Institution.create(identifier: '2', name: 'Michigan State University', site: 'Site', login: 'Login', entity_id: 'urn:mace:incommon:msu.edu') }
 
-  describe '#discovery_feed/id' do
-    let(:monograph) do
-      create(:public_monograph) do |m|
-        m.ordered_members << file_set
-        m.save!
-        file_set.save!
-        m
+    before { allow(RecacheInCommonMetadataJob).to receive(:new).and_return(job) }
+
+    describe '#discovery_feed' do
+      it 'gets full discovery feed' do
+        get :discovery_feed
+        expect(response).to be_success
+        expect { JSON.parse response.body }.not_to raise_error
+        expect(JSON.parse(response.body).size).to eq(2)
+        expect(JSON.parse(response.body)[0]['entityID']).to eq('https://shibboleth.umich.edu/idp/shibboleth')
+        expect(JSON.parse(response.body)[1]['entityID']).to eq('urn:mace:incommon:msu.edu')
       end
     end
-    let(:file_set) { create(:public_file_set) }
 
-    before { clear_grants_table }
+    describe '#discovery_feed/id' do
+      let(:monograph) do
+        create(:public_monograph) do |m|
+          m.ordered_members << file_set
+          m.save!
+          file_set.save!
+          m
+        end
+      end
+      let(:file_set) { create(:public_file_set) }
 
-    it 'gets parameterized discovery feed' do
-      m = Sighrax.from_noid(monograph.id)
-      component = Greensub::Component.create!(identifier: m.resource_token, name: m.title, noid: m.noid)
-      institution1 = Greensub::Institution.create!(identifier: '1', name: 'University of Michigan', site: 'Site', login: 'Login', entity_id: 'https://shibboleth.umich.edu/idp/shibboleth')
-      # To show that this institution is not used
-      institution2 = Greensub::Institution.create!(identifier: '2', name: 'College', site: 'Site', login: 'Login', entity_id: 'https://shibboleth.college.edu/idp/shibboleth') # rubocop:disable Lint/UselessAssignment
-      product = Greensub::Product.create!(identifier: 'product', name: 'name', purchase: 'purchase')
-      product.components << component
-      product.save!
-      Greensub.subscribe(subscriber: institution1, target: product)
-      get :discovery_feed, params: { id: file_set.id }
-      expect(response).to have_http_status(:success)
-      expect { JSON.parse response.body }.not_to raise_error
-      expect(JSON.parse(response.body).size).to be(1)
-      expect(JSON.parse(response.body)[0]['entityID']).to eq('https://shibboleth.umich.edu/idp/shibboleth')
-    end
+      before { clear_grants_table }
 
-    it 'gets empty discovery feed if given bogus id' do
-      Greensub::Institution.create!(identifier: '1', name: 'University of Michigan', site: 'Site', login: 'Login', entity_id: 'https://shibboleth.umich.edu/idp/shibboleth')
-      Greensub::Institution.create!(identifier: '2', name: 'College', site: 'Site', login: 'Login', entity_id: 'https://shibboleth.college.edu/idp/shibboleth')
-      get :discovery_feed, params: { id: 'bogus_id' }
-      expect(response).to have_http_status(:success)
-      expect { JSON.parse response.body }.not_to raise_error
-      expect(JSON.parse(response.body).size).to be 0
+      it 'gets parameterized discovery feed' do
+        m = Sighrax.from_noid(monograph.id)
+        component = Greensub::Component.create!(identifier: m.resource_token, name: m.title, noid: m.noid)
+        product = Greensub::Product.create!(identifier: 'product', name: 'name', purchase: 'purchase')
+        product.components << component
+        product.save!
+        Greensub.subscribe(subscriber: institution1, target: product)
+        get :discovery_feed, params: { id: file_set.id }
+        expect(response).to have_http_status(:success)
+        expect { JSON.parse response.body }.not_to raise_error
+        expect(JSON.parse(response.body).size).to eq(1)
+        expect(JSON.parse(response.body)[0]['entityID']).to eq('https://shibboleth.umich.edu/idp/shibboleth')
+      end
+
+      it 'gets empty discovery feed if given bogus id' do
+        get :discovery_feed, params: { id: 'bogus_id' }
+        expect(response).to have_http_status(:success)
+        expect { JSON.parse response.body }.not_to raise_error
+        expect(JSON.parse(response.body).size).to eq(0)
+      end
     end
   end
 end
