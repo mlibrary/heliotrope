@@ -228,6 +228,17 @@ describe PressHelper do
       it { is_expected.to eq ebc_product }
     end
 
+    context 'child of michigan' do
+      let(:subdomain) { 'wolverine' }
+      let(:publisher) { instance_double(Sighrax::Publisher, 'publisher', parent: parent_publisher) }
+      let(:parent_publisher) { instance_double(Sighrax::Publisher, 'parent_publisher', valid?: true, subdomain: parent_subdomain) }
+      let(:parent_subdomain) { 'michigan' }
+
+      before { allow(Sighrax::Publisher).to receive(:from_subdomain).with(subdomain).and_return(publisher) }
+
+      it { is_expected.to eq ebc_product }
+    end
+
     context 'heliotrope' do
       let(:subdomain) { 'heliotrope' }
 
