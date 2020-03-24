@@ -1,7 +1,7 @@
 <% # container for document in index list view -%>
 <%= link_to(url_for_document(document), document_link_params(document, counter: counter)) do %>
   <div class="col-sm-2 thumbnail">
-    <img class=\"img-responsive\" src=<%= raw presenter.work_thumbnail_src(145) %> alt="">
+    <img class="img-responsive" src=<%= raw presenter.work_thumbnail_src(145) %> alt="">
   </div>
   <div class="col-sm-10 caption">
     <h3 class="index_title">
@@ -10,10 +10,10 @@
     <p aria-label="By <%= presenter.authors %>" class="authors"><%= presenter.authors %></p>
     <% if press.subdomain == 'barpublishing' %>
       <% if presenter.date_created.length.positive? %>
-        <p><strong><%= presenter.date_created[0] %></strong></p>
+        <span class="pub-date">(<%= presenter.date_created[0] %>)</span>
       <% end %>
       <% if presenter.bar_number&.length&.positive? %>
-        <p><strong><%= t('bar_number') %>: </strong> <%= presenter.bar_number %></p>
+        <span class="bar-number"><strong><%= t('bar_number') %>:</strong> <%= presenter.bar_number %></span>
       <% end %>
     <% end %>
   </div>
