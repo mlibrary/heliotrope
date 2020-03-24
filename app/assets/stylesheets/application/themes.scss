@@ -2011,7 +2011,7 @@ $barpublishing-white: #fff;
 // typography
 
 @mixin arial {
-  font-family: Arial,sans-serif;
+  font-family: Arial, sans-serif;
 }
 
 @mixin georgia {
@@ -2133,9 +2133,9 @@ $barpublishing-white: #fff;
   // jumbotron
   .jumbotron {
     background: image-url("bar-jumbotron.png") no-repeat center;
-    height: 340px;
+    height: 320px;
     padding: 0;
-    background-color: $barpublishing-grey-2;
+    background-color: #e8e8e8;
 
     p {
       float: right;
