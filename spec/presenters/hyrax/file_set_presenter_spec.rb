@@ -655,4 +655,40 @@ RSpec.describe Hyrax::FileSetPresenter do
       it { is_expected.to be true }
     end
   end
+
+  describe '#probable_image?' do
+    subject { presenter.probable_image? }
+
+    let(:fileset_doc) {
+      SolrDocument.new(id: 'fileset_id',
+                       has_model_ssim: ['FileSet'],
+                       resource_type_ssi: mime_type,
+                       label_tesim: label)
+    }
+    let(:mime_type) { 'image/jpeg' }
+    let(:label) { 'some_image.jpg' }
+
+    it { is_expected.to be true }
+
+    context '.jpg extension with no MIME type' do
+      let(:mime_type) { nil }
+      let(:label) { 'some_image.jpg' }
+
+      it { is_expected.to be true }
+    end
+
+    context '.pdf extension with PDF MIME type' do
+      let(:mime_type) { 'application/pdf' }
+      let(:label) { 'some_doc.pdf' }
+
+      it { is_expected.to be false }
+    end
+
+    context '.pdf extension with no MIME type' do
+      let(:mime_type) { nil }
+      let(:label) { 'some_doc.pdf' }
+
+      it { is_expected.to be false }
+    end
+  end
 end

@@ -303,6 +303,14 @@ module Hyrax
       solr_document['score_version_tesim']
     end
 
+    # Returns true if the MIME type is image, or if MIME type is not available,
+    # if the file extension is a known image type.
+    def probable_image?
+      return true if mime_type&.start_with?('image/')
+      return false if label.nil?
+      %w[.bmp .gif .jp2 .jpeg .jpg .png .tif .tiff].member?(File.extname(label).downcase)
+    end
+
     private
 
       def fetch_parent_presenter
