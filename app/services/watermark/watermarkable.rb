@@ -13,9 +13,9 @@ module Watermark
         pdf = CombinePDF.parse(content, allow_optional_content: true)
         stamps = {} # Cache of stamps with potentially different media boxes
         pdf.pages.each do |page|
-          stamp = stamps[page[:MediaBox].to_s] || CombinePDF.parse(watermark(fmt, size, page[:MediaBox])).pages[0]
+          stamp = stamps[page[:TrimBox].to_s] || CombinePDF.parse(watermark(fmt, size, page[:TrimBox])).pages[0]
           page << stamp
-          stamps[page[:MediaBox].to_s] = stamp
+          stamps[page[:TrimBox].to_s] = stamp
         end
 
         pdf.to_pdf
