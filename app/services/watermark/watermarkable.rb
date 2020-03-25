@@ -13,13 +13,20 @@ module Watermark
         pdf = CombinePDF.parse(content, allow_optional_content: true)
         stamps = {} # Cache of stamps with potentially different media boxes
         pdf.pages.each do |page|
-          stamp = stamps[page[:MediaBox].to_s] || CombinePDF.parse(watermark(fmt, size, page[:MediaBox])).pages[0]
+          stamp = stamps[page_box(page).to_s] || CombinePDF.parse(watermark(fmt, size, page_box(page))).pages[0]
           page << stamp
-          stamps[page[:MediaBox].to_s] = stamp
+          stamps[page_box(page).to_s] = stamp
         end
 
         pdf.to_pdf
       end
+    end
+
+    # https://wiki.scribus.net/canvas/Talk:PDF_Boxes_:_mediabox,_cropbox,_bleedbox,_trimbox,_artbox
+    # "A PDF always has a MediaBox definition. All the other page boxes do not
+    # necessarily have to be present within the file."
+    def page_box(page)
+      page[:TrimBox] ? page[:TrimBox] : page[:MediaBox]
     end
 
     def watermark_authorship(presenter)
@@ -91,7 +98,7 @@ module Watermark
     end
 
     def cache_key(entity, text, size)
-      "#{entity.noid}-#{Digest::MD5.hexdigest(text)}-#{size}-#{cache_key_timestamp}"
+      "PDFWM-#{entity.noid}-#{Digest::MD5.hexdigest(text)}-#{size}-#{cache_key_timestamp}"
     end
   end
 end
