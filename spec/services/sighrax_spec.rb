@@ -299,20 +299,20 @@ RSpec.describe Sighrax do
       end
     end
 
-    describe '#hyrax_can?' do
-      subject { described_class.hyrax_can?(actor, action, target) }
+    describe '#ability_can?' do
+      subject { described_class.ability_can?(actor, action, target) }
 
       let(:actor) { double('actor', is_a?: anonymous) }
       let(:anonymous) { false }
       let(:action) { :action }
       let(:target) { double('target', valid?: valid, noid: 'noid') }
       let(:valid) { true }
-      let(:allow_hyrax_can) { true }
+      let(:allow_ability_can) { true }
       let(:ability) { double('ability') }
       let(:can) { true }
 
       before do
-        allow(Incognito).to receive(:allow_hyrax_can?).with(actor).and_return(allow_hyrax_can)
+        allow(Incognito).to receive(:allow_ability_can?).with(actor).and_return(allow_ability_can)
         allow(Ability).to receive(:new).with(actor).and_return(ability)
         allow(ability).to receive(:can?).with(action, target.noid).and_return(can)
       end
@@ -338,8 +338,8 @@ RSpec.describe Sighrax do
           it { is_expected.to be false }
         end
 
-        context 'do not allow hyrax_can' do
-          let(:allow_hyrax_can) { false }
+        context 'do not allow ability_can' do
+          let(:allow_ability_can) { false }
 
           it { is_expected.to be false }
         end

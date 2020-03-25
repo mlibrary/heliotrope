@@ -77,11 +77,11 @@ module Sighrax # rubocop:disable Metrics/ModuleLength
       (products & component_products).any?
     end
 
-    def hyrax_can?(actor, action, target)
+    def ability_can?(actor, action, target)
       return false if actor.is_a?(Anonymous)
       return false unless action.is_a?(Symbol)
       return false unless target.valid?
-      return false unless Incognito.allow_hyrax_can?(actor)
+      return false unless Incognito.allow_ability_can?(actor)
       ability = Ability.new(actor)
       ability.can?(action, target.noid)
     end

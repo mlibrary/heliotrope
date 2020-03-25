@@ -29,9 +29,9 @@ RSpec.describe Incognito do
     expect(incognito.allow_platform_admin(actor, false)).to be true
     expect(incognito.allow_platform_admin?(actor)).to be true
 
-    expect(incognito.allow_hyrax_can?(actor)).to be true
-    expect(incognito.allow_hyrax_can(actor, false)).to be true
-    expect(incognito.allow_hyrax_can?(actor)).to be true
+    expect(incognito.allow_ability_can?(actor)).to be true
+    expect(incognito.allow_ability_can(actor, false)).to be true
+    expect(incognito.allow_ability_can?(actor)).to be true
 
     expect(incognito.allow_action_permitted?(actor)).to be true
     expect(incognito.allow_action_permitted(actor, false)).to be true
@@ -58,12 +58,12 @@ RSpec.describe Incognito do
       expect(incognito.allow_platform_admin(actor)).to be true
       expect(incognito.allow_platform_admin?(actor)).to be true
 
-      expect(incognito.allow_hyrax_can?(actor)).to be true
-      expect(incognito.allow_hyrax_can(actor, false)).to be false
-      expect(incognito.allow_hyrax_can?(actor)).to be false
+      expect(incognito.allow_ability_can?(actor)).to be true
+      expect(incognito.allow_ability_can(actor, false)).to be false
+      expect(incognito.allow_ability_can?(actor)).to be false
 
-      expect(incognito.allow_hyrax_can(actor)).to be true
-      expect(incognito.allow_hyrax_can?(actor)).to be true
+      expect(incognito.allow_ability_can(actor)).to be true
+      expect(incognito.allow_ability_can?(actor)).to be true
 
       expect(incognito.allow_action_permitted?(actor)).to be true
       expect(incognito.allow_action_permitted(actor, false)).to be false
