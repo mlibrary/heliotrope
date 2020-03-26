@@ -100,5 +100,29 @@ RSpec.describe Hyrax::CitationsBehavior do
         expect(export_as_mla_citation(presenter)).to eq('<span class="citation-author">Princely, Mary, BIG MUSEUM, and Mark Pugner. </span><i class="citation-title">The Complete Book of Big Museum.</i> E-book, Ann Arbor, MI: University of Michigan Press, 2001, https://hdl.handle.net/2027/fulcrum.444444444. Accessed ' + "#{Time.now.getlocal.strftime('%e %b %Y').strip}.")
       end
     end
+
+    context 'MLA structure for watermarking' do
+      let(:doc) do
+        SolrDocument.new(id: '444444444',
+                         creator_tesim: ['Princely, Mary', "BIGG'S MUSEUM", 'Pugner, Mark'],
+                         title_tesim: ["The Complete Book of Bigg's Museum"],
+                         location_tesim: ['Ann Arbor, MI'],
+                         publisher_tesim: ['University of Michigan Press'],
+                         has_model_ssim: ['Monograph'],
+                         date_created_tesim: ['2001'])
+      end
+      let(:presenter) { Hyrax::MonographPresenter.new(doc, nil) }
+      let(:structure) { export_as_mla_structure(presenter) }
+
+      it 'returns the correct MLA structure author without HTML escaping' do
+        expect(structure[:author]).to eq("Princely, Mary, BIGG'S MUSEUM, and Mark Pugner. ")
+      end
+      it 'returns the correct MLA structure title without HTML escaping' do
+        expect(structure[:title]).to eq("The Complete Book of Bigg's Museum.")
+      end
+      it 'returns the correct MLA citation' do
+        expect(structure[:publisher]).to eq('E-book, Ann Arbor, MI: University of Michigan Press, 2001, https://hdl.handle.net/2027/fulcrum.444444444. Accessed ' + "#{Time.now.getlocal.strftime('%e %b %Y').strip}.")
+      end
+    end
   end
 end
