@@ -214,7 +214,7 @@ module Hyrax
     end
 
     def glyphicon_type
-      return 'glyphicon glyphicon-file' if pdf? || resource_type.blank?
+      return 'glyphicon glyphicon-file' if resource_type.blank?
       glyphicon_by_resource_type
     end
 
@@ -228,6 +228,8 @@ module Hyrax
         'glyphicon glyphicon-film'
       when 'audio'
         'glyphicon glyphicon-volume-up'
+      when 'map', 'interactive map'
+        'glyphicon glyphicon-map-marker'
       else
         'glyphicon glyphicon-file'
       end
