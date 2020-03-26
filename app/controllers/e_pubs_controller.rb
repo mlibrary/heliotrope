@@ -137,7 +137,7 @@ class EPubsController < CheckpointController
       end
 
       CounterService.from(self, @presenter).count(request: 1, section_type: "Chapter", section: interval.title) if rendered_pdf.present?
-      send_data watermark_pdf(@entity, 7, rendered_pdf), type: "application/pdf", disposition: "inline"
+      send_data watermark_pdf(@entity, interval.title, 7, rendered_pdf), type: "application/pdf", disposition: "inline"
     elsif @entity.is_a?(Sighrax::PortableDocumentFormat)
       return head :no_content if params[:title].blank? || params[:chapter_index].blank?
 
@@ -150,7 +150,7 @@ class EPubsController < CheckpointController
       file = File.join(chapter_dir, chapter_file_name)
 
       CounterService.from(self, @presenter).count(request: 1, section_type: "Chapter", section: params[:title])
-      send_data watermark_pdf(@entity, 7, IO.binread(file)), type: @entity.media_type, filename: chapter_download_name, disposition: "inline"
+      send_data watermark_pdf(@entity, params[:title], 7, IO.binread(file)), type: @entity.media_type, filename: chapter_download_name, disposition: "inline"
     end
   rescue StandardError => e
     Rails.logger.error "EPubsController.download_interval raised #{e}"
