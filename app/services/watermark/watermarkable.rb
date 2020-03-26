@@ -5,21 +5,29 @@ module Watermark
     extend ActiveSupport::Concern
     include Hyrax::CitationsBehavior
 
-    def watermark_pdf(entity, size = 7, file = nil)
+    def watermark_pdf(entity, title, size = 7, file = nil)
       fmt = watermark_formatted_text(entity)
-      Rails.cache.fetch(cache_key(entity, fmt.to_s, size), expires_in: 30.days) do
+      # Cache key based on citation, including the request_origin, plus chapter title if any.
+      Rails.cache.fetch(cache_key(entity, fmt.to_s + title.to_s, size), expires_in: 30.days) do
         content = file.presence || entity.content
 
         pdf = CombinePDF.parse(content, allow_optional_content: true)
         stamps = {} # Cache of stamps with potentially different media boxes
         pdf.pages.each do |page|
-          stamp = stamps[page[:MediaBox].to_s] || CombinePDF.parse(watermark(fmt, size, page[:MediaBox])).pages[0]
+          stamp = stamps[page_box(page).to_s] || CombinePDF.parse(watermark(fmt, size, page_box(page))).pages[0]
           page << stamp
-          stamps[page[:MediaBox].to_s] = stamp
+          stamps[page_box(page).to_s] = stamp
         end
 
         pdf.to_pdf
       end
+    end
+
+    # https://wiki.scribus.net/canvas/Talk:PDF_Boxes_:_mediabox,_cropbox,_bleedbox,_trimbox,_artbox
+    # "A PDF always has a MediaBox definition. All the other page boxes do not
+    # necessarily have to be present within the file."
+    def page_box(page)
+      page[:TrimBox] ? page[:TrimBox] : page[:MediaBox]
     end
 
     def watermark_authorship(presenter)
@@ -90,8 +98,8 @@ module Watermark
       pdf.render
     end
 
-    def cache_key(entity, text, size)
-      "#{entity.noid}-#{Digest::MD5.hexdigest(text)}-#{size}-#{cache_key_timestamp}"
+    def cache_key(entity, title, size)
+      "pdfwm:#{entity.noid}-#{Digest::MD5.hexdigest(title)}-#{size}-#{cache_key_timestamp}"
     end
   end
 end
