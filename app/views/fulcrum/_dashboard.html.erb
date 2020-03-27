@@ -48,8 +48,8 @@
   </ul>
   <input data-toggle="tooltip" title="hide your platform administrator role" type="checkbox" id="platform_admin" name="platform_admin" value="mask" <%= !Incognito.allow_platform_admin?(current_actor) ? 'checked' : '' %> />
   <label for="platform_admin">force 'platform_admin?' to be false</label><br>
-  <input data-toggle="tooltip" title="hide your hyrax devise cancan abilities" type="checkbox" id="hyrax_can" name="hyrax_can" value="mask" <%= !Incognito.allow_hyrax_can?(current_actor) ? 'checked' : '' %> />
-  <label for="hyrax_can">force hyrax 'can?' to be false</label><br>
+  <input data-toggle="tooltip" title="hide your devise cancan abilities" type="checkbox" id="ability_can" name="ability_can" value="mask" <%= !Incognito.allow_ability_can?(current_actor) ? 'checked' : '' %> />
+  <label for="ability_can">force 'can?' to be false</label><br>
   <input data-toggle="tooltip" title="hide your checkpoint credentials a.k.a. permissions" type="checkbox" id="action_permitted" name="action_permitted" value="mask" <%= !Incognito.allow_action_permitted?(current_actor) ? 'checked' : '' %> />
   <label for="action_permitted">force 'action_permitted?' to be false</label><br>
   &nbsp;<br>

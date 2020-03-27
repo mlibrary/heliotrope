@@ -121,6 +121,26 @@ RSpec.describe User do
     end
   end
 
+  describe '#editor_presses' do
+    let(:press1) { create(:press) }
+    let(:press2) { create(:press) }
+
+    let(:user) { create(:user) }
+    let(:superuser) { create(:platform_admin) }
+
+    before do
+      Press.delete_all
+      Role.delete_all
+      create(:role, resource: press1, user: user, role: 'editor')
+      create(:role, resource: press2, user: user, role: 'admin')
+    end
+
+    it 'returns the presses that this user is an admin for' do
+      expect(user.editor_presses).to eq [press1]
+      expect(superuser.editor_presses).to eq [press1, press2]
+    end
+  end
+
   describe '#admin_presses' do
     let(:press1) { create(:press) }
     let(:press2) { create(:press) }

@@ -14,8 +14,8 @@ class EntityPolicy < ResourcePolicy
     debug_log("platform_admin? #{value}")
     return true if value
 
-    value = Sighrax.hyrax_can?(actor, :edit, target)
-    debug_log("hyrax_can(:edit)? #{value}")
+    value = Sighrax.ability_can?(actor, :edit, target)
+    debug_log("ability_can(:edit)? #{value}")
     return true if value
 
     value = Sighrax.tombstone?(target)

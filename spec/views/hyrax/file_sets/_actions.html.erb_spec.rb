@@ -4,7 +4,7 @@ require 'rails_helper'
 
 # We just needed to shut of turbolinks for HELIO-3031 so pulled in this partial
 
-RSpec.describe 'hyrax/file_sets/_actions.html.erb', type: :view do
+RSpec.describe 'hyrax/file_sets/_actions.html.erb' do
   let(:solr_document) { double("Solr Doc", id: 'file_set_id') }
   let(:user) { build(:user) }
   let(:ability) { Ability.new(user) }

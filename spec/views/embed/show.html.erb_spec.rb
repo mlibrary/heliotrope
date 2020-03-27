@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe "embed/show.html.erb", type: :view do
+RSpec.describe "embed/show.html.erb" do
   let(:mock_file) { Hydra::PCDM::File.new }
   let(:file_set) do
     FileSet.new(id: 'a0s1d2f3g', title: ['A Title'], creator: ['Pants, Mr Smarty']) do |f|
