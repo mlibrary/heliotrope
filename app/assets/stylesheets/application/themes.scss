@@ -2044,6 +2044,28 @@ $barpublishing-white: #fff;
 
   // buttons
 
+  :focus, 
+  .btn-group > .btn:focus {
+
+    outline: 3px solid $barpublishing-brand-color;
+    outline-offset: 0;
+    -webkit-transition: outline .05s ease-out;
+    -o-transition: outline .05s ease-out;
+    transition: outline .05s ease-out;
+  }
+
+  .navbar, footer {
+     :focus, 
+     .navbar .btn-group > .btn:focus {
+
+      outline: 3px solid $barpublishing-grey-1;
+      outline-offset: 0;
+      -webkit-transition: outline .05s ease-out;
+      -o-transition: outline .05s ease-out;
+      transition: outline .05s ease-out;
+    }
+  }
+
   .btn-default {
     @include button-background-color($barpublishing-grey-3);
     @include button-font-color($barpublishing-white);
@@ -2198,6 +2220,10 @@ $barpublishing-white: #fff;
     }
   }
 
+  #documents.gallery .document .caption h3.index_title {
+    line-height: 1.3em;
+  }
+
   //filters on press and monograph pages
   .col-sm-3.facets-container,
   #facet-panel-collapse {
@@ -2206,6 +2232,13 @@ $barpublishing-white: #fff;
 
   .panel-group {
     padding-left: 0px;
+    a {
+      color: $barpublishing-grey-3;
+    }
+    a:hover, a:active {
+      color: $barpublishing-brand-color;
+      text-decoration: underline;
+    }
   }
 
   .panel-group .panel {
@@ -2230,6 +2263,7 @@ $barpublishing-white: #fff;
 
   .panel-body {
     background-color: #fafafa;
+
   }
 
   .search-form.panel-body {
@@ -2256,6 +2290,41 @@ $barpublishing-white: #fff;
       color: $barpublishing-white;
     }
 
+  }
+
+  // book pages
+  .monograph .monograph-metadata .authors {
+    font-size: 18px;
+  }
+
+  .monograph .monograph-metadata h1 {
+    font-size: 24px;
+    line-height: 1.3em;
+  }
+  
+  // tabs
+  .nav-tabs > li > h2 > a {
+    color: $barpublishing-grey-3;
+  }
+
+  .nav-tabs > li > h2 > a:hover {
+    color: $barpublishing-brand-color;
+  }
+
+  .nav-tabs > li.active > h2 > a, 
+  .nav-tabs > li.active > h2 > a:hover, 
+  .nav-tabs > li.active > h2 > a:focus {
+    color: $barpublishing-link;
+    text-decoration: none;
+  }
+
+  // toc
+  .monograph .monograph-assets-toc-epub ul.toc li {
+    border-bottom: 1px solid #dfdfdf;
+  }
+
+  .monograph .monograph-assets-toc-epub ul.toc li:first-child {
+    border-top: 1px solid #dfdfdf;
   }
 
   // search resources
