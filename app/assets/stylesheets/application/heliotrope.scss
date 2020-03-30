@@ -649,12 +649,18 @@ footer.press {
       justify-content: space-between;
     }
 
+    .section-container {
+      a.toc-link {
+        max-width: 80%;
+      }
+    }
+    
     .btn-group.download {
       a.toc-link {
         max-width: 100%;
        }
    
-       a.toc-download link + a.toc-link {
+       a.toc-download-link + a.toc-link {
          max-width: 80%;
        }
     }
@@ -1478,16 +1484,25 @@ footer.press {
   }
 
   .monograph .monograph-assets-toc-epub {
+    
+    .section-container {
+      a.toc-link {
+        max-width: 65%;
+        line-height: 3em;
+      }
+     
+    }
+    
     .btn-group.download {
     
       a.toc-link {
         max-width: 100%;
-        line-height: 2em;
+        line-height: 1.5em;
       }
       
       a.toc-download-link + a.toc-link {
         max-width: 65%;
-        line-height: 2em;
+        line-height: 1.5em;
       }
     }
   }
@@ -1540,6 +1555,13 @@ footer.press {
 
   .monograph .monograph-assets-toc-epub {
 
+    .section-container {
+      a.toc-link {
+        max-width: 57%;
+        line-height: 3em;
+      }
+    }
+    
     .btn-group.download {
       a.toc-link {
         max-width: 100%;
