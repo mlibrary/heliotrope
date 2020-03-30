@@ -56,6 +56,13 @@ class UnpackJob < ApplicationJob
     def create_pdf_chapters(id, root_path, file) # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
       return unless system("which pdfseparate > /dev/null 2>&1") && system("which pdfunite > /dev/null 2>&1")
 
+      # Blow away any PDFIntervalRecord associated with this noid
+      # since the structure may have changed
+      begin
+        PDFIntervalRecord.find(noid: id).destroy
+      rescue ActiveRecord::RecordNotFound
+      end
+
       # Grab the ToC as is done for the catalog ToC tab... note the force_encoding("utf-8") is not done here cause...
       # it's not done in Sighrax::Asset.content() which feeds the normal ToC creation, so I assume it's OK without...
       # for this purpose

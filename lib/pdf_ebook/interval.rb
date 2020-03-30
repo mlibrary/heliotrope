@@ -10,6 +10,10 @@ module PDFEbook
       new(id: id, index: index, title: title, depth: level, cfi: cfi)
     end
 
+    def self.from_h(hash)
+      self.from_title_level_cfi(hash['id'], hash['index'], hash['title'], hash['depth'], hash['cfi'])
+    end
+
     def self.null_object
       IntervalNullObject.send(:new)
     end
@@ -38,6 +42,10 @@ module PDFEbook
 
     def downloadable_pages
       []
+    end
+
+    def to_h
+      @args.to_h
     end
 
     private

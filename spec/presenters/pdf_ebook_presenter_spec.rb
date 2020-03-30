@@ -36,7 +36,11 @@ RSpec.describe PDFEbookPresenter do
       let(:intervals) { [interval] }
       let(:interval) { double('interval') }
 
-      it { is_expected.to be_an_instance_of(EPubIntervalPresenter) }
+      it do
+        allow(interval).to receive(:to_h).and_return({})
+        is_expected.to be_an_instance_of(EPubIntervalPresenter)
+        expect(PDFIntervalRecord.count).to be > 0
+      end
     end
   end
 end

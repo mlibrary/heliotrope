@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20200313153535) do
+ActiveRecord::Schema.define(version: 20200327185142) do
 
   create_table "api_requests", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.integer "user_id"
@@ -258,6 +258,10 @@ ActiveRecord::Schema.define(version: 20200313153535) do
     t.index ["identifier"], name: "index_institutions_on_identifier", unique: true
   end
 
+  create_table "intervals", primary_key: "noid", id: :string, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.text "data", null: false
+  end
+
   create_table "job_io_wrappers", id: :integer, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.integer "user_id"
     t.integer "uploaded_file_id"
@@ -334,6 +338,13 @@ ActiveRecord::Schema.define(version: 20200313153535) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["namespace"], name: "index_minter_states_on_namespace", unique: true
+  end
+
+  create_table "pdf_interval_records", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.string "noid", null: false
+    t.text "data", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "permission_template_accesses", id: :integer, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
