@@ -18,6 +18,9 @@ class CounterReport < ApplicationRecord
   # Every record should have a corresponding press id
   validates :press, presence: true
 
+  # HELIO-3070: truncate section to 255 characters so MySQL doesn't get irked
+  before_save :truncate_section
+
   scope :unique, -> { select(:session, :noid).distinct }
   scope :unique_by_title, -> { select(:session, :parent_noid).distinct }
   scope :investigations, -> { where(investigation: 1) }
@@ -41,5 +44,9 @@ class CounterReport < ApplicationRecord
 
   def self.turnaway(turnaway = nil)
     where(turnaway: turnaway)
+  end
+
+  def truncate_section
+    self.section = self.section.truncate(255) if self.section.present?
   end
 end
