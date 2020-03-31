@@ -16,12 +16,13 @@
       </button>
 
       <% if press_subdomain.present? %>
+        <% press_object = Press.where(subdomain: press_subdomain)&.first # this is less than ideal and will be addressed in HELIO-3311 %>
         <% if press_subdomain == 'leverpress' %>
-          <a class="navbar-brand" href="<%= @press.press_url %>">
-            <%= image_tag "LeverLogo.svg", class: 'navbar-brand-logo', alt: 'Lever Press', height: '70', width: 'auto' %><%= @press.name %>
+          <a class="navbar-brand" href="<%= press_object&.press_url %>">
+            <%= image_tag "LeverLogo.svg", class: 'navbar-brand-logo', alt: 'Lever Press', height: '70', width: 'auto' %><%= press_object&.name %>
           </a>
         <% elsif press_subdomain == 'barpublishing' %>
-        <a class="navbar-brand" href="<%= main_app.press_catalog_path(@press) %>">
+        <a class="navbar-brand" href="<%= main_app.press_catalog_path(press_object) %>">
             <%= image_tag "bar-digital-logo.png", class: 'navbar-brand-logo', alt: 'BAR Publishing', height: '70', width: 'auto' %>
         </a>
         <% end %>
