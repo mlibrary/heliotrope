@@ -16,34 +16,64 @@ RSpec.describe CommonWorkPresenter do
       []
     end
 
+    def title
+      @solr_document['title_tesim'].first
+    end
+
     delegate :representative_id, :thumbnail_path, to: :@solr_document
   end
 
   let(:presenter) { self.class::Presenter.new(solr_document) }
+  let(:title) { presenter.title }
 
   describe '#work_thumbnail' do
     context 'representative_id not set, uses Hyrax default' do
-      let(:solr_document) { ::SolrDocument.new(id: 'mono', has_model_ssim: ['Monograph'], thumbnail_path_ss: '/assets/work.png') }
+      let(:solr_document) { ::SolrDocument.new(id: 'mono', title_tesim: ['A Title'], has_model_ssim: ['Monograph'], thumbnail_path_ss: '/assets/work.png') }
 
       it {
-        expect(presenter.work_thumbnail).to eq '<img class="img-responsive" src="/assets/work.png" style="max-width:225px" alt="Cover image for ">'
+        expect(presenter.work_thumbnail).to eq %Q{<img class="img-responsive" src="/assets/work.png" style="max-width:225px" alt="Cover image for #{title}">}
       }
     end
 
     context 'representative_id set, uses image-service, default width' do
-      let(:solr_document) { ::SolrDocument.new(id: 'mono', has_model_ssim: ['Monograph'], hasRelatedMediaFragment_ssim: ['999999999']) }
+      let(:solr_document) { ::SolrDocument.new(id: 'mono', title_tesim: ['A Title'], has_model_ssim: ['Monograph'], hasRelatedMediaFragment_ssim: ['999999999']) }
 
       it {
-        expect(presenter.work_thumbnail).to start_with '<img class="img-responsive" src="/image-service/999999999/full/225,/0/default.png" alt="Cover image for ">'
+        expect(presenter.work_thumbnail).to start_with %Q{<img class="img-responsive" src="/image-service/999999999/full/225,/0/default.png" alt="Cover image for #{title}">}
       }
     end
 
     context 'representative_id set, uses image-service, custom width' do
-      let(:solr_document) { ::SolrDocument.new(id: 'mono', has_model_ssim: ['Monograph'], hasRelatedMediaFragment_ssim: ['999999999']) }
+      let(:solr_document) { ::SolrDocument.new(id: 'mono', title_tesim: ['A Title'], has_model_ssim: ['Monograph'], hasRelatedMediaFragment_ssim: ['999999999']) }
 
       it {
-        expect(presenter.work_thumbnail(99)).to start_with '<img class="img-responsive" src="/image-service/999999999/full/99,/0/default.png" alt="Cover image for ">'
+        expect(presenter.work_thumbnail(99)).to start_with %Q{<img class="img-responsive" src="/image-service/999999999/full/99,/0/default.png" alt="Cover image for #{title}">}
       }
+    end
+  end
+
+  describe "#cover_cache_breaker" do
+    let(:solr_document) { ::SolrDocument.new(id: '111111111', title_tesim: ['A Title'], has_model_ssim: ['Monograph'], hasRelatedMediaFragment_ssim: ['999999999']) }
+
+    context "with a thumbnail file" do
+      before do
+        FileUtils.mkdir_p(Rails.root.join('tmp', 'rspec_derivatives', '99', '99', '99', '99'))
+        FileUtils.touch(Rails.root.join('tmp', 'rspec_derivatives', '99', '99', '99', '99', '9-thumbnail.jpeg'))
+      end
+
+      after do
+        FileUtils.rm_rf(Dir[Rails.root.join('tmp', 'rspec_derivatives')])
+      end
+
+      it "returns the thumbnail's mtime" do
+        expect(presenter.cover_cache_breaker('999999999')).to eq "?#{File.mtime(Rails.root.join('tmp', 'rspec_derivatives', '99', '99', '99', '99', '9-thumbnail.jpeg')).to_i}"
+      end
+    end
+
+    context "without a thumbnail" do
+      it "returns an empty string" do
+        expect(presenter.cover_cache_breaker('999999999')).to eq ""
+      end
     end
   end
 

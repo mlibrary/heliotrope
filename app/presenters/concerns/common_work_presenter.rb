@@ -42,7 +42,7 @@ module CommonWorkPresenter
 
   def work_thumbnail_src(width = 255)
     if representative_id.present?
-      "\"/image-service/#{representative_id}/full/#{width},/0/default.png#{representative_presenter&.browser_cache_breaker}\""
+      "\"/image-service/#{representative_id}/full/#{width},/0/default.png#{cover_cache_breaker(representative_id)}\""
     else
       "\"#{thumbnail_path}\" style=\"max-width:#{width}px\""
     end
@@ -51,23 +51,26 @@ module CommonWorkPresenter
   def work_thumbnail(width = 225)
     img_tag = "<img class=\"img-responsive\" src="
     img_tag += work_thumbnail_src(width)
-    img_tag += " alt=\"Cover image for #{representative_alt_text}\">"
+    img_tag += " alt=\"Cover image for #{title}\">"
     img_tag
+  end
+
+  def cover_cache_breaker(representative_id)
+    # HELIO-2007, HELIO-3305
+    thumbnail = Hyrax::DerivativePath.new(representative_id).derivative_path + "thumbnail.jpeg"
+    return "" unless File.exist? thumbnail
+    "?#{File.mtime(thumbnail).to_i}"
   end
 
   # This overrides CC 1.6.2's work_show_presenter.rb which is recursive.
   # Because our FileSets also have respresentative_presenters (I guess that's not normal?)
   # this recursive call from Work -> Arbitrary Nesting of Works -> FileSet never ends.
   # Our PCDM model currently only has Work -> FileSet so this this non-recursive approach should be fine
+  # 2020-03-31: Use this sparingly, if at all. We don't want to go to solr for each FileSet unless it's
+  # absolutly neccessary. On press_catalog pages for instance this can cause N +1 problems, see HELIO-3305
   def representative_presenter
     return nil if representative_id.blank?
     @representative_presenter ||= Hyrax::PresenterFactory.build_for(ids: [representative_id], presenter_class: Hyrax::FileSetPresenter, presenter_args: current_ability).first
-  end
-
-  # Alt text for cover page/thumbnail. Defaults to first title if not found.
-  def representative_alt_text
-    rep = representative_presenter
-    rep.nil? || rep.alt_text.empty? ? solr_document.title.first : rep.alt_text.first
   end
 
   def license?
