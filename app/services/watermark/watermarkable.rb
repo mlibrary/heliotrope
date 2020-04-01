@@ -5,7 +5,7 @@ module Watermark
     extend ActiveSupport::Concern
     include Hyrax::CitationsBehavior
 
-    def watermark_pdf(entity, title, size = 7, file = nil)
+    def watermark_pdf(entity, title, size = 6, file = nil)
       fmt = watermark_formatted_text(entity)
       # Cache key based on citation, including the request_origin, plus chapter title if any.
       Rails.cache.fetch(cache_key(entity, fmt.to_s + title.to_s, size), expires_in: 30.days) do
@@ -81,8 +81,12 @@ module Watermark
       end
       width *= (size / 2.0)
       pdf = Prawn::Document.new do
-        Prawn::Font::AFM.hide_m17n_warning = true
-        font('Times-Roman', size: size) do
+        font_families.update("OpenSans" => {
+            normal: Rails.root.join('app', 'assets', 'fonts', 'OpenSans-Regular.ttf'),
+            italic: Rails.root.join('app', 'assets', 'fonts', 'OpenSans-Italic.ttf'),
+        })
+
+        font('OpenSans', size: size) do
           bounding_box([-20 + media_box[0], -30 + height + media_box[1]], width: width, height: height) do
             transparent(0.5) do
               fill_color "ffffff"
