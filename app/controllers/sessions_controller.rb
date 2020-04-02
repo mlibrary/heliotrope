@@ -73,92 +73,65 @@ class SessionsController < ApplicationController
 
   private
 
-    def component_discovery_feed(component_id = '') # rubocop:disable Metrics/CyclomaticComplexity
-      Rails.cache.fetch("component_discovery_feed:" + component_id, expires_in: 15.minutes) do
-        component_discovery_feed = []
-        component = Greensub::Component.find_by(noid: component_id)
-        if component.present?
-          products = component.products
-          if products.present?
-            institutions = []
-            products.each { |product| institutions += product.institutions }
-            if institutions.present?
-              entity_ids = []
-              institutions.each { |institution| entity_ids << institution.entity_id if institution.entity_id.present? } # rubocop:disable Metrics/BlockNesting
-              if entity_ids.present? # rubocop:disable Metrics/BlockNesting
-                filtered_discovery_feed.each do |entry|
-                  component_discovery_feed << entry if entry["entityID"].in?(entity_ids) # rubocop:disable Metrics/BlockNesting
-                end
+    def component_discovery_feed(component_id = '') # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
+      cache_key = 'component_discovery_feed:' + component_id
+      return Rails.cache.read(cache_key) if Rails.cache.exist?(cache_key)
+
+      component_discovery_feed = []
+      component = Greensub::Component.find_by(noid: component_id)
+      if component.present?
+        products = component.products
+        if products.present?
+          institutions = []
+          products.each { |product| institutions += product.institutions }
+          if institutions.present?
+            entity_ids = []
+            institutions.each { |institution| entity_ids << institution.entity_id if institution.entity_id.present? } # rubocop:disable Metrics/BlockNesting
+            if entity_ids.present? # rubocop:disable Metrics/BlockNesting
+              filtered_discovery_feed.each do |entry|
+                component_discovery_feed << entry if entry["entityID"].in?(entity_ids) # rubocop:disable Metrics/BlockNesting
               end
             end
           end
         end
+      end
+
+      return component_discovery_feed unless Rails.env.production?
+
+      Rails.cache.fetch(cache_key, expires_in: 1.hour) do
         component_discovery_feed
       end
     end
 
     def filtered_discovery_feed
-      Rails.cache.fetch("filtered_discovery_feed", expires_in: 12.hours) do
-        filtered_discovery_feed = []
-        institutions = Set.new(Greensub::Institution.where("entity_id <> ''").map(&:entity_id))
-        if institutions.present?
-          unfiltered_discovery_feed.each do |entry|
-            filtered_discovery_feed << entry if entry["entityID"].in?(institutions)
-          end
+      cache_key = 'filtered_discovery_feed'
+      return Rails.cache.read(cache_key) if Rails.cache.exist?(cache_key)
+
+      filtered_discovery_feed = []
+      institutions = Set.new(Greensub::Institution.where("entity_id <> ''").map(&:entity_id))
+      if institutions.present?
+        unfiltered_discovery_feed.each do |entry|
+          filtered_discovery_feed << entry if entry["entityID"].in?(institutions)
         end
+      end
+
+      return filtered_discovery_feed unless Rails.env.production?
+
+      Rails.cache.fetch(cache_key, expires_in: 12.hours) do
         filtered_discovery_feed
       end
     end
 
     def unfiltered_discovery_feed
-      Rails.cache.fetch("unfiltered_discovery_feed", expires_in: 24.hours) do
-        json = if Rails.env.production?
-                 # Faraday.get(root_url(script_name: "/Shibboleth.sso/DiscoFeed").gsub!(/\/?\?locale=.*/, '')).body
-                 # AE-7532 Static DiscoFeed temporary work around
-                 Faraday.get(root_url(script_name: "/DiscoFeed").gsub!(/\/?\?locale=.*/, '')).body
-               else
-                 fake_discovery_feed = []
-                 Greensub::Institution.where("entity_id <> ''").each do |institution|
-                   fake_discovery_feed << {
-                     "entityID" => institution.entity_id,
-                     "DisplayNames" => [
-                       {
-                         "value" => institution.name,
-                         "lang" => "en"
-                       }
-                     ],
-                     "Descriptions" => [
-                       {
-                         "value" => institution.name,
-                         "lang" => "en"
-                       }
-                     ],
-                     "InformationURLs" => [
-                       {
-                         "value" => "http://www.umich.edu/",
-                         "lang" => "en"
-                       }
-                     ],
-                     "PrivacyStatementURLs" => [
-                       {
-                         "value" => "http://documentation.its.umich.edu/node/262/",
-                         "lang" => "en"
-                       }
-                     ],
-                     "Logos" => [
-                       {
-                         "value" => "https://shibboleth.umich.edu/images/StackedBlockM-InC.png",
-                         "height" => "150",
-                         "width" => "300",
-                         "lang" => "en"
-                       }
-                     ]
-                   }
-                 end
-                 fake_discovery_feed.to_json
-               end
-        JSON.parse(json)
-      end
+      cache_key = RecacheInCommonMetadataJob::RAILS_CACHE_KEY
+      return Rails.cache.read(cache_key) if Rails.cache.exist?(cache_key)
+
+      RecacheInCommonMetadataJob.perform_now if Rails.env.production?
+
+      job = RecacheInCommonMetadataJob.new
+      job.download_xml unless File.exist?(RecacheInCommonMetadataJob::XML_FILE)
+      job.parse_xml unless File.exist?(RecacheInCommonMetadataJob::JSON_FILE)
+      job.load_json
     end
 
     def return_location

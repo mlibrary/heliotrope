@@ -53,6 +53,11 @@
     </form>
   </li>
   <li>
+    <%= link_to(fulcrum_exec_path(:recache_in_common_metadata), method: :get, class: "btn btn-default", data: { confirm: 'Are you sure?' }) do %>
+      <span class="glyphicon glyphicon-wrench" aria-hidden="true"></span> Recache InCommon Metadata
+    <% end %>
+  </li>
+  <li>
     <%= link_to(fulcrum_exec_path(:reindex_everything), method: :get, class: "btn btn-default", data: { confirm: 'Are you sure?' }) do %>
       <span class="glyphicon glyphicon-wrench" aria-hidden="true"></span> Reindex Everything
     <% end %>
