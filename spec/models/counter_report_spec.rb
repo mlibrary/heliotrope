@@ -32,6 +32,18 @@ RSpec.describe CounterReport, type: :model do
     end
   end
 
+  describe "section name truncated to max 255 characters" do
+    before do
+      create(:counter_report, section: 'x' * 256)
+    end
+
+    after { described_class.destroy_all }
+
+    it do
+      expect(described_class.first.section.length).to eq 255
+    end
+  end
+
   describe "chained scopes/methods for a PR report" do
     before do
       create(:counter_report, session: 1, noid: 'a', parent_noid: 'A', institution: 1, created_at: Time.parse("2018-01-02").utc)
