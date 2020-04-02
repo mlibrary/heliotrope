@@ -23,10 +23,10 @@ module Hyrax
         def structure(work)
           struct = {}
           # setup formatted author list
-          authors = author_list(work).reject(&:blank?)
+          authors = author_list(work, false).reject(&:blank?)
           struct[:author] = format_authors(authors)
           # setup title
-          title_info = setup_title_info(work)
+          title_info = setup_title_info(work, false)
           struct[:title] = mla_citation_title(title_info)
           # Publication
           struct[:publisher] = add_publisher_text_for(work)
