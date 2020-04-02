@@ -7,11 +7,26 @@ RSpec.describe FeaturedRepresentative, type: :model do
     it { expect(described_class.kinds).to eq %w[epub webgl database aboutware pdf_ebook mobi reviews related peer_review] }
   end
 
-  describe "the combination of mongraph_id, file_set_id and kind" do
+
+  describe "file_set" do
     let!(:fr1) { create(:featured_representative, work_id: 1, file_set_id: 1, kind: 'epub') }
 
     it "is unique" do
-      expect(described_class.create(work_id: 1, file_set_id: 1, kind: 'epub')).not_to be_valid
+      expect { described_class.create!(work_id: 2, file_set_id: 1, kind: 'epub') }.to raise_error(ActiveRecord::RecordInvalid, "Validation failed: File set has already been taken")
+    end
+  end
+
+  describe "kind" do
+    it "is valid" do
+      expect { described_class.create!(work_id: 1, file_set_id: 1, kind: 'kind') }.to raise_error(ActiveRecord::RecordInvalid, "Validation failed: Kind is not included in the list")
+    end
+  end
+
+  describe "work and kind" do
+    let!(:fr1) { create(:featured_representative, work_id: 1, file_set_id: 1, kind: 'epub') }
+
+    it "is unique" do
+      expect { described_class.create!(work_id: 1, file_set_id: 2, kind: 'epub') }.to raise_error(ActiveRecord::RecordInvalid, "Validation failed: Kind Work can only have one of each kind")
     end
   end
 end

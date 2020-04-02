@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20200313153535) do
+ActiveRecord::Schema.define(version: 20200330165632) do
 
   create_table "api_requests", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.integer "user_id"
@@ -162,6 +162,7 @@ ActiveRecord::Schema.define(version: 20200313153535) do
     t.string "kind"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["work_id", "file_set_id"], name: "index_featured_representatives_on_work_id_and_file_set_id", unique: true
   end
 
   create_table "featured_works", id: :integer, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
