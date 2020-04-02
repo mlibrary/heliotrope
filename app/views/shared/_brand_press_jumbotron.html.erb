@@ -1,28 +1,28 @@
-<!-- Main jumbotron for a primary heading image -->    
+<!-- Main jumbotron for a primary heading image -->
 <div class="jumbotron">
-  <h1 class="sr-only"><%= @press.name %></h1>
+  <h1 class="sr-only"><%= press_presenter.name %></h1>
   <div class="container">
-    <% if @press.logo_path && !@press.new_record? %>
+    <% if press_presenter.logo && !press_presenter.press.new_record? %>
       <div class="logo pull-left">
-        <%= image_tag logo(@press.subdomain), alt: @press.name %>
+        <%= image_tag press_presenter.logo, alt: press_presenter.name %>
       </div>
     <% end %>
 
-    <p class="lead"><%= render_markdown @press.description if @press.description.present? %></p>
-    <% if @press.location.present? || @press.twitter.present? %>
+    <p class="lead"><%= render_markdown press_presenter.description if press_presenter.description.present? %></p>
+    <% if press_presenter.location.present? || press_presenter.twitter.present? %>
     <p class="publisher-info">
-      <% if @press.location.present? %>
-        <span class="location"><span class="glyphicon glyphicon-map-marker" aria-hidden="true"></span> <%= @press.location %></span>
+      <% if press_presenter.location.present? %>
+        <span class="location"><span class="glyphicon glyphicon-map-marker" aria-hidden="true"></span> <%= press_presenter.location %></span>
       <% end %>
-      <% if @press.twitter.present? %>
-        <span class="twitter"><a href="https://twitter.com/<%= @press.twitter %>">@<%= @press.twitter %></a></span>
+      <% if press_presenter.twitter.present? %>
+        <span class="twitter"><a href="https://twitter.com/<%= press_presenter.twitter %>">@<%= press_presenter.twitter %></a></span>
       <% end %>
     </p>
     <% end %>
-    <% if @press.google_analytics_url.present? || @press.readership_map_url.present? %>
+    <% if press_presenter.google_analytics_url.present? || press_presenter.readership_map_url.present? %>
       <% unless controller&.class == PressStatisticsController %>
         <p class="lead">
-          <%= link_to t('press_catalog.statistics'), press_statistics_path(@press) %>
+          <%= link_to t('press_catalog.statistics'), press_statistics_path(press_presenter.press) %>
         </p>
       <% end %>
     <% end %>

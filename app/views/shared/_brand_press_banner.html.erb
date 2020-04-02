@@ -1,5 +1,5 @@
-<% banner_cookie_name = press_subdomain + "_shared_press_banner" %>
-<% product = banner_product(press_subdomain) %>
+<% banner_cookie_name = press_presenter.subdomain + "_shared_press_banner" %>
+<% product = banner_product(press_presenter.subdomain) %>
 <div class="alert alert-info alert-dismissible banner container" role="alert" style="display: none;">
   <button type="button" onclick="banner_button_no()" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&#x2715</span></button>
   <p class="message"><%= raw t(banner_message) %></p>

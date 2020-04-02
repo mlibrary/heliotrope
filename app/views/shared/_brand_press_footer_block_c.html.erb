@@ -1,5 +1,5 @@
-<% if footer_block_c(press_subdomain).present? %>
-  <%= render_markdown footer_block_c(press_subdomain) %>
+<% if press_presenter.footer_block_c.present? %>
+  <%= render_markdown press_presenter.footer_block_c %>
 <% else %>
-  <p>&copy; <%= name(press_subdomain) %> <%= Time.current.year %></p>
+  <p>&copy; <%= press_presenter.name %> <%= Time.current.year %></p>
 <% end %>

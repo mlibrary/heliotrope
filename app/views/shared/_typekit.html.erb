@@ -1,5 +1,5 @@
-<% typekit_id = typekit(press_subdomain) %>
+<% typekit_id = press_presenter&.typekit %>
 
-<% unless typekit_id.nil? %>
+<% if typekit_id.present? %>
   <link rel="stylesheet" href="https://use.typekit.net/<%= typekit_id %>.css">
 <% end %>

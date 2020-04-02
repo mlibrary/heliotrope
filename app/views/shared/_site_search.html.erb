@@ -1,7 +1,7 @@
-<% if press_subdomain.present? %>
-  <% catalog_url = main_app.press_catalog_path(press_subdomain) %>
-  <% search_label = t('press_catalog.search.form.q.label', press_name: name(press_subdomain)) %>
-  <% placeholder = t('press_catalog.search.form.q.placeholder', press_name: name(press_subdomain)) %>
+<% if press_presenter.present? %>
+  <% catalog_url = main_app.press_catalog_path(press_presenter.subdomain) %>
+  <% search_label = t('press_catalog.search.form.q.label', press_name: press_presenter.name) %>
+  <% placeholder = t('press_catalog.search.form.q.placeholder', press_name: press_presenter.name) %>
 <% else %>
   <% catalog_url = main_app.search_catalog_path %>
   <% search_label = t('hyrax.search.form.q.label', application_name: application_name) %>

@@ -4,7 +4,7 @@ class PressCatalogController < ::CatalogController
   before_action :load_press
   before_action :conditional_blacklight_configuration
 
-  self.theme = 'curation_concerns'
+  self.theme = 'hyrax'
   with_themed_layout 'catalog'
 
   configure_blacklight do |config|
@@ -105,7 +105,7 @@ class PressCatalogController < ::CatalogController
       blacklight_config.add_facet_field Solrizer.solr_name('bass_bells_required', :facetable), label: 'Bass Bells Required'
       blacklight_config.add_facet_field Solrizer.solr_name('solo', :facetable), label: 'Solo'
       blacklight_config.add_facet_field Solrizer.solr_name('musical_presentation', :facetable), label: 'Musical Presentation'
-      blacklight_config.add_facet_field Solrizer.solr_name('composer_diversity', :facetable), lable: 'Composer Diversity'
+      blacklight_config.add_facet_field Solrizer.solr_name('composer_diversity', :facetable), label: 'Composer Diversity'
       blacklight_config.add_facet_field Solrizer.solr_name('appropriate_occasion', :facetable), label: 'Appropriate Occasion'
     end
 

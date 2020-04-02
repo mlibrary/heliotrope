@@ -8,12 +8,8 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <% if defined?(@press.name) %>
-        <a class="navbar-brand" href="<%= main_app.press_catalog_path(@press) %>"><%= @press.name %></a>
-      <% elsif defined?(@presenter.press) %>
-        <a class="navbar-brand" href="<%= main_app.press_catalog_path(@presenter.press_obj) %>"><%= @presenter.press %></a>
-      <% elsif defined?(@presenter.parent.press) %>
-        <a class="navbar-brand" href="<%= main_app.press_catalog_path(@presenter.parent.press_obj) %>"><%= @presenter.parent.press %></a>
+      <% if press_presenter.present? %>
+        <a class="navbar-brand" href="<%= main_app.press_catalog_path(press_presenter.press) %>"><%= press_presenter.name %></a>
       <% else %>
         <a class="navbar-brand" href="#">University Press</a>
       <% end %>
@@ -28,8 +24,8 @@
       <div class="navbar-right">
         <!-- show special navigation if it exists -->
         <!-- NOTE: this is not neccessarily the same as "aboutware" see HELIO-3275 -->
-        <% if navigation_block(press_subdomain).present? %>
-          <%= navigation_block(press_subdomain).html_safe %>
+        <% if press_presenter.present? && press_presenter.navigation_block.present? %>
+          <%= press_presenter.navigation_block.html_safe %>
         <% end %>
         <% if current_user && show_site_actions? %>
           <%= render 'shared/my_actions' %>
