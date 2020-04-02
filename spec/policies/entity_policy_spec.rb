@@ -28,16 +28,16 @@ RSpec.describe EntityPolicy do
 
         it { is_expected.to be true }
 
-        context 'hyrax_can_edit' do
+        context 'ability_can_edit' do
           let(:platform_admin) { false }
-          let(:hyrax_can_edit) { true }
+          let(:ability_can_edit) { true }
 
-          before { allow(Sighrax).to receive(:hyrax_can?).with(actor, :edit, target).and_return(hyrax_can_edit) }
+          before { allow(Sighrax).to receive(:ability_can?).with(actor, :edit, target).and_return(ability_can_edit) }
 
           it { is_expected.to be true }
 
           context 'tombstone' do
-            let(:hyrax_can_edit) { false }
+            let(:ability_can_edit) { false }
             let(:tombstone) { true }
 
             before { allow(Sighrax).to receive(:tombstone?).with(target).and_return(tombstone) }

@@ -18,7 +18,7 @@ describe Ability do
     Hyrax::PresenterFactory.build_for(ids: [file_set.id], presenter_class: Hyrax::FileSetPresenter, presenter_args: described_class.new(creating_user)).first
   end
 
-  describe 'a platform-wide admin user' do
+  describe 'platform_admin' do
     let(:creating_user) { current_user }
     let(:current_user) { create(:platform_admin) }
     let(:role) { create(:role) }
@@ -89,7 +89,7 @@ describe Ability do
     end
   end
 
-  describe 'a press-admin' do
+  describe 'press_admin' do
     let(:my_press) { create(:press) }
     let(:other_press) { create(:press) }
     let(:current_user) { create(:press_admin, press: my_press) }
@@ -170,16 +170,51 @@ describe Ability do
     end
   end
 
-  describe 'a press editor' do
+  describe 'press_editor' do
     let(:my_press) { create(:press) }
+    let(:other_press) { create(:press) }
     let(:current_user) { create(:press_editor, press: my_press) }
-    let(:monograph_for_my_press) { Monograph.new(press: my_press.subdomain) }
 
     it do
       is_expected.not_to be_able_to(:create, Press.new)
       is_expected.not_to be_able_to(:update, my_press)
-      is_expected.not_to be_able_to(:create, monograph_for_my_press)
+      is_expected.not_to be_able_to(:update, other_press)
       is_expected.not_to be_able_to(:read, :admin_dashboard)
+    end
+
+    context "roles" do
+      let(:my_press_role) { create(:role, resource: my_press) }
+      let(:other_press_role) { create(:role) }
+
+      it do
+        is_expected.not_to be_able_to(:read, my_press_role)
+        is_expected.not_to be_able_to(:update, my_press_role)
+        is_expected.not_to be_able_to(:destroy, my_press_role)
+
+        is_expected.not_to be_able_to(:read, other_press_role)
+        is_expected.not_to be_able_to(:update, other_press_role)
+        is_expected.not_to be_able_to(:destroy, other_press_role)
+      end
+    end
+
+    context "creating" do
+      let(:monograph_for_my_press) { Monograph.new(press: my_press.subdomain) }
+      let(:monograph_for_other_press) { Monograph.new(press: other_press.subdomain) }
+
+      it do
+        is_expected.to     be_able_to(:create, monograph_for_my_press)
+        is_expected.not_to be_able_to(:create, monograph_for_other_press)
+      end
+    end
+
+    context "updating" do
+      let(:my_presenter) { Hyrax::MonographPresenter.new(SolrDocument.new(id: 'my_id', press_tesim: my_press.subdomain), subject) }
+      let(:other_presenter) { Hyrax::MonographPresenter.new(SolrDocument.new(id: 'other_id', press_tesim: other_press.subdomain), subject) }
+
+      it do
+        is_expected.not_to be_able_to(:update, my_presenter)
+        is_expected.not_to be_able_to(:update, other_presenter)
+      end
     end
 
     context "ApplicationPresenter" do
@@ -188,7 +223,7 @@ describe Ability do
 
     describe "RolePresenter" do
       let(:my_press_user) { create(:press_editor, press: my_press) }
-      let(:other_press_user) { create(:press_editor, press: create(:press)) }
+      let(:other_press_user) { create(:press_editor, press: other_press) }
 
       it { is_expected.to     be_able_to(:read, RolePresenter.new(current_user.roles.first, current_user, current_user)) }
       it { is_expected.not_to be_able_to(:read, RolePresenter.new(my_press_user.roles.first, my_press_user, current_user)) }
@@ -204,12 +239,11 @@ describe Ability do
 
     describe "UserPresenter" do
       let(:my_press_user) { create(:press_editor, press: my_press) }
-      let(:other_press_user) { create(:press_editor, press: create(:press)) }
+      let(:other_press_user) { create(:press_editor, press: other_press) }
 
       it { is_expected.to     be_able_to(:read, UserPresenter.new(current_user, current_user)) }
       it { is_expected.not_to be_able_to(:read, UserPresenter.new(my_press_user, current_user)) }
       it { is_expected.not_to be_able_to(:read, UserPresenter.new(other_press_user, current_user)) }
-      it { is_expected.not_to be_able_to(:read, UserPresenter.new(create(:user), current_user)) }
     end
 
     describe "UsersPresenter" do
@@ -217,7 +251,7 @@ describe Ability do
     end
   end
 
-  describe 'public user' do
+  describe 'user' do
     let(:creating_user) { create(:user) }
     let(:current_user) { User.new }
 

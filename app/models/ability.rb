@@ -4,20 +4,39 @@ class Ability
   include Hydra::Ability
   include Hyrax::Ability
 
+  # CanCanCan default aliases
+  #
+  # alias_action :index, :show, :to => :read
+  # alias_action :new, :to => :create
+  # alias_action :edit, :to => :update
+
   # Define any customized permissions here.
-  def custom_permissions
-    can [:read], ApplicationPresenter, &:can_read?
-    can [:read], UsersPresenter, &:can_read?
-    can [:read], UserPresenter, &:can_read?
-    can [:read], RolesPresenter, &:can_read?
-    can [:read], RolePresenter, &:can_read?
+  def custom_permissions # rubocop:disable Metrics/CyclomaticComplexity
+    can :read, ApplicationPresenter, &:can_read?
+    can :read, UsersPresenter, &:can_read?
+    can :read, UserPresenter, &:can_read?
+    can :read, RolesPresenter, &:can_read?
+    can :read, RolePresenter, &:can_read?
 
-    can %i[index read], Press
+    can :read, Press
 
-    # press admin
-    grant_press_admin_abilities
+    grant_press_editor_abilities if platform_admin? || press_admin? || press_editor?
+    grant_press_admin_abilities if platform_admin? || press_admin?
+    grant_platform_admin_abilities if platform_admin?
+  end
 
-    grant_platform_admin_abilities
+  def grant_press_editor_abilities
+    can :manage, Monograph do |m|
+      @user.editor_presses.pluck(:subdomain).include?(m.press) && !only_scores
+    end
+
+    can :manage, Score do
+      @user.editor_presses.pluck(:subdomain).include?(Services.score_press)
+    end
+
+    can :manage, FileSet do |f|
+      @user.editor_presses.map(&:subdomain).include?(f.parent.press) unless f.parent.nil?
+    end
   end
 
   def grant_press_admin_abilities
@@ -25,15 +44,15 @@ class Ability
 
     can :manage, FeaturedRepresentative
 
-    can %i[create update], Monograph do |m|
+    can :manage, Monograph do |m|
       @user.admin_presses.pluck(:subdomain).include?(m.press) && !only_scores
     end
 
-    can %i[create update], Score do
+    can :manage, Score do
       @user.admin_presses.pluck(:subdomain).include?(Services.score_press)
     end
 
-    can %i[create update], ::Hyrax::FileSet do |f|
+    can :manage, FileSet do |f|
       @user.admin_presses.map(&:subdomain).include?(f.parent.press) unless f.parent.nil?
     end
 
@@ -60,8 +79,7 @@ class Ability
   end
 
   def grant_platform_admin_abilities
-    return unless platform_admin?
-    can [:destroy], ActiveFedora::Base
+    can :destroy, ActiveFedora::Base
     can :publish, Monograph
     can :manage, Role
     can :manage, Press
@@ -74,12 +92,20 @@ class Ability
   end
   alias admin? platform_admin?
 
+  def press_admin?
+    @user.admin_presses.count.positive?
+  end
+
   def admin_for?(press)
     @user.admin_presses.include?(press)
   end
 
-  def press_admin?
-    @user.admin_presses.count.positive?
+  def press_editor?
+    @user.editor_presses.count.positive?
+  end
+
+  def editor_for?(press)
+    @user.editor_presses.include?(press)
   end
 
   def only_scores

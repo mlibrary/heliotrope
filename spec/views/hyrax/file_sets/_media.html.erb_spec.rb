@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe 'hyrax/file_sets/_media', type: :view do
+RSpec.describe 'hyrax/file_sets/_media' do
   let(:file_set) {
     build(:file_set,
           id: 'fileset_id',

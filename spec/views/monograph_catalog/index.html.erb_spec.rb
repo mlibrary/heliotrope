@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe "monograph_catalog/index.html.erb", type: :view do
+RSpec.describe "monograph_catalog/index.html.erb" do
   def debug_puts(arg)
     puts arg if debug
   end

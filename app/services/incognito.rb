@@ -11,7 +11,7 @@
 
 # actor.sign_in_count bit flags
 #   0x01 allow_platform_admin? returns false
-#   0x02 allow_hyrax_can? returns false
+#   0x02 allow_ability_can? returns false
 #   0x04 allow_action_permitted? returns false
 #   0x08 sudo_actor? returns true and ...
 #     actor.current_sign_in_ip is substituted for individual_id
@@ -49,16 +49,16 @@ module Incognito
       allow_platform_admin?(actor)
     end
 
-    def allow_hyrax_can?(actor)
+    def allow_ability_can?(actor)
       return true if short_circuit?(actor)
       (actor.sign_in_count & 2).zero?
     end
 
-    def allow_hyrax_can(actor, value = true)
+    def allow_ability_can(actor, value = true)
       return true if short_circuit?(actor)
       actor.sign_in_count = value ? actor.sign_in_count & ~2 : actor.sign_in_count | 2
       actor.save
-      allow_hyrax_can?(actor)
+      allow_ability_can?(actor)
     end
 
     def allow_action_permitted?(actor)

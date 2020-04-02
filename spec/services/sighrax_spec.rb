@@ -217,6 +217,49 @@ RSpec.describe Sighrax do
     end
   end
 
+  describe '#active_fedora' do
+    subject { described_class.active_fedora(entity) }
+
+    let(:entity) { described_class.from_noid(noid) }
+    let(:noid) { 'validnoid' }
+    let(:data) { {} }
+
+    it { expect { subject }.to raise_error(ActiveFedora::ObjectNotFoundError) }
+
+    context 'Entity' do
+      let(:data) { ::SolrDocument.new(id: noid) }
+      let(:base) { double('base') }
+
+      before do
+        allow(ActiveFedora::SolrService).to receive(:query).with("{!terms f=id}#{noid}", rows: 1).and_return([data])
+        allow(ActiveFedora::Base).to receive(:find).with(noid).and_return(base)
+      end
+
+      it { is_expected.to be base }
+    end
+
+    context 'Monograph' do
+      let(:noid) { monograph.id }
+      let(:monograph) { create(:public_monograph) }
+
+      it { is_expected.to be_an_instance_of(Monograph) }
+    end
+
+    context 'Score' do
+      let(:noid) { score.id }
+      let(:score) { create(:public_score) }
+
+      it { is_expected.to be_an_instance_of(Score) }
+    end
+
+    context 'Asset' do
+      let(:noid) { file_set.id }
+      let(:file_set) { create(:public_file_set) }
+
+      it { is_expected.to be_an_instance_of(FileSet) }
+    end
+  end
+
   describe '#hyrax_presenter' do
     subject { described_class.hyrax_presenter(entity) }
 
@@ -299,31 +342,34 @@ RSpec.describe Sighrax do
       end
     end
 
-    describe '#hyrax_can?' do
-      subject { described_class.hyrax_can?(actor, action, target) }
+    describe '#ability_can?' do
+      subject { described_class.ability_can?(actor, action, target) }
 
-      let(:actor) { double('actor', is_a?: anonymous) }
-      let(:anonymous) { false }
+      let(:actor) { double('actor', is_a?: user) }
+      let(:user) { true }
       let(:action) { :action }
-      let(:target) { double('target', valid?: valid, noid: 'noid') }
+      let(:target) { double('target', valid?: valid) }
+      let(:active_fedora) { double('active_fedora') }
       let(:valid) { true }
-      let(:allow_hyrax_can) { true }
+      let(:allow_ability_can) { true }
       let(:ability) { double('ability') }
-      let(:can) { true }
+      let(:boolean) { double('boolean') }
 
       before do
-        allow(Incognito).to receive(:allow_hyrax_can?).with(actor).and_return(allow_hyrax_can)
+        allow(Incognito).to receive(:allow_ability_can?).with(actor).and_return(allow_ability_can)
+        allow(Ability).to receive(:new).with(nil).and_return(ability)
         allow(Ability).to receive(:new).with(actor).and_return(ability)
-        allow(ability).to receive(:can?).with(action, target.noid).and_return(can)
+        allow(Sighrax).to receive(:active_fedora).with(target).and_return(active_fedora)
+        allow(ability).to receive(:can?).with(action, active_fedora).and_return(boolean)
       end
 
       context 'user can' do
-        it { is_expected.to be true }
+        it { is_expected.to be boolean }
 
         context 'anonymous' do
-          let(:anonymous) { true }
+          let(:user) { false }
 
-          it { is_expected.to be false }
+          it { is_expected.to be boolean }
         end
 
         context 'invalid action' do
@@ -338,14 +384,8 @@ RSpec.describe Sighrax do
           it { is_expected.to be false }
         end
 
-        context 'do not allow hyrax_can' do
-          let(:allow_hyrax_can) { false }
-
-          it { is_expected.to be false }
-        end
-
-        context 'can not' do
-          let(:can) { false }
+        context 'do not allow ability_can' do
+          let(:allow_ability_can) { false }
 
           it { is_expected.to be false }
         end

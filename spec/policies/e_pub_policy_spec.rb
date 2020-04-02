@@ -17,23 +17,23 @@ RSpec.describe EPubPolicy do
   let(:open_access) { false }
   let(:share) { false }
   let(:is_a_user) { false }
-  let(:hyrax_can_read) { false }
-  let(:hyrax_can_manage) { false }
+  let(:ability_can_read) { false }
+  let(:ability_can_edit) { false }
   let(:platform_admin) { false }
-  let(:allow_hyrax_can) { true }
+  let(:allow_ability_can) { true }
   let(:allow_platform_admin) { true }
   let(:sudo_actor) { false }
 
   before do
     allow(actor).to receive(:is_a?).with(User).and_return(is_a_user)
     allow(actor).to receive(:platform_admin?).and_return(platform_admin)
-    allow(Sighrax).to receive(:hyrax_can?).with(actor, :read, parent).and_return(hyrax_can_read)
-    allow(Sighrax).to receive(:hyrax_can?).with(actor, :manage, parent).and_return(hyrax_can_manage)
+    allow(Sighrax).to receive(:ability_can?).with(actor, :read, parent).and_return(ability_can_read)
+    allow(Sighrax).to receive(:ability_can?).with(actor, :edit, parent).and_return(ability_can_edit)
     allow(Sighrax).to receive(:open_access?).with(parent).and_return(open_access)
     allow(Sighrax).to receive(:published?).with(parent).and_return(published)
     allow(Sighrax).to receive(:restricted?).with(parent).and_return(restricted)
     allow(Greensub::Component).to receive(:find_by).with(noid: noid).and_return(component)
-    allow(Incognito).to receive(:allow_hyrax_can?).with(actor).and_return(allow_hyrax_can)
+    allow(Incognito).to receive(:allow_ability_can?).with(actor).and_return(allow_ability_can)
     allow(Incognito).to receive(:allow_platform_admin?).with(actor).and_return(allow_platform_admin)
     allow(Incognito).to receive(:sudo_actor?).with(actor).and_return(sudo_actor)
   end
@@ -52,25 +52,25 @@ RSpec.describe EPubPolicy do
 
         it { is_expected.to be false }
 
-        context 'hyrax_can_read' do
-          let(:hyrax_can_read) { true }
+        context 'ability_can_read' do
+          let(:ability_can_read) { true }
 
           it { is_expected.to be true }
 
           context 'Incognito' do
-            let(:allow_hyrax_can) { false }
+            let(:allow_ability_can) { false }
 
             it { is_expected.to be false }
           end
         end
 
-        context 'hyrax_can_manage' do
-          let(:hyrax_can_manage) { true }
+        context 'ability_can_edit' do
+          let(:ability_can_edit) { true }
 
           it { is_expected.to be true }
 
           context 'Incognito' do
-            let(:allow_hyrax_can) { false }
+            let(:allow_ability_can) { false }
 
             it { is_expected.to be false }
           end
@@ -126,25 +126,25 @@ RSpec.describe EPubPolicy do
 
         it { is_expected.to be false }
 
-        context 'hyrax_can_read' do
-          let(:hyrax_can_read) { true }
+        context 'ability_can_read' do
+          let(:ability_can_read) { true }
 
           it { is_expected.to be true }
 
           context 'Incognito' do
-            let(:allow_hyrax_can) { false }
+            let(:allow_ability_can) { false }
 
             it { is_expected.to be false }
           end
         end
 
-        context 'hyrax_can_manage' do
-          let(:hyrax_can_manage) { true }
+        context 'ability_can_edit' do
+          let(:ability_can_edit) { true }
 
           it { is_expected.to be true }
 
           context 'Incognito' do
-            let(:allow_hyrax_can) { false }
+            let(:allow_ability_can) { false }
 
             it { is_expected.to be false }
           end
@@ -213,19 +213,19 @@ RSpec.describe EPubPolicy do
 
         it { is_expected.to be false }
 
-        context 'hyrax_can_read' do
-          let(:hyrax_can_read) { true }
+        context 'ability_can_read' do
+          let(:ability_can_read) { true }
 
           it { is_expected.to be false }
         end
 
-        context 'hyrax_can_manage' do
-          let(:hyrax_can_manage) { true }
+        context 'ability_can_edit' do
+          let(:ability_can_edit) { true }
 
           it { is_expected.to be true }
 
           context 'Incognito' do
-            let(:allow_hyrax_can) { false }
+            let(:allow_ability_can) { false }
 
             it { is_expected.to be false }
           end

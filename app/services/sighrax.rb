@@ -38,37 +38,15 @@ module Sighrax # rubocop:disable Metrics/ModuleLength
       model_factory(noid, document, model_type)
     end
 
-    def policy(current_actor, entity)
-      EntityPolicy.new(current_actor, entity)
-    end
+    # Actor Helpers
 
-    def press(entity)
-      if entity.is_a?(Sighrax::Monograph)
-        Press.find_by(subdomain: Sighrax.hyrax_presenter(entity).subdomain)
-      elsif entity.is_a?(Sighrax::Asset)
-        if entity.parent.is_a?(Sighrax::Monograph)
-          Press.find_by(subdomain: Sighrax.hyrax_presenter(entity.parent).subdomain)
-        else
-          Press.null_press
-        end
-      else
-        Press.null_press
-      end
+    def ability_can?(actor, action, target)
+      return false unless action.is_a?(Symbol)
+      return false unless target.valid?
+      return false unless Incognito.allow_ability_can?(actor)
+      ability = Ability.new(actor.is_a?(User) ? actor : nil)
+      ability.can?(action, active_fedora(target))
     end
-
-    def hyrax_presenter(entity)
-      if entity.is_a?(Sighrax::Monograph)
-        Hyrax::MonographPresenter.new(SolrDocument.new(entity.send(:data)), nil)
-      elsif entity.is_a?(Sighrax::Score)
-        Hyrax::ScorePresenter.new(SolrDocument.new(entity.send(:data)), nil)
-      elsif entity.is_a?(Sighrax::Asset)
-        Hyrax::FileSetPresenter.new(SolrDocument.new(entity.send(:data)), nil)
-      else
-        Hyrax::Presenter.send(:new, entity.noid)
-      end
-    end
-
-    # Checkpoint Helpers
 
     def access?(actor, target)
       products = actor_products(actor)
@@ -76,17 +54,6 @@ module Sighrax # rubocop:disable Metrics/ModuleLength
       component_products = component&.products || []
       (products & component_products).any?
     end
-
-    def hyrax_can?(actor, action, target)
-      return false if actor.is_a?(Anonymous)
-      return false unless action.is_a?(Symbol)
-      return false unless target.valid?
-      return false unless Incognito.allow_hyrax_can?(actor)
-      ability = Ability.new(actor)
-      ability.can?(action, target.noid)
-    end
-
-    # Role Helpers
 
     def platform_admin?(actor)
       actor.is_a?(User) && actor.platform_admin? && Incognito.allow_platform_admin?(actor)
@@ -103,6 +70,50 @@ module Sighrax # rubocop:disable Metrics/ModuleLength
     end
 
     # Entity Helpers
+
+    def policy(actor, entity)
+      EntityPolicy.new(actor, entity)
+    end
+
+    def active_fedora(entity)
+      case entity
+      when Monograph
+        ::Monograph.find(entity.noid)
+      when Score
+        ::Score.find(entity.noid)
+      when Asset
+        ::FileSet.find(entity.noid)
+      else
+        ::ActiveFedora::Base.find(entity.noid)
+      end
+    end
+
+    def hyrax_presenter(entity)
+      case entity
+      when Monograph
+        Hyrax::MonographPresenter.new(SolrDocument.new(entity.send(:data)), nil)
+      when Score
+        Hyrax::ScorePresenter.new(SolrDocument.new(entity.send(:data)), nil)
+      when Asset
+        Hyrax::FileSetPresenter.new(SolrDocument.new(entity.send(:data)), nil)
+      else
+        Hyrax::Presenter.send(:new, entity.noid)
+      end
+    end
+
+    def press(entity)
+      if entity.is_a?(Sighrax::Monograph)
+        Press.find_by(subdomain: Sighrax.hyrax_presenter(entity).subdomain)
+      elsif entity.is_a?(Sighrax::Asset)
+        if entity.parent.is_a?(Sighrax::Monograph)
+          Press.find_by(subdomain: Sighrax.hyrax_presenter(entity.parent).subdomain)
+        else
+          Press.null_press
+        end
+      else
+        Press.null_press
+      end
+    end
 
     def url(entity)
       case entity

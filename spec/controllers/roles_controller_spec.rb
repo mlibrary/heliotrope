@@ -11,7 +11,8 @@ RSpec.describe RolesController, type: :controller do
     describe 'GET index' do
       it 'denies access' do
         get :index, params: { press_id: press }
-        expect(response).to be_unauthorized
+        expect(response).to redirect_to root_path
+        expect(flash[:alert]).to eq 'You are not authorized to access this page.'
       end
     end
   end

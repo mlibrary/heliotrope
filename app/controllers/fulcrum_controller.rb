@@ -88,7 +88,7 @@ class FulcrumController < ApplicationController
     end
 
     def incognito_params(params)
-      params.slice(:actor, :platform_admin, :hyrax_can, :action_permitted)
+      params.slice(:actor, :platform_admin, :ability_can, :action_permitted)
     end
 
     def incognito(options) # rubocop:disable Metrics/CyclomaticComplexity
@@ -99,8 +99,8 @@ class FulcrumController < ApplicationController
           Incognito.sudo_actor(current_actor, true, params[:individual_id] || 0, params[:institution_id] || 0)
         when 'platform_admin'
           Incognito.allow_platform_admin(current_actor, false)
-        when 'hyrax_can'
-          Incognito.allow_hyrax_can(current_actor, false)
+        when 'ability_can'
+          Incognito.allow_ability_can(current_actor, false)
         when 'action_permitted'
           Incognito.allow_action_permitted(current_actor, false)
         end
