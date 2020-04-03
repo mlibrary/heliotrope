@@ -45,18 +45,10 @@ SitemapGenerator::Sitemap.create do
     d['file_set_ids_ssim'].each do |fsid|
       fs = ActiveFedora::SolrService.query("{!terms f=id}#{fsid}", rows: 1).first
       next unless fs.present? && fs['visibility_ssi'] == 'open'
+      # "featured representative" file_sets pages don't need to be in sitemaps, nor is there any point adding links...
+      # to a complex, JS-dependent `/epub` CSB view, as the crawler sees nothing there to index but the page title.
       rep = FeaturedRepresentative.where(work_id: d['id'], file_set_id: fsid).first
-
-      # "featured representative" file_sets that are not epubs don't need to be in sitemaps
-      next if rep&.kind.present? && rep&.kind != 'epub'
-
-      # epubs, if they are not restricted by checkpoint, get a special ereader url.
-      # if they are restricted by checkpoint, they shouldn't be in sitemaps since google can't access them
-      if rep&.kind == 'epub' && EPubPolicy.new(Anonymous.new({}), Sighrax.from_noid(fsid)).show?
-        url = Rails.application.routes.url_helpers.epub_path(fsid)
-        add url, lastmod: d['date_modified_dtsi'], priority: 0.5, changefreq: 'monthly'
-        next
-      end
+      next if rep&.kind.present?
 
       # the majority of FileSets won't be featured reps at all, so get a 'normal' url
       url = Rails.application.routes.url_helpers.hyrax_file_set_path(fsid)

@@ -9,4 +9,6 @@
 User-agent: *
 Crawl-delay: 10
 
+Disallow: /epubs/
+
 Sitemap: https://fulcrum.org/sitemaps/sitemap.xml.gz
