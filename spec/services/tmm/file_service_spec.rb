@@ -7,6 +7,8 @@ RSpec.describe Tmm::FileService do
     stub_out_redis
   end
 
+  let(:pdf) { Rails.root.join(fixture_path, 'hello.pdf') }
+
   describe "#add" do
     let(:user) { create(:platform_admin) }
     let(:monograph) { create(:monograph, title: ["Book"], depositor: user.email) }
@@ -14,7 +16,7 @@ RSpec.describe Tmm::FileService do
 
     let(:cover) { Rails.root.join(fixture_path, 'csv', 'import', 'shipwreck.jpg') }
     let(:epub) { Rails.root.join(fixture_path, 'moby-dick.epub') }
-    let(:pdf) { Rails.root.join(fixture_path, 'hello.pdf') }
+
 
     it "adds files" do
       described_class.add(doc: doc, file: cover, kind: :cover)
@@ -42,6 +44,13 @@ RSpec.describe Tmm::FileService do
     let(:file2) { Rails.root.join(fixture_path, 'csv', 'miranda.jpg') }
     let(:file_set) { create(:file_set, content: File.open(file1)) }
 
+    before do
+      # in the presence of stub_out_redis, these never gets set, making the checks on the existing FileSet meaningless
+      allow_any_instance_of(Hyrax::FileSetPresenter).to receive(:original_checksum)
+                                                            .and_return([Digest::MD5.file(file1).hexdigest])
+      allow_any_instance_of(Hyrax::FileSetPresenter).to receive(:probable_image?).and_return(true)
+    end
+
     context "with the same file" do
       it "returns false" do
         expect(described_class.replace?(file_set_id: file_set.id, new_file_path: file1)).to be false
@@ -53,7 +62,66 @@ RSpec.describe Tmm::FileService do
       # for this test it's a different name. It doesn't really matter though, we only
       # care about the checksum.
       it "returns true" do
-        expect(described_class.replace?(file_set_id: file_set.id, new_file_path: file2)).to be false
+        expect(described_class.replace?(file_set_id: file_set.id, new_file_path: file2)).to be true
+      end
+    end
+
+    context "with a file that is not of the same type" do
+      it "raises an exception" do
+        expect { described_class.replace?(file_set_id: file_set.id, new_file_path: pdf) }
+                   .to raise_error("The FileSet #{file_set.id} does not match the type of the new file.")
+      end
+    end
+  end
+
+  describe "#mismatched_types?" do
+    let(:presenter) { Hyrax::FileSetPresenter.new(SolrDocument.new({}), nil) }
+
+    context "image FileSet" do
+      before { allow_any_instance_of(Hyrax::FileSetPresenter).to receive(:probable_image?).and_return(true) }
+
+      context "mismatched with another image?" do
+        it "returns true" do
+          expect(described_class.mismatched_types?('blah.jpg', presenter)).to be false
+        end
+      end
+
+      context "mismatched with a non-image?" do
+        it "returns true" do
+          expect(described_class.mismatched_types?('blah.blah', presenter)).to be true
+        end
+      end
+    end
+
+    context "pdf FileSet" do
+      before { allow_any_instance_of(Hyrax::FileSetPresenter).to receive(:pdf?).and_return(true) }
+
+      context "mismatched with another pdf?" do
+        it "returns true" do
+          expect(described_class.mismatched_types?('blah.pdf', presenter)).to be false
+        end
+      end
+
+      context "mismatched with a non-pdf?" do
+        it "returns true" do
+          expect(described_class.mismatched_types?('blah.blah', presenter)).to be true
+        end
+      end
+    end
+
+    context "image FileSet" do
+      before { allow_any_instance_of(Hyrax::FileSetPresenter).to receive(:epub?).and_return(true) }
+
+      context "mismatched with another epub" do
+        it "returns true" do
+          expect(described_class.mismatched_types?('blah.epub', presenter)).to be false
+        end
+      end
+
+      context "mismatched with a non-epub" do
+        it "returns true" do
+          expect(described_class.mismatched_types?('blah.blah', presenter)).to be true
+        end
       end
     end
   end
