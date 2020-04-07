@@ -4530,6 +4530,442 @@ $gabii-link-hover:    #1e5667;
 }
 ///////////////////////////////////////////////
 //
+// Michigan Publishing Services
+//
+///////////////////////////////////////////////
+// colors
+$mps-blue-500: #001324;
+$mps-blue-400: #00274c;
+$mps-blue-300: #4c6781;
+$mps-blue-200: #b2bec9;
+$mps-blue-100: #f7f8f9;
+
+$mps-maize-500: #eaba02;
+$mps-maize-400: #ffcb05;
+$mps-maize-300: #ffda50;
+$mps-maize-200: #ffea9b;
+$mps-maize-100: #fff9e6;
+
+$mps-neutral-500: #06080a;
+$mps-neutral-400: #212b36;
+$mps-neutral-300: #637381;
+$mps-neutral-200: #8196a1;
+$mps-neutral-100: #e5e9ed;
+
+$mps-teal-500: #106684;
+$mps-teal-400: #1d7491;
+$mps-teal-300: #65a8bf;
+$mps-teal-200: #a7cddb;
+$mps-teal-100: #e9f2f5;
+
+// typography
+@import url('https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,700;1,400;1,700&family=Muli:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+
+@mixin muli {
+  font-family: 'Muli', sans-serif;
+}
+
+@mixin crimson {
+  font-family: 'Crimson Text', serif;
+}
+
+
+.mps {
+
+  // typography
+  @include muli;
+
+  h1,
+  h2 {
+    @include crimson;
+    font-weight: 400;
+  }
+
+  h1 {
+    font-size: 36px;
+  }
+
+  h3,
+  h4,
+  h5 {
+    @include muli;
+    font-weight: 700;
+  }
+
+  // links
+  a {
+    color: $mps-teal-400;
+  }
+
+  a:hover,
+  a:active,
+  a:focus {
+    color: $mps-teal-500;
+    text-decoration: underline;
+  }
+
+  // buttons
+  .btn, .btn-default {
+    @include muli;
+    background-color: $mps-teal-400;
+    border-color: $mps-teal-400;
+    color: white;
+  }
+
+  .btn:hover,
+  .btn:active,
+  .btn:focus,
+  .btn-default:hover,
+  .btn-default:active,
+  .btn-default:focus {
+    background-color: $mps-teal-500;
+    color: white;
+    text-decoration: none;
+  }
+
+  // navigation menu
+  .navbar-default .navbar-nav > .open > a,
+  .navbar-default .navbar-nav > .open > a:hover,
+  .navbar-default .navbar-nav > .open > a:focus {
+    background-color: $mps-neutral-100;
+  }
+
+  .navbar {
+    border-radius: 0px;
+  }
+
+  #brand-bar {
+    background-color: white;
+    border-color: $mps-neutral-100;
+
+    .navbar-brand {
+      color: $mps-blue-500;
+      @include muli;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: unset;
+      font-size: 1.8em;
+      height: auto;
+      padding: 9px 40px 10px 15px;
+    }
+
+    .navbar-brand > img {
+      display: inline-block;
+      padding-right: 10px;
+    }
+
+    .search-form {
+      margin-top: 12px;
+    }
+
+    .navbar-brand:hover,
+    .navbar-brand:active,
+    .navbar-brand:focus {
+      text-decoration: underline;
+    }
+
+    .navbar-nav {
+      a#add-content,
+      a.login,
+      a.user-display-name,
+      a.language-dropdown {
+          color: $mps-blue-500;
+      }
+
+      .open > a,
+      .open > a:focus,
+      .open > a:hover,
+      .open > a#add-content {
+        background-color: $mps-neutral-100;
+        color: $mps-blue-500;
+      }
+    }
+
+    button.search-submit {
+      background-color: $mps-maize-400;
+      border-color: $mps-maize-400;
+      color: $mps-blue-500;
+    }
+
+  }
+
+  // breadcrumbs
+  .breadcrumbs {
+    @include muli;
+
+    .breadcrumb {
+      background-color: $mps-blue-100;
+    }
+    
+  }
+
+  // press catalog
+
+  // jumbotron
+  .jumbotron {
+    background-color: $mps-blue-100;
+    @include muli;
+
+    padding-top: 10px;
+    padding-bottom: 10px;
+
+    .container {
+      margin-top: 1em;
+    }
+
+    p.lead {
+      font-size: 20px;
+      a {
+        text-decoration: underline;
+      }
+    }
+
+    p.publisher-info a {
+      text-decoration: underline;
+    }
+
+    .logo {
+
+      img {
+        display: none;
+      }
+
+    }
+
+  }
+
+  // monograph catalog
+  #sort-dropdown .dropdown-toggle, #per_page-dropdown .dropdown-toggle {
+    background-color: $mps-teal-400;
+    color: white;
+  }
+
+  #sort-dropdown .dropdown-toggle,
+  #per_page-dropdown .dropdown-toggle {
+    background-color: $mps-teal-400;
+    color: white;
+    border-color: $mps-teal-400;
+
+  }
+
+  #sort-dropdown .dropdown-toggle:hover,
+  #per_page-dropdown .dropdown-toggle:hover,
+  #sort-dropdown .dropdown-toggle:active,
+  #per_page-dropdown .dropdown-toggle:active {
+    background-color: $mps-teal-500;
+    color: white;
+  }
+
+  #sort-dropdown .dropdown-toggle .caret,
+  #per_page-dropdown .dropdown-toggle .caret {
+    color: white;
+  }
+
+  #sort-dropdown .dropdown-toggle:hover .caret,
+  #per_page-dropdown .dropdown-toggle:hover .caret,
+  #sort-dropdown .dropdown-toggle:active .caret,
+  #per_page-dropdown .dropdown-toggle:active .caret {
+    color: white;
+  }
+
+  // monograph
+  .monograph {
+    .documentHeader {
+      p {
+        @include muli;
+      }
+    }
+
+    .monograph-metadata h1 {
+      font-size: 36px;
+    }
+
+    .authors, .copyright {
+      @include muli;
+    }
+
+    .monograph-cover button {
+      background-color: transparent;
+      border-color: transparent;
+    }
+  }
+
+  // pagination
+  .page_links {
+    @include muli;
+  }
+
+  .pagination {
+    @include muli;
+     li a, li span {
+       color: white;
+       background-color: $mps-teal-400;
+     }
+
+     .active>a,
+     .active>a:hover,
+     .active>a:focus,
+     .active>span,
+     .active>span:hover,
+     .active>span:focus {
+       background-color: $mps-teal-500;
+       border-color: $mps-teal-500;
+       color: white;
+     }
+  }
+
+  // assets
+  .asset-navigation {
+    @include muli;
+  }
+
+  .asset {
+    ul.nav-tabs li {
+      @include muli;
+    }
+  }
+
+  //footer
+  footer {
+    a,
+    a:hover,
+    a:active {
+      color: white;
+    }
+    .press-block-a,
+    .press-block-b {
+      background-color:  #002e5e;
+
+      a,
+      a:hover,
+      a:active {
+        color: white;
+      }
+
+      img {
+        width: 110px;
+        margin-top: 30px;
+      }
+
+      p {
+        @include muli;
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: unset;
+
+        a.brand {
+          display:none;
+        }
+      }
+
+    }
+    .press-block-c {
+      background-color: $mps-blue-500;
+      color: $mps-blue-200;
+      @include muli;
+    }
+    .platform {
+      background-color: $mps-neutral-400;
+    }
+  }
+
+  // e-book reader
+  #epub {
+    font-family: 'Muli', sans-serif !important;
+  }
+
+  #reader {
+    @include muli;
+
+    .cozy-control .cozy-h1 {
+      @include crimson;
+      font-size: 1.5em;
+    }
+
+    .cozy-container input[type="text"] {
+      font-family: 'Muli', sans-serif !important;
+    }
+
+    .button {
+      @include epub-button-background-color($mps-teal-400,$mps-teal-500,white);
+      @include muli;
+    }
+
+    .button--lg {
+      @include epub-button-background-color($mps-teal-400,$mps-teal-500,white);
+      @include muli;
+    }
+
+    .button--inline {
+      @include epub-button-background-color($mps-teal-400,$mps-teal-500,white);
+      @include muli;
+    }
+
+    .button--sm {
+      @include epub-button-background-color($mps-teal-400,$mps-teal-500,white);
+      @include muli;
+    }
+
+    .button--sm.cozy-preferences {
+      @include epub-button-background-color($mps-teal-400,$mps-teal-500,white);
+      color: white;
+    }
+
+    i[class^='icon-chevron-'] {
+      @include epub-prev-next-color($mps-teal-400 !important);
+      transition: 0.2s ease-in;
+    }
+
+    i[class^='icon-chevron-']:hover {
+      @include epub-hover-prev-next-color($mps-teal-500 !important);
+      transition: 0.2s ease-in;
+    }
+
+    // PDF loading progress bar
+    .helio-loading-bar .progress {
+      background-color: $mps-teal-400;
+    }
+
+  }
+
+  @media only screen and (max-width : 1198px) {
+
+    #brand-bar form.search-form, .navbar-form {
+      width: 200px;
+    }
+  
+  }
+  
+  @media only screen and (max-width : 992px) {
+    #brand-bar .navbar-brand {
+      font-size: 1.4em;
+    }
+
+    #brand-bar form.search-form, .navbar-form {
+      padding: 10px 0;
+      margin: 0;
+      width: 100%;
+      border: 0;
+      float: none !important;
+    }
+
+    .navbar-form .input-group .input-group-btn {
+      width: 1%;
+    }
+
+  }
+
+  @media only screen and (max-width : 768px) {
+    #brand-bar .navbar-brand {
+      font-size: 1.2em;
+    }
+
+  }
+
+}
+
+///////////////////////////////////////////////
+//
 // University of Minnesota Press
 //
 ///////////////////////////////////////////////

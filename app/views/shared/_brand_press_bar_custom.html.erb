@@ -25,6 +25,10 @@
         <a class="navbar-brand" href="<%= main_app.press_catalog_path(press_object) %>">
             <%= image_tag "bar-digital-logo.png", class: 'navbar-brand-logo', alt: 'BAR Publishing', height: '70', width: 'auto' %>
         </a>
+        <% elsif press_subdomain == 'mps' %>
+        <a class="navbar-brand" href="<%= press_object&.press_url %>">
+            <%= image_tag "mps.png", class: 'navbar-brand-logo', alt: '', height: '40', width: 'auto' %><%= press_object&.name %>
+          </a>
         <% end %>
       <% end %>
     </div>
@@ -36,6 +40,19 @@
         <% if navigation_block(press_subdomain).present? %>
           <%= navigation_block(press_subdomain).html_safe %>
         <% end %>
+        <% if press_subdomain.present? %>
+        <% press_object = Press.where(subdomain: press_subdomain)&.first # this is less than ideal and will be addressed in HELIO-3311 %>
+          <% if press_subdomain == 'mps' %>
+            <% if current_user && show_site_actions? %>
+              <%= render 'shared/my_actions' %>
+            <% elsif current_institutions? %>
+              <%= render 'shared/institutions' %>
+            <% else %>
+              <a href="/" title="Fulcrum" data-turbolinks="false"><%= image_tag "fulcrum-mark-white-30px.png", class: 'logo', alt: 'Fulcrum logo' %></a>
+            <% end %>
+          <% end %>
+        <% end %>
+
       </div>
     </div>
   </div>
