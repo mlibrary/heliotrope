@@ -3,6 +3,14 @@
 require 'rails_helper'
 
 RSpec.describe Score do
+  subject { score }
+
+  let(:score) { described_class.new }
+
+  it 'includes HeliotropeUniverialMetadata' do
+    is_expected.to be_a HeliotropeUniversalMetadata
+  end
+
   context 'handles' do
     let(:score) { build(:score, id: noid) }
     let(:noid) { 'validnoid' }

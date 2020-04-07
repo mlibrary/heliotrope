@@ -9,7 +9,7 @@ RSpec.describe Hyrax::CurationConcern do
     subject(:middlewares) { actor_factory.middlewares }
 
     it do
-      expect(middlewares.count).to eq 21
+      expect(middlewares.count).to eq 22
       expect(middlewares[ 0]).to eq Hyrax::Actors::TransactionalRequest
       expect(middlewares[ 1]).to eq Hyrax::Actors::OptimisticLockValidator
       expect(middlewares[ 2]).to eq HeliotropeActor
@@ -28,10 +28,11 @@ RSpec.describe Hyrax::CurationConcern do
       expect(middlewares[15]).to eq Hyrax::Actors::CleanupFileSetsActor
       expect(middlewares[16]).to eq Hyrax::Actors::CleanupTrophiesActor
       expect(middlewares[17]).to eq FeaturedRepresentativeActor
-      expect(middlewares[18]).to eq Hyrax::Actors::FeaturedWorkActor
-      expect(middlewares[19]).to eq Hyrax::Actors::ModelActor
-      expect(middlewares[20]).to eq Hyrax::Actors::InitializeWorkflowActor
-      expect(middlewares[21]).to be nil
+      expect(middlewares[18]).to eq ModelTreeActor
+      expect(middlewares[19]).to eq Hyrax::Actors::FeaturedWorkActor
+      expect(middlewares[20]).to eq Hyrax::Actors::ModelActor
+      expect(middlewares[21]).to eq Hyrax::Actors::InitializeWorkflowActor
+      expect(middlewares[22]).to be nil
     end
   end
 end

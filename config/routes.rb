@@ -131,6 +131,15 @@ Rails.application.routes.draw do
     end
   end
 
+  resources :model_trees, only: %i[show] do
+    member do
+      post :kind
+      delete :unkind
+      post :link
+      delete :unlink
+    end
+  end
+
   get 'epubs/:id', controller: :e_pubs, action: :show, as: :epub
   get 'epubs/:id/*file', controller: :e_pubs, action: :file, as: :epub_file
   get 'epubs_access/:id', controller: :e_pubs, action: :access, as: :epub_access
@@ -202,10 +211,18 @@ Rails.application.routes.draw do
   curation_concerns_basic_routes
   concern :exportable, Blacklight::Routes::Exportable.new
 
-  namespace :hyrax, path: '/concerns' do
-    resources :monographs, only: [] do
+  namespace :hyrax, path: :concern do
+    concerns_to_route.each do |curation_concern_name|
+      namespaced_resources curation_concern_name, only: [] do
+        member do
+          post :publish
+          get :model, to: '/model_trees#show'
+        end
+      end
+    end
+    resources :file_sets, only: [] do
       member do
-        post :publish
+        get :model, to: '/model_trees#show'
       end
     end
   end

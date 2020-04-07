@@ -27,5 +27,13 @@ module SolrDocumentExtensions
     def has_model # rubocop:disable Naming/PredicateName
       Array(self[Solrizer.solr_name('has_model', :symbol)]).first
     end
+
+    def model_parent_noid
+      Array(self[Solrizer.solr_name('model_parent_noid', :symbol)]).first
+    end
+
+    def model_metadata_json
+      Array(self[Solrizer.solr_name('model_metadata_json', :symbol)]).first
+    end
   end
 end

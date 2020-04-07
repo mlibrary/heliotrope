@@ -33,6 +33,8 @@ handle_service:
   user: admin
   password: secret
 
+model_tree: true
+
 # List of Greensub Products to allow read access to everyone.
 allow_read_products:
   - allow_read_product

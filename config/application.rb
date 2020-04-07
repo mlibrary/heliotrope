@@ -77,6 +77,9 @@ module Heliotrope
     # See https://github.com/mlibrary/umrdr/commit/4aa4e63349d6f3aa51d76f07aa20faeae6712719
     config.skylight.probes -= ['middleware']
 
+    # Development Model Tree Flag
+    config.model_tree = Settings.model_tree && true
+
     config.to_prepare do
       # ensure overrides are loaded
       # see https://bibwild.wordpress.com/2016/12/27/a-class_eval-monkey-patching-pattern-with-prepend/
@@ -95,6 +98,8 @@ module Heliotrope
       Hyrax::CurationConcern.actor_factory.insert_after(RegisterFileSetDoisActor, CreateWithImportFilesActor)
       # Destroy FeaturedRepresentatives on delete
       Hyrax::CurationConcern.actor_factory.insert_after(Hyrax::Actors::CleanupTrophiesActor, FeaturedRepresentativeActor)
+      # Delete ModelTreeVertices and ModelTreeEdges
+      Hyrax::CurationConcern.actor_factory.insert_after(FeaturedRepresentativeActor, ModelTreeActor)
     end
   end
 end

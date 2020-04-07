@@ -104,7 +104,7 @@ module Export
         @all_metadata = if @columns == :monograph
                           (ADMIN_METADATA_FIELDS + METADATA_FIELDS).select { |f| %i[universal monograph].include? f[:object] }
                         else
-                          ADMIN_METADATA_FIELDS + METADATA_FIELDS + FILE_SET_FLAG_FIELDS
+                          ADMIN_METADATA_FIELDS + METADATA_FIELDS + MODELING_FIELDS
                         end
       end
 

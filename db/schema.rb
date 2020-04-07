@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20200330165632) do
+ActiveRecord::Schema.define(version: 20200401184227) do
 
   create_table "api_requests", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.integer "user_id"
@@ -162,7 +162,8 @@ ActiveRecord::Schema.define(version: 20200330165632) do
     t.string "kind"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["work_id", "file_set_id"], name: "index_featured_representatives_on_work_id_and_file_set_id", unique: true
+    t.index ["file_set_id"], name: "index_featured_representatives_on_file_set_id", unique: true
+    t.index ["work_id", "kind"], name: "index_featured_representatives_on_work_id_and_kind", unique: true
   end
 
   create_table "featured_works", id: :integer, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
@@ -335,6 +336,19 @@ ActiveRecord::Schema.define(version: 20200330165632) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["namespace"], name: "index_minter_states_on_namespace", unique: true
+  end
+
+  create_table "model_tree_edges", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.string "parent_noid", null: false
+    t.string "child_noid", null: false
+    t.index ["child_noid"], name: "index_model_tree_edges_on_child_noid"
+    t.index ["parent_noid"], name: "index_model_tree_edges_on_parent_noid"
+  end
+
+  create_table "model_tree_vertices", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.string "noid", null: false
+    t.string "data"
+    t.index ["noid"], name: "index_model_tree_vertices_on_noid"
   end
 
   create_table "permission_template_accesses", id: :integer, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
@@ -711,6 +725,8 @@ ActiveRecord::Schema.define(version: 20200330165632) do
     t.index ["work_id"], name: "index_work_view_stats_on_work_id"
   end
 
+  add_foreign_key "api_requests", "users"
+  add_foreign_key "collection_type_participants", "hyrax_collection_types"
   add_foreign_key "components_products", "components"
   add_foreign_key "components_products", "products"
   add_foreign_key "curation_concerns_operations", "users"

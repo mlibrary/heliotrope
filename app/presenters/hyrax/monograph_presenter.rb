@@ -19,6 +19,7 @@ module Hyrax
              :isbn, :license, :copyright_holder, :open_access, :funder, :funder_display, :holding_contact, :has_model,
              :buy_url, :embargo_release_date, :lease_expiration_date, :rights, :series,
              :visibility, :identifier, :doi, :handle, :thumbnail_path,
+             :model_parent_noid, :model_metadata_json,
              to: :solr_document
 
     def creator

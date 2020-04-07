@@ -3,9 +3,15 @@
 require 'rails_helper'
 
 describe Monograph do
+  subject { monograph }
+
   let(:monograph) { described_class.new }
   let(:date) { DateTime.now }
   let(:umich) { build(:press, subdomain: 'umich') }
+
+  it 'includes HeliotropeUniverialMetadata' do
+    is_expected.to be_a HeliotropeUniversalMetadata
+  end
 
   it "has date_published" do
     monograph.date_published = [date]

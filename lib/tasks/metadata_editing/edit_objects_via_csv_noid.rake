@@ -14,7 +14,7 @@ namespace :heliotrope do
     rows = CSV.read(args.input_file, headers: true, skip_blanks: true).delete_if { |row| row.to_hash.values.all?(&:blank?) }
 
     # as the attr will be going straight to an update actor, we need to remove non-Fedora fields
-    non_fedora_fields = ((::ADMIN_METADATA_FIELDS + ::FILE_SET_FLAG_FIELDS).pluck :metadata_name).push(::MONO_FILENAME_FLAG)
+    non_fedora_fields = ((::ADMIN_METADATA_FIELDS + ::MODELING_FIELDS).pluck :metadata_name).push(::MONO_FILENAME_FLAG)
 
     check_for_unexpected_columns(rows)
 
@@ -73,7 +73,7 @@ namespace :heliotrope do
   def check_for_unexpected_columns(rows)
     # look for unexpected column names which will be ignored.
     # don't warn user for any fields that may have been output by the exporter, as they may be using its output as a starting point
-    unexpecteds = rows[0].to_h.keys.map { |k| k&.strip } - METADATA_FIELDS.pluck(:field_name) - ADMIN_METADATA_FIELDS.pluck(:field_name) - FILE_SET_FLAG_FIELDS.pluck(:field_name)
+    unexpecteds = rows[0].to_h.keys.map { |k| k&.strip } - METADATA_FIELDS.pluck(:field_name) - ADMIN_METADATA_FIELDS.pluck(:field_name) - MODELING_FIELDS.pluck(:field_name)
     puts "***TITLE ROW HAS UNEXPECTED VALUES!*** These columns will be skipped: #{unexpecteds.join(', ')}\n\n" if unexpecteds.present?
   end
 

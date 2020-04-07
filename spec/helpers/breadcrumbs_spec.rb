@@ -18,11 +18,28 @@ describe BreadcrumbsHelper, type: :helper do
                        has_model_ssim: ["FileSet"],
                        monograph_id_ssim: 1)
     end
+    let(:score_doc) do
+      SolrDocument.new(id: 3,
+                       title_tesim: ['Score Title'],
+                       press_tesim: press.subdomain,
+                       has_model_ssim: ['Score'],
+                       member_ids_ssim: ['4'])
+    end
+    let(:asset_doc) do
+      SolrDocument.new(id: 4,
+                       title_tesim: ['Asset Title'],
+                       has_model_ssim: ['FileSet'],
+                       monograph_id_ssim: 3)
+    end
     let(:monograph_presenter) { Hyrax::MonographPresenter.new(mono_doc, nil) }
     let(:file_set_presenter) { Hyrax::FileSetPresenter.new(file_set_doc, nil) }
+    let(:score_presenter) { Hyrax::ScorePresenter.new(score_doc, nil) }
+    let(:asset_presenter) { Hyrax::FileSetPresenter.new(asset_doc, nil) }
+
+
 
     before do
-      ActiveFedora::SolrService.add([mono_doc.to_h, file_set_doc.to_h])
+      ActiveFedora::SolrService.add([mono_doc.to_h, file_set_doc.to_h, score_doc.to_h, asset_doc.to_h])
       ActiveFedora::SolrService.commit
     end
 
@@ -188,6 +205,96 @@ describe BreadcrumbsHelper, type: :helper do
                                                 { href: "",
                                                   text: "FileSet Title",
                                                   class: "active" }])
+          end
+        end
+      end
+    end
+
+    describe 'when on a model_tree show page' do
+      let(:controller_name) { 'model_trees' }
+
+      context 'monograph' do
+        context 'when monograph presenter' do
+          it "returns the right breadcrumbs" do
+            @presenter = monograph_presenter
+            expect(breadcrumbs).to match_array([{ href: "/blue",
+                                                  text: "Home",
+                                                  class: "" },
+                                                { href: "/concern/monographs/1",
+                                                  text: "Monograph Title",
+                                                  class: "" },
+                                                { href: "/concern/monographs/1/show",
+                                                  text: "Show",
+                                                  class: "" },
+                                                { href: "",
+                                                  text: "Model",
+                                                  class: "active" }
+                                               ])
+          end
+        end
+
+        context 'when file set presenter' do
+          it "returns the right breadcrumbs" do
+            @presenter = file_set_presenter
+            expect(breadcrumbs).to match_array([{ href: "/blue",
+                                                  text: "Home",
+                                                  class: "" },
+                                                { href: "/concern/monographs/1",
+                                                  text: "Monograph Title",
+                                                  class: "" },
+                                                { href: "/concern/monographs/1/show",
+                                                  text: "Show",
+                                                  class: "" },
+                                                { href: "/concern/file_sets/2",
+                                                  text: "FileSet Title",
+                                                  class: "" },
+                                                { href: "",
+                                                  text: "Model",
+                                                  class: "active" }
+                                               ])
+          end
+        end
+      end
+
+      context 'score' do
+        context 'when score presenter' do
+          it "returns the right breadcrumbs" do
+            @presenter = score_presenter
+            expect(breadcrumbs).to match_array([{ href: "/blue",
+                                                  text: "Home",
+                                                  class: "" },
+                                                { href: "/concern/scores/3",
+                                                  text: "Score Title",
+                                                  class: "" },
+                                                { href: "/concern/scores/3/show",
+                                                  text: "Show",
+                                                  class: "" },
+                                                { href: "",
+                                                  text: "Model",
+                                                  class: "active" }
+                                               ])
+          end
+        end
+
+        context 'when asset presenter' do
+          it "returns the right breadcrumbs" do
+            @presenter = asset_presenter
+            expect(breadcrumbs).to match_array([{ href: "/blue",
+                                                  text: "Home",
+                                                  class: "" },
+                                                { href: "/concern/scores/3",
+                                                  text: "Score Title",
+                                                  class: "" },
+                                                { href: "/concern/scores/3/show",
+                                                  text: "Show",
+                                                  class: "" },
+                                                { href: "/concern/file_sets/4",
+                                                  text: "Asset Title",
+                                                  class: "" },
+                                                { href: "",
+                                                  text: "Model",
+                                                  class: "active" }
+                                               ])
           end
         end
       end

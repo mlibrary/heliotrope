@@ -355,3 +355,7 @@ en:
         -- related: *.html file
         -- peer_review: *.html file
         -- cover: image file like *.jpg (not JPG 2000), *.tiff, *.png
+      model_parent_noid: |
+        Fulcrum dev-only field. Can be used to create parent child model relation.
+      model_metadata_json: |
+        Fulcrum dev-only field. Can be used to model metadata in JSON.

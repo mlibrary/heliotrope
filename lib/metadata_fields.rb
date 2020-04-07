@@ -62,9 +62,11 @@ METADATA_FIELDS ||=
     { object: :file_set, field_name: 'Redirect to', metadata_name: 'redirect_to', required: false, multivalued: :no, description: I18n.t('csv.descriptions.redirect_to') }
   ].freeze
 
-# Any fields related to "representative" relationships between FileSets and their parent Monograph
-FILE_SET_FLAG_FIELDS ||=
+# ActiveFedora fields needed to support application data model
+MODELING_FIELDS ||=
   [
+    { object: :universal, field_name: 'Model Parent NOID', metadata_name: 'model_parent_noid', required: false, multivalued: :no, description: I18n.t('csv.descriptions.model_parent_noid') },
+    { object: :universal, field_name: 'Model Metadata JSON', metadata_name: 'model_metadata_json', required: false, multivalued: :no, description: I18n.t('csv.descriptions.model_metadata_json') },
     { object: :file_set, field_name: 'Representative Kind', metadata_name: 'representative_kind', required: false, multivalued: :no, acceptable_values: FeaturedRepresentative::KINDS + ['cover'], description: I18n.t('csv.descriptions.representative_kind') }
   ].freeze
 

@@ -28,5 +28,13 @@ module HeliotropeUniversalMetadata
     property :hdl, predicate: ::RDF::Vocab::Identifiers.hdl, multiple: false do |index|
       index.as :symbol
     end
+
+    property :model_parent_noid, predicate: ::RDF::URI.new('http://fulcrum.org/ns#ModelParentNOID'), multiple: false do |index|
+      index.as :symbol
+    end
+
+    property :model_metadata_json, predicate: ::RDF::URI.new('http://fulcrum.org/ns#ModelMetadataJSON'), multiple: false do |index|
+      index.as :symbol
+    end
   end
 end

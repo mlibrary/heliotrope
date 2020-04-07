@@ -1,22 +1,14 @@
 <h1>Jobs</h1>
-<ul>
-  <li>
-    <form name="ingest" method="get" action="<%= fulcrum_exec_path(:ingest) %>">
-      <label for="ingest_noid">NOID</label>
-      <input type="text" id="ingest_noid" name="noid" value="validnoid">
-      <label for="base">Base&nbsp&nbsp&nbsp</label>
-      <input type="text" id="base" name="base" value="https://www.fulcrum.org/api">
-      <label for="target">Target</label>
-      <%= select_tag "target", options_for_select(Press.all.collect { |press| [press.subdomain, press.subdomain] }, 'heliotrope') %>
-      <label for="token">Token</label>
-      <input type="text" id="token" name="token" value="JSON WEB TOKEN">
-      <button name="submit" type="submit" value="ingest">Ingest</button>
-    </form>
-  </li>
-  <li>
-    <form name="unpack" method="get" action="<%= fulcrum_exec_path(:unpack) %>">
+<div class="col-sm-6">
+  <div class="row">
+    <h2>Unpack</h2>
+  </div>
+  <form name="unpack" method="get" action="<%= fulcrum_exec_path(:unpack) %>">
+    <div class="row">
       <label for="unpack_noid">NOID</label>
       <input type="text" id="unpack_noid" name="noid" value="validnoid">
+    </div>
+    <div class="row">
       <label for="kind">Kind&nbsp&nbsp&nbsp</label>
       <select name="kind" id="kind">
         <option value="epub">epub</option>
@@ -25,12 +17,43 @@
         <option value="webgl">webgl</option>
       </select>
       <button name="submit" type="submit" value="unpack">Unpack</button>
-    </form>
-  </li>
-  <li>
-    <form name="handle" method="get" action="<%= fulcrum_exec_path(:handle) %>">
+    </div>
+  </form>
+</div>
+<div class="col-sm-6">
+  <div class="row">
+    <h2>Ingest</h2>
+  </div>
+  <form name="ingest" method="get" action="<%= fulcrum_exec_path(:ingest) %>">
+    <div class="row">
+      <label for="token">Token</label>
+      <input type="text" id="token" name="token" value="JSON WEB TOKEN">
+    </div>
+    <div class="row">
+      <label for="base">Base&nbsp&nbsp&nbsp</label>
+      <input type="text" id="base" name="base" value="https://www.fulcrum.org/api">
+    </div>
+    <div class="row">
+      <label for="ingest_noid">NOID</label>
+      <input type="text" id="ingest_noid" name="noid" value="validnoid">
+    </div>
+    <div class="row">
+      <label for="target">Target</label>
+      <%= select_tag "target", options_for_select(Press.all.collect { |press| [press.subdomain, press.subdomain] }, 'heliotrope') %>
+      <button name="submit" type="submit" value="ingest">Ingest</button>
+    </div>
+  </form>
+</div>
+<div class="col-sm-6">
+  <div class="row">
+    <h2>Handle</h2>
+  </div>
+  <form name="handle" method="get" action="<%= fulcrum_exec_path(:handle) %>">
+    <div class="row">
       <label for="handle_noid">NOID</label>
       <input type="text" id="handle_noid" name="noid" value="validnoid">
+    </div>
+    <div class="row">
       <label for="handle_job">Action</label>
       <select name="job" id="handle_job">
         <option value="create">create</option>
@@ -38,38 +61,55 @@
         <option selected="selected" value="verify">verify</option>
       </select>
       <button name="submit" type="submit" value="handle">Handle</button>
-    </form>
-  </li>
-  <li>
-    <form name="aptrust" method="get" action="<%= fulcrum_exec_path(:aptrust) %>">
+    </div>
+  </form>
+</div>
+<div class="col-sm-6">
+  <div class="row">
+    <h2>APTrust</h2>
+  </div>
+  <form name="aptrust" method="get" action="<%= fulcrum_exec_path(:aptrust) %>">
+    <div class="row">
       <label for="aptrust_noid">NOID</label>
       <input type="text" id="aptrust_noid" name="noid" value="validnoid">
+    </div>
+    <div class="row">
       <label for="aptrust_job">Action</label>
       <select name="job" id="aptrust_job">
         <option value="deposit">deposit</option>
         <option selected="selected" value="verify">verify</option>
       </select>
       <button name="submit" type="submit" value="aptrust">Aptrust</button>
-    </form>
-  </li>
-  <li>
+    </div>
+  </form>
+</div>
+<div class="col-sm-6">
+  <div class="row">
+    <h2>Maintenance</h2>
+  </div>
+  <div class="row">
     <%= link_to(fulcrum_exec_path(:recache_in_common_metadata), method: :get, class: "btn btn-default", data: { confirm: 'Are you sure?' }) do %>
       <span class="glyphicon glyphicon-wrench" aria-hidden="true"></span> Recache InCommon Metadata
     <% end %>
-  </li>
-  <li>
+  </div>
+</div>
+<div class="col-sm-6">
+  <div class="row">
+    <h2>Reindex</h2>
+  </div>
+  <div class="row">
     <%= link_to(fulcrum_exec_path(:reindex_everything), method: :get, class: "btn btn-default", data: { confirm: 'Are you sure?' }) do %>
-      <span class="glyphicon glyphicon-wrench" aria-hidden="true"></span> Reindex Everything
-    <% end %>
-  </li>
-  <li>
+        <span class="glyphicon glyphicon-wrench" aria-hidden="true"></span> Reindex Everything
+      <% end %>
+    </div>
+  <div class="row">
     <%= link_to(fulcrum_exec_path(:reindex_monographs), method: :get, class: "btn btn-default", data: { confirm: 'Are you sure?' }) do %>
       <span class="glyphicon glyphicon-wrench" aria-hidden="true"></span> Reindex Monographs
     <% end %>
-  </li>
-  <li>
+  </div>
+  <div class="row">
     <%= link_to(fulcrum_exec_path(:reindex_file_sets), method: :get, class: "btn btn-default", data: { confirm: 'Are you sure?' }) do %>
       <span class="glyphicon glyphicon-wrench" aria-hidden="true"></span> Reindex Assets
     <% end %>
-  </li>
-</ul>
+  </div>
+</div>

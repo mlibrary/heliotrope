@@ -1,0 +1,72 @@
+<div class="row">
+  <% presenter = @presenter
+  @presenter = @hyrax_presenter %>
+  <%= render partial: '/shared/breadcrumbs' %>
+  <% @presenter = presenter %>
+</div>
+
+<div class="row">
+  <h1><%= @presenter.display_name %></h1>
+  <% if @presenter.parent? %>
+    <%= @presenter.kind_display %> representative for <%= link_to @presenter.parent.display_name, model_tree_path(@presenter.parent.id) %>
+  <% end %>
+</div>
+
+<% if @presenter.children? || @presenter.child_options? %>
+  <div class="row">
+    <h2>Representatives</h2>
+    <% @presenter.children.each do |child| %>
+      <div class="row">
+        <div class="col-sm-4">
+          <% if child.kind? %>
+            <div class="row">
+              <div class="col-sm-3">
+                <%= link_to(unkind_model_tree_path(child.id, show_id: @presenter.id), method: :delete, class: "btn btn-default") do %>
+                  <span class="glyphicon glyphicon-minus" aria-hidden="true"></span> Unset
+                <% end %>
+              </div>
+              <div class="col-sm-9">
+                <b><%= child.kind_display %></b>
+              </div>
+            </div>
+          <% else %>
+            <%= form_with(url: kind_model_tree_path(child.id, show_id: @presenter.id), method: :post) do %>
+              <div class="row">
+                <div class="col-sm-3">
+                  <%= button_tag(type: 'submit',  class: 'btn btn-default') do %>
+                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Set
+                  <% end %>
+                </div>
+                <div class="col-sm-9">
+                  <%= select_tag(:kind, options_for_select(child.kind_options), class: 'form-control') %>
+                </div>
+              </div>
+            <% end %>
+          <% end %>
+        </div>
+        <div class="col-sm-6">
+          <%= link_to child.display_name, model_tree_path(child.id) %>
+        </div>
+        <div class="col-sm-2">
+          <%= link_to(unlink_model_tree_path(child.id, show_id: @presenter.id), method: :delete, class: "btn btn-default") do %>
+            <span class="glyphicon glyphicon-minus" aria-hidden="true"></span> Remove
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+    <% if @presenter.child_options? %>
+      <%= form_with(url: link_model_tree_path(@presenter.id), method: :post) do %>
+        <div class="row">
+          <div class="col-sm-10">
+            <%= select_tag(:child_id, options_for_select(@presenter.child_options), class: 'form-control') %>
+          </div>
+          <div class="col-sm-2">
+            <%= button_tag(type: 'submit',  class: 'btn btn-default') do %>
+              <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Add
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+    <% end %>
+  </div>
+<% end %>
