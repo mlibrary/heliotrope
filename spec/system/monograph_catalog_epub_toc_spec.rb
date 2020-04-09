@@ -97,11 +97,11 @@ RSpec.describe "Monograph Catalog EPUB TOC", type: :system, browser: true do
       let(:subdomain) { 'nonheb' }
 
       context 'when authorized' do
-        it 'has Read button' do
+        it 'has no Read or Download buttons' do
           visit monograph_catalog_path(monograph)
           click_on("Table of Contents")
           within("#toc") do
-            expect(page).to have_xpath(".//span[@title='Read section']")
+            expect(page).not_to have_xpath(".//span[@title='Read section']")
             expect(page).not_to have_xpath(".//i[@title='Download section']")
           end
         end
@@ -112,11 +112,11 @@ RSpec.describe "Monograph Catalog EPUB TOC", type: :system, browser: true do
 
         before { Greensub::Component.create!(identifier: parent.resource_token, name: parent.title, noid: parent.noid) }
 
-        it 'has Read button' do
+        it 'has no Read or Download buttons' do
           visit monograph_catalog_path(monograph)
           click_on("Table of Contents")
           within("#toc") do
-            expect(page).to have_xpath(".//span[@title='Read section']")
+            expect(page).not_to have_xpath(".//span[@title='Read section']")
             expect(page).not_to have_xpath(".//i[@title='Download section']")
           end
         end
@@ -142,11 +142,11 @@ RSpec.describe "Monograph Catalog EPUB TOC", type: :system, browser: true do
 
         before { Greensub::Component.create!(identifier: parent.resource_token, name: parent.title, noid: parent.noid) }
 
-        it 'has Read button' do
+        it 'has no Read or Download buttons' do
           visit monograph_catalog_path(monograph)
           click_on("Table of Contents")
           within("#toc") do
-            expect(page).to have_xpath(".//span[@title='Read section']")
+            expect(page).not_to have_xpath(".//span[@title='Read section']")
             expect(page).not_to have_xpath(".//i[@title='Download section']")
           end
 
