@@ -139,7 +139,7 @@
 <div class="row monograph-assets-toc-epub">
   <div class="col-sm-12" id="tabs">
     <ul class="nav nav-tabs" role="tablist">
-      <% if @presenter.toc? %>
+      <% if @presenter.toc? && @presenter.epub? %>
         <li role="presentation">
           <h2>
             <a id="tab-toc" href="#toc" aria-controls="toc" role="tab" data-toggle="tab" aria-selected="false" aria-expanded="false" tabindex="-1">Table of Contents</a>
@@ -195,7 +195,7 @@
         </li>
     </ul>
     <div id="tabs-content" class="tab-content monograph-assets-toc-epub-content" aria-live="polite">
-      <% if @presenter.toc? %>
+      <% if @presenter.toc? && @presenter.epub? %>
         <section id="toc" class="tab-pane fade toc row" role="tabpanel" aria-hidden="true" aria-labelledby="tab-toc" tabindex="0">
           <div class="col-sm-12">
             <%= render 'index_epub_toc' %>
