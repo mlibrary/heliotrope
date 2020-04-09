@@ -127,7 +127,7 @@ en:
 
         Using the drop-down list, select the copyright status of the item.
       open_access: |
-        Indicate if this item is "open access". Allowed values: Yes/No, but "No" is the default and need not be entered.
+        Indicate if this item is "open access". Allowed values: yes. Leave blank if the book is not OA.
       funder: |
         The person(s) or organization funding an open access item e.g. Andrew W. Mellon Foundation
       funder_display: |

@@ -1,0 +1,11 @@
+<div class="form-group check_boxes optional monograph_open_access">
+  <input type="hidden" name="monograph[open_access]" value="" />
+  <label class="control-label check_boxes optional" for="monograph_open_access">Open Access?
+    <input class="check_boxes required form-check-input"
+           type="checkbox"
+           value="yes"
+           name="monograph[open_access]"
+           id="monograph_open_access"
+           <%= "checked" if @form.open_access.include?('yes') %>>
+  </label>
+</div>

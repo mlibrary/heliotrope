@@ -35,7 +35,7 @@ describe 'Create a monograph' do
       fill_in 'Buy Book URL(s)', with: 'http://www.example.com/buy'
       select 'Creative Commons Public Domain Mark 1.0', from: 'License'
       fill_in 'Copyright Holder', with: 'Blahdy Blah Copyright Holder'
-      fill_in 'Open Access?', with: 'yes'
+      check 'Open Access?'
       fill_in 'Funder', with: 'Richie Rich'
       fill_in 'Funder Display', with: 'Made possible by Rich Richie'
       fill_in 'Holding Contact', with: 'http://www.blahpresscompany.com/'
