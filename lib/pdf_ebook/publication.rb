@@ -30,7 +30,7 @@ module PDFEbook
     private
 
       def initialize(file, id)
-        @pdf = Origami::PDF.read(file, verbosity: Origami::Parser::VERBOSE_QUIET)
+        @pdf = Origami::PDF.read(file, verbosity: Origami::Parser::VERBOSE_QUIET, lazy: true)
         @id = id
         @obj_to_page = {}
       end

@@ -138,8 +138,7 @@ module FeaturedRepresentatives
     end
 
     def pdf_ebook_presenter
-      entity = Sighrax.from_noid(pdf_ebook_id)
-      @pdf_ebook_presenter ||= PDFEbookPresenter.new(PDFEbook::Publication.from_string_id(entity.content, pdf_ebook_id))
+      @pdf_ebook_presenter ||= PDFEbookPresenter.new(PDFEbook::Publication.from_path_id(UnpackService.root_path_from_noid(pdf_ebook_id, 'pdf_ebook') + ".pdf", pdf_ebook_id))
     end
 
     def mobi?
