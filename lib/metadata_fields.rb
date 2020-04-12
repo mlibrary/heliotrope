@@ -59,8 +59,10 @@ METADATA_FIELDS ||=
     { object: :file_set, field_name: 'Translation', metadata_name: 'translation', required: false, multivalued: :yes, description: I18n.t('csv.descriptions.translation') },
     { object: :universal, field_name: 'DOI', metadata_name: 'doi', required: false, multivalued: :no, description: I18n.t('csv.descriptions.doi') },
     { object: :universal, field_name: 'Handle', metadata_name: 'hdl', required: false, multivalued: :no, description: I18n.t('csv.descriptions.hdl') },
-    { object: :file_set, field_name: 'Redirect to', metadata_name: 'redirect_to', required: false, multivalued: :no, description: I18n.t('csv.descriptions.redirect_to') }
-  ].freeze
+    { object: :file_set, field_name: 'Redirect to', metadata_name: 'redirect_to', required: false, multivalued: :no, description: I18n.t('csv.descriptions.redirect_to') },
+    { object: :file_set, field_name: 'Closed Captions', metadata_name: 'closed_captions', required: false, multivalued: :yes, description: I18n.t('csv.descriptions.closed_captions') },
+    { object: :file_set, field_name: 'Visual Descriptions', metadata_name: 'visual_descriptions', required: false, multivalued: :yes, description: I18n.t('csv.descriptions.visual_descriptions') }
+].freeze
 
 # Any fields related to "representative" relationships between FileSets and their parent Monograph
 FILE_SET_FLAG_FIELDS ||=

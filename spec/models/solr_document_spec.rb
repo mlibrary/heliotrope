@@ -5,6 +5,8 @@ require 'rails_helper'
 describe SolrDocument do
   let(:instance) { described_class.new(attributes) }
 
+  it('includes SolrDocumentExtensions') { is_expected.to be_a SolrDocumentExtensions }
+
   describe "#date_published" do
     subject { instance.date_published }
 
@@ -41,7 +43,6 @@ describe SolrDocument do
   it { is_expected.to respond_to(:funder) }
   it { is_expected.to respond_to(:funder_display) }
 
-
   # FileSet
   it { is_expected.to respond_to(:allow_display_after_expiration) }
   it { is_expected.to respond_to(:allow_download) }
@@ -49,6 +50,7 @@ describe SolrDocument do
   it { is_expected.to respond_to(:allow_hi_res) }
   it { is_expected.to respond_to(:alt_text) }
   it { is_expected.to respond_to(:caption) }
+  it { is_expected.to respond_to(:closed_captions) }
   it { is_expected.to respond_to(:content_type) }
   it { is_expected.to respond_to(:copyright_status) }
   it { is_expected.to respond_to(:credit_line) }
@@ -66,4 +68,5 @@ describe SolrDocument do
   it { is_expected.to respond_to(:sort_date) }
   it { is_expected.to respond_to(:transcript) }
   it { is_expected.to respond_to(:translation) }
+  it { is_expected.to respond_to(:visual_descriptions) }
 end

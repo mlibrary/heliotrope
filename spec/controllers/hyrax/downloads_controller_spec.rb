@@ -172,6 +172,42 @@ RSpec.describe Hyrax::DownloadsController, type: :controller do
         end
       end
     end
+
+    context 'closed caption' do
+      # allow_download is not relevant to closed caption
+      let(:file_set) { create(:public_file_set, user: user, allow_download: 'no', read_groups: ['public'], closed_captions: [closed_captions]) }
+      let(:closed_captions) do
+        <<~CAPTIONS_VTT
+        closed caption a
+        closed caption b
+        closed caption c
+        CAPTIONS_VTT
+      end
+
+      it 'downloads closed caption metadata' do
+        get :show, params: { id: file_set.id, use_route: 'downloads', file: 'captions_vtt' }
+        expect(response).to have_http_status(:ok)
+        expect(response.body).to eq closed_captions
+      end
+    end
+
+    context 'visual description' do
+      # allow_download is not relevant to visual description
+      let(:file_set) { create(:public_file_set, user: user, allow_download: 'no', read_groups: ['public'], visual_descriptions: [visual_descriptions]) }
+      let(:visual_descriptions) do
+        <<~DESCRIPTIONS_VTT
+          visual description a
+          visual description b
+          visual description c
+        DESCRIPTIONS_VTT
+      end
+
+      it 'downloads visual description metadata' do
+        get :show, params: { id: file_set.id, use_route: 'downloads', file: 'descriptions_vtt' }
+        expect(response).to have_http_status(:ok)
+        expect(response.body).to eq visual_descriptions
+      end
+    end
   end
 
   describe "#mime_type_for" do

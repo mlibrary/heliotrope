@@ -28,6 +28,10 @@ module SolrDocumentExtensions
       Array(self[Solrizer.solr_name('caption', :stored_searchable)])
     end
 
+    def closed_captions
+      Array(self[Solrizer.solr_name('closed_captions', :stored_searchable)]).first
+    end
+
     def content_type
       Array(self[Solrizer.solr_name('content_type', :stored_searchable)])
     end
@@ -90,6 +94,10 @@ module SolrDocumentExtensions
 
     def translation
       Array(self[Solrizer.solr_name('translation', :stored_searchable)]).first
+    end
+
+    def visual_descriptions
+      Array(self[Solrizer.solr_name('visual_descriptions', :stored_searchable)]).first
     end
   end
 end

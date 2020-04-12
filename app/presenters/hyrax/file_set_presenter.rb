@@ -45,6 +45,7 @@ module Hyrax
              :holding_contact, :external_resource_url, :primary_creator_role,
              :display_date, :sort_date, :transcript, :translation, :file_format,
              :label, :redirect_to, :has_model, :date_modified, :visibility,
+             :closed_captions, :visual_descriptions,
              to: :solr_document
 
     def monograph_id

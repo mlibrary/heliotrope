@@ -328,9 +328,17 @@ en:
 
         WebVTT is the file format needed for audio or video transcripts.
       translation: |
-        If there is a transcript of the digital asset, for example, a transcript for an audio interview, make the transcript its own file, put the file name here, and include the file with the rest of the digital assets for this metadata template.
+        If there is a translation of the digital asset, for example, a translation for an audio interview, make the translation its own file, put the file name here, and include the file with the rest of the digital assets for this metadata template.
 
-        WebVTT is the file format needed for audio or video transcripts.
+        WebVTT is the file format needed for audio or video translations.
+      closed_captions: |
+        If there are close captions of the digital asset, for example, closed captions for a movie, make the closed captions its own file, put the file name here, and include the file with the rest of the digital assets for this metadata template.
+
+        WebVTT is the file format needed for audio or video closed captions.
+      visual_descriptions: |
+        If there are visual descriptions of the digital asset, for example, visual descriptions for a movie, make the visual descriptions its own file, put the file name here, and include the file with the rest of the digital assets for this metadata template.
+
+        WebVTT is the file format needed for video visual descriptions.
       doi: |
         If a DOI (Digital Object Identifier) will be assigned and registered for the digital asset, enter the DOI you will be assigning. For example: 10.3998/3336451.0018.301.
 

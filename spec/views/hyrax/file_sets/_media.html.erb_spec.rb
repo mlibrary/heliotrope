@@ -38,8 +38,10 @@ RSpec.describe 'hyrax/file_sets/_media' do
       allow(file_set_presenter).to receive(:image?).and_return(false)
       allow(file_set_presenter).to receive(:epub?).and_return(true)
       allow(present).to receive(:present?).and_return(false)
+      allow(file_set_presenter).to receive(:closed_captions).and_return(present)
       allow(file_set_presenter).to receive(:transcript).and_return(present)
       allow(file_set_presenter).to receive(:translation).and_return(present)
+      allow(file_set_presenter).to receive(:visual_descriptions).and_return(present)
     end
 
     it do

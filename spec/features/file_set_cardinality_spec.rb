@@ -18,6 +18,7 @@ describe 'FileSet Cardinality' do
                       allow_hi_res: "yes",
                       alt_text: ["This is the alt text"],
                       caption: ["This is the caption"],
+                      closed_captions: ["This is a closed caption"],
                       content_type: ["drawing", "illustration"],
                       contributor: ["Thomas, John (playwright, author)\nGuy, Other (lackey)"],
                       copyright_holder: "This is the © Copyright Holder",
@@ -38,7 +39,8 @@ describe 'FileSet Cardinality' do
                       section_title: ["Chapter 2"],
                       sort_date: "1997-01-11",
                       transcript: "This is the transcript",
-                      translation: ["This is a translation"])
+                      translation: ["This is a translation"],
+                      visual_descriptions: ["This is a visual description"])
   }
   let!(:sipity_entity) do
     create(:sipity_entity, proxy_for_global_id: monograph.to_global_id.to_s)
@@ -82,6 +84,10 @@ describe 'FileSet Cardinality' do
       expect(cover.caption).to match_array(['This is the caption'])
       expect(doc.caption).to match_array(['This is the caption'])
       expect(find('#file_set_caption')[:class]).not_to include 'multi-text-field'
+
+      expect(cover.closed_captions).to match_array(['This is a closed caption'])
+      expect(doc.closed_captions).to eql 'This is a closed caption'
+      expect(find('#file_set_closed_captions')[:class]).not_to include 'multi-text-field'
 
       expect(cover.content_type).to match_array(['drawing', 'illustration'])
       expect(doc.content_type).to match_array(['drawing', 'illustration'])
@@ -172,6 +178,10 @@ describe 'FileSet Cardinality' do
       expect(cover.translation).to match_array(["This is a translation"])
       expect(doc.translation).to eql 'This is a translation'
       expect(find('#file_set_translation')[:class]).not_to include 'multi-text-field'
+
+      expect(cover.visual_descriptions).to match_array(['This is a visual description'])
+      expect(doc.visual_descriptions).to eql 'This is a visual description'
+      expect(find('#file_set_visual_descriptions')[:class]).not_to include 'multi-text-field'
     end
   end
 end
