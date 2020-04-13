@@ -21,7 +21,8 @@ namespace :heliotrope do
       'atg',
       'cv',
       'cb',
-      'dialogue'
+      'dialogue',
+      'barpublishing'
     ]
 
     children = []
@@ -37,7 +38,7 @@ namespace :heliotrope do
     hits.each do |hit|
       next unless hit["suppressed_bsi"] == false && hit["visibility_ssi"] == "open"
       presenter = Hyrax::MonographPresenter.new(SolrDocument.new(hit), nil)
-      puts %Q|"#{presenter.handle_url}","#{presenter.doi_url}"|
+      puts %Q|"#{presenter.handle_url}","#{presenter.doi_url}","#{presenter.subdomain}"|
     end
   end
 end
