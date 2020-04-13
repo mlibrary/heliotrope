@@ -45,6 +45,25 @@ module Hyrax
       Rails.application.routes.url_helpers.score_catalog_path(id)
     end
 
+    def authors(include_contributors = true)
+      authorship_names = include_contributors ? [unreverse_names(solr_document.creator), unreverse_names(contributor)] : [unreverse_names(solr_document.creator)]
+      authorship_names.flatten.to_sentence(last_word_connector: ' and ')
+    end
+
+    def authors?
+      authors.present?
+    end
+
+    def unreverse_names(comma_separated_names)
+      forward_names = []
+      comma_separated_names.each { |n| forward_names << unreverse_name(n) }
+      forward_names
+    end
+
+    def unreverse_name(comma_separated_name)
+      comma_separated_name.split(',').map(&:strip).reverse.join(' ')
+    end
+
     #
     # Methods we need because they're called from a partial or the
     # FileSetPresenter but are (currently) no-ops for Scores
@@ -60,8 +79,6 @@ module Hyrax
     end
 
     def creator_full_name; end
-
-    def authors?; end
 
     def ordered_section_titles; end
 

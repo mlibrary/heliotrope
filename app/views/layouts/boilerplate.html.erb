@@ -17,7 +17,7 @@
     <!-- Citation metadata for Google Scholar -->
     <%= render 'shared/metadata' %>
 
-  <% unless press_subdomain.nil? %>
+  <% if press_presenter.present? %>
     <!-- Typekit -->
     <%= render 'shared/typekit' %>
   <% end %>
@@ -80,7 +80,7 @@
 
   </head>
 
-  <%= tag.body class: press_subdomains(press_subdomain) do %>
+  <%= tag.body class: press_presenter.present? ? press_presenter.press_subdomains : '' do %>
 
     <%= content_for?(:body) ? yield(:body) : yield %>
 

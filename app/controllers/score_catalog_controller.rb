@@ -3,7 +3,7 @@
 class ScoreCatalogController < ::CatalogController
   before_action :load_presenter, only: %i[index facet]
 
-  self.theme = 'curation_concerns'
+  self.theme = 'hyrax'
   with_themed_layout 'catalog'
 
   configure_blacklight do |config|

@@ -4,7 +4,7 @@ class MonographCatalogController < ::CatalogController
   before_action :load_presenter, only: %i[index facet]
   after_action :add_counter_stat, only: %i[index]
 
-  self.theme = 'curation_concerns'
+  self.theme = 'hyrax'
   with_themed_layout 'catalog'
 
   configure_blacklight do |config|

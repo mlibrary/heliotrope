@@ -1,11 +1,11 @@
 
-  <% if footer_block_a(press_subdomain).present? %>
-    <%= render_markdown footer_block_a(press_subdomain) %>
+  <% if press_presenter.footer_block_a.present? %>
+    <%= render_markdown press_presenter.footer_block_a %>
   <% else %>
     <div class="crop">
-      <%= image_tag logo(press_subdomain), alt: name(press_subdomain) + ' logo', class: 'img-responsive' %><br /><br />
+      <%= image_tag press_presenter.logo, alt: press_presenter.name + ' logo', class: 'img-responsive' %><br /><br />
     </div>
     <p>
-      <a class="brand" href="<%= url(press_subdomain) %>"><%= name(press_subdomain) %></a>
+      <a class="brand" href="<%= press_presenter.url %>"><%= press_presenter.name %></a>
     </p>
   <% end %>

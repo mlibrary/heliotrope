@@ -1,8 +1,8 @@
 <%= render 'shared/skip_links' %>
 <header id="banner" role="banner">
   <hgroup>
-    <% if press_subdomain.present? %>
-      <% if %w[leverpress barpublishing mps].include? press_subdomain %>
+    <% if press_presenter.present? %>
+      <% if %w[leverpress barpublishing mps].include? press_presenter.subdomain %>
         <%= render 'shared/brand_press_bar_custom' %>
       <% else %>
         <%= render 'shared/brand_press_bar' %>
@@ -12,9 +12,9 @@
     <% end %>
   </hgroup>
 </header>
-<% if defined?(@press.subdomain) && controller_name == "press_catalog" %>
-  <% unless @press.aboutware? %>
+<% if press_presenter.present? && controller_name == "press_catalog" %>
+  <% unless press_presenter.press.aboutware? %>
     <%= render 'shared/brand_press_jumbotron' %>
   <% end %>
 <% end %>
-<%= render 'shared/brand_press_banner' if show_banner?(current_actor, press_subdomain) %>
+<%= render 'shared/brand_press_banner' if press_presenter.present? && show_banner?(current_actor, press_presenter.subdomain) %>

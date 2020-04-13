@@ -65,7 +65,6 @@ RSpec.describe 'Create a Score', type: :system, browser: true do
 
       click_on('Save')
 
-      expect(page).to have_content "Your files are being processed by Fulcrum in the background."
       expect(page).to have_content('My Test Work')
       expect(page).to have_content('Doe, Jane')
       expect(page).to have_content('This is the description of the score')

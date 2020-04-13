@@ -20,7 +20,7 @@
                {'file' => 'favicon-96x96.png', 'rel' => 'icon', 'sizes' => '96x96', 'type' => 'image/png'},
                {'file' => 'favicon-16x16.png', 'rel' => 'icon', 'sizes' => '16x16', 'type' => 'image/png'},
                {'file' => 'manifest.json', 'rel' => 'manifest'}] %>
-<% subdir = press_subdomain.present? ? (press_subdomain + '/') : '' %>
+<% subdir = press_presenter.present? ? (press_presenter.subdomain + '/') : '' %>
 <% favicons.each do |f| %>
   <% path = 'favicon/' + subdir + f['file'] %>
   <% unless Rails.application.assets_manifest.find_sources(path).first.present? %>

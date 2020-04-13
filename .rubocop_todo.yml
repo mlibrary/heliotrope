@@ -72,6 +72,7 @@ Rails/HelperInstanceVariable:
   Exclude:
     - 'app/helpers/breadcrumbs_helper.rb'
     - 'app/helpers/press_helper.rb'
+    - 'app/helpers/banner_helper.rb'
 
 Rails/InverseOf:
   Exclude:

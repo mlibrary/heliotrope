@@ -1,4 +1,4 @@
-<% ga_ids = all_google_analytics(press_subdomain) %>
+<% ga_ids = press_presenter.present? ? press_presenter.all_google_analytics : [] %>
 
 <% ga_url = 'https://www.google-analytics.com/analytics.js' %>
 <% if Rails.env.development? %>
