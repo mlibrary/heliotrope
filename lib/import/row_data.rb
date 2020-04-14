@@ -19,10 +19,16 @@ module Import
           # ensuring all values are arrays
           field_values = split_field_values(row[field[:field_name]], is_multivalued)
           field_values = strip_markdown(field[:field_name], field_values, md)
+          field_values = cleanup_open_access(field[:field_name], field_values)
           field_values = downcase_format(field[:field_name], field_values)
           field_values = downcase_role(field[:field_name], field_values)
           field_values = map_doi(field[:field_name], field_values)
           field_values = map_cc_license(field[:field_name], field_values)
+
+          # at this point some bad values may have been removed. This line will need to be changed if we ever start...
+          # using true/false values in metadata instead of yes/no, as false will not pass through.
+          next if field_values.none?
+
           if field[:acceptable_values]
             # when using controlled vocabularies make everything lowercase (Yes/No etc)
             field_values.map!(&:downcase)
@@ -60,6 +66,12 @@ module Import
         field_name == "Keywords" ? field_values.map! { |value| metadata.render(value).strip! } : field_values
       end
 
+      # HELIO-3287 only 'yes' values make sense for this Blacklight facet field
+      def cleanup_open_access(field_name, field_values)
+        return field_values unless field_name == 'Open Access?'
+        field_values.map { |val| val.downcase == 'yes' ? 'yes' : nil }
+      end
+
       def map_doi(field_name, field_values)
         return field_values unless field_name == 'DOI'
         field_values.map { |val| val.sub('https', 'http').sub('http://doi.org/', '') }
@@ -68,7 +80,7 @@ module Import
       def map_cc_license(field_name, field_values)
         return field_values unless field_name == 'CC License'
         field_values.map do |val|
-          # `select_all_options` rather than `select_active_options` as, unlike the UI edit forms, was allow all values here
+          # `select_all_options` rather than `select_active_options` as, unlike the UI edit forms, we allow all values here
           match = Hyrax::LicenseService.new.select_all_options.find { |license| val == license[0] }
           match.present? ? match[1] : val
         end
