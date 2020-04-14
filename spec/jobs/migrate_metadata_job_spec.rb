@@ -71,14 +71,16 @@ RSpec.describe MigrateMetadataJob, type: :job do
         end
       end
 
-      context 'file set' do
+      context 'file set with transcript and without closed_captions' do
         let(:noid) { file_set.id }
-        let(:file_set) { create(:public_file_set) }
+        let(:file_set) { create(:public_file_set, transcript: 'transcript') }
+
+        before { allow(FileSet).to receive(:find).with(file_set.id).and_return(file_set) }
 
         it { is_expected.to be false }
 
-        context 'transcript' do
-          let(:file_set) { create(:public_file_set, transcript: 'transcript') }
+        context 'video' do
+          before { allow(file_set).to receive(:video?).and_return(true) }
 
           it 'migrates' do
             is_expected.to be true
@@ -86,7 +88,7 @@ RSpec.describe MigrateMetadataJob, type: :job do
             expect(file_set.closed_captions).to eq(['transcript'])
           end
 
-          context 'closed_captions' do
+          context 'with closed_captions' do
             let(:file_set) { create(:public_file_set, transcript: 'transcript', closed_captions: ['closed_captions']) }
 
             it do

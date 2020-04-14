@@ -20,6 +20,7 @@ class MigrateMetadataJob < ApplicationJob
 
   def migrate_transcript_to_captions(noid)
     file_set = FileSet.find(noid)
+    return false unless file_set.video?
     return false if file_set.transcript.blank?
     return false if file_set.closed_captions.present?
 
