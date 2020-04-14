@@ -31,6 +31,8 @@
           <%= f.input :display_date, as: :multi_value, label: 'Display Date', input_html: { class: 'form-control' } %>
           <%= f.input :keywords, as: :multi_value, input_html: { class: 'form-control' } %>
           <%= f.input :language, as: :multi_value, input_html: { class: 'form-control' } %>
+          <%= f.input :closed_captions, as: :text, input_html: { multiple: true, value: curation_concern.closed_captions.first, class: 'form-control' } %>
+          <%= f.input :visual_descriptions, as: :text, input_html: { multiple: true, value: curation_concern.visual_descriptions.first, class: 'form-control' } %>
           <%= f.input :transcript, as: :text, input_html: { class: 'form-control' } %>
           <%= f.input :translation, as: :text, input_html: { multiple: true, value: curation_concern.translation.first, class: 'form-control' } %>
           <%= f.input :section_title, as: :multi_value, input_html: { class: 'form-control' } %>

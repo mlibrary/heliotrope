@@ -29,8 +29,10 @@ class FulcrumController < ApplicationController
       when 'verify'
         AptrustVerifyJob.perform_now(params[:noid])
       end
+    when 'migrate'
+      MigrateMetadataJob.perform_later(params[:job], params[:noid])
     when 'recache_in_common_metadata'
-      RecacheInCommonMetadataJob.perform_later
+      RecacheInCommonMetadataJob.perform_now
     when 'reindex_everything'
       ReindexJob.perform_later('everything')
     when 'reindex_monographs'

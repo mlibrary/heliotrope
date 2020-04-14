@@ -5,7 +5,11 @@ module Sighrax
     private_class_method :new
 
     def children
-      Array(data['ordered_member_ids_ssim']).map { |noid| Sighrax.from_noid(noid) }
+      children_noids.map { |noid| Sighrax.from_noid(noid) }
+    end
+
+    def children_noids
+      Array(data['ordered_member_ids_ssim'])
     end
 
     private

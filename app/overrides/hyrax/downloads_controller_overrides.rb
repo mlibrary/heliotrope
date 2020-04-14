@@ -3,8 +3,10 @@
 Hyrax::DownloadsController.class_eval do
   prepend(DownloadsControllerBehavior = Module.new do
     def show # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
-      if transcript?
-        render plain: presenter.transcript
+      if closed_captions?
+        render plain: presenter.closed_captions
+      elsif visual_descriptions?
+        render plain: presenter.visual_descriptions
       elsif file.present? && (thumbnail? || jpeg? || video? || sound? || allow_download?)
         # See #401
         if file.is_a? String
@@ -91,8 +93,12 @@ Hyrax::DownloadsController.class_eval do
       params[:file] == 'mp3' || params[:file] == 'ogg'
     end
 
-    def transcript?
-      params[:file] == 'vtt'
+    def closed_captions?
+      params[:file] == 'captions_vtt'
+    end
+
+    def visual_descriptions?
+      params[:file] == 'descriptions_vtt'
     end
   end)
 end

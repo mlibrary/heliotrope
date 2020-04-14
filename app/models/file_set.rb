@@ -26,6 +26,10 @@ class FileSet < ActiveFedora::Base
     index.as :stored_searchable
   end
 
+  property :closed_captions, predicate: ::RDF::URI.new('http://fulcrum.org/ns#closed_captions') do |index|
+    index.as :stored_searchable
+  end
+
   property :content_type, predicate: ::RDF::Vocab::SCHEMA.contentType do |index|
     index.as :stored_searchable, :facetable
   end
@@ -88,11 +92,14 @@ class FileSet < ActiveFedora::Base
     index.as :stored_searchable
   end
 
+  property :visual_descriptions, predicate: ::RDF::URI.new('http://fulcrum.org/ns#visual_descriptions') do |index|
+    index.as :stored_searchable
+  end
+
   # Depending on what "flavor" of file_set you are, this blob of json will have certain fields
   # See HELIO-2912
   property :extra_json_properties, predicate: ::RDF::URI.new('http://fulcrum.org/ns#ExtraJSONProperties'), multiple: false
 
-  include GlobalID::Identification
   include HeliotropeUniversalMetadata
   include ::Hyrax::FileSetBehavior
   # This must come after the FileSetBehavior because it finalizes the metadata
