@@ -8,8 +8,13 @@ RSpec.describe UnpackJob, type: :job do
       let(:epub) { create(:file_set, content: File.open(File.join(fixture_path, 'fake_epub01.epub'))) }
       let(:root_path) { UnpackService.root_path_from_noid(epub.id, 'epub') }
 
-      it "unzips the epub and creates the database" do
+      it "unzips the epub, caches the ToC and creates the database" do
         described_class.perform_now(epub.id, 'epub')
+        expect(JSON.parse(EbookTableOfContentsCache.find_by(noid: epub.id).toc).length).to eq 3
+        expect(JSON.parse(EbookTableOfContentsCache.find_by(noid: epub.id).toc)[0]["title"]).to eq "Damage report!"
+        expect(JSON.parse(EbookTableOfContentsCache.find_by(noid: epub.id).toc)[0]["level"]).to eq 1
+        expect(JSON.parse(EbookTableOfContentsCache.find_by(noid: epub.id).toc)[0]["cfi"]).to eq "/6/2[Chapter01]!/4/1:0"
+        expect(JSON.parse(EbookTableOfContentsCache.find_by(noid: epub.id).toc)[0]["downloadable?"]).to eq false
         expect(File.exist?(File.join(root_path, epub.id + '.db'))).to be true
       end
     end
@@ -29,11 +34,19 @@ RSpec.describe UnpackJob, type: :job do
       let(:root_path) { UnpackService.root_path_from_noid(pdf_ebook.id, 'pdf_ebook') }
       let(:chapters_dir) { UnpackService.root_path_from_noid(pdf_ebook.id, 'pdf_ebook_chapters') }
 
-      it "makes the pdf_ebook and chapter files derivatives" do
+      it "makes the pdf_ebook, caches the ToC and makes the chapter files derivatives" do
         described_class.perform_now(pdf_ebook.id, 'pdf_ebook')
         expect(File.exist?("#{root_path}.pdf")).to be true
         expect(Dir.exist?(chapters_dir)).to be true
         expect(Dir.glob(File.join(chapters_dir, '**', '*')).select { |file| File.file?(file) }.count).to eq 6
+        expect(JSON.parse(EbookTableOfContentsCache.find_by(noid: pdf_ebook.id).toc).length).to eq 6
+        expect(JSON.parse(EbookTableOfContentsCache.find_by(noid: pdf_ebook.id).toc)[0]["title"]).to eq "The standard Lorem Ipsum passage, used since the 1500s"
+        expect(JSON.parse(EbookTableOfContentsCache.find_by(noid: pdf_ebook.id).toc)[0]["level"]).to eq 1
+        expect(JSON.parse(EbookTableOfContentsCache.find_by(noid: pdf_ebook.id).toc)[0]["cfi"]).to eq "page=3"
+        # As far as EbooksTableOfContents is concerned, if the chapters exist, they are downloadable? = true
+        # The application itself (see views/monograph_catalog/_index_epub_toc.html.erb) will use policy/checkpoint/auth
+        # in combination with this to show or hide download links
+        expect(JSON.parse(EbookTableOfContentsCache.find_by(noid: pdf_ebook.id).toc)[0]["downloadable?"]).to eq true
       end
     end
 

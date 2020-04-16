@@ -18,18 +18,22 @@ RSpec.describe Hyrax::FileSetsController, type: :controller do
   describe "#destroy" do
     before { stub_out_redis }
 
-    context "featured_representative file_set" do
-      before { FeaturedRepresentative.create(work_id: monograph.id, file_set_id: file_set.id, kind: 'epub') }
+    context "featured_representative file_set and cached table of contents" do
+      before do
+        FeaturedRepresentative.create(work_id: monograph.id, file_set_id: file_set.id, kind: 'epub')
+        EbookTableOfContentsCache.create(noid: file_set.id, toc: [{ title: "A", depth: 1, cfi: "/6/2[Chapter01]!/4/1:0" }].to_json)
+      end
 
       it "deletes the featured_representative and the file_set" do
         expect do
           delete :destroy, params: { id: file_set }
         end.to change { FeaturedRepresentative.all.count }.from(1).to(0)
+        expect(EbookTableOfContentsCache.find_by(noid: file_set.id)).to be nil
         expect(FileSet.all.count).to be 0
       end
     end
 
-    context "not a featured_representative" do
+    context "not a featured_representative and not cached table of contents" do
       it "just deletes the file_set" do
         delete :destroy, params: { id: file_set }
         expect(FileSet.all.count).to be 0

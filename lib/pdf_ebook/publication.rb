@@ -6,20 +6,20 @@ module PDFEbook
     attr_reader :id
 
     # Class Methods
-    def self.from_string_id(string, id)
-      file = StringIO.new(string)
-      new(file, id)
-    rescue StandardError => e
-      ::PDFEbook.logger.info("Publication.from_string_id(#{string[0..30]}) raised #{e} #{e.backtrace}")
-      nil
-    end
-
     def self.from_path_id(path, id)
       file = File.new(path)
       new(file, id)
     rescue StandardError => e
-      ::PDFEbook.logger.info("Publication.from_path_id(#{path}) raised #{e} #{e.backtrace}")
-      nil
+      ::PDFEbook.logger.info("Publication.from_path_id(#{path},#{id}) raised #{e} #{e.backtrace.join("\n")}")
+      PublicationNullObject.send(:new)
+    end
+
+    def self.from_string_id(string, id)
+      file = StringIO.new(string)
+      new(file, id)
+    rescue StandardError => e
+      ::PDFEbook.logger.info("Publication.from_string_id(#{string[0..100]}) raised #{e} #{e.backtrace.join("\n")}")
+      PublicationNullObject.send(:new)
     end
 
     # Public method
@@ -79,6 +79,22 @@ module PDFEbook
           outline = outline[:Next]&.solve
         end
         intervals
+      end
+  end
+
+  class PublicationNullObject < Publication
+    private_class_method :new
+
+    def intervals
+      []
+    end
+
+    private
+
+      def initialize
+        @pdf = ''
+        @id = ''
+        @obj_to_page = {}
       end
   end
 end

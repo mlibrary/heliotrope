@@ -57,6 +57,14 @@ module EPub
     class ChapterNullObject < Chapter
       private_class_method :new
 
+      def downloadable_pages
+        []
+      end
+
+      def pages
+        []
+      end
+
       private
 
         def initialize

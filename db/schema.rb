@@ -156,6 +156,11 @@ ActiveRecord::Schema.define(version: 20200603181002) do
     t.index ["user_id"], name: "index_curation_concerns_operations_on_user_id"
   end
 
+  create_table "ebook_table_of_contents_caches", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.string "noid"
+    t.text "toc"
+  end
+
   create_table "featured_representatives", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.string "work_id"
     t.string "file_set_id"

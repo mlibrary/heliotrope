@@ -28,6 +28,7 @@ Hyrax::FileSetsController.class_eval do
 
     def destroy
       FeaturedRepresentative.where(file_set_id: params[:id]).first&.destroy
+      EbookTableOfContentsCache.find_by(noid: params[:id])&.destroy
       super
     end
 
