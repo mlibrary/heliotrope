@@ -94,6 +94,8 @@ class PressCatalogController < ::CatalogController
           blacklight_config.add_facet_fields_to_solr_request!
         end
 
+        blacklight_config.default_solr_params[:qf] += ' all_text_timv' if @press.subdomain == 'barpublishing'
+
         search_or_browse
         monograph_sort_fields
       end
