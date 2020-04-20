@@ -86,7 +86,7 @@ class SessionsController < ApplicationController
           products.each { |product| institutions += product.institutions }
           if institutions.present?
             entity_ids = []
-            institutions.each { |institution| entity_ids << institution.entity_id if institution.entity_id.present? } # rubocop:disable Metrics/BlockNesting
+            institutions.uniq.each { |institution| entity_ids << institution.entity_id if institution.entity_id.present? } # rubocop:disable Metrics/BlockNesting
             if entity_ids.present? # rubocop:disable Metrics/BlockNesting
               filtered_discovery_feed.each do |entry|
                 component_discovery_feed << entry if entry["entityID"].in?(entity_ids) # rubocop:disable Metrics/BlockNesting
@@ -96,11 +96,11 @@ class SessionsController < ApplicationController
         end
       end
 
-      return component_discovery_feed unless Rails.env.production?
-
-      Rails.cache.fetch(cache_key, expires_in: 1.hour) do
-        component_discovery_feed
+      if Rails.env.production? && component_discovery_feed.present?
+        Rails.cache.write(cache_key, component_discovery_feed, expires_in: 1.hour)
       end
+
+      component_discovery_feed
     end
 
     def filtered_discovery_feed
@@ -108,30 +108,34 @@ class SessionsController < ApplicationController
       return Rails.cache.read(cache_key) if Rails.cache.exist?(cache_key)
 
       filtered_discovery_feed = []
-      institutions = Set.new(Greensub::Institution.where("entity_id <> ''").map(&:entity_id))
-      if institutions.present?
+      entity_ids = Set.new(Greensub::Institution.where("entity_id <> ''").map(&:entity_id))
+      if entity_ids.present?
         unfiltered_discovery_feed.each do |entry|
-          filtered_discovery_feed << entry if entry["entityID"].in?(institutions)
+          filtered_discovery_feed << entry if entry["entityID"].in?(entity_ids)
         end
       end
 
-      return filtered_discovery_feed unless Rails.env.production?
-
-      Rails.cache.fetch(cache_key, expires_in: 12.hours) do
-        filtered_discovery_feed
+      if Rails.env.production? && filtered_discovery_feed.present?
+        Rails.cache.write(cache_key, filtered_discovery_feed, expires_in: 12.hours)
       end
+
+      filtered_discovery_feed
     end
 
     def unfiltered_discovery_feed
       cache_key = RecacheInCommonMetadataJob::RAILS_CACHE_KEY
       return Rails.cache.read(cache_key) if Rails.cache.exist?(cache_key)
 
-      RecacheInCommonMetadataJob.perform_now if Rails.env.production?
-
-      job = RecacheInCommonMetadataJob.new
-      job.download_xml unless File.exist?(RecacheInCommonMetadataJob::XML_FILE)
-      job.parse_xml unless File.exist?(RecacheInCommonMetadataJob::JSON_FILE)
-      job.load_json
+      if Rails.env.production?
+        RecacheInCommonMetadataJob.perform_later
+        return RecacheInCommonMetadataJob.new.load_json if File.exist?(RecacheInCommonMetadataJob::JSON_FILE)
+        []
+      else
+        job = RecacheInCommonMetadataJob.new
+        job.download_xml unless File.exist?(RecacheInCommonMetadataJob::XML_FILE)
+        job.parse_xml unless File.exist?(RecacheInCommonMetadataJob::JSON_FILE)
+        job.load_json
+      end
     end
 
     def return_location
