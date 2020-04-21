@@ -1,7 +1,12 @@
 <p id="notice"><%= notice %></p>
 <div id="maincontent">
-  <h1>Individuals</h1>
-  <form name="filter" method="get" action="<%= greensub_individuals_path %>">
+  <% if @product.present? %>
+    <h1>Individuals of <%= link_to @product.identifier, greensub_product_path(@product) %> Product</h1>
+    <form name="filter" method="get" action="<%= greensub_product_individuals_path(@product) %>">
+  <% else %>
+    <h1>Individuals</h1>
+    <form name="filter" method="get" action="<%= greensub_individuals_path %>">
+  <% end %>
     <b>
       <div class="col-md-12"><hr/></div>
       <div class="col-md-10">
