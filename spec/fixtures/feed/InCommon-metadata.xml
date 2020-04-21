@@ -1,39 +1,8 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?><EntitiesDescriptor xmlns="urn:oasis:names:tc:SAML:2.0:metadata" xmlns:alg="urn:oasis:names:tc:SAML:metadata:algsupport" xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:icmd="http://id.incommon.org/metadata" xmlns:idpdisc="urn:oasis:names:tc:SAML:profiles:SSO:idp-discovery-protocol" xmlns:init="urn:oasis:names:tc:SAML:profiles:SSO:request-init" xmlns:mdattr="urn:oasis:names:tc:SAML:metadata:attribute" xmlns:mdrpi="urn:oasis:names:tc:SAML:metadata:rpi" xmlns:mdui="urn:oasis:names:tc:SAML:metadata:ui" xmlns:remd="http://refeds.org/metadata" xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion" xmlns:shibmd="urn:mace:shibboleth:metadata:1.0" xmlns:xenc="http://www.w3.org/2001/04/xmlenc#" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ID="INC20200323T184953" Name="urn:mace:incommon" validUntil="2020-04-06T18:49:53Z"><ds:Signature>
-<ds:SignedInfo>
-<ds:CanonicalizationMethod Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
-<ds:SignatureMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#rsa-sha256"/>
-<ds:Reference URI="#INC20200323T184953">
-<ds:Transforms>
-<ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/>
-<ds:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
-</ds:Transforms>
-<ds:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
-<ds:DigestValue>CoUyrFhf/AKFUiZXAAUFVUN9ZiG/I9LLYH6zZ64qzmo=</ds:DigestValue>
-</ds:Reference>
-</ds:SignedInfo>
-<ds:SignatureValue>
-q357eHPfnHaI8sdIBL9APZ32uoL50X3TsWFpnESBpzO10zhx428lRflIDwepeQCrZY/APFwQbOl/
-cPNs1rV6eBa9Bcn/EprDRLPhbzG7a3s3PeCI39NmWUofaM/tZU3uqCxwt1AP4NXl4PFbBW4AsHmc
-BZ8vPN52UfPP9DDWHGrIrDqL5DXrEJeq34Yqpbe1UmhK602ILQk4wr5xTBjrkdPtt2M8jMUrO3+c
-a/chVTsEpbQGr6mid6hfgmm/4tXQrezYJmcrPVUHMY5AJCwEWk1KDOu4f88ew6wksaxwgUSauaC/
-qN+pH5JB6KNsv4/JVarXJ2B9IEp5uHFUyKMHyg==
-</ds:SignatureValue>
-<ds:KeyInfo>
-<ds:KeyValue>
-<ds:RSAKeyValue>
-<ds:Modulus>
-0Chdkrn+dG5Zj5L3UIw+xeWgNzm8ajw7/FyqRQ1SjD4Lfg2WCdlfjOrYGNnVZMCTfItoXTSpg4rX
-xHQsykeNiYRu2+02uMS+1pnBqWjzdPJE0od+q8EbdvE6ShimjyNn0yQfGyQKCNdYuc+75MIHsaIO
-AEtDZUST9Sd4oeU1zRjV2sGvUd+JFHveUAhRc0b+JEZfIEuq/LIU9qxm/+gFaawlmojZPyOWZ1Jl
-swbrrJYYyn10qgnJvjh9gZWXKjmPxqvHKJcATPhAh2gWGabWTXBJCckMe1hrHCl/vbDLCmz0/oYu
-oaSDzP6zE9YSA/xCplaHA0moC1Vs2H5MOQGlew==
-</ds:Modulus>
-<ds:Exponent>AQAB</ds:Exponent>
-</ds:RSAKeyValue>
-</ds:KeyValue>
-<ds:X509Data>
-<ds:X509Certificate>
-MIIDgTCCAmmgAwIBAgIJAJRJzvdpkmNaMA0GCSqGSIb3DQEBCwUAMFcxCzAJBgNVBAYTAlVTMRUw
+<?xml version="1.0" encoding="UTF-8"?><EntitiesDescriptor xmlns="urn:oasis:names:tc:SAML:2.0:metadata" xmlns:alg="urn:oasis:names:tc:SAML:metadata:algsupport" xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:icmd="http://id.incommon.org/metadata" xmlns:idpdisc="urn:oasis:names:tc:SAML:profiles:SSO:idp-discovery-protocol" xmlns:init="urn:oasis:names:tc:SAML:profiles:SSO:request-init" xmlns:mdattr="urn:oasis:names:tc:SAML:metadata:attribute" xmlns:mdrpi="urn:oasis:names:tc:SAML:metadata:rpi" xmlns:mdui="urn:oasis:names:tc:SAML:metadata:ui" xmlns:remd="http://refeds.org/metadata" xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion" xmlns:shibmd="urn:mace:shibboleth:metadata:1.0" xmlns:xenc="http://www.w3.org/2001/04/xmlenc#" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ID="INC20200420T184138" Name="urn:mace:incommon" validUntil="2020-05-04T18:41:38Z"><Signature xmlns="http://www.w3.org/2000/09/xmldsig#"><SignedInfo><CanonicalizationMethod Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/><SignatureMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#rsa-sha256"/><Reference URI="#INC20200420T184138"><Transforms><Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/><Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/></Transforms><DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/><DigestValue>vo978dWNap9G0xqA+Xi9JeS2XqZ63sFxEbcCriV2jcs=</DigestValue></Reference></SignedInfo><SignatureValue>y5ePdTsshkEUpdWeHee3TrUca+mW4r3zUsSuE4xVp0/a4i+PO/54hHpbuGJezU/0/pGR6ZY6xeC0
+f4aVgyOGNJtWu3kArGQ6NerTS+POkmdOi4fx6pOAX44PXz0meDlmI35BD9r3gOe3kFugVL6b6gJM
+flZRsew4NEzHogNoqYyGLPzlOAsb2uiAdEOjfYicK9aMj7oVWaXJzaDMx3QDDBOntmxnQzRKw6y/
+FzsdLUCFwMRMGhOGr1g5EFgMCWy1nXEMNyTvZNMOLNeW5eDFPEqKWVZuHQ/TA+NJDLgxhG4ZYORI
+eF3n7MF1jSKyC18jqhv+jp2XvDyhiMZAyznFYQ==</SignatureValue><KeyInfo><X509Data><X509Certificate>MIIDgTCCAmmgAwIBAgIJAJRJzvdpkmNaMA0GCSqGSIb3DQEBCwUAMFcxCzAJBgNVBAYTAlVTMRUw
 EwYDVQQKDAxJbkNvbW1vbiBMTEMxMTAvBgNVBAMMKEluQ29tbW9uIEZlZGVyYXRpb24gTWV0YWRh
 dGEgU2lnbmluZyBLZXkwHhcNMTMxMjE2MTkzNDU1WhcNMzcxMjE4MTkzNDU1WjBXMQswCQYDVQQG
 EwJVUzEVMBMGA1UECgwMSW5Db21tb24gTExDMTEwLwYDVQQDDChJbkNvbW1vbiBGZWRlcmF0aW9u
@@ -48,13 +17,9 @@ BgkqhkiG9w0BAQsFAAOCAQEAaQkEx9xvaLUt0PNLvHMtxXQPedCPw5xQBd2VWOsWPYspRAOSNbU1
 VloY+xUkUKorYTogKUY1q+uh2gDIEazW0uZZaQvWPp8xdxWqDh96n5US06lszEc+Lj3dqdxWkXRR
 qEbjhBFh/utXaeyeSOtaX65GwD5svDHnJBclAGkzeRIXqxmYG+I2zMm/JYGzEnbwToyC7yF6Q8cQ
 xOr37hEpqz+WN/x3qM2qyBLECQFjmlJrvRLkSL15PCZiu+xFNFd/zx6btDun5DBlfDS9DG+SHCNH
-6Nq+NfP+ZQ8CGzP/3TaZPzMlKPDCjp0XOQfyQqFIXdwjPFTWjEusDBlm4qJAlQ==
-</ds:X509Certificate>
-</ds:X509Data>
-</ds:KeyInfo>
-</ds:Signature>
+6Nq+NfP+ZQ8CGzP/3TaZPzMlKPDCjp0XOQfyQqFIXdwjPFTWjEusDBlm4qJAlQ==</X509Certificate></X509Data></KeyInfo></Signature>
 <Extensions>
-  <mdrpi:PublicationInfo creationInstant="2020-03-23T18:49:53Z" publisher="https://incommon.org"/>
+  <mdrpi:PublicationInfo creationInstant="2020-04-20T18:41:38Z" publisher="https://incommon.org"/>
 </Extensions>
 <EntityDescriptor entityID="https://issues.shibboleth.net/shibboleth">
   <Extensions>
@@ -554,11 +519,12 @@ TyOzJ1GTj16SNA==
   <Extensions>
     <mdrpi:RegistrationInfo registrationAuthority="https://incommon.org"/>
     <mdattr:EntityAttributes>
-      <saml:Attribute Name="http://macedir.org/entity-category-support" NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri">
-        <saml:AttributeValue>http://id.incommon.org/category/research-and-scholarship</saml:AttributeValue>
-      </saml:Attribute>
       <saml:Attribute Name="urn:oasis:names:tc:SAML:attribute:assurance-certification" NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri">
         <saml:AttributeValue>https://refeds.org/sirtfi</saml:AttributeValue>
+      </saml:Attribute>
+      <saml:Attribute Name="http://macedir.org/entity-category-support" NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri">
+        <saml:AttributeValue>http://id.incommon.org/category/research-and-scholarship</saml:AttributeValue>
+        <saml:AttributeValue>http://refeds.org/category/research-and-scholarship</saml:AttributeValue>
       </saml:Attribute>
       <saml:Attribute Name="http://macedir.org/entity-category" NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri">
         <saml:AttributeValue>http://id.incommon.org/category/registered-by-incommon</saml:AttributeValue>
@@ -638,8 +604,8 @@ C8N6DXggDWPtPRdpk96UW45huvXudpZenrcd7A==
         </ds:X509Data>
       </ds:KeyInfo>
     </KeyDescriptor>
-    <AttributeService Binding="urn:oasis:names:tc:SAML:1.0:bindings:SOAP-binding" Location="https://shibidp.cit.cornell.edu:8443/idp/profile/SAML1/SOAP/AttributeQuery"/>
     <AttributeService Binding="urn:oasis:names:tc:SAML:2.0:bindings:SOAP" Location="https://shibidp.cit.cornell.edu:8443/idp/profile/SAML2/SOAP/AttributeQuery"/>
+    <AttributeService Binding="urn:oasis:names:tc:SAML:1.0:bindings:SOAP-binding" Location="https://shibidp.cit.cornell.edu:8443/idp/profile/SAML1/SOAP/AttributeQuery"/>
   </AttributeAuthorityDescriptor>
   <Organization>
     <OrganizationName xml:lang="en">Cornell University</OrganizationName>
@@ -647,8 +613,8 @@ C8N6DXggDWPtPRdpk96UW45huvXudpZenrcd7A==
     <OrganizationURL xml:lang="en">http://www.cornell.edu/</OrganizationURL>
   </Organization>
   <ContactPerson contactType="technical">
-    <GivenName>Hong Ye</GivenName>
-    <EmailAddress>hy93@cornell.edu</EmailAddress>
+    <GivenName>Identity Management</GivenName>
+    <EmailAddress>idmgmt@cornell.edu</EmailAddress>
   </ContactPerson>
   <ContactPerson contactType="other" remd:contactType="http://refeds.org/metadata/contactType/security">
     <GivenName>University Security Office</GivenName>
@@ -1167,6 +1133,952 @@ t5FPe9J49gY6hyOtfE+pyPUlPWapeDqRNaMc7eNRBazmRObGJznrSmlBxk58uZSn
   <ContactPerson contactType="other" remd:contactType="http://refeds.org/metadata/contactType/security">
     <GivenName>Don Hamparian</GivenName>
     <EmailAddress>hamparid@oclc.org</EmailAddress>
+  </ContactPerson>
+</EntityDescriptor>
+<EntityDescriptor entityID="https://pitt.idm.oclc.org/shibboleth">
+  <Extensions>
+    <mdrpi:RegistrationInfo registrationAuthority="https://incommon.org"/>
+    <mdattr:EntityAttributes>
+      <saml:Attribute Name="http://macedir.org/entity-category" NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri">
+        <saml:AttributeValue>http://id.incommon.org/category/registered-by-incommon</saml:AttributeValue>
+      </saml:Attribute>
+    </mdattr:EntityAttributes>
+  </Extensions>
+  <SPSSODescriptor protocolSupportEnumeration="urn:oasis:names:tc:SAML:1.1:protocol urn:oasis:names:tc:SAML:2.0:protocol">
+    <Extensions>
+      <mdui:UIInfo>
+        <mdui:DisplayName xml:lang="en">Pitt EZproxy Hosted at OCLC</mdui:DisplayName>
+        <mdui:Description xml:lang="en">Pitt EZproxy Hosted at OCLC</mdui:Description>
+        <mdui:PrivacyStatementURL xml:lang="en">https://www.oclc.org/en/policies/privacy.html</mdui:PrivacyStatementURL>
+        <mdui:Logo height="187" width="390" xml:lang="en">https://www.oclc.org/content/dam/oclc/common/images/logos/new/OCLC/OCLC_Logo_H_Color_NoTag.png</mdui:Logo>
+      </mdui:UIInfo>
+    </Extensions>
+    <KeyDescriptor>
+      <ds:KeyInfo>
+        <ds:X509Data>
+          <!-- Serial No. 3, expires on Wed Feb 15 16:58:24 2023 GMT -->
+          <ds:X509Certificate>
+MIIEXjCCA0agAwIBAgIBAzANBgkqhkiG9w0BAQUFADCBgDEcMBoGA1UEAxQTKi5w
+aXR0LmlkbS5vY2xjLm9yZzELMAkGA1UEBhMCVVMxMTAvBgNVBAoTKE9DTEMgT25s
+aW5lIENvbXB1dGVyIExpYnJhcnkgQ2VudGVyIEluYy4xIDAeBgkqhkiG9w0BCQEW
+EWFra2luZW52QG9jbGMub3JnMB4XDTEzMDIxNTE2NTgyNFoXDTIzMDIxNTE2NTgy
+NFowgYAxHDAaBgNVBAMUEyoucGl0dC5pZG0ub2NsYy5vcmcxCzAJBgNVBAYTAlVT
+MTEwLwYDVQQKEyhPQ0xDIE9ubGluZSBDb21wdXRlciBMaWJyYXJ5IENlbnRlciBJ
+bmMuMSAwHgYJKoZIhvcNAQkBFhFha2tpbmVudkBvY2xjLm9yZzCCASIwDQYJKoZI
+hvcNAQEBBQADggEPADCCAQoCggEBAMR6nKRR8W1mEH+j8WUzzpLw0cQ8FpVzTvJu
+c3lyDifmxt51bI1ucqU2alFUoSWd7uvOxsh+LYHetD6WHGM6QIbPKEuM+B0TNmPH
+/CdDig9B1fVtOCV2Y9dU/UZWBNpeInQP2+KKHPeU1oT4XBlzpbhA79njw5W4jgu1
+zC2yihFt1mLRoxrP/v6CJTN9y/VwKRpXYTH5xC533frEvtLOUSbhGfuI4e4yr+KA
+DC0n5ORqs0PHs82G2wV8aC9YFdbwsNZ1yumSbjTzjgxI4oLPKMJisY6IVVToZn7Z
+NGINVdEXncd8pBoNwvgmpjwLiqXU5SvA/QtgkGLNZl70dDtocE0CAwEAAaOB4DCB
+3TAdBgNVHQ4EFgQUq0KS6VGbFRPYOxvpCna1QWtdboAwga0GA1UdIwSBpTCBooAU
+q0KS6VGbFRPYOxvpCna1QWtdboChgYakgYMwgYAxHDAaBgNVBAMUEyoucGl0dC5p
+ZG0ub2NsYy5vcmcxCzAJBgNVBAYTAlVTMTEwLwYDVQQKEyhPQ0xDIE9ubGluZSBD
+b21wdXRlciBMaWJyYXJ5IENlbnRlciBJbmMuMSAwHgYJKoZIhvcNAQkBFhFha2tp
+bmVudkBvY2xjLm9yZ4IBAzAMBgNVHRMEBTADAQH/MA0GCSqGSIb3DQEBBQUAA4IB
+AQBI5MeOuHMYrKWaHRX1Opzjd75Xql7JHMHS9eCft72yGbrsudnTYTXa9BJzs12F
+Rb3vs89a00Zvlt09HRjv13nKEMqJqknnT4N1xhsvmsTxX2PR4ysFtuFMseuZCct1
+Y7VzPj6E3X7+h6GTjLmubFgP+EzVT6GsEyS6OGCIWg8krXydvW5BYe8kPEpOldkK
+X7uEvk9uZ2tvs9DfQwYFSi2mYKAx0YUXpE6aNrpOtRotvhxnpZnuLVb2c8JQ0RT3
+BXfKuXFXlPXgc6uNkD4vHD6durn8cRySaaYGRJLNikq9MBIvprMYoquvieXlmTrt
+KZqJ7I1ARBAvkbpNEArtkAbB
+          </ds:X509Certificate>
+        </ds:X509Data>
+      </ds:KeyInfo>
+    </KeyDescriptor>
+    <AssertionConsumerService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST" Location="https://login.pitt.idm.oclc.org/Shibboleth.sso/SAML2/POST" index="1"/>
+    <AssertionConsumerService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Artifact" Location="https://login.pitt.idm.oclc.org/Shibboleth.sso/SAML2/Artifact" index="2"/>
+    <AssertionConsumerService Binding="urn:oasis:names:tc:SAML:1.0:profiles:browser-post" Location="https://login.pitt.idm.oclc.org/Shibboleth.sso/SAML/POST" index="3"/>
+    <AssertionConsumerService Binding="urn:oasis:names:tc:SAML:1.0:profiles:artifact-01" Location="https://login.pitt.idm.oclc.org/Shibboleth.sso/SAML/Artifact" index="4"/>
+    <AttributeConsumingService index="1">
+      <ServiceName xml:lang="en">Pitt EZproxy Hosted at OCLC</ServiceName>
+      <ServiceDescription xml:lang="en">Pitt EZproxy Hosted at OCLC</ServiceDescription>
+      <RequestedAttribute FriendlyName="eduPersonPrincipalName" Name="urn:oid:1.3.6.1.4.1.5923.1.1.1.6" NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri"/>
+    </AttributeConsumingService>
+  </SPSSODescriptor>
+  <Organization>
+    <OrganizationName xml:lang="en">Online Computer Library Center Inc.</OrganizationName>
+    <OrganizationDisplayName xml:lang="en">Online Computer Library Center Inc.</OrganizationDisplayName>
+    <OrganizationURL xml:lang="en">http://www.oclc.org</OrganizationURL>
+  </Organization>
+  <ContactPerson contactType="administrative">
+    <GivenName>Don Hamparian</GivenName>
+    <EmailAddress>hamparid@oclc.org</EmailAddress>
+  </ContactPerson>
+  <ContactPerson contactType="technical">
+    <GivenName>Don Hamparian</GivenName>
+    <EmailAddress>hamparid@oclc.org</EmailAddress>
+  </ContactPerson>
+  <ContactPerson contactType="other" remd:contactType="http://refeds.org/metadata/contactType/security">
+    <GivenName>Don Hamparian</GivenName>
+    <EmailAddress>hamparid@oclc.org</EmailAddress>
+  </ContactPerson>
+</EntityDescriptor>
+<EntityDescriptor entityID="https://shib.dev.oclc.org/oclcsaml-v1">
+  <Extensions>
+    <mdrpi:RegistrationInfo registrationAuthority="https://incommon.org"/>
+    <mdattr:EntityAttributes>
+      <saml:Attribute Name="http://macedir.org/entity-category" NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri">
+        <saml:AttributeValue>http://id.incommon.org/category/registered-by-incommon</saml:AttributeValue>
+      </saml:Attribute>
+    </mdattr:EntityAttributes>
+  </Extensions>
+  <SPSSODescriptor protocolSupportEnumeration="urn:oasis:names:tc:SAML:2.0:protocol">
+    <Extensions>
+      <mdui:UIInfo>
+        <mdui:DisplayName xml:lang="en">OCLC development environment</mdui:DisplayName>
+        <mdui:Description xml:lang="en">This environment is used in the software development process.</mdui:Description>
+        <mdui:PrivacyStatementURL xml:lang="en">https://policies.oclc.org/en/privacy/privacy-statement.html</mdui:PrivacyStatementURL>
+        <mdui:Logo height="187" width="390" xml:lang="en">https://www.oclc.org/content/dam/oclc/common/images/logos/new/OCLC/OCLC_Logo_H_Color_NoTag.png</mdui:Logo>
+      </mdui:UIInfo>
+    </Extensions>
+    <KeyDescriptor>
+      <ds:KeyInfo>
+        <ds:X509Data>
+          <!-- Serial No. 1565128228436, expires on Thu Jul 29 21:50:27 2049 GMT -->
+          <ds:X509Certificate>
+MIIDNjCCAh6gAwIBAgIGAWxo6X5UMA0GCSqGSIb3DQEBCwUAMFwxETAPBgNVBAMT
+CE1ldGFBdXRoMQ0wCwYDVQQLEwRFSURNMQ0wCwYDVQQKEwRPQ0xDMQ8wDQYDVQQH
+EwZEdWJsaW4xCzAJBgNVBAgTAk9IMQswCQYDVQQGEwJVUzAeFw0xOTA4MDYyMTUw
+MjdaFw00OTA3MjkyMTUwMjdaMFwxETAPBgNVBAMTCE1ldGFBdXRoMQ0wCwYDVQQL
+EwRFSURNMQ0wCwYDVQQKEwRPQ0xDMQ8wDQYDVQQHEwZEdWJsaW4xCzAJBgNVBAgT
+Ak9IMQswCQYDVQQGEwJVUzCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEB
+AI4rBQGOe7QBvCRaBm3cRnftF427dwtMufX6zkPHFsWTu0g1ZibXVi6novIFLBgK
+MeRwQrn2sM1AglqXFNYDuutRURiEsuWwVNDuzjShLLqBJiVpL2H+ajCxlSM/R63R
+MgWZ91s2RUvV5OMvzDZokQChrRH8oSSW69pJgTNt06upUfN5uYyLZk+s7KkuBxjB
+eEAW8LSsTohwiCENXSgn1MnVlOqBC5016QxlWTYvGDEm/l+H1p9C+/H1bl3IPSlA
+q7cPQuRKt2oT3wiKUm/tqE1NKFztvI13eGv/CugIFrgVQtMiUJlpbB0U+ANnTdwF
+GAf2FvykKsfK0K2C5CO5QAcCAwEAATANBgkqhkiG9w0BAQsFAAOCAQEAehq6jZ66
+mA6UPHmbQPWya1lj2RfbWh88DOQ04+UMhrZ+GCSV5vRl2VIZM0PWhBW/EbMvBnmZ
+yII+gxqY6wRq/c/gymIgk0cJ72izjmriom6Xhwk94OePl8veGpwxqiFWQZBDgznN
+vPLn398/qCgYM3yV+bh4OtVbVCLYJ1yEszqQn4a+vFGJ/jMlypVc7y1QHqeR6ry2
+n+P00l1pgI3XmL6P/N8CJ+STjUcnBXnJaWj2a8U8qfPcIYFHDoXkUvnTC7HGQY1E
+28raalaUwS804Nu+rDsIK42xAxtGNgt7DhEAx3aMEMqrNoSuVohgz3MJsMsphFGe
+4Ua0p7Xa3izAeQ==
+          </ds:X509Certificate>
+        </ds:X509Data>
+      </ds:KeyInfo>
+    </KeyDescriptor>
+    <AssertionConsumerService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST" Location="https://authn.sd00.worldcat-m1.dev.oclc.org/wayf/metaauth-ui/cmnd/protocol/acs/saml2" index="1"/>
+    <AttributeConsumingService index="1">
+      <ServiceName xml:lang="en">OCLC development environment</ServiceName>
+      <ServiceDescription xml:lang="en">This environment is used in the software development process.</ServiceDescription>
+      <RequestedAttribute FriendlyName="eduPersonEntitlement" Name="urn:oid:1.3.6.1.4.1.5923.1.1.1.7" NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri" isRequired="true"/>
+    </AttributeConsumingService>
+  </SPSSODescriptor>
+  <Organization>
+    <OrganizationName xml:lang="en">Online Computer Library Center Inc.</OrganizationName>
+    <OrganizationDisplayName xml:lang="en">Online Computer Library Center Inc.</OrganizationDisplayName>
+    <OrganizationURL xml:lang="en">http://www.oclc.org</OrganizationURL>
+  </Organization>
+  <ContactPerson contactType="administrative">
+    <GivenName>Don Hamparian</GivenName>
+    <EmailAddress>hamparid@oclc.org</EmailAddress>
+  </ContactPerson>
+  <ContactPerson contactType="technical">
+    <GivenName>Ho-Chun Chin</GivenName>
+    <EmailAddress>chinh@oclc.org</EmailAddress>
+  </ContactPerson>
+  <ContactPerson contactType="other" remd:contactType="http://refeds.org/metadata/contactType/security">
+    <GivenName>Don Hamparian</GivenName>
+    <EmailAddress>hamparid@oclc.org</EmailAddress>
+  </ContactPerson>
+</EntityDescriptor>
+<EntityDescriptor entityID="https://shib.nat.oclc.org/oclcsaml-v1">
+  <Extensions>
+    <mdrpi:RegistrationInfo registrationAuthority="https://incommon.org"/>
+    <mdattr:EntityAttributes>
+      <saml:Attribute Name="http://macedir.org/entity-category" NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri">
+        <saml:AttributeValue>http://id.incommon.org/category/registered-by-incommon</saml:AttributeValue>
+      </saml:Attribute>
+    </mdattr:EntityAttributes>
+  </Extensions>
+  <SPSSODescriptor protocolSupportEnumeration="urn:oasis:names:tc:SAML:2.0:protocol">
+    <Extensions>
+      <mdui:UIInfo>
+        <mdui:DisplayName xml:lang="en">OCLC production acceptance testing environment</mdui:DisplayName>
+        <mdui:Description xml:lang="en">This environment is used in the production acceptance testing process.</mdui:Description>
+        <mdui:PrivacyStatementURL xml:lang="en">https://policies.oclc.org/en/privacy/privacy-statement.html</mdui:PrivacyStatementURL>
+        <mdui:Logo height="187" width="390" xml:lang="en">https://www.oclc.org/content/dam/oclc/common/images/logos/new/OCLC/OCLC_Logo_H_Color_NoTag.png</mdui:Logo>
+      </mdui:UIInfo>
+    </Extensions>
+    <KeyDescriptor>
+      <ds:KeyInfo>
+        <ds:X509Data>
+          <!-- Serial No. 1565128228436, expires on Thu Jul 29 21:50:27 2049 GMT -->
+          <ds:X509Certificate>
+MIIDNjCCAh6gAwIBAgIGAWxo6X5UMA0GCSqGSIb3DQEBCwUAMFwxETAPBgNVBAMT
+CE1ldGFBdXRoMQ0wCwYDVQQLEwRFSURNMQ0wCwYDVQQKEwRPQ0xDMQ8wDQYDVQQH
+EwZEdWJsaW4xCzAJBgNVBAgTAk9IMQswCQYDVQQGEwJVUzAeFw0xOTA4MDYyMTUw
+MjdaFw00OTA3MjkyMTUwMjdaMFwxETAPBgNVBAMTCE1ldGFBdXRoMQ0wCwYDVQQL
+EwRFSURNMQ0wCwYDVQQKEwRPQ0xDMQ8wDQYDVQQHEwZEdWJsaW4xCzAJBgNVBAgT
+Ak9IMQswCQYDVQQGEwJVUzCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEB
+AI4rBQGOe7QBvCRaBm3cRnftF427dwtMufX6zkPHFsWTu0g1ZibXVi6novIFLBgK
+MeRwQrn2sM1AglqXFNYDuutRURiEsuWwVNDuzjShLLqBJiVpL2H+ajCxlSM/R63R
+MgWZ91s2RUvV5OMvzDZokQChrRH8oSSW69pJgTNt06upUfN5uYyLZk+s7KkuBxjB
+eEAW8LSsTohwiCENXSgn1MnVlOqBC5016QxlWTYvGDEm/l+H1p9C+/H1bl3IPSlA
+q7cPQuRKt2oT3wiKUm/tqE1NKFztvI13eGv/CugIFrgVQtMiUJlpbB0U+ANnTdwF
+GAf2FvykKsfK0K2C5CO5QAcCAwEAATANBgkqhkiG9w0BAQsFAAOCAQEAehq6jZ66
+mA6UPHmbQPWya1lj2RfbWh88DOQ04+UMhrZ+GCSV5vRl2VIZM0PWhBW/EbMvBnmZ
+yII+gxqY6wRq/c/gymIgk0cJ72izjmriom6Xhwk94OePl8veGpwxqiFWQZBDgznN
+vPLn398/qCgYM3yV+bh4OtVbVCLYJ1yEszqQn4a+vFGJ/jMlypVc7y1QHqeR6ry2
+n+P00l1pgI3XmL6P/N8CJ+STjUcnBXnJaWj2a8U8qfPcIYFHDoXkUvnTC7HGQY1E
+28raalaUwS804Nu+rDsIK42xAxtGNgt7DhEAx3aMEMqrNoSuVohgz3MJsMsphFGe
+4Ua0p7Xa3izAeQ==
+          </ds:X509Certificate>
+        </ds:X509Data>
+      </ds:KeyInfo>
+    </KeyDescriptor>
+    <AssertionConsumerService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST" Location="https://authn.sd00.worldcat-m1.nat.oclc.org/wayf/metaauth-ui/cmnd/protocol/acs/saml2" index="1"/>
+    <AttributeConsumingService index="1">
+      <ServiceName xml:lang="en">OCLC production acceptance testing environment</ServiceName>
+      <ServiceDescription xml:lang="en">This environment is used in the production acceptance testing process.</ServiceDescription>
+      <RequestedAttribute FriendlyName="eduPersonEntitlement" Name="urn:oid:1.3.6.1.4.1.5923.1.1.1.7" NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri" isRequired="true"/>
+    </AttributeConsumingService>
+  </SPSSODescriptor>
+  <Organization>
+    <OrganizationName xml:lang="en">Online Computer Library Center Inc.</OrganizationName>
+    <OrganizationDisplayName xml:lang="en">Online Computer Library Center Inc.</OrganizationDisplayName>
+    <OrganizationURL xml:lang="en">http://www.oclc.org</OrganizationURL>
+  </Organization>
+  <ContactPerson contactType="administrative">
+    <GivenName>Don Hamparian</GivenName>
+    <EmailAddress>hamparid@oclc.org</EmailAddress>
+  </ContactPerson>
+  <ContactPerson contactType="technical">
+    <GivenName>Ho-Chun Chin</GivenName>
+    <EmailAddress>chinh@oclc.org</EmailAddress>
+  </ContactPerson>
+  <ContactPerson contactType="other" remd:contactType="http://refeds.org/metadata/contactType/security">
+    <GivenName>Don Hamparian</GivenName>
+    <EmailAddress>hamparid@oclc.org</EmailAddress>
+  </ContactPerson>
+</EntityDescriptor>
+<EntityDescriptor entityID="https://shib.nit.oclc.org/oclcsaml-v1">
+  <Extensions>
+    <mdrpi:RegistrationInfo registrationAuthority="https://incommon.org"/>
+    <mdattr:EntityAttributes>
+      <saml:Attribute Name="http://macedir.org/entity-category" NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri">
+        <saml:AttributeValue>http://id.incommon.org/category/registered-by-incommon</saml:AttributeValue>
+      </saml:Attribute>
+    </mdattr:EntityAttributes>
+  </Extensions>
+  <SPSSODescriptor protocolSupportEnumeration="urn:oasis:names:tc:SAML:2.0:protocol">
+    <Extensions>
+      <mdui:UIInfo>
+        <mdui:DisplayName xml:lang="en">OCLC QA environment</mdui:DisplayName>
+        <mdui:Description xml:lang="en">This environment is used in the QA testing process.</mdui:Description>
+        <mdui:PrivacyStatementURL xml:lang="en">https://policies.oclc.org/en/privacy/privacy-statement.html</mdui:PrivacyStatementURL>
+        <mdui:Logo height="187" width="390" xml:lang="en">https://www.oclc.org/content/dam/oclc/common/images/logos/new/OCLC/OCLC_Logo_H_Color_NoTag.png</mdui:Logo>
+      </mdui:UIInfo>
+    </Extensions>
+    <KeyDescriptor>
+      <ds:KeyInfo>
+        <ds:X509Data>
+          <!-- Serial No. 1565128228436, expires on Thu Jul 29 21:50:27 2049 GMT -->
+          <ds:X509Certificate>
+MIIDNjCCAh6gAwIBAgIGAWxo6X5UMA0GCSqGSIb3DQEBCwUAMFwxETAPBgNVBAMT
+CE1ldGFBdXRoMQ0wCwYDVQQLEwRFSURNMQ0wCwYDVQQKEwRPQ0xDMQ8wDQYDVQQH
+EwZEdWJsaW4xCzAJBgNVBAgTAk9IMQswCQYDVQQGEwJVUzAeFw0xOTA4MDYyMTUw
+MjdaFw00OTA3MjkyMTUwMjdaMFwxETAPBgNVBAMTCE1ldGFBdXRoMQ0wCwYDVQQL
+EwRFSURNMQ0wCwYDVQQKEwRPQ0xDMQ8wDQYDVQQHEwZEdWJsaW4xCzAJBgNVBAgT
+Ak9IMQswCQYDVQQGEwJVUzCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEB
+AI4rBQGOe7QBvCRaBm3cRnftF427dwtMufX6zkPHFsWTu0g1ZibXVi6novIFLBgK
+MeRwQrn2sM1AglqXFNYDuutRURiEsuWwVNDuzjShLLqBJiVpL2H+ajCxlSM/R63R
+MgWZ91s2RUvV5OMvzDZokQChrRH8oSSW69pJgTNt06upUfN5uYyLZk+s7KkuBxjB
+eEAW8LSsTohwiCENXSgn1MnVlOqBC5016QxlWTYvGDEm/l+H1p9C+/H1bl3IPSlA
+q7cPQuRKt2oT3wiKUm/tqE1NKFztvI13eGv/CugIFrgVQtMiUJlpbB0U+ANnTdwF
+GAf2FvykKsfK0K2C5CO5QAcCAwEAATANBgkqhkiG9w0BAQsFAAOCAQEAehq6jZ66
+mA6UPHmbQPWya1lj2RfbWh88DOQ04+UMhrZ+GCSV5vRl2VIZM0PWhBW/EbMvBnmZ
+yII+gxqY6wRq/c/gymIgk0cJ72izjmriom6Xhwk94OePl8veGpwxqiFWQZBDgznN
+vPLn398/qCgYM3yV+bh4OtVbVCLYJ1yEszqQn4a+vFGJ/jMlypVc7y1QHqeR6ry2
+n+P00l1pgI3XmL6P/N8CJ+STjUcnBXnJaWj2a8U8qfPcIYFHDoXkUvnTC7HGQY1E
+28raalaUwS804Nu+rDsIK42xAxtGNgt7DhEAx3aMEMqrNoSuVohgz3MJsMsphFGe
+4Ua0p7Xa3izAeQ==
+          </ds:X509Certificate>
+        </ds:X509Data>
+      </ds:KeyInfo>
+    </KeyDescriptor>
+    <AssertionConsumerService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST" Location="https://authn.sd00.worldcat-m1.nit.oclc.org/wayf/metaauth-ui/cmnd/protocol/acs/saml2" index="1"/>
+    <AttributeConsumingService index="1">
+      <ServiceName xml:lang="en">OCLC QA environment</ServiceName>
+      <ServiceDescription xml:lang="en">This environment is used in the QA testing process.</ServiceDescription>
+      <RequestedAttribute FriendlyName="eduPersonEntitlement" Name="urn:oid:1.3.6.1.4.1.5923.1.1.1.7" NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri" isRequired="true"/>
+    </AttributeConsumingService>
+  </SPSSODescriptor>
+  <Organization>
+    <OrganizationName xml:lang="en">Online Computer Library Center Inc.</OrganizationName>
+    <OrganizationDisplayName xml:lang="en">Online Computer Library Center Inc.</OrganizationDisplayName>
+    <OrganizationURL xml:lang="en">http://www.oclc.org</OrganizationURL>
+  </Organization>
+  <ContactPerson contactType="administrative">
+    <GivenName>Don Hamparian</GivenName>
+    <EmailAddress>hamparid@oclc.org</EmailAddress>
+  </ContactPerson>
+  <ContactPerson contactType="technical">
+    <GivenName>Ho-Chun Chin</GivenName>
+    <EmailAddress>chinh@oclc.org</EmailAddress>
+  </ContactPerson>
+  <ContactPerson contactType="other" remd:contactType="http://refeds.org/metadata/contactType/security">
+    <GivenName>Don Hamparian</GivenName>
+    <EmailAddress>hamparid@oclc.org</EmailAddress>
+  </ContactPerson>
+</EntityDescriptor>
+<EntityDescriptor entityID="https://shib.oclc.org/oclcsaml-v1">
+  <Extensions>
+    <mdrpi:RegistrationInfo registrationAuthority="https://incommon.org"/>
+    <mdattr:EntityAttributes>
+      <saml:Attribute Name="http://macedir.org/entity-category" NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri">
+        <saml:AttributeValue>http://id.incommon.org/category/registered-by-incommon</saml:AttributeValue>
+      </saml:Attribute>
+    </mdattr:EntityAttributes>
+  </Extensions>
+  <SPSSODescriptor protocolSupportEnumeration="urn:oasis:names:tc:SAML:2.0:protocol">
+    <Extensions>
+      <mdui:UIInfo>
+        <mdui:DisplayName xml:lang="en">OCLC production environment</mdui:DisplayName>
+        <mdui:Description xml:lang="en">This is the production environment.</mdui:Description>
+        <mdui:PrivacyStatementURL xml:lang="en">https://policies.oclc.org/en/privacy/privacy-statement.html</mdui:PrivacyStatementURL>
+        <mdui:Logo height="187" width="390" xml:lang="en">https://www.oclc.org/content/dam/oclc/common/images/logos/new/OCLC/OCLC_Logo_H_Color_NoTag.png</mdui:Logo>
+      </mdui:UIInfo>
+    </Extensions>
+    <KeyDescriptor>
+      <ds:KeyInfo>
+        <ds:X509Data>
+          <!-- Serial No. 1565132764364, expires on Thu Jul 29 23:06:03 2049 GMT -->
+          <ds:X509Certificate>
+MIIDNjCCAh6gAwIBAgIGAWxpLrTMMA0GCSqGSIb3DQEBCwUAMFwxETAPBgNVBAMT
+CE1ldGFBdXRoMQ0wCwYDVQQLEwRFSURNMQ0wCwYDVQQKEwRPQ0xDMQ8wDQYDVQQH
+EwZEdWJsaW4xCzAJBgNVBAgTAk9IMQswCQYDVQQGEwJVUzAeFw0xOTA4MDYyMzA2
+MDNaFw00OTA3MjkyMzA2MDNaMFwxETAPBgNVBAMTCE1ldGFBdXRoMQ0wCwYDVQQL
+EwRFSURNMQ0wCwYDVQQKEwRPQ0xDMQ8wDQYDVQQHEwZEdWJsaW4xCzAJBgNVBAgT
+Ak9IMQswCQYDVQQGEwJVUzCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEB
+AKpFepX3FnMPQrDdO3HbnfFHqd9bHG/S1ylXddBduYgkamPz4N3jdv52s4U9qo8X
+g0b8Gv3bz1TsI4MWiqNgAilW+1Eb21N/e3RgbtAoOo6vjJK6asCE96QTa7SjIJoX
+gDDwFD4OLtbiTI5667pOgmQ9LEcBmduw6Adtyof7WL9kw9XG7ApGBWb3T3mFwAaH
+lSLcPZXvuipJwSD6LHDUqtEHjpx+6mIOsvSxAnapEb/mcMv6tiq5Sh7YqsgLOZa1
+sK8k+2xZ19KQDMs6c5N+HXjKAtvRsQ+AAp0kJZ7fuSw8t7BFuecpLBhaCSHmATNg
+bpUO/LxZhh1NX4RF2W6lfPsCAwEAATANBgkqhkiG9w0BAQsFAAOCAQEALA1jOFv/
+j7SqEqkQraFZ42+6TT245m6fx/ai32VYqcnvQ1prmdZkpu5mGeCAsSDVrtIuzJrM
+zvOWGccwFTrOU8c1f/J+1u0EhK8QNoINBVR8y6pTfZBV0VZBiBDo3wAxp7hZunla
+oB2tebvx/4RD0NZ2TDfZmLjDOZKbzdEZnVlO6avPRHRmEKjwOe1CivcT16i5RvNc
+SWBZPmali7qM8wX2zVp3QyzHpIv9GT5DI6p4kZBpQ7o4UpFQjGgM4qKQRJ8YmFoI
+6kChd50DvEZMqU+Klyo5xxj0fGYhND7Uoy/qrsncxWB6Wi6svAfSLF5avI+FrTs7
+bSNIvr0577r9pg==
+          </ds:X509Certificate>
+        </ds:X509Data>
+      </ds:KeyInfo>
+    </KeyDescriptor>
+    <AssertionConsumerService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST" Location="https://authn.sd00.worldcat.org/wayf/metaauth-ui/cmnd/protocol/acs/saml2" index="1"/>
+    <AssertionConsumerService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST" Location="https://authn.sd02.worldcat.org/wayf/metaauth-ui/cmnd/protocol/acs/saml2" index="2"/>
+    <AssertionConsumerService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST" Location="https://authn.sd03.worldcat.org/wayf/metaauth-ui/cmnd/protocol/acs/saml2" index="3"/>
+    <AssertionConsumerService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST" Location="https://authn.sd04.worldcat.org/wayf/metaauth-ui/cmnd/protocol/acs/saml2" index="4"/>
+    <AttributeConsumingService index="1">
+      <ServiceName xml:lang="en">OCLC production environment</ServiceName>
+      <ServiceDescription xml:lang="en">This is the production environment.</ServiceDescription>
+      <RequestedAttribute FriendlyName="eduPersonAffiliation" Name="urn:oid:1.3.6.1.4.1.5923.1.1.1.1" NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri" isRequired="true"/>
+    </AttributeConsumingService>
+  </SPSSODescriptor>
+  <Organization>
+    <OrganizationName xml:lang="en">Online Computer Library Center Inc.</OrganizationName>
+    <OrganizationDisplayName xml:lang="en">Online Computer Library Center Inc.</OrganizationDisplayName>
+    <OrganizationURL xml:lang="en">http://www.oclc.org</OrganizationURL>
+  </Organization>
+  <ContactPerson contactType="administrative">
+    <GivenName>Don Hamparian</GivenName>
+    <EmailAddress>hamparid@oclc.org</EmailAddress>
+  </ContactPerson>
+  <ContactPerson contactType="technical">
+    <GivenName>Ho-Chun Chin</GivenName>
+    <EmailAddress>chinh@oclc.org</EmailAddress>
+  </ContactPerson>
+  <ContactPerson contactType="other" remd:contactType="http://refeds.org/metadata/contactType/security">
+    <GivenName>Don Hamparian</GivenName>
+    <EmailAddress>hamparid@oclc.org</EmailAddress>
+  </ContactPerson>
+</EntityDescriptor>
+<EntityDescriptor entityID="https://shib.sbx.oclc.org/oclcsaml-v1">
+  <Extensions>
+    <mdrpi:RegistrationInfo registrationAuthority="https://incommon.org"/>
+    <mdattr:EntityAttributes>
+      <saml:Attribute Name="http://macedir.org/entity-category" NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri">
+        <saml:AttributeValue>http://id.incommon.org/category/registered-by-incommon</saml:AttributeValue>
+      </saml:Attribute>
+    </mdattr:EntityAttributes>
+  </Extensions>
+  <SPSSODescriptor protocolSupportEnumeration="urn:oasis:names:tc:SAML:2.0:protocol">
+    <Extensions>
+      <mdui:UIInfo>
+        <mdui:DisplayName xml:lang="en">OCLC developer sandbox environment</mdui:DisplayName>
+        <mdui:Description xml:lang="en">This environment is used the earliest in the software development process.</mdui:Description>
+        <mdui:PrivacyStatementURL xml:lang="en">https://policies.oclc.org/en/privacy/privacy-statement.html</mdui:PrivacyStatementURL>
+        <mdui:Logo height="187" width="390" xml:lang="en">https://www.oclc.org/content/dam/oclc/common/images/logos/new/OCLC/OCLC_Logo_H_Color_NoTag.png</mdui:Logo>
+      </mdui:UIInfo>
+    </Extensions>
+    <KeyDescriptor>
+      <ds:KeyInfo>
+        <ds:X509Data>
+          <!-- Serial No. 1565128228436, expires on Thu Jul 29 21:50:27 2049 GMT -->
+          <ds:X509Certificate>
+MIIDNjCCAh6gAwIBAgIGAWxo6X5UMA0GCSqGSIb3DQEBCwUAMFwxETAPBgNVBAMT
+CE1ldGFBdXRoMQ0wCwYDVQQLEwRFSURNMQ0wCwYDVQQKEwRPQ0xDMQ8wDQYDVQQH
+EwZEdWJsaW4xCzAJBgNVBAgTAk9IMQswCQYDVQQGEwJVUzAeFw0xOTA4MDYyMTUw
+MjdaFw00OTA3MjkyMTUwMjdaMFwxETAPBgNVBAMTCE1ldGFBdXRoMQ0wCwYDVQQL
+EwRFSURNMQ0wCwYDVQQKEwRPQ0xDMQ8wDQYDVQQHEwZEdWJsaW4xCzAJBgNVBAgT
+Ak9IMQswCQYDVQQGEwJVUzCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEB
+AI4rBQGOe7QBvCRaBm3cRnftF427dwtMufX6zkPHFsWTu0g1ZibXVi6novIFLBgK
+MeRwQrn2sM1AglqXFNYDuutRURiEsuWwVNDuzjShLLqBJiVpL2H+ajCxlSM/R63R
+MgWZ91s2RUvV5OMvzDZokQChrRH8oSSW69pJgTNt06upUfN5uYyLZk+s7KkuBxjB
+eEAW8LSsTohwiCENXSgn1MnVlOqBC5016QxlWTYvGDEm/l+H1p9C+/H1bl3IPSlA
+q7cPQuRKt2oT3wiKUm/tqE1NKFztvI13eGv/CugIFrgVQtMiUJlpbB0U+ANnTdwF
+GAf2FvykKsfK0K2C5CO5QAcCAwEAATANBgkqhkiG9w0BAQsFAAOCAQEAehq6jZ66
+mA6UPHmbQPWya1lj2RfbWh88DOQ04+UMhrZ+GCSV5vRl2VIZM0PWhBW/EbMvBnmZ
+yII+gxqY6wRq/c/gymIgk0cJ72izjmriom6Xhwk94OePl8veGpwxqiFWQZBDgznN
+vPLn398/qCgYM3yV+bh4OtVbVCLYJ1yEszqQn4a+vFGJ/jMlypVc7y1QHqeR6ry2
+n+P00l1pgI3XmL6P/N8CJ+STjUcnBXnJaWj2a8U8qfPcIYFHDoXkUvnTC7HGQY1E
+28raalaUwS804Nu+rDsIK42xAxtGNgt7DhEAx3aMEMqrNoSuVohgz3MJsMsphFGe
+4Ua0p7Xa3izAeQ==
+          </ds:X509Certificate>
+        </ds:X509Data>
+      </ds:KeyInfo>
+    </KeyDescriptor>
+    <AssertionConsumerService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST" Location="http://idmsvcap03dxdu.dev.oclc.org:8080/wayf/metaauth-ui/cmnd/protocol/acs/saml2" index="1"/>
+    <AttributeConsumingService index="1">
+      <ServiceName xml:lang="en">OCLC developer sandbox environment</ServiceName>
+      <ServiceDescription xml:lang="en">This environment is used the earliest in the software development process.</ServiceDescription>
+      <RequestedAttribute FriendlyName="eduPersonEntitlement" Name="urn:oid:1.3.6.1.4.1.5923.1.1.1.7" NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri" isRequired="true"/>
+    </AttributeConsumingService>
+  </SPSSODescriptor>
+  <Organization>
+    <OrganizationName xml:lang="en">Online Computer Library Center Inc.</OrganizationName>
+    <OrganizationDisplayName xml:lang="en">Online Computer Library Center Inc.</OrganizationDisplayName>
+    <OrganizationURL xml:lang="en">http://www.oclc.org</OrganizationURL>
+  </Organization>
+  <ContactPerson contactType="administrative">
+    <GivenName>Don Hamparian</GivenName>
+    <EmailAddress>hamparid@oclc.org</EmailAddress>
+  </ContactPerson>
+  <ContactPerson contactType="technical">
+    <GivenName>Ho-Chun Chin</GivenName>
+    <EmailAddress>chinh@oclc.org</EmailAddress>
+  </ContactPerson>
+  <ContactPerson contactType="other" remd:contactType="http://refeds.org/metadata/contactType/security">
+    <GivenName>Don Hamparian</GivenName>
+    <EmailAddress>hamparid@oclc.org</EmailAddress>
+  </ContactPerson>
+</EntityDescriptor>
+<EntityDescriptor entityID="https://smithsonian.idm.oclc.org/shibboleth">
+  <Extensions>
+    <mdrpi:RegistrationInfo registrationAuthority="https://incommon.org"/>
+    <mdattr:EntityAttributes>
+      <saml:Attribute Name="http://macedir.org/entity-category" NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri">
+        <saml:AttributeValue>http://id.incommon.org/category/registered-by-incommon</saml:AttributeValue>
+      </saml:Attribute>
+    </mdattr:EntityAttributes>
+  </Extensions>
+  <SPSSODescriptor protocolSupportEnumeration="urn:oasis:names:tc:SAML:1.1:protocol urn:oasis:names:tc:SAML:2.0:protocol">
+    <Extensions>
+      <mdui:UIInfo>
+        <mdui:DisplayName xml:lang="en">Smithsonian Institution OCLC Hosted EZproxy</mdui:DisplayName>
+        <mdui:PrivacyStatementURL xml:lang="en">https://www.oclc.org/en/policies/privacy.html</mdui:PrivacyStatementURL>
+        <mdui:Logo height="187" width="390" xml:lang="en">https://www.oclc.org/content/dam/oclc/common/images/logos/new/OCLC/OCLC_Logo_H_Color_NoTag.png</mdui:Logo>
+      </mdui:UIInfo>
+    </Extensions>
+    <KeyDescriptor>
+      <ds:KeyInfo>
+        <ds:X509Data>
+          <!-- Serial No. 2, expires on Sun Jul 19 13:21:03 2026 GMT -->
+          <ds:X509Certificate>
+MIIEAjCCAuqgAwIBAgIBAjANBgkqhkiG9w0BAQsFADBjMSMwIQYDVQQDFBoqLnNt
+aXRoc29uaWFuLmlkbS5vY2xjLm9yZzELMAkGA1UEBhMCVVMxDTALBgNVBAoTBE9D
+TEMxIDAeBgkqhkiG9w0BCQEWEWt1Y2tlbGhqQG9jbGMub3JnMB4XDTE2MDcxOTEz
+MjEwM1oXDTI2MDcxOTEzMjEwM1owYzEjMCEGA1UEAxQaKi5zbWl0aHNvbmlhbi5p
+ZG0ub2NsYy5vcmcxCzAJBgNVBAYTAlVTMQ0wCwYDVQQKEwRPQ0xDMSAwHgYJKoZI
+hvcNAQkBFhFrdWNrZWxoakBvY2xjLm9yZzCCASIwDQYJKoZIhvcNAQEBBQADggEP
+ADCCAQoCggEBAOSzTzXk30oFuQiU3LnnYSyLPyxwnZXstvuDUDvs40oPNOVYEuLM
+rpMHNImSV+gvBVjD4I1So9M3meCzy+y9cgKJ/7jVHsRFr/kdIwtVwocAi+Yv3GQU
+y3uDGyxm/4fhDpBbtuxVGkKwrPohZtmxU9Uo1JlltKlTv1Xz8OECqtC/ALm8gqJc
+/evah1QIvtf8DBxxxTTI1EoYVjUkGEYVP0HJ0OO6HHLGsBHPoNOV9If5bhDkYZzC
+UoRCeTZxWNh5+79tkz8zLQ7021fYdn+guHFZtmsWDWSNP6I1fxAJH3WrzWIiKm3E
+ln1oy17wDRK2I0HxRDtK3jtlB6NV8jl7qI8CAwEAAaOBwDCBvTAdBgNVHQ4EFgQU
+QAnIvMdO/Zsu4WvZzvZZ2y2I7ncwgY0GA1UdIwSBhTCBgoAUQAnIvMdO/Zsu4WvZ
+zvZZ2y2I7nehZ6RlMGMxIzAhBgNVBAMUGiouc21pdGhzb25pYW4uaWRtLm9jbGMu
+b3JnMQswCQYDVQQGEwJVUzENMAsGA1UEChMET0NMQzEgMB4GCSqGSIb3DQEJARYR
+a3Vja2VsaGpAb2NsYy5vcmeCAQIwDAYDVR0TBAUwAwEB/zANBgkqhkiG9w0BAQsF
+AAOCAQEAkBQdnnFaKJFrLo47dDon3G0/dJXuM7Kt0CEvNtxO7rD6j6Qjo7W4QHap
+stYvsh7FxPn6VFAMVO7HipxMm5pgfp7w26MueW96UkI5fVIygBEeFfNAGERKe0x4
+V1btOjvrFi6hctp8GTIRLk7t/fDuZI1v3DTyV3SMHNZpKiCD8H9YiN1e02sPBNEP
+uRacXy7RxeXjobBJG7ZyWexOOKRpcKZ3dx2ONz5tuzUgN0cp0z2WDXfAbobBWK6P
+gFYBzIc0a16EiXFRkWHIsOzIwnUHcTDMnHg6kM3wOrVCspO1k+6k7HM1OEPtrDyv
+srbERCGnpJKtTH2fSJVCbX6xczjFCg==
+          </ds:X509Certificate>
+        </ds:X509Data>
+      </ds:KeyInfo>
+    </KeyDescriptor>
+    <AssertionConsumerService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST" Location="https://login.smithsonian.idm.oclc.org/Shibboleth.sso/SAML2/POST" index="1"/>
+    <AssertionConsumerService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Artifact" Location="https://login.smithsonian.idm.oclc.org/Shibboleth.sso/SAML2/Artifact" index="2"/>
+    <AssertionConsumerService Binding="urn:oasis:names:tc:SAML:1.0:profiles:browser-post" Location="https://login.smithsonian.idm.oclc.org/Shibboleth.sso/SAML/POST" index="3"/>
+    <AssertionConsumerService Binding="urn:oasis:names:tc:SAML:1.0:profiles:artifact-01" Location="https://login.smithsonian.idm.oclc.org/Shibboleth.sso/SAML/Artifact" index="4"/>
+    <AttributeConsumingService index="1">
+      <ServiceName xml:lang="en">Smithsonian Institution OCLC Hosted EZproxy</ServiceName>
+      <RequestedAttribute FriendlyName="eduPersonPrincipalName" Name="urn:oid:1.3.6.1.4.1.5923.1.1.1.6" NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri"/>
+    </AttributeConsumingService>
+  </SPSSODescriptor>
+  <Organization>
+    <OrganizationName xml:lang="en">Online Computer Library Center Inc.</OrganizationName>
+    <OrganizationDisplayName xml:lang="en">Online Computer Library Center Inc.</OrganizationDisplayName>
+    <OrganizationURL xml:lang="en">http://www.oclc.org</OrganizationURL>
+  </Organization>
+  <ContactPerson contactType="technical">
+    <GivenName>Don Hamparian</GivenName>
+    <EmailAddress>hamparid@oclc.org</EmailAddress>
+  </ContactPerson>
+  <ContactPerson contactType="administrative">
+    <GivenName>Don Hamparian</GivenName>
+    <EmailAddress>hamparid@oclc.org</EmailAddress>
+  </ContactPerson>
+  <ContactPerson contactType="other" remd:contactType="http://refeds.org/metadata/contactType/security">
+    <GivenName>Don Hamparian</GivenName>
+    <EmailAddress>hamparid@oclc.org</EmailAddress>
+  </ContactPerson>
+</EntityDescriptor>
+<EntityDescriptor entityID="https://sonoma.idm.oclc.org/shibboleth">
+  <Extensions>
+    <mdrpi:RegistrationInfo registrationAuthority="https://incommon.org"/>
+    <mdattr:EntityAttributes>
+      <saml:Attribute Name="http://macedir.org/entity-category" NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri">
+        <saml:AttributeValue>http://id.incommon.org/category/registered-by-incommon</saml:AttributeValue>
+      </saml:Attribute>
+    </mdattr:EntityAttributes>
+  </Extensions>
+  <SPSSODescriptor protocolSupportEnumeration="urn:oasis:names:tc:SAML:1.1:protocol urn:oasis:names:tc:SAML:2.0:protocol">
+    <Extensions>
+      <mdui:UIInfo>
+        <mdui:DisplayName xml:lang="en">OCLC Hosted EZproxy Sonoma State University</mdui:DisplayName>
+        <mdui:PrivacyStatementURL xml:lang="en">https://www.oclc.org/en/policies/privacy.html</mdui:PrivacyStatementURL>
+        <mdui:Logo height="187" width="390" xml:lang="en">https://www.oclc.org/content/dam/oclc/common/images/logos/new/OCLC/OCLC_Logo_H_Color_NoTag.png</mdui:Logo>
+      </mdui:UIInfo>
+    </Extensions>
+    <KeyDescriptor>
+      <ds:KeyInfo>
+        <ds:X509Data>
+          <!-- Serial No. 2, expires on Wed Feb 17 22:26:21 2027 GMT -->
+          <ds:X509Certificate>
+MIIEBTCCAu2gAwIBAgIBAjANBgkqhkiG9w0BAQsFADBkMR4wHAYDVQQDFBUqLnNv
+bm9tYS5pZG0ub2NsYy5vcmcxCzAJBgNVBAYTAlVTMQ0wCwYDVQQKEwRPQ0xDMSYw
+JAYJKoZIhvcNAQkBFhdpbXBsZW1lbnRhdGlvbkBvY2xjLm9yZzAeFw0xNzAyMTcy
+MjI2MjFaFw0yNzAyMTcyMjI2MjFaMGQxHjAcBgNVBAMUFSouc29ub21hLmlkbS5v
+Y2xjLm9yZzELMAkGA1UEBhMCVVMxDTALBgNVBAoTBE9DTEMxJjAkBgkqhkiG9w0B
+CQEWF2ltcGxlbWVudGF0aW9uQG9jbGMub3JnMIIBIjANBgkqhkiG9w0BAQEFAAOC
+AQ8AMIIBCgKCAQEA2VM9KCd9Att/KWE3C/wLHGvVhSBZ+SseKgXozQiJK2/6yOBa
+SGRHn+0m6QHyDCvrOnZ4FJdRtUcqlEI3qyk+8IpYGBzeTeslyL7pfaJ2WQ9Gm02o
+/deCB/DCVS5dIZFSB1KWB36P4c/FJALsJ+jFnUsYm7csZxcELlQLp7BuVqJSqxNT
+fmtlZ5/OYf397fQEZ5nHCLMa6FqWD6qkHHYL5pUjY9SU97frwmNWyxCJRQ69eUgz
+jGgXk0cSX7sobWl4KxzLdULHrLGV9HFapBTHfL5PKB/K9yzBoXyaxGPxQ98HitJe
+Frsh0RkRcjts6kC0K6dg9F/YbJkSyLIwBQnVhwIDAQABo4HBMIG+MB0GA1UdDgQW
+BBQP1vT2GTVhI2zAc/8Jv16ClDbshDCBjgYDVR0jBIGGMIGDgBQP1vT2GTVhI2zA
+c/8Jv16ClDbshKFopGYwZDEeMBwGA1UEAxQVKi5zb25vbWEuaWRtLm9jbGMub3Jn
+MQswCQYDVQQGEwJVUzENMAsGA1UEChMET0NMQzEmMCQGCSqGSIb3DQEJARYXaW1w
+bGVtZW50YXRpb25Ab2NsYy5vcmeCAQIwDAYDVR0TBAUwAwEB/zANBgkqhkiG9w0B
+AQsFAAOCAQEAjbqCyTOMivG/YO3yHdUu5FnXVXX3AIx/xmWsepQ8ern6oSRz2Dck
+d6gJCtdzaY3paGddi3a4l8BdsJw+EHWO94g9kBXR7qeJ5Mz6DYNAylHu/AOydfg+
+Hrtb35FnOPxNX8vRHphjsxDVG9qWN/KtPlDVh6Jig8R7niDAEOe1rD43k+mVkPbV
+MCyZK/A/laMgfh3anBOIt6sONxFLjY7qO8Tly6tSGuAWENQla5n5j0W/ylP75aO9
+uwmGPVFGnY0rWu8I/VXnw/6lSfgeF+DoFzWKsf5DJyWXu2G+rMXSEag9xfQEhOA6
+YKGEGSPBHDqa9VXo3uK9fCnqPaFwPGhZ6w==
+          </ds:X509Certificate>
+        </ds:X509Data>
+      </ds:KeyInfo>
+    </KeyDescriptor>
+    <AssertionConsumerService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST" Location="https://login.sonoma.idm.oclc.org/Shibboleth.sso/SAML2/POST" index="1"/>
+    <AssertionConsumerService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Artifact" Location="https://login.sonoma.idm.oclc.org/Shibboleth.sso/SAML2/Artifact" index="2"/>
+    <AssertionConsumerService Binding="urn:oasis:names:tc:SAML:1.0:profiles:browser-post" Location="https://login.sonoma.idm.oclc.org/Shibboleth.sso/SAML/POST" index="3"/>
+    <AssertionConsumerService Binding="urn:oasis:names:tc:SAML:1.0:profiles:artifact-01" Location="https://login.sonoma.idm.oclc.org/Shibboleth.sso/SAML/Artifact" index="4"/>
+  </SPSSODescriptor>
+  <Organization>
+    <OrganizationName xml:lang="en">Online Computer Library Center Inc.</OrganizationName>
+    <OrganizationDisplayName xml:lang="en">Online Computer Library Center Inc.</OrganizationDisplayName>
+    <OrganizationURL xml:lang="en">http://www.oclc.org</OrganizationURL>
+  </Organization>
+  <ContactPerson contactType="administrative">
+    <GivenName>Don Hamparian</GivenName>
+    <EmailAddress>hamparid@oclc.org</EmailAddress>
+  </ContactPerson>
+  <ContactPerson contactType="technical">
+    <GivenName>Don Hamparian</GivenName>
+    <EmailAddress>hamparid@oclc.org</EmailAddress>
+  </ContactPerson>
+  <ContactPerson contactType="other" remd:contactType="http://refeds.org/metadata/contactType/security">
+    <GivenName>Don Hamparian</GivenName>
+    <EmailAddress>hamparid@oclc.org</EmailAddress>
+  </ContactPerson>
+</EntityDescriptor>
+<EntityDescriptor entityID="https://uchastings.idm.oclc.org/shibboleth">
+  <Extensions>
+    <mdrpi:RegistrationInfo registrationAuthority="https://incommon.org"/>
+    <mdattr:EntityAttributes>
+      <saml:Attribute Name="http://macedir.org/entity-category" NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri">
+        <saml:AttributeValue>http://id.incommon.org/category/registered-by-incommon</saml:AttributeValue>
+      </saml:Attribute>
+    </mdattr:EntityAttributes>
+  </Extensions>
+  <SPSSODescriptor protocolSupportEnumeration="urn:oasis:names:tc:SAML:1.1:protocol urn:oasis:names:tc:SAML:2.0:protocol">
+    <Extensions>
+      <mdui:UIInfo>
+        <mdui:DisplayName xml:lang="en">UC Hastings Law Library EZproxy Hosted by OCLC</mdui:DisplayName>
+        <mdui:PrivacyStatementURL xml:lang="en">https://www.oclc.org/en/policies/privacy.html</mdui:PrivacyStatementURL>
+        <mdui:Logo height="187" width="390" xml:lang="en">https://www.oclc.org/content/dam/oclc/common/images/logos/new/OCLC/OCLC_Logo_H_Color_NoTag.png</mdui:Logo>
+      </mdui:UIInfo>
+    </Extensions>
+    <KeyDescriptor>
+      <ds:KeyInfo>
+        <ds:X509Data>
+          <!-- Serial No. 2, expires on Sun Jul 25 18:52:52 2027 GMT -->
+          <ds:X509Certificate>
+MIID/zCCAuegAwIBAgIBAjANBgkqhkiG9w0BAQsFADBiMSIwIAYDVQQDFBkqLnVj
+aGFzdGluZ3MuaWRtLm9jbGMub3JnMQswCQYDVQQGEwJVUzENMAsGA1UEChMET0NM
+QzEgMB4GCSqGSIb3DQEJARYRa3Vja2VsaGpAb2NsYy5vcmcwHhcNMTcwNzI1MTg1
+MjUyWhcNMjcwNzI1MTg1MjUyWjBiMSIwIAYDVQQDFBkqLnVjaGFzdGluZ3MuaWRt
+Lm9jbGMub3JnMQswCQYDVQQGEwJVUzENMAsGA1UEChMET0NMQzEgMB4GCSqGSIb3
+DQEJARYRa3Vja2VsaGpAb2NsYy5vcmcwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAw
+ggEKAoIBAQCzTMSJh0OlTB+rmM1u5riV2Qh63VxK1aDC4ozs0ifkyxo9bwNsMQNm
+Bbvcb0zALZ79SIAPapaNmA4fdoaFbhMKyXLDxSTDmXJ+7gAK0qCMwkDwJPfPiMAg
+s/rRYHOukvtpv1WdtXWxzkmal0poeUAJLesNMXaKAdPJ0h6RAcU9X1x2ZDMrAOTV
+4p+psY53HXup8AlmdBRUSG3kENHbSzh40lDwSY2UD0n/R9yrXXiHjqS82hp3jbm9
+v3uX5xlq0lLI+oE9b2If9ZjvwVCi+5BSGpu7gczmxtDn1u1ECsdOJ0Yo9aoG+Iri
+1UCwOXze7f9q/blskTLd5m45krRZCWBHAgMBAAGjgb8wgbwwHQYDVR0OBBYEFJoV
+dPQMncZxzybTzN6a8LqdkZv6MIGMBgNVHSMEgYQwgYGAFJoVdPQMncZxzybTzN6a
+8LqdkZv6oWakZDBiMSIwIAYDVQQDFBkqLnVjaGFzdGluZ3MuaWRtLm9jbGMub3Jn
+MQswCQYDVQQGEwJVUzENMAsGA1UEChMET0NMQzEgMB4GCSqGSIb3DQEJARYRa3Vj
+a2VsaGpAb2NsYy5vcmeCAQIwDAYDVR0TBAUwAwEB/zANBgkqhkiG9w0BAQsFAAOC
+AQEASyG2loQcbpFIoZ2hST/3jz7LL//du04OqD+8noKErNIVGZYnzWNKsDpPfCGG
+zOckEcun0Noy2WZeTe9e2Vaf7jy5g1fLsKyLwFAKMYD1DTtu0Qz3/r8dh8VnWiJO
+sV0xY0ggdr5nFfgJ+pVWKerVMM5xCKWO8/6BHoZcXKDFtJxn++vbDNY89S1riGiG
+w+bNMwzQCXLDa0lJ/u8y0Bwcg81ndVkejBy5UfOZOSz1wnVkxmTPE/ssGLXdpxYI
+GbaYLNk3/wpfiFBZmwjkLw0BaaD0D7QRVhWhl8o1csu8q06chOxpEYgtJtrmcC2q
+lYq76UJZasdcMXfCc8QFh65ibQ==
+          </ds:X509Certificate>
+        </ds:X509Data>
+      </ds:KeyInfo>
+    </KeyDescriptor>
+    <AssertionConsumerService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST" Location="https://login.uchastings.idm.oclc.org/Shibboleth.sso/SAML2/POST" index="1"/>
+    <AssertionConsumerService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Artifact" Location="https://login.uchastings.idm.oclc.org/Shibboleth.sso/SAML2/Artifact" index="2"/>
+    <AssertionConsumerService Binding="urn:oasis:names:tc:SAML:1.0:profiles:browser-post" Location="https://login.uchastings.idm.oclc.org/Shibboleth.sso/SAML/POST" index="3"/>
+    <AssertionConsumerService Binding="urn:oasis:names:tc:SAML:1.0:profiles:artifact-01" Location="https://login.uchastings.idm.oclc.org/Shibboleth.sso/SAML/Artifact" index="4"/>
+  </SPSSODescriptor>
+  <Organization>
+    <OrganizationName xml:lang="en">Online Computer Library Center Inc.</OrganizationName>
+    <OrganizationDisplayName xml:lang="en">Online Computer Library Center Inc.</OrganizationDisplayName>
+    <OrganizationURL xml:lang="en">http://www.oclc.org</OrganizationURL>
+  </Organization>
+  <ContactPerson contactType="other" remd:contactType="http://refeds.org/metadata/contactType/security">
+    <GivenName>Don Hamparian</GivenName>
+    <EmailAddress>hamparid@oclc.org</EmailAddress>
+  </ContactPerson>
+  <ContactPerson contactType="technical">
+    <GivenName>Don Hamparian</GivenName>
+    <EmailAddress>hamparid@oclc.org</EmailAddress>
+  </ContactPerson>
+  <ContactPerson contactType="administrative">
+    <GivenName>Don Hamparian</GivenName>
+    <EmailAddress>hamparid@oclc.org</EmailAddress>
+  </ContactPerson>
+</EntityDescriptor>
+<EntityDescriptor entityID="https://aca.ucop.edu">
+  <Extensions>
+    <mdrpi:RegistrationInfo registrationAuthority="https://incommon.org"/>
+    <mdattr:EntityAttributes>
+      <saml:Attribute Name="http://macedir.org/entity-category" NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri">
+        <saml:AttributeValue>http://id.incommon.org/category/registered-by-incommon</saml:AttributeValue>
+      </saml:Attribute>
+    </mdattr:EntityAttributes>
+  </Extensions>
+  <SPSSODescriptor protocolSupportEnumeration="urn:oasis:names:tc:SAML:1.1:protocol urn:oasis:names:tc:SAML:2.0:protocol">
+    <Extensions>
+      <idpdisc:DiscoveryResponse Binding="urn:oasis:names:tc:SAML:profiles:SSO:idp-discovery-protocol" Location="https://aca.ucop.edu/Shibboleth.sso/Login" index="1"/>
+      <mdui:UIInfo>
+        <mdui:DisplayName xml:lang="en">ACAWeb</mdui:DisplayName>
+        <mdui:Description xml:lang="en">The ACA Web Compliance (ACAWeb) is designed to improve the Affordable Care Act compliance process through a web based application and database. </mdui:Description>
+        <mdui:PrivacyStatementURL xml:lang="en">https://www.ucop.edu/ethics-compliance-audit-services/_files/compliance/privacy/statement-of-privacy-for-web-based-applications.pdf</mdui:PrivacyStatementURL>
+        <mdui:Logo height="60" width="80" xml:lang="en">https://www.ucop.edu/_common/_images/sso/uc.png</mdui:Logo>
+      </mdui:UIInfo>
+    </Extensions>
+    <KeyDescriptor>
+      <ds:KeyInfo>
+        <ds:X509Data>
+          <!-- Serial No. 13839780449646008184, expires on Sun Sep 14 23:25:00 2025 GMT -->
+          <ds:X509Certificate>
+MIIDAzCCAeugAwIBAgIJAMAQxv4ei9d4MA0GCSqGSIb3DQEBBQUAMB8xHTAbBgNV
+BAMTFGFjYS13ZWItcDAyLnVjb3AuZWR1MB4XDTE1MDkxNzIzMjUwMFoXDTI1MDkx
+NDIzMjUwMFowHzEdMBsGA1UEAxMUYWNhLXdlYi1wMDIudWNvcC5lZHUwggEiMA0G
+CSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQDBKdgiovkPxq7xM1kkhNZiuUei1kgr
+bkgTO6lEpTH1zanDdtbYTvpwQe/dT7sSDkTdYfOmaVFtbhin6exxTzJl7mBdSDwZ
+je0phIken36w6iVh+b+wZy023eibxSpvkk3PMj+/nzORoG0fh4xNtAuX1EF1UVQn
+YNUJwxG4FwT71HGUmhsy1gKrtYAjiX3Gow4pnimZ2cIBIRar1mPLvdp3lHDWDU4s
+/PepqXpWkEu+T/Fc9QwGGyXAjZBtTJKIoj1zMqKZSP0j9zP5NJIJdcfCRTQcsuU9
+OkxUCkqZcVpk5CVaQLfiWB/uqkEgHsiUv8/SiElO/0hsit+dhM/a6NWDAgMBAAGj
+QjBAMB8GA1UdEQQYMBaCFGFjYS13ZWItcDAyLnVjb3AuZWR1MB0GA1UdDgQWBBQG
+GL9PT9Njlu6FMzgwcKrdXelWXTANBgkqhkiG9w0BAQUFAAOCAQEAJ9Pv0Xqb1TqG
+K+SGcVLVTJOx2CG+HII6BMFUsv39pY7U13zwChOFmxgH3vphka1NKI4qPwawx8TG
+mpkwwyEF1ZyibNzKKWgX+79G62LjvyYY6CGHkUJ8n+C7Ge9MMVpU62dFYf+PjaZ5
+P+gXz+RM8q2MdUuYJnS3p2bDrCO++co9J53rXaf0ykwf46NCJdn1wjr1VK6RG1W0
+mv+wfJ9xrRYnYCAZxb5dZLuDhWiwi3AXUFPU8SvE/XH1yt1Z10Pw8GqlOmkYv6D4
+aIbU3NLbZ4LkYimWrgmplqzTksxetbxkiDl8WAHkfkOWaK1GJ0wF2sr5ZIYrRlV0
+4tYg7hiS5g==
+          </ds:X509Certificate>
+        </ds:X509Data>
+      </ds:KeyInfo>
+    </KeyDescriptor>
+    <SingleLogoutService Binding="urn:oasis:names:tc:SAML:2.0:bindings:SOAP" Location="https://aca.ucop.edu/Shibboleth.sso/SLO/SOAP"/>
+    <SingleLogoutService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect" Location="https://aca.ucop.edu/Shibboleth.sso/SLO/Redirect"/>
+    <SingleLogoutService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST" Location="https://aca.ucop.edu/Shibboleth.sso/SLO/POST"/>
+    <AssertionConsumerService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST" Location="https://aca.ucop.edu/Shibboleth.sso/SAML2/POST" index="1"/>
+    <AssertionConsumerService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST-SimpleSign" Location="https://aca.ucop.edu/Shibboleth.sso/SAML2/POST-SimpleSign" index="2"/>
+    <AssertionConsumerService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Artifact" Location="https://aca.ucop.edu/Shibboleth.sso/SAML2/Artifact" index="3"/>
+    <AssertionConsumerService Binding="urn:oasis:names:tc:SAML:2.0:bindings:PAOS" Location="https://aca.ucop.edu/Shibboleth.sso/SAML2/ECP" index="4"/>
+    <AssertionConsumerService Binding="urn:oasis:names:tc:SAML:1.0:profiles:browser-post" Location="https://aca.ucop.edu/Shibboleth.sso/SAML/POST" index="5"/>
+    <AssertionConsumerService Binding="urn:oasis:names:tc:SAML:1.0:profiles:artifact-01" Location="https://aca.ucop.edu/Shibboleth.sso/SAML/Artifact" index="6"/>
+  </SPSSODescriptor>
+  <Organization>
+    <OrganizationName xml:lang="en">University of California - Office of the President</OrganizationName>
+    <OrganizationDisplayName xml:lang="en">University of California - Office of the President</OrganizationDisplayName>
+    <OrganizationURL xml:lang="en">http://www.ucop.edu/welcome.html</OrganizationURL>
+  </Organization>
+  <ContactPerson contactType="technical">
+    <GivenName>Mohana Kakkera</GivenName>
+    <EmailAddress>Mohana.Kakkera@ucop.edu</EmailAddress>
+  </ContactPerson>
+  <ContactPerson contactType="administrative">
+    <GivenName>IAM Group</GivenName>
+    <EmailAddress>IAMGroup@ucop.edu</EmailAddress>
+  </ContactPerson>
+  <ContactPerson contactType="other" remd:contactType="http://refeds.org/metadata/contactType/security">
+    <GivenName>Security Operations</GivenName>
+    <EmailAddress>soc@ucop.edu</EmailAddress>
+  </ContactPerson>
+</EntityDescriptor>
+<EntityDescriptor entityID="https://aigwebd14.ucop.edu">
+  <Extensions>
+    <mdrpi:RegistrationInfo registrationAuthority="https://incommon.org"/>
+    <mdattr:EntityAttributes>
+      <saml:Attribute Name="http://macedir.org/entity-category" NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri">
+        <saml:AttributeValue>http://id.incommon.org/category/registered-by-incommon</saml:AttributeValue>
+      </saml:Attribute>
+    </mdattr:EntityAttributes>
+  </Extensions>
+  <SPSSODescriptor protocolSupportEnumeration="urn:oasis:names:tc:SAML:2.0:protocol">
+    <Extensions>
+      <idpdisc:DiscoveryResponse Binding="urn:oasis:names:tc:SAML:profiles:SSO:idp-discovery-protocol" Location="https://aigwebd14.ucop.edu/Shibboleth.sso/Login" index="1"/>
+      <idpdisc:DiscoveryResponse Binding="urn:oasis:names:tc:SAML:profiles:SSO:idp-discovery-protocol" Location="https://ucicdwdev.ucop.edu/Shibboleth.sso/Login" index="2"/>
+      <mdui:UIInfo>
+        <mdui:DisplayName xml:lang="en">dev</mdui:DisplayName>
+        <mdui:PrivacyStatementURL xml:lang="en">https://www.ucop.edu/ethics-compliance-audit-services/_files/compliance/privacy/statement-of-privacy-for-web-based-applications.pdf</mdui:PrivacyStatementURL>
+        <mdui:Logo height="60" width="80" xml:lang="en">https://www.ucop.edu/_common/_images/sso/uc.png</mdui:Logo>
+      </mdui:UIInfo>
+    </Extensions>
+    <KeyDescriptor>
+      <ds:KeyInfo>
+        <ds:X509Data>
+          <!-- Serial No. 17176528828953728375, expires on Fri May  6 23:20:05 2022 GMT -->
+          <ds:X509Certificate>
+MIIC4jCCAcqgAwIBAgIJAO5fSfb8CxV3MA0GCSqGSIb3DQEBBQUAMBQxEjAQBgNV
+BAMTCWFpZ3dlYnExNDAeFw0xMjA1MDgyMzIwMDVaFw0yMjA1MDYyMzIwMDVaMBQx
+EjAQBgNVBAMTCWFpZ3dlYnExNDCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoC
+ggEBAMHGffTM+O99tjMDRfjxBzUjIuVHUgQR16natwrOaQFtdKxtPaXmeL5mWbH2
+r1x712uxltEh7fbe39st00mAlTJdq4VY8w0Z/HM7XD6nsBCkyxE0tKEOwrZ3ne/m
+XeqitNccogoUk02TFzW3dRZrigf129eFw3a9VAVwJcYD/txtzw07Ia44ycsafnvP
+3GO29s8gqv5hPSE0qhtwlTpXK00cI/B6jx/aOzheT/qezWQHY7AD21ZFTJDymn0x
+Eo2y5WCSWkGThygDRUVrPCJLCWWBwc8orGih1E7h4W5qAh/5W+x0tBxFUpo0Ljym
+y4OnQ5IQRp+lWDXytQdqIMLrp5ECAwEAAaM3MDUwFAYDVR0RBA0wC4IJYWlnd2Vi
+cTE0MB0GA1UdDgQWBBQ4AMu7fatsS/Z1IREncc1az1ILMDANBgkqhkiG9w0BAQUF
+AAOCAQEAZWsfx9hgaolhbVoKFQ5QWKoqi6iBK9hJ25ilwxGSDYf0y61Km8iv8+Dd
+9hlUpk4YUC7VwNUy3ZBNA5kZjTqWtvt23AaDql35MvbNu3Mj4zmrJzqSnEBDgKOd
+kuqJ55ZuodIrVkYY2ge0SGnHoijNq3cNz7B5o7MKYxAuOmuLnhJwSIRwILcJRTsz
+1/encPrJhjC5gX0JYUw1AhP8Cs+MkG6Xu7g6MZvLPP3aiEnnP0xpJKaz71OpfSdJ
+Gi2+CGeqsZogPMi895jm3GA/Zi7DgUweuywB67quYIBpcyLDTcELKZ4TwhPF3WQv
+W6HnAphkax2unqi9yvm9RUJF1bnZFg==
+          </ds:X509Certificate>
+        </ds:X509Data>
+      </ds:KeyInfo>
+    </KeyDescriptor>
+    <AssertionConsumerService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST" Location="https://aigwebd14.ucop.edu/Shibboleth.sso/SAML2/POST" index="1"/>
+    <AssertionConsumerService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST" Location="https://aigwebd14.ucop.edu/Shibboleth.sso/SAML2/POST-SimpleSign" index="2"/>
+    <AssertionConsumerService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST" Location="https://aigwebd14.ucop.edu/Shibboleth.sso/SAML2/Artifact" index="3"/>
+    <AssertionConsumerService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST" Location="https://aigwebd14.ucop.edu/Shibboleth.sso/SAML2/ECP" index="4"/>
+    <AssertionConsumerService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST" Location="https://aigwebd14.ucop.edu/Shibboleth.sso/SAML/POST" index="5"/>
+    <AssertionConsumerService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST" Location="https://aigwebd14.ucop.edu/Shibboleth.sso/SAML/Artifact" index="6"/>
+    <AssertionConsumerService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST" Location="https://ucicdwdev.ucop.edu/Shibboleth.sso/SAML2/POST" index="7"/>
+    <AssertionConsumerService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST" Location="https://ucicdwdev.ucop.edu/Shibboleth.sso/SAML2/POST-SimpleSign" index="8"/>
+    <AssertionConsumerService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST" Location="https://ucicdwdev.ucop.edu/Shibboleth.sso/SAML2/Artifact" index="9"/>
+    <AssertionConsumerService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST" Location="https://ucicdwdev.ucop.edu/Shibboleth.sso/SAML2/ECP" index="10"/>
+    <AssertionConsumerService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST" Location="https://ucicdwdev.ucop.edu/Shibboleth.sso/SAML/POST" index="11"/>
+    <AssertionConsumerService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST" Location="https://ucicdwdev.ucop.edu/Shibboleth.sso/SAML/Artifact" index="12"/>
+  </SPSSODescriptor>
+  <Organization>
+    <OrganizationName xml:lang="en">University of California - Office of the President</OrganizationName>
+    <OrganizationDisplayName xml:lang="en">University of California - Office of the President</OrganizationDisplayName>
+    <OrganizationURL xml:lang="en">http://www.ucop.edu/welcome.html</OrganizationURL>
+  </Organization>
+  <ContactPerson contactType="technical">
+    <GivenName>AIG</GivenName>
+    <EmailAddress>aig@ucop.edu</EmailAddress>
+  </ContactPerson>
+  <ContactPerson contactType="administrative">
+    <GivenName>IAM Group</GivenName>
+    <EmailAddress>IAMGroup@ucop.edu</EmailAddress>
+  </ContactPerson>
+  <ContactPerson contactType="other" remd:contactType="http://refeds.org/metadata/contactType/security">
+    <GivenName>Security Operations</GivenName>
+    <EmailAddress>soc@ucop.edu</EmailAddress>
+  </ContactPerson>
+</EntityDescriptor>
+<EntityDescriptor entityID="https://aigwebt10.ucop.edu">
+  <Extensions>
+    <mdrpi:RegistrationInfo registrationAuthority="https://incommon.org"/>
+    <mdattr:EntityAttributes>
+      <saml:Attribute Name="http://macedir.org/entity-category" NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri">
+        <saml:AttributeValue>http://id.incommon.org/category/registered-by-incommon</saml:AttributeValue>
+      </saml:Attribute>
+    </mdattr:EntityAttributes>
+  </Extensions>
+  <SPSSODescriptor protocolSupportEnumeration="urn:oasis:names:tc:SAML:1.1:protocol urn:oasis:names:tc:SAML:2.0:protocol">
+    <Extensions>
+      <mdui:UIInfo>
+        <mdui:DisplayName xml:lang="en">aigwebt10</mdui:DisplayName>
+        <mdui:Description xml:lang="en">test</mdui:Description>
+        <mdui:PrivacyStatementURL xml:lang="en">https://www.ucop.edu/ethics-compliance-audit-services/_files/compliance/privacy/statement-of-privacy-for-web-based-applications.pdf</mdui:PrivacyStatementURL>
+        <mdui:Logo height="60" width="80" xml:lang="en">https://www.ucop.edu/_common/_images/sso/uc.png</mdui:Logo>
+      </mdui:UIInfo>
+    </Extensions>
+    <KeyDescriptor>
+      <ds:KeyInfo>
+        <ds:X509Data>
+          <!-- Serial No. 10438035268688195641, expires on Fri Jan  7 22:37:08 2022 GMT -->
+          <ds:X509Certificate>
+MIIElTCCA32gAwIBAgIJAJDbWcYXKLA5MA0GCSqGSIb3DQEBBQUAMIGNMQswCQYD
+VQQGEwJVUzETMBEGA1UECBMKQ2FsaWZvcm5pYTEQMA4GA1UEBxMHT2FrbGFuZDEN
+MAsGA1UEChMEVUNPUDEMMAoGA1UECxMDQUlHMRYwFAYDVQQDEw1zaGliYm9sZXRo
+c3AyMSIwIAYJKoZIhvcNAQkBFhNhaWctYWxlcnRzQHVjb3AuZWR1MB4XDTEzMDEw
+OTIyMzcwOFoXDTIyMDEwNzIyMzcwOFowgY0xCzAJBgNVBAYTAlVTMRMwEQYDVQQI
+EwpDYWxpZm9ybmlhMRAwDgYDVQQHEwdPYWtsYW5kMQ0wCwYDVQQKEwRVQ09QMQww
+CgYDVQQLEwNBSUcxFjAUBgNVBAMTDXNoaWJib2xldGhzcDIxIjAgBgkqhkiG9w0B
+CQEWE2FpZy1hbGVydHNAdWNvcC5lZHUwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAw
+ggEKAoIBAQCxIctM9HkPHGpOHG82Ep+BedqPMmIHa0h20n6VuHELRSQxJdrcxclq
+CNL1oqbey/EDQ55PzxaULZB6o0Z+gfNWhmC4eiS6Aop/HKdDN/tCeU8RRVxzBoJm
+FFf/yoP7sdUzGn9U77DRhr50acyfs5Etk5f7vx1r9F48OhNd2L0Q/nsPqJ0HtD20
+YnKu26/aa4gm1myu3hGG7cS2zWQ7yT7jfVkv/4jPHtANnUyORnz+9bNAqrqLp9M6
+QVSMUBk0ZG3wIugfJNjBFb+300f30vQlcuj3rXYXZ+0feWuMhja1JbnD1k2bhca3
+yeyT2q5BgcAPNNuEWuBa7+95rFC8+c/xAgMBAAGjgfUwgfIwHQYDVR0OBBYEFB2E
+W0y9F93V5BDyFSUP1d2yxYGUMIHCBgNVHSMEgbowgbeAFB2EW0y9F93V5BDyFSUP
+1d2yxYGUoYGTpIGQMIGNMQswCQYDVQQGEwJVUzETMBEGA1UECBMKQ2FsaWZvcm5p
+YTEQMA4GA1UEBxMHT2FrbGFuZDENMAsGA1UEChMEVUNPUDEMMAoGA1UECxMDQUlH
+MRYwFAYDVQQDEw1zaGliYm9sZXRoc3AyMSIwIAYJKoZIhvcNAQkBFhNhaWctYWxl
+cnRzQHVjb3AuZWR1ggkAkNtZxhcosDkwDAYDVR0TBAUwAwEB/zANBgkqhkiG9w0B
+AQUFAAOCAQEAIPWz5e5mF9gPIjgPZGrrzlA1qERsVWtV5i8yiJ1GVLXlCUeENf+w
+oU6HcCr8Vo/NOuaiFrTVhLR9FwwuMVqp3aav34nTtDL1Tfg6CptQJ607rEVaE2hM
+XIq3yceRF2gnVkJ6zfOQ18nX0UrSLO97BvtIRRLWOJsOoWX+obymzz4Jq1JlrQL3
+TDFG5osKHaAVhhIwYfQm9Ez41N0FS6P+6de2Ru4bMeiW6sajNlVNSHu1IeLwoh8Q
+IQjKd6jpPKdWx4iOnJ1qg2wONpiTdQHwR/v7iXn7MHAKwEaPUJWsAllkBuXeZpZw
+dZ/jSOFUlugOqCYLe+lGROe5pG+ETAq67g==
+          </ds:X509Certificate>
+        </ds:X509Data>
+      </ds:KeyInfo>
+    </KeyDescriptor>
+    <AssertionConsumerService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST" Location="https://aigwebt10.ucop.edu/Shibboleth.sso/SAML2/POST" index="1"/>
+    <AssertionConsumerService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST-SimpleSign" Location="https://aigwebt10.ucop.edu/Shibboleth.sso/SAML2/POST-SimpleSign" index="2"/>
+    <AssertionConsumerService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Artifact" Location="https://aigwebt10.ucop.edu/Shibboleth.sso/SAML2/Artifact" index="3"/>
+    <AssertionConsumerService Binding="urn:oasis:names:tc:SAML:2.0:bindings:PAOS" Location="https://aigwebt10.ucop.edu/Shibboleth.sso/SAML2/ECP" index="4"/>
+    <AssertionConsumerService Binding="urn:oasis:names:tc:SAML:1.0:profiles:browser-post" Location="https://aigwebt10.ucop.edu/Shibboleth.sso/SAML/POST" index="5"/>
+    <AssertionConsumerService Binding="urn:oasis:names:tc:SAML:1.0:profiles:artifact-01" Location="https://aigwebt10.ucop.edu/Shibboleth.sso/SAML/Artifact" index="6"/>
+  </SPSSODescriptor>
+  <Organization>
+    <OrganizationName xml:lang="en">University of California - Office of the President</OrganizationName>
+    <OrganizationDisplayName xml:lang="en">University of California - Office of the President</OrganizationDisplayName>
+    <OrganizationURL xml:lang="en">http://www.ucop.edu/welcome.html</OrganizationURL>
+  </Organization>
+  <ContactPerson contactType="technical">
+    <GivenName>UCOP HelpDesk</GivenName>
+    <EmailAddress>UCOPDataCenter.HelpDesk@ucop.edu</EmailAddress>
+  </ContactPerson>
+  <ContactPerson contactType="administrative">
+    <GivenName>IAM Group</GivenName>
+    <EmailAddress>IAMGroup@ucop.edu</EmailAddress>
+  </ContactPerson>
+  <ContactPerson contactType="other" remd:contactType="http://refeds.org/metadata/contactType/security">
+    <GivenName>Security Operations</GivenName>
+    <EmailAddress>soc@ucop.edu</EmailAddress>
+  </ContactPerson>
+</EntityDescriptor>
+<EntityDescriptor entityID="https://aigwebt14.ucop.edu">
+  <Extensions>
+    <mdrpi:RegistrationInfo registrationAuthority="https://incommon.org"/>
+    <mdattr:EntityAttributes>
+      <saml:Attribute Name="http://macedir.org/entity-category" NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri">
+        <saml:AttributeValue>http://id.incommon.org/category/registered-by-incommon</saml:AttributeValue>
+      </saml:Attribute>
+    </mdattr:EntityAttributes>
+  </Extensions>
+  <SPSSODescriptor protocolSupportEnumeration="urn:oasis:names:tc:SAML:2.0:protocol">
+    <Extensions>
+      <idpdisc:DiscoveryResponse Binding="urn:oasis:names:tc:SAML:profiles:SSO:idp-discovery-protocol" Location="https://aigwebt14.ucop.edu/Shibboleth.sso/Login" index="1"/>
+      <mdui:UIInfo>
+        <mdui:DisplayName xml:lang="en">dsstest</mdui:DisplayName>
+        <mdui:PrivacyStatementURL xml:lang="en">https://www.ucop.edu/ethics-compliance-audit-services/_files/compliance/privacy/statement-of-privacy-for-web-based-applications.pdf</mdui:PrivacyStatementURL>
+        <mdui:Logo height="60" width="80" xml:lang="en">https://www.ucop.edu/_common/_images/sso/uc.png</mdui:Logo>
+      </mdui:UIInfo>
+    </Extensions>
+    <KeyDescriptor>
+      <ds:KeyInfo>
+        <ds:X509Data>
+          <!-- Serial No. 17176528828953728375, expires on Fri May  6 23:20:05 2022 GMT -->
+          <ds:X509Certificate>
+MIIC4jCCAcqgAwIBAgIJAO5fSfb8CxV3MA0GCSqGSIb3DQEBBQUAMBQxEjAQBgNV
+BAMTCWFpZ3dlYnExNDAeFw0xMjA1MDgyMzIwMDVaFw0yMjA1MDYyMzIwMDVaMBQx
+EjAQBgNVBAMTCWFpZ3dlYnExNDCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoC
+ggEBAMHGffTM+O99tjMDRfjxBzUjIuVHUgQR16natwrOaQFtdKxtPaXmeL5mWbH2
+r1x712uxltEh7fbe39st00mAlTJdq4VY8w0Z/HM7XD6nsBCkyxE0tKEOwrZ3ne/m
+XeqitNccogoUk02TFzW3dRZrigf129eFw3a9VAVwJcYD/txtzw07Ia44ycsafnvP
+3GO29s8gqv5hPSE0qhtwlTpXK00cI/B6jx/aOzheT/qezWQHY7AD21ZFTJDymn0x
+Eo2y5WCSWkGThygDRUVrPCJLCWWBwc8orGih1E7h4W5qAh/5W+x0tBxFUpo0Ljym
+y4OnQ5IQRp+lWDXytQdqIMLrp5ECAwEAAaM3MDUwFAYDVR0RBA0wC4IJYWlnd2Vi
+cTE0MB0GA1UdDgQWBBQ4AMu7fatsS/Z1IREncc1az1ILMDANBgkqhkiG9w0BAQUF
+AAOCAQEAZWsfx9hgaolhbVoKFQ5QWKoqi6iBK9hJ25ilwxGSDYf0y61Km8iv8+Dd
+9hlUpk4YUC7VwNUy3ZBNA5kZjTqWtvt23AaDql35MvbNu3Mj4zmrJzqSnEBDgKOd
+kuqJ55ZuodIrVkYY2ge0SGnHoijNq3cNz7B5o7MKYxAuOmuLnhJwSIRwILcJRTsz
+1/encPrJhjC5gX0JYUw1AhP8Cs+MkG6Xu7g6MZvLPP3aiEnnP0xpJKaz71OpfSdJ
+Gi2+CGeqsZogPMi895jm3GA/Zi7DgUweuywB67quYIBpcyLDTcELKZ4TwhPF3WQv
+W6HnAphkax2unqi9yvm9RUJF1bnZFg==
+          </ds:X509Certificate>
+        </ds:X509Data>
+      </ds:KeyInfo>
+    </KeyDescriptor>
+    <AssertionConsumerService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST" Location="https://aigwebt14.ucop.edu/Shibboleth.sso/SAML2/POST" index="1"/>
+    <AssertionConsumerService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST" Location="https://aigwebt14.ucop.edu/Shibboleth.sso/SAML2/POST-SimpleSign" index="2"/>
+    <AssertionConsumerService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST" Location="https://aigwebt14.ucop.edu/Shibboleth.sso/SAML2/Artifact" index="3"/>
+    <AssertionConsumerService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST" Location="https://aigwebt14.ucop.edu/Shibboleth.sso/SAML2/ECP" index="4"/>
+    <AssertionConsumerService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST" Location="https://aigwebt14.ucop.edu/Shibboleth.sso/SAML/POST" index="5"/>
+    <AssertionConsumerService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST" Location="https://aigwebt14.ucop.edu/Shibboleth.sso/SAML/Artifact" index="6"/>
+  </SPSSODescriptor>
+  <Organization>
+    <OrganizationName xml:lang="en">University of California - Office of the President</OrganizationName>
+    <OrganizationDisplayName xml:lang="en">University of California - Office of the President</OrganizationDisplayName>
+    <OrganizationURL xml:lang="en">http://www.ucop.edu/welcome.html</OrganizationURL>
+  </Organization>
+  <ContactPerson contactType="support">
+    <GivenName>UCOP DataCenter</GivenName>
+    <EmailAddress>UCOPDataCenter.HelpDesk@ucop.edu</EmailAddress>
+  </ContactPerson>
+  <ContactPerson contactType="technical">
+    <GivenName>AIG</GivenName>
+    <EmailAddress>aig@ucop.edu</EmailAddress>
+  </ContactPerson>
+  <ContactPerson contactType="administrative">
+    <GivenName>IAM Group</GivenName>
+    <EmailAddress>IAMGroup@ucop.edu</EmailAddress>
+  </ContactPerson>
+  <ContactPerson contactType="other" remd:contactType="http://refeds.org/metadata/contactType/security">
+    <GivenName>Security Operations</GivenName>
+    <EmailAddress>soc@ucop.edu</EmailAddress>
   </ContactPerson>
 </EntityDescriptor>
 </EntitiesDescriptor>

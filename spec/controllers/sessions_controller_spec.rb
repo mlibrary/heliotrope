@@ -86,8 +86,8 @@ RSpec.describe SessionsController, type: :controller do
       JSON.parse(
         <<~DISCO_FEED
           [
-          {"entityID":"https://shibboleth.umich.edu/idp/shibboleth","Descriptions":[{"value":"The University of Michigan","lang":"en"}],"DisplayNames":[{"value":"University of Michigan","lang":"en"}],"InformationURLs":[{"value":"http://www.umich.edu/","lang":"en"}],"Logos":[{"value":"https://shibboleth.umich.edu/images/StackedBlockM-InC.png","lang":"en"}],"PrivacyStatementURLs":[{"value":"https://documentation.its.umich.edu/node/262/","lang":"en"}]},
-          {"entityID":"urn:mace:incommon:msu.edu","Descriptions":[],"DisplayNames":[{"value":"Michigan State University","lang":"en"}],"InformationURLs":[],"Logos":[{"value":"https://brand.msu.edu/_files/images/masthead-helmet-green.png","lang":"en"}],"PrivacyStatementURLs":[{"value":"https://msu.edu/privacy/","lang":"en"}]}
+            {"entityID":"https://shibboleth.umich.edu/idp/shibboleth","Descriptions":[{"value":"The University of Michigan","lang":"en"}],"DisplayNames":[{"value":"University of Michigan","lang":"en"}],"InformationURLs":[{"value":"http://www.umich.edu/","lang":"en"}],"Logos":[{"value":"https://shibboleth.umich.edu/images/StackedBlockM-InC.png","height":"150","width":"300","lang":"en"}],"PrivacyStatementURLs":[{"value":"https://documentation.its.umich.edu/node/262/","lang":"en"}]},
+            {"entityID":"urn:mace:incommon:msu.edu","Descriptions":[],"DisplayNames":[{"value":"Michigan State University","lang":"en"}],"InformationURLs":[],"Logos":[{"value":"https://brand.msu.edu/_files/images/masthead-helmet-green.png","height":"34","width":"298","lang":"en"}],"PrivacyStatementURLs":[{"value":"https://msu.edu/privacy/","lang":"en"}]}
           ]
         DISCO_FEED
       )

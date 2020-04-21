@@ -24,7 +24,7 @@ class RecacheInCommonMetadataJob < ApplicationJob
           when /InformationURL/i
             information_urls << value_lang_hash(e)
           when /Logo/i
-            logos << value_lang_hash(e)
+            logos << value_height_width_lang_hash(e)
           when /PrivacyStatementURL/i
             privacy_statement_urls << value_lang_hash(e)
           end
@@ -56,6 +56,10 @@ class RecacheInCommonMetadataJob < ApplicationJob
 
       def value_lang_hash(element)
         { "value" => element.content, "lang" => element.attributes['lang']&.value || 'en' }
+      end
+
+      def value_height_width_lang_hash(element)
+        { "value" => element.content, "height" => element.attributes['height']&.value, "width" => element.attributes['width']&.value, "lang" => element.attributes['lang']&.value || 'en' }
       end
   end
 
@@ -102,19 +106,21 @@ class RecacheInCommonMetadataJob < ApplicationJob
   end
 
   def load_json
+    rvalue = []
     if File.exist?(JSON_FILE)
-      File.open(JSON_FILE, 'r') do |file|
-        JSON.load file || []
+      begin
+        rvalue = File.open(JSON_FILE, 'r') do |file|
+                   JSON.load file || []
+                 end
+      rescue StandardError => e
+        Rails.logger.error("ERROR: RecacheInCommonMetadataJob#load_json raised #{e}")
       end
-    else
-      []
     end
+    rvalue
   end
 
   def cache_json
-    Rails.cache.write(RAILS_CACHE_KEY, expires_in: 24.hours) do
-      load_json
-    end
+    Rails.cache.write(RAILS_CACHE_KEY, load_json, expires_in: 24.hours)
     true
   end
 end

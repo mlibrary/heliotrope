@@ -148,21 +148,37 @@ RSpec.describe RecacheInCommonMetadataJob, type: :job do
         before { FileUtils.cp(Rails.root.join('spec', 'fixtures', 'feed', 'InCommon-metadata.json'), described_class::JSON_FILE) }
 
         it { is_expected.to eq(JSON.load(File.read(Rails.root.join('spec', 'fixtures', 'feed', 'InCommon-metadata.json')))) }
+
+        context 'standard error' do
+          let(:message) { 'ERROR: RecacheInCommonMetadataJob#load_json raised StandardError' }
+
+          before do
+            allow(JSON).to receive(:load).and_raise(StandardError)
+            allow(Rails.logger).to receive(:error).with(message)
+          end
+
+          it do
+            is_expected.to eq([])
+            expect(Rails.logger).to have_received(:error).with(message)
+          end
+        end
       end
     end
 
     describe '#cache_json' do
       subject { job.cache_json }
 
+      let(:loaded_json) { double('loaded_json') }
+
       before do
-        allow(job).to receive(:load_json).and_return([])
-        allow(Rails.cache).to receive(:write).with(described_class::RAILS_CACHE_KEY, expires_in: 24.hours).and_yield
+        allow(job).to receive(:load_json).and_return(loaded_json)
+        allow(Rails.cache).to receive(:write).with(described_class::RAILS_CACHE_KEY, loaded_json, expires_in: 24.hours)
       end
 
       it do
         is_expected.to be true
         expect(job).to have_received(:load_json)
-        expect(Rails.cache).to have_received(:write).with(described_class::RAILS_CACHE_KEY, expires_in: 24.hours)
+        expect(Rails.cache).to have_received(:write).with(described_class::RAILS_CACHE_KEY, loaded_json, expires_in: 24.hours)
       end
     end
   end
