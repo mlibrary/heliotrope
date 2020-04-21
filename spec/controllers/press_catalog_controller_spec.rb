@@ -30,4 +30,71 @@ RSpec.describe PressCatalogController, type: :controller do
       expect(response).to have_http_status(:success)
     end
   end
+
+  # inspired by https://github.com/samvera/hyrax/blob/6182f8c778c52bff1f2832173595f12c038b2793/spec/controllers/catalog_controller_spec.rb#L86
+  context 'Finding Monographs using FileSet metadata' do
+    before do
+      create(:press, subdomain: 'michigan')
+      create(:press, subdomain: 'barpublishing')
+      objects.each { |obj| ActiveFedora::SolrService.add(obj.to_solr) }
+      ActiveFedora::SolrService.commit
+    end
+
+    let(:objects) do
+      [double(to_solr: file_set_1), double(to_solr: file_set_2),
+       double(to_solr: monograph_1), double(to_solr: monograph_2)]
+    end
+
+    let(:monograph_1) do
+      { has_model_ssim: ['Monograph'], id: 'ff365c76z', title_tesim: ['you too'],
+        file_set_ids_ssim: ['ff365c78h'],
+        read_access_group_ssim: ['public'], visibility_ssi: 'open', suppressed_bsi: false,
+        press_sim: 'michigan' }
+    end
+
+    let(:monograph_2) do
+      { has_model_ssim: ['Monograph'], id: 'ff365c777', title_tesim: ['find me'],
+        file_set_ids_ssim: ['ff365c79s'],
+        read_access_group_ssim: ["public"], visibility_ssi: 'open', suppressed_bsi: false,
+        press_sim: 'barpublishing' }
+    end
+
+    let(:file_set_1) do
+      { has_model_ssim: ['FileSet'], id: 'ff365c78h', title_tesim: ['first file title'],
+        all_text_timv: 'blahdy blah',
+        file_set_ids_ssim: [],
+        visibility_ssi: 'open' }
+    end
+
+    let(:file_set_2) do
+      { has_model_ssim: ['FileSet'], id: 'ff365c79s', title_tesim: ['second file title'],
+        all_text_timv: 'yadda yadda',
+        file_set_ids_ssim: [],
+        visibility_ssi: 'open' }
+    end
+
+    describe 'in a press other than "barpublishing"' do
+      it "won't find a Monograph by matching one of its FileSet's titles" do
+        get :index, params: { q: 'first file title', press: 'michigan' }
+        expect(assigns(:response).docs.map(&:id)).to eq []
+      end
+
+      it "won't find a Monograph by matching one of its FileSet's extracted text" do
+        get :index, params: { q: 'blahdy blah', press: 'michigan' }
+        expect(assigns(:response).docs.map(&:id)).to eq []
+      end
+    end
+
+    describe 'in "barpublishing" press' do
+      it "will find a Monograph by matching one of its FileSet's titles" do
+        get :index, params: { q: 'second file title', press: 'barpublishing' }
+        expect(assigns(:response).docs.map(&:id)).to contain_exactly(monograph_2[:id])
+      end
+
+      it "will find a Monograph by matching one of its FileSet's extracted text" do
+        get :index, params: { q: 'yadda yadda', press: 'barpublishing' }
+        expect(assigns(:response).docs.map(&:id)).to contain_exactly(monograph_2[:id])
+      end
+    end
+  end
 end
