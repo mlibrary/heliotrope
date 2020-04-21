@@ -5,7 +5,12 @@ module Greensub
     before_action :set_institution, only: %i[show edit update destroy login help]
 
     def index
-      @institutions = Institution.filter(filtering_params(params)).order(identifier: :asc).page(params[:page])
+      if params[:product_id].present?
+        @product = Product.find(params[:product_id])
+        @institutions = Institution.where(id: @product.institutions.map(&:id)).filter(filtering_params(params)).order(identifier: :asc).page(params[:page])
+      else
+        @institutions = Institution.filter(filtering_params(params)).order(identifier: :asc).page(params[:page])
+      end
     end
 
     def show; end

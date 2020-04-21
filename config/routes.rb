@@ -74,6 +74,8 @@ Rails.application.routes.draw do
       end
       resources :products do
         resources :components, only: %i[index create destroy]
+        resources :individuals, only: %i[index]
+        resources :institutions, only: %i[index]
         resources :grants, only: %i[new]
       end
     end

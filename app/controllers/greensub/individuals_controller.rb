@@ -5,7 +5,12 @@ module Greensub
     before_action :set_individual, only: %i[show edit update destroy]
 
     def index
-      @individuals = Individual.filter(filtering_params(params)).order(identifier: :asc).page(params[:page])
+      if params[:product_id].present?
+        @product = Product.find(params[:product_id])
+        @individuals = Individual.where(id: @product.individuals.map(&:id)).filter(filtering_params(params)).order(identifier: :asc).page(params[:page])
+      else
+        @individuals = Individual.filter(filtering_params(params)).order(identifier: :asc).page(params[:page])
+      end
     end
 
     def show; end

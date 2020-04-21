@@ -1,7 +1,12 @@
 <p id="notice"><%= notice %></p>
 <div id="maincontent">
-  <h1>Institutions</h1>
-  <form name="filter" method="get" action="<%= greensub_institutions_path %>">
+  <% if @product.present? %>
+    <h1>Institutions of <%= link_to @product.identifier, greensub_product_path(@product) %> Product</h1>
+    <form name="filter" method="get" action="<%= greensub_product_institutions_path(@product) %>">
+  <% else %>
+    <h1>Institutions</h1>
+    <form name="filter" method="get" action="<%= greensub_institutions_path %>">
+  <% end %>
     <b>
       <div class="col-md-12"><hr/></div>
       <div class="col-md-10">
