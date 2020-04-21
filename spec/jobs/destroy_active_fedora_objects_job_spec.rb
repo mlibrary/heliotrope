@@ -144,6 +144,8 @@ RSpec.describe DestroyActiveFedoraObjectsJob, type: :job do
         create(:monograph) do |m|
           m.ordered_members << monograph_file_set
           m.save
+          monograph_file_set.save! # Force reindexing
+          m
         end
       end
       let(:monograph_file_set) { create(:file_set) }
