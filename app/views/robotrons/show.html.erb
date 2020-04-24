@@ -1,0 +1,24 @@
+<p id="notice"><%= notice %></p>
+<div id="maincontent">
+  <div class="row">
+    <div class="col-md-12"><h1>Robotron</h1></div>
+    <div class="col-md-6">ID:</div>
+    <div class="col-md-6"><%= @robotron.id %></div>
+    <div class="col-md-6">IP:</div>
+    <div class="col-md-6"><%= @robotron.ip %></div>
+    <div class="col-md-6">HITS:</div>
+    <div class="col-md-6"><%= @robotron.hits %></div>
+    <div class="col-md-6">CREATED:</div>
+    <div class="col-md-6"><%= @robotron.created_at %></div>
+    <div class="col-md-6">UPDATED:</div>
+    <div class="col-md-6"><%= @robotron.updated_at %></div>
+    <div class="col-md-12"><br/></div>
+    <div class="col-md-6">
+      <%= link_to 'Profile', robotron_trap_path(@robotron, "profile") %>
+    </div>
+    <div class="col-md-6">
+      <%= link_to 'Back', robotrons_path %>
+    </div>
+    <div class="col-md-12"><br/></div>
+  </div>
+</div>

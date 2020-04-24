@@ -1,0 +1,35 @@
+<p id="notice"><%= notice %></p>
+<div id="maincontent">
+  <h1>Robotrons</h1>
+  <div class="row">
+    <form name="filter" method="get" action="<%= robotrons_path %>">
+      <b>
+        <div class="col-md-12"><hr/></div>
+        <% size = 6 %>
+        <div class="col-md-4"><div>Timestamp</div><div><input type="text" name="created_at_like" value="<%= params[:updated_at_like] %>" size="<%= size * 3 %>" aria-label="updated_at_like"></div></div>
+        <div class="col-md-4"><div>Ip</div><div><input type="text" name="ip_like" value="<%= params[:ip_like] %>" size="<%= size %>" aria-label="ip_like"></div></div>
+        <div class="col-md-2"><div>Hits</div><div><input type="text" name="hits_like" value="<%= params[:hits_like] %>" size="<%= size  %>" aria-label="hits_like"></div></div>
+        <div class="col-md-2"><button name="submit" type="submit" value="filter">Filter</button></div>
+        <div class="col-md-12"><hr/></div>
+      </b>
+    </form>
+  </div>
+  <div class="row">
+    <% @robotrons.each do |robotron| %>
+      <div class="row">
+        <div class="col-md-4"><%= robotron.updated_at %></div>
+        <div class="col-md-4"><%= robotron.ip %></div>
+        <div class="col-md-2"><%= robotron.hits %></div>
+        <div class="col-md-2">
+          <%= link_to 'Show', robotron %>
+          <% if @can_destroy %>
+            <%= link_to 'Destroy', robotron, data: { confirm: "Are you sure?" }, method: :delete %>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+  <div class="col-md-12"><br/></div>
+  <div class="col-md-12"><%= paginate @robotrons %></div>
+  <div class="col-md-12"><br/></div>
+</div>

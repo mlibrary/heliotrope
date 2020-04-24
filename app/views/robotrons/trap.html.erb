@@ -1,0 +1,16 @@
+<h1><%= @first_name + ' ' + @last_name %></h1>
+<div><%= @street %></div>
+<div><%= @city + ', ' + @state + ' ' + @zipcode %></div>
+<div><%= @mobile %> (mobile)</div>
+<div><%= @fax %> (fax)</div>
+<div><%= @email %></div>
+<div class="col-md-12"><br/></div>
+<% @trap_count.times do |i| %>
+  <%= link_to @trap_paths[i], robotron_trap_path(@robotron, @trap_paths[i]) %>
+  <p><%= raw @trap_paragraphs[i] %></p>
+<% end %>
+<div class="col-md-12"><br/></div>
+<div><%= @robotron.ip %> (ip)</div>
+<div><%= @robotron.hits %> (hits)</div>
+<div class="col-md-12"><br/></div>
+<div><%= link_to 'Back', robotrons_path %></div>

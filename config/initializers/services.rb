@@ -64,3 +64,5 @@ Services.register(:handle_service) do
     password: Settings.handle_service.password
   )
 end
+
+Services.register(:random_words) { RandomWords.new }

@@ -141,6 +141,8 @@ gem 'pragmatic_segmenter', '~> 0.3'
 # Turn page image epub chapters into pdfs
 gem 'prawn', '~> 2.2'
 
+gem 'random-word'
+
 gem 'redcarpet', '~> 3.3.4'
 gem 'reverse_markdown'
 

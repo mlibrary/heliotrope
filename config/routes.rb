@@ -148,6 +148,9 @@ Rails.application.routes.draw do
   post 'featured_representatives', controller: :featured_representatives, action: :save
   delete 'featured_representatives', controller: :featured_representatives, action: :delete
 
+  resources :robotrons, only: %i[index show destroy]
+  get 'robotrons/:id/*trap', controller: :robotrons, action: :trap, as: :robotron_trap
+
   mount Blacklight::Engine => '/'
   mount Riiif::Engine => '/image-service', as: 'riiif'
 
