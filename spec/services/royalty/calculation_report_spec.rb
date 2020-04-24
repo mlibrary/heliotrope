@@ -10,6 +10,7 @@ RSpec.describe Royalty::CalculationReport do
           "Authors": "Some One",
           "Parent_Title": "A",
           "Parent_DOI": "http://doi.org/a",
+          "Parent_ISBN": "9780231503709 (E-Book)",
           "Publisher": "Flub",
           "Section_Type": "Chapter",
           "Reporting_Period_Total": 1001,
@@ -25,6 +26,7 @@ RSpec.describe Royalty::CalculationReport do
           "Authors": "No One",
           "Parent_Title": "B",
           "Parent_DOI": "http://doi.org/b",
+          "Parent_ISBN": "9780292713420, 029271341X, 0292713428, 9780292713413",
           "Publisher": "Derp",
           "Section_Type": "Chapter",
           "Reporting_Period_Total": 5,
@@ -40,6 +42,7 @@ RSpec.describe Royalty::CalculationReport do
           "Authors": "Some One",
           "Parent_Title": "A",
           "Parent_DOI": "http://doi.org/a",
+          "Parent_ISBN": "9780231503709 (E-Book)",
           "Publisher": "Flub",
           "Section_Type": "",
           "Reporting_Period_Total": 10,
@@ -97,12 +100,17 @@ RSpec.describe Royalty::CalculationReport do
 
       expect(@reports["Copyright_A.calc.201901-201906.csv"][:header][:"Total Royalties Shared (All Rights Holders)"]).to eq "1,000.00"
       expect(@reports["Copyright_A.calc.201901-201906.csv"][:header][:"Total Hits (Non-OA Titles, All Rights Holders)"]).to eq "1,016"
+      expect(@reports["Copyright_A.calc.201901-201906.csv"][:header][:"Rightsholder Hits"]).to eq "1,011"
+      expect(@reports["Copyright_A.calc.201901-201906.csv"][:header][:"Rightsholder Royalties"]).to eq "995.08"
 
       expect(@reports["Copyright_A.calc.201901-201906.csv"][:items][0]["Parent_Proprietary_ID"]).to eq "AAAAAAAAA"
       expect(@reports["Copyright_A.calc.201901-201906.csv"][:items][0]["Total Title Hits"]).to eq "1,011"
 
       expect(@reports["Copyright_B.calc.201901-201906.csv"][:items][0]["Parent_Proprietary_ID"]).to eq "BBBBBBBBB"
       expect(@reports["Copyright_B.calc.201901-201906.csv"][:items][0]["Total Title Hits"]).to eq "5"
+      expect(@reports["Copyright_B.calc.201901-201906.csv"][:header][:"Rightsholder Hits"]).to eq "5"
+      expect(@reports["Copyright_B.calc.201901-201906.csv"][:header][:"Rightsholder Royalties"]).to eq "4.92"
+
 
       expect(@reports["Copyright_A.calc.201901-201906.csv"][:items][0]["Royalty Earning"].to_f +
              @reports["Copyright_B.calc.201901-201906.csv"][:items][0]["Royalty Earning"].to_f).to eq 1000.0
@@ -116,6 +124,7 @@ RSpec.describe Royalty::CalculationReport do
           "Authors": "Some One",
           "Parent_Title": "A",
           "Parent_DOI": "http://doi.org/a",
+          "Parent_ISBN": "9780231503709 (E-Book)",
           "Publisher": "Flub",
           "Section_Type": "Chapter",
           "Hits": 1001,
@@ -131,6 +140,7 @@ RSpec.describe Royalty::CalculationReport do
           "Authors": "No One",
           "Parent_Title": "B",
           "Parent_DOI": "http://doi.org/b",
+          "Parent_ISBN": "9780292713420, 029271341X, 0292713428, 9780292713413",
           "Publisher": "Derp",
           "Section_Type": "Chapter",
           "Hits": 125,
@@ -146,6 +156,7 @@ RSpec.describe Royalty::CalculationReport do
           "Authors": "Some One",
           "Parent_Title": "A",
           "Parent_DOI": "http://doi.org/a",
+          "Parent_ISBN": "9780231503709 (E-Book)",
           "Publisher": "Flub",
           "Section_Type": "",
           "Hits": 10,
@@ -168,6 +179,7 @@ RSpec.describe Royalty::CalculationReport do
       expect(subject[0]["Authors"]).to eq "Some One"
       expect(subject[0]["Publisher"]).to eq "Flub"
       expect(subject[0]["DOI"]).to eq "http://doi.org/a"
+      expect(subject[0]["ISBN"]).to eq "9780231503709 (E-Book)"
       expect(subject[0]["Hits"]).to be 1011
       expect(subject[0]["Royalty Earning"]).to eq 0.00
       expect(subject[0]["Jan-2019"]).to be 3
@@ -182,6 +194,7 @@ RSpec.describe Royalty::CalculationReport do
       expect(subject[1]["Publisher"]).to eq "Derp"
       expect(subject[1]["Authors"]).to eq "No One"
       expect(subject[1]["DOI"]).to eq "http://doi.org/b"
+      expect(subject[1]["ISBN"]).to eq "9780292713420, 029271341X, 0292713428, 9780292713413"
       expect(subject[1]["Hits"]).to be 125
       expect(subject[0]["Royalty Earning"]).to eq 0.00
       expect(subject[1]["Jan-2019"]).to be 0

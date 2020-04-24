@@ -23,11 +23,6 @@ module Royalty
       items = calculate_royalty(items)
       @total_royalty_all_rightsholders = total_royalties_all_rightsholders(items)
       @total_hits_all_rightsholders = total_hits_all_rightsholders(items)
-      # now that all the math is done, we can make currencies and formats
-      items = format_royalty(items)
-      items = format_numbers(items)
-      # an extra picky bit
-      items = rename_hits_heading(items)
       # make and send reports
       reports = copyholder_reports(items)
       send_reports(reports)
@@ -55,6 +50,14 @@ module Royalty
       def copyholder_reports(all_items)
         reports = {}
         items_by_copyholders(all_items).each do |copyholder, items|
+          # HELIO-3330
+          rightsholder_hits = items.map { |k| k["Hits"] }.sum
+          rightsholder_royalties = items.map { |k| k["Royalty Earning"] }.sum
+
+          items = format_royalty(items)
+          items = format_hits(items)
+          items = rename_hits_heading(items)
+
           name = copyholder.gsub(/[^0-9A-z.\-]/, '_') + ".calc.#{@start_date.strftime("%Y%m")}-#{@end_date.strftime("%Y%m")}.csv"
           reports[name] = {
             header: {
@@ -66,7 +69,9 @@ module Royalty
               "Total Hits (Non-OA Titles, All Rights Holders)": number_with_delimiter(@total_hits_all_rightsholders),
               # This number will ultimately be the same as the provided @total_royalties param
               # but we'll do the math of adding up the individual royalties as a sort of check
-              "Total Royalties Shared (All Rights Holders)": number_to_currency(@total_royalty_all_rightsholders, unit: "")
+              "Total Royalties Shared (All Rights Holders)": number_to_currency(@total_royalty_all_rightsholders, unit: ""),
+              "Rightsholder Hits": number_with_delimiter(rightsholder_hits),
+              "Rightsholder Royalties": number_to_currency(rightsholder_royalties, unit: ""),
             },
             items: items
           }
@@ -104,6 +109,7 @@ module Royalty
             monographs[noid]["Authors"] = item["Authors"]
             monographs[noid]["Publisher"] = item["Publisher"]
             monographs[noid]["DOI"] = item["Parent_DOI"]
+            monographs[noid]["ISBN"] = item["Parent_ISBN"]
             monographs[noid]["Royalty Earning"] = 0.00  # will calculate this elsewhere
             monographs[noid]["Hits"] = item["Hits"].to_i
             item.each do |k, v|
