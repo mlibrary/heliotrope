@@ -9,6 +9,7 @@
     <li><a href="https://github.com/mlibrary/heliotrope">Contribute</a></li>
     <li><a href="/accessibility/" data-turbolinks="false">Accessibility</a></li>
     <li><a href="/preservation/" data-turbolinks="false">Preservation</a></li>
+    <li><a href="/privacy/" data-turbolinks="false">Privacy</a></li>
     <li><a href="/terms/" data-turbolinks="false">Terms of Service</a></li>
     <li><% if current_user %> <%= link_to 'Log Out', main_app.destroy_user_session_path, class: 'log-out', 'data-turbolinks': 'false' %> <% else %> <%= link_to 'Log In', main_app.default_login_path, class: 'login', 'data-turbolinks': 'false' %> <% end %></li>
   </ul>

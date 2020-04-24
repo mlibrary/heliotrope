@@ -594,6 +594,13 @@ h2#services {
     flex-basis: 30%;
   }
 
+  .footer-copyright .container {
+    font-size: .9em;
+    text-align: left;
+    height: 53px;
+    line-height: 23px;
+  }
+
 }
 
 @media only screen and (max-width : 700px ) {
@@ -605,6 +612,7 @@ h2#services {
       font-size: 2rem;
     }
   }
+
 }
 
 @media only screen and (max-width : 600px) {
