@@ -1,5 +1,12 @@
 # frozen_string_literal: true
 
+desc 'Add system user'
+task system_user: :environment do
+  puts 'Creating fulcrum-system user.'
+  User.find_or_create_by!(email: 'fulcrum-system')
+  puts 'User fulcrum-system created.'
+end
+
 desc 'Add application-wide admin privileges to a user'
 task admin: :environment do
   puts 'Creating an admin user.'

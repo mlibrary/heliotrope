@@ -19,12 +19,6 @@ describe 'Routes', type: :routing do
     end
   end
 
-  describe 'for robots.txt' do
-    it 'has robots.txt' do
-      expect(get: '/robots.txt').to route_to(controller: 'robots', action: 'robots')
-    end
-  end
-
   describe 'Monograph Catalog' do
     it { expect(get: 'concern/monographs/new').to route_to(controller: 'hyrax/monographs', action: 'new') }
   end

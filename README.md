@@ -58,28 +58,38 @@ For additional details and helpful hints [read our ever growing Wiki](https://gi
 $ git clone https://github.com/mlibrary/heliotrope.git
 $ cd heliotrope
 $ bundle install
-$ ./bin/bundle exec ./bin/setup
-$ rails checkpoint:migrate
+$ bundle exec setup
+$ bundle exec rails checkpoint:migrate
 ```  
 See the [Wiki](https://github.com/mlibrary/heliotrope/wiki/Static-Pages-and-Blog) for information on [Jekyll](https://jekyllrb.com/) integration.
 
 ### 2. Create users
-#### Make yourself a "platform" admin
-There is a rails task you can execute to create a "platform" admin user. It will prompt you for an email address and then create a user with the correct role.
+#### Create fulcrum-system user
+There is a rails task you execute to create a "fulcrum-system" user.
 ```
-$ ./bin/bundle exec ./bin/rails admin
+$ bundle exec rails system_user
 ```
 
 If you need to run this when the app has been deployed, execute:
 ```
-$ RAILS_ENV=production ./bin/bundle exec ./bin/rails admin
+$ RAILS_ENV=production bundle exec rails system_user
+```
+#### Make yourself a "platform" admin
+There is a rails task you can execute to create a "platform" admin user. It will prompt you for an email address and then create a user with the correct role.
+```
+$ bundle exec rails admin
+```
+
+If you need to run this when the app has been deployed, execute:
+```
+$ RAILS_ENV=production bundle exec rails admin
 ```
 
 ### 3. Run the application
 
 Execute this command to start Fedora, Solr and Rails servers:
 ```
-$ ./bin/bundle exec ./bin/rails hydra:server
+$ bundle exec rails hydra:server
 ```
 Or, if you prefer to start each server individually execute each of the following commands in a seperate shells: *(you must use this alternate option if running on a VM)*
 
@@ -87,7 +97,7 @@ Or, if you prefer to start each server individually execute each of the followin
 $ redis-server /usr/local/etc/redis.conf
 $ fcrepo_wrapper -p 8984 --no-jms
 $ solr_wrapper -p 8983 -d solr/config/ --collection_name hydra-development
-$ ./bin/bundle exec ./bin/rails s
+$ bundle exec rails s
 ```
 *NOTE:* You'll also want to make sure that you have MySQL started.
 
@@ -99,7 +109,7 @@ $ solr_wrapper --config .wrap_conf/solr_dev
 
 ### 4. Create [default administrative set](https://github.com/samvera/hyrax#create-default-administrative-set)
 ```
-$ ./bin/bundle exec ./bin/rails hyrax:default_admin_set:create
+$ bundle exec rails hyrax:default_admin_set:create
 ```
 
 # Debugging
@@ -107,7 +117,7 @@ $ ./bin/bundle exec ./bin/rails hyrax:default_admin_set:create
 When running Rails server, set the `EXPLAIN_PARTIALS` environment variable to show partials being rendered in source html of your views. You can view this info using your browser's inspect element mode.
 
 ```
-$ EXPLAIN_PARTIALS=true ./bin/bundle exec ./bin/rails s
+$ EXPLAIN_PARTIALS=true bundle exec rails s
 ```
 
 *NOTE:* Because this feature can add a fair bit of overhead, it is restricted
@@ -117,7 +127,7 @@ to only run in development mode.
 To execute the continuous integration task run by Travis CI
 
 ```
-$ ./bin/bundle exec ./bin/rails ci
+$ bundle exec rails ci
 ```
 
 ## Starting servers individually when testing
@@ -141,10 +151,10 @@ $ solr_wrapper --config .wrap_conf/solr_test
 ```
 ### 3. Run tests
 ```
-$ ./bin/bundle exec ./bin/rails rubocop
-$ ./bin/bunlde exec ./bin/rails ruumba
-$ ./bin/bundle exec ./bin/rails lib_spec
-$ ./bin/bundle exec rspec
+$ bundle exec rails rubocop
+$ bunlde exec rails ruumba
+$ bundle exec rails lib_spec
+$ bundle exec rspec
 ```
 #### System specs
 System specs are skipped on Travis due to frequent timing failures. This won't affect running `rspec` locally either directly or through the `ci` task. 
@@ -154,13 +164,13 @@ System specs are skipped on Travis due to frequent timing failures. This won't a
 To run individual specs located in the `./lib/spec directory` (a.k.a lib_spec) first step into the lib directory and then execute rspec.
 ```
 $ cd lib
-$ ../bin/bundle exec rspec
+$ bundle exec rspec
 ```
 
 ## Special note on running tests
 As of June 20, 2017 there are tests that require the static pages to be built in order for routing to happen correctly (See [Static Pages and Blog](https://github.com/mlibrary/heliotrope/wiki/Static-Pages-and-Blog) documentation). This means you need to execute
 ```
-$ ./bin/bundle exec ./bin/rails jekyll:deploy
+$ bundle exec rails jekyll:deploy
 ```
 before running rspec.  This only need be executed once. If you followed step 1 of the [initial setup](#initial-setup) then you did this already.
 

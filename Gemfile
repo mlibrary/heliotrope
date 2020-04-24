@@ -76,9 +76,6 @@ gem 'tzinfo-data', platforms: %i[mingw mswin x64_mingw jruby]
 #
 ##############################################################################
 
-# Currently used in the robots_controller, maybe not needed in the long run
-gem 'actionpack-page_caching', '~> 1.1.0'
-
 # HELIO-2531
 gem "sassc", ">= 2.0.0"
 gem "bootstrap-sass", ">= 3.4.1"
