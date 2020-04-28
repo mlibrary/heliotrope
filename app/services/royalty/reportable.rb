@@ -38,7 +38,7 @@ module Royalty
       Rails.logger.error "[ROYALTY REPORTS] FTP Error: #{e}\n#{e.backtrace.join("\n")}"
     end
 
-    def format_numbers(items)
+    def format_hits(items)
       items.each do |item|
         item["Hits"] = number_with_delimiter(item["Hits"])
         item.map { |k, v| item[k] = number_with_delimiter(v) if k.match(/\w{3}-\d{4}/) } # matches "Jan-2019" or whatever

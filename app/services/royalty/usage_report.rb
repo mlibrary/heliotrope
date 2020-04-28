@@ -20,7 +20,7 @@ module Royalty
       items = remove_extra_lines(items)
       @total_hits_all_rightsholders = total_hits_all_rightsholders(items)
       # now that the math is done, format numbers
-      items = format_numbers(items)
+      items = format_hits(items)
       # create and sent reports
       reports = copyholder_reports(items)
       reports = combined_report(reports, items)
