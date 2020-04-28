@@ -115,6 +115,13 @@
   <div class="row">
     <h2>Reindex</h2>
   </div>
+  <form name="reindex" method="get" action="<%= fulcrum_exec_path(:reindex) %>">
+    <div class="row">
+      <label for="reindex_noid">NOID</label>
+      <input type="text" id="reindex_noid" name="noid" value="validnoid">
+      <button name="submit" type="submit" value="reindex">Reindex</button>
+    </div>
+  </form>
   <div class="row">
     <%= link_to(fulcrum_exec_path(:reindex_everything), method: :get, class: "btn btn-default", data: { confirm: 'Are you sure?' }) do %>
         <span class="glyphicon glyphicon-wrench" aria-hidden="true"></span> Reindex Everything
