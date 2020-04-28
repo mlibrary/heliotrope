@@ -32,5 +32,13 @@ Hyrax::FileSetDerivativesService.class_eval do
       when *file_set.class.image_mime_types           then create_image_derivatives(filename)
       end
     end
+
+    def create_video_derivatives(filename)
+      Hydra::Derivatives::VideoDerivatives.create(filename,
+                                                  outputs: [{ label: :thumbnail, format: 'jpg', url: derivative_url('thumbnail') },
+                                                            { label: :jpeg, format: 'jpg', url: derivative_url('jpeg') },
+                                                            { label: :webm, format: 'webm', url: derivative_url('webm') },
+                                                            { label: :mp4, format: 'mp4', url: derivative_url('mp4') }])
+    end
   end)
 end
