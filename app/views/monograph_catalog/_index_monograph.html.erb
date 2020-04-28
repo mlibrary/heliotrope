@@ -7,13 +7,13 @@
     <% if @presenter.representative_id.present? %>
       <!-- Image trigger modal -->
       <button type="button" class="btn btn-link" aria-label="Select to enlarge cover" data-toggle="modal" data-target="#modalImage">
-        <%= raw @presenter.work_thumbnail(225) %>
+        <%= @presenter.thumbnail_tag(225, class: "img-responsive", alt: "Cover image for #{@presenter.title}") %>
       </button>
 
       <!-- Modal image -->
       <div class="modal" id="modalImage" tabindex="-1" role="dialog" aria-label="Select the escape key to close the modal window">
         <button type="button" class="close btn btn-default" id="modalClose" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <%= image_tag(riiif.image_path(@presenter.representative_id, :full, :full, 0), tabindex: "-1", alt: '') %>
+        <%= @presenter.poster_tag(tabindex: "-1", alt: '') %>
       </div>
 
       <script type="text/javascript">
@@ -24,7 +24,7 @@
         });
       </script>
     <% else %>
-      <%= raw @presenter.work_thumbnail(225) %>
+      <%= @presenter.thumbnail_tag(225) %>
     <% end %>
     <% if can? :edit, @presenter %>
       <a class="btn btn-default manage-monograph-button" href="<%= main_app.monograph_show_path(@presenter.id) %>" title="<%= t('monograph_catalog.index.show_page_button') %>" data-turbolinks="false"><%= t('monograph_catalog.index.show_page_button') %></a>

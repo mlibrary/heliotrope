@@ -40,26 +40,27 @@ module CommonWorkPresenter
     end
   end
 
-  def work_thumbnail_src(width = 255)
+  def thumbnail_tag(width, options = {})
     if representative_id.present?
-      "\"/image-service/#{representative_id}/full/#{width},/0/default.png#{cover_cache_breaker(representative_id)}\""
+      ActionController::Base.helpers.image_tag(Riiif::Engine.routes.url_helpers.image_path(cache_buster_id, "#{width},"), options)
     else
-      "\"#{thumbnail_path}\" style=\"max-width:#{width}px\""
+      options[:style] = "max-width: #{width}px"
+      ActionController::Base.helpers.image_tag(thumbnail_path || '', options)
     end
   end
 
-  def work_thumbnail(width = 225)
-    img_tag = "<img class=\"img-responsive\" src="
-    img_tag += work_thumbnail_src(width)
-    img_tag += " alt=\"Cover image for #{title}\">"
-    img_tag
+  def poster_tag(options = {})
+    if representative_id.present?
+      ActionController::Base.helpers.image_tag(Riiif::Engine.routes.url_helpers.image_path(cache_buster_id, :full, :full, 0), options)
+    else
+      ActionController::Base.helpers.image_tag(thumbnail_path || '', options)
+    end
   end
 
-  def cover_cache_breaker(representative_id)
-    # HELIO-2007, HELIO-3305
+  def cache_buster_id
     thumbnail = Hyrax::DerivativePath.new(representative_id).derivative_path + "thumbnail.jpeg"
-    return "" unless File.exist? thumbnail
-    "?#{File.mtime(thumbnail).to_i}"
+    return representative_id unless File.exist? thumbnail
+    representative_id + "#{File.mtime(thumbnail).to_i}"
   end
 
   # This overrides CC 1.6.2's work_show_presenter.rb which is recursive.

@@ -26,34 +26,91 @@ RSpec.describe CommonWorkPresenter do
   let(:presenter) { self.class::Presenter.new(solr_document) }
   let(:title) { presenter.title }
 
-  describe '#work_thumbnail' do
+  describe '#thumbnail_tag' do
+    subject { presenter.thumbnail_tag(width, options) }
+
+    let(:width) { 225 }
+    let(:options) { double('options') }
+
     context 'representative_id not set, uses Hyrax default' do
       let(:solr_document) { ::SolrDocument.new(id: 'mono', title_tesim: ['A Title'], has_model_ssim: ['Monograph'], thumbnail_path_ss: '/assets/work.png') }
+      let(:thumbnail_image_tag) { double('thumbnail_image_tag') }
+
+      before do
+        allow(ActionController::Base.helpers).to receive(:image_tag).with(presenter.thumbnail_path, options).and_return(thumbnail_image_tag)
+        allow(options).to receive(:[]=).with(:style, "max-width: #{width}px")
+      end
 
       it {
-        expect(presenter.work_thumbnail).to eq %Q{<img class="img-responsive" src="/assets/work.png" style="max-width:225px" alt="Cover image for #{title}">}
+        is_expected.to be thumbnail_image_tag
+        expect(ActionController::Base.helpers).to have_received(:image_tag).with(presenter.thumbnail_path, options)
+        expect(options)                       .to have_received(:[]=).with(:style, "max-width: #{width}px")
       }
     end
 
-    context 'representative_id set, uses image-service, default width' do
+    context 'representative_id set, uses image-service' do
       let(:solr_document) { ::SolrDocument.new(id: 'mono', title_tesim: ['A Title'], has_model_ssim: ['Monograph'], hasRelatedMediaFragment_ssim: ['999999999']) }
+      let(:cache_buster_id) { 'cache_buster_id' }
+      let(:riiif_image_path) { Riiif::Engine.routes.url_helpers.image_path(cache_buster_id, "#{width},") }
+      let(:riiif_image_tag) { double('riiif_image_tag') }
+
+      before do
+        allow(presenter).to receive(:cache_buster_id).and_return(cache_buster_id)
+        allow(ActionController::Base.helpers).to receive(:image_tag).with(riiif_image_path, options).and_return(riiif_image_tag)
+      end
 
       it {
-        expect(presenter.work_thumbnail).to start_with %Q{<img class="img-responsive" src="/image-service/999999999/full/225,/0/default.png" alt="Cover image for #{title}">}
-      }
-    end
-
-    context 'representative_id set, uses image-service, custom width' do
-      let(:solr_document) { ::SolrDocument.new(id: 'mono', title_tesim: ['A Title'], has_model_ssim: ['Monograph'], hasRelatedMediaFragment_ssim: ['999999999']) }
-
-      it {
-        expect(presenter.work_thumbnail(99)).to start_with %Q{<img class="img-responsive" src="/image-service/999999999/full/99,/0/default.png" alt="Cover image for #{title}">}
+        is_expected.to be riiif_image_tag
+        expect(presenter).to have_received(:cache_buster_id)
+        expect(ActionController::Base.helpers).to have_received(:image_tag).with(riiif_image_path, options)
       }
     end
   end
 
-  describe "#cover_cache_breaker" do
+  describe '#poster_tag' do
+    subject { presenter.poster_tag(options) }
+
+    let(:options) { double('options') }
+
+    context 'representative_id not set, uses Hyrax default' do
+      let(:solr_document) { ::SolrDocument.new(id: 'mono', title_tesim: ['A Title'], has_model_ssim: ['Monograph'], thumbnail_path_ss: '/assets/work.png') }
+      let(:thumbnail_image_tag) { double('thumbnail_image_tag') }
+
+      before do
+        allow(ActionController::Base.helpers).to receive(:image_tag).with(presenter.thumbnail_path, options).and_return(thumbnail_image_tag)
+      end
+
+      it {
+        is_expected.to be thumbnail_image_tag
+        expect(ActionController::Base.helpers).to have_received(:image_tag).with(presenter.thumbnail_path, options)
+      }
+    end
+
+    context 'representative_id set, uses image-service' do
+      let(:solr_document) { ::SolrDocument.new(id: 'mono', title_tesim: ['A Title'], has_model_ssim: ['Monograph'], hasRelatedMediaFragment_ssim: ['999999999']) }
+      let(:cache_buster_id) { 'cache_buster_id' }
+      let(:riiif_image_path) { Riiif::Engine.routes.url_helpers.image_path(cache_buster_id, :full, :full, 0) }
+      let(:riiif_image_tag) { double('riiif_image_tag') }
+
+      before do
+        allow(presenter).to receive(:cache_buster_id).and_return(cache_buster_id)
+        allow(ActionController::Base.helpers).to receive(:image_tag).with(riiif_image_path, options).and_return(riiif_image_tag)
+      end
+
+      it {
+        is_expected.to be riiif_image_tag
+        expect(presenter).to have_received(:cache_buster_id)
+        expect(ActionController::Base.helpers).to have_received(:image_tag).with(riiif_image_path, options)
+      }
+    end
+  end
+
+  describe '#cache_buster_id' do
+    subject { presenter.cache_buster_id }
+
     let(:solr_document) { ::SolrDocument.new(id: '111111111', title_tesim: ['A Title'], has_model_ssim: ['Monograph'], hasRelatedMediaFragment_ssim: ['999999999']) }
+
+    it { is_expected.to eq presenter.representative_id }
 
     context "with a thumbnail file" do
       before do
@@ -65,15 +122,9 @@ RSpec.describe CommonWorkPresenter do
         FileUtils.rm_rf(Dir[Rails.root.join('tmp', 'rspec_derivatives')])
       end
 
-      it "returns the thumbnail's mtime" do
-        expect(presenter.cover_cache_breaker('999999999')).to eq "?#{File.mtime(Rails.root.join('tmp', 'rspec_derivatives', '99', '99', '99', '99', '9-thumbnail.jpeg')).to_i}"
-      end
-    end
-
-    context "without a thumbnail" do
-      it "returns an empty string" do
-        expect(presenter.cover_cache_breaker('999999999')).to eq ""
-      end
+      it {
+        is_expected.to eq presenter.representative_id + "#{File.mtime(Rails.root.join('tmp', 'rspec_derivatives', '99', '99', '99', '99', '9-thumbnail.jpeg')).to_i}"
+      }
     end
   end
 
