@@ -148,6 +148,8 @@ Rails.application.routes.draw do
   post 'featured_representatives', controller: :featured_representatives, action: :save
   delete 'featured_representatives', controller: :featured_representatives, action: :delete
 
+  get 'whoami', controller: :utilities, action: :whoami, as: :whoami_utility
+
   mount Blacklight::Engine => '/'
   mount Riiif::Engine => '/image-service', as: 'riiif'
 
