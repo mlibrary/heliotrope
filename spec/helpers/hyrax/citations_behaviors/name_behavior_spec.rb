@@ -3,8 +3,6 @@
 require 'rails_helper'
 
 RSpec.describe Hyrax::CitationsBehaviors::NameBehavior do
-  let(:title_behavior) { described_class.new }
-
   # https://tools.lib.umich.edu/jira/browse/HELIO-2319
 
   it 'gets given_name_first(Flavigny) as Flavigny' do

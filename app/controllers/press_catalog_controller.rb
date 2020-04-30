@@ -114,9 +114,11 @@ class PressCatalogController < ::CatalogController
     def search_or_browse
       # sort fields
       if params[:q].present?
+        params.extract!(:sort) if /date_uploaded/i.match?(params[:sort])
         # if this is a search, relevance/score is default
         blacklight_config.add_sort_field 'relevance', sort: "score desc, #{Solrizer.solr_name('date_uploaded', :stored_sortable, type: :date)} desc", label: "Relevance"
       else
+        params.extract!(:sort) if /relevance/i.match?(params[:sort])
         # if it's a "browse", then it's date_uploaded
         blacklight_config.add_sort_field 'date_uploaded desc', sort: "#{Solrizer.solr_name('date_uploaded', :stored_sortable, type: :date)} desc", label: "Date Added (Newest First)"
       end

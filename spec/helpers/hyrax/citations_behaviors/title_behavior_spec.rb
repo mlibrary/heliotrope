@@ -3,8 +3,6 @@
 require 'rails_helper'
 
 RSpec.describe Hyrax::CitationsBehaviors::TitleBehavior do
-  let(:title_behavior) { described_class.new }
-
   # https://tools.lib.umich.edu/jira/browse/HELIO-1991
 
   it 'gets World War II right for Chicago' do
