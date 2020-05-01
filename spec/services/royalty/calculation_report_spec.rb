@@ -117,6 +117,106 @@ RSpec.describe Royalty::CalculationReport do
     end
   end
 
+  describe "different case copyright holders have seperate reports" do
+    # See HELIO-3361
+    let(:items) do
+      [{ "Parent_Proprietary_ID": "AAAAAAAAA",
+         "Proprietary_ID": "111111111",
+         "Authors": "Some One",
+         "Parent_Title": "A",
+         "Parent_DOI": "http://doi.org/a",
+         "Parent_ISBN": "9780231503709 (E-Book)",
+         "Publisher": "Flub",
+         "Section_Type": "Chapter",
+         "Reporting_Period_Total": 1,
+         "Jan-2019": 1
+       }.with_indifferent_access,
+       { "Parent_Proprietary_ID": "BBBBBBBBB",
+         "Proprietary_ID": "222222222",
+         "Authors": "No One",
+         "Parent_Title": "B",
+         "Parent_DOI": "http://doi.org/b",
+         "Parent_ISBN": "9780292713420, 029271341X, 0292713428, 9780292713413",
+         "Publisher": "Derp",
+         "Section_Type": "Chapter",
+         "Reporting_Period_Total": 5,
+         "Jan-2019": 5
+       }.with_indifferent_access,
+       { "Parent_Proprietary_ID": "AAAAAAAAA",
+         "Proprietary_ID": "333333333",
+         "Authors": "Some One",
+         "Parent_Title": "A",
+         "Parent_DOI": "http://doi.org/a",
+         "Parent_ISBN": "9780231503709 (E-Book)",
+         "Publisher": "Flub",
+         "Section_Type": "",
+         "Reporting_Period_Total": 1,
+         "Jan-2019": 1
+       }.with_indifferent_access]
+    end
+
+    subject { described_class.new(press.subdomain, "2019-01-01", "2019-02-28", 1000.00).report }
+
+    let(:press) { create(:press, subdomain: "blue") }
+    let(:mono1) do
+      SolrDocument.new(id: "AAAAAAAAA",
+                       has_model_ssim: ['Monograph'],
+                       press_sim: press.subdomain,
+                       copyright_holder_tesim: ["Assumed rights"], # note case "rights"
+                       title_tesim: ["A"])
+    end
+
+    let(:mono2) do
+      SolrDocument.new(id: "BBBBBBBBB",
+                       has_model_ssim: ['Monograph'],
+                       press_sim: press.subdomain,
+                       copyright_holder_tesim: ["Assumed Rights"], # note case "Rights"
+                       title_tesim: ["B"])
+    end
+    let(:counter_report) { double("counter_report") }
+    let(:item_report) { { items: items } }
+    let(:ftp) do
+      instance_double(Net::FTP,
+                      "ftp",
+                      mkdir: true,
+                      chdir: true,
+                      putbinaryfile: true,
+                      close: true)
+    end
+
+    before do
+      ActiveFedora::SolrService.add([mono1.to_h, mono2.to_h])
+      ActiveFedora::SolrService.commit
+      allow(CounterReporter::ItemReport).to receive(:new).and_return(counter_report)
+      allow(counter_report).to receive(:report).and_return(item_report)
+    end
+
+    before do
+      ActiveFedora::SolrService.add([mono1.to_h, mono2.to_h])
+      ActiveFedora::SolrService.commit
+      allow(CounterReporter::ItemReport).to receive(:new).and_return(counter_report)
+      allow(counter_report).to receive(:report).and_return(item_report)
+    end
+
+    it "sends the reports" do
+      allow(Net::FTP).to receive(:open).and_return(ftp)
+      allow(ftp).to receive(:mkdir).with("Library PTG Box/HEB/HEB Royalty Reports/2019-01_to_2019-02").and_return(true)
+
+      @reports = subject
+
+      expect(@reports.keys).to eq ["Assumed_rights.calc.201901-201902.csv", "Assumed_Rights.calc.201901-201902.csv"]
+
+      expect(@reports["Assumed_rights.calc.201901-201902.csv"][:header][:"Rightsholder Name"]).to eq "Assumed rights"
+      expect(@reports["Assumed_Rights.calc.201901-201902.csv"][:header][:"Rightsholder Name"]).to eq "Assumed Rights"
+
+      # OK. The specs pass. The reports are fine. I think that Box is versioning these files and not respecting their case.
+      # I don't think there's anything that can be done about that in heliotrope.
+      # Jeremy's got a processes to check correctness of reports out of Box. If the numbers are off, I guess
+      # we'll just have to figure it out when that happens (only twice a year, so, meh)
+      # See HELIO-3361 for more info.
+    end
+  end
+
   describe "#by_monograph" do
     let(:items) do
        [{ "Proprietary_ID": "111111111",
