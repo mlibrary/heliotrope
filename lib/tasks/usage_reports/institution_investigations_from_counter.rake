@@ -4,10 +4,10 @@
 # Given a Press and start and end dates, it will give Total_Item_Investigations
 # (a COUNTER5 term, but sort of like "all the things that got looked at") for
 # every institution, per month
-desc "institution usage report kind of"
+desc "institution investigation usage report kind of"
 namespace :heliotrope do
-  task :institution_usage_from_counter, [:subdomain, :starts, :ends] => :environment do |_t, args|
-    # Usage: bundle exec rails "heliotrope:institution_usage_from_counter[heb, 2018-01-01, 2019-11-30]" > /tmp/my_report.csv
+  task :institution_investigations_from_counter, [:subdomain, :starts, :ends] => :environment do |_t, args|
+    # Usage: bundle exec rails "heliotrope:institution_investigations_from_counter[heb, 2018-01-01, 2019-11-30]" > /tmp/my_report.csv
     start_date = Date.parse(args.starts)
     end_date = Date.parse(args.ends)
     press = Press.where(subdomain: args.subdomain).first
