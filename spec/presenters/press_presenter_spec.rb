@@ -53,6 +53,7 @@ RSpec.describe PressPresenter do
                        press_url: "http://blue.com",
                        google_analytics: "GA-ID-BLUE",
                        google_analytics_url: 'https://www.example.com/GA/readreadread',
+                       readership_map_url: 'https://www.example.com/GA/mappitymapmap',
                        typekit: "BLUE-TYPEKIT",
                        footer_block_a: "blue-footer-a",
                        footer_block_b: "blue-footer-b",
@@ -67,6 +68,7 @@ RSpec.describe PressPresenter do
                        press_url: "http://blue.com/maize",
                        google_analytics: nil, # factorybot will fake a ga-id without this
                        google_analytics_url: nil,
+                       readership_map_url: nil,
                        parent_id: parent_press.id)
       }
 
@@ -76,7 +78,8 @@ RSpec.describe PressPresenter do
           expect(subject.footer_block_b).to eq parent_press.footer_block_b
           expect(subject.footer_block_c).to eq parent_press.footer_block_c
           expect(subject.google_analytics).to eq parent_press.google_analytics
-          expect(subject.google_analytics_url).to eq parent_press.google_analytics_url
+          expect(subject.google_analytics_url).to be_nil
+          expect(subject.readership_map_url).to be_nil
           expect(subject.typekit).to eq parent_press.typekit
         end
         it "does not use the parent's name, since a name is required for all presses" do
