@@ -54,11 +54,12 @@
     <div class="col-sm-6">
       <div class="panel panel-danger">
         <div class="panel-heading">
-          <h2 class="panel-title">Purchase a subscription</h2>
+          <h2 class="panel-title">Purchase the BAR Digital Collection</h2>
         </div>
         <div class="panel-body">
-          <p>For more information, please visit <a href="https://www.barpublishing.com/">https://www.barpublishing.com/</a>.</p>
+          <p>Please contact <a href="mailto:Digital@barpublishing.com">Digital@barpublishing.com</a> or visit <a href="www.barpublishing.com/digital.html">www.barpublishing.com/digital.html</a>.</p>
           <p></p>
+          <h3>Collections which include this title</h3>
           <ul class="list-unstyled">
             <% products.each do |product| %>
               <li><%= link_to product.name, product.purchase, target: '_blank' %></li>
