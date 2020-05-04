@@ -182,6 +182,10 @@ RSpec.describe CounterReporter::ItemReport do
         ActiveFedora::SolrService.add([red.to_h, a.to_h, a2.to_h, green.to_h, c.to_h, blue.to_h, b.to_h])
         ActiveFedora::SolrService.commit
 
+        # Let's have 'c' be an epub, and 'a' be a pdf_ebook
+        FeaturedRepresentative.create(file_set_id: 'c', work_id: 'green', kind: 'epub')
+        FeaturedRepresentative.create(file_set_id: 'a', work_id: 'red', kind: 'pdf_ebook')
+
         create(:counter_report, press: press.id, session: 1,  noid: 'a',     model: 'FileSet',   parent_noid: 'red',   institution: 1, created_at: Time.parse("2018-01-02").utc, access_type: "Controlled", request: 1)
         create(:counter_report, press: press.id, session: 1,  noid: 'a2',    model: 'FileSet',   parent_noid: 'red',   institution: 1, created_at: Time.parse("2018-01-02").utc, access_type: "Controlled", request: 1, section: "Forward", section_type: "Chapter")
         create(:counter_report, press: press.id, session: 1,  noid: 'b',     model: 'FileSet',   parent_noid: 'blue',  institution: 1, created_at: Time.parse("2018-01-02").utc, access_type: "Controlled", request: 1, section: "Chapter R", section_type: "Chapter")
@@ -221,6 +225,20 @@ RSpec.describe CounterReporter::ItemReport do
           expect(subject[:items][2]["Component_Title"]).to eq ''
           expect(subject[:items][3]["Component_Title"]).to eq ''
           expect(subject[:items][4]["Component_Title"]).to eq 'Forward'
+
+
+          expect(subject[:items][0]["Data_Type"]).to eq "Book_Segment"
+          expect(subject[:items][1]["Data_Type"]).to eq "Book_Segment"
+          expect(subject[:items][2]["Data_Type"]).to eq "Book" # epub featured representative
+          expect(subject[:items][3]["Data_Type"]).to eq "Book" # pdf_ebook featured_representative
+          expect(subject[:items][4]["Data_Type"]).to eq "Book_Segment"
+
+          # I think we want epub, pdf_ebooks and chapters to all point to the "epub" url, not the file_set url
+          expect(subject[:items][0]["URI"]).to match(/^http:\/\/test\.host\/epubs\/*/)
+          expect(subject[:items][1]["URI"]).to match(/^http:\/\/test\.host\/epubs\/*/)
+          expect(subject[:items][2]["URI"]).to match(/^http:\/\/test\.host\/epubs\/*/)
+          expect(subject[:items][3]["URI"]).to match(/^http:\/\/test\.host\/epubs\/*/)
+          expect(subject[:items][4]["URI"]).to match(/^http:\/\/test\.host\/epubs\/*/)
         end
 
         it "has the correct counts" do

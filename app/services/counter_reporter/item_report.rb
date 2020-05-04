@@ -2,11 +2,11 @@
 
 module CounterReporter
   class ItemReport
-    attr_reader :params, :all_epubs
+    attr_reader :params, :all_ebooks
 
     def initialize(params)
       @params = params
-      @all_epubs = FeaturedRepresentative.where(kind: 'epub').map(&:file_set_id)
+      @all_ebooks = FeaturedRepresentative.where(kind: ['epub', 'pdf_ebook']).map(&:file_set_id)
     end
 
     def report # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
@@ -44,7 +44,7 @@ module CounterReporter
             item["ISBN"] = parent.isbn.join(", ")
             item["Print_ISSN"] = ""
             item["Online_ISSN"] = ""
-            item["URI"] = find_url(presenter)
+            item["URI"] = find_url(presenter, section)
             item["Parent_Title"] = parent.page_title
             item["Parent_Data_Type"] = "Book"
             item["Parent_DOI"] = parent.citable_link
@@ -81,7 +81,7 @@ module CounterReporter
       # See 3.3.2 Data Types at https://www.projectcounter.org/code-of-practice-five-sections/3-0-technical-specifications/
       return "Book_Segment" if section == "Chapter"
       return "Multimedia" if presenter.multimedia?
-      return "Book" if @all_epubs.include? presenter.id
+      return "Book" if @all_ebooks.include? presenter.id
       "Other"
     end
 
@@ -93,8 +93,9 @@ module CounterReporter
       creator
     end
 
-    def find_url(presenter)
-      return Rails.application.routes.url_helpers.epub_url(presenter.id) if @all_epubs.include? presenter.id
+    def find_url(presenter, section)
+      return Rails.application.routes.url_helpers.epub_url(presenter.id) if section == "Chapter"
+      return Rails.application.routes.url_helpers.epub_url(presenter.id) if @all_ebooks.include? presenter.id
       Rails.application.routes.url_helpers.hyrax_file_set_url(presenter.id)
     end
 
