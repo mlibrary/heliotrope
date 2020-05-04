@@ -62,11 +62,13 @@ class PressPresenter < ApplicationPresenter
   end
 
   def google_analytics_url
-    @press.google_analytics_url.presence || parent_press(@press)&.google_analytics_url.presence
+    # can't use parent's value here, each press must have its own https://tools.lib.umich.edu/jira/browse/HELIO-3362
+    @press.google_analytics_url.presence
   end
 
   def readership_map_url
-    @press.readership_map_url.presence || parent_press(@press)&.readership_map_url.presence
+    # can't use parent's value here, each press must have its own https://tools.lib.umich.edu/jira/browse/HELIO-3362
+    @press.readership_map_url.presence
   end
 
   def typekit
