@@ -2,7 +2,7 @@
 <div class="document col-xs-6 col-md-4">
   <%= link_to(url_for_document(document), document_link_params(document, counter: counter)) do %>
     <div class="thumbnail">
-      <img class=\"img-responsive\" src=<%= raw presenter.work_thumbnail_src(145) %> alt="">
+      <%= presenter.thumbnail_tag(145, class: "img-responsive", alt: "") %>
     </div>
     <div class="caption">
       <h3 class="index_title">
