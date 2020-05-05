@@ -303,7 +303,7 @@ footer.press {
       padding-top: 2em;
 
       a {
-        display: block; 
+        display: block;
         overflow: auto;
       }
 
@@ -654,12 +654,12 @@ footer.press {
         max-width: 80%;
       }
     }
-    
+
     .btn-group.download {
       a.toc-link {
         max-width: 100%;
        }
-   
+
        a.toc-download-link + a.toc-link {
          max-width: 80%;
        }
@@ -966,15 +966,6 @@ footer.press {
     .able {
       box-shadow: 0 0 0 0 transparent;
 
-      video {
-        width: 100% !important;
-        height: auto !important;
-      }
-
-      audio {
-        width: 100% !important;
-      }
-
       .able-seekbar {
         height: 0.8em;
       }
@@ -983,9 +974,7 @@ footer.press {
         height: 2em;
         min-height: 2em;
       }
-
     }
-
   }
 
   #audio-transcript-container {
@@ -1484,22 +1473,22 @@ footer.press {
   }
 
   .monograph .monograph-assets-toc-epub {
-    
+
     .section-container {
       a.toc-link {
         max-width: 65%;
         line-height: 3em;
       }
-     
+
     }
-    
+
     .btn-group.download {
-    
+
       a.toc-link {
         max-width: 100%;
         line-height: 1.5em;
       }
-      
+
       a.toc-download-link + a.toc-link {
         max-width: 65%;
         line-height: 1.5em;
@@ -1561,13 +1550,13 @@ footer.press {
         line-height: 3em;
       }
     }
-    
+
     .btn-group.download {
       a.toc-link {
         max-width: 100%;
         line-height: 1.5em;
       }
-    
+
       a.toc-download-link + a.toc-link {
         max-width: 57%;
         line-height: 1.5em;
