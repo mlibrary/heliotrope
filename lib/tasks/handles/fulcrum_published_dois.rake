@@ -22,7 +22,11 @@ namespace :heliotrope do
       'cv',
       'cb',
       'dialogue',
-      'barpublishing'
+      'barpublishing',
+      'lrcss',
+      'cjs',
+      'csas',
+      'cseas'
     ]
 
     children = []
