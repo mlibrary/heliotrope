@@ -24,8 +24,8 @@ class ApplicationController < ActionController::Base
   with_themed_layout '1_column'
 
   rescue_from ActiveFedora::ObjectNotFoundError, with: :render_unauthorized
-  # rescue_from ActiveFedora::ActiveFedoraError, with: :render_unauthorized
   rescue_from ActiveRecord::RecordNotFound, with: :render_unauthorized
+  rescue_from PageNotFoundError, with: :render_page_not_found
 
   # TODO: See gkostin about this comment if you have any questions.
   # Ensure CanCan by authorize!(<action>, <resource> || <resouce_class>)
@@ -112,6 +112,12 @@ class ApplicationController < ActionController::Base
       respond_to do |format|
         format.html { render 'hyrax/base/unauthorized', status: :unauthorized }
         format.any { head :unauthorized, content_type: 'text/plain' }
+      end
+    end
+
+    def render_page_not_found(_exception)
+      respond_to do |format|
+        format.any { page_not_found }
       end
     end
 

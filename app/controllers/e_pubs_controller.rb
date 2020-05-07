@@ -184,6 +184,7 @@ class EPubsController < CheckpointController
 
     def setup
       @noid = params[:id]
+      raise(PageNotFoundError, "Invalid NOID") unless ValidationService.valid_noid?(@noid)
       @presenter = Hyrax::PresenterFactory.build_for(ids: [@noid], presenter_class: Hyrax::FileSetPresenter, presenter_args: nil).first
       @entity = Sighrax.from_presenter(@presenter)
       @parent_noid = @entity.parent.noid

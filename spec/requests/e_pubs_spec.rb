@@ -26,6 +26,18 @@ RSpec.describe "EPubs", type: :request do
     allow(CounterService).to receive(:from).and_return(counter_service)
   end
 
+  context 'Invalid noid' do
+    describe 'GET /epubs/:id' do
+      subject { get "/epubs/default.css" }
+
+      it do
+        expect { subject }.not_to raise_error
+        expect(response).to have_http_status(:not_found)
+        expect(response.body).to match("404 - The page you were looking for doesn't exist")
+      end
+    end
+  end
+
   context 'Electronic Publication' do
     describe 'GET /epubs/:id' do
       subject { get "/epubs/#{epub.id}" }
