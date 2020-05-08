@@ -1,6 +1,11 @@
-<%= f.input :press,
-            # The possible values for the press selector drop-down
-            collection: @form.select_press,
-            # collection: Hash[current_user.admin_presses.map { |press| [press.name, press.subdomain] }],
-            input_html: { class: 'required' },
-            required: f.object.required?(:press) %>
+<% if action_name == "edit" %>
+  <%# HELIO-2945 %>
+  <%= f.input :press, disabled: true, input_html: { style: "padding: 6px 12px 6px 12px; margin: 0;" } %>
+<% else %>
+  <%= f.input :press,
+              # The possible values for the press selector drop-down
+              collection: @form.select_press,
+              # collection: Hash[current_user.admin_presses.map { |press| [press.name, press.subdomain] }],
+              input_html: { class: 'required' },
+              required: f.object.required?(:press) %>
+<% end %>
