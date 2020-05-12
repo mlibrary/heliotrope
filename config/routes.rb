@@ -214,6 +214,8 @@ Rails.application.routes.draw do
     end
   end
 
+  post 'admin/stats/institution', controller: 'hyrax/admin/stats', action: :institution_report, as: :admin_stats_institution
+
   mount Qa::Engine => '/authorities'
 
   resources :solr_documents, only: [:show], path: '/catalog', controller: 'catalog' do

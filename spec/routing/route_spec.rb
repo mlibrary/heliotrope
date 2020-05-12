@@ -26,4 +26,8 @@ describe 'Routes', type: :routing do
   describe 'Score Catalog' do
     it { expect(get: 'concern/scores/12').to route_to(controller: 'score_catalog', action: 'index', id: '12') }
   end
+
+  describe 'stats' do
+    it { expect(post: 'admin/stats/institution').to route_to(controller: 'hyrax/admin/stats', action: 'institution_report') }
+  end
 end
