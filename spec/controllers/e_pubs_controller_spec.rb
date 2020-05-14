@@ -21,7 +21,7 @@ RSpec.describe EPubsController, type: :controller do
 
         before do
           allow(Hyrax::PresenterFactory).to receive(:build_for).and_return([presenter])
-          get :show, params: { id: :id }
+          get :show, params: { id: 'validnoid' }
         end
 
         it { expect(response).to have_http_status(:unauthorized) }
@@ -112,7 +112,7 @@ RSpec.describe EPubsController, type: :controller do
 
         before do
           allow(Hyrax::PresenterFactory).to receive(:build_for).and_return([presenter])
-          get :file, params: { id: :id, file: 'META-INF/container', format: 'xml' }
+          get :file, params: { id: 'validnoid', file: 'META-INF/container', format: 'xml' }
         end
 
         it { expect(response).to have_http_status(:unauthorized) }

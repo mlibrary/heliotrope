@@ -19,16 +19,16 @@ RSpec.describe ApplicationController, type: :controller do
       expect(response).to be_unauthorized
     end
 
-    # it "ActiveFedora::ActiveFedoraError with response unauthorized" do
-    #   controller.the_exception = ActiveFedora::ActiveFedoraError.new
-    #   get :trigger
-    #   expect(response).to be_unauthorized
-    # end
-
     it "ActiveRecord::RecordNotFound with response unauthorized" do
       controller.the_exception = ActiveRecord::RecordNotFound.new
       get :trigger
       expect(response).to be_unauthorized
+    end
+
+    it "FileNotFoundError with response not found" do
+      controller.the_exception = PageNotFoundError.new
+      get :trigger
+      expect(response).to be_not_found
     end
   end
 
