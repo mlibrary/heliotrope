@@ -16,7 +16,7 @@ addons:
   apt:
     packages:
       - dpkg # fix for travis issue https://github.com/travis-ci/travis-ci/issues/9361
-      - poppler-utils
+      - qpdf
   chrome: stable
 services:
   - mysql

@@ -497,7 +497,7 @@ $ahpi-white: #fff;
 // typography
 @import url('https://fonts.googleapis.com/css?family=Cardo|Lato:300,400&display=swap');
 @mixin lato {
-  font-family: 'Lato', sans-serif;  
+  font-family: 'Lato', sans-serif;
 }
 @mixin cardo {
   font-family: 'Cardo', serif;
@@ -2048,7 +2048,7 @@ $barpublishing-white: #fff;
 
   // buttons
 
-  :focus, 
+  :focus,
   .btn-group > .btn:focus {
 
     outline: 3px solid $barpublishing-brand-color;
@@ -2059,7 +2059,7 @@ $barpublishing-white: #fff;
   }
 
   .navbar, footer {
-     :focus, 
+     :focus,
      .navbar .btn-group > .btn:focus {
 
       outline: 3px solid $barpublishing-grey-1;
@@ -2305,7 +2305,7 @@ $barpublishing-white: #fff;
     font-size: 24px;
     line-height: 1.3em;
   }
-  
+
   // tabs
   .nav-tabs > li > h2 > a {
     color: $barpublishing-grey-3;
@@ -2315,20 +2315,11 @@ $barpublishing-white: #fff;
     color: $barpublishing-brand-color;
   }
 
-  .nav-tabs > li.active > h2 > a, 
-  .nav-tabs > li.active > h2 > a:hover, 
+  .nav-tabs > li.active > h2 > a,
+  .nav-tabs > li.active > h2 > a:hover,
   .nav-tabs > li.active > h2 > a:focus {
     color: $barpublishing-link;
     text-decoration: none;
-  }
-
-  // toc
-  .monograph .monograph-assets-toc-epub ul.toc li {
-    border-bottom: 1px solid #dfdfdf;
-  }
-
-  .monograph .monograph-assets-toc-epub ul.toc li:first-child {
-    border-top: 1px solid #dfdfdf;
   }
 
   // search resources
@@ -2402,7 +2393,7 @@ $barpublishing-white: #fff;
 
     .press-block-a {
       .custom-footer {
-        img { 
+        img {
           margin-bottom: 20px;
         }
         span {
@@ -2415,7 +2406,7 @@ $barpublishing-white: #fff;
         span.web {
           margin-bottom: 20px;
         }
-      
+
         p.social {
           a {
             padding-right: 0.75em;
@@ -2515,23 +2506,23 @@ $barpublishing-white: #fff;
     }
 
   }
-  
+
   @media only screen and (max-width : 992px) {
-    
+
     .navbar-header {
       float: none;
       margin-bottom: 3em;
     }
-  
+
     .navbar-toggle {
       display: block;
     }
-  
+
     .navbar-collapse {
       border-top: 1px solid transparent;
       box-shadow: inset 0 1px 0 rgba(255,255,255,0.1);
     }
-  
+
     .navbar-collapse.collapse {
       display: none!important;
     }
@@ -2540,7 +2531,7 @@ $barpublishing-white: #fff;
       padding-top: 1em;
       padding-left: 1em;
     }
-  
+
     .navbar-default .navbar-nav {
       padding-top: 0;
       padding-right: 0;
@@ -2554,17 +2545,17 @@ $barpublishing-white: #fff;
     .navbar-nav>li {
       float: none;
     }
-  
+
     .navbar-nav>li>a {
       padding-top: 10px;
       padding-bottom: 10px;
       line-height: 3.5rem;
     }
 
-    .navbar-collapse.collapse.in { 
+    .navbar-collapse.collapse.in {
       display: block!important;
     }
-  
+
     .collapsing {
       overflow: hidden!important;
     }
@@ -2580,7 +2571,7 @@ $barpublishing-white: #fff;
     .navbar-form .input-group .input-group-btn {
       width: 1%;
     }
-  
+
   }
 
 
@@ -2927,7 +2918,7 @@ $lever-black-80: #342f2e;
       color: $lever-nav-brand;
       @include scala-sans;
       font-size: 1.8em;
-      height: unset;      
+      height: unset;
       line-height: unset;
       padding: 1.3rem 1.6rem 1.3rem 1.5rem;
 
@@ -2935,10 +2926,10 @@ $lever-black-80: #342f2e;
         display: inline;
         margin-right: .55rem;
         vertical-align: middle;
-        
+
       }
     }
-    
+
 
     form.search-form {
       padding-top: 2.2rem;
@@ -2963,7 +2954,7 @@ $lever-black-80: #342f2e;
   }
 
   .navbar-default .navbar-nav {
-    @include scala-sans;  
+    @include scala-sans;
     list-style: none;
     font-size: 1.64rem;
     padding-top: 3.5rem;
@@ -2983,7 +2974,7 @@ $lever-black-80: #342f2e;
 
   // press catalog
   .press {
-    
+
     .results-container {
 
       .document {
@@ -3271,29 +3262,29 @@ $lever-black-80: #342f2e;
     }
 
   }
-  
+
   @media only screen and (max-width : 992px) {
     #main {
       margin-top: 11.5em;
     }
-    
+
     .navbar-header {
       float: none;
     }
-  
+
     .navbar-toggle {
       display: block;
     }
-  
+
     .navbar-collapse {
       border-top: 1px solid transparent;
       box-shadow: inset 0 1px 0 rgba(255,255,255,0.1);
     }
-  
+
     .navbar-collapse.collapse {
       display: none!important;
     }
-  
+
     .navbar-default .navbar-nav {
       padding-top: 0;
       padding-right: 0;
@@ -3303,17 +3294,17 @@ $lever-black-80: #342f2e;
     .navbar-nav>li {
       float: none;
     }
-  
+
     .navbar-nav>li>a {
       padding-top: 10px;
       padding-bottom: 10px;
       line-height: 3.5rem;
     }
 
-    .navbar-collapse.collapse.in { 
+    .navbar-collapse.collapse.in {
       display: block!important;
     }
-  
+
     .collapsing {
       overflow: hidden!important;
     }
@@ -3329,7 +3320,7 @@ $lever-black-80: #342f2e;
     .navbar-form .input-group .input-group-btn {
       width: 1%;
     }
-  
+
   }
 
   @media only screen and (max-width : 768px) {
@@ -4429,15 +4420,15 @@ $gabii-link-hover:    #1e5667;
 	    img {
      	  width: 180px;
    	  }
-    } 	
+    }
   }
 }
 ///////////////////////////////////////////////
 //
 // University of Michigan - LRCCS, CJS, CSAS
 // CSEAS
-// 
-// Kenneth G. Lieberthal and Richard H. Rogel 
+//
+// Kenneth G. Lieberthal and Richard H. Rogel
 // Center for Chinese Studies
 // Center for Japanese Studies
 // Center for South Asian Studies
@@ -4471,7 +4462,7 @@ $gabii-link-hover:    #1e5667;
 	    img {
      	  width: 150px;
    	  }
-    } 	
+    }
   }
 
   // footer
@@ -4484,7 +4475,7 @@ $gabii-link-hover:    #1e5667;
     #brand-bar form.search-form, .navbar-form {
       width: 200px;
     }
-  
+
   }
 
   @media only screen and (max-width : 768px) {
@@ -4499,7 +4490,7 @@ $gabii-link-hover:    #1e5667;
     .navbar-form .input-group .input-group-btn {
       width: 1%;
     }
-    
+
     #brand-bar .navbar-brand {
       max-width: 250px;
     }
@@ -4700,7 +4691,7 @@ $mps-teal-100: #e9f2f5;
     .breadcrumb {
       background-color: $mps-blue-100;
     }
-    
+
   }
 
   // press catalog
@@ -4937,9 +4928,9 @@ $mps-teal-100: #e9f2f5;
     #brand-bar form.search-form, .navbar-form {
       width: 200px;
     }
-  
+
   }
-  
+
   @media only screen and (max-width : 992px) {
     #brand-bar .navbar-brand {
       font-size: 1.4em;
@@ -5295,7 +5286,7 @@ $unc-black-80: #342f2e;
     }
 
     button.search-submit {
-      background-color: $unc-link; 
+      background-color: $unc-link;
       color: $unc-white;
       height: 34px;
     }
@@ -5475,7 +5466,7 @@ $unc-black-80: #342f2e;
 
   //footer
   footer {
- 
+
     .press-block-a,
     .press-block-b {
       background-color:  $unc-accent-color-light;

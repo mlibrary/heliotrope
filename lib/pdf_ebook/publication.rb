@@ -46,7 +46,7 @@ module PDFEbook
       end
 
       # Takes Origami::OutlineItem and 1-based depth
-      def iterate_outlines(outline, depth) # rubocop:disable Metrics/CyclomaticComplexity
+      def iterate_outlines(outline, depth) # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
         intervals = []
         index = 0
         until outline.nil?
@@ -60,7 +60,12 @@ module PDFEbook
               next
             end
             page = target
+          elsif page.is_a?(Origami::LiteralString)
+            # At this point some ToC entries are "named destinations", essentially strings for some...
+            # different type of lookup directory than a page number type destination. See HELIO-3377.
+            page = @pdf.get_destination_by_name(page)
           end
+
           page = page&.[](0)&.solve # gets to Origami::Page
           page ||= outline[:Dest]&.solve&.[](0)&.solve
           unless page.nil?

@@ -48,49 +48,37 @@ class UnpackJob < ApplicationJob
       # things happen with hydra-derivatives. I guess.
       FileUtils.mkdir_p File.dirname root_path unless Dir.exist? File.dirname root_path
 
-      # in general `qpf` (linearize_pdf) raises (sometimes insignificant) errors the most, so do it last
-      create_pdf_chapters(id, root_path, file)
       linearize_pdf(root_path, file)
+      create_pdf_chapters(id, root_path, file)
     end
 
     def create_pdf_chapters(id, root_path, file) # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
-      return unless system("which pdfseparate > /dev/null 2>&1") && system("which pdfunite > /dev/null 2>&1")
+      return unless system("which qpdf > /dev/null 2>&1")
+      return unless File.exist? "#{root_path}.pdf"
 
       # Grab the ToC as is done for the catalog ToC tab... note the force_encoding("utf-8") is not done here cause...
       # it's not done in Sighrax::Asset.content() which feeds the normal ToC creation, so I assume it's OK without...
       # for this purpose
-      pdf_ebook_presenter = PDFEbookPresenter.new(PDFEbook::Publication.from_string_id(FileSet.find(id).original_file.content, id))
+      pdf_ebook_presenter = PDFEbookPresenter.new(PDFEbook::Publication.from_path_id(root_path + '.pdf', id))
       return unless pdf_ebook_presenter.intervals?
 
+      # all the intervals have are start pages, so we'll gather those and then move on to calculating end pages
       chapters = []
       pdf_ebook_presenter.intervals.each do |interval|
         chapters << { level: interval.level,
                       start_page: interval.cfi.gsub('page=', '').to_i }
       end
 
-      # Naively run through and assume each section ends on the page before the next one starts.
-      # This makes books with a cleaner layout look better at the expense of a few problem corner cases.
-      last_level = 0
-      chapters_out = []
       chapters.each_with_index do |chapter, index|
-        chapters_out[index] = chapter
-
-        if index.zero?
-        elsif chapter[:level] > last_level
-        elsif chapter[:level] == last_level
-          chapters_out[index - 1][:end_page] = chapters_out[index - 1][:start_page] == chapter[:start_page] ? chapter[:start_page] : chapter[:start_page] - 1
-        elsif chapter[:level] < last_level
-          # if we just moved back up to a higher ToC level (lower number!), the last chapter/section is finished,...
-          # as are any previous sections on this higher ToC level
-          chapters_out[index - 1][:end_page] = chapters_out[index - 1][:start_page] == chapter[:start_page] ? chapter[:start_page] : chapter[:start_page] - 1
-          chapters_out.map do |chapter_out|
-            if chapter_out[:end_page].blank? && chapter_out[:level] == chapter[:level]
-              chapter_out[:end_page] = chapters_out[index - 1][:start_page] == chapter[:start_page] ? chapter[:start_page] : chapter[:start_page] - 1
-              break
-            end
+        chapters[0...index].map do |chapter_out|
+          # if we just moved back up to a "higher" ToC level (lower level number!), then all previous sections on...
+          # this ToC level or "below" (their nested children with a higher level number) are terminated.
+          if chapter_out[:end_page].blank? && chapter_out[:level] >= chapter[:level]
+            # Note we'll always include the first page of the following section, as there are inevitable edge cases...
+            # (usually in smaller/lower subsections) where that page is needed, and we have no way to detect that.
+            chapter_out[:end_page] = chapter[:start_page]
           end
         end
-        last_level = chapter[:level]
       end
 
       chapter_dir = File.join(root_path + '_chapters')
@@ -98,19 +86,13 @@ class UnpackJob < ApplicationJob
       FileUtils.move(chapter_dir, UnpackService.remove_path_from_noid(id, 'pdf_ebook_chapters')) if Dir.exist? chapter_dir
       FileUtils.mkdir_p chapter_dir unless Dir.exist? chapter_dir
 
-      chapters_out.each_with_index do |chapter_out, index|
-        # some very dodgy ToC's can tie up a worker for a very, very long time with links to page 0, `pdfunite` eventually fails somehow
+      chapters.each_with_index do |chapter_out, index|
         raise "This ToC has bookmarks pointing to page 0" if chapter_out[:start_page] == 0 || chapter_out[:end_page] == 0
-        # now that Travis is using Xenial the default poppler-utils allows the %06d format specifier, zero-padding...
-        # to 6 digits and bypassing sort problems when assembling the pages into section files
         if chapter_out[:end_page].present?
-          run_command("pdfseparate -f #{chapter_out[:start_page]} -l #{chapter_out[:end_page]} #{file.path} #{chapter_dir}/#{id}_page_%06d.pdf")
+          run_command("qpdf --empty --pages #{file.path} #{chapter_out[:start_page]}-#{chapter_out[:end_page]} -- #{chapter_dir}/#{index}.pdf")
         else
-          run_command("pdfseparate -f #{chapter_out[:start_page]} #{file.path} #{chapter_dir}/#{id}_page_%06d.pdf")
+          run_command("qpdf --empty --pages #{file.path} #{chapter_out[:start_page]}-z -- #{chapter_dir}/#{index}.pdf")
         end
-        run_command("pdfunite #{chapter_dir}/#{id}_page_*.pdf #{chapter_dir}/#{index}.pdf")
-        # clean up page files before next chapter is built
-        Dir.glob("#{chapter_dir}/#{id}_page_*.pdf").each { |page_file| File.delete(page_file) }
       end
     end
 
