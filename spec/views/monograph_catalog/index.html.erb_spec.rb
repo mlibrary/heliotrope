@@ -29,6 +29,8 @@ RSpec.describe "monograph_catalog/index.html.erb" do
     stub_template "catalog/_search_results" => "<!-- render-template-catalog/_search_results -->"
     assign(:presenter, presenter)
     assign(:ebook_download_presenter, ebook_download_presenter)
+    assign(:stats_graph_data, '[{"label":"Total Pageviews","data":[]}]')
+    assign(:pageviews, 0)
     allow(view).to receive(:t).with(any_args) { |value| value }
     allow(presenter).to receive(:date_uploaded).and_return(DateTime.now)
     allow(presenter).to receive(:creator).and_return([])

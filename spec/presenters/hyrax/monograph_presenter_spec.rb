@@ -16,7 +16,6 @@ RSpec.describe Hyrax::MonographPresenter do
 
     it do
       is_expected.to be_a CommonWorkPresenter
-      is_expected.to be_a AnalyticsPresenter
       is_expected.to be_a CitableLinkPresenter
       is_expected.to be_a OpenUrlPresenter
       is_expected.to be_a TitlePresenter

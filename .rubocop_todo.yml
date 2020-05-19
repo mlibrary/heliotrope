@@ -164,14 +164,12 @@ Style/CommentedKeyword:
 
 Style/DateTime:
   Exclude:
-    - 'app/presenters/concerns/cc_analytics_presenter.rb'
     - 'app/services/counter_service.rb'
     - 'app/services/unpack_service.rb'
     - 'spec/factories/monographs.rb'
     - 'spec/features/press_catalog_spec.rb'
     - 'spec/features/press_catalog_sort_spec.rb'
     - 'spec/models/monograph_spec.rb'
-    - 'spec/presenters/concerns/cc_analytics_presenter_spec.rb'
     - 'spec/views/monograph_catalog/index.html.erb_spec.rb'
 
 Style/EvalWithLocation:
@@ -197,7 +195,3 @@ Style/GuardClause:
 Style/NumericLiterals:
   Exclude:
     - 'config/initializers/mailboxer.rb'
-
-Style/RedundantReturn:
-  Exclude:
-    - 'app/presenters/concerns/analytics_presenter.rb'

@@ -2,6 +2,7 @@
 
 class ScoreCatalogController < ::CatalogController
   before_action :load_presenter, only: %i[index facet]
+  before_action :load_stats, only: %i[index facet]
 
   self.theme = 'hyrax'
   with_themed_layout 'catalog'
@@ -35,5 +36,11 @@ class ScoreCatalogController < ::CatalogController
       raise CanCan::AccessDenied unless current_ability&.can?(:read, score_id)
       @presenter = Hyrax::PresenterFactory.build_for(ids: [score_id], presenter_class: Hyrax::ScorePresenter, presenter_args: current_ability).first
       @ebook_download_presenter = EBookDownloadPresenter.new(@presenter, current_ability, current_actor)
+    end
+
+    def load_stats
+      stats_graph_service = StatsGraphService.new(@presenter.monograph_analytics_ids, @presenter.date_uploaded)
+      @stats_graph_data = stats_graph_service.pageviews_over_time_graph_data
+      @pageviews = stats_graph_service.pageviews
     end
 end
