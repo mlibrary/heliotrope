@@ -34,9 +34,20 @@ namespace :heliotrope do
     rows.each do |row|
       row_num += 1
 
-      # For now this is the only place where we set a Monograph's press from a CSV column. Handle separately.
-      # Every row should have a press set, but fall back to 'michigan'
-      press = row['Press'].present? && all_michigan_presses.include?(row['Press'].strip) ? row['Press'].strip : 'michigan'
+      # For now this is the only place where we set a Monograph's press from a CSV column. Handle this field separately.
+      # Every row should have a press set, but some use TMM names that need mapping to an actual Fulcrum subdomain.
+      # Fall back to 'michigan' if no press is set or the final value is not michigan or one of its sub-presses.
+
+      tmm_press_name_map = { 'umccs' => 'lrccs', 'umcjs' => 'cjs', 'umsa' => 'csas', 'umsea' => 'cseas' }
+
+      press = row['Press']&.strip
+
+      press = if all_michigan_presses.include?(press)
+                press
+              else
+                tmm_press_name_map[press].presence || 'michigan'
+              end
+
       clean_isbns = []
 
       # ISBN(s) is a multi-valued field with entries separated by a ';'
