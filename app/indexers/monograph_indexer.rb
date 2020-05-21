@@ -9,6 +9,12 @@ class MonographIndexer < Hyrax::WorkIndexer
       press_name = press.name unless press.nil?
       solr_doc[Solrizer.solr_name('press_name', :symbol)] = press_name
 
+      # This facet is for michigan only, to highlight sub-press Monographs only. I think I'd rather conditionally...
+      # index the facetable value than put any more press-specific logic in the controllers. Could change later!
+      if press&.parent&.subdomain == 'michigan'
+        solr_doc[Solrizer.solr_name('press_name', :facetable)] = press_name
+      end
+
       solr_doc[Solrizer.solr_name('title', :sortable)] = normalize_for_sort(object&.title&.first)
 
       # now that the exporter pulls directly from Solr, we need suitable values for creator/contributor
