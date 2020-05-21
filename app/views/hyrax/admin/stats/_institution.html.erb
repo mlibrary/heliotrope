@@ -1,0 +1,50 @@
+<% provide :page_header do %>
+  <h1><span class="fa fa-graduation-cap"></span>Institution Usage Summary Reports</h1>
+<% end %>
+
+<br/>
+<br/>
+
+<p>
+This form will generate a <a href="https://www.projectcounter.org/code-of-practice-five-sections/abstract/">COUNTER5</a> based Institution Usage report
+that will be emailed to the provided email address.</p>
+<p>Available Collections/Press/Publishers are based on your permissions.</p>
+<p>While this report is derived from COUNTER5 stats, it itself is <b>not</b> an official
+  <a href="https://www.projectcounter.org/code-of-practice-five-sections/4-1-usage-reports/">COUNTER5 report type.</a>
+</p>
+
+<br/>
+<br/>
+
+<%= form_with(url: "/admin/stats/institution", method: "post") do %>
+  <div class="form-group row">
+    <div class="col-sm-2">
+      <label for="email" class="col-form-label">Email</label>
+      <input type="text" name="email" value="<%= current_user.email %>" class="form-control">
+    </div>
+    <div class="col-sm-2">
+      <label for="press" class="col-form-label">Press</label>
+      <%= select_tag(:press, options_for_select(current_user.admin_presses.map { |p| [p.name, p.id] }), class: 'form-control') %>
+    </div>
+    <div class="col-sm-1">
+      <label for="start_date" class="col-form-label">Start Date</label>
+      <input type="text" name="start_date" aria-label="Start date in yyyy-mm-dd format" class="counter-start-date form-control" />
+    </div>
+    <div class="col-sm-1">
+      <label for="end_date" class="col-form-label">End Date</label>
+      <input type="text" name="end_date" aria-label="End date in yyyy-mm-dd format" class="counter-end-date form-control" />
+    </div>
+    <div class="col-sm-1">
+      <label for="report_type" class="col-form-label">Report Type</label>
+      <select name="report_type" class="form-control">
+        <option value="request">Requests ("downloads")</option>
+        <option value="investigation">Investigations ("views", includes Requests")</option>
+      </select>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-sm-1">
+      <button type="submit" class="btn btn-primary form-control">Get Report</button>
+    </div>
+  </div>
+<% end %>

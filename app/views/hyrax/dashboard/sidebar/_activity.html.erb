@@ -42,6 +42,10 @@
     <%= menu.nav_link(hyrax.admin_stats_path + ';partial=dimensions') do %>
       <span class="fa fa-cubes"></span> <span class="sidebar-action-text">Dimensions Reports</span>
     <% end %>
+
+    <%= menu.nav_link(hyrax.admin_stats_path + ';partial=institution') do %>
+      <span class="fa fa-graduation-cap"></span> <span class="sidebar-action-text">Institution Usage</span>
+    <% end %>
   <% end %>
 </li>
 <% end %>
