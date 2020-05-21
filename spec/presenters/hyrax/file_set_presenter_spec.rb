@@ -11,7 +11,6 @@ RSpec.describe Hyrax::FileSetPresenter do
     subject { described_class.new(nil, nil) }
 
     it { is_expected.to be_a TitlePresenter }
-    it { is_expected.to be_a AnalyticsPresenter }
     it { is_expected.to be_a CitableLinkPresenter }
     it { is_expected.to be_a EmbedCodePresenter }
     it { is_expected.to be_a OpenUrlPresenter }

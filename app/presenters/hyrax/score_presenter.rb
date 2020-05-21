@@ -3,7 +3,6 @@
 module Hyrax
   class ScorePresenter < Hyrax::WorkShowPresenter
     include CommonWorkPresenter
-    include AnalyticsPresenter
     include CitableLinkPresenter
     include OpenUrlPresenter
     include TitlePresenter
@@ -31,14 +30,6 @@ module Hyrax
 
     def monograph_analytics_ids
       ordered_file_sets_ids + [id]
-    end
-
-    def pageviews_count
-      @pageviews ||= pageviews_by_ids(monograph_analytics_ids) # rubocop:disable Naming/MemoizedInstanceVariableName TODO: why is this not just pageviews? Change here and in monograph_presenter?
-    end
-
-    def pageviews_over_time_graph_data
-      [{ "label": "Total Pageviews", "data": flot_pageviews_over_time(monograph_analytics_ids).to_a.sort }]
     end
 
     def catalog_url

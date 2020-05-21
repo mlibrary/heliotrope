@@ -3,7 +3,6 @@
 module Hyrax
   class FileSetPresenter
     include TitlePresenter
-    include AnalyticsPresenter
     include CitableLinkPresenter
     include EmbedCodePresenter
     include OpenUrlPresenter
@@ -114,11 +113,6 @@ module Hyrax
       else
         allow_hi_res&.downcase == 'yes'
       end
-    end
-
-    # Google Analytics
-    def pageviews_over_time_graph_data
-      [{ "label": "Total Pageviews", "data": flot_pageviews_over_time(id).to_a.sort }]
     end
 
     # Technical Metadata

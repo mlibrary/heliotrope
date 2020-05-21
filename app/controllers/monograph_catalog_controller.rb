@@ -2,6 +2,7 @@
 
 class MonographCatalogController < ::CatalogController
   before_action :load_presenter, only: %i[index facet]
+  before_action :load_stats, only: %i[index facet]
   after_action :add_counter_stat, only: %i[index]
 
   self.theme = 'hyrax'
@@ -87,6 +88,12 @@ class MonographCatalogController < ::CatalogController
       Rails.logger.error(%Q|[RSOLR ERROR TRY:#{retries}] #{e} #{e.backtrace.join("\n")}|)
       retries += 1
       retry if retries < 3
+    end
+
+    def load_stats
+      stats_graph_service = StatsGraphService.new(@presenter.monograph_analytics_ids, @presenter.date_uploaded)
+      @stats_graph_data = stats_graph_service.pageviews_over_time_graph_data
+      @pageviews = stats_graph_service.pageviews
     end
 
     def add_counter_stat

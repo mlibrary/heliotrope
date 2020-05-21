@@ -3,15 +3,12 @@
 module Hyrax
   class MonographPresenter < WorkShowPresenter
     include CommonWorkPresenter
-    include AnalyticsPresenter
     include CitableLinkPresenter
     include OpenUrlPresenter
     include TitlePresenter
     include SocialShareWidgetPresenter
     include FeaturedRepresentatives::MonographPresenter
     include ActionView::Helpers::UrlHelper
-
-    attr_accessor :pageviews
 
     delegate :date_modified, :date_uploaded, :location, :description,
              :creator_display, :creator_full_name, :contributor,
@@ -184,14 +181,6 @@ module Hyrax
 
     def monograph_analytics_ids
       ordered_file_sets_ids + [id]
-    end
-
-    def pageviews_count
-      @pageviews ||= pageviews_by_ids(monograph_analytics_ids)
-    end
-
-    def pageviews_over_time_graph_data
-      [{ "label": "Total Pageviews", "data": flot_pageviews_over_time(monograph_analytics_ids).to_a.sort }]
     end
 
     def buy_url?

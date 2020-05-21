@@ -14,6 +14,11 @@ Hyrax::FileSetsController.class_eval do
       else
         CounterService.from(self, presenter).count
       end
+
+      stats_graph_service = StatsGraphService.new(params[:id], presenter.date_uploaded)
+      @stats_graph_data = stats_graph_service.pageviews_over_time_graph_data
+      @pageviews = stats_graph_service.pageviews
+
       respond_to do |wants|
         wants.html { presenter }
         wants.json { presenter }
