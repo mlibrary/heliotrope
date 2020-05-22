@@ -30,4 +30,9 @@ module BannerHelper
   def banner_message
     controller.is_a?(PressCatalogController) ? 'press_catalog.banner' : 'monograph_catalog.banner'
   end
+
+  def show_eula?(subdomain)
+    return false unless controller.is_a?(PressCatalogController) || controller.is_a?(::MonographCatalogController)
+    %w[barpublishing].include? subdomain
+  end
 end

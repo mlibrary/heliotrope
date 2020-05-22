@@ -110,4 +110,70 @@ describe BannerHelper do
       it { is_expected.to eq nag_product }
     end
   end
+
+  describe "#show_eula?" do
+    subject { show_eula?(subdomain) }
+
+    context 'press wants EULA' do
+      let(:subdomain) { 'barpublishing' }
+
+      context 'not press or monograph catalog' do
+        before do
+          allow(controller).to receive(:is_a?).with(PressCatalogController).and_return(false)
+          allow(controller).to receive(:is_a?).with(MonographCatalogController).and_return(false)
+        end
+
+        it { is_expected.to be false }
+      end
+
+      context 'press catalog' do
+        before do
+          allow(controller).to receive(:is_a?).with(PressCatalogController).and_return(true)
+          allow(controller).to receive(:is_a?).with(MonographCatalogController).and_return(false)
+        end
+
+        it { is_expected.to be true }
+      end
+
+      context 'monograph catalog' do
+        before do
+          allow(controller).to receive(:is_a?).with(PressCatalogController).and_return(false)
+          allow(controller).to receive(:is_a?).with(MonographCatalogController).and_return(true)
+        end
+
+        it { is_expected.to be true }
+      end
+    end
+
+    context 'press does not want EULA' do
+      let(:subdomain) { 'blahpress' }
+
+      context 'not press or monograph catalog' do
+        before do
+          allow(controller).to receive(:is_a?).with(PressCatalogController).and_return(false)
+          allow(controller).to receive(:is_a?).with(MonographCatalogController).and_return(false)
+        end
+
+        it { is_expected.to be false }
+      end
+
+      context 'press catalog' do
+        before do
+          allow(controller).to receive(:is_a?).with(PressCatalogController).and_return(true)
+          allow(controller).to receive(:is_a?).with(MonographCatalogController).and_return(false)
+        end
+
+        it { is_expected.to be false }
+      end
+
+      context 'monograph catalog' do
+        before do
+          allow(controller).to receive(:is_a?).with(PressCatalogController).and_return(false)
+          allow(controller).to receive(:is_a?).with(MonographCatalogController).and_return(true)
+        end
+
+        it { is_expected.to be false }
+      end
+    end
+  end
 end
