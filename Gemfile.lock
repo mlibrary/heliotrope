@@ -626,7 +626,7 @@ GEM
       pry (>= 0.10.4)
     public_suffix (4.0.1)
     pul_uv_rails (2.0.1)
-    puma (3.12.4)
+    puma (3.12.6)
     qa (2.2.0)
       activerecord-import
       deprecation
