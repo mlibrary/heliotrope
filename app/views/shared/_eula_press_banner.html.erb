@@ -1,0 +1,14 @@
+<% banner_cookie_name = press_presenter.subdomain + "_eula_press_banner" %>
+<div class="alert alert-info alert-dismissible banner container" role="alert" style="display: none;">
+  <button type="button" onclick="banner_button_no()" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&#x2715</span></button>
+  <p class="message"><%= raw t("eula_message.#{press_presenter.subdomain}") %></p>
+  <button type="button" onclick="banner_button_yes()" class="btn btn-default btn-lg" data-dismiss="alert" aria-label="I Agree. Close Dialog">I Agree</button>
+</div>
+<script type="text/javascript">
+    function banner_button_no(){
+        Cookies.set('<%= banner_cookie_name %>', 'eula_no_agreement', { expires: 182 });
+    }
+    function banner_button_yes(){
+        Cookies.set('<%= banner_cookie_name %>', 'eula_agreement', { expires: 182 });
+    }
+</script>
