@@ -91,8 +91,8 @@ en:
       max_size_error: "File size should be less than %{max_size}"
   eula_message:
     barpublishing: |
-      Your use of this Platform is subject to <a href="https://www.barpublishing.com/pdf/BAR%20EULA%2017-04-2020.pdf">BAR’s End User License Agreement</a>. Please read it carefully.<br><br>
-      Materials on the Platform are for the use of authorised users only. Giving access in any form to non-authorised users is prohibited.
+      <span>Your use of this Platform is subject to <a href="https://www.barpublishing.com/pdf/BAR%20EULA%2017-04-2020.pdf">BAR’s End User License Agreement</a>. Please read it carefully.</span>
+      <span>Materials on the Platform are for the use of authorised users only. Giving access in any form to non-authorised users is prohibited.</span>
   exclusive_to_platform: "Exclusive to Platform?"
   external_resource_url: "External Resource URL"
   file_format: "File Format"

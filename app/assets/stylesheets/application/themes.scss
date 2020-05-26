@@ -2195,6 +2195,39 @@ $barpublishing-white: #fff;
 
   }
 
+  .alert.banner {
+    background-color: #dfdfdf;
+    color: $barpublishing-link;
+    border-color: $barpublishing-link-hover;
+    font-size: 16px;
+    padding: 1.8em;
+    border-width: .5px;
+    font-weight: bold;
+
+    span {
+      display: block;
+    }
+
+    span:nth-child(2) {
+      margin-top: 10px;
+    }
+
+    .btn-default {
+      font-size: 16px;
+    }
+
+    .btn-default:hover, .btn-default:active {
+      background-color: $barpublishing-black-80;
+      border-color: $barpublishing-black-80;
+    }
+  }
+
+  
+  .alert-dismissible .close {
+    top: -18px;
+    right: -16px;
+  }
+
   .press {
     .results-container {
 
