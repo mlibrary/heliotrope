@@ -91,6 +91,7 @@ class PressCatalogController < ::CatalogController
             blacklight_config.add_facet_field Solrizer.solr_name('publisher', :facetable), label: "Publisher", limit: 5, url_method: :facet_url_helper, sort: sort
           end
           blacklight_config.add_facet_field Solrizer.solr_name('series', :facetable), label: "Series", limit: 5, url_method: :facet_url_helper, sort: sort
+          blacklight_config.add_facet_field Solrizer.solr_name('press_name', :facetable), label: "Source", limit: 5, url_method: :facet_url_helper, sort: sort
           blacklight_config.add_facet_fields_to_solr_request!
         end
 
