@@ -10,7 +10,7 @@ module Import
 
     def field_values(object, row, attrs, errors = {}, row_num = 0) # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
       md = Redcarpet::Markdown.new(Redcarpet::Render::StripDown, space_after_headers: true)
-      missing_fields_errors, controlled_vocab_errors, date_errors = Array.new(3) { [] }
+      missing_fields_errors, date_errors = Array.new(2) { [] }
 
       fields = METADATA_FIELDS.select { |f| [:universal, object].include? f[:object] } + FILE_SET_FLAG_FIELDS
       fields.each do |field|
@@ -29,11 +29,6 @@ module Import
           # using true/false values in metadata instead of yes/no, as false will not pass through.
           next if field_values.none?
 
-          if field[:acceptable_values]
-            # when using controlled vocabularies make everything lowercase (Yes/No etc)
-            field_values.map!(&:downcase)
-            field_value_acceptable(field[:field_name], field[:acceptable_values], field_values, controlled_vocab_errors)
-          end
           if field[:date_format]
             field_values = field_check_dates(field[:field_name], field_values, date_errors)
             next if field_values.blank?
@@ -46,7 +41,7 @@ module Import
       end
       # These checks were designed to check FileSet metadata. We never set, e.g. required fields on Monograph...
       # metadata so don't bother with errors on the Monograph row.
-      combine_field_errors(errors, row_num, missing_fields_errors, controlled_vocab_errors, date_errors) if object == :file_set
+      combine_field_errors(errors, row_num, missing_fields_errors, date_errors) if object == :file_set
     end
 
     private
@@ -116,14 +111,6 @@ module Import
         is_multivalued == :no ? field_values.first : Array.wrap(field_values)
       end
 
-      def field_value_acceptable(field_name, acceptable_values, actual_values, controlled_vocab_errors)
-        actual_values.each do |actual_value|
-          unless acceptable_values.map(&:downcase).include? actual_value.downcase
-            controlled_vocab_errors << field_name + ' - "' + actual_value + '"'
-          end
-        end
-      end
-
       def field_check_dates(field_name, actual_values, date_errors)
         output_dates = []
         actual_values.each do |actual_value|
@@ -153,18 +140,17 @@ module Import
         y + '-' + m + '-' + d
       end
 
-      def combine_field_errors(errors, row_num, missing_fields_errors, controlled_vocab_errors, date_errors)
+      def combine_field_errors(errors, row_num, missing_fields_errors, date_errors)
         message = ''
         message += missing_fields_errors.empty? ? '' : "\nmissing required fields: \n" + missing_fields_errors.join(', ')
-        message += controlled_vocab_errors.empty? ? '' : "\nunacceptable values for: \n" + controlled_vocab_errors.join(', ')
         message += date_errors.empty? ? '' : "\nthese dates cannot be padded to a YYYY-MM-DD value and will be discarded: \n" + date_errors.join(', ')
-        message = maybe_hide_errors(message, row_num, missing_fields_errors, controlled_vocab_errors, date_errors)
+        message = maybe_hide_errors(message, row_num, missing_fields_errors, date_errors)
         errors[row_num] = message if message.present?
       end
 
-      def maybe_hide_errors(message, row_num, missing_fields_errors, controlled_vocab_errors, date_errors)
+      def maybe_hide_errors(message, row_num, missing_fields_errors, date_errors)
         # silence error data for row 3, which we've been using for the cover
-        if row_num == 3 || (missing_fields_errors.empty? && controlled_vocab_errors.empty? && date_errors.empty?)
+        if row_num == 3 || (missing_fields_errors.empty? && date_errors.empty?)
           ''
         else
           message

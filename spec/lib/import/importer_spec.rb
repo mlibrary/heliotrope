@@ -146,7 +146,7 @@ describe Import::Importer do
         expect(monograph.admin_set_id).to eq 'admin_set/default'
 
         expect(monograph.visibility).to eq public_vis
-        expect(monograph.open_access).to eq 'yes' # acceptable_values are downcased
+        expect(monograph.open_access).to eq 'yes'
         file_sets = monograph.ordered_members.to_a
 
         expect(file_sets[0].title).to eq ['External Resource FileSet']

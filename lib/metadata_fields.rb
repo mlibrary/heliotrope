@@ -17,26 +17,25 @@ ADMIN_METADATA_FIELDS ||=
 METADATA_FIELDS ||=
   [
     { object: :universal, field_name: 'Title', metadata_name: 'title', required: true, multivalued: :yes, description: I18n.t('csv.descriptions.title') },
-    { object: :file_set, field_name: 'Resource Type', metadata_name: 'resource_type', required: true, multivalued: :yes, acceptable_values: ['audio', 'image', 'dataset', 'table', '3D model', 'text', 'video', 'map', 'interactive map'], description: I18n.t('csv.descriptions.resource_type') },
+    { object: :file_set, field_name: 'Resource Type', metadata_name: 'resource_type', required: true, multivalued: :yes, description: I18n.t('csv.descriptions.resource_type') },
     { object: :file_set, field_name: 'External Resource URL', metadata_name: 'external_resource_url', required: false, multivalued: :no, description: I18n.t('csv.descriptions.external_resource_url') },
     { object: :file_set, field_name: 'Caption', metadata_name: 'caption', required: true, multivalued: :yes, description: I18n.t('csv.descriptions.caption') },
     { object: :file_set, field_name: 'Alternative Text', metadata_name: 'alt_text', required: true, multivalued: :yes, description: I18n.t('csv.descriptions.alt_text') },
     { object: :universal, field_name: 'Copyright Holder', metadata_name: 'copyright_holder', required: true, multivalued: :no, description: I18n.t('csv.descriptions.copyright_holder') },
-    { object: :file_set, field_name: 'Copyright Status', metadata_name: 'copyright_status', required: true, multivalued: :no, acceptable_values: ['in-copyright', 'public domain', 'status unknown'], description: I18n.t('csv.descriptions.copyright_status') },
-    { object: :monograph, field_name: 'Open Access?', metadata_name: 'open_access', required: false, multivalued: :no, acceptable_values: ['yes', 'no'], description: I18n.t('csv.descriptions.open_access') },
+    { object: :file_set, field_name: 'Copyright Status', metadata_name: 'copyright_status', required: true, multivalued: :no, description: I18n.t('csv.descriptions.copyright_status') },
+    { object: :monograph, field_name: 'Open Access?', metadata_name: 'open_access', required: false, multivalued: :no, description: I18n.t('csv.descriptions.open_access') },
     { object: :monograph, field_name: 'Funder', metadata_name: 'funder', required: false, multivalued: :no, description: I18n.t('csv.descriptions.funder') },
     { object: :monograph, field_name: 'Funder Display', metadata_name: 'funder_display', required: false, multivalued: :no, description: I18n.t('csv.descriptions.funder_display') },
-    { object: :file_set, field_name: 'Allow Fullscreen Display', metadata_name: 'allow_hi_res', required: true, multivalued: :no, acceptable_values: ['yes', 'no', 'not hosted on the platform'], description: I18n.t('csv.descriptions.allow_hi_res') },
-    { object: :file_set, field_name: 'Allow Download?', metadata_name: 'allow_download', required: true, multivalued: :no, acceptable_values: ['yes', 'no', 'not hosted on the platform'], description: I18n.t('csv.descriptions.allow_download') },
+    { object: :file_set, field_name: 'Allow Fullscreen Display', metadata_name: 'allow_hi_res', required: true, multivalued: :no, description: I18n.t('csv.descriptions.allow_hi_res') },
+    { object: :file_set, field_name: 'Allow Download?', metadata_name: 'allow_download', required: true, multivalued: :no, description: I18n.t('csv.descriptions.allow_download') },
     { object: :file_set, field_name: 'Rights Granted', metadata_name: 'rights_granted', required: false, multivalued: :no, description: I18n.t('csv.descriptions.rights_granted') },
-    # `Hyrax::LicenseService.new.select_all_options` rather than `select_active_options` as, unlike the UI edit forms, was allow all values here (importing old CC licenses used by partners etc)
-    { object: :universal, field_name: 'CC License', metadata_name: 'license', required: false, multivalued: :yes, acceptable_values: Hyrax::LicenseService.new.select_all_options.map { |a| a[1] }, description: I18n.t('csv.descriptions.license') },
+    { object: :universal, field_name: 'CC License', metadata_name: 'license', required: false, multivalued: :yes, description: I18n.t('csv.descriptions.license') },
     { object: :file_set, field_name: 'Permissions Expiration Date', metadata_name: 'permissions_expiration_date', required: false, multivalued: :no, date_format: true, description: I18n.t('csv.descriptions.permissions_expiration_date') },
-    { object: :file_set, field_name: 'After Expiration: Allow Display?', metadata_name: 'allow_display_after_expiration', required: false, multivalued: :no, acceptable_values: ['none', 'high-res', 'low-res', 'not hosted on the platform'], description: I18n.t('csv.descriptions.allow_display_after_expiration') },
-    { object: :file_set, field_name: 'After Expiration: Allow Download?', metadata_name: 'allow_download_after_expiration', required: false, multivalued: :no, acceptable_values: ['yes', 'no', 'not hosted on the platform'], description: I18n.t('csv.descriptions.allow_download_after_expiration') },
+    { object: :file_set, field_name: 'After Expiration: Allow Display?', metadata_name: 'allow_display_after_expiration', required: false, multivalued: :no, description: I18n.t('csv.descriptions.allow_display_after_expiration') },
+    { object: :file_set, field_name: 'After Expiration: Allow Download?', metadata_name: 'allow_download_after_expiration', required: false, multivalued: :no, description: I18n.t('csv.descriptions.allow_download_after_expiration') },
     { object: :file_set, field_name: 'Credit Line', metadata_name: 'credit_line', required: false, multivalued: :no, description: I18n.t('csv.descriptions.credit_line') },
     { object: :universal, field_name: 'Holding Contact', metadata_name: 'holding_contact', required: false, multivalued: :no, description: I18n.t('csv.descriptions.holding_contact') },
-    { object: :file_set, field_name: 'Exclusive to Fulcrum', metadata_name: 'exclusive_to_platform', required: false, multivalued: :no, acceptable_values: ['yes', 'no'], description: I18n.t('csv.descriptions.exclusive_to_platform') },
+    { object: :file_set, field_name: 'Exclusive to Fulcrum', metadata_name: 'exclusive_to_platform', required: false, multivalued: :no, description: I18n.t('csv.descriptions.exclusive_to_platform') },
     { object: :universal, field_name: 'Identifier(s)', metadata_name: 'identifier', required: false, multivalued: :yes_split, description: I18n.t('csv.descriptions.identifier') },
     { object: :file_set, field_name: 'Content Type', metadata_name: 'content_type', required: false, multivalued: :yes_split, description: I18n.t('csv.descriptions.content_type') },
     { object: :universal, field_name: 'Creator(s)', metadata_name: 'creator', required: false, multivalued: :yes_multiline, description: I18n.t('csv.descriptions.creator') },
@@ -67,7 +66,7 @@ METADATA_FIELDS ||=
 # Any fields related to "representative" relationships between FileSets and their parent Monograph
 FILE_SET_FLAG_FIELDS ||=
   [
-    { object: :file_set, field_name: 'Representative Kind', metadata_name: 'representative_kind', required: false, multivalued: :no, acceptable_values: FeaturedRepresentative::KINDS + ['cover'], description: I18n.t('csv.descriptions.representative_kind') }
+    { object: :file_set, field_name: 'Representative Kind', metadata_name: 'representative_kind', required: false, multivalued: :no, description: I18n.t('csv.descriptions.representative_kind') }
   ].freeze
 
 MONO_FILENAME_FLAG ||= '://:MONOGRAPH://:'
