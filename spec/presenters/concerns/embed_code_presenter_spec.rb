@@ -109,6 +109,24 @@ RSpec.describe EmbedCodePresenter do
         </div>
       END
     }
+    let(:portrait_image_embed_code) {
+      <<~END
+        <div style='width:auto; page-break-inside:avoid; -webkit-column-break-inside:avoid; break-inside:avoid; max-width:1080px; margin:auto'>
+          <div style='overflow:hidden; padding-bottom:80%; position:relative; height:0;'><!-- actual image height: 1920px -->
+            <iframe src='#{presenter.embed_link}' title='#{presenter.embed_code_title}' style='overflow:hidden; border-width:0; left:0; top:0; width:100%; height:100%; position:absolute;'></iframe>
+          </div>
+        </div>
+      END
+    }
+    let(:square_image_embed_code) {
+      <<~END
+        <div style='width:auto; page-break-inside:avoid; -webkit-column-break-inside:avoid; break-inside:avoid; max-width:500px; margin:auto'>
+          <div style='overflow:hidden; padding-bottom:80%; position:relative; height:0;'><!-- actual image height: 500px -->
+            <iframe src='#{presenter.embed_link}' title='#{presenter.embed_code_title}' style='overflow:hidden; border-width:0; left:0; top:0; width:100%; height:100%; position:absolute;'></iframe>
+          </div>
+        </div>
+      END
+    }
     let(:dimensionless_image_embed_code) {
       <<~END
         <div style='width:auto; page-break-inside:avoid; -webkit-column-break-inside:avoid; break-inside:avoid; max-width:400px; margin:auto'>
@@ -157,10 +175,32 @@ RSpec.describe EmbedCodePresenter do
       it { expect(presenter.embed_code).to eq map_embed_code }
     end
 
-    context 'image FileSet' do
+    context 'image FileSet (landscape)' do
       let(:mime_type) { 'image/tiff' }
 
       it { expect(presenter.embed_code).to eq image_embed_code }
+    end
+
+    context 'image FileSet (portrait)' do
+      before do
+        allow(presenter).to receive(:width).and_return(1080)
+        allow(presenter).to receive(:height).and_return(1920)
+      end
+
+      let(:mime_type) { 'image/tiff' }
+
+      it { expect(presenter.embed_code).to eq portrait_image_embed_code }
+    end
+
+    context 'image FileSet (square)' do
+      before do
+        allow(presenter).to receive(:width).and_return(500)
+        allow(presenter).to receive(:height).and_return(500)
+      end
+
+      let(:mime_type) { 'image/tiff' }
+
+      it { expect(presenter.embed_code).to eq square_image_embed_code }
     end
 
     context 'video FileSet' do

@@ -339,7 +339,11 @@ L.TileLayer.Iiif = L.TileLayer.extend({
 
             // round the zoom for simpler processing
             zoom = Math.round(zoom * 100) / 100;
-            return zoom;
+
+            // HELIO-3242 a negative zoom here means "best fit" is (probably?) trying to fit the image onto...
+            // a map whose side that corresponds to imageSize[key] is less than a tile edge in length. This breaks...
+            // things in deep and mysterious ways. I don't think fitBounds() can handle it. Give up and use zoom 0.
+            return zoom < 0 ? 0 : zoom;
         }
         return this.maxNativeZoom;
     },
