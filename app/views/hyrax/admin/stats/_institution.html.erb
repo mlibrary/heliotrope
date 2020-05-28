@@ -24,27 +24,29 @@ that will be emailed to the provided email address.</p>
     </div>
     <div class="col-sm-2">
       <label for="press" class="col-form-label">Press</label>
-      <%= select_tag(:press, options_for_select(current_user.admin_presses.map { |p| [p.name, p.id] }), class: 'form-control') %>
+      <%= select_tag(:press, options_for_select((current_user.admin_presses + current_user.editor_presses).uniq.map { |p| [p.name, p.id] }), class: 'form-control') %>
     </div>
-    <div class="col-sm-1">
+    <div class="col-sm-2">
       <label for="start_date" class="col-form-label">Start Date</label>
       <input type="text" name="start_date" aria-label="Start date in yyyy-mm-dd format" class="counter-start-date form-control" />
     </div>
-    <div class="col-sm-1">
+    <div class="col-sm-2">
       <label for="end_date" class="col-form-label">End Date</label>
       <input type="text" name="end_date" aria-label="End date in yyyy-mm-dd format" class="counter-end-date form-control" />
     </div>
-    <div class="col-sm-1">
-      <label for="report_type" class="col-form-label">Report Type</label>
+    <div class="col-sm-4 col-md-2">
+      <label for="report_type" class="col-form-label">Report Type <a href="https://www.projectcounter.org/release-5-understanding-investigations-and-requests/" target="_blank" rel="noopener noreferrer">(what's this?)</a></label>
       <select name="report_type" class="form-control">
-        <option value="request">Requests ("downloads", includes Investigations)</option>
-        <option value="investigation">Investigations ("views")</option>
+        <option value="request">Total Item Requests</option>
+        <option value="investigation">Total Item Investigations</option>
       </select>
     </div>
+    <div class="col-md-2"></div>
   </div>
   <div class="row">
-    <div class="col-sm-1">
+    <div class="col-sm-2">
       <button type="submit" class="btn btn-primary form-control">Get Report</button>
     </div>
+    <div class="col-sm-10"></div>
   </div>
 <% end %>
