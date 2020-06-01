@@ -84,12 +84,18 @@ module EmbedCodePresenter
     height.present? && !height.zero?
   end
 
-  def padding_bottom
-    # images have pan/zoom and are often portrait, which would gobble up massive height, so use 60% for all
-    return 60 unless video?
-    # adjusts the height to allow for what the video player is doing to preserve the content's aspect ratio
-    percentage = !width_ok? || !height_ok? ? 75 : (height.to_f * 100.0 / width.to_f).round(2)
-    (percentage % 1).zero? ? percentage.to_i : percentage
+  def padding_bottom  # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
+    # images have pan/zoom and are often portrait, which would gobble up massive height, so we used to use 60% for all
+    # but see HELIO-3242. Small portrait images get a negative zoom. Maps that are closer to square will cause...
+    # fewer issues with "best fit" initial zoom. So for portrait or square images I'll bump the bottom padding to 80%.
+    if video?
+      # adjusts the height to allow for what the video player is doing to preserve the content's aspect ratio
+      percentage = !width_ok? || !height_ok? ? 75 : (height.to_f * 100.0 / width.to_f).round(2)
+      (percentage % 1).zero? ? percentage.to_i : percentage
+    else
+      return 60 unless width.present? && height.present?
+      width > height ? 60 : 80
+    end
   end
 
   def audio_without_transcript?
