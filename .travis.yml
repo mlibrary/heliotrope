@@ -9,7 +9,7 @@ before_install:
 before_script:
   - bin/bundle exec bin/travis
 rvm:
-  - 2.4.10
+  - 2.5.8
 jdk:
   - openjdk8
 addons:
