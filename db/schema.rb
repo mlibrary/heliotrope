@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20200420214220) do
+ActiveRecord::Schema.define(version: 20200603181002) do
 
   create_table "api_requests", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.integer "user_id"
@@ -129,7 +129,7 @@ ActiveRecord::Schema.define(version: 20200420214220) do
     t.text "initial_http_message"
     t.text "submission_xml", limit: 16777215
     t.string "status"
-    t.text "response_xml"
+    t.text "response_xml", limit: 16777215
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "file_name"

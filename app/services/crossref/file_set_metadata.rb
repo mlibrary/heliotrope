@@ -85,7 +85,21 @@ module Crossref
       # https://tools.lib.umich.edu/jira/browse/HELIO-3163
       # This is of course not right, but what can you do?
       return "application/vnd.ms-excel" if mime == "text/csv"
+      # HELIO-3378 has another one of these. There are very few acceptable audio mime types to choose from only these:
+      # audio/basic, audio/32kadpcm, audio/mpeg, audio/parityfec, audio/MP4A-LATM, audio/mpa-robust
+      # so I don't know what's right exactly. This just seems wrong.
+      return "audio/basic" if mime == "audio/x-wave"
       mime
+    end
+
+    def monograph_doi_is_registered?
+      # See HELIO-3378. This *really* shouldn't happen, but it did once, so we need this check.
+      # This could totally block. Move to a Job? I dunno. We'll see how it goes for a while I guess.
+      request = Typhoeus::Request.new(Crossref::Config.load_config['search_url'] + "/#{@work.doi}")
+      resp = request.run
+      return false if resp.failure?
+      return false if resp.code == "404"
+      true
     end
 
     private
@@ -93,7 +107,15 @@ module Crossref
       def save_dois_to_file_sets
         # Can you imagine how long this would take for a work with 2000+ file_sets?
         # It could be hours. Pass to a job I guess.
-        BatchSaveJob.perform_later(file_sets_to_save)
+        #
+        # Also: HELIO-3378 we're NOT going to save resource/file_set DOIs if the Monograph
+        # has an UNREGISTERED DOI. We're still going to go through the steps and run the submission,
+        # but that submission will FAIL at Crossref since the Monograph does not have a REGISTERED DOI.
+        # So: if the monograph DOI is unregistered, still run the submission and let it fail.
+        # But don't save the resource DOIs. The error will be obvious in the crossref_log, so
+        # once the monograph doi is sorted out this whole file_set_metadata DOI creation process
+        # will need to be re-run. Which is fine.
+        BatchSaveJob.perform_later(file_sets_to_save) if monograph_doi_is_registered?
       end
 
       def presenters_for(hyrax_presenter, noids)
