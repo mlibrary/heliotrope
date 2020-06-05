@@ -105,6 +105,35 @@ RSpec.describe Crossref::FileSetMetadata do
     end
   end
 
+  describe "#monograph_doi_is_registered?" do
+    # HELIO-3378
+    context "if the monograph has a registered doi" do
+      let(:press) { create(:press, subdomain: "blue", name: "The Blue Press", doi_creation: true) }
+      let(:code) { 200 }
+
+      before do
+        Typhoeus.stub(/api.crossref.org\/works\/10.9985\/blue.999999999/).and_return(Typhoeus::Response.new(response_code: code))
+      end
+
+      it "returns true" do
+        expect(described_class.new(monograph.id).monograph_doi_is_registered?).to be true
+      end
+    end
+
+    context "if the monograph has an unregistered doi" do
+      let(:press) { create(:press, subdomain: "blue", name: "The Blue Press", doi_creation: true) }
+      let(:code) { 404 }
+
+      before do
+        Typhoeus.stub(/api.crossref.org\/works\/10.9985\/blue.999999999/).and_return(Typhoeus::Response.new(response_code: code))
+      end
+
+      it "returns false" do
+        expect(described_class.new(monograph.id).monograph_doi_is_registered?).to be false
+      end
+    end
+  end
+
   describe "#build" do
     subject { described_class.new('999999999').build }
 
