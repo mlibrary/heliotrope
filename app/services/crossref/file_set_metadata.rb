@@ -85,6 +85,10 @@ module Crossref
       # https://tools.lib.umich.edu/jira/browse/HELIO-3163
       # This is of course not right, but what can you do?
       return "application/vnd.ms-excel" if mime == "text/csv"
+      # HELIO-3378 has another one of these. There are very few acceptable audio mime types to choose from only these:
+      # audio/basic, audio/32kadpcm, audio/mpeg, audio/parityfec, audio/MP4A-LATM, audio/mpa-robust
+      # so I don't know what's right exactly. This just seems wrong.
+      return "audio/basic" if mime == "audio/x-wave"
       mime
     end
 
