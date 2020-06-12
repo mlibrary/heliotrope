@@ -112,6 +112,9 @@ webgl = Webgl::Unity.from_directory(UnpackService.root_path_from_noid(webgl_id, 
 
         // Configure and initiate reader
         var reader = cozy.reader('reader', {
+          // See https://tools.lib.umich.edu/jira/browse/HELIO-3350 and https://stackoverflow.com/a/47331356
+          // Hopefully this line can be removed eventually. Note these are the epub FileSet's NOIDs.
+          <% if %w(cc08hh07v x059c8342 t722h883s ws859h272 4t64gq185).include? @presenter.id %>...(bowser.safari && bowser.version >= 13 ? {flow: 'scrolled-doc'} : {}),<% end %>
           href: "<%= "#{main_app.epub_url.gsub!(/\?.*/, '')}/" %>",
           skipLink: '.skip',
           download_links: <%= @ebook_download_presenter.csb_download_links.to_json.html_safe %>,
