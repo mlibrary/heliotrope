@@ -2418,6 +2418,12 @@ $barpublishing-white: #fff;
     border-top: 20px solid $barpublishing-grey-2;
     background-color: $barpublishing-brand-color;
 
+    .row:first-child {
+      display: flex;
+      align-items: stretch;
+      flex-grow: 2;
+    }
+
     a,
     a:hover,
     a:active {
@@ -2473,6 +2479,18 @@ $barpublishing-white: #fff;
         width: 175px;
       }
 
+    }
+
+    .press-block-b {
+      display: flex;
+      align-items: stretch;
+      flex-grow: 2;
+      flex-direction: row-reverse;
+
+      .custom-links {
+        padding-right: 1.5em;
+        padding-top: 4.7em;
+      }
     }
 
     .press-block-c {
