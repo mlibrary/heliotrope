@@ -47,6 +47,14 @@ describe PressSearchBuilder do
       before { allow(sort_fields).to receive(:[]).with('year desc').and_return(year_desc) }
 
       it { is_expected.to be year_desc }
+
+      context "params['q'].present?" do
+        before do
+          allow(search_builder).to receive(:blacklight_params).and_return({ 'press' => press, 'q' => 'query' })
+        end
+
+        it { is_expected.to be default_sort_field }
+      end
     end
   end
 end
