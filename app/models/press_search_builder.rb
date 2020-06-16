@@ -22,9 +22,18 @@ class PressSearchBuilder < ::SearchBuilder
   end
 
   def default_sort_field
+    # This code is working at the moment (see HELIO-3429).
+    # default_sort_field is a very ubiquitous term and is defined multiple times in multiple locations
+    # blacklight_config.default_sort_field appears to morph between being a hash and being a method
+    # In short this is a hack because I have no idea why it works.
+    # Feel free to purge this code and find a better solution.
     case blacklight_params['press']
     when /^barpublishing$/i
-      blacklight_config.sort_fields['year desc'] # Sort by Publication Date (Newest First)
+      if blacklight_params['q'].present?
+        blacklight_config.default_sort_field
+      else
+        blacklight_config.sort_fields['year desc'] # Sort by Publication Date (Newest First)
+      end
     else
       blacklight_config.default_sort_field
     end
