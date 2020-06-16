@@ -5,7 +5,6 @@ module EPub
     private_class_method :new
 
     # Class Methods
-
     def self.from_rendition_cfi_title(rendition, cfi, title) # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
       return null_object unless rendition&.instance_of?(Rendition) && cfi&.instance_of?(String) && cfi.present? && title&.instance_of?(String) && title.present?
       rendition.intervals.each do |interval|
@@ -49,6 +48,15 @@ module EPub
 
     def downloadable_pages
       @downloadable_pages ||= @args[:unmarshaller_chapter]&.downloadable_pages&.map { |unmarshaller_page| Page.from_interval_unmarshaller_page(self, unmarshaller_page) } || []
+    end
+
+    def to_h_for_toc
+      {
+        title: title,
+        level: level,
+        cfi: cfi,
+        downloadable?: downloadable?
+      }
     end
 
     private

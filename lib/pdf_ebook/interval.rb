@@ -40,6 +40,15 @@ module PDFEbook
       []
     end
 
+    def to_h_for_toc
+      {
+        title: title,
+        level: level,
+        cfi: cfi,
+        downloadable?: downloadable?,
+      }
+    end
+
     private
 
       def initialize(args)

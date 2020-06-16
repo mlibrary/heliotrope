@@ -51,4 +51,25 @@ RSpec.describe PDFEbook::Publication do
       end
     end
   end
+
+  describe "with no PDF" do
+    context "using #from_path_id" do
+      before do
+        @noid = '99999999'
+        @file = 'not-a-file.pdf'
+        allow(PDFEbook.logger).to receive(:info).and_return(nil) # don't print log errors in specs
+      end
+
+      describe "#intervals" do
+        subject { described_class.from_path_id(@file, @noid) }
+
+        it { is_expected.to be_an_instance_of(PDFEbook::PublicationNullObject) }
+
+        it "has no intervals, but does not throw an error" do
+          expect(subject.intervals).to eq []
+          expect(subject.intervals.count).to be 0
+        end
+      end
+    end
+  end
 end

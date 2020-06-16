@@ -15,15 +15,25 @@ RSpec.describe PDFEbookPresenter do
   end
 
   describe '#intervals?' do
-    subject { presenter.intervals? }
+    context "with a valid/not broken pdf" do
+      subject { presenter.intervals? }
 
-    it { is_expected.to be false }
+      it { is_expected.to be false }
 
-    context 'intervals' do
-      let(:intervals) { [interval] }
-      let(:interval) { double('interval') }
+      context 'with actual intervals' do
+        let(:intervals) { [interval] }
+        let(:interval) { double('interval') }
 
-      it { is_expected.to be true }
+        it { is_expected.to be true }
+      end
+    end
+
+    context "with a broken pdf" do
+      subject { presenter.intervals? }
+
+      let(:pdf_ebook) { PDFEbook::PublicationNullObject.send(:new) }
+
+      it { is_expected.to be false }
     end
   end
 
@@ -33,10 +43,11 @@ RSpec.describe PDFEbookPresenter do
     it { is_expected.to be_nil }
 
     context 'intervals' do
-      let(:intervals) { [interval] }
-      let(:interval) { double('interval') }
+      before do
+        EbookTableOfContentsCache.create(noid: pdf_ebook.id, toc: [{ title: "A", depth: 1, cfi: "/6/2[Chapter01]!/4/1:0", download?: false }].to_json)
+      end
 
-      it { is_expected.to be_an_instance_of(EPubIntervalPresenter) }
+      it { is_expected.to be_an_instance_of(EBookIntervalPresenter) }
     end
   end
 end

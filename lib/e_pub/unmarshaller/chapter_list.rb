@@ -24,7 +24,7 @@ module EPub
         return @chapters unless @chapters.nil?
         @chapters = []
         @chapter_list_doc.xpath('.//span').each do |span|
-          @chapters << Chapter.from_chapter_list_span_element(self, span)
+          @chapters << EPub::Unmarshaller::Chapter.from_chapter_list_span_element(self, span)
         end
         @chapters
       end

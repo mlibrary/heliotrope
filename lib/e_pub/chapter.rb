@@ -10,7 +10,7 @@ module EPub
     # Class Methods
     def self.from_cfi(publication, cfi)
       result = EPub::SqlLite.from_publication(publication).find_by_cfi(cfi) # rubocop:disable  Rails/DynamicFindBy
-      return Chapter.null_object if result.blank?
+      return EPub::ChapterNullObject.send(:new) if result.blank?
 
       new(id: result[:id],
           href: result[:href],
@@ -112,6 +112,11 @@ module EPub
 
     def pdf
       Prawn::Document.new(page_size: "A4", page_layout: :portrait)
+    end
+
+    def downloadable_pages
+      ::EPub.logger.error("Reflowable epubs never have downloadable chapters. Method downloadable_pages called from lib/e_pub/chapter.rb. Is this dead code?")
+      []
     end
 
     private

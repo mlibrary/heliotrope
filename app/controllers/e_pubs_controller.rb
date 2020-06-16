@@ -59,6 +59,9 @@ class EPubsController < CheckpointController
         response.headers['X-Sendfile'] = pdf
         send_file pdf
       else
+        # This really should *never* happen, but might if the pdf wasn't unpacked right...
+        # Consider this an error. We don't want to go through ActiveFedora for this.
+        Rails.logger.error("[PDF EBOOK ERROR] The pdf_ebook #{pdf} is not in the derivative directory!!!!")
         response.headers['Content-Length'] ||= @presenter.file.size.to_s
         # Prevent Rack::ETag from calculating a digest over body with a Last-Modified response header
         # any Solr document save will change this, see definition of browser_cache_breaker

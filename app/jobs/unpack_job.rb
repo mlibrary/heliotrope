@@ -7,11 +7,12 @@ class UnpackJob < ApplicationJob
   include Open3
   queue_as :unpack
 
-  def perform(id, kind) # rubocop:disable Metrics/CyclomaticComplexity
+  def perform(id, kind) # rubocop:disable Metrics/CyclomaticComplexity,  Metrics/PerceivedComplexity
     file_set = FileSet.find id
     raise "No file_set for #{id}" if file_set.nil?
 
     root_path = UnpackService.root_path_from_noid(id, kind)
+    FileUtils.mkdir_p File.dirname root_path unless Dir.exist? File.dirname root_path # this should already exist... but with specs it's iffy
 
     # A rake task run via nightly cron will delete these so we can avoid
     # problems with puma holding open file handles making deletion fail, HELIO-2015
@@ -27,6 +28,7 @@ class UnpackJob < ApplicationJob
     when 'epub'
       unpack_epub(id, root_path, file)
       create_search_index(root_path)
+      cache_epub_toc(id, root_path)
       epub_webgl_bridge(id, root_path, kind)
     when 'webgl'
       unpack_webgl(id, root_path, file)
@@ -34,7 +36,9 @@ class UnpackJob < ApplicationJob
     when 'interactive_map'
       unpack_map(id, root_path, file)
     when 'pdf_ebook'
-      unpack_pdf(id, root_path, file)
+      pdf = linearize_pdf(root_path, file)
+      create_pdf_chapters(id, pdf, root_path) if File.exist? pdf
+      cache_pdf_toc(id, pdf) if File.exist? pdf
     else
       Rails.logger.error("Can't unpack #{kind} for #{id}")
     end
@@ -42,29 +46,39 @@ class UnpackJob < ApplicationJob
 
   private
 
-    def unpack_pdf(id, root_path, file)
-      # Need to make the dir for some tests to pass. This shouldn't ever be an issue
-      # in real usage, but I'll put it here and not in the specs in case really weird
-      # things happen with hydra-derivatives. I guess.
-      FileUtils.mkdir_p File.dirname root_path unless Dir.exist? File.dirname root_path
-
-      linearize_pdf(root_path, file)
-      create_pdf_chapters(id, root_path, file)
+    def cache_pdf_toc(id, pdf)
+      EbookTableOfContentsCache.find_by(noid: id)&.destroy
+      pdf_ebook = PDFEbook::Publication.from_path_id(pdf, id)
+      intervals = pdf_ebook.intervals
+      EbookTableOfContentsCache.create(noid: pdf_ebook.id, toc: intervals.map { |i| i.to_h_for_toc }.to_json)
     end
 
-    def create_pdf_chapters(id, root_path, file) # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
+    def cache_epub_toc(id, root_path)
+      EbookTableOfContentsCache.find_by(noid: id)&.destroy
+      epub = EPub::Publication.from_directory(root_path)
+      intervals = epub&.rendition&.intervals
+      EbookTableOfContentsCache.create(noid: epub.id, toc: intervals.map { |i| i.to_h_for_toc }.to_json)
+    end
+
+    def create_pdf_chapters(id, pdf, root_path) # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
       return unless system("which qpdf > /dev/null 2>&1")
       return unless File.exist? "#{root_path}.pdf"
 
-      # Grab the ToC as is done for the catalog ToC tab... note the force_encoding("utf-8") is not done here cause...
-      # it's not done in Sighrax::Asset.content() which feeds the normal ToC creation, so I assume it's OK without...
-      # for this purpose
-      pdf_ebook_presenter = PDFEbookPresenter.new(PDFEbook::Publication.from_path_id(root_path + '.pdf', id))
-      return unless pdf_ebook_presenter.intervals?
+      pdf_ebook = PDFEbook::Publication.from_path_id(pdf, id)
+      # The above will fail to load due to a plethora of Oragami errors due to malformed PDFs
+      # So we'll have a pdf on the file system, in the derivatives directory but there's something wrong
+      # with it. The way PDFEbook::Publication handles that is by catching and logging the error and returning a
+      # null object, just like epubs do
+      # How can we report that there's a problem with the PDF from a Job?
+      # The logs are most likely too dense. Should we fail the job here?
+      # I don't know.
+      # Maybe by not displaying the TOC or and interval downloads in the app it will be obvious there's
+      # a problem.
+      Rails.logger.error("[PDF CHAPTER FAILURE] The pdf_ebook #{id} will not have intervals") if pdf_ebook.class == "PDFEbook::PublicationNullObject"
+      return unless pdf_ebook.intervals&.count&.positive?
 
-      # all the intervals have are start pages, so we'll gather those and then move on to calculating end pages
       chapters = []
-      pdf_ebook_presenter.intervals.each do |interval|
+      pdf_ebook.intervals.each do |interval|
         chapters << { level: interval.level,
                       start_page: interval.cfi.gsub('page=', '').to_i }
       end
@@ -81,6 +95,7 @@ class UnpackJob < ApplicationJob
         end
       end
 
+      file = File.open(pdf)
       chapter_dir = File.join(root_path + '_chapters')
       # if there is a pre-existing chapter_dir schedule it for deletion
       FileUtils.move(chapter_dir, UnpackService.remove_path_from_noid(id, 'pdf_ebook_chapters')) if Dir.exist? chapter_dir
@@ -100,12 +115,22 @@ class UnpackJob < ApplicationJob
       if system("which qpdf > /dev/null 2>&1")
         # "Linearize" the pdf for x-sendfile and byte ranges, HELIO-3165
         # It's ok to linearize a pdf that's already been linearized
-        run_command("qpdf --linearize #{file.path} #{root_path}.pdf")
+        begin
+          run_command("qpdf --linearize #{file.path} #{root_path}.pdf")
+        rescue StandardError => e
+          # qpdf lineariztion VERY OFTEN will produce an "error" even if linearization succeeds
+          # It's really more of a warning... but just rescuing everything is bad.
+          # TODO: a better way to handle this and maybe job errors generally
+          Rails.logger.error("[PDF LINEARIZE ERROR] #{e.message}")
+          # make sure we've pulled the pdf out of fedora even if lineariztion has failed
+          FileUtils.copy(file, "#{root_path}.pdf") unless File.exist? "#{root_path}.pdf"
+        end
       else
         FileUtils.copy(file, "#{root_path}.pdf")
       end
       # This is weird, but perms are -rw------- and they need to be -rw-rw-r--
       File.chmod 0664, "#{root_path}.pdf"
+      "#{root_path}.pdf"
     end
 
     def run_command(command)
