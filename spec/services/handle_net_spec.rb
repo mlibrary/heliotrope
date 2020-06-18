@@ -65,6 +65,12 @@ RSpec.describe HandleNet do
 
           it { is_expected.to be nil }
         end
+
+        context 'nil handle' do
+          let(:handle) { nil }
+
+          it { is_expected.to be nil }
+        end
       end
 
       describe '#create_or_update' do

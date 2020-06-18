@@ -32,3 +32,4 @@ handle_service:
   url: https://hdl.handle.net/api/handles
   user: admin
   password: secret
+  ssl_verify: false
