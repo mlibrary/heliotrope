@@ -61,6 +61,7 @@ Services.register(:handle_service) do
   HandleService.new(
     url: Settings.handle_service.url,
     user: Settings.handle_service.user,
-    password: Settings.handle_service.password
+    password: Settings.handle_service.password,
+    ssl_verify: Settings.handle_service.ssl_verify
   )
 end

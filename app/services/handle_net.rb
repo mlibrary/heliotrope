@@ -27,7 +27,7 @@ class HandleNet
     def value(noid)
       return nil unless Settings.handle_service&.instantiate
 
-      Services.handle_service.get(HandleNet.path(noid)).url
+      Services.handle_service.get(HandleNet.path(noid))&.url
     end
 
     def create_or_update(noid, url)
