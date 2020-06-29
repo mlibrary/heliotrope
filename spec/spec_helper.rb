@@ -33,6 +33,7 @@ if coverage_needed?
 end
 
 require 'active_fedora/cleaner'
+require 'rspec/repeat'
 
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure
@@ -44,12 +45,18 @@ RSpec.configure do |config|
 
   # System specs (new in rails 5.1) use headless chrome and Capybara
   config.before(:each, type: :system) do
-    driven_by :selenium_chrome_headless, screen_size: [1200, 1200]
+    driven_by :selenium, using: :headless_chrome, screen_size: [1400, 1400]
     # If you actually want to watch these happen in the browser (and have chrome installed)
     # driven_by :selenium_chrome, screen_size: [1200, 1200]
   end
   # exclude system specs on Travis (timing issues etc), see HELIO-3046 and HELIO-3271
   config.filter_run_excluding browser: :true if ENV['TRAVIS']
+  # When not in travis, repeat system specs if they fail
+  # This seems to help. Sort of. Sometimes...  See HELIO-2302
+  config.include RSpec::Repeat
+  config.around :each, type: :system do |example|
+    repeat example, 3.times
+  end
 
   config.after(:all) do
     if Rails.env.test? || Rails.env.cucumber?

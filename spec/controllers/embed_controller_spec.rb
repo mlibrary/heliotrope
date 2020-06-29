@@ -48,7 +48,7 @@ RSpec.describe EmbedController, type: :controller do
 
       it do
         expect(response).not_to have_http_status(:unauthorized)
-        expect(response).to be_success
+        expect(response).to be_successful
       end
     end
 
@@ -88,7 +88,7 @@ RSpec.describe EmbedController, type: :controller do
       it "counts the file_set" do
         get :show, params: { hdl: hdl }
         expect(response).not_to have_http_status(:unauthorized)
-        expect(response).to be_success
+        expect(response).to be_successful
 
         cr = CounterReport.last
         expect(cr.request).to eq 1

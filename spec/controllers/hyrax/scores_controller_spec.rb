@@ -35,7 +35,7 @@ RSpec.describe Hyrax::ScoresController do
         # This will probably change in the future. Being unauthorized should probably
         # be explicitly shown a 401. We have a ticket to do that work: HELIO-2904
         get :new
-        expect(response).not_to be_success
+        expect(response).not_to be_successful
         expect(response).to redirect_to(Rails.application.routes.url_helpers.root_path(locale: I18n.locale))
       end
     end

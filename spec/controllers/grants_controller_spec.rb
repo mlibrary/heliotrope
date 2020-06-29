@@ -49,7 +49,7 @@ RSpec.describe GrantsController, type: :controller do
     it "returns a success response" do
       Greensub.subscribe(subscriber: individual, target: product)
       get :index, params: {}, session: valid_session
-      expect(response).to be_success
+      expect(response).to be_successful
       expect(response).to render_template(:index)
     end
   end
@@ -58,7 +58,7 @@ RSpec.describe GrantsController, type: :controller do
     it "returns a success response" do
       Greensub.subscribe(subscriber: individual, target: product)
       get :show, params: { id: grants_table_last.id }, session: valid_session
-      expect(response).to be_success
+      expect(response).to be_successful
       expect(response).to render_template(:show)
     end
   end
@@ -66,7 +66,7 @@ RSpec.describe GrantsController, type: :controller do
   describe "GET #new" do
     it "returns a success response" do
       get :new, params: {}, session: valid_session
-      expect(response).to be_success
+      expect(response).to be_successful
       expect(response).to render_template(:new)
     end
   end
@@ -120,7 +120,7 @@ RSpec.describe GrantsController, type: :controller do
     context "with invalid params" do
       it "returns a success response (i.e. to display the 'new' template)" do
         post :create, params: { grant: invalid_attributes }, session: valid_session
-        expect(response).to be_success
+        expect(response).to be_successful
         expect(response).to render_template(:new)
       end
     end

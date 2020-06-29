@@ -33,7 +33,7 @@ RSpec.describe PressesController, type: :controller do
 
       it 'shows the presses' do
         get :index
-        expect(response).to be_success
+        expect(response).to be_successful
         expect(assigns[:presses]).to include press
       end
     end
@@ -45,7 +45,7 @@ RSpec.describe PressesController, type: :controller do
 
       it 'shows the presses' do
         get :index
-        expect(response).to be_success
+        expect(response).to be_successful
         expect(assigns[:presses]).to include press
       end
     end
@@ -75,7 +75,7 @@ RSpec.describe PressesController, type: :controller do
 
       it 'displays the form for a new press' do
         expect(response).to render_template :new
-        expect(response).to be_success
+        expect(response).to be_successful
       end
     end
 
@@ -84,7 +84,7 @@ RSpec.describe PressesController, type: :controller do
 
       it 'displays the form to edit the press' do
         expect(response).to render_template :edit
-        expect(response).to be_success
+        expect(response).to be_successful
       end
     end
 
@@ -120,7 +120,7 @@ RSpec.describe PressesController, type: :controller do
       before { get :new }
 
       it 'cannot access the form for a new press' do
-        expect(response).not_to be_success
+        expect(response).not_to be_successful
       end
     end
 
@@ -131,7 +131,7 @@ RSpec.describe PressesController, type: :controller do
 
       it 'displays the form to edit the press' do
         expect(response).to render_template :edit
-        expect(response).to be_success
+        expect(response).to be_successful
       end
     end
 

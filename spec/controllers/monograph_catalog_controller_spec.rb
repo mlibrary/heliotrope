@@ -85,7 +85,7 @@ RSpec.describe MonographCatalogController, type: :controller do
         before { get :index, params: { id: 'not_a_monograph_id' } }
 
         it 'response is not successful' do
-          expect(response).not_to be_success
+          expect(response).not_to be_successful
           expect(response).not_to render_template('monograph_catalog/index')
         end
         it 'shows 404 page' do
@@ -107,7 +107,7 @@ RSpec.describe MonographCatalogController, type: :controller do
         end
 
         it 'response is not successful' do
-          expect(response).not_to be_success
+          expect(response).not_to be_successful
           expect(response).not_to render_template('monograph_catalog/index')
         end
         it 'shows 404 page' do
@@ -126,7 +126,7 @@ RSpec.describe MonographCatalogController, type: :controller do
         end
 
         it 'response is successful' do
-          expect(response).to be_success
+          expect(response).to be_successful
           expect(response).to render_template('monograph_catalog/index')
         end
         it 'monograph presenter is a monograph presenter class' do
@@ -146,7 +146,7 @@ RSpec.describe MonographCatalogController, type: :controller do
           end
 
           it 'response is not successful' do
-            expect(response).not_to be_success
+            expect(response).not_to be_successful
             expect(response).not_to render_template('monograph_catalog/index')
           end
           it 'redirects to login page' do
@@ -164,7 +164,7 @@ RSpec.describe MonographCatalogController, type: :controller do
           end
 
           it 'response is successful' do
-            expect(response).to be_success
+            expect(response).to be_successful
             expect(response).to render_template('monograph_catalog/index')
           end
           it 'monograph presenter is a monograph presenter class' do
