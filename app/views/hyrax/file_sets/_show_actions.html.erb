@@ -23,16 +23,4 @@
       </script>
     </form>
   <% end %>
-  <!-- TODO: add citation generator -->
-  <!-- <button type="button" class="btn btn-default btn-lg cite">Cite</button> -->
-  <!-- TODO: figure out what asset metadata field holds the permanent URL and replace below -->
-  <div class="btn-group share">
-    <button type="button" class="btn btn-default btn-lg dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Share <span class="caret"></span></button>
-      <ul class="dropdown-menu">
-        <li><a href="http://twitter.com/intent/tweet?text=<%= @presenter.url_title %>&url=<%= @presenter.citable_link %>" target="_blank">Twitter</a></li>
-        <li><a href="http://www.facebook.com/sharer.php?u=<%= @presenter.citable_link %>&t=<%= @presenter.url_title %>" target="_blank">Facebook</a></li>
-        <li><a href="http://www.reddit.com/submit?url=<%= @presenter.citable_link %>" target="_blank">Reddit</a></li>
-        <li><a href="http://www.mendeley.com/import/?url=<%= @presenter.citable_link %>" target="_blank">Mendeley</a></li>
-      </ul>
-  </div>
 </div><!-- form-actions -->
