@@ -130,7 +130,7 @@ describe 'Edit a file set' do
 
       # check share links
       share_links = page.all('.btn-group.share ul li a')
-      expect(share_links.count).to eq 5
+      expect(share_links.count).to eq 4
       expect(share_links[0].text).to eq 'Twitter'
       expect(share_links[0]['href']).to eq("http://twitter.com/intent/tweet?text=#{url_escaped_title}&url=#{file_set_share_link}")
       expect(share_links[0]['target']).to eq('_blank')
@@ -143,9 +143,6 @@ describe 'Edit a file set' do
       expect(share_links[3].text).to eq 'Mendeley'
       expect(share_links[3]['href']).to eq("http://www.mendeley.com/import/?url=#{file_set_share_link}")
       expect(share_links[3]['target']).to eq('_blank')
-      expect(share_links[4].text).to eq 'Cite U Like'
-      expect(share_links[4]['href']).to eq("http://www.citeulike.org/posturl?url=#{file_set_share_link}&title=#{url_escaped_title}")
-      expect(share_links[4]['target']).to eq('_blank')
 
       # FileSet page also has authors
       expect(page).to have_content 'Jimmy Johns, Wingperson M. Creator, Sub Way and Wingperson M. Contributor'

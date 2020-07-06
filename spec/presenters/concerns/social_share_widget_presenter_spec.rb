@@ -21,7 +21,6 @@ RSpec.describe SocialShareWidgetPresenter do
           <li>#{presenter.social_share_link(:facebook)}</li>
           <li>#{presenter.social_share_link(:reddit)}</li>
           <li>#{presenter.social_share_link(:mendeley)}</li>
-          <li>#{presenter.social_share_link(:citeulike)}</li>
         </ul>
       </div>
     END
@@ -39,7 +38,6 @@ RSpec.describe SocialShareWidgetPresenter do
       expect(presenter.social_share_link(:facebook)).to eq("<a href=\"http://www.facebook.com/sharer.php?u=https://hdl.handle.net/2027/fulcrum.999999999&t=%23hashtag+Test+monograph+with+MD+Italics+and+HTML+Italics\" target=\"_blank\">Facebook</a>")
       expect(presenter.social_share_link(:reddit)).to eq("<a href=\"http://www.reddit.com/submit?url=https://hdl.handle.net/2027/fulcrum.999999999\" target=\"_blank\">Reddit</a>")
       expect(presenter.social_share_link(:mendeley)).to eq("<a href=\"http://www.mendeley.com/import/?url=https://hdl.handle.net/2027/fulcrum.999999999\" target=\"_blank\">Mendeley</a>")
-      expect(presenter.social_share_link(:citeulike)).to eq("<a href=\"http://www.citeulike.org/posturl?url=https://hdl.handle.net/2027/fulcrum.999999999&title=%23hashtag+Test+monograph+with+MD+Italics+and+HTML+Italics\" target=\"_blank\">Cite U Like</a>")
     end
   end
 end

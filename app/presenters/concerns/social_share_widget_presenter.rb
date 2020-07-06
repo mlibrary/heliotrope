@@ -14,7 +14,6 @@ module SocialShareWidgetPresenter
           <li>#{social_share_link(:facebook)}</li>
           <li>#{social_share_link(:reddit)}</li>
           <li>#{social_share_link(:mendeley)}</li>
-          <li>#{social_share_link(:citeulike)}</li>
         </ul>
       </div>
     END
@@ -34,8 +33,6 @@ module SocialShareWidgetPresenter
       "<a href=\"http://www.reddit.com/submit?url=#{citable_link}\" target=\"_blank\">Reddit</a>"
     when :mendeley
       "<a href=\"http://www.mendeley.com/import/?url=#{citable_link}\" target=\"_blank\">Mendeley</a>"
-    when :citeulike
-      "<a href=\"http://www.citeulike.org/posturl?url=#{citable_link}&title=#{url_title}\" target=\"_blank\">Cite U Like</a>"
     end
   end
 end
