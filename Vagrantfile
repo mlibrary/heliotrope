@@ -9,8 +9,7 @@ VAGRANTFILE_API_VERSION = "2"
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.hostname = "heliotrope"
 
-  # Ubuntu's own 16.04 boxes have issues with Vagrant right now, Bento boxes are popular alternatives
-  config.vm.box = "bento/ubuntu-16.04"
+  config.vm.box = "bento/ubuntu-18.04"
 
   config.ssh.username = 'vagrant'
   config.ssh.password = 'vagrant'
@@ -38,6 +37,5 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.provision :shell, path: "./vagrant_scripts/ruby.sh"
   config.vm.provision :shell, path: "./vagrant_scripts/mysql.sh"
   config.vm.provision :shell, path: "./vagrant_scripts/fits.sh", args: shared_dir, privileged: false
-  config.vm.provision :shell, path: "./vagrant_scripts/ffmpeg.sh"
   config.vm.provision :shell, path: "./vagrant_scripts/heliotrope.sh"
 end
