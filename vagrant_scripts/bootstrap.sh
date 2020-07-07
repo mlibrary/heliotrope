@@ -29,3 +29,6 @@ sudo apt-get -y install git vim > /dev/null 2>&1
 
 # Wget, curl and unzip
 sudo apt-get -y install wget curl unzip > /dev/null 2>&1
+
+# FFmpeg
+sudo apt-get -y install ffmpeg > /dev/null 2>&1
