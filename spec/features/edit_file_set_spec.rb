@@ -93,7 +93,7 @@ describe 'Edit a file set' do
       click_button 'Update Attached File'
 
       # Go to Monograph catalog page
-      click_link 'Back to Monograph'
+      find_link(monograph.title.first, match: :first).click
       click_link 'List'
       expect(page).to have_current_path(hyrax_monograph_path(monograph, locale: 'en', view: 'list'))
       # Order in FileSet's section_title has been taken from Monograph's section_titles
