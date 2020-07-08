@@ -30,11 +30,11 @@ RSpec.describe Tmm::FileService do
       expect(ordered_members.to_a[0].label).to eq 'shipwreck.jpg'
 
       expect(ordered_members.to_a[1].label).to eq 'moby-dick.epub'
-      expect(ordered_members.to_a[1].allow_download).to eq 'yes'
+      expect(ordered_members.to_a[1].allow_download).to eq nil
       expect(FeaturedRepresentative.where(file_set_id: ordered_members.to_a[1].id, kind: 'epub').present?).to be true
 
       expect(ordered_members.to_a[2].label).to eq 'hello.pdf'
-      expect(ordered_members.to_a[2].allow_download).to eq 'yes'
+      expect(ordered_members.to_a[2].allow_download).to eq nil
       expect(FeaturedRepresentative.where(file_set_id: ordered_members.to_a[2].id, kind: 'pdf_ebook').present?).to be true
     end
   end
@@ -157,6 +157,60 @@ RSpec.describe Tmm::FileService do
       expect(file_set.original_file.size).not_to eq cover_size
       expect(file_set.original_file.size).to eq new_cover_size
       expect(described_class.replace?(file_set_id: file_set.id, new_file_path: new_cover)).to be false
+    end
+  end
+
+  describe "#files_attributes" do
+    subject { described_class.files_attributes(kind, ebooks_downloadable) }
+
+    context "eBooks are not downloadable" do
+      let(:ebooks_downloadable) { nil }
+
+      context "cover" do
+        let(:kind) { :cover }
+        it "returns correct representative kind with no allow_download" do
+          expect(subject).to eq ({ representative_kind: 'cover' })
+        end
+      end
+
+      context "epub" do
+        let(:kind) { :epub }
+        it "returns correct representative kind with no allow_download" do
+          expect(subject).to eq ({ representative_kind: 'epub' })
+        end
+      end
+
+      context "pdf_ebook" do
+        let(:kind) { :pdf }
+        it "returns correct representative kind with no allow_download" do
+          expect(subject).to eq ({ representative_kind: 'pdf_ebook' })
+        end
+      end
+    end
+
+    context "eBooks are downloadable" do
+      let(:ebooks_downloadable) { true }
+
+      context "cover" do
+        let(:kind) { :cover }
+        it "returns correct representative kind with no allow_download (covers are never downloadable)" do
+          expect(subject).to eq ({ representative_kind: 'cover' })
+        end
+      end
+
+      context "epub" do
+        let(:kind) { :epub }
+        it "returns correct representative kind with allow_download == 'yes'" do
+          expect(subject).to eq ({ representative_kind: 'epub', allow_download: 'yes' })
+        end
+      end
+
+      context "pdf_ebook" do
+        let(:kind) { :pdf }
+        it "returns correct representative kind with allow_download == 'yes'" do
+          expect(subject).to eq ({ representative_kind: 'pdf_ebook', allow_download: 'yes' })
+        end
+      end
     end
   end
 end

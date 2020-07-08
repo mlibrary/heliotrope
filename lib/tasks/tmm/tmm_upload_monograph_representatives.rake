@@ -70,7 +70,7 @@ namespace :heliotrope do
 
         if file_set_id.blank?
           puts "    No epub found. Adding epub using #{epub_file_paths.first}"
-          Tmm::FileService.add(doc: doc, file: epub_file_paths.first, kind: :epub)
+          Tmm::FileService.add(doc: doc, file: epub_file_paths.first, kind: :epub, downloadable: true)
 
         elsif Tmm::FileService.replace?(file_set_id: file_set_id, new_file_path: epub_file_paths.first)
           puts "    Current epub will be replaced with new #{epub_file_paths.first}"
@@ -90,7 +90,7 @@ namespace :heliotrope do
 
         if file_set_id.blank?
           puts "    No pdf_ebook found. Adding pdf_ebook using #{pdf_file_paths.first}"
-          Tmm::FileService.add(doc: doc, file: pdf_file_paths.first, kind: :pdf)
+          Tmm::FileService.add(doc: doc, file: pdf_file_paths.first, kind: :pdf, downloadable: true)
 
         elsif Tmm::FileService.replace?(file_set_id: file_set_id, new_file_path: pdf_file_paths.first)
           puts "    Current pdf will be replaced with new #{pdf_file_paths.first}"

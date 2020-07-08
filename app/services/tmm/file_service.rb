@@ -2,13 +2,13 @@
 
 module Tmm
   class FileService
-    def self.add(doc:, file:, kind:)
+    def self.add(doc:, file:, kind:, downloadable: nil)
       user = User.find_by(email: doc['depositor_tesim'].first)
       monograph = Monograph.find(doc.id)
       uploaded_file = Hyrax::UploadedFile.create(file: File.new(file), user: user)
       attrs = {}
       attrs[:import_uploaded_files_ids] = [uploaded_file.id]
-      attrs[:import_uploaded_files_attributes] = [files_attributes(kind)]
+      attrs[:import_uploaded_files_attributes] = [files_attributes(kind, downloadable)]
       Hyrax::CurationConcern.actor.update(Hyrax::Actors::Environment.new(monograph, Ability.new(user), attrs))
     end
 
@@ -62,15 +62,16 @@ module Tmm
       false
     end
 
-    def self.files_attributes(kind)
-      case kind
-      when :cover
-        { representative_kind: 'cover' }
-      when :epub
-        { allow_download: 'yes', representative_kind: 'epub' }
-      when :pdf
-        { allow_download: 'yes', representative_kind: 'pdf_ebook' }
-      end
+    def self.files_attributes(kind, ebooks_downloadable = nil)
+      attrs = case kind
+              when :cover
+                { representative_kind: 'cover' }
+              when :epub
+                { representative_kind: 'epub' }
+              when :pdf
+                { representative_kind: 'pdf_ebook' }
+              end
+      ebooks_downloadable && [:epub, :pdf].include?(kind) ? attrs.merge({ allow_download: 'yes' }) : attrs
     end
   end
 end
