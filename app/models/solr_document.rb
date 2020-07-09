@@ -6,6 +6,7 @@ class SolrDocument
   include Hyrax::SolrDocumentBehavior
 
   include SolrDocumentExtensions
+  include HeliotropeMimeTypes
   # self.unique_key = 'id'
 
   # Email uses the semantic field mappings below to generate the body of an email.

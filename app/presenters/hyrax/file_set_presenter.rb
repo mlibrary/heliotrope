@@ -26,7 +26,7 @@ module Hyrax
     end
 
     # CurationConcern methods
-    delegate :stringify_keys, :human_readable_type, :collection?, :image?, :video?,
+    delegate :stringify_keys, :human_readable_type, :collection?, :image?, :video?, :eps?,
              :audio?, :pdf?, :office_document?, :representative_id, :to_s, to: :solr_document
 
     # Methods used by blacklight helpers
@@ -122,10 +122,6 @@ module Hyrax
 
     def height
       solr_document['height_is']
-    end
-
-    def eps?
-      mime_type == 'application/postscript'
     end
 
     def interactive_map?

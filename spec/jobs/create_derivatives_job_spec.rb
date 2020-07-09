@@ -25,7 +25,7 @@ describe Hyrax::CreateDerivativesJob do
     end
   end
 
-  # see config/initializers/file_set_derivative_service_monkey_patch.rb
+  # see app/overrides/hyrax/file_set_derivatives_service_overrides.rb
   context "with a Word file" do
     let(:file) do
       Hydra::PCDM::File.new do |f|
@@ -41,7 +41,7 @@ describe Hyrax::CreateDerivativesJob do
     end
   end
 
-  # see config/initializers/file_set_derivative_service_monkey_patch.rb
+  # see app/overrides/hyrax/file_set_derivatives_service_overrides.rb
   context "with an Excel file" do
     let(:file) do
       Hydra::PCDM::File.new do |f|
@@ -53,6 +53,22 @@ describe Hyrax::CreateDerivativesJob do
 
     it "doesn't create derivatives" do
       expect(Hydra::Derivatives::DocumentDerivatives).not_to receive(:create)
+      described_class.perform_now(file_set, file.id)
+    end
+  end
+
+  # see HELIO-3438 and app/models/concerns/heliotrope_mime_types.rb
+  context "video file with mime type `video/mpg`" do
+    let(:file) do
+      Hydra::PCDM::File.new do |f|
+        f.content = File.open(File.join(fixture_path, 'empty.txt')) # file name/contents not relevant here
+        f.original_name = 'blah.mpg'
+        f.mime_type = 'video/mpg'
+      end
+    end
+
+    it "creates derivatives" do
+      expect(Hydra::Derivatives::VideoDerivatives).to receive(:create)
       described_class.perform_now(file_set, file.id)
     end
   end

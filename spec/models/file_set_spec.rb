@@ -69,4 +69,20 @@ describe FileSet do
       expect(HandleDeleteJob).to have_received(:perform_later).with(noid)
     end
   end
+
+  describe 'shortcut methods for mime types' do
+    let(:file_set) { create(:file_set) }
+
+    context 'video?' do
+      subject { file_set.video? }
+
+      before do
+        allow(file_set).to receive(:mime_type).and_return('video/mpg')
+      end
+
+      it 'returns true for a mime type of `video/mpg`' do
+        expect(subject).to be true
+      end
+    end
+  end
 end
