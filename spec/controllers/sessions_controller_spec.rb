@@ -100,7 +100,7 @@ RSpec.describe SessionsController, type: :controller do
     describe '#discovery_feed' do
       it 'gets full discovery feed' do
         get :discovery_feed
-        expect(response).to be_success
+        expect(response).to be_successful
         expect { JSON.parse response.body }.not_to raise_error
         expect(JSON.parse(response.body).size).to eq(2)
         expect(JSON.parse(response.body)[0]['entityID']).to eq('https://shibboleth.umich.edu/idp/shibboleth')

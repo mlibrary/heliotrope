@@ -37,7 +37,7 @@ RSpec.describe Hyrax::MonographsController, type: :controller do
       describe "#show" do
         it 'is successful' do
           get :show, params: { id: monograph }
-          expect(response).to be_success
+          expect(response).to be_successful
         end
       end
 

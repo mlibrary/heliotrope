@@ -54,7 +54,7 @@ RSpec.describe FulcrumController, type: :controller do
       it 'authenticated' do
         sign_in user
         get :index, params: { locale: 'en', partials: :users }
-        expect(response).to be_success
+        expect(response).to be_successful
       end
     end
   end
@@ -82,7 +82,7 @@ RSpec.describe FulcrumController, type: :controller do
       it 'authenticated' do
         sign_in user
         get :show, params: { locale: 'en', partials: :users, id: Base64.urlsafe_encode64(user.email) }
-        expect(response).to be_success
+        expect(response).to be_successful
       end
     end
   end

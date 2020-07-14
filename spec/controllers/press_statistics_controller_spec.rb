@@ -12,7 +12,7 @@ RSpec.describe PressStatisticsController, type: :controller do
       end
 
       it 'is successful' do
-        expect(response).to be_success
+        expect(response).to be_successful
         expect(response).to render_template('press_statistics/index')
       end
     end

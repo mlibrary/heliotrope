@@ -20,7 +20,7 @@ RSpec.describe ScoreCatalogController, type: :controller do
       end
 
       it "is successful" do
-        expect(response).to be_success
+        expect(response).to be_successful
         expect(response).to render_template('score_catalog/index')
         expect(controller.instance_variable_get(:@presenter).class).to eq Hyrax::ScorePresenter
         expect(controller.instance_variable_get(:@ebook_download_presenter).class).to eq EBookDownloadPresenter
@@ -35,7 +35,7 @@ RSpec.describe ScoreCatalogController, type: :controller do
       end
 
       it "redirects to login" do
-        expect(response).not_to be_success
+        expect(response).not_to be_successful
         expect(response).not_to render_template('score_catalog/index')
         expect(response).to redirect_to(new_user_session_path)
       end

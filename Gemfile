@@ -8,9 +8,8 @@ git_source(:github) do |repo_name|
 end
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '~> 5.1.6.2'
-# HELIO-2566
-gem 'actionview', ">= 5.1.6.2"
+gem 'rails', '~> 5.2.4.3'
+
 gem 'rails-html-sanitizer', '~> 1.3.0'
 
 # Use sqlite3 as the database for Active Record
@@ -52,9 +51,9 @@ group :development, :test do
   # gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
   # Adds support for Capybara system testing and selenium driver
   # This is picky, fiddly stuff requiring rails/capybara/etc versions to be in sync
-  gem 'capybara', '~> 2.18'
+  gem 'capybara', '~> 3.29'
   # https://groups.google.com/forum/#!topic/ruby-capybara/xR77bvMCGUo
-  gem 'selenium-webdriver', '3.141.0'
+  gem 'selenium-webdriver', '~> 3.141.0'
   gem 'webdrivers', '~> 3.0'
 end
 
@@ -79,6 +78,11 @@ gem 'tzinfo-data', platforms: %i[mingw mswin x64_mingw jruby]
 # HELIO-2531
 gem "sassc", ">= 2.0.0"
 gem "bootstrap-sass", ">= 3.4.1"
+
+# A rails 5.2 thing. Might make startup faster. Not sure if it really matters though.
+# I guess we'll see.
+# https://github.com/Shopify/bootsnap
+gem 'bootsnap', '~> 1.4.6'
 
 # Canister provides containers
 gem 'canister', '~> 0.9.0'
@@ -109,7 +113,7 @@ gem 'faraday_middleware', '~>0.12.2'
 # Use gem version of handle_rest
 gem 'handle_rest', git: 'https://github.com/mlibrary/handle_rest', ref: '944fa06a119072f060d986862c34dea7215ebd29'
 
-gem 'hyrax', '2.7.0'
+gem 'hyrax', '2.8.0'
 
 # Use Jekyll for blog and informational pages
 gem 'jekyll', '~> 3.6.3'
@@ -191,6 +195,7 @@ group :development, :test do
   gem 'rspec-context-private'
   gem 'rspec-html-matchers'
   gem 'rspec-rails'
+  gem 'rspec-repeat', '~> 1.0.2'
   gem 'rubocop', '~> 0.74'
   gem 'rubocop-rspec', '~> 1.35'
   gem 'rubocop-rails_config', '~> 0.7.2'
