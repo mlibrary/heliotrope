@@ -297,7 +297,7 @@ RSpec.describe HandleJob, type: :job do
 
         before do
           allow(ActiveFedora::SolrService).to receive(:query)
-            .with("+has_model_ssim:[* TO *]",
+            .with("+(has_model_ssim:Monograph OR has_model_ssim:FileSet)",
               fl: %w[id has_model_ssim],
               rows: 100_000)
             .and_return(model_docs)
