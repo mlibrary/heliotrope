@@ -44,6 +44,20 @@ class Monograph < ActiveFedora::Base
     index.as :stored_searchable
   end
 
+  property :edition_name, predicate: ::RDF::Vocab::BIBO.edition, multiple: false do |index|
+    index.as :stored_searchable
+  end
+
+  property :previous_edition, predicate: ::RDF::URI.new('http://fulcrum.org/ns#PreviousEdition'), multiple: false do |index|
+    index.as :symbol
+  end
+  validates :previous_edition, format: { allow_blank: true, with: URI.regexp(%w[http https]), message: 'must be a url.' }
+
+  property :next_edition, predicate: ::RDF::URI.new('http://fulcrum.org/ns#NextEdition'), multiple: false do |index|
+    index.as :symbol
+  end
+  validates :next_edition, format: { allow_blank: true, with: URI.regexp(%w[http https]), message: 'must be a url.' }
+
   include HeliotropeUniversalMetadata
   include ::Hyrax::WorkBehavior
   # This must come after the WorkBehavior because it finalizes the metadata

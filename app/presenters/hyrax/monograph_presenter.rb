@@ -15,7 +15,7 @@ module Hyrax
              :subject, :section_titles, :based_near, :publisher, :date_published, :language,
              :isbn, :license, :copyright_holder, :open_access, :funder, :funder_display, :holding_contact, :has_model,
              :buy_url, :embargo_release_date, :lease_expiration_date, :rights, :series,
-             :visibility, :identifier, :doi, :handle, :thumbnail_path,
+             :visibility, :identifier, :doi, :handle, :thumbnail_path, :edition_name, :previous_edition, :next_edition,
              to: :solr_document
 
     def creator

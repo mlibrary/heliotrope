@@ -1,4 +1,6 @@
-<%# Remove once our Hyrax version has this https://github.com/samvera/hyrax/pull/4080 %>
+<%# Originally added because our Hyrax version lacks this https://github.com/samvera/hyrax/pull/4080 %>
+<%# but field validation errors are also missing from Hyrax (the `f.object.errors.full_messages.each` stuff) %>
+<%# TODO: maybe fold those back into Hyrax cause right now field validations result in an empty alert div %>
 <%= simple_form_for [main_app, @form],
                     html: {
                       data: { behavior: 'work-form',
@@ -8,6 +10,13 @@
   <% if f.object.errors.any? %>
     <div class="alert alert-danger alert-dismissable" role="alert">
       <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      The form contains <%= pluralize(f.object.errors.count, "error") %>:
+      <ul>
+        <% f.object.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+      </ul>
+
       <%= f.object.errors.full_messages_for(:base).send(SimpleForm.error_method) %>
       <%= render 'form_in_works_error', f: f %>
       <%= render 'form_ordered_members_error', f: f %>

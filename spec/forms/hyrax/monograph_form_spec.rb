@@ -52,7 +52,10 @@ describe Hyrax::MonographForm do
                            funder_display
                            holding_contact
                            location
-                           section_titles]
+                           section_titles
+                           edition_name
+                           previous_edition
+                           next_edition]
     }
   end
 
@@ -90,7 +93,10 @@ describe Hyrax::MonographForm do
                            funder
                            funder_display
                            holding_contact
-                           section_titles]
+                           section_titles
+                           edition_name
+                           previous_edition
+                           next_edition]
     }
   end
 
