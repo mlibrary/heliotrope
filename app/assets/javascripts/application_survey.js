@@ -1,7 +1,6 @@
-$(document).ready(function () {
-  if ($(".asset").length > 0 || (".monograph").length > 0) {
-    displaySurvey();
-    closeSurvey();
+$(document).on('turbolinks:load', function() {
+  {
+    displayNonModalSurvey();
   }
 });
 
@@ -10,23 +9,27 @@ $(document).ready(function () {
 // if the users chooses to ignore the survey or clicks the link to the survey
 // don't show the survey message again.
 
-function displaySurvey() {
+// This survey function is called from an onClick action in _survey_modal.html.erb
+// When a user selects a format to download, the modal is activated
+function displayModalSurvey() {
   var surveyStatus = Cookies.get('survey');
   if (( surveyStatus == 'ignore') || (surveyStatus == 'clicked')) {
-    $("div.survey").hide();
+    $('#surveyModal').modal('hide');
   } else {
-    $("div.survey").show();
+    $('#surveyModal').modal('show');
   }
 }
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-function closeSurvey() {
-  $(".survey a.close").click(function() {
-    $("div.survey").hide();
-  });
-
-  $(".survey a.btn-primary").click(function() {
-    $("div.survey").hide();
-  });
+// This survey function is called above on document load and appears only in e-reader
+// The survey is hidden by default to prevent a flash of the survey if 
+// cookie surveyStatus = 'ignore' or 'clicked'
+function displayNonModalSurvey() {
+  var surveyStatus = Cookies.get('survey');
+  if (( surveyStatus == 'ignore') || (surveyStatus == 'clicked')) {
+    $('div.alert.survey').hide();
+  } else {
+    $('div.alert.survey').show();
+  }
 }
+
+
