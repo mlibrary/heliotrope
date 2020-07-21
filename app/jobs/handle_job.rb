@@ -44,7 +44,7 @@ class HandleJob < ApplicationJob
 
   def model_docs
     ActiveFedora::SolrService.query(
-      "+has_model_ssim:[* TO *]",
+      "+(has_model_ssim:Monograph OR has_model_ssim:FileSet)",
       fl: %w[id has_model_ssim],
       rows: 100_000
     ) || []

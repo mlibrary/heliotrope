@@ -1,22 +1,27 @@
 <p id="notice"><%= notice %></p>
 <div id="maincontent">
   <h1>Handle Deposits</h1>
-  <div class="col-md-12">
-    <div class="col-md-1">ID</div>
-    <div class="col-md-2">Noid</div>
-    <div class="col-md-2">Action</div>
-    <div class="col-md-2">Verified</div>
-    <div class="col-md-5">Modified</div>
-  </div>
-  <div class="col-md-12"><hr/></div>
+  <form name="filter" method="get" action="<%= handle_deposits_path %>">
+    <b>
+      <div class="col-md-12"><hr/></div>
+      <div class="col-md-12">
+        <% size = 12 %>
+        <div class="col-md-2"><div>NOID</div><div><input type="text" name="noid_like" value="<%= params[:noid_like] %>" size="<%= size %>" aria-label="noid_like"></div></div>
+        <div class="col-md-2"><div>Action</div><div><input type="text" name="action_like" value="<%= params[:action_like] %>" size="<%= size %>" aria-label="action_like"></div></div>
+        <div class="col-md-2"><div>Verified</div><div><input type="checkbox" name="verified_like" value=0 <%= params[:verified_like] == '0' ? 'checked' : '' %> aria-label="verified_like"> false</div></div>
+        <div class="col-md-6"><div>Modified</div><div><button name="submit" type="submit" value="filter">Filter</button></div></div>
+      </div>
+      <div class="col-md-12"><hr/></div>
+    </b>
+  </form>
   <% @handle_deposits.each do |handle_deposit| %>
     <div class="col-md-12">
-      <div class="col-md-1"><%= "#{handle_deposit.id}" %></div>
-      <div class="col-md-2"><%= "#{handle_deposit.noid}" %></div>
+      <% entity =  Sighrax.from_noid(handle_deposit.noid) %>
+      <div class="col-md-2"><%= link_to handle_deposit.noid, Sighrax.url(entity) %></div>
       <div class="col-md-2"><%= "#{handle_deposit.action}" %></div>
       <div class="col-md-2"><%= "#{handle_deposit.verified}" %></div>
-      <div class="col-md-5"><%= "#{handle_deposit.updated_at}" %></div>
+      <div class="col-md-6"><%= "#{handle_deposit.updated_at}" %></div>
     </div>
   <% end %>
-  <div class="col-md-12"><br></div>
+  <div class="col-md-12">&nbsp;<%= paginate @handle_deposits %></div>
 </div>
