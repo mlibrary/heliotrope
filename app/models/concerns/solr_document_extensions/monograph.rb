@@ -48,5 +48,17 @@ module SolrDocumentExtensions
     def funder_display
       Array(self[Solrizer.solr_name('funder_display', :stored_searchable)]).first
     end
+
+    def edition_name
+      Array(self[Solrizer.solr_name('edition_name', :stored_searchable)])
+    end
+
+    def previous_edition
+      Array(self[Solrizer.solr_name('previous_edition', :symbol)])
+    end
+
+    def next_edition
+      Array(self[Solrizer.solr_name('next_edition', :symbol)])
+    end
   end
 end

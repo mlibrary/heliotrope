@@ -297,6 +297,12 @@ en:
         Used as publication location for monograph citations, e.g. for UofM Press enter "Ann Arbor, MI"
       series: |
         If the monograph is part of one or more series, enter them separated by semi-colons. These will be used in a Series facet.
+      edition_name: |
+        If the monograph is part of one or more series, enter them separated by semi-colons. These will be used in a Series facet.
+      previous_edition: |
+        If the monograph is part of one or more series, enter them separated by semi-colons. These will be used in a Series facet.
+      next_edition: |
+        If the monograph is part of one or more series, enter them separated by semi-colons. These will be used in a Series facet.
       keywords: |
         The topic of the resource. Typically, the topic will be represented using keywords or key phrases. Be consistent in how you name keywords, e.g. WWII or WW2, not both.
 
