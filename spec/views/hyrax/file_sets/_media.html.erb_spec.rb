@@ -23,7 +23,7 @@ RSpec.describe 'hyrax/file_sets/_media' do
   context 'with an external_resource' do
     it 'has the external resource url' do
       render
-      expect(rendered).to match('<a href="http://things.at/stuff" title=')
+      expect(rendered).to match('<a class="btn btn-default btn-lg" href="http://things.at/stuff" title=')
     end
   end
 

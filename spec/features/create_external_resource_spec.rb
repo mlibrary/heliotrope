@@ -63,11 +63,11 @@ describe 'Create an external resource' do
 
       click_link 'Gallery'
       expect(find('#documents')['class']).to include('gallery')
-      expect(page).to have_link('View External Object', href: "https://www.example.com/blah")
+      expect(page).to have_link('Open external resource at https://www.example.com', href: "https://www.example.com/blah")
 
       click_link 'List'
       expect(find('#documents')['class']).to include('documents-list')
-      expect(page).to have_link('View External Object', href: "https://www.example.com/blah")
+      expect(page).to have_link('Open external resource at https://www.example.com', href: "https://www.example.com/blah")
 
       # On FileSet Page
       visit hyrax_file_set_path(file_set)
@@ -76,7 +76,7 @@ describe 'Create an external resource' do
       expect(page).to have_content 'This is a caption for the external resource'
       expect(page).to have_content 'University of Michigan'
       # Look for the text highlighting this is an external resource
-      expect(page).to have_content 'This is an external resource hosted on another website.'
+      expect(page).to have_content 'This is an external resource hosted at https://www.example.com. When selecting the button above you will be leaving this website.'
       expect(page).to have_link(nil, href: "https://www.example.com/blah")
 
       # no image present on an external resource's FileSet page
