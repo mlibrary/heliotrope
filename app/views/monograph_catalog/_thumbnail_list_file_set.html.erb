@@ -7,7 +7,8 @@
     <% elsif fs_presenter.use_glyphicon? %>
       <%= tn.gsub(/<img.*>/, fs_presenter.gylphicon + "<br/></a>".html_safe).html_safe %>
       <% if fs_presenter.external_resource? %>
-        <a class="external-resource-link" href="<%= document.external_resource_url %>" target="_blank"><span class="glyphicon glyphicon-share" aria-hidden="true"></span> View External Object</a>
+        <% uri =  URI.parse(document.external_resource_url) %>
+        <a class="external-resource-link" href="<%= document.external_resource_url %>" target="_blank"><span class="glyphicon glyphicon-share" aria-hidden="true"></span> Open external resource at <%= uri.scheme %>://<%= uri.host %></a>
       <% end %>
     <% else %>
       <%= tn %>

@@ -16,8 +16,9 @@
       <%= render_document_partials document, blacklight_config.view_config(:gallery).partials, document_counter: document_counter %>
     </div>
     <% if fs_presenter.external_resource? %>
+      <% uri =  URI.parse(document.external_resource_url) %>
       <div class="external-resource-link">
-        <a href="<%= document.external_resource_url %>" target="_blank"><span class="glyphicon glyphicon-share" aria-hidden="true"></span> View External Object</a>
+        <a href="<%= document.external_resource_url %>" target="_blank"><span class="glyphicon glyphicon-share" aria-hidden="true"></span> Open external resource at <%= uri.scheme %>://<%= uri.host %></a>
       </div>
     <% end %>
   </div>
