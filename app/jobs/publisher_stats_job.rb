@@ -18,6 +18,7 @@ class PublisherStatsJob < ApplicationJob
       user_count = publisher.user_ids.count
       trash_flag = !(monograph_count.positive? || asset_count.positive? || user_count.positive? || publisher.children.present?)
       {
+        modified: press.updated_at.strftime('%F'),
         subdomain: press.subdomain,
         name: press.name,
         monographs: monograph_count,

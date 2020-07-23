@@ -7,10 +7,11 @@
       <% end %>
     </th>
     <th onclick="sortTable(1, false)">Publisher</th>
+    <th onclick="sortTable(3, false)">Modified</th>
     <th onclick="sortTable(2, false)">Subdomain</th>
-    <th onclick="sortTable(3, true)">Monographs</th>
-    <th onclick="sortTable(4, true)">Assets</th>
-    <th onclick="sortTable(5, true)">Users</th>
+    <th onclick="sortTable(4, true)">Monographs</th>
+    <th onclick="sortTable(5, true)">Assets</th>
+    <th onclick="sortTable(6, true)">Users</th>
     <th></th>
   </tr>
   <% @publishers_stats[:presses].each do |press| %>
@@ -20,6 +21,7 @@
         <% end %>
       </td>
       <td><%= press[:name] %></td>
+      <td><%= press[:modified] %></td>
       <td><%= link_to press[:subdomain], "/#{press[:subdomain]}?locale=#{I18n.locale}" %></td>
       <td><%= press[:monographs] %>&nbsp;<%= link_to(concern_monographs_new_path(press: press[:subdomain])) do %>
           <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Add
