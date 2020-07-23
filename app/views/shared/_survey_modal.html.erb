@@ -1,8 +1,5 @@
 <!-- survey -->
 <% presenter = @presenter %>
-<!-- TODO: gather needed params -->
-<% asset_link_needed = presenter.class == Hyrax::FileSetPresenter %>
-<% link_params = '?Book=' + (asset_link_needed ? presenter.parent.page_title + '&Asset=' + presenter.page_title : presenter.page_title) %>
 <div id="surveyModal" class="modal fade survey" tabindex="-1" role="dialog" aria-labelledby="surveyModalLabel">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
@@ -11,7 +8,7 @@
         <h4 class="modal-title" id="surveyModalLabel">Share the story of what Open Access means to you</h4>
       </div>
       <div class="modal-body">
-        <%= image_tag 'oa-lock-logo-lg.png',:alt => 'a graphic of a lock that is open, the universal logo for open access'  %>
+        <%= image_tag 'oa-lock-logo-lg.png', alt: 'a graphic of a lock that is open, the universal logo for open access'  %>
         <p>University of Michigan needs your feedback to better understand how readers are using openly available ebooks. You can help by taking a short, privacy-friendly survey.</p>
       </div>
       <div class="modal-footer">

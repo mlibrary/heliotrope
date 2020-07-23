@@ -61,6 +61,9 @@ Lint/Void:
 
 Metrics/BlockLength:
   Enabled: false
+Metrics/BlockNesting:
+  Exclude:
+    - 'app/views/monograph_catalog/_index_monograph.html.erb.rb'
 Metrics/LineLength:
   Enabled: false
 
