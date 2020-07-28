@@ -42,8 +42,12 @@
     <% if @presenter.authors? %>
         <span class="authors"><%= render_markdown @presenter.authors %></span>
     <% end %>
-    <% if @presenter.date_created? %>
-    <span aria-label="publication date" class="pubdate"><%= @presenter.date_created.first %></span>
+    <% if @presenter.date_created.present? %>
+      <% pub_year = @presenter.edition_name.present? ? "#{@presenter.date_created.first}, " : @presenter.date_created.first %>
+      <span aria-label="publication date"><%= pub_year %></span>
+    <% end %>
+    <% if @presenter.edition_name.present? %>
+      <span aria-label="edition name"><%= @presenter.edition_name %></span>
     <% end %>
     <% if @presenter.license? %>
       <span class="license"><a aria-label="<%= @presenter.license_alt_text %>" rel="license" href="<%= @presenter.license.first %>" target="_blank"><%= @presenter.license_link_content %></a></span>
@@ -110,6 +114,20 @@
             <% end %>
           </div><!-- /.btn-group -->
         </div><!-- /.btn-toolbar -->
+    <% end %>
+    <% if @presenter.previous_edition_url.present? || @presenter.next_edition_url.present? %>
+      <div class="edition-links">
+      <% if @presenter.previous_edition_url.present? %>
+        <div class="edition-link">
+          <a href="<%= @presenter.previous_edition_url %>" title="<%= t('monograph_catalog.index.previous_edition', title: @presenter.title) %>" aria-label="<%= t('monograph_catalog.index.previous_edition', title: @presenter.title) %>" data-turbolinks="false"><%= t('monograph_catalog.index.previous_edition_html', title: @presenter.title) %></a>
+        </div>
+      <% end %>
+      <% if @presenter.next_edition_url.present? %>
+        <div class="edition-link">
+          <a href="<%= @presenter.next_edition_url %>" title="<%= t('monograph_catalog.index.next_edition', title: @presenter.title) %>" aria-label="<%= t('monograph_catalog.index.next_edition', title: @presenter.title) %>" data-turbolinks="false"><%= t('monograph_catalog.index.next_edition_html', title: @presenter.title) %></a>
+        </div>
+      <% end %>
+      </div>
     <% end %>
     <% if @presenter.webgl? %>
       <div id="webgl-message"></div>

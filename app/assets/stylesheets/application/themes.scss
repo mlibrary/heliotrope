@@ -2222,7 +2222,7 @@ $barpublishing-white: #fff;
     }
   }
 
-  
+
   .alert-dismissible .close {
     top: -18px;
     right: -16px;
@@ -2243,16 +2243,19 @@ $barpublishing-white: #fff;
           text-decoration: none;
         }
         p.authors {
+          color: $barpublishing-grey-3;
+        }
+        span.pub-date, span.bar-number, span.edition-name {
           margin-bottom: 2px;
           color: $barpublishing-grey-3;
         }
-        span.pub-date, span.bar-number {
-          font-size: 13px;
+        span.pub-date, span.edition-name {
+          display: inline-block;
+        }
+        span.bar-number {
           display: block;
-          margin-bottom: 2px;
-          color: $barpublishing-grey-3;
+          font-size: 13px;
         }
-
       }
     }
   }

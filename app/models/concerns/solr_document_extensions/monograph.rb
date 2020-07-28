@@ -50,15 +50,15 @@ module SolrDocumentExtensions
     end
 
     def edition_name
-      Array(self[Solrizer.solr_name('edition_name', :stored_searchable)])
+      Array(self[Solrizer.solr_name('edition_name', :stored_searchable)]).first
     end
 
     def previous_edition
-      Array(self[Solrizer.solr_name('previous_edition', :symbol)])
+      Array(self[Solrizer.solr_name('previous_edition', :symbol)]).first
     end
 
     def next_edition
-      Array(self[Solrizer.solr_name('next_edition', :symbol)])
+      Array(self[Solrizer.solr_name('next_edition', :symbol)]).first
     end
   end
 end
