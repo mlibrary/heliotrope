@@ -1,7 +1,8 @@
 <% provide :page_title, @presenter.page_title %>
 <% provide :page_class, 'search monograph' %>
 <% provide :page_header do %>
-  <%# render 'shared/survey' %>
+    <!-- survey -->
+  <%= render 'shared/survey_modal' %>
   <!-- breadcrumbs -->
   <%= render 'shared/breadcrumbs' %>
 <% end %><!-- provide :page_header -->

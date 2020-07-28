@@ -1,0 +1,29 @@
+<!-- survey -->
+<% presenter = @presenter %>
+<div id="surveyModal" class="modal fade survey" tabindex="-1" role="dialog" aria-labelledby="surveyModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="survey_button_no()" data-ga-event-category="monograph_page" data-ga-event-action="survey" data-ga-event-label="ignore_survey"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="surveyModalLabel">Share the story of what Open Access means to you</h4>
+      </div>
+      <div class="modal-body">
+        <%= image_tag 'oa-lock-logo-lg.png', alt: 'a graphic of a lock that is open, the universal logo for open access'  %>
+        <p>University of Michigan needs your feedback to better understand how readers are using openly available ebooks. You can help by taking a short, privacy-friendly survey.</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary btn-lg" data-dismiss="modal" onclick="survey_button_yes()" data-ga-event-category="monograph_page" data-ga-event-action="survey" data-ga-event-label="open_survey">Yes, I can help</button>
+        <button type="button" class="btn btn-default btn-lg" data-dismiss="modal" onclick="survey_button_no()" data-ga-event-category="monograph_page" data-ga-event-action="survey" data-ga-event-label="ignore_survey">No thanks</button>
+      </div>
+    </div>
+  </div>
+</div>
+<script type="text/javascript">
+  function survey_button_yes(){
+    Cookies.set('survey', 'clicked', { expires: 365, secure: true, sameSite: 'strict' });
+    window.open("https://umich.qualtrics.com/jfe/form/SV_5ApssrqydELoPM9?publisher=<%= @presenter.subdomain %>&title=<%= @presenter.title %>", "_blank");
+  }
+  function survey_button_no(){
+    Cookies.set('survey', 'ignore', { expires: 180, secure: true, sameSite: 'strict' });
+  }
+</script>

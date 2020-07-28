@@ -187,32 +187,92 @@ div.skip {
 //////////////////////////////////
 // SURVEY
 ///////////////////////////////////
-.survey {
-  font-size: 1.5em;
-
-  .message {
-      padding-bottom: 1em;
+// Modal survey on monograph page
+.modal.survey {
+  h4 {
+    font-size: 2rem;
   }
 
-  a.btn-primary, a.btn-primary:hover, a.btn-primary:active {
+  .close {
+    opacity: 1;
+  }
+
+  .modal-body {
+    img {
+      float: left;
+      padding: 0 2em .9em .5em;
+      height: 170px;
+    }
+    p {
+      font-size: 1.85rem;
+    }
+  }
+  .modal-footer {
+    text-align: left;
+    clear: both;
+
+    .btn-primary,
+    .btn-primary:hover {
       color: #fff;
+    }
+
+    .btn-default,
+    .btn-default:hover,
+    .btn-default:active {
+      border: none;
+      background: none;
+      color: #333;
+    }
+  }  
+}
+
+.alert.survey {
+  position: fixed;
+  z-index: 5001;
+  bottom: 0px;
+  right: 0px;
+  padding: 0;
+  margin-bottom: 0;
+
+  .modal-dialog {
+    width: 450px;
   }
 
-  a.btn-default, a.btn-default:active, a.btn-default:hover {
-      color: inherit;
-      background-color: #d9edf7;
-      border-color: #d9edf7;
+  h4 {
+    font-size: 18px;
   }
 
-  a.close {
-      color: #31708f;
-      opacity: .75;
+  .modal-body {
+    img {
+      float: left;
+      width: 60px;
+      margin-right: 1.5em;
+      margin-bottom: 1em;
+    }
+
+    p {
+      font-size: 16px;
+    }
   }
 
-  a.close:active, a.close:hover {
-      color: #31708f;
-      opacity: 1;
-  }
+  .modal-footer {
+    text-align: left;
+    clear: both;
+
+    .btn-primary,
+    .btn-primary:hover {
+      color: #fff;
+    }
+
+    .btn-default,
+    .btn-default:hover,
+    .btn-default:active {
+      border: none;
+      background: none;
+      color: #333;
+    }
+  } 
+
 }
 
 ///////////////////////////////////
@@ -1519,6 +1579,17 @@ footer.press {
 
   .monograph .monograph-info-epub .monograph-metadata .additional-metadata dd > form {
     width: 120%;
+  }
+
+  .alert.survey {
+    top: 20%;
+    bottom: unset;
+    
+    .modal-dialog {
+      width: 90%;
+      margin: 0 auto;
+    }
+  
   }
 
 }
