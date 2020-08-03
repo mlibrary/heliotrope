@@ -116,64 +116,6 @@ RSpec.describe FacetsHelper do
     end
   end
 
-  describe "#should_collapse_facet?" do
-    subject { helper.should_collapse_facet?(facet_field, display_facet) }
-
-    let(:facet_field) { object_double(Blacklight::Configuration::FacetField.new(field: 'field').normalize!, 'facet_field', key: 'key', collapse: 'collapse') }
-    let(:display_facet) { instance_double(Blacklight::Solr::Response::Facets::FacetField, 'display_facet', items: items) }
-    let(:items) { [] }
-
-    it { is_expected.to eq 'collapse' }
-
-    context 'params[:f].present' do
-      let(:facets) { instance_double(ActionController::Parameters, 'facets') }
-
-      before do
-        allow(params).to receive(:[]).with(:f).and_return(facets)
-        allow(helper).to receive(:facet_field_in_params?).with('key').and_return(false)
-      end
-
-      it { is_expected.to eq 'collapse' }
-
-      context 'facet field in params' do
-        before { allow(helper).to receive(:facet_field_in_params?).with('key').and_return(true) }
-
-        it { is_expected.to eq false }
-      end
-
-      context 'item field present' do
-        let(:items) { [item] }
-        let(:item) { double('item', field: 'field', items: item_items) }
-        let(:item_items) { [] }
-
-        before { allow(helper).to receive(:facet_field_in_params?).with('field').and_return(false) }
-
-        it { is_expected.to eq 'collapse' }
-
-        context 'item field in params' do
-          before { allow(helper).to receive(:facet_field_in_params?).with('field').and_return(true) }
-
-          it { is_expected.to eq false }
-        end
-
-        context 'item items present' do
-          let(:item_items) { [item_item] }
-          let(:item_item) { double('item_item', field: 'field_field') }
-
-          before { allow(helper).to receive(:facet_field_in_params?).with('field_field').and_return(false) }
-
-          it { is_expected.to eq 'collapse' }
-
-          context 'items item field in params' do
-            before { allow(helper).to receive(:facet_field_in_params?).with('field_field').and_return(true) }
-
-            it { is_expected.to eq false }
-          end
-        end
-      end
-    end
-  end
-
   describe "#facet_field_in_params?" do
     let(:facet_field) { Blacklight::Configuration::FacetField.new(field: "field").normalize! }
 
@@ -219,42 +161,12 @@ RSpec.describe FacetsHelper do
       expect(helper.facet_field_in_params?(:Symbol)).to be true
     end
 
-    it 'field is a FacetField without pivot and NOT in params' do
+    it 'field is a FacetField and NOT in params' do
       allow(helper).to receive(:facet_params).and_return(nil)
       expect(helper.facet_field_in_params?(facet_field)).to be false
     end
 
-    it 'field is a FacetField without pivot and in params' do
-      allow(helper).to receive(:facet_params) do |field|
-        Blacklight::Configuration::FacetField.new(field: field).normalize!
-      end
-      expect(helper.facet_field_in_params?(facet_field)).to be true
-    end
-
-    it 'field is a FacetField with pivot and NOT in params and pivot NOT in params' do
-      facet_field[:pivot] = ["pivot"]
-      allow(helper).to receive(:facet_params).and_return(nil)
-      expect(helper.facet_field_in_params?(facet_field)).to be false
-    end
-
-    it 'field is a FacetField with pivot and NOT in params and pivot in params' do
-      facet_field[:pivot] = ["pivot"]
-      allow(helper).to receive(:facet_params) do |field|
-        field == "pivot" ? Blacklight::Configuration::FacetField.new(field: field).normalize! : nil
-      end
-      expect(helper.facet_field_in_params?(facet_field)).to be true
-    end
-
-    it 'field is a FacetField with pivot and in params and pivot NOT in params' do
-      facet_field[:pivot] = ["pivot"]
-      allow(helper).to receive(:facet_params) do |field|
-        field == "field" ? Blacklight::Configuration::FacetField.new(field: field).normalize! : nil
-      end
-      expect(helper.facet_field_in_params?(facet_field)).to be false
-    end
-
-    it 'field is a FacetField with pivot and in params and pivot in params' do
-      facet_field[:pivot] = ["pivot"]
+    it 'field is a FacetField and in params' do
       allow(helper).to receive(:facet_params) do |field|
         Blacklight::Configuration::FacetField.new(field: field).normalize!
       end
