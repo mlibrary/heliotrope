@@ -53,16 +53,10 @@ RSpec.describe MonographCatalogController, type: :controller do
         subject(:facet_field) { facet_fields[resource_type_facetable] }
 
         let(:resource_type_facetable) { described_class.solr_name('resource_type', :facetable) }
-        let(:content_type_facetable) {  described_class.solr_name('content_type', :facetable) }
+        let(:content_type_facetable) { described_class.solr_name('content_type', :facetable) }
 
         it 'label' do
           expect(facet_field.label).to eq("Format")
-        end
-        it 'pivot' do
-          expect(facet_field.pivot).not_to be_nil
-        end
-        it 'pivot keys' do
-          expect(facet_field.pivot).to eq([resource_type_facetable, content_type_facetable])
         end
       end
 

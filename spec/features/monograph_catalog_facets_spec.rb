@@ -18,7 +18,6 @@ describe "Monograph Catalog Facets" do
     let(:monograph) { create(:public_monograph, title: ["Yellow"], representative_id: cover.id) }
     let(:file_set) {
       create(:public_file_set, resource_type: ['image'],
-                               content_type: ['portrait'],
                                exclusive_to_platform: 'yes',
                                creator: ["McTesterson, Testy\nCoauthorson, Timmy"],
                                sort_date: '1974-01-01',
@@ -41,10 +40,7 @@ describe "Monograph Catalog Facets" do
       expect(page).to have_selector('#facet-creator_sim a.facet_select', count: 2)
       expect(page).to have_selector('#facet-creator_sim a.facet_select', text: 'McTesterson, Testy')
       expect(page).to have_selector('#facet-creator_sim a.facet_select', text: 'Coauthorson, Timmy')
-      expect(page).to have_selector('#facet-resource_type_sim a.facet_select')
-
-      # content type is nested/pivoted under resource type
-      expect(find('#facet-resource_type_sim-image a.facet_select').text).to eq 'portrait1'
+      expect(page).to have_selector('#facet-resource_type_sim a.facet_select', text: 'image')
       expect(page).to have_selector('#facet-search_year_sim a.facet_select')
       expect(page).to have_selector('#facet-exclusive_to_platform_sim a.facet_select')
     end

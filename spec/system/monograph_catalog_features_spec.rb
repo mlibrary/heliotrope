@@ -62,6 +62,8 @@ RSpec.describe "Monograph Catalog TOC", type: :system, browser: true do
       expect(page).not_to have_css("div#main[hidden='hidden']", visible: true) # verify lack of `hidden` attribute
       expect(page).to have_css("div#ajax-modal[hidden='hidden']", visible: false)
 
+      # somehow this expect gets the find afterwards to work more consistently. Bah. Timing errors.
+      expect(page).to have_css("div#facet-keywords_sim a.more_facets_link")
       # click "more" link to open full-screen facet modal overlay
       find("a[href='#{monograph_catalog_facet_path(id: 'keywords_sim', monograph_id: monograph.id, locale: 'en')}']").click
       expect(page).to have_css("div#main[hidden='hidden']", visible: false)
