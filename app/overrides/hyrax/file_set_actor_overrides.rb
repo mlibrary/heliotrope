@@ -18,6 +18,20 @@ Hyrax::Actors::FileSetActor.class_eval do
       yield(file_set) if block_given?
     end
 
+    # Spawns asynchronous IngestJob with user notification afterward
+    # @param [Hyrax::UploadedFile, File, ActionDigest::HTTP::UploadedFile] file the file uploaded by the user
+    # @param [Symbol, #to_s] relation
+    # @return [IngestJob] the queued job
+    def update_content(file, relation = :original_file)
+      # HELIO-3506 override for tempfiles uploaded via Versioning
+      if file.is_a?(Hyrax::UploadedFile)
+        IngestJob.perform_later(wrapper!(file: file, relation: relation), notification: true)
+      else
+        IngestJob.perform_now(wrapper!(file: file, relation: relation), notification: true)
+      end
+    end
+
+
     # Adds a FileSet to the work using ore:Aggregations.
     # Locks to ensure that only one process is operating on the list at a time.
     def attach_to_work(work, file_set_params = {})
