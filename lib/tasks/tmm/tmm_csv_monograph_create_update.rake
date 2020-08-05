@@ -15,7 +15,7 @@ namespace :heliotrope do
     fail "CSV file may accidentally be a backup as '#{input_file}' contains 'bak'. Exiting." if input_file.include? 'bak'
 
     puts "Parsing file: #{input_file}"
-    rows = CSV.read(input_file, encoding: 'windows-1252:utf-8', headers: true, skip_blanks: true).delete_if { |row| row.to_hash.values.all?(&:blank?) }
+    rows = CSV.read(input_file, encoding: 'utf-8', headers: true, skip_blanks: true).delete_if { |row| row.to_hash.values.all?(&:blank?) }
 
     monograph_fields = METADATA_FIELDS.select { |f| %i[universal monograph].include? f[:object] }
 
