@@ -6,6 +6,9 @@
     </div>
     <div class="caption">
       <h3 class="index_title">
+        <% if presenter.access_level(@actor_product_ids, @allow_read_product_ids).show? %>
+          <%= presenter.access_level(@actor_product_ids, @allow_read_product_ids).icon_sm.html_safe %>
+        <% end %>
         <%= render_markdown(document.title.first) %>
       </h3>
       <p aria-label="By <%= presenter.authors %>" class="authors"><%= presenter.authors %></p>

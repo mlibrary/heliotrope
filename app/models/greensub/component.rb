@@ -9,7 +9,9 @@ module Greensub
     scope :noid_like, ->(like) { where("noid like ?", "%#{like}%") }
 
     has_many :components_products # rubocop:disable Rails/HasManyOrHasOneDependent
-    has_many :products, through: :components_products
+    has_many :products, through: :components_products,
+                                 after_remove: :reindex_component_product,
+                                 after_add: :reindex_component_product
 
     validates :identifier, presence: true, allow_blank: false, uniqueness: true
     validates :noid, presence: true, allow_blank: false
@@ -64,6 +66,14 @@ module Greensub
 
     def resource_id
       id
+    end
+
+    # If this gets called via the has_many components_products on like:
+    # > component.products.delete(product)
+    # > component.products << product
+    # then the product gets passed as a param, which we don't actually use.
+    def reindex_component_product(_product)
+      ReindexJob.perform_later(noid)
     end
 
     private

@@ -35,6 +35,38 @@ RSpec.describe Greensub::Product, type: :model do
     end
   end
 
+  context "with components" do
+    context "adding components" do
+      let(:component) { create(:component) }
+      let(:product) { create(:product) }
+
+      it "runs the ReindexJob" do
+        expect(product.components).to be_empty
+        allow(ReindexJob).to receive(:perform_later).with(component.noid)
+        product.components << component
+        expect(ReindexJob).to have_received(:perform_later).with(component.noid)
+        expect(product.components.count).to eq 1
+      end
+    end
+
+    context "deleting compontents" do
+      let(:component) { create(:component) }
+      let(:product) { create(:product) }
+
+      before do
+        product.components << component
+      end
+
+      it "runs the ReindexJob" do
+        expect(product.components.count).to eq 1
+        allow(ReindexJob).to receive(:perform_later).with(component.noid)
+        product.components.delete(component)
+        expect(ReindexJob).to have_received(:perform_later).with(component.noid)
+        expect(product.components).to be_empty
+      end
+    end
+  end
+
   context 'methods' do
     before do
       clear_grants_table

@@ -86,10 +86,19 @@ class MonographCatalogController < ::CatalogController
       @monograph_policy = MonographPolicy.new(current_actor, Sighrax.from_presenter(@presenter))
       @press_policy = PressPolicy.new(current_actor, Press.find_by(subdomain: @presenter.subdomain))
       @ebook_download_presenter = EBookDownloadPresenter.new(@presenter, current_ability, current_actor)
+      # For Access Icons HELIO-3346
+      @actor_product_ids = Sighrax.actor_products(current_actor).pluck(:id)
+      @allow_read_product_ids = Sighrax.allow_read_products.pluck(:id)
+      @disable_read_button = disable_read_button?
     rescue RSolr::Error::ConnectionRefused, RSolr::Error::Http => e
       Rails.logger.error(%Q|[RSOLR ERROR TRY:#{retries}] #{e} #{e.backtrace.join("\n")}|)
       retries += 1
       retry if retries < 3
+    end
+
+    def disable_read_button?
+      return true if @presenter.access_level(@actor_product_ids, @allow_read_product_ids).known? && @presenter.access_level(@actor_product_ids, @allow_read_product_ids).level == :restricted
+      false
     end
 
     def load_stats

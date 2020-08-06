@@ -15,6 +15,10 @@ class MonographIndexer < Hyrax::WorkIndexer
         solr_doc[Solrizer.solr_name('press_name', :facetable)] = press_name
       end
 
+      # HELIO-3347 Indicate access levels on Publisher page, need to be able to filter by products
+      solr_doc['products_lsim'] = all_product_ids_for_monograph(object)
+      solr_doc[Solrizer.solr_name('product_names', :facetable)] = all_product_names_for_monograph(object)
+
       solr_doc[Solrizer.solr_name('title', :sortable)] = normalize_for_sort(object&.title&.first)
 
       # now that the exporter pulls directly from Solr, we need suitable values for creator/contributor
@@ -90,5 +94,35 @@ class MonographIndexer < Hyrax::WorkIndexer
     value = ActiveSupport::Inflector.transliterate(value).downcase.gsub(/[^\w\s\d-]/, '')
     # return nil to ensure removal of Solr doc value if appropriate
     value.presence
+  end
+
+  # HELIO-3347 Indicate access levels on Publisher page
+  #
+  # We need to be able to filter by
+  #
+  #   1. All content a.k.a. no filter
+  #   2. All content the current actor can access a.k.a. [-1, 0, allow read products, actor products] (see also PressSearchBuilder)
+  #   3. All Open Access content a.k.a. [-1]
+  #
+  def all_product_ids_for_monograph(obj)
+    component = Greensub::Component.find_by(noid: obj.id)
+    all_prodcuts_ids = if component.blank? || component.products.empty?
+                         # Default product ID for non-component monographs or components that don't belong to a product.
+                         [0]
+                       else
+                         # Product IDs for monograph.
+                         component.products.map(&:id)
+                       end
+    # Imaginary product ID for Open Access monographs.
+    all_prodcuts_ids << -1 if /yes/i.match?(obj.open_access)
+    all_prodcuts_ids.uniq.sort
+  end
+
+  def all_product_names_for_monograph(obj)
+    all_product_ids = all_product_ids_for_monograph(obj)
+    all_product_names = []
+    all_product_names << "Open Access" if all_product_ids.include?(-1)
+    all_product_names << "Unrestricted" if all_product_ids.include?(0)
+    all_product_names + Greensub::Product.where(id: all_product_ids).map { |product| product.name || product.identifier }
   end
 end

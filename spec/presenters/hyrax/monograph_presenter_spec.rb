@@ -575,4 +575,95 @@ RSpec.describe Hyrax::MonographPresenter do
       it { expect(presenter.funder_display?).to be true }
     end
   end
+
+  describe "#access_level with access_indicators" do
+    subject { presenter.access_level(actor_product_ids, allow_read_product_ids) }
+
+    let(:actor_product_ids) { [] }
+    let(:allow_read_product_ids) { [] }
+
+    context "unknown (a Monograph with no products indexed)" do
+      let(:mono_doc) { ::SolrDocument.new(id: 'mono', has_model_ssim: ['Monograph']) }
+      it "returns :unknown" do
+        expect(subject.level).to eq :unknown
+        expect(subject.show?).to eq false
+        expect(subject.icon_sm).to be ""
+        expect(subject.icon_lg).to be ""
+        expect(subject.text).to be ""
+      end
+    end
+
+    context "a monograph with an indexed products_lsim field" do
+      context "open_access" do
+        let(:products) { [-1] } # Open Access product is -1, but we use open_access_tesim to indicate it really. It's odd. Sorry.
+        let(:mono_doc) { ::SolrDocument.new(id: 'mono', has_model_ssim: ['Monograph'], products_lsim: products, open_access_tesim: ['yes']) }
+
+        it do
+          expect(subject.level).to eq :open_access
+          expect(subject.show?).to eq true
+          expect(subject.icon_sm).to eq ActionController::Base.helpers.image_tag("open-access.svg", width: "16px", height: "16px", alt: "Open Access")
+          expect(subject.icon_lg).to eq ActionController::Base.helpers.image_tag("open-access.svg", width: "24px", height: "24px", alt: "Open Access")
+          expect(subject.text).to eq ::I18n.t('access_levels.access_level_text.open_access')
+        end
+      end
+
+      context "purchased" do
+        let(:mono_doc) { ::SolrDocument.new(id: 'mono', has_model_ssim: ['Monograph'], products_lsim: products) }
+        let(:products) { [1] }
+        let(:actor_product_ids) { [1] }
+
+        it do
+          expect(subject.level).to eq :purchased
+          expect(subject.show?).to eq true
+          expect(subject.icon_sm).to eq ActionController::Base.helpers.image_tag("green_check.svg", width: "16px", height: "16px", alt: "Purchased")
+          expect(subject.icon_lg).to eq ActionController::Base.helpers.image_tag("green_check.svg", width: "24px", height: "24px", alt: "Purchased")
+          expect(subject.text).to eq ::I18n.t('access_levels.access_level_text.purchased')
+        end
+      end
+
+      context "free" do
+        let(:mono_doc) { ::SolrDocument.new(id: 'mono', has_model_ssim: ['Monograph'], products_lsim: products) }
+        let(:products) { [1] }
+        let(:allow_read_product_ids) { [1] }
+
+        it do
+          expect(subject.level).to eq :free
+          expect(subject.show?).to eq true
+          expect(subject.icon_sm).to eq ActionController::Base.helpers.image_tag("free.svg", width: "38px", height: "16px", alt: "Free", style: "vertical-align: top")
+          expect(subject.icon_lg).to eq ActionController::Base.helpers.image_tag("free.svg", width: "57px", height: "24px", alt: "Free", style: "vertical-align: bottom")
+          expect(subject.text).to eq ::I18n.t('access_levels.access_level_text.free')
+        end
+      end
+
+      context "unrestricted" do
+        let(:mono_doc) { ::SolrDocument.new(id: 'mono', has_model_ssim: ['Monograph'], products_lsim: products) }
+        let(:products) { [0] } # unrestricted is "0", it's a Monograph without a Component
+
+        it do
+          expect(subject.level).to eq :unrestricted
+          expect(subject.show?).to eq false
+          expect(subject.icon_sm).to eq ''
+          expect(subject.icon_lg).to eq ''
+          expect(subject.text).to eq ''
+        end
+      end
+
+      context "restricted" do
+        let(:mono_doc) { ::SolrDocument.new(id: 'mono', has_model_ssim: ['Monograph'], products_lsim: products) }
+        let(:products) { [] }
+
+        before do
+          FeaturedRepresentative.create(work_id: 'mono', file_set_id: 'epubnoid', kind: 'epub')
+        end
+
+        it do
+          expect(subject.level).to eq :restricted
+          expect(subject.show?).to eq true
+          expect(subject.icon_sm).to eq ActionController::Base.helpers.image_tag("lock_locked.svg", width: "16px", height: "16px", alt: "Restricted")
+          expect(subject.icon_lg).to eq ActionController::Base.helpers.image_tag("lock_locked.svg", width: "24px", height: "24px", alt: "Restricted")
+          expect(subject.text).to eq ::I18n.t('access_levels.access_level_text.restricted') + " <a href=\"http://test.host/epubs_access/epubnoid\">How to get access.</a>"
+        end
+      end
+    end
+  end
 end

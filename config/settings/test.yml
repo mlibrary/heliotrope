@@ -33,3 +33,7 @@ handle_service:
   user: admin
   password: secret
   ssl_verify: false
+
+# List of Greensub Products to allow read access to everyone.
+allow_read_products:
+  - allow_read_product

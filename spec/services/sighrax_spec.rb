@@ -715,4 +715,45 @@ RSpec.describe Sighrax do
       end
     end
   end
+
+  context 'Greensub Helpers' do
+    describe '#allow_read_products' do
+      subject { described_class.allow_read_products }
+
+      it { is_expected.to be_empty }
+
+      context 'products' do
+        let(:products) { instance_double(Array, 'products') }
+
+        before do
+          allow(Settings).to receive(:allow_read_products).and_return('identifier')
+          allow(Greensub::Product).to receive(:where).with(identifier: 'identifier').and_return(products)
+        end
+
+        it { is_expected.to be(products) }
+      end
+    end
+
+    describe '#actor_products' do
+      subject { described_class.actor_products(actor) }
+
+      let(:actor) { instance_double(Anonymous, 'actor') }
+      let(:products) { instance_double(Array, 'products') }
+
+      before { allow(Greensub).to receive(:actor_products).with(actor).and_return(products) }
+
+      it { is_expected.to be(products) }
+
+      context 'Incognito' do
+        let(:incognito_products) { instance_double(Array, 'incognito_products') }
+
+        before do
+          allow(Incognito).to receive(:sudo_actor?).with(actor).and_return(true)
+          allow(Incognito).to receive(:sudo_actor_products).with(actor).and_return(incognito_products)
+        end
+
+        it { is_expected.to be(incognito_products) }
+      end
+    end
+  end
 end

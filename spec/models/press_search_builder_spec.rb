@@ -57,4 +57,41 @@ describe PressSearchBuilder do
       end
     end
   end
+
+  describe "filter_by_product_access" do
+    let(:press) { create(:press) }
+
+    context "for a subscriber with access to OA, default, free, and purchased" do
+      let(:current_user) { create(:user) }
+      let(:free_results) { instance_double(ActiveRecord::Result, 'free_results') }
+      let(:purchased_results) { instance_double(ActiveRecord::Result, 'purchased_results') }
+
+      before do
+        allow(context).to receive(:current_actor).and_return(current_user)
+        search_builder.blacklight_params['press'] = press.subdomain
+        search_builder.blacklight_params['user_access'] = 'true' # the string 'true'
+        allow(Sighrax).to receive(:allow_read_products).and_return(free_results)
+        allow(Sighrax).to receive(:actor_products).with(current_user).and_return(purchased_results)
+        allow(free_results).to receive(:pluck).with(:id).and_return([2, 4])
+        allow(purchased_results).to receive(:pluck).with(:id).and_return([1, 3])
+      end
+
+      it "creates a query for the books the user can access" do
+        search_builder.filter_by_product_access(solr_params)
+        expect(solr_params[:fq].first).to eq("{!terms f=products_lsim}-1,0,1,2,3,4")
+      end
+    end
+
+    context "when only OA books should be shown" do
+      before do
+        search_builder.blacklight_params['press'] = press.subdomain
+        search_builder.blacklight_params['user_access'] = "oa"
+      end
+
+      it "creates a query for the books the user can access" do
+        search_builder.filter_by_product_access(solr_params)
+        expect(solr_params[:fq].first).to eq("{!terms f=products_lsim}-1")
+      end
+    end
+  end
 end

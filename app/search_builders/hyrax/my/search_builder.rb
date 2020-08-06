@@ -3,7 +3,7 @@
 module Hyrax
   module My
     # Search builder for things that the current user has edit access to
-    # Heliotrope Hyrax override
+    # Heliotrope Hyrax override. This is used only on the `/dashboard/my/works?locale=en` page
     # @abstract
     class SearchBuilder < ::SearchBuilder
       # Check for edit access

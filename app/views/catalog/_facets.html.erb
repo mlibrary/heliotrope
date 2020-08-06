@@ -12,7 +12,100 @@
   </div>
 
   <div id="facet-panel-collapse" class="collapse panel-group">
+    <% if params['controller'] == "press_catalog" %>
+    <%# The press_catalog "user_access" "fake facet", HELIO-3347 %>
+    <%# I think using the unsafe .permit! method here is ok. There is no "update" or mass assignment in blacklight... %>
+    <%# Also: reset the page to 0 if these change, otherwise it's possible to land on empty results with no navigation! %>
+    <div class="panel panel-default facet_limit blacklight-user_access">
+      <div tabindex="0"
+           role="button"
+           class="panel-heading facet-field-heading collapse-toggle"
+           data-toggle="collapse"
+           data-target="#facet-user_access"
+           aria-expanded="false">
+        <span class="sr-only">Filter search results by</span>
+        <h3 class="panel-title">Access</h3>
+      </div>
+      <div id="facet-user_access" class="panel-collapse facet-content collapse in">
+        <div class="panel-body">
+          <ul class="facet-values list-unstyled">
+            <li>
+              <a class="facet-anchor facet_select" href="<%= url_for(params.deep_dup.except("user_access").except("page").permit!) %>">
+                <span class="facet-label">
+                  <% if params["user_access"].nil? %>
+                    <input type="radio" aria-label="View all content" name="user_access" checked> All Content
+                  <% else %>
+                    <input type="radio" aria-lable="View all content" name="user_access"> All Content
+                  <% end %>
+                </span>
+              </a>
+            </li>
+            <li>
+              <a class="facet-anchor facet_select" href="<%= url_for(params.deep_dup.merge(user_access: "true").except("page").permit!) %>">
+                <span class="facet-label">
+                  <% if params["user_access"] == "true" %>
+                    <input type="radio" aria-label="View only content I can access" name="user_access" checked> Only content I can access
+                  <% else %>
+                    <input type="radio" aria-label="View only content I can access" name="user_access"> Only content I can access
+                  <% end %>
+                </span>
+              </a>
+            </li>
+            <li>
+              <a class="facet-anchor facet_select" href="<%= url_for(params.deep_dup.merge(user_access: "oa").except("page").permit!) %>">
+                <span class="facet-label">
+                  <% if params["user_access"] == "oa" %>
+                    <input type="radio" aria-label="View only open access content" name="user_access" checked> Only open access content
+                  <% else %>
+                    <input type="radio" aria-label="View only open access content" name="user_access"> Only open access content
+                  <% end %>
+                </span>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <% end %>
     <%= render_facet_partials %>
   </div>
+  <% if params['controller'] == "press_catalog" %>
+  <%# Access Icon Legend, HELIO-3520 %>
+  <div class="panel-group" style="padding: 15px">
+    <div class="panel panel-default facet_limit">
+      <div class="panel-heading">
+        <h3 class="panel-title">
+          Legend
+        </h3>
+      </div>
+      <div class="panel-body">
+        <div class="row">
+          <p style="padding-left: 10px">
+            <%= image_tag "free.svg", height: "16px", width: "38px", alt: "Free Icon" %>
+            Free resource
+          </p>
+        </div>
+        <div class="row">
+          <p style="padding-left: 10px">
+            <%= image_tag "green_check.svg", height: "16px", width: "16px", alt: "Purchased Icon" %>
+            Access provided by your Library
+          </p>
+        </div>
+        <div class="row">
+          <p style="padding-left: 10px">
+            <%= image_tag "lock_locked.svg", height: "16px", width: "16px", alt: "Restricted Icon" %>
+            You do not have access
+          </p>
+        </div>
+        <div class="row">
+          <p style="padding-left: 10px">
+            <%= image_tag "open-access.svg", height: "16px", width: "16px", alt: "Open Access Icon" %>
+            Open access
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <% end %>
 </div>
 <% end %>
