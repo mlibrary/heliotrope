@@ -14,6 +14,29 @@
 
   <script src="/mozilla-pdf-viewer/build/pdf.js"></script>
 
+  <% if defined? @subdomain %>
+    <%# only include hypothes.is for leverpress um press and its subpresses at this point %>
+    <% if %w[leverpress michigan cjs cseas csas lrccs ummaa].include? @subdomain %>
+  
+      <!-- hypothes.is -->
+      <script type="text/javascript">
+        window.hypothesisConfig = function () {
+          return {
+            openSidebar: false,
+            theme: 'clean', // "clean" or "classic"
+            enableMultiFrameSupport: true,
+            onLayoutChange: function(state) {
+              var $frame = $('.annotator-frame');
+              var $reader = $("#reader");
+            },
+            enableExperimentalNewNoteButton: true
+          };
+        };
+      </script>
+      <script src="https://cdn.hypothes.is/hypothesis"></script>
+    <% end %>
+  <% end %>
+
 <% end %>
 
 <% provide :body do %>
@@ -370,6 +393,38 @@
           return undefined;
        },
     });
+
+    <% if %w[leverpress michigan cjs cseas csas lrccs ummaa].include? @subdomain %>
+        // Create custom annotator button that is aware of its state
+        AnnotationTool = cozy.Control.Widget.Toggle.extend({
+        defaultTemplate: '<button data-hypothesis-trigger class="button--sm annotation" data-toggle="button" aria-label="Open Annotations"><i class="fa fa-pencil" title="Open annotation panel" aria-hidden="true"></i></button><div class="annotation-count" data-hypothesis-annotation-count></div>',
+
+        initialize: function(options) {
+
+              cozy.Control.Widget.Toggle.prototype.initialize.apply(this, arguments);
+
+              this.options.states = [{
+                stateName: 'close-annotator',
+                onClick: this.openAnnotator.bind(this)
+              },
+              {
+                stateName: 'open-annotator',
+                onClick: this.closeAnnotator.bind(this)
+              }];
+            },
+
+            openAnnotator: function(self, reader) {
+              this.options.$panel.removeClass("annotator-collapsed");
+              self.state('open-annotator');
+            },
+
+            closeAnnotator: function(self, reader) {
+              this.options.$panel.addClass("annotator-collapsed");
+              self.state('close-annotator');
+            }
+
+        })
+      <% end %>
 
     cozy.Control.Preferences.fieldset.PDFScale = cozy.Control.Preferences.fieldset.Scale.extend({
       options: {},
@@ -921,6 +976,33 @@
     <%= render "cozy_controls_top", presenter: @presenter, parent_presenter: @parent_presenter %>
 
     <%= render "cozy_controls_bottom", presenter: @presenter, parent_presenter: @parent_presenter %>
+
+    <% if %w[leverpress michigan cjs cseas csas lrccs ummaa].include? @subdomain %>
+    // Annotation widget checks and initialization
+        var tm;
+        function checkForAnnotator(cb, w) {
+          if (!w) {
+            w = window;
+          }
+          tm = setTimeout(function () {
+            if (w && w.annotator) {
+              clearTimeout(tm);
+              cb();
+            } else {
+              checkForAnnotator(cb, w);
+            }
+          }, 100);
+        }
+
+        var $panel = $('.annotator-frame');
+
+        // pass the reference to the panel
+        var annotation_tool = new AnnotationTool({
+          region: 'top.toolbar.left',
+          $panel: $panel
+        })
+        annotation_tool.addTo(reader);
+      <% end %>
 
     // start reader
     reader.start();
