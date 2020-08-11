@@ -9,13 +9,17 @@
         <%= render_markdown(document.title.first) %>
       </h3>
       <p aria-label="By <%= presenter.authors %>" class="authors"><%= presenter.authors %></p>
-      <% if press.subdomain == 'barpublishing' %>
-        <% if presenter.date_created.length.positive? %>
-          <span class="pub-date">(<%= presenter.date_created[0] %>)</span>
-        <% end %>
-        <% if presenter.bar_number&.length&.positive? %>
-          <span class="bar-number"><strong><%= t('bar_number') %>:</strong> <%= presenter.bar_number %></span>
-        <% end %>
+      <% if presenter.date_created.present? %>
+        <% pub_year = press.subdomain == 'barpublishing' ? "(#{presenter.date_created.first})" : presenter.date_created.first %>
+        <span aria-label="publication date" class="pub-date"><%= pub_year %></span>
+      <% end %>
+      <% if presenter.edition_name.present? %>
+        <%# very unlikely the publication year will be missing, but anyway %>
+        <% edition = presenter.date_created.present? ? " (#{presenter.edition_name})" : "(#{presenter.edition_name})" %>
+        <span aria-label="edition name" class="edition-name"><%= edition %></span>
+      <% end %>
+      <% if presenter.bar_number&.length&.positive? %>
+        <span class="bar-number"><strong><%= t('bar_number') %>:</strong> <%= presenter.bar_number %></span>
       <% end %>
     </div>
   <% end %>

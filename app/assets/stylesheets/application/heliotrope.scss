@@ -223,7 +223,7 @@ div.skip {
       background: none;
       color: #333;
     }
-  }  
+  }
 }
 
 .alert.survey {
@@ -271,7 +271,7 @@ div.skip {
       background: none;
       color: #333;
     }
-  } 
+  }
 
 }
 
@@ -354,6 +354,15 @@ footer.press {
 
 }
 .press {
+  p.authors {
+    margin-bottom: 2px;
+  }
+
+  span.pub-date, span.edition-name {
+    font-size: 13px;
+    margin-bottom: 10px;
+    margin-top: 0;
+  }
 
   // List View
   #documents.documents-list {
@@ -523,12 +532,19 @@ footer.press {
 
   .metrics {
     padding-top: .5em;
+    padding-bottom: 1em;
 
     .altmetric-embed {
       padding-bottom: .5em;
     }
   }
 
+  .previous-edition-metrics {
+    // the Altmetric widgets are always the same width
+    max-width: 110px;
+    padding-top: .5em;
+    border-top: 2px solid #d5d5d5;
+  }
   .fulcrum_sidebar {
     // In hyrax2 this defaults to grey which we don't want
     background-color: white;
@@ -575,8 +591,9 @@ footer.press {
       padding-bottom: .2em;
     }
 
-    .pubdate {
+    .year-and-edition {
       padding-right: .4em;
+      margin-left: 0;
       vertical-align: middle;
     }
 
@@ -603,6 +620,10 @@ footer.press {
       img {
         margin-right: .5em;
       }
+    }
+
+    .edition-link, .edition-links {
+      padding-top: 0.5em;
     }
   }
 
@@ -1584,12 +1605,12 @@ footer.press {
   .alert.survey {
     top: 20%;
     bottom: unset;
-    
+
     .modal-dialog {
       width: 90%;
       margin: 0 auto;
     }
-  
+
   }
 
 }
