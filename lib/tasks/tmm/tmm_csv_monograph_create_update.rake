@@ -15,7 +15,8 @@ namespace :heliotrope do
     fail "CSV file may accidentally be a backup as '#{input_file}' contains 'bak'. Exiting." if input_file.include? 'bak'
 
     puts "Parsing file: #{input_file}"
-    rows = CSV.read(input_file, encoding: 'utf-8', headers: true, skip_blanks: true).delete_if { |row| row.to_hash.values.all?(&:blank?) }
+    # we need UTF-8 and TMM needs to export UTF-16 for now because of this kind of thing: https://dba.stackexchange.com/a/250018
+    rows = CSV.read(input_file, encoding: 'utf-16:utf-8', headers: true, skip_blanks: true).delete_if { |row| row.to_hash.values.all?(&:blank?) }
 
     monograph_fields = METADATA_FIELDS.select { |f| %i[universal monograph].include? f[:object] }
 
