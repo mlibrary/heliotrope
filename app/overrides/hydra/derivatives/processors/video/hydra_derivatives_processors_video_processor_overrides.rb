@@ -3,7 +3,7 @@
 # see HELIO-2207, HELIO-2208
 Hydra::Derivatives::Processors::Video::Processor.class_eval do
   prepend(HeliotropeVideoProcessorOverrides = Module.new do
-    # source https://github.com/samvera/hydra-derivatives/blob/f781d112e05155c90d3de9c6bc05308864ecb1cf/lib/hydra/derivatives/processors/video/config.rb#L1
+    # source https://github.com/samvera/hydra-derivatives/blob/f781d112e05155c90d3de9c6bc05308864ecb1cf/lib/hydra/derivatives/processors/video/processor.rb#L1
 
     protected
 
