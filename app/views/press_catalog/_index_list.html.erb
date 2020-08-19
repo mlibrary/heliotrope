@@ -10,12 +10,7 @@
     <p aria-label="By <%= presenter.authors %>" class="authors"><%= presenter.authors %></p>
     <% if presenter.date_created.present? %>
       <% pub_year = press.subdomain == 'barpublishing' ? "(#{presenter.date_created.first})" : presenter.date_created.first %>
-      <span aria-label="publication date" class="pub-date"><%= pub_year %></span>
-    <% end %>
-    <% if presenter.edition_name.present? %>
-      <%# very unlikely the publication year will be missing, but anyway %>
-      <% edition = presenter.date_created.present? ? " (#{presenter.edition_name})" : "(#{presenter.edition_name})" %>
-      <span aria-label="edition name" class="edition-name"><%= edition %></span>
+      <span aria-label="publication date" class="pub-date"><%= pub_year %></span><% if presenter.edition_name.present? %><span aria-label="edition name" class="edition-name"><%= sanitize presenter.edition_name %></span><% end %>
     <% end %>
     <% if presenter.bar_number&.length&.positive? %>
       <span class="bar-number"><strong><%= t('bar_number') %>:</strong> <%= presenter.bar_number %></span>

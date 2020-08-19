@@ -4,6 +4,7 @@ module Hyrax
   class MonographPresenter < WorkShowPresenter
     include CommonWorkPresenter
     include CitableLinkPresenter
+    include EditionPresenter
     include OpenUrlPresenter
     include TitlePresenter
     include SocialShareWidgetPresenter
@@ -15,7 +16,7 @@ module Hyrax
              :subject, :section_titles, :based_near, :publisher, :date_published, :language,
              :isbn, :license, :copyright_holder, :open_access, :funder, :funder_display, :holding_contact, :has_model,
              :buy_url, :embargo_release_date, :lease_expiration_date, :rights, :series,
-             :visibility, :identifier, :doi, :handle, :thumbnail_path, :edition_name, :previous_edition, :next_edition,
+             :visibility, :identifier, :doi, :handle, :thumbnail_path, :previous_edition, :next_edition,
              to: :solr_document
 
     def creator
@@ -219,34 +220,6 @@ module Hyrax
         end && next
       end
       creators
-    end
-
-    def previous_edition_presenter
-      return @previous_edition_presenter if @previous_edition_presenter.present?
-      # don't instantiate a presenter unless the link is to a Monograph in the current app this user can read
-      return nil if previous_edition.blank? || previous_edition_noid.blank? || !current_ability.can?(:read, previous_edition_noid)
-      @previous_edition_hash ||= ActiveFedora::SolrService.query("+id:#{previous_edition_noid} AND +has_model_ssim:Monograph", rows: 1).first.to_h
-      @previous_edition_presenter ||= Hyrax::MonographPresenter.new(::SolrDocument.new(@previous_edition_hash), current_ability)
-    end
-
-    def previous_edition_url
-      return nil if /https?:\/\//i.match(previous_edition).blank?
-      return nil if previous_edition_noid.present? && !current_ability.can?(:read, previous_edition_noid)
-      previous_edition
-    end
-
-    def next_edition_url
-      return nil if /https?:\/\//i.match(next_edition).blank?
-      return nil if next_edition_noid.present? && !current_ability.can?(:read, next_edition_noid)
-      next_edition
-    end
-
-    def previous_edition_noid
-      @previous_edition_noid ||= /https?:\/\/#{Rails.application.routes.default_url_options[:host]}\/concern\/monographs\/([[:alnum:]]{9})/i.match(previous_edition)&.[](1)
-    end
-
-    def next_edition_noid
-      @next_edition_noid ||= /https?:\/\/#{Rails.application.routes.default_url_options[:host]}\/concern\/monographs\/([[:alnum:]]{9})/i.match(next_edition)&.[](1)
     end
   end
 end
