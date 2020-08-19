@@ -10,7 +10,11 @@
   </div>
     <% if @presenter&.previous_edition_presenter&.doi_path&.present? || @presenter&.previous_edition_presenter&.isbn_noformat&.first&.present? %>
       <div class="previous-edition-metrics">
-      <%= @presenter&.previous_edition_presenter&.edition_name %>
+      <% if @presenter&.previous_edition_presenter&.date_created.present? %>
+        <div class="pub-date-edition-name">
+          <span aria-label="publication date" class="pub-date"><%= @presenter&.previous_edition_presenter&.date_created&.first %></span><% if @presenter&.previous_edition_presenter&.edition_name.present? %><span aria-label="edition name" class="edition-name"><%= sanitize @presenter&.previous_edition_presenter&.edition_name %></span><% end %>
+        </div>
+      <% end %>
     <% if @presenter&.previous_edition_presenter&.isbn_noformat&.present? %>
       <script type='text/javascript' src='https://d1bxh8uas1mnw7.cloudfront.net/assets/embed.js'></script>
       <div data-badge-type="1" data-isbn="<%= @presenter&.previous_edition_presenter&.isbn_noformat&.first %>" data-hide-no-mentions="true" class="altmetric-embed"></div>
@@ -19,5 +23,5 @@
       <span class="__dimensions_badge_embed__" data-doi="<%= @presenter&.previous_edition_presenter&.doi_path %>" data-hide-zero-citations="true" data-legend="never" data-style="large_rectangle"></span><script async src="https://badge.dimensions.ai/badge.js" charset="utf-8"></script>
     <% end %>
       </div>
-    <% end %>
+  <% end %>
 <% end %>

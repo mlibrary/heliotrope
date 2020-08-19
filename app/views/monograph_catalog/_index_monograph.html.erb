@@ -43,11 +43,7 @@
         <span class="authors"><%= render_markdown @presenter.authors %></span>
     <% end %>
     <% if @presenter.date_created.present? %>
-      <% pub_year = @presenter.edition_name.present? ? "#{@presenter.date_created.first}, " : @presenter.date_created.first %>
-      <span aria-label="publication date"><%= pub_year %></span>
-    <% end %>
-    <% if @presenter.edition_name.present? %>
-      <span aria-label="edition name"><%= @presenter.edition_name %></span>
+      <span aria-label="publication date"><%= @presenter.date_created.first %></span><% if @presenter.edition_name.present? %><span aria-label="edition name"><%= sanitize @presenter.edition_name %></span><% end %>
     <% end %>
     <% if @presenter.license? %>
       <span class="license"><a aria-label="<%= @presenter.license_alt_text %>" rel="license" href="<%= @presenter.license.first %>" target="_blank"><%= @presenter.license_link_content %></a></span>
