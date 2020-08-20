@@ -78,7 +78,7 @@ describe 'Edit a file set' do
       expect(page).to have_css('input.file_set_section_title', count: 1)
       fill_in 'Related Section', with: 'Test section with _Italicized Title_ therein'
 
-      fill_in 'External Resource URL', with: 'URL'
+      fill_in 'External Resource URL', with: 'https://example.com/thingy'
       fill_in 'Allow Download?', with: 'no4'
       fill_in 'Allow Hi-Res?', with: 'yes2'
       fill_in 'Credit Line', with: 'A Nice Museum'

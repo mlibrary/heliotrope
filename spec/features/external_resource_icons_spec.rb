@@ -11,7 +11,7 @@ describe "Monograph Catalog Facets" do
 
   context "external resource image icons" do
     let(:monograph) { create(:public_monograph, title: ["External"], representative_id: cover.id) }
-    let(:file_set1) { create(:public_file_set, external_resource_url: 'URL', resource_type: ["image"]) }
+    let(:file_set1) { create(:public_file_set, external_resource_url: 'https://example.com/1', resource_type: ["image"]) }
 
     before do
       monograph.ordered_members << cover
@@ -38,7 +38,7 @@ describe "Monograph Catalog Facets" do
 
   context "external resource file icons" do
     let(:monograph) { create(:public_monograph, title: ["External"], representative_id: cover.id) }
-    let(:file_set1) { create(:public_file_set, external_resource_url: 'URL', resource_type: ["text"]) }
+    let(:file_set1) { create(:public_file_set, external_resource_url: 'https://example.com/2', resource_type: ["text"]) }
 
     before do
       monograph.ordered_members << cover
@@ -65,7 +65,7 @@ describe "Monograph Catalog Facets" do
 
   context "external resource video icons" do
     let(:monograph) { create(:public_monograph, title: ["External"], representative_id: cover.id) }
-    let(:file_set1) { create(:public_file_set, external_resource_url: 'URL', resource_type: ["video"]) }
+    let(:file_set1) { create(:public_file_set, external_resource_url: 'https://example.com/3', resource_type: ["video"]) }
 
     before do
       monograph.ordered_members << cover
@@ -92,7 +92,7 @@ describe "Monograph Catalog Facets" do
 
   context "external resource audio icons" do
     let(:monograph) { create(:public_monograph, title: ["External"], representative_id: cover.id) }
-    let(:file_set1) { create(:public_file_set, external_resource_url: 'URL', resource_type: ["audio"]) }
+    let(:file_set1) { create(:public_file_set, external_resource_url: 'https://example.com/4', resource_type: ["audio"]) }
 
     before do
       monograph.ordered_members << cover
