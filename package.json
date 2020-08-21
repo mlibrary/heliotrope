@@ -2,9 +2,14 @@
   "name": "heliotrope",
   "private": true,
   "dependencies": {
-    "@rails/webpacker": "5.2.1"
+    "@rails/webpacker": "5.2.1",
+    "jquery": "^3.5.1",
+    "js-cookie": "^2.2.1"
   },
   "devDependencies": {
     "webpack-dev-server": "^3.11.0"
+  },
+  "optionalDependencies": {
+    "xml-js": "^1.6.11"
   }
 }

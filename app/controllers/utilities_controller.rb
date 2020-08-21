@@ -56,4 +56,8 @@ class UtilitiesController < ApplicationController
     WHO_AM_I
     render plain: who_am_i
   end
+
+  def ableplayer
+    render layout: false
+  end
 end
