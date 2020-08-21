@@ -24,10 +24,12 @@
 
     <!-- CSS -->
     <%= stylesheet_link_tag 'application' %>
+    <%= stylesheet_pack_tag 'application' %>
 
     <!-- Javascript -->
     <%= javascript_include_tag 'application' %>
     <%= javascript_include_tag 'https://umich.edu/apis/umcookieconsent/umcookieconsent.js' %>
+    <%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>
 
     <%# See comments in HELIO-3046. While working on HELIO-3162 this seemed to help system spec behavior locally %>
     <% if Rails.env.test? %>
