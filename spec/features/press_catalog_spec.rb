@@ -114,15 +114,15 @@ describe 'Press Catalog' do
       end
     end
 
-    context 'with a press with 15 or more open monographs' do
+    context 'with a press with 9 or more open monographs' do
       before do
-        16.times do |n|
+        10.times do |n|
           title = Faker::Book.title
           name1 = Faker::Book.author
           open_access = nil
 
           # give 3 of the books a second creator, for a total of 16 + 3 = 19 creators
-          if [5, 10, 15].include? n
+          if [3, 6, 9].include? n
             name2 = Faker::Book.author
             creators = [name1, name2]
             open_access = 'yes' # also make these open access to test that facet
@@ -170,7 +170,7 @@ describe 'Press Catalog' do
         # dedicated facet modal shows up to 20 values, we expect 19 creator names
         find("a[href='/#{heb.subdomain}/facet?id=creator_sim&locale=en']").click
         # save_and_open_page
-        expect(page).to have_selector('a.facet-anchor.facet_select', count: 19)
+        expect(page).to have_selector('a.facet-anchor.facet_select', count: 13)
       end
     end
   end # not logged in
