@@ -6,9 +6,58 @@ RSpec.describe Press, type: :model do
   describe 'validation' do
     let(:press) { described_class.new }
 
-    it 'must have a subdomain' do
-      expect(press.valid?).to eq false
-      expect(press.errors.messages[:subdomain]).to eq ["can't be blank", "2 to 32 lowercase alphanumeric ascii characters"]
+    context 'subdomain' do
+      it 'must have a subdomain' do
+        expect(press.valid?).to eq false
+        expect(press.errors.messages[:subdomain])
+            .to eq ["can't be blank", "is too short (minimum is 2 characters)",
+                    "Lowercase alphanumeric ascii characters and hyphens only"]
+      end
+
+      it 'cannot have a subdomain less than 2 characters' do
+        press.subdomain = 'x'
+        expect(press.valid?).to eq false
+        expect(press.errors.messages[:subdomain]).to eq ["is too short (minimum is 2 characters)"]
+      end
+
+      it 'cannot have a subdomain greater than 32 characters' do
+        press.subdomain = 'really-long-press-subdomain-value-blahdy-blah'
+        expect(press.valid?).to eq false
+        expect(press.errors.messages[:subdomain]).to eq ["is too long (maximum is 32 characters)"]
+      end
+
+      it 'cannot contain uppercase letters' do
+        press.subdomain = 'SHOUTY'
+        expect(press.valid?).to eq false
+        expect(press.errors.messages[:subdomain]).to eq ["Lowercase alphanumeric ascii characters and hyphens only"]
+      end
+
+      it 'cannot start with a hyphen' do
+        press.subdomain = '-hyphen-start'
+        expect(press.valid?).to eq false
+        expect(press.errors.messages[:subdomain])
+            .to eq ["Cannot start or end with a hyphen or have consecutive hyphens"]
+      end
+
+      it 'cannot end with a hyphen' do
+        press.subdomain = 'hyphen-end-'
+        expect(press.valid?).to eq false
+        expect(press.errors.messages[:subdomain])
+            .to eq ["Cannot start or end with a hyphen or have consecutive hyphens"]
+      end
+
+      it 'cannot have consecutive hyphens' do
+        press.subdomain = 'consecutive--hyphens'
+        expect(press.valid?).to eq false
+        expect(press.errors.messages[:subdomain])
+            .to eq ["Cannot start or end with a hyphen or have consecutive hyphens"]
+      end
+
+      it 'can contain 2-32 lowercase ASCII chars and non-consecutive hyphens' do
+        press.subdomain = 'nice-hyphenated-value'
+        expect(press.valid?).to eq false # as it's still missing other requirements like name, description, press_url
+        expect(press.errors.messages[:subdomain]).to eq []
+      end
     end
 
     it 'must have a name' do

@@ -3,7 +3,10 @@
 class Press < ApplicationRecord
   mount_uploader :logo_path, LogoPathUploader
   validates :name, presence: true, uniqueness: true
-  validates :subdomain, presence: true, uniqueness: true, format: { with: /\A([a-z]|\d){2,32}\z/, message: '2 to 32 lowercase alphanumeric ascii characters' }
+  validates :subdomain, presence: true, uniqueness: true,
+            length: { minimum: 2, maximum: 32 },
+            format: { with: /\A[-0-9a-z]+\z/, message: :format }
+  validate :subdomain_hyphens
   validates :description, presence: true, uniqueness: true
   # don't want to add a gem for this right now, this will at least prevent relative links
   validates :press_url, presence: true, uniqueness: true, format: URI.regexp(%w[http https])
@@ -53,5 +56,10 @@ class Press < ApplicationRecord
 
   def self.null_press
     NullPress.new
+  end
+
+  def subdomain_hyphens
+    return if subdomain.blank?
+    errors.add(:subdomain, :hyphens) if subdomain.start_with?('-') || subdomain.end_with?('-') || subdomain.include?('--')
   end
 end
