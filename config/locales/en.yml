@@ -38,6 +38,9 @@ en:
             logo_path:
               blank: "You must upload a logo image"
               taken: "This logo image is already taken"
+            subdomain:
+              format: "Lowercase alphanumeric ascii characters and hyphens only"
+              hyphens: "Cannot start or end with a hyphen or have consecutive hyphens"
   allow_display_after_expiration: "Allow Display After Expiration?"
   allow_download: "Allow Download?"
   allow_download_after_expiration: "Allow Download After Expiration?"
@@ -300,6 +303,9 @@ en:
         previous_edition: "Full DOI (or other) URL pointing to the previous edition of the Monograph"
         section_titles: "Used like a table of contents to indicate the order of attached FileSets' \"related sections\"."
         subject: "Keywords which describe what this monograph is about."
+      press:
+        description: "Description of the Press. Markdown is allowed."
+        subdomain: "Subdomain used as the Press URL. 2-32 lowercase alphanumeric ASCII characters, plus (non-consecutive) hyphens. Must not start or end with a hyphen."
   sort_date: "Sort Date"
   transcript: "Transcript"
   translation: "Translation(s)"
