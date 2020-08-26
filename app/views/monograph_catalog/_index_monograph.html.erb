@@ -98,8 +98,39 @@
                   <ul class="dropdown-menu monograph-catalog-rep-downloads">
                   <% @ebook_download_presenter.ebook_presenters.each do |ebook| %>
                     <% if @ebook_download_presenter.downloadable?(ebook) %>
+<%# Democracy and Debate titles requiring temporary ereader survey hack. TODO: remove when possible %>
+<%# horrible indentation cause Ruumba %>
+<%
+ereader_survey_titles = %w[
+  gq67js19r
+  bv73c132k
+  7d278t87f
+  pv63g2033
+  7d278t88q
+  wh246v07t
+  cj82k879b
+  db78td58z
+  mp48sd49d
+  z029p637r
+  5t34sk67j
+  zc77sr73f
+  js956h350
+  g158bj82p
+  qb98mg66j
+  1n79h511f
+  6h440t76h
+  3t945r69k
+  fx719n646
+  zp38wd48w
+  kh04dq580
+  rn3012840
+  q811kk505
+  1544bq992
+  h702q709t
+]
+%>
                       <!-- TODO: add logic to display survey if book is free -->
-                      <li><a data-rep-type="<%= ebook.ebook_format.downcase %>" href="<%= download_ebook_path(ebook.id) %>" <% if @presenter.open_access? %> onclick="displayModalSurvey();" <% end %> target="_blank"><%= ebook.ebook_format %> (<%= number_to_human_size(ebook.file_size) %>)</a></li>
+                      <li><a data-rep-type="<%= ebook.ebook_format.downcase %>" href="<%= download_ebook_path(ebook.id) %>" <% if @presenter.open_access? || ereader_survey_titles.include?(@presenter.id) %> onclick="displayModalSurvey();" <% end %> target="_blank"><%= ebook.ebook_format %> (<%= number_to_human_size(ebook.file_size) %>)</a></li>
                     <% end %>
                   <% end %>
                   </ul>
