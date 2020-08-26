@@ -69,13 +69,7 @@ class ApplicationController < ActionController::Base
   end
 
   def current_institutions
-    if session[:dlpsInstitutionId]
-      insts = Greensub::Institution.where(identifier: session[:dlpsInstitutionId]).to_a
-    else
-      insts = (ip_based_institutions + shib_institutions).uniq
-      session[:dlpsInstitutionId] = insts.map(&:identifier).map(&:to_s)
-    end
-    insts
+    @current_institutions ||= (ip_based_institutions + shib_institutions).uniq
   end
 
   private
