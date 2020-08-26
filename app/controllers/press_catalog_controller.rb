@@ -75,7 +75,7 @@ class PressCatalogController < ::CatalogController
       if @press.subdomain == Services.score_press
         musical_score
       else
-        if display_works.count >= 15
+        if display_works.count >= 9
           # per page
           blacklight_config.default_per_page = 15
           blacklight_config.per_page = [10, 15, 50, 100]
