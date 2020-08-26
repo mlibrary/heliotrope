@@ -115,8 +115,11 @@ gem 'handle_rest', git: 'https://github.com/mlibrary/handle_rest', ref: '944fa06
 
 gem 'hyrax', '2.8.0'
 
+# pinned for Jekyll
+gem 'i18n', '~> 0.7'
+
 # Use Jekyll for blog and informational pages
-gem 'jekyll', '~> 3.6.3'
+gem 'jekyll', '~> 3.9.0'
 
 # Use jquery as the JavaScript library
 gem 'jquery-rails'
@@ -128,6 +131,10 @@ gem 'jwt'
 
 # Keycard provides authentication support and user/request information
 gem 'keycard', '~> 0.2.4'
+
+# markdown support for Jekyll, CVE-2020-14001
+gem "kramdown", ">= 2.3.0"
+gem "kramdown-parser-gfm"
 
 # Use MySQL as the database for Active Record
 gem 'mysql2', '~> 0.4.10'
