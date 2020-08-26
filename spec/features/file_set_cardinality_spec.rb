@@ -30,7 +30,7 @@ describe 'FileSet Cardinality' do
                       doi: "",
                       hdl: "",
                       exclusive_to_platform: "yes",
-                      external_resource_url: "URL",
+                      external_resource_url: "https://example.com/blah",
                       holding_contact: "Some museum or something somewhere",
                       keywords: ["dogs", "cats", "fish"],
                       permissions_expiration_date: "2020-01-01",
@@ -139,8 +139,8 @@ describe 'FileSet Cardinality' do
       expect(doc.exclusive_to_platform).to eql 'yes'
       expect(find('#file_set_exclusive_to_platform')[:class]).not_to include 'multi-text-field'
 
-      expect(cover.external_resource_url).to eql 'URL'
-      expect(doc.external_resource_url).to eql 'URL'
+      expect(cover.external_resource_url).to eql 'https://example.com/blah'
+      expect(doc.external_resource_url).to eql 'https://example.com/blah'
       expect(find('#file_set_external_resource_url')[:class]).not_to include 'multi-text-field'
 
       expect(cover.holding_contact).to eql 'Some museum or something somewhere'
