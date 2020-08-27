@@ -46,6 +46,11 @@
 
   <dataDir>${solr.blacklight-core.data.dir:}</dataDir>
 
+  <!-- HELIO-3542 -->
+  <indexConfig>
+    <lockType>${solr.lock.type:native}</lockType>
+  </indexConfig>
+
   <requestDispatcher handleSelect="true" >
     <requestParsers enableRemoteStreaming="false" multipartUploadLimitInKB="2048000" />
   </requestDispatcher>
