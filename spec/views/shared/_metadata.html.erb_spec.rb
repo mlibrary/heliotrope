@@ -85,6 +85,25 @@ describe 'shared/_metadata.html.erb' do
     end
   end
 
+  context 'when the monographs description has markdown' do
+    # HELIO-3513
+    let(:solr_document) {
+      SolrDocument.new(id: '1',
+                       has_model_ssim: ['Monograph'],
+                       title_tesim: [%q(Bob's “Smart” Dog’s "Rött" Äpple)],
+                       creator_full_name_tesim: ['Bob'],
+                       publisher_tesim: ['Swedish Red Apple'],
+                       description_tesim: ['A book about _Italics_ and *Bold* text. Great Read! 5 Stars.'])
+    }
+
+    it 'renders the description correctly' do
+      @presenter = Hyrax::MonographPresenter.new(solr_document, nil)
+      allow(controller).to receive(:controller_name).and_return("monograph_catalog")
+      render
+      expect(rendered).to match('A book about Italics and Bold text. Great Read! 5 Stars.')
+    end
+  end
+
   context 'when the monograph has creators and contributors' do
     # See 879
     let(:solr_document) {
@@ -103,6 +122,22 @@ describe 'shared/_metadata.html.erb' do
       expect(rendered).to match 'Blug Shoeman'
       expect(rendered).to match 'Melissa Allen'
       expect(rendered).not_to match 'Overlooked, Sir Always'
+    end
+  end
+
+  context "a monograph with a thumbnail (representative file_set)" do
+    let(:solr_document) do
+      ::SolrDocument.new(id: 'mono',
+                         title_tesim: ['A Title'],
+                         has_model_ssim: ['Monograph'],
+                         hasRelatedMediaFragment_ssim: ['999999999'])
+    end
+
+    it 'renders the thumbnail url' do
+      @presenter = Hyrax::MonographPresenter.new(solr_document, nil)
+      allow(controller).to receive(:controller_name).and_return("monograph_catalog")
+      render
+      expect(rendered).to match '<img src=\"/image-service/999999999/full/225,/0/default.jpg\"'
     end
   end
 
