@@ -44,12 +44,16 @@ module Crossref
 
     def components
       presenters.each_with_index do |presenter, index|
-        next if presenter.external_resource?
         next if monograph_representative?(presenter)
         fragment = Nokogiri::XML.fragment(@component_file)
         fragment.at_css('title').content = presenter.page_title
         fragment.at_css('description').content = description(presenter)
-        fragment.at_css('format').attribute('mime_type').value = mime_type(presenter.mime_type)
+        if presenter.external_resource?
+          fragment.at_css('format').remove_attribute('mime_type')
+          fragment.at_css('format').content = 'Metadata record for externally-hosted component'
+        else
+          fragment.at_css('format').attribute('mime_type').value = mime_type(presenter.mime_type)
+        end
         fragment.at_css('doi').content = doi(presenter, index)
         fragment.at_css('resource').content = presenter.handle_url
         document.at_css('component_list') << fragment

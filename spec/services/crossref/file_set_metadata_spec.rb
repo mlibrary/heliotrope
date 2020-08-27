@@ -13,9 +13,9 @@ RSpec.describe Crossref::FileSetMetadata do
                        isbn_tesim: ["1234567890 (ebook)", "0987654321 (hardcover)"],
                        date_created_tesim: ['9999'],
                        doi_ssim: ['10.9985/blue.999999999'],
-                       ordered_member_ids_ssim: ['111111111', '222222222', '333333333', '444444444', '555555555', '666666666', '777777777'],
-                       member_ids_ssim: ['111111111', '222222222', '333333333', '444444444', '555555555', '666666666', '777777777'],
-                       hasRelatedMediaFragment_ssim: ['777777777'])
+                       ordered_member_ids_ssim: ['111111111', '222222222', '333333333', '444444444', '555555555', '666666666', '777777777', '888888888'],
+                       member_ids_ssim: ['111111111', '222222222', '333333333', '444444444', '555555555', '666666666', '777777777', '888888888'],
+                       hasRelatedMediaFragment_ssim: ['888888888'])
   end
 
   let(:fs1) do
@@ -51,9 +51,20 @@ RSpec.describe Crossref::FileSetMetadata do
                        mime_type_ssi: "text/csv")
   end
 
-  # will be skipped: no dois for epubs
   let(:fs4) do
     ::SolrDocument.new(id: '444444444',
+                       has_model_ssim: ['FileSet'],
+                       monograph_id_ssim: '999999999',
+                       title_tesim: ["FS 4"],
+                       creator_tesim: ["Last, First"],
+                       contributor_tesim: ["First Last", "A Place", "Actor, An (actor)"],
+                       caption_tesim: ["FS 4 Caption"],
+                       external_resource_url_ssim: 'https://example.com/blah')
+  end
+
+  # will be skipped: no dois for epubs
+  let(:fs5) do
+    ::SolrDocument.new(id: '555555555',
                        has_model_ssim: ['FileSet'],
                        monograph_id_ssim: '999999999',
                        title_tesim: ["EPUB"],
@@ -61,8 +72,8 @@ RSpec.describe Crossref::FileSetMetadata do
   end
 
   # will be skipped, no dois for `peer_review` FeaturedRepresentatives (or any other kind)
-  let(:fs5) do
-    ::SolrDocument.new(id: '555555555',
+  let(:fs6) do
+    ::SolrDocument.new(id: '666666666',
                        has_model_ssim: ['FileSet'],
                        monograph_id_ssim: '999999999',
                        title_tesim: ["Peer Review"],
@@ -70,8 +81,8 @@ RSpec.describe Crossref::FileSetMetadata do
   end
 
   # will be skipped, no dois for `related` FeaturedRepresentatives (or any other kind)
-  let(:fs6) do
-    ::SolrDocument.new(id: '666666666',
+  let(:fs7) do
+    ::SolrDocument.new(id: '777777777',
                        has_model_ssim: ['FileSet'],
                        monograph_id_ssim: '999999999',
                        title_tesim: ["Related"],
@@ -79,8 +90,8 @@ RSpec.describe Crossref::FileSetMetadata do
   end
 
   # will be skipped, no dois for covers
-  let(:fs7) do
-    ::SolrDocument.new(id: '777777777',
+  let(:fs8) do
+    ::SolrDocument.new(id: '888888888',
                        has_model_ssim: ['FileSet'],
                        monograph_id_ssim: '999999999',
                        title_tesim: ["Cover"],
@@ -88,11 +99,11 @@ RSpec.describe Crossref::FileSetMetadata do
   end
 
   before do
-    ActiveFedora::SolrService.add([monograph.to_h, fs1.to_h, fs2.to_h, fs3.to_h, fs4.to_h, fs5.to_h, fs6.to_h, fs7.to_h])
+    ActiveFedora::SolrService.add([monograph.to_h, fs1.to_h, fs2.to_h, fs3.to_h, fs4.to_h, fs5.to_h, fs6.to_h, fs7.to_h, fs8.to_h])
     ActiveFedora::SolrService.commit
-    FeaturedRepresentative.create(work_id: '999999999', file_set_id: '444444444', kind: 'epub')
-    FeaturedRepresentative.create(work_id: '999999999', file_set_id: '555555555', kind: 'peer_review')
-    FeaturedRepresentative.create(work_id: '999999999', file_set_id: '666666666', kind: 'related')
+    FeaturedRepresentative.create(work_id: '999999999', file_set_id: '555555555', kind: 'epub')
+    FeaturedRepresentative.create(work_id: '999999999', file_set_id: '666666666', kind: 'peer_review')
+    FeaturedRepresentative.create(work_id: '999999999', file_set_id: '777777777', kind: 'related')
   end
 
   describe "#new" do
@@ -152,11 +163,11 @@ RSpec.describe Crossref::FileSetMetadata do
       expect(subject.at_css('timestamp').content).to eq timestamp
       expect(subject.at_css('sa_component').attribute('parent_doi').value).to eq monograph.doi
 
-      expect(described_class.new('999999999').presenters.length).to eq 7
+      expect(described_class.new('999999999').presenters.length).to eq 8
       # no DOIs for covers, epubs (or mobi or pdf_ebook or any other FeaturedRepresentatives)
-      expect(subject.xpath("//component_list/component").length).to eq 3
+      expect(subject.xpath("//component_list/component").length).to eq 4
 
-      [fs1, fs2, fs3].each_with_index do |fs, i|
+      [fs1, fs2, fs3, fs4].each_with_index do |fs, i|
         # See HELIO-2739 for names in description
         names = "Last, First. First Last, A Place, Actor, An (actor)."
 
@@ -164,6 +175,10 @@ RSpec.describe Crossref::FileSetMetadata do
         if i == 2
           expect(subject.xpath("//component_list/component")[i].at_css('description').content).to eq fs.caption.first + " #{names}"
           expect(subject.xpath("//component_list/component")[i].at_css('format').attribute('mime_type').value).to eq "application/vnd.ms-excel"
+        elsif i == 3
+          expect(subject.xpath("//component_list/component")[i].at_css('description').content).to eq fs.caption.first + " #{names}"
+          expect(subject.xpath("//component_list/component")[i].at_css('format').attribute('mime_type')).to eq nil
+          expect(subject.xpath("//component_list/component")[i].at_css('format').text).to eq 'Metadata record for externally-hosted component'
         else
           expect(subject.xpath("//component_list/component")[i].at_css('description').content).to eq fs.description.first + " #{names}"
           expect(subject.xpath("//component_list/component")[i].at_css('format').attribute('mime_type').value).to eq fs.mime_type
