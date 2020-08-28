@@ -5,7 +5,6 @@
   <meta property="twitter:card" content="summary">
   <meta property="twitter:title" content="<%= @presenter.page_title %>">
 
-
   <% if @presenter.present? %>
     <% @presenter.creator.each do |creator_name| %>
       <meta name="citation_author" content="<%= creator_name %>">
@@ -42,8 +41,8 @@
   <% end %>
 
   <% if @presenter.representative_id.present? %>
-    <meta name="og:image" content="<%= @presenter.thumbnail_tag(225) %>">
-    <meta name="twitter:image" content="<%= @presenter.thumbnail_tag(225) %>">
+    <meta name="og:image" content="<%= Riiif::Engine.routes.url_helpers.image_path(@presenter.cache_buster_id, "225,") %>">
+    <meta name="twitter:image" content="<%= Riiif::Engine.routes.url_helpers.image_path(@presenter.cache_buster_id, "225,") %>">
     <%# this is terrible alt text. But like 99% of cover image file_set alt_text fields are blank... %>
     <meta name="og:image:alt" content="Cover Image for <%= @presenter.page_title %>">
   <% end %>

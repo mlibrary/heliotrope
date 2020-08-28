@@ -137,7 +137,7 @@ describe 'shared/_metadata.html.erb' do
       @presenter = Hyrax::MonographPresenter.new(solr_document, nil)
       allow(controller).to receive(:controller_name).and_return("monograph_catalog")
       render
-      expect(rendered).to match '<img src=\"/image-service/999999999/full/225,/0/default.jpg\"'
+      expect(rendered).to match '/image-service/999999999/full/225,/0/default.jpg'
     end
   end
 
