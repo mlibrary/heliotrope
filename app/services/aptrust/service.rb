@@ -7,7 +7,7 @@ require 'json'
 module Aptrust
   class Service
     def ingest_status(identifier) # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
-      response = connection.get("items?object_identifier=#{identifier}&item_action=Ingest")
+      response = connection.get("items?object_identifier_like=#{identifier}&item_action=Ingest")
 
       return 'http_error' unless response.success?
 

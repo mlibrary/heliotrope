@@ -44,7 +44,7 @@ RSpec.describe Aptrust::Service do
     let(:body) { { "results" => items } }
     let(:items) { [] }
 
-    before { allow(connection).to receive(:get).with("items?object_identifier=#{identifier}&item_action=Ingest").and_return(response) }
+    before { allow(connection).to receive(:get).with("items?object_identifier_like=#{identifier}&item_action=Ingest").and_return(response) }
 
     it { is_expected.to eq('http_error') }
 
@@ -71,7 +71,7 @@ RSpec.describe Aptrust::Service do
             it { is_expected.to eq('success') }
 
             context 'standard error' do
-              before { allow(connection).to receive(:get).with("items?object_identifier=#{identifier}&item_action=Ingest").and_raise(StandardError) }
+              before { allow(connection).to receive(:get).with("items?object_identifier_like=#{identifier}&item_action=Ingest").and_raise(StandardError) }
 
               it { is_expected.to eq('standard_error') }
             end
