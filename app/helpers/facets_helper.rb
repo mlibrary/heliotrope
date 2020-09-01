@@ -59,6 +59,20 @@ module FacetsHelper # rubocop:disable Metrics/ModuleLength
     end
   end
 
+  # https://tools.lib.umich.edu/jira/browse/HELIO-3111
+  # possibly this should be used sparingly or else we'll have a lot on in-line sorting/processing of the type...
+  # that would best be handled by cached DB queries
+  def case_insensitive_sort_facet(paginator)
+    # if on the dedicated facet page, defer to the user's sort choice
+    sorted_items = if paginator.sort == 'index'
+                     paginator.items.sort_by { |item| item.value.downcase }
+                   else # i.e. paginator.sort == 'count', fall back on the case-insensitive alpha sort
+                     # https://stackoverflow.com/a/16628808 for ASC/DESC trick
+                     paginator.items.sort { |a, b| [b.hits, a.value.downcase] <=> [a.hits, b.value.downcase] }
+                   end
+    Blacklight::Solr::FacetPaginator.new(sorted_items)
+  end
+
   def markdown_as_text_facet(value)
     render_markdown_as_text(value)
   end
