@@ -195,7 +195,7 @@ en:
   permissions_expiration_date: "Permissions Expiration Date"
   press: "Publisher (Fulcrum subdivision)"
   press_catalog:
-    banner: "You can access this title through a library that has purchased it. More information about purchasing is available at <a href=\"https://www.press.umich.edu/librarians\" id=\"banner-librarians-link\">our website</a>."
+    banner: "You can access this collection through a library that has purchased it. More information about purchasing is available at <a href=\"https://www.press.umich.edu/librarians\" id=\"banner-librarians-link\">our website</a>. Some titles are <a href=\"https://www.fulcrum.org/michigan?f[open_access_sim][]=yes&locale=en\"> available open access for all to view</a>."
     search:
       form:
         q:
