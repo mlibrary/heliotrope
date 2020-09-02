@@ -37,7 +37,7 @@
 
   <% if @presenter.description.present? %>
     <meta name="og:description" content="<%= MarkdownService.markdown_as_text(@presenter.description.first) %>">
-    <meta name="twitter:description" content="<%= MarkdownService.markdown_as_text(@presenter.description.first) %>">"
+    <meta name="twitter:description" content="<%= MarkdownService.markdown_as_text(@presenter.description.first) %>">
   <% end %>
 
   <% if @presenter.representative_id.present? %>
