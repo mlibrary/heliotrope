@@ -37,6 +37,19 @@ class Ability
     can :manage, FileSet do |f|
       @user.editor_presses.map(&:subdomain).include?(f.parent.press) unless f.parent.nil?
     end
+
+    # For the different view presenters
+    can :update, Hyrax::MonographPresenter do |p|
+      @user.editor_presses.map(&:subdomain).include?(p.subdomain) && !only_scores
+    end
+
+    can :update, Hyrax::ScorePresenter do
+      @user.editor_presses.pluck(:subdomain).include?(Services.score_press)
+    end
+
+    can :update, Hyrax::FileSetPresenter do |p|
+      @user.editor_presses.map(&:subdomain).include?(p.parent.subdomain)
+    end
   end
 
   def grant_press_admin_abilities

@@ -212,7 +212,7 @@ describe Ability do
       let(:other_presenter) { Hyrax::MonographPresenter.new(SolrDocument.new(id: 'other_id', press_tesim: other_press.subdomain), subject) }
 
       it do
-        is_expected.not_to be_able_to(:update, my_presenter)
+        is_expected.to be_able_to(:update, my_presenter)
         is_expected.not_to be_able_to(:update, other_presenter)
       end
     end
