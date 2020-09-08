@@ -190,6 +190,9 @@ gem 'signet'
 # performance profiling
 gem 'skylight'
 
+# Rails Webpack Tool
+gem 'webpacker', '~> 5.2.1'
+
 group :development, :test do
   gem 'byebug'
   # test coverage with coveralls
@@ -212,12 +215,10 @@ group :development, :test do
 end
 
 group :development do
+  # Capybara save_and_open_page thingy
+  gem 'launchy', '~> 2.4.3'
+  # Debugger
   gem 'pry-rails', '~> 0.3.4'
   # Yay! A Ruby Documentation Tool
   gem 'yard', '>= 0.9.20'
-end
-
-group :development do
-  # Capybara save_and_open_page thingy
-  gem 'launchy', '~> 2.4.3'
 end

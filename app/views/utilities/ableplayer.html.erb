@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<%= stylesheet_pack_tag 'ableplayer/build/ableplayer' %>
+<%= javascript_pack_tag 'ableplayer/build/ableplayer' %>
+
+<h1>Able Player</h1>
+
+<h2>Able Player Audio Demo #1:<br/>Audio player with one track</h2>
+<audio id="audio1" width="480" preload="auto" data-able-player data-skin="2020">
+  <source type="audio/mpeg" src="media/ableplayer/demo/smallf.mp3"/>
+  <source type="audio/ogg" src="media/ableplayer/demo/smallf.ogg"/>
+</audio>
+
+<h2>Able Player Video Demo #1:<br/>Video player with closed captions</h2>
+<video id="video1" preload="auto" width="480" height="360" poster="media/ableplayer/demo/wwa.jpg" data-able-player data-skin="2020" playsinline>
+  <source type="video/mp4" src="media/ableplayer/demo/wwa.mp4"/>
+  <source type="video/webm" src=media/ableplayer/demo/wwa.webm"/>
+  <track kind="captions" src="media/ableplayer/demo/wwa_captions_en.vtt" srclang="en" label="English captions"/>
+</video>
