@@ -7,9 +7,21 @@ class UnpackJob < ApplicationJob
   include Open3
   queue_as :unpack
 
+  discard_on Resque::Job::DontPerform
+
+  before_perform do |job|
+    file_set = FileSet.find(job.arguments.first)
+    # This is needed because manual triggering of UnpackJob in FeaturedRepresentativesController can happen before...
+    # the original_file is available
+    raise "No file_set for #{id}" if file_set.nil?
+    # according to the Resque docs Resque::Job::DontPerform should not leave a failed job in the queue,...
+    # see https://github.com/resque/resque/blob/master/docs/HOOKS.md
+    # ...but in the context of ActiveJob the `discard_on` is needed, so really any custom exception would work here.
+    raise Resque::Job::DontPerform if file_set.original_file.blank?
+  end
+
   def perform(id, kind) # rubocop:disable Metrics/CyclomaticComplexity,  Metrics/PerceivedComplexity
     file_set = FileSet.find id
-    raise "No file_set for #{id}" if file_set.nil?
 
     root_path = UnpackService.root_path_from_noid(id, kind)
     FileUtils.mkdir_p File.dirname root_path unless Dir.exist? File.dirname root_path # this should already exist... but with specs it's iffy
