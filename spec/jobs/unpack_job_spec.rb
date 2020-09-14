@@ -3,8 +3,6 @@
 require 'rails_helper'
 
 RSpec.describe UnpackJob, type: :job do
-  include ActiveJob::TestHelper
-
   describe "perform" do
     context "with a missing original_file" do
       let(:no_file_file_set) { create(:file_set) }
