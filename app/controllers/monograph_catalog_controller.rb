@@ -51,7 +51,8 @@ class MonographCatalogController < ::CatalogController
                            label: "Section", url_method: :facet_url_helper,
                            partial: 'custom_section_facet',
                            helper_method: :markdown_as_text_facet
-    config.add_facet_field solr_name('keywords', :facetable), label: "Keyword", limit: 5, url_method: :facet_url_helper,
+    config.add_facet_field solr_name('keywords', :facetable), label: "Keyword", limit: 5, more_limit: 1000,
+                           url_method: :facet_url_helper,
                            partial: 'case_insensitive_sort_facet'
     config.add_facet_field solr_name('creator', :facetable), label: 'Creator', limit: 5, url_method: :facet_url_helper
     config.add_facet_field solr_name('content_type', :facetable), label: "Content", show: false

@@ -486,6 +486,26 @@ footer.press {
     margin-top: 0px;
   }
 }
+
+///////////////////////////////////
+// FACET BOOTSTRAP MODALS
+///////////////////////////////////
+
+#ajax-modal {
+  button.close {
+    margin: 10px 10px 5px 10px;
+  }
+
+  .facet_pagination.top {
+    padding: 10px 15px 0 15px;
+  }
+
+  #helio-facet-modal-close {
+    display: block;
+    overflow: auto;
+  }
+}
+
 ///////////////////////////////////
 // PRESS ADD/EDIT FORM
 ///////////////////////////////////
