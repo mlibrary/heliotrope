@@ -3,7 +3,19 @@
 require 'rails_helper'
 
 RSpec.describe UnpackJob, type: :job do
+  include ActiveJob::TestHelper
+
   describe "perform" do
+    context "with a missing original_file" do
+      let(:no_file_file_set) { create(:file_set) }
+      let(:root_path) { UnpackService.root_path_from_noid(epub.id, 'epub') }
+
+      it 'raises Resque::Job::DontPerform, which is discarded, and does not create a derivatives directory' do
+        expect(described_class.perform_now(no_file_file_set.id, 'epub').class).to eq(Resque::Job::DontPerform)
+        expect(Dir.exist?(File.dirname(UnpackService.root_path_from_noid(no_file_file_set.id, 'epub')))).to be false
+      end
+    end
+
     context "with an epub" do
       let(:epub) { create(:file_set, content: File.open(File.join(fixture_path, 'fake_epub01.epub'))) }
       let(:root_path) { UnpackService.root_path_from_noid(epub.id, 'epub') }
