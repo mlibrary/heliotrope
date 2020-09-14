@@ -2,7 +2,6 @@ $(document).on('turbolinks:load', function () {
     if ($(".asset").length > 0 || (".monograph").length > 0) {
         displayBanner();
         displayEulaBanner();
-        closeBanner();
     }
 });
 
@@ -13,32 +12,23 @@ $(document).on('turbolinks:load', function () {
 // don't show the banner again.
 
 function displayBanner() {
-    var subdomain = $("body")[0].classList[0]
-    var bannerStatus = Cookies.get(subdomain + '_shared_press_banner');
-    if (( bannerStatus == 'ignore') || (bannerStatus == 'clicked')) {
-        $("div.banner").hide();
+    var subdomain = $("body")[0].classList[0];
+    var cookieName = subdomain + '_shared_press_banner';
+    var bannerStatus = Cookies.get(cookieName);
+    if ((bannerStatus == 'ignore') || (bannerStatus == 'clicked')) {
+        $("div#" + cookieName).hide();
     } else {
-        $("div.banner").show();
+        $("div#" + cookieName).show();
     }
 }
 
 function displayEulaBanner() {
-    var bannerStatus = Cookies.get('barpublishing_eula_press_banner');
+    var subdomain = $("body")[0].classList[0];
+    var cookieName = subdomain + '_eula_press_banner';
+    var bannerStatus = Cookies.get(cookieName);
     if ( bannerStatus == 'eula_agreement' ) {
-        $("div.banner").hide();
+        $("div#" + cookieName).hide();
     } else {
-        $("div.banner").show();
+        $("div#" + cookieName).show();
     }
-}
-
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-function closeBanner() {
-    $(".banner a.close").click(function() {
-        $("div.banner").hide();
-    });
-
-    $(".banner a.btn-primary").click(function() {
-        $("div.banner").hide();
-    });
 }

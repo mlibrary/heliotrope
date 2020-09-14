@@ -1,13 +1,11 @@
 <% banner_cookie_name = press_presenter.subdomain + "_shared_press_banner" %>
-<% product = banner_product(press_presenter.subdomain) %>
-<div class="alert alert-info alert-dismissible banner container" role="alert" style="display: none;">
-  <button type="button" onclick="banner_button_no()" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&#x2715</span></button>
+<div id="<%= banner_cookie_name %>" class="alert alert-info alert-dismissible banner container" role="alert" style="display: none;">
+  <button type="button" onclick="press_banner_button_no()" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&#x2715</span></button>
   <p class="message"><%= raw t(banner_message) %></p>
-  <button type="button" onclick="banner_button_no()" class="btn btn-default btn-lg" data-dismiss="alert" aria-label="Got it. Close Dialog">Got it</button>
+  <button type="button" onclick="press_banner_button_no()" class="btn btn-default btn-lg" data-dismiss="alert" aria-label="Got it. Close Dialog">Got it</button>
 </div>
 <script type="text/javascript">
-    function banner_button_no(){
+    function press_banner_button_no(){
         Cookies.set('<%= banner_cookie_name %>', 'ignore', { expires: 15 });
-        location.href='#';
     }
 </script>
