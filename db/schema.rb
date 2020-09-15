@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20200603181002) do
+ActiveRecord::Schema.define(version: 20200914204534) do
 
   create_table "api_requests", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.integer "user_id"
@@ -158,7 +158,7 @@ ActiveRecord::Schema.define(version: 20200603181002) do
 
   create_table "ebook_table_of_contents_caches", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.string "noid"
-    t.text "toc"
+    t.text "toc", limit: 16777215
   end
 
   create_table "featured_representatives", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
