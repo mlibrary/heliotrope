@@ -81,6 +81,28 @@ class CounterService
     end
   end
 
+  def robot?
+    robots_list.each do |pattern|
+      # One of the bot patterns in the list COUNTER provides has a bad regex:
+      #   warning: regular expression has ']' without escape: /^Mozilla\/4\.5\+\[en]\+\(Win98;\+I\)$/
+      # TODO: Submit a pull request to the https://github.com/atmire/COUNTER-Robots/ project. But for now, silence the warning.
+      silence_warnings do
+        return true if @controller.request.user_agent.match?(/#{pattern}/i)
+      end
+    end
+    false
+  end
+
+  def robots_list
+    Rails.cache.fetch(RecacheCounterRobotsJob::RAILS_CACHE_KEY, expires_in: 7.days) do
+      # The plan is to have a cron fetch and cache the robots list nightly, so the following won't happen in normal usage.
+      RecacheCounterRobotsJob.new.download_json unless File.exist? RecacheCounterRobotsJob::JSON_FILE
+      # First cache the list for next time, then return the list
+      RecacheCounterRobotsJob.new.cache_pattern_list
+      RecacheCounterRobotsJob.new.load_list
+    end
+  end
+
   private
 
     def initialize(controller, presenter)
