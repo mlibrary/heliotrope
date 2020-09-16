@@ -211,7 +211,7 @@ group :development, :test do
   gem 'rubocop-rails_config', '~> 0.7.2'
   gem 'ruumba', '0.1.2'
   gem 'simple_solr_client'
-  gem 'solr_wrapper', '0.21.0'
+  gem 'solr_wrapper', '>= 1.1', '< 3.0'
 end
 
 group :development do
