@@ -72,4 +72,9 @@ FILE_SET_FLAG_FIELDS ||=
     { object: :file_set, field_name: 'Representative Kind', metadata_name: 'representative_kind', required: false, multivalued: :no, description: I18n.t('csv.descriptions.representative_kind') }
   ].freeze
 
+SYSTEM_METADATA_FIELDS ||=
+  [
+    { object: :universal, field_name: 'Published?', multivalued: :no, description: I18n.t('csv.descriptions.published') },
+  ].freeze
+
 MONO_FILENAME_FLAG ||= '://:MONOGRAPH://:'

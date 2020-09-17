@@ -142,5 +142,21 @@ describe Export::Exporter do
         expect(actual).to match expected
       end
     end
+
+    context 'system metadata' do
+      subject { CSV.generate_line(described_class.new(monograph.id, :monograph, system_metadata).monograph_row) }
+      let(:system_metadata) { true }
+      let(:expected) do
+        <<~eos
+          #{monograph.id},"=HYPERLINK(""#{Rails.application.routes.url_helpers.hyrax_monograph_url(monograph)}"")",#{monograph.title.first},,,,,,,,"First, Ms Joan (editor); Second, Mr Tom (editor); Third Author, Lady","Doe, Jane (illustrator); Joe, G.I.",,,,,,,,,,,,,,https://doi.org/mpub.111111111.blah,,false
+        eos
+      end
+
+      it 'outputs a row including system metadata like "Published?", which is false in this case' do
+        actual = subject
+        expect(actual.empty?).to be false
+        expect(actual).to match expected
+      end
+    end
   end
 end
