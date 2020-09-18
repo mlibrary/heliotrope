@@ -217,49 +217,6 @@ RSpec.describe Sighrax do
     end
   end
 
-  describe '#active_fedora' do
-    subject { described_class.active_fedora(entity) }
-
-    let(:entity) { described_class.from_noid(noid) }
-    let(:noid) { 'validnoid' }
-    let(:data) { {} }
-
-    it { expect { subject }.to raise_error(ActiveFedora::ObjectNotFoundError) }
-
-    context 'Entity' do
-      let(:data) { ::SolrDocument.new(id: noid) }
-      let(:base) { double('base') }
-
-      before do
-        allow(ActiveFedora::SolrService).to receive(:query).with("{!terms f=id}#{noid}", rows: 1).and_return([data])
-        allow(ActiveFedora::Base).to receive(:find).with(noid).and_return(base)
-      end
-
-      it { is_expected.to be base }
-    end
-
-    context 'Monograph' do
-      let(:noid) { monograph.id }
-      let(:monograph) { create(:public_monograph) }
-
-      it { is_expected.to be_an_instance_of(Monograph) }
-    end
-
-    context 'Score' do
-      let(:noid) { score.id }
-      let(:score) { create(:public_score) }
-
-      it { is_expected.to be_an_instance_of(Score) }
-    end
-
-    context 'Asset' do
-      let(:noid) { file_set.id }
-      let(:file_set) { create(:public_file_set) }
-
-      it { is_expected.to be_an_instance_of(FileSet) }
-    end
-  end
-
   describe '#hyrax_presenter' do
     subject { described_class.hyrax_presenter(entity) }
 
@@ -349,7 +306,7 @@ RSpec.describe Sighrax do
       let(:user) { true }
       let(:action) { :action }
       let(:target) { double('target', valid?: valid) }
-      let(:active_fedora) { double('active_fedora') }
+      let(:hyrax_presenter) { double('hyrax_presenter') }
       let(:valid) { true }
       let(:allow_ability_can) { true }
       let(:ability) { double('ability') }
@@ -359,8 +316,8 @@ RSpec.describe Sighrax do
         allow(Incognito).to receive(:allow_ability_can?).with(actor).and_return(allow_ability_can)
         allow(Ability).to receive(:new).with(nil).and_return(ability)
         allow(Ability).to receive(:new).with(actor).and_return(ability)
-        allow(Sighrax).to receive(:active_fedora).with(target).and_return(active_fedora)
-        allow(ability).to receive(:can?).with(action, active_fedora).and_return(boolean)
+        allow(Sighrax).to receive(:hyrax_presenter).with(target, ability).and_return(hyrax_presenter)
+        allow(ability).to receive(:can?).with(action, hyrax_presenter).and_return(boolean)
       end
 
       context 'user can' do

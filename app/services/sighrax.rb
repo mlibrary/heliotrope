@@ -45,7 +45,7 @@ module Sighrax # rubocop:disable Metrics/ModuleLength
       return false unless target.valid?
       return false unless Incognito.allow_ability_can?(actor)
       ability = Ability.new(actor.is_a?(User) ? actor : nil)
-      ability.can?(action, active_fedora(target))
+      ability.can?(action, hyrax_presenter(target, ability))
     end
 
     def access?(actor, target)
@@ -75,27 +75,14 @@ module Sighrax # rubocop:disable Metrics/ModuleLength
       EntityPolicy.new(actor, entity)
     end
 
-    def active_fedora(entity)
+    def hyrax_presenter(entity, current_ability = nil)
       case entity
       when Monograph
-        ::Monograph.find(entity.noid)
+        Hyrax::MonographPresenter.new(SolrDocument.new(entity.send(:data)), current_ability)
       when Score
-        ::Score.find(entity.noid)
+        Hyrax::ScorePresenter.new(SolrDocument.new(entity.send(:data)), current_ability)
       when Asset
-        ::FileSet.find(entity.noid)
-      else
-        ::ActiveFedora::Base.find(entity.noid)
-      end
-    end
-
-    def hyrax_presenter(entity)
-      case entity
-      when Monograph
-        Hyrax::MonographPresenter.new(SolrDocument.new(entity.send(:data)), nil)
-      when Score
-        Hyrax::ScorePresenter.new(SolrDocument.new(entity.send(:data)), nil)
-      when Asset
-        Hyrax::FileSetPresenter.new(SolrDocument.new(entity.send(:data)), nil)
+        Hyrax::FileSetPresenter.new(SolrDocument.new(entity.send(:data)), current_ability)
       else
         Hyrax::Presenter.send(:new, entity.noid)
       end
