@@ -53,7 +53,16 @@ RSpec.describe Hyrax::DownloadsController, type: :controller do
       end
 
       context "and an edit user is logged in" do
-        before { sign_in user }
+        let(:press) { create(:press) }
+        let(:user) { create(:press_editor, press: press) }
+        let(:monograph) { create(:monograph, press: press.subdomain, title: ["A Test"]) }
+
+        before do
+          sign_in user
+          monograph.ordered_members << file_set
+          monograph.save!
+          file_set.save!
+        end
 
         it "sends the file" do
           get :show, params: { id: file_set.id, use_route: 'downloads' }
