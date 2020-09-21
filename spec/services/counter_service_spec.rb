@@ -305,4 +305,47 @@ RSpec.describe CounterService do
       end
     end
   end
+
+  describe "#robot?" do
+    let(:file) { File.read(Rails.root.join('spec', 'fixtures', 'feed', 'counter_robots.json')) }
+    let(:request) { double("request") }
+
+    before do
+      allow(controller).to receive(:request).and_return(request)
+      allow(request).to receive(:user_agent).and_return(user_agent)
+      allow(Rails.cache).to receive(:fetch).and_return(JSON.load(file).map { |entry| entry["pattern"] })
+    end
+
+    context "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.83 Safari/537.36" do
+      let(:user_agent) { "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.83 Safari/537.36" }
+
+      it "is not a robot" do
+        expect(described_class.from(controller, presenter).robot?).to eq false
+      end
+    end
+
+    context "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/12.1.2 Safari/605.1.15" do
+      let(:user_agent) { "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/12.1.2 Safari/605.1.15" }
+
+      it "is not a robot" do
+        expect(described_class.from(controller, presenter).robot?).to eq false
+      end
+    end
+
+    context "Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)" do
+      let(:user_agent) { "Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)" }
+
+      it "is a robot" do
+        expect(described_class.from(controller, presenter).robot?).to eq true
+      end
+    end
+
+    context "Mozilla/5.0 (compatible; Yahoo! Slurp; http://help.yahoo.com/help/us/ysearch/slurp)" do
+      let(:user_agent) { "Mozilla/5.0 (compatible; Yahoo! Slurp; http://help.yahoo.com/help/us/ysearch/slurp)" }
+
+      it "is a robot" do
+        expect(described_class.from(controller, presenter).robot?).to eq true
+      end
+    end
+  end
 end
