@@ -8,7 +8,8 @@
 </div>
 
 <%=
-  if lookup_context.find_all("e_pubs/access/_#{@parent_presenter.subdomain}").any?
-    render partial: "e_pubs/access/#{@parent_presenter.subdomain}", locals: { presenter: @presenter, monograph_presenter: @parent_presenter, institutions: @institutions, products: @products }
+  access_template_subdomain = @parent_presenter.parent_press_subdomain || @parent_presenter.subdomain
+  if lookup_context.find_all("e_pubs/access/_#{access_template_subdomain}").any?
+    render partial: "e_pubs/access/#{access_template_subdomain}", locals: { presenter: @presenter, monograph_presenter: @parent_presenter, institutions: @institutions, products: @products }
   end
 %>

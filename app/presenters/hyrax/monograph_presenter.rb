@@ -156,6 +156,10 @@ module Hyrax
       Press.find_by(subdomain: subdomain)
     end
 
+    def parent_press_subdomain
+      press_obj&.parent&.subdomain
+    end
+
     def press_url # rubocop:disable Rails/Delegate
       press_obj.press_url
     end
