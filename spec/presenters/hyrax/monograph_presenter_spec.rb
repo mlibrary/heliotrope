@@ -439,6 +439,24 @@ RSpec.describe Hyrax::MonographPresenter do
 
       it { is_expected.to eq('url') }
     end
+
+    describe '#parent_press_subdomain' do
+      subject { presenter.parent_press_subdomain }
+
+      context 'press has no parent' do
+        before { allow(press).to receive(:parent).and_return(nil) }
+
+        it { is_expected.to be nil }
+      end
+
+      context 'press has a parent' do
+        let(:parent_press) { instance_double(Press, 'parent_press', press_url: 'parent_press_url', subdomain: 'blah') }
+
+        before { allow(press).to receive(:parent).and_return(parent_press) }
+
+        it { is_expected.to be 'blah' }
+      end
+    end
   end
 
   # Dependent upon CitableLinkPresenter
