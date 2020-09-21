@@ -1,13 +1,14 @@
-<div class="facet_pagination top">
-  <%= render partial: 'facet_pagination' %>
-</div>
-
 <div data-ajax-modal="container">
+  <div id="helio-facet-modal-close">
+    <button type="button" class="ajax-modal-close close" data-dismiss="modal" aria-label="Close dialog">
+      <span  aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="facet_pagination top">
+    <%= render partial: 'facet_pagination' %>
+  </div>
   <div aria-label="<%= facet_field_label(@facet.key) %>">
     <div class="modal-header">
-      <button type="button" class="ajax-modal-close close" data-dismiss="modal" aria-label="Close dialog">
-        <span  aria-hidden="true">&times;</span>
-      </button>
       <h3 class="modal-title"><%= facet_field_label(@facet.key) %></h3>
       <%= render partial: 'facet_index_navigation' if @facet.index_range && @display_facet.index? %>
     </div>
