@@ -32,6 +32,7 @@ RSpec.configure do |config|
   config.fixture_path = "#{::Rails.root}/spec/fixtures"
 
   config.include CheckpointSpecHelper
+  config.include JsonSchemaSpecHelper, type: :json_schema
   config.include RequestSpecHelper, type: :request
   config.include SystemSpecHelper, type: :system
 

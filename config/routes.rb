@@ -56,6 +56,13 @@ Rails.application.routes.draw do
   end
 
   namespace :api do # no json constraints
+    namespace :opds do
+      scope module: :v2, constraints: API::Opds::Version.new('v2', true) do
+        get '', controller: :feeds, action: :opds
+        get 'oa', controller: :feeds, action: :open_access
+      end
+    end
+
     scope module: :v1, constraints: API::Version.new('v1', true) do
       post 'crossref_register', controller: :crossref_registrations, action: :create
     end

@@ -201,6 +201,7 @@ group :development, :test do
   gem "fakefs", require: "fakefs/safe"
   gem "faker"
   gem 'fcrepo_wrapper', '0.5.2'
+  gem 'json_schemer'
   gem 'rails-controller-testing'
   gem 'rspec-context-private'
   gem 'rspec-html-matchers'

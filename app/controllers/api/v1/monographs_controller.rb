@@ -35,7 +35,7 @@ module API
 
       # Get monograph by id
       # @example
-      #   get /api/monograph/:id
+      #   get /api/monographs/:id
       # @param [Hash] params { id: Number }
       # @return [ActionDispatch::Response] {Monograph}
       #
@@ -50,7 +50,7 @@ module API
 
       # Get monograph manifest by id
       # @example
-      #   get /api/monograph/:id/manifest
+      #   get /api/monographs/:id/manifest
       # @param [Hash] params { id: String }
       # @return [ActionDispatch::Response] {zip file}
       def manifest
@@ -67,7 +67,7 @@ module API
 
       # Get monograph extract by id
       # @example
-      #   get /api/monograph/:id/extract
+      #   get /api/monographs/:id/extract
       # @param [Hash] params { id: String }
       # @return [ActionDispatch::Response] {zip file}
       def extract
