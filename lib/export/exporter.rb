@@ -6,9 +6,10 @@ module Export
   class Exporter
     attr_reader :all_metadata, :monograph, :monograph_presenter, :columns
 
-    def initialize(monograph_id, columns = :all)
+    def initialize(monograph_id, columns = :all, system_metadata = false)
       @monograph = Sighrax.from_noid(monograph_id)
       @columns = columns
+      @system_metadata = system_metadata
     end
 
     def export
@@ -102,7 +103,9 @@ module Export
         return @all_metadata if @all_metadata.present?
 
         @all_metadata = if @columns == :monograph
-                          (ADMIN_METADATA_FIELDS + METADATA_FIELDS).select { |f| %i[universal monograph].include? f[:object] }
+                          fields = ADMIN_METADATA_FIELDS + METADATA_FIELDS
+                          fields += SYSTEM_METADATA_FIELDS if @system_metadata
+                          (fields).select { |f| %i[universal monograph].include? f[:object] }
                         else
                           ADMIN_METADATA_FIELDS + METADATA_FIELDS + FILE_SET_FLAG_FIELDS
                         end
@@ -126,6 +129,7 @@ module Export
         return representative_kind_or_cover(item, parent_rep) if object_type == :file_set && field[:field_name] == 'Representative Kind'
         return item_url(item, object_type) if field[:object] == :universal && field[:field_name] == 'Link'
         return file_set_embed_code(item) if object_type == :file_set && field[:field_name] == 'Embed Code'
+        return published?(item) if field[:field_name] == 'Published?'
         return field_value(item, field[:metadata_name], field[:multivalued]) if field[:object] == :universal || field[:object] == object_type
         return MONO_FILENAME_FLAG if object_type == :monograph && (['label', 'section_title'].include? field[:metadata_name])
       end
@@ -157,6 +161,10 @@ module Export
 
       def file_set_embed_code(file_set)
         file_set.embed_code
+      end
+
+      def published?(item)
+        item.solr_document["suppressed_bsi"] != true && item.solr_document["visibility_ssi"] == "open"
       end
 
       def field_value(item, metadata_name, multivalued) # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity

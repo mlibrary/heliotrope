@@ -21,7 +21,7 @@ namespace :heliotrope do
 
     CSV.open(file_path, "w") do |csv|
       docs.each_with_index do |doc, index|
-        exporter = Export::Exporter.new(doc.id, :monograph)
+        exporter = Export::Exporter.new(doc.id, :monograph, system_metadata = true)
         exporter.write_csv_header_rows(csv) if index == 0
         csv << exporter.monograph_row
       end

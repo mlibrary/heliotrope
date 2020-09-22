@@ -369,3 +369,5 @@ en:
         -- related: *.html file
         -- peer_review: *.html file
         -- cover: image file like *.jpg (not JPG 2000), *.tiff, *.png
+      published: |
+        Whether the object is currently "published" on Fulcrum.
