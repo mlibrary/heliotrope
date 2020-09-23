@@ -157,6 +157,7 @@ Rails.application.routes.draw do
 
   get 'whoami', controller: :utilities, action: :whoami, as: :whoami_utility
   get 'ableplayer', controller: :utilities, action: :ableplayer, as: :ableplayer_utility
+  get 'status', controller: :utilities, action: :status, as: :status_utility
 
   mount Blacklight::Engine => '/'
   mount Riiif::Engine => '/image-service', as: 'riiif'
