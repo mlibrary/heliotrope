@@ -3,36 +3,195 @@
 require 'rails_helper'
 
 RSpec.describe Sighrax::Monograph, type: :model do
-  subject { described_class.send(:new, noid, data) }
+  subject { monograph }
 
+  let(:monograph) { described_class.send(:new, noid, data) }
   let(:noid) { 'validnoid' }
   let(:data) { {} }
-  let(:electronic_publication) { double('electronic_publication') }
 
   it { is_expected.to be_an_instance_of(described_class) }
   it { is_expected.to be_a_kind_of(Sighrax::Work) }
-  it { expect(subject.resource_type).to eq :Monograph }
-  it { expect(subject.epub_featured_representative).to be_an_instance_of(Sighrax::NullEntity) }
+  it { expect(monograph.resource_type).to eq :Monograph }
 
-  describe '#epub_featured_representative' do
-    let(:epub_featured_representative) { double('epub_featured_representative', file_set_id: 'file_set_id') }
+  describe '#cover_representative' do
+    subject { monograph.cover_representative }
 
-    before do
-      allow(FeaturedRepresentative).to receive(:find_by).with(work_id: noid, kind: 'epub').and_return(epub_featured_representative)
-      allow(Sighrax).to receive(:from_noid).with(epub_featured_representative.file_set_id).and_return(electronic_publication)
+    it { is_expected.to be_an_instance_of(Sighrax::NullEntity) }
+
+    context 'when cover' do
+      let(:data) { { 'representative_id_ssim' => ['covernoid'] } }
+      let(:cover) { instance_double(Sighrax::Asset, 'cover') }
+
+      before { allow(Sighrax).to receive(:from_noid).with('covernoid').and_return(cover) }
+
+      it { is_expected.to be cover }
     end
-
-    it { expect(subject.epub_featured_representative).to be electronic_publication }
   end
 
-  describe '#pdf_ebook_featured_representative' do
-    let(:pdf_ebook_featured_representative) { double('pdf_ebook_featured_representative', file_set_id: 'file_set_id') }
+  context 'featured representatives' do
+    let(:featured_representative) { instance_double(FeaturedRepresentative, 'featured_representative', file_set_id: 'file_set_id') }
+    let(:null_entity) { Sighrax::Entity.null_entity }
+    let(:asset) { instance_double(Sighrax::Asset, 'asset') }
 
     before do
-      allow(FeaturedRepresentative).to receive(:find_by).with(work_id: noid, kind: 'pdf_ebook').and_return(pdf_ebook_featured_representative)
-      allow(Sighrax).to receive(:from_noid).with(pdf_ebook_featured_representative.file_set_id).and_return(electronic_publication)
+      allow(Sighrax).to receive(:from_noid).with(nil).and_return(null_entity)
+      allow(Sighrax).to receive(:from_noid).with(featured_representative.file_set_id).and_return(asset)
     end
 
-    it { expect(subject.pdf_ebook_featured_representative).to be electronic_publication }
+    describe '#epub_featured_representative' do
+      subject { monograph.epub_featured_representative }
+
+      it { is_expected.to be null_entity }
+
+      context 'when epub' do
+        before { allow(FeaturedRepresentative).to receive(:find_by).with(work_id: noid, kind: 'epub').and_return(featured_representative) }
+
+        it { is_expected.to be asset }
+      end
+    end
+
+    describe '#pdf_ebook_featured_representative' do
+      subject { monograph.pdf_ebook_featured_representative }
+
+      it { is_expected.to be null_entity }
+
+      context 'when pdf_ebook' do
+        before { allow(FeaturedRepresentative).to receive(:find_by).with(work_id: noid, kind: 'pdf_ebook').and_return(featured_representative) }
+
+        it { is_expected.to be asset }
+      end
+    end
+  end
+
+  context 'attributes' do
+    let(:monograph) { Sighrax.from_noid(hyrax_monograph.id) }
+    let(:hyrax_monograph) { create(:public_monograph) }
+
+    describe '#contributors' do
+      subject { monograph.contributors }
+
+      it { is_expected.to be_empty }
+
+      context 'contributor' do
+        before do
+          hyrax_monograph.contributor = ['Contributor']
+          hyrax_monograph.save!
+        end
+
+        it { is_expected.to contain_exactly('Contributor') }
+
+        context 'creator' do
+          before do
+            hyrax_monograph.creator = ['Creator']
+            hyrax_monograph.save!
+          end
+
+          it { is_expected.to contain_exactly('Creator', 'Contributor') }
+        end
+      end
+    end
+
+    describe '#description' do
+      subject { monograph.description }
+
+      before do
+        hyrax_monograph.description = ['Description']
+        hyrax_monograph.save!
+      end
+
+      it { is_expected.to eq('Description') }
+    end
+
+    describe '#identifier' do
+      subject { monograph.identifier }
+
+      it { is_expected.to eq(HandleNet.url(monograph.noid)) }
+
+      context 'hdl' do
+        before do
+          hyrax_monograph.hdl = 'Handle'
+          hyrax_monograph.save!
+        end
+
+        it { is_expected.to eq(HandleNet.url(monograph.noid)) }
+
+        context 'doi' do
+          before do
+            hyrax_monograph.hdl = 'DOI'
+            hyrax_monograph.save!
+          end
+
+          it { is_expected.to eq(HandleNet.url(monograph.noid)) }
+        end
+      end
+    end
+
+    describe '#language' do
+      subject { monograph.language }
+
+      before do
+        hyrax_monograph.language = ['Language']
+        hyrax_monograph.save!
+      end
+
+      it { is_expected.to eq('Language') }
+    end
+
+    describe '#published' do
+      subject { monograph.published }
+
+      before do
+        hyrax_monograph.date_created = ['2020']
+        hyrax_monograph.save!
+      end
+
+      it { is_expected.to eq(Date.parse('2020-01-01')) }
+    end
+
+    describe '#publisher' do
+      subject { monograph.publisher }
+
+      before do
+        hyrax_monograph.publisher = ['Publisher']
+        hyrax_monograph.save!
+      end
+
+      it { is_expected.to eq('Publisher') }
+    end
+
+    describe '#series' do
+      subject { monograph.series }
+
+      before do
+        hyrax_monograph.series = ['Series']
+        hyrax_monograph.save!
+      end
+
+      it { is_expected.to eq('Series') }
+    end
+
+    describe '#subjects' do
+      subject { monograph.subjects }
+
+      it { is_expected.to be_empty }
+
+      context 'when singular' do
+        before do
+          hyrax_monograph.subject = ['A']
+          hyrax_monograph.save!
+        end
+
+        it { is_expected.to contain_exactly('A') }
+      end
+
+      context 'when multiple' do
+        before do
+          hyrax_monograph.subject = ['A', 'B', 'C']
+          hyrax_monograph.save!
+        end
+
+        it { is_expected.to contain_exactly('A', 'B', 'C') }
+      end
+    end
   end
 end
