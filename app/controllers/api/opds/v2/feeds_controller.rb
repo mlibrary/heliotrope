@@ -25,9 +25,9 @@ module API
             ],
             "navigation": [
               {
-                "title": "Open Access Publications",
+                "title": "University of Michigan Press Ebook Collection Open Access",
                 "rel": "first",
-                "href": "/oa",
+                "href": "/ebc_open",
                 "type": "application/opds+json"
               }
             ]
@@ -38,32 +38,34 @@ module API
         # This resource returns the open access feed.
         # @example get /api/opds/oa
         # @return [ActionDispatch::Response] { <opds_feed> }
-        def open_access
+        def ebc_open
           feed = {
             "metadata": {
-              "title": "Fulcrum Open Access Publications"
+              "title": "University of Michigan Press Ebook Collection Open Access"
             },
             "links": [
               {
                 "rel": "self",
-                "href": Rails.application.routes.url_helpers.api_opds_oa_url,
+                "href": Rails.application.routes.url_helpers.api_opds_ebc_open_url,
                 "type": "application/opds+json"
               }
             ],
             "publications": [
             ]
           }
-          feed[:publications] = open_access_publications
+          feed[:publications] = ebc_open_publications
           render plain: feed.to_json, content_type: 'application/opds+json'
         end
 
         private
 
-          def open_access_publications
+          def ebc_open_publications
             rvalue = []
+            ebc_open = Greensub::Product.find_by(identifier: 'ebc_open')
+            monograph_noids = ebc_open.components.pluck(:noid)
             (ActiveFedora::SolrService.query(
-              "+has_model_ssim:Monograph AND +visibility_ssi:open AND -suppressed_bsi:true AND +open_access_tesim:yes",
-              rows: 100_000
+              "{!terms f=id}#{monograph_noids.join(',')} AND +has_model_ssim:Monograph AND +visibility_ssi:open AND -suppressed_bsi:true AND +open_access_tesim:yes",
+              rows: monograph_noids.count
             ) || [])
               .each do |solr_doc|
                 sm = ::Sighrax.from_solr_document(solr_doc)
