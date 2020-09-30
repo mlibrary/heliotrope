@@ -43,9 +43,9 @@ RSpec.describe "OPDS Feeds", type: [:request, :json_schema]  do
             ],
             "navigation": [
               {
-                "title": "Open Access Publications",
+                "title": "University of Michigan Press Ebook Collection Open Access",
                 "rel": "first",
-                "href": "/oa",
+                "href": "/ebc_open",
                 "type": "application/opds+json"
               }
             ]
@@ -61,16 +61,16 @@ RSpec.describe "OPDS Feeds", type: [:request, :json_schema]  do
       end
     end
 
-    describe '#open_access' do
-      let(:open_access_feed) do
+    describe '#ebc_open' do
+      let(:ebc_open_feed) do
         JSON.parse({
           "metadata": {
-            "title": "Fulcrum Open Access Publications"
+            "title": "University of Michigan Press Ebook Collection Open Access"
           },
           "links": [
             {
               "rel": "self",
-              "href": Rails.application.routes.url_helpers.api_opds_oa_url,
+              "href": Rails.application.routes.url_helpers.api_opds_ebc_open_url,
               "type": "application/opds+json"
             }
           ],
@@ -81,52 +81,61 @@ RSpec.describe "OPDS Feeds", type: [:request, :json_schema]  do
       let!(:monograph) { create(:public_monograph) }
 
       it 'empty feed' do
-        get api_opds_oa_path, headers: headers
+        get api_opds_ebc_open_path, headers: headers
         expect(response.content_type).to eq("application/opds+json")
         expect(response).to have_http_status(:ok)
         expect(schemer_validate?(opds_feed_schemer, response_body)).to be true
-        expect(response_body).to eq(open_access_feed)
+        expect(response_body).to eq(ebc_open_feed)
         expect(response_body['publications']).to be_empty
       end
 
-      context 'when invalid open access publication' do
-        before do
-          monograph.open_access = 'yes'
-          monograph.save!
-        end
-
-        it 'is empty' do
-          get api_opds_oa_path, headers: headers
-          expect(response.content_type).to eq("application/opds+json")
-          expect(response).to have_http_status(:ok)
-          expect(schemer_validate?(opds_feed_schemer, response_body)).to be true
-          expect(response_body['publications']).to be_empty
-        end
-      end
-
-      context 'when valid open access publication' do
-        let(:cover) { create(:public_file_set) }
-        let(:epub) { create(:public_file_set) }
-        let(:fr) { create(:featured_representative, work_id: monograph.id, file_set_id: epub.id, kind: 'epub') }
+      context 'ebc open' do
+        let(:product) { create(:product, identifier: 'ebc_open') }
+        let(:component) { create(:component, noid: monograph.id) }
 
         before do
-          monograph.ordered_members << cover
-          monograph.representative_id = cover.id
-          monograph.ordered_members << epub
-          monograph.open_access = 'yes'
-          monograph.save!
-          cover.save!
-          epub.save!
-          fr
+          product.components << component
         end
 
-        it 'is non-empty' do
-          get api_opds_oa_path, headers: headers
-          expect(response.content_type).to eq("application/opds+json")
-          expect(response).to have_http_status(:ok)
-          expect(schemer_validate?(opds_feed_schemer, response_body)).to be true
-          expect(response_body['publications'].count).to eq(1)
-          expect(response_body['publications'].first).to eq(JSON.parse(Opds::Publication.new_from_monograph(Sighrax.from_noid(monograph.id)).to_json))
+        context 'when invalid open access publication' do
+          before do
+            monograph.open_access = 'yes'
+            monograph.save!
+          end
+
+          it 'is empty' do
+            get api_opds_ebc_open_path, headers: headers
+            expect(response.content_type).to eq("application/opds+json")
+            expect(response).to have_http_status(:ok)
+            expect(schemer_validate?(opds_feed_schemer, response_body)).to be true
+            expect(response_body['publications']).to be_empty
+          end
+        end
+
+        context 'when valid open access publication' do
+          let(:cover) { create(:public_file_set) }
+          let(:epub) { create(:public_file_set) }
+          let(:fr) { create(:featured_representative, work_id: monograph.id, file_set_id: epub.id, kind: 'epub') }
+
+          before do
+            monograph.ordered_members << cover
+            monograph.representative_id = cover.id
+            monograph.ordered_members << epub
+            monograph.open_access = 'yes'
+            monograph.save!
+            cover.save!
+            epub.save!
+            fr
+          end
+
+          it 'is non-empty' do
+            get api_opds_ebc_open_path, headers: headers
+            expect(response.content_type).to eq("application/opds+json")
+            expect(response).to have_http_status(:ok)
+            expect(schemer_validate?(opds_feed_schemer, response_body)).to be true
+            expect(response_body['publications'].count).to eq(1)
+            expect(response_body['publications'].first).to eq(JSON.parse(Opds::Publication.new_from_monograph(Sighrax.from_noid(monograph.id)).to_json))
+          end
         end
       end
     end

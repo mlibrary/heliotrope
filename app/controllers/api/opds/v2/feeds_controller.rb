@@ -60,14 +60,16 @@ module API
         private
 
           def ebc_open_publications
-            rvalue = []
             ebc_open = Greensub::Product.find_by(identifier: 'ebc_open')
+            return [] if ebc_open.blank?
+
             monograph_noids = ebc_open.components.pluck(:noid)
-            (ActiveFedora::SolrService.query(
-              "{!terms f=id}#{monograph_noids.join(',')} AND +has_model_ssim:Monograph AND +visibility_ssi:open AND -suppressed_bsi:true AND +open_access_tesim:yes",
-              rows: monograph_noids.count
-            ) || [])
-              .each do |solr_doc|
+            return [] if monograph_noids.blank?
+
+            query = ActiveFedora::SolrQueryBuilder.construct_query_for_ids(monograph_noids)
+
+            rvalue = []
+            (ActiveFedora::SolrService.query(query, rows: monograph_noids.count) || []).each do |solr_doc|
                 sm = ::Sighrax.from_solr_document(solr_doc)
                 op = ::Opds::Publication.new_from_monograph(sm)
                 rvalue.append(op.to_h) if op.valid?
