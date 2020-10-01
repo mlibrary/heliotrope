@@ -10,7 +10,7 @@ RSpec.describe Royalty::CalculationReport do
           "Authors": "Some One",
           "Parent_Title": "A",
           "Parent_DOI": "http://doi.org/a",
-          "Parent_ISBN": "9780231503709 (E-Book)",
+          "Parent_ISBN": "9780520047983 (hardcover), 9780520319196 (ebook), 9780520319189 (paper)",
           "Publisher": "Flub",
           "Section_Type": "Chapter",
           "Reporting_Period_Total": 1001,
@@ -26,7 +26,7 @@ RSpec.describe Royalty::CalculationReport do
           "Authors": "No One",
           "Parent_Title": "B",
           "Parent_DOI": "http://doi.org/b",
-          "Parent_ISBN": "9780292713420, 029271341X, 0292713428, 9780292713413",
+          "Parent_ISBN": "9780813915425 (hardcover), 9780813915432 (paper)",
           "Publisher": "Derp",
           "Section_Type": "Chapter",
           "Reporting_Period_Total": 5,
@@ -42,7 +42,7 @@ RSpec.describe Royalty::CalculationReport do
           "Authors": "Some One",
           "Parent_Title": "A",
           "Parent_DOI": "http://doi.org/a",
-          "Parent_ISBN": "9780231503709 (E-Book)",
+          "Parent_ISBN": "9780520047983 (hardcover), 9780520319196 (ebook), 9780520319189 (paper)",
           "Publisher": "Flub",
           "Section_Type": "",
           "Reporting_Period_Total": 10,
@@ -62,7 +62,8 @@ RSpec.describe Royalty::CalculationReport do
                        has_model_ssim: ['Monograph'],
                        press_sim: press.subdomain,
                        copyright_holder_tesim: ["Copyright A"],
-                       title_tesim: ["A"])
+                       title_tesim: ["A"],
+                       identifier_tesim: ["heb90001.0001.001", "http://hdl.handle.net/2027/heb.31695"])
     end
 
     let(:mono2) do
@@ -70,7 +71,8 @@ RSpec.describe Royalty::CalculationReport do
                        has_model_ssim: ['Monograph'],
                        press_sim: press.subdomain,
                        copyright_holder_tesim: ["Copyright B"],
-                       title_tesim: ["B"])
+                       title_tesim: ["B"],
+                       identifier_tesim: ["http://hdl.handle.net/2027/heb.sxklj", "heb33333.0001.001"])
     end
     let(:counter_report) { double("counter_report") }
     let(:item_report) { { items: items } }
@@ -96,7 +98,7 @@ RSpec.describe Royalty::CalculationReport do
 
       @reports = subject
 
-      expect(@reports.keys).to eq ["Copyright_A.calc.201901-201906.csv", "Copyright_B.calc.201901-201906.csv"]
+      expect(@reports.keys).to eq ["Copyright_A.calc.201901-201906.csv", "Copyright_B.calc.201901-201906.csv", "calc_combined.201901-201906.csv"]
 
       expect(@reports["Copyright_A.calc.201901-201906.csv"][:header][:"Total Royalties Shared (All Rights Holders)"]).to eq "1,000.00"
       expect(@reports["Copyright_A.calc.201901-201906.csv"][:header][:"Total Hits (Non-OA Titles, All Rights Holders)"]).to eq "1,016"
@@ -114,6 +116,22 @@ RSpec.describe Royalty::CalculationReport do
 
       expect(@reports["Copyright_A.calc.201901-201906.csv"][:items][0]["Royalty Earning"].to_f +
              @reports["Copyright_B.calc.201901-201906.csv"][:items][0]["Royalty Earning"].to_f).to eq 1000.0
+
+      # HELIO-3572 the calc combined has no "Report" header
+      expect(@reports["calc_combined.201901-201906.csv"][:header]).to eq Hash.new
+      expect(@reports["calc_combined.201901-201906.csv"][:items][0]["hebid"]).to eq "heb90001.0001.001"
+      expect(@reports["calc_combined.201901-201906.csv"][:items][0]["Copyright Holder"]).to eq "Copyright A"
+      expect(@reports["calc_combined.201901-201906.csv"][:items][0]["ebook ISBN"]).to eq "9780520319196"
+      expect(@reports["calc_combined.201901-201906.csv"][:items][0]["hardcover ISBN"]).to eq "9780520047983"
+      expect(@reports["calc_combined.201901-201906.csv"][:items][0]["paper ISBN"]).to eq "9780520319189"
+      expect(@reports["calc_combined.201901-201906.csv"][:items][1]["hebid"]).to eq "heb33333.0001.001"
+      expect(@reports["calc_combined.201901-201906.csv"][:items][1]["Copyright Holder"]).to eq "Copyright B"
+      expect(@reports["calc_combined.201901-201906.csv"][:items][1]["ebook ISBN"]).to eq ""
+      expect(@reports["calc_combined.201901-201906.csv"][:items][1]["hardcover ISBN"]).to eq "9780813915425"
+      expect(@reports["calc_combined.201901-201906.csv"][:items][1]["paper ISBN"]).to eq "9780813915432"
+
+      expect(@reports["calc_combined.201901-201906.csv"][:items][0]["Total Title Hits"]).to eq "1,011"
+      expect(@reports["calc_combined.201901-201906.csv"][:items][1]["Total Title Hits"]).to eq "5"
     end
   end
 
@@ -204,7 +222,7 @@ RSpec.describe Royalty::CalculationReport do
 
       @reports = subject
 
-      expect(@reports.keys).to eq ["Assumed_rights.calc.201901-201902.csv", "Assumed_Rights.calc.201901-201902.csv"]
+      expect(@reports.keys).to eq ["Assumed_rights.calc.201901-201902.csv", "Assumed_Rights.calc.201901-201902.csv", "calc_combined.201901-201902.csv"]
 
       expect(@reports["Assumed_rights.calc.201901-201902.csv"][:header][:"Rightsholder Name"]).to eq "Assumed rights"
       expect(@reports["Assumed_Rights.calc.201901-201902.csv"][:header][:"Rightsholder Name"]).to eq "Assumed Rights"

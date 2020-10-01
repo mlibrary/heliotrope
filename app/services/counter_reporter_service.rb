@@ -63,7 +63,7 @@ class CounterReporterService
     CSV.generate({}) do |csv|
       row = []
       # header rows
-      report[:header].each do |k, v|
+      report[:header]&.each do |k, v|
         row << k
         row << v
         1.upto(report[:items][0].length - 2).each do
@@ -73,7 +73,7 @@ class CounterReporterService
         row = []
       end
       # empty row
-      csv << 1.upto(report[:items][0].length).map { "" }
+      csv << 1.upto(report[:items][0].length).map { "" } if report[:header].present?
       # items
       if report[:items][0].empty?
         csv << ["Report is empty", ""]

@@ -35,6 +35,29 @@ RSpec.describe CounterReporterService do
       end
     end
 
+    context "with no report header" do
+      let(:report) { described_class.pr_p1(press: press.id, institution: institution, start_date: "2018-01-01", end_date: "2018-03-01") }
+
+      before do
+        create(:counter_report, press: press.id, session: 1,  noid: 'a',  parent_noid: 'A', institution: 1, created_at: Time.parse("2018-01-02").utc, access_type: "Controlled", request: 1)
+        create(:counter_report, press: press.id, session: 6,  noid: 'b',  parent_noid: 'B', institution: 1, created_at: Time.parse("2018-02-11").utc, access_type: "Controlled", request: 1)
+      end
+
+      after { CounterReport.destroy_all }
+
+      it "makes the csv report with no report header" do
+        allow(Greensub::Institution).to receive(:where).with(identifier: institution).and_return([institution_name])
+        report.delete(:header)
+
+        expect(described_class.csv(report)).to eq <<~CSV
+          Platform,Metric_Type,Reporting_Period_Total,Jan-2018,Feb-2018,Mar-2018
+          Fulcrum/#{press.name},Total_Item_Requests,2,1,1,0
+          Fulcrum/#{press.name},Unique_Item_Requests,2,1,1,0
+          Fulcrum/#{press.name},Unique_Title_Requests,2,1,1,0
+        CSV
+      end
+    end
+
     context "with counter data" do
       let(:report) { described_class.pr_p1(press: press.id, institution: institution, start_date: "2018-01-01", end_date: "2018-03-01") }
 
