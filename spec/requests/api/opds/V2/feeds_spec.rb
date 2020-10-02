@@ -45,7 +45,7 @@ RSpec.describe "OPDS Feeds", type: [:request, :json_schema]  do
               {
                 "title": "University of Michigan Press Ebook Collection Open Access",
                 "rel": "first",
-                "href": "/ebc_open",
+                "href": "/umpebc_oa",
                 "type": "application/opds+json"
               }
             ]
@@ -61,8 +61,8 @@ RSpec.describe "OPDS Feeds", type: [:request, :json_schema]  do
       end
     end
 
-    describe '#ebc_open' do
-      let(:ebc_open_feed) do
+    describe '#umpebc_oa' do
+      let(:umpebc_oa_feed) do
         JSON.parse({
           "metadata": {
             "title": "University of Michigan Press Ebook Collection Open Access"
@@ -70,7 +70,7 @@ RSpec.describe "OPDS Feeds", type: [:request, :json_schema]  do
           "links": [
             {
               "rel": "self",
-              "href": Rails.application.routes.url_helpers.api_opds_ebc_open_url,
+              "href": Rails.application.routes.url_helpers.api_opds_umpebc_oa_url,
               "type": "application/opds+json"
             }
           ],
@@ -81,16 +81,16 @@ RSpec.describe "OPDS Feeds", type: [:request, :json_schema]  do
       let!(:monograph) { create(:public_monograph) }
 
       it 'empty feed' do
-        get api_opds_ebc_open_path, headers: headers
+        get api_opds_umpebc_oa_path, headers: headers
         expect(response.content_type).to eq("application/opds+json")
         expect(response).to have_http_status(:ok)
         expect(schemer_validate?(opds_feed_schemer, response_body)).to be true
-        expect(response_body).to eq(ebc_open_feed)
+        expect(response_body).to eq(umpebc_oa_feed)
         expect(response_body['publications']).to be_empty
       end
 
-      context 'ebc open' do
-        let(:product) { create(:product, identifier: 'ebc_open') }
+      context 'umpebc oa' do
+        let(:product) { create(:product, identifier: 'ebc_backlist') }
         let(:component) { create(:component, noid: monograph.id) }
 
         before do
@@ -104,7 +104,7 @@ RSpec.describe "OPDS Feeds", type: [:request, :json_schema]  do
           end
 
           it 'is empty' do
-            get api_opds_ebc_open_path, headers: headers
+            get api_opds_umpebc_oa_path, headers: headers
             expect(response.content_type).to eq("application/opds+json")
             expect(response).to have_http_status(:ok)
             expect(schemer_validate?(opds_feed_schemer, response_body)).to be true
@@ -129,7 +129,7 @@ RSpec.describe "OPDS Feeds", type: [:request, :json_schema]  do
           end
 
           it 'is non-empty' do
-            get api_opds_ebc_open_path, headers: headers
+            get api_opds_umpebc_oa_path, headers: headers
             expect(response.content_type).to eq("application/opds+json")
             expect(response).to have_http_status(:ok)
             expect(schemer_validate?(opds_feed_schemer, response_body)).to be true

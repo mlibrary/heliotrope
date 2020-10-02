@@ -59,7 +59,7 @@ Rails.application.routes.draw do
     namespace :opds do
       scope module: :v2, constraints: API::Opds::Version.new('v2', true) do
         get '', controller: :feeds, action: :opds
-        get 'ebc_open', controller: :feeds, action: :ebc_open
+        get 'umpebc_oa', controller: :feeds, action: :umpebc_oa
       end
     end
 
