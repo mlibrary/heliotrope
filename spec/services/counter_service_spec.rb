@@ -122,6 +122,22 @@ RSpec.describe CounterService do
       it "is 'Controlled'" do
         expect(described_class.from(controller, presenter).access_type).to eq 'Controlled'
       end
+
+      context "the Monograph is Open Access" do
+        let(:mono_doc) do
+          SolrDocument.new(id: 'mono_id',
+                           has_model_ssim: ['Monograph'],
+                           visibility_ssi: 'open',
+                           member_ids_ssim: ['id'],
+                           press_tesim: [press.subdomain],
+                           read_access_group_ssim: ["public"],
+                           open_access_tesim: ["yes"])
+        end
+
+        it "is 'OA_Gold'" do
+          expect(described_class.from(controller, presenter).access_type).to eq 'OA_Gold'
+        end
+      end
     end
 
     context "with an unrestricted epub" do
@@ -131,7 +147,7 @@ RSpec.describe CounterService do
       end
 
       it "is OA_Gold" do
-        expect(described_class.from(controller, presenter).access_type).to eq 'OA_Gold'
+        expect(described_class.from(controller, monograph).access_type).to eq 'OA_Gold'
       end
     end
 

@@ -60,7 +60,7 @@ class CounterService
     "#{ip}|#{ua}|#{date}|#{hour}"
   end
 
-  def access_type
+  def access_type # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
     # COUNTER v5 section 3.5.3 seems to indicate that we need this
     # for epubs as well as multimedia (TR and IR reports).
     # Currently, in Checkpoint, we are restricting at the Monograph level,
@@ -71,7 +71,13 @@ class CounterService
            else
              @presenter.parent.id
            end
-    if Greensub::Component.find_by(noid: noid)
+
+    oa   = if @presenter.is_a? Hyrax::MonographPresenter
+             @presenter.open_access?
+           else
+             @presenter.parent.open_access?
+           end
+    if Greensub::Component.find_by(noid: noid) && !oa
       "Controlled"
       # For assets if they have a permissions_expiration_date at any time, past or present
     elsif @presenter.is_a?(Hyrax::FileSetPresenter) && @presenter&.permissions_expiration_date.present?
