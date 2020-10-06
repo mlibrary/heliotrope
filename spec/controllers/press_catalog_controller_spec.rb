@@ -29,6 +29,28 @@ RSpec.describe PressCatalogController, type: :controller do
       get :index, params: { press: press }
       expect(response).to have_http_status(:success)
     end
+
+    context '#search_ongoing' do
+      it 'is false with no additional params' do
+        get :index, params: { press: press }
+        expect(assigns(:search_ongoing)).to eq false
+      end
+
+      it 'is false with additional non-search-related params' do
+        get :index, params: { press: press, page: 2, per_page: 50, sort: 'year desc', view: 'list' }
+        expect(assigns(:search_ongoing)).to eq false
+      end
+
+      it 'is true with a text search query param' do
+        get :index, params: { press: press, q: 'search terms' }
+        expect(assigns(:search_ongoing)).to eq true
+      end
+
+      it 'is true with a facet param' do
+        get :index, params: { press: press, open_access_sim: 'yes' }
+        expect(assigns(:search_ongoing)).to eq true
+      end
+    end
   end
 
   # inspired by https://github.com/samvera/hyrax/blob/6182f8c778c52bff1f2832173595f12c038b2793/spec/controllers/catalog_controller_spec.rb#L86
