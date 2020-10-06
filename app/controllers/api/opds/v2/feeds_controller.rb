@@ -27,7 +27,7 @@ module API
               {
                 "title": "University of Michigan Press Ebook Collection Open Access",
                 "rel": "first",
-                "href": "/ebc_open",
+                "href": "/umpebc_oa",
                 "type": "application/opds+json"
               }
             ]
@@ -35,10 +35,10 @@ module API
           render plain: feed.to_json, content_type: 'application/opds+json'
         end
 
-        # This resource returns the open access feed.
-        # @example get /api/opds/oa
+        # This resource returns the umpebc_oa publications feed.
+        # @example get /api/opds/umpebc_oa
         # @return [ActionDispatch::Response] { <opds_feed> }
-        def ebc_open
+        def umpebc_oa
           feed = {
             "metadata": {
               "title": "University of Michigan Press Ebook Collection Open Access"
@@ -46,24 +46,24 @@ module API
             "links": [
               {
                 "rel": "self",
-                "href": Rails.application.routes.url_helpers.api_opds_ebc_open_url,
+                "href": Rails.application.routes.url_helpers.api_opds_umpebc_oa_url,
                 "type": "application/opds+json"
               }
             ],
             "publications": [
             ]
           }
-          feed[:publications] = ebc_open_publications
+          feed[:publications] = umpebc_oa_publications
           render plain: feed.to_json, content_type: 'application/opds+json'
         end
 
         private
 
-          def ebc_open_publications
-            ebc_open = Greensub::Product.find_by(identifier: 'ebc_open')
-            return [] if ebc_open.blank?
+          def umpebc_oa_publications
+            ebc_backlist = Greensub::Product.find_by(identifier: 'ebc_backlist')
+            return [] if ebc_backlist.blank?
 
-            monograph_noids = ebc_open.components.pluck(:noid)
+            monograph_noids = ebc_backlist.components.pluck(:noid)
             return [] if monograph_noids.blank?
 
             query = ActiveFedora::SolrQueryBuilder.construct_query_for_ids(monograph_noids)
