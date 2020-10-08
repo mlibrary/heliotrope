@@ -7,6 +7,7 @@ module PDFEbook
     # Class Methods
     def self.from_title_level_cfi(id, index, title, level, cfi)
       return null_object unless title&.instance_of?(String) && cfi&.instance_of?(String)
+      # index is position within the current depth/level only, hence overall_index
       new(id: id, index: index, title: title, depth: level, cfi: cfi)
     end
 
@@ -15,6 +16,8 @@ module PDFEbook
     end
 
     # Instance Methods
+
+    attr_accessor :overall_index
 
     def title
       @args[:title] || ''
@@ -29,7 +32,7 @@ module PDFEbook
     end
 
     def downloadable?
-      File.exist?(File.join(UnpackService.root_path_from_noid(@args[:id], 'pdf_ebook_chapters'), @args[:index].to_s + '.pdf'))
+      File.exist?(File.join(UnpackService.root_path_from_noid(@args[:id], 'pdf_ebook_chapters'), overall_index.to_s + '.pdf'))
     end
 
     def pages

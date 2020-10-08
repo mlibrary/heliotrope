@@ -78,7 +78,7 @@ module PDFEbook
           end
           outline = outline[:Next]&.solve
         end
-        intervals
+        intervals.each_with_index { |interval, i| interval.overall_index = i }
       end
   end
 

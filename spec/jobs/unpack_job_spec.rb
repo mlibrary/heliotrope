@@ -48,8 +48,8 @@ RSpec.describe UnpackJob, type: :job do
         described_class.perform_now(pdf_ebook.id, 'pdf_ebook')
         expect(File.exist?("#{root_path}.pdf")).to be true
         expect(Dir.exist?(chapters_dir)).to be true
-        expect(Dir.glob(File.join(chapters_dir, '**', '*')).select { |file| File.file?(file) }.count).to eq 6
-        expect(JSON.parse(EbookTableOfContentsCache.find_by(noid: pdf_ebook.id).toc).length).to eq 6
+        expect(Dir.glob(File.join(chapters_dir, '**', '*')).select { |file| File.file?(file) }.count).to eq 7
+        expect(JSON.parse(EbookTableOfContentsCache.find_by(noid: pdf_ebook.id).toc).length).to eq 7
         expect(JSON.parse(EbookTableOfContentsCache.find_by(noid: pdf_ebook.id).toc)[0]["title"]).to eq "The standard Lorem Ipsum passage, used since the 1500s"
         expect(JSON.parse(EbookTableOfContentsCache.find_by(noid: pdf_ebook.id).toc)[0]["level"]).to eq 1
         expect(JSON.parse(EbookTableOfContentsCache.find_by(noid: pdf_ebook.id).toc)[0]["cfi"]).to eq "page=3"
@@ -57,6 +57,20 @@ RSpec.describe UnpackJob, type: :job do
         # The application itself (see views/monograph_catalog/_index_epub_toc.html.erb) will use policy/checkpoint/auth
         # in combination with this to show or hide download links
         expect(JSON.parse(EbookTableOfContentsCache.find_by(noid: pdf_ebook.id).toc)[0]["downloadable?"]).to eq true
+      end
+
+      before do
+        # this line is weirdly necessary https://github.com/chefspec/chefspec/issues/766#issuecomment-396631456
+        allow(File).to receive(:exist?).and_call_original
+        allow(File).to receive(:exist?).with(File.join(UnpackService.root_path_from_noid(pdf_ebook.id, 'pdf_ebook_chapters'), '3.pdf')).and_return(false)
+      end
+
+      it "properly detects missing PDF chapter files for PDFs with layered ToC's" do
+        described_class.perform_now(pdf_ebook.id, 'pdf_ebook')
+        # 3.pdf is the first entry in a subsection (depth higher than 1), with index == 0 in its section,...
+        # overall_index == 3. Before overall_index was added for PDFEbook::Interval.downloadable? this check would...
+        # erroneously always be against `<index within current depth>.pdf`, i.e. 0.pdf in this case.
+        expect(JSON.parse(EbookTableOfContentsCache.find_by(noid: pdf_ebook.id).toc)[3]["downloadable?"]).to eq false
       end
     end
 
