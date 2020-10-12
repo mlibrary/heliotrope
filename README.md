@@ -17,6 +17,7 @@ Jump In: [Issue Tracker](https://tools.lib.umich.edu/jira/projects/HELIO/issues)
 * [Testing](#testing)
 * [License](#license)
 * [Contributing](#contributing)
+* [Ancillary Repositories](#ancillary-repositories)
 * [Acknowledgements](#acknowledgements)
 
 # What is Fulcrum? What is Heliotrope?
@@ -181,6 +182,15 @@ Heliotrope is available under the [Apache 2.0 license](LICENSE.md).
 We'd love to accept your contributions and there are lots of ways to engage with the Fulcrum project and Heliotrope codebase even if you aren't a developer. Please see our [contributing guidelines](https://github.com/mlibrary/heliotrope/wiki/How-to-Contribute) for how you can get involved.
 
 Please note: As of May 14 2018, we have migrated our issues to a [JIRA project](https://tools.lib.umich.edu/jira/projects/HELIO/issues) and are no longer creating new issues in GitHub. All GitHub issues that were open at the time of migration will be updated with relevant links to the corresponding JIRA issue. If you find bugs or would like to open an issue, you can still use GitHub for that to open the conversation with Fulcrum developers.
+
+# Ancillary Repositories
+
+The Fulcrum Development Team have created a number of ancillary code repositories for handling different areas of business logic related to our use of the Heliotrope repository software. None of the libraries listed below are required in any way for the operation of Heliotrope and are tuned to the use cases and business logic relevant to the Fulcrum instance. They are offered here for possible adaptation and repurposing, or just to illustrate the cluster of tasks that necessarily arise around the operation of repository publishing software.
+
+* [Heliotropium](https://github.com/mlibrary/heliotropium) is a collection of miscellaneous scripts that provide support and infrastructure for heliotrope in the Fulcrum production environment but don't require direct access to Hyrax data structures. Examples include task scheduling and fetching MARC records.
+* [Winterberry](https://github.com/mlibrary/winterberry) provides a number of scripts for processing content in a production stream for eventual ingest into Heliotrope. 
+* [Greensub](https://github.com/mlibrary/greensub) supports a number of business processes related to restricted repository content: assigning Monographs to specific restricted Products, and authorizing Institutions and Individuals to access those Products.
+* [Turnsole](https://github.com/mlibrary/turnsole) provides the RESTful API for Greensub to communicate with Heliotrope.
 
 # Acknowledgements
 Initial development has been supported by a generous grant from the [Andrew W. Mellon Foundation](https://mellon.org/) and implemented by the University of Michigan Library and Press working with partners from Indiana, Minnesota, Northwestern, and Penn State universities and [Data Curation Experts](https://curationexperts.com/).
