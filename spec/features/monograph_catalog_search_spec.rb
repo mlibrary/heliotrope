@@ -53,6 +53,8 @@ describe 'Monograph Catalog Search' do
   it 'searches the monograph catalog page' do
     visit monograph_catalog_path(monograph.id)
 
+    expect(page).to_not have_content("Your search has returned")
+
     # Selectors needed for assets/javascripts/ga_event_tracking.js
     # If these change, fix here then update ga_event_tracking.js
     expect(page).to have_selector('#documents .document h4.index_title a')
@@ -64,46 +66,55 @@ describe 'Monograph Catalog Search' do
     click_button 'resources-search-submit'
     expect(page).to have_content 'Unruly Puddles'
     expect(page).not_to have_content 'Strange Marshes'
+    expect(page).to have_content("Your search has returned 1 resource attached to Weird Bogs")
 
     fill_in 'resources_search', with: 'monkey'
     click_button 'resources-search-submit'
     expect(page).to have_content 'Unruly Puddles'
     expect(page).not_to have_content 'Strange Marshes'
+    expect(page).to have_content("Your search has returned 1 resource attached to Weird Bogs")
 
     fill_in 'resources_search', with: 'lizard'
     click_button 'resources-search-submit'
     expect(page).to have_content 'Unruly Puddles'
     expect(page).not_to have_content 'Strange Marshes'
+    expect(page).to have_content("Your search has returned 1 resource attached to Weird Bogs")
 
     fill_in 'resources_search', with: 'elephant'
     click_button 'resources-search-submit'
     expect(page).to have_content 'Unruly Puddles'
     expect(page).not_to have_content 'Strange Marshes'
+    expect(page).to have_content("Your search has returned 1 resource attached to Weird Bogs")
 
     fill_in 'resources_search', with: 'rhino'
     click_button 'resources-search-submit'
     expect(page).to have_content 'Unruly Puddles'
     expect(page).not_to have_content 'Strange Marshes'
+    expect(page).to have_content("Your search has returned 1 resource attached to Weird Bogs")
 
     fill_in 'resources_search', with: 'snake'
     click_button 'resources-search-submit'
     expect(page).to have_content 'Unruly Puddles'
     expect(page).not_to have_content 'Strange Marshes'
+    expect(page).to have_content("Your search has returned 1 resource attached to Weird Bogs")
 
     fill_in 'resources_search', with: 'tiger'
     click_button 'resources-search-submit'
     expect(page).to have_content 'Unruly Puddles'
     expect(page).not_to have_content 'Strange Marshes'
+    expect(page).to have_content("Your search has returned 1 resource attached to Weird Bogs")
 
     fill_in 'resources_search', with: 'mouse'
     click_button 'resources-search-submit'
     expect(page).to have_content 'Unruly Puddles'
     expect(page).not_to have_content 'Strange Marshes'
+    expect(page).to have_content("Your search has returned 1 resource attached to Weird Bogs")
 
     # Gallery view
     visit monograph_catalog_path id: monograph.id, view: 'gallery'
     expect(page).to have_selector("#documents.row.gallery")
     expect(page).to have_selector(".gallery .document .thumbnail .caption")
     expect(page).to have_content("Unruly Puddles")
+    expect(page).to_not have_content("Your search has returned")
   end
 end

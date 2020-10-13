@@ -1,0 +1,9 @@
+<% if @search_ongoing == true %>
+  <div class="sr-only">
+    <% if controller_name == 'monograph_catalog' %>
+      <%= "Your search has returned #{pluralize(@response['response']['numFound'], 'resource')} attached to #{@presenter.title}" %>
+    <% elsif controller_name == 'press_catalog' %>
+      <%= "Your search has returned #{pluralize(@response['response']['numFound'], 'book')} from #{@press.name}" %>
+    <% end %>
+  </div>
+<% end %>

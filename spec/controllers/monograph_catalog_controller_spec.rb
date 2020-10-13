@@ -129,6 +129,9 @@ RSpec.describe MonographCatalogController, type: :controller do
         it 'mongraph presenter has the monograph' do
           expect(controller.instance_variable_get(:@presenter).solr_document.id).to eq monograph.id
         end
+        it 'sets search_ongoing to false' do
+          expect(assigns(:search_ongoing)).to eq false
+        end
       end
 
       context 'when a monograph is draft/private' do
@@ -166,6 +169,17 @@ RSpec.describe MonographCatalogController, type: :controller do
           end
           it 'mongraph presenter has the monograph' do
             expect(controller.instance_variable_get(:@presenter).solr_document.id).to eq monograph.id
+          end
+          it 'sets search_ongoing to false' do
+            expect(assigns(:search_ongoing)).to eq false
+          end
+
+          context 'textbox search term in play' do
+            before { get :index, params: { id: monograph.id, q: 'blah' } }
+
+            it 'sets search_ongoing to true' do
+              expect(assigns(:search_ongoing)).to eq true
+            end
           end
         end
       end
