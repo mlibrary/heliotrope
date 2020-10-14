@@ -42,7 +42,7 @@ module CommonWorkPresenter
 
   def thumbnail_tag(width, options = {})
     if representative_id.present?
-      ActionController::Base.helpers.image_tag(Riiif::Engine.routes.url_helpers.image_path(cache_buster_id, "#{width},"), options)
+      ActionController::Base.helpers.image_tag(Riiif::Engine.routes.url_helpers.image_path(cache_buster_id, "#{width},", format: "png"), options)
     else
       options[:style] = "max-width: #{width}px"
       ActionController::Base.helpers.image_tag(thumbnail_path || '', options)
@@ -51,7 +51,7 @@ module CommonWorkPresenter
 
   def poster_tag(options = {})
     if representative_id.present?
-      ActionController::Base.helpers.image_tag(Riiif::Engine.routes.url_helpers.image_path(cache_buster_id, :full, :full, 0), options)
+      ActionController::Base.helpers.image_tag(Riiif::Engine.routes.url_helpers.image_path(cache_buster_id, :full, :full, 0, format: "png"), options)
     else
       ActionController::Base.helpers.image_tag(thumbnail_path || '', options)
     end

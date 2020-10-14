@@ -149,13 +149,10 @@ module Hyrax
       # More file-specific fields on the Solr doc can't be trusted to be ordered in a useful way on "reversioning".
       # An alternative could be to pull the timestamp from the Hydra Derivatives thumbnail itself, for files that...
       # actually get one, of course.
-      value = ''
-      if solr_document['timestamp'].present?
-        # "2018-09-18T18:18:28.384Z" vs. "2018-09-18T18:18:28Z", see https://tools.lib.umich.edu/jira/browse/HELIO-2167
-        format = solr_document['timestamp'].length > 20 ? '%Y-%m-%dT%H:%M:%S.%L%Z' : '%Y-%m-%dT%H:%M:%S%Z'
-        value += '?' + Time.strptime(solr_document['timestamp'], format).to_i.to_s
-      end
-      value
+      # Since we already have the FileSet solr doc, using the solr timestamp seems fine.
+      # In CommonWorkPresenter#cache_buster_id we use the thumbnail method since we don't have the representative solr doc.
+      return Time.new(solr_document['timestamp']).to_i.to_s if solr_document['timestamp'].present?
+      ""
     end
 
     def sample_rate
