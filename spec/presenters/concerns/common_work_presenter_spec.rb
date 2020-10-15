@@ -51,7 +51,7 @@ RSpec.describe CommonWorkPresenter do
     context 'representative_id set, uses image-service' do
       let(:solr_document) { ::SolrDocument.new(id: 'mono', title_tesim: ['A Title'], has_model_ssim: ['Monograph'], hasRelatedMediaFragment_ssim: ['999999999']) }
       let(:cache_buster_id) { 'cache_buster_id' }
-      let(:riiif_image_path) { Riiif::Engine.routes.url_helpers.image_path(cache_buster_id, "#{width},") }
+      let(:riiif_image_path) { Riiif::Engine.routes.url_helpers.image_path(cache_buster_id, "#{width},", format: "png") }
       let(:riiif_image_tag) { double('riiif_image_tag') }
 
       before do
@@ -89,7 +89,7 @@ RSpec.describe CommonWorkPresenter do
     context 'representative_id set, uses image-service' do
       let(:solr_document) { ::SolrDocument.new(id: 'mono', title_tesim: ['A Title'], has_model_ssim: ['Monograph'], hasRelatedMediaFragment_ssim: ['999999999']) }
       let(:cache_buster_id) { 'cache_buster_id' }
-      let(:riiif_image_path) { Riiif::Engine.routes.url_helpers.image_path(cache_buster_id, :full, :full, 0) }
+      let(:riiif_image_path) { Riiif::Engine.routes.url_helpers.image_path(cache_buster_id, :full, :full, 0, format: "png") }
       let(:riiif_image_tag) { double('riiif_image_tag') }
 
       before do

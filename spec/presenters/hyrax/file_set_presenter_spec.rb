@@ -690,4 +690,20 @@ RSpec.describe Hyrax::FileSetPresenter do
       it { is_expected.to be false }
     end
   end
+
+  describe "#browser_cache_breaker" do
+    subject { presenter.browser_cache_breaker }
+    # make sure we handle both kinds of solr timestamps correctly for HELIO-2167
+    context "milliseconds" do
+      let(:fileset_doc) { SolrDocument.new(id: 'fileset_id', has_model_ssim: ['FileSet'], timestamp: "2018-09-18T18:18:28.384Z") }
+
+      it { is_expected.to eq "1514782800" }
+    end
+
+    context "no milliseconds" do
+      let(:fileset_doc) { SolrDocument.new(id: 'fileset_id', has_model_ssim: ['FileSet'], timestamp: "2018-09-18T18:18:28Z") }
+
+      it { is_expected.to eq "1514782800" }
+    end
+  end
 end

@@ -17,7 +17,7 @@
   <% if defined? @subdomain %>
     <%# only include hypothes.is for leverpress um press and its subpresses at this point %>
     <% if %w[leverpress michigan cjs cseas csas lrccs ummaa].include? @subdomain %>
-  
+
       <!-- hypothes.is -->
       <script type="text/javascript">
         window.hypothesisConfig = function () {
@@ -966,7 +966,7 @@
 
     var reader = new PDFReader('mainContainer', {
       // href: location.search.replace('?file=', ''),
-      href: '<%= "#{@presenter.id}/file#{@presenter.browser_cache_breaker}" %>',
+      href: '<%= "#{@presenter.id}/file?#{@presenter.browser_cache_breaker}" %>',
       download_links: <%= @ebook_download_presenter.csb_download_links.to_json.html_safe %>,
       metadata: {
         title: '<%= raw escape_javascript(@parent_presenter.page_title) %>'
