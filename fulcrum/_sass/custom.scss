@@ -53,6 +53,10 @@
   background-position: 0;
 }
 
+.button {
+  line-height: 1.2em;
+}
+
 // homepage
 p.header {
   line-height: 1.2em;
@@ -219,6 +223,10 @@ hr.brand {
 
   .project-info h3 {
     font-style: italic;
+  }
+
+  a.btn-large {
+    height: auto;
   }
 
 }
@@ -587,7 +595,7 @@ h2#services {
     top: 0%;
   }
   .parallax-container .section.phases {
-    top: 10%;
+    top: -5%;
   }
 
   .post-content ul.services-list li {

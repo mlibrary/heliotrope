@@ -560,6 +560,9 @@ a > g, a > path {
   color: #ffffff;
   background-position: 0; }
 
+.button {
+  line-height: 1.2em; }
+
 p.header {
   line-height: 1.2em;
   color: #002C63;
@@ -674,6 +677,8 @@ hr.brand {
     color: transparent; }
   .case-study .project-info h3 {
     font-style: italic; }
+  .case-study a.btn-large {
+    height: auto; }
 
 .services {
   padding-top: 5rem; }
@@ -934,7 +939,7 @@ h2#services {
     top: 0%; }
 
   .parallax-container .section.phases {
-    top: 10%; }
+    top: -5%; }
 
   .post-content ul.services-list li {
     flex-basis: 30%; }
