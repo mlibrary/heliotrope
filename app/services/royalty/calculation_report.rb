@@ -25,6 +25,7 @@ module Royalty
       @total_hits_all_rightsholders = total_hits_all_rightsholders(items)
       # make and send reports
       reports = copyholder_reports(items)
+      reports = combined_report(reports, items)
       send_reports(reports)
       reports
     end
@@ -47,6 +48,30 @@ module Royalty
         items
       end
 
+      # Generate one additional summary calculation report for all rightsholders
+      def combined_report(reports, items)
+        # Because of all the formatting that happens in the copyholder_reports method,
+        # and the fact that that formatting/math needs to happen at a certain time in the process,
+        # we're going to repeat all of it here. Obviously not efficient. But these get run like
+        # twice a year so I'm not going to worry about it.
+        # Actually, the methods called on "items" in the copyholder_reports method
+        # have mutated that data structure, so we don't need these:
+        # items = format_royalty(items)
+        # items = format_hits(items)
+        # items = rename_hits_heading(items)
+        # But we still need to re-do these:
+        # HELIO-3572
+        items = add_hebids(items)
+        items = reclassify_isbns(items)
+        items = add_copyright_holder_to_combined_report(items)
+        combined = "calc_combined.#{@start_date.strftime("%Y%m")}-#{@end_date.strftime("%Y%m")}.csv"
+        reports[combined] = {
+          header: {},
+          items: items
+        }
+        reports
+      end
+
       def copyholder_reports(all_items)
         reports = {}
         items_by_copyholders(all_items).each do |copyholder, items|
@@ -57,6 +82,9 @@ module Royalty
           items = format_royalty(items)
           items = format_hits(items)
           items = rename_hits_heading(items)
+          # HELIO-3572
+          items = add_hebids(items)
+          items = reclassify_isbns(items)
 
           name = copyholder.gsub(/[^0-9A-z.\-]/, '_') + ".calc.#{@start_date.strftime("%Y%m")}-#{@end_date.strftime("%Y%m")}.csv"
           reports[name] = {

@@ -21,6 +21,9 @@ module Royalty
       @total_hits_all_rightsholders = total_hits_all_rightsholders(items)
       # now that the math is done, format numbers
       items = format_hits(items)
+      # HELIO-3572
+      items = add_hebids(items)
+      items = reclassify_isbns(items)
       # create and sent reports
       reports = copyholder_reports(items)
       reports = combined_report(reports, items)
@@ -32,6 +35,7 @@ module Royalty
 
       # Generate one additional summary usage report for all rightsholders
       def combined_report(reports, all_items)
+        all_items = add_copyright_holder_to_combined_report(all_items)
         combined = "usage_combined.#{@start_date.strftime("%Y%m")}-#{@end_date.strftime("%Y%m")}.csv"
         reports[combined] = {
           header: {
