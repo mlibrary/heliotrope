@@ -22,8 +22,17 @@ namespace :heliotrope do
     # But I've been poking around and testing, and the work-around code below seems to be working fine.
     # It goes through the cache, gets each cache key and does a read. If that cached object is expired,
     # it deletes it. So I guess that's fine.
-    Dir.glob(Rails.root.join("tmp", "cache", "*", "*", "*")).each do |path|
-      Rails.cache.read(CGI.unescape(File.basename(path)))
+    #
+    # HELIO-3558: it's really slow though, so only check the "old" caches
+    #
+    # Also, I'm starting to suspect that using the "low level" cache in this way is usually related to
+    # a model in rails. Or some object that should respond to "expired?" anyway.... Which we're not doing.
+    # We might be using this in a way that isn't supported by Rails.cache.cleanup.
+    Dir.glob(Rails.root.join("tmp", "cache", "[A-Z0-9][A-Z0-9][A-Z0-9]", "[A-Z0-9][A-Z0-9][A-Z0-9]", "*")).each do |path|
+      # Test the file via "read", which will likely delete it, if it's timestamp is 30 days or older
+      if File.exist?(path) && 30.days.ago >= File.mtime(path)
+        Rails.cache.read(CGI.unescape(File.basename(path)))
+      end
     end
     Rails.logger.info("clean_cache cleaned up cache")
 
