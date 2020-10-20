@@ -1,5 +1,5 @@
 <% if press_presenter.present? %>
-  <% if press_presenter.subdomain == 'leverpress' %>
+  <% if %w[leverpress amherst].include? press_presenter.subdomain %>
     <nav id="brand-bar" class="navbar navbar-default navbar-fixed-top">
   <% else %>
     <nav id="brand-bar" class="navbar navbar-default">
@@ -18,6 +18,10 @@
       <% if press_presenter.subdomain == 'leverpress' %>
         <a class="navbar-brand" href="<%= press_presenter.url %>">
           <%= image_tag "LeverLogo.svg", class: 'navbar-brand-logo', alt: 'Lever Press', height: '70', width: 'auto' %><%= press_presenter.name %>
+        </a>
+      <% elsif press_presenter.subdomain == 'amherst' %>
+        <a class="navbar-brand" href="<%= press_presenter.url %>">
+          <%= image_tag "AmherstLogo.svg", class: 'navbar-brand-logo', alt: 'Amherst College Press', height: '70', width: 'auto' %>
         </a>
       <% elsif press_presenter.subdomain == 'barpublishing' %>
         <a class="navbar-brand" href="<%= main_app.press_catalog_path(press_presenter.press) %>">
