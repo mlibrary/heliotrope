@@ -1624,14 +1624,25 @@ $atg-black-80: #342f2e;
 ///////////////////////////////////////////////
 // colors
 $amherst-brand-color: #311a4d;
+$amherst-brand-color-dark: #0d0714;
+$amherst-secondary-color: #5D3C85;
+$amherst-button-hover: #4b306b;
+$amherst-button-hover-border-color: #442c62;
+$amherst-accent-color: #6837A3;
 $amherst-light-blue: #64dfeb;
+$amherst-green: #458246;
+$amherst-dark-grey: #505061;
+$amherst-light-grey: #9ba1a7;
+$amherst-black-80: #342f2e;
+$amherst-text-dark: #343a40;
+
 $amherst-link: #6837A3;
 $amherst-accent-link: #311a4d;
 $amherst-med-purple: #6837A3;
 $amherst-lighter-blue: #6DF2FF;
-$amherst-black-80: #333;
-$amherst-grey-1: #9ba1a7;
 $amherst-white: #fafafa;
+$amherst-grey-2: #f8f9fa;
+$amherst-grey-3: #dee2e6;
 
 // typography
 
@@ -1659,97 +1670,122 @@ $amherst-white: #fafafa;
 
   // links
   a {
-    color: $amherst-link;
+    color: $amherst-brand-color;
   }
 
   a:hover,
   a:active {
-    color: $amherst-accent-link;
+    color: $amherst-brand-color-dark;
   }
 
   // buttons
 
+  .btn {
+    @include brandon;
+  }
+
   .btn-default {
-    @include button-background-color($amherst-brand-color);
+    @include button-background-color($amherst-secondary-color);
     @include button-font-color($amherst-white);
-    border-color: $amherst-brand-color;
+    border-color: $amherst-secondary-color;
   }
 
 
   .btn-default:hover,
   .btn-default:active {
-    @include button-hover-background-color($amherst-link);
+    @include button-hover-background-color($amherst-button-hover);
     @include button-font-color($amherst-white);
+    border-color: $amherst-button-hover-border-color;
   }
 
   // navigation menu
   .navbar-default .navbar-nav > .open > a,
   .navbar-default .navbar-nav > .open > a:hover,
   .navbar-default .navbar-nav > .open > a:focus {
-    background-color: $amherst-grey-1;
+    background-color: $amherst-grey-2;
+  }
+
+  // .container
+  #main {
+    margin-top: 7.5em;
+  }
+
+  // navigation menu
+  .navbar > .container .navbar-brand {
+    margin-left: 0;
   }
 
   #brand-bar {
-    background-color: $amherst-brand-color;
+    background-color: $amherst-grey-2;
+    border-bottom: 1px solid $amherst-grey-3;
+    min-height: 6.9rem;
+    @include brandon;
+    padding: 1rem 1rem;
+
 
     .navbar-brand {
-      @include abril;
-      color: $amherst-white;
-      font-weight: 500;
-      font-size: 1.8em;
-      letter-spacing: -1px;
+      color: $amherst-text-dark;
+      padding-top: .3125rem;
+      padding-bottom: .3125rem;
+      margin-right: 1rem;
+      height: unset;
+      line-height: unset;
+
+      img {
+        display: inline;
+        margin-right: .55rem;
+        vertical-align: middle;
+      }
+
     }
 
-    .navbar-nav {
-      a#add-content,
-      a.login,
-      a.user-display-name,
-      a.language-dropdown {
-          color: $amherst-white;
-      }
-
-      .open > a,
-      .open > a:focus,
-      .open > a:hover {
-        background-color: $amherst-grey-1;
-      }
+    form.search-form {
+      padding-top: 1.2rem;
+      padding-left: 7rem;
     }
 
     button.search-submit {
-      background-color: $amherst-light-blue;
-      border-color: $amherst-light-blue;
-      color: $amherst-brand-color;
+      background-color: $amherst-secondary-color;
+      border-color: $amherst-secondary-color;
+      color: $amherst-white;
     }
 
+    button.search-submit:hover {
+      background-color: $amherst-button-hover;
+      border-color: $amherst-button-hover-border-color;
+    }
+
+    .navbar-toggle {
+      padding: 1.2rem 1.5rem;
+      margin: 3rem 1.8rem;
+    }
+
+  }
+
+  .navbar-right {
+    margin-right: 0;
+  }
+
+  .navbar-default .navbar-nav {
+    @include brandon;
+    list-style: none;
+    font-size: 1.6rem;
+    padding-top: 2.7rem;
+    padding-right: 1.2rem;
+
+    a {
+      color: $amherst-text-dark;
+      padding-right: .8rem;
+      padding-left: .8rem;
+    }
+
+    a:hover {
+      color: #1d2124;
+      text-decoration: none;
+    }
   }
 
   // press catalog
-
-  // jumbotron
-  .jumbotron {
-    padding-top: 1.5em;
-    padding-bottom: 1em;
-
-    p {
-      font-size: 19px;
-      margin-bottom: 0;
-      font-weight: 400;
-    }
-
-    .container {
-      margin-top: 0;
-    }
-
-    .logo {
-
-      img {
-        width: 190px;
-        margin-right: 3em;
-      }
-
-    }
-
-  }
 
   .press {
     .results-container {
@@ -1759,7 +1795,7 @@ $amherst-white: #fafafa;
           font-weight: 600;
         }
         a {
-          color: $amherst-brand-color;
+          color: $amherst-secondary-color;
         }
       }
     }
@@ -1827,9 +1863,14 @@ $amherst-white: #fafafa;
 
   // search resources
   button.search-submit {
-    background-color: $amherst-brand-color;
-    border-color: $amherst-brand-color;
+    background-color: $amherst-secondary-color;
+    border-color: $amherst-secondary-color;
     color: $amherst-white;
+  }
+
+  button.search-submit:hover {
+    background-color: $amherst-button-hover;
+    border-color: $amherst-button-hover-border-color;
   }
 
   .constraints-container {
@@ -1845,8 +1886,8 @@ $amherst-white: #fafafa;
   .pagination {
      li a, li span {
 
-       background-color: $amherst-brand-color;
-       border-color: $amherst-brand-color;
+       background-color: $amherst-secondary-color;
+       border-color: $amherst-secondary-color;
        color: $amherst-white;
      }
 
@@ -1854,8 +1895,8 @@ $amherst-white: #fafafa;
      li>a:focus,
      li>span:hover,
      li>span:focus {
-       background-color: $amherst-link;
-       border-color: $amherst-link;
+       background-color: $amherst-button-hover;
+       border-color: $amherst-button-hover-border-color;
        color: $amherst-white;
      }
 
@@ -1866,9 +1907,9 @@ $amherst-white: #fafafa;
      .active>span,
      .active>span:hover,
      .active>span:focus {
-       background-color: $amherst-link;
-       border-color: $amherst-link;
-       color: $amherst-white;
+       background-color: $amherst-white;
+       border-color: $amherst-secondary-color;
+       color: $amherst-secondary-color;
      }
 
      .disabled>span,
@@ -1877,48 +1918,84 @@ $amherst-white: #fafafa;
      .disabled>a,
      .disabled>a:hover,
      .disabled>a:focus {
-      background-color: $amherst-link;
-      border-color: $amherst-link;
-      color: $amherst-white;
+      background-color: $amherst-white;
+      border-color: $amherst-secondary-color;
+      color: $amherst-secondary-color;
      }
+  }
+
+  // breadcrumbs
+  .breadcrumbs {
+    @include brandon;
+  }
+
+  .breadcrumb {
+    background-color: $amherst-grey-2;
+    border-color: $amherst-grey-3;
   }
 
   //footer
   footer {
-    a,
-    a:hover,
-    a:active {
-      color: $amherst-white;
-    }
-    .press-block-a,
-    .press-block-b {
-      background-color:  $amherst-brand-color;
-      font-weight: 400;
+    border-top: 1px solid rgba(0,0,0,.125);
+    background-color: $amherst-brand-color;
+    padding: 3.5em;
 
-      a,
+      a {
+        color: #f8f9fa;
+      }
+
+
       a:hover,
       a:active {
-        color: $amherst-white;
+        color: #dae0e5;
+        text-decoration: underline;
       }
 
-      img {
-        width: 125px;
+      h5 {
+        font-size: 1.5em;
       }
 
+      .fulcrum {
+        height: 20px;
+        width: auto;
+        vertical-align: baseline;
+      }
+
+      .block {
+        display: block;
+        height: 100px;
+        width: auto;
+      }
+
+      p.social {
+        padding-top: .4em;
+        a {
+          padding-right: 0.75em;
+          svg {
+            display: inline-block;
+            vertical-align: middle;
+            fill: $amherst-light-blue;
+          }
+        }
+      }
+
+    .press-block-a, .press-block-b, .press-block-c {
+      background-color: $amherst-brand-color;
+    }
+    
+    .press-block-a {
+      padding-top: 0;
+      small {
+        display: block;
+      }
     }
 
-    .press-block-c {
-      background-color: $amherst-light-blue;
-      color: $amherst-brand-color;
-
-      img {
-        width: auto !important;
-        margin-right: 1em;
-        height: 25px;
+    .press-block-b {
+      padding-top: 0;
+      ul {
+        @include brandon;
+        font-size: 1.1em;
       }
-    }
-    .platform {
-       background-color: $amherst-black-80;
     }
   }
 
@@ -1971,23 +2048,85 @@ $amherst-white: #fafafa;
 
   }
 
-}
-
-@media(max-width: 768px) {
-  .amherst .monograph .message {
-    padding: 1.5em;
-
-    .wrapper {
-      width: auto;
+  @media only screen and (max-width: 1220px) {
+    .navbar-default .navbar-nav {
+      padding-left: 0px;
     }
-    .text {
-      width: 70%;
+
+    #brand-bar form.search-form {
+      padding-left: 0;
+      width: 200px;
     }
-    .dismiss {
-      width: 20%;
-      padding-left: 10%;
+
+  }
+
+  @media only screen and (max-width : 992px) {
+    #main {
+      margin-top: 11.5em;
+    }
+
+    .navbar-header {
+      float: none;
+    }
+
+    .navbar-toggle {
+      display: block;
+    }
+
+    .navbar-collapse {
+      border-top: 1px solid transparent;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.1);
+    }
+
+    .navbar-collapse.collapse {
+      display: none!important;
+    }
+
+    .navbar-default .navbar-nav {
+      padding-top: 0;
+      padding-right: 0;
+      margin-top: 0;
+    }
+
+    .navbar-nav>li {
+      float: none;
+    }
+
+    .navbar-nav>li>a {
+      padding-top: 10px;
+      padding-bottom: 10px;
+      line-height: 3.5rem;
+    }
+
+    .navbar-collapse.collapse.in {
+      display: block!important;
+    }
+
+    .collapsing {
+      overflow: hidden!important;
+    }
+
+    #brand-bar form.search-form, .navbar-form {
+      padding: 10px 0;
+      margin: 0;
+      width: 100%;
+      border: 0;
+      float: none !important;
+    }
+
+    .navbar-form .input-group .input-group-btn {
+      width: 1%;
+    }
+
+  }
+
+  @media only screen and (max-width : 768px) {
+    .navbar-nav {
+      float: right;
     }
   }
+
+
 }
 
 
