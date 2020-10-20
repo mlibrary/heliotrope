@@ -42,6 +42,8 @@ describe "Monograph Catalog Facets" do
     it "shows the correct facets" do
       visit monograph_catalog_path(id: monograph.id)
 
+      expect(page).to_not have_content("Your search has returned")
+
       expect(page).to have_selector('#facet-section_title_sim a.facet_select')
 
       expect(page).to have_selector('#facet-creator_sim a.facet_select', count: 3)
@@ -117,6 +119,13 @@ describe "Monograph Catalog Facets" do
       expect(keyword_facet_counts[4]).to have_content '2'
       expect(keyword_facet_labels[5]).to have_content 'things'
       expect(keyword_facet_counts[5]).to have_content '1'
+    end
+
+    it "shows the results for a facet, with screen reader div" do
+      visit monograph_catalog_path(id: monograph.id)
+      click_link('stuff')
+      expect(page).to have_selector('#documents .document', count: 2)
+      expect(page).to have_content("Your search has returned 2 resources attached to Yellow")
     end
   end
 end

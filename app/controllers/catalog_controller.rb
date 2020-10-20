@@ -6,6 +6,7 @@ class CatalogController < ApplicationController
 
   # This filter applies the hydra access controls
   before_action :enforce_show_permissions, only: :show
+  before_action :search_ongoing
 
   configure_blacklight do |config|
     config.search_builder_class = ::SearchBuilder
@@ -259,5 +260,17 @@ class CatalogController < ApplicationController
   # this method is not called in that context.
   def render_bookmarks_control?
     false
+  end
+
+  def search_ongoing
+    @search_ongoing = false
+
+    params.each do |key, _value|
+      non_search_keys = ['action', 'authenticity_token', 'controller', 'id', 'locale', 'page', 'per_page', 'press', 'sort', 'utf8', 'view']
+      if non_search_keys.exclude? key
+        @search_ongoing = true
+        break
+      end
+    end
   end
 end

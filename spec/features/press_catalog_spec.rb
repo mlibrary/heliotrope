@@ -21,6 +21,7 @@ describe 'Press Catalog' do
       it 'visits the catalog page for a press' do
         # The catalog for a certain press
         visit "/#{umich.subdomain}"
+        expect(page).to_not have_content("Your search has returned")
 
         # I should see only the public monographs for this press
         expect(page).to have_selector('#documents .document', count: 2)
@@ -48,6 +49,7 @@ describe 'Press Catalog' do
 
         # I should see search results for only this press
         expect(page).to have_selector('#documents .document', count: 1)
+        expect(page).to have_content("Your search has returned 1 book from #{umich.name}")
         expect(page).to     have_link red.title.first
         expect(page).not_to have_link blue.title.first
         expect(page).not_to have_link invisible.title.first
@@ -70,6 +72,7 @@ describe 'Press Catalog' do
         visit "/#{umich.subdomain.upcase}"
         # I should see only the public monographs for this press
         expect(page).to have_selector('#documents .document', count: 2)
+        expect(page).to_not have_content("Your search has returned")
         expect(page).to     have_link red.title.first
         expect(page).to     have_link blue.title.first
         expect(page).not_to have_link invisible.title.first
@@ -88,6 +91,7 @@ describe 'Press Catalog' do
           visit "/#{umich.subdomain}"
           # I should see only the public monographs for umich press and its children
           expect(page).to have_selector('#documents .document', count: 4)
+          expect(page).to_not have_content("Your search has returned")
           expect(page).to     have_link red.title.first
           expect(page).to     have_link blue.title.first
           expect(page).not_to have_link invisible.title.first
@@ -167,10 +171,14 @@ describe 'Press Catalog' do
 
         expect(page).to have_selector('#facet-creator_sim a.facet_select', count: 5) # 5 is limit in facet widget
 
-        # dedicated facet modal shows up to 20 values, we expect 19 creator names
+        # dedicated facet modal shows up to 20 values, we expect 13 creator names
         find("a[href='/#{heb.subdomain}/facet?id=creator_sim&locale=en']").click
         # save_and_open_page
         expect(page).to have_selector('a.facet-anchor.facet_select', count: 13)
+
+        find('a.facet-anchor.facet_select', match: :first).click
+        expect(page).to have_selector('#documents .document', count: 1)
+        expect(page).to have_content("Your search has returned 1 book from #{heb.name}")
       end
     end
   end # not logged in

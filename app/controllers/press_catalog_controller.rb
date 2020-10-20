@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class PressCatalogController < ::CatalogController
-  before_action :load_press, :search_ongoing
+  before_action :load_press
   before_action :conditional_blacklight_configuration
 
   self.theme = 'hyrax'
@@ -47,18 +47,6 @@ class PressCatalogController < ::CatalogController
       return @press if @press.present?
 
       render file: Rails.root.join('public', '404.html'), status: :not_found, layout: false
-    end
-
-    def search_ongoing
-      @search_ongoing = false
-
-      params.each do |key, _value|
-        non_search_keys = ['action', 'authenticity_token', 'controller', 'locale', 'page', 'per_page', 'press', 'sort', 'utf8', 'view']
-        if non_search_keys.exclude? key
-          @search_ongoing = true
-          break
-        end
-      end
     end
 
     def all_works
