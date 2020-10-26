@@ -158,6 +158,62 @@ RSpec.describe "Customers Counter Reports", type: :request do
           expect(response).to render_template(:show)
         end
       end
+
+      describe "GET /counter_report/pr" do
+        it do
+          get counter_report_path(id: 'pr'), params: { institution: 1, press: press.id, metric_type: 'Total_Item_Investigations', access_type: 'Controlled' }
+          expect(response).to have_http_status(:ok)
+        end
+      end
+
+      describe "GET /counter_report/tr" do
+        it do
+          get counter_report_path(id: 'tr'), params: { institution: 1, press: press.id, metric_type: 'Unique_Title_Investigations', access_type: 'OA_Gold' }
+          expect(response).to have_http_status(:ok)
+        end
+      end
+
+      describe "GET /counter_report/tr_b1" do
+        it do
+          get counter_report_path(id: 'tr_b1'), params: { institution: 1, press: press.id }
+          expect(response).to have_http_status(:ok)
+        end
+      end
+
+      describe "GET /counter_report/tr_b2" do
+        it do
+          get counter_report_path(id: 'tr_b2'), params: { institution: 1, press: press.id }
+          expect(response).to have_http_status(:ok)
+        end
+      end
+
+      describe "GET /counter_reports/tr_b3" do
+        it do
+          get counter_report_path(id: 'tr_b3'), params: { institution: 1, press: press.id }
+          expect(response).to have_http_status(:ok)
+        end
+      end
+
+      describe "GET /counter_reports/ir" do
+        it do
+          get counter_report_path(id: 'ir'), params: { institution: 1, press: press.id, metric_type: ['Total_Item_Requests', 'Unique_Item_Requests', 'Unique_Title_Requests'], access_type: 'OA_Gold' }
+          expect(response).to have_http_status(:ok)
+        end
+      end
+
+      describe "GET /counter_reports/ir_m1" do
+        it do
+          get counter_report_path(id: 'ir_m1'), params: { institution: 1, press: press.id }
+          expect(response).to have_http_status(:ok)
+        end
+      end
+
+      describe "GET /counter_reports/counter4_br2" do
+        it do
+          get counter_report_path(id: 'counter4_br2'), params: { institution: 1, press: press.id }
+          expect(response).to have_http_status(:ok)
+        end
+      end
     end
 
     context 'press admin user from no institution' do
@@ -179,8 +235,11 @@ RSpec.describe "Customers Counter Reports", type: :request do
       describe "GET /counter_reports" do
         it do
           get counter_reports_path
-          expect(response).to have_http_status(:ok)
-          expect(response).to render_template(:index)
+          # HELIO-3526 press admins (and editors, analysts or other authed and prived users) will no longer
+          # access reports through this controller, but instead through the dashboard and
+          # hyrax/admin/stats_controller.rb
+          expect(response).to have_http_status(:unauthorized)
+          expect(response).not_to render_template(:index)
         end
       end
 
@@ -188,8 +247,9 @@ RSpec.describe "Customers Counter Reports", type: :request do
         context "the press admin's press" do
           it do
             get counter_report_path(id: 'pr_p1'), params: { institution: 1, press: press_id }
-            expect(response).to have_http_status(:ok)
-            expect(response).to render_template(:show)
+            # HELIO-3526
+            expect(response).to have_http_status(:unauthorized)
+            expect(response).not_to render_template(:show)
           end
         end
 
@@ -198,62 +258,6 @@ RSpec.describe "Customers Counter Reports", type: :request do
             get counter_report_path(id: 'pr_p1'), params: { institution: 1, press: 1_000_000_000 }
             expect(response).to have_http_status(:unauthorized)
           end
-        end
-      end
-
-      context "GET /counter_report/pr" do
-        it do
-          get counter_report_path(id: 'pr'), params: { institution: 1, press: press_id, metric_type: 'Total_Item_Investigations', access_type: 'Controlled' }
-          expect(response).to have_http_status(:ok)
-        end
-      end
-
-      describe "GET /counter_report/tr" do
-        it do
-          get counter_report_path(id: 'tr'), params: { institution: 1, press: press_id, metric_type: 'Unique_Title_Investigations', access_type: 'OA_Gold' }
-          expect(response).to have_http_status(:ok)
-        end
-      end
-
-      describe "GET /counter_report/tr_b1" do
-        it do
-          get counter_report_path(id: 'tr_b1'), params: { institution: 1, press: press_id }
-          expect(response).to have_http_status(:ok)
-        end
-      end
-
-      describe "GET /counter_report/tr_b2" do
-        it do
-          get counter_report_path(id: 'tr_b2'), params: { institution: 1, press: press_id }
-          expect(response).to have_http_status(:ok)
-        end
-      end
-
-      describe "GET /counter_reports/tr_b3" do
-        it do
-          get counter_report_path(id: 'tr_b3'), params: { institution: 1, press: press_id }
-          expect(response).to have_http_status(:ok)
-        end
-      end
-
-      describe "GET /counter_reports/ir" do
-        it do
-          get counter_report_path(id: 'ir'), params: { institution: 1, press: press_id, metric_type: ['Total_Item_Requests', 'Unique_Item_Requests', 'Unique_Title_Requests'], access_type: 'OA_Gold' }
-          expect(response).to have_http_status(:ok)
-        end
-      end
-
-      describe "GET /counter_reports/ir_m1" do
-        it do
-          get counter_report_path(id: 'ir_m1'), params: { institution: 1, press: press_id }
-          expect(response).to have_http_status(:ok)
-        end
-      end
-
-      describe "GET /counter_reports/counter4_br2" do
-        it do
-          get counter_report_path(id: 'counter4_br2'), params: { institution: '*', press: press_id }
-          expect(response).to have_http_status(:ok)
         end
       end
     end
