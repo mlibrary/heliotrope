@@ -1,4 +1,158 @@
 <% provide :page_header do %>
   <h1><span class="fa fa-list-ol"></span> COUNTER Reports</h1>
 <% end %>
-<li><%= link_to "COUNTER Reports", main_app.counter_reports_path %></li>
+
+<p>To view counter reports as an Institutional user, in the way a standard library
+  Fulcrum subscriber would, follow <%= link_to "this link to COUNTER 5 reports", main_app.counter_reports_path %>.
+  However you must be authenticated from a known institution in order to do so.
+</p>
+<p>If you are logged into Fulcrum, you can run COUNTER5 reports against "all" institutions
+  for the Presses you are affiliated with.
+<p>
+<p>Due to the time it takes to generate COUNTER5 reports across institutions, these reports will be run and
+  emailed to you, either to <b><%= current_user.email %></b> (the default), or a different email address of your choosing.
+</p>
+<p>COUNTER 5 "standard" views are reports that have specific parameters preset.
+  COUNTER 5 "master" reports allow the selection of the different parameters and metrics.
+</p>
+
+<p>
+<a href="https://www.projectcounter.org/code-of-practice-five-sections/4-1-usage-reports/">COUNTER5 report definitions</a>
+</p>
+<p>
+<a href="https://www.projectcounter.org/appendix-i-sample-counter-repor/">Sample COUNTER5 reports</a>
+</p>
+
+<h2>Standard Reports</h2>
+
+<%= form_with(url: "/admin/stats/counter", method: "post") do %>
+  <div class="row">
+    <div class="col-sm-2">
+      <label for="email" class="col-form-label">Email</label>
+      <input type="text" name="email" aria-label="Email" value="<%= current_user.email %>" class="form-control">
+    </div>
+    <div class="col-sm-2 form-group">
+      <label for="report_type">Report Type</label>
+      <select name="report_type" aria-label="Report Type" class="form-control">
+        <option value="pr_p1">Platform Usage (PR_P1)</option>
+        <option value="tr_b1">Book Requests (Excluding OA_Gold) (TR_B1)</option>
+        <option value="tr_b2">Access Denied by Book (TR_B2)</option>
+        <option value="tr_b3">Book Usage by Access Type (TR_B3)</option>
+        <option value="ir_m1">Multimedia Item Requests (IR_M1)</option>
+        <option value="counter4_br2">COUNTER4 Book Report 2 (R2): Number of Successful Section Requests by Month and Title</option>
+      </select>
+    </div>
+    <div class="col-sm-2 form-group">
+      <label for="institution">Institution</label>
+      <%= select_tag(:institution, options_for_select(@institutions.map { |i| [i.name, i.identifier] }), class: 'form-control') %>
+    </div>
+    <div class="col-sm-2 form-group">
+      <label for="press">Platform</label>
+      <%= select_tag(:press, options_for_select(@presses.map { |p| [p.name, p.id] }), class: 'form-control') %>
+    </div>
+    <div class="col-sm-2 form-group">
+      <label for="start_date">Start</label>
+      <input type="text" name="start_date" aria-label="Start date in yyyy-mm-dd format" class="counter-start-date form-control" />
+    </div>
+    <div class="col-sm-2 form-group">
+      <label for="end_date">End</label>
+      <input type="text" name="end_date" aria-label="End date in yyyy-mm-dd format" class="counter-end-date form-control" />
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-sm-12 form-group">
+      <button type="submit" class="btn btn-primary">Email Report</button>
+    </div>
+  </div>
+<% end %>
+
+<br />
+<br />
+
+<h2>Master Reports</h2>
+
+<%= form_with(url: "/admin/stats/counter", method: "post") do %>
+  <div class="form-group row">
+    <label for="email" class="col-sm-2 col-form-label">Email</label>
+    <div class="col-sm-2">
+      <input type="text" name="email" aria-label="Email" value="<%= current_user.email %>" class="form-control">
+    </div>
+  </div>
+  <div class="form-group row">
+    <label for="report_type" class="col-sm-2 col-form-label">Report Type</label>
+    <div class="col-sm-2">
+      <select name="report_type" aria-label="Report Type" class="form-control">
+        <option value="pr">Platform Master Report (PR)</option>
+        <option value="tr">Title Master Report (TR)</option>
+        <option value="ir">Item Master Report (IR)</option>
+      </select>
+    </div>
+  </div>
+  <div class="form-group row">
+    <label for="institution" class="col-sm-2 col-form-label">Institution</label>
+    <div class="col-sm-2">
+      <%= select_tag(:institution, options_for_select(@institutions.map { |i| [i.name, i.identifier] }), class: 'form-control') %>
+    </div>
+  </div>
+  <div class="form-group row">
+    <label for="start_date" class="col-sm-2 col-form-label">Start Date</label>
+    <div class="col-sm-2">
+      <input type="text" name="start_date" aria-label="Start date in yyyy-mm-dd format" class="counter-start-date form-control" />
+    </div>
+  </div>
+  <div class="form-group row">
+    <label for="end_date" class="col-sm-2 col-form-label">End Date</label>
+    <div class="col-sm-2">
+      <input type="text" name="end_date" aria-label="End date in yyyy-mm-dd format" class="counter-end-date form-control" />
+    </div>
+  </div>
+  <div class="form-group row">
+    <label for="metric_type" class="col-sm-2 col-form-label">Metric Types</label>
+    <div class="col-sm-2">
+      <select name="metric_type" aria-label="Metric Type" class="form-control">
+        <option value="Total_Item_Investigations">Total Item Investigations</option>
+        <option value="Unique_Item_Investigations">Unique Item Investigations</option>
+        <option value="Unique_Title_Investigations">Unique Title Investigations (invalid for IR reports)</option>
+        <option value="Total_Item_Requests">Total Item Requests</option>
+        <option value="Unique_Item_Requests">Unique Item Requests</option>
+        <option value="Unique_Title_Requests">Unique Title Requests (invalid for IR reports)</option>
+      </select>
+    </div>
+  </div>
+  <div class="form-group row">
+    <label for="data_type" class="col-sm-2 col-form-label">Data Types</label>
+    <div class="col-sm-2">
+      <select name="data_type" aria-label="Date Type" class="form-control">
+        <option value="Book">Book</option>
+      </select>
+    </div>
+  </div>
+  <div class="form-group row">
+    <label for="access_type" class="col-sm-2 col-form-label">Access Types</label>
+    <div class="col-sm-2">
+      <select name="access_type" aria-label="Access Type" class="form-control">
+        <option value="Controlled">Controlled</option>
+        <option value="OA_Gold">OA_Gold</option>
+      </select>
+    </div>
+  </div>
+  <div class="form-group row">
+    <label for="access_method" class="col-sm-2 col-form-label">Access Method</label>
+    <div class="col-sm-2">
+      <select name="access_method" aria-label="Access Method" class="form-control">
+        <option value="Regular">Regular</option>
+      </select>
+    </div>
+  </div>
+  <div class="form-group row">
+    <label for="press" class="col-sm-2 col-form-label">Platform</label>
+    <div class="col-sm-2">
+      <%= select_tag(:press, options_for_select(@presses.map { |p| [p.name, p.id] }), class: 'form-control') %>
+    </div>
+  </div>
+  <div class="form-group row">
+    <div class="col-sm-2">
+      <button type="submit" class="btn btn-primary">Email Report</button>
+    </div>
+  </div>
+<% end %>
