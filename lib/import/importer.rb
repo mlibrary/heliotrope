@@ -177,7 +177,7 @@ module Import
       end
 
       def csv_files
-        raise "Directory not found: #{root_dir}" unless File.exist?(root_dir)
+        raise "Directory not found: #{root_dir}" unless Dir.exist?(root_dir)
         @csv_files ||= Dir.glob(File.join(root_dir, '*.csv'))
       end
 
