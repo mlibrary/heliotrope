@@ -443,8 +443,11 @@ RSpec.describe Hyrax::FileSetPresenter do
   describe '#heliotrope_media_partial' do
     subject { presenter.heliotrope_media_partial }
 
-    let(:fileset_doc) { SolrDocument.new(mime_type_ssi: mime_type, resource_type_tesim: [resource_type], external_resource_url_ssim: external_resource_url) }
+    let(:fileset_doc) { SolrDocument.new(mime_type_ssi: mime_type, resource_type_tesim: [resource_type],
+                                         external_resource_url_ssim: external_resource_url,
+                                         animated_gif_bsi: animated_gif_bsi) }
     let(:mime_type) { nil }
+    let(:animated_gif_bsi) { nil }
     let(:resource_type) { nil }
     let(:external_resource_url) { '' }
 
@@ -477,6 +480,19 @@ RSpec.describe Hyrax::FileSetPresenter do
       let(:mime_type) { 'image/tiff' }
 
       it { is_expected.to eq 'hyrax/file_sets/media_display/leaflet_image' }
+    end
+
+    context "with a static GIF image" do
+      let(:mime_type) { 'image/gif' }
+
+      it { is_expected.to eq 'hyrax/file_sets/media_display/leaflet_image' }
+    end
+
+    context "with an animated GIF image" do
+      let(:mime_type) { 'image/gif' }
+      let(:animated_gif_bsi) { true }
+
+      it { is_expected.to eq 'hyrax/file_sets/media_display/repo_image' }
     end
 
     context "with a video" do
@@ -688,6 +704,28 @@ RSpec.describe Hyrax::FileSetPresenter do
       let(:label) { 'some_doc.pdf' }
 
       it { is_expected.to be false }
+    end
+  end
+
+  describe '#animated_gif?' do
+    subject { presenter.animated_gif? }
+
+    let(:fileset_doc) {
+      SolrDocument.new(id: 'fileset_id',
+                       has_model_ssim: ['FileSet'],
+                       animated_gif_bsi: animated_gif_bsi)
+    }
+
+    context 'FileSet was not detected/indexed as an animated GIF' do
+      let(:animated_gif_bsi) { nil }
+
+      it { is_expected.to be false }
+    end
+
+    context 'FileSet was detected/indexed as an animated GIF' do
+      let(:animated_gif_bsi) { true }
+
+      it { is_expected.to be true }
     end
   end
 

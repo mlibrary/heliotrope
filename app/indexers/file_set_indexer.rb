@@ -62,11 +62,15 @@ class FileSetIndexer < Hyrax::FileSetIndexer
     value.present? ? Array.wrap(value[/\(([^()]*)\)/]&.gsub(/\(|\)/, '')&.split(',')&.map(&:strip)&.map(&:downcase)) : value
   end
 
-  def index_technical_metadata(solr_doc, orig)
+  def index_technical_metadata(solr_doc, orig) # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
     solr_doc[Solrizer.solr_name('duration', :symbol)] = orig.duration.first if orig.duration.present?
     solr_doc[Solrizer.solr_name('sample_rate', :symbol)] = orig.sample_rate if orig.sample_rate.present?
     solr_doc[Solrizer.solr_name('original_checksum', :symbol)] = orig.original_checksum if orig.original_checksum.present?
     solr_doc[Solrizer.solr_name('original_name', :stored_searchable)] = orig.original_name if orig.original_name.present?
+    # generate_solr_document is first run in IngestJob where `orig.uri.to_s` will return a file URI but no file will ...
+    # actually be available in Fedora at that point, hence `FileSet.find(solr_doc[:id])&.files&.present?`
+    return unless orig&.original_name&.ends_with?('.gif') && FileSet.find(solr_doc[:id])&.files&.present? && MiniMagick::Image.open(orig&.uri&.to_s)&.frames&.count > 1
+    solr_doc['animated_gif_bsi'] = true
   end
 
   # Make sure the asset is aware of its monograph
