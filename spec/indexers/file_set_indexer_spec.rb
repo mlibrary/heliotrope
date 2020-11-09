@@ -38,27 +38,31 @@ describe FileSetIndexer do
       expect(subject['creator_sim']).to eq ['Moose, Bullwinkle', 'Squirrel, Rocky'] # facet
     end
 
-    it "indexes it's section_title" do
+    it "indexes its section_title" do
       expect(subject['section_title_tesim']).to eq ['A section title']
     end
 
-    it "indexes it's sample_rate" do
+    it "indexes its sample_rate" do
       expect(subject['sample_rate_ssim']).to eq file_set2.original_file.sample_rate
     end
 
-    it "indexes it's duration" do
+    it "indexes its duration" do
       expect(subject['duration_ssim']).to eq file_set2.original_file.duration.first
     end
 
-    it "indexes it's original_checksum" do
+    it "indexes its original_checksum" do
       expect(subject['original_checksum_ssim']).to eq file_set2.original_file.original_checksum
     end
 
-    it "indexs it's original_name" do
+    it "does not index this an an animated GIF" do
+      expect(subject['animated_gif_ssi']).to eq nil
+    end
+
+    it "indexes its original_name" do
       expect(subject['original_name_tesim']).to eq file_set2.original_file.original_name
     end
 
-    it "index's it's monograph's id" do
+    it "indexes its monograph's id" do
       expect(subject['monograph_id_ssim']).to eq monograph.id
     end
 
@@ -79,6 +83,36 @@ describe FileSetIndexer do
     it "indexes the extra_json_properties" do
       expect(subject['whatever_you_want_tesim']).to eq "Homer Simpson"
       expect(subject['score_version_tesim']).to eq "7"
+    end
+  end
+
+  describe "indexing GIF file_sets" do
+    subject { indexer.generate_solr_document }
+
+    let(:indexer) { described_class.new(file_set) }
+    let(:file_set) do
+      create(:file_set)
+    end
+
+    before do
+      stub_out_redis
+      Hydra::Works::AddFileToFileSet.call(file_set, file, :original_file)
+    end
+
+    context 'GIF file without animation' do
+      let(:file) { File.open(File.join(fixture_path, 'static.gif')) }
+
+      it "does not index this as an animated GIF" do
+        expect(subject['animated_gif_bsi']).to eq nil
+      end
+    end
+
+    context 'GIF file with animation' do
+      let(:file) { File.open(File.join(fixture_path, 'animated.gif')) }
+
+      it "indexes this an an animated GIF" do
+        expect(subject['animated_gif_bsi']).to eq true
+      end
     end
   end
 end

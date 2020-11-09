@@ -265,6 +265,8 @@ module Hyrax
       partial = 'hyrax/file_sets/' + directory + '/'
       partial + if external_resource?
                   'external_resource'
+                elsif animated_gif? # needs to come before `image?`
+                  'repo_image'
                 elsif image?
                   'leaflet_image'
                 elsif video?
@@ -299,6 +301,10 @@ module Hyrax
       return true if mime_type&.start_with?('image/')
       return false if label.nil?
       %w[.bmp .gif .jp2 .jpeg .jpg .png .tif .tiff].member?(File.extname(label).downcase)
+    end
+
+    def animated_gif?
+      solr_document['animated_gif_bsi'] == true
     end
 
     private
