@@ -224,6 +224,7 @@ Rails.application.routes.draw do
   end
 
   post 'admin/stats/institution', controller: 'hyrax/admin/stats', action: :institution_report, as: :admin_stats_institution
+  post 'admin/stats/counter',     controller: 'hyrax/admin/stats', action: :counter_report, as: :admin_stats_counter_reports
 
   mount Qa::Engine => '/authorities'
 
