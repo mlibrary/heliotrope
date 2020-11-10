@@ -36,6 +36,45 @@ RSpec.describe Greensub::Component, type: :model do
     end
   end
 
+  context "with products" do
+    include ActiveJob::TestHelper
+
+    after do
+      clear_enqueued_jobs
+      clear_performed_jobs
+    end
+
+    context "adding a product" do
+      let(:component) { create(:component) }
+      let(:product) { create(:product) }
+
+      it "runs the ReindexJob" do
+        expect(component.products).to be_empty
+        component.products << product
+        expect { ReindexJob.perform_later }.to have_enqueued_job(ReindexJob).on_queue("default")
+        expect(component.products.count).to eq 1
+      end
+    end
+
+    context "deleting a product" do
+      let(:component) { create(:component) }
+      let(:product) { create(:product) }
+
+      before do
+        component.products << product
+        clear_enqueued_jobs
+        clear_performed_jobs
+      end
+
+      it "runs the ReindexJob" do
+        expect(component.products.count).to eq 1
+        component.products.delete(product)
+        expect { ReindexJob.perform_later }.to have_enqueued_job(ReindexJob).on_queue("default")
+        expect(component.products).to be_empty
+      end
+    end
+  end
+
   context 'methods' do
     before do
       clear_grants_table

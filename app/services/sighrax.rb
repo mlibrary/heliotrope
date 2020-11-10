@@ -38,6 +38,20 @@ module Sighrax # rubocop:disable Metrics/ModuleLength
       model_factory(noid, document, model_type)
     end
 
+    # Greensub Helpers
+
+    def allow_read_products
+      Greensub::Product.where(identifier: Settings.allow_read_products || [])
+    end
+
+    def actor_products(actor)
+      if Incognito.sudo_actor?(actor)
+        Incognito.sudo_actor_products(actor)
+      else
+        Greensub.actor_products(actor)
+      end
+    end
+
     # Actor Helpers
 
     def ability_can?(actor, action, target)
@@ -199,14 +213,6 @@ module Sighrax # rubocop:disable Metrics/ModuleLength
           InteractiveMap.send(:new, noid, data)
         else
           Asset.send(:new, noid, data)
-        end
-      end
-
-      def actor_products(actor)
-        if Incognito.sudo_actor?(actor)
-          Incognito.sudo_actor_products(actor)
-        else
-          Greensub.actor_products(actor)
         end
       end
 

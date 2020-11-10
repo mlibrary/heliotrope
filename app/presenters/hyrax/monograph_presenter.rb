@@ -225,5 +225,70 @@ module Hyrax
       end
       creators
     end
+
+    # HELIO-3346, HELIO-3347: Support for indicators to help users understand
+    # what books they have access to and why.
+    #
+    # @param [Array] allow_product_ids {  Sighrax.actor_products(current_actor).pluck(:id) }
+    # @param [Array] allow_read_product_ids {  Sighrax.allow_read_products.pluck(:id) }
+    def access_level(actor_product_ids, allow_read_product_ids)
+      # Open Access
+      return access_indicators(:open_access)  if /yes/i.match?(solr_document.open_access)
+      # Unknown because monograph needs to be reindexed!
+      return access_indicators(:unknown)      unless solr_document['products_lsim']
+      # Purchased
+      return access_indicators(:purchased)    if (solr_document['products_lsim'] & actor_product_ids).any?
+      # Free
+      return access_indicators(:free)         if (solr_document['products_lsim'] & allow_read_product_ids).any?
+      # Unrestricted
+      return access_indicators(:unrestricted) if solr_document['products_lsim'].include?(0)
+      # Restricted
+      access_indicators(:restricted)
+    end
+
+    def access_indicators(level)
+      case level
+      when :open_access
+        OpenStruct.new(level:   :open_access,
+                       show?:   true,
+                       icon_sm: ActionController::Base.helpers.image_tag("open-access.svg", width: "16px", height: "16px", alt: "Open Access"),
+                       icon_lg: ActionController::Base.helpers.image_tag("open-access.svg", width: "24px", height: "24px", alt: "Open Access"),
+                       text:    ::I18n.t('access_levels.access_level_text.open_access'))
+      when :purchased
+        OpenStruct.new(level:   :purchased,
+                       show?:   true,
+                       icon_sm: ActionController::Base.helpers.image_tag("green_check.svg", width: "16px", height: "16px", alt: "Purchased"),
+                       icon_lg: ActionController::Base.helpers.image_tag("green_check.svg", width: "24px", height: "24px", alt: "Purchased"),
+                       text:    ::I18n.t('access_levels.access_level_text.purchased'))
+      when :free
+        OpenStruct.new(level:   :free,
+                       show?:   true,
+                       icon_sm: ActionController::Base.helpers.image_tag("free.svg", width: "38px", height: "16px", alt: "Free", style: "vertical-align: top"),
+                       icon_lg: ActionController::Base.helpers.image_tag("free.svg", width: "57px", height: "24px", alt: "Free", style: "vertical-align: bottom"),
+                       text:    ::I18n.t('access_levels.access_level_text.free'))
+      when :unrestricted
+        # "unrestricted" is a Monograph with no Component. The products_lsim field
+        # is indexed with a 0. As opposed to "unknown" which has an empty products_lsim
+        # field which means the monograph should be reindexed
+        OpenStruct.new(level:   :unrestricted,
+                       show?:   false,
+                       icon_sm: '',
+                       icon_lg: '',
+                       text:    '')
+      when :restricted
+        OpenStruct.new(level:   :restricted,
+                       show?:   true,
+                       icon_sm: ActionController::Base.helpers.image_tag("lock_locked.svg", width: "16px", height: "16px", alt: "Restricted"),
+                       icon_lg: ActionController::Base.helpers.image_tag("lock_locked.svg", width: "24px", height: "24px", alt: "Restricted"),
+                       text:    ::I18n.t('access_levels.access_level_text.restricted') + " " + link_to(::I18n.t('access_levels.access_level_text.restricted_access_options'),
+                                                                                                    Rails.application.routes.url_helpers.epub_access_url(id: reader_ebook_id)))
+      else
+        OpenStruct.new(level:   :unknown,
+                       show?:   false,
+                       icon_sm: '',
+                       icon_lg: '',
+                       text:    '')
+      end
+    end
   end
 end

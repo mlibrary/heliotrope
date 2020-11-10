@@ -217,6 +217,8 @@ RSpec.describe "Components", type: :request do
       end
 
       context 'existing identifier' do
+        include ActiveJob::TestHelper
+
         let(:identifier) { component.identifier }
 
         it do
@@ -225,6 +227,7 @@ RSpec.describe "Components", type: :request do
           expect(response).to have_http_status(:unprocessable_entity)
           expect(response_body[:identifier.to_s]).to eq(["component identifier #{identifier} exists!"])
           expect(Greensub::Component.count).to eq(1)
+          expect { ReindexJob.perform_later }.to have_enqueued_job(ReindexJob).on_queue("default")
         end
       end
     end
@@ -291,6 +294,8 @@ RSpec.describe "Components", type: :request do
     end
 
     describe "PUT /api/v1/component" do # update
+      include ActiveJob::TestHelper
+
       let(:params) { { component: { identifier: identifier, name: name, noid: noid } }.to_json }
       let(:identifier) { 'updated_identifier' }
       let(:name) { 'updated_name' }
@@ -315,6 +320,7 @@ RSpec.describe "Components", type: :request do
         expect(response_body[:id.to_s]).to eq(component.id)
         expect(response_body[:name.to_s]).to eq('updated_name')
         expect(Greensub::Component.count).to eq(1)
+        expect { ReindexJob.perform_later }.to have_enqueued_job(ReindexJob).on_queue("default")
       end
 
       context 'existing update identifier unprocessable_entity' do
@@ -343,6 +349,13 @@ RSpec.describe "Components", type: :request do
     end
 
     describe "PUT /api/v1/products/:product_id:/components/:id" do # update
+      include ActiveJob::TestHelper
+
+      after do
+        clear_enqueued_jobs
+        clear_performed_jobs
+      end
+
       context 'non existing product' do
         it 'non existing component not_found' do
           put api_product_component_path(1, 1), headers: headers
@@ -380,6 +393,7 @@ RSpec.describe "Components", type: :request do
           expect(product.components).to include(component)
           expect(product.components.count).to eq(1)
           expect(Greensub::Component.count).to eq(1)
+          expect { ReindexJob.perform_later }.to have_enqueued_job(ReindexJob).on_queue("default")
         end
 
         it 'existing component twice ok' do
@@ -391,12 +405,20 @@ RSpec.describe "Components", type: :request do
           expect(product.components).to include(component)
           expect(product.components.count).to eq(1)
           expect(Greensub::Component.count).to eq(1)
+          expect { ReindexJob.perform_later }.to have_enqueued_job(ReindexJob).on_queue("default")
         end
       end
     end
 
     describe "DELETE /api/v1/component/:id" do # destroy
+      include ActiveJob::TestHelper
+
       let(:product) { create(:product) }
+
+      after do
+        clear_enqueued_jobs
+        clear_performed_jobs
+      end
 
       it 'non existing not_found' do
         delete api_component_path(1), headers: headers
@@ -412,6 +434,8 @@ RSpec.describe "Components", type: :request do
         expect(response).to have_http_status(:ok)
         expect(response.body).to be_empty
         expect(Greensub::Component.count).to eq(0)
+        # it seems like this shouldn't happen since there is no activity in components_products but it does... not sure why
+        expect { ReindexJob.perform_later }.to have_enqueued_job(ReindexJob).on_queue("default")
       end
 
       it 'existing with products accepted' do
@@ -426,6 +450,13 @@ RSpec.describe "Components", type: :request do
     end
 
     describe "DELETE /api/v1/products/:product_id:/components/:id" do # delete
+      include ActiveJob::TestHelper
+
+      after do
+        clear_enqueued_jobs
+        clear_performed_jobs
+      end
+
       context 'non existing product' do
         it 'non existing component not_found' do
           delete api_product_component_path(1, 1), headers: headers
@@ -450,6 +481,8 @@ RSpec.describe "Components", type: :request do
         before do
           product.components << component
           product.save
+          clear_enqueued_jobs
+          clear_performed_jobs
         end
 
         it 'non existing component not_found' do
@@ -470,6 +503,7 @@ RSpec.describe "Components", type: :request do
           expect(product.components).to include(component)
           expect(product.components.count).to eq(0)
           expect(Greensub::Component.count).to eq(1)
+          expect { ReindexJob.perform_later }.to have_enqueued_job(ReindexJob).on_queue("default")
         end
 
         it 'existing component twice ok' do
@@ -481,6 +515,7 @@ RSpec.describe "Components", type: :request do
           expect(product.components).to include(component)
           expect(product.components.count).to eq(0)
           expect(Greensub::Component.count).to eq(1)
+          expect { ReindexJob.perform_later }.to have_enqueued_job(ReindexJob).on_queue("default")
         end
       end
     end

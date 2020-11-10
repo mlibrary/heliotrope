@@ -30,6 +30,13 @@
 # available at http://guides.rubyonrails.org/i18n.html.
 
 en:
+  access_levels:
+    access_level_text:
+      open_access: "Open Access"
+      purchased: "Access to this book has been provided by your Library"
+      free: "Free access to this book has been provided in response to the COVID-19 crisis"
+      restricted: "You do not have access to this book."
+      restricted_access_options: "How to get access."
   activerecord:
     errors:
       models:

@@ -9,7 +9,10 @@ module Greensub
     scope :purchase_like, ->(like) { where("purchase like ?", "%#{like}%") }
 
     has_many :components_products # rubocop:disable Rails/HasManyOrHasOneDependent
-    has_many :components, through: :components_products
+    has_many :components, through: :components_products,
+                                   after_remove: :reindex_component_product,
+                                   after_add: :reindex_component_product
+
 
     validates :identifier, presence: true, allow_blank: false, uniqueness: true
     validates :name, presence: true, allow_blank: false
@@ -64,6 +67,14 @@ module Greensub
 
     def resource_id
       id
+    end
+
+    # If this gets called via the has_many components_products on add or delete like:
+    # > product.components << component
+    # > product.components.delete(component)
+    # then we need to reindex the Monograph to save/delete the product
+    def reindex_component_product(component)
+      ReindexJob.perform_later(component.noid)
     end
 
     private

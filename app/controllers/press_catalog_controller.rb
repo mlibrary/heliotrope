@@ -2,6 +2,8 @@
 
 class PressCatalogController < ::CatalogController
   before_action :load_press
+  before_action :load_actor_product_ids
+  before_action :load_allow_read_product_ids
   before_action :conditional_blacklight_configuration
 
   self.theme = 'hyrax'
@@ -49,6 +51,14 @@ class PressCatalogController < ::CatalogController
       render file: Rails.root.join('public', '404.html'), status: :not_found, layout: false
     end
 
+    def load_actor_product_ids
+      @actor_product_ids = Sighrax.actor_products(current_actor).pluck(:id)
+    end
+
+    def load_allow_read_product_ids
+      @allow_read_product_ids = Sighrax.allow_read_products.pluck(:id)
+    end
+
     def all_works
       children = @press.children.pluck(:subdomain)
       presses = children.push(@press.subdomain).uniq
@@ -71,7 +81,7 @@ class PressCatalogController < ::CatalogController
       end
     end
 
-    def conditional_blacklight_configuration
+    def conditional_blacklight_configuration # rubocop:disable Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity
       if @press.subdomain == Services.score_press
         musical_score
       else
@@ -83,7 +93,8 @@ class PressCatalogController < ::CatalogController
           # facets
           # Sort HEB facets alphabetically, others by count
           sort = (@press.subdomain == 'heb') ? 'index' : 'count'
-          blacklight_config.add_facet_field Solrizer.solr_name('open_access', :facetable), label: "Open Access", limit: 1, url_method: :facet_url_helper, sort: sort
+          # This is replaced with the Access "fake facet", HELIO-3347
+          # blacklight_config.add_facet_field Solrizer.solr_name('open_access', :facetable), label: "Open Access", limit: 1, url_method: :facet_url_helper, sort: sort
           blacklight_config.add_facet_field Solrizer.solr_name('funder', :facetable), label: "Funder", limit: 5, url_method: :facet_url_helper, sort: sort
           blacklight_config.add_facet_field Solrizer.solr_name('subject', :facetable), label: "Subject", limit: 10, url_method: :facet_url_helper, sort: sort
           blacklight_config.add_facet_field Solrizer.solr_name('creator', :facetable), label: "Author", limit: 5, url_method: :facet_url_helper, sort: sort
@@ -92,6 +103,10 @@ class PressCatalogController < ::CatalogController
           end
           blacklight_config.add_facet_field Solrizer.solr_name('series', :facetable), label: "Series", limit: 5, url_method: :facet_url_helper, sort: sort
           blacklight_config.add_facet_field Solrizer.solr_name('press_name', :facetable), label: "Source", limit: 5, url_method: :facet_url_helper, sort: sort
+          if Sighrax.platform_admin?(current_actor)
+            blacklight_config.add_facet_field Solrizer.solr_name('product_names', :facetable), label: "Products", limit: 5
+          end
+
           blacklight_config.add_facet_fields_to_solr_request!
         end
 

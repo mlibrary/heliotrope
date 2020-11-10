@@ -35,18 +35,14 @@ class EPubPolicy < ResourcePolicy
         debug_log("component products: #{component.products.count}")
         component.products.each { |product| debug_log("component product: #{product.identifier}") }
 
-        allow_read_products = Greensub::Product.where(identifier: Settings.allow_read_products || [])
+        allow_read_products = Sighrax.allow_read_products
         debug_log("allow read products: #{allow_read_products.count}")
         allow_read_products.each { |product| debug_log("allow read product: #{product.identifier}") }
         value = (allow_read_products & component.products).any?
         debug_log("allow_read_products_intersect_component_products_any? #{value}")
         return true if value
 
-        products = if Incognito.sudo_actor?(actor)
-                     Incognito.sudo_actor_products(actor)
-                   else
-                     Greensub.actor_products(actor)
-                   end
+        products = Sighrax.actor_products(actor)
         debug_log("actor products: #{products.count}")
         products.each { |product| debug_log("actor product: #{product.identifier}") }
         value = (products & component.products).any?

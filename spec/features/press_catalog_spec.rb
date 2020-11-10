@@ -167,7 +167,9 @@ describe 'Press Catalog' do
 
         expect(page).to have_link "Publisher"
         expect(page).to have_selector("#facet-publisher_sim")
-        expect(page).to have_selector("#facet-open_access_sim")
+        # expect(page).to have_selector("#facet-open_access_sim")
+        # use "fake facet" Access (user_access) instead of OA, # HELIO-3347
+        expect(page).to have_selector('#facet-user_access')
 
         expect(page).to have_selector('#facet-creator_sim a.facet_select', count: 5) # 5 is limit in facet widget
 
