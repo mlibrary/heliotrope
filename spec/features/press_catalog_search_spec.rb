@@ -29,9 +29,11 @@ describe 'Press Catalog' do
   it 'searches for second citable author' do
     visit "/#{umich.subdomain}"
     expect(page).to_not have_content("Your search has returned")
+    expect(page.title).to eq umich.name
 
     fill_in 'q', with: 'Smith'
     click_button 'Search'
+    expect(page.title).to eq "#{umich.name} results - page 1 of 1"
     expect(page).to have_selector('#documents .document', count: 1)
     expect(page).to have_content("Your search has returned 1 book from #{umich.name}")
     expect(page).to     have_link green.title.first

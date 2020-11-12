@@ -1,4 +1,4 @@
-<% provide :page_title, @press.name %>
+<% provide :page_title, @search_ongoing ? "#{@press.name} results - page #{@response.current_page} of #{@response.total_pages}" : @press.name %>
 <% provide :page_class, 'press' %>
 <%
 works = if @press.subdomain == Services.score_press
