@@ -59,6 +59,8 @@ RSpec.describe EPubsController, type: :controller do
         it do
           get :show, params: { id: file_set.id }
           expect(assigns(:title)).to eq('A book with emphasis n stuff')
+          expect(assigns(:actor_product_ids))
+          expect(assigns(:allow_read_product_ids))
           expect(response).to have_http_status(:success)
           expect(response.body.empty?).to be true
         end
@@ -87,6 +89,7 @@ RSpec.describe EPubsController, type: :controller do
           file_set.save!
           allow_any_instance_of(Keycard::Request::Attributes).to receive(:all).and_return(keycard)
           allow(Greensub::Institution).to receive(:where).with(identifier: ['9999']).and_return([institution])
+          allow(institution).to receive(:products).and_return([])
 
           get :show, params: { id: file_set.id }
         end
@@ -330,6 +333,8 @@ RSpec.describe EPubsController, type: :controller do
 
       it 'Open Access' do
         get :show, params: { id: file_set.id }
+        expect(assigns(:actor_product_ids))
+        expect(assigns(:allow_read_product_ids))
         expect(response).to have_http_status(:success)
         expect(response).to render_template(:show)
       end
@@ -349,6 +354,8 @@ RSpec.describe EPubsController, type: :controller do
 
         it 'Anonymous User' do
           get :show, params: { id: file_set.id }
+          expect(assigns(:actor_product_ids))
+          expect(assigns(:allow_read_product_ids))
           expect(response).to have_http_status(:found)
           expect(response).to redirect_to(epub_access_url)
         end
@@ -356,6 +363,8 @@ RSpec.describe EPubsController, type: :controller do
         it 'Authenticated User' do
           sign_in(create(:user))
           get :show, params: { id: file_set.id }
+          expect(assigns(:actor_product_ids))
+          expect(assigns(:allow_read_product_ids))
           expect(response).to have_http_status(:found)
           expect(response).to redirect_to(epub_access_url)
         end
@@ -363,6 +372,8 @@ RSpec.describe EPubsController, type: :controller do
         it 'Platform Admin' do
           sign_in(create(:platform_admin))
           get :show, params: { id: file_set.id }
+          expect(assigns(:actor_product_ids))
+          expect(assigns(:allow_read_product_ids))
           expect(response).to have_http_status(:success)
           expect(response).to render_template(:show)
         end
@@ -374,6 +385,8 @@ RSpec.describe EPubsController, type: :controller do
           product.save!
           Greensub.subscribe(subscriber: institution, target: product)
           get :show, params: { id: file_set.id }
+          expect(assigns(:actor_product_ids))
+          expect(assigns(:allow_read_product_ids))
           expect(response).to have_http_status(:success)
           expect(response).to render_template(:show)
         end
@@ -388,6 +401,8 @@ RSpec.describe EPubsController, type: :controller do
           Greensub.subscribe(subscriber: individual, target: product)
           sign_in(user)
           get :show, params: { id: file_set.id }
+          expect(assigns(:actor_product_ids))
+          expect(assigns(:allow_read_product_ids))
           expect(response).to have_http_status(:success)
           expect(response).to render_template(:show)
         end
