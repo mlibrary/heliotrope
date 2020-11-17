@@ -66,9 +66,11 @@ RSpec.describe User do
   describe '#groups' do
     let(:press1) { create(:press, subdomain: 'red') }
     let(:press2) { create(:press, subdomain: 'blue') }
+    let(:press3) { create(:press, subdomain: 'yellow') }
 
     let(:admin) { create(:user) }
     let(:editor) { create(:user) }
+    let(:analyst) { create(:user) }
     let(:platform_admin) { create(:platform_admin) }
 
     before do
@@ -76,12 +78,14 @@ RSpec.describe User do
       Role.delete_all
       create(:role, resource: press1, user: admin, role: 'admin')
       create(:role, resource: press2, user: editor, role: 'editor')
+      create(:role, resource: press3, user: analyst, role: 'analyst')
     end
 
     it "returns the right groups for users" do
       expect(admin.groups).to eq ["red_admin"]
       expect(editor.groups).to eq ["blue_editor"]
-      expect(platform_admin.groups).to eq ["blue_admin", "blue_editor", "red_admin", "red_editor", "admin"]
+      expect(analyst.groups).to eq ["yellow_analyst"]
+      expect(platform_admin.groups).to eq ["blue_admin", "blue_analyst", "blue_editor", "red_admin", "red_analyst", "red_editor", "yellow_admin", "yellow_analyst", "yellow_editor", "admin"]
     end
   end
 
@@ -101,6 +105,7 @@ RSpec.describe User do
         it { expect(user.press_roles).to be_empty }
         it { expect(user.admin_roles).to be_empty }
         it { expect(user.editor_roles).to be_empty }
+        it { expect(user.analyst_roles).to be_empty }
 
         context '#admin_roles' do
           let(:user) { create(:press_admin) }
@@ -108,6 +113,7 @@ RSpec.describe User do
           it { expect(user.press_roles).not_to be_empty }
           it { expect(user.admin_roles).not_to be_empty }
           it { expect(user.editor_roles).to be_empty }
+          it { expect(user.analyst_roles).to be_empty }
         end
 
         context '#editor_roles' do
@@ -116,8 +122,38 @@ RSpec.describe User do
           it { expect(user.press_roles).not_to be_empty }
           it { expect(user.admin_roles).to be_empty }
           it { expect(user.editor_roles).not_to be_empty }
+          it { expect(user.analyst_roles).to be_empty }
+        end
+
+        context "#analyst_roles" do
+          let(:user) { create(:press_analyst) }
+
+          it { expect(user.press_roles).not_to be_empty }
+          it { expect(user.admin_roles).to be_empty }
+          it { expect(user.editor_roles).to be_empty }
+          it { expect(user.analyst_roles).not_to be_empty }
         end
       end
+    end
+  end
+
+  describe "#analyst_presses" do
+    let(:press1) { create(:press) }
+    let(:press2) { create(:press) }
+
+    let(:user) { create(:user) }
+    let(:superuser) { create(:platform_admin) }
+
+    before do
+      Press.delete_all
+      Role.delete_all
+      create(:role, resource: press1, user: user, role: 'analyst')
+      create(:role, resource: press2, user: user, role: 'admin')
+    end
+
+    it 'returns the presses that this user is an analyst for' do
+      expect(user.analyst_presses).to eq [press1]
+      expect(superuser.analyst_presses).to eq [press1, press2]
     end
   end
 
@@ -135,7 +171,7 @@ RSpec.describe User do
       create(:role, resource: press2, user: user, role: 'admin')
     end
 
-    it 'returns the presses that this user is an admin for' do
+    it 'returns the presses that this user is an editor for' do
       expect(user.editor_presses).to eq [press1]
       expect(superuser.editor_presses).to eq [press1, press2]
     end

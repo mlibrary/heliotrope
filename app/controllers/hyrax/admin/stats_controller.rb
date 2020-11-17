@@ -74,13 +74,13 @@ module Hyrax
       private
 
         def only_elevated_users
-          return if current_ability.platform_admin? || current_ability.press_admin? || current_ability.press_editor?
+          return if current_ability.platform_admin? || current_ability.press_admin? || current_ability.press_editor? || current_ability.press_analyst?
           render 'hyrax/base/unauthorized', status: :unauthorized
         end
 
         def set_presses_and_institutions
           # Only presses the user is affiliated with (are an admin, editor, etc)
-          @presses = (current_user&.admin_presses + current_user&.editor_presses).uniq
+          @presses = (current_user&.admin_presses + current_user&.editor_presses + current_user&.analyst_presses).uniq
           # Reports can be "all institutions" at once or each individual institution seperately
           @institutions = Greensub::Institution.order(:name).to_a.unshift(Greensub::Institution.new(name: "All Institutions", identifier: '*'))
         end

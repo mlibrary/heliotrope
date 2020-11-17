@@ -6,6 +6,14 @@ class PublishJob < ApplicationJob
   def perform(curation_concern)
     curation_concern.date_published = [Hyrax::TimeService.time_in_utc]
 
+    # We need to make sure we're getting read_groups and write_groups inherited
+    # from the monograph if this is a FileSet
+    # This seems to be unstable, see HELIO-3630
+    if curation_concern.is_a?(FileSet) && curation_concern&.parent.present?
+      curation_concern.read_groups = curation_concern.parent.read_groups
+      curation_concern.edit_groups = curation_concern.parent.edit_groups
+    end
+
     # TODO: this is probably not how we publish in the long run
     curation_concern.visibility = 'open'
 

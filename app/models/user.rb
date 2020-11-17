@@ -109,6 +109,10 @@ class User < ApplicationRecord
     press_roles.where(role: 'editor')
   end
 
+  def analyst_roles
+    press_roles.where(role: 'analyst')
+  end
+
   # Presses for which this user is an editor
   def editor_presses
     platform_admin? ? Press.order(:name) : presses.where(['roles.role = ?', 'editor']).order(:name)
@@ -117,6 +121,10 @@ class User < ApplicationRecord
   # Presses for which this user is an admin
   def admin_presses
     platform_admin? ? Press.order(:name) : presses.where(['roles.role = ?', 'admin']).order(:name)
+  end
+
+  def analyst_presses
+    platform_admin? ? Press.order(:name) : presses.where(['roles.role = ?', 'analyst']).order(:name)
   end
 
   def platform_admin?
