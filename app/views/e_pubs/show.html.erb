@@ -50,39 +50,7 @@ webgl = Webgl::Unity.from_directory(UnpackService.root_path_from_noid(webgl_id, 
   <% if defined? @presenter.file_set_coins_title %>
     <span class="Z3988" title="<%= @presenter.file_set_coins_title %>" aria-hidden="true"></span>
   <% end %>
-<%# Democracy and Debate titles requiring temporary ereader survey hack. TODO: remove when possible %>
-<%# horrible indentation cause Ruumba %>
-<%
-ereader_survey_titles = %w[
-  gq67js19r
-  bv73c132k
-  7d278t87f
-  pv63g2033
-  7d278t88q
-  wh246v07t
-  cj82k879b
-  db78td58z
-  mp48sd49d
-  z029p637r
-  5t34sk67j
-  zc77sr73f
-  js956h350
-  g158bj82p
-  qb98mg66j
-  1n79h511f
-  6h440t76h
-  3t945r69k
-  fx719n646
-  zp38wd48w
-  kh04dq580
-  rn3012840
-  q811kk505
-  1544bq992
-  h702q709t
-]
-%>
-  <!-- TODO: add logic to display survey if book is free -->
-  <% if @parent_presenter.open_access? || ereader_survey_titles.include?(@parent_presenter.id) %>
+  <% if @parent_presenter.open_access? || @parent_presenter.access_level(@actor_product_ids, @allow_read_product_ids).level == :free %>
     <%= render 'shared/survey_nonmodal' %>
   <% end %>
   <div class="skip"></div>

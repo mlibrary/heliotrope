@@ -231,15 +231,15 @@ module Hyrax
     #
     # @param [Array] allow_product_ids {  Sighrax.actor_products(current_actor).pluck(:id) }
     # @param [Array] allow_read_product_ids {  Sighrax.allow_read_products.pluck(:id) }
-    def access_level(actor_product_ids, allow_read_product_ids)
+    def access_level(actor_product_ids, allow_read_product_ids) # rubocop:disable Metrics/PerceivedComplexity
       # Open Access
       return access_indicators(:open_access)  if /yes/i.match?(solr_document.open_access)
       # Unknown because monograph needs to be reindexed!
       return access_indicators(:unknown)      unless solr_document['products_lsim']
       # Purchased
-      return access_indicators(:purchased)    if (solr_document['products_lsim'] & actor_product_ids).any?
+      return access_indicators(:purchased)    if actor_product_ids && (solr_document['products_lsim'] & actor_product_ids).any?
       # Free
-      return access_indicators(:free)         if (solr_document['products_lsim'] & allow_read_product_ids).any?
+      return access_indicators(:free)         if allow_read_product_ids && (solr_document['products_lsim'] & allow_read_product_ids).any?
       # Unrestricted
       return access_indicators(:unrestricted) if solr_document['products_lsim'].include?(0)
       # Restricted
