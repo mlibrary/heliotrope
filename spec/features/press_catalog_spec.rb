@@ -160,6 +160,7 @@ describe 'Press Catalog' do
 
       it 'the press catalog page has facets' do
         visit "/#{heb.subdomain}"
+        expect(page.title).to eq heb.name
 
         # Presses with 15 or more books will have facets,
         # less than 15 don't
@@ -179,6 +180,7 @@ describe 'Press Catalog' do
         expect(page).to have_selector('a.facet-anchor.facet_select', count: 13)
 
         find('a.facet-anchor.facet_select', match: :first).click
+        expect(page.title).to eq "#{heb.name} results - page 1 of 1"
         expect(page).to have_selector('#documents .document', count: 1)
         expect(page).to have_content("Your search has returned 1 book from #{heb.name}")
       end
