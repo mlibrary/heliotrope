@@ -27,8 +27,9 @@ Hydra::Derivatives::Processors::Video::Processor.class_eval do
           scaling_options = "-filter_complex scale=320:-1"
         else
           # scale all video playback and poster derivatives to 720P resolution, without upscaling smaller stuff
-          # `-2` ensures the height is divisible by 2, a requirement for many encoders like libx264
-          scaling_options = "-filter_complex \"scale='iw*min(1, min(1280/iw, 720/ih))':-2\""
+          # ceil(.../2)*2 ensures the width is divisble by 2 and the `:-2` ensures the height is divisible by 2,...
+          # which are requirements for many encoders like libx264
+          scaling_options = "-filter_complex \"scale='ceil(iw*min(1, min(1280/iw, 720/ih))/2)*2':-2\""
         end
 
         output_options = "#{scaling_options} #{codecs(format)} #{output_options}"
