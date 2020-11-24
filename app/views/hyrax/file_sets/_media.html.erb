@@ -5,7 +5,7 @@
     <%= render partial: @presenter.heliotrope_media_partial, locals: { file_set: @presenter } %>
     <figcaption<%= ' class="text-center"'.html_safe if @presenter.center_caption? %>><%= @presenter.attribute_to_html(:caption, render_as: :markdown, label: '') %></figcaption>
     <div class="text-center">
-    <% if @presenter.allow_download?  %>
+    <% if @entity_policy.download? %>
       <a class="btn btn-default btn-lg btn-heliotrope-download" href="<%= hyrax.download_path(@presenter) %>" target="_blank">
         <%= @presenter.download_button_label %>
       </a>

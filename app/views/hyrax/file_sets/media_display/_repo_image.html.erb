@@ -1,4 +1,4 @@
-<% if file_set.allow_download? %>
+<% if @entity_policy.download? %>
   <%= link_to hyrax.download_path(file_set), target: "_new", title: file_set.download_button_label do %>
     <%= image_tag hyrax.download_path(file_set),
                   class: "img-responsive asset-page-image",

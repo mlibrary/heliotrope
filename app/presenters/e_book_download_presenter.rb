@@ -37,10 +37,7 @@ class EBookDownloadPresenter < ApplicationPresenter
   def downloadable?(ebook_presenter)
     Rails.logger.debug("[EBOOK DOWNLOAD] ebook_presenter.blank? #{ebook_presenter.blank?} (#{ebook_presenter.class})")
     return false if ebook_presenter.blank?
-    # Get rid of value temp variable when debug logging is no longer needed
-    value = ebook_presenter.allow_download?
-    Rails.logger.debug("[EBOOK DOWNLOAD] ebook_presenter.allow_download? #{value}")
-    value && EntityPolicy.new(current_actor, Sighrax.from_presenter(ebook_presenter)).download?
+    EntityPolicy.new(current_actor, Sighrax.from_presenter(ebook_presenter)).download?
   end
 
   def downloadable_ebooks?

@@ -13,7 +13,6 @@ RSpec.describe EBookDownloadPresenter do
   let(:epub_doc) { SolrDocument.new(id: '111111111', visibility_ssi: 'open', monograph_id_ssim: 'mono_id', has_model_ssim: ['FileSet'], file_size_lts: 20_000, allow_download_ssim: 'yes') }
   let(:mobi_doc) { SolrDocument.new(id: '222222222', visibility_ssi: 'open', monograph_id_ssim: 'mono_id', has_model_ssim: ['FileSet'], file_size_lts: 30_000, allow_download_ssim: 'yes') }
   let(:pdfe_doc) { SolrDocument.new(id: '333333333', visibility_ssi: 'open', monograph_id_ssim: 'mono_id', has_model_ssim: ['FileSet'], file_size_lts: 40_000, allow_download_ssim: 'yes') }
-  let(:policy) { double('policy', download?: true) }
 
   before do
     create(:featured_representative, file_set_id: '111111111', work_id: 'mono_id', kind: 'epub')
@@ -21,7 +20,10 @@ RSpec.describe EBookDownloadPresenter do
     create(:featured_representative, file_set_id: '333333333', work_id: 'mono_id', kind: 'pdf_ebook')
     ActiveFedora::SolrService.add([epub_doc.to_h, mobi_doc.to_h, pdfe_doc.to_h])
     ActiveFedora::SolrService.commit
-    allow(EntityPolicy).to receive(:new).with(current_actor, anything).and_return(policy)
+    # nothing in this spec tests Checkpointy stuff and to show the "allow_download_ssim" checks haven't prevented...
+    # even reaching Checkpointy checks in EntityPolicy we need to make sure EntityPolicy.download? doesn't return...
+    # false at the end due to lack of Product access
+    allow(Sighrax).to receive(:access?).with(current_actor, anything).and_return(true)
   end
 
   context "formats" do

@@ -14,10 +14,11 @@ RSpec.describe 'hyrax/file_sets/_media' do
   let(:request) { double('request') }
   let(:file_set_presenter) { Hyrax::FileSetPresenter.new(file_set_doc, ability, request) }
   let(:allow_download) { nil }
+  let(:entity_policy) { double('entity_policy', download?: false) }
 
   before do
     assign(:presenter, file_set_presenter)
-    allow(file_set_presenter).to receive(:allow_download?).and_return(allow_download)
+    assign(:entity_policy, entity_policy)
   end
 
   context 'with an external_resource' do
@@ -57,14 +58,14 @@ RSpec.describe 'hyrax/file_sets/_media' do
       render
     end
 
-    context 'has a download link when allow_download? returns true' do
-      let(:allow_download) { true }
+    context 'has a download link when EntityPolicy.download? returns true' do
+      let(:entity_policy) { double('entity_policy', download?: true) }
 
       it { expect(rendered).to have_link('Download') }
     end
 
-    context 'has no download link when allow_download? returns false' do
-      let(:allow_download) { false }
+    context 'has no download link when EntityPolicy.download? returns false' do
+      let(:entity_policy) { double('entity_policy', download?: false) }
 
       it { expect(rendered).not_to have_link('Download') }
     end
