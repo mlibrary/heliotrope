@@ -4,7 +4,7 @@
 <% end %>
 
 <% riiif_url = "/image-service/#{file_set.id}#{file_set.browser_cache_breaker}/info.json" %>
-<div id="image"></div>
+<div id="image" class="no-context-menu-or-drag"></div>
 <script>
     $().ready(function() {
         var map, layer;

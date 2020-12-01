@@ -1,0 +1,7 @@
+<%# need original animated GIF file for proper display, otherwise use image-service (Chrome and FF cannot display TIFFs at all!) %>
+<% image_path = file_set.animated_gif? ? hyrax.download_path(file_set) : "/image-service/#{file_set.id}#{file_set.browser_cache_breaker}/full/full/0/default.png" %>
+<% orientation_class = file_set.width.present? && file_set.height.present? && file_set.height > file_set.width ? 'portrait' : 'landscape' %>
+<%= image_tag image_path,
+              class: "img-responsive embed-static-image #{orientation_class} no-context-menu-or-drag",
+              alt: file_set.page_title,
+              role: 'presentation' %>

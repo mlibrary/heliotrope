@@ -2,12 +2,15 @@
 
 Hyrax::DownloadsController.class_eval do
   prepend(DownloadsControllerBehavior = Module.new do
+    # for animated GIF files we use the repo asset for display. They need to be "downloadable" no matter what.
+    delegate :animated_gif?, to: :presenter
+
     def show # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
       if closed_captions?
         render plain: presenter.closed_captions
       elsif visual_descriptions?
         render plain: presenter.visual_descriptions
-      elsif file.present? && (thumbnail? || jpeg? || video? || sound? || allow_download?)
+      elsif file.present? && (thumbnail? || jpeg? || video? || sound? || animated_gif? || allow_download?)
         # See #401
         if file.is_a? String
           # For derivatives stored on the local file system

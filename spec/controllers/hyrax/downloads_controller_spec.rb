@@ -50,6 +50,16 @@ RSpec.describe Hyrax::DownloadsController, type: :controller do
           get :show, params: { id: file_set.id, use_route: 'downloads' }
           expect(response).to have_http_status(:unauthorized)
         end
+
+        context "animated GIF file is downloadable anyway" do
+          before { allow_any_instance_of(Hyrax::FileSetPresenter).to receive(:animated_gif?).and_return(true) }
+
+          it "sends the file" do
+            get :show, params: { id: file_set.id, use_route: 'downloads' }
+            expect(response).to have_http_status(:ok)
+            expect(response.body).to eq file_set.original_file.content
+          end
+        end
       end
 
       context "and an edit user is logged in" do

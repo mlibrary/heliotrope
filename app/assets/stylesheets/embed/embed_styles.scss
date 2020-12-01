@@ -145,3 +145,18 @@ figure:hover > div:nth-child(1), figure:active > div:nth-child(1) {
     height: 105px;
   }
 }
+
+.embed-static-image {
+  display: block;
+  margin: auto;
+}
+
+.embed-static-image.portrait {
+  width: auto;
+  height: 100%;
+}
+
+.embed-static-image.landscape {
+  width: 100%;
+  height: auto
+}

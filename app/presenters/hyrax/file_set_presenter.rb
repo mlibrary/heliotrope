@@ -250,8 +250,12 @@ module Hyrax
       partial = 'hyrax/file_sets/' + directory + '/'
       partial + if external_resource?
                   'external_resource'
-                elsif animated_gif? # needs to come before `image?`
-                  'repo_image'
+                # this needs to come before `elsif image?` as these are also images
+                # less than 430 or so px wide means a "responsive" iframe with a 5:3 ratio will not fit a Leaflet...
+                # map with enough height for a single 256x256px tile. But actually it might make more sense to have...
+                # < 540 here as that's the width of the Leaflet map on the FileSet show page
+                elsif animated_gif? || (width.present? && width < 450)
+                  'static_image'
                 elsif image?
                   'leaflet_image'
                 elsif video?
