@@ -31,7 +31,7 @@ shared_examples "a group permission actor for works" do
       it "adds default group read and edit permissions" do
         expect(middleware.create(env)).to be true
 
-        expect(curation_concern.read_groups).to match_array ["heliotrope_admin", "heliotrope_editor"]
+        expect(curation_concern.read_groups).to match_array ["heliotrope_admin", "heliotrope_editor", "heliotrope_analyst"]
         expect(curation_concern.edit_groups).to match_array ["heliotrope_admin", "heliotrope_editor"]
       end
 
@@ -53,7 +53,7 @@ shared_examples "a group permission actor for works" do
       it "adds default group read and edit permissions including public read" do
         expect(middleware.create(env)).to be true
 
-        expect(curation_concern.read_groups).to match_array ["heliotrope_admin", "heliotrope_editor", "public"]
+        expect(curation_concern.read_groups).to match_array ["heliotrope_admin", "heliotrope_editor", "heliotrope_analyst", "public"]
         expect(curation_concern.edit_groups).to match_array ["heliotrope_admin", "heliotrope_editor"]
       end
 

@@ -20,9 +20,32 @@ class Ability
 
     can :read, Press
 
-    grant_press_editor_abilities if platform_admin? || press_admin? || press_editor?
+    grant_press_analyst_abiltites if press_analyst?
+    grant_press_editor_abilities if press_editor?
     grant_press_admin_abilities if platform_admin? || press_admin?
     grant_platform_admin_abilities if platform_admin?
+  end
+
+  def grant_press_analyst_abiltites
+    can :read, Monograph do |m|
+      @user.analyst_presses.pluck(:subdomain).include?(m.press) && !only_scores
+    end
+
+    can :read, FileSet do |f|
+      @user.analyst_presses.pluck(:subdomain).include?(f.parent.press) unless f.present.nil?
+    end
+
+    can :read, Hyrax::MonographPresenter do |p|
+      @user.analyst_presses.map(&:subdomain).include?(p.subdomain) && !only_scores
+    end
+
+    can :read, Hyrax::FileSetPresenter do |p|
+      @user.analyst_presses.map(&:subdomain).include?(p.parent.subdomain)
+    end
+
+    can :read, :stats_dashboard do
+      @user.analyst_presses.present?
+    end
   end
 
   def grant_press_editor_abilities
@@ -49,6 +72,10 @@ class Ability
 
     can :update, Hyrax::FileSetPresenter do |p|
       @user.editor_presses.map(&:subdomain).include?(p.parent.subdomain)
+    end
+
+    can :read, :stats_dashboard do
+      @user.editor_presses.present?
     end
   end
 
@@ -86,6 +113,10 @@ class Ability
       @user.admin_presses.map(&:subdomain).include?(p.parent.subdomain)
     end
 
+    can :read, :stats_dashboard do
+      @user.admin_presses.present?
+    end
+
     can :read, :admin_dashboard do
       @user.admin_presses.present?
     end
@@ -98,6 +129,8 @@ class Ability
     can :manage, Press
     can :manage, FeaturedRepresentative
     can :manage, User
+    can :read, :admin_dashboard
+    can :read, :stats_dashboard
   end
 
   def platform_admin?
@@ -119,6 +152,14 @@ class Ability
 
   def editor_for?(press)
     @user.editor_presses.include?(press)
+  end
+
+  def press_analyst?
+    @user.analyst_presses.count.positive?
+  end
+
+  def analyst_for?(press)
+    @user.analyst_presses.include(press)
   end
 
   def only_scores

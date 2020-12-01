@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Role < ApplicationRecord
-  ROLES = %w[admin editor].freeze
+  ROLES = %w[admin editor analyst].freeze
   # A platform_admin has a role of "admin" with a resource of "nil" so
   # we need belongs_to: resource to be optional. In rails 5 this defaults to false.
   belongs_to :resource, polymorphic: true, optional: true

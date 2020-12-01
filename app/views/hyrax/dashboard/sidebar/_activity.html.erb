@@ -20,7 +20,7 @@
   <% end %>
 </li>
 
-<% if can? :read, :admin_dashboard %>
+<% if can? :read, :stats_dashboard %>
 <li>
   <% #byebug %>
   <%= menu.collapsable_section "Reports",

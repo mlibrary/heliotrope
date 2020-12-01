@@ -215,6 +215,7 @@ en:
   role:
     admin: "Admin"
     editor: "Editor"
+    analyst: "Analyst"
   roles:
     index:
       email: "Email"

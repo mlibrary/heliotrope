@@ -24,7 +24,7 @@ that will be emailed to the provided email address.</p>
     </div>
     <div class="col-sm-2">
       <label for="press" class="col-form-label">Press</label>
-      <%= select_tag(:press, options_for_select((current_user.admin_presses + current_user.editor_presses).uniq.map { |p| [p.name, p.id] }), class: 'form-control') %>
+      <%= select_tag(:press, options_for_select((current_user.admin_presses + current_user.editor_presses + current_user.analyst_presses).uniq.map { |p| [p.name, p.id] }), class: 'form-control') %>
     </div>
     <div class="col-sm-2">
       <label for="start_date" class="col-form-label">Start Date</label>
