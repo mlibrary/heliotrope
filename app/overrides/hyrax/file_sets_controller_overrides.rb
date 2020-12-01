@@ -18,12 +18,21 @@ Hyrax::FileSetsController.class_eval do
       stats_graph_service = StatsGraphService.new(params[:id], presenter.date_uploaded)
       @stats_graph_data = stats_graph_service.pageviews_over_time_graph_data
       @pageviews = stats_graph_service.pageviews
+      @entity_policy ||= EntityPolicy.new(current_actor, Sighrax.from_noid(params[:id]))
 
       respond_to do |wants|
         wants.html { presenter }
         wants.json { presenter }
         additional_response_formats(wants)
       end
+    end
+
+    def edit
+      # @entity_policy needed in edit() as well as show() because of the "mini show view" included on the edit form.
+      # At least that is my assumption. With the Module prepend override stuff it's too egregious to create an...
+      # initialize/setup method on the overriden class. So just duplicate.
+      @entity_policy ||= EntityPolicy.new(current_actor, Sighrax.from_noid(params[:id]))
+      initialize_edit_form
     end
 
     def destroy
