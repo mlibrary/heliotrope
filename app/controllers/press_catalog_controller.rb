@@ -4,6 +4,7 @@ class PressCatalogController < ::CatalogController
   before_action :load_press
   before_action :load_actor_product_ids
   before_action :load_allow_read_product_ids
+  before_action :has_open_access
   before_action :conditional_blacklight_configuration
 
   self.theme = 'hyrax'
@@ -59,6 +60,10 @@ class PressCatalogController < ::CatalogController
       @allow_read_product_ids = Sighrax.allow_read_products.pluck(:id)
     end
 
+    def has_open_access
+      @has_open_access ||=  display_works.select { |doc| doc['open_access_tesim'] == ['yes'] }.count > 0
+    end
+
     def all_works
       children = @press.children.pluck(:subdomain)
       presses = children.push(@press.subdomain).uniq
@@ -66,11 +71,11 @@ class PressCatalogController < ::CatalogController
     end
 
     def active_works
-      all_works.select { |doc| doc["suppressed_bsi"] == false }
+      @active_works ||= all_works.select { |doc| doc["suppressed_bsi"] == false }
     end
 
     def open_works
-      all_works.select { |doc| doc["suppressed_bsi"] == false && doc["visibility_ssi"] == "open" }
+      @open_works ||= all_works.select { |doc| doc["suppressed_bsi"] == false && doc["visibility_ssi"] == "open" }
     end
 
     def display_works

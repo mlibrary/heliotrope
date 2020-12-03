@@ -51,6 +51,7 @@
                 </span>
               </a>
             </li>
+            <% if @has_open_access %>
             <li>
               <a class="facet-anchor facet_select" href="<%= url_for(params.deep_dup.merge(user_access: "oa").except("page").permit!) %>">
                 <span class="facet-label">
@@ -62,6 +63,7 @@
                 </span>
               </a>
             </li>
+            <% end %>
           </ul>
         </div>
       </div>

@@ -3,6 +3,30 @@
 require 'rails_helper'
 
 describe "Press Catalog Facets" do
+  describe 'Access facet' do
+    let(:press) { create(:press) }
+
+    it 'DOES NOT display the open access facet' do
+      FactoryBot.create_list :public_monograph, 10, press: press.subdomain, creator: ['creator']
+      visit press_catalog_path(press: press.subdomain)
+      # save_and_open_page
+      expect(page).to have_selector('#facet-user_access')
+      expect(page).to have_text 'All Content'
+      expect(page).to have_text 'Only content I can access'
+      expect(page).not_to have_text 'Only open access content'
+    end
+
+    it 'DOES display the open access facet' do
+      FactoryBot.create_list :public_monograph, 10, press: press.subdomain, creator: ['creator'], open_access: 'yes'
+      visit press_catalog_path(press: press.subdomain)
+      # save_and_open_page
+      expect(page).to have_selector('#facet-user_access')
+      expect(page).to have_text 'All Content'
+      expect(page).to have_text 'Only content I can access'
+      expect(page).to have_text 'Only open access content'
+    end
+  end
+
   describe "Source facet" do
     context "in michigan press" do
       let(:michigan_press) { create(:press, subdomain: 'michigan', name: 'University of Michigan Press') }

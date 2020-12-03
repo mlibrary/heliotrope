@@ -63,6 +63,7 @@ Metrics/BlockLength:
   Enabled: false
 Metrics/BlockNesting:
   Exclude:
+    - 'app/views/catalog/_facets.html.erb.rb'
     - 'app/views/monograph_catalog/_index_monograph.html.erb.rb'
     - 'app/views/shared/_altmetric_dimensions.html.erb.rb'
 Metrics/LineLength:
