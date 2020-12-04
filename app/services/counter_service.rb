@@ -22,9 +22,17 @@ class CounterService
     ["Hyrax::FileSetPresenter", "Hyrax::MonographPresenter"]
   end
 
-  def count(opts = {}) # rubocop:disable Metrics/CyclomaticComplexity
+  def count(opts = {}) # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
     return if @presenter&.visibility == "restricted"
 
+    # Add "Unknown Institution" (aka: "The World") if the request has no institutions and is not a robot
+    if @controller.current_institutions.empty? && !robot?
+      inst0 = Greensub::Institution.where(identifier: 0).first
+      @controller.current_institutions.push(inst0) if inst0.present?
+    end
+
+    # Add a COUNT for each institution. Usually a request will only have a single
+    # institution, but not always (for instance: U of M and LIT IP ranges means 2 institutions)
     @controller.current_institutions.each do |institution|
       cr = CounterReport.new(session: session,
                              institution: institution.identifier,
@@ -88,6 +96,8 @@ class CounterService
   end
 
   def robot?
+    return true if @controller.request.user_agent.blank? # No user_agent is suspect...
+
     robots_list.each do |pattern|
       # One of the bot patterns in the list COUNTER provides has a bad regex:
       #   warning: regular expression has ']' without escape: /^Mozilla\/4\.5\+\[en]\+\(Win98;\+I\)$/

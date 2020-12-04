@@ -183,7 +183,7 @@ RSpec.describe CounterService do
       before do
         allow(controller).to receive(:request).and_return(request)
         allow(controller.request).to receive(:remote_ip).and_return("99.99.99.99")
-        allow(controller.request).to receive(:user_agent).and_return("Mozilla/5.0")
+        allow(controller.request).to receive(:user_agent).and_return("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.75 Safari/537.36")
         allow(DateTime).to receive(:now).and_return(now)
         allow(now).to receive(:strftime).with('%Y-%m-%d').and_return("2020-10-17")
         allow(now).to receive(:hour).and_return('13')
@@ -193,8 +193,25 @@ RSpec.describe CounterService do
 
       after { CounterReport.destroy_all }
 
-      context "a user with NO institutions" do
-        before { allow(controller).to receive(:current_institutions).and_return([]) }
+      context "a user with NO institutions that is not a Robot" do
+        before do
+          Greensub::Institution.create(identifier: 0, name: "Unknown Institution")
+          allow(controller).to receive(:current_institutions).and_return([])
+        end
+
+        it "adds an 'Unknown Institution' (aka: 'The World') COUNT" do
+          expect { described_class.from(controller, presenter).count }
+            .to change(CounterReport, :count)
+            .by(1)
+        end
+      end
+
+      context "a user with NO institutions that is a Robot" do
+        before do
+          Greensub::Institution.create(identifier: 0, name: "Unknown Institution")
+          allow(controller).to receive(:current_institutions).and_return([])
+          allow(controller.request).to receive(:user_agent).and_return("some-bot/1.0")
+        end
 
         it "doesn't add COUNTER stats" do
           expect { described_class.from(controller, presenter).count }
@@ -217,7 +234,7 @@ RSpec.describe CounterService do
           expect(cr.model).to eq "FileSet"
           expect(cr.press).to eq press.id
           expect(cr.parent_noid).to eq presenter.monograph_id
-          expect(cr.session).to eq "99.99.99.99|Mozilla/5.0|2020-10-17|13"
+          expect(cr.session).to eq "99.99.99.99|Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.75 Safari/537.36|2020-10-17|13"
           expect(cr.institution).to eq 495
           expect(cr.investigation).to eq 1
           expect(cr.section).to be nil
