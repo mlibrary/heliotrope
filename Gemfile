@@ -194,6 +194,11 @@ gem 'skylight', '~> 5.0.0.beta4'
 # Rails Webpack Tool
 gem 'webpacker', '~> 5.2.1'
 
+# puma monitoring, HELIO-3388
+gem 'yabeda-rails'
+gem 'yabeda-puma-plugin'
+gem 'yabeda-prometheus'
+
 group :development, :test do
   gem 'byebug'
   # test coverage with coveralls

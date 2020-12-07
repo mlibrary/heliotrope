@@ -77,6 +77,11 @@ module Heliotrope
     # See https://github.com/mlibrary/umrdr/commit/4aa4e63349d6f3aa51d76f07aa20faeae6712719
     config.skylight.probes -= ['middleware']
 
+    # Prometheus monitoring, see HELIO-3388
+    ENV["PROMETHEUS_MONITORING_DIR"] = ENV["PROMETHEUS_MONITORING_DIR"] || Settings.prometheus_monitoring.dir || Rails.root.join("tmp", "prometheus").to_s
+    FileUtils.mkdir_p ENV.fetch("PROMETHEUS_MONITORING_DIR")
+    Prometheus::Client.config.data_store = Prometheus::Client::DataStores::DirectFileStore.new(dir: ENV.fetch("PROMETHEUS_MONITORING_DIR"))
+
     config.to_prepare do
       # ensure overrides are loaded
       # see https://bibwild.wordpress.com/2016/12/27/a-class_eval-monkey-patching-pattern-with-prepend/

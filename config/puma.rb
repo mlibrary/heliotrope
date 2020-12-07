@@ -60,3 +60,15 @@ pidfile ENV.fetch("PIDFILE") { "tmp/pids/server.pid" }
 
 # Allow puma to be restarted by `rails restart` command.
 plugin :tmp_restart
+
+# puma monitoring, see HELIO-3388
+# testing/staging/preview/production would need these changes in the deploy project
+require 'prometheus/client'
+require 'prometheus/client/data_stores/direct_file_store'
+
+activate_control_app
+plugin :yabeda
+
+before_fork do
+  Prometheus::Client.config.data_store = Prometheus::Client::DataStores::DirectFileStore.new(dir: ENV.fetch('PROMETHEUS_MONITORING_DIR'))
+end
