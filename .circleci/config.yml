@@ -1,13 +1,303 @@
-version: 2
-jobs:
-  fake_job:
-    docker:
-      - image: circleci/ruby:2.5.8
+# A lot of this is borrowed from https://github.com/mlibrary/deepblue/tree/master/.circleci
+# which in turn was borrowed from https://github.com/samvera-labs/samvera-circleci-orb
+version: 2.1
+
+commands:
+  bundle_for_gem:
+    description: Bundles and caches a gem.
+    parameters:
+      bundler_version:
+        type: string
+        default: '2.1.4'
+      cache_version:
+        type: string
+        default: "1"
+      project:
+        type: string
+      ruby_version:
+        type: string
+        default: '2.5.8'
     steps:
-      - run: echo "I don't do anything"
+    - restore_cache:
+        keys:
+        - v<< parameters.cache_version >>-bundle-{{ checksum "Gemfile" }}--{{ checksum
+          "Gemfile.lock" }}-<< parameters.ruby_version >>
+        name: Restore bundle from cache
+    - run:
+        command: |
+          echo 'export BUNDLER_VERSION=<< parameters.bundler_version >>' >> $BASH_ENV
+          gem install bundler -v << parameters.bundler_version >>
+        name: Update bundler
+    - run:
+        command: bundle check || bundle install
+        name: Install dependencies
+    - save_cache:
+        key: v<< parameters.cache_version >>-bundle-{{ checksum "Gemfile" }}--{{ checksum
+          "Gemfile.lock" }}-<< parameters.ruby_version >>
+        name: Save bundle cache
+        paths:
+        - ~/project/vendor/bundle
+  cached_checkout:
+    description: Perform a cache-enabled git checkout.
+    steps:
+    - restore_cache:
+        keys:
+        - v1-source-{{ .Branch }}-{{ .Revision }}
+        name: Restore code from cache
+    - checkout
+    - save_cache:
+        key: v1-source-{{ .Branch }}-{{ .Revision }}
+        name: Save code cache
+        paths:
+        - .git
+  install_solr_core:
+    description: Installs a solr core into a running Solr docker container.
+    parameters:
+      core_name:
+        default: hydra-test
+        type: string
+      solr_config_path:
+        default: ./solr/config
+        type: string
+      solr_port:
+        default: "8985"
+        type: string
+    steps:
+    - run:
+        command: dockerize -wait tcp://localhost:<< parameters.solr_port >> -timeout
+          1m
+        name: Wait for Solr
+    - run:
+        command: |
+          cd << parameters.solr_config_path >>
+          zip -1 -r solr_config.zip ./*
+          curl -H "Content-type:application/octet-stream" --data-binary @solr_config.zip "http://localhost:<< parameters.solr_port >>/solr/admin/configs?action=UPLOAD&name=solrconfig"
+          curl "http://localhost:<< parameters.solr_port >>/solr/admin/cores?action=CREATE&name=<< parameters.core_name >>"
+        name: Load config into solr
+  parallel_rspec:
+    description: Run RSpec in Parallel, storing test_results for CircleCI to parse.
+    steps:
+    - run:
+        # we're skipping the system specs here since a couple of them have on-going timing issues...
+        command: |
+          mkdir -p /tmp/test-results
+          COVERALLS_REPO_TOKEN=$COVERALLS_REPO_TOKEN bundle exec rspec $(circleci tests glob "spec/**/*_spec.rb" | grep -v "spec/system/" | circleci tests split --split-by=timings)
+        name: Run rspec in parallel
+    - store_test_results:
+        path: /tmp/test-results
+    - store_artifacts:
+        destination: test-results
+        path: /tmp/test-results
+
+jobs:
+  bundle:
+    parameters:
+      ruby_version:
+        type: string
+        default: '2.5.8'
+      bundler_version:
+        type: string
+        default: '2.1.4'
+      rails_version:
+        type: string
+        default: '5.2.4.4'
+    executor:
+      name: 'ruby'
+      ruby_version: << parameters.ruby_version >>
+    resource_class: medium
+    environment:
+      RAILS_VERSION: << parameters.rails_version >>
+      NOKOGIRI_USE_SYSTEM_LIBRARIES: true
+    steps:
+      - cached_checkout
+      - bundle_for_gem:
+          ruby_version: << parameters.ruby_version >>
+          bundler_version: << parameters.bundler_version >>
+          cache_version: '{{ checksum "./.circleci/.force_rebuild" }}'
+          project: heliotrope
+      - persist_to_workspace:
+          root: ~/
+          paths:
+          - project/*
+          - project/**/*
+
+  build:
+    parameters:
+      ruby_version:
+        type: string
+        default: '2.5.8'
+      bundler_version:
+        type: string
+        default: '2.1.4'
+      rails_version:
+        type: string
+        default: '5.2.4.4'
+    executor:
+      name: 'ruby'
+      ruby_version: << parameters.ruby_version >>
+    resource_class: medium
+    environment:
+      RAILS_VERSION: << parameters.rails_version >>
+      NOKOGIRI_USE_SYSTEM_LIBRARIES: true
+    steps:
+      - attach_workspace:
+          at: ~/
+      - bundle_for_gem:
+          ruby_version: << parameters.ruby_version >>
+          bundler_version: << parameters.bundler_version >>
+          cache_version: '{{ checksum "./.circleci/.force_rebuild" }}'
+          project: heliotrope
+      - persist_to_workspace:
+          root: ~/
+          paths:
+          - project/*
+          - project/**/*
+
+  test:
+    parameters:
+      ruby_version:
+        type: string
+        default: '2.5.8'
+      bundler_version:
+        type: string
+        default: '2.1.4'
+    executor:
+      name: 'ruby_fcrepo_solr_redis_mysql'
+      ruby_version: << parameters.ruby_version >>
+    resource_class: medium
+    parallelism: 4
+    environment:
+      COVERALLS_PARALLEL: true
+    steps:
+      - attach_workspace:
+          at: ~/
+      - install_solr_core:
+          solr_config_path: ./solr/config
+      # Rerun bundler in case this is a different ruby version than bundle and build steps
+      - bundle_for_gem:
+          ruby_version: << parameters.ruby_version >>
+          bundler_version: << parameters.bundler_version >>
+          cache_version: '{{ checksum "./.circleci/.force_rebuild" }}'
+          project: heliotrope
+      - run:
+          name: Wait for DB
+          command: dockerize -wait tcp://localhost:3306 -timeout 1m
+      # TODO: probably could move setup/migration/yarn and asset precompliation into
+      # the "build" job... and cache the yarn/assets. It's not that slow so is ok for now.
+      - run:
+          name: Set up rails with bin/setup_ci
+          command: bin/setup_ci
+      - run:
+          name: Install yarn dependencies
+          command: yarn install --ignore-engines --frozen-lockfile
+      - run:
+          name: Precompile assets
+          command: RAILS_ENV=test bundle exec rails webpacker:compile
+      - run:
+          name: install qpdf
+          command: sudo apt-get install -y qpdf
+      # TODO: as with the yarn/asset stuff, we could move rubocop/ruumba to a "lint" job
+      # and cache results. But it's fast enough for now I think
+      - run:
+          name: rubocop
+          command: bundle exec rubocop
+      - run:
+          name: rummba
+          command: bundle exec ruumba -D app/views -c ruumba/.ruumba.yml
+      # the "solr" and "lib" specs are so fast I don't think we need to split them and
+      # run in parallel
+      - run:
+          name: run solr specs
+          command: |
+            cd solr
+            bundle exec rspec --format progress
+      - run:
+          name: run lib specs
+          command: |
+            cd lib
+            bundle exec rspec --format progress
+      # the "app" specs do benifit from being run in parallel though.
+      - parallel_rspec
+
+executors:
+  ruby:
+    description: Box just Ruby
+    docker:
+    - image: circleci/<< parameters.ruby_type >>:<< parameters.ruby_version >>-node-browsers-legacy
+    environment:
+      BUNDLE_JOBS: 4
+      BUNDLE_PATH: vendor/bundle
+      BUNDLE_RETRY: 3
+      RACK_ENV: test
+      RAILS_ENV: test
+      SPEC_OPTS: --profile 10 --out /tmp/test-results/rspec.xml
+        --format progress
+    parameters:
+      ruby_type:
+        default: ruby
+        type: string
+      ruby_version:
+        default: '2.5.8'
+        type: string
+  ruby_fcrepo_solr_redis_mysql:
+    description: Box running FCRepo, Solr, Ruby, Redis and MySQL.
+    docker:
+    - image: circleci/<< parameters.ruby_type >>:<< parameters.ruby_version >>-node-browsers-legacy
+    - environment:
+        CATALINA_OPTS: -Djava.awt.headless=true -Dfile.encoding=UTF-8 -server -Xms512m
+          -Xmx1024m -XX:NewSize=256m -XX:MaxNewSize=256m -XX:PermSize=256m -XX:MaxPermSize=256m
+          -XX:+DisableExplicitGC
+      image: ualbertalib/docker-fcrepo4:<< parameters.fcrepo_version>>
+    - command: bin/solr -cloud -noprompt -f -p <<parameters.solr_port>>
+      image: solr:6-alpine
+    - image: circleci/redis:<<parameters.redis_version>>
+    - image: circleci/mysql:<<parameters.mysql_version>>
+      command: [--default-authentication-plugin=mysql_native_password]
+      environment:
+        MYSQL_ALLOW_EMPTY_PASSWORD: 'true'
+        MYSQL_ROOT_HOST: '%'
+    environment:
+      BUNDLE_JOBS: 4
+      BUNDLE_PATH: vendor/bundle
+      BUNDLE_RETRY: 3
+      FCREPO_TEST_PORT: 8080/fcrepo
+      RACK_ENV: test
+      RAILS_ENV: test
+      SPEC_OPTS: --profile 10 --format RspecJunitFormatter --out /tmp/test-results/rspec.xml --format progress
+    parameters:
+      fcrepo_version:
+        default: '4.7'
+        type: string
+      redis_version:
+        default: '6'
+        type: string
+      ruby_type:
+        default: ruby
+        type: string
+      ruby_version:
+        default: '2.5.8'
+        type: string
+      solr_port:
+        default: "8985"
+        type: string
+      mysql_version:
+        default: '5.7.32'
+        type: string
 
 workflows:
   version: 2
-  fake_workflow:
+  ruby2-5rails5-2:
     jobs:
-      - fake_job
+      - bundle:
+          ruby_version: '2.5.8'
+          rails_version: '5.2.4.4'
+      - build:
+          ruby_version: '2.5.8'
+          rails_version: '5.2.4.4'
+          requires:
+            - bundle
+      - test:
+          name: "rails5-2"
+          ruby_version: '2.5.8'
+          requires:
+            - build

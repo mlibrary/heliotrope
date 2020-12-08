@@ -68,31 +68,51 @@ RSpec.describe PressCatalogController, type: :controller do
     end
 
     let(:monograph_1) do
-      { has_model_ssim: ['Monograph'], id: 'ff365c76z', title_tesim: ['you too'],
+      {
+        has_model_ssim: ['Monograph'],
+        id: 'ff365c76z',
+        title_tesim: ['you too'],
         file_set_ids_ssim: ['ff365c78h'],
-        read_access_group_ssim: ['public'], visibility_ssi: 'open', suppressed_bsi: false,
-        press_sim: 'michigan' }
+        read_access_group_ssim: ['public'],
+        visibility_ssi: 'open',
+        suppressed_bsi: false,
+        press_sim: 'michigan'
+      }
     end
 
     let(:monograph_2) do
-      { has_model_ssim: ['Monograph'], id: 'ff365c777', title_tesim: ['find me'],
+      {
+        has_model_ssim: ['Monograph'],
+        id: 'ff365c777',
+        title_tesim: ['find me'],
         file_set_ids_ssim: ['ff365c79s'],
-        read_access_group_ssim: ["public"], visibility_ssi: 'open', suppressed_bsi: false,
-        press_sim: 'barpublishing' }
+        read_access_group_ssim: ["public"],
+        visibility_ssi: 'open',
+        suppressed_bsi: false,
+        press_sim: 'barpublishing'
+      }
     end
 
     let(:file_set_1) do
-      { has_model_ssim: ['FileSet'], id: 'ff365c78h', title_tesim: ['first file title'],
+      {
+        has_model_ssim: ['FileSet'],
+        id: 'ff365c78h',
+        title_tesim: ['first file title'],
         all_text_timv: 'blahdy blah',
         file_set_ids_ssim: [],
-        visibility_ssi: 'open' }
+        visibility_ssi: 'open'
+      }
     end
 
     let(:file_set_2) do
-      { has_model_ssim: ['FileSet'], id: 'ff365c79s', title_tesim: ['second file title'],
+      {
+        has_model_ssim: ['FileSet'],
+        id: 'ff365c79s',
+        title_tesim: ['second file title'],
         all_text_timv: 'yadda yadda',
         file_set_ids_ssim: [],
-        visibility_ssi: 'open' }
+        visibility_ssi: 'open'
+      }
     end
 
     describe 'in a press other than "barpublishing"' do

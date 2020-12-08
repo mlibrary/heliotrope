@@ -205,6 +205,9 @@ group :development, :test do
   gem 'rails-controller-testing'
   gem 'rspec-context-private'
   gem 'rspec-html-matchers'
+  # This formatter enables the use of "--format RspecJunitFormatter" when running
+  # rspec. Specifically used with circleci so we can get timings for parallelism
+  gem 'rspec_junit_formatter'
   gem 'rspec-rails'
   gem 'rspec-repeat', '~> 1.0.2'
   gem 'rubocop', '~> 0.74'
