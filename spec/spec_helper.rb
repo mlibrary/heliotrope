@@ -19,7 +19,7 @@
 #
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
 def coverage_needed?
-  ENV['COVERAGE'] || ENV['TRAVIS']
+  ENV['COVERAGE'] || ENV['TRAVIS'] || ENV['COVERALLS_REPO_TOKEN']
 end
 
 if coverage_needed?

@@ -136,7 +136,7 @@ module Hyrax
       # actually get one, of course.
       # Since we already have the FileSet solr doc, using the solr timestamp seems fine.
       # In CommonWorkPresenter#cache_buster_id we use the thumbnail method since we don't have the representative solr doc.
-      return Time.new(solr_document['timestamp']).to_i.to_s if solr_document['timestamp'].present?
+      return Time.parse(solr_document['timestamp']).to_i.to_s if solr_document['timestamp'].present?
       ""
     end
 

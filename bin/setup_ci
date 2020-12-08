@@ -11,7 +11,7 @@ def system!(*args)
 end
 
 Dir.chdir APP_ROOT do
-  # This script is run by travis
+  # This script is run by CI (travis or circle)
   # Add necessary setup steps to this file.
 
   puts "\n== Copying sample files =="
