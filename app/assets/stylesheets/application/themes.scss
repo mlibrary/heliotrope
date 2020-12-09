@@ -3890,6 +3890,306 @@ $maize-black-80: #342f2e;
 }
 ///////////////////////////////////////////////
 //
+// University of Michigan - President's Commission
+// on Carbon Neutrality
+//
+///////////////////////////////////////////////
+// colors
+$pccn-brand-color: #00274c;
+$pccn-accent-color: #b7c9d7;
+$pccn-accent-link: #417da1;
+
+$pccn-blue: #054a92;
+
+$pccn-grey-1: #dedfdb;
+$pccn-grey-2: #989c97;
+$pccn-grey-3: #655a52;
+$pccn-white: #fff;
+$pccn-black-80: #342f2e;
+
+// typography
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+@mixin roboto {
+  font-family: 'Roboto', sans-serif;
+}
+
+@mixin meta {
+  font-family: "ff-meta-web-pro", sans-serif;
+}
+
+.um-pccn {
+
+  // typography
+  @include roboto;
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5 {
+    font-weight: 700;
+  }
+
+  // links
+  a,
+  button {
+    color: $pccn-blue;
+  }
+
+  a:hover,
+  a:active,
+  a:focus,
+  button:hover,
+  button:active,
+  button:focus {
+    color: $pccn-brand-color;
+  }
+
+  // navigation menu
+  .navbar-default .navbar-nav > .open > a,
+  .navbar-default .navbar-nav > .open > a:hover,
+  .navbar-default .navbar-nav > .open > a:focus {
+    background-color: $pccn-accent-color;
+  }
+
+  .navbar {
+    min-height: 90px;
+  }
+
+  .search-form {
+    padding-top: 1.5em;
+  }
+
+  .navbar-right {
+    padding-top: 1em;
+  }
+
+  #brand-bar {
+    background-color: $pccn-brand-color;
+    border-color: $pccn-brand-color;
+
+    .navbar-brand {
+      color: $pccn-white;
+      @include meta;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      max-width: 350px;
+    }
+
+    .navbar-nav {
+      a#add-content,
+      a.login,
+      a.user-display-name,
+      a.language-dropdown {
+          color: $pccn-accent-color;
+      }
+
+      .open > a,
+      .open > a:focus,
+      .open > a:hover {
+        background-color: $pccn-blue;
+      }
+    }
+
+    button.search-submit {
+      background-color: $pccn-accent-color;
+      border-color: $pccn-accent-color;
+      color: $pccn-brand-color;
+    }
+
+  }
+
+  // press catalog
+
+  // jumbotron
+  .jumbotron {
+    background-color: $pccn-accent-color;
+
+    padding-top: 20px;
+    padding-bottom: 20px;
+
+    .container {
+      margin-top: 1em;
+    }
+
+    p.lead {
+      font-size: 14px;
+    }
+
+    .logo {
+
+      img {
+        width: 150px;
+        margin-right: 1em;
+      }
+
+    }
+
+  }
+
+  // monograph catalog
+  #sort-dropdown .dropdown-toggle, #per_page-dropdown .dropdown-toggle {
+    color: $pccn-blue;
+  }
+
+  // monograph
+  .monograph {
+
+    button.search-submit {
+      background-color: $pccn-blue;
+      border-color: $pccn-blue;
+      color: $pccn-white;
+    }
+  }
+
+  .pagination {
+     li a, li span {
+       color: $pccn-blue;
+     }
+
+     .active>a,
+     .active>a:hover,
+     .active>a:focus,
+     .active>span,
+     .active>span:hover,
+     .active>span:focus {
+       background-color: $pccn-blue;
+       border-color: $pccn-blue;
+       color: $pccn-brand-color;
+     }
+  }
+
+  //footer
+
+  footer {
+    a,
+    a:hover,
+    a:active {
+      color: $pccn-white;
+    }
+    .press-block-a,
+    .press-block-b {
+      background-color: $pccn-accent-link;
+
+      a,
+      a:hover,
+      a:active {
+        color: $pccn-white;
+      }
+
+      img {
+        width: 100%;
+      }
+
+      p {
+        @include meta;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+      }
+
+    }
+    .press-block-c {
+      background-color: $pccn-brand-color;
+    }
+    .platform {
+      background-color: $pccn-black-80;
+    }
+  }
+
+  // e-book reader
+  #reader {
+
+    .cozy-control .cozy-h1 {
+      font-size: 1.5em;
+    }
+
+    .button {
+      @include epub-button-background-color($pccn-blue,$pccn-brand-color,$pccn-white);
+    }
+
+    .button--lg {
+      @include epub-button-background-color($pccn-blue,$pccn-brand-color,$pccn-white);
+    }
+
+    .button--inline {
+      @include epub-button-background-color($pccn-blue,$pccn-brand-color,$pccn-white);
+    }
+
+    .button--sm {
+      @include epub-button-background-color($pccn-blue,$pccn-brand-color,$pccn-white);
+    }
+
+    .button--sm.cozy-preferences {
+      @include epub-button-background-color(#f1f1f1,$pccn-blue,$pccn-white);
+      color: $pccn-brand-color;
+    }
+
+    i[class^='icon-chevron-'] {
+      @include epub-prev-next-color($pccn-brand-color);
+      transition: 0.2s ease-in;
+    }
+
+    i[class^='icon-chevron-']:hover {
+      @include epub-hover-prev-next-color($pccn-brand-color);
+      transition: 0.2s ease-in;
+    }
+
+    .cozy-control .logo {
+      background: $pccn-grey-1;
+      height: 46.6px;
+      width: 36px;
+      overflow: hidden;
+
+      img {
+        height: 36px;
+        margin-top: 6px;
+        margin-left: 11px;
+      }
+    }
+
+    // PDF loading progress bar
+    .helio-loading-bar .progress {
+      background-color: $pccn-brand-color;
+    }
+
+  }
+
+
+  @media only screen and (max-width : 992px) {
+
+    #brand-bar form.search-form, .navbar-form {
+      width: 190px;
+    }
+
+  }
+
+  @media only screen and (max-width : 768px) {
+    #brand-bar form.search-form, .navbar-form {
+      padding: 10px 0;
+      margin: 0;
+      width: 100%;
+      border: 0;
+      float: none !important;
+    }
+
+    .navbar-form .input-group .input-group-btn {
+      width: 1%;
+    }
+
+    #brand-bar .navbar-brand {
+      max-width: 250px;
+    }
+
+    .navbar-header {
+      min-height: 9em;
+    }
+  }
+
+}
+///////////////////////////////////////////////
+//
 // University of Michigan Press
 //
 ///////////////////////////////////////////////
