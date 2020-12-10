@@ -27,8 +27,12 @@ class CounterReport < ApplicationRecord
   scope :requests, -> { where(request: 1) }
   scope :controlled, -> { where(access_type: 'Controlled') }
 
-  scope :press, ->(press) { where(press: press) if press.present? }
   scope :institution, ->(institution_id) { where(institution: institution_id) unless institution_id == '*' }
+
+  def self.press(press_id)
+    # HELIO-3659 COUNTER reports will include a presses children if there are any
+    where(press: [press_id] + Press.where(parent: press_id).map(&:id))
+  end
 
   def self.access_type(access_type)
     where(access_type: access_type)

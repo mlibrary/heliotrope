@@ -71,6 +71,23 @@ RSpec.describe CounterReporter::PlatformReport do
         expect(subject[:items][2]["Jan-2018"]).to eq 1
         expect(subject[:items][2]["Feb-2018"]).to eq 1
       end
+
+      context "with child presses" do
+        let(:child1) { create(:press, parent: press) }
+        let(:child2) { create(:press, parent: press) }
+
+        before do
+          create(:counter_report, press: child1.id, session: 11,  noid: 'a',  parent_noid: 'A', institution: 1, created_at: Time.parse("2018-01-10").utc, access_type: "Controlled", request: 1)
+          create(:counter_report, press: child2.id, session: 12,  noid: 'b',  parent_noid: 'B', institution: 1, created_at: Time.parse("2018-01-15").utc, access_type: "Controlled", request: 1)
+        end
+
+        it "includes the childs presses in the results" do
+          expect(subject[:items][0]["Metric_Type"]).to eq "Total_Item_Requests"
+          expect(subject[:items][0]["Reporting_Period_Total"]).to eq 6
+          expect(subject[:items][0]["Jan-2018"]).to eq 5
+          expect(subject[:items][0]["Feb-2018"]).to eq 1
+        end
+      end
     end
 
     context "a pr report'" do
