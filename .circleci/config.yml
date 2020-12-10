@@ -1,0 +1,13 @@
+version: 2
+jobs:
+  fake_job:
+    docker:
+      - image: circleci/ruby:2.5.8
+    steps:
+      - run: echo "I don't do anything"
+
+workflows:
+  version: 2
+  fake_workflow:
+    jobs:
+      - fake_job
