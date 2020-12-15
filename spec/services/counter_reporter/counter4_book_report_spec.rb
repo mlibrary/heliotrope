@@ -7,7 +7,7 @@ RSpec.describe CounterReporter::Counter4BookReport do
     subject { described_class.new(params_object).results_by_month }
 
     let(:params_object) do
-      double("params_object", press: nil,
+      double("params_object", press: 1,
                               institution: '*',
                               access_types: ['Controlled'],
                               start_date: Date.parse("2018-01-01"),

@@ -32,6 +32,21 @@ RSpec.describe CounterReport, type: :model do
     end
   end
 
+  describe "#press" do
+    let(:press) { create(:press, subdomain: "blue") }
+    let(:child) { create(:press, subdomain: "yellow", parent: press) }
+
+    before do
+      create(:counter_report, session: 1, noid: 'a', press: press.id)
+      create(:counter_report, session: 2, noid: 'b', press: press.id)
+      create(:counter_report, session: 3, noid: 'c', press: child.id)
+    end
+
+    it "returns that parent press and it's children" do
+      expect(described_class.press(press).length).to eq 3
+    end
+  end
+
   describe "section name truncated to max 255 characters" do
     before do
       create(:counter_report, section: 'x' * 256)
