@@ -440,6 +440,13 @@ RSpec.describe Hyrax::FileSetPresenter do
       it { is_expected.to eq 'hyrax/file_sets/media_display/video' }
     end
 
+    context "with a small video" do
+      let(:mime_type) { 'video/mp4' }
+      let(:width_is) { 320 }
+
+      it { is_expected.to eq 'hyrax/file_sets/media_display/video' }
+    end
+
     context "with an audio" do
       let(:mime_type) { 'audio/wav' }
 
@@ -537,6 +544,13 @@ RSpec.describe Hyrax::FileSetPresenter do
 
     context "with a video" do
       let(:mime_type) { 'video/webm' }
+
+      it { is_expected.to eq 'hyrax/file_sets/media_display_embedded/video' }
+    end
+
+    context "with a small video" do
+      let(:mime_type) { 'video/mp4' }
+      let(:width_is) { 320 }
 
       it { is_expected.to eq 'hyrax/file_sets/media_display_embedded/video' }
     end
