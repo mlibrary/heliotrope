@@ -126,15 +126,30 @@ RSpec.describe Sighrax::Monograph, type: :model do
       end
     end
 
-    describe '#language' do
-      subject { monograph.language }
+    describe '#languages' do
+      subject { monograph.languages }
+
+      let(:languages) { %w[english french] }
 
       before do
-        hyrax_monograph.language = ['Language']
+        hyrax_monograph.language = languages
         hyrax_monograph.save!
       end
 
-      it { is_expected.to eq('Language') }
+      it { is_expected.to contain_exactly(*languages) }
+    end
+
+    describe '#modified' do
+      subject { monograph.modified }
+
+      let(:modified_date) { Time.parse(Time.now.utc.iso8601) }
+
+      before do
+        hyrax_monograph.date_modified = modified_date
+        hyrax_monograph.save!
+      end
+
+      it { is_expected.to eq(modified_date) }
     end
 
     describe '#published' do
