@@ -141,7 +141,8 @@ gem 'mysql2', '~> 0.4.10'
 
 # CVE-2019-5477
 # CVE-2020-7595
-gem "nokogiri", ">= 1.10.8"
+# CVE-2020-26247
+gem "nokogiri", ">= 1.11.1"
 
 # Read PDF ToC
 gem 'origami'
