@@ -4,7 +4,8 @@
   epub_policy = @presenter.epub? ? @monograph_policy.epub_policy : @monograph_policy.pdf_ebook_policy
   # we could show the buttons even if epub_policy.show? = false, as another entry point into the `epubs_access`...
   # subscription screen, much like the main "Read Book" button, but right now we don't do that.
-  permit_download_buttons = @press_policy.allows_interval_download? && epub_policy.show?
+  # `!@presenter.disallow_chapter_downloads?` is hopefully temporary, see HELIO-3678.
+  permit_download_buttons = @press_policy.allows_interval_download? && epub_policy.show? && !@presenter.disallow_chapter_downloads?
 %>
   <% ebook_presenter.intervals.each_with_index do |interval, index| %>
     <% if interval.level > level %>

@@ -130,7 +130,8 @@ class EPubsController < CheckpointController
   # The PDF chapter file downloads are the one file download exception that do not use EntityPolicy.download().
   # They use EPubPolicy.show() to align with read permissions. If you can read the book you can download chapters.
   def download_interval # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
-    return head :no_content unless @policy.show?
+    # `!@presenter.disallow_chapter_downloads?` is hopefully temporary, see HELIO-3678.
+    return head :no_content unless @policy.show? && !@presenter&.parent&.disallow_chapter_downloads?
 
     if @entity.is_a?(Sighrax::ElectronicPublication)
       publication = EPub::Publication.from_directory(UnpackService.root_path_from_noid(@noid, 'epub'))
