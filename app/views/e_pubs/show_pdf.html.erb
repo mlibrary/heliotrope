@@ -47,11 +47,11 @@
   <!-- `role="status"` implies `aria-live="polite"` but redundancy is recommended for maximum compatibility -->
   <!-- see https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/ARIA_Live_Regions -->
   <div id="pdfLoadingProgressBar" role="status" aria-live="polite" aria-atomic="true" class="sr-only"></div>
-    <div id="epub" class="<%= @subdomain %>">
+    <%= tag.div id: 'epub', class: press_presenter.present? ? press_presenter.press_subdomains : '' do %>
       <div id="reader">
         <div id="mainContainer"></div>
       </div>
-    </div>
+    <% end %>
 
     <div id="mozilla-pdf-viewer-ui" style="display: none">
       <div id="sidebarResizer" class="hidden"></div>
