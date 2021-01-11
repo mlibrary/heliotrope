@@ -778,7 +778,7 @@ GEM
       rdf (~> 3.1)
     rdf-xsd (3.1.0)
       rdf (~> 3.1)
-    redcarpet (3.3.4)
+    redcarpet (3.5.1)
     redic (1.5.3)
       hiredis
     redis (4.2.1)
@@ -1093,7 +1093,7 @@ DEPENDENCIES
   rails (~> 5.2.4.4)
   rails-controller-testing
   rails-html-sanitizer (~> 1.3.0)
-  redcarpet (~> 3.3.4)
+  redcarpet (~> 3.5.1)
   resque (~> 1.26.0)
   resque-pool
   resque-web (~> 0.0.7)
