@@ -6,6 +6,6 @@
 </div>
 <script type="text/javascript">
     function press_banner_button_no(){
-        Cookies.set('<%= banner_cookie_name %>', 'ignore', { expires: 15 });
+        Cookies.set('<%= banner_cookie_name %>', 'ignore', { expires: 15<%= ', secure: true' if Rails.env == 'production' %> });
     }
 </script>

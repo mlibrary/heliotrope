@@ -6,9 +6,9 @@
 </div>
 <script type="text/javascript">
     function eula_banner_button_no(){
-        Cookies.set('<%= banner_cookie_name %>', 'eula_no_agreement', { expires: 182 });
+        Cookies.set('<%= banner_cookie_name %>', 'eula_no_agreement', { expires: 182<%= ', secure: true' if Rails.env == 'production' %> });
     }
     function eula_banner_button_yes(){
-        Cookies.set('<%= banner_cookie_name %>', 'eula_agreement', { expires: 182 });
+        Cookies.set('<%= banner_cookie_name %>', 'eula_agreement', { expires: 182<%= ', secure: true' if Rails.env == 'production' %> });
     }
 </script>
