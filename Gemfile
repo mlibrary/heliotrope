@@ -153,7 +153,7 @@ gem 'pragmatic_segmenter', '~> 0.3'
 # Turn page image epub chapters into pdfs
 gem 'prawn', '~> 2.2'
 
-gem 'redcarpet', '~> 3.3.4'
+gem 'redcarpet', '~> 3.5.1'
 gem 'reverse_markdown'
 
 gem 'resque', '~> 1.26.0'
