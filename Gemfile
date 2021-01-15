@@ -113,7 +113,7 @@ gem 'faraday_middleware', '~>0.12.2'
 # Use gem version of handle_rest
 gem 'handle_rest', git: 'https://github.com/mlibrary/handle_rest', ref: '944fa06a119072f060d986862c34dea7215ebd29'
 
-gem 'hyrax', '2.8.0'
+gem 'hyrax', '2.9.3'
 
 # pinned for Jekyll
 gem 'i18n', '~> 0.7'
