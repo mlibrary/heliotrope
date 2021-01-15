@@ -33,9 +33,9 @@
               <a class="facet-anchor facet_select" href="<%= url_for(params.deep_dup.except("user_access").except("page").permit!) %>">
                 <span class="facet-label">
                   <% if params["user_access"].nil? %>
-                    <input type="radio" aria-label="View all content" name="user_access" checked> All Content
+                    <input type="radio" aria-label="View all content" name="user_access" checked> All content
                   <% else %>
-                    <input type="radio" aria-lable="View all content" name="user_access"> All Content
+                    <input type="radio" aria-label="View all content" name="user_access"> All content
                   <% end %>
                 </span>
               </a>
@@ -73,7 +73,7 @@
   </div>
   <% if params['controller'] == "press_catalog" %>
   <%# Access Icon Legend, HELIO-3520 %>
-  <div class="panel-group" style="padding: 15px">
+  <div class="panel-group access-legend">
     <div class="panel panel-default facet_limit">
       <div class="panel-heading">
         <h3 class="panel-title">

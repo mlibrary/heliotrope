@@ -11,7 +11,7 @@ describe "Press Catalog Facets" do
       visit press_catalog_path(press: press.subdomain)
       # save_and_open_page
       expect(page).to have_selector('#facet-user_access')
-      expect(page).to have_text 'All Content'
+      expect(page).to have_text 'All content'
       expect(page).to have_text 'Only content I can access'
       expect(page).not_to have_text 'Only open access content'
     end
@@ -21,7 +21,7 @@ describe "Press Catalog Facets" do
       visit press_catalog_path(press: press.subdomain)
       # save_and_open_page
       expect(page).to have_selector('#facet-user_access')
-      expect(page).to have_text 'All Content'
+      expect(page).to have_text 'All content'
       expect(page).to have_text 'Only content I can access'
       expect(page).to have_text 'Only open access content'
     end

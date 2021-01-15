@@ -485,6 +485,10 @@ footer.press {
   .panel-group .panel + .panel {
     margin-top: 0px;
   }
+
+  .access-legend {
+    padding-right: 15px;
+  }
 }
 
 ///////////////////////////////////
@@ -635,7 +639,7 @@ footer.press {
       }
     }
 
-    .open-access {
+    .access {
       display: flex;
       align-items:center;
       margin-top: 1em;

@@ -59,7 +59,7 @@
       <span aria-label="funder display" class="funder_display"><i><%= @presenter.funder_display %></i></span>
     <% end %>
     <% if @presenter.access_level(@actor_product_ids, @allow_read_product_ids).show? %>
-      <div>
+      <div class="access">
         <%= @presenter.access_level(@actor_product_ids, @allow_read_product_ids).icon_lg.html_safe %>
         <span><%= @presenter.access_level(@actor_product_ids, @allow_read_product_ids).text.html_safe %></span>
       </div>
