@@ -26,7 +26,8 @@ namespace :heliotrope do
       'lrcss',
       'cjs',
       'csas',
-      'cseas'
+      'cseas',
+      'um-pccn'
     ]
 
     children = []
