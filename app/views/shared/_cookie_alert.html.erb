@@ -1,4 +1,4 @@
 <div id="cookies-required-alert" class="alert alert-info alert-dismissible" style="display: none">
-  <a class="close" aria-label="Close" data-dismiss="alert" href="#" onclick="Cookies.set('browser_accepts_cookies', 'yes', { expires: 365 }); window.location.reload(false);">x</a>
+  <a class="close" aria-label="Close" data-dismiss="alert" href="#" onclick="Cookies.set('browser_accepts_cookies', 'yes', { expires: 365<%= ', secure: true' if Rails.env == 'production' %> }); window.location.reload(false);">x</a>
   This site requires cookies to function correctly.
 </div>

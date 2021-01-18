@@ -20,10 +20,10 @@
 </div>
 <script type="text/javascript">
   function survey_button_yes(){
-    Cookies.set('survey', 'clicked', { expires: 365, secure: true, sameSite: 'strict' });
+    Cookies.set('survey', 'clicked', { expires: 365<%= ', secure: true' if Rails.env == 'production' %> });
     window.open("https://umich.qualtrics.com/jfe/form/SV_5ApssrqydELoPM9?publisher=<%= @presenter.subdomain %>&title=<%= @presenter.title %>", "_blank");
   }
   function survey_button_no(){
-    Cookies.set('survey', 'ignore', { expires: 180, secure: true, sameSite: 'strict' });
+    Cookies.set('survey', 'ignore', { expires: 180<%= ', secure: true' if Rails.env == 'production' %> });
   }
 </script>
