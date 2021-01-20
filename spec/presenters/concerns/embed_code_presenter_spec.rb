@@ -154,6 +154,15 @@ RSpec.describe EmbedCodePresenter do
         </div>
       END
     }
+    let(:video_with_visual_descriptions_embed_code) {
+      <<~END
+        <div style='width:auto; page-break-inside:avoid; -webkit-column-break-inside:avoid; break-inside:avoid; max-width:1920px; margin:auto'>
+          <div style='overflow:hidden; padding-bottom:67.5%; position:relative; height:0;'><!-- actual video height: 1080px -->
+            <iframe src='#{presenter.embed_link}' title='#{presenter.embed_code_title}' style='overflow:hidden; border-width:0; left:0; top:0; width:100%; height:100%; position:absolute;'></iframe>
+          </div>
+        </div>
+      END
+    }
     let(:audio_embed_code) {
       "<iframe src='#{presenter.embed_link}' title='#{presenter.embed_code_title}' style='page-break-inside:avoid; -webkit-column-break-inside:avoid; break-inside:avoid; display:block; overflow:hidden; border-width:0; width:98%; max-width:98%; height:125px; margin:auto'></iframe>"
     }
@@ -225,6 +234,16 @@ RSpec.describe EmbedCodePresenter do
       let(:mime_type) { 'video/mp4' }
 
       it { expect(dimensionless_presenter.embed_code).to eq dimensionless_video_embed_code }
+    end
+
+    context 'video with visual descriptions FileSet' do
+      let(:mime_type) { 'video/mp4' }
+
+      before do
+        allow(presenter).to receive(:visual_descriptions).and_return('blah')
+      end
+
+      it { expect(presenter.embed_code).to eq video_with_visual_descriptions_embed_code }
     end
 
     context 'audio FileSet' do

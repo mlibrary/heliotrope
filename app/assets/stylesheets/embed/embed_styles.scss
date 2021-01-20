@@ -42,6 +42,20 @@ html {
       // able-big-play-button has a z-index of 6500, we need the video controls (to capture clicks) over it
       z-index: 6501;
     }
+
+    // HELIO-3674
+    .able-descriptions {
+      // the `able-descriptions` div needs to be contiguous with the controls, so that it's visible in the iframe
+      -webkit-transform: translateY(-98px);
+      transform: translateY(-98px);
+      // change the height to a fixed percentage value for embed code "responsive nested divs" calculations...
+      // i.e. we'll add 20% extra height if visual description are present
+      min-height: 20%;
+      height: 20%;
+      // override other values from `ableplayer.scss` that are incompatible with embedding in CSB
+      width: 100%;
+      padding: 2% 0 2% 0;
+    }
   }
   // :active here is a first attempt to defeat sticky touch hover behavior
   .able:hover > div:nth-child(3), .able:active > div:nth-child(3) {

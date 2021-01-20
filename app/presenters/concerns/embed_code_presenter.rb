@@ -91,6 +91,12 @@ module EmbedCodePresenter
     if video?
       # adjusts the height to allow for what the video player is doing to preserve the content's aspect ratio
       percentage = !width_ok? || !height_ok? ? 75 : (height.to_f * 100.0 / width.to_f).round(2)
+
+      # HELIO-3674: stick an extra 20% onto the height to make room for the `able-descriptions` div
+      # This is not a good universal/long-term solution. There will be a limit to the amount of text that can...
+      # be shown at one time before it is cut off by the allowed height of the iframe-wrapping divs.
+      percentage = (percentage * 1.2).round(2) if visual_descriptions.present?
+
       (percentage % 1).zero? ? percentage.to_i : percentage
     else
       return 60 unless width.present? && height.present?
