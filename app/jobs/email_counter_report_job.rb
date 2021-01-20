@@ -41,7 +41,7 @@ class EmailCounterReportJob < ApplicationJob
     params = {}
     params[:email] = email
     params[:email_subject] = email_subject
-    params[:zip_file] = build_zip(email_subject, report)
+    params[:zip_file] = build_zip(report_type, email_subject, report)
     params[:press] = press
     params[:institution] = institution
     params[:report_type] = report_type.upcase
@@ -52,11 +52,16 @@ class EmailCounterReportJob < ApplicationJob
     Rails.logger.info("[COUNTER REPORT] emailed #{report_type.upcase} to #{params[:email]}")
   end
 
-  def build_zip(email_subject, report)
+  def build_zip(report_type, email_subject, report)
     tmp_zip = Tempfile.new('counter_email_zip')
     tmp_report = Tempfile.new('counter_email_report')
 
-    tmp_report.write(CounterReporterService.csv(report))
+    if report_type == "counter4_br2"
+      # HELIO-3703 counter4_br2 reports are weird
+      tmp_report.write(report)
+    else
+      tmp_report.write(CounterReporterService.csv(report))
+    end
     tmp_report.close
 
     report_name = email_subject.gsub(/[^0-9A-z.\-]/, '_') + ".csv"
