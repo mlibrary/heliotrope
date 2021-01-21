@@ -4,7 +4,8 @@ module API
   module V1
     # Institutions Controller
     class InstitutionsController < API::ApplicationController
-      before_action :set_institution, only: %i[show update destroy]
+      before_action :set_institution, only: %i[show update destroy access]
+      before_action :set_product, only: %i[access]
 
       # Get institution by identifier
       # @example
@@ -29,11 +30,11 @@ module API
       #   @param [Hash] params { product_id: Number }
       #   @return [ActionDispatch::Response] array of {Greensub::Institution}
       #
-      #     (See ./app/views/api/v1/institution/index.json.jbuilder)
+      #     (See ./app/views/api/v1/institutions/index.json.jbuilder)
       #
       #     {include:file:app/views/api/v1/institutions/index.json.jbuilder}
       #
-      #     (See ./app/views/api/v1/institution/_institution.json.jbuilder)
+      #     (See ./app/views/api/v1/institutions/_institution.json.jbuilder)
       #
       #     {include:file:app/views/api/v1/institutions/_institution.json.jbuilder}
       def index
@@ -52,11 +53,11 @@ module API
       #   @param [Hash] params { id: Number }
       #   @return [ActionDispatch::Response] {Greensub::Institution}
       #
-      #     (See ./app/views/api/v1/institution/show.json.jbuilder)
+      #     (See ./app/views/api/v1/institutions/show.json.jbuilder)
       #
       #     {include:file:app/views/api/v1/institutions/show.json.jbuilder}
       #
-      #     (See ./app/views/api/v1/institution/_institution.json.jbuilder)
+      #     (See ./app/views/api/v1/institutions/_institution.json.jbuilder)
       #
       #     {include:file:app/views/api/v1/institutions/_institution.json.jbuilder}
       # @overload show
@@ -136,6 +137,29 @@ module API
           return render json: @institution.errors, status: :accepted unless @institution.destroy
         end
         head :ok
+      end
+
+      # @overload access
+      #   Get product access
+      #   @example
+      #     get /api/products/:product_id/institutions/:id/access
+      #   @param [Hash] params { product_id: Number, id: Number }
+      #   @return [ActionDispatch::Response] {access}
+      # @overload access
+      #   Set product access
+      #   @example
+      #     post /api/products/:product_id/institutions/:id/access
+      #   @param [Hash] params { product_id: Number, id: Number, access: String }
+      #   @return [ActionDispatch::Response] {access}
+      #
+      #     (See ./app/views/api/v1/institutions/access.json.jbuilder)
+      #
+      #     {include:file:app/views/api/v1/institutions/access.json.jbuilder}
+      def access
+        return render json: { "access" => "undefined" }, status: :accepted unless @institution.products.include?(@product)
+
+        if params[:access].present?
+        end
       end
 
       private

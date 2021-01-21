@@ -38,7 +38,9 @@ Rails.application.routes.draw do
       resources :products, only: %i[index show create update destroy] do
         resources :components, only: %i[index show update destroy]
         resources :individuals, only: %i[index show update destroy]
+        match 'individuals/:id/access', controller: :individuals, action: :access, as: :individual_access, via: %i[get post]
         resources :institutions, only: %i[index show update destroy]
+        match 'institutions/:id/access', controller: :institutions, action: :access, as: :institution_access, via: %i[get post]
       end
       get 'component', controller: :components, action: :find, as: :find_component
       resources :components, only: %i[index show create update destroy] do
