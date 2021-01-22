@@ -5,3 +5,5 @@ shibboleth:
   sp:
     url: /Shibboleth.sso
     entity_id: https://fulcrum.org/sp
+prometheus_monitoring:
+  dir: /tmp/prometheus-heliotrope-development
