@@ -712,13 +712,13 @@ RSpec.describe Hyrax::FileSetPresenter do
     context "milliseconds" do
       let(:fileset_doc) { SolrDocument.new(id: 'fileset_id', has_model_ssim: ['FileSet'], timestamp: "2018-09-18T18:18:28.384Z") }
 
-      it { is_expected.to eq "1514782800" }
+      it { is_expected.to eq "1537294708" }
     end
 
     context "no milliseconds" do
       let(:fileset_doc) { SolrDocument.new(id: 'fileset_id', has_model_ssim: ['FileSet'], timestamp: "2018-09-18T18:18:28Z") }
 
-      it { is_expected.to eq "1514782800" }
+      it { is_expected.to eq "1537294708" }
     end
   end
 end

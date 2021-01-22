@@ -361,6 +361,8 @@
  <!--  <defaultSearchField>text</defaultSearchField> -->
 
  <!-- SolrQueryParser configuration: defaultOperator="AND|OR" -->
+ <!-- TODO: we're going to have to remove this when we upgrade to solr7,
+ see HELIO-3650 -->
  <solrQueryParser defaultOperator="OR"/>
 
   <!-- copyField commands copy one field to another at the time a document
