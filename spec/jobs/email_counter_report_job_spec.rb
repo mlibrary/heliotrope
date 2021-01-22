@@ -67,6 +67,7 @@ RSpec.describe EmailCounterReportJob, type: :job do
   end
 
   describe "#build_zip" do
+    let(:report_type) { "pr_p1" }
     let(:email_subject) { "This is the PR_P1 report of Institution for Press from 2020-01-01 to 2020-10-01" }
     let(:report) do
       {
@@ -85,7 +86,7 @@ RSpec.describe EmailCounterReportJob, type: :job do
     end
 
     it "returns a zipped archive containing the report" do
-      Zip::File.open(described_class.new.build_zip(email_subject, report)) do |zip_file|
+      Zip::File.open(described_class.new.build_zip(report_type, email_subject, report)) do |zip_file|
         zip_file.each do |entry|
           expect(entry.name).to eq "This_is_the_PR_P1_report_of_Institution_for_Press_from_2020-01-01_to_2020-10-01.csv"
           expect(entry.get_input_stream.read).to eq CounterReporterService.csv(report)

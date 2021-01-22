@@ -9,7 +9,7 @@ RSpec.describe CounterReportMailer, type: :mailer do
     let(:press) { create(:press, subdomain: "blue", name: "The Blue Press") }
     let(:press_admin) { create(:press_admin, press: press) }
     let(:email_subject) { "This is the subject line for #{institution.name} of the Press #{press.name}" }
-    let(:report_type) { "TR_B1" }
+    let(:report_type) { "tr_b1" }
     let(:institution) { create(:institution) }
     let(:start_date) { "2018-01-01" }
     let(:end_date) { "2018-02-28" }
@@ -28,7 +28,7 @@ RSpec.describe CounterReportMailer, type: :mailer do
         ]
       }
     end
-    let(:zip_file) { EmailCounterReportJob.new.build_zip(email_subject, report) }
+    let(:zip_file) { EmailCounterReportJob.new.build_zip(report_type, email_subject, report) }
 
     let(:mail) { described_class.send_report({ email: press_admin.email,
                                                zip_file: zip_file,
