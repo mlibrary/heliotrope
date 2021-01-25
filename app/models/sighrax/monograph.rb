@@ -35,8 +35,20 @@ module Sighrax
       @identifier
     end
 
-    def language
-      Array(data['language_tesim']).first
+    def languages
+      Array(data['language_tesim'])
+    end
+
+    def modified
+      # Going to leverage the aptrust_deposits table created_at field
+      # since this is the modify date of the entire monograph a.k.a.
+      # Maximum date_modified_dtsi of Monograph and FileSets .
+      record = AptrustDeposit.find_by(noid: noid)
+      value = record&.created_at
+      value ||= Time.parse(Array(data['date_modified_dtsi']).first) if Array(data['date_modified_dtsi']).first # rubocop:disable Rails/TimeZone
+      value
+    rescue StandardError => _e
+      nil
     end
 
     def published

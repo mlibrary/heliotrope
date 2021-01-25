@@ -10,6 +10,12 @@ module Opds
       def new_from_monograph(monograph)
         Publication.send(:new, monograph)
       end
+
+      def to_iso_639_2(language)
+        return 'eng' if /\s*(en)(g)(lish)\s*/i.match?(language)
+
+        nil
+      end
     end
 
     def valid? # rubocop:disable Metrics/CyclomaticComplexity
@@ -170,11 +176,19 @@ module Opds
       end
 
       def language
-        # BCP 47 e.g. 'en'
+        # BCP 47
         # language_tesim
-        return nil if @monograph.language.blank?
-        return 'en' if /\s*(en)(glish)?\s*/i.match?(@monograph.language)
-        nil
+        # ISO 639-2
+        # The US Library of Congress is the registration authority for ISO 639-2
+        # ISO 639-2 Part 2: Alpha-3 code Library of Congress
+        # HELIO-3483 Return 'eng' if language is blank
+        language_tags = @monograph.languages&.map { |language| Opds::Publication.to_iso_639_2(language) } || []
+        language_tags.delete_if { |language| language.nil? }
+        return 'eng' if language_tags.blank?
+
+        return language_tags.first if language_tags.count == 1
+
+        language_tags
       end
 
       def modified
@@ -184,6 +198,16 @@ module Opds
         # system_modified_dtsi
         # date_uploaded_dtsi
         # date_modified_dtsi
+
+        # HELIO-3677 Fix OPDS feed based on James English feedback
+        # 2. Publication’s metadata doesn’t include modified field.
+        # This field is required by Circulation Manager
+        # to be able to skip already processed items,
+        # i.e. it processes only publications which modified time is
+        # greater than the time when this publication was last processed.
+        # Without a modified field Circulation Manager is not able to
+        # process the feed correctly.
+        @monograph.modified&.utc&.iso8601 || Time.now.utc.iso8601
       end
 
       def numberOfPages

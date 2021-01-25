@@ -44,8 +44,7 @@ RSpec.describe "OPDS Feeds", type: [:request, :json_schema]  do
             "navigation": [
               {
                 "title": "University of Michigan Press Ebook Collection Open Access",
-                "rel": "first",
-                "href": "/umpebc_oa",
+                "href": Rails.application.routes.url_helpers.api_opds_umpebc_oa_url,
                 "type": "application/opds+json"
               }
             ]
@@ -122,6 +121,7 @@ RSpec.describe "OPDS Feeds", type: [:request, :json_schema]  do
             monograph.representative_id = cover.id
             monograph.ordered_members << epub
             monograph.open_access = 'yes'
+            monograph.date_modified = Time.now
             monograph.save!
             cover.save!
             epub.save!

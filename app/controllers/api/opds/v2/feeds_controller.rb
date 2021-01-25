@@ -26,8 +26,7 @@ module API
             "navigation": [
               {
                 "title": "University of Michigan Press Ebook Collection Open Access",
-                "rel": "first",
-                "href": "/umpebc_oa",
+                "href": Rails.application.routes.url_helpers.api_opds_umpebc_oa_url,
                 "type": "application/opds+json"
               }
             ]
@@ -60,20 +59,22 @@ module API
         private
 
           def umpebc_oa_publications
+            rvalue = []
+
             ebc_backlist = Greensub::Product.find_by(identifier: 'ebc_backlist')
-            return [] if ebc_backlist.blank?
+            return rvalue if ebc_backlist.blank?
 
             monograph_noids = ebc_backlist.components.pluck(:noid)
-            return [] if monograph_noids.blank?
+            return rvalue if monograph_noids.blank?
 
             query = ActiveFedora::SolrQueryBuilder.construct_query_for_ids(monograph_noids)
 
-            rvalue = []
-            (ActiveFedora::SolrService.query(query, rows: monograph_noids.count) || []).each do |solr_doc|
-                sm = ::Sighrax.from_solr_document(solr_doc)
-                op = ::Opds::Publication.new_from_monograph(sm)
-                rvalue.append(op.to_h) if op.valid?
-              end
+            (ActiveFedora::SolrService.query(query, rows: monograph_noids.count, sort: "date_modified_dtsi desc") || []).each do |solr_doc|
+              sm = ::Sighrax.from_solr_document(solr_doc)
+              op = ::Opds::Publication.new_from_monograph(sm)
+              rvalue.append(op.to_h) if op.valid?
+            end
+
             rvalue
           end
       end

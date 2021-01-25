@@ -41,6 +41,7 @@ RSpec.describe Opds::Publication, type: [:model, :json_schema] do
       let(:cover) { instance_double(Sighrax::Asset, 'cover', noid: 'covernoid') }
       let(:epub) { instance_double(Sighrax::ElectronicPublication, 'epub', noid: 'epub_noid') }
       let(:pdf) { instance_double(Sighrax::PortableDocumentFormat, 'pdf', noid: 'epdf_noid') }
+      let(:time_now) { Time.new(2021) }
 
       before do
         allow(publication).to receive(:valid?).and_return(true)
@@ -54,11 +55,14 @@ RSpec.describe Opds::Publication, type: [:model, :json_schema] do
         allow(monograph).to receive(:contributors).and_return([])
         allow(monograph).to receive(:description).and_return(nil)
         allow(monograph).to receive(:identifier).and_return(nil)
-        allow(monograph).to receive(:language).and_return(nil)
+        allow(monograph).to receive(:languages).and_return(nil)
+        allow(monograph).to receive(:modified).and_return(nil)
         allow(monograph).to receive(:published).and_return(nil)
         allow(monograph).to receive(:publisher).and_return(nil)
         allow(monograph).to receive(:series).and_return(nil)
         allow(monograph).to receive(:subjects).and_return([])
+
+        allow(Time).to receive(:now).and_return(time_now)
       end
 
       context 'epub and pdf' do
@@ -75,9 +79,11 @@ RSpec.describe Opds::Publication, type: [:model, :json_schema] do
         it { expect(subject).to include(:images) }
 
         # Metadata (required keys)
-        it { expect(subject[:metadata].keys.count).to eq(2) }
+        it { expect(subject[:metadata].keys.count).to eq(4) }
         it { expect(subject[:metadata]).to include("@type": 'http:://schema.org/EBook') }
         it { expect(subject[:metadata]).to include(title: 'Title') }
+        it { expect(subject[:metadata]).to include(language: 'eng') }
+        it { expect(subject[:metadata]).to include(modified: time_now.utc.iso8601) }
         it { expect(subject[:metadata]).not_to have_key(:sortAs) } # optional
 
         # Links
@@ -153,7 +159,7 @@ RSpec.describe Opds::Publication, type: [:model, :json_schema] do
             )
           end
 
-          it { expect(subject[:metadata].keys.count).to eq(4) }
+          it { expect(subject[:metadata].keys.count).to eq(6) }
           it { expect(subject[:metadata]).to include(author: 'Author') }
           it { expect(subject[:metadata]).to include(editor: 'Editor') }
           it { expect(schemer_validate?(opds_publication_schemer, JSON.parse(subject.to_json))).to be true }
@@ -163,7 +169,7 @@ RSpec.describe Opds::Publication, type: [:model, :json_schema] do
           describe '#collection' do
             # before { allow(monograph).to receive(:collection).and_return('Collection') }
 
-            it { expect(subject[:metadata].keys.count).to eq(2) }
+            it { expect(subject[:metadata].keys.count).to eq(4) }
             it { expect(subject[:metadata]).not_to have_key(:belongsTo) }
             it { expect(schemer_validate?(opds_publication_schemer, JSON.parse(subject.to_json))).to be true }
           end
@@ -171,7 +177,7 @@ RSpec.describe Opds::Publication, type: [:model, :json_schema] do
           describe '#series' do
             before { allow(monograph).to receive(:series).and_return('Series') }
 
-            it { expect(subject[:metadata].keys.count).to eq(3) }
+            it { expect(subject[:metadata].keys.count).to eq(5) }
             it { expect(subject[:metadata]).to include(belongsTo: { series: 'Series' }) }
             it { expect(schemer_validate?(opds_publication_schemer, JSON.parse(subject.to_json))).to be true }
           end
@@ -180,7 +186,7 @@ RSpec.describe Opds::Publication, type: [:model, :json_schema] do
         describe '#description' do
           before { allow(monograph).to receive(:description).and_return('Description') }
 
-          it { expect(subject[:metadata].keys.count).to eq(3) }
+          it { expect(subject[:metadata].keys.count).to eq(5) }
           it { expect(subject[:metadata]).to include(description: 'Description') }
           it { expect(schemer_validate?(opds_publication_schemer, JSON.parse(subject.to_json))).to be true }
         end
@@ -188,27 +194,19 @@ RSpec.describe Opds::Publication, type: [:model, :json_schema] do
         describe '#identifier' do
           before { allow(monograph).to receive(:identifier).and_return('https://Identifier') }
 
-          it { expect(subject[:metadata].keys.count).to eq(3) }
+          it { expect(subject[:metadata].keys.count).to eq(5) }
           it { expect(subject[:metadata]).to include(identifier: 'https://Identifier') }
           it { expect(schemer_validate?(opds_publication_schemer, JSON.parse(subject.to_json))).to be true }
         end
 
         describe '#language' do
-          let(:language) { 'Language' }
+          let(:languages) { %w[language] }
 
-          before { allow(monograph).to receive(:language).and_return(language) }
+          before { allow(monograph).to receive(:languages).and_return(languages) }
 
-          it { expect(subject[:metadata].keys.count).to eq(2) }
-          it { expect(subject[:metadata]).not_to have_key(:language) }
+          it { expect(subject[:metadata].keys.count).to eq(4) }
+          it { expect(subject[:metadata]).to include(language: 'eng') }
           it { expect(schemer_validate?(opds_publication_schemer, JSON.parse(subject.to_json))).to be true }
-
-          context 'English' do
-            let(:language) { 'English' }
-
-            it { expect(subject[:metadata].keys.count).to eq(3) }
-            it { expect(subject[:metadata]).to include(language: 'en') }
-            it { expect(schemer_validate?(opds_publication_schemer, JSON.parse(subject.to_json))).to be true }
-          end
         end
 
         describe '#published' do
@@ -216,7 +214,7 @@ RSpec.describe Opds::Publication, type: [:model, :json_schema] do
 
           before { allow(monograph).to receive(:published).and_return(date) }
 
-          it { expect(subject[:metadata].keys.count).to eq(3) }
+          it { expect(subject[:metadata].keys.count).to eq(5) }
           it { expect(subject[:metadata]).to include(published: date.iso8601) }
           it { expect(schemer_validate?(opds_publication_schemer, JSON.parse(subject.to_json))).to be true }
         end
@@ -224,7 +222,7 @@ RSpec.describe Opds::Publication, type: [:model, :json_schema] do
         describe '#publisher' do
           before { allow(monograph).to receive(:publisher).and_return('Publisher') }
 
-          it { expect(subject[:metadata].keys.count).to eq(3) }
+          it { expect(subject[:metadata].keys.count).to eq(5) }
           it { expect(subject[:metadata]).to include(publisher: 'Publisher') }
           it { expect(schemer_validate?(opds_publication_schemer, JSON.parse(subject.to_json))).to be true }
         end
@@ -233,7 +231,7 @@ RSpec.describe Opds::Publication, type: [:model, :json_schema] do
           context 'singular' do
             before { allow(monograph).to receive(:subjects).and_return(['Subject']) }
 
-            it { expect(subject[:metadata].keys.count).to eq(3) }
+            it { expect(subject[:metadata].keys.count).to eq(5) }
             it { expect(subject[:metadata]).to include(subject: 'Subject') }
             it { expect(schemer_validate?(opds_publication_schemer, JSON.parse(subject.to_json))).to be true }
           end
@@ -241,15 +239,15 @@ RSpec.describe Opds::Publication, type: [:model, :json_schema] do
           context 'plural' do
             before { allow(monograph).to receive(:subjects).and_return(['Subject A', 'Subject B']) }
 
-            it { expect(subject[:metadata].keys.count).to eq(3) }
+            it { expect(subject[:metadata].keys.count).to eq(5) }
             it { expect(subject[:metadata]).to include(subject: ['Subject A', 'Subject B']) }
             it { expect(schemer_validate?(opds_publication_schemer, JSON.parse(subject.to_json))).to be true }
           end
         end
 
-        [:abriged, :duration, :imprint, :modified, :numberOfPages, :readingProgression, :subtitle].each do |method|
+        [:abriged, :duration, :imprint, :numberOfPages, :readingProgression, :subtitle].each do |method|
           describe "##{method}" do
-            it { expect(subject[:metadata].keys.count).to eq(2) }
+            it { expect(subject[:metadata].keys.count).to eq(4) }
             it { expect(subject[:metadata]).not_to have_key(method) }
             it { expect(schemer_validate?(opds_publication_schemer, JSON.parse(subject.to_json))).to be true }
           end
