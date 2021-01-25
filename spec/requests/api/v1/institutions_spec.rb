@@ -34,6 +34,8 @@ RSpec.describe "Institutions", type: :request do
     it { put api_product_institution_path(1, 1), headers: headers; expect(response).to have_http_status(:unauthorized) } # rubocop:disable Style/Semicolon
     it { delete api_institution_path(1), headers: headers; expect(response).to have_http_status(:unauthorized) } # rubocop:disable Style/Semicolon
     it { delete api_product_institution_path(1, 1), headers: headers; expect(response).to have_http_status(:unauthorized) } # rubocop:disable Style/Semicolon
+    it { get api_product_institution_access_path(1, 1), headers: headers; expect(response).to have_http_status(:unauthorized) } # rubocop:disable Style/Semicolon
+    it { post api_product_institution_access_path(1, 1), headers: headers; expect(response).to have_http_status(:unauthorized) } # rubocop:disable Style/Semicolon
   end
 
   context 'authorized' do
@@ -224,7 +226,7 @@ RSpec.describe "Institutions", type: :request do
         end
 
         it 'existing institution ok' do
-          put api_product_institution_path(product, institution), headers: headers
+          Greensub.subscribe(subscriber: institution, target: product)
           get api_product_institution_path(product, institution), headers: headers
           expect(response.content_type).to eq("application/json")
           expect(response).to have_http_status(:ok)
@@ -295,7 +297,7 @@ RSpec.describe "Institutions", type: :request do
         end
 
         it 'existing institution twice ok' do
-          put api_product_institution_path(product, institution), headers: headers
+          Greensub.subscribe(subscriber: institution, target: product)
           put api_product_institution_path(product, institution), headers: headers
           expect(response.content_type).to eq("application/json")
           expect(response).to have_http_status(:ok)
@@ -355,8 +357,6 @@ RSpec.describe "Institutions", type: :request do
       context 'existing product' do
         let(:product) { create(:product) }
 
-        before { Greensub.subscribe(subscriber: institution, target: product) }
-
         it 'non existing institution not_found' do
           delete api_product_institution_path(product, 1), headers: headers
           expect(response.content_type).to eq("application/json")
@@ -365,20 +365,111 @@ RSpec.describe "Institutions", type: :request do
         end
 
         it 'existing institution ok' do
+          Greensub.subscribe(subscriber: institution, target: product)
+          expect(Greensub.subscribed?(subscriber: institution, target: product)).to be true
           delete api_product_institution_path(product, institution), headers: headers
+          expect(Greensub.subscribed?(subscriber: institution, target: product)).to be false
           expect(response.content_type).to eq("application/json")
           expect(response).to have_http_status(:ok)
           expect(response.body).to be_empty
-          expect(Greensub.subscribed?(subscriber: institution, target: product)).to be false
+          expect(Greensub::Institution.count).to eq(1)
         end
 
-        it 'existing institution twice ok' do
-          delete api_product_institution_path(product, institution), headers: headers
+        it 'existing institution non subscriber ok' do
+          expect(Greensub.subscribed?(subscriber: institution, target: product)).to be false
           delete api_product_institution_path(product, institution), headers: headers
           expect(response.content_type).to eq("application/json")
           expect(response).to have_http_status(:ok)
           expect(response.body).to be_empty
-          expect(Greensub.subscribed?(subscriber: institution, target: product)).to be false
+          expect(Greensub::Institution.count).to eq(1)
+        end
+      end
+    end
+
+    describe "GET /api/v1/products/:product_id:/institutions/:id/access" do # get access
+      context 'non existing product' do
+        it 'non existing institution not_found' do
+          get api_product_institution_access_path(1, 1), headers: headers
+          expect(response.content_type).to eq("application/json")
+          expect(response).to have_http_status(:not_found)
+          expect(response_body[:exception.to_s]).to include("ActiveRecord::RecordNotFound: Couldn't find Greensub::Institution with")
+        end
+
+        it 'existing institution not_found' do
+          get api_product_institution_access_path(1, institution), headers: headers
+          expect(response.content_type).to eq("application/json")
+          expect(response).to have_http_status(:not_found)
+          expect(response_body[:exception.to_s]).to include("ActiveRecord::RecordNotFound: Couldn't find Greensub::Product with")
+        end
+      end
+
+      context 'existing product' do
+        let(:product) { create(:product) }
+
+        it 'non existing institution not_found' do
+          get api_product_institution_access_path(product, 1), headers: headers
+          expect(response.content_type).to eq("application/json")
+          expect(response).to have_http_status(:not_found)
+          expect(response_body[:exception.to_s]).to include("ActiveRecord::RecordNotFound: Couldn't find Greensub::Institution with")
+        end
+
+        it 'existing institution accepted' do
+          get api_product_institution_access_path(product, institution), headers: headers
+          expect(response.content_type).to eq("application/json")
+          expect(response).to have_http_status(:accepted)
+          expect(response_body).to eq({ "access"=>"undefined" })
+        end
+
+        it 'existing institution with subscription ok' do
+          Greensub.subscribe(subscriber: institution, target: product)
+          get api_product_institution_access_path(product, institution), headers: headers
+          expect(response.content_type).to eq("application/json")
+          expect(response).to have_http_status(:ok)
+          expect(response_body).to eq({ "access"=>"full" })
+        end
+      end
+    end
+
+    describe "POST /api/v1/products/:product_id:/institutions/:id/access" do # set access
+      context 'non existing product' do
+        it 'non existing institution not_found' do
+          post api_product_institution_access_path(1, 1), headers: headers, params: { access: 'full' }.to_json
+          expect(response.content_type).to eq("application/json")
+          expect(response).to have_http_status(:not_found)
+          expect(response_body[:exception.to_s]).to include("ActiveRecord::RecordNotFound: Couldn't find Greensub::Institution with")
+        end
+
+        it 'existing institution not_found' do
+          post api_product_institution_access_path(1, institution), headers: headers, params: { access: 'full' }.to_json
+          expect(response.content_type).to eq("application/json")
+          expect(response).to have_http_status(:not_found)
+          expect(response_body[:exception.to_s]).to include("ActiveRecord::RecordNotFound: Couldn't find Greensub::Product with")
+        end
+      end
+
+      context 'existing product' do
+        let(:product) { create(:product) }
+
+        it 'non existing institution not_found' do
+          post api_product_institution_access_path(product, 1), headers: headers, params: { access: 'full' }.to_json
+          expect(response.content_type).to eq("application/json")
+          expect(response).to have_http_status(:not_found)
+          expect(response_body[:exception.to_s]).to include("ActiveRecord::RecordNotFound: Couldn't find Greensub::Institution with")
+        end
+
+        it 'existing institution accepted' do
+          post api_product_institution_access_path(product, institution), headers: headers, params: { access: 'full' }.to_json
+          expect(response.content_type).to eq("application/json")
+          expect(response).to have_http_status(:accepted)
+          expect(response_body).to eq({ "access"=>"undefined" })
+        end
+
+        it 'existing institution with subscription ok' do
+          Greensub.subscribe(subscriber: institution, target: product)
+          post api_product_institution_access_path(product, institution), headers: headers, params: { access: 'full' }.to_json
+          expect(response.content_type).to eq("application/json")
+          expect(response).to have_http_status(:ok)
+          expect(response_body).to eq({ "access"=>"full" })
         end
       end
     end

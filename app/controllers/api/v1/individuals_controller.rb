@@ -4,7 +4,8 @@ module API
   module V1
     # Individuals Controller
     class IndividualsController < API::ApplicationController
-      before_action :set_individual, only: %i[show update destroy]
+      before_action :set_individual, only: %i[show update destroy access]
+      before_action :set_product, only: %i[access]
 
       # Get individual by identifier
       # @example
@@ -29,11 +30,11 @@ module API
       #   @param [Hash] params { product_id: Number }
       #   @return [ActionDispatch::Response] array of {Greensub::Individual}
       #
-      #     (See ./app/views/api/v1/individual/index.json.jbuilder)
+      #     (See ./app/views/api/v1/individuals/index.json.jbuilder)
       #
       #     {include:file:app/views/api/v1/individuals/index.json.jbuilder}
       #
-      #     (See ./app/views/api/v1/individual/_individual.json.jbuilder)
+      #     (See ./app/views/api/v1/individuals/_individual.json.jbuilder)
       #
       #     {include:file:app/views/api/v1/individuals/_individual.json.jbuilder}
       def index
@@ -52,11 +53,11 @@ module API
       #   @param [Hash] params { id: Number }
       #   @return [ActionDispatch::Response] {Greensub::Individual}
       #
-      #     (See ./app/views/api/v1/individual/show.json.jbuilder)
+      #     (See ./app/views/api/v1/individuals/show.json.jbuilder)
       #
       #     {include:file:app/views/api/v1/individuals/show.json.jbuilder}
       #
-      #     (See ./app/views/api/v1/individual/_individual.json.jbuilder)
+      #     (See ./app/views/api/v1/individuals/_individual.json.jbuilder)
       #
       #     {include:file:app/views/api/v1/individuals/_individual.json.jbuilder}
       # @overload show
@@ -135,6 +136,29 @@ module API
           return render json: @individual.errors, status: :accepted unless @individual.destroy
         end
         head :ok
+      end
+
+      # @overload access
+      #   Get product access
+      #   @example
+      #     get /api/products/:product_id/individuals/:id/access
+      #   @param [Hash] params { product_id: Number, id: Number }
+      #   @return [ActionDispatch::Response] {access}
+      # @overload access
+      #   Set product access
+      #   @example
+      #     post /api/products/:product_id/individuals/:id/access
+      #   @param [Hash] params { product_id: Number, id: Number, access: String }
+      #   @return [ActionDispatch::Response] {access}
+      #
+      #     (See ./app/views/api/v1/individuals/access.json.jbuilder)
+      #
+      #     {include:file:app/views/api/v1/individuals/access.json.jbuilder}
+      def access
+        return render json: { "access" => "undefined" }, status: :accepted unless @individual.products.include?(@product)
+
+        if params[:access].present?
+        end
       end
 
       private
