@@ -54,6 +54,7 @@ Rails.application.routes.draw do
       resources :institutions, only: %i[index show create update destroy] do
         resources :products, only: %i[index]
       end
+      resources 'noids', only: %i[index]
     end
   end
 
