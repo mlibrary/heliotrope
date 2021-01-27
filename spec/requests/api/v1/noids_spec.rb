@@ -92,12 +92,12 @@ RSpec.describe "Noids", type: :request do
         let(:mono_doc) do
           ::SolrDocument.new(id: 'monoid',
                              has_model_ssim: ['Monograph'],
-                             identifier_tesim: ["bar1234"])
+                             identifier_ssim: ["bar_number:S1234", "heb99999.0001.001"])
         end
         let(:no_match_doc) do
           ::SolrDocument.new(id: 'nomatch',
                              has_model_ssim: ['Monograph'],
-                             identifier_tesim: ["bar0987"])
+                             identifier_ssim: ["bar_number:S0987", "heb10000.0001.001"])
         end
 
         before do
@@ -105,11 +105,22 @@ RSpec.describe "Noids", type: :request do
           ActiveFedora::SolrService.commit
         end
 
-        it "returns the correct noid(s)" do
-          get api_noids_path, params: { identifier: "bar1234" }, headers: headers
-          expect(response.content_type).to eq("application/json")
-          expect(response).to have_http_status(:ok)
-          expect(response_body).to match_array([{ "id" => "monoid" }])
+        context "bar number" do
+          it "returns the correct noid(s)" do
+            get api_noids_path, params: { identifier: "bar_number:S1234" }, headers: headers
+            expect(response.content_type).to eq("application/json")
+            expect(response).to have_http_status(:ok)
+            expect(response_body).to match_array([{ "id" => "monoid" }])
+          end
+        end
+
+        context "hebid" do
+          it "returns the correct noid(s)" do
+            get api_noids_path, params: { identifier: "heb99999.0001.001" }, headers: headers
+            expect(response.content_type).to eq("application/json")
+            expect(response).to have_http_status(:ok)
+            expect(response_body).to match_array([{ "id" => "monoid" }])
+          end
         end
       end
     end
