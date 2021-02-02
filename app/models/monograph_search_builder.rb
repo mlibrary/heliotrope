@@ -26,14 +26,22 @@ class MonographSearchBuilder < ::SearchBuilder
 
       ids = []
       docs.each do |doc|
-        fp = Hyrax::FileSetPresenter.new(doc, nil)
-        next if fp.featured_representative?
-        next if fp.id == monograph.representative_id
-        next if Sighrax.tombstone?(Sighrax.from_presenter(fp))
-        ids << fp.id
+        next if doc['id'].in?(monograph.featured_representatives.map(&:file_set_id))
+        next if doc['id'] == monograph.representative_id
+        next if tombstone?(doc)
+        ids << doc['id']
       end
 
       ids.join(",")
+    end
+
+    def tombstone?(doc)
+      # HELIO-3707 ideally we'd do:
+      # return true if Sighrax.tombstone?(Sighrax.from_solr_document(doc))
+      # but that is N+1 and the contructors are a little complicated to change
+      # The logic is simple, so:
+      return true if doc['permissions_expiration_date_ssim']&.present? && Date.parse(doc['permissions_expiration_date_ssim'].first) <= Time.now.utc.to_date
+      false
     end
 
     def work_types
