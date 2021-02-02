@@ -59,6 +59,10 @@ class MonographIndexer < Hyrax::WorkIndexer
       #   <copyField source="isbn_tesim" dest="isbn_numeric"/>
       # the english text stored indexed multivalued field generated for the 'isbn' property a.k.a. object.isbn
       # See './app/models/monograph.rb' and './solr/config/schema.xml' for details.
+
+      # HELIO-3709 used in the NOID API
+      # Collapse whitespace in identifiers if they exist, although in practice HELIO-3712 fixes this
+      solr_doc[Solrizer.solr_name('identifier', :symbol)] = object.identifier.map { |id| id.gsub(/\s/, "") }
     end
   end
 

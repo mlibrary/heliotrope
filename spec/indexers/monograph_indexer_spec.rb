@@ -13,7 +13,8 @@ RSpec.describe MonographIndexer do
             creator: ["Moose, Bullwinkle\nSquirrel, Rocky"],
             description: ["This is the abstract"],
             date_created: ['c.2018?'],
-            isbn: ['978-0-252012345 (paper)', '978-0252023456 (hardcover)', '978-1-62820-123-9 (e-book)'])
+            isbn: ['978-0-252012345 (paper)', '978-0252023456 (hardcover)', '978-1-62820-123-9 (e-book)'],
+            identifier: ['bar_number: S0001', 'heb9999.0001.001'])
     }
     let(:file_set) { create(:file_set) }
     let(:press_name) { Press.find_by(subdomain: monograph.press).name }
@@ -55,6 +56,10 @@ RSpec.describe MonographIndexer do
 
     it 'has a single-valued, cleaned-up date_created value to sort by' do
       expect(subject['date_created_si']).to eq '2018'
+    end
+
+    it 'indexes identifers as symbols and removes whitespace if needed' do
+      expect(subject['identifier_ssim']).to contain_exactly('bar_number:S0001', 'heb9999.0001.001')
     end
 
     # 'isbn_numeric' is an isbn indexed multivalued field for finding books which is copied from 'isbn_tesim'
