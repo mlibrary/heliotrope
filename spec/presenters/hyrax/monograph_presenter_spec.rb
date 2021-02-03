@@ -478,14 +478,14 @@ RSpec.describe Hyrax::MonographPresenter do
 
     subject { presenter.bar_number }
 
-    context 'No `bar_number: NNNN` is present in identifier' do
+    context 'No `bar_number:NNNN` is present in identifier' do
       let(:identifier) { ["http://www.example.com/doi", "999.999.9999"] }
 
       it { is_expected.to be nil }
     end
 
-    context 'A `bar_number: NNNN` is present in identifier' do
-      let(:identifier) { ["http://www.example.com/doi", "999.999.9999", "bar_number: S20156"] }
+    context 'A `bar_number:NNNN` is present in identifier' do
+      let(:identifier) { ["http://www.example.com/doi", "999.999.9999", "bar_number:S20156"] }
 
       it { is_expected.to eq 'S20156' }
     end
@@ -502,14 +502,14 @@ RSpec.describe Hyrax::MonographPresenter do
       let(:subdomain) { 'notbarpublishing' }
 
       context "no disallowed BAR number is present in identifier" do
-        let(:identifier) { ["http://www.example.com/doi", "bar_number: S20156"] }
+        let(:identifier) { ["http://www.example.com/doi", "bar_number:S20156"] }
 
         it { is_expected.to be false }
       end
 
       context "disallowed BAR number is present in identifier" do
         # see config/settings/test.yml
-        let(:identifier) { ["http://www.example.com/doi", "bar_number: sample_bar_number_1"] }
+        let(:identifier) { ["http://www.example.com/doi", "bar_number:sample_bar_number_1"] }
 
         it { is_expected.to be false }
       end
@@ -519,14 +519,14 @@ RSpec.describe Hyrax::MonographPresenter do
       let(:subdomain) { 'barpublishing' }
 
       context "no disallowed BAR number is present in identifier" do
-        let(:identifier) { ["http://www.example.com/doi", "bar_number: S20156"] }
+        let(:identifier) { ["http://www.example.com/doi", "bar_number:S20156"] }
 
         it { is_expected.to be false }
       end
 
       context "disallowed BAR number is present in identifier" do
         # see config/settings/test.yml
-        let(:identifier) { ["http://www.example.com/doi", "bar_number: sample_bar_number_1"] }
+        let(:identifier) { ["http://www.example.com/doi", "bar_number:sample_bar_number_1"] }
 
         it { is_expected.to be true }
       end

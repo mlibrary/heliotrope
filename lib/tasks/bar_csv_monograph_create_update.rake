@@ -64,7 +64,7 @@ namespace :heliotrope do
           # BAR Number goes in `identifier` with a prefix
           bar_number = row['Identifier(s)']
           identifier = []
-          identifier << 'bar_number: ' + bar_number unless bar_number.blank?
+          identifier << 'bar_number:' + bar_number unless bar_number.blank?
           identifier.present? ? attrs['identifier'] = identifier : attrs.delete('identifier')
 
           # we store title and subtitle in a single string
