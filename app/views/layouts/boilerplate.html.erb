@@ -88,6 +88,6 @@
 
     <%= render 'shared/ajax_modal' %>
     <%= render 'shared/cookie_alert' %>
-    <%= render 'shared/monitoring' %>
+    <%= render 'shared/monitoring' if Rails.env.production? %>
   <% end %>
 </html>
