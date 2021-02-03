@@ -4,16 +4,20 @@ title: Accessibility
 permalink: /accessibility/
 ---
 
-<p class="milli">Last updated: May 19, 2020</p>
-<p>Accessibility is a core value and design component of Fulcrum. We are dedicated to creating inclusive services and content for all readers, and are constantly working to make Fulcrum and its content as accessible and usable as possible.</p>
-<p>The Fulcrum platform aims to meet the latest <a href="https://www.w3.org/WAI/WCAG21/quickref/?versions=2.1" title="Web Content Accessibility Guidelines 2.1 AA">WCAG 2 AA Standards</a> (currently WCAG 2.1 AA) in both the platform and its content by providing infrastructure and resources to support accessible books, image descriptions, transcripts for audio, captions for video, and alternative formats for digitized content.</p>
-<p>The extent to which Fulcrum meets WCAG 2.0 and Section 508 of the U.S. Rehabilitation Act is measured and reported in Fulcrum's <a href="/docs/Fulcrum-VPAT2.3INT-20200302.pdf">Voluntary Product Accessibility Template (VPAT®) Version 2.3 INT</a>. The extent to which electronic documents which comprise individual collections on Fulcrum meet WCAG 2.0 and Section 508 of the U.S. Rehabilitation Act is <a href="#content">documented in collection specific VPATs</a>.</p>
+<p class="milli">Last updated: February 3, 2021</p>
+<p>Accessibility is a core value and design component of Fulcrum.  As part of the ongoing development of Fulcrum, we work to make the platform and its content inclusive, accessible, and usable for all readers.</p>
+<p>Fulcrum aims to meet the latest <a href="https://www.w3.org/WAI/WCAG21/quickref/?versions=2.1" title="Web Content Accessibility Guidelines 2.1 AA">WCAG 2 AA Standards</a> (currently WCAG 2.1 AA) in two ways:</p>
+<ul>
+  <li>Developing a platform with infrastructure that meets web accessibility guidelines and includes accessibility features.</li>
+  <li>Creating and sharing resources that help publishers produce accessible content.</li>
+</ul>
+<p>We report Fulcrum's compliance with WCAG 2.0 and Section 508 in a <a href="/docs/Fulcrum-VPAT2.3INT-20200302.pdf">Voluntary Product Accessibility Template (VPAT®) Version 2.3 INT</a>. We report content compliance <a href="#content">in collection specific VPATs</a>.</p>
 <p>Accessibility features, compatibility, and known issues are also summarized on this page.</p>
 
 <div class="help">
     <h2>Need Help?</h2>
     <p>If you need to be provided with an accessible version of a book or need other assistance using the platform, please email <a href="mailto:fulcrum-info@umich.edu">fulcrum-info@umich.edu</a>.</p>    
-    <p>If you would like to share general comments, suggestions, or other ideas, please do so using our <a href="https://goo.gl/forms/mqmDGSe5ihDgWrii1">feedback form</a>.</p>
+    <p>If you would like to report an issue, share general comments, suggestions, or other ideas, please use our <a href="https://umich.qualtrics.com/jfe/form/SV_3KSLynPij0fqrD7?url=https://www.fulcrum.org/accessibility">feedback form</a>.</p>
 </div>
 
 <div class="toc">
@@ -28,12 +32,14 @@ permalink: /accessibility/
 </div>
 
 <h2 id="timeline">Accessibility Timeline and Roadmap</h2>
-<p>Our active development on accessibility issues is publicly available and can be tracked in our <a href="https://tools.lib.umich.edu/jira/browse/HELIO-1806?jql=project%20in%20(CSB%2C%20HELIO)%20AND%20status%20in%20(%22In%20Progress%22%2C%20%22To%20Do%22%2C%20%22For%20Review%22)%20AND%20labels%20%3D%20accessibility">issue tracker for Fulcrum</a>.</p>
+<p>Our work on platform accessibility issues is available in our <a href="https://tools.lib.umich.edu/jira/browse/HELIO-3689?jql=project%20in%20(HELIO%2C%20CSB)%20AND%20status%20in%20(%22In%20Progress%22%2C%20%22To%20Do%22%2C%20%22For%20Review%22)%20AND%20labels%20%3D%20accessibility">issue tracker for Fulcrum</a>.</p>
 
 <h3>2020</h3>
-<p>From January to March 2020, in collaboration with <a href="https://usability.msu.edu/">Michigan State University Usability and Accessibility Research Consulting</a>, Fulcrum was tested by assistive technology and limited dexterity users, identifying usability and accessibility issues with the Fulcrum E-Reader which we are actively working to address.</p>
+<p>From January to March 2020, in collaboration with <a href="https://usability.msu.edu/">Michigan State University Usability and Accessibility Research Consulting</a>, Fulcrum was tested by assistive technology and limited dexterity users. User testing helped identify usability and accessibility issues, specifically with the Fulcrum Reader, which we are working to address.</p>
 
 <p>In March and May 2020, we worked to update our Voluntary Product Assessment Template from 2.1 to VPAT® Version 2.3 INT. In addition, we released collection-specific VPAT®s for the University of Michigan E-Book Collection, the ACLS Humanities E-Book Collection, and the BAR Digital Collection.</p>
+
+<p>Over the course of 2020, we released several accessibility improvements to Fulcrum including: accessible link labels, a more usable and accessible search and browse experience, improved color contrast, and support for transcripts and visual descriptions of audio and video content hosted on Fulcrum.</p>
 
 <h3>2019</h3>
 <p>In August and September 2019, the Fulcrum team collaborated with the <a href="http://www.daisy.org/">DAISY Consortium</a> to have the Fulcrum Reader evaluated for <a href="http://epubtest.org">http://epubtest.org</a>. Several accessibility and usability issues and best practices were identified and Fulcrum developers are working to address identified issues. We will continue to work with the DAISY Consortium to have future versions of the Fulcrum Reader evaluated.</p>
@@ -49,13 +55,13 @@ permalink: /accessibility/
 
 <h2 id="compatibility">Compatibility with Keyboards and Screen Readers</h2>
 <h3>Screen Reader Compatibility</h3>
-<p>Fulcrum should be compatible with most major screen readers, but is optimized for use with NVDA in Firefox. New features are tested with NVDA in Firefox and VoiceOver in Safari. Fulcrum should be compatible with recent versions of the following screen readers:</p>
+<p>Fulcrum should be compatible with most major screen readers. It is optimized for use with NVDA in Firefox. New features are tested with NVDA in Firefox and VoiceOver in Safari. Fulcrum should be compatible with recent versions of the following screen readers:</p>
 <ul>
   <li>JAWS</li>
   <li>NVDA</li>
   <li>VoiceOver</li>
 </ul>
-<p>The site should also be compatible with:</p>
+<p>The site is also compatible with:</p>
 <ul>
   <li>basic operating system screen magnifiers and contrast settings</li>
   <li>accessibility browser extensions, such as Read Aloud (text to speech), Zoom Text Only (magnifier), and High Contrast for Chrome</li>
@@ -104,12 +110,6 @@ permalink: /accessibility/
   </li>
 </ul>
 
-<h4>Known issues</h4>
-<p>For readers using keyboard only:</p>
-<ul>
-  <li>In the Fulcrum Reader, pressing TAB to enter the text of the book takes the focus back to the first link in the chapter, rather than the first link on the currently opened page.</li>
-</ul>
-
 <h2 id="features">Accessibility Features</h2>
 <ul>
   <li>For certain content, users can choose between page-by-page and scroll view in the Fulcrum Reader. To switch views, select the Preferences and Settings button and choose your preferred Display mode.</li>
@@ -150,7 +150,7 @@ permalink: /accessibility/
 <p>Lever Press titles, while open access and freely available, are not available for download.</p>
 <p>To request remediation or a file download of any Lever Press title, send and email with the title of the content, your preferred format, and the URL to <a href="mpub-help@umich.edu">mpub-help@umich.edu</a>.</p>
 
-<h3>British Archaeological Reports Digital Collection</h3>
+<h3>BAR Digital Collection</h3>
 <p><a href="/docs/Fulcrum-BAR-VPAT2.3INT-20200519.pdf">BAR Digital Collection Voluntary Product Accessibility Template (VPAT®) Version 2.3 INT</a></p>
 <p>To request remediation of any content in the BAR Digital Collection, please send an email with the title of the content, your preferred format, and the URL to <a href="fulcrum-info@umich.edu">fulcrum-info@umich.edu</a>.</p>
 
