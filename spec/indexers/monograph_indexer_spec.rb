@@ -7,6 +7,7 @@ RSpec.describe MonographIndexer do
     subject { indexer.generate_solr_document }
 
     let(:indexer) { described_class.new(monograph) }
+    let(:press) { create(:press, parent: parent_press) }
     let(:monograph) {
       build(:monograph,
             title: ['"Blah"-de-blah-blah and Stuff!'],
@@ -14,10 +15,12 @@ RSpec.describe MonographIndexer do
             description: ["This is the abstract"],
             date_created: ['c.2018?'],
             isbn: ['978-0-252012345 (paper)', '978-0252023456 (hardcover)', '978-1-62820-123-9 (e-book)'],
-            identifier: ['bar_number: S0001', 'heb9999.0001.001'])
+            identifier: ['bar_number: S0001', 'heb9999.0001.001'],
+            press: press.subdomain)
     }
     let(:file_set) { create(:file_set) }
-    let(:press_name) { Press.find_by(subdomain: monograph.press).name }
+    let(:press_name) { press.name }
+    let(:parent_press) { nil }
 
     before do
       monograph.ordered_members << file_set
@@ -28,8 +31,40 @@ RSpec.describe MonographIndexer do
       expect(subject['ordered_member_ids_ssim']).to eq [file_set.id]
     end
 
-    it 'indexes the press name' do
-      expect(subject['press_name_ssim']).to eq press_name
+    describe 'press name' do
+      context 'no parent press' do
+        it 'does not index a facetable value' do
+          expect(subject['press_name_ssim']).to eq press_name # symbol
+          expect(subject['press_name_sim']).to eq nil # facetable
+        end
+      end
+
+      context 'parent press subdomain is not "michigan" or "mps"' do
+        let(:parent_press) { create(:press, subdomain: 'blah') }
+
+        it 'does not index a facetable value' do
+          expect(subject['press_name_ssim']).to eq press_name # symbol
+          expect(subject['press_name_sim']).to eq nil # facetable
+        end
+      end
+
+      context 'parent press subdomain is "michigan"' do
+        let(:parent_press) { create(:press, subdomain: 'michigan') }
+
+        it 'indexes a facetable value' do
+          expect(subject['press_name_ssim']).to eq press_name # symbol
+          expect(subject['press_name_sim']).to eq press_name # facetable
+        end
+      end
+
+      context 'parent press subdomain is "mps"' do
+        let(:parent_press) { create(:press, subdomain: 'mps') }
+
+        it 'indexes a facetable value' do
+          expect(subject['press_name_ssim']).to eq press_name # symbol
+          expect(subject['press_name_sim']).to eq press_name # facetable
+        end
+      end
     end
 
     it 'indexes the representative_id' do
