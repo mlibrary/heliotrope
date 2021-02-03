@@ -9,9 +9,9 @@ class MonographIndexer < Hyrax::WorkIndexer
       press_name = press.name unless press.nil?
       solr_doc[Solrizer.solr_name('press_name', :symbol)] = press_name
 
-      # This facet is for michigan only, to highlight sub-press Monographs only. I think I'd rather conditionally...
+      # This facet is for mps and michigan only, to highlight sub-press Monographs only. I'd rather conditionally...
       # index the facetable value than put any more press-specific logic in the controllers. Could change later!
-      if press&.parent&.subdomain == 'michigan'
+      if ['michigan', 'mps'].include? press&.parent&.subdomain
         solr_doc[Solrizer.solr_name('press_name', :facetable)] = press_name
       end
 
