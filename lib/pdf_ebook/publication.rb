@@ -52,6 +52,9 @@ module PDFEbook
         until outline.nil?
           page = nil
           page = outline&.[](:A)&.solve&.[](:D)
+          # HELIO-3717 some "named destinations" have `:Dest` not `:A` here. The sample I'm looking at is PDF v1.3
+          page ||= outline&.[](:Dest)
+
           if page.is_a?(Origami::Reference) # skips external links
             begin
               target = page.solve
