@@ -31,6 +31,33 @@ module Royalty
       reports
     end
 
+    # HELIO-3720
+    # Returns a report (not csv) for a given copyright_holder
+    def report_for_copyholder(copyright_holder)
+      # this is not efficient, just using what's already here to get this working
+      items = item_report[:items]
+      ids = copyright_holders.to_a.map { |i| i[0] if i[1] == copyright_holder }.compact
+      items = items.map { |item| item if item["Parent_Proprietary_ID"].in?(ids) }.compact
+
+      items = update_results(items)
+      items = remove_extra_lines(items)
+      @total_hits_all_rightsholders = total_hits_all_rightsholders(items)
+      items = format_hits(items)
+      items = add_hebids(items)
+      items = reclassify_isbns(items)
+
+      {
+        header: {
+          "Collection Name": @press.name,
+          "Report Name": "Royalty Usage Report",
+          "Rightsholder Name": copyright_holder,
+          "Reporting Period": "#{@start_date.strftime("%Y%m")} to #{@end_date.strftime("%Y%m")}",
+          "Total Hits": number_with_delimiter(@total_hits_all_rightsholders),
+        },
+        items: items
+      }
+    end
+
     private
 
       # Generate one additional summary usage report for all rightsholders

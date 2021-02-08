@@ -118,6 +118,57 @@ RSpec.describe Royalty::UsageReport do
     end
   end
 
+  describe "#report_for_copyholder" do
+    subject { described_class.new(press.subdomain, "2019-01-01", "2019-06-30").report_for_copyholder("Copyright A") }
+
+    let(:press) { create(:press, subdomain: "blue") }
+    let(:mono1) do
+      SolrDocument.new(id: "AAAAAAAAA",
+                       has_model_ssim: ['Monograph'],
+                       press_sim: press.subdomain,
+                       copyright_holder_tesim: ["Copyright A"],
+                       title_tesim: ["A"],
+                       identifier_tesim: ["heb90001.0001.001", "http://hdl.handle.net/2027/heb.31695"])
+    end
+
+    let(:mono2) do
+      SolrDocument.new(id: "BBBBBBBBB",
+                       has_model_ssim: ['Monograph'],
+                       press_sim: press.subdomain,
+                       copyright_holder_tesim: ["Copyright B"],
+                       title_tesim: ["B"],
+                       identifier_tesim: ["http://hdl.handle.net/2027/heb.sxklj", "heb33333.0001.001"])
+    end
+    let(:counter_report) { double("counter_report") }
+    let(:item_report) { { items: items } }
+
+    before do
+      ActiveFedora::SolrService.add([mono1.to_h, mono2.to_h])
+      ActiveFedora::SolrService.commit
+      allow(CounterReporter::ItemReport).to receive(:new).and_return(counter_report)
+      allow(counter_report).to receive(:report).and_return(item_report)
+    end
+
+    it "returns a report for a single copyright holder" do
+      expect(subject[:header][:"Rightsholder Name"]).to eq "Copyright A"
+      expect(subject[:header][:"Total Hits"]).to eq "2,309"
+      expect(subject[:items].length).to eq 2
+      expect(subject[:items][0]["Proprietary_ID"]).to eq "111111111"
+      expect(subject[:items][0]["Parent_Proprietary_ID"]).to eq "AAAAAAAAA"
+      expect(subject[:items][0]["Hits"]).to eq "2,300"
+      expect(subject[:items][0]["Apr-2019"]).to eq "1,000"
+      expect(subject[:items][0]["May-2019"]).to eq "0"
+      expect(subject[:items][0]["Jun-2019"]).to eq "1,300"
+      expect(subject[:items][1]["Proprietary_ID"]).to eq "333333333"
+      expect(subject[:items][1]["Parent_Proprietary_ID"]).to eq "AAAAAAAAA"
+      expect(subject[:items][1]["Hits"]).to eq "9"
+      expect(subject[:items][1]["Jan-2019"]).to eq "3"
+      expect(subject[:items][1]["Feb-2019"]).to eq "3"
+      expect(subject[:items][1]["Mar-2019"]).to eq "3"
+      expect(subject[:items][1]["Jun-2019"]).to eq "0"
+    end
+  end
+
   describe "#update_results" do
     subject { described_class.new("test", "2019-01-01", "2019-07-31").send(:update_results, items) }
 
