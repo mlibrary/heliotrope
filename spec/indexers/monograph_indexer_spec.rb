@@ -15,7 +15,7 @@ RSpec.describe MonographIndexer do
             description: ["This is the abstract"],
             date_created: ['c.2018?'],
             isbn: ['978-0-252012345 (paper)', '978-0252023456 (hardcover)', '978-1-62820-123-9 (e-book)'],
-            identifier: ['bar_number: S0001', 'heb9999.0001.001'],
+            identifier: ['bar_number:S0001', 'heb9999.0001.001'],
             press: press.subdomain)
     }
     let(:file_set) { create(:file_set) }
