@@ -200,7 +200,7 @@ GEM
     combine_pdf (1.0.16)
       ruby-rc4 (>= 0.1.5)
     commonjs (0.2.7)
-    concurrent-ruby (1.1.7)
+    concurrent-ruby (1.1.8)
     config (1.7.0)
       activesupport (>= 3.0)
       deep_merge (~> 1.2.1)
@@ -253,7 +253,7 @@ GEM
       dry-core (~> 0.4)
       dry-equalizer (~> 0.2)
     dry-inflector (0.2.0)
-    dry-initializer (3.0.3)
+    dry-initializer (3.0.4)
     dry-logic (1.0.6)
       concurrent-ruby (~> 1.0)
       dry-core (~> 0.2)
@@ -507,7 +507,7 @@ GEM
       turbolinks
     jquery-ui-rails (6.0.1)
       railties (>= 3.2.16)
-    json (2.3.0)
+    json (2.5.1)
     json-canonicalization (0.2.0)
     json-ld (3.1.7)
       htmlentities (~> 4.3)
@@ -1067,10 +1067,10 @@ GEM
       prometheus-client (>= 0.10, < 3.0)
       rack
       yabeda (~> 0.5)
-    yabeda-puma-plugin (0.5.0)
+    yabeda-puma-plugin (0.6.0)
       json
       puma
-      yabeda (~> 0.2)
+      yabeda (~> 0.5)
     yabeda-rails (0.7.1)
       rails
       yabeda (~> 0.8)
