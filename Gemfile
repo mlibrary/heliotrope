@@ -87,7 +87,7 @@ gem 'bootsnap', '~> 1.4.6'
 # Canister provides containers
 gem 'canister', '~> 0.9.0'
 
-gem 'carrierwave', '~> 1.1.0'
+gem 'carrierwave', '~> 1.3.2'
 
 # Checkpoint provides authorization support
 gem 'checkpoint', '~> 1.1.0'
