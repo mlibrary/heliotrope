@@ -9,6 +9,6 @@ RSpec.describe Sighrax::ElectronicPublication, type: :model do
   let(:data) { {} }
 
   it { is_expected.to be_an_instance_of(described_class) }
-  it { is_expected.to be_a_kind_of(Sighrax::Asset) }
+  it { is_expected.to be_a_kind_of(Sighrax::ElectronicBook) }
   it { expect(subject.resource_type).to eq :ElectronicPublication }
 end

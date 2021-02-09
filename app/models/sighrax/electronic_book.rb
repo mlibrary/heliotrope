@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Sighrax
-  class Mobipocket < ElectronicBook
+  class ElectronicBook < Asset
     private_class_method :new
 
     private
