@@ -158,17 +158,6 @@ RSpec.describe Sighrax do
     end
   end
 
-  describe '#policy' do
-    subject { described_class.policy(actor, entity) }
-
-    let(:actor) { double('actor') }
-    let(:entity) { described_class.from_noid(noid) }
-    let(:noid) { 'validnoid' }
-    let(:data) { {} }
-
-    it { is_expected.to be_an_instance_of(EntityPolicy) }
-  end
-
   describe '#press' do
     subject { described_class.press(entity) }
 

@@ -85,10 +85,6 @@ module Sighrax # rubocop:disable Metrics/ModuleLength
 
     # Entity Helpers
 
-    def policy(actor, entity)
-      EntityPolicy.new(actor, entity)
-    end
-
     def hyrax_presenter(entity, current_ability = nil)
       case entity
       when Monograph

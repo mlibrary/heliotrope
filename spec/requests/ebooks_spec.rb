@@ -17,8 +17,8 @@ RSpec.describe "PDF EBooks", type: :request do
 
     before do
       allow(Sighrax).to receive(:from_noid).with(noid).and_return(entity)
-      allow(Sighrax).to receive(:policy).with(anything, entity).and_return(policy)
       allow(Sighrax).to receive(:press).with(entity).and_return(press)
+      allow(EntityPolicy).to receive(:new).with(anything, entity).and_return(policy)
       allow(PressPolicy).to receive(:new).with(anything, press).and_return(press_policy)
     end
 
