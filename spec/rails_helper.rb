@@ -53,6 +53,7 @@ RSpec.configure do |config|
   config.include Devise::Test::IntegrationHelpers, type: :system
   config.include Warden::Test::Helpers, type: :feature
   config.include RSpecHtmlMatchers
+  config.include ActiveSupport::Testing::TimeHelpers
 end
 
 # Stub out anything that requires a redis connection,

@@ -34,6 +34,12 @@ handle_service:
   password: secret
   ssl_verify: false
 
+open_access_ebook_trust_emails:
+  to: test@fulcrum
+  cc:
+    - cc1@fulcrum
+    - cc2@fulcrum
+
 # List of Greensub Products to allow read access to everyone.
 allow_read_products:
   - allow_read_product
