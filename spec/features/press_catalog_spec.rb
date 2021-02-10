@@ -30,8 +30,17 @@ describe 'Press Catalog' do
         expect(page).not_to have_link invisible.title.first
         expect(page).not_to have_link colors.title.first
 
-        # The Press Catalog is *always* gallery view
+        # Press catalog defaults to gallery view
         expect(page).to have_selector('#documents.row.gallery')
+        expect(page).to have_css(".view-type-group.btn-group[role=tablist]")
+        expect(page).to have_css("a.btn.btn-default.view-type-list[href*='view=list'][role=tab][aria-selected=false]")
+        expect(page).to have_css("a.btn.btn-default.view-type-gallery.active[href*='view=gallery'][role=tab][aria-selected=true]")
+
+        # also check list view
+        click_link 'List'
+        expect(page).to have_css(".view-type-group.btn-group[role=tablist]")
+        expect(page).to have_css("a.btn.btn-default.view-type-list.active[href*='view=list'][role=tab][aria-selected=true]")
+        expect(page).to have_css("a.btn.btn-default.view-type-gallery[href*='view=gallery'][role=tab][aria-selected=false]")
 
         # Since this is not a search, it's a "browse" and the default
         # sort should be Sort by Date Added (Newest First)
