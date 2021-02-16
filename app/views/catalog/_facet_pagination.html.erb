@@ -8,12 +8,22 @@
   <% end %>
 </div>
 
-<div class="sort_options btn-group pull-right">
+<div class="sort_options btn-group pull-right" role="tablist">
   <% if @pagination.sort == 'index' -%>
-    <span class="active az btn btn-default", aria-hidden="true"><%= facet_pagination_sort_index_label(@facet) %></span>
-    <%= link_to(facet_pagination_sort_count_label(@facet), @pagination.params_for_resort_url('count', search_state.to_h), class: "sort_change numeric btn btn-default", data: { ajax_modal: "preserve" }) %>
+    <span class="active az btn btn-default" role="tab" aria-selected="true"><%= facet_pagination_sort_index_label(@facet) %></span>
+    <%= link_to(facet_pagination_sort_count_label(@facet),
+                @pagination.params_for_resort_url('count', search_state.to_h),
+                class: "sort_change numeric btn btn-default",
+                data: { ajax_modal: "preserve" },
+                role: 'tab',
+                'aria-selected': false) %>
   <% elsif @pagination.sort == 'count' -%>
-    <%=  link_to(facet_pagination_sort_index_label(@facet), @pagination.params_for_resort_url('index', search_state.to_h), class: "sort_change az btn btn-default",  data: { ajax_modal: "preserve" }) %>
-    <span class="active numeric btn btn-default", aria-hidden="true"><%= facet_pagination_sort_count_label(@facet) %></span>
+    <%=  link_to(facet_pagination_sort_index_label(@facet),
+                 @pagination.params_for_resort_url('index', search_state.to_h),
+                 class: "sort_change az btn btn-default",
+                 data: { ajax_modal: "preserve" },
+                 role: 'tab',
+                 'aria-selected': false) %>
+    <span class="active numeric btn btn-default" role="tab" aria-selected="true"><%= facet_pagination_sort_count_label(@facet) %></span>
   <% end -%>
 </div>

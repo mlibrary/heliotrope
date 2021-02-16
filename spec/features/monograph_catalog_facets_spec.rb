@@ -98,6 +98,11 @@ describe "Monograph Catalog Facets" do
       expect(keyword_facet_labels[5]).to have_content 'things'
       expect(keyword_facet_counts[5]).to have_content '1'
 
+      # HELIO-3688
+      expect(page).to have_css(".sort_options.btn-group.pull-right[role=tablist]")
+      expect(page).to have_css("span.active.numeric.btn.btn-default[role=tab][aria-selected=true]")
+      expect(page).to have_css("a.sort_change.az.btn.btn-default[href*='keywords_sim?facet.sort=index'][role=tab][aria-selected=false]")
+
       # change to A-Z Sort. specificity because on the actual page used for the more AJAX view there are two sets...
       # of sort buttons, with the upper ones hidden in the modal
       find('.facet_pagination.bottom .sort_options a.sort_change.az.btn.btn-default').click
@@ -119,6 +124,11 @@ describe "Monograph Catalog Facets" do
       expect(keyword_facet_counts[4]).to have_content '2'
       expect(keyword_facet_labels[5]).to have_content 'things'
       expect(keyword_facet_counts[5]).to have_content '1'
+
+      # HELIO-3688
+      expect(page).to have_css(".sort_options.btn-group.pull-right[role=tablist]")
+      expect(page).to have_css("span.active.az.btn.btn-default[role=tab][aria-selected=true]")
+      expect(page).to have_css("a.sort_change.numeric.btn.btn-default[href*='keywords_sim?facet.sort=count'][role=tab][aria-selected=false]")
     end
 
     it "shows the results for a facet, with screen reader div" do
