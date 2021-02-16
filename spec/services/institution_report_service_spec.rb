@@ -5,14 +5,11 @@ require 'rails_helper'
 RSpec.describe InstitutionReportService do
   describe "#run" do
     let(:press) { create(:press, subdomain: "blue", name: "The Blue Press") }
-    let(:inst1) { double("inst1", name: "One Institution", identifier: "1") }
-    let(:inst2) { double("inst2", name: "Two Institution", identifier: "2") }
+    let(:inst1) { create(:institution, name: "One Institution", identifier: "1") }
+    let(:inst2) { create(:institution, name: "Two Institution", identifier: "2") }
 
     before do
-      allow(Greensub::Institution).to receive(:all).and_return([inst1, inst2])
-      create(:counter_report, press: press.id, session: 1,  request: 1, noid: 'a',  parent_noid: 'red', institution: inst1.identifier, created_at: Time.parse("2018-01-01").utc)
-      create(:counter_report, press: press.id, session: 2,  request: 1, noid: 'b',  parent_noid: 'gar', institution: inst2.identifier, created_at: Time.parse("2018-01-03").utc)
-      create(:counter_report, press: press.id, session: 3,  request: 1, noid: 'c',  parent_noid: 'luf', institution: inst2.identifier, created_at: Time.parse("2018-02-03").utc)
+      CounterReport.destroy_all
     end
 
     context "without provided institutions" do
@@ -32,6 +29,11 @@ RSpec.describe InstitutionReportService do
       end
 
       it "returns the correct results" do
+        create(:counter_report, press: press.id, request: 1, noid: 'a',  parent_noid: 'red', institution: inst1.identifier, created_at: Time.parse("2018-01-01").utc)
+        create(:counter_report, press: press.id, request: 1, noid: 'b',  parent_noid: 'gar', institution: inst2.identifier, created_at: Time.parse("2018-01-03").utc)
+        create(:counter_report, press: press.id, request: 1, noid: 'c',  parent_noid: 'luf', institution: inst2.identifier, created_at: Time.parse("2018-02-03").utc)
+        expect(Greensub::Institution.count).to be 2
+        expect(CounterReport.count).to be 3
         expect(described_class.run(args: args)).to eq results
       end
     end
@@ -53,6 +55,11 @@ RSpec.describe InstitutionReportService do
       end
 
       it "returns the correct results" do
+        create(:counter_report, press: press.id, request: 1, noid: 'aaa',  parent_noid: 'red', institution: inst1.identifier, created_at: Time.parse("2018-01-01").utc)
+        create(:counter_report, press: press.id, request: 1, noid: 'bbb',  parent_noid: 'gar', institution: inst2.identifier, created_at: Time.parse("2018-01-03").utc)
+        create(:counter_report, press: press.id, request: 1, noid: 'ccc',  parent_noid: 'luf', institution: inst2.identifier, created_at: Time.parse("2018-02-03").utc)
+        expect(Greensub::Institution.count).to be 2
+        expect(CounterReport.count).to be 3
         expect(described_class.run(args: args)).to eq results
       end
     end
