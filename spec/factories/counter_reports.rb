@@ -13,7 +13,7 @@ FactoryBot.define do
       inst = %w[1 45 987 43 24 643 22 6 18 745]
       inst[Random.rand(10)]
     end
-    noid { "validnoid" }
+    noid { Noid::Rails::Service.new.mint }
     model { "FileSet" }
     section { "" }
     section_type { "" }
@@ -24,6 +24,6 @@ FactoryBot.define do
       at[Random.rand(2)]
     end
     press { 1 }
-    parent_noid { "ValidNoid" }
+    parent_noid { Noid::Rails::Service.new.mint }
   end
 end

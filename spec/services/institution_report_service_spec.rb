@@ -9,7 +9,9 @@ RSpec.describe InstitutionReportService do
     let(:inst2) { create(:institution, name: "Two Institution", identifier: "2") }
 
     before do
-      CounterReport.destroy_all
+      create(:counter_report, press: press.id, request: 1, institution: inst1.identifier, created_at: Time.parse("2018-01-02").utc)
+      create(:counter_report, press: press.id, request: 1, institution: inst2.identifier, created_at: Time.parse("2018-01-04").utc)
+      create(:counter_report, press: press.id, request: 1, institution: inst2.identifier, created_at: Time.parse("2018-02-05").utc)
     end
 
     context "without provided institutions" do
@@ -29,9 +31,6 @@ RSpec.describe InstitutionReportService do
       end
 
       it "returns the correct results" do
-        create(:counter_report, press: press.id, request: 1, noid: 'a',  parent_noid: 'red', institution: inst1.identifier, created_at: Time.parse("2018-01-01").utc)
-        create(:counter_report, press: press.id, request: 1, noid: 'b',  parent_noid: 'gar', institution: inst2.identifier, created_at: Time.parse("2018-01-03").utc)
-        create(:counter_report, press: press.id, request: 1, noid: 'c',  parent_noid: 'luf', institution: inst2.identifier, created_at: Time.parse("2018-02-03").utc)
         expect(Greensub::Institution.count).to be 2
         expect(CounterReport.count).to be 3
         expect(described_class.run(args: args)).to eq results
@@ -55,9 +54,6 @@ RSpec.describe InstitutionReportService do
       end
 
       it "returns the correct results" do
-        create(:counter_report, press: press.id, request: 1, noid: 'aaa',  parent_noid: 'red', institution: inst1.identifier, created_at: Time.parse("2018-01-01").utc)
-        create(:counter_report, press: press.id, request: 1, noid: 'bbb',  parent_noid: 'gar', institution: inst2.identifier, created_at: Time.parse("2018-01-03").utc)
-        create(:counter_report, press: press.id, request: 1, noid: 'ccc',  parent_noid: 'luf', institution: inst2.identifier, created_at: Time.parse("2018-02-03").utc)
         expect(Greensub::Institution.count).to be 2
         expect(CounterReport.count).to be 3
         expect(described_class.run(args: args)).to eq results
