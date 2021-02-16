@@ -110,8 +110,18 @@ describe 'Monograph Catalog Search' do
     expect(page).not_to have_content 'Strange Marshes'
     expect(page).to have_content("Your search has returned 1 resource attached to Weird Bogs")
 
-    # Gallery view
+    # Monograph catalog defaults to list view
+    expect(page).to have_css(".view-type-group.btn-group[role=tablist]")
+    expect(page).to have_css("a.btn.btn-default.view-type-list.active[href*='view=list'][role=tab][aria-selected=true]")
+    expect(page).to have_css("a.btn.btn-default.view-type-gallery[href*='view=gallery'][role=tab][aria-selected=false]")
+
+    # also check gallery view
     visit monograph_catalog_path id: monograph.id, view: 'gallery'
+
+    expect(page).to have_css(".view-type-group.btn-group[role=tablist]")
+    expect(page).to have_css("a.btn.btn-default.view-type-list[href*='view=list'][role=tab][aria-selected=false]")
+    expect(page).to have_css("a.btn.btn-default.view-type-gallery.active[href*='view=gallery'][role=tab][aria-selected=true]")
+
     expect(page).to have_selector("#documents.row.gallery")
     expect(page).to have_selector(".gallery .document .thumbnail .caption")
     expect(page).to have_content("Unruly Puddles")
