@@ -26,6 +26,16 @@ module Sighrax
       Array(data['description_tesim']).first
     end
 
+    def products
+      Greensub::Product.containing_monograph(noid)
+    end
+
+    # Don't want to call this press right now because the other things like it are direct field access
+    def _press
+      subdomain = Array(data['press_tesim']).first
+      Press.find_by(subdomain: subdomain)
+    end
+
     def identifier
       return @identifier if @identifier.present?
 

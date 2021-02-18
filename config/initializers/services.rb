@@ -45,7 +45,7 @@ Services.register(:checkpoint) do
   #     resource_resolver: Resource::Resolver.new,
   #     permits: Permits.new)
   # end
-  Checkpoint::Authority.new(
+  HeliotropeAuthority.new(
     agent_resolver: ActorAgentResolver.new,
     resource_resolver: TargetResourceResolver.new
   )

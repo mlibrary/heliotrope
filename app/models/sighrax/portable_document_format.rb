@@ -4,6 +4,12 @@ module Sighrax
   class PortableDocumentFormat < ElectronicBook
     private_class_method :new
 
+    delegate :products, to: :monograph
+
+    def monograph
+      parent
+    end
+
     private
 
       def initialize(noid, data)
