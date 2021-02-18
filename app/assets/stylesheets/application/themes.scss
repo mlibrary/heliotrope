@@ -823,380 +823,6 @@ $ahpi-white: #fff;
   }
 
 }
-
-///////////////////////////////////////////////
-//
-// A2RU - Alliance for the Arts in Research
-// Universities
-//
-///////////////////////////////////////////////
-// colors
-$a2ru-brand-color: #64b145;
-$a2ru-link: #ed1b68;
-$a2ru-accent-link: #A10941;
-$a2ru-black-80: #333;
-$a2ru-blue-light: #148ec2;
-$a2ru-blue-dark: #244c9e;
-$a2ru-aqua: #69c9ca;
-$a2ru-grey-1: #676c72;
-$a2ru-grey-2: #efefef;
-$a2ru-brown: #a47434;
-$a2ru-yellow: #cac52f;
-$a2ru-white: #fafafa;
-
-// typography
-@import url('https://fonts.googleapis.com/css?family=Rubik:300,400,400i,500,500i&display=swap');
-
-@mixin rubik {
-  font-family: 'Rubik', sans-serif;
-}
-
-.a2ru {
-
-  // typography
-  @include rubik;
-
-  h1,
-  h2,
-  h3,
-  h4,
-  h5 {
-    font-weight: 500;
-  }
-
-  // links
-  a {
-    color: $a2ru-link;
-  }
-
-  a:hover,
-  a:active {
-    color: $a2ru-accent-link;
-  }
-
-  // buttons
-
-  .btn-default {
-    @include button-background-color($a2ru-white);
-    @include button-font-color($a2ru-link);
-    border-color: $a2ru-link;
-  }
-
-
-  .btn-default:hover,
-  .btn-default:active {
-    @include button-hover-background-color($a2ru-link);
-    @include button-hover-font-color($a2ru-white);
-  }
-
-  // navigation menu
-  .navbar-default .navbar-nav > .open > a,
-  .navbar-default .navbar-nav > .open > a:hover,
-  .navbar-default .navbar-nav > .open > a:focus {
-    background-color: $a2ru-grey-2;
-  }
-
-  #brand-bar {
-    background-color: $a2ru-white;
-    border-bottom: 2px solid $a2ru-link;
-
-    .navbar-brand {
-      color: $a2ru-brand-color;
-      font-weight: 400;
-    }
-
-    .navbar-nav {
-      a#add-content,
-      a.login,
-      a.user-display-name,
-      a.language-dropdown {
-          color: $a2ru-link;
-      }
-
-      .open > a,
-      .open > a:focus,
-      .open > a:hover {
-        background-color: $a2ru-grey-2;
-      }
-    }
-
-    button.search-submit {
-      background-color: $a2ru-grey-1;
-      border-color: $a2ru-grey-1;
-      color: $a2ru-white;
-    }
-
-  }
-
-  // press catalog
-
-  // jumbotron
-  .jumbotron {
-    background-color: $a2ru-grey-2;
-    font-weight: 300;
-    padding-top: 1.5em;
-    padding-bottom: 1em;
-
-    p {
-      font-size: 16px;
-      margin-bottom: 0;
-    }
-
-    .container {
-      margin-top: 0;
-    }
-
-    .logo {
-
-      img {
-        width: 300px;
-        margin-right: 3em;
-      }
-
-    }
-
-  }
-
-  .press {
-    .results-container {
-
-      .document {
-        h3 {
-          font-weight: 600;
-        }
-        a {
-          color: #333;
-        }
-      }
-    }
-  }
-
-  //filters on press and monograph pages
-  .col-sm-3.facets-container,
-  #facet-panel-collapse {
-    padding-left: 0px;
-  }
-
-  .panel-group {
-    padding-left: 0px;
-  }
-
-  .panel-group .panel {
-    border-radius: 0px;
-  }
-
-  .panel-heading {
-    padding-top: 15px;
-  }
-
-  .panel-group .panel + .panel {
-    margin-top: 0px;
-  }
-
-  h3.panel-title a, a.more_facets_link {
-    color: #333;
-  }
-
-  .panel-heading.collapse-toggle .panel-title::after {
-    color: #333;
-  }
-
-  .panel-body {
-    background-color: #fafafa;
-  }
-
-  .search-form.panel-body {
-    background-color: #fff;
-  }
-
-  // sorts on press and monograph pages
-  #sort-dropdown .dropdown-toggle,
-  #per_page-dropdown .dropdown-toggle {
-    color: $a2ru-link;
-  }
-
-  #sort-dropdown .dropdown-toggle:hover,
-  #per_page-dropdown .dropdown-toggle:hover,
-  #sort-dropdown .dropdown-toggle:active,
-  #per_page-dropdown .dropdown-toggle:active {
-    color: $a2ru-white;
-
-    .caret {
-      color: $a2ru-white;
-    }
-
-  }
-
-  // search resources
-  button.search-submit {
-    background-color: $a2ru-link;
-    border-color: $a2ru-link;
-    color: $a2ru-white;
-  }
-
-  .constraints-container {
-    padding: 10px 20px;
-    border-radius: 0px;
-    -webkit-box-shadow: none;
-    box-shadow: none;
-  }
-
-
-  // pagination
-
-  .pagination {
-     li a, li span {
-
-       background-color: $a2ru-link;
-       border-color: $a2ru-link;
-       color: $a2ru-white;
-     }
-
-     li>a:hover,
-     li>a:focus,
-     li>span:hover,
-     li>span:focus {
-       background-color: $a2ru-white;
-       border-color: $a2ru-white;
-       color: $a2ru-link;
-     }
-
-
-     .active>a,
-     .active>a:hover,
-     .active>a:focus,
-     .active>span,
-     .active>span:hover,
-     .active>span:focus {
-       background-color: $a2ru-white;
-       border-color: $a2ru-white;
-       color: $a2ru-link;
-     }
-
-     .disabled>span,
-     .disabled>span:hover,
-     .disabled>span:focus,
-     .disabled>a,
-     .disabled>a:hover,
-     .disabled>a:focus {
-      background-color: $a2ru-white;
-      border-color: $a2ru-white;
-      color: $a2ru-link;
-     }
-  }
-
-  //footer
-  footer {
-    a,
-    a:hover,
-    a:active {
-      color: $a2ru-white;
-    }
-    .press-block-a,
-    .press-block-b {
-      background-color:  $a2ru-grey-2;
-      font-weight: 400;
-
-      a,
-      a:hover,
-      a:active {
-        color: $a2ru-link;
-      }
-
-      img {
-        width: 125px;
-      }
-
-    }
-    .press-block-a a,
-    .press-block-a a:hover,
-    .press-block-a  a:active {
-      display: none;
-    }
-    .press-block-c {
-      background-color: $a2ru-brand-color;
-      color: $a2ru-white;
-      text-transform: uppercase;
-      letter-spacing: 1.75px;
-
-      img {
-        width: auto !important;
-        margin-right: 1em;
-        height: 25px;
-      }
-    }
-    .platform {
-       background-color: $a2ru-black-80;
-    }
-  }
-
-  // e-book reader
-  #reader {
-
-    .button {
-      @include epub-button-background-color($a2ru-link,$a2ru-accent-link,$a2ru-white);
-    }
-
-    .button--lg {
-      @include epub-button-background-color($a2ru-link,$a2ru-accent-link,$a2ru-white);
-    }
-
-    .button--inline {
-      @include epub-button-background-color($a2ru-link,$a2ru-accent-link,$a2ru-white);
-    }
-
-    .button--sm {
-      @include epub-button-background-color($a2ru-link,$a2ru-accent-link,$a2ru-white);
-    }
-
-    .button--sm.cozy-preferences {
-      @include epub-button-background-color(#f1f1f1,$a2ru-accent-link,$a2ru-white);
-      color: $a2ru-link;
-    }
-
-    i[class^='icon-chevron-'] {
-      @include epub-prev-next-color($a2ru-grey-1);
-      transition: 0.2s ease-in;
-    }
-
-    i[class^='icon-chevron-']:hover {
-      @include epub-hover-prev-next-color($a2ru-brand-color);
-      transition: 0.2s ease-in;
-    }
-
-    .cozy-control .logo {
-      height: 47px;
-
-      img {
-        height: 47px;
-      }
-    }
-
-    // PDF loading progress bar
-    .helio-loading-bar .progress {
-      background-color: $a2ru-brand-color;
-    }
-
-  }
-
-}
-
-@media(max-width: 768px) {
-  .a2ru .monograph .message {
-    padding: 1.5em;
-
-    .wrapper {
-      width: auto;
-    }
-    .text {
-      width: 70%;
-    }
-    .dismiss {
-      width: 20%;
-      padding-left: 10%;
-    }
-  }
-}
 ///////////////////////////////////////////////
 //
 // Against the Grain (ATG)
@@ -3525,671 +3151,6 @@ $lever-black-80: #342f2e;
 }
 ///////////////////////////////////////////////
 //
-// Maize Books
-//
-///////////////////////////////////////////////
-// colors
-$maize-brand-color: #002e5e;
-$maize-accent-color: #e4e1df;
-
-$maize-accent-footer: #989c97;
-
-$maize-accent-link: #00274c;
-
-$maize-grey-1: #e5e5e5;
-$maize-grey-2: #d5d6d2;
-$maize-grey-3: #989c97;
-$maize-grey-4: #655a52;
-$maize-yellow: #ffcb05;
-$maize-blue: #40658f;
-$maize-blue-2: #1d3160;
-$maize-white: #fff;
-$maize-black-80: #342f2e;
-
-// typography
-@mixin benton {
-  font-family: benton-sans, sans-serif;
-}
-
-@mixin synthese {
-  font-family: synthese, sans-serif;
-}
-
-.maizebooks {
-
-  // typography
-  @include benton;
-
-  h1,
-  h2,
-  h3,
-  h4,
-  h5 {
-    @include benton;
-    font-weight: 700;
-  }
-
-  // links
-  a {
-    color: $maize-accent-link;
-  }
-
-  a:hover,
-  a:active,
-  a:focus {
-    color: $maize-blue;
-    text-decoration: underline;
-  }
-
-  // buttons
-  .btn, .btn-default {
-    @include benton;
-    background-color: $maize-brand-color;
-    border-color: $maize-accent-link;
-    color: $maize-white;
-  }
-
-  .btn:hover,
-  .btn:active,
-  .btn-default:hover,
-  .btn-default:active {
-    background-color: $maize-white;
-    color: $maize-brand-color;
-    text-decoration: none;
-  }
-
-  // navigation menu
-  .navbar-default .navbar-nav > .open > a,
-  .navbar-default .navbar-nav > .open > a:hover,
-  .navbar-default .navbar-nav > .open > a:focus {
-    background-color: $maize-white;
-  }
-
-  #brand-bar {
-    background-color: $maize-brand-color;
-    border-color: $maize-brand-color;
-
-    .navbar-brand {
-      color: $maize-white;
-      @include synthese;
-      font-weight: 300;
-      text-transform: uppercase;
-      letter-spacing: unset;
-      font-size: 2.3em;
-      -o-transition: .3s;
-        -ms-transition: .3s;
-        -moz-transition: .3s;
-        -webkit-transition: .3s;
-        transition: .3s;
-    }
-
-    .navbar-brand:hover,
-    .navbar-brand:active,
-    .navbar-brand:focus {
-      color: $maize-yellow;
-      text-decoration: none;
-    }
-
-    .navbar-nav {
-      a#add-content,
-      a.login,
-      a.user-display-name,
-      a.language-dropdown {
-          color: $maize-white;
-      }
-
-      .open > a,
-      .open > a:focus,
-      .open > a:hover,
-      .open > a#add-content {
-        background-color: $maize-white;
-        color: $maize-brand-color;
-      }
-    }
-
-    button.search-submit {
-      background-color: $maize-grey-2;
-      border-color: $maize-grey-1;
-      color: $maize-brand-color;
-    }
-
-  }
-
-  // breadcrumbs
-  .breadcrumbs {
-    @include benton;
-  }
-
-  // press catalog
-
-  // jumbotron
-  .jumbotron {
-    background-color: $maize-grey-1;
-    @include benton;
-    font-weight: 300;
-
-    padding-top: 20px;
-    padding-bottom: 20px;
-
-    .container {
-      margin-top: 1em;
-    }
-
-    p.lead {
-      font-size: 20px;
-      a {
-        text-decoration: underline;
-      }
-    }
-
-    p.publisher-info a {
-      text-decoration: underline;
-    }
-
-    .logo {
-
-      img {
-        display: none;
-      }
-
-    }
-
-  }
-
-  // monograph catalog
-  #sort-dropdown .dropdown-toggle, #per_page-dropdown .dropdown-toggle {
-    background-color: $maize-brand-color;
-    color: $maize-white;
-  }
-
-  #sort-dropdown .dropdown-toggle,
-  #per_page-dropdown .dropdown-toggle {
-    background-color: $maize-brand-color;
-    color: $maize-white;
-    border-color: $maize-accent-link;
-
-  }
-
-  #sort-dropdown .dropdown-toggle:hover,
-  #per_page-dropdown .dropdown-toggle:hover,
-  #sort-dropdown .dropdown-toggle:active,
-  #per_page-dropdown .dropdown-toggle:active {
-    background-color: $maize-white;
-    color: $maize-brand-color;
-  }
-
-  #sort-dropdown .dropdown-toggle .caret,
-  #per_page-dropdown .dropdown-toggle .caret {
-    color: $maize-white;
-  }
-
-  #sort-dropdown .dropdown-toggle:hover .caret,
-  #per_page-dropdown .dropdown-toggle:hover .caret,
-  #sort-dropdown .dropdown-toggle:active .caret,
-  #per_page-dropdown .dropdown-toggle:active .caret {
-    color: $maize-brand-color;
-  }
-
-  // monograph
-  .monograph {
-    .documentHeader {
-      p {
-        @include benton;
-      }
-    }
-
-    .authors, .copyright {
-      @include benton;
-    }
-
-    .monograph-cover button {
-      background-color: transparent;
-      border-color: transparent;
-    }
-  }
-
-  // pagination
-  .page_links {
-    @include benton;
-  }
-
-  .pagination {
-    @include benton;
-     li a, li span {
-       color: $maize-white;
-       background-color: $maize-brand-color;
-     }
-
-     .active>a,
-     .active>a:hover,
-     .active>a:focus,
-     .active>span,
-     .active>span:hover,
-     .active>span:focus {
-       background-color: $maize-white;
-       border-color: $maize-grey-1;
-       color: $maize-brand-color;
-     }
-  }
-
-  // assets
-  .asset-navigation {
-    @include benton;
-  }
-
-  .asset {
-    ul.nav-tabs li {
-      @include benton;
-    }
-  }
-
-  //footer
-  footer {
-    a,
-    a:hover,
-    a:active {
-      color: $maize-white;
-    }
-    .press-block-a,
-    .press-block-b {
-      background-color:  $maize-brand-color;
-
-      a,
-      a:hover,
-      a:active {
-        color: $maize-white;
-      }
-
-      img {
-        width: 110px;
-        margin-top: 30px;
-      }
-
-      p {
-        @include benton;
-        font-weight: 500;
-        text-transform: uppercase;
-        letter-spacing: unset;
-
-        a.brand {
-          display:none;
-        }
-      }
-
-    }
-    .press-block-c {
-      background-color: $maize-grey-1;
-      color: $maize-brand-color;
-      @include synthese;
-      text-transform: uppercase;
-    }
-    .platform {
-      background-color: $maize-black-80;
-    }
-  }
-
-  // e-book reader
-  #epub {
-    font-family: benton-sans, arial, sans-serif !important;
-  }
-
-  #reader {
-    @include benton;
-
-    .cozy-control .cozy-h1 {
-      @include benton;
-      font-size: 1.5em;
-    }
-
-    .cozy-container input[type="text"] {
-      font-family: benton-sans, arial, sans-serif !important;
-    }
-
-    .button {
-      @include epub-button-background-color($maize-brand-color,$maize-blue,$maize-white);
-      @include benton;
-    }
-
-    .button--lg {
-      @include epub-button-background-color($maize-brand-color,$maize-blue,$maize-white);
-      @include benton;
-    }
-
-    .button--inline {
-      @include epub-button-background-color($maize-brand-color,$maize-blue,$maize-white);
-      @include benton;
-    }
-
-    .button--sm {
-      @include epub-button-background-color($maize-brand-color,$maize-blue,$maize-white);
-      @include benton;
-    }
-
-    .button--sm.cozy-preferences {
-      @include epub-button-background-color(#f1f1f1,$maize-blue,$maize-white);
-      color: $maize-brand-color;
-    }
-
-    i[class^='icon-chevron-'] {
-      @include epub-prev-next-color($maize-brand-color);
-      transition: 0.2s ease-in;
-    }
-
-    i[class^='icon-chevron-']:hover {
-      @include epub-hover-prev-next-color($maize-brand-color);
-      transition: 0.2s ease-in;
-    }
-
-    // PDF loading progress bar
-    .helio-loading-bar .progress {
-      background-color: $maize-brand-color;
-    }
-
-  }
-
-}
-///////////////////////////////////////////////
-//
-// University of Michigan - President's Commission
-// on Carbon Neutrality
-//
-///////////////////////////////////////////////
-// colors
-$pccn-brand-color: #00274c;
-$pccn-accent-color: #b7c9d7;
-$pccn-accent-link: #417da1;
-
-$pccn-blue: #054a92;
-
-$pccn-grey-1: #dedfdb;
-$pccn-grey-2: #989c97;
-$pccn-grey-3: #655a52;
-$pccn-white: #fff;
-$pccn-black-80: #342f2e;
-
-// typography
-@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,400;0,700;1,400;1,700&display=swap');
-@mixin roboto {
-  font-family: 'Roboto', sans-serif;
-}
-
-@mixin meta {
-  font-family: "ff-meta-web-pro", sans-serif;
-}
-
-.um-pccn {
-
-  // typography
-  @include roboto;
-
-  h1,
-  h2,
-  h3,
-  h4,
-  h5 {
-    font-weight: 700;
-  }
-
-  // links
-  a,
-  button {
-    color: $pccn-blue;
-  }
-
-  a:hover,
-  a:active,
-  a:focus,
-  button:hover,
-  button:active,
-  button:focus {
-    color: $pccn-brand-color;
-  }
-
-  // navigation menu
-  .navbar-default .navbar-nav > .open > a,
-  .navbar-default .navbar-nav > .open > a:hover,
-  .navbar-default .navbar-nav > .open > a:focus {
-    background-color: $pccn-accent-color;
-  }
-
-  .navbar {
-    min-height: 90px;
-  }
-
-  .search-form {
-    padding-top: 1.5em;
-  }
-
-  .navbar-right {
-    padding-top: 1em;
-  }
-
-  #brand-bar {
-    background-color: $pccn-brand-color;
-    border-color: $pccn-brand-color;
-
-    .navbar-brand {
-      color: $pccn-white;
-      @include meta;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 2px;
-      max-width: 350px;
-    }
-
-    .navbar-nav {
-      a#add-content,
-      a.login,
-      a.user-display-name,
-      a.language-dropdown {
-          color: $pccn-accent-color;
-      }
-
-      .open > a,
-      .open > a:focus,
-      .open > a:hover {
-        background-color: $pccn-blue;
-      }
-    }
-
-    button.search-submit {
-      background-color: $pccn-accent-color;
-      border-color: $pccn-accent-color;
-      color: $pccn-brand-color;
-    }
-
-  }
-
-  // press catalog
-
-  // jumbotron
-  .jumbotron {
-    background-color: $pccn-accent-color;
-
-    padding-top: 20px;
-    padding-bottom: 20px;
-
-    .container {
-      margin-top: 1em;
-    }
-
-    p.lead {
-      font-size: 14px;
-    }
-
-    .logo {
-
-      img {
-        width: 150px;
-        margin-right: 1em;
-      }
-
-    }
-
-  }
-
-  // monograph catalog
-  #sort-dropdown .dropdown-toggle, #per_page-dropdown .dropdown-toggle {
-    color: $pccn-blue;
-  }
-
-  // monograph
-  .monograph {
-
-    button.search-submit {
-      background-color: $pccn-blue;
-      border-color: $pccn-blue;
-      color: $pccn-white;
-    }
-  }
-
-  .pagination {
-     li a, li span {
-       color: $pccn-blue;
-     }
-
-     .active>a,
-     .active>a:hover,
-     .active>a:focus,
-     .active>span,
-     .active>span:hover,
-     .active>span:focus {
-       background-color: $pccn-blue;
-       border-color: $pccn-blue;
-       color: $pccn-brand-color;
-     }
-  }
-
-  //footer
-
-  footer {
-    a,
-    a:hover,
-    a:active {
-      color: $pccn-white;
-    }
-    .press-block-a,
-    .press-block-b {
-      background-color: $pccn-accent-link;
-
-      a,
-      a:hover,
-      a:active {
-        color: $pccn-white;
-      }
-
-      img {
-        width: 100%;
-      }
-
-      p {
-        @include meta;
-        font-weight: 700;
-        text-transform: uppercase;
-        letter-spacing: 2px;
-      }
-
-    }
-    .press-block-c {
-      background-color: $pccn-brand-color;
-    }
-    .platform {
-      background-color: $pccn-black-80;
-    }
-  }
-
-  // e-book reader
-  #reader {
-
-    .cozy-control .cozy-h1 {
-      font-size: 1.5em;
-    }
-
-    .button {
-      @include epub-button-background-color($pccn-blue,$pccn-brand-color,$pccn-white);
-    }
-
-    .button--lg {
-      @include epub-button-background-color($pccn-blue,$pccn-brand-color,$pccn-white);
-    }
-
-    .button--inline {
-      @include epub-button-background-color($pccn-blue,$pccn-brand-color,$pccn-white);
-    }
-
-    .button--sm {
-      @include epub-button-background-color($pccn-blue,$pccn-brand-color,$pccn-white);
-    }
-
-    .button--sm.cozy-preferences {
-      @include epub-button-background-color(#f1f1f1,$pccn-blue,$pccn-white);
-      color: $pccn-brand-color;
-    }
-
-    i[class^='icon-chevron-'] {
-      @include epub-prev-next-color($pccn-brand-color);
-      transition: 0.2s ease-in;
-    }
-
-    i[class^='icon-chevron-']:hover {
-      @include epub-hover-prev-next-color($pccn-brand-color);
-      transition: 0.2s ease-in;
-    }
-
-    .cozy-control .logo {
-      background: $pccn-grey-1;
-      height: 46.6px;
-      width: 36px;
-      overflow: hidden;
-
-      img {
-        height: 36px;
-        margin-top: 6px;
-        margin-left: 11px;
-      }
-    }
-
-    // PDF loading progress bar
-    .helio-loading-bar .progress {
-      background-color: $pccn-brand-color;
-    }
-
-  }
-
-
-  @media only screen and (max-width : 992px) {
-
-    #brand-bar form.search-form, .navbar-form {
-      width: 190px;
-    }
-
-  }
-
-  @media only screen and (max-width : 768px) {
-    #brand-bar form.search-form, .navbar-form {
-      padding: 10px 0;
-      margin: 0;
-      width: 100%;
-      border: 0;
-      float: none !important;
-    }
-
-    .navbar-form .input-group .input-group-btn {
-      width: 1%;
-    }
-
-    #brand-bar .navbar-brand {
-      max-width: 250px;
-    }
-
-    .navbar-header {
-      min-height: 9em;
-    }
-  }
-
-}
-///////////////////////////////////////////////
-//
 // University of Michigan Press
 //
 ///////////////////////////////////////////////
@@ -5451,7 +4412,1047 @@ $mps-teal-100: #e9f2f5;
   }
 
 }
+///////////////////////////////////////////////
+//
+// Michigan Publishing Services
+// A2RU - Alliance for the Arts in Research
+// Universities
+//
+///////////////////////////////////////////////
+// colors
+$a2ru-brand-color: #64b145;
+$a2ru-link: #ed1b68;
+$a2ru-accent-link: #A10941;
+$a2ru-black-80: #333;
+$a2ru-blue-light: #148ec2;
+$a2ru-blue-dark: #244c9e;
+$a2ru-aqua: #69c9ca;
+$a2ru-grey-1: #676c72;
+$a2ru-grey-2: #efefef;
+$a2ru-brown: #a47434;
+$a2ru-yellow: #cac52f;
+$a2ru-white: #fafafa;
 
+// typography
+@import url('https://fonts.googleapis.com/css?family=Rubik:300,400,400i,500,500i&display=swap');
+
+@mixin rubik {
+  font-family: 'Rubik', sans-serif;
+}
+
+.a2ru {
+
+  // typography
+  @include rubik;
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5 {
+    font-weight: 500;
+  }
+
+  // links
+  a {
+    color: $a2ru-link;
+  }
+
+  a:hover,
+  a:active {
+    color: $a2ru-accent-link;
+  }
+
+  // buttons
+
+  .btn-default {
+    @include button-background-color($a2ru-white);
+    @include button-font-color($a2ru-link);
+    border-color: $a2ru-link;
+  }
+
+
+  .btn-default:hover,
+  .btn-default:active {
+    @include button-hover-background-color($a2ru-link);
+    @include button-hover-font-color($a2ru-white);
+  }
+
+  // navigation menu
+  .navbar-default .navbar-nav > .open > a,
+  .navbar-default .navbar-nav > .open > a:hover,
+  .navbar-default .navbar-nav > .open > a:focus {
+    background-color: $a2ru-grey-2;
+  }
+
+  #brand-bar {
+    background-color: $a2ru-white;
+    border-bottom: 2px solid $a2ru-link;
+
+    .navbar-brand {
+      color: $a2ru-brand-color;
+      font-weight: 400;
+    }
+
+    .navbar-nav {
+      a#add-content,
+      a.login,
+      a.user-display-name,
+      a.language-dropdown {
+          color: $a2ru-link;
+      }
+
+      .open > a,
+      .open > a:focus,
+      .open > a:hover {
+        background-color: $a2ru-grey-2;
+      }
+    }
+
+    button.search-submit {
+      background-color: $a2ru-grey-1;
+      border-color: $a2ru-grey-1;
+      color: $a2ru-white;
+    }
+
+  }
+
+  // press catalog
+
+  // jumbotron
+  .jumbotron {
+    background-color: $a2ru-grey-2;
+    font-weight: 300;
+    padding-top: 1.5em;
+    padding-bottom: 1em;
+
+    p {
+      font-size: 16px;
+      margin-bottom: 0;
+    }
+
+    .container {
+      margin-top: 0;
+    }
+
+    .logo {
+
+      img {
+        width: 300px;
+        margin-right: 3em;
+      }
+
+    }
+
+  }
+
+  .press {
+    .results-container {
+
+      .document {
+        h3 {
+          font-weight: 600;
+        }
+        a {
+          color: #333;
+        }
+      }
+    }
+  }
+
+  //filters on press and monograph pages
+  .col-sm-3.facets-container,
+  #facet-panel-collapse {
+    padding-left: 0px;
+  }
+
+  .panel-group {
+    padding-left: 0px;
+  }
+
+  .panel-group .panel {
+    border-radius: 0px;
+  }
+
+  .panel-heading {
+    padding-top: 15px;
+  }
+
+  .panel-group .panel + .panel {
+    margin-top: 0px;
+  }
+
+  h3.panel-title a, a.more_facets_link {
+    color: #333;
+  }
+
+  .panel-heading.collapse-toggle .panel-title::after {
+    color: #333;
+  }
+
+  .panel-body {
+    background-color: #fafafa;
+  }
+
+  .search-form.panel-body {
+    background-color: #fff;
+  }
+
+  // sorts on press and monograph pages
+  #sort-dropdown .dropdown-toggle,
+  #per_page-dropdown .dropdown-toggle {
+    color: $a2ru-link;
+  }
+
+  #sort-dropdown .dropdown-toggle:hover,
+  #per_page-dropdown .dropdown-toggle:hover,
+  #sort-dropdown .dropdown-toggle:active,
+  #per_page-dropdown .dropdown-toggle:active {
+    color: $a2ru-white;
+
+    .caret {
+      color: $a2ru-white;
+    }
+
+  }
+
+  // search resources
+  button.search-submit {
+    background-color: $a2ru-link;
+    border-color: $a2ru-link;
+    color: $a2ru-white;
+  }
+
+  .constraints-container {
+    padding: 10px 20px;
+    border-radius: 0px;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+  }
+
+
+  // pagination
+
+  .pagination {
+     li a, li span {
+
+       background-color: $a2ru-link;
+       border-color: $a2ru-link;
+       color: $a2ru-white;
+     }
+
+     li>a:hover,
+     li>a:focus,
+     li>span:hover,
+     li>span:focus {
+       background-color: $a2ru-white;
+       border-color: $a2ru-white;
+       color: $a2ru-link;
+     }
+
+
+     .active>a,
+     .active>a:hover,
+     .active>a:focus,
+     .active>span,
+     .active>span:hover,
+     .active>span:focus {
+       background-color: $a2ru-white;
+       border-color: $a2ru-white;
+       color: $a2ru-link;
+     }
+
+     .disabled>span,
+     .disabled>span:hover,
+     .disabled>span:focus,
+     .disabled>a,
+     .disabled>a:hover,
+     .disabled>a:focus {
+      background-color: $a2ru-white;
+      border-color: $a2ru-white;
+      color: $a2ru-link;
+     }
+  }
+
+  //footer
+  footer {
+    a,
+    a:hover,
+    a:active {
+      color: $a2ru-white;
+    }
+    .press-block-a,
+    .press-block-b {
+      background-color:  $a2ru-grey-2;
+      font-weight: 400;
+
+      a,
+      a:hover,
+      a:active {
+        color: $a2ru-link;
+      }
+
+      img {
+        width: 125px;
+      }
+
+    }
+    .press-block-a a,
+    .press-block-a a:hover,
+    .press-block-a  a:active {
+      display: none;
+    }
+    .press-block-c {
+      background-color: $a2ru-brand-color;
+      color: $a2ru-white;
+      text-transform: uppercase;
+      letter-spacing: 1.75px;
+
+      img {
+        width: auto !important;
+        margin-right: 1em;
+        height: 25px;
+      }
+    }
+    .platform {
+       background-color: $a2ru-black-80;
+    }
+  }
+
+  // e-book reader
+  #reader {
+
+    .button {
+      @include epub-button-background-color($a2ru-link,$a2ru-accent-link,$a2ru-white);
+    }
+
+    .button--lg {
+      @include epub-button-background-color($a2ru-link,$a2ru-accent-link,$a2ru-white);
+    }
+
+    .button--inline {
+      @include epub-button-background-color($a2ru-link,$a2ru-accent-link,$a2ru-white);
+    }
+
+    .button--sm {
+      @include epub-button-background-color($a2ru-link,$a2ru-accent-link,$a2ru-white);
+    }
+
+    .button--sm.cozy-preferences {
+      @include epub-button-background-color(#f1f1f1,$a2ru-accent-link,$a2ru-white);
+      color: $a2ru-link;
+    }
+
+    i[class^='icon-chevron-'] {
+      @include epub-prev-next-color($a2ru-grey-1);
+      transition: 0.2s ease-in;
+    }
+
+    i[class^='icon-chevron-']:hover {
+      @include epub-hover-prev-next-color($a2ru-brand-color);
+      transition: 0.2s ease-in;
+    }
+
+    .cozy-control .logo {
+      height: 47px;
+
+      img {
+        height: 47px;
+      }
+    }
+
+    // PDF loading progress bar
+    .helio-loading-bar .progress {
+      background-color: $a2ru-brand-color;
+    }
+
+  }
+
+}
+
+@media(max-width: 768px) {
+  .a2ru .monograph .message {
+    padding: 1.5em;
+
+    .wrapper {
+      width: auto;
+    }
+    .text {
+      width: 70%;
+    }
+    .dismiss {
+      width: 20%;
+      padding-left: 10%;
+    }
+  }
+}
+///////////////////////////////////////////////
+//
+// Michigan Publishing Services
+// Maize Books
+//
+///////////////////////////////////////////////
+// colors
+$maize-brand-color: #002e5e;
+$maize-accent-color: #e4e1df;
+
+$maize-accent-footer: #989c97;
+
+$maize-accent-link: #00274c;
+
+$maize-grey-1: #e5e5e5;
+$maize-grey-2: #d5d6d2;
+$maize-grey-3: #989c97;
+$maize-grey-4: #655a52;
+$maize-yellow: #ffcb05;
+$maize-blue: #40658f;
+$maize-blue-2: #1d3160;
+$maize-white: #fff;
+$maize-black-80: #342f2e;
+
+// typography
+@mixin benton {
+  font-family: benton-sans, sans-serif;
+}
+
+@mixin synthese {
+  font-family: synthese, sans-serif;
+}
+
+.maizebooks {
+
+  // typography
+  @include benton;
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5 {
+    @include benton;
+    font-weight: 700;
+  }
+
+  // links
+  a {
+    color: $maize-accent-link;
+  }
+
+  a:hover,
+  a:active,
+  a:focus {
+    color: $maize-blue;
+    text-decoration: underline;
+  }
+
+  // buttons
+  .btn, .btn-default {
+    @include benton;
+    background-color: $maize-brand-color;
+    border-color: $maize-accent-link;
+    color: $maize-white;
+  }
+
+  .btn:hover,
+  .btn:active,
+  .btn-default:hover,
+  .btn-default:active {
+    background-color: $maize-white;
+    color: $maize-brand-color;
+    text-decoration: none;
+  }
+
+  // navigation menu
+  .navbar-default .navbar-nav > .open > a,
+  .navbar-default .navbar-nav > .open > a:hover,
+  .navbar-default .navbar-nav > .open > a:focus {
+    background-color: $maize-white;
+  }
+
+  #brand-bar {
+    background-color: $maize-brand-color;
+    border-color: $maize-brand-color;
+
+    .navbar-brand {
+      color: $maize-white;
+      @include synthese;
+      font-weight: 300;
+      text-transform: uppercase;
+      letter-spacing: unset;
+      font-size: 2.3em;
+      -o-transition: .3s;
+        -ms-transition: .3s;
+        -moz-transition: .3s;
+        -webkit-transition: .3s;
+        transition: .3s;
+    }
+
+    .navbar-brand:hover,
+    .navbar-brand:active,
+    .navbar-brand:focus {
+      color: $maize-yellow;
+      text-decoration: none;
+    }
+
+    .navbar-nav {
+      a#add-content,
+      a.login,
+      a.user-display-name,
+      a.language-dropdown {
+          color: $maize-white;
+      }
+
+      .open > a,
+      .open > a:focus,
+      .open > a:hover,
+      .open > a#add-content {
+        background-color: $maize-white;
+        color: $maize-brand-color;
+      }
+    }
+
+    button.search-submit {
+      background-color: $maize-grey-2;
+      border-color: $maize-grey-1;
+      color: $maize-brand-color;
+    }
+
+  }
+
+  // breadcrumbs
+  .breadcrumbs {
+    @include benton;
+  }
+
+  // press catalog
+
+  // jumbotron
+  .jumbotron {
+    background-color: $maize-grey-1;
+    @include benton;
+    font-weight: 300;
+
+    padding-top: 20px;
+    padding-bottom: 20px;
+
+    .container {
+      margin-top: 1em;
+    }
+
+    p.lead {
+      font-size: 20px;
+      a {
+        text-decoration: underline;
+      }
+    }
+
+    p.publisher-info a {
+      text-decoration: underline;
+    }
+
+    .logo {
+
+      img {
+        display: none;
+      }
+
+    }
+
+  }
+
+  // monograph catalog
+  #sort-dropdown .dropdown-toggle, #per_page-dropdown .dropdown-toggle {
+    background-color: $maize-brand-color;
+    color: $maize-white;
+  }
+
+  #sort-dropdown .dropdown-toggle,
+  #per_page-dropdown .dropdown-toggle {
+    background-color: $maize-brand-color;
+    color: $maize-white;
+    border-color: $maize-accent-link;
+
+  }
+
+  #sort-dropdown .dropdown-toggle:hover,
+  #per_page-dropdown .dropdown-toggle:hover,
+  #sort-dropdown .dropdown-toggle:active,
+  #per_page-dropdown .dropdown-toggle:active {
+    background-color: $maize-white;
+    color: $maize-brand-color;
+  }
+
+  #sort-dropdown .dropdown-toggle .caret,
+  #per_page-dropdown .dropdown-toggle .caret {
+    color: $maize-white;
+  }
+
+  #sort-dropdown .dropdown-toggle:hover .caret,
+  #per_page-dropdown .dropdown-toggle:hover .caret,
+  #sort-dropdown .dropdown-toggle:active .caret,
+  #per_page-dropdown .dropdown-toggle:active .caret {
+    color: $maize-brand-color;
+  }
+
+  // monograph
+  .monograph {
+    .documentHeader {
+      p {
+        @include benton;
+      }
+    }
+
+    .authors, .copyright {
+      @include benton;
+    }
+
+    .monograph-cover button {
+      background-color: transparent;
+      border-color: transparent;
+    }
+  }
+
+  // pagination
+  .page_links {
+    @include benton;
+  }
+
+  .pagination {
+    @include benton;
+     li a, li span {
+       color: $maize-white;
+       background-color: $maize-brand-color;
+     }
+
+     .active>a,
+     .active>a:hover,
+     .active>a:focus,
+     .active>span,
+     .active>span:hover,
+     .active>span:focus {
+       background-color: $maize-white;
+       border-color: $maize-grey-1;
+       color: $maize-brand-color;
+     }
+  }
+
+  // assets
+  .asset-navigation {
+    @include benton;
+  }
+
+  .asset {
+    ul.nav-tabs li {
+      @include benton;
+    }
+  }
+
+  //footer
+  footer {
+    a,
+    a:hover,
+    a:active {
+      color: $maize-white;
+    }
+    .press-block-a,
+    .press-block-b {
+      background-color:  $maize-brand-color;
+
+      a,
+      a:hover,
+      a:active {
+        color: $maize-white;
+      }
+
+      img {
+        width: 110px;
+        margin-top: 30px;
+      }
+
+      p {
+        @include benton;
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: unset;
+
+        a.brand {
+          display:none;
+        }
+      }
+
+    }
+    .press-block-c {
+      background-color: $maize-grey-1;
+      color: $maize-brand-color;
+      @include synthese;
+      text-transform: uppercase;
+    }
+    .platform {
+      background-color: $maize-black-80;
+    }
+  }
+
+  // e-book reader
+  #epub {
+    font-family: benton-sans, arial, sans-serif !important;
+  }
+
+  #reader {
+    @include benton;
+
+    .cozy-control .cozy-h1 {
+      @include benton;
+      font-size: 1.5em;
+    }
+
+    .cozy-container input[type="text"] {
+      font-family: benton-sans, arial, sans-serif !important;
+    }
+
+    .button {
+      @include epub-button-background-color($maize-brand-color,$maize-blue,$maize-white);
+      @include benton;
+    }
+
+    .button--lg {
+      @include epub-button-background-color($maize-brand-color,$maize-blue,$maize-white);
+      @include benton;
+    }
+
+    .button--inline {
+      @include epub-button-background-color($maize-brand-color,$maize-blue,$maize-white);
+      @include benton;
+    }
+
+    .button--sm {
+      @include epub-button-background-color($maize-brand-color,$maize-blue,$maize-white);
+      @include benton;
+    }
+
+    .button--sm.cozy-preferences {
+      @include epub-button-background-color(#f1f1f1,$maize-blue,$maize-white);
+      color: $maize-brand-color;
+    }
+
+    i[class^='icon-chevron-'] {
+      @include epub-prev-next-color($maize-brand-color);
+      transition: 0.2s ease-in;
+    }
+
+    i[class^='icon-chevron-']:hover {
+      @include epub-hover-prev-next-color($maize-brand-color);
+      transition: 0.2s ease-in;
+    }
+
+    // PDF loading progress bar
+    .helio-loading-bar .progress {
+      background-color: $maize-brand-color;
+    }
+
+  }
+
+}
+///////////////////////////////////////////////
+//
+// Michigan Publishing Services
+// University of Michigan President's Commission
+// on Carbon Neutrality
+//
+///////////////////////////////////////////////
+// colors
+$pccn-brand-color: #00274c;
+$pccn-accent-color: #b7c9d7;
+$pccn-accent-link: #417da1;
+
+$pccn-blue: #054a92;
+
+$pccn-grey-1: #dedfdb;
+$pccn-grey-2: #989c97;
+$pccn-grey-3: #655a52;
+$pccn-white: #fff;
+$pccn-black-80: #342f2e;
+
+// typography
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+@mixin roboto {
+  font-family: 'Roboto', sans-serif;
+}
+
+@mixin meta {
+  font-family: "ff-meta-web-pro", sans-serif;
+}
+
+.um-pccn {
+
+  // typography
+  @include roboto;
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5 {
+    font-weight: 700;
+  }
+
+  // links
+  a,
+  button {
+    color: $pccn-blue;
+  }
+
+  a:hover,
+  a:active,
+  a:focus,
+  button:hover,
+  button:active,
+  button:focus {
+    color: $pccn-brand-color;
+  }
+
+  // navigation menu
+  .navbar-default .navbar-nav > .open > a,
+  .navbar-default .navbar-nav > .open > a:hover,
+  .navbar-default .navbar-nav > .open > a:focus {
+    background-color: $pccn-accent-color;
+  }
+
+  .navbar {
+    min-height: 90px;
+  }
+
+  .search-form {
+    padding-top: 1.5em;
+  }
+
+  .navbar-right {
+    padding-top: 1em;
+  }
+
+  #brand-bar {
+    background-color: $pccn-brand-color;
+    border-color: $pccn-brand-color;
+
+    .navbar-brand {
+      color: $pccn-white;
+      @include meta;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      max-width: 350px;
+    }
+
+    .navbar-nav {
+      a#add-content,
+      a.login,
+      a.user-display-name,
+      a.language-dropdown {
+          color: $pccn-accent-color;
+      }
+
+      .open > a,
+      .open > a:focus,
+      .open > a:hover {
+        background-color: $pccn-blue;
+      }
+    }
+
+    button.search-submit {
+      background-color: $pccn-accent-color;
+      border-color: $pccn-accent-color;
+      color: $pccn-brand-color;
+    }
+
+  }
+
+  // press catalog
+
+  // jumbotron
+  .jumbotron {
+    background-color: $pccn-accent-color;
+
+    padding-top: 20px;
+    padding-bottom: 20px;
+
+    .container {
+      margin-top: 1em;
+    }
+
+    p.lead {
+      font-size: 14px;
+    }
+
+    .logo {
+
+      img {
+        width: 150px;
+        margin-right: 1em;
+      }
+
+    }
+
+  }
+
+  // monograph catalog
+  #sort-dropdown .dropdown-toggle, #per_page-dropdown .dropdown-toggle {
+    color: $pccn-blue;
+  }
+
+  // monograph
+  .monograph {
+
+    button.search-submit {
+      background-color: $pccn-blue;
+      border-color: $pccn-blue;
+      color: $pccn-white;
+    }
+  }
+
+  .pagination {
+     li a, li span {
+       color: $pccn-blue;
+     }
+
+     .active>a,
+     .active>a:hover,
+     .active>a:focus,
+     .active>span,
+     .active>span:hover,
+     .active>span:focus {
+       background-color: $pccn-blue;
+       border-color: $pccn-blue;
+       color: $pccn-brand-color;
+     }
+  }
+
+  //footer
+
+  footer {
+    a,
+    a:hover,
+    a:active {
+      color: $pccn-white;
+    }
+    .press-block-a,
+    .press-block-b {
+      background-color: $pccn-accent-link;
+
+      a,
+      a:hover,
+      a:active {
+        color: $pccn-white;
+      }
+
+      img {
+        width: 100%;
+      }
+
+      p {
+        @include meta;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+      }
+
+    }
+    .press-block-c {
+      background-color: $pccn-brand-color;
+    }
+    .platform {
+      background-color: $pccn-black-80;
+    }
+  }
+
+  // e-book reader
+  #reader {
+
+    .cozy-control .cozy-h1 {
+      font-size: 1.5em;
+    }
+
+    .button {
+      @include epub-button-background-color($pccn-blue,$pccn-brand-color,$pccn-white);
+    }
+
+    .button--lg {
+      @include epub-button-background-color($pccn-blue,$pccn-brand-color,$pccn-white);
+    }
+
+    .button--inline {
+      @include epub-button-background-color($pccn-blue,$pccn-brand-color,$pccn-white);
+    }
+
+    .button--sm {
+      @include epub-button-background-color($pccn-blue,$pccn-brand-color,$pccn-white);
+    }
+
+    .button--sm.cozy-preferences {
+      @include epub-button-background-color(#f1f1f1,$pccn-blue,$pccn-white);
+      color: $pccn-brand-color;
+    }
+
+    i[class^='icon-chevron-'] {
+      @include epub-prev-next-color($pccn-brand-color);
+      transition: 0.2s ease-in;
+    }
+
+    i[class^='icon-chevron-']:hover {
+      @include epub-hover-prev-next-color($pccn-brand-color);
+      transition: 0.2s ease-in;
+    }
+
+    .cozy-control .logo {
+      background: $pccn-grey-1;
+      height: 46.6px;
+      width: 36px;
+      overflow: hidden;
+
+      img {
+        height: 36px;
+        margin-top: 6px;
+        margin-left: 11px;
+      }
+    }
+
+    // PDF loading progress bar
+    .helio-loading-bar .progress {
+      background-color: $pccn-brand-color;
+    }
+
+  }
+
+
+  @media only screen and (max-width : 992px) {
+
+    #brand-bar form.search-form, .navbar-form {
+      width: 190px;
+    }
+
+  }
+
+  @media only screen and (max-width : 768px) {
+    #brand-bar form.search-form, .navbar-form {
+      padding: 10px 0;
+      margin: 0;
+      width: 100%;
+      border: 0;
+      float: none !important;
+    }
+
+    .navbar-form .input-group .input-group-btn {
+      width: 1%;
+    }
+
+    #brand-bar .navbar-brand {
+      max-width: 250px;
+    }
+
+    .navbar-header {
+      min-height: 9em;
+    }
+  }
+
+}
 ///////////////////////////////////////////////
 //
 // University of Minnesota Press
