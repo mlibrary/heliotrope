@@ -20,6 +20,19 @@ module Sighrax
       original_file&.file_name&.first || noid + '.txt'
     end
 
+    def file_size
+      original_file&.size
+    end
+
+    def downloadable?
+      Array(data['external_resource_url_ssim']).first.blank?
+    end
+
+    def allow_download?
+      downloadable? &&
+        /^yes$/i.match?(Array(data['allow_download_ssim']).first)
+    end
+
     private
 
       def initialize(noid, data)

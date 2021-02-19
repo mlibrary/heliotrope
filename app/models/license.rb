@@ -9,15 +9,3 @@ class License < ApplicationRecord
     entitlements.include?(action)
   end
 end
-
-class TrialLicense < License
-  def entitlements
-    [:preview, :reader]
-  end
-end
-
-class FullLicense < License
-  def entitlements
-    [:preview, :reader, :download]
-  end
-end

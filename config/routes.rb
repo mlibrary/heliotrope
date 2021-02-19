@@ -154,7 +154,12 @@ Rails.application.routes.draw do
   get 'epubs_search/:id', controller: :e_pubs, action: :search, as: :epub_search
   get 'epubs_share_link/:id', controller: :e_pubs, action: :share_link, as: :epub_share_link
 
-  resource :pdfs, only: :show
+  resources :pdf_ebooks, only: :show do
+    member do
+      get :file
+      get :download
+    end
+  end
 
   get 'embed', controller: :embed, action: :show
   get 'webgl/:id', controller: :webgls, action: :show, as: :webgl

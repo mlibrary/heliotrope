@@ -126,49 +126,36 @@ module Sighrax # rubocop:disable Metrics/ModuleLength
     end
 
     def allow_download?(entity)
-      return false unless entity.valid?
-      return false unless downloadable?(entity)
-      /^yes$/i.match?(Array(solr_document(entity)['allow_download_ssim']).first)
+      entity.is_a?(Sighrax::Asset) && entity.allow_download?
     end
 
     def deposited?(entity)
-      return false unless entity.valid?
-      return true if Array(solr_document(entity)['suppressed_bsi']).empty?
-      Array(solr_document(entity)['suppressed_bsi']).first.blank?
+      entity.deposited?
     end
 
     def downloadable?(entity)
-      return false unless entity.valid?
-      return false if Array(solr_document(entity)['external_resource_url_ssim']).first.present?
-      entity.is_a?(Sighrax::Asset)
+      entity.is_a?(Sighrax::Asset) && entity.downloadable?
     end
 
     def open_access?(entity)
-      return false unless entity.valid?
-      /^yes$/i.match?(Array(solr_document(entity)['open_access_tesim']).first)
+      entity.is_a?(Sighrax::Monograph) && entity.open_access?
     end
 
     def published?(entity)
-      return false unless entity.valid?
-      deposited?(entity) && /open/i.match?(Array(solr_document(entity)['visibility_ssi']).first)
+      entity.published?
     end
 
     def restricted?(entity)
-      return true unless entity.valid?
-      Greensub::Component.find_by(noid: entity.noid).present?
+      entity.is_a?(Sighrax::Monograph) &&
+        Greensub::Component.find_by(noid: entity.noid).present?
     end
 
     def tombstone?(entity)
-      return false unless entity.valid?
-      expiration_date = Array(solr_document(entity)['permissions_expiration_date_ssim']).first
-      return false if expiration_date.blank?
-      Date.parse(expiration_date) <= Time.now.utc.to_date
+      entity.is_a?(Sighrax::Model) && entity.tombstone?
     end
 
     def watermarkable?(entity)
-      return false unless entity.valid?
-      return false if Array(solr_document(entity)['external_resource_url_ssim']).first.present?
-      entity.is_a?(Sighrax::PortableDocumentFormat)
+      entity.is_a?(Sighrax::PortableDocumentFormat) && entity.watermarkable?
     end
 
     private
