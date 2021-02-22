@@ -4154,7 +4154,6 @@ $mps-teal-100: #e9f2f5;
   .jumbotron {
     background-color: $mps-blue-100;
     @include muli;
-
     padding-top: 10px;
     padding-bottom: 10px;
 
@@ -4183,12 +4182,7 @@ $mps-teal-100: #e9f2f5;
 
   }
 
-  // monograph catalog
-  #sort-dropdown .dropdown-toggle, #per_page-dropdown .dropdown-toggle {
-    background-color: $mps-teal-400;
-    color: white;
-  }
-
+  // sorts on press and monograph pages
   #sort-dropdown .dropdown-toggle,
   #per_page-dropdown .dropdown-toggle {
     background-color: $mps-teal-400;
@@ -4451,6 +4445,7 @@ $a2ru-white: #fafafa;
   h4,
   h5 {
     font-weight: 500;
+    @include rubik;
   }
 
   // links
@@ -4464,18 +4459,22 @@ $a2ru-white: #fafafa;
   }
 
   // buttons
-
-  .btn-default {
+  .btn, .btn-default {
+    @include rubik;
     @include button-background-color($a2ru-white);
     @include button-font-color($a2ru-link);
     border-color: $a2ru-link;
   }
 
-
+  .btn:hover,
+  .btn:active,
+  .btn:focus,
   .btn-default:hover,
-  .btn-default:active {
+  .btn-default:active,
+  .btn-default:focus {
     @include button-hover-background-color($a2ru-link);
     @include button-hover-font-color($a2ru-white);
+    text-decoration: none;
   }
 
   // navigation menu
@@ -4491,7 +4490,16 @@ $a2ru-white: #fafafa;
 
     .navbar-brand {
       color: $a2ru-brand-color;
+      @include rubik;
       font-weight: 400;
+      text-transform: none;
+      font-size: 18px;
+      height: 50px;
+      padding: 15px 15px 15px 15px;
+    }
+
+    .search-form {
+      margin-top: 8px;
     }
 
     .navbar-nav {
@@ -4504,8 +4512,10 @@ $a2ru-white: #fafafa;
 
       .open > a,
       .open > a:focus,
-      .open > a:hover {
+      .open > a:hover,
+      .open > a#add-content {
         background-color: $a2ru-grey-2;
+        color: $a2ru-link;
       }
     }
 
@@ -4516,30 +4526,42 @@ $a2ru-white: #fafafa;
     }
 
   }
+  // breadcrumbs
+  .breadcrumbs {
+    @include rubik;
+  
+    .breadcrumb {
+      background-color: rgb(245, 245, 245);
+    }
+  }
 
   // press catalog
 
   // jumbotron
   .jumbotron {
+    @include rubik;
     background-color: $a2ru-grey-2;
     font-weight: 300;
     padding-top: 1.5em;
     padding-bottom: 1em;
 
-    p {
+    .container {
+      margin-top: 0;
+    }
+
+    p.lead {
       font-size: 16px;
       margin-bottom: 0;
     }
 
-    .container {
-      margin-top: 0;
-    }
+    
 
     .logo {
 
       img {
         width: 300px;
         margin-right: 3em;
+        display: initial;
       }
 
     }
@@ -4602,6 +4624,8 @@ $a2ru-white: #fafafa;
   #sort-dropdown .dropdown-toggle,
   #per_page-dropdown .dropdown-toggle {
     color: $a2ru-link;
+    background-color: #fafafa;
+    border-color: $a2ru-link;
   }
 
   #sort-dropdown .dropdown-toggle:hover,
@@ -4609,6 +4633,8 @@ $a2ru-white: #fafafa;
   #sort-dropdown .dropdown-toggle:active,
   #per_page-dropdown .dropdown-toggle:active {
     color: $a2ru-white;
+    background-color: $a2ru-link;
+    border-color: $a2ru-link;
 
     .caret {
       color: $a2ru-white;
@@ -4630,12 +4656,35 @@ $a2ru-white: #fafafa;
     box-shadow: none;
   }
 
+    // monograph
+    .monograph {
+      .documentHeader {
+        p {
+          @include rubik;
+        }
+      }
+  
+      .monograph-metadata h1 {
+        font-size: 36px;
+      }
+  
+      .authors, .copyright {
+        @include rubik;
+      }
+  
+      .monograph-cover button {
+        background-color: transparent;
+        border-color: transparent;
+      }
+    }
 
   // pagination
-
+  .page_links {
+    @include rubik;
+  }
   .pagination {
+    @include rubik;
      li a, li span {
-
        background-color: $a2ru-link;
        border-color: $a2ru-link;
        color: $a2ru-white;
@@ -4673,6 +4722,17 @@ $a2ru-white: #fafafa;
       color: $a2ru-link;
      }
   }
+  // assets
+  .asset-navigation {
+    @include rubik;
+  }
+
+  .asset {
+    ul.nav-tabs li {
+      @include rubik;
+    }
+  }
+
 
   //footer
   footer {
@@ -4694,6 +4754,7 @@ $a2ru-white: #fafafa;
 
       img {
         width: 125px;
+        margin-top: 0;
       }
 
     }
@@ -4707,6 +4768,7 @@ $a2ru-white: #fafafa;
       color: $a2ru-white;
       text-transform: uppercase;
       letter-spacing: 1.75px;
+      @include rubik;
 
       img {
         width: auto !important;
@@ -4720,22 +4782,40 @@ $a2ru-white: #fafafa;
   }
 
   // e-book reader
+  #epub {
+    font-family: 'Rubik', sans-serif !important;
+  }
+
   #reader {
+    @include rubik;
+
+    .cozy-control .cozy-h1 {
+      @include rubik;
+      font-size: 1.5em;
+    }
+
+    .cozy-container input[type="text"] {
+      font-family: 'Rubik', sans-serif !important;
+    }
 
     .button {
       @include epub-button-background-color($a2ru-link,$a2ru-accent-link,$a2ru-white);
+      @include rubik;
     }
 
     .button--lg {
       @include epub-button-background-color($a2ru-link,$a2ru-accent-link,$a2ru-white);
+      @include rubik;
     }
 
     .button--inline {
       @include epub-button-background-color($a2ru-link,$a2ru-accent-link,$a2ru-white);
+      @include rubik;
     }
 
     .button--sm {
       @include epub-button-background-color($a2ru-link,$a2ru-accent-link,$a2ru-white);
+      @include rubik;
     }
 
     .button--sm.cozy-preferences {
@@ -4744,12 +4824,12 @@ $a2ru-white: #fafafa;
     }
 
     i[class^='icon-chevron-'] {
-      @include epub-prev-next-color($a2ru-grey-1);
+      @include epub-prev-next-color($a2ru-grey-1 !important);
       transition: 0.2s ease-in;
     }
 
     i[class^='icon-chevron-']:hover {
-      @include epub-hover-prev-next-color($a2ru-brand-color);
+      @include epub-hover-prev-next-color($a2ru-brand-color !important);
       transition: 0.2s ease-in;
     }
 
@@ -4833,6 +4913,10 @@ $maize-black-80: #342f2e;
     font-weight: 700;
   }
 
+  h1 {
+    font-size: 36px;
+  }
+
   // links
   a {
     color: $maize-accent-link;
@@ -4885,6 +4969,12 @@ $maize-black-80: #342f2e;
         -moz-transition: .3s;
         -webkit-transition: .3s;
         transition: .3s;
+      padding: 15px 15px 15px 15px;
+      height: 50px;
+    }
+
+    .search-form {
+      margin-top: 8px;
     }
 
     .navbar-brand:hover,
@@ -4922,6 +5012,10 @@ $maize-black-80: #342f2e;
   // breadcrumbs
   .breadcrumbs {
     @include benton;
+
+    .breadcrumb {
+      background-color: rgb(245, 245, 245);
+    }
   }
 
   // press catalog
@@ -4931,7 +5025,6 @@ $maize-black-80: #342f2e;
     background-color: $maize-grey-1;
     @include benton;
     font-weight: 300;
-
     padding-top: 20px;
     padding-bottom: 20px;
 
@@ -4960,10 +5053,11 @@ $maize-black-80: #342f2e;
 
   }
 
-  // monograph catalog
+  // sorts on press and monograph pages
   #sort-dropdown .dropdown-toggle, #per_page-dropdown .dropdown-toggle {
     background-color: $maize-brand-color;
     color: $maize-white;
+    border-color: $maize-accent-link;
   }
 
   #sort-dropdown .dropdown-toggle,
@@ -5000,6 +5094,10 @@ $maize-black-80: #342f2e;
       p {
         @include benton;
       }
+    }
+    
+    .monograph-metadata h1 {
+      font-size: 30px;
     }
 
     .authors, .copyright {
@@ -5193,6 +5291,11 @@ $pccn-black-80: #342f2e;
   h4,
   h5 {
     font-weight: 700;
+    @include roboto;
+  }
+
+  h1 {
+    font-size: 30px;
   }
 
   // links
@@ -5210,6 +5313,25 @@ $pccn-black-80: #342f2e;
     color: $pccn-brand-color;
   }
 
+  // buttons
+  .btn, .btn-default {
+    @include roboto;
+    background-color: rgb(255, 255, 255);
+    border-color: rgb(204, 204, 204);
+    color: rgb(5, 74, 146);
+  }
+
+  .btn:hover,
+  .btn:active,
+  .btn:focus,
+  .btn-default:hover,
+  .btn-default:active,
+  .btn-default:focus {
+    background-color: rgb(230, 230, 230);
+    color: rgb(0, 39, 76);
+    text-decoration: none;
+  }
+
   // navigation menu
   .navbar-default .navbar-nav > .open > a,
   .navbar-default .navbar-nav > .open > a:hover,
@@ -5219,10 +5341,6 @@ $pccn-black-80: #342f2e;
 
   .navbar {
     min-height: 90px;
-  }
-
-  .search-form {
-    padding-top: 1.5em;
   }
 
   .navbar-right {
@@ -5240,6 +5358,9 @@ $pccn-black-80: #342f2e;
       text-transform: uppercase;
       letter-spacing: 2px;
       max-width: 350px;
+      font-size: 18px;
+      height: auto;
+      padding: 15px 15px 15px 15px;
     }
 
     .navbar-nav {
@@ -5254,7 +5375,13 @@ $pccn-black-80: #342f2e;
       .open > a:focus,
       .open > a:hover {
         background-color: $pccn-blue;
+        color: $pccn-accent-color;
       }
+    }
+
+    .search-form {
+      padding-top: 1.5em;
+      margin-top: 8px;
     }
 
     button.search-submit {
@@ -5265,12 +5392,21 @@ $pccn-black-80: #342f2e;
 
   }
 
+  // breadcrumbs
+  .breadcrumbs {
+    @include roboto;
+  
+    .breadcrumb {
+      background-color: rgb(245, 245, 245)
+    }
+  }
+
   // press catalog
 
   // jumbotron
   .jumbotron {
     background-color: $pccn-accent-color;
-
+    @include roboto;
     padding-top: 20px;
     padding-bottom: 20px;
 
@@ -5287,6 +5423,7 @@ $pccn-black-80: #342f2e;
       img {
         width: 150px;
         margin-right: 1em;
+        display: inline-block;
       }
 
     }
@@ -5294,12 +5431,48 @@ $pccn-black-80: #342f2e;
   }
 
   // monograph catalog
-  #sort-dropdown .dropdown-toggle, #per_page-dropdown .dropdown-toggle {
+  #sort-dropdown .dropdown-toggle, 
+  #per_page-dropdown .dropdown-toggle {
+    background-color: white;
     color: $pccn-blue;
+    border-color: rgb(204, 204, 204);
+  }
+
+  #sort-dropdown .dropdown-toggle:hover,
+  #per_page-dropdown .dropdown-toggle:hover,
+  #sort-dropdown .dropdown-toggle:active,
+  #per_page-dropdown .dropdown-toggle:active {
+    background-color: rgb(230, 230, 230);
+    color: #054a92;
+  }
+
+  #sort-dropdown .dropdown-toggle .caret,
+  #per_page-dropdown .dropdown-toggle .caret {
+    color: #054a92;
+  }
+
+  #sort-dropdown .dropdown-toggle:hover .caret,
+  #per_page-dropdown .dropdown-toggle:hover .caret,
+  #sort-dropdown .dropdown-toggle:active .caret,
+  #per_page-dropdown .dropdown-toggle:active .caret {
+    color: #054a92;
   }
 
   // monograph
   .monograph {
+    .documentHeader {
+      p {
+        @include roboto;
+      }
+    }
+
+    .monograph-metadata h1 {
+      font-size: 30px;
+    }
+
+    .authors, .copyright {
+      @include roboto;
+    }
 
     button.search-submit {
       background-color: $pccn-blue;
@@ -5308,9 +5481,16 @@ $pccn-black-80: #342f2e;
     }
   }
 
+  // pagination 
+  .page_links {
+    @include roboto;
+  }
+
   .pagination {
+    @include roboto;
      li a, li span {
        color: $pccn-blue;
+       background-color: white;
      }
 
      .active>a,
@@ -5325,8 +5505,18 @@ $pccn-black-80: #342f2e;
      }
   }
 
-  //footer
+  // assets
+  .asset-navigation {
+    @include roboto;
+  }
 
+  .asset {
+    ul.nav-tabs li {
+      @include roboto;
+    }
+  }
+
+  //footer
   footer {
     a,
     a:hover,
@@ -5345,10 +5535,11 @@ $pccn-black-80: #342f2e;
 
       img {
         width: 100%;
+        margin-top: 0;
       }
 
       p {
-        @include meta;
+        @include roboto;
         font-weight: 700;
         text-transform: uppercase;
         letter-spacing: 2px;
@@ -5357,6 +5548,8 @@ $pccn-black-80: #342f2e;
     }
     .press-block-c {
       background-color: $pccn-brand-color;
+      color: white;
+      @include roboto;
     }
     .platform {
       background-color: $pccn-black-80;
@@ -5364,31 +5557,42 @@ $pccn-black-80: #342f2e;
   }
 
   // e-book reader
+  #epub {
+    font-family: 'Roboto', sans-serif !important;
+  }
+  
   #reader {
+    @include roboto;
 
     .cozy-control .cozy-h1 {
+      @include roboto;
       font-size: 1.5em;
     }
 
     .button {
       @include epub-button-background-color($pccn-blue,$pccn-brand-color,$pccn-white);
+      @include roboto;
     }
 
     .button--lg {
       @include epub-button-background-color($pccn-blue,$pccn-brand-color,$pccn-white);
+      @include roboto;
     }
 
     .button--inline {
       @include epub-button-background-color($pccn-blue,$pccn-brand-color,$pccn-white);
+      @include roboto;
     }
 
     .button--sm {
       @include epub-button-background-color($pccn-blue,$pccn-brand-color,$pccn-white);
+      @include roboto;
     }
 
     .button--sm.cozy-preferences {
       @include epub-button-background-color(#f1f1f1,$pccn-blue,$pccn-white);
       color: $pccn-brand-color;
+      @include roboto;
     }
 
     i[class^='icon-chevron-'] {
