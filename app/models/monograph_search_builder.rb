@@ -40,7 +40,9 @@ class MonographSearchBuilder < ::SearchBuilder
       # return true if Sighrax.tombstone?(Sighrax.from_solr_document(doc))
       # but that is N+1 and the contructors are a little complicated to change
       # The logic is simple, so:
-      return true if doc['permissions_expiration_date_ssim']&.present? && Date.parse(doc['permissions_expiration_date_ssim'].first) <= Time.now.utc.to_date
+      return true if Date.parse(doc['permissions_expiration_date_ssim'].first) <= Time.now.utc.to_date
+      false
+    rescue
       false
     end
 
