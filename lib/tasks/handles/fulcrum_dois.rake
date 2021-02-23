@@ -9,7 +9,7 @@
 
 desc 'monograph handles and DOIs for certain presses'
 namespace :heliotrope do
-  task fulcrum_published_dois: :environment do
+  task fulcrum_dois: :environment do
     # You can put child presses here, or not.
     # If you don't it will automatically pick up the children of a press.
     subdomains = [
@@ -41,9 +41,8 @@ namespace :heliotrope do
     hits = ActiveFedora::SolrService.query("{!terms f=press_sim}#{subdomains.map(&:downcase).join(',')}", rows: 100_000)
 
     hits.each do |hit|
-      next unless hit["suppressed_bsi"] == false && hit["visibility_ssi"] == "open"
       presenter = Hyrax::MonographPresenter.new(SolrDocument.new(hit), nil)
-      puts %Q|"#{presenter.handle_url}","#{presenter.doi_url}","#{presenter.subdomain}"|
+      puts %Q|"#{presenter.handle_url}","#{presenter.doi_url}","#{presenter.subdomain}","#{presenter.visibility}"|
     end
   end
 end
