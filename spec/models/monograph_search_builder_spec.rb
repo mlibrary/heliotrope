@@ -52,22 +52,66 @@ describe MonographSearchBuilder do
       end
 
       context 'tombstone' do
-        let(:file2) do
-          ::SolrDocument.new(id: file2_noid,
-                             has_model_ssim: ['FileSet'],
-                             permissions_expiration_date_ssim: Time.now.yesterday.utc.to_s,
-                             monograph_id_ssim: ['mono'],
-                             visibility_ssi: 'open')
+        context 'with a valid permissions_expiration_date_ssim date' do
+          let(:file2) do
+            ::SolrDocument.new(id: file2_noid,
+                               has_model_ssim: ['FileSet'],
+                               permissions_expiration_date_ssim: Time.now.yesterday.utc.to_s,
+                               monograph_id_ssim: ['mono'],
+                               visibility_ssi: 'open')
+          end
+
+          before do
+            ActiveFedora::SolrService.add([file2.to_h])
+            ActiveFedora::SolrService.commit
+          end
+
+          it "creates a query for the monograph's assets without tombstone" do
+            search_builder.filter_by_members(solr_params)
+            expect(solr_params[:fq].first).to match(/^{!terms f=id}#{file1_noid}$/)
+          end
         end
 
-        before do
-          ActiveFedora::SolrService.add([file2.to_h])
-          ActiveFedora::SolrService.commit
+        context 'with an empty string in permissions_expiration_date_ssim' do
+          # This happens sometimes. It shouldn't, and I'm not sure why it does,
+          # but some of our data is like this, see HELIO-3748
+          let(:file2) do
+            ::SolrDocument.new(id: file2_noid,
+                               has_model_ssim: ['FileSet'],
+                               permissions_expiration_date_ssim: [""], # weird empty string
+                               monograph_id_ssim: ['mono'],
+                               visibility_ssi: 'open')
+          end
+
+          before do
+            ActiveFedora::SolrService.add([file2.to_h])
+            ActiveFedora::SolrService.commit
+          end
+
+          it "creates a query with the correct file_sets/assets" do
+            search_builder.filter_by_members(solr_params)
+            expect(solr_params[:fq].first).to match(/^{!terms f=id}#{file1_noid},#{file2_noid}$/)
+          end
         end
 
-        it "creates a query for the monograph's assets without tombstone" do
-          search_builder.filter_by_members(solr_params)
-          expect(solr_params[:fq].first).to match(/^{!terms f=id}#{file1_noid}$/)
+        context "with an invalid date" do
+          let(:file2) do
+            ::SolrDocument.new(id: file2_noid,
+                               has_model_ssim: ['FileSet'],
+                               permissions_expiration_date_ssim: ["garbage"],
+                               monograph_id_ssim: ['mono'],
+                               visibility_ssi: 'open')
+          end
+
+          before do
+            ActiveFedora::SolrService.add([file2.to_h])
+            ActiveFedora::SolrService.commit
+          end
+
+          it "creates a query with the correct file_sets/assets" do
+            search_builder.filter_by_members(solr_params)
+            expect(solr_params[:fq].first).to match(/^{!terms f=id}#{file1_noid},#{file2_noid}$/)
+          end
         end
       end
     end
