@@ -46,6 +46,16 @@ RSpec.describe "OPDS Feeds", type: [:request, :json_schema]  do
                 "title": "University of Michigan Press Ebook Collection Open Access",
                 "href": Rails.application.routes.url_helpers.api_opds_umpebc_oa_url,
                 "type": "application/opds+json"
+              },
+              {
+                "title": "Lever Press",
+                "href": Rails.application.routes.url_helpers.api_opds_leverpress_url,
+                "type": "application/opds+json"
+              },
+              {
+                "title": "Amherst College Press",
+                "href": Rails.application.routes.url_helpers.api_opds_amherst_url,
+                "type": "application/opds+json"
               }
             ]
           }.to_json)
@@ -136,6 +146,124 @@ RSpec.describe "OPDS Feeds", type: [:request, :json_schema]  do
             expect(response_body['publications'].count).to eq(1)
             expect(response_body['publications'].first).to eq(JSON.parse(Opds::Publication.new_from_monograph(Sighrax.from_noid(monograph.id)).to_json))
           end
+        end
+      end
+    end
+
+    describe '#leverpress' do
+      let!(:leverpress) { create(:press, subdomain: "leverpress") }
+      let(:leverpress_feed) do
+        JSON.parse({
+          "metadata": {
+            "title": "Lever Press"
+          },
+          "links": [
+            {
+              "rel": "self",
+              "href": Rails.application.routes.url_helpers.api_opds_leverpress_url,
+              "type": "application/opds+json"
+            }
+          ],
+          "publications": [
+          ]
+        }.to_json)
+      end
+
+      context "with no books" do
+        it 'empty feed' do
+          get api_opds_leverpress_path, headers: headers
+          expect(response.content_type).to eq("application/opds+json")
+          expect(response).to have_http_status(:ok)
+          expect(schemer_validate?(opds_feed_schemer, response_body)).to be true
+          expect(response_body).to eq(leverpress_feed)
+          expect(response_body['publications']).to be_empty
+        end
+      end
+
+      context 'with leverpress books' do
+        let(:monograph) { create(:public_monograph, press: leverpress.subdomain) }
+        let(:cover) { create(:public_file_set) }
+        let(:epub) { create(:public_file_set) }
+        let(:fr) { create(:featured_representative, work_id: monograph.id, file_set_id: epub.id, kind: 'epub') }
+
+        before do
+          monograph.ordered_members << cover
+          monograph.representative_id = cover.id
+          monograph.ordered_members << epub
+          monograph.open_access = 'yes'
+          monograph.date_modified = Time.now
+          monograph.save!
+          cover.save!
+          epub.save!
+          fr
+        end
+
+        it 'is non-empty' do
+          get api_opds_leverpress_path, headers: headers
+          expect(response.content_type).to eq("application/opds+json")
+          expect(response).to have_http_status(:ok)
+          expect(schemer_validate?(opds_feed_schemer, response_body)).to be true
+          expect(response_body['publications'].count).to eq(1)
+          expect(response_body['publications'].first).to eq(JSON.parse(Opds::Publication.new_from_monograph(Sighrax.from_noid(monograph.id)).to_json))
+        end
+      end
+    end
+
+    describe '#amherst' do
+      let!(:amherst_press) { create(:press, subdomain: "amherst") }
+      let(:amherst_feed) do
+        JSON.parse({
+          "metadata": {
+            "title": "Amherst College Press"
+          },
+          "links": [
+            {
+              "rel": "self",
+              "href": Rails.application.routes.url_helpers.api_opds_amherst_url,
+              "type": "application/opds+json"
+            }
+          ],
+          "publications": [
+          ]
+        }.to_json)
+      end
+
+      context "with no books" do
+        it 'empty feed' do
+          get api_opds_amherst_path, headers: headers
+          expect(response.content_type).to eq("application/opds+json")
+          expect(response).to have_http_status(:ok)
+          expect(schemer_validate?(opds_feed_schemer, response_body)).to be true
+          expect(response_body).to eq(amherst_feed)
+          expect(response_body['publications']).to be_empty
+        end
+      end
+
+      context 'with amherst books' do
+        let(:monograph) { create(:public_monograph, press: amherst_press.subdomain) }
+        let(:cover) { create(:public_file_set) }
+        let(:epub) { create(:public_file_set) }
+        let(:fr) { create(:featured_representative, work_id: monograph.id, file_set_id: epub.id, kind: 'epub') }
+
+        before do
+          monograph.ordered_members << cover
+          monograph.representative_id = cover.id
+          monograph.ordered_members << epub
+          monograph.open_access = 'yes'
+          monograph.date_modified = Time.now
+          monograph.save!
+          cover.save!
+          epub.save!
+          fr
+        end
+
+        it 'is non-empty' do
+          get api_opds_amherst_path, headers: headers
+          expect(response.content_type).to eq("application/opds+json")
+          expect(response).to have_http_status(:ok)
+          expect(schemer_validate?(opds_feed_schemer, response_body)).to be true
+          expect(response_body['publications'].count).to eq(1)
+          expect(response_body['publications'].first).to eq(JSON.parse(Opds::Publication.new_from_monograph(Sighrax.from_noid(monograph.id)).to_json))
         end
       end
     end
