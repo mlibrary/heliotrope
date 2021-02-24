@@ -37,7 +37,7 @@ module Watermark
 
     def cache_key_timestamp
       ActiveFedora::SolrService.query("{!terms f=id}#{@entity.noid}", rows: 1).first['timestamp']
-    rescue # rubocop:disable Style/RescueStandardError
+    rescue StandardError => _e
       ''
     end
 

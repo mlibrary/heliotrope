@@ -52,14 +52,14 @@ module Hyrax
         end
 
         begin Date.parse(params[:start_date])
-        rescue
+        rescue StandardError => _e
           flash[:alert] = "Please enter a valid start date"
           redirect_to hyrax.admin_stats_path(partial: 'counter')
           return
         end
 
         begin Date.parse(params[:end_date])
-        rescue
+        rescue StandardError => _e
           flash[:alert] = "Please enter a valid end date"
           redirect_to hyrax.admin_stats_path(partial: 'counter')
           return
