@@ -42,7 +42,7 @@ class MonographSearchBuilder < ::SearchBuilder
       # The logic is simple, so:
       return true if Date.parse(doc['permissions_expiration_date_ssim'].first) <= Time.now.utc.to_date
       false
-    rescue
+    rescue StandardError => _e
       false
     end
 

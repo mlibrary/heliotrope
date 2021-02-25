@@ -260,7 +260,7 @@ class EPubsController < CheckpointController
     # pdf_ebooks reps' chapters can be re-unpacked without ever touching Solr/Fedora
     def cache_key_timestamp
       File.mtime(UnpackService.root_path_from_noid(@entity.noid, 'pdf_ebook_chapters')).to_i
-    rescue # rubocop:disable Style/RescueStandardError
+    rescue StandardError => _e
       ''
     end
 end

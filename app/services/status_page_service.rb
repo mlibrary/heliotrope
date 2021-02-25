@@ -22,7 +22,7 @@ module StatusPageService
   def check_active_record
     ActiveRecord::Migrator.current_version
     'UP'
-  rescue
+  rescue StandardError => _e
     'DOWN'
   end
 
@@ -32,7 +32,7 @@ module StatusPageService
     # not using `safe_load` to avoid `Psych::BadAlias: Unknown alias` stuff.
     yaml = YAML.load(File.read(file)) if File.exist?(file)
     yaml.present? ? 'OK' : 'ERROR'
-  rescue
+  rescue StandardError => _e
     'ERROR'
   end
 
@@ -64,7 +64,7 @@ module StatusPageService
     output = response.ends_with?('200') ? 'UP' : 'DOWN'
     output += response.include?('instanceDir') ? ' - core found' : ' - core not found'
     output
-  rescue
+  rescue StandardError => _e
     'ERROR'
   end
 
