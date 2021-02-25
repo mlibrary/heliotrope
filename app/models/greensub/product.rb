@@ -8,6 +8,8 @@ module Greensub
     scope :name_like, ->(like) { where("name like ?", "%#{like}%") }
     scope :purchase_like, ->(like) { where("purchase like ?", "%#{like}%") }
 
+    scope :containing_monograph, ->(noid) { joins(:components).merge(Component.for_noid(noid)) }
+
     has_many :components_products # rubocop:disable Rails/HasManyOrHasOneDependent
     has_many :components, through: :components_products,
                                    after_remove: :reindex_component_product,
