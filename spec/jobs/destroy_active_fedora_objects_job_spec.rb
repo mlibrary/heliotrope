@@ -140,20 +140,21 @@ RSpec.describe DestroyActiveFedoraObjectsJob, type: :job do
     end
 
     context 'interdependent objects' do
-      let(:monograph_with_file_set) do
-        create(:monograph) do |m|
-          m.ordered_members << monograph_file_set
-          m.save
-          monograph_file_set.save! # Force reindexing
-          m
-        end
-      end
+      let(:monograph_with_file_set) { create(:monograph) }
       let(:monograph_file_set) { create(:file_set) }
+      let(:create_monograph_with_file_set) do
+        monograph_with_file_set
+        monograph_file_set
+        monograph_with_file_set.ordered_members << monograph_file_set
+        monograph_with_file_set.save
+        monograph_file_set.save
+        true
+      end
 
       it "deletes parent object and orphans child" do
         expect(ActiveFedora::Base.all.count).to eq(0)
 
-        monograph_with_file_set
+        create_monograph_with_file_set
         expect(Monograph.count).to eq(1)
         expect(FileSet.count).to eq(1)
         expect(ActiveFedora::Base.all.count).to eq(9)
@@ -170,7 +171,7 @@ RSpec.describe DestroyActiveFedoraObjectsJob, type: :job do
       it "deletes child object" do
         expect(ActiveFedora::Base.all.count).to eq(0)
 
-        monograph_with_file_set
+        create_monograph_with_file_set
         expect(Monograph.count).to eq(1)
         expect(FileSet.count).to eq(1)
         expect(ActiveFedora::Base.all.count).to eq(9)
@@ -187,7 +188,7 @@ RSpec.describe DestroyActiveFedoraObjectsJob, type: :job do
       it "deletes child and parent object" do
         expect(ActiveFedora::Base.all.count).to eq(0)
 
-        monograph_with_file_set
+        create_monograph_with_file_set
         expect(Monograph.count).to eq(1)
         expect(FileSet.count).to eq(1)
         expect(ActiveFedora::Base.all.count).to eq(9)
@@ -204,7 +205,7 @@ RSpec.describe DestroyActiveFedoraObjectsJob, type: :job do
       it "deletes parent and child object" do
         expect(ActiveFedora::Base.all.count).to eq(0)
 
-        monograph_with_file_set
+        create_monograph_with_file_set
         expect(Monograph.count).to eq(1)
         expect(FileSet.count).to eq(1)
         expect(ActiveFedora::Base.all.count).to eq(9)
