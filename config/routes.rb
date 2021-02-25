@@ -63,6 +63,8 @@ Rails.application.routes.draw do
       scope module: :v2, constraints: API::Opds::Version.new('v2', true) do
         get '', controller: :feeds, action: :opds
         get 'umpebc_oa', controller: :feeds, action: :umpebc_oa
+        get 'leverpress', controller: :feeds, action: :leverpress
+        get 'amherst', controller: :feeds, action: :amherst
       end
     end
 
