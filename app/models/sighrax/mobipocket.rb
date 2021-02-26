@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 module Sighrax
+  # Deprecated
   class Mobipocket < ElectronicBook
     private_class_method :new
 

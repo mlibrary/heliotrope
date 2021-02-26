@@ -1,14 +1,24 @@
 # frozen_string_literal: true
 
 require_dependency 'sighrax/asset'
+require_dependency 'sighrax/ebook'
+require_dependency 'sighrax/electronic_book'
 require_dependency 'sighrax/electronic_publication'
 require_dependency 'sighrax/entity'
+require_dependency 'sighrax/epub_ebook'
 require_dependency 'sighrax/interactive_map'
+require_dependency 'sighrax/mobi_ebook'
 require_dependency 'sighrax/mobipocket'
 require_dependency 'sighrax/model'
 require_dependency 'sighrax/monograph'
-require_dependency 'sighrax/score'
+require_dependency 'sighrax/null_entity'
+require_dependency 'sighrax/pdf_ebook'
 require_dependency 'sighrax/portable_document_format'
+require_dependency 'sighrax/publisher'
+require_dependency 'sighrax/resource'
+require_dependency 'sighrax/score'
+require_dependency 'sighrax/work'
+
 
 module Sighrax # rubocop:disable Metrics/ModuleLength
   class << self
@@ -125,50 +135,87 @@ module Sighrax # rubocop:disable Metrics/ModuleLength
       end
     end
 
+    # Only makes sense for Assets
     def allow_download?(entity)
-      return false unless entity.valid?
-      return false unless downloadable?(entity)
-      /^yes$/i.match?(Array(solr_document(entity)['allow_download_ssim']).first)
+      # return false unless entity.valid?
+      # return false unless downloadable?(entity)
+      # /^yes$/i.match?(Array(solr_document(entity)['allow_download_ssim']).first)
+      return false unless entity.is_a?(Sighrax::Asset)
+
+      entity.allow_download?
     end
 
+    # Sipity workflow final state is deposited
+    # return true for non Model entities
+    # Only makes sense for Model
     def deposited?(entity)
-      return false unless entity.valid?
-      return true if Array(solr_document(entity)['suppressed_bsi']).empty?
-      Array(solr_document(entity)['suppressed_bsi']).first.blank?
+      # return false unless entity.valid?
+      # return true if Array(solr_document(entity)['suppressed_bsi']).empty?
+      # Array(solr_document(entity)['suppressed_bsi']).first.blank?
+      return true unless entity.is_a?(Sighrax::Model)
+
+      entity.deposited?
     end
 
+    # Only makes sense for Assets
     def downloadable?(entity)
-      return false unless entity.valid?
-      return false if Array(solr_document(entity)['external_resource_url_ssim']).first.present?
-      entity.is_a?(Sighrax::Asset)
+      # return false unless entity.valid?
+      # return false if Array(solr_document(entity)['external_resource_url_ssim']).first.present?
+      # entity.is_a?(Sighrax::Asset)
+      return false unless entity.is_a?(Sighrax::Asset)
+
+      entity.downloadable?
     end
 
+    # Only makes sense for Monographs
     def open_access?(entity)
-      return false unless entity.valid?
-      /^yes$/i.match?(Array(solr_document(entity)['open_access_tesim']).first)
+      # return false unless entity.valid?
+      # /^yes$/i.match?(Array(solr_document(entity)['open_access_tesim']).first)
+      return false unless entity.is_a?(Sighrax::Monograph)
+
+      entity.open_access?
     end
 
+    # Hyrax draft or public?
+    # Only makes sense for Models
     def published?(entity)
-      return false unless entity.valid?
-      deposited?(entity) && /open/i.match?(Array(solr_document(entity)['visibility_ssi']).first)
+      # return false unless entity.valid?
+      # deposited?(entity) && /open/i.match?(Array(solr_document(entity)['visibility_ssi']).first)
+      return false unless entity.is_a?(Sighrax::Model)
+
+      entity.published?
     end
 
+    # Ebooks are restricted through their parent Monograph (See policy)
+    # Only makes sense for Monographs
     def restricted?(entity)
-      return true unless entity.valid?
-      Greensub::Component.find_by(noid: entity.noid).present?
+      # return true unless entity.valid?
+      # Greensub::Component.find_by(noid: entity.noid).present?
+      return false unless entity.is_a?(Sighrax::Monograph)
+
+      !entity.unrestricted?
     end
 
+    # Currently only Assets can be tombstone
+    # Only makes sense for Models
     def tombstone?(entity)
-      return false unless entity.valid?
-      expiration_date = Array(solr_document(entity)['permissions_expiration_date_ssim']).first
-      return false if expiration_date.blank?
-      Date.parse(expiration_date) <= Time.now.utc.to_date
+      # return false unless entity.valid?
+      # expiration_date = Array(solr_document(entity)['permissions_expiration_date_ssim']).first
+      # return false if expiration_date.blank?
+      # Date.parse(expiration_date) <= Time.now.utc.to_date
+      return false unless entity.is_a?(Sighrax::Model)
+
+      entity.tombstone?
     end
 
+    # Only makes sense for Assets
     def watermarkable?(entity)
-      return false unless entity.valid?
-      return false if Array(solr_document(entity)['external_resource_url_ssim']).first.present?
-      entity.is_a?(Sighrax::PortableDocumentFormat)
+      # return false unless entity.valid?
+      # return false if Array(solr_document(entity)['external_resource_url_ssim']).first.present?
+      # entity.is_a?(Sighrax::PortableDocumentFormat)
+      return false unless entity.is_a?(Sighrax::Asset)
+
+      entity.watermarkable?
     end
 
     private
@@ -210,10 +257,6 @@ module Sighrax # rubocop:disable Metrics/ModuleLength
         else
           Asset.send(:new, noid, data)
         end
-      end
-
-      def solr_document(entity)
-        entity.send(:data)
       end
   end
 end

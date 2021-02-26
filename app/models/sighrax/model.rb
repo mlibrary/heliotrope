@@ -4,14 +4,52 @@ module Sighrax
   class Model < Entity
     private_class_method :new
 
+    def children
+      []
+    end
+
+    def deposited?
+      return true if vector('suppressed_bsi').empty?
+
+      scalar('suppressed_bsi').blank?
+    end
+
+    def modified
+      Time.parse(scalar('date_modified_dtsi')).utc
+    rescue StandardError => _e
+      nil
+    end
+
+    def parent
+      Entity.null_entity
+    end
+
+    def published?
+      deposited? && /open/i.match?(scalar('visibility_ssi'))
+    end
+
+    def timestamp
+      Time.parse(scalar('timestamp')).utc
+    rescue StandardError => _e
+      nil
+    end
+
     def title
-      Array(data['title_tesim']).first || super
+      scalar('title_tesim') || super
+    end
+
+    def tombstone?
+      return false if scalar('permissions_expiration_date_ssim').blank?
+
+      return true if Date.parse(scalar('permissions_expiration_date_ssim')) <= Time.now.utc.to_date
+
+      false
     end
 
     protected
 
       def model_type
-        Array(data['has_model_ssim']).first
+        scalar('has_model_ssim')
       end
 
     private

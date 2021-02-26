@@ -1,9 +1,12 @@
 # frozen_string_literal: true
 
 module Sighrax
-  # Deprecated
-  class ElectronicPublication < EpubEbook
+  class PdfEbook < ElectronicBook
     private_class_method :new
+
+    def watermarkable?
+      true
+    end
 
     private
 

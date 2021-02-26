@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
 module Sighrax
-  class PortableDocumentFormat < ElectronicBook
+  # Deprecated
+  class PortableDocumentFormat < PdfEbook
     private_class_method :new
 
     private

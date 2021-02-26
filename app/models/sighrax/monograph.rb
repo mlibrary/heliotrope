@@ -6,68 +6,90 @@ module Sighrax
   class Monograph < Work
     private_class_method :new
 
+    def contributors
+      vector('creator_tesim') + vector('contributor_tesim')
+    end
+
     def cover_representative
-      @cover_representative ||= Sighrax.from_noid(Array(data['representative_id_ssim']).first)
+      @cover_representative ||= Sighrax.from_noid(scalar('representative_id_ssim'))
+    end
+
+    def description
+      scalar('description_tesim') || ''
     end
 
     def epub_featured_representative
       @epub_featured_representative ||= Sighrax.from_noid(FeaturedRepresentative.find_by(work_id: noid, kind: 'epub')&.file_set_id)
     end
 
-    def pdf_ebook_featured_representative
-      @pdf_ebook_featured_representative ||= Sighrax.from_noid(FeaturedRepresentative.find_by(work_id: noid, kind: 'pdf_ebook')&.file_set_id)
-    end
-
-    def contributors
-      Array(data['creator_tesim']) + Array(data['contributor_tesim'])
-    end
-
-    def description
-      Array(data['description_tesim']).first
-    end
-
     def identifier
       return @identifier if @identifier.present?
 
-      @identifier = Array(data['doi_sim']).first
-      @identifier ||= Array(data['hdl_sim']).first
+      @identifier = HandleNet::DOI_ORG_PREFIX + scalar('doi_ssim') if scalar('doi_ssim').present?
+      @identifier ||= HandleNet::HANDLE_NET_PREFIX + scalar('hdl_ssim') if scalar('hdl_ssim').present?
       @identifier ||= HandleNet.url(noid)
       @identifier
     end
 
     def languages
-      Array(data['language_tesim'])
+      vector('language_tesim')
     end
 
     def modified
-      # Going to leverage the aptrust_deposits table created_at field
+      # Going to leverage the aptrust_deposits table updated_at field
       # since this is the modify date of the entire monograph a.k.a.
-      # Maximum date_modified_dtsi of Monograph and FileSets .
+      # Maximum date_modified_dtsi of the Monograph and all its FileSets. .
       record = AptrustDeposit.find_by(noid: noid)
-      value = record&.created_at
-      value ||= Time.parse(Array(data['date_modified_dtsi']).first) if Array(data['date_modified_dtsi']).first # rubocop:disable Rails/TimeZone
-      value
-    rescue StandardError => _e
+      return record.updated_at.utc if record.present?
+
+      super
+    end
+
+    def open_access?
+      /^yes$/i.match?(scalar('open_access_tesim'))
+    end
+
+    def pdf_ebook_featured_representative
+      @pdf_ebook_featured_representative ||= Sighrax.from_noid(FeaturedRepresentative.find_by(work_id: noid, kind: 'pdf_ebook')&.file_set_id)
+    end
+
+    # Don't want to call this press right now because the other things like it are direct field access
+    def _press
+      subdomain = scalar('press_tesim')
+      Press.find_by(subdomain: subdomain)
+    end
+
+    def products
+      Greensub::Product.containing_monograph(noid)
+    end
+
+    def publication_year
+      match = /(\d{4})/.match(scalar('date_created_tesim'))
+      return match[1] if match.present?
+
       nil
     end
 
     def published
-      m = /\d{4}/.match(Array(data['date_created_tesim']).first)
-      Date.parse("#{m}-01-01")
+      Time.parse(scalar('date_published_dtsim')).utc
     rescue StandardError => _e
       nil
     end
 
     def publisher
-      Array(data['publisher_tesim']).first
+      scalar('publisher_tesim') || ''
     end
 
     def series
-      Array(data['series_tesim']).first
+      scalar('series_tesim') || ''
     end
 
     def subjects
-      Array(data['subject_tesim'])
+      vector('subject_tesim')
+    end
+
+    def unrestricted?
+      Greensub::Component.find_by(noid: noid).blank?
     end
 
     private

@@ -3,209 +3,172 @@
 require 'rails_helper'
 
 RSpec.describe Sighrax::Monograph, type: :model do
-  subject { monograph }
+  describe 'monograph with resources' do
+    subject { Sighrax.from_noid(monograph.id) }
 
-  let(:monograph) { described_class.send(:new, noid, data) }
-  let(:noid) { 'validnoid' }
-  let(:data) { {} }
-
-  it { is_expected.to be_an_instance_of(described_class) }
-  it { is_expected.to be_a_kind_of(Sighrax::Work) }
-  it { expect(monograph.resource_type).to eq :Monograph }
-
-  describe '#cover_representative' do
-    subject { monograph.cover_representative }
-
-    it { is_expected.to be_an_instance_of(Sighrax::NullEntity) }
-
-    context 'when cover' do
-      let(:data) { { 'representative_id_ssim' => ['covernoid'] } }
-      let(:cover) { instance_double(Sighrax::Asset, 'cover') }
-
-      before { allow(Sighrax).to receive(:from_noid).with('covernoid').and_return(cover) }
-
-      it { is_expected.to be cover }
+    let(:press) { create(:press, subdomain: 'subdomain') }
+    let(:monograph) do
+      create(:public_monograph,
+             press: 'subdomain',
+             representative_id: cover.id,
+             creator: ['creator'],
+             contributor: ['contributor'],
+             description: ['description'],
+             language: ['language'],
+             date_created: ['c1999e'],
+             date_modified: date_modified,
+             date_published: [date_published],
+             publisher: ['publisher'],
+             series: ['series'],
+             subject: ['subject'])
     end
-  end
-
-  context 'featured representatives' do
-    let(:featured_representative) { instance_double(FeaturedRepresentative, 'featured_representative', file_set_id: 'file_set_id') }
-    let(:null_entity) { Sighrax::Entity.null_entity }
-    let(:asset) { instance_double(Sighrax::Asset, 'asset') }
+    let(:date_modified) { Time.utc(2000, 2, 2) }
+    let(:date_published) { Time.utc(2001, 11, 11) }
+    let(:cover) { create(:public_file_set) }
+    let(:epub) { create(:public_file_set) }
+    let(:pdf_ebook) { create(:public_file_set) }
+    let(:file_set) { create(:public_file_set) }
+    let(:epub_fr) { create(:featured_representative, work_id: monograph.id, file_set_id: epub.id, kind: 'epub') }
+    let(:pdf_ebook_fr) { create(:featured_representative, work_id: monograph.id, file_set_id: pdf_ebook.id, kind: 'pdf_ebook') }
 
     before do
-      allow(Sighrax).to receive(:from_noid).with(nil).and_return(null_entity)
-      allow(Sighrax).to receive(:from_noid).with(featured_representative.file_set_id).and_return(asset)
+      press
+      monograph.ordered_members = [cover, epub, pdf_ebook, file_set]
+      monograph.save
+      cover.save
+      epub.save
+      pdf_ebook.save
+      file_set.save
+      epub_fr
+      pdf_ebook_fr
     end
 
-    describe '#epub_featured_representative' do
-      subject { monograph.epub_featured_representative }
+    it 'has expected values' do
+      is_expected.to be_an_instance_of described_class
+      is_expected.to be_a_kind_of Sighrax::Work
+      expect(subject.resource_type).to eq :Monograph
 
-      it { is_expected.to be null_entity }
+      expect(subject.contributors).to contain_exactly('creator', 'contributor')
+      expect(subject.cover_representative.noid).to eq cover.id
+      expect(subject.description).to eq 'description'
+      expect(subject.epub_featured_representative.noid).to eq epub.id
+      expect(subject.identifier).to eq HandleNet.url(monograph.id)
+      expect(subject.languages).to contain_exactly('language')
+      expect(subject.modified).to eq date_modified
+      expect(subject.open_access?).to be false
+      expect(subject._press).to eq press
+      expect(subject.pdf_ebook_featured_representative.noid).to eq pdf_ebook.id
+      expect(subject.products).to be_empty
+      expect(subject.publication_year).to eq '1999'
+      expect(subject.published).to eq date_published
+      expect(subject.publisher).to eq 'publisher'
+      expect(subject.series).to eq 'series'
+      expect(subject.subjects).to contain_exactly('subject')
+      expect(subject.unrestricted?).to be true
 
-      context 'when epub' do
-        before { allow(FeaturedRepresentative).to receive(:find_by).with(work_id: noid, kind: 'epub').and_return(featured_representative) }
+      expect(subject.parent).to be_an_instance_of Sighrax::NullEntity
+      expect(subject.children).to contain_exactly(
+        Sighrax.from_noid(cover.id),
+        Sighrax.from_noid(epub.id),
+        Sighrax.from_noid(pdf_ebook.id),
+        Sighrax.from_noid(file_set.id)
+      )
+    end
+  end
 
-        it { is_expected.to be asset }
+  describe '#identifier' do
+    subject { Sighrax.from_noid(monograph.id).identifier }
+
+    let(:monograph) { create(:public_monograph) }
+
+    it { is_expected.to eq HandleNet.url(monograph.id) }
+
+    context 'handle' do
+      before do
+        monograph.hdl = 'hdl'
+        monograph.save
       end
-    end
 
-    describe '#pdf_ebook_featured_representative' do
-      subject { monograph.pdf_ebook_featured_representative }
+      it { is_expected.to eq HandleNet::HANDLE_NET_PREFIX + 'hdl' }
 
-      it { is_expected.to be null_entity }
+      context 'doi' do
+        before do
+          monograph.doi = 'doi'
+          monograph.save
+        end
 
-      context 'when pdf_ebook' do
-        before { allow(FeaturedRepresentative).to receive(:find_by).with(work_id: noid, kind: 'pdf_ebook').and_return(featured_representative) }
-
-        it { is_expected.to be asset }
+        it { is_expected.to eq HandleNet::DOI_ORG_PREFIX + 'doi' }
       end
     end
   end
 
-  context 'attributes' do
-    let(:monograph) { Sighrax.from_noid(hyrax_monograph.id) }
-    let(:hyrax_monograph) { create(:public_monograph) }
+  describe '#modified' do
+    subject { Sighrax.from_noid(monograph.id).modified }
 
-    describe '#contributors' do
-      subject { monograph.contributors }
+    let(:monograph) { create(:public_monograph) }
+    let(:yesterday) { 1.day.ago.utc }
 
-      it { is_expected.to be_empty }
+    before do
+      monograph.date_modified = yesterday
+      monograph.save
+    end
 
-      context 'contributor' do
+    it { is_expected.to eq Time.parse(yesterday.iso8601) } # Truncate to second }
+
+    it 'Aptrust Deposit updated_at' do
+      record = AptrustDeposit.create(noid: monograph.id, identifier: monograph.id, verified: true)
+      is_expected.to eq record.updated_at
+      is_expected.not_to eq yesterday
+    end
+  end
+
+  describe '#open_access?, #products, and #unrestricted?' do
+    subject { Sighrax.from_noid(monograph.id) }
+
+    let(:monograph) { create(:public_monograph) }
+
+    it do
+      expect(subject.unrestricted?).to be true
+      expect(subject.open_access?).to be false
+    end
+
+    context 'when component' do
+      let(:component) { create(:component, identifier: monograph.id, noid: monograph.id) }
+
+      it 'has expected values' do
+        expect(subject.products).to be_empty
+        expect(subject.unrestricted?).to be true
+        expect(subject.open_access?).to be false
+      end
+
+      context 'when component of product' do
+        let(:product) { create(:product) }
+
         before do
-          hyrax_monograph.contributor = ['Contributor']
-          hyrax_monograph.save!
+          component.products << product
+          component.save
         end
 
-        it { is_expected.to contain_exactly('Contributor') }
+        it 'has expected values' do
+          expect(subject.products).not_to be_empty
+          expect(subject.products).to eq(Greensub::Product.containing_monograph(monograph.id))
+          expect(subject.unrestricted?).to be false
+          expect(subject.open_access?).to be false
+        end
 
-        context 'creator' do
+        context 'when open access' do
           before do
-            hyrax_monograph.creator = ['Creator']
-            hyrax_monograph.save!
+            monograph.open_access = 'yes'
+            monograph.save
           end
 
-          it { is_expected.to contain_exactly('Creator', 'Contributor') }
-        end
-      end
-    end
-
-    describe '#description' do
-      subject { monograph.description }
-
-      before do
-        hyrax_monograph.description = ['Description']
-        hyrax_monograph.save!
-      end
-
-      it { is_expected.to eq('Description') }
-    end
-
-    describe '#identifier' do
-      subject { monograph.identifier }
-
-      it { is_expected.to eq(HandleNet.url(monograph.noid)) }
-
-      context 'hdl' do
-        before do
-          hyrax_monograph.hdl = 'Handle'
-          hyrax_monograph.save!
-        end
-
-        it { is_expected.to eq(HandleNet.url(monograph.noid)) }
-
-        context 'doi' do
-          before do
-            hyrax_monograph.hdl = 'DOI'
-            hyrax_monograph.save!
+          it 'has expected values' do
+            expect(subject.products).not_to be_empty
+            expect(subject.products).to eq(Greensub::Product.containing_monograph(monograph.id))
+            expect(subject.unrestricted?).to be false
+            expect(subject.open_access?).to be true
           end
-
-          it { is_expected.to eq(HandleNet.url(monograph.noid)) }
         end
-      end
-    end
-
-    describe '#languages' do
-      subject { monograph.languages }
-
-      let(:languages) { %w[english french] }
-
-      before do
-        hyrax_monograph.language = languages
-        hyrax_monograph.save!
-      end
-
-      it { is_expected.to contain_exactly(*languages) }
-    end
-
-    describe '#modified' do
-      subject { monograph.modified }
-
-      let(:modified_date) { Time.parse(Time.now.utc.iso8601) }
-
-      before do
-        hyrax_monograph.date_modified = modified_date
-        hyrax_monograph.save!
-      end
-
-      it { is_expected.to eq(modified_date) }
-    end
-
-    describe '#published' do
-      subject { monograph.published }
-
-      before do
-        hyrax_monograph.date_created = ['2020']
-        hyrax_monograph.save!
-      end
-
-      it { is_expected.to eq(Date.parse('2020-01-01')) }
-    end
-
-    describe '#publisher' do
-      subject { monograph.publisher }
-
-      before do
-        hyrax_monograph.publisher = ['Publisher']
-        hyrax_monograph.save!
-      end
-
-      it { is_expected.to eq('Publisher') }
-    end
-
-    describe '#series' do
-      subject { monograph.series }
-
-      before do
-        hyrax_monograph.series = ['Series']
-        hyrax_monograph.save!
-      end
-
-      it { is_expected.to eq('Series') }
-    end
-
-    describe '#subjects' do
-      subject { monograph.subjects }
-
-      it { is_expected.to be_empty }
-
-      context 'when singular' do
-        before do
-          hyrax_monograph.subject = ['A']
-          hyrax_monograph.save!
-        end
-
-        it { is_expected.to contain_exactly('A') }
-      end
-
-      context 'when multiple' do
-        before do
-          hyrax_monograph.subject = ['A', 'B', 'C']
-          hyrax_monograph.save!
-        end
-
-        it { is_expected.to contain_exactly('A', 'B', 'C') }
       end
     end
   end

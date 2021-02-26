@@ -1,8 +1,7 @@
 # frozen_string_literal: true
 
 module Sighrax
-  # Deprecated
-  class ElectronicPublication < EpubEbook
+  class EpubEbook < ElectronicBook
     private_class_method :new
 
     private
