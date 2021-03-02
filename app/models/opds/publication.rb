@@ -14,6 +14,12 @@ module Opds
       def to_iso_639_2(language)
         return 'eng' if /\s*(en)(g)(lish)\s*/i.match?(language)
 
+        return 'frc' if /\s*(fr)(e)(nch)\s*/i.match?(language)
+        return 'frc' if /\s*(frc)\s*/i.match?(language)
+
+        return 'spa' if /\s*(spa)(nish)\s*/i.match?(language)
+        return 'spa' if /\s*(es)(pa.ol)\s*/i.match?(language)
+
         nil
       end
     end
@@ -155,7 +161,6 @@ module Opds
 
       def description
         # plain text
-        # description_tesim
         return nil if @monograph.description.blank?
         MarkdownService.markdown_as_text(@monograph.description, true)
       end
@@ -166,10 +171,7 @@ module Opds
       end
 
       def identifier
-        # doi_sim
-        # hdl_sim
-        # identifier_tesim
-        @monograph.identifier # "https://uri"
+        @monograph.identifier
       end
 
       def imprint
@@ -177,7 +179,6 @@ module Opds
 
       def language
         # BCP 47
-        # language_tesim
         # ISO 639-2
         # The US Library of Congress is the registration authority for ISO 639-2
         # ISO 639-2 Part 2: Alpha-3 code Library of Congress
@@ -188,17 +189,10 @@ module Opds
 
         return language_tags.first if language_tags.count == 1
 
-        language_tags
+        language_tags.uniq
       end
 
       def modified
-        # ISO 8601
-        # timestamp
-        # system_create_dtsi
-        # system_modified_dtsi
-        # date_uploaded_dtsi
-        # date_modified_dtsi
-
         # HELIO-3677 Fix OPDS feed based on James English feedback
         # 2. Publication’s metadata doesn’t include modified field.
         # This field is required by Circulation Manager
@@ -207,20 +201,21 @@ module Opds
         # greater than the time when this publication was last processed.
         # Without a modified field Circulation Manager is not able to
         # process the feed correctly.
-        @monograph.modified&.utc&.iso8601 || Time.now.utc.iso8601
+        @monograph.modified&.utc&.iso8601 ||
+          @monograph.published&.utc&.iso8601 ||
+            Time.now.utc.iso8601
       end
 
       def numberOfPages
       end
 
       def published
-        # ISO 8601
-        # date_created_tesim
-        @monograph.published&.iso8601
+        year = @monograph.publication_year
+        date = Date.parse("#{year}-01-01") if year.present?
+        date&.iso8601
       end
 
       def publisher
-        # publisher_tesim
         @monograph.publisher
       end
 
@@ -231,12 +226,10 @@ module Opds
       def series
         # optional links
         # see also belongsTo and collection
-        # series_tesim
         @monograph.series
       end
 
       def subject
-        # subject_tesim
         return nil if @monograph.subjects.blank?
         return @monograph.subjects.first if @monograph.subjects.count == 1
         @monograph.subjects
@@ -246,11 +239,6 @@ module Opds
       end
 
       def title
-        # title_tesim
-        # {
-        #     en: @monograph.title
-        # }
-        # MarkdownService.markdown_as_text(@monograph.title, true)
         @monograph.title
       end
 
