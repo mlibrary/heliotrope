@@ -8,6 +8,8 @@ module Greensub
     scope :name_like, ->(like) { where("name like ?", "%#{like}%") }
     scope :noid_like, ->(like) { where("noid like ?", "%#{like}%") }
 
+    scope :for_noid, ->(noid) { where(noid: noid) }
+
     has_many :components_products # rubocop:disable Rails/HasManyOrHasOneDependent
     has_many :products, through: :components_products,
                                  after_remove: :reindex_component_product,

@@ -8,6 +8,7 @@ class EbooksController < CheckpointController
   def download
     raise NotAuthorizedError unless @policy.download?
     return redirect_to(hyrax.download_path(params[:id])) unless Sighrax.watermarkable?(@entity) && @press_policy.watermark_download?
+
     begin
       CounterService.from(self, Sighrax.hyrax_presenter(@entity)).count(request: 1)
       send_data watermark_pdf(@entity, @entity.filename), type: @entity.media_type, filename: @entity.filename
