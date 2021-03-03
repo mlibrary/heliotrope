@@ -6,24 +6,9 @@ module Sighrax
 
     attr_reader :noid
 
-    # Class Methods
-
-    def self.null_entity(noid = 'null_noid')
+    def self.null_entity(noid = nil)
+      noid = 'null_noid' if noid.blank?
       NullEntity.send(:new, noid)
-    end
-
-    # Instance Methods
-
-    def valid?
-      !instance_of?(NullEntity)
-    end
-
-    def uri
-      ActiveFedora::Base.id_to_uri(noid)
-    end
-
-    def resource_type
-      type
     end
 
     def resource_id
@@ -34,20 +19,24 @@ module Sighrax
       resource_type.to_s + ':' + resource_id.to_s
     end
 
+    def resource_type
+      type
+    end
+
     def title
       noid
     end
 
-    def parent
-      self.class.null_entity
+    def uri
+      ActiveFedora::Base.id_to_uri(noid)
     end
 
-    def children
-      []
+    def valid?
+      !instance_of?(NullEntity)
     end
 
-    def content
-      ''
+    def ==(other)
+      noid == other.noid
     end
 
     protected
@@ -58,21 +47,19 @@ module Sighrax
         @type ||= /^Sighrax::(.+$)/.match(self.class.to_s)[1].to_sym
       end
 
+      def scalar(key)
+        vector(key).first
+      end
+
+      def vector(key)
+        Array(data[key])
+      end
+
     private
 
       def initialize(noid, data)
         @noid = noid
         @data = data
-      end
-  end
-
-  class NullEntity < Entity
-    private_class_method :new
-
-    private
-
-      def initialize(noid)
-        super(noid, {})
       end
   end
 end

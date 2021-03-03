@@ -1,9 +1,14 @@
 # frozen_string_literal: true
 
 module Sighrax
-  # Deprecated
-  class ElectronicPublication < EpubEbook
+  class Ebook < Asset
     private_class_method :new
+
+    delegate :open_access?, :_press, :products, :tombstone?, :unrestricted?, to: :monograph
+
+    def monograph
+      parent
+    end
 
     private
 

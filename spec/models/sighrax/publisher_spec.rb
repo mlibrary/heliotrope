@@ -6,14 +6,14 @@ RSpec.describe Sighrax::Publisher, type: :model do
   context 'null publisher' do
     subject { described_class.null_publisher }
 
-    it { is_expected.to be_an_instance_of(Sighrax::NullPublisher) }
+    it { is_expected.to be_an_instance_of Sighrax::NullPublisher }
     it { expect(subject.subdomain).to eq 'null_subdomain' }
-    it { expect(subject.send(:press)).to eq(nil) }
+    it { expect(subject.send(:press)).to eq nil }
     it { expect(subject.valid?).to be false }
     it { expect(subject.resource_type).to eq :NullPublisher }
     it { expect(subject.resource_id).to eq 'null_subdomain' }
     it { expect(subject.resource_token).to eq "#{subject.resource_type}:#{subject.resource_id}" }
-    it { expect(subject.parent).to be_an_instance_of(Sighrax::NullPublisher) }
+    it { expect(subject.parent).to be_an_instance_of Sighrax::NullPublisher }
     it { expect(subject.children).to be_empty }
     it { expect(subject.work_noids(true)).to be_empty }
     it { expect(subject.asset_noids(true)).to be_empty }
@@ -60,14 +60,14 @@ RSpec.describe Sighrax::Publisher, type: :model do
     let(:subdomain) { 'root' }
     let(:press) { create(:press, subdomain: subdomain) }
 
-    it { is_expected.to be_an_instance_of(described_class) }
+    it { is_expected.to be_an_instance_of described_class }
     it { expect(subject.subdomain).to eq subdomain }
     it { expect(subject.send(:press)).to eq press }
     it { expect(subject.valid?).to be true }
     it { expect(subject.resource_type).to eq :Publisher }
     it { expect(subject.resource_id).to eq subdomain }
     it { expect(subject.resource_token).to eq "#{subject.resource_type}:#{subject.resource_id}" }
-    it { expect(subject.parent).to be_an_instance_of(Sighrax::NullPublisher) }
+    it { expect(subject.parent).to be_an_instance_of Sighrax::NullPublisher }
     it { expect(subject.children).to be_empty }
     it { expect(subject.work_noids(true)).to be_empty }
     it { expect(subject.asset_noids(true)).to be_empty }
@@ -83,8 +83,8 @@ RSpec.describe Sighrax::Publisher, type: :model do
       end
 
       it { expect(subject.children.count).to eq 1 }
-      it { expect(subject.children.first).to eq described_class.from_press(child_press) }
-      it { expect(subject.children.first).to be_an_instance_of(described_class) }
+      it { expect(subject.children.first).to eq described_class.from_press child_press }
+      it { expect(subject.children.first).to be_an_instance_of described_class }
       it { expect(subject.children.first.parent).to eq subject }
     end
 

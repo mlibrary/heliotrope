@@ -64,7 +64,7 @@ RSpec.describe Sighrax do
     let(:document) { }
 
     it { is_expected.to be_an_instance_of(Sighrax::NullEntity) }
-    it { expect(subject.noid).to be nil }
+    it { expect(subject.noid).to eq Sighrax::Entity.null_entity.noid }
     it { expect(subject.send(:data)).to be_empty }
 
     context 'NullEntity' do
@@ -482,22 +482,14 @@ RSpec.describe Sighrax do
 
       it { is_expected.to be false }
 
-      context 'Entity' do
+      context 'Asset' do
+        let(:entity) { Sighrax::Asset.send(:new, noid, data) }
         let(:data) { ::SolrDocument.new(id: noid, 'allow_download_ssim' => ['yes']) }
-        let(:downloadable) { true }
-
-        before { allow(described_class).to receive(:downloadable?).with(entity).and_return(downloadable) }
 
         it { is_expected.to be true }
 
         context 'do not allow download' do
           let(:data) { ::SolrDocument.new(id: noid, 'allow_download_ssim' => ['anything but yes']) }
-
-          it { is_expected.to be false }
-        end
-
-        context 'non downloadable' do
-          let(:downloadable) { false }
 
           it { is_expected.to be false }
         end
@@ -507,9 +499,10 @@ RSpec.describe Sighrax do
     describe '#deposited?' do
       subject { described_class.deposited?(entity) }
 
-      it { is_expected.to be false }
+      it { is_expected.to be true }
 
-      context 'Entity' do
+      context 'Model' do
+        let(:entity) { Sighrax::Model.send(:new, noid, data) }
         let(:data) { ::SolrDocument.new(id: noid) }
 
         it { is_expected.to be true }
@@ -533,29 +526,22 @@ RSpec.describe Sighrax do
 
       it { is_expected.to be false }
 
-      context 'Entity' do
+      context 'Asset' do
+        let(:entity) { Sighrax::Asset.send(:new, noid, data) }
         let(:data) { ::SolrDocument.new(id: noid) }
 
-        it { is_expected.to be false }
+        it { is_expected.to be true }
 
-        context 'Asset' do
-          let(:asset) { true }
+        context 'external resource url' do
+          let(:data) { ::SolrDocument.new(id: noid, 'external_resource_url_ssim' => url) }
+          let(:url) { 'url' }
 
-          before { allow(entity).to receive(:is_a?).with(Sighrax::Asset).and_return(asset) }
+          it { is_expected.to be false }
 
-          it { is_expected.to be true }
+          context 'blank url' do
+            let(:url) { '' }
 
-          context 'external resource url' do
-            let(:data) { ::SolrDocument.new(id: noid, 'external_resource_url_ssim' => url) }
-            let(:url) { 'url' }
-
-            it { is_expected.to be false }
-
-            context 'blank url' do
-              let(:url) { '' }
-
-              it { is_expected.to be true }
-            end
+            it { is_expected.to be true }
           end
         end
       end
@@ -566,7 +552,8 @@ RSpec.describe Sighrax do
 
       it { is_expected.to be false }
 
-      context 'Entity' do
+      context 'Monograph' do
+        let(:entity) { Sighrax::Monograph.send(:new, noid, data) }
         let(:data) { ::SolrDocument.new(id: noid) }
 
         it { is_expected.to be false }
@@ -590,7 +577,8 @@ RSpec.describe Sighrax do
 
       it { is_expected.to be false }
 
-      context 'Entity' do
+      context 'Models' do
+        let(:entity) { Sighrax::Model.send(:new, noid, data) }
         let(:data) { ::SolrDocument.new(id: noid) }
 
         it { is_expected.to be false }
@@ -618,10 +606,13 @@ RSpec.describe Sighrax do
     describe '#restricted?' do
       subject { described_class.restricted?(entity) }
 
-      it { is_expected.to be true }
+      it { is_expected.to be false }
 
-      context 'Entity' do
+      context 'Monograph' do
+        let(:entity) { Sighrax::Monograph.send(:new, noid, data) }
         let(:data) { ::SolrDocument.new(id: noid) }
+
+        it { is_expected.to be false }
 
         context 'Component' do
           let(:component) { double('component') }
@@ -640,7 +631,8 @@ RSpec.describe Sighrax do
 
       it { is_expected.to be false }
 
-      context 'Entity' do
+      context 'Model' do
+        let(:entity) { Sighrax::Model.send(:new, noid, data) }
         let(:data) { ::SolrDocument.new(id: noid) }
 
         it { is_expected.to be false }
@@ -668,38 +660,17 @@ RSpec.describe Sighrax do
     describe '#watermarkable?' do
       subject { described_class.watermarkable?(entity) }
 
-      before { allow(entity).to receive(:is_a?).and_return(false) }
-
       it { is_expected.to be false }
 
-      context 'Entity' do
-        let(:data) { ::SolrDocument.new(id: noid) }
+      context 'Asset' do
+        let(:entity) { Sighrax::Asset.send(:new, noid, data) }
 
         it { is_expected.to be false }
 
-        context 'Asset' do
-          before { allow(entity).to receive(:is_a?).with(Sighrax::Asset).and_return(true) }
+        context 'Portable Document Format' do
+          let(:entity) { Sighrax::PortableDocumentFormat.send(:new, noid, data) }
 
-          it { is_expected.to be false }
-
-          context 'Portable Document Format' do
-            before { allow(entity).to receive(:is_a?).with(Sighrax::PortableDocumentFormat).and_return(true) }
-
-            it { is_expected.to be true }
-
-            context 'external resource url' do
-              let(:data) { ::SolrDocument.new(id: noid, 'external_resource_url_ssim' => url) }
-              let(:url) { 'url' }
-
-              it { is_expected.to be false }
-
-              context 'blank url' do
-                let(:url) { '' }
-
-                it { is_expected.to be true }
-              end
-            end
-          end
+          it { is_expected.to be true }
         end
       end
     end

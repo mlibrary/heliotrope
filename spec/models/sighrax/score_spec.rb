@@ -3,12 +3,13 @@
 require 'rails_helper'
 
 RSpec.describe Sighrax::Score, type: :model do
-  subject { described_class.send(:new, noid, data) }
+  subject { Sighrax.from_noid(score.id) }
 
-  let(:noid) { 'validnoid' }
-  let(:data) { {} }
+  let(:score) { create(:public_score) }
 
-  it { is_expected.to be_an_instance_of(described_class) }
-  it { is_expected.to be_a_kind_of(Sighrax::Work) }
-  it { expect(subject.resource_type).to eq :Score }
+  it 'has expected values' do
+    is_expected.to be_an_instance_of described_class
+    is_expected.to be_a_kind_of Sighrax::Work
+    expect(subject.resource_type).to eq :Score
+  end
 end

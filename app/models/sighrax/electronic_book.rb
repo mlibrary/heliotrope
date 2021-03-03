@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
 module Sighrax
-  class ElectronicBook < Asset
+  # Deprecated
+  class ElectronicBook < Ebook
     private_class_method :new
 
     private
