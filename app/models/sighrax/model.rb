@@ -28,6 +28,10 @@ module Sighrax
       deposited? && /open/i.match?(scalar('visibility_ssi'))
     end
 
+    def publisher
+      Publisher.from_subdomain(scalar('press_tesim'))
+    end
+
     def timestamp
       Time.parse(scalar('timestamp')).utc
     rescue StandardError => _e

@@ -59,7 +59,7 @@ RSpec.describe Opds::Publication, type: [:model, :json_schema] do
         allow(monograph).to receive(:modified).and_return(nil)
         allow(monograph).to receive(:publication_year).and_return(nil)
         allow(monograph).to receive(:published).and_return(nil)
-        allow(monograph).to receive(:publisher).and_return(nil)
+        allow(monograph).to receive(:publishing_house).and_return(nil)
         allow(monograph).to receive(:series).and_return(nil)
         allow(monograph).to receive(:subjects).and_return([])
 
@@ -270,10 +270,10 @@ RSpec.describe Opds::Publication, type: [:model, :json_schema] do
         end
 
         describe '#publisher' do
-          before { allow(monograph).to receive(:publisher).and_return('Publisher') }
+          before { allow(monograph).to receive(:publishing_house).and_return('Publishing House') }
 
           it { expect(subject[:metadata].keys.count).to eq(5) }
-          it { expect(subject[:metadata]).to include(publisher: 'Publisher') }
+          it { expect(subject[:metadata]).to include(publisher: 'Publishing House') }
           it { expect(schemer_validate?(opds_publication_schemer, JSON.parse(subject.to_json))).to be true }
         end
 

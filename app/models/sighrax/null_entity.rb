@@ -73,15 +73,11 @@ module Sighrax
       false
     end
 
-    def pdf_ebook_featured_representative
+    def parent
       Entity.null_entity
     end
 
-    def _press
-      nil
-    end
-
-    def parent
+    def pdf_ebook_featured_representative
       Entity.null_entity
     end
 
@@ -89,12 +85,12 @@ module Sighrax
       []
     end
 
-    def published?
-      false
-    end
 
     def publication_year
       nil
+    end
+    def published?
+      false
     end
 
     def published
@@ -102,7 +98,15 @@ module Sighrax
     end
 
     def publisher
+      Publisher.null_publisher
+    end
+
+    def publishing_house
       ''
+    end
+
+    def restricted?
+      false
     end
 
     def series
@@ -119,10 +123,6 @@ module Sighrax
 
     def tombstone?
       false
-    end
-
-    def unrestricted?
-      true
     end
 
     def watermarkable?

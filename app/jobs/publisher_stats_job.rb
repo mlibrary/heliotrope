@@ -14,15 +14,15 @@ class PublisherStatsJob < ApplicationJob
     def stats(press)
       publisher = Sighrax::Publisher.from_press(press)
       monograph_count = publisher.work_noids.count
-      asset_count = publisher.asset_noids.count
+      resource_count = publisher.resource_noids.count
       user_count = publisher.user_ids.count
-      trash_flag = !(monograph_count.positive? || asset_count.positive? || user_count.positive? || publisher.children.present?)
+      trash_flag = !(monograph_count.positive? || resource_count.positive? || user_count.positive? || publisher.children.present?)
       {
         modified: press.updated_at.strftime('%F'),
         subdomain: press.subdomain,
         name: press.name,
         monographs: monograph_count,
-        assets: asset_count,
+        resources: resource_count,
         users: user_count,
         trash: trash_flag
       }

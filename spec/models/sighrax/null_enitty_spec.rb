@@ -54,17 +54,17 @@ RSpec.describe Sighrax::NullEntity, type: :model do
     it { expect(subject.monograph)        .to be_an_instance_of(Sighrax::NullEntity) }
     it { expect(subject.open_access?)     .to be false }
     it { expect(subject.parent)           .to be_an_instance_of(Sighrax::NullEntity) }
-    it { expect(subject._press)           .to be nil }
     it { expect(subject.products)         .to eq([]) }
     it { expect(subject.publication_year) .to be nil }
     it { expect(subject.published)        .to be nil }
     it { expect(subject.published?)       .to be false }
-    it { expect(subject.publisher)        .to eq('') }
+    it { expect(subject.publisher)        .to be_an_instance_of(Sighrax::NullPublisher) }
+    it { expect(subject.publishing_house) .to eq('') }
+    it { expect(subject.restricted?)      .to be false }
     it { expect(subject.timestamp)        .to be nil }
     it { expect(subject.series)           .to eq('') }
     it { expect(subject.subjects)         .to eq([]) }
     it { expect(subject.tombstone?)       .to be false }
-    it { expect(subject.unrestricted?)    .to be true }
     it { expect(subject.watermarkable?)   .to be false }
   end
 
@@ -109,6 +109,7 @@ RSpec.describe Sighrax::NullEntity, type: :model do
         it { expect(subject.modified)   .to eq instance.modified }
         it { expect(subject.parent)     .to eq instance.parent }
         it { expect(subject.published?) .to eq instance.published? }
+        it { expect(subject.publisher)  .to eq instance.publisher }
         it { expect(subject.timestamp)  .to eq instance.timestamp }
         it { expect(subject.title)      .to eq instance.title }
         it { expect(subject.tombstone?) .to eq instance.tombstone? }
@@ -131,14 +132,13 @@ RSpec.describe Sighrax::NullEntity, type: :model do
             it { expect(subject.modified)                          .to eq instance.modified }
             it { expect(subject.open_access?)                      .to eq instance.open_access? }
             it { expect(subject.pdf_ebook_featured_representative) .to eq instance.pdf_ebook_featured_representative }
-            it { expect(subject._press)                            .to eq instance._press }
             it { expect(subject.products)                          .to eq instance.products }
             it { expect(subject.publication_year)                  .to eq instance.publication_year }
             it { expect(subject.published)                         .to eq instance.published }
-            it { expect(subject.publisher)                         .to eq instance.publisher }
+            it { expect(subject.publishing_house)                  .to eq instance.publishing_house }
+            it { expect(subject.restricted?)                       .to eq instance.restricted? }
             it { expect(subject.series)                            .to eq instance.series }
             it { expect(subject.subjects)                          .to eq instance.subjects }
-            it { expect(subject.unrestricted?)                     .to eq instance.unrestricted? }
           end
         end
 
@@ -178,8 +178,8 @@ RSpec.describe Sighrax::NullEntity, type: :model do
             it { expect(subject.monograph)       .to eq instance.monograph }
             it { expect(subject.open_access?)    .to eq instance.open_access? }
             it { expect(subject.products)        .to eq instance.products }
+            it { expect(subject.restricted?)     .to eq instance.restricted? }
             it { expect(subject.tombstone?)      .to eq instance.tombstone? }
-            it { expect(subject.unrestricted?)   .to eq instance.unrestricted? }
 
             # Portable Document Format is watermark-able!
             if [Sighrax::PortableDocumentFormat, Sighrax::PdfEbook].include?(klass)
