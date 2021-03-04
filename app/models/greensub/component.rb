@@ -20,11 +20,11 @@ module Greensub
 
     before_destroy do
       if products.present?
-        errors.add(:base, "component has #{products.count} associated products!")
+        errors.add(:base, "component has associated product!")
         throw(:abort)
       end
       if grants?
-        errors.add(:base, "component has at least one associated grant!")
+        errors.add(:base, "component has associated grant!")
         throw(:abort)
       end
     end
@@ -59,7 +59,11 @@ module Greensub
     end
 
     def grants?
-      Authority.resource_grants?(self)
+      grants.present?
+    end
+
+    def grants
+      @grants ||= Checkpoint::DB::Grant.where(resource_type: resource_type.to_s, resource_id: resource_id.to_s)
     end
 
     def resource_type

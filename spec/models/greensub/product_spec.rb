@@ -3,15 +3,17 @@
 require 'rails_helper'
 
 RSpec.describe Greensub::Product, type: :model do
-  subject { described_class.new(id: id, identifier: identifier, name: name, purchase: purchase) }
+  context 'instance' do
+    subject { described_class.new(id: id, identifier: identifier, name: name, purchase: purchase) }
 
-  let(:id) { 1 }
-  let(:identifier) { double('identifier') }
-  let(:name) { double('name') }
-  let(:purchase) { double('purchase') }
+    let(:id) { 1 }
+    let(:identifier) { double('identifier') }
+    let(:name) { double('name') }
+    let(:purchase) { double('purchase') }
 
-  it { expect(subject.resource_type).to eq :Product }
-  it { expect(subject.resource_id).to eq id }
+    it { expect(subject.resource_type).to eq :Product }
+    it { expect(subject.resource_id).to eq id }
+  end
 
   context 'before destroy' do
     let(:product) { create(:product) }
@@ -22,16 +24,17 @@ RSpec.describe Greensub::Product, type: :model do
       expect(product.destroy).to be false
       expect(product.errors.count).to eq 1
       expect(product.errors.first[0]).to eq :base
-      expect(product.errors.first[1]).to eq "product has 1 associated components!"
+      expect(product.errors.first[1]).to eq "product has associated component!"
     end
 
     it 'grants present' do
       individual = create(:individual)
-      Greensub.subscribe(subscriber: individual, target: product)
+      license = create(:full_license)
+      Authority.grant!(individual, license, product)
       expect(product.destroy).to be false
       expect(product.errors.count).to eq 1
       expect(product.errors.first[0]).to eq :base
-      expect(product.errors.first[1]).to eq "product has at least one associated grant!"
+      expect(product.errors.first[1]).to eq "product has associated grant!"
     end
   end
 
@@ -68,10 +71,11 @@ RSpec.describe Greensub::Product, type: :model do
   end
 
   context 'methods' do
-    before do
-      clear_grants_table
-      allow(described_class).to receive(:find).with(id).and_return(subject)
-    end
+    subject { product }
+
+    let(:product) { create(:product) }
+
+    before { clear_grants_table }
 
     it do
       is_expected.to be_valid
@@ -112,36 +116,39 @@ RSpec.describe Greensub::Product, type: :model do
 
     it '#grants?' do
       individual = create(:individual)
+      individual_license = create(:full_license)
       institution = create(:institution)
-      expect(subject.subscribers).to be_empty
+      institution_license = create(:full_license)
+
+      expect(subject.licensees).to be_empty
 
       expect(subject.update?).to be true
       expect(subject.destroy?).to be true
       expect(subject.grants?).to be false
 
-      Greensub.subscribe(subscriber: individual, target: subject)
-      expect(subject.subscribers).to match_array([individual])
+      Authority.grant!(individual, individual_license, subject)
+      expect(subject.licensees).to contain_exactly(individual)
 
       expect(subject.update?).to be true
       expect(subject.destroy?).to be false
       expect(subject.grants?).to be true
 
-      Greensub.subscribe(subscriber: institution, target: subject)
-      expect(subject.subscribers).to match_array([individual, institution])
+      Authority.grant!(institution, institution_license, subject)
+      expect(subject.licensees).to contain_exactly(individual, institution)
 
       expect(subject.update?).to be true
       expect(subject.destroy?).to be false
       expect(subject.grants?).to be true
 
-      Greensub.unsubscribe(subscriber: individual, target: subject)
-      expect(subject.subscribers).to match_array([institution])
+      Authority.revoke!(individual, individual_license, subject)
+      expect(subject.licensees).to contain_exactly(institution)
 
       expect(subject.update?).to be true
       expect(subject.destroy?).to be false
       expect(subject.grants?).to be true
 
-      Greensub.unsubscribe(subscriber: institution, target: subject)
-      expect(subject.subscribers).to be_empty
+      Authority.revoke!(institution, institution_license, subject)
+      expect(subject.licensees).to be_empty
 
       expect(subject.update?).to be true
       expect(subject.destroy?).to be true

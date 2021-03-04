@@ -9,7 +9,7 @@
 </b>
 <% products.each do |product| %>
   <div class="col-md-10">
-    <div class="col-md-1"><%= link_to product.id, edit_greensub_product_path(product) %></div>
+    <div class="col-md-1"><%= link_to product.id, greensub_product_path(product) %></div>
     <div class="col-md-9">
       <div><%= product.identifier %></div>
       <div<%= product.name %></div>

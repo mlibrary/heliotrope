@@ -14,9 +14,9 @@
   <div class="col-md-1"><em>Login</em></div>
   <div class="col-md-11">&nbsp;<%= @institution.login %></div>
   <div class="col-md-12"><br/></div>
-  <h2>Products</h2>
+  <h2>Licenses</h2>
   <div class="col-md-12">
-    <%= render partial: '/greensub/institutions/products', locals: { institution: @institution, products: @institution.products } %>
+    <%= render partial: '/greensub/licenses/licenses', locals: { institution: @individual, licenses: @institution.licenses } %>
   </div>
   <div class="col-md-12"><br/></div>
   <div class="col-md-12">

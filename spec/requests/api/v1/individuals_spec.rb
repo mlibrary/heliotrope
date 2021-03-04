@@ -226,7 +226,7 @@ RSpec.describe "Individuals", type: :request do
         end
 
         it 'existing individual ok' do
-          Greensub.subscribe(subscriber: individual, target: product)
+          individual.update_product_license(product)
           get api_product_individual_path(product, individual), headers: headers
           expect(response.content_type).to eq("application/json")
           expect(response).to have_http_status(:ok)
@@ -293,16 +293,16 @@ RSpec.describe "Individuals", type: :request do
           expect(response.content_type).to eq("application/json")
           expect(response).to have_http_status(:ok)
           expect(response.body).to be_empty
-          expect(Greensub.subscribed?(subscriber: individual, target: product)).to be true
+          expect(individual.product_license?(product)).to be true
         end
 
         it 'existing individual twice ok' do
-          Greensub.subscribe(subscriber: individual, target: product)
+          individual.update_product_license(product)
           put api_product_individual_path(product, individual), headers: headers
           expect(response.content_type).to eq("application/json")
           expect(response).to have_http_status(:ok)
           expect(response.body).to be_empty
-          expect(Greensub.subscribed?(subscriber: individual, target: product)).to be true
+          expect(individual.product_license?(product)).to be true
           expect(grants_table_count).to eq(1)
         end
       end
@@ -328,11 +328,11 @@ RSpec.describe "Individuals", type: :request do
       end
 
       it 'existing with products accepted' do
-        Greensub.subscribe(subscriber: individual, target: product)
+        individual.update_product_license(product)
         delete api_individual_path(individual), headers: headers
         expect(response.content_type).to eq("application/json")
         expect(response).to have_http_status(:accepted)
-        expect(response_body[:base.to_s]).to include("individual has 1 associated products!")
+        expect(response_body[:base.to_s]).to include("individual has associated grant!")
         expect(Greensub::Individual.count).to eq(1)
       end
     end
@@ -365,10 +365,10 @@ RSpec.describe "Individuals", type: :request do
         end
 
         it 'existing individual ok' do
-          Greensub.subscribe(subscriber: individual, target: product)
-          expect(Greensub.subscribed?(subscriber: individual, target: product)).to be true
+          individual.update_product_license(product)
+          expect(individual.product_license?(product)).to be true
           delete api_product_individual_path(product, individual), headers: headers
-          expect(Greensub.subscribed?(subscriber: individual, target: product)).to be false
+          expect(individual.product_license?(product)).to be false
           expect(response.content_type).to eq("application/json")
           expect(response).to have_http_status(:ok)
           expect(response.body).to be_empty
@@ -376,7 +376,7 @@ RSpec.describe "Individuals", type: :request do
         end
 
         it 'existing individual non subscriber ok' do
-          expect(Greensub.subscribed?(subscriber: individual, target: product)).to be false
+          expect(individual.product_license?(product)).to be false
           delete api_product_individual_path(product, individual), headers: headers
           expect(response.content_type).to eq("application/json")
           expect(response).to have_http_status(:ok)
@@ -421,7 +421,7 @@ RSpec.describe "Individuals", type: :request do
         end
 
         it 'existing individual with subscription ok' do
-          Greensub.subscribe(subscriber: individual, target: product)
+          individual.update_product_license(product)
           get api_product_individual_access_path(product, individual), headers: headers
           expect(response.content_type).to eq("application/json")
           expect(response).to have_http_status(:ok)
@@ -465,7 +465,7 @@ RSpec.describe "Individuals", type: :request do
         end
 
         it 'existing individual with subscription ok' do
-          Greensub.subscribe(subscriber: individual, target: product)
+          individual.update_product_license(product)
           post api_product_individual_access_path(product, individual), headers: headers, params: { access: 'full' }.to_json
           expect(response.content_type).to eq("application/json")
           expect(response).to have_http_status(:ok)

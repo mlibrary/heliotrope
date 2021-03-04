@@ -36,7 +36,16 @@ module Authority
       authority.who(credential, Checkpoint::Resource.all).any?
     end
 
+    def license(license)
+      # return Greensub::LicenseCredential.new('any') if license == 'any'
+
+      raise ArgumentError unless ValidationService.valid_license?(license)
+      Greensub::LicenseCredential.new(license)
+    end
+
     def permission(permission)
+      return Checkpoint::Credential::Permission.new('any') if permission == 'any'
+
       raise ArgumentError unless ValidationService.valid_permission?(permission)
       Checkpoint::Credential::Permission.new(permission)
     end
@@ -44,6 +53,8 @@ module Authority
     def credential(credential_type, credential_id)
       raise ArgumentError unless ValidationService.valid_credential?(credential_type, credential_id)
       case credential_type&.to_sym
+      when :License
+        license(credential_id)
       when :permission
         permission(credential_id)
       else
@@ -62,8 +73,6 @@ module Authority
       return OpenStruct.new(resource_type: resource_type, resource_id: resource_id) if resource_id&.to_s == 'any'
       raise ArgumentError unless ValidationService.valid_resource?(resource_type, resource_id)
       case resource_type&.to_s&.to_sym
-      when :ElectronicPublication
-        Sighrax.from_noid(resource_id)
       when :Component
         Greensub::Component.find(resource_id)
       when :Product

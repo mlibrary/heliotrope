@@ -143,6 +143,23 @@ RSpec.describe Authority do
     end
   end
 
+  describe '#license' do
+    subject { described_class.license(license) }
+
+    let(:license) { 'license' }
+
+    it { expect { subject }.to raise_error(ArgumentError) }
+
+    context 'valid license' do
+      before { allow(ValidationService).to receive(:valid_license?).with(license).and_return(true) }
+
+      it 'is expected' do
+        expect(subject).to be_an_instance_of(Greensub::LicenseCredential)
+        expect(subject.id).to eq license
+      end
+    end
+  end
+
   describe '#permission' do
     subject { described_class.permission(permission) }
 
@@ -184,15 +201,27 @@ RSpec.describe Authority do
     end
 
     context 'any:any' do
-      let(:credential_type) { :any }
-      let(:credential_id) { :any }
+      let(:credential_type) { 'any' }
+      let(:credential_id) { 'any' }
 
       it { expect { subject }.to raise_error(ArgumentError) }
     end
 
+    context 'License:any' do
+      let(:credential_type) { 'License' }
+      let(:credential_id) { 'any' }
+
+      it 'is expected' do
+        expect { subject }.to raise_error(ArgumentError)
+        # expect(subject).to be_an_instance_of(Greensub::LicenseCredential)
+        # expect(subject.type).to eq credential_type.to_s
+        # expect(subject.id).to eq credential_id.to_s
+      end
+    end
+
     context 'permission:any' do
-      let(:credential_type) { :permission }
-      let(:credential_id) { :any }
+      let(:credential_type) { 'permission' }
+      let(:credential_id) { 'any' }
 
       it 'is expected' do
         expect(subject).to be_an_instance_of(Checkpoint::Credential::Permission)
@@ -256,7 +285,7 @@ RSpec.describe Authority do
       end
     end
 
-    [Sighrax::ElectronicPublication].each do |klass|
+    [Sighrax::Entity].each do |klass|
       relative_klass_match = /^Sighrax::(.+$)/.match(klass.to_s)
       relative_klass = relative_klass_match[1].to_sym if relative_klass_match.present?
       relative_klass ||= klass
@@ -267,9 +296,10 @@ RSpec.describe Authority do
           let(:resource_id) { 'any' }
 
           it 'is expected' do
-            expect(subject).to be_an_instance_of(OpenStruct)
-            expect(subject.resource_type).to eq resource_type
-            expect(subject.resource_id).to eq resource_id
+            expect { subject }.to raise_error(ArgumentError)
+            # expect(subject).to be_an_instance_of(OpenStruct)
+            # expect(subject.resource_type).to eq resource_type
+            # expect(subject.resource_id).to eq resource_id
           end
         end
 
@@ -280,9 +310,10 @@ RSpec.describe Authority do
           before { allow(Sighrax).to receive(:from_noid).with(resource_id).and_return(instance) }
 
           it 'is expected' do
-            expect(subject).to be_an_instance_of(klass)
-            expect(subject.resource_type).to eq resource_type
-            expect(subject.resource_id).to eq resource_id
+            expect { subject }.to raise_error(ArgumentError)
+            # expect(subject).to be_an_instance_of(klass)
+            # expect(subject.resource_type).to eq resource_type
+            # expect(subject.resource_id).to eq resource_id
           end
         end
       end

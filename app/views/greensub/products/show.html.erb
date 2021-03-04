@@ -16,6 +16,8 @@
   <div class="col-md-11">&nbsp;<%= link_to @product.individuals.count, greensub_product_individuals_path(@product) %></div>
   <div class="col-md-1"><em>Institutions</em></div>
   <div class="col-md-11">&nbsp;<%= link_to @product.institutions.count, greensub_product_institutions_path(@product) %></div>
+  <div class="col-md-1"><em>Licenses</em></div>
+  <div class="col-md-11">&nbsp;<%= link_to @product.licenses.count, greensub_product_licenses_path(@product) %></div>
   <div class="col-md-12"><br/></div>
   <div class="col-md-12">
     <%= link_to_if @product.update?, 'Edit', edit_greensub_product_path(@product) %>

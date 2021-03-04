@@ -1,0 +1,11 @@
+<%= simple_form_for @license, as: :greensub_license, url: greensub_license_path do |f| %>
+  <%= f.error_notification %>
+
+  <div class="form-inputs">
+    <%= f.input :type, collection: ['Greensub::FullLicense', 'Greensub::TrialLicense'] %>
+  </div>
+
+  <div class="form-actions">
+    <%= f.button :submit %>
+  </div>
+<% end %>

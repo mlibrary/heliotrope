@@ -226,7 +226,7 @@ RSpec.describe "Institutions", type: :request do
         end
 
         it 'existing institution ok' do
-          Greensub.subscribe(subscriber: institution, target: product)
+          institution.update_product_license(product)
           get api_product_institution_path(product, institution), headers: headers
           expect(response.content_type).to eq("application/json")
           expect(response).to have_http_status(:ok)
@@ -293,16 +293,16 @@ RSpec.describe "Institutions", type: :request do
           expect(response.content_type).to eq("application/json")
           expect(response).to have_http_status(:ok)
           expect(response.body).to be_empty
-          expect(Greensub.subscribed?(subscriber: institution, target: product)).to be true
+          expect(institution.product_license?(product)).to be true
         end
 
         it 'existing institution twice ok' do
-          Greensub.subscribe(subscriber: institution, target: product)
+          institution.update_product_license(product)
           put api_product_institution_path(product, institution), headers: headers
           expect(response.content_type).to eq("application/json")
           expect(response).to have_http_status(:ok)
           expect(response.body).to be_empty
-          expect(Greensub.subscribed?(subscriber: institution, target: product)).to be true
+          expect(institution.product_license?(product)).to be true
           expect(grants_table_count).to eq(1)
         end
       end
@@ -328,11 +328,11 @@ RSpec.describe "Institutions", type: :request do
       end
 
       it 'existing with products accepted' do
-        Greensub.subscribe(subscriber: institution, target: product)
+        institution.update_product_license(product)
         delete api_institution_path(institution), headers: headers
         expect(response.content_type).to eq("application/json")
         expect(response).to have_http_status(:accepted)
-        expect(response_body[:base.to_s]).to include("institution has 1 associated products!")
+        expect(response_body[:base.to_s]).to include("institution has associated grant!")
         expect(Greensub::Institution.count).to eq(1)
       end
     end
@@ -365,10 +365,10 @@ RSpec.describe "Institutions", type: :request do
         end
 
         it 'existing institution ok' do
-          Greensub.subscribe(subscriber: institution, target: product)
-          expect(Greensub.subscribed?(subscriber: institution, target: product)).to be true
+          institution.update_product_license(product)
+          expect(institution.product_license?(product)).to be true
           delete api_product_institution_path(product, institution), headers: headers
-          expect(Greensub.subscribed?(subscriber: institution, target: product)).to be false
+          expect(institution.product_license?(product)).to be false
           expect(response.content_type).to eq("application/json")
           expect(response).to have_http_status(:ok)
           expect(response.body).to be_empty
@@ -376,7 +376,7 @@ RSpec.describe "Institutions", type: :request do
         end
 
         it 'existing institution non subscriber ok' do
-          expect(Greensub.subscribed?(subscriber: institution, target: product)).to be false
+          expect(institution.product_license?(product)).to be false
           delete api_product_institution_path(product, institution), headers: headers
           expect(response.content_type).to eq("application/json")
           expect(response).to have_http_status(:ok)
@@ -421,7 +421,7 @@ RSpec.describe "Institutions", type: :request do
         end
 
         it 'existing institution with subscription ok' do
-          Greensub.subscribe(subscriber: institution, target: product)
+          institution.update_product_license(product)
           get api_product_institution_access_path(product, institution), headers: headers
           expect(response.content_type).to eq("application/json")
           expect(response).to have_http_status(:ok)
@@ -465,7 +465,7 @@ RSpec.describe "Institutions", type: :request do
         end
 
         it 'existing institution with subscription ok' do
-          Greensub.subscribe(subscriber: institution, target: product)
+          institution.update_product_license(product)
           post api_product_institution_access_path(product, institution), headers: headers, params: { access: 'full' }.to_json
           expect(response.content_type).to eq("application/json")
           expect(response).to have_http_status(:ok)

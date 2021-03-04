@@ -12,6 +12,7 @@ RSpec.describe Greensub::Individual, type: :model do
 
   before { clear_grants_table }
 
+  it { is_expected.to be_a Greensub::Licensee }
   it { expect(subject.agent_type).to eq :Individual }
   it { expect(subject.agent_id).to eq id }
 
@@ -28,23 +29,15 @@ RSpec.describe Greensub::Individual, type: :model do
 
   context 'before destroy' do
     let(:individual) { create(:individual) }
+    let(:license) { create(:full_license) }
     let(:product) { create(:product) }
-    let(:component) { create(:component) }
 
-    it 'grant product present' do
-      Greensub.subscribe(subscriber: individual, target: product)
+    it 'grant present' do
+      Authority.grant!(individual, license, product)
       expect(individual.destroy).to be false
       expect(individual.errors.count).to eq 1
       expect(individual.errors.first[0]).to eq :base
-      expect(individual.errors.first[1]).to eq "individual has 1 associated products!"
-    end
-
-    it 'other grants present' do
-      Authority.grant!(individual, Checkpoint::Credential::Permission.new(:read), component)
-      expect(individual.destroy).to be false
-      expect(individual.errors.count).to eq 1
-      expect(individual.errors.first[0]).to eq :base
-      expect(individual.errors.first[1]).to eq "individual has at least one associated grant!"
+      expect(individual.errors.first[1]).to eq "individual has associated grant!"
     end
   end
 
@@ -58,13 +51,13 @@ RSpec.describe Greensub::Individual, type: :model do
       expect(subject.destroy?).to be true
       expect(subject.grants?).to be false
 
-      Greensub.subscribe(subscriber: subject, target: product)
+      subject.update_product_license(product)
 
       expect(subject.update?).to be true
       expect(subject.destroy?).to be false
       expect(subject.grants?).to be true
 
-      Greensub.unsubscribe(subscriber: subject, target: product)
+      subject.delete_product_license(product)
 
       expect(subject.update?).to be true
       expect(subject.destroy?).to be true
@@ -92,13 +85,13 @@ RSpec.describe Greensub::Individual, type: :model do
 
         product_2
 
-        Greensub.subscribe(subscriber: subject, target: product_2)
+        subject.update_product_license(product_2)
         expect(subject.products.count).to eq 1
 
         product_2.components << component_b
         expect(subject.products.count).to eq 1
 
-        Greensub.subscribe(subscriber: subject, target: product_1)
+        subject.update_product_license(product_1)
         expect(subject.products.count).to eq 2
 
         product_1.components << component_b
@@ -107,10 +100,10 @@ RSpec.describe Greensub::Individual, type: :model do
         clear_grants_table
         expect(subject.products.count).to eq 0
 
-        Greensub.subscribe(subscriber: subject, target: component_b)
+        Authority.grant!(subject, Checkpoint::Credential::Permission.new(:read), component_b)
         expect(subject.products.count).to eq 0
 
-        Greensub.subscribe(subscriber: subject, target: component_a)
+        Authority.grant!(subject, Checkpoint::Credential::Permission.new(:read), component_a)
         expect(subject.products.count).to eq 0
 
         clear_grants_table

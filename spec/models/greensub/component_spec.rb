@@ -24,15 +24,15 @@ RSpec.describe Greensub::Component, type: :model do
       expect(component.destroy).to be false
       expect(component.errors.count).to eq 1
       expect(component.errors.first[0]).to eq :base
-      expect(component.errors.first[1]).to eq "component has 1 associated products!"
+      expect(component.errors.first[1]).to eq "component has associated product!"
     end
 
-    it 'grants present' do
-      Greensub.subscribe(subscriber: individual, target: component)
+    it 'grant present' do
+      Authority.grant!(individual, Checkpoint::Credential::Permission.new(:read), component)
       expect(component.destroy).to be false
       expect(component.errors.count).to eq 1
       expect(component.errors.first[0]).to eq :base
-      expect(component.errors.first[1]).to eq "component has at least one associated grant!"
+      expect(component.errors.first[1]).to eq "component has associated grant!"
     end
   end
 
@@ -155,13 +155,13 @@ RSpec.describe Greensub::Component, type: :model do
       expect(subject.destroy?).to be true
       expect(subject.grants?).to be false
 
-      Greensub.subscribe(subscriber: individual, target: subject)
+      Authority.grant!(individual, Checkpoint::Credential::Permission.new(:read), subject)
 
       expect(subject.update?).to be true
       expect(subject.destroy?).to be false
       expect(subject.grants?).to be true
 
-      Greensub.unsubscribe(subscriber: individual, target: subject)
+      Authority.revoke!(individual, Checkpoint::Credential::Permission.new(:read), subject)
 
       expect(subject.update?).to be true
       expect(subject.destroy?).to be true

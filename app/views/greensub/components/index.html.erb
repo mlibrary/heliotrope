@@ -1,4 +1,3 @@
-<p id="notice"><%= notice %></p>
 <div id="maincontent">
   <% if @product.present? %>
     <h1>Components of <%= link_to @product.identifier, greensub_product_path(@product) %> Product</h1>
@@ -43,5 +42,6 @@
       <div class="col-md-4"><%= link_to_if component.destroy?, 'Destroy', greensub_component_path(component), method: :delete, data: { confirm: 'Are you sure?' } %></div>
     </div>
   <% end %>
+
   <div class="col-md-12"><%= paginate @components %>&nbsp;</div>
 </div>

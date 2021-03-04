@@ -83,7 +83,7 @@ RSpec.describe ValidationService do
     end
   end
 
-  [Greensub::Component, Greensub::Individual, Greensub::Institution, Greensub::Product, User].each do |klass|
+  [Greensub::Component, Greensub::Individual, Greensub::Institution, Greensub::License, Greensub::Product, User].each do |klass|
     relative_klass_match = /^Greensub::(.+$)/.match(klass.to_s)
     relative_klass = relative_klass_match[1].to_sym if relative_klass_match.present?
     relative_klass ||= klass
@@ -229,12 +229,6 @@ RSpec.describe ValidationService do
 
     it { is_expected.to be false }
 
-    context 'any' do
-      let(:credential_id) { 'any' }
-
-      it { is_expected.to be true }
-    end
-
     context 'read' do
       let(:credential_id) { 'read' }
 
@@ -242,6 +236,38 @@ RSpec.describe ValidationService do
     end
   end
 
+  describe '#valid_license_type?' do
+    subject { described_class.valid_license_type?(license_type) }
+
+    let(:license_type) { 'license_type' }
+
+    it { is_expected.to be false }
+
+    context 'License' do
+      let(:license_type) { 'Greensub::License' }
+
+      it { is_expected.to be true }
+    end
+
+    context 'TrialLicense' do
+      let(:license_type) { 'Greensub::TrialLicense' }
+
+      it { is_expected.to be true }
+    end
+
+
+    context 'FullLicense' do
+      let(:license_type) { 'Greensub::FullLicense' }
+
+      it { is_expected.to be true }
+    end
+
+    context 'TrialLicense' do
+      let(:license_type) { 'Greensub::TrialLicense' }
+
+      it { is_expected.to be true }
+    end
+  end
   describe '#valid_credential_type? and #valid_credential?' do
     subject { described_class.valid_credential?(credential_type, credential_id) }
 
@@ -264,6 +290,27 @@ RSpec.describe ValidationService do
       end
     end
 
+    context 'License' do
+      let(:credential_type) { :License }
+
+      it { expect(described_class.valid_credential_type?(credential_type)).to be true }
+      it { expect(described_class.valid_license?(credential_id)).to be false }
+      it { is_expected.to be false }
+
+      context 'any' do
+        let(:credential_id) { 'any' }
+
+        it { expect(described_class.valid_license?(credential_id)).to be false }
+        it { is_expected.to be false }
+      end
+
+      context 'valid' do
+        before { allow(described_class).to receive(:valid_license?).with(credential_id).and_return(true) }
+
+        it { is_expected.to be true }
+      end
+    end
+
     context 'permission' do
       let(:credential_type) { :permission }
 
@@ -274,7 +321,7 @@ RSpec.describe ValidationService do
       context 'any' do
         let(:credential_id) { 'any' }
 
-        it { expect(described_class.valid_permission?(credential_id)).to be true }
+        it { expect(described_class.valid_permission?(credential_id)).to be false }
         it { is_expected.to be true }
       end
 
@@ -303,26 +350,6 @@ RSpec.describe ValidationService do
 
       context 'valid' do
         let(:resource_id) { 'any' }
-
-        it { is_expected.to be true }
-      end
-    end
-
-    context 'ElectronicPublication' do
-      let(:resource_type) { :ElectronicPublication }
-
-      it { expect(described_class.valid_resource_type?(resource_type)).to be true }
-      it { is_expected.to be false }
-
-      context 'any' do
-        let(:resource_id) { 'any' }
-
-        it { expect(described_class.valid_noid?(resource_id)).to be false }
-        it { is_expected.to be true }
-      end
-
-      context 'valid' do
-        before { allow(described_class).to receive(:valid_entity?).with(resource_id).and_return(true) }
 
         it { is_expected.to be true }
       end

@@ -22,11 +22,11 @@ module Greensub
 
     before_destroy do
       if components.present?
-        errors.add(:base, "product has #{components.count} associated components!")
+        errors.add(:base, "product has associated component!")
         throw(:abort)
       end
       if grants?
-        errors.add(:base, "product has at least one associated grant!")
+        errors.add(:base, "product has associated grant!")
         throw(:abort)
       end
     end
@@ -47,20 +47,44 @@ module Greensub
       Component.where.not(id: components.map(&:id)).where("identifier like ?", "%#{like}%").order(:identifier)
     end
 
+    def licensees?
+      individuals? || institutions?
+    end
+
+    def licensees
+      individuals + institutions
+    end
+
+    def individuals?
+      individuals.present?
+    end
+
     def individuals
-      @individuals ||= subscribers.map { |s| s if s.is_a?(Individual) }.compact
+      licenses.map(&:individual).compact
+    end
+
+    def institutions?
+      institutions.present?
     end
 
     def institutions
-      @institutions ||= subscribers.map { |s| s if s.is_a?(Institution) }.compact
+      licenses.map(&:institution).compact
     end
 
-    def subscribers
-      Greensub.product_subscribers(self)
+    def licenses?
+      licenses.present?
+    end
+
+    def licenses
+      License.where(id: grants.where(credential_type: 'License').map(&:credential_id))
     end
 
     def grants?
-      Authority.resource_grants?(self)
+      grants.present?
+    end
+
+    def grants
+      Checkpoint::DB::Grant.where(resource_type: resource_type.to_s, resource_id: resource_id.to_s)
     end
 
     def resource_type

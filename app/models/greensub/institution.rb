@@ -3,6 +3,7 @@
 module Greensub
   class Institution < ApplicationRecord
     include Filterable
+    include Licensee
 
     scope :identifier_like, ->(like) { where("identifier like ?", "%#{like}%") }
     scope :name_like, ->(like) { where("name like ?", "%#{like}%") }
@@ -22,12 +23,8 @@ module Greensub
     end
 
     before_destroy do
-      if products.present?
-        errors.add(:base, "institution has #{products.count} associated products!")
-        throw(:abort)
-      end
       if grants?
-        errors.add(:base, "institution has at least one associated grant!")
+        errors.add(:base, "institution has associated grant!")
         throw(:abort)
       end
     end
@@ -37,19 +34,11 @@ module Greensub
     end
 
     def destroy?
-      products.blank? && !grants?
+      !grants?
     end
 
     def shibboleth?
       entity_id.present?
-    end
-
-    def products
-      Greensub.subscriber_products(self)
-    end
-
-    def grants?
-      Authority.agent_grants?(self)
     end
 
     def agent_type
