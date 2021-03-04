@@ -57,7 +57,8 @@ RSpec.describe "Monograph Catalog EPUB TOC", type: :system, browser: true do
             within("#toc") do
               expect(page).to have_xpath(".//a[@class='toc-link']")
               expect(page).not_to have_xpath(".//span[@title='Read section']")
-              expect(page).not_to have_xpath(".//i[@title='Download section']")
+              # expect(page).not_to have_xpath(".//i[@title='Download section']")
+              expect(page).not_to have_content("Download")
             end
           end
         end
@@ -73,7 +74,8 @@ RSpec.describe "Monograph Catalog EPUB TOC", type: :system, browser: true do
             within("#toc") do
               expect(page).to have_xpath(".//a[@class='toc-link']")
               expect(page).not_to have_xpath(".//span[@title='Read section']")
-              expect(page).not_to have_xpath(".//i[@title='Download section']")
+              # expect(page).not_to have_xpath(".//i[@title='Download section']")
+              expect(page).not_to have_content("Download")
             end
           end
         end
@@ -88,7 +90,8 @@ RSpec.describe "Monograph Catalog EPUB TOC", type: :system, browser: true do
             within("#toc") do
               expect(page).to have_xpath(".//a[@class='toc-link']")
               expect(page).not_to have_xpath(".//span[@title='Read section']")
-              expect(page).not_to have_xpath(".//i[@title='Download section']")
+              # expect(page).not_to have_xpath(".//i[@title='Download section']")
+              expect(page).not_to have_content("Download")
             end
           end
         end
@@ -108,7 +111,8 @@ RSpec.describe "Monograph Catalog EPUB TOC", type: :system, browser: true do
             within("#toc") do
               expect(page).to have_xpath(".//a[@class='toc-link']")
               expect(page).not_to have_xpath(".//span[@title='Read section']")
-              expect(page).not_to have_xpath(".//i[@title='Download section']")
+              # expect(page).not_to have_xpath(".//i[@title='Download section']")
+              expect(page).not_to have_content("Download")
             end
           end
         end
@@ -123,7 +127,8 @@ RSpec.describe "Monograph Catalog EPUB TOC", type: :system, browser: true do
             within("#toc") do
               expect(page).to have_xpath(".//a[@class='toc-link']")
               expect(page).not_to have_xpath(".//span[@title='Read section']")
-              expect(page).not_to have_xpath(".//i[@title='Download section']")
+              # expect(page).not_to have_xpath(".//i[@title='Download section']")
+              expect(page).not_to have_content("Download")
             end
           end
         end
@@ -139,7 +144,8 @@ RSpec.describe "Monograph Catalog EPUB TOC", type: :system, browser: true do
             within("#toc") do
               expect(page).to have_xpath(".//a[@class='toc-link']")
               expect(page).not_to have_xpath(".//span[@title='Read section']")
-              expect(page).not_to have_xpath(".//i[@title='Download section']")
+              # expect(page).not_to have_xpath(".//i[@title='Download section']")
+              expect(page).not_to have_content("Download")
             end
           end
         end
@@ -154,7 +160,8 @@ RSpec.describe "Monograph Catalog EPUB TOC", type: :system, browser: true do
             within("#toc") do
               expect(page).to have_xpath(".//a[@class='toc-link']")
               expect(page).not_to have_xpath(".//span[@title='Read section']")
-              expect(page).not_to have_xpath(".//i[@title='Download section']")
+              # expect(page).not_to have_xpath(".//i[@title='Download section']")
+              expect(page).not_to have_content("Download")
             end
           end
         end
@@ -178,7 +185,8 @@ RSpec.describe "Monograph Catalog EPUB TOC", type: :system, browser: true do
             within("#toc") do
               expect(page).to have_xpath(".//a[@class='toc-link']")
               expect(page).not_to have_xpath(".//span[@title='Read section']")
-              expect(page).not_to have_xpath(".//i[@title='Download section']")
+              # expect(page).not_to have_xpath(".//i[@title='Download section']")
+              expect(page).not_to have_content("Download")
             end
           end
         end
@@ -193,7 +201,8 @@ RSpec.describe "Monograph Catalog EPUB TOC", type: :system, browser: true do
             within("#toc") do
               expect(page).to have_xpath(".//a[@class='toc-link']")
               expect(page).not_to have_xpath(".//span[@title='Read section']")
-              expect(page).not_to have_xpath(".//i[@title='Download section']")
+              # expect(page).not_to have_xpath(".//i[@title='Download section']")
+              expect(page).not_to have_content("Download")
             end
           end
         end
@@ -209,7 +218,8 @@ RSpec.describe "Monograph Catalog EPUB TOC", type: :system, browser: true do
             within("#toc") do
               expect(page).to have_xpath(".//a[@class='toc-link']")
               expect(page).not_to have_xpath(".//span[@title='Read section']")
-              expect(page).not_to have_xpath(".//i[@title='Download section']")
+              # expect(page).not_to have_xpath(".//i[@title='Download section']")
+              expect(page).not_to have_content("Download")
             end
           end
         end
@@ -224,7 +234,8 @@ RSpec.describe "Monograph Catalog EPUB TOC", type: :system, browser: true do
             within("#toc") do
               expect(page).to have_xpath(".//a[@class='toc-link']")
               expect(page).not_to have_xpath(".//span[@title='Read section']")
-              expect(page).not_to have_xpath(".//i[@title='Download section']")
+              # expect(page).not_to have_xpath(".//i[@title='Download section']")
+              expect(page).not_to have_content("Download")
             end
           end
         end
@@ -244,7 +255,9 @@ RSpec.describe "Monograph Catalog EPUB TOC", type: :system, browser: true do
             within("#toc") do
               expect(page).to have_xpath(".//a[@class='toc-link']")
               expect(page).to have_xpath(".//span[@title='Read section']")
-              expect(page).to have_xpath(".//i[@title='Download section']")
+              # expect(page).to have_xpath(".//i[@title='Download section']")
+              # expect(page).to have_xpath(".//a[@class='toc-download-link']")
+              expect(page).to have_content("Download")
             end
           end
         end
@@ -259,7 +272,8 @@ RSpec.describe "Monograph Catalog EPUB TOC", type: :system, browser: true do
             within("#toc") do
               expect(page).to have_xpath(".//a[@class='toc-link']")
               expect(page).to have_xpath(".//span[@title='Read section']")
-              expect(page).to have_xpath(".//i[@title='Download section']")
+              # expect(page).to have_xpath(".//i[@title='Download section']")
+              expect(page).to have_content("Download")
             end
           end
         end
@@ -275,7 +289,8 @@ RSpec.describe "Monograph Catalog EPUB TOC", type: :system, browser: true do
             within("#toc") do
               expect(page).to have_xpath(".//a[@class='toc-link']")
               expect(page).to have_xpath(".//span[@title='Read section']")
-              expect(page).to have_xpath(".//i[@title='Download section']")
+              # expect(page).to have_xpath(".//i[@title='Download section']")
+              expect(page).to have_content("Download")
             end
           end
         end
@@ -290,7 +305,8 @@ RSpec.describe "Monograph Catalog EPUB TOC", type: :system, browser: true do
             within("#toc") do
               expect(page).to have_xpath(".//a[@class='toc-link']")
               expect(page).not_to have_xpath(".//span[@title='Read section']")
-              expect(page).not_to have_xpath(".//i[@title='Download section']")
+              # expect(page).not_to have_xpath(".//i[@title='Download section']")
+              expect(page).not_to have_content("Download")
             end
           end
         end
