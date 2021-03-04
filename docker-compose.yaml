@@ -1,0 +1,36 @@
+version: '3.3'
+
+services:
+
+  db:
+    image: mysql:5.7
+    volumes:
+    - db_data:/var/lib/mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: helio-admin
+      MYSQL_USER: helio
+      MYSQL_PASSWORD: helio
+      MYSQL_DATABASE: helio
+
+  web:
+    depends_on:
+    - db
+    build: .
+    ports:
+    - "3000:3000"
+    volumes:
+    - .:/app
+    - gem_cache:/gems
+    - node_modules:/app/node_modules
+    restart: always
+    environment:
+      RAILS_ENV: development
+      DATABASE_URL: 'mysql2://helio:helio@db:3306/helio'
+      # CHECKPOINT_DATABASE_URL: 'mysql2://helio:helio@db:3306/checkpoint'
+      CHECKPOINT_DATABASE_URL: 'sqlite://db/checkpoint-development.sqlite3'
+volumes:
+  gem_cache:
+  node_modules:
+  db_data:
+    driver: local
