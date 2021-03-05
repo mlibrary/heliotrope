@@ -25,7 +25,7 @@ RSpec.describe Hyrax::CitationsBehavior do
         expect(export_as_chicago_citation(presenter)).to eq('<span class="citation-author">Pugner, Mark, and Mary Princely.</span> <i class="citation-title">The Complete Book of Everything.</i> Ann Arbor, MI: University of Michigan Press, 2001. https://doi.org/10.0000/mpub.111111.')
       end
       it 'returns the correct MLA citation' do
-        expect(export_as_mla_citation(presenter)).to eq('<span class="citation-author">Pugner, Mark, and Mary Princely. </span><i class="citation-title">The Complete Book of Everything.</i> E-book, Ann Arbor, MI: University of Michigan Press, 2001, https://doi.org/10.0000/mpub.111111. Accessed ' + "#{Time.now.getlocal.strftime('%e %b %Y').strip}.")
+        expect(export_as_mla_citation(presenter)).to eq('<span class="citation-author">Pugner, Mark, and Mary Princely. </span><i class="citation-title">The Complete Book of Everything.</i> E-book, Ann Arbor, MI: University of Michigan Press, 2001, https://doi.org/10.0000/mpub.111111.') # Accessed ' + "#{Time.now.getlocal.strftime('%e %b %Y').strip}.")
       end
     end
 
@@ -49,7 +49,8 @@ RSpec.describe Hyrax::CitationsBehavior do
         expect(export_as_chicago_citation(presenter)).to eq('<span class="citation-author">Pugner, Mark, and Mary Princely.</span> <i class="citation-title">The Complete Book of Everything.</i> Ann Arbor, MI: University of Michigan Press, 2001. https://hdl.handle.net/2027/fulcrum.222222222. PDF.')
       end
       it 'returns the correct MLA citation' do
-        expect(export_as_mla_citation(presenter)).to eq('<span class="citation-author">Pugner, Mark, and Mary Princely. </span><i class="citation-title">The Complete Book of Everything.</i> E-book, Ann Arbor, MI: University of Michigan Press, 2001, https://hdl.handle.net/2027/fulcrum.222222222. Accessed ' + "#{Time.now.getlocal.strftime('%e %b %Y').strip}.")
+        # https://tools.lib.umich.edu/jira/browse/HELIO-3775
+        expect(export_as_mla_citation(presenter)).to eq('<span class="citation-author">Pugner, Mark, and Mary Princely. </span><i class="citation-title">The Complete Book of Everything.</i> E-book, Ann Arbor, MI: University of Michigan Press, 2001, https://hdl.handle.net/2027/fulcrum.222222222.') # Accessed ' + "#{Time.now.getlocal.strftime('%e %b %Y').strip}.")
       end
     end
 
@@ -73,7 +74,8 @@ RSpec.describe Hyrax::CitationsBehavior do
         expect(export_as_chicago_citation(presenter)).to eq('<span class="citation-author">BIG MUSEUM, Mark Pugner, and Mary Princely.</span> <i class="citation-title">The Complete Book of Big Museum.</i> Ann Arbor, MI: University of Michigan Press, 2001. https://hdl.handle.net/2027/fulcrum.333333333.')
       end
       it 'returns the correct MLA citation' do
-        expect(export_as_mla_citation(presenter)).to eq('<span class="citation-author">BIG MUSEUM, Mark Pugner, and Mary Princely. </span><i class="citation-title">The Complete Book of Big Museum.</i> E-book, Ann Arbor, MI: University of Michigan Press, 2001, https://hdl.handle.net/2027/fulcrum.333333333. Accessed ' + "#{Time.now.getlocal.strftime('%e %b %Y').strip}.")
+        # https://tools.lib.umich.edu/jira/browse/HELIO-3775
+        expect(export_as_mla_citation(presenter)).to eq('<span class="citation-author">BIG MUSEUM, Mark Pugner, and Mary Princely. </span><i class="citation-title">The Complete Book of Big Museum.</i> E-book, Ann Arbor, MI: University of Michigan Press, 2001, https://hdl.handle.net/2027/fulcrum.333333333.') # Accessed ' + "#{Time.now.getlocal.strftime('%e %b %Y').strip}.")
       end
     end
 
@@ -97,7 +99,8 @@ RSpec.describe Hyrax::CitationsBehavior do
         expect(export_as_chicago_citation(presenter)).to eq('<span class="citation-author">Princely, Mary, BIG MUSEUM, and Mark Pugner.</span> <i class="citation-title">The Complete Book of Big Museum.</i> Ann Arbor, MI: University of Michigan Press, 2001. https://hdl.handle.net/2027/fulcrum.444444444.')
       end
       it 'returns the correct MLA citation' do
-        expect(export_as_mla_citation(presenter)).to eq('<span class="citation-author">Princely, Mary, BIG MUSEUM, and Mark Pugner. </span><i class="citation-title">The Complete Book of Big Museum.</i> E-book, Ann Arbor, MI: University of Michigan Press, 2001, https://hdl.handle.net/2027/fulcrum.444444444. Accessed ' + "#{Time.now.getlocal.strftime('%e %b %Y').strip}.")
+        # https://tools.lib.umich.edu/jira/browse/HELIO-3775
+        expect(export_as_mla_citation(presenter)).to eq('<span class="citation-author">Princely, Mary, BIG MUSEUM, and Mark Pugner. </span><i class="citation-title">The Complete Book of Big Museum.</i> E-book, Ann Arbor, MI: University of Michigan Press, 2001, https://hdl.handle.net/2027/fulcrum.444444444.') # Accessed ' + "#{Time.now.getlocal.strftime('%e %b %Y').strip}.")
       end
     end
 
@@ -121,7 +124,8 @@ RSpec.describe Hyrax::CitationsBehavior do
         expect(structure[:title]).to eq("The Complete Book of Bigg's Museum.")
       end
       it 'returns the correct MLA citation' do
-        expect(structure[:publisher]).to eq('E-book, Ann Arbor, MI: University of Michigan Press, 2001, https://hdl.handle.net/2027/fulcrum.444444444. Accessed ' + "#{Time.now.getlocal.strftime('%e %b %Y').strip}.")
+        # https://tools.lib.umich.edu/jira/browse/HELIO-3775
+        expect(structure[:publisher]).to eq('E-book, Ann Arbor, MI: University of Michigan Press, 2001, https://hdl.handle.net/2027/fulcrum.444444444.') # Accessed ' + "#{Time.now.getlocal.strftime('%e %b %Y').strip}.")
       end
     end
   end
