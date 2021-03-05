@@ -19,7 +19,6 @@ require_dependency 'sighrax/resource'
 require_dependency 'sighrax/score'
 require_dependency 'sighrax/work'
 
-
 module Sighrax # rubocop:disable Metrics/ModuleLength
   class << self
     def from_noid(noid)
@@ -193,7 +192,7 @@ module Sighrax # rubocop:disable Metrics/ModuleLength
       # Greensub::Component.find_by(noid: entity.noid).present?
       return false unless entity.is_a?(Sighrax::Monograph)
 
-      !entity.unrestricted?
+      entity.restricted?
     end
 
     # Currently only Assets can be tombstone

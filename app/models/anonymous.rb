@@ -26,4 +26,24 @@ class Anonymous
   def agent_id
     :any
   end
+
+  def platform_admin?
+    false
+  end
+
+  def presses
+    []
+  end
+
+  def admin_presses
+    []
+  end
+
+  def editor_presses
+    []
+  end
+
+  def analyst_presses
+    []
+  end
 end

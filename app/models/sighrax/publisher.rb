@@ -9,6 +9,7 @@ module Sighrax
     # Class Methods
 
     def self.null_publisher(subdomain = 'null_subdomain')
+      subdomain = 'null_subdomain' if subdomain.blank?
       NullPublisher.send(:new, subdomain)
     end
 
@@ -62,13 +63,13 @@ module Sighrax
       docs.map { |doc| doc['id'] }.uniq
     end
 
-    def asset_noids(recursive = false)
-      asset_noids = []
+    def resource_noids(recursive = false)
+      resource_noids = []
       work_noids(recursive).each do |noid|
         docs = ActiveFedora::SolrService.query("{!terms f=id}#{noid}", fl: ['id', Solrizer.solr_name('ordered_member_ids', :symbol)], rows: 1)
-        asset_noids += (docs[0][Solrizer.solr_name('ordered_member_ids', :symbol)] || []) if docs.present?
+        resource_noids += (docs[0][Solrizer.solr_name('ordered_member_ids', :symbol)] || []) if docs.present?
       end
-      asset_noids.uniq
+      resource_noids.uniq
     end
 
     def user_ids(recursive = false)
@@ -95,28 +96,6 @@ module Sighrax
       def initialize(subdomain, press)
         @subdomain = subdomain
         @press = press
-      end
-  end
-
-  class NullPublisher < Publisher
-    private_class_method :new
-
-    def work_noids(recursive = false)
-      []
-    end
-
-    def asset_noids(recursive = false)
-      []
-    end
-
-    def user_ids(recursive = false)
-      []
-    end
-
-    private
-
-      def initialize(subdomain)
-        super(subdomain, nil)
       end
   end
 end

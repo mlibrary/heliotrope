@@ -53,12 +53,6 @@ module Sighrax
       @pdf_ebook_featured_representative ||= Sighrax.from_noid(FeaturedRepresentative.find_by(work_id: noid, kind: 'pdf_ebook')&.file_set_id)
     end
 
-    # Don't want to call this press right now because the other things like it are direct field access
-    def _press
-      subdomain = scalar('press_tesim')
-      Press.find_by(subdomain: subdomain)
-    end
-
     def products
       Greensub::Product.containing_monograph(noid)
     end
@@ -76,8 +70,14 @@ module Sighrax
       nil
     end
 
-    def publisher
+    # This solr field 'publisher_tesim' is the name of the company that created the work.
+    # Not to be confused with 'subdomain' which is the 'press' a.k.a. Fulcrum Publisher.
+    def publishing_house
       scalar('publisher_tesim') || ''
+    end
+
+    def restricted?
+      Greensub::Component.find_by(noid: noid).present?
     end
 
     def series
@@ -86,10 +86,6 @@ module Sighrax
 
     def subjects
       vector('subject_tesim')
-    end
-
-    def unrestricted?
-      Greensub::Component.find_by(noid: noid).blank?
     end
 
     private

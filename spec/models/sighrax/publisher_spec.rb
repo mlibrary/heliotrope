@@ -16,7 +16,7 @@ RSpec.describe Sighrax::Publisher, type: :model do
     it { expect(subject.parent).to be_an_instance_of Sighrax::NullPublisher }
     it { expect(subject.children).to be_empty }
     it { expect(subject.work_noids(true)).to be_empty }
-    it { expect(subject.asset_noids(true)).to be_empty }
+    it { expect(subject.resource_noids(true)).to be_empty }
     it { expect(subject.user_ids(true)).to be_empty }
   end
 
@@ -70,7 +70,7 @@ RSpec.describe Sighrax::Publisher, type: :model do
     it { expect(subject.parent).to be_an_instance_of Sighrax::NullPublisher }
     it { expect(subject.children).to be_empty }
     it { expect(subject.work_noids(true)).to be_empty }
-    it { expect(subject.asset_noids(true)).to be_empty }
+    it { expect(subject.resource_noids(true)).to be_empty }
     it { expect(subject.user_ids(true)).to be_empty }
 
     context 'with child' do
@@ -111,7 +111,7 @@ RSpec.describe Sighrax::Publisher, type: :model do
       end
     end
 
-    context 'with work and asset' do
+    context 'with work and resource' do
       let(:monograph) do
         create(:public_monograph, press: press.subdomain) do |m|
           m.ordered_members << file_set
@@ -124,9 +124,9 @@ RSpec.describe Sighrax::Publisher, type: :model do
       before { monograph }
 
       it { expect(subject.work_noids(true)).to contain_exactly(monograph.id) }
-      it { expect(subject.asset_noids(true)).to contain_exactly(file_set.id) }
+      it { expect(subject.resource_noids(true)).to contain_exactly(file_set.id) }
 
-      context 'with child work and asset' do
+      context 'with child work and resource' do
         let(:child_subdomain) { 'child' }
         let(:child_press) { create(:press, subdomain: child_subdomain) }
         let(:child_score) do
@@ -145,9 +145,9 @@ RSpec.describe Sighrax::Publisher, type: :model do
         end
 
         it { expect(subject.work_noids).to contain_exactly(monograph.id) }
-        it { expect(subject.asset_noids).to contain_exactly(file_set.id) }
+        it { expect(subject.resource_noids).to contain_exactly(file_set.id) }
         it { expect(subject.work_noids(true)).to contain_exactly(monograph.id, child_score.id) }
-        it { expect(subject.asset_noids(true)).to contain_exactly(file_set.id, child_file_set.id) }
+        it { expect(subject.resource_noids(true)).to contain_exactly(file_set.id, child_file_set.id) }
       end
     end
   end

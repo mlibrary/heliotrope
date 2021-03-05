@@ -10,7 +10,7 @@
     <th onclick="sortTable(3, false)">Modified</th>
     <th onclick="sortTable(2, false)">Subdomain</th>
     <th onclick="sortTable(4, true)">Monographs</th>
-    <th onclick="sortTable(5, true)">Assets</th>
+    <th onclick="sortTable(5, true)">Resources</th>
     <th onclick="sortTable(6, true)">Users</th>
     <th></th>
   </tr>
@@ -27,7 +27,7 @@
           <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Add
         <% end %>
       </td>
-      <td><%= press[:assets] %></td>
+      <td><%= press[:resources] %></td>
       <td><%= press[:users] %></td>
       <td>
         <% if press[:trash] %>

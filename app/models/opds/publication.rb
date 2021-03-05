@@ -216,7 +216,7 @@ module Opds
       end
 
       def publisher
-        @monograph.publisher
+        @monograph.publishing_house
       end
 
       def readingProgression

@@ -4,7 +4,7 @@ module Sighrax
   class Ebook < Asset
     private_class_method :new
 
-    delegate :open_access?, :_press, :products, :tombstone?, :unrestricted?, to: :monograph
+    delegate :open_access?, :products, :publisher, :restricted?, :tombstone?, to: :monograph
 
     def monograph
       parent

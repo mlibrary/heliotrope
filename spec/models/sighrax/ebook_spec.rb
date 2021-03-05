@@ -18,17 +18,18 @@ RSpec.describe Sighrax::Ebook, type: :model do
   context 'delegates to parent monograph' do
     let(:data) { { 'monograph_id_ssim' => 'monograph_id' } }
 
-    let(:monograph) { instance_double(Sighrax::Monograph,
-                                   'parent',
-                                   open_access?: open_access,
-                                   products: products,
-                                   tombstone?: tombstone,
-                                   unrestricted?: unrestricted
+    let(:monograph) { instance_double(
+      Sighrax::Monograph,
+      'parent',
+      open_access?: open_access,
+      products: products,
+      restricted?: restricted,
+      tombstone?: tombstone
     ) }
     let(:open_access) { double('open_access') }
     let(:products) { double('products') }
     let(:tombstone) { double('tombstone') }
-    let(:unrestricted) { double('unrestricted') }
+    let(:restricted) { double('restricted') }
 
     before { allow(Sighrax).to receive(:from_noid).with('monograph_id').and_return(monograph) }
 
@@ -37,8 +38,8 @@ RSpec.describe Sighrax::Ebook, type: :model do
       expect(subject.monograph).to be monograph
       expect(subject.open_access?).to be open_access
       expect(subject.products).to be products
+      expect(subject.restricted?).to be restricted
       expect(subject.tombstone?).to be tombstone
-      expect(subject.unrestricted?).to be unrestricted
     end
   end
 end

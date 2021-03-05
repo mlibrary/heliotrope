@@ -50,7 +50,7 @@ class FulcrumController < ApplicationController
     @individuals = []
     @institutions = []
     @publishers_stats = { presses: [], timestampe: Time.now.utc.to_s }
-    if ['dashboard', 'products', 'components', 'individuals', 'institutions', 'publishers', 'users', 'tokens', 'logs', 'grants', 'monographs', 'assets', 'pages', 'reports', 'customize', 'settings', 'help', 'csv', 'jobs', 'refresh'].include? @partials
+    if ['dashboard', 'products', 'components', 'individuals', 'institutions', 'publishers', 'users', 'tokens', 'logs', 'grants', 'monographs', 'resources', 'pages', 'reports', 'customize', 'settings', 'help', 'csv', 'jobs', 'refresh'].include? @partials
       if /dashboard/.match?(@partials)
         @individuals = Greensub::Individual.where("identifier like ? or name like ?", "%#{params['individual_filter']}%", "%#{params['individual_filter']}%").map { |individual| ["#{individual.identifier} (#{individual.name})", individual.id] }
         @institutions = Greensub::Institution.where("identifier like ? or name like ?", "%#{params['institution_filter']}%", "%#{params['institution_filter']}%").map { |institution| ["#{institution.identifier} (#{institution.name})", institution.id] }

@@ -3,22 +3,33 @@
 require 'rails_helper'
 
 RSpec.describe Sighrax::Model, type: :model do
-  subject { instance }
+  context 'instance' do
+    subject { described_class.send(:new, noid, data) }
 
-  let(:instance) { described_class.send(:new, noid, data) }
-  let(:noid) { 'validnoid' }
-  let(:data) { {} }
+    let(:noid) { 'validnoid' }
+    let(:data) { {} }
 
-  it 'has expected values' do
-    is_expected.to be_an_instance_of described_class
-    is_expected.to be_a_kind_of Sighrax::Entity
-    expect(subject.resource_type).to eq :Model
-    expect(subject.children).to be_empty
-    expect(subject.parent).to be_an_instance_of Sighrax::NullEntity
+    it 'has expected values' do
+      is_expected.to be_an_instance_of described_class
+      is_expected.to be_a_kind_of Sighrax::Entity
+      expect(subject.resource_type).to eq :Model
+      expect(subject.children).to be_empty
+      expect(subject.deposited?).to be true
+      expect(subject.modified).to be nil
+      expect(subject.parent).to be_an_instance_of Sighrax::NullEntity
+      expect(subject.published?).to be false
+      expect(subject.publisher).to be_an_instance_of(Sighrax::NullPublisher)
+      expect(subject.timestamp).to be nil
+      expect(subject.title).to eq noid
+      expect(subject.tombstone?).to be false
+    end
   end
 
   describe '#deposited?' do
-    subject { instance.deposited? }
+    subject { described_class.send(:new, noid, data).deposited? }
+
+    let(:noid) { 'validnoid' }
+    let(:data) { {} }
 
     # Sipity workflow state is NOT stored on the
     # Fedora object hence this test assumes the
@@ -50,7 +61,6 @@ RSpec.describe Sighrax::Model, type: :model do
       it { is_expected.to be false }
     end
   end
-
 
   context 'file set' do
     subject { Sighrax.from_noid(file_set.id) }

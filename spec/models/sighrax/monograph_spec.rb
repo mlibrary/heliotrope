@@ -18,7 +18,7 @@ RSpec.describe Sighrax::Monograph, type: :model do
              date_created: ['c1999e'],
              date_modified: date_modified,
              date_published: [date_published],
-             publisher: ['publisher'],
+             publisher: ['publishing house'],
              series: ['series'],
              subject: ['subject'])
     end
@@ -56,15 +56,15 @@ RSpec.describe Sighrax::Monograph, type: :model do
       expect(subject.languages).to contain_exactly('language')
       expect(subject.modified).to eq date_modified
       expect(subject.open_access?).to be false
-      expect(subject._press).to eq press
       expect(subject.pdf_ebook_featured_representative.noid).to eq pdf_ebook.id
       expect(subject.products).to be_empty
       expect(subject.publication_year).to eq '1999'
       expect(subject.published).to eq date_published
-      expect(subject.publisher).to eq 'publisher'
+      expect(subject.publisher).to eq Sighrax::Publisher.from_press(press)
+      expect(subject.publishing_house).to eq 'publishing house'
+      expect(subject.restricted?).to be false
       expect(subject.series).to eq 'series'
       expect(subject.subjects).to contain_exactly('subject')
-      expect(subject.unrestricted?).to be true
 
       expect(subject.parent).to be_an_instance_of Sighrax::NullEntity
       expect(subject.children).to contain_exactly(
@@ -128,7 +128,7 @@ RSpec.describe Sighrax::Monograph, type: :model do
     let(:monograph) { create(:public_monograph) }
 
     it do
-      expect(subject.unrestricted?).to be true
+      expect(subject.restricted?).to be false
       expect(subject.open_access?).to be false
     end
 
@@ -137,7 +137,7 @@ RSpec.describe Sighrax::Monograph, type: :model do
 
       it 'has expected values' do
         expect(subject.products).to be_empty
-        expect(subject.unrestricted?).to be true
+        expect(subject.restricted?).to be false
         expect(subject.open_access?).to be false
       end
 
@@ -152,7 +152,7 @@ RSpec.describe Sighrax::Monograph, type: :model do
         it 'has expected values' do
           expect(subject.products).not_to be_empty
           expect(subject.products).to eq(Greensub::Product.containing_monograph(monograph.id))
-          expect(subject.unrestricted?).to be false
+          expect(subject.restricted?).to be true
           expect(subject.open_access?).to be false
         end
 
@@ -165,7 +165,7 @@ RSpec.describe Sighrax::Monograph, type: :model do
           it 'has expected values' do
             expect(subject.products).not_to be_empty
             expect(subject.products).to eq(Greensub::Product.containing_monograph(monograph.id))
-            expect(subject.unrestricted?).to be false
+            expect(subject.restricted?).to be true
             expect(subject.open_access?).to be true
           end
         end
