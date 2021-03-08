@@ -73,7 +73,9 @@ module Hyrax
           pub_info = clean_end_punctuation(setup_pub_info(work, true)) || ''
           pub_info = pub_info + ', ' if pub_info.length
           pub_info = 'E-book, ' + pub_info + "#{work.citable_link}."
-          pub_info + " Accessed #{Time.now.getlocal.strftime('%e %b %Y').strip}."
+          # https://tools.lib.umich.edu/jira/browse/HELIO-3775
+          # pub_info + " Accessed #{Time.now.getlocal.strftime('%e %b %Y').strip}."
+          pub_info
         end
       end
     end
