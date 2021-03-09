@@ -30,7 +30,7 @@
       <% if interval.downloadable? && permit_download_buttons %>
         <div class="btn-group download" role="group" aria-label="Read or Download Section">
           <% if @presenter.epub? %>
-            <a class="btn btn-default btn-sm toc-download-link" href="<%= epub_download_interval_path(id: ebook_presenter.id, cfi: interval.cfi, title: interval.title) %>" data-turbolinks="false">
+            <a class="btn btn-default btn-sm toc-download-link" href="<%= epub_download_interval_path(id: ebook_presenter.id, cfi: interval.cfi, title: interval.title, chapter_index: index) %>" data-turbolinks="false">
           <% else %>
             <a class="btn btn-default btn-sm toc-download-link" href="<%= epub_download_interval_path(id: ebook_presenter.id, title: interval.title, chapter_index: index) %>" data-turbolinks="false">
           <% end %>

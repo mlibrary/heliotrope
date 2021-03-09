@@ -286,7 +286,7 @@ RSpec.describe "EPubs", type: :request do
         end
 
         context 'cfi title' do
-          subject { get "/epubs_download_interval/#{epub.id}?cfi=cfi;title=title" }
+          subject { get "/epubs_download_interval/#{epub.id}?cfi=cfi;title=title;chapter_index=0" }
 
           let(:rendition) { double('rendition') }
           let(:interval) { double('interval', title: 'title') }

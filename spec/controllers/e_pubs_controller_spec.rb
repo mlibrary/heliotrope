@@ -457,7 +457,7 @@ RSpec.describe EPubsController, type: :controller do
         expect(document).to receive(:image).with(/images\/00000004\.png/, fit: [512, 692])
         expect(document).to receive(:image).with(/images\/00000005\.png/, fit: [512, 692])
         expect(document).to receive(:render).and_return(rendered)
-        get :download_interval, params: { id: file_set.id, cfi: '/6/2[xhtml00000003]!/4/1:0', title: "This is Chapter One's Title" }
+        get :download_interval, params: { id: file_set.id, cfi: '/6/2[xhtml00000003]!/4/1:0', title: "This is Chapter One's Title", chapter_index: 0 }
         expect(response).to have_http_status(:success)
         expect(response.headers['Content-Type']).to eq 'application/pdf'
         expect(response.headers['Content-Disposition']).to eq 'inline'

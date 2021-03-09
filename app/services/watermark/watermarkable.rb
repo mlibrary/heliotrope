@@ -5,10 +5,10 @@ module Watermark
     extend ActiveSupport::Concern
     include Hyrax::CitationsBehavior
 
-    def watermark_pdf(entity, title, size = 6, file = nil)
+    def watermark_pdf(entity, title, size = 6, file = nil, chapter_index = nil)
       fmt = watermark_formatted_text(entity)
       # Cache key based on citation, including the request_origin, plus chapter title if any.
-      Rails.cache.fetch(cache_key(entity, fmt.to_s + title.to_s, size), expires_in: 30.days) do
+      Rails.cache.fetch(cache_key(entity, fmt.to_s + title.to_s + chapter_index.to_s, size), expires_in: 30.days) do
         content = file.presence || entity.content
 
         pdf = CombinePDF.parse(content, allow_optional_content: true)
