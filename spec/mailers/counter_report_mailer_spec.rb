@@ -8,7 +8,7 @@ RSpec.describe CounterReportMailer, type: :mailer do
   describe '#send_report' do
     let(:press) { create(:press, subdomain: "blue", name: "The Blue Press") }
     let(:press_admin) { create(:press_admin, press: press) }
-    let(:email_subject) { "This is the subject line for #{institution.name} of the Press #{press.name}" }
+    let(:email_subject) { "TR_B1 #{institution.name} #{press.name}" }
     let(:report_type) { "tr_b1" }
     let(:institution) { create(:institution) }
     let(:start_date) { "2018-01-01" }
@@ -50,7 +50,7 @@ RSpec.describe CounterReportMailer, type: :mailer do
       expect(mail.body.encoded).to match("Date range: #{start_date} through #{end_date}")
       expect(mail.attachments[0].main_type).to eq "application"
       expect(mail.attachments[0].sub_type).to eq "zip"
-      expect(mail.attachments[0].filename).to eq "This_is_the_subject_line_for_#{institution.name}_of_the_Press_The_Blue_Press.zip"
+      expect(mail.attachments[0].filename).to eq "TR_B1_#{institution.name}_The_Blue_Press.zip"
     end
   end
 end

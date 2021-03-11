@@ -36,7 +36,7 @@ class EmailCounterReportJob < ApplicationJob
     start_date = args[:start_date]
     end_date = args[:end_date]
 
-    email_subject = "Fulcrum COUNTER 5 report #{report_type.upcase} for \"#{institution}\" of the Press \"#{press}\" from #{start_date} to #{end_date}"
+    email_subject = "Fulcrum #{report_type.upcase} \"#{institution}\" \"#{press}\" #{start_date} to #{end_date}"
 
     params = {}
     params[:email] = email

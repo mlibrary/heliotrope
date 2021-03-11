@@ -13,7 +13,7 @@ class InstitutionReportJob < ApplicationJob
     press = Press.find args[:press]
     start_date = args[:start_date]
     end_date = args[:end_date]
-    report_heading = "#{report_name} for all Institutions for #{press.name} from #{start_date} to #{end_date}"
+    report_heading = "#{report_name} for all Institutions #{press.name} #{start_date} to #{end_date}"
 
     results = InstitutionReportService.run(args: args)
     output = InstitutionReportService.make_csv(subject: report_heading, results: results)
