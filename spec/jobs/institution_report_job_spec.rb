@@ -9,7 +9,7 @@ RSpec.describe InstitutionReportJob, type: :job do
     let(:start_date) { "2018-01-01" }
     let(:end_date) { "2018-02-28" }
     let(:report_type) { "request" }
-    let(:report_heading) { "Total_Item_Requests for all Institutions for #{press.name} from #{start_date} to #{end_date}" }
+    let(:report_heading) { "Total_Item_Requests for all Institutions #{press.name} #{start_date} to #{end_date}" }
     let(:report_name) { "Total_Item_Requests" }
     let(:tmpfile) { Tempfile.new }
     let(:mailer) { double("mailer", deliver_now: true) }
