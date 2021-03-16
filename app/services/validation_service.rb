@@ -28,6 +28,16 @@ class ValidationService
     false
   end
 
+  def self.valid_action?(action)
+    case action
+    when :create; true
+    when :read; true
+    when :update; true
+    when :delete; true
+    else false
+    end
+  end
+
   # Object Validation
 
   def self.valid_entity?(id)
@@ -47,7 +57,7 @@ class ValidationService
   end
 
   def self.valid_license_type?(license_type)
-    # w%[Greensub::FullLicense Greensub::TrialLicense].include?(type)
+    # w%[Greensub::FullLicense Greensub::ReadLicense].include?(type)
     Greensub::License.new(type: license_type)
     true
   rescue ActiveRecord::SubclassNotFound
@@ -90,13 +100,11 @@ class ValidationService
     end
   end
 
-  # Permission Credential Validation
+  # Credential Validation
 
   def self.valid_permission?(permission)
     %i[read].include?(permission&.to_s&.to_sym)
   end
-
-  # Credential Validation
 
   def self.valid_credential_type?(type)
     %i[License permission].include?(type&.to_s&.to_sym)

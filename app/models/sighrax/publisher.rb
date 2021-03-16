@@ -5,6 +5,7 @@ module Sighrax
     private_class_method :new
 
     attr_reader :subdomain
+    attr_reader :press
 
     # Class Methods
 
@@ -83,9 +84,11 @@ module Sighrax
       press == other.press
     end
 
-    protected
+    def watermark?
+      press.watermark
+    end
 
-      attr_reader :press
+    protected
 
       def type
         @type ||= /^Sighrax::(.+$)/.match(self.class.to_s)[1].to_sym

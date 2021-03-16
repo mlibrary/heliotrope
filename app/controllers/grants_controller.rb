@@ -39,8 +39,8 @@ class GrantsController < ApplicationController
                     license = case credential_id.to_s.to_sym
                               when :full
                                 Greensub::FullLicense.new
-                              when :trial
-                                Greensub::TrialLicense.new
+                              when :read
+                                Greensub::ReadLicense.new
                               else
                                 raise(ArgumentError)
                               end
@@ -56,8 +56,8 @@ class GrantsController < ApplicationController
                     license.type = case credential_id.to_s.to_sym
                                    when :full
                                      license.type = Greensub::FullLicense.to_s
-                                   when :trial
-                                     license.type = Greensub::TrialLicense.to_s
+                                   when :read
+                                     license.type = Greensub::ReadLicense.to_s
                                    else
                                      raise(ArgumentError)
                                    end

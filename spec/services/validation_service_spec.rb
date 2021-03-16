@@ -55,6 +55,25 @@ RSpec.describe ValidationService do
     end
   end
 
+  describe '#valid_action?' do
+    subject { described_class.valid_action?(action) }
+
+    context 'unknown' do
+      let (:action) { :unknown }
+
+      it 'false' do is_expected.to be false end
+    end
+
+    %i[create read update delete].each do |action|
+      context "#{action}" do
+        let(:action) { action }
+
+        it "true" do is_expected.to be true end
+      end
+    end
+  end
+
+
   describe "#valid_entity?" do
     subject { described_class.valid_entity?(id) }
 
@@ -249,8 +268,8 @@ RSpec.describe ValidationService do
       it { is_expected.to be true }
     end
 
-    context 'TrialLicense' do
-      let(:license_type) { 'Greensub::TrialLicense' }
+    context 'ReadLicense' do
+      let(:license_type) { 'Greensub::ReadLicense' }
 
       it { is_expected.to be true }
     end
@@ -262,8 +281,8 @@ RSpec.describe ValidationService do
       it { is_expected.to be true }
     end
 
-    context 'TrialLicense' do
-      let(:license_type) { 'Greensub::TrialLicense' }
+    context 'ReadLicense' do
+      let(:license_type) { 'Greensub::ReadLicense' }
 
       it { is_expected.to be true }
     end

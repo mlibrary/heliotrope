@@ -16,6 +16,10 @@ module Sighrax
       []
     end
 
+    def watermark?
+      false
+    end
+
     private
 
       def initialize(subdomain)
