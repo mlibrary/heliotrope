@@ -33,8 +33,6 @@ class FulcrumController < ApplicationController
       MigrateMetadataJob.perform_later(params[:job], params[:noid])
     when 'recache_in_common_metadata'
       RecacheInCommonMetadataJob.perform_now
-    when 'credential'
-      CredentialJob.perform_now
     when 'reindex'
       ReindexJob.perform_later(params[:noid])
     when 'reindex_everything'
@@ -96,7 +94,7 @@ class FulcrumController < ApplicationController
     end
 
     def incognito_params(params)
-      params.slice(:actor, :platform_admin, :ability_can, :action_permitted)
+      params.slice(:actor, :platform_admin, :ability_can, :action_permitted, :developer)
     end
 
     def incognito(options) # rubocop:disable Metrics/CyclomaticComplexity
@@ -111,6 +109,8 @@ class FulcrumController < ApplicationController
           Incognito.allow_ability_can(current_actor, false)
         when 'action_permitted'
           Incognito.allow_action_permitted(current_actor, false)
+        when 'developer'
+          Incognito.allow_developer(current_actor, true)
         end
       end
     end

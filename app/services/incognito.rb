@@ -87,6 +87,18 @@ module Incognito
       sudo_actor?(actor)
     end
 
+    def allow_developer?(actor)
+      return false if short_circuit?(actor)
+      !(actor.sign_in_count & 16).zero?
+    end
+
+    def allow_developer(actor, value = false)
+      return false if short_circuit?(actor)
+      actor.sign_in_count = value ? actor.sign_in_count | 16 : actor.sign_in_count & ~16
+      actor.save
+      allow_developer?(actor)
+    end
+
     def sudo_actor_individual(actor)
       return nil if short_circuit?(actor)
       return nil if (actor.sign_in_count & 8).zero?

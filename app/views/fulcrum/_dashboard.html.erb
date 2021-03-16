@@ -52,6 +52,8 @@
   <label for="ability_can">force 'can?' to be false</label><br>
   <input data-toggle="tooltip" title="hide your checkpoint credentials a.k.a. permissions" type="checkbox" id="action_permitted" name="action_permitted" value="mask" <%= !Incognito.allow_action_permitted?(current_actor) ? 'checked' : '' %> />
   <label for="action_permitted">force 'action_permitted?' to be false</label><br>
+  <input data-toggle="tooltip" title="show developer only stuff" type="checkbox" id="developer" name="developer" value="mask" <%= Incognito.allow_developer?(current_actor) ? 'checked' : '' %> />
+  <label for="developer">force 'developer?' to be true</label><br>
   &nbsp;<br>
   <button name="submit" type="submit" value="incognito">Incognito</button>
 </form>

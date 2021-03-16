@@ -213,6 +213,20 @@ RSpec.describe User do
     end
   end
 
+  describe '#developer?' do
+    subject { user.developer? }
+
+    let(:user) { build(:user) }
+
+    it { is_expected.to be false }
+
+    context 'when incognito' do
+      before { allow(Incognito).to receive(:allow_developer?).with(user).and_return true }
+
+      it { is_expected.to be true }
+    end
+  end
+
   describe '#token' do
     subject { user.token }
 
