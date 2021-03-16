@@ -131,6 +131,10 @@ class User < ApplicationRecord
     roles.where(role: 'admin', resource: nil).any?
   end
 
+  def developer?
+    Incognito.allow_developer?(self)
+  end
+
   # Method added by Blacklight; Blacklight uses #to_s on your
   # user class to get a user-displayable login/identifier for
   # the account.
@@ -156,11 +160,19 @@ class User < ApplicationRecord
   end
 
   def institutions
-    Services.dlps_institution.find(request_attributes)
+    if Incognito.sudo_actor?(self)
+      [Incognito.sudo_actor_institution(self)].compact
+    else
+      Services.dlps_institution.find(request_attributes)
+    end
   end
 
   def individual
-    Greensub::Individual.find_by(email: email) if email.present?
+    if Incognito.sudo_actor?(self)
+      Incognito.sudo_actor_individual(self)
+    else
+      Greensub::Individual.find_by(email: email) if email.present?
+    end
   end
 
   def grants?
