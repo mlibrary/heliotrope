@@ -39,7 +39,9 @@ module Greensub
     def update
       respond_to do |format|
         valid = ValidationService.valid_license_type?(license_params['type'])
-        valid ||= @license.update(license_params) if valid
+        if valid
+          valid = @license.update(license_params)
+        end
         if valid
           format.html { redirect_to greensub_licenses_path, notice: 'License was successfully updated.' }
           format.json { render :show, status: :ok, location: @license }

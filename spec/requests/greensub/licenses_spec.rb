@@ -139,7 +139,7 @@ RSpec.describe "Greensub::Licenses", type: :request do
   describe '#update' do
     subject { put greensub_license_path(target.id), params: { greensub_license: license_params } }
 
-    let(:license_params) { { type: 'Greensub::TrialLicense' } }
+    let(:license_params) { { type: 'Greensub::ReadLicense' } }
 
     it { expect { subject }.to raise_error(ActionController::RoutingError) }
 
@@ -163,7 +163,7 @@ RSpec.describe "Greensub::Licenses", type: :request do
           end
 
           context 'invalid license params' do
-            let(:license_params) { { type: 'TrialLicense' } }
+            let(:license_params) { { type: 'ReadLicense' } }
 
             it do
               expect { subject }.not_to raise_error
