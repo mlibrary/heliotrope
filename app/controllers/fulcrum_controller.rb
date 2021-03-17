@@ -110,7 +110,7 @@ class FulcrumController < ApplicationController
         when 'action_permitted'
           Incognito.allow_action_permitted(current_actor, false)
         when 'developer'
-          Incognito.allow_developer(current_actor, true)
+          Incognito.developer(current_actor, true)
         end
       end
     end

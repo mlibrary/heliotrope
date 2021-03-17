@@ -132,7 +132,7 @@ class User < ApplicationRecord
   end
 
   def developer?
-    Incognito.allow_developer?(self)
+    Incognito.developer?(self)
   end
 
   # Method added by Blacklight; Blacklight uses #to_s on your

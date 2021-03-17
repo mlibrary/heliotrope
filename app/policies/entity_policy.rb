@@ -10,11 +10,11 @@ class EntityPolicy < ResourcePolicy
     debug_log("downloadable? #{value}")
     return false unless value
 
-    value = Sighrax.platform_admin?(actor)
+    value = Sighrax.platform_admin?(actor) && Incognito.allow_platform_admin?(actor)
     debug_log("platform_admin? #{value}")
     return true if value
 
-    value = Sighrax.ability_can?(actor, :edit, target)
+    value = Sighrax.ability_can?(actor, :edit, target) && Incognito.allow_ability_can?(actor)
     debug_log("ability_can(:edit)? #{value}")
     return true if value
 
@@ -42,8 +42,14 @@ class EntityPolicy < ResourcePolicy
     debug_log("restricted? #{value}")
     return true unless value
 
-    value = Sighrax.access?(actor, target.parent)
-    debug_log("access? #{value}")
-    value
+    if Incognito.developer?(actor)
+      value = EbookDownloadOperation.new(actor, target).allowed?
+      debug_log("allowed? #{value}")
+      value
+    else
+      value = Sighrax.access?(actor, target.parent)
+      debug_log("access? #{value}")
+      value
+    end
   end
 end

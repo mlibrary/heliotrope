@@ -221,7 +221,7 @@ RSpec.describe User do
     it { is_expected.to be false }
 
     context 'when incognito' do
-      before { allow(Incognito).to receive(:allow_developer?).with(user).and_return true }
+      before { allow(Incognito).to receive(:developer?).with(user).and_return true }
 
       it { is_expected.to be true }
     end
