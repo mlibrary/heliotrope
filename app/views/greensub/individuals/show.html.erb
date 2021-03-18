@@ -10,9 +10,9 @@
   <div class="col-md-1"><em>eMail</em></div>
   <div class="col-md-11">&nbsp;<%= @individual.email %></div>
   <div class="col-md-12"><br/></div>
-  <h2>Products</h2>
+  <h2>Licenses</h2>
   <div class="col-md-12">
-    <%= render partial: '/greensub/individuals/products', locals: { individual: @individual, products: @individual.products } %>
+    <%= render partial: '/greensub/licenses/licenses', locals: { individual: @individual, licenses: @individual.licenses } %>
   </div>
   <div class="col-md-12"><br/></div>
   <div class="col-md-12">

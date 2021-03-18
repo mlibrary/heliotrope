@@ -29,8 +29,43 @@ class GrantsController < ApplicationController
       resource_type = entity.type.to_sym
     end
 
-    success = if ValidationService.valid_credential?(credential_type, credential_id)
+    success = if ValidationService.valid_credential_type?(credential_type)
                 case credential_type
+                when :License
+                  license_grants = agent_resource_license_grants(agent_type, agent_id, resource_type, resource_id)
+                  case license_grants.count
+                  when 0
+                    # new license
+                    license = case credential_id.to_s.to_sym
+                              when :full
+                                Greensub::FullLicense.new
+                              when :trial
+                                Greensub::TrialLicense.new
+                              else
+                                raise(ArgumentError)
+                              end
+                    license.save
+                    Authority.grant!(Authority.agent(agent_type, agent_id),
+                                     Authority.credential(:License, license.id),
+                                     Authority.resource(resource_type, resource_id))
+                    true
+                  when 1
+                    # update license
+                    grant = license_grants.first
+                    license = Greensub::License.find(grant.credential_id.to_i)
+                    license.type = case credential_id.to_s.to_sym
+                                   when :full
+                                     license.type = Greensub::FullLicense.to_s
+                                   when :trial
+                                     license.type = Greensub::TrialLicense.to_s
+                                   else
+                                     raise(ArgumentError)
+                                   end
+                    license.save
+                    true
+                  else
+                    raise(ArgumentError)
+                  end
                 when :permission
                   case credential_id.to_s.to_sym
                   when :any
@@ -49,6 +84,8 @@ class GrantsController < ApplicationController
                 else
                   raise(ArgumentError)
                 end
+              else
+                false
               end
 
     @grant = Grant.new
@@ -71,7 +108,12 @@ class GrantsController < ApplicationController
   end
 
   def destroy
+    license = case @grant.credential_type
+              when 'License'
+                Greensub::License.find(@grant.credential_id)
+              end
     @grant.delete
+    license.destroy if license.present?
     respond_to do |format|
       format.html { redirect_to grants_url, notice: 'Grant was successfully destroyed.' }
       format.json { head :no_content }
@@ -89,9 +131,15 @@ class GrantsController < ApplicationController
         :agent_type,
         :agent_id, :agent_guest_id, :agent_user_id, :agent_individual_id, :agent_institution_id,
         :credential_type,
-        :credential_id, :credential_permission_id,
+        :credential_id, :credential_license_id, :credential_permission_id,
         :resource_type,
         :resource_id, :resource_entity_id, :resource_component_id, :resource_product_id
       )
+    end
+
+    def agent_resource_license_grants(agent_type, agent_id, resource_type, resource_id)
+      Checkpoint::DB::Grant
+        .where(credential_type: 'License')
+        .where(agent_type: agent_type.to_s, agent_id: agent_id.to_i, resource_type: resource_type.to_s, resource_id: resource_id.to_i)
     end
 end

@@ -126,7 +126,7 @@ class OpenAccessEbookTrustJob < ApplicationJob
   def institutions
     subscribers = []
     Greensub::Product.where("identifier like ?", "ebc_%").each do |product|
-      subscribers << Greensub.product_subscribers(product)
+      subscribers << product.licensees
     end
     subscribers.flatten.uniq.map { |s| s if s.is_a? Greensub::Institution }.compact
   end

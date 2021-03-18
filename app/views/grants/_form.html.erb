@@ -91,12 +91,17 @@
         </div>
       </div>
       <div class="col-md-2">
+        <label for="grant_credential_type_license">
+          <input type="radio" value="License" checked="checked" name="grant[credential_type]" id="grant_credential_type_license" />
+          <label class="collection_radio_buttons" for="grant_credential_type_license">License</label>
+        </label>
+      </div>
+      <div class="col-md-3">
         <label for="grant_credential_type_permission">
-          <input type="radio" value="permission" checked="checked" name="grant[credential_type]" id="grant_credential_type_permission" />
+          <input type="radio" value="permission" name="grant[credential_type]" id="grant_credential_type_permission" />
           <label class="collection_radio_buttons" for="grant_credential_type_permission">permission</label>
         </label>
       </div>
-      <div class="col-md-3">&nbsp;</div>
       <div class="col-md-2">&nbsp;</div>
       <div class="col-md-2">&nbsp;</div>
       <div class="col-md-1">&nbsp;</div>
@@ -112,13 +117,21 @@
         </div>
       </div>
       <div class="col-md-2">
+        <label for="grant_credential_license_id">
+          <select name="grant[credential_license_id]" id="grant_credential_license_id">
+            <option value="full">full</option>
+            <option value="trial">trial</option>
+          </select>
+        </label>
+      </div>
+      <div class="col-md-3">
         <label for="grant_credential_permission_id">
           <select name="grant[credential_permission_id]" id="grant_credential_permission_id">
             <option value="read">read</option>
           </select>
         </label>
       </div>
-      <div class="col-md-7">&nbsp;</div>
+      <div class="col-md-4">&nbsp;</div>
       <div class="col-md-1">
         <label for="grant_credential_id_any">
           <input type="checkbox" value="any" name="grant[credential_id]" id="grant_credential_id_any" />

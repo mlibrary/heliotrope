@@ -22,7 +22,7 @@
         <div><input type="text" name="email_like" value="<%= params[:email_like] %>" size="<%= size %>" aria-label="email_like"></div>
       </th>
       <th>
-        <div>Products</div>
+        <div>Licenses</div>
         <div>&nbsp;</div>
         <div><button name="submit" type="submit" value="filter">Filter</button></div>
       </th>
@@ -38,7 +38,7 @@
           <div><%= individual.name %></div>
         </td>
         <td><%= individual.email %></td>
-        <td><%= individual.products.count %></td>
+        <td><%= individual.licenses.count %></td>
       </tr>
     <% end %>
   </table>

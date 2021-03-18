@@ -1,4 +1,3 @@
-<p id="notice"><%= notice %></p>
 <div id="maincontent">
   <% if @product.present? %>
     <h1>Individuals of <%= link_to @product.identifier, greensub_product_path(@product) %> Product</h1>
@@ -22,14 +21,13 @@
           <div>eMail</div>
           <div><input type="text" name="email_like" value="<%= params[:email_like] %>" size="<%= size %>" aria-label="email_like"></div>
         </div>
-        <div class="col-md-2"><div>Products</div><div><button name="submit" type="submit" value="filter">Filter</button></div>
+        <div class="col-md-2"><div>Licenses</div><div><button name="submit" type="submit" value="filter">Filter</button></div>
         </div>
       </div>
       <div class="col-md-2"><%= link_to 'New Individual', new_greensub_individual_path %></div>
       <div class="col-md-12"><hr/></div>
     </b>
   </form>
-
 
   <% @individuals.each do |individual| %>
     <div class="col-md-10">
@@ -40,7 +38,7 @@
       </div>
       <div class="col-md-3"><%= individual.email %></div>
 <!--      <div class="col-md-2"><%#= link_to individual.products.count, individual_products_path(individual) %></div>-->
-      <div class="col-md-2"><%= individual.products.count %></div>
+      <div class="col-md-2"><%= individual.licenses.count %></div>
     </div>
     <div class="col-md-2">
       <div class="col-md-4"><%= link_to 'Show', greensub_individual_path(individual) %></div>
@@ -48,5 +46,6 @@
       <div class="col-md-4"><%= link_to_if individual.destroy?, 'Destroy', greensub_individual_path(individual), method: :delete, data: { confirm: 'Are you sure?' } %></div>
     </div>
   <% end %>
+
   <div class="col-md-12">&nbsp<%= paginate @individuals %></div>
 </div>

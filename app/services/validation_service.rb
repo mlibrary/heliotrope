@@ -46,6 +46,18 @@ class ValidationService
     valid_id?(id) && Greensub::Institution.find(id).present?
   end
 
+  def self.valid_license_type?(license_type)
+    # w%[Greensub::FullLicense Greensub::TrialLicense].include?(type)
+    Greensub::License.new(type: license_type)
+    true
+  rescue ActiveRecord::SubclassNotFound
+    false
+  end
+
+  def self.valid_license?(id)
+    valid_id?(id) && Greensub::License.find(id).present?
+  end
+
   def self.valid_product?(id)
     valid_id?(id) && Greensub::Product.find(id).present?
   end
@@ -81,13 +93,13 @@ class ValidationService
   # Permission Credential Validation
 
   def self.valid_permission?(permission)
-    %i[any read].include?(permission&.to_s&.to_sym)
+    %i[read].include?(permission&.to_s&.to_sym)
   end
 
   # Credential Validation
 
   def self.valid_credential_type?(type)
-    %i[permission].include?(type&.to_s&.to_sym)
+    %i[License permission].include?(type&.to_s&.to_sym)
   end
 
   def self.valid_credential?(credential_type, credential_id)
@@ -95,6 +107,9 @@ class ValidationService
     case credential_type&.to_s&.to_sym
     # when :any
     #   any_id
+    when :License
+      # any_id || valid_license?(credential_id)
+      valid_license?(credential_id)
     when :permission
       any_id || valid_permission?(credential_id)
     else
@@ -105,7 +120,7 @@ class ValidationService
   # Resource Validation
 
   def self.valid_resource_type?(type)
-    %i[any ElectronicPublication Component Product].include?(type&.to_s&.to_sym)
+    %i[any Component Product].include?(type&.to_s&.to_sym)
   end
 
   def self.valid_resource?(resource_type, resource_id) # rubocop:disable  Metrics/CyclomaticComplexity
@@ -113,8 +128,6 @@ class ValidationService
     case resource_type&.to_s&.to_sym
     when :any
       any_id
-    when :ElectronicPublication
-      any_id || valid_entity?(resource_id)
     when :Component
       any_id || valid_component?(resource_id)
     when :Product

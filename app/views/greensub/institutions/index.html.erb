@@ -1,4 +1,3 @@
-<p id="notice"><%= notice %></p>
 <div id="maincontent">
   <% if @product.present? %>
     <h1>Institutions of <%= link_to @product.identifier, greensub_product_path(@product) %> Product</h1>
@@ -20,13 +19,14 @@
           <div><div class="col-md-2">Name</div><div class="col-md-10"><input type="text" name="name_like" value="<%= params[:name_like] %>" size="<%= size %>" aria-label="name_like"></div></div>
           <div><div class="col-md-2">Entity ID</div><div class="col-md-10"><input type="text" name="entity_id_like" value="<%= params[:entity_id_like] %>" size="<%= size %>" aria-label="entity_id_like"></div></div>
         </div>
-        <div class="col-md-2"><div>Products</div><div>&nbsp;</div><div><button name="submit" type="submit" value="filter">Filter</button></div>
+        <div class="col-md-2"><div>Licenses</div><div>&nbsp;</div><div><button name="submit" type="submit" value="filter">Filter</button></div>
         </div>
       </div>
       <div class="col-md-2"><%= link_to 'New Institution', new_greensub_institution_path %></div>
       <div class="col-md-12"><hr/></div>
     </b>
   </form>
+
   <% @institutions.each do |institution| %>
     <div class="col-md-10">
       <div class="col-md-1"><%= institution.id %></div>
@@ -35,7 +35,7 @@
         <div><%= institution.name %></div>
         <div><%= institution.entity_id %></div>
       </div>
-      <div class="col-md-2"><%= institution.products.count %></div>
+      <div class="col-md-2"><%= institution.licenses.count %></div>
     </div>
     <div class="col-md-2">
       <div class="col-md-4"><%= link_to 'Show', greensub_institution_path(institution) %></div>
@@ -43,5 +43,6 @@
       <div class="col-md-4"><%= link_to_if institution.destroy?, 'Destroy', greensub_institution_path(institution), method: :delete, data: { confirm: 'Are you sure?' } %></div>
     </div>
   <% end %>
+
   <div class="col-md-12">&nbsp;<%= paginate @institutions %></div>
 </div>

@@ -91,7 +91,11 @@ Rails.application.routes.draw do
         resources :components, only: %i[index create destroy]
         resources :individuals, only: %i[index]
         resources :institutions, only: %i[index]
+        resources :licenses, only: %i[index]
         resources :grants, only: %i[new]
+      end
+      resources :licenses, only: %i[index edit update destroy] do
+        resources :products, only: %i[index]
       end
     end
     get 'fulcrum', controller: :fulcrum, action: :dashboard, as: :fulcrum

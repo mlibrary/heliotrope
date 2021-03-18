@@ -127,7 +127,7 @@ RSpec.describe SessionsController, type: :controller do
         product = Greensub::Product.create!(identifier: 'product', name: 'name', purchase: 'purchase')
         product.components << component
         product.save!
-        Greensub.subscribe(subscriber: institution1, target: product)
+        institution1.update_product_license(product)
         get :discovery_feed, params: { id: file_set.id }
         expect(response).to have_http_status(:success)
         expect { JSON.parse response.body }.not_to raise_error

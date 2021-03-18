@@ -276,10 +276,10 @@ RSpec.describe User do
     product = create(:product)
     expect(user.grants?).to be false
 
-    Greensub.subscribe(subscriber: user, target: product)
+    Authority.grant!(user, Checkpoint::Credential::Permission.new(:read), product)
     expect(user.grants?).to be true
 
-    Greensub.unsubscribe(subscriber: user, target: product)
+    Authority.revoke!(user, Checkpoint::Credential::Permission.new(:read), product)
     expect(user.grants?).to be false
   end
 

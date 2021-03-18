@@ -156,7 +156,7 @@ RSpec.describe "Products", type: :request do
       end
 
       it 'product ok' do
-        Greensub.subscribe(subscriber: individual, target: product)
+        individual.update_product_license(product)
         get api_individual_products_path(individual), headers: headers
         expect(response.content_type).to eq("application/json")
         expect(response).to have_http_status(:ok)
@@ -165,8 +165,8 @@ RSpec.describe "Products", type: :request do
       end
 
       it 'products ok' do
-        Greensub.subscribe(subscriber: individual, target: product)
-        Greensub.subscribe(subscriber: individual, target: new_product)
+        individual.update_product_license(product)
+        individual.update_product_license(new_product)
         get api_individual_products_path(individual), headers: headers
         expect(response.content_type).to eq("application/json")
         expect(response).to have_http_status(:ok)
@@ -201,7 +201,7 @@ RSpec.describe "Products", type: :request do
       end
 
       it 'product ok' do
-        Greensub.subscribe(subscriber: institution, target: product)
+        institution.update_product_license(product)
         get api_institution_products_path(institution), headers: headers
         expect(response.content_type).to eq("application/json")
         expect(response).to have_http_status(:ok)
@@ -210,8 +210,8 @@ RSpec.describe "Products", type: :request do
       end
 
       it 'products ok' do
-        Greensub.subscribe(subscriber: institution, target: product)
-        Greensub.subscribe(subscriber: institution, target: new_product)
+        institution.update_product_license(product)
+        institution.update_product_license(new_product)
         get api_institution_products_path(institution), headers: headers
         expect(response.content_type).to eq("application/json")
         expect(response).to have_http_status(:ok)
@@ -340,7 +340,7 @@ RSpec.describe "Products", type: :request do
         delete api_product_path(product), headers: headers
         expect(response.content_type).to eq("application/json")
         expect(response).to have_http_status(:accepted)
-        expect(response_body[:base.to_s]).to include("product has 1 associated components!")
+        expect(response_body[:base.to_s]).to include("product has associated component!")
         expect(Greensub::Product.count).to eq(1)
       end
     end

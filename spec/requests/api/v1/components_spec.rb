@@ -444,7 +444,7 @@ RSpec.describe "Components", type: :request do
         delete api_component_path(component), headers: headers
         expect(response.content_type).to eq("application/json")
         expect(response).to have_http_status(:accepted)
-        expect(response_body[:base.to_s]).to include("component has 1 associated products!")
+        expect(response_body[:base.to_s]).to include("component has associated product!")
         expect(Greensub::Component.count).to eq(1)
       end
     end

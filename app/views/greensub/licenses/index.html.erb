@@ -1,0 +1,62 @@
+<div id="maincontent">
+  <% if @product.present? %>
+    <h1>Licenses of <%= link_to @product.identifier, greensub_product_path(@product) %> Product</h1>
+    <form name="filter" method="get" action="<%= greensub_product_institutions_path(@product) %>">
+  <% else %>
+    <h1>Licenses</h1>
+    <form name="filter" method="get" action="<%= greensub_licenses_path %>">
+  <% end %>
+    <b>
+      <div class="col-md-12"><hr/></div>
+      <div class="col-md-10">
+        <div class="col-md-1">
+          <div>ID</div>
+          <div><button name="submit" type="submit" value="filter">Filter</button></div>
+        </div>
+        <div class="col-md-1">
+          <% size = 6 %>
+          <div>
+            <div>Type</div>
+            <div><input type="text" name="type_like" value="<%= params[:type_like] %>" size="<%= size %>" aria-label="type_like"></div>
+          </div>
+        </div>
+        <div class="col-md-5">
+          <div>Licensee</div>
+        </div>
+        <div class="col-md-5">
+          <div>Product</div>
+        </div>
+      </div>
+      <div class="col-md-2">&nbsp;</div>
+      <div class="col-md-12"><hr/></div>
+    </b>
+  </form>
+
+  <% @licenses.each do |license| %>
+    <div class="col-md-10">
+      <div class="col-md-1"><%= license.id %></div>
+      <div class="col-md-1"><%= license.label %></div>
+      <div class="col-md-5">
+        <% if license.individual? %>
+          <%= link_to "#{license.individual.identifier}", greensub_individual_path(license.individual) %>
+        <% end %>
+        <% if license.institution? %>
+          <%= link_to "#{license.institution.name}", greensub_institution_path(license.institution) %>
+        <% end %>
+        &nbsp;
+      </div>
+      <div class="col-md-5">
+        <% if license.product? %>
+          <%= link_to "#{license.product.identifier}", greensub_product_path(license.product) %>
+        <% end %>
+        &nbsp;
+      </div>
+    </div>
+    <div class="col-md-2">
+      <div class="col-md-4"><%= link_to_if license.update?, 'Edit', edit_greensub_license_path(license) %></div>
+      <div class="col-md-4"><%= link_to_if license.destroy?, 'Destroy', greensub_license_path(license), method: :delete, data: { confirm: 'Are you sure?' } %></div>
+    </div>
+  <% end %>
+
+  <div class="col-md-12">&nbsp<%= paginate @licenses %></div>
+</div>

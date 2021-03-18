@@ -20,80 +20,80 @@ RSpec.describe Greensub do
 
   it 'works' do
     expect(greensub.actor_products(actor)).to be_empty
-    expect(greensub.subscriber_products(individual)).to be_empty
-    expect(greensub.subscriber_products(institutions[0])).to be_empty
-    expect(greensub.subscriber_products(institutions[1])).to be_empty
-    expect(greensub.product_subscribers(products[0])).to be_empty
-    expect(greensub.product_subscribers(products[1])).to be_empty
-    expect(greensub.product_subscribers(products[2])).to be_empty
+    expect(individual.products).to be_empty
+    expect(institutions[0].products).to be_empty
+    expect(institutions[1].products).to be_empty
+    expect(products[0].licensees).to be_empty
+    expect(products[1].licensees).to be_empty
+    expect(products[2].licensees).to be_empty
 
-    greensub.subscribe(subscriber: individual, target: products[0])
-    expect(greensub.subscribed?(subscriber: individual, target: products[0])).to be true
-    expect(greensub.subscriber_products(individual)).to match_array([products[0]])
-    expect(greensub.product_subscribers(products[0])).to match_array([individual])
+    individual.update_product_license(products[0])
+    expect(individual.product_license?(products[0])).to be true
+    expect(individual.products).to contain_exactly(products[0])
+    expect(products[0].licensees).to contain_exactly(individual)
     expect(greensub.actor_products(actor).count).to eq 1
-    expect(greensub.actor_products(actor)).to match_array([products[0]])
+    expect(greensub.actor_products(actor)).to contain_exactly(products[0])
 
-    greensub.subscribe(subscriber: institutions[0], target: products[1])
-    expect(greensub.subscribed?(subscriber: institutions[0], target: products[1])).to be true
-    expect(greensub.subscriber_products(institutions[0])).to match_array([products[1]])
-    expect(greensub.product_subscribers(products[1])).to match_array([institutions[0]])
+    institutions[0].update_product_license(products[1])
+    expect(institutions[0].product_license?(products[1])).to be true
+    expect(institutions[0].products).to contain_exactly(products[1])
+    expect(products[1].licensees).to contain_exactly(institutions[0])
     expect(greensub.actor_products(actor).count).to eq 2
-    expect(greensub.actor_products(actor)).to match_array([products[0], products[1]])
+    expect(greensub.actor_products(actor)).to contain_exactly(products[0], products[1])
 
-    greensub.subscribe(subscriber: institutions[1], target: products[2])
-    expect(greensub.subscribed?(subscriber: institutions[1], target: products[2])).to be true
-    expect(greensub.subscriber_products(institutions[1])).to match_array([products[2]])
-    expect(greensub.product_subscribers(products[2])).to match_array([institutions[1]])
+    institutions[1].update_product_license(products[2])
+    expect(institutions[1].product_license?(products[2])).to be true
+    expect(institutions[1].products).to contain_exactly(products[2])
+    expect(products[2].licensees).to contain_exactly(institutions[1])
     expect(greensub.actor_products(actor).count).to eq 3
-    expect(greensub.actor_products(actor)).to match_array([products[0], products[1], products[2]])
+    expect(greensub.actor_products(actor)).to contain_exactly(products[0], products[1], products[2])
 
-    greensub.subscribe(subscriber: individual, target: products[1])
-    expect(greensub.subscribed?(subscriber: individual, target: products[1])).to be true
-    expect(greensub.subscriber_products(individual)).to match_array([products[0], products[1]])
-    expect(greensub.product_subscribers(products[1])).to match_array([individual, institutions[0]])
+    individual.update_product_license(products[1])
+    expect(individual.product_license?(products[1])).to be true
+    expect(individual.products).to contain_exactly(products[0], products[1])
+    expect(products[1].licensees).to contain_exactly(individual, institutions[0])
     expect(greensub.actor_products(actor).count).to eq 3
-    expect(greensub.actor_products(actor)).to match_array([products[0], products[1], products[2]])
+    expect(greensub.actor_products(actor)).to contain_exactly(products[0], products[1], products[2])
 
-    greensub.subscribe(subscriber: institutions[0], target: products[0])
-    expect(greensub.subscribed?(subscriber: institutions[0], target: products[0])).to be true
-    expect(greensub.subscriber_products(institutions[0])).to match_array([products[0], products[1]])
-    expect(greensub.product_subscribers(products[0])).to match_array([individual, institutions[0]])
+    institutions[0].update_product_license(products[0])
+    expect(institutions[0].product_license?(products[0])).to be true
+    expect(institutions[0].products).to contain_exactly(products[0], products[1])
+    expect(products[0].licensees).to contain_exactly(individual, institutions[0])
     expect(greensub.actor_products(actor).count).to eq 3
-    expect(greensub.actor_products(actor)).to match_array([products[0], products[1], products[2]])
+    expect(greensub.actor_products(actor)).to contain_exactly(products[0], products[1], products[2])
 
-    greensub.unsubscribe(subscriber: individual, target: products[0])
-    expect(greensub.subscribed?(subscriber: individual, target: products[0])).to be false
-    expect(greensub.subscriber_products(individual)).to match_array([products[1]])
-    expect(greensub.product_subscribers(products[0])).to match_array([institutions[0]])
+    individual.delete_product_license(products[0])
+    expect(individual.product_license?(products[0])).to be false
+    expect(individual.products).to contain_exactly(products[1])
+    expect(products[0].licensees).to contain_exactly(institutions[0])
     expect(greensub.actor_products(actor).count).to eq 3
-    expect(greensub.actor_products(actor)).to match_array([products[0], products[1], products[2]])
+    expect(greensub.actor_products(actor)).to contain_exactly(products[0], products[1], products[2])
 
-    greensub.unsubscribe(subscriber: institutions[0], target: products[0])
-    expect(greensub.subscribed?(subscriber: institutions[0], target: products[0])).to be false
-    expect(greensub.subscriber_products(institutions[0])).to match_array([products[1]])
-    expect(greensub.product_subscribers(products[0])).to be_empty
+    institutions[0].delete_product_license(products[0])
+    expect(institutions[0].product_license?(products[0])).to be false
+    expect(institutions[0].products).to contain_exactly(products[1])
+    expect(products[0].licensees).to be_empty
     expect(greensub.actor_products(actor).count).to eq 2
-    expect(greensub.actor_products(actor)).to match_array([products[1], products[2]])
+    expect(greensub.actor_products(actor)).to contain_exactly(products[1], products[2])
 
-    greensub.unsubscribe(subscriber: institutions[0], target: products[1])
-    expect(greensub.subscribed?(subscriber: institutions[0], target: products[1])).to be false
-    expect(greensub.subscriber_products(institutions[0])).to be_empty
-    expect(greensub.product_subscribers(products[1])).to match_array([individual])
+    institutions[0].delete_product_license(products[1])
+    expect(institutions[0].product_license?(products[1])).to be false
+    expect(institutions[0].products).to be_empty
+    expect(products[1].licensees).to contain_exactly(individual)
     expect(greensub.actor_products(actor).count).to eq 2
-    expect(greensub.actor_products(actor)).to match_array([products[1], products[2]])
+    expect(greensub.actor_products(actor)).to contain_exactly(products[1], products[2])
 
-    greensub.unsubscribe(subscriber: individual, target: products[1])
-    expect(greensub.subscribed?(subscriber: individual, target: products[1])).to be false
-    expect(greensub.subscriber_products(individual)).to be_empty
-    expect(greensub.product_subscribers(products[1])).to be_empty
+    individual.delete_product_license(products[1])
+    expect(individual.product_license?(products[1])).to be false
+    expect(individual.products).to be_empty
+    expect(products[1].licensees).to be_empty
     expect(greensub.actor_products(actor).count).to eq 1
-    expect(greensub.actor_products(actor)).to match_array([products[2]])
+    expect(greensub.actor_products(actor)).to contain_exactly(products[2])
 
-    greensub.unsubscribe(subscriber: institutions[1], target: products[2])
-    expect(greensub.subscribed?(subscriber: institutions[1], target: products[2])).to be false
-    expect(greensub.subscriber_products(institutions[1])).to be_empty
-    expect(greensub.product_subscribers(products[2])).to be_empty
+    institutions[1].delete_product_license(products[2])
+    expect(institutions[1].product_license?(products[2])).to be false
+    expect(institutions[1].products).to be_empty
+    expect(products[2].licensees).to be_empty
     expect(greensub.actor_products(actor).count).to eq 0
     expect(greensub.actor_products(actor)).to be_empty
   end
