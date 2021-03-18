@@ -5,16 +5,24 @@ require 'rails_helper'
 RSpec.describe EntityPolicy do
   subject(:entity_policy) { described_class.new(actor, target) }
 
-  let(:actor) { double('actor') }
-  let(:target) { double('target', parent: parent) }
-  let(:parent) { double('parent') }
+  let(:actor) { instance_double(Anonymous, 'actor') }
+  let(:target) { instance_double(Sighrax::Resource, 'target', parent: parent) }
+  let(:parent) { instance_double(Sighrax::Work, 'parent') }
 
   describe '#download?' do
     subject { entity_policy.download? }
 
     let(:downloadable) { false }
+    let(:allow_ability_can) { true }
+    let(:allow_platform_admin) { true }
+    let(:developer) { false }
 
-    before { allow(Sighrax).to receive(:downloadable?).with(target).and_return(downloadable) }
+    before do
+      allow(Incognito).to receive(:allow_platform_admin?).with(actor).and_return(allow_platform_admin)
+      allow(Incognito).to receive(:allow_ability_can?).with(actor).and_return(allow_ability_can)
+      allow(Incognito).to receive(:developer?).with(actor).and_return(developer)
+      allow(Sighrax).to receive(:downloadable?).with(target).and_return(downloadable)
+    end
 
     it { is_expected.to be false }
 
@@ -43,6 +51,32 @@ RSpec.describe EntityPolicy do
             before { allow(Sighrax).to receive(:tombstone?).with(target).and_return(tombstone) }
 
             it { is_expected.to be false }
+
+            context 'Incognito' do
+              context 'platform admin' do
+                let(:platform_admin) { true }
+
+                it { is_expected.to be true }
+
+                context 'disallow platform admin' do
+                  let(:allow_platform_admin) { false }
+
+                  it { is_expected.to be false }
+                end
+              end
+
+              context 'ability can' do
+                let(:ability_can_edit) { true }
+
+                it { is_expected.to be true }
+
+                context 'disallow ability can' do
+                  let(:allow_ability_can) { false }
+
+                  it { is_expected.to be false }
+                end
+              end
+            end
 
             context 'deny download' do
               let(:tombstone) { false }
@@ -96,6 +130,27 @@ RSpec.describe EntityPolicy do
                           let(:access) { true }
 
                           it { is_expected.to be true }
+                        end
+
+                        context 'developer' do
+                          let(:developer) { true }
+                          let(:download_op) { instance_double(EbookDownloadOperation, 'download_op', allowed?: allowed) }
+                          let(:allowed)  { false }
+
+                          before do
+                            allow(Sighrax).to receive(:access?).with(actor, parent)
+                            allow(EbookDownloadOperation).to receive(:new).with(actor, target).and_return download_op
+                          end
+
+                          it { is_expected.to be false }
+                          it { expect(Sighrax).not_to have_received(:access?).with(actor, parent) }
+
+                          context 'allowed' do
+                            let(:allowed) { true }
+
+                            it { is_expected.to be true }
+                            it { expect(Sighrax).not_to have_received(:access?).with(actor, parent) }
+                          end
                         end
                       end
                     end
