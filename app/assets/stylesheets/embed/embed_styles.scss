@@ -43,6 +43,17 @@ html {
       z-index: 6501;
     }
 
+    // HELIO-3656
+    .able-big-play-button {
+      opacity: 0.4;
+      filter: alpha(opacity=40);
+      background-color: #555;
+    }
+    .able-big-play-button:hover {
+      opacity: .7;
+      filter: alpha(opacity=70);
+    }
+
     // HELIO-3674
     .able-descriptions {
       // the `able-descriptions` div needs to be contiguous with the controls, so that it's visible in the iframe
