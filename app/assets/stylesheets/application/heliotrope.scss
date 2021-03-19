@@ -1020,6 +1020,21 @@ footer.press {
     width: 97%;
     height: auto;
     margin: initial;
+
+    // HELIO-3656
+    .able-big-play-button {
+      opacity: 0.4;
+      filter: alpha(opacity=40);
+      background-color: #555;
+      color: #fdfdfd !important;
+    }
+
+    .able-big-play-button:hover {
+      opacity: .7;
+      filter: alpha(opacity=70);
+      color: #fdfdfd !important;
+    }
+
   }
 
   figcaption {
