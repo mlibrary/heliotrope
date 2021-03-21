@@ -21,7 +21,8 @@ class ActorAgentResolver < Checkpoint::Agent::Resolver
     end
 
     def institutions(actor)
-      return [] if actor.try(:institutions).blank?
-      actor.institutions.map { |institution| convert(institution) }
+      return [] unless actor.respond_to?(:institutions)
+      world_institutions = Greensub::Institution.where(identifier: Settings.world_institution_identifier).to_a
+      (actor.institutions + world_institutions).map { |institution| convert(institution) }
     end
 end

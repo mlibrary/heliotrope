@@ -41,7 +41,7 @@ class EPubPolicy < ResourcePolicy
           debug_log("component products: #{component.products.count}")
           component.products.each { |product| debug_log("component product: #{product.identifier}") }
 
-          allow_read_products = Sighrax.allow_read_products
+          allow_read_products = Sighrax.allow_read_products(actor)
           debug_log("allow read products: #{allow_read_products.count}")
           allow_read_products.each { |product| debug_log("allow read product: #{product.identifier}") }
           value = (allow_read_products & component.products).any?

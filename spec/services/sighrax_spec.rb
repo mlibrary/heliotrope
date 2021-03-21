@@ -678,7 +678,9 @@ RSpec.describe Sighrax do
 
   context 'Greensub Helpers' do
     describe '#allow_read_products' do
-      subject { described_class.allow_read_products }
+      subject { described_class.allow_read_products(actor) }
+
+      let(:actor) { Anonymous.new({}) }
 
       it { is_expected.to be_empty }
 
@@ -687,10 +689,30 @@ RSpec.describe Sighrax do
 
         before do
           allow(Settings).to receive(:allow_read_products).and_return('identifier')
-          allow(Greensub::Product).to receive(:where).with(identifier: 'identifier').and_return(products)
+          allow(Greensub::Product).to receive(:where).with(identifier: 'identifier').and_return products
         end
 
-        it { is_expected.to be(products) }
+        it { is_expected.to be products }
+
+        context 'developer' do
+          before { allow(Incognito).to receive(:developer?).with(actor).and_return true }
+
+          it { is_expected.to be_empty }
+
+          context 'world institution' do
+            let(:world_institution) { instance_double(Greensub::Institution, 'world institution', products: []) }
+
+            before { allow(Greensub::Institution).to receive(:find_by).with(identifier: Settings.world_institution_identifier).and_return world_institution }
+
+            it { is_expected.to be_empty }
+
+            context 'products' do
+              before { allow(world_institution).to receive(:products).and_return products }
+
+              it { is_expected.to be products }
+            end
+          end
+        end
       end
     end
 
