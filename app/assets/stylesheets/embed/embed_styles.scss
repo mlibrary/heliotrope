@@ -93,8 +93,8 @@ html {
   top: 0;
   right: 0;
   float: right;
-  width: 6%;
-  min-width: 60px;
+  width: 4%;
+  min-width: 25px;
   height: auto;
   // able div has a z-index of 5000
   z-index: 5001;
@@ -113,8 +113,8 @@ html {
   -o-transition: all 2s ease;
   transition: all 2s ease;
   .logo {
-    width: 100%;
-    height: auto;
+    width: unset;
+    height: 25px;
   }
 }
 
