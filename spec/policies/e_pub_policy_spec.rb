@@ -263,7 +263,6 @@ RSpec.describe EPubPolicy do
         it { expect(Sighrax).not_to have_received(:allow_read_products) }
         it { expect(Sighrax).not_to have_received(:actor_products).with(actor) }
 
-
         context 'allowed' do
           let(:allowed) { true }
 

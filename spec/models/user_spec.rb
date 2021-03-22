@@ -275,14 +275,49 @@ RSpec.describe User do
     let(:user) { build(:user) }
 
     it { is_expected.to eq [] }
+
+    context 'dlps institution' do
+      let(:dlps_institution) { double('dlps_institution') }
+
+      before do
+        allow(Services).to receive(:dlps_institution).and_return dlps_institution
+        allow(dlps_institution).to receive(:find).and_return ['institution']
+      end
+
+      it { is_expected.to contain_exactly('institution') }
+
+      context 'sudo actor' do
+        before do
+          allow(Incognito).to receive(:sudo_actor?).with(user).and_return true
+          allow(Incognito).to receive(:sudo_actor_institution).with(user).and_return 'sudo_institution'
+        end
+
+        it { is_expected.to contain_exactly('sudo_institution') }
+      end
+    end
   end
 
   describe '#individual' do
     subject { user.individual }
 
-    let(:user) { build(:user) }
+    let(:user) { build(:user, email: 'wolverine@umich.edu') }
 
     it { is_expected.to be nil }
+
+    context 'individual' do
+      before { allow(Greensub::Individual).to receive(:find_by).with(email: user.email).and_return 'individual' }
+
+      it { is_expected.to eq 'individual' }
+
+      context 'sudo actor' do
+        before do
+          allow(Incognito).to receive(:sudo_actor?).with(user).and_return true
+          allow(Incognito).to receive(:sudo_actor_individual).with(user).and_return 'sudo_individual'
+        end
+
+        it { is_expected.to eq 'sudo_individual' }
+      end
+    end
   end
 
   it '#grants?' do

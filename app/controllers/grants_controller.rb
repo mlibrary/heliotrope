@@ -17,9 +17,11 @@ class GrantsController < ApplicationController
     agent_type = grant_params[:agent_type]&.to_sym
     agent_id = grant_params[:agent_id] if grant_params[:agent_id].present?
     agent_id ||= (agent_type == :any) ? :any : grant_params["agent_#{agent_type.to_s.downcase}_id"]
+
     credential_type = grant_params[:credential_type]&.to_sym
     credential_id = grant_params[:credential_id] if grant_params[:credential_id].present?
-    credential_id ||= (grant_params[:credential_id] == 'any') ? 'any' : grant_params["credential_#{credential_type.to_s.downcase}_id"]
+    credential_id ||= (credential_type == :any) ? :any : grant_params["credential_#{credential_type.to_s.downcase}_id"]
+
     resource_type = grant_params[:resource_type]&.to_sym
     resource_id = grant_params[:resource_id] if grant_params[:resource_id].present?
     resource_id ||= (resource_type == :any) ? :any : grant_params["resource_#{resource_type.to_s.downcase}_id"]

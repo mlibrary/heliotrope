@@ -57,7 +57,7 @@ class PressCatalogController < ::CatalogController
     end
 
     def load_allow_read_product_ids
-      @allow_read_product_ids = Sighrax.allow_read_products.pluck(:id)
+      @allow_read_product_ids = Sighrax.allow_read_products(current_actor).pluck(:id)
     end
 
     def has_open_access
