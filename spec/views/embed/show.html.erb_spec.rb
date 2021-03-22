@@ -26,10 +26,9 @@ RSpec.describe "embed/show.html.erb" do
       expect(rendered).not_to have_tag('asset')
       expect(rendered).to have_tag('figure')
       # logo links back to the Fulcrum asset page through the handle
-      expect(rendered).to have_css("img[src*='fulcrum-white-50px']", count: 1)
+      expect(rendered).to have_css("img[src*='fulcrum-logo-circle']", count: 1)
       expect(rendered).to have_link(nil,
-                                    href: hyrax_file_set_url(file_set.id),
-                                    title: file_set_presenter.embed_fulcrum_logo_title)
+                                    href: hyrax_file_set_url(file_set.id)
     }
   end
 
@@ -47,10 +46,9 @@ RSpec.describe "embed/show.html.erb" do
       expect(rendered).not_to have_tag('asset')
       expect(rendered).to have_tag('figure')
       # logo links back to the Fulcrum asset page through the handle
-      expect(rendered).to have_css("img[src*='fulcrum-white-50px']", count: 1)
+      expect(rendered).to have_css("img[src*='fulcrum-logo-circle']", count: 1)
       expect(rendered).to have_link(nil,
-                                    href: hyrax_file_set_url(file_set.id),
-                                    title: file_set_presenter.embed_fulcrum_logo_title)
+                                    href: hyrax_file_set_url(file_set.id)
     }
   end
 end
