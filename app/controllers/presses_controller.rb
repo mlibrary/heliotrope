@@ -75,7 +75,8 @@ class PressesController < ApplicationController
                                     :doi_creation,
                                     :navigation_block,
                                     :default_list_view,
-                                    :aboutware
+                                    :aboutware,
+                                    :interval
                                   )
     end
 end

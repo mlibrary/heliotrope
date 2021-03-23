@@ -42,8 +42,9 @@ RSpec.describe Sighrax::Publisher, type: :model do
 
     let(:publisher) { described_class.send(:new, subdomain, press) }
     let(:subdomain) { 'publisher' }
-    let(:press) { create(:press, subdomain: subdomain, watermark: watermark) }
+    let(:press) { create(:press, subdomain: subdomain, watermark: watermark, interval: interval) }
     let(:watermark) { false }
+    let(:interval) { false }
 
     it { is_expected.to be_an_instance_of described_class }
     it { expect(subject.subdomain).to eq subdomain }
@@ -58,11 +59,18 @@ RSpec.describe Sighrax::Publisher, type: :model do
     it { expect(subject.resource_noids(true)).to be_empty }
     it { expect(subject.user_ids(true)).to be_empty }
     it { expect(subject.watermark?).to be false }
+    it { expect(subject.interval?).to be false }
 
     context 'watermark' do
       let(:watermark) { true }
 
       it { expect(subject.watermark?). to be true }
+    end
+
+    context 'interval' do
+      let(:interval) { true }
+
+      it { expect(subject.interval?).to be true }
     end
 
     context 'with child' do

@@ -33,5 +33,6 @@ RSpec.describe Sighrax::NullPublisher, type: :model do
     it { expect(subject.resource_noids(true)).to be_empty }
     it { expect(subject.user_ids(true)).to be_empty }
     it { expect(subject.watermark?).to be false }
+    it { expect(subject.interval?).to be false }
   end
 end
