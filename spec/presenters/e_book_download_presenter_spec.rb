@@ -96,4 +96,22 @@ RSpec.describe EBookDownloadPresenter do
                                               { format: "MOBI", size: "29.3 KB", href: "/ebooks/222222222/download" },
                                               { format: "PDF",  size: "39.1 KB", href: "/ebooks/333333333/download" }]
   end
+
+  context 'developer' do
+    let(:ebook_download_op) { instance_double(EbookIntervalDownloadOperation, 'ebook download op', allowed?: allowed) }
+    let(:allowed) { false }
+
+    before do
+      allow(Incognito).to receive(:developer?).with(current_actor).and_return true
+      allow(EbookDownloadOperation).to receive(:new).with(current_actor, anything).and_return ebook_download_op
+    end
+
+    it { expect(subject.downloadable_ebooks?).to be false }
+
+    context 'allowed' do
+      let(:allowed) { true }
+
+      it { expect(subject.downloadable_ebooks?).to be true }
+    end
+  end
 end

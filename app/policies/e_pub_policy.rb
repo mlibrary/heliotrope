@@ -33,9 +33,7 @@ class EPubPolicy < ResourcePolicy
         return true if share
 
         if Incognito.developer?(actor)
-          value = EbookReaderOperation.new(actor, @ebook).allowed?
-          debug_log("allowed? #{value}")
-          value
+          EbookReaderOperation.new(actor, ebook).allowed?
         else
           component = Greensub::Component.find_by(noid: target.noid)
           debug_log("component products: #{component.products.count}")
@@ -71,5 +69,6 @@ class EPubPolicy < ResourcePolicy
 
   protected
 
+    attr_reader :ebook
     attr_reader :share
 end
