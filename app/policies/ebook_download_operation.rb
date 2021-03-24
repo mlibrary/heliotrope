@@ -2,6 +2,8 @@
 
 class EbookDownloadOperation < EbookOperation
   def allowed?
-    licensed_for?(:download)
+    return false unless accessible_offline?
+
+    unrestricted? || licensed_for?(:download)
   end
 end
