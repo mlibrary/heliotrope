@@ -9,17 +9,25 @@ RSpec.describe EbookDownloadOperation do
     let(:policy) { described_class.new(actor, ebook) }
     let(:actor) { Anonymous.new({}) }
     let(:ebook) { instance_double(Sighrax::Ebook, 'ebook') }
+    let(:can_edit) { false }
     let(:accessible_offline) { false }
     let(:unrestricted) { false }
     let(:licensed_for_download) { false }
 
     before do
+      allow(policy).to receive(:can?).with(:edit).and_return can_edit
       allow(policy).to receive(:accessible_offline?).and_return accessible_offline
       allow(policy).to receive(:unrestricted?).and_return unrestricted
       allow(policy).to receive(:licensed_for?).with(:download).and_return licensed_for_download
     end
 
     it { is_expected.to be false }
+
+    context 'when can edit' do
+      let(:can_edit) { true }
+
+      it { is_expected.to be true }
+    end
 
     context 'when accessible offline' do
       let(:accessible_offline) { true }

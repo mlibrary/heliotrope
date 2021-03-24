@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class EbookOperation < ApplicationPolicy
+  include AbilityHelpers
+
   protected
 
     alias_attribute :ebook, :target

@@ -11,11 +11,13 @@ RSpec.describe EbookIntervalDownloadOperation do
     let(:ebook) { instance_double(Sighrax::Ebook, 'ebook', publisher: publisher) }
     let(:publisher) { instance_double(Sighrax::Publisher, 'publisher', interval?: interval) }
     let(:interval) { false }
+    let(:can_edit) { false }
     let(:accessible_online) { false }
     let(:unrestricted) { false }
     let(:licensed_for_download) { false }
 
     before do
+      allow(policy).to receive(:can?).with(:edit).and_return can_edit
       allow(policy).to receive(:accessible_online?).and_return accessible_online
       allow(policy).to receive(:unrestricted?).and_return unrestricted
       allow(policy).to receive(:licensed_for?).with(:download).and_return licensed_for_download
@@ -27,6 +29,12 @@ RSpec.describe EbookIntervalDownloadOperation do
       let(:interval) { true }
 
       it { is_expected.to be false }
+
+      context 'when can edit' do
+        let(:can_edit) { true }
+
+        it { is_expected.to be true }
+      end
 
       context 'when online access' do
         let(:accessible_online) { true }
@@ -45,6 +53,12 @@ RSpec.describe EbookIntervalDownloadOperation do
           it { is_expected.to be true }
         end
       end
+    end
+
+    context 'when can edit' do
+      let(:can_edit) { true }
+
+      it { is_expected.to be false }
     end
 
     context 'when online access' do
