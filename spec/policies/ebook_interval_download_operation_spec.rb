@@ -9,8 +9,8 @@ RSpec.describe EbookIntervalDownloadOperation do
     let(:policy) { described_class.new(actor, ebook) }
     let(:actor) { Anonymous.new({}) }
     let(:ebook) { instance_double(Sighrax::Ebook, 'ebook', publisher: publisher) }
-    let(:publisher) { instance_double(Sighrax::Publisher, 'publisher', subdomain: subdomain) }
-    let(:subdomain) { 'subdomain' }
+    let(:publisher) { instance_double(Sighrax::Publisher, 'publisher', interval?: interval) }
+    let(:interval) { false }
     let(:licensed_for_download) { false }
 
     before do
@@ -24,8 +24,8 @@ RSpec.describe EbookIntervalDownloadOperation do
 
       it { is_expected.to be false }
 
-      context 'when publisher subdomain' do
-        let(:subdomain) { 'heliotrope' }
+      context 'when publisher interval' do
+        let(:interval) { true }
 
         it { is_expected.to be true }
       end

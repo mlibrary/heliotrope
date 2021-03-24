@@ -39,6 +39,7 @@
   <%= f.input :restricted_message, label: 'Message for restricted works (if any). HTML is ok' %>
   <%= f.input :share_links, label: 'Allow "share links" for temporary access of restricted materials?', as: :radio_buttons, collection: [['Yes', true], ['No', false]], default: false %>
   <%= f.input :watermark, label: 'Apply watermark to downloaded ebooks?', as: :radio_buttons, collection: [['Yes', true], ['No', false]], default: false %>
+  <%= f.input :interval, label: 'Allow ebook interval (chapter) download?', as: :radio_buttons, collection: [['Yes', true], ['No', false]], default: false %>
   <%= f.input :doi_creation, label: 'Press allows AUTOMATIC creation of Component (FileSet) level DOIs?', as: :radio_buttons, collection: [['Yes', true], ['No', false]], default: false %>
   <%= f.input :default_list_view, label: 'Select the default view', as: :radio_buttons, collection: [['List View', true], ['Gallery View', false]], default: false %>
   <%= f.input :aboutware, label: 'Press has "aboutware" (MAY include a complex "navigation_block" or MAY NOT)', as: :radio_buttons, collection: [['Yes', true], ['No', false]], default: false %>

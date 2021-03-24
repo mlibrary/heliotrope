@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_02_19_181153) do
+ActiveRecord::Schema.define(version: 2021_03_23_134614) do
 
   create_table "api_requests", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.integer "user_id"
@@ -391,6 +391,7 @@ ActiveRecord::Schema.define(version: 2021_02_19_181153) do
     t.text "navigation_block"
     t.boolean "default_list_view", default: false
     t.boolean "aboutware", default: false
+    t.boolean "interval", default: false
     t.index ["parent_id"], name: "index_presses_on_parent_id"
   end
 

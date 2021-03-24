@@ -2,7 +2,7 @@
   level = 0
   ebook_presenter = @presenter.epub? ? @presenter.epub_presenter : @presenter.pdf_ebook_presenter
   if Incognito.developer?(current_actor)
-    permit_download_buttons = EbookIntervalDownloadOperation.new(current_actor, Sighrax.from_presenter(ebook_presenter)).allowed?
+    permit_download_buttons = EbookIntervalDownloadOperation.new(current_actor, Sighrax.from_solr_document(@presenter.reader_ebook)).allowed?
   else
     epub_policy = @presenter.epub? ? @monograph_policy.epub_policy : @monograph_policy.pdf_ebook_policy
     # we could show the buttons even if epub_policy.show? = false, as another entry point into the `epubs_access`...

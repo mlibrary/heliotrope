@@ -20,6 +20,10 @@ module Sighrax
       false
     end
 
+    def interval?
+      false
+    end
+
     private
 
       def initialize(subdomain)

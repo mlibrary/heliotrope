@@ -88,6 +88,10 @@ module Sighrax
       press.watermark
     end
 
+    def interval?
+      press.interval
+    end
+
     protected
 
       def type
