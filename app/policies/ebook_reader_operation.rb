@@ -2,6 +2,10 @@
 
 class EbookReaderOperation < EbookOperation
   def allowed?
-    licensed_for?(:reader)
+    return true if can? :read
+
+    return false unless accessible_online?
+
+    unrestricted? || licensed_for?(:reader)
   end
 end

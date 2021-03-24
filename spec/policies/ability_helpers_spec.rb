@@ -15,25 +15,33 @@ RSpec.describe AbilityHelpers do
     let(:agent) { Anonymous.new({}) }
     let(:resource) { instance_double(Sighrax::Model, 'resource') }
     let(:platform_admin) { false }
+    let(:valid_action) { false }
     let(:ability_can) { false }
 
     before do
       allow(Sighrax).to receive(:platform_admin?).with(agent).and_return platform_admin
+      allow(ValidationService).to receive(:valid_action?).with(action).and_return valid_action
       allow(Sighrax).to receive(:ability_can?).with(agent, action, resource).and_return ability_can
     end
 
-    it { is_expected.to be false }
+    it { expect { subject }.to raise_error(ArgumentError) }
 
-    context 'when platform admin' do
-      let(:platform_admin) { true }
+    context 'when valid action' do
+      let(:valid_action) { true }
 
-      it { is_expected.to be true }
-    end
+      it { is_expected.to be false }
 
-    context 'when ability can' do
-      let(:ability_can) { true }
+      context 'when platform admin' do
+        let(:platform_admin) { true }
 
-      it { is_expected.to be true }
+        it { is_expected.to be true }
+      end
+
+      context 'when ability can' do
+        let(:ability_can) { true }
+
+        it { is_expected.to be true }
+      end
     end
   end
 end

@@ -4,11 +4,42 @@ class Ability
   include Hydra::Ability
   include Hyrax::Ability
 
-  # CanCanCan default aliases
-  #
-  # alias_action :index, :show, :to => :read
-  # alias_action :new, :to => :create
-  # alias_action :edit, :to => :update
+  # CanCanCan comments
+  # # Alias one or more actions into another one.
+  # #
+  # #   alias_action :update, :destroy, :to => :modify
+  # #   can :modify, Comment
+  # #
+  # # Then :modify permission will apply to both :update and :destroy requests.
+  # #
+  # #   can? :update, Comment # => true
+  # #   can? :destroy, Comment # => true
+  # #
+  # # This only works in one direction. Passing the aliased action into the "can?" call
+  # # will not work because aliases are meant to generate more generic actions.
+  # #
+  # #   alias_action :update, :destroy, :to => :modify
+  # #   can :update, Comment
+  # #   can? :modify, Comment # => false
+  # #
+  # # Unless that exact alias is used.
+  # #
+  # #   can :modify, Comment
+  # #   can? :modify, Comment # => true
+  # #
+  # # The following aliases are added by default for conveniently mapping common controller actions.
+  # #
+  # #   alias_action :index, :show, :to => :read
+  # #   alias_action :new, :to => :create
+  # #   alias_action :edit, :to => :update
+  # #
+  # # This way one can use params[:action] in the controller to determine the permission.
+  # def alias_action(*args)
+  #   target = args.pop[:to]
+  #   validate_target(target)
+  #   aliased_actions[target] ||= []
+  #   aliased_actions[target] += args
+  # end
 
   # Define any customized permissions here.
   def custom_permissions # rubocop:disable Metrics/CyclomaticComplexity

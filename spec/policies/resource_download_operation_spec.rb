@@ -13,10 +13,10 @@ RSpec.describe ResourceDownloadOperation do
     let(:published) { false }
     let(:tombstone) { false }
     let(:allow_download) { false }
-    let(:can_edit) { false }
+    let(:can_update) { false }
 
     before do
-      allow(policy).to receive(:can?).with(:edit).and_return can_edit
+      allow(policy).to receive(:can?).with(:update).and_return can_update
     end
 
     it { is_expected.to be false }
@@ -38,8 +38,8 @@ RSpec.describe ResourceDownloadOperation do
 
       it { is_expected.to be false }
 
-      context 'when can edit' do
-        let(:can_edit) { true }
+      context 'when can update' do
+        let(:can_update) { true }
 
         it { is_expected.to be true }
       end
