@@ -15,12 +15,10 @@ RSpec.describe EntityPolicy do
     let(:downloadable) { false }
     let(:allow_ability_can) { true }
     let(:allow_platform_admin) { true }
-    let(:developer) { false }
 
     before do
       allow(Incognito).to receive(:allow_platform_admin?).with(actor).and_return(allow_platform_admin)
       allow(Incognito).to receive(:allow_ability_can?).with(actor).and_return(allow_ability_can)
-      allow(Incognito).to receive(:developer?).with(actor).and_return(developer)
       allow(Sighrax).to receive(:downloadable?).with(target).and_return(downloadable)
     end
 
@@ -120,37 +118,17 @@ RSpec.describe EntityPolicy do
 
                       context 'restricted' do
                         let(:restricted) { true }
-                        let(:access) { false }
+                        let(:download_op) { instance_double(EbookDownloadOperation, 'download_op', allowed?: allowed) }
+                        let(:allowed) { false }
 
-                        before { allow(Sighrax).to receive(:access?).with(actor, parent).and_return(access) }
+                        before { allow(EbookDownloadOperation).to receive(:new).with(actor, target).and_return download_op }
 
                         it { is_expected.to be false }
 
-                        context 'access' do
-                          let(:access) { true }
+                        context 'allowed' do
+                          let(:allowed) { true }
 
                           it { is_expected.to be true }
-                        end
-
-                        context 'developer' do
-                          let(:developer) { true }
-                          let(:download_op) { instance_double(EbookDownloadOperation, 'download_op', allowed?: allowed) }
-                          let(:allowed)  { false }
-
-                          before do
-                            allow(Sighrax).to receive(:access?).with(actor, parent)
-                            allow(EbookDownloadOperation).to receive(:new).with(actor, target).and_return download_op
-                          end
-
-                          it { is_expected.to be false }
-                          it { expect(Sighrax).not_to have_received(:access?).with(actor, parent) }
-
-                          context 'allowed' do
-                            let(:allowed) { true }
-
-                            it { is_expected.to be true }
-                            it { expect(Sighrax).not_to have_received(:access?).with(actor, parent) }
-                          end
                         end
                       end
                     end

@@ -37,11 +37,7 @@ class EBookDownloadPresenter < ApplicationPresenter
   def downloadable?(ebook_presenter)
     Rails.logger.debug("[EBOOK DOWNLOAD] ebook_presenter.blank? #{ebook_presenter.blank?} (#{ebook_presenter.class})")
     return false if ebook_presenter.blank?
-    if Incognito.developer?(current_actor)
-      EbookDownloadOperation.new(current_actor, Sighrax.from_presenter(ebook_presenter)).allowed?
-    else
-      EntityPolicy.new(current_actor, Sighrax.from_presenter(ebook_presenter)).download?
-    end
+    EbookDownloadOperation.new(current_actor, Sighrax.from_presenter(ebook_presenter)).allowed?
   end
 
   def downloadable_ebooks?

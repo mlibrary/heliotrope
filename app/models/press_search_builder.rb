@@ -96,7 +96,7 @@ class PressSearchBuilder < ::SearchBuilder
       #  allow_read_products == free to read products
       #  actor_products == current actor's products
       #
-      allow_read_products_ids = Sighrax.allow_read_products(scope.current_actor).pluck(:id)
+      allow_read_products_ids = Sighrax.allow_read_products.pluck(:id)
       actor_products_ids = Sighrax.actor_products(scope.current_actor).pluck(:id)
       ([-1, 0] + allow_read_products_ids + actor_products_ids).uniq.sort
     end

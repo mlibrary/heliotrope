@@ -49,12 +49,8 @@ module Sighrax # rubocop:disable Metrics/ModuleLength
 
     # Greensub Helpers
 
-    def allow_read_products(actor)
-      if Incognito.developer?(actor)
-        Greensub::Institution.find_by(identifier: Settings.world_institution_identifier)&.products || []
-      else
-        Greensub::Product.where(identifier: Settings.allow_read_products || [])
-      end
+    def allow_read_products
+      Greensub::Institution.find_by(identifier: Settings.world_institution_identifier)&.products || []
     end
 
     def actor_products(actor)
