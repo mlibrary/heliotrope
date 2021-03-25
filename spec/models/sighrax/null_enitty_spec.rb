@@ -76,16 +76,11 @@ RSpec.describe Sighrax::NullEntity, type: :model do
       Sighrax::Monograph,
       Sighrax::Score,
       Sighrax::Resource,
-      Sighrax::Asset, # Deprecated
       Sighrax::InteractiveMap,
       Sighrax::Ebook,
-      Sighrax::ElectronicBook, # Deprecated
       Sighrax::EpubEbook,
-      Sighrax::ElectronicPublication, # Deprecated
       Sighrax::MobiEbook,
-      Sighrax::Mobipocket, # Deprecated
-      Sighrax::PdfEbook,
-      Sighrax::PortableDocumentFormat # Deprecated
+      Sighrax::PdfEbook
     ].each do |klass|
       context klass.to_s do
         let(:instance) { klass.send(:new, noid, {}) }
@@ -145,16 +140,11 @@ RSpec.describe Sighrax::NullEntity, type: :model do
         # Resource
         if [
           Sighrax::Resource,
-          Sighrax::Asset, # Deprecated
           Sighrax::InteractiveMap,
           Sighrax::Ebook,
-          Sighrax::ElectronicBook, # Deprecated
           Sighrax::EpubEbook,
-          Sighrax::ElectronicPublication, # Deprecated
           Sighrax::MobiEbook,
-          Sighrax::Mobipocket, # Deprecated
-          Sighrax::PdfEbook,
-          Sighrax::PortableDocumentFormat # Deprecated
+          Sighrax::PdfEbook
         ].include?(klass)
           it { expect(subject.allow_download?)    .to eq instance.allow_download? }
           it { expect(subject.content)            .to eq instance.content }
@@ -167,13 +157,9 @@ RSpec.describe Sighrax::NullEntity, type: :model do
           # Electronic Book
           if [
             Sighrax::Ebook,
-            Sighrax::ElectronicBook, # Deprecated
             Sighrax::EpubEbook,
-            Sighrax::ElectronicPublication, # Deprecated
             Sighrax::MobiEbook,
-            Sighrax::Mobipocket, # Deprecated
-            Sighrax::PdfEbook,
-            Sighrax::PortableDocumentFormat # Deprecated
+            Sighrax::PdfEbook
           ].include?(klass)
             it { expect(subject.monograph)       .to eq instance.monograph }
             it { expect(subject.open_access?)    .to eq instance.open_access? }
@@ -182,7 +168,7 @@ RSpec.describe Sighrax::NullEntity, type: :model do
             it { expect(subject.tombstone?)      .to eq instance.tombstone? }
 
             # Portable Document Format is watermark-able!
-            if [Sighrax::PortableDocumentFormat, Sighrax::PdfEbook].include?(klass)
+            if [Sighrax::PdfEbook].include?(klass)
               it { expect(subject.watermarkable?) .not_to eq instance.watermarkable? }
             else
               it { expect(subject.watermarkable?)     .to eq instance.watermarkable? }

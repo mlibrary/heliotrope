@@ -95,7 +95,7 @@ $(document).on('turbolinks:load', function() {
     });
 
     //
-    // File Set/Asset page
+    // File Set/Resource page
     //
     // download
     $('a.btn-heliotrope-download').click(function() {

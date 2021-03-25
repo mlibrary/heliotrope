@@ -1,19 +1,14 @@
 # frozen_string_literal: true
 
-require_dependency 'sighrax/asset'
 require_dependency 'sighrax/ebook'
-require_dependency 'sighrax/electronic_book'
-require_dependency 'sighrax/electronic_publication'
 require_dependency 'sighrax/entity'
 require_dependency 'sighrax/epub_ebook'
 require_dependency 'sighrax/interactive_map'
 require_dependency 'sighrax/mobi_ebook'
-require_dependency 'sighrax/mobipocket'
 require_dependency 'sighrax/model'
 require_dependency 'sighrax/monograph'
 require_dependency 'sighrax/null_entity'
 require_dependency 'sighrax/pdf_ebook'
-require_dependency 'sighrax/portable_document_format'
 require_dependency 'sighrax/publisher'
 require_dependency 'sighrax/resource'
 require_dependency 'sighrax/score'
@@ -100,7 +95,7 @@ module Sighrax # rubocop:disable Metrics/ModuleLength
         Hyrax::MonographPresenter.new(SolrDocument.new(entity.send(:data)), current_ability)
       when Score
         Hyrax::ScorePresenter.new(SolrDocument.new(entity.send(:data)), current_ability)
-      when Asset
+      when Resource
         Hyrax::FileSetPresenter.new(SolrDocument.new(entity.send(:data)), current_ability)
       else
         Hyrax::Presenter.send(:new, entity.noid)
@@ -110,7 +105,7 @@ module Sighrax # rubocop:disable Metrics/ModuleLength
     def press(entity)
       if entity.is_a?(Sighrax::Monograph)
         Press.find_by(subdomain: Sighrax.hyrax_presenter(entity).subdomain)
-      elsif entity.is_a?(Sighrax::Asset)
+      elsif entity.is_a?(Sighrax::Resource)
         if entity.parent.is_a?(Sighrax::Monograph)
           Press.find_by(subdomain: Sighrax.hyrax_presenter(entity.parent).subdomain)
         else
@@ -127,19 +122,19 @@ module Sighrax # rubocop:disable Metrics/ModuleLength
         Rails.application.routes.url_helpers.hyrax_monograph_url(entity.noid)
       when Sighrax::Score
         Rails.application.routes.url_helpers.hyrax_score_url(entity.noid)
-      when Sighrax::Asset
+      when Sighrax::Resource
         Rails.application.routes.url_helpers.hyrax_file_set_url(entity.noid)
       else
         nil
       end
     end
 
-    # Only makes sense for Assets
+    # Only makes sense for Resources
     def allow_download?(entity)
       # return false unless entity.valid?
       # return false unless downloadable?(entity)
       # /^yes$/i.match?(Array(solr_document(entity)['allow_download_ssim']).first)
-      return false unless entity.is_a?(Sighrax::Asset)
+      return false unless entity.is_a?(Sighrax::Resource)
 
       entity.allow_download?
     end
@@ -156,12 +151,12 @@ module Sighrax # rubocop:disable Metrics/ModuleLength
       entity.deposited?
     end
 
-    # Only makes sense for Assets
+    # Only makes sense for Resources
     def downloadable?(entity)
       # return false unless entity.valid?
       # return false if Array(solr_document(entity)['external_resource_url_ssim']).first.present?
-      # entity.is_a?(Sighrax::Asset)
-      return false unless entity.is_a?(Sighrax::Asset)
+      # entity.is_a?(Sighrax::Resource)
+      return false unless entity.is_a?(Sighrax::Resource)
 
       entity.downloadable?
     end
@@ -195,7 +190,7 @@ module Sighrax # rubocop:disable Metrics/ModuleLength
       entity.restricted?
     end
 
-    # Currently only Assets can be tombstone
+    # Currently only Resources can be tombstone
     # Only makes sense for Models
     def tombstone?(entity)
       # return false unless entity.valid?
@@ -207,12 +202,12 @@ module Sighrax # rubocop:disable Metrics/ModuleLength
       entity.tombstone?
     end
 
-    # Only makes sense for Assets
+    # Only makes sense for Resources
     def watermarkable?(entity)
       # return false unless entity.valid?
       # return false if Array(solr_document(entity)['external_resource_url_ssim']).first.present?
-      # entity.is_a?(Sighrax::PortableDocumentFormat)
-      return false unless entity.is_a?(Sighrax::Asset)
+      # entity.is_a?(Sighrax::PdfEbook)
+      return false unless entity.is_a?(Sighrax::Resource)
 
       entity.watermarkable?
     end
@@ -238,13 +233,13 @@ module Sighrax # rubocop:disable Metrics/ModuleLength
         else
           case featured_representative.kind
           when 'epub'
-            ElectronicPublication.send(:new, noid, data)
+            EpubEbook.send(:new, noid, data)
           when 'mobi'
-            Mobipocket.send(:new, noid, data)
+            MobiEbook.send(:new, noid, data)
           when 'pdf_ebook'
-            PortableDocumentFormat.send(:new, noid, data)
+            PdfEbook.send(:new, noid, data)
           else
-            Asset.send(:new, noid, data)
+            Resource.send(:new, noid, data)
           end
         end
       end
@@ -254,7 +249,7 @@ module Sighrax # rubocop:disable Metrics/ModuleLength
         when /^interactive map$/i
           InteractiveMap.send(:new, noid, data)
         else
-          Asset.send(:new, noid, data)
+          Resource.send(:new, noid, data)
         end
       end
   end

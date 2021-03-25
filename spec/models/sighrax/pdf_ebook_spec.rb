@@ -17,12 +17,9 @@ RSpec.describe Sighrax::PdfEbook, type: :model do
   end
 
   it 'has expected values' do
-    is_expected.not_to be_an_instance_of described_class
-    is_expected.to be_an_instance_of Sighrax::PortableDocumentFormat # Deprecated
+    is_expected.to be_an_instance_of described_class
     is_expected.to be_a_kind_of Sighrax::Ebook
-    is_expected.to be_a_kind_of Sighrax::ElectronicBook # Deprecated
     expect(subject.resource_type).not_to eq :PDFEbook
-    expect(subject.resource_type).to eq :PortableDocumentFormat # Deprecated
     expect(subject.parent.noid).to eq monograph.id
     expect(subject.parent.children.first.noid).to eq pdf_ebook.id
     expect(subject.monograph).to be subject.parent

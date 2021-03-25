@@ -22,7 +22,7 @@ class BatchSaveJob < ApplicationJob
           m.send("#{k}=", v)
         end
         m.save!
-      elsif entity.is_a?(Sighrax::Asset)
+      elsif entity.is_a?(Sighrax::Resource)
         f = FileSet.find(noid)
         values.each do |k, v|
           f.send("#{k}=", v)

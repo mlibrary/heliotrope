@@ -68,9 +68,9 @@ RSpec.describe Sighrax::Model, type: :model do
     let(:file_set) { create(:public_file_set) }
 
     it 'is a file set model' do
-      is_expected.to be_an_instance_of(Sighrax::Asset)
+      is_expected.to be_an_instance_of(Sighrax::Resource)
       is_expected.to be_a_kind_of(Sighrax::Model)
-      expect(subject.resource_type).to eq :Asset
+      expect(subject.resource_type).to eq :Resource
       expect(subject.send(:model_type)).to eq 'FileSet'
     end
 

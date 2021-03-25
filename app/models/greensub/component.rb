@@ -55,7 +55,7 @@ module Greensub
     end
 
     def file_set?
-      Sighrax.from_noid(noid).is_a?(Sighrax::Asset)
+      Sighrax.from_noid(noid).is_a?(Sighrax::Resource)
     end
 
     def grants?

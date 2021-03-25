@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Sighrax
-  class InteractiveMap < Asset
+  class InteractiveMap < Resource
     private_class_method :new
 
     private

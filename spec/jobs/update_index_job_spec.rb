@@ -46,11 +46,11 @@ RSpec.describe UpdateIndexJob, type: :job do
     end
   end
 
-  context 'Asset' do
+  context 'Resource' do
     let(:asset) { double('asset') }
 
     before do
-      allow(entity).to receive(:is_a?).with(Sighrax::Asset).and_return(true)
+      allow(entity).to receive(:is_a?).with(Sighrax::Resource).and_return(true)
       allow(FileSet).to receive(:find).with(noid).and_return(asset)
       allow(asset).to receive(:update_index)
     end

@@ -50,7 +50,7 @@ RSpec.describe "PDF EBooks", type: :request do
           let(:watermark_download) { true }
           let(:entity) do
             instance_double(
-              Sighrax::Asset,
+              Sighrax::Resource,
               noid: noid,
               data: {},
               valid?: true,
