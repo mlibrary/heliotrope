@@ -124,11 +124,6 @@ module Hyrax
       identifier&.find { |i| i[/^bar_number:.*/] }&.gsub('bar_number:', '')&.strip
     end
 
-    # temporary extra chapter downloadability logic for BAR, see HELIO-3678
-    def disallow_chapter_downloads?
-      subdomain == 'barpublishing' && Settings.bar_disallow_chapter_downloads_list&.include?(bar_number)
-    end
-
     def unreverse_names(comma_separated_names)
       forward_names = []
       comma_separated_names.each { |n| forward_names << unreverse_name(n) }

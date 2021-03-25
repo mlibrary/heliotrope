@@ -491,48 +491,6 @@ RSpec.describe Hyrax::MonographPresenter do
     end
   end
 
-  # hopefully temporary, see HELIO-3678
-  describe '#disallow_chapter_downloads?' do
-    let(:mono_doc) { ::SolrDocument.new(id: 'mono', has_model_ssim: ['Monograph'], press_tesim: subdomain,
-                                        identifier_tesim: identifier) }
-
-    subject { presenter.disallow_chapter_downloads? }
-
-    context 'subdomain is not "barpublishing"' do
-      let(:subdomain) { 'notbarpublishing' }
-
-      context "no disallowed BAR number is present in identifier" do
-        let(:identifier) { ["http://www.example.com/doi", "bar_number:S20156"] }
-
-        it { is_expected.to be false }
-      end
-
-      context "disallowed BAR number is present in identifier" do
-        # see config/settings/test.yml
-        let(:identifier) { ["http://www.example.com/doi", "bar_number:sample_bar_number_1"] }
-
-        it { is_expected.to be false }
-      end
-    end
-
-    context 'subdomain is "barpublishing"' do
-      let(:subdomain) { 'barpublishing' }
-
-      context "no disallowed BAR number is present in identifier" do
-        let(:identifier) { ["http://www.example.com/doi", "bar_number:S20156"] }
-
-        it { is_expected.to be false }
-      end
-
-      context "disallowed BAR number is present in identifier" do
-        # see config/settings/test.yml
-        let(:identifier) { ["http://www.example.com/doi", "bar_number:sample_bar_number_1"] }
-
-        it { is_expected.to be true }
-      end
-    end
-  end
-
   describe '#creator' do
     context 'there are values in creator and contributor' do
       subject { presenter.creator }

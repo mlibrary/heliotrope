@@ -6,12 +6,12 @@ class EbooksController < CheckpointController
   before_action :setup
 
   def download
-    raise NotAuthorizedError unless @policy.download?
-    return redirect_to(hyrax.download_path(params[:id])) unless Sighrax.watermarkable?(@entity) && @press_policy.watermark_download?
+    raise NotAuthorizedError unless EbookDownloadOperation.new(current_actor, @ebook).allowed?
+    return redirect_to(hyrax.download_path(params[:id])) unless @ebook.watermarkable? && @ebook.publisher.watermark?
 
     begin
-      CounterService.from(self, Sighrax.hyrax_presenter(@entity)).count(request: 1)
-      send_data watermark_pdf(@entity, @entity.filename), type: @entity.media_type, filename: @entity.filename
+      CounterService.from(self, Sighrax.hyrax_presenter(@ebook)).count(request: 1)
+      send_data watermark_pdf(@ebook, @ebook.filename), type: @ebook.media_type, filename: @ebook.filename
     rescue StandardError => e
       Rails.logger.error "EbooksController.download raised #{e}"
       head :no_content
@@ -21,9 +21,6 @@ class EbooksController < CheckpointController
   private
 
     def setup
-      @entity = Sighrax.from_noid(params[:id])
-      @policy = EntityPolicy.new(current_actor, @entity)
-      @press = Sighrax.press(@entity)
-      @press_policy = PressPolicy.new(current_actor, @press)
+      @ebook = Sighrax.from_noid(params[:id])
     end
 end

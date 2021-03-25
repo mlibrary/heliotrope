@@ -279,6 +279,12 @@ RSpec.describe "EPubs", type: :request do
       describe 'GET /epubs_download_interval/:id' do
         subject { get "/epubs_download_interval/#{epub.id}" }
 
+        let(:ebook_interval_download_op) { instance_double(EbookIntervalDownloadOperation, 'ebook_interval_download_op', allowed?: true) }
+
+        before do
+          allow(EbookIntervalDownloadOperation).to receive(:new).with(anything, Sighrax.from_noid(epub.id)).and_return ebook_interval_download_op
+        end
+
         it do
           expect { subject }.not_to raise_error
           expect(response).to have_http_status(:no_content)
@@ -312,9 +318,14 @@ RSpec.describe "EPubs", type: :request do
       end
 
       describe 'GET /epubs_download_interval/:id with a FeaturedRepresentative of kind pdf_ebook' do
-        let(:fre) { create(:featured_representative, work_id: monograph.id, file_set_id: epub.id, kind: 'pdf_ebook') }
-
         subject { get "/epubs_download_interval/#{epub.id}" }
+
+        let(:fre) { create(:featured_representative, work_id: monograph.id, file_set_id: epub.id, kind: 'pdf_ebook') }
+        let(:ebook_interval_download_op) { instance_double(EbookIntervalDownloadOperation, 'ebook_interval_download_op', allowed?: true) }
+
+        before do
+          allow(EbookIntervalDownloadOperation).to receive(:new).with(anything, Sighrax.from_noid(epub.id)).and_return ebook_interval_download_op
+        end
 
         it do
           expect { subject }.not_to raise_error
