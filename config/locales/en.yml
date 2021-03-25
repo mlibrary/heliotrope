@@ -34,7 +34,7 @@ en:
     access_level_text:
       open_access: "Open Access"
       purchased: "Access to this book has been provided by your Library"
-      free: "Free access to this book has been provided in response to the COVID-19 crisis"
+      free: "Free access to this book has been provided in memory of Jeffrey R. Parsons."
       restricted: "You do not have access to this book."
       restricted_access_options: "How to get access."
   activerecord:
