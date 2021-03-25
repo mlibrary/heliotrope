@@ -13,6 +13,8 @@ RSpec.describe Anonymous, type: :model do
   it { expect(subject.agent_type).to eq :Anonymous }
   it { expect(subject.agent_id).to eq :any }
   it { expect(subject.platform_admin?).to be false }
+  it { expect(subject.developer?).to be false }
+  it { expect(subject.presses).to be_empty }
   it { expect(subject.admin_presses).to be_empty }
   it { expect(subject.editor_presses).to be_empty }
   it { expect(subject.analyst_presses).to be_empty }

@@ -4,8 +4,8 @@ module API
   module V1
     # Institutions Controller
     class InstitutionsController < API::ApplicationController
-      before_action :set_institution, only: %i[show update destroy access]
-      before_action :set_product, only: %i[access]
+      before_action :set_institution, only: %i[show update destroy license]
+      before_action :set_product, only: %i[license]
 
       # Get institution by identifier
       # @example
@@ -139,30 +139,52 @@ module API
         head :ok
       end
 
-      # @overload access
-      #   Get product access
+      # @overload license
+      #   Get product license
       #   @example
-      #     get /api/products/:product_id/institutions/:id/access
+      #     get /api/products/:product_id/institutions/:id/license
       #   @param [Hash] params { product_id: Number, id: Number }
-      #   @return [ActionDispatch::Response] {access}
-      # @overload access
-      #   Set product access
+      #   @return [ActionDispatch::Response] {license}
+      # @overload license
+      #   Set product license
       #   @example
-      #     post /api/products/:product_id/institutions/:id/access
-      #   @param [Hash] params { product_id: Number, id: Number, access: String }
-      #   @return [ActionDispatch::Response] {access}
+      #     post /api/products/:product_id/institutions/:id/license
+      #   @param [Hash] params { product_id: Number, id: Number, license: String }
+      #   @return [ActionDispatch::Response] {license}
       #
-      #     (See ./app/views/api/v1/institutions/access.json.jbuilder)
+      #     (See ./app/views/api/v1/institutions/license.json.jbuilder)
       #
-      #     {include:file:app/views/api/v1/institutions/access.json.jbuilder}
-      def access
-        return render json: { "access" => "undefined" }, status: :accepted unless @institution.products.include?(@product)
+      #     {include:file:app/views/api/v1/institutions/license.json.jbuilder}
+      def license
+        if params[:license].present?
+          return_license, status = set_license(params[:license])
+          render json: return_license, status: status
+        else
+          return render json: { "license" => "undefined" }, status: :not_found unless @institution.product_license?(@product)
 
-        if params[:access].present?
+          label = @institution.product_license(@product).label.downcase
+          label = "none" if label.blank?
+          render json: { "license" => label }, status: :ok
         end
       end
 
       private
+
+        def set_license(license)
+          case license
+          when "full"
+            @institution.update_product_license(@product, license_type: "Greensub::FullLicense")
+            return { "license" => "full" }, :ok
+          when "read"
+            @institution.update_product_license(@product, license_type: "Greensub::ReadLicense")
+            return { "license" => "read" }, :ok
+          when "none"
+            @institution.update_product_license(@product, license_type: "Greensub::License")
+            return { "license" => "none" }, :ok
+          else
+            return { exception: "no license type found for: #{license}" }, :unprocessable_entity
+          end
+        end
 
         def set_product
           @product = Greensub::Product.find(params[:product_id])

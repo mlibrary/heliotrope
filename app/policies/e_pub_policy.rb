@@ -2,6 +2,7 @@
 
 class EPubPolicy < ResourcePolicy
   def initialize(actor, target, share = false)
+    @ebook = target
     target = target.parent
     super(actor, target)
     @share = share
@@ -10,7 +11,7 @@ class EPubPolicy < ResourcePolicy
   def show? # rubocop:disable Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity
     debug_log("show? #{actor.agent_type}:#{actor.agent_id}, #{target.resource_type}:#{target.resource_id}, share is #{share}")
 
-    value = super
+    value = actor.platform_admin? && Incognito.allow_platform_admin?(actor)
     debug_log("platform_admin? #{value}")
     return true if value
 
@@ -31,23 +32,27 @@ class EPubPolicy < ResourcePolicy
         debug_log("share #{share}")
         return true if share
 
-        component = Greensub::Component.find_by(noid: target.noid)
-        debug_log("component products: #{component.products.count}")
-        component.products.each { |product| debug_log("component product: #{product.identifier}") }
+        if Incognito.developer?(actor)
+          EbookReaderOperation.new(actor, ebook).allowed?
+        else
+          component = Greensub::Component.find_by(noid: target.noid)
+          debug_log("component products: #{component.products.count}")
+          component.products.each { |product| debug_log("component product: #{product.identifier}") }
 
-        allow_read_products = Sighrax.allow_read_products
-        debug_log("allow read products: #{allow_read_products.count}")
-        allow_read_products.each { |product| debug_log("allow read product: #{product.identifier}") }
-        value = (allow_read_products & component.products).any?
-        debug_log("allow_read_products_intersect_component_products_any? #{value}")
-        return true if value
+          allow_read_products = Sighrax.allow_read_products(actor)
+          debug_log("allow read products: #{allow_read_products.count}")
+          allow_read_products.each { |product| debug_log("allow read product: #{product.identifier}") }
+          value = (allow_read_products & component.products).any?
+          debug_log("allow_read_products_intersect_component_products_any? #{value}")
+          return true if value
 
-        products = Sighrax.actor_products(actor)
-        debug_log("actor products: #{products.count}")
-        products.each { |product| debug_log("actor product: #{product.identifier}") }
-        value = (products & component.products).any?
-        debug_log("actor_products_intersect_component_products_any? #{value}")
-        value
+          products = Sighrax.actor_products(actor)
+          debug_log("actor products: #{products.count}")
+          products.each { |product| debug_log("actor product: #{product.identifier}") }
+          value = (products & component.products).any?
+          debug_log("actor_products_intersect_component_products_any? #{value}")
+          value
+        end
       else
         true
       end
@@ -64,5 +69,6 @@ class EPubPolicy < ResourcePolicy
 
   protected
 
+    attr_reader :ebook
     attr_reader :share
 end

@@ -3,23 +3,6 @@
 require 'rails_helper'
 
 RSpec.describe Sighrax::Publisher, type: :model do
-  context 'null publisher' do
-    subject { described_class.null_publisher }
-
-    it { is_expected.to be_an_instance_of Sighrax::NullPublisher }
-    it { expect(subject.subdomain).to eq 'null_subdomain' }
-    it { expect(subject.send(:press)).to eq nil }
-    it { expect(subject.valid?).to be false }
-    it { expect(subject.resource_type).to eq :NullPublisher }
-    it { expect(subject.resource_id).to eq 'null_subdomain' }
-    it { expect(subject.resource_token).to eq "#{subject.resource_type}:#{subject.resource_id}" }
-    it { expect(subject.parent).to be_an_instance_of Sighrax::NullPublisher }
-    it { expect(subject.children).to be_empty }
-    it { expect(subject.work_noids(true)).to be_empty }
-    it { expect(subject.resource_noids(true)).to be_empty }
-    it { expect(subject.user_ids(true)).to be_empty }
-  end
-
   context 'factories' do
     let(:subdomain) { 'publisher' }
 
@@ -54,11 +37,14 @@ RSpec.describe Sighrax::Publisher, type: :model do
     end
   end
 
-  context 'root publisher' do
-    subject { described_class.send(:new, subdomain, press) }
+  context 'publisher' do
+    subject { publisher }
 
-    let(:subdomain) { 'root' }
-    let(:press) { create(:press, subdomain: subdomain) }
+    let(:publisher) { described_class.send(:new, subdomain, press) }
+    let(:subdomain) { 'publisher' }
+    let(:press) { create(:press, subdomain: subdomain, watermark: watermark, interval: interval) }
+    let(:watermark) { false }
+    let(:interval) { false }
 
     it { is_expected.to be_an_instance_of described_class }
     it { expect(subject.subdomain).to eq subdomain }
@@ -72,6 +58,20 @@ RSpec.describe Sighrax::Publisher, type: :model do
     it { expect(subject.work_noids(true)).to be_empty }
     it { expect(subject.resource_noids(true)).to be_empty }
     it { expect(subject.user_ids(true)).to be_empty }
+    it { expect(subject.watermark?).to be false }
+    it { expect(subject.interval?).to be false }
+
+    context 'watermark' do
+      let(:watermark) { true }
+
+      it { expect(subject.watermark?). to be true }
+    end
+
+    context 'interval' do
+      let(:interval) { true }
+
+      it { expect(subject.interval?).to be true }
+    end
 
     context 'with child' do
       let(:child_subdomain) { 'child' }

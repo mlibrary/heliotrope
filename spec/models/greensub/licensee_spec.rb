@@ -59,10 +59,10 @@ RSpec.describe Greensub::Licensee do
     it 'update product license' do
       id = license.id
       expect(license.type).to eq 'Greensub::FullLicense'
-      licensee.update_product_license(product, license_type: "Greensub::TrialLicense")
+      licensee.update_product_license(product, license_type: "Greensub::ReadLicense")
       license = licensee.product_license(product)
       expect(license.id).to eq id
-      expect(license.type).to eq 'Greensub::TrialLicense'
+      expect(license.type).to eq 'Greensub::ReadLicense'
     end
 
     context 'second product' do

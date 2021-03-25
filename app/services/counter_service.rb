@@ -27,8 +27,8 @@ class CounterService
 
     # Add "Unknown Institution" (aka: "The World") if the request has no institutions and is not a robot
     if @controller.current_institutions.empty? && !robot?
-      inst0 = Greensub::Institution.where(identifier: 0).first
-      @controller.current_institutions.push(inst0) if inst0.present?
+      world_institution = Greensub::Institution.where(identifier: Settings.world_institution_identifier).first
+      @controller.current_institutions.push(world_institution) if world_institution.present?
     end
 
     # Add a COUNT for each institution. Usually a request will only have a single

@@ -7,10 +7,9 @@ require_dependency 'greensub/individual'
 require_dependency 'greensub/institution'
 require_dependency 'greensub/license'
 require_dependency 'greensub/license_credential'
-require_dependency 'greensub/license_grant'
 require_dependency 'greensub/licensee'
 require_dependency 'greensub/product'
-require_dependency 'greensub/trial_license'
+require_dependency 'greensub/read_license'
 
 module Greensub
   class << self

@@ -10,7 +10,7 @@ class EPubsController < CheckpointController
     return redirect_to epub_access_url unless @policy.show?
 
     @actor_product_ids = Sighrax.actor_products(current_actor).pluck(:id)
-    @allow_read_product_ids = Sighrax.allow_read_products.pluck(:id)
+    @allow_read_product_ids = Sighrax.allow_read_products(current_actor).pluck(:id)
 
     @title = @presenter.parent.present? ? @presenter.parent.page_title : @presenter.page_title
     @parent_presenter = @presenter.parent

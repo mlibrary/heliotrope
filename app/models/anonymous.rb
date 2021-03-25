@@ -31,6 +31,10 @@ class Anonymous
     false
   end
 
+  def developer?
+    false
+  end
+
   def presses
     []
   end

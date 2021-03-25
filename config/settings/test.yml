@@ -40,6 +40,8 @@ open_access_ebook_trust_emails:
     - cc1@fulcrum
     - cc2@fulcrum
 
+world_institution_identifier: 0
+
 # List of Greensub Products to allow read access to everyone.
 allow_read_products:
   - allow_read_product

@@ -14,6 +14,12 @@ RSpec.describe PDFEbookPresenter do
     it { is_expected.to eq(pdf_ebook.id) }
   end
 
+  describe '#multi_rendition?' do
+    subject { presenter.multi_rendition? }
+
+    it { is_expected.to be false }
+  end
+
   describe '#intervals?' do
     context "with a valid/not broken pdf" do
       subject { presenter.intervals? }

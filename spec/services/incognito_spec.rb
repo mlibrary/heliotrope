@@ -24,8 +24,8 @@ RSpec.describe Incognito do
 
   it do
     expect(incognito.reset(actor)).to be true
-    expect(incognito.allow_platform_admin?(actor)).to be true
 
+    expect(incognito.allow_platform_admin?(actor)).to be true
     expect(incognito.allow_platform_admin(actor, false)).to be true
     expect(incognito.allow_platform_admin?(actor)).to be true
 
@@ -43,6 +43,10 @@ RSpec.describe Incognito do
     expect(incognito.sudo_actor_individual(actor)).to be nil
     expect(incognito.sudo_actor_institution(actor)).to be nil
     expect(incognito.sudo_actor_products(actor)).to be_empty
+
+    expect(incognito.developer?(actor)).to be false
+    expect(incognito.developer(actor, true)).to be false
+    expect(incognito.developer?(actor)).to be false
   end
 
   context 'platform_admin' do
@@ -78,6 +82,13 @@ RSpec.describe Incognito do
       expect(incognito.sudo_actor_individual(actor)&.id).to be individual.id
       expect(incognito.sudo_actor_institution(actor)&.id).to be institution.id
       expect(incognito.sudo_actor_products(actor)).to eq [product]
+
+      expect(incognito.developer?(actor)).to be false
+      expect(incognito.developer(actor, true)).to be true
+      expect(incognito.developer?(actor)).to be true
+
+      expect(incognito.developer(actor)).to be false
+      expect(incognito.developer?(actor)).to be false
     end
 
     context 'Individual.find Standard Error' do

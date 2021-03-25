@@ -25,14 +25,14 @@ RSpec.describe Greensub::License, type: :model do
     it { expect(subject.allows?(:reader)).to be true }
   end
 
-  describe 'Trial License' do
+  describe 'Read License' do
     subject { license }
 
-    let(:license) { create(:trial_license) }
+    let(:license) { create(:read_license) }
 
     it { expect { subject }.not_to raise_exception }
-    it { expect(subject).to be_an_instance_of(Greensub::TrialLicense) }
-    it { expect(subject.label).to eq 'Trial' }
+    it { expect(subject).to be_an_instance_of(Greensub::ReadLicense) }
+    it { expect(subject.label).to eq 'Read' }
     it { expect(subject.entitlements).to contain_exactly(:reader) }
     it { expect(subject.allows?(:download)).to be false }
     it { expect(subject.allows?(:reader)).to be true }
@@ -41,7 +41,14 @@ RSpec.describe Greensub::License, type: :model do
   describe 'License' do
     subject { license }
 
-    let(:license) { create(:full_license) }
+    let(:license) { create(:license) }
+
+    it { expect { subject }.not_to raise_exception }
+    it { expect(subject).to be_an_instance_of(Greensub::License) }
+    it { expect(subject.label).to eq '' }
+    it { expect(subject.entitlements).to be_empty }
+    it { expect(subject.allows?(:download)).to be false }
+    it { expect(subject.allows?(:reader)).to be false }
 
     it { expect(subject.allows?(:action)).to be false }
     it { expect(subject.update?).to be true }
@@ -61,13 +68,13 @@ RSpec.describe Greensub::License, type: :model do
 
     it 'updates' do
       id = license.id
-      expect(license).to be_an_instance_of(Greensub::FullLicense)
-      expect(license.type).to eq "Greensub::FullLicense"
-      license.type = "Greensub::TrialLicense"
+      expect(license).to be_an_instance_of(Greensub::License)
+      expect(license.type).to eq "Greensub::License"
+      license.type = "Greensub::ReadLicense"
       license.save
       license = Greensub::License.find(id)
-      expect(license).to be_an_instance_of(Greensub::TrialLicense)
-      expect(license.type).to eq "Greensub::TrialLicense"
+      expect(license).to be_an_instance_of(Greensub::ReadLicense)
+      expect(license.type).to eq "Greensub::ReadLicense"
       license.type = "Greensub::FullLicense"
       license.save
       license = Greensub::License.find(id)

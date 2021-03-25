@@ -87,6 +87,10 @@ RSpec.describe PressPresenter do
         end
       end
 
+      describe '#press_subdomain' do
+        it { expect(subject.press_subdomain).to eq press.subdomain }
+      end
+
       describe "#press_subdomains" do
         it "returns the press's subdomains in the right order, child then parent" do
           expect(subject.press_subdomains).to eq [press.subdomain, parent_press.subdomain]
