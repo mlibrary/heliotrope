@@ -4,6 +4,12 @@ class EbookIntervalDownloadOperation < EbookOperation
   def allowed?
     return false unless ebook.publisher.interval?
 
+    # The placement of the can? :edit check after the publisher.interval? check
+    # is intentional since a user that can? :edit can download the entire ebook.
+    # It will also be a more consistent user experience since most publishers
+    # don't allow interval downloads.
+    return true if can? :edit
+
     # Interval download is NOT restricted by ebook.allow_download?
     # This is counterintuitive but if you think of the restriction
     # as pertaining to the entire ebook it is a bit easier to swallow
@@ -17,7 +23,6 @@ class EbookIntervalDownloadOperation < EbookOperation
     # would have their own interval.allow_download? or perhaps not. Which
     # only opens a can of worms since this is an ebook policy.  Anyway,
     # until things change you're just going to have to deal with it.
-    #
     return false unless accessible_online?
 
     unrestricted? || licensed_for?(:download)
