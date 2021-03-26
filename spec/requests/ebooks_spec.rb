@@ -6,20 +6,17 @@ RSpec.describe "PDF EBooks", type: :request do
   describe "GET /ebooks/:id/download" do
     subject { get download_ebook_path(noid) }
 
-    let(:actor) { instance_double(Anonymous) }
     let(:noid) { 'validnoid' }
-    let(:entity) { instance_double(Sighrax::Entity, noid: noid, data: {}, valid?: true, title: 'title') }
-    let(:policy) { instance_double(EntityPolicy, download?: download) }
-    let(:download) { false }
-    let(:press) { instance_double(Press, name: 'name') }
-    let(:press_policy) { instance_double(PressPolicy, watermark_download?: watermark_download) }
-    let(:watermark_download) { false }
+    let(:ebook) { instance_double(Sighrax::Ebook, 'ebook', noid: noid, data: {}, valid?: true, title: 'title', watermarkable?: watermarkable, publisher: publisher) }
+    let(:watermarkable) { false }
+    let(:publisher) { instance_double(Sighrax::Publisher, 'publihser', watermark?: watermark) }
+    let(:watermark) { false }
+    let(:ebook_download_op) { instance_double(EbookDownloadOperation, 'ebook_download_op', allowed?: allowed) }
+    let(:allowed) { false }
 
     before do
-      allow(Sighrax).to receive(:from_noid).with(noid).and_return(entity)
-      allow(Sighrax).to receive(:press).with(entity).and_return(press)
-      allow(EntityPolicy).to receive(:new).with(anything, entity).and_return(policy)
-      allow(PressPolicy).to receive(:new).with(anything, press).and_return(press_policy)
+      allow(Sighrax).to receive(:from_noid).with(noid).and_return(ebook)
+      allow(EbookDownloadOperation).to receive(:new).with(anything, ebook).and_return ebook_download_op
     end
 
     it do
@@ -28,8 +25,8 @@ RSpec.describe "PDF EBooks", type: :request do
       expect(response).to render_template('hyrax/base/unauthorized')
     end
 
-    context 'download?' do
-      let(:download) { true }
+    context 'allowed?' do
+      let(:allowed) { true }
 
       it do
         expect { subject }.not_to raise_error
@@ -38,7 +35,7 @@ RSpec.describe "PDF EBooks", type: :request do
       end
 
       context 'watermarkable?' do
-        before { allow(Sighrax).to receive(:watermarkable?).with(entity).and_return(true) }
+        let(:watermarkable) { true }
 
         it do
           expect { subject }.not_to raise_error
@@ -46,11 +43,11 @@ RSpec.describe "PDF EBooks", type: :request do
           expect(response).to redirect_to(hyrax.download_path(noid))
         end
 
-        describe 'watermark_download?' do
-          let(:watermark_download) { true }
-          let(:entity) do
+        describe 'watermark' do
+          let(:watermark) { true }
+          let(:ebook) do
             instance_double(
-              Sighrax::Resource,
+              Sighrax::Ebook, 'ebook',
               noid: noid,
               data: {},
               valid?: true,
@@ -58,16 +55,18 @@ RSpec.describe "PDF EBooks", type: :request do
               title: 'title',
               resource_token: 'resource_token',
               media_type: 'application/pdf',
-              filename: 'clippath.pdf'
+              filename: 'clippath.pdf',
+              watermarkable?: watermarkable,
+              publisher: publisher
             )
           end
-          let(:parent) { instance_double(Sighrax::Entity, title: 'title') }
-          let(:entity_presenter) { double("entity_presenter") }
+          let(:parent) { instance_double(Sighrax::Ebook, title: 'title') }
+          let(:ebook_presenter) { double("ebook_presenter") }
           let(:counter_service) { double("counter_service") }
 
           before do
-            allow(entity).to receive(:content).and_return(File.read(Rails.root.join(fixture_path, entity.filename)))
-            allow(Sighrax).to receive(:hyrax_presenter).with(entity).and_return(entity_presenter)
+            allow(ebook).to receive(:content).and_return(File.read(Rails.root.join(fixture_path, ebook.filename)))
+            allow(Sighrax).to receive(:hyrax_presenter).with(ebook).and_return(ebook_presenter)
             allow(CounterService).to receive(:from).and_return(counter_service)
             allow(counter_service).to receive(:count).with(request: 1).and_return(true)
           end
@@ -90,10 +89,10 @@ RSpec.describe "PDF EBooks", type: :request do
               expect(response).to have_http_status(:ok)
               expect(response.body).not_to be_empty
               # watermarking will change the file content and PDF 'producer' metadata
-              expect(response.body).not_to eq File.read(Rails.root.join(fixture_path, entity.filename))
+              expect(response.body).not_to eq File.read(Rails.root.join(fixture_path, ebook.filename))
               expect(response.body).to include('Producer (Ruby CombinePDF')
-              expect(response.header['Content-Type']).to eq(entity.media_type)
-              expect(response.header['Content-Disposition']).to eq("attachment; filename=\"#{entity.filename}\"")
+              expect(response.header['Content-Type']).to eq(ebook.media_type)
+              expect(response.header['Content-Disposition']).to eq("attachment; filename=\"#{ebook.filename}\"")
               expect(counter_service).to have_received(:count).with(request: 1)
             end
           end
@@ -112,9 +111,9 @@ RSpec.describe "PDF EBooks", type: :request do
               expect { subject }.not_to raise_error
               expect(response).to have_http_status(:ok)
               expect(response.body).not_to be_empty
-              expect(response.body).not_to eq File.read(Rails.root.join(fixture_path, entity.filename))
-              expect(response.header['Content-Type']).to eq(entity.media_type)
-              expect(response.header['Content-Disposition']).to eq("attachment; filename=\"#{entity.filename}\"")
+              expect(response.body).not_to eq File.read(Rails.root.join(fixture_path, ebook.filename))
+              expect(response.header['Content-Type']).to eq(ebook.media_type)
+              expect(response.header['Content-Disposition']).to eq("attachment; filename=\"#{ebook.filename}\"")
               expect(counter_service).to have_received(:count).with(request: 1)
             end
           end

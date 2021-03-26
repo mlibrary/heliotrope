@@ -440,13 +440,14 @@ RSpec.describe EPubsController, type: :controller do
       let!(:fr) { create(:featured_representative, work_id: monograph.id, file_set_id: file_set.id, kind: 'epub') }
       let(:document) { double('document') }
       let(:rendered) { +"%PDF-1.3\ntrailer<</Root<</Pages<</Kids[<</MediaBox[0 0 3 3]>>]>>>>>>" }
+      let(:ebook_interval_download_op) { instance_double(EbookIntervalDownloadOperation, 'ebook_interval_download_op', allowed?: true) }
 
       before do
         monograph.ordered_members << file_set
         monograph.save!
         file_set.save!
         UnpackJob.perform_now(file_set.id, 'epub')
-        allow_any_instance_of(EPubPolicy).to receive(:show?).and_return(true)
+        allow(EbookIntervalDownloadOperation).to receive(:new).with(anything, Sighrax.from_noid(file_set.id)).and_return ebook_interval_download_op
         allow(Prawn::Document).to receive(:new).and_return(document)
       end
 
