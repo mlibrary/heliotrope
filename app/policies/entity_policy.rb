@@ -42,14 +42,8 @@ class EntityPolicy < ResourcePolicy
     debug_log("restricted? #{value}")
     return true unless value
 
-    if Incognito.developer?(actor)
-      value = EbookDownloadOperation.new(actor, target).allowed?
-      debug_log("allowed? #{value}")
-      value
-    else
-      value = Sighrax.access?(actor, target.parent)
-      debug_log("access? #{value}")
-      value
-    end
+    value = EbookDownloadOperation.new(actor, target).allowed?
+    debug_log("allowed? #{value}")
+    value
   end
 end

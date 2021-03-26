@@ -88,7 +88,7 @@ class MonographCatalogController < ::CatalogController
       @ebook_download_presenter = EBookDownloadPresenter.new(@presenter, current_ability, current_actor)
       # For Access Icons HELIO-3346
       @actor_product_ids = Sighrax.actor_products(current_actor).pluck(:id)
-      @allow_read_product_ids = Sighrax.allow_read_products(current_actor).pluck(:id)
+      @allow_read_product_ids = Sighrax.allow_read_products.pluck(:id)
       @disable_read_button = disable_read_button?
     rescue RSolr::Error::ConnectionRefused, RSolr::Error::Http => e
       Rails.logger.error(%Q|[RSOLR ERROR TRY:#{retries}] #{e} #{e.backtrace.join("\n")}|)

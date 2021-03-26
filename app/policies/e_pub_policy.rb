@@ -32,27 +32,7 @@ class EPubPolicy < ResourcePolicy
         debug_log("share #{share}")
         return true if share
 
-        if Incognito.developer?(actor)
-          EbookReaderOperation.new(actor, ebook).allowed?
-        else
-          component = Greensub::Component.find_by(noid: target.noid)
-          debug_log("component products: #{component.products.count}")
-          component.products.each { |product| debug_log("component product: #{product.identifier}") }
-
-          allow_read_products = Sighrax.allow_read_products(actor)
-          debug_log("allow read products: #{allow_read_products.count}")
-          allow_read_products.each { |product| debug_log("allow read product: #{product.identifier}") }
-          value = (allow_read_products & component.products).any?
-          debug_log("allow_read_products_intersect_component_products_any? #{value}")
-          return true if value
-
-          products = Sighrax.actor_products(actor)
-          debug_log("actor products: #{products.count}")
-          products.each { |product| debug_log("actor product: #{product.identifier}") }
-          value = (products & component.products).any?
-          debug_log("actor_products_intersect_component_products_any? #{value}")
-          value
-        end
+        EbookReaderOperation.new(actor, ebook).allowed?
       else
         true
       end
