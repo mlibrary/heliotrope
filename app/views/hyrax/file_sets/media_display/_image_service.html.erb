@@ -1,5 +1,5 @@
 <%# a partial that allows side-stepping hydra-derivatives by using riiif for FileSets %>
-<% if @entity_policy.download? %>
+<% if @resource_download_operation_allowed %>
   <%= link_to hyrax.download_path(file_set), target: "_new", title: file_set.download_button_label do %>
     <%= image_tag '/image-service/' + file_set.id + file_set.browser_cache_breaker + '/full/350,/0/default.png',
                   class: "img-responsive asset-page-image",

@@ -20,10 +20,6 @@ RSpec.describe EBookDownloadPresenter do
     create(:featured_representative, file_set_id: '333333333', work_id: 'mono_id', kind: 'pdf_ebook')
     ActiveFedora::SolrService.add([epub_doc.to_h, mobi_doc.to_h, pdfe_doc.to_h])
     ActiveFedora::SolrService.commit
-    # nothing in this spec tests Checkpointy stuff and to show the "allow_download_ssim" checks haven't prevented...
-    # even reaching Checkpointy checks in EntityPolicy we need to make sure EntityPolicy.download? doesn't return...
-    # false at the end due to lack of Product access
-    allow(Sighrax).to receive(:access?).with(current_actor, anything).and_return(true)
   end
 
   context "formats" do

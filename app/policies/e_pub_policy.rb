@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class EPubPolicy < ResourcePolicy
+class EPubPolicy < ApplicationPolicy
   def initialize(actor, target, share = false)
     @ebook = target
     target = target.parent
