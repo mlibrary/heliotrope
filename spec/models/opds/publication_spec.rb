@@ -12,9 +12,9 @@ RSpec.describe Opds::Publication, type: [:model, :json_schema] do
     it { is_expected.to be false }
 
     context 'valid' do
-      let(:cover) { instance_double(Sighrax::Asset, 'cover') }
-      let(:epub) { instance_double(Sighrax::ElectronicPublication, 'epub') }
-      let(:pdf) { instance_double(Sighrax::PortableDocumentFormat, 'pdf') }
+      let(:cover) { instance_double(Sighrax::Resource, 'cover') }
+      let(:epub) { instance_double(Sighrax::EpubEbook, 'epub') }
+      let(:pdf) { instance_double(Sighrax::PdfEbook, 'pdf') }
 
       before do
         allow(monograph).to receive(:is_a?).with(Sighrax::Monograph).and_return(true)
@@ -38,9 +38,9 @@ RSpec.describe Opds::Publication, type: [:model, :json_schema] do
     it { expect { subject }.to raise_error(StandardError, 'Invalid OPDS Publication') }
 
     context 'valid' do
-      let(:cover) { instance_double(Sighrax::Asset, 'cover', noid: 'covernoid') }
-      let(:epub) { instance_double(Sighrax::ElectronicPublication, 'epub', noid: 'epub_noid') }
-      let(:pdf) { instance_double(Sighrax::PortableDocumentFormat, 'pdf', noid: 'epdf_noid') }
+      let(:cover) { instance_double(Sighrax::Resource, 'cover', noid: 'covernoid') }
+      let(:epub) { instance_double(Sighrax::EpubEbook, 'epub', noid: 'epub_noid') }
+      let(:pdf) { instance_double(Sighrax::PdfEbook, 'pdf', noid: 'epdf_noid') }
       let(:time_now) { Time.new(2021) }
 
       before do

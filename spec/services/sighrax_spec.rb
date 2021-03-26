@@ -100,7 +100,7 @@ RSpec.describe Sighrax do
           it { is_expected.to be_an_instance_of(Sighrax::Score) }
         end
 
-        context 'Asset' do
+        context 'Resource' do
           let(:document) { ::SolrDocument.new(id: 'validnoid', has_model_ssim: [model_type], resource_type_tesim: [resource_type]) }
           let(:model_type) { 'FileSet' }
           let(:resource_type) { }
@@ -108,12 +108,12 @@ RSpec.describe Sighrax do
 
           before { allow(FeaturedRepresentative).to receive(:find_by).with(file_set_id: document['id']).and_return(featured_representatitve) }
 
-          it { is_expected.to be_an_instance_of(Sighrax::Asset) }
+          it { is_expected.to be_an_instance_of(Sighrax::Resource) }
 
           context 'ResourceTypes' do
             let(:resource_type) { 'unknown' }
 
-            it { is_expected.to be_an_instance_of(Sighrax::Asset) }
+            it { is_expected.to be_an_instance_of(Sighrax::Resource) }
 
             context 'interactive map' do
               let(:resource_type) { 'interactive map' }
@@ -124,7 +124,7 @@ RSpec.describe Sighrax do
                 let(:featured_representatitve) { double('featured_representatitve', kind: kind) }
                 let(:kind) { 'unknown' }
 
-                it { is_expected.to be_an_instance_of(Sighrax::Asset) }
+                it { is_expected.to be_an_instance_of(Sighrax::Resource) }
               end
             end
           end
@@ -133,24 +133,24 @@ RSpec.describe Sighrax do
             let(:featured_representatitve) { double('featured_representatitve', kind: kind) }
             let(:kind) { 'unknown' }
 
-            it { is_expected.to be_an_instance_of(Sighrax::Asset) }
+            it { is_expected.to be_an_instance_of(Sighrax::Resource) }
 
-            context 'ElectronicPublication' do
+            context 'EpubEbook' do
               let(:kind) { 'epub' }
 
-              it { is_expected.to be_an_instance_of(Sighrax::ElectronicPublication) }
+              it { is_expected.to be_an_instance_of(Sighrax::EpubEbook) }
             end
 
-            context 'Mobipocket' do
+            context 'MobiEbook' do
               let(:kind) { 'mobi' }
 
-              it { is_expected.to be_an_instance_of(Sighrax::Mobipocket) }
+              it { is_expected.to be_an_instance_of(Sighrax::MobiEbook) }
             end
 
-            context 'PortableDocumentFormat' do
+            context 'PdfEbook' do
               let(:kind) { 'pdf_ebook' }
 
-              it { is_expected.to be_an_instance_of(Sighrax::PortableDocumentFormat) }
+              it { is_expected.to be_an_instance_of(Sighrax::PdfEbook) }
             end
           end
         end
@@ -237,7 +237,7 @@ RSpec.describe Sighrax do
       it { is_expected.to be_an_instance_of(Hyrax::ScorePresenter) }
     end
 
-    context 'Asset' do
+    context 'Resource' do
       let(:noid) { file_set.id }
       let(:file_set) { create(:public_file_set) }
 
@@ -465,7 +465,7 @@ RSpec.describe Sighrax do
       end
 
       context 'asset' do
-        let(:entity) { Sighrax::Asset.send(:new, noid, data) }
+        let(:entity) { Sighrax::Resource.send(:new, noid, data) }
 
         it { is_expected.to eq "http://test.host/concern/file_sets/validnoid" }
       end
@@ -482,8 +482,8 @@ RSpec.describe Sighrax do
 
       it { is_expected.to be false }
 
-      context 'Asset' do
-        let(:entity) { Sighrax::Asset.send(:new, noid, data) }
+      context 'Resource' do
+        let(:entity) { Sighrax::Resource.send(:new, noid, data) }
         let(:data) { ::SolrDocument.new(id: noid, 'allow_download_ssim' => ['yes']) }
 
         it { is_expected.to be true }
@@ -526,8 +526,8 @@ RSpec.describe Sighrax do
 
       it { is_expected.to be false }
 
-      context 'Asset' do
-        let(:entity) { Sighrax::Asset.send(:new, noid, data) }
+      context 'Resource' do
+        let(:entity) { Sighrax::Resource.send(:new, noid, data) }
         let(:data) { ::SolrDocument.new(id: noid) }
 
         it { is_expected.to be true }
@@ -662,13 +662,13 @@ RSpec.describe Sighrax do
 
       it { is_expected.to be false }
 
-      context 'Asset' do
-        let(:entity) { Sighrax::Asset.send(:new, noid, data) }
+      context 'Resource' do
+        let(:entity) { Sighrax::Resource.send(:new, noid, data) }
 
         it { is_expected.to be false }
 
         context 'Portable Document Format' do
-          let(:entity) { Sighrax::PortableDocumentFormat.send(:new, noid, data) }
+          let(:entity) { Sighrax::PdfEbook.send(:new, noid, data) }
 
           it { is_expected.to be true }
         end

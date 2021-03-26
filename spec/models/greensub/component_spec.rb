@@ -138,7 +138,7 @@ RSpec.describe Greensub::Component, type: :model do
       end
 
       context '#file_set?' do
-        before { allow(Sighrax).to receive(:from_noid).with(noid.to_s).and_return(Sighrax::Asset.send(:new, noid, {})) }
+        before { allow(Sighrax).to receive(:from_noid).with(noid.to_s).and_return(Sighrax::Resource.send(:new, noid, {})) }
 
         it do
           expect(subject.noid).to eq noid.to_s

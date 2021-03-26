@@ -16,11 +16,9 @@ RSpec.describe Sighrax::Resource, type: :model do
     end
 
     it 'has expected values' do
-      is_expected.not_to be_an_instance_of described_class
-      is_expected.to be_an_instance_of Sighrax::Asset # Deprecated
+      is_expected.to be_an_instance_of described_class
       is_expected.to be_a_kind_of Sighrax::Model
-      expect(subject.resource_type).not_to eq :Resource
-      expect(subject.resource_type).to eq :Asset # Deprecated
+      expect(subject.resource_type).to eq :Resource
 
       expect(subject.allow_download?).to be false
       expect(subject.content).to eq 'present'

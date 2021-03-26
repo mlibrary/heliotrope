@@ -92,16 +92,16 @@ RSpec.describe EntityPolicy do
 
                 it { is_expected.to be false }
 
-                context 'instance of asset' do
+                context 'instance of resource' do
                   let(:published) { true }
-                  let(:instance_of_asset) { true }
+                  let(:instance_of_resource) { true }
 
-                  before { allow(target).to receive(:instance_of?).with(Sighrax::Asset).and_return(instance_of_asset) }
+                  before { allow(target).to receive(:instance_of?).with(Sighrax::Resource).and_return(instance_of_resource) }
 
                   it { is_expected.to be true }
 
                   context 'open access' do
-                    let(:instance_of_asset) { false }
+                    let(:instance_of_resource) { false }
                     let(:open_access) { true }
 
                     before { allow(Sighrax).to receive(:open_access?).with(parent).and_return(open_access) }

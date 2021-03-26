@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Sighrax
-  class Ebook < Asset
+  class Ebook < Resource
     private_class_method :new
 
     delegate :open_access?, :products, :publisher, :restricted?, :tombstone?, to: :monograph

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Sighrax
-  class PdfEbook < ElectronicBook
+  class PdfEbook < Ebook
     private_class_method :new
 
     def watermarkable?

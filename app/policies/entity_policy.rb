@@ -30,8 +30,8 @@ class EntityPolicy < ResourcePolicy
     debug_log("published? #{value}")
     return false unless value
 
-    value = target.instance_of?(Sighrax::Asset)
-    debug_log("instance_of?(Sighrax::Asset) #{value}")
+    value = target.instance_of?(Sighrax::Resource)
+    debug_log("instance_of?(Sighrax::Resource) #{value}")
     return true if value
 
     value = Sighrax.open_access?(target.parent)

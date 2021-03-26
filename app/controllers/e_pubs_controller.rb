@@ -24,7 +24,7 @@ class EPubsController < CheckpointController
                  end
     @ebook_download_presenter = EBookDownloadPresenter.new(@parent_presenter, current_ability, current_actor)
 
-    @search_url = main_app.epub_search_url(@noid, q: '').gsub!(/locale=en&/, '') if @entity.is_a?(Sighrax::ElectronicPublication)
+    @search_url = main_app.epub_search_url(@noid, q: '').gsub!(/locale=en&/, '') if @entity.is_a?(Sighrax::EpubEbook)
 
     @press = Press.where(subdomain: @subdomain).first
     @component = component
@@ -33,9 +33,9 @@ class EPubsController < CheckpointController
 
     log_share_link_use
 
-    if @entity.is_a?(Sighrax::ElectronicPublication)
+    if @entity.is_a?(Sighrax::EpubEbook)
       render layout: false
-    elsif @entity.is_a?(Sighrax::PortableDocumentFormat)
+    elsif @entity.is_a?(Sighrax::PdfEbook)
       render 'e_pubs/show_pdf', layout: false
     else
       return head :not_found
@@ -45,7 +45,7 @@ class EPubsController < CheckpointController
   def file # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
     return head :no_content unless @policy.show?
 
-    if @entity.is_a?(Sighrax::ElectronicPublication)
+    if @entity.is_a?(Sighrax::EpubEbook)
       epub = EPub::Publication.from_directory(UnpackService.root_path_from_noid(@noid, 'epub'))
       filename = params[:file] + '.' + params[:format]
 
@@ -54,7 +54,7 @@ class EPubsController < CheckpointController
       response.headers['X-Sendfile'] = file
 
       send_file file
-    elsif @entity.is_a?(Sighrax::PortableDocumentFormat)
+    elsif @entity.is_a?(Sighrax::PdfEbook)
       pdf = UnpackService.root_path_from_noid(@noid, 'pdf_ebook') + ".pdf"
       if File.exist? pdf
         response.headers['Accept-Ranges'] = 'bytes'
@@ -136,7 +136,7 @@ class EPubsController < CheckpointController
     chapter_title = params[:title]
     chapter_index = params[:chapter_index]
 
-    if @entity.is_a?(Sighrax::ElectronicPublication)
+    if @entity.is_a?(Sighrax::EpubEbook)
       publication = EPub::Publication.from_directory(UnpackService.root_path_from_noid(@noid, 'epub'))
       cfi = params[:cfi]
       interval = EPub::Interval.from_rendition_cfi_title(publication.rendition, cfi, chapter_title)
@@ -152,7 +152,7 @@ class EPubsController < CheckpointController
 
       CounterService.from(self, @presenter).count(request: 1, section_type: "Chapter", section: interval.title) if rendered_pdf.present?
       send_data watermark_pdf(@entity, interval.title, 6, rendered_pdf, chapter_index), type: "application/pdf", disposition: "inline"
-    elsif @entity.is_a?(Sighrax::PortableDocumentFormat)
+    elsif @entity.is_a?(Sighrax::PdfEbook)
       chapter_dir = UnpackService.root_path_from_noid(@noid, 'pdf_ebook_chapters')
       chapter_file_name = chapter_index + '.pdf'
       chapter_download_name = chapter_index + '_' + chapter_title.gsub(/[^0-9A-Za-z\-]/, ' ').squish.gsub(' ', '_') + '.pdf'
@@ -200,7 +200,7 @@ class EPubsController < CheckpointController
       @presenter = Hyrax::PresenterFactory.build_for(ids: [@noid], presenter_class: Hyrax::FileSetPresenter, presenter_args: nil).first
       @entity = Sighrax.from_presenter(@presenter)
       @parent_noid = @entity.parent.noid
-      raise(NotAuthorizedError, "Non Electronic Publication") unless @entity.is_a?(Sighrax::ElectronicPublication) || @entity.is_a?(Sighrax::PortableDocumentFormat)
+      raise(NotAuthorizedError, "Non Electronic Publication") unless @entity.is_a?(Sighrax::EpubEbook) || @entity.is_a?(Sighrax::PdfEbook)
       @share_link = params[:share] || session[:share_link]
       session[:share_link] = @share_link
       @policy = EPubPolicy.new(current_actor, @entity, valid_share_link?)

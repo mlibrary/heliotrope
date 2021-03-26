@@ -11,7 +11,6 @@ RSpec.describe Sighrax::Ebook, type: :model do
   it 'has expected values' do
     is_expected.to be_an_instance_of described_class
     is_expected.to be_a_kind_of Sighrax::Resource
-    is_expected.to be_a_kind_of Sighrax::Asset # Deprecated
     expect(subject.resource_type).to eq :Ebook
   end
 
