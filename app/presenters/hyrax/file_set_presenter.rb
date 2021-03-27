@@ -89,7 +89,7 @@ module Hyrax
     end
 
     def tombstone?
-      Sighrax.tombstone?(Sighrax.from_noid(id))
+      Sighrax.from_presenter(self).tombstone?
     end
 
     def allow_high_res_display?

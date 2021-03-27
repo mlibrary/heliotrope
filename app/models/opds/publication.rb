@@ -26,8 +26,8 @@ module Opds
 
     def valid? # rubocop:disable Metrics/CyclomaticComplexity
       return false unless @monograph.is_a?(::Sighrax::Monograph)
-      return false unless ::Sighrax.published?(@monograph)
-      return false unless ::Sighrax.open_access?(@monograph)
+      return false unless @monograph.published?
+      return false unless @monograph.open_access?
       return false unless @monograph.cover_representative.valid?
       return false unless @monograph.epub_featured_representative.valid? || @monograph.pdf_ebook_featured_representative.valid?
       true

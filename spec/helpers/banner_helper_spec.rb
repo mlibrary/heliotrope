@@ -38,16 +38,16 @@ describe BannerHelper do
       end
 
       context 'monograph catalog' do
-        let(:monograph) { double('monograph', valid?: true) }
+        let(:monograph) { instance_double(Sighrax::Monograph, 'monograph', valid?: true, open_access?: open_access) }
         let(:open_access) { false }
         let(:product_include) { true }
+        let(:@presenter) { instance_double(Hyrax::MonographPresenter, 'presenter') }
 
         before do
           allow(controller).to receive(:is_a?).with(PressCatalogController).and_return(false)
           allow(controller).to receive(:is_a?).with(MonographCatalogController).and_return(true)
           allow(Greensub).to receive(:product_include?).with(product: product, entity: monograph).and_return(product_include)
-          allow(Sighrax).to receive(:from_noid).and_return(monograph)
-          allow(Sighrax).to receive(:open_access?).with(monograph).and_return(open_access)
+          allow(Sighrax).to receive(:from_presenter).with(@presenter).and_return(monograph)
         end
 
         it { is_expected.to be true }

@@ -15,14 +15,14 @@ class EPubPolicy < ResourcePolicy
     debug_log("platform_admin? #{value}")
     return true if value
 
-    value = Sighrax.published?(target)
+    value = target.published?
     debug_log("published? #{value}")
     if value
-      value = Sighrax.open_access?(target)
+      value = target.open_access?
       debug_log("open_access? #{value}")
       return true if value
 
-      value = Sighrax.restricted?(target)
+      value = target.restricted?
       debug_log("restricted? #{value}")
       if value
         value = Sighrax.ability_can?(actor, :edit, target) && Incognito.allow_ability_can?(actor)
