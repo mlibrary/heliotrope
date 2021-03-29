@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class MonographPolicy < ResourcePolicy
+class MonographPolicy < ApplicationPolicy
   def initialize(actor, target)
     super(actor, target)
   end

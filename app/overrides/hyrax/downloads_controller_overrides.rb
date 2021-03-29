@@ -74,7 +74,7 @@ Hyrax::DownloadsController.class_eval do
     end
 
     def allow_download?
-      EntityPolicy.new(current_actor, Sighrax.from_noid(params[:id])).download?
+      ResourceDownloadOperation.new(current_actor, Sighrax.from_noid(params[:id])).allowed?
     end
 
     def thumbnail?

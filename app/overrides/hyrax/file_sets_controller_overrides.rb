@@ -18,7 +18,7 @@ Hyrax::FileSetsController.class_eval do
       stats_graph_service = StatsGraphService.new(params[:id], presenter.date_uploaded)
       @stats_graph_data = stats_graph_service.pageviews_over_time_graph_data
       @pageviews = stats_graph_service.pageviews
-      @entity_policy ||= EntityPolicy.new(current_actor, Sighrax.from_noid(params[:id]))
+      @resource_download_operation_allowed ||= ResourceDownloadOperation.new(current_actor, Sighrax.from_noid(params[:id])).allowed?
 
       respond_to do |wants|
         wants.html { presenter }
@@ -28,10 +28,10 @@ Hyrax::FileSetsController.class_eval do
     end
 
     def edit
-      # @entity_policy needed in edit() as well as show() because of the "mini show view" included on the edit form.
+      # @resource_download_operation_allowed needed in edit() as well as show() because of the "mini show view" included on the edit form.
       # At least that is my assumption. With the Module prepend override stuff it's too egregious to create an...
       # initialize/setup method on the overriden class. So just duplicate.
-      @entity_policy ||= EntityPolicy.new(current_actor, Sighrax.from_noid(params[:id]))
+      @resource_download_operation_allowed ||= ResourceDownloadOperation.new(current_actor, Sighrax.from_noid(params[:id])).allowed?
       initialize_edit_form
     end
 
