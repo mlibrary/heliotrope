@@ -10,16 +10,23 @@ module Sighrax
       vector('creator_tesim') + vector('contributor_tesim')
     end
 
-    def cover_representative
-      @cover_representative ||= Sighrax.from_noid(scalar('representative_id_ssim'))
+    def cover
+      @cover ||= Sighrax.from_noid(scalar('representative_id_ssim'))
     end
 
     def description
       scalar('description_tesim') || ''
     end
 
-    def epub_featured_representative
-      @epub_featured_representative ||= Sighrax.from_noid(FeaturedRepresentative.find_by(work_id: noid, kind: 'epub')&.file_set_id)
+    def ebook
+      return @ebook if @ebook.present?
+      @ebook = epub_ebook
+      @ebook = pdf_ebook if @ebook.is_a?(Sighrax::NullEntity)
+      @ebook
+    end
+
+    def epub_ebook
+      @epub_ebook ||= Sighrax.from_noid(FeaturedRepresentative.find_by(work_id: noid, kind: 'epub')&.file_set_id)
     end
 
     def identifier
@@ -49,8 +56,8 @@ module Sighrax
       /^yes$/i.match?(scalar('open_access_tesim'))
     end
 
-    def pdf_ebook_featured_representative
-      @pdf_ebook_featured_representative ||= Sighrax.from_noid(FeaturedRepresentative.find_by(work_id: noid, kind: 'pdf_ebook')&.file_set_id)
+    def pdf_ebook
+      @pdf_ebook ||= Sighrax.from_noid(FeaturedRepresentative.find_by(work_id: noid, kind: 'pdf_ebook')&.file_set_id)
     end
 
     def products

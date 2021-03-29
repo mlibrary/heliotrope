@@ -28,8 +28,8 @@ module Opds
       return false unless @monograph.is_a?(::Sighrax::Monograph)
       return false unless @monograph.published?
       return false unless @monograph.open_access?
-      return false unless @monograph.cover_representative.valid?
-      return false unless @monograph.epub_featured_representative.valid? || @monograph.pdf_ebook_featured_representative.valid?
+      return false unless @monograph.cover.valid?
+      return false unless @monograph.epub_ebook.valid? || @monograph.pdf_ebook.valid?
       true
     end
 
@@ -79,15 +79,15 @@ module Opds
 
       rvalue[:metadata].delete_if { |k, v| v.blank? }
 
-      if @monograph.epub_featured_representative.valid?
-        rvalue[:links].append({ rel: 'self', href: download_ebook_url(@monograph.epub_featured_representative), type: 'application/epub+zip' })
-        rvalue[:links].append({ rel: 'http://opds-spec.org/acquisition/open-access', href: download_ebook_url(@monograph.epub_featured_representative), type: 'application/epub+zip' })
-        if @monograph.pdf_ebook_featured_representative.valid?
-          rvalue[:links].append({ rel: 'http://opds-spec.org/acquisition/open-access', href: download_ebook_url(@monograph.pdf_ebook_featured_representative), type: 'application/pdf' })
+      if @monograph.epub_ebook.valid?
+        rvalue[:links].append({ rel: 'self', href: download_ebook_url(@monograph.epub_ebook), type: 'application/epub+zip' })
+        rvalue[:links].append({ rel: 'http://opds-spec.org/acquisition/open-access', href: download_ebook_url(@monograph.epub_ebook), type: 'application/epub+zip' })
+        if @monograph.pdf_ebook.valid?
+          rvalue[:links].append({ rel: 'http://opds-spec.org/acquisition/open-access', href: download_ebook_url(@monograph.pdf_ebook), type: 'application/pdf' })
         end
-      elsif @monograph.pdf_ebook_featured_representative.valid?
-        rvalue[:links].append({ rel: 'self', href: download_ebook_url(@monograph.pdf_ebook_featured_representative), type: 'application/pdf' })
-        rvalue[:links].append({ rel: 'http://opds-spec.org/acquisition/open-access', href: download_ebook_url(@monograph.pdf_ebook_featured_representative), type: 'application/pdf' })
+      elsif @monograph.pdf_ebook.valid?
+        rvalue[:links].append({ rel: 'self', href: download_ebook_url(@monograph.pdf_ebook), type: 'application/pdf' })
+        rvalue[:links].append({ rel: 'http://opds-spec.org/acquisition/open-access', href: download_ebook_url(@monograph.pdf_ebook), type: 'application/pdf' })
       end
 
       rvalue[:images].append({ href: monograph_image_url(@monograph), type: "image/jpeg" })
@@ -251,7 +251,7 @@ module Opds
 
       def monograph_image_url(monograph, width_size = 'full')
         width_size_string = width_size == 'full' ? 'full' : "#{width_size},"
-        Riiif::Engine.routes.url_helpers.image_url(monograph.cover_representative.noid, host: Rails.application.routes.url_helpers.root_url, size: width_size_string, format: 'jpg')
+        Riiif::Engine.routes.url_helpers.image_url(monograph.cover.noid, host: Rails.application.routes.url_helpers.root_url, size: width_size_string, format: 'jpg')
       end
 
       def initialize(monograph)
