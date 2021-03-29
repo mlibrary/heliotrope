@@ -23,10 +23,10 @@ rvm:
   - 2.5.8
 # this temporarily disables travis without "turning it off"
 # via github/travis permanently. For details HELIO-3650.
-# matrix:
-#  exlude:
-#    rvm: '2.5.8'
-# end disable
+matrix:
+ exlude:
+   rvm: '2.5.8'
+# end disable #
 jdk:
   - openjdk8
 addons:

@@ -945,6 +945,7 @@ GEM
       json (>= 1.8, < 3)
       simplecov-html (~> 0.10.0)
     simplecov-html (0.10.2)
+    simplecov-lcov (0.8.0)
     sinatra (2.0.3)
       mustermann (~> 1.0)
       rack (~> 2.0)
@@ -1149,6 +1150,8 @@ DEPENDENCIES
   selenium-webdriver (~> 3.141.0)
   signet
   simple_solr_client
+  simplecov
+  simplecov-lcov
   sinatra (~> 2.0.2)
   sitemap_generator (~> 6.0.1)
   skylight (~> 5.0.0.beta4)

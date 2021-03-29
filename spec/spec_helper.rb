@@ -24,12 +24,26 @@ end
 
 if coverage_needed?
   require 'coveralls'
+  require 'simplecov'
+  require 'simplecov-lcov'
+
   Coveralls.wear! do
     add_filter 'config'
     add_filter 'lib/spec'
     add_filter 'spec'
     add_filter 'lib/tasks'
   end
+
+  SimpleCov::Formatter::LcovFormatter.config do |config|
+    config.report_with_single_file = true
+    config.lcov_file_name = './coverage/lcov.info'
+  end
+
+  SimpleCov.formatter = SimpleCov::Formatter::MultiFormatter.new([
+    SimpleCov::Formatter::LcovFormatter,
+    Coveralls::SimpleCov::Formatter
+  ])
+  SimpleCov.start('rails')
 end
 
 require 'active_fedora/cleaner'

@@ -2,6 +2,8 @@
 # which in turn was borrowed from https://github.com/samvera-labs/samvera-circleci-orb
 version: 2.1
 
+orbs:
+  coveralls: coveralls/coveralls@1.0.6
 commands:
   bundle_for_gem:
     description: Bundles and caches a gem.
@@ -222,6 +224,13 @@ jobs:
       # the "app" specs do benifit from being run in parallel though.
       - parallel_rspec
 
+  done:
+    docker:
+      - image: 'circleci/node:10.0.0'
+    steps:
+      - coveralls/upload:
+          parallel_finished: true
+
 executors:
   ruby:
     description: Box just Ruby
@@ -304,3 +313,8 @@ workflows:
           ruby_version: '2.5.8'
           requires:
             - build
+      - done:
+          name: "coveralls"
+          requires:
+            - rails5-2
+
