@@ -29,7 +29,7 @@ module Sighrax # rubocop:disable Metrics/ModuleLength
     end
 
     def from_presenter(presenter)
-      from_solr_document(presenter.solr_document)
+      from_solr_document(presenter&.solr_document)
     end
 
     def from_solr_document(document)
@@ -127,89 +127,6 @@ module Sighrax # rubocop:disable Metrics/ModuleLength
       else
         nil
       end
-    end
-
-    # Only makes sense for Resources
-    def allow_download?(entity)
-      # return false unless entity.valid?
-      # return false unless downloadable?(entity)
-      # /^yes$/i.match?(Array(solr_document(entity)['allow_download_ssim']).first)
-      return false unless entity.is_a?(Sighrax::Resource)
-
-      entity.allow_download?
-    end
-
-    # Sipity workflow final state is deposited
-    # return true for non Model entities
-    # Only makes sense for Model
-    def deposited?(entity)
-      # return false unless entity.valid?
-      # return true if Array(solr_document(entity)['suppressed_bsi']).empty?
-      # Array(solr_document(entity)['suppressed_bsi']).first.blank?
-      return true unless entity.is_a?(Sighrax::Model)
-
-      entity.deposited?
-    end
-
-    # Only makes sense for Resources
-    def downloadable?(entity)
-      # return false unless entity.valid?
-      # return false if Array(solr_document(entity)['external_resource_url_ssim']).first.present?
-      # entity.is_a?(Sighrax::Resource)
-      return false unless entity.is_a?(Sighrax::Resource)
-
-      entity.downloadable?
-    end
-
-    # Only makes sense for Monographs
-    def open_access?(entity)
-      # return false unless entity.valid?
-      # /^yes$/i.match?(Array(solr_document(entity)['open_access_tesim']).first)
-      return false unless entity.is_a?(Sighrax::Monograph)
-
-      entity.open_access?
-    end
-
-    # Hyrax draft or public?
-    # Only makes sense for Models
-    def published?(entity)
-      # return false unless entity.valid?
-      # deposited?(entity) && /open/i.match?(Array(solr_document(entity)['visibility_ssi']).first)
-      return false unless entity.is_a?(Sighrax::Model)
-
-      entity.published?
-    end
-
-    # Ebooks are restricted through their parent Monograph (See policy)
-    # Only makes sense for Monographs
-    def restricted?(entity)
-      # return true unless entity.valid?
-      # Greensub::Component.find_by(noid: entity.noid).present?
-      return false unless entity.is_a?(Sighrax::Monograph)
-
-      entity.restricted?
-    end
-
-    # Currently only Resources can be tombstone
-    # Only makes sense for Models
-    def tombstone?(entity)
-      # return false unless entity.valid?
-      # expiration_date = Array(solr_document(entity)['permissions_expiration_date_ssim']).first
-      # return false if expiration_date.blank?
-      # Date.parse(expiration_date) <= Time.now.utc.to_date
-      return false unless entity.is_a?(Sighrax::Model)
-
-      entity.tombstone?
-    end
-
-    # Only makes sense for Resources
-    def watermarkable?(entity)
-      # return false unless entity.valid?
-      # return false if Array(solr_document(entity)['external_resource_url_ssim']).first.present?
-      # entity.is_a?(Sighrax::PdfEbook)
-      return false unless entity.is_a?(Sighrax::Resource)
-
-      entity.watermarkable?
     end
 
     private

@@ -6,30 +6,60 @@ RSpec.describe Sighrax do
   describe '#from_noid' do
     subject { described_class.from_noid(noid) }
 
-    let(:noid) { 'validnoid' }
+    let(:noid) { }
 
-    it 'null_entity' do
-      is_expected.to be_an_instance_of(Sighrax::NullEntity)
-      expect(subject.noid).to be noid
-      expect(subject.send(:data)).to be_empty
-    end
+    it { is_expected.to eq Sighrax::Entity.null_entity }
 
-    context 'standard error' do
-      before { allow(ActiveFedora::SolrService).to receive(:query).with("{!terms f=id}#{noid}", rows: 1).and_raise(StandardError) }
+    context 'noid' do
+      let(:noid) { 'validnoid' }
 
       it 'null_entity' do
         is_expected.to be_an_instance_of(Sighrax::NullEntity)
         expect(subject.noid).to be noid
         expect(subject.send(:data)).to be_empty
       end
-    end
 
-    context 'solr document' do
+      context 'standard error' do
+        before { allow(ActiveFedora::SolrService).to receive(:query).with("{!terms f=id}#{noid}", rows: 1).and_raise(StandardError) }
+
+        it 'null_entity' do
+          is_expected.to be_an_instance_of(Sighrax::NullEntity)
+          expect(subject.noid).to be noid
+          expect(subject.send(:data)).to be_empty
+        end
+      end
+
+      context 'solr document' do
+        let(:document) { instance_double(SolrDocument, 'document') }
+        let(:entity) { instance_double(Sighrax::Entity, 'entity') }
+
+        before do
+          allow(ActiveFedora::SolrService).to receive(:query).with("{!terms f=id}#{noid}", rows: 1).and_return([document])
+          allow(described_class).to receive(:from_solr_document).with(document).and_return(entity)
+        end
+
+        it 'from_solr_document' do
+          is_expected.to be entity
+          expect(described_class).to have_received(:from_solr_document).with(document)
+        end
+      end
+    end
+  end
+
+  describe '#from_presenter' do
+    subject { described_class.from_presenter(presenter) }
+
+    let(:presenter) { }
+
+    it { is_expected.to eq Sighrax::Entity.null_entity }
+
+    context 'presenter' do
+      let(:presenter) { double('presenter') }
       let(:document) { instance_double(SolrDocument, 'document') }
       let(:entity) { instance_double(Sighrax::Entity, 'entity') }
 
       before do
-        allow(ActiveFedora::SolrService).to receive(:query).with("{!terms f=id}#{noid}", rows: 1).and_return([document])
+        allow(presenter).to receive(:solr_document).and_return(document)
         allow(described_class).to receive(:from_solr_document).with(document).and_return(entity)
       end
 
@@ -40,32 +70,12 @@ RSpec.describe Sighrax do
     end
   end
 
-  describe '#from_presenter' do
-    subject { described_class.from_presenter(presenter) }
-
-    let(:presenter) { double('presenter') }
-    let(:document) { instance_double(SolrDocument, 'document') }
-    let(:entity) { instance_double(Sighrax::Entity, 'entity') }
-
-    before do
-      allow(presenter).to receive(:solr_document).and_return(document)
-      allow(described_class).to receive(:from_solr_document).with(document).and_return(entity)
-    end
-
-    it 'from_solr_document' do
-      is_expected.to be entity
-      expect(described_class).to have_received(:from_solr_document).with(document)
-    end
-  end
-
   describe '#from_solr_document' do
     subject { described_class.from_solr_document(document) }
 
     let(:document) { }
 
-    it { is_expected.to be_an_instance_of(Sighrax::NullEntity) }
-    it { expect(subject.noid).to eq Sighrax::Entity.null_entity.noid }
-    it { expect(subject.send(:data)).to be_empty }
+    it { is_expected.to eq Sighrax::Entity.null_entity }
 
     context 'NullEntity' do
       let(:document) { ::SolrDocument.new(id: 'invalidnoid') }
@@ -474,204 +484,6 @@ RSpec.describe Sighrax do
         let(:entity) { Sighrax::InteractiveMap.send(:new, noid, data) }
 
         it { is_expected.to eq "http://test.host/concern/file_sets/validnoid" }
-      end
-    end
-
-    describe '#allow_download?' do
-      subject { described_class.allow_download?(entity) }
-
-      it { is_expected.to be false }
-
-      context 'Resource' do
-        let(:entity) { Sighrax::Resource.send(:new, noid, data) }
-        let(:data) { ::SolrDocument.new(id: noid, 'allow_download_ssim' => ['yes']) }
-
-        it { is_expected.to be true }
-
-        context 'do not allow download' do
-          let(:data) { ::SolrDocument.new(id: noid, 'allow_download_ssim' => ['anything but yes']) }
-
-          it { is_expected.to be false }
-        end
-      end
-    end
-
-    describe '#deposited?' do
-      subject { described_class.deposited?(entity) }
-
-      it { is_expected.to be true }
-
-      context 'Model' do
-        let(:entity) { Sighrax::Model.send(:new, noid, data) }
-        let(:data) { ::SolrDocument.new(id: noid) }
-
-        it { is_expected.to be true }
-
-        context "'suppressed_bsi' => false" do
-          let(:data) { ::SolrDocument.new(id: noid, 'suppressed_bsi' => false) }
-
-          it { is_expected.to be true }
-        end
-
-        context "'suppressed_bsi' => true" do
-          let(:data) { ::SolrDocument.new(id: noid, 'suppressed_bsi' => true) }
-
-          it { is_expected.to be false }
-        end
-      end
-    end
-
-    describe '#downloadable?' do
-      subject { described_class.downloadable?(entity) }
-
-      it { is_expected.to be false }
-
-      context 'Resource' do
-        let(:entity) { Sighrax::Resource.send(:new, noid, data) }
-        let(:data) { ::SolrDocument.new(id: noid) }
-
-        it { is_expected.to be true }
-
-        context 'external resource url' do
-          let(:data) { ::SolrDocument.new(id: noid, 'external_resource_url_ssim' => url) }
-          let(:url) { 'url' }
-
-          it { is_expected.to be false }
-
-          context 'blank url' do
-            let(:url) { '' }
-
-            it { is_expected.to be true }
-          end
-        end
-      end
-    end
-
-    describe '#open_access?' do
-      subject { described_class.open_access?(entity) }
-
-      it { is_expected.to be false }
-
-      context 'Monograph' do
-        let(:entity) { Sighrax::Monograph.send(:new, noid, data) }
-        let(:data) { ::SolrDocument.new(id: noid) }
-
-        it { is_expected.to be false }
-
-        context "'open_access_tesim' => ''" do
-          let(:data) { ::SolrDocument.new(id: noid, 'open_access_tesim' => ['anything but yes']) }
-
-          it { is_expected.to be false }
-        end
-
-        context "'open_access_tesim' => 'yes'" do
-          let(:data) { ::SolrDocument.new(id: noid, 'open_access_tesim' => ['yes']) }
-
-          it { is_expected.to be true }
-        end
-      end
-    end
-
-    describe '#published?' do
-      subject { described_class.published?(entity) }
-
-      it { is_expected.to be false }
-
-      context 'Models' do
-        let(:entity) { Sighrax::Model.send(:new, noid, data) }
-        let(:data) { ::SolrDocument.new(id: noid) }
-
-        it { is_expected.to be false }
-
-        context "'visibility_ssi' => 'restricted'" do
-          let(:data) { ::SolrDocument.new(id: noid, 'visibility_ssi' => 'restricted') }
-
-          it { is_expected.to be false }
-        end
-
-        context "'visibility_ssi' => 'open'" do
-          let(:data) { ::SolrDocument.new(id: noid, 'visibility_ssi' => 'open') }
-
-          it { is_expected.to be true }
-
-          context "'suppressed_bsi' => true" do
-            let(:data) { ::SolrDocument.new(id: noid, 'visibility_ssi' => 'open', 'suppressed_bsi' => true) }
-
-            it { is_expected.to be false }
-          end
-        end
-      end
-    end
-
-    describe '#restricted?' do
-      subject { described_class.restricted?(entity) }
-
-      it { is_expected.to be false }
-
-      context 'Monograph' do
-        let(:entity) { Sighrax::Monograph.send(:new, noid, data) }
-        let(:data) { ::SolrDocument.new(id: noid) }
-
-        it { is_expected.to be false }
-
-        context 'Component' do
-          let(:component) { double('component') }
-
-          before do
-            allow(Greensub::Component).to receive(:find_by).with(noid: entity.noid).and_return(component)
-          end
-
-          it { is_expected.to be true }
-        end
-      end
-    end
-
-    describe '#tombstone?' do
-      subject { described_class.tombstone?(entity) }
-
-      it { is_expected.to be false }
-
-      context 'Model' do
-        let(:entity) { Sighrax::Model.send(:new, noid, data) }
-        let(:data) { ::SolrDocument.new(id: noid) }
-
-        it { is_expected.to be false }
-
-        context 'yesterday' do
-          let(:data) { ::SolrDocument.new(id: noid, "permissions_expiration_date_ssim" => (Time.now.utc.to_date - 1).to_s) }
-
-          it { is_expected.to be true }
-        end
-
-        context 'today' do
-          let(:data) { ::SolrDocument.new(id: noid,  "permissions_expiration_date_ssim" => Time.now.utc.to_date.to_s) }
-
-          it { is_expected.to be true }
-        end
-
-        context 'tomorrow' do
-          let(:data) { ::SolrDocument.new(id: noid,  "permissions_expiration_date_ssim" => (Time.now.utc.to_date + 1).to_s) }
-
-          it { is_expected.to be false }
-        end
-      end
-    end
-
-    describe '#watermarkable?' do
-      subject { described_class.watermarkable?(entity) }
-
-      it { is_expected.to be false }
-
-      context 'Resource' do
-        let(:entity) { Sighrax::Resource.send(:new, noid, data) }
-
-        it { is_expected.to be false }
-
-        context 'Portable Document Format' do
-          let(:entity) { Sighrax::PdfEbook.send(:new, noid, data) }
-
-          it { is_expected.to be true }
-        end
       end
     end
   end

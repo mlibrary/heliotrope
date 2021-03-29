@@ -18,8 +18,8 @@ RSpec.describe Opds::Publication, type: [:model, :json_schema] do
 
       before do
         allow(monograph).to receive(:is_a?).with(Sighrax::Monograph).and_return(true)
-        allow(Sighrax).to receive(:published?).with(monograph).and_return(true)
-        allow(Sighrax).to receive(:open_access?).with(monograph).and_return(true)
+        allow(monograph).to receive(:published?).and_return(true)
+        allow(monograph).to receive(:open_access?).and_return(true)
         allow(monograph).to receive(:cover_representative).and_return(cover)
         allow(monograph).to receive(:epub_featured_representative).and_return(epub)
         allow(monograph).to receive(:pdf_ebook_featured_representative).and_return(pdf)

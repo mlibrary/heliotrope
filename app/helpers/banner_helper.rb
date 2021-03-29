@@ -8,9 +8,9 @@ module BannerHelper
     return false unless product.present? && product.name.present? && product.purchase.present?
     return false if Sighrax.actor_products(actor).include?(product)
     return true if controller.is_a?(PressCatalogController)
-    monograph = Sighrax.from_noid(@presenter&.id)
+    monograph = Sighrax.from_presenter(@presenter)
     return false unless monograph.valid?
-    return false if Sighrax.open_access?(monograph)
+    return false if monograph.open_access?
     Greensub.product_include?(product: product, entity: monograph)
   end
 

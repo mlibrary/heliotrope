@@ -31,7 +31,7 @@ class ScoreSearchBuilder < ::SearchBuilder
         fp = Hyrax::FileSetPresenter.new(doc, nil)
         next if fp.featured_representative?
         next if fp.id == score.representative_id
-        next if Sighrax.tombstone?(Sighrax.from_presenter(fp))
+        next if Sighrax.from_presenter(fp).tombstone?
         ids << fp.id
       end
 
