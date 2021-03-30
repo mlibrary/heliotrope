@@ -8,7 +8,7 @@ class ResourceDownloadOperation < ApplicationPolicy
 
     return false unless resource.downloadable?
 
-    return true if can? :edit
+    return true if can? :update
 
     resource.published? && !resource.tombstone? && resource.allow_download?
   end

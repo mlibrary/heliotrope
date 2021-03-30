@@ -2,7 +2,7 @@
 
 class EbookDownloadOperation < EbookOperation
   def allowed?
-    return true if can? :edit
+    return true if can? :update
 
     return false unless accessible_offline?
 
