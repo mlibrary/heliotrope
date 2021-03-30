@@ -20,9 +20,9 @@ RSpec.describe Opds::Publication, type: [:model, :json_schema] do
         allow(monograph).to receive(:is_a?).with(Sighrax::Monograph).and_return(true)
         allow(monograph).to receive(:published?).and_return(true)
         allow(monograph).to receive(:open_access?).and_return(true)
-        allow(monograph).to receive(:cover_representative).and_return(cover)
-        allow(monograph).to receive(:epub_featured_representative).and_return(epub)
-        allow(monograph).to receive(:pdf_ebook_featured_representative).and_return(pdf)
+        allow(monograph).to receive(:cover).and_return(cover)
+        allow(monograph).to receive(:epub_ebook).and_return(epub)
+        allow(monograph).to receive(:pdf_ebook).and_return(pdf)
         allow(cover).to receive(:valid?).and_return(true)
         allow(epub).to receive(:valid?).and_return(true)
         allow(pdf).to receive(:valid?).and_return(true)
@@ -46,7 +46,7 @@ RSpec.describe Opds::Publication, type: [:model, :json_schema] do
       before do
         allow(publication).to receive(:valid?).and_return(true)
 
-        allow(monograph).to receive(:cover_representative).and_return(cover)
+        allow(monograph).to receive(:cover).and_return(cover)
         allow(cover).to receive(:valid?).and_return(true)
 
         allow(monograph).to receive(:noid).and_return('validnoid')
@@ -68,8 +68,8 @@ RSpec.describe Opds::Publication, type: [:model, :json_schema] do
 
       context 'epub and pdf' do
         before do
-          allow(monograph).to receive(:epub_featured_representative).and_return(epub)
-          allow(monograph).to receive(:pdf_ebook_featured_representative).and_return(pdf)
+          allow(monograph).to receive(:epub_ebook).and_return(epub)
+          allow(monograph).to receive(:pdf_ebook).and_return(pdf)
           allow(epub).to receive(:valid?).and_return(true)
           allow(pdf).to receive(:valid?).and_return(true)
         end
@@ -95,9 +95,9 @@ RSpec.describe Opds::Publication, type: [:model, :json_schema] do
 
         # Images
         it { expect(subject[:images].count).to eq(4) }
-        it { expect(subject[:images]).to include({ href: "#{Riiif::Engine.routes.url_helpers.image_url(monograph.cover_representative.noid, host: Rails.application.routes.url_helpers.root_url, size: 'full', format: 'jpg')}", type: 'image/jpeg' }) }
+        it { expect(subject[:images]).to include({ href: "#{Riiif::Engine.routes.url_helpers.image_url(monograph.cover.noid, host: Rails.application.routes.url_helpers.root_url, size: 'full', format: 'jpg')}", type: 'image/jpeg' }) }
         [200, 400, 800].each do |width_size|
-          it { expect(subject[:images]).to include({ href: "#{Riiif::Engine.routes.url_helpers.image_url(monograph.cover_representative.noid, host: Rails.application.routes.url_helpers.root_url, size: "#{width_size},", format: 'jpg')}", width: width_size, type: 'image/jpeg' }) }
+          it { expect(subject[:images]).to include({ href: "#{Riiif::Engine.routes.url_helpers.image_url(monograph.cover.noid, host: Rails.application.routes.url_helpers.root_url, size: "#{width_size},", format: 'jpg')}", width: width_size, type: 'image/jpeg' }) }
         end
 
         it { expect(schemer_validate?(opds_publication_schemer, JSON.parse(subject.to_json))).to be true }
@@ -105,8 +105,8 @@ RSpec.describe Opds::Publication, type: [:model, :json_schema] do
 
       context 'only epub' do
         before do
-          allow(monograph).to receive(:epub_featured_representative).and_return(epub)
-          allow(monograph).to receive(:pdf_ebook_featured_representative).and_return(Sighrax::Entity.null_entity)
+          allow(monograph).to receive(:epub_ebook).and_return(epub)
+          allow(monograph).to receive(:pdf_ebook).and_return(Sighrax::Entity.null_entity)
           allow(epub).to receive(:valid?).and_return(true)
         end
 
@@ -120,8 +120,8 @@ RSpec.describe Opds::Publication, type: [:model, :json_schema] do
 
       context 'only pdf' do
         before do
-          allow(monograph).to receive(:epub_featured_representative).and_return(Sighrax::Entity.null_entity)
-          allow(monograph).to receive(:pdf_ebook_featured_representative).and_return(pdf)
+          allow(monograph).to receive(:epub_ebook).and_return(Sighrax::Entity.null_entity)
+          allow(monograph).to receive(:pdf_ebook).and_return(pdf)
           allow(pdf).to receive(:valid?).and_return(true)
         end
 
@@ -135,8 +135,8 @@ RSpec.describe Opds::Publication, type: [:model, :json_schema] do
 
       context 'metadata' do
         before do
-          allow(monograph).to receive(:epub_featured_representative).and_return(epub)
-          allow(monograph).to receive(:pdf_ebook_featured_representative).and_return(pdf)
+          allow(monograph).to receive(:epub_ebook).and_return(epub)
+          allow(monograph).to receive(:pdf_ebook).and_return(pdf)
           allow(epub).to receive(:valid?).and_return(true)
           allow(pdf).to receive(:valid?).and_return(true)
         end

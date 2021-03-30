@@ -34,17 +34,16 @@ RSpec.describe Sighrax::NullEntity, type: :model do
   end
 
   context 'when noid is present and a derived class method' do
-    it { expect(subject.cover_representative)              .to eq(Sighrax::Entity.null_entity) }
-    it { expect(subject.epub_featured_representative)      .to eq(Sighrax::Entity.null_entity) }
-    it { expect(subject.pdf_ebook_featured_representative) .to eq(Sighrax::Entity.null_entity) }
-
     it { expect(subject.allow_download?)  .to be false }
     it { expect(subject.children)         .to eq([]) }
     it { expect(subject.content)          .to eq('') }
     it { expect(subject.contributors)     .to eq([]) }
+    it { expect(subject.cover)            .to eq(Sighrax::Entity.null_entity) }
     it { expect(subject.deposited?)       .to be true }
     it { expect(subject.description)      .to eq('') }
     it { expect(subject.downloadable?)    .to be false }
+    it { expect(subject.ebook)            .to eq(Sighrax::Entity.null_entity) }
+    it { expect(subject.epub_ebook)       .to eq(Sighrax::Entity.null_entity) }
     it { expect(subject.file_name)        .to eq('null_file.txt') }
     it { expect(subject.file_size)        .to eq 0 }
     it { expect(subject.identifier)       .to eq(HandleNet.url(noid)) }
@@ -54,6 +53,7 @@ RSpec.describe Sighrax::NullEntity, type: :model do
     it { expect(subject.monograph)        .to be_an_instance_of(Sighrax::NullEntity) }
     it { expect(subject.open_access?)     .to be false }
     it { expect(subject.parent)           .to be_an_instance_of(Sighrax::NullEntity) }
+    it { expect(subject.pdf_ebook)        .to eq(Sighrax::Entity.null_entity) }
     it { expect(subject.products)         .to eq([]) }
     it { expect(subject.publication_year) .to be nil }
     it { expect(subject.published)        .to be nil }
@@ -118,22 +118,23 @@ RSpec.describe Sighrax::NullEntity, type: :model do
         ].include?(klass)
           # it { expect(subject.children).to eq instance.children }
           if [Sighrax::Monograph].include?(klass)
-            it { expect(subject.contributors)                      .to eq instance.contributors }
-            it { expect(subject.cover_representative)              .to eq instance.cover_representative }
-            it { expect(subject.description)                       .to eq instance.description }
-            it { expect(subject.epub_featured_representative)      .to eq instance.epub_featured_representative }
-            it { expect(subject.identifier)                        .to eq instance.identifier }
-            it { expect(subject.languages)                         .to eq instance.languages }
-            it { expect(subject.modified)                          .to eq instance.modified }
-            it { expect(subject.open_access?)                      .to eq instance.open_access? }
-            it { expect(subject.pdf_ebook_featured_representative) .to eq instance.pdf_ebook_featured_representative }
-            it { expect(subject.products)                          .to eq instance.products }
-            it { expect(subject.publication_year)                  .to eq instance.publication_year }
-            it { expect(subject.published)                         .to eq instance.published }
-            it { expect(subject.publishing_house)                  .to eq instance.publishing_house }
-            it { expect(subject.restricted?)                       .to eq instance.restricted? }
-            it { expect(subject.series)                            .to eq instance.series }
-            it { expect(subject.subjects)                          .to eq instance.subjects }
+            it { expect(subject.contributors)     .to eq instance.contributors }
+            it { expect(subject.cover)            .to eq instance.cover }
+            it { expect(subject.description)      .to eq instance.description }
+            it { expect(subject.ebook)            .to eq instance.epub_ebook }
+            it { expect(subject.epub_ebook)       .to eq instance.epub_ebook }
+            it { expect(subject.identifier)       .to eq instance.identifier }
+            it { expect(subject.languages)        .to eq instance.languages }
+            it { expect(subject.modified)         .to eq instance.modified }
+            it { expect(subject.open_access?)     .to eq instance.open_access? }
+            it { expect(subject.pdf_ebook)        .to eq instance.pdf_ebook }
+            it { expect(subject.products)         .to eq instance.products }
+            it { expect(subject.publication_year) .to eq instance.publication_year }
+            it { expect(subject.published)        .to eq instance.published }
+            it { expect(subject.publishing_house) .to eq instance.publishing_house }
+            it { expect(subject.restricted?)      .to eq instance.restricted? }
+            it { expect(subject.series)           .to eq instance.series }
+            it { expect(subject.subjects)         .to eq instance.subjects }
           end
         end
 

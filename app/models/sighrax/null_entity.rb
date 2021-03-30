@@ -20,7 +20,7 @@ module Sighrax
       []
     end
 
-    def cover_representative
+    def cover
       Entity.null_entity
     end
 
@@ -36,7 +36,11 @@ module Sighrax
       false
     end
 
-    def epub_featured_representative
+    def ebook
+      Entity.null_entity
+    end
+
+    def epub_ebook
       Entity.null_entity
     end
 
@@ -77,7 +81,7 @@ module Sighrax
       Entity.null_entity
     end
 
-    def pdf_ebook_featured_representative
+    def pdf_ebook
       Entity.null_entity
     end
 

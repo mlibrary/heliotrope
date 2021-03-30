@@ -49,14 +49,15 @@ RSpec.describe Sighrax::Monograph, type: :model do
       expect(subject.resource_type).to eq :Monograph
 
       expect(subject.contributors).to contain_exactly('creator', 'contributor')
-      expect(subject.cover_representative.noid).to eq cover.id
+      expect(subject.cover.noid).to eq cover.id
       expect(subject.description).to eq 'description'
-      expect(subject.epub_featured_representative.noid).to eq epub.id
+      expect(subject.ebook.noid).to eq epub.id
+      expect(subject.epub_ebook.noid).to eq epub.id
       expect(subject.identifier).to eq HandleNet.url(monograph.id)
       expect(subject.languages).to contain_exactly('language')
       expect(subject.modified).to eq date_modified
       expect(subject.open_access?).to be false
-      expect(subject.pdf_ebook_featured_representative.noid).to eq pdf_ebook.id
+      expect(subject.pdf_ebook.noid).to eq pdf_ebook.id
       expect(subject.products).to be_empty
       expect(subject.publication_year).to eq '1999'
       expect(subject.published).to eq date_published
