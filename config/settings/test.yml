@@ -41,12 +41,3 @@ open_access_ebook_trust_emails:
     - cc2@fulcrum
 
 world_institution_identifier: 0
-
-# List of Greensub Products to allow read access to everyone.
-allow_read_products:
-  - allow_read_product
-
-# hopefully temporary, see HELIO-3678
-bar_disallow_chapter_downloads_list:
-  - sample_bar_number_1
-  - sample_bar_number_2
