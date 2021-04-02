@@ -5,6 +5,8 @@ class OpenAccessEbookTrustJob < ApplicationJob
   # HELIO-3701
   # Run via cron on the first day of the month generating stats from the previous month
   def perform(subdomain: nil)
+    ActiveRecord::Base.retrieve_connection unless ActiveRecord::Base.connected? # HELIO-3844
+
     subdomain = subdomain || "michigan"
     press = Press.where(subdomain: subdomain).first
 
