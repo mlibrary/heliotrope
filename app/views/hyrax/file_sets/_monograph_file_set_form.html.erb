@@ -39,7 +39,7 @@
           <%= f.input :doi, input_html: { class: 'form-control' } %>
           <%= f.input :hdl, input_html: { class: 'form-control' } %>
           <%= f.input :redirect_to, input_html: { class: 'form-control' } %>
-          <%= f.input :permissions_expiration_date, input_html: { class: 'form-control required' }, placeholder: 'YYYY-MM-DD' %>
+          <%= f.input :permissions_expiration_date, input_html: { class: 'form-control' }, placeholder: 'YYYY-MM-DD' %>
           <%= f.input :rights_granted, input_html: { class: 'form-control' } %>
           <%# https://github.com/samvera/hyrax/blob/2.0-stable/app/views/records/edit_fields/_license.html.erb %>
           <%# changed :multi_value_select to :select %>
@@ -51,8 +51,10 @@
                       input_html: { class: 'form-control' } %>
           <%= f.input :credit_line, input_html: { class: 'form-control' } %>
           <%= f.input :holding_contact, as: :text, input_html: { class: 'form-control' } %>
-          <%= f.input :allow_display_after_expiration, input_html: { class: 'form-control required' } %>
-          <%= f.input :allow_download_after_expiration, input_html: { class: 'form-control required' } %>
+          <%= f.input :allow_display_after_expiration, input_html: { class: 'form-control' } %>
+          <%= f.input :allow_download_after_expiration, input_html: { class: 'form-control' } %>
+          <%= f.input :tombstone, as: :boolean, checked_value: 'yes', unchecked_value: '' %>
+          <%= f.input :tombstone_message, input_html: { class: 'form-control' } %>
       </fieldset>
     </div>
   </div>

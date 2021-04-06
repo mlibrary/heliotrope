@@ -41,6 +41,7 @@ module CommonWorkPresenter
   end
 
   def thumbnail_tag(width, options = {})
+    options['style'] = "filter: grayscale(1)" if respond_to?(:tombstone?) && tombstone?
     if representative_id.present?
       ActionController::Base.helpers.image_tag(Riiif::Engine.routes.url_helpers.image_path(cache_buster_id, "#{width},", format: "png"), options)
     else
@@ -50,6 +51,7 @@ module CommonWorkPresenter
   end
 
   def poster_tag(options = {})
+    options['style'] = "filter: grayscale(1)" if respond_to?(:tombstone?) && tombstone?
     if representative_id.present?
       ActionController::Base.helpers.image_tag(Riiif::Engine.routes.url_helpers.image_path(cache_buster_id, :full, :full, 0, format: "png"), options)
     else

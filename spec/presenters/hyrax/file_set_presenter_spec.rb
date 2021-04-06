@@ -15,6 +15,7 @@ RSpec.describe Hyrax::FileSetPresenter do
     it { is_expected.to be_a EmbedCodePresenter }
     it { is_expected.to be_a OpenUrlPresenter }
     it { is_expected.to be_a FeaturedRepresentatives::FileSetPresenter }
+    it { is_expected.to be_a TombstonePresenter }
   end
 
   describe '#tombstone?' do

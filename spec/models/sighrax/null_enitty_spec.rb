@@ -65,6 +65,7 @@ RSpec.describe Sighrax::NullEntity, type: :model do
     it { expect(subject.series)           .to eq('') }
     it { expect(subject.subjects)         .to eq([]) }
     it { expect(subject.tombstone?)       .to be false }
+    it { expect(subject.tombstone_message).to be nil }
     it { expect(subject.watermarkable?)   .to be false }
   end
 
@@ -99,15 +100,16 @@ RSpec.describe Sighrax::NullEntity, type: :model do
         next if [Sighrax::Entity].include?(klass)
 
         # Model
-        it { expect(subject.children)   .to eq instance.children }
-        it { expect(subject.deposited?) .to eq instance.deposited? }
-        it { expect(subject.modified)   .to eq instance.modified }
-        it { expect(subject.parent)     .to eq instance.parent }
-        it { expect(subject.published?) .to eq instance.published? }
-        it { expect(subject.publisher)  .to eq instance.publisher }
-        it { expect(subject.timestamp)  .to eq instance.timestamp }
-        it { expect(subject.title)      .to eq instance.title }
-        it { expect(subject.tombstone?) .to eq instance.tombstone? }
+        it { expect(subject.children)          .to eq instance.children }
+        it { expect(subject.deposited?)        .to eq instance.deposited? }
+        it { expect(subject.modified)          .to eq instance.modified }
+        it { expect(subject.parent)            .to eq instance.parent }
+        it { expect(subject.published?)        .to eq instance.published? }
+        it { expect(subject.publisher)         .to eq instance.publisher }
+        it { expect(subject.timestamp)         .to eq instance.timestamp }
+        it { expect(subject.title)             .to eq instance.title }
+        it { expect(subject.tombstone?)        .to eq instance.tombstone? }
+        it { expect(subject.tombstone_message) .to eq instance.tombstone_message }
         next if [Sighrax::Model].include?(klass)
 
         # Work

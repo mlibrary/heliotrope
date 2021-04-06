@@ -1,0 +1,11 @@
+<div class="form-group check_boxes optional monograph_tombstone">
+  <input type="hidden" name="monograph[tombstone]" value="" />
+  <label class="control-label check_boxes optional" for="monograph_tombstone">Tombstone?
+    <input class="check_boxes required form-check-input"
+           type="checkbox"
+           value="yes"
+           name="monograph[tombstone]"
+           id="monograph_tombstone"
+    <%= "checked" if @form.tombstone.include?('yes') %>>
+  </label>
+</div>

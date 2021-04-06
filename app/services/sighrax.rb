@@ -9,6 +9,7 @@ require_dependency 'sighrax/model'
 require_dependency 'sighrax/monograph'
 require_dependency 'sighrax/null_entity'
 require_dependency 'sighrax/pdf_ebook'
+require_dependency 'sighrax/platform'
 require_dependency 'sighrax/publisher'
 require_dependency 'sighrax/resource'
 require_dependency 'sighrax/score'
@@ -42,6 +43,10 @@ module Sighrax # rubocop:disable Metrics/ModuleLength
       model_type = Array(document['has_model_ssim']).first
       return Entity.send(:new, noid, document) if model_type.blank?
       model_factory(noid, document, model_type)
+    end
+
+    def platform
+      Platform.send(:new)
     end
 
     # Greensub Helpers

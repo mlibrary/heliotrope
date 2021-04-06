@@ -18,9 +18,11 @@ RSpec.describe Hyrax::MonographPresenter do
       is_expected.to be_a CommonWorkPresenter
       is_expected.to be_a CitableLinkPresenter
       is_expected.to be_a EditionPresenter
-      is_expected.to be_a OpenUrlPresenter
-      is_expected.to be_a TitlePresenter
       is_expected.to be_a FeaturedRepresentatives::MonographPresenter
+      is_expected.to be_a OpenUrlPresenter
+      is_expected.to be_a SocialShareWidgetPresenter
+      is_expected.to be_a TitlePresenter
+      is_expected.to be_a TombstonePresenter
     end
   end
 

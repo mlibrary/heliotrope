@@ -71,6 +71,9 @@ Naming/FileName:
 Rails:
   Enabled: true
 
+Rails/Delegate:
+  Enabled: false
+
 Rails/LexicallyScopedActionFilter:
   Enabled: false
 
