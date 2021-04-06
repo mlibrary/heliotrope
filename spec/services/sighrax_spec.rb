@@ -168,6 +168,12 @@ RSpec.describe Sighrax do
     end
   end
 
+  describe '#platform' do
+    subject { described_class.platform }
+
+    it { is_expected.to be_an_instance_of(Sighrax::Platform) }
+  end
+
   describe '#press' do
     subject { described_class.press(entity) }
 

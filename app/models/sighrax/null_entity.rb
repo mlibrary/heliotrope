@@ -129,6 +129,10 @@ module Sighrax
       false
     end
 
+    def tombstone_message
+      nil
+    end
+
     def watermarkable?
       false
     end

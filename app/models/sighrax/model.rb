@@ -43,11 +43,17 @@ module Sighrax
     end
 
     def tombstone?
+      return true if /^yes$/i.match?(scalar('tombstone_ssim'))
+
       return false if scalar('permissions_expiration_date_ssim').blank?
 
       return true if Date.parse(scalar('permissions_expiration_date_ssim')) <= Time.now.utc.to_date
 
       false
+    end
+
+    def tombstone_message
+      scalar('tombstone_message_tesim')
     end
 
     protected

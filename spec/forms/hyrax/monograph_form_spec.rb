@@ -55,7 +55,9 @@ describe Hyrax::MonographForm do
                            section_titles
                            edition_name
                            previous_edition
-                           next_edition]
+                           next_edition
+                           tombstone
+                           tombstone_message]
     }
   end
 
@@ -96,7 +98,9 @@ describe Hyrax::MonographForm do
                            section_titles
                            edition_name
                            previous_edition
-                           next_edition]
+                           next_edition
+                           tombstone
+                           tombstone_message]
     }
   end
 

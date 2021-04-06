@@ -11,6 +11,7 @@ module Hyrax
     include CharacterizationBehavior
     include WithEvents
     include FeaturedRepresentatives::FileSetPresenter
+    include TombstonePresenter
     include Rails.application.routes.url_helpers
     include ActionView::Helpers::TagHelper
 

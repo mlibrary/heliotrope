@@ -16,6 +16,10 @@ module SolrDocumentExtensions
       Array(self[Solrizer.solr_name('doi', :symbol)]).first
     end
 
+    def has_model # rubocop:disable Naming/PredicateName
+      Array(self[Solrizer.solr_name('has_model', :symbol)]).first
+    end
+
     def hdl
       Array(self[Solrizer.solr_name('hdl', :symbol)]).first
     end
@@ -24,8 +28,12 @@ module SolrDocumentExtensions
       Array(self[Solrizer.solr_name('holding_contact', :symbol)]).first
     end
 
-    def has_model # rubocop:disable Naming/PredicateName
-      Array(self[Solrizer.solr_name('has_model', :symbol)]).first
+    def tombstone
+      Array(self[Solrizer.solr_name('tombstone', :symbol)]).first
+    end
+
+    def tombstone_message
+      Array(self[Solrizer.solr_name('tombstone_message', :stored_searchable)]).first
     end
   end
 end

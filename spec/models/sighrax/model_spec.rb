@@ -22,6 +22,7 @@ RSpec.describe Sighrax::Model, type: :model do
       expect(subject.timestamp).to be nil
       expect(subject.title).to eq noid
       expect(subject.tombstone?).to be false
+      expect(subject.tombstone_message).to be nil
     end
   end
 
@@ -120,13 +121,35 @@ RSpec.describe Sighrax::Model, type: :model do
     describe '#tombstone?' do
       it { expect(subject.tombstone?).to be false }
 
-      context 'tombstone' do
+      context 'when tombstone' do
+        before do
+          file_set.tombstone = 'yES'
+          file_set.save
+        end
+
+        it { expect(subject.tombstone?).to be true }
+      end
+
+      context 'when permissions expire' do
         before do
           file_set.permissions_expiration_date = "1999-01-01"
           file_set.save
         end
 
         it { expect(subject.tombstone?).to be true }
+      end
+    end
+
+    describe '#tombstone_message' do
+      it { expect(subject.tombstone_message).to be nil }
+
+      context 'when tombstone message' do
+        before do
+          file_set.tombstone_message = "_FileSet_ Tombstone Message"
+          file_set.save
+        end
+
+        it { expect(subject.tombstone_message).to eq "_FileSet_ Tombstone Message" }
       end
     end
   end
@@ -187,14 +210,26 @@ RSpec.describe Sighrax::Model, type: :model do
     describe '#tombstone?' do
       it { expect(subject.tombstone?).to be false }
 
-      # TODO: Currently Monographs don't have permission expiration dates
-      xcontext 'tombstone' do
+      context 'when tombstone' do
         before do
-          monograph.permissions_expiration_date = "1999-01-01"
+          monograph.tombstone = 'yES'
           monograph.save
         end
 
         it { expect(subject.tombstone?).to be true }
+      end
+    end
+
+    describe '#tombstone_message' do
+      it { expect(subject.tombstone_message).to be nil }
+
+      context 'when tombstone message' do
+        before do
+          monograph.tombstone_message = "_Monograph_ Tombstone Message"
+          monograph.save
+        end
+
+        it { expect(subject.tombstone_message).to eq "_Monograph_ Tombstone Message" }
       end
     end
   end

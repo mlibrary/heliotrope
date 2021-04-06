@@ -230,6 +230,9 @@ en:
   section_title: "Related Section"
   section_titles: "Section Titles"
   series: "Series"
+  sighrax:
+    platform:
+      tombstone_message: "_Platform_ Tombstone Message"
   simple_form:
     labels:
       defaults:
@@ -271,6 +274,8 @@ en:
         sort_date: :"sort_date"
         transcript: :"transcript"
         translation: :"translation"
+        tombstone: :"tombstone"
+        tombstone_message: :"tombstone_message"
       monograph:
         creator: "Creator(s)"
         citation_publisher: "Citation Publisher"
@@ -286,12 +291,16 @@ en:
         series: "Series"
         subject: "Subject"
         title: "Title"
+        tombstone: "Tombstone"
+        tombstone_message: "Tombstone Message"
       score:
         creator: "Composer"
         license: "Creative Commons License"
     hints:
       defaults:
         transcript: "Transcripts must be formatted as WebVTT captions. <a href='https://developer.mozilla.org/en-US/docs/Web/API/WebVTT_API' target='_blank'>Get help with WebVTT formatting.</a>"
+        tombstone: "Check box to tombstone."
+        tombstone_message: "Message displayed on tombstone."
       monograph:
         citation_publisher: "The publisher name used in auto-generated citations."
         creator: "Enter one citation name per line in the format \"Lastname, Firstname (optional role)\". Omit the comma for institutions etc."

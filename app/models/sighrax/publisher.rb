@@ -92,6 +92,12 @@ module Sighrax
       press.interval
     end
 
+    def tombstone_message # rubocop:disable Rails/Delegate
+      return press.tombstone_message if press.tombstone_message.present?
+
+      nil
+    end
+
     protected
 
       def type

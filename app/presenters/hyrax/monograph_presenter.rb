@@ -5,10 +5,11 @@ module Hyrax
     include CommonWorkPresenter
     include CitableLinkPresenter
     include EditionPresenter
-    include OpenUrlPresenter
-    include TitlePresenter
-    include SocialShareWidgetPresenter
     include FeaturedRepresentatives::MonographPresenter
+    include OpenUrlPresenter
+    include SocialShareWidgetPresenter
+    include TitlePresenter
+    include TombstonePresenter
     include ActionView::Helpers::UrlHelper
 
     delegate :date_modified, :date_uploaded, :location, :description,
