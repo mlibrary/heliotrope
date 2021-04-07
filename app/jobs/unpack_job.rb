@@ -41,6 +41,7 @@ class UnpackJob < ApplicationJob
       unpack_epub(id, root_path, file)
       create_search_index(root_path)
       cache_epub_toc(id, root_path)
+      create_epub_chapters(id, root_path) # has to come after cache_epub_toc()
       epub_webgl_bridge(id, root_path, kind)
     when 'webgl'
       unpack_webgl(id, root_path, file)
@@ -70,6 +71,29 @@ class UnpackJob < ApplicationJob
       epub = EPub::Publication.from_directory(root_path)
       intervals = epub&.rendition&.intervals
       EbookTableOfContentsCache.create(noid: epub.id, toc: intervals.map { |i| i.to_h_for_toc }.to_json)
+    end
+
+    def create_epub_chapters(id, root_path)
+      publication = EPub::Publication.from_directory(UnpackService.root_path_from_noid(id, 'epub'))
+      epub_presenter = EPubPresenter.new(publication)
+
+      Rails.logger.error("[EPUB CHAPTER FAILURE] The pdf_ebook #{id} will not have intervals") if publication.class == "EPub::PublicationNullObject"
+      # don't create an empty directory if there are no downloadable intervals
+      return unless epub_presenter.intervals? && epub_presenter.intervals.any? { |interval| interval.downloadable? }
+
+      chapter_dir = prepare_chapter_dir(id, 'epub', root_path)
+
+      # the `toc_only_interval` and `content_interval` stuff are a little weird but stem from the way these things...
+      # evolved with epub_presenter.intervals() only needing to provide ToC link for the Monograph catalog page...
+      # but it also provides the cfi necessary for the PDF-producing Interval.from_rendition_cfi_title()
+      epub_presenter.intervals.each_with_index do |toc_only_interval, index|
+        # don't create an empty/broken file if there are no pages in this interval
+        next unless toc_only_interval.downloadable?
+
+        content_interval = EPub::Interval.from_rendition_cfi_title(publication.rendition, toc_only_interval.cfi, toc_only_interval.title)
+        pdf = EPub::Marshaller::PDF.from_publication_interval(publication, content_interval)
+        pdf.document.render_file "#{chapter_dir}/#{index}.pdf"
+      end
     end
 
     def create_pdf_chapters(id, pdf, root_path) # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
@@ -108,10 +132,7 @@ class UnpackJob < ApplicationJob
       end
 
       file = File.open(pdf)
-      chapter_dir = File.join(root_path + '_chapters')
-      # if there is a pre-existing chapter_dir schedule it for deletion
-      FileUtils.move(chapter_dir, UnpackService.remove_path_from_noid(id, 'pdf_ebook_chapters')) if Dir.exist? chapter_dir
-      FileUtils.mkdir_p chapter_dir unless Dir.exist? chapter_dir
+      chapter_dir = prepare_chapter_dir(id, 'pdf', root_path)
 
       chapters.each_with_index do |chapter_out, index|
         raise "This ToC has bookmarks pointing to page 0" if chapter_out[:start_page] == 0 || chapter_out[:end_page] == 0
@@ -121,6 +142,14 @@ class UnpackJob < ApplicationJob
           run_command("qpdf --empty --pages #{file.path} #{chapter_out[:start_page]}-z -- #{chapter_dir}/#{index}.pdf")
         end
       end
+    end
+
+    def prepare_chapter_dir(id, kind_prefix, root_path)
+      chapter_dir = File.join(root_path + '_chapters')
+      # if there is a pre-existing chapter_dir schedule it for deletion
+      FileUtils.move(chapter_dir, UnpackService.remove_path_from_noid(id, "#{kind_prefix}_ebook_chapters")) if Dir.exist? chapter_dir
+      FileUtils.mkdir_p chapter_dir unless Dir.exist? chapter_dir
+      chapter_dir
     end
 
     def linearize_pdf(root_path, file)

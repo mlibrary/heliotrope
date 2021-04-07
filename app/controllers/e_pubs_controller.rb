@@ -132,34 +132,44 @@ class EPubsController < CheckpointController
     return head :no_content if params[:title].blank? || params[:chapter_index].blank?
     chapter_title = params[:title]
     chapter_index = params[:chapter_index]
+    chapter_file_name = chapter_index + '.pdf'
+    chapter_download_name = chapter_index + '_' + chapter_title.gsub(/[^0-9A-Za-z\-]/, ' ').squish.gsub(' ', '_') + '.pdf'
 
     if @entity.is_a?(Sighrax::EpubEbook)
-      publication = EPub::Publication.from_directory(UnpackService.root_path_from_noid(@noid, 'epub'))
-      cfi = params[:cfi]
-      interval = EPub::Interval.from_rendition_cfi_title(publication.rendition, cfi, chapter_title)
+      chapter_dir = UnpackService.root_path_from_noid(@noid, 'epub_ebook_chapters')
+      chapter_file_path = File.join(chapter_dir, chapter_file_name)
 
-      return head :no_content if interval.is_a?(EPub::IntervalNullObject)
+      # HELIO-3772
+      # this `if` path should be completely removed once all existing EPUBs have been (re)run through UnpackJob.
+      # It will be replaced by the same guard clause as the `Sighrax::PdfEbook` logic, i.e.:
+      # `return head :no_content if !File.exist?(chapter_file_path)`
+      if !File.exist?(chapter_file_path)
+        publication = EPub::Publication.from_directory(UnpackService.root_path_from_noid(@noid, 'epub'))
+        cfi = params[:cfi]
+        interval = EPub::Interval.from_rendition_cfi_title(publication.rendition, cfi, chapter_title)
 
-      # This chapter file creation probably shouldn't be done inline (see HELIO-3772), but for now ensure...
-      # chapters with the same title have unique Rails cache keys with chapter_index (HELIO-3725)
-      rendered_pdf = Rails.cache.fetch(pdf_cache_key(@noid, interval.title, chapter_index), expires_in: 30.days) do
-        pdf = EPub::Marshaller::PDF.from_publication_interval(publication, interval)
-        pdf.document.render
+        return head :no_content if interval.is_a?(EPub::IntervalNullObject)
+
+        # This chapter file creation probably shouldn't be done inline (see HELIO-3772), but for now ensure...
+        # chapters with the same title have unique Rails cache keys with chapter_index (HELIO-3725)
+        rendered_pdf = Rails.cache.fetch(pdf_cache_key(@noid, interval.title, chapter_index), expires_in: 30.days) do
+          pdf = EPub::Marshaller::PDF.from_publication_interval(publication, interval)
+          pdf.document.render
+        end
+
+        CounterService.from(self, @presenter).count(request: 1, section_type: "Chapter", section: interval.title) if rendered_pdf.present?
+        send_data watermark_pdf(@entity, interval.title, 6, rendered_pdf, chapter_index), type: "application/pdf", disposition: "inline"
+      else
+        CounterService.from(self, @presenter).count(request: 1, section_type: "Chapter", section: chapter_title)
+        send_data watermark_pdf(@entity, chapter_title, 6, IO.binread(chapter_file_path), chapter_index), type: "application/pdf", filename: chapter_download_name, disposition: "inline"
       end
-
-      CounterService.from(self, @presenter).count(request: 1, section_type: "Chapter", section: interval.title) if rendered_pdf.present?
-      send_data watermark_pdf(@entity, interval.title, 6, rendered_pdf, chapter_index), type: "application/pdf", disposition: "inline"
     elsif @entity.is_a?(Sighrax::PdfEbook)
       chapter_dir = UnpackService.root_path_from_noid(@noid, 'pdf_ebook_chapters')
-      chapter_file_name = chapter_index + '.pdf'
-      chapter_download_name = chapter_index + '_' + chapter_title.gsub(/[^0-9A-Za-z\-]/, ' ').squish.gsub(' ', '_') + '.pdf'
-
-      return head :no_content if !File.exist?(File.join(chapter_dir, chapter_file_name))
-
-      file = File.join(chapter_dir, chapter_file_name)
+      chapter_file_path = File.join(chapter_dir, chapter_file_name)
+      return head :no_content if !File.exist?(chapter_file_path)
 
       CounterService.from(self, @presenter).count(request: 1, section_type: "Chapter", section: chapter_title)
-      send_data watermark_pdf(@entity, chapter_title, 6, IO.binread(file), chapter_index), type: @entity.media_type, filename: chapter_download_name, disposition: "inline"
+      send_data watermark_pdf(@entity, chapter_title, 6, IO.binread(chapter_file_path), chapter_index), type: @entity.media_type, filename: chapter_download_name, disposition: "inline"
     end
   rescue StandardError => e
     Rails.logger.error "EPubsController.download_interval raised #{e}"
