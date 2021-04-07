@@ -39,7 +39,8 @@ RSpec.describe "Monograph Catalog pdf_ebook TOC", type: :system, browser: true d
           within("#toc") do
             expect(page).to have_xpath(".//a[@class='toc-link']")
             expect(page).not_to have_xpath(".//span[@title='Read section']")
-            expect(page).not_to have_xpath(".//i[@title='Download section']")
+            # expect(page).not_to have_xpath(".//i[@title='Download section']")
+            expect(page).not_to have_content("Download")
           end
         end
       end
@@ -54,7 +55,8 @@ RSpec.describe "Monograph Catalog pdf_ebook TOC", type: :system, browser: true d
           within("#toc") do
             expect(page).to have_xpath(".//a[@class='toc-link']")
             expect(page).not_to have_xpath(".//span[@title='Read section']")
-            expect(page).not_to have_xpath(".//i[@title='Download section']")
+            # expect(page).not_to have_xpath(".//i[@title='Download section']")
+            expect(page).not_to have_content("Download")
           end
         end
       end
@@ -70,7 +72,8 @@ RSpec.describe "Monograph Catalog pdf_ebook TOC", type: :system, browser: true d
           within("#toc") do
             expect(page).to have_xpath(".//a[@class='toc-link']")
             expect(page).not_to have_xpath(".//span[@title='Read section']")
-            expect(page).not_to have_xpath(".//i[@title='Download section']")
+            # expect(page).not_to have_xpath(".//i[@title='Download section']")
+            expect(page).not_to have_content("Download")
           end
         end
       end
@@ -85,7 +88,8 @@ RSpec.describe "Monograph Catalog pdf_ebook TOC", type: :system, browser: true d
           within("#toc") do
             expect(page).to have_xpath(".//a[@class='toc-link']")
             expect(page).not_to have_xpath(".//span[@title='Read section']")
-            expect(page).not_to have_xpath(".//i[@title='Download section']")
+            # expect(page).not_to have_xpath(".//i[@title='Download section']")
+            expect(page).not_to have_content("Download")
           end
         end
       end
@@ -105,7 +109,8 @@ RSpec.describe "Monograph Catalog pdf_ebook TOC", type: :system, browser: true d
           within("#toc") do
             expect(page).to have_xpath(".//a[@class='toc-link']")
             expect(page).to have_xpath(".//span[@title='Read section']")
-            expect(page).to have_xpath(".//i[@title='Download section']")
+            # expect(page).to have_xpath(".//i[@title='Download section']")
+            expect(page).to have_content("Download")
           end
         end
       end
@@ -120,7 +125,8 @@ RSpec.describe "Monograph Catalog pdf_ebook TOC", type: :system, browser: true d
           within("#toc") do
             expect(page).to have_xpath(".//a[@class='toc-link']")
             expect(page).to have_xpath(".//span[@title='Read section']")
-            expect(page).to have_xpath(".//i[@title='Download section']")
+            # expect(page).to have_xpath(".//i[@title='Download section']")
+            expect(page).to have_content("Download")
           end
         end
       end
@@ -136,7 +142,8 @@ RSpec.describe "Monograph Catalog pdf_ebook TOC", type: :system, browser: true d
           within("#toc") do
             expect(page).to have_xpath(".//a[@class='toc-link']")
             expect(page).to have_xpath(".//span[@title='Read section']")
-            expect(page).to have_xpath(".//i[@title='Download section']")
+            # expect(page).to have_xpath(".//i[@title='Download section']")
+            expect(page).to have_content("Download")
           end
         end
       end
@@ -151,7 +158,8 @@ RSpec.describe "Monograph Catalog pdf_ebook TOC", type: :system, browser: true d
           within("#toc") do
             expect(page).to have_xpath(".//a[@class='toc-link']")
             expect(page).not_to have_xpath(".//span[@title='Read section']")
-            expect(page).not_to have_xpath(".//i[@title='Download section']")
+            # expect(page).not_to have_xpath(".//i[@title='Download section']")
+            expect(page).not_to have_content("Download")
           end
         end
       end
