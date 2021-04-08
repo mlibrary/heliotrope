@@ -8,3 +8,6 @@
 //= require bootstrap/dropdown
 // needed by Google Analytics
 //= require application/ga_event_tracking
+// needed to set cookies and open/close the alert box for our Open Access/"free to read" survey in the PDF reader
+//= require application_survey
+//= require bootstrap/alert

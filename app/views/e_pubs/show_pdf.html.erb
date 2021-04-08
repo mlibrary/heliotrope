@@ -43,6 +43,9 @@
   <% if defined? @presenter.file_set_coins_title %>
     <span class="Z3988" title="<%= @presenter.file_set_coins_title %>" aria-hidden="true"></span>
   <% end %>
+  <% if @parent_presenter.open_access? || @parent_presenter.access_level(@actor_product_ids, @allow_read_product_ids).level == :free %>
+    <%= render 'shared/survey_nonmodal' %>
+  <% end %>
   <div class="skip"></div>
   <!-- `role="status"` implies `aria-live="polite"` but redundancy is recommended for maximum compatibility -->
   <!-- see https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/ARIA_Live_Regions -->

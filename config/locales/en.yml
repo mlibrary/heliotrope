@@ -34,7 +34,7 @@ en:
     access_level_text:
       open_access: "Open Access"
       purchased: "Access to this book has been provided by your Library"
-      free: "Free access to this book has been provided in memory of Jeffrey R. Parsons."
+      free: "To mark the completion of their digitization, UMMAA titles are temporarily free-to-read until the end of September 2021."
       restricted: "You do not have access to this book."
       restricted_access_options: "How to get access."
   activerecord:
