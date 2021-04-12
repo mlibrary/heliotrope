@@ -136,7 +136,7 @@ class EPubsController < CheckpointController
     chapter_download_name = chapter_index + '_' + chapter_title.gsub(/[^0-9A-Za-z\-]/, ' ').squish.gsub(' ', '_') + '.pdf'
 
     if @entity.is_a?(Sighrax::EpubEbook)
-      chapter_dir = UnpackService.root_path_from_noid(@noid, 'epub_ebook_chapters')
+      chapter_dir = UnpackService.root_path_from_noid(@noid, 'epub_chapters')
       chapter_file_path = File.join(chapter_dir, chapter_file_name)
 
       # HELIO-3772

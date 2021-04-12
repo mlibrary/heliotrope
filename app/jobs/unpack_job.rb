@@ -132,7 +132,7 @@ class UnpackJob < ApplicationJob
       end
 
       file = File.open(pdf)
-      chapter_dir = prepare_chapter_dir(id, 'pdf', root_path)
+      chapter_dir = prepare_chapter_dir(id, 'pdf_ebook', root_path)
 
       chapters.each_with_index do |chapter_out, index|
         raise "This ToC has bookmarks pointing to page 0" if chapter_out[:start_page] == 0 || chapter_out[:end_page] == 0
@@ -147,7 +147,7 @@ class UnpackJob < ApplicationJob
     def prepare_chapter_dir(id, kind_prefix, root_path)
       chapter_dir = File.join(root_path + '_chapters')
       # if there is a pre-existing chapter_dir schedule it for deletion
-      FileUtils.move(chapter_dir, UnpackService.remove_path_from_noid(id, "#{kind_prefix}_ebook_chapters")) if Dir.exist? chapter_dir
+      FileUtils.move(chapter_dir, UnpackService.remove_path_from_noid(id, "#{kind_prefix}_chapters")) if Dir.exist? chapter_dir
       FileUtils.mkdir_p chapter_dir unless Dir.exist? chapter_dir
       chapter_dir
     end
