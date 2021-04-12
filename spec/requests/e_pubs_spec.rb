@@ -291,19 +291,11 @@ RSpec.describe "EPubs", type: :request do
           expect(response.body).to be_empty
         end
 
-        context 'cfi title' do
-          subject { get "/epubs_download_interval/#{epub.id}?cfi=cfi;title=title;chapter_index=0" }
-
-          let(:rendition) { double('rendition') }
-          let(:interval) { double('interval', title: 'title') }
-          let(:pdf) { double('pdf', document: document) }
-          let(:document) { double('document', render: rendered_pdf) }
-          let(:rendered_pdf) { +"%PDF-1.\ntrailer<</Root<</Pages<</Kids[<</MediaBox[0 0 3 3]>>]>>>>>>" }
+        context 'chapter download' do
+          subject { get "/epubs_download_interval/#{epub.id}?title=title;chapter_index=0" }
 
           before do
-            allow(publication).to receive(:rendition).and_return(rendition)
-            allow(EPub::Interval).to receive(:from_rendition_cfi_title).with(rendition, 'cfi', 'title').and_return(interval)
-            allow(EPub::Marshaller::PDF).to receive(:from_publication_interval).with(publication, interval).and_return(pdf)
+            allow(UnpackService).to receive(:root_path_from_noid).and_return(fixture_path)
             allow(counter_service).to receive(:count).with(request: 1, section: 'title', section_type: 'Chapter')
           end
 
@@ -311,7 +303,8 @@ RSpec.describe "EPubs", type: :request do
             expect { subject }.not_to raise_error
             expect(response).to have_http_status(:ok)
             # watermarking will change the file content and PDF 'producer' metadata
-            expect(response.body).not_to eq(rendered_pdf)
+            expect(response.body).not_to eq File.read(Rails.root.join(fixture_path, '0.pdf'))
+            expect(response.body).to include('Producer (Ruby CombinePDF')
             expect(counter_service).to have_received(:count).with(request: 1, section: 'title', section_type: 'Chapter')
           end
         end
@@ -336,10 +329,7 @@ RSpec.describe "EPubs", type: :request do
         context 'chapter download' do
           subject { get "/epubs_download_interval/#{epub.id}?title=title;chapter_index=0" }
 
-          let(:interval) { double('interval', title: 'title') }
-
           before do
-            allow(PDFEbook::Interval).to receive(:from_title_level_cfi).with(epub.id, 0, 'title', 1, 5).and_return(interval)
             allow(UnpackService).to receive(:root_path_from_noid).and_return(fixture_path)
             allow(counter_service).to receive(:count).with(request: 1, section: 'title', section_type: 'Chapter')
           end
