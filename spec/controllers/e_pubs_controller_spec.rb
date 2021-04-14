@@ -436,34 +436,62 @@ RSpec.describe EPubsController, type: :controller do
 
     describe '#download_interval' do
       let(:monograph) { create(:monograph) }
-      let(:file_set) { create(:file_set, id: '999999998', content: File.open(File.join(fixture_path, 'fake_epub_multi_rendition.epub'))) }
-      let!(:fr) { create(:featured_representative, work_id: monograph.id, file_set_id: file_set.id, kind: 'epub') }
-      let(:document) { double('document') }
-      let(:rendered) { +"%PDF-1.3\ntrailer<</Root<</Pages<</Kids[<</MediaBox[0 0 3 3]>>]>>>>>>" }
       let(:ebook_interval_download_op) { instance_double(EbookIntervalDownloadOperation, 'ebook_interval_download_op', allowed?: true) }
+      let(:counter_service) { double('counter_service') }
 
       before do
         monograph.ordered_members << file_set
         monograph.save!
         file_set.save!
-        UnpackJob.perform_now(file_set.id, 'epub')
         allow(EbookIntervalDownloadOperation).to receive(:new).with(anything, Sighrax.from_noid(file_set.id)).and_return ebook_interval_download_op
-        allow(Prawn::Document).to receive(:new).and_return(document)
+        allow(CounterService).to receive(:from).and_return(counter_service)
+        allow(counter_service).to receive(:count).with(request: 1, section: "This is Chapter One's Title", section_type: 'Chapter')
       end
 
       after { FeaturedRepresentative.destroy_all }
 
-      it 'sends the interval as pdf' do
-        expect(document).to receive(:image).with(/images\/00000003\.png/, fit: [512, 692])
-        expect(document).to receive(:image).with(/images\/00000004\.png/, fit: [512, 692])
-        expect(document).to receive(:image).with(/images\/00000005\.png/, fit: [512, 692])
-        expect(document).to receive(:render).and_return(rendered)
-        get :download_interval, params: { id: file_set.id, cfi: '/6/2[xhtml00000003]!/4/1:0', title: "This is Chapter One's Title", chapter_index: 0 }
-        expect(response).to have_http_status(:success)
-        expect(response.headers['Content-Type']).to eq 'application/pdf'
-        expect(response.headers['Content-Disposition']).to eq 'inline'
-        expect(response.headers['Content-Transfer-Encoding']).to eq 'binary'
-        expect(response.body.starts_with?("%PDF-1.3\n")).to be true
+      context 'fixed-layout (fixed-width) EPUB ebook' do
+        let(:file_set) { create(:file_set, content: File.open(File.join(fixture_path, 'fake_epub_multi_rendition.epub'))) }
+        let!(:fr) { create(:featured_representative, work_id: monograph.id, file_set_id: file_set.id, kind: 'epub') }
+
+        before do
+          UnpackJob.perform_now(file_set.id, 'epub')
+          allow(UnpackService).to receive(:root_path_from_noid).and_return(fixture_path)
+        end
+
+        it 'sends the interval as pdf' do
+          get :download_interval, params: { id: file_set.id, title: "This is Chapter One's Title", chapter_index: 0 }
+          expect(response).to have_http_status(:success)
+          expect(response.headers['Content-Type']).to eq 'application/pdf'
+          expect(response.headers['Content-Disposition']).to eq 'inline; filename="0_This_is_Chapter_One_s_Title.pdf"'
+          expect(response.headers['Content-Transfer-Encoding']).to eq 'binary'
+          # watermarking will change the file content and PDF 'producer' metadata
+          expect(response.body).not_to eq File.read(Rails.root.join(fixture_path, '0.pdf'))
+          expect(response.body).to include('Producer (Ruby CombinePDF')
+          expect(counter_service).to have_received(:count).with(request: 1, section: "This is Chapter One's Title", section_type: 'Chapter')
+        end
+      end
+
+      context 'PDF ebook' do
+        let(:file_set) { create(:file_set, content: File.open(File.join(fixture_path, 'lorum_ipsum_toc.pdf'))) }
+        let!(:fr) { create(:featured_representative, work_id: monograph.id, file_set_id: file_set.id, kind: 'pdf_ebook') }
+
+        before do
+          UnpackJob.perform_now(file_set.id, 'pdf_ebook')
+          allow(UnpackService).to receive(:root_path_from_noid).and_return(fixture_path)
+        end
+
+        it 'sends the interval as pdf' do
+          get :download_interval, params: { id: file_set.id, title: "This is Chapter One's Title", chapter_index: 0 }
+          expect(response).to have_http_status(:success)
+          expect(response.headers['Content-Type']).to eq 'application/pdf'
+          expect(response.headers['Content-Disposition']).to eq 'inline; filename="0_This_is_Chapter_One_s_Title.pdf"'
+          expect(response.headers['Content-Transfer-Encoding']).to eq 'binary'
+          # watermarking will change the file content and PDF 'producer' metadata
+          expect(response.body).not_to eq File.read(Rails.root.join(fixture_path, '0.pdf'))
+          expect(response.body).to include('Producer (Ruby CombinePDF')
+          expect(counter_service).to have_received(:count).with(request: 1, section: "This is Chapter One's Title", section_type: 'Chapter')
+        end
       end
     end
 
