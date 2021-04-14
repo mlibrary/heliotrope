@@ -16,6 +16,8 @@ require_dependency 'sighrax/work'
 
 module Sighrax # rubocop:disable Metrics/ModuleLength
   class << self
+    # Factories
+
     def from_noid(noid)
       noid = noid&.to_s
       data = begin
@@ -56,35 +58,36 @@ module Sighrax # rubocop:disable Metrics/ModuleLength
       end
     end
 
-    # Actor Helpers
-
-    def ability_can?(actor, action, target)
-      return false unless action.is_a?(Symbol)
-      return false unless target.valid?
-      return false unless Incognito.allow_ability_can?(actor)
-      ability = Ability.new(actor.is_a?(User) ? actor : nil)
-      ability.can?(action, hyrax_presenter(target, ability))
-    end
-
-    def access?(actor, target)
-      products = actor_products(actor)
-      component = Greensub::Component.find_by(noid: target.noid)
-      component_products = component&.products || []
-      (products & component_products).any?
-    end
+    # Role Helpers
 
     def platform_admin?(actor)
-      actor.is_a?(User) && actor.platform_admin? && Incognito.allow_platform_admin?(actor)
+      return false unless actor.is_a?(User)
+
+      actor.platform_admin? && Incognito.allow_platform_admin?(actor)
+    end
+
+    def press_role?(actor, press)
+      return false unless actor.is_a?(User)
+
+      actor.press_roles.where(resource: press).any?
     end
 
     def press_admin?(actor, press)
       return false unless actor.is_a?(User)
+
       actor.admin_roles.where(resource: press).any?
     end
 
     def press_editor?(actor, press)
       return false unless actor.is_a?(User)
+
       actor.editor_roles.where(resource: press).any?
+    end
+
+    def press_analyst?(actor, press)
+      return false unless actor.is_a?(User)
+
+      actor.analyst_roles.where(resource: press).any?
     end
 
     # Entity Helpers

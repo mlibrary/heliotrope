@@ -51,13 +51,4 @@ class AbilityCheckpoint
     #   true
     # end
   end
-
-  def platform_admin?
-    @current_user.platform_admin?
-  end
-  alias admin? platform_admin?
-
-  def admin_for?(press)
-    @current_user.admin_presses.include?(press)
-  end
 end
