@@ -59,8 +59,10 @@ namespace :heliotrope do
     uploads_path = Rails.root.join('tmp', 'uploads')
 
     Dir.glob("#{uploads_path}/*") do |dir|
-      Rails.logger.info("clean_cache deleted: #{dir}")
-      FileUtils.remove_entry_secure(dir)
+      if Dir.exist?(dir) && 7.days.ago >= File.mtime(dir)
+        Rails.logger.info("clean_cache deleted: #{dir}")
+        FileUtils.remove_entry_secure(dir)
+      end
     end
   end
 end
