@@ -16,7 +16,7 @@ RSpec.describe ResourceDownloadOperation do
     let(:can_update) { false }
 
     before do
-      allow(policy).to receive(:can?).with(:update).and_return can_update
+      allow(policy).to receive(:ability_can?).with(actor, :update, resource).and_return can_update
     end
 
     it { is_expected.to be false }

@@ -319,7 +319,8 @@ RSpec.describe EPubsController, type: :controller do
 
   context "checkpoint" do
     describe '#show' do
-      let(:monograph) { create(:public_monograph) }
+      let(:press) { create(:press) }
+      let(:monograph) { create(:public_monograph, press: press.subdomain) }
       let(:file_set) { create(:public_file_set, id: '999999999', content: File.open(File.join(fixture_path, 'fake_epub01.epub'))) }
       let!(:fr) { create(:featured_representative, work_id: monograph.id, file_set_id: file_set.id, kind: 'epub') }
 
@@ -371,6 +372,33 @@ RSpec.describe EPubsController, type: :controller do
 
         it 'Platform Admin' do
           sign_in(create(:platform_admin))
+          get :show, params: { id: file_set.id }
+          expect(assigns(:actor_product_ids))
+          expect(assigns(:allow_read_product_ids))
+          expect(response).to have_http_status(:success)
+          expect(response).to render_template(:show)
+        end
+
+        it 'Press Admin' do
+          sign_in(create(:press_admin, press: press))
+          get :show, params: { id: file_set.id }
+          expect(assigns(:actor_product_ids))
+          expect(assigns(:allow_read_product_ids))
+          expect(response).to have_http_status(:success)
+          expect(response).to render_template(:show)
+        end
+
+        it 'Press Editor' do
+          sign_in(create(:press_editor, press: press))
+          get :show, params: { id: file_set.id }
+          expect(assigns(:actor_product_ids))
+          expect(assigns(:allow_read_product_ids))
+          expect(response).to have_http_status(:success)
+          expect(response).to render_template(:show)
+        end
+
+        it 'Press Analyst' do
+          sign_in(create(:press_analyst, press: press))
           get :show, params: { id: file_set.id }
           expect(assigns(:actor_product_ids))
           expect(assigns(:allow_read_product_ids))

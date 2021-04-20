@@ -45,6 +45,10 @@ module Hyrax
       authors.present?
     end
 
+    def open_access?
+      true
+    end
+
     def unreverse_names(comma_separated_names)
       forward_names = []
       comma_separated_names.each { |n| forward_names << unreverse_name(n) }
