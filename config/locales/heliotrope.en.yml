@@ -371,3 +371,7 @@ en:
         -- cover: image file like *.jpg (not JPG 2000), *.tiff, *.png
       published: |
         Whether the object is currently "published" on Fulcrum.
+      tombstone: |
+        Whether the object is currently "tombstoned" on Fulcrum.
+      tombstone_message: |
+        Message displayed on tombstone.

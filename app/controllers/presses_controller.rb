@@ -76,7 +76,8 @@ class PressesController < ApplicationController
                                     :navigation_block,
                                     :default_list_view,
                                     :aboutware,
-                                    :interval
+                                    :interval,
+                                    :tombstone_message
                                   )
     end
 end

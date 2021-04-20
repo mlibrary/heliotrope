@@ -4,7 +4,8 @@ class PressSearchBuilder < ::SearchBuilder
   self.default_processor_chain += [
       :filter_by_press,
       :filter_by_product_access,
-      :show_works_or_works_that_contain_files
+      :show_works_or_works_that_contain_files,
+      :filter_out_tombstones
   ]
 
   def filter_by_press(solr_parameters)
@@ -40,6 +41,13 @@ class PressSearchBuilder < ::SearchBuilder
     return if blacklight_params[:q].blank? || blacklight_params['press'] != 'barpublishing'
     solr_parameters[:user_query] = blacklight_params[:q]
     solr_parameters[:q] = new_query
+  end
+
+  def filter_out_tombstones(solr_parameters)
+    return if press_admin_role_override?
+
+    solr_parameters[:fq] ||= []
+    solr_parameters[:fq] << "-tombstone_ssim:[* TO *]"
   end
 
   def default_sort_field

@@ -5,10 +5,11 @@ module Hyrax
     include CommonWorkPresenter
     include CitableLinkPresenter
     include EditionPresenter
-    include OpenUrlPresenter
-    include TitlePresenter
-    include SocialShareWidgetPresenter
     include FeaturedRepresentatives::MonographPresenter
+    include OpenUrlPresenter
+    include SocialShareWidgetPresenter
+    include TitlePresenter
+    include TombstonePresenter
     include ActionView::Helpers::UrlHelper
 
     delegate :date_modified, :date_uploaded, :location, :description,
@@ -162,6 +163,13 @@ module Hyrax
 
     def press_url # rubocop:disable Rails/Delegate
       press_obj.press_url
+    end
+
+    def monograph_tombstone_message
+      monograph = Sighrax.from_presenter(self)
+      monograph.tombstone_message ||
+        monograph.publisher.tombstone_message ||
+          Sighrax.platform.tombstone_message(monograph.publisher.name)
     end
 
     def previous_file_sets_id?(file_sets_id)

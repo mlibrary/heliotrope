@@ -24,6 +24,10 @@ module Sighrax
       false
     end
 
+    def tombstone_message
+      nil
+    end
+
     private
 
       def initialize(subdomain)
