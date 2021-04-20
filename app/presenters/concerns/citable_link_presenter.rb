@@ -28,6 +28,9 @@ module CitableLinkPresenter
   end
 
   def heb?
+    # this is only expected to be true for backlist/migrated HEB titles whose handles were created outside of...
+    # Fulcrum and stored in `identifier` during the DLXS-to-Fulcrum migration. New HEB titles will have a...
+    # fresh HEB-style handle created by the Fulcrum team and stored in the `handle` field like other books.
     heb.present?
   end
 
