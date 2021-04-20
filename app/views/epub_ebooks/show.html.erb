@@ -1,0 +1,157 @@
+<% provide :page_title, @title || "Title" %>
+<%# https://github.com/mlibrary/heliotrope/issues/1228 %>
+<% content_for :head do %>
+  <meta name="turbolinks-cache-control" content="no-cache">
+  <script type="text/javascript" src="https://d1bxh8uas1mnw7.cloudfront.net/assets/embed.js"></script>
+  <% if @parent_presenter.doi.present? %>
+    <script async src="https://badge.dimensions.ai/badge.js" charset="utf-8"></script>
+  <% end %>
+  <% if defined? @subdomain %>
+    <%# only include hypothes.is for leverpress, um press and its subpresses at this point %>
+    <% if %w[leverpress michigan cjs cseas csas lrccs ummaa].include? @subdomain %>
+      <!-- hypothes.is -->
+      <script type="text/javascript">
+        window.hypothesisConfig = function () {
+          return {
+            openSidebar: false,
+            theme: 'clean', // "clean" or "classic"
+            enableMultiFrameSupport: true,
+            onLayoutChange: function(state) {
+              var $frame = $('.annotator-frame');
+              var $reader = $("#reader");
+            },
+            enableExperimentalNewNoteButton: true
+          };
+        };
+      </script>
+      <script src="https://cdn.hypothes.is/hypothesis"></script>
+    <% end %>
+  <% end %>
+<% end %>
+
+<% provide :body do %>
+  <% if defined? @presenter.file_set_coins_title %>
+    <span class="Z3988" title="<%= @presenter.file_set_coins_title %>" aria-hidden="true"></span>
+  <% end %>
+  <% if @parent_presenter.open_access? || @parent_presenter.access_level(@actor_product_ids, @allow_read_product_ids).level == :free %>
+    <%= render 'shared/survey_nonmodal' %>
+  <% end %>
+  <div class="skip"></div>
+  <%= tag.div id: 'epub', class: press_presenter.present? ? press_presenter.press_subdomains : '' do %>
+    <div id="reader"></div>
+
+    <script type="text/javascript">
+      if ( true ) {
+
+        <% if %w[leverpress michigan cjs cseas csas lrccs ummaa].include? @subdomain %>
+        // Create custom annotator button that is aware of its state
+        AnnotationTool = cozy.Control.Widget.Toggle.extend({
+          defaultTemplate: '<button data-hypothesis-trigger class="button--sm annotation" data-toggle="button" aria-label="Open Annotations"><i class="fa fa-pencil" title="Open annotation panel" aria-hidden="true"></i></button><div class="annotation-count" data-hypothesis-annotation-count></div>',
+
+
+          initialize: function(options) {
+
+            cozy.Control.Widget.Toggle.prototype.initialize.apply(this, arguments);
+
+            this.options.states = [{
+              stateName: 'close-annotator',
+              onClick: this.openAnnotator.bind(this)
+            },
+              {
+                stateName: 'open-annotator',
+                onClick: this.closeAnnotator.bind(this)
+              }];
+          },
+
+          _onAddExtra: function(container) {
+            // super._onAddExtra(container);
+            cozy.Control.Widget.Toggle.prototype._onAddExtra.apply(this, arguments);
+            this.setupHook();
+            return container;
+          },
+
+          openAnnotator: function(self, reader) {
+            this.options.$panel.removeClass("annotator-collapsed");
+            self.state('open-annotator');
+          },
+
+          closeAnnotator: function(self, reader) {
+            this.options.$panel.addClass("annotator-collapsed");
+            self.state('close-annotator');
+          },
+
+          setupHook: function() {
+            var reader = this._reader;
+            reader.rendition.hooks.content.register(function(contents, view) {
+              contents.window.addEventListener('scrolltorange', function (e) {
+                var range = e.detail;
+                var cfi = new reader.CFI(range, contents.cfiBase).toString();
+                if (cfi) {
+                  reader.gotoPage(cfi);
+                }
+                e.preventDefault();
+              });
+            })
+          }
+        })
+        <% end %>
+
+        // Configure and initiate reader
+        var reader = cozy.reader('reader', {
+          // See https://tools.lib.umich.edu/jira/browse/HELIO-3350 and https://stackoverflow.com/a/47331356
+          // Hopefully this line can be removed eventually. Note these are the epub FileSet's NOIDs.
+          <% if %w[cc08hh07v x059c8342 t722h883s ws859h272 4t64gq185 3n204094k sx61dp14z 9019s4683 5138jh01s 2v23vw65x].include? @presenter.id %>...(bowser.safari && Math.floor(bowser.version) === 13 ? {flow: 'scrolled-doc'} : {}),<% end %>
+          href: "<%= "#{main_app.epub_ebook_url.gsub!(/\?.*/, '')}/" %>",
+          skipLink: '.skip',
+          download_links: <%= @ebook_download_presenter.csb_download_links.to_json.html_safe %>,
+          loader_template: '<div class="fulcrum-loading"><div class="rect rect1"></div><div class="circle circ1"></div><div class="rect rect2"></div><div class="circle circ2"></div></div>',
+          <% if %w[leverpress michigan mps uncpress].include? @subdomain %>
+          injectStylesheet: '/css/fulcrum_enhanced_display.css',
+          <% end %>
+          metadata: {
+            doi: '<%= @citable_link %>',
+            location: 'Ann Arbor, MI'
+          }
+        });
+
+        <%= render "cozy_controls_top", presenter: @presenter, parent_presenter: @parent_presenter %>
+
+        <%= render "cozy_controls_bottom", presenter: @presenter, parent_presenter: @parent_presenter %>
+
+        // Annotation widget checks and initialization
+        <% if %w[leverpress michigan cjs cseas csas lrccs ummaa].include? @subdomain %>
+        var tm;
+        function checkForAnnotator(cb, w) {
+          if (!w) {
+            w = window;
+          }
+          tm = setTimeout(function () {
+            if (w && w.annotator) {
+              clearTimeout(tm);
+              cb();
+            } else {
+              checkForAnnotator(cb, w);
+            }
+          }, 100);
+        }
+
+        var $panel = $('.annotator-frame');
+
+        // pass the reference to the panel
+        var annotation_tool = new AnnotationTool({
+          region: 'top.toolbar.left',
+          $panel: $panel
+        })
+        annotation_tool.addTo(reader);
+
+        <% end %>
+
+        // Initiate EPUB Reader
+        reader.start(function() {
+        });
+      }
+    </script>
+  <% end %>
+  <%= render 'shared/ga' %>
+<% end %>
+<%= render template: 'layouts/csb_too_viewer' %>

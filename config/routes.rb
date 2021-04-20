@@ -152,6 +152,14 @@ Rails.application.routes.draw do
     end
   end
 
+  resources :epub_ebooks, only: %i[show] do
+    member do
+      get :search
+      get '*file', action: :file, as: :file
+    end
+  end
+  get "epubs/#{ Settings.princesse_de_cleves_noid || 'invalidnoid' }", to: redirect("epub_ebooks/#{ Settings.princesse_de_cleves_noid || 'invalidnoid' }", status: 302)
+
   get 'epubs/:id', controller: :e_pubs, action: :show, as: :epub
   get 'epubs/:id/*file', controller: :e_pubs, action: :file, as: :epub_file
   get 'epubs_access/:id', controller: :e_pubs, action: :access, as: :epub_access

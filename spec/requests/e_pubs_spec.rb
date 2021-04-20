@@ -444,4 +444,16 @@ RSpec.describe "EPubs", type: :request do
       end
     end
   end
+
+  context 'Princesse De Cleves' do
+    describe 'GET /epubs/pdecleves' do
+      subject { get "/epubs/pdecleves" }
+
+      it do
+        expect { subject }.not_to raise_error
+        expect(response).to have_http_status(:found)
+        expect(response).to redirect_to(epub_ebook_path('pdecleves'))
+      end
+    end
+  end
 end
