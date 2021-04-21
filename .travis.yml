@@ -10,7 +10,7 @@ bundler_args: --without production
 before_install:
   - gem update --system
   - gem install -v 2.1.4 bundler
-  - nvm install node
+  - nvm install v15
   - npm install --global yarn
 install:
   - bundle install --jobs=3 --retry=3
