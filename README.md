@@ -59,6 +59,7 @@ For additional details and helpful hints [read our ever growing Wiki](https://gi
 $ git clone https://github.com/mlibrary/heliotrope.git
 $ cd heliotrope
 $ bundle install
+$ yarn install
 $ bundle exec setup
 $ bundle exec rails checkpoint:migrate
 ```  
