@@ -27,10 +27,8 @@ class PressSearchBuilder < ::SearchBuilder
 
     # these URL params can be set by radio buttons in the UI "facet looking thing" seen in the wireframes
     if blacklight_params['user_access'] == 'true'
-      solr_parameters[:fq] ||= []
       solr_parameters[:fq] << "{!terms f=products_lsim}#{all_product_ids_accessible_by_current_actor.join(',')}"
     elsif blacklight_params['user_access'] == 'oa'
-      solr_parameters[:fq] ||= []
       solr_parameters[:fq] << "{!terms f=products_lsim}-1" # equivalent to solr_parameters[:fq] << "+open_access_tesim:yes"
     end
   end
@@ -46,7 +44,6 @@ class PressSearchBuilder < ::SearchBuilder
   def filter_out_tombstones(solr_parameters)
     return if press_admin_role_override?
 
-    solr_parameters[:fq] ||= []
     solr_parameters[:fq] << "-tombstone_ssim:[* TO *]"
   end
 

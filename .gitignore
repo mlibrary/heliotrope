@@ -22,6 +22,7 @@
 
 .byebug_history
 .rspec_status
+.java-version
 
 # Ignore Redis snapshots
 dump.rdb

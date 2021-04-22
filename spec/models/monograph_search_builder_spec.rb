@@ -6,169 +6,105 @@ describe MonographSearchBuilder do
   let(:search_builder) { described_class.new(context) }
   let(:config) { CatalogController.blacklight_config }
   let(:context) { double('context', blacklight_config: config) }
-  let(:solr_params) { { fq: [] } }
 
-  describe "#filter_by_members" do
-    context "a monograph with assets" do
-      let(:monograph) do
-        ::SolrDocument.new(id: 'mono',
-                           has_model_ssim: ['Monograph'],
-                           # representative_id has a rather different Solr name!
-                           hasRelatedMediaFragment_ssim: cover.id,
-                           ordered_member_ids_ssim: [cover_noid, file1_noid, file2_noid])
+  describe '#monograph_id' do
+    subject { search_builder.send(:monograph_id, blacklight_params) }
+
+    let(:blacklight_params) { { 'id' => id } }
+    let(:id) { 'validnoid' }
+
+    before { allow(search_builder).to receive(:blacklight_params).and_return blacklight_params }
+
+    it { is_expected.to eq id }
+
+    context 'monograph id' do
+      let(:blacklight_params) { { 'id' => id, monograph_id: monograph_id } }
+      let(:monograph_id) { 'monograph' }
+
+      it { is_expected.to eq monograph_id }
+    end
+  end
+
+  describe 'filters' do
+    let(:id) { 'validnoid' }
+
+    before { allow(search_builder).to receive(:monograph_id).and_return id }
+
+    describe '#filter_by_monograph_id' do
+      it do
+        solr_params = { fq: [] }
+        search_builder.filter_by_monograph_id(solr_params)
+        expect(solr_params[:fq]).to contain_exactly("{!terms f=monograph_id_ssim}#{id}")
+      end
+    end
+
+    describe '#filter_out_miscellaneous' do
+      it do
+        solr_params = { fq: [] }
+        search_builder.filter_out_miscellaneous(solr_params)
+        expect(solr_params[:fq]).to be_empty
       end
 
-      let(:cover_noid) { 'cover1234' }
-      let(:file1_noid) { '111111111' }
-      let(:file2_noid) { '222222222' }
-
-      let(:cover) { ::SolrDocument.new(id: cover_noid, has_model_ssim: ['FileSet'], monograph_id_ssim: ['mono'], visibility_ssi: 'open') }
-      let(:file1) { ::SolrDocument.new(id: file1_noid, has_model_ssim: ['FileSet'], monograph_id_ssim: ['mono'], visibility_ssi: 'open') }
-      let(:file2) { ::SolrDocument.new(id: file2_noid, has_model_ssim: ['FileSet'], monograph_id_ssim: ['mono'], visibility_ssi: 'open') }
-
-      before do
-        ActiveFedora::SolrService.add([monograph.to_h, cover.to_h, file1.to_h, file2.to_h])
-        ActiveFedora::SolrService.commit
-        search_builder.blacklight_params['id'] = "mono"
-      end
-
-      context "reprensentative id (cover)" do
-        before { search_builder.filter_by_members(solr_params) }
-
-        it "creates a query for the monograph's assets but without the representative_id" do
-          expect(solr_params[:fq].first).to match(/^{!terms f=id}#{file1_noid},#{file2_noid}$/)
-        end
-      end
-
-      FeaturedRepresentative::KINDS.each do |kind|
-        context kind do
-          before { FeaturedRepresentative.create!(work_id: "mono", file_set_id: file2_noid, kind: kind) }
-
-          it "creates a query for the monograph's assets" do
-            search_builder.filter_by_members(solr_params)
-            expect(solr_params[:fq].first).to match(/^{!terms f=id}#{file1_noid}$/)
-          end
+      context 'representative_id' do
+        it do
+          m = create(:public_monograph, id: id)
+          fs = create(:public_file_set)
+          m.representative_id = fs.id
+          m.save!
+          solr_params = { fq: [] }
+          search_builder.filter_out_miscellaneous(solr_params)
+          expect(solr_params[:fq]).to contain_exactly("-id:#{fs.id}")
         end
       end
 
       context 'tombstone' do
-        context 'with a valid permissions_expiration_date_ssim date' do
-          let(:file2) do
-            ::SolrDocument.new(id: file2_noid,
-                               has_model_ssim: ['FileSet'],
-                               permissions_expiration_date_ssim: Time.now.yesterday.utc.to_s,
-                               monograph_id_ssim: ['mono'],
-                               visibility_ssi: 'open')
-          end
-
-          before do
-            ActiveFedora::SolrService.add([file2.to_h])
-            ActiveFedora::SolrService.commit
-          end
-
-          it "creates a query for the monograph's assets without tombstone" do
-            search_builder.filter_by_members(solr_params)
-            expect(solr_params[:fq].first).to match(/^{!terms f=id}#{file1_noid}$/)
-          end
+        it do
+          m = create(:public_monograph, id: id)
+          fs = create(:public_file_set, tombstone: 'yes')
+          m.ordered_members << fs
+          m.save!
+          solr_params = { fq: [] }
+          search_builder.filter_out_miscellaneous(solr_params)
+          expect(solr_params[:fq]).to contain_exactly("-id:#{fs.id}")
         end
+      end
 
-        context 'with an empty string in permissions_expiration_date_ssim' do
-          # This happens sometimes. It shouldn't, and I'm not sure why it does,
-          # but some of our data is like this, see HELIO-3748
-          let(:file2) do
-            ::SolrDocument.new(id: file2_noid,
-                               has_model_ssim: ['FileSet'],
-                               permissions_expiration_date_ssim: [""], # weird empty string
-                               monograph_id_ssim: ['mono'],
-                               visibility_ssi: 'open')
-          end
-
-          before do
-            ActiveFedora::SolrService.add([file2.to_h])
-            ActiveFedora::SolrService.commit
-          end
-
-          it "creates a query with the correct file_sets/assets" do
-            search_builder.filter_by_members(solr_params)
-            expect(solr_params[:fq].first).to match(/^{!terms f=id}#{file1_noid},#{file2_noid}$/)
-          end
-        end
-
-        context "with an invalid date" do
-          let(:file2) do
-            ::SolrDocument.new(id: file2_noid,
-                               has_model_ssim: ['FileSet'],
-                               permissions_expiration_date_ssim: ["garbage"],
-                               monograph_id_ssim: ['mono'],
-                               visibility_ssi: 'open')
-          end
-
-          before do
-            ActiveFedora::SolrService.add([file2.to_h])
-            ActiveFedora::SolrService.commit
-          end
-
-          it "creates a query with the correct file_sets/assets" do
-            search_builder.filter_by_members(solr_params)
-            expect(solr_params[:fq].first).to match(/^{!terms f=id}#{file1_noid},#{file2_noid}$/)
-          end
+      context 'permissions_expiration_date' do
+        it do
+          m = create(:public_monograph, id: id)
+          fs = create(:public_file_set, permissions_expiration_date: 1.day.ago.utc.strftime('%Y-%m-%d'))
+          m.ordered_members << fs
+          m.save!
+          solr_params = { fq: [] }
+          search_builder.filter_out_miscellaneous(solr_params)
+          expect(solr_params[:fq]).to contain_exactly("-id:#{fs.id}")
         end
       end
     end
 
-    context "a monograph with no assets" do
-      let(:monograph) do
-        ::SolrDocument.new(id: 'mono',
-                           has_model_ssim: ['Monograph'])
+    describe '#filter_out_representatives' do
+      it do
+        solr_params = { fq: [] }
+        search_builder.filter_out_representatives(solr_params)
+        expect(solr_params[:fq]).to be_empty
       end
 
-      before do
-        ActiveFedora::SolrService.add([monograph.to_h])
-        ActiveFedora::SolrService.commit
-        search_builder.blacklight_params['id'] = 'mono'
-        search_builder.filter_by_members(solr_params)
-      end
-
-      it "creates an empty query for the monograph's assets" do
-        expect(solr_params[:fq].first).to eq("{!terms f=id}")
+      context 'representatives' do
+        it do
+          create(:featured_representative, work_id: id, file_set_id: '1', kind: 'epub')
+          create(:featured_representative, work_id: id, file_set_id: '2', kind: 'pdf_ebook')
+          solr_params = { fq: [] }
+          search_builder.filter_out_representatives(solr_params)
+          expect(solr_params[:fq]).to contain_exactly("-id:(1,2)")
+        end
       end
     end
 
-    # Maybe this test doesn't belong here... but where to put it?
-    # We're testing search, not really the search_builder...
-    # For #386
-    context "a monograph with file_sets with markdown content" do
-      let(:monograph) do
-        ::SolrDocument.new(id: 'mono',
-                           has_model_ssim: ['Monograph'],
-                           # representative_id has a rather different Solr name!
-                           hasRelatedMediaFragment_ssim: cover.id,
-                           ordered_member_ids_ssim: ["cover", "file1", "file2"])
-      end
-      let(:cover) { ::SolrDocument.new(id: 'cover', has_model_ssim: ['FileSet'], title_tesim: ["Blue"], description_tesim: ["italic _elephant_"], visibility_ssi: 'open') }
-      let(:file1) { ::SolrDocument.new(id: 'file1', has_model_ssim: ['FileSet'], title_tesim: ["Red"], description_tesim: ["bold __spider__"], visibility_ssi: 'open') }
-      let(:file2) { ::SolrDocument.new(id: 'file2', has_model_ssim: ['FileSet'], title_tesim: ["Yellow"], description_tesim: ["strikethrough ~~lizard~~"], visibility_ssi: 'open') }
-
-      before do
-        ActiveFedora::SolrService.add([monograph.to_h, cover.to_h, file1.to_h, file2.to_h])
-        ActiveFedora::SolrService.commit
-      end
-
-      it "recieves the correct file_set after searching for italic" do
-        doc = ActiveFedora::SolrService.query("{!terms f=description_tesim}elephant", rows: 10_000).first
-        expect(doc[:title_tesim]).to eq(["Blue"])
-      end
-
-      it "recieves the correct result after searching for bold" do
-        doc = ActiveFedora::SolrService.query("{!terms f=description_tesim}spider", rows: 10_000).first
-        expect(doc[:title_tesim]).to eq(["Red"])
-      end
-
-      it "recieves the correct result after searching for strikethrough" do
-        # solr doesn't need any changes in solr/config/schema.xml for strikethrough.
-        # It just "does the right thing". Should test it anyway I guess.
-        doc = ActiveFedora::SolrService.query("{!terms f=description_tesim}lizard", rows: 10_000).first
-        expect(doc[:title_tesim]).to eq(["Yellow"])
+    describe '#filter_out_tombstones' do
+      it do
+        solr_params = { fq: [] }
+        search_builder.filter_out_tombstones(solr_params)
+        expect(solr_params[:fq]).to contain_exactly("-tombstone_ssim:[* TO *]")
       end
     end
   end
