@@ -63,7 +63,19 @@ class MonographIndexer < Hyrax::WorkIndexer
       # HELIO-3709 used in the NOID API
       # Collapse whitespace in identifiers if they exist, although in practice HELIO-3712 fixes this
       solr_doc[Solrizer.solr_name('identifier', :symbol)] = object.identifier.map { |id| id.gsub(/\s/, "") }
+
+      # Index the ToC of the monograph's epub or pdf_ebook if it has one, HELIO-3870
+      solr_doc[Solrizer.solr_name('table_of_contents', :stored_searchable)] = table_of_contents(object.id)
     end
+  end
+
+  def table_of_contents(work_id)
+    # prefer the epub if there is one, otherwise next in order will be pdf_ebook
+    ebook_id = FeaturedRepresentative.where(work_id: work_id, kind: ['epub', 'pdf_ebook']).order(:kind).first&.file_set_id
+    return [] if ebook_id.nil?
+    toc = EbookTableOfContentsCache.where(noid: ebook_id).first&.toc
+    return [] if toc.nil?
+    JSON.parse(toc).map { |entry| entry["title"] }
   end
 
   def importable_names(field)
