@@ -180,13 +180,11 @@ Style/EvalWithLocation:
 
 Style/FrozenStringLiteralComment:
   Exclude:
-    - 'lib/import/importer.rb'
-    - 'lib/import/csv_parser.rb'
+    - 'app/models/riiif/file.rb'
+    - 'app/renderers/hyrax/renderers/*'
+    - 'config/initializers/mailboxer.rb'
     - 'spec/views/hyrax/file_sets/show.html.erb_spec.rb'
     - 'spec/views/hyrax/file_sets/_media.html.erb_spec.rb'
-    - 'app/renderers/hyrax/renderers/*'
-    - 'app/models/riiif/file.rb'
-    - 'config/initializers/mailboxer.rb'
 
 Style/GuardClause:
   Exclude:
