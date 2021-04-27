@@ -12,8 +12,10 @@ describe "Monograph Catalog Sections Facets", type: :feature do
   context "sections using fileset section_title (fallback) for order" do
     let(:monograph) do
       m = build(:public_monograph, title: ["Yellow"], representative_id: cover.id)
-      m.ordered_members = [cover, fs1, fs2, fs3, fs4, fs5, fs6]
+      file_sets = [cover, fs1, fs2, fs3, fs4, fs5, fs6]
+      m.ordered_members = file_sets
       m.save!
+      file_sets.map(&:save!)
       m
     end
 
@@ -56,8 +58,10 @@ describe "Monograph Catalog Sections Facets", type: :feature do
                 representative_id: cover.id,
                 # intended
                 section_titles: "C 1\nB 2\nA 3")
-      m.ordered_members = [cover, fs1, fs2, fs3, fs4, fs5, fs6]
+      file_sets = [cover, fs1, fs2, fs3, fs4, fs5, fs6]
+      m.ordered_members = file_sets
       m.save!
+      file_sets.map(&:save!)
       m
     end
 
@@ -85,8 +89,10 @@ describe "Monograph Catalog Sections Facets", type: :feature do
   context "with italics in the title" do
     let(:monograph) do
       m = build(:public_monograph, title: ["Yellow"], representative_id: cover.id)
-      m.ordered_members = [cover, fs]
+      file_sets = [cover, fs]
+      m.ordered_members = file_sets
       m.save!
+      file_sets.map(&:save!)
       m
     end
 

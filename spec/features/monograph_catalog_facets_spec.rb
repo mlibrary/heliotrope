@@ -35,8 +35,10 @@ describe "Monograph Catalog Facets" do
     }
 
     before do
-      monograph.ordered_members = [cover, file_set1, file_set2]
+      file_sets = [cover, file_set1, file_set2]
+      monograph.ordered_members = file_sets
       monograph.save!
+      file_sets.map(&:save!)
     end
 
     it "shows the correct facets" do

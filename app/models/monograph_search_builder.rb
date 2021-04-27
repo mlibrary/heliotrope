@@ -1,38 +1,50 @@
 # frozen_string_literal: true
 
 class MonographSearchBuilder < ::SearchBuilder
-  self.default_processor_chain += [:filter_by_members]
+  self.default_processor_chain += [
+    :filter_by_monograph_id,
+    :filter_out_miscellaneous,
+    :filter_out_representatives,
+    :filter_out_tombstones
+  ]
 
-  def filter_by_members(solr_parameters)
-    ids = if blacklight_params[:monograph_id]
-            # used for the facets "more" link and facet modal
-            asset_ids(blacklight_params[:monograph_id])
-          else
-            asset_ids(blacklight_params['id'])
-          end
+  def filter_by_monograph_id(solr_parameters)
+    id = monograph_id(blacklight_params)
     solr_parameters[:fq] ||= []
-    solr_parameters[:fq] << "{!terms f=id}#{ids}"
+    solr_parameters[:fq] << "{!terms f=monograph_id_ssim}#{id}"
+  end
+
+  def filter_out_miscellaneous(solr_parameters)
+    id = monograph_id(blacklight_params)
+    mp = Hyrax::PresenterFactory.build_for(ids: [id], presenter_class: Hyrax::MonographPresenter, presenter_args: nil).first
+    return if mp.blank?
+
+    solr_parameters[:fq] << "-id:#{mp.representative_id}" if mp.representative_id.present?
+
+    # TODO: This isn't ideal but works. Ideally the solr document tombstone field
+    # would be set to 'yes' for file sets that have past their permissions expiration date and
+    # would be filtered out by the filter_out_tombstones filter method below.
+    mp.ordered_member_docs.each do |doc|
+      solr_parameters[:fq] << "-id:#{doc['id']}" if tombstone?(doc)
+    end
+  end
+
+  def filter_out_representatives(solr_parameters)
+    id = monograph_id(blacklight_params)
+    ids = FeaturedRepresentative.where(work_id: id).map(&:file_set_id)
+    solr_parameters[:fq] << "-id:(#{ids.join(',')})" if ids.present?
+  end
+
+  # Redundant but consistent with PressSearchBuilder
+  def filter_out_tombstones(solr_parameters)
+    # id = monograph_id(blacklight_params)
+    solr_parameters[:fq] << "-tombstone_ssim:[* TO *]"
   end
 
   private
 
-    # Get the asset/fileset ids of the monograph
-    def asset_ids(id)
-      monograph = Hyrax::PresenterFactory.build_for(ids: [id], presenter_class: Hyrax::MonographPresenter, presenter_args: nil).first
-      return if monograph.blank?
-
-      docs = monograph.ordered_member_docs
-      return if docs.blank?
-
-      ids = []
-      docs.each do |doc|
-        next if doc['id'].in?(monograph.featured_representatives.map(&:file_set_id))
-        next if doc['id'] == monograph.representative_id
-        next if tombstone?(doc)
-        ids << doc['id']
-      end
-
-      ids.join(",")
+    def monograph_id(blacklight_params)
+      blacklight_params[:monograph_id] || blacklight_params['id']
     end
 
     def tombstone?(doc)
@@ -40,8 +52,9 @@ class MonographSearchBuilder < ::SearchBuilder
       # return true if Sighrax.tombstone?(Sighrax.from_solr_document(doc))
       # but that is N+1 and the contructors are a little complicated to change
       # The logic is simple, so:
-      return true if Date.parse(doc['permissions_expiration_date_ssim'].first) <= Time.now.utc.to_date
-      false
+      tombstone = /^yes$/i.match?(doc.tombstone)
+      return true if tombstone
+      Date.parse(doc['permissions_expiration_date_ssim'].first) <= Time.now.utc.to_date
     rescue StandardError => _e
       false
     end
