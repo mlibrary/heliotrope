@@ -19,7 +19,12 @@ module Watermark
           stamps[page_box(page).to_s] = stamp
         end
 
-        pdf.to_pdf
+        # The nasty string manipulation here is to satisfy the requirements of HELIO-3810, given that the date is...
+        # currently removed from `Hyrax::CitationsBehaviors::Formatters::MlaFormatter.add_publisher_text_for()`...
+        # cause of HELIO-3775 I'm just adding it back here pending a decision and the completion of HELIO-3812
+        keywords_text = fmt.map { |t| t[:text] }.join('').gsub("\n", ' ')
+                            .sub('Downloaded on behalf of', "Downloaded on #{Time.zone.now.strftime('%e %b %Y')} from University of Michigan, Ann Arbor, on behalf of")
+        pdf.to_pdf({ keywords: keywords_text })
       end
     end
 

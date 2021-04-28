@@ -181,6 +181,7 @@ Style/EvalWithLocation:
 Style/FrozenStringLiteralComment:
   Exclude:
     - 'app/models/riiif/file.rb'
+    - 'app/overrides/combine_pdf/pdf_overrides.rb'
     - 'app/renderers/hyrax/renderers/*'
     - 'config/initializers/mailboxer.rb'
     - 'spec/views/hyrax/file_sets/show.html.erb_spec.rb'

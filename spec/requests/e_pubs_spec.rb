@@ -302,9 +302,10 @@ RSpec.describe "EPubs", type: :request do
           it do
             expect { subject }.not_to raise_error
             expect(response).to have_http_status(:ok)
-            # watermarking will change the file content and PDF 'producer' metadata
+            # watermarking will change the file content and PDF 'producer'/'keywords' metadata
             expect(response.body).not_to eq File.read(Rails.root.join(fixture_path, '0.pdf'))
             expect(response.body).to include('Producer (Ruby CombinePDF')
+            expect(response.body).to include("Keywords (#{monograph.title.first}. E-book, , https://hdl.handle.net/2027/fulcrum.#{monograph.id}. Downloaded on #{Time.zone.now.strftime('%e %b %Y')} from University of Michigan, Ann Arbor, on behalf of #{request.remote_ip})")
             expect(counter_service).to have_received(:count).with(request: 1, section: 'title', section_type: 'Chapter')
           end
         end
@@ -337,9 +338,10 @@ RSpec.describe "EPubs", type: :request do
           it do
             expect { subject }.not_to raise_error
             expect(response).to have_http_status(:ok)
-            # watermarking will change the file content and PDF 'producer' metadata
+            # watermarking will change the file content and PDF 'producer'/'keywords' metadata
             expect(response.body).not_to eq File.read(Rails.root.join(fixture_path, '0.pdf'))
             expect(response.body).to include('Producer (Ruby CombinePDF')
+            expect(response.body).to include("Keywords (#{monograph.title.first}. E-book, , https://hdl.handle.net/2027/fulcrum.#{monograph.id}. Downloaded on #{Time.zone.now.strftime('%e %b %Y')} from University of Michigan, Ann Arbor, on behalf of #{request.remote_ip})")
             expect(counter_service).to have_received(:count).with(request: 1, section: 'title', section_type: 'Chapter')
           end
         end
