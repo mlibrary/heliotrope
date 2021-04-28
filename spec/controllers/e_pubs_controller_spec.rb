@@ -493,9 +493,10 @@ RSpec.describe EPubsController, type: :controller do
           expect(response.headers['Content-Type']).to eq 'application/pdf'
           expect(response.headers['Content-Disposition']).to eq 'inline; filename="0_This_is_Chapter_One_s_Title.pdf"'
           expect(response.headers['Content-Transfer-Encoding']).to eq 'binary'
-          # watermarking will change the file content and PDF 'producer' metadata
+          # watermarking will change the file content and PDF 'producer'/'keywords' metadata
           expect(response.body).not_to eq File.read(Rails.root.join(fixture_path, '0.pdf'))
           expect(response.body).to include('Producer (Ruby CombinePDF')
+          expect(response.body).to include('Keywords <feff') # BOM of UTF-16 encoded keywords string
           expect(counter_service).to have_received(:count).with(request: 1, section: "This is Chapter One's Title", section_type: 'Chapter')
         end
       end
@@ -515,9 +516,10 @@ RSpec.describe EPubsController, type: :controller do
           expect(response.headers['Content-Type']).to eq 'application/pdf'
           expect(response.headers['Content-Disposition']).to eq 'inline; filename="0_This_is_Chapter_One_s_Title.pdf"'
           expect(response.headers['Content-Transfer-Encoding']).to eq 'binary'
-          # watermarking will change the file content and PDF 'producer' metadata
+          # watermarking will change the file content and PDF 'producer'/'keywords' metadata
           expect(response.body).not_to eq File.read(Rails.root.join(fixture_path, '0.pdf'))
           expect(response.body).to include('Producer (Ruby CombinePDF')
+          expect(response.body).to include('Keywords <feff') # BOM of UTF-16 encoded keywords string
           expect(counter_service).to have_received(:count).with(request: 1, section: "This is Chapter One's Title", section_type: 'Chapter')
         end
       end
