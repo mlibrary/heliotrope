@@ -548,6 +548,14 @@ footer.press {
 ///////////////////////////////////
 .monograph {
 
+  // tombstone message alert
+  .alert-danger.alert-message {
+    font-size: 1.4em;
+    font-weight: bold;
+    color: #333;
+    margin-top: 0;
+  }
+
   figure.peer_review {
     margin-top: 1.5em;
     display: -webkit-box;
