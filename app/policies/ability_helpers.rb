@@ -11,7 +11,7 @@ module AbilityHelpers
       return true if Sighrax.platform_admin?(agent)
 
       press = resource.publisher.press
-      return false unless Sighrax.press_role?(actor, press)
+      return false unless Sighrax.press_role?(agent, press)
 
       case action
       when :create
