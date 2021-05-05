@@ -2124,9 +2124,9 @@ core-js-compat@^3.9.0, core-js-compat@^3.9.1:
     semver "7.0.0"
 
 core-js@^3.6.5:
-  version "3.10.1"
-  resolved "https://registry.yarnpkg.com/core-js/-/core-js-3.10.1.tgz#e683963978b6806dcc6c0a4a8bd4ab0bdaf3f21a"
-  integrity sha512-pwCxEXnj27XG47mu7SXAwhLP3L5CrlvCB91ANUkIz40P27kUcvNfSdvyZJ9CLHiVoKSp+TTChMQMSKQEH/IQxA==
+  version "3.11.3"
+  resolved "https://registry.yarnpkg.com/core-js/-/core-js-3.11.3.tgz#2835b1f4d10f6d0400bf820cfe6fe64ad067dd3f"
+  integrity sha512-DFEW9BllWw781Op5KdYGtXfj3s9Cmykzt16bY6elaVuqXHCUwF/5pv0H3IJ7/I3BGjK7OeU+GrjD1ChCkBJPuA==
 
 core-util-is@1.0.2, core-util-is@~1.0.0:
   version "1.0.2"
@@ -2156,7 +2156,7 @@ cosmiconfig@^6.0.0:
 
 "cozy-sun-bear-too@git+https://github.com/mlibrary/cozy-sun-bear.git#too":
   version "1.0.0"
-  resolved "git+https://github.com/mlibrary/cozy-sun-bear.git#4d586a636a42ca1f654983dd9a687a458616e11e"
+  resolved "git+https://github.com/mlibrary/cozy-sun-bear.git#c9734e7820c612bfab9582b25aeec03c554d29b9"
   dependencies:
     ajv "^6.12.6"
     core-js "^3.6.5"
@@ -2167,10 +2167,11 @@ cosmiconfig@^6.0.0:
     lodash "^4.17.13"
     mustache "^2.3.0"
     path-webpack "0.0.3"
+    portfinder "^1.0.28"
 
 "cozy-sun-bear@git+https://github.com/mlibrary/cozy-sun-bear.git":
   version "1.0.0"
-  resolved "git+https://github.com/mlibrary/cozy-sun-bear.git#735ae38dc892a21dfda8b542c075bff041aa091d"
+  resolved "git+https://github.com/mlibrary/cozy-sun-bear.git#51b7e4e62be0e4b0afb6c43b08fbbc46de312204"
   dependencies:
     ajv "^6.12.6"
     core-js "^3.6.5"
@@ -5373,7 +5374,7 @@ pnp-webpack-plugin@^1.6.4:
   dependencies:
     ts-pnp "^1.1.6"
 
-portfinder@^1.0.26:
+portfinder@^1.0.26, portfinder@^1.0.28:
   version "1.0.28"
   resolved "https://registry.yarnpkg.com/portfinder/-/portfinder-1.0.28.tgz#67c4622852bd5374dd1dd900f779f53462fac778"
   integrity sha512-Se+2isanIcEqf2XMHjyUKskczxbPH7dQnlMjXX6+dybayyHvAf/TCgyMRlzf/B6QDhAEFOGes0pzRo3by4AbMA==
