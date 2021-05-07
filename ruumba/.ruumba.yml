@@ -41,6 +41,9 @@ Layout/IndentationWidth:
   Enabled: false
 Layout/InitialIndentation:
   Enabled: false
+Layout/LeadingBlankLines:
+  Exclude:
+    - 'app/views/epub_search_logs/index.html.erb.rb'
 Layout/LeadingCommentSpace:
   Enabled: false
 Layout/MultilineMethodCallBraceLayout:

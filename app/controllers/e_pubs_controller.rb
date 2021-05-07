@@ -97,10 +97,18 @@ class EPubsController < CheckpointController
     query = params[:q] || ''
     # due to performance issues, must have 3 or more characters to search
     return render json: { q: query, search_results: [] } if query.length < 3
+
+    log = EpubSearchLog.create(noid: @noid, query: query)
+    start = (Time.now.to_f * 1000.0).to_i
+
     results = Rails.cache.fetch(search_cache_key(@noid, query), expires_in: 30.days) do
       epub = EPub::Publication.from_directory(UnpackService.root_path_from_noid(@noid, 'epub'))
       epub.search(query)
     end
+
+    finish = (Time.now.to_f * 1000.0).to_i
+    log.update(time: finish - start, hits: results[:search_results].count, search_results: results)
+
     render json: results
   rescue StandardError => e
     Rails.logger.error "EPubsController.search raised #{e}"

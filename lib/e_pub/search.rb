@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "skylight"
+
 module EPub
   class Search
     def initialize(publication)
@@ -27,35 +29,39 @@ module EPub
     private
 
       def find_selection(node, query)
-        matches = []
-        offset = 0
+        Skylight.instrument title: "FindSelection" do
+          matches = []
+          offset = 0
 
-        while node_query_match(node, query, offset)
-          pos0 = node.content.index(/#{Regexp.escape(query)}($|\W)/i, offset)
-          pos1 = pos0 + query.length
+          while node_query_match(node, query, offset)
+            pos0 = node.content.index(/#{Regexp.escape(query)}($|\W)/i, offset)
+            pos1 = pos0 + query.length
 
-          result = OpenStruct.new
-          result.cfi = EPub::CFI.from(node, pos0, pos1).cfi
-          result.snippet = EPub::Snippet.from(node, pos0, pos1).snippet
-          matches << result
+            result = OpenStruct.new
+            result.cfi = EPub::CFI.from(node, pos0, pos1).cfi
+            result.snippet = EPub::Snippet.from(node, pos0, pos1).snippet
+            matches << result
 
-          offset = pos1 + 1
+            offset = pos1 + 1
+          end
+          matches
         end
-        matches
       end
 
       def find_targets(node, query)
-        targets = []
-        return nil unless node_query_match(node, query)
+        Skylight.instrument title: "FindTargets" do
+          targets = []
+          return nil unless node_query_match(node, query)
 
-        node.children.each do |child|
-          targets << if child.text? && node_query_match(child, query)
-                       find_selection(child, query)
-                     else
-                       find_targets(child, query)
-                     end
+          node.children.each do |child|
+            targets << if child.text? && node_query_match(child, query)
+                         find_selection(child, query)
+                       else
+                         find_targets(child, query)
+                       end
+          end
+          targets.compact
         end
-        targets.compact
       end
 
       def results_from_chapters(db_results, query)
@@ -65,29 +71,31 @@ module EPub
         results[:search_results] = []
 
         db_results.each do |chapter|
-          file = File.join(@publication.root_path, File.dirname(@publication.content_file), chapter[:href])
-          doc = Nokogiri::XML(File.open(file))
-          doc.remove_namespaces!
+          Skylight.instrument title: "EpubSearch Text In Each Chapter" do
+            file = File.join(@publication.root_path, File.dirname(@publication.content_file), chapter[:href])
+            doc = Nokogiri::XML(File.open(file))
+            doc.remove_namespaces!
 
-          matches = []
-          body = doc.xpath("//body")
-          body.children.each do |node|
-            matches << find_targets(node, query)
-          end
+            matches = []
+            body = doc.xpath("//body")
+            body.children.each do |node|
+              matches << find_targets(node, query)
+            end
 
-          matches = matches.flatten.compact
+            matches = matches.flatten.compact
 
-          matches.each_index do |index|
-            match = matches[index]
+            matches.each_index do |index|
+              match = matches[index]
 
-            # De-duplicate identical snippets with slightly different CFIs that are neighbors.
-            # Since we need the CFIs in the reader for syntax highlighting, still send those,
-            # just not snippets
-            empty_snippet = "" if match.snippet == matches[index - 1].snippet && matches.length > 1
+              # De-duplicate identical snippets with slightly different CFIs that are neighbors.
+              # Since we need the CFIs in the reader for syntax highlighting, still send those,
+              # just not snippets
+              empty_snippet = "" if match.snippet == matches[index - 1].snippet && matches.length > 1
 
-            results[:search_results].push(cfi: "#{chapter[:basecfi]}#{match.cfi}",
-                                          title: chapter[:title],
-                                          snippet: empty_snippet || match.snippet)
+              results[:search_results].push(cfi: "#{chapter[:basecfi]}#{match.cfi}",
+                                            title: chapter[:title],
+                                            snippet: empty_snippet || match.snippet)
+            end
           end
         end
         results
