@@ -37,10 +37,9 @@ class LogoPathUploader < CarrierWave::Uploader::Base
   #   process resize_to_fit: [50, 50]
   # end
 
-  # Add a white list of extensions which are allowed to be uploaded.
-  # For images you might use something like this:
+  # Prawn only allows jpg and png images so only allow these as they have to be used in watermark cover pages
   def extension_whitelist
-    %w[jpg jpeg gif png]
+    %w[jpg jpeg png]
   end
 
   # Override the filename of the uploaded files:

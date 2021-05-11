@@ -7,6 +7,11 @@ RSpec.describe "EPubs", type: :request do
     create(:public_monograph,
            user: user,
            press: press.subdomain,
+           creator: ['Doe, A. Deer'], # all citation metadata is needed for PDF cover page
+           copyright_holder: 'blah',
+           date_created: ['2003'],
+           location: 'Collegeville, MN',
+           publisher: ['Uni Press'],
            representative_id: cover.id,
            thumbnail_id: thumbnail.id)
   }

@@ -1,7 +1,10 @@
 # frozen_string_literal: true
 
-module Watermark
-  module Watermarkable
+# conorom 20210521: this Watermark module is unused currently but left in the project in case we revert to the...
+# slower every-page watermark method, which would probably need to be done using a background job and WebSockets
+
+module PDFProtection
+  module Watermark
     extend ActiveSupport::Concern
     include Hyrax::CitationsBehavior
 
@@ -23,7 +26,7 @@ module Watermark
         # currently removed from `Hyrax::CitationsBehaviors::Formatters::MlaFormatter.add_publisher_text_for()`...
         # cause of HELIO-3775 I'm just adding it back here pending a decision and the completion of HELIO-3812
         keywords = fmt.map { |t| t[:text] }.join('').gsub("\n", ' ')
-                            .sub('Downloaded on behalf of', "Downloaded on #{Time.zone.now.strftime('%e %b %Y').strip} from University of Michigan, Ann Arbor, on behalf of")
+                       .sub('Downloaded on behalf of', "Downloaded on #{Time.zone.now.strftime('%e %b %Y').strip} from University of Michigan, Ann Arbor, on behalf of")
         # https://github.com/boazsegev/combine_pdf/issues/188#issuecomment-831377639
         pdf.to_pdf({ keywords: keywords.encode('utf-16') })
       end

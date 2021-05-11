@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class EPubsController < CheckpointController
-  include Watermark::Watermarkable
+  include PdfProtection::CoverPage
 
   protect_from_forgery except: :file
   before_action :setup
@@ -139,6 +139,9 @@ class EPubsController < CheckpointController
     return head :no_content unless EbookIntervalDownloadOperation.new(current_actor, @entity).allowed?
     return head :no_content if params[:title].blank? || params[:chapter_index].blank?
     return head :no_content unless @entity.is_a?(Sighrax::EpubEbook) || @entity.is_a?(Sighrax::PdfEbook)
+    # I would prefer this check to be done in PdfProtection::CoverPage but for now I want to ensure a 204 if the...
+    # cover page cannot be created. Future refactoring potential.
+    raise "Monograph #{@presenter.parent.id} is missing metadata for cover page" unless @presenter.parent.citations_ready?
 
     chapter_title = params[:title]
     chapter_index = params[:chapter_index]
@@ -151,7 +154,7 @@ class EPubsController < CheckpointController
     return head :no_content if !File.exist?(chapter_file_path)
 
     CounterService.from(self, @presenter).count(request: 1, section_type: "Chapter", section: chapter_title)
-    send_data watermark_pdf(@entity, chapter_title, 6, IO.binread(chapter_file_path), chapter_index), type: "application/pdf", filename: chapter_download_name, disposition: "inline"
+    send_data watermark_pdf(@entity, @presenter.parent, IO.binread(chapter_file_path), chapter_index), type: "application/pdf", filename: chapter_download_name, disposition: "inline"
   rescue StandardError => e
     Rails.logger.error "EPubsController.download_interval raised #{e}"
     head :no_content
