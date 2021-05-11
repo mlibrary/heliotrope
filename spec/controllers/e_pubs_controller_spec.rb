@@ -253,6 +253,9 @@ RSpec.describe EPubsController, type: :controller do
           # to get search highlighting
           @snippets = JSON.parse(response.body)["search_results"].map { |result| result["snippet"].presence }.compact
           expect(@snippets.length).to eq 102
+          expect(EpubSearchLog.first.noid).to eq file_set.id
+          expect(EpubSearchLog.first.query).to eq "White Whale"
+          expect(EpubSearchLog.first.hits).to eq 105
         end
       end
 
@@ -312,6 +315,9 @@ RSpec.describe EPubsController, type: :controller do
           expect(response).to have_http_status(:success)
           expect(JSON.parse(response.body)["q"]).to eq "glubmerschmup"
           expect(JSON.parse(response.body)["search_results"]).to eq []
+          expect(EpubSearchLog.first.noid).to eq file_set.id
+          expect(EpubSearchLog.first.query).to eq "glubmerschmup"
+          expect(EpubSearchLog.first.hits).to eq 0
         end
       end
     end

@@ -1,0 +1,44 @@
+<div id="maincontent">
+  <div class="row">
+    <div class="col-md-12"><h1>Epub Search Log</h1></div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <div class="row">
+        <form name="filter" method="get" action="<%=  %>">
+          <table class="table table-striped table-responsive" summary="Epub Search Log List">
+            <tr>
+              <th></th>
+              <th><label for="created_like"><%= link_to "Created", sort: "created_at" %></label></th>
+              <th><label for="noid_like"><%= link_to "Epub Noid", sort: "noid" %></label></th>
+              <th><label for="query_like"><%= link_to "Query", sort: "query" %></label></th>
+              <th><label for="time_like"><%= link_to "Time (in ms)", sort: "time" %></label></th>
+              <th><label for="hits_like"><%= link_to "Hits", sort: "hits" %></label></th>
+            </tr>
+            <tr>
+              <td><button name="submit" type="submit" value="filter">Filter</button></td>
+              <td><input type="text" name="created_like" value="<%= params[:created_like] %>" aria-label="created_like"></td>
+              <td><input type="text" name="noid_like" value="<%= params[:noid_like] %>" aria-label="noid_like"></td>
+              <td><input type="text" name="query_like" value="<%= params[:query_like] %>" aria-label="query_like"></td>
+              <td><input type="text" name="time_like" value="<%= params[:time_like] %>" aria-label="time_like"></td>
+              <td><input type="text" name="hits_like" value="<%= params[:hits_like] %>" aria-label="hits_like"></td>
+            </tr>
+            <% @epub_search_logs.each do |search| %>
+              <tr>
+                <td></td>
+                <td><%= search.created_at %></td>
+                <td><%= search.noid %></td>
+                <td><%= search.query %></td>
+                <td><%= search.time %></td>
+                <td><%= search.hits %></td>
+              </tr>
+            <% end %>
+          </table>
+        </form>
+      </div>
+      <div class="row">
+        <%= paginate @epub_search_logs, per_page: 100 %>
+      </div>
+    </div>
+  </div>
+</div>
