@@ -15,9 +15,16 @@ RSpec.describe UnpackJob, type: :job do
     end
 
     context "with a reflowable epub" do
+      let(:monograph) { create(:monograph) }
       let(:reflowable_epub) { create(:file_set, content: File.open(File.join(fixture_path, 'fake_epub01.epub'))) }
       let(:root_path) { UnpackService.root_path_from_noid(reflowable_epub.id, 'epub') }
       let(:chapters_dir) { UnpackService.root_path_from_noid(reflowable_epub.id, 'epub_chapters') }
+
+      before do
+        monograph.ordered_members << reflowable_epub
+        monograph.save!
+        reflowable_epub.save!
+      end
 
       it "unzips the epub, caches the ToC, creates the search database and doesn't make chapter files derivatives" do
         described_class.perform_now(reflowable_epub.id, 'epub')
@@ -32,9 +39,16 @@ RSpec.describe UnpackJob, type: :job do
     end
 
     context "with a fixed-layout epub" do
+      let(:monograph) { create(:monograph) }
       let(:fixed_layout_epub) { create(:file_set, content: File.open(File.join(fixture_path, 'the-whale.epub'))) }
       let(:root_path) { UnpackService.root_path_from_noid(fixed_layout_epub.id, 'epub') }
       let(:chapters_dir) { UnpackService.root_path_from_noid(fixed_layout_epub.id, 'epub_chapters') }
+
+      before do
+        monograph.ordered_members << fixed_layout_epub
+        monograph.save!
+        fixed_layout_epub.save!
+      end
 
       it "unzips the epub, caches the ToC, creates the search database and makes the chapter files derivatives" do
         described_class.perform_now(fixed_layout_epub.id, 'epub')
@@ -63,9 +77,16 @@ RSpec.describe UnpackJob, type: :job do
     end
 
     context "with a pdf_ebook" do
+      let(:monograph) { create(:monograph) }
       let(:pdf_ebook) { create(:file_set, content: File.open(File.join(fixture_path, 'lorum_ipsum_toc.pdf'))) }
       let(:root_path) { UnpackService.root_path_from_noid(pdf_ebook.id, 'pdf_ebook') }
       let(:chapters_dir) { UnpackService.root_path_from_noid(pdf_ebook.id, 'pdf_ebook_chapters') }
+
+      before do
+        monograph.ordered_members << pdf_ebook
+        monograph.save!
+        pdf_ebook.save!
+      end
 
       it "makes the pdf_ebook, caches the ToC and makes the chapter files derivatives" do
         described_class.perform_now(pdf_ebook.id, 'pdf_ebook')
@@ -98,10 +119,17 @@ RSpec.describe UnpackJob, type: :job do
     end
 
     context "with an epub and pre-existing webgl" do
+      let(:monograph) { create(:monograph) }
       let(:epub) { create(:file_set, content: File.open(File.join(fixture_path, 'fake_epub01.epub'))) }
-      let!(:fre) { create(:featured_representative, work_id: 'mono_id', file_set_id: epub.id, kind: 'epub') }
-      let!(:frw) { create(:featured_representative, work_id: 'mono_id', file_set_id: '123456789', kind: 'webgl') }
+      let!(:fre) { create(:featured_representative, work_id: monograph.id, file_set_id: epub.id, kind: 'epub') }
+      let!(:frw) { create(:featured_representative, work_id: monograph.id, file_set_id: '123456789', kind: 'webgl') }
       let(:root_path) { UnpackService.root_path_from_noid(epub.id, 'epub') }
+
+      before do
+        monograph.ordered_members << epub
+        monograph.save!
+        epub.save!
+      end
 
       after { FeaturedRepresentative.destroy_all }
 
@@ -112,9 +140,13 @@ RSpec.describe UnpackJob, type: :job do
     end
 
     context "with a pre-existing epub" do
+      let(:monograph) { create(:monograph) }
       let(:epub) { create(:file_set, content: File.open(File.join(fixture_path, 'fake_epub01.epub'))) }
 
       before do
+        monograph.ordered_members << epub
+        monograph.save!
+        epub.save!
         # we need the epub already unpacked in order to store the epub-webgl map file
         described_class.perform_now(epub.id, 'epub')
       end
@@ -123,8 +155,8 @@ RSpec.describe UnpackJob, type: :job do
 
       context "adding a webgl" do
         let(:webgl) { create(:file_set, content: File.open(File.join(fixture_path, 'fake-game.zip'))) }
-        let!(:fre) { create(:featured_representative, work_id: 'mono_id', file_set_id: epub.id, kind: 'epub') }
-        let!(:frw) { create(:featured_representative, work_id: 'mono_id', file_set_id: webgl.id, kind: 'webgl') }
+        let!(:fre) { create(:featured_representative, work_id: monograph.id, file_set_id: epub.id, kind: 'epub') }
+        let!(:frw) { create(:featured_representative, work_id: monograph.id, file_set_id: webgl.id, kind: 'webgl') }
         # The root_path of the epub, not the webgl is used to test
         let(:root_path) { UnpackService.root_path_from_noid(epub.id, 'epub') }
 

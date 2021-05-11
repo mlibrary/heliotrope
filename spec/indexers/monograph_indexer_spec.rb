@@ -18,13 +18,14 @@ RSpec.describe MonographIndexer do
             identifier: ['bar_number:S0001', 'heb9999.0001.001'],
             press: press.subdomain)
     }
-    let(:file_set) { create(:file_set) }
+    let(:file_set) { create(:file_set, content: File.open(File.join(fixture_path, 'moby-dick.epub'))) }
     let(:press_name) { press.name }
     let(:parent_press) { nil }
 
     before do
       monograph.ordered_members << file_set
       monograph.save!
+      file_set.save!
     end
 
     it 'indexes the ordered members' do
@@ -64,6 +65,17 @@ RSpec.describe MonographIndexer do
           expect(subject['press_name_ssim']).to eq press_name # symbol
           expect(subject['press_name_sim']).to eq press_name # facetable
         end
+      end
+    end
+
+    context "ebook representative table of contents" do
+      before do
+        create(:featured_representative, work_id: monograph.id, file_set_id: file_set.id, kind: "epub")
+        UnpackJob.perform_now(file_set.id, "epub") # to index the epub's table of contents HELIO-3870
+      end
+
+      it "indexes the epub/pdf_ebook's ToC if there is one" do
+        expect(subject['table_of_contents_tesim']).to include("Chapter 73. Stubb and Flask Kill a Right Whale; and Then Have a Talk")
       end
     end
 
@@ -202,6 +214,74 @@ RSpec.describe MonographIndexer do
 
           it { is_expected.to contain_exactly(-1, product1.id, product2.id) }
         end
+      end
+    end
+  end
+
+  describe "#table_of_contents" do
+    context "no epub or pdf_ebook" do
+      it "returns an empty list" do
+        expect(described_class.new(Monograph.new).table_of_contents('somenoid')).to eq []
+      end
+    end
+
+    context "an epub with no toc" do
+      let(:rep) { create(:featured_representative, kind: 'epub') }
+
+      it "returns an empty list" do
+        expect(described_class.new(Monograph.new).table_of_contents(rep.work_id)).to eq []
+      end
+    end
+
+    context "a pdf_ebook (no available epub) with no toc" do
+      let(:rep) { create(:featured_representative, kind: 'pdf_ebook') }
+
+      it "returns an empty list" do
+        expect(described_class.new(Monograph.new).table_of_contents(rep.work_id)).to eq []
+      end
+    end
+
+    context "an epub with a toc" do
+      let(:toc) {
+        [
+          { title: "Front Cover", level: 1, cfi: "/OEBPS/Cover.xhtml" },
+          { title: "Chapter 1: The Starting", level: 1, cfi:  "/OEBPS/1.xhtml" },
+          { title: "Chapter 2: The Ending", level: 1, cfi: "/OEBPS/2.xhtml" }
+        ]
+      }
+      let(:rep) { create(:featured_representative, kind: 'epub') }
+
+      before do
+        EbookTableOfContentsCache.create(noid: rep.file_set_id, toc: toc.to_json)
+      end
+
+      it "returns the table of contents titles" do
+        expect(described_class.new(Monograph.new).table_of_contents(rep.work_id)).to eq ["Front Cover", "Chapter 1: The Starting", "Chapter 2: The Ending"]
+      end
+    end
+
+    context "an epub and a pdf_ebook with tocs" do
+      let(:monograph_noid) { "aa1234kl0" }
+      let(:epub_toc) {
+        [
+          { title: "epub toc", level: 1, cfi: "/OEBPS/Cover.xhtml" }
+        ]
+      }
+      let(:pdf_toc) {
+        [
+          { title: "pdf toc", level: 1, cfi: "page=1" }
+        ]
+      }
+      let(:pdf) { create(:featured_representative, work_id: monograph_noid, kind: 'pdf_ebook') }
+      let(:epub) { create(:featured_representative, work_id: monograph_noid, kind: 'epub') }
+
+      before do
+        EbookTableOfContentsCache.create(noid: pdf.file_set_id, toc: pdf_toc.to_json)
+        EbookTableOfContentsCache.create(noid: epub.file_set_id, toc: epub_toc.to_json)
+      end
+
+      it "returns the epub table of contents titles" do
+        expect(described_class.new(Monograph.new).table_of_contents(monograph_noid)).to eq ["epub toc"]
       end
     end
   end

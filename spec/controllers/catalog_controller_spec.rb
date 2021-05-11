@@ -27,7 +27,8 @@ RSpec.describe CatalogController, type: :controller do
                                    transcript
                                    translation
                                    alt_text
-                                   identifier]
+                                   identifier
+                                   table_of_contents]
         expected_fields = expected_tesim_fields.map { |field| described_class.solr_name(field, :stored_searchable) }
         expected_fields << 'isbn_numeric'
         expect(default_solr_params[:qf].split(' ')).to match_array(expected_fields)
