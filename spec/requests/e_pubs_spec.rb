@@ -302,9 +302,10 @@ RSpec.describe "EPubs", type: :request do
           it do
             expect { subject }.not_to raise_error
             expect(response).to have_http_status(:ok)
-            # watermarking will change the file content and PDF 'producer' metadata
+            # watermarking will change the file content and PDF 'producer'/'keywords' metadata
             expect(response.body).not_to eq File.read(Rails.root.join(fixture_path, '0.pdf'))
             expect(response.body).to include('Producer (Ruby CombinePDF')
+            expect(response.body).to include('Keywords <feff') # BOM of UTF-16 encoded keywords string
             expect(counter_service).to have_received(:count).with(request: 1, section: 'title', section_type: 'Chapter')
           end
         end
@@ -337,9 +338,10 @@ RSpec.describe "EPubs", type: :request do
           it do
             expect { subject }.not_to raise_error
             expect(response).to have_http_status(:ok)
-            # watermarking will change the file content and PDF 'producer' metadata
+            # watermarking will change the file content and PDF 'producer'/'keywords' metadata
             expect(response.body).not_to eq File.read(Rails.root.join(fixture_path, '0.pdf'))
             expect(response.body).to include('Producer (Ruby CombinePDF')
+            expect(response.body).to include('Keywords <feff') # BOM of UTF-16 encoded keywords string
             expect(counter_service).to have_received(:count).with(request: 1, section: 'title', section_type: 'Chapter')
           end
         end
