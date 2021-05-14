@@ -1,0 +1,21 @@
+development:
+  enabled: true
+  enable_send_logger: true
+  irus_server_address: https://irus.jisc.ac.uk/counter/test/
+  robots_file: irus_analytics_counter_robot_list.txt
+  source_repository: localhost
+  verbose_debug: false # the logging is very noisy, set to true as needed
+test:
+  enabled: true
+  enable_send_logger: false
+  irus_server_address: https://irus.jisc.ac.uk/counter/test/
+  robots_file: irus_analytics_counter_robot_list.txt
+  source_repository: production
+  verbose_debug: false
+production:
+  enabled: true
+  enable_send_logger: false
+  irus_server_address: https://irus.jisc.ac.uk/counter/test/
+  robots_file: irus_analytics_counter_robot_list.txt
+  source_repository: production
+  verbose_debug: false

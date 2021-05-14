@@ -74,6 +74,29 @@ RSpec.describe MonographCatalogController, type: :controller do
   end
 
   describe '#index' do
+    context 'triggers COUNTER, local and IRUS' do
+      let(:monograph) { create(:public_monograph) }
+      let(:counter_service) { double('counter_service') }
+      let(:file_set) { create(:file_set, content: File.open(File.join(fixture_path, 'fake_epub_multi_rendition.epub'))) }
+      let!(:fr) { create(:featured_representative, work_id: monograph.id, file_set_id: file_set.id, kind: 'epub') }
+
+      before do
+        monograph.ordered_members << file_set
+        monograph.save!
+        file_set.save!
+        allow(CounterService).to receive(:from).and_return(counter_service)
+        allow(counter_service).to receive(:count)
+        # The "controller" here is the instance of MonographCatalogController created by rspec
+        allow(controller).to receive(:send_irus_analytics_investigation)
+      end
+
+      it 'counts' do
+        get :index, params: { id: monograph.id }
+        expect(counter_service).to have_received(:count)
+        expect(controller).to have_received(:send_irus_analytics_investigation)
+      end
+    end
+
     context 'no monograph exists with provided id' do
       context 'id never existed' do
         before { get :index, params: { id: 'not_a_monograph_id' } }

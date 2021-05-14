@@ -3,6 +3,8 @@
 require 'rails_helper'
 
 RSpec.describe "FileSets", type: :request do
+  before { stub_out_irus }
+
   context 'draft monograph file set' do
     let(:press) { create(:press) }
     let(:monograph) { create(:monograph, press: press.subdomain) }

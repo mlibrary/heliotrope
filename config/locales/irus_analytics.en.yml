@@ -1,0 +1,62 @@
+en:
+  irus_analytics:
+    analytics_behaviour:
+      no_request_object: Request object is nil
+      exited:            '%{method} exited'
+      no_server_address: No server address
+      params_extracted: '%{method} parameters extracted'
+      enquing_error:    'Problem enqueing the analytics with Resque. Error: %{error}'
+    tracker_context:
+# These transport layer codes don't belong here, see irus_analytics/elements.rb
+#      handles: # see: https://irus.jisc.ac.uk/r5/about/policies/tracker/
+#        event_datestamp:     url_tim
+#        file_url:            svc_dat
+#        http_referer:        rfr_dat
+#        ip_address:          req_id
+#        item_oai_identifier: rft.artnum
+#        openurl_version:     url_ver
+#        source_repository:   rfr_id
+#        usage_event_type:    rft_dat
+#        user_agent:          req_dat
+      labels:
+        event_datestamp:     Usage event datestamp
+        file_url:            FileURL
+        http_referer:        HTTP referer
+        ip_address:          Client IP address
+        item_oai_identifier: Item OAI identifier
+        openurl_version:     OpenURL version
+        source_repository:   Source repository
+        usage_event_type:    Usage event type
+        user_agent:          UserAgent
+    rails:
+      generator_service:
+        say:
+          found_first_line_including: 'Found first line including'
+          looking_for: 'Looking for %{label}'
+    generators:
+      inject_controller_hooks:
+        argument:
+          options_str:
+            desc:  'A string containing one or space separated more name:value'
+        desc: >
+          This generator uses a single string that defines options. Options appear in a single string
+          and are of the form "name:value" (no quotes) amd separated by spaces.
+          These options are:
+            after_action: (required)
+            type: (optional: either 'investigation' or 'request', default to 'request')
+            controller_class_name: qualified class name -- The class name of the controller including any module prefixs.
+            controller_file_name: partial path starting at root -- The file name of the controller. 'app/controllers' will be prepended.
+            debug_verbose: (optional) true or false -- Whether or not to print lots of annoying messages.
+            test_mode: (optional) true or false -- copy the target file and carry out operations against the copy.
+
+          Either a "controller_class_name" or "controller_file_name" is required.
+
+          Example invocation:
+            bundle exec rails generate inject_controller_hooks "after_action:test_action controller_class_name:Hyrax::DissertationsController debug_verbose:false"
+
+          It makes the following changes to your application:
+           1. Injects IRUS analytic hooks into a specified controller
+        say:
+          found:            'Found: %{code}'
+          looking_for:      'Looking for: %{code}'
+      irus_analytics:

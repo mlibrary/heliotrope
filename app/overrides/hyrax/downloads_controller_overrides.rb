@@ -2,6 +2,8 @@
 
 Hyrax::DownloadsController.class_eval do # rubocop:disable Metrics/BlockLength
   prepend(DownloadsControllerBehavior = Module.new do
+    include IrusAnalytics::Controller::AnalyticsBehaviour
+
     # for animated GIF files we use the repo asset for display. They need to be "downloadable" no matter what.
     delegate :animated_gif?, to: :presenter
 
@@ -21,6 +23,7 @@ Hyrax::DownloadsController.class_eval do # rubocop:disable Metrics/BlockLength
           send_file file, derivative_download_options
         else
           CounterService.from(self, presenter).count(request: 1)
+          send_irus_analytics_request
           self.status = 200
           send_file_headers! content_options.merge(disposition: disposition(presenter))
           response.headers['Content-Length'] ||= file.size.to_s
@@ -30,6 +33,10 @@ Hyrax::DownloadsController.class_eval do # rubocop:disable Metrics/BlockLength
       else
         render 'hyrax/base/unauthorized', status: :unauthorized
       end
+    end
+
+    def item_identifier_for_irus_analytics
+      CatalogController.blacklight_config.oai[:provider][:record_prefix] + ":" + FileSet.find(params[:id]).parent.id
     end
 
     def disposition(presenter)

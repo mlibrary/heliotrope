@@ -5,6 +5,7 @@ require 'rails_helper'
 describe "Monograph Catalog Sections Facets", type: :feature do
   before do
     stub_out_redis
+    stub_out_irus
   end
 
   let(:cover) { create(:public_file_set) }

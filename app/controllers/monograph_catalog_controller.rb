@@ -1,12 +1,15 @@
 # frozen_string_literal: true
 
 class MonographCatalogController < ::CatalogController
+  include IrusAnalytics::Controller::AnalyticsBehaviour
+
   before_action :load_presenter, only: %i[index facet purchase]
   before_action :load_press_presenter, only: %i[purchase]
   # HELIO-4115 - deactivate stats tabs but keep the code around as inspiration for the next solution
   # before_action :load_stats, only: %i[index facet]
   before_action :wayfless_redirect_to_shib_login, only: %i[index]
   after_action :add_counter_stat, only: %i[index]
+  # after_action :send_irus_analytics_investigation, only: %i[index]
 
   self.theme = 'hyrax'
   with_themed_layout 'catalog'
@@ -83,6 +86,10 @@ class MonographCatalogController < ::CatalogController
     session[:preferred_monograph_view] = params[:view] if params[:view]
   end
 
+  def item_identifier_for_irus_analytics
+    CatalogController.blacklight_config.oai[:provider][:record_prefix] + ":" + params[:id]
+  end
+
   private
 
     def load_presenter
@@ -122,5 +129,6 @@ class MonographCatalogController < ::CatalogController
       # HELIO-2292
       return unless @presenter.epub? || @presenter.pdf_ebook? || @presenter.mobi?
       CounterService.from(self, @presenter).count
+      send_irus_analytics_investigation
     end
 end

@@ -3,6 +3,7 @@
 class CatalogController < ApplicationController
   include Hydra::Catalog
   include Hydra::Controller::ControllerBehavior
+  include BlacklightOaiProvider::Controller
 
   # This filter applies the hydra access controls
   before_action :enforce_show_permissions, only: :show
@@ -249,6 +250,22 @@ class CatalogController < ApplicationController
 
     # If there are more than this many search results, no spelling ("did you mean") suggestion is offered.
     config.spell_max = 5
+
+    # Oai Configuration
+    config.oai = {
+      provider: {
+        repository_name: 'Fulcrum',
+        repository_url: 'https://fulcrum.org/catalog/oai',
+        record_prefix: 'oai:fulcrum.org',
+        admin_email: 'fulcrum-info@umich.edu',
+        sample_id: '9s1616317'
+      },
+      document: {
+        limit: 50,
+        set_model: OaiPressSet,
+        set_fields: [{ label: 'Press', solr_field: 'press_name_ssim' }]
+      }
+    }
   end
 
   def show_site_search?

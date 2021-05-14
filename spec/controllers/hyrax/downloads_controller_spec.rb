@@ -30,6 +30,26 @@ RSpec.describe Hyrax::DownloadsController, type: :controller do
           expect(response.body).to eq file_set.original_file.content
         end
       end
+
+      context "triggers counter reporting, internally and for irus" do
+        let(:press) { create(:press) }
+        let(:monograph) { create(:monograph, press: press.subdomain, title: ["A Test"]) }
+        let(:counter_service) { double('counter_service') }
+
+        before do
+          monograph.ordered_members << file_set
+          monograph.save!
+          file_set.save!
+          allow(CounterService).to receive(:from).and_return(counter_service)
+          allow(counter_service).to receive(:count)
+        end
+
+        it "counts" do
+          get :show, params: { id: file_set.id, use_route: 'downloads' }
+          expect(counter_service).to have_received(:count)
+          expect(response.body).to eq file_set.original_file.content
+        end
+      end
     end
 
     context "when allow_download is not yes" do

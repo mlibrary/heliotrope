@@ -56,6 +56,7 @@ describe 'Log In and Out' do
 
     before do
       stub_out_redis
+      stub_out_irus
       file_set.update_index
     end
 

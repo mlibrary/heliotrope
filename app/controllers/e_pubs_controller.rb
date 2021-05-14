@@ -2,6 +2,7 @@
 
 class EPubsController < CheckpointController
   include Watermark::Watermarkable
+  include IrusAnalytics::Controller::AnalyticsBehaviour
 
   protect_from_forgery except: :file
   before_action :setup
@@ -35,6 +36,7 @@ class EPubsController < CheckpointController
     @component = component
 
     CounterService.from(self, @presenter).count(request: 1)
+    send_irus_analytics_request
 
     log_share_link_use
 
@@ -45,6 +47,11 @@ class EPubsController < CheckpointController
     else
       head :not_found
     end
+  end
+
+  # HELIO-4143, HELIO-3778
+  def item_identifier_for_irus_analytics
+    CatalogController.blacklight_config.oai[:provider][:record_prefix] + ":" + @presenter.parent.id
   end
 
   def file # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
@@ -153,6 +160,7 @@ class EPubsController < CheckpointController
     run_watermark_checks(chapter_file_path)
 
     CounterService.from(self, @presenter).count(request: 1, section_type: "Chapter", section: chapter_title)
+    send_irus_analytics_request
     send_data watermark_pdf(@entity, chapter_title, chapter_file_path, chapter_index), type: "application/pdf", filename: chapter_download_name, disposition: "inline"
   rescue StandardError => e
     Rails.logger.error "EPubsController.download_interval raised #{e}"

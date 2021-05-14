@@ -36,6 +36,7 @@ describe 'Create an external resource' do
     before do
       login_as user
       stub_out_redis
+      stub_out_irus
       Hydra::Works::AddFileToFileSet.call(file_set, file, :original_file)
       monograph.ordered_members << file_set
       monograph.save!

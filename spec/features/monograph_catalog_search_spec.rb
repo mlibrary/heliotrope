@@ -43,6 +43,7 @@ describe 'Monograph Catalog Search' do
   before do
     login_as user
     stub_out_redis
+    stub_out_irus
   end
 
   it 'has the correct search field form' do

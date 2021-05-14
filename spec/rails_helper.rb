@@ -67,6 +67,12 @@ def stub_out_redis
   allow_any_instance_of(AttachImportFilesToWorkJob).to receive(:acquire_lock_for).and_yield
 end
 
+# IRUS UK COUNTER stats, HELIO-4143, HELIO-3778
+def stub_out_irus
+  allow_any_instance_of(IrusAnalytics::Controller::AnalyticsBehaviour).to receive(:send_irus_analytics_investigation).and_return(true)
+  allow_any_instance_of(IrusAnalytics::Controller::AnalyticsBehaviour).to receive(:send_irus_analytics_request).and_return(true)
+end
+
 # For system specs
 
 # On system spec failure, don't dump the (binary!) screenshot to the console,
