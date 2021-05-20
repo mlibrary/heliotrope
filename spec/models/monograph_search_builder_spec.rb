@@ -95,7 +95,7 @@ describe MonographSearchBuilder do
           create(:featured_representative, work_id: id, file_set_id: '2', kind: 'pdf_ebook')
           solr_params = { fq: [] }
           search_builder.filter_out_representatives(solr_params)
-          expect(solr_params[:fq]).to contain_exactly("-id:(1,2)")
+          expect(solr_params[:fq]).to contain_exactly("-id:(1 2)")
         end
       end
     end

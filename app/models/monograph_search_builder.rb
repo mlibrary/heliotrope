@@ -32,7 +32,7 @@ class MonographSearchBuilder < ::SearchBuilder
   def filter_out_representatives(solr_parameters)
     id = monograph_id(blacklight_params)
     ids = FeaturedRepresentative.where(work_id: id).map(&:file_set_id)
-    solr_parameters[:fq] << "-id:(#{ids.join(',')})" if ids.present?
+    solr_parameters[:fq] << "-id:(#{ids.join(' ')})" if ids.present?
   end
 
   # Redundant but consistent with PressSearchBuilder
