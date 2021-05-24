@@ -20,7 +20,7 @@ RSpec.describe EPub::Search do
     context 'db results empty' do
       let(:query) { 'nobody' }
 
-      it { is_expected.to match(q: query, highlight_off: "no", search_results: []) }
+      it { is_expected.to match(q: query, highlight_off: "no", search_results: [], timeout: 0) }
     end
 
     context 'db results non empty' do
@@ -47,6 +47,16 @@ RSpec.describe EPub::Search do
         expect(subject[:q]).to eq 'star wars'
         @snippets = subject[:search_results].map { |result| result[:snippet].presence }.compact
         expect(@snippets.length).to eq @snippets.uniq.length
+      end
+    end
+
+    context "with a timeout" do
+      let(:query) { 'can' }
+
+      it "has a non-zero timeout because the search timed out" do
+        stub_const("EPub::Search::TIME_OUT", 1) # 1 millisecond
+        allow(EPub.logger).to receive(:info).and_return(true)
+        expect(subject[:timeout].to_i).to be > 0
       end
     end
   end
