@@ -2,7 +2,7 @@
 
 class EpubSearchLogsController < ApplicationController
   def index
-    @epub_search_logs = EpubSearchLog.filter(filtering_params(params)).order(params[:sort] || "created_at desc").page(params[:page])
+    @epub_search_logs = EpubSearchLog.filter(filtering_params(params)).order(params[:sort] || "created_at desc").page(params[:page]).per(1000)
   end
 
   private

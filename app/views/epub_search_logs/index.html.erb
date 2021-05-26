@@ -3,17 +3,64 @@
     <div class="col-md-12"><h1>Epub Search Log</h1></div>
   </div>
   <div class="row">
+  total: <%= EpubSearchLog.count %>
+  <br />
+  total > 60sec: <%= EpubSearchLog.where("time > 60000").count %> &nbsp; hits: <%= EpubSearchLog.where("hits != 0").where("time > 60000").count %>
+  <br />
+  total > 30sec: <%= EpubSearchLog.where("time > 30000").count %> &nbsp; hits: <%= EpubSearchLog.where("hits != 0").where("time > 30000").count %>
+  <br />
+  total > 10sec: <%= EpubSearchLog.where("time > 10000").count %> &nbsp; hits: <%= EpubSearchLog.where("hits != 0").where("time > 10000").count %>
+  <br />
+  total > 5sec: <%= EpubSearchLog.where("time > 5000").count %> &nbsp; hits: <%= EpubSearchLog.where("hits != 0").where("time > 5000").count %>
+  <br />
+  total < 1sec: <%= EpubSearchLog.where("time < 1000").count %> &nbsp; hits: <%= EpubSearchLog.where("hits != 0").where("time < 1000").count %>
+  <br />
+  total hits: <%= EpubSearchLog.where("hits != 0").count %>
+  <br />
+  total no hits: <%= EpubSearchLog.where("hits = 0").count %>
+  </div>
+  <div class="row">
     <div class="col-md-12">
       <div class="row">
         <form name="filter" method="get" action="<%=  %>">
           <table class="table table-striped table-responsive" summary="Epub Search Log List">
             <tr>
               <th></th>
-              <th><label for="created_like"><%= link_to "Created", sort: "created_at" %></label></th>
-              <th><label for="noid_like"><%= link_to "Epub Noid", sort: "noid" %></label></th>
-              <th><label for="query_like"><%= link_to "Query", sort: "query" %></label></th>
-              <th><label for="time_like"><%= link_to "Time (in ms)", sort: "time" %></label></th>
-              <th><label for="hits_like"><%= link_to "Hits", sort: "hits" %></label></th>
+              <th>
+                <label for="created_like">
+                  Created 
+                  <%= link_to "^", sort: "created_at desc" %>
+                  <%= link_to "v", sort: "created_at asc" %>
+                </label>
+              </th>
+              <th>
+                <label for="noid_like">
+                  Epub Noid
+                  <%= link_to "^", sort: "noid desc" %>
+                  <%= link_to "v", sort: "noid asc" %>
+                </label>
+              </th>
+              <th>
+                <label for="query_like">
+                  Query
+                  <%= link_to "^", sort: "query desc" %>
+                  <%= link_to "v", sort: "query asc" %>
+                </label>
+              </th>
+              <th>
+                <label for="time_like">
+                  Time (in ms)
+                  <%= link_to "^", sort: "time desc" %>
+                  <%= link_to "v", sort: "time asc" %>
+                </label>
+              </th>
+              <th>
+                <label for="hits_like">
+                  Hits
+                  <%= link_to "^", sort: "hits desc" %>
+                  <%= link_to "v", sort: "hits asc" %>
+                </label>
+              </th>
             </tr>
             <tr>
               <td><button name="submit" type="submit" value="filter">Filter</button></td>
@@ -27,7 +74,7 @@
               <tr>
                 <td></td>
                 <td><%= search.created_at %></td>
-                <td><%= search.noid %></td>
+                <td><%= link_to search.noid, epub_path(search.noid), target: "_blank" %></td>
                 <td><%= search.query %></td>
                 <td><%= search.time %></td>
                 <td><%= search.hits %></td>
@@ -37,7 +84,7 @@
         </form>
       </div>
       <div class="row">
-        <%= paginate @epub_search_logs, per_page: 100 %>
+        <%= paginate @epub_search_logs %>
       </div>
     </div>
   </div>
