@@ -154,7 +154,7 @@ $ solr_wrapper --config .wrap_conf/solr_test
 ### 3. Run tests
 ```
 $ bundle exec rails rubocop
-$ bunlde exec rails ruumba
+$ bundle exec rails ruumba
 $ bundle exec rails lib_spec
 $ bundle exec rspec
 ```
