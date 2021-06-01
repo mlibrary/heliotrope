@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'pragmatic_segmenter'
+require "skylight"
 
 # This class is supposed to show the search term in context, so surrounded
 # by sentences (not sentence fragments). It's unfortunatly a little involved...
@@ -9,6 +10,7 @@ module EPub
   class Snippet
     private_class_method :new
     attr_accessor :node, :pos0, :pos1
+    include Skylight::Helpers
 
     # This is not an "exact" length, but will be used as sort of a
     # guideline. Weird snippets might still sneak through...
@@ -26,6 +28,7 @@ module EPub
       SnippetNullObject.send(:new)
     end
 
+    instrument_method
     def snippet
       original_text = node.text
       # mark the hit without using markup in a really dumb way
@@ -44,6 +47,7 @@ module EPub
       # remove the hit indicator
       text.gsub!('{{{HIT~', '')
       text.gsub!('~HIT}}}', '')
+
       # Important! Clean up the original node! It's global to the EPub::Publication
       node.content = original_text
 
@@ -58,7 +62,9 @@ module EPub
         # Prefer context to surround the hit evenly, before and after as opposed
         # to having more context up front or more context after (I guess?).
         # Prefer whole words, not bits of words.
+
         sentences = PragmaticSegmenter::Segmenter.new(text: text).segment
+
         # PragmaticSegmenter will turn this: {{{HIT~Honk!~HIT}}} into this: ["{{{HIT~Honk!", "~HIT}}}"]
         # which makes sense since the search term contains a sentence terminator. So just find the hit
         # using the first "{{{HIT~" part.
