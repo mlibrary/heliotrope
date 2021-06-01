@@ -8,3 +8,43 @@
   <li><%= link_to "Handle Deposits", handle_deposits_path %></li>
   <li><%= link_to "Tombstones", tombstones_path %></li>
 </ul>
+
+<div class="row">
+  <div class="col">
+    <!-- blacklight search table queries, HELIO-3912 -->
+    <table class="table table-striped">
+      <tr>
+        <td>
+          Blacklight Searches in the last 30 days
+        </td>
+        <td>
+         <%= Search.where("query_params like '%q:%'").count %>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          EPUB Searches in the last 30 days
+        </td>
+        <td>
+          <%= EpubSearchLog.where("created_at > '#{30.days.ago}'").count%>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Blacklight Searches today
+        </td>
+        <td>
+          <%= Search.where("created_at > '#{1.days.ago}'").where("query_params like '%q:%'").count %>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          EPUB Searches today
+        </td>
+        <td>
+          <%= EpubSearchLog.where("created_at > '#{1.days.ago}'").count %>
+        </td>
+      </tr>
+    <table>
+  </div>
+</div>

@@ -3,21 +3,58 @@
     <div class="col-md-12"><h1>Epub Search Log</h1></div>
   </div>
   <div class="row">
-  total: <%= EpubSearchLog.count %>
-  <br />
-  total > 60sec: <%= EpubSearchLog.where("time > 60000").count %> &nbsp; hits: <%= EpubSearchLog.where("hits != 0").where("time > 60000").count %>
-  <br />
-  total > 30sec: <%= EpubSearchLog.where("time > 30000").count %> &nbsp; hits: <%= EpubSearchLog.where("hits != 0").where("time > 30000").count %>
-  <br />
-  total > 10sec: <%= EpubSearchLog.where("time > 10000").count %> &nbsp; hits: <%= EpubSearchLog.where("hits != 0").where("time > 10000").count %>
-  <br />
-  total > 5sec: <%= EpubSearchLog.where("time > 5000").count %> &nbsp; hits: <%= EpubSearchLog.where("hits != 0").where("time > 5000").count %>
-  <br />
-  total < 1sec: <%= EpubSearchLog.where("time < 1000").count %> &nbsp; hits: <%= EpubSearchLog.where("hits != 0").where("time < 1000").count %>
-  <br />
-  total hits: <%= EpubSearchLog.where("hits != 0").count %>
-  <br />
-  total no hits: <%= EpubSearchLog.where("hits = 0").count %>
+    <div class="col">
+      <table class="table table-striped">
+        <tr>
+          <td>total since <%= EpubSearchLog.first.updated_at %></td>
+          <td><%= EpubSearchLog.count %></td>
+        </tr>
+        <tr>
+          <td>total hits since <%= EpubSearchLog.first.updated_at %></td>
+          <td><%= EpubSearchLog.where("hits != 0").count %></td>
+        </tr>
+        <tr>
+          <td>total > 60sec</td> 
+          <td><%= EpubSearchLog.where("time > 60000").count %></td>
+        </tr>
+        <tr>
+          <td>total > 60sec hits</td> 
+          <td><%= EpubSearchLog.where("hits != 0").where("time > 60000").count %></td>
+        </tr>
+        <tr>
+          <td>total > 30sec</td>
+          <td><%= EpubSearchLog.where("time > 30000").count %></td>
+        </tr>
+        <tr>
+          <td>total > 30sec hits</td> 
+          <td><%= EpubSearchLog.where("hits != 0").where("time > 30000").count %></td>
+        </tr>
+        <tr>
+          <td>total > 10sec</td> 
+          <td><%= EpubSearchLog.where("time > 10000").count %></td> 
+        </tr>
+        <tr>
+          <td>total > 10sec hits</td> 
+          <td><%= EpubSearchLog.where("hits != 0").where("time > 10000").count %></td>
+        </tr>
+        <tr>
+          <td>total > 5sec</td> 
+          <td><%= EpubSearchLog.where("time > 5000").count %></td>
+        </tr>
+        <tr>
+          <td>total > 5sec hits</td> 
+          <td><%= EpubSearchLog.where("hits != 0").where("time > 5000").count %></td>
+        </tr>
+        <tr>
+          <td>total < 1sec</td> 
+          <td><%= EpubSearchLog.where("time < 1000").count %></td>
+        </tr>
+        <tr>
+          <td>total < 1sec hits</td>
+          <td><%= EpubSearchLog.where("hits != 0").where("time < 1000").count %></td>
+        </tr>
+      </table>
+    </div>
   </div>
   <div class="row">
     <div class="col-md-12">
