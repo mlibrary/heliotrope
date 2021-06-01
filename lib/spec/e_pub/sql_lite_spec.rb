@@ -3,40 +3,23 @@
 require 'sqlite3'
 
 RSpec.describe EPub::SqlLite do
-  subject { described_class.from_directory(root_path) }
-
-  let(:root_path) { double("root_path") }
-  let(:epub_publication) { double("publication") }
-  let(:chapters) do
-    [EPub::Chapter.send(:new,
-                        id: '1',
-                        href: '1.xhmtl',
-                        title: 'Chapter Title 1',
-                        basecfi: '/6/2[1.xhtml]!',
-                        doc: Nokogiri::XML('<p>things about stuff</p>'),
-                        publication: epub_publication),
-     EPub::Chapter.send(:new,
-                        id: '2',
-                        href: '2.xhtml',
-                        title: 'Chapter Title 2',
-                        basecfi: '/6/4[2.xhtml]!',
-                        doc: Nokogiri::XML('<p>more things about stuff</p>'),
-                        publication: epub_publication)]
-  end
+  subject { described_class.from_directory(@root_path) }
 
   before do
-    allow(EPub::Publication).to receive(:from_directory).with(root_path).and_return(epub_publication)
-    allow(epub_publication).to receive(:root_path).and_return(true)
-    allow(epub_publication).to receive(:is_a?).and_return(EPub::Publication)
-    allow(epub_publication).to receive(:id).and_return('id')
-    allow(File).to receive(:join).and_return(":memory:")
-    allow(File).to receive(:exist?).with(root_path).and_return(true)
-    allow(epub_publication).to receive(:chapters_from_file).and_return(chapters)
+    @noid = '999999991'
+    @root_path = UnpackHelper.noid_to_root_path(@noid, 'epub')
+    @file = './spec/fixtures/fake_epub01.epub'
+    UnpackHelper.unpack_epub(@noid, @root_path, @file)
+    allow(EPub.logger).to receive(:info).and_return(nil)
   end
 
-  describe "#db" do
-    it "is a database" do
-      expect(subject.db).to be_instance_of SQLite3::Database
+  after do
+    FileUtils.rm_rf(Dir[File.join('./tmp', 'rspec_derivatives')])
+  end
+
+  describe "#db_file" do
+    it "is a database file" do
+      expect(subject.db_file).to eq "./tmp/rspec_derivatives/99/99/99/99/1-epub/999999991.db"
     end
   end
 
@@ -44,8 +27,10 @@ RSpec.describe EPub::SqlLite do
     before { subject.create_table }
 
     it "creates the chapters table" do
-      rows = subject.db.execute "select name from sqlite_master where type='table' and name='chapters'"
-      expect(rows[0][0]).to eq 'chapters'
+      SQLite3::Database.new subject.db_file do |db|
+        rows = db.execute "select name from sqlite_master where type='table' and name='chapters'"
+        expect(rows[0][0]).to eq 'chapters'
+      end
     end
   end
 
@@ -56,8 +41,10 @@ RSpec.describe EPub::SqlLite do
     end
 
     it "loads the chapters" do
-      rows = subject.db.execute "select count() from chapters"
-      expect(rows[0][0]).to eq 2
+      SQLite3::Database.new subject.db_file do |db|
+        rows = db.execute "select count() from chapters"
+        expect(rows[0][0]).to eq 3
+      end
     end
   end
 
@@ -68,12 +55,14 @@ RSpec.describe EPub::SqlLite do
     end
 
     it "finds the chapters that contain the search query" do
-      expect(subject.search_chapters("stuff").count).to eq 2
-      expect(subject.search_chapters("stuff")).to eq [
-        { href: "1.xhmtl", basecfi: "/6/2[1.xhtml]!", title: "Chapter Title 1" },
-        { href: "2.xhtml", basecfi: "/6/4[2.xhtml]!", title: "Chapter Title 2" }
+      expect(subject.search_chapters("lieutenant").count).to eq 3
+      expect(subject.search_chapters("lieutenant")).to eq [
+        {  basecfi: "/6/2[Chapter01]!",  href: "xhtml/Chapter01.xhtml", title: "Damage report!" },
+        {  basecfi: "/6/4[Chapter02]!",  href: "xhtml/Chapter02.xhtml", title: "Shields up!" },
+        {  basecfi: "/6/6[Chapter03]!",  href: "xhtml/Chapter03.xhtml", title: "Mr. Crusher, ready a collision course with the Borg ship." }
       ]
-      expect(subject.search_chapters("more").count).to eq 1
+      expect(subject.search_chapters("szdkfjahykafeh").count).to eq 0
+      expect(subject.search_chapters("artifact").count).to eq 1
     end
   end
 
@@ -81,8 +70,32 @@ RSpec.describe EPub::SqlLite do
     subject { described_class.from_directory("nothing") }
 
     it "returns an instance of SqlLiteNullObject" do
-      allow(File).to receive(:exist?).with("nothing").and_return(false)
       is_expected.to be_an_instance_of(EPub::SqlLiteNullObject)
+    end
+  end
+
+  describe "#find_by_cfi" do
+    before do
+      subject.create_table
+      subject.load_chapters
+    end
+
+    it "finds the chapter based on the cfi" do
+      expect(subject.find_by_cfi("/6/2[Chapter01]!")[:id]).to eq "Chapter01" # rubocop:disable Rails/DynamicFindBy
+      expect(subject.find_by_cfi("/6/2[Chapter01]!")[:title]).to eq "Damage report!" # rubocop:disable Rails/DynamicFindBy
+      expect(subject.find_by_cfi("/6/2[Chapter01]!")[:href]).to eq "xhtml/Chapter01.xhtml" # rubocop:disable Rails/DynamicFindBy
+    end
+  end
+
+  describe "#fetch_chapters" do
+    before do
+      subject.create_table
+      subject.load_chapters
+    end
+
+    it "returns the epub chapters" do
+      expect(subject.fetch_chapters.count).to eq 3
+      expect(subject.fetch_chapters[1][:id]).to eq "Chapter02"
     end
   end
 end
