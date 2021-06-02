@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_05_07_185550) do
+ActiveRecord::Schema.define(version: 2021_06_02_023727) do
 
   create_table "api_requests", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.integer "user_id"
@@ -272,6 +272,9 @@ ActiveRecord::Schema.define(version: 2021_05_07_185550) do
     t.datetime "updated_at", null: false
     t.string "identifier"
     t.string "entity_id"
+    t.string "catalog_url"
+    t.string "link_resolver_url"
+    t.string "logo_path"
     t.index ["identifier"], name: "index_institutions_on_identifier", unique: true
   end
 
