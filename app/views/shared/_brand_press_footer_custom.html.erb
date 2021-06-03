@@ -1,7 +1,13 @@
 <footer class="press">
   <div class="container">
     <div class="row">
+    <% if press_presenter.present? %>
+        <% if %w[heb].include? press_presenter.subdomain %>
+        <div class="press-block-a">
+        <% else %>
         <div class="col-md-6 press-block-a">
+        <% end %>
+    <% end %>
             <%= render 'shared/brand_press_footer_block_a' %>
         </div>
         <div class="press-block-b">

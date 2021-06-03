@@ -2,7 +2,7 @@
 <header id="banner" role="banner">
   <hgroup>
     <% if press_presenter.present? %>
-      <% if %w[leverpress amherst barpublishing mps].include? press_presenter.subdomain %>
+      <% if %w[leverpress amherst barpublishing mps heb].include? press_presenter.subdomain %>
         <%= render 'shared/brand_press_bar_custom' %>
       <% else %>
         <%= render 'shared/brand_press_bar' %>

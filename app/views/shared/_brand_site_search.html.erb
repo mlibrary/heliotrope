@@ -1,0 +1,25 @@
+<% if press_presenter.present? %>
+  <% catalog_url = main_app.press_catalog_path(press_presenter.subdomain) %>
+  <% search_label = t('press_catalog.search.form.q.label', press_name: press_presenter.name) %>
+  <% placeholder = t('press_catalog.search.form.q.placeholder', press_name: press_presenter.name) %>
+<% else %>
+  <% catalog_url = main_app.search_catalog_path %>
+  <% search_label = t('hyrax.search.form.q.label', application_name: application_name) %>
+  <% placeholder = t('hyrax.search.form.q.placeholder') %>
+<% end %>
+
+<%= form_tag catalog_url, method: :get, class: "search-form navbar-left navbar-form" do %>
+  <fieldset>
+    <%= render_hash_as_hidden_fields(search_state.params_for_search.except(:q, :search_field, :qt, :page, :utf8, :partial)) %>
+    <div class="input-group">
+      <%= label_tag :catalog_search, search_label, class: "sr-only" %>
+      <%= text_field_tag(:q, params[:q], class: "q search-query form-control", id: "catalog_search",
+                         placeholder: "Search and discover books", tabindex: "0", type: "search") %>
+      <div class="input-group-btn">
+        <button type="submit" class="search-submit btn btn-primary" id="keyword-search-submit" tabindex="0">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mx-3"><title>Search</title><circle cx="10.5" cy="10.5" r="7.5"></circle><line x1="21" y1="21" x2="15.8" y2="15.8"></line></svg>
+        </button>
+      </div>
+    </div>
+  </fieldset>
+<% end %>

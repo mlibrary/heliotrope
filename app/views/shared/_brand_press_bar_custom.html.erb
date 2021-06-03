@@ -1,59 +1,79 @@
 <% if press_presenter.present? %>
-  <% if %w[leverpress amherst].include? press_presenter.subdomain %>
-    <nav id="brand-bar" class="navbar navbar-default navbar-fixed-top">
+  <% if %w[heb].include? press_presenter.subdomain %>
+    <div class="container py-3">
+        <div class="row justify-content-end">
+          <div class="col-md-8">
+          <a class="navbar-brand" href="<%= press_presenter.url %>">
+            <%= image_tag "HEB-REDBLACK_NOFILL_CROP.svg", class: 'navbar-brand-logo', alt: 'ACLS Humanities EBook', height: '70', width: 'auto' %><h1>ACLS<br/> Humanities Ebook</h1>
+          </a>
+          </div>
+          <div class="col-md-4 pt-3">
+            <%= render 'shared/brand_site_search' %>
+            <% if press_presenter.navigation_block.present? %>
+              <%= press_presenter.navigation_block.html_safe %>
+            <% end %>
+          </div> 
+        </div>
+    </div>    
   <% else %>
-    <nav id="brand-bar" class="navbar navbar-default">
-  <% end %>
-<% end %>
-  <div class="container">
-    <!-- brand and toggle grouped together -->
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#brand-bar-nav" aria-expanded="false" aria-controls="navbar">
-        <span class="sr-only">Toggle navigation</span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
+    <% if %w[leverpress amherst].include? press_presenter.subdomain %>
+      <nav id="brand-bar" class="navbar navbar-default navbar-fixed-top">
+    <% else %>
+      <nav id="brand-bar" class="navbar navbar-default">
+    <% end %>
 
-      <% if press_presenter.subdomain == 'leverpress' %>
-        <a class="navbar-brand" href="<%= press_presenter.url %>">
-          <%= image_tag "LeverLogo.svg", class: 'navbar-brand-logo', alt: 'Lever Press', height: '70', width: 'auto' %><%= press_presenter.name %>
-        </a>
-      <% elsif press_presenter.subdomain == 'amherst' %>
-        <a class="navbar-brand" href="<%= press_presenter.url %>">
-          <%= image_tag "AmherstLogo.svg", class: 'navbar-brand-logo', alt: 'Amherst College Press', height: '70', width: 'auto' %>
-        </a>
-      <% elsif press_presenter.subdomain == 'barpublishing' %>
-        <a class="navbar-brand" href="<%= main_app.press_catalog_path(press_presenter.press) %>">
-            <%= image_tag "bar-digital-logo.png", class: 'navbar-brand-logo', alt: 'BAR Publishing', height: '70', width: 'auto' %>
-        </a>
-      <% elsif press_presenter.subdomain == 'mps' %>
-        <a class="navbar-brand" href="<%= press_presenter.url %>">
-          <%= image_tag "mps.png", class: 'navbar-brand-logo', alt: '', height: '40', width: 'auto' %><%= press_presenter.name %>
-        </a>
-      <% end %>
-    </div>
-
-      <%= render 'shared/site_search' %>
-
-    <div class="collapse navbar-collapse" id="brand-bar-nav">
-      <div class="navbar-right">
-        <% if press_presenter.navigation_block.present? %>
-          <%= press_presenter.navigation_block.html_safe %>
+    <div class="container">
+      <!-- brand and toggle grouped together -->
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#brand-bar-nav" aria-expanded="false" aria-controls="navbar">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        
+        <% if press_presenter.subdomain == 'leverpress' %>  
+          <a class="navbar-brand" href="<%= press_presenter.url %>">
+            <%= image_tag "LeverLogo.svg", class: 'navbar-brand-logo', alt: 'Lever Press', height: '70', width: 'auto' %><%= press_presenter.name %>
+          </a>
+        <% elsif press_presenter.subdomain == 'amherst' %>
+          <a class="navbar-brand" href="<%= press_presenter.url %>">
+            <%= image_tag "AmherstLogo.svg", class: 'navbar-brand-logo', alt: 'Amherst College Press', height: '70', width: 'auto' %>
+          </a>
+        <% elsif press_presenter.subdomain == 'barpublishing' %>
+          <a class="navbar-brand" href="<%= main_app.press_catalog_path(press_presenter.press) %>">
+              <%= image_tag "bar-digital-logo.png", class: 'navbar-brand-logo', alt: 'BAR Publishing', height: '70', width: 'auto' %>
+          </a>
+        <% elsif press_presenter.subdomain == 'mps' %>
+          <a class="navbar-brand" href="<%= press_presenter.url %>">
+            <%= image_tag "mps.png", class: 'navbar-brand-logo', alt: '', height: '40', width: 'auto' %><%= press_presenter.name %>
+          </a>
         <% end %>
-        <% if press_presenter.present? %>
-          <% if press_presenter.subdomain == 'mps' %>
-            <% if current_user && show_site_actions? %>
-              <%= render 'shared/my_actions' %>
-            <% elsif current_institutions? %>
-              <%= render 'shared/institutions' %>
-            <% else %>
-              <a href="/" title="Fulcrum" data-turbolinks="false"><%= image_tag "fulcrum-mark-white-30px.png", class: 'logo', alt: 'Fulcrum logo' %></a>
+      </div>
+
+
+        <%= render 'shared/site_search' %>
+
+      <div class="collapse navbar-collapse" id="brand-bar-nav">
+        <div class="navbar-right">
+          <% if press_presenter.navigation_block.present? %>
+            <%= press_presenter.navigation_block.html_safe %>
+          <% end %>
+          <% if press_presenter.present? %>
+            <% if press_presenter.subdomain == 'mps' %>
+              <% if current_user && show_site_actions? %>
+                <%= render 'shared/my_actions' %>
+              <% elsif current_institutions? %>
+                <%= render 'shared/institutions' %>
+              <% else %>
+                <a href="/" title="Fulcrum" data-turbolinks="false"><%= image_tag "fulcrum-mark-white-30px.png", class: 'logo', alt: 'Fulcrum logo' %></a>
+              <% end %>
             <% end %>
           <% end %>
-        <% end %>
 
+        </div>
       </div>
     </div>
-  </div>
-</nav>
+  </nav>
+  <% end %>
+<% end %>
