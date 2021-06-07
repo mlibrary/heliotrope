@@ -327,7 +327,9 @@ button:focus {
       }
   }
 
-  
+  .breadcrumbs {
+    @include proxima-nova;
+  }
   
 
 
@@ -440,7 +442,7 @@ button:focus {
   // sorts on press and monograph pages
   #sort-dropdown .dropdown-toggle,
   #per_page-dropdown .dropdown-toggle {
-    color: $heb-white;
+    color: $heb-brand-color;
   }
 
   #sort-dropdown .dropdown-toggle:hover,
@@ -469,17 +471,19 @@ button:focus {
   .pagination {
      li a, li span {
 
-       background-color: $heb-brand-color;
-       border-color: $heb-brand-color;
-       color: $heb-white;
+       background-color: $heb-accent-color;
+       border-color: #91a3b0;
+       color: $heb-brand-color;
+       font-weight: 600;
+       @include proxima-nova;
      }
 
      li>a:hover,
      li>a:focus,
      li>span:hover,
      li>span:focus {
-       background-color: $heb-grey-4;
-       border-color: $heb-grey-4;
+       background-color: $heb-accent-color-dark;
+       border-color: $heb-accent-color-dark;
        color: $heb-brand-color;
      }
 
@@ -490,9 +494,9 @@ button:focus {
      .active>span,
      .active>span:hover,
      .active>span:focus {
-       background-color: $heb-grey-4;
-       border-color: $heb-grey-4;
-       color: $heb-brand-color;
+      background-color: $heb-accent-color-dark;
+      border-color: $heb-accent-color-dark;
+      color: $heb-brand-color;
      }
 
      .disabled>span,
@@ -501,9 +505,9 @@ button:focus {
      .disabled>a,
      .disabled>a:hover,
      .disabled>a:focus {
-       background-color: $heb-grey-4;
-       border-color: $heb-grey-4;
-       color: $heb-brand-color;
+      background-color: $heb-accent-color-dark;
+      border-color: $heb-accent-color-dark;
+      color: $heb-brand-color;
      }
   }
 
@@ -681,6 +685,24 @@ button:focus {
 }
 
 @media(max-width: 768px) {
+  .heb header {
+    height: 194px;
+  }
+  .heb .container {
+    overflow: auto;
+  }
+  .heb header .row.justify-content-end .col-md-4.pt-3 {
+    flex-grow: 1;
+  }
+
+  .heb header .row.justify-content-end .col-md-4.pt-3 form.navbar-form {
+    width: 80%;
+  }
+
+  .heb header .row.justify-content-end {
+    justify-content: unset;
+  }
+
   .heb .monograph .message {
     padding: 1.5em;
 
@@ -694,6 +716,11 @@ button:focus {
       width: 20%;
       padding-left: 10%;
     }
+  }
+
+  .heb footer .row {
+    flex-wrap: wrap;
+    justify-content: unset;
   }
 }
 ///////////////////////////////////////////////
