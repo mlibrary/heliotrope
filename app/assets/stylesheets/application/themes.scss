@@ -188,6 +188,7 @@ button:focus {
     .container {
       padding: 16px 15px !important;
       height: inherit;
+      max-width: 1140px;
     }
     .row.justify-content-end {
       display: flex;
@@ -195,30 +196,76 @@ button:focus {
       justify-content: flex-end !important;
       height: 113px;
 
-      .col-md-4 {
+      // search box and links
+      .col-md-4.pt-3 {
         display: flex;
         flex-direction: column;
-        .pt-3 {
-          padding-top: 16px;
+        padding-top: 16px;
+
+        form.navbar-form {
+          margin: 0;
+          padding: 0;
+
+        }
+
+        form {
+          @include proxima-nova;
+
+          .input-group {
+            display: flex;
+            position: relative;
+            width: 100%;
+            align-items: stretch;
+
+            .form-control {
+              position: relative;
+              flex: 1 1 auto;
+              width: 1%;
+              margin-bottom: 0;
+              display: block;
+              padding: 6px 12px;
+              font-size: 16px;
+              line-height: 1.5;
+              background-clip: padding-box;
+              border: 1px solid #ced4da;
+              transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+              color: rgb(73, 80, 87) !important;
+            }
+          }
+
+          input.search-query {
+            background-color: #F3F3F3;
+            border-right: none !important;
+            color: rgb(73, 80, 87) !important;
+            height: 38px;
+          }
+
+          button.search-submit {
+            background-color: rgb(243, 243, 243);
+            border-top: rgb(206, 212, 218) 1px solid;
+            border-right: rgb(206, 212, 218) 1px solid;
+            border-bottom: rgb(206, 212, 218) 1px solid;
+            border-left: none !important;
+            height: 100%;
+            padding: 0;
+            text-transform: none;
+            overflow: visible;
+            border-radius: 0;
+            margin: 0;
+            width: 53px;
+            height: 38px;
+
+            svg {
+              height: auto;
+              width: auto;
+              fill: none;
+              stroke-width: 2;
+
+            }
+          }
+
         }
       }
-    }
-
-    form {
-      @include proxima-nova;
-    }
-
-    input.search-query {
-      background-color: #F3F3F3;
-      border-right: none;
-    }
-    button.search-submit {
-      border-top: rgb(206, 212, 218) 1px solid;
-      border-right: rgb(206, 212, 218) 1px solid;
-      border-bottom: rgb(206, 212, 218) 1px solid;
-      border-left: none;
-      height: 100%;
-      padding: 0;
     }
     
     .navbar-brand-logo {
@@ -254,6 +301,7 @@ button:focus {
       display: inline-block;
       padding-top: 5px;
       padding-bottom: 5px;
+      padding-left: 0;
       margin-right: 1rem;
       font-size: 1.25rem;
       line-height: inherit;
@@ -462,12 +510,37 @@ button:focus {
   //footer
   footer.press {
     background-color: $heb-accent-color-dark !important;
+    img {
+      height: 107px !important;
+      width: 134px !important;
+      padding-bottom: 8px !important;
+    }
+
+    img.fulcrum {
+      height: 27px !important;
+      width: auto !important;
+    }
+
+    .press-block-c {
+      padding: 0;
+      margin-top: 16px;
+    }
   }
   
   footer {
     background-color: $heb-accent-color-dark;
     border-top: 2px solid $heb-red;
-    padding: 3rem 0 1rem;
+    padding: 48px 0 16px;
+
+    .container {
+      max-width: 1140px;
+    
+    }
+
+    .row {
+      display: flex; 
+      justify-content: space-between;
+    }
 
     .press,
     .press-block-a,
@@ -475,19 +548,50 @@ button:focus {
     .press-block-c {
       background-color:  $heb-accent-color-dark !important;
 
+      small {
+        font-size: 12.8px;
+      }
+
     }
 
-    .press-block-a {
-      .logo {
-        height: unset;
-        width: unset;
+    .press-block-c {
+      a {
+        color: #f8f9fa !important;
+      }
+
+      .admin {
+        vertical-align: middle;
       }
     }
+
+    .social {
+      padding-top: 6.4px;
+      margin-bottom: 16px;
+
+    }
+    
+    .d-block {
+      display: block !important;
+      font-size: 12.8px;
+    }
+
+    section {
+      ul {
+        font-size: 16px;
+      }
+    }
+
     .partners {
       display: flex;
       flex-direction: column;
+      height: 175px;
+      a.pr-5 {
+        padding-right: 48px;
+      }
       img {
-        height: 60px;
+        height: 67px !important;
+        width: auto !important;
+        vertical-align: middle !important;
       }
       a {display: inline-block;}
       a > img {
@@ -495,6 +599,8 @@ button:focus {
       }
       p {
         font-size: 12px;
+        padding-top: 24px;
+        margin-bottom: 16px;
       }
     }
 

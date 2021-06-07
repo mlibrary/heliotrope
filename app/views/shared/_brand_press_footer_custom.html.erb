@@ -3,16 +3,14 @@
     <div class="row">
     <% if press_presenter.present? %>
         <% if %w[heb].include? press_presenter.subdomain %>
-        <div class="press-block-a">
+        <%= render 'shared/brand_press_footer_block_a' %>
         <% else %>
         <div class="col-md-6 press-block-a">
-        <% end %>
-    <% end %>
             <%= render 'shared/brand_press_footer_block_a' %>
         </div>
-        <div class="press-block-b">
+        <% end %>
+    <% end %>
             <%= render 'shared/brand_press_footer_block_b' %>
-        </div>
     </div>
     <div class="row press-block-c">
         <div class="col-md-6">
