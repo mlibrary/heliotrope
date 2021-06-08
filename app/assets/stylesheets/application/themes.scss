@@ -69,13 +69,15 @@ $heliotrope-highlight-background: #002c63;
 //
 ///////////////////////////////////////////////
 // colors
-$heb-brand-color: #111;
-$heb-accent-color: #d5d6d2;
-$heb-link: #c50000;
-$heb-red: #cc0000;
+$heb-brand-color: #333333;
+$heb-accent-color: #91A3B0;
+$heb-red: #9E172E;
+$heb-accent-color-dark: #65778B;
 $heb-accent-footer: #989c97;
+$heb-text: rgb(51, 51, 51);
 
-$heb-accent-link: #989c97;
+$heb-link: $heb-brand-color;
+$heb-accent-link: #0d0d0d;
 
 $heb-grey-1: #d5d6d2;
 $heb-grey-2: #989c97;
@@ -85,23 +87,41 @@ $heb-white: #fff;
 $heb-black-80: #342f2e;
 
 // typography
-@import url('https://fonts.googleapis.com/css?family=Open+Sans:300,400,400i,600,600i,700');
+@import url("https://use.typekit.net/rqe4rki.css");
 
-@mixin open-sans {
-  font-family: 'Open Sans', Arial, sans-serif;
+@mixin proxima-nova {
+  font-family: proxima-nova, Arial, Helvetica, sans-serif;
+}
+
+.proxima-nova {
+  @include proxima-nova;
+}
+
+@mixin freight-text {
+  font-family: freight-text-pro, Georgia, 'Times New Roman', Times, serif;
+}
+
+.freight-text {
+  @include freight-text;
 }
 
 .heb {
 
   // typography
-  @include open-sans;
+  @include freight-text;
 
   h1,
   h2,
   h3,
   h4,
   h5 {
+    @include proxima-nova;
     font-weight: 700;
+    color:$heb-brand-color;
+  }
+
+  .text-light {
+    color: #f8f9fa !important;
   }
 
   // links
@@ -114,23 +134,42 @@ $heb-black-80: #342f2e;
     color: $heb-accent-link;
   }
 
+  a:focus,
+button:focus {
+  color: #495057 !important;
+  background-color: #fff !important;
+  border-color: #737373 !important;
+  outline: 0 !important;
+  box-shadow: 0 0 0 0.2rem rgba(51, 51, 51, 0.25) !important;
+}
+
   // buttons
 
   .btn-default {
-    @include button-background-color($heb-brand-color);
-    @include button-font-color($heb-white);
+    @include button-background-color($heb-accent-color);
+    @include button-font-color($heb-brand-color);
+    border-color: #91a3b0;
+    font-weight: 600;
+    @include proxima-nova;
   }
 
   .download {
     .btn-default {
-      @include button-background-color($heb-grey-3);
+    @include button-background-color($heb-accent-color);
+    @include button-font-color($heb-brand-color);
+    border-color: #91a3b0;
+    font-weight: 600;
+    @include proxima-nova;
     }
   }
 
   .btn-default:hover,
   .btn-default:active {
-    @include button-hover-background-color($heb-grey-4);
-    @include button-hover-font-color($heb-brand-color);
+    @include button-hover-background-color(#7b90a0);
+    @include button-hover-font-color(#fff);
+    border-color: #738a9b;
+    font-weight: 600;
+    @include proxima-nova;
   }
 
   // navigation menu
@@ -140,70 +179,161 @@ $heb-black-80: #342f2e;
     background-color: $heb-grey-2;
   }
 
-  #brand-bar {
-    background-color: $heb-white;
-    border-bottom: 10px solid $heb-red;
+  header {
+    border-bottom: 2px solid $heb-red;
+    height: 113px;
+    hgroup {
+      height: inherit;
+    }
+    .container {
+      padding: 16px 15px !important;
+      height: inherit;
+      max-width: 1140px;
+    }
+    .row.justify-content-end {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end !important;
+      height: 113px;
 
+      // search box and links
+      .col-md-4.pt-3 {
+        display: flex;
+        flex-direction: column;
+        padding-top: 16px;
+
+        form.navbar-form {
+          margin: 0;
+          padding: 0;
+
+        }
+
+        form {
+          @include proxima-nova;
+
+          .input-group {
+            display: flex;
+            position: relative;
+            width: 100%;
+            align-items: stretch;
+
+            .form-control {
+              position: relative;
+              flex: 1 1 auto;
+              width: 1%;
+              margin-bottom: 0;
+              display: block;
+              padding: 6px 12px;
+              font-size: 16px;
+              line-height: 1.5;
+              background-clip: padding-box;
+              border: 1px solid #ced4da;
+              transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+              color: rgb(73, 80, 87) !important;
+            }
+          }
+
+          input.search-query {
+            background-color: #F3F3F3;
+            border-right: none !important;
+            color: rgb(73, 80, 87) !important;
+            height: 38px;
+          }
+
+          button.search-submit {
+            background-color: rgb(243, 243, 243);
+            border-top: rgb(206, 212, 218) 1px solid;
+            border-right: rgb(206, 212, 218) 1px solid;
+            border-bottom: rgb(206, 212, 218) 1px solid;
+            border-left: none !important;
+            height: 100%;
+            padding: 0;
+            text-transform: none;
+            overflow: visible;
+            border-radius: 0;
+            margin: 0;
+            width: 53px;
+            height: 38px;
+
+            svg {
+              height: auto;
+              width: auto;
+              fill: none;
+              stroke-width: 2;
+
+            }
+          }
+
+        }
+      }
+    }
+    
+    .navbar-brand-logo {
+      display: inline-block;
+      padding-right: 21.5px;
+    }
+
+    .nav-browse {
+      display: flex;
+      justify-content: flex-end;
+      font-size: 14px;
+      @include proxima-nova;
+      margin-top: 4px;
+
+      .pr-4 {
+        padding-right: 24px;
+      }
+  
+      
+      a {
+        text-transform: uppercase;
+        font-weight: 600;
+        color: #707070;
+      }
+      a:hover,
+      a:active {
+        text-decoration: underline;
+      }
+    }
+    
     .navbar-brand {
-      color: $heb-red;
-      font-weight: 800;
+      height: inherit;
+      display: inline-block;
+      padding-top: 5px;
+      padding-bottom: 5px;
+      padding-left: 0;
+      margin-right: 1rem;
+      font-size: 1.25rem;
+      line-height: inherit;
+      white-space: nowrap;
     }
 
-    .navbar-nav {
-      a#add-content,
-      a.login,
-      a.user-display-name,
-      a.language-dropdown {
-          color: $heb-red;
-      }
-
-      .open > a,
-      .open > a:focus,
-      .open > a:hover {
+    .navbar-brand h1 {
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      display: inline-block;
+      margin: 0;
+      margin-bottom: -8px;
+      vertical-align: bottom;
+      font-size: 26px;
+      line-height: 31.2px;
+    }
+  
+      button.search-submit {
         background-color: $heb-grey-4;
+        border-color: $heb-grey-4;
+        color: $heb-brand-color;
       }
-    }
-
-    button.search-submit {
-      background-color: $heb-grey-4;
-      border-color: $heb-grey-4;
-      color: $heb-brand-color;
-    }
-
   }
+
+  .breadcrumbs {
+    @include proxima-nova;
+  }
+  
+
 
   // press catalog
-
-  // jumbotron
-  .jumbotron {
-    background-color: $heb-grey-4;
-    font-weight: 200;
-    padding-top: 1.5em;
-    padding-bottom: 1em;
-
-    p {
-      font-size: 16px;
-      margin-bottom: 0;
-    }
-
-    p.publisher-info {
-      padding-bottom: .8em;
-    }
-
-    .container {
-      margin-top: 0;
-    }
-
-    .logo {
-
-      img {
-        width: 100px;
-        margin-right: 3em;
-      }
-
-    }
-
-  }
 
   .press {
     .results-container {
@@ -312,7 +442,7 @@ $heb-black-80: #342f2e;
   // sorts on press and monograph pages
   #sort-dropdown .dropdown-toggle,
   #per_page-dropdown .dropdown-toggle {
-    color: $heb-white;
+    color: $heb-brand-color;
   }
 
   #sort-dropdown .dropdown-toggle:hover,
@@ -341,17 +471,19 @@ $heb-black-80: #342f2e;
   .pagination {
      li a, li span {
 
-       background-color: $heb-brand-color;
-       border-color: $heb-brand-color;
-       color: $heb-white;
+       background-color: $heb-accent-color;
+       border-color: #91a3b0;
+       color: $heb-brand-color;
+       font-weight: 600;
+       @include proxima-nova;
      }
 
      li>a:hover,
      li>a:focus,
      li>span:hover,
      li>span:focus {
-       background-color: $heb-grey-4;
-       border-color: $heb-grey-4;
+       background-color: $heb-accent-color-dark;
+       border-color: $heb-accent-color-dark;
        color: $heb-brand-color;
      }
 
@@ -362,9 +494,9 @@ $heb-black-80: #342f2e;
      .active>span,
      .active>span:hover,
      .active>span:focus {
-       background-color: $heb-grey-4;
-       border-color: $heb-grey-4;
-       color: $heb-brand-color;
+      background-color: $heb-accent-color-dark;
+      border-color: $heb-accent-color-dark;
+      color: $heb-brand-color;
      }
 
      .disabled>span,
@@ -373,41 +505,132 @@ $heb-black-80: #342f2e;
      .disabled>a,
      .disabled>a:hover,
      .disabled>a:focus {
-       background-color: $heb-grey-4;
-       border-color: $heb-grey-4;
-       color: $heb-brand-color;
+      background-color: $heb-accent-color-dark;
+      border-color: $heb-accent-color-dark;
+      color: $heb-brand-color;
      }
   }
 
   //footer
-  footer {
-    a,
-    a:hover,
-    a:active {
-      color: $heb-grey-1;
+  footer.press {
+    background-color: $heb-accent-color-dark !important;
+    img {
+      height: 107px !important;
+      width: 134px !important;
+      padding-bottom: 8px !important;
     }
-    .press-block-a,
-    .press-block-b {
-      background-color:  $heb-grey-4;
-      font-weight: 600;
 
-      a,
-      a:hover,
-      a:active {
-        color: #333;
-      }
-
-      img {
-        width: 75px;
-      }
-
+    img.fulcrum {
+      height: 27px !important;
+      width: auto !important;
     }
+
     .press-block-c {
-      background-color: $heb-brand-color;
+      padding: 0;
+      margin-top: 16px;
     }
-    .platform {
-      background-color: $heb-black-80;
+  }
+  
+  footer {
+    background-color: $heb-accent-color-dark;
+    border-top: 2px solid $heb-red;
+    padding: 48px 0 16px;
+
+    .container {
+      max-width: 1140px;
+    
     }
+
+    .row {
+      display: flex; 
+      justify-content: space-between;
+    }
+
+    .press,
+    .press-block-a,
+    .press-block-b,
+    .press-block-c {
+      background-color:  $heb-accent-color-dark !important;
+
+      small {
+        font-size: 12.8px;
+      }
+
+    }
+
+    .press-block-c {
+      a {
+        color: #f8f9fa !important;
+      }
+
+      .admin {
+        vertical-align: middle;
+      }
+    }
+
+    .social {
+      padding-top: 6.4px;
+      margin-bottom: 16px;
+
+    }
+    
+    .d-block {
+      display: block !important;
+      font-size: 12.8px;
+    }
+
+    section {
+      ul {
+        font-size: 16px;
+      }
+    }
+
+    .partners {
+      display: flex;
+      flex-direction: column;
+      height: 175px;
+      a.pr-5 {
+        padding-right: 48px;
+      }
+      img {
+        height: 67px !important;
+        width: auto !important;
+        vertical-align: middle !important;
+      }
+      a {display: inline-block;}
+      a > img {
+        display: inline-block;
+      }
+      p {
+        font-size: 12px;
+        padding-top: 24px;
+        margin-bottom: 16px;
+      }
+    }
+
+    h2 {
+      font-size: 17px;
+      @include proxima-nova;
+      text-transform: uppercase;
+      margin-top: 0;
+    }
+
+    .block {
+      display: block;
+    }
+  
+    p.social {
+      padding-top: .4em;
+      a {
+        padding-right: 0.75em;
+        svg {
+          display: inline-block;
+          vertical-align: middle;
+          fill: $heb-red;
+        }
+      }
+    }
+
   }
 
   // e-book reader
@@ -462,6 +685,24 @@ $heb-black-80: #342f2e;
 }
 
 @media(max-width: 768px) {
+  .heb header {
+    height: 194px;
+  }
+  .heb .container {
+    overflow: auto;
+  }
+  .heb header .row.justify-content-end .col-md-4.pt-3 {
+    flex-grow: 1;
+  }
+
+  .heb header .row.justify-content-end .col-md-4.pt-3 form.navbar-form {
+    width: 80%;
+  }
+
+  .heb header .row.justify-content-end {
+    justify-content: unset;
+  }
+
   .heb .monograph .message {
     padding: 1.5em;
 
@@ -475,6 +716,11 @@ $heb-black-80: #342f2e;
       width: 20%;
       padding-left: 10%;
     }
+  }
+
+  .heb footer .row {
+    flex-wrap: wrap;
+    justify-content: unset;
   }
 }
 ///////////////////////////////////////////////

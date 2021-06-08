@@ -15,7 +15,7 @@
     <%= content_for?(:main) ? yield(:main) : yield %>
   </div>
   <% if press_presenter.present? %>
-    <% if %w[leverpress amherst barpublishing].include? press_presenter.subdomain %>
+    <% if %w[leverpress amherst barpublishing heb].include? press_presenter.subdomain %>
       <%= render 'shared/brand_press_footer_custom' %>
     <% else %>
       <%= render 'shared/brand_press_footer' %>
