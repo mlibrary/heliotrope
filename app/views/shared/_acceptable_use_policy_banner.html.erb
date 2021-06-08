@@ -1,0 +1,14 @@
+<% banner_cookie_name = "acceptable_use_policy_banner" %>
+<div id="<%= banner_cookie_name %>" class="alert alert-info alert-dismissible banner container" role="alert" style="display: none;">
+  <button type="button" onclick="acceptable_use_policy_banner_button_no()" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&#x2715</span></button>
+  <p class="message"><%= raw t("acceptable_use_policy_message") %></p>
+  <button type="button" onclick="acceptable_use_policy_banner_button_yes()" class="btn btn-default btn-lg" data-dismiss="alert" aria-label="OK. Close Dialog">OK</button>
+</div>
+<script type="text/javascript">
+    function acceptable_use_policy_banner_button_no(){
+        Cookies.set('<%= banner_cookie_name %>', 'acceptable_use_policy_no_agreement', { expires: 182<%= ', secure: true' if Rails.env == 'production' %> });
+    }
+    function acceptable_use_policy_banner_button_yes(){
+        Cookies.set('<%= banner_cookie_name %>', 'acceptable_use_policy_agreement', { expires: 182<%= ', secure: true' if Rails.env == 'production' %> });
+    }
+</script>

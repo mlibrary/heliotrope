@@ -30,6 +30,8 @@
 # available at http://guides.rubyonrails.org/i18n.html.
 
 en:
+  acceptable_use_policy_message: |
+    <span>Your use of this Platform is subject to the <a href="https://www.fulcrum.org/terms/">Fulcrum Terms of Service</a>.</span>
   access_levels:
     access_level_text:
       open_access: "Open Access"
