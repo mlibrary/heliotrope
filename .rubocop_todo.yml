@@ -23,6 +23,7 @@ Metrics/CyclomaticComplexity:
 Metrics/ModuleLength:
   Exclude:
     - 'app/helpers/press_helper.rb'
+    - 'app/services/watermark/watermarkable.rb'
 
 Metrics/PerceivedComplexity:
   Exclude:

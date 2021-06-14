@@ -1,44 +1,40 @@
 # frozen_string_literal: true
 
+require 'open3'
+
 module Watermark
   module Watermarkable
     extend ActiveSupport::Concern
     include Hyrax::CitationsBehavior
 
-    def watermark_pdf(entity, title, size = 6, file = nil, chapter_index = nil)
-      fmt = watermark_formatted_text(entity)
-      # Cache key based on citation, including the request_origin, plus chapter title if any.
-      Rails.cache.fetch(cache_key(entity, fmt.to_s + title.to_s + chapter_index.to_s, size), expires_in: 30.days) do
-        content = file.presence || entity.content
+    def run_watermark_checks(file_path)
+      # checking `citations_ready?` may seem worthwhile, but we can occasionally have public "pre-publication content"...
+      # on Fulcrum missing, e.g. the publication year (especially in EBC), that might stay incomplete for weeks.
+      # I'm leaving the line and comment here as a reminder of this.
+      # raise "Monograph #{parent_presenter.id} is missing metadata for watermark" unless parent_presenter.citations_ready?
+      raise "PDF file #{file_path} does not exist" unless File.exist?(file_path)
+      raise "PDFtk not present on machine" unless system("which pdftk > /dev/null 2>&1")
+    end
 
-        pdf = CombinePDF.parse(content, allow_optional_content: true)
-        stamps = {} # Cache of stamps with potentially different media boxes
-        pdf.pages.each do |page|
-          stamp = stamps[page_box(page).to_s] || CombinePDF.parse(watermark(fmt, size, page_box(page))).pages[0]
-          page << stamp
-          stamps[page_box(page).to_s] = stamp
-        end
+    def watermark_pdf(entity, title, file_path = nil, chapter_index = nil)
+      fmt = watermark_formatted_text
 
-        # The nasty string manipulation here is to satisfy the requirements of HELIO-3810, given that the date is...
-        # currently removed from `Hyrax::CitationsBehaviors::Formatters::MlaFormatter.add_publisher_text_for()`...
-        # cause of HELIO-3775 I'm just adding it back here pending a decision and the completion of HELIO-3812
-        keywords = fmt.map { |t| t[:text] }.join('').gsub("\n", ' ')
-                            .sub('Downloaded on behalf of', "Downloaded on #{Time.zone.now.strftime('%e %b %Y').strip} from University of Michigan, Ann Arbor, on behalf of")
-        # https://github.com/boazsegev/combine_pdf/issues/188#issuecomment-831377639
-        pdf.to_pdf({ keywords: keywords.encode('utf-16') })
+      Rails.cache.fetch(cache_key(entity, fmt.to_s + title.to_s + chapter_index.to_s), expires_in: 30.days) do
+        # I think a nightly cron to clean up "watermark_pdf_*" files older than a couple of hours will work
+        suffix = Random.rand(999_999_999).to_s.rjust(9, "0")
+        stamp_file_path = Rails.root.join('tmp', "watermark_pdf_stamp_#{suffix}.pdf")
+        create_watermark_pdf(fmt, stamp_file_path)
+        stamped_file_path = Rails.root.join('tmp', "watermark_pdf_stamped_#{suffix}.pdf")
+
+        command = "pdftk #{file_path} stamp #{stamp_file_path} output #{stamped_file_path}"
+
+        run_command_with_timeout(command, 45) # hopefully 45 seconds is enough for a large PDF at busy times
+        IO.binread(stamped_file_path)
       end
     end
 
-    # https://wiki.scribus.net/canvas/Talk:PDF_Boxes_:_mediabox,_cropbox,_bleedbox,_trimbox,_artbox
-    # "A PDF always has a MediaBox definition. All the other page boxes do not
-    # necessarily have to be present within the file."
-    def page_box(page)
-      page[:TrimBox] ? page[:TrimBox] : page[:MediaBox]
-    end
-
-    def watermark_authorship(presenter)
-      # presenter.authors can only be missing now if creator itself is blank, which would break citations as well
-      presenter.authors? ? CGI.unescapeHTML(presenter.authors(false)) + ', ' : ''
+    def parent_presenter
+      @parent_presenter ||= Sighrax.hyrax_presenter(@entity.parent)
     end
 
     def cache_key_timestamp
@@ -66,9 +62,8 @@ module Watermark
     end
 
     # Returns Prawn::Text::Formatted compatible structure
-    def watermark_formatted_text(entity)
-      presenter = Sighrax.hyrax_presenter(entity.parent)
-      struct = export_as_mla_structure(presenter)
+    def watermark_formatted_text
+      struct = export_as_mla_structure(parent_presenter)
       wrapped = wrap_text(struct[:author] + '___' + struct[:title], 150)
       parts = wrapped.split('___')
       [{ text: parts[0] },
@@ -78,7 +73,8 @@ module Watermark
       ]
     end
 
-    def watermark(formatted_text, size, media_box)
+    def create_watermark_pdf(formatted_text, output_file_path)
+      size = 10
       text = formatted_text.map { |t| t[:text] }.join('')
       height = (text.lines.count + 1) * size
       width = 0
@@ -86,14 +82,18 @@ module Watermark
         width = (width < line.size) ? line.size : width
       end
       width *= (size / 2.0)
-      pdf = Prawn::Document.new do
+      # we are no longer examining the page size and the stamp auto-sizing of command line tools like qpdf or pdftk...
+      # is neater if the stamp is being shrunk, keeping the watermark in what would be considered the "footer" area.
+      # Hence A3 with a text size of 10 on the stamp. Cause we have a variety of page sizes but none should be...
+      # larger than A3.
+      pdf = Prawn::Document.new(page_size: 'A3') do
         font_families.update("OpenSans" => {
             normal: Rails.root.join('app', 'assets', 'fonts', 'OpenSans-Regular.ttf'),
             italic: Rails.root.join('app', 'assets', 'fonts', 'OpenSans-Italic.ttf'),
         })
 
         font('OpenSans', size: size) do
-          bounding_box([-20 + media_box[0], -30 + height + media_box[1]], width: width, height: height) do
+          bounding_box([0, size], width: width, height: height) do
             transparent(0.5) do
               fill_color "ffffff"
               stroke_color "ffffff"
@@ -105,11 +105,34 @@ module Watermark
           end
         end
       end
-      pdf.render
+      pdf.render_file(output_file_path)
     end
 
-    def cache_key(entity, title, size)
-      "pdfwm:#{entity.noid}-#{Digest::MD5.hexdigest(title)}-#{size}-#{cache_key_timestamp}"
+    def cache_key(entity, text)
+      "pdfwm:#{entity.noid}-#{Digest::MD5.hexdigest(text)}-#{cache_key_timestamp}"
+    end
+
+    def run_command_with_timeout(cmd, time_limit)
+      Open3.popen3(cmd) do |_, stdout, stderr, wait_thr|
+        out = ''
+        err = ''
+        exit_status = 0
+        pid = 0
+        begin
+          Timeout.timeout(time_limit) do
+            pid = wait_thr.pid
+            out = stdout.read
+            err = stderr.read
+            exit_status = wait_thr.value
+            Process.wait(pid)
+          end
+        rescue Errno::ECHILD
+        rescue Timeout::Error # "execution expired"
+          Process.kill('HUP', pid)
+          fail
+        end
+        raise "Unable to execute command \"#{cmd}\"\n#{err}\n#{out}" unless exit_status.success?
+      end
     end
   end
 end

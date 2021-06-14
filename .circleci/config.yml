@@ -197,6 +197,9 @@ jobs:
           name: Precompile assets
           command: RAILS_ENV=test bundle exec rails webpacker:compile
       - run:
+          name: install pdftk
+          command: sudo apt-get install -y pdftk
+      - run:
           name: install qpdf
           command: sudo apt-get install -y qpdf
       # TODO: as with the yarn/asset stuff, we could move rubocop/ruumba to a "lint" job
