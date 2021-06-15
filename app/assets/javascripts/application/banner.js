@@ -2,6 +2,7 @@ $(document).on('turbolinks:load', function () {
     if ($(".asset").length > 0 || (".monograph").length > 0) {
         displayBanner();
         displayEulaBanner();
+        displayAcceptableUsePolicyBanner();
     }
 });
 
@@ -27,6 +28,16 @@ function displayEulaBanner() {
     var cookieName = subdomain + '_eula_press_banner';
     var bannerStatus = Cookies.get(cookieName);
     if ( bannerStatus == 'eula_agreement' ) {
+        $("div#" + cookieName).hide();
+    } else {
+        $("div#" + cookieName).show();
+    }
+}
+
+function displayAcceptableUsePolicyBanner() {
+    var cookieName = 'acceptable_use_policy_banner';
+    var bannerStatus = Cookies.get(cookieName);
+    if ( bannerStatus == 'acceptable_use_policy_agreement' ) {
         $("div#" + cookieName).hide();
     } else {
         $("div#" + cookieName).show();

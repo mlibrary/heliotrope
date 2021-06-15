@@ -19,3 +19,4 @@
 <% end %>
 <%= render 'shared/brand_press_banner' if press_presenter.present? && show_banner?(current_actor, press_presenter.subdomain) %>
 <%= render 'shared/eula_press_banner' if press_presenter.present? && show_eula?(press_presenter.subdomain) %>
+<%= render 'shared/acceptable_use_policy_banner' if press_presenter.present? && show_acceptable_use_policy?(press_presenter.subdomain) %>
