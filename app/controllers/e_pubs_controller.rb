@@ -2,6 +2,7 @@
 
 class EPubsController < CheckpointController
   include Watermark::Watermarkable
+  include Skylight::Helpers
 
   protect_from_forgery except: :file
   before_action :setup
@@ -78,6 +79,7 @@ class EPubsController < CheckpointController
     head :no_content
   end
 
+  instrument_method
   def access
     @parent_presenter = @presenter.parent
     @institutions = component_institutions
@@ -182,6 +184,7 @@ class EPubsController < CheckpointController
 
   private
 
+    instrument_method
     def setup
       @noid = params[:id]
       raise(PageNotFoundError, "Invalid NOID") unless ValidationService.valid_noid?(@noid)
@@ -217,12 +220,14 @@ class EPubsController < CheckpointController
       false
     end
 
+    instrument_method
     def component_institutions
       institutions = []
       component_products.each { |product| institutions += product.institutions }
       institutions.uniq
     end
 
+    instrument_method
     def component_products
       return [] if component.blank?
       products = component.products

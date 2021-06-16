@@ -3,6 +3,7 @@
 # Replaces Devise SessionsController
 class SessionsController < ApplicationController
   skip_before_action :store_user_location!
+  include Skylight::Helpers
 
   # Called after HTTP_X_REMOTE_USER authentication
   def new
@@ -58,6 +59,7 @@ class SessionsController < ApplicationController
     redirect_to saved_return_location
   end
 
+  instrument_method
   def discovery_feed
     render json: if params[:id].present?
                    child = Sighrax.from_noid(params[:id])
@@ -73,6 +75,7 @@ class SessionsController < ApplicationController
 
   private
 
+    instrument_method
     def component_discovery_feed(component_id = '') # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
       cache_key = 'component_discovery_feed:' + component_id
       return Rails.cache.read(cache_key) if Rails.cache.exist?(cache_key)
@@ -103,6 +106,7 @@ class SessionsController < ApplicationController
       component_discovery_feed
     end
 
+    instrument_method
     def filtered_discovery_feed
       cache_key = 'filtered_discovery_feed'
       return Rails.cache.read(cache_key) if Rails.cache.exist?(cache_key)
@@ -122,6 +126,7 @@ class SessionsController < ApplicationController
       filtered_discovery_feed
     end
 
+    instrument_method
     def unfiltered_discovery_feed
       cache_key = RecacheInCommonMetadataJob::RAILS_CACHE_KEY
       return Rails.cache.read(cache_key) if Rails.cache.exist?(cache_key)

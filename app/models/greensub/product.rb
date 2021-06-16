@@ -3,6 +3,7 @@
 module Greensub
   class Product < ApplicationRecord
     include Filterable
+    include Skylight::Helpers
 
     scope :identifier_like, ->(like) { where("identifier like ?", "%#{like}%") }
     scope :name_like, ->(like) { where("name like ?", "%#{like}%") }
@@ -60,23 +61,30 @@ module Greensub
     end
 
     def individuals
-      licenses.map(&:individual).compact
+      # licenses.map(&:individual).compact # this is n+1
+      return [] if grants.blank?
+      @individuals ||= Individual.find(grants.where(agent_type: 'Individual').pluck(:agent_id))
     end
 
     def institutions?
       institutions.present?
     end
 
+    instrument_method
     def institutions
-      licenses.map(&:institution).compact
+      # licenses.map(&:institution).compact # this is n+1
+      return [] if grants.blank?
+      @institutions ||= Institution.find(grants.where(agent_type: 'Institution').pluck(:agent_id))
     end
 
     def licenses?
       licenses.present?
     end
 
+    instrument_method
     def licenses
-      License.where(id: grants.where(credential_type: 'License').map(&:credential_id))
+      # License.where(id: grants.where(credential_type: 'License').map(&:credential_id))
+      @licenses ||= License.where(id: grants.where(credential_type: 'License').pluck(:credential_id))
     end
 
     def grants?
@@ -84,7 +92,7 @@ module Greensub
     end
 
     def grants
-      Checkpoint::DB::Grant.where(resource_type: resource_type.to_s, resource_id: resource_id.to_s)
+      @grants ||= Checkpoint::DB::Grant.where(resource_type: resource_type.to_s, resource_id: resource_id.to_s)
     end
 
     def resource_type
