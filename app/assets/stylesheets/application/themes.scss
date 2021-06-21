@@ -5142,6 +5142,437 @@ $a2ru-white: #fafafa;
 ///////////////////////////////////////////////
 //
 // Michigan Publishing Services
+// Frankel Institute Annual
+//
+///////////////////////////////////////////////
+// colors
+$fia-blue-500: #001324;
+$fia-blue-400: #00274c;
+$fia-blue-300: #4c6781;
+$fia-blue-200: #b2bec9;
+$fia-blue-100: #f7f8f9;
+
+$fia-maize-500: #eaba02;
+$fia-maize-400: #ffcb05;
+$fia-maize-300: #ffda50;
+$fia-maize-200: #ffea9b;
+$fia-maize-100: #fff9e6;
+
+$fia-neutral-500: #06080a;
+$fia-neutral-400: #212b36;
+$fia-neutral-300: #637381;
+$fia-neutral-200: #8196a1;
+$fia-neutral-100: #e5e9ed;
+
+$fia-teal-500: #106684;
+$fia-teal-400: #1d7491;
+$fia-teal-300: #65a8bf;
+$fia-teal-200: #a7cddb;
+$fia-teal-100: #e9f2f5;
+
+// typography
+@mixin proxima-nova {
+  font-family: proxima-nova, sans-serif; 
+}
+
+
+.fia {
+
+  // typography
+  @include proxima-nova;
+
+  h1,
+  h2 {
+    @include proxima-nova;
+    font-weight: 600;
+  }
+
+  h1 {
+    font-size: 36px;
+  }
+
+  h3,
+  h4,
+  h5 {
+    @include proxima-nova;
+    font-weight: 600;
+  }
+
+  // links
+  a {
+    color: $fia-neutral-400;
+  }
+
+  a:hover,
+  a:active,
+  a:focus {
+    color: $fia-neutral-300;
+    text-decoration: underline;
+  }
+
+  // buttons
+  .btn, .btn-default {
+    @include proxima-nova;
+    background-color: $fia-blue-400;
+    border-color: $fia-blue-400;
+    color: white;
+  }
+
+  .btn:hover,
+  .btn:active,
+  .btn:focus,
+  .btn-default:hover,
+  .btn-default:active,
+  .btn-default:focus {
+    background-color: $fia-blue-500;
+    color: white;
+    text-decoration: none;
+  }
+
+  // navigation menu
+  .navbar-default .navbar-nav > .open > a,
+  .navbar-default .navbar-nav > .open > a:hover,
+  .navbar-default .navbar-nav > .open > a:focus {
+    background-color: $fia-neutral-100;
+  }
+
+  .navbar {
+    border-radius: 0px;
+  }
+
+  #brand-bar {
+    background-color: white;
+    border-color: $fia-blue-400;
+    border-bottom-width: 2px;
+
+    .navbar-brand {
+      color: $fia-blue-500;
+      @include proxima-nova;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: unset;
+      font-size: 1.8em;
+      height: auto;
+      padding: 20px 20px 19px 15px;
+    }
+
+    .navbar-brand > img {
+      display: inline-block;
+      padding-right: 10px;
+    }
+
+    .search-form {
+      margin-top: 12px;
+    }
+
+    .navbar-brand:hover,
+    .navbar-brand:active,
+    .navbar-brand:focus {
+      text-decoration: underline;
+    }
+
+    .navbar-nav {
+      a#add-content,
+      a.login,
+      a.user-display-name,
+      a.language-dropdown {
+          color: $fia-blue-500;
+      }
+
+      .open > a,
+      .open > a:focus,
+      .open > a:hover,
+      .open > a#add-content {
+        background-color: $fia-neutral-100;
+        color: $fia-blue-500;
+      }
+    }
+
+    button.search-submit {
+      background-color: $fia-maize-400;
+      border-color: $fia-maize-400;
+      color: $fia-blue-500;
+    }
+
+  }
+
+  // breadcrumbs
+  .breadcrumbs {
+    @include proxima-nova;
+
+    .breadcrumb {
+      background-color: $fia-blue-100;
+    }
+
+  }
+
+  // press catalog
+
+  // jumbotron
+  .jumbotron {
+    background-color: $fia-blue-100;
+    @include proxima-nova;
+    padding-top: 10px;
+    padding-bottom: 10px;
+
+    .container {
+      margin-top: 1em;
+    }
+
+    p.lead, p {
+      font-size: 16px;
+      a {
+        text-decoration: underline;
+      }
+    }
+
+    p.publisher-info a {
+      text-decoration: underline;
+    }
+
+    .logo {
+
+      img {
+        display: none;
+      }
+
+    }
+
+  }
+
+  // sorts on press and monograph pages
+  #sort-dropdown .dropdown-toggle,
+  #per_page-dropdown .dropdown-toggle {
+    background-color: $fia-blue-400;
+    color: white;
+    border-color: $fia-blue-400;
+
+  }
+
+  #sort-dropdown .dropdown-toggle:hover,
+  #per_page-dropdown .dropdown-toggle:hover,
+  #sort-dropdown .dropdown-toggle:active,
+  #per_page-dropdown .dropdown-toggle:active {
+    background-color: $fia-blue-500;
+    color: white;
+  }
+
+  #sort-dropdown .dropdown-toggle .caret,
+  #per_page-dropdown .dropdown-toggle .caret {
+    color: white;
+  }
+
+  #sort-dropdown .dropdown-toggle:hover .caret,
+  #per_page-dropdown .dropdown-toggle:hover .caret,
+  #sort-dropdown .dropdown-toggle:active .caret,
+  #per_page-dropdown .dropdown-toggle:active .caret {
+    color: white;
+  }
+
+  // monograph
+  .monograph {
+    .documentHeader {
+      p {
+        @include proxima-nova;
+      }
+    }
+
+    .monograph-metadata h1 {
+      font-size: 36px;
+    }
+
+    .authors, .copyright {
+      @include proxima-nova;
+    }
+
+    .monograph-cover button {
+      background-color: transparent;
+      border-color: transparent;
+    }
+  }
+
+  // pagination
+  .page_links {
+    @include proxima-nova;
+  }
+
+  .pagination {
+    @include proxima-nova;
+     li a, li span {
+       color: white;
+       background-color: $fia-blue-400;
+     }
+
+     .active>a,
+     .active>a:hover,
+     .active>a:focus,
+     .active>span,
+     .active>span:hover,
+     .active>span:focus {
+       background-color: $fia-blue-500;
+       border-color: $fia-blue-500;
+       color: white;
+     }
+  }
+
+  // assets
+  .asset-navigation {
+    @include proxima-nova;
+  }
+
+  .asset {
+    ul.nav-tabs li {
+      @include proxima-nova;
+    }
+  }
+
+  //footer
+  footer {
+    border-top: 2px solid $fia-blue-400;
+    
+    a,
+    a:hover,
+    a:active {
+      color: #fff;
+    }
+    .press-block-a,
+    .press-block-b {
+      background-color:  $fia-blue-200;
+
+      a,
+      a:hover,
+      a:active {
+        color: $fia-blue-400;
+        text-decoration: underline;
+      }
+
+      img {
+        width: auto;
+        margin-top: 30px;
+      }
+
+      p {
+        @include proxima-nova;
+        font-weight: 400;
+        letter-spacing: unset;
+        text-transform: unset;
+        color: $fia-blue-400;
+
+        a.brand {
+          display: block;
+        }
+      }
+
+    }
+    .press-block-c {
+      background-color: $fia-blue-500;
+      color: $fia-blue-200;
+      @include muli;
+    }
+    .platform {
+      background-color: $fia-neutral-400;
+    }
+  }
+
+  // e-book reader
+  #epub {
+    font-family: proxima-nova, sans-serif !important;
+  }
+
+  #reader {
+    @include proxima-nova;
+
+    .cozy-control .cozy-h1 {
+      @include proxima-nova;
+      font-size: 1.5em;
+    }
+
+    .cozy-container input[type="text"] {
+      font-family: proxima-nova, sans-serif !important;
+    }
+
+    .button {
+      @include epub-button-background-color($fia-blue-400,$fia-blue-500,white);
+      @include proxima-nova;
+    }
+
+    .button--lg {
+      @include epub-button-background-color($fia-blue-400,$fia-blue-500,white);
+      @include proxima-nova;
+    }
+
+    .button--inline {
+      @include epub-button-background-color($fia-blue-400,$fia-blue-500,white);
+      @include proxima-nova;
+    }
+
+    .button--sm {
+      @include epub-button-background-color($fia-blue-400,$fia-blue-500,white);
+      @include proxima-nova;
+    }
+
+    .button--sm.cozy-preferences {
+      @include epub-button-background-color($fia-blue-400,$fia-blue-500,white);
+      color: white;
+    }
+
+    i[class^='icon-chevron-'] {
+      @include epub-prev-next-color($fia-blue-400 !important);
+      transition: 0.2s ease-in;
+    }
+
+    i[class^='icon-chevron-']:hover {
+      @include epub-hover-prev-next-color($fia-blue-500 !important);
+      transition: 0.2s ease-in;
+    }
+
+    // PDF loading progress bar
+    .helio-loading-bar .progress {
+      background-color: $fia-blue-400;
+    }
+
+  }
+
+  @media only screen and (max-width : 1198px) {
+
+    #brand-bar form.search-form, .navbar-form {
+      width: 200px;
+    }
+
+  }
+
+  @media only screen and (max-width : 992px) {
+    #brand-bar .navbar-brand {
+      font-size: 1.4em;
+    }
+
+    #brand-bar form.search-form, .navbar-form {
+      padding: 10px 0;
+      margin: 0;
+      width: 100%;
+      border: 0;
+      float: none !important;
+    }
+
+    .navbar-form .input-group .input-group-btn {
+      width: 1%;
+    }
+
+  }
+
+  @media only screen and (max-width : 768px) {
+    #brand-bar .navbar-brand {
+      font-size: 1.2em;
+    }
+
+  }
+
+}
+
+
+///////////////////////////////////////////////
+//
+// Michigan Publishing Services
 // Maize Books
 //
 ///////////////////////////////////////////////
