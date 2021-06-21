@@ -331,6 +331,11 @@ button:focus {
     @include proxima-nova;
   }
   
+  // container on all pages
+  #main.container {
+    max-width: 1140px;
+    padding-top: 1.5em;
+  }
 
 
   // press catalog
@@ -449,7 +454,7 @@ button:focus {
   #per_page-dropdown .dropdown-toggle:hover,
   #sort-dropdown .dropdown-toggle:active,
   #per_page-dropdown .dropdown-toggle:active {
-    color: $heb-brand-color;
+    color: #fff;
   }
 
   .constraints-container {
@@ -507,7 +512,7 @@ button:focus {
      .disabled>a:focus {
       background-color: $heb-accent-color-dark;
       border-color: $heb-accent-color-dark;
-      color: $heb-brand-color;
+      color: #fff;
      }
   }
 
@@ -637,24 +642,46 @@ button:focus {
   #reader {
 
     .button {
-      @include epub-button-background-color($heb-brand-color,$heb-grey-2,$heb-white);
+      @include epub-button-background-color($heb-accent-color,#7b90a0,$heb-brand-color);
     }
 
     .button--lg {
-      @include epub-button-background-color($heb-brand-color,$heb-grey-2,$heb-white);
+      @include epub-button-background-color($heb-accent-color,#7b90a0,$heb-brand-color);
     }
 
     .button--inline {
-      @include epub-button-background-color($heb-brand-color,$heb-grey-2,$heb-white);
+      @include epub-button-background-color($heb-accent-color,#7b90a0,$heb-brand-color);
     }
 
     .button--sm {
-      @include epub-button-background-color($heb-brand-color,$heb-grey-2,$heb-white);
+      @include epub-button-background-color($heb-accent-color,#7b90a0,$heb-brand-color);
     }
 
     .button--sm.cozy-preferences {
-      @include epub-button-background-color(#f1f1f1,$heb-grey-2,$heb-white);
+      @include epub-button-background-color($heb-accent-color,#7b90a0,$heb-brand-color);
       color: $heb-brand-color;
+    }
+
+    .button:hover,
+    .button--lg:hover,
+    .button--inline:hover,
+    .button--sm:hover,
+    .button--sm.cozy-preferences:hover, 
+    .button:active,
+    .button--lg:active,
+    .button--inline:active,
+    .button--sm:active,
+    .button--sm.cozy-preferences:active {
+      color: #fff !important;
+    }
+
+    .button:focus,
+    .button--lg:focus,
+    .button--inline:focus,
+    .button--sm:focus,
+    .button--sm.cozy-preferences:focus {
+      color: #fff !important;
+      background-color: #7b90a0;
     }
 
     i[class^='icon-chevron-'] {
