@@ -9,7 +9,7 @@ RSpec.describe "PDF EBooks", type: :request do
     let(:noid) { 'validnoid' }
     let(:ebook) { instance_double(Sighrax::Ebook, 'ebook', noid: noid, data: {}, valid?: true, title: 'title', watermarkable?: watermarkable, publisher: publisher) }
     let(:watermarkable) { false }
-    let(:publisher) { instance_double(Sighrax::Publisher, 'publihser', watermark?: watermark) }
+    let(:publisher) { instance_double(Sighrax::Publisher, 'publisher', watermark?: watermark) }
     let(:watermark) { false }
     let(:ebook_download_op) { instance_double(EbookDownloadOperation, 'ebook_download_op', allowed?: allowed) }
     let(:allowed) { false }
@@ -54,8 +54,7 @@ RSpec.describe "PDF EBooks", type: :request do
               parent: parent,
               title: 'title',
               resource_token: 'resource_token',
-              media_type: 'application/pdf',
-              filename: 'clippath.pdf',
+              filename: 'lorum_ipsum_toc.pdf',
               watermarkable?: watermarkable,
               publisher: publisher
             )
@@ -65,55 +64,69 @@ RSpec.describe "PDF EBooks", type: :request do
           let(:counter_service) { double("counter_service") }
 
           before do
-            allow(ebook).to receive(:content).and_return(File.read(Rails.root.join(fixture_path, ebook.filename)))
+            allow(UnpackService).to receive(:root_path_from_noid).with(noid, 'pdf_ebook').and_return(Rails.root.join(fixture_path, ebook.filename).to_s.gsub('.pdf', ''))
             allow(Sighrax).to receive(:hyrax_presenter).with(ebook).and_return(ebook_presenter)
+            allow(Sighrax).to receive(:hyrax_presenter).with(parent).and_return(presenter)
             allow(CounterService).to receive(:from).and_return(counter_service)
             allow(counter_service).to receive(:count).with(request: 1).and_return(true)
           end
 
-          context 'presenter returns an authors value' do
-            let(:presenter) do
-              instance_double(Hyrax::MonographPresenter, authors?: true,
-                                                         authors: 'creator blah',
-                                                         creator: ['Creator, A.', 'Destroyer, Z.'],
-                                                         title: 'title',
-                                                         date_created: ['created'],
-                                                         based_near_label: ['Somewhere'],
-                                                         citable_link: 'www.example.com/something',
-                                                         publisher: ['publisher'])
-            end
+          context 'presenter missing citation metadata needed for the watermark/stamp' do
+            let(:presenter) { instance_double(Hyrax::MonographPresenter, id: 'validnoid', citations_ready?: false,
+                                              authors?: false,
+                                              authors: '',
+                                              epub?: false,
+                                              pdf_ebook?: true,
+                                              creator: [],
+                                              title: 'title',
+                                              date_created: nil,
+                                              based_near_label: ['Somewhere'],
+                                              citable_link: 'www.example.com/something',
+                                              publisher: ['publisher']) }
 
-            it 'uses it in the watermark' do
-              allow(Sighrax).to receive(:hyrax_presenter).with(parent).and_return(presenter)
+            it "serves a PDF with cover page anyway" do
               expect { subject }.not_to raise_error
+              expect(assigns(:entity))
+              expect(response).to have_http_status(:success)
               expect(response).to have_http_status(:ok)
-              expect(response.body).not_to be_empty
-              # watermarking will change the file content and PDF 'producer' metadata
-              expect(response.body).not_to eq File.read(Rails.root.join(fixture_path, ebook.filename))
-              expect(response.body).to include('Producer (Ruby CombinePDF')
-              expect(response.header['Content-Type']).to eq(ebook.media_type)
+              expect(response.header['Content-Type']).to eq('application/pdf')
               expect(response.header['Content-Disposition']).to eq("attachment; filename=\"#{ebook.filename}\"")
+              expect(response.headers['Content-Transfer-Encoding']).to eq 'binary'
+              expect(response.body).not_to be_empty
+              # watermarking will change the file content and add fonts
+              expect(response.body).not_to eq File.read(Rails.root.join(fixture_path, ebook.filename))
+              expect(response.body).to include('OpenSans-Regular')
+              expect(response.body).to include('OpenSans-Italic')
               expect(counter_service).to have_received(:count).with(request: 1)
             end
           end
 
-          context 'presenter does not return an authors value' do
-            let(:presenter) { instance_double(Hyrax::MonographPresenter, authors?: false,
-                                                                         creator: [],
-                                                                         title: 'title',
-                                                                         date_created: ['created'],
-                                                                         based_near_label: ['Somewhere'],
-                                                                         citable_link: 'www.example.com/something',
-                                                                         publisher: ['publisher']) }
+          context 'presenter has all citation metadata needed for the watermark/stamp' do
+            let(:presenter) { instance_double(Hyrax::MonographPresenter, id: 'validnoid', citations_ready?: true,
+                                              authors?: true,
+                                              authors: 'Ann Author and Ann Other',
+                                              epub?: false,
+                                              pdf_ebook?: true,
+                                              creator: ['Doe, A. Deer'],
+                                              title: 'title',
+                                              date_created: ['created'],
+                                              based_near_label: ['Somewhere'],
+                                              citable_link: 'www.example.com/something',
+                                              publisher: ['publisher']) }
 
-            it "doesn't raise an error" do
-              allow(Sighrax).to receive(:hyrax_presenter).with(parent).and_return(presenter)
+            it "serves a PDF with cover page" do
               expect { subject }.not_to raise_error
+              expect(assigns(:entity))
+              expect(response).to have_http_status(:success)
               expect(response).to have_http_status(:ok)
-              expect(response.body).not_to be_empty
-              expect(response.body).not_to eq File.read(Rails.root.join(fixture_path, ebook.filename))
-              expect(response.header['Content-Type']).to eq(ebook.media_type)
+              expect(response.header['Content-Type']).to eq('application/pdf')
               expect(response.header['Content-Disposition']).to eq("attachment; filename=\"#{ebook.filename}\"")
+              expect(response.headers['Content-Transfer-Encoding']).to eq 'binary'
+              expect(response.body).not_to be_empty
+              # watermarking will change the file content and add fonts
+              expect(response.body).not_to eq File.read(Rails.root.join(fixture_path, ebook.filename))
+              expect(response.body).to include('OpenSans-Regular')
+              expect(response.body).to include('OpenSans-Italic')
               expect(counter_service).to have_received(:count).with(request: 1)
             end
           end

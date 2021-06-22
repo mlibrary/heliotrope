@@ -148,10 +148,10 @@ class EPubsController < CheckpointController
     chapter_dir_path = UnpackService.root_path_from_noid(@noid, chapter_dir)
 
     chapter_file_path = File.join(chapter_dir_path, chapter_file_name)
-    return head :no_content if !File.exist?(chapter_file_path)
+    run_watermark_checks(chapter_file_path)
 
     CounterService.from(self, @presenter).count(request: 1, section_type: "Chapter", section: chapter_title)
-    send_data watermark_pdf(@entity, chapter_title, 6, IO.binread(chapter_file_path), chapter_index), type: "application/pdf", filename: chapter_download_name, disposition: "inline"
+    send_data watermark_pdf(@entity, chapter_title, chapter_file_path, chapter_index), type: "application/pdf", filename: chapter_download_name, disposition: "inline"
   rescue StandardError => e
     Rails.logger.error "EPubsController.download_interval raised #{e}"
     head :no_content

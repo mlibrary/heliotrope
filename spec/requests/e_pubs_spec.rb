@@ -7,6 +7,10 @@ RSpec.describe "EPubs", type: :request do
     create(:public_monograph,
            user: user,
            press: press.subdomain,
+           creator: ['Doe, A. Deer'], # all citation metadata is needed for PDF cover page
+           date_created: ['2003'],
+           location: 'Collegeville, MN',
+           publisher: ['Uni Press'],
            representative_id: cover.id,
            thumbnail_id: thumbnail.id)
   }
@@ -302,10 +306,10 @@ RSpec.describe "EPubs", type: :request do
           it do
             expect { subject }.not_to raise_error
             expect(response).to have_http_status(:ok)
-            # watermarking will change the file content and PDF 'producer'/'keywords' metadata
+            # watermarking will change the file content and add fonts
             expect(response.body).not_to eq File.read(Rails.root.join(fixture_path, '0.pdf'))
-            expect(response.body).to include('Producer (Ruby CombinePDF')
-            expect(response.body).to include('Keywords <feff') # BOM of UTF-16 encoded keywords string
+            expect(response.body).to include('OpenSans-Regular')
+            expect(response.body).to include('OpenSans-Italic')
             expect(counter_service).to have_received(:count).with(request: 1, section: 'title', section_type: 'Chapter')
           end
         end
@@ -338,10 +342,10 @@ RSpec.describe "EPubs", type: :request do
           it do
             expect { subject }.not_to raise_error
             expect(response).to have_http_status(:ok)
-            # watermarking will change the file content and PDF 'producer'/'keywords' metadata
+            # watermarking will change the file content and add fonts
             expect(response.body).not_to eq File.read(Rails.root.join(fixture_path, '0.pdf'))
-            expect(response.body).to include('Producer (Ruby CombinePDF')
-            expect(response.body).to include('Keywords <feff') # BOM of UTF-16 encoded keywords string
+            expect(response.body).to include('OpenSans-Regular')
+            expect(response.body).to include('OpenSans-Italic')
             expect(counter_service).to have_received(:count).with(request: 1, section: 'title', section_type: 'Chapter')
           end
         end

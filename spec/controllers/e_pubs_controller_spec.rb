@@ -493,17 +493,39 @@ RSpec.describe EPubsController, type: :controller do
           allow(UnpackService).to receive(:root_path_from_noid).and_return(fixture_path)
         end
 
-        it 'sends the interval as pdf' do
-          get :download_interval, params: { id: file_set.id, title: "This is Chapter One's Title", chapter_index: 0 }
-          expect(response).to have_http_status(:success)
-          expect(response.headers['Content-Type']).to eq 'application/pdf'
-          expect(response.headers['Content-Disposition']).to eq 'inline; filename="0_This_is_Chapter_One_s_Title.pdf"'
-          expect(response.headers['Content-Transfer-Encoding']).to eq 'binary'
-          # watermarking will change the file content and PDF 'producer'/'keywords' metadata
-          expect(response.body).not_to eq File.read(Rails.root.join(fixture_path, '0.pdf'))
-          expect(response.body).to include('Producer (Ruby CombinePDF')
-          expect(response.body).to include('Keywords <feff') # BOM of UTF-16 encoded keywords string
-          expect(counter_service).to have_received(:count).with(request: 1, section: "This is Chapter One's Title", section_type: 'Chapter')
+        context 'inadequate metadata to create the full citation in the watermark/stamp' do
+          it 'sends the interval as pdf' do
+            get :download_interval, params: { id: file_set.id, title: "This is Chapter One's Title", chapter_index: 0 }
+            expect(assigns(:entity))
+            expect(response).to have_http_status(:ok)
+            expect(response.headers['Content-Type']).to eq 'application/pdf'
+            expect(response.headers['Content-Disposition']).to eq 'inline; filename="0_This_is_Chapter_One_s_Title.pdf"'
+            expect(response.headers['Content-Transfer-Encoding']).to eq 'binary'
+            # watermarking will change the file content and add fonts
+            expect(response.body).not_to eq File.read(Rails.root.join(fixture_path, '0.pdf'))
+            expect(response.body).to include('OpenSans-Regular')
+            expect(response.body).to include('OpenSans-Italic')
+            expect(counter_service).to have_received(:count).with(request: 1, section: "This is Chapter One's Title", section_type: 'Chapter')
+          end
+        end
+
+        context 'adequate metadata to create a cover page' do
+          let(:monograph) { create(:monograph, creator: ['Doe, A. Deer'], date_created: ['2003'],
+                                   location: 'Collegeville, MN', publisher: ['Uni Press']) }
+
+          it 'sends the interval as pdf' do
+            get :download_interval, params: { id: file_set.id, title: "This is Chapter One's Title", chapter_index: 0 }
+            expect(assigns(:entity))
+            expect(response).to have_http_status(:ok)
+            expect(response.headers['Content-Type']).to eq 'application/pdf'
+            expect(response.headers['Content-Disposition']).to eq 'inline; filename="0_This_is_Chapter_One_s_Title.pdf"'
+            expect(response.headers['Content-Transfer-Encoding']).to eq 'binary'
+            # watermarking will change the file content and add fonts
+            expect(response.body).not_to eq File.read(Rails.root.join(fixture_path, '0.pdf'))
+            expect(response.body).to include('OpenSans-Regular')
+            expect(response.body).to include('OpenSans-Italic')
+            expect(counter_service).to have_received(:count).with(request: 1, section: "This is Chapter One's Title", section_type: 'Chapter')
+          end
         end
       end
 
@@ -516,17 +538,39 @@ RSpec.describe EPubsController, type: :controller do
           allow(UnpackService).to receive(:root_path_from_noid).and_return(fixture_path)
         end
 
-        it 'sends the interval as pdf' do
-          get :download_interval, params: { id: file_set.id, title: "This is Chapter One's Title", chapter_index: 0 }
-          expect(response).to have_http_status(:success)
-          expect(response.headers['Content-Type']).to eq 'application/pdf'
-          expect(response.headers['Content-Disposition']).to eq 'inline; filename="0_This_is_Chapter_One_s_Title.pdf"'
-          expect(response.headers['Content-Transfer-Encoding']).to eq 'binary'
-          # watermarking will change the file content and PDF 'producer'/'keywords' metadata
-          expect(response.body).not_to eq File.read(Rails.root.join(fixture_path, '0.pdf'))
-          expect(response.body).to include('Producer (Ruby CombinePDF')
-          expect(response.body).to include('Keywords <feff') # BOM of UTF-16 encoded keywords string
-          expect(counter_service).to have_received(:count).with(request: 1, section: "This is Chapter One's Title", section_type: 'Chapter')
+        context 'inadequate metadata to create the full citation in the watermark/stamp' do
+          it 'sends the interval as pdf' do
+            get :download_interval, params: { id: file_set.id, title: "This is Chapter One's Title", chapter_index: 0 }
+            expect(assigns(:entity))
+            expect(response).to have_http_status(:ok)
+            expect(response.headers['Content-Type']).to eq 'application/pdf'
+            expect(response.headers['Content-Disposition']).to eq 'inline; filename="0_This_is_Chapter_One_s_Title.pdf"'
+            expect(response.headers['Content-Transfer-Encoding']).to eq 'binary'
+            # watermarking will change the file content and add fonts
+            expect(response.body).not_to eq File.read(Rails.root.join(fixture_path, '0.pdf'))
+            expect(response.body).to include('OpenSans-Regular')
+            expect(response.body).to include('OpenSans-Italic')
+            expect(counter_service).to have_received(:count).with(request: 1, section: "This is Chapter One's Title", section_type: 'Chapter')
+          end
+        end
+
+        context 'adequate metadata to create a cover page' do
+          let(:monograph) { create(:monograph, creator: ['Doe, A. Deer'], date_created: ['2003'],
+                                   location: 'Collegeville, MN', publisher: ['Uni Press']) }
+
+          it 'sends the interval as pdf' do
+            get :download_interval, params: { id: file_set.id, title: "This is Chapter One's Title", chapter_index: 0 }
+            expect(assigns(:entity))
+            expect(response).to have_http_status(:ok)
+            expect(response.headers['Content-Type']).to eq 'application/pdf'
+            expect(response.headers['Content-Disposition']).to eq 'inline; filename="0_This_is_Chapter_One_s_Title.pdf"'
+            expect(response.headers['Content-Transfer-Encoding']).to eq 'binary'
+            # watermarking will change the file content and add fonts
+            expect(response.body).not_to eq File.read(Rails.root.join(fixture_path, '0.pdf'))
+            expect(response.body).to include('OpenSans-Regular')
+            expect(response.body).to include('OpenSans-Italic')
+            expect(counter_service).to have_received(:count).with(request: 1, section: "This is Chapter One's Title", section_type: 'Chapter')
+          end
         end
       end
     end
