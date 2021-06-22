@@ -134,7 +134,7 @@ RSpec.describe "Tokens", type: :request do
             expect(response).to have_http_status(:unauthorized)
             expect(response.body).not_to be_empty
             expect(response_hash[:exception]).not_to be_empty
-            expect(response_hash[:exception]).to include("JWT::DecodeError: Not enough or too many segments")
+            expect(response_hash[:exception]).to include("JWT::IncorrectAlgorithm: Expected a different algorithm")
           end
         end
 
@@ -215,7 +215,7 @@ RSpec.describe "Tokens", type: :request do
             expect(response).to have_http_status(:unauthorized)
             expect(response.body).not_to be_empty
             expect(response_hash[:exception]).not_to be_empty
-            expect(response_hash[:exception]).to include("JWT::DecodeError: Not enough or too many segments")
+            expect(response_hash[:exception]).to include("JWT::IncorrectAlgorithm: Expected a different algorithm")
           end
         end
 
