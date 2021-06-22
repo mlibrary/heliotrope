@@ -8,7 +8,7 @@ git_source(:github) do |repo_name|
 end
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '~> 5.2.4.5'
+gem 'rails', '~> 5.2.4.6'
 
 gem 'rails-html-sanitizer', '~> 1.3.0'
 
@@ -107,7 +107,7 @@ gem 'faraday_middleware', '~>0.12.2'
 # Use gem version of handle_rest
 gem 'handle_rest', git: 'https://github.com/mlibrary/handle_rest', ref: '944fa06a119072f060d986862c34dea7215ebd29'
 
-gem 'hyrax', '2.9.3'
+gem 'hyrax', '2.9.5'
 
 # pinned for Jekyll
 gem 'i18n', '~> 0.7'
