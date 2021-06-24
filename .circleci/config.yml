@@ -16,7 +16,7 @@ commands:
         type: string
       ruby_version:
         type: string
-        default: '2.5.8'
+        default: '2.7.3'
     steps:
     - restore_cache:
         keys:
@@ -97,13 +97,13 @@ jobs:
     parameters:
       ruby_version:
         type: string
-        default: '2.5.8'
+        default: '2.7.3'
       bundler_version:
         type: string
         default: '2.1.4'
       rails_version:
         type: string
-        default: '5.2.4.4'
+        default: '5.2.4.6'
     executor:
       name: 'ruby'
       ruby_version: << parameters.ruby_version >>
@@ -128,13 +128,13 @@ jobs:
     parameters:
       ruby_version:
         type: string
-        default: '2.5.8'
+        default: '2.7.3'
       bundler_version:
         type: string
         default: '2.1.4'
       rails_version:
         type: string
-        default: '5.2.4.4'
+        default: '5.2.4.6'
     executor:
       name: 'ruby'
       ruby_version: << parameters.ruby_version >>
@@ -160,7 +160,7 @@ jobs:
     parameters:
       ruby_version:
         type: string
-        default: '2.5.8'
+        default: '2.7.3'
       bundler_version:
         type: string
         default: '2.1.4'
@@ -243,7 +243,7 @@ executors:
         default: ruby
         type: string
       ruby_version:
-        default: '2.5.8'
+        default: '2.7.3'
         type: string
   ruby_fcrepo_solr_redis_mysql:
     description: Box running FCRepo, Solr, Ruby, Redis and MySQL.
@@ -281,7 +281,7 @@ executors:
         default: ruby
         type: string
       ruby_version:
-        default: '2.5.8'
+        default: '2.7.3'
         type: string
       solr_port:
         default: "8985"
@@ -292,18 +292,18 @@ executors:
 
 workflows:
   version: 2
-  ruby2-5rails5-2:
+  ruby2-7rails5-2:
     jobs:
       - bundle:
-          ruby_version: '2.5.8'
-          rails_version: '5.2.4.4'
+          ruby_version: '2.7.3'
+          rails_version: '5.2.4.6'
       - build:
-          ruby_version: '2.5.8'
-          rails_version: '5.2.4.4'
+          ruby_version: '2.7.3'
+          rails_version: '5.2.4.6'
           requires:
             - bundle
       - test:
           name: "rails5-2"
-          ruby_version: '2.5.8'
+          ruby_version: '2.7.3'
           requires:
             - build

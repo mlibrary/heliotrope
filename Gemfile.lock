@@ -193,10 +193,9 @@ GEM
     colorize (0.8.1)
     commonjs (0.2.7)
     concurrent-ruby (1.1.9)
-    config (1.7.0)
-      activesupport (>= 3.0)
-      deep_merge (~> 1.2.1)
-      dry-validation (>= 0.10.4)
+    config (3.1.0)
+      deep_merge (~> 1.2, >= 1.2.1)
+      dry-validation (~> 1.0, >= 1.0.0)
     connection_pool (2.2.5)
     coveralls (0.8.22)
       json (>= 1.8, < 3)
@@ -311,11 +310,11 @@ GEM
     fakefs (0.18.0)
     faker (1.9.1)
       i18n (>= 0.7)
-    faraday (0.12.2)
+    faraday (0.17.4)
       multipart-post (>= 1.2, < 3)
     faraday-encoding (0.0.4)
       faraday
-    faraday_middleware (0.12.2)
+    faraday_middleware (0.14.0)
       faraday (>= 0.7.4, < 1.0)
     fcrepo_wrapper (0.5.2)
       ruby-progressbar
@@ -916,7 +915,7 @@ GEM
       childprocess (>= 0.5, < 2.0)
       rubyzip (~> 1.2, >= 1.2.2)
     semantic_range (2.3.0)
-    sequel (5.11.0)
+    sequel (5.45.0)
     shex (0.6.1)
       ebnf (~> 2.0)
       json-ld (~> 3.1)
@@ -1092,8 +1091,8 @@ DEPENDENCIES
   factory_bot_rails
   fakefs
   faker
-  faraday (~> 0.12.2)
-  faraday_middleware (~> 0.12.2)
+  faraday (~> 0.17.3)
+  faraday_middleware (~> 0.14.0)
   fcrepo_wrapper (= 0.5.2)
   handle_rest!
   hyrax (= 2.9.5)

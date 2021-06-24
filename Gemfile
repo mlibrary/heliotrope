@@ -101,8 +101,8 @@ gem 'config'
 gem 'devise', '>= 4.7.1'
 gem 'devise-guests', '~> 0.7'
 
-gem 'faraday', '~>0.12.2'
-gem 'faraday_middleware', '~>0.12.2'
+gem 'faraday', '~> 0.17.3'
+gem 'faraday_middleware', '~> 0.14.0'
 
 # Use gem version of handle_rest
 gem 'handle_rest', git: 'https://github.com/mlibrary/handle_rest', ref: '944fa06a119072f060d986862c34dea7215ebd29'
