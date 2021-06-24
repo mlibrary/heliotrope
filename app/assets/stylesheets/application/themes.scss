@@ -1604,6 +1604,11 @@ $amherst-grey-3: #dee2e6;
     background-color: $amherst-grey-2;
   }
 
+  // acceptable use policy banner
+  #acceptable_use_policy_banner {
+      margin-top: 6em;
+  }
+
   // .container
   #main {
     margin-top: 7.5em;
@@ -2989,6 +2994,11 @@ $lever-black-80: #342f2e;
   .btn-default:active {
     @include button-hover-background-color($lever-button-hover);
     @include button-hover-font-color($lever-white);
+  }
+
+  // acceptable use policy banner
+  #acceptable_use_policy_banner {
+      margin-top: 6em;
   }
 
   // container
