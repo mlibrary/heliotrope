@@ -4,14 +4,14 @@ title: Accessibility
 permalink: /accessibility/
 ---
 
-<p class="milli">Last updated: March 4, 2021</p>
+<p class="milli">Last updated: June 28, 2021</p>
 <p>Accessibility is a core value and design component of Fulcrum.  As part of the ongoing development of Fulcrum, we work to make the platform and its content inclusive, accessible, and usable for all readers.</p>
 <p>Fulcrum aims to meet the latest <a href="https://www.w3.org/WAI/WCAG21/quickref/?versions=2.1" title="Web Content Accessibility Guidelines 2.1 AA">WCAG 2 AA Standards</a> (currently WCAG 2.1 AA) in two ways:</p>
 <ul>
   <li>Developing a platform with infrastructure that meets web accessibility guidelines and includes accessibility features.</li>
   <li>Creating and sharing resources that help publishers produce accessible content.</li>
 </ul>
-<p>We report Fulcrum's compliance with WCAG 2.0 and Section 508 in a <a href="/docs/Fulcrum-VPAT2.3INT-20200302.pdf">Voluntary Product Accessibility Template (VPAT®) Version 2.3 INT</a>. We report content compliance <a href="#content">in collection specific VPATs</a>.</p>
+<p>We report Fulcrum's compliance with WCAG 2.0 and Section 508 in a <a href="/docs/Fulcrum-VPAT2.4INT-20210622.pdf">Voluntary Product Accessibility Template (VPAT®) Version 2.4 INT</a>. We report content compliance <a href="#content">in collection specific VPATs</a>.</p>
 <p>Accessibility features, compatibility, and known issues are also summarized on this page.</p>
 
 <div class="help">
@@ -33,6 +33,9 @@ permalink: /accessibility/
 
 <h2 id="timeline">Accessibility Timeline and Roadmap</h2>
 <p>Our work on platform accessibility issues is available in our <a href="https://tools.lib.umich.edu/jira/browse/HELIO-3689?jql=project%20in%20(HELIO%2C%20CSB)%20AND%20status%20in%20(%22In%20Progress%22%2C%20%22To%20Do%22%2C%20%22For%20Review%22)%20AND%20labels%20%3D%20accessibility">issue tracker for Fulcrum</a>.</p>
+
+<h3>2021</h3>
+<p>In June 2021, we updated all VPAT®s to Version 2.4 INT.</p>
 
 <h3>2020</h3>
 <p>From January to March 2020, in collaboration with <a href="https://usability.msu.edu/">Michigan State University Usability and Accessibility Research Consulting</a>, Fulcrum was tested by assistive technology and limited dexterity users. User testing helped identify usability and accessibility issues, specifically with the Fulcrum Reader, which we are working to address.</p>
@@ -130,20 +133,22 @@ permalink: /accessibility/
 <p>Fulcrum provides hosting for a number of different publishers. Accessible content is the primary responsibility of each publisher and we work with them to support and improve the accessibility of their content. Below you will find a list of accessibility features and known content issues in large collections hosted on Fulcrum.</p>
 
 <h3>ACLS Humanities E-Book</h3>
-<p><a href="/docs/Fulcrum-HEB-VPAT2.3INT-20200519.pdf">ACLS HEB Voluntary Product Accessibility Template (VPAT®) Version 2.3 INT</a></p>
-<p>In addition to the ACLS HEB VPAT®, ACLS HEB has made available an <a href="/docs/ConformanceandRemediationRoadmap-FulcrumACLSHEB-Feb2021.pdf">Accessibility Conformance and Remediation Roadmap (Feb. 2021)</a> which describes timelines, development plans, and workarounds for issues identified in the VPAT®.</p>
-<p>There are two types of book content within the ACLS Humanities E-Book (HEB). The type informs the accessibility of that content:</p>
+<p><a href="/docs/Fulcrum-HEB-VPAT2.4INT-20210622.pdf">ACLS HEB Voluntary Product Accessibility Template (VPAT®) Version 2.4 INT</a></p>
+<p>In addition to the ACLS HEB VPAT®, ACLS HEB has made available an <a href="/docs/ConformanceandRemediationRoadmap-FulcrumACLSHEB-June2021.pdf">Accessibility Conformance and Remediation Roadmap (June 2021)</a> which describes timelines, development plans, and workarounds for issues identified in the VPAT®.</p>
+<p>There are three types of book content within the ACLS Humanities E-Book (HEB). The type informs the accessibility of that content:</p>
 <ul>
   <li>EPUBs created by reformatting print to digital and include page scans and uncorrected OCR text. When read in the Fulcrum Reader, the uncorrected OCR can be accessed by adjusting the Settings and Preferences to use the text renditions. These titles are available for chapter download only in PDF format. The PDF downloads do not include the uncorrected OCR.</li>
   <li>EPUBs created by reformatting print to digital and include reflowable, structured text. The content of these EPUBs are compatible with assistive technology. These titles are not available for download.</li>
+  <li>Beginning in 2020, PDFs provided by publishers that include OCR or born-digital text, bookmarks, but do not include structural markup and tagging. These titles are available for chapter download only in PDF format. PDF watermarks applied to each page of the downloaded file are read aloud by screenreaders and assistive technology.</li>
 </ul> 
 <p>ACLS HEB titles do not contain textual descriptions of images.</p>
 <p>To request remediation of any content in the ACLS HEB, it is recommended to first contact the publisher of that title. The publisher information can either be found in the Get Citation tool in the Fulcrum Reader, or found on the title landing page beneath the author name, and may include a link to the publisher's webpage. If you cannot find the publisher information, please send an email with the title of the content, your preferred format, and the URL to <a href="mailto:fulcrum-info@umich.edu">fulcrum-info@umich.edu</a>.</p>
 
 <h3>University of Michigan Press Ebook Collection</h3>
-<p><a href="/docs/Fulcrum-UMPEBC-VPAT2.3INT-20200519.pdf">UMP EBC Voluntary Product Accessibility Template (VPAT®) Version 2.3 INT</a></p>
+<p><a href="/docs/Fulcrum-UMPEBC-VPAT2.4INT-20210625.pdf">UMP EBC Voluntary Product Accessibility Template (VPAT®) Version 2.4 INT</a></p>
 <p>All titles in the University of Michigan Press Ebook Collection (UMP EBC) are available for download in EPUB and PDF formats, with the exception of a handful of titles only available in one format. In all cases, we recommend the EPUB format as the accessible format – all EPUBs in the UMP EBC have been designed following the Fulcrum EPUB Specification, designed to ensure compatibility with assistive technology and are more likely to contain image descriptions. However, we recognize not all print disabled users prefer EPUB and will remediate PDF files with textual descriptions of images upon request.</p>
 <p>All titles published after 2019 contain at least basic textual descriptions of images, however these descriptions are only contained within EPUB files. All audio and video associated with books produced after 2018 have transcripts or captions available. Some supplemental content has been reformatted from print to digital and may not contain Optical Character Recognition text. If OCR text has been included it has not been corrected.</p>
+<p>Beginning with titles published in 2021, most titles are certified accessible by the <a href="https://bornaccessible.benetech.org/certified-publishers/">Benetech Global Certified Accessible program</a> and meet WCAG 2.0 AA. Titles that are not certified accessible by Benetech are indicated as such in the EPUB metadata.</p>
 <p>To request remediation of any content in the UMP EBC, please send an email with the title of the content, your preferred format, and the URL to <a href="umpress.accessibility@umich.edu">umpress.accessibility@umich.edu</a>.</p>
 
 <h3>Lever Press</h3>
@@ -152,7 +157,7 @@ permalink: /accessibility/
 <p>To request remediation or a file download of any Lever Press title, send and email with the title of the content, your preferred format, and the URL to <a href="mpub-help@umich.edu">mpub-help@umich.edu</a>.</p>
 
 <h3>BAR Digital Collection</h3>
-<p><a href="/docs/Fulcrum-BAR-VPAT2.3INT-20200519.pdf">BAR Digital Collection Voluntary Product Accessibility Template (VPAT®) Version 2.3 INT</a></p>
+<p><a href="/docs/Fulcrum-BAR-VPAT2.4INT-20210628.pdf">BAR Digital Collection Voluntary Product Accessibility Template (VPAT®) Version 2.4 INT</a></p>
 <p>To request remediation of any content in the BAR Digital Collection, please send an email with the title of the content, your preferred format, and the URL to <a href="fulcrum-info@umich.edu">fulcrum-info@umich.edu</a>.</p>
 
 <h2 id="resources">Resources for Creating Accessible Content</h2>
