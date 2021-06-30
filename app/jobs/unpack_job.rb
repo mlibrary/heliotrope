@@ -5,6 +5,8 @@ require 'open3'
 
 class UnpackJob < ApplicationJob
   include Open3
+  include EmbedCodeService
+
   queue_as :unpack
 
   discard_on Resque::Job::DontPerform
@@ -39,6 +41,7 @@ class UnpackJob < ApplicationJob
     case kind
     when 'epub'
       unpack_epub(id, root_path, file)
+      insert_embed_codes(file_set.parent.id, root_path)
       create_search_index(root_path)
       cache_epub_toc(id, root_path)
       file_set.parent.update_index if file_set.parent.present? # index the ToC to the monograph
