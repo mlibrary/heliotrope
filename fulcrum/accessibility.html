@@ -4,7 +4,7 @@ title: Accessibility
 permalink: /accessibility/
 ---
 
-<p class="milli">Last updated: June 28, 2021</p>
+<p class="milli">Last updated: June 30, 2021</p>
 <p>Accessibility is a core value and design component of Fulcrum.  As part of the ongoing development of Fulcrum, we work to make the platform and its content inclusive, accessible, and usable for all readers.</p>
 <p>Fulcrum aims to meet the latest <a href="https://www.w3.org/WAI/WCAG21/quickref/?versions=2.1" title="Web Content Accessibility Guidelines 2.1 AA">WCAG 2 AA Standards</a> (currently WCAG 2.1 AA) in two ways:</p>
 <ul>
@@ -35,7 +35,7 @@ permalink: /accessibility/
 <p>Our work on platform accessibility issues is available in our <a href="https://tools.lib.umich.edu/jira/browse/HELIO-3689?jql=project%20in%20(HELIO%2C%20CSB)%20AND%20status%20in%20(%22In%20Progress%22%2C%20%22To%20Do%22%2C%20%22For%20Review%22)%20AND%20labels%20%3D%20accessibility">issue tracker for Fulcrum</a>.</p>
 
 <h3>2021</h3>
-<p>In June 2021, we updated all VPAT®s to Version 2.4 INT.</p>
+<p>In June 2021, we updated all VPAT®s to Version 2.4 INT and worked with the <a href="http://www.daisy.org/">DAISY Consortium</a> to have the Fulcrum Reader tested with NVDA and Microsoft Edge Read Aloud.</p>
 
 <h3>2020</h3>
 <p>From January to March 2020, in collaboration with <a href="https://usability.msu.edu/">Michigan State University Usability and Accessibility Research Consulting</a>, Fulcrum was tested by assistive technology and limited dexterity users. User testing helped identify usability and accessibility issues, specifically with the Fulcrum Reader, which we are working to address.</p>
@@ -77,12 +77,20 @@ permalink: /accessibility/
 <ul>
   <li>In the Fulcrum Reader, alt-text image descriptions will be read when the embedded image is selected via the TAB key, but will not be read automatically via continuous reading. Alt-text image descriptions can be accessed by selecting the embedded image via keyboard controls or by following the link to the full image media page.</li>
   <li>In the Fulcrum Reader, when searching inside the text of a book and following a search result, the matched term in the text is indicated on the page only through visual highlighting of the matched text, but the excerpts and chapter locations are accessible through screen reader technology.</li>
+  <li>In the Fulcrum Reader, navigation from page list pages, search results, and internal links such as footnotes do not focus properly to the anchored element. NVDA instead begins reading at the beginning of the anchored element's parent chapter.</li>
+  <li>In the Fulcrum Reader, text selection for highlighting or note taking does not work as expected.</li>
   <li>On <a href="https://www.fulcrum.org/concern/monographs/sj139271b?locale=en">book title pages</a>, “Table of Contents” is the default tab. To get to other tabs on that page, navigate to the “Table of Contents” heading and press the right arrow key.</li>
   <li>On <a href="https://www.fulcrum.org/concern/file_sets/x633f103b?locale=en">resources pages</a>, “Info” is the default tab. To get to others tabs, navigate to the “Info” heading and press the right arrow key.</li>
 </ul>
 <p>For readers using VoiceOver:</p>
 <ul>
   <li>When the focus in the Fulcrum Reader is on a piece of embedded content such as a video or image, the VoiceOver rotor only recognizes the media controls as links. To access the other links and menu buttons through the rotor, navigate away from the embedded piece of media first.</li>
+</ul>
+
+<p>For reader using Microsoft Edge Read Aloud:</p>
+<ul>
+  <li>In the Fulcrum Reader, the visual display of text does not continue to scroll when Read Aloud reaches the bottom of the page.</li>
+  <li>In the Fulcrum Reader, it is not possible to adjust the emphasis styles in Read Aloud.</li>
 </ul>
 
 <h3>Keyboard Compatibility</h3>
