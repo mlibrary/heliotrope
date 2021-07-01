@@ -10,7 +10,8 @@ SitemapGenerator::Sitemap.default_host = "https://fulcrum.org"
 # see https://github.com/kjvarga/sitemap_generator#deployments--capistrano
 SitemapGenerator::Sitemap.public_path = 'public/sitemaps'
 
-SitemapGenerator::Sitemap.create do
+# HELIO-3953 sitemaps should be uncompressed
+SitemapGenerator::Sitemap.create(compress: false) do
   # Put links creation logic here.
   #
   # The root path '/' and sitemap index file are added automatically for you.
