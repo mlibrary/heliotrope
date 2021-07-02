@@ -143,16 +143,21 @@
             function getToUnity(s) {
               SendMessage("WebCommunicator", "ShowString", s);
             };
+            function getToUnityTomb(s) {
+              SendMessage("WebCommunicator", "ShowStringTomb", s);
+            };
             var gameContainerDiv = document.getElementById("gameContainer");
             if ($('body').hasClass('panel-open')) {
               FocusCanvas("1");
               gameContainerDiv.focus();
               getToUnity(s);
+              getToUnityTomb(s)
             } else {
               open_panel();
               FocusCanvas("1");
               gameContainerDiv.focus();
               getToUnity(s);
+              getToUnityTomb(s)
             }
           }
         };
