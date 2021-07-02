@@ -20,8 +20,10 @@ RSpec.describe OpenAccessEbookTrustJob, type: :job do
     end
 
     it "calls the mailer" do
-      described_class.perform_now
-      expect(OpenAccessEbookTrustMailer).to have_received(:send_report).with(mock_zip)
+      travel_to(Time.parse("2020-05-01")) do
+        described_class.perform_now
+        expect(OpenAccessEbookTrustMailer).to have_received(:send_report).with(mock_zip)
+      end
     end
   end
 
