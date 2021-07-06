@@ -47,6 +47,11 @@
     <meta name="og:image:alt" content="Cover Image for <%= @presenter.page_title %>">
   <% end %>
 
+  <% if @ebook_download_presenter.present? && @ebook_download_presenter.pdf_ebook.present? && @ebook_download_presenter.downloadable?(@ebook_download_presenter.pdf_ebook) %>
+    <%# for google scholar, HELIO-3951 %>
+    <meta name="citation_pdf_url" content="<%= Rails.application.routes.url_helpers.download_ebook_path(@ebook_download_presenter.pdf_ebook.id) %>">
+  <% end %>
+
 <% elsif controller_name == "file_sets" %>
 
   <meta name="citation_title" content="<%= @presenter.page_title %>">
