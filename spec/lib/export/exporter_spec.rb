@@ -88,6 +88,9 @@ describe Export::Exporter do
       file3.save!
       file4.original_file = original_file_non_ascii
       file4.save!
+      # Upgrade to ruby 2.7.3 weirdness, HELIO-3950
+      file4.original_file.original_name.force_encoding("UTF-8")
+      file4.save!
       monograph.ordered_members << file1
       monograph.ordered_members << file2
       monograph.ordered_members << file3
@@ -103,7 +106,7 @@ describe Export::Exporter do
     it do
       actual = subject
       expect(actual.empty?).to be false
-      expect(actual).to match expected
+      expect(actual.dup.force_encoding("UTF-8")).to match expected.dup.force_encoding("UTF-8")
     end
   end
 

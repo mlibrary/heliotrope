@@ -5,13 +5,12 @@ module Greensub
     before_action :set_component, only: %i[show edit update destroy add remove]
 
     def index
-      if params[:product_id].present?
-        @product = Product.find(params[:product_id])
-        @components = @product.components
-      else
-        @components = Component.all
-      end
-      @components = @components.filter(filtering_params(params)).order(identifier: :asc).page(params[:page])
+      @components = if params[:product_id].present?
+                      @product = Product.find(params[:product_id])
+                      @product.components.filter(filtering_params(params)).order(identifier: :asc).page(params[:page])
+                    else
+                      Component.filter(filtering_params(params)).order(identifier: :asc).page(params[:page])
+                    end
     end
 
     def show; end
