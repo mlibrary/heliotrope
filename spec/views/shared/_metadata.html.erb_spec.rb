@@ -141,6 +141,47 @@ describe 'shared/_metadata.html.erb' do
     end
   end
 
+  # HELIO-3951 show the citation_pdf_url if there's a pdf_ebook and the client has permission to download.
+  # This is by request from Google Scholar who we'll make an Institution so they can download and index restricted pdfs.
+  context "a monograph with a pdf_ebook" do
+    let(:monograph) {
+      SolrDocument.new(id: 'monograph1',
+                       has_model_ssim: ['Monograph'],
+                       title_tesim: ['Sun Moon Dog'])
+    }
+    let(:file_set) {
+      SolrDocument.new(id: 'file_set1',
+                       has_model_ssim: ['FileSet'],
+                       title_tesim: ['Bark Bark Boop'])
+    }
+
+    context "a client that has permission to download" do
+      let(:ebook_download_presenter) { double("pdf_ebook", downloadable?: true, present?: true, pdf_ebook: Hyrax::FileSetPresenter.new(file_set, nil)) }
+
+      it 'renders the pdf_ebook download url' do
+        @presenter = Hyrax::MonographPresenter.new(monograph, nil)
+        @ebook_download_presenter = ebook_download_presenter
+        allow(controller).to receive(:controller_name).and_return("monograph_catalog")
+        render
+
+        expect(rendered).to match '\"citation_pdf_url\" content=\"/ebooks/file_set1/download\"'
+      end
+    end
+
+    context "a client that DOES NOT have permission to download" do
+      let(:ebook_download_presenter) { double("pdf_ebook", downloadable?: false, present?: true, pdf_ebook: Hyrax::FileSetPresenter.new(file_set, nil)) }
+
+      it 'does not render the pdf_ebook download url' do
+        @presenter = Hyrax::MonographPresenter.new(monograph, nil)
+        @ebook_download_presenter = ebook_download_presenter
+        allow(controller).to receive(:controller_name).and_return("monograph_catalog")
+        render
+
+        expect(rendered).not_to match 'citation_pdf_url'
+      end
+    end
+  end
+
   context 'with a file_set presenter' do
     let(:solr_document) {
       SolrDocument.new(id: '001',
