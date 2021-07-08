@@ -111,55 +111,54 @@ module Import
 
       validate_user
       validate_press unless reimporting
-      csv_files.each do |file|
-        attrs = CSVParser.new(file).attributes
 
-        unless @reimporting # if reimporting then the monograph has a title already
-          # tombstoned HEB items have a Monograph title of `[title removed]`. We don't want to import these.
-          if attrs['title'].blank? # might as well bow out if the monograph title is blank for some reason too.
-            puts "Monograph title cannot be blank. Not importing this Monograph."
-            exit
-          elsif attrs['title'].first&.strip == '[title removed]'
-            puts "HEB tombstoned EPUB detected. Not importing this Monograph."
-            exit
-          end
+      attrs = CSVParser.new(csv_file).attributes
+
+      unless @reimporting # if reimporting then the monograph has a title already
+        # tombstoned HEB items have a Monograph title of `[title removed]`. We don't want to import these.
+        if attrs['title'].blank? # might as well bow out if the monograph title is blank for some reason too.
+          puts "Monograph title cannot be blank. Not importing this Monograph."
+          exit
+        elsif attrs['title'].first&.strip == '[title removed]'
+          puts "HEB tombstoned EPUB detected. Not importing this Monograph."
+          exit
         end
+      end
 
-        # We've removed the Hyrax behavior where it sets the representative/thumbnail to the first file of any kind...
-        # (not just image files) that gets attached to the new Work. However we want backwards-compatibility with our...
-        # old imports, so we'll look for an image to assign even without the 'Representative Kind' field set to 'cover'.
-        maybe_set_cover(attrs) unless reimporting
+      # We've removed the Hyrax behavior where it sets the representative/thumbnail to the first file of any kind...
+      # (not just image files) that gets attached to the new Work. However we want backwards-compatibility with our...
+      # old imports, so we'll look for an image to assign even without the 'Representative Kind' field set to 'cover'.
+      maybe_set_cover(attrs) unless reimporting
 
-        optional_early_exit(interaction, attrs.delete('row_errors'), test)
+      optional_early_exit(interaction, attrs.delete('row_errors'), test)
 
-        # if there is a command-line monograph title then use it
-        attrs['title'] = Array(monograph_title) if monograph_title.present?
+      # if there is a command-line monograph title then use it
+      attrs['title'] = Array(monograph_title) if monograph_title.present?
 
-        # Find file's absolute path and verify it exist?
-        absolute_filenames = attrs.delete('files').map do |filename|
-          if filename.present? # "External Resources" are FileSets without a file
-            find_file(filename) # Raise on error!
-          end
+      # Find file's absolute path and verify it exist?
+      absolute_filenames = attrs.delete('files').map do |filename|
+        if filename.present? # "External Resources" are FileSets without a file
+          find_file(filename) # Raise on error!
         end
+      end
 
-        # Wrap files in UploadedFile wrappers using nil for external resources
-        uploaded_files = absolute_filenames.map do |filename|
-          if filename.present? # "External Resources" are FileSets without a file
-            Hyrax::UploadedFile.create(file: File.new(filename), user: user)
-          end
+      # Wrap files in UploadedFile wrappers using nil for external resources
+      uploaded_files = absolute_filenames.map do |filename|
+        if filename.present? # "External Resources" are FileSets without a file
+          Hyrax::UploadedFile.create(file: File.new(filename), user: user)
         end
+      end
 
-        attrs['import_uploaded_files_ids'] = uploaded_files.map { |f| f&.id }
-        attrs['import_uploaded_files_attributes'] = attrs.delete('files_metadata')
+      attrs['import_uploaded_files_ids'] = uploaded_files.map { |f| f&.id }
+      attrs['import_uploaded_files_attributes'] = attrs.delete('files_metadata')
 
-        if reimporting
-          attrs['visibility'] = reimport_mono.visibility
-          Hyrax::CurationConcern.actor.update(Hyrax::Actors::Environment.new(@reimport_mono, Ability.new(user), attrs))
-        else
-          attrs['press'] = press_subdomain
-          attrs['visibility'] = visibility
-          Hyrax::CurationConcern.actor.create(Hyrax::Actors::Environment.new(Monograph.new, Ability.new(user), attrs))
-        end
+      if reimporting
+        attrs['visibility'] = reimport_mono.visibility
+        Hyrax::CurationConcern.actor.update(Hyrax::Actors::Environment.new(@reimport_mono, Ability.new(user), attrs))
+      else
+        attrs['press'] = press_subdomain
+        attrs['visibility'] = visibility
+        Hyrax::CurationConcern.actor.create(Hyrax::Actors::Environment.new(Monograph.new, Ability.new(user), attrs))
       end
     end
 
@@ -176,9 +175,18 @@ module Import
         end
       end
 
-      def csv_files
+      def csv_file
+        return @csv_file if @csv_file.present?
+
         raise "Directory not found: #{root_dir}" unless Dir.exist?(root_dir)
-        @csv_files ||= Dir.glob(File.join(root_dir, '*.csv'))
+        csv_files = Dir.glob(File.join(root_dir, '*.csv'))
+        csv_files = Dir.glob(File.join(root_dir, 'manifest.csv')) if csv_files.count > 1
+        if csv_files.count == 1
+          @csv_file = csv_files.first
+        else
+          raise "Directory #{root_dir} must contain 1 manifest CSV file of any name.\n"\
+                "If multiple CSV files are present the manifest file must be named `manifest.csv`\n"
+        end
       end
 
       def find_file(file_name)

@@ -59,7 +59,7 @@ module Export
         job_path = File.join(Dir.pwd, path)
       end
 
-      manifest = File.new(File.join(path, monograph.noid.to_s + ".csv"), "w")
+      manifest = File.new(File.join(path, "manifest.csv"), "w")
       manifest << export
       manifest.close
 
