@@ -41,7 +41,7 @@ class UnpackJob < ApplicationJob
       unpack_epub(id, root_path, file)
       create_search_index(root_path)
       cache_epub_toc(id, root_path)
-      file_set.parent.update_index # index the ToC to the monograph
+      file_set.parent.update_index if file_set.parent.present? # index the ToC to the monograph
       create_epub_chapters(id, root_path) # has to come after cache_epub_toc()
       epub_webgl_bridge(id, root_path, kind)
     when 'webgl'
@@ -53,7 +53,7 @@ class UnpackJob < ApplicationJob
       pdf = linearize_pdf(root_path, file)
       create_pdf_chapters(id, pdf, root_path) if File.exist? pdf
       cache_pdf_toc(id, pdf) if File.exist? pdf
-      file_set.parent.update_index # index the ToC to the monograph
+      file_set.parent.update_index if file_set.parent.present? # index the ToC to the monograph
     else
       Rails.logger.error("Can't unpack #{kind} for #{id}")
     end
