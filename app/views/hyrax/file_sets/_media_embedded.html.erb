@@ -1,6 +1,4 @@
-<% if @presenter.tombstone? %>
-  <%= render partial: 'media_tombstone', locals: { presenter: @presenter } %>
-<% else %>
+<%# Note no equivalent to `media_tombstone` partial here as we want tombstoned files to continue displaying in EPUBs %>
 <figure title="<%= @presenter.alt_text.first %>">
   <%# note that the fulcrum-embed-link hover display relies on it being the first child of <figure> %>
   <div class="fulcrum-embed-link<%= ' audio no-transcript' if @presenter.audio_without_transcript? %>">
@@ -15,5 +13,4 @@
   <%= render partial: @presenter.heliotrope_media_partial('media_display_embedded'), locals: { file_set: @presenter } %>
   </div>
 </figure>
-<% end %>
 <%= render 'shared/ga' %>
