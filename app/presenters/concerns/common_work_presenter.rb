@@ -3,6 +3,25 @@
 module CommonWorkPresenter
   extend ActiveSupport::Concern
 
+  # yes, I need this and `assets?` is completely geared towards whether the "resources" tab should show or not
+  # so this is `ordered_file_sets_ids` with the visibility and permissions removed
+  def non_representative_file_sets?
+    non_representative_file_set_ids.present?
+  end
+
+  def non_representative_file_set_ids # rubocop:disable Metrics/CyclomaticComplexity
+    return @non_representative_file_set_ids if @non_representative_file_set_ids
+    file_sets_ids = []
+    ordered_member_docs.each do |doc|
+      next if doc['has_model_ssim'] != ['FileSet'].freeze
+      next if doc.id == representative_id
+      next if featured_representatives.map(&:file_set_id).include?(doc.id)
+
+      file_sets_ids.append doc.id
+    end
+    @non_representative_file_set_ids = file_sets_ids
+  end
+
   def assets?
     ordered_file_sets_ids.present?
   end

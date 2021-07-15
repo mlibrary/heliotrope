@@ -171,6 +171,7 @@ Style/DateTime:
     - 'spec/features/press_catalog_spec.rb'
     - 'spec/features/press_catalog_sort_spec.rb'
     - 'spec/models/monograph_spec.rb'
+    - 'spec/services/embed_code_service_spec.rb'
     - 'spec/views/monograph_catalog/index.html.erb_spec.rb'
 
 Style/EvalWithLocation:

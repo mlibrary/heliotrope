@@ -12,12 +12,10 @@ RSpec.describe CommonWorkPresenter do
       @current_ability = nil
     end
 
+    # It's a little weird that this method is needed to exercise the module by itself, but it's dependent on...
+    # FeaturedRepresentatives::MonographPresenter.featured_representatives()
     def featured_representatives
-      []
-    end
-
-    def title
-      @solr_document['title_tesim'].first
+      FeaturedRepresentative.where(work_id: 'mono')
     end
 
     delegate :representative_id, :thumbnail_path, to: :@solr_document
@@ -164,6 +162,71 @@ RSpec.describe CommonWorkPresenter do
       end
 
       it { is_expected.to be false }
+    end
+  end
+
+  describe '#non_representative_file_sets?' do
+    subject { presenter.non_representative_file_sets? }
+
+    let(:solr_document) {
+      ::SolrDocument.new(id: 'mono',
+                         has_model_ssim: ['Monograph'],
+                         # representative_id has a rather different Solr name!
+                         hasRelatedMediaFragment_ssim: cover.id,
+                         ordered_member_ids_ssim: ordered_ids)
+    }
+
+    let(:cover) { ::SolrDocument.new(id: 'cover', has_model_ssim: ['FileSet'], visibility_ssi: 'open') }
+    let(:blue_file) { ::SolrDocument.new(id: 'blue', has_model_ssim: ['FileSet'], visibility_ssi: 'open') }
+    let(:green_file) { ::SolrDocument.new(id: 'green', has_model_ssim: ['FileSet'], visibility_ssi: 'open') }
+    let(:red_file) { ::SolrDocument.new(id: 'red', has_model_ssim: ['FileSet'], visibility_ssi: 'restricted') }
+
+    context 'has a cover, but no non-representative asset' do
+      let(:ordered_ids) { [cover.id] }
+
+      before do
+        ActiveFedora::SolrService.add([solr_document.to_h, cover.to_h])
+        ActiveFedora::SolrService.commit
+      end
+
+      it { is_expected.to be false }
+    end
+
+    context 'has a cover and an EPUB, but no non-representative asset' do
+      let(:ordered_ids) { [cover.id, red_file.id] }
+      let(:featured_representatives) { FeaturedRepresentative.where(work_id: 'mono') }
+
+      before do
+        FeaturedRepresentative.create!(work_id: 'mono', file_set_id: red_file.id, kind: 'epub')
+        ActiveFedora::SolrService.add([solr_document.to_h, cover.to_h, red_file.to_h])
+        ActiveFedora::SolrService.commit
+      end
+
+      after { FeaturedRepresentative.destroy_all }
+
+      it { is_expected.to be false }
+    end
+
+    context 'has a cover and 3 non-representative assets' do
+      let(:ordered_ids) { [cover.id, blue_file.id, green_file.id, red_file.id] }
+
+      before do
+        ActiveFedora::SolrService.add([solr_document.to_h, cover.to_h, blue_file.to_h, green_file.to_h, red_file.to_h])
+        ActiveFedora::SolrService.commit
+      end
+
+      it { is_expected.to be true }
+    end
+
+    context 'has a cover and one non-representative asset' do
+      let(:ordered_ids) { [cover.id, red_file.id] }
+
+      before do
+        ActiveFedora::SolrService.add([solr_document.to_h, cover.to_h, red_file.to_h])
+        ActiveFedora::SolrService.commit
+      end
+
+      it { is_expected.to be true }
     end
   end
 
