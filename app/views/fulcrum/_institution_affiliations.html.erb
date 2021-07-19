@@ -1,0 +1,36 @@
+<% institution_affiliations = Greensub::InstitutionAffiliation.filter(institution_id_like: params[:institution_id_like], dlps_institution_id_like: params[:dlps_institution_id_like], affiliation_like: params[:affiliation_like]).order(institution_id: :asc).page(params[:page]) %>
+<h1>Institution Affiliations</h1>
+<form name="filter" method="get" action="<%= fulcrum_partials_path(:institution_affiliations) %>">
+  <table class="table table-striped" summary="Institution Affiliation List">
+    <tr>
+      <th>
+        <%= link_to(new_greensub_institution_affiliation_path) do %>
+          <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> New
+        <% end %>
+      </th>
+      <th><label for="institution_id_like">Institution</label></th>
+      <th><label for="dlps_institution_id_like">DLPS Institution ID</label></th>
+      <th><label for="affiliation_like">Affiliation</label></th>
+    </tr>
+    <tr>
+      <% size = 12 %>
+      <td><button name="submit" type="submit" value="filter">Filter</button></td>
+      <td><%= select(nil, "institution_id_like", Greensub::Institution.all.collect {|institution| [institution.name, institution.id]}, { include_blank: true, selected: params[:institution_id_like] }) %></td>
+      <td><input type="text" name="dlps_institution_id_like" value="<%= params[:dlps_institution_id_like] %>" size="<%= size %>" aria-label="dlps_institution_id_like"></td>
+      <td><%= select(nil, "affiliation_like", Greensub::InstitutionAffiliation.affiliations.collect {|affiliation| [affiliation, affiliation]}, { include_blank: true, selected: params[:affiliation_like] }) %></td>
+    </tr>
+    <% institution_affiliations.each do |institution_affiliation| %>
+      <tr>
+        <td>
+          <%= link_to(greensub_institution_affiliation_path(institution_affiliation)) do %>
+            <span class="glyphicon glyphicon-sunglasses" aria-hidden="true"></span> Show
+          <% end %>
+        </td>
+        <td><%= institution_affiliation.institution.name %></td>
+        <td><%= institution_affiliation.dlps_institution_id %></td>
+        <td><%= institution_affiliation.affiliation %></td>
+      </tr>
+    <% end %>
+  </table>
+</form>
+<%= paginate institution_affiliations %>

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_06_02_023727) do
+ActiveRecord::Schema.define(version: 2021_07_19_161113) do
 
   create_table "api_requests", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.integer "user_id"
@@ -262,6 +262,15 @@ ActiveRecord::Schema.define(version: 2021_06_02_023727) do
     t.datetime "updated_at", null: false
     t.index ["email"], name: "index_individuals_on_email", unique: true
     t.index ["identifier"], name: "index_individuals_on_identifier", unique: true
+  end
+
+  create_table "institution_affiliations", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+    t.bigint "institution_id"
+    t.integer "dlps_institution_id"
+    t.string "affiliation"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["institution_id"], name: "index_institution_affiliations_on_institution_id"
   end
 
   create_table "institutions", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
@@ -739,6 +748,7 @@ ActiveRecord::Schema.define(version: 2021_06_02_023727) do
   add_foreign_key "components_products", "components"
   add_foreign_key "components_products", "products"
   add_foreign_key "curation_concerns_operations", "users"
+  add_foreign_key "institution_affiliations", "institutions"
   add_foreign_key "mailboxer_conversation_opt_outs", "mailboxer_conversations", column: "conversation_id", name: "mb_opt_outs_on_conversations_id"
   add_foreign_key "mailboxer_notifications", "mailboxer_conversations", column: "conversation_id", name: "notifications_on_conversation_id"
   add_foreign_key "mailboxer_receipts", "mailboxer_notifications", column: "notification_id", name: "receipts_on_notification_id"
