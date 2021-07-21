@@ -84,6 +84,7 @@ Rails.application.routes.draw do
       resources :institutions do
         resources :products, only: %i[index]
       end
+      resources :institution_affiliations
       resources :components do
         resources :products, only: %i[index create destroy]
       end

@@ -1,0 +1,39 @@
+<div id="maincontent">
+  <% if @institution.present? %>
+    <h1>Institution Affiliations of <%= link_to @institution.identifier, greensub_institution_path(@institution) %> Institution</h1>
+    <form name="filter" method="get" action="<%= greensub_institution_affiliations_path(@institution) %>">
+  <% else %>
+    <h1>Institution Affiliations</h1>
+    <form name="filter" method="get" action="<%= greensub_institution_affiliations_path %>">
+  <% end %>
+  <b>
+    <div class="col-md-12"><hr/></div>
+    <div class="col-md-1">ID</div>
+    <div class="col-md-5">Institution</div>
+    <div class="col-md-2">DLPS ID</div>
+    <div class="col-md-2">Affiliation</div>
+    <div class="col-md-2"><%= link_to 'New Institution Association', new_greensub_institution_affiliation_path %></div>
+    <% size = 12 %>
+    <div class="col-md-1"><button name="submit" type="submit" value="filter">Filter</button></div>
+    <div class="col-md-5"><%= select(nil, "institution_id_like", Greensub::Institution.all.collect {|institution| [institution.name, institution.id]}, { include_blank: true, selected: params[:institution_id_like] }) %></div>
+    <div class="col-md-2"><input type="text" name="dlps_institution_id_like" value="<%= params[:dlps_institution_id_like] %>" size="<%= size %>" aria-label="dlps_institution_id_like"></div>
+    <div class="col-md-2"><%= select(nil, "affiliation_like", Greensub::InstitutionAffiliation.affiliations.collect {|affiliation| [affiliation, affiliation]}, { include_blank: true, selected: params[:affiliation_like] }) %></div>
+    <div class="col-md-2">&nbsp;</div>
+    <div class="col-md-12"><hr/></div>
+  </b>
+  </form>
+
+  <% @institution_affiliations.each do |institution_affiliation| %>
+    <div class="col-md-1"><%= institution_affiliation.id %></div>
+    <div class="col-md-5"><%= institution_affiliation.institution.name %></div>
+    <div class="col-md-2"><%= institution_affiliation.dlps_institution_id %></div>
+    <div class="col-md-2"><%= institution_affiliation.affiliation %></div>
+    <div class="col-md-2">
+      <div class="col-md-4"><%= link_to 'Show', greensub_institution_affiliation_path(institution_affiliation) %></div>
+      <div class="col-md-4"><%= link_to 'Edit', edit_greensub_institution_affiliation_path(institution_affiliation) %></div>
+      <div class="col-md-4"><%= link_to 'Destroy', greensub_institution_affiliation_path(institution_affiliation), method: :delete, data: { confirm: 'Are you sure?' } %></div>
+    </div>
+  <% end %>
+
+  <div class="col-md-12">&nbsp;<%= paginate @institution_affiliations %></div>
+</div>

@@ -43,6 +43,8 @@ class FulcrumController < ApplicationController
       ReindexJob.perform_later('monographs')
     when 'reindex_file_sets'
       ReindexJob.perform_later('file_sets')
+    when 'seed_institution_affiliations'
+      SeedInstitutionAffiliationsJob.perform_now
     end
     redirect_to action: :index, partials: :dashboard
   end
@@ -52,7 +54,7 @@ class FulcrumController < ApplicationController
     @individuals = []
     @institutions = []
     @publishers_stats = { presses: [], timestampe: Time.now.utc.to_s }
-    if ['dashboard', 'licenses', 'products', 'components', 'individuals', 'institutions', 'publishers', 'users', 'tokens', 'logs', 'grants', 'monographs', 'resources', 'pages', 'reports', 'customize', 'settings', 'help', 'csv', 'jobs', 'refresh'].include? @partials
+    if ['dashboard', 'licenses', 'products', 'components', 'individuals', 'institutions', 'institution_affiliations', 'publishers', 'users', 'tokens', 'logs', 'grants', 'monographs', 'resources', 'pages', 'reports', 'customize', 'settings', 'help', 'csv', 'jobs', 'refresh'].include? @partials
       if /dashboard/.match?(@partials)
         @individuals = Greensub::Individual.where("identifier like ? or name like ?", "%#{params['individual_filter']}%", "%#{params['individual_filter']}%").map { |individual| ["#{individual.identifier} (#{individual.name})", individual.id] }
         @institutions = Greensub::Institution.where("identifier like ? or name like ?", "%#{params['institution_filter']}%", "%#{params['institution_filter']}%").map { |institution| ["#{institution.identifier} (#{institution.name})", institution.id] }
