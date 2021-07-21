@@ -196,12 +196,14 @@ RSpec.describe Hyrax::FileSetsController, type: :controller do
   end
 
   context "counter report counts from the show page" do
-    let(:keycard) { { dlpsInstitutionId: [institution.identifier] } }
-    let(:institution) { double('institution', identifier: '9999') }
+    let(:keycard) { { dlpsInstitutionId: [dlps_institution_id.to_s] } }
+    let(:institution) { create(:institution, identifier: dlps_institution_id.to_s) } # TODO: Prefix with '#'
+    let(:institution_affiliation) { create(:institution_affiliation, institution: institution, dlps_institution_id: dlps_institution_id, affiliation: 'member') }
+    let(:dlps_institution_id) { 9999 }
 
     before do
+      institution_affiliation
       allow_any_instance_of(Keycard::Request::Attributes).to receive(:all).and_return(keycard)
-      allow(Greensub::Institution).to receive(:where).with(identifier: ['9999']).and_return([institution])
       file_set.read_groups << "public"
       file_set.visibility = "open"
     end

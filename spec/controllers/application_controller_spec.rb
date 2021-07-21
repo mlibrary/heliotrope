@@ -101,14 +101,13 @@ RSpec.describe ApplicationController, type: :controller do
     end
 
     let(:keycard) { {} }
-    let(:institution) { double('institution', identifier: 'identifier') }
+    let(:institution) { create(:institution, identifier: dlps_institution_id.to_s, entity_id: 'https://entity.id') } # TODO: Prefix identifier value with '#'
+    let(:institution_affiliation) { create(:institution_affiliation, institution: institution, dlps_institution_id: dlps_institution_id, affiliation: 'member') }
+    let(:dlps_institution_id) { 9999 }
 
     before do
+      institution_affiliation
       allow_any_instance_of(Keycard::Request::Attributes).to receive(:all).and_return(keycard)
-      allow(Greensub::Institution).to receive(:where).with(identifier: []).and_return([])
-      allow(Greensub::Institution).to receive(:where).with(identifier: 'identifier').and_return([institution])
-      allow(Greensub::Institution).to receive(:where).with(identifier: ['identifier']).and_return([institution])
-      allow(Greensub::Institution).to receive(:where).with(entity_id: 'https://entity.id').and_return([institution])
       request.env["HTTP_ACCEPT"] = 'application/json'
       routes.draw { get "trigger" => "anonymous#trigger" }
       get :trigger
@@ -118,21 +117,19 @@ RSpec.describe ApplicationController, type: :controller do
     it { expect(controller.current_institutions).to be_empty }
 
     context 'with an IP belonging to an institutional network' do
-      let(:keycard) { { dlpsInstitutionId: [institution.identifier] } }
-      let(:institution) { double('institution', identifier: 'identifier') }
+      let(:keycard) { { dlpsInstitutionId: [dlps_institution_id.to_s] } }
 
       it { expect(controller.current_institutions?).to be true }
       it { expect(controller.current_institutions).not_to be_empty }
-      it { expect(controller.current_institutions.first).to be institution }
+      it { expect(controller.current_institutions.first).to eq institution }
     end
 
     context 'when authenticated via partner Shibboleth' do
       let(:keycard) { { identity_provider: 'https://entity.id' } }
-      let(:institution) { double('institution', identifier: 'identifier') }
 
       it { expect(controller.current_institutions?).to be true }
       it { expect(controller.current_institutions).not_to be_empty }
-      it { expect(controller.current_institutions.first).to be institution }
+      it { expect(controller.current_institutions.first).to eq institution }
     end
   end
 end

@@ -197,7 +197,7 @@ RSpec.describe "Greensub::Institutions", type: :request do
           end
 
           context 'invalid institution params' do
-            let(:institution_params) { { identifier: 'identifier' } }
+            let(:institution_params) { { identifier: '' } }
 
             it do
               expect { subject }.not_to raise_error

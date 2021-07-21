@@ -74,14 +74,17 @@ RSpec.describe EmbedController, type: :controller do
                            visibility_ssi: 'open',
                            read_access_group_ssim: ["public"])
       end
-      let(:keycard) { { dlpsInstitutionId: [institution.identifier] } }
-      let(:institution) { double('institution', identifier: '9999') }
+      let(:keycard) { { dlpsInstitutionId: [dlps_institution_id.to_s] } }
+      let(:institution) { create(:institution, identifier: dlps_institution_id.to_s) } # TODO: Prefix with '#'
+      let(:institution_affiliation) { create(:institution_affiliation, institution: institution, dlps_institution_id: dlps_institution_id, affiliation: 'member') }
+      let(:dlps_institution_id) { 9999 }
+
 
       before do
+        institution_affiliation
         ActiveFedora::SolrService.add([monograph.to_h, file_set.to_h])
         ActiveFedora::SolrService.commit
         allow_any_instance_of(Keycard::Request::Attributes).to receive(:all).and_return(keycard)
-        allow(Greensub::Institution).to receive(:where).with(identifier: ['9999']).and_return([institution])
         allow(HandleNet).to receive(:noid).with(hdl).and_return('file_set_noid')
       end
 

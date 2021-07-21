@@ -80,16 +80,17 @@ RSpec.describe EPubsController, type: :controller do
         let(:monograph) { create(:public_monograph) }
         let(:file_set) { create(:public_file_set, content: File.open(File.join(fixture_path, 'fake_epub01.epub'))) }
         let!(:fr) { create(:featured_representative, work_id: monograph.id, file_set_id: file_set.id, kind: 'epub') }
-        let(:keycard) { { dlpsInstitutionId: [institution.identifier] } }
-        let(:institution) { double('institution', identifier: '9999') }
+        let(:keycard) { { dlpsInstitutionId: [dlps_institution_id.to_s] } }
+        let(:institution) { create(:institution, identifier: dlps_institution_id.to_s) } # TODO: Prefix with '#'
+        let(:institution_affiliation) { create(:institution_affiliation, institution: institution, dlps_institution_id: dlps_institution_id, affiliation: 'member') }
+        let(:dlps_institution_id) { 9999 }
 
         before do
+          institution_affiliation
           monograph.ordered_members << file_set
           monograph.save!
           file_set.save!
           allow_any_instance_of(Keycard::Request::Attributes).to receive(:all).and_return(keycard)
-          allow(Greensub::Institution).to receive(:where).with(identifier: ['9999']).and_return([institution])
-          allow(institution).to receive(:products).and_return([])
 
           get :show, params: { id: file_set.id }
         end

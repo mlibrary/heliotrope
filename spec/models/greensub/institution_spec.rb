@@ -32,17 +32,6 @@ RSpec.describe Greensub::Institution, type: :model do
     end
   end
 
-  context 'before validation' do
-    it 'on update' do
-      institution = create(:institution, identifier: identifier)
-      institution.identifier = 'new_identifier'
-      expect(institution.save).to be false
-      expect(institution.errors.count).to eq 1
-      expect(institution.errors.first[0]).to eq :identifier
-      expect(institution.errors.first[1]).to eq "institution identifier can not be changed!"
-    end
-  end
-
   context 'before destroy' do
     let(:institution) { create(:institution) }
     let(:product) { create(:product) }
@@ -125,6 +114,34 @@ RSpec.describe Greensub::Institution, type: :model do
         clear_grants_table
         expect(subject.products.count).to eq 0
       end
+    end
+  end
+
+  describe 'institution affiliations' do
+    let(:institutions) { [] }
+
+    before do
+      for i in 0..2
+        institutions << create(:institution)
+        for j in 0..Greensub::InstitutionAffiliation.affiliations.count-1
+          create(:institution_affiliation, institution: institutions[i], dlps_institution_id: 1 + (i * 100) + j, affiliation: Greensub::InstitutionAffiliation.affiliations[j])
+        end
+      end
+    end
+
+    it do
+      expect(institutions[0].institution_affiliations.count).to eq Greensub::InstitutionAffiliation.affiliations.count
+      expect(described_class.containing_dlps_institution_id(1).count).to eq 1
+      expect(described_class.containing_dlps_institution_id(1).first).to eq institutions[0]
+      expect(described_class.containing_dlps_institution_id(101).count).to eq 1
+      expect(described_class.containing_dlps_institution_id(101).first).to eq institutions[1]
+      expect(described_class.containing_dlps_institution_id(201).count).to eq 1
+      expect(described_class.containing_dlps_institution_id(201).first).to eq institutions[2]
+      expect(described_class.containing_dlps_institution_id([1, 2, 3]).count).to eq 1
+      expect(described_class.containing_dlps_institution_id([1, 101, 201]).count).to eq 3
+      expect(institutions[0].dlps_institution_ids).to contain_exactly(1, 2, 3)
+      expect(institutions[1].dlps_institution_ids).to contain_exactly(101, 102, 103)
+      expect(institutions[2].dlps_institution_ids).to contain_exactly(201, 202, 203)
     end
   end
 end

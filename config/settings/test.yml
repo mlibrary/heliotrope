@@ -40,6 +40,6 @@ open_access_ebook_trust_emails:
     - cc1@fulcrum
     - cc2@fulcrum
 
-world_institution_identifier: 0
+world_institution_identifier: 0 # TODO: Prefix with '#'
 
 princesse_de_cleves_noid: pdecleves
