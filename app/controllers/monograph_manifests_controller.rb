@@ -5,7 +5,7 @@ class MonographManifestsController < ApplicationController
 
   def export
     exporter = Export::Exporter.new(params[:id])
-    send_data exporter.export.force_encoding("utf-8"), filename: "#{params[:id]}.csv"
+    send_data exporter.export, filename: "#{params[:id]}.csv"
   end
 
   def import
