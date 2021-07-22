@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'csv'
+require 'io/console'
 
 module Export
   class Exporter
