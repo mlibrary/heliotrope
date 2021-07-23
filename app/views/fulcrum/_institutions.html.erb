@@ -23,6 +23,9 @@
         <div></div>
       </th>
       <th>
+        <div>Affiliations</div>
+      </th>
+      <th>
         <div>Licenses</div>
         <div>&nbsp;</div>
         <div><button name="submit" type="submit" value="filter">Filter</button></div>
@@ -39,6 +42,11 @@
           <div><%= institution.identifier %></div>
           <div><%= institution.name %>&nbsp;</div>
           <div><%= institution.entity_id %>&nbsp;</div>
+        </td>
+        <td>
+          <% institution.institution_affiliations.each do |institution_affiliation| %>
+            <div><%= link_to institution_affiliation.dlps_institution_id.to_s + ":" + institution_affiliation.affiliation, greensub_institution_affiliation_path(institution_affiliation) %></div>
+          <% end %>
         </td>
         <td><%= institution.licenses.count %></td>
       </tr>

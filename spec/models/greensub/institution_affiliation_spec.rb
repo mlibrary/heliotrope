@@ -55,7 +55,7 @@ RSpec.describe Greensub::InstitutionAffiliation, type: :model do
     subject
     expect(Greensub::Institution.count).to eq 1
     expect(Greensub::InstitutionAffiliation.count).to eq 1
-    expect { institution.destroy }.to raise_error(ActiveRecord::StatementInvalid, /Mysql2::Error: Cannot delete or update a parent row: a foreign key constraint fails/)
+    expect { institution.destroy }.to raise_error(ActiveRecord::DeleteRestrictionError, "Cannot delete record because of dependent institution_affiliations")
     institution_affiliation.destroy
     expect(Greensub::InstitutionAffiliation.count).to eq 0
     expect(Greensub::Institution.count).to eq 1

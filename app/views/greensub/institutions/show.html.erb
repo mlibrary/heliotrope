@@ -14,9 +14,16 @@
   <div class="col-md-1"><em>Login</em></div>
   <div class="col-md-11">&nbsp;<%= @institution.login %></div>
   <div class="col-md-12"><br/></div>
+  <h2>Affiliations</h2>
+  <div class="col-md-12">
+    <% @institution.institution_affiliations.each do |institution_affiliation| %>
+      <div><%= link_to institution_affiliation.dlps_institution_id.to_s + ":" + institution_affiliation.affiliation, greensub_institution_affiliation_path(institution_affiliation) %></div>
+    <% end %>
+  </div>
+  <div class="col-md-12"><br/></div>
   <h2>Licenses</h2>
   <div class="col-md-12">
-    <%= render partial: '/greensub/licenses/licenses', locals: { institution: @individual, licenses: @institution.licenses } %>
+    <%= render partial: '/greensub/licenses/licenses', locals: { institution: @institution, licenses: @institution.licenses } %>
   </div>
   <div class="col-md-12"><br/></div>
   <div class="col-md-12">

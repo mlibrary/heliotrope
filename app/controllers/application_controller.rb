@@ -49,19 +49,8 @@ class ApplicationController < ActionController::Base
   end
 
   def current_institution
-    insts = current_institutions
-    the_inst = insts.first
-    insts.each do |inst|
-      begin
-        left = the_inst.identifier.to_i
-        right = inst.identifier.to_i
-        next if left <= right
-        the_inst = inst
-      rescue StandardError => e
-        Rails.logger.debug("ApplicationController.current_institution error" + e)
-      end
-    end
-    the_inst
+    # current_institutions.sort { |x, y| x.identifier <=> y.identifier }.first
+    current_institutions.sort { |x, y| x.identifier.to_i <=> y.identifier.to_i }.first # TODO: Better sort logic
   end
 
   def current_institutions?
@@ -80,13 +69,13 @@ class ApplicationController < ActionController::Base
 
     def ip_based_institutions
       ids = request_attributes[:dlpsInstitutionId] || []
-      Greensub::Institution.where(identifier: ids).to_a
+      Greensub::Institution.containing_dlps_institution_id(ids).to_a
     end
 
     def shib_institutions
       entity_id = request_attributes[:identity_provider]
       if entity_id
-        Greensub::Institution.where(entity_id: entity_id).to_a
+        Greensub::Institution.for_entity_id(entity_id).to_a
       else
         []
       end

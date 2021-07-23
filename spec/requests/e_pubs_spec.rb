@@ -421,10 +421,13 @@ RSpec.describe "EPubs", type: :request do
           context "valid token" do
             let(:token) { JsonWebToken.encode(data: epub.id, exp: Time.now.to_i + 48 * 3600) }
             let(:request_attributes_for) { double('request_attributes_for') }
-            let(:request_attributes) { { dlpsInstitutionId: [institution.identifier] } }
-            let(:institution) { create(:institution) }
+            let(:request_attributes) { { dlpsInstitutionId: [dlps_institution_id] } }
+            let(:institution) { create(:institution, identifier: dlps_institution_id.to_s, entity_id: 'https://entity.id') } # TODO: Prefix identifier value with '#'
+            let(:institution_affiliation) { create(:institution_affiliation, institution: institution, dlps_institution_id: dlps_institution_id, affiliation: 'member') }
+            let(:dlps_institution_id) { 9999 }
 
             before do
+              institution_affiliation
               allow(Services).to receive(:request_attributes).and_return(request_attributes_for)
               allow(request_attributes_for).to receive(:for).and_return(request_attributes)
               allow(ShareLinkLog).to receive(:create)
