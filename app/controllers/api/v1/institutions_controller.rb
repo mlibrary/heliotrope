@@ -178,9 +178,6 @@ module API
           when "read"
             @institution.update_product_license(@product, license_type: "Greensub::ReadLicense")
             return { "license" => "read" }, :ok
-          when "none"
-            @institution.update_product_license(@product, license_type: "Greensub::License")
-            return { "license" => "none" }, :ok
           else
             return { exception: "no license type found for: #{license}" }, :unprocessable_entity
           end

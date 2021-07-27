@@ -2,9 +2,23 @@
 
 module Greensub
   class License < ApplicationRecord
-    include Filterable
+    belongs_to :product
 
+    include Filterable
     scope :type_like, ->(like) { where("type like ?", "%#{like}%") }
+
+    validates :type, presence: true, inclusion: { in: %w[Greensub::FullLicense Greensub::ReadLicense] }
+
+    before_validation(on: :update) do
+      if licensee_type_changed? || licensee_id_changed?
+        errors.add(:licensee, "can not be changed!")
+        throw(:abort)
+      end
+      if product_id_changed?
+        errors.add(:product, "can not be changed!")
+        throw(:abort)
+      end
+    end
 
     before_destroy do
       if grants?
@@ -22,7 +36,7 @@ module Greensub
     end
 
     def update?
-      true
+      grants.blank?
     end
 
     def destroy?
@@ -42,50 +56,15 @@ module Greensub
     end
 
     def label
-      return @label if @label.present?
-      @label = '' if self.instance_of?(Greensub::License)
       @label ||= /^Greensub::(.+)(License$)/.match(self.class.to_s)[1]
     end
 
-    def licensee?
-      licensee.present?
-    end
-
-    def licensee
-      @licensee ||= individual || institution
-    end
-
     def individual?
-      individual.present?
-    end
-
-    def individual
-      return nil if grants.blank?
-      @individual ||= case grants.first.agent_type
-                      when 'Individual'
-                        Individual.find(grants.first.agent_id)
-                      end
+      licensee.is_a?(Greensub::Individual)
     end
 
     def institution?
-      institution.present?
-    end
-
-    def institution
-      return nil if grants.blank?
-      @institution ||= case grants.first.agent_type
-                       when 'Institution'
-                         Institution.find(grants.first.agent_id)
-                       end
-    end
-
-    def product?
-      product.present?
-    end
-
-    def product
-      return nil if grants.blank?
-      @product ||= Product.find(grants.first.resource_id)
+      licensee.is_a?(Greensub::Institution)
     end
 
     private

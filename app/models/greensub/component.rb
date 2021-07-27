@@ -11,7 +11,7 @@ module Greensub
     scope :for_noid, ->(noid) { where(noid: noid) }
 
     has_many :components_products # rubocop:disable Rails/HasManyOrHasOneDependent
-    has_many :products, through: :components_products,
+    has_many :products, through: :components_products, dependent: :restrict_with_error,
                                  after_remove: :reindex_component_product,
                                  after_add: :reindex_component_product
 

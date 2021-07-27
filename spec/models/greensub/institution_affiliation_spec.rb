@@ -55,7 +55,10 @@ RSpec.describe Greensub::InstitutionAffiliation, type: :model do
     subject
     expect(Greensub::Institution.count).to eq 1
     expect(Greensub::InstitutionAffiliation.count).to eq 1
-    expect { institution.destroy }.to raise_error(ActiveRecord::DeleteRestrictionError, "Cannot delete record because of dependent institution_affiliations")
+    expect(institution.destroy).to be false
+    expect(institution.errors.count).to eq 1
+    expect(institution.errors.first[0]).to eq :base
+    expect(institution.errors.first[1]).to eq "Cannot delete record because dependent institution affiliations exist"
     institution_affiliation.destroy
     expect(Greensub::InstitutionAffiliation.count).to eq 0
     expect(Greensub::Institution.count).to eq 1

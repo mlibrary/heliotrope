@@ -3,38 +3,38 @@
 require 'rails_helper'
 
 RSpec.describe Greensub::Institution, type: :model do
-  subject { described_class.new(id: id, identifier: identifier, name: name, entity_id: entity_id) }
+  context 'instance' do
+    subject { described_class.new(id: id, identifier: identifier, name: name, entity_id: entity_id) }
 
-  let(:id) { 1 }
-  let(:identifier) { 'identifier' }
-  let(:name) { 'name' }
-  let(:entity_id) { 'entity_id' }
+    let(:id) { 1 }
+    let(:identifier) { 'identifier' }
+    let(:name) { 'name' }
+    let(:entity_id) { 'entity_id' }
 
-  before { clear_grants_table }
+    it { is_expected.to be_a Greensub::Licensee }
+    it { expect(subject.agent_type).to eq :Institution }
+    it { expect(subject.agent_id).to eq id }
 
-  it { is_expected.to be_a Greensub::Licensee }
-  it { expect(subject.agent_type).to eq :Institution }
-  it { expect(subject.agent_id).to eq id }
+    describe '#shibboleth?' do
+      it { expect(subject.shibboleth?).to be true }
 
-  describe '#shibboleth?' do
-    it { expect(subject.shibboleth?).to be true }
+      context 'nil' do
+        let(:entity_id) { nil }
 
-    context 'nil' do
-      let(:entity_id) { nil }
+        it { expect(subject.shibboleth?).to be false }
+      end
 
-      it { expect(subject.shibboleth?).to be false }
-    end
+      context 'blank' do
+        let(:entity_id) { '' }
 
-    context 'blank' do
-      let(:entity_id) { '' }
-
-      it { expect(subject.shibboleth?).to be false }
+        it { expect(subject.shibboleth?).to be false }
+      end
     end
   end
 
   context 'before validation' do
     it 'on update' do
-      institution = create(:institution, identifier: identifier)
+      institution = create(:institution)
       institution.identifier = 'new_identifier'
       expect(institution.save).to be false
       expect(institution.errors.count).to eq 1
@@ -46,19 +46,30 @@ RSpec.describe Greensub::Institution, type: :model do
   context 'before destroy' do
     let(:institution) { create(:institution) }
     let(:product) { create(:product) }
-    let(:component) { create(:component) }
+    let(:license) { create(:full_license, licensee: institution, product: product) }
 
-    it 'grant present' do
-      Authority.grant!(institution, Checkpoint::Credential::Permission.new(:read), component)
+    it 'license present' do
+      license
       expect(institution.destroy).to be false
       expect(institution.errors.count).to eq 1
       expect(institution.errors.first[0]).to eq :base
-      expect(institution.errors.first[1]).to eq "institution has associated grant!"
+      expect(institution.errors.first[1]).to eq "Cannot delete record because dependent licenses exist"
     end
   end
 
-  context 'other' do
-    before { allow(described_class).to receive(:find).with(id).and_return(subject) }
+  context 'methods' do
+    subject { institution }
+
+    let(:institution) { create(:institution) }
+
+    before { clear_grants_table }
+
+    it do
+      is_expected.to be_valid
+      expect(subject.update?).to be true
+      expect(subject.destroy?).to be true
+      expect(subject.grants?).to be false
+    end
 
     it 'grants' do
       product = create(:product)
@@ -81,17 +92,12 @@ RSpec.describe Greensub::Institution, type: :model do
     end
 
     context 'products and components' do
-      subject { create(:institution, identifier: identifier, name: name, entity_id: entity_id) }
+      subject { create(:institution) }
 
       let(:product_1) { create(:product, identifier: 'product_1') }
       let(:component_a) { create(:component, identifier: 'component_a') }
       let(:product_2) { create(:product, identifier: 'product_2') }
       let(:component_b) { create(:component, identifier: 'component_b') }
-
-      before do
-        subject
-        allow(described_class).to receive(:find).with(subject.id).and_return(subject)
-      end
 
       it do
         expect(subject.products.count).to be_zero
@@ -112,18 +118,6 @@ RSpec.describe Greensub::Institution, type: :model do
 
         product_1.components << component_b
         expect(subject.products.count).to eq 2
-
-        clear_grants_table
-        expect(subject.products.count).to eq 0
-
-        Authority.grant!(subject, Checkpoint::Credential::Permission.new(:read), component_b)
-        expect(subject.products.count).to eq 0
-
-        Authority.grant!(subject, Checkpoint::Credential::Permission.new(:read), component_a)
-        expect(subject.products.count).to eq 0
-
-        clear_grants_table
-        expect(subject.products.count).to eq 0
       end
     end
   end

@@ -2,6 +2,8 @@
 
 module Greensub
   class FullLicense < License
+    belongs_to :licensee, polymorphic: true
+
     def entitlements
       [:download, :reader]
     end

@@ -1,4 +1,4 @@
-<% products = Greensub::Product.filter(identifier_like: params[:identifier_like], name_like: params[:name_like], purchase_like: params[:purchase_like]).order(identifier: :asc).page(params[:page]) %>
+<% products = Greensub::Product.filter_by(identifier_like: params[:identifier_like], name_like: params[:name_like], purchase_like: params[:purchase_like]).order(identifier: :asc).page(params[:page]) %>
 <h1>Products</h1>
 <form name="filter" method="get" action="<%= fulcrum_partials_path(:products) %>">
   <table class="table table-striped" summary="Product List">

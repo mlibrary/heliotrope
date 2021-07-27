@@ -4,7 +4,9 @@ require 'rails_helper'
 
 RSpec.describe "Greensub::Licenses", type: :request do
   let(:current_user) { User.guest(user_key: 'wolverine@umich.edu') }
-  let(:target) { create(:full_license) }
+  let(:target) { create(:full_license, licensee: individual, product: product) }
+  let(:individual) { create(:individual) }
+  let(:product) { create(:product) }
 
   before { target }
 

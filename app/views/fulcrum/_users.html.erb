@@ -1,4 +1,4 @@
-<% users = User.filter(identifier_like: params[:identifier_like], name_like: params[:name_like], email_like: params[:email_like]).order(email: :asc).page(params[:page]) %>
+<% users = User.filter_by(identifier_like: params[:identifier_like], name_like: params[:name_like], email_like: params[:email_like]).order(email: :asc).page(params[:page]) %>
 <h1>Users</h1>
 <form name="filter" method="get" action="<%= fulcrum_partials_path(:users) %>">
   <table class="table table-striped" summary="User List">
