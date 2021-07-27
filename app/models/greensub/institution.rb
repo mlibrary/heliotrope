@@ -19,6 +19,13 @@ module Greensub
     # validates :site, presence: true, allow_blank: false
     # validates :login, presence: true, allow_blank: false
 
+    before_validation(on: :update) do
+      if identifier_changed?
+        errors.add(:identifier, "institution identifier can not be changed!")
+        throw(:abort)
+      end
+    end
+
     before_destroy do
       if grants?
         errors.add(:base, "institution has associated grant!")

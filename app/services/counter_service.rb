@@ -35,7 +35,7 @@ class CounterService
     # institution, but not always (for instance: U of M and LIT IP ranges means 2 institutions)
     @controller.current_institutions.each do |institution|
       cr = CounterReport.new(session: session,
-                             institution: institution.identifier, # TODO: Replace with Institution ID ???????
+                             institution: institution.identifier,
                              noid: @presenter.id,
                              model: @presenter.has_model)
 

@@ -252,6 +252,13 @@ RSpec.describe "Institutions", type: :request do
         expect(response_body[:id.to_s]).to eq(institution.id)
         expect(response_body[:name.to_s]).to eq('updated_name')
       end
+
+      it 'existing update identifier unprocessable_entity' do
+        put api_institution_path(institution.id), params: { institution: { identifier: 'updated_identifier' } }.to_json, headers: headers
+        expect(response.content_type).to eq("application/json")
+        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response_body[:identifier.to_s]).to eq(["institution identifier can not be changed!"])
+      end
     end
 
     describe "PUT /api/v1/products/:product_id:/institutions/:id" do # update

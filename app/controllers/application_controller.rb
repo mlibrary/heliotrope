@@ -49,8 +49,7 @@ class ApplicationController < ActionController::Base
   end
 
   def current_institution
-    # current_institutions.sort { |x, y| x.identifier <=> y.identifier }.first
-    current_institutions.sort { |x, y| x.identifier.to_i <=> y.identifier.to_i }.first # TODO: Better sort logic
+    current_institutions.sort { |x, y| x.identifier.to_i <=> y.identifier.to_i }.first
   end
 
   def current_institutions?

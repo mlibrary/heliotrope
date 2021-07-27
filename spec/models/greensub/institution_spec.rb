@@ -32,6 +32,17 @@ RSpec.describe Greensub::Institution, type: :model do
     end
   end
 
+  context 'before validation' do
+    it 'on update' do
+      institution = create(:institution, identifier: identifier)
+      institution.identifier = 'new_identifier'
+      expect(institution.save).to be false
+      expect(institution.errors.count).to eq 1
+      expect(institution.errors.first[0]).to eq :identifier
+      expect(institution.errors.first[1]).to eq "institution identifier can not be changed!"
+    end
+  end
+
   context 'before destroy' do
     let(:institution) { create(:institution) }
     let(:product) { create(:product) }

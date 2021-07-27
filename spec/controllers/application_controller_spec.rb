@@ -101,7 +101,7 @@ RSpec.describe ApplicationController, type: :controller do
     end
 
     let(:keycard) { {} }
-    let(:institution) { create(:institution, identifier: dlps_institution_id.to_s, entity_id: 'https://entity.id') } # TODO: Prefix identifier value with '#'
+    let(:institution) { create(:institution, identifier: dlps_institution_id.to_s, entity_id: 'https://entity.id') }
     let(:institution_affiliation) { create(:institution_affiliation, institution: institution, dlps_institution_id: dlps_institution_id, affiliation: 'member') }
     let(:dlps_institution_id) { 9999 }
 
