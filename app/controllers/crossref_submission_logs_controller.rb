@@ -2,7 +2,7 @@
 
 class CrossrefSubmissionLogsController < ApplicationController
   def index
-    @crossref_submission_logs = CrossrefSubmissionLog.filter(filtering_params(params)).order(created_at: :desc).page(params[:page])
+    @crossref_submission_logs = CrossrefSubmissionLog.filter_by(filtering_params(params)).order(created_at: :desc).page(params[:page])
   end
 
   def show

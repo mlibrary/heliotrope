@@ -4,7 +4,7 @@ class AptrustDepositsController < ApplicationController
   before_action :set_aptrust_deposit, only: %i[destroy]
 
   def index
-    @aptrust_deposits = AptrustDeposit.filter(filtering_params(params)).order(created_at: :desc).page(params[:page])
+    @aptrust_deposits = AptrustDeposit.filter_by(filtering_params(params)).order(created_at: :desc).page(params[:page])
   end
 
   def destroy

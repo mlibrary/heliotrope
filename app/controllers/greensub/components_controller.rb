@@ -7,9 +7,9 @@ module Greensub
     def index
       @components = if params[:product_id].present?
                       @product = Product.find(params[:product_id])
-                      @product.components.filter(filtering_params(params)).order(identifier: :asc).page(params[:page])
+                      @product.components.filter_by(filtering_params(params)).order(identifier: :asc).page(params[:page])
                     else
-                      Component.filter(filtering_params(params)).order(identifier: :asc).page(params[:page])
+                      Component.filter_by(filtering_params(params)).order(identifier: :asc).page(params[:page])
                     end
     end
 
