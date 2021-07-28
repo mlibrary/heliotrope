@@ -42,26 +42,6 @@ RSpec.describe SeedInstitutionAffiliationsJob, type: :job do
       expect(Greensub::InstitutionAffiliation.last.institution).to eq institution_2
       expect(Greensub::InstitutionAffiliation.last.dlps_institution_id.to_s).to eq institution_2.identifier
       expect(Greensub::InstitutionAffiliation.last.affiliation).to eq 'member'
-      job.perform(true)
-      institution_1.reload
-      institution_2.reload
-      expect(Greensub::InstitutionAffiliation.count).to eq 2
-      expect(Greensub::InstitutionAffiliation.first.institution).to eq institution_1
-      expect("#" + Greensub::InstitutionAffiliation.first.dlps_institution_id.to_s).to eq institution_1.identifier
-      expect(Greensub::InstitutionAffiliation.first.affiliation).to eq 'member'
-      expect(Greensub::InstitutionAffiliation.last.institution).to eq institution_2
-      expect("#" + Greensub::InstitutionAffiliation.last.dlps_institution_id.to_s).to eq institution_2.identifier
-      expect(Greensub::InstitutionAffiliation.last.affiliation).to eq 'member'
-      job.perform
-      institution_1.reload
-      institution_2.reload
-      expect(Greensub::InstitutionAffiliation.count).to eq 2
-      expect(Greensub::InstitutionAffiliation.first.institution).to eq institution_1
-      expect(Greensub::InstitutionAffiliation.first.dlps_institution_id.to_s).to eq institution_1.identifier
-      expect(Greensub::InstitutionAffiliation.first.affiliation).to eq 'member'
-      expect(Greensub::InstitutionAffiliation.last.institution).to eq institution_2
-      expect(Greensub::InstitutionAffiliation.last.dlps_institution_id.to_s).to eq institution_2.identifier
-      expect(Greensub::InstitutionAffiliation.last.affiliation).to eq 'member'
     end
   end
 end

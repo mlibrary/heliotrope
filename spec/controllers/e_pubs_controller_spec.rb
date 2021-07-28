@@ -81,7 +81,7 @@ RSpec.describe EPubsController, type: :controller do
         let(:file_set) { create(:public_file_set, content: File.open(File.join(fixture_path, 'fake_epub01.epub'))) }
         let!(:fr) { create(:featured_representative, work_id: monograph.id, file_set_id: file_set.id, kind: 'epub') }
         let(:keycard) { { dlpsInstitutionId: [dlps_institution_id.to_s] } }
-        let(:institution) { create(:institution, identifier: dlps_institution_id.to_s) } # TODO: Prefix with '#'
+        let(:institution) { create(:institution, identifier: dlps_institution_id.to_s) }
         let(:institution_affiliation) { create(:institution_affiliation, institution: institution, dlps_institution_id: dlps_institution_id, affiliation: 'member') }
         let(:dlps_institution_id) { 9999 }
 

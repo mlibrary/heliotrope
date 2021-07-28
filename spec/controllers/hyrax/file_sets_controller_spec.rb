@@ -197,7 +197,7 @@ RSpec.describe Hyrax::FileSetsController, type: :controller do
 
   context "counter report counts from the show page" do
     let(:keycard) { { dlpsInstitutionId: [dlps_institution_id.to_s] } }
-    let(:institution) { create(:institution, identifier: dlps_institution_id.to_s) } # TODO: Prefix with '#'
+    let(:institution) { create(:institution, identifier: dlps_institution_id.to_s) }
     let(:institution_affiliation) { create(:institution_affiliation, institution: institution, dlps_institution_id: dlps_institution_id, affiliation: 'member') }
     let(:dlps_institution_id) { 9999 }
 
