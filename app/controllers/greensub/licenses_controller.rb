@@ -7,9 +7,9 @@ module Greensub
     def index
       if params[:product_id].present?
         @product = Product.find(params[:product_id])
-        @licenses = License.where(id: @product.licenses.map(&:id)).filter(filtering_params(params)).order(type: :asc).page(params[:page])
+        @licenses = License.where(id: @product.licenses.map(&:id)).filter_by(filtering_params(params)).order(type: :asc).page(params[:page])
       else
-        @licenses = License.filter(filtering_params(params)).order(type: :asc).page(params[:page])
+        @licenses = License.filter_by(filtering_params(params)).order(type: :asc).page(params[:page])
       end
     end
 

@@ -7,7 +7,7 @@ module Greensub
     def index
       if params[:component_id].present?
         @component = Component.find(params[:component_id])
-        @products = @component.products.filter(filtering_params(params)).order(name: :asc).page(params[:page])
+        @products = @component.products.filter_by(filtering_params(params)).order(name: :asc).page(params[:page])
         # elsif params[:individual_id].present?
         #   @individual = Individual.find(params[:individual_id])
         #   @products = @individual.products
@@ -15,7 +15,7 @@ module Greensub
         #   @institution = Institution.find(params[:institution_id])
         #   @products = @institution.products
       else
-        @products = Product.filter(filtering_params(params)).order(name: :asc).page(params[:page])
+        @products = Product.filter_by(filtering_params(params)).order(name: :asc).page(params[:page])
       end
     end
 

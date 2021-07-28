@@ -2,7 +2,7 @@
 
 class ShareLinkLogsController < ApplicationController
   def index
-    @share_link_logs = ShareLinkLog.filter(filtering_params(params)).order(created_at: :desc).page(params[:page])
+    @share_link_logs = ShareLinkLog.filter_by(filtering_params(params)).order(created_at: :desc).page(params[:page])
   end
 
   private
