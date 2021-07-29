@@ -164,7 +164,7 @@ gem 'rsolr', '~> 2.0.1'
 # Use Zip to extract EPubs
 gem "rubyzip", ">= 1.3.0"
 
-gem 'sitemap_generator', '~> 6.0.1'
+gem 'sitemap_generator', '~> 6.1.2'
 
 gem 'sinatra', '~> 2.0.2'
 # CVE-2018-3760
