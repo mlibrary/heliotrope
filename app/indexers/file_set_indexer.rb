@@ -66,7 +66,8 @@ class FileSetIndexer < Hyrax::FileSetIndexer
     solr_doc[Solrizer.solr_name('duration', :symbol)] = orig.duration.first if orig.duration.present?
     solr_doc[Solrizer.solr_name('sample_rate', :symbol)] = orig.sample_rate if orig.sample_rate.present?
     solr_doc[Solrizer.solr_name('original_checksum', :symbol)] = orig.original_checksum if orig.original_checksum.present?
-    solr_doc[Solrizer.solr_name('original_name', :stored_searchable)] = orig.original_name if orig.original_name.present?
+    # Force UTF-8 since original_name is ASCII-8BIT (for some reason) which shouldn't be in the index, HELIO-3983
+    solr_doc[Solrizer.solr_name('original_name', :stored_searchable)] = orig.original_name.dup.force_encoding("UTF-8") if orig.original_name.present?
     # generate_solr_document is first run in IngestJob where `orig.uri.to_s` will return a file URI but no file will ...
     # actually be available in Fedora at that point, hence `FileSet.find(solr_doc[:id])&.files&.present?`
     return unless orig&.original_name&.ends_with?('.gif') && FileSet.find(solr_doc[:id])&.files&.present? && MiniMagick::Image.open(orig&.uri&.to_s)&.frames&.count > 1
