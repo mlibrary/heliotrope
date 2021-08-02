@@ -1,0 +1,14 @@
+<%= simple_form_for @license_affiliation do |f| %>
+  <%= f.error_notification %>
+
+  <div class="form-inputs">
+    <%= f.association :license, include_blank: false %>
+    <%= f.input :affiliation, collection: Greensub::LicenseAffiliation.affiliations.collect { |affiliation| [affiliation, affiliation] }, include_blank: false %>
+  </div>
+
+  <div class="form-actions">
+    <%= f.button :submit %>
+  </div>
+
+  <div>&nbsp;</div>
+<% end %>

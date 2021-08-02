@@ -1,6 +1,6 @@
 <div id="maincontent">
   <% if @product.present? %>
-    <h1>Individuals of <%= link_to @product.identifier, greensub_product_path(@product) %> Product</h1>
+    <h1><%= link_to "#{@product.identifier} - #{@product.name}", greensub_product_path(@product) %> Individuals</h1>
     <form name="filter" method="get" action="<%= greensub_product_individuals_path(@product) %>">
   <% else %>
     <h1>Individuals</h1>
@@ -11,34 +11,39 @@
       <div class="col-md-10">
         <div class="col-md-1">
           <div>ID</div>
+          <div>&nbsp;</div>
+          <div><button name="submit" type="submit" value="filter">Filter</button></div>
         </div>
-        <div class="col-md-6">
+        <div class="col-md-8">
           <% size = 24 %>
           <div><div class="col-md-2">Identifier</div><div class="col-md-10"><input type="text" name="identifier_like" value="<%= params[:identifier_like] %>" size="<%= size %>" aria-label="identifier_like"></div></div>
           <div><div class="col-md-2">Name</div><div class="col-md-10"><input type="text" name="name_like" value="<%= params[:name_like] %>" size="<%= size %>" aria-label="name_like"></div></div>
+          <div><div class="col-md-2">eMail</div><div class="col-md-10"><input type="text" name="email_like" value="<%= params[:email_like] %>" size="<%= size %>" aria-label="email_like"></div></div>
         </div>
         <div class="col-md-3">
-          <div>eMail</div>
-          <div><input type="text" name="email_like" value="<%= params[:email_like] %>" size="<%= size %>" aria-label="email_like"></div>
-        </div>
-        <div class="col-md-2"><div>Licenses</div><div><button name="submit" type="submit" value="filter">Filter</button></div>
+          <div>Licenses</div>
+          <div>Products</div>
+          <div>&nbsp;</div>
         </div>
       </div>
       <div class="col-md-2"><%= link_to 'New Individual', new_greensub_individual_path %></div>
-      <div class="col-md-12"><hr/></div>
     </b>
   </form>
 
   <% @individuals.each do |individual| %>
+    <div class="col-md-12"><hr/></div>
     <div class="col-md-10">
       <div class="col-md-1"><%= individual.id %></div>
-      <div class="col-md-6">
+      <div class="col-md-8">
         <div><%= individual.identifier %></div>
         <div><%= individual.name %></div>
+        <div><%= individual.email %></div>
       </div>
-      <div class="col-md-3"><%= individual.email %></div>
-<!--      <div class="col-md-2"><%#= link_to individual.products.count, individual_products_path(individual) %></div>-->
-      <div class="col-md-2"><%= individual.licenses.count %></div>
+      <div class="col-md-3">
+        <div class="col-md-2">L</div><div class="col-md-10"><%= link_to individual.licenses.count, greensub_individual_licenses_path(individual) %></div>
+        <div class="col-md-2">P</div><div class="col-md-10"><%= link_to individual.products.count, greensub_individual_products_path(individual) %></div>
+        <div>&nbsp;</div>
+      </div>
     </div>
     <div class="col-md-2">
       <div class="col-md-4"><%= link_to 'Show', greensub_individual_path(individual) %></div>
@@ -46,6 +51,5 @@
       <div class="col-md-4"><%= link_to_if individual.destroy?, 'Destroy', greensub_individual_path(individual), method: :delete, data: { confirm: 'Are you sure?' } %></div>
     </div>
   <% end %>
-
   <div class="col-md-12">&nbsp<%= paginate @individuals %></div>
 </div>

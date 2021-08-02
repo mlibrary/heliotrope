@@ -45,6 +45,8 @@ class FulcrumController < ApplicationController
       ReindexJob.perform_later('file_sets')
     when 'seed_institution_affiliations'
       SeedInstitutionAffiliationsJob.perform_now
+    when 'seed_license_affiliations'
+      SeedLicenseAffiliationsJob.perform_now
     end
     redirect_to action: :index, partials: :dashboard
   end

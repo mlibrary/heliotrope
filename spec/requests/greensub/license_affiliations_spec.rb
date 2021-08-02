@@ -2,16 +2,18 @@
 
 require 'rails_helper'
 
-RSpec.describe "Greensub::Licenses", type: :request do
+RSpec.describe "Greensub::LicenseAffiliations", type: :request do
   let(:current_user) { User.guest(user_key: 'wolverine@umich.edu') }
-  let(:target) { create(:full_license, licensee: individual, product: product) }
-  let(:individual) { create(:individual) }
+  let(:target) { create(:license_affiliation, license: license, affiliation: affiliation) }
+  let(:license) { create(:full_license, licensee: licensee, product: product) }
+  let(:licensee) { create(:individual) }
   let(:product) { create(:product) }
+  let(:affiliation) { 'member' }
 
   before { target }
 
   describe '#index' do
-    subject { get greensub_licenses_path }
+    subject { get greensub_license_affiliations_path }
 
     it { expect { subject }.to raise_error(ActionController::RoutingError) }
 
@@ -35,7 +37,7 @@ RSpec.describe "Greensub::Licenses", type: :request do
           end
 
           context 'filtering' do
-            subject { get greensub_licenses_path, params: "type_like=Full" }
+            subject { get greensub_license_affiliations_path, params: "affiliation_like#{target.affiliation}" }
 
             it do
               expect { subject }.not_to raise_error
@@ -49,7 +51,7 @@ RSpec.describe "Greensub::Licenses", type: :request do
   end
 
   describe '#show' do
-    subject { get greensub_license_path(target.id) }
+    subject { get greensub_license_affiliation_path(target.id) }
 
     it { expect { subject }.to raise_error(ActionController::RoutingError) }
 
@@ -63,23 +65,49 @@ RSpec.describe "Greensub::Licenses", type: :request do
 
         it { expect { subject }.to raise_error(ActionController::RoutingError) }
 
-        xcontext 'platform administrator' do
+        context 'platform administrator' do
           let(:current_user) { create(:platform_admin) }
 
-          it { expect { subject }.to raise_error(ActionController::RoutingError) }
+          it do
+            expect { subject }.not_to raise_error
+            expect(response).to render_template(:show)
+            expect(response).to have_http_status(:ok)
+          end
         end
       end
     end
   end
 
-  xdescribe '#new' do
-    subject { get new_greensub_license_path }
+  describe '#new' do
+    subject { get new_greensub_license_affiliation_path }
 
-    it { expect { subject }.to raise_error(NameError) }
+    it { expect { subject }.to raise_error(ActionController::RoutingError) }
+
+    context 'authenticated' do
+      before { sign_in(current_user) }
+
+      it { expect { subject }.to raise_error(ActionController::RoutingError) }
+
+      context 'authorized' do
+        before { allow_any_instance_of(ApplicationController).to receive(:authorize!) }
+
+        it { expect { subject }.to raise_error(ActionController::RoutingError) }
+
+        context 'platform administrator' do
+          let(:current_user) { create(:platform_admin) }
+
+          it do
+            expect { subject }.not_to raise_error
+            expect(response).to render_template(:new)
+            expect(response).to have_http_status(:ok)
+          end
+        end
+      end
+    end
   end
 
   describe '#edit' do
-    subject { get edit_greensub_license_path(target.id) }
+    subject { get edit_greensub_license_affiliation_path(target.id) }
 
     it { expect { subject }.to raise_error(ActionController::RoutingError) }
 
@@ -107,41 +135,9 @@ RSpec.describe "Greensub::Licenses", type: :request do
   end
 
   describe '#create' do
-    subject { post greensub_licenses_path, params: { greensub_license: license_params } }
+    subject { post greensub_license_affiliations_path, params: { greensub_license_affiliation: license_affiliation_params } }
 
-    let(:license_params) { { type: 'Greensub::FullLicense' } }
-
-    it { expect { subject }.to raise_error(ActionController::RoutingError) }
-
-    context 'authenticated' do
-      before { sign_in(current_user) }
-
-      it { expect { subject }.to raise_error(ActionController::RoutingError) }
-
-      context 'authorized' do
-        before { allow_any_instance_of(ApplicationController).to receive(:authorize!) }
-
-        it { expect { subject }.to raise_error(ActionController::RoutingError) }
-
-        xcontext 'platform administrator' do
-          let(:current_user) { create(:platform_admin) }
-
-          it { expect { subject }.to raise_error(ActionController::RoutingError) }
-
-          context 'invalid license params' do
-            let(:license_params) { { type: 'license_type' } }
-
-            it { expect { subject }.to raise_error(ActionController::RoutingError) }
-          end
-        end
-      end
-    end
-  end
-
-  describe '#update' do
-    subject { put greensub_license_path(target.id), params: { greensub_license: license_params } }
-
-    let(:license_params) { { type: 'Greensub::ReadLicense' } }
+    let(:license_affiliation_params) { { license_id: target.license.id, affiliation: 'alum' } }
 
     it { expect { subject }.to raise_error(ActionController::RoutingError) }
 
@@ -160,17 +156,57 @@ RSpec.describe "Greensub::Licenses", type: :request do
 
           it do
             expect { subject }.not_to raise_error
-            expect(response).to redirect_to(greensub_licenses_path)
+            expect(response).to redirect_to(greensub_license_affiliation_path(Greensub::LicenseAffiliation.find_by(license_affiliation_params)))
             expect(response).to have_http_status(:found)
           end
 
-          context 'invalid license params' do
-            let(:license_params) { { type: 'ReadLicense' } }
+          context 'invalid license affiliation params' do
+            let(:license_affiliation_params) { { affiliation: 'affiliation' } }
+
+            it do
+              expect { subject }.not_to raise_error
+              expect(response).to render_template(:new)
+              expect(response).to have_http_status(:unprocessable_entity)
+            end
+          end
+        end
+      end
+    end
+  end
+
+  describe '#update' do
+    subject { put greensub_license_affiliation_path(target.id), params: { greensub_license_affiliation: license_affiliation_params } }
+
+    let(:license_affiliation_params) { { affiliation: 'alum' } }
+
+    it { expect { subject }.to raise_error(ActionController::RoutingError) }
+
+    context 'authenticated' do
+      before { sign_in(current_user) }
+
+      it { expect { subject }.to raise_error(ActionController::RoutingError) }
+
+      context 'authorized' do
+        before { allow_any_instance_of(ApplicationController).to receive(:authorize!) }
+
+        it { expect { subject }.to raise_error(ActionController::RoutingError) }
+
+        context 'platform administrator' do
+          let(:current_user) { create(:platform_admin) }
+
+          it do
+            expect { subject }.not_to raise_error
+            expect(response).to redirect_to(greensub_license_affiliation_path(Greensub::LicenseAffiliation.find(target.id)))
+            expect(response).to have_http_status(:found)
+          end
+
+          context 'invalid license affiliation params' do
+            let(:license_affiliation_params) { { affiliation: 'affiliation' } }
 
             it do
               expect { subject }.not_to raise_error
               expect(response).to render_template(:edit)
-              expect(response).to have_http_status(:ok)
+              expect(response).to have_http_status(:unprocessable_entity)
             end
           end
         end
@@ -179,7 +215,7 @@ RSpec.describe "Greensub::Licenses", type: :request do
   end
 
   describe '#destroy' do
-    subject { delete greensub_license_path(target.id) }
+    subject { delete greensub_license_affiliation_path(target.id) }
 
     it { expect { subject }.to raise_error(ActionController::RoutingError) }
 
@@ -198,23 +234,9 @@ RSpec.describe "Greensub::Licenses", type: :request do
 
           it do
             expect { subject }.not_to raise_error
-            expect(response).to redirect_to(greensub_licenses_path)
+            expect(response).to redirect_to(greensub_license_affiliations_path)
             expect(response).to have_http_status(:found)
-            expect { Greensub::License.find(target.id) }.to raise_error(ActiveRecord::RecordNotFound)
-          end
-
-          context 'grant' do
-            before do
-              clear_grants_table
-              Authority.grant!(create(:individual), target, create(:product))
-            end
-
-            it do
-              expect { subject }.not_to raise_error
-              expect(response).to redirect_to(greensub_licenses_path)
-              expect(response).to have_http_status(:found)
-              expect { Greensub::License.find(target.id) }.not_to raise_error
-            end
+            expect { Greensub::LicenseAffiliation.find(target.id) }.to raise_error(ActiveRecord::RecordNotFound)
           end
         end
       end

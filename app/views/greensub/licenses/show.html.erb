@@ -1,0 +1,32 @@
+<p id="notice"><%= notice %></p>
+<div id="maincontent">
+  <h1>License</h1>
+  <div class="col-md-1"><em>ID</em></div>
+  <div class="col-md-11">&nbsp;<%= @license.id %></div>
+  <div class="col-md-1"><em>Type</em></div>
+  <div class="col-md-11">&nbsp;<%= @license.label %></div>
+  <div class="col-md-1"><em>Licensee</em></div>
+  <div class="col-md-11">
+    <% if @license.individual? %>
+      <%= link_to "#{@license.licensee.identifier}", greensub_individual_path(@license.licensee) %>
+    <% end %>
+    <% if @license.institution? %>
+      <%= link_to "#{@license.licensee.name}", greensub_institution_path(@license.licensee) %>
+      &nbsp;
+      <%= @license.licensee.institution_affiliations.map(&:affiliation).join(', ') %>
+    <% end %>
+    &nbsp;
+  </div>
+  <div class="col-md-1"><em>Product</em></div>
+  <div class="col-md-11">&nbsp;<%= link_to "#{@license.product.identifier}", greensub_product_path(@license.product)  %></div>
+  <div class="col-md-12"><br/></div>
+  <h2>Affiliations</h2>
+  <div class="col-md-12">&nbsp;<%= "#{@license.license_affiliations.map(&:affiliation).join(', ')}" %></div>
+  <div class="col-md-12"><br/></div>
+  <div class="col-md-12">
+    <%= link_to_if @license.update?, 'Edit', edit_greensub_license_path(@license) %>
+    <span> | </span>
+    <%= link_to 'Back', greensub_licenses_path %>
+  </div>
+  <div class="col-md-12"><br/></div>
+ </div>

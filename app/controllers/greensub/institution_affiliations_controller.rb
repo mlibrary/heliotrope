@@ -5,7 +5,12 @@ module Greensub
     before_action :set_institution_affiliation, only: %i[ show edit update destroy ]
 
     def index
-      @institution_affiliations = InstitutionAffiliation.filter_by(filtering_params(params)).order(dlps_institution_id: :asc).page(params[:page])
+      if params[:institution_id].present?
+        @institution = Institution.find(params[:institution_id])
+        @institution_affiliations = @institution.institution_affiliations.filter_by(filtering_params(params)).order(dlps_institution_id: :asc).page(params[:page])
+      else
+        @institution_affiliations = InstitutionAffiliation.filter_by(filtering_params(params)).order(dlps_institution_id: :asc).page(params[:page])
+      end
     end
 
     def show

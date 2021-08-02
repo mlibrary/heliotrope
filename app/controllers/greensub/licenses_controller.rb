@@ -5,9 +5,15 @@ module Greensub
     before_action :set_license, only: %i[show edit update destroy]
 
     def index
-      if params[:product_id].present?
+      if params[:individual_id].present?
+        @individual = Individual.find(params[:individual_id])
+        @licenses = @individual.licenses.filter_by(filtering_params(params)).order(type: :asc).page(params[:page])
+      elsif params[:institution_id].present?
+        @institution = Institution.find(params[:institution_id])
+        @licenses = @institution.licenses.filter_by(filtering_params(params)).order(type: :asc).page(params[:page])
+      elsif params[:product_id].present?
         @product = Product.find(params[:product_id])
-        @licenses = License.where(id: @product.licenses.map(&:id)).filter_by(filtering_params(params)).order(type: :asc).page(params[:page])
+        @licenses = @product.licenses.filter_by(filtering_params(params)).order(type: :asc).page(params[:page])
       else
         @licenses = License.filter_by(filtering_params(params)).order(type: :asc).page(params[:page])
       end
@@ -71,7 +77,7 @@ module Greensub
       end
 
       def filtering_params(params)
-        params.slice(:type_like)
+        params.slice(:type_like, :licensee_id_like, :product_id_like)
       end
   end
 end

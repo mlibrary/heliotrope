@@ -4,7 +4,7 @@
   <div class="form-inputs">
     <%= f.association :institution, include_blank: false %>
     <%= f.input :dlps_institution_id %>
-    <%= f.input :affiliation, collection: Greensub::InstitutionAffiliation.affiliations.collect {|affiliation| [affiliation, affiliation]}, include_blank: false %>
+    <%= f.input :affiliation, collection: Greensub::InstitutionAffiliation.affiliations.collect { |affiliation| [affiliation, affiliation] }, include_blank: false %>
   </div>
 
   <div class="form-actions">

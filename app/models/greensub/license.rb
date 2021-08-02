@@ -2,12 +2,18 @@
 
 module Greensub
   class License < ApplicationRecord
+    TYPES = %w[full read].freeze
+
     belongs_to :product
 
     include Filterable
     scope :type_like, ->(like) { where("type like ?", "%#{like}%") }
+    scope :licensee_id_like, ->(like) { where("licensee_id like ?", "%#{like}%") }
+    scope :product_id_like, ->(like) { where("product_id like ?", "%#{like}%") }
 
     validates :type, presence: true, inclusion: { in: %w[Greensub::FullLicense Greensub::ReadLicense] }
+
+    has_many :license_affiliations, dependent: :restrict_with_error
 
     before_validation(on: :update) do
       if licensee_type_changed? || licensee_id_changed?

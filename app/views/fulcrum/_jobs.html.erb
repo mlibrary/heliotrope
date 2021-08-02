@@ -152,4 +152,9 @@
       <span class="glyphicon glyphicon-wrench" aria-hidden="true"></span> Seed Institution Affiliations
     <% end %>
   </div>
+  <div class="row">
+    <%= link_to(fulcrum_exec_path(:seed_license_affiliations), method: :get, class: "btn btn-default", data: { confirm: 'Are you sure?' }) do %>
+      <span class="glyphicon glyphicon-wrench" aria-hidden="true"></span> Seed License Affiliations
+    <% end %>
+  </div>
 </div>

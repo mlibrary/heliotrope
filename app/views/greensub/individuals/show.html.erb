@@ -9,11 +9,10 @@
   <div class="col-md-11">&nbsp;<%= @individual.name %></div>
   <div class="col-md-1"><em>eMail</em></div>
   <div class="col-md-11">&nbsp;<%= @individual.email %></div>
-  <div class="col-md-12"><br/></div>
-  <h2>Licenses</h2>
-  <div class="col-md-12">
-    <%= render partial: '/greensub/licenses/licenses', locals: { individual: @individual, licenses: @individual.licenses } %>
-  </div>
+  <div class="col-md-1"><em>Licenses</em></div>
+  <div class="col-md-11">&nbsp;<%= link_to @individual.licenses.count, greensub_individual_licenses_path(@individual) %></div>
+  <div class="col-md-1"><em>Products</em></div>
+  <div class="col-md-11">&nbsp;<%= link_to @individual.products.count, greensub_individual_products_path(@individual) %></div>
   <div class="col-md-12"><br/></div>
   <div class="col-md-12">
     <%= link_to_if @individual.update?, 'Edit', edit_greensub_individual_path(@individual) %>
