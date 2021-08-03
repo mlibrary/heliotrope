@@ -78,11 +78,11 @@ module Incognito
       !(actor.sign_in_count & 8).zero?
     end
 
-    def sudo_actor(actor, value = false, individual_id = 0, institution_id = 0)
+    def sudo_actor(actor, value = false, individual_id = 0, institution_affiliation_id = 0)
       return false if short_circuit?(actor)
       actor.sign_in_count = value ? actor.sign_in_count | 8 : actor.sign_in_count & ~8
       actor.current_sign_in_ip = individual_id
-      actor.last_sign_in_ip = institution_id
+      actor.last_sign_in_ip = institution_affiliation_id
       actor.save
       sudo_actor?(actor)
     end
@@ -110,13 +110,25 @@ module Incognito
     end
 
     def sudo_actor_institution(actor)
+      sudo_actor_institution_affiliation(actor)&.institution
+    end
+
+    def sudo_actor_institution_affiliation(actor)
       return nil if short_circuit?(actor)
       return nil if (actor.sign_in_count & 8).zero?
       begin
-        Greensub::Institution.find(actor.last_sign_in_ip.to_i)
+        Greensub::InstitutionAffiliation.find(actor.last_sign_in_ip.to_i)
       rescue StandardError => _e
         nil
       end
+    end
+
+    def sudo_actor_licenses(actor)
+      return [] if short_circuit?(actor)
+      return [] if (actor.sign_in_count & 8).zero?
+      licenses = Incognito.sudo_actor_individual(actor)&.licenses || []
+      licenses += Incognito.sudo_actor_institution(actor)&.licenses || []
+      licenses.uniq
     end
 
     def sudo_actor_products(actor)

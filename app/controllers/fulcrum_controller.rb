@@ -63,7 +63,9 @@ class FulcrumController < ApplicationController
     if ['dashboard', 'licenses', 'products', 'components', 'individuals', 'institutions', 'institution_affiliations', 'publishers', 'users', 'tokens', 'logs', 'grants', 'monographs', 'resources', 'pages', 'reports', 'customize', 'settings', 'help', 'csv', 'jobs', 'refresh'].include? @partials
       if /dashboard/.match?(@partials)
         @individuals = Greensub::Individual.where("identifier like ? or name like ?", "%#{params['individual_filter']}%", "%#{params['individual_filter']}%").map { |individual| ["#{individual.identifier} (#{individual.name})", individual.id] }
-        @institutions = Greensub::Institution.where("identifier like ? or name like ?", "%#{params['institution_filter']}%", "%#{params['institution_filter']}%").map { |institution| ["#{institution.identifier} (#{institution.name})", institution.id] }
+        @institution_affiliations = Greensub::InstitutionAffiliation.where(institution_id: Greensub::Institution.where("identifier like ? or name like ?", "%#{params['institution_filter']}%", "%#{params['institution_filter']}%").map(&:id))
+                                                        .sort_by(&:dlps_institution_id)
+                                                        .map { |institution_affiliation| ["#{institution_affiliation.dlps_institution_id} #{institution_affiliation.affiliation} #{institution_affiliation.institution.name}", institution_affiliation.id] }
       end
       if /publishers/.match?(@partials)
         begin
@@ -112,7 +114,7 @@ class FulcrumController < ApplicationController
       options.each do |key, _value|
         case key
         when 'actor'
-          Incognito.sudo_actor(current_actor, true, params[:individual_id] || 0, params[:institution_id] || 0)
+          Incognito.sudo_actor(current_actor, true, params[:individual_id] || 0, params[:institution_affiliation_id] || 0)
         when 'platform_admin'
           Incognito.allow_platform_admin(current_actor, false)
         when 'ability_can'
