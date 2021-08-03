@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'csv'
+require 'io/console'
 
 module Export
   class Exporter
@@ -13,7 +14,7 @@ module Export
     end
 
     def export
-      return String.new if monograph.instance_of?(Sighrax::NullEntity)
+      return String.new(encoding: "UTF-8") if monograph.instance_of?(Sighrax::NullEntity)
 
       rows = []
       monograph.children.each do |member|
@@ -22,7 +23,7 @@ module Export
       end
 
       rows << metadata_row(monograph_presenter)
-      buffer = String.new
+      buffer = String.new(encoding: "UTF-8")
       CSV.generate(buffer) do |csv|
         write_csv_header_rows(csv)
         rows.each { |row| csv << row if row.present? }
