@@ -2,30 +2,10 @@
 
 require 'rails_helper'
 
-class TestLicensee
-  include ActiveModel::Model
-  include Greensub::Licensee
-
-  attr_reader :id
-
-  def initialize(id)
-    @id = id
-  end
-
-  def agent_type
-    TestLicensee
-  end
-
-  def agent_id
-    id
-  end
-end
-
 RSpec.describe Greensub::Licensee do
   subject { licensee }
 
-  let(:licensee) { TestLicensee.new(id) }
-  let(:id) { 'id' }
+  let(:licensee) { create(:individual) }
   let(:product) { create(:product) }
 
   before { clear_grants_table }
