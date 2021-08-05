@@ -1,0 +1,17 @@
+<p id="notice"><%= notice %></p>
+<div id="maincontent">
+  <h1>License Affiliation</h1>
+  <div class="col-md-1"><em>ID</em></div>
+  <div class="col-md-11"><%= @license_affiliation.id %></div>
+  <div class="col-md-1"><em>License</em></div>
+  <div class="col-md-11"><%= link_to @license_affiliation.license.type, greensub_license_path(@license_affiliation.license) %></div>
+  <div class="col-md-1"><em>Affiliation</em></div>
+  <div class="col-md-11"><%= @license_affiliation.affiliation %></div>
+  <div class="col-md-12"><br/></div>
+  <div class="col-md-12">
+    <%= link_to 'Edit', edit_greensub_license_affiliation_path(@license_affiliation) %>
+    <span> | </span>
+    <%= link_to 'Back', greensub_license_affiliations_path %>
+  </div>
+  <div class="col-md-12"><br/></div>
+</div>

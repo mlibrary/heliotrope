@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_07_26_204505) do
+ActiveRecord::Schema.define(version: 2021_08_02_170018) do
 
   create_table "api_requests", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.integer "user_id"
@@ -299,6 +299,14 @@ ActiveRecord::Schema.define(version: 2021_07_26_204505) do
     t.datetime "updated_at", null: false
     t.index ["uploaded_file_id"], name: "index_job_io_wrappers_on_uploaded_file_id"
     t.index ["user_id"], name: "index_job_io_wrappers_on_user_id"
+  end
+
+  create_table "license_affiliations", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+    t.bigint "license_id"
+    t.string "affiliation"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["license_id"], name: "index_license_affiliations_on_license_id"
   end
 
   create_table "licenses", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
@@ -754,6 +762,7 @@ ActiveRecord::Schema.define(version: 2021_07_26_204505) do
   add_foreign_key "components_products", "products"
   add_foreign_key "curation_concerns_operations", "users"
   add_foreign_key "institution_affiliations", "institutions"
+  add_foreign_key "license_affiliations", "licenses"
   add_foreign_key "licenses", "products"
   add_foreign_key "mailboxer_conversation_opt_outs", "mailboxer_conversations", column: "conversation_id", name: "mb_opt_outs_on_conversations_id"
   add_foreign_key "mailboxer_notifications", "mailboxer_conversations", column: "conversation_id", name: "notifications_on_conversation_id"

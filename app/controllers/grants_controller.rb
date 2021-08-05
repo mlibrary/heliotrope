@@ -46,6 +46,20 @@ class GrantsController < ApplicationController
                               else
                                 raise(ArgumentError)
                               end
+                    license.licensee = case agent_type
+                                       when :Individual
+                                         Greensub::Individual.find(agent_id)
+                                       when :Institution
+                                         Greensub::Institution.find(agent_id)
+                                       else
+                                         raise(ArgumentError)
+                                       end
+                    license.product = case resource_type
+                                      when :Product
+                                        Greensub::Product.find(resource_id)
+                                      else
+                                        raise(ArgumentError)
+                                      end
                     license.save
                     Authority.grant!(Authority.agent(agent_type, agent_id),
                                      Authority.credential(:License, license.id),

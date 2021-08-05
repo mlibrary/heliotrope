@@ -16,8 +16,7 @@ module Greensub
 
     validates :institution_id, presence: true, allow_blank: false
     validates :dlps_institution_id, presence: true, allow_blank: false
-    validates :affiliation, presence: true, allow_blank: false
-    validates :affiliation, inclusion: { in: AFFILIATIONS }
+    validates :affiliation, presence: true, allow_blank: false, inclusion: { in: AFFILIATIONS }
 
     def self.affiliations
       AFFILIATIONS
