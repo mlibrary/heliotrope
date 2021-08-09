@@ -17,7 +17,7 @@ module EmbedCodeService
 
       # these should look something like this
       # <div data-embed-filename="audio_file_name.mp3">
-      nodes = doc.search '[data-embed-filename]'
+      nodes = doc.search '[data-fulcrum-embed-filename]'
       data_attribute_embeds(nodes, embeddable_file_set_docs) if nodes.present?
 
       # these should look like regular img tags
@@ -53,9 +53,9 @@ module EmbedCodeService
 
   def data_attribute_embeds(nodes, embeddable_file_set_docs)
     nodes.each do |node|
-      next if node['data-embed-filename']&.gsub(/\s+/, "").blank?
+      next if node['data-fulcrum-embed-filename']&.gsub(/\s+/, "").blank?
 
-      matching_files = match_files(embeddable_file_set_docs, node['data-embed-filename'])
+      matching_files = match_files(embeddable_file_set_docs, node['data-fulcrum-embed-filename'])
       next unless matching_files.count == 1 # there must only be one file found to add the embed code
       id = matching_files&.first&.id
 
