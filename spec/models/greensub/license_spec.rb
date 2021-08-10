@@ -76,15 +76,15 @@ RSpec.describe Greensub::License, type: :model do
       expect { subject.save! }.not_to raise_exception
     end
 
-    it 'update licensee' do
-      subject.licensee = create(:individual)
-      expect { subject.save! }.to raise_exception(ActiveRecord::RecordInvalid, 'Validation failed: Licensee can not be changed!')
-    end
+    # it 'update licensee' do
+    #   subject.licensee = create(:individual)
+    #   expect { subject.save! }.to raise_exception(ActiveRecord::RecordInvalid, 'Validation failed: Licensee can not be changed!')
+    # end
 
-    it 'update product' do
-      subject.product = create(:product)
-      expect { subject.save! }.to raise_exception(ActiveRecord::RecordInvalid, 'Validation failed: Product can not be changed!')
-    end
+    # it 'update product' do
+    #   subject.product = create(:product)
+    #   expect { subject.save! }.to raise_exception(ActiveRecord::RecordInvalid, 'Validation failed: Product can not be changed!')
+    # end
 
     it 'destroy' do
       expect(subject.destroy).to be subject
@@ -140,15 +140,15 @@ RSpec.describe Greensub::License, type: :model do
       expect { subject.save! }.not_to raise_exception
     end
 
-    it 'update licensee' do
-      subject.licensee = create(:institution)
-      expect { subject.save! }.to raise_exception(ActiveRecord::RecordInvalid, 'Validation failed: Licensee can not be changed!')
-    end
+    # it 'update licensee' do
+    #   subject.licensee = create(:institution)
+    #   expect { subject.save! }.to raise_exception(ActiveRecord::RecordInvalid, 'Validation failed: Licensee can not be changed!')
+    # end
 
-    it 'update product' do
-      subject.product = create(:product)
-      expect { subject.save! }.to raise_exception(ActiveRecord::RecordInvalid, 'Validation failed: Product can not be changed!')
-    end
+    # it 'update product' do
+    #   subject.product = create(:product)
+    #   expect { subject.save! }.to raise_exception(ActiveRecord::RecordInvalid, 'Validation failed: Product can not be changed!')
+    # end
 
     it 'destroy' do
       expect(subject.destroy).to be subject
