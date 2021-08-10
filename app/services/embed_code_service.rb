@@ -22,7 +22,8 @@ module EmbedCodeService
 
       # these should look like regular img tags
       # <img src="images/video_file_basename.jpg" alt="local image representing a video embed"/>
-      nodes = doc.search 'img'
+      # `data-fulcrum-embed="false"` allows img tags with matching Monograph resource FileSet basenames to *not* cause an embed
+      nodes = doc.search 'img:not([data-fulcrum-embed="false"])'
       img_src_basename_embeds(nodes, embeddable_file_set_docs) if nodes.present?
 
       File.write(file, doc)
