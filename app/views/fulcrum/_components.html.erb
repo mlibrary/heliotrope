@@ -7,25 +7,25 @@
         <%= link_to(new_greensub_component_path) do %>
           <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> New
         <% end %>
+        <div>&nbsp;</div>
+        <div><button name="submit" type="submit" value="filter">Filter</button></div>
       </th>
       <th>
         <% size = 24 %>
         <div class="col-md-12">
-          <div class="col-md-2"><label for="identifier_like">Identifier</label></div><div class="col-md-10"><input type="text" name="identifier_like" value="<%= params[:identifier_like] %>" size="<%= size %>" aria-label="identifier_like"></div>
+          <div class="col-md-2"><label for="identifier_like">Identifier</label></div>
+          <div class="col-md-10"><input type="text" name="identifier_like" value="<%= params[:identifier_like] %>" size="<%= size %>" aria-label="identifier_like"></div>
         </div>
         <div class="col-md-12">
-          <div class="col-md-2"><label for="name_like">Name</label></div><div class="col-md-10"><input type="text" name="name_like" value="<%= params[:name_like] %>" size="<%= size %>" aria-label="name_like"></div></div>
+          <div class="col-md-2"><label for="name_like">Name</label></div>
+          <div class="col-md-10"><input type="text" name="name_like" value="<%= params[:name_like] %>" size="<%= size %>" aria-label="name_like"></div>
+        </div>
+        <div class="col-md-12">
+          <div class="col-md-2"><label for="noid_like">Noid</label></div>
+          <div class="col-md-10"><input type="text" name="noid_like" value="<%= params[:noid_like] %>" size="<%= size %>" aria-label="noid_like"></div>
         </div>
       </th>
-      <th>
-        <div><label for="noid_like">Noid</label></div>
-        <div><input type="text" name="noid_like" value="<%= params[:noid_like] %>" size="<%= size / 2 %>" aria-label="noid_like"></div>
-      </th>
-      <th>
-        <div>Products</div>
-        <div>&nbsp;</div>
-        <div><button name="submit" type="submit" value="filter">Filter</button></div>
-      </th>
+      <th>Products</th>
     </tr>
     <% components.each do |component| %>
       <tr>
@@ -36,8 +36,6 @@
         <td>
           <div><%= component.identifier %></div>
           <div><%= component.name %></div>
-        </td>
-        <td>
           <%
             entity = Sighrax.from_noid(component.noid)
             file_set_id = 0

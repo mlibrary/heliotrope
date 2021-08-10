@@ -100,8 +100,11 @@ Rails.application.routes.draw do
       end
       resources :licenses do
         resources :products, only: %i[index]
+        member do
+          patch :affiliations
+          patch :type
+        end
       end
-      resources :license_affiliations
     end
     get 'fulcrum', controller: :fulcrum, action: :dashboard, as: :fulcrum
     get 'fulcrum/exec/:cmd', controller: :fulcrum, action: :exec, as: :fulcrum_exec
