@@ -20,8 +20,24 @@ class EbookOperation < ApplicationPolicy
     end
 
     def licensed_for?(entitlement)
-      authority
-        .licenses_for(actor, ebook)
-        .any? { |license| license.allows?(entitlement) }
+      licenses = authority.licenses_for(actor, ebook)
+
+      return true if licenses
+                       .where(licensee_type: "Greensub::Individual")
+                       .any? { |license| license.allows?(entitlement) }
+
+      return true if licenses
+                       .where(licensee_type: "Greensub::Institution")
+                       .any? { |license| license.allows?(entitlement) } && affiliation_match?(licenses)
+      false
     end
+
+    private
+
+      def affiliation_match?(licenses)
+        licenses.where(licensee_type: "Greensub::Institution").each do |license|
+          return true if (license.licensee.institution_affiliations.map(&:affiliation) & license.license_affiliations.map(&:affiliation)).present?
+        end
+        false
+      end
 end

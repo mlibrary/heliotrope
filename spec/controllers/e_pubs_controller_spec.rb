@@ -419,11 +419,28 @@ RSpec.describe EPubsController, type: :controller do
           product.components << component
           product.save!
           institution.update_product_license(product)
+          create(:institution_affiliation, institution_id: institution.id, affiliation: "member")
+          create(:license_affiliation, license_id: institution.product_license(product).id, affiliation: "member")
           get :show, params: { id: file_set.id }
           expect(assigns(:actor_product_ids))
           expect(assigns(:allow_read_product_ids))
           expect(response).to have_http_status(:success)
           expect(response).to render_template(:show)
+        end
+
+        it "Subscribed Greensub::Institution with the wrong affiliation" do
+          institution = create(:institution, identifier: dlpsInstitutionId)
+          product = Greensub::Product.create!(identifier: 'product', name: 'name', purchase: 'purchase')
+          product.components << component
+          product.save!
+          institution.update_product_license(product)
+          create(:institution_affiliation, institution_id: institution.id, affiliation: "alum")
+          create(:license_affiliation, license_id: institution.product_license(product).id, affiliation: "member")
+          get :show, params: { id: file_set.id }
+          expect(assigns(:actor_product_ids))
+          expect(assigns(:allow_read_product_ids))
+          expect(response).to have_http_status(:found)
+          expect(response).to redirect_to(epub_access_url)
         end
 
         it "Subscribed Individual" do
