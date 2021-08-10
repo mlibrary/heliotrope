@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_08_02_170018) do
+ActiveRecord::Schema.define(version: 2021_08_06_174540) do
 
   create_table "api_requests", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.integer "user_id"
@@ -316,6 +316,7 @@ ActiveRecord::Schema.define(version: 2021_08_02_170018) do
     t.bigint "licensee_id"
     t.index ["licensee_type", "licensee_id"], name: "index_licenses_on_licensee_type_and_licensee_id"
     t.index ["product_id"], name: "index_licenses_on_product_id"
+    t.index ["type", "licensee_type", "licensee_id", "product_id"], name: "index_licenses_on_all_fields", unique: true
   end
 
   create_table "mailboxer_conversation_opt_outs", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
@@ -462,6 +463,14 @@ ActiveRecord::Schema.define(version: 2021_08_02_170018) do
     t.datetime "updated_at", null: false
     t.index ["grantee_id"], name: "index_proxy_deposit_rights_on_grantee_id"
     t.index ["grantor_id"], name: "index_proxy_deposit_rights_on_grantor_id"
+  end
+
+  create_table "robotrons", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+    t.string "ip", null: false
+    t.integer "hits", default: 0
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["ip"], name: "index_robotrons_on_ip"
   end
 
   create_table "roles", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|

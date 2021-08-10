@@ -9,23 +9,41 @@
   <div class="col-md-11">
     <% if @license.individual? %>
       <%= link_to "#{@license.licensee.identifier}", greensub_individual_path(@license.licensee) %>
-    <% end %>
-    <% if @license.institution? %>
+    <% elsif @license.institution? %>
       <%= link_to "#{@license.licensee.name}", greensub_institution_path(@license.licensee) %>
       &nbsp;
       <%= @license.licensee.institution_affiliations.map(&:affiliation).join(', ') %>
-    <% end %>
-    &nbsp;
+    <% else %>
+      &nbsp;
+  <% end %>
   </div>
   <div class="col-md-1"><em>Product</em></div>
   <div class="col-md-11">&nbsp;<%= link_to "#{@license.product.identifier}", greensub_product_path(@license.product)  %></div>
   <div class="col-md-12"><br/></div>
-  <h2>Affiliations</h2>
-  <div class="col-md-12">&nbsp;<%= "#{@license.license_affiliations.map(&:affiliation).join(', ')}" %></div>
+  <h2>Type</h2>
+  <%= form_with(model: @license, url: type_greensub_license_path, scope: :greensub_license) do |f| %>
+  <div class="col-md-12">
+    <%= f.select :type, [['Full', 'Greensub::FullLicense'], ['Read', 'Greensub::ReadLicense']] %>
+    <%= f.submit 'Update' %>
+  </div>
+  <% end %>
+  <% if @license.institution? %>
+    <div class="col-md-12"><br/></div>
+    <h2>Affiliations</h2>
+    <%= form_with(model: @license, url: affiliations_greensub_license_path) do |f| %>
+      <div class="col-md-12">
+        <label for="member">member</label>
+        <input data-toggle="tooltip" title="member" type="checkbox" id="member" name="member" value=true <%= @license.member? ? 'checked' : '' %> />
+        <label for="alum">alum</label>
+        <input data-toggle="tooltip" title="alum" type="checkbox" id="alum" name="alum" value=true <%= @license.alum? ? 'checked' : '' %> />
+        <label for="walk_in">walk-in</label>
+        <input data-toggle="tooltip" title="walk_in" type="checkbox" id="walk_in" name="walk_in" value=true <%= @license.walk_in? ? 'checked' : '' %> />
+        <%= f.submit 'Update' %>
+      </div>
+    <% end %>
+  <% end %>
   <div class="col-md-12"><br/></div>
   <div class="col-md-12">
-    <%= link_to_if @license.update?, 'Edit', edit_greensub_license_path(@license) %>
-    <span> | </span>
     <%= link_to 'Back', greensub_licenses_path %>
   </div>
   <div class="col-md-12"><br/></div>

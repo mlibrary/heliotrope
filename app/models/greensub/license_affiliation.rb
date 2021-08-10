@@ -6,11 +6,6 @@ module Greensub
 
     belongs_to :license
 
-    include Filterable
-
-    scope :license_id_like, ->(like) { where("license_id like ?", "%#{like}%") }
-    scope :affiliation_like, ->(like) { where("affiliation like ?", "%#{like}%") }
-
     validates :license_id, presence: true, allow_blank: false
     validates :affiliation, presence: true, allow_blank: false, inclusion: { in: AFFILIATIONS }
 

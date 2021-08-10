@@ -4,14 +4,22 @@ module Greensub
   class License < ApplicationRecord
     TYPES = %w[full read].freeze
 
+    attr_accessor :individual_id
+    attr_accessor :institution_id
+
     belongs_to :product
 
     include Filterable
     scope :type_like, ->(like) { where("type like ?", "%#{like}%") }
-    scope :licensee_id_like, ->(like) { where("licensee_id like ?", "%#{like}%") }
-    scope :product_id_like, ->(like) { where("product_id like ?", "%#{like}%") }
+    scope :licensee_type_like, ->(like) { where("licensee_type like ?", "#{like}") }
+    scope :licensee_id_like, ->(like) { where("licensee_id like ?", "#{like}") }
+    scope :product_id_like, ->(like) { where("product_id like ?", "#{like}") }
 
     validates :type, presence: true, inclusion: { in: %w[Greensub::FullLicense Greensub::ReadLicense] }
+    validates :licensee_type, presence: true, inclusion: { in: %w[Greensub::Individual Greensub::Institution] }
+    validates :licensee_id, presence: true
+    validates :product_id, presence: true
+    validates :type, uniqueness: { scope: [:licensee_type, :licensee_id, :product_id] }
 
     has_many :license_affiliations, dependent: :restrict_with_error
 
@@ -48,7 +56,7 @@ module Greensub
     end
 
     def destroy?
-      grants.blank?
+      grants.blank? && license_affiliations.empty?
     end
 
     def credential_type
@@ -73,6 +81,22 @@ module Greensub
 
     def institution?
       licensee.is_a?(Greensub::Institution)
+    end
+
+    def member?
+      license_affiliations.pluck(:affiliation).include? 'member'
+    end
+
+    def alum?
+      license_affiliations.pluck(:affiliation).include? 'alum'
+    end
+
+    def walk_in?
+      license_affiliations.pluck(:affiliation).include? 'walk-in'
+    end
+
+    def active?
+      grants?
     end
 
     private
