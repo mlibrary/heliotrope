@@ -32,16 +32,24 @@
     </li>
     <li>
       Institution
-      <%= select_tag "institution_id", options_for_select(@institutions, Incognito.sudo_actor_institution(current_actor)&.id), include_blank: '' %>
+      <%= select_tag "institution_affiliation_id", options_for_select(@institution_affiliations, Incognito.sudo_actor_institution_affiliation(current_actor)&.id), include_blank: '' %>
       filter by
       <input type="text" id="institution_filter" name="institution_filter" value=<%= params['institution_filter'] %>>
       <button>filter</button>
     </li>
     <li>
+      Licenses
+      <% Incognito.sudo_actor_licenses(current_actor).each do |license| %>
+        <ul>
+          <li><%= link_to " #{license.label} #{license.license_affiliations.map(&:affiliation).join(', ')} access to #{license.product.identifier}", greensub_license_path(license) %></li>
+        </ul>
+      <% end %>
+    </li>
+    <li>
       Products
       <% Incognito.sudo_actor_products(current_actor).each do |product| %>
         <ul>
-          <li><%= link_to "#{product.identifier} (#{product.name})", product %></li>
+          <li><%= link_to "#{product.identifier} - #{product.name}", product %></li>
         </ul>
       <% end %>
     </li>
