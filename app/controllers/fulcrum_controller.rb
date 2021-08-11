@@ -49,6 +49,8 @@ class FulcrumController < ApplicationController
       SeedLicenseAffiliationsJob.perform_now
     when 'grant_to_license'
       GrantToLicenseJob.perform_now
+    when 'license_to_grant'
+      LicenseToGrantJob.perform_now
     end
     redirect_to action: :index, partials: :dashboard
   end
