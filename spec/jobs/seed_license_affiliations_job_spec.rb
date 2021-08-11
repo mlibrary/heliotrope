@@ -20,27 +20,30 @@ RSpec.describe SeedLicenseAffiliationsJob, type: :job do
 
   describe 'job' do
     let(:job) { described_class.new }
-    let(:license_1) { create(:full_license, licensee: licensee, product: product) }
-    let(:license_2) { create(:read_license, licensee: licensee, product: product) }
-    let(:licensee) { create(:individual) }
+    let(:individual_license) { create(:full_license, licensee: individual, product: product) }
+    let(:institution_license) { create(:read_license, licensee: institution, product: product) }
+    let(:individual) { create(:individual) }
+    let(:institution) { create(:institution) }
     let(:product) { create(:product) }
 
     it 'seeds license affiliations' do
-      license_1
+      individual_license
       job.perform
-      license_1.reload
+      individual_license.reload
+      expect(Greensub::LicenseAffiliation.count).to eq 0
+      institution_license
+      job.perform
+      individual_license.reload
+      institution_license.reload
       expect(Greensub::LicenseAffiliation.count).to eq 1
-      expect(Greensub::LicenseAffiliation.first.license).to eq license_1
+      expect(Greensub::LicenseAffiliation.first.license).to eq institution_license
       expect(Greensub::LicenseAffiliation.first.affiliation).to eq 'member'
-      license_2
       job.perform
-      license_1.reload
-      license_2.reload
-      expect(Greensub::LicenseAffiliation.count).to eq 2
-      expect(Greensub::LicenseAffiliation.first.license).to eq license_1
+      individual_license.reload
+      institution_license.reload
+      expect(Greensub::LicenseAffiliation.count).to eq 1
+      expect(Greensub::LicenseAffiliation.first.license).to eq institution_license
       expect(Greensub::LicenseAffiliation.first.affiliation).to eq 'member'
-      expect(Greensub::LicenseAffiliation.last.license).to eq license_2
-      expect(Greensub::LicenseAffiliation.last.affiliation).to eq 'member'
     end
   end
 end
