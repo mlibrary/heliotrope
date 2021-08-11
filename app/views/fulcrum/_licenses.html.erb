@@ -42,7 +42,7 @@
     <% licenses.each do |license| %>
       <tr>
         <td><%= link_to(greensub_license_path(license)) do %>
-            <span class="glyphicon glyphicon-sunglasses" aria-hidden="true"></span> Show
+            <span class="glyphicon glyphicon-sunglasses" aria-hidden="true"></span> Show <%= "*" if license.active? %>
           <% end %>
         </td>
         <td>
