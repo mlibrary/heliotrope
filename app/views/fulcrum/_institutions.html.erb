@@ -30,6 +30,7 @@
         <div>Licenses</div>
         <div>Products</div>
       </th>
+      <th>&nbsp;</th>
     </tr>
     <% institutions.each do |institution| %>
       <tr>
@@ -47,6 +48,13 @@
           <div><%= link_to institution.institution_affiliations.count, greensub_institution_inst_affiliations_path(institution) %></div>
           <div><%= link_to institution.licenses.count, greensub_institution_licenses_path(institution) %></div>
           <div><%= link_to institution.products.count, greensub_institution_products_path(institution) %></div>
+        </td>
+        <td>
+          <% if institution.destroy? %>
+            <%= link_to(greensub_institution_path(institution), method: :delete, class: "btn btn-default", data: { confirm: 'Are you sure?' }) do %>
+              <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+            <% end %>
+          <% end %>
         </td>
       </tr>
     <% end %>

@@ -41,6 +41,8 @@
     <%= link_to_if @component.update?, 'Edit', edit_greensub_component_path(@component) %>
     <span> | </span>
     <%= link_to 'Back', greensub_components_path %>
+    <span> | </span>
+    <%= link_to_if @component.destroy?, 'Destroy', greensub_component_path(@component), method: :delete, data: { confirm: 'Are you sure?' } %>
   </div>
   <div class="col-md-12"><br/></div>
 </div>
