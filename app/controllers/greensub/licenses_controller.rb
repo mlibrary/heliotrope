@@ -2,7 +2,7 @@
 
 module Greensub
   class LicensesController < ApplicationController
-    before_action :set_license, only: %i[show edit update type affiliations destroy]
+    before_action :set_license, only: %i[show edit update type affiliations state destroy]
 
     def index
       if params[:individual_id].present?
@@ -119,6 +119,30 @@ module Greensub
       end
     end
 
+    def state
+      if state_params[:active].present?
+        unless @license.active?
+          Authority.grant!(Authority.agent(@license.licensee.agent_type, @license.licensee.agent_id),
+                           Authority.credential(@license.credential_type, @license.credential_id),
+                           Authority.resource(@license.product.resource_type, @license.product.resource_id))
+        end
+      else
+        if @license.active?
+          grants = Checkpoint::DB::Grant.where(agent_type: @license.licensee.agent_type.to_s,
+                                               agent_id: @license.licensee.agent_id.to_i,
+                                               credential_type: @license.credential_type.to_s,
+                                               credential_id: @license.credential_id.to_i,
+                                               resource_type: @license.product.resource_type.to_s,
+                                               resource_id: @license.product.resource_id.to_i)
+          grants.first.delete
+        end
+      end
+      respond_to do |format|
+        format.html { redirect_to greensub_license_path(@license), notice: 'License state was successfully updated.' }
+        format.json { render :show, status: :ok, location: @license }
+      end
+    end
+
     def destroy
       @license.destroy
       respond_to do |format|
@@ -139,6 +163,10 @@ module Greensub
 
       def affiliations_params
         params.permit(:member, :alum, :walk_in)
+      end
+
+      def state_params
+        params.permit(:active)
       end
 
       def filtering_params(params)

@@ -43,8 +43,19 @@
     <% end %>
   <% end %>
   <div class="col-md-12"><br/></div>
+  <h2>State</h2>
+  <%= form_with(model: @license, url: state_greensub_license_path) do |f| %>
+    <div class="col-md-12">
+      <label for="active">active</label>
+      <input data-toggle="tooltip" title="active" type="checkbox" id="active" name="active" value=true <%= @license.active? ? 'checked' : '' %> />
+      <%= f.submit 'Update' %>
+    </div>
+  <% end %>
+  <div class="col-md-12"><br/></div>
   <div class="col-md-12">
     <%= link_to 'Back', greensub_licenses_path %>
+    <span> | </span>
+    <%= link_to_if @license.destroy?, 'Destroy', greensub_license_path(@license), method: :delete, data: { confirm: 'Are you sure?' } %>
   </div>
   <div class="col-md-12"><br/></div>
  </div>
