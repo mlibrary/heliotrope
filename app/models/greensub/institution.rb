@@ -39,7 +39,7 @@ module Greensub
     end
 
     def destroy?
-      !grants?
+      !grants? && institution_affiliations.empty?
     end
 
     def shibboleth?

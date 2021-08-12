@@ -24,18 +24,28 @@
   <label for="actor">use individual and/or institution products</label><br>
   <ul>
     <li>
-      Individual
-      <%= select_tag "individual_id", options_for_select(@individuals, Incognito.sudo_actor_individual(current_actor)&.id), include_blank: '' %>
-      filter by
-      <input type="text" id="individual_filter" name="individual_filter" value=<%= params['individual_filter'] %>>
-      <button>filter</button>
+      <div>
+        <span>Filter individual by </span>
+        <input type="text" id="individual_filter" name="individual_filter" value=<%= params['individual_filter'] %>>
+        <button>filter</button>
+      </div>
+      <div>
+        <span>Individual </span>
+        <%= select_tag "individual_id", options_for_select(@individuals, Incognito.sudo_actor_individual(current_actor)&.id), include_blank: '' %>
+      </div>
+      <div>&nbsp;</div>
     </li>
     <li>
-      Institution
-      <%= select_tag "institution_affiliation_id", options_for_select(@institution_affiliations, Incognito.sudo_actor_institution_affiliation(current_actor)&.id), include_blank: '' %>
-      filter by
-      <input type="text" id="institution_filter" name="institution_filter" value=<%= params['institution_filter'] %>>
-      <button>filter</button>
+      <div>
+        <span>Filter institution by</span>
+        <input type="text" id="institution_filter" name="institution_filter" value=<%= params['institution_filter'] %>>
+        <button>filter</button>
+      </div>
+      <div>
+        <span>Institution </span>
+        <%= select_tag "institution_affiliation_id", options_for_select(@institution_affiliations, Incognito.sudo_actor_institution_affiliation(current_actor)&.id), include_blank: '' %>
+      </div>
+      <div>&nbsp;</div>
     </li>
     <li>
       Licenses
@@ -44,6 +54,7 @@
           <li><%= link_to " #{license.label} #{license.license_affiliations.map(&:affiliation).join(', ')} access to #{license.product.identifier}", greensub_license_path(license) %></li>
         </ul>
       <% end %>
+      <div>&nbsp;</div>
     </li>
     <li>
       Products

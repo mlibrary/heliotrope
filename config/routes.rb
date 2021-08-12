@@ -102,6 +102,7 @@ Rails.application.routes.draw do
         resources :products, only: %i[index]
         member do
           patch :affiliations
+          patch :state
           patch :type
         end
       end
