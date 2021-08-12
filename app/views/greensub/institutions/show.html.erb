@@ -26,6 +26,8 @@
     <%= link_to_if @institution.update?, 'Edit', edit_greensub_institution_path(@institution) %>
     <span> | </span>
     <%= link_to 'Back', greensub_institutions_path %>
+    <span> | </span>
+    <%= link_to_if @institution.destroy?, 'Destroy', greensub_institution_path(@institution), method: :delete, data: { confirm: 'Are you sure?' } %>
   </div>
   <div class="col-md-12"><br/></div>
 </div>

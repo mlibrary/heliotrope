@@ -26,6 +26,7 @@
         </div>
       </th>
       <th>Products</th>
+      <th>&nbsp;</th>
     </tr>
     <% components.each do |component| %>
       <tr>
@@ -59,6 +60,13 @@
           <% end %>
         </td>
         <td><%= link_to component.products.count, greensub_component_products_path(component) %></td>
+        <td>
+          <% if component.destroy? %>
+            <%= link_to(greensub_component_path(component), method: :delete, class: "btn btn-default", data: { confirm: 'Are you sure?' }) do %>
+              <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+            <% end %>
+          <% end %>
+        </td>
       </tr>
     <% end %>
   </table>
