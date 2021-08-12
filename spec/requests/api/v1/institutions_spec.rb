@@ -332,7 +332,7 @@ RSpec.describe "Institutions", type: :request do
         delete api_institution_path(institution), headers: headers
         expect(response.content_type).to eq("application/json")
         expect(response).to have_http_status(:accepted)
-        expect(response_body[:base.to_s]).to include("institution has associated grant!")
+        expect(response_body[:base.to_s]).to include("Cannot delete record because dependent licenses exist")
         expect(Greensub::Institution.count).to eq(1)
       end
     end
@@ -435,14 +435,6 @@ RSpec.describe "Institutions", type: :request do
           expect(response).to have_http_status(:ok)
           expect(response_body).to eq({ "license"=>"read" })
         end
-
-        it 'existing instution with a none/empty license ok' do
-          institution.update_product_license(product, license_type: "Greensub::License")
-          get api_product_institution_license_path(product, institution), headers: headers
-          expect(response.content_type).to eq("application/json")
-          expect(response).to have_http_status(:ok)
-          expect(response_body).to eq({ "license"=>"none" })
-        end
       end
     end
 
@@ -489,19 +481,19 @@ RSpec.describe "Institutions", type: :request do
           expect(institution.products.include?(product)).to be true
         end
 
-        it 'existing institution setting a none/empty license ok' do
-          post api_product_institution_license_path(product, institution), headers: headers, params: { license: 'none' }.to_json
+        it 'existing institution setting a empty license not found' do
+          post api_product_institution_license_path(product, institution), headers: headers, params: { license: '' }.to_json
           expect(response.content_type).to eq("application/json")
-          expect(response).to have_http_status(:ok)
-          expect(response_body).to eq({ "license"=>"none" })
-          expect(institution.products.include?(product)).to be true
+          expect(response).to have_http_status(:not_found)
+          expect(response_body).to eq({ "license"=>"undefined" })
+          expect(institution.products.include?(product)).to be false
         end
 
-        it 'existing institution setting a bad license unprocessable_entity' do
-          post api_product_institution_license_path(product, institution), headers: headers, params: { license: 'bad' }.to_json
+        it 'existing institution setting a none license unprocessable entity' do
+          post api_product_institution_license_path(product, institution), headers: headers, params: { license: 'none' }.to_json
           expect(response.content_type).to eq("application/json")
           expect(response).to have_http_status(:unprocessable_entity)
-          expect(response_body[:exception.to_s]).to include("no license type found for: bad")
+          expect(response_body[:exception.to_s]).to include("no license type found for: none")
           expect(institution.products.include?(product)).to be false
         end
       end

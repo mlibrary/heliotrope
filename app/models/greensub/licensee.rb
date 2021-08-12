@@ -7,7 +7,7 @@ module Greensub
     end
 
     def product_license(product)
-      pl = License.where(id: grants.where(credential_type: 'License', resource_type: 'Product', resource_id: product.id).map(&:credential_id))
+      pl = licenses.where(product: product)
       pl.first
     end
 
@@ -17,7 +17,7 @@ module Greensub
         pl.type = license_type
         pl.save
       else
-        pl = License.create(type: license_type)
+        pl = License.create(licensee: self, type: license_type, product: product)
         Authority.grant!(self, pl, product)
       end
     end
@@ -35,7 +35,7 @@ module Greensub
     end
 
     def products
-      Product.where(id: grants.where(resource_type: 'Product').map(&:resource_id))
+      Product.where(id: licenses.pluck(:product_id))
     end
 
     def licenses?
@@ -43,7 +43,7 @@ module Greensub
     end
 
     def licenses
-      License.where(id: grants.where(credential_type: 'License').map(&:credential_id))
+      License.where(licensee_type: self.class.to_s, licensee_id: self.id)
     end
 
     def grants?

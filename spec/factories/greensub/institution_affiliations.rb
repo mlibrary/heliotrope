@@ -2,8 +2,8 @@
 
 FactoryBot.define do
   factory :institution_affiliation, class: Greensub::InstitutionAffiliation do
-    institution { FactoryBot.create(:institution) }
-    dlps_institution_id { Greensub::Institution.last.identifier }
+    institution { create(:institution) }
+    dlps_institution_id { institution.identifier }
     affiliation { "member" }
   end
 end

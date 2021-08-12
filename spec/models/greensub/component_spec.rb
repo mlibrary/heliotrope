@@ -24,7 +24,7 @@ RSpec.describe Greensub::Component, type: :model do
       expect(component.destroy).to be false
       expect(component.errors.count).to eq 1
       expect(component.errors.first[0]).to eq :base
-      expect(component.errors.first[1]).to eq "component has associated product!"
+      expect(component.errors.first[1]).to eq "Cannot delete record because dependent products exist"
     end
 
     it 'grant present' do

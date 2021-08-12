@@ -152,4 +152,19 @@
       <span class="glyphicon glyphicon-wrench" aria-hidden="true"></span> Seed Institution Affiliations
     <% end %>
   </div>
+  <div class="row">
+    <%= link_to(fulcrum_exec_path(:seed_license_affiliations), method: :get, class: "btn btn-default", data: { confirm: 'Are you sure?' }) do %>
+      <span class="glyphicon glyphicon-wrench" aria-hidden="true"></span> Seed License Affiliations
+    <% end %>
+  </div>
+  <div class="row">
+    <%= link_to(fulcrum_exec_path(:grant_to_license), method: :get, class: "btn btn-default", data: { confirm: 'Are you sure?' }) do %>
+      <span class="glyphicon glyphicon-wrench" aria-hidden="true"></span> Populate new License fields from Grants HELIO-3994
+    <% end %>
+  </div>
+  <div class="row">
+    <%= link_to(fulcrum_exec_path(:license_to_grant), method: :get, class: "btn btn-default", data: { confirm: 'Are you sure?' }) do %>
+      <span class="glyphicon glyphicon-wrench" aria-hidden="true"></span> Create Grants for Licenses
+    <% end %>
+  </div>
 </div>

@@ -1,62 +1,85 @@
 <div id="maincontent">
-  <% if @product.present? %>
-    <h1>Licenses of <%= link_to @product.identifier, greensub_product_path(@product) %> Product</h1>
-    <form name="filter" method="get" action="<%= greensub_product_institutions_path(@product) %>">
-  <% else %>
+  <% filter = false %>
+  <% index = true %>
+  <% licensee_type = nil %>
+  <% licensee_id = nil %>
+  <% if @individual.present? %>
+    <% licensee_type = Greensub::Individual.to_s %>
+    <% licensee_id = @individual.id %>
+    <h1><%= link_to "#{@individual.identifier} - #{@individual.name}", greensub_individual_path(@individual) %> Licenses</h1>
+<% elsif @institution.present? %>
+    <% licensee_type = Greensub::Institution.to_s %>
+    <% licensee_id = @institution.id %>
+    <h1><%= link_to "#{@institution.identifier} - #{@institution.name}", greensub_institution_path(@institution) %> Licenses</h1>
+<% elsif @product.present? %>
+    <% filter = true %>
+    <h1><%= link_to "#{@product.identifier} - #{@product.name}", greensub_product_path(@product) %> Licenses</h1>
+    <form name="filter" method="get" action="<%= greensub_product_licenses_path(@product) %>">
+<% else %>
+    <% filter = true %>
+    <% index = false %>
     <h1>Licenses</h1>
     <form name="filter" method="get" action="<%= greensub_licenses_path %>">
+<% end %>
+  <% if index %>
+    <span><%= link_to "Index", greensub_licenses_path %></span>
   <% end %>
+  <div class="col-md-12"><hr/></div>
+  <b>
+    <div class="col-md-10">
+      <div class="col-md-1">ID</div>
+      <div class="col-md-1">Type</div>
+      <div class="col-md-2">Affiliations</div>
+      <div class="col-md-8">
+        <div>Licensee / Product</div>
+      </div>
+    </div>
+    <div class="col-md-2"><%= link_to "New License", new_greensub_license_path(licensee_type: licensee_type, licensee_id: licensee_id, product: @product) %></div>
+  </b>
+  <% if filter %>
     <b>
-      <div class="col-md-12"><hr/></div>
       <div class="col-md-10">
-        <div class="col-md-1">
-          <div>ID</div>
-          <div><button name="submit" type="submit" value="filter">Filter</button></div>
-        </div>
-        <div class="col-md-1">
-          <% size = 6 %>
-          <div>
-            <div>Type</div>
-            <div><input type="text" name="type_like" value="<%= params[:type_like] %>" size="<%= size %>" aria-label="type_like"></div>
-          </div>
-        </div>
-        <div class="col-md-5">
-          <div>Licensee</div>
-        </div>
-        <div class="col-md-5">
-          <div>Product</div>
+        <div class="col-md-1"><button name="submit" type="submit" value="filter">Filter</button></div>
+        <div class="col-md-1"><%= select(nil, "type_like", Greensub::License::TYPES.collect { |type| [type, type] }, include_blank: true, selected: params[:type_like]) %></div>
+        <div class="col-md-2">&nbsp;</div>
+        <div class="col-md-8">
+          <div><%= select(nil, "individual_id_like", Greensub::Individual.all.collect { |individual| ["#{individual.identifier} - #{individual.name}", individual.id] }, include_blank: true, selected: params[:individual_id_like]) %></div>
+          <div><%= select(nil, "institution_id_like", Greensub::Institution.all.collect { |institution| ["#{institution.identifier} - #{institution.name}", institution.id] }, include_blank: true, selected: params[:institution_id_like]) %></div>
+          <div><%= select(nil, "product_id_like", Greensub::Product.all.collect { |product| ["#{product.identifier} - #{product.name}", product.id] }, include_blank: true, selected: params[:product_id_like]) %></div>
         </div>
       </div>
       <div class="col-md-2">&nbsp;</div>
-      <div class="col-md-12"><hr/></div>
     </b>
-  </form>
-
+    </form>
+  <% end %>
+  <div class="col-md-12"><hr/></div>
   <% @licenses.each do |license| %>
     <div class="col-md-10">
-      <div class="col-md-1"><%= license.id %></div>
+      <div class="col-md-1"><%= license.id %><%= "*" if license.active? %></div>
       <div class="col-md-1"><%= license.label %></div>
-      <div class="col-md-5">
+      <div class="col-md-2">
+        <% license.license_affiliations.map(&:affiliation).each do |affiliation| %>
+          <div><%= affiliation.to_s %></div>
+        <% end %>
+      </div>
+      <div class="col-md-8">
         <% if license.individual? %>
-          <%= link_to "#{license.individual.identifier}", greensub_individual_path(license.individual) %>
+          <div><%= link_to_if !@individual.present?, license.licensee.identifier, greensub_individual_licenses_path(license.licensee) %></div>
+          <div><%= link_to_if !@individual.present?, license.licensee.name, greensub_individual_licenses_path(license.licensee) %></div>
         <% end %>
         <% if license.institution? %>
-          <%= link_to "#{license.institution.name}", greensub_institution_path(license.institution) %>
+          <div><%= link_to_if !@institution.present?, license.licensee.identifier, greensub_institution_licenses_path(license.licensee) %></div>
+          <div><%= link_to_if !@institution.present?, license.licensee.name, greensub_institution_licenses_path(license.licensee) %></div>
         <% end %>
-        &nbsp;
-      </div>
-      <div class="col-md-5">
-        <% if license.product? %>
-          <%= link_to "#{license.product.identifier}", greensub_product_path(license.product) %>
-        <% end %>
-        &nbsp;
+        <div><%= link_to_if !@product.present?, license.product.identifier, greensub_product_licenses_path(license.product) %></div>
+        <div><%= link_to_if !@product.present?, license.product.name, greensub_product_licenses_path(license.product) %></div>
       </div>
     </div>
     <div class="col-md-2">
-      <div class="col-md-4"><%= link_to_if license.update?, 'Edit', edit_greensub_license_path(license) %></div>
-      <div class="col-md-4"><%= link_to_if license.destroy?, 'Destroy', greensub_license_path(license), method: :delete, data: { confirm: 'Are you sure?' } %></div>
+      <div class="col-md-6"><%= link_to 'Show', greensub_license_path(license) %></div>
+      <div class="col-md-6"><%= link_to_if license.destroy?, 'Destroy', greensub_license_path(license), method: :delete, data: { confirm: 'Are you sure?' } %></div>
     </div>
-  <% end %>
-
+    <div class="col-md-12"><hr/></div>
+<% end %>
   <div class="col-md-12">&nbsp<%= paginate @licenses %></div>
 </div>

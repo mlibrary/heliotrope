@@ -2,9 +2,39 @@
 
 module Greensub
   class License < ApplicationRecord
-    include Filterable
+    TYPES = %w[full read].freeze
 
+    attr_accessor :individual_id
+    attr_accessor :institution_id
+
+    belongs_to :product
+
+    include Filterable
     scope :type_like, ->(like) { where("type like ?", "%#{like}%") }
+    scope :licensee_type_like, ->(like) { where("licensee_type like ?", "#{like}") }
+    scope :licensee_id_like, ->(like) { where("licensee_id like ?", "#{like}") }
+    scope :product_id_like, ->(like) { where("product_id like ?", "#{like}") }
+
+    validates :type, presence: true, inclusion: { in: %w[Greensub::FullLicense Greensub::ReadLicense] }
+    validates :licensee_type, presence: true, inclusion: { in: %w[Greensub::Individual Greensub::Institution] }
+    validates :licensee_id, presence: true
+    validates :product_id, presence: true
+    validates :type, uniqueness: { scope: [:licensee_type, :licensee_id, :product_id] }
+
+    has_many :license_affiliations, dependent: :restrict_with_error
+
+    # temporary! TODO: HELIO-3994
+    #
+    # before_validation(on: :update) do
+    #   if licensee_type_changed? || licensee_id_changed?
+    #     errors.add(:licensee, "can not be changed!")
+    #     throw(:abort)
+    #   end
+    #   if product_id_changed?
+    #     errors.add(:product, "can not be changed!")
+    #     throw(:abort)
+    #   end
+    # end
 
     before_destroy do
       if grants?
@@ -22,11 +52,11 @@ module Greensub
     end
 
     def update?
-      true
+      grants.blank?
     end
 
     def destroy?
-      grants.blank?
+      grants.blank? && license_affiliations.empty?
     end
 
     def credential_type
@@ -42,50 +72,31 @@ module Greensub
     end
 
     def label
-      return @label if @label.present?
-      @label = '' if self.instance_of?(Greensub::License)
       @label ||= /^Greensub::(.+)(License$)/.match(self.class.to_s)[1]
     end
 
-    def licensee?
-      licensee.present?
-    end
-
-    def licensee
-      @licensee ||= individual || institution
-    end
-
     def individual?
-      individual.present?
-    end
-
-    def individual
-      return nil if grants.blank?
-      @individual ||= case grants.first.agent_type
-                      when 'Individual'
-                        Individual.find(grants.first.agent_id)
-                      end
+      licensee.is_a?(Greensub::Individual)
     end
 
     def institution?
-      institution.present?
+      licensee.is_a?(Greensub::Institution)
     end
 
-    def institution
-      return nil if grants.blank?
-      @institution ||= case grants.first.agent_type
-                       when 'Institution'
-                         Institution.find(grants.first.agent_id)
-                       end
+    def member?
+      license_affiliations.pluck(:affiliation).include? 'member'
     end
 
-    def product?
-      product.present?
+    def alum?
+      license_affiliations.pluck(:affiliation).include? 'alum'
     end
 
-    def product
-      return nil if grants.blank?
-      @product ||= Product.find(grants.first.resource_id)
+    def walk_in?
+      license_affiliations.pluck(:affiliation).include? 'walk-in'
+    end
+
+    def active?
+      grants?
     end
 
     private

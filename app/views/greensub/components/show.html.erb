@@ -23,10 +23,14 @@
   <div class="col-md-11">&nbsp;<%= @component.name %></div>
   <div class="col-md-1"><em>Noid</em></div>
   <div class="col-md-11">&nbsp;<%= @component.noid %></div>
+  <div class="col-md-12"><br/></div>
   <div class="col-md-1"><em>FileSet</em></div>
   <div class="col-md-11">&nbsp;<%= link_to_if file_set.present?, file_set_id, hyrax_file_set_path(file_set_id) %></div>
   <div class="col-md-1"><em>Monograph</em></div>
   <div class="col-md-11">&nbsp;<%= link_to_if monograph.present?, monograph_id, monograph_catalog_path(monograph_id) %></div>
+  <div class="col-md-12"><br/></div>
+  <div class="col-md-1"><em>Products</em></div>
+  <div class="col-md-11">&nbsp;<%= link_to @component.products.count, greensub_component_products_path(@component) %></div>
   <div class="col-md-12"><br/></div>
   <h2>Products</h2>
   <div class="col-md-12">

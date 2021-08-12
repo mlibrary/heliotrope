@@ -79,9 +79,12 @@ Rails.application.routes.draw do
   constraints platform_administrator_constraint do
     namespace :greensub do
       resources :individuals do
+        resources :licenses, only: %i[index]
         resources :products, only: %i[index]
       end
       resources :institutions do
+        resources :institution_affiliations, path: :affiliations, as: :inst_affiliations, only: %i[index]
+        resources :licenses, only: %i[index]
         resources :products, only: %i[index]
       end
       resources :institution_affiliations
@@ -95,8 +98,13 @@ Rails.application.routes.draw do
         resources :licenses, only: %i[index]
         resources :grants, only: %i[new]
       end
-      resources :licenses, only: %i[index edit update destroy] do
+      resources :licenses do
         resources :products, only: %i[index]
+        member do
+          patch :affiliations
+          patch :state
+          patch :type
+        end
       end
     end
     get 'fulcrum', controller: :fulcrum, action: :dashboard, as: :fulcrum

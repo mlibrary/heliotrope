@@ -2,8 +2,8 @@
 
 module Greensub
   class Individual < ApplicationRecord
-    include Filterable
     include Licensee
+    include Filterable
 
     scope :identifier_like, ->(like) { where("identifier like ?", "%#{like}%") }
     scope :name_like, ->(like) { where("identifier like ?", "%#{like}%") }
@@ -12,6 +12,8 @@ module Greensub
     validates :identifier, presence: true, allow_blank: false, uniqueness: true
     validates :name, presence: true, allow_blank: false
     validates :email, presence: true, allow_blank: false, uniqueness: true
+
+    has_many :licenses, as: :licensee, dependent: :restrict_with_error
 
     before_validation(on: :update) do
       if identifier_changed?

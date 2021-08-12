@@ -16,25 +16,25 @@ RSpec.describe Greensub::Product, type: :model do
   end
 
   context 'before destroy' do
+    let(:individual) { create(:individual) }
     let(:product) { create(:product) }
     let(:component) { create(:component) }
+    let(:license) { create(:full_license, licensee: individual, product: product) }
 
     it 'component present' do
       product.components << component
       expect(product.destroy).to be false
       expect(product.errors.count).to eq 1
       expect(product.errors.first[0]).to eq :base
-      expect(product.errors.first[1]).to eq "product has associated component!"
+      expect(product.errors.first[1]).to eq "Cannot delete record because dependent components exist"
     end
 
-    it 'grants present' do
-      individual = create(:individual)
-      license = create(:full_license)
-      Authority.grant!(individual, license, product)
+    it 'license present' do
+      license
       expect(product.destroy).to be false
       expect(product.errors.count).to eq 1
       expect(product.errors.first[0]).to eq :base
-      expect(product.errors.first[1]).to eq "product has associated grant!"
+      expect(product.errors.first[1]).to eq "Cannot delete record because dependent licenses exist"
     end
   end
 
@@ -116,9 +116,9 @@ RSpec.describe Greensub::Product, type: :model do
 
     it '#grants?' do
       individual = create(:individual)
-      individual_license = create(:full_license)
+      individual_license = create(:full_license, licensee: individual, product: subject)
       institution = create(:institution)
-      institution_license = create(:full_license)
+      institution_license = create(:full_license, licensee: institution, product: subject)
 
       expect(subject.licensees?).to be false
       expect(subject.licensees).to be_empty

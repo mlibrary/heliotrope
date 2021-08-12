@@ -7,24 +7,27 @@
         <%= link_to(new_greensub_individual_path) do %>
           <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> New
         <% end %>
+        <div>&nbsp;</div>
+        <button name="submit" type="submit" value="filter">Filter</button>
       </th>
       <th>
         <% size = 24 %>
         <div class="col-md-12">
-          <div class="col-md-2"><label for="identifier_like">Identifier</label></div><div class="col-md-10"><input type="text" name="identifier_like" value="<%= params[:identifier_like] %>" size="<%= size %>" aria-label="identifier_like"></div>
+          <div class="col-md-2"><label for="identifier_like">Identifier</label></div>
+          <div class="col-md-10"><input type="text" name="identifier_like" value="<%= params[:identifier_like] %>" size="<%= size %>" aria-label="identifier_like"></div>
         </div>
         <div class="col-md-12">
-          <div class="col-md-2"><label for="name_like">Name</label></div><div class="col-md-10"><input type="text" name="name_like" value="<%= params[:name_like] %>" size="<%= size %>" aria-label="name_like"></div></div>
+          <div class="col-md-2"><label for="name_like">Name</label></div>
+          <div class="col-md-10"><input type="text" name="name_like" value="<%= params[:name_like] %>" size="<%= size %>" aria-label="name_like"></div>
         </div>
-      </th>
-      <th>
-        <div><label for="email_like">eMail</label></div>
-        <div><input type="text" name="email_like" value="<%= params[:email_like] %>" size="<%= size %>" aria-label="email_like"></div>
+        <div class="col-md-12">
+          <div class="col-md-2"><label for="email_like">eMail</label></div>
+          <div class="col-md-10"><input type="text" name="email_like" value="<%= params[:email_like] %>" size="<%= size %>" aria-label="email_like"></div>
+        </div>
       </th>
       <th>
         <div>Licenses</div>
-        <div>&nbsp;</div>
-        <div><button name="submit" type="submit" value="filter">Filter</button></div>
+        <div>Products</div>
       </th>
     </tr>
     <% individuals.each do |individual| %>
@@ -36,9 +39,12 @@
         <td>
           <div><%= individual.identifier %></div>
           <div><%= individual.name %></div>
+          <div><%= individual.email %></div>
         </td>
-        <td><%= individual.email %></td>
-        <td><%= individual.licenses.count %></td>
+        <td>
+          <div><%= link_to individual.licenses.count, greensub_individual_licenses_path(individual) %></div>
+          <div><%= link_to individual.products.count, greensub_individual_products_path(individual) %></div>
+        </td>
       </tr>
     <% end %>
   </table>

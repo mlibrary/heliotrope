@@ -7,24 +7,20 @@
   <div class="col-md-11">&nbsp;<%= @institution.identifier %></div>
   <div class="col-md-1"><em>Name</em></div>
   <div class="col-md-11">&nbsp;<%= @institution.name %></div>
-  <div class="col-md-1"><em>Entity ID</em></div>
+  <div class="col-md-1"><em>Entity&nbsp;ID</em></div>
   <div class="col-md-11">&nbsp;<%= @institution.entity_id %></div>
   <div class="col-md-1"><em>Site</em></div>
   <div class="col-md-11">&nbsp;<%= @institution.site %></div>
   <div class="col-md-1"><em>Login</em></div>
   <div class="col-md-11">&nbsp;<%= @institution.login %></div>
   <div class="col-md-12"><br/></div>
-  <h2>Affiliations</h2>
-  <div class="col-md-12">
-    <% @institution.institution_affiliations.each do |institution_affiliation| %>
-      <div><%= link_to institution_affiliation.dlps_institution_id.to_s + ":" + institution_affiliation.affiliation, greensub_institution_affiliation_path(institution_affiliation) %></div>
-    <% end %>
-  </div>
+  <div class="col-md-1"><em>Affiliations</em></div>
+  <div class="col-md-11">&nbsp;<%= link_to @institution.institution_affiliations.count, greensub_institution_inst_affiliations_path(@institution) %></div>
   <div class="col-md-12"><br/></div>
-  <h2>Licenses</h2>
-  <div class="col-md-12">
-    <%= render partial: '/greensub/licenses/licenses', locals: { institution: @institution, licenses: @institution.licenses } %>
-  </div>
+  <div class="col-md-1"><em>Licenses</em></div>
+  <div class="col-md-11">&nbsp;<%= link_to @institution.licenses.count, greensub_institution_licenses_path(@institution) %></div>
+  <div class="col-md-1"><em>Products</em></div>
+  <div class="col-md-11">&nbsp;<%= link_to @institution.products.count, greensub_institution_products_path(@institution) %></div>
   <div class="col-md-12"><br/></div>
   <div class="col-md-12">
     <%= link_to_if @institution.update?, 'Edit', edit_greensub_institution_path(@institution) %>

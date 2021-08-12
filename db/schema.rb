@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_07_19_161113) do
+ActiveRecord::Schema.define(version: 2021_08_06_174540) do
 
   create_table "api_requests", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.integer "user_id"
@@ -301,8 +301,22 @@ ActiveRecord::Schema.define(version: 2021_07_19_161113) do
     t.index ["user_id"], name: "index_job_io_wrappers_on_user_id"
   end
 
+  create_table "license_affiliations", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+    t.bigint "license_id"
+    t.string "affiliation"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["license_id"], name: "index_license_affiliations_on_license_id"
+  end
+
   create_table "licenses", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "type"
+    t.bigint "product_id"
+    t.string "licensee_type"
+    t.bigint "licensee_id"
+    t.index ["licensee_type", "licensee_id"], name: "index_licenses_on_licensee_type_and_licensee_id"
+    t.index ["product_id"], name: "index_licenses_on_product_id"
+    t.index ["type", "licensee_type", "licensee_id", "product_id"], name: "index_licenses_on_all_fields", unique: true
   end
 
   create_table "mailboxer_conversation_opt_outs", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
@@ -449,6 +463,14 @@ ActiveRecord::Schema.define(version: 2021_07_19_161113) do
     t.datetime "updated_at", null: false
     t.index ["grantee_id"], name: "index_proxy_deposit_rights_on_grantee_id"
     t.index ["grantor_id"], name: "index_proxy_deposit_rights_on_grantor_id"
+  end
+
+  create_table "robotrons", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+    t.string "ip", null: false
+    t.integer "hits", default: 0
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["ip"], name: "index_robotrons_on_ip"
   end
 
   create_table "roles", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
@@ -749,6 +771,8 @@ ActiveRecord::Schema.define(version: 2021_07_19_161113) do
   add_foreign_key "components_products", "products"
   add_foreign_key "curation_concerns_operations", "users"
   add_foreign_key "institution_affiliations", "institutions"
+  add_foreign_key "license_affiliations", "licenses"
+  add_foreign_key "licenses", "products"
   add_foreign_key "mailboxer_conversation_opt_outs", "mailboxer_conversations", column: "conversation_id", name: "mb_opt_outs_on_conversations_id"
   add_foreign_key "mailboxer_notifications", "mailboxer_conversations", column: "conversation_id", name: "notifications_on_conversation_id"
   add_foreign_key "mailboxer_receipts", "mailboxer_notifications", column: "notification_id", name: "receipts_on_notification_id"

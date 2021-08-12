@@ -37,7 +37,6 @@ class GrantsController < ApplicationController
                   license_grants = agent_resource_license_grants(agent_type, agent_id, resource_type, resource_id)
                   case license_grants.count
                   when 0
-                    # new license
                     license = case credential_id.to_s.to_sym
                               when :full
                                 Greensub::FullLicense.new
@@ -46,24 +45,52 @@ class GrantsController < ApplicationController
                               else
                                 raise(ArgumentError)
                               end
-                    license.save
-                    Authority.grant!(Authority.agent(agent_type, agent_id),
-                                     Authority.credential(:License, license.id),
-                                     Authority.resource(resource_type, resource_id))
-                    true
-                  when 1
-                    # update license
-                    grant = license_grants.first
-                    license = Greensub::License.find(grant.credential_id.to_i)
-                    license.type = case credential_id.to_s.to_sym
+                    license.licensee = case agent_type
+                                       when :Individual
+                                         Greensub::Individual.find(agent_id)
+                                       when :Institution
+                                         Greensub::Institution.find(agent_id)
+                                       else
+                                         raise(ArgumentError)
+                                       end
+                    license.product = case resource_type
+                                      when :Product
+                                        Greensub::Product.find(resource_id)
+                                      else
+                                        raise(ArgumentError)
+                                      end
+                    license_type = case credential_id.to_s.to_sym
                                    when :full
-                                     license.type = Greensub::FullLicense.to_s
+                                     Greensub::FullLicense.to_s
                                    when :read
-                                     license.type = Greensub::ReadLicense.to_s
+                                     Greensub::ReadLicense.to_s
                                    else
                                      raise(ArgumentError)
                                    end
-                    license.save
+                    new_license = Greensub::License.find_or_create_by(type: license_type, licensee_type: license.licensee.class.to_s, licensee_id: license.licensee, product_id: license.product)
+                    Authority.grant!(Authority.agent(agent_type, agent_id),
+                                     Authority.credential(:License, new_license.id),
+                                     Authority.resource(resource_type, resource_id))
+                    true
+                  when 1
+                    grant = license_grants.first
+                    license = Greensub::License.find(grant.credential_id.to_i)
+                    license_type = case credential_id.to_s.to_sym
+                                   when :full
+                                     Greensub::FullLicense.to_s
+                                   when :read
+                                     Greensub::ReadLicense.to_s
+                                   else
+                                     raise(ArgumentError)
+                                   end
+                    new_license = Greensub::License.find_or_create_by(type: license_type, licensee_type: license.licensee.class.to_s, licensee_id: license.licensee, product_id: license.product)
+                    if new_license.id != license.id
+                      Authority.grant!(Authority.agent(agent_type, agent_id),
+                                       Authority.credential(:License, new_license.id),
+                                       Authority.resource(resource_type, resource_id))
+                    end
+                    true
+                  when 2
                     true
                   else
                     raise(ArgumentError)

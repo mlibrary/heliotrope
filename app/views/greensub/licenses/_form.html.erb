@@ -1,11 +1,33 @@
-<%= simple_form_for @license, as: :greensub_license, url: greensub_license_path do |f| %>
+<%= simple_form_for @license, as: :greensub_license, url: greensub_licenses_path do |f| %>
   <%= f.error_notification %>
 
   <div class="form-inputs">
-    <%= f.input :type, collection: ['Greensub::FullLicense', 'Greensub::ReadLicense'] %>
+    <%= f.input :type, collection: [['Full', 'Greensub::FullLicense'], ['Read', 'Greensub::ReadLicense']], as: :radio_buttons %>
+
+    <div class="form-group radio_buttons required greensub_license_licensee_type">
+      <label class="control-label radio_buttons required">* Licensee type</label>
+      <input type="hidden" name="greensub_license[licensee_type]" value="" />
+      <span class="radio">
+        <label for="greensub_license_licensee_type_greensubindividual">
+          <input class="radio_buttons required" type="radio" value="Greensub::Individual" name="greensub_license[licensee_type]" id="greensub_license_licensee_type_greensubindividual" />
+          Individual <label for="individual_id"><%= f.collection_select :individual_id, Greensub::Individual.order(:email), :id, :email %></label>
+        </label>
+      </span>
+      <span class="radio">
+        <label for="greensub_license_licensee_type_greensubinstitution">
+          <input class="radio_buttons required" type="radio" value="Greensub::Institution" name="greensub_license[licensee_type]" id="greensub_license_licensee_type_greensubinstitution" />
+          Institution <label for="institution_id"><%= f.collection_select :institution_id, Greensub::Institution.order(:name), :id, :name %></label>
+        </label>
+      </span>
+    </div>
+    <%= f.input :licensee_id, as: :hidden, input_html: { value: "1" } %>
+
+    <%= f.association :product, include_blank: false %>
   </div>
 
   <div class="form-actions">
     <%= f.button :submit %>
   </div>
+
+  <div>&nbsp;</div>
 <% end %>

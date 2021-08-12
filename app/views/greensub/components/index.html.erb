@@ -1,24 +1,33 @@
 <div id="maincontent">
+  <% index = true %>
   <% if @product.present? %>
-    <h1>Components of <%= link_to @product.identifier, greensub_product_path(@product) %> Product</h1>
+    <h1><%= link_to "#{@product.identifier} - #{@product.name}", greensub_product_path(@product) %> Components</h1>
     <form name="filter" method="get" action="<%= greensub_product_components_path(@product) %>">
   <% else %>
+    <% index = false %>
     <h1>Components</h1>
-    <form name="filter" method="get" action="<%= greensub_products_path %>">
+    <form name="filter" method="get" action="<%= greensub_components_path %>">
+  <% end %>
+  <% if index %>
+    <span><%= link_to "Index", greensub_components_path %></span>
   <% end %>
     <b>
       <div class="col-md-12"><hr/></div>
       <div class="col-md-10">
         <div class="col-md-1">
           <div>ID</div>
+          <div>&nbsp;</div>
+          <div><button name="submit" type="submit" value="filter">Filter</button></div>
         </div>
-        <div class="col-md-8">
+        <div class="col-md-9">
           <% size = 24 %>
           <div class="col-md-2">Identifier</div><div class="col-md-10"><input type="text" name="identifier_like" value="<%= params[:identifier_like] %>" size="<%= size %>" aria-label="identifier_like"></div>
           <div class="col-md-2">Name</div><div class="col-md-10"><input type="text" name="name_like" value="<%= params[:name_like] %>" size="<%= size %>" aria-label="name_like"></div>
+          <div class="col-md-2">Noid</div><div class="col-md-10"><input type="text" name="noid_like" value="<%= params[:noid_like] %>" size="<%= size %>" aria-label="noid_like"></div>
         </div>
-        <div class="col-md-2"><div>Noid</div><div><input type="text" name="noid_like" value="<%= params[:noid_like] %>" size="<%= size / 2 %>" aria-label="noid_like"></div></div>
-        <div class="col-md-1"><div>Products</div><div><button name="submit" type="submit" value="filter">Filter</button></div></div>
+        <div class="col-md-2">
+          <div>Products</div>
+        </div>
       </div>
       <div class="col-md-2"><div><%= link_to 'New Component', new_greensub_component_path %></div><div>&nbsp;</div></div>
       <div class="col-md-12"><hr/></div>
@@ -28,20 +37,26 @@
   <% @components.each do |component| %>
     <div class="col-md-10">
       <div class="col-md-1"><%= component.id %></div>
-      <div class="col-md-8"><div><%= component.identifier %></div><div><%= component.name %></div>&nbsp;</div>
+      <div class="col-md-9">
+        <div><%= component.identifier %></div>
+        <div><%= component.name %>&nbsp;</div>
       <% if Sighrax.from_noid(component.noid).is_a?(Sighrax::Monograph) %>
-        <div class="col-md-2">&nbsp;<%= link_to component.noid, hyrax_monograph_path(component.noid) %></div>
+        <div><%= link_to component.noid, hyrax_monograph_path(component.noid) %></div>
       <% else %>
-        <div class="col-md-2">&nbsp;<%= link_to component.noid, hyrax_file_set_path(component.noid) %></div>
+        <div><%= link_to component.noid, hyrax_file_set_path(component.noid) %></div>
       <% end %>
-      <div class="col-md-1">&nbsp;<%= link_to component.products.count, greensub_component_products_path(component) %></div>
+      </div>
+      <div class="col-md-2">
+        <%= link_to component.products.count, greensub_component_products_path(component) %>
+      </div>
     </div>
     <div class="col-md-2">
       <div class="col-md-4"><%= link_to 'Show', component %></div>
       <div class="col-md-4"><%= link_to_if component.update?, 'Edit', edit_greensub_component_path(component) %></div>
       <div class="col-md-4"><%= link_to_if component.destroy?, 'Destroy', greensub_component_path(component), method: :delete, data: { confirm: 'Are you sure?' } %></div>
     </div>
-  <% end %>
+    <div class="col-md-12"><hr/></div>
+<% end %>
 
   <div class="col-md-12"><%= paginate @components %>&nbsp;</div>
 </div>

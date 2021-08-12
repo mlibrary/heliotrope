@@ -7,28 +7,28 @@
           <%= link_to(new_greensub_institution_path) do %>
             <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> New
           <% end %>
+          <div>&nbsp;</div>
+          <button name="submit" type="submit" value="filter">Filter</button>
       </th>
       <th>
         <% size = 24 %>
         <div class="col-md-12">
-          <div class="col-md-2"><label for="identifier_like">Identifier</label></div><div class="col-md-10"><input type="text" name="identifier_like" value="<%= params[:identifier_like] %>" size="<%= size %>" aria-label="identifier_like"></div>
+          <div class="col-md-2"><label for="identifier_like">Identifier</label></div>
+          <div class="col-md-10"><input type="text" name="identifier_like" value="<%= params[:identifier_like] %>" size="<%= size %>" aria-label="identifier_like"></div>
         </div>
         <div class="col-md-12">
-          <div class="col-md-2"><label for="name_like">Name</label></div><div class="col-md-10"><input type="text" name="name_like" value="<%= params[:name_like] %>" size="<%= size %>" aria-label="name_like"></div></div>
+          <div class="col-md-2"><label for="name_like">Name</label></div>
+          <div class="col-md-10"><input type="text" name="name_like" value="<%= params[:name_like] %>" size="<%= size %>" aria-label="name_like"></div>
         </div>
         <div class="col-md-12">
-          <div class="col-md-2"><label for="entity_id_like">Entity ID</label></div><div class="col-md-10"><input type="text" name="entity_id_like" value="<%= params[:entity_id_like] %>" size="<%= size %>" aria-label="entity_id_like"></div></div>
+          <div class="col-md-2"><label for="entity_id_like">Entity ID</label></div>
+          <div class="col-md-10"><input type="text" name="entity_id_like" value="<%= params[:entity_id_like] %>" size="<%= size %>" aria-label="entity_id_like"></div>
         </div>
-        <div></div>
-        <div></div>
       </th>
       <th>
         <div>Affiliations</div>
-      </th>
-      <th>
         <div>Licenses</div>
-        <div>&nbsp;</div>
-        <div><button name="submit" type="submit" value="filter">Filter</button></div>
+        <div>Products</div>
       </th>
     </tr>
     <% institutions.each do |institution| %>
@@ -44,11 +44,10 @@
           <div><%= institution.entity_id %>&nbsp;</div>
         </td>
         <td>
-          <% institution.institution_affiliations.each do |institution_affiliation| %>
-            <div><%= link_to institution_affiliation.dlps_institution_id.to_s + ":" + institution_affiliation.affiliation, greensub_institution_affiliation_path(institution_affiliation) %></div>
-          <% end %>
+          <div><%= link_to institution.institution_affiliations.count, greensub_institution_inst_affiliations_path(institution) %></div>
+          <div><%= link_to institution.licenses.count, greensub_institution_licenses_path(institution) %></div>
+          <div><%= link_to institution.products.count, greensub_institution_products_path(institution) %></div>
         </td>
-        <td><%= institution.licenses.count %></td>
       </tr>
     <% end %>
   </table>

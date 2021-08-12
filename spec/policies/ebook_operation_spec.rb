@@ -126,7 +126,9 @@ RSpec.describe EbookOperation do
 
     let(:entitlement) { :entitlement }
     let(:checkpoint) { double('checkpoint') }
-    let(:license) { create(:license) }
+    let(:license) { create(:full_license, licensee: individual, product: product) }
+    let(:individual) { create(:individual) }
+    let(:product) { create(:product) }
 
     before do
       allow(Services).to receive(:checkpoint).and_return checkpoint

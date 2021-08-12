@@ -10,8 +10,9 @@ module Greensub
 
     scope :containing_monograph, ->(noid) { joins(:components).merge(Component.for_noid(noid)) }
 
+    has_many :licenses, dependent: :restrict_with_error
     has_many :components_products # rubocop:disable Rails/HasManyOrHasOneDependent
-    has_many :components, through: :components_products,
+    has_many :components, through: :components_products, dependent: :restrict_with_error,
                                    after_remove: :reindex_component_product,
                                    after_add: :reindex_component_product
 
@@ -21,10 +22,6 @@ module Greensub
     # validates :purchase, presence: true, allow_blank: false
 
     before_destroy do
-      if components.present?
-        errors.add(:base, "product has associated component!")
-        throw(:abort)
-      end
       if grants?
         errors.add(:base, "product has associated grant!")
         throw(:abort)
@@ -60,7 +57,7 @@ module Greensub
     end
 
     def individuals
-      licenses.map(&:individual).compact
+      Individual.where(id: licenses.where(licensee_type: 'Greensub::Individual').pluck(:licensee_id)).compact
     end
 
     def institutions?
@@ -68,7 +65,7 @@ module Greensub
     end
 
     def institutions
-      licenses.map(&:institution).compact
+      Institution.where(id: licenses.where(licensee_type: 'Greensub::Institution').pluck(:licensee_id)).compact
     end
 
     def licenses?

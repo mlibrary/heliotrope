@@ -3,153 +3,179 @@
 require 'rails_helper'
 
 RSpec.describe Greensub::License, type: :model do
-  context 'Subclass Not Found' do
+  let(:individual) { create(:individual) }
+  let(:institution) { create(:institution) }
+  let(:product) { create(:product) }
+
+  context 'instance' do
     subject { described_class.new(id: id, type: type) }
 
     let(:id) { 1 }
-    let(:type) { 'type' }
+    let(:type) { nil }
 
-    it { expect { subject }.to raise_exception(ActiveRecord::SubclassNotFound) }
+    it { expect { subject }.not_to raise_exception }
+    it { expect { subject.save! }.not_to raise_exception(ActiveRecord::RecordInvalid, "Validation failed: Product must exist, Type can't be blank, Type is not included in the list") }
+
+    context 'Blank Type' do
+      let(:type) { '' }
+
+      it { expect { subject }.not_to raise_exception }
+      it { expect { subject.save! }.not_to raise_exception(ActiveRecord::RecordInvalid, "Validation failed: Product must exist, Type can't be blank, Type is not included in the list") }
+    end
+
+    context 'Unknown Subclass Type' do
+      let(:type) { 'type' }
+
+      it { expect { subject }.to raise_exception(ActiveRecord::SubclassNotFound) }
+    end
+
+    context 'License' do
+      let(:type) { 'Greensub::License' }
+
+      it { expect { subject }.not_to raise_exception }
+      it { expect { subject.save! }.not_to raise_exception(ActiveRecord::RecordInvalid, "Validation failed: Product must exist, Type is not included in the list") }
+    end
+
+    context 'Read License' do
+      let(:type) { 'Greensub::ReadLicense' }
+
+      it { expect { subject }.not_to raise_exception }
+      it { expect { subject.save! }.not_to raise_exception(ActiveRecord::RecordInvalid, "Validation failed: Product must exist, Licensee must exist") }
+    end
+
+    context 'Full License' do
+      let(:type) { 'Greensub::FullLicense' }
+
+      it { expect { subject }.not_to raise_exception }
+      it { expect { subject.save! }.not_to raise_exception(ActiveRecord::RecordInvalid, "Validation failed: Product must exist, Licensee must exist") }
+    end
   end
 
-  describe 'Full License' do
+  describe 'Individual Full License' do
     subject { license }
 
-    let(:license) { create(:full_license) }
+    let(:license) { create(:full_license, licensee: individual, product: product) }
 
     it { expect { subject }.not_to raise_exception }
     it { expect(subject).to be_an_instance_of(Greensub::FullLicense) }
     it { expect(subject.label).to eq 'Full' }
     it { expect(subject.entitlements).to contain_exactly(:download, :reader) }
+    it { expect(subject.allows?(:action)).to be false }
     it { expect(subject.allows?(:download)).to be true }
     it { expect(subject.allows?(:reader)).to be true }
+    it { expect(subject.update?).to be true }
+    it { expect(subject.destroy?).to be true }
+    it { expect(subject.credential_id).to eq license.id }
+    it { expect(subject.credential_type).to be :License }
+    it { expect(subject.to_credential).to be_an_instance_of(Greensub::LicenseCredential) }
+    it { expect(subject.licensee).to eq individual }
+    it { expect(subject.product).to eq product }
+
+    it 'update type' do
+      subject.type = 'Greensub::ReadLicense'
+      expect { subject.save! }.not_to raise_exception
+    end
+
+    it 'update licensee' do
+      subject.licensee = create(:individual)
+      expect { subject.save! }.not_to raise_exception(ActiveRecord::RecordInvalid, 'Validation failed: Licensee can not be changed!')
+    end
+
+    it 'update product' do
+      subject.product = create(:product)
+      expect { subject.save! }.not_to raise_exception(ActiveRecord::RecordInvalid, 'Validation failed: Product can not be changed!')
+    end
+
+    it 'destroy' do
+      expect(subject.destroy).to be subject
+      expect(subject.errors.count).to eq 0
+      expect(Greensub::License.count).to eq 0
+    end
+
+    context 'with grant' do
+      before do
+        clear_grants_table
+        Authority.grant!(individual, license, product)
+      end
+
+      it { expect(subject.update?).to be false }
+      it { expect(subject.destroy?).to be false }
+
+      it 'update type' do
+        subject.type = 'Greensub::ReadLicense'
+        expect { subject.save! }.not_to raise_exception
+      end
+
+      it 'destroy fails' do
+        expect(subject.destroy).to be false
+        expect(subject.errors.count).to eq 1
+        expect(subject.errors.first[0]).to eq :base
+        expect(subject.errors.first[1]).to eq "license has associated grant!"
+      end
+    end
   end
 
-  describe 'Read License' do
+  describe 'Institution Read License' do
     subject { license }
 
-    let(:license) { create(:read_license) }
+    let(:license) { create(:read_license, licensee: institution, product: product) }
 
     it { expect { subject }.not_to raise_exception }
     it { expect(subject).to be_an_instance_of(Greensub::ReadLicense) }
     it { expect(subject.label).to eq 'Read' }
     it { expect(subject.entitlements).to contain_exactly(:reader) }
+    it { expect(subject.allows?(:action)).to be false }
     it { expect(subject.allows?(:download)).to be false }
     it { expect(subject.allows?(:reader)).to be true }
-  end
-
-  describe 'License' do
-    subject { license }
-
-    let(:license) { create(:license) }
-
-    it { expect { subject }.not_to raise_exception }
-    it { expect(subject).to be_an_instance_of(Greensub::License) }
-    it { expect(subject.label).to eq '' }
-    it { expect(subject.entitlements).to be_empty }
-    it { expect(subject.allows?(:download)).to be false }
-    it { expect(subject.allows?(:reader)).to be false }
-
-    it { expect(subject.allows?(:action)).to be false }
     it { expect(subject.update?).to be true }
     it { expect(subject.destroy?).to be true }
-    it { expect(subject.credential_id).to eq Greensub::License.first.id }
-    it { expect(subject.credential_type).to be :License }
-    it { expect(subject.to_credential).to be_an_instance_of(Greensub::LicenseCredential) }
-    it { expect(subject.licensee?).to be false }
-    it { expect(subject.licensee).to be nil }
-    it { expect(subject.individual?).to be false }
-    it { expect(subject.individual).to be nil }
-    it { expect(subject.institution?).to be false }
-    it { expect(subject.institution).to be nil }
-    it { expect(subject.product?).to be false }
-    it { expect(subject.product).to be nil }
-    it { expect(subject.destroy).to be license }
-
-    it 'updates' do
-      id = license.id
-      expect(license).to be_an_instance_of(Greensub::License)
-      expect(license.type).to eq "Greensub::License"
-      license.type = "Greensub::ReadLicense"
-      license.save
-      license = Greensub::License.find(id)
-      expect(license).to be_an_instance_of(Greensub::ReadLicense)
-      expect(license.type).to eq "Greensub::ReadLicense"
-      license.type = "Greensub::FullLicense"
-      license.save
-      license = Greensub::License.find(id)
-      expect(license).to be_an_instance_of(Greensub::FullLicense)
-      expect(license.type).to eq "Greensub::FullLicense"
-    end
-  end
-
-  describe 'Individual License Grant' do
-    subject { license }
-
-    let(:individual) { create(:individual) }
-    let(:license) { create(:full_license) }
-    let(:product) { create(:product) }
-
-    before do
-      clear_grants_table
-      Authority.grant!(individual, license, product)
-    end
-
-    it { expect(subject.allows?(:action)).to be false }
-    it { expect(subject.update?).to be true }
-    it { expect(subject.destroy?).to be false }
     it { expect(subject.credential_id).to eq license.id }
     it { expect(subject.credential_type).to be :License }
     it { expect(subject.to_credential).to be_an_instance_of(Greensub::LicenseCredential) }
-    it { expect(subject.licensee?).to be true }
-    it { expect(subject.licensee).to eq individual }
-    it { expect(subject.individual?).to be true }
-    it { expect(subject.individual).to eq individual }
-    it { expect(subject.institution?).to be false }
-    it { expect(subject.institution).to be nil }
-    it { expect(subject.product?).to be true }
-    it { expect(subject.product).to eq product }
-
-    it 'destroy fails' do
-      expect(subject.destroy).to be false
-      expect(subject.errors.count).to eq 1
-      expect(subject.errors.first[0]).to eq :base
-      expect(subject.errors.first[1]).to eq "license has associated grant!"
-    end
-  end
-
-  describe 'Institution License Grant' do
-    subject { license }
-
-    let(:institution) { create(:institution) }
-    let(:license) { create(:full_license) }
-    let(:product) { create(:product) }
-
-    before do
-      clear_grants_table
-      Authority.grant!(institution, license, product)
-    end
-
-    it { expect(subject.allows?(:action)).to be false }
-    it { expect(subject.update?).to be true }
-    it { expect(subject.destroy?).to be false }
-    it { expect(subject.credential_id).to eq license.id }
-    it { expect(subject.credential_type).to be :License }
-    it { expect(subject.to_credential).to be_an_instance_of(Greensub::LicenseCredential) }
-    it { expect(subject.licensee?).to be true }
     it { expect(subject.licensee).to eq institution }
-    it { expect(subject.individual?).to be false }
-    it { expect(subject.individual).to be nil }
-    it { expect(subject.institution?).to be true }
-    it { expect(subject.institution).to eq institution }
-    it { expect(subject.product?).to be true }
     it { expect(subject.product).to eq product }
 
-    it 'destroy fails' do
-      expect(subject.destroy).to be false
-      expect(subject.errors.count).to eq 1
-      expect(subject.errors.first[0]).to eq :base
-      expect(subject.errors.first[1]).to eq "license has associated grant!"
+    it 'update type' do
+      subject.type = 'Greensub::FullLicense'
+      expect { subject.save! }.not_to raise_exception
+    end
+
+    it 'update licensee' do
+      subject.licensee = create(:institution)
+      expect { subject.save! }.not_to raise_exception(ActiveRecord::RecordInvalid, 'Validation failed: Licensee can not be changed!')
+    end
+
+    it 'update product' do
+      subject.product = create(:product)
+      expect { subject.save! }.not_to raise_exception(ActiveRecord::RecordInvalid, 'Validation failed: Product can not be changed!')
+    end
+
+    it 'destroy' do
+      expect(subject.destroy).to be subject
+      expect(subject.errors.count).to eq 0
+      expect(Greensub::License.count).to eq 0
+    end
+
+    context 'with grant' do
+      before do
+        clear_grants_table
+        Authority.grant!(institution, license, product)
+      end
+
+      it { expect(subject.update?).to be false }
+      it { expect(subject.destroy?).to be false }
+
+      it 'update type' do
+        subject.type = 'Greensub::FullLicense'
+        expect { subject.save! }.not_to raise_exception
+      end
+
+      it 'destroy fails' do
+        expect(subject.destroy).to be false
+        expect(subject.errors.count).to eq 1
+        expect(subject.errors.first[0]).to eq :base
+        expect(subject.errors.first[1]).to eq "license has associated grant!"
+      end
     end
   end
 end

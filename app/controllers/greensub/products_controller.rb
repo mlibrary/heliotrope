@@ -5,15 +5,18 @@ module Greensub
     before_action :set_product, only: %i[show edit update destroy add remove purchase]
 
     def index
+      # if params[:institution_id].present?
+      #   @institution = Institution.find(params[:institution_id])
+      #   @products = @institution.products.filter_by(filtering_params(params)).order(name: :asc).page(params[:page])
       if params[:component_id].present?
         @component = Component.find(params[:component_id])
         @products = @component.products.filter_by(filtering_params(params)).order(name: :asc).page(params[:page])
-        # elsif params[:individual_id].present?
-        #   @individual = Individual.find(params[:individual_id])
-        #   @products = @individual.products
-        # elsif params[:institution_id].present?
-        #   @institution = Institution.find(params[:institution_id])
-        #   @products = @institution.products
+      elsif params[:individual_id].present?
+        @individual = Individual.find(params[:individual_id])
+        @products = @individual.products.filter_by(filtering_params(params)).order(name: :asc).page(params[:page])
+      elsif params[:institution_id].present?
+        @institution = Institution.find(params[:institution_id])
+        @products = @institution.products.filter_by(filtering_params(params)).order(name: :asc).page(params[:page])
       else
         @products = Product.filter_by(filtering_params(params)).order(name: :asc).page(params[:page])
       end

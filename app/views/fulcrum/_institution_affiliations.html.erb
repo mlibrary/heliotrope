@@ -1,4 +1,4 @@
-<% institution_affiliations = Greensub::InstitutionAffiliation.filter_by(institution_id_like: params[:institution_id_like], dlps_institution_id_like: params[:dlps_institution_id_like], affiliation_like: params[:affiliation_like]).order(institution_id: :asc).page(params[:page]) %>
+<% institution_affiliations = Greensub::InstitutionAffiliation.filter_by(institution_id_like: params[:institution_id_like], dlps_institution_id_like: params[:dlps_institution_id_like], affiliation_like: params[:affiliation_like]).order(dlps_institution_id: :asc).page(params[:page]) %>
 <h1>Institution Affiliations</h1>
 <form name="filter" method="get" action="<%= fulcrum_partials_path(:institution_affiliations) %>">
   <table class="table table-striped" summary="Institution Affiliation List">
@@ -15,18 +15,18 @@
     <tr>
       <% size = 12 %>
       <td><button name="submit" type="submit" value="filter">Filter</button></td>
-      <td><%= select(nil, "institution_id_like", Greensub::Institution.all.collect {|institution| [institution.name, institution.id]}, { include_blank: true, selected: params[:institution_id_like] }) %></td>
+      <td><%= select(nil, "institution_id_like", Greensub::Institution.all.collect { |institution| [institution.name, institution.id] }, include_blank: true, selected: params[:institution_id_like]) %></td>
       <td><input type="text" name="dlps_institution_id_like" value="<%= params[:dlps_institution_id_like] %>" size="<%= size %>" aria-label="dlps_institution_id_like"></td>
-      <td><%= select(nil, "affiliation_like", Greensub::InstitutionAffiliation.affiliations.collect {|affiliation| [affiliation, affiliation]}, { include_blank: true, selected: params[:affiliation_like] }) %></td>
+      <td><%= select(nil, "affiliation_like", Greensub::InstitutionAffiliation.affiliations.collect { |affiliation| [affiliation, affiliation] }, include_blank: true, selected: params[:affiliation_like]) %></td>
     </tr>
     <% institution_affiliations.each do |institution_affiliation| %>
       <tr>
         <td>
-          <%= link_to(greensub_institution_affiliation_path(institution_affiliation)) do %>
-            <span class="glyphicon glyphicon-sunglasses" aria-hidden="true"></span> Show
+          <%= link_to(greensub_institution_affiliation_path(institution_affiliation), method: :delete, class: "btn btn-default", data: { confirm: 'Are you sure?' }) do %>
+            <span class="glyphicon glyphicon-minus" aria-hidden="true"></span> Destroy
           <% end %>
         </td>
-        <td><%= link_to institution_affiliation.institution.name, greensub_institution_path(institution_affiliation.institution)  %></td>
+        <td><%= link_to institution_affiliation.institution.name, greensub_institution_inst_affiliations_path(institution_affiliation.institution)  %></td>
         <td><%= institution_affiliation.dlps_institution_id %></td>
         <td><%= institution_affiliation.affiliation %></td>
       </tr>

@@ -332,7 +332,7 @@ RSpec.describe "Individuals", type: :request do
         delete api_individual_path(individual), headers: headers
         expect(response.content_type).to eq("application/json")
         expect(response).to have_http_status(:accepted)
-        expect(response_body[:base.to_s]).to include("individual has associated grant!")
+        expect(response_body[:base.to_s]).to include("Cannot delete record because dependent licenses exist")
         expect(Greensub::Individual.count).to eq(1)
       end
     end
@@ -435,14 +435,6 @@ RSpec.describe "Individuals", type: :request do
           expect(response).to have_http_status(:ok)
           expect(response_body).to eq({ "license"=>"read" })
         end
-
-        it 'exisiting individual with none/empty license ok' do
-          individual.update_product_license(product, license_type: "Greensub::License")
-          get api_product_individual_license_path(product, individual), headers: headers
-          expect(response.content_type).to eq("application/json")
-          expect(response).to have_http_status(:ok)
-          expect(response_body).to eq({ "license"=>"none" })
-        end
       end
     end
 
@@ -489,19 +481,19 @@ RSpec.describe "Individuals", type: :request do
           expect(individual.products.include?(product)).to be true
         end
 
-        it 'existing individual setting a none/empty license ok' do
-          post api_product_individual_license_path(product, individual), headers: headers, params: { license: 'none' }.to_json
+        it 'existing individual setting a empty license not found' do
+          post api_product_individual_license_path(product, individual), headers: headers, params: { license: '' }.to_json
           expect(response.content_type).to eq("application/json")
-          expect(response).to have_http_status(:ok)
-          expect(response_body).to eq({ "license"=>"none" })
-          expect(individual.products.include?(product)).to be true
+          expect(response).to have_http_status(:not_found)
+          expect(response_body).to eq({ "license"=>"undefined" })
+          expect(individual.products.include?(product)).to be false
         end
 
-        it 'existing individual setting a bad license unprocessable_entity' do
-          post api_product_individual_license_path(product, individual), headers: headers, params: { license: 'bad' }.to_json
+        it 'existing individual setting a none license unprocessable entity' do
+          post api_product_individual_license_path(product, individual), headers: headers, params: { license: 'none' }.to_json
           expect(response.content_type).to eq("application/json")
           expect(response).to have_http_status(:unprocessable_entity)
-          expect(response_body[:exception.to_s]).to include("no license type found for: bad")
+          expect(response_body[:exception.to_s]).to include("no license type found for: none")
           expect(individual.products.include?(product)).to be false
         end
       end
