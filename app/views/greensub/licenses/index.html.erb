@@ -76,7 +76,7 @@
       </div>
     </div>
     <div class="col-md-2">
-      <div class="col-md-6"><%= link_to 'Show', greensub_license_path(license) %></div>
+      <div class="col-md-6"><%= link_to 'Edit', greensub_license_path(license) %></div>
       <div class="col-md-6"><%= link_to_if license.destroy?, 'Destroy', greensub_license_path(license), method: :delete, data: { confirm: 'Are you sure?' } %></div>
     </div>
     <div class="col-md-12"><hr/></div>

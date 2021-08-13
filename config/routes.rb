@@ -36,6 +36,7 @@ Rails.application.routes.draw do
       get 'monographs/:id/manifest', controller: :monographs, action: :manifest, as: :monograph_manifest
       get 'product', controller: :products, action: :find, as: :find_product
       resources :products, only: %i[index show create update destroy] do
+        resources :licenses, only: %i[index]
         resources :components, only: %i[index show update destroy]
         resources :individuals, only: %i[index show update destroy]
         match 'individuals/:id/license', controller: :individuals, action: :license, as: :individual_license, via: %i[get post]
@@ -48,12 +49,15 @@ Rails.application.routes.draw do
       end
       get 'individual', controller: :individuals, action: :find, as: :find_individual
       resources :individuals, only: %i[index show create update destroy] do
+        resources :licenses, only: %i[index]
         resources :products, only: %i[index]
       end
       get 'institution', controller: :institutions, action: :find, as: :find_institution
       resources :institutions, only: %i[index show create update destroy] do
+        resources :licenses, only: %i[index]
         resources :products, only: %i[index]
       end
+      resources :licenses, only: %i[index show create update destroy]
       resources 'noids', only: %i[index]
     end
   end

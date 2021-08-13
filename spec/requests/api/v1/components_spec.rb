@@ -444,7 +444,7 @@ RSpec.describe "Components", type: :request do
         delete api_component_path(component), headers: headers
         expect(response.content_type).to eq("application/json")
         expect(response).to have_http_status(:accepted)
-        expect(response_body[:base.to_s]).to include("Cannot delete record because dependent products exist")
+        expect(response_body[:base.to_s]).to include("Cannot delete record because dependent components products exist")
         expect(Greensub::Component.count).to eq(1)
       end
     end

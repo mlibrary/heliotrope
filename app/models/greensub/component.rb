@@ -10,7 +10,7 @@ module Greensub
 
     scope :for_noid, ->(noid) { where(noid: noid) }
 
-    has_many :components_products # rubocop:disable Rails/HasManyOrHasOneDependent
+    has_many :components_products, dependent: :restrict_with_error
     has_many :products, through: :components_products, dependent: :restrict_with_error,
                                  after_remove: :reindex_component_product,
                                  after_add: :reindex_component_product
@@ -19,12 +19,8 @@ module Greensub
     validates :noid, presence: true, allow_blank: false
 
     before_destroy do
-      if products.present?
-        errors.add(:base, "component has associated product!")
-        throw(:abort)
-      end
       if grants?
-        errors.add(:base, "component has associated grant!")
+        errors.add(:base, "Cannot delete record because dependent grant exist")
         throw(:abort)
       end
     end

@@ -7,50 +7,6 @@ RSpec.describe Greensub::License, type: :model do
   let(:institution) { create(:institution) }
   let(:product) { create(:product) }
 
-  context 'instance' do
-    subject { described_class.new(id: id, type: type) }
-
-    let(:id) { 1 }
-    let(:type) { nil }
-
-    it { expect { subject }.not_to raise_exception }
-    it { expect { subject.save! }.not_to raise_exception(ActiveRecord::RecordInvalid, "Validation failed: Product must exist, Type can't be blank, Type is not included in the list") }
-
-    context 'Blank Type' do
-      let(:type) { '' }
-
-      it { expect { subject }.not_to raise_exception }
-      it { expect { subject.save! }.not_to raise_exception(ActiveRecord::RecordInvalid, "Validation failed: Product must exist, Type can't be blank, Type is not included in the list") }
-    end
-
-    context 'Unknown Subclass Type' do
-      let(:type) { 'type' }
-
-      it { expect { subject }.to raise_exception(ActiveRecord::SubclassNotFound) }
-    end
-
-    context 'License' do
-      let(:type) { 'Greensub::License' }
-
-      it { expect { subject }.not_to raise_exception }
-      it { expect { subject.save! }.not_to raise_exception(ActiveRecord::RecordInvalid, "Validation failed: Product must exist, Type is not included in the list") }
-    end
-
-    context 'Read License' do
-      let(:type) { 'Greensub::ReadLicense' }
-
-      it { expect { subject }.not_to raise_exception }
-      it { expect { subject.save! }.not_to raise_exception(ActiveRecord::RecordInvalid, "Validation failed: Product must exist, Licensee must exist") }
-    end
-
-    context 'Full License' do
-      let(:type) { 'Greensub::FullLicense' }
-
-      it { expect { subject }.not_to raise_exception }
-      it { expect { subject.save! }.not_to raise_exception(ActiveRecord::RecordInvalid, "Validation failed: Product must exist, Licensee must exist") }
-    end
-  end
-
   describe 'Individual Full License' do
     subject { license }
 
@@ -110,7 +66,7 @@ RSpec.describe Greensub::License, type: :model do
         expect(subject.destroy).to be false
         expect(subject.errors.count).to eq 1
         expect(subject.errors.first[0]).to eq :base
-        expect(subject.errors.first[1]).to eq "license has associated grant!"
+        expect(subject.errors.first[1]).to eq "Cannot delete record because dependent grant exist"
       end
     end
   end
@@ -174,7 +130,7 @@ RSpec.describe Greensub::License, type: :model do
         expect(subject.destroy).to be false
         expect(subject.errors.count).to eq 1
         expect(subject.errors.first[0]).to eq :base
-        expect(subject.errors.first[1]).to eq "license has associated grant!"
+        expect(subject.errors.first[1]).to eq "Cannot delete record because dependent grant exist"
       end
     end
   end
