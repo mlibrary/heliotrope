@@ -13,7 +13,7 @@ class HeliotropeAuthority < Checkpoint::Authority
       id: what(actor, target)
         .select { |token| token.type.downcase == 'license' }
         .map(&:id)
-    ).to_a
+    )
   end
 
   # This might be garbage -- not sure if we want generic marshaling
