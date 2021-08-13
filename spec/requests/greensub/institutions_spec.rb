@@ -133,7 +133,7 @@ RSpec.describe "Greensub::Institutions", type: :request do
   describe '#create' do
     subject { post greensub_institutions_path, params: { greensub_institution: institution_params } }
 
-    let(:institution_params) { { identifier: 'identifier', name: 'name' } }
+    let(:institution_params) { { identifier: '1', name: 'name' } }
 
     it { expect { subject }.to raise_error(ActionController::RoutingError) }
 
