@@ -32,6 +32,30 @@ RSpec.describe Greensub::Institution, type: :model do
     end
   end
 
+  context 'validation' do
+    subject { institution }
+
+    let(:institution) { described_class.create!(params) }
+    let(:params) { { identifier: identifier,
+                     name: name,
+                     entity_id: entity_id,
+                     site: site,
+                     login: login,
+                     catalog_url: catalog_url,
+                     link_resolver_url: link_resolver_url,
+                     logo_path: logo_path } }
+    let(:identifier) { nil }
+    let(:name) { nil }
+    let(:entity_id) { nil }
+    let(:site) { nil }
+    let(:login) { nil }
+    let(:catalog_url) { nil }
+    let(:link_resolver_url) { nil }
+    let(:logo_path) { nil }
+
+    it { expect { subject }.to raise_error(ActiveRecord::RecordInvalid, "Validation failed: Identifier can't be blank, Identifier is not a number, Name can't be blank") }
+  end
+
   context 'before validation' do
     it 'on update' do
       institution = create(:institution)
