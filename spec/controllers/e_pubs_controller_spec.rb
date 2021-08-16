@@ -352,7 +352,7 @@ RSpec.describe EPubsController, type: :controller do
         let(:epub) { Sighrax.from_noid(file_set.id) }
         let(:component) { Greensub::Component.create!(identifier: parent.resource_token, name: parent.title, noid: parent.noid) }
         let(:keycard) { { dlpsInstitutionId: dlpsInstitutionId } }
-        let(:dlpsInstitutionId) { 'institute' }
+        let(:dlpsInstitutionId) { '0' }
 
         before do
           clear_grants_table

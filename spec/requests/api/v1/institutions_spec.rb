@@ -142,7 +142,7 @@ RSpec.describe "Institutions", type: :request do
           post api_institutions_path, params: params, headers: headers
           expect(response.content_type).to eq("application/json")
           expect(response).to have_http_status(:unprocessable_entity)
-          expect(response_body[:identifier.to_s]).to eq(["can't be blank"])
+          expect(response_body[:identifier.to_s]).to eq(["can't be blank", "is not a number"])
           expect(response_body[:name.to_s]).to eq(["can't be blank"])
           expect(response_body[:entity_id.to_s]).to be nil
           expect(Greensub::Institution.count).to eq(0)
@@ -150,7 +150,7 @@ RSpec.describe "Institutions", type: :request do
       end
 
       context 'non existing' do
-        let(:identifier) { 'identifier' }
+        let(:identifier) { '0' }
         let(:name) { 'name' }
         let(:entity_id) { 'entity_id' }
 
