@@ -55,6 +55,8 @@ Services.register(:request_attributes) { Keycard::Request::AttributesFactory.new
 
 Services.register(:dlps_institution) { DlpsInstitution.new }
 
+Services.register(:dlps_institution_affiliation) { DlpsInstitutionAffiliation.new }
+
 Services.register(:score_press) { 'carillon' }
 
 Services.register(:handle_service) do

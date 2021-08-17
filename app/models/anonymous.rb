@@ -19,6 +19,10 @@ class Anonymous
     Services.dlps_institution.find(request_attributes)
   end
 
+  def affiliations(institution)
+    Services.dlps_institution_affiliation.find(request_attributes).select { |ia| ia.institution_id == institution.id }
+  end
+
   def agent_type
     :Anonymous
   end
