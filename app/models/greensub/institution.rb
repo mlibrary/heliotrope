@@ -19,6 +19,7 @@ module Greensub
 
     has_many :licenses, as: :licensee, dependent: :restrict_with_error
     has_many :institution_affiliations, dependent: :restrict_with_error
+    alias_attribute :affiliations, :institution_affiliations
 
     before_validation(on: :update) do
       if identifier_changed?

@@ -22,6 +22,7 @@ module Greensub
     validates :type, uniqueness: { scope: [:licensee_type, :licensee_id, :product_id] }
 
     has_many :license_affiliations, dependent: :restrict_with_error
+    alias_attribute :affiliations, :license_affiliations
 
     # temporary! TODO: HELIO-3994
     #

@@ -269,34 +269,6 @@ RSpec.describe User do
     end
   end
 
-  describe '#institutions' do
-    subject { user.institutions }
-
-    let(:user) { build(:user) }
-
-    it { is_expected.to eq [] }
-
-    context 'dlps institution' do
-      let(:dlps_institution) { double('dlps_institution') }
-
-      before do
-        allow(Services).to receive(:dlps_institution).and_return dlps_institution
-        allow(dlps_institution).to receive(:find).and_return ['institution']
-      end
-
-      it { is_expected.to contain_exactly('institution') }
-
-      context 'sudo actor' do
-        before do
-          allow(Incognito).to receive(:sudo_actor?).with(user).and_return true
-          allow(Incognito).to receive(:sudo_actor_institution).with(user).and_return 'sudo_institution'
-        end
-
-        it { is_expected.to contain_exactly('sudo_institution') }
-      end
-    end
-  end
-
   describe '#individual' do
     subject { user.individual }
 
@@ -316,6 +288,67 @@ RSpec.describe User do
         end
 
         it { is_expected.to eq 'sudo_individual' }
+      end
+    end
+  end
+
+  describe '#institutions' do
+    subject { user.institutions }
+
+    let(:user) { build(:user) }
+
+    it { is_expected.to eq [] }
+
+    context 'dlps institution' do
+      let(:dlps_institution) { double('dlps_institution') }
+
+      before { allow(Services.dlps_institution).to receive(:find).and_return ['institution'] }
+
+      it { is_expected.to contain_exactly('institution') }
+
+      context 'sudo actor' do
+        before do
+          allow(Incognito).to receive(:sudo_actor?).with(user).and_return true
+          allow(Incognito).to receive(:sudo_actor_institution).with(user).and_return 'sudo_institution'
+        end
+
+        it { is_expected.to contain_exactly('sudo_institution') }
+      end
+    end
+  end
+
+  describe '#affiliations' do
+    subject { user.affiliations(institution) }
+
+    let(:user) { build(:user) }
+    let(:institution) { build(:institution, id: 100) }
+    let(:member_affiliation) { build(:institution_affiliation, institution: institution, dlps_institution_id: 101, affiliation: 'member') }
+    let(:alum_affiliation) { build(:institution_affiliation, institution: institution, dlps_institution_id: 102, affiliation: 'alum') }
+    let(:walk_in_affiliation) { build(:institution_affiliation, institution: institution, dlps_institution_id: 103, affiliation: 'walk-in') }
+    let(:institutions) { [] }
+
+    before { allow(user).to receive(:institutions).and_return institutions }
+
+    it { is_expected.to eq [] }
+
+    context 'institution' do
+      let(:institutions) { [institution] }
+
+      it { is_expected.to eq [] }
+
+      context 'dlps institution affiliation' do
+        before { allow(Services.dlps_institution_affiliation).to receive(:find).and_return [member_affiliation] }
+
+        it { is_expected.to contain_exactly(member_affiliation) }
+
+        context 'when sudo actor' do
+          before do
+            allow(Incognito).to receive(:sudo_actor?).with(user).and_return true
+            allow(Incognito).to receive(:sudo_actor_institution_affiliation).with(user).and_return walk_in_affiliation
+          end
+
+          it { is_expected.to contain_exactly(walk_in_affiliation) }
+        end
       end
     end
   end
