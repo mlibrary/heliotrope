@@ -124,6 +124,8 @@ RSpec.describe EbookOperation do
   describe '#licensed_for?' do
     subject { policy.send(:licensed_for?, entitlement) }
 
+    before { allow(Incognito).to receive(:developer?).with(actor).and_return true }
+
     context "individual" do
       let(:entitlement) { :entitlement }
       let(:checkpoint) { double('checkpoint') }
@@ -151,14 +153,14 @@ RSpec.describe EbookOperation do
       let(:checkpoint) { double('checkpoint') }
       let(:license) { create(:full_license, licensee: institution, product: product) }
       let(:license_affiliation) { create(:license_affiliation, license: license, affiliation: 'member') }
-      let(:institution) { create(:institution) }
+      let(:institution) { create(:institution, identifier: institution_identifier) }
+      let(:institution_identifier) { Settings.world_institution_identifier + 1 }
       let(:institution_affiliation) { create(:institution_affiliation, institution: institution, affiliation: affiliation) }
       let(:affiliation) { 'member' }
       let(:product) { create(:product) }
 
       before do
-        license_affiliation
-        institution_affiliation
+        license
         allow(Services).to receive(:checkpoint).and_return checkpoint
         allow(checkpoint).to receive(:licenses_for).with(actor, ebook).and_return Greensub::License.all
         allow(actor).to receive(:affiliations).with(institution).and_return([institution_affiliation])
@@ -169,15 +171,24 @@ RSpec.describe EbookOperation do
       context 'when license entitlement' do
         before { allow_any_instance_of(Greensub::License).to receive(:allows?).with(entitlement).and_return true }
 
-        it { is_expected.to be true }
+        it { is_expected.to be false }
 
-        context 'when affiliation mismatch' do
-          let(:affiliation) { 'walk-in' }
+        context 'when world institution license' do
+          let(:institution_identifier) { Settings.world_institution_identifier }
+
+          it { is_expected.to be true }
+        end
+
+        context 'when license affiliation' do
+          before do
+            license_affiliation
+            institution_affiliation
+          end
 
           it { is_expected.to be true }
 
-          context 'when developer' do
-            before { allow(Incognito).to receive(:developer?).with(actor).and_return true }
+          context 'when affiliation mismatch' do
+            let(:affiliation) { 'walk-in' }
 
             it { is_expected.to be false }
           end

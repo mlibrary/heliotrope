@@ -30,6 +30,12 @@ class EbookOperation < ApplicationPolicy
         return true if licenses
                         .where(licensee_type: "Greensub::Institution")
                         .any? { |license| license.allows?(entitlement) && (license.affiliations.map(&:affiliation) & actor.affiliations(license.licensee).map(&:affiliation)).any? }
+
+        world_institution_ids = Greensub::Institution.where(identifier: Settings.world_institution_identifier).pluck(:id).to_a
+        return true if licenses
+                         .where(licensee_type: "Greensub::Institution", licensee_id: world_institution_ids)
+                         .any? { |license| license.allows?(entitlement) }
+
         false
       else
         authority
