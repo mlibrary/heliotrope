@@ -109,6 +109,17 @@ RSpec.describe EmbedCodeService do
         expect(doc.search("div[@class='image']").count).to eq(4)
       end
 
+      it "Does not insert embed codes for files referenced in the EPUB using img src basename matching if `data-fulcrum-embed='false'` is present" do
+        expect(File.exist?(File.join(root_path, 'EPUB', 'xhtml', 'embeds_using_img_src_basenames_prevented.xhtml'))).to be true
+        doc = Nokogiri::XML(File.read(File.join(root_path, 'EPUB', 'xhtml', 'embeds_using_img_src_basenames_prevented.xhtml')))
+        expect(doc.search(image_embed_attributes)).to be_empty
+        expect(doc.search(audio_embed_attributes)).to be_empty
+        expect(doc.search(video_embed_attributes)).to be_empty
+        expect(doc.search(interactive_map_embed_attributes)).to be_empty
+        # check parent `p.image` tags are *not* changed to <div> tags
+        expect(doc.search("p[@class='image']").count).to eq(4)
+      end
+
       context "Monograph has more than one filename matching the EPUB file references" do
         let(:image_same_filename) { create(:file_set, label: 'image.jpg') }
         let(:audio_same_filename) { create(:file_set, label: 'audio.mp3') }
