@@ -31,6 +31,7 @@
         <div>Institutions</div>
         <div>Licenses</div>
       </th>
+      <th>&nbsp;</th>
     </tr>
     <% products.each do |product| %>
       <tr>
@@ -49,6 +50,13 @@
           <div><%= link_to product.individuals.count, greensub_product_individuals_path(product) %></div>
           <div><%= link_to product.institutions.count, greensub_product_institutions_path(product) %></div>
           <div><%= link_to product.licenses.count, greensub_product_licenses_path(product) %></div>
+        </td>
+        <td>
+          <% if product.destroy? %>
+            <%= link_to(greensub_product_path(product), method: :delete, class: "btn btn-default", data: { confirm: 'Are you sure?' }) do %>
+              <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+            <% end %>
+          <% end %>
         </td>
       </tr>
     <% end %>

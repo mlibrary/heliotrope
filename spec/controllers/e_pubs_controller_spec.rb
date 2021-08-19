@@ -352,7 +352,7 @@ RSpec.describe EPubsController, type: :controller do
         let(:epub) { Sighrax.from_noid(file_set.id) }
         let(:component) { Greensub::Component.create!(identifier: parent.resource_token, name: parent.title, noid: parent.noid) }
         let(:keycard) { { dlpsInstitutionId: dlpsInstitutionId } }
-        let(:dlpsInstitutionId) { '1' }
+        let(:dlpsInstitutionId) { '-1' }
 
         before do
           clear_grants_table
@@ -419,11 +419,29 @@ RSpec.describe EPubsController, type: :controller do
           product.components << component
           product.save!
           institution.update_product_license(product)
+          create(:institution_affiliation, institution_id: institution.id, affiliation: "member")
+          create(:license_affiliation, license_id: institution.product_license(product).id, affiliation: "member")
           get :show, params: { id: file_set.id }
           expect(assigns(:actor_product_ids))
           expect(assigns(:allow_read_product_ids))
           expect(response).to have_http_status(:success)
           expect(response).to render_template(:show)
+        end
+
+        it "Subscribed Greensub::Institution with the wrong affiliation" do
+          institution = create(:institution, identifier: dlpsInstitutionId)
+          product = Greensub::Product.create!(identifier: 'product', name: 'name', purchase: 'purchase')
+          product.components << component
+          product.save!
+          institution.update_product_license(product)
+          create(:institution_affiliation, institution_id: institution.id, affiliation: "alum")
+          create(:license_affiliation, license_id: institution.product_license(product).id, affiliation: "member")
+          allow(Incognito).to receive(:developer?).and_return true # TODO: remvove
+          get :show, params: { id: file_set.id }
+          expect(assigns(:actor_product_ids))
+          expect(assigns(:allow_read_product_ids))
+          expect(response).to have_http_status(:found)
+          expect(response).to redirect_to(epub_access_url)
         end
 
         it "Subscribed Individual" do

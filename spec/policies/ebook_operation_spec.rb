@@ -124,23 +124,76 @@ RSpec.describe EbookOperation do
   describe '#licensed_for?' do
     subject { policy.send(:licensed_for?, entitlement) }
 
-    let(:entitlement) { :entitlement }
-    let(:checkpoint) { double('checkpoint') }
-    let(:license) { create(:full_license, licensee: individual, product: product) }
-    let(:individual) { create(:individual) }
-    let(:product) { create(:product) }
+    before { allow(Incognito).to receive(:developer?).with(actor).and_return true }
 
-    before do
-      allow(Services).to receive(:checkpoint).and_return checkpoint
-      allow(checkpoint).to receive(:licenses_for).with(actor, ebook).and_return [license]
+    context "individual" do
+      let(:entitlement) { :entitlement }
+      let(:checkpoint) { double('checkpoint') }
+      let(:license) { create(:full_license, licensee: individual, product: product) }
+      let(:individual) { create(:individual) }
+      let(:product) { create(:product) }
+
+      before do
+        license
+        allow(Services).to receive(:checkpoint).and_return checkpoint
+        allow(checkpoint).to receive(:licenses_for).with(actor, ebook).and_return Greensub::License.all
+      end
+
+      it { is_expected.to be false }
+
+      context 'when license entitlement' do
+        before { allow_any_instance_of(Greensub::License).to receive(:allows?).with(entitlement).and_return true }
+
+        it { is_expected.to be true }
+      end
     end
 
-    it { is_expected.to be false }
+    context "institution" do
+      let(:entitlement) { :entitlement }
+      let(:checkpoint) { double('checkpoint') }
+      let(:license) { create(:full_license, licensee: institution, product: product) }
+      let(:license_affiliation) { create(:license_affiliation, license: license, affiliation: 'member') }
+      let(:institution) { create(:institution, identifier: institution_identifier) }
+      let(:institution_identifier) { Settings.world_institution_identifier + 1 }
+      let(:institution_affiliation) { create(:institution_affiliation, institution: institution, affiliation: affiliation) }
+      let(:affiliation) { 'member' }
+      let(:product) { create(:product) }
 
-    context 'when license entitlement' do
-      before { allow(license).to receive(:allows?).with(entitlement).and_return true }
+      before do
+        license
+        allow(Services).to receive(:checkpoint).and_return checkpoint
+        allow(checkpoint).to receive(:licenses_for).with(actor, ebook).and_return Greensub::License.all
+        allow(actor).to receive(:affiliations).with(institution).and_return([institution_affiliation])
+      end
 
-      it { is_expected.to be true }
+      it { is_expected.to be false }
+
+      context 'when license entitlement' do
+        before { allow_any_instance_of(Greensub::License).to receive(:allows?).with(entitlement).and_return true }
+
+        it { is_expected.to be false }
+
+        context 'when world institution license' do
+          let(:institution_identifier) { Settings.world_institution_identifier }
+
+          it { is_expected.to be true }
+        end
+
+        context 'when license affiliation' do
+          before do
+            license_affiliation
+            institution_affiliation
+          end
+
+          it { is_expected.to be true }
+
+          context 'when affiliation mismatch' do
+            let(:affiliation) { 'walk-in' }
+
+            it { is_expected.to be false }
+          end
+        end
+      end
     end
   end
 end

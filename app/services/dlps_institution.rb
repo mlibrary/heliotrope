@@ -10,12 +10,14 @@ class DlpsInstitution
     def ip_based_institutions(request_attributes)
       ids = request_attributes[:dlpsInstitutionId]
       return [] if ids.blank?
+
       Greensub::Institution.where(identifier: ids).to_a
     end
 
     def shib_institutions(request_attributes)
       entity_id = request_attributes[:identity_provider]
       return [] if entity_id.blank?
+
       Greensub::Institution.where(entity_id: entity_id).to_a
     end
 end

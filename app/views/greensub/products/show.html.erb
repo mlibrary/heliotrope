@@ -24,6 +24,8 @@
     <%= link_to_if @product.update?, 'Edit', edit_greensub_product_path(@product) %>
     <span> | </span>
     <%= link_to 'Back', greensub_products_path %>
+    <span> | </span>
+    <%= link_to_if @product.destroy?, 'Destroy', greensub_product_path(@product), method: :delete, data: { confirm: 'Are you sure?' } %>
   </div>
   <div class="col-md-12"><br/></div>
 </div>

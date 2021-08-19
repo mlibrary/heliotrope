@@ -29,6 +29,7 @@
         <div>Licenses</div>
         <div>Products</div>
       </th>
+      <th>&nbsp;</th>
     </tr>
     <% individuals.each do |individual| %>
       <tr>
@@ -44,6 +45,13 @@
         <td>
           <div><%= link_to individual.licenses.count, greensub_individual_licenses_path(individual) %></div>
           <div><%= link_to individual.products.count, greensub_individual_products_path(individual) %></div>
+        </td>
+        <td>
+          <% if individual.destroy? %>
+            <%= link_to(greensub_individual_path(individual), method: :delete, class: "btn btn-default", data: { confirm: 'Are you sure?' }) do %>
+              <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+            <% end %>
+          <% end %>
         </td>
       </tr>
     <% end %>

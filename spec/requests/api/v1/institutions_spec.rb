@@ -150,7 +150,7 @@ RSpec.describe "Institutions", type: :request do
       end
 
       context 'non existing' do
-        let(:identifier) { '1' }
+        let(:identifier) { '0' }
         let(:name) { 'name' }
         let(:entity_id) { 'entity_id' }
 

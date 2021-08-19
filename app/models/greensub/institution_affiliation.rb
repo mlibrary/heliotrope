@@ -8,9 +8,9 @@ module Greensub
 
     include Filterable
 
-    scope :institution_id_like, ->(like) { where("institution_id like ?", "%#{like}%") }
-    scope :dlps_institution_id_like, ->(like) { where("dlps_institution_id like ?", "%#{like}%") }
-    scope :affiliation_like, ->(like) { where("affiliation like ?", "%#{like}%") }
+    scope :institution_id_like, ->(like) { where("institution_id like ?", "#{like}") }
+    scope :dlps_institution_id_like, ->(like) { where("dlps_institution_id like ?", "#{like}%") }
+    scope :affiliation_like, ->(like) { where("affiliation like ?", "#{like}") }
 
     scope :for_dlps_institution_id, ->(dlps_institution_id) { where(dlps_institution_id: dlps_institution_id) }
 
