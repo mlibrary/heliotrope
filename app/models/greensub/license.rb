@@ -39,7 +39,7 @@ module Greensub
 
     before_destroy do
       if grants?
-        errors.add(:base, "license has associated grant!")
+        errors.add(:base, "Cannot delete record because dependent grant exist")
         throw(:abort)
       end
     end

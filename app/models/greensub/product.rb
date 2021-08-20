@@ -11,19 +11,17 @@ module Greensub
     scope :containing_monograph, ->(noid) { joins(:components).merge(Component.for_noid(noid)) }
 
     has_many :licenses, dependent: :restrict_with_error
-    has_many :components_products # rubocop:disable Rails/HasManyOrHasOneDependent
+    has_many :components_products, dependent: :restrict_with_error
     has_many :components, through: :components_products, dependent: :restrict_with_error,
                                    after_remove: :reindex_component_product,
                                    after_add: :reindex_component_product
 
-
     validates :identifier, presence: true, allow_blank: false, uniqueness: true
     validates :name, presence: true, allow_blank: false
-    # validates :purchase, presence: true, allow_blank: false
 
     before_destroy do
       if grants?
-        errors.add(:base, "product has associated grant!")
+        errors.add(:base, "Cannot delete record because dependent grant exist")
         throw(:abort)
       end
     end
@@ -33,7 +31,7 @@ module Greensub
     end
 
     def destroy?
-      components.blank? && !grants?
+      components.blank? && !licensees? && !grants?
     end
 
     def not_components
@@ -70,10 +68,6 @@ module Greensub
 
     def licenses?
       licenses.present?
-    end
-
-    def licenses
-      License.where(id: grants.where(credential_type: 'License').map(&:credential_id))
     end
 
     def grants?

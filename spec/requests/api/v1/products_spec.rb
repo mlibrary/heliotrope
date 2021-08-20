@@ -235,6 +235,7 @@ RSpec.describe "Products", type: :request do
           expect(response_body[:identifier.to_s]).to eq(["can't be blank"])
           expect(response_body[:name.to_s]).to eq(["can't be blank"])
           expect(response_body[:purchase.to_s]).to be nil
+          expect(response_body['exception']).to eq(["Validation failed: Identifier can't be blank, Name can't be blank"])
           expect(Greensub::Product.all.count).to eq(0)
         end
       end
@@ -340,7 +341,7 @@ RSpec.describe "Products", type: :request do
         delete api_product_path(product), headers: headers
         expect(response.content_type).to eq("application/json")
         expect(response).to have_http_status(:accepted)
-        expect(response_body[:base.to_s]).to include("Cannot delete record because dependent components exist")
+        expect(response_body[:base.to_s]).to include("Cannot delete record because dependent components products exist")
         expect(Greensub::Product.count).to eq(1)
       end
     end

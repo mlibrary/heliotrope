@@ -72,10 +72,32 @@ RSpec.describe "Greensub::Licenses", type: :request do
     end
   end
 
-  xdescribe '#new' do
+  describe '#new' do
     subject { get new_greensub_license_path }
 
-    it { expect { subject }.to raise_error(NameError) }
+    it { expect { subject }.to raise_error(ActionController::RoutingError) }
+
+    context 'authenticated' do
+      before { sign_in(current_user) }
+
+      it { expect { subject }.to raise_error(ActionController::RoutingError) }
+
+      context 'authorized' do
+        before { allow_any_instance_of(ApplicationController).to receive(:authorize!) }
+
+        it { expect { subject }.to raise_error(ActionController::RoutingError) }
+
+        context 'platform administrator' do
+          let(:current_user) { create(:platform_admin) }
+
+          it do
+            expect { subject }.not_to raise_error
+            expect(response).to render_template(:new)
+            expect(response).to have_http_status(:ok)
+          end
+        end
+      end
+    end
   end
 
   describe '#edit' do
