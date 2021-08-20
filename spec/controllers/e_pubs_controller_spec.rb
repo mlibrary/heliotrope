@@ -420,7 +420,7 @@ RSpec.describe EPubsController, type: :controller do
           product = Greensub::Product.create!(identifier: 'product', name: 'name', purchase: 'purchase')
           product.components << component
           product.save!
-          individual.update_product_license(product)
+          individual.create_product_license(product)
           sign_in(user)
           get :show, params: { id: file_set.id }
           expect(assigns(:actor_product_ids))
@@ -436,8 +436,7 @@ RSpec.describe EPubsController, type: :controller do
           product = Greensub::Product.create!(identifier: 'product', name: 'name', purchase: 'purchase')
           product.components << component
           product.save!
-          institution.update_product_license(product)
-          create(:license_affiliation, license_id: institution.product_license(product).id, affiliation: "member")
+          institution.create_product_license(product)
           get :show, params: { id: file_set.id }
           expect(assigns(:actor_product_ids))
           expect(assigns(:allow_read_product_ids))
@@ -452,8 +451,7 @@ RSpec.describe EPubsController, type: :controller do
           product = Greensub::Product.create!(identifier: 'product', name: 'name', purchase: 'purchase')
           product.components << component
           product.save!
-          institution.update_product_license(product)
-          create(:license_affiliation, license_id: institution.product_license(product).id, affiliation: "alum")
+          institution.create_product_license(product, affiliation: 'alum')
           get :show, params: { id: file_set.id }
           expect(assigns(:actor_product_ids))
           expect(assigns(:allow_read_product_ids))

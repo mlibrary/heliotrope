@@ -11,6 +11,7 @@ platform_administrator_constraint = lambda do |request|
 end
 
 COUNTER_REPORT_ID_CONSTRAINT = { id: /dr|dr_d1|dr_d2|ir|ir_a1|ir_m1|pr|pr_p1|tr|tr_b1|tr_b2|tr_b3|tr_j1|tr_j2|tr_j3|tr_j4|counter4_br2/i }.freeze
+AFFILIATION_CONSTRAINT = { affiliation: /member|alum|walk-in/i }.freeze
 
 Rails.application.routes.draw do
   namespace :api, constraints: ->(req) { req.format == :json } do
@@ -38,10 +39,10 @@ Rails.application.routes.draw do
       resources :products, only: %i[index show create update destroy] do
         resources :licenses, only: %i[index]
         resources :components, only: %i[index show update destroy]
-        resources :individuals, only: %i[index show update destroy]
-        match 'individuals/:id/license', controller: :individuals, action: :license, as: :individual_license, via: %i[get post]
-        resources :institutions, only: %i[index show update destroy]
-        match 'institutions/:id/license', controller: :institutions, action: :license, as: :institution_license, via: %i[get post]
+        resources :individuals, only: %i[index]
+        match 'individuals/:id/license', controller: :individuals, action: :license, as: :individual_license, via: %i[get post delete]
+        resources :institutions, only: %i[index]
+        match 'institutions/:id/license(/:affiliation)', controller: :institutions, action: :license, as: :institution_license, via: %i[get post delete], constraints: AFFILIATION_CONSTRAINT
       end
       get 'component', controller: :components, action: :find, as: :find_component
       resources :components, only: %i[index show create update destroy] do
@@ -54,6 +55,8 @@ Rails.application.routes.draw do
       end
       get 'institution', controller: :institutions, action: :find, as: :find_institution
       resources :institutions, only: %i[index show create update destroy] do
+        get 'affiliation', controller: :institution_affiliations, action: :find, as: :find_affiliation
+        resources :institution_affiliations, only: %i[index show create update destroy], path: 'affiliations', as: :affiliations
         resources :licenses, only: %i[index]
         resources :products, only: %i[index]
       end

@@ -60,12 +60,6 @@ module API
       #     (See ./app/views/api/v1/individuals/_individual.json.jbuilder)
       #
       #     {include:file:app/views/api/v1/individuals/_individual.json.jbuilder}
-      # @overload show
-      #   Get product individual
-      #   @example
-      #     get /api/products/:product_id/individuals/:id
-      #   @param [Hash] params { product_id: Number, id: Number }
-      #   @return [ActionDispatch::Response]
       def show
         if params[:product_id].present? # rubocop:disable Style/GuardClause
           set_product
@@ -100,18 +94,7 @@ module API
       #     put /api/individuals/:id
       #   @param [Hash] params { id: Number, individual: { name: String, email: String } }
       #   @return [ActionDispatch::Response] {Greensub::Individual} (see {show})
-      # @overload update
-      #   Grant individual read access to product
-      #   @example
-      #     put /api/products/:product_id/individuals/:id
-      #   @param [Hash] params { product_id: Number, id: Number }
-      #   @return [ActionDispatch::Response]
       def update
-        if params[:product_id].present?
-          set_product
-          @individual.update_product_license(@product)
-          return head :ok
-        end
         return render json: @individual.errors, status: :unprocessable_entity unless @individual.update(individual_params)
         render :show, status: :ok, location: @individual
       end
@@ -122,65 +105,51 @@ module API
       #     delete /api/individuals/:id
       #   @param [Hash] params { id: Number }
       #   @return [ActionDispatch::Response]
-      # @overload destroy
-      #   Revoke individual read access to product
-      #   @example
-      #     put /api/products/:product_id/individuals/:id
-      #   @param [Hash] params { product_id: Number, id: Number }
-      #   @return [ActionDispatch::Response]
       def destroy
-        if params[:product_id].present?
-          set_product
-          @individual.delete_product_license(@product)
-        else
-          return render json: @individual.errors, status: :accepted unless @individual.destroy
-        end
+        return render json: @individual.errors, status: :accepted unless @individual.destroy
         head :ok
       end
 
       # @overload license
-      #   Get product license
+      #   Get Product License
       #   @example
       #     get /api/products/:product_id/individuals/:id/license
       #   @param [Hash] params { product_id: Number, id: Number }
-      #   @return [ActionDispatch::Response] {license}
+      #   @return [ActionDispatch::Response] { String }
       # @overload license
-      #   Set product license
+      #   Create Product License
       #   @example
       #     post /api/products/:product_id/individuals/:id/license
-      #   @param [Hash] params { product_id: Number, id: Number, license: String }
-      #   @return [ActionDispatch::Response] {license}
-      #
+      #   @param [Hash] params { product_id: Number, id: Number, license: { type: String } }
+      #   @return [ActionDispatch::Response] { String }
+      # @overload license
+      #   Delete Product License
+      #   @example
+      #     delete /api/products/:product_id/individuals/:id/license
+      #   @param [Hash] params { product_id: Number, id: Number }
+      #   @return [ActionDispatch::Response] { String }      #
       #     (See ./app/views/api/v1/individuals/license.json.jbuilder)
       #
       #     {include:file:app/views/api/v1/individuals/license.json.jbuilder}
-      def license
-        if params[:license].present?
-          return_license, status = set_license(params[:license])
-          render json: return_license, status: status
-        else
-          return render json: { "license" => "undefined" }, status: :not_found unless @individual.product_license?(@product)
-
-          label = @individual.product_license(@product).label.downcase
-          label = "none" if label.blank?
-          render json: { "license" => label }, status: :ok
+      def license # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
+        if request.get?
+          pl = @individual.find_product_license(@product)
+          return render partial: '/api/v1/licenses/license', locals: { license: pl }, status: :ok if pl.present?
+          render json: {}, status: :not_found
+        elsif request.post?
+          pl = @individual.create_product_license(@product, type: params[:license][:type])
+          return render partial: '/api/v1/licenses/license', locals: { license: pl }, status: :ok if pl.present?
+          render json: {}, status: :unprocessable_entity
+        elsif request.delete?
+          pl = @individual.delete_product_license(@product)
+          return render partial: '/api/v1/licenses/license', locals: { license: pl }, status: :ok if pl.present?
+          head :ok
         end
+      rescue StandardError => e
+        render json: { exception: e.to_s }, status: :unprocessable_entity
       end
 
       private
-
-        def set_license(license)
-          case license
-          when "full"
-            @individual.update_product_license(@product, license_type: "Greensub::FullLicense")
-            return { "license" => "full" }, :ok
-          when "read"
-            @individual.update_product_license(@product, license_type: "Greensub::ReadLicense")
-            return { "license" => "read" }, :ok
-          else
-            return { exception: "no license type found for: #{license}" }, :unprocessable_entity
-          end
-        end
 
         def set_product
           @product = Greensub::Product.find(params[:product_id])
@@ -192,6 +161,10 @@ module API
 
         def individual_params
           params.require(:individual).permit(:identifier, :name, :email)
+        end
+
+        def license_params
+          params.require(:license).permit(:type)
         end
     end
   end

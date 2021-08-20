@@ -95,9 +95,9 @@ RSpec.describe OpenAccessEbookTrustJob, type: :job do
     let(:prod2) { create(:product, identifier: "ebc_rrr") }
 
     before do
-      inst1.update_product_license(prod1)
-      inst2.update_product_license(prod2)
-      inst1.update_product_license(prod1)
+      inst1.create_product_license(prod1)
+      inst2.create_product_license(prod2)
+      inst1.create_product_license(prod1)
     end
 
     it "returns institutions that are subscribed to ebc_* products" do
@@ -148,8 +148,8 @@ RSpec.describe OpenAccessEbookTrustJob, type: :job do
     let(:report2_name) { "Item Master Report Total_Item_Requests of #{press.name} for #{inst2.name} from #{start_date} to #{end_date}" }
 
     before do
-      inst1.update_product_license(prod1)
-      inst2.update_product_license(prod2)
+      inst1.create_product_license(prod1)
+      inst2.create_product_license(prod2)
       allow(CounterReporter::ReportParams).to receive(:new).with('ir', {
         institution: inst1.identifier,
         start_date: start_date,

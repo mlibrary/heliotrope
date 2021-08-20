@@ -12,6 +12,16 @@ RSpec.describe "Institutions", type: :request do
       "url" => greensub_institution_url(institution, format: :json)
     }
   end
+  def license_obj(license:)
+    {
+      "id" => license.id,
+      "type" => license.type,
+      "licensee_type" => license.licensee_type,
+      "licensee_id" => license.licensee_id,
+      "product_id" => license.product_id,
+      "url" => greensub_license_url(license, format: :json)
+    }
+  end
   let(:headers) do
     {
       "ACCEPT" => "application/json, application/vnd.heliotrope.v1+json",
@@ -20,6 +30,7 @@ RSpec.describe "Institutions", type: :request do
   end
   let(:institution) { create(:institution) }
   let(:response_body) { JSON.parse(@response.body) }
+  let(:second_response_body) { JSON.parse(@response.body) }
 
   before { clear_grants_table }
 
@@ -29,13 +40,11 @@ RSpec.describe "Institutions", type: :request do
     it { get api_product_institutions_path(1), headers: headers; expect(response).to have_http_status(:unauthorized) } # rubocop:disable Style/Semicolon
     it { post api_institutions_path, params: {}, headers: headers; expect(response).to have_http_status(:unauthorized) } # rubocop:disable Style/Semicolon
     it { get api_institution_path(1), headers: headers; expect(response).to have_http_status(:unauthorized) } # rubocop:disable Style/Semicolon
-    it { get api_product_institution_path(1, 1), headers: headers; expect(response).to have_http_status(:unauthorized) } # rubocop:disable Style/Semicolon
     it { put api_institution_path(1), params: {}, headers: headers; expect(response).to have_http_status(:unauthorized) } # rubocop:disable Style/Semicolon
-    it { put api_product_institution_path(1, 1), headers: headers; expect(response).to have_http_status(:unauthorized) } # rubocop:disable Style/Semicolon
     it { delete api_institution_path(1), headers: headers; expect(response).to have_http_status(:unauthorized) } # rubocop:disable Style/Semicolon
-    it { delete api_product_institution_path(1, 1), headers: headers; expect(response).to have_http_status(:unauthorized) } # rubocop:disable Style/Semicolon
     it { get api_product_institution_license_path(1, 1), headers: headers; expect(response).to have_http_status(:unauthorized) } # rubocop:disable Style/Semicolon
-    it { post api_product_institution_license_path(1, 1), headers: headers; expect(response).to have_http_status(:unauthorized) } # rubocop:disable Style/Semicolon
+    it { post api_product_institution_license_path(1, 1), params: {}, headers: headers; expect(response).to have_http_status(:unauthorized) } # rubocop:disable Style/Semicolon
+    it { delete api_product_institution_license_path(1, 1), headers: headers; expect(response).to have_http_status(:unauthorized) } # rubocop:disable Style/Semicolon
   end
 
   context 'authorized' do
@@ -92,6 +101,7 @@ RSpec.describe "Institutions", type: :request do
       let(:product) { create(:product) }
       let(:institution_response_body) { JSON.parse(@response.body) }
       let(:institutions_response_body) { JSON.parse(@response.body) }
+      let(:params) { { license: { type: Greensub::FullLicense.to_s } }.to_json }
 
       it 'empty ok' do
         get api_product_institutions_path(product), headers: headers
@@ -107,7 +117,7 @@ RSpec.describe "Institutions", type: :request do
         expect(response.content_type).to eq("application/json")
         expect(response).to have_http_status(:ok)
         expect(response_body).to eq([])
-        put api_product_institution_path(product, institution), headers: headers
+        institution.create_product_license(product)
         get api_product_institutions_path(product), headers: headers
         expect(institution_response_body).to eq([institution_obj(institution: institution)])
         expect(Greensub::Institution.count).to eq(1)
@@ -120,10 +130,10 @@ RSpec.describe "Institutions", type: :request do
         expect(response.content_type).to eq("application/json")
         expect(response).to have_http_status(:ok)
         expect(response_body).to eq([])
-        put api_product_institution_path(product, institution), headers: headers
+        institution.create_product_license(product)
         get api_product_institutions_path(product), headers: headers
         expect(institution_response_body).to eq([institution_obj(institution: institution)])
-        put api_product_institution_path(product, new_institution), headers: headers
+        new_institution.create_product_license(product)
         get api_product_institutions_path(product), headers: headers
         expect(institutions_response_body).to match_array([institution_obj(institution: institution), institution_obj(institution: new_institution)])
         expect(Greensub::Institution.count).to eq(2)
@@ -198,45 +208,6 @@ RSpec.describe "Institutions", type: :request do
       end
     end
 
-    describe "GET /api/v1/products/:product_id:/institutions/:id" do # show
-      context 'non existing product' do
-        it 'non existing institution not_found' do
-          get api_product_institution_path(1, 1), headers: headers
-          expect(response.content_type).to eq("application/json")
-          expect(response).to have_http_status(:not_found)
-          expect(response_body[:exception.to_s]).to include("ActiveRecord::RecordNotFound: Couldn't find Greensub::Institution with")
-        end
-
-        it 'existing institution not_found' do
-          get api_product_institution_path(1, institution), headers: headers
-          expect(response.content_type).to eq("application/json")
-          expect(response).to have_http_status(:not_found)
-          expect(response_body[:exception.to_s]).to include("ActiveRecord::RecordNotFound: Couldn't find Greensub::Product with")
-        end
-      end
-
-      context 'existing product' do
-        let(:product) { create(:product) }
-
-        it 'non existing institution not_found' do
-          get api_product_institution_path(product, 1), headers: headers
-          expect(response.content_type).to eq("application/json")
-          expect(response).to have_http_status(:not_found)
-          expect(response_body[:exception.to_s]).to include("ActiveRecord::RecordNotFound: Couldn't find Greensub::Institution with")
-        end
-
-        it 'existing institution ok' do
-          institution.update_product_license(product)
-          get api_product_institution_path(product, institution), headers: headers
-          expect(response.content_type).to eq("application/json")
-          expect(response).to have_http_status(:ok)
-          expect(response_body).to eq(institution_obj(institution: institution))
-          expect(product.institutions).to include(institution)
-          expect(product.institutions.count).to eq(1)
-        end
-      end
-    end
-
     describe "PUT /api/v1/institution" do # update
       it 'non existing not_found' do
         put api_institution_path(1), params: { institution: { name: 'updated_name' } }.to_json, headers: headers
@@ -261,53 +232,6 @@ RSpec.describe "Institutions", type: :request do
       end
     end
 
-    describe "PUT /api/v1/products/:product_id:/institutions/:id" do # update
-      context 'non existing product' do
-        it 'non existing institution not_found' do
-          put api_product_institution_path(1, 1), headers: headers
-          expect(response.content_type).to eq("application/json")
-          expect(response).to have_http_status(:not_found)
-          expect(response_body[:exception.to_s]).to include("ActiveRecord::RecordNotFound: Couldn't find Greensub::Institution with")
-        end
-
-        it 'existing institution not_found' do
-          put api_product_institution_path(1, institution), headers: headers
-          expect(response.content_type).to eq("application/json")
-          expect(response).to have_http_status(:not_found)
-          expect(response_body[:exception.to_s]).to include("ActiveRecord::RecordNotFound: Couldn't find Greensub::Product with")
-        end
-      end
-
-      context 'existing product' do
-        let(:product) { create(:product) }
-
-        it 'non existing institution not_found' do
-          put api_product_institution_path(product, 1), headers: headers
-          expect(response.content_type).to eq("application/json")
-          expect(response).to have_http_status(:not_found)
-          expect(response_body[:exception.to_s]).to include("ActiveRecord::RecordNotFound: Couldn't find Greensub::Institution with")
-        end
-
-        it 'existing institution ok' do
-          put api_product_institution_path(product, institution), headers: headers
-          expect(response.content_type).to eq("application/json")
-          expect(response).to have_http_status(:ok)
-          expect(response.body).to be_empty
-          expect(institution.product_license?(product)).to be true
-        end
-
-        it 'existing institution twice ok' do
-          institution.update_product_license(product)
-          put api_product_institution_path(product, institution), headers: headers
-          expect(response.content_type).to eq("application/json")
-          expect(response).to have_http_status(:ok)
-          expect(response.body).to be_empty
-          expect(institution.product_license?(product)).to be true
-          expect(grants_table_count).to eq(1)
-        end
-      end
-    end
-
     describe "DELETE /api/v1/institution/:id" do # destroy
       let(:product) { create(:product) }
 
@@ -328,61 +252,12 @@ RSpec.describe "Institutions", type: :request do
       end
 
       it 'existing with products accepted' do
-        institution.update_product_license(product)
+        institution.create_product_license(product)
         delete api_institution_path(institution), headers: headers
         expect(response.content_type).to eq("application/json")
         expect(response).to have_http_status(:accepted)
         expect(response_body[:base.to_s]).to include("Cannot delete record because dependent licenses exist")
         expect(Greensub::Institution.count).to eq(1)
-      end
-    end
-
-    describe "DELETE /api/v1/products/:product_id:/institutions/:id" do # delete
-      context 'non existing product' do
-        it 'non existing institution not_found' do
-          delete api_product_institution_path(1, 1), headers: headers
-          expect(response.content_type).to eq("application/json")
-          expect(response).to have_http_status(:not_found)
-          expect(response_body[:exception.to_s]).to include("ActiveRecord::RecordNotFound: Couldn't find Greensub::Institution with")
-        end
-
-        it 'existing institution not_found' do
-          delete api_product_institution_path(1, institution), headers: headers
-          expect(response.content_type).to eq("application/json")
-          expect(response).to have_http_status(:not_found)
-          expect(response_body[:exception.to_s]).to include("ActiveRecord::RecordNotFound: Couldn't find Greensub::Product with")
-        end
-      end
-
-      context 'existing product' do
-        let(:product) { create(:product) }
-
-        it 'non existing institution not_found' do
-          delete api_product_institution_path(product, 1), headers: headers
-          expect(response.content_type).to eq("application/json")
-          expect(response).to have_http_status(:not_found)
-          expect(response_body[:exception.to_s]).to include("ActiveRecord::RecordNotFound: Couldn't find Greensub::Institution with")
-        end
-
-        it 'existing institution ok' do
-          institution.update_product_license(product)
-          expect(institution.product_license?(product)).to be true
-          delete api_product_institution_path(product, institution), headers: headers
-          expect(institution.product_license?(product)).to be false
-          expect(response.content_type).to eq("application/json")
-          expect(response).to have_http_status(:ok)
-          expect(response.body).to be_empty
-          expect(Greensub::Institution.count).to eq(1)
-        end
-
-        it 'existing institution non subscriber ok' do
-          expect(institution.product_license?(product)).to be false
-          delete api_product_institution_path(product, institution), headers: headers
-          expect(response.content_type).to eq("application/json")
-          expect(response).to have_http_status(:ok)
-          expect(response.body).to be_empty
-          expect(Greensub::Institution.count).to eq(1)
-        end
       end
     end
 
@@ -417,38 +292,52 @@ RSpec.describe "Institutions", type: :request do
           get api_product_institution_license_path(product, institution), headers: headers
           expect(response.content_type).to eq("application/json")
           expect(response).to have_http_status(:not_found)
-          expect(response_body).to eq({ "license"=>"undefined" })
+          expect(response_body).to eq({})
         end
 
         it 'existing institution with full license ok' do
-          institution.update_product_license(product)
+          pl = institution.create_product_license(product)
           get api_product_institution_license_path(product, institution), headers: headers
           expect(response.content_type).to eq("application/json")
           expect(response).to have_http_status(:ok)
-          expect(response_body).to eq({ "license"=>"full" })
+          expect(response_body).to eq(license_obj(license: pl))
         end
 
-        it 'exisiting institution with read license ok' do
-          institution.update_product_license(product, license_type: "Greensub::ReadLicense")
+        it 'existing institution with read license ok' do
+          pl = institution.create_product_license(product, type: "Greensub::ReadLicense")
           get api_product_institution_license_path(product, institution), headers: headers
           expect(response.content_type).to eq("application/json")
           expect(response).to have_http_status(:ok)
-          expect(response_body).to eq({ "license"=>"read" })
+          expect(response_body).to eq(license_obj(license: pl))
+        end
+
+        it 'existing institution with full alum license ok' do
+          pl = institution.create_product_license(product, affiliation: 'alum')
+          get api_product_institution_license_path(product, institution), headers: headers
+          expect(response.content_type).to eq("application/json")
+          expect(response).to have_http_status(:not_found)
+          expect(response_body).to eq({})
+          get api_product_institution_license_path(product, institution, 'alum'), headers: headers
+          expect(response.content_type).to eq("application/json")
+          expect(response).to have_http_status(:ok)
+          expect(second_response_body).to eq(license_obj(license: pl))
         end
       end
     end
 
-    describe "POST /api/v1/products/:product_id:/institutions/:id/license" do # set license
+    describe "POST /api/v1/products/:product_id:/institutions/:id/license" do # create license
+      let(:params) { { license: { type: Greensub::FullLicense.to_s } }.to_json }
+
       context 'non existing product' do
         it 'non existing institution not_found' do
-          post api_product_institution_license_path(1, 1), headers: headers, params: { license: 'full' }.to_json
+          post api_product_institution_license_path(1, 1), params: params, headers: headers
           expect(response.content_type).to eq("application/json")
           expect(response).to have_http_status(:not_found)
           expect(response_body[:exception.to_s]).to include("ActiveRecord::RecordNotFound: Couldn't find Greensub::Institution with")
         end
 
         it 'existing institution not_found' do
-          post api_product_institution_license_path(1, institution), headers: headers, params: { license: 'full' }.to_json
+          post api_product_institution_license_path(1, institution), params: params, headers: headers
           expect(response.content_type).to eq("application/json")
           expect(response).to have_http_status(:not_found)
           expect(response_body[:exception.to_s]).to include("ActiveRecord::RecordNotFound: Couldn't find Greensub::Product with")
@@ -459,42 +348,167 @@ RSpec.describe "Institutions", type: :request do
         let(:product) { create(:product) }
 
         it 'non existing institution not_found' do
-          post api_product_institution_license_path(product, 1), headers: headers, params: { license: 'full' }.to_json
+          post api_product_institution_license_path(product, 1), params: params, headers: headers
           expect(response.content_type).to eq("application/json")
           expect(response).to have_http_status(:not_found)
           expect(response_body[:exception.to_s]).to include("ActiveRecord::RecordNotFound: Couldn't find Greensub::Institution with")
         end
 
         it 'existing institution setting full license ok' do
-          post api_product_institution_license_path(product, institution), headers: headers, params: { license: 'full' }.to_json
+          post api_product_institution_license_path(product, institution), params: params, headers: headers
           expect(response.content_type).to eq("application/json")
           expect(response).to have_http_status(:ok)
-          expect(response_body).to eq({ "license"=>"full" })
+          pl = institution.find_product_license(product)
+          expect(pl.type).to eq Greensub::FullLicense.to_s
+          expect(response_body).to eq(license_obj(license: pl))
           expect(institution.products.include?(product)).to be true
         end
 
         it 'existing institution setting read license ok' do
-          post api_product_institution_license_path(product, institution), headers: headers, params: { license: 'read' }.to_json
+          params = { license: { type: Greensub::ReadLicense.to_s } }.to_json
+          post api_product_institution_license_path(product, institution), params: params, headers: headers
           expect(response.content_type).to eq("application/json")
           expect(response).to have_http_status(:ok)
-          expect(response_body).to eq({ "license"=>"read" })
+          pl = institution.find_product_license(product)
+          expect(pl.type).to eq Greensub::ReadLicense.to_s
+          expect(response_body).to eq(license_obj(license: pl))
           expect(institution.products.include?(product)).to be true
         end
 
-        it 'existing institution setting a empty license not found' do
-          post api_product_institution_license_path(product, institution), headers: headers, params: { license: '' }.to_json
+        it 'existing institution setting full license then read license ok' do
+          post api_product_institution_license_path(product, institution), params: params, headers: headers
           expect(response.content_type).to eq("application/json")
-          expect(response).to have_http_status(:not_found)
-          expect(response_body).to eq({ "license"=>"undefined" })
+          expect(response).to have_http_status(:ok)
+          pl = institution.find_product_license(product)
+          pl_id = pl.id
+          expect(pl.type).to eq Greensub::FullLicense.to_s
+          expect(response_body).to eq(license_obj(license: pl))
+          expect(institution.products.include?(product)).to be true
+
+          params = { license: { type: Greensub::ReadLicense.to_s } }.to_json
+          post api_product_institution_license_path(product, institution), params: params, headers: headers
+          expect(response.content_type).to eq("application/json")
+          expect(response).to have_http_status(:ok)
+          pl = institution.find_product_license(product)
+          expect(pl_id).to eq pl.id
+          expect(pl.type).to eq Greensub::ReadLicense.to_s
+          response_body = JSON.parse(@response.body)
+          expect(response_body).to eq(license_obj(license: pl))
+          expect(institution.products.include?(product)).to be true
+        end
+
+        it 'existing institution setting full member license then read alum license ok' do
+          post api_product_institution_license_path(product, institution), params: params, headers: headers
+          expect(response.content_type).to eq("application/json")
+          expect(response).to have_http_status(:ok)
+          pl = institution.find_product_license(product)
+          pl_id = pl.id
+          expect(pl.type).to eq Greensub::FullLicense.to_s
+          expect(response_body).to eq(license_obj(license: pl))
+          expect(institution.products.include?(product)).to be true
+          expect(Greensub::License.count).to eq 1
+
+          params = { license: { type: Greensub::ReadLicense.to_s } }.to_json
+          post api_product_institution_license_path(product, institution, 'alum'), params: params, headers: headers
+          expect(response.content_type).to eq("application/json")
+          expect(response).to have_http_status(:ok)
+          pl = institution.find_product_license(product, affiliation: 'alum')
+          expect(pl_id).not_to eq pl.id
+          expect(pl.type).to eq Greensub::ReadLicense.to_s
+          response_body = JSON.parse(@response.body)
+          expect(response_body).to eq(license_obj(license: pl))
+          expect(institution.products.include?(product)).to be true
+          expect(Greensub::License.count).to eq 2
+        end
+
+        it 'existing institution setting a base license unprocessable entity' do
+          params = { license: { type: Greensub::License.to_s } }.to_json
+          post api_product_institution_license_path(product, institution), params: params, headers: headers
+          expect(response.content_type).to eq("application/json")
+          expect(response).to have_http_status(:unprocessable_entity)
+          expect(response_body).to eq({ "exception"=>"unknown attribute 'licensee' for Greensub::License." })
           expect(institution.products.include?(product)).to be false
         end
 
-        it 'existing institution setting a none license unprocessable entity' do
-          post api_product_institution_license_path(product, institution), headers: headers, params: { license: 'none' }.to_json
+        it 'existing institution setting a empty license unprocessable entity' do
+          params = { license: {} }.to_json
+          post api_product_institution_license_path(product, institution), params: params, headers: headers
           expect(response.content_type).to eq("application/json")
           expect(response).to have_http_status(:unprocessable_entity)
-          expect(response_body[:exception.to_s]).to include("no license type found for: none")
+          expect(response_body).to eq({ "exception"=>"unknown attribute 'licensee' for Greensub::License." })
           expect(institution.products.include?(product)).to be false
+        end
+      end
+    end
+
+    describe "DELETE /api/v1/products/:product_id:/institutions/:id/license" do # delete license
+      context 'non existing product' do
+        it 'non existing institution not_found' do
+          delete api_product_institution_license_path(1, 1), headers: headers
+          expect(response.content_type).to eq("application/json")
+          expect(response).to have_http_status(:not_found)
+          expect(response_body[:exception.to_s]).to include("ActiveRecord::RecordNotFound: Couldn't find Greensub::Institution with")
+        end
+
+        it 'existing institution not_found' do
+          delete api_product_institution_license_path(1, institution), headers: headers
+          expect(response.content_type).to eq("application/json")
+          expect(response).to have_http_status(:not_found)
+          expect(response_body[:exception.to_s]).to include("ActiveRecord::RecordNotFound: Couldn't find Greensub::Product with")
+        end
+      end
+
+      context 'existing product' do
+        let(:product) { create(:product) }
+
+        it 'non existing institution not_found' do
+          delete api_product_institution_license_path(product, 1), headers: headers
+          expect(response.content_type).to eq("application/json")
+          expect(response).to have_http_status(:not_found)
+          expect(response_body[:exception.to_s]).to include("ActiveRecord::RecordNotFound: Couldn't find Greensub::Institution with")
+        end
+
+        it 'existing institution with product license ok' do
+          pl = institution.create_product_license(product)
+          expect(institution.find_product_license(product)).not_to be nil
+          delete api_product_institution_license_path(product, institution), headers: headers
+          expect(institution.find_product_license(product)).to be nil
+          expect(response.content_type).to eq("application/json")
+          expect(response).to have_http_status(:ok)
+          expect(response_body).to eq(license_obj(license: pl))
+          expect(Greensub::Institution.count).to eq(1)
+        end
+
+        it 'existing institution with member and alum product licenses ok' do
+          pl = institution.create_product_license(product)
+          expect(institution.find_product_license(product)).not_to be nil
+          expect(Greensub::License.count).to eq(1)
+          pl_alum = institution.create_product_license(product, type: Greensub::ReadLicense.to_s, affiliation: 'alum')
+          expect(institution.find_product_license(product, affiliation: 'alum')).not_to be nil
+          expect(Greensub::License.count).to eq(2)
+          delete api_product_institution_license_path(product, institution), headers: headers
+          expect(institution.find_product_license(product)).to be nil
+          expect(institution.find_product_license(product, affiliation: 'alum')).not_to be nil
+          expect(response.content_type).to eq("application/json")
+          expect(response).to have_http_status(:ok)
+          expect(response_body).to eq(license_obj(license: pl))
+          expect(Greensub::License.count).to eq(1)
+          delete api_product_institution_license_path(product, institution, 'alum'), headers: headers
+          expect(institution.find_product_license(product)).to be nil
+          expect(institution.find_product_license(product, affiliation: 'alum')).to be nil
+          expect(response.content_type).to eq("application/json")
+          expect(response).to have_http_status(:ok)
+          expect(second_response_body).to eq(license_obj(license: pl_alum))
+          expect(Greensub::License.count).to eq(0)
+        end
+
+        it 'existing institution without product license ok' do
+          expect(institution.find_product_license(product)).to be nil
+          delete api_product_institution_license_path(product, institution), headers: headers
+          expect(response.content_type).to eq("application/json")
+          expect(response).to have_http_status(:ok)
+          expect(response.body).to be_empty
+          expect(Greensub::Institution.count).to eq(1)
         end
       end
     end

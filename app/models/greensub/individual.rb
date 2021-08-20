@@ -34,7 +34,7 @@ module Greensub
     end
 
     def destroy?
-      !grants?
+      !licenses? && !grants?
     end
 
     def agent_type

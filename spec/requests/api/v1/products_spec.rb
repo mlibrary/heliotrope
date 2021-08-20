@@ -156,7 +156,7 @@ RSpec.describe "Products", type: :request do
       end
 
       it 'product ok' do
-        individual.update_product_license(product)
+        individual.create_product_license(product)
         get api_individual_products_path(individual), headers: headers
         expect(response.content_type).to eq("application/json")
         expect(response).to have_http_status(:ok)
@@ -165,8 +165,8 @@ RSpec.describe "Products", type: :request do
       end
 
       it 'products ok' do
-        individual.update_product_license(product)
-        individual.update_product_license(new_product)
+        individual.create_product_license(product)
+        individual.create_product_license(new_product)
         get api_individual_products_path(individual), headers: headers
         expect(response.content_type).to eq("application/json")
         expect(response).to have_http_status(:ok)
@@ -201,7 +201,7 @@ RSpec.describe "Products", type: :request do
       end
 
       it 'product ok' do
-        institution.update_product_license(product)
+        institution.create_product_license(product)
         get api_institution_products_path(institution), headers: headers
         expect(response.content_type).to eq("application/json")
         expect(response).to have_http_status(:ok)
@@ -210,8 +210,8 @@ RSpec.describe "Products", type: :request do
       end
 
       it 'products ok' do
-        institution.update_product_license(product)
-        institution.update_product_license(new_product)
+        institution.create_product_license(product)
+        institution.create_product_license(new_product)
         get api_institution_products_path(institution), headers: headers
         expect(response.content_type).to eq("application/json")
         expect(response).to have_http_status(:ok)
