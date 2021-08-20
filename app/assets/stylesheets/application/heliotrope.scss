@@ -978,6 +978,20 @@ footer.press {
     height: 150px;
   }
 
+  #unity-container {
+    // `position: absolute;` is set in the WebGL's TemplateData/style.css, which is included in all the WebGL views,...
+    // meaning the `position: relative;` needed in the #webgl tab (and in CSB) has to go in-line on #unity-container
+    width:1024px;
+    height:600px;
+    margin-left: auto !important;
+    margin-right: auto !important;
+
+    #unity-canvas {
+      width:1024px;
+      height:600px;
+    }
+  }
+
   section#reviews {
     table {
       // the reviews.html files all have a "Reviews" caption on the table
@@ -1500,11 +1514,6 @@ footer.press {
   right: 0;
   top: 0;
   bottom: 0;
-}
-
-#gameContainer {
-  margin-left: auto !important;
-  margin-right: auto !important;
 }
 
 #epub-webgl-mobile-message {

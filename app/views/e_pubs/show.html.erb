@@ -28,21 +28,24 @@
     <% end %>
   <% end %>
   <% if @parent_presenter.webgl? %>
-    <%
-# load what we need to show the webgl/3-d model if needed
-webgl_id = @parent_presenter.webgl_id
-webgl = Webgl::Unity.from_directory(UnpackService.root_path_from_noid(webgl_id, 'webgl'))
-@unity_loader = "/webgl/#{webgl_id}/#{webgl.unity_loader}"
-@unity_json = "/webgl/#{webgl_id}/#{webgl.unity_json}"
-    %>
-       <!-- browser detection here -->
-     <script src="<%= @unity_loader %>"></script>
-	   <script>
- 	   // this has to go right after @unity_loader is loaded to guarantee no random JS errors get alert-boxed
-      	UnityLoader.Error.handler = function(e, t){
-          // NOP to stop the nuisance alert boxes for *all* (even non-Unity) JS errors
-        }
-	   </script>
+    <% # load what we need to show the webgl/3-d model if needed %>
+    <% webgl = Webgl::Unity.from_directory(UnpackService.root_path_from_noid(@parent_presenter.webgl_id, 'webgl')) %>
+    <link rel="stylesheet" href="/webgl/<%= @parent_presenter.webgl_id %>/TemplateData/style.css">
+    <script src="/webgl/<%= webgl.unity_loader %>"></script>
+    <script>
+      var config = {
+        dataUrl: "/webgl/<%= webgl.unity_data %>",
+        frameworkUrl: "/webgl/<%= webgl.unity_framework %>",
+        codeUrl: "/webgl/<%= webgl.unity_code %>",
+        streamingAssetsUrl: "StreamingAssets",
+      };
+
+      var container = document.querySelector("#unity-container");
+      var canvas = document.querySelector("#canvas");
+      var loadingBar = document.querySelector("#unity-loading-bar");
+      var progressBarFull = document.querySelector("#unity-progress-bar-full");
+      var fullscreenButton = document.querySelector("#unity-fullscreen-button");
+    </script>
   <% end %>
 <% end %>
 
@@ -121,7 +124,7 @@ webgl = Webgl::Unity.from_directory(UnpackService.root_path_from_noid(webgl_id, 
           href: "<%= "#{main_app.epub_url.gsub!(/\?.*/, '')}/" %>",
           skipLink: '.skip',
           download_links: <%= @ebook_download_presenter.csb_download_links.to_json.html_safe %>,
-          loader_template: '<div class="fulcrum-loading"><div class="rect rect1"></div><div class="circle circ1"></div><div class="rect rect2"></div><div class="circle circ2"></div></div>',        
+          loader_template: '<div class="fulcrum-loading"><div class="rect rect1"></div><div class="circle circ1"></div><div class="rect rect2"></div><div class="circle circ2"></div></div>',
           injectStylesheet: '/css/fulcrum_enhanced_display.css',
           metadata: {
             doi: '<%= @citable_link %>',

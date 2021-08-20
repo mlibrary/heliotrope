@@ -267,7 +267,7 @@ button:focus {
         }
       }
     }
-    
+
     .navbar-brand-logo {
       display: inline-block;
       padding-right: 21.5px;
@@ -283,8 +283,8 @@ button:focus {
       .pr-4 {
         padding-right: 24px;
       }
-  
-      
+
+
       a {
         text-transform: uppercase;
         font-weight: 600;
@@ -295,7 +295,7 @@ button:focus {
         text-decoration: underline;
       }
     }
-    
+
     .navbar-brand {
       height: inherit;
       display: inline-block;
@@ -319,7 +319,7 @@ button:focus {
       font-size: 26px;
       line-height: 31.2px;
     }
-  
+
       button.search-submit {
         background-color: $heb-grey-4;
         border-color: $heb-grey-4;
@@ -330,7 +330,7 @@ button:focus {
   .breadcrumbs {
     @include proxima-nova;
   }
-  
+
   // container on all pages
   #main.container {
     max-width: 1140px;
@@ -535,7 +535,7 @@ button:focus {
       margin-top: 16px;
     }
   }
-  
+
   footer {
     background-color: $heb-accent-color-dark;
     border-top: 2px solid $heb-red;
@@ -543,11 +543,11 @@ button:focus {
 
     .container {
       max-width: 1140px;
-    
+
     }
 
     .row {
-      display: flex; 
+      display: flex;
       justify-content: space-between;
     }
 
@@ -578,7 +578,7 @@ button:focus {
       margin-bottom: 16px;
 
     }
-    
+
     .d-block {
       display: block !important;
       font-size: 12.8px;
@@ -623,7 +623,7 @@ button:focus {
     .block {
       display: block;
     }
-  
+
     p.social {
       padding-top: .4em;
       a {
@@ -666,7 +666,7 @@ button:focus {
     .button--lg:hover,
     .button--inline:hover,
     .button--sm:hover,
-    .button--sm.cozy-preferences:hover, 
+    .button--sm.cozy-preferences:hover,
     .button:active,
     .button--lg:active,
     .button--inline:active,
@@ -1886,7 +1886,7 @@ $amherst-grey-3: #dee2e6;
     .press-block-a, .press-block-b, .press-block-c {
       background-color: $amherst-brand-color;
     }
-    
+
     .press-block-a {
       padding-top: 0;
       small {
@@ -4111,6 +4111,7 @@ $gabii-link-hover:    #1e5667;
     }
 
     .special-panel {
+      overflow: auto;
 
       .panel-control button.button--sm.webgl-close {
       background: transparent;
@@ -4128,6 +4129,7 @@ $gabii-link-hover:    #1e5667;
 
       .panel-info {
         padding: 0 1em;
+        overflow-wrap: break-word;
 
         p {
           font-size: .75em;
@@ -4812,7 +4814,7 @@ $a2ru-white: #fafafa;
   // breadcrumbs
   .breadcrumbs {
     @include rubik;
-  
+
     .breadcrumb {
       background-color: rgb(245, 245, 245);
     }
@@ -4837,7 +4839,7 @@ $a2ru-white: #fafafa;
       margin-bottom: 0;
     }
 
-    
+
 
     .logo {
 
@@ -4946,15 +4948,15 @@ $a2ru-white: #fafafa;
           @include rubik;
         }
       }
-  
+
       .monograph-metadata h1 {
         font-size: 36px;
       }
-  
+
       .authors, .copyright {
         @include rubik;
       }
-  
+
       .monograph-cover button {
         background-color: transparent;
         border-color: transparent;
@@ -5182,7 +5184,7 @@ $fia-teal-100: #e9f2f5;
 
 // typography
 @mixin proxima-nova {
-  font-family: proxima-nova, sans-serif; 
+  font-family: proxima-nova, sans-serif;
 }
 
 
@@ -5439,7 +5441,7 @@ $fia-teal-100: #e9f2f5;
   //footer
   footer {
     border-top: 2px solid $fia-blue-400;
-    
+
     a,
     a:hover,
     a:active {
@@ -5809,7 +5811,7 @@ $maize-black-80: #342f2e;
         @include benton;
       }
     }
-    
+
     .monograph-metadata h1 {
       font-size: 30px;
     }
@@ -6109,7 +6111,7 @@ $pccn-black-80: #342f2e;
   // breadcrumbs
   .breadcrumbs {
     @include roboto;
-  
+
     .breadcrumb {
       background-color: rgb(245, 245, 245)
     }
@@ -6145,7 +6147,7 @@ $pccn-black-80: #342f2e;
   }
 
   // monograph catalog
-  #sort-dropdown .dropdown-toggle, 
+  #sort-dropdown .dropdown-toggle,
   #per_page-dropdown .dropdown-toggle {
     background-color: white;
     color: $pccn-blue;
@@ -6195,7 +6197,7 @@ $pccn-black-80: #342f2e;
     }
   }
 
-  // pagination 
+  // pagination
   .page_links {
     @include roboto;
   }
@@ -6274,7 +6276,7 @@ $pccn-black-80: #342f2e;
   #epub {
     font-family: 'Roboto', sans-serif !important;
   }
-  
+
   #reader {
     @include roboto;
 

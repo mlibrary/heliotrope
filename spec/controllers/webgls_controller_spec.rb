@@ -52,12 +52,6 @@ RSpec.describe WebglsController, type: :controller do
 
       after { FeaturedRepresentative.destroy_all }
 
-      it "returns the UnityLoader.js file" do
-        get :file, params: { id: file_set.id, file: 'Build/UnityLoader', format: 'js' }
-        expect(response).to have_http_status(:success)
-        expect(response.body.empty?).to be false
-      end
-
       it "does not return a nonexistent file" do
         get :file, params: { id: file_set.id, file: 'Build/NotAThing', format: 'js' }
         expect(response).to have_http_status(:success)
@@ -70,19 +64,29 @@ RSpec.describe WebglsController, type: :controller do
         expect(response.body.empty?).to be true
       end
 
-      context "with a presumed pre-gzipped unityweb file (Unity 2017)" do
-        it "responds with Content-Encoding gzip header, stopping mod_deflate from recompressing it" do
-          get :file, params: { id: file_set.id, file: 'Build/thing.asm.memory', format: 'unityweb' }
-          expect(response).to have_http_status(:success)
-          expect(response.headers['Content-Encoding']).to eq('gzip')
-        end
+      it "returns the loader file" do
+        get :file, params: { id: file_set.id, file: 'Build/blah.loader', format: 'js' }
+        expect(response).to have_http_status(:success)
+        expect(response.body.empty?).to be false
       end
 
-      context "with a non-unityweb file" do
-        it "doesn't respond with Content-Encoding gzip header, mod_deflate will compress this" do
-          get :file, params: { id: file_set.id, file: 'Build/UnityLoader', format: 'js' }
+      it "returns the data file" do
+        get :file, params: { id: file_set.id, file: 'Build/blah', format: 'data' }
+        expect(response).to have_http_status(:success)
+        expect(response.body.empty?).to be false
+      end
+
+      it "returns the framework file" do
+        get :file, params: { id: file_set.id, file: 'Build/blah.framework', format: 'js' }
+        expect(response).to have_http_status(:success)
+        expect(response.body.empty?).to be false
+      end
+
+      context "with a WASM file" do
+        it "responds the file with correct type header for the file to be run as compiled code" do
+          get :file, params: { id: file_set.id, file: 'Build/blah', format: 'wasm' }
           expect(response).to have_http_status(:success)
-          expect(response.headers['Content-Encoding']).not_to eq('gzip')
+          expect(response.headers['Content-Type']).to eq('application/wasm')
         end
       end
     end

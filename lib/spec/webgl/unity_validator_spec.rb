@@ -8,7 +8,8 @@ RSpec.describe Webgl::UnityValidator do
       before do
         @noid = 'validnoid'
         @root_path = UnpackHelper.noid_to_root_path(@noid, 'webgl')
-        @file = './spec/fixtures/fake-game.zip'
+        # using the fake-game from the main fixtures directory
+        @file = '../spec/fixtures/fake-game.zip'
         UnpackHelper.unpack_webgl(@noid, @root_path, @file)
         allow(Webgl.logger).to receive(:info).and_return(nil)
       end
@@ -20,34 +21,66 @@ RSpec.describe Webgl::UnityValidator do
       it "has the correct attributes" do
         expect(subject).to be_an_instance_of(described_class)
         expect(subject.id).to eq 'validnoid'
-        expect(subject.progress).to eq 'TemplateData/UnityProgress.js'
-        expect(subject.loader).to eq 'Build/UnityLoader.js'
-        expect(subject.json).to eq 'Build/fake.json'
+        expect(subject.loader).to eq 'validnoid/Build/blah.loader.js'
+        expect(subject.data).to eq 'validnoid/Build/blah.data'
+        expect(subject.framework).to eq 'validnoid/Build/blah.framework.js'
+        expect(subject.code).to eq 'validnoid/Build/blah.wasm'
       end
 
-      context "with a missing UnityProgress.js" do
+      context "with a missing TemplateData folder" do
         it "returns the null object" do
-          allow(File).to receive(:join).and_call_original
-          allow(File).to receive(:join).with(@root_path, "TemplateData", "UnityProgress.js").and_return(nil)
+          allow(Dir).to receive(:exist?).and_call_original
+          allow(Dir).to receive(:exist?).with(File.join(@root_path, "TemplateData")).and_return(false)
           allow(Webgl.logger).to receive(:info).and_return(nil)
 
           expect(subject).to be_an_instance_of(Webgl::UnityValidatorNullObject)
         end
       end
 
-      context "with a missing UnityLoader.js" do
+      context "with a missing Build folder" do
         it "returns the null object" do
-          allow(File).to receive(:join).and_call_original
-          allow(File).to receive(:join).with(@root_path, "Build", "UnityLoader.js").and_return(nil)
+          allow(Dir).to receive(:exist?).and_call_original
+          allow(Dir).to receive(:exist?).with(File.join(@root_path, "Build")).and_return(false)
           allow(Webgl.logger).to receive(:info).and_return(nil)
 
           expect(subject).to be_an_instance_of(Webgl::UnityValidatorNullObject)
         end
       end
 
-      context "with a missing unity json file" do
+      context "with a missing loader file" do
         it "returns the null object" do
-          allow(Find).to receive(:find).and_return(nil)
+          allow(Pathname).to receive(:glob).and_call_original
+          allow(Pathname).to receive(:glob).with(File.join(@root_path, "Build", "*.loader.js")).and_return([])
+          allow(Webgl.logger).to receive(:info).and_return(nil)
+
+          expect(subject).to be_an_instance_of(Webgl::UnityValidatorNullObject)
+        end
+      end
+
+      context "with a missing data file" do
+        it "returns the null object" do
+          allow(Pathname).to receive(:glob).and_call_original
+          allow(Pathname).to receive(:glob).with(File.join(@root_path, "Build", "*.data")).and_return([])
+          allow(Webgl.logger).to receive(:info).and_return(nil)
+
+          expect(subject).to be_an_instance_of(Webgl::UnityValidatorNullObject)
+        end
+      end
+
+      context "with a missing framework file" do
+        it "returns the null object" do
+          allow(Pathname).to receive(:glob).and_call_original
+          allow(Pathname).to receive(:glob).with(File.join(@root_path, "Build", "*.framework.js")).and_return([])
+          allow(Webgl.logger).to receive(:info).and_return(nil)
+
+          expect(subject).to be_an_instance_of(Webgl::UnityValidatorNullObject)
+        end
+      end
+
+      context "with a missing WASM/code file" do
+        it "returns the null object" do
+          allow(Pathname).to receive(:glob).and_call_original
+          allow(Pathname).to receive(:glob).with(File.join(@root_path, "Build", "*.wasm")).and_return([])
           allow(Webgl.logger).to receive(:info).and_return(nil)
 
           expect(subject).to be_an_instance_of(Webgl::UnityValidatorNullObject)
@@ -72,9 +105,10 @@ RSpec.describe Webgl::UnityValidator do
       # The fact that these all default to nil sort of defeats the purpose of
       # a null object. TODO: if this becomes a problem, give these default values
       expect(subject.id).to be 'webglnull'
-      expect(subject.progress).to be nil
-      expect(subject.loader).to be nil
-      expect(subject.json).to be nil
+      expect(subject.loader).to eq nil
+      expect(subject.data).to eq nil
+      expect(subject.framework).to eq nil
+      expect(subject.code).to eq nil
       expect(subject.root_path).to be nil
     end
   end
