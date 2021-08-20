@@ -4,10 +4,6 @@ require 'rails_helper'
 
 RSpec.describe EmbedCodeService do
   describe "when UnpackJob uses EmbedCodeService on an EPUB file with embeds" do
-    before do
-      travel_to(Time.parse("2022-01-01"))
-    end
-
     let(:monograph) { create(:monograph, representative_id: cover.id) }
     let(:root_path) { UnpackService.root_path_from_noid(epub.id, 'epub') }
 
@@ -244,12 +240,11 @@ RSpec.describe EmbedCodeService do
         end
       end
 
-      context "The EPUB being unpacked was originally created before 20210826" do
-        let(:monograph) { create(:monograph, representative_id: cover.id, date_uploaded: DateTime.new(2021, 6, 1, 4, 5, 0, '+0')) }
-
+      context "When running on bulleit-1" do
         before do
           monograph.ordered_members << cover << epub << image << audio << video << interactive_map
           [monograph, epub, image, audio, video, interactive_map].each { |item| item.save! }
+          allow(Socket).to receive(:gethostname).and_return('bulleit-1.umdl.umich.edu')
           UnpackJob.perform_now(epub.id, 'epub')
         end
 
