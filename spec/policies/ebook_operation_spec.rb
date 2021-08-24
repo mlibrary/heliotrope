@@ -124,8 +124,6 @@ RSpec.describe EbookOperation do
   describe '#licensed_for?' do
     subject { policy.send(:licensed_for?, entitlement) }
 
-    before { allow(Incognito).to receive(:developer?).with(actor).and_return true }
-
     context "individual" do
       let(:entitlement) { :entitlement }
       let(:checkpoint) { double('checkpoint') }
