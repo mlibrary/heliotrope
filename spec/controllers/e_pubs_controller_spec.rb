@@ -351,8 +351,8 @@ RSpec.describe EPubsController, type: :controller do
         let(:parent) { Sighrax.from_noid(monograph.id) }
         let(:epub) { Sighrax.from_noid(file_set.id) }
         let(:component) { Greensub::Component.create!(identifier: parent.resource_token, name: parent.title, noid: parent.noid) }
-        let(:keycard) { { dlpsInstitutionId: dlpsInstitutionId } }
-        let(:dlpsInstitutionId) { '-1' }
+        let(:keycard) { { dlpsInstitutionId: dlps_institution_id } }
+        let(:dlps_institution_id) { 9999 }
 
         before do
           clear_grants_table
@@ -413,37 +413,6 @@ RSpec.describe EPubsController, type: :controller do
           expect(response).to render_template(:show)
         end
 
-        it "Subscribed Greensub::Institution" do
-          institution = create(:institution, identifier: dlpsInstitutionId)
-          product = Greensub::Product.create!(identifier: 'product', name: 'name', purchase: 'purchase')
-          product.components << component
-          product.save!
-          institution.update_product_license(product)
-          create(:institution_affiliation, institution_id: institution.id, affiliation: "member")
-          create(:license_affiliation, license_id: institution.product_license(product).id, affiliation: "member")
-          get :show, params: { id: file_set.id }
-          expect(assigns(:actor_product_ids))
-          expect(assigns(:allow_read_product_ids))
-          expect(response).to have_http_status(:success)
-          expect(response).to render_template(:show)
-        end
-
-        it "Subscribed Greensub::Institution with the wrong affiliation" do
-          institution = create(:institution, identifier: dlpsInstitutionId)
-          product = Greensub::Product.create!(identifier: 'product', name: 'name', purchase: 'purchase')
-          product.components << component
-          product.save!
-          institution.update_product_license(product)
-          create(:institution_affiliation, institution_id: institution.id, affiliation: "alum")
-          create(:license_affiliation, license_id: institution.product_license(product).id, affiliation: "member")
-          allow(Incognito).to receive(:developer?).and_return true # TODO: remvove
-          get :show, params: { id: file_set.id }
-          expect(assigns(:actor_product_ids))
-          expect(assigns(:allow_read_product_ids))
-          expect(response).to have_http_status(:found)
-          expect(response).to redirect_to(epub_access_url)
-        end
-
         it "Subscribed Individual" do
           email = 'wolverine@umich.edu'
           user = create(:user, email: email)
@@ -458,6 +427,38 @@ RSpec.describe EPubsController, type: :controller do
           expect(assigns(:allow_read_product_ids))
           expect(response).to have_http_status(:success)
           expect(response).to render_template(:show)
+        end
+
+        it "Subscribed Institution" do
+          institution = create(:institution, identifier: dlps_institution_id)
+          create(:institution_affiliation, institution_id: institution.id, dlps_institution_id: dlps_institution_id, affiliation: "member")
+          create(:institution_affiliation, institution_id: institution.id, dlps_institution_id: dlps_institution_id + 1, affiliation: "alum")
+          product = Greensub::Product.create!(identifier: 'product', name: 'name', purchase: 'purchase')
+          product.components << component
+          product.save!
+          institution.update_product_license(product)
+          create(:license_affiliation, license_id: institution.product_license(product).id, affiliation: "member")
+          get :show, params: { id: file_set.id }
+          expect(assigns(:actor_product_ids))
+          expect(assigns(:allow_read_product_ids))
+          expect(response).to have_http_status(:success)
+          expect(response).to render_template(:show)
+        end
+
+        it "Subscribed Institution with the wrong affiliation" do
+          institution = create(:institution, identifier: dlps_institution_id)
+          create(:institution_affiliation, institution_id: institution.id, dlps_institution_id: dlps_institution_id, affiliation: "member")
+          create(:institution_affiliation, institution_id: institution.id, dlps_institution_id: dlps_institution_id + 1, affiliation: "alum")
+          product = Greensub::Product.create!(identifier: 'product', name: 'name', purchase: 'purchase')
+          product.components << component
+          product.save!
+          institution.update_product_license(product)
+          create(:license_affiliation, license_id: institution.product_license(product).id, affiliation: "alum")
+          get :show, params: { id: file_set.id }
+          expect(assigns(:actor_product_ids))
+          expect(assigns(:allow_read_product_ids))
+          expect(response).to have_http_status(:found)
+          expect(response).to redirect_to(epub_access_url)
         end
       end
     end
