@@ -189,7 +189,7 @@ gem 'signet'
 gem 'skylight', '~> 5.0.0.beta4'
 
 # Rails Webpack Tool
-gem 'webpacker', '~> 5.2.1'
+gem 'webpacker', '~> 5.4.2'
 
 # puma monitoring, HELIO-3388
 gem 'yabeda-rails'
