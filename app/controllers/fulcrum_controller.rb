@@ -43,14 +43,6 @@ class FulcrumController < ApplicationController
       ReindexJob.perform_later('monographs')
     when 'reindex_file_sets'
       ReindexJob.perform_later('file_sets')
-    when 'seed_institution_affiliations'
-      SeedInstitutionAffiliationsJob.perform_now
-    when 'seed_license_affiliations'
-      SeedLicenseAffiliationsJob.perform_now
-    when 'grant_to_license'
-      GrantToLicenseJob.perform_now
-    when 'license_to_grant'
-      LicenseToGrantJob.perform_now
     end
     redirect_to action: :index, partials: :dashboard
   end

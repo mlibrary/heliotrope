@@ -24,18 +24,16 @@ module Greensub
     has_many :license_affiliations, dependent: :restrict_with_error
     alias_attribute :affiliations, :license_affiliations
 
-    # temporary! TODO: HELIO-3994
-    #
-    # before_validation(on: :update) do
-    #   if licensee_type_changed? || licensee_id_changed?
-    #     errors.add(:licensee, "can not be changed!")
-    #     throw(:abort)
-    #   end
-    #   if product_id_changed?
-    #     errors.add(:product, "can not be changed!")
-    #     throw(:abort)
-    #   end
-    # end
+    before_validation(on: :update) do
+      if licensee_type_changed? || licensee_id_changed?
+        errors.add(:licensee, "can not be changed!")
+        throw(:abort)
+      end
+      if product_id_changed?
+        errors.add(:product, "can not be changed!")
+        throw(:abort)
+      end
+    end
 
     before_destroy do
       if grants?

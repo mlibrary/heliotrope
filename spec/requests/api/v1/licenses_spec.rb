@@ -283,8 +283,8 @@ RSpec.describe "Licenses", type: :request do
         new_product = create(:product)
         put api_license_path(individual_license), params: { license: { product_id: new_product.id } }.to_json, headers: headers
         expect(response.content_type).to eq("application/json")
-        expect(response).not_to have_http_status(:unprocessable_entity)
-        expect(response_body[:product.to_s]).not_to eq(["can not be changed!"])
+        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response_body[:product.to_s]).to eq(["can not be changed!"])
         expect(Greensub::License.count).to eq(1)
       end
     end
