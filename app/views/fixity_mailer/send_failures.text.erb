@@ -1,0 +1,14 @@
+
+Below are the following Fixity Failures for <%= @today %>.
+
+<% @failures.each do |failure| %>
+  file_set_id:  <%= failure[:file_set_id] %>
+  file_id:      <%= failure[:file_id] %>
+  passed?:      <%= failure[:passed] %>
+  tries:        <%= failure[:tries] %>
+
+<% end %>
+
+Please read the confluence fixity page for steps on how to handle this.
+
+https://tools.lib.umich.edu/confluence/display/FUL/How+to+Address+Fixity+Failures
