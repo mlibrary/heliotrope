@@ -298,11 +298,11 @@ en:
       series: |
         If the monograph is part of one or more series, enter them separated by semi-colons. These will be used in a Series facet.
       edition_name: |
-        If the monograph is part of one or more series, enter them separated by semi-colons. These will be used in a Series facet.
+        Specific text, which will be displayed after the citation year, to differentitate editions of the Monograph.
       previous_edition: |
-        If the monograph is part of one or more series, enter them separated by semi-colons. These will be used in a Series facet.
+        DOI link to a previous edition of the Fulcrum Monograph.
       next_edition: |
-        If the monograph is part of one or more series, enter them separated by semi-colons. These will be used in a Series facet.
+        DOI link to a subsequent edition of the Fulcrum Monograph.
       keywords: |
         The topic of the resource. Typically, the topic will be represented using keywords or key phrases. Be consistent in how you name keywords, e.g. WWII or WW2, not both.
 
