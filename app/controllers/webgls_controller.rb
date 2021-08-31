@@ -11,9 +11,10 @@ class WebglsController < ApplicationController
     @presenter = Hyrax::PresenterFactory.build_for(ids: [params[:id]], presenter_class: Hyrax::FileSetPresenter, presenter_args: nil).first
     if @presenter.present? && @presenter.webgl?
       webgl = Webgl::Unity.from_directory(UnpackService.root_path_from_noid(params[:id], 'webgl'))
-      @unity_progress = "#{params[:id]}/#{webgl.unity_progress}"
-      @unity_loader = "#{params[:id]}/#{webgl.unity_loader}"
-      @unity_json = "#{params[:id]}/#{webgl.unity_json}"
+      @unity_loader = webgl.unity_loader
+      @unity_data = webgl.unity_data
+      @unity_framework = webgl.unity_framework
+      @unity_code = webgl.unity_code
       render layout: false
     else
       Rails.logger.info("WebglsController.show(#{params[:id]}) is not a WebGL.")
@@ -24,17 +25,18 @@ class WebglsController < ApplicationController
   def file
     webgl = Webgl::Unity.from_directory(UnpackService.root_path_from_noid(params[:id], 'webgl'))
 
-    # `.unityweb` files are gzipped by default as part of the release build process.
-    # They need `Content-Encoding: gzip` to trigger browser unpacking.
-    response.headers['Content-Encoding'] = 'gzip' if params[:format] == 'unityweb'
-
     file = webgl.file(params[:file] + "." + params[:format])
     file = Rails.root + file if webgl.root_path.blank?
 
     # Need to match apache's XSendFilePath configuration
     file = file.to_s.sub(/releases\/\d+/, "current")
     response.headers['X-Sendfile'] = file
-    send_file file
+
+    if params[:format] == 'wasm'
+      send_file(file, type: 'application/wasm')
+    else
+      send_file file
+    end
   rescue StandardError => e
     Rails.logger.info("WebglsController.file(#{params[:file] + '.' + params[:format]}) raised #{e} #{e.backtrace.join("\n")}")
     head :no_content, status: :not_found

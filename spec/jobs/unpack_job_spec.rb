@@ -72,7 +72,7 @@ RSpec.describe UnpackJob, type: :job do
 
       it "unzips the webgl" do
         described_class.perform_now(webgl.id, 'webgl')
-        expect(File.exist?(File.join(root_path, "Build", "UnityLoader.js"))).to be true
+        expect(File.exist?(File.join(root_path, "Build", "blah.loader.js"))).to be true
       end
     end
 

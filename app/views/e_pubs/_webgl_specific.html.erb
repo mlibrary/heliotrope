@@ -30,12 +30,6 @@
           var $panel = $('.special-panel');
 
           if (! $panel.length) {
-
-            var mobileUserMessage = '';
-            if(heliotropeIncompatibleWebGlUser === true) {
-              mobileUserMessage = '<div id="epub-webgl-mobile-message">Sorry, it looks like your device or browser is not compatible with WebGL.<br />Please check our <a href="https://hdl.handle.net/2027/fulcrum.9231782/about">compatibility requirements</a>.</div>';
-            }
-
             var $panelContent =
               '<div class="special-panel" aria-hidden="false">' +
                 '<div class="panel-control">' +
@@ -43,9 +37,13 @@
                     '<i class="icon-x oi" data-glyph="x" aria-hidden="true"></i>' +
                   '</button>' +
                 '</div>' +
-                '<div class="webgl-content">' +
-                  '<div id="gameContainer" tabindex="0">' +
-                    mobileUserMessage +
+                '<div id="unity-container" style="position:relative" tabindex="0">' +
+                  '<canvas id="unity-canvas"></canvas>' +
+                  '<div id="unity-loading-bar">' +
+                    '<div id="unity-logo"></div>' +
+                    '<div id="unity-progress-bar-empty">' +
+                      '<div id="unity-progress-bar-full"></div>' +
+                    '</div>' +
                   '</div>' +
                 '</div>' +
                 '<div class="panel-info">' +
@@ -64,22 +62,72 @@
 
           // mobile users won't be loading the 3D content so this stuff isn't required
           if (heliotropeIncompatibleWebGlUser === false) {
-            var options = {};
-
             var h = $panel.height();
             var w = $panel.width();
 
             // the game has to have a specific aspect ratio or it looks distorted
             var r = w / 1024;
-            options.width = w + 'px';
-            options.height = Math.ceil(600 * r) + 'px';
+            game_width = w + 'px';
+            game_height = Math.ceil(600 * r) + 'px';
 
             if (!gameInstance) {
-              gameInstance = UnityLoader.instantiate("gameContainer", "<%= "#{@unity_json}" %>", options);
+              var container = document.querySelector("#unity-container");
+              var canvas = document.querySelector("#unity-canvas");
+              var loadingBar = document.querySelector("#unity-loading-bar");
+              var progressBarFull = document.querySelector("#unity-progress-bar-full");
+              var fullscreenButton = document.querySelector("#unity-fullscreen-button");
+
+              container.style.width = game_width;
+              container.style.height = game_height;
+              canvas.style.width = game_width;
+              canvas.style.height = game_height;
+
+                loadingBar.style.display = "block";
+
+                createUnityInstance(canvas, config, (progress) => {
+                  progressBarFull.style.width = 100 * progress + "%";
+                }).then((unityInstance) => {
+                gameInstance = unityInstance;
+                loadingBar.style.display = "none";
+                fullscreenButton.onclick = () => {
+                  unityInstance.SetFullscreen(1);
+                };
+                }).catch((message) => {
+                  // For heliotrope we've historically NOP'ed errors from the WebGL game
+                  // note I think this only blocks alerts for loading-time errors
+                  // alert(message);
+                });
+
+                document.addEventListener('click', function (e) {
+                if (e.target.id == "unity-canvas") {
+                  // Clicked on canvas
+                  FocusCanvas("1");
+                } else {
+                  // Clicked outside of canvas
+                  FocusCanvas("0");
+                }
+                });
+
+                document.addEventListener('keydown', function (event) {
+                if (event.defaultPrevented) {
+                  return; // Do nothing if the event was already processed
+                }
+
+              switch (event.key) {
+              case "Tab":
+                FocusCanvas("0");
+                break;
+              default:
+                return;
+              }
+
+              }, true);
             } else {
               // resize the webGL canvas
               resize_webgl();
             }
+          } else {
+            $('#unity-container').html('<div id="epub-webgl-mobile-message">Sorry, it looks like your device or browser is not compatible with WebGL.<br />Please check our <a href="https://hdl.handle.net/2027/fulcrum.9231782/about">compatibility requirements</a>.</div>');
           }
 
           // resize EPUB
@@ -116,11 +164,10 @@
           var width = w + 'px';
           var height = Math.ceil(600 * r) + 'px';
 
-          var $g = $('#gameContainer');
+          var $g = $('#unity-container');
           $g.css({ width: width, height: height });
-          var $c = $g.find('canvas').get(0);
-          $c.setAttribute('width', parseInt(width));
-          $c.setAttribute('height', parseInt(height));
+          var $c = $('#unity-canvas');
+          $c.css({ width: width, height: height });
         }
 
         // dynamic WebGL canvas resizing
@@ -143,15 +190,15 @@
             function getToUnity(s) {
               SendMessage("WebCommunicator", "ShowString", s);
             };
-            var gameContainerDiv = document.getElementById("gameContainer");
+            var unityContainer = document.getElementById("unity-container");
             if ($('body').hasClass('panel-open')) {
               FocusCanvas("1");
-              gameContainerDiv.focus();
+              unityContainer.focus();
               getToUnity(s);
             } else {
               open_panel();
               FocusCanvas("1");
-              gameContainerDiv.focus();
+              unityContainer.focus();
               getToUnity(s);
             }
           }

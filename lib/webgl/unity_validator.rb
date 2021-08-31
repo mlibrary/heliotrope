@@ -4,31 +4,54 @@ require 'find'
 
 module Webgl
   class UnityValidator
-    attr_reader :id, :progress, :loader, :json, :root_path
+    attr_reader :id, :root_path, :loader, :data, :framework, :code
 
-    def self.from_directory(root_path)
-      return null_object unless Dir.exist? root_path
+    def self.from_directory(root_path) # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
+      return null_object unless root_path.present? && Dir.exist?(root_path)
 
-      if File.join(root_path, "TemplateData", "UnityProgress.js").blank?
-        ::Webgl.logger.info("#{root_path} is missing UnityProgress.js")
+      if !Dir.exist?(File.join(root_path, "TemplateData"))
+        ::Webgl.logger.info("#{root_path} is missing TemplateData folder")
         return null_object
       end
 
-      if File.join(root_path, "Build", "UnityLoader.js").blank?
-        ::Webgl.logger.info("#{root_path} is missing UnityLoader.js")
+      build_path = File.join(root_path, "Build")
+
+      if !Dir.exist?(build_path)
+        ::Webgl.logger.info("#{root_path} is missing Build folder")
         return null_object
       end
 
-      json_file = Find.find(File.join(root_path, "Build"))&.map { |f| f if File.extname(f) == ".json" }&.compact&.first
-      if json_file.blank?
-        ::Webgl.logger.info("#{root_path} is missing Unity .json file")
+      loader_file = Pathname.glob(File.join(build_path, '*.loader.js')).first
+      if loader_file.blank?
+        ::Webgl.logger.info("#{build_path} is missing Unity *.loader.js file")
         return null_object
       end
 
-      new(id: root_path_to_noid(root_path),
-          progress: File.join("TemplateData", "UnityProgress.js"),
-          loader: File.join("Build", "UnityLoader.js"),
-          json: File.join("Build", File.basename(json_file)),
+      data_file = Pathname.glob(File.join(build_path, '*.data')).first
+      if data_file.blank?
+        ::Webgl.logger.info("#{build_path} is missing Unity *.data file")
+        return null_object
+      end
+
+      framework_file = Pathname.glob(File.join(build_path, '*.framework.js')).first
+      if framework_file.blank?
+        ::Webgl.logger.info("#{build_path} is missing Unity *.framework.js file")
+        return null_object
+      end
+
+      code_file = Pathname.glob(File.join(build_path, '*.wasm')).first
+      if code_file.blank?
+        ::Webgl.logger.info("#{build_path} is missing Unity *.wasm file")
+        return null_object
+      end
+
+      id = root_path_to_noid(root_path)
+
+      new(id: id,
+          loader: File.join(id, 'Build', File.basename(loader_file)),
+          data: File.join(id, 'Build', File.basename(data_file)),
+          framework: File.join(id, 'Build', File.basename(framework_file)),
+          code: File.join(id, 'Build', File.basename(code_file)),
           root_path: root_path)
     end
 
@@ -43,20 +66,22 @@ module Webgl
     private
 
       def initialize(opts)
-        @id       = opts[:id]
-        @progress = opts[:progress]
-        @loader   = opts[:loader]
-        @json     = opts[:json]
+        @id        = opts[:id]
+        @loader    = opts[:loader]
+        @data      = opts[:data]
+        @framework = opts[:framework]
+        @code      = opts[:code]
         @root_path = opts[:root_path]
       end
   end
 
   class UnityValidatorNullObject < UnityValidator
     def initialize
-      @id = "webglnull"
-      @progress = nil
-      @loader = nil
-      @json = nil
+      @id        = "webglnull"
+      @loader    = nil
+      @data      = nil
+      @framework = nil
+      @code      = nil
       @root_path = nil
     end
   end

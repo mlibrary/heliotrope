@@ -3,71 +3,130 @@
   <meta name="turbolinks-cache-control" content="no-cache">
   <%= csrf_meta_tag %>
   <link src="shortcut icon" href="<%= @favicon %>">
+  <link rel="stylesheet" href="<%= @presenter.id %>/TemplateData/style.css">
+
   <script src="<%= @unity_loader %>"></script>
   <% Rails.logger.info("UNITY LOADER: " + @unity_loader) %>
+
   <script>
-    // this has to go right after @unity_loader is loaded to guarantee no random JS errors get alert-boxed
-    UnityLoader.Error.handler = function(e, t){
-      // NOP to stop the nuisance alert boxes for *all* (even non-Unity) JS errors
-    }
-  </script>
-  <script>
-    var gameInstance;
+    var config = {
+      dataUrl: "<%= @unity_data %>",
+      frameworkUrl: "<%= @unity_framework %>",
+      codeUrl: "<%= @unity_code %>",
+      streamingAssetsUrl: "StreamingAssets",
+    };
+
+    var gameInstance = undefined;
     var gameReady = false;
+
+    function FocusCanvas(focus) {
+      if (gameReady) {
+        gameInstance.SendMessage("GameControl","FocusCanvas", focus);
+      }
+    }
+
     // Toggling for focus of canvas
     function GameControlReady () {
       gameReady = true;
     }
-    $(document).on('turbolinks:load', function() {
 
+    // Take user to a POI when passed a string from WebGL
+    function goToParagraph(p) {
+      var paragraphHandle = "https://hdl.handle.net/2027/fulcrum.9231782/" + "par" + p;
+      $('#paragraphHandle').html('<a href="' + paragraphHandle + '" target="_blank">' + paragraphHandle + '</a>');
+      $('#goToParagraphModal').modal();
+      gameInstance.SetFullscreen(0);
+    }
+
+    $(document).on('turbolinks:load', function() {
       if (heliotropeIncompatibleWebGlUser === true) {
-        $('#gameContainer').html('<div id="epub-webgl-mobile-message">Sorry, it looks like your device or browser is not compatible with WebGL.<br />Please check our <a href="https://hdl.handle.net/2027/fulcrum.9231782/about">compatibility requirements</a>.</div>');
+        $('#unity-container').html('<div id="epub-webgl-mobile-message">Sorry, it looks like your device or browser is not compatible with WebGL.<br />Please check our <a href="https://hdl.handle.net/2027/fulcrum.9231782/about">compatibility requirements</a>.</div>');
       }
       else if (typeof gameInstance === 'undefined' ) {
+        var canvas = document.querySelector("#unity-canvas");
+        var loadingBar = document.querySelector("#unity-loading-bar");
+        var progressBarFull = document.querySelector("#unity-progress-bar-full");
+        var fullscreenButton = document.querySelector("#unity-fullscreen-button");
+        canvas.style.width = "1024px";
+        canvas.style.height = "600px";
 
-        gameInstance = UnityLoader.instantiate("gameContainer", "<%= @unity_json %>", {serverSetupWarningEnabled: false});
+        loadingBar.style.display = "block";
 
-        function FocusCanvas(focus) {
-          if (gameReady) {
-            var SendMessage = gameInstance.SendMessage;
-            SendMessage("GameControl", "FocusCanvas", focus);
-          }
-        }
-
-        document.addEventListener('click', function (e) {
-          if (e.target.id == "#canvas") {
-            // Clicked on canvas
-            FocusCanvas("1");
-          } else {
-            // Clicked outside of canvas
-            FocusCanvas("0");
-          }
+        createUnityInstance(canvas, config, (progress) => {
+          progressBarFull.style.width = 100 * progress + "%";
+        }).then((unityInstance) => {
+          gameInstance = unityInstance;
+          loadingBar.style.display = "none";
+          fullscreenButton.onclick = () => {
+            unityInstance.SetFullscreen(1);
+          };
+        }).catch((message) => {
+          // For heliotrope we've historically NOP'ed errors from the WebGL game
+          // note I think this only blocks alerts for loading-time errors
+          // alert(message);
         });
 
-        document.addEventListener('keydown', function (event) {
-          if (event.defaultPrevented) {
-            return; // Do nothing if the event was already processed
-          }
-
-          switch (event.key) {
-            case "Tab":
-              FocusCanvas("0");
-              break;
-            default:
-              return;
-          }
-
-        }, true);
-
-        // Take user to a POI when passed a string from WebGL
-        function goToParagraph() {
-          // don't do anything quite yet - here to prevent errors
+      document.addEventListener('click', function (e) {
+        if (e.target.id == "unity-canvas") {
+          // Clicked on canvas
+          FocusCanvas("1");
+        } else {
+          // Clicked outside of canvas
+          FocusCanvas("0");
         }
-      }
-    });
+      });
+
+      document.addEventListener('keydown', function (event) {
+        if (event.defaultPrevented) {
+          return; // Do nothing if the event was already processed
+        }
+
+        switch (event.key) {
+          case "Tab":
+            FocusCanvas("0");
+            break;
+          default:
+            return;
+        }
+
+      }, true);
+    }
+  });
   </script>
 <% end %>
-<div class="webgl-content">
-  <div id="gameContainer" style="width: 1024px; height: 600px" tabindex="0"></div>
+
+<% provide :body do %>
+<div id="unity-container" class="unity-desktop" tabindex="0">
+  <canvas id="unity-canvas"></canvas>
+  <div id="unity-loading-bar">
+    <div id="unity-logo"></div>
+    <div id="unity-progress-bar-empty">
+      <div id="unity-progress-bar-full"></div>
+    </div>
+  </div>
+  <div id="unity-footer">
+    <div id="unity-webgl-logo"></div>
+    <div id="unity-fullscreen-button"></div>
+    <div id="unity-build-title">Fulcrum WebGL Build</div>
+  </div>
 </div>
+
+<div class="modal fade" id="goToParagraphModal" tabindex="-1" role="dialog" aria-labelledby="goToParagraphModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      </div>
+      <div class="modal-body">
+        <p>To view a textual reference to this stratigraphic unit in the publication, please use the following permalink (will open in a new window):</p>
+
+        <p id="paragraphHandle"></p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+<% end %>
 <%= render template: 'layouts/boilerplate' %>

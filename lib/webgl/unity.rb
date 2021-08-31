@@ -3,7 +3,7 @@
 module Webgl
   class Unity
     private_class_method :new
-    attr_accessor :id, :unity_progress, :unity_loader, :unity_json, :root_path
+    attr_accessor :id, :root_path, :unity_loader, :unity_data, :unity_framework, :unity_code
 
     def self.from_directory(root_path)
       ::Webgl.logger.info("Opening Webgl from directory #{root_path}")
@@ -29,9 +29,10 @@ module Webgl
 
       def initialize(webgl)
         @id = webgl.id
-        @unity_progress = webgl.progress
         @unity_loader = webgl.loader
-        @unity_json = webgl.json
+        @unity_data = webgl.data
+        @unity_framework = webgl.framework
+        @unity_code = webgl.code
         @root_path = webgl.root_path
       end
   end
@@ -43,9 +44,10 @@ module Webgl
 
       def initialize
         @id = nil
-        @unity_progress = nil
         @unity_loader = nil
-        @unity_json = nil
+        @unity_data = nil
+        @unity_framework = nil
+        @unity_code = nil
         @root_path = nil
       end
   end
