@@ -34,12 +34,12 @@ RSpec.describe Greensub::License, type: :model do
 
     it 'update licensee' do
       subject.licensee = create(:individual)
-      expect { subject.save! }.not_to raise_exception(ActiveRecord::RecordInvalid, 'Validation failed: Licensee can not be changed!')
+      expect { subject.save! }.to raise_exception(ActiveRecord::RecordInvalid, 'Validation failed: Licensee can not be changed!')
     end
 
     it 'update product' do
       subject.product = create(:product)
-      expect { subject.save! }.not_to raise_exception(ActiveRecord::RecordInvalid, 'Validation failed: Product can not be changed!')
+      expect { subject.save! }.to raise_exception(ActiveRecord::RecordInvalid, 'Validation failed: Product can not be changed!')
     end
 
     it 'destroy' do
@@ -98,12 +98,12 @@ RSpec.describe Greensub::License, type: :model do
 
     it 'update licensee' do
       subject.licensee = create(:institution)
-      expect { subject.save! }.not_to raise_exception(ActiveRecord::RecordInvalid, 'Validation failed: Licensee can not be changed!')
+      expect { subject.save! }.to raise_exception(ActiveRecord::RecordInvalid, 'Validation failed: Licensee can not be changed!')
     end
 
     it 'update product' do
       subject.product = create(:product)
-      expect { subject.save! }.not_to raise_exception(ActiveRecord::RecordInvalid, 'Validation failed: Product can not be changed!')
+      expect { subject.save! }.to raise_exception(ActiveRecord::RecordInvalid, 'Validation failed: Product can not be changed!')
     end
 
     it 'destroy' do

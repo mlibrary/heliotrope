@@ -13,9 +13,6 @@ module Greensub
 
     validates :identifier, presence: true, allow_blank: false, uniqueness: true, numericality: { only_integer: true }
     validates :name, presence: true, allow_blank: false
-    # validates :entity_id, presence: true, allow_blank: false
-    # validates :site, presence: true, allow_blank: false
-    # validates :login, presence: true, allow_blank: false
 
     has_many :licenses, as: :licensee, dependent: :restrict_with_error
     has_many :institution_affiliations, dependent: :restrict_with_error
@@ -40,7 +37,7 @@ module Greensub
     end
 
     def destroy?
-      !grants? && institution_affiliations.empty?
+      affiliations.empty? && !licenses? && !grants?
     end
 
     def shibboleth?

@@ -12,6 +12,16 @@ RSpec.describe "Individuals", type: :request do
       "url" => greensub_individual_url(individual, format: :json)
     }
   end
+  def license_obj(license:)
+    {
+      "id" => license.id,
+      "type" => license.type,
+      "licensee_type" => license.licensee_type,
+      "licensee_id" => license.licensee_id,
+      "product_id" => license.product_id,
+      "url" => greensub_license_url(license, format: :json)
+    }
+  end
   let(:headers) do
     {
       "ACCEPT" => "application/json, application/vnd.heliotrope.v1+json",
@@ -20,6 +30,7 @@ RSpec.describe "Individuals", type: :request do
   end
   let(:individual) { create(:individual) }
   let(:response_body) { JSON.parse(@response.body) }
+  let(:second_response_body) { JSON.parse(@response.body) }
 
   before { clear_grants_table }
 
@@ -29,13 +40,11 @@ RSpec.describe "Individuals", type: :request do
     it { get api_product_individuals_path(1), headers: headers; expect(response).to have_http_status(:unauthorized) } # rubocop:disable Style/Semicolon
     it { post api_individuals_path, params: {}, headers: headers; expect(response).to have_http_status(:unauthorized) } # rubocop:disable Style/Semicolon
     it { get api_individual_path(1), headers: headers; expect(response).to have_http_status(:unauthorized) } # rubocop:disable Style/Semicolon
-    it { get api_product_individual_path(1, 1), headers: headers; expect(response).to have_http_status(:unauthorized) } # rubocop:disable Style/Semicolon
     it { put api_individual_path(1), params: {}, headers: headers; expect(response).to have_http_status(:unauthorized) } # rubocop:disable Style/Semicolon
-    it { put api_product_individual_path(1, 1), headers: headers; expect(response).to have_http_status(:unauthorized) } # rubocop:disable Style/Semicolon
     it { delete api_individual_path(1), headers: headers; expect(response).to have_http_status(:unauthorized) } # rubocop:disable Style/Semicolon
-    it { delete api_product_individual_path(1, 1), headers: headers; expect(response).to have_http_status(:unauthorized) } # rubocop:disable Style/Semicolon
     it { get api_product_individual_license_path(1, 1), headers: headers; expect(response).to have_http_status(:unauthorized) } # rubocop:disable Style/Semicolon
-    it { post api_product_individual_license_path(1, 1), headers: headers; expect(response).to have_http_status(:unauthorized) } # rubocop:disable Style/Semicolon
+    it { post api_product_individual_license_path(1, 1), params: {}, headers: headers; expect(response).to have_http_status(:unauthorized) } # rubocop:disable Style/Semicolon
+    it { delete api_product_individual_license_path(1, 1), headers: headers; expect(response).to have_http_status(:unauthorized) } # rubocop:disable Style/Semicolon
   end
 
   context 'authorized' do
@@ -92,6 +101,7 @@ RSpec.describe "Individuals", type: :request do
       let(:product) { create(:product) }
       let(:individual_response_body) { JSON.parse(@response.body) }
       let(:individuals_response_body) { JSON.parse(@response.body) }
+      let(:params) { { license: { type: Greensub::FullLicense.to_s } }.to_json }
 
       it 'empty ok' do
         get api_product_individuals_path(product), headers: headers
@@ -107,7 +117,7 @@ RSpec.describe "Individuals", type: :request do
         expect(response.content_type).to eq("application/json")
         expect(response).to have_http_status(:ok)
         expect(response_body).to eq([])
-        put api_product_individual_path(product, individual), headers: headers
+        individual.create_product_license(product)
         get api_product_individuals_path(product), headers: headers
         expect(individual_response_body).to eq([individual_obj(individual: individual)])
         expect(Greensub::Individual.count).to eq(1)
@@ -120,10 +130,10 @@ RSpec.describe "Individuals", type: :request do
         expect(response.content_type).to eq("application/json")
         expect(response).to have_http_status(:ok)
         expect(response_body).to eq([])
-        put api_product_individual_path(product, individual), headers: headers
+        individual.create_product_license(product)
         get api_product_individuals_path(product), headers: headers
         expect(individual_response_body).to eq([individual_obj(individual: individual)])
-        put api_product_individual_path(product, new_individual), headers: headers
+        new_individual.create_product_license(product)
         get api_product_individuals_path(product), headers: headers
         expect(individuals_response_body).to match_array([individual_obj(individual: individual), individual_obj(individual: new_individual)])
         expect(Greensub::Individual.count).to eq(2)
@@ -198,45 +208,6 @@ RSpec.describe "Individuals", type: :request do
       end
     end
 
-    describe "GET /api/v1/products/:product_id:/individuals/:id" do # show
-      context 'non existing product' do
-        it 'non existing individual not_found' do
-          get api_product_individual_path(1, 1), headers: headers
-          expect(response.content_type).to eq("application/json")
-          expect(response).to have_http_status(:not_found)
-          expect(response_body[:exception.to_s]).to include("ActiveRecord::RecordNotFound: Couldn't find Greensub::Individual with")
-        end
-
-        it 'existing individual not_found' do
-          get api_product_individual_path(1, individual), headers: headers
-          expect(response.content_type).to eq("application/json")
-          expect(response).to have_http_status(:not_found)
-          expect(response_body[:exception.to_s]).to include("ActiveRecord::RecordNotFound: Couldn't find Greensub::Product with")
-        end
-      end
-
-      context 'existing product' do
-        let(:product) { create(:product) }
-
-        it 'non existing individual not_found' do
-          get api_product_individual_path(product, 1), headers: headers
-          expect(response.content_type).to eq("application/json")
-          expect(response).to have_http_status(:not_found)
-          expect(response_body[:exception.to_s]).to include("ActiveRecord::RecordNotFound: Couldn't find Greensub::Individual with")
-        end
-
-        it 'existing individual ok' do
-          individual.update_product_license(product)
-          get api_product_individual_path(product, individual), headers: headers
-          expect(response.content_type).to eq("application/json")
-          expect(response).to have_http_status(:ok)
-          expect(response_body).to eq(individual_obj(individual: individual))
-          expect(product.individuals).to include(individual)
-          expect(product.individuals.count).to eq(1)
-        end
-      end
-    end
-
     describe "PUT /api/v1/individual" do # update
       it 'non existing not_found' do
         put api_individual_path(1), params: { individual: { name: 'updated_name' } }.to_json, headers: headers
@@ -261,53 +232,6 @@ RSpec.describe "Individuals", type: :request do
       end
     end
 
-    describe "PUT /api/v1/products/:product_id:/individuals/:id" do # update
-      context 'non existing product' do
-        it 'non existing individual not_found' do
-          put api_product_individual_path(1, 1), headers: headers
-          expect(response.content_type).to eq("application/json")
-          expect(response).to have_http_status(:not_found)
-          expect(response_body[:exception.to_s]).to include("ActiveRecord::RecordNotFound: Couldn't find Greensub::Individual with")
-        end
-
-        it 'existing individual not_found' do
-          put api_product_individual_path(1, individual), headers: headers
-          expect(response.content_type).to eq("application/json")
-          expect(response).to have_http_status(:not_found)
-          expect(response_body[:exception.to_s]).to include("ActiveRecord::RecordNotFound: Couldn't find Greensub::Product with")
-        end
-      end
-
-      context 'existing product' do
-        let(:product) { create(:product) }
-
-        it 'non existing individual not_found' do
-          put api_product_individual_path(product, 1), headers: headers
-          expect(response.content_type).to eq("application/json")
-          expect(response).to have_http_status(:not_found)
-          expect(response_body[:exception.to_s]).to include("ActiveRecord::RecordNotFound: Couldn't find Greensub::Individual with")
-        end
-
-        it 'existing individual ok' do
-          put api_product_individual_path(product, individual), headers: headers
-          expect(response.content_type).to eq("application/json")
-          expect(response).to have_http_status(:ok)
-          expect(response.body).to be_empty
-          expect(individual.product_license?(product)).to be true
-        end
-
-        it 'existing individual twice ok' do
-          individual.update_product_license(product)
-          put api_product_individual_path(product, individual), headers: headers
-          expect(response.content_type).to eq("application/json")
-          expect(response).to have_http_status(:ok)
-          expect(response.body).to be_empty
-          expect(individual.product_license?(product)).to be true
-          expect(grants_table_count).to eq(1)
-        end
-      end
-    end
-
     describe "DELETE /api/v1/individual/:id" do # destroy
       let(:product) { create(:product) }
 
@@ -328,61 +252,12 @@ RSpec.describe "Individuals", type: :request do
       end
 
       it 'existing with products accepted' do
-        individual.update_product_license(product)
+        individual.create_product_license(product)
         delete api_individual_path(individual), headers: headers
         expect(response.content_type).to eq("application/json")
         expect(response).to have_http_status(:accepted)
         expect(response_body[:base.to_s]).to include("Cannot delete record because dependent licenses exist")
         expect(Greensub::Individual.count).to eq(1)
-      end
-    end
-
-    describe "DELETE /api/v1/products/:product_id:/individuals/:id" do # delete
-      context 'non existing product' do
-        it 'non existing individual not_found' do
-          delete api_product_individual_path(1, 1), headers: headers
-          expect(response.content_type).to eq("application/json")
-          expect(response).to have_http_status(:not_found)
-          expect(response_body[:exception.to_s]).to include("ActiveRecord::RecordNotFound: Couldn't find Greensub::Individual with")
-        end
-
-        it 'existing individual not_found' do
-          delete api_product_individual_path(1, individual), headers: headers
-          expect(response.content_type).to eq("application/json")
-          expect(response).to have_http_status(:not_found)
-          expect(response_body[:exception.to_s]).to include("ActiveRecord::RecordNotFound: Couldn't find Greensub::Product with")
-        end
-      end
-
-      context 'existing product' do
-        let(:product) { create(:product) }
-
-        it 'non existing individual not_found' do
-          delete api_product_individual_path(product, 1), headers: headers
-          expect(response.content_type).to eq("application/json")
-          expect(response).to have_http_status(:not_found)
-          expect(response_body[:exception.to_s]).to include("ActiveRecord::RecordNotFound: Couldn't find Greensub::Individual with")
-        end
-
-        it 'existing individual ok' do
-          individual.update_product_license(product)
-          expect(individual.product_license?(product)).to be true
-          delete api_product_individual_path(product, individual), headers: headers
-          expect(individual.product_license?(product)).to be false
-          expect(response.content_type).to eq("application/json")
-          expect(response).to have_http_status(:ok)
-          expect(response.body).to be_empty
-          expect(Greensub::Individual.count).to eq(1)
-        end
-
-        it 'existing individual non subscriber ok' do
-          expect(individual.product_license?(product)).to be false
-          delete api_product_individual_path(product, individual), headers: headers
-          expect(response.content_type).to eq("application/json")
-          expect(response).to have_http_status(:ok)
-          expect(response.body).to be_empty
-          expect(Greensub::Individual.count).to eq(1)
-        end
       end
     end
 
@@ -417,38 +292,40 @@ RSpec.describe "Individuals", type: :request do
           get api_product_individual_license_path(product, individual), headers: headers
           expect(response.content_type).to eq("application/json")
           expect(response).to have_http_status(:not_found)
-          expect(response_body).to eq({ "license"=>"undefined" })
+          expect(response_body).to eq({})
         end
 
         it 'existing individual with full license ok' do
-          individual.update_product_license(product)
+          pl = individual.create_product_license(product)
           get api_product_individual_license_path(product, individual), headers: headers
           expect(response.content_type).to eq("application/json")
           expect(response).to have_http_status(:ok)
-          expect(response_body).to eq({ "license"=>"full" })
+          expect(response_body).to eq(license_obj(license: pl))
         end
 
-        it 'exisiting individual with read license ok' do
-          individual.update_product_license(product, license_type: "Greensub::ReadLicense")
+        it 'existing individual with read license ok' do
+          pl = individual.create_product_license(product, type: "Greensub::ReadLicense")
           get api_product_individual_license_path(product, individual), headers: headers
           expect(response.content_type).to eq("application/json")
           expect(response).to have_http_status(:ok)
-          expect(response_body).to eq({ "license"=>"read" })
+          expect(response_body).to eq(license_obj(license: pl))
         end
       end
     end
 
-    describe "POST /api/v1/products/:product_id:/individuals/:id/license" do # set license
+    describe "POST /api/v1/products/:product_id:/individuals/:id/license" do # create license
+      let(:params) { { license: { type: Greensub::FullLicense.to_s } }.to_json }
+
       context 'non existing product' do
         it 'non existing individual not_found' do
-          post api_product_individual_license_path(1, 1), headers: headers, params: { license: 'full' }.to_json
+          post api_product_individual_license_path(1, 1), params: params, headers: headers
           expect(response.content_type).to eq("application/json")
           expect(response).to have_http_status(:not_found)
           expect(response_body[:exception.to_s]).to include("ActiveRecord::RecordNotFound: Couldn't find Greensub::Individual with")
         end
 
         it 'existing individual not_found' do
-          post api_product_individual_license_path(1, individual), headers: headers, params: { license: 'full' }.to_json
+          post api_product_individual_license_path(1, individual), params: params, headers: headers
           expect(response.content_type).to eq("application/json")
           expect(response).to have_http_status(:not_found)
           expect(response_body[:exception.to_s]).to include("ActiveRecord::RecordNotFound: Couldn't find Greensub::Product with")
@@ -459,42 +336,119 @@ RSpec.describe "Individuals", type: :request do
         let(:product) { create(:product) }
 
         it 'non existing individual not_found' do
-          post api_product_individual_license_path(product, 1), headers: headers, params: { license: 'full' }.to_json
+          post api_product_individual_license_path(product, 1), params: params, headers: headers
           expect(response.content_type).to eq("application/json")
           expect(response).to have_http_status(:not_found)
           expect(response_body[:exception.to_s]).to include("ActiveRecord::RecordNotFound: Couldn't find Greensub::Individual with")
         end
 
         it 'existing individual setting full license ok' do
-          post api_product_individual_license_path(product, individual), headers: headers, params: { license: 'full' }.to_json
+          post api_product_individual_license_path(product, individual), params: params, headers: headers
           expect(response.content_type).to eq("application/json")
           expect(response).to have_http_status(:ok)
-          expect(response_body).to eq({ "license"=>"full" })
+          pl = individual.find_product_license(product)
+          expect(pl.type).to eq Greensub::FullLicense.to_s
+          expect(response_body).to eq(license_obj(license: pl))
           expect(individual.products.include?(product)).to be true
         end
 
         it 'existing individual setting read license ok' do
-          post api_product_individual_license_path(product, individual), headers: headers, params: { license: 'read' }.to_json
+          params = { license: { type: Greensub::ReadLicense.to_s } }.to_json
+          post api_product_individual_license_path(product, individual), params: params, headers: headers
           expect(response.content_type).to eq("application/json")
           expect(response).to have_http_status(:ok)
-          expect(response_body).to eq({ "license"=>"read" })
+          pl = individual.find_product_license(product)
+          expect(pl.type).to eq Greensub::ReadLicense.to_s
+          expect(response_body).to eq(license_obj(license: pl))
           expect(individual.products.include?(product)).to be true
         end
 
-        it 'existing individual setting a empty license not found' do
-          post api_product_individual_license_path(product, individual), headers: headers, params: { license: '' }.to_json
+        it 'existing individual setting full license then read license ok' do
+          post api_product_individual_license_path(product, individual), params: params, headers: headers
           expect(response.content_type).to eq("application/json")
-          expect(response).to have_http_status(:not_found)
-          expect(response_body).to eq({ "license"=>"undefined" })
+          expect(response).to have_http_status(:ok)
+          pl = individual.find_product_license(product)
+          pl_id = pl.id
+          expect(pl.type).to eq Greensub::FullLicense.to_s
+          expect(response_body).to eq(license_obj(license: pl))
+          expect(individual.products.include?(product)).to be true
+
+          params = { license: { type: Greensub::ReadLicense.to_s } }.to_json
+          post api_product_individual_license_path(product, individual), params: params, headers: headers
+          expect(response.content_type).to eq("application/json")
+          expect(response).to have_http_status(:ok)
+          pl = individual.find_product_license(product)
+          expect(pl_id).to eq pl.id
+          expect(pl.type).to eq Greensub::ReadLicense.to_s
+          expect(second_response_body).to eq(license_obj(license: pl))
+          expect(individual.products.include?(product)).to be true
+        end
+
+        it 'existing individual setting a base license unprocessable entity' do
+          params = { license: { type: Greensub::License.to_s } }.to_json
+          post api_product_individual_license_path(product, individual), params: params, headers: headers
+          expect(response.content_type).to eq("application/json")
+          expect(response).to have_http_status(:unprocessable_entity)
+          expect(response_body).to eq({ "exception"=>"unknown attribute 'licensee' for Greensub::License." })
           expect(individual.products.include?(product)).to be false
         end
 
-        it 'existing individual setting a none license unprocessable entity' do
-          post api_product_individual_license_path(product, individual), headers: headers, params: { license: 'none' }.to_json
+        it 'existing individual setting a empty license unprocessable entity' do
+          params = { license: {} }.to_json
+          post api_product_individual_license_path(product, individual), params: params, headers: headers
           expect(response.content_type).to eq("application/json")
           expect(response).to have_http_status(:unprocessable_entity)
-          expect(response_body[:exception.to_s]).to include("no license type found for: none")
+          expect(response_body).to eq({ "exception"=>"unknown attribute 'licensee' for Greensub::License." })
           expect(individual.products.include?(product)).to be false
+        end
+      end
+    end
+
+    describe "DELETE /api/v1/products/:product_id:/individuals/:id/license" do # delete license
+      context 'non existing product' do
+        it 'non existing individual not_found' do
+          delete api_product_individual_license_path(1, 1), headers: headers
+          expect(response.content_type).to eq("application/json")
+          expect(response).to have_http_status(:not_found)
+          expect(response_body[:exception.to_s]).to include("ActiveRecord::RecordNotFound: Couldn't find Greensub::Individual with")
+        end
+
+        it 'existing individual not_found' do
+          delete api_product_individual_license_path(1, individual), headers: headers
+          expect(response.content_type).to eq("application/json")
+          expect(response).to have_http_status(:not_found)
+          expect(response_body[:exception.to_s]).to include("ActiveRecord::RecordNotFound: Couldn't find Greensub::Product with")
+        end
+      end
+
+      context 'existing product' do
+        let(:product) { create(:product) }
+
+        it 'non existing individual not_found' do
+          delete api_product_individual_license_path(product, 1), headers: headers
+          expect(response.content_type).to eq("application/json")
+          expect(response).to have_http_status(:not_found)
+          expect(response_body[:exception.to_s]).to include("ActiveRecord::RecordNotFound: Couldn't find Greensub::Individual with")
+        end
+
+        it 'existing individual with product license ok' do
+          pl = individual.create_product_license(product)
+          expect(individual.find_product_license(product)).not_to be nil
+          delete api_product_individual_license_path(product, individual), headers: headers
+          expect(individual.find_product_license(product)).to be nil
+          expect(response.content_type).to eq("application/json")
+          expect(response).to have_http_status(:ok)
+          expect(response_body).to eq(license_obj(license: pl))
+          expect(Greensub::Individual.count).to eq(1)
+        end
+
+        it 'existing individual without product license ok' do
+          expect(individual.find_product_license(product)).to be nil
+          delete api_product_individual_license_path(product, individual), headers: headers
+          expect(response.content_type).to eq("application/json")
+          expect(response).to have_http_status(:ok)
+          expect(response.body).to be_empty
+          expect(Greensub::Individual.count).to eq(1)
         end
       end
     end

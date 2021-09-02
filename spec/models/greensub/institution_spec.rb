@@ -102,7 +102,7 @@ RSpec.describe Greensub::Institution, type: :model do
       expect(subject.destroy?).to be true
       expect(subject.grants?).to be false
 
-      subject.update_product_license(product)
+      subject.create_product_license(product)
 
       expect(subject.update?).to be true
       expect(subject.destroy?).to be false
@@ -131,13 +131,13 @@ RSpec.describe Greensub::Institution, type: :model do
 
         product_2
 
-        subject.update_product_license(product_2)
+        subject.create_product_license(product_2)
         expect(subject.products.count).to eq 1
 
         product_2.components << component_b
         expect(subject.products.count).to eq 1
 
-        subject.update_product_license(product_1)
+        subject.create_product_license(product_1)
         expect(subject.products.count).to eq 2
 
         product_1.components << component_b

@@ -60,12 +60,6 @@ module API
       #     (See ./app/views/api/v1/institutions/_institution.json.jbuilder)
       #
       #     {include:file:app/views/api/v1/institutions/_institution.json.jbuilder}
-      # @overload show
-      #   Get product institution
-      #   @example
-      #     get /api/products/:product_id/institutions/:id
-      #   @param [Hash] params { product_id: Number, id: Number }
-      #   @return [ActionDispatch::Response]
       def show
         if params[:product_id].present? # rubocop:disable Style/GuardClause
           set_product
@@ -100,21 +94,9 @@ module API
       #     put /api/institutions/:id
       #   @param [Hash] params { id: Number, institution: { name: String, email: String } }
       #   @return [ActionDispatch::Response] {Greensub::Institution} (see {show})
-      # @overload update
-      #   Grant institution read access to product
-      #   @example
-      #     put /api/products/:product_id/institutions/:id
-      #   @param [Hash] params { product_id: Number, id: Number }
-      #   @return [ActionDispatch::Response]
       def update
-        if params[:product_id].present?
-          set_product
-          @institution.update_product_license(@product)
-          return head :ok # rubocop:disable Style/RedundantReturn
-        else
-          return render json: @institution.errors, status: :unprocessable_entity unless @institution.update(institution_params)
-          render :show, status: :ok, location: @institution
-        end
+        return render json: @institution.errors, status: :unprocessable_entity unless @institution.update(institution_params)
+        render :show, status: :ok, location: @institution
       end
 
       # @overload destroy
@@ -123,65 +105,51 @@ module API
       #     delete /api/institutions/:id
       #   @param [Hash] params { id: Number }
       #   @return [ActionDispatch::Response]
-      # @overload destroy
-      #   Revoke institution read access to product
-      #   @example
-      #     put /api/products/:product_id/institutions/:id
-      #   @param [Hash] params { product_id: Number, id: Number }
-      #   @return [ActionDispatch::Response]
       def destroy
-        if params[:product_id].present?
-          set_product
-          @institution.delete_product_license(@product)
-        else
-          return render json: @institution.errors, status: :accepted unless @institution.destroy
-        end
+        return render json: @institution.errors, status: :accepted unless @institution.destroy
         head :ok
       end
 
       # @overload license
-      #   Get product license
+      #   Get Product License
       #   @example
-      #     get /api/products/:product_id/institutions/:id/license
+      #     get /api/products/:product_id/institutions/:id/license(/:affiliation)
       #   @param [Hash] params { product_id: Number, id: Number }
       #   @return [ActionDispatch::Response] {license}
       # @overload license
-      #   Set product license
+      #   Create Product License
       #   @example
-      #     post /api/products/:product_id/institutions/:id/license
+      #     post /api/products/:product_id/institutions/:id/license(/:affiliation)
       #   @param [Hash] params { product_id: Number, id: Number, license: String }
       #   @return [ActionDispatch::Response] {license}
-      #
+      # @overload license
+      #   Delete Product License
+      #   @example
+      #     delete /api/products/:product_id/institutions/:id/license(/:affiliation)
+      #   @param [Hash] params { product_id: Number, id: Number }
+      #   @return [ActionDispatch::Response]  { String }
       #     (See ./app/views/api/v1/institutions/license.json.jbuilder)
       #
       #     {include:file:app/views/api/v1/institutions/license.json.jbuilder}
-      def license
-        if params[:license].present?
-          return_license, status = set_license(params[:license])
-          render json: return_license, status: status
-        else
-          return render json: { "license" => "undefined" }, status: :not_found unless @institution.product_license?(@product)
-
-          label = @institution.product_license(@product).label.downcase
-          label = "none" if label.blank?
-          render json: { "license" => label }, status: :ok
+      def license # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
+        if request.get?
+          pl = @institution.find_product_license(@product, affiliation: params[:affiliation] || 'member')
+          return render partial: '/api/v1/licenses/license', locals: { license: pl }, status: :ok if pl.present?
+          render json: {}, status: :not_found
+        elsif request.post?
+          pl = @institution.create_product_license(@product, type: params[:license][:type], affiliation: params[:affiliation] || 'member')
+          return render partial: '/api/v1/licenses/license', locals: { license: pl }, status: :ok if pl.present?
+          render json: {}, status: :unprocessable_entity
+        elsif request.delete?
+          pl = @institution.delete_product_license(@product, affiliation: params[:affiliation] || 'member')
+          return render partial: '/api/v1/licenses/license', locals: { license: pl }, status: :ok if pl.present?
+          head :ok
         end
+      rescue StandardError => e
+        render json: { exception: e.to_s }, status: :unprocessable_entity
       end
 
       private
-
-        def set_license(license)
-          case license
-          when "full"
-            @institution.update_product_license(@product, license_type: "Greensub::FullLicense")
-            return { "license" => "full" }, :ok
-          when "read"
-            @institution.update_product_license(@product, license_type: "Greensub::ReadLicense")
-            return { "license" => "read" }, :ok
-          else
-            return { exception: "no license type found for: #{license}" }, :unprocessable_entity
-          end
-        end
 
         def set_product
           @product = Greensub::Product.find(params[:product_id])
@@ -193,6 +161,10 @@ module API
 
         def institution_params
           params.require(:institution).permit(:identifier, :name, :entity_id, :site, :login)
+        end
+
+        def license_params
+          params.require(:license).permit(:type)
         end
     end
   end

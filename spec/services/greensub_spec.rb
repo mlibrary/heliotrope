@@ -27,71 +27,71 @@ RSpec.describe Greensub do
     expect(products[1].licensees).to be_empty
     expect(products[2].licensees).to be_empty
 
-    individual.update_product_license(products[0])
-    expect(individual.product_license?(products[0])).to be true
+    individual.create_product_license(products[0])
+    expect(individual.find_product_license(products[0])).not_to be nil
     expect(individual.products).to contain_exactly(products[0])
     expect(products[0].licensees).to contain_exactly(individual)
     expect(greensub.actor_products(actor).count).to eq 1
     expect(greensub.actor_products(actor)).to contain_exactly(products[0])
 
-    institutions[0].update_product_license(products[1])
-    expect(institutions[0].product_license?(products[1])).to be true
+    institutions[0].create_product_license(products[1])
+    expect(institutions[0].find_product_license(products[1])).not_to be nil
     expect(institutions[0].products).to contain_exactly(products[1])
     expect(products[1].licensees).to contain_exactly(institutions[0])
     expect(greensub.actor_products(actor).count).to eq 2
     expect(greensub.actor_products(actor)).to contain_exactly(products[0], products[1])
 
-    institutions[1].update_product_license(products[2])
-    expect(institutions[1].product_license?(products[2])).to be true
+    institutions[1].create_product_license(products[2])
+    expect(institutions[1].find_product_license(products[2])).not_to be nil
     expect(institutions[1].products).to contain_exactly(products[2])
     expect(products[2].licensees).to contain_exactly(institutions[1])
     expect(greensub.actor_products(actor).count).to eq 3
     expect(greensub.actor_products(actor)).to contain_exactly(products[0], products[1], products[2])
 
-    individual.update_product_license(products[1])
-    expect(individual.product_license?(products[1])).to be true
+    individual.create_product_license(products[1])
+    expect(individual.find_product_license(products[1])).not_to be nil
     expect(individual.products).to contain_exactly(products[0], products[1])
     expect(products[1].licensees).to contain_exactly(individual, institutions[0])
     expect(greensub.actor_products(actor).count).to eq 3
     expect(greensub.actor_products(actor)).to contain_exactly(products[0], products[1], products[2])
 
-    institutions[0].update_product_license(products[0])
-    expect(institutions[0].product_license?(products[0])).to be true
+    institutions[0].create_product_license(products[0])
+    expect(institutions[0].find_product_license(products[0])).not_to be nil
     expect(institutions[0].products).to contain_exactly(products[0], products[1])
     expect(products[0].licensees).to contain_exactly(individual, institutions[0])
     expect(greensub.actor_products(actor).count).to eq 3
     expect(greensub.actor_products(actor)).to contain_exactly(products[0], products[1], products[2])
 
     individual.delete_product_license(products[0])
-    expect(individual.product_license?(products[0])).to be false
+    expect(individual.find_product_license(products[0])).to be nil
     expect(individual.products).to contain_exactly(products[1])
     expect(products[0].licensees).to contain_exactly(institutions[0])
     expect(greensub.actor_products(actor).count).to eq 3
     expect(greensub.actor_products(actor)).to contain_exactly(products[0], products[1], products[2])
 
     institutions[0].delete_product_license(products[0])
-    expect(institutions[0].product_license?(products[0])).to be false
+    expect(institutions[0].find_product_license(products[0])).to be nil
     expect(institutions[0].products).to contain_exactly(products[1])
     expect(products[0].licensees).to be_empty
     expect(greensub.actor_products(actor).count).to eq 2
     expect(greensub.actor_products(actor)).to contain_exactly(products[1], products[2])
 
     institutions[0].delete_product_license(products[1])
-    expect(institutions[0].product_license?(products[1])).to be false
+    expect(institutions[0].find_product_license(products[1])).to be nil
     expect(institutions[0].products).to be_empty
     expect(products[1].licensees).to contain_exactly(individual)
     expect(greensub.actor_products(actor).count).to eq 2
     expect(greensub.actor_products(actor)).to contain_exactly(products[1], products[2])
 
     individual.delete_product_license(products[1])
-    expect(individual.product_license?(products[1])).to be false
+    expect(individual.find_product_license(products[1])).to be nil
     expect(individual.products).to be_empty
     expect(products[1].licensees).to be_empty
     expect(greensub.actor_products(actor).count).to eq 1
     expect(greensub.actor_products(actor)).to contain_exactly(products[2])
 
     institutions[1].delete_product_license(products[2])
-    expect(institutions[1].product_license?(products[2])).to be false
+    expect(institutions[1].find_product_license(products[2])).to be nil
     expect(institutions[1].products).to be_empty
     expect(products[2].licensees).to be_empty
     expect(greensub.actor_products(actor).count).to eq 0
