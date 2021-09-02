@@ -36,7 +36,7 @@ en:
     access_level_text:
       open_access: "Open Access"
       purchased: "Access to this book has been provided by your Library"
-      free: "To mark the completion of their digitization, UMMAA titles are temporarily free-to-read until the end of August 2021."
+      free: "This title is temporarily free to read for all users."
       restricted: "You do not have access to this book."
       restricted_access_options: "How to get access."
   activerecord:
