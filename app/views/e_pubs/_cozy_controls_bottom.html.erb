@@ -6,6 +6,9 @@
         contents.addTo(reader);
         <% end %>
 
+        // WebGL and Database widgets
+        <%= render "webgl_specific", presenter: @presenter, parent_presenter: @parent_presenter %>
+
         // Resources
         <% if @parent_presenter.assets? %>
         cozy.control.widget.button({

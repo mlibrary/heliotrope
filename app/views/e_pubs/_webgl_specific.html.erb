@@ -182,6 +182,8 @@
         // If in a11y mode, open database record
         var click_handler = function(event) {
           var s = event.target.getAttribute('data-uid');
+          // new variable to support tomb linking
+          var t = event.target.getAttribute('data-tid');
           if ($('body').hasClass('a11y')) {
             window.open('https://doi.org/10.3998/gabii.1.' + s, '_blank');
           } else {
@@ -190,23 +192,28 @@
             function getToUnity(s) {
               SendMessage("WebCommunicator", "ShowString", s);
             };
+            function getToUnityTomb(t) {
+              SendMessage("WebCommunicator", "ShowStringTomb", t);
+            };
             var unityContainer = document.getElementById("unity-container");
             if ($('body').hasClass('panel-open')) {
               FocusCanvas("1");
               unityContainer.focus();
               getToUnity(s);
+              getToUnityTomb(t);
             } else {
               open_panel();
               FocusCanvas("1");
               unityContainer.focus();
               getToUnity(s);
+              getToUnityTomb(t);
             }
           }
         };
 
-        // Setup SU link event listener
+        // Setup SU and Tomb link event listener
         reader.on('ready:contents', function(contents) {
-          var links = contents.content.querySelectorAll("a[data-uid]");
+          var links = contents.content.querySelectorAll("a[data-uid], a[data-tid]");
           for(var i =0, n = links.length; i < n; i++) {
             var link = links[i];
             link.addEventListener('click', click_handler);
