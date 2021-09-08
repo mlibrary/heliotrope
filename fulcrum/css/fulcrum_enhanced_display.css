@@ -13,3 +13,56 @@
 span.enhanced-media-display {
     display: inline !important;
 }
+
+/* place "open <resource>" button in the middle of the figure, 
+   presumably a nested <img> */
+
+figure > div {
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    flex-direction: column !important;
+}
+
+figure div[data-href*="embed"] {
+    display: flex !important;
+    position: absolute !important;
+    align-items: center !important;
+    justify-content: center !important;
+    background-color: transparent !important;
+}
+
+figure .cozy-mangled-popup--container {
+    background-color: transparent;
+}
+figure .cozy-mangled-popup--container button.cozy-mangled-popup--action {
+    clip-path: inset(100%);
+    clip: rect(1px, 1px, 1px, 1px);
+    height: 1px;
+    overflow: hidden;
+    position: absolute;
+    white-space: nowrap;
+    width: 1px;
+}
+
+figure:hover .cozy-mangled-popup--container button.cozy-mangled-popup--action,
+figure:active .cozy-mangled-popup--container button.cozy-mangled-popup--action,
+figure:focus .cozy-mangled-popup--container button.cozy-mangled-popup--action,
+figure .cozy-mangled-popup--container button.cozy-mangled-popup--action:hover,
+figure .cozy-mangled-popup--container button.cozy-mangled-popup--action:active,
+figure .cozy-mangled-popup--container button.cozy-mangled-popup--action:focus
+  {
+    clip-path: unset;
+    clip: unset;
+    height: unset;
+    overflow: unset;
+    position: unset;
+    white-space: unset;
+    width: unset;
+}
+
+figure:hover img,
+figure:active img,
+figure:focus img {
+    opacity: 0.2;
+}
