@@ -2,6 +2,7 @@
 <% provide :page_class, 'press' %>
 <% ga_url = @press.google_analytics_url %>
 <% map_url = @press.readership_map_url %>
+<% oaebu_url = 'https://datastudio.google.com/embed/u/0/reporting/9b42ed06-ab37-4bb5-9215-4ea8c3ee70ec/page/9i1ZC' if @press.subdomain == 'michigan' %>
 
 <%= render 'shared/breadcrumbs' %>
 
@@ -15,6 +16,11 @@
         <% if ga_url.present? %>
           <li role="presentation">
             <h2><a id="tab-analytics-press-stats" href="#analytics" aria-controls="analytics-press-stats" role="tab" data-toggle="tab" aria-selected="false" aria-expanded="false" tabindex="-1">Google Analytics</a></h2>
+          </li>
+        <% end %>
+        <% if oaebu_url.present? %>
+          <li role="presentation">
+            <h2><a id="tab-analytics-press-stats" href="#report" aria-controls="report-press-stats" role="tab" data-toggle="tab" aria-selected="false" aria-expanded="false" tabindex="-1">Open Access Ebooks</a></h2>
           </li>
         <% end %>
       </ul>
@@ -47,6 +53,25 @@
                 <div class="panel-body">
                   <div class="iframe-container">
                     <iframe src="<%= ga_url %>" id="ga_iframe" class=".embed-responsive-item"></iframe>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <p>Not seeing the graphs? Third-Party Cookies must be enabled (<a href="https://www.whatismybrowser.com/detect/are-third-party-cookies-enabled" target="_blank">check here</a>). Strict tracker blocking will also cause issues. Please adjust browser settings and reload.</p>
+          </section>
+        <% end %>
+        <% if oaebu_url.present? %>
+          <section id="report" class="tab-pane fade row" role="tabpanel" aria-hidden="true" aria-labelledby="tab-report-press-stats" tabindex="0">
+            <div class="col-sm-12">
+              <% if @press.subdomain == 'michigan' %>
+                <p class="press-stats-text">
+                  This report is created by the <a href="https://educopia.org/data_trust/" target="_blank">Open Access Ebook Usage Trust</a> (OAeBU) and represents usage across a number of different sources platforms. For more information, see <a href="https://tools.lib.umich.edu/confluence/display/FPS/UMP+EBC+Usage+Statistics+FAQ" target="_blank">our FAQ</a>.
+                </p>
+              <% end %>
+              <div class="panel panel-default">
+                <div class="panel-body">
+                  <div class="iframe-container">
+                    <iframe src="<%= oaebu_url %>" id="oa_iframe" class=".embed-responsive-item"></iframe>
                   </div>
                 </div>
               </div>
