@@ -30,6 +30,16 @@
           var $panel = $('.special-panel');
 
           if (! $panel.length) {
+              var title = document.title;
+              var vol_1 = "A Mid-Republican House from Gabii";
+              if (title.includes(vol_1)) { 
+                var $3d_title = "Gabii Area B 3D Model";
+                var $3d_doi = "https://doi.org/10.3998/mpub.9231782.model";
+              } else {
+                var $3d_title = "Gabii Area A 3D Model";
+                var $3d_doi = "https://doi.org/10.3998/mpub.";
+              }
+            
             var $panelContent =
               '<div class="special-panel" aria-hidden="false">' +
                 '<div class="panel-control">' +
@@ -47,9 +57,9 @@
                   '</div>' +
                 '</div>' +
                 '<div class="panel-info">' +
-                  '<h2>Gabii Area B 3D Model</h2>' +
-                  '<p><strong>DOI: https://doi.org/10.3998/mpub.9231782.model</strong></p>' +
-                  '<p>This interactive section of the publication includes 3D models, descriptions, and links to the online database, and complements the narrative text. Interaction with this content is essential to engaging with our interpretation of the Tincu house. Readers are encouraged both to follow the narrative laid out in the text through the model and data, and to explore the 3D content and database freely.' +
+                  '<h2>'+$3d_title+'</h2>' +
+                  '<p><strong>'+$3d_doi+'</strong></p>' +
+                  '<p>This interactive section of the publication includes 3D models, descriptions, and links to the online database, and complements the narrative text. Interaction with this content is essential to engaging with our interpretation of the Gabii site. Readers are encouraged both to follow the narrative laid out in the text through the model and data, and to explore the 3D content and database freely.' +
                   '</p>' +
                 '</div>' +
               '</div>';
@@ -181,9 +191,11 @@
         // Open SU panel in WebGL if SU link is clicked
         // If in a11y mode, open database record
         var click_handler = function(event) {
-          var s = event.target.getAttribute('data-uid');
-          // new variable to support tomb linking
-          var t = event.target.getAttribute('data-tid');
+          if (event.target.hasAttribute('data-tid')) {
+            var s = event.target.getAttribute('data-tid');
+          } else {
+            var s = event.target.getAttribute('data-uid');
+          }
           if ($('body').hasClass('a11y')) {
             window.open('https://doi.org/10.3998/gabii.1.' + s, '_blank');
           } else {
@@ -192,21 +204,21 @@
             function getToUnity(s) {
               SendMessage("WebCommunicator", "ShowString", s);
             };
-            function getToUnityTomb(t) {
-              SendMessage("WebCommunicator", "ShowStringTomb", t);
+            function getToUnityTomb(s) {
+              SendMessage("WebCommunicator", "ShowStringTomb", s);
             };
             var unityContainer = document.getElementById("unity-container");
             if ($('body').hasClass('panel-open')) {
               FocusCanvas("1");
               unityContainer.focus();
               getToUnity(s);
-              getToUnityTomb(t);
+              getToUnityTomb(s);
             } else {
               open_panel();
               FocusCanvas("1");
               unityContainer.focus();
               getToUnity(s);
-              getToUnityTomb(t);
+              getToUnityTomb(s);
             }
           }
         };
