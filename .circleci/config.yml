@@ -16,7 +16,7 @@ commands:
         type: string
       ruby_version:
         type: string
-        default: '2.7.3'
+        default: '2.7.4'
     steps:
     - restore_cache:
         keys:
@@ -97,7 +97,7 @@ jobs:
     parameters:
       ruby_version:
         type: string
-        default: '2.7.3'
+        default: '2.7.4'
       bundler_version:
         type: string
         default: '2.1.4'
@@ -128,7 +128,7 @@ jobs:
     parameters:
       ruby_version:
         type: string
-        default: '2.7.3'
+        default: '2.7.4'
       bundler_version:
         type: string
         default: '2.1.4'
@@ -160,7 +160,7 @@ jobs:
     parameters:
       ruby_version:
         type: string
-        default: '2.7.3'
+        default: '2.7.4'
       bundler_version:
         type: string
         default: '2.1.4'
@@ -243,7 +243,7 @@ executors:
         default: ruby
         type: string
       ruby_version:
-        default: '2.7.3'
+        default: '2.7.4'
         type: string
   ruby_fcrepo_solr_redis_mysql:
     description: Box running FCRepo, Solr, Ruby, Redis and MySQL.
@@ -281,7 +281,7 @@ executors:
         default: ruby
         type: string
       ruby_version:
-        default: '2.7.3'
+        default: '2.7.4'
         type: string
       solr_port:
         default: "8985"
@@ -295,15 +295,15 @@ workflows:
   ruby2-7rails5-2:
     jobs:
       - bundle:
-          ruby_version: '2.7.3'
+          ruby_version: '2.7.4'
           rails_version: '5.2.4.6'
       - build:
-          ruby_version: '2.7.3'
+          ruby_version: '2.7.4'
           rails_version: '5.2.4.6'
           requires:
             - bundle
       - test:
           name: "rails5-2"
-          ruby_version: '2.7.3'
+          ruby_version: '2.7.4'
           requires:
             - build
