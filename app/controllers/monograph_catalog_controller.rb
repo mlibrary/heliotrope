@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
 class MonographCatalogController < ::CatalogController
-  before_action :load_presenter, only: %i[index facet]
+  before_action :load_presenter, only: %i[index facet purchase]
+  before_action :load_press_presenter, only: %i[purchase]
   before_action :load_stats, only: %i[index facet]
   after_action :add_counter_stat, only: %i[index]
 
@@ -68,6 +69,9 @@ class MonographCatalogController < ::CatalogController
     super
   end
 
+  def purchase
+  end
+
   # If the params specify a view, then store it in the session. If the params
   # do not specifiy the view, set the view parameter to the value stored in the
   # session. This enables a user with a session to do subsequent searches and have
@@ -92,6 +96,10 @@ class MonographCatalogController < ::CatalogController
       Rails.logger.error(%Q|[RSOLR ERROR TRY:#{retries}] #{e} #{e.backtrace.join("\n")}|)
       retries += 1
       retry if retries < 3
+    end
+
+    def load_press_presenter
+      @press_presenter = PressPresenter.for(@presenter.subdomain)
     end
 
     def disable_read_button?

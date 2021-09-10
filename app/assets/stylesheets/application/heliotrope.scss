@@ -1268,6 +1268,31 @@ footer.press {
   }
 
 }
+
+///////////////////////////////////
+// PURCHASE
+///////////////////////////////////
+.purchase {
+  .heading {
+    font-size: 24px;
+    font-weight: bold;
+  }
+  .margin-padding {
+    padding-top: 15px;
+    padding-left: 15px;
+    padding-right: 15px;
+    padding-bottom: 0;
+  }
+  .border-padding {
+    border: black 3px solid;
+    padding-top: 0;
+    padding-left: 15px;
+    padding-right: 15px;
+    padding-bottom: 15px;
+    background: #fafafa;
+  }
+}
+
 ///////////////////////////////////
 // EPUB READER - cozy-sun-bear
 ///////////////////////////////////
