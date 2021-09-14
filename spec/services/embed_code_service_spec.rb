@@ -9,8 +9,8 @@ RSpec.describe EmbedCodeService do
 
     let(:cover) { create(:file_set, label: 'cover.jpg') }
     let(:epub) { create(:file_set, label: 'fake_epub_with_embeds.epub', content: File.open(File.join(fixture_path, 'fake_epub_with_embeds.epub'))) }
-    let(:image) { create(:file_set, label: 'image.jpg') }
-    let(:audio) { create(:file_set, label: 'audio.mp3') }
+    let(:image) { create(:file_set, label: 'image.jpg', caption: ['Image file caption in FileSet metadata']) }
+    let(:audio) { create(:file_set, label: 'audio.mp3', caption: ['Audio file caption in FileSet metadata']) }
     let(:video) { create(:file_set, label: 'video.mp4') }
     let(:interactive_map) { create(:file_set, label: 'interactive_map.zip', resource_type: ['interactive map']) }
 
@@ -92,6 +92,23 @@ RSpec.describe EmbedCodeService do
         expect(doc.search(audio_embed_attributes).size).to eq(2) # one is a no-local-image example
         expect(doc.search(video_embed_attributes).size).to eq(1)
         expect(doc.search(interactive_map_embed_attributes).size).to eq(1)
+      end
+
+      it "Inserts figcaptions for files referenced in the EPUB using data attributes, if none are present in the EPUB" do
+        expect(File.exist?(File.join(root_path, 'EPUB', 'xhtml', 'embeds_using_data_attributes.xhtml'))).to be true
+        doc = Nokogiri::XML(File.read(File.join(root_path, 'EPUB', 'xhtml', 'embeds_using_data_attributes.xhtml')))
+        # the image embed in this EPUB XHTML file already has a <figcaption> present,...
+        # nothing is changed even though the FileSet has a (different) metadata caption.
+        expect(doc.search("figcaption:contains('Image file caption in the EPUB file')").size).to eq(1)
+        # the audio embeds don't have a <figcaption> present in the EPUB XHTML file,...
+        # but the FileSet metadata has a caption, which will be added to both as a <figcaption>.
+        expect(doc.search("figcaption:contains('Audio file caption in FileSet metadata')").size).to eq(2)
+        # the video embed has a <figcaption> present in the EPUB XHTML file,...
+        # and the FileSet metadata has no caption. Nothing is changed.
+        expect(doc.search("figcaption:contains('Video file caption in the EPUB file')").size).to eq(1)
+        # the interactive map embed doesn't have a <figcaption> present in the EPUB XHTML file,...
+        # and the FileSet metadata has no caption. A generic <figcaption> is inserted.
+        expect(doc.search("figcaption:contains('Additional Interactive Map Resource')").size).to eq(1)
       end
 
       it "Inserts embed codes for files referenced in the EPUB using img src basename matching" do

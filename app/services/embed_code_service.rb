@@ -17,7 +17,7 @@ module EmbedCodeService
 
       # these should look something like this
       # <div data-embed-filename="audio_file_name.mp3">
-      nodes = doc.search '[data-fulcrum-embed-filename]'
+      nodes = doc.search 'figure[data-fulcrum-embed-filename]'
       data_attribute_embeds(nodes, embeddable_file_set_docs) if nodes.present?
 
       # these should look like regular img tags
@@ -66,6 +66,8 @@ module EmbedCodeService
       node['data-href'] = file_set_presenter.embed_link
       node['data-title'] = file_set_presenter.embed_code_title
       node['data-resource-type'] = resource_type(file_set_presenter)
+
+      maybe_add_figcaption(node, file_set_presenter)
     end
   end
 
@@ -88,5 +90,12 @@ module EmbedCodeService
                             "data-title=\"#{file_set_presenter.embed_code_title}\" " \
                             "data-resource-type=\"#{resource_type(file_set_presenter)}\" />")
     end
+  end
+
+  def maybe_add_figcaption(node, file_set_presenter)
+    # skip if there is a figcaption anywhere under this node
+    return if node.at('figcaption').present?
+    caption = file_set_presenter.caption.present? ? file_set_presenter.caption.first : "Additional #{resource_type(file_set_presenter).titlecase} Resource"
+    node.add_child("<figcaption>#{caption}</figcaption>")
   end
 end
