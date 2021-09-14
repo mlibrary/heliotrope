@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+  </head>
+  <body>
+    <p>Below are the following Fixity Failures for <%= @today %><p>
+    <table>
+      <tr>
+        <th>file_set_id</th>
+        <th>file_id</th>
+        <th>passed?</th>
+        <th>tries</th>
+      </tr>
+    <% @failures.each do |failure| %>
+      <tr>
+        <td><%= failure[:file_set_id] %></td>
+        <td><%= failure[:file_id] %></td>
+        <td><%= failure[:passed] %></td>
+        <td><%= failure[:tries] %></td>
+      </tr>
+    <% end %>
+    </table>
+    <p />
+    <p><a href="https://tools.lib.umich.edu/confluence/display/FUL/How+to+Address+Fixity+Failures">Please read the confluence fixity page for steps on how to handle this.</a></p>
+  </body>
+</html>

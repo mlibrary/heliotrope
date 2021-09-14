@@ -117,6 +117,12 @@ class UtilitiesController < ApplicationController
       Processes - Resque workers
 
         #{resque_workers}
+
+
+      ActiveFedora - Connection config options
+
+        #{ActiveFedora::Fedora.instance.authorized_connection.options}
+
     APP_STATUS
     end
 
