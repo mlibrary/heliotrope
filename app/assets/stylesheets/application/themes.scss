@@ -2143,6 +2143,7 @@ $barpublishing-white: #fff;
     .navbar-brand {
       @include arial;
       color: $barpublishing-white;
+      height: auto;
     }
 
     .navbar-nav {
