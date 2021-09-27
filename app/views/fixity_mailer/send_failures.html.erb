@@ -4,21 +4,23 @@
     <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
   </head>
   <body>
-    <p>Below are the following Fixity Failures for <%= @today %><p>
+    <p>Below are the following Fixity Failures for <%= @hostname %>, <%= @today %><p>
     <table>
       <tr>
+        <th></th>
         <th>file_set_id</th>
         <th>file_id</th>
         <th>passed?</th>
-        <th>tries</th>
       </tr>
+    <% i = 1 %>
     <% @failures.each do |failure| %>
       <tr>
+        <td><%= i %>
         <td><%= failure[:file_set_id] %></td>
         <td><%= failure[:file_id] %></td>
         <td><%= failure[:passed] %></td>
-        <td><%= failure[:tries] %></td>
       </tr>
+      <% i += 1 %>
     <% end %>
     </table>
     <p />

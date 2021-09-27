@@ -1,12 +1,14 @@
 
-Below are the following Fixity Failures for <%= @today %>.
+Below are the following Fixity Failures for <%= @hostname %>, <%= @today %>.
 
+<% i = 1 %>
 <% @failures.each do |failure| %>
+  <%= i %>
   file_set_id:  <%= failure[:file_set_id] %>
   file_id:      <%= failure[:file_id] %>
   passed?:      <%= failure[:passed] %>
-  tries:        <%= failure[:tries] %>
 
+  <% i += 1 %>
 <% end %>
 
 Please read the confluence fixity page for steps on how to handle this.
