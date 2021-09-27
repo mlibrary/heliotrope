@@ -22,7 +22,7 @@ describe Hydra::Derivatives::Processors::Video::Processor do
       expect(subject)
                  .to receive(:encode_file)
                                  .with("mp4",
-                                       Hydra::Derivatives::Processors::Ffmpeg::OUTPUT_OPTIONS => "-filter_complex \"scale='ceil(iw*min(1, min(1280/iw, 720/ih))/2)*2':-2\" -vcodec mpeg4 -acodec aac -strict -2 -g 30 -b:v 1200k -ac 2 -ab 192k -ar 44100",
+                                       Hydra::Derivatives::Processors::Ffmpeg::OUTPUT_OPTIONS => "-filter_complex \"scale='ceil(iw*min(1, min(1280/iw, 720/ih))/2)*2':-2\" -vcodec mpeg4 -acodec aac -strict -2 -g 30 -b:v 1800k -ac 2 -ab 192k -ar 44100",
                                        Hydra::Derivatives::Processors::Ffmpeg::INPUT_OPTIONS => "")
       subject.process
     end
@@ -62,7 +62,7 @@ describe Hydra::Derivatives::Processors::Video::Processor do
         expect(subject)
             .to receive(:encode_file)
                     .with("mp4",
-                          Hydra::Derivatives::Processors::Ffmpeg::OUTPUT_OPTIONS => "-filter_complex \"scale='ceil(iw*min(1, min(1280/iw, 720/ih))/2)*2':-2\" -vcodec libx264 -acodec aac -g 30 -b:v 1200k -ac 2 -ab 192k -ar 44100",
+                          Hydra::Derivatives::Processors::Ffmpeg::OUTPUT_OPTIONS => "-filter_complex \"scale='ceil(iw*min(1, min(1280/iw, 720/ih))/2)*2':-2\" -vcodec libx264 -acodec aac -g 30 -b:v 1800k -ac 2 -ab 192k -ar 44100",
                           Hydra::Derivatives::Processors::Ffmpeg::INPUT_OPTIONS => "")
         subject.process
       end
@@ -75,7 +75,7 @@ describe Hydra::Derivatives::Processors::Video::Processor do
         expect(subject)
             .to receive(:encode_file)
                     .with("webm",
-                          Hydra::Derivatives::Processors::Ffmpeg::OUTPUT_OPTIONS => "-filter_complex \"scale='ceil(iw*min(1, min(1280/iw, 720/ih))/2)*2':-2\" -vcodec libvpx -acodec libvorbis -g 30 -b:v 1200k -ac 2 -ab 192k -ar 44100",
+                          Hydra::Derivatives::Processors::Ffmpeg::OUTPUT_OPTIONS => "-filter_complex \"scale='ceil(iw*min(1, min(1280/iw, 720/ih))/2)*2':-2\" -vcodec libvpx -acodec libvorbis -g 30 -b:v 1800k -ac 2 -ab 192k -ar 44100",
                           Hydra::Derivatives::Processors::Ffmpeg::INPUT_OPTIONS => "")
         subject.process
       end

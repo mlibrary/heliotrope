@@ -8,8 +8,10 @@
        data-able-player
        data-include-transcript="false"
        poster="<%= hyrax.download_path(file_set, file: 'jpeg') %>">
-  <source src="<%= hyrax.download_path(file_set, file: 'webm') %>" type="video/webm" />
+  <%# mp4 looks better than webm, at least with our codecs and bitrates, list it first so it will take precedence. %>
   <source src="<%= hyrax.download_path(file_set, file: 'mp4') %>" type="video/mp4" />
+  <%# all browser now seem to support mp4/h.264, it might be best to get rid of the webm derivatives entirely %>
+  <source src="<%= hyrax.download_path(file_set, file: 'webm') %>" type="video/webm" />
   <% if file_set.closed_captions.present? %><%# kind="subtitles" not "captions" due to https://github.com/mlibrary/heliotrope/issues/1234 %>
     <track kind="subtitles" src="<%= hyrax.download_path(file_set, file: 'captions_vtt') %>" srclang="en" label="English"  />
   <% end %>

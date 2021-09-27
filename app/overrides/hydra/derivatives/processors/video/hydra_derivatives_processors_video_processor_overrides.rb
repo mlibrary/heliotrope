@@ -19,7 +19,7 @@ Hydra::Derivatives::Processors::Video::Processor.class_eval do
         else
           # set pretty good bitrates across-the-board, will likely increase size of playback derivatives...
           # of low-res content, but no matter
-          output_options += "-g 30 -b:v 1200k -ac 2 -ab 192k -ar 44100"
+          output_options += "-g 30 -b:v 1800k -ac 2 -ab 192k -ar 44100"
         end
 
         if directives.fetch(:label) == :thumbnail
