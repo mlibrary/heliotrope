@@ -76,6 +76,9 @@ RSpec.describe EmbedCodeService do
         expect(doc.search("iframe[@src=\"#{video_embed_url}\"]")).to be_empty
         expect(doc.search(interactive_map_embed_attributes)).to be_empty
         expect(doc.search("iframe[@src=\"#{interactive_map_embed_url}\"]")).to be_empty
+        # the `display:none` for the data attribute (additional resource) embeds off-Fulcrum are still present
+        expect(doc.search("figure[@style=\"display:none\"]").size).to eq(3)
+        expect(doc.search("figure[@style=\"display: none\"]").size).to eq(2)
       end
     end
 
@@ -113,6 +116,13 @@ RSpec.describe EmbedCodeService do
           expect(doc.search(interactive_map_embed_attributes).size).to eq(1)
           expect(doc.search("iframe[@src=\"#{interactive_map_embed_url}\"]")).to be_empty
         end
+
+        it 'removes the `style="display:none"` used to keep these additional-resource embeds hidden off-Fulcrum' do
+          expect(File.exist?(File.join(root_path, 'EPUB', 'xhtml', 'embeds_using_data_attributes.xhtml'))).to be true
+          doc = Nokogiri::XML(File.read(File.join(root_path, 'EPUB', 'xhtml', 'embeds_using_data_attributes.xhtml')))
+          # all styles removed from additional resources (especially targeting the `display:none` needed off-Fulcrum)
+          expect(doc.search("figure[@data-fulcrum-embed-filename][@style]")).to be_empty
+        end
       end
 
       it "Inserts figcaptions for files referenced in the EPUB using data attributes, if none are present in the EPUB" do
@@ -134,7 +144,7 @@ RSpec.describe EmbedCodeService do
 
       context "Inserts embed codes for files referenced in the EPUB using img src basename matching" do
         it "inserts iframe embed codes for audio and video files and removes the original img tags" do
-          expect(File.exist?(File.join(root_path, 'EPUB', 'xhtml', 'embeds_using_data_attributes.xhtml'))).to be true
+          expect(File.exist?(File.join(root_path, 'EPUB', 'xhtml', 'embeds_using_img_src_basenames.xhtml'))).to be true
           doc = Nokogiri::XML(File.read(File.join(root_path, 'EPUB', 'xhtml', 'embeds_using_img_src_basenames.xhtml')))
           expect(doc.search(audio_embed_attributes)).to be_empty
           expect(doc.search("iframe[@src=\"#{audio_embed_url}\"]").size).to eq(1)
@@ -145,7 +155,7 @@ RSpec.describe EmbedCodeService do
         end
 
         it "inserts CSB-modal embed codes for images and interactive maps, leaving their img tags in place" do
-          expect(File.exist?(File.join(root_path, 'EPUB', 'xhtml', 'embeds_using_data_attributes.xhtml'))).to be true
+          expect(File.exist?(File.join(root_path, 'EPUB', 'xhtml', 'embeds_using_img_src_basenames.xhtml'))).to be true
           doc = Nokogiri::XML(File.read(File.join(root_path, 'EPUB', 'xhtml', 'embeds_using_img_src_basenames.xhtml')))
           expect(doc.search(image_embed_attributes).size).to eq(1)
           expect(doc.search("iframe[@src=\"#{image_embed_url}\"]")).to be_empty
@@ -156,7 +166,7 @@ RSpec.describe EmbedCodeService do
         end
 
         it "Changes the imgs' parent p tags to div tags" do
-          expect(File.exist?(File.join(root_path, 'EPUB', 'xhtml', 'embeds_using_data_attributes.xhtml'))).to be true
+          expect(File.exist?(File.join(root_path, 'EPUB', 'xhtml', 'embeds_using_img_src_basenames.xhtml'))).to be true
           doc = Nokogiri::XML(File.read(File.join(root_path, 'EPUB', 'xhtml', 'embeds_using_img_src_basenames.xhtml')))
           expect(doc.search("div[@class='image']").count).to eq(4)
         end
@@ -205,6 +215,9 @@ RSpec.describe EmbedCodeService do
           expect(doc.search("iframe[@src=\"#{video_embed_url}\"]")).to be_empty
           expect(doc.search(interactive_map_embed_attributes)).to be_empty
           expect(doc.search("iframe[@src=\"#{interactive_map_embed_url}\"]")).to be_empty
+          # the `display:none` for the data attribute (additional resource) embeds off-Fulcrum are still present
+          expect(doc.search("figure[@style=\"display:none\"]").size).to eq(3)
+          expect(doc.search("figure[@style=\"display: none\"]").size).to eq(2)
         end
 
         it "Does not insert embed codes for files referenced in the EPUB using img src basename matching" do
@@ -261,6 +274,8 @@ RSpec.describe EmbedCodeService do
             expect(doc.search("iframe[@src=\"#{audio_embed_url}\"]").size).to eq(2) # one is a no-local-image example
             expect(doc.search(video_embed_attributes)).to be_empty
             expect(doc.search("iframe[@src=\"#{video_embed_url}\"]").size).to eq(1)
+            # all styles removed from additional resources (especially targeting the `display:none` needed off-Fulcrum)
+            expect(doc.search("figure[@data-fulcrum-embed-filename][@style]")).to be_empty
           end
 
           it "Inserts CSB-modal embed codes for images and interactive maps" do
@@ -270,6 +285,8 @@ RSpec.describe EmbedCodeService do
             expect(doc.search("iframe[@src=\"#{image_embed_url}\"]")).to be_empty
             expect(doc.search(interactive_map_embed_attributes).size).to eq(1)
             expect(doc.search("iframe[@src=\"#{interactive_map_embed_url}\"]")).to be_empty
+            # all styles removed from additional resources (especially targeting the `display:none` needed off-Fulcrum)
+            expect(doc.search("figure[@data-fulcrum-embed-filename][@style]")).to be_empty
           end
         end
 
@@ -330,6 +347,8 @@ RSpec.describe EmbedCodeService do
           expect(doc.search("iframe[@src=\"#{hyphen_video_embed_url}\"]").size).to eq(1)
           expect(doc.search(hyphen_weird_casing_interactive_map_embed_attributes).size).to eq(1)
           expect(doc.search("iframe[@src=\"#{hyphen_weird_casing_interactive_map_embed_url}\"]")).to be_empty
+          # all styles removed from additional resources (especially targeting the `display:none` needed off-Fulcrum)
+          expect(doc.search("figure[@data-fulcrum-embed-filename][@style]")).to be_empty
         end
       end
 
@@ -361,6 +380,9 @@ RSpec.describe EmbedCodeService do
           expect(doc.search("iframe[@src=\"#{video_embed_url}\"]")).to be_empty
           expect(doc.search(interactive_map_embed_attributes)).to be_empty
           expect(doc.search("iframe[@src=\"#{interactive_map_embed_url}\"]")).to be_empty
+          # the `display:none` for the data attribute (additional resource) embeds off-Fulcrum are still present
+          expect(doc.search("figure[@style=\"display:none\"]").size).to eq(3)
+          expect(doc.search("figure[@style=\"display: none\"]").size).to eq(2)
         end
 
         it "Does not insert embed codes for files referenced in the EPUB using img src basename matching" do

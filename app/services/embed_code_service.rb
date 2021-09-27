@@ -63,6 +63,10 @@ module EmbedCodeService
       file_set_presenter = Hyrax::PresenterFactory.build_for(ids: [id], presenter_class: Hyrax::FileSetPresenter, presenter_args: nil).first
       next unless file_set_presenter.embeddable_type?
 
+      # additional resources are expected to have a `style="display:none"` attribute present, to keep them hidden in...
+      # the EPUB off-Fulcrum. There is no other reason they would have a style attribute, so delete it completely.
+      node.remove_attribute('style')
+
       if file_set_presenter.audio? || file_set_presenter.video?
         # for these full embed markup is added inside the <figure> element in the derivative-folder XHTML file
         node.add_child(file_set_presenter.embed_code)
