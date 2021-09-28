@@ -14,7 +14,7 @@ class SessionsController < ApplicationController
     elsif Rails.env.production?
       production_fallback!
     else
-      redirect_to new_authentications_path
+      redirect_to new_authentication_path
     end
   end
 

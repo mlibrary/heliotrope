@@ -9,16 +9,17 @@ RSpec.describe Sighrax::Monograph, type: :model do
     let(:press) { create(:press, subdomain: 'subdomain') }
     let(:monograph) do
       create(:public_monograph,
-             press: 'subdomain',
-             representative_id: cover.id,
-             creator: ['creator'],
+             buy_url: ['buy_url'],
              contributor: ['contributor'],
-             description: ['description'],
-             language: ['language'],
+             creator: ['creator'],
              date_created: ['c1999e'],
              date_modified: date_modified,
              date_published: [date_published],
+             description: ['description'],
+             language: ['language'],
+             press: 'subdomain',
              publisher: ['publishing house'],
+             representative_id: cover.id,
              series: ['series'],
              subject: ['subject'])
     end
@@ -48,6 +49,7 @@ RSpec.describe Sighrax::Monograph, type: :model do
       is_expected.to be_a_kind_of Sighrax::Work
       expect(subject.resource_type).to eq :Monograph
 
+      expect(subject.buy_url).to eq 'buy_url'
       expect(subject.contributors).to contain_exactly('creator', 'contributor')
       expect(subject.cover.noid).to eq cover.id
       expect(subject.description).to eq 'description'
@@ -170,6 +172,35 @@ RSpec.describe Sighrax::Monograph, type: :model do
             expect(subject.open_access?).to be true
           end
         end
+      end
+    end
+  end
+
+  describe '#worldcat_url' do
+    subject { Sighrax.from_noid(monograph.id).worldcat_url }
+
+    context 'none' do
+      let(:monograph) { create(:public_monograph) }
+
+      it { is_expected.to be_empty }
+    end
+
+    context 'isbns' do
+      let(:monograph) { create(:public_monograph, isbn: isbns) }
+      let(:isbns) { [] }
+
+      it { is_expected.to be_empty }
+
+      context 'blank' do
+        let(:isbns) { [''] }
+
+        it { is_expected.to be_empty }
+      end
+
+      context 'isbn' do
+        let(:isbns) { ['0123456789'] }
+
+        it { is_expected.to eq 'http://www.worldcat.org/isbn/0123456789' }
       end
     end
   end

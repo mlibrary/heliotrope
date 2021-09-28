@@ -1,9 +1,10 @@
 # frozen_string_literal: true
 
 class AuthenticationsController < ApplicationController
+  before_action :set_presenter, only: %i[show]
+
   def show
-    @request_attributes = Services.request_attributes.for(request)
-    @identity = @request_attributes.identity
+    redirect_to default_login_path unless @presenter.publisher?
   end
 
   def new
@@ -23,6 +24,10 @@ class AuthenticationsController < ApplicationController
   end
 
   private
+
+    def set_presenter
+      @presenter = AuthenticationPresenter.for(current_actor, params[:press], params[:id], params[:filter])
+    end
 
     def authentication_params
       params.require(:authentication).permit(:email)

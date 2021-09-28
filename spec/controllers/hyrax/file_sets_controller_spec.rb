@@ -15,6 +15,15 @@ RSpec.describe Hyrax::FileSetsController, type: :controller do
     sign_in user
   end
 
+  describe "#show" do
+    it 'succeeds' do
+      get :show, params: { id: file_set.id }
+      expect(response).to have_http_status(:success)
+      expect(controller.instance_variable_get(:@auth)).to be_an_instance_of(Auth)
+      expect(controller.instance_variable_get(:@auth).return_location).to eq Rails.application.routes.url_helpers.hyrax_file_set_path(file_set)
+    end
+  end
+
   describe "#destroy" do
     before { stub_out_redis }
 

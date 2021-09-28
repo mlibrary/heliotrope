@@ -24,7 +24,7 @@ RSpec.describe SessionsController, type: :controller do
     context 'user not signed in' do
       before { allow_any_instance_of(described_class).to receive(:user_signed_in?).and_return(false) }
 
-      it { is_expected.to redirect_to new_authentications_path }
+      it { is_expected.to redirect_to new_authentication_path }
     end
   end
 

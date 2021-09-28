@@ -87,6 +87,7 @@ class MonographCatalogController < ::CatalogController
       monograph_id = params[:monograph_id] || params[:id]
       raise CanCan::AccessDenied unless current_ability&.can?(:read, monograph_id)
       @presenter = Hyrax::PresenterFactory.build_for(ids: [monograph_id], presenter_class: Hyrax::MonographPresenter, presenter_args: current_ability).first
+      auth_for(Sighrax.from_presenter(@presenter))
       @ebook_download_presenter = EBookDownloadPresenter.new(@presenter, current_ability, current_actor)
       # For Access Icons HELIO-3346
       @actor_product_ids = Sighrax.actor_products(current_actor).pluck(:id)

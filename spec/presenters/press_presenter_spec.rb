@@ -119,8 +119,16 @@ RSpec.describe PressPresenter do
     describe "#present?" do
       # Is it too weird to override .present?
       # It is very useful in the views to do this, but it's a little much maybe
-      it "is not present?" do
+      it "is not present" do
         expect(subject.present?).to be false
+      end
+    end
+
+    describe "#blank?" do
+      # Is it too weird to override .present?
+      # It is very useful in the views to do this, but it's a little much maybe
+      it "is blank" do
+        expect(subject.blank?).to be true
       end
     end
 

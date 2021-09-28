@@ -57,27 +57,17 @@ class ApplicationController < ActionController::Base
   end
 
   def current_institutions
-    @current_institutions ||= (ip_based_institutions + shib_institutions).uniq
+    @current_institutions ||= current_actor.institutions
+  end
+
+  def auth_for(entity)
+    @auth ||= Auth.new(current_actor, entity) # rubocop:disable Naming/MemoizedInstanceVariableName
   end
 
   private
 
     def request_attributes
       @request_attributes ||= Services.request_attributes.for(request)
-    end
-
-    def ip_based_institutions
-      ids = request_attributes[:dlpsInstitutionId] || []
-      Greensub::Institution.containing_dlps_institution_id(ids).to_a
-    end
-
-    def shib_institutions
-      entity_id = request_attributes[:identity_provider]
-      if entity_id
-        Greensub::Institution.for_entity_id(entity_id).to_a
-      else
-        []
-      end
     end
 
     def checkpoint_controller?

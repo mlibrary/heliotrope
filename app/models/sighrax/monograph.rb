@@ -10,6 +10,10 @@ module Sighrax
       @audiobook ||= Sighrax.from_noid(FeaturedRepresentative.find_by(work_id: noid, kind: 'audiobook')&.file_set_id)
     end
 
+    def buy_url
+      scalar('buy_url_ssim') || ''
+    end
+
     def contributors
       vector('creator_tesim') + vector('contributor_tesim')
     end
@@ -97,6 +101,18 @@ module Sighrax
 
     def subjects
       vector('subject_tesim')
+    end
+
+    def worldcat_url
+      # Build your link around the 10- or 13-digit ISBN for the item.
+      isbns = vector('isbn_tesim')
+      return '' if isbns.empty?
+
+      return '' if isbns.first.blank?
+
+      # TODO: process isbns
+
+      'http://www.worldcat.org/isbn/' + isbns.first
     end
 
     private

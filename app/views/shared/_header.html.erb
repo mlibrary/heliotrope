@@ -1,17 +1,16 @@
 <%= render 'shared/skip_links' %>
 <header id="banner" role="banner">
-  <hgroup>
-    <% if press_presenter.present? %>
-      <% if %w[leverpress amherst barpublishing mps heb].include? press_presenter.subdomain %>
-        <%= render 'shared/brand_press_bar_custom' %>
-      <% else %>
-        <%= render 'shared/brand_press_bar' %>
-      <% end %>
+  <% if press_presenter.present? %>
+    <% if %w[leverpress amherst barpublishing mps heb].include? press_presenter.subdomain %>
+      <%= render 'shared/brand_press_bar_custom' %>
     <% else %>
-      <%= render 'shared/brand_bar' %>
+      <%= render 'shared/brand_press_bar' %>
     <% end %>
-  </hgroup>
+  <% else %>
+    <%= render 'shared/brand_bar' %>
+  <% end %>
 </header>
+<%= render partial: 'shared/brand_press_auth', locals: { auth: @auth } if @auth.present? %>
 <% if press_presenter.present? && controller_name == "press_catalog" %>
   <% unless @search_ongoing == true || press_presenter.press.aboutware? %>
     <%= render 'shared/brand_press_jumbotron' %>

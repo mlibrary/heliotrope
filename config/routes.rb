@@ -218,7 +218,8 @@ Rails.application.routes.draw do
   get 'default_login', to: 'sessions#default_login', as: :default_login
   get 'shib_login(/*resource)', to: 'sessions#shib_login', as: :shib_login
   get 'shib_session(/*resource)', to: 'sessions#shib_session', as: :shib_session
-  resource :authentications, only: %i[show new create destroy]
+  resource :authentication, only: %i[show new create destroy]
+  resolve('Authentication') { [:authentication] }
   get 'discovery_feed', controller: :sessions, action: :discovery_feed
   get 'discovery_feed/:id', controller: :sessions, action: :discovery_feed
   unless Rails.env.production?
@@ -238,9 +239,12 @@ Rails.application.routes.draw do
 
   mount Hyrax::Engine, at: '/'
 
+  get 'concern/file_set/:id/authentication', controller: :authentications, action: :show, as: :file_set_authentication
+
   get 'concern/monographs/new', controller: 'hyrax/monographs', action: :new
   get 'concern/monographs/:id', controller: :monograph_catalog, action: :index, as: :monograph_catalog
   get 'concern/monographs/:id/purchase', controller: :monograph_catalog, action: :purchase, as: :purchase_monograph_catalog
+  get 'concern/monographs/:id/authentication', controller: :authentications, action: :show, as: :monograph_authentication
   get 'concern/monographs/:id/show', controller: 'hyrax/monographs', action: :show, as: :monograph_show
   patch 'concern/monographs/:id/reindex', controller: 'hyrax/monographs', action: :reindex, as: :monograph_reindex
   get 'monograph_catalog/facet/:id', controller: :monograph_catalog, action: :facet, as: :monograph_catalog_facet
@@ -296,6 +300,7 @@ Rails.application.routes.draw do
   get ':press', controller: :press_catalog, action: :index, as: :press_catalog
   get ':press/facet', controller: :press_catalog, action: :facet
   get ':press/statistics', controller: :press_statistics, action: :index, as: :press_statistics
+  get ':press/authentication', controller: :authentications, action: :show, as: :press_authentication
 
   root 'presses#index'
 
