@@ -663,7 +663,7 @@ RSpec.describe Hyrax::MonographPresenter do
           expect(subject.show?).to eq true
           expect(subject.icon_sm).to eq ActionController::Base.helpers.image_tag("lock_locked.svg", width: "16px", height: "16px", alt: "Restricted")
           expect(subject.icon_lg).to eq ActionController::Base.helpers.image_tag("lock_locked.svg", width: "24px", height: "24px", alt: "Restricted")
-          expect(subject.text).to eq ::I18n.t('access_levels.access_level_text.restricted') + " <a href=\"http://test.host/epubs_access/epubnoid\">How to get access.</a>"
+          expect(subject.text).to eq ::I18n.t('access_levels.access_level_text.restricted') + " " + link_to(::I18n.t('access_levels.access_level_text.restricted_access_options'), Rails.application.routes.url_helpers.monograph_authentication_url(id: "mono"))
         end
       end
     end

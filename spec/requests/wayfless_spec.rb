@@ -413,7 +413,7 @@ RSpec.describe "(Where Are You From)less", type: :request do
 
           it do
             subject
-            expect(response).to redirect_to(epub_access_path(epub.id))
+            expect(response).to redirect_to(monograph_authentication_path(monograph.id))
           end
         end
 

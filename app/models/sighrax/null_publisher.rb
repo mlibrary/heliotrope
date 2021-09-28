@@ -16,6 +16,10 @@ module Sighrax
       []
     end
 
+    def name
+      'Null Publisher Name'
+    end
+
     def watermark?
       false
     end

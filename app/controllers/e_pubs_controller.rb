@@ -8,7 +8,10 @@ class EPubsController < CheckpointController
   before_action :wayfless_redirect_to_shib_login, only: %i[show]
 
   def show # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
-    return redirect_to epub_access_url unless @policy.show?
+    unless @policy.show?
+      CounterService.new(self, @presenter).count(request: 1, turnaway: "No_License")
+      return redirect_to monograph_authentication_url(@parent_noid)
+    end
 
     @actor_product_ids = current_actor.products.pluck(:id)
     @allow_read_product_ids = Sighrax.allow_read_products.pluck(:id)
@@ -77,13 +80,6 @@ class EPubsController < CheckpointController
   rescue StandardError => e
     Rails.logger.info("EPubsController.file raised #{e}")
     head :no_content
-  end
-
-  def access
-    @parent_presenter = @presenter.parent
-    @institutions = component_institutions
-    @products = component_products
-    CounterService.from(self, @presenter).count(request: 1, turnaway: "No_License")
   end
 
   def search
