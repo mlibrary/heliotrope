@@ -288,8 +288,7 @@ module Hyrax
                        show?:   true,
                        icon_sm: ActionController::Base.helpers.image_tag("lock_locked.svg", width: "16px", height: "16px", alt: "Restricted"),
                        icon_lg: ActionController::Base.helpers.image_tag("lock_locked.svg", width: "24px", height: "24px", alt: "Restricted"),
-                       text:    ::I18n.t('access_levels.access_level_text.restricted') + " " + link_to(::I18n.t('access_levels.access_level_text.restricted_access_options'),
-                                                                                                    Rails.application.routes.url_helpers.epub_access_url(id: reader_ebook_id)))
+                       text:    ::I18n.t('access_levels.access_level_text.restricted'))
       else
         OpenStruct.new(level:   :unknown,
                        show?:   false,

@@ -8,6 +8,10 @@ module Sighrax
       false
     end
 
+    def buy_url
+      ''
+    end
+
     def children
       []
     end
@@ -89,7 +93,6 @@ module Sighrax
       []
     end
 
-
     def publication_year
       nil
     end
@@ -135,6 +138,10 @@ module Sighrax
 
     def watermarkable?
       false
+    end
+
+    def worldcat_url
+      ''
     end
 
     private

@@ -1,9 +1,7 @@
 <% provide :page_title, 'Purchase ' + @presenter.page_title %>
-<div id="maincontent" class="purchase">
-   <div class="row">
-    <div class="col-sm-12 margin-padding">
-      <%= link_to "<< Go back to previous page", monograph_catalog_path(@presenter.id) %>
-    </div>
+<div id="maincontent" class="monograph-purchase">
+  <div class="back-link">
+    <%= link_to "<< Go back to previous page", monograph_catalog_path(@presenter.id) %>
   </div>
   <div class="row">
     <div class="col-sm-8 margin-padding">

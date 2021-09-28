@@ -1,0 +1,16 @@
+<% if auth.actor_unauthorized? %>
+  <% if auth.actor_authenticated? %>
+    <div class="access access-options">
+      <span>
+        <b>Your institution does not have access to this book.</b> Please try <%= link_to "other options", main_app.monograph_authentication_path(@presenter.id, filter: true) %>.
+      </br>
+        Are you a librarian? See <%= link_to "purchase information", main_app.purchase_monograph_catalog_path(@presenter.id) %>.
+      </span>
+    </div>
+  <% else %>
+    <div class="access access-options access-options-alert">
+      <div>You don't have access to this book. Please try to log in with your library.</div>
+      <div><%= link_to "Log in", main_app.monograph_authentication_path(@presenter.id)  %></div>
+    </div>
+  <% end %>
+<% end %>

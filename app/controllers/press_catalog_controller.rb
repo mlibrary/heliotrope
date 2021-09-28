@@ -46,7 +46,7 @@ class PressCatalogController < ::CatalogController
 
     def load_press
       @press = Press.find_by(subdomain: params['press'])
-
+      auth_for(Sighrax::Publisher.from_press(@press))
       return @press if @press.present?
 
       render file: Rails.root.join('public', '404.html'), status: :not_found, layout: false

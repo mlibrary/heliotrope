@@ -35,38 +35,40 @@ RSpec.describe Sighrax::NullEntity, type: :model do
 
   context 'when noid is present and a derived class method' do
     it { expect(subject.allow_download?)  .to be false }
-    it { expect(subject.children)         .to eq([]) }
-    it { expect(subject.content)          .to eq('') }
-    it { expect(subject.contributors)     .to eq([]) }
-    it { expect(subject.cover)            .to eq(Sighrax::Entity.null_entity) }
+    it { expect(subject.buy_url)          .to eq '' }
+    it { expect(subject.children)         .to eq [] }
+    it { expect(subject.content)          .to eq '' }
+    it { expect(subject.contributors)     .to eq []  }
+    it { expect(subject.cover)            .to be_an_instance_of(Sighrax::NullEntity) }
     it { expect(subject.deposited?)       .to be true }
-    it { expect(subject.description)      .to eq('') }
+    it { expect(subject.description)      .to eq '' }
     it { expect(subject.downloadable?)    .to be false }
-    it { expect(subject.ebook)            .to eq(Sighrax::Entity.null_entity) }
-    it { expect(subject.epub_ebook)       .to eq(Sighrax::Entity.null_entity) }
-    it { expect(subject.file_name)        .to eq('null_file.txt') }
+    it { expect(subject.ebook)            .to be_an_instance_of(Sighrax::NullEntity) }
+    it { expect(subject.epub_ebook)       .to be_an_instance_of(Sighrax::NullEntity) }
+    it { expect(subject.file_name)        .to eq 'null_file.txt' }
     it { expect(subject.file_size)        .to eq 0 }
-    it { expect(subject.identifier)       .to eq(HandleNet.url(noid)) }
-    it { expect(subject.languages)        .to eq([]) }
-    it { expect(subject.media_type)       .to eq('text/plain') }
+    it { expect(subject.identifier)       .to eq HandleNet.url(noid) }
+    it { expect(subject.languages)        .to eq [] }
+    it { expect(subject.media_type)       .to eq 'text/plain' }
     it { expect(subject.modified)         .to be nil }
     it { expect(subject.monograph)        .to be_an_instance_of(Sighrax::NullEntity) }
     it { expect(subject.open_access?)     .to be false }
     it { expect(subject.parent)           .to be_an_instance_of(Sighrax::NullEntity) }
-    it { expect(subject.pdf_ebook)        .to eq(Sighrax::Entity.null_entity) }
-    it { expect(subject.products)         .to eq([]) }
+    it { expect(subject.pdf_ebook)        .to be_an_instance_of(Sighrax::NullEntity) }
+    it { expect(subject.products)         .to eq [] }
     it { expect(subject.publication_year) .to be nil }
     it { expect(subject.published)        .to be nil }
     it { expect(subject.published?)       .to be false }
     it { expect(subject.publisher)        .to be_an_instance_of(Sighrax::NullPublisher) }
-    it { expect(subject.publishing_house) .to eq('') }
+    it { expect(subject.publishing_house) .to eq '' }
     it { expect(subject.restricted?)      .to be false }
     it { expect(subject.timestamp)        .to be nil }
-    it { expect(subject.series)           .to eq('') }
-    it { expect(subject.subjects)         .to eq([]) }
+    it { expect(subject.series)           .to eq '' }
+    it { expect(subject.subjects)         .to eq [] }
     it { expect(subject.tombstone?)       .to be false }
     it { expect(subject.tombstone_message).to be nil }
     it { expect(subject.watermarkable?)   .to be false }
+    it { expect(subject.worldcat_url)     .to eq '' }
   end
 
   context 'when compared to an instance that has a blank solr document' do
@@ -121,6 +123,7 @@ RSpec.describe Sighrax::NullEntity, type: :model do
         ].include?(klass)
           # it { expect(subject.children).to eq instance.children }
           if [Sighrax::Monograph].include?(klass)
+            it { expect(subject.buy_url)          .to eq instance.buy_url }
             it { expect(subject.contributors)     .to eq instance.contributors }
             it { expect(subject.cover)            .to eq instance.cover }
             it { expect(subject.description)      .to eq instance.description }
@@ -138,6 +141,7 @@ RSpec.describe Sighrax::NullEntity, type: :model do
             it { expect(subject.restricted?)      .to eq instance.restricted? }
             it { expect(subject.series)           .to eq instance.series }
             it { expect(subject.subjects)         .to eq instance.subjects }
+            it { expect(subject.worldcat_url)     .to eq instance.worldcat_url }
           end
         end
 
