@@ -9,16 +9,17 @@ RSpec.describe Sighrax::Monograph, type: :model do
     let(:press) { create(:press, subdomain: 'subdomain') }
     let(:monograph) do
       create(:public_monograph,
-             press: 'subdomain',
-             representative_id: cover.id,
-             creator: ['creator'],
+             buy_url: ['buy_url'],
              contributor: ['contributor'],
-             description: ['description'],
-             language: ['language'],
+             creator: ['creator'],
              date_created: ['c1999e'],
              date_modified: date_modified,
              date_published: [date_published],
+             description: ['description'],
+             language: ['language'],
+             press: 'subdomain',
              publisher: ['publishing house'],
+             representative_id: cover.id,
              series: ['series'],
              subject: ['subject'])
     end
@@ -48,6 +49,7 @@ RSpec.describe Sighrax::Monograph, type: :model do
       is_expected.to be_a_kind_of Sighrax::Work
       expect(subject.resource_type).to eq :Monograph
 
+      expect(subject.buy_url).to eq 'buy_url'
       expect(subject.contributors).to contain_exactly('creator', 'contributor')
       expect(subject.cover.noid).to eq cover.id
       expect(subject.description).to eq 'description'
@@ -168,6 +170,77 @@ RSpec.describe Sighrax::Monograph, type: :model do
             expect(subject.products).to eq(Greensub::Product.containing_monograph(monograph.id))
             expect(subject.restricted?).to be true
             expect(subject.open_access?).to be true
+          end
+        end
+      end
+    end
+  end
+
+  describe '#worldcat_url' do
+    subject { Sighrax.from_noid(monograph.id).worldcat_url }
+
+    context 'monograph without isbns' do
+      let(:monograph) { create(:public_monograph) }
+
+      it { is_expected.to be_empty }
+    end
+
+    context 'isbns' do
+      let(:monograph) { create(:public_monograph, isbn: isbns) }
+      let(:isbns) { [] }
+
+      it { is_expected.to be_empty }
+
+      context 'blank' do
+        let(:isbns) { [''] }
+
+        it { is_expected.to be_empty }
+      end
+
+      context 'alphabetic garbage' do
+        let(:isbns) { ['a string with no numbers (unknown) trailer junk'] }
+
+        it { is_expected.to be_empty }
+      end
+
+      context 'alphanumeric garbage' do
+        let(:isbns) { ['a 1 string 2 with 3 numbers 4 (unknown) 5 trailer 6 junk'] }
+
+        it { is_expected.to eq 'http://www.worldcat.org/isbn/4' }
+      end
+
+      context 'isbn precedence' do
+        let(:none) { '00-00-00-00-00' }
+        let(:unknown) { '111-111-111-1 (unknown)' }
+        let(:ebook) { '2222-2222-22 (ebook)' }
+        let(:hardcover) { '3-33-333-3333 (hardcover)' }
+        let(:paper) { '444-44-4-4444 (paper)' }
+
+        let(:isbns) { [unknown, hardcover, none, ebook, paper] }
+
+        it { is_expected.to eq 'http://www.worldcat.org/isbn/2222222222' }
+
+        context 'no ebook' do
+          let(:isbns) { [unknown, hardcover, none, paper] }
+
+          it { is_expected.to eq 'http://www.worldcat.org/isbn/3333333333' }
+
+          context 'no hardcover' do
+            let(:isbns) { [unknown, none, paper] }
+
+            it { is_expected.to eq 'http://www.worldcat.org/isbn/4444444444' }
+
+            context 'no paper' do
+              let(:isbns) { [unknown, none] }
+
+              it { is_expected.to eq 'http://www.worldcat.org/isbn/0000000000' }
+
+              context 'unknown' do
+                let(:isbns) { [unknown] }
+
+                it { is_expected.to eq 'http://www.worldcat.org/isbn/1111111111' }
+              end
+            end
           end
         end
       end

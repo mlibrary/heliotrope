@@ -10,6 +10,10 @@ module Sighrax
       @audiobook ||= Sighrax.from_noid(FeaturedRepresentative.find_by(work_id: noid, kind: 'audiobook')&.file_set_id)
     end
 
+    def buy_url
+      scalar('buy_url_ssim') || ''
+    end
+
     def contributors
       vector('creator_tesim') + vector('contributor_tesim')
     end
@@ -99,10 +103,52 @@ module Sighrax
       vector('subject_tesim')
     end
 
+    def worldcat_url
+      # Build your link around the 10- or 13-digit ISBN for the item.
+      isbns = vector('isbn_tesim')
+      return '' if isbns.empty?
+
+      return '' if isbns.first.blank?
+
+      parsed_isbns = parse_isbns(isbns)
+      return '' if parsed_isbns.blank?
+
+      isbn = nil
+      %w[ebook hardcover paper none].each do |key|
+        isbn = parsed_isbns[key]
+        break if isbn.present?
+      end
+      isbn ||= parsed_isbns.values[0]
+
+      'http://www.worldcat.org/isbn/' + isbn
+    end
+
     private
 
       def initialize(noid, data)
         super(noid, data)
+      end
+
+      def parse_isbns(isbns) # rubocop:disable Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity
+        flag = false
+        rvalue = {}
+        isbns.each do |isbn|
+          m = /\s*(\S+)\s+\(\s*(\S+)\s*\)(.*)/.match(isbn)
+          if m.blank? || m[1].blank? || m[2].blank?
+            next if flag
+
+            value = isbn.gsub(/\D/, '')
+            next if value.blank?
+
+            rvalue['none'] = value
+            flag = true
+          else
+            key = m[2]
+            value = m[1].gsub(/\D/, '') || m[1]
+            rvalue[key] = value if value.present?
+          end
+        end
+        rvalue
       end
   end
 end

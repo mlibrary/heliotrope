@@ -133,7 +133,7 @@ RSpec.describe "Greensub::Institutions", type: :request do
   describe '#create' do
     subject { post greensub_institutions_path, params: { greensub_institution: institution_params } }
 
-    let(:institution_params) { { identifier: '0', name: 'name' } }
+    let(:institution_params) { { identifier: '0', name: 'name', display_name: 'display_name' } }
 
     it { expect { subject }.to raise_error(ActionController::RoutingError) }
 
@@ -157,7 +157,7 @@ RSpec.describe "Greensub::Institutions", type: :request do
           end
 
           context 'invalid institution params' do
-            let(:institution_params) { { identifier: '', name: 'name' } }
+            let(:institution_params) { { identifier: '', name: 'name', display_name: 'display_name' } }
 
             it do
               expect { subject }.not_to raise_error

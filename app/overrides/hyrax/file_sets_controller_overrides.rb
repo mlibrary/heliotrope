@@ -26,6 +26,8 @@ Hyrax::FileSetsController.class_eval do # rubocop:disable Metrics/BlockLength
 
       @resource_download_operation_allowed ||= ResourceDownloadOperation.new(current_actor, Sighrax.from_noid(params[:id])).allowed?
 
+      auth_for(Sighrax.from_presenter(@presenter))
+
       respond_to do |wants|
         wants.html { presenter }
         wants.json { presenter }

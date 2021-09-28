@@ -50,7 +50,7 @@ RSpec.describe User do
       create(:role, resource: press2, user: user, role: 'admin')
     end
 
-    it { is_expected.to eq [press1, press2] }
+    it { is_expected.to contain_exactly(press1, press2) }
   end
 
   describe '#guest' do
@@ -84,10 +84,10 @@ RSpec.describe User do
     end
 
     it "returns the right groups for users" do
-      expect(admin.groups).to eq ["red_admin"]
-      expect(editor.groups).to eq ["blue_editor"]
-      expect(analyst.groups).to eq ["yellow_analyst"]
-      expect(platform_admin.groups).to eq ["blue_admin", "blue_analyst", "blue_editor", "red_admin", "red_analyst", "red_editor", "yellow_admin", "yellow_analyst", "yellow_editor", "admin"]
+      expect(admin.groups).to contain_exactly("red_admin")
+      expect(editor.groups).to contain_exactly("blue_editor")
+      expect(analyst.groups).to contain_exactly("yellow_analyst")
+      expect(platform_admin.groups).to contain_exactly("blue_admin", "blue_analyst", "blue_editor", "red_admin", "red_analyst", "red_editor", "yellow_admin", "yellow_analyst", "yellow_editor", "admin")
     end
   end
 
@@ -154,8 +154,8 @@ RSpec.describe User do
     end
 
     it 'returns the presses that this user is an analyst for' do
-      expect(user.analyst_presses).to eq [press1]
-      expect(superuser.analyst_presses).to eq [press1, press2]
+      expect(user.analyst_presses).to contain_exactly(press1)
+      expect(superuser.analyst_presses).to contain_exactly(press1, press2)
     end
   end
 
@@ -174,8 +174,8 @@ RSpec.describe User do
     end
 
     it 'returns the presses that this user is an editor for' do
-      expect(user.editor_presses).to eq [press1]
-      expect(superuser.editor_presses).to eq [press1, press2]
+      expect(user.editor_presses).to contain_exactly(press1)
+      expect(superuser.editor_presses).to contain_exactly(press1, press2)
     end
   end
 
@@ -194,8 +194,8 @@ RSpec.describe User do
     end
 
     it 'returns the presses that this user is an admin for' do
-      expect(user.admin_presses).to eq [press2]
-      expect(superuser.admin_presses).to eq [press1, press2]
+      expect(user.admin_presses).to contain_exactly(press2)
+      expect(superuser.admin_presses).to contain_exactly(press1, press2)
     end
   end
 
@@ -299,7 +299,7 @@ RSpec.describe User do
 
     let(:user) { build(:user) }
 
-    it { is_expected.to eq [] }
+    it { is_expected.to be_empty }
 
     context 'dlps institution' do
       let(:dlps_institution) { double('dlps_institution') }
@@ -331,12 +331,12 @@ RSpec.describe User do
 
     before { allow(user).to receive(:institutions).and_return institutions }
 
-    it { is_expected.to eq [] }
+    it { is_expected.to be_empty }
 
     context 'institution' do
       let(:institutions) { [institution] }
 
-      it { is_expected.to eq [] }
+      it { is_expected.to be_empty }
 
       context 'dlps institution affiliation' do
         before { allow(Services.dlps_institution_affiliation).to receive(:find).and_return [member_affiliation] }

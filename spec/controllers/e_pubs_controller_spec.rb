@@ -68,10 +68,15 @@ RSpec.describe EPubsController, type: :controller do
         context 'access denied' do
           let(:access) { false }
 
+          before do
+            Greensub::Institution.create!(identifier: Settings.world_institution_identifier, name: "Unknown Insitution", display_name: "Unknown Institution")
+          end
+
           it do
             get :show, params: { id: file_set.id }
             expect(response).to have_http_status(:found)
-            expect(response).to redirect_to(epub_access_url)
+            expect(response).to redirect_to(monograph_authentication_url(monograph.id))
+            expect(CounterReport.first.turnaway).to eq "No_License"
           end
         end
       end
@@ -361,6 +366,7 @@ RSpec.describe EPubsController, type: :controller do
         monograph.ordered_members << file_set
         monograph.save!
         file_set.save!
+        Greensub::Institution.create!(identifier: Settings.world_institution_identifier, name: "Unknown Insitution", display_name: "Unknown Institution")
       end
 
       after { FeaturedRepresentative.destroy_all }
@@ -391,7 +397,8 @@ RSpec.describe EPubsController, type: :controller do
           expect(assigns(:actor_product_ids))
           expect(assigns(:allow_read_product_ids))
           expect(response).to have_http_status(:found)
-          expect(response).to redirect_to(epub_access_url)
+          expect(response).to redirect_to(monograph_authentication_url(monograph.id))
+          expect(CounterReport.first.turnaway).to eq "No_License"
         end
 
         it 'Authenticated User' do
@@ -400,7 +407,8 @@ RSpec.describe EPubsController, type: :controller do
           expect(assigns(:actor_product_ids))
           expect(assigns(:allow_read_product_ids))
           expect(response).to have_http_status(:found)
-          expect(response).to redirect_to(epub_access_url)
+          expect(response).to redirect_to(monograph_authentication_url(monograph.id))
+          expect(CounterReport.first.turnaway).to eq "No_License"
         end
 
         it 'Platform Admin' do
@@ -482,7 +490,8 @@ RSpec.describe EPubsController, type: :controller do
           expect(assigns(:actor_product_ids))
           expect(assigns(:allow_read_product_ids))
           expect(response).to have_http_status(:found)
-          expect(response).to redirect_to(epub_access_url)
+          expect(response).to redirect_to(monograph_authentication_url(monograph.id))
+          expect(CounterReport.first.turnaway).to eq "No_License"
         end
       end
     end
@@ -628,6 +637,7 @@ RSpec.describe EPubsController, type: :controller do
         monograph.ordered_members << file_set
         monograph.save!
         file_set.save!
+        Greensub::Institution.create!(identifier: Settings.world_institution_identifier, name: "Unknown Insitution", display_name: "Unknown Institution")
       end
 
       context "A restricted epub with an anonymous user" do
@@ -661,14 +671,16 @@ RSpec.describe EPubsController, type: :controller do
         it "with an expired share_link" do
           get :show, params: { id: file_set.id, share: expired_share_token }
           expect(response).to have_http_status(:found)
-          expect(response).to redirect_to(epub_access_url)
+          expect(response).to redirect_to(monograph_authentication_url(monograph.id))
+          expect(CounterReport.first.turnaway).to eq "No_License"
           expect(ShareLinkLog.count).to eq 0
         end
 
         it "with the wrong share link" do
           get :show, params: { id: file_set.id, share: wrong_share_token }
           expect(response).to have_http_status(:found)
-          expect(response).to redirect_to(epub_access_url)
+          expect(response).to redirect_to(monograph_authentication_url(monograph.id))
+          expect(CounterReport.first.turnaway).to eq "No_License"
           expect(ShareLinkLog.count).to eq 0
         end
       end
