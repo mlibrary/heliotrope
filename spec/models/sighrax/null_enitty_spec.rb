@@ -79,6 +79,7 @@ RSpec.describe Sighrax::NullEntity, type: :model do
       Sighrax::Resource,
       Sighrax::InteractiveMap,
       Sighrax::Ebook,
+      Sighrax::AudiobookEbook,
       Sighrax::EpubEbook,
       Sighrax::MobiEbook,
       Sighrax::PdfEbook
@@ -145,6 +146,7 @@ RSpec.describe Sighrax::NullEntity, type: :model do
           Sighrax::Resource,
           Sighrax::InteractiveMap,
           Sighrax::Ebook,
+          Sighrax::AudiobookEbook,
           Sighrax::EpubEbook,
           Sighrax::MobiEbook,
           Sighrax::PdfEbook
@@ -160,6 +162,7 @@ RSpec.describe Sighrax::NullEntity, type: :model do
           # Electronic Book
           if [
             Sighrax::Ebook,
+            Sighrax::AudiobookEbook,
             Sighrax::EpubEbook,
             Sighrax::MobiEbook,
             Sighrax::PdfEbook

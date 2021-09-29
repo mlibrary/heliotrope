@@ -8,9 +8,12 @@ class EBookDownloadPresenter < ApplicationPresenter
     @monograph = monograph_presenter
     @current_ability = current_ability
     @current_actor = current_actor
-    @ebook_presenters = Hyrax::PresenterFactory.build_for(ids: [@monograph.epub_id, @monograph.mobi_id, @monograph.pdf_ebook_id], presenter_class: Hyrax::FileSetPresenter, presenter_args: @current_ability).compact
+    # note the order here is the order that will end up in the ebook download dropdown options
+    @ebook_presenters = Hyrax::PresenterFactory.build_for(ids: [@monograph.epub_id, @monograph.mobi_id, @monograph.pdf_ebook_id, @monograph.audiobook_id], presenter_class: Hyrax::FileSetPresenter, presenter_args: @current_ability).compact
     @ebook_presenters.each do |ebook|
-      ebook_format = if ebook.epub?
+      ebook_format = if ebook.audiobook?
+                       "AUDIO BOOK MP3" # wording requested by Fulcrum Steering (file may be a zip of several MP3s)
+                     elsif ebook.epub?
                        "EPUB"
                      elsif ebook.mobi?
                        "MOBI"
@@ -20,6 +23,10 @@ class EBookDownloadPresenter < ApplicationPresenter
       ebook.class_eval { attr_accessor "ebook_format" }
       ebook.instance_variable_set(:@ebook_format, ebook_format)
     end
+  end
+
+  def audiobook
+    @ebook_presenters.filter_map { |ebook| ebook if ebook.audiobook? }.first
   end
 
   def epub

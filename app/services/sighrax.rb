@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require_dependency 'sighrax/audiobook_ebook'
 require_dependency 'sighrax/ebook'
 require_dependency 'sighrax/entity'
 require_dependency 'sighrax/epub_ebook'
@@ -157,6 +158,8 @@ module Sighrax # rubocop:disable Metrics/ModuleLength
           file_set_resource_type_factory(noid, data)
         else
           case featured_representative.kind
+          when 'audiobook'
+            AudiobookEbook.send(:new, noid, data)
           when 'epub'
             EpubEbook.send(:new, noid, data)
           when 'mobi'
