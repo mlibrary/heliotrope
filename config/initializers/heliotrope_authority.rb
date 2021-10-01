@@ -11,8 +11,7 @@ class HeliotropeAuthority < Checkpoint::Authority
   def licenses_for(actor, target)
     Greensub::License.where(
       id: what(actor, target)
-        .select { |token| token.type.downcase == 'license' }
-        .map(&:id)
+        .filter_map { |license| license.id if license.token.type.downcase == 'license' }
     )
   end
 
