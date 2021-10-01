@@ -5,6 +5,7 @@ inherit_gem:
 inherit_from: .rubocop_todo.yml
 
 AllCops:
+  NewCops: enable
   DisplayCopNames: true
   Include:
     - '**/*.rb'
@@ -23,17 +24,20 @@ AllCops:
     - 'vagrant_scripts/**/*'
     - 'vendor/**/*'
 
-Layout/AlignArray:
+Layout/ArrayAlignment:
   Enabled: true
-
-Layout/IndentationConsistency:
-  EnforcedStyle: indented_internal_methods
 
 Layout/EmptyLinesAroundAccessModifier:
   EnforcedStyle: around
 
 Layout/EndAlignment:
   EnforcedStyleAlignWith: keyword
+
+Layout/IndentationConsistency:
+  EnforcedStyle: indented_internal_methods
+
+Layout/LineLength:
+  Enabled: false
 
 Lint/DuplicateMethods:
   Exclude:
@@ -55,8 +59,6 @@ Metrics/ClassLength:
   Enabled: true
   Max: 250
 
-Metrics/LineLength:
-  Enabled: false
 
 Metrics/MethodLength:
   Enabled: false
