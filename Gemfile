@@ -213,12 +213,10 @@ group :development, :test do
   gem 'rspec_junit_formatter'
   gem 'rspec-rails'
   gem 'rspec-repeat', '~> 1.0.2'
-  # gem 'rubocop', '~> 0.74'
-  # gem 'rubocop-rspec', '~> 2.5'
-  # gem 'rubocop-rails_config', '~> 0.7.2'
   gem 'rubocop', '~> 1.22'
-  gem 'rubocop-rspec', '~> 2.5'
+  gem 'rubocop-rails', '~> 2.11', '>= 2.11.3'
   gem 'rubocop-rails_config', '~> 1.7', '>= 1.7.1'
+  gem 'rubocop-rspec', '~> 2.5'
   gem 'ruumba', '0.1.2'
   gem 'simple_solr_client'
   gem 'solr_wrapper', '>= 1.1', '< 3.0'
@@ -232,4 +230,3 @@ group :development do
   # Yay! A Ruby Documentation Tool
   gem 'yard', '>= 0.9.20'
 end
-gem 'rubocop-rspec', '~> 2.5'
