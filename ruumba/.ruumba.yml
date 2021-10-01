@@ -9,13 +9,9 @@ AllCops:
 #
 # Inapplicable Cops
 
-Layout/AlignArguments:
+Layout/ArgumentAlignment:
   Enabled: false
-Layout/AlignArray:
-  Enabled: false
-Layout/AlignHash:
-  Enabled: false
-Layout/AlignParameters:
+Layout/ArrayAlignment:
   Enabled: false
 Layout/BlockAlignment:
   Enabled: false
@@ -33,7 +29,9 @@ Layout/EndAlignment:
   Enabled: false
 Layout/ExtraSpacing:
   Enabled: false
-Layout/IndentFirstArgument:
+Layout/FirstArgumentIndentation:
+  Enabled: false
+Layout/HashAlignment:
   Enabled: false
 Layout/IndentationConsistency:
   Enabled: false
@@ -41,12 +39,16 @@ Layout/IndentationWidth:
   Enabled: false
 Layout/InitialIndentation:
   Enabled: false
-Layout/LeadingBlankLines:
-  Exclude:
-    - 'app/views/epub_search_logs/index.html.erb.rb'
 Layout/LeadingCommentSpace:
   Enabled: false
+Layout/LeadingEmptyLines:
+  Exclude:
+    - 'app/views/epub_search_logs/index.html.erb.rb'
+Layout/LineLength:
+  Enabled: false
 Layout/MultilineMethodCallBraceLayout:
+  Enabled: false
+Layout/ParameterAlignment:
   Enabled: false
 Layout/SpaceAfterComma:
   Enabled: false
@@ -56,7 +58,7 @@ Layout/SpaceInsideHashLiteralBraces:
   Enabled: false
 Layout/SpaceInsideStringInterpolation:
   Enabled: false
-Layout/TrailingBlankLines:
+Layout/TrailingEmptyLines:
   Enabled: false
 
 Lint/Void:
@@ -70,8 +72,6 @@ Metrics/BlockNesting:
     - 'app/views/monograph_catalog/_index_monograph.html.erb.rb'
     - 'app/views/shared/_altmetric_dimensions.html.erb.rb'
     - 'app/views/shared/_brand_press_bar_custom.html.erb.rb'
-Metrics/LineLength:
-  Enabled: false
 
 Naming/FileName:
   Exclude:
@@ -99,6 +99,8 @@ Style/IfUnlessModifier:
   Enabled: false
 Style/Next:
   Enabled: false
+Style/RedundantInterpolation:
+  Enabled: false
 Style/RedundantParentheses:
   Enabled: false
 Style/StringLiterals:
@@ -106,8 +108,6 @@ Style/StringLiterals:
 Style/SymbolProc:
   Enabled: false
 Style/TernaryParentheses:
-  Enabled: false
-Style/UnneededInterpolation:
   Enabled: false
 Style/WhileUntilModifier:
   Enabled: false
