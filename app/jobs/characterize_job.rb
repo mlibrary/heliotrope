@@ -31,7 +31,7 @@ class CharacterizeJob < ApplicationJob
 
     Hydra::Works::CharacterizationService.run(file_set.characterization_proxy, filename)
 
-    Rails.logger.debug "Ran characterization on #{file_set.characterization_proxy.id} (#{file_set.characterization_proxy.mime_type})"
+    Rails.logger.debug { "Ran characterization on #{file_set.characterization_proxy.id} (#{file_set.characterization_proxy.mime_type})" }
     file_set.characterization_proxy.save!
 
     # Override CC/Hyrax, see https://github.com/samvera/hyrax/issues/1152

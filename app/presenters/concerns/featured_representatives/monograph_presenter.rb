@@ -50,7 +50,7 @@ module FeaturedRepresentatives
     end
 
     def epub_id
-      featured_representatives.map { |fr| fr.file_set_id if fr.kind == 'epub' }.compact.first
+      featured_representatives.filter_map { |fr| fr.file_set_id if fr.kind == 'epub' }.first
     end
 
     def epub_presenter
@@ -66,7 +66,7 @@ module FeaturedRepresentatives
     end
 
     def webgl_id
-      featured_representatives.map { |fr| fr.file_set_id if fr.kind == 'webgl' }.compact.first
+      featured_representatives.filter_map { |fr| fr.file_set_id if fr.kind == 'webgl' }.first
     end
 
     def database?
@@ -80,7 +80,7 @@ module FeaturedRepresentatives
     end
 
     def database_id
-      featured_representatives.map { |fr| fr.file_set_id if fr.kind == 'database' }.compact.first
+      featured_representatives.filter_map { |fr| fr.file_set_id if fr.kind == 'database' }.first
     end
 
     def aboutware?
@@ -94,7 +94,7 @@ module FeaturedRepresentatives
     end
 
     def aboutware_id
-      featured_representatives.map { |fr| fr.file_set_id if fr.kind == 'aboutware' }.compact.first
+      featured_representatives.filter_map { |fr| fr.file_set_id if fr.kind == 'aboutware' }.first
     end
 
     def reviews?
@@ -108,7 +108,7 @@ module FeaturedRepresentatives
     end
 
     def reviews_id
-      featured_representatives.map { |fr| fr.file_set_id if fr.kind == 'reviews' }.compact.first
+      featured_representatives.filter_map { |fr| fr.file_set_id if fr.kind == 'reviews' }.first
     end
 
     def related?
@@ -122,7 +122,7 @@ module FeaturedRepresentatives
     end
 
     def related_id
-      featured_representatives.map { |fr| fr.file_set_id if fr.kind == 'related' }.compact.first
+      featured_representatives.filter_map { |fr| fr.file_set_id if fr.kind == 'related' }.first
     end
 
     def pdf_ebook?
@@ -134,7 +134,7 @@ module FeaturedRepresentatives
     end
 
     def pdf_ebook_id
-      featured_representatives.map { |fr| fr.file_set_id if fr.kind == 'pdf_ebook' }.compact.first
+      featured_representatives.filter_map { |fr| fr.file_set_id if fr.kind == 'pdf_ebook' }.first
     end
 
     def pdf_ebook_presenter
@@ -146,7 +146,7 @@ module FeaturedRepresentatives
     end
 
     def mobi_id
-      featured_representatives.map { |fr| fr.file_set_id if fr.kind == 'mobi' }.compact.first
+      featured_representatives.filter_map { |fr| fr.file_set_id if fr.kind == 'mobi' }.first
     end
 
     def peer_review?
@@ -160,7 +160,7 @@ module FeaturedRepresentatives
     end
 
     def peer_review_id
-      featured_representatives.map { |fr| fr.file_set_id if fr.kind == 'peer_review' }.compact.first
+      featured_representatives.filter_map { |fr| fr.file_set_id if fr.kind == 'peer_review' }.first
     end
   end
 end

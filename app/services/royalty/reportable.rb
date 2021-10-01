@@ -41,7 +41,7 @@ module Royalty
     def format_hits(items)
       items.each do |item|
         item["Hits"] = number_with_delimiter(item["Hits"])
-        item.map { |k, v| item[k] = number_with_delimiter(v) if k.match(/\w{3}-\d{4}/) } # matches "Jan-2019" or whatever
+        item.map { |k, v| item[k] = number_with_delimiter(v) if k.match?(/\w{3}-\d{4}/) } # matches "Jan-2019" or whatever
       end
       items
     end

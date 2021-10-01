@@ -54,7 +54,7 @@ module Devise
         end
 
         def debug_log(msg)
-          Rails.logger.debug "[AUTHN] HttpHeaderAuthenticatable -- #{msg}"
+          Rails.logger.debug { "[AUTHN] HttpHeaderAuthenticatable -- #{msg}" }
         end
     end
   end

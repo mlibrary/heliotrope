@@ -30,7 +30,7 @@ module CounterReporter
             item["URI"] = Rails.application.routes.url_helpers.hyrax_monograph_url(presenter.id)
             item["Access_Type"] = access_type if @params.report_type == 'tr_b3'
             item["Metric_Type"] = metric_type
-            item["Reporting_Period_Total"] = results.values.map { |r| r[metric_type.downcase][access_type.downcase][presenter.id] }.compact.sum
+            item["Reporting_Period_Total"] = results.values.filter_map { |r| r[metric_type.downcase][access_type.downcase][presenter.id] }.sum
             results.each do |result|
               item[result[0]] = result[1][metric_type.downcase][access_type.downcase][presenter.id] || 0
             end

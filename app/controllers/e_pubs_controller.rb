@@ -38,7 +38,7 @@ class EPubsController < CheckpointController
     elsif @entity.is_a?(Sighrax::PdfEbook)
       render 'e_pubs/show_pdf', layout: false
     else
-      return head :not_found
+      head :not_found
     end
   end
 
@@ -143,7 +143,7 @@ class EPubsController < CheckpointController
     chapter_title = params[:title]
     chapter_index = params[:chapter_index]
     chapter_file_name = chapter_index + '.pdf'
-    chapter_download_name = chapter_index + '_' + chapter_title.gsub(/[^0-9A-Za-z\-]/, ' ').squish.gsub(' ', '_') + '.pdf'
+    chapter_download_name = chapter_index + '_' + chapter_title.gsub(/[^0-9A-Za-z\-]/, ' ').squish.tr(' ', '_') + '.pdf'
     chapter_dir = @entity.is_a?(Sighrax::EpubEbook) ? 'epub_chapters' : 'pdf_ebook_chapters'
     chapter_dir_path = UnpackService.root_path_from_noid(@noid, chapter_dir)
 

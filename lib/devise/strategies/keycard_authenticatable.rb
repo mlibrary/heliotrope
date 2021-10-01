@@ -120,7 +120,7 @@ module Devise
         end
 
         def debug_log(msg)
-          Rails.logger.debug "[AUTHN] KeycardAuthenticatable -- #{msg}"
+          Rails.logger.debug { "[AUTHN] KeycardAuthenticatable -- #{msg}" }
         end
     end
   end

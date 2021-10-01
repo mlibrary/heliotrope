@@ -78,7 +78,7 @@ class AttachImportFilesToWorkJob < ApplicationJob
       ids = mono_doc['ordered_member_ids_ssim']
       return if ids.blank?
       docs = ActiveFedora::SolrService.query("{!terms f=id}#{ids.join(',')}", rows: 10_000)
-      ReindexJob.perform_later(docs.map { |doc| doc.id if doc['monograph_id_ssim'].blank? }.compact)
+      ReindexJob.perform_later(docs.filter_map { |doc| doc.id if doc['monograph_id_ssim'].blank? })
     end
 
     # The attributes used for visibility - sent as initial params to created FileSets.

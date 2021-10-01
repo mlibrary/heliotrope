@@ -389,7 +389,7 @@ RSpec.describe "Individuals", type: :request do
           post api_product_individual_license_path(product, individual), params: params, headers: headers
           expect(response.content_type).to eq("application/json")
           expect(response).to have_http_status(:unprocessable_entity)
-          expect(response_body).to eq({ "exception"=>"unknown attribute 'licensee' for Greensub::License." })
+          expect(response_body).to eq({ "exception" => "unknown attribute 'licensee' for Greensub::License." })
           expect(individual.products.include?(product)).to be false
         end
 
@@ -398,7 +398,7 @@ RSpec.describe "Individuals", type: :request do
           post api_product_individual_license_path(product, individual), params: params, headers: headers
           expect(response.content_type).to eq("application/json")
           expect(response).to have_http_status(:unprocessable_entity)
-          expect(response_body).to eq({ "exception"=>"unknown attribute 'licensee' for Greensub::License." })
+          expect(response_body).to eq({ "exception" => "unknown attribute 'licensee' for Greensub::License." })
           expect(individual.products.include?(product)).to be false
         end
       end

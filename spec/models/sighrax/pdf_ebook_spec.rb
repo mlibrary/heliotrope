@@ -10,7 +10,7 @@ RSpec.describe Sighrax::PdfEbook, type: :model do
   let(:featured_representative) { create(:featured_representative, work_id: monograph.id, file_set_id: pdf_ebook.id, kind: 'pdf_ebook') }
 
   before do
-    monograph.ordered_members  << pdf_ebook
+    monograph.ordered_members << pdf_ebook
     monograph.save
     pdf_ebook.save
     featured_representative

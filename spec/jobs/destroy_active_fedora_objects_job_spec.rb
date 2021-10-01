@@ -15,12 +15,10 @@ def ldp_gone_ids(ids)
   puts_objects(ids)
   gone_ids = []
   ids.each_with_index do |id, index|
-    begin
-      ActiveFedora::Base.find(id)
-    rescue Ldp::Gone
-      gone_ids << id
-    rescue StandardError
-    end
+    ActiveFedora::Base.find(id)
+  rescue Ldp::Gone
+    gone_ids << id
+  rescue StandardError
   end
   gone_ids
 end
@@ -28,18 +26,16 @@ end
 def puts_objects(ids)
   return # comment for debug puts
   ids.each_with_index do |id, index|
-    begin
-      obj = ActiveFedora::Base.find(id)
-      puts "[#{index}] #{id} #{obj.inspect}"
-    rescue ActiveFedora::ObjectNotFoundError
-      puts "[#{index}] #{id} ActiveFedora::ObjectNotFoundError"
-    rescue Ldp::Gone
-      puts "[#{index}] #{id} Ldp::Gone"
-    rescue ActiveFedora::ActiveFedoraError
-      puts "[#{index}] #{id} ActiveFedora::ActiveFedoraError"
-    rescue StandardError => e
-      puts "[#{index}] #{id} #{e}"
-    end
+    obj = ActiveFedora::Base.find(id)
+    puts "[#{index}] #{id} #{obj.inspect}"
+  rescue ActiveFedora::ObjectNotFoundError
+    puts "[#{index}] #{id} ActiveFedora::ObjectNotFoundError"
+  rescue Ldp::Gone
+    puts "[#{index}] #{id} Ldp::Gone"
+  rescue ActiveFedora::ActiveFedoraError
+    puts "[#{index}] #{id} ActiveFedora::ActiveFedoraError"
+  rescue StandardError => e
+    puts "[#{index}] #{id} #{e}"
   end
   puts ''
 end

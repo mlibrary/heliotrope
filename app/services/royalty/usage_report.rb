@@ -36,8 +36,8 @@ module Royalty
     def report_for_copyholder(copyright_holder)
       # this is not efficient, just using what's already here to get this working
       items = item_report[:items]
-      ids = copyright_holders.to_a.map { |i| i[0] if i[1] == copyright_holder }.compact
-      items = items.map { |item| item if item["Parent_Proprietary_ID"].in?(ids) }.compact
+      ids = copyright_holders.to_a.filter_map { |i| i[0] if i[1] == copyright_holder }
+      items = items.filter_map { |item| item if item["Parent_Proprietary_ID"].in?(ids) }
 
       items = update_results(items)
       items = remove_extra_lines(items)
@@ -103,7 +103,7 @@ module Royalty
         # It's weird and confusing, but that's how it works in COUNTER5.
         # For these reports though, we're going to remove the "extra" row, either OA
         # or Controlled, if the row has no Hits. It will make the resulting report easier to read, probably.
-        items.map { |item| item["Hits"] == 0 ? nil : item }.compact
+        items.filter_map { |item| item["Hits"] == 0 ? nil : item }
       end
 
       def update_results(items)

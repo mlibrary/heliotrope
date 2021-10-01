@@ -12,7 +12,7 @@ class AptrustJob < ApplicationJob
         rvalue += 1
       end
     end
-    Rails.logger.debug "Aptrust Job Deposited #{rvalue} Monographs"
+    Rails.logger.debug { "Aptrust Job Deposited #{rvalue} Monographs" }
     rvalue
   end
 

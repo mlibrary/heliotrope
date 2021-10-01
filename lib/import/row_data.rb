@@ -126,7 +126,7 @@ module Import
 
       def output_date(date_string)
         y = m = d = ''
-        date_string.gsub!('/', '-')
+        date_string.tr!('/', '-')
         if date_string[/\A\d{4}-\d{2}-\d{2}\z/]
           y, m, d = date_string.split '-'
         elsif date_string[/\A\d{4}-\d{2}\z/]

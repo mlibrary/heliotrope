@@ -61,7 +61,7 @@ RSpec.describe EPub::Snippet do
 </footer>
 </body>
 </html>
-EOT
+  EOT
 end
 
   let(:doc) { Nokogiri::XML(markup) }

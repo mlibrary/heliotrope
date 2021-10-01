@@ -252,7 +252,7 @@ RSpec.describe EPubsController, type: :controller do
           # Only show unique snippets, duplicate neighbor snippets are blank so
           # that they don't display in cozy-sun-bear while we still send all CFIs
           # to get search highlighting
-          @snippets = JSON.parse(response.body)["search_results"].map { |result| result["snippet"].presence }.compact
+          @snippets = JSON.parse(response.body)["search_results"].filter_map { |result| result["snippet"].presence }
           expect(@snippets.length).to eq 102
           expect(EpubSearchLog.first.noid).to eq file_set.id
           expect(EpubSearchLog.first.query).to eq "White Whale"

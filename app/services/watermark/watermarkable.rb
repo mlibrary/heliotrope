@@ -75,7 +75,7 @@ module Watermark
 
     def create_watermark_pdf(formatted_text, output_file_path)
       size = 10
-      text = formatted_text.map { |t| t[:text] }.join('')
+      text = formatted_text.pluck(:text).join('')
       height = (text.lines.count + 1) * size
       width = 0
       text.lines.each do |line|

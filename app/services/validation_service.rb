@@ -8,7 +8,7 @@ class ValidationService
   # Syntax Validation a.k.a. Regular Expression Match? and such
 
   def self.valid_email?(email)
-    /^[^@]+@[^@]+\.+[^@|\.]+$/.match?(email&.to_s)
+    /^[^@]+@[^@]+\.+[^@|.]+$/.match?(email&.to_s)
   end
 
   def self.valid_id?(id)

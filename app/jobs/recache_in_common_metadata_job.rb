@@ -20,7 +20,7 @@ class RecacheInCommonMetadataJob < ApplicationJob
           when /Description/i
             descriptions << value_lang_hash(e)
           when /DisplayName/i
-            display_names <<  value_lang_hash(e)
+            display_names << value_lang_hash(e)
           when /InformationURL/i
             information_urls << value_lang_hash(e)
           when /Logo/i

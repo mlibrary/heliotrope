@@ -22,7 +22,7 @@ module CounterReporter
             item["Access_Method"] = @params.access_method
           end
           item["Metric_Type"] = metric_type
-          item["Reporting_Period_Total"] = results.values.map { |r| r[metric_type.downcase][access_type.downcase] }.compact.sum
+          item["Reporting_Period_Total"] = results.values.filter_map { |r| r[metric_type.downcase][access_type.downcase] }.sum
           results.each do |result|
             item[result[0]] = result[1][metric_type.downcase][access_type.downcase] || 0
           end

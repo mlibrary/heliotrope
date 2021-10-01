@@ -45,7 +45,7 @@ class PressesController < ApplicationController
   def destroy
     @press.destroy if destroy?
     respond_to do |format|
-      format.html { redirect_to fulcrum_partials_path(:refresh), notice: "Publisher was #{@press.destroyed? ? 'successfully': 'NOT'} destroyed." }
+      format.html { redirect_to fulcrum_partials_path(:refresh), notice: "Publisher was #{@press.destroyed? ? 'successfully' : 'NOT'} destroyed." }
       format.json { head :no_content }
     end
   end
@@ -78,6 +78,6 @@ class PressesController < ApplicationController
                                     :aboutware,
                                     :interval,
                                     :tombstone_message
-                                  )
+                                   )
     end
 end

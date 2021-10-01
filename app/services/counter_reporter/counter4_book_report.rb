@@ -43,9 +43,9 @@ module CounterReporter
       totals << ""
       totals << ""
       totals << ""
-      totals << results.values.map { |r| r.map { |i| i[1] }.compact.sum }.sum
+      totals << results.values.map { |r| r.filter_map { |i| i[1] }.sum }.sum
       results.values.each do |r|
-        totals << r.map { |i| i[1] }.compact.sum
+        totals << r.filter_map { |i| i[1] }.sum
       end
 
       items << totals
@@ -59,7 +59,7 @@ module CounterReporter
         item << presenter.citable_link
         item <<  presenter.id
         item <<  presenter.isbn.join("; ")
-        item <<  results.values.map { |r| r[presenter.id] }.compact.sum
+        item <<  results.values.filter_map { |r| r[presenter.id] }.sum
         results.each do |result|
           # item << result[1][presenter.id].presence || 0
           item << if result[1][presenter.id].present? # rubocop:disable Rails/Presence

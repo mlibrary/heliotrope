@@ -21,7 +21,7 @@ class ExtractIngestJob < ApplicationJob
         end
       end
     rescue StandardError => e
-      Rails.logger.debug "ERROR: #{e}"
+      Rails.logger.debug { "ERROR: #{e}" }
       return
     end
     FileUtils.rm_rf(extract_file)

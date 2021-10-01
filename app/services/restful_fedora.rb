@@ -12,12 +12,12 @@ module RestfulFedora
         first_level_path = RestfulFedora.uri_to_path(first_level_uri)
         first_level_id = RestfulFedora.path_to_id(first_level_path)
         first_level_object = RestfulFedora.id_to_object(first_level_id)
-        Rails.logger.debug "reindex_everything ... uri: #{first_level_uri} path: #{first_level_path} id: #{first_level_id} object: #{first_level_object}"
+        Rails.logger.debug { "reindex_everything ... uri: #{first_level_uri} path: #{first_level_path} id: #{first_level_id} object: #{first_level_object}" }
         next if first_level_object.blank?
         first_level_object_and_descendants = ActiveFedora::Indexing::DescendantFetcher.new(first_level_path).descendant_and_self_uris
         batch = []
         first_level_object_and_descendants.each do |uri|
-          Rails.logger.debug "reindex_everything ... to_solr #{ActiveFedora::Base.uri_to_id(uri)}"
+          Rails.logger.debug { "reindex_everything ... to_solr #{ActiveFedora::Base.uri_to_id(uri)}" }
           batch << ActiveFedora::Base.find(ActiveFedora::Base.uri_to_id(uri)).to_solr
         end
         Rails.logger.debug "reindex_everything ... batch add"

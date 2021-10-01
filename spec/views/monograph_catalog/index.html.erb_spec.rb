@@ -123,11 +123,11 @@ RSpec.describe "monograph_catalog/index.html.erb" do
         it do
           debug_puts subject.to_s
           is_expected.not_to be_empty
-          is_expected.not_to match(/<span.*?class=\"Z3988\".*?title=\".*?".*?>.*?<\/span>/m)
+          is_expected.not_to match(/<span.*?class="Z3988".*?title=".*?".*?>.*?<\/span>/m)
           is_expected.not_to match t('monograph_catalog.index.show_page_button')
           is_expected.not_to match t('monograph_catalog.index.edit_page_button')
           is_expected.not_to match authors
-          is_expected.not_to match(/<div.*?class=\"isbn\".*?>.*?<\/div>/m)
+          is_expected.not_to match(/<div.*?class="isbn".*?>.*?<\/div>/m)
           is_expected.not_to match t('isbn')
           is_expected.not_to match t('monograph_catalog.index.buy')
           is_expected.not_to match t('monograph_catalog.index.buy_book')
@@ -143,7 +143,7 @@ RSpec.describe "monograph_catalog/index.html.erb" do
 
         it do
           debug_puts subject.to_s
-          is_expected.to match(/<span.*?class=\"Z3988\".*?title=\"#{monograph_coins_title}\".*?>.*?<\/span>/m)
+          is_expected.to match(/<span.*?class="Z3988".*?title="#{monograph_coins_title}".*?>.*?<\/span>/m)
         end
       end
 

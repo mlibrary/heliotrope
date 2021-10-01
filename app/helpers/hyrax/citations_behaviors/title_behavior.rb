@@ -10,7 +10,7 @@ module Hyrax
 
       def chicago_citation_title(title_text)
         process_title_parts(title_text) do |w, index|
-          if (index.zero? && w.casecmp(w).zero?) || (w.length > 1 && w.casecmp(w).zero? && !EXPANDED_NOCAPS.include?(w))
+          if (index.zero? && w.casecmp(w).zero?) || (w.length > 1 && w.casecmp(w).zero? && EXPANDED_NOCAPS.exclude?(w))
             maybe_split_on_hyphens(w)
           else
             w

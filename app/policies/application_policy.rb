@@ -26,6 +26,6 @@ class ApplicationPolicy
     attr_reader :actor, :target
 
     def debug_log(msg)
-      Rails.logger.debug "[POLICY] #{self.class} -- #{msg}"
+      Rails.logger.debug { "[POLICY] #{self.class} -- #{msg}" }
     end
 end

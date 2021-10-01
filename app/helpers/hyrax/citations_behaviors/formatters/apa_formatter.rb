@@ -42,7 +42,7 @@ module Hyrax
               text << ", " << author
             end
           end
-          text << "." unless text =~ /\.$/
+          text << "." unless /\.$/.match?(text)
           text
         end
 

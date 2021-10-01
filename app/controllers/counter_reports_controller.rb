@@ -82,7 +82,7 @@ class CounterReportsController < ApplicationController
 
     def authorized_insitutions_or_presses?
       return false unless @institutions.map(&:identifier).include?(params[:institution])
-      return false if @presses.present? && !@presses.map(&:id).include?(params[:press].to_i)
+      return false if @presses.present? && @presses.map(&:id).exclude?(params[:press].to_i)
       true
     end
 

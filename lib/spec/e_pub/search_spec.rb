@@ -45,7 +45,7 @@ RSpec.describe EPub::Search do
 
       it "doesn't include duplicate snippets" do
         expect(subject[:q]).to eq 'star wars'
-        @snippets = subject[:search_results].map { |result| result[:snippet].presence }.compact
+        @snippets = subject[:search_results].filter_map { |result| result[:snippet].presence }
         expect(@snippets.length).to eq @snippets.uniq.length
       end
     end

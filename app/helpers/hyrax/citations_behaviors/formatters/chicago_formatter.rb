@@ -34,7 +34,7 @@ module Hyrax
           text << " et al." if authors_list.length > 7
           # if for some reason the first author ended with a comma
           text.gsub!(',,', ',')
-          text << "." unless text =~ /\.$/
+          text << "." unless /\.$/.match?(text)
           whitewash(text)
         end
         # rubocop:enable Metrics/MethodLength
@@ -44,7 +44,7 @@ module Hyrax
         def format_title(title_info)
           return "" if title_info.blank?
           title_text = chicago_citation_title(title_info)
-          title_text << '.' unless title_text =~ /\.$/
+          title_text << '.' unless /\.$/.match?(title_text)
           title_text = whitewash(title_text)
           " <i class=\"citation-title\">#{title_text}</i>"
         end

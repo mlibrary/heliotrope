@@ -141,7 +141,7 @@ module Crossref
         # I don't think there's really a good way to determine this.
         # This is what I came up with.
         if work.creator_display?
-          return true if work.creator_display =~ /.*?Editor+s$/
+          return true if /.*?Editor+s$/.match?(work.creator_display)
         end
         # Does this make sense? Not sure...
         roles = work.creators_with_roles.map(&:role)

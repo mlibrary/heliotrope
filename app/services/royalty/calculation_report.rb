@@ -125,7 +125,7 @@ module Royalty
           if monographs[noid].present?
             monographs[noid]["Hits"] += item["Hits"].to_i
             item.each do |k, v|
-              if k.match(/\w{3}-\d{4}/) # match month-year like "Mar-1999"
+              if k.match?(/\w{3}-\d{4}/) # match month-year like "Mar-1999"
                 monographs[noid][k] += v.to_i
               end
             end
@@ -141,7 +141,7 @@ module Royalty
             monographs[noid]["Royalty Earning"] = 0.00  # will calculate this elsewhere
             monographs[noid]["Hits"] = item["Hits"].to_i
             item.each do |k, v|
-              if k.match(/\w{3}-\d{4}/)
+              if k.match?(/\w{3}-\d{4}/)
                 monographs[noid][k] = v.to_i
               end
             end

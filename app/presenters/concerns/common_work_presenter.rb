@@ -47,7 +47,7 @@ module CommonWorkPresenter
 
     if ids.blank?
       @ordered_member_docs = []
-      return @ordered_member_docs
+      @ordered_member_docs
     else
       query_results = ActiveFedora::SolrService.query("{!terms f=id}#{ids.join(',')}", rows: ids.count)
 

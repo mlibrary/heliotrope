@@ -6,7 +6,7 @@ class OpenAccessEbookTrustMailer < ApplicationMailer
   def send_report(tmp_zip)
     @month_year = Time.zone.now.prev_month.strftime("%B %Y")
     @email_subject = "Monthly Fulcrum reports for OAeBU Data Trust"
-    attachment_name = "Monthly Fulcrum_Reports #{@month_year}.zip".gsub(" ", "_")
+    attachment_name = "Monthly Fulcrum_Reports #{@month_year}.zip".tr(" ", "_")
     attachments[attachment_name] = File.read(tmp_zip)
     mail(to: Settings.open_access_ebook_trust_emails.to, cc: Settings.open_access_ebook_trust_emails.cc, subject: @email_subject)
 
