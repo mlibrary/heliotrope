@@ -93,6 +93,8 @@ Lint/AssignmentInCondition:
 Lint/UselessAssignment:
   Enabled: false
 
+Style/CaseLikeIf:
+  Enabled: false
 Style/EmptyElse:
   Enabled: false
 Style/IdenticalConditionalBranches:
@@ -106,6 +108,10 @@ Style/Next:
 Style/RedundantInterpolation:
   Enabled: false
 Style/RedundantParentheses:
+  Enabled: false
+Style/SoleNestedConditional:
+  Enabled: false
+Style/StringConcatenation:
   Enabled: false
 Style/StringLiterals:
   Enabled: false
