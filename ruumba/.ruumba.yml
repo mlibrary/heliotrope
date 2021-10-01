@@ -61,6 +61,10 @@ Layout/SpaceInsideStringInterpolation:
 Layout/TrailingEmptyLines:
   Enabled: false
 
+Lint/EmptyConditionalBody:
+  Enabled: false
+Lint/EmptyFile:
+  Enabled: false
 Lint/Void:
   Enabled: false
 
