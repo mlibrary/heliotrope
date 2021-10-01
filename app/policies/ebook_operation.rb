@@ -19,7 +19,7 @@ class EbookOperation < ApplicationPolicy
       ebook.open_access? || !ebook.restricted?
     end
 
-    def licensed_for?(entitlement)
+    def licensed_for?(entitlement) # rubocop:disable Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity
       licenses = authority.licenses_for(actor, ebook)
 
       return true if licenses

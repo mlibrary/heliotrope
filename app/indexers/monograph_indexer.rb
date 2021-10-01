@@ -3,7 +3,7 @@
 class MonographIndexer < Hyrax::WorkIndexer
   include Hyrax::IndexesBasicMetadata
 
-  def generate_solr_document
+  def generate_solr_document # rubocop:disable Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity
     super.tap do |solr_doc|
       press = Press.find_by(subdomain: object.press)
       press_name = press.name unless press.nil?

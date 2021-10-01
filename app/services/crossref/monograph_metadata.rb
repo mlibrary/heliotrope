@@ -137,7 +137,7 @@ module Crossref
         Time.current.strftime("%Y%m%d%H%M%S")
       end
 
-      def edited_book?
+      def edited_book? # rubocop:disable Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity
         # I don't think there's really a good way to determine this.
         # This is what I came up with.
         if work.creator_display?

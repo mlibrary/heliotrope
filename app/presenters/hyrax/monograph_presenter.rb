@@ -20,7 +20,7 @@ module Hyrax
              :visibility, :identifier, :doi, :handle, :thumbnail_path, :previous_edition, :next_edition,
              to: :solr_document
 
-    def creator
+    def creator # rubocop:disable Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity
       # this is the value used in CitationsBehavior, so remove anything after the second comma in a name, like HEB's...
       # author birth/death years etc
       citable_creators = []

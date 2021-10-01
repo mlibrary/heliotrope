@@ -115,7 +115,7 @@ module Royalty
         items
       end
 
-      def by_monographs(items)
+      def by_monographs(items) # rubocop:disable Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity
         return @by_monographs if @by_monographs.present?
         monographs = {}
         # We take the item level report and "condense" it to the monograph level

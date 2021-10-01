@@ -8,7 +8,7 @@ module CounterReporter
       @params = params
     end
 
-    def report
+    def report # rubocop:disable Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity
       results = results_by_month
       items = []
 

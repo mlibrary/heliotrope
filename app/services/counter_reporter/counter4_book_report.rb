@@ -12,7 +12,7 @@ module CounterReporter
     # See HELIO-2386
     # This report is going to work a little differently than the COUNTER5
     # reports.
-    def report
+    def report # rubocop:disable Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity
       results = results_by_month
       items = []
       file_sets = presenters_for(Hyrax::FileSetPresenter, unique_noids(results))

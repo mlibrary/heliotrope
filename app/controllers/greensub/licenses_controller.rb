@@ -90,7 +90,7 @@ module Greensub
       end
     end
 
-    def affiliations # rubocop:disable Metrics/PerceivedComplexity
+    def affiliations # rubocop:disable Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity
       if @license.institution?
         if affiliations_params[:member].present?
           LicenseAffiliation.find_or_create_by(license: @license, affiliation: 'member')

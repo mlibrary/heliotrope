@@ -52,7 +52,7 @@ module EmbedCodeService
     end
   end
 
-  def data_attribute_embeds(nodes, embeddable_file_set_docs)
+  def data_attribute_embeds(nodes, embeddable_file_set_docs) # rubocop:disable Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity
     nodes.each do |node|
       next if node['data-fulcrum-embed-filename']&.gsub(/\s+/, "").blank?
 

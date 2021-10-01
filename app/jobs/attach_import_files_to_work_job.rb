@@ -10,7 +10,7 @@ class AttachImportFilesToWorkJob < ApplicationJob
   # @param [Hash<attributes>] work_attributes - a hash of work attributes a.k.a env.attributes
   # @param [Array<UploadedFile>] files - an array of files to attach
   # @param [Array<attributes>] files_attributes - an array of file attributes to apply
-  def perform(work, work_attributes, files, files_attributes)
+  def perform(work, work_attributes, files, files_attributes) # rubocop:disable Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity
     validate_files!(files)
     new_ordered_members = []
     @cover_noid = nil

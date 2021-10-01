@@ -31,7 +31,7 @@ module OpenUrlPresenter
     fields.join('&')
   end
 
-  def monograph_coins_title
+  def monograph_coins_title # rubocop:disable Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity
     fields = []
     fields << "ctx_ver=Z39.88-2004"
     fields << "rft_val_fmt=info:ofi/fmt:kev:mtx:book"

@@ -10,7 +10,7 @@ module Import
       @file = input_file
     end
 
-    def attributes(stream = nil)
+    def attributes(stream = nil) # rubocop:disable Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity
       attrs = {}
 
       # a CSV can only have one monograph (probably for in-house use only)...

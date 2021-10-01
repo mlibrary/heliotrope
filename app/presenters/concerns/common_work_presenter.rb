@@ -26,7 +26,7 @@ module CommonWorkPresenter
     ordered_file_sets_ids.present?
   end
 
-  def ordered_file_sets_ids # rubocop:disable Metrics/CyclomaticComplexity
+  def ordered_file_sets_ids # rubocop:disable Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity
     return @ordered_file_sets_ids if @ordered_file_sets_ids
     file_sets_ids = []
     ordered_member_docs.each do |doc|

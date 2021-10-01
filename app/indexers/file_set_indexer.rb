@@ -3,7 +3,7 @@
 class FileSetIndexer < Hyrax::FileSetIndexer
   attr_reader :monograph
 
-  def generate_solr_document
+  def generate_solr_document # rubocop:disable Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity
     super.tap do |solr_doc|
       # Removing punctuation so that a title starting with quotes doesn't always come first
       solr_doc[Solrizer.solr_name('title', :sortable)] = object&.title&.first&.downcase&.gsub(/[^\w\s\d-]/, '')
@@ -57,7 +57,7 @@ class FileSetIndexer < Hyrax::FileSetIndexer
     value.present? ? value.split(/\r?\n/).reject(&:blank?).map(&:strip) : value
   end
 
-  def first_creator_roles
+  def first_creator_roles # rubocop:disable Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity
     value = object.creator.first
     value.present? ? Array.wrap(value[/\(([^()]*)\)/]&.gsub(/\(|\)/, '')&.split(',')&.map(&:strip)&.map(&:downcase)) : value
   end

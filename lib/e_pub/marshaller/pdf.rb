@@ -23,7 +23,7 @@ module EPub
 
       # Instance Methods
 
-      def document
+      def document # rubocop:disable Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity
         # In Prawn, "LETTER" is 8.5x11 which is 612x792
         doc = Prawn::Document.new(page_size: "LETTER", page_layout: :portrait, margin: 50)
         if @publication.multi_rendition?

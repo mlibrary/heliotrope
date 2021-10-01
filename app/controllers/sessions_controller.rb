@@ -103,7 +103,7 @@ class SessionsController < ApplicationController
       component_discovery_feed
     end
 
-    def filtered_discovery_feed
+    def filtered_discovery_feed # rubocop:disable Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity
       cache_key = 'filtered_discovery_feed'
       return Rails.cache.read(cache_key) if Rails.cache.exist?(cache_key)
 
