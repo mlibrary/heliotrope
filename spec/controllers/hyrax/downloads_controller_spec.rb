@@ -165,7 +165,7 @@ RSpec.describe Hyrax::DownloadsController, type: :controller do
       let(:mock_association) { double('blah') }
 
       before do
-        allow(subject).to receive(:dereference_file).with(:extracted_text).and_return(mock_association)
+        allow(subject).to receive(:dereference_file).with(:extracted_text).and_return(mock_association) # rubocop:disable RSpec/SubjectStub
       end
 
       context "When the extracted_text file exists" do
