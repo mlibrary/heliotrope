@@ -195,7 +195,7 @@ RSpec.describe CounterService do
 
       context "a user with NO institutions that is not a Robot" do
         before do
-          Greensub::Institution.create(identifier: 0, name: "Unknown Institution")
+          Greensub::Institution.create(identifier: 0, name: "Unknown Institution", display_name: "World")
           allow(controller).to receive(:current_institutions).and_return([])
         end
 

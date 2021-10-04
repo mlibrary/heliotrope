@@ -4,11 +4,12 @@ require 'rails_helper'
 
 RSpec.describe Greensub::Institution, type: :model do
   context 'instance' do
-    subject { described_class.new(id: id, identifier: identifier, name: name, entity_id: entity_id) }
+    subject { described_class.new(id: id, identifier: identifier, name: name, display_name: display_name, entity_id: entity_id) }
 
     let(:id) { 1 }
     let(:identifier) { 'identifier' }
     let(:name) { 'name' }
+    let(:display_name) { 'display_name' }
     let(:entity_id) { 'entity_id' }
 
     it { is_expected.to be_a Greensub::Licensee }
@@ -38,22 +39,28 @@ RSpec.describe Greensub::Institution, type: :model do
     let(:institution) { described_class.create!(params) }
     let(:params) { { identifier: identifier,
                      name: name,
+                     display_name: display_name,
                      entity_id: entity_id,
-                     site: site,
-                     login: login,
                      catalog_url: catalog_url,
                      link_resolver_url: link_resolver_url,
-                     logo_path: logo_path } }
+                     location: location,
+                     login: login,
+                     logo_path: logo_path,
+                     ror_id: ror_id,
+                     site: site } }
     let(:identifier) { nil }
     let(:name) { nil }
+    let(:display_name) { nil }
     let(:entity_id) { nil }
-    let(:site) { nil }
-    let(:login) { nil }
     let(:catalog_url) { nil }
     let(:link_resolver_url) { nil }
+    let(:location) { nil }
+    let(:login) { nil }
     let(:logo_path) { nil }
+    let(:ror_id) { nil }
+    let(:site) { nil }
 
-    it { expect { subject }.to raise_error(ActiveRecord::RecordInvalid, "Validation failed: Identifier can't be blank, Identifier is not a number, Name can't be blank") }
+    it { expect { subject }.to raise_error(ActiveRecord::RecordInvalid, "Validation failed: Identifier can't be blank, Identifier is not a number, Name can't be blank, Display name can't be blank") }
   end
 
   context 'before validation' do

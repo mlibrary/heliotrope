@@ -23,6 +23,7 @@ module Greensub
 
     def create
       @institution = Institution.new(institution_params)
+      @institution.display_name = @institution.name if @institution.display_name.blank?
       respond_to do |format|
         if @institution.save
           format.html { redirect_to greensub_institution_path(@institution), notice: 'Institution was successfully created.' }
@@ -61,11 +62,11 @@ module Greensub
       end
 
       def institution_params
-        params.require(:greensub_institution).permit(:identifier, :name, :entity_id, :site, :login)
+        params.require(:greensub_institution).permit(:identifier, :name, :display_name, :entity_id, :catalog_url, :link_resolver_url, :location, :login, :logo_path, :ror_id, :site)
       end
 
       def filtering_params(params)
-        params.slice(:identifier_like, :name_like, :entity_id_like)
+        params.slice(:identifier_like, :name_like, :display_name_like, :entity_id_like)
       end
   end
 end

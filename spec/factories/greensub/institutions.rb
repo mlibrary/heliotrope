@@ -4,8 +4,13 @@ FactoryBot.define do
   factory :institution, class: Greensub::Institution do
     sequence(:identifier) { |n| n }
     sequence(:name) { |n| "InstitutionName#{n}" }
-    sequence(:entity_id) { |n| "InstitutionEntity_ID#{n}" }
+    sequence(:display_name) { |n| "InstitutionDisplayName#{n}" }
+    sequence(:entity_id) { |n| "InstitutionEntityID#{n}" }
+    sequence(:catalog_url) { |n| "InstitutionCatalogURL#{n}" }
+    sequence(:link_resolver_url) { |n| "InstitutionLinkResolverURL#{n}" }
+    sequence(:location) { |n| "InstitutionLocation#{n}" }
+    sequence(:logo_path) { |n| "InstitutionLogoPath#{n}" }
+    sequence(:ror_id) { |n| "InstitutionRorID#{n}" }
     sequence(:site) { |n| "InstitutionSite#{n}" }
-    sequence(:login) { |n| "InstitutionLogin#{n}" }
   end
 end
