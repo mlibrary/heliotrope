@@ -51,10 +51,7 @@ class CharacterizeJob < ApplicationJob
 
     # Heliotrope addition: allow "reversioned" FileSets to be Unpacked if needed
     kind = FeaturedRepresentative.where(file_set_id: file_set.id)&.first&.kind
-    # HACK: for HELIO-1830
-    if kind.blank? && file_set.parent&.press == 'heb'
-      kind = maybe_set_featured_representative(file_set)
-    end
+
     if kind.present? && ['epub', 'webgl', 'pdf_ebook'].include?(kind)
       UnpackJob.perform_later(file_set.id, kind)
     elsif /^interactive map$/i.match?(file_set.resource_type.first)
@@ -62,23 +59,5 @@ class CharacterizeJob < ApplicationJob
     end
 
     CreateDerivativesJob.perform_later(file_set, file_id, filename)
-  end
-
-  def maybe_set_featured_representative(file_set)
-    kind = case file_set.original_file.file_name.first
-           when /\.epub$/
-             "epub"
-           when "related.html"
-             "related"
-           when "reviews.html"
-             "reviews"
-           end
-
-    if kind.present?
-      FeaturedRepresentative.create!(work_id: file_set.parent.id,
-                                     file_set_id: file_set.id,
-                                     kind: kind)
-    end
-    kind
   end
 end
