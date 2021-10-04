@@ -54,7 +54,7 @@ module Hyrax
         markup.html_safe
       end
 
-      def maybe_sort_values
+      def maybe_sort_values # rubocop:disable Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity
         # options[:sort_by] is an array showing values' items in their intended order
         return if options[:sort_by].blank? || !values.is_a?(Array) || values.count < 1
         ordered_values = []

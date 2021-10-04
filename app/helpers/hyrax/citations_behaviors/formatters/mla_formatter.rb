@@ -38,7 +38,7 @@ module Hyrax
           authors_list = Array.wrap(authors_list)
           text = concatenate_authors_from(authors_list)
           if text.present?
-            text << '.' unless text =~ /\.$/
+            text << '.' unless /\.$/.match?(text)
             text << ' '
           end
           text

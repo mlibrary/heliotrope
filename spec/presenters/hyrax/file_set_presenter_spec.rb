@@ -373,6 +373,7 @@ RSpec.describe Hyrax::FileSetPresenter do
     let(:external_resource_url) { '' }
     let(:width_is) { nil }
 
+    # rubocop:disable RSpec/EmptyExampleGroup
     context 'with featured representative' do
       FeaturedRepresentative::KINDS.each do |kind|
         context kind.to_s do
@@ -391,6 +392,7 @@ RSpec.describe Hyrax::FileSetPresenter do
         end
       end
     end
+    # rubocop:enable RSpec/EmptyExampleGroup
 
     context "with a map" do
       let(:resource_type) { 'interactive map' }
@@ -481,6 +483,7 @@ RSpec.describe Hyrax::FileSetPresenter do
     let(:external_resource_url) { '' }
     let(:width_is) { nil }
 
+    # rubocop:disable RSpec/EmptyExampleGroup
     context 'with featured representative' do
       FeaturedRepresentative::KINDS.each do |kind|
         context kind.to_s do
@@ -499,6 +502,7 @@ RSpec.describe Hyrax::FileSetPresenter do
         end
       end
     end
+    # rubocop:enable RSpec/EmptyExampleGroup
 
     context "with a map" do
       let(:resource_type) { 'interactive map' }

@@ -44,7 +44,7 @@ module EPub
                                                        File.dirname(@publication.page_scan_content_file),
                                                        chapter_list_file))).remove_namespaces!
       chapter_titles = chapter_list.xpath("//ol/li/span")
-      title_node = chapter_titles.map { |node| node if node.text == @title }.compact
+      title_node = chapter_titles.filter_map { |node| node if node.text == @title }
 
       results = []
       title_node&.first&.parent&.traverse do |node|

@@ -25,7 +25,7 @@ module Greensub
       if params[:product_id].present?
         product = Product.find(params[:product_id])
         @component = Component.find(params[:id])
-        if product.present? && @component.present? && !product.components.include?(@component)
+        if product.present? && @component.present? && product.components.exclude?(@component)
           product.components << @component
         end
         redirect_to product

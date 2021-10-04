@@ -1,11 +1,18 @@
-require: rubocop-rspec
+require:
+  - rubocop-rails
+  - rubocop-rspec
+
 inherit_gem:
   rubocop-rails_config:
     - config/rails.yml
+
 inherit_from: .rubocop_todo.yml
 
 AllCops:
+  NewCops: enable
   DisplayCopNames: true
+  TargetRubyVersion: 2.7.4
+  TargetRailsVersion: 5.2.4.6
   Include:
     - '**/*.rb'
     - '**/Rakefile'
@@ -23,17 +30,20 @@ AllCops:
     - 'vagrant_scripts/**/*'
     - 'vendor/**/*'
 
-Layout/AlignArray:
+Layout/ArrayAlignment:
   Enabled: true
-
-Layout/IndentationConsistency:
-  EnforcedStyle: indented_internal_methods
 
 Layout/EmptyLinesAroundAccessModifier:
   EnforcedStyle: around
 
 Layout/EndAlignment:
   EnforcedStyleAlignWith: keyword
+
+Layout/IndentationConsistency:
+  EnforcedStyle: indented_internal_methods
+
+Layout/LineLength:
+  Enabled: false
 
 Lint/DuplicateMethods:
   Exclude:
@@ -55,9 +65,6 @@ Metrics/ClassLength:
   Enabled: true
   Max: 250
 
-Metrics/LineLength:
-  Enabled: false
-
 Metrics/MethodLength:
   Enabled: false
 
@@ -74,6 +81,10 @@ Rails:
 
 Rails/Delegate:
   Enabled: false
+
+Rails/FilePath:
+  #  EnforcedStyle: slashes
+  EnforcedStyle: arguments
 
 Rails/LexicallyScopedActionFilter:
   Enabled: false
@@ -118,9 +129,6 @@ RSpec/ExampleWording:
     NOT: does NOT
   IgnoredWords:
     - only
-
-RSpec/FilePath:
-  Enabled: false
 
 RSpec/InstanceVariable:
   Enabled: false

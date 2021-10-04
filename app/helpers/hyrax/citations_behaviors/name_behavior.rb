@@ -6,7 +6,7 @@ module Hyrax
       include Hyrax::CitationsBehaviors::CommonBehavior
       # return all unique authors with end punctuation removed
       def author_list(work, escape = true)
-        all_authors(work) { |author| clean_end_punctuation(escape ? CGI.escapeHTML(author) :  author) }
+        all_authors(work) { |author| clean_end_punctuation(escape ? CGI.escapeHTML(author) : author) }
       end
 
       # return all unique authors of a work or nil if none
@@ -17,7 +17,7 @@ module Hyrax
 
       def given_name_first(name)
         name = clean_end_punctuation(name)
-        return name unless name =~ /,/
+        return name unless /,/.match?(name)
         temp_name = name.split(/,\s*/)
         temp_name.last + " " + temp_name.first
       end

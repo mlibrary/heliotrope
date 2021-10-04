@@ -8,7 +8,7 @@ class ValidationService
   # Syntax Validation a.k.a. Regular Expression Match? and such
 
   def self.valid_email?(email)
-    /^[^@]+@[^@]+\.+[^@|\.]+$/.match?(email&.to_s)
+    /^[^@]+@[^@]+\.+[^@|.]+$/.match?(email&.to_s)
   end
 
   def self.valid_id?(id)
@@ -82,7 +82,7 @@ class ValidationService
     %i[any Guest Individual Institution User].include?(type&.to_s&.to_sym)
   end
 
-  def self.valid_agent?(agent_type, agent_id) # rubocop:disable  Metrics/CyclomaticComplexity
+  def self.valid_agent?(agent_type, agent_id) # rubocop:disable Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity
     any_id = agent_id&.to_s&.to_sym == :any
     case agent_type&.to_s&.to_sym
     when :any
@@ -110,7 +110,7 @@ class ValidationService
     %i[License permission].include?(type&.to_s&.to_sym)
   end
 
-  def self.valid_credential?(credential_type, credential_id)
+  def self.valid_credential?(credential_type, credential_id) # rubocop:disable Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity
     any_id = credential_id&.to_s&.to_sym == :any
     case credential_type&.to_s&.to_sym
     # when :any
@@ -131,7 +131,7 @@ class ValidationService
     %i[any Component Product].include?(type&.to_s&.to_sym)
   end
 
-  def self.valid_resource?(resource_type, resource_id) # rubocop:disable  Metrics/CyclomaticComplexity
+  def self.valid_resource?(resource_type, resource_id)  # rubocop:disable Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity
     any_id = resource_id&.to_s&.to_sym == :any
     case resource_type&.to_s&.to_sym
     when :any

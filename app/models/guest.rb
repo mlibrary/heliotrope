@@ -2,7 +2,7 @@
 
 class Guest < User
   def name
-    return super unless /guest\@fulcrum\.org/i.match?(user_key)
+    return super unless /guest@fulcrum\.org/i.match?(user_key)
     'member@' + (institutions.first&.name || institutions.first&.identifier || 'institution')
   end
 

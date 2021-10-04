@@ -94,6 +94,13 @@ Rails/SkipsModelValidations:
   Exclude:
     - 'spec/jobs/characterize_job_spec.rb'
 
+Rails/UniqueValidationWithoutIndex:
+  Exclude:
+    - 'app/models/ebook_table_of_contents_cache.rb'
+    - 'app/models/featured_representative.rb'
+    - 'app/models/google_analytics_history.rb'
+    - 'app/models/press.rb'
+
 RSpec/EmptyExampleGroup:
   Exclude:
     - 'spec/actors/hyrax/monograph_actor_spec.rb'

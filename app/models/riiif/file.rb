@@ -46,7 +46,7 @@ module Riiif
     def extract_tifftopnm(options)
       command = ["tifftopnm -byrow #{path}"]
       if options[:crop]
-        w, h, x, y = options[:crop].split(/[x\+]/)
+        w, h, x, y = options[:crop].split(/[x+]/)
         command << "pamcut #{x} #{y} #{w} #{h}"
       end
 

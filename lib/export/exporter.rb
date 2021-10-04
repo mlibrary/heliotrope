@@ -184,9 +184,9 @@ module Export
           # I don't want to convert HTML to Markdown here, so taking title from the Solr doc
           case metadata_name
           when 'title'
-            return item.solr_document['title_tesim'].first
+            item.solr_document['title_tesim'].first
           else
-            return value.first
+            value.first
           end
         elsif multivalued == :yes_multiline
           # note1: this is a multi-valued field but we're only using the first one to hold a string containing...
@@ -195,12 +195,12 @@ module Export
           #        these were specifically indexed for the exporter
           case metadata_name
           when 'creator'
-            return item.solr_document['importable_creator_ss']
+            item.solr_document['importable_creator_ss']
           when 'contributor'
-            return item.solr_document['importable_contributor_ss']
+            item.solr_document['importable_contributor_ss']
           else
             # shouldn't happen as creator/contributor are the only :yes_multiline fields
-            return value.first
+            value.first
           end
         else
           # https://tools.lib.umich.edu/jira/browse/HELIO-2321

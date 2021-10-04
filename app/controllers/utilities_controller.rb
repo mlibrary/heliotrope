@@ -123,7 +123,7 @@ class UtilitiesController < ApplicationController
 
         #{ActiveFedora::Fedora.instance.authorized_connection.options}
 
-    APP_STATUS
+      APP_STATUS
     end
 
     app_status += "\n#{hash_tag_line}"

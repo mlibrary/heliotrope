@@ -21,13 +21,11 @@ module Hyrax
     # @param options [Hash, String] a hash or string representing the path. Hash is prefered as it
     #                              allows us to workaround https://github.com/rails/rails/issues/28253
     # @param also_active_for [Hash, String] a hash or string with alternative paths that should be 'active'
-    def nav_link(options, also_active_for: nil, **link_html_options)
+    def nav_link(options, also_active_for: nil, **link_html_options, &block)
       active_urls = [options, also_active_for].compact
       list_options = active_urls.any? { |url| current_page?(url) } ? { class: 'active' } : {}
       content_tag(:li, list_options) do
-        link_to(options, link_html_options) do
-          yield
-        end
+        link_to(options, link_html_options, &block)
       end
     end
 

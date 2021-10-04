@@ -103,7 +103,7 @@ class SessionsController < ApplicationController
       component_discovery_feed
     end
 
-    def filtered_discovery_feed
+    def filtered_discovery_feed # rubocop:disable Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity
       cache_key = 'filtered_discovery_feed'
       return Rails.cache.read(cache_key) if Rails.cache.exist?(cache_key)
 
@@ -147,7 +147,7 @@ class SessionsController < ApplicationController
     def shib_target
       target = params[:resource] || return_location || ""
       target = CGI.unescape(target)
-      match = /^(https?\:\/\/[^\/]+\/)(.*)$/i.match(target)
+      match = /^(https?:\/\/[^\/]+\/)(.*)$/i.match(target)
       target = match[2] if match.present?
       target = target.prepend('/') unless target.start_with?('/')
       target
@@ -190,6 +190,6 @@ class SessionsController < ApplicationController
     end
 
     def debug_log(msg)
-      Rails.logger.debug "[AUTHN] SessionsController -- #{msg}"
+      Rails.logger.debug { "[AUTHN] SessionsController -- #{msg}" }
     end
 end

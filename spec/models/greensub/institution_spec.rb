@@ -152,7 +152,7 @@ RSpec.describe Greensub::Institution, type: :model do
     before do
       for i in 0..2
         institutions << create(:institution)
-        for j in 0..Greensub::InstitutionAffiliation.affiliations.count-1
+        for j in 0..Greensub::InstitutionAffiliation.affiliations.count - 1
           create(:institution_affiliation, institution: institutions[i], dlps_institution_id: 1 + (i * 100) + j, affiliation: Greensub::InstitutionAffiliation.affiliations[j])
         end
       end

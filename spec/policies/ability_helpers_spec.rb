@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-class TestPolicy  < ApplicationPolicy
+class TestPolicy < ApplicationPolicy
   include AbilityHelpers
 end
 

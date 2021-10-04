@@ -342,7 +342,7 @@ RSpec.describe Royalty::CalculationReport do
     end
 
     it "calculates royalties" do
-      expect(subject).to eq [{ "Hits"=>1, "Royalty Earning"=> 1 }, { "Hits"=>1, "Royalty Earning"=> 1 }]
+      expect(subject).to eq [{ "Hits" => 1, "Royalty Earning" => 1 }, { "Hits" => 1, "Royalty Earning" => 1 }]
     end
   end
 

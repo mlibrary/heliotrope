@@ -38,6 +38,6 @@ module BannerHelper
 
   def show_acceptable_use_policy?(subdomain)
     return false unless controller.is_a?(PressCatalogController) || controller.is_a?(::MonographCatalogController)
-    !%w[barpublishing].include? subdomain
+    %w[barpublishing].exclude?(subdomain)
   end
 end

@@ -35,7 +35,7 @@ module EmbedCodePresenter
   end
 
   def embed_fulcrum_logo_link
-    if !root_url.include?('fulcrum')
+    if root_url.exclude?('fulcrum')
       hyrax_file_set_url(id)
     else
       citable_link

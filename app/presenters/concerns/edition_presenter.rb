@@ -3,7 +3,7 @@
 module EditionPresenter
   extend ActiveSupport::Concern
 
-  def previous_edition_presenter
+  def previous_edition_presenter # rubocop:disable Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity
     return @previous_edition_presenter if @previous_edition_presenter.present?
     # don't instantiate a presenter unless the link is to a Monograph in the current app this user can read
     return nil if previous_edition.blank? || previous_edition_noid.blank? || !current_ability.can?(:read, previous_edition_noid)
@@ -35,7 +35,7 @@ module EditionPresenter
                                end
   end
 
-  def next_edition_noid
+  def next_edition_noid # rubocop:disable Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity
     return @next_edition_noid if @next_edition_noid.present?
     @next_edition_doi ||= /https?:\/\/doi.org\/(.*)/i.match(next_edition)&.[](1)
 

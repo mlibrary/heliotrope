@@ -61,7 +61,7 @@ module CounterReporter
             item["Access_Method"] = @params.access_method
             item["Metric_Type"] = metric_type
             # item["Reporting_Period_Total"] = reporting_period_total
-            item["Reporting_Period_Total"] = results.values.map { |r| r[metric_type.downcase][access_type.downcase][[parent_noid, noid, section, comp_title]] }.compact.sum
+            item["Reporting_Period_Total"] = results.values.filter_map { |r| r[metric_type.downcase][access_type.downcase][[parent_noid, noid, section, comp_title]] }.sum
             results.each do |month, result|
               item[month] = result[metric_type.downcase][access_type.downcase][[parent_noid, noid, section, comp_title]] || 0
             end

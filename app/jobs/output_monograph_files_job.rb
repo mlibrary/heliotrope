@@ -3,7 +3,7 @@
 class OutputMonographFilesJob < ApplicationJob
   # @param [noid] NOID of Monograph whose files are being extracted
   # @param [path] string, path of directory to extract to
-  def perform(noid, path)
+  def perform(noid, path) # rubocop:disable Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity
     monograph = Sighrax.from_noid(noid)
 
     monograph.children.each do |member|

@@ -191,7 +191,7 @@ class UnpackJob < ApplicationJob
       raise "Unable to execute command \"#{command}\"\n#{err}\n#{out}" unless wait_thr.value.success? || err.include?('operation succeeded with warnings')
     end
 
-    def epub_webgl_bridge(id, root_path, kind)
+    def epub_webgl_bridge(id, root_path, kind) # rubocop:disable Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity
       # Edge case for epubs with POI (Point of Interest) to map to CFI for a webgl (gabii)
       # See 1630
       monograph_id = FeaturedRepresentative.where(file_set_id: id)&.first&.work_id

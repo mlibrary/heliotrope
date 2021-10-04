@@ -426,7 +426,7 @@ RSpec.describe "Institutions", type: :request do
           post api_product_institution_license_path(product, institution), params: params, headers: headers
           expect(response.content_type).to eq("application/json")
           expect(response).to have_http_status(:unprocessable_entity)
-          expect(response_body).to eq({ "exception"=>"unknown attribute 'licensee' for Greensub::License." })
+          expect(response_body).to eq({ "exception" => "unknown attribute 'licensee' for Greensub::License." })
           expect(institution.products.include?(product)).to be false
         end
 
@@ -435,7 +435,7 @@ RSpec.describe "Institutions", type: :request do
           post api_product_institution_license_path(product, institution), params: params, headers: headers
           expect(response.content_type).to eq("application/json")
           expect(response).to have_http_status(:unprocessable_entity)
-          expect(response_body).to eq({ "exception"=>"unknown attribute 'licensee' for Greensub::License." })
+          expect(response_body).to eq({ "exception" => "unknown attribute 'licensee' for Greensub::License." })
           expect(institution.products.include?(product)).to be false
         end
       end

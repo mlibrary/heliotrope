@@ -26,7 +26,7 @@ module CommonWorkPresenter
     ordered_file_sets_ids.present?
   end
 
-  def ordered_file_sets_ids # rubocop:disable Metrics/CyclomaticComplexity
+  def ordered_file_sets_ids # rubocop:disable Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity
     return @ordered_file_sets_ids if @ordered_file_sets_ids
     file_sets_ids = []
     ordered_member_docs.each do |doc|
@@ -47,7 +47,7 @@ module CommonWorkPresenter
 
     if ids.blank?
       @ordered_member_docs = []
-      return @ordered_member_docs
+      @ordered_member_docs
     else
       query_results = ActiveFedora::SolrService.query("{!terms f=id}#{ids.join(',')}", rows: ids.count)
 

@@ -4,7 +4,7 @@ Hyrax::FileSetsController.class_eval do
   prepend(FileSetsControllerBehavior = Module.new do
     Hyrax::FileSetsController.form_class = ::Heliotrope::FileSetEditForm
 
-    def show
+    def show # rubocop:disable Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity
       # local heliotrope changes
       (redirect_to Rails.application.routes.url_helpers.monograph_catalog_path(presenter&.parent&.id)) && return if bounce_from_representatives?
 

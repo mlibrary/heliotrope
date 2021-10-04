@@ -23,19 +23,19 @@ class EBookDownloadPresenter < ApplicationPresenter
   end
 
   def epub
-    @ebook_presenters.map { |ebook| ebook if ebook.epub? }.compact.first
+    @ebook_presenters.filter_map { |ebook| ebook if ebook.epub? }.first
   end
 
   def mobi
-    @ebook_presenters.map { |ebook| ebook if ebook.mobi? }.compact.first
+    @ebook_presenters.filter_map { |ebook| ebook if ebook.mobi? }.first
   end
 
   def pdf_ebook
-    @ebook_presenters.map { |ebook| ebook if ebook.pdf_ebook? }.compact.first
+    @ebook_presenters.filter_map { |ebook| ebook if ebook.pdf_ebook? }.first
   end
 
   def downloadable?(ebook_presenter)
-    Rails.logger.debug("[EBOOK DOWNLOAD] ebook_presenter.blank? #{ebook_presenter.blank?} (#{ebook_presenter.class})")
+    Rails.logger.debug { "[EBOOK DOWNLOAD] ebook_presenter.blank? #{ebook_presenter.blank?} (#{ebook_presenter.class})" }
     return false if ebook_presenter.blank?
     EbookDownloadOperation.new(current_actor, Sighrax.from_presenter(ebook_presenter)).allowed?
   end

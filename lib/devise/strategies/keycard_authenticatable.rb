@@ -46,7 +46,7 @@ module Devise
 
       private
 
-        def set_user!
+        def set_user! # rubocop:disable Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity
           user = nil
           user ||= existing_user || new_user || guest_user if user_eid.present?
           user ||= guest_institution_user if identity_provider.present?
@@ -120,7 +120,7 @@ module Devise
         end
 
         def debug_log(msg)
-          Rails.logger.debug "[AUTHN] KeycardAuthenticatable -- #{msg}"
+          Rails.logger.debug { "[AUTHN] KeycardAuthenticatable -- #{msg}" }
         end
     end
   end

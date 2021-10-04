@@ -6,14 +6,14 @@ module SystemSpecHelper
     db.execute "delete from aa_network"
     db.execute "delete from aa_inst"
 
-    db.execute <<~SQL
+    db.execute <<~SQL.squish
       insert into aa_network
         (uniqueIdentifier, dlpsCIDRAddress, dlpsAddressStart, dlpsAddressEnd, dlpsAccessSwitch, inst, lastModifiedBy, dlpsDeleted)
       values
         ("#{institution.identifier}", '127.0.0.1/32', '2130706433', '2130706433', 'allow', "#{institution.identifier}", 'root', 'f')
     SQL
 
-    db.execute <<~SQL
+    db.execute <<~SQL.squish
       insert into aa_inst
         (uniqueIdentifier, organizationName, manager, lastModifiedBy, dlpsDeleted)
       values

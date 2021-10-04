@@ -11,6 +11,6 @@ class UnpackService
 
   def self.remove_path_from_noid(noid, kind)
     root_path = root_path_from_noid(noid, kind)
-    root_path.sub(/\/*.\-#{kind}/, '/') + "TO-BE-REMOVED-" + DateTime.now.to_i.to_s + "-#{kind}"
+    root_path.sub(/\/*.-#{kind}/, '/') + "TO-BE-REMOVED-" + DateTime.now.to_i.to_s + "-#{kind}"
   end
 end

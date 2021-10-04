@@ -12,7 +12,7 @@ module Authority
       authority.which(agent, :read).any?
     end
 
-    def agent(agent_type, agent_id) # rubocop:disable Metrics/CyclomaticComplexity
+    def agent(agent_type, agent_id) # rubocop:disable Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity
       raise ArgumentError unless ValidationService.valid_agent_type?(agent_type)
       return OpenStruct.new(agent_type: agent_type, agent_id: agent_id) if agent_id&.to_s == 'any'
       raise ArgumentError unless ValidationService.valid_agent?(agent_type, agent_id)
