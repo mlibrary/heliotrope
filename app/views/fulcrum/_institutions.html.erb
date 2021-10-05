@@ -13,16 +13,20 @@
       <th>
         <% size = 24 %>
         <div class="col-md-12">
-          <div class="col-md-2"><label for="identifier_like">Identifier</label></div>
-          <div class="col-md-10"><input type="text" name="identifier_like" value="<%= params[:identifier_like] %>" size="<%= size %>" aria-label="identifier_like"></div>
+          <div class="col-md-3"><label for="identifier_like">Identifier</label></div>
+          <div class="col-md-9"><input type="text" name="identifier_like" value="<%= params[:identifier_like] %>" size="<%= size %>" aria-label="identifier_like"></div>
         </div>
         <div class="col-md-12">
-          <div class="col-md-2"><label for="name_like">Name</label></div>
-          <div class="col-md-10"><input type="text" name="name_like" value="<%= params[:name_like] %>" size="<%= size %>" aria-label="name_like"></div>
+          <div class="col-md-3"><label for="name_like">Name</label></div>
+          <div class="col-md-9"><input type="text" name="name_like" value="<%= params[:name_like] %>" size="<%= size %>" aria-label="name_like"></div>
         </div>
         <div class="col-md-12">
-          <div class="col-md-2"><label for="entity_id_like">Entity ID</label></div>
-          <div class="col-md-10"><input type="text" name="entity_id_like" value="<%= params[:entity_id_like] %>" size="<%= size %>" aria-label="entity_id_like"></div>
+          <div class="col-md-3"><label for="name_like">Display Name</label></div>
+          <div class="col-md-9"><input type="text" name="display_name_like" value="<%= params[:display_name_like] %>" size="<%= size %>" aria-label="display_name_like"></div>
+        </div>
+        <div class="col-md-12">
+          <div class="col-md-3"><label for="entity_id_like">Entity ID</label></div>
+          <div class="col-md-9"><input type="text" name="entity_id_like" value="<%= params[:entity_id_like] %>" size="<%= size %>" aria-label="entity_id_like"></div>
         </div>
       </th>
       <th>
@@ -42,6 +46,7 @@
         <td>
           <div><%= institution.identifier %></div>
           <div><%= institution.name %>&nbsp;</div>
+          <div><%= institution.display_name %>&nbsp;</div>
           <div><%= institution.entity_id %>&nbsp;</div>
         </td>
         <td>

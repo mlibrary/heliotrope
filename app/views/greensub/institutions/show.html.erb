@@ -1,27 +1,46 @@
 <p id="notice"><%= notice %></p>
 <div id="maincontent">
   <h1>Institution</h1>
-  <div class="col-md-1"><em>ID</em></div>
-  <div class="col-md-11">&nbsp;<%= @institution.id %></div>
-  <div class="col-md-1"><em>Identifier</em></div>
-  <div class="col-md-11">&nbsp;<%= @institution.identifier %></div>
-  <div class="col-md-1"><em>Name</em></div>
-  <div class="col-md-11">&nbsp;<%= @institution.name %></div>
-  <div class="col-md-1"><em>Entity&nbsp;ID</em></div>
-  <div class="col-md-11">&nbsp;<%= @institution.entity_id %></div>
-  <div class="col-md-1"><em>Site</em></div>
-  <div class="col-md-11">&nbsp;<%= @institution.site %></div>
-  <div class="col-md-1"><em>Login</em></div>
-  <div class="col-md-11">&nbsp;<%= @institution.login %></div>
+  <div class="col-md-2"><em>ID</em></div>
+  <div class="col-md-10">&nbsp;<%= @institution.id %></div>
+  <div class="col-md-2"><em>Identifier</em></div>
+  <div class="col-md-10">&nbsp;<%= @institution.identifier %></div>
+  <div class="col-md-2"><em>Name</em></div>
+  <div class="col-md-10">&nbsp;<%= @institution.name %></div>
+  <div class="col-md-2"><em>Display Name</em></div>
+  <div class="col-md-10">&nbsp;<%= @institution.display_name %></div>
+  <div class="col-md-2"><em>Entity&nbsp;ID</em></div>
+  <div class="col-md-10">&nbsp;<%= @institution.entity_id %></div>
+
   <div class="col-md-12"><br/></div>
-  <div class="col-md-1"><em>Affiliations</em></div>
-  <div class="col-md-11">&nbsp;<%= link_to @institution.institution_affiliations.count, greensub_institution_inst_affiliations_path(@institution) %></div>
+
+  <div class="col-md-2"><em>Catalog URL</em></div>
+  <div class="col-md-10">&nbsp;<%= @institution.catalog_url %></div>
+  <div class="col-md-2"><em>Link Resolver URL</em></div>
+  <div class="col-md-10">&nbsp;<%= @institution.link_resolver_url %></div>
+  <div class="col-md-2"><em>Location</em></div>
+  <div class="col-md-10">&nbsp;<%= @institution.location %></div>
+  <div class="col-md-2"><em>Login</em></div>
+  <div class="col-md-10">&nbsp;<%= @institution.login %></div>
+  <div class="col-md-2"><em>Logo Path</em></div>
+  <div class="col-md-10">&nbsp;<%= @institution.logo_path %></div>
+  <div class="col-md-2"><em>ROR ID</em></div>
+  <div class="col-md-10">&nbsp;<%= @institution.ror_id %></div>
+  <div class="col-md-2"><em>Site</em></div>
+  <div class="col-md-10">&nbsp;<%= @institution.site %></div>
+
   <div class="col-md-12"><br/></div>
-  <div class="col-md-1"><em>Licenses</em></div>
-  <div class="col-md-11">&nbsp;<%= link_to @institution.licenses.count, greensub_institution_licenses_path(@institution) %></div>
-  <div class="col-md-1"><em>Products</em></div>
-  <div class="col-md-11">&nbsp;<%= link_to @institution.products.count, greensub_institution_products_path(@institution) %></div>
+
+  <div class="col-md-2"><em>Affiliations</em></div>
+  <div class="col-md-10">&nbsp;<%= link_to @institution.institution_affiliations.count, greensub_institution_inst_affiliations_path(@institution) %></div>
   <div class="col-md-12"><br/></div>
+  <div class="col-md-2"><em>Licenses</em></div>
+  <div class="col-md-10">&nbsp;<%= link_to @institution.licenses.count, greensub_institution_licenses_path(@institution) %></div>
+  <div class="col-md-2"><em>Products</em></div>
+  <div class="col-md-10">&nbsp;<%= link_to @institution.products.count, greensub_institution_products_path(@institution) %></div>
+
+  <div class="col-md-12"><br/></div>
+
   <div class="col-md-12">
     <%= link_to_if @institution.update?, 'Edit', edit_greensub_institution_path(@institution) %>
     <span> | </span>

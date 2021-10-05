@@ -92,8 +92,8 @@ RSpec.describe SessionsController, type: :controller do
         DISCO_FEED
       )
     end
-    let(:institution1) { Greensub::Institution.create(identifier: '1', name: 'University of Michigan', site: 'Site', login: 'Login', entity_id: 'https://shibboleth.umich.edu/idp/shibboleth') }
-    let(:institution2) { Greensub::Institution.create(identifier: '2', name: 'Michigan State University', site: 'Site', login: 'Login', entity_id: 'urn:mace:incommon:msu.edu') }
+    let(:institution1) { Greensub::Institution.create(identifier: '1', name: 'University of Michigan', display_name: 'University of Michigan', entity_id: 'https://shibboleth.umich.edu/idp/shibboleth') }
+    let(:institution2) { Greensub::Institution.create(identifier: '2', name: 'Michigan State University', display_name: 'Michigan State University', entity_id: 'urn:mace:incommon:msu.edu') }
 
     before { allow(RecacheInCommonMetadataJob).to receive(:new).and_return(job) }
 

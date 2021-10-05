@@ -79,6 +79,7 @@ module API
           return render json: @institution.errors, status: :unprocessable_entity
         end
         @institution = Greensub::Institution.new(institution_params)
+        @institution.display_name = @institution.name if @institution.display_name.blank?
         begin
           @institution.save!
         rescue StandardError => e
@@ -160,7 +161,7 @@ module API
         end
 
         def institution_params
-          params.require(:institution).permit(:identifier, :name, :entity_id, :site, :login)
+          params.require(:institution).permit(:identifier, :name, :display_name, :entity_id, :catalog_url, :link_resolver_url, :location, :login, :logo_path, :ror_id, :site)
         end
 
         def license_params
