@@ -49,7 +49,7 @@
   <div class="col-sm-9 monograph-metadata">
     <h1 id="work-title"><%= @presenter.title %></h1>
     <% if @presenter.authors? %>
-        <span class="authors"><%= render_markdown @presenter.authors %></span>
+        <span aria-label="authors" class="authors"><%= render_markdown @presenter.authors %></span>
     <% end %>
     <% if @presenter.date_created.present? %>
       <span aria-label="publication date"><%= @presenter.date_created.first %></span><% if @presenter.edition_name.present? %><span aria-label="edition name"><%= sanitize @presenter.edition_name %></span><% end %>
