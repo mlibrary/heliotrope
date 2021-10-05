@@ -356,20 +356,20 @@ en:
       representative_kind: |
         Use this to assign a FileSet as one of its Monograph's "representatives".
         Allowed representative values are:
-        epub, webgl, database, aboutware, pdf_ebook, mobi, reviews, related, peer_review, audiobook and cover
+        aboutware, audiobook, cover, database, epub, mobi, pdf_ebook, peer_review, related, reviews, webgl
 
         You must ensure that the file is of an appropriate type to be used as the relevant representative:
-        -- epub: *.epub (archive file)
-        -- webgl: *.zip (WebGL archive file)
-        -- database: an external resource URL (see relevant column) with no actual file present
         -- aboutware: *.html file
-        -- pdf_ebook: *.pdf file
-        -- mobi: *.mobi file
-        -- reviews: *.html file
-        -- related: *.html file
-        -- peer_review: *.html file
-        -- audiobook: *.zip file (containing separate audio (mp3) files, one per chapter)
+        -- audiobook: *.zip file (containing separate audio files, one per chapter)
         -- cover: image file like *.jpg (not JPG 2000), *.tiff, *.png
+        -- database: an external resource URL (see relevant column) with no actual file present
+        -- epub: *.epub (archive file)
+        -- mobi: *.mobi file
+        -- pdf_ebook: *.pdf file
+        -- peer_review: *.html file
+        -- related: *.html file
+        -- reviews: *.html file
+        -- webgl: *.zip (WebGL archive file)
       published: |
         Whether the object is currently "published" on Fulcrum.
       tombstone: |
