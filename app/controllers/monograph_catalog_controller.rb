@@ -2,6 +2,7 @@
 
 class MonographCatalogController < ::CatalogController
   before_action :load_presenter, only: %i[index facet purchase]
+  before_action :redirect_for_oa_marker, only: %i[index]
   before_action :load_press_presenter, only: %i[purchase]
   before_action :load_stats, only: %i[index facet]
   after_action :add_counter_stat, only: %i[index]
@@ -96,6 +97,12 @@ class MonographCatalogController < ::CatalogController
       Rails.logger.error(%Q|[RSOLR ERROR TRY:#{retries}] #{e} #{e.backtrace.join("\n")}|)
       retries += 1
       retry if retries < 3
+    end
+
+    def redirect_for_oa_marker
+      # HELIO-4030, this is for google scholar
+      oa_marker = @presenter.open_access? ? "oa-monograph" : "monograph"
+      redirect_to hyrax_monograph_path(@presenter.id, oa_marker: oa_marker) if params[:oa_marker].blank?
     end
 
     def load_press_presenter

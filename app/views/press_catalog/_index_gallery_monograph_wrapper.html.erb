@@ -1,4 +1,5 @@
 <% # container for document in index gallery view -%>
 <% presenter = Hyrax::MonographPresenter.new(document, current_ability) %>
 <% counter = document_counter_with_offset(document_counter) %>
-<%= render partial: "index_gallery", locals: { document: document, counter: counter, presenter: presenter } %>
+<% marker = presenter.open_access? ? "oa-monograph" : "monograph" %>
+<%= render partial: "index_gallery", locals: { document: document, counter: counter, marker: marker, presenter: presenter } %>

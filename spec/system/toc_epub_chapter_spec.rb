@@ -23,7 +23,7 @@ RSpec.describe "Cozy Sun Bear", type: :system, browser: true do
 
   it "clicking on a chapter link takes you to the correct chapter in CSB" do
     visit monograph_catalog_path(monograph, locale: 'en')
-    expect(page).to have_current_path(hyrax_monograph_path(monograph, locale: 'en'))
+    expect(page).to have_current_path(hyrax_monograph_path(monograph, locale: 'en', oa_marker: oa_marker))
 
     # should have an epub download button for the platform_admin
     expect(page).to have_selector('#monograph-download-btn')

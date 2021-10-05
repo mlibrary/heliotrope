@@ -1,6 +1,6 @@
 <% # container for document in index gallery view -%>
 <div class="document col-xs-6 col-md-4">
-  <%= link_to(url_for_document(document), document_link_params(document, counter: counter)) do %>
+  <%= link_to(hyrax_monograph_path(document.id, oa_marker: marker)) do %>
     <div class="thumbnail">
       <%= presenter.thumbnail_tag(145, class: "img-responsive", alt: "") %>
     </div>

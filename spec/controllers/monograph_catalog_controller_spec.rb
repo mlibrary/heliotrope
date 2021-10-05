@@ -113,24 +113,39 @@ RSpec.describe MonographCatalogController, type: :controller do
 
     context 'when a monograph with the id exists' do
       context 'when a monograph is open/public' do
-        let(:monograph) { create(:public_monograph) }
+        context 'with no oa url marker' do
+          let(:monograph) { create(:public_monograph) }
 
-        before do
-          get :index, params: { id: monograph.id }
-        end
+          before do
+            get :index, params: { id: monograph.id }
+          end
 
-        it 'response is successful' do
-          expect(response).to be_successful
-          expect(response).to render_template('monograph_catalog/index')
+          it 'redirects' do
+            expect(response).to have_http_status(:redirect)
+          end
+
         end
-        it 'monograph presenter is a monograph presenter class' do
-          expect(controller.instance_variable_get(:@presenter).class).to eq Hyrax::MonographPresenter
-        end
-        it 'mongraph presenter has the monograph' do
-          expect(controller.instance_variable_get(:@presenter).solr_document.id).to eq monograph.id
-        end
-        it 'sets search_ongoing to false' do
-          expect(assigns(:search_ongoing)).to eq false
+  
+        context "with a oa url marker" do
+          let(:monograph) { create(:public_monograph) }
+
+          before do
+            get :index, params: { id: monograph.id, oa_marker: "monograph" }
+          end
+
+          it 'response is successful' do
+            expect(response).to be_successful
+            expect(response).to render_template('monograph_catalog/index')
+          end
+          it 'monograph presenter is a monograph presenter class' do
+            expect(controller.instance_variable_get(:@presenter).class).to eq Hyrax::MonographPresenter
+          end
+          it 'mongraph presenter has the monograph' do
+            expect(controller.instance_variable_get(:@presenter).solr_document.id).to eq monograph.id
+          end
+          it 'sets search_ongoing to false' do
+            expect(assigns(:search_ongoing)).to eq false
+          end
         end
       end
 
@@ -139,7 +154,7 @@ RSpec.describe MonographCatalogController, type: :controller do
           let(:monograph) { create(:private_monograph) }
 
           before do
-            get :index, params: { id: monograph.id }
+            get :index, params: { id: monograph.id, oa_marker: "monograph" }
           end
 
           it 'response is not successful' do
@@ -157,7 +172,7 @@ RSpec.describe MonographCatalogController, type: :controller do
 
           before do
             sign_in user
-            get :index, params: { id: monograph.id }
+            get :index, params: { id: monograph.id, oa_marker: "monograph" }
           end
 
           it 'response is successful' do

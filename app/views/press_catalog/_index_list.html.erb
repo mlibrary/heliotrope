@@ -1,5 +1,5 @@
 <% # container for document in index list view -%>
-<%= link_to(url_for_document(document), document_link_params(document, counter: counter)) do %>
+<%= link_to(hyrax_monograph_path(document.id, oa_marker: marker)) do %>
   <div class="col-sm-2 thumbnail">
     <%= presenter.thumbnail_tag(145, class: "img-responsive", alt: "") %>
   </div>

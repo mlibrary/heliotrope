@@ -95,7 +95,7 @@ describe 'Edit a file set' do
       # Go to Monograph catalog page
       find_link(monograph.title.first, match: :first).click
       click_link 'List'
-      expect(page).to have_current_path(hyrax_monograph_path(monograph, locale: 'en', view: 'list'))
+      expect(page).to have_current_path(hyrax_monograph_path(monograph, locale: 'en', view: 'list', oa_marker: 'monograph'))
       # Order in FileSet's section_title has been taken from Monograph's section_titles
       expect(page).to have_content 'From C 1 and Test section with Italicized Title therein'
 

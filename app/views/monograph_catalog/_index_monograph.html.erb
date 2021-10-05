@@ -77,6 +77,7 @@
       <%= render_markdown @presenter.description.first || '' %>
     </div>
     <% if @presenter.buy_url? || @presenter.reader_ebook? %>
+        <% oa_marker = @presenter.open_access? ? "oa-monograph" : "monograph" %>
         <div class="btn-toolbar" role="toolbar">
           <div class="btn-group btn-group-lg" role="group">
             <% if @presenter.reader_ebook? %>
@@ -93,7 +94,7 @@
                 </a>
               <% else %>
                 <a id="monograph-read-btn"
-                   href="<%= epub_path(@presenter.reader_ebook) %>"
+                   href="<%= epub_path(@presenter.reader_ebook, oa_marker: oa_marker) %>"
                    class="btn btn-default"
                    data-turbolinks="false">
                    <%= t('monograph_catalog.index.read_book') %>
@@ -115,7 +116,7 @@
                   <ul class="dropdown-menu monograph-catalog-rep-downloads">
                   <% @ebook_download_presenter.ebook_presenters.each do |ebook| %>
                     <% if @ebook_download_presenter.downloadable?(ebook) %>
-                      <li><a data-rep-type="<%= ebook.ebook_format.downcase %>" href="<%= download_ebook_path(ebook.id) %>" <% if @presenter.open_access? || @presenter.access_level(@actor_product_ids, @allow_read_product_ids).level == :free %> onclick="displayModalSurvey();" <% end %> target="_blank"><%= ebook.ebook_format %> (<%= number_to_human_size(ebook.file_size) %>)</a></li>
+                      <li><a data-rep-type="<%= ebook.ebook_format.downcase %>" href="<%= download_ebook_path(ebook.id, oa_marker: oa_marker) %>" <% if @presenter.open_access? || @presenter.access_level(@actor_product_ids, @allow_read_product_ids).level == :free %> onclick="displayModalSurvey();" <% end %> target="_blank"><%= ebook.ebook_format %> (<%= number_to_human_size(ebook.file_size) %>)</a></li>
                     <% end %>
                   <% end %>
                   </ul>

@@ -40,23 +40,27 @@ SitemapGenerator::Sitemap.create(compress: false) do
   # add '/static/about_project', changefreq: 'monthly'
   # add '/static/rights', changefreq: 'monthly'
 
-  docs = ActiveFedora::SolrService.query("+has_model_ssim:Monograph AND -(press_sim:demo OR press_sim:heliotrope OR press_sim:monitoringservicetarget)", rows: 100_000)
-  docs.each do |d|
-    next unless d['visibility_ssi'] == 'open'
-    d['file_set_ids_ssim'].each do |fsid|
-      fs = ActiveFedora::SolrService.query("{!terms f=id}#{fsid}", rows: 1).first
-      next unless fs.present? && fs['visibility_ssi'] == 'open'
-      # "featured representative" file_sets pages don't need to be in sitemaps, nor is there any point adding links...
-      # to a complex, JS-dependent `/epub` CSB view, as the crawler sees nothing there to index but the page title.
-      rep = FeaturedRepresentative.where(work_id: d['id'], file_set_id: fsid).first
-      next if rep&.kind.present?
+  monograph_docs = ActiveFedora::SolrService.query("+has_model_ssim:Monograph AND -(press_sim:demo OR press_sim:heliotrope OR press_sim:monitoringservicetarget)", rows: 100_000)
+  monograph_docs.each do |mono_doc|
+    monograph = Hyrax::MonographPresenter.new(SolrDocument.new(mono_doc), nil)
+    next unless monograph.visibility == "open"
 
-      # the majority of FileSets won't be featured reps at all, so get a 'normal' url
-      url = Rails.application.routes.url_helpers.hyrax_file_set_path(fsid)
-      add url, lastmod: d['date_modified_dtsi'], priority: 0.5, changefreq: 'monthly'
+    # Monographs are always in sitemaps (unless they're in Draft)
+    # Open Access monograph need to be differentiated for google scholar, HELIO-4030
+    oa_marker = monograph.open_access? ? "oa-monograph" : "monograph"
+    url = Rails.application.routes.url_helpers.hyrax_monograph_path(monograph.id, oa_marker: oa_marker)
+    add url, lastmod: monograph.date_modified.to_s, priority: 1, changefreq: 'monthly'
+
+    monograph.ordered_member_docs.each do |file_set_doc|
+      file_set = Hyrax::FileSetPresenter.new(file_set_doc, nil)
+
+      next unless file_set.visibility == "open"
+      # Featured Representative file_set pages don't need to be in sitemaps, nor is there any point adding links...
+      # to a complex, JS-dependent `/epub` CSB view, as the crawler sees nothing there to index but the page title.
+      next if file_set.featured_representative?
+
+      url = Rails.application.routes.url_helpers.hyrax_file_set_path(file_set.id)
+      add url, lastmod: file_set.date_modified.to_s, priority: 0.5, changefreq: 'monthly'
     end
-    # monographs are always in sitemaps (unless they're in Draft)
-    url = Rails.application.routes.url_helpers.hyrax_monograph_path(d['id'])
-    add url, lastmod: d['date_modified_dtsi'], priority: 1, changefreq: 'monthly'
   end
 end

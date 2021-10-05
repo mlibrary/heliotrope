@@ -246,7 +246,8 @@ module Opds
       end
 
       def download_ebook_url(ebook)
-        Rails.application.routes.url_helpers.download_ebook_url(ebook.noid)
+        oa_marker = @monograph.open_access? ? "oa-monograph" : "monograph"
+        Rails.application.routes.url_helpers.download_ebook_url(ebook.noid, oa_marker: oa_marker)
       end
 
       def monograph_image_url(monograph, width_size = 'full')

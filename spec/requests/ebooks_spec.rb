@@ -7,7 +7,7 @@ RSpec.describe "PDF EBooks", type: :request do
     subject { get download_ebook_path(noid) }
 
     let(:noid) { 'validnoid' }
-    let(:ebook) { instance_double(Sighrax::Ebook, 'ebook', noid: noid, data: {}, valid?: true, title: 'title', watermarkable?: watermarkable, publisher: publisher) }
+    let(:ebook) { instance_double(Sighrax::Ebook, 'ebook', noid: noid, data: {}, valid?: true, title: 'title', watermarkable?: watermarkable, publisher: publisher, open_access?: false) }
     let(:watermarkable) { false }
     let(:publisher) { instance_double(Sighrax::Publisher, 'publisher', watermark?: watermark) }
     let(:watermark) { false }
@@ -31,7 +31,7 @@ RSpec.describe "PDF EBooks", type: :request do
       it do
         expect { subject }.not_to raise_error
         expect(response).to have_http_status(:found)
-        expect(response).to redirect_to(hyrax.download_path(noid))
+        expect(response).to redirect_to(hyrax.download_path(noid, oa_marker: "monograph"))
       end
 
       context 'watermarkable?' do
@@ -40,7 +40,7 @@ RSpec.describe "PDF EBooks", type: :request do
         it do
           expect { subject }.not_to raise_error
           expect(response).to have_http_status(:found)
-          expect(response).to redirect_to(hyrax.download_path(noid))
+          expect(response).to redirect_to(hyrax.download_path(noid, oa_marker: "monograph"))
         end
 
         describe 'watermark' do
@@ -56,7 +56,8 @@ RSpec.describe "PDF EBooks", type: :request do
               resource_token: 'resource_token',
               filename: 'lorum_ipsum_toc.pdf',
               watermarkable?: watermarkable,
-              publisher: publisher
+              publisher: publisher,
+              open_access?: false
             )
           end
           let(:parent) { instance_double(Sighrax::Ebook, title: 'title') }
@@ -82,7 +83,8 @@ RSpec.describe "PDF EBooks", type: :request do
                                               date_created: nil,
                                               based_near_label: ['Somewhere'],
                                               citable_link: 'www.example.com/something',
-                                              publisher: ['publisher']) }
+                                              publisher: ['publisher'],
+                                              open_access?: false) }
 
             it "serves a PDF with cover page anyway" do
               expect { subject }.not_to raise_error
@@ -112,7 +114,8 @@ RSpec.describe "PDF EBooks", type: :request do
                                               date_created: ['created'],
                                               based_near_label: ['Somewhere'],
                                               citable_link: 'www.example.com/something',
-                                              publisher: ['publisher']) }
+                                              publisher: ['publisher'],
+                                              open_access?: false) }
 
             it "serves a PDF with cover page" do
               expect { subject }.not_to raise_error

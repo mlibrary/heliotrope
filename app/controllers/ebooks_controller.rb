@@ -7,7 +7,8 @@ class EbooksController < CheckpointController
 
   def download
     raise NotAuthorizedError unless EbookDownloadOperation.new(current_actor, @ebook).allowed?
-    return redirect_to(hyrax.download_path(params[:id])) unless @ebook.watermarkable? && @ebook.publisher.watermark?
+    oa_marker = @ebook.open_access? ? "oa-monograph" : "monograph"
+    return redirect_to(hyrax.download_path(params[:id], oa_marker: oa_marker)) unless @ebook.watermarkable? && @ebook.publisher.watermark?
 
     # we'll send the linearized file in all cases, leave Fedora out of it. They should always exist, and do right now.
     ebook_file_path = UnpackService.root_path_from_noid(params[:id], 'pdf_ebook') + '.pdf'

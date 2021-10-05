@@ -62,6 +62,7 @@ RSpec.describe Opds::Publication, type: [:model, :json_schema] do
         allow(monograph).to receive(:publishing_house).and_return(nil)
         allow(monograph).to receive(:series).and_return(nil)
         allow(monograph).to receive(:subjects).and_return([])
+        allow(monograph).to receive(:open_access?).and_return(true)
 
         allow(Time).to receive(:now).and_return(time_now)
       end
@@ -89,9 +90,9 @@ RSpec.describe Opds::Publication, type: [:model, :json_schema] do
 
         # Links
         it { expect(subject[:links].count).to eq(3) }
-        it { expect(subject[:links]).to include({ rel: 'self', href: Rails.application.routes.url_helpers.download_ebook_url(epub.noid), type: 'application/epub+zip' }) }
-        it { expect(subject[:links]).to include({ rel: 'http://opds-spec.org/acquisition/open-access', href: Rails.application.routes.url_helpers.download_ebook_url(epub.noid), type: 'application/epub+zip' }) }
-        it { expect(subject[:links]).to include({ rel: 'http://opds-spec.org/acquisition/open-access', href: Rails.application.routes.url_helpers.download_ebook_url(pdf.noid), type: 'application/pdf' }) }
+        it { expect(subject[:links]).to include({ rel: 'self', href: Rails.application.routes.url_helpers.download_ebook_url(epub.noid, oa_marker: "oa-monograph"), type: 'application/epub+zip' }) }
+        it { expect(subject[:links]).to include({ rel: 'http://opds-spec.org/acquisition/open-access', href: Rails.application.routes.url_helpers.download_ebook_url(epub.noid, oa_marker: "oa-monograph"), type: 'application/epub+zip' }) }
+        it { expect(subject[:links]).to include({ rel: 'http://opds-spec.org/acquisition/open-access', href: Rails.application.routes.url_helpers.download_ebook_url(pdf.noid, oa_marker: "oa-monograph"), type: 'application/pdf' }) }
 
         # Images
         it { expect(subject[:images].count).to eq(4) }
@@ -111,9 +112,9 @@ RSpec.describe Opds::Publication, type: [:model, :json_schema] do
         end
 
         it { expect(subject[:links].count).to eq(2) }
-        it { expect(subject[:links]).to include({ rel: 'self', href: Rails.application.routes.url_helpers.download_ebook_url(epub.noid), type: 'application/epub+zip' }) }
-        it { expect(subject[:links]).to include({ rel: 'http://opds-spec.org/acquisition/open-access', href: Rails.application.routes.url_helpers.download_ebook_url(epub.noid), type: 'application/epub+zip' }) }
-        it { expect(subject[:links]).not_to include({ rel: 'http://opds-spec.org/acquisition/open-access', href: Rails.application.routes.url_helpers.download_ebook_url(pdf.noid), type: 'application/pdf' }) }
+        it { expect(subject[:links]).to include({ rel: 'self', href: Rails.application.routes.url_helpers.download_ebook_url(epub.noid, oa_marker: "oa-monograph"), type: 'application/epub+zip' }) }
+        it { expect(subject[:links]).to include({ rel: 'http://opds-spec.org/acquisition/open-access', href: Rails.application.routes.url_helpers.download_ebook_url(epub.noid, oa_marker: "oa-monograph"), type: 'application/epub+zip' }) }
+        it { expect(subject[:links]).not_to include({ rel: 'http://opds-spec.org/acquisition/open-access', href: Rails.application.routes.url_helpers.download_ebook_url(pdf.noid, oa_marker: "oa-monograph"), type: 'application/pdf' }) }
 
         it { expect(schemer_validate?(opds_publication_schemer, JSON.parse(subject.to_json))).to be true }
       end
@@ -126,9 +127,9 @@ RSpec.describe Opds::Publication, type: [:model, :json_schema] do
         end
 
         it { expect(subject[:links].count).to eq(2) }
-        it { expect(subject[:links]).to include({ rel: 'self', href: Rails.application.routes.url_helpers.download_ebook_url(pdf.noid), type: 'application/pdf' }) }
-        it { expect(subject[:links]).not_to include({ rel: 'http://opds-spec.org/acquisition/open-access', href: Rails.application.routes.url_helpers.download_ebook_url(epub.noid), type: 'application/epub+zip' }) }
-        it { expect(subject[:links]).to include({ rel: 'http://opds-spec.org/acquisition/open-access', href: Rails.application.routes.url_helpers.download_ebook_url(pdf.noid), type: 'application/pdf' }) }
+        it { expect(subject[:links]).to include({ rel: 'self', href: Rails.application.routes.url_helpers.download_ebook_url(pdf.noid, oa_marker: "oa-monograph"), type: 'application/pdf' }) }
+        it { expect(subject[:links]).not_to include({ rel: 'http://opds-spec.org/acquisition/open-access', href: Rails.application.routes.url_helpers.download_ebook_url(epub.noid, oa_marker: "oa-monograph"), type: 'application/epub+zip' }) }
+        it { expect(subject[:links]).to include({ rel: 'http://opds-spec.org/acquisition/open-access', href: Rails.application.routes.url_helpers.download_ebook_url(pdf.noid, oa_marker: "oa-monograph"), type: 'application/pdf' }) }
 
         it { expect(schemer_validate?(opds_publication_schemer, JSON.parse(subject.to_json))).to be true }
       end

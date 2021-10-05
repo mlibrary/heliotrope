@@ -266,7 +266,7 @@ class CatalogController < ApplicationController
     @search_ongoing = false
 
     params.each do |key, _value|
-      non_search_keys = ['action', 'authenticity_token', 'controller', 'id', 'locale', 'page', 'per_page', 'press', 'sort', 'utf8', 'view']
+      non_search_keys = ['action', 'authenticity_token', 'controller', 'id', 'locale', 'page', 'per_page', 'press', 'sort', 'utf8', 'view', 'oa_marker']
       if non_search_keys.exclude? key
         @search_ongoing = true
         break

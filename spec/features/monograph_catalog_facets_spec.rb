@@ -79,7 +79,7 @@ describe "Monograph Catalog Facets" do
       # somehow this expect gets the find afterwards to work more consistently, in the system specs anyway
       expect(page).to have_css("div#facet-keywords_sim a.more_facets_link")
       # click "more" link to open full-screen facet modal overlay
-      find("a[href='#{monograph_catalog_facet_path(id: 'keywords_sim', monograph_id: monograph.id, locale: 'en')}']")
+      find("a[href='#{monograph_catalog_facet_path(id: 'keywords_sim', monograph_id: monograph.id, locale: 'en', oa_marker: 'monograph')}']")
           .click
 
       keyword_facet_labels = page.all('a.facet_select .facet-label')

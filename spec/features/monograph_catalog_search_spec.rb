@@ -116,7 +116,7 @@ describe 'Monograph Catalog Search' do
     expect(page).to have_css("a.btn.btn-default.view-type-gallery[href*='view=gallery'][role=tab][aria-selected=false]")
 
     # also check gallery view
-    visit monograph_catalog_path id: monograph.id, view: 'gallery'
+    visit monograph_catalog_path id: monograph.id, view: 'gallery', oa_marker: 'monograph'
 
     expect(page).to have_css(".view-type-group.btn-group[role=tablist]")
     expect(page).to have_css("a.btn.btn-default.view-type-list[href*='view=list'][role=tab][aria-selected=false]")

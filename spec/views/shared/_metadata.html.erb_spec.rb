@@ -143,11 +143,13 @@ describe 'shared/_metadata.html.erb' do
 
   # HELIO-3951 show the citation_pdf_url if there's a pdf_ebook and the client has permission to download.
   # This is by request from Google Scholar who we'll make an Institution so they can download and index restricted pdfs.
+  # Also HELIO-4030, "open access makers" in urls for Google Scholar
   context "a monograph with a pdf_ebook" do
     let(:monograph) {
       SolrDocument.new(id: 'monograph1',
                        has_model_ssim: ['Monograph'],
-                       title_tesim: ['Sun Moon Dog'])
+                       title_tesim: ['Sun Moon Dog'],
+                       open_access_tesim: "yes")
     }
     let(:file_set) {
       SolrDocument.new(id: 'file_set1',
@@ -164,7 +166,7 @@ describe 'shared/_metadata.html.erb' do
         allow(controller).to receive(:controller_name).and_return("monograph_catalog")
         render
 
-        expect(rendered).to match '\"citation_pdf_url\" content=\"/ebooks/file_set1/download\"'
+        expect(rendered).to match '\"citation_pdf_url\" content=\"/ebooks/file_set1/download\?oa_marker=oa-monograph\"'
       end
     end
 

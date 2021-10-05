@@ -66,7 +66,7 @@ describe 'Press Catalog' do
 
         # thumbnail link
         expect(page).to have_selector("img[alt='']")
-        expect(page).to have_link('', href: monograph_catalog_path(red, locale: 'en'))
+        expect(page).to have_link('', href: monograph_catalog_path(red, locale: 'en', oa_marker: 'monograph'))
 
         # Selectors needed for assets/javascripts/application/ga_event_tracking.js
         # If these change, fix here then update ga_event_tracking.js
