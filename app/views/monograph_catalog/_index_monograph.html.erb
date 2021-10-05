@@ -76,7 +76,8 @@
     <div class="description">
       <%= render_markdown @presenter.description.first || '' %>
     </div>
-    <% if @presenter.buy_url? || @presenter.reader_ebook? %>
+    <%# ensure all of the toolbar's internal components' conditionals are present here to control the toolbar's appearance %>
+    <% if @presenter.reader_ebook? || (@ebook_download_presenter.downloadable_ebooks? && !@presenter.tombstone?) || @presenter.buy_url? %>
         <div class="btn-toolbar" role="toolbar">
           <div class="btn-group btn-group-lg" role="group">
             <% if @presenter.reader_ebook? %>

@@ -34,6 +34,7 @@ RSpec.describe "monograph_catalog/index.html.erb" do
     allow(view).to receive(:t).with(any_args) { |value| value }
     allow(presenter).to receive(:date_uploaded).and_return(DateTime.now)
     allow(presenter).to receive(:creator).and_return([])
+    allow(ebook_download_presenter).to receive(:downloadable_ebooks?).and_return(false)
   end
 
   describe 'provide: page_title' do
@@ -204,7 +205,6 @@ RSpec.describe "monograph_catalog/index.html.erb" do
         before do
           allow(presenter).to receive(:buy_url?).and_return(true)
           allow(presenter).to receive(:buy_url).and_return("BUY-URL")
-          allow(ebook_download_presenter).to receive(:downloadable_ebooks?).and_return(false)
           render
         end
 
