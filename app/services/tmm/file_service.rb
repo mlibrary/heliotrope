@@ -54,15 +54,16 @@ module Tmm
       true
     end
 
-    def self.mismatched_types?(new_file_path, presenter) # rubocop:disable Metrics/CyclomaticComplexity
+    def self.mismatched_types?(new_file_path, presenter) # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
       # sticking to images and ebook types that have actually been replaced using associated rake tasks
       return true if presenter.probable_image? && %w[.bmp .gif .jp2 .jpeg .jpg .png .tif .tiff].exclude?(File.extname(new_file_path).downcase)
       return true if presenter.epub? && '.epub' != File.extname(new_file_path).downcase
       return true if presenter.pdf? && '.pdf' != File.extname(new_file_path).downcase
+      return true if presenter.audiobook? && '.zip' != File.extname(new_file_path).downcase # zip of mp3 files, one per chapter
       false
     end
 
-    def self.files_attributes(kind, ebooks_downloadable = nil)
+    def self.files_attributes(kind, ebooks_downloadable = nil) # rubocop:disable Metrics/CyclomaticComplexity
       attrs = case kind
               when :cover
                 { representative_kind: 'cover' }
@@ -70,8 +71,10 @@ module Tmm
                 { representative_kind: 'epub' }
               when :pdf
                 { representative_kind: 'pdf_ebook' }
+              when :audiobook
+                { representative_kind: 'audiobook' }
               end
-      ebooks_downloadable && [:epub, :pdf].include?(kind) ? attrs.merge({ allow_download: 'yes' }) : attrs
+      ebooks_downloadable && [:epub, :pdf, :audiobook].include?(kind) ? attrs.merge({ allow_download: 'yes' }) : attrs
     end
   end
 end

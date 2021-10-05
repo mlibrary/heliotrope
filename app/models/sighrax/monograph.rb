@@ -6,6 +6,10 @@ module Sighrax
   class Monograph < Work
     private_class_method :new
 
+    def audiobook
+      @audiobook ||= Sighrax.from_noid(FeaturedRepresentative.find_by(work_id: noid, kind: 'audiobook')&.file_set_id)
+    end
+
     def contributors
       vector('creator_tesim') + vector('contributor_tesim')
     end

@@ -41,6 +41,18 @@ module FeaturedRepresentatives
       ordered_member_docs.find { |doc| doc.id == reader_ebook_id }
     end
 
+    def audiobook
+      ordered_member_docs.find { |doc| doc.id == audiobook_id }
+    end
+
+    def audiobook?
+      featured_representatives.map(&:kind).include? 'audiobook'
+    end
+
+    def audiobook_id
+      featured_representatives.filter_map { |fr| fr.file_set_id if fr.kind == 'audiobook' }.first
+    end
+
     def epub?
       featured_representatives.map(&:kind).include? 'epub'
     end

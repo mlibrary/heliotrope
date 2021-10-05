@@ -13,6 +13,10 @@ module FeaturedRepresentatives
       featured_representative ? true : false
     end
 
+    def audiobook?
+      featured_representative&.kind == 'audiobook'
+    end
+
     def epub?
       # ['application/epub+zip'].include? mime_type
       featured_representative&.kind == 'epub'

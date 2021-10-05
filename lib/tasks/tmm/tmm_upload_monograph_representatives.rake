@@ -3,7 +3,7 @@
 desc 'Task to be called by a cron to add cover/representatives to Monographs (ISBN lookup)'
 namespace :heliotrope do
   task :tmm_upload_monograph_representatives, [:publisher, :monograph_files_dir] => :environment do |_t, args|
-    # Usage: bundle exec rails "heliotrope:tmm_upload_monograph_representatives[michigan, /path/to/tmm_csv_dir]"
+    # Usage: bundle exec rails "heliotrope:tmm_upload_monograph_representatives[michigan, /path/to/parent/of/isbn_named_dirs]"
 
     # note: fail messages will be emailed to MAILTO by cron *unless* you use 2>&1 at the end of the job line
     fail "Monographs directory not found: '#{args.monograph_files_dir}'" unless Dir.exist?(args.monograph_files_dir)
@@ -53,7 +53,7 @@ namespace :heliotrope do
 
       if image_file_paths.count == 1 && doc['representative_id_ssim'].present?
         if Tmm::FileService.replace?(file_set_id: doc['representative_id_ssim'].first, new_file_path: image_file_paths.first)
-           puts "    Current cover will be replaced with new #{image_file_paths.first}"
+           puts "    Current cover will be replaced with #{image_file_paths.first}"
            Tmm::FileService.replace(file_set_id: doc['representative_id_ssim'].first, new_file_path: image_file_paths.first)
         end
       end
@@ -73,7 +73,7 @@ namespace :heliotrope do
           Tmm::FileService.add(doc: doc, file: epub_file_paths.first, kind: :epub, downloadable: true)
 
         elsif Tmm::FileService.replace?(file_set_id: file_set_id, new_file_path: epub_file_paths.first)
-          puts "    Current epub will be replaced with new #{epub_file_paths.first}"
+          puts "    Current epub will be replaced with #{epub_file_paths.first}"
           Tmm::FileService.replace(file_set_id: file_set_id, new_file_path: epub_file_paths.first)
         end
       end
@@ -93,8 +93,28 @@ namespace :heliotrope do
           Tmm::FileService.add(doc: doc, file: pdf_file_paths.first, kind: :pdf, downloadable: true)
 
         elsif Tmm::FileService.replace?(file_set_id: file_set_id, new_file_path: pdf_file_paths.first)
-          puts "    Current pdf will be replaced with new #{pdf_file_paths.first}"
+          puts "    Current pdf will be replaced with #{pdf_file_paths.first}"
           Tmm::FileService.replace(file_set_id: file_set_id, new_file_path: pdf_file_paths.first)
+        end
+      end
+
+      # Audiobooks (right now we only expect a zip which will contain the actual audio files, e.g. mp3's)
+      audiobook_file_paths = Pathname.glob(mono_dir + '*.zip')
+      if audiobook_file_paths.count > 1
+        puts "    More than one audiobook zip archive found in #{mono_dir.basename} ... SKIPPING AUDIOBOOK PROCESSING"
+        next
+      end
+
+      if audiobook_file_paths.count == 1
+        file_set_id = FeaturedRepresentative.where(work_id: doc.id, kind: 'audiobook').first&.file_set_id
+
+        if file_set_id.blank?
+          puts "    No audiobook found. Adding audiobook using #{audiobook_file_paths.first}"
+          Tmm::FileService.add(doc: doc, file: audiobook_file_paths.first, kind: :audiobook, downloadable: true)
+
+        elsif Tmm::FileService.replace?(file_set_id: file_set_id, new_file_path: audiobook_file_paths.first)
+          puts "    Current audiobook will be replaced with #{audiobook_file_paths.first}"
+          Tmm::FileService.replace(file_set_id: file_set_id, new_file_path: audiobook_file_paths.first)
         end
       end
     end
