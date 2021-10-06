@@ -110,15 +110,45 @@ module Sighrax
 
       return '' if isbns.first.blank?
 
-      # TODO: process isbns
+      parsed_isbns = parse_isbns(isbns)
+      return '' if parsed_isbns.blank?
 
-      'http://www.worldcat.org/isbn/' + isbns.first
+      isbn = nil
+      %w[ebook hardcover paper none].each do |key|
+        isbn = parsed_isbns[key]
+        break if isbn.present?
+      end
+      isbn ||= parsed_isbns.values[0]
+
+      'http://www.worldcat.org/isbn/' + isbn
     end
 
     private
 
       def initialize(noid, data)
         super(noid, data)
+      end
+
+      def parse_isbns(isbns) # rubocop:disable Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity
+        flag = false
+        rvalue = {}
+        isbns.each do |isbn|
+          m = /\s*(\S+)\s+\(\s*(\S+)\s*\)(.*)/.match(isbn)
+          if m.blank? || m[1].blank? || m[2].blank?
+            next if flag
+
+            value = isbn.gsub(/\D/, '')
+            next if value.blank?
+
+            rvalue['none'] = value
+            flag = true
+          else
+            key = m[2]
+            value = m[1].gsub(/\D/, '') || m[1]
+            rvalue[key] = value if value.present?
+          end
+        end
+        rvalue
       end
   end
 end

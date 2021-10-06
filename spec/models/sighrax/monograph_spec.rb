@@ -179,7 +179,7 @@ RSpec.describe Sighrax::Monograph, type: :model do
   describe '#worldcat_url' do
     subject { Sighrax.from_noid(monograph.id).worldcat_url }
 
-    context 'none' do
+    context 'monograph without isbns' do
       let(:monograph) { create(:public_monograph) }
 
       it { is_expected.to be_empty }
@@ -197,10 +197,52 @@ RSpec.describe Sighrax::Monograph, type: :model do
         it { is_expected.to be_empty }
       end
 
-      context 'isbn' do
-        let(:isbns) { ['0123456789'] }
+      context 'alphabetic garbage' do
+        let(:isbns) { ['a string with no numbers (unknown) trailer junk'] }
 
-        it { is_expected.to eq 'http://www.worldcat.org/isbn/0123456789' }
+        it { is_expected.to be_empty }
+      end
+
+      context 'alphanumeric garbage' do
+        let(:isbns) { ['a 1 string 2 with 3 numbers 4 (unknown) 5 trailer 6 junk'] }
+
+        it { is_expected.to eq 'http://www.worldcat.org/isbn/4' }
+      end
+
+      context 'isbn precedence' do
+        let(:none) { '00-00-00-00-00' }
+        let(:unknown) { '111-111-111-1 (unknown)' }
+        let(:ebook) { '2222-2222-22 (ebook)' }
+        let(:hardcover) { '3-33-333-3333 (hardcover)' }
+        let(:paper) { '444-44-4-4444 (paper)' }
+
+        let(:isbns) { [unknown, hardcover, none, ebook, paper] }
+
+        it { is_expected.to eq 'http://www.worldcat.org/isbn/2222222222' }
+
+        context 'no ebook' do
+          let(:isbns) { [unknown, hardcover, none, paper] }
+
+          it { is_expected.to eq 'http://www.worldcat.org/isbn/3333333333' }
+
+          context 'no hardcover' do
+            let(:isbns) { [unknown, none, paper] }
+
+            it { is_expected.to eq 'http://www.worldcat.org/isbn/4444444444' }
+
+            context 'no paper' do
+              let(:isbns) { [unknown, none] }
+
+              it { is_expected.to eq 'http://www.worldcat.org/isbn/0000000000' }
+
+              context 'unknown' do
+                let(:isbns) { [unknown] }
+
+                it { is_expected.to eq 'http://www.worldcat.org/isbn/1111111111' }
+              end
+            end
+          end
+        end
       end
     end
   end

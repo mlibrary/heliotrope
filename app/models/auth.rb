@@ -95,7 +95,7 @@ class Auth
   def publisher_subscribing_institutions
     return @publisher_subscribing_institutions unless @publisher_subscribing_institutions.nil?
 
-    return @publisher_subscribing_institutions = [] if @publisher.is_a?(Sighrax::NullEntity)
+    return @publisher_subscribing_institutions = [] unless @publisher.valid?
 
     @publisher_subscribing_institutions = subscribing_institutions(@publisher.work_noids(true))
   end
@@ -127,7 +127,7 @@ class Auth
   def monograph_subscribing_institutions
     return @monograph_subscribing_institutions unless @monograph_subscribing_institutions.nil?
 
-    return @monograph_subscribing_institutions = [] if @monograph.is_a?(Sighrax::NullEntity)
+    return @monograph_subscribing_institutions = [] unless @monograph.valid?
 
     @monograph_subscribing_institutions = subscribing_institutions(@monograph.noid)
   end
