@@ -73,7 +73,7 @@ RSpec.describe Hyrax::FileSetsController, type: :controller do
     context 'orphan FileSet redirects to FileSet with monograph parent' do
       let(:orphan_file_set) { create(:file_set, redirect_to: file_set.id) }
 
-      it 'redirects to the approprite file_set in redirect_to' do
+      it 'redirects to the appropriate file_set in redirect_to' do
         get :show, params: { id: orphan_file_set.id }
         expect(response).to redirect_to Rails.application.routes.url_helpers.hyrax_file_set_path(file_set.id)
       end

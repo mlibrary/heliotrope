@@ -301,6 +301,7 @@ module Hyrax
 
       def fetch_parent_presenter
         @parent_document ||= ActiveFedora::SolrService.query("{!field f=member_ids_ssim}#{id}", rows: 1).first
+        return nil if @parent_document.blank?
 
         case @parent_document["has_model_ssim"].first
         when "Monograph"

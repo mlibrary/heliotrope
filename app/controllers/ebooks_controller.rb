@@ -4,9 +4,10 @@ class EbooksController < CheckpointController
   include Watermark::Watermarkable
 
   before_action :setup
+  before_action :wayfless, only: %i[download]
 
   def download
-    raise NotAuthorizedError unless EbookDownloadOperation.new(current_actor, @ebook).allowed?
+    raise NotAuthorizedError unless @ebook_download_operation_allowed
     return redirect_to(hyrax.download_path(params[:id])) unless @ebook.watermarkable? && @ebook.publisher.watermark?
 
     # we'll send the linearized file in all cases, leave Fedora out of it. They should always exist, and do right now.
@@ -26,5 +27,10 @@ class EbooksController < CheckpointController
 
     def setup
       @entity = @ebook = Sighrax.from_noid(params[:id])
+      @ebook_download_operation_allowed = EbookDownloadOperation.new(current_actor, @ebook).allowed?
+    end
+
+    def wayfless
+      wayfless_redirect_to_shib_login unless @ebook_download_operation_allowed
     end
 end
