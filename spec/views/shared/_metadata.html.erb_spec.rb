@@ -164,7 +164,7 @@ describe 'shared/_metadata.html.erb' do
         allow(controller).to receive(:controller_name).and_return("monograph_catalog")
         render
 
-        expect(rendered).to match '\"citation_pdf_url\" content=\"/ebooks/file_set1/download\"'
+        expect(rendered).to match '\"citation_pdf_url\" content=\"http://test.host/ebooks/file_set1/download\"'
       end
     end
 
