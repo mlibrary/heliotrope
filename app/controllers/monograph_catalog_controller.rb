@@ -103,7 +103,7 @@ class MonographCatalogController < ::CatalogController
     end
 
     def disable_read_button?
-      return true if @presenter.access_level(@actor_product_ids, @allow_read_product_ids).known? && @presenter.access_level(@actor_product_ids, @allow_read_product_ids).level == :restricted
+      return true if @presenter.access_level(@actor_product_ids, @allow_read_product_ids).show? && @presenter.access_level(@actor_product_ids, @allow_read_product_ids).level == :restricted
       false
     end
 
