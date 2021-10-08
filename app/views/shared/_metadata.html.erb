@@ -41,15 +41,15 @@
   <% end %>
 
   <% if @presenter.representative_id.present? %>
-    <meta name="og:image" content="<%= Riiif::Engine.routes.url_helpers.image_path(@presenter.cache_buster_id, "225,") %>">
-    <meta name="twitter:image" content="<%= Riiif::Engine.routes.url_helpers.image_path(@presenter.cache_buster_id, "225,") %>">
+    <meta name="og:image" content="<%= Rails.application.routes.default_url_options[:protocol] + "://" + Rails.application.routes.default_url_options[:host] + Riiif::Engine.routes.url_helpers.image_path(@presenter.cache_buster_id, "225,") %>">
+    <meta name="twitter:image" content="<%= Rails.application.routes.default_url_options[:protocol] + "://" + Rails.application.routes.default_url_options[:host] + Riiif::Engine.routes.url_helpers.image_path(@presenter.cache_buster_id, "225,") %>">
     <%# this is terrible alt text. But like 99% of cover image file_set alt_text fields are blank... %>
     <meta name="og:image:alt" content="Cover Image for <%= @presenter.page_title %>">
   <% end %>
 
   <% if @ebook_download_presenter.present? && @ebook_download_presenter.pdf_ebook.present? && @ebook_download_presenter.downloadable?(@ebook_download_presenter.pdf_ebook) %>
     <%# for google scholar, HELIO-3951 %>
-    <meta name="citation_pdf_url" content="<%= Rails.application.routes.url_helpers.download_ebook_path(@ebook_download_presenter.pdf_ebook.id) %>">
+    <meta name="citation_pdf_url" content="<%= Rails.application.routes.url_helpers.download_ebook_url(@ebook_download_presenter.pdf_ebook.id) %>">
   <% end %>
 
 <% elsif controller_name == "file_sets" %>
