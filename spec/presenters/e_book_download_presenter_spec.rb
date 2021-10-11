@@ -9,17 +9,18 @@ RSpec.describe EBookDownloadPresenter do
   let(:current_ability) { Ability.new(user) }
   let(:current_actor) { user }
 
-  let(:mono) { Hyrax::MonographPresenter.new(SolrDocument.new(id: 'mono_id', visibility_ssi: 'open', has_model_ssim: ['Monograph']), current_ability) }
-  let(:epub_doc) { SolrDocument.new(id: '111111111', visibility_ssi: 'open', monograph_id_ssim: 'mono_id', has_model_ssim: ['FileSet'], file_size_lts: 20_000, allow_download_ssim: 'yes') }
-  let(:mobi_doc) { SolrDocument.new(id: '222222222', visibility_ssi: 'open', monograph_id_ssim: 'mono_id', has_model_ssim: ['FileSet'], file_size_lts: 30_000, allow_download_ssim: 'yes') }
-  let(:pdfe_doc) { SolrDocument.new(id: '333333333', visibility_ssi: 'open', monograph_id_ssim: 'mono_id', has_model_ssim: ['FileSet'], file_size_lts: 40_000, allow_download_ssim: 'yes') }
-  let(:audiobook_doc) { SolrDocument.new(id: '444444444', visibility_ssi: 'open', monograph_id_ssim: 'mono_id', has_model_ssim: ['FileSet'], file_size_lts: 50_000, allow_download_ssim: 'yes') }
+  let(:mono) { Hyrax::MonographPresenter.new(SolrDocument.new(id: 'validnoid', visibility_ssi: 'open', has_model_ssim: ['Monograph']), current_ability) }
+  let(:epub_doc) { SolrDocument.new(id: '111111111', visibility_ssi: 'open', monograph_id_ssim: 'validnoid', has_model_ssim: ['FileSet'], file_size_lts: 20_000, allow_download_ssim: 'yes') }
+  let(:mobi_doc) { SolrDocument.new(id: '222222222', visibility_ssi: 'open', monograph_id_ssim: 'validnoid', has_model_ssim: ['FileSet'], file_size_lts: 30_000, allow_download_ssim: 'yes') }
+  let(:pdfe_doc) { SolrDocument.new(id: '333333333', visibility_ssi: 'open', monograph_id_ssim: 'validnoid', has_model_ssim: ['FileSet'], file_size_lts: 40_000, allow_download_ssim: 'yes') }
+  let(:audiobook_doc) { SolrDocument.new(id: '444444444', visibility_ssi: 'open', monograph_id_ssim: 'validnoid', has_model_ssim: ['FileSet'], file_size_lts: 50_000, allow_download_ssim: 'yes') }
 
   before do
-    create(:featured_representative, file_set_id: '111111111', work_id: 'mono_id', kind: 'epub')
-    create(:featured_representative, file_set_id: '222222222', work_id: 'mono_id', kind: 'mobi')
-    create(:featured_representative, file_set_id: '333333333', work_id: 'mono_id', kind: 'pdf_ebook')
-    create(:featured_representative, file_set_id: '444444444', work_id: 'mono_id', kind: 'audiobook')
+    allow(Sighrax).to receive(:from_noid).with('validnoid').and_return(Sighrax.from_presenter(mono))
+    create(:featured_representative, file_set_id: '111111111', work_id: 'validnoid', kind: 'epub')
+    create(:featured_representative, file_set_id: '222222222', work_id: 'validnoid', kind: 'mobi')
+    create(:featured_representative, file_set_id: '333333333', work_id: 'validnoid', kind: 'pdf_ebook')
+    create(:featured_representative, file_set_id: '444444444', work_id: 'validnoid', kind: 'audiobook')
     ActiveFedora::SolrService.add([epub_doc.to_h, mobi_doc.to_h, pdfe_doc.to_h, audiobook_doc.to_h])
     ActiveFedora::SolrService.commit
   end
@@ -68,10 +69,10 @@ RSpec.describe EBookDownloadPresenter do
     end
 
     context "with a downloadable ebook" do
-      let(:epub_doc) { SolrDocument.new(id: '111111111', visibility_ssi: 'restricted', monograph_id_ssim: 'mono_id', has_model_ssim: ['FileSet'], file_size_lts: 20_000, allow_download_ssim: 'no') }
-      let(:mobi_doc) { SolrDocument.new(id: '222222222', visibility_ssi: 'restricted', monograph_id_ssim: 'mono_id', has_model_ssim: ['FileSet'], file_size_lts: 30_000, allow_download_ssim: 'no') }
-      let(:pdfe_doc) { SolrDocument.new(id: '333333333', visibility_ssi: 'open', monograph_id_ssim: 'mono_id', has_model_ssim: ['FileSet'], file_size_lts: 40_000, allow_download_ssim: 'yes') }
-      let(:audiobook_doc) { SolrDocument.new(id: '444444444', visibility_ssi: 'open', monograph_id_ssim: 'mono_id', has_model_ssim: ['FileSet'], file_size_lts: 40_000, allow_download_ssim: 'no') }
+      let(:epub_doc) { SolrDocument.new(id: '111111111', visibility_ssi: 'restricted', monograph_id_ssim: 'validnoid', has_model_ssim: ['FileSet'], file_size_lts: 20_000, allow_download_ssim: 'no') }
+      let(:mobi_doc) { SolrDocument.new(id: '222222222', visibility_ssi: 'restricted', monograph_id_ssim: 'validnoid', has_model_ssim: ['FileSet'], file_size_lts: 30_000, allow_download_ssim: 'no') }
+      let(:pdfe_doc) { SolrDocument.new(id: '333333333', visibility_ssi: 'open', monograph_id_ssim: 'validnoid', has_model_ssim: ['FileSet'], file_size_lts: 40_000, allow_download_ssim: 'yes') }
+      let(:audiobook_doc) { SolrDocument.new(id: '444444444', visibility_ssi: 'open', monograph_id_ssim: 'validnoid', has_model_ssim: ['FileSet'], file_size_lts: 40_000, allow_download_ssim: 'no') }
 
       it "returns true" do
         expect(subject.downloadable_ebooks?).to be true
@@ -79,10 +80,10 @@ RSpec.describe EBookDownloadPresenter do
     end
 
     context "with no downloadable ebooks" do
-      let(:epub_doc) { SolrDocument.new(id: '111111111', visibility_ssi: 'restricted', monograph_id_ssim: 'mono_id', has_model_ssim: ['FileSet'], file_size_lts: 20_000, allow_download_ssim: 'no') }
-      let(:mobi_doc) { SolrDocument.new(id: '222222222', visibility_ssi: 'restricted', monograph_id_ssim: 'mono_id', has_model_ssim: ['FileSet'], file_size_lts: 30_000, allow_download_ssim: 'no') }
-      let(:pdfe_doc) { SolrDocument.new(id: '333333333', visibility_ssi: 'open', monograph_id_ssim: 'mono_id', has_model_ssim: ['FileSet'], file_size_lts: 40_000, allow_download_ssim: 'no') }
-      let(:audiobook_doc) { SolrDocument.new(id: '444444444', visibility_ssi: 'open', monograph_id_ssim: 'mono_id', has_model_ssim: ['FileSet'], file_size_lts: 40_000, allow_download_ssim: 'no') }
+      let(:epub_doc) { SolrDocument.new(id: '111111111', visibility_ssi: 'restricted', monograph_id_ssim: 'validnoid', has_model_ssim: ['FileSet'], file_size_lts: 20_000, allow_download_ssim: 'no') }
+      let(:mobi_doc) { SolrDocument.new(id: '222222222', visibility_ssi: 'restricted', monograph_id_ssim: 'validnoid', has_model_ssim: ['FileSet'], file_size_lts: 30_000, allow_download_ssim: 'no') }
+      let(:pdfe_doc) { SolrDocument.new(id: '333333333', visibility_ssi: 'open', monograph_id_ssim: 'validnoid', has_model_ssim: ['FileSet'], file_size_lts: 40_000, allow_download_ssim: 'no') }
+      let(:audiobook_doc) { SolrDocument.new(id: '444444444', visibility_ssi: 'open', monograph_id_ssim: 'validnoid', has_model_ssim: ['FileSet'], file_size_lts: 40_000, allow_download_ssim: 'no') }
 
       it "returns false" do
         expect(subject.downloadable_ebooks?).to be false

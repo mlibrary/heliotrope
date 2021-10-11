@@ -60,7 +60,7 @@ RSpec.describe Sighrax::NullEntity, type: :model do
     it { expect(subject.published?)       .to be false }
     it { expect(subject.publisher)        .to be_an_instance_of(Sighrax::NullPublisher) }
     it { expect(subject.publishing_house) .to eq('') }
-    it { expect(subject.restricted?)      .to be false }
+    it { expect(subject.restricted?)      .to be true }
     it { expect(subject.timestamp)        .to be nil }
     it { expect(subject.series)           .to eq('') }
     it { expect(subject.subjects)         .to eq([]) }
@@ -135,7 +135,10 @@ RSpec.describe Sighrax::NullEntity, type: :model do
             it { expect(subject.publication_year) .to eq instance.publication_year }
             it { expect(subject.published)        .to eq instance.published }
             it { expect(subject.publishing_house) .to eq instance.publishing_house }
-            it { expect(subject.restricted?)      .to eq instance.restricted? }
+            # NOTE: A NullEntity is restricted because a FileSets without a Monograph
+            # has a NullEntity parent therefore the FileSet needs to be reindex
+            # or it is an orphan, in both cases we want the FileSet to be restricted.
+            it { expect(subject.restricted?)      .not_to eq instance.restricted? }
             it { expect(subject.series)           .to eq instance.series }
             it { expect(subject.subjects)         .to eq instance.subjects }
           end

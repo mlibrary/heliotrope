@@ -110,7 +110,7 @@ module Sighrax
     end
 
     def restricted?
-      false
+      true
     end
 
     def series
