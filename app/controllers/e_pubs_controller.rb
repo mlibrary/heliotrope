@@ -7,7 +7,8 @@ class EPubsController < CheckpointController
   before_action :setup
 
   def show # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
-    return redirect_to epub_access_url unless @policy.show?
+    # return redirect_to epub_access_url unless @policy.show?
+    return redirect_to monograph_authentication_url(@parent_noid) unless @policy.show?
 
     @actor_product_ids = Sighrax.actor_products(current_actor).pluck(:id)
     @allow_read_product_ids = Sighrax.allow_read_products.pluck(:id)

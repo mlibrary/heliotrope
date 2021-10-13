@@ -133,7 +133,7 @@ RSpec.describe "EPubs", type: :request do
         it do
           expect { subject }.not_to raise_error
           expect(response).to have_http_status(:found)
-          expect(response).to redirect_to(epub_access_url)
+          expect(response).to redirect_to(monograph_authentication_url(monograph.id))
         end
       end
 

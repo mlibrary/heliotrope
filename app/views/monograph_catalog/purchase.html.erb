@@ -7,7 +7,7 @@
     <div class="col-sm-8 margin-padding">
       <div class="col-sm-12 border-padding">
         <h1 class="heading">Purchase access</h1>
-        <%= @press_presenter.restricted_message %>
+        <%= @press_presenter.restricted_message&.html_safe %>
       </div>
     </div>
     <div class="col-sm-4 margin-padding">
