@@ -56,7 +56,7 @@ Metrics/AbcSize:
 Metrics/BlockLength:
   Exclude:
     - 'spec/**/*'
-    - 'app/views/shared/_brand_press_bar_custom.html.erb'
+    - 'lib/spec/**/*'
 
 Metrics/ClassLength:
   Description: 'Avoid classes longer than 250 lines of code'
