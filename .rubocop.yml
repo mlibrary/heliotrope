@@ -6,8 +6,6 @@ inherit_gem:
   rubocop-rails_config:
     - config/rails.yml
 
-inherit_from: .rubocop_todo.yml
-
 AllCops:
   NewCops: enable
   DisplayCopNames: true
