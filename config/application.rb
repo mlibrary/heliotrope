@@ -67,9 +67,31 @@ module Heliotrope
     # See the KeycardAuthenticatable strategy for more detail.
     config.create_user_on_login = Settings.create_user_on_login && true
 
+    # HELIO-4075 Set java.io.tmpdir to application tmp
+    # Ensure tmp directories are defined (Cut and pasted from DBD October 14, 2021 then modified for Fulcrum)
+    verbose_init = false
+    if verbose_init
+      Rails.logger.info "ENV TMPDIR -- BEFORE -- Application Configuration"
+      Rails.logger.info "ENV['TMPDIR']=#{ENV['TMPDIR']}"
+      Rails.logger.info "ENV['_JAVA_OPTIONS']=#{ENV['_JAVA_OPTIONS']}"
+      Rails.logger.info "ENV['JAVA_OPTIONS']=#{ENV['JAVA_OPTIONS']}"
+    end
+
     # Never use /tmp, always use ~/tmp, #627 and http://stackoverflow.com/a/17068331
     tmpdir = Rails.root.join('tmp').to_s
     ENV['TMPDIR'] = tmpdir
+    ENV['_JAVA_OPTIONS'] = "-Djava.io.tmpdir=#{tmpdir}" if ENV['_JAVA_OPTIONS'].blank?
+    ENV['JAVA_OPTIONS'] = "-Djava.io.tmpdir=#{tmpdir}" if ENV['JAVA_OPTIONS'].blank?
+
+    if verbose_init
+      Rails.logger.info "ENV TMPDIR -- AFTER -- Application Configuration"
+      Rails.logger.info "ENV['TMPDIR']=#{ENV['TMPDIR']}"
+      Rails.logger.info "ENV['_JAVA_OPTIONS']=#{ENV['_JAVA_OPTIONS']}"
+      Rails.logger.info "ENV['JAVA_OPTIONS']=#{ENV['JAVA_OPTIONS']}"
+      Rails.logger.info `echo $TMPDIR`.to_s
+      Rails.logger.info `echo $_JAVA_OPTIONS`.to_s
+      Rails.logger.info `echo $JAVA_OPTIONS`.to_s
+    end
 
     # Set the epub engine for cozy-sun-bear
     config.cozy_epub_engine = 'epubjs'
@@ -91,13 +113,18 @@ module Heliotrope
 
       # Here we swap out some of the default actor stack, from Hyrax, located
       # (in Hyrax itself) at app/services/default_middleware_stack.rb
-
+      #
+      # FIRST IN LINE
+      #
       # Insert actor after obtaining lock so we are first in line!
       Hyrax::CurationConcern.actor_factory.insert_after(Hyrax::Actors::OptimisticLockValidator, HeliotropeActor)
       # Maybe register DOIs on update
       Hyrax::CurationConcern.actor_factory.insert_after(HeliotropeActor, RegisterFileSetDoisActor)
       # Heliotrope "importer" style CreateWithFilesActor
       Hyrax::CurationConcern.actor_factory.insert_after(RegisterFileSetDoisActor, CreateWithImportFilesActor)
+      #
+      # LAST IN LINE
+      #
       # Destroy FeaturedRepresentatives on delete
       Hyrax::CurationConcern.actor_factory.insert_after(Hyrax::Actors::CleanupTrophiesActor, FeaturedRepresentativeActor)
     end
