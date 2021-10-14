@@ -118,10 +118,10 @@ module Import
         # tombstoned HEB items have a Monograph title of `[title removed]`. We don't want to import these.
         if attrs['title'].blank? # might as well bow out if the monograph title is blank for some reason too.
           puts "Monograph title cannot be blank. Not importing this Monograph."
-          exit
+          exit # rubocop:disable Rails/Exit
         elsif attrs['title'].first&.strip == '[title removed]'
           puts "HEB tombstoned EPUB detected. Not importing this Monograph."
-          exit
+          exit # rubocop:disable Rails/Exit
         end
       end
 
@@ -212,13 +212,13 @@ module Import
           end
           puts '-' * 100 + "\n"
           puts "\n\nSome rows/fields have been flagged for your approval. Please review the messages above before proceeding.\n"
-          exit if test == true
+          exit if test == true # rubocop:disable Rails/Exit
           puts "Do you wish to continue (y/n)?"
           continue = gets
-          exit unless continue.downcase.first == 'y'
+          exit unless continue.downcase.first == 'y' # rubocop:disable Rails/Exit
         end
         # command-line option to exit
-        exit if test == true
+        exit if test == true # rubocop:disable Rails/Exit
       end
 
       def maybe_set_cover(attrs)
