@@ -76,7 +76,7 @@ module Export
     end
 
     def blank_csv_sheet
-      buffer = String.new
+      buffer = +''
       CSV.generate(buffer) do |csv|
         write_csv_header_rows(csv)
       end
