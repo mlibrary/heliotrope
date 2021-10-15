@@ -57,6 +57,7 @@ Metrics/BlockLength:
   Exclude:
     - 'spec/**/*'
     - 'lib/spec/**/*'
+    - 'config/**/*'
 
 Metrics/ClassLength:
   Description: 'Avoid classes longer than 250 lines of code'
