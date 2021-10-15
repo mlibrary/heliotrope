@@ -16,7 +16,7 @@ class Press < ApplicationRecord
 
   # A Press can have a parent press and can have children presses
   belongs_to :parent, class_name: 'Press', optional: true
-  has_many :children, class_name: 'Press', foreign_key: 'parent_id'
+  has_many :children, class_name: 'Press', foreign_key: 'parent_id', inverse_of: :press, dependent: :nullify
   # Get only presses that are "root" parents
   scope :parent_presses, -> { where(parent_id: nil) }
 
