@@ -15,8 +15,8 @@ class Press < ApplicationRecord
   accepts_nested_attributes_for :roles, allow_destroy: true, reject_if: proc { |attr| attr['user_key'].blank? && attr['id'].blank? }
 
   # A Press can have a parent press and can have children presses
-  belongs_to :parent, class_name: 'Press', optional: true
-  has_many :children, class_name: 'Press', foreign_key: 'parent_id', inverse_of: :press, dependent: :nullify
+  belongs_to :parent, class_name: 'Press', optional: true, inverse_of: :children
+  has_many :children, class_name: 'Press', foreign_key: 'parent_id', inverse_of: :parent, dependent: :nullify
   # Get only presses that are "root" parents
   scope :parent_presses, -> { where(parent_id: nil) }
 

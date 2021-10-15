@@ -67,7 +67,7 @@ module Riiif
     end
 
     def extract_imagemagick(options)
-      command = 'convert'
+      command = +'convert'
       command << " -crop #{options[:crop]}" if options[:crop]
       command << " -resize #{options[:size]}" if options[:size]
       if options[:rotation]

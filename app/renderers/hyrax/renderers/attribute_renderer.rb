@@ -23,7 +23,7 @@ module Hyrax
 
       # Draw the table row for the attribute
       def render
-        markup = ''
+        markup = +''
         return markup if values.blank? && !options[:include_empty]
         markup << if label.empty?
                     %(<tr><td colspan="2"><ul class='tabular list-unstyled'>)
@@ -44,7 +44,7 @@ module Hyrax
 
       # Draw the dl row for the attribute
       def render_dl_row
-        markup = ''
+        markup = +''
 
         return markup if values.blank? && !options[:include_empty]
         markup << %(<dt>#{label}</dt>\n<dd><ul class='tabular'>)
@@ -88,7 +88,7 @@ module Hyrax
         end
 
         def html_attributes(attributes)
-          buffer = ""
+          buffer = +''
           attributes.each do |k, v|
             buffer << " #{k}"
             buffer << %(="#{v}") if v.present?

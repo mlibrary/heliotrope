@@ -6,7 +6,7 @@ module Hyrax
   module Renderers
     class MarkdownAttributeRenderer < AttributeRenderer
       def render
-        markup = ''
+        markup = +''
         return markup if values.blank? && !options[:include_empty]
         markup_values = []
         Array(values).each do |value|
