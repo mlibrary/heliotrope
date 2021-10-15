@@ -2,14 +2,14 @@
 
 class Press < ApplicationRecord
   mount_uploader :logo_path, LogoPathUploader
-  validates :name, presence: true, uniqueness: true
-  validates :subdomain, presence: true, uniqueness: true,
+  validates :name, presence: true, uniqueness: true # rubocop:disable Rails/UniqueValidationWithoutIndex
+  validates :subdomain, presence: true, uniqueness: true, # rubocop:disable Rails/UniqueValidationWithoutIndex
             length: { minimum: 2, maximum: 32 },
             format: { with: /\A[-0-9a-z]+\z/, message: :format }
   validate :subdomain_hyphens
-  validates :description, presence: true, uniqueness: true
+  validates :description, presence: true, uniqueness: true # rubocop:disable Rails/UniqueValidationWithoutIndex
   # don't want to add a gem for this right now, this will at least prevent relative links
-  validates :press_url, presence: true, uniqueness: true, format: URI.regexp(%w[http https])
+  validates :press_url, presence: true, uniqueness: true, format: URI.regexp(%w[http https]) # rubocop:disable Rails/UniqueValidationWithoutIndex
 
   has_many :roles, as: :resource, dependent: :delete_all
   accepts_nested_attributes_for :roles, allow_destroy: true, reject_if: proc { |attr| attr['user_key'].blank? && attr['id'].blank? }
