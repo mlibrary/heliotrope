@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-Hyrax::DownloadsController.class_eval do
+Hyrax::DownloadsController.class_eval do # rubocop:disable Metrics/BlockLength
   prepend(DownloadsControllerBehavior = Module.new do
     # for animated GIF files we use the repo asset for display. They need to be "downloadable" no matter what.
     delegate :animated_gif?, to: :presenter

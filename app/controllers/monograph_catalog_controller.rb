@@ -9,7 +9,7 @@ class MonographCatalogController < ::CatalogController
   self.theme = 'hyrax'
   with_themed_layout 'catalog'
 
-  configure_blacklight do |config|
+  configure_blacklight do |config| # rubocop:disable Metrics/BlockLength
     config.search_builder_class = MonographSearchBuilder
     config.index.partials = %i[thumbnail index_header index]
     config.view.gallery.partials = %i[index_header index]

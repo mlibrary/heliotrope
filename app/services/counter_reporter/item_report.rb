@@ -16,7 +16,7 @@ module CounterReporter
       file_sets = presenters_for(Hyrax::FileSetPresenter, unique_noids(results))
       parents = presenters_for(Hyrax::MonographPresenter, unique_parent_noids(results))
 
-      unique_results(results).sort_by { |k, _v| parents[k[0]].present? ? parents[k[0]]&.page_title : "" }.each do |key, _reporting_period_total|
+      unique_results(results).sort_by { |k, _v| parents[k[0]].present? ? parents[k[0]]&.page_title : "" }.each do |key, _reporting_period_total|  # rubocop:disable Metrics/BlockLength
         parent_noid = key[0]
         noid        = key[1]
         section     = key[2]
@@ -29,8 +29,8 @@ module CounterReporter
         next if @params.report_type == 'ir_m1' && !presenter.multimedia?
         next if @params.yop.present? && @params.yop != parent.date_created.first
 
-        @params.metric_types.each do |metric_type|
-          @params.access_types.each do |access_type|
+        @params.metric_types.each do |metric_type| # rubocop:disable Metrics/BlockLength
+          @params.access_types.each do |access_type| # rubocop:disable Metrics/BlockLength
             item = ActiveSupport::OrderedHash.new
             item["Item"] = presenter.page_title
             item["Publisher"] = presenter.publisher.first || parent.publisher.first

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # https://tools.lib.umich.edu/jira/browse/HELIO-2196
-Hyrax::Actors::FileSetActor.class_eval do
+Hyrax::Actors::FileSetActor.class_eval do # rubocop:disable Metrics/BlockLength
   prepend(HeliotropeFileSetActorOverrides = Module.new do
     # source: https://github.com/samvera/hyrax/blob/4ae385ba69d189ba4d9cf4c279d0a58368d3be67/app/actors/hyrax/actors/file_set_actor.rb
     def create_metadata(file_set_params = {})

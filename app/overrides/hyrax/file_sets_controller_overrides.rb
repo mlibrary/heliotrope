@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-Hyrax::FileSetsController.class_eval do
+Hyrax::FileSetsController.class_eval do # rubocop:disable Metrics/BlockLength
   prepend(FileSetsControllerBehavior = Module.new do
     Hyrax::FileSetsController.form_class = ::Heliotrope::FileSetEditForm
 
