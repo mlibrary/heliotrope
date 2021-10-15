@@ -23,7 +23,7 @@ module Hyrax
           markup << "<li#{html_attributes(attributes)}>#{attribute_value_to_html(value)}</li>"
         end
         markup << %(</ul></td></tr>)
-        markup.html_safe
+        markup.html_safe # rubocop:disable Rails/OutputSafety
       end
 
       # override to not HTML escape or autolink here, leave it to Redcarpet

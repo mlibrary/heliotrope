@@ -39,7 +39,7 @@ module Hyrax
         end
 
         markup << %(</ul></td></tr>)
-        markup.html_safe
+        markup.html_safe # rubocop:disable Rails/OutputSafety
       end
 
       # Draw the dl row for the attribute
@@ -53,7 +53,7 @@ module Hyrax
           markup << "<li#{html_attributes(attributes)}>#{attribute_value_to_html(value.to_s)}</li>"
         end
         markup << %(</ul></dd>)
-        markup.html_safe
+        markup.html_safe # rubocop:disable Rails/OutputSafety
       end
 
       def maybe_sort_values # rubocop:disable Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity
