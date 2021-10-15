@@ -6,7 +6,7 @@ module BannerHelper
     return false if subdomain.blank?
     product = banner_product(subdomain)
     return false unless product.present? && product.name.present? && product.purchase.present?
-    return false if Sighrax.actor_products(actor).include?(product)
+    return false if actor.products.include?(product)
     return true if controller.is_a?(PressCatalogController)
     monograph = Sighrax.from_presenter(@presenter)
     return false unless monograph.valid?

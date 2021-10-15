@@ -56,14 +56,6 @@ module Sighrax # rubocop:disable Metrics/ModuleLength
       Greensub::Institution.find_by(identifier: Settings.world_institution_identifier)&.products || []
     end
 
-    def actor_products(actor)
-      if Incognito.sudo_actor?(actor)
-        Incognito.sudo_actor_products(actor)
-      else
-        Greensub.actor_products(actor)
-      end
-    end
-
     # Role Helpers
 
     def platform_admin?(actor)

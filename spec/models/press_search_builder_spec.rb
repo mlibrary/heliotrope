@@ -71,7 +71,7 @@ describe PressSearchBuilder do
         search_builder.blacklight_params['press'] = press.subdomain
         search_builder.blacklight_params['user_access'] = 'true' # the string 'true'
         allow(Sighrax).to receive(:allow_read_products).and_return(free_results)
-        allow(Sighrax).to receive(:actor_products).with(current_user).and_return(purchased_results)
+        allow(current_user).to receive(:products).and_return(purchased_results)
         allow(free_results).to receive(:pluck).with(:id).and_return([2, 4])
         allow(purchased_results).to receive(:pluck).with(:id).and_return([1, 3])
       end

@@ -89,7 +89,7 @@ class MonographCatalogController < ::CatalogController
       @presenter = Hyrax::PresenterFactory.build_for(ids: [monograph_id], presenter_class: Hyrax::MonographPresenter, presenter_args: current_ability).first
       @ebook_download_presenter = EBookDownloadPresenter.new(@presenter, current_ability, current_actor)
       # For Access Icons HELIO-3346
-      @actor_product_ids = Sighrax.actor_products(current_actor).pluck(:id)
+      @actor_product_ids = current_actor.products.pluck(:id)
       @allow_read_product_ids = Sighrax.allow_read_products.pluck(:id)
       @disable_read_button = disable_read_button?
     rescue RSolr::Error::ConnectionRefused, RSolr::Error::Http => e

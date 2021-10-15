@@ -15,7 +15,7 @@ describe BannerHelper do
     let(:subdomain_product) { nil }
     let(:actor_products) { [] }
 
-    before { allow(Greensub).to receive(:actor_products).with(actor).and_return(actor_products) }
+    before { allow(actor).to receive(:products).and_return(actor_products) }
 
     it { is_expected.to be false }
 

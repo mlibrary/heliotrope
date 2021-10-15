@@ -28,7 +28,7 @@
 
 # Look under app/policies for usage examples.
 
-module Incognito
+module Incognito # rubocop:disable Metrics/ModuleLength
   class << self
     def reset(actor)
       return true if short_circuit?(actor)
@@ -121,22 +121,6 @@ module Incognito
       rescue StandardError => _e
         nil
       end
-    end
-
-    def sudo_actor_licenses(actor)
-      return [] if short_circuit?(actor)
-      return [] if (actor.sign_in_count & 8).zero?
-      licenses = Incognito.sudo_actor_individual(actor)&.licenses || []
-      licenses += Incognito.sudo_actor_institution(actor)&.licenses || []
-      licenses.uniq
-    end
-
-    def sudo_actor_products(actor)
-      return [] if short_circuit?(actor)
-      return [] if (actor.sign_in_count & 8).zero?
-      products = Incognito.sudo_actor_individual(actor)&.products || []
-      products += Incognito.sudo_actor_institution(actor)&.products || []
-      products.uniq
     end
 
     private

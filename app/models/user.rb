@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class User < ApplicationRecord
+  include Actorable
   include Filterable
 
   scope :identifier_like, ->(like) { where("email like ?", "%#{like}%") }
@@ -157,30 +158,6 @@ class User < ApplicationRecord
 
   def name
     display_name || identifier
-  end
-
-  def individual
-    if Incognito.sudo_actor?(self)
-      Incognito.sudo_actor_individual(self)
-    else
-      Greensub::Individual.find_by(email: email) if email.present?
-    end
-  end
-
-  def institutions
-    if Incognito.sudo_actor?(self)
-      [Incognito.sudo_actor_institution(self)].compact
-    else
-      Services.dlps_institution.find(request_attributes)
-    end
-  end
-
-  def affiliations(institution)
-    if Incognito.sudo_actor?(self)
-      [Incognito.sudo_actor_institution_affiliation(self)].compact.select { |ia| ia.institution_id == institution.id }
-    else
-      Services.dlps_institution_affiliation.find(request_attributes).select { |ia| ia.institution_id == institution.id }
-    end
   end
 
   def grants?
