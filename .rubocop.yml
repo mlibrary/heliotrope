@@ -85,6 +85,12 @@ Rails/FilePath:
   #  EnforcedStyle: slashes
   EnforcedStyle: arguments
 
+Rails/HelperInstanceVariable:
+  Exclude:
+    - 'app/helpers/banner_helper.rb'
+    - 'app/helpers/breadcrumbs_helper.rb'
+    - 'app/helpers/press_helper.rb'
+
 Rails/LexicallyScopedActionFilter:
   Enabled: false
 
