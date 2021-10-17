@@ -59,7 +59,8 @@ module Tmm
       return true if presenter.probable_image? && %w[.bmp .gif .jp2 .jpeg .jpg .png .tif .tiff].exclude?(File.extname(new_file_path).downcase)
       return true if presenter.epub? && '.epub' != File.extname(new_file_path).downcase
       return true if presenter.pdf? && '.pdf' != File.extname(new_file_path).downcase
-      return true if presenter.audiobook? && '.zip' != File.extname(new_file_path).downcase # zip of mp3 files, one per chapter
+      # one full-book mp3 file, or a zip which contains several mp3 files, e.g. one per chapter/section
+      return true if presenter.audiobook? && %w[.mp3 .zip].exclude?(File.extname(new_file_path).downcase)
       false
     end
 

@@ -12,7 +12,8 @@ class EBookDownloadPresenter < ApplicationPresenter
     @ebook_presenters = Hyrax::PresenterFactory.build_for(ids: [@monograph.epub_id, @monograph.mobi_id, @monograph.pdf_ebook_id, @monograph.audiobook_id], presenter_class: Hyrax::FileSetPresenter, presenter_args: @current_ability).compact
     @ebook_presenters.each do |ebook|
       ebook_format = if ebook.audiobook?
-                       "AUDIO BOOK MP3" # wording requested by Fulcrum Steering (file may be a zip of several MP3s)
+                       # one full-book mp3 file, or a zip which contains several mp3 files, e.g. one per chapter/section
+                       "AUDIO BOOK MP3" # wording requested by Fulcrum Steering, even if the download is a zip file
                      elsif ebook.epub?
                        "EPUB"
                      elsif ebook.mobi?
