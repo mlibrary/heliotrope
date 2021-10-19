@@ -360,7 +360,7 @@ en:
 
         You must ensure that the file is of an appropriate type to be used as the relevant representative:
         -- aboutware: *.html file
-        -- audiobook: *.zip file (containing separate audio files, one per chapter)
+        -- audiobook: one full-book *.mp3 file, or a *.zip which contains several *.mp3 files, e.g. one per chapter/section
         -- cover: image file like *.jpg (not JPG 2000), *.tiff, *.png
         -- database: an external resource URL (see relevant column) with no actual file present
         -- epub: *.epub (archive file)

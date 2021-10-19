@@ -98,10 +98,10 @@ namespace :heliotrope do
         end
       end
 
-      # Audiobooks (right now we only expect a zip which will contain the actual audio files, e.g. mp3's)
-      audiobook_file_paths = Pathname.glob(mono_dir + '*.zip')
+      # Audiobooks (one full-book mp3 file, or a zip which contains several mp3 files, e.g. one per chapter/section)
+      audiobook_file_paths = Pathname.glob(mono_dir + '*.{mp3,zip}')
       if audiobook_file_paths.count > 1
-        puts "    More than one audiobook zip archive found in #{mono_dir.basename} ... SKIPPING AUDIOBOOK PROCESSING"
+        puts "    More than one potential audiobook (mp3 or zip) found in #{mono_dir.basename} ... SKIPPING AUDIOBOOK PROCESSING"
         next
       end
 

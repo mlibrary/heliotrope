@@ -30,7 +30,7 @@ RSpec.describe EBookDownloadPresenter do
       expect(subject.epub.ebook_format).to eq "EPUB"
       expect(subject.mobi.ebook_format).to eq "MOBI"
       expect(subject.pdf_ebook.ebook_format).to eq "PDF"
-      expect(subject.audiobook.ebook_format).to eq "AUDIO BOOK MP3" # wording requested by Fulcrum Steering (file may be a zip of several MP3s)
+      expect(subject.audiobook.ebook_format).to eq "AUDIO BOOK MP3" # wording requested by Fulcrum Steering (file may be an mp3 or a zip archive containing several mp3 files)
     end
   end
 
