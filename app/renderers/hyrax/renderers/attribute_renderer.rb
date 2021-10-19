@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "rails_autolink/helpers"
 
 module Hyrax
@@ -21,7 +23,7 @@ module Hyrax
 
       # Draw the table row for the attribute
       def render
-        markup = ''
+        markup = +''
         return markup if values.blank? && !options[:include_empty]
         markup << if label.empty?
                     %(<tr><td colspan="2"><ul class='tabular list-unstyled'>)
@@ -37,12 +39,12 @@ module Hyrax
         end
 
         markup << %(</ul></td></tr>)
-        markup.html_safe
+        markup.html_safe # rubocop:disable Rails/OutputSafety
       end
 
       # Draw the dl row for the attribute
       def render_dl_row
-        markup = ''
+        markup = +''
 
         return markup if values.blank? && !options[:include_empty]
         markup << %(<dt>#{label}</dt>\n<dd><ul class='tabular'>)
@@ -51,7 +53,7 @@ module Hyrax
           markup << "<li#{html_attributes(attributes)}>#{attribute_value_to_html(value.to_s)}</li>"
         end
         markup << %(</ul></dd>)
-        markup.html_safe
+        markup.html_safe # rubocop:disable Rails/OutputSafety
       end
 
       def maybe_sort_values # rubocop:disable Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity
@@ -86,7 +88,7 @@ module Hyrax
         end
 
         def html_attributes(attributes)
-          buffer = ""
+          buffer = +''
           attributes.each do |k, v|
             buffer << " #{k}"
             buffer << %(="#{v}") if v.present?

@@ -1,10 +1,12 @@
+# frozen_string_literal: true
+
 require "rails_autolink/helpers"
 
 module Hyrax
   module Renderers
     class MarkdownAttributeRenderer < AttributeRenderer
       def render
-        markup = ''
+        markup = +''
         return markup if values.blank? && !options[:include_empty]
         markup_values = []
         Array(values).each do |value|
@@ -21,7 +23,7 @@ module Hyrax
           markup << "<li#{html_attributes(attributes)}>#{attribute_value_to_html(value)}</li>"
         end
         markup << %(</ul></td></tr>)
-        markup.html_safe
+        markup.html_safe # rubocop:disable Rails/OutputSafety
       end
 
       # override to not HTML escape or autolink here, leave it to Redcarpet

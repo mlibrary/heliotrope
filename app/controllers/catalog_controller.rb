@@ -8,7 +8,7 @@ class CatalogController < ApplicationController
   before_action :enforce_show_permissions, only: :show
   before_action :search_ongoing
 
-  configure_blacklight do |config|
+  configure_blacklight do |config| # rubocop:disable Metrics/BlockLength
     config.search_builder_class = ::SearchBuilder
     ## Default parameters to send to solr for all search-like requests. See also SolrHelper#solr_search_params
     config.default_solr_params = {

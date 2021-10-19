@@ -8,7 +8,7 @@ if Rails.env.development? && ENV['EXPLAIN_PARTIALS']
       # Note: We haven't figured out how to get a path when @template is nil.
       start_explanation = "\n<!-- START PARTIAL #{@template.inspect} -->\n"
       end_explanation = "\n<!-- END PARTIAL #{@template.inspect} -->\n"
-      start_explanation.html_safe + rendered + end_explanation.html_safe
+      start_explanation.html_safe + rendered + end_explanation.html_safe # rubocop:disable Rails/OutputSafety
     end
   end
 
