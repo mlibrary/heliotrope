@@ -157,7 +157,8 @@ RSpec.describe Sighrax::Model, type: :model do
   context 'monograph' do
     subject { Sighrax.from_noid(monograph.id) }
 
-    let(:monograph) { create(:public_monograph) }
+    let(:monograph) { create(:public_monograph, date_modified: date_modified) }
+    let(:date_modified) { nil }
 
     it 'is a monograph model' do
       is_expected.to be_an_instance_of(Sighrax::Monograph)
@@ -173,11 +174,6 @@ RSpec.describe Sighrax::Model, type: :model do
 
       context 'date modified' do
         let(:date_modified) { Time.parse(Time.now.iso8601).utc } # Strip fractions of a second
-
-        before do
-          monograph.date_modified = date_modified
-          monograph.save
-        end
 
         it { expect(subject.modified).to eq date_modified }
       end
