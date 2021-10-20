@@ -76,7 +76,7 @@ module Import
         return field_values unless field_name == 'CC License'
         field_values.map do |val|
           # `select_all_options` rather than `select_active_options` as, unlike the UI edit forms, we allow all values here
-          match = Hyrax::LicenseService.new.select_all_options.find { |license| val == license[0] }
+          match = Hyrax::LicenseService.new.select_all_options.find { |license| val.downcase == license[0].downcase }
           match.present? ? match[1] : val
         end
       end
