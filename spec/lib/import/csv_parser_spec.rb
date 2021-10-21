@@ -103,7 +103,7 @@ describe Import::CSVParser do
           'language' => ['Russian'] },
         { 'title' => ['Section 1 Miranda'],
           'resource_type' => ['image'],
-          'license' => ['https://creativecommons.org/publicdomain/mark/1.0/'],
+          'license' => ['https://creativecommons.org/publicdomain/mark/1.0/'], # found the associated authority `term` case-insensitively
           'exclusive_to_platform' => 'yes',
           'content_type' => ['portrait'],
           'creator' => ["Waterhouse, John William\nCreator, A. Second (editor)"], # role was downcased

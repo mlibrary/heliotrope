@@ -176,6 +176,7 @@ describe Import::Importer do
         expect(file_sets[6].section_title).to eq ['Act 1: Calm Waters']
 
         expect(file_sets[7].title).to eq ['Section 1 Miranda']
+        expect(file_sets[7].license).to eq ['https://creativecommons.org/publicdomain/mark/1.0/'] # found the associated authority `term` case-insensitively
         expect(file_sets[7].section_title).to eq ['Act 1: Calm Waters']
 
         expect(file_sets[8].title).to eq ['Section 2 Shipwreck']
