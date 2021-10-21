@@ -237,7 +237,7 @@ module Hyrax
     # HELIO-3346, HELIO-3347: Support for indicators to help users understand
     # what books they have access to and why.
     #
-    # @param [Array] allow_product_ids {  Sighrax.actor_products(current_actor).pluck(:id) }
+    # @param [Array] allow_product_ids {  current_actor.products.pluck(:id) }
     # @param [Array] allow_read_product_ids {  Sighrax.allow_read_products.pluck(:id) }
     def access_level(actor_product_ids, allow_read_product_ids) # rubocop:disable Metrics/PerceivedComplexity
       # Open Access

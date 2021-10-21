@@ -53,7 +53,7 @@ class PressCatalogController < ::CatalogController
     end
 
     def load_actor_product_ids
-      @actor_product_ids = Sighrax.actor_products(current_actor).pluck(:id)
+      @actor_product_ids = current_actor.products.pluck(:id)
     end
 
     def load_allow_read_product_ids

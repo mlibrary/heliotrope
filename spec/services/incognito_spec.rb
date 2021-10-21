@@ -54,8 +54,6 @@ RSpec.describe Incognito do
     expect(incognito.sudo_actor_individual(actor)).to be nil
     expect(incognito.sudo_actor_institution(actor)).to be nil
     expect(incognito.sudo_actor_institution_affiliation(actor)).to be nil
-    expect(incognito.sudo_actor_licenses(actor)).to be_empty
-    expect(incognito.sudo_actor_products(actor)).to be_empty
 
     expect(incognito.developer?(actor)).to be false
     expect(incognito.developer(actor, true)).to be false
@@ -95,8 +93,6 @@ RSpec.describe Incognito do
       expect(incognito.sudo_actor_individual(actor)&.id).to be individual.id
       expect(incognito.sudo_actor_institution(actor)&.id).to be institution1.id
       expect(incognito.sudo_actor_institution_affiliation(actor)&.id).to be institution_affiliation1.id
-      expect(incognito.sudo_actor_licenses(actor)).to contain_exactly(license1, license2)
-      expect(incognito.sudo_actor_products(actor)).to contain_exactly(product1, product2)
 
       expect(incognito.developer?(actor)).to be false
       expect(incognito.developer(actor, true)).to be true
@@ -117,8 +113,6 @@ RSpec.describe Incognito do
         expect(incognito.sudo_actor_individual(actor)&.id).to be nil
         expect(incognito.sudo_actor_institution(actor)&.id).to be institution1.id
         expect(incognito.sudo_actor_institution_affiliation(actor)&.id).to be institution_affiliation1.id
-        expect(incognito.sudo_actor_licenses(actor)).to contain_exactly(license2)
-        expect(incognito.sudo_actor_products(actor)).to contain_exactly(product2)
       end
     end
 
@@ -133,8 +127,6 @@ RSpec.describe Incognito do
         expect(incognito.sudo_actor_individual(actor)&.id).to be individual.id
         expect(incognito.sudo_actor_institution(actor)&.id).to be nil
         expect(incognito.sudo_actor_institution_affiliation(actor)&.id).to be nil
-        expect(incognito.sudo_actor_licenses(actor)).to contain_exactly(license1)
-        expect(incognito.sudo_actor_products(actor)).to contain_exactly(product1)
 
         expect(incognito.sudo_actor_institution(actor)).to be nil
         expect(incognito.sudo_actor_institution_affiliation(actor)).to be nil

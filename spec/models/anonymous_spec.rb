@@ -9,6 +9,7 @@ RSpec.describe Anonymous, type: :model do
   let(:institution) { build(:institution, id: 100) }
   let(:affiliation) { build(:institution_affiliation, institution_id: 100) }
 
+  it { is_expected.to be_a Actorable }
   it { expect(subject.email).to be nil }
   it { expect(subject.individual).to be nil }
   it { expect(subject.institutions).to eq [] }

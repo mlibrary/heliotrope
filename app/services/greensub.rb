@@ -13,14 +13,6 @@ require_dependency 'greensub/read_license'
 
 module Greensub
   class << self
-    def actor_products(actor)
-      products = actor.individual&.products || []
-      actor.institutions.each do |institution|
-        products += institution.products
-      end
-      products.uniq
-    end
-
     def product_include?(product:, entity:)
       return false unless product.present? && entity.present?
       noids = product.components.map(&:noid)

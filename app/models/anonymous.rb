@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class Anonymous
+  include Actorable
+
   attr_reader :request_attributes
 
   def initialize(request_attributes)
@@ -9,18 +11,6 @@ class Anonymous
 
   def email
     nil
-  end
-
-  def individual
-    nil
-  end
-
-  def institutions
-    Services.dlps_institution.find(request_attributes)
-  end
-
-  def affiliations(institution)
-    Services.dlps_institution_affiliation.find(request_attributes).select { |ia| ia.institution_id == institution.id }
   end
 
   def agent_type

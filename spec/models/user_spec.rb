@@ -3,6 +3,8 @@
 require 'rails_helper'
 
 RSpec.describe User do
+  it { is_expected.to be_a Actorable }
+
   describe '#user_key' do
     subject { user.user_key }
 
