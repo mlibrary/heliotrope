@@ -68,6 +68,8 @@ require 'prometheus/client/data_stores/direct_file_store'
 
 activate_control_app
 plugin :yabeda
+plugin :yabeda_prometheus
+prometheus_exporter_url "tcp://0.0.0.0:9394/metrics"
 
 before_fork do
   Prometheus::Client.config.data_store = Prometheus::Client::DataStores::DirectFileStore.new(dir: ENV.fetch('PROMETHEUS_MONITORING_DIR'))
