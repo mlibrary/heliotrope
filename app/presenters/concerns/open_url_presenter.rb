@@ -50,7 +50,7 @@ module OpenUrlPresenter
       fields << "rft.subject=#{CGI.escape(subj)}"
     end
 
-    fields << "rft.date=#{CGI.escape(date_published.first)}" if date_published.present?
+    fields << "rft.date=#{CGI.escape(date_created.first)}" if date_created.present?
     fields << "rft.isbn=#{CGI.escape(isbn.first)}" if isbn.present?
 
     publisher.each do |pub|

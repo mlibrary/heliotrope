@@ -10,7 +10,7 @@ RSpec.describe OpenUrlPresenter do
                      creator_full_name_tesim: ['Worm, Bird'],
                      description_tesim: ['Things about Stuff'],
                      subject_tesim: ['Birds', 'Bionics', 'Hats'],
-                     date_published_tesim: ['1776'],
+                     date_created_tesim: ['1776'],
                      isbn_tesim: ['123-456-7890'],
                      publisher_tesim: ['MERP'],
                      member_ids_ssim: ['2'])
