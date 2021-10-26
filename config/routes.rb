@@ -80,9 +80,6 @@ Rails.application.routes.draw do
     end
   end
 
-  # puma monitoring see HELIO-2604
-  mount Yabeda::Prometheus::Exporter => "/metrics"
-
   constraints platform_administrator_constraint do
     namespace :greensub do
       resources :individuals do
