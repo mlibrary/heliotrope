@@ -25,7 +25,7 @@ class SessionsController < ApplicationController
     params[:entityID] = Settings.shibboleth.default_idp.entity_id
     params[:resource] = return_location
     debug_log("default_login, entityID(#{params[:entityID]}) resource(#{params[:resource]})")
-    redirect_to sp_login_url
+    redirect_to except_locale { sp_login_url }
   end
 
   # Initiate a Shibboleth login through the Service Provider
@@ -33,7 +33,7 @@ class SessionsController < ApplicationController
     session[:log_me_in] = true
     session.delete(:dlpsInstitutionId)
     debug_log("shib_login, entityID(#{params[:entityID]}) resource(#{params[:resource]})")
-    redirect_to sp_login_url
+    redirect_to except_locale { sp_login_url }
   end
 
   # Begin an application session based once Shibboleth login has happened
@@ -156,7 +156,7 @@ class SessionsController < ApplicationController
     def sp_login_url(entity_id = params[:entityID], target = params[:resource])
       URI("#{Settings.shibboleth.sp.url}/Login").tap do |url|
         url.query = URI.encode_www_form(
-          target: shib_session_url(target),
+          target: except_locale { shib_session_url(target) },
           entityID: entity_id || Settings.shibboleth.default_idp.entity_id
         )
       end.to_s

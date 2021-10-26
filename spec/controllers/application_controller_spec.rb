@@ -132,4 +132,10 @@ RSpec.describe ApplicationController, type: :controller do
       it { expect(controller.current_institutions.first).to eq institution }
     end
   end
+
+  describe '#except_locale' do
+    it { expect(root_path).to match('locale=en') }
+
+    it { expect(controller.except_locale { root_path }).not_to match('locale=en') }
+  end
 end

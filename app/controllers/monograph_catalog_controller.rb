@@ -4,6 +4,7 @@ class MonographCatalogController < ::CatalogController
   before_action :load_presenter, only: %i[index facet purchase]
   before_action :load_press_presenter, only: %i[purchase]
   before_action :load_stats, only: %i[index facet]
+  before_action :wayfless, only: %i[index]
   after_action :add_counter_stat, only: %i[index]
 
   self.theme = 'hyrax'
@@ -117,5 +118,9 @@ class MonographCatalogController < ::CatalogController
       # HELIO-2292
       return unless @presenter.epub? || @presenter.pdf_ebook? || @presenter.mobi?
       CounterService.from(self, @presenter).count
+    end
+
+    def wayfless
+      wayfless_redirect_to_shib_login if disable_read_button?
     end
 end

@@ -5,6 +5,7 @@ class EPubsController < CheckpointController
 
   protect_from_forgery except: :file
   before_action :setup
+  before_action :wayfless, only: %i[show]
 
   def show # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
     return redirect_to epub_access_url unless @policy.show?
@@ -251,5 +252,9 @@ class EPubsController < CheckpointController
       File.mtime(UnpackService.root_path_from_noid(@entity.noid, 'pdf_ebook_chapters')).to_i
     rescue StandardError => _e
       ''
+    end
+
+    def wayfless
+      wayfless_redirect_to_shib_login unless @policy.show?
     end
 end

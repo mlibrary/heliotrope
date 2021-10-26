@@ -3,6 +3,7 @@
 class CounterReportsController < ApplicationController
   before_action :set_counter_report_service, only: %i[index show edit update]
   before_action :set_counter_report, only: %i[show update]
+  before_action :wayfless, only: %i[index]
   before_action :set_presses_and_institutions, only: %i[index show]
 
   COUNTER_REPORT_TITLE = {
@@ -106,5 +107,9 @@ class CounterReportsController < ApplicationController
     def counter_report_params
       params.require(:counter_report).permit
       params.permit(:institution, :press, :start_date, :end_date, :metric_type, :access_type, :access_method, :data_type, :yop)
+    end
+
+    def wayfless
+      wayfless_redirect_to_shib_login
     end
 end

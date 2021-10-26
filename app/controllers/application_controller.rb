@@ -57,27 +57,39 @@ class ApplicationController < ActionController::Base
   end
 
   def current_institutions
-    @current_institutions ||= (ip_based_institutions + shib_institutions).uniq
+    @current_institutions ||= current_actor.institutions
+  end
+
+  def except_locale
+    @except_locale = true
+    rv = yield
+    @except_locale = false
+    rv
+  end
+
+  def default_url_options
+    if @except_locale
+      super.except(:locale)
+    else
+      super
+    end
+  end
+
+  def wayfless_redirect_to_shib_login
+    entity_id = params[:entityID]&.downcase
+    return if entity_id.blank? || entity_id == current_actor.request_attributes[:identity_provider]&.downcase
+
+    @_params = @_params.except(:entityID)
+    redirect_to (except_locale do
+      url = main_app.url_for only_path: true
+      main_app.shib_login_path url, params: { entityID: entity_id }
+    end)
   end
 
   private
 
     def request_attributes
       @request_attributes ||= Services.request_attributes.for(request)
-    end
-
-    def ip_based_institutions
-      ids = request_attributes[:dlpsInstitutionId] || []
-      Greensub::Institution.containing_dlps_institution_id(ids).to_a
-    end
-
-    def shib_institutions
-      entity_id = request_attributes[:identity_provider]
-      if entity_id
-        Greensub::Institution.for_entity_id(entity_id).to_a
-      else
-        []
-      end
     end
 
     def checkpoint_controller?
