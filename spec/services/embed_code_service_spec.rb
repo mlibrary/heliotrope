@@ -352,55 +352,6 @@ RSpec.describe EmbedCodeService do
           expect(doc.search("figure[@data-fulcrum-embed-filename][@style]")).to be_empty
         end
       end
-
-      context "When running on bulleit-1" do
-        before do
-          monograph.ordered_members << cover << epub << image << audio << video << interactive_map
-          [monograph, epub, image, audio, video, interactive_map].each { |item| item.save! }
-          allow(Socket).to receive(:gethostname).and_return('bulleit-1.umdl.umich.edu')
-          UnpackJob.perform_now(epub.id, 'epub')
-        end
-
-        it "Does not insert embed codes for the Monograph's representative files" do
-          expect(File.exist?(File.join(root_path, 'EPUB', 'xhtml', 'spec_representatives_no_embed.xhtml'))).to be true
-          doc = Nokogiri::XML(File.read(File.join(root_path, 'EPUB', 'xhtml', 'spec_representatives_no_embed.xhtml')))
-          expect(doc.search(cover_embed_attributes)).to be_empty
-          expect(doc.search("iframe[@src=\"#{cover_embed_url}\"]")).to be_empty
-          expect(doc.search(epub_embed_attributes)).to be_empty
-          expect(doc.search("iframe[@src=\"#{epub_embed_url}\"]")).to be_empty
-        end
-
-        it "Does not insert embed codes for files referenced in the EPUB using data attributes" do
-          expect(File.exist?(File.join(root_path, 'EPUB', 'xhtml', 'embeds_using_data_attributes.xhtml'))).to be true
-          doc = Nokogiri::XML(File.read(File.join(root_path, 'EPUB', 'xhtml', 'embeds_using_data_attributes.xhtml')))
-          expect(doc.search(image_embed_attributes)).to be_empty
-          expect(doc.search("iframe[@src=\"#{image_embed_url}\"]")).to be_empty
-          expect(doc.search(audio_embed_attributes)).to be_empty
-          expect(doc.search("iframe[@src=\"#{audio_embed_url}\"]")).to be_empty
-          expect(doc.search(video_embed_attributes)).to be_empty
-          expect(doc.search("iframe[@src=\"#{video_embed_url}\"]")).to be_empty
-          expect(doc.search(interactive_map_embed_attributes)).to be_empty
-          expect(doc.search("iframe[@src=\"#{interactive_map_embed_url}\"]")).to be_empty
-          # the `display:none` for the data attribute (additional resource) embeds off-Fulcrum are still present
-          expect(doc.search("figure[@style=\"display:none\"]").size).to eq(3)
-          expect(doc.search("figure[@style=\"display: none\"]").size).to eq(2)
-        end
-
-        it "Does not insert embed codes for files referenced in the EPUB using img src basename matching" do
-          expect(File.exist?(File.join(root_path, 'EPUB', 'xhtml', 'embeds_using_img_src_basenames.xhtml'))).to be true
-          doc = Nokogiri::XML(File.read(File.join(root_path, 'EPUB', 'xhtml', 'embeds_using_img_src_basenames.xhtml')))
-          expect(doc.search(image_embed_attributes)).to be_empty
-          expect(doc.search("iframe[@src=\"#{image_embed_url}\"]")).to be_empty
-          expect(doc.search(audio_embed_attributes)).to be_empty
-          expect(doc.search("iframe[@src=\"#{audio_embed_url}\"]")).to be_empty
-          expect(doc.search(video_embed_attributes)).to be_empty
-          expect(doc.search("iframe[@src=\"#{video_embed_url}\"]")).to be_empty
-          expect(doc.search(interactive_map_embed_attributes)).to be_empty
-          expect(doc.search("iframe[@src=\"#{interactive_map_embed_url}\"]")).to be_empty
-          # check parent `p.image` tags are not changed to <div> tags
-          expect(doc.search("div[@class='image']")).to be_empty
-        end
-      end
     end
   end
 end
