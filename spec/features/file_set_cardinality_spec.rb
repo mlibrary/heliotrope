@@ -25,7 +25,7 @@ describe 'FileSet Cardinality' do
                       copyright_status: "in-copyright",
                       creator: ["Smith, John (author, artist, photographer)\nCoauthor, Sally"],
                       credit_line: "Copyright by Some Person...",
-                      date_published: ["2017-01-01"],
+                      date_created: ["2017-01-01"],
                       display_date: ["circa. 2000"],
                       doi: "",
                       hdl: "",
@@ -118,10 +118,8 @@ describe 'FileSet Cardinality' do
       expect(doc.credit_line).to eql 'Copyright by Some Person...'
       expect(find('#file_set_credit_line')[:class]).not_to include 'multi-text-field'
 
-      expect(cover.date_published).to match_array(["2017-01-01"])
-      expect(doc.date_published).to match_array(["2017-01-01"])
-      # Apparently we don't have date_published on the form? Seems like we should?
-      expect(page).not_to have_selector '#file_set_date_published'
+      expect(cover.date_created).to match_array(["2017-01-01"])
+      expect(doc.date_created).to match_array(["2017-01-01"])
 
       expect(cover.display_date).to match_array(['circa. 2000'])
       expect(doc.display_date).to match_array(['circa. 2000'])

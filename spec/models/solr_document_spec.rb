@@ -10,9 +10,9 @@ describe SolrDocument do
   describe "#date_published" do
     subject { instance.date_published }
 
-    let(:attributes) { { 'date_published_tesim' => ['Oct 20th'] } }
+    let(:attributes) { { 'date_published_dtsim' => ['2019-04-11T18:24:53Z'] } }
 
-    it { is_expected.to eq ['Oct 20th'] }
+    it { is_expected.to eq '2019-04-11' }
   end
 
   describe "#allow_display_after_expiration" do

@@ -18,7 +18,11 @@
   </div>
   <div class="col-sm-4">
     <%= render "show_actions", presenter: @presenter %>
-    <%= t('.last_modified', value: @presenter.date_modified) %>
+    <dl>
+      <%= @presenter.attribute_to_html(:date_uploaded, label: t('date_uploaded'), html_dl: true) %>
+      <%= @presenter.attribute_to_html(:date_published, label: t('date_published'), html_dl: true) %>
+      <%= @presenter.attribute_to_html(:date_modified, label: t('last_modified'), html_dl: true) %>
+    </dl>
     <%= render 'representative_media', presenter: @presenter %>
     <%= render 'social_media' %>
     <%= render 'citations', presenter: @presenter %>

@@ -6,7 +6,7 @@ en:
       facets:
         title: 'Search and Filter Resources'
       fields:
-        date_published_tesim: "Date Published"
+        date_published_dtsim: "Date Published"
         isbn_tesim: "ISBN (Hardcover)"
         isbn_paper_tesim: "ISBN (Paper)"
         isbn_ebook_tesim: "ISBN (E-Book)"
