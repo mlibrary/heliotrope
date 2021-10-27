@@ -5,7 +5,7 @@ module EmbedCodeService
 
   def insert_embed_codes(parent_id, epub_dir)
     monograph_presenter = Hyrax::PresenterFactory.build_for(ids: [parent_id], presenter_class: Hyrax::MonographPresenter, presenter_args: nil).first
-    return unless monograph_presenter.non_representative_file_sets? && Socket.gethostname != 'bulleit-1.umdl.umich.edu'
+    return unless monograph_presenter.non_representative_file_sets?
 
     # first get all the Monograph's FileSets' Solr docs, then whittle out the "representative" ones
     embeddable_file_set_docs = ActiveFedora::SolrService.query("+has_model_ssim:FileSet AND monograph_id_ssim:#{parent_id} AND +label_ssi:['' TO *]", rows: 100_000)
