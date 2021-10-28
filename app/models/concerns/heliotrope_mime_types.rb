@@ -48,7 +48,7 @@ module HeliotropeMimeTypes
 
     # heliotrope: 'video/mpg' added for https://tools.lib.umich.edu/jira/browse/HELIO-3438
     def video_mime_types
-      ['video/mpg', 'video/mpeg', 'video/mp4', 'video/webm', 'video/x-msvideo', 'video/avi', 'video/quicktime', 'application/mxf']
+      ['video/mpg', 'video/mpeg', 'video/mp4', 'video/x-m4v', 'video/webm', 'video/x-msvideo', 'video/avi', 'video/quicktime', 'application/mxf']
     end
 
     def audio_mime_types
