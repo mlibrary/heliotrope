@@ -26,15 +26,8 @@ class FixityJob < ApplicationJob
                                                   sort: 'date_modified_dtsi desc',
                                                   rows: FileSet.all.count).map(&:id)
 
-    # Temporarily set a limit on the number of new file_sets to be checked so we can
-    # stagger the initial fixity checking over a number of days instead of doing them all
-    # on one day. After all files have the initial check, remove the limit
-
-    limit = 2000 # todo: remove
-    current = 0 # todo: remove
     file_set_ids.each do |file_set_id|
       next if ChecksumAuditLog.where(file_set_id: file_set_id).where("updated_at > ?", 30.days.ago).where(passed: true).present?
-      next if current >= limit # todo: remove
 
       Rails.logger.tagged(SecureRandom.uuid) do
         response = run_fixity_check(file_set_id)
@@ -58,8 +51,6 @@ class FixityJob < ApplicationJob
         else
           create_or_replace(response)
         end
-
-        current += 1 # todo: remove
       end
     end
 
@@ -68,7 +59,7 @@ class FixityJob < ApplicationJob
 
   def create_or_replace(response)
     # We only keep a single row for a file_set/file that has passed: true
-    return unless response[:passed] = true
+    return unless response[:passed] == true
     ChecksumAuditLog.where(file_set_id: response[:file_set_id]).destroy_all
     ChecksumAuditLog.create!(passed: response[:passed], file_set_id: response[:file_set_id], checked_uri: response[:checked_uri], file_id: response[:file_id], expected_result: response[:expected_result])
   end
@@ -85,7 +76,7 @@ class FixityJob < ApplicationJob
     try_limit = 4
     Rails.logger.info("FIXITY CHECK for file_set: #{file_set_id}, try: #{try}")
     Rails.logger.info("FIXITY Sleep 1")
-    sleep(1)
+    sleep(1) # This actually seems to help fixity pass by giving fedora a "rest" between checks
 
     response = {}
     response[:file_set_id] = file_set_id
