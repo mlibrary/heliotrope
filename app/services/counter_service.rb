@@ -24,6 +24,7 @@ class CounterService
 
   def count(opts = {}) # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
     return if @presenter&.visibility == "restricted"
+    return if @controller.current_institutions.map(&:identifier).any?("490" || "2405") # LIT/Staff IP or monitoring IP, HELIO-4090
 
     # Add "Unknown Institution" (aka: "The World") if the request has no institutions and is not a robot
     if @controller.current_institutions.empty? && !robot?

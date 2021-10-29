@@ -263,6 +263,19 @@ RSpec.describe CounterService do
         end
       end
 
+      context "a user with a LIT/Staff IP (490)" do
+        before do
+          allow(controller).to receive(:current_institutions).and_return([Greensub::Institution.new(identifier: 1, name: "u of m"),
+                                                                          Greensub::Institution.new(identifier: 490, name: "lit")])
+        end
+
+        it "creates 0 counter report rows" do
+          expect { described_class.from(controller, presenter).count }
+          .to change(CounterReport, :count)
+          .by(0)
+        end
+      end
+
       context "if the file_set is not 'published'/open" do
         let(:presenter) do
           Hyrax::FileSetPresenter.new(SolrDocument.new(id: 'id',
