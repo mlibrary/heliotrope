@@ -7,8 +7,8 @@ module Opds
     delegate :to_json, to: :to_h
 
     class << self
-      def new_from_monograph(monograph)
-        Publication.send(:new, monograph)
+      def new_from_monograph(monograph, open_access = true)
+        Publication.send(:new, monograph, open_access)
       end
 
       def to_iso_639_2(language)
@@ -27,10 +27,14 @@ module Opds
     def valid? # rubocop:disable Metrics/CyclomaticComplexity
       return false unless @monograph.is_a?(::Sighrax::Monograph)
       return false unless @monograph.published?
-      return false unless @monograph.open_access?
+      return false if open_access? && !@monograph.open_access?
       return false unless @monograph.cover.valid?
       return false unless @monograph.epub_ebook.valid? || @monograph.pdf_ebook.valid?
       true
+    end
+
+    def open_access?
+      @open_access
     end
 
     def to_h
@@ -254,8 +258,9 @@ module Opds
         Riiif::Engine.routes.url_helpers.image_url(monograph.cover.noid, host: Rails.application.routes.url_helpers.root_url, size: width_size_string, format: 'jpg')
       end
 
-      def initialize(monograph)
+      def initialize(monograph, open_access = true)
         @monograph = monograph
+        @open_access = open_access
       end
   end
 end

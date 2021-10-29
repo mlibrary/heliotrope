@@ -25,8 +25,8 @@ module API
             ],
             "navigation": [
               {
-                "title": "University of Michigan Press Ebook Collection Open Access",
-                "href": Rails.application.routes.url_helpers.api_opds_umpebc_oa_url,
+                "title": "Amherst College Press",
+                "href": Rails.application.routes.url_helpers.api_opds_amherst_url,
                 "type": "application/opds+json"
               },
               {
@@ -35,8 +35,13 @@ module API
                 "type": "application/opds+json"
               },
               {
-                "title": "Amherst College Press",
-                "href": Rails.application.routes.url_helpers.api_opds_amherst_url,
+                "title": "University of Michigan Press Ebook Collection",
+                "href": Rails.application.routes.url_helpers.api_opds_umpebc_url,
+                "type": "application/opds+json"
+              },
+              {
+                "title": "University of Michigan Press Ebook Collection Open Access",
+                "href": Rails.application.routes.url_helpers.api_opds_umpebc_oa_url,
                 "type": "application/opds+json"
               }
             ]
@@ -63,6 +68,28 @@ module API
             ]
           }
           feed[:publications] = umpebc_oa_publications
+          render plain: feed.to_json, content_type: 'application/opds+json'
+        end
+
+        # This resource returns the umpebc publications feed.
+        # @example get /api/opds/umpebc
+        # @return [ActionDispatch::Response] { <opds_feed> }
+        def umpebc
+          feed = {
+            "metadata": {
+              "title": "University of Michigan Press Ebook Collection"
+            },
+            "links": [
+              {
+                "rel": "self",
+                "href": Rails.application.routes.url_helpers.api_opds_umpebc_url,
+                "type": "application/opds+json"
+              }
+            ],
+            "publications": [
+            ]
+          }
+          feed[:publications] = umpebc_publications
           render plain: feed.to_json, content_type: 'application/opds+json'
         end
 
@@ -125,7 +152,27 @@ module API
 
             (ActiveFedora::SolrService.query(query, rows: monograph_noids.count, sort: "date_modified_dtsi desc") || []).each do |solr_doc|
               sm = ::Sighrax.from_solr_document(solr_doc)
-              op = ::Opds::Publication.new_from_monograph(sm)
+              op = ::Opds::Publication.new_from_monograph(sm, true)
+              rvalue.append(op.to_h) if op.valid?
+            end
+
+            rvalue
+          end
+
+          def umpebc_publications
+            rvalue = []
+
+            ebc_backlist = Greensub::Product.find_by(identifier: 'ebc_backlist')
+            return rvalue if ebc_backlist.blank?
+
+            monograph_noids = ebc_backlist.components.pluck(:noid)
+            return rvalue if monograph_noids.blank?
+
+            query = ActiveFedora::SolrQueryBuilder.construct_query_for_ids(monograph_noids)
+
+            (ActiveFedora::SolrService.query(query, rows: monograph_noids.count, sort: "date_modified_dtsi desc") || []).each do |solr_doc|
+              sm = ::Sighrax.from_solr_document(solr_doc)
+              op = ::Opds::Publication.new_from_monograph(sm, false)
               rvalue.append(op.to_h) if op.valid?
             end
 
@@ -141,7 +188,7 @@ module API
 
             (ActiveFedora::SolrService.query("+press_sim:#{subdomain} AND +visibility_ssi:open", rows: 100_000, sort: "date_modified_dtsi desc") || []).each do |solr_doc|
               sm = ::Sighrax.from_solr_document(solr_doc)
-              op = ::Opds::Publication.new_from_monograph(sm)
+              op = ::Opds::Publication.new_from_monograph(sm, true)
               rvalue.append(op.to_h) if op.valid?
             end
 
