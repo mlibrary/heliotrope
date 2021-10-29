@@ -87,9 +87,7 @@ RSpec.describe "(Where Are You From)less", type: :request do
 
       it do
         subject
-        expect(response).to have_http_status(:ok)
-        expect(response).to render_template(:index)
-        expect(response.body).not_to match(/You do not have access to this book/)
+        expect(response).to redirect_to(shib_login_path(monograph_catalog_path(monograph.id), params: entity_id))
       end
 
       context 'restricted' do
@@ -111,9 +109,7 @@ RSpec.describe "(Where Are You From)less", type: :request do
 
           it do
             subject
-            expect(response).to have_http_status(:ok)
-            expect(response).to render_template(:index)
-            expect(response.body).not_to match(/You do not have access to this book/)
+            expect(response).to redirect_to(shib_login_path(monograph_catalog_path(monograph.id), params: entity_id))
           end
         end
 
@@ -191,8 +187,7 @@ RSpec.describe "(Where Are You From)less", type: :request do
 
         it do
           subject
-          expect(response).to have_http_status(:ok)
-          expect(response).to render_template(:show)
+          expect(response).to redirect_to(main_app.shib_login_path(main_app.hyrax_file_set_path(resource.id), params: entity_id))
         end
       end
 
@@ -299,7 +294,7 @@ RSpec.describe "(Where Are You From)less", type: :request do
 
       it do
         subject
-        expect(response).to redirect_to(hyrax.download_path(epub.id))
+        expect(response).to redirect_to(shib_login_path(download_ebook_path(epub.id), params: entity_id))
       end
 
       context 'restricted' do
@@ -321,7 +316,7 @@ RSpec.describe "(Where Are You From)less", type: :request do
 
           it do
             subject
-            expect(response).to redirect_to(hyrax.download_path(epub.id))
+            expect(response).to redirect_to(shib_login_path(download_ebook_path(epub.id), params: entity_id))
           end
         end
 
@@ -384,8 +379,7 @@ RSpec.describe "(Where Are You From)less", type: :request do
 
       it do
         subject
-        expect(response).to have_http_status(:ok)
-        expect(response).to render_template(:show)
+        expect(response).to redirect_to(shib_login_path(epub_path(epub.id), params: entity_id))
       end
 
       context 'restricted' do
@@ -407,8 +401,7 @@ RSpec.describe "(Where Are You From)less", type: :request do
 
           it do
             subject
-            expect(response).to have_http_status(:ok)
-            expect(response).to render_template(:show)
+            expect(response).to redirect_to(shib_login_path(epub_path(epub.id), params: entity_id))
           end
         end
 
