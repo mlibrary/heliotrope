@@ -11,7 +11,8 @@ RSpec.describe Opds::Publication, type: [:model, :json_schema] do
 
     it { is_expected.to be false }
 
-    context 'valid' do
+    context 'valid open access monograph' do
+      let(:open_access) { true }
       let(:cover) { instance_double(Sighrax::Resource, 'cover') }
       let(:epub) { instance_double(Sighrax::EpubEbook, 'epub') }
       let(:pdf) { instance_double(Sighrax::PdfEbook, 'pdf') }
@@ -19,7 +20,7 @@ RSpec.describe Opds::Publication, type: [:model, :json_schema] do
       before do
         allow(monograph).to receive(:is_a?).with(Sighrax::Monograph).and_return(true)
         allow(monograph).to receive(:published?).and_return(true)
-        allow(monograph).to receive(:open_access?).and_return(true)
+        allow(monograph).to receive(:open_access?).and_return(open_access)
         allow(monograph).to receive(:cover).and_return(cover)
         allow(monograph).to receive(:epub_ebook).and_return(epub)
         allow(monograph).to receive(:pdf_ebook).and_return(pdf)
@@ -29,6 +30,18 @@ RSpec.describe Opds::Publication, type: [:model, :json_schema] do
       end
 
       it { is_expected.to be true }
+
+      context 'when non open access' do
+        let(:open_access) { false }
+
+        it { is_expected.to be false }
+      end
+
+      context 'when open access not required' do
+        let(:publication) { described_class.new_from_monograph(monograph, false) }
+
+        it { is_expected.to be true }
+      end
     end
   end
 
