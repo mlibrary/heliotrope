@@ -3439,176 +3439,378 @@ $lever-black-80: #342f2e;
 //
 ///////////////////////////////////////////////
 // colors
-$um-brand-color: #00274c;
-$um-accent-color: #e4e1df;
+$um-brand-color: #4C6781;
+$um-accent-color: #00274C;
+$um-accent-color-light: #E5E9ED;
+$um-headings: rgb(33, 43, 54);
 
 $um-accent-footer: #989c97;
 
-$um-accent-link: #587abc;
+$um-accent-link: rgb(29, 116, 145);
 
-$um-grey-1: #dedfdb;
-$um-grey-2: #989c97;
-$um-grey-3: #655a52;
-$um-blue: #40658f;
+$um-maize: #FFCB05;
+$um-blue: #212B36;
+
+$um-grey-1: #F5F0F0;
 $um-white: #fff;
-$um-black-80: #342f2e;
 
 // typography
-@mixin meta {
-  font-family: "ff-meta-web-pro", sans-serif;
+@import url("https://use.typekit.net/hfw0vui.css");
+
+@mixin muli {
+  font-family: muli, Arial, Helvetica, sans-serif;
 }
 
 @mixin meta-serif {
-  font-family: "ff-meta-serif-web-pro", serif;
+  font-family: ff-meta-serif-web-pro, Georgia, 'Times New Roman', Times, serif;
 }
 
-@mixin minion {
-  font-family: "minion-pro", serif;
+.muli {
+  @include muli;
 }
+
+.meta-serif {
+  @include meta-serif;
+}
+
 
 .michigan {
 
   // typography
-  @include minion;
+  @include meta-serif;
 
-  h1,
+  h1 {
+    @include meta-serif;
+    font-weight: 700;
+    color: $um-headings;
+  }
+
   h2,
   h3,
   h4,
   h5 {
-    @include meta;
+    @include muli;
     font-weight: 700;
+    color: $um-headings;
+  }
+
+  h2 {
+    margin-top: 2rem;
+  }
+ 
+  h3, 
+  h4,
+  h5 {
+    margin-top: 1rem;
+  }
+
+  .bold {
+    font-weight: 700;
+  }
+  
+  .text-light {
+    color: #f8f9fa !important;
+  }
+
+  p, ul li, ol li {
+    font-weight: 300;
   }
 
   // links
-  a,
-  button {
-    color: $um-blue;
+  a, .link {
+    color: $um-accent-link;
+    text-decoration: underline;
   }
 
   a:hover,
   a:active,
-  a:focus,
   button:hover,
   button:active,
-  button:focus {
+  .link:hover {
     color: $um-accent-link;
+    text-decoration-thickness: 2px;
+  }
+
+  a:focus,
+  button:focus,
+  .form-control:focus,
+  .btn:focus {
+    outline: 0;
+    box-shadow: 0 0 0 2px #FFCB05,0 0 0 3px #212B36;
+    border-radius: 2px !important;
+  }
+
+  a.btn, a.previous, a.next {
+    text-decoration: none;
   }
 
   // buttons
   .btn, .btn-group {
-    @include meta;
+    @include muli;
+    font-weight: 600;
+  }
+
+  .btn-default {
+    @include button-background-color($um-accent-color);
+    @include button-font-color($um-white);
+    border-color: $um-accent-color;
+    font-weight: 600;
+    @include muli;
+  }
+
+  .download {
+    .btn-default {
+    @include button-background-color($um-accent-color);
+    @include button-font-color($um-white);
+    border-color: $um-accent-color;
+    font-weight: 600;
+    @include muli;
+    }
+  }
+
+  .btn-default:hover,
+  .btn-default:active {
+    @include button-hover-background-color($um-brand-color);
+    @include button-hover-font-color(#fff);
+    border-color: $um-brand-color;
+    font-weight: 600;
+  }
+
+  .open > .btn-default.dropdown-toggle {
+    background-color: $um-blue;
+    background-image: none;
+    border-color: $um-brand-color;
+    color: #fff;
+  }
+
+  #sort-dropdown .dropdown-toggle .caret, 
+  #per_page-dropdown .dropdown-toggle .caret {
+    color: $um-white;
   }
 
   // navigation menu
-  .navbar-default .navbar-nav > .open > a,
-  .navbar-default .navbar-nav > .open > a:hover,
-  .navbar-default .navbar-nav > .open > a:focus {
-    background-color: $um-accent-color;
+  
+  .nav,
+  header {
+    @include muli;
   }
 
-  #brand-bar {
-    background-color: $um-brand-color;
-    border-color: $um-brand-color;
+  header {
+    border-bottom: 2px solid $um-brand-color;
+    height: 113px;
+    hgroup {
+      height: inherit;
+    }
+    .container {
+      padding: 16px 15px !important;
+      height: inherit;
+      max-width: 1140px;
+    }
+    .row.justify-content-end {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end !important;
+      height: 113px;
+    
+      // search box and links
+      .col-md-4.pt-3 {
+        display: flex;
+        flex-direction: column;
+        padding-top: 16px;
+        
+        form.navbar-form {
+          margin: 0;
+          padding: 0;
+        }
+
+        form {
+          @include muli;
+
+          .input-group {
+            display: flex;
+            position: relative;
+            width: 100%;
+            align-items: stretch;
+
+            .form-control {
+              position: relative;
+              flex: 1 1 auto;
+              width: 1%;
+              margin-bottom: 0;
+              display: block;
+              padding: 6px 12px;
+              font-size: 16px;
+              line-height: 1.5;
+              background-clip: padding-box;
+              border: 1px solid #ced4da;
+              transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+              color: rgb(73, 80, 87) !important;
+            }
+          }
+
+          input.search-query {
+            background-color: #F3F3F3;
+            border-right: none !important;
+            color: rgb(73, 80, 87) !important;
+            height: 38px;
+          }
+
+          button.search-submit {
+            background-color: rgb(243, 243, 243);
+            border-top: rgb(206, 212, 218) 1px solid;
+            border-right: rgb(206, 212, 218) 1px solid;
+            border-bottom: rgb(206, 212, 218) 1px solid;
+            border-left: none !important;
+            height: 100%;
+            padding: 0;
+            text-transform: none;
+            overflow: visible;
+            border-radius: 0;
+            margin: 0;
+            width: 53px;
+            height: 38px;
+
+            svg {
+              height: auto;
+              width: auto;
+              fill: none;
+              stroke-width: 2;
+              color: #000;
+            }
+          }
+        }
+      }
+    }
+    .navbar-brand-logo {
+      display: inline-block;
+      padding-right: 21.5px;
+    }
+    .nav-browse {
+      display: flex;
+      justify-content: flex-end;
+      font-size: 14px;
+      @include muli;
+      margin-top: 4px;
+
+      .pr-4 {
+        padding-right: 24px;
+      }
+
+      a {
+        text-transform: uppercase;
+        color: #707070;
+        text-decoration: none;
+        font-weight: 600;
+      }
+      a:hover,
+      a:active {
+        text-decoration: underline;
+      }
+    }
 
     .navbar-brand {
-      color: $um-white;
-      @include meta;
+      height: inherit;
+      display: inline-block;
+      padding-top: 5px;
+      padding-bottom: 5px;
+      padding-left: 0;
+      margin-right: 1rem;
+      font-size: 1.25rem;
+      line-height: inherit;
+      white-space: nowrap;
+    }
+
+    .navbar-brand h1 {
       font-weight: 700;
       text-transform: uppercase;
-      letter-spacing: 2px;
+      letter-spacing: 1.2px;
+      display: inline-block;
+      margin: 0;
+      margin-bottom: -5px;
+      vertical-align: bottom;
+      font-size: 26px;
+      line-height: 31.2px;
+      @include muli;
+      color: $um-accent-color;
     }
 
-    .navbar-nav {
-      a#add-content,
-      a.login,
-      a.user-display-name,
-      a.language-dropdown {
-          color: $um-accent-color;
-      }
+  }
 
-      .open > a,
-      .open > a:focus,
-      .open > a:hover {
-        background-color: $um-blue;
-      }
-    }
-
-    button.search-submit {
-      background-color: $um-accent-color;
-      border-color: $um-accent-color;
-      color: $um-brand-color;
-    }
-
+  // container on all pages
+  #main.container {
+    max-width: 1140px;
+    padding-top: 1.5em;
   }
 
   // breadcrumbs
   .breadcrumbs {
-    @include meta;
+    @include muli;
   }
 
   // press catalog
 
-  // jumbotron
-  .jumbotron {
-    background-color: $um-grey-1;
-    @include meta-serif;
-
-    padding-top: 20px;
-    padding-bottom: 20px;
-
-    .container {
-      margin-top: 1em;
+  .press .document {
+    a {
+      display: block;
+      text-decoration: none;
     }
-
-    p.lead {
-      font-size: 16px;
+    a:hover {
+      text-decoration: underline;
+      text-decoration-thickness: 2px;
     }
+  }
 
-    .logo {
+  #facets a {
+    text-decoration: none;
+  }
 
-      img {
-        width: 73px;
-        margin-right: 3em;
-      }
-
-    }
-
+  #facets a:hover {
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
   }
 
   // monograph catalog
   #sort-dropdown .dropdown-toggle, #per_page-dropdown .dropdown-toggle {
-    color: $um-blue;
+    color: $um-white;
   }
 
   // monograph
   .monograph {
     .documentHeader {
       p {
-        @include meta;
+        @include meta-serif;
       }
     }
 
     .authors, .copyright {
-      @include meta;
+      @include muli;
     }
 
     button.search-submit {
       background-color: $um-accent-color;
       border-color: $um-accent-color;
-      color: $um-brand-color;
+      color: $um-white;
+      height: 34px;
     }
   }
 
   // pagination
   .page_links {
-    @include meta;
+    @include muli;
   }
 
   .pagination {
-    @include meta;
+    @include muli;
      li a, li span {
-       color: $um-brand-color;
+       color: $um-white;
+       background-color: $um-accent-color;
+       border-color: $um-accent-color;
+     }
+
+     li a:hover, li span:hover {
+      color: $um-white;
+      background-color: $um-brand-color;
+      border-color: $um-brand-color;
      }
 
      .active>a,
@@ -3619,62 +3821,109 @@ $um-black-80: #342f2e;
      .active>span:focus {
        background-color: $um-brand-color;
        border-color: $um-brand-color;
-       color: $um-accent-color;
+       color: $um-white;
      }
   }
 
   // assets
   .asset-navigation {
-    @include meta;
+    @include muli;
   }
 
   .asset {
     ul.nav-tabs li {
-      @include meta;
+      @include muli;
     }
   }
 
   //footer
-  footer {
-    a,
-    a:hover,
-    a:active {
-      color: $um-accent-color;
+  footer.press {
+    background-color: $um-accent-color !important;
+
+    img {
+      height: 108px !important;
+      width: 43px !important;
+      padding-bottom: 8px !important;
     }
-    .press-block-a,
-    .press-block-b {
-      background-color:  $um-blue;
 
-      .crop {
-        height: 126px;
-        width: auto;
-      }
-
-      a,
-      a:hover,
-      a:active {
-        color: $um-accent-color;
-      }
-
-      img {
-        width: 50px;
-      }
-
-      p {
-        @include meta;
-        font-weight: 700;
-        text-transform: uppercase;
-        letter-spacing: 2px;
-      }
-
+    img.fulcrum {
+      height: 27px !important;
+      width: auto !important;
     }
+
     .press-block-c {
-      background-color: $um-brand-color;
-      @include meta-serif;
+      padding: 0;
+      margin-top: 16px;
     }
-    .platform {
-      background-color: $um-black-80;
+  }
+
+  footer.press .press-block-a, footer.press .press-block-b {
+    background-color: $um-accent-color !important;
+    padding: 0;
+  }
+
+  footer {
+    background-color: $um-accent-color;
+    border-top: 2px solid #4C6781;
+    padding: 48px 0 16px;
+
+    .container {
+      max-width: 1140px;
     }
+
+    .row {
+      display: flex;
+      justify-content: space-between;
+    }
+
+    a {
+      text-decoration: none;
+    }
+
+    a:hover {
+      color: #dae0e5 !important;
+      text-decoration: none;
+    }
+
+    .press
+    .press-block-a,
+    .press-block-b,
+    .press-block-c {
+      background-color:  $um-accent-color !important;
+
+      small {
+        font-size: 12.8px;
+      }
+
+    }
+
+    .press-block-c {
+      a {
+        color: #f8f9fa !important;
+      }
+    }
+
+    .admin {
+      vertical-align: middle;
+    }
+
+    section {
+      ul {
+        font-size: 16px;
+      }
+    }
+
+    h2 {
+      font-size: 17px;
+      @include muli;
+      text-transform: uppercase;
+      margin-top: 0;
+    }
+
+    .block {
+      display: block;
+    }
+
   }
 
   // e-book reader
@@ -3685,28 +3934,28 @@ $um-black-80: #342f2e;
     }
 
     .button {
-      @include epub-button-background-color($um-brand-color,$um-blue,$um-white);
+      @include epub-button-background-color($um-accent-color,$um-brand-color,$um-white);
     }
 
     .button--lg {
-      @include epub-button-background-color($um-brand-color,$um-blue,$um-white);
+      @include epub-button-background-color($um-accent-color,$um-brand-color,$um-white);
     }
 
     .button--inline {
-      @include epub-button-background-color($um-brand-color,$um-blue,$um-white);
+      @include epub-button-background-color($um-accent-color,$um-brand-color,$um-white);
     }
 
     .button--sm {
-      @include epub-button-background-color($um-brand-color,$um-blue,$um-white);
+      @include epub-button-background-color($um-accent-color,$um-brand-color,$um-white);
     }
 
     .button--sm.cozy-preferences {
-      @include epub-button-background-color(#f1f1f1,$um-blue,$um-white);
+      @include epub-button-background-color(#f1f1f1,$um-brand-color,$um-white);
       color: $um-brand-color;
     }
 
     i[class^='icon-chevron-'] {
-      @include epub-prev-next-color($um-brand-color);
+      @include epub-prev-next-color($um-accent-color);
       transition: 0.2s ease-in;
     }
 
@@ -3728,13 +3977,70 @@ $um-black-80: #342f2e;
       }
     }
 
+    .modal__footer {
+      background-color: $um-accent-color-light;
+    }
+
     // PDF loading progress bar
     .helio-loading-bar .progress {
-      background-color: $um-brand-color;
+      background-color: $um-accent-color;
     }
 
   }
 
+}
+
+@media(max-width: 976px) {
+  .michigan header {
+    height: 194px;
+  }
+  .michigan .container {
+    overflow: auto;
+  }
+  .michigan header .row.justify-content-end .col-md-4.pt-3 {
+    flex-grow: 1;
+  }
+
+  .michigan header .row.justify-content-end .col-md-4.pt-3 form.navbar-form {
+    width: 80%;
+  }
+
+  .michigan header .row.justify-content-end {
+    justify-content: unset !important;
+    margin: 0 auto;
+    width: 95%;
+  }
+
+  .michigan header .navbar-brand h1 {
+    font-size: 20px;
+    letter-spacing: 1px;
+    line-height: 28px;
+  }
+
+  .michigan header .nav-browse {
+    justify-content: flex-start;
+    margin-top: .8em;
+  }
+
+  .michigan .monograph .message {
+    padding: 1.5em;
+
+    .wrapper {
+      width: auto;
+    }
+    .text {
+      width: 70%;
+    }
+    .dismiss {
+      width: 20%;
+      padding-left: 10%;
+    }
+  }
+
+  .michigan footer .row {
+    flex-wrap: wrap;
+    justify-content: unset;
+  }
 }
 ///////////////////////////////////////////////
 // University of Michigan Press -
@@ -3783,6 +4089,7 @@ $gabii-link-hover:    #1e5667;
   // links
   a {
     color: $gabii-link;
+    text-decoration: none;
   }
 
   a:hover,
@@ -3812,6 +4119,28 @@ $gabii-link-hover:    #1e5667;
     background-color: $gabii-brand-color;
   }
 
+  header {
+    @include lato;
+    border-bottom: none;
+    height: unset;
+
+    .container {
+      padding: 0 !important;
+      max-width: unset;
+    }
+
+    .nav-browse {
+      display: inline-block;
+      justify-content: unset;
+      padding-right: 15px;
+      padding-top: 11px;
+
+      a {
+        color: #fff;
+      }
+    }
+  }
+  
   #brand-bar {
     background-color: $gabii-brand-color;
     border-color: $gabii-brand-color;
@@ -3976,7 +4305,26 @@ $gabii-link-hover:    #1e5667;
   }
 
   //footer
-  footer {
+  footer.press {
+    background-color: $gabii-light-1 !important;
+  }
+  
+  footer.press {
+    border: none;
+    padding: 0;
+    background-color:  $gabii-light-1 !important;
+
+    img {
+      width: initial !important;
+        height: initial !important;
+        padding: initial !important;
+    }
+
+    .row {
+      display: flex;
+      justify-content: unset;
+    }
+
     a,
     a:hover,
     a:active {
@@ -3984,7 +4332,8 @@ $gabii-link-hover:    #1e5667;
     }
     .press-block-a,
     .press-block-b {
-      background-color:  $gabii-light-1;
+      background-color:  $gabii-light-1 !important;
+      padding: 30px;
 
 
       a,
@@ -3994,7 +4343,9 @@ $gabii-link-hover:    #1e5667;
       }
 
       img {
-        width: initial;
+        width: initial !important;
+        height: initial !important;
+        padding: initial !important;
       }
 
       p {
@@ -4006,11 +4357,19 @@ $gabii-link-hover:    #1e5667;
 
     }
     .press-block-c {
-      background-color: $gabii-brand-color;
+      background-color: $gabii-brand-color !important;
       @include lato;
+      margin-top: 0;
+      padding: 10px 0;
     }
     .platform {
-      background-color: $gabii-black;
+      background-color: $gabii-black !important;
+
+      img {
+        margin-left: 4px;
+        vertical-align: baseline;
+        width: 90px !important;
+      } 
     }
   }
 
@@ -4154,14 +4513,129 @@ $gabii-link-hover:    #1e5667;
 //////////////////////////////////////////////
 .ummaa {
 
+  header {
+    border-bottom: none;
+    height: unset;
+
+    .container {
+      padding: 0 !important;
+      max-width: unset;
+    }
+
+    .nav-browse {
+      display: inline-block;
+      justify-content: unset;
+      padding-right: 15px;
+      padding-top: 11px;
+
+      a {
+        background-color: unset;
+      }
+    }
+
+    a {
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
+      text-decoration-thickness: 2px;
+    }
+  }
+
+  #brand-bar {
+
+    .navbar-brand {
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      font-size: 16px;
+      padding-top: 12px;
+      color: $um-accent-color;
+    }
+  }
+
+  .search-form button {
+    background-color: $um-accent-color;
+    height: 34px;
+  }
+
+  .navbar-right {
+    a {
+      background-color: $um-accent-color;
+      vertical-align: super;
+      img.logo {
+        background-color: $um-accent-color;
+        padding: 3px;
+      }
+    }
+  }
+
+
+
   // jumbotron
   .jumbotron {
+    background-color: $um-accent-color;
+    color: #fff; 
+
     .logo {
 	    img {
      	  width: 180px;
    	  }
     }
   }
+
+  //footer
+  
+  footer.press {
+    border: none;
+    padding: 0;
+
+    .row {
+      display: flex;
+      justify-content: unset;
+    }
+
+    a,
+    a:hover,
+    a:active {
+      color: $um-white;
+    }
+    .press-block-a,
+    .press-block-b {
+      padding: 30px;
+
+
+      a,
+      a:hover,
+      a:active {
+        color: $um-white;
+      }
+
+      p {
+        text-transform: initial;
+        letter-spacing: initial;
+        font-size: 1.5em;
+      }
+
+    }
+    .press-block-c {
+      margin-top: 0;
+      padding: 10px 0;
+      background-color: $um-brand-color !important;
+    }
+    .platform {
+      background-color: #342f2e !important;
+
+      img {
+        margin-left: 4px;
+        vertical-align: middle;
+        width: 90px !important;
+        height: auto !important;
+      } 
+    }
+  }
+
+
 }
 ///////////////////////////////////////////////
 //
@@ -4175,25 +4649,71 @@ $gabii-link-hover:    #1e5667;
 //
 //////////////////////////////////////////////
 .lrccs, .cjs, .csas, .cseas {
+  
   // navigation bar
+
+  header {
+    border-bottom: none;
+    height: unset;
+
+    .container {
+      padding: 0 !important;
+      max-width: unset;
+    }
+
+    .nav-browse {
+      display: none;
+    }
+
+    a {
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
+      text-decoration-thickness: 2px;
+    }
+  }
+
   .navbar {
     min-height: 90px;
   }
 
   #brand-bar .navbar-brand {
     max-width: 350px;
+    font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      font-size: 16px;
+      padding-top: 12px;
+      color: $um-accent-color;
+      white-space: unset;
   }
 
   .search-form {
     padding-top: 1.5em;
+    
+    button {
+      background-color: $um-accent-color;
+      height: 34px;
+    }
   }
 
   .navbar-right {
     padding-top: 1em;
+    a {
+      background-color: $um-accent-color;
+      vertical-align: super;
+      img.logo {
+        background-color: $um-accent-color;
+        padding: 3px;
+      }
+    }
   }
 
   // jumbotron
   .jumbotron {
+    background-color: $um-accent-color;
+    color: #fff; 
     p.lead {
       font-size: 14px;
     }
@@ -4207,13 +4727,73 @@ $gabii-link-hover:    #1e5667;
 
   // footer
   footer .press-block-a img {
-    width: 100%;
+    width: 100% !important;
+    height: auto !important;
+  }
+
+  footer.press {
+    border: none;
+    padding: 0;
+
+    .row {
+      display: flex;
+      justify-content: unset;
+    }
+
+    a,
+    a:hover,
+    a:active {
+      color: $um-white;
+    }
+    .press-block-a,
+    .press-block-b {
+      padding: 30px;
+
+
+      a,
+      a:hover,
+      a:active {
+        color: $um-white;
+      }
+
+      p {
+        text-transform: initial;
+        letter-spacing: initial;
+        font-size: 1.5em;
+      }
+
+    }
+    .press-block-c {
+      margin-top: 0;
+      padding: 10px 0;
+      background-color: $um-brand-color !important;
+    }
+    .platform {
+      background-color: #342f2e !important;
+
+      img {
+        margin-left: 4px;
+        vertical-align: middle;
+        width: 90px !important;
+        height: auto !important;
+      } 
+    }
   }
 
   @media only screen and (max-width : 992px) {
 
     #brand-bar form.search-form, .navbar-form {
       width: 200px;
+      padding-left: 50px;
+    }
+
+    footer .row {
+      flex-wrap: inherit;
+      flex-direction: row;
+    }
+
+    .container {
+      overflow: unset;
     }
 
   }
@@ -4233,6 +4813,7 @@ $gabii-link-hover:    #1e5667;
 
     #brand-bar .navbar-brand {
       max-width: 250px;
+      padding-left: 50px;
     }
 
     .navbar-header {
