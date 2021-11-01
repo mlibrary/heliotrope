@@ -9,8 +9,8 @@ Hyrax::FileSetsController.class_eval do # rubocop:disable Metrics/BlockLength
       (redirect_to Rails.application.routes.url_helpers.monograph_catalog_path(presenter&.parent&.id)) && return if bounce_from_representatives?
 
       # Presently resources are not restricted but if someone is following a WAYFless URL
-      # then redirect them to shib login unless open access monograph.
-      wayfless_redirect_to_shib_login unless presenter&.parent&.open_access?
+      # then redirect them to shib login.
+      wayfless_redirect_to_shib_login
 
       redirect_to redirect_link, status: :moved_permanently if redirect_link.present?
       if presenter.multimedia?
