@@ -83,6 +83,14 @@ describe FileSet do
       it 'returns true for a mime type of `video/mpg`' do
         expect(subject).to be true
       end
+
+      before do
+        allow(file_set).to receive(:mime_type).and_return('video/x-m4v')
+      end
+
+      it 'returns true for a mime type of `video/x-m4v`' do
+        expect(subject).to be true
+      end
     end
   end
 end
