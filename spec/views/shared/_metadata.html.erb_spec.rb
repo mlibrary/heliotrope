@@ -163,8 +163,8 @@ describe 'shared/_metadata.html.erb' do
         @ebook_download_presenter = ebook_download_presenter
         allow(controller).to receive(:controller_name).and_return("monograph_catalog")
         render
-
-        expect(rendered).to match '\"citation_pdf_url\" content=\"http://test.host/ebooks/file_set1/download\"'
+        # Disable citation_pdf_url meta tags, HELIO-4103
+        expect(rendered).not_to match '\"citation_pdf_url\" content=\"http://test.host/ebooks/file_set1/download\"'
       end
     end
 
