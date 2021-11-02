@@ -4,24 +4,23 @@ require 'rails_helper'
 
 RSpec.describe CounterReporterService do
   let(:press) { create(:press) }
+  let(:institution) { instance_double(Greensub::Institution, 'institution', identifier: 1, name: "U of Something", ror_id: 'ror') }
+
+  before { allow(Greensub::Institution).to receive(:find_by).with(identifier: institution.identifier).and_return(institution) }
 
   describe '#csv' do
-    let(:institution) { 1 }
-    let(:institution_name) { double("institution_name", name: "U of Something") }
     let(:created_date) { Time.zone.today.iso8601 }
 
     context "with no data" do
-      let(:report) { described_class.tr_b1(press: press.id, institution: institution, start_date: "2018-01-01", end_date: "2018-03-01") }
+      let(:report) { described_class.tr_b1(press: press.id, institution: institution.identifier, start_date: "2018-01-01", end_date: "2018-03-01") }
 
       it "makes an empty report" do
-        allow(Greensub::Institution).to receive(:where).with(identifier: institution).and_return([institution_name])
-
         expect(described_class.csv(report)).to eq <<~CSV
           Report_Name,Book Requests (Excluding OA_Gold)
           Report_ID,TR_B1
           Release,5
           Institution_Name,U of Something
-          Institution_ID,1
+          Institution_ID,1; ror
           Metric_Types,Total_Item_Requests; Unique_Title_Requests
           Report_Filters,Data_Type=Book; Access_Type=Controlled; Access_Method=Regular
           Report_Attributes,""
@@ -36,7 +35,7 @@ RSpec.describe CounterReporterService do
     end
 
     context "with no report header" do
-      let(:report) { described_class.pr_p1(press: press.id, institution: institution, start_date: "2018-01-01", end_date: "2018-03-01") }
+      let(:report) { described_class.pr_p1(press: press.id, institution: institution.identifier, start_date: "2018-01-01", end_date: "2018-03-01") }
 
       before do
         create(:counter_report, press: press.id, session: 1,  noid: 'a',  parent_noid: 'A', institution: 1, created_at: Time.parse("2018-01-02").utc, access_type: "Controlled", request: 1)
@@ -46,7 +45,6 @@ RSpec.describe CounterReporterService do
       after { CounterReport.destroy_all }
 
       it "makes the csv report with no report header" do
-        allow(Greensub::Institution).to receive(:where).with(identifier: institution).and_return([institution_name])
         report.delete(:header)
 
         expect(described_class.csv(report)).to eq <<~CSV
@@ -59,7 +57,7 @@ RSpec.describe CounterReporterService do
     end
 
     context "with counter data" do
-      let(:report) { described_class.pr_p1(press: press.id, institution: institution, start_date: "2018-01-01", end_date: "2018-03-01") }
+      let(:report) { described_class.pr_p1(press: press.id, institution: institution.identifier, start_date: "2018-01-01", end_date: "2018-03-01") }
 
       before do
         create(:counter_report, press: press.id, session: 1,  noid: 'a',  parent_noid: 'A', institution: 1, created_at: Time.parse("2018-01-02").utc, access_type: "Controlled", request: 1)
@@ -69,14 +67,12 @@ RSpec.describe CounterReporterService do
       after { CounterReport.destroy_all }
 
       it "makes the csv report" do
-        allow(Greensub::Institution).to receive(:where).with(identifier: institution).and_return([institution_name])
-
         expect(described_class.csv(report)).to eq <<~CSV
           Report_Name,Platform Usage,"","","",""
           Report_ID,PR_P1,"","","",""
           Release,5,"","","",""
           Institution_Name,U of Something,"","","",""
-          Institution_ID,1,"","","",""
+          Institution_ID,1; ror,"","","",""
           Metric_Types,Total_Item_Requests; Unique_Item_Requests; Unique_Title_Requests,"","","",""
           Report_Filters,Access_Type=Controlled; Access_Method=Regular,"","","",""
           Report_Attributes,"","","","",""

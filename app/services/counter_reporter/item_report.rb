@@ -245,17 +245,22 @@ module CounterReporter
     end
 
     def header
+      institution_ids = []
       institution_name = if @params.institution == '*'
+                           institution_ids << '*'
                            "All Institutions"
                          else
-                           Greensub::Institution.where(identifier: @params.institution).first&.name
+                           institution = Greensub::Institution.find_by(identifier: @params.institution)
+                           institution_ids << institution.identifier
+                           institution_ids << institution.ror_id if institution.ror_id.present?
+                           institution.name
                          end
       {
         Report_Name: @params.report_title,
         Report_ID: @params.report_type.upcase,
         Release: "5",
         Institution_Name: institution_name,
-        Institution_ID: @params.institution,
+        Institution_ID: institution_ids.join("; "),
         Metric_Types: @params.metric_types.join("; "),
         Report_Filters: "Data_Type=#{@params.data_type}; Access_Type=#{@params.access_types.join('; ')}; Access_Method=#{@params.access_method}",
         Report_Attributes: "",

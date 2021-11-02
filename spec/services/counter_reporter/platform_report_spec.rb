@@ -4,23 +4,23 @@ require 'rails_helper'
 
 RSpec.describe CounterReporter::PlatformReport do
   let(:press) { create(:press) }
+  let(:institution) { instance_double(Greensub::Institution, 'institution', identifier: 1, name: "U of Something", ror_id: 'ror') }
+
+  before { allow(Greensub::Institution).to receive(:find_by).with(identifier: institution.identifier).and_return(institution) }
 
   describe "#header" do
     subject { described_class.new(params_object).report }
 
-    let(:params_object) { CounterReporter::ReportParams.new('pr_p1', press: press.id, institution: institution, start_date: start_date, end_date: end_date) }
-    let(:institution_name) { double("institution_name", name: "U of Something") }
+    let(:params_object) { CounterReporter::ReportParams.new('pr_p1', press: press.id, institution: institution.identifier, start_date: start_date, end_date: end_date) }
     let(:start_date) { "2018-01-01" }
     let(:end_date) { "2018-02-01" }
-    let(:institution) { 1 }
 
     it "has the correct header" do
-      allow(Greensub::Institution).to receive(:where).with(identifier: institution).and_return([institution_name])
       expect(subject[:header][:Report_Name]).to eq "Platform Usage"
       expect(subject[:header][:Report_ID]).to eq "PR_P1"
       expect(subject[:header][:Release]).to eq "5"
-      expect(subject[:header][:Institution_Name]).to eq institution_name.name
-      expect(subject[:header][:Institution_ID]).to eq institution
+      expect(subject[:header][:Institution_Name]).to eq institution.name
+      expect(subject[:header][:Institution_ID]).to eq institution.identifier.to_s + '; ' + institution.ror_id.to_s
       expect(subject[:header][:Metric_Types]).to eq "Total_Item_Requests; Unique_Item_Requests; Unique_Title_Requests"
       expect(subject[:header][:Report_Filters]).to eq "Access_Type=Controlled; Access_Method=Regular"
       expect(subject[:header][:Report_Attributes]).to eq ""
@@ -35,11 +35,9 @@ RSpec.describe CounterReporter::PlatformReport do
     context 'a pr_p1 report' do
       subject { described_class.new(params_object).report }
 
-      let(:params_object) { CounterReporter::ReportParams.new('pr_p1', press: press.id, institution: institution, start_date: start_date, end_date: end_date) }
-      let(:institution_name) { double("institution_name", name: "U of Something") }
+      let(:params_object) { CounterReporter::ReportParams.new('pr_p1', press: press.id, institution: institution.identifier, start_date: start_date, end_date: end_date) }
       let(:start_date) { "2018-01-01" }
       let(:end_date) { "2018-02-01" }
-      let(:institution) { 1 }
 
       before do
         create(:counter_report, press: press.id, session: 1,  noid: 'a',  parent_noid: 'A', institution: 1, created_at: Time.parse("2018-01-02").utc, access_type: "Controlled")
@@ -48,7 +46,6 @@ RSpec.describe CounterReporter::PlatformReport do
         create(:counter_report, press: press.id, session: 1,  noid: 'a',  parent_noid: 'A', institution: 1, created_at: Time.parse("2018-01-02").utc, access_type: "Controlled", request: 1)
         create(:counter_report, press: press.id, session: 6,  noid: 'b',  parent_noid: 'B', institution: 1, created_at: Time.parse("2018-02-11").utc, access_type: "Controlled", request: 1)
         create(:counter_report, press: press.id, session: 10, noid: 'b',  parent_noid: 'B', institution: 2, created_at: Time.parse("2018-11-11").utc, access_type: "Controlled", request: 1)
-        allow(Greensub::Institution).to receive(:where).with(identifier: institution).and_return([institution_name])
       end
 
       it "has the correct platform" do
@@ -93,16 +90,14 @@ RSpec.describe CounterReporter::PlatformReport do
     context "a pr report'" do
       subject { described_class.new(params_object).report }
 
-      let(:institution_name) { double("institution_name", name: "U of Something") }
       let(:start_date) { "2018-01-01" }
       let(:end_date) { "2018-02-01" }
-      let(:institution) { 1 }
 
       context "for oa_gold, unique_title_investigations for a press" do
         let(:params_object) do
           CounterReporter::ReportParams.new('pr',
                                             press: press.id,
-                                            institution: institution,
+                                            institution: institution.identifier,
                                             metric_type: 'Unique_Title_Investigations',
                                             access_type: 'OA_Gold',
                                             start_date: start_date,
@@ -129,7 +124,7 @@ RSpec.describe CounterReporter::PlatformReport do
         let(:params_object) do
           CounterReporter::ReportParams.new('pr',
                                             press: press.id,
-                                            institution: institution,
+                                            institution: institution.identifier,
                                             metric_type: ['Total_Item_Investigations', 'Unique_Item_Investigations'],
                                             access_type: ['Controlled'],
                                             start_date: start_date,
@@ -163,12 +158,10 @@ RSpec.describe CounterReporter::PlatformReport do
       end
 
       context "multi-institutional, Total_Item_Investigations, Controlled" do
-        let(:institution) { '*' }
-        let(:institution_name) { double("institution_name", name: "All Institutions") }
         let(:params_object) do
           CounterReporter::ReportParams.new('pr',
                                             press: press.id,
-                                            institution: institution,
+                                            institution: '*',
                                             metric_type: ['Total_Item_Investigations'],
                                             access_type: ['Controlled'],
                                             start_date: start_date,
