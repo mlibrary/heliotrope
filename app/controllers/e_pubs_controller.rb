@@ -6,6 +6,7 @@ class EPubsController < CheckpointController
   protect_from_forgery except: :file
   before_action :setup
   before_action :wayfless_redirect_to_shib_login, only: %i[show]
+  before_action :apply_hash_fragment_param, only: %i[show]
 
   def show # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
     return redirect_to epub_access_url unless @policy.show?

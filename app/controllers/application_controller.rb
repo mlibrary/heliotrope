@@ -79,11 +79,27 @@ class ApplicationController < ActionController::Base
     entity_id = params[:entityID]&.downcase
     return if entity_id.blank? || entity_id == current_actor.request_attributes[:identity_provider]&.downcase
 
-    @_params = @_params.except(:entityID)
     redirect_to (except_locale do
-      url = main_app.url_for only_path: true
+      self.params.permit!
+      args = self.params.except(:entityID).to_h
+      args[:only_path] = true
+      url = main_app.url_for args
       main_app.shib_login_path url, params: { entityID: entity_id }
     end)
+  end
+
+  def apply_hash_fragment_param
+    fragment = params[:hash]
+    return if fragment.blank?
+
+    url = except_locale do
+      self.params.permit!
+      args = self.params.except(:hash).to_h
+      args[:only_path] = true
+      main_app.url_for args
+    end
+
+    head :found, location: url + '#' + fragment
   end
 
   private

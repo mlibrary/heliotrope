@@ -3,8 +3,9 @@
 require 'rails_helper'
 
 RSpec.describe "(Where Are You From)less", type: :request do
-  let (:locale) { { locale: 'en' } }
-  let(:anything) { locale.merge({ anything: 'wayfless' }) }
+  # let (:locale) { { locale: 'en' } }
+  # let(:anything) { locale.merge({ anything: 'wayfless' }) }
+  let(:anything) { { anything: 'wayfless' } }
   # let(:entity_id) { { entityID: 'https://shibboleth.umich.edu/idp/shibboleth' } }
   let(:entity_id) { { entityID: 'https://registry.shibboleth.ox.ac.uk/idp' } }
 
@@ -25,7 +26,7 @@ RSpec.describe "(Where Are You From)less", type: :request do
 
       it do
         subject
-        expect(response).to redirect_to(shib_login_path(press_catalog_path(press.subdomain), params: entity_id))
+        expect(response).to redirect_to(shib_login_path(press_catalog_path(press.subdomain, params: anything), params: entity_id))
       end
 
       context 'already logged in by entityID' do
@@ -49,7 +50,7 @@ RSpec.describe "(Where Are You From)less", type: :request do
 
         it do
           subject
-          expect(response).to redirect_to(shib_login_path(press_catalog_path(press.subdomain), params: entity_id))
+          expect(response).to redirect_to(shib_login_path(press_catalog_path(press.subdomain, params: anything), params: entity_id))
         end
       end
     end
@@ -87,7 +88,7 @@ RSpec.describe "(Where Are You From)less", type: :request do
 
       it do
         subject
-        expect(response).to redirect_to(shib_login_path(monograph_catalog_path(monograph.id), params: entity_id))
+        expect(response).to redirect_to(shib_login_path(monograph_catalog_path(monograph.id, params: anything), params: entity_id))
       end
 
       context 'restricted' do
@@ -98,7 +99,7 @@ RSpec.describe "(Where Are You From)less", type: :request do
 
         it do
           subject
-          expect(response).to redirect_to(shib_login_path(monograph_catalog_path(monograph.id), params: entity_id))
+          expect(response).to redirect_to(shib_login_path(monograph_catalog_path(monograph.id, params: anything), params: entity_id))
         end
 
         context 'open access' do
@@ -109,7 +110,7 @@ RSpec.describe "(Where Are You From)less", type: :request do
 
           it do
             subject
-            expect(response).to redirect_to(shib_login_path(monograph_catalog_path(monograph.id), params: entity_id))
+            expect(response).to redirect_to(shib_login_path(monograph_catalog_path(monograph.id, params: anything), params: entity_id))
           end
         end
 
@@ -135,7 +136,7 @@ RSpec.describe "(Where Are You From)less", type: :request do
 
           it do
             subject
-            expect(response).to redirect_to(shib_login_path(monograph_catalog_path(monograph.id), params: entity_id))
+            expect(response).to redirect_to(shib_login_path(monograph_catalog_path(monograph.id, params: anything), params: entity_id))
           end
         end
       end
@@ -176,7 +177,7 @@ RSpec.describe "(Where Are You From)less", type: :request do
 
       it do
         subject
-        expect(response).to redirect_to(main_app.shib_login_path(main_app.hyrax_file_set_path(resource.id), params: entity_id))
+        expect(response).to redirect_to(main_app.shib_login_path(main_app.hyrax_file_set_path(resource.id, params: anything), params: entity_id))
       end
 
       context 'open access' do
@@ -187,7 +188,7 @@ RSpec.describe "(Where Are You From)less", type: :request do
 
         it do
           subject
-          expect(response).to redirect_to(main_app.shib_login_path(main_app.hyrax_file_set_path(resource.id), params: entity_id))
+          expect(response).to redirect_to(main_app.shib_login_path(main_app.hyrax_file_set_path(resource.id, params: anything), params: entity_id))
         end
       end
 
@@ -212,7 +213,7 @@ RSpec.describe "(Where Are You From)less", type: :request do
 
         it do
           subject
-          expect(response).to redirect_to(main_app.shib_login_path(main_app.hyrax_file_set_path(resource.id), params: entity_id))
+          expect(response).to redirect_to(main_app.shib_login_path(main_app.hyrax_file_set_path(resource.id, params: anything), params: entity_id))
         end
       end
     end
@@ -234,7 +235,7 @@ RSpec.describe "(Where Are You From)less", type: :request do
 
       it do
         subject
-        expect(response).to redirect_to(shib_login_path(counter_reports_path, params: entity_id))
+        expect(response).to redirect_to(shib_login_path(counter_reports_path(params: anything), params: entity_id))
       end
 
       context 'already logged in by entityID' do
@@ -258,7 +259,7 @@ RSpec.describe "(Where Are You From)less", type: :request do
 
         it do
           subject
-          expect(response).to redirect_to(shib_login_path(counter_reports_path, params: entity_id))
+          expect(response).to redirect_to(shib_login_path(counter_reports_path(params: anything), params: entity_id))
         end
       end
     end
@@ -294,7 +295,7 @@ RSpec.describe "(Where Are You From)less", type: :request do
 
       it do
         subject
-        expect(response).to redirect_to(shib_login_path(download_ebook_path(epub.id), params: entity_id))
+        expect(response).to redirect_to(shib_login_path(download_ebook_path(epub.id, params: anything), params: entity_id))
       end
 
       context 'restricted' do
@@ -305,7 +306,7 @@ RSpec.describe "(Where Are You From)less", type: :request do
 
         it do
           subject
-          expect(response).to redirect_to(shib_login_path(download_ebook_path(epub.id), params: entity_id))
+          expect(response).to redirect_to(shib_login_path(download_ebook_path(epub.id, params: anything), params: entity_id))
         end
 
         context 'open access' do
@@ -316,7 +317,7 @@ RSpec.describe "(Where Are You From)less", type: :request do
 
           it do
             subject
-            expect(response).to redirect_to(shib_login_path(download_ebook_path(epub.id), params: entity_id))
+            expect(response).to redirect_to(shib_login_path(download_ebook_path(epub.id, params: anything), params: entity_id))
           end
         end
 
@@ -341,7 +342,7 @@ RSpec.describe "(Where Are You From)less", type: :request do
 
           it do
             subject
-            expect(response).to redirect_to(shib_login_path(download_ebook_path(epub.id), params: entity_id))
+            expect(response).to redirect_to(shib_login_path(download_ebook_path(epub.id, params: anything), params: entity_id))
           end
         end
       end
@@ -379,7 +380,7 @@ RSpec.describe "(Where Are You From)less", type: :request do
 
       it do
         subject
-        expect(response).to redirect_to(shib_login_path(epub_path(epub.id), params: entity_id))
+        expect(response).to redirect_to(shib_login_path(epub_path(epub.id, params: anything), params: entity_id))
       end
 
       context 'restricted' do
@@ -390,7 +391,7 @@ RSpec.describe "(Where Are You From)less", type: :request do
 
         it do
           subject
-          expect(response).to redirect_to(shib_login_path(epub_path(epub.id), params: entity_id))
+          expect(response).to redirect_to(shib_login_path(epub_path(epub.id, params: anything), params: entity_id))
         end
 
         context 'open access' do
@@ -401,7 +402,7 @@ RSpec.describe "(Where Are You From)less", type: :request do
 
           it do
             subject
-            expect(response).to redirect_to(shib_login_path(epub_path(epub.id), params: entity_id))
+            expect(response).to redirect_to(shib_login_path(epub_path(epub.id, params: anything), params: entity_id))
           end
         end
 
@@ -425,7 +426,7 @@ RSpec.describe "(Where Are You From)less", type: :request do
 
           it do
             subject
-            expect(response).to redirect_to(shib_login_path(epub_path(epub.id), params: entity_id))
+            expect(response).to redirect_to(shib_login_path(epub_path(epub.id, params: anything), params: entity_id))
           end
         end
       end
