@@ -11,7 +11,8 @@ SitemapGenerator::Sitemap.default_host = "https://fulcrum.org"
 SitemapGenerator::Sitemap.public_path = 'public/sitemaps'
 
 # HELIO-3953 sitemaps should be uncompressed
-SitemapGenerator::Sitemap.create(compress: false) do
+# HELIO-4105 sitemaps should be no larger than 5MB
+SitemapGenerator::Sitemap.create(compress: false, create_index: true, max_sitemap_links: 20_000) do
   # Put links creation logic here.
   #
   # The root path '/' and sitemap index file are added automatically for you.
