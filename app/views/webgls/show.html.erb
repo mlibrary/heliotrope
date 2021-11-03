@@ -31,11 +31,20 @@
     }
 
     // Take user to a POI when passed a string from WebGL
+    
     function goToParagraph(p) {
-      var paragraphHandle = "https://hdl.handle.net/2027/fulcrum.9231782/" + "par" + p;
+      var title = document.title;
+      var vol_1 = "A Mid-Republican House From Gabii";
+      
+      if (title.includes(vol_1)) { 
+        var paragraphHandle = "http://hdl.handle.net/2027/fulcrum.9231782/" + "par" + p;
+      } else {
+        var paragraphHandle = "http://hdl.handle.net/2027/fulcrum.11885571/" + "par" + p;
+      }
       $('#paragraphHandle').html('<a href="' + paragraphHandle + '" target="_blank">' + paragraphHandle + '</a>');
       $('#goToParagraphModal').modal();
       gameInstance.SetFullscreen(0);
+
     }
 
     $(document).on('turbolinks:load', function() {
@@ -118,7 +127,7 @@
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
       </div>
       <div class="modal-body">
-        <p>To view a textual reference to this stratigraphic unit in the publication, please use the following permalink (will open in a new window):</p>
+        <p>To view a textual reference for this feature in the publication, please use the following permalink (will open in a new window):</p>
 
         <p id="paragraphHandle"></p>
       </div>
