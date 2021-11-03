@@ -4114,10 +4114,11 @@ $gabii-link-hover:    #1e5667;
     .special-panel {
       overflow: auto;
 
-      .panel-control button.button--sm.webgl-close {
-      background: transparent;
-      color: #333;
-      padding: 2em;
+      .panel-control button.button--sm.webgl-close,
+      .panel-control a.button--sm.webgl-fullscreen {
+        background: transparent;
+        color: #333;
+        padding: 2em;
 
         &:hover,
         &:active,

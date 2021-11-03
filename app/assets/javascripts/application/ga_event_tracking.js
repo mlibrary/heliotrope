@@ -232,6 +232,19 @@ $(document).on('turbolinks:load', function() {
     $("body").on('click', '.cozy-modal-contents ul li a', function(e) {
       press_tracker_event('e_reader', 'toc', this.href);
     });
+
+    // WebGL open and close
+    $("body").on('click', '.special-panel .panel-control button.webgl-close', function(e) {
+      press_tracker_event('e_reader', 'webgl', 'close');
+    });
+    $("body").on('click', 'button#webgl', function(e) {
+      press_tracker_event('e_reader', 'webgl', 'open');
+    });
+
+    // WebGL fullscreen mode
+    $("body").on('click', '.special-panel .panel-control a.webgl-fullscreen', function(e) {
+      press_tracker_event('e_reader', 'webgl', 'fullscreen');
+    });
   }
 
   function which_category() {
