@@ -28,7 +28,11 @@ describe 'Edit a file set' do
     let(:file_set_display_title) { '#hashtag Test FileSet Title with <em>MD Italics</em> and <em>HTML Italics</em>' }
     let(:file_set_page_title) { '#hashtag Test FileSet Title with MD Italics and HTML Italics' }
 
-    let(:file_set) { create(:public_file_set, user: user, title: [file_set_title]) }
+    let(:file_set) { create(:public_file_set,
+                            user: user,
+                            title: [file_set_title],
+                            date_published: [Hyrax::TimeService.time_in_utc] # normally set by PublishJob
+                           ) }
 
     let(:file_set_share_link) { "https://hdl.handle.net/2027/fulcrum.#{file_set.id}" }
     let(:url_escaped_title) { '%23hashtag+Test+FileSet+Title+with+MD+Italics+and+HTML+Italics' }
@@ -94,6 +98,10 @@ describe 'Edit a file set' do
 
       # Go to Monograph catalog page
       find_link(monograph.title.first, match: :first).click
+
+      # HELIO-4104
+      expect(page).not_to have_selector '.blacklight-date_published_dtsim'
+
       click_link 'List'
       expect(page).to have_current_path(hyrax_monograph_path(monograph, locale: 'en', view: 'list'))
       # Order in FileSet's section_title has been taken from Monograph's section_titles
