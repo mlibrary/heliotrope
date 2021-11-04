@@ -36,8 +36,8 @@
                 var $3d_title = "Gabii Area B 3D Model";
                 var $3d_doi = "https://doi.org/10.3998/mpub.9231782.model";
               } else {
-                var $3d_title = "Gabii Area A 3D Model";
-                var $3d_doi = "https://doi.org/10.3998/mpub.";
+                var $3d_title = "Gabii Area A/B 3D Model";
+                var $3d_doi = "https://doi.org/10.3998/mpub.11885571.cmp.webgl";
               }
             
             var $panelContent =
@@ -46,6 +46,7 @@
                   '<button class="button--sm webgl-close" data-toggle="button" data-slot="label" aria-label="Close 3-D Model" onclick="close_panel();">' +
                     '<i class="icon-x oi" data-glyph="x" aria-hidden="true"></i>' +
                   '</button>' +
+                  '<a class="button--sm webgl-fullscreen" href="'+$3d_doi+'" target="_blank"><i class="icon-fullscreen-enter oi" data-glyph="fullscreen-enter" aria-label="View 3D model in fullscreen standalone mode"></i></a>' +
                 '</div>' +
                 '<div id="unity-container" style="position:relative" tabindex="0">' +
                   '<canvas id="unity-canvas"></canvas>' +
