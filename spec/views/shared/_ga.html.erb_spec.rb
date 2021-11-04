@@ -7,6 +7,12 @@ describe 'shared/_ga.html.erb' do
 
   before do
     view.extend PressHelper
+    allow(Settings).to receive(:host).and_return("www.fulcrum.org")
+    controller.instance_eval do
+      def current_institutions
+        [ Greensub::Institution.new(identifier: 1) ]
+      end
+    end
   end
 
   context "when there's a fulcrum google_analytics_id" do
@@ -30,6 +36,25 @@ describe 'shared/_ga.html.erb' do
   context "when there's no fulcrum google analytics id" do
     it "renders no google analytics javascript" do
       Rails.application.secrets.delete :google_analytics_id
+      render
+      expect(rendered).not_to match(/javascript/)
+    end
+  end
+
+  context "when the user is Staff" do
+    before do
+      controller.instance_eval do
+        def current_institutions
+          [
+            Greensub::Institution.new(identifier: 490),
+            Greensub::Institution.new(identifier: 1)
+          ]
+        end
+      end
+    end
+
+    it "renders no google analytics javascript" do
+      Rails.application.secrets.google_analytics_id = "TEST-ID"
       render
       expect(rendered).not_to match(/javascript/)
     end
