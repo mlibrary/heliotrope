@@ -47,6 +47,7 @@ class MonographCatalogController < ::CatalogController
       config.index_fields.delete('keywords_tesim')
       config.index_fields.delete('section_title_tesim')
       config.index_fields.delete('license_tesim')
+      config.index_fields.delete('date_published_dtsim')
     end
 
     config.add_facet_field solr_name('section_title', :facetable),
