@@ -8,7 +8,7 @@ class CounterReport < ApplicationRecord
   # COUNTER v5 section 3.3.4
   validates :turnaway, inclusion: { in: [nil, "", "No_License", "Limit_Exceeded"] }
 
-  # Really we only want "Chapter" here for the forseeable future.
+  # Really we only want "Chapter" here for the foreseeable future.
   # COUNTER v5 section 3.3.3
   # We'll use the higher level "Data_Type" for other things (which we can infer
   # from solr so we don't need to collect it in this table)

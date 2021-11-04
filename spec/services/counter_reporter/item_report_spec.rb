@@ -109,6 +109,7 @@ RSpec.describe CounterReporter::ItemReport do
     subject { described_class.new(params_object).report }
 
     let(:press) { create(:press) }
+    let(:institution) { instance_double(Greensub::Institution, 'institution', identifier: 1, name: "U of Something", ror_id: 'ror') }
 
     let(:red) do
       ::SolrDocument.new(id: 'red',
@@ -161,9 +162,11 @@ RSpec.describe CounterReporter::ItemReport do
                          monograph_id_ssim: ['blue'])
     end
 
+    before { allow(Greensub::Institution).to receive(:find_by).with(identifier: institution.identifier).and_return(institution) }
+
     context "an ir report" do
       let(:params_object) do
-        CounterReporter::ReportParams.new('ir', institution: institution,
+        CounterReporter::ReportParams.new('ir', institution: institution.identifier,
                                                 press: press.id,
                                                 start_date: start_date,
                                                 end_date: end_date,
@@ -171,10 +174,8 @@ RSpec.describe CounterReporter::ItemReport do
                                                 access_type: access_type)
       end
 
-      let(:institution_name) { double("institution_name", name: "U of Something") }
       let(:start_date) { "2018-01-01" }
       let(:end_date) { "2018-02-01" }
-      let(:institution) { 1 }
       let(:access_type) { 'Controlled' }
       let(:metric_type) { 'Total_Item_Requests' }
 
@@ -194,8 +195,6 @@ RSpec.describe CounterReporter::ItemReport do
         create(:counter_report, press: press.id, session: 6,  noid: 'c',     model: 'FileSet',   parent_noid: 'green', institution: 1, created_at: Time.parse("2018-02-11").utc, access_type: "Controlled", request: 1)
         create(:counter_report, press: press.id, session: 7,  noid: 'green', model: 'Monograph', parent_noid: 'green', institution: 1, created_at: Time.parse("2018-02-13").utc, access_type: "Controlled")
         create(:counter_report, press: press.id, session: 10, noid: 'a',     model: 'FileSet',   parent_noid: 'red',   institution: 2, created_at: Time.parse("2018-11-11").utc, access_type: "Controlled", request: 1)
-
-        allow(Greensub::Institution).to receive(:where).with(identifier: institution).and_return([institution_name])
       end
 
       context "items" do
@@ -261,8 +260,8 @@ RSpec.describe CounterReporter::ItemReport do
           expect(subject[:header][:Report_Name]).to eq "Item Master Report"
           expect(subject[:header][:Report_ID]).to eq "IR"
           expect(subject[:header][:Release]).to eq "5"
-          expect(subject[:header][:Institution_Name]).to eq institution_name.name
-          expect(subject[:header][:Institution_ID]).to eq institution
+          expect(subject[:header][:Institution_Name]).to eq institution.name
+          expect(subject[:header][:Institution_ID]).to eq institution.identifier.to_s + '; ' + institution.ror_id.to_s
           expect(subject[:header][:Metric_Types]).to eq "Total_Item_Requests"
           expect(subject[:header][:Report_Filters]).to eq "Data_Type=Book; Access_Type=Controlled; Access_Method=Regular"
           expect(subject[:header][:Report_Attributes]).to eq ""
@@ -276,16 +275,14 @@ RSpec.describe CounterReporter::ItemReport do
 
     context "an ir_m1 report" do
       let(:params_object) do
-        CounterReporter::ReportParams.new('ir_m1', institution: institution,
+        CounterReporter::ReportParams.new('ir_m1', institution: institution.identifier,
                                                    press: press.id,
                                                    start_date: start_date,
                                                    end_date: end_date)
       end
 
-      let(:institution_name) { double("institution_name", name: "U of Something") }
       let(:start_date) { "2018-01-01" }
       let(:end_date) { "2018-02-01" }
-      let(:institution) { 1 }
 
       let(:a) do
         ::SolrDocument.new(id: 'a',
@@ -321,8 +318,6 @@ RSpec.describe CounterReporter::ItemReport do
         create(:counter_report, press: press.id, session: 6,  noid: 'c',     model: 'FileSet',   parent_noid: 'green', institution: 1, created_at: Time.parse("2018-02-11").utc, access_type: "Controlled", request: 1)
         create(:counter_report, press: press.id, session: 7,  noid: 'green', model: 'Monograph', parent_noid: 'green', institution: 1, created_at: Time.parse("2018-02-13").utc, access_type: "Controlled")
         create(:counter_report, press: press.id, session: 10, noid: 'a',     model: 'FileSet',   parent_noid: 'red',   institution: 2, created_at: Time.parse("2018-11-11").utc, access_type: "Controlled", request: 1)
-
-        allow(Greensub::Institution).to receive(:where).with(identifier: institution).and_return([institution_name])
       end
 
       it "has to correct number of items" do

@@ -4,6 +4,9 @@ require 'rails_helper'
 
 RSpec.describe CounterReporter::TitleReport do
   let(:press) { create(:press) }
+  let(:institution) { instance_double(Greensub::Institution, 'institution', identifier: 1, name: 'U of Something', ror_id: 'ror') }
+
+  before { allow(Greensub::Institution).to receive(:find_by).with(identifier: institution.identifier).and_return(institution) }
 
   describe "#results_by_month" do
     subject { described_class.new(params_object).results_by_month }
@@ -11,7 +14,7 @@ RSpec.describe CounterReporter::TitleReport do
     let(:params_object) { CounterReporter::ReportParams.new('tr', params) }
     let(:params) do
       {
-        institution: institution,
+        institution: institution.identifier,
         press: press.id,
         metric_type: 'Total_Item_Investigations',
         start_date: start_date,
@@ -21,7 +24,6 @@ RSpec.describe CounterReporter::TitleReport do
     end
     let(:start_date) { "2018-01-01" }
     let(:end_date) { "2018-03-30" }
-    let(:institution) { 1 }
 
     before do
       create(:counter_report, press: press.id, session: 1,  noid: 'a',  parent_noid: 'red',   institution: 1, created_at: Time.parse("2018-01-02").utc, access_type: "OA_Gold")
@@ -69,11 +71,9 @@ RSpec.describe CounterReporter::TitleReport do
 
     context 'a full tr_b1 report' do
       # https://docs.google.com/spreadsheets/d/1fsF_JCuOelUs9s_cvu7x_Yn8FNsi5xK0CR3bu2X_dVI/edit#gid=1559300549
-      let(:params_object) { CounterReporter::ReportParams.new('tr_b1', press: press.id, institution: institution, start_date: start_date, end_date: end_date) }
-      let(:institution_name) { double("institution_name", name: "U of Something") }
+      let(:params_object) { CounterReporter::ReportParams.new('tr_b1', press: press.id, institution: institution.identifier, start_date: start_date, end_date: end_date) }
       let(:start_date) { "2018-01-01" }
       let(:end_date) { "2018-12-01" }
-      let(:institution) { 1 }
 
       before do
         ActiveFedora::SolrService.add([red.to_h, green.to_h, blue.to_h])
@@ -85,8 +85,6 @@ RSpec.describe CounterReporter::TitleReport do
         create(:counter_report, press: press.id, session: 6,  noid: 'c',  parent_noid: 'green', institution: 1, created_at: Time.parse("2018-05-11").utc, access_type: "Controlled", request: 1)
         create(:counter_report, press: press.id, session: 7,  noid: 'c1', parent_noid: 'green', institution: 1, created_at: Time.parse("2018-11-03").utc, access_type: "Controlled", request: 1)
         create(:counter_report, press: press.id, session: 10, noid: 'a',  parent_noid: 'red',   institution: 2, created_at: Time.parse("2018-11-11").utc, access_type: "Controlled", request: 1)
-
-        allow(Greensub::Institution).to receive(:where).with(identifier: institution).and_return([institution_name])
       end
 
       context "items" do
@@ -157,8 +155,8 @@ RSpec.describe CounterReporter::TitleReport do
           expect(subject[:header][:Report_Name]).to eq "Book Requests (Excluding OA_Gold)"
           expect(subject[:header][:Report_ID]).to eq "TR_B1"
           expect(subject[:header][:Release]).to eq "5"
-          expect(subject[:header][:Institution_Name]).to eq institution_name.name
-          expect(subject[:header][:Institution_ID]).to eq institution
+          expect(subject[:header][:Institution_Name]).to eq institution.name
+          expect(subject[:header][:Institution_ID]).to eq institution.identifier.to_s + '; ' + institution.ror_id.to_s
           expect(subject[:header][:Metric_Types]).to eq "Total_Item_Requests; Unique_Title_Requests"
           expect(subject[:header][:Report_Filters]).to eq "Data_Type=Book; Access_Type=Controlled; Access_Method=Regular"
           expect(subject[:header][:Report_Attributes]).to eq ""
@@ -172,7 +170,7 @@ RSpec.describe CounterReporter::TitleReport do
 
     context "a tr report including Year of Publications" do
       let(:params_object) do
-        CounterReporter::ReportParams.new('tr', institution: institution,
+        CounterReporter::ReportParams.new('tr', institution: institution.identifier,
                                                 press: press.id,
                                                 start_date: start_date,
                                                 end_date: end_date,
@@ -180,10 +178,8 @@ RSpec.describe CounterReporter::TitleReport do
                                                 metric_type: metric_type,
                                                 access_type: access_type)
       end
-      let(:institution_name) { double("institution_name", name: "U of Something") }
       let(:start_date) { "2018-01-01" }
       let(:end_date) { "2018-02-01" }
-      let(:institution) { 1 }
       let(:yop) { '2000' }
       let(:access_type) { 'OA_Gold' }
       let(:metric_type) { 'Total_Item_Investigations' }
@@ -200,8 +196,6 @@ RSpec.describe CounterReporter::TitleReport do
         # A monograph investigation from the monograph_catalog page
         create(:counter_report, press: press.id, session: 7,  noid: 'green', model: 'Monograph', parent_noid: 'green', institution: 1, created_at: Time.parse("2018-02-13").utc, access_type: "OA_Gold")
         create(:counter_report, press: press.id, session: 10, noid: 'a', parent_noid: 'red', institution: 2, created_at: Time.parse("2018-11-11").utc, access_type: "OA_Gold")
-
-        allow(Greensub::Institution).to receive(:where).with(identifier: institution).and_return([institution_name])
       end
 
       context "items" do
@@ -233,15 +227,13 @@ RSpec.describe CounterReporter::TitleReport do
       let(:params) do
         {
           press: press.id,
-          institution: institution,
+          institution: institution.identifier,
           start_date: start_date,
           end_date: end_date
         }
       end
-      let(:institution_name) { double("institution_name", name: "U of Something") }
       let(:start_date) { "2018-08-01" }
       let(:end_date) { "2018-09-01" }
-      let(:institution) { 1 }
 
       before do
         ActiveFedora::SolrService.add([red.to_h, green.to_h, blue.to_h])
@@ -253,8 +245,6 @@ RSpec.describe CounterReporter::TitleReport do
         create(:counter_report, press: press.id, session: 6,  noid: 'c',  parent_noid: 'green', institution: 1, created_at: Time.parse("2018-09-11").utc, access_type: "Controlled", turnaway: "No_License")
         create(:counter_report, press: press.id, session: 7,  noid: 'c1', parent_noid: 'green', institution: 1, created_at: Time.parse("2018-09-13").utc, access_type: "Controlled", turnaway: "No_License")
         create(:counter_report, press: press.id, session: 10, noid: 'a',  parent_noid: 'red',   institution: 2, created_at: Time.parse("2018-12-11").utc, access_type: "Controlled", turnaway: "No_License")
-
-        allow(Greensub::Institution).to receive(:where).with(identifier: institution).and_return([institution_name])
       end
 
       context "items" do
@@ -316,15 +306,13 @@ RSpec.describe CounterReporter::TitleReport do
       let(:params) do
         {
           press: press.id,
-          institution: institution,
+          institution: institution.identifier,
           start_date: start_date,
           end_date: end_date
         }
       end
-      let(:institution_name) { double("institution_name", name: "U of Something") }
       let(:start_date) { "2018-08-01" }
       let(:end_date) { "2018-09-01" }
-      let(:institution) { 1 }
 
       before do
         ActiveFedora::SolrService.add([red.to_h, green.to_h, blue.to_h, purple.to_h, yellow.to_h])
@@ -339,8 +327,6 @@ RSpec.describe CounterReporter::TitleReport do
         create(:counter_report, press: press.id, session: 6,  noid: 'c',  parent_noid: 'green',  institution: 1, created_at: Time.parse("2018-09-11").utc, access_type: "Controlled", request: 1)
         create(:counter_report, press: press.id, session: 7,  noid: 'c1', parent_noid: 'green',  institution: 1, created_at: Time.parse("2018-09-13").utc, access_type: "Controlled")
         create(:counter_report, press: press.id, session: 10, noid: 'a',  parent_noid: 'red',    institution: 2, created_at: Time.parse("2018-12-11").utc, access_type: "Controlled")
-
-        allow(Greensub::Institution).to receive(:where).with(identifier: institution).and_return([institution_name])
       end
 
       it "has the correct number of items" do
