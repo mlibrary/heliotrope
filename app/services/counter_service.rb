@@ -10,8 +10,15 @@ class CounterService
     new(controller, presenter)
   end
 
-  def self.null_object(controller, presenter)
-    CounterServiceNullObject.new(controller, presenter)
+  def self.for_press(controller, press)
+    return null_object(controller, nil, press) unless /PressCatalogController/.match?(controller.class.name)
+    return null_object(controller, nil, press) if press.blank?
+
+    new(controller, nil, press)
+  end
+
+  def self.null_object(controller, presenter, press = nil)
+    CounterServiceNullObject.new(controller, presenter, press)
   end
 
   def self.allowed_controllers
@@ -38,10 +45,10 @@ class CounterService
     @controller.current_institutions.each do |institution|
       cr = CounterReport.new(session: session,
                              institution: institution.identifier,
-                             noid: @presenter.id,
-                             model: @presenter.has_model)
+                             noid: @presenter&.id,
+                             model: @presenter&.has_model)
 
-      case @presenter.has_model
+      case @presenter&.has_model
       when 'FileSet'
         cr.parent_noid = @presenter&.monograph_id
         cr.press = Press.where(subdomain: @presenter.parent.subdomain).first&.id
@@ -50,13 +57,17 @@ class CounterService
         cr.parent_noid = @presenter.id
         cr.press = Press.where(subdomain: @presenter.subdomain).first&.id
       end
+      cr.press ||= @press&.id
 
-      cr.access_type = access_type
-      cr.investigation = 1
+      cr.access_type = access_type if @press.blank?
+      cr.access_type ||= 'Controlled'
+
+      cr.investigation = 1                  if !opts[:search]
       cr.section = opts[:section]           if opts[:section]
       cr.section_type = opts[:section_type] if opts[:section_type]
       cr.request = 1                        if opts[:request]
       cr.turnaway = "No_License"            if opts[:turnaway]
+      cr.search = 1                         if opts[:search]
       cr.save!
     end
   end
@@ -123,16 +134,18 @@ class CounterService
 
   private
 
-    def initialize(controller, presenter)
+    def initialize(controller, presenter, press = nil)
       @controller = controller
       @presenter = presenter
+      @press = press
     end
 end
 
 class CounterServiceNullObject < CounterService
-  def initialize(controller, presenter)
+  def initialize(controller, presenter, press = nil)
     @controller = controller
     @presenter = presenter
+    @press = press
   end
 
   def count(_opts = {})

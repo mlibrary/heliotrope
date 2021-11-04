@@ -20,9 +20,9 @@ RSpec.describe CounterReporterService do
           Report_ID,TR_B1
           Release,5
           Institution_Name,U of Something
-          Institution_ID,1; ror
+          Institution_ID,ID:1; ROR:ror
           Metric_Types,Total_Item_Requests; Unique_Title_Requests
-          Report_Filters,Data_Type=Book; Access_Type=Controlled; Access_Method=Regular
+          Report_Filters,Platform=#{press.subdomain}; Data_Type=Book; Access_Type=Controlled; Access_Method=Regular
           Report_Attributes,""
           Exceptions,""
           Reporting_Period,2018-1 to 2018-3
@@ -38,6 +38,8 @@ RSpec.describe CounterReporterService do
       let(:report) { described_class.pr_p1(press: press.id, institution: institution.identifier, start_date: "2018-01-01", end_date: "2018-03-01") }
 
       before do
+        create(:counter_report, press: press.id, session: 1,  noid: 'a',  parent_noid: 'A', institution: 1, created_at: Time.parse("2018-01-02").utc, access_type: "Controlled", search: 1)
+        create(:counter_report, press: press.id, session: 6,  noid: 'b',  parent_noid: 'B', institution: 1, created_at: Time.parse("2018-02-11").utc, access_type: "Controlled", search: 1)
         create(:counter_report, press: press.id, session: 1,  noid: 'a',  parent_noid: 'A', institution: 1, created_at: Time.parse("2018-01-02").utc, access_type: "Controlled", request: 1)
         create(:counter_report, press: press.id, session: 6,  noid: 'b',  parent_noid: 'B', institution: 1, created_at: Time.parse("2018-02-11").utc, access_type: "Controlled", request: 1)
       end
@@ -49,6 +51,7 @@ RSpec.describe CounterReporterService do
 
         expect(described_class.csv(report)).to eq <<~CSV
           Platform,Metric_Type,Reporting_Period_Total,Jan-2018,Feb-2018,Mar-2018
+          Fulcrum/#{press.name},Searches_Platform,2,1,1,0
           Fulcrum/#{press.name},Total_Item_Requests,2,1,1,0
           Fulcrum/#{press.name},Unique_Item_Requests,2,1,1,0
           Fulcrum/#{press.name},Unique_Title_Requests,2,1,1,0
@@ -60,6 +63,8 @@ RSpec.describe CounterReporterService do
       let(:report) { described_class.pr_p1(press: press.id, institution: institution.identifier, start_date: "2018-01-01", end_date: "2018-03-01") }
 
       before do
+        create(:counter_report, press: press.id, session: 1,  noid: 'a',  parent_noid: 'A', institution: 1, created_at: Time.parse("2018-01-02").utc, access_type: "Controlled", search: 1)
+        create(:counter_report, press: press.id, session: 6,  noid: 'b',  parent_noid: 'B', institution: 1, created_at: Time.parse("2018-02-11").utc, access_type: "Controlled", search: 1)
         create(:counter_report, press: press.id, session: 1,  noid: 'a',  parent_noid: 'A', institution: 1, created_at: Time.parse("2018-01-02").utc, access_type: "Controlled", request: 1)
         create(:counter_report, press: press.id, session: 6,  noid: 'b',  parent_noid: 'B', institution: 1, created_at: Time.parse("2018-02-11").utc, access_type: "Controlled", request: 1)
       end
@@ -72,9 +77,9 @@ RSpec.describe CounterReporterService do
           Report_ID,PR_P1,"","","",""
           Release,5,"","","",""
           Institution_Name,U of Something,"","","",""
-          Institution_ID,1; ror,"","","",""
-          Metric_Types,Total_Item_Requests; Unique_Item_Requests; Unique_Title_Requests,"","","",""
-          Report_Filters,Access_Type=Controlled; Access_Method=Regular,"","","",""
+          Institution_ID,ID:1; ROR:ror,"","","",""
+          Metric_Types,Searches_Platform; Total_Item_Requests; Unique_Item_Requests; Unique_Title_Requests,"","","",""
+          Report_Filters,Platform=#{press.subdomain}; Access_Method=Regular,"","","",""
           Report_Attributes,"","","","",""
           Exceptions,"","","","",""
           Reporting_Period,2018-1 to 2018-3,"","","",""
@@ -82,6 +87,7 @@ RSpec.describe CounterReporterService do
           Created_By,Fulcrum/#{press.name},"","","",""
           "","","","","",""
           Platform,Metric_Type,Reporting_Period_Total,Jan-2018,Feb-2018,Mar-2018
+          Fulcrum/#{press.name},Searches_Platform,2,1,1,0
           Fulcrum/#{press.name},Total_Item_Requests,2,1,1,0
           Fulcrum/#{press.name},Unique_Item_Requests,2,1,1,0
           Fulcrum/#{press.name},Unique_Title_Requests,2,1,1,0

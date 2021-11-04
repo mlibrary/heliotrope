@@ -3,16 +3,16 @@
 require 'rails_helper'
 
 RSpec.describe SushiService do
-  let(:sushi_service) { described_class.new(customer_id, platform, requestor_id) }
+  let(:sushi_service) { described_class.new(customer_id, platform_id, current_user.email) }
   let(:customer_id) { double('customer_id') }
-  let(:institution) { double('institution', name: 'name', entity_id: 'entity_id') }
-  let(:platform) { double('platform') }
-  let(:requestor_id) { double('requestor_id') }
+  let(:institution) { instance_double(Greensub::Institution, 'institution', id: customer_id, name: 'Customer', entity_id: 'entity_id') }
+  let(:platform_id) { double('platform_id') }
+  let(:press) { instance_double(Press, 'press', name: 'Platform') }
   let(:current_user) { double('current_user', email: 'email') }
 
   before do
-    allow(User).to receive(:find).with(requestor_id).and_return(current_user)
     allow(Greensub::Institution).to receive(:find).with(customer_id).and_return(institution)
+    allow(Press).to receive(:find).with(platform_id).and_return(press)
   end
 
   describe '#status' do
@@ -22,7 +22,7 @@ RSpec.describe SushiService do
       is_expected.to be_an_instance_of(Array)
       expect(status_array.size).to eq 1
       expect(status_array.first).to be_an_instance_of(SwaggerClient::SUSHIServiceStatus)
-      expect(status_array.first.description).to eq 'COUNTER Usage Reports for Fulcrum platform.'
+      expect(status_array.first.description).to eq "COUNTER Usage Reports for #{press.name}."
       expect(status_array.first.service_active).to be true
       expect(status_array.first.registry_url).to eq 'http://test.host/api/sushi'
       expect(status_array.first.note).to eq 'You must be a platform administrator to retrieve reports.'
@@ -43,8 +43,8 @@ RSpec.describe SushiService do
       expect(members.size).to eq 1
       expect(members.first).to be_an_instance_of(SwaggerClient::SUSHIConsortiumMemberList)
       expect(members.first.customer_id).to be customer_id
-      expect(members.first.requestor_id).to eq 'email'
-      expect(members.first.name).to eq 'name'
+      expect(members.first.requestor_id).to eq current_user.email
+      expect(members.first.name).to eq institution.name
       expect(members.first.notes).to eq 'entity_id'
       expect(members.first.institution_id).to be_an_instance_of(Array)
       expect(members.first.institution_id).to be_empty

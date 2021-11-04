@@ -20,9 +20,9 @@ RSpec.describe CounterReporter::PlatformReport do
       expect(subject[:header][:Report_ID]).to eq "PR_P1"
       expect(subject[:header][:Release]).to eq "5"
       expect(subject[:header][:Institution_Name]).to eq institution.name
-      expect(subject[:header][:Institution_ID]).to eq institution.identifier.to_s + '; ' + institution.ror_id.to_s
-      expect(subject[:header][:Metric_Types]).to eq "Total_Item_Requests; Unique_Item_Requests; Unique_Title_Requests"
-      expect(subject[:header][:Report_Filters]).to eq "Access_Type=Controlled; Access_Method=Regular"
+      expect(subject[:header][:Institution_ID]).to eq "ID:#{institution.identifier}; ROR:#{institution.ror_id}"
+      expect(subject[:header][:Metric_Types]).to eq "Searches_Platform; Total_Item_Requests; Unique_Item_Requests; Unique_Title_Requests"
+      expect(subject[:header][:Report_Filters]).to eq "Platform=#{press.subdomain}; Access_Method=Regular"
       expect(subject[:header][:Report_Attributes]).to eq ""
       expect(subject[:header][:Exceptions]).to eq ""
       expect(subject[:header][:Reporting_Period]).to eq "2018-1 to 2018-2"
@@ -44,8 +44,11 @@ RSpec.describe CounterReporter::PlatformReport do
         create(:counter_report, press: press.id, session: 1,  noid: 'a',  parent_noid: 'A', institution: 1, created_at: Time.parse("2018-01-02").utc, access_type: "Controlled", request: 1)
         create(:counter_report, press: press.id, session: 1,  noid: 'a2', parent_noid: 'A', institution: 1, created_at: Time.parse("2018-01-02").utc, access_type: "Controlled", request: 1)
         create(:counter_report, press: press.id, session: 1,  noid: 'a',  parent_noid: 'A', institution: 1, created_at: Time.parse("2018-01-02").utc, access_type: "Controlled", request: 1)
+        create(:counter_report, press: press.id, session: 1,  noid: 'a',  parent_noid: 'A', institution: 1, created_at: Time.parse("2018-01-02").utc, access_type: "Controlled", search: 1)
         create(:counter_report, press: press.id, session: 6,  noid: 'b',  parent_noid: 'B', institution: 1, created_at: Time.parse("2018-02-11").utc, access_type: "Controlled", request: 1)
+        create(:counter_report, press: press.id, session: 6,  noid: 'b',  parent_noid: 'B', institution: 1, created_at: Time.parse("2018-02-11").utc, access_type: "Controlled", search: 1)
         create(:counter_report, press: press.id, session: 10, noid: 'b',  parent_noid: 'B', institution: 2, created_at: Time.parse("2018-11-11").utc, access_type: "Controlled", request: 1)
+        create(:counter_report, press: press.id, session: 10, noid: 'b',  parent_noid: 'B', institution: 2, created_at: Time.parse("2018-11-11").utc, access_type: "Controlled", search: 1)
       end
 
       it "has the correct platform" do
@@ -53,20 +56,25 @@ RSpec.describe CounterReporter::PlatformReport do
       end
 
       it "has the correct results" do
-        expect(subject[:items][0]["Metric_Type"]).to eq "Total_Item_Requests"
-        expect(subject[:items][0]["Reporting_Period_Total"]).to eq 4
-        expect(subject[:items][0]["Jan-2018"]).to eq 3
+        expect(subject[:items][0]["Metric_Type"]).to eq "Searches_Platform"
+        expect(subject[:items][0]["Reporting_Period_Total"]).to eq 2
+        expect(subject[:items][0]["Jan-2018"]).to eq 1
         expect(subject[:items][0]["Feb-2018"]).to eq 1
 
-        expect(subject[:items][1]["Metric_Type"]).to eq "Unique_Item_Requests"
-        expect(subject[:items][1]["Reporting_Period_Total"]).to eq 3
-        expect(subject[:items][1]["Jan-2018"]).to eq 2
+        expect(subject[:items][1]["Metric_Type"]).to eq "Total_Item_Requests"
+        expect(subject[:items][1]["Reporting_Period_Total"]).to eq 4
+        expect(subject[:items][1]["Jan-2018"]).to eq 3
         expect(subject[:items][1]["Feb-2018"]).to eq 1
 
-        expect(subject[:items][2]["Metric_Type"]).to eq "Unique_Title_Requests"
-        expect(subject[:items][2]["Reporting_Period_Total"]).to eq 2
-        expect(subject[:items][2]["Jan-2018"]).to eq 1
+        expect(subject[:items][2]["Metric_Type"]).to eq "Unique_Item_Requests"
+        expect(subject[:items][2]["Reporting_Period_Total"]).to eq 3
+        expect(subject[:items][2]["Jan-2018"]).to eq 2
         expect(subject[:items][2]["Feb-2018"]).to eq 1
+
+        expect(subject[:items][3]["Metric_Type"]).to eq "Unique_Title_Requests"
+        expect(subject[:items][3]["Reporting_Period_Total"]).to eq 2
+        expect(subject[:items][3]["Jan-2018"]).to eq 1
+        expect(subject[:items][3]["Feb-2018"]).to eq 1
       end
 
       context "with child presses" do
@@ -74,15 +82,22 @@ RSpec.describe CounterReporter::PlatformReport do
         let(:child2) { create(:press, parent: press) }
 
         before do
+          create(:counter_report, press: child1.id, session: 11,  noid: 'a',  parent_noid: 'A', institution: 1, created_at: Time.parse("2018-01-10").utc, access_type: "Controlled", search: 1)
+          create(:counter_report, press: child2.id, session: 12,  noid: 'b',  parent_noid: 'B', institution: 1, created_at: Time.parse("2018-01-15").utc, access_type: "Controlled", search: 1)
           create(:counter_report, press: child1.id, session: 11,  noid: 'a',  parent_noid: 'A', institution: 1, created_at: Time.parse("2018-01-10").utc, access_type: "Controlled", request: 1)
           create(:counter_report, press: child2.id, session: 12,  noid: 'b',  parent_noid: 'B', institution: 1, created_at: Time.parse("2018-01-15").utc, access_type: "Controlled", request: 1)
         end
 
         it "includes the childs presses in the results" do
-          expect(subject[:items][0]["Metric_Type"]).to eq "Total_Item_Requests"
-          expect(subject[:items][0]["Reporting_Period_Total"]).to eq 6
-          expect(subject[:items][0]["Jan-2018"]).to eq 5
+          expect(subject[:items][0]["Metric_Type"]).to eq "Searches_Platform"
+          expect(subject[:items][0]["Reporting_Period_Total"]).to eq 4
+          expect(subject[:items][0]["Jan-2018"]).to eq 3
           expect(subject[:items][0]["Feb-2018"]).to eq 1
+
+          expect(subject[:items][1]["Metric_Type"]).to eq "Total_Item_Requests"
+          expect(subject[:items][1]["Reporting_Period_Total"]).to eq 6
+          expect(subject[:items][1]["Jan-2018"]).to eq 5
+          expect(subject[:items][1]["Feb-2018"]).to eq 1
         end
       end
     end
@@ -98,8 +113,10 @@ RSpec.describe CounterReporter::PlatformReport do
           CounterReporter::ReportParams.new('pr',
                                             press: press.id,
                                             institution: institution.identifier,
-                                            metric_type: 'Unique_Title_Investigations',
-                                            access_type: 'OA_Gold',
+                                            metric_types: ['Unique_Title_Investigations'],
+                                            data_types: ['Book'],
+                                            access_types: ['OA_Gold'],
+                                            access_methods: ['Regular'],
                                             start_date: start_date,
                                             end_date: end_date)
         end
@@ -125,8 +142,13 @@ RSpec.describe CounterReporter::PlatformReport do
           CounterReporter::ReportParams.new('pr',
                                             press: press.id,
                                             institution: institution.identifier,
-                                            metric_type: ['Total_Item_Investigations', 'Unique_Item_Investigations'],
-                                            access_type: ['Controlled'],
+                                            metric_types: ['Total_Item_Investigations', 'Unique_Item_Investigations'],
+                                            data_types: ['Book'],
+                                            access_types: ['Controlled'],
+                                            access_methods: ['Regular'],
+                                            show_data_type: true,
+                                            show_access_type: true,
+                                            show_access_method: true,
                                             start_date: start_date,
                                             end_date: end_date)
         end
@@ -162,8 +184,10 @@ RSpec.describe CounterReporter::PlatformReport do
           CounterReporter::ReportParams.new('pr',
                                             press: press.id,
                                             institution: '*',
-                                            metric_type: ['Total_Item_Investigations'],
-                                            access_type: ['Controlled'],
+                                            metric_types: ['Total_Item_Investigations'],
+                                            data_types: ['Book'],
+                                            access_types: ['Controlled'],
+                                            access_methods: ['Regular'],
                                             start_date: start_date,
                                             end_date: end_date)
         end

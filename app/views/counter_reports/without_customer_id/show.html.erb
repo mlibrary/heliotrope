@@ -7,25 +7,28 @@
     <tr>
       <td><b><%= k %></b></td>
       <td><%= v %></td>
-      <% 1.upto(columns - 2).each do |x| %>
-        <td>&nbsp;</td>
-      <% end %>
+      <%# 1.upto(columns - 2).each do |x| %>
+<!--        <td>&nbsp;</td>-->
+      <%# end %>
     </tr>
     <% end %>
     <tr>
-      <% 1.upto(columns).each do |x| %>
+      <%# 1.upto(columns).each do |x| %>
         <td>&nbsp;</td>
-      <% end %>
+        <td>&nbsp;</td>
+      <%# end %>
     </tr>
     <tr>
-    <% if columns.zero? %>
-      <tr><td>&nbsp;</td><td>&nbsp;</td></tr>
-      <td><b>Report is empty</b></td><td>&nbsp;</td>
-    <% else %>
-      <% @report[:items][0].each do |k, _v| %>
-        <td><b><%= k %></b></td>
-      <% end %>
-      <% @report[:items].each do |item| %>
+</table>
+<table class="table">
+  <% if columns.zero? %>
+    <tr><td>&nbsp;</td><td>&nbsp;</td></tr>
+    <td><b>Report is empty</b></td><td>&nbsp;</td>
+  <% else %>
+    <% @report[:items][0].each do |k, _v| %>
+      <td><b><%= k %></b></td>
+    <% end %>
+    <% @report[:items].each do |item| %>
       <tr>
         <% item.each do |_k, v| %>
         <td><%= v %></td>

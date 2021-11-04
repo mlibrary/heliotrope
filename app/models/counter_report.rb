@@ -25,6 +25,7 @@ class CounterReport < ApplicationRecord
   scope :unique_by_title, -> { select(:session, :parent_noid).distinct }
   scope :investigations, -> { where(investigation: 1) }
   scope :requests, -> { where(request: 1) }
+  scope :searches, -> { where(search: 1) }
   scope :controlled, -> { where(access_type: 'Controlled') }
 
   scope :institution, ->(institution_id) { where(institution: institution_id) unless institution_id == '*' }

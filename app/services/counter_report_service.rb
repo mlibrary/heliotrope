@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 class CounterReportService
-  def initialize(customer_id, requestor_id)
-    @sushi_service = SushiService.new(customer_id, 'fulcrum', requestor_id)
+  def initialize(customer_id, platform_id, actor)
+    @sushi_service = SushiService.new(customer_id, platform_id, actor.email)
   end
 
   def active?

@@ -180,10 +180,16 @@ module CounterReporter
                            "All Institutions"
                          else
                            institution = Greensub::Institution.find_by(identifier: @params.institution)
-                           institution_ids << institution.identifier
-                           institution_ids << institution.ror_id if institution.ror_id.present?
+                           institution_ids << 'ID:' + institution.identifier.to_s
+                           institution_ids << 'ROR:' + institution.ror_id.to_s if institution.ror_id.present?
                            institution.name
                          end
+      report_filters = []
+      report_filters << "Platform=#{@params.platforms.join('|')}"
+      report_filters << "Data_Type=#{@params.data_types.join('|')}" if @params.data_types.count == 1
+      report_filters << "Access_Type=#{@params.access_types.join('|')}" if @params.access_types.count == 1
+      report_filters << "Access_Method=#{@params.access_methods.join('|')}" if @params.access_methods.count == 1
+      report_attributes = []
       {
         Report_Name: @params.report_title,
         Report_ID: @params.report_type.upcase,
@@ -191,8 +197,8 @@ module CounterReporter
         Institution_Name: institution_name,
         Institution_ID: institution_ids.join("; "),
         Metric_Types: @params.metric_types.join("; "),
-        Report_Filters: "Data_Type=#{@params.data_type}; Access_Type=#{@params.access_types.join('; ')}; Access_Method=#{@params.access_method}",
-        Report_Attributes: "",
+        Report_Filters: report_filters.join("; "),
+        Report_Attributes: report_attributes.join("; "),
         Exceptions: "",
         Reporting_Period: "#{@params.start_date.year}-#{@params.start_date.month} to #{@params.end_date.year}-#{@params.end_date.month}",
         Created: Time.zone.today.iso8601,

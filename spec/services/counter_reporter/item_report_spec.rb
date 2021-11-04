@@ -171,7 +171,9 @@ RSpec.describe CounterReporter::ItemReport do
                                                 start_date: start_date,
                                                 end_date: end_date,
                                                 metric_type: metric_type,
-                                                access_type: access_type)
+                                                data_type: 'Book',
+                                                access_type: access_type,
+                                                access_method: 'Regular')
       end
 
       let(:start_date) { "2018-01-01" }
@@ -261,9 +263,9 @@ RSpec.describe CounterReporter::ItemReport do
           expect(subject[:header][:Report_ID]).to eq "IR"
           expect(subject[:header][:Release]).to eq "5"
           expect(subject[:header][:Institution_Name]).to eq institution.name
-          expect(subject[:header][:Institution_ID]).to eq institution.identifier.to_s + '; ' + institution.ror_id.to_s
+          expect(subject[:header][:Institution_ID]).to eq "ID:#{institution.identifier}; ROR:#{institution.ror_id}"
           expect(subject[:header][:Metric_Types]).to eq "Total_Item_Requests"
-          expect(subject[:header][:Report_Filters]).to eq "Data_Type=Book; Access_Type=Controlled; Access_Method=Regular"
+          expect(subject[:header][:Report_Filters]).to eq "Platform=#{press.subdomain}; Data_Type=Book; Access_Type=Controlled; Access_Method=Regular"
           expect(subject[:header][:Report_Attributes]).to eq ""
           expect(subject[:header][:Exceptions]).to eq ""
           expect(subject[:header][:Reporting_Period]).to eq "2018-1 to 2018-2"

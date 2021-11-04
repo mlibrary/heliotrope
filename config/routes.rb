@@ -127,9 +127,6 @@ Rails.application.routes.draw do
     get 'crossref_submission_logs/:id/:file', controller: :crossref_submission_logs, action: :show, as: :crossref_submission_log_file
     resources :epub_search_logs, only: %i[index]
     resources :grants, except: %i[edit update]
-    resources :customers, only: %i[index] do
-      resources :counter_reports, only: %i[index show edit update], constraints: COUNTER_REPORT_ID_CONSTRAINT
-    end
     resources :tombstones, only: %i[index]
     resources :handle_deposits, only: %i[index]
     resource :manifests, path: 'concern/monographs/:id/manifest', only: %i[new edit update create destroy], as: :monograph_manifests
@@ -148,6 +145,11 @@ Rails.application.routes.draw do
     end
     scope module: :hyrax do
       resources :users, only: %i[index show]
+    end
+    get 'counter_reports/customers', controller: :counter_reports, action: :customers, as: :counter_report_customers
+    get 'counter_reports/customers/:customer_id/platforms', controller: :counter_reports, action: :platforms, as: :counter_report_customer_platforms
+    scope 'counter_reports/customers/:customer_id/platforms/:platform_id' do
+      resources :reports, only: %i[index show edit update], constraints: COUNTER_REPORT_ID_CONSTRAINT, controller: :counter_reports, as: :counter_report_customer_platform_reports
     end
   end
 

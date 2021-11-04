@@ -31,7 +31,7 @@
     <div>Requestor_ID: <%= member.requestor_id %></div>
     <% @counter_report_service.reports.each do |report| %>
       <hr>
-      <div>Report_Name: <%= link_to report.report_name, edit_customer_counter_report_path(customer_id: member.customer_id, id: report.report_id) %></div>
+      <div>Report_Name: <%= link_to report.report_name, edit_counter_report_customer_platform_report_path(customer_id: params[:customer_id], platform_id: params[:platform_id], id: report.report_id) %></div>
       <div>Report_ID: <%= report.report_id %></div>
       <div>Release: <%= report.release %></div>
       <div>Report_Description: <%= report.report_description %></div>

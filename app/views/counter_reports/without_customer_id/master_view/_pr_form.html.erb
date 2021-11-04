@@ -1,0 +1,102 @@
+<form action=<%= counter_report_path(id: report_id) %> method="show">
+  <div class="form-group row">
+    <label for="institution" class="col-sm-2 col-form-label">Institution</label>
+    <div class="col-sm-4">
+      <%= select_tag(:institution, options_for_select(@institutions.map { |i| [i.name, i.identifier] }), class: 'form-control') %>
+    </div>
+  </div>
+  <div class="form-group row">
+    <label for="start_date" class="col-sm-1 col-form-label">Start Date</label>
+    <div class="col-sm-2">
+      <input type="text" name="start_date" aria-label="Start date in yyyy-mm-dd format" class="counter-start-date form-control" />
+    </div>
+    <label for="end_date" class="col-sm-1 col-form-label">End Date</label>
+    <div class="col-sm-2">
+      <input type="text" name="end_date" aria-label="End date in yyyy-mm-dd format" class="counter-end-date form-control" />
+    </div>
+    <label for="show" class="col-sm-2 col-form-label">Include Column</label>
+  </div>
+  <div class="form-group row">
+    <label for="press" class="col-sm-2 col-form-label">Platform</label>
+    <div class="col-sm-4">
+      <%= select_tag(:press, options_for_select(@presses.map { |p| [p.name, p.id] }), class: 'form-control') %>
+    </div>
+  </div>
+  <div class="form-group row">
+    <label for="data_types" class="col-sm-2 col-form-label">Data Types</label>
+    <div class="col-sm-4">
+      <select name="data_types[]" aria-label="Date Type" class="form-control" multiple size=1>
+        <option value="Book" selected>Book</option>
+        <!--        <option value="Multimedia" selected>Multimedia</option>-->
+        <!--        <option value="Platform" selected>Platform</option>-->
+      </select>
+    </div>
+    <div class="col-sm-1">
+      <input type="checkbox" name="show_data_type" aria-label="Include Column Data Type" value=true checked class="form-control" />
+    </div>
+  </div>
+  <div class="form-group row">
+    <label for="access_types" class="col-sm-2 col-form-label">Access Types</label>
+    <div class="col-sm-4">
+      <select name="access_types[]" aria-label="Access Type" class="form-control" multiple size=2>
+        <option value="Controlled" selected>Controlled</option>
+        <option value="OA_Gold" selected>OA_Gold</option>
+      </select>
+    </div>
+    <div class="col-sm-1">
+      <input type="checkbox" name="show_access_type" aria-label="Include Column Access Type" value=true checked class="form-control" />
+    </div>
+  </div>
+  <div class="form-group row">
+    <label for="access_methods" class="col-sm-2 col-form-label">Access Methods</label>
+    <div class="col-sm-4">
+      <select name="access_methods[]" aria-label="Access Methods" class="form-control" multiple size=1>
+        <option value="Regular" selected>Regular</option>
+        <!--        <option value="TDM">Text and Data Mining (TDM)</option>-->
+      </select>
+    </div>
+    <div class="col-sm-1">
+      <input type="checkbox" name="show_access_method" aria-label="Include Column Access Method" value=false class="form-control" />
+    </div>
+  </div>
+  <div class="form-group row">
+    <label for="metric_types" class="col-sm-2 col-form-label">Metric Types</label>
+    <div class="col-sm-4">
+      <select name="metric_types[]" aria-label="Metric Type" class="form-control" multiple size=7>
+        <% if report_id == 'pr' %>
+          <option value="Searches_Platform" selected>Searches Platform</option>
+        <% end %>
+        <option value="Total_Item_Investigations" selected>Total Item Investigations</option>
+        <option value="Unique_Item_Investigations" selected>Unique Item Investigations</option>
+        <% unless report_id == 'ir' %>
+          <option value="Unique_Title_Investigations" selected>Unique Title Investigations</option>
+        <% end %>
+        <option value="Total_Item_Requests" selected>Total Item Requests</option>
+        <option value="Unique_Item_Requests" selected>Unique Item Requests</option>
+        <% unless report_id == 'ir' %>
+          <option value="Unique_Title_Requests" selected>Unique Title Requests</option>
+        <% end %>
+      </select>
+    </div>
+  </div>
+  <% unless report_id == 'pr' %>
+    <div class="form-group row">
+      <label for="yop" class="col-sm-2 col-form-label">YOP</label>
+      <div class="col-sm-4">
+        <input type="text" name="yop" aria-label="Year of Publication" class="form-control" />
+      </div>
+    </div>
+  <% end %>
+  <div class="form-group row">
+    <label for="exclude_monthly_details" class="col-sm-2 col-form-label">Exclude Monthly Details</label>
+    <div class="col-sm-1">
+      <input type="checkbox" name="exclude_monthly_details" aria-label="Exclude Monthly Details" value=false class="form-control" />
+    </div>
+  </div>
+  <div class="form-group row">
+    <div class="col-sm-2">
+      <button type="submit" class="btn btn-primary">View</button>
+      <button type="submit" class="btn btn-primary" name="csv">CSV</button>
+    </div>
+  </div>
+</form>

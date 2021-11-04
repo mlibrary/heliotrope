@@ -5,11 +5,12 @@ require 'rails_helper'
 RSpec.describe "Customers Counter Reports", type: :request do
   context "with the customer_id route" do
     let(:customer_id) { 'customer_id' }
+    let(:platform_id) { 'platform_id' }
 
     context 'anonymous' do
-      describe "GET /customers/:customer_id/counter_reports" do
+      describe "GET /counter_reports/customers/:customer_id/platforms/:platform_id/reports" do
         it do
-          expect { get customer_counter_reports_path(customer_id: customer_id) }.to raise_error(ActionController::RoutingError)
+          expect { get counter_report_customer_platform_reports_path(customer_id: customer_id, platform_id: platform_id) }.to raise_error(ActionController::RoutingError)
         end
       end
     end
@@ -20,15 +21,17 @@ RSpec.describe "Customers Counter Reports", type: :request do
       context 'unauthorized' do
         let(:current_user) { create(:user) }
 
-        describe "GET /customers/:customer_id/counter_reports" do
+        describe "GET /counter_reports/customers/:customer_id/platforms/:platform_id/reports" do
           it do
-            expect { get customer_counter_reports_path(customer_id: customer_id) }.to raise_error(ActionController::RoutingError)
+            expect { get counter_report_customer_platform_reports_path(customer_id: customer_id, platform_id: platform_id) }.to raise_error(ActionController::RoutingError)
           end
         end
       end
 
       context 'authorized' do
         let(:current_user) { create(:platform_admin) }
+        let(:institution) { instance_double(Greensub::Institution, 'institution', id: customer_id, name: 'Institution') }
+        let(:press) { instance_double(Press, 'press', id: platform_id, name: 'Press') }
         let(:counter_report_service) do
           instance_double(
             CounterReportService,
@@ -42,39 +45,46 @@ RSpec.describe "Customers Counter Reports", type: :request do
         let(:counter_report) { double('counter_report') }
 
         before do
-          allow(CounterReportService).to receive(:new).with(customer_id, current_user.id).and_return(counter_report_service)
+          allow(Greensub::Institution).to receive(:find).with(customer_id).and_return(institution)
+          allow(Press).to receive(:find).with(platform_id).and_return(press)
+          allow(CounterReportService).to receive(:new).with(customer_id, platform_id, current_user).and_return(counter_report_service)
           allow(counter_report_service).to receive(:report).with('pr').and_return(counter_report)
           allow(counter_report).to receive(:report_header).and_return({})
           allow(counter_report).to receive(:report_items).and_return([])
         end
 
-        describe "GET /customers/:customer_id/counter_reports" do
+        describe "GET /counter_reports/customers/:customer_id/platforms/:platform_id/reports" do
           it do
-            get customer_counter_reports_path(customer_id: customer_id)
+            get counter_report_customer_platform_reports_path(customer_id: customer_id, platform_id: platform_id)
             expect(response).to have_http_status(:ok)
             expect(response).to render_template(:index)
           end
         end
 
-        describe "GET /customers/:customer_id/counter_reports/:id/edit" do
+        describe "GET /counter_reports/customers/:customer_id/platforms/:platform_id/reports/:id/edit" do
+          before do
+            allow(Greensub::Institution).to receive(:find).with(customer_id).and_return(institution)
+            allow(Press).to receive(:find).with(platform_id).and_return(press)
+          end
+
           it do
-            get edit_customer_counter_report_path(customer_id: customer_id, id: 'pr')
+            get edit_counter_report_customer_platform_report_path(customer_id: customer_id, platform_id: platform_id, id: 'pr')
             expect(response).to have_http_status(:ok)
             expect(response).to render_template(:edit)
           end
         end
 
-        describe "PUT /customers/:customer_id/counter_reports/:id" do
+        describe "PUT /counter_reports/customers/:customer_id/platforms/:platform_id/reports/:id" do
           it do
-            put customer_counter_report_path(customer_id: customer_id, id: 'pr')
+            put counter_report_customer_platform_report_path(customer_id: customer_id, platform_id: platform_id, id: 'pr')
             expect(response).to have_http_status(:found)
-            expect(response).to redirect_to customer_counter_report_path(customer_id: customer_id, id: 'pr')
+            expect(response).to redirect_to counter_report_customer_platform_report_path(customer_id: customer_id, platform_id: platform_id, id: 'pr')
           end
         end
 
-        describe "GET /customers/:customer_id/counter_reports/:id" do
+        describe "GET /counter_reports/customers/:customer_id/platforms/:platform_id/reports/:id" do
           it do
-            get customer_counter_report_path(customer_id: customer_id, id: 'pr')
+            get counter_report_customer_platform_report_path(customer_id: customer_id, platform_id: platform_id, id: 'pr')
             expect(response).to have_http_status(:ok)
             expect(response).to render_template(:show)
           end
@@ -161,14 +171,14 @@ RSpec.describe "Customers Counter Reports", type: :request do
 
       describe "GET /counter_report/pr" do
         it do
-          get counter_report_path(id: 'pr'), params: { institution: 1, press: press.id, metric_type: 'Total_Item_Investigations', access_type: 'Controlled' }
+          get counter_report_path(id: 'pr'), params: { institution: 1, press: press.id, metric_types: ['Total_Item_Investigations'], data_types: ['Book'], access_types: ['Controlled'], access_methods: ['Regular'] }
           expect(response).to have_http_status(:ok)
         end
       end
 
       describe "GET /counter_report/tr" do
         it do
-          get counter_report_path(id: 'tr'), params: { institution: 1, press: press.id, metric_type: 'Unique_Title_Investigations', access_type: 'OA_Gold' }
+          get counter_report_path(id: 'tr'), params: { institution: 1, press: press.id, metric_type: 'Unique_Title_Investigations', data_type: 'Book', access_type: 'OA_Gold', access_method: 'Regular' }
           expect(response).to have_http_status(:ok)
         end
       end
@@ -196,7 +206,7 @@ RSpec.describe "Customers Counter Reports", type: :request do
 
       describe "GET /counter_reports/ir" do
         it do
-          get counter_report_path(id: 'ir'), params: { institution: 1, press: press.id, metric_type: ['Total_Item_Requests', 'Unique_Item_Requests', 'Unique_Title_Requests'], access_type: 'OA_Gold' }
+          get counter_report_path(id: 'ir'), params: { institution: 1, press: press.id, metric_type: ['Total_Item_Requests', 'Unique_Item_Requests', 'Unique_Title_Requests'], data_type: 'Book', access_type: 'OA_Gold', access_method: 'Regular' }
           expect(response).to have_http_status(:ok)
         end
       end
