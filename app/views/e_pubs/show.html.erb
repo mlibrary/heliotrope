@@ -132,9 +132,9 @@
           }
         });
 
-        <%= render "cozy_controls_top", presenter: @presenter, parent_presenter: @parent_presenter %>
+        <%= render partial: "cozy_controls_top", formats: [:js], presenter: @presenter, parent_presenter: @parent_presenter %>
 
-        <%= render "cozy_controls_bottom", presenter: @presenter, parent_presenter: @parent_presenter %>
+        <%= render partial: "cozy_controls_bottom", formats: [:js], presenter: @presenter, parent_presenter: @parent_presenter %>
 
         // Annotation widget checks and initialization
         <% if %w[leverpress michigan cjs cseas csas lrccs ummaa amherst].include? @subdomain %>
