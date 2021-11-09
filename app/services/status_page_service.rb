@@ -74,7 +74,7 @@ module StatusPageService
   end
 
   def shib_check_redirecting
-    expected_redirect_location = 'https://www.fulcrum.org/Shibboleth.sso/Login?target=https%3A%2F%2Fwww.fulcrum.org%2Fshib_session%3Flocale%3Den&entityID=https%3A%2F%2Fshibboleth.umich.edu%2Fidp%2Fshibboleth'
+    expected_redirect_location = 'https://www.fulcrum.org/Shibboleth.sso/Login?target=https%3A%2F%2Fwww.fulcrum.org%2Fshib_session&entityID=https%3A%2F%2Fshibboleth.umich.edu%2Fidp%2Fshibboleth'
     uri = URI('https://www.fulcrum.org/shib_login')
     http = Net::HTTP.start(uri.host, uri.port, use_ssl: true, read_timeout: 5)
     request = Net::HTTP::Get.new uri
