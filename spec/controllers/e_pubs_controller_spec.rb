@@ -227,7 +227,8 @@ RSpec.describe EPubsController, type: :controller do
     end
 
     describe '#search' do
-      let(:monograph) { create(:public_monograph) }
+      let(:press) { create(:press) }
+      let(:monograph) { create(:public_monograph, press: press.subdomain) }
       let(:file_set) { create(:public_file_set, id: '999999999', content: File.open(File.join(fixture_path, 'moby-dick.epub'))) }
       let!(:fr) { create(:featured_representative, work_id: monograph.id, file_set_id: file_set.id, kind: 'epub') }
 
@@ -288,24 +289,46 @@ RSpec.describe EPubsController, type: :controller do
         end
       end
 
-      context "if a search is cached, return the cached search" do
-        let(:results) do
-          { q: 'search term',
+      context "caching search queries" do
+        let(:cached_results) do
+          { q: 'cached search term',
             search_results: [
               cfi: "/6/84/[chap]!/4/2/2/,/1:66,/1:77",
               snippet: "This is a snippet"
             ] }
         end
 
-        before do
-          allow(Rails.cache).to receive(:fetch).and_return(results)
-          get :search, params: { id: file_set.id, q: "White Whale" }
+        context "normal users get cached search results if there are any" do
+          before do
+            allow(Rails.cache).to receive(:fetch).and_return(cached_results)
+            get :search, params: { id: file_set.id, q: "White Whale" }
+          end
+
+          it do
+            expect(response).to have_http_status(:success)
+            expect(JSON.parse(response.body)["search_results"].length).to eq 1
+            expect(JSON.parse(response.body)["q"]).to eq "cached search term"
+            expect(JSON.parse(response.body)["search_results"][0]["snippet"]).to eq "This is a snippet"
+          end
         end
 
-        it do
-          expect(response).to have_http_status(:success)
-          expect(JSON.parse(response.body)["search_results"].length).to eq 1
-          expect(JSON.parse(response.body)["search_results"][0]["snippet"]).to eq "This is a snippet"
+        context "platform_admins do not get cached search results" do
+          let(:user) { create(:platform_admin) }
+
+          before do
+            sign_in user
+            allow(Rails.cache).to receive(:fetch).and_return(cached_results)
+            get :search, params: { id: file_set.id, q: "White Whale" }
+          end
+
+          it do
+            expect(response).to have_http_status(:success)
+            expect(JSON.parse(response.body)["search_results"].length).to eq 105
+            expect(JSON.parse(response.body)["q"]).to eq "White Whale"
+            expect(JSON.parse(response.body)["search_results"][0]["snippet"]).to eq "“All ye mast-headers have before now heard me give orders about a white whale. Look ye! d’ye see this Spanish ounce of"
+            expect(EpubSearchLog.first.user).to eq user.email
+            expect(EpubSearchLog.first.press).to eq press.subdomain
+          end
         end
       end
 

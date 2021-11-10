@@ -99,13 +99,17 @@ class EPubsController < CheckpointController
     # due to performance issues, must have 3 or more characters to search
     return render json: { q: query, search_results: [] } if query.length < 3
 
-    log = EpubSearchLog.create(noid: @noid, query: query)
+    log = EpubSearchLog.create(noid: @noid, query: query, user: current_actor.email, press: @presenter.parent.subdomain)
     start = (Time.now.to_f * 1000.0).to_i
 
-    results = Rails.cache.fetch(search_cache_key(@noid, query), expires_in: 30.days) do
-      epub = EPub::Publication.from_directory(UnpackService.root_path_from_noid(@noid, 'epub'))
-      epub.search(query)
-    end
+    epub = EPub::Publication.from_directory(UnpackService.root_path_from_noid(@noid, 'epub'))
+
+    # no query caching for platform_admins so they can better test performance issues, HELIO-4082
+    results = if current_actor.platform_admin?
+                epub.search(query)
+              else
+                Rails.cache.fetch(search_cache_key(@noid, query), expires_in: 30.days) { epub.search(query) }
+              end
 
     finish = (Time.now.to_f * 1000.0).to_i
     log.update(time: finish - start, hits: results[:search_results].count, search_results: results)

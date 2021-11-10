@@ -58,6 +58,11 @@
   </div>
   <div class="row">
     <div class="col-md-12">
+      <a href="<%= @csv_url %>"><button type="button" class="btn btn-primary" aria-label="Get CSV File">Get CSV File of Results</button></a>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
       <div class="row">
         <form name="filter" method="get" action="<%=  %>">
           <table class="table table-striped table-responsive" summary="Epub Search Log List">
@@ -98,14 +103,30 @@
                   <%= link_to "v", sort: "hits asc" %>
                 </label>
               </th>
+              <th>
+                <label for="press_like">
+                  Press
+                  <%= link_to "^", sort: "press desc" %>
+                  <%= link_to "v", sort: "press asc" %>
+                </label>
+              </th>
+              <th>
+                <label for="user_like">
+                  User
+                  <%= link_to "^", sort: "user desc" %>
+                  <%= link_to "v", sort: "user asc" %>
+                </label>
+              </th>
             </tr>
             <tr>
               <td><button name="submit" type="submit" value="filter">Filter</button></td>
               <td><input type="text" name="created_like" value="<%= params[:created_like] %>" aria-label="created_like"></td>
-              <td><input type="text" name="noid_like" value="<%= params[:noid_like] %>" aria-label="noid_like"></td>
+              <td><input type="text" size="10" name="noid_like" value="<%= params[:noid_like] %>" aria-label="noid_like"></td>
               <td><input type="text" name="query_like" value="<%= params[:query_like] %>" aria-label="query_like"></td>
-              <td><input type="text" name="time_like" value="<%= params[:time_like] %>" aria-label="time_like"></td>
-              <td><input type="text" name="hits_like" value="<%= params[:hits_like] %>" aria-label="hits_like"></td>
+              <td><input type="text" size="6" name="time_like" value="<%= params[:time_like] %>" aria-label="time_like"></td>
+              <td><input type="text" size="6" name="hits_like" value="<%= params[:hits_like] %>" aria-label="hits_like"></td>
+              <td><input type="text" name="press_like" value="<%= params[:press_like] %>" aria-label="press_like"></td>
+              <td><input type="text" name="user_like" value="<%= params[:press_like] %>" aria-label="user_like"></td>
             </tr>
             <% @epub_search_logs.each do |search| %>
               <tr>
@@ -115,6 +136,8 @@
                 <td><%= search.query %></td>
                 <td><%= search.time %></td>
                 <td><%= search.hits %></td>
+                <td><%= search.press %></td>
+                <td><%= search.user %></td>
               </tr>
             <% end %>
           </table>
