@@ -2,10 +2,14 @@
 
 # For HELIO-2488
 # HELIO-3118
+# HELIO-3877
 
 # Creates a report of handles => dois that will
 # be ingested into TMM so that TMM can know the
 # handle that Fulcrum has assigned to a Monograph
+
+# UPDATE: due to HELIO-3877 we're doing fulcrum urls => dois
+# No more handles.
 
 desc 'monograph handles and DOIs for certain presses'
 namespace :heliotrope do
@@ -42,7 +46,8 @@ namespace :heliotrope do
 
     hits.each do |hit|
       presenter = Hyrax::MonographPresenter.new(SolrDocument.new(hit), nil)
-      puts %Q|"#{presenter.handle_url}","#{presenter.doi_url}","#{presenter.subdomain}","#{presenter.visibility}"|
+      url = Rails.application.routes.default_url_options[:protocol] + "://" + Rails.application.routes.default_url_options[:host] + Rails.application.routes.url_helpers.hyrax_monograph_path(presenter.id)
+      puts %Q|"#{url}","#{presenter.doi_url}","#{presenter.subdomain}","#{presenter.visibility}"|
     end
   end
 end
