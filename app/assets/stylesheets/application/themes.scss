@@ -4278,7 +4278,7 @@ $gabii-link-hover:    #1e5667;
   .pagination {
     @include lato;
      li a, li span {
-       color: $gabii-brand-color;
+       color: #fff;
      }
 
      .active>a,
