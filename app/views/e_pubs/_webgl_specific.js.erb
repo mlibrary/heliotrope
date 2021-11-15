@@ -244,16 +244,6 @@ function FocusCanvas(focus) {
   }
 }
 
-document.addEventListener('click', function(e) {
-  if (e.target.id == "#canvas") {
-    // Clicked on canvas
-    FocusCanvas("1");
-      } else {
-    // Clicked outside of canvas
-    FocusCanvas("0");
-  }
-});
-
 document.addEventListener('keydown', function(event) {
   if (event.defaultPrevented) {
     return; // Do nothing if the event was already processed
