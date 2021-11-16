@@ -1,0 +1,335 @@
+var gameInstance;
+var gameReady = false;
+
+// a flag to allow the panel to be open with `a11y_on` the first time only for users with an incompatible...
+// device or browser (heliotropeIncompatibleWebGlUser === true)
+var firstLaunchWebGlEpub = false;
+
+// load the game on launch of e-reader
+reader.on('ready', function() {
+  // open_panel();
+  // the a11y state disables the "3D MODEL" button and hides the WebGL panel. These are things we want for...
+  // incompatible device/browser users also, but initially we *do* want them to see the panel with the...
+  // incompatibility message as an "easy" way to inform them about the problem (firstLaunchWebGlEpub flag)
+  if(heliotropeIncompatibleWebGlUser === true) {
+    firstLaunchWebGlEpub = true;
+    a11y_on();
+  }
+})
+
+// open panel function and initiate game if not initiated
+var open_panel = function() {
+  var $main = $(".cozy-module-main");
+  var $book = $(".cozy-module-book-cover");
+  close_panel();
+  $("body").addClass("panel-open panel-right");
+
+  var $panel = $('.special-panel');
+
+  if (! $panel.length) {
+      var title = document.title;
+      var vol_1 = "A Mid-Republican House From Gabii";
+      if (title.includes(vol_1)) {
+        var $3d_title = "Gabii Area B 3D Model";
+        var $3d_doi = "https://doi.org/10.3998/mpub.9231782.model";
+      } else {
+        var $3d_title = "Gabii Area A/B 3D Model";
+        var $3d_doi = "https://doi.org/10.3998/mpub.11885571.cmp.webgl";
+      }
+
+    var $panelContent =
+      '<div class="special-panel" aria-hidden="false">' +
+        '<div class="panel-control">' +
+          '<button class="button--sm webgl-close" data-toggle="button" data-slot="label" aria-label="Close 3-D Model" onclick="close_panel();">' +
+            '<i class="icon-x oi" data-glyph="x" aria-hidden="true"></i>' +
+          '</button>' +
+          '<a class="button--sm webgl-fullscreen" href="'+$3d_doi+'" target="_blank"><i class="icon-fullscreen-enter oi" data-glyph="fullscreen-enter" aria-label="View 3D model in fullscreen standalone mode"></i></a>' +
+        '</div>' +
+        '<div id="unity-container" style="position:relative" tabindex="0">' +
+          '<canvas id="unity-canvas"></canvas>' +
+          '<div id="unity-loading-bar">' +
+            '<div id="unity-logo"></div>' +
+            '<div id="unity-progress-bar-empty">' +
+              '<div id="unity-progress-bar-full"></div>' +
+            '</div>' +
+          '</div>' +
+        '</div>' +
+        '<div class="panel-info">' +
+          '<h2>'+$3d_title+'</h2>' +
+          '<p><strong>'+$3d_doi+'</strong></p>' +
+          '<p>This interactive section of the publication includes 3D models, descriptions, and links to the online database, and complements the narrative text. Interaction with this content is essential to engaging with our interpretation of the Gabii site. Readers are encouraged both to follow the narrative laid out in the text through the model and data, and to explore the 3D content and database freely.' +
+          '</p>' +
+        '</div>' +
+      '</div>';
+    $panel = $($panelContent).appendTo($main);
+  } else {
+    $panel.show();
+    $('.special-panel').prop('hidden', false);
+    $('.special-panel').attr('aria-hidden', 'false');
+  }
+
+  // mobile users won't be loading the 3D content so this stuff isn't required
+  if (heliotropeIncompatibleWebGlUser === false) {
+    var h = $panel.height();
+    var w = $panel.width();
+
+    // the game has to have a specific aspect ratio or it looks distorted
+    var r = w / 1024;
+    game_width = w + 'px';
+    game_height = Math.ceil(600 * r) + 'px';
+
+    if (!gameInstance) {
+      var container = document.querySelector("#unity-container");
+      var canvas = document.querySelector("#unity-canvas");
+      var loadingBar = document.querySelector("#unity-loading-bar");
+      var progressBarFull = document.querySelector("#unity-progress-bar-full");
+      var fullscreenButton = document.querySelector("#unity-fullscreen-button");
+
+      container.style.width = game_width;
+      container.style.height = game_height;
+      canvas.style.width = game_width;
+      canvas.style.height = game_height;
+
+        loadingBar.style.display = "block";
+
+        createUnityInstance(canvas, config, (progress) => {
+          progressBarFull.style.width = 100 * progress + "%";
+        }).then((unityInstance) => {
+        gameInstance = unityInstance;
+        loadingBar.style.display = "none";
+        fullscreenButton.onclick = () => {
+          unityInstance.SetFullscreen(1);
+        };
+        }).catch((message) => {
+          // For heliotrope we've historically NOP'ed errors from the WebGL game
+          // note I think this only blocks alerts for loading-time errors
+          // alert(message);
+        });
+
+        document.addEventListener('click', function (e) {
+        if (e.target.id == "unity-canvas") {
+          // Clicked on canvas
+          FocusCanvas("1");
+        } else {
+          // Clicked outside of canvas
+          FocusCanvas("0");
+        }
+        });
+
+      // stop the CSB (epubjs) iframe from doing *anything* if the Unity WebGL is being dragged (camera rotated)
+      document.getElementById('unity-canvas').addEventListener('mousedown', function (e) {
+        // causes no issues even if #unity-canvas is clicked before the EPUB is loaded, i.e. no iframe present yet (yay!)
+        $('iframe[id*="epubjs-view-"]').css('pointer-events', 'none');
+      });
+
+      // re-enable pointer events on the CSB (epubjs) iframe (for text select etc.) on a mouseup *anywhere*
+      document.addEventListener('mouseup', function (e) {
+        $('iframe[id*="epubjs-view-"]').css('pointer-events', 'auto');
+      });
+
+        document.addEventListener('keydown', function (event) {
+        if (event.defaultPrevented) {
+          return; // Do nothing if the event was already processed
+        }
+
+      switch (event.key) {
+      case "Tab":
+        FocusCanvas("0");
+        break;
+      default:
+        return;
+      }
+
+      }, true);
+    } else {
+      // resize the webGL canvas
+      resize_webgl();
+    }
+  } else {
+    $('#unity-container').html('<div id="epub-webgl-mobile-message">Sorry, it looks like your device or browser is not compatible with WebGL.<br />Please check our <a href="https://hdl.handle.net/2027/fulcrum.9231782/about">compatibility requirements</a>.</div>');
+  }
+
+  // resize EPUB
+  setTimeout(function() {
+    window.dispatchEvent(new Event('resize'));
+  }, 0);
+
+  panel_toggle.state('close-webgl');
+} // end open_panel
+
+// close panel function
+var close_panel = function() {
+  var $panel = $('.special-panel');
+  if ($panel.length) {
+    $('.special-panel').hide();
+    $('body').removeClass('panel-open');
+    $('body').removeClass('panel-right');
+    $('.special-panel').prop('hidden', true);
+    $('.special-panel').attr('aria-hidden', 'true');
+    setTimeout(function() {
+      window.dispatchEvent(new Event('resize'));
+    }, 0);
+  }
+  panel_toggle.state('open-webgl');
+}
+
+// resize the webGL canvas
+var resize_webgl = function() {
+  var $panel= $(".special-panel");
+  var h = $panel.height();
+  var w = $panel.width();
+
+  var r = w / 1024;
+  var width = w + 'px';
+  var height = Math.ceil(600 * r) + 'px';
+
+  var $g = $('#unity-container');
+  $g.css({ width: width, height: height });
+  var $c = $('#unity-canvas');
+  $c.css({ width: width, height: height });
+}
+
+// dynamic WebGL canvas resizing
+reader.on('resized', function() {
+  // mobile users shouldn't have a canvas to resize
+  if (gameReady && heliotropeIncompatibleWebGlUser === false) {
+    resize_webgl();
+  }
+})
+
+// Open SU panel in WebGL if SU link is clicked
+// If in a11y mode, open database record
+var click_handler = function(event) {
+  if (event.target.hasAttribute('data-tid')) {
+    var s = event.target.getAttribute('data-tid');
+  } else {
+    var s = event.target.getAttribute('data-uid');
+  }
+  if ($('body').hasClass('a11y')) {
+    window.open('https://doi.org/10.3998/gabii.1.' + s, '_blank');
+  } else {
+    var SendMessage = gameInstance.SendMessage;
+    var $panel= $(".special-panel");
+    function getToUnity(s) {
+      SendMessage("WebCommunicator", "ShowString", s);
+    };
+    function getToUnityTomb(s) {
+      SendMessage("WebCommunicator", "ShowStringTomb", s);
+    };
+    var unityContainer = document.getElementById("unity-container");
+    if ($('body').hasClass('panel-open')) {
+      FocusCanvas("1");
+      unityContainer.focus();
+      getToUnity(s);
+      getToUnityTomb(s);
+    } else {
+      open_panel();
+      FocusCanvas("1");
+      unityContainer.focus();
+      getToUnity(s);
+      getToUnityTomb(s);
+    }
+  }
+};
+
+// Setup SU and Tomb link event listener
+reader.on('ready:contents', function(contents) {
+  var links = contents.content.querySelectorAll("a[data-uid], a[data-tid]");
+  for(var i =0, n = links.length; i < n; i++) {
+    var link = links[i];
+    link.addEventListener('click', click_handler);
+  }
+})
+
+// Toggling focus of canvas - if clicked on canvas, focus
+// if clicked outside of canvas, remove focus
+// if tab advance after focusing canvas, remove canvas focus
+function GameControlReady () {
+  gameReady = true;
+}
+
+function FocusCanvas(focus) {
+  if (gameReady) {
+    var SendMessage = gameInstance.SendMessage;
+    SendMessage("GameControl", "FocusCanvas", focus);
+  }
+}
+
+document.addEventListener('keydown', function(event) {
+  if (event.defaultPrevented) {
+    return; // Do nothing if the event was already processed
+  }
+
+  switch (event.key) {
+    case "Tab":
+      FocusCanvas("0");
+    break;
+    default:
+    return;
+  }
+
+}, true);
+
+// POI to CFI webgl -> epub mapping stuff
+var poiToCfiMap = {};
+
+var fetch_poi = function() {
+  $.get("<%= "#{epub_file_path(id: @presenter.id, file: 'epub-webgl-map.json')}" %>", function(data) {
+    data.forEach(function(map) {
+      poiToCfiMap[map['poi']] = map['cfi']
+    })
+  });
+}
+// Take user to a POI when passed a string from WebGL
+function goToParagraph(p) {
+  var par = "par" + p;
+  if (poiToCfiMap[par]) {
+    console.log("CFI " + poiToCfiMap[par] + " found for POI " + par);
+    reader.gotoPage('epubcfi(' + poiToCfiMap[par] + ')');
+  } else {
+    console.log("No CFI found for POI " + par);
+  };
+}
+
+// 3D model toggler
+var panel_toggle = cozy.control.widget.toggle({
+  region: 'top.toolbar.left',
+  template: '<button class="button--sm" id="webgl" data-toggle="button" aria-label="3D Model">3D Model</button>',
+  states: [{
+    stateName: 'open-webgl',
+    onClick: function(btn, reader) {
+      open_panel();
+      btn.state('close-webgl');
+    }
+  },
+    {
+      stateName: 'close-webgl',
+      onClick: function(btn, reader) {
+        close_panel();
+        btn.state('open-webgl');
+      }
+    }],
+})
+panel_toggle.addTo(reader);
+
+// accessibility mode on/off
+var a11y_on = function() {
+  $('body').addClass('a11y');
+  $('#webgl').attr('aria-disabled', 'true');
+  $('#webgl').prop('disabled', true);
+  // a flag (set above) to allow the WebGL panel, with an incompatibility message, to be open with a11y_on...
+  // mode on initial load *only* for users with an incompatible device/browser
+  if(firstLaunchWebGlEpub === true)
+    firstLaunchWebGlEpub = false;
+  else if($('.special-panel').prop('hidden') == false) // the user might have closed this manually
+    close_panel();
+}
+
+var a11y_off = function() {
+  $('body').removeClass('a11y');
+  $('.toggle-a11y').removeClass('on');
+  $('#webgl').attr('aria-disabled', 'false');
+  $('#webgl').prop('disabled', false);
+
+  open_panel();
+}
