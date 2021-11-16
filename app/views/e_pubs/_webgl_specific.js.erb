@@ -116,6 +116,17 @@ var open_panel = function() {
         }
         });
 
+      // stop the CSB (epubjs) iframe from doing *anything* if the Unity WebGL is being dragged (camera rotated)
+      document.getElementById('unity-canvas').addEventListener('mousedown', function (e) {
+        // causes no issues even if #unity-canvas is clicked before the EPUB is loaded, i.e. no iframe present yet (yay!)
+        $('iframe[id*="epubjs-view-"]').css('pointer-events', 'none');
+      });
+
+      // re-enable pointer events on the CSB (epubjs) iframe (for text select etc.) on a mouseup *anywhere*
+      document.addEventListener('mouseup', function (e) {
+        $('iframe[id*="epubjs-view-"]').css('pointer-events', 'auto');
+      });
+
         document.addEventListener('keydown', function (event) {
         if (event.defaultPrevented) {
           return; // Do nothing if the event was already processed
