@@ -1,0 +1,21 @@
+<% if auth.actor_platform_admin? || auth.actor_publisher_role? %>
+  <div>
+    <div>
+      Roles: [<%= auth.actor_publisher_roles.join(', ') %>]
+      <% if auth.actor_sudo_developer? %>
+        Incognito: [
+        actor? <%= auth.actor_sudo_actor? %>,
+        role? <%= auth.actor_sudo_role? %>,
+        platform_admin? <%= auth.actor_sudo_platform_admin? %>
+        ]
+      <% end %>
+    </div>
+    <div>
+      <%= link_to('edit publisher', main_app.edit_press_path(auth.publisher_subdomain)) if auth.publisher? %>
+      <%= link_to('show monograph', main_app.monograph_show_path(auth.monograph_id)) if auth.monograph? %>
+      <%= link_to('edit monograph', main_app.edit_hyrax_monograph_path(auth.monograph_id)) if auth.monograph? %>
+      <%= link_to('edit resource', main_app.edit_hyrax_file_set_path(auth.resource_id)) if auth.resource? %>
+      <%= link_to('download resource', hyrax.download_path(auth.resource_id)) if auth.resource? %>
+    </div>
+  </div>
+<% end %>

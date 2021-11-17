@@ -20,7 +20,7 @@ class ResourceDownloadOperation < ApplicationPolicy
     def ability_can?(actor, action, target)
       return false unless action.is_a?(Symbol)
       return false unless target.valid?
-      return false unless Incognito.allow_ability_can?(actor)
+      # return false unless Incognito.allow_ability_can?(actor)
       ability = Ability.new(actor.is_a?(User) ? actor : nil)
       ability.can?(action, target.noid)
     end

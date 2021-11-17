@@ -1,4 +1,5 @@
 <%= render 'shared/skip_links' %>
+<%= render partial: 'shared/brand_press_role', locals: { auth: @auth } if @auth.present? %>
 <header id="banner" role="banner">
   <hgroup>
     <% if press_presenter.present? %>

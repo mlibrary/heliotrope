@@ -36,6 +36,34 @@ class Auth
     end
   end
 
+  def actor_platform_admin?
+    @actor.platform_admin?
+  end
+
+  def actor_publisher_role?
+    @actor.publisher_role?(@publisher)
+  end
+
+  def actor_publisher_roles
+    @actor.publisher_roles(@publisher)
+  end
+
+  def actor_sudo_actor?
+    Incognito.sudo_actor?(@actor)
+  end
+
+  def actor_sudo_role?
+    Incognito.sudo_role?(@actor)
+  end
+
+  def actor_sudo_platform_admin?
+    Incognito.allow_platform_admin?(@actor)
+  end
+
+  def actor_sudo_developer?
+    Incognito.developer?(@actor)
+  end
+
   def actor_authorized?
     return true unless @monograph.restricted?
 

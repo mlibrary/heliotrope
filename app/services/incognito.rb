@@ -49,18 +49,6 @@ module Incognito # rubocop:disable Metrics/ModuleLength
       allow_platform_admin?(actor)
     end
 
-    def allow_ability_can?(actor)
-      return true if short_circuit?(actor)
-      (actor.sign_in_count & 2).zero?
-    end
-
-    def allow_ability_can(actor, value = true)
-      return true if short_circuit?(actor)
-      actor.sign_in_count = value ? actor.sign_in_count & ~2 : actor.sign_in_count | 2
-      actor.save
-      allow_ability_can?(actor)
-    end
-
     def allow_action_permitted?(actor)
       return true if short_circuit?(actor)
       (actor.sign_in_count & 4).zero?
@@ -85,6 +73,20 @@ module Incognito # rubocop:disable Metrics/ModuleLength
       actor.last_sign_in_ip = institution_affiliation_id
       actor.save
       sudo_actor?(actor)
+    end
+
+    def sudo_role?(actor)
+      return false if short_circuit?(actor)
+      !(actor.sign_in_count & 2).zero?
+    end
+
+    def sudo_role(actor, value = false, press_id = 0, press_role = '')
+      return false if short_circuit?(actor)
+      actor.sign_in_count = value ? actor.sign_in_count | 2 : actor.sign_in_count & ~2
+      actor.department = press_id
+      actor.title = press_role
+      actor.save
+      sudo_role?(actor)
     end
 
     def developer?(actor)
@@ -121,6 +123,22 @@ module Incognito # rubocop:disable Metrics/ModuleLength
       rescue StandardError => _e
         nil
       end
+    end
+
+    def sudo_role_press(actor)
+      return nil if short_circuit?(actor)
+      return nil if (actor.sign_in_count & 2).zero?
+      begin
+        Press.find(actor.department.to_i)
+      rescue StandardError => _e
+        nil
+      end
+    end
+
+    def sudo_role_press_role(actor)
+      return '' if short_circuit?(actor)
+      return '' if (actor.sign_in_count & 2).zero?
+      actor.title || ''
     end
 
     private

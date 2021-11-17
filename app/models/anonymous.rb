@@ -33,6 +33,10 @@ class Anonymous
     false
   end
 
+  def roles
+    Role.where(resource_type: 'None') # Empty result set
+  end
+
   def press_role?
     false
   end

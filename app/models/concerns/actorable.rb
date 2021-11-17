@@ -3,6 +3,28 @@
 module Actorable
   extend ActiveSupport::Concern
 
+  def publishers
+    if Incognito.sudo_role?(self)
+      [Sighrax::Publisher.from_press(Incognito.sudo_role_press(self))]
+    else
+      presses.map { |p| Sighrax::Publisher.from_press(p) }
+    end
+  end
+
+  def publisher_role?(publisher)
+    publisher_roles(publisher).any?
+  end
+
+  def publisher_roles(publisher)
+    if Incognito.sudo_role?(self)
+      return [] unless publishers.include?(publisher)
+
+      [Incognito.sudo_role_press_role(self)]
+    else
+      roles.where(resource_type: 'Press', resource_id: publisher.press.id).map(&:role)
+    end
+  end
+
   def individual
     if Incognito.sudo_actor?(self)
       Incognito.sudo_actor_individual(self)

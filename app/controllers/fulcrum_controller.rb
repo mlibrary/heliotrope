@@ -49,6 +49,8 @@ class FulcrumController < ApplicationController
     @partials = params[:partials]
     @individuals = []
     @institutions = []
+    @presses = []
+    @press_roles = Role::ROLES
     @publishers_stats = { presses: [], timestampe: Time.now.utc.to_s }
     if ['dashboard', 'licenses', 'products', 'components', 'individuals', 'institutions', 'institution_affiliations', 'publishers', 'users', 'tokens', 'logs', 'grants', 'monographs', 'resources', 'pages', 'reports', 'customize', 'settings', 'help', 'csv', 'jobs', 'refresh'].include? @partials
       if /dashboard/.match?(@partials)
@@ -56,6 +58,7 @@ class FulcrumController < ApplicationController
         @institution_affiliations = Greensub::InstitutionAffiliation.where(institution_id: Greensub::Institution.where("identifier like ? or name like ?", "%#{params['institution_filter']}%", "%#{params['institution_filter']}%").map(&:id))
                                                         .sort_by(&:dlps_institution_id)
                                                         .map { |institution_affiliation| ["#{institution_affiliation.dlps_institution_id} #{institution_affiliation.affiliation} #{institution_affiliation.institution.name}", institution_affiliation.id] }
+        @presses = Press.where("subdomain like? or name like ?", "%#{params['press_filter']}%", "%#{params['press_filter']}%").map { |press| ["#{press.subdomain} (#{press.name})", press.id] }
       end
       if /publishers/.match?(@partials)
         begin
@@ -96,7 +99,7 @@ class FulcrumController < ApplicationController
     end
 
     def incognito_params(params)
-      params.slice(:actor, :platform_admin, :ability_can, :action_permitted, :developer)
+      params.slice(:actor, :platform_admin, :role, :action_permitted, :developer)
     end
 
     def incognito(options) # rubocop:disable Metrics/CyclomaticComplexity
@@ -107,8 +110,8 @@ class FulcrumController < ApplicationController
           Incognito.sudo_actor(current_actor, true, params[:individual_id] || 0, params[:institution_affiliation_id] || 0)
         when 'platform_admin'
           Incognito.allow_platform_admin(current_actor, false)
-        when 'ability_can'
-          Incognito.allow_ability_can(current_actor, false)
+        when 'role'
+          Incognito.sudo_role(current_actor, true, params[:press_id] || 0, params[:press_role] || '')
         when 'action_permitted'
           Incognito.allow_action_permitted(current_actor, false)
         when 'developer'

@@ -65,10 +65,31 @@
       <% end %>
     </li>
   </ul>
+  <input input data-toggle="tooltip" title="impersonate a press role" type="checkbox" id="role" name="role" value="sudo" <%= Incognito.sudo_role?(current_actor) ? 'checked' : '' %>>
+  <label for="role">use press role</label><br>
+  <ul>
+    <li>
+      <div>
+        <label for="press_filter">Filter press by </label>
+        <input type="text" id="press_filter" name="press_filter" value=<%= params['press_filter'] %>>
+        <button>filter</button>
+      </div>
+      <div>
+        <span>Press </span>
+        <%= select_tag "press_id", options_for_select(@presses, Incognito.sudo_role_press(current_actor)&.id), include_blank: '' %>
+      </div>
+      <div>&nbsp;</div>
+    </li>
+    <li>
+      <div>
+        <span>Press Role</span>
+        <%= select_tag "press_role", options_for_select(@press_roles, Incognito.sudo_role_press_role(current_actor)), include_blank: '' %>
+      </div>
+      <div>&nbsp;</div>
+    </li>
+  </ul>
   <input data-toggle="tooltip" title="hide your platform administrator role" type="checkbox" id="platform_admin" name="platform_admin" value="mask" <%= !Incognito.allow_platform_admin?(current_actor) ? 'checked' : '' %> />
   <label for="platform_admin">force 'platform_admin?' to be false</label><br>
-  <input data-toggle="tooltip" title="hide your devise cancan abilities" type="checkbox" id="ability_can" name="ability_can" value="mask" <%= !Incognito.allow_ability_can?(current_actor) ? 'checked' : '' %> />
-  <label for="ability_can">force 'can?' to be false</label><br>
   <input data-toggle="tooltip" title="hide your checkpoint credentials a.k.a. permissions" type="checkbox" id="action_permitted" name="action_permitted" value="mask" <%= !Incognito.allow_action_permitted?(current_actor) ? 'checked' : '' %> />
   <label for="action_permitted">force 'action_permitted?' to be false</label><br>
   <input data-toggle="tooltip" title="show developer only stuff" type="checkbox" id="developer" name="developer" value="mask" <%= Incognito.developer?(current_actor) ? 'checked' : '' %> />

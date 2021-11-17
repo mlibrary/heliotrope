@@ -65,6 +65,15 @@ $base-color-footer-link-hover: #73d2f4;
   transition: 0.2s ease-in;
 }
 
+.stay-on-top
+{
+  position: fixed;
+  top: 0; /* to place it on top */
+  left: 0; /* to place it in the left corner, that'd be the most logical place; although this obviously isn't necessary, you could want to put it in the right corner or somewhere else and whatever /longcomment */
+  z-index: 9999;
+  //background-color: lightgrey;
+}
+
 /////////////////////////////////////////////////
 // BOOTSTRAP OVERRIDES FOR WCAG AA/AAA COMPLIANCE
 // See https://infoguides.wtamu.edu/bootstrap/helpers
