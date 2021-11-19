@@ -3,16 +3,16 @@
 class TombstonesController < ApplicationController
   def index
     model_docs = has_model_docs.sort do |a, b|
-      if a['has_model_ssim'].first == 'Monograph' && b['has_model_ssim'].first == 'Monograph'
+      if (a['has_model_ssim']&.first == 'Monograph') && (b['has_model_ssim']&.first == 'Monograph')
         a['id'] <=> b['id']
-      elsif a['has_model_ssim'].first == 'Monograph'
-        rv = a['id'] <=> (b['monograph_id_ssim'].first || '')
+      elsif a['has_model_ssim']&.first == 'Monograph'
+        rv = a['id'] <=> (b['monograph_id_ssim']&.first || '')
         rv == 0 ? -1 : rv
-      elsif b['has_model_ssim'].first == 'Monograph'
-        rv = (a['monograph_id_ssim'].first || '') <=> b['id']
+      elsif b['has_model_ssim']&.first == 'Monograph'
+        rv = (a['monograph_id_ssim']&.first || '') <=> b['id']
         rv == 0 ? 1 : rv
       else
-        a['monograph_id_ssim'].first <=> b['monograph_id_ssim'].first
+        (a['monograph_id_ssim']&.first || '') <=> (b['monograph_id_ssim']&.first || '')
       end
     end
     tombstone_docs = model_docs.sort do |a, b|
