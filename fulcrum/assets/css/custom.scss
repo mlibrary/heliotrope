@@ -1,3 +1,8 @@
+---
+# this ensures Jekyll reads the file to be transformed into CSS later
+# only Main files contain this front matter, not partials.
+---
+
 @import 'brand';
 @import 'syntax-highlighting';
 
@@ -140,6 +145,7 @@ p.blurb {
   img {
     width: 100%;
     filter: grayscale(100%);
+  
   }
 
   img:hover {
@@ -158,6 +164,7 @@ p.blurb {
   a {
     display: block;
     text-align: center;
+    border-bottom: 0px solid transparent; // HELIO-3594
   }
 
   a:hover, a:active {
