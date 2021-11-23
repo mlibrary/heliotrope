@@ -2,7 +2,8 @@
 
 class ScoreCatalogController < ::CatalogController
   before_action :load_presenter, only: %i[index facet]
-  before_action :load_stats, only: %i[index facet]
+  # HELIO-4115 - deactivate stats tabs but keep the code around as inspiration for the next solution
+  # before_action :load_stats, only: %i[index facet]
 
   self.theme = 'hyrax'
   with_themed_layout 'catalog'
@@ -38,9 +39,11 @@ class ScoreCatalogController < ::CatalogController
       @ebook_download_presenter = EBookDownloadPresenter.new(@presenter, current_ability, current_actor)
     end
 
-    def load_stats
-      stats_graph_service = StatsGraphService.new(@presenter.monograph_analytics_ids, @presenter.date_uploaded)
-      @stats_graph_data = stats_graph_service.pageviews_over_time_graph_data
-      @pageviews = stats_graph_service.pageviews
-    end
+  # HELIO-4115 - deactivate stats tabs but keep the code around as inspiration for the next solution
+  # aside: it's weird that rubocop wants indentation at 2 here. Ah well.
+  # def load_stats
+  #   stats_graph_service = StatsGraphService.new(@presenter.monograph_analytics_ids, @presenter.date_uploaded)
+  #   @stats_graph_data = stats_graph_service.pageviews_over_time_graph_data
+  #   @pageviews = stats_graph_service.pageviews
+  # end
 end

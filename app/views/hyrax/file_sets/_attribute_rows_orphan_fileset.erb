@@ -30,8 +30,9 @@
     <%= presenter.attribute_to_html(:original_checksum, label: t('original_checksum')) %>
     <%= presenter.attribute_to_html(:duration) %>
     <%= presenter.attribute_to_html(:sample_rate, label: t('sample_rate')) %>
+    <%# HELIO-4115 - deactivate stats tabs but keep the code around as inspiration for the next solution %>
     <%# STATS %>
-    <%= presenter.attribute_to_html(:pageviews) %>
+    <%# presenter.attribute_to_html(:pageviews) %>
   <tr>
     <th><%= t('citable_link') %></th>
     <td>

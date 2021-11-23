@@ -222,11 +222,14 @@
           </h2>
         </li>
       <% end %>
+      <%# HELIO-4115 - deactivate stats tabs but keep the code around as inspiration for the next solution %>
+      <% if false %>
         <li role="presentation">
           <h2>
             <a id="tab-stats" href="#stats" aria-controls="stats" role="tab" data-toggle="tab" aria-selected="false" aria-expanded="false" tabindex="-1">Stats</a>
           </h2>
         </li>
+      <% end %>
     </ul>
     <div id="tabs-content" class="tab-content monograph-assets-toc-epub-content" aria-live="polite">
       <% if @presenter.toc? %>
@@ -286,9 +289,12 @@
           </div>
         </section>
       <% end %>
+      <%# HELIO-4115 - deactivate stats tabs but keep the code around as inspiration for the next solution %>
+      <% if false %>
         <section id="stats" class="tab-pane fade stats row" role="tabpanel" aria-hidden="true" aria-labelledby="tab-stats" tabindex="0">
           <%= render 'stats' %>
         </section>
+      <% end %>
     </div>
   </div>
 </div><!-- /.monograph-assets-toc-epub -->
