@@ -106,7 +106,7 @@
           download_links: <%= @ebook_download_presenter.csb_download_links.to_json.html_safe %>,
           loader_template: '<div class="fulcrum-loading"><div class="rect rect1"></div><div class="circle circ1"></div><div class="rect rect2"></div><div class="circle circ2"></div></div>',
           <% if %w[leverpress michigan mps uncpress].include? @subdomain %>
-          injectStylesheet: '/css/fulcrum_enhanced_display.css',
+          injectStylesheet: '/assets/css/fulcrum_enhanced_display.css',
           <% end %>
           metadata: {
             doi: '<%= @citable_link %>',
