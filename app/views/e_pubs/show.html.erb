@@ -44,6 +44,15 @@
       var loadingBar = document.querySelector("#unity-loading-bar");
       var progressBarFull = document.querySelector("#unity-progress-bar-full");
       var fullscreenButton = document.querySelector("#unity-fullscreen-button");
+
+      webgl_epub_noid_position = -1;
+      webgl_epub_noid = <%= "\"#{@presenter.id}\"".html_safe %>;
+      webgl_epub_noids_a11y_on = localStorage.getItem("webgl_epub_noids_a11y_on");
+      if(webgl_epub_noids_a11y_on !== null) {
+        webgl_epub_noids_a11y_on = JSON.parse(webgl_epub_noids_a11y_on);
+        webgl_epub_noid_position = webgl_epub_noids_a11y_on.indexOf(webgl_epub_noid);
+      }
+      var webgl_a11y_on_stored = webgl_epub_noid_position !== -1;
     </script>
   <% end %>
 <% end %>
@@ -164,7 +173,8 @@
         <% end %>
 
         <% if @parent_presenter.webgl? %>
-          open_panel();
+          if(!webgl_a11y_on_stored)
+            open_panel();
         <% end %>
 
         // Initiate EPUB Reader

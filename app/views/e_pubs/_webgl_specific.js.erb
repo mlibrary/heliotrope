@@ -7,11 +7,10 @@ var firstLaunchWebGlEpub = false;
 
 // load the game on launch of e-reader
 reader.on('ready', function() {
-  // open_panel();
   // the a11y state disables the "3D MODEL" button and hides the WebGL panel. These are things we want for...
   // incompatible device/browser users also, but initially we *do* want them to see the panel with the...
   // incompatibility message as an "easy" way to inform them about the problem (firstLaunchWebGlEpub flag)
-  if(heliotropeIncompatibleWebGlUser === true) {
+  if(webgl_a11y_on_stored || heliotropeIncompatibleWebGlUser) {
     firstLaunchWebGlEpub = true;
     a11y_on();
   }
@@ -69,7 +68,7 @@ var open_panel = function() {
   }
 
   // mobile users won't be loading the 3D content so this stuff isn't required
-  if (heliotropeIncompatibleWebGlUser === false) {
+  if (!heliotropeIncompatibleWebGlUser) {
     var h = $panel.height();
     var w = $panel.width();
 
@@ -192,7 +191,7 @@ var resize_webgl = function() {
 // dynamic WebGL canvas resizing
 reader.on('resized', function() {
   // mobile users shouldn't have a canvas to resize
-  if (gameReady && heliotropeIncompatibleWebGlUser === false) {
+  if (gameReady && !heliotropeIncompatibleWebGlUser) {
     resize_webgl();
   }
 })
@@ -317,12 +316,27 @@ var a11y_on = function() {
   $('body').addClass('a11y');
   $('#webgl').attr('aria-disabled', 'true');
   $('#webgl').prop('disabled', true);
+
   // a flag (set above) to allow the WebGL panel, with an incompatibility message, to be open with a11y_on...
   // mode on initial load *only* for users with an incompatible device/browser
-  if(firstLaunchWebGlEpub === true)
+  if(firstLaunchWebGlEpub)
     firstLaunchWebGlEpub = false;
   else if($('.special-panel').prop('hidden') == false) // the user might have closed this manually
     close_panel();
+
+  // the storing of `webgl_epub_noids_a11y_on` will happen for both deliberate a11y_mode choice and for...
+  // incompatible browsers, so subsequent loads with an incompatible browser will also have the panel closed
+  epub_noid = <%= "\"#{@presenter.id}\"".html_safe %>;
+  a11y_on_noids = localStorage.getItem("webgl_epub_noids_a11y_on");
+  if(a11y_on_noids === null) {
+    localStorage.setItem("webgl_epub_noids_a11y_on", JSON.stringify([epub_noid]));
+  } else {
+    a11y_on_noids = JSON.parse(a11y_on_noids);
+    if (a11y_on_noids.indexOf(epub_noid) === -1) {
+      a11y_on_noids.push(epub_noid);
+      localStorage.setItem("webgl_epub_noids_a11y_on", JSON.stringify(a11y_on_noids));
+    }
+  }
 }
 
 var a11y_off = function() {
@@ -330,6 +344,21 @@ var a11y_off = function() {
   $('.toggle-a11y').removeClass('on');
   $('#webgl').attr('aria-disabled', 'false');
   $('#webgl').prop('disabled', false);
+
+  epub_noid = <%= "\"#{@presenter.id}\"".html_safe %>;
+  a11y_on_noids = localStorage.getItem("webgl_epub_noids_a11y_on");
+  if(a11y_on_noids !== null) {
+    a11y_on_noids = JSON.parse(a11y_on_noids);
+    position = a11y_on_noids.indexOf(epub_noid);
+    if (position !== -1) {
+      a11y_on_noids.splice(position, 1);
+      if(a11y_on_noids.length == 0) {
+        localStorage.removeItem("webgl_epub_noids_a11y_on");
+      } else {
+        localStorage.setItem("webgl_epub_noids_a11y_on", JSON.stringify(a11y_on_noids));
+      }
+    }
+  }
 
   open_panel();
 }
