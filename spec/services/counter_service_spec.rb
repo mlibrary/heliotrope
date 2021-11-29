@@ -276,6 +276,18 @@ RSpec.describe CounterService do
         end
       end
 
+      context "a crawler, CLOCKSS/LOCKSS (2334)" do
+        before do
+          allow(controller).to receive(:current_institutions).and_return([Greensub::Institution.new(identifier: 2334, name: "CLOCKS/LOCKS")])
+        end
+
+        it "creates 0 counter report rows" do
+          expect { described_class.from(controller, presenter).count }
+          .to change(CounterReport, :count)
+          .by(0)
+        end
+      end
+
       context "if the file_set is not 'published'/open" do
         let(:presenter) do
           Hyrax::FileSetPresenter.new(SolrDocument.new(id: 'id',

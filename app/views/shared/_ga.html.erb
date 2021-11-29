@@ -12,8 +12,8 @@
   <% end %>
 <% end %>
 
-<%# no GA for staff (490) or monitoring (2405) in production, HELIO-4090 %>
-<% if (Rails.application.secrets.key? :google_analytics_id) && (Settings.host == "www.fulcrum.org") && (!controller.current_institutions.map(&:identifier).any?("490" || "2405")) %>
+<%# no GA for staff (490) or monitoring (2405) in production, HELIO-4090. Also: LOCKSS/CLOCKSS or Google Scholar, HELIO-4122 %>
+<% if (Rails.application.secrets.key? :google_analytics_id) && (Settings.host == "www.fulcrum.org") && (controller.current_institutions.map(&:identifier) & ["490", "2405", "2334", "2402"]).empty? %>
   <script type="text/javascript">
     // Wait until the cookie is set via user interaction
     // and only then get Analytics under way.
