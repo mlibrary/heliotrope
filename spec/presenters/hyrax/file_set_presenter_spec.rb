@@ -715,4 +715,40 @@ RSpec.describe Hyrax::FileSetPresenter do
       it { is_expected.to eq "1537294708" }
     end
   end
+
+  describe "#duration" do
+    subject { presenter.duration }
+
+    let(:fileset_doc) { SolrDocument.new(id: 'fileset_id', has_model_ssim: ['FileSet'], duration_ssim: duration) }
+
+    context "pre-formatted '20.84 s' value is left as-is" do
+      let(:duration) { ["20.84 s"] }
+
+      it { is_expected.to eq duration }
+    end
+
+    context "pre-formatted 'HH:mm:ss' value is left as-is" do
+      let(:duration) { ["0:23:33"] }
+
+      it { is_expected.to eq duration }
+    end
+
+    context "pre-formatted 'HH:mm:ss.SSS' value is left as-is" do
+      let(:duration) { ["0:3:46:213"] }
+
+      it { is_expected.to eq duration }
+    end
+
+    context "numeric value is assumed to be milliseconds and converted, non-zero milliseconds value is shown" do
+      let(:duration) { ["98498"] }
+
+      it { is_expected.to eq ["0:1:38:498"] }
+    end
+
+    context "numeric value is assumed to be milliseconds and converted, zero milliseconds value is removed" do
+      let(:duration) { ["36700000"] }
+
+      it { is_expected.to eq ["10:11:40"] }
+    end
+  end
 end

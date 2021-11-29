@@ -146,7 +146,19 @@ module Hyrax
     end
 
     def duration
-      solr_document['duration_ssim']
+      duration = solr_document['duration_ssim']&.first
+      # return if duration is blank or "contains no non-digit characters" is false, which implies a millisecond...
+      # value, e.g. from MediaInfo
+      return solr_document['duration_ssim'] if duration.blank? || (duration !~ /\D/) == false
+
+      s, ms = duration.to_i.divmod(1000)
+      m, s = s.divmod(60)
+      h, m = m.divmod(60)
+
+      # don't show the millisecond part if it's zero
+      s = ms.zero? ? "#{h}:#{m}:#{s}" : "#{h}:#{m}:#{s}:#{ms}"
+      # Array() as it's expected elsewhere to be a multivalued field (the 'm' in '_ssim')
+      Array(s)
     end
 
     def original_name
