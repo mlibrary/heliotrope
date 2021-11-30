@@ -54,7 +54,7 @@ class PressSearchBuilder < ::SearchBuilder
     # In short this is a hack because I have no idea why it works.
     # Feel free to purge this code and find a better solution.
     case blacklight_params['press']
-    when /^barpublishing$/i
+    when 'barpublishing', 'michigan'
       if blacklight_params['q'].present?
         blacklight_config.default_sort_field
       else
