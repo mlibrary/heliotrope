@@ -39,7 +39,7 @@ var open_panel = function() {
     var $panelContent =
       '<div class="special-panel" aria-hidden="false">' +
         '<div class="panel-control">' +
-          '<button class="button--sm webgl-close" data-toggle="button" data-slot="label" aria-label="Close 3-D Model" onclick="close_panel();">' +
+          '<button class="button--sm webgl-close" data-toggle="button" data-slot="label" aria-label="Close 3-D Model" onclick="close_panel();" disabled>' +
             '<i class="icon-x oi" data-glyph="x" aria-hidden="true"></i>' +
           '</button>' +
           '<a class="button--sm webgl-fullscreen" href="'+$3d_doi+'" target="_blank"><i class="icon-fullscreen-enter oi" data-glyph="fullscreen-enter" aria-label="View 3D model in fullscreen standalone mode"></i></a>' +
@@ -238,6 +238,12 @@ reader.on('ready:contents', function(contents) {
     var link = links[i];
     link.addEventListener('click', click_handler);
   }
+
+  // CSB cannot handle its iframe being resized while it is loading the EPUB, which is what will happen if the user...
+  // closes the WebGL panel before the EPUB is ready. Hence we'll only enable this WebGL close button at that point.
+  var webgl_close_button = document.getElementsByClassName('webgl-close')[0];
+  if(typeof(webgl_close_button) != 'undefined' && webgl_close_button != null)
+    webgl_close_button.disabled = false;
 })
 
 // Toggling focus of canvas - if clicked on canvas, focus

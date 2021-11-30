@@ -3497,8 +3497,8 @@ $um-white: #fff;
   h2 {
     margin-top: 2rem;
   }
- 
-  h3, 
+
+  h3,
   h4,
   h5 {
     margin-top: 1rem;
@@ -3507,7 +3507,7 @@ $um-white: #fff;
   .bold {
     font-weight: 700;
   }
-  
+
   .text-light {
     color: #f8f9fa !important;
   }
@@ -3583,13 +3583,13 @@ $um-white: #fff;
     color: #fff;
   }
 
-  #sort-dropdown .dropdown-toggle .caret, 
+  #sort-dropdown .dropdown-toggle .caret,
   #per_page-dropdown .dropdown-toggle .caret {
     color: $um-white;
   }
 
   // navigation menu
-  
+
   .nav,
   header {
     @include muli;
@@ -3611,13 +3611,13 @@ $um-white: #fff;
       flex-wrap: wrap;
       justify-content: flex-end !important;
       height: 113px;
-    
+
       // search box and links
       .col-md-4.pt-3 {
         display: flex;
         flex-direction: column;
         padding-top: 16px;
-        
+
         form.navbar-form {
           margin: 0;
           padding: 0;
@@ -4140,7 +4140,7 @@ $gabii-link-hover:    #1e5667;
       }
     }
   }
-  
+
   #brand-bar {
     background-color: $gabii-brand-color;
     border-color: $gabii-brand-color;
@@ -4308,7 +4308,7 @@ $gabii-link-hover:    #1e5667;
   footer.press {
     background-color: $gabii-light-1 !important;
   }
-  
+
   footer.press {
     border: none;
     padding: 0;
@@ -4369,7 +4369,7 @@ $gabii-link-hover:    #1e5667;
         margin-left: 4px;
         vertical-align: baseline;
         width: 90px !important;
-      } 
+      }
     }
   }
 
@@ -4488,6 +4488,10 @@ $gabii-link-hover:    #1e5667;
 
       }
 
+      .panel-control button.button--sm.webgl-close[disabled] {
+        color: #999;
+      }
+
       .panel-info {
         padding: 0 1em;
         overflow-wrap: break-word;
@@ -4576,7 +4580,7 @@ $gabii-link-hover:    #1e5667;
   // jumbotron
   .jumbotron {
     background-color: $um-accent-color;
-    color: #fff; 
+    color: #fff;
 
     .logo {
 	    img {
@@ -4586,7 +4590,7 @@ $gabii-link-hover:    #1e5667;
   }
 
   //footer
-  
+
   footer.press {
     border: none;
     padding: 0;
@@ -4632,7 +4636,7 @@ $gabii-link-hover:    #1e5667;
         vertical-align: middle;
         width: 90px !important;
         height: auto !important;
-      } 
+      }
     }
   }
 
@@ -4650,7 +4654,7 @@ $gabii-link-hover:    #1e5667;
 //
 //////////////////////////////////////////////
 .lrccs, .cjs, .csas, .cseas {
-  
+
   // navigation bar
 
   header {
@@ -4692,7 +4696,7 @@ $gabii-link-hover:    #1e5667;
 
   .search-form {
     padding-top: 1.5em;
-    
+
     button {
       background-color: $um-accent-color;
       height: 34px;
@@ -4714,7 +4718,7 @@ $gabii-link-hover:    #1e5667;
   // jumbotron
   .jumbotron {
     background-color: $um-accent-color;
-    color: #fff; 
+    color: #fff;
     p.lead {
       font-size: 14px;
     }
@@ -4777,7 +4781,7 @@ $gabii-link-hover:    #1e5667;
         vertical-align: middle;
         width: 90px !important;
         height: auto !important;
-      } 
+      }
     }
   }
 
