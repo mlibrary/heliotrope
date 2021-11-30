@@ -3834,6 +3834,14 @@ $um-white: #fff;
     ul.nav-tabs li {
       @include muli;
     }
+
+    .able-transcript-area {
+      .panel-title {
+        margin: 0;
+        color: #fff;
+        font-size: 1em;
+      }
+    }
   }
 
   //footer
