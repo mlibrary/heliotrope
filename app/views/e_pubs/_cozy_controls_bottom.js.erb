@@ -142,7 +142,7 @@ cozy.control.preferences({
           { value: 'off', label: 'Off' },
           { value: 'on', label: 'On'}
         ],
-        value: heliotropeIncompatibleWebGlUser === true ? 'on' : 'off',
+        value: webgl_a11y_on_stored || heliotropeIncompatibleWebGlUser ? 'on' : 'off',
         callback: function(value) {
           if (value == 'on') {
             a11y_on();
