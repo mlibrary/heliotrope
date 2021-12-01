@@ -18,7 +18,7 @@ encoding: "utf-8"
 markdown_ext: "markdown,mkdown,mkdn,mkd,md"
 
 # Jekyll will delete everything under public for security reasons. We want to keep these symlinks into `shared/public/`
-keep_files: ["assets", "media", "packs", "sitemaps", "system", "upload", "robots.txt"]
+keep_files: ["assets", "media", "packs", "system", "upload", "robots.txt"]
 
 # Conversion
 markdown: kramdown

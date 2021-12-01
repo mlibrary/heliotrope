@@ -6,10 +6,6 @@ require 'sitemap_generator'
 # Set the host name for URL creation
 SitemapGenerator::Sitemap.default_host = "https://fulcrum.org"
 
-# we want these in the shared directory where they won't get blown away each time
-# see https://github.com/kjvarga/sitemap_generator#deployments--capistrano
-SitemapGenerator::Sitemap.public_path = 'public/sitemaps'
-
 # HELIO-3953 sitemaps should be uncompressed
 # HELIO-4105 sitemaps should be no larger than 5MB
 SitemapGenerator::Sitemap.create(compress: false, create_index: true, max_sitemap_links: 20_000) do
