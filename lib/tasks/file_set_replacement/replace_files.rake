@@ -27,7 +27,7 @@ namespace :heliotrope do
 
         # f now contains references to tombstoned files, so pull the FileSet object again to avoid any...
         # Ldp::Gone errors in Hydra::Works::AddFileToFileSet
-        f = FileSet.where(label: new_file).first
+        f = FileSet.find(f.id)
 
         now = Hyrax::TimeService.time_in_utc
         f.date_uploaded = now
