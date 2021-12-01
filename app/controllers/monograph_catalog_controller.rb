@@ -3,7 +3,8 @@
 class MonographCatalogController < ::CatalogController
   before_action :load_presenter, only: %i[index facet purchase]
   before_action :load_press_presenter, only: %i[purchase]
-  before_action :load_stats, only: %i[index facet]
+  # HELIO-4115 - deactivate stats tabs but keep the code around as inspiration for the next solution
+  # before_action :load_stats, only: %i[index facet]
   before_action :wayfless_redirect_to_shib_login, only: %i[index]
   after_action :add_counter_stat, only: %i[index]
 
@@ -109,11 +110,12 @@ class MonographCatalogController < ::CatalogController
       false
     end
 
-    def load_stats
-      stats_graph_service = StatsGraphService.new(@presenter.monograph_analytics_ids, @presenter.date_uploaded)
-      @stats_graph_data = stats_graph_service.pageviews_over_time_graph_data
-      @pageviews = stats_graph_service.pageviews
-    end
+    # HELIO-4115 - deactivate stats tabs but keep the code around as inspiration for the next solution
+    # def load_stats
+    #   stats_graph_service = StatsGraphService.new(@presenter.monograph_analytics_ids, @presenter.date_uploaded)
+    #   @stats_graph_data = stats_graph_service.pageviews_over_time_graph_data
+    #   @pageviews = stats_graph_service.pageviews
+    # end
 
     def add_counter_stat
       # HELIO-2292

@@ -19,9 +19,11 @@ Hyrax::FileSetsController.class_eval do # rubocop:disable Metrics/BlockLength
         CounterService.from(self, presenter).count
       end
 
-      stats_graph_service = StatsGraphService.new(params[:id], presenter.date_uploaded)
-      @stats_graph_data = stats_graph_service.pageviews_over_time_graph_data
-      @pageviews = stats_graph_service.pageviews
+      # HELIO-4115 - deactivate stats tabs but keep the code around as inspiration for the next solution
+      # stats_graph_service = StatsGraphService.new(params[:id], presenter.date_uploaded)
+      # @stats_graph_data = stats_graph_service.pageviews_over_time_graph_data
+      # @pageviews = stats_graph_service.pageviews
+
       @resource_download_operation_allowed ||= ResourceDownloadOperation.new(current_actor, Sighrax.from_noid(params[:id])).allowed?
 
       respond_to do |wants|

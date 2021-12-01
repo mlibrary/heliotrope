@@ -9,8 +9,6 @@ module Hyrax
     include SocialShareWidgetPresenter
     include FeaturedRepresentatives::MonographPresenter
 
-    attr_reader :pageviews
-
     delegate :date_uploaded, :thumbnail_path, to: :solr_document
 
     #

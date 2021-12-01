@@ -23,8 +23,11 @@ RSpec.describe 'hyrax/file_sets/show' do
     monograph.ordered_members << file_set
     monograph.save!
     assign(:presenter, file_set_presenter)
-    assign(:stats_graph_data, '[{"label":"Total Pageviews","data":[]}]')
-    assign(:pageviews, 0)
+
+    # HELIO-4115 - deactivate stats tabs but keep the code around as inspiration for the next solution
+    # assign(:stats_graph_data, '[{"label":"Total Pageviews","data":[]}]')
+    # assign(:pageviews, 0)
+
     allow(ability).to receive(:platform_admin?).and_return(false)
     allow(ability).to receive(:can?).with(:read, anything).and_return(true)
     allow(file_set_presenter).to receive(:embed_code).and_return("embed code")

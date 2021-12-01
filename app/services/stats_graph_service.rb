@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+# HELIO-4115 - this is no longer used but is left in place as inspiration for the next solution
+
 class StatsGraphService
   attr_accessor :pageviews
 

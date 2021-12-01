@@ -2,7 +2,10 @@
   <ul class="nav nav-tabs" role="tablist">
     <li role="presentation" class="active"><h2><a id="tab-info" href="#info" data-toggle="tab" role="tab" aria-controls="info" aria-selected="true" tabindex="-1">Info</a></h2></li>
     <li role="presentation"><h2><a id="tab-permissions" href="#permissions" data-toggle="tab" role="tab" aria-controls="permissions" aria-selected="false" aria-expanded="false" tabindex="-1">Permissions</a></h2></li>
-    <li id="stats-tab" role="presentation"><h2><a id="tab-stats" href="#stats" data-toggle="tab" role="tab" aria-controls="stats" aria-selected="false" aria-expanded="false" tabindex="-1">Stats</a></h2></li>
+    <%# HELIO-4115 - deactivate stats tabs but keep the code around as inspiration for the next solution %>
+    <% if false %>
+      <li id="stats-tab" role="presentation"><h2><a id="tab-stats" href="#stats" data-toggle="tab" role="tab" aria-controls="stats" aria-selected="false" aria-expanded="false" tabindex="-1">Stats</a></h2></li>
+    <% end %>
     <% unless presenter.external_resource? || presenter.tombstone? %>
       <li role="presentation"><h2><a id="tab-technical-info" href="#technical-info" data-toggle="tab" role="tab" aria-controls="technical-info" aria-selected="false" aria-expanded="false" tabindex="-1">Technical Info</a></h2></li>
     <% end %>
@@ -32,13 +35,16 @@
         </tbody>
       </table>
     </section> <!-- /.permissions panel -->
-    <section id="stats" class="tab-pane fade" role="tabpanel" aria-hidden="true" aria-labelledby="tab-stats" tabindex="0">
-      <table class="table <%= dom_class(presenter) %> attributes" <%= presenter.microdata_type_to_html %>>
-        <tbody>
-          <%= render 'attribute_rows_stats', presenter: presenter %>
-        </tbody>
-      </table>
-    </section>  <!-- /.stats panel -->
+    <%# HELIO-4115 - deactivate stats tabs but keep the code around as inspiration for the next solution %>
+    <% if false %>
+      <section id="stats" class="tab-pane fade" role="tabpanel" aria-hidden="true" aria-labelledby="tab-stats" tabindex="0">
+        <table class="table <%= dom_class(presenter) %> attributes" <%= presenter.microdata_type_to_html %>>
+          <tbody>
+            <%= render 'attribute_rows_stats', presenter: presenter %>
+          </tbody>
+        </table>
+      </section>  <!-- /.stats panel -->
+    <% end %>
     <section id="technical-info" class="tab-pane fade" role="tabpanel" aria-hidden="true" aria-labelledby="tab-technical-info" tabindex="0">
       <table class="table <%= dom_class(presenter) %> attributes" <%= presenter.microdata_type_to_html %>>
         <tbody>
