@@ -59,4 +59,22 @@ describe 'shared/_ga.html.erb' do
       expect(rendered).not_to match(/javascript/)
     end
   end
+
+  context "when the request is from a crawler (that has an Institution like LOCKSS/CLOCKSS or Google Scholar)" do
+    before do
+      controller.instance_eval do
+        def current_institutions
+          [
+            Greensub::Institution.new(identifier: 2402, name: "Google Scholar")
+          ]
+        end
+      end
+    end
+
+    it "renders no google analytics javascript" do
+      Rails.application.secrets.google_analytics_id = "TEST-ID"
+      render
+      expect(rendered).not_to match(/javascript/)
+    end
+  end
 end
