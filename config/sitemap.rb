@@ -4,7 +4,7 @@ require 'rubygems'
 require 'sitemap_generator'
 
 # Set the host name for URL creation
-SitemapGenerator::Sitemap.default_host = "https://fulcrum.org"
+SitemapGenerator::Sitemap.default_host = Rails.application.routes.url_helpers.root_url
 
 # we want these in the shared directory where they won't get blown away each time
 # see https://github.com/kjvarga/sitemap_generator#deployments--capistrano
