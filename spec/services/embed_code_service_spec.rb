@@ -9,6 +9,7 @@ RSpec.describe EmbedCodeService do
 
     let(:cover) { create(:file_set, label: 'cover.jpg') }
     let(:epub) { create(:file_set, label: 'fake_epub_with_embeds.epub', content: File.open(File.join(fixture_path, 'fake_epub_with_embeds.epub'))) }
+    # the caption on `image` only serves to show that existing figcaptions within the EPUB take precedence
     let(:image) { create(:file_set, label: 'image.jpg', caption: ['Image file caption in FileSet metadata']) }
     let(:audio) { create(:file_set, label: 'audio.mp3', caption: ['Audio file caption in FileSet metadata']) }
     let(:video) { create(:file_set, label: 'video.mp4') }
@@ -77,8 +78,7 @@ RSpec.describe EmbedCodeService do
         expect(doc.search(interactive_map_embed_attributes)).to be_empty
         expect(doc.search("iframe[@src=\"#{interactive_map_embed_url}\"]")).to be_empty
         # the `display:none` for the data attribute (additional resource) embeds off-Fulcrum are still present
-        expect(doc.search("figure[@style=\"display:none\"]").size).to eq(3)
-        expect(doc.search("figure[@style=\"display: none\"]").size).to eq(2)
+        expect(doc.search("figure[@style]").size).to eq(6)
       end
     end
 
@@ -113,7 +113,7 @@ RSpec.describe EmbedCodeService do
         it "inserts CSB-modal embed codes for interactive maps" do
           expect(File.exist?(File.join(root_path, 'EPUB', 'xhtml', 'embeds_using_data_attributes.xhtml'))).to be true
           doc = Nokogiri::XML(File.read(File.join(root_path, 'EPUB', 'xhtml', 'embeds_using_data_attributes.xhtml')))
-          expect(doc.search(interactive_map_embed_attributes).size).to eq(1)
+          expect(doc.search(interactive_map_embed_attributes).size).to eq(2)
           expect(doc.search("iframe[@src=\"#{interactive_map_embed_url}\"]")).to be_empty
         end
 
@@ -125,21 +125,47 @@ RSpec.describe EmbedCodeService do
         end
       end
 
-      it "Inserts figcaptions for files referenced in the EPUB using data attributes, if none are present in the EPUB" do
-        expect(File.exist?(File.join(root_path, 'EPUB', 'xhtml', 'embeds_using_data_attributes.xhtml'))).to be true
-        doc = Nokogiri::XML(File.read(File.join(root_path, 'EPUB', 'xhtml', 'embeds_using_data_attributes.xhtml')))
-        # the image embed in this EPUB XHTML file already has a <figcaption> present,...
-        # nothing is changed even though the FileSet has a (different) metadata caption.
-        expect(doc.search("figcaption:contains('Image file caption in the EPUB file')").size).to eq(1)
-        # the audio embeds don't have a <figcaption> present in the EPUB XHTML file,...
-        # but the FileSet metadata has a caption, which will be added to both as a <figcaption>.
-        expect(doc.search("figcaption:contains('Audio file caption in FileSet metadata')").size).to eq(2)
-        # the video embed has a <figcaption> present in the EPUB XHTML file,...
-        # and the FileSet metadata has no caption. Nothing is changed.
-        expect(doc.search("figcaption:contains('Video file caption in the EPUB file')").size).to eq(1)
-        # the interactive map embed doesn't have a <figcaption> present in the EPUB XHTML file,...
-        # and the FileSet metadata has no caption. A generic <figcaption> is inserted.
-        expect(doc.search("figcaption:contains('Additional Interactive Map Resource')").size).to eq(1)
+      context "Figcaptions for embeds referenced using data attributes on figure" do
+        it "are inserted at the end of the figures, only where none are present in the EPUB" do
+          expect(File.exist?(File.join(root_path, 'EPUB', 'xhtml', 'embeds_using_data_attributes.xhtml'))).to be true
+          doc = Nokogiri::XML(File.read(File.join(root_path, 'EPUB', 'xhtml', 'embeds_using_data_attributes.xhtml')))
+          # the image embed in this EPUB XHTML file already has a <figcaption> present,...
+          # nothing is changed even though the FileSet has a (different) metadata caption.
+          expect(doc.search("figcaption:contains('Image file caption in the EPUB file')").size).to eq(1)
+          # the audio embeds don't have a <figcaption> present in the EPUB XHTML file,...
+          # but the FileSet metadata has a caption, which will be added to both as a <figcaption>.
+          expect(doc.search("figcaption:contains('Audio file caption in FileSet metadata')").size).to eq(2)
+          # the video embed has a <figcaption> present in the EPUB XHTML file,...
+          # and the FileSet metadata has no caption. Nothing is changed.
+          expect(doc.search("figcaption:contains('Video file caption in the EPUB file')").size).to eq(1)
+          # the first interactive map embed doesn't have a <figcaption> present in the EPUB XHTML file,...
+          # and the FileSet metadata has no caption. A generic <figcaption> is inserted.
+          expect(doc.search("figcaption:contains('Additional Interactive Map Resource')").size).to eq(1)
+          # the second interactive map has a <figcaption> present in the EPUB, so this is left as-is
+          expect(doc.search("figcaption:contains('Fig. 1.5. An image representing the interactive map')").size).to eq(1)
+        end
+
+        it 'are always positioned after the iframe embeds or modal-embed-opening buttons' do
+          expect(File.exist?(File.join(root_path, 'EPUB', 'xhtml', 'embeds_using_data_attributes.xhtml'))).to be true
+          doc = Nokogiri::XML(File.read(File.join(root_path, 'EPUB', 'xhtml', 'embeds_using_data_attributes.xhtml')))
+          figure = doc.search("figure[data-fulcrum-embed-filename='image.jpg']").first
+          expect(figure.last_element_child.name).to eq('figcaption')
+
+          expect(doc.search("figure[data-fulcrum-embed-filename='audio.mp3']").size).to eq(2)
+          figure = doc.search("figure[data-fulcrum-embed-filename='audio.mp3']")[0]
+          expect(figure.last_element_child.name).to eq('figcaption')
+          figure = doc.search("figure[data-fulcrum-embed-filename='audio.mp3']")[1]
+          expect(figure.last_element_child.name).to eq('figcaption')
+
+          figure = doc.search("figure[data-fulcrum-embed-filename='video.mp4']").first
+          expect(figure.last_element_child.name).to eq('figcaption')
+
+          expect(doc.search("figure[data-fulcrum-embed-filename='interactive_map.zip']").size).to eq(2)
+          figure = doc.search("figure[data-fulcrum-embed-filename='interactive_map.zip']")[0]
+          expect(figure.last_element_child.name).to eq('figcaption')
+          figure = doc.search("figure[data-fulcrum-embed-filename='interactive_map.zip']")[1]
+          expect(figure.last_element_child.name).to eq('figcaption')
+        end
       end
 
       context "Inserts embed codes for files referenced in the EPUB using img src basename matching" do
@@ -216,8 +242,7 @@ RSpec.describe EmbedCodeService do
           expect(doc.search(interactive_map_embed_attributes)).to be_empty
           expect(doc.search("iframe[@src=\"#{interactive_map_embed_url}\"]")).to be_empty
           # the `display:none` for the data attribute (additional resource) embeds off-Fulcrum are still present
-          expect(doc.search("figure[@style=\"display:none\"]").size).to eq(3)
-          expect(doc.search("figure[@style=\"display: none\"]").size).to eq(2)
+          expect(doc.search("figure[@style]").size).to eq(6)
         end
 
         it "Does not insert embed codes for files referenced in the EPUB using img src basename matching" do
@@ -283,7 +308,7 @@ RSpec.describe EmbedCodeService do
           it "Inserts CSB-modal embed codes for interactive maps" do
             expect(File.exist?(File.join(root_path, 'EPUB', 'xhtml', 'embeds_using_data_attributes.xhtml'))).to be true
             doc = Nokogiri::XML(File.read(File.join(root_path, 'EPUB', 'xhtml', 'embeds_using_data_attributes.xhtml')))
-            expect(doc.search(interactive_map_embed_attributes).size).to eq(1)
+            expect(doc.search(interactive_map_embed_attributes).size).to eq(2)
             expect(doc.search("iframe[@src=\"#{interactive_map_embed_url}\"]")).to be_empty
             # all styles removed from additional resources (especially targeting the `display:none` needed off-Fulcrum)
             expect(doc.search("figure[@data-fulcrum-embed-filename][@style]")).to be_empty
