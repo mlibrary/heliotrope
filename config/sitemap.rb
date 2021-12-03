@@ -44,13 +44,15 @@ SitemapGenerator::Sitemap.create(compress: false, create_index: true, max_sitema
   docs = ActiveFedora::SolrService.query("+has_model_ssim:Monograph AND -(press_sim:demo OR press_sim:heliotrope OR press_sim:monitoringservicetarget)", rows: 100_000)
   docs.each do |d|
     next unless d['visibility_ssi'] == 'open'
+    cover_id = d['representative_id_ssim']&.first
+
     d['file_set_ids_ssim'].each do |fsid|
       fs = ActiveFedora::SolrService.query("{!terms f=id}#{fsid}", rows: 1).first
       next unless fs.present? && fs['visibility_ssi'] == 'open'
-      # "featured representative" file_sets pages don't need to be in sitemaps, nor is there any point adding links...
-      # to a complex, JS-dependent `/epub` CSB view, as the crawler sees nothing there to index but the page title.
+      # Monograph cover and "featured representative" file_set URLs don't need to be in sitemaps.
+      # Crawlers cannot parse content from CSB, anyway. They can only read the page title.
       rep = FeaturedRepresentative.where(work_id: d['id'], file_set_id: fsid).first
-      next if rep&.kind.present?
+      next if rep&.kind.present? || fsid == cover_id
 
       # the majority of FileSets won't be featured reps at all, so get a 'normal' url
       url = Rails.application.routes.url_helpers.hyrax_file_set_path(fsid)
