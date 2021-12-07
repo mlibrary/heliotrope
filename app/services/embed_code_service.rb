@@ -67,18 +67,36 @@ module EmbedCodeService
       # the EPUB off-Fulcrum. There is no other reason they would have a style attribute, so delete it completely.
       node.remove_attribute('style')
 
+      figcaption = node.at('figcaption')
+
       if file_set_presenter.interactive_map?
-        # these data attributes prompt CSB to add embed modal and button
+        # these data attributes prompt CSB to add a button that opens the embedded FileSet in a modal
         # see https://github.com/mlibrary/cozy-sun-bear/blob/51b7e4e62be0e4b0afb6c43b08fbbc46de312204/src/utils/manglers.js#L189
         node['data-href'] = file_set_presenter.embed_link
         node['data-title'] = file_set_presenter.embed_code_title
         node['data-resource-type'] = resource_type(file_set_presenter)
+
+        # the `data-resource-trigger` element allows us to decide where the modal-opening button will go, so we'll...
+        # add it above the <figcaption>, if the interactive map already has one in the EPUB. Otherwise put it as the...
+        # last element in the <figure> for now, given that an automatic <figcaption> will come next.
+        # see https://github.com/mlibrary/cozy-sun-bear/blob/8fb409d269b2e7cbdaf7bd3ac46055f357dc67ee/src/utils/manglers.js#L199-L202
+        if figcaption.present?
+          figcaption.add_previous_sibling("<div data-resource-trigger></div>")
+        else
+          node.add_child("<div data-resource-trigger></div>")
+        end
+
       else
         # for these full embed markup is added inside the <figure> element in the derivative-folder XHTML file
-        node.add_child(file_set_presenter.embed_code)
+        # we must ensure this node is inserted above any existing <figcaption>
+        if figcaption.present?
+          figcaption.add_previous_sibling(file_set_presenter.embed_code)
+        else
+          node.add_child(file_set_presenter.embed_code)
+        end
       end
 
-      maybe_add_figcaption(node, file_set_presenter)
+      maybe_add_figcaption(node, file_set_presenter) if figcaption.blank?
     end
   end
 
