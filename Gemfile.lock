@@ -564,7 +564,6 @@ GEM
       less (~> 2.6.0)
       sprockets (> 2, < 4)
       tilt
-    libv8 (3.16.14.19)
     link_header (0.0.8)
     linkeddata (3.1.1)
       equivalent-xml (~> 0.6)
@@ -796,7 +795,6 @@ GEM
       redis (>= 3.0.4)
     redlock (1.2.1)
       redis (>= 3.0.0, < 5.0)
-    ref (2.0.0)
     regexp_parser (1.8.2)
     representable (3.1.1)
       declarative (< 0.1.0)
@@ -1006,9 +1004,6 @@ GEM
     temple (0.8.2)
     term-ansicolor (1.6.0)
       tins (~> 1.0)
-    therubyracer (0.12.3)
-      libv8 (~> 3.16.14.15)
-      ref
     thor (0.19.4)
     thread_safe (0.3.6)
     tilt (2.0.10)
@@ -1168,7 +1163,6 @@ DEPENDENCIES
   sprockets (~> 3.7.2)
   sqlite3
   swagger_client!
-  therubyracer
   turbolinks (~> 5)
   typhoeus (~> 1.1)
   tzinfo-data
