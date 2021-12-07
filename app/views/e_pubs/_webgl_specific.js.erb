@@ -89,57 +89,67 @@ var open_panel = function() {
       canvas.style.width = game_width;
       canvas.style.height = game_height;
 
-        loadingBar.style.display = "block";
+      loadingBar.style.display = "block";
 
-        createUnityInstance(canvas, config, (progress) => {
-          progressBarFull.style.width = 100 * progress + "%";
-        }).then((unityInstance) => {
+      createUnityInstance(canvas, config, (progress) => {
+        progressBarFull.style.width = 100 * progress + "%";
+      }).then((unityInstance) => {
         gameInstance = unityInstance;
         loadingBar.style.display = "none";
         fullscreenButton.onclick = () => {
           unityInstance.SetFullscreen(1);
         };
-        }).catch((message) => {
-          // For heliotrope we've historically NOP'ed errors from the WebGL game
-          // note I think this only blocks alerts for loading-time errors
-          // alert(message);
-        });
-
-        document.addEventListener('click', function (e) {
-        if (e.target.id == "unity-canvas") {
-          // Clicked on canvas
-          FocusCanvas("1");
-        } else {
-          // Clicked outside of canvas
-          FocusCanvas("0");
-        }
-        });
-
-      // stop the CSB (epubjs) iframe from doing *anything* if the Unity WebGL is being dragged (camera rotated)
-      document.getElementById('unity-canvas').addEventListener('mousedown', function (e) {
-        // causes no issues even if #unity-canvas is clicked before the EPUB is loaded, i.e. no iframe present yet (yay!)
-        $('iframe[id*="epubjs-view-"]').css('pointer-events', 'none');
+      }).catch((message) => {
+        // For heliotrope we've historically NOP'ed errors from the WebGL game
+        // note I think this only blocks alerts for loading-time errors
+        // alert(message);
       });
 
-      // re-enable pointer events on the CSB (epubjs) iframe (for text select etc.) on a mouseup *anywhere*
-      document.addEventListener('mouseup', function (e) {
-        $('iframe[id*="epubjs-view-"]').css('pointer-events', 'auto');
-      });
-
-        document.addEventListener('keydown', function (event) {
+      // This is needed to get Unity to relinquish focus on a tab keypress
+      document.addEventListener('keydown', function(event) {
         if (event.defaultPrevented) {
           return; // Do nothing if the event was already processed
         }
 
-      switch (event.key) {
-      case "Tab":
-        FocusCanvas("0");
-        break;
-      default:
-        return;
-      }
+        switch (event.key) {
+          case "Tab":
+            // will be duplicated by blur() event below but doesn't matter, it's still needed here to even get the...
+            // focus to move (and thus the blur() to happen)
+            FocusCanvas("0");
+            break;
+          default:
+           return;
+        }
 
       }, true);
+
+      // blur() is the easiest/best event I can think of to remove pointer events from #unity-canvas so it doesn't...
+      // act like a camera swivel is ending when a click returns to it after a lost mousedown on the reader iframe.
+      // See mousing part of HELIO-4117.
+      document.getElementById('unity-container').addEventListener('blur', function (e) {
+        $('#unity-canvas').css('pointer-events', 'none');
+        FocusCanvas("0");
+      }, true);
+
+      // turn mouse events back on, this can't be done any sooner or the mousing part of HELIO-4117 still happens.
+      // unfortunately this means your first click back on the WebGL panel only re-focuses it, you can't immediately...
+      // swivel the view. Hopefully most users will not be taken aback by this.
+      document.getElementById('unity-container').addEventListener('focus', function (e) {
+        $('#unity-canvas').css('pointer-events', 'auto');
+        FocusCanvas("1");
+      }, true);
+
+      // stop the CSB (epubjs) iframe from doing *anything* if the Unity WebGL is being dragged (camera rotated)
+      document.getElementById('unity-container').addEventListener('mousedown', function (e) {
+        // causes no issues even if #unity-canvas is clicked before the EPUB is loaded, i.e. no iframe present yet (yay!)
+        $('iframe[id*="epubjs-view-"]').css('pointer-events', 'none');
+      });
+
+      // re-enable pointer events on the CSB (epubjs) iframe (for text select etc.) on a mouseup anywhere *other than*
+      // the iframe, which is why it is only used to re-enable pointer events on (in) the reader iframe
+      document.addEventListener('mouseup', function (e) {
+        $('iframe[id*="epubjs-view-"]').css('pointer-events', 'auto');
+      });
     } else {
       // resize the webGL canvas
       resize_webgl();
@@ -259,21 +269,6 @@ function FocusCanvas(focus) {
     SendMessage("GameControl", "FocusCanvas", focus);
   }
 }
-
-document.addEventListener('keydown', function(event) {
-  if (event.defaultPrevented) {
-    return; // Do nothing if the event was already processed
-  }
-
-  switch (event.key) {
-    case "Tab":
-      FocusCanvas("0");
-    break;
-    default:
-    return;
-  }
-
-}, true);
 
 // POI to CFI webgl -> epub mapping stuff
 var poiToCfiMap = {};
