@@ -47,7 +47,11 @@ module Hyrax
         markup = +''
 
         return markup if values.blank? && !options[:include_empty]
-        markup << %(<dt>#{label}</dt>\n<dd><ul class='tabular'>)
+        if options[:heading].present?
+          markup << %(<dt role="heading" aria-level="#{options[:heading]}">#{label}</dt>\n<dd><ul class="tabular">)
+        else
+          markup << %(<dt>#{label}</dt>\n<dd><ul class="tabular">)
+        end
         attributes = microdata_object_attributes(field).merge(class: "attribute attribute-#{field}")
         Array(values).each do |value|
           markup << "<li#{html_attributes(attributes)}>#{attribute_value_to_html(value.to_s)}</li>"

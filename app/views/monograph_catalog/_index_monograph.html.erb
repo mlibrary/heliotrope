@@ -148,14 +148,13 @@
 
   <div class="additional-metadata">
     <dl>
-      <%= @presenter.attribute_to_html(:series, html_dl: true) %>
-      <%= @presenter.attribute_to_html(:isbn, label: t('isbn'), html_dl: true) %>
-      <%= @presenter.attribute_to_html(:bar_number, label: t('bar_number'), html_dl: true) %>
-      <%= @presenter.attribute_to_html(:subject, html_dl: true, render_as: :catalog_facet_attribute,
-                                                 subdomain: @presenter.subdomain) %>
+      <%= @presenter.attribute_to_html(:series, html_dl: true, heading: 3) %>
+      <%= @presenter.attribute_to_html(:isbn, label: t('isbn'), html_dl: true, heading: 3) %>
+      <%= @presenter.attribute_to_html(:bar_number, label: t('bar_number'), html_dl: true, heading: 3) %>
+      <%= @presenter.attribute_to_html(:subject, html_dl: true, heading: 3, render_as: :catalog_facet_attribute, subdomain: @presenter.subdomain) %>
 
       <% unless @presenter.tombstone? %>
-        <dt><%= t('citable_link') %></dt>
+        <dt role="heading" aria-level="3"><%= t('citable_link') %></dt>
         <dd>
           <form>
             <label for="permalink" style="display: none;"><%= t('citable_link') %></label>
