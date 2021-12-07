@@ -99,18 +99,35 @@ class PressCatalogController < ::CatalogController
           # facets
           # Sort HEB facets alphabetically, others by count
           sort = (@press.subdomain == 'heb') ? 'index' : 'count'
-          # This is replaced with the Access "fake facet", HELIO-3347
-          # blacklight_config.add_facet_field Solrizer.solr_name('open_access', :facetable), label: "Open Access", limit: 1, url_method: :facet_url_helper, sort: sort
-          blacklight_config.add_facet_field Solrizer.solr_name('funder', :facetable), label: "Funder", limit: 5, url_method: :facet_url_helper, sort: sort
-          blacklight_config.add_facet_field Solrizer.solr_name('subject', :facetable), label: "Subject", limit: 10, url_method: :facet_url_helper, sort: sort
-          blacklight_config.add_facet_field Solrizer.solr_name('creator', :facetable), label: "Author", limit: 5, url_method: :facet_url_helper, sort: sort
-          if @press.subdomain == 'heb'
-            blacklight_config.add_facet_field Solrizer.solr_name('publisher', :facetable), label: "Publisher", limit: 5, url_method: :facet_url_helper, sort: sort
-          end
-          blacklight_config.add_facet_field Solrizer.solr_name('series', :facetable), label: "Series", limit: 5, url_method: :facet_url_helper, sort: sort
-          blacklight_config.add_facet_field Solrizer.solr_name('press_name', :facetable), label: "Source", limit: 5, url_method: :facet_url_helper, sort: sort
-          if Sighrax.platform_admin?(current_actor)
-            blacklight_config.add_facet_field Solrizer.solr_name('product_names', :facetable), label: "Products", limit: 5
+
+          if Incognito.developer?(current_actor)
+            # This is replaced with the Access "fake facet", HELIO-3347
+            # blacklight_config.add_facet_field Solrizer.solr_name('open_access', :facetable), label: "Open Access", limit: 1, url_method: :facet_url_helper, sort: sort
+            blacklight_config.add_facet_field Solrizer.solr_name('funder', :facetable), label: "Funder", limit: false, url_method: :facet_url_helper, sort: sort
+            blacklight_config.add_facet_field Solrizer.solr_name('subject', :facetable), label: "Subject", limit: false, url_method: :facet_url_helper, sort: sort
+            blacklight_config.add_facet_field Solrizer.solr_name('creator', :facetable), label: "Author", limit: false, url_method: :facet_url_helper, sort: sort
+            if @press.subdomain == 'heb'
+              blacklight_config.add_facet_field Solrizer.solr_name('publisher', :facetable), label: "Publisher", limit: false, url_method: :facet_url_helper, sort: sort
+            end
+            blacklight_config.add_facet_field Solrizer.solr_name('series', :facetable), label: "Series", limit: false, url_method: :facet_url_helper, sort: sort
+            blacklight_config.add_facet_field Solrizer.solr_name('press_name', :facetable), label: "Source", limit: false, url_method: :facet_url_helper, sort: sort
+            if Sighrax.platform_admin?(current_actor)
+              blacklight_config.add_facet_field Solrizer.solr_name('product_names', :facetable), label: "Products", limit: false
+            end
+          else
+            # This is replaced with the Access "fake facet", HELIO-3347
+            # blacklight_config.add_facet_field Solrizer.solr_name('open_access', :facetable), label: "Open Access", limit: 1, url_method: :facet_url_helper, sort: sort
+            blacklight_config.add_facet_field Solrizer.solr_name('funder', :facetable), label: "Funder", limit: 5, url_method: :facet_url_helper, sort: sort
+            blacklight_config.add_facet_field Solrizer.solr_name('subject', :facetable), label: "Subject", limit: 10, url_method: :facet_url_helper, sort: sort
+            blacklight_config.add_facet_field Solrizer.solr_name('creator', :facetable), label: "Author", limit: 5, url_method: :facet_url_helper, sort: sort
+            if @press.subdomain == 'heb'
+              blacklight_config.add_facet_field Solrizer.solr_name('publisher', :facetable), label: "Publisher", limit: 5, url_method: :facet_url_helper, sort: sort
+            end
+            blacklight_config.add_facet_field Solrizer.solr_name('series', :facetable), label: "Series", limit: 5, url_method: :facet_url_helper, sort: sort
+            blacklight_config.add_facet_field Solrizer.solr_name('press_name', :facetable), label: "Source", limit: 5, url_method: :facet_url_helper, sort: sort
+            if Sighrax.platform_admin?(current_actor)
+              blacklight_config.add_facet_field Solrizer.solr_name('product_names', :facetable), label: "Products", limit: 5
+            end
           end
 
           blacklight_config.add_facet_fields_to_solr_request!
