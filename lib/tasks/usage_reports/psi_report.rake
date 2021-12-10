@@ -2,6 +2,7 @@
 
 # See FULCRUMOPS-13
 # press will include subpresses
+# Updated with HELIO-4121
 desc "Create a usage report to send to PSI"
 namespace :heliotrope do
   task :psi_report, [:press] => :environment do |_t, args|
@@ -19,13 +20,26 @@ namespace :heliotrope do
     file_sets = presenters_for(Hyrax::FileSetPresenter, counter.pluck(:noid).uniq)
     monographs = presenters_for(Hyrax::MonographPresenter, counter.pluck(:parent_noid).uniq)
 
-    puts ["Time Stamp", "IP Address", "Monograph Title", "Chapter/Resource Title", "Creators"].to_csv
+    # puts ["Time Stamp", "IP Address", "Monograph Title", "Chapter/Resource Title", "Creators"].to_csv
+    puts ["Event Date", "Event", "ISBN/DOI", "Publisher Name", "Book Title/Journal Title", "Author(s)", "Chapter/Article Title", "IP Adress", "OA/Paid"].to_csv
 
     counter.each do |c|
       ip = c.session.split("|")[0]
       chapter = c.section_type == "Chapter" ? c.section : file_sets[c.noid]&.title
+      # epubs and other featured representative types won't have a DOI, so use ISBN I guess?
+      doi = monographs[c.parent_noid]&.doi? ? monographs[c.parent_noid]&.doi_url : monographs[c.parent_noid]&.isbn.join("; ")
 
-      puts [c.created_at, ip, monographs[c.parent_noid]&.title, chapter, monographs[c.parent_noid]&.authors].to_csv
+      puts [
+            c.created_at, 
+            "request",
+            doi,
+            Press.find(c.press).name,
+            monographs[c.parent_noid]&.title,
+            monographs[c.parent_noid]&.creator.join("; "),
+            chapter,
+            ip,
+            monographs[c.parent_noid]&.open_access? ? "OA" : "Paid"
+      ].to_csv
     end
 
   end
