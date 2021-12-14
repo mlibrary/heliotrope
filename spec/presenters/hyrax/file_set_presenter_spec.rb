@@ -269,6 +269,158 @@ RSpec.describe Hyrax::FileSetPresenter do
     end
   end
 
+  describe 'svgicon' do
+    describe '#use_svgicon?' do
+      subject { presenter.use_svgicon? }
+
+      let(:fileset_doc) {
+        SolrDocument.new(id: 'fileset_id',
+                         has_model_ssim: ['FileSet'],
+                         mime_type_ssi: mime_type,
+                         external_resource_url_ssim: external_resource_url,
+                         thumbnail_path_ss: thumbnail_path)
+      }
+
+      context 'file not using a thumbnail derivative' do
+        let(:mime_type) { 'application/pdf' }
+        let(:external_resource_url) { '' }
+        let(:thumbnail_path) { ActionController::Base.helpers.image_path 'default.png' }
+
+        it { is_expected.to be true }
+      end
+
+      context 'file using a thumbnail derivative' do
+        let(:mime_type) { 'application/pdf' }
+        let(:external_resource_url) { '' }
+        let(:thumbnail_path) { Hyrax::Engine.routes.url_helpers.download_path('fileset_id', file: 'thumbnail') }
+
+        it { is_expected.to be false }
+      end
+
+      context 'external resource' do
+        let(:mime_type) { nil }
+        let(:external_resource_url) { 'URL' }
+        let(:thumbnail_path) { nil }
+
+        it { is_expected.to be true }
+      end
+
+      context 'mystery file' do
+        let(:mime_type) { nil }
+        let(:external_resource_url) { nil }
+        let(:thumbnail_path) { nil }
+
+        it { is_expected.to be true }
+      end
+    end
+
+    describe '#svgicon_type' do
+      subject { presenter.svgicon_type }
+
+      let(:fileset_doc) {
+        SolrDocument.new(id: 'fileset_id',
+                         has_model_ssim: ['FileSet'],
+                         mime_type_ssi: mime_type,
+                         resource_type_tesim: resource_type)
+      }
+
+      context 'pdf file' do
+        let(:mime_type) { 'application/pdf' }
+        let(:resource_type) { nil }
+
+        it { is_expected.to be 'svgicon/default.svg' }
+      end
+
+      context 'text resource_type' do
+        let(:mime_type) { nil }
+        let(:resource_type) { ['text'] }
+
+        it { is_expected.to be 'svgicon/text.svg' }
+      end
+
+      context 'image resource_type' do
+        let(:mime_type) { nil }
+        let(:resource_type) { ['image'] }
+
+        it { is_expected.to be 'svgicon/image.svg' }
+      end
+
+      context 'video resource_type' do
+        let(:mime_type) { nil }
+        let(:resource_type) { ['video'] }
+
+        it { is_expected.to be 'svgicon/video.svg' }
+      end
+
+      context 'audio resource_type' do
+        let(:mime_type) { nil }
+        let(:resource_type) { ['audio'] }
+
+        it { is_expected.to be 'svgicon/audio.svg' }
+      end
+
+      context 'mystery file' do
+        let(:mime_type) { nil }
+        let(:resource_type) { ['blurb'] }
+
+        it { is_expected.to be 'svgicon/default.svg' }
+      end
+    end
+
+    describe '#svgicon_alt' do
+      subject { presenter.svgicon_alt }
+
+      let(:fileset_doc) {
+        SolrDocument.new(id: 'fileset_id',
+                         has_model_ssim: ['FileSet'],
+                         mime_type_ssi: mime_type,
+                         resource_type_tesim: resource_type)
+      }
+
+      context 'pdf file' do
+        let(:mime_type) { 'application/pdf' }
+        let(:resource_type) { nil }
+
+        it { is_expected.to be 'Document File Icon' }
+      end
+
+      context 'text resource_type' do
+        let(:mime_type) { nil }
+        let(:resource_type) { ['text'] }
+
+        it { is_expected.to be 'Document File Icon' }
+      end
+
+      context 'image resource_type' do
+        let(:mime_type) { nil }
+        let(:resource_type) { ['image'] }
+
+        it { is_expected.to be 'Image File Icon' }
+      end
+
+      context 'video resource_type' do
+        let(:mime_type) { nil }
+        let(:resource_type) { ['video'] }
+
+        it { is_expected.to be 'Video File Icon' }
+      end
+
+      context 'audio resource_type' do
+        let(:mime_type) { nil }
+        let(:resource_type) { ['audio'] }
+
+        it { is_expected.to be 'Audio File Icon' }
+      end
+
+      context 'mystery file' do
+        let(:mime_type) { nil }
+        let(:resource_type) { ['blurb'] }
+
+        it { is_expected.to be 'Document File Icon' }
+      end
+    end
+  end
+
   describe '#use_riiif_for_icon??' do
     subject { presenter.use_riiif_for_icon? }
 

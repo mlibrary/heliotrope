@@ -840,6 +840,10 @@ footer.press {
         border: 2px solid #eeeeee;
         }
 
+        img.svgicon {
+          border: none;
+        }
+
         .file-set-glyphicon {
           font-size: 9em;
           margin-bottom: 10px;
@@ -899,13 +903,14 @@ footer.press {
       -ms-flex: 1;
       flex: 1;
 
-      min-width: 250px;
-      min-height: 250px;
-      -webkit-flex: 1 0 250px;
+      min-width: 240px;
+      min-height: 240px;
+      -webkit-flex: 1 0 240px;
     }
 
     .document:first-child {
-      margin-top: auto;
+      margin-top: 6px;
+      padding-top: 6px;
     }
 
     .index_title {
@@ -951,6 +956,10 @@ footer.press {
 
         img {
           border: 2px solid #eeeeee;
+        }
+
+        img.svgicon {
+          border: none;
         }
 
         .file-set-glyphicon {

@@ -1,17 +1,30 @@
 <% fs_presenter = Hyrax::FileSetPresenter.new(document, nil, nil) %>
 <%- if has_thumbnail?(document) && tn = render_thumbnail_tag(document, {alt: fs_presenter.alt_text}, counter: document_counter_with_offset(document_counter)) %>
   <div class="document-thumbnail col-sm-3">
-    <% if fs_presenter.use_riiif_for_icon? %>
-      <% icon_string = '<img src="/image-service/' + fs_presenter.id + fs_presenter&.browser_cache_breaker + '/full/200,/0/default.png' + '">' %>
-      <%= tn.gsub(/<img.*>/, icon_string).html_safe %>
-    <% elsif fs_presenter.use_glyphicon? %>
-      <%= tn.gsub(/<img.*>/, fs_presenter.gylphicon + "<br/></a>".html_safe).html_safe %>
-      <% if fs_presenter.external_resource? %>
-        <% uri =  URI.parse(document.external_resource_url) %>
-        <a class="external-resource-link" href="<%= document.external_resource_url %>" target="_blank"><span class="glyphicon glyphicon-share" aria-hidden="true"></span> Open external resource at <%= uri.scheme %>://<%= uri.host %></a>
-      <% end %>
-    <% else %>
-      <%= tn %>
+    <%=
+      if fs_presenter.use_riiif_for_icon?
+        riiif_icon = "/image-service/#{fs_presenter.id + fs_presenter&.browser_cache_breaker}/full/200,/0/default.png"
+        alt_text = fs_presenter.alt_text.first || ''
+        '<img src="' + riiif_icon  + '" alt="' + alt_text + '">'.html_safe
+      elsif fs_presenter.use_svgicon?
+        image_tag(fs_presenter.svgicon_type, class: 'svgicon', alt: fs_presenter.svgicon_alt, sizes: "(max-width: 100%)", width: "200px", height: "auto")
+      else
+        # Render the thumbnail, if available, for a document and link it to the document record.
+        # def render_thumbnail_tag document, image_options = {}, url_options = {}
+        #   Params:
+        #     document (SolrDocument)
+        #   image_options (Hash) — to pass to the image tag
+        #   url_options (Hash) — to pass to #link_to_document
+        #   Returns:
+        #     (String)
+        render_thumbnail_tag(document, { alt: fs_presenter.alt_text.first || '' }, { suppress_link: true })
+      end
+    %>
+    <% if fs_presenter.external_resource? %>
+      <% uri =  URI.parse(document.external_resource_url) %>
+      <div class="external-resource-link">
+        <a href="<%= document.external_resource_url %>" target="_blank"><span class="glyphicon glyphicon-share" aria-hidden="true"></span> Open external resource at <%= uri.scheme %>://<%= uri.host %></a>
+      </div>
     <% end %>
   </div>
 <% end %>

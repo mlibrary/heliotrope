@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Hyrax
-  class FileSetPresenter
+  class FileSetPresenter # rubocop:disable Metrics/ClassLength
     include TitlePresenter
     include CitableLinkPresenter
     include EmbedCodePresenter
@@ -233,6 +233,44 @@ module Hyrax
       # Anyway, this default (set with a call to ActionController::Base.helpers.image_path) can't be styled per...
       # publisher so instead we'll use resource-type-specific glyphicons in "publisher branding" colors
       mime_type.blank? || external_resource? || using_default_thumbnail?
+    end
+
+    def use_svgicon?
+      mime_type.blank? || external_resource? || using_default_thumbnail?
+    end
+
+    def svgicon_type
+      case resource_type&.first&.downcase
+      when 'text'
+        'svgicon/text.svg'
+      when 'image'
+        'svgicon/image.svg'
+      when 'video'
+        'svgicon/video.svg'
+      when 'audio'
+        'svgicon/audio.svg'
+      when 'map', 'interactive map'
+        'svgicon/map.svg'
+      else
+        'svgicon/default.svg'
+      end
+    end
+
+    def svgicon_alt
+      case resource_type&.first&.downcase
+      when 'text'
+        'Document File Icon'
+      when 'image'
+        'Image File Icon'
+      when 'video'
+        'Video File Icon'
+      when 'audio'
+        'Audio File Icon'
+      when 'map', 'interactive map'
+        'Location Map Icon'
+      else
+        'Document File Icon'
+      end
     end
 
     def center_caption?

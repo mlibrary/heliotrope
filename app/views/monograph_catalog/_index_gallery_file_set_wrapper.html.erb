@@ -1,16 +1,26 @@
 <% fs_presenter = Hyrax::FileSetPresenter.new(document, nil, nil) %>
 <div class="document col-xs-6 col-md-3">
   <div class="thumbnail">
-    <% if fs_presenter.use_riiif_for_icon? %>
-      <% icon_string = '<img src="/image-service/' + fs_presenter.id + fs_presenter&.browser_cache_breaker + '/full/200,/0/default.png' + '">' %>
-      <% tn = render_thumbnail_tag(document, {}, counter: document_counter_with_offset(document_counter)) %>
-      <%= tn.gsub(/<img.*>/, icon_string).html_safe %>
-    <% elsif fs_presenter.use_glyphicon? %>
-      <% icon_string = '<span class="' + fs_presenter.glyphicon_type + ' file-set-glyphicon" aria-hidden="true"></span>' %>
-      <% tn = render_thumbnail_tag(document, {}, counter: document_counter_with_offset(document_counter)) %>
-      <%= tn.gsub(/<img.*>/, icon_string + '<br/>').html_safe %>
-    <% else %>
-      <%= render_thumbnail_tag(document, {alt: fs_presenter.alt_text}, counter: document_counter_with_offset(document_counter)) %>
+    <%= link_to url_for_document(document) do %>
+      <%=
+        if fs_presenter.use_riiif_for_icon?
+          riiif_icon = "/image-service/#{fs_presenter.id + fs_presenter&.browser_cache_breaker}/full/200,/0/default.png"
+          alt_text = fs_presenter.alt_text.first || ''
+          '<img src="' + riiif_icon  + '" alt="' + alt_text + '">'.html_safe
+        elsif fs_presenter.use_svgicon?
+          image_tag(fs_presenter.svgicon_type, class: 'svgicon', alt: fs_presenter.svgicon_alt, sizes: "(max-width: 100%)", width: "200px", height: "auto")
+        else
+          # Render the thumbnail, if available, for a document and link it to the document record.
+          # def render_thumbnail_tag document, image_options = {}, url_options = {}
+          #   Params:
+          #     document (SolrDocument)
+          #   image_options (Hash) — to pass to the image tag
+          #   url_options (Hash) — to pass to #link_to_document
+          #   Returns:
+          #     (String)
+          render_thumbnail_tag(document, { alt: fs_presenter.alt_text.first || '' }, { suppress_link: true })
+        end
+      %>
     <% end %>
     <div class="caption">
       <%= render_document_partials document, blacklight_config.view_config(:gallery).partials, document_counter: document_counter %>
