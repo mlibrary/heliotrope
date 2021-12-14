@@ -4,13 +4,14 @@ require 'rails_helper'
 
 RSpec.describe Greensub::Institution, type: :model do
   context 'instance' do
-    subject { described_class.new(id: id, identifier: identifier, name: name, display_name: display_name, entity_id: entity_id) }
+    subject { described_class.new(id: id, identifier: identifier, name: name, display_name: display_name, entity_id: entity_id, in_common: in_common) }
 
     let(:id) { 1 }
     let(:identifier) { 'identifier' }
     let(:name) { 'name' }
     let(:display_name) { 'display_name' }
     let(:entity_id) { 'entity_id' }
+    let(:in_common) { true }
 
     it { is_expected.to be_a Greensub::Licensee }
     it { expect(subject.agent_type).to eq :Institution }
@@ -19,13 +20,19 @@ RSpec.describe Greensub::Institution, type: :model do
     describe '#shibboleth?' do
       it { expect(subject.shibboleth?).to be true }
 
-      context 'nil' do
+      context 'not in common' do
+        let(:in_common) { false }
+
+        it { expect(subject.shibboleth?).to be false }
+      end
+
+      context 'entity id nil' do
         let(:entity_id) { nil }
 
         it { expect(subject.shibboleth?).to be false }
       end
 
-      context 'blank' do
+      context 'entity id blank' do
         let(:entity_id) { '' }
 
         it { expect(subject.shibboleth?).to be false }

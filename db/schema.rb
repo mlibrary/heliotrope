@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_11_03_174801) do
+ActiveRecord::Schema.define(version: 2021_12_14_202124) do
 
   create_table "api_requests", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.integer "user_id"
@@ -289,6 +289,7 @@ ActiveRecord::Schema.define(version: 2021_11_03_174801) do
     t.string "display_name"
     t.string "location"
     t.string "ror_id"
+    t.boolean "in_common", default: false
     t.index ["identifier"], name: "index_institutions_on_identifier", unique: true
   end
 

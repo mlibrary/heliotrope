@@ -217,8 +217,6 @@ Rails.application.routes.draw do
   get 'shib_session(/*resource)', to: 'sessions#shib_session', as: :shib_session
   resource :authentication, only: %i[show new create destroy]
   resolve('Authentication') { [:authentication] }
-  get 'discovery_feed', controller: :sessions, action: :discovery_feed
-  get 'discovery_feed/:id', controller: :sessions, action: :discovery_feed
   unless Rails.env.production?
     get 'Shibboleth.sso/Help', controller: :shibboleths, action: :help
     get 'Shibboleth.sso/Login', controller: :shibboleths, action: :new
