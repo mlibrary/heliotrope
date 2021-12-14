@@ -826,6 +826,15 @@ footer.press {
     }
   }
 
+  #documents {
+
+    .svgicon {
+      // To change any SVGs color see https://stackoverflow.com/a/53336754
+      filter: invert(53%) sepia(22%) saturate(3052%) hue-rotate(159deg) brightness(96%) contrast(102%); // #00AFEC
+    }
+
+  }
+
   // MONOGRAPH ASSETS - LIST VIEW
   #documents.documents-list {
 

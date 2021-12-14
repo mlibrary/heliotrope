@@ -52,6 +52,16 @@ $heliotrope-highlight-background: #002c63;
 
 .heliotrope {
 
+  // svgicon
+  #documents {
+
+    .svgicon {
+      // To change any SVGs color see https://stackoverflow.com/a/53336754
+      filter: invert(42%) sepia(93%) saturate(1352%) hue-rotate(87deg) brightness(119%) contrast(119%); // #00EE00
+    }
+
+  }
+
   // EPUB Reader
   #reader {
 
@@ -106,6 +116,17 @@ $heb-black-80: #342f2e;
 }
 
 .heb {
+
+  // svgicon
+  #documents {
+
+    .svgicon {
+      // To change any SVGs color see https://stackoverflow.com/a/53336754
+      filter: invert(17%) sepia(6%) saturate(0%) hue-rotate(128deg) brightness(95%) contrast(86%); // $heb-brand-color: #333333;
+
+    }
+
+  }
 
   // typography
   @include freight-text;
@@ -778,6 +799,17 @@ $ahpi-white: #fff;
 
 .ahpi {
 
+  // svgicon
+  #documents {
+
+    .svgicon {
+      // To change any SVGs color see https://stackoverflow.com/a/53336754
+      filter: invert(40%) sepia(100%) saturate(404%) hue-rotate(356deg) brightness(93%) contrast(83%); // $ahpi-brand-light: #a76f20;
+
+    }
+
+  }
+
   // typography
   @include cardo;
 
@@ -1130,6 +1162,18 @@ $atg-black-80: #342f2e;
 }
 
 .atg {
+
+  // svgicon
+  #documents {
+
+    .svgicon {
+      // To change any SVGs color see https://stackoverflow.com/a/53336754
+      filter: invert(12%) sepia(41%) saturate(6364%) hue-rotate(352deg) brightness(91%) contrast(117%); // $atg-link: #800000;
+
+
+    }
+
+  }
 
   // typography
   @include roboto;
@@ -1554,6 +1598,17 @@ $amherst-grey-3: #dee2e6;
 }
 
 .amherst {
+
+  // svgicon
+  #documents {
+
+    .svgicon {
+      // To change any SVGs color see https://stackoverflow.com/a/53336754
+      filter: invert(27%) sepia(73%) saturate(847%) hue-rotate(233deg) brightness(90%) contrast(104%); // $amherst-link: #6837A3;
+
+    }
+
+  }
 
   // typography
   @include brandon;
@@ -2066,6 +2121,17 @@ $barpublishing-white: #fff;
 }
 
 .barpublishing {
+
+  // svgicon
+  #documents {
+
+    .svgicon {
+      // To change any SVGs color see https://stackoverflow.com/a/53336754
+      filter: invert(0%) sepia(100%) saturate(0%) hue-rotate(21deg) brightness(97%) contrast(103%); // $barpublishing-link: #000;
+
+    }
+
+  }
 
   // typography
   @include arial;
@@ -2733,6 +2799,16 @@ $iu-midnight: #006298;
 }
 
 .indiana {
+  // svgicon
+  #documents {
+
+    .svgicon {
+      // To change any SVGs color see https://stackoverflow.com/a/53336754
+      filter: invert(9%) sepia(95%) saturate(4588%) hue-rotate(358deg) brightness(94%) contrast(110%); // $iu-accent-link: #990000;
+
+    }
+
+  }
 
   // typography
   @include benton-regular;
@@ -2960,6 +3036,17 @@ $lever-black-80: #342f2e;
 }
 
 .leverpress {
+
+  // svgicon
+  #documents {
+
+    .svgicon {
+      // To change any SVGs color see https://stackoverflow.com/a/53336754
+      filter: invert(33%) sepia(57%) saturate(425%) hue-rotate(170deg) brightness(100%) contrast(90%); // $lever-link: #40658f;
+
+    }
+
+  }
 
   // typography
   @include meta-serif;
@@ -3475,6 +3562,17 @@ $um-white: #fff;
 
 
 .michigan {
+
+  // svgicon
+  #documents {
+
+    .svgicon {
+      // To change any SVGs color see https://stackoverflow.com/a/53336754
+      filter: invert(38%) sepia(20%) saturate(1106%) hue-rotate(165deg) brightness(93%) contrast(96%); // $um-accent-link: rgb(29, 116, 145);
+
+    }
+
+  }
 
   // typography
   @include meta-serif;
@@ -4082,6 +4180,17 @@ $gabii-link-hover:    #1e5667;
 
 .gabii {
 
+  // svgicon
+  #documents {
+
+    .svgicon {
+      // To change any SVGs color see https://stackoverflow.com/a/53336754
+      filter: invert(38%) sepia(20%) saturate(1106%) hue-rotate(165deg) brightness(93%) contrast(96%); // $gabii-link:          #39688f;
+
+    }
+
+  }
+
   @include garamond;
   color: #00051c;
 
@@ -4526,6 +4635,17 @@ $gabii-link-hover:    #1e5667;
 //////////////////////////////////////////////
 .ummaa {
 
+  // svgicon
+  #documents {
+
+    .svgicon {
+      // To change any SVGs color see https://stackoverflow.com/a/53336754
+      filter: invert(0%) sepia(90%) saturate(7459%) hue-rotate(60deg) brightness(88%) contrast(112%); // #000000
+
+    }
+
+  }
+
   header {
     border-bottom: none;
     height: unset;
@@ -4662,6 +4782,16 @@ $gabii-link-hover:    #1e5667;
 //
 //////////////////////////////////////////////
 .lrccs, .cjs, .csas, .cseas {
+
+  // svgicon
+  #documents {
+
+    .svgicon {
+      filter: invert(0%) sepia(90%) saturate(7459%) hue-rotate(60deg) brightness(88%) contrast(112%); // #000000
+
+    }
+
+  }
 
   // navigation bar
 
@@ -4843,6 +4973,18 @@ $gabii-link-hover:    #1e5667;
 //
 //////////////////////////////////////////////
 .cjs {
+
+  // svgicon
+  #documents {
+
+    .svgicon {
+      // To change any SVGs color see https://stackoverflow.com/a/53336754
+      filter: invert(0%) sepia(90%) saturate(7459%) hue-rotate(60deg) brightness(88%) contrast(112%); // #000000
+
+    }
+
+  }
+
   // navigation bar
   .navbar {
     min-height: 70px;
@@ -4900,6 +5042,17 @@ $mps-teal-100: #e9f2f5;
 
 
 .mps {
+
+  // svgicon
+  #documents {
+
+    .svgicon {
+      // To change any SVGs color see https://stackoverflow.com/a/53336754
+      filter: invert(39%) sepia(36%) saturate(858%) hue-rotate(149deg) brightness(92%) contrast(96%); // $mps-teal-400: #1d7491;
+
+    }
+
+  }
 
   // typography
   @include muli;
@@ -5315,6 +5468,17 @@ $a2ru-white: #fafafa;
 }
 
 .a2ru {
+
+  // svgicon
+  #documents {
+
+    .svgicon {
+      // To change any SVGs color see https://stackoverflow.com/a/53336754
+      filter: invert(25%) sepia(75%) saturate(1995%) hue-rotate(313deg) brightness(96%) contrast(116%); // $a2ru-link: #ed1b68;
+
+    }
+
+  }
 
   // typography
   @include rubik;
@@ -5785,6 +5949,17 @@ $fia-teal-100: #e9f2f5;
 
 .fia {
 
+  // svgicon
+  #documents {
+
+    .svgicon {
+      // To change any SVGs color see https://stackoverflow.com/a/53336754
+      filter: invert(36%) sepia(15%) saturate(2207%) hue-rotate(149deg) brightness(100%) contrast(87%); // $fia-teal-400: #1d7491;
+
+    }
+
+  }
+
   // typography
   @include proxima-nova;
 
@@ -6212,6 +6387,17 @@ $maize-black-80: #342f2e;
 
 .maizebooks {
 
+  // svgicon
+  #documents {
+
+    .svgicon {
+      // To change any SVGs color see https://stackoverflow.com/a/53336754
+      filter: invert(14%) sepia(21%) saturate(3867%) hue-rotate(181deg) brightness(97%) contrast(106%); // $maize-accent-link: #00274c;
+
+    }
+
+  }
+
   // typography
   @include benton;
 
@@ -6592,6 +6778,17 @@ $pccn-black-80: #342f2e;
 }
 
 .um-pccn {
+
+  // svgicon
+  #documents {
+
+    .svgicon {
+      // To change any SVGs color see https://stackoverflow.com/a/53336754
+      filter: invert(48%) sepia(34%) saturate(715%) hue-rotate(159deg) brightness(86%) contrast(86%); // $pccn-accent-link: #417da1;
+
+    }
+
+  }
 
   // typography
   @include roboto;
@@ -7000,6 +7197,17 @@ $umn-white: #fff;
 
 .minnesota {
 
+  // svgicon
+  #documents {
+
+    .svgicon {
+      // To change any SVGs color see https://stackoverflow.com/a/53336754
+      filter: invert(23%) sepia(89%) saturate(1225%) hue-rotate(343deg) brightness(97%) contrast(87%); // $umn-accent-link: #a43727;
+
+    }
+
+  }
+
   // typography
   @include ff-meta-serif;
 
@@ -7216,6 +7424,16 @@ $unc-black-80: #342f2e;
 }
 
 .uncpress {
+  // svgicon
+  #documents {
+
+    .svgicon {
+      // To change any SVGs color see https://stackoverflow.com/a/53336754
+      filter: invert(15%) sepia(74%) saturate(2217%) hue-rotate(358deg) brightness(86%) contrast(92%); // $unc-link: #72260D;
+
+    }
+
+  }
 
   // typography
   @include alegreya;
@@ -7585,6 +7803,17 @@ $fulcrum-light-2: #bec4cc;
 
 .northwestern {
 
+  // svgicon
+  #documents {
+
+    .svgicon {
+      // To change any SVGs color see https://stackoverflow.com/a/53336754
+      filter: invert(45%) sepia(7%) saturate(3588%) hue-rotate(220deg) brightness(79%) contrast(77%); // $nw-purple-60: #735c9d;
+
+    }
+
+  }
+
   //typography
   @include droid-serif;
 
@@ -7798,6 +8027,17 @@ $ncid-black-80: #342f2e;
 }
 
 .ncid {
+
+  // svgicon
+  #documents {
+
+    .svgicon {
+      // To change any SVGs color see https://stackoverflow.com/a/53336754
+      filter: invert(39%) sepia(63%) saturate(737%) hue-rotate(329deg) brightness(109%) contrast(96%); // $ncid-accent-link: #f46036;
+
+    }
+
+  }
 
   // typography
   @include proxima-nova();
@@ -8146,6 +8386,16 @@ $nyu-gray-2: #342f2e;
 
 .nyupress {
 
+  // svgicon
+  #documents {
+
+    .svgicon {
+      // To change any SVGs color see https://stackoverflow.com/a/53336754
+      filter: invert(11%) sepia(55%) saturate(7150%) hue-rotate(275deg) brightness(77%) contrast(109%); // $nyu-link: #57068c;
+    }
+
+  }
+
   // typography
   @include adelle-sans;
 
@@ -8425,6 +8675,16 @@ $psu-gray-1: #3F4550;
 }
 
 .pennstate {
+
+  // svgicon
+  #documents {
+
+    .svgicon {
+      // To change any SVGs color see https://stackoverflow.com/a/53336754
+      filter: invert(11%) sepia(53%) saturate(7384%) hue-rotate(187deg) brightness(101%) contrast(105%); // $psu-link: #00527b;
+    }
+
+  }
 
   // typography
   @include droid-serif;
@@ -8784,6 +9044,16 @@ $reki-black-80: #342f2e;
 
 .rekihaku {
 
+  // svgicon
+  #documents {
+
+    .svgicon {
+      // To change any SVGs color see https://stackoverflow.com/a/53336754
+      filter: invert(35%) sepia(15%) saturate(1110%) hue-rotate(6deg) brightness(95%) contrast(95%); // $reki-link: #665833;
+    }
+
+  }
+
   // typography
   @include open-sans;
 
@@ -9123,6 +9393,16 @@ $sussex-black-80: #342f2e;
 }
 
 .sussex {
+
+  // svgicon
+  #documents {
+
+    .svgicon {
+      // To change any SVGs color see https://stackoverflow.com/a/53336754
+      filter: invert(22%) sepia(92%) saturate(3706%) hue-rotate(340deg) brightness(87%) contrast(89%); // $sussex-link: #d3273e;
+    }
+
+  }
 
   // typography
   @include franklin;
