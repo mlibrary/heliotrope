@@ -8,6 +8,10 @@ module Sighrax
       []
     end
 
+    def citable_link
+      Sighrax.citable_link(self)
+    end
+
     def deposited?
       return true if vector('suppressed_bsi').empty?
 

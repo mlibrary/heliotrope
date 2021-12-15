@@ -475,6 +475,36 @@ RSpec.describe Sighrax do
         it { is_expected.to eq "http://test.host/concern/file_sets/validnoid" }
       end
     end
+
+    describe '#citable_link' do
+      subject { described_class.citable_link(entity) }
+
+      let(:entity) { described_class.from_noid(noid) }
+      let(:noid) { 'validnoid' }
+      let(:data) { { id: noid } }
+
+      before { allow(ActiveFedora::SolrService).to receive(:query).with("{!terms f=id}#{noid}", rows: 1).and_return([data]) }
+
+      it { is_expected.to be nil }
+
+      context 'monograph' do
+        let(:entity) { Sighrax::Monograph.send(:new, noid, data) }
+
+        it { is_expected.to eq "https://hdl.handle.net/2027/fulcrum.#{noid}" }
+      end
+
+      context 'score' do
+        let(:entity) { Sighrax::Score.send(:new, noid, data) }
+
+        it { is_expected.to eq "https://hdl.handle.net/2027/fulcrum.#{noid}" }
+      end
+
+      context 'resource' do
+        let(:entity) { Sighrax::Resource.send(:new, noid, data) }
+
+        it { is_expected.to eq "https://hdl.handle.net/2027/fulcrum.#{noid}" }
+      end
+    end
   end
 
   describe '#platform' do

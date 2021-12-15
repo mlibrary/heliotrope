@@ -46,7 +46,7 @@ module API
               }
             ]
           }
-          render plain: feed.to_json, content_type: 'application/opds+json'
+          render plain: javascript_escaping(feed.to_json), content_type: 'application/opds+json'
         end
 
         # This resource returns the umpebc_oa publications feed.
@@ -68,7 +68,7 @@ module API
             ]
           }
           feed[:publications] = umpebc_oa_publications
-          render plain: feed.to_json, content_type: 'application/opds+json'
+          render plain: javascript_escaping(feed.to_json), content_type: 'application/opds+json'
         end
 
         # This resource returns the umpebc publications feed.
@@ -90,7 +90,7 @@ module API
             ]
           }
           feed[:publications] = umpebc_publications
-          render plain: feed.to_json, content_type: 'application/opds+json'
+          render plain: javascript_escaping(feed.to_json), content_type: 'application/opds+json'
         end
 
         # This resource returns the leverpress publications feed.
@@ -112,7 +112,7 @@ module API
             ]
           }
           feed[:publications] = publications_by_subdomain("leverpress")
-          render plain: feed.to_json, content_type: 'application/opds+json'
+          render plain: javascript_escaping(feed.to_json), content_type: 'application/opds+json'
         end
 
         # This resource returns the amherst publications feed.
@@ -134,10 +134,70 @@ module API
             ]
           }
           feed[:publications] = publications_by_subdomain("amherst")
-          render plain: feed.to_json, content_type: 'application/opds+json'
+          render plain: javascript_escaping(feed.to_json), content_type: 'application/opds+json'
         end
 
         private
+
+          def javascript_escaping(hash_to_json)
+            # https://www.thorntech.com/4-things-you-must-do-when-putting-html-in-json/
+            #
+            # https://jehiah.cz/a/guide-to-escape-sequences
+            #
+            # javascript escaping
+            #
+            # As part of web applications you are always outputting data into a <script> tag.
+            # It’s important that all the values you output are escaped to prevent breaking
+            # out of quoted strings, and from breaking the closing </script> tag.
+            #
+            # A good mental check is to think about breaking this code:
+            #
+            # <script>
+            #     var a = "{{value}}";
+            # </script>
+            #
+            # Typically this is done by JSON encoding all data output into the script tag.
+            #
+            # <script>
+            #     var a = {{json_encode(value)}};
+            # </script>
+            #
+            # Unfortunately this isn’t sufficient. It really surprises people, myself included,
+            # that a properly escaped JSON string in a script tag that contains </script>
+            # will break processing of the script block.
+            #
+            # For example, take this properly JSON encoded string:
+            #
+            # <script>
+            #     var a = "</script><script>alert('and now i control your page');</script>";
+            # </script>
+            #
+            # Notice you can break the script and double quoted string sandbox without a double quote!
+            #
+            # In a page served as XML it’s possible to guard against this by making the whole script tag
+            # a PDATA block where you apply html escaping to the whole script contents,
+            # but in XHTML/HTML mode that is not an option.
+            #
+            # The way to solve this is using backslash escape sequence for the forward slash.
+            # (Note: some JSON encoders do this by default, some do not.)
+            #
+            #     / ==> \/
+            #
+            # However you can’t directly apply this substitution after JSON encoding
+            # as this would break any existing backslash escapes. The following substitution
+            # can however be used as a post-processing step after JSON encoding a string
+            #
+            #     </ ==> <\/
+            #
+            # In python you can do this with:
+            #
+            # return json.dumps(value).replace("</", "<\\/")
+
+            # In Ruby to_json replaces '<' character with '\\u003c'
+            # so you can do this with the return value:
+
+            hash_to_json.gsub('\\u003c/', '\\u003c\\/')
+          end
 
           def umpebc_oa_publications
             rvalue = []

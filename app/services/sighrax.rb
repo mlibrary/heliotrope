@@ -130,6 +130,13 @@ module Sighrax # rubocop:disable Metrics/ModuleLength
       end
     end
 
+    def citable_link(entity)
+      presenter = Sighrax.hyrax_presenter(entity)
+      return presenter.citable_link if presenter.respond_to?(:citable_link)
+
+      nil
+    end
+
     private
 
       def model_factory(noid, data, model_type)

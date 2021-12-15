@@ -26,6 +26,18 @@ RSpec.describe Sighrax::Model, type: :model do
     end
   end
 
+  describe '#citable_link' do
+    subject { monograph_entity.citable_link }
+
+    let(:monograph_entity) { Sighrax.from_noid(monograph.id) }
+    let(:monograph) { create(:public_monograph) }
+    let(:citable_link) { double('citable_link') }
+
+    before { allow(Sighrax).to receive(:citable_link).with(monograph_entity).and_return(citable_link) }
+
+    it { is_expected.to be citable_link }
+  end
+
   describe '#deposited?' do
     subject { described_class.send(:new, noid, data).deposited? }
 
