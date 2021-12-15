@@ -3,7 +3,7 @@
   <%= simple_form_for [main_app, curation_concern], html: { multipart: true } do |f| %>
       <%= hidden_field_tag('redirect_tab', 'thumbnail') %>
       <%= simple_fields_for :user_thumbnail do |t| %>
-        <%= t.input :use_default, label: 'Override Thumbnail with Glyphicon?', as: :boolean,
+        <%= t.input :use_default, label: 'Override Thumbnail with svgicon?', as: :boolean,
                     input_html: { checked: curation_concern.to_presenter.using_default_thumbnail? } %>
         <h4>Upload New Thumbnail (JPG/JPEG only!)</h4>
         <%= t.input :custom_thumbnail, as: :file, wrapper: :vertical_file_input, label: false, required: false,

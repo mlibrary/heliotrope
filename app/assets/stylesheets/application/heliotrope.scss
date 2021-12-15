@@ -826,6 +826,15 @@ footer.press {
     }
   }
 
+  #documents {
+
+    .svgicon {
+      // To change any SVGs color see https://stackoverflow.com/a/53336754
+      filter: invert(53%) sepia(22%) saturate(3052%) hue-rotate(159deg) brightness(96%) contrast(102%); // #00AFEC
+    }
+
+  }
+
   // MONOGRAPH ASSETS - LIST VIEW
   #documents.documents-list {
 
@@ -838,6 +847,10 @@ footer.press {
         img {
         margin-top: .9em;
         border: 2px solid #eeeeee;
+        }
+
+        img.svgicon {
+          border: none;
         }
 
         .file-set-glyphicon {
@@ -899,13 +912,14 @@ footer.press {
       -ms-flex: 1;
       flex: 1;
 
-      min-width: 250px;
-      min-height: 250px;
-      -webkit-flex: 1 0 250px;
+      min-width: 240px;
+      min-height: 240px;
+      -webkit-flex: 1 0 240px;
     }
 
     .document:first-child {
-      margin-top: auto;
+      margin-top: 6px;
+      padding-top: 6px;
     }
 
     .index_title {
@@ -951,6 +965,10 @@ footer.press {
 
         img {
           border: 2px solid #eeeeee;
+        }
+
+        img.svgicon {
+          border: none;
         }
 
         .file-set-glyphicon {
