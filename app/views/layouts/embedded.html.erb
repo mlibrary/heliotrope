@@ -20,6 +20,10 @@
     <%= stylesheet_link_tag 'embed' %>
     <!-- Javascript -->
     <%= javascript_include_tag 'embed' %>
+
+    <% if content_for?(:head) %>
+      <%= yield(:head) %>
+    <% end %>
   </head>
   <body <%= "style=\"#{style}\"".html_safe if style.length.positive? %>>
     <% if Settings.host == "heliotrope-preview.hydra.lib.umich.edu" %>
