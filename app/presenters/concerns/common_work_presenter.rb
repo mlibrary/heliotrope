@@ -107,7 +107,7 @@ module CommonWorkPresenter
     return 'All Rights Reserved' if link_content == 'https://www.press.umich.edu/about/licenses#all-rights-reserved'
 
     # get term for use as alt text
-    term = Hyrax::LicenseService.new.select_active_options.find { |a| a[1] == link_content }&.first
+    term = Hyrax::LicenseService.new.select_all_options.find { |a| a[1] == link_content }&.first
     term || 'Creative Commons License'
   end
 
@@ -119,7 +119,7 @@ module CommonWorkPresenter
     return 'All Rights Reserved' if link_content == 'https://www.press.umich.edu/about/licenses#all-rights-reserved'
 
     # get term for use as alt text
-    term = Hyrax::LicenseService.new.select_active_options.find { |a| a[1] == link_content }&.first
+    term = Hyrax::LicenseService.new.select_all_options.find { |a| a[1] == link_content }&.first
     term ||= 'Creative Commons License'
 
     link_content = link_content.sub('licenses', 'l')
