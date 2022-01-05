@@ -5,5 +5,8 @@
     <div class="pull-right">
       <%=link_to t('blacklight.search.start_over'), start_over_path, class: "catalog_startOverLink btn btn-sm btn-text", id: "startOverLink" %>
     </div>
+    <div class="search-feedback">
+      <p>Not finding what you are looking for? Help improve Fulcrum's search and <a target="_blank" href="https://umich.qualtrics.com/jfe/form/SV_3KSLynPij0fqrD7?publisher=<%= press.subdomain %>&search_location=catalog&url=<%= request.original_url %>">share your feedback</a>.</p>
+    </div>
   </div>
 <% end %>
