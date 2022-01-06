@@ -25,15 +25,13 @@ namespace :heliotrope do
 
     counter.each do |c|
       ip = c.session.split("|")[0]
-      chapter = c.section_type == "Chapter" ? c.section : file_sets[c.noid]&.title
-      # epubs and other featured representative types won't have a DOI, so use ISBN I guess?
-      doi = monographs[c.parent_noid]&.doi? ? monographs[c.parent_noid]&.doi_url : monographs[c.parent_noid]&.isbn.join("; ")
+      chapter = c.section_type == "Chapter" ? c.section : file_sets[c.noid]&.title 
 
       puts [
             c.created_at, 
             "request",
-            doi,
-            Press.find(c.press).name,
+            which_doi,
+            monographs[c.parent_noid]&.publisher.first,
             monographs[c.parent_noid]&.title,
             monographs[c.parent_noid]&.creator.join("; "),
             chapter,
@@ -42,6 +40,14 @@ namespace :heliotrope do
       ].to_csv
     end
 
+  end
+
+  def which_doi
+    # file_set doi if it exists, otherwise the monograph doi (for epubs and other featured reps), otherwise the monograph isbn(s)
+    return file_sets[c.noid]&.doi_url if  file_sets[c.noid]&.doi?
+    return monographs[c.parent_noid]&.doi_url if monographs[c.parent_noid]&.doi?
+    return monographs[c.parent_noid]&.isbn.join("; ") if monographs[c.parent_noid]&.isbn.present?
+    ""
   end
 
   def presenters_for(hyrax_presenter, noids)
