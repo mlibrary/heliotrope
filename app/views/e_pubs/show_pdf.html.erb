@@ -871,6 +871,8 @@
                     if ( data.metadata.has("dc:author") ) {
                       metadata.author = data.metadata.get("dc:author");
                     }
+                    metadata.noid = '<%= @noid %>';
+                    metadata.press_subdomain = '<%= @subdomain %>';
                   }
                   self.metadata = metadata;
 
