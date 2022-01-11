@@ -7,35 +7,48 @@ module Royalty
     extend ActiveSupport::Concern
     include ActionView::Helpers::NumberHelper
 
-    def box_config
-      return @box_config if @box_config.present?
-      @box_config ||= begin
-        filename = Rails.root.join('config', 'box.yml')
-        @yaml = YAML.safe_load(File.read(filename)) if File.exist?(filename)
-        @yaml ||= {}
-        @yaml['lib_ptg_box']
-      end
-    end
+    # def box_config
+    #   return @box_config if @box_config.present?
+    #   @box_config ||= begin
+    #     filename = Rails.root.join('config', 'box.yml')
+    #     @yaml = YAML.safe_load(File.read(filename)) if File.exist?(filename)
+    #     @yaml ||= {}
+    #     @yaml['lib_ptg_box']
+    #   end
+    # end
 
-    def send_reports(reports)
-      dir = File.join("Library PTG Box", "HEB", "HEB Royalty Reports", "#{@start_date.strftime("%Y-%m")}_to_#{@end_date.strftime("%Y-%m")}")
-      ftp = Net::FTP.open(box_config["ftp"], username: box_config["user"], password: box_config["password"], ssl: true)
-      begin
-        ftp.mkdir(dir)
-      rescue Net::FTPPermError => e
-        Rails.logger.info "[ROYALTY REPORTS] #{dir} already exists (THIS IS OK!): #{e}"
-      end
-      ftp.chdir(dir)
+    # def send_reports(reports)
+    #   dir = File.join("Library PTG Box", "HEB", "HEB Royalty Reports", "#{@start_date.strftime("%Y-%m")}_to_#{@end_date.strftime("%Y-%m")}")
+    #   ftp = Net::FTP.open(box_config["ftp"], username: box_config["user"], password: box_config["password"], ssl: true)
+    #   begin
+    #     ftp.mkdir(dir)
+    #   rescue Net::FTPPermError => e
+    #     Rails.logger.info "[ROYALTY REPORTS] #{dir} already exists (THIS IS OK!): #{e}"
+    #   end
+    #   ftp.chdir(dir)
+    #   reports.each do |name, report|
+    #     file = Tempfile.new(name)
+    #     file.write(CounterReporterService.csv(report))
+    #     file.close
+    #     ftp.putbinaryfile(file, name)
+    #     file.unlink
+    #     Rails.logger.info("[ROYALTY REPORTS] Put #{name}")
+    #   end
+    # rescue StandardError => e
+    #   Rails.logger.error "[ROYALTY REPORTS] FTP Error: #{e}\n#{e.backtrace.join("\n")}"
+    # end
+
+    # No longer using Box, write to disk (/tmp) instead: HELIO-4066
+    def send_reports(type, reports)
+      dir = File.join("/tmp", type, "#{@start_date.strftime("%Y-%m")}_to_#{@end_date.strftime("%Y-%m")}")
+      FileUtils.mkdir_p dir
       reports.each do |name, report|
-        file = Tempfile.new(name)
-        file.write(CounterReporterService.csv(report))
-        file.close
-        ftp.putbinaryfile(file, name)
-        file.unlink
-        Rails.logger.info("[ROYALTY REPORTS] Put #{name}")
+        file = File.join(dir, name)
+        File.write(file, CounterReporterService.csv(report))
+        Rails.logger.info("[ROYALTY REPORTS] wrote #{file}")
       end
     rescue StandardError => e
-      Rails.logger.error "[ROYALTY REPORTS] FTP Error: #{e}\n#{e.backtrace.join("\n")}"
+      "[ROYALTY REPORTS] Error: #{e}\n#{e.backtrace.join("\n")}"
     end
 
     def format_hits(items)
