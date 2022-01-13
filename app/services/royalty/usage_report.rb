@@ -16,6 +16,7 @@ module Royalty
 
     def report
       items = item_report[:items]
+
       items = update_results(items)
       items = remove_extra_lines(items)
       @total_hits_all_rightsholders = total_hits_all_rightsholders(items)
@@ -27,7 +28,7 @@ module Royalty
       # create and sent reports
       reports = copyholder_reports(items)
       reports = combined_report(reports, items)
-      send_reports(reports)
+      send_reports("fulcrum_royalty_usage_reports", reports)
       reports
     end
 

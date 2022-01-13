@@ -26,7 +26,7 @@ module Royalty
       # make and send reports
       reports = copyholder_reports(items)
       reports = combined_report(reports, items)
-      send_reports(reports)
+      send_reports("fulcrum_royalty_calculation_reports", reports)
       reports
     end
 
