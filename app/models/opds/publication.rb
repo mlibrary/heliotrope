@@ -164,9 +164,14 @@ module Opds
       end
 
       def description
-        # plain text
-        return nil if @monograph.description.blank?
-        MarkdownService.markdown_as_text(@monograph.description, true)
+        # plain HTML text
+        MarkdownService.markdown_as_text(
+          "<div>" +
+            MarkdownService.markdown(@monograph.description || "") +
+            "<br><a href=\"" +
+              MarkdownService.markdown_as_text(@monograph.citable_link, true) +
+              "\">View on Fulcrum platform.</a></div>"
+        )
       end
 
       def duration
