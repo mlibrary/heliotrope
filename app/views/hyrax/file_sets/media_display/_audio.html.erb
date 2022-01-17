@@ -7,7 +7,6 @@
        preload="auto"
        data-able-player
        <%= raw file_set.closed_captions.present? ? 'data-transcript-div="audio-transcript-container" data-lyrics-mode' : 'data-include-transcript="false"' %>>
-  <source src="<%= hyrax.download_path(file_set, file: 'ogg') %>" type="audio/ogg" />
   <source src="<%= hyrax.download_path(file_set, file: 'mp3') %>" type="audio/mpeg" />
   <% if file_set.closed_captions.present? %>
    <track kind="captions" src="<%= hyrax.download_path(file_set, file: 'captions_vtt') %>" srclang="en" label="English" />

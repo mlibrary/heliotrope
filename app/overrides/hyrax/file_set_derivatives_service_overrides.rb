@@ -3,7 +3,7 @@
 # copied from this commit
 # https://github.com/samvera/hyrax/blob/55ce354a372e97b3eb168927d1b84eddcaac3bff/app/services/hyrax/file_set_derivatives_service.rb
 
-Hyrax::FileSetDerivativesService.class_eval do
+Hyrax::FileSetDerivativesService.class_eval do # rubocop:disable Metrics/BlockLength
   prepend(HeliotropeDerivativesServiceOverrides = Module.new do
     # Heliotrope change
     # See #1016
@@ -33,11 +33,15 @@ Hyrax::FileSetDerivativesService.class_eval do
       end
     end
 
+    def create_audio_derivatives(filename)
+      Hydra::Derivatives::AudioDerivatives.create(filename,
+                                                  outputs: [{ label: 'mp3', format: 'mp3', url: derivative_url('mp3') }])
+    end
+
     def create_video_derivatives(filename)
       Hydra::Derivatives::VideoDerivatives.create(filename,
                                                   outputs: [{ label: :thumbnail, format: 'jpg', url: derivative_url('thumbnail') },
                                                             { label: :jpeg, format: 'jpg', url: derivative_url('jpeg') },
-                                                            { label: :webm, format: 'webm', url: derivative_url('webm') },
                                                             { label: :mp4, format: 'mp4', url: derivative_url('mp4') }])
     end
   end)
