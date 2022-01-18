@@ -130,8 +130,4 @@ class UtilitiesController < ApplicationController
 
     render plain: app_status
   end
-
-  def ableplayer
-    render layout: false
-  end
 end
