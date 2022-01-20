@@ -68,19 +68,6 @@ describe Hydra::Derivatives::Processors::Video::Processor do
       end
     end
 
-    context "when a webm playback derivative is requested" do
-      let(:directives) { { label: :webm, format: 'webm', url: 'webm_derivative_file_path' } }
-
-      it "creates a derivative file" do
-        expect(subject)
-            .to receive(:encode_file)
-                    .with("webm",
-                          Hydra::Derivatives::Processors::Ffmpeg::OUTPUT_OPTIONS => "-filter_complex \"scale='ceil(iw*min(1, min(1280/iw, 720/ih))/2)*2':-2\" -vcodec libvpx -acodec libvorbis -g 30 -b:v 1800k -ac 2 -ab 192k -ar 44100",
-                          Hydra::Derivatives::Processors::Ffmpeg::INPUT_OPTIONS => "")
-        subject.process
-      end
-    end
-
     context "when an unknown format is requested" do
       let(:directives) { { label: :thumb, format: 'nocnv', url: 'http://localhost:8983/fedora/rest/dev/1234/thumbnail' } }
 

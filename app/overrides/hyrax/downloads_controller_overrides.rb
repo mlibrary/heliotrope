@@ -88,12 +88,12 @@ Hyrax::DownloadsController.class_eval do # rubocop:disable Metrics/BlockLength
 
     def video?
       # video "previews"
-      params[:file] == 'webm' || params[:file] == 'mp4'
+      params[:file] == 'mp4'
     end
 
     def sound?
       # sound "previews"
-      params[:file] == 'mp3' || params[:file] == 'ogg'
+      params[:file] == 'mp3'
     end
 
     def closed_captions?
