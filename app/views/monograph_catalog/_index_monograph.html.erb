@@ -1,4 +1,11 @@
 <div id="maincontent" class="row monograph-info-epub">
+  <div class="platform-admin">
+    <% if can? :edit, @presenter %>
+      <a href="<%= main_app.edit_hyrax_monograph_path(@presenter.id) %>" title="<%= t('monograph_catalog.index.edit_page_button') %>" data-turbolinks="false"><%= t('monograph_catalog.index.edit_page_button') %></a>
+      <a href="<%= main_app.monograph_show_path(@presenter.id) %>" title="<%= t('monograph_catalog.index.show_page_button') %>" data-turbolinks="false"><%= t('monograph_catalog.index.show_page_button') %></a>
+      <%= @presenter.permission_badge %>
+    <% end %>
+    </div>
   <% if @presenter.monograph_coins_title? %>
     <!-- COinS for Zotero, etc -->
     <span class="Z3988" title="<%= @presenter.monograph_coins_title %>" aria-hidden="true"></span>
@@ -8,14 +15,14 @@
       <%= render_markdown @presenter.monograph_tombstone_message %>
     </div>
   <% end %>
-  <div class="col-sm-3 monograph-cover">
+  <div class="col-sm-4 monograph-cover monograph-metadata">
     <% if @presenter.tombstone_thumbnail? %>
-      <%= @presenter.tombstone_thumbnail_tag(225) %>
+      <%= @presenter.tombstone_thumbnail_tag(286) %>
     <% else %>
       <% if @presenter.representative_id.present? %>
         <!-- Image trigger modal -->
         <button type="button" class="btn btn-link" aria-label="Select to enlarge cover" data-toggle="modal" data-target="#modalImage">
-          <%= @presenter.thumbnail_tag(225, class: "img-responsive", alt: "Cover image for #{@presenter.title}") %>
+          <%= @presenter.thumbnail_tag(286, class: "img-responsive", alt: "Cover image for #{@presenter.title}") %>
         </button>
 
         <!-- Modal image -->
@@ -32,39 +39,66 @@
           });
         </script>
       <% else %>
-        <%= @presenter.thumbnail_tag(225) %>
+        <%= @presenter.thumbnail_tag(286) %>
       <% end %>
     <% end %>
-    <% if can? :edit, @presenter %>
-      <a class="btn btn-default manage-monograph-button" href="<%= main_app.monograph_show_path(@presenter.id) %>" title="<%= t('monograph_catalog.index.show_page_button') %>" data-turbolinks="false"><%= t('monograph_catalog.index.show_page_button') %></a>
-      <a class="btn btn-default manage-monograph-button" href="<%= main_app.edit_hyrax_monograph_path(@presenter.id) %>" title="<%= t('monograph_catalog.index.edit_page_button') %>" data-turbolinks="false"><%= t('monograph_catalog.index.edit_page_button') %></a>
-      <p><%= @presenter.permission_badge %>
-      <%= @presenter.workflow.badge %></p>
-    <% end %>
+    
     <%= render 'shared/altmetric_dimensions' %>
     <% if @presenter.peer_review? %>
-      <div><%= @presenter.peer_review.file.content.force_encoding("UTF-8").html_safe %></div>
+      <div><%= @presenter.peer_review.file.content.force_encoding("UTF-8").html_safe %></div>      
     <% end %>
+    <div class="monograph-metadata">
+      <!-- CITABLE LINK -->
+
+      <!-- PUBLICATION DATE -->
+      <% if @presenter.date_created.present? %>
+        <span aria-label="publication date">Published: <%= @presenter.date_created.first %></span>
+      <% end %>
+      <!-- PUBLISHER -->
+      <!-- COPYRIGHT YEAR -->
+      <!-- COPYRIGHT HOLDER -->
+      <% if @presenter.copyright_holder? %>
+        <% if @presenter.holding_contact? %>
+          <span aria-label="copyright information and contact" class="copyright">Copyright Holder: <a href="<%= @presenter.holding_contact %>"><%= @presenter.copyright_holder %></a></span>
+        <% else %>
+          <span aria-label="copyright information" class="copyright">Copyright Holder: <%= @presenter.copyright_holder %></span>
+        <% end %>
+      <% end %>
+      <!-- LICENSE -->
+      <% if @presenter.license? %>
+        <span class="license">License: <a aria-label="<%= @presenter.license_alt_text %>" rel="license" href="<%= @presenter.license.first %>" target="_blank"><%= @presenter.license_link_content %></a></span>
+      <% end %>
+      <div class="additional-metadata">
+        <dl>
+          <%= @presenter.attribute_to_html(:series, html_dl: true, heading: 3) %>
+          <%= @presenter.attribute_to_html(:isbn, label: t('isbn'), html_dl: true, heading: 3) %>
+          <%= @presenter.attribute_to_html(:bar_number, label: t('bar_number'), html_dl: true, heading: 3) %>
+          <%= @presenter.attribute_to_html(:subject, html_dl: true, heading: 3, render_as: :catalog_facet_attribute, subdomain: @presenter.subdomain) %>
+
+          <% unless @presenter.tombstone? %>
+            <dt role="heading" aria-level="3"><%= t('citable_link') %></dt>
+            <dd>
+              <form>
+                <label for="permalink" style="display: none;"><%= t('citable_link') %></label>
+                <input type="text" class="form-control" id="permalink" aria-label="citable link" value="<%= @presenter.citable_link %>" readonly="readonly" onclick="this.select(); document.execCommand('copy');" />
+              </form>
+            </dd>
+          <% end %>
+        </dl>
+      </div>
+    </div>
   </div><!-- /.monograph-cover -->
-  <div class="col-sm-9 monograph-metadata">
+  <div class="col-sm-8 monograph-metadata">    
+    <!-- TITLE -->
     <h1 id="work-title"><%= @presenter.title %></h1>
+    <!-- EDITION -->
+    <% if @presenter.edition_name.present? %><span aria-label="edition name"><%= sanitize @presenter.edition_name %></span><% end %>
+    <!-- VOLUME -->
     <% authorship_display = @presenter.authors(contributors: true, orcids: true) %>
     <% if authorship_display.present? %>
       <span aria-label="authors" class="authors"><%= render_markdown authorship_display %></span>
     <% end %>
-    <% if @presenter.date_created.present? %>
-      <span aria-label="publication date"><%= @presenter.date_created.first %></span><% if @presenter.edition_name.present? %><span aria-label="edition name"><%= sanitize @presenter.edition_name %></span><% end %>
-    <% end %>
-    <% if @presenter.license? %>
-      <span class="license"><a aria-label="<%= @presenter.license_alt_text %>" rel="license" href="<%= @presenter.license.first %>" target="_blank"><%= @presenter.license_link_content %></a></span>
-    <% end %>
-    <% if @presenter.copyright_holder? %>
-       <% if @presenter.holding_contact? %>
-        <span aria-label="copyright information and contact" class="copyright">&copy; <a href="<%= @presenter.holding_contact %>"><%= @presenter.copyright_holder %></a></span>
-       <% else %>
-        <span aria-label="copyright information" class="copyright">&copy; <%= @presenter.copyright_holder %></span>
-       <% end %>
-    <% end %>
+    
     <% if @presenter.funder_display? %>
       <span aria-label="funder display" class="funder_display"><i><%= @presenter.funder_display %></i></span>
     <% end %>
@@ -126,6 +160,109 @@
           </div><!-- /.btn-group -->
         </div><!-- /.btn-toolbar -->
     <% end %>
+    
+    <!-- BOOK INFORMATION -->
+    <div id="tabs">
+    <ul class="nav nav-tabs" role="tablist">
+      <% if @presenter.description? %>
+        <li role="presentation">
+          <h2>
+            <a id="tab-description" href="#description" aria-controls="description" role="tab" data-toggle="tab" aria-selected="false" aria-expanded="false" tabindex="-1">Overview</a>
+          </h2>
+        </li>
+      <% end %>   
+      <% if @presenter.toc? %>
+        <li role="presentation">
+          <h2>
+            <a id="tab-toc" href="#toc" aria-controls="toc" role="tab" data-toggle="tab" aria-selected="false" aria-expanded="false" tabindex="-1">Contents</a>
+          </h2>
+        </li>
+      <% end %>      
+      <% if @presenter.reviews? %>
+        <li role="presentation">
+          <h2>
+            <a id="tab-reviews" href="#reviews" aria-controls="reviews" role="tab" data-toggle="tab" aria-selected="false" aria-expanded="false" tabindex="-1">Reviews</a>
+          </h2>
+        </li>
+      <% end %>
+      <% if @presenter.related? %>
+        <li role="presentation">
+          <h2>
+            <a id="tab-related" href="#related" aria-controls="related" role="tab" data-toggle="tab" aria-selected="false" aria-expanded="false" tabindex="-1">Related Titles</a>
+          </h2>
+        </li>
+      <% end %>      
+      <% if @presenter.aboutware? %>
+        <li role="presentation">
+          <h2>
+            <a id="tab-aboutware" href="#aboutware" aria-controls="aboutware" role="tab" data-toggle="tab" aria-selected="false" aria-expanded="false" tabindex="-1">About</a>
+          </h2>
+        </li>
+      <% end %>
+      <%# HELIO-4115 - deactivate stats tabs but keep the code around as inspiration for the next solution %>
+      <% if false %>
+        <li role="presentation">
+          <h2>
+            <a id="tab-stats" href="#stats" aria-controls="stats" role="tab" data-toggle="tab" aria-selected="false" aria-expanded="false" tabindex="-1">Stats</a>
+          </h2>
+        </li>
+      <% end %>
+    </ul>
+    <div id="tabs-content" class="tab-content monograph-assets-toc-epub-content" aria-live="polite">
+      
+      <!-- OVERVIEW -->
+      <% if @presenter.description? %>
+        <section id="description" class="tab-pane fade description row" role="tabpanel" aria-hidden="true" aria-labelledby="tab-description" tabindex="0">
+          <div class="col-sm-12">
+            <div class="description<%= " display-in-full" if %w[mw22v7671 8623j115w].include? @presenter.id %>">
+              <%= render_markdown @presenter.description.first || '' %>
+            </div>
+          </div>
+        </section>
+      <% end %>
+      <!-- TABLE OF CONTENTS -->
+      <% if @presenter.toc? %>
+        <section id="toc" class="tab-pane fade toc row" role="tabpanel" aria-hidden="true" aria-labelledby="tab-toc" tabindex="0">
+          <div class="col-sm-12">
+            <%= render 'index_epub_toc' %>
+          </div>
+        </section>
+      <% end %>
+            
+      <% if @presenter.aboutware? %>
+        <section id="aboutware" class="tab-pane fade aboutware row" role="tabpanel" aria-hidden="true" aria-labelledby="tab-aboutware" tabindex="0">
+          <div class="col-sm-12">
+            <%# this assumes that the "aboutware" FileSet is an html doc %>
+            <%= @presenter.aboutware.file.content.force_encoding("UTF-8").html_safe %>
+          </div>
+        </section>
+      <% end %>
+      <% if @presenter.reviews? %>
+        <section id="reviews" class="tab-pane fade reviews row" role="tabpanel" aria-hidden="true" aria-labelledby="tab-reviews" tabindex="0">
+          <div class="col-sm-12">
+            <%# this assumes that the "reviews" FileSet is an html doc %>
+            <%= auto_link(@presenter.reviews.file.content.force_encoding("UTF-8"), html: { target: '_blank' }, sanitize: false).html_safe %>
+          </div>
+        </section>
+      <% end %>
+      <% if @presenter.related? %>
+        <section id="related" class="tab-pane fade related row" role="tabpanel" aria-hidden="true" aria-labelledby="tab-related" tabindex="0">
+          <div class="col-sm-12">
+            <%# this assumes that the "related" FileSet is an html doc %>
+            <%= @presenter.related.file.content.force_encoding("UTF-8").html_safe %>
+          </div>
+        </section>
+      <% end %>
+      <%# HELIO-4115 - deactivate stats tabs but keep the code around as inspiration for the next solution %>
+      <% if false %>
+        <section id="stats" class="tab-pane fade stats row" role="tabpanel" aria-hidden="true" aria-labelledby="tab-stats" tabindex="0">
+          <%= render 'stats' %>
+        </section>
+      <% end %>
+    </div>
+  </div>
+  
+    
     <% if @presenter.previous_edition_url.present? || @presenter.next_edition_url.present? %>
       <div class="edition-links">
       <% if @presenter.previous_edition_url.present? %>
@@ -144,39 +281,13 @@
       <div id="webgl-message"></div>
     <% end %>
 
-  <div class="additional-metadata">
-    <dl>
-      <%= @presenter.attribute_to_html(:series, html_dl: true, heading: 3) %>
-      <%= @presenter.attribute_to_html(:isbn, label: t('isbn'), html_dl: true, heading: 3) %>
-      <%= @presenter.attribute_to_html(:bar_number, label: t('bar_number'), html_dl: true, heading: 3) %>
-      <%= @presenter.attribute_to_html(:subject, html_dl: true, heading: 3, render_as: :catalog_facet_attribute, subdomain: @presenter.subdomain) %>
-
-      <% unless @presenter.tombstone? %>
-        <dt role="heading" aria-level="3"><%= t('citable_link') %></dt>
-        <dd>
-          <form>
-            <label for="permalink" style="display: none;"><%= t('citable_link') %></label>
-            <input type="text" class="form-control" id="permalink" aria-label="citable link" value="<%= @presenter.citable_link %>" readonly="readonly" onclick="this.select(); document.execCommand('copy');" />
-          </form>
-        </dd>
-      <% end %>
-    </dl>
-  </div>
-
   </div><!-- /.monograph-metadata -->
 </div><!-- /.monograph-info-epub -->
 
 <!-- See app/assets/javascripts/application/tabs.js -->
 <div class="row monograph-assets-toc-epub">
-  <div class="col-sm-12" id="tabs">
+  <div class="col-sm-12" id="tabs-resources">
     <ul class="nav nav-tabs" role="tablist">
-      <% if @presenter.toc? %>
-        <li role="presentation">
-          <h2>
-            <a id="tab-toc" href="#toc" aria-controls="toc" role="tab" data-toggle="tab" aria-selected="false" aria-expanded="false" tabindex="-1">Table of Contents</a>
-          </h2>
-        </li>
-      <% end %>
       <% if @presenter.assets? %>
         <li role="presentation">
           <h2>
@@ -184,20 +295,7 @@
           </h2>
         </li>
       <% end %>
-      <% if @presenter.reviews? %>
-        <li role="presentation">
-          <h2>
-            <a id="tab-reviews" href="#reviews" aria-controls="reviews" role="tab" data-toggle="tab" aria-selected="false" aria-expanded="false" tabindex="-1">Reviews</a>
-          </h2>
-        </li>
-      <% end %>
-      <% if @presenter.related? %>
-        <li role="presentation">
-          <h2>
-            <a id="tab-related" href="#related" aria-controls="related" role="tab" data-toggle="tab" aria-selected="false" aria-expanded="false" tabindex="-1">Related Titles</a>
-          </h2>
-        </li>
-      <% end %>
+     
       <% if @presenter.webgl? %>
         <li role="presentation">
           <h2>
@@ -229,13 +327,7 @@
       <% end %>
     </ul>
     <div id="tabs-content" class="tab-content monograph-assets-toc-epub-content" aria-live="polite">
-      <% if @presenter.toc? %>
-        <section id="toc" class="tab-pane fade toc row" role="tabpanel" aria-hidden="true" aria-labelledby="tab-toc" tabindex="0">
-          <div class="col-sm-12">
-            <%= render 'index_epub_toc' %>
-          </div>
-        </section>
-      <% end %>
+     
       <% if @presenter.assets? %>
         <section id="resources" class="tab-pane fade resources row" role="tabpanel" aria-hidden="true" aria-labelledby="tab-resources" tabindex="0">
           <div class="col-sm-3 fulcrum_sidebar">
@@ -270,22 +362,7 @@
           </div>
         </section>
       <% end %>
-      <% if @presenter.reviews? %>
-        <section id="reviews" class="tab-pane fade reviews row" role="tabpanel" aria-hidden="true" aria-labelledby="tab-reviews" tabindex="0">
-          <div class="col-sm-12">
-            <%# this assumes that the "reviews" FileSet is an html doc %>
-            <%= auto_link(@presenter.reviews.file.content.force_encoding("UTF-8"), html: { target: '_blank' }, sanitize: false).html_safe %>
-          </div>
-        </section>
-      <% end %>
-      <% if @presenter.related? %>
-        <section id="related" class="tab-pane fade related row" role="tabpanel" aria-hidden="true" aria-labelledby="tab-related" tabindex="0">
-          <div class="col-sm-12">
-            <%# this assumes that the "related" FileSet is an html doc %>
-            <%= @presenter.related.file.content.force_encoding("UTF-8").html_safe %>
-          </div>
-        </section>
-      <% end %>
+   
       <%# HELIO-4115 - deactivate stats tabs but keep the code around as inspiration for the next solution %>
       <% if false %>
         <section id="stats" class="tab-pane fade stats row" role="tabpanel" aria-hidden="true" aria-labelledby="tab-stats" tabindex="0">

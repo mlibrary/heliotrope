@@ -231,6 +231,10 @@ div.skip {
   .breadcrumb li:first-child {
     margin-left: 0;
   }
+
+  .breadcrumb li a {
+    text-decoration: underline !important;
+  }
 }
 
 //////////////////////////////////
@@ -593,6 +597,15 @@ footer.press {
 ///////////////////////////////////
 .monograph {
 
+  .platform-admin {
+    float: right;
+    margin-top: -2.8em;
+
+    a {
+      padding-right: 25px;
+    }
+  }
+
   // tombstone message alert
   .alert-danger.alert-message {
     font-size: 1.4em;
@@ -783,6 +796,7 @@ footer.press {
       .description {
         padding-top: 1.2em;
         padding-bottom: 2em;
+        font-size: 16px;
       }
 
       .additional-metadata {
