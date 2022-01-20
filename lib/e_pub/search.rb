@@ -47,8 +47,22 @@ module EPub
           pos1 = pos0 + query.length
 
           result = OpenStruct.new
-          result.cfi = EPub::CFI.from(node, pos0, pos1).cfi
-          result.snippet = EPub::Snippet.from(node, pos0, pos1).snippet
+
+          begin
+            result.cfi = EPub::CFI.from(node, pos0, pos1).cfi
+          rescue
+            Rails.logger.error("EPUB SEARCH ERROR: EPub::CFI.from(#{node}, #{pos0}, #{pos1}).cfi produced an ERROR")
+          end
+
+          begin
+            result.snippet = EPub::Snippet.from(node, pos0, pos1).snippet
+          rescue
+            Rails.logger.error("EPUB SEARCH ERROR: EPub::Snippet.from(#{node}, #{pos0}, #{pos1}).snippet produced an ERROR")
+          end
+
+          # HELIO-4085
+          next if result.cfi.nil?
+          next if result.snippet.nil?
 
           matches << result
 
