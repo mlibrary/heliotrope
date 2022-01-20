@@ -191,7 +191,6 @@ Rails.application.routes.draw do
   delete 'featured_representatives', controller: :featured_representatives, action: :delete
 
   get 'whoami', controller: :utilities, action: :whoami, as: :whoami_utility
-  get 'ableplayer', controller: :utilities, action: :ableplayer, as: :ableplayer_utility
   get 'status', controller: :utilities, action: :status, as: :status_utility
 
   mount Blacklight::Engine => '/'
