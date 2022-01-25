@@ -2275,7 +2275,7 @@ cosmiconfig@^6.0.0:
 
 "cozy-sun-bear@git+https://github.com/mlibrary/cozy-sun-bear.git":
   version "1.0.0"
-  resolved "git+https://github.com/mlibrary/cozy-sun-bear.git#7c68b94aab6d00c52d546d41da3ad34509a67267"
+  resolved "git+https://github.com/mlibrary/cozy-sun-bear.git#84922e898d09f11b5c1390ae12a477b1c4478fd0"
   dependencies:
     ajv "^6.12.6"
     core-js "^3.6.5"
