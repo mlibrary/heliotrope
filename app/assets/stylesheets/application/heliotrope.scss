@@ -1061,7 +1061,7 @@ footer.press {
 
   figure {
     display: inline-block;
-    width: 97%;
+    width: 100%;
     height: auto;
     margin: initial;
 
@@ -1101,8 +1101,8 @@ footer.press {
     font-size: 1.5em;
   }
 
-  // LEAFLET/IMAGES
-  #image {
+  // Leaflet images, video tags (video width prevents flash of actual-resolution poster while Able Player JS loads
+  #image, #video {
     height: 540px;
     width: 100% !important;
   }

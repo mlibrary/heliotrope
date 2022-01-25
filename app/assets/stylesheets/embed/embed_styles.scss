@@ -173,6 +173,13 @@ figure:hover > div:nth-child(1), figure:active > div:nth-child(1) {
   }
 }
 
+// This should be outside the bounds of the visible "responsive" nested divs anyway, but hide it just to be sure...
+// until we decide on a way to show transcripts divs beside embedded videos in CSB, if we ever do that.
+// TODO: edit comment when working on https://tools.lib.umich.edu/jira/browse/HELIO-4167
+#video-transcript-container {
+  display: none;
+}
+
 .embed-static-image {
   display: block;
   margin: auto;

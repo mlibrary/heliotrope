@@ -1,11 +1,20 @@
-<%# https://github.com/mlibrary/heliotrope/issues/1084 %>
 <% content_for :head do %>
-  <meta name="turbolinks-cache-control" content="no-cache">
+  <%# the meta tag because of https://github.com/mlibrary/heliotrope/issues/1084 %>
+  <%# ...and also as this visit-control setting seems to be the only way to have the `$(document).ready` always... %>
+  <%# fire, i.e. on both initial and subsequent page loads, while restricting event-driven JS (placed in <head>)... %>
+  <%# to specific pages. Happily this also means no Turbolinks-related changes to `ableplayer.js` are necessary. %>
+  <meta name="turbolinks-visit-control" content="reload">
+  <!-- Able Player CSS -->
+  <link rel="stylesheet" href="/ableplayer-4.3/build/ableplayer.min.css" type="text/css"/>
+  <!-- Able Player JavaScript -->
+  <script src="/ableplayer-4.3/build/ableplayer.js"></script>
 <% end %>
 
 <audio id="audio"
        preload="auto"
+       width="8000px" <%# https://tools.lib.umich.edu/jira/browse/HELIO-746?focusedCommentId=1074044&page=com.atlassian.jira.plugin.system.issuetabpanels:comment-tabpanel#comment-1074044 %>
        data-able-player
+       data-skin="2020"
        <%= raw file_set.closed_captions.present? ? 'data-transcript-div="audio-transcript-container" data-lyrics-mode' : 'data-include-transcript="false"' %>>
   <source src="<%= hyrax.download_path(file_set, file: 'mp3') %>" type="audio/mpeg" />
   <% if file_set.closed_captions.present? %>

@@ -1,9 +1,24 @@
+<% content_for :head do %>
+  <%# the meta tag because of https://github.com/mlibrary/heliotrope/issues/1084 %>
+  <%# ...and also as this visit-control setting seems to be the only way to have the `$(document).ready` always... %>
+  <%# fire, i.e. on both initial and subsequent page loads, while restricting event-driven JS (placed in <head>)... %>
+  <%# to specific pages. Happily this also means no Turbolinks-related changes to `ableplayer.js` are necessary. %>
+  <meta name="turbolinks-visit-control" content="reload">
+  <!-- Able Player CSS -->
+  <link rel="stylesheet" href="/ableplayer-4.3/build/ableplayer.min.css" type="text/css"/>
+  <!-- Able Player JavaScript -->
+  <script src="/ableplayer-4.3/build/ableplayer.js"></script>
+<% end %>
+
 <video id="video"
        preload="metadata"
+       width="8000px" <%# https://tools.lib.umich.edu/jira/browse/HELIO-746?focusedCommentId=1074044&page=com.atlassian.jira.plugin.system.issuetabpanels:comment-tabpanel#comment-1074044 %>
        data-able-player
+       data-skin="2020"
        data-include-transcript="false"
        data-allow-fullscreen="false"
-       poster="<%= hyrax.download_path(file_set.id, file: 'jpeg') %>">
+       poster="<%= hyrax.download_path(file_set.id, file: 'jpeg') %>"
+       <%= raw file_set.closed_captions.present? ? 'data-transcript-div="video-transcript-container" data-lyrics-mode' : 'data-include-transcript="false"' %>>
   <source src="<%= hyrax.download_path(file_set, file: 'mp4') %>" type="video/mp4" />
   <% if file_set.closed_captions.present? %><%# kind="subtitles" not "captions" due to https://github.com/mlibrary/heliotrope/issues/1234 %>
     <track kind="subtitles" src="<%= hyrax.download_path(file_set.id, file: 'captions_vtt') %>" srclang="en" label="English"  />
@@ -13,22 +28,46 @@
   <% end %>
   Your browser does not support the video tag.
 </video>
+<% if file_set.closed_captions.present? %>
+  <%# There's no way to show this right now, due to the restrictive "responsive" nested divs on the iframe, nor is... %>
+  <%# there a way to turn the interactive transcript off (without hacks). So keep it below the embedded iframe window. %>
+  <%# The extra room in the form of "percentage height" will need to be accounted for in EmbedCodeService at... %>
+  <%# unpack time, if we want to show it, but might be too much space to take up in two-column view. %>
+  <%# TODO: edit comment when working on https://tools.lib.umich.edu/jira/browse/HELIO-4167 %>
+  <div id="video-transcript-container"></div>
+<% end %>
 
 <script>
-    $(document).ready(function() {
-      setupVideoAnalytics();
-    });
+  var timer;
 
-    function setupVideoAnalytics() {
-      if (typeof(ga) == typeof(Function)) {
-        var video = $('#video').get(0)
-        video.addEventListener("play", function() {
-          press_tracker_event('e_reader', 'play_video', window.location.href);
-        });
-        video.addEventListener("pause", function() {
-          press_tracker_event('e_reader', 'stop_video', window.location.href);
-        });
+  $(document).ready(function() {
+    clearTimeout (timer);
+    // it can take up to a couple of seconds for Able Player's menus to be built
+    timer = setTimeout(hideTranscriptPreferencesOption, 2000);
+    setupVideoAnalytics();
+  });
+
+  function setupVideoAnalytics() {
+    if (typeof(ga) == typeof(Function)) {
+      var video = $('#video').get(0)
+      video.addEventListener("play", function() {
+        press_tracker_event('e_reader', 'play_video', window.location.href);
+      });
+      video.addEventListener("pause", function() {
+        press_tracker_event('e_reader', 'stop_video', window.location.href);
+      });
+    }
+  }
+
+  <%# TODO: maybe remove this, depending on the outcome of https://tools.lib.umich.edu/jira/browse/HELIO-4167 %>
+  function hideTranscriptPreferencesOption() {
+    var ul = document.getElementById("video-prefs-menu");
+    var items = ul.getElementsByTagName("li");
+    for (var i = 0; i < items.length; ++i) {
+      if(items[i].innerText == "Transcript") {
+        items[i].style.display = 'none';
       }
     }
+  }
 
 </script>

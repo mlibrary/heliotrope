@@ -7,8 +7,7 @@
 //= require leaflet-iiif_1.2.1_best_fit
 //= require L.Control.Pan
 //= require Control.FullScreen
-// Able Player stuff
+// JavaScript Cookie originally added for Able Player but we use it in many places now
 //= require js.cookie
-//= require modernizr.custom
 // `disable_chrome_media_download_button.js` in `./common` requires bowser
 //= require 'bowser.min'
