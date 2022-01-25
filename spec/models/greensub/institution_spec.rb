@@ -45,7 +45,8 @@ RSpec.describe Greensub::Institution, type: :model do
                      link_resolver_url: link_resolver_url,
                      location: location,
                      login: login,
-                     logo_path: logo_path,
+                     horizontal_logo: horizontal_logo,
+                     vertical_logo: vertical_logo,
                      ror_id: ror_id,
                      site: site } }
     let(:identifier) { nil }
@@ -56,7 +57,8 @@ RSpec.describe Greensub::Institution, type: :model do
     let(:link_resolver_url) { nil }
     let(:location) { nil }
     let(:login) { nil }
-    let(:logo_path) { nil }
+    let(:horizontal_logo) { nil }
+    let(:vertical_logo) { nil }
     let(:ror_id) { nil }
     let(:site) { nil }
 

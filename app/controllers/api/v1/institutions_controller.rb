@@ -161,7 +161,7 @@ module API
         end
 
         def institution_params
-          params.require(:institution).permit(:identifier, :name, :display_name, :entity_id, :catalog_url, :link_resolver_url, :location, :login, :logo_path, :ror_id, :site)
+          params.require(:institution).permit(:identifier, :name, :display_name, :entity_id, :catalog_url, :link_resolver_url, :location, :login, :horizontal_logo, :vertical_logo, :ror_id, :site)
         end
 
         def license_params
