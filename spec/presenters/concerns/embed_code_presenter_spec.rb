@@ -166,10 +166,10 @@ RSpec.describe EmbedCodePresenter do
     let(:audio_embed_code) {
       "<iframe src='#{presenter.embed_link}' title='#{presenter.embed_code_title}' style='page-break-inside:avoid; -webkit-column-break-inside:avoid; break-inside:avoid; display:block; overflow:hidden; border-width:0; width:98%; max-width:98%; height:125px; margin:auto'></iframe>"
     }
-    let(:file_set_doc) { SolrDocument.new(id: 'fileset_id', has_model_ssim: ['FileSet'], mime_type_ssi: mime_type, resource_type_tesim: [resource_type], transcript_tesim: transcript) }
+    let(:file_set_doc) { SolrDocument.new(id: 'fileset_id', has_model_ssim: ['FileSet'], mime_type_ssi: mime_type, resource_type_tesim: [resource_type], closed_captions_tesim: closed_captions) }
     let(:mime_type) { nil }
     let(:resource_type) { nil }
-    let(:transcript) { nil }
+    let(:closed_captions) { nil }
 
     before do
       allow(presenter).to receive(:width).and_return(1920)
@@ -249,43 +249,43 @@ RSpec.describe EmbedCodePresenter do
     context 'audio FileSet' do
       let(:mime_type) { 'audio/mp3' }
 
-      context 'no transcript present' do
+      context 'no closed_captions present' do
         it { expect(presenter.embed_code).to eq audio_embed_code }
       end
 
-      context 'transcript present' do
-        let(:transcript) { ['STUFF'] }
+      context 'closed_captions present' do
+        let(:closed_captions) { ['STUFF'] }
 
         it { expect(presenter.embed_code).to eq audio_embed_code }
       end
     end
 
-    context '#audio_without_transcript?' do
+    context '#audio_without_closed_captions?' do
       context 'audio file' do
         let(:mime_type) { 'audio/mp3' }
 
-        context 'no transcript present' do
-          it { expect(presenter.audio_without_transcript?).to eq true }
+        context 'no closed_captions present' do
+          it { expect(presenter.audio_without_closed_captions?).to eq true }
         end
 
-        context 'transcript present' do
-          let(:transcript) { ['STUFF'] }
+        context 'closed_captions present' do
+          let(:closed_captions) { ['STUFF'] }
 
-          it { expect(presenter.audio_without_transcript?).to eq false }
+          it { expect(presenter.audio_without_closed_captions?).to eq false }
         end
       end
 
       context 'non-audio file' do
         let(:mime_type) { 'blerg' }
 
-        context 'no transcript present' do
-          it { expect(presenter.audio_without_transcript?).to eq false }
+        context 'no closed_captions present' do
+          it { expect(presenter.audio_without_closed_captions?).to eq false }
         end
 
-        context 'transcript present' do
-          let(:transcript) { ['STUFF'] }
+        context 'closed_captions present' do
+          let(:closed_captions) { ['STUFF'] }
 
-          it { expect(presenter.audio_without_transcript?).to eq false }
+          it { expect(presenter.audio_without_closed_captions?).to eq false }
         end
       end
     end

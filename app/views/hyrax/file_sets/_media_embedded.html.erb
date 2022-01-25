@@ -1,7 +1,7 @@
 <%# Note no equivalent to `media_tombstone` partial here as we want tombstoned files to continue displaying in EPUBs %>
 <figure title="<%= @presenter.alt_text.first %>">
   <%# note that the fulcrum-embed-link hover display relies on it being the first child of <figure> %>
-  <div class="fulcrum-embed-link<%= ' audio no-transcript' if @presenter.audio_without_transcript? %>">
+  <div class="fulcrum-embed-link<%= ' audio no-transcript' if @presenter.audio_without_closed_captions? %>">
     <%# note embed_fulcrum_logo_title is double-quoted, <base target="_blank"> in embedded.html.erb doesn't work here %>
     <a href="<%= @presenter.embed_fulcrum_logo_link %>"
        aria-label='<%= @presenter.embed_fulcrum_logo_title %>'
@@ -9,7 +9,7 @@
       <%= image_tag "fulcrum-logo-circle.png", class: 'logo', alt: 'Fulcrum logo' %>
     </a>
   </div>
-  <div class="fulcrum-media-wrapper<%= ' audio no-transcript' if @presenter.audio_without_transcript? %>">
+  <div class="fulcrum-media-wrapper<%= ' audio no-transcript' if @presenter.audio_without_closed_captions? %>">
   <%= render partial: @presenter.heliotrope_media_partial('media_display_embedded'), locals: { file_set: @presenter } %>
   </div>
 </figure>
