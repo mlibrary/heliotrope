@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_01_24_183838) do
+ActiveRecord::Schema.define(version: 2022_01_25_163308) do
 
   create_table "api_requests", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.integer "user_id"
@@ -286,7 +286,8 @@ ActiveRecord::Schema.define(version: 2022_01_24_183838) do
     t.string "entity_id"
     t.string "catalog_url"
     t.string "link_resolver_url"
-    t.string "logo_path"
+    t.string "horizontal_logo"
+    t.string "vertical_logo"
     t.string "display_name"
     t.string "location"
     t.string "ror_id"

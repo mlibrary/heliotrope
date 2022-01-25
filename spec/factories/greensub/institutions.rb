@@ -9,7 +9,8 @@ FactoryBot.define do
     sequence(:catalog_url) { |n| "InstitutionCatalogURL#{n}" }
     sequence(:link_resolver_url) { |n| "InstitutionLinkResolverURL#{n}" }
     sequence(:location) { |n| "InstitutionLocation#{n}" }
-    sequence(:logo_path) { |n| "InstitutionLogoPath#{n}" }
+    sequence(:horizontal_logo) { |n| "InstitutionHorizontalLogo#{n}" }
+    sequence(:vertical_logo) { |n| "InstitutionVerticalLogo#{n}" }
     sequence(:ror_id) { |n| "InstitutionRorID#{n}" }
     sequence(:site) { |n| "InstitutionSite#{n}" }
   end
