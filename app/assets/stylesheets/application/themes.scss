@@ -540,6 +540,8 @@ button:focus {
   //footer
   footer.press {
     background-color: $heb-accent-color-dark !important;
+    border-top: 2px solid $heb-red;
+    padding: 48px 0 16px;
     img {
       height: 107px !important;
       width: 134px !important;
@@ -558,10 +560,6 @@ button:focus {
   }
 
   footer {
-    background-color: $heb-accent-color-dark;
-    border-top: 2px solid $heb-red;
-    padding: 48px 0 16px;
-
     .container {
       max-width: 1140px;
 
@@ -1894,10 +1892,12 @@ $amherst-grey-3: #dee2e6;
   }
 
   //footer
+  footer.press {
+      border-top: 1px solid rgba(0,0,0,.125);
+      background-color: $amherst-brand-color;
+      padding: 3.5em;
+  }
   footer {
-    border-top: 1px solid rgba(0,0,0,.125);
-    background-color: $amherst-brand-color;
-    padding: 3.5em;
 
       a {
         color: #f8f9fa;
@@ -3313,10 +3313,12 @@ $lever-black-80: #342f2e;
   }
 
   //footer
-  footer {
+  footer.press {
     border-top: 1px solid rgba(0,0,0,.125);
-    background-color: $lever-brand-color;
-    padding: 3.5em;
+      background-color: $lever-brand-color !important;
+      padding: 3.5em;
+  }
+  footer {
 
     @include scala-sans;
 
@@ -3945,6 +3947,8 @@ $um-white: #fff;
   //footer
   footer.press {
     background-color: $um-accent-color !important;
+    border-top: 2px solid #4C6781;
+    padding: 48px 0 16px;
 
     img {
       height: 108px !important;
@@ -3969,10 +3973,6 @@ $um-white: #fff;
   }
 
   footer {
-    background-color: $um-accent-color;
-    border-top: 2px solid #4C6781;
-    padding: 48px 0 16px;
-
     .container {
       max-width: 1140px;
     }
