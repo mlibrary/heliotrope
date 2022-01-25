@@ -99,7 +99,7 @@ class EPubsController < CheckpointController
     # due to performance issues, must have 3 or more characters to search
     return render json: { q: query, search_results: [] } if query.length < 3
 
-    log = EpubSearchLog.create(noid: @noid, query: query, user: current_actor.email, press: @presenter.parent.subdomain)
+    log = EpubSearchLog.create(noid: @noid, query: query, user: current_actor.email, press: @presenter.parent.subdomain, session_id: session.id)
     start = (Time.now.to_f * 1000.0).to_i
 
     epub = EPub::Publication.from_directory(UnpackService.root_path_from_noid(@noid, 'epub'))

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_11_03_174801) do
+ActiveRecord::Schema.define(version: 2022_01_24_183838) do
 
   create_table "api_requests", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.integer "user_id"
@@ -171,6 +171,7 @@ ActiveRecord::Schema.define(version: 2021_11_03_174801) do
     t.datetime "updated_at", null: false
     t.string "user"
     t.string "press"
+    t.string "session_id"
     t.index ["noid"], name: "index_epub_search_logs_on_noid"
   end
 

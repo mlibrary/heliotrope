@@ -5,7 +5,7 @@ require 'rails_helper'
 RSpec.describe EpubSearchLog, type: :model do
   subject { described_class.new(args) }
 
-  let(:args) { { noid: 'validnoid', query: 'dog', time: 43, hits: 2, search_results: "{:q=>\"dog\", :search_results=>[]}", user: "user@fulcrum.org", press: "subdomain" } }
+  let(:args) { { noid: 'validnoid', query: 'dog', time: 43, hits: 2, search_results: "{:q=>\"dog\", :search_results=>[]}", user: "user@fulcrum.org", press: "subdomain", session_id: "some_session" } }
 
   it 'is valid' do
     expect(subject).to be_valid
@@ -24,8 +24,8 @@ RSpec.describe EpubSearchLog, type: :model do
 
     it "returns csv" do
       expect(described_class.to_csv).to eq <<-EOT
-id,noid,query,time,hits,created_at,user,press
-#{@log.id},validnoid,dog,43,2,#{created_at},user@fulcrum.org,subdomain
+id,noid,query,time,hits,created_at,user,press,session_id
+#{@log.id},validnoid,dog,43,2,#{created_at},user@fulcrum.org,subdomain,some_session
       EOT
     end
   end

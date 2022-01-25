@@ -10,6 +10,7 @@ class EpubSearchLog < ApplicationRecord
   scope :hits_like, ->(like) { where("hits like ?", "%#{like}%") }
   scope :press_like, ->(like) { where("press like ?", "%#{like}%") }
   scope :user_like, ->(like) { where("user like ?", "%#{like}%") }
+  scope :session_id_like, ->(like) { where("session_id like ?", "%#{like}%") }
 
   def self.to_csv
     CSV.generate(headers: true) do |csv|

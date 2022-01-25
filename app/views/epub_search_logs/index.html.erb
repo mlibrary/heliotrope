@@ -117,6 +117,13 @@
                   <%= link_to "v", sort: "user asc" %>
                 </label>
               </th>
+              <th>
+                <label for="session_id_like">
+                  Session
+                  <%= link_to "^", sort: "session_id desc" %>
+                  <%= link_to "v", sort: "session_id asc" %>
+                <label>
+              </th>
             </tr>
             <tr>
               <td><button name="submit" type="submit" value="filter">Filter</button></td>
@@ -126,7 +133,8 @@
               <td><input type="text" size="6" name="time_like" value="<%= params[:time_like] %>" aria-label="time_like"></td>
               <td><input type="text" size="6" name="hits_like" value="<%= params[:hits_like] %>" aria-label="hits_like"></td>
               <td><input type="text" name="press_like" value="<%= params[:press_like] %>" aria-label="press_like"></td>
-              <td><input type="text" name="user_like" value="<%= params[:press_like] %>" aria-label="user_like"></td>
+              <td><input type="text" name="user_like" value="<%= params[:user_like] %>" aria-label="user_like"></td>
+              <td><input type="text" name="session_id_like" value="<%= params[:session_id_like] %>" aria-label="session_id_like"></td>
             </tr>
             <% @epub_search_logs.each do |search| %>
               <tr>
@@ -138,6 +146,7 @@
                 <td><%= search.hits %></td>
                 <td><%= search.press %></td>
                 <td><%= search.user %></td>
+                <td><%= search.session_id %></td>
               </tr>
             <% end %>
           </table>
