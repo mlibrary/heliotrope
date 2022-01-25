@@ -104,7 +104,9 @@ class AttachImportFilesToWorkJob < ApplicationJob
         @cover_noid = file_set.id
         return
       end
-      FeaturedRepresentative.where(work_id: work.id, file_set_id: file_set.id).destroy_all
+      # these deletions match the table uniqueness constraints, should enable a failed job to re-run etc.
+      FeaturedRepresentative.where(file_set_id: file_set.id).destroy_all
+      FeaturedRepresentative.where(work_id: work.id, kind: kind).destroy_all
       FeaturedRepresentative.create!(work_id: work.id, file_set_id: file_set.id, kind: kind)
     end
 
