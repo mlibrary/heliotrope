@@ -104,7 +104,8 @@ module EmbedCodePresenter
     end
   end
 
-  def audio_without_transcript?
-    audio? && transcript.blank?
+  # The Able Player "interactive transcript" div will only be present if our `closed_captions` field is set
+  def audio_without_closed_captions?
+    audio? && closed_captions.blank?
   end
 end
