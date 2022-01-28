@@ -14,23 +14,8 @@
   var timer;
 
   $(document).ready(function() {
-    // give half a second for resize to take over
-    throttleIframeResize(500);
     setupAudioAnalytics();
   });
-
-  $(window).resize(function() {
-    throttleIframeResize(250);
-  });
-
-  function throttleIframeResize(milliseconds) {
-    clearTimeout (timer);
-    if(window.frameElement != null) {
-      body = document.querySelector('body');
-      console.log("AHOY RESIZED AUDIO IFRAME", body.offsetHeight, body.scrollHeight, window.frameElement);
-      window.frameElement.style.height = (body.scrollHeight + <%= file_set.audio_without_closed_captions? ? '45' : '0' %>) + 'px'; // 45px for vertical volume bar
-    }
-  }
 
   function setupAudioAnalytics() {
     if (typeof(ga) == typeof(Function)) {
