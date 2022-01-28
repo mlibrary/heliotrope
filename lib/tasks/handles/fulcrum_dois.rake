@@ -20,18 +20,15 @@ namespace :heliotrope do
       'michigan',
       'leverpress',
       'amherst',
-      'maizebooks',
-      'a2ru',
+      'mps',
       'atg',
       'cv',
       'cb',
-      'dialogue',
       'barpublishing',
       'lrcss',
       'cjs',
       'csas',
-      'cseas',
-      'um-pccn'
+      'cseas'
     ]
 
     children = []
