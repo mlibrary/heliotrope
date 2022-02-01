@@ -66,17 +66,13 @@
     <% end %>
     <% if @presenter.funder_display? %>
       <span aria-label="funder display" class="funder_display"><i><%= @presenter.funder_display %></i></span>
-    <% end %>
-    <% if @presenter.access_level(@actor_product_ids, @allow_read_product_ids).show? %>
-      <div class="access">
-        <%= @presenter.access_level(@actor_product_ids, @allow_read_product_ids).icon_lg.html_safe %>
-        <span><%= @presenter.access_level(@actor_product_ids, @allow_read_product_ids).text.html_safe %></span>
-      </div>
-    <% end %>
+    <% end %>    
+    <!-- ACCESS INDICATORS and OPTIONS -->
+    <%= render partial: 'access_options.html.erb', locals: { auth: @auth, presenter: @presenter } if @auth.present? %>
+    <!-- BOOK DESCRIPTION -->
     <div class="description<%= " display-in-full" if %w[mw22v7671 8623j115w].include? @presenter.id %>">
       <%= render_markdown @presenter.description.first || '' %>
-    </div>
-    <%= render partial: 'access_options.html.erb', locals: { auth: @auth, presenter: @presenter } if @auth.present? %>
+    </div>    
     <%# ensure all of the toolbar's internal components' conditionals are present here to control the toolbar's appearance %>
     <% if @presenter.reader_ebook? || (@ebook_download_presenter.downloadable_ebooks? && !@presenter.tombstone?) || @presenter.buy_url? %>
         <div class="btn-toolbar" role="toolbar">
