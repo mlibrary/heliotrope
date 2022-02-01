@@ -4,14 +4,14 @@
       Provided by <%= auth.institution.display_name %>
     <% else %>
       <span>
-        Get access to more books <%= link_to "Log in with your institution",
+        Get access to more books. <strong><%= link_to "Log in with your institution.",
           if auth.resource?
             main_app.file_set_authentication_path(auth.resource_id)
           elsif auth.monograph?
             main_app.monograph_authentication_path(auth.monograph_id)
           else
             main_app.press_authentication_path(auth.publisher_subdomain)
-          end %>
+          end %></strong>
       </span>
     <% end %>
   </div>

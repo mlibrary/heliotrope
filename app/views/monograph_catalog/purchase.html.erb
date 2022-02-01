@@ -3,16 +3,20 @@
   <div class="back-link">
     <%= link_to "<< Go back to previous page", monograph_catalog_path(@presenter.id) %>
   </div>
+
   <div class="row">
-    <div class="col-sm-8 margin-padding">
-      <div class="col-sm-12 border-padding">
-        <h1 class="heading">Purchase access</h1>
-        <%= @press_presenter.restricted_message&.html_safe %>
+    <div class="col-sm-7">
+      <h1>Purchase access</h1>
+      <div class="row">
+        <div class="col-sm-12 purchase-msg lead">
+          <%= @press_presenter.restricted_message&.html_safe %>
+        </div>
       </div>
     </div>
-    <div class="col-sm-4 margin-padding">
-      <div class="col-sm-12 border-padding">
-        <h2 class="heading">The book you're looking for:</h2>
+
+    <div class="col-sm-4 col-sm-offset-1">
+      <h2>The book you're looking for:</h2>
+      <div class="row">
         <div class="col-sm-3">
           <% if @presenter.representative_id.present? %>
             <%= @presenter.thumbnail_tag(225, class: "img-responsive") %>
@@ -27,3 +31,4 @@
     </div>
   </div>
 </div>
+

@@ -10,8 +10,7 @@ $base-color-header-background: #342f2e;
 $base-color-header-link: #73d2f4;
 $base-color-header-link-hover: #00AFEC;
 
-$base-color-alert-box-background: pink;
-$base-color-alert-box-border: red;
+$base-color-alert-box-background: #ecccd1;
 $base-color-alert-box-color: #342f2e;
 $base-color-alert-box-link: #342f2e;
 $base-color-alert-box-link-hover: #ddd;
@@ -192,6 +191,7 @@ div.skip {
   justify-content: center;
   align-items: center;
   padding: 1em;
+  border-bottom: 1px solid #e5e5e5;
 }
 
 ///////////////////////////////////
@@ -708,25 +708,33 @@ footer.press {
       margin-top: 1em;
       font-weight: bold;
       font-stretch: condensed;
+      
       img {
         margin-right: .5em;
+        vertical-align: bottom;
       }
 
       &-options {
         font-weight: normal;
         font-stretch: normal;
         color: $base-color-box-color;
-        background-color: $base-color-box-background;
-        margin-top: 0;
+        background-color: #f5f5f5;
+        margin-top: 1em;
         margin-bottom: 1em;
-        border: 1px solid $base-color-box-border;
         padding: 1em;
+        border-radius: 4px;
+        font-size: 16px;
+
+        .btn {
+          background-color: #333;
+          color: #fff;
+          font-size: 14px !important;
+        }
 
         &-alert {
           justify-content: space-between;
           color: $base-color-alert-box-color;
           background-color: $base-color-alert-box-background;
-          border: 3px solid $base-color-alert-box-border;
         }
       }
     }
@@ -744,23 +752,12 @@ footer.press {
       align-items: center;
       padding: 1em;
     }
-    .heading {
+    h1 {
+      font-size: 30px;
+    }
+
+    h2 {
       font-size: 24px;
-      font-weight: bold;
-    }
-    .margin-padding {
-      padding-top: 15px;
-      padding-left: 15px;
-      padding-right: 15px;
-      padding-bottom: 0;
-    }
-    .border-padding {
-      border: 3px solid $base-color-box-border;
-      padding-top: 0;
-      padding-left: 15px;
-      padding-right: 15px;
-      padding-bottom: 15px;
-      background: $base-color-box-background;
     }
   }
 
@@ -1375,8 +1372,18 @@ footer.press {
 // AUTHENTICATION
 ///////////////////////////////////
 .authentication {
-  * {
-    box-sizing: border-box;
+
+  h1 {
+    font-size: 30px;
+  }
+
+  h2 {
+    font-size: 24px;
+  }
+
+  h3 {
+    font-size: 20px;
+    margin-top: 20px !important;
   }
 
   #searchInstitutionInput {
@@ -1387,13 +1394,14 @@ footer.press {
     font-size: 16px;
     padding: 12px 20px 12px 40px;
     border: 1px solid #ddd;
-    margin-bottom: 12px;
+    margin-bottom: 20px;
+    margin-top: 5px;
   }
 
   #institutionList {
     list-style-type: none;
     padding: 0;
-    margin: 0;
+    margin: 15px 0 0;
   }
 
   #institutionList li {
@@ -1402,7 +1410,7 @@ footer.press {
     background-color: #f6f6f6;
     padding: 12px;
     text-decoration: none;
-    font-size: 18px;
+    font-size: 16px;
     color: black;
     display: block
   }

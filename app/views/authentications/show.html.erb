@@ -51,11 +51,11 @@
   <div class="row">
     <div class="col-sm-7">
       <h1>Log in with your Institution</h1>
-      <p class="lead">Search and click your institution to log in, or you can access this resource on-campus.</p>
+      <p class="lead">Search for your institution and click on it to log in. You can also access this resource on-campus.</p>
       <div class="row">  
         <div class="col-sm-12">
-          <h2>Search for your institution:</h2>
-          <input type="text" id="searchInstitutionInput" onkeyup="searchInstitutionList()" placeholder="Enter your institution's name" aria-label="Type in an institution name to search">
+          <h2>Search for your institution</h2>
+          <input type="text" id="searchInstitutionInput" onkeyup="searchInstitutionList()" placeholder="Enter your institution's name" aria-label="Type in an institution name to filter the list of purchasing institutions">
           <h3 id="institutionListHeading">All purchasing institutions</h3>
           <ul id="institutionList">
             <% @presenter.institutions.each do |institution| %>
@@ -88,19 +88,22 @@
         <div class="col-sm-12">
           <% if @presenter.publisher_individual_subscribers? %>
             <h2>Individual access</h2>
-            <p>If you have purchased an individual subscription.</p>
+            <p>If you have purchased an individual subscription:</p>
             <p class="text-left"><a class="btn btn-default" href="<%= main_app.shib_login_url(@presenter.return_location, entityID: Settings.shibboleth.default_idp.entity_id) %>" data-turbolinks="false">Sign in as individual</a></p>
           <% end %>
-          <h2 >Can't find your institution?</h2>
-          <p>Ask your librarian to purchase the <%= @presenter.publisher_name %></p>
+          <h2>Can't find your institution?</h2>
+          <p>Ask your librarian to purchase the <%= @presenter.publisher_name %>.</p>
           <% if @presenter.monograph_other_options? %>
-            <h2 class="heading">Other Options</h2>
-            <% if @presenter.monograph_buy_url? %>
-              <p>You can also <%= link_to 'buy this book', @presenter.monograph_buy_url, target: :_blank %></p>
-            <% end %>
-            <% if @presenter.monograph_worldcat_url? %>
-              <p>Or find it at <%= link_to 'WorldCat.org', @presenter.monograph_worldcat_url, target: :_blank %></p>
-            <% end %>
+            <h3>Other Options</h3>
+            <p>You can also:</p>
+            <ul>
+              <% if @presenter.monograph_buy_url? %>
+                <li><%= link_to 'Buy a copy of this book', @presenter.monograph_buy_url, target: :_blank %></li>
+              <% end %>
+              <% if @presenter.monograph_worldcat_url? %>
+                <li>Find it at a nearby library via <%= link_to 'WorldCat.org', @presenter.monograph_worldcat_url, target: :_blank %></li>
+              <% end %>
+            </ul>
           <% end %>
         </div>
       </div>
