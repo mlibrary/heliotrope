@@ -11,7 +11,7 @@
       </div>
     <% else %>
       <div class="access access-options access-options-alert">
-        <span><%= @presenter.access_level(@actor_product_ids, @allow_read_product_ids).icon_lg.html_safe %> <strong>You don't have access to this book.</strong> Please try to log in with your library.</span>
+        <span><%= @presenter.access_level(@actor_product_ids, @allow_read_product_ids).icon_lg.html_safe %> <strong>You don't have access to this book.</strong> Please try to log in with your institution.</span>
         <span><%= link_to "Log in", main_app.monograph_authentication_path(@presenter.id), class: "btn-sm btn"  %></span>
       </div>
     <% end %>

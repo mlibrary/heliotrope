@@ -199,7 +199,7 @@ div.skip {
 ///////////////////////////////////
 .main-header {
   border-bottom: 0;
-  margin-bottom: 0;
+  margin-bottom: 0 !important;
 }
 
 .breadcrumbs {
@@ -207,6 +207,11 @@ div.skip {
   padding-bottom: 0 !important;
   .active {
     color: $gray-60 !important;
+  }
+
+  .breadcrumb {
+    background: none !important;
+    border: none !important;
   }
 
   .breadcrumb li + ::before {

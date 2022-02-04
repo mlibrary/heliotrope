@@ -1886,11 +1886,6 @@ $amherst-grey-3: #dee2e6;
     @include brandon;
   }
 
-  .breadcrumb {
-    background-color: $amherst-grey-2;
-    border-color: $amherst-grey-3;
-  }
-
   //footer
   footer.press {
       border-top: 1px solid rgba(0,0,0,.125);
@@ -3305,11 +3300,6 @@ $lever-black-80: #342f2e;
   // breadcrumbs
   .breadcrumbs {
     @include scala-sans;
-
-    .breadcrumb {
-      background-color: $lever-grey-3;
-      border-color: $lever-grey-4;
-    }
   }
 
   //footer
@@ -5175,10 +5165,6 @@ $mps-teal-100: #e9f2f5;
   .breadcrumbs {
     @include muli;
 
-    .breadcrumb {
-      background-color: $mps-blue-100;
-    }
-
   }
 
   // press catalog
@@ -5573,10 +5559,6 @@ $a2ru-white: #fafafa;
   // breadcrumbs
   .breadcrumbs {
     @include rubik;
-
-    .breadcrumb {
-      background-color: rgb(245, 245, 245);
-    }
   }
 
   // press catalog
@@ -6081,11 +6063,6 @@ $fia-teal-100: #e9f2f5;
   // breadcrumbs
   .breadcrumbs {
     @include proxima-nova;
-
-    .breadcrumb {
-      background-color: $fia-blue-100;
-    }
-
   }
 
   // press catalog
@@ -6509,10 +6486,6 @@ $maize-black-80: #342f2e;
   // breadcrumbs
   .breadcrumbs {
     @include benton;
-
-    .breadcrumb {
-      background-color: rgb(245, 245, 245);
-    }
   }
 
   // press catalog
@@ -6903,10 +6876,6 @@ $pccn-black-80: #342f2e;
   // breadcrumbs
   .breadcrumbs {
     @include roboto;
-
-    .breadcrumb {
-      background-color: rgb(245, 245, 245)
-    }
   }
 
   // press catalog
