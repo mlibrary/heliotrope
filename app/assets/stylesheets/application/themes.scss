@@ -1886,6 +1886,10 @@ $amherst-grey-3: #dee2e6;
     @include brandon;
   }
 
+  .breadcrumb {
+    padding: 8px 15px !important;
+  }
+
   //footer
   footer.press {
       border-top: 1px solid rgba(0,0,0,.125);
@@ -3300,6 +3304,10 @@ $lever-black-80: #342f2e;
   // breadcrumbs
   .breadcrumbs {
     @include scala-sans;
+  }
+
+  .breadcrumb {
+    padding: 8px 15px !important;
   }
 
   //footer
