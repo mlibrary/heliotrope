@@ -15,10 +15,11 @@
        width="8000px" <%# https://tools.lib.umich.edu/jira/browse/HELIO-746?focusedCommentId=1074044&page=com.atlassian.jira.plugin.system.issuetabpanels:comment-tabpanel#comment-1074044 %>
        data-able-player
        data-skin="2020"
+       data-captions-position="overlay" <%# Does not have the desired effect if the user has set a "Below video" caption position preference. Hence `checkElement()` fiddling below. %>
        data-include-transcript="false"
        data-allow-fullscreen="false"
        poster="<%= hyrax.download_path(file_set.id, file: 'jpeg') %>"
-       <%= raw file_set.closed_captions.present? ? 'data-transcript-div="video-transcript-container" data-lyrics-mode' : 'data-include-transcript="false"' %>>
+       <%= raw file_set.closed_captions.present? ? 'data-transcript-div="video-hidden-transcript-container" data-lyrics-mode' : 'data-include-transcript="false"' %>>
   <source src="<%= hyrax.download_path(file_set, file: 'mp4') %>" type="video/mp4" />
   <% if file_set.closed_captions.present? %><%# kind="subtitles" not "captions" due to https://github.com/mlibrary/heliotrope/issues/1234 %>
     <track kind="subtitles" src="<%= hyrax.download_path(file_set.id, file: 'captions_vtt') %>" srclang="en" label="English"  />
@@ -31,42 +32,50 @@
 <% if file_set.closed_captions.present? %>
   <%# There's no way to show this right now, due to the restrictive "responsive" nested divs on the iframe, nor is... %>
   <%# there a way to turn the interactive transcript off (without hacks). So keep it below the embedded iframe window. %>
-  <%# The extra room in the form of "percentage height" will need to be accounted for in EmbedCodeService at... %>
-  <%# unpack time, if we want to show it, but might be too much space to take up in two-column view. %>
-  <%# TODO: edit comment when working on https://tools.lib.umich.edu/jira/browse/HELIO-4167 %>
-  <div id="video-transcript-container"></div>
+  <div id="video-hidden-transcript-container"></div>
 <% end %>
 
 <script>
-  var timer;
+  // https://stackoverflow.com/a/53269990
+  const checkElement = async selector => {
+    while (!$(selector).length) {
+      await new Promise( resolve =>  requestAnimationFrame(resolve) )
+    }
+    return selector;
+  };
 
   $(document).ready(function() {
-    clearTimeout (timer);
-    // it can take up to a couple of seconds for Able Player's menus to be built
-    timer = setTimeout(hideTranscriptPreferencesOption, 2000);
+    // wait for each of these selectors to be present, then fiddle with them to constrain Able Player features for...
+    // embedding in the iframe
+    checkElement('.able-captions-wrapper').then((selector) => {
+      $(selector).removeClass('able-captions-below');
+      $(selector).addClass('able-captions-overlay');
+      $(selector).css({ "font-size":"100%", "background-color": "transparent", "opacity": "" });
+    });
+
+    // With these two embed-unsuitable preferences menu items, removal is better than hiding and having to mess with...
+    // classes. This way Able Player can still manage a11y items like active status, class='able-focus' and tabIndex...
+    // on the remaining menu items, facilitating tab navigation and active styles.
+    checkElement("#video-prefs-menu li:contains('Captions')").then((selector) => {
+      $(selector).remove();
+    });
+
+    checkElement("#video-prefs-menu li:contains('Transcript')").then((selector) => {
+      $(selector).remove();
+    });
+
     setupVideoAnalytics();
   });
 
   function setupVideoAnalytics() {
     if (typeof(ga) == typeof(Function)) {
-      var video = $('#video').get(0)
+      var video = $('#video').get(0);
       video.addEventListener("play", function() {
         press_tracker_event('e_reader', 'play_video', window.location.href);
       });
       video.addEventListener("pause", function() {
         press_tracker_event('e_reader', 'stop_video', window.location.href);
       });
-    }
-  }
-
-  <%# TODO: maybe remove this, depending on the outcome of https://tools.lib.umich.edu/jira/browse/HELIO-4167 %>
-  function hideTranscriptPreferencesOption() {
-    var ul = document.getElementById("video-prefs-menu");
-    var items = ul.getElementsByTagName("li");
-    for (var i = 0; i < items.length; ++i) {
-      if(items[i].innerText == "Transcript") {
-        items[i].style.display = 'none';
-      }
     }
   }
 

@@ -163,8 +163,11 @@ RSpec.describe EmbedCodePresenter do
         </div>
       END
     }
-    let(:audio_embed_code) {
+    let(:audio_embed_code_without_transcript) {
       "<iframe src='#{presenter.embed_link}' title='#{presenter.embed_code_title}' style='page-break-inside:avoid; -webkit-column-break-inside:avoid; break-inside:avoid; display:block; overflow:hidden; border-width:0; width:98%; max-width:98%; height:125px; margin:auto'></iframe>"
+    }
+    let(:audio_embed_code_with_transcript) {
+      "<iframe src='#{presenter.embed_link}' title='#{presenter.embed_code_title}' style='page-break-inside:avoid; -webkit-column-break-inside:avoid; break-inside:avoid; display:block; overflow:hidden; border-width:0; width:98%; max-width:98%; height:300px; margin:auto'></iframe>"
     }
     let(:file_set_doc) { SolrDocument.new(id: 'fileset_id', has_model_ssim: ['FileSet'], mime_type_ssi: mime_type, resource_type_tesim: [resource_type], closed_captions_tesim: closed_captions) }
     let(:mime_type) { nil }
@@ -250,13 +253,13 @@ RSpec.describe EmbedCodePresenter do
       let(:mime_type) { 'audio/mp3' }
 
       context 'no closed_captions present' do
-        it { expect(presenter.embed_code).to eq audio_embed_code }
+        it { expect(presenter.embed_code).to eq audio_embed_code_without_transcript }
       end
 
       context 'closed_captions present' do
         let(:closed_captions) { ['STUFF'] }
 
-        it { expect(presenter.embed_code).to eq audio_embed_code }
+        it { expect(presenter.embed_code).to eq audio_embed_code_with_transcript }
       end
     end
 

@@ -54,7 +54,7 @@ module EmbedCodePresenter
 
   def audio_embed_code
     # `height: 125px` allows for Able Player's controls. Both the controls and the audio-transcript-container div take up 375px of height, but the iframe should auto-adjust its height as required
-    "<iframe src='#{embed_link}' title='#{embed_code_title}' style='page-break-inside:avoid; -webkit-column-break-inside:avoid; break-inside:avoid; display:block; overflow:hidden; border-width:0; width:98%; max-width:98%; height:125px; margin:auto'></iframe>"
+    "<iframe src='#{embed_link}' title='#{embed_code_title}' style='page-break-inside:avoid; -webkit-column-break-inside:avoid; break-inside:avoid; display:block; overflow:hidden; border-width:0; width:98%; max-width:98%; height:#{audio_embed_height}px; margin:auto'></iframe>"
   end
 
   def embed_width
@@ -105,7 +105,13 @@ module EmbedCodePresenter
   end
 
   # The Able Player "interactive transcript" div will only be present if our `closed_captions` field is set
+  # this method is only used to allow height for the volume bar, it's used in the parent partial,...
+  # app/views/hyrax/file_sets/_media_embedded.html.erb, which is not audio-specific
   def audio_without_closed_captions?
     audio? && closed_captions.blank?
+  end
+
+  def audio_embed_height
+    closed_captions.present? ? 300 : 125
   end
 end
