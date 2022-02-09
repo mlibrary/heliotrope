@@ -58,6 +58,18 @@ class Monograph < ActiveFedora::Base
   end
   validates :next_edition, format: { allow_blank: true, with: URI.regexp(%w[http https]), message: 'must be a url.' }
 
+  property :volume, predicate: ::RDF::URI.new('http://fulcrum.org/ns#Volume'), multiple: false do |index|
+    index.as :stored_searchable
+  end
+
+  property :oclc_owi, predicate: ::RDF::URI.new('http://fulcrum.org/ns#OclcOwi'), multiple: false do |index|
+    index.as :stored_searchable
+  end
+
+  property :copyright_year, predicate: ::RDF::URI.new('http://purl.org/dc/terms/dateCopyrighted'), multiple: false do |index|
+    index.as :stored_searchable
+  end
+
   include HeliotropeUniversalMetadata
   include ::Hyrax::WorkBehavior
   # This must come after the WorkBehavior because it finalizes the metadata

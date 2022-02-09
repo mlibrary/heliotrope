@@ -57,7 +57,10 @@ describe Hyrax::MonographForm do
                            previous_edition
                            next_edition
                            tombstone
-                           tombstone_message]
+                           tombstone_message
+                           volume
+                           oclc_owi
+                           copyright_year]
     }
   end
 
@@ -100,7 +103,10 @@ describe Hyrax::MonographForm do
                            previous_edition
                            next_edition
                            tombstone
-                           tombstone_message]
+                           tombstone_message
+                           volume
+                           oclc_owi
+                           copyright_year]
     }
   end
 

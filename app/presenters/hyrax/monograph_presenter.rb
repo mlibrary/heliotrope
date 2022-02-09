@@ -18,6 +18,7 @@ module Hyrax
              :isbn, :license, :copyright_holder, :open_access, :funder, :funder_display, :holding_contact, :has_model,
              :buy_url, :embargo_release_date, :lease_expiration_date, :rights, :series,
              :visibility, :identifier, :doi, :handle, :thumbnail_path, :previous_edition, :next_edition,
+             :volume, :oclc_owi, :copyright_year,
              to: :solr_document
 
     def creator # rubocop:disable Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity

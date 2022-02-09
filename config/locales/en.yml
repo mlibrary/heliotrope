@@ -279,6 +279,9 @@ en:
         translation: :"translation"
         tombstone: :"tombstone"
         tombstone_message: :"tombstone_message"
+        volume: :"volume"
+        oclc_owi: :"oclc_owi"
+        copyright_year: :"copyright_year"
       monograph:
         creator: "Creator(s)"
         citation_publisher: "Citation Publisher"
@@ -296,6 +299,9 @@ en:
         title: "Title"
         tombstone: "Tombstone"
         tombstone_message: "Tombstone Message"
+        volume: "Volume"
+        oclc_owi: "OCLC Work Identifier"
+        copyright_year: "Copyright Year"
       score:
         creator: "Composer"
         license: "Creative Commons License"
@@ -321,6 +327,9 @@ en:
         previous_edition: "Full DOI (or other) URL pointing to the previous edition of the Monograph"
         section_titles: "Used like a table of contents to indicate the order of attached FileSets' \"related sections\"."
         subject: "Keywords which describe what this monograph is about."
+        volume: "Monograph volume number if member of a multi-volume set - integer - greater than 0."
+        oclc_owi: "OCLC Work Identifier - NOT the OCLC Number - At least that is my interpretation."
+        copyright_year: "Copyright Year - YYYY - four digit year - greater than 1709."
       press:
         description: "Description of the Press. Markdown is allowed."
         subdomain: "Subdomain used as the Press URL. 2-32 lowercase alphanumeric ASCII characters, plus (non-consecutive) hyphens. Must not start or end with a hyphen."

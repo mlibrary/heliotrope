@@ -6,4 +6,14 @@ module SolrDocumentExtensions
   include SolrDocumentExtensions::Universal
   include SolrDocumentExtensions::Monograph
   include SolrDocumentExtensions::FileSet
+
+  private
+
+    def scalar(key)
+      vector(key).first
+    end
+
+    def vector(key)
+      Array(self[key])
+    end
 end
