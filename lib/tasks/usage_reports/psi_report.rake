@@ -30,7 +30,7 @@ namespace :heliotrope do
       puts [
             c.created_at, 
             "request",
-            which_doi,
+            which_doi(c, monographs, file_sets),
             monographs[c.parent_noid]&.publisher.first,
             monographs[c.parent_noid]&.title,
             monographs[c.parent_noid]&.creator.join("; "),
@@ -42,7 +42,7 @@ namespace :heliotrope do
 
   end
 
-  def which_doi
+  def which_doi(c, monographs, file_sets)
     # file_set doi if it exists, otherwise the monograph doi (for epubs and other featured reps), otherwise the monograph isbn(s)
     return file_sets[c.noid]&.doi_url if  file_sets[c.noid]&.doi?
     return monographs[c.parent_noid]&.doi_url if monographs[c.parent_noid]&.doi?
