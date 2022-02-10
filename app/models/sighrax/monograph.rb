@@ -104,6 +104,13 @@ module Sighrax
     end
 
     def worldcat_url
+      isbn = preferred_isbn
+      return '' if isbn.empty?
+
+      'http://www.worldcat.org/isbn/' + preferred_isbn
+    end
+
+    def preferred_isbn
       # Build your link around the 10- or 13-digit ISBN for the item.
       isbns = vector('isbn_tesim')
       return '' if isbns.empty?
@@ -119,8 +126,6 @@ module Sighrax
         break if isbn.present?
       end
       isbn ||= parsed_isbns.values[0]
-
-      'http://www.worldcat.org/isbn/' + isbn
     end
 
     private

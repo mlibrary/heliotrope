@@ -124,6 +124,14 @@ class Auth
     @monograph.worldcat_url
   end
 
+  def monograph_isbn?
+    @monograph.preferred_isbn.present?
+  end
+
+  def monograph_isbn
+    @monograph.preferred_isbn
+  end
+
   def monograph_subscribing_institutions
     return @monograph_subscribing_institutions unless @monograph_subscribing_institutions.nil?
 

@@ -2,9 +2,19 @@
   <% if auth.actor_unauthorized? %>
     <% if auth.actor_authenticated? %>
       <div class="access access-options">
-        <span><%= @presenter.access_level(@actor_product_ids, @allow_read_product_ids).icon_lg.html_safe %></span> 
+        <span><%= @presenter.access_level(@actor_product_ids, @allow_read_product_ids).icon_lg.html_safe %></span>
+        <%
+          link_resolver_url = auth&.institution&.link_resolver_url
+          if link_resolver_url.present?
+            if link_resolver_url.last == "?" || link_resolver_url.last == "&"
+              link_resolver_url += "isbn=#{auth.monograph_isbn}"
+            else
+              link_resolver_url += "?isbn=#{auth.monograph_isbn}"
+            end
+          end
+        %>
         <div>
-          <span><strong>Your institution does not have access to this book.</strong> Please try <%= link_to "other options", main_app.monograph_authentication_path(@presenter.id, filter: true) %>.</span>        
+          <span><strong>Your institution does not have access to this book.</strong> Please try <%= link_to "other options", link_resolver_url || auth.monograph_worldcat_url %>.</span>        
           <br />
           <span>Are you a librarian? See <%= link_to "purchase information", main_app.purchase_monograph_catalog_path(@presenter.id) %>.</span>
         </div>
