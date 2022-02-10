@@ -12,6 +12,7 @@
     <% end %>
   </hgroup>
 </header>
+<%= render partial: 'shared/brand_press_auth', locals: { auth: @auth } if @auth.present? %>
 <% if press_presenter.present? && controller_name == "press_catalog" %>
   <% unless @search_ongoing == true || press_presenter.press.aboutware? %>
     <%= render 'shared/brand_press_jumbotron' %>

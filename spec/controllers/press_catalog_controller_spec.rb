@@ -28,6 +28,8 @@ RSpec.describe PressCatalogController, type: :controller do
     it "returns http 'success' when press param is a known Press subdomain" do
       get :index, params: { press: press }
       expect(response).to have_http_status(:success)
+      expect(controller.instance_variable_get(:@auth)).to be_an_instance_of(Auth)
+      expect(controller.instance_variable_get(:@auth).return_location).to eq Rails.application.routes.url_helpers.press_catalog_path(press)
     end
 
     context '#search_ongoing' do

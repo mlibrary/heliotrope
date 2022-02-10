@@ -60,6 +60,10 @@ class ApplicationController < ActionController::Base
     @current_institutions ||= current_actor.institutions
   end
 
+  def auth_for(entity)
+    @auth ||= Auth.new(current_actor, entity) # rubocop:disable Naming/MemoizedInstanceVariableName
+  end
+
   def except_locale
     @except_locale = true
     rv = yield

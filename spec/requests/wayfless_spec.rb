@@ -123,7 +123,7 @@ RSpec.describe "(Where Are You From)less", type: :request do
             subject
             expect(response).to have_http_status(:ok)
             expect(response).to render_template(:index)
-            expect(response.body).to match(/You do not have access to this book/)
+            expect(response.body).to match(/You don't have access to this book/)
           end
         end
 
@@ -413,7 +413,7 @@ RSpec.describe "(Where Are You From)less", type: :request do
 
           it do
             subject
-            expect(response).to redirect_to(epub_access_path(epub.id))
+            expect(response).to redirect_to(monograph_authentication_path(monograph.id))
           end
         end
 

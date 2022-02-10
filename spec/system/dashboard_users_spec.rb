@@ -16,7 +16,7 @@ RSpec.describe 'Dashboard User Types', type: :system, browser: true do
       visit hyrax.dashboard_path
       # in production this goes to shibboleth login but in dev/test it goes to fake HTTP authentication login page
       expect(page).to have_content("You need to sign in or sign up before continuing.")
-      expect(page).to have_content("Fake HTTP Authentication")
+      expect(page).to have_content("Authentication")
     end
   end
 
@@ -34,7 +34,7 @@ RSpec.describe 'Dashboard User Types', type: :system, browser: true do
 
       visit hyrax.dashboard_path
       expect(page).to have_content("You need to sign in or sign up before continuing.")
-      expect(page).to have_content("Fake HTTP Authentication")
+      expect(page).to have_content("Authentication")
 
       visit main_app.fulcrum_path
       expect(page).to have_current_path(fulcrum_path)

@@ -2,7 +2,35 @@
 // HELIOTROPE BASE THEME
 // Place standard styling of app here
 // Press related overrides go in themes.scss
-///////////////////////////////////////////
+
+///////////////////////////////////////////////
+// colors
+$base-color-header-color: #fafafa;
+$base-color-header-background: #342f2e;
+$base-color-header-link: #73d2f4;
+$base-color-header-link-hover: #00AFEC;
+
+$base-color-alert-box-background: #ecccd1;
+$base-color-alert-box-color: #342f2e;
+$base-color-alert-box-link: #342f2e;
+$base-color-alert-box-link-hover: #ddd;
+
+$base-color-background: #fafafa;
+$base-color-box-color: #342f2e;
+$base-color-box-background: #fafafa;
+$base-color-box-border: #342f2e;
+$base-color-button: #fff;
+$base-color-button-background: #655a52;
+$base-color-button-hover: #ddd;
+$base-color-color: #342f2e;
+$base-color-link: #73d2f4;
+$base-color-link-hover: #73d2f4;
+
+$base-color-footer-color: #fafafa;
+$base-color-footer-background: #342f2e;
+$base-color-footer-link: #73d2f4;
+$base-color-footer-link-hover: #73d2f4;
+
 ///////////////////////////////////
 // UTILITY
 ///////////////////////////////////
@@ -155,12 +183,23 @@ div.skip {
 }
 
 ///////////////////////////////////
+// BRAND AUTH
+///////////////////////////////////
+
+.brand-auth {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1em;
+  border-bottom: 1px solid #e5e5e5;
+}
+
+///////////////////////////////////
 // BREADCRUMBS
 ///////////////////////////////////
 .main-header {
   border-bottom: 0;
-  margin-bottom: 0;
-  margin-top: 1em;
+  margin-bottom: 0 !important;
 }
 
 .breadcrumbs {
@@ -168,6 +207,12 @@ div.skip {
   padding-bottom: 0 !important;
   .active {
     color: $gray-60 !important;
+  }
+
+  .breadcrumb {
+    background: none !important;
+    border: none !important;
+    padding: 8px 15px 8px 0px !important;
   }
 
   .breadcrumb li + ::before {
@@ -669,13 +714,56 @@ footer.press {
       margin-top: 1em;
       font-weight: bold;
       font-stretch: condensed;
+      
       img {
         margin-right: .5em;
+        vertical-align: bottom;
+      }
+
+      &-options {
+        font-weight: normal;
+        font-stretch: normal;
+        color: $base-color-box-color;
+        background-color: #f5f5f5;
+        margin-top: 1em;
+        margin-bottom: 1em;
+        padding: 1em;
+        border-radius: 4px;
+        font-size: 16px;
+
+        .btn {
+          background-color: #333;
+          color: #fff;
+          font-size: 14px !important;
+        }
+
+        &-alert {
+          justify-content: space-between;
+          color: $base-color-alert-box-color;
+          background-color: $base-color-alert-box-background;
+        }
       }
     }
 
     .edition-link, .edition-links {
       padding-top: 0.5em;
+    }
+  }
+
+  // PURCHASE
+  &-purchase {
+    .back-link {
+      display: flex;
+      justify-content: left;
+      align-items: center;
+      padding: 1em;
+    }
+    h1 {
+      font-size: 30px;
+    }
+
+    h2 {
+      font-size: 24px;
     }
   }
 
@@ -1284,30 +1372,70 @@ footer.press {
   #idpSelectSelectButton {
     width: 35% !important;
   }
-
 }
 
 ///////////////////////////////////
-// PURCHASE
+// AUTHENTICATION
 ///////////////////////////////////
-.purchase {
-  .heading {
+.authentication {
+
+  h1 {
+    font-size: 30px;
+  }
+
+  h2 {
     font-size: 24px;
-    font-weight: bold;
   }
-  .margin-padding {
-    padding-top: 15px;
-    padding-left: 15px;
-    padding-right: 15px;
-    padding-bottom: 0;
+
+  h3 {
+    font-size: 20px;
+    margin-top: 20px !important;
   }
-  .border-padding {
-    border: black 3px solid;
-    padding-top: 0;
-    padding-left: 15px;
-    padding-right: 15px;
-    padding-bottom: 15px;
-    background: #fafafa;
+
+  #searchInstitutionInput {
+    //background-image: url('/css/searchicon.png');
+    background-position: 10px 12px;
+    background-repeat: no-repeat;
+    width: 100%;
+    font-size: 16px;
+    padding: 12px 20px 12px 40px;
+    border: 1px solid #ddd;
+    margin-bottom: 20px;
+    margin-top: 5px;
+  }
+
+  #institutionList {
+    list-style-type: none;
+    padding: 0;
+    margin: 15px 0 0;
+  }
+
+  #institutionList li {
+    border: 1px solid #ddd;
+    margin-top: -1px; /* Prevent double borders */
+    background-color: #f6f6f6;
+    padding: 12px;
+    text-decoration: none;
+    font-size: 16px;
+    color: black;
+    display: block
+  }
+
+  #institutionList li a:hover:not(.header) {
+    background-color: #eee;
+  }
+
+  .back-link {
+    display: flex;
+    justify-content: left;
+    align-items: center;
+    padding: 1em;
+  }
+
+  .info {
+    display: flex;
+    align-items:center;
+    justify-content: space-between;
   }
 }
 
@@ -1342,7 +1470,6 @@ footer.press {
     margin-bottom: 0;
     -webkit-animation: stretchdelay 1.6s infinite ease-in-out;
     animation: stretchdelay 1.6s infinite ease-in-out;
-
   }
 
   .fulcrum-loading .circ1 {

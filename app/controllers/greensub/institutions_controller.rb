@@ -23,7 +23,6 @@ module Greensub
 
     def create
       @institution = Institution.new(institution_params)
-      @institution.display_name = @institution.name if @institution.display_name.blank?
       respond_to do |format|
         if @institution.save
           format.html { redirect_to greensub_institution_path(@institution), notice: 'Institution was successfully created.' }

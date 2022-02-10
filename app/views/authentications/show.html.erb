@@ -1,18 +1,126 @@
-<h1>Request Attributes</h1>
+<% provide :page_title, @presenter.page_title %>
+<% provide :page_class, @presenter.page_class %>
+<% content_for :head do %>
+  <meta name="turbolinks-cache-control" content="no-cache">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script>
+    function searchInstitutionList() {
+      var input, filter, ul, li, a, i, txtValue;
+      input = document.getElementById("searchInstitutionInput");
+      filter = input.value.toUpperCase();
+      ul = document.getElementById("institutionList");
+      li = ul.getElementsByTagName("li");
+      var heading, showing, hiding, last;
+      showing = false;
+      hiding = false
+      for (i = 0; i < li.length-1; i++) {
+        a = li[i].getElementsByTagName("span")[0];
+        txtValue = a.textContent || a.innerText;
+        if (txtValue.toUpperCase().indexOf(filter) > -1) {
+          li[i].style.display = "";
+          showing = true
+        } else {
+          li[i].style.display = "none";
+          hiding = true;
+        }
+      }
+      heading = document.getElementById("institutionListHeading");
+      if (hiding) {
+        heading.textContent = "Search results";
+      }  else {
+        heading.textContent = "All purchasing institutions";
+      }
+      last = document.getElementById("lastInstitutionListItem");
+      if (showing) {
+        last.style.display = "none";
+      } else {
+        last.style.display = "";
+      }
+    }
 
-<h2>Identity</h2>
-<table>
-  <th>key</th>
-  <th>value</th>
-  <% @identity.each do |key, value| %>
-    <tr>
-      <td><%= key %></td>
-      <td><%= value %></td>
-    </tr>
-  <% end %>
-</table>
-
-<h2>All</h2>
-<%= @request_attributes.all %>
-
-<p></p>
+    function showInstitutionInfoWindow(name) {
+      $('#name').text(name);
+      $('#infoWindow').modal('show');
+    }
+  </script>
+<% end %>
+<div id="maincontent" class="authentication">
+  <div class="back-link">
+    <%= link_to "<< Go back to previous page", @presenter.return_location %>
+  </div>
+  <div class="row">
+    <div class="col-sm-7">
+      <h1>Log in with your Institution</h1>
+      <p class="lead">Search for your institution and click on it to log in. You can also access this resource on-campus.</p>
+      <div class="row">  
+        <div class="col-sm-12">
+          <h2>Search for your institution</h2>
+          <input type="text" id="searchInstitutionInput" onkeyup="searchInstitutionList()" placeholder="Enter your institution's name" aria-label="Type in an institution name to filter the list of purchasing institutions">
+          <h3 id="institutionListHeading">All purchasing institutions</h3>
+          <ul id="institutionList">
+            <% @presenter.institutions.each do |institution| %>
+            <li>
+              <% if institution.shibboleth? %>
+                <%= link_to(shib_login_url(@presenter.return_location, entityID: institution.entity_id)) do %>
+                  <span><%= institution.name %></span>
+                <% end %>
+              <% elsif institution.catalog_url.present? %>
+                <%= link_to(institution.catalog_url) do %>
+                  <span><%= institution.name %></span>
+                <% end %>
+              <% else %>
+                <div class="info">
+                  <span><%= institution.name %></span>
+                  <button onclick="showInstitutionInfoWindow('<%= institution.name %>')">
+                    <span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+                  </button>
+                </div>
+              <% end %>
+            </li>
+            <% end %>
+            <li id="lastInstitutionListItem" style="display: none;">Empty</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-4 col-sm-offset-1">
+      <div class="row">
+        <div class="col-sm-12">
+          <% if @presenter.publisher_individual_subscribers? %>
+            <h2>Individual access</h2>
+            <p>If you have purchased an individual subscription:</p>
+            <p class="text-left"><a class="btn btn-default" href="<%= main_app.shib_login_url(@presenter.return_location, entityID: Settings.shibboleth.default_idp.entity_id) %>" data-turbolinks="false">Sign in as individual</a></p>
+          <% end %>
+          <h2>Can't find your institution?</h2>
+          <p>Ask your librarian to purchase the <%= @presenter.publisher_name %>.</p>
+          <% if @presenter.monograph_other_options? %>
+            <h3>Other Options</h3>
+            <p>You can also:</p>
+            <ul>
+              <% if @presenter.monograph_buy_url? %>
+                <li><%= link_to 'Buy a copy of this book', @presenter.monograph_buy_url, target: :_blank %></li>
+              <% end %>
+              <% if @presenter.monograph_worldcat_url? %>
+                <li>Find it at a nearby library via <%= link_to 'WorldCat.org', @presenter.monograph_worldcat_url, target: :_blank %></li>
+              <% end %>
+            </ul>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal fade" id="infoWindow" role="dialog">
+    <div class="modal-dialog modal-sm vertical-align-center">
+      <div class="modal-content">
+        <div class="modal-body">
+          <p class="lead">This collection is using Single Sign-On for login, and <span id="name"></span> does not support this login method. <strong>You will need to access this collection on-campus or through your library's website.</strong></p>
+          <p>Please contact your librarian if you have any questions about how to log in.</p>
+          <button type="button" data-dismiss="modal" class="btn btn-default">Got it</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+  searchInstitutionList();
+</script>

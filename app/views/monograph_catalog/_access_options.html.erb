@@ -1,0 +1,24 @@
+<% if @presenter.access_level(@actor_product_ids, @allow_read_product_ids).show? %>
+  <% if auth.actor_unauthorized? %>
+    <% if auth.actor_authenticated? %>
+      <div class="access access-options">
+        <span><%= @presenter.access_level(@actor_product_ids, @allow_read_product_ids).icon_lg.html_safe %></span> 
+        <div>
+          <span><strong>Your institution does not have access to this book.</strong> Please try <%= link_to "other options", main_app.monograph_authentication_path(@presenter.id, filter: true) %>.</span>        
+          <br />
+          <span>Are you a librarian? See <%= link_to "purchase information", main_app.purchase_monograph_catalog_path(@presenter.id) %>.</span>
+        </div>
+      </div>
+    <% else %>
+      <div class="access access-options access-options-alert">
+        <span><%= @presenter.access_level(@actor_product_ids, @allow_read_product_ids).icon_lg.html_safe %> <strong>You don't have access to this book.</strong> Please try to log in with your institution.</span>
+        <span><%= link_to "Log in", main_app.monograph_authentication_path(@presenter.id), class: "btn-sm btn"  %></span>
+      </div>
+    <% end %>
+  <% else %>
+    <div class="access">
+      <%= @presenter.access_level(@actor_product_ids, @allow_read_product_ids).icon_lg.html_safe %>
+      <span><%= @presenter.access_level(@actor_product_ids, @allow_read_product_ids).text.html_safe %></span>
+    </div>
+  <% end %>
+<% end %>

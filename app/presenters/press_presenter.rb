@@ -111,6 +111,10 @@ class PressPresenterNullObject
     false
   end
 
+  def blank?
+    true
+  end
+
   def press_subdomains
     []
   end

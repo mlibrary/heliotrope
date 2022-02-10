@@ -285,7 +285,7 @@ module Hyrax
                        text:    '')
       when :restricted
         access_options_link = if reader_ebook_id.present?
-                                " " + link_to(::I18n.t('access_levels.access_level_text.restricted_access_options'), Rails.application.routes.url_helpers.epub_access_url(id: reader_ebook_id))
+                                " " + link_to(::I18n.t('access_levels.access_level_text.restricted_access_options'), Rails.application.routes.url_helpers.monograph_authentication_url(id: id))
                               else
                                 ''
                               end

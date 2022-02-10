@@ -138,4 +138,21 @@ RSpec.describe ApplicationController, type: :controller do
 
     it { expect(controller.except_locale { root_path }).not_to match('locale=en') }
   end
+
+  describe '#auth_for' do
+    let(:actor) { instance_double(Anonymous, 'actor') }
+    let(:entity) { instance_double(Sighrax::Entity, 'entity') }
+    let(:auth) { instance_double(Auth, 'auth') }
+
+    before do
+      allow(controller).to receive(:current_actor).and_return(actor)
+      allow(Auth).to receive(:new).with(actor, entity).and_return(auth)
+    end
+
+    it do
+      expect(controller.instance_variable_get(:@auth)).to be nil
+      expect(controller.auth_for(entity)).to be auth
+      expect(controller.instance_variable_get(:@auth)).to be auth
+    end
+  end
 end

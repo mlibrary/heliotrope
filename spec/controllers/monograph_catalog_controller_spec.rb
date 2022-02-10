@@ -163,6 +163,8 @@ RSpec.describe MonographCatalogController, type: :controller do
           it 'response is successful' do
             expect(response).to be_successful
             expect(response).to render_template('monograph_catalog/index')
+            expect(controller.instance_variable_get(:@auth)).to be_an_instance_of(Auth)
+            expect(controller.instance_variable_get(:@auth).return_location).to eq Rails.application.routes.url_helpers.monograph_catalog_path(monograph.id)
           end
           it 'monograph presenter is a monograph presenter class' do
             expect(controller.instance_variable_get(:@presenter).class).to eq Hyrax::MonographPresenter

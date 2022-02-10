@@ -20,7 +20,7 @@ RSpec.describe "EPubs", type: :request do
   let(:thumbnail) { create(:public_file_set) }
   let(:epub) { create(:public_file_set) }
   let(:publication) { EPub::Publication.null_object }
-  let(:counter_service) { double('counter_service') }
+  let(:counter_service) { double("counter_service") }
 
   before do
     monograph.ordered_members = [cover, thumbnail, epub]
@@ -60,16 +60,6 @@ RSpec.describe "EPubs", type: :request do
         expect { subject }.not_to raise_error
         expect(response).to have_http_status(:unauthorized)
         expect(response.body).to be_empty
-      end
-    end
-
-    describe 'GET /epubs_access/:id' do
-      subject { get "/epubs_access/#{epub.id}" }
-
-      it do
-        expect { subject }.not_to raise_error
-        expect(response).to have_http_status(:unauthorized)
-        expect(response).to render_template('hyrax/base/unauthorized')
       end
     end
 
@@ -130,10 +120,16 @@ RSpec.describe "EPubs", type: :request do
       describe 'GET /epubs/:id' do
         subject { get "/epubs/#{epub.id}" }
 
+        before do
+          Greensub::Institution.create!(identifier: Settings.world_institution_identifier, name: "Unknown Insitution", display_name: "Unknown Institution")
+          allow_any_instance_of(CounterService).to receive(:robot?).and_return(false)
+        end
+
         it do
           expect { subject }.not_to raise_error
           expect(response).to have_http_status(:found)
-          expect(response).to redirect_to(epub_access_url)
+          expect(response).to redirect_to(monograph_authentication_url(monograph.id))
+          expect(CounterReport.first.turnaway).to eq "No_License"
         end
       end
 
@@ -144,19 +140,6 @@ RSpec.describe "EPubs", type: :request do
           expect { subject }.not_to raise_error
           expect(response).to have_http_status(:no_content)
           expect(response.body).to be_empty
-        end
-      end
-
-      describe 'GET /epubs_access/:id' do
-        subject { get "/epubs_access/#{epub.id}" }
-
-        before { allow(counter_service).to receive(:count).with(request: 1, turnaway: "No_License") }
-
-        it do
-          expect { subject }.not_to raise_error
-          expect(response).to have_http_status(:ok)
-          expect(response).to render_template(:access)
-          expect(counter_service).to have_received(:count).with(request: 1, turnaway: "No_License")
         end
       end
 
@@ -234,19 +217,6 @@ RSpec.describe "EPubs", type: :request do
             expect(response).to have_http_status(:ok)
             expect(response.body).to eq('present')
           end
-        end
-      end
-
-      describe 'GET /epubs_access/:id' do
-        subject { get "/epubs_access/#{epub.id}" }
-
-        before { allow(counter_service).to receive(:count).with(request: 1, turnaway: 'No_License') }
-
-        it do
-          expect { subject }.not_to raise_error
-          expect(response).to have_http_status(:ok)
-          expect(response).to render_template(:access)
-          expect(counter_service).to have_received(:count).with(request: 1, turnaway: 'No_License')
         end
       end
 
