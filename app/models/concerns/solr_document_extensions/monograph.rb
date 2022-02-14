@@ -4,6 +4,10 @@ module SolrDocumentExtensions
   module Monograph
     extend ActiveSupport::Concern
 
+    def award
+      vector(Solrizer.solr_name('award', :stored_searchable))
+    end
+
     def buy_url
       vector(Solrizer.solr_name('buy_url', :symbol))
     end

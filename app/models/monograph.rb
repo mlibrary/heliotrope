@@ -70,6 +70,10 @@ class Monograph < ActiveFedora::Base
     index.as :stored_searchable
   end
 
+  property :award, predicate: ::RDF::URI.new('http://fulcrum.org/ns#Award') do |index|
+    index.as :stored_searchable
+  end
+
   include HeliotropeUniversalMetadata
   include ::Hyrax::WorkBehavior
   # This must come after the WorkBehavior because it finalizes the metadata
