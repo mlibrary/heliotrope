@@ -11,7 +11,8 @@ module Hyrax
     self.terms += %i[press creator_display series buy_url isbn doi hdl copyright_holder open_access
                      funder funder_display holding_contact location section_titles
                      edition_name previous_edition next_edition
-                     tombstone tombstone_message]
+                     tombstone tombstone_message
+                     volume oclc_owi copyright_year]
 
     self.required_fields = %i[title press creator publisher date_created location]
     self.required_fields -= %i[keyword rights]

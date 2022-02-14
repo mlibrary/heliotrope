@@ -376,3 +376,9 @@ en:
         Whether the object is currently "tombstoned" on Fulcrum.
       tombstone_message: |
         Message displayed on tombstone.
+      volume: |
+        Work volume number if it exist.
+      oclc_owi: |
+        OCLC Work Identifier which is experimental and probably doesn't truly exist.
+      copyright_year: |
+        Four digit copyright year a.k.a. YYYY. 
