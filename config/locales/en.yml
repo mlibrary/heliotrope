@@ -153,7 +153,6 @@ en:
     download: "Download CSV"
   mime_type: "Mime Type"
   monograph_catalog:
-    banner: "You can access this title through a library that has purchased it. More information about purchasing is available at <a href=\"https://www.press.umich.edu/librarians\" id=\"banner-librarians-link\">our website</a>."
     index:
       buy: "Buy a print copy of %{title}"
       buy_book: "Buy Book"
@@ -203,7 +202,6 @@ en:
   permissions_expiration_date: "Permissions Expiration Date"
   press: "Publisher (Fulcrum subdivision)"
   press_catalog:
-    banner: "You can access this collection through a library that has purchased it. More information about purchasing is available at <a href=\"https://www.press.umich.edu/librarians\" id=\"banner-librarians-link\">our website</a>. Some titles are <a href=\"https://www.fulcrum.org/michigan?locale=en&user_access=oa\"> available open access for all to view</a>."
     search:
       form:
         q:
