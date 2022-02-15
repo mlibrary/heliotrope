@@ -12,7 +12,7 @@ module Hyrax
                      funder funder_display holding_contact location section_titles
                      edition_name previous_edition next_edition
                      tombstone tombstone_message
-                     volume oclc_owi copyright_year]
+                     volume oclc_owi copyright_year award]
 
     self.required_fields = %i[title press creator publisher date_created location]
     self.required_fields -= %i[keyword rights]

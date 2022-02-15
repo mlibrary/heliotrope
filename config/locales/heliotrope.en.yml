@@ -228,7 +228,7 @@ en:
         --Last name, First name (editor)
         --Last name, First name (editor); Last name, First name (editor)
       contributor: |
-        If there are additional creators, you can inlclude them here. List them by Last name, First name, separated by a semicolon.
+        If there are additional creators, you can include them here. List them by Last name, First name, separated by a semicolon.
 
         These values do not get used in the the generation of the programmatic citation.
 
@@ -381,4 +381,9 @@ en:
       oclc_owi: |
         OCLC Work Identifier which is experimental and probably doesn't truly exist.
       copyright_year: |
-        Four digit copyright year a.k.a. YYYY. 
+        Four digit copyright year a.k.a. YYYY.
+      award: |
+        If there are awards, you can include them here. List them by Year|Title|Society separated by a semicolon.
+
+        For example:
+        --2022|Golden Anniversary Monograph Award|National Communication Association;2000|EMS Monograph Award|European Mathematical Society;2011|Outstanding Monograph Prize|American Society for Aesthetics

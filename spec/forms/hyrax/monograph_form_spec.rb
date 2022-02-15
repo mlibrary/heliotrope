@@ -60,7 +60,8 @@ describe Hyrax::MonographForm do
                            tombstone_message
                            volume
                            oclc_owi
-                           copyright_year]
+                           copyright_year
+                           award]
     }
   end
 
@@ -106,7 +107,8 @@ describe Hyrax::MonographForm do
                            tombstone_message
                            volume
                            oclc_owi
-                           copyright_year]
+                           copyright_year
+                           award]
     }
   end
 
