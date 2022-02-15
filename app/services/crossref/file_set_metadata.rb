@@ -93,6 +93,8 @@ module Crossref
       # audio/basic, audio/32kadpcm, audio/mpeg, audio/parityfec, audio/MP4A-LATM, audio/mpa-robust
       # so I don't know what's right exactly. This just seems wrong.
       return "audio/basic" if mime == "audio/x-wave"
+      # HELIO-4183
+      return "video/mp4" if mime == "video/x-m4v"
       mime
     end
 
