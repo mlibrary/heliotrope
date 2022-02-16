@@ -8,7 +8,7 @@ git_source(:github) do |repo_name|
 end
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '~> 5.2.4.6'
+gem 'rails', '~> 5.2.6.2'
 
 gem 'rails-html-sanitizer', '~> 1.3.0'
 
