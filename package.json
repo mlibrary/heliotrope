@@ -3,7 +3,7 @@
   "private": true,
   "dependencies": {
     "@rails/webpacker": "5.4.2",
-    "cozy-sun-bear": "git+https://github.com/mlibrary/cozy-sun-bear.git",
+    "cozy-sun-bear": "git+https://github.com/mlibrary/cozy-sun-bear.git#34713d2f465d6ee4e7186f7b3c4ebbcd64040afd",
     "cozy-sun-bear-too": "git+https://github.com/mlibrary/cozy-sun-bear.git#too"
   },
   "devDependencies": {
