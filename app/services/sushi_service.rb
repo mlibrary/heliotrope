@@ -1,15 +1,15 @@
 # frozen_string_literal: true
 
 class SushiService
-  def initialize(customer_id, platform, requestor_id)
-    @customer_id = customer_id
-    @platform = platform
-    @requestor_id = requestor_id
+  def initialize(customer_id, platform_id, email = nil)
+    @customer = Greensub::Institution.find(customer_id)
+    @platform = Press.find(platform_id)
+    @requestor = email || 'anonymous'
   end
 
   def status
     fulcrum_status = ::SwaggerClient::SUSHIServiceStatus.new
-    fulcrum_status.description = "COUNTER Usage Reports for Fulcrum platform."
+    fulcrum_status.description = "COUNTER Usage Reports for #{@platform.name}."
     fulcrum_status.service_active = true
     fulcrum_status.registry_url = Rails.application.routes.url_helpers.api_sushi_url
     fulcrum_status.note = "You must be a platform administrator to retrieve reports."
@@ -25,10 +25,10 @@ class SushiService
 
   def members
     member = ::SwaggerClient::SUSHIConsortiumMemberList.new
-    member.customer_id = @customer_id
-    member.requestor_id = User.find(@requestor_id)&.email
-    member.name = Greensub::Institution.find(@customer_id).name
-    member.notes = Greensub::Institution.find(@customer_id).entity_id
+    member.customer_id = @customer.id
+    member.requestor_id = @requestor
+    member.name = @customer.name
+    member.notes = @customer.entity_id
     member.institution_id = []
     [member]
   end

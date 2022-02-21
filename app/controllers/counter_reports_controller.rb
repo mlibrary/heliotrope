@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 class CounterReportsController < ApplicationController
-  before_action :set_counter_report_service, only: %i[index show edit update]
-  before_action :set_counter_report, only: %i[show update]
   before_action :wayfless_redirect_to_shib_login, only: %i[index]
+  before_action :set_counter_report_service, only: %i[index show edit update]
+  before_action :set_counter_report, only: %i[show]
   before_action :set_presses_and_institutions, only: %i[index show]
 
   COUNTER_REPORT_TITLE = {
@@ -26,24 +26,51 @@ class CounterReportsController < ApplicationController
     counter4_br2: 'COUNTER4 BR2'
   }.freeze
 
+  def customers
+    @customers = if Sighrax.platform_admin?(current_actor)
+                   Greensub::Institution.order(:name)
+                 elsif current_actor.press_role?
+                   Greensub::Institution.order(:name)
+                 else
+                   current_institutions.sort_by(&:name)
+                 end
+    redirect_to counter_report_customer_platforms_path(customer_id: @customers.first.id) if @customers.count == 1
+  end
+
+  def platforms
+    @customer = Greensub::Institution.find(params[:customer_id])
+    @platforms = if Sighrax.platform_admin?(current_actor)
+                   Press.order(:name)
+                 elsif current_actor.press_role?
+                   current_actor.presses.order(:name)
+                 else
+                   Press.order(:name)
+                 end
+    redirect_to counter_report_customer_platform_reports_path(customer_id: @customer.id, platform_id: @platforms.first.id) if @platforms.count == 1
+  end
+
   def index
-    return render if params[:customer_id].present?
+    return render if @counter_report_service.present?
+
     render 'counter_reports/without_customer_id/index'
   end
 
   def edit
-    @customer_id = params[:customer_id]
-    @id = params[:id]
+    @customer = Greensub::Institution.find(params[:customer_id])
+    @platform = Press.find(params[:platform_id])
+    @report = params[:id].downcase.to_sym
+    @title = COUNTER_REPORT_TITLE[@report]
   end
 
   def update
     respond_to do |format|
-      format.html { redirect_to customer_counter_report_path(params[:customer_id], params[:id]), notice: 'COUNTER Report was successfully created.' }
+      format.html { redirect_to counter_report_customer_platform_report_path(params[:customer_id], params[:platform_id], params[:id]), notice: 'COUNTER Report was successfully created.' }
     end
   end
 
   def show # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
-    return render if params[:customer_id].present?
+    return render if @counter_report_service.present?
+
     # institutional 'guest' users can only see their institutions, but all presses
     # press admins can only see their presses, but all institutions
     return render 'counter_reports/unauthorized', status: :unauthorized unless authorized_insitutions_or_presses?
@@ -84,23 +111,29 @@ class CounterReportsController < ApplicationController
     def authorized_insitutions_or_presses?
       return false unless @institutions.map(&:identifier).include?(params[:institution])
       return false if @presses.present? && @presses.map(&:id).exclude?(params[:press].to_i)
+
       true
     end
 
-    # Use callbacks to share common setup or constraints between actions.
     def set_counter_report_service
-      @counter_report_service = CounterReportService.new(params[:customer_id], current_user.id) if params[:customer_id].present?
+      @counter_report_service = CounterReportService.new(params[:customer_id], params[:platform_id], current_actor) if params[:customer_id].present? && params[:platform_id].present?
     end
 
     def set_counter_report
       @title = COUNTER_REPORT_TITLE[params[:id]&.downcase&.to_sym]
-      @counter_report = @counter_report_service.report(params[:id]) if params[:customer_id].present?
+      @counter_report = @counter_report_service.report(params[:id]) if @counter_report_service.present?
     end
 
     def set_presses_and_institutions
+      return if @counter_report_service.present?
+
+      # HELIO-3526 press admins (and editors, analysts or other authed and prived users) will no longer
+      # access reports through this controller, but instead through the dashboard and
+      # hyrax/admin/stats_controller.rb
+      @institutions = current_institutions.sort_by(&:name)
       @presses = Press.order(:name)
-      @institutions = current_institutions
-      return render 'counter_reports/unauthorized', status: :unauthorized if params[:customer_id].nil? && @institutions.empty?
+
+      return render 'counter_reports/unauthorized', status: :unauthorized if @institutions.empty? || @presses.empty?
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.

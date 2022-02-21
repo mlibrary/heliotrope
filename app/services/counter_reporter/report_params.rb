@@ -2,7 +2,7 @@
 
 module CounterReporter
   class ReportParams
-    attr_reader :report_type, :start_date, :end_date, :press, :institution,
+    attr_reader :report_type, :start_date, :end_date, :press, :institution, :platforms,
                 :metric_types, :data_type, :access_types, :access_method, :yop,
                 :report_title, :errors
 
@@ -13,6 +13,8 @@ module CounterReporter
       @press       = Press.where(id: params[:press]).first
       @institution = params[:institution]
       @errors      = []
+
+      set_platforms
 
       case @report_type
       when 'pr'
@@ -53,7 +55,7 @@ module CounterReporter
     end
 
     def allowed_metric_types?
-      allowed_types = %w[Total_Item_Investigations Unique_Item_Investigations Unique_Title_Investigations
+      allowed_types = %w[Searches_Platform Total_Item_Investigations Unique_Item_Investigations Unique_Title_Investigations
                          Total_Item_Requests Unique_Item_Requests Unique_Title_Requests
                          No_License Limit_Exceeded]
       @metric_types.each do |metric_type|
@@ -76,6 +78,18 @@ module CounterReporter
     end
 
     private
+
+      def set_platforms
+        @platforms = []
+
+        if @press.present?
+          # @platforms = @press.children.map(&:subdomain)
+          # @platforms.unshift(@press.subdomain)
+          @platforms = [@press.subdomain]
+        end
+
+        @platforms
+      end
 
       def make_start_date(params)
         if params[:start_date].present?
@@ -104,7 +118,7 @@ module CounterReporter
 
       def pr_p1
         @report_title = 'Platform Usage'
-        @metric_types = ['Total_Item_Requests', 'Unique_Item_Requests', 'Unique_Title_Requests']
+        @metric_types = ['Searches_Platform', 'Total_Item_Requests', 'Unique_Item_Requests', 'Unique_Title_Requests']
         @access_types = ['Controlled']
         @access_method = 'Regular'
       end

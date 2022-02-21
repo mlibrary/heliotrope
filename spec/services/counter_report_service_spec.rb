@@ -3,14 +3,15 @@
 require 'rails_helper'
 
 RSpec.describe CounterReportService do
-  subject(:counter_report_service) { described_class.new(customer_id, requestor_id) }
+  subject(:counter_report_service) { described_class.new(customer_id, platform_id, requestor_actor) }
 
   let(:customer_id) { double('customer_id') }
-  let(:requestor_id) { double('requestor_id') }
-  let(:sushi_service) { double('sushi_service', status: status, members: members, reports: reports) }
+  let(:platform_id) { double('platform_id') }
+  let(:requestor_actor) { instance_double(Anonymous, 'anonymous', email: nil) }
+  let(:sushi_service) { instance_double(SushiService, 'sushi_service', status: status, members: members, reports: reports) }
 
   before do
-    allow(SushiService).to receive(:new).with(customer_id, 'fulcrum', requestor_id).and_return(sushi_service)
+    allow(SushiService).to receive(:new).with(customer_id, platform_id, requestor_actor.email).and_return(sushi_service)
   end
 
   context 'nil' do

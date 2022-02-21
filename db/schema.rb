@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_01_25_163308) do
+ActiveRecord::Schema.define(version: 2022_02_21_105530) do
 
   create_table "api_requests", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.integer "user_id"
@@ -119,6 +119,7 @@ ActiveRecord::Schema.define(version: 2022_01_25_163308) do
     t.datetime "updated_at", null: false
     t.integer "press"
     t.string "parent_noid"
+    t.integer "search"
     t.index ["access_type"], name: "index_counter_reports_on_access_type"
     t.index ["institution"], name: "index_counter_reports_on_institution"
   end
@@ -181,7 +182,8 @@ ActiveRecord::Schema.define(version: 2022_01_25_163308) do
     t.string "kind"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["work_id", "file_set_id"], name: "index_featured_representatives_on_work_id_and_file_set_id", unique: true
+    t.index ["file_set_id"], name: "index_featured_representatives_on_file_set_id", unique: true
+    t.index ["work_id", "kind"], name: "index_featured_representatives_on_work_id_and_kind", unique: true
   end
 
   create_table "featured_works", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
@@ -766,6 +768,8 @@ ActiveRecord::Schema.define(version: 2022_01_25_163308) do
     t.index ["work_id"], name: "index_work_view_stats_on_work_id"
   end
 
+  add_foreign_key "api_requests", "users"
+  add_foreign_key "collection_type_participants", "hyrax_collection_types"
   add_foreign_key "components_products", "components"
   add_foreign_key "components_products", "products"
   add_foreign_key "curation_concerns_operations", "users"

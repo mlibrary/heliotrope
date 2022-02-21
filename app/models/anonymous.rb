@@ -29,6 +29,14 @@ class Anonymous
     false
   end
 
+  def role?
+    false
+  end
+
+  def press_role?
+    false
+  end
+
   def presses
     []
   end

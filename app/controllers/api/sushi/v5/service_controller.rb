@@ -25,11 +25,11 @@ module API
         def status
           customer_id = params[:customer_id]
           return head :not_found if customer_id.blank?
-          platform = params[:platform] || 'fulcrum'
-          return head :not_found unless /fulcrum/i.match?(platform)
-          requestor_id = current_user.id
+          platform_id = params[:platform]
+          return head :not_found if platform_id.blank?
+          requestor_email = current_user.email
           return head :unauthorized unless current_user.platform_admin?
-          @status = SushiService.new(customer_id, platform, requestor_id).status
+          @status = SushiService.new(customer_id, platform_id, requestor_email).status
         end
 
         # This resource returns the list of consortium members related to a Customer_ID.
@@ -41,11 +41,11 @@ module API
         def members
           customer_id = params[:customer_id]
           return head :not_found if customer_id.blank?
-          platform = params[:platform] || 'fulcrum'
-          return head :not_found unless /fulcrum/i.match?(platform)
-          requestor_id = current_user.id
+          platform_id = params[:platform]
+          return head :not_found if platform_id.blank?
+          requestor_email = current_user.email
           return head :unauthorized unless current_user.platform_admin?
-          @members = SushiService.new(customer_id, platform, requestor_id).members
+          @members = SushiService.new(customer_id, platform_id, requestor_email).members
         end
 
         # This resource returns the list of reports related to a Customer_ID.
@@ -57,11 +57,11 @@ module API
         def reports
           customer_id = params[:customer_id]
           return head :not_found if customer_id.blank?
-          platform = params[:platform] || 'fulcrum'
-          return head :not_found unless /fulcrum/i.match?(platform)
-          requestor_id = current_user.id
+          platform_id = params[:platform]
+          return head :not_found if platform_id.blank?
+          requestor_email = current_user.email
           return head :unauthorized unless current_user.platform_admin?
-          @reports = SushiService.new(customer_id, platform, requestor_id).reports(params[:search])
+          @reports = SushiService.new(customer_id, platform_id, requestor_email).reports(params[:search])
         end
       end
     end
