@@ -13,11 +13,11 @@ module API
         def show
           customer_id = params[:customer_id]
           return head :not_found if customer_id.blank?
-          platform = params[:platform] || 'fulcrum'
-          return head :not_found unless /fulcrum/i.match?(platform)
-          requestor_id = current_user.id
+          platform_id = params[:platform]
+          return head :not_found if platform_id.blank?
+          requestor_email = current_user.email
           return head :unauthorized unless current_user.platform_admin?
-          @report = SushiService.new(customer_id, platform, requestor_id).report(params[:id])
+          @report = SushiService.new(customer_id, platform_id, requestor_email).report(params[:id])
         end
       end
     end

@@ -53,6 +53,16 @@ module CounterReporter
       results
     end
 
+    def searches_platform(month, access_type)
+      CounterReport.institution(@params.institution)
+                   .searches
+                   .access_type(access_type)
+                   .start_date(month.beginning_of_month)
+                   .end_date(month.end_of_month)
+                   .press(@params.press.id)
+                   .count
+    end
+
     def total_item_investigations(month, access_type)
       CounterReport.institution(@params.institution)
                    .investigations
@@ -67,10 +77,10 @@ module CounterReporter
       CounterReport.institution(@params.institution)
                    .investigations
                    .access_type(access_type)
-                   .unique
                    .start_date(month.beginning_of_month)
                    .end_date(month.end_of_month)
                    .press(@params.press.id)
+                   .unique
                    .count
     end
 
@@ -78,10 +88,10 @@ module CounterReporter
       CounterReport.institution(@params.institution)
                    .investigations
                    .access_type(access_type)
-                   .unique_by_title
                    .start_date(month.beginning_of_month)
                    .end_date(month.end_of_month)
                    .press(@params.press.id)
+                   .unique_by_title
                    .count
     end
 
@@ -99,10 +109,10 @@ module CounterReporter
       CounterReport.institution(@params.institution)
                    .requests
                    .access_type(access_type)
-                   .unique
                    .start_date(month.beginning_of_month)
                    .end_date(month.end_of_month)
                    .press(@params.press.id)
+                   .unique
                    .count
     end
 
@@ -110,10 +120,10 @@ module CounterReporter
       CounterReport.institution(@params.institution)
                    .requests
                    .access_type(access_type)
-                   .unique_by_title
                    .start_date(month.beginning_of_month)
                    .end_date(month.end_of_month)
                    .press(@params.press.id)
+                   .unique_by_title
                    .count
     end
 
@@ -124,8 +134,8 @@ module CounterReporter
                            "All Institutions"
                          else
                            institution = Greensub::Institution.find_by(identifier: @params.institution)
-                           institution_ids << institution.identifier
-                           institution_ids << institution.ror_id if institution.ror_id.present?
+                           institution_ids << 'ID:' + institution.identifier.to_s
+                           institution_ids << 'ROR:' + institution.ror_id.to_s if institution.ror_id.present?
                            institution.name
                          end
       {
@@ -135,7 +145,7 @@ module CounterReporter
         Institution_Name: institution_name,
         Institution_ID: institution_ids.join("; "),
         Metric_Types: @params.metric_types.join("; "),
-        Report_Filters: "Access_Type=#{@params.access_types.join('; ')}; Access_Method=#{@params.access_method}",
+        Report_Filters: "Platform=#{@params.platforms.join('|')}; Access_Type=#{@params.access_types.join('; ')}; Access_Method=#{@params.access_method}",
         Report_Attributes: "",
         Exceptions: "",
         Reporting_Period: "#{@params.start_date.year}-#{@params.start_date.month} to #{@params.end_date.year}-#{@params.end_date.month}",

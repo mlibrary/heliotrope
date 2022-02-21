@@ -180,8 +180,8 @@ module CounterReporter
                            "All Institutions"
                          else
                            institution = Greensub::Institution.find_by(identifier: @params.institution)
-                           institution_ids << institution.identifier
-                           institution_ids << institution.ror_id if institution.ror_id.present?
+                           institution_ids << 'ID:' + institution.identifier.to_s
+                           institution_ids << 'ROR:' + institution.ror_id.to_s if institution.ror_id.present?
                            institution.name
                          end
       {
@@ -191,7 +191,7 @@ module CounterReporter
         Institution_Name: institution_name,
         Institution_ID: institution_ids.join("; "),
         Metric_Types: @params.metric_types.join("; "),
-        Report_Filters: "Data_Type=#{@params.data_type}; Access_Type=#{@params.access_types.join('; ')}; Access_Method=#{@params.access_method}",
+        Report_Filters: "Platform=#{@params.platforms.join('|')}; Data_Type=#{@params.data_type}; Access_Type=#{@params.access_types.join('; ')}; Access_Method=#{@params.access_method}",
         Report_Attributes: "",
         Exceptions: "",
         Reporting_Period: "#{@params.start_date.year}-#{@params.start_date.month} to #{@params.end_date.year}-#{@params.end_date.month}",

@@ -1,0 +1,8 @@
+<% content_for :head do %>
+  <meta name="turbolinks-cache-control" content="no-cache">
+<% end %>
+<h1>COUNTER Reports Platform</h1>
+<% @platforms.each do |platform| %>
+  <div><%= link_to platform.name, counter_report_customer_platform_reports_path(customer_id: @customer.id, platform_id: platform.id) %></div>
+<% end %>
+<hr>

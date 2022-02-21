@@ -104,6 +104,7 @@ RSpec.describe User do
       it { expect(user.role?).to be true }
 
       context '#press_roles' do
+        it { expect(user.press_role?).to be false }
         it { expect(user.press_roles).to be_empty }
         it { expect(user.admin_roles).to be_empty }
         it { expect(user.editor_roles).to be_empty }
@@ -112,6 +113,7 @@ RSpec.describe User do
         context '#admin_roles' do
           let(:user) { create(:press_admin) }
 
+          it { expect(user.press_role?).to be true }
           it { expect(user.press_roles).not_to be_empty }
           it { expect(user.admin_roles).not_to be_empty }
           it { expect(user.editor_roles).to be_empty }
@@ -121,6 +123,7 @@ RSpec.describe User do
         context '#editor_roles' do
           let(:user) { create(:press_editor) }
 
+          it { expect(user.press_role?).to be true }
           it { expect(user.press_roles).not_to be_empty }
           it { expect(user.admin_roles).to be_empty }
           it { expect(user.editor_roles).not_to be_empty }
@@ -130,6 +133,7 @@ RSpec.describe User do
         context "#analyst_roles" do
           let(:user) { create(:press_analyst) }
 
+          it { expect(user.press_role?).to be true }
           it { expect(user.press_roles).not_to be_empty }
           it { expect(user.admin_roles).to be_empty }
           it { expect(user.editor_roles).to be_empty }

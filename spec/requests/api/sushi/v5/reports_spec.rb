@@ -11,14 +11,19 @@ RSpec.describe "Sushi Reports", type: :request do
   end
 
   let(:id) { 'pr' }
-  let(:params) { { customer_id: customer_id } }
+  let(:params) { { customer_id: customer_id, platform: platform_id } }
   let(:customer_id) { 'customer_id' }
-  let(:current_user) { double('current_user', id: 'id', platform_admin?: true) }
+  let(:platform_id) { 'platform_id' }
+  let(:current_user) { instance_double(User, 'current_user', id: 'id', email: 'platform_admin', platform_admin?: true) }
+  let(:institution) { instance_double(Greensub::Institution, 'institution') }
+  let(:press) { instance_double(Press, 'press') }
   let(:response_body) { JSON.parse(@response.body).map(&:deep_symbolize_keys!) }
 
   before do
     allow_any_instance_of(API::ApplicationController).to receive(:current_user).and_return(current_user)
     allow(User).to receive(:find).with(current_user.id).and_return(current_user)
+    allow(Greensub::Institution).to receive(:find).with(customer_id).and_return(institution)
+    allow(Press).to receive(:find).with(platform_id).and_return(press)
   end
 
   context 'unauthorized' do

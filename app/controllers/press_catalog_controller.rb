@@ -7,6 +7,7 @@ class PressCatalogController < ::CatalogController
   before_action :has_open_access
   before_action :conditional_blacklight_configuration
   before_action :wayfless_redirect_to_shib_login, only: %i[index]
+  after_action :add_counter_stat, only: %i[index]
 
   self.theme = 'hyrax'
   with_themed_layout 'catalog'
@@ -170,5 +171,9 @@ class PressCatalogController < ::CatalogController
       blacklight_config.add_sort_field 'year asc', sort: "#{Solrizer.solr_name('date_created', :sortable)} asc, #{Solrizer.solr_name('date_published', :sortable)} asc", label: "Publication Date (Oldest First)"
       blacklight_config.add_sort_field 'title asc', sort: "#{Solrizer.solr_name('title', :sortable)} asc", label: "Title (A-Z)"
       blacklight_config.add_sort_field 'title desc', sort: "#{Solrizer.solr_name('title', :sortable)} desc", label: "Title (Z-A)"
+    end
+
+    def add_counter_stat
+      CounterService.for_press(self, @press).count(search: 1) if @search_ongoing
     end
 end

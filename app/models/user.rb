@@ -98,6 +98,10 @@ class User < ApplicationRecord
     roles.any?
   end
 
+  def press_role?
+    !press_roles.empty?
+  end
+
   def press_roles
     roles.where(resource_type: 'Press')
   end

@@ -47,13 +47,13 @@ class CounterReporterService
 
   def self.ir(params)
     item_params = CounterReporter::ReportParams.new('ir', params)
-    return({ header: title_params.errors, items: [] }) unless item_params.validate!
+    return({ header: item_params.errors, items: [] }) unless item_params.validate!
     CounterReporter::ItemReport.new(item_params).report
   end
 
   def self.ir_m1(params)
     item_params = CounterReporter::ReportParams.new('ir_m1', params)
-    return({ header: title_params.errors, items: [] }) unless item_params.validate!
+    return({ header: item_params.errors, items: [] }) unless item_params.validate!
     CounterReporter::ItemReport.new(item_params).report
   end
 
