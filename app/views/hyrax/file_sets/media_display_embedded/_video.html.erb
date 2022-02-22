@@ -7,8 +7,32 @@
   <!-- Able Player CSS -->
   <link rel="stylesheet" href="/ableplayer-4.3/build/ableplayer.min.css" type="text/css"/>
   <!-- Able Player JavaScript -->
+  <%# we used to have an entire copy of ableplayer.js just for embed view tweaks, instead now we'll just override... %>
+  <%# AblePlayer.prototype methods as seen below. NB NB check these work appropriately after an upgrade. %>
   <script src="/ableplayer-4.3/build/ableplayer.js"></script>
 <% end %>
+
+<script>
+  <%# NB: Update the links below (if necessary) and verify that these overrides work as expected after an upgrade! %>
+  <%# https://tools.lib.umich.edu/jira/browse/HELIO-4167 %>
+  <%# The 'Captions' and 'Transcripts' options should be hidden in embed views %>
+  <%# https://github.com/ableplayer/ableplayer/blob/803bc5394cbbfbbec8cb1abe291f9ef6b65227b9/scripts/preference.js#L86 %>
+  AblePlayer.prototype.getPreferencesGroups = function() {
+    return ['descriptions','keyboard'];
+  };
+
+  <%# Captions cannot be positioned underneath in embed views as there is no space for them in the nested divs %>
+  <%# https://github.com/ableplayer/ableplayer/blob/803bc5394cbbfbbec8cb1abe291f9ef6b65227b9/scripts/caption.js#L402 %>
+  AblePlayer.prototype.positionCaptions = function(position) {
+    if (typeof this.$captionsWrapper !== 'undefined') {
+        this.$captionsWrapper.removeClass('able-captions-below').addClass('able-captions-overlay');
+        this.$captionsWrapper.css({
+          'background-color': 'transparent',
+          'opacity': ''
+        });
+    }
+  };
+</script>
 
 <video id="video"
        preload="metadata"
@@ -36,34 +60,7 @@
 <% end %>
 
 <script>
-  // https://stackoverflow.com/a/53269990
-  const checkElement = async selector => {
-    while (!$(selector).length) {
-      await new Promise( resolve =>  requestAnimationFrame(resolve) )
-    }
-    return selector;
-  };
-
   $(document).ready(function() {
-    // wait for each of these selectors to be present, then fiddle with them to constrain Able Player features for...
-    // embedding in the iframe
-    checkElement('.able-captions-wrapper').then((selector) => {
-      $(selector).removeClass('able-captions-below');
-      $(selector).addClass('able-captions-overlay');
-      $(selector).css({ "font-size":"100%", "background-color": "transparent", "opacity": "" });
-    });
-
-    // With these two embed-unsuitable preferences menu items, removal is better than hiding and having to mess with...
-    // classes. This way Able Player can still manage a11y items like active status, class='able-focus' and tabIndex...
-    // on the remaining menu items, facilitating tab navigation and active styles.
-    checkElement("#video-prefs-menu li:contains('Captions')").then((selector) => {
-      $(selector).remove();
-    });
-
-    checkElement("#video-prefs-menu li:contains('Transcript')").then((selector) => {
-      $(selector).remove();
-    });
-
     setupVideoAnalytics();
   });
 
@@ -78,5 +75,4 @@
       });
     }
   }
-
 </script>
