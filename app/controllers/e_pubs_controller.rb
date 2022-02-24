@@ -8,6 +8,8 @@ class EPubsController < CheckpointController
   before_action :wayfless_redirect_to_shib_login, only: %i[show]
 
   def show # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
+    @parent_noid = @parent_presenter.id
+
     unless @policy.show?
       CounterService.new(self, @presenter).count(request: 1, turnaway: "No_License")
       return redirect_to monograph_authentication_url(@parent_noid)
@@ -16,8 +18,7 @@ class EPubsController < CheckpointController
     @actor_product_ids = current_actor.products.pluck(:id)
     @allow_read_product_ids = Sighrax.allow_read_products.pluck(:id)
 
-    @title = @presenter.parent.present? ? @presenter.parent.page_title : @presenter.page_title
-    @parent_presenter = @presenter.parent
+    @title = @parent_presenter.present? ? @parent_presenter.page_title : @presenter.page_title
     @citable_link = @parent_presenter.citable_link
     @subdomain = @presenter.parent.subdomain
 
@@ -188,7 +189,7 @@ class EPubsController < CheckpointController
       raise(PageNotFoundError, "Invalid NOID") unless ValidationService.valid_noid?(@noid)
       @presenter = Hyrax::PresenterFactory.build_for(ids: [@noid], presenter_class: Hyrax::FileSetPresenter, presenter_args: nil).first
       @entity = Sighrax.from_presenter(@presenter)
-      @parent_noid = @entity.parent.noid
+      @parent_presenter = @presenter.parent
       raise(NotAuthorizedError, "Non Electronic Publication") unless @entity.is_a?(Sighrax::EpubEbook) || @entity.is_a?(Sighrax::PdfEbook)
       @share_link = params[:share] || session[:share_link]
       session[:share_link] = @share_link
