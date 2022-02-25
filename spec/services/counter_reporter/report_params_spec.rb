@@ -41,7 +41,6 @@ RSpec.describe CounterReporter::ReportParams do
         institution: '1',
         metric_type: 'Total_Item_Requests',
         access_type: 'OA_Gold',
-        data_type: 'Book',
         access_method: 'Regular'
       }
     end
@@ -106,7 +105,10 @@ RSpec.describe CounterReporter::ReportParams do
         {
           institution: '1',
           metric_type: 'Not_A_Thing',
+          data_type: 'Book',
+          section_type: 'Book',
           access_type: 'Controlled',
+          access_method: 'Regular',
           press: press.id
         }
       end
@@ -127,6 +129,10 @@ RSpec.describe CounterReporter::ReportParams do
         {
           institution: '1',
           metric_type: 'Unique_Title_Requests',
+          data_type: 'Book',
+          section_type: 'Book',
+          access_type: '',
+          access_method: 'Regular',
           press: press.id
         }
       end

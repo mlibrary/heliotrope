@@ -2,6 +2,9 @@
 
 require 'rails_helper'
 
+# COUNTER Code of Practice Release 5.0.2 specification.
+# https://cop5.projectcounter.org/en/5.0.2/04-reports/03-title-reports.html
+
 RSpec.describe CounterReporter::TitleReport do
   let(:press) { create(:press) }
   let(:institution) { instance_double(Greensub::Institution, 'institution', identifier: 1, name: 'U of Something', ror_id: 'ror') }
@@ -9,21 +12,26 @@ RSpec.describe CounterReporter::TitleReport do
   before { allow(Greensub::Institution).to receive(:find_by).with(identifier: institution.identifier).and_return(institution) }
 
   describe "#results_by_month" do
-    subject { described_class.new(params_object).results_by_month }
+    subject { described_class.new(params_object).results_by_month(metric_types, access_types) }
 
     let(:params_object) { CounterReporter::ReportParams.new('tr', params) }
     let(:params) do
       {
         institution: institution.identifier,
         press: press.id,
-        metric_type: 'Total_Item_Investigations',
+        metric_type: metric_type,
         start_date: start_date,
         end_date: end_date,
-        access_type: 'OA_Gold'
+        access_type: access_type,
+        attributes_to_show: %w[]
       }
     end
     let(:start_date) { "2018-01-01" }
     let(:end_date) { "2018-03-30" }
+    let(:metric_types) { [metric_type] }
+    let(:metric_type) { 'Total_Item_Investigations' }
+    let(:access_types) { [access_type] }
+    let(:access_type) { 'OA_Gold' }
 
     before do
       create(:counter_report, press: press.id, session: 1,  noid: 'a',  parent_noid: 'red',   institution: 1, created_at: Time.parse("2018-01-02").utc, access_type: "OA_Gold")
@@ -161,7 +169,7 @@ RSpec.describe CounterReporter::TitleReport do
           expect(subject[:header][:Report_Filters]).to eq "Platform=#{press.subdomain}; Data_Type=Book; Access_Type=Controlled; Access_Method=Regular"
           expect(subject[:header][:Report_Attributes]).to eq ""
           expect(subject[:header][:Exceptions]).to eq ""
-          expect(subject[:header][:Reporting_Period]).to eq "2018-1 to 2018-12"
+          expect(subject[:header][:Reporting_Period]).to eq "Begin_Date=2018-01-01; End_Date=2018-12-31"
           expect(subject[:header][:Created]).to eq Time.zone.today.iso8601
           expect(subject[:header][:Created_By]).to eq "Fulcrum/#{press.name}"
         end
