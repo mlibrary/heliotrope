@@ -263,7 +263,7 @@ RSpec.describe EPubsController, type: :controller do
           expect(EpubSearchLog.first.noid).to eq file_set.id
           expect(EpubSearchLog.first.query).to eq "White Whale"
           expect(EpubSearchLog.first.hits).to eq 105
-          expect(EpubSearchLog.first.session_id).to eq request.session.id
+          expect(EpubSearchLog.first.session_id).to eq request.session.id.to_s
         end
       end
 
@@ -334,7 +334,7 @@ RSpec.describe EPubsController, type: :controller do
             expect(JSON.parse(response.body)["search_results"][0]["snippet"]).to eq "“All ye mast-headers have before now heard me give orders about a white whale. Look ye! d’ye see this Spanish ounce of"
             expect(EpubSearchLog.first.user).to eq user.email
             expect(EpubSearchLog.first.press).to eq press.subdomain
-            expect(EpubSearchLog.first.session_id).to eq request.session.id
+            expect(EpubSearchLog.first.session_id).to eq request.session.id.to_s
           end
         end
       end
@@ -349,7 +349,7 @@ RSpec.describe EPubsController, type: :controller do
           expect(EpubSearchLog.first.noid).to eq file_set.id
           expect(EpubSearchLog.first.query).to eq "glubmerschmup"
           expect(EpubSearchLog.first.hits).to eq 0
-          expect(EpubSearchLog.first.session_id).to eq request.session.id
+          expect(EpubSearchLog.first.session_id).to eq request.session.id.to_s
         end
       end
     end
