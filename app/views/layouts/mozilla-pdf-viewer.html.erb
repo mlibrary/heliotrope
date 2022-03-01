@@ -11,6 +11,9 @@
     })(window,document,'script','dataLayer','GTM-PTZXSV7');</script>
     <% end %>
 
+    <!-- Citation metadata for Google Scholar -->
+    <%= render 'shared/metadata' %>
+
     <%= content_for?(:head) ? yield(:head) : yield %>
     <!-- CSS -->
     <%= stylesheet_link_tag 'mozilla-pdf-viewer' %>

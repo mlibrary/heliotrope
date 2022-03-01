@@ -71,4 +71,56 @@
     <meta name="citation_hdl" content="<%= @presenter.handle_path %>">
   <% end %>
 
+<% elsif controller_name == "e_pubs"%>
+  <%# for epubs we really want the epub's monograph's info since it's a "representative" of the monograph %>
+  <%# This is basically a cut-and-paste of the monographs controller, but with a different presenter %>
+  <%# We can add "Ebook of " in front of the title tags to differentiate the ereader page from the monograph_catalog page %>
+
+  <meta name="citation_title" content="Ebook of <%= @parent_presenter.page_title %>">
+  <meta property="og:title" content="Ebook of <%= @parent_presenter.page_title %>">
+  <meta property="twitter:card" content="summary">
+  <meta property="twitter:title" content="Ebook of <%= @parent_presenter.page_title %>">
+
+  <% if @parent_presenter.present? %>
+    <% @parent_presenter.creator.each do |creator_name| %>
+      <meta name="citation_author" content="<%= creator_name %>">
+      <meta name="twitter:creator" content="<%= creator_name %>">
+    <% end %>
+  <% end %>
+
+  <% if @parent_presenter.date_created.present? %>
+    <meta name="citation_publication_date" content="<%= @parent_presenter.date_created.first %>">
+    <meta name="citation_online_date" content="<%= @parent_presenter.date_created.first %>">
+  <% end %>
+
+  <% if @parent_presenter.isbn_noformat.present? %>
+    <% @parent_presenter.isbn_noformat.each do |isbn_noformat| %>
+      <meta name="citation_isbn" content="<%= isbn_noformat %>">
+    <% end %>
+  <% end %>
+
+  <% if @parent_presenter.doi.present? %>
+    <meta name="citation_doi" content="doi:<%= @parent_presenter.doi_path %>">
+  <% else %>
+    <meta name="citation_hdl" content="<%= @parent_presenter.handle_path %>">
+    <meta name="DC.Identifier" content="<%= @parent_presenter.handle_url %>">
+    <meta name="og:url" content="<%= @parent_presenter.citable_link %>">
+  <% end %>
+
+  <% if @parent_presenter.publisher.present? %>
+    <meta name="citation_publisher" content="<%= @parent_presenter.publisher.first %>">
+  <% end %>
+
+  <% if @parent_presenter.description.present? %>
+    <meta name="og:description" content="<%= MarkdownService.markdown_as_text(@parent_presenter.description.first) %>">
+    <meta name="twitter:description" content="<%= MarkdownService.markdown_as_text(@parent_presenter.description.first) %>">
+  <% end %>
+
+  <% if @parent_presenter.representative_id.present? %>
+    <meta name="og:image" content="<%= Rails.application.routes.default_url_options[:protocol] + "://" + Rails.application.routes.default_url_options[:host] + Riiif::Engine.routes.url_helpers.image_path(@parent_presenter.cache_buster_id, "225,") %>">
+    <meta name="twitter:image" content="<%= Rails.application.routes.default_url_options[:protocol] + "://" + Rails.application.routes.default_url_options[:host] + Riiif::Engine.routes.url_helpers.image_path(@parent_presenter.cache_buster_id, "225,") %>">
+    <%# this is terrible alt text. But like 99% of cover image file_set alt_text fields are blank... %>
+    <meta name="og:image:alt" content="Cover Image for <%= @parent_presenter.page_title %>">
+  <% end %> 
+
 <% end %>

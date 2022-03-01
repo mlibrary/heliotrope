@@ -221,4 +221,29 @@ describe 'shared/_metadata.html.erb' do
       expect(rendered).not_to match HandleNet::DOI_ORG_PREFIX
     end
   end
+
+  context 'an epub in the ereader' do
+    let(:monograph) {
+      SolrDocument.new(id: 'monograph1',
+                       has_model_ssim: ['Monograph'],
+                       title_tesim: ['Sun Moon Dog'],
+                       doi_ssim: ['10.3998/fulcrum.001'])
+    }
+    let(:file_set) {
+      SolrDocument.new(id: 'file_set1',
+                       has_model_ssim: ['FileSet'],
+                       title_tesim: ['Bark Bark Boop'],
+                       monograph_id_ssim: ["monograph1"],
+                       doi_ssim: ['10.3998/fulcrum.001.cmp.1']) # ebook file_sets won't have DOIs in prod, but added here for the test
+    }
+
+    it "shows ebook metadata (which is actually the monograph's metadata for the most part)" do
+      @parent_presenter = Hyrax::MonographPresenter.new(monograph, nil)
+      @presenter = Hyrax::FileSetPresenter.new(file_set, nil)
+      allow(controller).to receive(:controller_name).and_return("e_pubs")
+      render
+      expect(rendered).to match '10.3998/fulcrum.001' # monograph doi, not file_set
+      expect(rendered).to match 'Ebook of Sun Moon Dog' # monograph title with "Ebook of " added to differentiate from the monograph_catalog page
+    end
+  end
 end
