@@ -1,0 +1,28 @@
+<% if (Settings.host == "www.fulcrum.org") && (controller.current_institutions.map(&:identifier) & ["490", "2405", "2334", "2402"]).empty? %>
+<!-- Hotjar Tracking Code for https://fulcrum.org -->
+<script>
+  (function(h,o,t,j,a,r){
+      h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
+      h._hjSettings={hjid:2863753,hjsv:6};
+      a=o.getElementsByTagName('head')[0];
+      r=o.createElement('script');r.async=1;
+      r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
+      a.appendChild(r);
+  })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
+</script>
+
+<% end %>
+
+<% if Settings.host == "heliotrope-preview.hydra.lib.umich.edu" %>
+<!-- Hotjar Tracking Code for https://heliotrope-preview.hydra.lib.umich.edu/ -->
+<script>
+  (function(h,o,t,j,a,r){
+      h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
+      h._hjSettings={hjid:2858980,hjsv:6};
+      a=o.getElementsByTagName('head')[0];
+      r=o.createElement('script');r.async=1;
+      r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
+      a.appendChild(r);
+  })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
+</script>
+<% end %>
