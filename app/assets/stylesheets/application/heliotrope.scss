@@ -1627,6 +1627,15 @@ footer.press {
   font-size: 1em !important;
 }
 
+/* Control display of language tagged or diacritic tagged content in CSB TOC */
+.modal__content ul li a span.lang,
+.modal__content ul li a span.dcrit {
+  display: inline-block;
+  padding: 0;
+  border: none;
+  text-decoration: underline;
+}
+
 .cozy-container .st-modal button.button--lg {
   font-size: 1.15em !important;
 }
