@@ -4,3 +4,4 @@ download_dir: /var/tmp
 collection:
     dir: solr/config
     name: hydra-development
+    persist: true
