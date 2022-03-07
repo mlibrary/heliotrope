@@ -14,6 +14,8 @@ COUNTER_REPORT_ID_CONSTRAINT = { id: /dr|dr_d1|dr_d2|ir|ir_a1|ir_m1|pr|pr_p1|tr|
 AFFILIATION_CONSTRAINT = { affiliation: /member|alum|walk-in/i }.freeze
 
 Rails.application.routes.draw do
+  concern :oai_provider, BlacklightOaiProvider::Routes.new
+
   namespace :api, constraints: ->(req) { req.format == :json } do
     resource :token, only: %i[show]
 
@@ -207,6 +209,8 @@ Rails.application.routes.draw do
   concern :searchable, Blacklight::Routes::Searchable.new
 
   resource :catalog, only: [:index], as: 'catalog', path: '/catalog', controller: 'catalog' do
+    concerns :oai_provider
+
     concerns :searchable
   end
 

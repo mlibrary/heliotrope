@@ -2,6 +2,8 @@
 
 class SolrDocument
   include Blacklight::Solr::Document
+  include BlacklightOaiProvider::SolrDocument
+
   # Adds Hyrax behaviors to the SolrDocument.
   include Hyrax::SolrDocumentBehavior
 
@@ -21,6 +23,28 @@ class SolrDocument
   # and Blacklight::Document::SemanticFields#to_semantic_values
   # Recommendation: Use field names from Dublin Core
   use_extension(Blacklight::Document::DublinCore)
+
+  # I think these are all secific DC fields...
+  field_semantics.merge!(
+    contributor:  ['contributor_tesim'],
+    coverage:     ['location_tesim'],
+    creator:      ['creator_tesim'],
+    date:         'date_created_tesim',
+    description:  ['description_tesim'],
+    # format:       ['file_extent_tesim', 'file_format_tesim'],
+    identifier:   'id',
+    # language:     'language_label_tesim',
+    publisher:    'publisher_tesim', # or press here maybe?
+    # rights:       'oai_rights',
+    # source:       ['source_tesim', 'isBasedOnUrl_tesim'],
+    subject:      ['subject_tesim', 'keyword_tesim'],
+    title:        'title_tesim',
+    type:         'resource_type_tesim'
+  )
+
+  def sets
+    OaiPressSet.sets_for(self)
+  end
 
   # Do content negotiation for AF models.
   use_extension(Hydra::ContentNegotiation)

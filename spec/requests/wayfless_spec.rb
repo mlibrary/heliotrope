@@ -8,6 +8,8 @@ RSpec.describe "(Where Are You From)less", type: :request do
   # let(:entity_id) { { entityID: 'https://shibboleth.umich.edu/idp/shibboleth' } }
   let(:entity_id) { { entityID: 'https://registry.shibboleth.ox.ac.uk/idp' } }
 
+  before { stub_out_irus }
+
   context 'Press Catalog Index' do
     subject { get press_catalog_path(press.subdomain), params: params }
 

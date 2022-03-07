@@ -24,6 +24,7 @@ RSpec.describe "EPubs", type: :request do
   let(:counter_service) { double("counter_service") }
 
   before do
+    stub_out_irus
     monograph.ordered_members = [cover, thumbnail, epub]
     monograph.save!
     [cover, thumbnail, epub].map(&:save!)

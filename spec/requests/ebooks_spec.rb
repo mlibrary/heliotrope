@@ -15,6 +15,7 @@ RSpec.describe "PDF EBooks", type: :request do
     let(:allowed) { false }
 
     before do
+      stub_out_irus
       allow(Sighrax).to receive(:from_noid).with(noid).and_return(ebook)
       allow(EbookDownloadOperation).to receive(:new).with(anything, ebook).and_return ebook_download_op
     end

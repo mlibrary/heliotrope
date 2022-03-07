@@ -3,6 +3,7 @@
 Hyrax::FileSetsController.class_eval do # rubocop:disable Metrics/BlockLength
   prepend(FileSetsControllerBehavior = Module.new do
     Hyrax::FileSetsController.form_class = ::Heliotrope::FileSetEditForm
+    include IrusAnalytics::Controller::AnalyticsBehaviour
 
     def show # rubocop:disable Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity
       # local heliotrope changes
@@ -15,8 +16,10 @@ Hyrax::FileSetsController.class_eval do # rubocop:disable Metrics/BlockLength
       redirect_to redirect_link, status: :moved_permanently if redirect_link.present?
       if presenter.multimedia?
         CounterService.from(self, presenter).count(request: 1)
+        send_irus_analytics_request
       else
         CounterService.from(self, presenter).count
+        send_irus_analytics_investigation
       end
 
       # HELIO-4115 - deactivate stats tabs but keep the code around as inspiration for the next solution
@@ -33,6 +36,11 @@ Hyrax::FileSetsController.class_eval do # rubocop:disable Metrics/BlockLength
         wants.json { presenter }
         additional_response_formats(wants)
       end
+    end
+
+    # HELIO-4143
+    def item_identifier_for_irus_analytics
+      CatalogController.blacklight_config.oai[:provider][:record_prefix] + ":" + FileSet.find(params[:id]).parent.id
     end
 
     def edit

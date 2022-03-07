@@ -16,6 +16,7 @@ describe 'Monograph catalog sort' do
 
     before do
       stub_out_redis
+      stub_out_irus
       login_as user
       monograph.ordered_members << cover
       monograph.ordered_members << fileset_outlier

@@ -11,6 +11,7 @@ describe 'FileSet Browse' do
 
     before do
       stub_out_redis
+      stub_out_irus
       login_as user
       monograph.ordered_members << cover
 

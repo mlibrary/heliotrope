@@ -4,6 +4,7 @@ require 'rails_helper'
 
 describe 'Press Catalog' do
   before do
+    stub_out_irus
     create(:press, subdomain: 'michigan')
 
     create(:public_monograph,

@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class EpubEbooksController < CheckpointController
+  include IrusAnalytics::Controller::AnalyticsBehaviour
+
   protect_from_forgery except: :file
   before_action :setup
 
@@ -21,6 +23,7 @@ class EpubEbooksController < CheckpointController
     @ebook_download_presenter = EBookDownloadPresenter.new(@parent_presenter, current_ability, current_actor)
     @search_url = main_app.search_epub_ebook_url(@noid, q: '').gsub!(/locale=en&/, '')
     CounterService.from(self, @presenter).count(request: 1)
+    send_irus_analytics_request
     render layout: false
   end
 
@@ -45,6 +48,10 @@ class EpubEbooksController < CheckpointController
     return render json: { q: query, search_results: [] } unless EbookReaderOperation.new(current_actor, @epub_ebook).allowed?
 
     render json: { q: query, search_results: [] }
+  end
+
+  def item_identifier_for_irus_analytics
+    CatalogController.blacklight_config.oai[:provider][:record_prefix] + ":" + @parent_presenter.id
   end
 
     private

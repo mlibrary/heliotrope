@@ -5,6 +5,7 @@ require 'rails_helper'
 describe "Monograph Catalog Keyword Facets", type: :feature do
   before do
     stub_out_redis
+    stub_out_irus
   end
 
   let(:facets) { "#facets" }

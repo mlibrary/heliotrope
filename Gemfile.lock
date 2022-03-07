@@ -7,6 +7,17 @@ GIT
       faraday
 
 GIT
+  remote: https://github.com/mlibrary/irus_analytics
+  revision: 0de9a17b2f764a0ce7bdd1d0221c60b88c2643e7
+  ref: 0de9a17b2f764a0ce7bdd1d0221c60b88c2643e7
+  specs:
+    irus_analytics (1.0.3)
+      config_files
+      i18n
+      openurl
+      resque
+
+GIT
   remote: https://github.com/mlibrary/swagger_client
   revision: 0de4ce928f0f8da7956b710ffd78975b2c150f3d
   branch: master
@@ -141,6 +152,9 @@ GEM
       bootstrap-sass (~> 3.0)
       openseadragon (>= 0.2.0)
       rails
+    blacklight_oai_provider (6.1.1)
+      blacklight (~> 6.0)
+      oai (~> 1.0)
     bootsnap (1.4.6)
       msgpack (~> 1.0)
     bootstrap-sass (3.4.1)
@@ -196,6 +210,8 @@ GEM
     config (3.1.0)
       deep_merge (~> 1.2, >= 1.2.1)
       dry-validation (~> 1.0, >= 1.0.0)
+    config_files (0.1.6)
+      activesupport (>= 2.2.1)
     connection_pool (2.2.5)
     coveralls (0.8.22)
       json (>= 1.8, < 3)
@@ -604,6 +620,10 @@ GEM
     mailboxer (0.15.1)
       carrierwave (>= 0.5.8)
       rails (>= 5.0.0)
+    marc (1.1.1)
+      rexml
+      scrub_rb (>= 1.0.1, < 2)
+      unf
     marcel (1.0.2)
     memoist (0.16.2)
     mercenary (0.3.6)
@@ -640,6 +660,10 @@ GEM
       racc (~> 1.4)
     nokogumbo (2.0.5)
       nokogiri (~> 1.8, >= 1.8.4)
+    oai (1.1.0)
+      builder (>= 3.1.0)
+      faraday
+      faraday_middleware
     oauth (0.5.6)
     oauth2 (1.4.7)
       faraday (>= 0.8, < 2.0)
@@ -649,6 +673,9 @@ GEM
       rack (>= 1.2, < 3)
     openseadragon (0.6.0)
       rails (> 3.2.0)
+    openurl (1.0.0)
+      marc
+      scrub_rb (~> 1.0)
     origami (2.1.0)
       colorize (~> 0.7)
     orm_adapter (0.5.0)
@@ -919,6 +946,7 @@ GEM
     sassc (2.4.0)
       ffi (~> 1.9)
     scanf (1.0.0)
+    scrub_rb (1.0.1)
     select2-rails (3.5.11)
     selenium-webdriver (3.141.5926)
       childprocess (>= 0.5, < 2.0)
@@ -1030,6 +1058,9 @@ GEM
     uber (0.1.0)
     uglifier (3.2.0)
       execjs (>= 0.3.0, < 3)
+    unf (0.1.4)
+      unf_ext
+    unf_ext (0.0.8)
     unicode (0.4.4.4)
     unicode-display_width (2.1.0)
     unicode-types (1.6.0)
@@ -1081,6 +1112,7 @@ PLATFORMS
 DEPENDENCIES
   aws-sdk-s3 (~> 1)
   bagit
+  blacklight_oai_provider (~> 6.1.1)
   bootsnap (~> 1.4.6)
   bootstrap-sass (>= 3.4.1)
   byebug
@@ -1103,6 +1135,7 @@ DEPENDENCIES
   handle_rest!
   hyrax (= 2.9.5)
   i18n (~> 0.7)
+  irus_analytics!
   jbuilder (~> 2.5)
   jekyll (~> 3.9.0)
   jquery-rails

@@ -22,6 +22,7 @@ RSpec.describe "Epub Ebooks", type: :request do
     let(:ebook_reader_op) { instance_double(EbookReaderOperation, 'ebook_reader_op', allowed?: allowed) }
 
     before do
+      stub_out_irus
       monograph.ordered_members = [cover, thumbnail, epub]
       [monograph, cover, thumbnail, epub].map(&:save!)
       fre
