@@ -1158,7 +1158,7 @@ DEPENDENCIES
   pragmatic_segmenter (~> 0.3)
   prawn (~> 2.2)
   pry-rails (~> 0.3.4)
-  puma (~> 5.6)
+  puma (~> 5.6.2)
   rack (~> 2.1.4)
   rails (~> 5.2.6.2)
   rails-controller-testing
