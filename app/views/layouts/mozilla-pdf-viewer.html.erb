@@ -11,9 +11,6 @@
     })(window,document,'script','dataLayer','GTM-PTZXSV7');</script>
     <% end %>
 
-    <!-- hotjar -->
-    <%= render 'shared/hotjar' %>
-
     <!-- Citation metadata for Google Scholar -->
     <%= render 'shared/metadata' %>
 
@@ -24,6 +21,9 @@
     <!-- Javascript -->
     <%= javascript_pack_tag 'cozy-sun-bear/cozy-sun-bear' %>
     <%= javascript_include_tag 'mozilla-pdf-viewer' %>
+
+    <!-- hotjar -->
+    <%= render 'shared/hotjar' %>
   </head>
   <body id="outerContainer">
     <%= content_for?(:body) ? yield(:body) : yield %>

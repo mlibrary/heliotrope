@@ -14,15 +14,15 @@
     })(window,document,'script','dataLayer','GTM-PTZXSV7');</script>
     <% end %>
 
-    <!-- hotjar -->
-    <%= render 'shared/hotjar' %>
-
     <!-- Ensure all links open outside the iframe, in a new tab -->
     <base target="_blank">
     <!-- CSS -->
     <%= stylesheet_link_tag 'embed' %>
     <!-- Javascript -->
     <%= javascript_include_tag 'embed' %>
+
+    <!-- hotjar -->
+    <%= render 'shared/hotjar' %>
 
     <% if content_for?(:head) %>
       <%= yield(:head) %>
