@@ -2,9 +2,12 @@
 
 require 'rails_helper'
 
+# COUNTER Code of Practice Release 5.0.2 specification.
+# https://cop5.projectcounter.org/en/5.0.2/04-reports/04-item-reports.html
+
 RSpec.describe CounterReporter::ItemReport do
   describe "#unique_noids" do
-    subject { described_class.new(params_object).unique_noids(results) }
+    subject { described_class.new(params_object).unique_noids(results, metric_types, access_types) }
 
     let(:results) do
       {
@@ -22,9 +25,11 @@ RSpec.describe CounterReporter::ItemReport do
     end
 
     let(:params_object) do
-      double("params_object", metric_types: ['Total_Item_Investigations'],
-                              access_types: ['Controlled'])
+      double("params_object", metric_types: metric_types,
+                              access_types: access_types)
     end
+    let(:metric_types) { ['Total_Item_Investigations'] }
+    let(:access_types) { ['Controlled'] }
 
     it "has the unqiue noids" do
       expect(subject).to eq ['noid1', 'noid2', 'noid3']
@@ -32,7 +37,7 @@ RSpec.describe CounterReporter::ItemReport do
   end
 
   describe "#unique_parent_noids" do
-    subject { described_class.new(params_object).unique_parent_noids(results) }
+    subject { described_class.new(params_object).unique_parent_noids(results, metric_types, access_types) }
 
     let(:results) do
       {
@@ -50,9 +55,11 @@ RSpec.describe CounterReporter::ItemReport do
     end
 
     let(:params_object) do
-      double("params_object", metric_types: ['Total_Item_Investigations'],
-                              access_types: ['Controlled'])
+      double("params_object", metric_types: metric_types,
+                              access_types: access_types)
     end
+    let(:metric_types) { ['Total_Item_Investigations'] }
+    let(:access_types) { ['Controlled'] }
 
     it "has the unqiue noids" do
       expect(subject).to eq ['parent_noid1', 'parent_noid2']
@@ -60,7 +67,7 @@ RSpec.describe CounterReporter::ItemReport do
   end
 
   describe "#unique_results" do
-    subject { described_class.new(params_object).unique_results(results) }
+    subject { described_class.new(params_object).unique_results(results, metric_types, access_types) }
 
     let(:results) do
       {
@@ -88,9 +95,11 @@ RSpec.describe CounterReporter::ItemReport do
     end
 
     let(:params_object) do
-      double("params_object", metric_types: ['Total_Item_Investigations'],
-                              access_types: ['Controlled'])
+      double("params_object", metric_types: metric_types,
+                              access_types: access_types)
     end
+    let(:metric_types) { ['Total_Item_Investigations'] }
+    let(:access_types) { ['Controlled'] }
 
     it "has all unique results" do
       expect(subject).to eq(
@@ -170,13 +179,20 @@ RSpec.describe CounterReporter::ItemReport do
                                                 press: press.id,
                                                 start_date: start_date,
                                                 end_date: end_date,
+                                                data_type: data_type,
                                                 metric_type: metric_type,
-                                                access_type: access_type)
+                                                access_type: access_type,
+                                                access_method: access_method,
+                                                attributes_to_show: %w[Data_Type],
+                                                include_parent_details: true,
+                                                include_component_details: true)
       end
 
       let(:start_date) { "2018-01-01" }
       let(:end_date) { "2018-02-01" }
+      let(:data_type) { 'Book' }
       let(:access_type) { 'Controlled' }
+      let(:access_method) { 'Regular' }
       let(:metric_type) { 'Total_Item_Requests' }
 
       before do
@@ -225,7 +241,6 @@ RSpec.describe CounterReporter::ItemReport do
           expect(subject[:items][3]["Component_Title"]).to eq ''
           expect(subject[:items][4]["Component_Title"]).to eq 'Forward'
 
-
           expect(subject[:items][0]["Data_Type"]).to eq "Book_Segment"
           expect(subject[:items][1]["Data_Type"]).to eq "Book_Segment"
           expect(subject[:items][2]["Data_Type"]).to eq "Book" # epub featured representative
@@ -264,9 +279,9 @@ RSpec.describe CounterReporter::ItemReport do
           expect(subject[:header][:Institution_ID]).to eq "ID:#{institution.identifier}; ROR:#{institution.ror_id}"
           expect(subject[:header][:Metric_Types]).to eq "Total_Item_Requests"
           expect(subject[:header][:Report_Filters]).to eq "Platform=#{press.subdomain}; Data_Type=Book; Access_Type=Controlled; Access_Method=Regular"
-          expect(subject[:header][:Report_Attributes]).to eq ""
+          expect(subject[:header][:Report_Attributes]).to eq "Attributes_To_Show=Data_Type; Include_Parent_Details=True; Include_Component_Details=True"
           expect(subject[:header][:Exceptions]).to eq ""
-          expect(subject[:header][:Reporting_Period]).to eq "2018-1 to 2018-2"
+          expect(subject[:header][:Reporting_Period]).to eq "Begin_Date=2018-01-01; End_Date=2018-02-28"
           expect(subject[:header][:Created]).to eq Time.zone.today.iso8601
           expect(subject[:header][:Created_By]).to eq "Fulcrum/#{press.name}"
         end
@@ -276,9 +291,12 @@ RSpec.describe CounterReporter::ItemReport do
     context "an ir_m1 report" do
       let(:params_object) do
         CounterReporter::ReportParams.new('ir_m1', institution: institution.identifier,
-                                                   press: press.id,
-                                                   start_date: start_date,
-                                                   end_date: end_date)
+                                          press: press.id,
+                                          start_date: start_date,
+                                          end_date: end_date,
+                                          attributes_to_show: %w[Access_Type],
+                                          include_parent_details: true,
+                                          include_component_details: true)
       end
 
       let(:start_date) { "2018-01-01" }

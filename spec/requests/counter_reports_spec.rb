@@ -171,14 +171,14 @@ RSpec.describe "Customers Counter Reports", type: :request do
 
       describe "GET /counter_report/pr" do
         it do
-          get counter_report_path(id: 'pr'), params: { institution: 1, press: press.id, metric_type: 'Total_Item_Investigations', access_type: 'Controlled' }
+          get counter_report_path(id: 'pr'), params: { institution: 1, press: press.id, metric_types: ['Total_Item_Investigations'], access_types: ['Controlled'] }
           expect(response).to have_http_status(:ok)
         end
       end
 
       describe "GET /counter_report/tr" do
         it do
-          get counter_report_path(id: 'tr'), params: { institution: 1, press: press.id, metric_type: 'Unique_Title_Investigations', access_type: 'OA_Gold' }
+          get counter_report_path(id: 'tr'), params: { institution: 1, press: press.id, metric_types: ['Unique_Title_Investigations'], access_types: ['OA_Gold'] }
           expect(response).to have_http_status(:ok)
         end
       end
@@ -206,7 +206,7 @@ RSpec.describe "Customers Counter Reports", type: :request do
 
       describe "GET /counter_reports/ir" do
         it do
-          get counter_report_path(id: 'ir'), params: { institution: 1, press: press.id, metric_type: ['Total_Item_Requests', 'Unique_Item_Requests', 'Unique_Title_Requests'], access_type: 'OA_Gold' }
+          get counter_report_path(id: 'ir'), params: { institution: 1, press: press.id, metric_types: ['Total_Item_Requests', 'Unique_Item_Requests', 'Unique_Title_Requests'], access_types: ['OA_Gold'] }
           expect(response).to have_http_status(:ok)
         end
       end

@@ -1,6 +1,33 @@
 # frozen_string_literal: true
 
 class CounterReport < ApplicationRecord
+  # Routing constraint for all possible report types (see routes.rb in config)
+  # COUNTER_REPORT_ID_CONSTRAINT = { id: /dr|dr_d1|dr_d2|ir|ir_a1|ir_m1|pr|pr_p1|tr|tr_b1|tr_b2|tr_b3|tr_j1|tr_j2|tr_j3|tr_j4|counter4_br2/i }.freeze
+
+  # Supported report types
+  SUPPORTED_COUNTER_REPORT_TYPES = %w[ir ir_m1 pr pr_p1 tr tr_b1 tr_b2 tr_b3 counter4_br2].freeze
+
+  # All possible report titles
+  COUNTER_REPORT_TITLE = {
+    pr: 'Platform Master Report',
+    pr_p1: 'Platform Usage',
+    dr: 'Database Master Report',
+    dr_d1: 'Database Search and Item Usage',
+    dr_d2: 'Database Access Denied',
+    tr: 'Title Master Report',
+    tr_b1: 'Book Requests (Excluding OA_Gold)',
+    tr_b2: 'Access Denied by Book',
+    tr_b3: 'Book Usage by Access Type',
+    tr_j1: 'Journal Requests (Excluding OA_Gold)',
+    tr_j2: 'Access Denied by Journal',
+    tr_j3: 'Journal Usage by Access Type',
+    tr_j4: 'Journal Requests by YOP (Excluding OA_Gold)',
+    ir: 'Item Master Report',
+    ir_a1: 'Journal Article Requests',
+    ir_m1: 'Multimedia Item Requests',
+    counter4_br2: 'COUNTER4 BR2'
+  }.freeze
+
   # COUNTER v5 section 3.3.5
   validates :access_type, inclusion: { in: %w[Controlled OA_Gold] }
 

@@ -6,26 +6,6 @@ class CounterReportsController < ApplicationController
   before_action :set_counter_report, only: %i[show]
   before_action :set_presses_and_institutions, only: %i[index show]
 
-  COUNTER_REPORT_TITLE = {
-    pr: 'Platform Master Report',
-    pr_p1: 'Platform Usage',
-    dr: 'Database Master Report',
-    dr_d1: 'Database Search and Item Usage',
-    dr_d2: 'Database Access Denied',
-    tr: 'Title Master Report',
-    tr_b1: 'Book Requests (Excluding OA_Gold)',
-    tr_b2: 'Access Denied by Book',
-    tr_b3: 'Book Usage by Access Type',
-    tr_j1: 'Journal Requests (Excluding OA_Gold)',
-    tr_j2: 'Access Denied by Journal',
-    tr_j3: 'Journal Usage by Access Type',
-    tr_j4: 'Journal Requests by YOP (Excluding OA_Gold)',
-    ir: 'Item Master Report',
-    ir_a1: 'Journal Article Requests',
-    ir_m1: 'Multimedia Item Requests',
-    counter4_br2: 'COUNTER4 BR2'
-  }.freeze
-
   def customers
     @customers = if Sighrax.platform_admin?(current_actor)
                    Greensub::Institution.order(:name)
@@ -59,7 +39,7 @@ class CounterReportsController < ApplicationController
     @customer = Greensub::Institution.find(params[:customer_id])
     @platform = Press.find(params[:platform_id])
     @report = params[:id].downcase.to_sym
-    @title = COUNTER_REPORT_TITLE[@report]
+    @title = CounterReport::COUNTER_REPORT_TITLE[@report]
   end
 
   def update
@@ -120,7 +100,7 @@ class CounterReportsController < ApplicationController
     end
 
     def set_counter_report
-      @title = COUNTER_REPORT_TITLE[params[:id]&.downcase&.to_sym]
+      @title = CounterReport::COUNTER_REPORT_TITLE[params[:id]&.downcase&.to_sym]
       @counter_report = @counter_report_service.report(params[:id]) if @counter_report_service.present?
     end
 

@@ -2,6 +2,9 @@
 
 require 'rails_helper'
 
+# COUNTER Code of Practice Release 5.0.2 specification.
+# https://cop5.projectcounter.org/en/5.0.2/04-reports/01-platform-reports.html
+
 RSpec.describe CounterReporter::PlatformReport do
   let(:press) { create(:press) }
   let(:institution) { instance_double(Greensub::Institution, 'institution', identifier: 1, name: "U of Something", ror_id: 'ror') }
@@ -22,10 +25,10 @@ RSpec.describe CounterReporter::PlatformReport do
       expect(subject[:header][:Institution_Name]).to eq institution.name
       expect(subject[:header][:Institution_ID]).to eq "ID:#{institution.identifier}; ROR:#{institution.ror_id}"
       expect(subject[:header][:Metric_Types]).to eq "Searches_Platform; Total_Item_Requests; Unique_Item_Requests; Unique_Title_Requests"
-      expect(subject[:header][:Report_Filters]).to eq "Platform=#{press.subdomain}; Access_Type=Controlled; Access_Method=Regular"
+      expect(subject[:header][:Report_Filters]).to eq "Platform=#{press.subdomain}; Data_Type=Book; Access_Type=Controlled; Access_Method=Regular"
       expect(subject[:header][:Report_Attributes]).to eq ""
       expect(subject[:header][:Exceptions]).to eq ""
-      expect(subject[:header][:Reporting_Period]).to eq "2018-1 to 2018-2"
+      expect(subject[:header][:Reporting_Period]).to eq "Begin_Date=2018-01-01; End_Date=2018-02-28"
       expect(subject[:header][:Created]).to eq Time.zone.today.iso8601
       expect(subject[:header][:Created_By]).to eq "Fulcrum/#{press.name}"
     end
@@ -136,9 +139,12 @@ RSpec.describe CounterReporter::PlatformReport do
                                             press: press.id,
                                             institution: institution.identifier,
                                             metric_type: ['Total_Item_Investigations', 'Unique_Item_Investigations'],
-                                            access_type: ['Controlled'],
+                                            data_type: 'Book',
+                                            access_type: 'Controlled',
+                                            access_method: 'Regular',
                                             start_date: start_date,
-                                            end_date: end_date)
+                                            end_date: end_date,
+                                            attributes_to_show: %w[Data_Type Access_Type Access_Method])
         end
 
         before do

@@ -25,7 +25,7 @@ RSpec.describe CounterReporterService do
           Report_Filters,Platform=#{press.subdomain}; Data_Type=Book; Access_Type=Controlled; Access_Method=Regular
           Report_Attributes,""
           Exceptions,""
-          Reporting_Period,2018-1 to 2018-3
+          Reporting_Period,Begin_Date=2018-01-01; End_Date=2018-03-31
           Created,#{created_date}
           Created_By,Fulcrum/#{press.name}
 
@@ -79,10 +79,10 @@ RSpec.describe CounterReporterService do
           Institution_Name,U of Something,"","","",""
           Institution_ID,ID:1; ROR:ror,"","","",""
           Metric_Types,Searches_Platform; Total_Item_Requests; Unique_Item_Requests; Unique_Title_Requests,"","","",""
-          Report_Filters,Platform=#{press.subdomain}; Access_Type=Controlled; Access_Method=Regular,"","","",""
+          Report_Filters,Platform=#{press.subdomain}; Data_Type=Book; Access_Type=Controlled; Access_Method=Regular,"","","",""
           Report_Attributes,"","","","",""
           Exceptions,"","","","",""
-          Reporting_Period,2018-1 to 2018-3,"","","",""
+          Reporting_Period,Begin_Date=2018-01-01; End_Date=2018-03-31,"","","",""
           Created,#{created_date},"","","",""
           Created_By,Fulcrum/#{press.name},"","","",""
           "","","","","",""

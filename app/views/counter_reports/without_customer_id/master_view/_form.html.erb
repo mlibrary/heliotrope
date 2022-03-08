@@ -1,80 +1,201 @@
 <form action=<%= counter_report_path(id: report_id) %> method="show">
-  <div class="form-group row">
-    <label for="institution" class="col-sm-2 col-form-label">Institution</label>
-    <div class="col-sm-2">
-      <%= select_tag(:institution, options_for_select(@institutions.map { |i| [i.name, i.identifier] }), class: 'form-control') %>
+  <input type=hidden name=counter_5_report value=true />
+  <fieldset>
+    <legend>Parameters</legend>
+    <div class="form-group row">
+      <label for="institution" class="col-sm-2 col-form-label">Institution</label>
+      <div class="col-sm-4">
+        <%= select_tag(:institution, options_for_select(@institutions.map { |i| [i.name, i.identifier] }), class: 'form-control') %>
+      </div>
     </div>
-  </div>
-  <div class="form-group row">
-    <label for="start_date" class="col-sm-1 col-form-label">Start Date</label>
-    <div class="col-sm-1">
+    <div class="form-group row">
+      <label for="start_date" class="col-sm-2 col-form-label">Start Date</label>
+      <div class="col-sm-4">
       <input type="text" name="start_date" aria-label="Start date in yyyy-mm-dd format" class="counter-start-date form-control" />
+      </div>
     </div>
-    <label for="end_date" class="col-sm-1 col-form-label">End Date</label>
-    <div class="col-sm-1">
-      <input type="text" name="end_date" aria-label="End date in yyyy-mm-dd format" class="counter-end-date form-control" />
+    <div class="form-group row">
+      <label for="end_date" class="col-sm-2 col-form-label">End Date</label>
+      <div class="col-sm-4">
+        <input type="text" name="end_date" aria-label="End date in yyyy-mm-dd format" class="counter-end-date form-control" />
+      </div>
     </div>
-  </div>
-  <div class="form-group row">
-    <label for="metric_type" class="col-sm-2 col-form-label">Metric Types</label>
-    <div class="col-sm-2">
-      <select name="metric_type" aria-label="Metric Type" class="form-control">
-        <option value="Total_Item_Investigations">Total Item Investigations</option>
-        <option value="Unique_Item_Investigations">Unique Item Investigations</option>
-        <% unless report_id == 'ir' %>
-        <option value="Unique_Title_Investigations">Unique Title Investigations</option>
+    <div class="form-group row">
+      <label for="press" class="col-sm-2 col-form-label">Platform</label>
+      <div class="col-sm-4">
+        <%= select_tag(:press, options_for_select(@presses.map { |p| [p.name, p.id] }), class: 'form-control') %>
+      </div>
+    </div>
+  </fieldset>
+  <fieldset>
+    <legend>Filters</legend>
+    <div class="form-group row">
+      <label for="data_types" class="col-sm-2 col-form-label">Data Types</label>
+      <div class="col-sm-4">
+        <%
+          size = case report_id
+                 when 'pr'
+                   1
+                 when 'tr'
+                   1
+                 when 'ir'
+                   3
+                 end
+        %>
+        <select name="data_types[]" aria-label="Date Type" class="form-control" multiple size=<%= size %>>
+<!--          Fulcrum currently does NOT support Journals-->
+<!--          <option value="Article">Article</option>-->
+          <option value="Book">Book</option>
+          <% if report_id == 'ir' %>
+            <option value="Book_Segment">Book Segment</option>
+            <option value="Multimedia">Multimedia</option>
+<!--            Currently not being used in Fulcrum-->
+<!--            <option value="Other">Other</option>-->
+          <% end %>
+        </select>
+      </div>
+    </div>
+    <% if report_id == 'tr' %>
+      <div class="form-group row">
+        <label for="section_types" class="col-sm-2 col-form-label">Section Types</label>
+        <div class="col-sm-4">
+          <select name="section_types[]" aria-label="Section Type" class="form-control" multiple size=1>
+            <option value="Book">Book</option>
+<!--            Report generation does NOT handle these correctly.  The section_type field-->
+<!--            is NOT being populated for all types (a.k.a. 'Book') which is required for-->
+<!--            writing the necessary SQL statement to split this data into a group.-->
+<!--            <option value="Section">Section</option>-->
+<!--            <option value="Chapter">Chapter</option>-->
+<!--            <option value="Other">Other</option>-->
+          </select>
+        </div>
+      </div>
+    <% end %>
+    <% unless report_id == 'pr' %>
+      <div class="form-group row">
+        <label for="yop" class="col-sm-2 col-form-label">Year of Publication (YOP)</label>
+        <div class="col-sm-4">
+          <input type="text" name="yop" aria-label="Year of Publication" class="form-control" />
+          <p>All years (default), a specific year in the format yyyy, or a range of years in the format yyyy-yyyy.</p>
+        </div>
+      </div>
+    <% end %>
+    <div class="form-group row">
+      <label for="access_types" class="col-sm-2 col-form-label">Access Types</label>
+      <div class="col-sm-4">
+        <select name="access_types[]" aria-label="Access Type" class="form-control" multiple size=2>
+          <option value="Controlled" selected>Controlled</option>
+          <option value="OA_Gold">OA_Gold</option>
+<!--          Fulcrum currently does NOT support this access type.-->
+<!--          <option value="Other_Free_To_Read">Other Free To Read</option>-->
+        </select>
+      </div>
+    </div>
+    <div class="form-group row">
+      <label for="access_methods" class="col-sm-2 col-form-label">Access Methods</label>
+      <div class="col-sm-4">
+        <select name="access_methods[]" aria-label="Access Methods" class="form-control" multiple size=1>
+          <option value="Regular">Regular</option>
+<!--          Fulcrum does NOT currently support this access method.-->
+<!--          <option value="TDM">Text and Data Mining (TDM)</option>-->
+        </select>
+      </div>
+    </div>
+    <div class="form-group row">
+      <label for="metric_types" class="col-sm-2 col-form-label">Metric Types</label>
+      <div class="col-sm-4">
+        <%
+          size = case report_id
+                 when 'pr'
+                   7
+                 when 'tr'
+                   8
+                 when 'ir'
+                   6
+                 end
+        %>
+        <select name="metric_types[]" aria-label="Metric Types" class="form-control" multiple size=<%= size %>>
+          <% if report_id == 'pr' %>
+            <option value="Searches_Platform">Searches Platform</option>
+          <% end %>
+          <option value="Total_Item_Investigations" selected>Total Item Investigations</option>
+          <option value="Total_Item_Requests">Total Item Requests</option>
+          <option value="Unique_Item_Investigations">Unique Item Investigations</option>
+          <option value="Unique_Item_Requests">Unique Item Requests</option>
+          <% unless report_id == 'ir' %>
+            <option value="Unique_Title_Investigations">Unique Title Investigations</option>
+            <option value="Unique_Title_Requests">Unique Title Requests</option>
+          <% end %>
+          <% unless report_id == 'pr' %>
+            <option value="Limit_Exceeded">Limit Exceeded</option>
+            <option value="No_License">No License</option>
+          <% end %>
+        </select>
+      </div>
+    </div>
+  </fieldset>
+  <fieldset>
+    <legend>Attributes</legend>
+    <div class="form-group row">
+    <label for="attributes_to_show" class="col-sm-2 col-form-label">Include Columns</label>
+    <div class="col-sm-4">
+      <%
+        size = case report_id
+               when 'pr'
+                 3
+               when 'tr'
+                 5
+               when 'ir'
+                 7
+               end
+      %>
+      <select name="attributes_to_show[]" aria-label="Include Columns" class="form-control" multiple size=<%= size %>>
+        <% if report_id == 'ir' %>
+          <option value="Authors">Authors</option>
+          <option value="Publication_Date">Publication Date</option>
+          <option value="Article_Version">Article Version</option>
         <% end %>
-        <option value="Total_Item_Requests">Total Item Requests</option>
-        <option value="Unique_Item_Requests">Unique Item Requests</option>
-        <% unless report_id == 'ir' %>
-        <option value="Unique_Title_Requests">Unique Title Requests</option>
+        <option value="Data_Type">Data Type</option>
+        <% if report_id == 'tr' %>
+          <option value="Section_Type">Section Type</option>
         <% end %>
+        <% unless report_id == 'pr' %>
+          <option value="YOP">Year of Publication (YOP)</option>
+        <% end %>
+        <option value="Access_Type">Access Type</option>
+        <option value="Access_Method">Access Method</option>
       </select>
     </div>
   </div>
-  <div class="form-group row">
-    <label for="data_type" class="col-sm-2 col-form-label">Data Types</label>
-    <div class="col-sm-2">
-      <select name="data_type" aria-label="Date Type" class="form-control">
-        <option value="Book">Book</option>
-      </select>
+    <% if report_id == 'ir' %>
+      <div class="form-group row">
+        <label for="include_parent_details" class="col-sm-2 col-form-label">Include Parent Details</label>
+        <div class="col-sm-1">
+          <input type="checkbox" name="include_parent_details" aria-label="Include Parent Details" value=true class="form-control" />
+        </div>
+      </div>
+      <div class="form-group row">
+        <label for="include_component_details" class="col-sm-2 col-form-label">Include Component Details</label>
+        <div class="col-sm-1">
+          <input type="checkbox" name="include_component_details" aria-label="Include Component Details" value=true class="form-control" />
+        </div>
+      </div>
+    <% end %>
+    <div class="form-group row">
+      <label for="include_monthly_details" class="col-sm-2 col-form-label">Include Monthly Details</label>
+      <div class="col-sm-1">
+        <input type=hidden name=exclude_monthly_details value=false />
+        <input type="checkbox" name="include_monthly_details" aria-label="Include Monthly Details" value=true checked class="form-control" />
+      </div>
     </div>
-  </div>
-  <div class="form-group row">
-    <label for="access_type" class="col-sm-2 col-form-label">Access Types</label>
-    <div class="col-sm-2">
-      <select name="access_type" aria-label="Access Type" class="form-control">
-        <option value="Controlled">Controlled</option>
-        <option value="OA_Gold">OA_Gold</option>
-      </select>
+  </fieldset>
+  <fieldset>
+    <legend>Format</legend>
+    <div class="form-group row">
+      <div class="col-sm-2">
+        <button type="submit" class="btn btn-primary">View</button>
+        <button type="submit" class="btn btn-primary" name="csv">CSV</button>
+      </div>
     </div>
-  </div>
-  <div class="form-group row">
-    <label for="access_method" class="col-sm-2 col-form-label">Access Method</label>
-    <div class="col-sm-2">
-      <select name="access_method" aria-label="Access Method" class="form-control">
-        <option value="Regular">Regular</option>
-      </select>
-    </div>
-  </div>
-  <% unless report_id == 'pr' %>
-  <div class="form-group row">
-    <label for="yop" class="col-sm-2 col-form-label">YOP</label>
-    <div class="col-sm-2">
-      <input type="text" name="yop" aria-label="Year of Publication" class="form-control" />
-    </div>
-  </div>
-  <% end %>
-  <div class="form-group row">
-    <label for="press" class="col-sm-2 col-form-label">Platform</label>
-    <div class="col-sm-2">
-      <%= select_tag(:press, options_for_select(@presses.map { |p| [p.name, p.id] }), class: 'form-control') %>
-    </div>
-  </div>
-  <div class="form-group row">
-    <div class="col-sm-2">
-      <button type="submit" class="btn btn-primary">View</button>
-      <button type="submit" class="btn btn-primary" name="csv">CSV</button>
-    </div>
-  </div>
+  </fieldset>
 </form>
