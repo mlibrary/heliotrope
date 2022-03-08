@@ -31,12 +31,12 @@
     }
 
     // Take user to a POI when passed a string from WebGL
-    
+
     function goToParagraph(p) {
       var title = document.title;
       var vol_1 = "A Mid-Republican House From Gabii";
-      
-      if (title.includes(vol_1)) { 
+
+      if (title.includes(vol_1)) {
         var paragraphHandle = "http://hdl.handle.net/2027/fulcrum.9231782/" + "par" + p;
       } else {
         var paragraphHandle = "http://hdl.handle.net/2027/fulcrum.11885571/" + "par" + p;
@@ -75,32 +75,33 @@
           // alert(message);
         });
 
-      document.addEventListener('click', function (e) {
-        if (e.target.id == "unity-canvas") {
-          // Clicked on canvas
-          FocusCanvas("1");
-        } else {
-          // Clicked outside of canvas
+        // This is needed to get Unity to relinquish focus on a tab keypress
+        document.addEventListener('keydown', function(event) {
+          if (event.defaultPrevented) {
+            return; // Do nothing if the event was already processed
+          }
+
+          switch (event.key) {
+            case "Tab":
+              // will be duplicated by blur() event below but doesn't matter, it's still needed here to even get the...
+              // focus to move (and thus the blur() to happen)
+              FocusCanvas("0");
+              break;
+            default:
+              return;
+          }
+
+        }, true);
+
+        document.getElementById('unity-container').addEventListener('blur', function (e) {
           FocusCanvas("0");
-        }
-      });
+        }, true);
 
-      document.addEventListener('keydown', function (event) {
-        if (event.defaultPrevented) {
-          return; // Do nothing if the event was already processed
-        }
-
-        switch (event.key) {
-          case "Tab":
-            FocusCanvas("0");
-            break;
-          default:
-            return;
-        }
-
-      }, true);
-    }
-  });
+        document.getElementById('unity-container').addEventListener('focus', function (e) {
+          FocusCanvas("1");
+        }, true);
+      }
+    });
   </script>
 <% end %>
 

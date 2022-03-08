@@ -4601,6 +4601,9 @@ $gabii-link-hover:    #1e5667;
           box-shadow: unset;
         }
 
+        &:focus {
+          box-shadow: inset 0 0 0 3px #00AFEC;
+        }
       }
 
       .panel-control button.button--sm.webgl-close[disabled] {
