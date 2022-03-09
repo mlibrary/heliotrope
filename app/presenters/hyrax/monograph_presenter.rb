@@ -126,19 +126,33 @@ module Hyrax
       identifier&.find { |i| i[/^bar_number:.*/] }&.gsub('bar_number:', '')&.strip
     end
 
-    def unreverse_names(comma_separated_names)
+    def prepare_display_names(comma_separated_names, author_type, orcids)
       forward_names = []
-      comma_separated_names.each { |n| forward_names << unreverse_name(n) }
+      comma_separated_names.each_with_index { |val, index| forward_names << unreverse_name(val) + (orcids ? maybe_add_orcid(index, author_type) : '') }
       forward_names
+    end
+
+    def maybe_add_orcid(index, author_type)
+      key = Solrizer.solr_name("#{author_type}_orcids", :symbol)
+      if solr_document[key].present? && solr_document[key][index].present?
+        # https://info.orcid.org/brand-guidelines/#Inline_ORCID_iD
+        "<sup><a target=\"_blank\" href=\"#{solr_document[key][index]}\">#{ActionController::Base.helpers.image_tag('orcid_16x16.gif', width: '16px', height: '16px')}</a></sup>"
+      else
+        ''
+      end
     end
 
     def unreverse_name(comma_separated_name)
       comma_separated_name.split(',').map(&:strip).reverse.join(' ')
     end
 
-    def authors(include_contributors = true)
+    def authors(contributors: true, orcids: false)
       return creator_display if creator_display?
-      authorship_names = include_contributors ? [unreverse_names(solr_document.creator), unreverse_names(contributor)] : [unreverse_names(solr_document.creator)]
+      authorship_names = if contributors
+                           [prepare_display_names(solr_document.creator, :creator, orcids), prepare_display_names(contributor, :contributor, orcids)]
+                         else
+                           [prepare_display_names(solr_document.creator, :creator, orcids)]
+                         end
       authorship_names.flatten.to_sentence(last_word_connector: ' and ')
     end
 

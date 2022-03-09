@@ -116,12 +116,12 @@ describe 'Press Catalog' do
       let!(:monograph) {
         create(:public_monograph,
                title: ['The Two Authors\' Book'],
-               creator: ['Johns, Jimmy (a role)'],
-               contributor: ['Way, Sub (another role)'],
+               creator: ['Johns, Jimmy (a role)|https://orcid.org/0000-0002-1825-0097'],
+               contributor: ['Way, Sub (another role)|https://orcid.org/0000-0002-1825-0097'],
                press: umich.subdomain)
       }
 
-      it 'sees multiple author names on the press catalog page' do
+      it 'sees multiple author names, without ORCIDs, on the press catalog page' do
         visit "/#{umich.subdomain}"
         expect(page).to have_content 'Jimmy Johns and Sub Way'
       end

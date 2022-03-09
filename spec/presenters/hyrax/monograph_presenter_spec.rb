@@ -130,6 +130,12 @@ RSpec.describe Hyrax::MonographPresenter do
   end
 
   describe '#authors' do
+    before do
+      allow(mono_doc).to receive(:creator).and_return(['Cat, Abe'])
+      allow(mono_doc).to receive(:contributor).and_return(['Lastname, Thing', 'Feetys, Manny'])
+      allow(mono_doc).to receive(:creator_display).and_return(nil)
+    end
+
     describe "creator_display exists, creators/contributors don't" do
       subject { presenter.authors }
 
@@ -140,12 +146,6 @@ RSpec.describe Hyrax::MonographPresenter do
       it { is_expected.to eq 'A very elaborate description of editors and authors' }
     end
 
-    before do
-      allow(mono_doc).to receive(:creator).and_return(['Cat, Abe'])
-      allow(mono_doc).to receive(:contributor).and_return(['Lastname, Thing', 'Feetys, Manny'])
-      allow(mono_doc).to receive(:creator_display).and_return(nil)
-    end
-
     describe "creators/contributors exist, creator_display doesn't" do
       describe 'default (contributors included)' do
         subject { presenter.authors }
@@ -154,7 +154,7 @@ RSpec.describe Hyrax::MonographPresenter do
       end
 
       describe 'contributors excluded' do
-        subject { presenter.authors(false) }
+        subject { presenter.authors(contributors: false) }
 
         it { is_expected.to eq 'Abe Cat' }
       end
@@ -168,6 +168,62 @@ RSpec.describe Hyrax::MonographPresenter do
       end
 
       it { is_expected.to eq 'A very elaborate description of editors and authors' }
+    end
+
+    describe "optional ORCIDs" do
+      let(:mono_doc) {
+        ::SolrDocument.new(id: 'mono',
+                           creator_orcids_ssim: ['https://orcid.org/0000-0002-1825-0097'],
+                           contributor_orcids_ssim: ['', 'https://orcid.org/0000-0002-1825-0097'])
+      }
+
+      describe 'ORCIDs not included (default)' do
+        describe 'default (contributors included)' do
+          subject { presenter.authors }
+
+          it { is_expected.to eq 'Abe Cat, Thing Lastname and Manny Feetys' }
+        end
+
+        describe 'contributors excluded' do
+          subject { presenter.authors(contributors: false) }
+
+          it { is_expected.to eq 'Abe Cat' }
+        end
+      end
+
+      describe 'ORCIDs included' do
+        describe 'default (contributors included)' do
+          subject { presenter.authors(orcids: true) }
+
+          it do
+            is_expected.to eq 'Abe Cat'\
+                              '<sup>'\
+                                '<a target="_blank" href="https://orcid.org/0000-0002-1825-0097">' +
+                                  ActionController::Base.helpers.image_tag('orcid_16x16.gif', width: '16px', height: '16px') +
+                                '</a>'\
+                              '</sup>'\
+                              ', Thing Lastname and Manny Feetys'\
+                              '<sup>'\
+                                '<a target="_blank" href="https://orcid.org/0000-0002-1825-0097">' +
+                                  ActionController::Base.helpers.image_tag('orcid_16x16.gif', width: '16px', height: '16px') +
+                                '</a>'\
+                              '</sup>'
+          end
+        end
+
+        describe 'contributors excluded' do
+          subject { presenter.authors(orcids: true, contributors: false) }
+
+          it do
+            is_expected.to eq 'Abe Cat'\
+                              '<sup>'\
+                                '<a target="_blank" href="https://orcid.org/0000-0002-1825-0097">' +
+                                  ActionController::Base.helpers.image_tag('orcid_16x16.gif', width: '16px', height: '16px') +
+                                  '</a>'\
+                              '</sup>'
+          end
+        end
+      end
     end
   end
 

@@ -25,8 +25,8 @@ class MonographIndexer < Hyrax::WorkIndexer
       solr_doc['importable_creator_ss'] = importable_names('creator')
       solr_doc['importable_contributor_ss'] = importable_names('contributor')
 
-      roleless_creators = multiline_names_minus_role('creator')
-      roleless_contributors = multiline_names_minus_role('contributor')
+      roleless_creators, creator_orcids = names_and_orcids('creator')
+      roleless_contributors, contributor_orcids = names_and_orcids('contributor')
 
       # fix for imported Monographs that only have contributors for whatever reason, i.e. the metadata was created...
       # outside Fulcrum and only had supposed "non-author roles" which were put in as contributors so we'll promote...
@@ -37,8 +37,10 @@ class MonographIndexer < Hyrax::WorkIndexer
       solr_doc[Solrizer.solr_name('creator', :facetable)] = roleless_creators
       solr_doc[Solrizer.solr_name('creator_full_name', :stored_searchable)] = roleless_creators&.first
       solr_doc[Solrizer.solr_name('creator_full_name', :sortable)] = normalize_for_sort(roleless_creators&.first)
+      solr_doc[Solrizer.solr_name('creator_orcids', :symbol)] = creator_orcids
 
       solr_doc[Solrizer.solr_name('contributor', :stored_searchable)] = roleless_contributors
+      solr_doc[Solrizer.solr_name('contributor_orcids', :symbol)] = contributor_orcids
 
       # probably we'll need more substantial cleanup here, for now discard anything that isn't a number as...
       # HEB often has stuff like 'c1999' in the Publication Year (`date_created`)
@@ -97,9 +99,18 @@ class MonographIndexer < Hyrax::WorkIndexer
     end
   end
 
-  def multiline_names_minus_role(field)
+  def names_and_orcids(field)
     value = object.public_send(field).first
-    value.present? ? value.split(/\r?\n/).reject(&:blank?).map { |val| val.sub(/\s*\(.+\)$/, '').strip } : value
+    if value.present?
+      # for now an ORCID must have a manually-entered name preceding it, a (stripped) line starting with '|' is not...
+      # indexed. See spec/indexers/monograph_indexer_spec.rb for examples.
+      values = value.split(/\r?\n/).reject(&:blank?).map(&:strip).reject { |val| val.start_with?('|') }
+      # names and ORCIDs will strictly be parallel arrays until we (maybe) do something fancier with ORCIDs
+      # nils here are not retained in Solr, hence the '' entries for names with no associated ORCID
+      orcids = values.any? { |val| val.include?('|') } ? values.map { |val| val.split('|')[1]&.strip || '' } : []
+      names = values.map { |val| val.split('|')[0]&.strip.sub(/|.*$/, '').sub(/\s*\(.+\)$/, '').strip }
+    end
+    return names.presence, orcids.presence
   end
 
   def normalize_for_sort(value)
