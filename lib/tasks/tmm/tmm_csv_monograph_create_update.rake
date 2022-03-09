@@ -39,7 +39,11 @@ namespace :heliotrope do
       # Every row should have a press set, but some use TMM names that need mapping to an actual Fulcrum subdomain.
       # Fall back to 'michigan' if no press is set or the final value is not michigan or one of its sub-presses.
 
-      tmm_press_name_map = { 'umccs' => 'lrccs', 'umcjs' => 'cjs', 'umsa' => 'csas', 'umsea' => 'cseas' }
+      tmm_press_name_map = { 'umasp' => 'asp',
+                             'umccs' => 'lrccs',
+                             'umcjs' => 'cjs',
+                             'umsa' => 'csas',
+                             'umsea' => 'cseas' }
 
       press = row['Press']&.strip
 
