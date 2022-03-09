@@ -20,9 +20,6 @@
     })(window,document,'script','dataLayer','GTM-PTZXSV7');</script>
     <% end %>
 
-    <!-- hotjar -->
-    <%= render 'shared/hotjar' %>
-
     <!-- Favicons and theme colors -->
     <%= render 'shared/favicon' %>
     <meta name="format-detection" content="telephone=no">
@@ -43,6 +40,9 @@
     <%= javascript_include_tag 'application' %>
     <%= javascript_include_tag 'https://umich.edu/apis/umcookieconsent/umcookieconsent.js' %>
     <%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>
+
+    <!-- hotjar -->
+    <%= render 'shared/hotjar' %>
 
     <%# See comments in HELIO-3046. While working on HELIO-3162 this seemed to help system spec behavior locally %>
     <% if Rails.env.test? %>
