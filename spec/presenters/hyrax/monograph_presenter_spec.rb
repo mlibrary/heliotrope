@@ -227,17 +227,6 @@ RSpec.describe Hyrax::MonographPresenter do
     end
   end
 
-  describe '#authors?' do
-    subject { presenter.authors? }
-
-    before do
-      allow(mono_doc).to receive(:contributor).and_return([])
-      allow(mono_doc).to receive(:creator_display).and_return(nil)
-    end
-
-    it { is_expected.to eq false }
-  end
-
   describe '#ordered_section_titles' do
     subject { presenter.ordered_section_titles }
 

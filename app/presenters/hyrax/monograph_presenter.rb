@@ -156,10 +156,6 @@ module Hyrax
       authorship_names.flatten.to_sentence(last_word_connector: ' and ')
     end
 
-    def authors?
-      authors.present?
-    end
-
     def subdomain
       Array(solr_document['press_tesim']).first
     end

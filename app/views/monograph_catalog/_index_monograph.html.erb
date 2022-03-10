@@ -48,8 +48,9 @@
   </div><!-- /.monograph-cover -->
   <div class="col-sm-9 monograph-metadata">
     <h1 id="work-title"><%= @presenter.title %></h1>
-    <% if @presenter.authors? %>
-        <span aria-label="authors" class="authors"><%= render_markdown @presenter.authors(contributors: true, orcids: true) %></span>
+    <% authorship_display = @presenter.authors(contributors: true, orcids: true) %>
+    <% if authorship_display.present? %>
+      <span aria-label="authors" class="authors"><%= render_markdown authorship_display %></span>
     <% end %>
     <% if @presenter.date_created.present? %>
       <span aria-label="publication date"><%= @presenter.date_created.first %></span><% if @presenter.edition_name.present? %><span aria-label="edition name"><%= sanitize @presenter.edition_name %></span><% end %>
