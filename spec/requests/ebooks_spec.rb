@@ -74,7 +74,6 @@ RSpec.describe "PDF EBooks", type: :request do
 
           context 'presenter missing citation metadata needed for the watermark/stamp' do
             let(:presenter) { instance_double(Hyrax::MonographPresenter, id: 'validnoid', citations_ready?: false,
-                                              authors?: false,
                                               authors: '',
                                               epub?: false,
                                               pdf_ebook?: true,
@@ -104,7 +103,6 @@ RSpec.describe "PDF EBooks", type: :request do
 
           context 'presenter has all citation metadata needed for the watermark/stamp' do
             let(:presenter) { instance_double(Hyrax::MonographPresenter, id: 'validnoid', citations_ready?: true,
-                                              authors?: true,
                                               authors: 'Ann Author and Ann Other',
                                               epub?: false,
                                               pdf_ebook?: true,

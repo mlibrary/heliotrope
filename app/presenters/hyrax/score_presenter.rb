@@ -39,10 +39,6 @@ module Hyrax
       authorship_names.flatten.to_sentence(last_word_connector: ' and ')
     end
 
-    def authors?
-      authors.present?
-    end
-
     def open_access?
       true
     end

@@ -11,7 +11,12 @@ RSpec.describe MonographIndexer do
     let(:monograph) {
       build(:monograph,
             title: ['"Blah"-de-blah-blah and Stuff!'],
-            creator: ["Moose, Bullwinkle\nSquirrel, Rocky"],
+            # throwing messy spaces in to test strip and rejection of blanks
+            creator: ["Moose, Bullwinkle\n"\
+                      "|https://orcid.org/dont-index-me\n"\
+                      "Squirrel, Rocky|https://orcid.org/0000-0002-1825-0097\n\n"\
+                      "Badenov, Boris  \n"\
+                      " Fatale, Natasha |  https://orcid.org/0000-0002-1825-0097 "],
             description: ["This is the abstract"],
             date_created: ['c.2018?'],
             isbn: ['978-0-252012345 (paper)', '978-0252023456 (hardcover)', '978-1-62820-123-9 (e-book)'],
@@ -88,13 +93,17 @@ RSpec.describe MonographIndexer do
     end
 
     it "indexes all creators' names for access/search and faceting" do
-      expect(subject['creator_tesim']).to eq ['Moose, Bullwinkle', 'Squirrel, Rocky'] # access/search
-      expect(subject['creator_sim']).to eq ['Moose, Bullwinkle', 'Squirrel, Rocky'] # facet
+      expect(subject['creator_tesim']).to eq ['Moose, Bullwinkle', 'Squirrel, Rocky', 'Badenov, Boris', 'Fatale, Natasha'] # access/search
+      expect(subject['creator_sim']).to eq ['Moose, Bullwinkle', 'Squirrel, Rocky', 'Badenov, Boris', 'Fatale, Natasha'] # facet
     end
 
     it "indexes first creator's name for access/search and (normalized) for sorting" do
       expect(subject['creator_full_name_tesim']).to eq 'Moose, Bullwinkle' # access/search
       expect(subject['creator_full_name_si']).to eq 'moose bullwinkle' # facet
+    end
+
+    it "indexes creator ORCIDs in a parallel array" do
+      expect(subject['creator_orcids_ssim']).to eq ['', 'https://orcid.org/0000-0002-1825-0097', '', 'https://orcid.org/0000-0002-1825-0097']
     end
 
     it 'has description indexed by Hyrax::IndexesBasicMetadata' do

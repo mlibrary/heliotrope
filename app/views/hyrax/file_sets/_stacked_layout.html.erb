@@ -14,9 +14,10 @@
     <div class="col-sm-12 map">
         <div class="row asset-attributes">
             <span class="section">From <em><%= link_to @presenter.parent.title, main_app.monograph_catalog_path(@presenter.monograph_id) %></em>
-            <% if @presenter.parent.authors? %>
-              by <%= render_markdown @presenter.parent.authors %>
-            <% end %>
+              <% authorship_display = @presenter.parent.authors %>
+              <% if authorship_display.present? %>
+                by <%= render_markdown authorship_display %>
+              <% end %>
           </span>
           <br />
           <%= render "attributes", presenter: @presenter %>

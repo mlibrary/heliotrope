@@ -162,19 +162,6 @@ RSpec.describe "monograph_catalog/index.html.erb" do
         end
       end
 
-      context 'authors?' do
-        before do
-          allow(presenter).to receive(:authors?).and_return(true)
-          allow(presenter).to receive(:authors).and_return(authors)
-          render
-        end
-
-        it do
-          debug_puts subject.to_s
-          is_expected.to match authors
-        end
-      end
-
       # TODO: see https://tools.lib.umich.edu/jira/browse/HELIO-2224
       #
       # context 'pageviews' do
