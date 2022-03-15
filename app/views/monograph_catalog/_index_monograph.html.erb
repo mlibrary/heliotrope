@@ -49,7 +49,15 @@
     <% end %>
     <div class="monograph-metadata">
       <!-- CITABLE LINK -->
-
+      <% unless @presenter.tombstone? %>
+            <span id="citable_link"><%= t('citable_link') %></span>
+            <form>
+              <label for="permalink" style="display: none;"><%= t('citable_link') %></label>
+              <input aria-labelledby="citable_link" type="text" class="form-control" id="permalink" aria-label="citable link" value="<%= @presenter.citable_link %>" readonly="readonly" onclick="this.select(); document.execCommand('copy');" />
+            </form>
+      <% end %>
+      <!-- BAR NUMBER -->
+      <%= @presenter.attribute_to_html(:bar_number, label: t('bar_number'), html_p: true) %>
       <!-- PUBLICATION DATE -->
       <% if @presenter.date_created.present? %>
         <span aria-label="publication date">Published: <%= @presenter.date_created.first %></span>
@@ -68,22 +76,19 @@
       <% if @presenter.license? %>
         <span class="license">License: <a aria-label="<%= @presenter.license_alt_text %>" rel="license" href="<%= @presenter.license.first %>" target="_blank"><%= @presenter.license_link_content %></a></span>
       <% end %>
+      <!-- ISBN -->
+      <%= @presenter.attribute_to_html(:isbn, label: t('isbn'), html_p: true) %>
+      <!-- SUBJECT -->
+      <!-- SERIES -->
+
       <div class="additional-metadata">
         <dl>
           <%= @presenter.attribute_to_html(:series, html_dl: true, heading: 3) %>
-          <%= @presenter.attribute_to_html(:isbn, label: t('isbn'), html_dl: true, heading: 3) %>
-          <%= @presenter.attribute_to_html(:bar_number, label: t('bar_number'), html_dl: true, heading: 3) %>
+         
+          
           <%= @presenter.attribute_to_html(:subject, html_dl: true, heading: 3, render_as: :catalog_facet_attribute, subdomain: @presenter.subdomain) %>
 
-          <% unless @presenter.tombstone? %>
-            <dt role="heading" aria-level="3"><%= t('citable_link') %></dt>
-            <dd>
-              <form>
-                <label for="permalink" style="display: none;"><%= t('citable_link') %></label>
-                <input type="text" class="form-control" id="permalink" aria-label="citable link" value="<%= @presenter.citable_link %>" readonly="readonly" onclick="this.select(); document.execCommand('copy');" />
-              </form>
-            </dd>
-          <% end %>
+          
         </dl>
       </div>
     </div>
@@ -91,23 +96,17 @@
   <div class="col-sm-8 monograph-metadata">    
     <!-- TITLE -->
     <h1 id="work-title"><%= @presenter.title %></h1>
+    <!-- VOLUME -->
     <!-- EDITION -->
     <% if @presenter.edition_name.present? %><span aria-label="edition name"><%= sanitize @presenter.edition_name %></span><% end %>
-    <!-- VOLUME -->
+    <!-- AUTHORS/EDITORS -->
     <% authorship_display = @presenter.authors(contributors: true, orcids: true) %>
     <% if authorship_display.present? %>
       <span aria-label="authors" class="authors"><%= render_markdown authorship_display %></span>
     <% end %>
-    
-    <% if @presenter.funder_display? %>
-      <span aria-label="funder display" class="funder_display"><i><%= @presenter.funder_display %></i></span>
-    <% end %>
     <!-- ACCESS INDICATORS and OPTIONS -->
-    <%= render partial: 'access_options.html.erb', locals: { auth: @auth, presenter: @presenter } if @auth.present? %>
-    <!-- BOOK DESCRIPTION -->
-    <div class="description<%= " display-in-full" if %w[mw22v7671 8623j115w].include? @presenter.id %>">
-      <%= render_markdown @presenter.description.first || '' %>
-    </div>
+    <%= render partial: 'access_options.html.erb', locals: { auth: @auth, presenter: @presenter } if @auth.present? %>      
+    <!-- READ, DOWNLOAD, BUY BUTTONS -->
     <%# ensure all of the toolbar's internal components' conditionals are present here to control the toolbar's appearance %>
     <% if @presenter.reader_ebook? || (@ebook_download_presenter.downloadable_ebooks? && !@presenter.tombstone?) || @presenter.buy_url? %>
         <div class="btn-toolbar" role="toolbar">
@@ -161,7 +160,7 @@
         </div><!-- /.btn-toolbar -->
     <% end %>
     
-    <!-- BOOK INFORMATION -->
+    <!-- BOOK INFORMATION TABS - TABS -->
     <div id="tabs">
     <ul class="nav nav-tabs" role="tablist">
       <% if @presenter.description? %>
@@ -177,7 +176,14 @@
             <a id="tab-toc" href="#toc" aria-controls="toc" role="tab" data-toggle="tab" aria-selected="false" aria-expanded="false" tabindex="-1">Contents</a>
           </h2>
         </li>
-      <% end %>      
+      <% end %>
+      <% if @presenter.funder_display? %>
+        <li role="presentation">
+          <h2>
+            <a id="tab-funder" href="#funder" aria-controls="funder" role="tab" data-toggle="tab" aria-selected="false" aria-expanded="false" tabindex="-1">Funder Information</a>
+          </h2>
+        </li>
+      <% end %>     
       <% if @presenter.reviews? %>
         <li role="presentation">
           <h2>
@@ -208,9 +214,10 @@
         </li>
       <% end %>
     </ul>
+    <!-- BOOK INFORMATION TABS - CONTENT -->
     <div id="tabs-content" class="tab-content monograph-assets-toc-epub-content" aria-live="polite">
       
-      <!-- OVERVIEW -->
+      <!-- OVERVIEW/BOOK DESCRIPTION -->
       <% if @presenter.description? %>
         <section id="description" class="tab-pane fade description row" role="tabpanel" aria-hidden="true" aria-labelledby="tab-description" tabindex="0">
           <div class="col-sm-12">
@@ -228,7 +235,15 @@
           </div>
         </section>
       <% end %>
-            
+      <!-- FUNDER INFORMATION -->
+      <% if @presenter.funder_display? %>
+        <section id="funder" class="tab-pane fade funder row" role="tabpanel" aria-hidden="true" aria-labelledby="tab-funder" tabindex="0">
+          <div class="col-sm-12">
+            <span aria-label="funder display" class="funder_display"><i><%= @presenter.funder_display %></i></span>
+          </div>
+        </section>
+      <% end %>    
+      <!-- ABOUTWARE FEATURED REPRESENTATIVE -->      
       <% if @presenter.aboutware? %>
         <section id="aboutware" class="tab-pane fade aboutware row" role="tabpanel" aria-hidden="true" aria-labelledby="tab-aboutware" tabindex="0">
           <div class="col-sm-12">
@@ -237,6 +252,7 @@
           </div>
         </section>
       <% end %>
+      <!-- REVIEWS FEATURED REPRESENTATIVE -->
       <% if @presenter.reviews? %>
         <section id="reviews" class="tab-pane fade reviews row" role="tabpanel" aria-hidden="true" aria-labelledby="tab-reviews" tabindex="0">
           <div class="col-sm-12">
@@ -245,6 +261,7 @@
           </div>
         </section>
       <% end %>
+      <!-- RELATED TITLES FEATURED REPRESENTATIVE -->
       <% if @presenter.related? %>
         <section id="related" class="tab-pane fade related row" role="tabpanel" aria-hidden="true" aria-labelledby="tab-related" tabindex="0">
           <div class="col-sm-12">
@@ -253,6 +270,7 @@
           </div>
         </section>
       <% end %>
+      <!-- BOOK STATS -->
       <%# HELIO-4115 - deactivate stats tabs but keep the code around as inspiration for the next solution %>
       <% if false %>
         <section id="stats" class="tab-pane fade stats row" role="tabpanel" aria-hidden="true" aria-labelledby="tab-stats" tabindex="0">
