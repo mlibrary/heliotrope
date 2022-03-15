@@ -128,6 +128,19 @@ module Sighrax
       isbn ||= parsed_isbns.values[0]
     end
 
+    def non_preferred_isbns
+      isbns = vector('isbn_tesim')
+      return '' if isbns.empty?
+      return '' if isbns.first.blank?
+
+      parsed_isbns = parse_isbns(isbns)
+      return '' if parsed_isbns.blank?
+
+      isbns = parsed_isbns.values
+      isbns.delete(preferred_isbn)
+      isbns
+    end
+
     private
 
       def initialize(noid, data)
