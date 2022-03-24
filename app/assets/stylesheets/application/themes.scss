@@ -4632,9 +4632,10 @@ $gabii-link-hover:    #1e5667;
 ///////////////////////////////////////////////
 //
 // University of Michigan - UMMAA
+// University of Michigan - ASP
 //
 //////////////////////////////////////////////
-.ummaa {
+.ummaa, .asp {
 
   // svgicon
   #documents {
@@ -4770,6 +4771,123 @@ $gabii-link-hover:    #1e5667;
   }
 
 
+}
+
+
+// ASP - jumbotron
+.asp {
+  
+  // buttons
+
+  .btn-default {
+    @include button-background-color(#474747);
+    @include button-font-color($um-white);
+    border-color: #474747;
+    font-weight: 600;
+  }
+
+  .download {
+    .btn-default {
+    @include button-background-color(#474747);
+    @include button-font-color($um-white);
+    border-color: #474747;
+    font-weight: 600;
+    }
+  }
+
+  .btn-default:hover,
+  .btn-default:active {
+    @include button-hover-background-color(#474747);
+    @include button-hover-font-color(#fff);
+    border-color: #474747;
+    font-weight: 600;
+  }
+
+  .open > .btn-default.dropdown-toggle {
+    background-color: #474747;
+    background-image: none;
+    border-color: $um-brand-color;
+    color: #fff;
+  }
+
+  #sort-dropdown .dropdown-toggle .caret,
+  #per_page-dropdown .dropdown-toggle .caret {
+    color: $um-white;
+  }
+
+  // navbar
+
+  .navbar-right {
+    a {
+      background-color: #F8F8F8;
+      vertical-align: super;
+      img.logo {
+        background-color: #474747;
+        padding: 3px;
+      }
+    }
+  }
+  
+  #brand-bar .navbar-brand {
+    color: #474747;
+  }
+
+  .search-form button {
+    background-color: #474747;
+  }
+  
+  .jumbotron {
+  background-color: #FEF9E8;
+  color: #474747;
+  padding-top: 16px;
+  padding-bottom: 16px;
+
+    .container {
+      margin-top: 16px;
+    }
+
+    .p {
+      margin: 20px auto;
+      width: 70%;
+      line-height: 32px;
+    }
+
+    .logo {
+      float: none !important;
+    
+      img {
+         width: 240px;
+         margin: 0 auto;
+         display: block;
+      }
+    }
+  }
+
+  //footer
+
+  footer.press {
+    border: 2px solid #916144;
+    
+    img {
+      height: auto !important;
+      width: 240px !important;
+      padding-bottom: 8px !important;
+    }
+
+    .press-block-a,
+    .press-block-b {
+      background-color: #F6F3EA !important;
+      color: #474747;
+      a {
+        color: #474747;
+        text-decoration: underline;      
+      }
+      a:hover {
+          color: #2E2E2E !important;
+      }
+    }
+
+  }
 }
 ///////////////////////////////////////////////
 //
