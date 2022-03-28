@@ -14,7 +14,7 @@
     <div class="input-group">
       <%= label_tag :catalog_search, search_label, class: "sr-only" %>
       <%= text_field_tag(:q, params[:q], class: "q search-query form-control", id: "catalog_search",
-                         placeholder: "Search and discover books", tabindex: "0", type: "search") %>
+                         placeholder: "Search and discover books", tabindex: "0", type: "search", "data-hj-allow": true) %>
       <div class="input-group-btn">
         <button type="submit" class="search-submit btn btn-primary" id="keyword-search-submit" tabindex="0">
           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mx-3"><title>Search</title><circle cx="10.5" cy="10.5" r="7.5"></circle><line x1="21" y1="21" x2="15.8" y2="15.8"></line></svg>
