@@ -614,6 +614,47 @@ footer.press {
     margin-top: 0;
   }
 
+  .fulcrum_sidebar {
+    // In hyrax2 this defaults to grey which we don't want
+    background-color: white;
+  }
+
+  div.facets h3 {
+    font-size: 1.2em;
+  }
+
+  .page_links {
+    display: inline-block;
+    vertical-align: middle;
+    margin-top: .4em;
+  }
+
+  #appliedParams.constraints-container {
+    margin-bottom: 20px;
+  }
+
+  .monograph-cover {
+
+    .btn {
+      padding: 0;
+    }
+
+    .modal {
+      text-align: center;
+      img {
+        max-width: 100%;
+        max-height: 100%;
+        width: auto;
+        height: auto;
+      }
+    }
+    img {
+      border: 4px solid #eeeeee;
+    }
+  }
+
+  .monograph-metadata-additional {
+      
   figure.peer_review {
     margin-top: 1.5em;
     display: -webkit-box;
@@ -655,41 +696,62 @@ footer.press {
       margin-bottom: .5em;
     }
   }
-  .fulcrum_sidebar {
-    // In hyrax2 this defaults to grey which we don't want
-    background-color: white;
-  }
+    
+    #citable_link {
+    
+    }
 
-  div.facets h3 {
-    font-size: 1.2em;
-  }
+    .subject-series {
+      padding-top: 2em;
+      dt, dd {
+        display: inline-block;
+        float: left;
+      }
+      dt {
+        clear: both;
+        width: 8em;
+      }
 
-  .page_links {
-    display: inline-block;
-    vertical-align: middle;
-    margin-top: .4em;
-  }
+      dd {
+        padding-left: 3em;
+      }
 
-  #appliedParams.constraints-container {
-    margin-bottom: 20px;
-  }
+      dd > form {
+        width: 200%;
+        label {}
+      }
 
-  .monograph-cover {
-    .modal {
-      text-align: center;
-      img {
-        max-width: 100%;
-        max-height: 100%;
-        width: auto;
-        height: auto;
+      ul {
+        padding-left: 0;
       }
     }
-    img {
-      border: 4px solid #eeeeee;
-    }
-  }
 
+    table.table {
+      margin-top: 1.5em;
+    }
+
+    .table > thead > tr > th,
+    .table > thead > tr > td,
+    .table > tbody > tr > th,
+    .table > tbody > tr > td,
+    .table > tfoot > tr > th,
+    .table > tfoot > tr > td {
+      border-top: 0 solid #fff;
+      padding: 0px;
+    }
+
+    table tbody tr:last-of-type th {
+      vertical-align: middle;
+    }
+
+    input#permalink {
+      max-width: 82%;
+    }
+
+  }
+  
   .monograph-metadata {
+    
     h1 {
       font-size: 30px;
     }
@@ -707,8 +769,21 @@ footer.press {
       vertical-align: middle;
     }
 
+    // BUY/READ/DOWNLOAD BUTTONS
+    .btn-toolbar {
+      margin: 1em 0;
+    }
+
     .funder {
       display: block;
+      font-size: 16px;
+      line-height: 24px;
+      margin: 0em auto;
+      width: 95%;
+    }
+
+    .funder_display {
+      margin-top: 2.5em;
     }
 
     .message {
@@ -721,10 +796,19 @@ footer.press {
       }
     }
 
+    .description {
+      line-height: 24px;
+      margin: 0 auto;
+      width: 95%;
+      padding-top: 1.2em;
+      padding-bottom: 2em;
+      font-size: 16px;
+    }
+
     .access {
       display: flex;
       align-items:center;
-      margin-top: 1em;
+      margin: 1em 0;
       font-weight: bold;
       font-stretch: condensed;
       
@@ -789,40 +873,7 @@ footer.press {
     }
 
     .monograph-metadata {
-      .copyright {
-        font-size: .85em;
-      }
 
-      .description {
-        padding-top: 1.2em;
-        padding-bottom: 2em;
-        font-size: 16px;
-      }
-
-      .additional-metadata {
-        padding-top: 2em;
-        dt, dd {
-          display: inline-block;
-          float: left;
-        }
-        dt {
-          clear: both;
-          width: 8em;
-        }
-
-        dd {
-          padding-left: 3em;
-        }
-
-        dd > form {
-          width: 200%;
-          label {}
-        }
-
-        ul {
-          padding-left: 0;
-        }
-      }
     .webgl.alert {
       margin-left: 0;
       margin-right: 0;
@@ -834,55 +885,32 @@ footer.press {
       }
     }
 
-      table.table {
-        margin-top: 1.5em;
-      }
-
-      .table > thead > tr > th,
-      .table > thead > tr > td,
-      .table > tbody > tr > th,
-      .table > tbody > tr > td,
-      .table > tfoot > tr > th,
-      .table > tfoot > tr > td {
-        border-top: 0 solid #fff;
-        padding: 0px;
-      }
-
-      table tbody tr:last-of-type th {
-        vertical-align: middle;
-      }
-
-      input#permalink {
-        max-width: 82%;
-      }
+      
     }
   }
 
-  .monograph-assets-toc-epub {
-    .monograph-assets-toc-epub-content {
-      padding-top: 4em;
-    }
+    .monograph-info-content {
+      padding-top: 2em;
 
-    /* Monograph TOC */
+      /* Monograph TOC */
 
-    ul.toc {
-      list-style: none;
-      padding-left: 2em;
-      padding-right: 0;
-    }
+      ul.toc {
+        list-style: none;
+        padding: 0 1em;
+      }
 
-    ul.toc li {
-      line-height: 3em;
+      ul.toc li {
+        line-height: 2.5em;
 
-      display: flex;
-      flex-direction: column;
-    }
+        display: flex;
+        flex-direction: column;
+      }
 
-    ul.toc li .section-container {
-      display: flex;
-      flex-direction: row;
-      justify-content: space-between;
-    }
+      ul.toc li .section-container {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+      }
 
     .section-container {
       border-bottom: 1px solid #dfdfdf;
@@ -891,43 +919,42 @@ footer.press {
         max-width: 80%;
         text-decoration: underline;   
       }
+
+      .btn-group.download {
+        a.toc-link {
+          max-width: 100%;
+        }
+
+        a.toc-download-link + a.toc-link {
+          max-width: 80%;
+        }
+      }
+
+      //ul.toc li:first-child {
+      //  border-top: 1px solid #eee;
+      //}
+
+      ul.toc li:last-child {
+        border: none;
+      }
+
+      //ul.toc ul.toc a.toc-link {
+      //  padding-left: 2em;
+      //}
+
+      #toc > div > ul.toc {
+        font-size: 1.15em;
+      }
+
+      .chapter {
+        padding-left: 1em;
+      }
+
+      .download {
+        padding: 0;
+        margin-top: 11px;
+      }
     }
-
-    .btn-group.download {
-      a.toc-link {
-        max-width: 100%;
-       }
-
-       a.toc-download-link + a.toc-link {
-         max-width: 80%;
-       }
-    }
-
-    //ul.toc li:first-child {
-    //  border-top: 1px solid #eee;
-    //}
-
-    ul.toc li:last-child {
-      border: none;
-    }
-
-    //ul.toc ul.toc a.toc-link {
-    //  padding-left: 2em;
-    //}
-
-    #toc > div > ul.toc {
-      font-size: 1.2em;
-    }
-
-    .chapter {
-      padding-left: 1em;
-    }
-
-    .download {
-      padding: 0;
-      margin-top: 11px;
-    }
-  }
 
   #documents {
 

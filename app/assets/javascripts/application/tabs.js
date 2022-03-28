@@ -138,19 +138,19 @@ $(document).on('turbolinks:load', function() {
       });
     });
 
-    var blackLightSearchOngoing = function blackLightSearchOngoing() {
+    //var blackLightSearchOngoing = function blackLightSearchOngoing() {
       // the presence of this div indicates text search and/or facet terms are present
-      if ($('#appliedParams').val() !== undefined) return true;
+      //if ($('#appliedParams').val() !== undefined) return true;
       // the presence of these query parameters indicate the user is interacting with results (sorting, paging)
-      var blacklight_params = ['page', 'per_page', 'sort', 'view'];
-      var blacklight_param_found = false;
-      window.location.search.substring(1).split('&').forEach(function(queryNameValue) {
-        if (blacklight_params.includes(queryNameValue.split('=')[0])) {
-          blacklight_param_found = true;
-        }
-      });
-      return blacklight_param_found;
-    };
+      //var blacklight_params = ['page', 'per_page', 'sort', 'view'];
+      //var blacklight_param_found = false;
+      //window.location.search.substring(1).split('&').forEach(function(queryNameValue) {
+      //  if (blacklight_params.includes(queryNameValue.split('=')[0])) {
+      //    blacklight_param_found = true;
+      //  }
+      //});
+      //return blacklight_param_found;
+    //};
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // Here comes the actual heliotrope tab activation logic. Precedence is as follows:
@@ -163,16 +163,16 @@ $(document).on('turbolinks:load', function() {
     var activeTab = $(tabs[0]).attr('href');
     // 2) above... Monograph/score catalog pages need to trigger resources tab if Blacklight is in use. If we have...
     //    Blacklight results on another tabbed page in future it should just be a matter of detecting it in this `if`
-    if ($('#main.monograph').length > 0 || $('#main.score').length > 0) {
-      if (blackLightSearchOngoing()) {
-        activeTab = '#resources';
-      }
-    }
+    //if ($('#main.monograph').length > 0 || $('#main.score').length > 0) {
+    //  if (blackLightSearchOngoing()) {
+    //    activeTab = '#resources';
+    //  }
+    //}
     // 1) above... Override if there is a tab in the URL, i.e a URL fragment, '#tab-name'
-    var stripped = document.location.href.split("#");
-    if (stripped.length > 1) {
-      activeTab = '#' + stripped[1];
-    }
+    //var stripped = document.location.href.split("#");
+    //if (stripped.length > 1) {
+    //  activeTab = '#' + stripped[1];
+    //}
 
     // set tab using a11y-compatible method up top
     var tab = $('a[href="' + activeTab + '"]')[0];
