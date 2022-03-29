@@ -4514,7 +4514,17 @@ $gabii-link-hover:    #1e5667;
 
     }
 
+    .cozy-panel-sidebar .cozy-control a {
+      padding: 4px;
+    }
 
+    .cozy-module-left, .cozy-module-right {
+      width: 3%;
+    }
+
+    .cozy-container i[class^="icon-chevron-"] {
+      font-size: 2em !important;
+    }
 
     .cozy-control .cozy-h1 {
       font-size: 1.5em;
