@@ -12,7 +12,7 @@
         <div class="input-group">
           <%= label_tag :resources_search, search_label, class: "sr-only" %>
           <%= text_field_tag(:q, params[:q], class: "q search-query form-control", id: "resources_search",
-                             placeholder: placeholder, tabindex: "0", type: "search") %>
+                             placeholder: placeholder, tabindex: "0", type: "search", "data-hj-allow": true) %>
           <div class="input-group-btn">
             <button type="submit" class="search-submit btn btn-primary" id="resources-search-submit" tabindex="0">
               <i class="glyphicon glyphicon-search"></i><span class="sr-only">Search resources</span>
