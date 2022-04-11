@@ -1,0 +1,13 @@
+<% if Settings.host == "heliotrope-preview.hydra.lib.umich.edu" %>
+  <!-- HELIO-4224 -->
+  <!-- This is hard coded and temporary and only for preview -->
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-RDQZEZQ73K"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-RDQZEZQ73K');
+  </script>
+<% end %>

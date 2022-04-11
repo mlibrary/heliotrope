@@ -44,7 +44,9 @@
     <%= javascript_pack_tag 'cozy-sun-bear/cozy-sun-bear' %>
 
     <!-- hotjar -->
-    <%= render 'shared/hotjar' %> 
+    <%= render 'shared/hotjar' %>
+    <!-- GA4 -->
+    <%= render 'shared/ga4' %>
 
     <%# See comments in HELIO-3046. While working on HELIO-3162 this seemed to help system spec behavior locally %>
     <% if Rails.env.test? %>
