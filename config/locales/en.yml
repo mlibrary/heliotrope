@@ -273,7 +273,9 @@ en:
         section_title: :"section_title"
         section_titles: :"section_titles"
         sort_date: :"sort_date"
-        transcript: :"transcript"
+        closed_captions: :"closed_captions"
+        visual_descriptions: :"visual_descriptions"
+        transcript: :"transcript" 
         translation: :"translation"
         tombstone: :"tombstone"
         tombstone_message: :"tombstone_message"
@@ -307,7 +309,8 @@ en:
         license: "Creative Commons License"
     hints:
       defaults:
-        transcript: "Transcripts must be formatted as WebVTT captions. <a href='https://developer.mozilla.org/en-US/docs/Web/API/WebVTT_API' target='_blank'>Get help with WebVTT formatting.</a>"
+        closed_captions: "Closed Captions must be formatted as WebVTT captions. <a href='https://developer.mozilla.org/en-US/docs/Web/API/WebVTT_API' target='_blank'>Get help with WebVTT formatting.</a>"
+        visual_descriptions: "Visual Descriptions must be formatted as WebVTT captions. <a href='https://developer.mozilla.org/en-US/docs/Web/API/WebVTT_API' target='_blank'>Get help with WebVTT formatting.</a>"
         tombstone: "Check box to tombstone."
         tombstone_message: "Message displayed on tombstone."
       monograph:
@@ -335,6 +338,8 @@ en:
         description: "Description of the Press. Markdown is allowed."
         subdomain: "Subdomain used as the Press URL. 2-32 lowercase alphanumeric ASCII characters, plus (non-consecutive) hyphens. Must not start or end with a hyphen."
   sort_date: "Sort Date"
+  closed_captions: "Closed Captions"
+  visual_descriptions: "Visual Descriptions"
   transcript: "Transcript"
   translation: "Translation(s)"
   # views.pagination.aria.* from HELIO-1989. May be removed when Blacklight changes are backported to Hyrax.
