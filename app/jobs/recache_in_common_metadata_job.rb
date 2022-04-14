@@ -71,6 +71,7 @@ class RecacheInCommonMetadataJob < ApplicationJob
     return false unless download_xml
     return false unless parse_xml
     return false unless cache_json
+    return false unless in_common
     true
   end
 
@@ -121,6 +122,23 @@ class RecacheInCommonMetadataJob < ApplicationJob
 
   def cache_json
     Rails.cache.write(RAILS_CACHE_KEY, load_json, expires_in: 24.hours)
+    true
+  end
+
+  def in_common
+    return false unless File.exist?(RecacheInCommonMetadataJob::JSON_FILE)
+
+    Greensub::Institution.update_all(in_common: false) # rubocop:disable Rails/SkipsModelValidations
+    entity_ids = Set.new(Greensub::Institution.where("entity_id <> ''").map(&:entity_id))
+    if entity_ids.present?
+      load_json.each do |entry|
+        next unless entry["entityID"].in?(entity_ids)
+
+        institution = Greensub::Institution.find_by(entity_id: entry["entityID"])
+        institution.in_common = true
+        institution.save!
+      end
+    end
     true
   end
 end
