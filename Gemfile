@@ -101,11 +101,19 @@ gem 'config'
 gem 'devise', '>= 4.7.1'
 gem 'devise-guests', '~> 0.7'
 
-gem 'faraday', '~> 0.17.3'
+# Bundler could not find compatible versions for gem "faraday":
+#   In Gemfile:
+#     faraday (~> 2)
+#
+#     hyrax (= 2.9.5) was resolved to 2.9.5, which depends on
+#       signet was resolved to 0.12.0, which depends on
+#         faraday (~> 0.9)
+gem 'faraday', '~> 0.9'
+# NOTE: This is the last minor release in the v0.x series, next release will be 1.0 to match Faraday v1.0 release and from then on only fixes will be applied to v0.14.x!
 gem 'faraday_middleware', '~> 0.14.0'
-
-# Use gem version of handle_rest
-gem 'handle_rest', git: 'https://github.com/mlibrary/handle_rest', ref: '944fa06a119072f060d986862c34dea7215ebd29'
+#
+# # Use gem version of handle_rest
+gem 'handle_rest', git: 'https://github.com/mlibrary/handle_rest', ref: '483cf71257d96c7f27ab1d40ef067f48ee37f8a5'
 
 gem 'hyrax', '2.9.5'
 

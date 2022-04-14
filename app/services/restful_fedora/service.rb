@@ -1,9 +1,5 @@
 # frozen_string_literal: true
 
-require 'faraday'
-require 'faraday_middleware'
-require 'json'
-
 module RestfulFedora
   class Service
     def contains

@@ -27,13 +27,17 @@ class HandleNet
     def value(noid)
       return nil unless Settings.handle_service&.instantiate
 
-      Services.handle_service.get(HandleNet.path(noid))&.url
+      HandleRest::UrlService.new(1, HandleNet.service).get(HandleNet.path(noid))
+    rescue StandardError => e
+      Rails.logger.error("HandleNet.value(#{noid}) failed with error #{e}")
+      nil
     end
 
     def create_or_update(noid, url)
       return false unless Settings.handle_service&.instantiate
 
-      Services.handle_service.create(Handle.new(HandleNet.path(noid), url: url))
+      HandleRest::UrlService.new(1, HandleNet.service).set(HandleNet.path(noid), url)
+      true
     rescue StandardError => e
       Rails.logger.error("HandleNet.create_or_update(#{noid}, #{url}) failed with error #{e}")
       false
@@ -42,7 +46,25 @@ class HandleNet
     def delete(noid)
       return false unless Settings.handle_service&.instantiate
 
-      Services.handle_service.delete(HandleNet.path(noid))
+      HandleNet.service.delete(HandleRest::Handle.from_s(HandleNet.path(noid)))
+      true
+    rescue StandardError => e
+      Rails.logger.error("HandleNet.delete(#{noid}) failed with error #{e}")
+      false
+    end
+
+    def service
+      return nil unless Settings.handle_service&.instantiate
+
+      root_admin = HandleRest::Identity.from_s("300:0.NA/2027")
+      root_admin_value = HandleRest::AdminValue.new(root_admin.index, HandleRest::AdminPermissionSet.new, root_admin.handle)
+      root_admin_value_line = HandleRest::ValueLine.new(100, root_admin_value)
+
+      local_admin = HandleRest::Identity.from_s("300:2027/spo")
+      local_admin_value = HandleRest::AdminValue.new(local_admin.index, HandleRest::AdminPermissionSet.new, local_admin.handle)
+      local_admin_value_line = HandleRest::ValueLine.new(101, local_admin_value)
+
+      HandleRest::Service.new([root_admin_value_line, local_admin_value_line], Services.handle_service)
     end
   end
 end

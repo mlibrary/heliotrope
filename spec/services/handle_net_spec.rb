@@ -37,13 +37,24 @@ RSpec.describe HandleNet do
     it { expect(described_class.value(noid)).to be nil }
     it { expect(described_class.create_or_update(noid, url)).to be false }
     it { expect(described_class.delete(noid)).to be false }
+    it { expect(described_class.service).to be nil }
 
     context 'instantiate' do
-      let(:service) { instance_double(HandleService, 'service') }
+      let(:handle_service) { instance_double(HandleRest::HandleService, 'handle_service') }
+      let(:service) { instance_double(HandleRest::Service, 'service') }
+      let(:root_admin) { HandleRest::Identity.from_s("300:0.NA/2027") }
+      let(:root_admin_value) { HandleRest::AdminValue.new(root_admin.index, HandleRest::AdminPermissionSet.new, root_admin.handle) }
+      let(:root_admin_value_line) { HandleRest::ValueLine.new(100, root_admin_value) }
+      let(:local_admin) { HandleRest::Identity.from_s("300:2027/spo") }
+      let(:local_admin_value) { HandleRest::AdminValue.new(local_admin.index, HandleRest::AdminPermissionSet.new, local_admin.handle) }
+      let(:local_admin_value_line) { HandleRest::ValueLine.new(101, local_admin_value) }
+      let(:url_service) { instance_double(HandleRest::UrlService, 'url_service') }
 
       before do
         Settings.handle_service.instantiate = true
-        allow(Services).to receive(:handle_service).and_return(service)
+        allow(Services).to receive(:handle_service).and_return(handle_service)
+        allow(HandleRest::Service).to receive(:new).with([root_admin_value_line, local_admin_value_line], handle_service).and_return(service)
+        allow(HandleRest::UrlService).to receive(:new).with(1, service).and_return(url_service)
       end
 
       after { Settings.handle_service.instantiate = false }
@@ -51,37 +62,32 @@ RSpec.describe HandleNet do
       describe '#value' do
         subject { described_class.value(noid) }
 
-        let(:handle) { instance_double(Handle, 'handle') }
-
-        before do
-          allow(service).to receive(:get).with(HandleNet.path(noid)).and_return(handle)
-          allow(handle).to receive(:url).and_return(url)
-        end
+        before { allow(url_service).to receive(:get).with(HandleNet.path(noid)).and_return(url) }
 
         it { is_expected.to be url }
 
-        context 'not found' do
-          before { allow(handle).to receive(:url).and_return(nil) }
+        context 'error' do
+          let(:logger) { instance_double(Logger, 'logger') }
+          let(:message) { "HandleNet.value(#{noid}) failed with error #{error}" }
+          let(:error) { 'error' }
 
-          it { is_expected.to be nil }
-        end
+          before do
+            allow(Rails).to receive(:logger).and_return(logger)
+            allow(logger).to receive(:error).with(message)
+            allow(url_service).to receive(:get).with(HandleNet.path(noid)).and_raise(error)
+          end
 
-        context 'nil handle' do
-          let(:handle) { nil }
-
-          it { is_expected.to be nil }
+          it do
+            is_expected.to be nil
+            expect(logger).to have_received(:error).with(message)
+          end
         end
       end
 
       describe '#create_or_update' do
         subject { described_class.create_or_update(noid, url) }
 
-        let(:handle) { instance_double(Handle, 'handle') }
-
-        before do
-          allow(Handle).to receive(:new).with(HandleNet.path(noid), url: url).and_return(handle)
-          allow(service).to receive(:create).with(handle).and_return(true)
-        end
+        before { allow(url_service).to receive(:set).with(HandleNet.path(noid), url).and_return(url) }
 
         it { is_expected.to be true }
 
@@ -90,11 +96,10 @@ RSpec.describe HandleNet do
           let(:message) { "HandleNet.create_or_update(#{noid}, #{url}) failed with error #{error}" }
           let(:error) { 'error' }
 
-
           before do
             allow(Rails).to receive(:logger).and_return(logger)
             allow(logger).to receive(:error).with(message)
-            allow(service).to receive(:create).with(handle).and_raise(error)
+            allow(url_service).to receive(:set).with(HandleNet.path(noid), url).and_raise(error)
           end
 
           it do
@@ -107,15 +112,32 @@ RSpec.describe HandleNet do
       describe '#delete' do
         subject { described_class.delete(noid) }
 
-        before { allow(service).to receive(:delete).with(HandleNet.path(noid)).and_return(true) }
+        before { allow(service).to receive(:delete).with(HandleRest::Handle.from_s(HandleNet.path(noid))).and_return([]) }
 
         it { is_expected.to be true }
 
-        context 'non success' do
-          before { allow(service).to receive(:delete).with(HandleNet.path(noid)).and_return(false) }
+        context 'error' do
+          let(:logger) { instance_double(Logger, 'logger') }
+          let(:message) { "HandleNet.delete(#{noid}) failed with error #{error}" }
+          let(:error) { 'error' }
 
-          it { is_expected.to be false }
+          before do
+            allow(Rails).to receive(:logger).and_return(logger)
+            allow(logger).to receive(:error).with(message)
+            allow(service).to receive(:delete).with(HandleRest::Handle.from_s(HandleNet.path(noid))).and_raise(error)
+          end
+
+          it do
+            is_expected.to be false
+            expect(logger).to have_received(:error).with(message)
+          end
         end
+      end
+
+      describe '#service' do
+        subject { described_class.service }
+
+        it { is_expected.to be service }
       end
     end
   end
