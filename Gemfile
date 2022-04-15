@@ -114,7 +114,7 @@ gem 'faraday_middleware', '~> 0.14.0'
 # # Use gem version of handle_rest
 gem 'handle_rest', git: 'https://github.com/mlibrary/handle_rest', ref: 'baed402b5a530eb57e838443ce292ec3f46cd5e6'
 
-gem 'hyrax', '2.9.5'
+gem 'hyrax', '3.4.1'
 
 # pinned for Jekyll
 gem 'i18n', '~> 0.7'
@@ -149,6 +149,8 @@ gem 'mysql2', '~> 0.4.10'
 # CVE-2020-7595
 # CVE-2020-26247
 gem "nokogiri", ">= 1.13.6"
+
+gem "okcomputer", "~> 1.18.4"
 
 # Read PDF ToC
 gem 'origami'
@@ -185,8 +187,14 @@ gem 'sqlite3'
 # SwaggerClient - the Ruby gem for the COUNTER_SUSHI5_0 API
 gem 'swagger_client', git: 'https://github.com/mlibrary/swagger_client', branch: 'master'
 
+# https://github.com/samvera/hyrax/pull/5612
+# "Version 6 of tinymce-rails causes uglifier to error during assets:precompile"
+# This seems to be a hyrax 3.4.1 problem, the next release will have this pin
+# in hyrax itself so can be removed
+gem 'tinymce-rails', '~> 5.10'
+
 # Use Uglifier as compressor for JavaScript assets
-gem 'uglifier', '~> 3.2'
+gem 'uglifier', '~> 4.2'
 
 # Talking to Google Analytics
 gem 'legato', '~> 0.3'

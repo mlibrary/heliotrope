@@ -117,18 +117,22 @@ RSpec.describe DestroyActiveFedoraObjectsJob, type: :job do
 
         monograph
         expect(Monograph.count).to eq(1)
+        expect(Hydra::AccessControls::Embargo.count).to eq(1)
+        expect(Hydra::AccessControls::Lease.count).to eq(1)
         expect(FileSet.count).to eq(0)
-        expect(ActiveFedora::Base.all.count).to eq(3)
+        expect(ActiveFedora::Base.all.count).to eq(5)
 
         file_set
         expect(Monograph.count).to eq(1)
+        expect(Hydra::AccessControls::Embargo.count).to eq(1)
+        expect(Hydra::AccessControls::Lease.count).to eq(1)
         expect(FileSet.count).to eq(1)
-        expect(ActiveFedora::Base.all.count).to eq(6)
+        expect(ActiveFedora::Base.all.count).to eq(8)
 
         ids = object_ids
-        expect(ids.count).to eq(6)
+        expect(ids.count).to eq(8)
 
-        described_class.perform_now([monograph.id, file_set.id])
+        described_class.perform_now([monograph.id, file_set.id, monograph.embargo.id, monograph.lease.id])
 
         gone_ids = ldp_gone_ids(ids)
         expect(ids.count - gone_ids.count).to eq(0)
@@ -153,15 +157,17 @@ RSpec.describe DestroyActiveFedoraObjectsJob, type: :job do
         create_monograph_with_file_set
         expect(Monograph.count).to eq(1)
         expect(FileSet.count).to eq(1)
-        expect(ActiveFedora::Base.all.count).to eq(9)
+        expect(Hydra::AccessControls::Embargo.count).to eq(1)
+        expect(Hydra::AccessControls::Lease.count).to eq(1)
+        expect(ActiveFedora::Base.all.count).to eq(11)
 
         ids = object_ids
-        expect(ids.count).to eq(9)
+        expect(ids.count).to eq(11)
 
         described_class.perform_now([monograph_with_file_set.id])
 
         gone_ids = ldp_gone_ids(ids)
-        expect(ids.count - gone_ids.count).to eq(3)
+        expect(ids.count - gone_ids.count).to eq(5)
       end
 
       it "deletes child object" do
@@ -170,15 +176,17 @@ RSpec.describe DestroyActiveFedoraObjectsJob, type: :job do
         create_monograph_with_file_set
         expect(Monograph.count).to eq(1)
         expect(FileSet.count).to eq(1)
-        expect(ActiveFedora::Base.all.count).to eq(9)
+        expect(Hydra::AccessControls::Embargo.count).to eq(1)
+        expect(Hydra::AccessControls::Lease.count).to eq(1)
+        expect(ActiveFedora::Base.all.count).to eq(11)
 
         ids = object_ids
-        expect(ids.count).to eq(9)
+        expect(ids.count).to eq(11)
 
         described_class.perform_now([monograph_file_set.id])
 
         gone_ids = ldp_gone_ids(ids)
-        expect(ids.count - gone_ids.count).to eq(5)
+        expect(ids.count - gone_ids.count).to eq(7)
       end
 
       it "deletes child and parent object" do
@@ -187,12 +195,14 @@ RSpec.describe DestroyActiveFedoraObjectsJob, type: :job do
         create_monograph_with_file_set
         expect(Monograph.count).to eq(1)
         expect(FileSet.count).to eq(1)
-        expect(ActiveFedora::Base.all.count).to eq(9)
+        expect(Hydra::AccessControls::Embargo.count).to eq(1)
+        expect(Hydra::AccessControls::Lease.count).to eq(1)
+        expect(ActiveFedora::Base.all.count).to eq(11)
 
         ids = object_ids
-        expect(ids.count).to eq(9)
+        expect(ids.count).to eq(11)
 
-        described_class.perform_now([monograph_file_set.id, monograph_with_file_set.id])
+        described_class.perform_now([monograph_file_set.id, monograph_with_file_set.id, monograph_with_file_set.embargo.id, monograph_with_file_set.lease.id])
 
         gone_ids = ldp_gone_ids(ids)
         expect(ids.count - gone_ids.count).to eq(0)
@@ -204,12 +214,14 @@ RSpec.describe DestroyActiveFedoraObjectsJob, type: :job do
         create_monograph_with_file_set
         expect(Monograph.count).to eq(1)
         expect(FileSet.count).to eq(1)
-        expect(ActiveFedora::Base.all.count).to eq(9)
+        expect(Hydra::AccessControls::Embargo.count).to eq(1)
+        expect(Hydra::AccessControls::Lease.count).to eq(1)
+        expect(ActiveFedora::Base.all.count).to eq(11)
 
         ids = object_ids
-        expect(ids.count).to eq(9)
+        expect(ids.count).to eq(11)
 
-        described_class.perform_now([monograph_with_file_set.id, monograph_file_set.id])
+        described_class.perform_now([monograph_with_file_set.id, monograph_file_set.id, monograph_with_file_set.embargo.id, monograph_with_file_set.lease.id])
 
         gone_ids = ldp_gone_ids(ids)
         expect(ids.count - gone_ids.count).to eq(0)

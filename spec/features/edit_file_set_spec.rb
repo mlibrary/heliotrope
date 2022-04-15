@@ -64,7 +64,7 @@ describe 'Edit a file set' do
       fill_in 'Exclusive to Platform?', with: 'yes1'
       fill_in 'Allow Display After Expiration?', with: 'no1'
       fill_in 'Allow Download After Expiration?', with: 'no2'
-      fill_in 'Abstract or Summary', with: 'Veggies es bonus vobis, [external link](www.external-link.com) proinde vos postulo essum magis [internal link](www.fulcrum.org) kohlrabi welsh onion daikon amaranth tatsoi tomatillo melon azuki bean garlic.'
+      fill_in 'Description', with: 'Veggies es bonus vobis, [external link](www.external-link.com) proinde vos postulo essum magis [internal link](www.fulcrum.org) kohlrabi welsh onion daikon amaranth tatsoi tomatillo melon azuki bean garlic.'
       fill_in 'Content Type', with: 'screenshot'
       fill_in 'Creator', with: "FamilyName, GivenName (On Screen Talent)\nCreator, Wingperson F."
       fill_in 'Contributor', with: "Contributor, Mr A. (photographer)\nContributor, Wingperson F."

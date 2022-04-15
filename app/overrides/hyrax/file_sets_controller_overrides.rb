@@ -132,5 +132,20 @@ Hyrax::FileSetsController.class_eval do # rubocop:disable Metrics/BlockLength
       UpdateIndexJob.perform_later(params[:id])
       redirect_to [main_app, @file_set], notice: "Reindexing Job Scheduled"
     end
+
+    # Heliotrope Override
+    # Heliotrope doesn't use Workflow at all, but the WorkflowsHelper is included in Hyrax 3's FileSetController
+    # which can raise a WorkflowAuthorizationException under certain conditions. For instance:
+    #
+    # raise WorkflowAuthorizationException if presenter.parent.blank?
+    #
+    # really messes up our orpan FileSet redirects.
+    #
+    # Heliotrope Override: Heliotrope doesn't care about this, just pass through
+    # See hyrax, https://github.com/samvera/hyrax/commit/cb21570fadcea0b8d1dfd0b7cffecf5135c1ea76
+    # See hyrax, https://github.com/samvera/hyrax/commit/1efe93929285985751cc270675c243f628cf31ca
+    def presenter
+      @presenter ||= show_presenter.new(curation_concern_document, current_ability, request)
+    end
   end)
 end

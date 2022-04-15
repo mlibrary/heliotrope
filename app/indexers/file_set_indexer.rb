@@ -24,7 +24,7 @@ class FileSetIndexer < Hyrax::FileSetIndexer
 
       # Extra technical metadata we need to index
       # These are apparently not necessarily integers all the time, so index them as symbols
-      index_technical_metadata(solr_doc, object.original_file) if object.original_file.present?
+      index_technical_metadata(solr_doc, object.original_file) if !object.original_file.nil?
 
       # Neither we nor Hyrax have FileSets attached to more than one Monograph/Work and we haven't had...
       # "intermediate" Works (a.k.a. "Sections") in a really long time. So grab the one and only parent *once* here.

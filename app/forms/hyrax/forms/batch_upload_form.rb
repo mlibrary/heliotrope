@@ -12,7 +12,7 @@ module Hyrax
 
       self.terms += %i[press]
       self.required_fields = %i[press]
-      self.terms -= %i[title resource_type]
+      self.terms -= %i[title resource_type alternative_title abstract access_right rights_notes]
 
       attr_accessor :payload_concern # a Class name: what is form creating a batch of?
 
