@@ -6,7 +6,10 @@
   (async() => {
     while(!Cookies.get('um_cookie_consent'))
       await new Promise(resolve => setTimeout(resolve, 1000));
-    setup_hotjar();
+    if (document.location.hostname === "fulcrum.org" || document.location.hostname === "www.fulcrum.org") {
+      // HELIO-4209 only fulcrum.org proper, do not use hotjar with proxy servers
+      setup_hotjar();
+    }
   })();
 
   function setup_hotjar() {
@@ -38,7 +41,9 @@
   (async() => {
     while(!Cookies.get('um_cookie_consent'))
       await new Promise(resolve => setTimeout(resolve, 1000));
-    setup_hotjar();
+    if (document.location.hostname === "heliotrope-preview.hydra.lib.umich.edu") {
+      setup_hotjar();
+    }
   })();
 
   function setup_hotjar() {
