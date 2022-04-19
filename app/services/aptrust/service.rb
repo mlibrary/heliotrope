@@ -1,9 +1,5 @@
 # frozen_string_literal: true
 
-require 'faraday'
-require 'faraday_middleware'
-require 'json'
-
 module Aptrust
   class Service
     def ingest_status(identifier) # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity

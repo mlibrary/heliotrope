@@ -1,10 +1,11 @@
 GIT
   remote: https://github.com/mlibrary/handle_rest
-  revision: 944fa06a119072f060d986862c34dea7215ebd29
-  ref: 944fa06a119072f060d986862c34dea7215ebd29
+  revision: 483cf71257d96c7f27ab1d40ef067f48ee37f8a5
+  ref: 483cf71257d96c7f27ab1d40ef067f48ee37f8a5
   specs:
-    handle_rest (0.0.1)
-      faraday
+    handle_rest (0.0.2)
+      faraday (~> 0.9)
+      faraday_middleware (~> 0.14.0)
 
 GIT
   remote: https://github.com/mlibrary/irus_analytics
@@ -658,6 +659,8 @@ GEM
     nokogiri (1.13.4)
       mini_portile2 (~> 2.8.0)
       racc (~> 1.4)
+    nokogiri (1.13.4-x86_64-linux)
+      racc (~> 1.4)
     nokogumbo (2.0.5)
       nokogiri (~> 1.8, >= 1.8.4)
     oai (1.1.0)
@@ -1108,6 +1111,7 @@ GEM
 
 PLATFORMS
   ruby
+  x86_64-linux
 
 DEPENDENCIES
   aws-sdk-s3 (~> 1)
@@ -1129,7 +1133,7 @@ DEPENDENCIES
   factory_bot_rails
   fakefs
   faker
-  faraday (~> 0.17.3)
+  faraday (~> 0.9)
   faraday_middleware (~> 0.14.0)
   fcrepo_wrapper (= 0.5.2)
   handle_rest!
