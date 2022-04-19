@@ -28,6 +28,7 @@ RSpec.describe RecacheInCommonMetadataJob, type: :job do
         allow(job).to receive(:download_xml).and_return(true)
         allow(job).to receive(:parse_xml).and_return(true)
         allow(job).to receive(:cache_json).and_return(true)
+        allow(job).to receive(:in_common).and_return(true)
       end
 
       it do
@@ -35,37 +36,53 @@ RSpec.describe RecacheInCommonMetadataJob, type: :job do
         expect(job).to have_received(:download_xml)
         expect(job).to have_received(:parse_xml)
         expect(job).to have_received(:cache_json)
+        expect(job).to have_received(:in_common)
       end
 
       context 'fail' do
-        context 'cache_json' do
-          before { allow(job).to receive(:cache_json).and_return(false) }
+        context 'in_common' do
+          before { allow(job).to receive(:in_common).and_return(false) }
 
           it do
             is_expected.to be false
-            expect(job).to have_received(:download_xml)
-            expect(job).to have_received(:parse_xml)
-            expect(job).to have_received(:cache_json)
+            expect(job).to     have_received(:download_xml)
+            expect(job).to     have_received(:parse_xml)
+            expect(job).to     have_received(:cache_json)
+            expect(job).to     have_received(:in_common)
           end
 
-          context 'parse_xml' do
-            before { allow(job).to receive(:parse_xml).and_return(false) }
+          context 'cache_json' do
+            before { allow(job).to receive(:cache_json).and_return(false) }
 
             it do
               is_expected.to be false
               expect(job).to     have_received(:download_xml)
               expect(job).to     have_received(:parse_xml)
-              expect(job).not_to have_received(:cache_json)
+              expect(job).to     have_received(:cache_json)
+              expect(job).not_to have_received(:in_common)
             end
 
-            context 'download_xml' do
-              before { allow(job).to receive(:download_xml).and_return(false) }
+            context 'parse_xml' do
+              before { allow(job).to receive(:parse_xml).and_return(false) }
 
               it do
                 is_expected.to be false
                 expect(job).to     have_received(:download_xml)
-                expect(job).not_to have_received(:parse_xml)
+                expect(job).to     have_received(:parse_xml)
                 expect(job).not_to have_received(:cache_json)
+                expect(job).not_to have_received(:in_common)
+              end
+
+              context 'download_xml' do
+                before { allow(job).to receive(:download_xml).and_return(false) }
+
+                it do
+                  is_expected.to be false
+                  expect(job).to     have_received(:download_xml)
+                  expect(job).not_to have_received(:parse_xml)
+                  expect(job).not_to have_received(:cache_json)
+                  expect(job).not_to have_received(:in_common)
+                end
               end
             end
           end
@@ -179,6 +196,50 @@ RSpec.describe RecacheInCommonMetadataJob, type: :job do
         is_expected.to be true
         expect(job).to have_received(:load_json)
         expect(Rails.cache).to have_received(:write).with(described_class::RAILS_CACHE_KEY, loaded_json, expires_in: 24.hours)
+      end
+    end
+
+    describe '#in_common' do
+      subject { job.in_common }
+
+      let(:in_common_institution) { instance_double(Greensub::Institution, 'in_common_institution', in_common: false, entity_id: "https://ccbcmd.idm.oclc.org/shibboleth") }
+      let(:not_in_common_institution) { instance_double(Greensub::Institution, 'not_in_common_institution', in_common: false, entity_id: "https://shibboleth.umich.edu/idp/shibboleth") }
+
+      before do
+        allow(Greensub::Institution).to receive(:update_all).with(in_common: false)
+        allow(Greensub::Institution).to receive(:where).with("entity_id <> ''").and_return([in_common_institution, not_in_common_institution])
+        allow(Greensub::Institution).to receive(:find_by).with(entity_id: "https://ccbcmd.idm.oclc.org/shibboleth").and_return(in_common_institution)
+        allow(Greensub::Institution).to receive(:find_by).with(entity_id: "https://shibboleth.umich.edu/idp/shibboleth").and_return(not_in_common_institution)
+        allow(in_common_institution).to receive(:in_common=).with(true)
+        allow(in_common_institution).to receive(:save!)
+      end
+
+      context 'no file' do
+        before { FileUtils.rm(described_class::JSON_FILE) if File.exist?(described_class::JSON_FILE) }
+
+        it do
+          is_expected.to be false
+          expect(Greensub::Institution).not_to have_received(:update_all).with(in_common: false)
+          expect(Greensub::Institution).not_to have_received(:where).with("entity_id <> ''")
+          expect(Greensub::Institution).not_to have_received(:find_by).with(entity_id: "https://ccbcmd.idm.oclc.org/shibboleth")
+          expect(Greensub::Institution).not_to have_received(:find_by).with(entity_id: "https://shibboleth.umich.edu/idp/shibboleth")
+          expect(in_common_institution).not_to have_received(:in_common=).with(true)
+          expect(in_common_institution).not_to have_received(:save!)
+        end
+      end
+
+      context 'file' do
+        before { FileUtils.cp(Rails.root.join('spec', 'fixtures', 'feed', 'InCommon-metadata.json'), described_class::JSON_FILE) }
+
+        it do
+          is_expected.to be true
+          expect(Greensub::Institution).to     have_received(:update_all).with(in_common: false)
+          expect(Greensub::Institution).to     have_received(:where).with("entity_id <> ''")
+          expect(Greensub::Institution).to     have_received(:find_by).with(entity_id: "https://ccbcmd.idm.oclc.org/shibboleth")
+          expect(Greensub::Institution).not_to have_received(:find_by).with(entity_id: "https://shibboleth.umich.edu/idp/shibboleth")
+          expect(in_common_institution).to     have_received(:in_common=).with(true)
+          expect(in_common_institution).to     have_received(:save!)
+        end
       end
     end
   end

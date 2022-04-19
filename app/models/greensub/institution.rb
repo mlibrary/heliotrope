@@ -43,7 +43,7 @@ module Greensub
     end
 
     def shibboleth?
-      entity_id.present?
+      entity_id.present? && in_common
     end
 
     def dlps_institution_ids
