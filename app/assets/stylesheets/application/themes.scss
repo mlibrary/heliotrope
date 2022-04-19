@@ -2086,7 +2086,394 @@ $amherst-grey-3: #dee2e6;
 
 
 }
+///////////////////////////////////////////////
+//
+// SMU Bridwell Press - BRIDWELL
+//
+///////////////////////////////////////////////
+// colors
+$bridwell-brand-color: #354ca1;
+$bridwell-accent-color: #262626;
 
+$bridwell-accent-link: #3366cc;
+
+$bridwell-grey-1: #e5e5e5;
+$bridwell-grey-2: #d5d6d2;
+$bridwell-grey-3: #989c97;
+$bridwell-grey-4: #655a52;
+
+$bridwell-white: #fff;
+$bridwell-black-80: #342f2e;
+
+// typography
+@mixin plantin {
+  font-family: plantin, georgia, serif;
+}
+
+@mixin trade-gothic {
+  font-family: trade-gothic-next, arial, sans-serif;
+}
+
+.bridwell {
+
+  // svgicon
+  #documents {
+
+    .svgicon {
+      // To change any SVGs color see https://stackoverflow.com/a/53336754
+      filter: invert(14%) sepia(21%) saturate(3867%) hue-rotate(181deg) brightness(97%) contrast(106%); // $bridwell-accent-link: #00274c;
+
+    }
+
+  }
+
+  // typography
+  @include trade-gothic;
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5 {
+    @include trade-gothic;
+    font-weight: 700;
+  }
+
+  h1 {
+    font-size: 36px;
+  }
+
+  // links
+  a {
+    color: $bridwell-accent-link;
+  }
+
+  a:hover,
+  a:active,
+  a:focus {
+    color: $bridwell-accent-link;
+    text-decoration: underline;
+  }
+
+  // buttons
+  .btn, .btn-default {
+    @include trade-gothic;
+    background-color: $bridwell-brand-color;
+    border-color: $bridwell-accent-link;
+    color: $bridwell-white;
+  }
+
+  .btn:hover,
+  .btn:active,
+  .btn:focus,
+  .btn-default:hover,
+  .btn-default:active,
+  .btn-default:focus {
+    background-color: $bridwell-white;
+    color: $bridwell-brand-color;
+    text-decoration: none;
+  }
+
+  // navigation menu
+  .navbar-default .navbar-nav > .open > a,
+  .navbar-default .navbar-nav > .open > a:hover,
+  .navbar-default .navbar-nav > .open > a:focus {
+    background-color: $bridwell-white;
+  }
+
+  #brand-bar {
+    background-color: $bridwell-brand-color;
+    border-color: $bridwell-brand-color;
+
+    .navbar-brand {
+      color: $bridwell-white;
+      @include trade-gothic;
+      font-weight: 300;
+      text-transform: uppercase;
+      letter-spacing: unset;
+      font-size: 2.3em;
+      -o-transition: .3s;
+        -ms-transition: .3s;
+        -moz-transition: .3s;
+        -webkit-transition: .3s;
+        transition: .3s;
+      padding: 15px 15px 15px 15px;
+      height: 50px;
+    }
+
+    .search-form {
+      margin-top: 8px;
+    }
+
+    .navbar-brand:hover,
+    .navbar-brand:active,
+    .navbar-brand:focus {
+      color: $bridwell-grey-1;
+      text-decoration: none;
+    }
+
+    .navbar-nav {
+      a#add-content,
+      a.login,
+      a.user-display-name,
+      a.language-dropdown {
+          color: $bridwell-white;
+      }
+
+      .open > a,
+      .open > a:focus,
+      .open > a:hover,
+      .open > a#add-content {
+        background-color: $bridwell-white;
+        color: $bridwell-brand-color;
+      }
+    }
+
+    button.search-submit {
+      background-color: $bridwell-grey-1;
+      border-color: $bridwell-grey-1;
+      color: $bridwell-brand-color;
+    }
+
+  }
+
+  // breadcrumbs
+  .breadcrumbs {
+    @include trade-gothic;
+  }
+
+  // press catalog
+
+  // jumbotron
+  .jumbotron {
+    background-color: $bridwell-grey-1;
+    @include trade-gothic;
+    font-weight: 300;
+    padding-top: 20px;
+    padding-bottom: 20px;
+
+    .container {
+      margin-top: 1em;
+    }
+
+    p.lead {
+      font-size: 20px;
+      a {
+        text-decoration: underline;
+      }
+    }
+
+    p.publisher-info a {
+      text-decoration: underline;
+    }
+
+    .logo {
+
+      img {
+        display: none;
+      }
+
+    }
+
+  }
+
+  // sorts on press and monograph pages
+  #sort-dropdown .dropdown-toggle, #per_page-dropdown .dropdown-toggle {
+    background-color: $bridwell-brand-color;
+    color: $bridwell-white;
+    border-color: $bridwell-accent-link;
+  }
+
+  #sort-dropdown .dropdown-toggle,
+  #per_page-dropdown .dropdown-toggle {
+    background-color: $bridwell-brand-color;
+    color: $bridwell-white;
+    border-color: $bridwell-accent-link;
+
+  }
+
+  #sort-dropdown .dropdown-toggle:hover,
+  #per_page-dropdown .dropdown-toggle:hover,
+  #sort-dropdown .dropdown-toggle:active,
+  #per_page-dropdown .dropdown-toggle:active {
+    background-color: $bridwell-white;
+    color: $bridwell-brand-color;
+  }
+
+  #sort-dropdown .dropdown-toggle .caret,
+  #per_page-dropdown .dropdown-toggle .caret {
+    color: $bridwell-white;
+  }
+
+  #sort-dropdown .dropdown-toggle:hover .caret,
+  #per_page-dropdown .dropdown-toggle:hover .caret,
+  #sort-dropdown .dropdown-toggle:active .caret,
+  #per_page-dropdown .dropdown-toggle:active .caret {
+    color: $bridwell-brand-color;
+  }
+
+  // monograph
+  .monograph {
+    .documentHeader {
+      p {
+        @include trade-gothic;
+      }
+    }
+
+    .monograph-metadata h1 {
+      font-size: 30px;
+    }
+
+    .authors, .copyright {
+      @include trade-gothic;
+    }
+
+    .monograph-cover button {
+      background-color: transparent;
+      border-color: transparent;
+    }
+  }
+
+  // pagination
+  .page_links {
+    @include trade-gothic;
+  }
+
+  .pagination {
+    @include trade-gothic;
+     li a, li span {
+       color: $bridwell-white;
+       background-color: $bridwell-brand-color;
+     }
+
+     .active>a,
+     .active>a:hover,
+     .active>a:focus,
+     .active>span,
+     .active>span:hover,
+     .active>span:focus {
+       background-color: $bridwell-white;
+       border-color: $bridwell-grey-1;
+       color: $bridwell-brand-color;
+     }
+  }
+
+  // assets
+  .asset-navigation {
+    @include trade-gothic;
+  }
+
+  .asset {
+    ul.nav-tabs li {
+      @include trade-gothic;
+    }
+  }
+
+  //footer
+  footer {
+    a,
+    a:hover,
+    a:active {
+      color: $bridwell-white;
+    }
+    .press-block-a,
+    .press-block-b {
+      background-color:  $bridwell-brand-color;
+
+      a,
+      a:hover,
+      a:active {
+        color: $bridwell-white;
+      }
+
+      img {
+        width: 200px;
+        margin-top: 30px;
+        display:block;
+      }
+
+      p {
+        @include trade-gothic;
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: unset;
+
+        a.brand {
+          display:none;
+        }
+      }
+
+    }
+    .press-block-c {
+      background-color: $bridwell-grey-1;
+      color: $bridwell-brand-color;
+      @include trade-gothic;
+    }
+    .platform {
+      background-color: $bridwell-black-80;
+    }
+  }
+
+  // e-book reader
+  #epub {
+    font-family: trade-gothic-next, arial, sans-serif !important;
+  }
+
+  #reader {
+    @include trade-gothic;
+
+    .cozy-control .cozy-h1 {
+      @include trade-gothic;
+      font-size: 1.5em;
+    }
+
+    .cozy-container input[type="text"] {
+      font-family: trade-gothic-next, arial, sans-serif !important;
+    }
+
+    .button {
+      @include epub-button-background-color($bridwell-brand-color,$bridwell-accent-link,$bridwell-white);
+      @include trade-gothic;
+    }
+
+    .button--lg {
+      @include epub-button-background-color($bridwell-brand-color,$bridwell-accent-link,$bridwell-white);
+      @include trade-gothic;
+    }
+
+    .button--inline {
+      @include epub-button-background-color($bridwell-brand-color,$bridwell-accent-link,$bridwell-white);
+      @include trade-gothic;
+    }
+
+    .button--sm {
+      @include epub-button-background-color($bridwell-brand-color,$bridwell-accent-link,$bridwell-white);
+      @include trade-gothic;
+    }
+
+    .button--sm.cozy-preferences {
+      @include epub-button-background-color(#f1f1f1,$bridwell-accent-link,$bridwell-white);
+      color: $bridwell-brand-color;
+    }
+
+    i[class^='icon-chevron-'] {
+      @include epub-prev-next-color($bridwell-brand-color);
+      transition: 0.2s ease-in;
+    }
+
+    i[class^='icon-chevron-']:hover {
+      @include epub-hover-prev-next-color($bridwell-brand-color);
+      transition: 0.2s ease-in;
+    }
+
+    // PDF loading progress bar
+    .helio-loading-bar .progress {
+      background-color: $bridwell-brand-color;
+    }
+
+  }
+
+}
 
 ///////////////////////////////////////////////
 //
