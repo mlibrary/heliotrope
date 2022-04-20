@@ -94,6 +94,18 @@ module Export
       csv << row1 << row2
     end
 
+    # made this a public method purely for dumping metadata in rails/rake tasks
+    def metadata_row(item, parent_rep = nil)
+      row = []
+      return row if item.instance_of?(Sighrax::NullEntity)
+
+      object_type = item.has_model == 'Monograph' ? :monograph : :file_set
+      all_metadata.each do |field|
+        row << metadata_field_value(item, object_type, field, parent_rep)
+      end
+      row
+    end
+
     private
 
       def monograph_presenter
@@ -110,17 +122,6 @@ module Export
                         else
                           ADMIN_METADATA_FIELDS + METADATA_FIELDS + FILE_SET_FLAG_FIELDS
                         end
-      end
-
-      def metadata_row(item, parent_rep = nil)
-        row = []
-        return row if item.instance_of?(Sighrax::NullEntity)
-
-        object_type = item.has_model == 'Monograph' ? :monograph : :file_set
-        all_metadata.each do |field|
-          row << metadata_field_value(item, object_type, field, parent_rep)
-        end
-        row
       end
 
       def metadata_field_value(item, object_type, field, parent_rep) # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
