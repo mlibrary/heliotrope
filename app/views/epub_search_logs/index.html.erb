@@ -139,7 +139,7 @@
             <% @epub_search_logs.each do |search| %>
               <tr>
                 <td></td>
-                <td><%= search.created_at %></td>
+                <td><%= search.created_at.in_time_zone("America/New_York") %></td>
                 <td><%= link_to search.noid, epub_path(search.noid), target: "_blank" %></td>
                 <td><%= search.query %></td>
                 <td><%= search.time %></td>
