@@ -113,7 +113,7 @@ gem 'faraday', '~> 0.9'
 gem 'faraday_middleware', '~> 0.14.0'
 #
 # # Use gem version of handle_rest
-gem 'handle_rest', git: 'https://github.com/mlibrary/handle_rest', ref: '483cf71257d96c7f27ab1d40ef067f48ee37f8a5'
+gem 'handle_rest', git: 'https://github.com/mlibrary/handle_rest', ref: 'baed402b5a530eb57e838443ce292ec3f46cd5e6'
 
 gem 'hyrax', '2.9.5'
 

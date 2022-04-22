@@ -38,9 +38,7 @@ class HandleVerifyJob < ApplicationJob
   end
 
   def verify_handle_delete(model_id)
-    handle_not_found = "100 : Handle Not Found. (HTTP 404 Not Found)"
-    service_url = HandleNet.value(model_id)
-    /^#{Regexp.escape(handle_not_found)}$/i.match?(service_url)
+    HandleNet.value(model_id).blank?
   rescue StandardError => e
     Rails.logger.error("HandleVerifyJob #{model_id} verify handle delete #{e}")
     false
