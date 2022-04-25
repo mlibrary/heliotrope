@@ -77,8 +77,16 @@ module Hyrax
       solr_document.copyright_holder.present?
     end
 
+    def copyright_year?
+      solr_document.copyright_year.present?
+    end
+
     def holding_contact?
       solr_document.holding_contact.present?
+    end
+
+    def publisher?
+      solr_document.publisher.present?
     end
 
     def open_access?

@@ -654,76 +654,75 @@ footer.press {
   }
 
   .monograph-metadata-additional {
+    
+    line-height: 24px;
       
-  figure.peer_review {
-    margin-top: 1.5em;
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: flex;
-    -webkit-box-orient: horizontal;
-    -webkit-box-direction: normal;
-    -ms-flex-direction: row;
-    flex-direction: row;
-  }
-
-  figure.peer_review img {
-    border: none !important;
-    width: 85px;
-    height: 80px;
-    margin-right: .5em;
-  }
-
-  figure.peer_review figcaption {
-    font-size: 11px;
-  }
-
-  .metrics {
-    padding-top: .5em;
-    padding-bottom: 1em;
-
-    .altmetric-embed {
-      padding-bottom: .5em;
+    figure.peer_review {
+      margin-top: 1.5em;
+      display: -webkit-box;
+      display: -ms-flexbox;
+      display: flex;
+      -webkit-box-orient: horizontal;
+      -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+      flex-direction: row;
     }
-  }
 
-  .previous-edition-metrics {
-    // the Altmetric widgets are always the same width
-    max-width: fit-content;
-    padding-top: .5em;
-    border-top: 2px solid #d5d5d5;
-    font-size: 13px;
-    .pub-date-edition-name {
-      margin-bottom: .5em;
+    figure.peer_review img {
+      border: none !important;
+      width: 85px;
+      height: 80px;
+      margin-right: .5em;
     }
-  }
-    
-    #citable_link {
-    
+
+    figure.peer_review figcaption {
+      font-size: 11px;
+    }
+
+    .metrics {
+      padding-top: .5em;
+      padding-bottom: 1em;
+
+      .altmetric-embed {
+        padding-bottom: .5em;
+      }
+    }
+
+    .previous-edition-metrics {
+      // the Altmetric widgets are always the same width
+      max-width: fit-content;
+      padding-top: .5em;
+      border-top: 2px solid #d5d5d5;
+      font-size: 13px;
+      .pub-date-edition-name {
+        margin-bottom: .5em;
+      }
+    }
+
+    .meta-label, .isbns, .subject-series {
+      font-weight: bold;
+        ul {
+          font-weight: unset;
+        }
+    }
+
+    .citable-link {
+      padding-bottom: 5px;
+
+      input#permalink {
+        width: 80%;
+        max-width: 300px;
+      }
+    }
+
+    .isbns {
+      padding-top: 2em;
     }
 
     .subject-series {
-      padding-top: 2em;
-      dt, dd {
-        display: inline-block;
-        float: left;
-      }
-      dt {
-        clear: both;
-        width: 8em;
-      }
-
-      dd {
-        padding-left: 3em;
-      }
-
-      dd > form {
-        width: 200%;
-        label {}
-      }
-
-      ul {
-        padding-left: 0;
-      }
+      padding-top: 1em;
+      margin-top: 1em;
+      border-top: 1px solid #C4BABA;
     }
 
     table.table {
@@ -744,16 +743,24 @@ footer.press {
       vertical-align: middle;
     }
 
-    input#permalink {
-      max-width: 82%;
-    }
+  }
 
+  .monograph-assets {
+    border-top: 1px solid #C4BABA;
   }
   
   .monograph-metadata {
     
     h1 {
       font-size: 30px;
+      margin-bottom: .1em;
+    }
+
+    .volume {
+      text-transform: uppercase;
+      font-size: 18px;
+      font-variant-numeric: lining-nums;
+      color: #575757;
     }
 
     .authors {
@@ -761,6 +768,7 @@ footer.press {
       font-weight: 700;
       display: block;
       padding-bottom: .2em;
+      padding-top: .4em;
     }
 
     .year-and-edition {
@@ -774,7 +782,7 @@ footer.press {
       margin: 1em 0;
     }
 
-    .funder {
+    .funder, .award {
       display: block;
       font-size: 16px;
       line-height: 24px;
@@ -1848,7 +1856,7 @@ footer.press {
     font-size: 1.2em;
   }
 
-  .monograph .monograph-assets-toc-epub {
+  .monograph .monograph-info-content {
 
     .section-container {
       a.toc-link {
@@ -1929,7 +1937,7 @@ footer.press {
     }
   }
 
-  .monograph .monograph-assets-toc-epub {
+  .monograph .monograph-info-content {
 
     .section-container {
       a.toc-link {
@@ -1950,6 +1958,7 @@ footer.press {
       }
     }
   }
+}
 }
 
 ///////////////////////////////////
