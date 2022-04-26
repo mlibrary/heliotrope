@@ -12,15 +12,15 @@ class ScoreIndexer < Hyrax::WorkIndexer
   def generate_solr_document
     super.tap do |solr_doc|
       existing_fileset_order = existing_filesets
-      solr_doc[Solrizer.solr_name('ordered_member_ids', :symbol)] = object.ordered_member_ids
-      solr_doc[Solrizer.solr_name('representative_id', :symbol)] = object.representative_id
+      solr_doc['ordered_member_ids_ssim'] = object.ordered_member_ids
+      solr_doc['representative_id_ssim'] = object.representative_id
       trigger_fileset_reindexing(existing_fileset_order, object.ordered_member_ids)
     end
   end
 
   def existing_filesets
     existing_score_doc = ActiveFedora::SolrService.query("{!terms f=id}#{object.id}", rows: 1)
-    order = existing_score_doc.blank? ? [] : existing_score_doc[0][Solrizer.solr_name('ordered_member_ids', :symbol)]
+    order = existing_score_doc.blank? ? [] : existing_score_doc[0]['ordered_member_ids_ssim']
     order || []
   end
 

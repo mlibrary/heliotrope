@@ -103,31 +103,31 @@ class PressCatalogController < ::CatalogController
 
           if Incognito.developer?(current_actor)
             # This is replaced with the Access "fake facet", HELIO-3347
-            # blacklight_config.add_facet_field Solrizer.solr_name('open_access', :facetable), label: "Open Access", limit: 1, url_method: :facet_url_helper, sort: sort
-            blacklight_config.add_facet_field Solrizer.solr_name('funder', :facetable), label: "Funder", limit: false, url_method: :facet_url_helper, sort: sort
-            blacklight_config.add_facet_field Solrizer.solr_name('subject', :facetable), label: "Subject", limit: false, url_method: :facet_url_helper, sort: sort
-            blacklight_config.add_facet_field Solrizer.solr_name('creator', :facetable), label: "Author", limit: false, url_method: :facet_url_helper, sort: sort
+            # blacklight_config.add_facet_field 'open_access_sim', label: "Open Access", limit: 1, url_method: :facet_url_helper, sort: sort
+            blacklight_config.add_facet_field 'funder_sim', label: "Funder", limit: false, url_method: :facet_url_helper, sort: sort
+            blacklight_config.add_facet_field 'subject_sim', label: "Subject", limit: false, url_method: :facet_url_helper, sort: sort
+            blacklight_config.add_facet_field 'creator_sim', label: "Author", limit: false, url_method: :facet_url_helper, sort: sort
             if @press.subdomain == 'heb'
-              blacklight_config.add_facet_field Solrizer.solr_name('publisher', :facetable), label: "Publisher", limit: false, url_method: :facet_url_helper, sort: sort
+              blacklight_config.add_facet_field 'publisher_sim', label: "Publisher", limit: false, url_method: :facet_url_helper, sort: sort
             end
-            blacklight_config.add_facet_field Solrizer.solr_name('series', :facetable), label: "Series", limit: false, url_method: :facet_url_helper, sort: sort
-            blacklight_config.add_facet_field Solrizer.solr_name('press_name', :facetable), label: "Source", limit: false, url_method: :facet_url_helper, sort: sort
+            blacklight_config.add_facet_field 'series_sim', label: "Series", limit: false, url_method: :facet_url_helper, sort: sort
+            blacklight_config.add_facet_field 'press_name_sim', label: "Source", limit: false, url_method: :facet_url_helper, sort: sort
             if Sighrax.platform_admin?(current_actor)
-              blacklight_config.add_facet_field Solrizer.solr_name('product_names', :facetable), label: "Products", limit: false
+              blacklight_config.add_facet_field 'product_names_sim', label: "Products", limit: false
             end
           else
             # This is replaced with the Access "fake facet", HELIO-3347
-            # blacklight_config.add_facet_field Solrizer.solr_name('open_access', :facetable), label: "Open Access", limit: 1, url_method: :facet_url_helper, sort: sort
-            blacklight_config.add_facet_field Solrizer.solr_name('funder', :facetable), label: "Funder", limit: 5, url_method: :facet_url_helper, sort: sort
-            blacklight_config.add_facet_field Solrizer.solr_name('subject', :facetable), label: "Subject", limit: 10, url_method: :facet_url_helper, sort: sort
-            blacklight_config.add_facet_field Solrizer.solr_name('creator', :facetable), label: "Author", limit: 5, url_method: :facet_url_helper, sort: sort
+            # blacklight_config.add_facet_field 'open_access_sim', label: "Open Access", limit: 1, url_method: :facet_url_helper, sort: sort
+            blacklight_config.add_facet_field 'funder_sim', label: "Funder", limit: 5, url_method: :facet_url_helper, sort: sort
+            blacklight_config.add_facet_field 'subject_sim', label: "Subject", limit: 10, url_method: :facet_url_helper, sort: sort
+            blacklight_config.add_facet_field 'creator_sim', label: "Author", limit: 5, url_method: :facet_url_helper, sort: sort
             if @press.subdomain == 'heb'
-              blacklight_config.add_facet_field Solrizer.solr_name('publisher', :facetable), label: "Publisher", limit: 5, url_method: :facet_url_helper, sort: sort
+              blacklight_config.add_facet_field 'publisher_sim', label: "Publisher", limit: 5, url_method: :facet_url_helper, sort: sort
             end
-            blacklight_config.add_facet_field Solrizer.solr_name('series', :facetable), label: "Series", limit: 5, url_method: :facet_url_helper, sort: sort
-            blacklight_config.add_facet_field Solrizer.solr_name('press_name', :facetable), label: "Source", limit: 5, url_method: :facet_url_helper, sort: sort
+            blacklight_config.add_facet_field 'series_sim', label: "Series", limit: 5, url_method: :facet_url_helper, sort: sort
+            blacklight_config.add_facet_field 'press_name_sim', label: "Source", limit: 5, url_method: :facet_url_helper, sort: sort
             if Sighrax.platform_admin?(current_actor)
-              blacklight_config.add_facet_field Solrizer.solr_name('product_names', :facetable), label: "Products", limit: 5
+              blacklight_config.add_facet_field 'product_names_sim', label: "Products", limit: 5
             end
           end
 
@@ -142,13 +142,13 @@ class PressCatalogController < ::CatalogController
     end
 
     def musical_score
-      blacklight_config.add_facet_field Solrizer.solr_name('creator', :facetable), label: 'Composer'
-      blacklight_config.add_facet_field Solrizer.solr_name('octave_compass', :facetable), label: 'Octave Compass'
-      blacklight_config.add_facet_field Solrizer.solr_name('bass_bells_required', :facetable), label: 'Bass Bells Required'
-      blacklight_config.add_facet_field Solrizer.solr_name('solo', :facetable), label: 'Solo'
-      blacklight_config.add_facet_field Solrizer.solr_name('musical_presentation', :facetable), label: 'Musical Presentation'
-      blacklight_config.add_facet_field Solrizer.solr_name('composer_diversity', :facetable), label: 'Composer Diversity'
-      blacklight_config.add_facet_field Solrizer.solr_name('appropriate_occasion', :facetable), label: 'Appropriate Occasion'
+      blacklight_config.add_facet_field 'creator_sim', label: 'Composer'
+      blacklight_config.add_facet_field 'octave_compass_sim', label: 'Octave Compass'
+      blacklight_config.add_facet_field 'bass_bells_required_sim', label: 'Bass Bells Required'
+      blacklight_config.add_facet_field 'solo_sim', label: 'Solo'
+      blacklight_config.add_facet_field 'musical_presentation_sim', label: 'Musical Presentation'
+      blacklight_config.add_facet_field 'composer_diversity_sim', label: 'Composer Diversity'
+      blacklight_config.add_facet_field 'appropriate_occasion_sim', label: 'Appropriate Occasion'
     end
 
     def search_or_browse
@@ -156,21 +156,21 @@ class PressCatalogController < ::CatalogController
       if params[:q].present?
         params.extract!(:sort) if /date_uploaded/i.match?(params[:sort])
         # if this is a search, relevance/score is default
-        blacklight_config.add_sort_field 'relevance', sort: "score desc, #{Solrizer.solr_name('date_uploaded', :stored_sortable, type: :date)} desc", label: "Relevance"
+        blacklight_config.add_sort_field 'relevance', sort: "score desc, date_uploaded_dtsi desc", label: "Relevance"
       else
         params.extract!(:sort) if /relevance/i.match?(params[:sort])
         # if it's a "browse", then it's date_uploaded
-        blacklight_config.add_sort_field 'date_uploaded desc', sort: "#{Solrizer.solr_name('date_uploaded', :stored_sortable, type: :date)} desc", label: "Date Added (Newest First)"
+        blacklight_config.add_sort_field 'date_uploaded desc', sort: "date_uploaded_dtsi desc", label: "Date Added (Newest First)"
       end
     end
 
     def monograph_sort_fields
-      blacklight_config.add_sort_field 'author asc', sort: "#{Solrizer.solr_name('creator_full_name', :sortable)} asc", label: "Author (A-Z)"
-      blacklight_config.add_sort_field 'author desc', sort: "#{Solrizer.solr_name('creator_full_name', :sortable)} desc", label: "Author (Z-A)"
-      blacklight_config.add_sort_field 'year desc', sort: "#{Solrizer.solr_name('date_created', :sortable)} desc, #{Solrizer.solr_name('date_published', :sortable)} desc", label: "Publication Date (Newest First)"
-      blacklight_config.add_sort_field 'year asc', sort: "#{Solrizer.solr_name('date_created', :sortable)} asc, #{Solrizer.solr_name('date_published', :sortable)} asc", label: "Publication Date (Oldest First)"
-      blacklight_config.add_sort_field 'title asc', sort: "#{Solrizer.solr_name('title', :sortable)} asc", label: "Title (A-Z)"
-      blacklight_config.add_sort_field 'title desc', sort: "#{Solrizer.solr_name('title', :sortable)} desc", label: "Title (Z-A)"
+      blacklight_config.add_sort_field 'author asc', sort: "creator_full_name_si asc", label: "Author (A-Z)"
+      blacklight_config.add_sort_field 'author desc', sort: "creator_full_name_si desc", label: "Author (Z-A)"
+      blacklight_config.add_sort_field 'year desc', sort: "date_created_si desc, date_published_si desc", label: "Publication Date (Newest First)"
+      blacklight_config.add_sort_field 'year asc', sort: "date_created_si asc, date_published_si asc", label: "Publication Date (Oldest First)"
+      blacklight_config.add_sort_field 'title asc', sort: "title_si asc", label: "Title (A-Z)"
+      blacklight_config.add_sort_field 'title desc', sort: "title_si desc", label: "Title (Z-A)"
     end
 
     def add_counter_stat

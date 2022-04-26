@@ -22,13 +22,13 @@ RSpec.describe CatalogHelper do
 
     context 'browse' do
       before do
-        blacklight_config.add_sort_field 'date_uploaded desc', sort: "#{Solrizer.solr_name('date_uploaded', :stored_sortable, type: :date)} desc", label: "Date Added (Newest First)"
-        blacklight_config.add_sort_field 'author asc', sort: "#{Solrizer.solr_name('creator_full_name', :sortable)} asc", label: "Author (A-Z)"
-        blacklight_config.add_sort_field 'author desc', sort: "#{Solrizer.solr_name('creator_full_name', :sortable)} desc", label: "Author (Z-A)"
-        blacklight_config.add_sort_field 'year desc', sort: "#{Solrizer.solr_name('date_created', :sortable)} desc, #{Solrizer.solr_name('date_published', :sortable)} desc", label: "Publication Date (Newest First)"
-        blacklight_config.add_sort_field 'year asc', sort: "#{Solrizer.solr_name('date_created', :sortable)} asc, #{Solrizer.solr_name('date_published', :sortable)} asc", label: "Publication Date (Oldest First)"
-        blacklight_config.add_sort_field 'title asc', sort: "#{Solrizer.solr_name('title', :sortable)} asc", label: "Title (A-Z)"
-        blacklight_config.add_sort_field 'title desc', sort: "#{Solrizer.solr_name('title', :sortable)} desc", label: "Title (Z-A)"
+        blacklight_config.add_sort_field 'date_uploaded desc', sort: "date_uploaded_dtsi desc", label: "Date Added (Newest First)"
+        blacklight_config.add_sort_field 'author asc', sort: "creator_full_name_si asc", label: "Author (A-Z)"
+        blacklight_config.add_sort_field 'author desc', sort: "creator_full_name_si desc", label: "Author (Z-A)"
+        blacklight_config.add_sort_field 'year desc', sort: "date_created_si desc, date_published_si desc", label: "Publication Date (Newest First)"
+        blacklight_config.add_sort_field 'year asc', sort: "date_created_si asc, date_published_si asc", label: "Publication Date (Oldest First)"
+        blacklight_config.add_sort_field 'title asc', sort: "title_si asc", label: "Title (A-Z)"
+        blacklight_config.add_sort_field 'title desc', sort: "title_si desc", label: "Title (Z-A)"
       end
 
       it ('default sort') { expect(subject.key).to eq 'date_uploaded desc' }
@@ -66,13 +66,13 @@ RSpec.describe CatalogHelper do
 
     context 'search' do
       before do
-        blacklight_config.add_sort_field 'relevance', sort: "score desc, #{Solrizer.solr_name('date_uploaded', :stored_sortable, type: :date)} desc", label: "Relevance"
-        blacklight_config.add_sort_field 'author asc', sort: "#{Solrizer.solr_name('creator_full_name', :sortable)} asc", label: "Author (A-Z)"
-        blacklight_config.add_sort_field 'author desc', sort: "#{Solrizer.solr_name('creator_full_name', :sortable)} desc", label: "Author (Z-A)"
-        blacklight_config.add_sort_field 'year desc', sort: "#{Solrizer.solr_name('date_created', :sortable)} desc, #{Solrizer.solr_name('date_published', :sortable)} desc", label: "Publication Date (Newest First)"
-        blacklight_config.add_sort_field 'year asc', sort: "#{Solrizer.solr_name('date_created', :sortable)} asc, #{Solrizer.solr_name('date_published', :sortable)} asc", label: "Publication Date (Oldest First)"
-        blacklight_config.add_sort_field 'title asc', sort: "#{Solrizer.solr_name('title', :sortable)} asc", label: "Title (A-Z)"
-        blacklight_config.add_sort_field 'title desc', sort: "#{Solrizer.solr_name('title', :sortable)} desc", label: "Title (Z-A)"
+        blacklight_config.add_sort_field 'relevance', sort: "score desc, date_uploaded_dtsi desc", label: "Relevance"
+        blacklight_config.add_sort_field 'author asc', sort: "creator_full_name_si asc", label: "Author (A-Z)"
+        blacklight_config.add_sort_field 'author desc', sort: "creator_full_name_si desc", label: "Author (Z-A)"
+        blacklight_config.add_sort_field 'year desc', sort: "date_created_si desc, date_published_si desc", label: "Publication Date (Newest First)"
+        blacklight_config.add_sort_field 'year asc', sort: "date_created_si asc, date_published_si asc", label: "Publication Date (Oldest First)"
+        blacklight_config.add_sort_field 'title asc', sort: "title_si asc", label: "Title (A-Z)"
+        blacklight_config.add_sort_field 'title desc', sort: "title_si desc", label: "Title (Z-A)"
       end
 
       it ('default sort') { expect(subject.key).to eq 'relevance' }

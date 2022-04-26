@@ -2,6 +2,6 @@
 
 FactoryBot.define do
   factory :solr_document do
-    initialize_with { new(id: :id, Solrizer.solr_name('title') => ['UNTITLED']) }
+    initialize_with { new(id: :id, 'title_tesim' => ['UNTITLED']) }
   end
 end

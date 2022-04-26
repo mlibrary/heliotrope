@@ -20,7 +20,7 @@ module Hyrax
         end
 
         def search_field
-          Solrizer.solr_name(options.fetch(:search_field, field), :facetable, type: :string)
+          "#{options.fetch(:search_field, field)}_sim"
         end
     end
   end

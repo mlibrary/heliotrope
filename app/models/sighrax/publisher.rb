@@ -67,8 +67,8 @@ module Sighrax
     def resource_noids(recursive = false)
       resource_noids = []
       work_noids(recursive).each do |noid|
-        docs = ActiveFedora::SolrService.query("{!terms f=id}#{noid}", fl: ['id', Solrizer.solr_name('ordered_member_ids', :symbol)], rows: 1)
-        resource_noids += (docs[0][Solrizer.solr_name('ordered_member_ids', :symbol)] || []) if docs.present?
+        docs = ActiveFedora::SolrService.query("{!terms f=id}#{noid}", fl: ['id', 'ordered_member_ids_ssim'], rows: 1)
+        resource_noids += (docs[0]['ordered_member_ids_ssim'] || []) if docs.present?
       end
       resource_noids.uniq
     end
