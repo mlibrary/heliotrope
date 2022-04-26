@@ -56,15 +56,11 @@ class HandleNet
     def service
       return nil unless Settings.handle_service&.instantiate
 
-      root_admin = HandleRest::Identity.from_s("300:0.NA/2027")
-      root_admin_value = HandleRest::AdminValue.new(root_admin.index, HandleRest::AdminPermissionSet.new, root_admin.handle)
-      root_admin_value_line = HandleRest::ValueLine.new(100, root_admin_value)
+      admin_group = HandleRest::Identity.from_s("200:0.NA/2027")
+      admin_group_value = HandleRest::AdminValue.new(admin_group.index, HandleRest::AdminPermissionSet.new, admin_group.handle)
+      admin_group_value_line = HandleRest::ValueLine.new(100, admin_group_value)
 
-      local_admin = HandleRest::Identity.from_s("300:2027/spo")
-      local_admin_value = HandleRest::AdminValue.new(local_admin.index, HandleRest::AdminPermissionSet.new, local_admin.handle)
-      local_admin_value_line = HandleRest::ValueLine.new(101, local_admin_value)
-
-      HandleRest::Service.new([root_admin_value_line, local_admin_value_line], Services.handle_service)
+      HandleRest::Service.new([admin_group_value_line], Services.handle_service)
     end
   end
 end
