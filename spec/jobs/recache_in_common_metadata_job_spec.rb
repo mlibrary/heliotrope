@@ -208,8 +208,8 @@ RSpec.describe RecacheInCommonMetadataJob, type: :job do
       before do
         allow(Greensub::Institution).to receive(:update_all).with(in_common: false)
         allow(Greensub::Institution).to receive(:where).with("entity_id <> ''").and_return([in_common_institution, not_in_common_institution])
-        allow(Greensub::Institution).to receive(:find_by).with(entity_id: "https://ccbcmd.idm.oclc.org/shibboleth").and_return(in_common_institution)
-        allow(Greensub::Institution).to receive(:find_by).with(entity_id: "https://shibboleth.umich.edu/idp/shibboleth").and_return(not_in_common_institution)
+        allow(Greensub::Institution).to receive(:where).with(entity_id: "https://ccbcmd.idm.oclc.org/shibboleth").and_return([in_common_institution])
+        allow(Greensub::Institution).to receive(:where).with(entity_id: "https://shibboleth.umich.edu/idp/shibboleth").and_return([not_in_common_institution])
         allow(in_common_institution).to receive(:in_common=).with(true)
         allow(in_common_institution).to receive(:save!)
       end
@@ -221,8 +221,8 @@ RSpec.describe RecacheInCommonMetadataJob, type: :job do
           is_expected.to be false
           expect(Greensub::Institution).not_to have_received(:update_all).with(in_common: false)
           expect(Greensub::Institution).not_to have_received(:where).with("entity_id <> ''")
-          expect(Greensub::Institution).not_to have_received(:find_by).with(entity_id: "https://ccbcmd.idm.oclc.org/shibboleth")
-          expect(Greensub::Institution).not_to have_received(:find_by).with(entity_id: "https://shibboleth.umich.edu/idp/shibboleth")
+          expect(Greensub::Institution).not_to have_received(:where).with(entity_id: "https://ccbcmd.idm.oclc.org/shibboleth")
+          expect(Greensub::Institution).not_to have_received(:where).with(entity_id: "https://shibboleth.umich.edu/idp/shibboleth")
           expect(in_common_institution).not_to have_received(:in_common=).with(true)
           expect(in_common_institution).not_to have_received(:save!)
         end
@@ -235,10 +235,35 @@ RSpec.describe RecacheInCommonMetadataJob, type: :job do
           is_expected.to be true
           expect(Greensub::Institution).to     have_received(:update_all).with(in_common: false)
           expect(Greensub::Institution).to     have_received(:where).with("entity_id <> ''")
-          expect(Greensub::Institution).to     have_received(:find_by).with(entity_id: "https://ccbcmd.idm.oclc.org/shibboleth")
-          expect(Greensub::Institution).not_to have_received(:find_by).with(entity_id: "https://shibboleth.umich.edu/idp/shibboleth")
+          expect(Greensub::Institution).to     have_received(:where).with(entity_id: "https://ccbcmd.idm.oclc.org/shibboleth")
+          expect(Greensub::Institution).not_to have_received(:where).with(entity_id: "https://shibboleth.umich.edu/idp/shibboleth")
           expect(in_common_institution).to     have_received(:in_common=).with(true)
           expect(in_common_institution).to     have_received(:save!)
+        end
+
+        # HELIO-4243
+        # U of M Ann Arbor, Dearborn and Flint all have the same entity_id, but there's only 1 U of M
+        # listed in the inCommon-metadata
+        context "more than one in_common institutions with a shared entity_id" do
+          let(:other_institution_with_the_same_entity_id) { instance_double(Greensub::Institution, 'other_institution_with_the_same_entity_id', in_common: false, entity_id: "https://ccbcmd.idm.oclc.org/shibboleth") }
+
+          before do
+            allow(Greensub::Institution).to receive(:where).with(entity_id: "https://ccbcmd.idm.oclc.org/shibboleth").and_return([in_common_institution, other_institution_with_the_same_entity_id])
+            allow(other_institution_with_the_same_entity_id).to receive(:in_common=).with(true)
+            allow(other_institution_with_the_same_entity_id).to receive(:save!)
+          end
+
+          it "multiple institutions get in_common=true if their entity_id is in InCommon-metadata" do
+            is_expected.to be true
+            expect(Greensub::Institution).to     have_received(:update_all).with(in_common: false)
+            expect(Greensub::Institution).to     have_received(:where).with("entity_id <> ''")
+            expect(Greensub::Institution).to     have_received(:where).with(entity_id: "https://ccbcmd.idm.oclc.org/shibboleth")
+            expect(Greensub::Institution).not_to have_received(:where).with(entity_id: "https://shibboleth.umich.edu/idp/shibboleth")
+            expect(in_common_institution).to     have_received(:in_common=).with(true)
+            expect(in_common_institution).to     have_received(:save!)
+            expect(other_institution_with_the_same_entity_id).to have_received(:in_common=).with(true)
+            expect(other_institution_with_the_same_entity_id).to have_received(:save!)
+          end
         end
       end
     end

@@ -134,9 +134,11 @@ class RecacheInCommonMetadataJob < ApplicationJob
       load_json.each do |entry|
         next unless entry["entityID"].in?(entity_ids)
 
-        institution = Greensub::Institution.find_by(entity_id: entry["entityID"])
-        institution.in_common = true
-        institution.save!
+        institutions = Greensub::Institution.where(entity_id: entry["entityID"])
+        institutions.each do |institution|
+          institution.in_common = true
+          institution.save!
+        end
       end
     end
     true
