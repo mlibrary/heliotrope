@@ -57,7 +57,11 @@ class HandleNet
       return nil unless Settings.handle_service&.instantiate
 
       admin_group = HandleRest::Identity.from_s("200:0.NA/2027")
-      admin_group_value = HandleRest::AdminValue.new(admin_group.index, HandleRest::AdminPermissionSet.new, admin_group.handle)
+      # The admin permission set is twelve characters with the following order: add handle, delete handle, add
+      # naming authority, delete naming authority, modify values, remove values, add values, read values,
+      # modify administrator, remove administrator, add administrator and list handles.
+      admin_permission_set = HandleRest::AdminPermissionSet.from_s("110011110011") # Yea! A palindrome
+      admin_group_value = HandleRest::AdminValue.new(admin_group.index, admin_permission_set, admin_group.handle)
       admin_group_value_line = HandleRest::ValueLine.new(100, admin_group_value)
 
       HandleRest::Service.new([admin_group_value_line], Services.handle_service)

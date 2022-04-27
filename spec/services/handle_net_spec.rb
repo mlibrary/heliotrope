@@ -43,7 +43,8 @@ RSpec.describe HandleNet do
       let(:handle_service) { instance_double(HandleRest::HandleService, 'handle_service') }
       let(:service) { instance_double(HandleRest::Service, 'service') }
       let(:admin_group) { HandleRest::Identity.from_s("200:0.NA/2027") }
-      let(:admin_group_value) { HandleRest::AdminValue.new(admin_group.index, HandleRest::AdminPermissionSet.new, admin_group.handle) }
+      let(:admin_permission_set) { HandleRest::AdminPermissionSet.from_s("110011110011") }
+      let(:admin_group_value) { HandleRest::AdminValue.new(admin_group.index, admin_permission_set, admin_group.handle) }
       let(:admin_group_value_line) { HandleRest::ValueLine.new(100, admin_group_value) }
       let(:url_service) { instance_double(HandleRest::UrlService, 'url_service') }
 
