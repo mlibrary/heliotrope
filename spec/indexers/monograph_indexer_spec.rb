@@ -134,7 +134,7 @@ RSpec.describe MonographIndexer do
       end
 
       it { expect(subject['products_lsim']).to be(products) }
-      it { expect(subject[Solrizer.solr_name('product_names', :facetable)]).to contain_exactly('Open Access', 'Unrestricted', 'Product') }
+      it { expect(subject['product_names_sim']).to contain_exactly('Open Access', 'Unrestricted', 'Product') }
     end
   end
 

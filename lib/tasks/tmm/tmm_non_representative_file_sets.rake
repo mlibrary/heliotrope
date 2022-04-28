@@ -50,7 +50,7 @@ namespace :heliotrope do
       # Right now I'm going with a one-off import when the Monograph has no resource files yet. Because the order...
       # of resource files matters and we have no way to control that if we add more files bit by bit.
       # If the Monograph has resources already, they will be checked to see if they should be replaced.
-      mono_file_sets = doc[Solrizer.solr_name('ordered_member_ids', :symbol)]
+      mono_file_sets = doc['ordered_member_ids_ssim']
       featured_reps = FeaturedRepresentative.where(work_id: doc.id)&.map(&:file_set_id)
       cover = doc['representative_id_ssim']&.first
 

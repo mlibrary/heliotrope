@@ -28,7 +28,7 @@ RSpec.describe TombstonePresenter do
     it { is_expected.to be false }
 
     context 'when tombstone' do
-      before { options[Solrizer.solr_name('tombstone', :symbol)] = 'YeS' }
+      before { options['tombstone_ssim'] = 'YeS' }
 
       it { is_expected.to be true }
     end

@@ -43,7 +43,7 @@ module CommonWorkPresenter
   def ordered_member_docs
     return @ordered_member_docs if @ordered_member_docs
 
-    ids = Array(solr_document[Solrizer.solr_name('ordered_member_ids', :symbol)])
+    ids = Array(solr_document['ordered_member_ids_ssim'])
 
     if ids.blank?
       @ordered_member_docs = []

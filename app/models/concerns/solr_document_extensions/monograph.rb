@@ -5,76 +5,76 @@ module SolrDocumentExtensions
     extend ActiveSupport::Concern
 
     def award
-      vector(Solrizer.solr_name('award', :stored_searchable))
+      vector('award_tesim')
     end
 
     def buy_url
-      vector(Solrizer.solr_name('buy_url', :symbol))
+      vector('buy_url_ssim')
     end
 
     def copyright_year
-      scalar(Solrizer.solr_name('copyright_year', :stored_searchable))
+      scalar('copyright_year_tesim')
     end
 
     def creator_display
-      scalar(Solrizer.solr_name('creator_display', :stored_searchable))
+      scalar('creator_display_tesim')
     end
 
     def creator_full_name
-      scalar(Solrizer.solr_name('creator_full_name', :stored_searchable))
+      scalar('creator_full_name_tesim')
     end
 
     def edition_name
-      scalar(Solrizer.solr_name('edition_name', :stored_searchable))
+      scalar('edition_name_tesim')
     end
 
     def funder
-      scalar(Solrizer.solr_name('funder', :stored_searchable))
+      scalar('funder_tesim')
     end
 
     def funder_display
-      scalar(Solrizer.solr_name('funder_display', :stored_searchable))
+      scalar('funder_display_tesim')
     end
 
     def isbn
-      vector(Solrizer.solr_name('isbn', :stored_searchable))
+      vector('isbn_tesim')
     end
 
     def location
-      scalar(Solrizer.solr_name('location', :stored_searchable))
+      scalar('location_tesim')
     end
 
     def next_edition
-      scalar(Solrizer.solr_name('next_edition', :symbol))
+      scalar('next_edition_ssim')
     end
 
     def oclc_owi
-      scalar(Solrizer.solr_name('oclc_owi', :stored_searchable))
+      scalar('oclc_owi_tesim')
     end
 
     def open_access
-      scalar(Solrizer.solr_name('open_access', :stored_searchable))
+      scalar('open_access_tesim')
     end
 
     def press
-      scalar(Solrizer.solr_name('press', :stored_searchable))
+      scalar('press_tesim')
     end
 
     def previous_edition
-      scalar(Solrizer.solr_name('previous_edition', :symbol))
+      scalar('previous_edition_ssim')
     end
 
     def section_titles
-      value = scalar(Solrizer.solr_name('section_titles', :symbol))
+      value = scalar('section_titles_ssim')
       value.present? ? value.split(/\r?\n/).reject(&:blank?) : value
     end
 
     def series
-      vector(Solrizer.solr_name('series', :stored_searchable))
+      vector('series_tesim')
     end
 
     def volume
-      scalar(Solrizer.solr_name('volume', :stored_searchable))
+      scalar('volume_tesim')
     end
   end
 end

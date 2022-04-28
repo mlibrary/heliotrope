@@ -133,7 +133,7 @@ module Hyrax
     end
 
     def maybe_add_orcid(index, author_type)
-      key = Solrizer.solr_name("#{author_type}_orcids", :symbol)
+      key = "#{author_type}_orcids_ssim"
       if solr_document[key].present? && solr_document[key][index].present?
         # https://info.orcid.org/brand-guidelines/#Inline_ORCID_iD
         "<sup><a target=\"_blank\" href=\"#{solr_document[key][index]}\">#{ActionController::Base.helpers.image_tag('orcid_16x16.gif', width: '16px', height: '16px')}</a></sup>"
