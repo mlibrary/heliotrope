@@ -24,7 +24,7 @@
     <% if @presenter.volume.present? %><span class="volume" aria-label="volume">Volume <%= @presenter.volume %></span><% end %>
     <!-- EDITION -->
     <% if @presenter.edition_name.present? %><span aria-label="edition name"><%= sanitize @presenter.edition_name %></span><% end %>
-    <!-- AUTHORS/EDITORS -->
+    <!-- AUTHOR/EDITOR -->
     <% authorship_display = @presenter.authors(contributors: true, orcids: true) %>
     <% if authorship_display.present? %>
       <span aria-label="authors" class="authors"><%= render_markdown authorship_display %></span>

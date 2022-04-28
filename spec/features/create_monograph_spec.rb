@@ -68,7 +68,7 @@ describe 'Create a monograph' do
       expect(page.title).to eq '#hashtag Test Monograph Title with MD Italics and HTML Italics'
       expect(page).to have_content '#hashtag Test Monograph Title with MD Italics and HTML Italics'
       # get text inside <em> tags
-      italicized_text = page.first('.col-sm-9.monograph-metadata h1 em').text
+      italicized_text = page.first('.col-sm-8.col-sm-push-4.monograph-metadata h1 em').text
       expect(italicized_text).to eq 'MD Italics'
       expect(page).to have_content press.name
       expect(page).to have_content 'Blahdy blah description works'
@@ -94,7 +94,7 @@ describe 'Create a monograph' do
       expect(unlinked_crumb.first).to have_css('em', text: 'MD Italics')
       expect(unlinked_crumb.first).to have_css('em', text: 'HTML Italics')
 
-      click_link 'Edit Monograph'
+      click_link 'Edit'
 
       # back on Monograph form
       # add citation_display to test authorship override
@@ -126,7 +126,7 @@ describe 'Create a monograph' do
       expect(page).to have_content '123-456-7890'
       expect(page).to have_content '123-456-7891'
 
-      click_link 'Manage Monograph and Files'
+      click_link 'Manage Files'
 
       # On Monograph show page
       expect(page.title).to eq '#hashtag Test Monograph Title with MD Italics and HTML Italics'

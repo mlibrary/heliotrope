@@ -31,7 +31,7 @@ RSpec.describe "Cozy Sun Bear", type: :system, browser: true do
     expect(page).to have_content("EPUB (#{ActiveSupport::NumberHelper.number_to_human_size(file_set.file_size.first)})")
 
     # ensure we're on the right tab to click a ToC link, even though it's the default (I think this also helps timing)
-    click_on "Table of Contents"
+    click_on "Contents"
     expect(page).to have_link "Shields up!"
     # Clicking on chapter 2 in the ToC
     click_on "Shields up!"

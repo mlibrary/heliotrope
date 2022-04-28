@@ -144,7 +144,7 @@ module Hyrax
       key = "#{author_type}_orcids_ssim"
       if solr_document[key].present? && solr_document[key][index].present?
         # https://info.orcid.org/brand-guidelines/#Inline_ORCID_iD
-        "<sup><a target=\"_blank\" href=\"#{solr_document[key][index]}\">#{ActionController::Base.helpers.image_tag('orcid_16x16.gif', width: '16px', height: '16px')}</a></sup>"
+        "<sup><a target=\"_blank\" href=\"#{solr_document[key][index]}\">#{ActionController::Base.helpers.image_tag('orcid_16x16.gif', alt: 'ORCID page', width: '16px', height: '16px')}</a></sup>"
       else
         ''
       end
