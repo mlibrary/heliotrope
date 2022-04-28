@@ -6,7 +6,10 @@ RSpec.describe AuthenticationsController, type: :controller do
   describe '#show' do
     let(:actor) { Anonymous.new({}) }
 
-    before { allow(controller).to receive(:current_actor).and_return(actor) }
+    before do
+      allow(controller).to receive(:current_actor).and_return(actor)
+      allow(RecacheInCommonMetadataJob).to receive(:perform_later).and_return(true)
+    end
 
     context 'no params' do
       subject { get :show }
@@ -14,7 +17,9 @@ RSpec.describe AuthenticationsController, type: :controller do
       before { allow(AuthenticationPresenter).to receive(:for).with(actor, nil, nil, nil).and_call_original }
 
       it do
+        allow(File).to receive(:exists?).with(RecacheInCommonMetadataJob::JSON_FILE).and_return(false)
         is_expected.to redirect_to default_login_path
+        expect(RecacheInCommonMetadataJob).to have_received(:perform_later)
         expect(AuthenticationPresenter).to have_received(:for).with(actor, nil, nil, nil)
         expect(controller.instance_variable_get(:@presenter).publisher?).to be false
         expect(controller.instance_variable_get(:@presenter).monograph?).to be false
@@ -29,7 +34,9 @@ RSpec.describe AuthenticationsController, type: :controller do
       before { allow(AuthenticationPresenter).to receive(:for).with(actor, press.subdomain, nil, nil).and_call_original }
 
       it do
+        allow(File).to receive(:exists?).with(RecacheInCommonMetadataJob::JSON_FILE).and_return(false)
         is_expected.to have_http_status(:ok)
+        expect(RecacheInCommonMetadataJob).to have_received(:perform_later)
         expect(AuthenticationPresenter).to have_received(:for).with(actor, press.subdomain, nil, nil)
         expect(controller.instance_variable_get(:@presenter).publisher?).to be true
         expect(controller.instance_variable_get(:@presenter).monograph?).to be false
@@ -45,6 +52,8 @@ RSpec.describe AuthenticationsController, type: :controller do
 
       it do
         is_expected.to have_http_status(:ok)
+        allow(File).to receive(:exists?).with(RecacheInCommonMetadataJob::JSON_FILE).and_return(false)
+        expect(RecacheInCommonMetadataJob).to have_received(:perform_later)
         expect(AuthenticationPresenter).to have_received(:for).with(actor, nil, monograph.id, nil)
         expect(controller.instance_variable_get(:@presenter).publisher?).to be true
         expect(controller.instance_variable_get(:@presenter).monograph?).to be true
@@ -67,7 +76,9 @@ RSpec.describe AuthenticationsController, type: :controller do
 
       it do
         monograph
+        allow(File).to receive(:exists?).with(RecacheInCommonMetadataJob::JSON_FILE).and_return(false)
         is_expected.to have_http_status(:ok)
+        expect(RecacheInCommonMetadataJob).to have_received(:perform_later)
         expect(AuthenticationPresenter).to have_received(:for).with(actor, nil, file_set.id, nil)
         expect(controller.instance_variable_get(:@presenter).publisher?).to be true
         expect(controller.instance_variable_get(:@presenter).monograph?).to be true
