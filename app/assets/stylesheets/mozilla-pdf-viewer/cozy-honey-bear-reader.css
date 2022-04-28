@@ -123,13 +123,13 @@ html, body {
 
 /* --- FROM VIEWER.CSS --- */
 
-html[dir='ltr'] .outlineWithDeepNesting > .outlineItem,
-html[dir='ltr'] .outlineItem > .outlineItems {
+html[dir="ltr"] .treeWithDeepNesting > .treeItem,
+html[dir="ltr"] .treeItem > .treeItems {
   margin-left: 20px;
 }
 
-html[dir='rtl'] .outlineWithDeepNesting > .outlineItem,
-html[dir='rtl'] .outlineItem > .outlineItems {
+html[dir="rtl"] .treeWithDeepNesting > .treeItem,
+html[dir="rtl"] .treeItem > .treeItems {
   margin-right: 20px;
 }
 
@@ -216,7 +216,7 @@ a:focus > .thumbnail > .thumbnailSelectionRing,
   padding: 3px 4px 0;
 }
 
-#outlineView .outlineItem a {
+#outlineView .treeItem a {
   display: block;
   padding: 1em 1em 1em 1.2em;
   border-top: 1px solid #ccc;
@@ -224,7 +224,7 @@ a:focus > .thumbnail > .thumbnailSelectionRing,
   transition: background 0.2s, box-shadow 0.3s;
 }
 
-#outlineView .outlineItem a:hover {
+#outlineView .treeItem a:hover {
   background-color: #e8e8e8;
   border-top: 1px solid #000;
   border-bottom: 1px solid #000;
