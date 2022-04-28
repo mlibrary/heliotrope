@@ -25,7 +25,7 @@ RSpec.describe EpubSearchLog, type: :model do
     it "returns csv" do
       expect(described_class.to_csv).to eq <<-EOT
 id,noid,query,time,hits,created_at,user,press,session_id
-#{@log.id},validnoid,dog,43,2,#{created_at},user@fulcrum.org,subdomain,some_session
+#{@log.id},validnoid,dog,43,2,#{created_at.in_time_zone("America/New_York")},user@fulcrum.org,subdomain,some_session
       EOT
     end
   end

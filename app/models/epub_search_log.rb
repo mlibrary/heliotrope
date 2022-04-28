@@ -17,7 +17,9 @@ class EpubSearchLog < ApplicationRecord
       csv << self.attribute_names.reject { |r| r == "search_results" || r == "updated_at" }
 
       all.find_each do |record|
-        csv << record.attributes.reject! { |k, _v| k == "search_results" || k == "updated_at" }.values
+        r = record.attributes.reject { |k, _v| k == "search_results" || k == "updated_at" }
+        r["created_at"] = r["created_at"].in_time_zone("America/New_York")
+        csv << r.values
       end
     end
   end
