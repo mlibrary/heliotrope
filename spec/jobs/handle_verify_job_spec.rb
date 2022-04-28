@@ -200,7 +200,7 @@ RSpec.describe HandleVerifyJob, type: :job do
     describe '#verify_handle_delete' do
       subject { job.verify_handle_delete(model_id) }
 
-      let(:service_url) { 'url' }
+      let(:service_url) { ['url'] }
       let(:logger) { instance_double(ActiveSupport::Logger, 'logger') }
       let(:error_msg) { "HandleVerifyJob #{model_id} verify handle delete StandardError" }
 
@@ -216,7 +216,7 @@ RSpec.describe HandleVerifyJob, type: :job do
       end
 
       context 'verified' do
-        let(:service_url) { "100 : Handle Not Found. (HTTP 404 Not Found)" }
+        let(:service_url) { [] } # handle deleted/non-existent, returns empty array
 
         it 'handle not found' do
           is_expected.to be true

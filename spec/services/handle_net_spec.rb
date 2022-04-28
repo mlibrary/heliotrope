@@ -42,18 +42,16 @@ RSpec.describe HandleNet do
     context 'instantiate' do
       let(:handle_service) { instance_double(HandleRest::HandleService, 'handle_service') }
       let(:service) { instance_double(HandleRest::Service, 'service') }
-      let(:root_admin) { HandleRest::Identity.from_s("300:0.NA/2027") }
-      let(:root_admin_value) { HandleRest::AdminValue.new(root_admin.index, HandleRest::AdminPermissionSet.new, root_admin.handle) }
-      let(:root_admin_value_line) { HandleRest::ValueLine.new(100, root_admin_value) }
-      let(:local_admin) { HandleRest::Identity.from_s("300:2027/spo") }
-      let(:local_admin_value) { HandleRest::AdminValue.new(local_admin.index, HandleRest::AdminPermissionSet.new, local_admin.handle) }
-      let(:local_admin_value_line) { HandleRest::ValueLine.new(101, local_admin_value) }
+      let(:admin_group) { HandleRest::Identity.from_s("200:0.NA/2027") }
+      let(:admin_permission_set) { HandleRest::AdminPermissionSet.from_s("110011110011") }
+      let(:admin_group_value) { HandleRest::AdminValue.new(admin_group.index, admin_permission_set, admin_group.handle) }
+      let(:admin_group_value_line) { HandleRest::ValueLine.new(100, admin_group_value) }
       let(:url_service) { instance_double(HandleRest::UrlService, 'url_service') }
 
       before do
         Settings.handle_service.instantiate = true
         allow(Services).to receive(:handle_service).and_return(handle_service)
-        allow(HandleRest::Service).to receive(:new).with([root_admin_value_line, local_admin_value_line], handle_service).and_return(service)
+        allow(HandleRest::Service).to receive(:new).with([admin_group_value_line], handle_service).and_return(service)
         allow(HandleRest::UrlService).to receive(:new).with(1, service).and_return(url_service)
       end
 

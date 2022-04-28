@@ -1,9 +1,9 @@
 GIT
   remote: https://github.com/mlibrary/handle_rest
-  revision: 483cf71257d96c7f27ab1d40ef067f48ee37f8a5
-  ref: 483cf71257d96c7f27ab1d40ef067f48ee37f8a5
+  revision: baed402b5a530eb57e838443ce292ec3f46cd5e6
+  ref: baed402b5a530eb57e838443ce292ec3f46cd5e6
   specs:
-    handle_rest (0.0.2)
+    handle_rest (0.0.4)
       faraday (~> 0.9)
       faraday_middleware (~> 0.14.0)
 

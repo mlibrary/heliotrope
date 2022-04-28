@@ -60,7 +60,7 @@ Services.register(:dlps_institution_affiliation) { DlpsInstitutionAffiliation.ne
 Services.register(:score_press) { 'carillon' }
 
 Services.register(:handle_service) do
-  HandleService.new(
+  HandleRest::HandleService.new(
     url: Settings.handle_service.url,
     user: Settings.handle_service.user,
     password: Settings.handle_service.password,
