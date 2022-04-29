@@ -882,18 +882,17 @@ footer.press {
 
     .monograph-metadata {
 
-    .webgl.alert {
-      margin-left: 0;
-      margin-right: 0;
-      font-size: 15px;
+      .webgl.alert {
+        margin-left: 0;
+        margin-right: 0;
+        font-size: 15px;
 
-      a {
-        text-decoration: underline;
-        font-weight: bold;
+        a {
+          text-decoration: underline;
+          font-weight: bold;
+        }
       }
-    }
-
-      
+ 
     }
   }
 
@@ -920,246 +919,247 @@ footer.press {
         justify-content: space-between;
       }
 
-    .section-container {
-      border-bottom: 1px solid #dfdfdf;
-      border-top: none;
-      a.toc-link {
-        max-width: 80%;
-        text-decoration: underline;   
-      }
-
-      .btn-group.download {
+      .section-container {
+        border-bottom: 1px solid #dfdfdf;
+        border-top: none;
         a.toc-link {
-          max-width: 100%;
+         max-width: 80%;
+          text-decoration: underline;   
         }
 
-        a.toc-download-link + a.toc-link {
-          max-width: 80%;
-        }
-      }
+        .btn-group.download {
+          a.toc-link {
+            max-width: 100%;
+          }
 
-      //ul.toc li:first-child {
-      //  border-top: 1px solid #eee;
-      //}
-
-      ul.toc li:last-child {
-        border: none;
-      }
-
-      //ul.toc ul.toc a.toc-link {
-      //  padding-left: 2em;
-      //}
-
-      #toc > div > ul.toc {
-        font-size: 1.15em;
-      }
-
-      .chapter {
-        padding-left: 1em;
-      }
-
-      .download {
-        padding: 0;
-        margin-top: 11px;
-      }
-    }
-
-  #documents {
-
-    .svgicon {
-      // To change any SVGs color see https://stackoverflow.com/a/53336754
-      filter: invert(53%) sepia(22%) saturate(3052%) hue-rotate(159deg) brightness(96%) contrast(102%); // #00AFEC
-    }
-
-  }
-
-  // MONOGRAPH ASSETS - LIST VIEW
-  #documents.documents-list {
-
-    .document {
-      margin-bottom: 1.5em;
-      padding-top: 1.5em;
-      border-bottom: none;
-
-      .document-thumbnail {
-        img {
-        margin-top: .9em;
-        border: 2px solid #eeeeee;
+          a.toc-download-link + a.toc-link {
+            max-width: 80%;
+          }
         }
 
-        img.svgicon {
+        //ul.toc li:first-child {
+        //  border-top: 1px solid #eee;
+        //}
+
+        ul.toc li:last-child {
           border: none;
         }
 
-        .file-set-glyphicon {
-          font-size: 9em;
-          margin-bottom: 10px;
+        //ul.toc ul.toc a.toc-link {
+        //  padding-left: 2em;
+        //}
+
+        #toc > div > ul.toc {
+          font-size: 1.15em;
         }
 
-        .glyphicon.glyphicon-file {
-          // glyphicons with portrait orientation take up too much height
-          font-size: 6em;
+        .chapter {
+          padding-left: 1em;
+        }
+
+        .download {
+          padding: 0;
+          margin-top: 11px;
+        }
+      }
+    }
+
+    #documents {
+
+      .svgicon {
+        // To change any SVGs color see https://stackoverflow.com/a/53336754
+        filter: invert(53%) sepia(22%) saturate(3052%) hue-rotate(159deg) brightness(96%) contrast(102%); // #00AFEC
+      }
+
+    }
+
+    // MONOGRAPH ASSETS - LIST VIEW
+    #documents.documents-list {
+
+      .document {
+        margin-bottom: 1.5em;
+        padding-top: 1.5em;
+        border-bottom: none;
+
+        .document-thumbnail {
+          img {
+          margin-top: .9em;
+          border: 2px solid #eeeeee;
+          }
+
+          img.svgicon {
+            border: none;
+          }
+
+          .file-set-glyphicon {
+            font-size: 9em;
+            margin-bottom: 10px;
+          }
+
+          .glyphicon.glyphicon-file {
+            // glyphicons with portrait orientation take up too much height
+            font-size: 6em;
+          }
+
+          .external-resource-link {
+            text-align: center;
+          }
+
+        }
+
+        .documentHeader {
+          p {
+              font-size: 1.15em;
+              font-weight: 500;
+          }
+        }
+
+        .document-metadata {
+          width: auto;
+          padding-left: 0;
+          padding-right: 0;
+        }
+
+      }
+
+    }
+
+    // MONOGRAPH ASSETS - GALLERY VIEW
+    .view-icon-gallery {
+      &:before { content: "\e011"; }
+    }
+
+    #documents.gallery {
+      display: -webkit-box;
+      display: -moz-box;
+      display: -ms-flexbox;
+      display: -webkit-flex;
+      display: flex;
+      flex-flow: row wrap;
+      -webkit-flex-wrap: wrap;
+      padding-top: 2em;
+      margin: 0 auto;
+      width: 90%;
+
+      .document {
+        border-bottom: none;
+        border-top: none;
+
+        -webkit-box-flex: 1;
+        -moz-box-flex: 1;
+        -ms-flex: 1;
+        flex: 1;
+
+        min-width: 240px;
+        min-height: 240px;
+        -webkit-flex: 1 0 240px;
+      }
+
+      .document:first-child {
+        margin-top: 6px;
+        padding-top: 6px;
+      }
+
+      .index_title {
+        width: 100%;
+        font-weight: 400;
+      }
+
+      .document-counter {
+        display: none;
+      }
+
+      .index-document-functions {
+        clear: left;
+      }
+
+      .document-metadata {
+        dt, dd {
+          float: none;
+          width: auto;
+          clear: none;
+          text-align: left;
+          margin: 0;
+          padding: 0;
+        }
+      }
+    }
+
+    #documents.row.gallery {
+      display: block;
+      display: -moz-box;
+      display: -ms-flexbox;
+      display: flex;
+
+      .document {
+        display: flex;
+        flex: none;
+        align-items: stretch;
+
+        .thumbnail {
+          width: 100%;
+          padding: 1em;
+          text-align: center;
+
+          img {
+            border: 2px solid #eeeeee;
+          }
+
+          img.svgicon {
+            border: none;
+          }
+
+          .file-set-glyphicon {
+            font-size: 8em;
+          }
+
+        }
+        .caption {
+          display: inline-block;
+          text-align: left;
         }
 
         .external-resource-link {
           text-align: center;
         }
-
-      }
-
-      .documentHeader {
-        p {
-            font-size: 1.15em;
-            font-weight: 500;
-        }
-      }
-
-      .document-metadata {
-        width: auto;
-        padding-left: 0;
-        padding-right: 0;
-      }
-
-    }
-
-  }
-
-  // MONOGRAPH ASSETS - GALLERY VIEW
-  .view-icon-gallery {
-    &:before { content: "\e011"; }
-  }
-
-  #documents.gallery {
-    display: -webkit-box;
-    display: -moz-box;
-    display: -ms-flexbox;
-    display: -webkit-flex;
-    display: flex;
-    flex-flow: row wrap;
-    -webkit-flex-wrap: wrap;
-    padding-top: 2em;
-    margin: 0 auto;
-    width: 90%;
-
-    .document {
-      border-bottom: none;
-      border-top: none;
-
-      -webkit-box-flex: 1;
-      -moz-box-flex: 1;
-      -ms-flex: 1;
-      flex: 1;
-
-      min-width: 240px;
-      min-height: 240px;
-      -webkit-flex: 1 0 240px;
-    }
-
-    .document:first-child {
-      margin-top: 6px;
-      padding-top: 6px;
-    }
-
-    .index_title {
-      width: 100%;
-      font-weight: 400;
-    }
-
-    .document-counter {
-      display: none;
-    }
-
-    .index-document-functions {
-      clear: left;
-    }
-
-    .document-metadata {
-      dt, dd {
-        float: none;
-        width: auto;
-        clear: none;
-        text-align: left;
-        margin: 0;
-        padding: 0;
       }
     }
-  }
 
-  #documents.row.gallery {
-    display: block;
-    display: -moz-box;
-    display: -ms-flexbox;
-    display: flex;
-
-    .document {
-      display: flex;
-      flex: none;
-      align-items: stretch;
-
-      .thumbnail {
-        width: 100%;
-        padding: 1em;
-        text-align: center;
-
-        img {
-          border: 2px solid #eeeeee;
-        }
-
-        img.svgicon {
-          border: none;
-        }
-
-        .file-set-glyphicon {
-          font-size: 8em;
-        }
-
-      }
-      .caption {
-        display: inline-block;
-        text-align: left;
-      }
-
-      .external-resource-link {
-        text-align: center;
-      }
+    .stats-container.usage {
+      width: 80%;
     }
-  }
 
-  .stats-container.usage {
-    width: 80%;
-  }
+    .stats-container.overview {
+      width: 80%;
+      height: 150px;
+    }
 
-  .stats-container.overview {
-    width: 80%;
-    height: 150px;
-  }
-
-  #unity-container {
-    // `position: absolute;` is set in the WebGL's TemplateData/style.css, which is included in all the WebGL views,...
-    // meaning the `position: relative;` needed in the #webgl tab (and in CSB) has to go in-line on #unity-container
-    width:1024px;
-    height:600px;
-    margin-left: auto !important;
-    margin-right: auto !important;
-
-    #unity-canvas {
+    #unity-container {
+      // `position: absolute;` is set in the WebGL's TemplateData/style.css, which is included in all the WebGL views,...
+      // meaning the `position: relative;` needed in the #webgl tab (and in CSB) has to go in-line on #unity-container
       width:1024px;
       height:600px;
-    }
-  }
+      margin-left: auto !important;
+      margin-right: auto !important;
 
-  section#reviews {
-    table {
-      // the reviews.html files all have a "Reviews" caption on the table
-      // which appears immediately under our "Reviews" tab link and looks redundant
-      caption {
-        display: none;
-      }
-      th, td {
-        padding: 10px;
+      #unity-canvas {
+        width:1024px;
+        height:600px;
       }
     }
-  }
+
+    section#reviews {
+      table {
+        // the reviews.html files all have a "Reviews" caption on the table
+        // which appears immediately under our "Reviews" tab link and looks redundant
+        caption {
+          display: none;
+        }
+        th, td {
+          padding: 10px;
+        }
+      }
+    }
 
 }
 
@@ -1958,7 +1958,6 @@ footer.press {
       }
     }
   }
-}
 }
 
 ///////////////////////////////////
