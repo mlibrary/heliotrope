@@ -74,7 +74,7 @@ RSpec.describe FixityJob, type: :job do
       end
     end
 
-    context "a third failure after at least two previous failures" do
+    context "a fourth failure after at least three previous failures" do
       let(:response) do
         {
             file_set_id: file_set.id,
@@ -91,11 +91,12 @@ RSpec.describe FixityJob, type: :job do
         allow_any_instance_of(described_class).to receive(:run_fixity_check).with(file_set.id).and_return(response)
         ChecksumAuditLog.create!(response)
         ChecksumAuditLog.create!(response)
+        ChecksumAuditLog.create!(response)
       end
 
       it "adds a row to the logs and sends an email" do
         described_class.perform_now
-        expect(ChecksumAuditLog.count).to eq 3
+        expect(ChecksumAuditLog.count).to eq 4
         expect(ChecksumAuditLog.third.file_set_id).to eq file_set.id
         expect(ChecksumAuditLog.third.checked_uri).to eq file_set.original_file.versions.first.uri
         expect(ChecksumAuditLog.third.passed).to be false

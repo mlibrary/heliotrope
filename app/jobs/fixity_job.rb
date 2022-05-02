@@ -45,7 +45,7 @@ class FixityJob < ApplicationJob
         # It's madness, but we can't have false failures.
         if response[:passed] == false
           ChecksumAuditLog.create!(passed: response[:passed], file_set_id: response[:file_set_id], checked_uri: response[:checked_uri], file_id: response[:file_id], expected_result: response[:expected_result])
-          if ChecksumAuditLog.where(file_set_id: response[:file_set_id], passed: false).count >= 3
+          if ChecksumAuditLog.where(file_set_id: response[:file_set_id], passed: false).count >= 4
             failures << response
           end
         else
