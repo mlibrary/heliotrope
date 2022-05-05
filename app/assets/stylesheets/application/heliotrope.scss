@@ -656,9 +656,13 @@ footer.press {
   .monograph-metadata-additional {
     
     line-height: 24px;
-      
+    
+    .peer-review {
+      width: 90%;
+      padding: 1em 0;
+    }
+    
     figure.peer_review {
-      margin-top: 1.5em;
       display: -webkit-box;
       display: -ms-flexbox;
       display: flex;
@@ -677,6 +681,7 @@ footer.press {
 
     figure.peer_review figcaption {
       font-size: 11px;
+      line-height: 16px;
     }
 
     .metrics {
@@ -689,9 +694,9 @@ footer.press {
     }
 
     .previous-edition-metrics {
-      // the Altmetric widgets are always the same width
       max-width: fit-content;
       padding-top: .5em;
+      padding-bottom: 1.2em;
       border-top: 2px solid #d5d5d5;
       font-size: 13px;
       .pub-date-edition-name {
@@ -702,7 +707,7 @@ footer.press {
     .meta-label, .isbns, .subject-series {
       font-weight: bold;
         ul li {
-          font-weight: unset;
+          font-weight: normal;
         }
     }
 
@@ -722,7 +727,7 @@ footer.press {
     .subject-series {
       padding-top: 1em;
       margin-top: 1em;
-      border-top: 1px solid #C4BABA;
+      border-top: 1px solid #ddd;
     }
 
     table.table {
@@ -746,7 +751,7 @@ footer.press {
   }
 
   .monograph-assets {
-    border-top: 1px solid #C4BABA;
+    border-top: 1px solid #ddd;
   }
   
   .monograph-metadata {
@@ -779,19 +784,18 @@ footer.press {
 
     // BUY/READ/DOWNLOAD BUTTONS
     .btn-toolbar {
-      margin: 1em 0;
+      margin: 2em 0 1em 0;
+    }
+
+    .btn-group {
+      margin-left: 0;
     }
 
     .funder, .award {
-      display: block;
       font-size: 16px;
       line-height: 24px;
       margin: 0em auto;
       width: 95%;
-    }
-
-    .funder_display {
-      margin-top: 2.5em;
     }
 
     .message {
@@ -808,7 +812,6 @@ footer.press {
       line-height: 24px;
       margin: 0 auto;
       width: 95%;
-      padding-top: 1.2em;
       padding-bottom: 2em;
       font-size: 16px;
     }
@@ -853,6 +856,15 @@ footer.press {
     .edition-link, .edition-links {
       padding-top: 0.5em;
     }
+
+    #tabs {
+      padding-top: 1em;
+
+      .nav-tabs h2 {
+        padding: 8px 0;
+      }
+    }
+
   }
 
   // PURCHASE
@@ -895,19 +907,18 @@ footer.press {
  
     }
   }
-
+    /* Monograph TOC */
     .monograph-info-content {
       padding-top: 2em;
-
-      /* Monograph TOC */
 
       ul.toc {
         list-style: none;
         padding: 0 1em;
+        font-size: 16px;
       }
 
       ul.toc li {
-        line-height: 2.5em;
+        line-height: 50px;
 
         display: flex;
         flex-direction: column;
@@ -923,8 +934,11 @@ footer.press {
         border-bottom: 1px solid #dfdfdf;
         border-top: none;
         a.toc-link {
-         max-width: 80%;
-          text-decoration: underline;   
+          max-width: 80%;
+          text-decoration: underline;  
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis; 
         }
 
         .btn-group.download {
@@ -960,6 +974,7 @@ footer.press {
         .download {
           padding: 0;
           margin-top: 11px;
+          margin-bottom: 11px;
         }
       }
     }

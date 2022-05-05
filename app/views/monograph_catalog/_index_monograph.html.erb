@@ -23,7 +23,7 @@
     <!-- VOLUME -->
     <% if @presenter.volume.present? %><span class="volume" aria-label="volume">Volume <%= @presenter.volume %></span><% end %>
     <!-- EDITION -->
-    <% if @presenter.edition_name.present? %><span aria-label="edition name"><%= sanitize @presenter.edition_name %></span><% end %>
+    <% if @presenter.edition_name.present? %><span aria-label="edition name"><%= @presenter.date_created.first %><%= sanitize @presenter.edition_name %></span><% end %>
     <!-- AUTHOR/EDITOR -->
     <% authorship_display = @presenter.authors(contributors: true, orcids: true) %>
     <% if authorship_display.present? %>
@@ -45,6 +45,10 @@
         </div>
       <% end %>
       </div>
+    <% end %>
+    <!-- WEBGL COMPATIBILITY MESSAGE -->
+    <% if @presenter.webgl? %>
+      <div id="webgl-message"></div>
     <% end %>
     <!-- READ, DOWNLOAD, BUY BUTTONS -->
     <%# ensure all of the toolbar's internal components' conditionals are present here to control the toolbar's appearance %>
@@ -234,10 +238,6 @@
         <% end %>
       </div>
     </div>
-    <!-- WEBGL COMPATIBILITY MESSAGE -->
-    <% if @presenter.webgl? %>
-      <div id="webgl-message"></div>
-    <% end %>
   </div>
   <!-- BOOK COVER AND ADDITIONAL METADATA -->
   <div class="col-sm-4 col-sm-pull-8 monograph-metadata-additional">
@@ -291,12 +291,6 @@
             </form>
           </div>
       <% end %>
-      <!-- BAR NUMBER -->
-      <% if @presenter.bar_number.present? %>
-        <div class="number meta-label">
-          <%= @presenter.attribute_to_html(:bar_number, label: t('bar_number'), html_p: true) %>
-        </div>
-      <% end %>
       <!-- PUBLICATION DATE -->
       <% if @presenter.date_created.present? %>
         <div class="publication-date">
@@ -332,14 +326,24 @@
       </div>
       <% end %>
       <!-- ISBN -->
-      <div class="isbns">
-        <%= @presenter.attribute_to_html(:isbn, label: t('isbn'), html_p: true) %>
-      </div>
+      <% if @presenter.isbn.present? %>
+        <div class="isbns">
+          <%= @presenter.attribute_to_html(:isbn, label: t('isbn'), html_p: true) %>
+        </div>
+      <% end %>
+      <!-- BAR NUMBER -->
+      <% if @presenter.bar_number.present? %>
+        <div class="number">
+          <span class="meta-label">BAR Number:</span> <%= @presenter.bar_number %>
+        </div>
+      <% end %>
       <!-- SUBJECT/SERIES -->
-      <div class="subject-series">
-          <%= @presenter.attribute_to_html(:series, render_as: :catalog_facet_attribute, subdomain: @presenter.subdomain) %>
-          <%= @presenter.attribute_to_html(:subject, render_as: :catalog_facet_attribute, subdomain: @presenter.subdomain) %>          
-      </div>
+      <% if @presenter.series.present? || @presenter.subject.present? %>
+        <div class="subject-series">
+            <%= @presenter.attribute_to_html(:series, render_as: :catalog_facet_attribute, subdomain: @presenter.subdomain) %>
+            <%= @presenter.attribute_to_html(:subject, render_as: :catalog_facet_attribute, subdomain: @presenter.subdomain) %>          
+        </div>
+      <% end %>
     </div>
   </div><!-- /.monograph-cover -->
 

@@ -204,7 +204,7 @@ RSpec.describe Hyrax::MonographPresenter do
                               '</sup>'\
                               ', Thing Lastname and Manny Feetys'\
                               '<sup>'\
-                                '<a alt="ORCID page" target="_blank" href="https://orcid.org/0000-0002-1825-0097">' +
+                                '<a target="_blank" href="https://orcid.org/0000-0002-1825-0097">' +
                                   ActionController::Base.helpers.image_tag('orcid_16x16.gif', alt: 'ORCID page', width: '16px', height: '16px') +
                                 '</a>'\
                               '</sup>'
