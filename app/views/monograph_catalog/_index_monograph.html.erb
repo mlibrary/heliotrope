@@ -21,13 +21,13 @@
     <!-- TITLE -->
     <h1 id="work-title"><%= @presenter.title %></h1>
     <!-- VOLUME -->
-    <% if @presenter.volume.present? %><span class="volume" aria-label="volume">Volume <%= @presenter.volume %></span><% end %>
+    <% if @presenter.volume.present? %><span class="volume">Volume <%= @presenter.volume %></span><% end %>
     <!-- EDITION -->
-    <% if @presenter.edition_name.present? %><span aria-label="edition name"><%= @presenter.date_created.first %><%= sanitize @presenter.edition_name %></span><% end %>
+    <% if @presenter.edition_name.present? %><span><%= @presenter.date_created.first %><%= sanitize @presenter.edition_name %></span><% end %>
     <!-- AUTHOR/EDITOR -->
     <% authorship_display = @presenter.authors(contributors: true, orcids: true) %>
     <% if authorship_display.present? %>
-      <span aria-label="authors" class="authors"><%= render_markdown authorship_display %></span>
+      <span class="authors"><%= render_markdown authorship_display %></span>
     <% end %>
     <!-- ACCESS INDICATORS and OPTIONS -->
     <%= render partial: 'access_options.html.erb', locals: { auth: @auth, presenter: @presenter } if @auth.present? %>      
@@ -359,7 +359,7 @@
           <%= render 'catalog/search_sidebar' %>
         </div>
         <div class="col-sm-9">
-          <div id="resources" class="content">
+          <div class="content">
             <%= render 'catalog/search_results' %>
           </div><!-- /.content -->
         </div>
