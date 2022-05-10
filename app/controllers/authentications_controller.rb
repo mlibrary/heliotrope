@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class AuthenticationsController < ApplicationController
+  before_action :verify_incommon_exists, only: %i[show]
   before_action :set_presenter, only: %i[show]
 
   def show
@@ -24,6 +25,11 @@ class AuthenticationsController < ApplicationController
   end
 
   private
+
+    # HELIO-4242
+    def verify_incommon_exists
+      RecacheInCommonMetadataJob.perform_later unless File.exist?(RecacheInCommonMetadataJob::JSON_FILE)
+    end
 
     def set_presenter
       @presenter = AuthenticationPresenter.for(current_actor, params[:press], params[:id], params[:filter])
