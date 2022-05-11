@@ -199,13 +199,13 @@ RSpec.describe Hyrax::MonographPresenter do
             is_expected.to eq 'Abe Cat'\
                               '<sup>'\
                                 '<a target="_blank" href="https://orcid.org/0000-0002-1825-0097">' +
-                                  ActionController::Base.helpers.image_tag('orcid_16x16.gif', width: '16px', height: '16px') +
+                                  ActionController::Base.helpers.image_tag('orcid_16x16.gif', alt: 'ORCID page', width: '16px', height: '16px') +
                                 '</a>'\
                               '</sup>'\
                               ', Thing Lastname and Manny Feetys'\
                               '<sup>'\
                                 '<a target="_blank" href="https://orcid.org/0000-0002-1825-0097">' +
-                                  ActionController::Base.helpers.image_tag('orcid_16x16.gif', width: '16px', height: '16px') +
+                                  ActionController::Base.helpers.image_tag('orcid_16x16.gif', alt: 'ORCID page', width: '16px', height: '16px') +
                                 '</a>'\
                               '</sup>'
           end
@@ -218,7 +218,7 @@ RSpec.describe Hyrax::MonographPresenter do
             is_expected.to eq 'Abe Cat'\
                               '<sup>'\
                                 '<a target="_blank" href="https://orcid.org/0000-0002-1825-0097">' +
-                                  ActionController::Base.helpers.image_tag('orcid_16x16.gif', width: '16px', height: '16px') +
+                                  ActionController::Base.helpers.image_tag('orcid_16x16.gif', alt: 'ORCID page', width: '16px', height: '16px') +
                                   '</a>'\
                               '</sup>'
           end

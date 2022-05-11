@@ -39,154 +39,66 @@ RSpec.describe "Monograph Bootstrap tabs", type: :system, browser: true do
       expect(page).to have_css("section#toc[aria-hidden=false]")
       expect(page).to_not have_css("section#toc[aria-hidden=true]", visible: false)
 
-      # resources tab link
-      expect(page).to_not have_css("li.active h2 a#tab-resources")
-      expect(page).to_not have_css("a#tab-resources[aria-selected=true][aria-expanded=true]")
-      expect(page).to have_css("a#tab-resources[aria-selected='false'][aria-expanded='false']")
-      expect(page).to have_css("a#tab-resources[tabindex='-1']")
-      # resources tab panel
-      expect(page).to_not have_css("section#resources[aria-hidden=false]")
-      expect(page).to have_css("section#resources[aria-hidden=true]", visible: false)
-
       # stats tab link
-      expect(page).to_not have_css("li.active h2 a#tab-stats")
-      expect(page).to_not have_css("a#tab-stats[aria-selected=true][aria-expanded=true]")
-      expect(page).to have_css("a#tab-stats[aria-selected=false][aria-expanded=false]")
-      expect(page).to have_css("a#tab-stats[tabindex='-1']")
+      # expect(page).to_not have_css("li.active h2 a#tab-stats")
+      # expect(page).to_not have_css("a#tab-stats[aria-selected=true][aria-expanded=true]")
+      # expect(page).to have_css("a#tab-stats[aria-selected=false][aria-expanded=false]")
+      # expect(page).to have_css("a#tab-stats[tabindex='-1']")
       # stats tab panel
-      expect(page).to_not have_css("section#stats[aria-hidden=false]")
-      expect(page).to have_css("section#stats[aria-hidden=true]", visible: false)
+      # expect(page).to_not have_css("section#stats[aria-hidden=false]")
+      # expect(page).to have_css("section#stats[aria-hidden=true]", visible: false)
 
       visit monograph_catalog_path(monograph)
-      # click resources tab
-      find("#tab-resources").click
-
-      # resources tab link
-      expect(page).to have_css("li.active h2 a#tab-resources")
-      expect(page).to have_css("a#tab-resources[aria-selected=true][aria-expanded=true]")
-      expect(page).to_not have_css("a#tab-resources[aria-selected='false'][aria-expanded='false']")
-      expect(page).to_not have_css("a#tab-resources[tabindex='-1']")
-      # resources tab panel
-      expect(page).to have_css("section#resources[aria-hidden=false]")
-      expect(page).to_not have_css("section#resources[aria-hidden=true]", visible: false)
-
-      # toc tab link
-      expect(page).to_not have_css("li.active h2 a#tab-toc")
-      expect(page).to_not have_css("a#tab-toc[aria-selected=true][aria-expanded=true]")
-      expect(page).to have_css("a#tab-toc[aria-selected=false][aria-expanded=false]")
-      expect(page).to have_css("a#tab-toc[tabindex='-1']")
-      # toc tab panel
-      expect(page).to_not have_css("section#toc[aria-hidden=false]")
-      expect(page).to have_css("section#toc[aria-hidden=true]", visible: false)
-
-      # stats tab link
-      expect(page).to_not have_css("li.active h2 a#tab-stats")
-      expect(page).to_not have_css("a#tab-stats[aria-selected=true][aria-expanded=true]")
-      expect(page).to have_css("a#tab-stats[aria-selected=false][aria-expanded=false]")
-      expect(page).to have_css("a#tab-stats[tabindex='-1']")
-      # stats tab panel
-      expect(page).to_not have_css("section#stats[aria-hidden=false]")
-      expect(page).to have_css("section#stats[aria-hidden=true]", visible: false)
 
       # click stats tab
-      find("#tab-stats").click
+      # find("#tab-stats").click
 
       # stats tab link
-      expect(page).to have_css("li.active h2 a#tab-stats")
-      expect(page).to have_css("a#tab-stats[aria-selected=true][aria-expanded=true]")
-      expect(page).to_not have_css("a#tab-stats[aria-selected=false][aria-expanded=false]")
-      expect(page).to_not have_css("a#tab-stats[tabindex='-1']")
+      # expect(page).to have_css("li.active h2 a#tab-stats")
+      # expect(page).to have_css("a#tab-stats[aria-selected=true][aria-expanded=true]")
+      # expect(page).to_not have_css("a#tab-stats[aria-selected=false][aria-expanded=false]")
+      # expect(page).to_not have_css("a#tab-stats[tabindex='-1']")
       # stats tab panel
-      expect(page).to have_css("section#stats[aria-hidden=false]")
-      expect(page).to_not have_css("section#stats[aria-hidden=true]", visible: false)
+      # expect(page).to have_css("section#stats[aria-hidden=false]")
+      # expect(page).to_not have_css("section#stats[aria-hidden=true]", visible: false)
 
       # toc tab link
-      expect(page).to_not have_css("li.active h2 a#tab-toc")
-      expect(page).to_not have_css("a#tab-toc[aria-selected=true][aria-expanded=true]")
-      expect(page).to have_css("a#tab-toc[aria-selected=false][aria-expanded=false]")
-      expect(page).to have_css("a#tab-toc[tabindex='-1']")
+      # expect(page).to_not have_css("li.active h2 a#tab-toc")
+      # expect(page).to_not have_css("a#tab-toc[aria-selected=true][aria-expanded=true]")
+      # expect(page).to have_css("a#tab-toc[aria-selected=false][aria-expanded=false]")
+      # expect(page).to have_css("a#tab-toc[tabindex='-1']")
       # toc tab panel
-      expect(page).to_not have_css("section#toc[aria-hidden=false]")
-      expect(page).to have_css("section#toc[aria-hidden=true]", visible: false)
-
-      # resources tab link
-      expect(page).to_not have_css("li.active h2 a#tab-resources")
-      expect(page).to_not have_css("a#tab-resources[aria-selected=true][aria-expanded=true]")
-      expect(page).to have_css("a#tab-resources[aria-selected='false'][aria-expanded='false']")
-      expect(page).to have_css("a#tab-resources[tabindex='-1']")
-      # resources tab panel
-      expect(page).to_not have_css("section#resources[aria-hidden=false]")
-      expect(page).to have_css("section#resources[aria-hidden=true]", visible: false)
+      # expect(page).to_not have_css("section#toc[aria-hidden=false]")
+      # expect(page).to have_css("section#toc[aria-hidden=true]", visible: false)
     end
 
     it 'has Blacklight resources searching that opens the resources tab' do
       visit monograph_catalog_path(monograph)
 
-      # now to verify Blacklight resource searches open the resources tab
-      # click resources tab to test text search
-      find("#tab-resources").click
-      # this seems to help with timing on transitioning to the expected tab before continuing
-      expect(page).to have_css("li.active h2 a#tab-resources")
-
       fill_in("Search resources", with: "shipwreck")
       find("#resources-search-submit").click
-      # verify resources tab is visible as above (we'll skip checking the other tabs)
-      # resources tab link
-      expect(page).to have_css("li.active h2 a#tab-resources")
-      expect(page).to have_css("a#tab-resources[aria-selected=true][aria-expanded=true]")
-      expect(page).to_not have_css("a#tab-resources[aria-selected='false'][aria-expanded='false']")
-      expect(page).to_not have_css("a#tab-resources[tabindex='-1']")
-      # resources tab panel
-      expect(page).to have_css("section#resources[aria-hidden=false]")
-      expect(page).to_not have_css("section#resources[aria-hidden=true]", visible: false)
 
       # clear last search
       find("span.glyphicon.glyphicon-remove").click
 
-      # click resources tab to test facet search
-      find("#tab-resources").click
-      expect(page).to have_css("li.active h2 a#tab-resources")
+      # test facet search
       # open the facet panel
       find("div[data-target='#facet-keywords_sim']").click
       # click the keyword facet search link
       find("a.facet-anchor.facet_select[href='/concern/monographs/#{monograph.id}?f%5Bkeywords_sim%5D%5B%5D=one&locale=en']").click
-      # verify resources tab is visible
-      # resources tab link
-      expect(page).to have_css("li.active h2 a#tab-resources")
-      expect(page).to have_css("a#tab-resources[aria-selected=true][aria-expanded=true]")
-      expect(page).to_not have_css("a#tab-resources[aria-selected='false'][aria-expanded='false']")
-      expect(page).to_not have_css("a#tab-resources[tabindex='-1']")
-      # resources tab panel
-      expect(page).to have_css("section#resources[aria-hidden=false]")
-      expect(page).to_not have_css("section#resources[aria-hidden=true]", visible: false)
 
       # Facets cause two of these 'x' icons. Clear last search by clicking the one in the sidebar (facet panel)
       find("span.glyphicon.glyphicon-remove", match: :first).click
       expect(page).to_not have_css("span.glyphicon.glyphicon-remove")
 
-      # click resources tab to test results sort
-      find("#tab-resources").click
-      expect(page).to have_css("li.active h2 a#tab-resources")
-
       click_button "Sort by First Appearance"
       expect(page).to have_css("button.btn.btn-default.dropdown-toggle[aria-expanded='true']")
       expect(page).to have_css("ul.dropdown-menu", visible: true)
       click_link "Year (Oldest First)"
-      # verify resources tab is visible
-      # resources tab link
-      expect(page).to have_css("li.active h2 a#tab-resources")
-      expect(page).to have_css("a#tab-resources[aria-selected=true][aria-expanded=true]")
-      expect(page).to_not have_css("a#tab-resources[aria-selected='false'][aria-expanded='false']")
-      expect(page).to_not have_css("a#tab-resources[tabindex='-1']")
-      # resources tab panel
-      expect(page).to have_css("section#resources[aria-hidden=false]")
-      expect(page).to_not have_css("section#resources[aria-hidden=true]", visible: false)
 
       # the preceding page load and checks seem to regularly be able to happen faster than the JS can bind...
       # to the next "20 per page" dropdown. So I'm going to reset the page/tab here.
       visit monograph_catalog_path(monograph)
-      find("#tab-resources").click
-      expect(page).to have_css("li.active h2 a#tab-resources")
 
       click_button "20 per page"
       expect(page).to have_css("button.btn.btn-default.dropdown-toggle[aria-expanded='true']")
@@ -196,26 +108,7 @@ RSpec.describe "Monograph Bootstrap tabs", type: :system, browser: true do
       # alternate link click used for testing
       # find("a[href='#{hyrax_monograph_path(monograph.id, locale: 'en', per_page: 50)}'").click
 
-      # verify resources tab is visible
-      # resources tab link
-      expect(page).to have_css("li.active h2 a#tab-resources")
-      expect(page).to have_css("a#tab-resources[aria-selected=true][aria-expanded=true]")
-      expect(page).to_not have_css("a#tab-resources[aria-selected='false'][aria-expanded='false']")
-      expect(page).to_not have_css("a#tab-resources[tabindex='-1']")
-      # resources tab panel
-      expect(page).to have_css("section#resources[aria-hidden=false]")
-      expect(page).to_not have_css("section#resources[aria-hidden=true]", visible: false)
-
       find("span.glyphicon.glyphicon-list.view-icon-list").click
-      # verify resources tab is visible
-      # resources tab link
-      expect(page).to have_css("li.active h2 a#tab-resources")
-      expect(page).to have_css("a#tab-resources[aria-selected=true][aria-expanded=true]")
-      expect(page).to_not have_css("a#tab-resources[aria-selected='false'][aria-expanded='false']")
-      expect(page).to_not have_css("a#tab-resources[tabindex='-1']")
-      # resources tab panel
-      expect(page).to have_css("section#resources[aria-hidden=false]")
-      expect(page).to_not have_css("section#resources[aria-hidden=true]", visible: false)
     end
   end
 
@@ -242,13 +135,13 @@ RSpec.describe "Monograph Bootstrap tabs", type: :system, browser: true do
       expect(page).to have_css("section#permissions[aria-hidden=true]", visible: false)
 
       # stats tab link
-      expect(page).to_not have_css("li.active h2 a#tab-stats")
-      expect(page).to_not have_css("a#tab-stats[aria-selected=true][aria-expanded=true]")
-      expect(page).to have_css("a#tab-stats[aria-selected=false][aria-expanded=false]")
-      expect(page).to have_css("a#tab-stats[tabindex='-1']")
+      # expect(page).to_not have_css("li.active h2 a#tab-stats")
+      # expect(page).to_not have_css("a#tab-stats[aria-selected=true][aria-expanded=true]")
+      # expect(page).to have_css("a#tab-stats[aria-selected=false][aria-expanded=false]")
+      # expect(page).to have_css("a#tab-stats[tabindex='-1']")
       # stats tab panel
-      expect(page).to_not have_css("section#stats[aria-hidden=false]")
-      expect(page).to have_css("section#stats[aria-hidden=true]", visible: false)
+      # expect(page).to_not have_css("section#stats[aria-hidden=false]")
+      # expect(page).to have_css("section#stats[aria-hidden=true]", visible: false)
 
       # technical-info tab link
       expect(page).to_not have_css("li.active h2 a#tab-technical-info")
@@ -281,13 +174,13 @@ RSpec.describe "Monograph Bootstrap tabs", type: :system, browser: true do
       expect(page).to have_css("section#info[aria-hidden=true]", visible: false)
 
       # stats tab link
-      expect(page).to_not have_css("li.active h2 a#tab-stats")
-      expect(page).to_not have_css("a#tab-stats[aria-selected=true][aria-expanded=true]")
-      expect(page).to have_css("a#tab-stats[aria-selected=false][aria-expanded=false]")
-      expect(page).to have_css("a#tab-stats[tabindex='-1']")
+      # expect(page).to_not have_css("li.active h2 a#tab-stats")
+      # expect(page).to_not have_css("a#tab-stats[aria-selected=true][aria-expanded=true]")
+      # expect(page).to have_css("a#tab-stats[aria-selected=false][aria-expanded=false]")
+      # expect(page).to have_css("a#tab-stats[tabindex='-1']")
       # stats tab panel
-      expect(page).to_not have_css("section#stats[aria-hidden=false]")
-      expect(page).to have_css("section#stats[aria-hidden=true]", visible: false)
+      # expect(page).to_not have_css("section#stats[aria-hidden=false]")
+      # expect(page).to have_css("section#stats[aria-hidden=true]", visible: false)
 
       # technical-info tab link
       expect(page).to_not have_css("li.active h2 a#tab-technical-info")
@@ -299,45 +192,45 @@ RSpec.describe "Monograph Bootstrap tabs", type: :system, browser: true do
       expect(page).to have_css("section#technical-info[aria-hidden=true]", visible: false)
 
       # click stats tab
-      find("#tab-stats").click
+      # find("#tab-stats").click
 
       # stats tab link
-      expect(page).to have_css("li.active h2 a#tab-stats")
-      expect(page).to have_css("a#tab-stats[aria-selected=true][aria-expanded=true]")
-      expect(page).to_not have_css("a#tab-stats[aria-selected=false][aria-expanded=false]")
-      expect(page).to_not have_css("a#tab-stats[tabindex='-1']")
+      # expect(page).to have_css("li.active h2 a#tab-stats")
+      # expect(page).to have_css("a#tab-stats[aria-selected=true][aria-expanded=true]")
+      # expect(page).to_not have_css("a#tab-stats[aria-selected=false][aria-expanded=false]")
+      # expect(page).to_not have_css("a#tab-stats[tabindex='-1']")
       # stats tab panel
-      expect(page).to have_css("section#stats[aria-hidden=false]")
-      expect(page).to_not have_css("section#stats[aria-hidden=true]", visible: false)
+      # expect(page).to have_css("section#stats[aria-hidden=false]")
+      # expect(page).to_not have_css("section#stats[aria-hidden=true]", visible: false)
 
       # info tab link
-      expect(page).to_not have_css("li.active h2 a#tab-info")
-      expect(page).to_not have_css("a#tab-info[aria-selected=true][aria-expanded=true]")
-      expect(page).to have_css("a#tab-info[aria-selected=false][aria-expanded=false]")
-      expect(page).to have_css("a#tab-info[tabindex='-1']")
+      # expect(page).to_not have_css("li.active h2 a#tab-info")
+      # expect(page).to_not have_css("a#tab-info[aria-selected=true][aria-expanded=true]")
+      # expect(page).to have_css("a#tab-info[aria-selected=false][aria-expanded=false]")
+      # expect(page).to have_css("a#tab-info[tabindex='-1']")
       # info tab panel
-      expect(page).to_not have_css("section#info[aria-hidden=false]")
-      expect(page).to have_css("section#info[aria-hidden=true]", visible: false)
+      # expect(page).to_not have_css("section#info[aria-hidden=false]")
+      # expect(page).to have_css("section#info[aria-hidden=true]", visible: false)
 
       # permissions tab link
-      expect(page).to_not have_css("li.active h2 a#tab-permissions")
-      expect(page).to_not have_css("a#tab-permissions[aria-selected=true][aria-expanded=true]")
-      expect(page).to have_css("a#tab-permissions[aria-selected='false'][aria-expanded='false']")
-      expect(page).to have_css("a#tab-permissions[tabindex='-1']")
+      # expect(page).to_not have_css("li.active h2 a#tab-permissions")
+      # expect(page).to_not have_css("a#tab-permissions[aria-selected=true][aria-expanded=true]")
+      # expect(page).to have_css("a#tab-permissions[aria-selected='false'][aria-expanded='false']")
+      # expect(page).to have_css("a#tab-permissions[tabindex='-1']")
       # permissions tab panel
-      expect(page).to_not have_css("section#permissions[aria-hidden=false]")
-      expect(page).to have_css("section#permissions[aria-hidden=true]", visible: false)
+      # expect(page).to_not have_css("section#permissions[aria-hidden=false]")
+      # expect(page).to have_css("section#permissions[aria-hidden=true]", visible: false)
 
       # technical-info tab link
-      expect(page).to_not have_css("li.active h2 a#tab-technical-info")
-      expect(page).to_not have_css("a#tab-technical-info[aria-selected=true][aria-expanded=true]")
-      expect(page).to have_css("a#tab-technical-info[aria-selected='false'][aria-expanded='false']")
-      expect(page).to have_css("a#tab-technical-info[tabindex='-1']")
+      # expect(page).to_not have_css("li.active h2 a#tab-technical-info")
+      # expect(page).to_not have_css("a#tab-technical-info[aria-selected=true][aria-expanded=true]")
+      # expect(page).to have_css("a#tab-technical-info[aria-selected='false'][aria-expanded='false']")
+      # expect(page).to have_css("a#tab-technical-info[tabindex='-1']")
       # technical-info tab panel
-      expect(page).to_not have_css("section#technical-info[aria-hidden=false]")
-      expect(page).to have_css("section#technical-info[aria-hidden=true]", visible: false)
+      # expect(page).to_not have_css("section#technical-info[aria-hidden=false]")
+      # expect(page).to have_css("section#technical-info[aria-hidden=true]", visible: false)
 
-      # click stats tab
+      # click technical info tab
       find("#tab-technical-info").click
 
       # technical-info tab link
@@ -368,13 +261,13 @@ RSpec.describe "Monograph Bootstrap tabs", type: :system, browser: true do
       expect(page).to have_css("section#permissions[aria-hidden=true]", visible: false)
 
       # stats tab link
-      expect(page).to_not have_css("li.active h2 a#tab-stats")
-      expect(page).to_not have_css("a#tab-stats[aria-selected=true][aria-expanded=true]")
-      expect(page).to have_css("a#tab-stats[aria-selected=false][aria-expanded=false]")
-      expect(page).to have_css("a#tab-stats[tabindex='-1']")
+      # expect(page).to_not have_css("li.active h2 a#tab-stats")
+      # expect(page).to_not have_css("a#tab-stats[aria-selected=true][aria-expanded=true]")
+      # expect(page).to have_css("a#tab-stats[aria-selected=false][aria-expanded=false]")
+      # expect(page).to have_css("a#tab-stats[tabindex='-1']")
       # stats tab panel
-      expect(page).to_not have_css("section#stats[aria-hidden=false]")
-      expect(page).to have_css("section#stats[aria-hidden=true]", visible: false)
+      # expect(page).to_not have_css("section#stats[aria-hidden=false]")
+      # expect(page).to have_css("section#stats[aria-hidden=true]", visible: false)
     end
   end
 end

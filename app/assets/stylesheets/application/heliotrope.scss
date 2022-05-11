@@ -231,6 +231,10 @@ div.skip {
   .breadcrumb li:first-child {
     margin-left: 0;
   }
+
+  .breadcrumb li a {
+    text-decoration: underline !important;
+  }
 }
 
 //////////////////////////////////
@@ -593,6 +597,15 @@ footer.press {
 ///////////////////////////////////
 .monograph {
 
+  .platform-admin {
+    float: right;
+    margin-top: -2.8em;
+
+    a {
+      padding-right: 25px;
+    }
+  }
+
   // tombstone message alert
   .alert-danger.alert-message {
     font-size: 1.4em;
@@ -601,47 +614,6 @@ footer.press {
     margin-top: 0;
   }
 
-  figure.peer_review {
-    margin-top: 1.5em;
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: flex;
-    -webkit-box-orient: horizontal;
-    -webkit-box-direction: normal;
-    -ms-flex-direction: row;
-    flex-direction: row;
-  }
-
-  figure.peer_review img {
-    border: none !important;
-    width: 85px;
-    height: 80px;
-    margin-right: .5em;
-  }
-
-  figure.peer_review figcaption {
-    font-size: 11px;
-  }
-
-  .metrics {
-    padding-top: .5em;
-    padding-bottom: 1em;
-
-    .altmetric-embed {
-      padding-bottom: .5em;
-    }
-  }
-
-  .previous-edition-metrics {
-    // the Altmetric widgets are always the same width
-    max-width: fit-content;
-    padding-top: .5em;
-    border-top: 2px solid #d5d5d5;
-    font-size: 13px;
-    .pub-date-edition-name {
-      margin-bottom: .5em;
-    }
-  }
   .fulcrum_sidebar {
     // In hyrax2 this defaults to grey which we don't want
     background-color: white;
@@ -662,6 +634,11 @@ footer.press {
   }
 
   .monograph-cover {
+
+    .btn {
+      padding: 0;
+    }
+
     .modal {
       text-align: center;
       img {
@@ -676,9 +653,119 @@ footer.press {
     }
   }
 
+  .monograph-metadata-additional {
+    
+    line-height: 24px;
+    
+    .peer-review {
+      width: 90%;
+      padding: 1em 0;
+    }
+    
+    figure.peer_review {
+      display: -webkit-box;
+      display: -ms-flexbox;
+      display: flex;
+      -webkit-box-orient: horizontal;
+      -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+      flex-direction: row;
+    }
+
+    figure.peer_review img {
+      border: none !important;
+      width: 85px;
+      height: 80px;
+      margin-right: .5em;
+    }
+
+    figure.peer_review figcaption {
+      font-size: 11px;
+      line-height: 16px;
+    }
+
+    .metrics {
+      padding-top: .5em;
+      padding-bottom: 1em;
+
+      .altmetric-embed {
+        padding-bottom: .5em;
+      }
+    }
+
+    .previous-edition-metrics {
+      max-width: fit-content;
+      padding-top: .5em;
+      padding-bottom: 1.2em;
+      border-top: 2px solid #d5d5d5;
+      font-size: 13px;
+      .pub-date-edition-name {
+        margin-bottom: .5em;
+      }
+    }
+
+    .meta-label, .isbns, .subject-series {
+      font-weight: bold;
+        ul li {
+          font-weight: normal;
+        }
+    }
+
+    .citable-link {
+      padding-bottom: 5px;
+
+      input#permalink {
+        width: 80%;
+        max-width: 300px;
+      }
+    }
+
+    .isbns {
+      padding-top: 2em;
+    }
+
+    .subject-series {
+      padding-top: 1em;
+      margin-top: 1em;
+      border-top: 1px solid #ddd;
+    }
+
+    table.table {
+      margin-top: 1.5em;
+    }
+
+    .table > thead > tr > th,
+    .table > thead > tr > td,
+    .table > tbody > tr > th,
+    .table > tbody > tr > td,
+    .table > tfoot > tr > th,
+    .table > tfoot > tr > td {
+      border-top: 0 solid #fff;
+      padding: 0px;
+    }
+
+    table tbody tr:last-of-type th {
+      vertical-align: middle;
+    }
+
+  }
+
+  .monograph-assets {
+    border-top: 1px solid #ddd;
+  }
+  
   .monograph-metadata {
+    
     h1 {
       font-size: 30px;
+      margin-bottom: .1em;
+    }
+
+    .volume {
+      text-transform: uppercase;
+      font-size: 18px;
+      font-variant-numeric: lining-nums;
+      color: #575757;
     }
 
     .authors {
@@ -686,6 +773,7 @@ footer.press {
       font-weight: 700;
       display: block;
       padding-bottom: .2em;
+      padding-top: .4em;
     }
 
     .year-and-edition {
@@ -694,8 +782,20 @@ footer.press {
       vertical-align: middle;
     }
 
-    .funder {
-      display: block;
+    // BUY/READ/DOWNLOAD BUTTONS
+    .btn-toolbar {
+      margin: 2em 0 1em 0;
+    }
+
+    .btn-group {
+      margin-left: 0;
+    }
+
+    .funder, .award {
+      font-size: 16px;
+      line-height: 24px;
+      margin: 0em auto;
+      width: 95%;
     }
 
     .message {
@@ -708,10 +808,18 @@ footer.press {
       }
     }
 
+    .description {
+      line-height: 24px;
+      margin: 0 auto;
+      width: 95%;
+      padding-bottom: 2em;
+      font-size: 16px;
+    }
+
     .access {
       display: flex;
       align-items:center;
-      margin-top: 1em;
+      margin: 1em 0;
       font-weight: bold;
       font-stretch: condensed;
       
@@ -748,6 +856,15 @@ footer.press {
     .edition-link, .edition-links {
       padding-top: 0.5em;
     }
+
+    #tabs {
+      padding-top: 1em;
+
+      .nav-tabs h2 {
+        padding: 8px 0;
+      }
+    }
+
   }
 
   // PURCHASE
@@ -776,341 +893,288 @@ footer.press {
     }
 
     .monograph-metadata {
-      .copyright {
-        font-size: .85em;
-      }
 
-      .description {
-        padding-top: 1.2em;
-        padding-bottom: 2em;
-      }
+      .webgl.alert {
+        margin-left: 0;
+        margin-right: 0;
+        font-size: 15px;
 
-      .additional-metadata {
-        padding-top: 2em;
-        dt, dd {
-          display: inline-block;
-          float: left;
-        }
-        dt {
-          clear: both;
-          width: 8em;
-        }
-
-        dd {
-          padding-left: 3em;
-        }
-
-        dd > form {
-          width: 200%;
-          label {}
-        }
-
-        ul {
-          padding-left: 0;
+        a {
+          text-decoration: underline;
+          font-weight: bold;
         }
       }
-    .webgl.alert {
-      margin-left: 0;
-      margin-right: 0;
-      font-size: 15px;
-
-      a {
-        text-decoration: underline;
-        font-weight: bold;
-      }
-    }
-
-      table.table {
-        margin-top: 1.5em;
-      }
-
-      .table > thead > tr > th,
-      .table > thead > tr > td,
-      .table > tbody > tr > th,
-      .table > tbody > tr > td,
-      .table > tfoot > tr > th,
-      .table > tfoot > tr > td {
-        border-top: 0 solid #fff;
-        padding: 0px;
-      }
-
-      table tbody tr:last-of-type th {
-        vertical-align: middle;
-      }
-
-      input#permalink {
-        max-width: 82%;
-      }
+ 
     }
   }
-
-  .monograph-assets-toc-epub {
-    .monograph-assets-toc-epub-content {
-      padding-top: 4em;
-    }
-
     /* Monograph TOC */
+    .monograph-info-content {
+      padding-top: 2em;
 
-    ul.toc {
-      list-style: none;
-      padding-left: 2em;
-      padding-right: 0;
-    }
-
-    ul.toc li {
-      line-height: 3em;
-
-      display: flex;
-      flex-direction: column;
-    }
-
-    ul.toc li .section-container {
-      display: flex;
-      flex-direction: row;
-      justify-content: space-between;
-    }
-
-    .section-container {
-      border-bottom: 1px solid #dfdfdf;
-      border-top: none;
-      a.toc-link {
-        max-width: 80%;
-        text-decoration: underline;   
+      ul.toc {
+        list-style: none;
+        padding: 0 1em;
+        font-size: 16px;
       }
-    }
 
-    .btn-group.download {
-      a.toc-link {
-        max-width: 100%;
-       }
+      ul.toc li {
+        line-height: 50px;
 
-       a.toc-download-link + a.toc-link {
-         max-width: 80%;
-       }
-    }
+        display: flex;
+        flex-direction: column;
+      }
 
-    //ul.toc li:first-child {
-    //  border-top: 1px solid #eee;
-    //}
+      ul.toc li .section-container {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+      }
 
-    ul.toc li:last-child {
-      border: none;
-    }
-
-    //ul.toc ul.toc a.toc-link {
-    //  padding-left: 2em;
-    //}
-
-    #toc > div > ul.toc {
-      font-size: 1.2em;
-    }
-
-    .chapter {
-      padding-left: 1em;
-    }
-
-    .download {
-      padding: 0;
-      margin-top: 11px;
-    }
-  }
-
-  #documents {
-
-    .svgicon {
-      // To change any SVGs color see https://stackoverflow.com/a/53336754
-      filter: invert(53%) sepia(22%) saturate(3052%) hue-rotate(159deg) brightness(96%) contrast(102%); // #00AFEC
-    }
-
-  }
-
-  // MONOGRAPH ASSETS - LIST VIEW
-  #documents.documents-list {
-
-    .document {
-      margin-bottom: 1.5em;
-      padding-top: 1.5em;
-      border-bottom: none;
-
-      .document-thumbnail {
-        img {
-        margin-top: .9em;
-        border: 2px solid #eeeeee;
+      .section-container {
+        border-bottom: 1px solid #dfdfdf;
+        border-top: none;
+        a.toc-link {
+          max-width: 80%;
+          text-decoration: underline;  
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis; 
         }
 
-        img.svgicon {
+        .btn-group.download {
+          a.toc-link {
+            max-width: 100%;
+          }
+
+          a.toc-download-link + a.toc-link {
+            max-width: 80%;
+          }
+        }
+
+        //ul.toc li:first-child {
+        //  border-top: 1px solid #eee;
+        //}
+
+        ul.toc li:last-child {
           border: none;
         }
 
-        .file-set-glyphicon {
-          font-size: 9em;
-          margin-bottom: 10px;
+        //ul.toc ul.toc a.toc-link {
+        //  padding-left: 2em;
+        //}
+
+        #toc > div > ul.toc {
+          font-size: 1.15em;
         }
 
-        .glyphicon.glyphicon-file {
-          // glyphicons with portrait orientation take up too much height
-          font-size: 6em;
+        .chapter {
+          padding-left: 1em;
+        }
+
+        .download {
+          padding: 0;
+          margin-top: 11px;
+          margin-bottom: 11px;
+        }
+      }
+    }
+
+    #documents {
+
+      .svgicon {
+        // To change any SVGs color see https://stackoverflow.com/a/53336754
+        filter: invert(53%) sepia(22%) saturate(3052%) hue-rotate(159deg) brightness(96%) contrast(102%); // #00AFEC
+      }
+
+    }
+
+    // MONOGRAPH ASSETS - LIST VIEW
+    #documents.documents-list {
+
+      .document {
+        margin-bottom: 1.5em;
+        padding-top: 1.5em;
+        border-bottom: none;
+
+        .document-thumbnail {
+          img {
+          margin-top: .9em;
+          border: 2px solid #eeeeee;
+          }
+
+          img.svgicon {
+            border: none;
+          }
+
+          .file-set-glyphicon {
+            font-size: 9em;
+            margin-bottom: 10px;
+          }
+
+          .glyphicon.glyphicon-file {
+            // glyphicons with portrait orientation take up too much height
+            font-size: 6em;
+          }
+
+          .external-resource-link {
+            text-align: center;
+          }
+
+        }
+
+        .documentHeader {
+          p {
+              font-size: 1.15em;
+              font-weight: 500;
+          }
+        }
+
+        .document-metadata {
+          width: auto;
+          padding-left: 0;
+          padding-right: 0;
+        }
+
+      }
+
+    }
+
+    // MONOGRAPH ASSETS - GALLERY VIEW
+    .view-icon-gallery {
+      &:before { content: "\e011"; }
+    }
+
+    #documents.gallery {
+      display: -webkit-box;
+      display: -moz-box;
+      display: -ms-flexbox;
+      display: -webkit-flex;
+      display: flex;
+      flex-flow: row wrap;
+      -webkit-flex-wrap: wrap;
+      padding-top: 2em;
+      margin: 0 auto;
+      width: 90%;
+
+      .document {
+        border-bottom: none;
+        border-top: none;
+
+        -webkit-box-flex: 1;
+        -moz-box-flex: 1;
+        -ms-flex: 1;
+        flex: 1;
+
+        min-width: 240px;
+        min-height: 240px;
+        -webkit-flex: 1 0 240px;
+      }
+
+      .document:first-child {
+        margin-top: 6px;
+        padding-top: 6px;
+      }
+
+      .index_title {
+        width: 100%;
+        font-weight: 400;
+      }
+
+      .document-counter {
+        display: none;
+      }
+
+      .index-document-functions {
+        clear: left;
+      }
+
+      .document-metadata {
+        dt, dd {
+          float: none;
+          width: auto;
+          clear: none;
+          text-align: left;
+          margin: 0;
+          padding: 0;
+        }
+      }
+    }
+
+    #documents.row.gallery {
+      display: block;
+      display: -moz-box;
+      display: -ms-flexbox;
+      display: flex;
+
+      .document {
+        display: flex;
+        flex: none;
+        align-items: stretch;
+
+        .thumbnail {
+          width: 100%;
+          padding: 1em;
+          text-align: center;
+
+          img {
+            border: 2px solid #eeeeee;
+          }
+
+          img.svgicon {
+            border: none;
+          }
+
+          .file-set-glyphicon {
+            font-size: 8em;
+          }
+
+        }
+        .caption {
+          display: inline-block;
+          text-align: left;
         }
 
         .external-resource-link {
           text-align: center;
         }
-
-      }
-
-      .documentHeader {
-        p {
-            font-size: 1.15em;
-            font-weight: 500;
-        }
-      }
-
-      .document-metadata {
-        width: auto;
-        padding-left: 0;
-        padding-right: 0;
-      }
-
-    }
-
-  }
-
-  // MONOGRAPH ASSETS - GALLERY VIEW
-  .view-icon-gallery {
-    &:before { content: "\e011"; }
-  }
-
-  #documents.gallery {
-    display: -webkit-box;
-    display: -moz-box;
-    display: -ms-flexbox;
-    display: -webkit-flex;
-    display: flex;
-    flex-flow: row wrap;
-    -webkit-flex-wrap: wrap;
-    padding-top: 2em;
-    margin: 0 auto;
-    width: 90%;
-
-    .document {
-      border-bottom: none;
-      border-top: none;
-
-      -webkit-box-flex: 1;
-      -moz-box-flex: 1;
-      -ms-flex: 1;
-      flex: 1;
-
-      min-width: 240px;
-      min-height: 240px;
-      -webkit-flex: 1 0 240px;
-    }
-
-    .document:first-child {
-      margin-top: 6px;
-      padding-top: 6px;
-    }
-
-    .index_title {
-      width: 100%;
-      font-weight: 400;
-    }
-
-    .document-counter {
-      display: none;
-    }
-
-    .index-document-functions {
-      clear: left;
-    }
-
-    .document-metadata {
-      dt, dd {
-        float: none;
-        width: auto;
-        clear: none;
-        text-align: left;
-        margin: 0;
-        padding: 0;
       }
     }
-  }
 
-  #documents.row.gallery {
-    display: block;
-    display: -moz-box;
-    display: -ms-flexbox;
-    display: flex;
-
-    .document {
-      display: flex;
-      flex: none;
-      align-items: stretch;
-
-      .thumbnail {
-        width: 100%;
-        padding: 1em;
-        text-align: center;
-
-        img {
-          border: 2px solid #eeeeee;
-        }
-
-        img.svgicon {
-          border: none;
-        }
-
-        .file-set-glyphicon {
-          font-size: 8em;
-        }
-
-      }
-      .caption {
-        display: inline-block;
-        text-align: left;
-      }
-
-      .external-resource-link {
-        text-align: center;
-      }
+    .stats-container.usage {
+      width: 80%;
     }
-  }
 
-  .stats-container.usage {
-    width: 80%;
-  }
+    .stats-container.overview {
+      width: 80%;
+      height: 150px;
+    }
 
-  .stats-container.overview {
-    width: 80%;
-    height: 150px;
-  }
-
-  #unity-container {
-    // `position: absolute;` is set in the WebGL's TemplateData/style.css, which is included in all the WebGL views,...
-    // meaning the `position: relative;` needed in the #webgl tab (and in CSB) has to go in-line on #unity-container
-    width:1024px;
-    height:600px;
-    margin-left: auto !important;
-    margin-right: auto !important;
-
-    #unity-canvas {
+    #unity-container {
+      // `position: absolute;` is set in the WebGL's TemplateData/style.css, which is included in all the WebGL views,...
+      // meaning the `position: relative;` needed in the #webgl tab (and in CSB) has to go in-line on #unity-container
       width:1024px;
       height:600px;
-    }
-  }
+      margin-left: auto !important;
+      margin-right: auto !important;
 
-  section#reviews {
-    table {
-      // the reviews.html files all have a "Reviews" caption on the table
-      // which appears immediately under our "Reviews" tab link and looks redundant
-      caption {
-        display: none;
-      }
-      th, td {
-        padding: 10px;
+      #unity-canvas {
+        width:1024px;
+        height:600px;
       }
     }
-  }
+
+    section#reviews {
+      table {
+        // the reviews.html files all have a "Reviews" caption on the table
+        // which appears immediately under our "Reviews" tab link and looks redundant
+        caption {
+          display: none;
+        }
+        th, td {
+          padding: 10px;
+        }
+      }
+    }
 
 }
 
@@ -1807,7 +1871,7 @@ footer.press {
     font-size: 1.2em;
   }
 
-  .monograph .monograph-assets-toc-epub {
+  .monograph .monograph-info-content {
 
     .section-container {
       a.toc-link {
@@ -1888,7 +1952,7 @@ footer.press {
     }
   }
 
-  .monograph .monograph-assets-toc-epub {
+  .monograph .monograph-info-content {
 
     .section-container {
       a.toc-link {

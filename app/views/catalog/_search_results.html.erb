@@ -1,6 +1,6 @@
 <%= render 'helio_results_sr_only_div' %>
 
-<h2 class="sr-only top-content-title"><%= t('blacklight.search.search_results_header') %></h2>
+<h3 class="sr-only top-content-title"><%= t('blacklight.search.search_results_header') %></h3>
 
 <% @page_title = t('blacklight.search.page_title.title', constraints: render_search_to_page_title(params), application_name: application_name) %>
 
@@ -13,7 +13,7 @@
 
 <%= render 'search_header' %>
 
-<h2 class="sr-only"><%= t('blacklight.search.search_results') %></h2>
+<h3 class="sr-only"><%= t('blacklight.search.search_results') %></h3>
 
 <%- if @response.empty? %>
   <%= render "zero_results" %>

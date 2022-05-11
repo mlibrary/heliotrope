@@ -38,7 +38,7 @@ RSpec.describe "Monograph Catalog EPUB TOC", type: :system, browser: true do
         context 'not restricted' do
           it 'has links but no buttons' do
             visit monograph_catalog_path(monograph)
-            click_on("Table of Contents")
+            click_on("Contents")
             within("#toc") do
               expect(page).to have_xpath(".//a[@class='toc-link']")
               expect(page).not_to have_xpath(".//span[@title='Read section']")
@@ -53,7 +53,7 @@ RSpec.describe "Monograph Catalog EPUB TOC", type: :system, browser: true do
 
           it 'has links but no buttons' do
             visit monograph_catalog_path(monograph)
-            click_on("Table of Contents")
+            click_on("Contents")
             within("#toc") do
               expect(page).to have_xpath(".//a[@class='toc-link']")
               expect(page).not_to have_xpath(".//span[@title='Read section']")
@@ -70,7 +70,7 @@ RSpec.describe "Monograph Catalog EPUB TOC", type: :system, browser: true do
         context 'not restricted' do
           it 'has links but no buttons' do
             visit monograph_catalog_path(monograph)
-            click_on("Table of Contents")
+            click_on("Contents")
             within("#toc") do
               expect(page).to have_xpath(".//a[@class='toc-link']")
               expect(page).not_to have_xpath(".//span[@title='Read section']")
@@ -86,7 +86,7 @@ RSpec.describe "Monograph Catalog EPUB TOC", type: :system, browser: true do
 
           it 'has links but no buttons' do
             visit monograph_catalog_path(monograph)
-            click_on("Table of Contents")
+            click_on("Contents")
             within("#toc") do
               expect(page).to have_xpath(".//a[@class='toc-link']")
               expect(page).not_to have_xpath(".//span[@title='Read section']")
@@ -107,7 +107,7 @@ RSpec.describe "Monograph Catalog EPUB TOC", type: :system, browser: true do
         context 'not restricted' do
           it 'has links but no buttons' do
             visit monograph_catalog_path(monograph)
-            click_on("Table of Contents")
+            click_on("Contents")
             within("#toc") do
               expect(page).to have_xpath(".//a[@class='toc-link']")
               expect(page).not_to have_xpath(".//span[@title='Read section']")
@@ -123,7 +123,7 @@ RSpec.describe "Monograph Catalog EPUB TOC", type: :system, browser: true do
 
           it 'has links but no buttons' do
             visit monograph_catalog_path(monograph)
-            click_on("Table of Contents")
+            click_on("Contents")
             within("#toc") do
               expect(page).to have_xpath(".//a[@class='toc-link']")
               expect(page).not_to have_xpath(".//span[@title='Read section']")
@@ -140,7 +140,7 @@ RSpec.describe "Monograph Catalog EPUB TOC", type: :system, browser: true do
         context 'not restricted' do
           it 'has links but no buttons' do
             visit monograph_catalog_path(monograph)
-            click_on("Table of Contents")
+            click_on("Contents")
             within("#toc") do
               expect(page).to have_xpath(".//a[@class='toc-link']")
               expect(page).not_to have_xpath(".//span[@title='Read section']")
@@ -156,7 +156,7 @@ RSpec.describe "Monograph Catalog EPUB TOC", type: :system, browser: true do
 
           it 'has links but no buttons' do
             visit monograph_catalog_path(monograph)
-            click_on("Table of Contents")
+            click_on("Contents")
             within("#toc") do
               expect(page).to have_xpath(".//a[@class='toc-link']")
               expect(page).not_to have_xpath(".//span[@title='Read section']")
@@ -181,7 +181,7 @@ RSpec.describe "Monograph Catalog EPUB TOC", type: :system, browser: true do
         context 'not restricted' do
           it 'has links but no buttons' do
             visit monograph_catalog_path(monograph)
-            click_on("Table of Contents")
+            click_on("Contents")
             within("#toc") do
               expect(page).to have_xpath(".//a[@class='toc-link']")
               expect(page).not_to have_xpath(".//span[@title='Read section']")
@@ -197,7 +197,7 @@ RSpec.describe "Monograph Catalog EPUB TOC", type: :system, browser: true do
 
           it 'has links but no buttons' do
             visit monograph_catalog_path(monograph)
-            click_on("Table of Contents")
+            click_on("Contents")
             within("#toc") do
               expect(page).to have_xpath(".//a[@class='toc-link']")
               expect(page).not_to have_xpath(".//span[@title='Read section']")
@@ -214,7 +214,7 @@ RSpec.describe "Monograph Catalog EPUB TOC", type: :system, browser: true do
         context 'not restricted' do
           it 'has links but no buttons' do
             visit monograph_catalog_path(monograph)
-            click_on("Table of Contents")
+            click_on("Contents")
             within("#toc") do
               expect(page).to have_xpath(".//a[@class='toc-link']")
               expect(page).not_to have_xpath(".//span[@title='Read section']")
@@ -230,7 +230,7 @@ RSpec.describe "Monograph Catalog EPUB TOC", type: :system, browser: true do
 
           it 'has links but no buttons' do
             visit monograph_catalog_path(monograph)
-            click_on("Table of Contents")
+            click_on("Contents")
             within("#toc") do
               expect(page).to have_xpath(".//a[@class='toc-link']")
               expect(page).not_to have_xpath(".//span[@title='Read section']")
@@ -251,10 +251,10 @@ RSpec.describe "Monograph Catalog EPUB TOC", type: :system, browser: true do
         context 'not restricted' do
           it 'has links and buttons' do
             visit monograph_catalog_path(monograph)
-            click_on("Table of Contents")
+            click_on("Contents")
             within("#toc") do
               expect(page).to have_xpath(".//a[@class='toc-link']")
-              expect(page).to have_xpath(".//span[@title='Read section']")
+              # expect(page).to have_xpath(".//span[@title='Read section']")
               # expect(page).to have_xpath(".//i[@title='Download section']")
               # expect(page).to have_xpath(".//a[@class='toc-download-link']")
               expect(page).to have_content("Download")
@@ -268,10 +268,10 @@ RSpec.describe "Monograph Catalog EPUB TOC", type: :system, browser: true do
 
           it 'has links and buttons (buttons because OA takes precedence over restricted)' do
             visit monograph_catalog_path(monograph)
-            click_on("Table of Contents")
+            click_on("Contents")
             within("#toc") do
               expect(page).to have_xpath(".//a[@class='toc-link']")
-              expect(page).to have_xpath(".//span[@title='Read section']")
+              # expect(page).to have_xpath(".//span[@title='Read section']")
               # expect(page).to have_xpath(".//i[@title='Download section']")
               expect(page).to have_content("Download")
             end
@@ -285,10 +285,10 @@ RSpec.describe "Monograph Catalog EPUB TOC", type: :system, browser: true do
         context 'not restricted' do
           it 'has links and buttons' do
             visit monograph_catalog_path(monograph)
-            click_on("Table of Contents")
+            click_on("Contents")
             within("#toc") do
               expect(page).to have_xpath(".//a[@class='toc-link']")
-              expect(page).to have_xpath(".//span[@title='Read section']")
+              # expect(page).to have_xpath(".//span[@title='Read section']")
               # expect(page).to have_xpath(".//i[@title='Download section']")
               expect(page).to have_content("Download")
             end
@@ -301,10 +301,10 @@ RSpec.describe "Monograph Catalog EPUB TOC", type: :system, browser: true do
 
           it 'has links but no buttons' do
             visit monograph_catalog_path(monograph)
-            click_on("Table of Contents")
+            click_on("Contents")
             within("#toc") do
               expect(page).to have_xpath(".//a[@class='toc-link']")
-              expect(page).not_to have_xpath(".//span[@title='Read section']")
+              # expect(page).not_to have_xpath(".//span[@title='Read section']")
               # expect(page).not_to have_xpath(".//i[@title='Download section']")
               expect(page).not_to have_content("Download")
             end

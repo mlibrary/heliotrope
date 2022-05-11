@@ -77,8 +77,16 @@ module Hyrax
       solr_document.copyright_holder.present?
     end
 
+    def copyright_year?
+      solr_document.copyright_year.present?
+    end
+
     def holding_contact?
       solr_document.holding_contact.present?
+    end
+
+    def publisher?
+      solr_document.publisher.present?
     end
 
     def open_access?
@@ -136,7 +144,7 @@ module Hyrax
       key = "#{author_type}_orcids_ssim"
       if solr_document[key].present? && solr_document[key][index].present?
         # https://info.orcid.org/brand-guidelines/#Inline_ORCID_iD
-        "<sup><a target=\"_blank\" href=\"#{solr_document[key][index]}\">#{ActionController::Base.helpers.image_tag('orcid_16x16.gif', width: '16px', height: '16px')}</a></sup>"
+        "<sup><a target=\"_blank\" href=\"#{solr_document[key][index]}\">#{ActionController::Base.helpers.image_tag('orcid_16x16.gif', alt: 'ORCID page', width: '16px', height: '16px')}</a></sup>"
       else
         ''
       end
@@ -213,6 +221,10 @@ module Hyrax
 
     def buy_url
       solr_document.buy_url.first if buy_url?
+    end
+
+    def description?
+      solr_document.description.present?
     end
 
     def catalog_url

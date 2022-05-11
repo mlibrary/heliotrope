@@ -1,3 +1,6 @@
+// MOVED from ./application folder related to HELIO-4163 to deactivate
+// Keeping this file alive in case it can be applied in other places
+
 jQuery($(document).on('turbolinks:load', function (){
 
     var minimized_elements = $(".monograph-metadata .description:not('.display-in-full')");

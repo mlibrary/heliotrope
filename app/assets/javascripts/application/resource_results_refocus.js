@@ -5,7 +5,7 @@ $(document).on('turbolinks:load', function() {
 
   if (withinResources()) {
     var bodyRect = document.body.getBoundingClientRect();
-    var elemRect = document.querySelector("#tabs").getBoundingClientRect();
+    var elemRect = document.querySelector("#resources").getBoundingClientRect();
     var offset   = elemRect.top - bodyRect.top;
     // Scroll so that the tabs are at the very top of the window
     window.scrollTo(0, offset);
