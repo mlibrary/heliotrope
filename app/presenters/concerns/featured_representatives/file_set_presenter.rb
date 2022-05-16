@@ -34,5 +34,9 @@ module FeaturedRepresentatives
     def mobi?
       featured_representative&.kind == 'mobi'
     end
+
+    def database?
+      featured_representative&.kind == 'database'
+    end
   end
 end

@@ -71,7 +71,7 @@ RSpec.describe Crossref::FileSetMetadata do
                        mime_type_ssi: "epub")
   end
 
-  # will be skipped, no dois for `peer_review` FeaturedRepresentatives (or any other kind)
+  # will be skipped, no dois for `peer_review` FeaturedRepresentatives (except webgl)
   let(:fs6) do
     ::SolrDocument.new(id: '666666666',
                        has_model_ssim: ['FileSet'],
@@ -80,7 +80,7 @@ RSpec.describe Crossref::FileSetMetadata do
                        mime_type_ssi: "text/html")
   end
 
-  # will be skipped, no dois for `related` FeaturedRepresentatives (or any other kind)
+  # will be skipped, no dois for `related` FeaturedRepresentatives (except webgl)
   let(:fs7) do
     ::SolrDocument.new(id: '777777777',
                        has_model_ssim: ['FileSet'],

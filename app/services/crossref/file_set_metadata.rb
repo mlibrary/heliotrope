@@ -139,8 +139,9 @@ module Crossref
       end
 
       def monograph_representative?(presenter)
-        return true if presenter.featured_representative?
-        return true if presenter.id == presenter.parent.representative_id
+        return false if presenter.webgl? # "webgl" featured reps get a DOI now, HELIO-4214
+        return true if presenter.featured_representative? # other featured reps do not
+        return true if presenter.id == presenter.parent.representative_id # the cover does not
         false
       end
   end
