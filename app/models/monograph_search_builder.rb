@@ -31,7 +31,8 @@ class MonographSearchBuilder < ::SearchBuilder
 
   def filter_out_representatives(solr_parameters)
     id = monograph_id(blacklight_params)
-    ids = FeaturedRepresentative.where(work_id: id).map(&:file_set_id)
+    # HELIO-4214 include webgls and database in the file_set/resource list
+    ids = FeaturedRepresentative.where(work_id: id).filter_map { |f| f.file_set_id unless f.kind == "database" || f.kind == "webgl" }
     solr_parameters[:fq] << "-id:(#{ids.join(' ')})" if ids.present?
   end
 
