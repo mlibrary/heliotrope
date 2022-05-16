@@ -8,8 +8,7 @@ class FixityMailer < ApplicationMailer
   def send_failures(failures)
     @today = Time.zone.now.strftime "%Y-%m-%d"
     @failures = failures
-    @hostname = Socket.gethostname
-    if @hostname == 'bulleit-1.umdl.umich.edu'
+    if Settings.host == "www.fulcrum.org"
       mail
     else
       mail(to: "sethajoh@umich.edu")

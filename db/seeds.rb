@@ -3,8 +3,8 @@
 #
 require 'yaml'
 
-def bulleit?
-  return true if Socket.gethostname == 'bulleit-1.umdl.umich.edu'
+def production?
+  return true if Settings.host == "www.fulcrum.org"
   false
 end
 
@@ -33,7 +33,7 @@ unless Rails.env.test?
     puts "Could not parse YAML: #{e.message}"
   end
   publishers.each_entry do |entry|
-    if bulleit?
+    if production?
       update_create(entry) if entry["production"]
     else
       update_create(entry)
