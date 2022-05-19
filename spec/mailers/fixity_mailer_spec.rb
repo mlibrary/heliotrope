@@ -18,7 +18,7 @@ RSpec.describe FixityMailer, type: :mailer do
     let(:mail) { described_class.send_failures(failures).deliver }
 
     before do
-      allow(Socket).to receive(:gethostname).and_return("bulleit-1.umdl.umich.edu")
+      allow(Settings).to receive(:host).and_return("www.fulcrum.org")
     end
 
     it "has the correct fields" do
