@@ -8,7 +8,7 @@ git_source(:github) do |repo_name|
 end
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '~> 5.2.6.3'
+gem 'rails', '~> 5.2.7.1'
 
 gem 'rails-html-sanitizer', '~> 1.3.0'
 
@@ -35,8 +35,7 @@ gem 'jbuilder', '~> 2.5'
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
 
-# HELIO-2318
-gem 'rack', '~> 2.1.4'
+gem 'rack', '~> 2.2.0'
 
 # HELIO-2404 APTRUST PRESERVATION
 gem 'bagit'
@@ -149,7 +148,7 @@ gem 'mysql2', '~> 0.4.10'
 # CVE-2019-5477
 # CVE-2020-7595
 # CVE-2020-26247
-gem "nokogiri", ">= 1.11.1"
+gem "nokogiri", ">= 1.13.6"
 
 # Read PDF ToC
 gem 'origami'
@@ -176,7 +175,7 @@ gem "rubyzip", ">= 1.3.0"
 
 gem 'sitemap_generator', '~> 6.1.2'
 
-gem 'sinatra', '~> 2.0.2'
+gem 'sinatra', '~> 2.2.0'
 # CVE-2018-3760
 gem 'sprockets', '~> 3.7.2'
 
