@@ -319,6 +319,8 @@ module Hyrax
                   'image_service'
                 elsif interactive_map?
                   'interactive_map'
+                elsif webgl?
+                  'webgl'
                 else
                   'default'
                 end
