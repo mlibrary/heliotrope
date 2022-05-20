@@ -15,7 +15,8 @@ namespace :heliotrope do
       image_base_name = File.basename(image_file_path, image_extension)
 
       # we expect the numeric component of the image file name to uniquely identify a Monograph within this publisher by ISBN
-      isbn = image_base_name.delete('^0-9').strip
+      # sometimes other digits are present after the ISBN (relating to, e.g. compression level or file version). Remove them.
+      isbn = pdf_base_name.delete('^0-9')[0, 13].strip
 
       if isbn.blank?
         puts "No number present in image file #{image_base_name}#{image_extension} ...................... SKIPPING"

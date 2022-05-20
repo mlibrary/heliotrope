@@ -13,8 +13,9 @@ namespace :heliotrope do
     epub_file_paths.each do |epub_file_path|
       epub_base_name = File.basename(epub_file_path, '.epub')
 
-      # we expect the numeric component of the epub file name to uniquely identify a Monograph by ISBN
-      isbn = epub_base_name.delete('^0-9').strip
+      # we expect the numeric component of the image file name to uniquely identify a Monograph within this publisher by ISBN
+      # sometimes other digits are present after the ISBN (relating to, e.g. compression level or file version). Remove them.
+      isbn = pdf_base_name.delete('^0-9')[0, 13].strip
 
       if isbn.blank?
         puts "No number present in EPUB file #{epub_base_name}.epub ...................... SKIPPING"
