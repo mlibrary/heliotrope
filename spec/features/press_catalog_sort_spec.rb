@@ -54,7 +54,29 @@ describe 'Press catalog sort' do
       visit "/sortpress1"
     end
 
-    it 'is sorted by "Date Added (Newest First)" by default' do
+    it 'is sortable by "Publication Date (Newest First) by default"' do
+      # using corresponding titles to check position as pub year isn't shown in results page (or set here)
+      assert_equal page.all(title_selector).map(&:text), ['silverfish',
+                                                          'aardvark',
+                                                          'Manatee',
+                                                          'Cormorant',
+                                                          'baboon',
+                                                          'Zebra']
+    end
+
+    it 'is sortable by "Publication Date (Oldest First)"' do
+      click_link 'Publication Date (Oldest First)'
+      # using corresponding titles to check position as pub year isn't shown in results page (or set here)
+      assert_equal page.all(title_selector).map(&:text), ['Zebra',
+                                                          'baboon',
+                                                          'Cormorant',
+                                                          'Manatee',
+                                                          'aardvark',
+                                                          'silverfish']
+    end
+
+    it 'is sortable by "Date Added (Newest First)"' do
+      click_link 'Date Added (Newest First)'
       assert_equal page.all(title_selector).map(&:text), ['Zebra',
                                                           'silverfish',
                                                           'Cormorant',
@@ -83,28 +105,6 @@ describe 'Press catalog sort' do
                                                            'ruth andrew',
                                                            'Renée Andrée',
                                                            'Rita Andrea']
-    end
-
-    it 'is sortable by "Publication Date (Newest First)"' do
-      click_link 'Publication Date (Newest First)'
-      # using corresponding titles to check position as pub year isn't shown in results page (or set here)
-      assert_equal page.all(title_selector).map(&:text), ['silverfish',
-                                                          'aardvark',
-                                                          'Manatee',
-                                                          'Cormorant',
-                                                          'baboon',
-                                                          'Zebra']
-    end
-
-    it 'is sortable by "Publication Date (Oldest First)"' do
-      click_link 'Publication Date (Oldest First)'
-      # using corresponding titles to check position as pub year isn't shown in results page (or set here)
-      assert_equal page.all(title_selector).map(&:text), ['Zebra',
-                                                          'baboon',
-                                                          'Cormorant',
-                                                          'Manatee',
-                                                          'aardvark',
-                                                          'silverfish']
     end
 
     it 'is sortable by "Title (A-Z)"' do
@@ -173,16 +173,7 @@ describe 'Press catalog sort' do
       visit "/sortpress2"
     end
 
-    it 'is sorted by "Date Added (Newest First)" by default' do
-      assert_equal page.all(title_selector).map(&:text), ['Date Published Tie-Break Test 5',
-                                                          'Date Published Tie-Break Test 4',
-                                                          'Date Published Tie-Break Test 3',
-                                                          'Date Published Tie-Break Test 2',
-                                                          'Date Published Tie-Break Test 1']
-    end
-
-    it 'uses date_published to tie-break "Publication Date (Newest First)"' do
-      click_link 'Publication Date (Newest First)'
+    it 'uses date_published to tie-break the default sort of "Publication Date (Newest First)"' do
       assert_equal page.all(title_selector).map(&:text), ['Date Published Tie-Break Test 5',
                                                           'Date Published Tie-Break Test 2',
                                                           'Date Published Tie-Break Test 3',
@@ -307,7 +298,29 @@ describe 'Press catalog sort' do
       visit "/sortpress3"
     end
 
-    it 'is sorted by "Date Added (Newest First)" by default' do
+    it 'is sorted by "Publication Date (Newest First)" by default' do
+      # using corresponding titles to check position as pub year isn't shown in results page (or set here)
+      assert_equal page.all(title_selector).map(&:text), ['Manatee',
+                                                          'silverfish',
+                                                          'Zebra',
+                                                          'aardvark',
+                                                          'Cormorant',
+                                                          'baboon']
+    end
+
+    it 'is sortable by "Publication Date (Oldest First)"' do
+      click_link 'Publication Date (Oldest First)'
+      # using corresponding titles to check position as pub year isn't shown in results page (or set here)
+      assert_equal page.all(title_selector).map(&:text), ['baboon',
+                                                          'Cormorant',
+                                                          'aardvark',
+                                                          'Zebra',
+                                                          'silverfish',
+                                                          'Manatee']
+    end
+
+    it 'is sortable by "Date Added (Newest First)"' do
+      click_link 'Date Added (Newest First)'
       assert_equal page.all(title_selector).map(&:text), ['aardvark',
                                                           'Manatee',
                                                           'baboon',
@@ -336,28 +349,6 @@ describe 'Press catalog sort' do
                                                            'Smiley Quinn',
                                                            'Barry Hopeful',
                                                            'Guy Gulliver']
-    end
-
-    it 'is sortable by "Publication Date (Newest First)"' do
-      click_link 'Publication Date (Newest First)'
-      # using corresponding titles to check position as pub year isn't shown in results page (or set here)
-      assert_equal page.all(title_selector).map(&:text), ['Manatee',
-                                                          'silverfish',
-                                                          'Zebra',
-                                                          'aardvark',
-                                                          'Cormorant',
-                                                          'baboon']
-    end
-
-    it 'is sortable by "Publication Date (Oldest First)"' do
-      click_link 'Publication Date (Oldest First)'
-      # using corresponding titles to check position as pub year isn't shown in results page (or set here)
-      assert_equal page.all(title_selector).map(&:text), ['baboon',
-                                                          'Cormorant',
-                                                          'aardvark',
-                                                          'Zebra',
-                                                          'silverfish',
-                                                          'Manatee']
     end
 
     it 'is sortable by "Title (A-Z)"' do
