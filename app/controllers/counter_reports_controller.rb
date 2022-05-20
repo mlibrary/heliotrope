@@ -53,7 +53,10 @@ class CounterReportsController < ApplicationController
 
     # institutional 'guest' users can only see their institutions, but all presses
     # press admins can only see their presses, but all institutions
-    return render 'counter_reports/unauthorized', status: :unauthorized unless authorized_insitutions_or_presses?
+    unless authorized_insitutions_or_presses?
+      @skip_footer = true
+      render 'counter_reports/unauthorized', status: :unauthorized
+    end
 
     case params[:id]
     when 'pr'
@@ -113,7 +116,10 @@ class CounterReportsController < ApplicationController
       @institutions = current_institutions.sort_by(&:name)
       @presses = Press.order(:name)
 
-      return render 'counter_reports/unauthorized', status: :unauthorized if @institutions.empty? || @presses.empty?
+      if @institutions.empty? || @presses.empty?
+        @skip_footer = true
+        render 'counter_reports/unauthorized', status: :unauthorized
+      end
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.
