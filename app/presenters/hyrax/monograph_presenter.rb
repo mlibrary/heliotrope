@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Hyrax
-  class MonographPresenter < WorkShowPresenter
+  class MonographPresenter < WorkShowPresenter # rubocop:disable Metrics/ClassLength
     include CommonWorkPresenter
     include CitableLinkPresenter
     include EditionPresenter
@@ -122,6 +122,21 @@ module Hyrax
         isbns << isbn_removeformat if isbn_removeformat.present?
       end
       isbns
+    end
+
+    def awards
+      awards = []
+      award.each do |award|
+        # each one should look something like this:
+        # 2022|Book of the Year|American Library Association
+        # and we'll display it like this in Fedora:
+        # 2022 Book of the Year (American Library Association)
+        award_components = award.split('|')
+        next unless award_components.count == 3
+        awards << "#{award_components[0].strip} #{award_components[1].strip} (#{award_components[2].strip})"
+      end
+      return nil if awards.blank?
+      awards.sort.join("\n")
     end
 
     # Dependent upon CitableLinkPresenter

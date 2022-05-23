@@ -623,6 +623,34 @@ RSpec.describe Hyrax::MonographPresenter do
     end
   end
 
+  describe '#awards' do
+    let(:mono_doc) { ::SolrDocument.new(id: 'mono', has_model_ssim: ['Monograph'], award_tesim: award) }
+
+    subject { presenter.awards }
+
+    context 'No value present in awards' do
+      let(:award) { nil }
+
+      it { is_expected.to eq nil }
+    end
+
+    context 'A single award' do
+      let(:award) { ["2022 |NYT Bestsellers | New York Times"] }
+
+      it 'Formats the award, stripping unwanted spacing' do
+        is_expected.to eq '2022 NYT Bestsellers (New York Times)'
+      end
+    end
+
+    context 'Two awards, one with italics' do
+      let(:award) { ["2022|NYT Bestsellers|New York Times", "2022|Book of the Year|American Library Association"] }
+
+      it 'Formats and sorts the awards' do
+        is_expected.to eq "2022 Book of the Year (American Library Association)\n2022 NYT Bestsellers (New York Times)"
+      end
+    end
+  end
+
   describe "#access_level with access_indicators" do
     subject { presenter.access_level(actor_product_ids, allow_read_product_ids) }
 

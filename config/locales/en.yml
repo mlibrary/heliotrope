@@ -333,7 +333,7 @@ en:
         volume: "Monograph volume number if member of a multi-volume set - integer - greater than 0."
         oclc_owi: "OCLC Work Identifier - NOT the OCLC Number - At least that is my interpretation."
         copyright_year: "Copyright Year - YYYY - four digit year - greater than 1709."
-        award: "Awards in the following format: YYYY|Title|Society;YYYY|Title|Society"
+        award: "Enter each Award in the following format: YYYY|Title|Society"
       press:
         description: "Description of the Press. Markdown is allowed."
         subdomain: "Subdomain used as the Press URL. 2-32 lowercase alphanumeric ASCII characters, plus (non-consecutive) hyphens. Must not start or end with a hyphen."
