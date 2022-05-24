@@ -11,7 +11,7 @@ class DlpsInstitution
       ids = request_attributes[:dlpsInstitutionId]
       return [] if ids.blank?
 
-      Greensub::Institution.where(identifier: ids).to_a
+      Greensub::Institution.where(id: Greensub::InstitutionAffiliation.where(dlps_institution_id: ids).pluck(:institution_id).uniq).to_a
     end
 
     def shib_institutions(request_attributes)
