@@ -538,6 +538,8 @@ RSpec.describe Hyrax::FileSetPresenter do
           case kind
           when 'epub'
             it { is_expected.to eq "hyrax/file_sets/media_display/#{kind}" }
+          when 'webgl'
+            it { is_expected.to eq "hyrax/file_sets/media_display/#{kind}" }
           else
             it { is_expected.to eq 'hyrax/file_sets/media_display/default' }
           end
@@ -639,6 +641,7 @@ RSpec.describe Hyrax::FileSetPresenter do
     context 'with featured representative' do
       FeaturedRepresentative::KINDS.each do |kind|
         context kind.to_s do
+          next if kind == "webgl" # HELIO-4254 we don't want to embed webgls in epubs, right? Maybe someday.
           before do
             if presenter.respond_to?("#{kind}?".to_sym)
               allow(presenter).to receive("#{kind}?".to_sym).and_return(true)

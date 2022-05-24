@@ -32,7 +32,7 @@
       <span class="Z3988" title="<%= @presenter.file_set_coins_title %>" aria-hidden="true"></span>
     <% end %>
 
-    <% if @presenter.interactive_map? %>
+    <% if @presenter.interactive_map? || @presenter.webgl? %>
       <!-- map file_set -->
       <%= render "stacked_layout", presenter: @presenter %>
     <% else %>
