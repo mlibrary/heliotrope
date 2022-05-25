@@ -1,10 +1,7 @@
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // This file is not the easiest to follow but you can take it that most of the top section is to do with adding...
 // ARIA stuff and k/b naviagation for a11y concerns, whereas the bottom part is heliotrope-specific logic that...
-// takes our Monograph/Score catalog customizations into account. Basically the fact that the resources tab may not...
-// be the default (table of contents comes first for eBook reader Monographs) but needs to take precedence if the...
-// user is interacting with Blacklight resources/assets/media results.
-//
+// takes our Monograph/Score catalog customizations into account.
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //
 // The four places tabs are being used now are:
@@ -27,7 +24,6 @@
 // - `class="active",`aria-selected="<true|false>"` and `aria-expanded="<true|false>"` all work as intended whether...
 //   tab activation is via mouse click or keyboard (a11y)
 // - normal Bootstrap tab behavior not broken (URL fragments highlight the expected tab)
-// - Blacklight resources results activate resources tab for both facet and text searches
 // - browser back button navigates through tab loads as expected (see Hyrax's tabs.js linked below)
 //
 // Based on bugs we've fought previously (numerous times) you will at a minimum need to review these listed...
@@ -138,41 +134,20 @@ $(document).on('turbolinks:load', function() {
       });
     });
 
-    //var blackLightSearchOngoing = function blackLightSearchOngoing() {
-      // the presence of this div indicates text search and/or facet terms are present
-      //if ($('#appliedParams').val() !== undefined) return true;
-      // the presence of these query parameters indicate the user is interacting with results (sorting, paging)
-      //var blacklight_params = ['page', 'per_page', 'sort', 'view'];
-      //var blacklight_param_found = false;
-      //window.location.search.substring(1).split('&').forEach(function(queryNameValue) {
-      //  if (blacklight_params.includes(queryNameValue.split('=')[0])) {
-      //    blacklight_param_found = true;
-      //  }
-      //});
-      //return blacklight_param_found;
-    //};
-
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    // Here comes the actual heliotrope tab activation logic. Precedence is as follows:
+    // conorom 20220524: note this logic is much simpler now that Monograph "Resource" (a.k.a. FileSet) results are...
+    // no longer inside a tab at all (post HELIO-4163).
+    // Here is the heliotrope tab activation logic. Precedence is as follows:
     // 1) A tab is specifically called out in the URL as a fragment (#tab-id). This beats everything.
-    // 2) Blacklight interactions come next in line, the user is interacting with Blacklight so the results must...
-    //    ...be front and center on next page load.
-    // 3) First tab listed in the HTML under #tabs is the fallback/default otherwise.
+    // 2) First tab listed in the HTML under #tabs is the fallback/default otherwise.
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    // 3) above... First tab, the default
+    // 2) above... First tab, the default
     var activeTab = $(tabs[0]).attr('href');
-    // 2) above... Monograph/score catalog pages need to trigger resources tab if Blacklight is in use. If we have...
-    //    Blacklight results on another tabbed page in future it should just be a matter of detecting it in this `if`
-    //if ($('#main.monograph').length > 0 || $('#main.score').length > 0) {
-    //  if (blackLightSearchOngoing()) {
-    //    activeTab = '#resources';
-    //  }
-    //}
     // 1) above... Override if there is a tab in the URL, i.e a URL fragment, '#tab-name'
-    //var stripped = document.location.href.split("#");
-    //if (stripped.length > 1) {
-    //  activeTab = '#' + stripped[1];
-    //}
+    var stripped = document.location.href.split("#");
+    if (stripped.length > 1) {
+     activeTab = '#' + stripped[1];
+    }
 
     // set tab using a11y-compatible method up top
     var tab = $('a[href="' + activeTab + '"]')[0];
