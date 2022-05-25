@@ -31,47 +31,28 @@ describe PressSearchBuilder do
     let(:default_sort_field) { double('default_sort_field') }
     let(:sort_fields) { double('sort_fields') }
     let(:press) { 'press' }
+    let(:year_desc) { double('year_desc') }
 
     before do
       allow(search_builder).to receive(:blacklight_params).and_return({ 'press' => press })
       allow(config).to receive(:default_sort_field).and_return(default_sort_field)
       allow(config).to receive(:sort_fields).and_return(sort_fields)
+      allow(sort_fields).to receive(:[]).with('year desc').and_return(year_desc)
     end
 
-    it { is_expected.to be default_sort_field }
+    it { is_expected.to be year_desc }
 
-    context 'barpublishing' do
-      let(:press) { 'barpublishing' }
-      let(:year_desc) { double('year_desc') }
-
-      before { allow(sort_fields).to receive(:[]).with('year desc').and_return(year_desc) }
-
-      it { is_expected.to be year_desc }
-
-      context "params['q'].present?" do
-        before do
-          allow(search_builder).to receive(:blacklight_params).and_return({ 'press' => press, 'q' => 'query' })
-        end
-
-        it { is_expected.to be default_sort_field }
+    context "params['q'].present?" do
+      before do
+        allow(search_builder).to receive(:blacklight_params).and_return({ 'press' => press, 'q' => 'query' })
       end
+
+      it { is_expected.to be default_sort_field }
     end
 
-    context 'michigan' do
-      let(:press) { 'michigan' }
-      let(:year_desc) { double('year_desc') }
-
-      before { allow(sort_fields).to receive(:[]).with('year desc').and_return(year_desc) }
-
-      it { is_expected.to be year_desc }
-
-      context "params['q'].present?" do
-        before do
-          allow(search_builder).to receive(:blacklight_params).and_return({ 'press' => press, 'q' => 'query' })
-        end
-
-        it { is_expected.to be default_sort_field }
-      end
+    context 'heb' do
+      let(:press) { 'heb' }
+      it { is_expected.to be default_sort_field }
     end
   end
 

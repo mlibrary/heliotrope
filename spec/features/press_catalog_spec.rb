@@ -43,8 +43,8 @@ describe 'Press Catalog' do
         expect(page).to have_css("a.btn.btn-default.view-type-gallery[href*='view=gallery'][role=tab][aria-selected=false]")
 
         # Since this is not a search, it's a "browse" and the default
-        # sort should be Sort by Date Added (Newest First)
-        expect(page).to have_content "Sort by Date Added (Newest First)"
+        # sort should be Sort by Publication Date (Newest First)
+        expect(page).to have_content "Sort by Publication Date (Newest First)"
 
         # Presses with less than 15 books will not have facets
         expect(page).not_to have_selector(".facets-container")

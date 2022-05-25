@@ -54,14 +54,14 @@ class PressSearchBuilder < ::SearchBuilder
     # In short this is a hack because I have no idea why it works.
     # Feel free to purge this code and find a better solution.
     case blacklight_params['press']
-    when 'barpublishing', 'michigan'
+    when 'heb'
+      blacklight_config.default_sort_field
+    else
       if blacklight_params['q'].present?
         blacklight_config.default_sort_field
       else
         blacklight_config.sort_fields['year desc'] # Sort by Publication Date (Newest First)
       end
-    else
-      blacklight_config.default_sort_field
     end
   end
 
