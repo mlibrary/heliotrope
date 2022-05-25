@@ -17,7 +17,7 @@
     </div>
   <% end %>
   <!-- BOOK TITLE AND PRIMARY METADATA -->
-  <div class="col-sm-8 col-sm-push-4 monograph-metadata">    
+  <div class="col-sm-8 col-sm-push-4 monograph-metadata">
     <!-- TITLE -->
     <h1 id="work-title"><%= @presenter.title %></h1>
     <!-- VOLUME -->
@@ -30,7 +30,7 @@
       <span class="authors"><%= render_markdown authorship_display %></span>
     <% end %>
     <!-- ACCESS INDICATORS and OPTIONS -->
-    <%= render partial: 'access_options.html.erb', locals: { auth: @auth, presenter: @presenter } if @auth.present? %>      
+    <%= render partial: 'access_options.html.erb', locals: { auth: @auth, presenter: @presenter } if @auth.present? %>
     <!-- PREVIOUS/NEXT EDITION MESSAGE -->
     <% if @presenter.previous_edition_url.present? || @presenter.next_edition_url.present? %>
       <div class="edition-links">
@@ -103,7 +103,7 @@
           </div><!-- /.btn-group -->
         </div><!-- /.btn-toolbar -->
     <% end %>
-    
+
     <!-- BOOK INFORMATION TABS - TABS -->
     <!-- See app/assets/javascripts/application/tabs.js -->
     <div id="tabs">
@@ -114,7 +114,7 @@
               <a id="tab-description" href="#description" aria-controls="description" role="tab" data-toggle="tab" aria-selected="false" aria-expanded="false" tabindex="-1">Overview</a>
             </h2>
           </li>
-        <% end %>   
+        <% end %>
         <% if @presenter.toc? %>
           <li role="presentation">
             <h2>
@@ -129,13 +129,13 @@
             </h2>
           </li>
         <% end %>
-        <% if @presenter.award.present? %>
+        <% if @presenter.awards.present? %>
           <li role="presentation">
             <h2>
               <a id="tab-award" href="#award" aria-controls="award" role="tab" data-toggle="tab" aria-selected="false" aria-expanded="false" tabindex="-1">Awards</a>
             </h2>
           </li>
-        <% end %>         
+        <% end %>
         <% if @presenter.reviews? %>
           <li role="presentation">
             <h2>
@@ -149,7 +149,7 @@
               <a id="tab-related" href="#related" aria-controls="related" role="tab" data-toggle="tab" aria-selected="false" aria-expanded="false" tabindex="-1">Related Titles</a>
             </h2>
           </li>
-        <% end %>      
+        <% end %>
         <% if @presenter.aboutware? %>
           <li role="presentation">
             <h2>
@@ -193,8 +193,8 @@
               <div aria-label="funder display" class="funder_display"><%= @presenter.funder_display %></div>
             </div>
           </section>
-        <% end %>    
-        <!-- ABOUTWARE FEATURED REPRESENTATIVE -->      
+        <% end %>
+        <!-- ABOUTWARE FEATURED REPRESENTATIVE -->
         <% if @presenter.aboutware? %>
           <section id="aboutware" class="tab-pane fade aboutware row" role="tabpanel" aria-hidden="true" aria-labelledby="tab-aboutware" tabindex="0">
             <div class="col-sm-12">
@@ -207,10 +207,10 @@
         <% if @presenter.award.present? %>
           <section id="award" class="tab-pane fade award row" role="tabpanel" aria-hidden="true" aria-labelledby="tab-funder" tabindex="0">
             <div class="col-sm-12">
-              <div aria-label="award" class="award"><%= @presenter.award %></div>
+              <div aria-label="award" class="award"><%= render_markdown @presenter.awards %></div>
             </div>
           </section>
-        <% end %>        
+        <% end %>
         <!-- REVIEWS FEATURED REPRESENTATIVE -->
         <% if @presenter.reviews? %>
           <section id="reviews" class="tab-pane fade reviews row" role="tabpanel" aria-hidden="true" aria-labelledby="tab-reviews" tabindex="0">
@@ -278,7 +278,7 @@
     <%= render 'shared/altmetric_dimensions' %>
     <!-- PEER REVIEW -->
     <% if @presenter.peer_review? %>
-      <div class="peer-review"><%= @presenter.peer_review.file.content.force_encoding("UTF-8").html_safe %></div>      
+      <div class="peer-review"><%= @presenter.peer_review.file.content.force_encoding("UTF-8").html_safe %></div>
     <% end %>
     <div class="monograph-metadata-additional">
       <!-- CITABLE LINK -->
@@ -341,7 +341,7 @@
       <% if @presenter.series.present? || @presenter.subject.present? %>
         <div class="subject-series">
             <%= @presenter.attribute_to_html(:series, render_as: :catalog_facet_attribute, subdomain: @presenter.subdomain) %>
-            <%= @presenter.attribute_to_html(:subject, render_as: :catalog_facet_attribute, subdomain: @presenter.subdomain) %>          
+            <%= @presenter.attribute_to_html(:subject, render_as: :catalog_facet_attribute, subdomain: @presenter.subdomain) %>
         </div>
       <% end %>
     </div>
