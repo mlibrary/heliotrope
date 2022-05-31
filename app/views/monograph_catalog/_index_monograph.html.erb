@@ -367,17 +367,3 @@
     </div>
   </div><!-- /.monograph-assets-toc-epub -->
 <% end %>
-<% if @presenter.webgl? %>
-        <section id="webgl" class="tab-pane fade webgl row" role="tabpanel" aria-hidden="true" aria-labelledby="tab-webgl" tabindex="0">
-          <div class="col-sm-12">
-            <%= render 'webgls/tab' %>
-          </div>
-        </section>
-<% end %>
-<% if @presenter.database? %>
-        <section id="database" class="tab-pane fade database row" role="tabpanel" aria-hidden="true" aria-labelledby="tab-database" tabindex="0">
-          <div class="col-sm-12">
-            <a href="<%= @presenter&.database&.external_resource_url %>" target="_blank">Click to open external database <span class="glyphicon glyphicon-share" aria-hidden="true" aria-label="Link to external database"></span></a>
-          </div>
-        </section>
-<% end %>
