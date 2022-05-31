@@ -654,14 +654,14 @@ footer.press {
   }
 
   .monograph-metadata-additional {
-    
+
     line-height: 24px;
-    
+
     .peer-review {
       width: 90%;
       padding: 1em 0;
     }
-    
+
     figure.peer_review {
       display: -webkit-box;
       display: -ms-flexbox;
@@ -753,9 +753,9 @@ footer.press {
   .monograph-assets {
     border-top: 1px solid #ddd;
   }
-  
+
   .monograph-metadata {
-    
+
     h1 {
       font-size: 30px;
       margin-bottom: .1em;
@@ -822,7 +822,7 @@ footer.press {
       margin: 1em 0;
       font-weight: bold;
       font-stretch: condensed;
-      
+
       img {
         margin-right: .5em;
         vertical-align: bottom;
@@ -904,7 +904,7 @@ footer.press {
           font-weight: bold;
         }
       }
- 
+
     }
   }
     /* Monograph TOC */
@@ -913,7 +913,7 @@ footer.press {
 
       ul.toc {
         list-style: none;
-        padding: 0 1em;
+        padding: 0 0 0 1em;
         font-size: 16px;
       }
 
@@ -935,10 +935,10 @@ footer.press {
         border-top: none;
         a.toc-link {
           max-width: 80%;
-          text-decoration: underline;  
+          text-decoration: underline;
           white-space: nowrap;
           overflow: hidden;
-          text-overflow: ellipsis; 
+          text-overflow: ellipsis;
         }
 
         .btn-group.download {
