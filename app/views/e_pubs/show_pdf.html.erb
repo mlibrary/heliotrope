@@ -881,8 +881,11 @@
                 self.tracking.action('contents/go/link');
                 self._will_be_setting_zoom_to = context.explicitDest[4];
                 self._will_be_setting_zoom_from = self.pdfViewer.currentScaleValue;
+              },
+              pushPage: function(pageNumber) {
+                self.tracking.action('contents/go/link');
               }
-            }
+            };
 
             var setupInterval = setInterval(function() {
               if ( self.PDFViewerApplication.pdfDocument != null ) {
