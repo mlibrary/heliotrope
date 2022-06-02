@@ -59,7 +59,7 @@ RSpec.describe FeaturedRepresentativesController, type: :controller do
       let(:fr) { create(:featured_representative, work_id: monograph.id, file_set_id: file_set.id, kind: 'epub') }
 
       before do
-        delete :delete, params: { file_set_id: fr.id, work_id: monograph.id }
+        delete :delete, params: { file_set_id: fr.file_set_id, work_id: monograph.id }
       end
 
       it "deletes the featured_representative" do
@@ -104,7 +104,7 @@ RSpec.describe FeaturedRepresentativesController, type: :controller do
       let(:fr) { create(:featured_representative, work_id: monograph.id, file_set_id: file_set.id, kind: 'epub') }
 
       before do
-        delete :delete, params: { file_set_id: fr.id, work_id: monograph.id }
+        delete :delete, params: { file_set_id: fr.file_set_id, work_id: monograph.id }
       end
 
       it "deletes the featured_representative" do

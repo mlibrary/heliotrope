@@ -14,7 +14,7 @@
     </div>
     <div class="col-sm-4">
       <% if can? :edit, member.id %>
-            <%= link_to "Unset", main_app.featured_representatives_path(file_set_id: member.featured_representative.id, work_id: member.parent.id),
+            <%= link_to "Unset", main_app.featured_representatives_path(file_set_id: member.id, work_id: member.parent.id),
             method: :delete, title: "Delete #{member.featured_representative.kind}",
             data: { confirm: "Unset Featured Representative?" },
             class: "btn btn-default" %>
