@@ -42,6 +42,19 @@ RSpec.describe FeaturedRepresentativesController, type: :controller do
       end
     end
 
+    describe '#unpack' do
+      let(:fr) { create(:featured_representative, work_id: monograph.id, file_set_id: file_set.id, kind: 'epub') }
+
+      before do
+        allow(UnpackJob).to receive_messages(perform_later: nil)
+        get :unpack, params: { file_set_id: fr.file_set_id }
+      end
+
+      it "calls UnpackJob" do
+        expect(UnpackJob).to have_received(:perform_later).with(file_set.id, 'epub')
+      end
+    end
+
     describe '#delete' do
       let(:fr) { create(:featured_representative, work_id: monograph.id, file_set_id: file_set.id, kind: 'epub') }
 
@@ -71,6 +84,19 @@ RSpec.describe FeaturedRepresentativesController, type: :controller do
 
       it "saves the featured_representative" do
         expect(FeaturedRepresentative.all.count).to eq(1)
+      end
+    end
+
+    describe '#unpack' do
+      let(:fr) { create(:featured_representative, work_id: monograph.id, file_set_id: file_set.id, kind: 'epub') }
+
+      before do
+        allow(UnpackJob).to receive_messages(perform_later: nil)
+        get :unpack, params: { file_set_id: fr.file_set_id }
+      end
+
+      it "calls UnpackJob" do
+        expect(UnpackJob).to have_received(:perform_later).with(file_set.id, 'epub')
       end
     end
 

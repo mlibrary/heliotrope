@@ -1,8 +1,16 @@
 <% if member.featured_representative? %>
 <fieldset id="<%= member.id %>">
   <div class="row">
-    <div class="col-sm-8">
+    <div class="col-sm-4">
       <b><%= member.featured_representative.kind %></b>
+    </div>
+    <div class="col-sm-4">
+      <% if (can? :edit, member.id) && member.featured_representative.kind == 'epub' %>
+        <%= link_to "Unpack", main_app.unpack_fr_path(file_set_id: member.id),
+                    title: "Unpack EPUB",
+                    data: { confirm: "Do you wish to unpack this EPUB?" },
+                    class: "btn btn-default" %>
+      <% end %>
     </div>
     <div class="col-sm-4">
       <% if can? :edit, member.id %>

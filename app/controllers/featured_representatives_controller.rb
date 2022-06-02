@@ -25,6 +25,16 @@ class FeaturedRepresentativesController < ApplicationController
     end
   end
 
+  def unpack
+    fr = FeaturedRepresentative.where(file_set_id: params[:file_set_id]).first
+    UnpackJob.perform_later(params[:file_set_id], fr.kind) if fr.present?
+    if Sighrax.from_noid(fr.work_id).is_a?(Sighrax::Score)
+      redirect_to score_show_patt(fr.work_id)
+    else
+      redirect_to monograph_show_path(fr.work_id)
+    end
+  end
+
   def delete
     fr = FeaturedRepresentative.where(id: params[:file_set_id]).first
     fr.destroy if fr.present?
