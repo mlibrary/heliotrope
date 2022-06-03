@@ -192,6 +192,7 @@ Rails.application.routes.draw do
   get 'maps/:id/*file', controller: :maps, action: :file, as: :map_file
   post 'featured_representatives', controller: :featured_representatives, action: :save
   delete 'featured_representatives', controller: :featured_representatives, action: :delete
+  get 'featured_representatives', controller: :featured_representatives, action: :unpack, as: :unpack_fr
 
   get 'whoami', controller: :utilities, action: :whoami, as: :whoami_utility
   get 'status', controller: :utilities, action: :status, as: :status_utility

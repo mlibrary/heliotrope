@@ -42,11 +42,24 @@ RSpec.describe FeaturedRepresentativesController, type: :controller do
       end
     end
 
+    describe '#unpack' do
+      let(:fr) { create(:featured_representative, work_id: monograph.id, file_set_id: file_set.id, kind: 'epub') }
+
+      before do
+        allow(UnpackJob).to receive_messages(perform_later: nil)
+        get :unpack, params: { file_set_id: fr.file_set_id }
+      end
+
+      it "calls UnpackJob" do
+        expect(UnpackJob).to have_received(:perform_later).with(file_set.id, 'epub')
+      end
+    end
+
     describe '#delete' do
       let(:fr) { create(:featured_representative, work_id: monograph.id, file_set_id: file_set.id, kind: 'epub') }
 
       before do
-        delete :delete, params: { file_set_id: fr.id, work_id: monograph.id }
+        delete :delete, params: { file_set_id: fr.file_set_id, work_id: monograph.id }
       end
 
       it "deletes the featured_representative" do
@@ -74,11 +87,24 @@ RSpec.describe FeaturedRepresentativesController, type: :controller do
       end
     end
 
+    describe '#unpack' do
+      let(:fr) { create(:featured_representative, work_id: monograph.id, file_set_id: file_set.id, kind: 'epub') }
+
+      before do
+        allow(UnpackJob).to receive_messages(perform_later: nil)
+        get :unpack, params: { file_set_id: fr.file_set_id }
+      end
+
+      it "calls UnpackJob" do
+        expect(UnpackJob).to have_received(:perform_later).with(file_set.id, 'epub')
+      end
+    end
+
     describe '#delete' do
       let(:fr) { create(:featured_representative, work_id: monograph.id, file_set_id: file_set.id, kind: 'epub') }
 
       before do
-        delete :delete, params: { file_set_id: fr.id, work_id: monograph.id }
+        delete :delete, params: { file_set_id: fr.file_set_id, work_id: monograph.id }
       end
 
       it "deletes the featured_representative" do
