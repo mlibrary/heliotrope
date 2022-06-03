@@ -872,16 +872,21 @@
           // self.PDFViewerApplication.open('<%= "#{@presenter.id}/file?#{@presenter.browser_cache_breaker}" %>').then(function() {
             self.pdfViewer = this.PDFViewerApplication.pdfViewer;
 
+            // this option is weird to tweak in viewer.js, it seems to very much be geared to user preferences in...
+            // Firefox's about:config (BasePreferences in viewer.js). Setting it here does what we want for...
+            // HELIO-2866/HELIO-4266 without tracking  more hacks to viewer.js in Confluence.
+            self.PDFViewerApplication.pdfLinkService._ignoreDestinationZoom = true;
+
             // monkeypatch the PDFLinkService to be able to track when _it_
             // thinks clicks are worth of pushing onto history so we can
             // tell when to push links onto history.
             self.PDFViewerApplication.pdfLinkService.pdfHistory = {
               pushCurrentPosition: function() { /* NO OP */ },
+              // ToC links, i.e. all PDF bookmarks
               push: function(context) {
                 self.tracking.action('contents/go/link');
-                self._will_be_setting_zoom_to = context.explicitDest[4];
-                self._will_be_setting_zoom_from = self.pdfViewer.currentScaleValue;
               },
+              // thumbnail links
               pushPage: function(pageNumber) {
                 self.tracking.action('contents/go/link');
               }
@@ -908,15 +913,6 @@
                     href: self.options.href + '#page=' + pageNumber,
                     percentage: ( pageNumber / self.PDFViewerApplication.pagesCount )
                   });
-                });
-
-                self.pdfViewer.eventBus.on('scalechanging', function(evt) {
-                  var currentScaleValue = self.options.scale;
-                  if ( self._will_be_setting_zoom_to && self._will_be_setting_zoom_from ) {
-                    // and clear these
-                    self._will_be_setting_zoom_to = self._will_be_setting_zoom_from = null;
-                    self.pdfViewer.currentScaleValue = currentScaleValue;
-                  }
                 });
 
                 self.PDFViewerApplication.pdfDocument.getMetadata().then(function(data) {
