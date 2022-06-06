@@ -21,10 +21,13 @@ RSpec.describe "monograph_catalog/index.html.erb" do
 
   let(:debug) { false }
   let(:current_ability) { double("ability") }
-  let(:presenter) { Hyrax::MonographPresenter.new(SolrDocument.new(id: 'mono_id', title: ["Untitled"], has_model_ssim: ['Monograph']), current_ability) }
+  let(:solr_doc) { SolrDocument.new(id: 'mono_id', title_tesim: ["Untitled"], has_model_ssim: ['Monograph']) }
+  let(:presenter) { Hyrax::MonographPresenter.new(solr_doc, current_ability) }
   let(:ebook_download_presenter) { double("ebook_download_presenter") }
 
   before do
+    ActiveFedora::SolrService.add([solr_doc.to_h])
+    ActiveFedora::SolrService.commit
     stub_template "catalog/_search_sidebar" => "<!-- render-template-catalog/_search_sidebar -->"
     stub_template "catalog/_search_results" => "<!-- render-template-catalog/_search_results -->"
     assign(:presenter, presenter)

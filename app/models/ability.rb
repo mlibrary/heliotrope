@@ -62,18 +62,6 @@ class Ability
       @user.analyst_presses.pluck(:subdomain).include?(m.press) && !only_scores
     end
 
-    can :read, FileSet do |f|
-      @user.analyst_presses.pluck(:subdomain).include?(f.parent.press) unless f.present.nil?
-    end
-
-    can :read, Hyrax::MonographPresenter do |p|
-      @user.analyst_presses.map(&:subdomain).include?(p.subdomain) && !only_scores
-    end
-
-    can :read, Hyrax::FileSetPresenter do |p|
-      @user.analyst_presses.map(&:subdomain).include?(p.parent.subdomain)
-    end
-
     can :read, :stats_dashboard do
       @user.analyst_presses.present?
     end
@@ -90,19 +78,6 @@ class Ability
 
     can :manage, FileSet do |f|
       @user.editor_presses.map(&:subdomain).include?(f.parent.press) unless f.parent.nil?
-    end
-
-    # For the different view presenters
-    can :update, Hyrax::MonographPresenter do |p|
-      @user.editor_presses.map(&:subdomain).include?(p.subdomain) && !only_scores
-    end
-
-    can :update, Hyrax::ScorePresenter do
-      @user.editor_presses.pluck(:subdomain).include?(Services.score_press)
-    end
-
-    can :update, Hyrax::FileSetPresenter do |p|
-      @user.editor_presses.map(&:subdomain).include?(p.parent.subdomain)
     end
 
     can :read, :stats_dashboard do
@@ -129,19 +104,6 @@ class Ability
 
     can :update, Press do |p|
       admin_for?(p)
-    end
-
-    # For the different view presenters
-    can :update, Hyrax::MonographPresenter do |p|
-      @user.admin_presses.map(&:subdomain).include?(p.subdomain) && !only_scores
-    end
-
-    can :update, Hyrax::ScorePresenter do
-      @user.admin_presses.pluck(:subdomain).include?(Services.score_press)
-    end
-
-    can :update, Hyrax::FileSetPresenter do |p|
-      @user.admin_presses.map(&:subdomain).include?(p.parent.subdomain)
     end
 
     can :read, :stats_dashboard do

@@ -129,12 +129,12 @@ describe Ability do
     end
 
     context "updating" do
-      let(:my_presenter) { Hyrax::MonographPresenter.new(SolrDocument.new(id: 'my_id', press_tesim: my_press.subdomain), subject) }
-      let(:other_presenter) { Hyrax::MonographPresenter.new(SolrDocument.new(id: 'other_id', press_tesim: other_press.subdomain), subject) }
+      let(:monograph_for_my_press) { create(:monograph, press: my_press.subdomain) }
+      let(:monograph_for_other_press) { create(:monograph, press: other_press.subdomain) }
 
       it do
-        is_expected.to     be_able_to(:update, my_presenter)
-        is_expected.not_to be_able_to(:update, other_presenter)
+        is_expected.to     be_able_to(:update, monograph_for_my_press)
+        is_expected.not_to be_able_to(:update, monograph_for_other_press)
       end
     end
 
@@ -211,12 +211,12 @@ describe Ability do
     end
 
     context "updating" do
-      let(:my_presenter) { Hyrax::MonographPresenter.new(SolrDocument.new(id: 'my_id', press_tesim: my_press.subdomain), subject) }
-      let(:other_presenter) { Hyrax::MonographPresenter.new(SolrDocument.new(id: 'other_id', press_tesim: other_press.subdomain), subject) }
+      let(:monograph_for_my_press) { create(:monograph, press: my_press.subdomain) }
+      let(:monograph_for_other_press) { create(:monograph, press: other_press.subdomain) }
 
       it do
-        is_expected.to be_able_to(:update, my_presenter)
-        is_expected.not_to be_able_to(:update, other_presenter)
+        is_expected.to     be_able_to(:update, monograph_for_my_press)
+        is_expected.not_to be_able_to(:update, monograph_for_other_press)
       end
     end
 
@@ -303,12 +303,12 @@ describe Ability do
     end
 
     context "updating" do
-      let(:my_presenter) { Hyrax::MonographPresenter.new(SolrDocument.new(id: 'my_id', press_tesim: my_press.subdomain), subject) }
-      let(:other_presenter) { Hyrax::MonographPresenter.new(SolrDocument.new(id: 'other_id', press_tesim: other_press.subdomain), subject) }
+      let(:monograph_for_my_press) { create(:monograph, press: my_press.subdomain) }
+      let(:monograph_for_other_press) { create(:monograph, press: other_press.subdomain) }
 
       it do
-        is_expected.not_to be_able_to(:update, my_presenter)
-        is_expected.not_to be_able_to(:update, other_presenter)
+        is_expected.not_to be_able_to(:update, monograph_for_my_press)
+        is_expected.not_to be_able_to(:update, monograph_for_other_press)
       end
     end
 

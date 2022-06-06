@@ -18,9 +18,9 @@ Hyrax::DownloadsController.class_eval do # rubocop:disable Metrics/BlockLength
           # For derivatives stored on the local file system
           response.headers['Accept-Ranges'] = 'bytes'
           response.headers['Content-Length'] = File.size(file).to_s
-          file.sub!(/releases\/\d+/, "current")
-          response.headers['X-Sendfile'] = file
-          send_file file, derivative_download_options
+          updated_file_path = file.sub(/releases\/\d+/, "current")
+          response.headers['X-Sendfile'] = updated_file_path
+          send_file updated_file_path, derivative_download_options
         else
           CounterService.from(self, presenter).count(request: 1)
           send_irus_analytics_request

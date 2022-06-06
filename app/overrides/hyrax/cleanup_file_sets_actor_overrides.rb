@@ -45,7 +45,16 @@ Hyrax::Actors::CleanupFileSetsActor.class_eval do
       # in_objects lookup does not break when FileSets are destroyed.
       ActiveFedora::SolrService.delete(curation_concern.id)
       FeaturedRepresentative.where(file_set_id: curation_concern.member_ids).destroy_all
-      DestroyActiveFedoraObjectsJob.perform_later(Array(curation_concern.list_source.id) + curation_concern.member_ids)
+
+      # Hyrax 3 HELIO-4237
+      # It appears that Embargo and Lease object are now automatically being created for new Works, but
+      # also that they are not being deleted with the Work. It's weird, I don't know.
+      # If a Work has an Embargo or Lease, make sure we're deleting those too.
+      to_delete = Array(curation_concern.list_source.id) + curation_concern.member_ids
+      to_delete << curation_concern.embargo.id if curation_concern.embargo.present?
+      to_delete << curation_concern.lease.id if curation_concern.lease.present?
+
+      DestroyActiveFedoraObjectsJob.perform_later(to_delete)
     end
   end)
 end

@@ -14,7 +14,7 @@ describe 'Adding a new press' do
       visit new_press_path
       fill_in 'Publisher Name', with: 'Test Publisher'
       fill_in 'fulcrum.org Subdomain', with: 'testpub'
-      fill_in 'Abstract or Summary', with: 'A Test Publisher description'
+      fill_in 'Description', with: 'A Test Publisher description'
       attach_file 'press[logo_path]', Rails.root.join('spec', 'fixtures', 'csv', 'import', 'shipwreck.jpg')
       fill_in 'Publisher\'s Current Website Address', with: 'https://example.com'
       fill_in 'Google Analytics Tracking ID', with: 'GA-87654321-1'
