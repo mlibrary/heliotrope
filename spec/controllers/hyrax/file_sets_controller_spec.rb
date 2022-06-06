@@ -50,6 +50,181 @@ RSpec.describe Hyrax::FileSetsController, type: :controller do
     end
   end
 
+  # Some of the update specs lifted from
+  # https://github.com/samvera/hyrax/blob/4c1a99a6a52c973781dff090c2c98c044ea65e42/spec/controllers/hyrax/file_sets_controller_spec.rb#L78
+  # with minor changes to get them passing in heliotrope
+  describe "#update" do
+    let(:parent) { FactoryBot.create(:public_monograph, user: user) }
+
+    let(:file_set) do
+      FactoryBot.create(:file_set, user: user, title: ['test title']).tap do |file_set|
+        parent.ordered_members << file_set
+        parent.save!
+      end
+    end
+
+    context "when updating metadata" do
+      before { ActiveJob::Base.queue_adapter = :test }
+      after { ActiveJob::Base.queue_adapter = :resque }
+
+      it "spawns a content update event job" do
+        expect do
+          post :update, params: {
+            id: file_set,
+            file_set: {
+              title: ['new_title'],
+              keyword: [''],
+              permissions_attributes: [{ type: 'person',
+                                         name: 'archivist1',
+                                         access: 'edit' }]
+            }
+          }
+        end.to have_enqueued_job(ContentUpdateEventJob).exactly(:once)
+
+        expect(response)
+          .to redirect_to Rails.application.routes.url_helpers.hyrax_file_set_path(file_set, locale: 'en')
+        expect(assigns[:file_set].modified_date)
+          .not_to be file_set.modified_date
+      end
+    end
+
+    context "when updating the attached file already uploaded" do
+      let(:actor) { double(Hyrax::Actors::FileActor) }
+
+      before do
+        allow(Hyrax::Actors::FileActor).to receive(:new).and_return(actor)
+      end
+
+      it "spawns a ContentNewVersionEventJob", perform_enqueued: [IngestJob] do
+        expect(actor)
+          .to receive(:ingest_file)
+          .with(JobIoWrapper)
+          .and_return(true)
+        expect(ContentNewVersionEventJob)
+          .to receive(:perform_later)
+          .with(file_set, user)
+
+        file = fixture_file_upload('/lorum_ipsum_toc_cover.png', 'image/png')
+        allow(Hyrax::UploadedFile)
+          .to receive(:find)
+          .with(["1"])
+          .and_return([file])
+
+        post :update, params: { id: file_set, files_files: ["1"] }
+
+        expect(assigns[:file_set].modified_date)
+          .not_to be file_set.modified_date
+        expect(assigns[:file_set].title)
+          .to contain_exactly(*file_set.title)
+      end
+    end
+
+    context "with two existing versions from different users", :perform_enqueued do
+      let(:file1)       { "lorum_ipsum_toc_cover.png" }
+      let(:file2)       { "kitty.tif" }
+      let(:second_user) { create(:user) }
+      let(:version1)    { "version1" }
+      # let(:actor1)      { Hyrax::Actors::FileSetActor.new(file_set, user) }
+      # let(:actor2)      { Hyrax::Actors::FileSetActor.new(file_set, second_user) }
+
+      before do
+        # ActiveJob::Base.queue_adapter.filter = [IngestJob]
+        # actor1.create_content(fixture_file_upload(file1))
+        # actor2.create_content(fixture_file_upload(file2))
+        Hydra::Works::AddFileToFileSet.call(file_set, File.open(fixture_path + "/#{file1}"), :original_file)
+        Hydra::Works::AddFileToFileSet.call(file_set, File.open(fixture_path + "/#{file2}"), :original_file)
+      end
+
+      describe "restoring a previous version" do
+        context "as the first user" do
+          before do
+            ActiveJob::Base.queue_adapter = :test
+            sign_in user
+            post :update, params: { id: file_set, revision: version1 }
+          end
+          after { ActiveJob::Base.queue_adapter = :resque }
+
+          let(:restored_content) { file_set.reload.original_file }
+          let(:versions)         { restored_content.versions }
+          let(:latest_version)   { Hyrax::VersioningService.latest_version_of(restored_content) }
+
+          it "restores the first versions's content and metadata" do
+            # expect(restored_content.mime_type).to eq "image/png"
+            expect(restored_content).to be_a(Hydra::PCDM::File)
+            expect(restored_content.original_name).to eq file1
+            expect(versions.all.count).to eq 3
+            expect(versions.last.label).to eq latest_version.label
+            expect(Hyrax::VersionCommitter.where(version_id: versions.last.uri).pluck(:committer_login))
+              .to eq [user.user_key]
+          end
+        end
+
+        context "as a user without edit access" do
+          before { sign_in second_user }
+
+          it "is unauthorized" do
+            post :update, params: { id: file_set, revision: version1 }
+            expect(response.code).to eq '401'
+            expect(response).to render_template 'unauthorized'
+            expect(response).to render_template('dashboard')
+          end
+        end
+      end
+    end
+
+    it "adds new groups and users" do
+      post :update, params: {
+        id: file_set,
+        file_set: { keyword: [''],
+                    permissions_attributes: [
+                      { type: 'person', name: 'user1', access: 'edit' },
+                      { type: 'group', name: 'group1', access: 'read' }
+                    ] }
+      }
+
+      expect(assigns[:file_set])
+        .to have_attributes(read_groups: contain_exactly("group1"),
+                            edit_users: include("user1", user.user_key))
+    end
+
+    it "updates existing groups and users" do
+      file_set.edit_groups = ['group3']
+      file_set.save
+
+      post :update, params: {
+        id: file_set,
+        file_set: { keyword: [''],
+                    permissions_attributes: [
+                      { id: file_set.permissions.last.id, type: 'group', name: 'group3', access: 'read' }
+                    ] }
+      }
+
+      expect(assigns[:file_set].read_groups).to contain_exactly("group3")
+    end
+
+    context "when there's an error saving" do
+      let(:parent) { FactoryBot.create(:public_monograph, user: user) }
+
+      let(:file_set) do
+        FactoryBot.create(:file_set, user: user).tap do |file_set|
+          parent.ordered_members << file_set
+          parent.save!
+        end
+      end
+
+      before { allow(FileSet).to receive(:find).and_return(file_set) }
+
+      it "draws the edit page" do
+        expect(file_set).to receive(:valid?).and_return(false)
+        post :update, params: { id: file_set, file_set: { keyword: [''] } }
+        expect(response.code).to eq '422'
+        expect(response).to render_template('edit')
+        expect(response).to render_template('dashboard')
+        expect(assigns[:file_set]).to eq file_set
+      end
+    end
+  end
+
   context 'tombstone' do
     context 'file set created' do
       before do
