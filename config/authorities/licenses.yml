@@ -33,7 +33,15 @@ terms:
       term: Creative Commons Attribution-NonCommercial-ShareAlike license, 3.0 Unported
     - id: https://creativecommons.org/licenses/by-sa/3.0/
       term: Creative Commons Attribution-ShareAlike license, 3.0 Unported
+    - id: https://creativecommons.org/licenses/by-sa/2.5/
+      term: Creative Commons Attribution-ShareAlike 2.5 Generic
     - id: https://creativecommons.org/licenses/by-sa/2.1/jp/
       term: Creative Commons Attribution-ShareAlike 2.1 Japan
     - id: https://creativecommons.org/licenses/by/2.0/
       term: Creative Commons Attribution 2.0 Generic license
+    - id: https://creativecommons.org/licenses/by-sa/2.0/
+      term: Creative Commons Attribution-ShareAlike 2.0 Generic
+    - id: https://creativecommons.org/licenses/by-nc-sa/2.0/
+      term: Creative Commons Attribution-NonCommercial-ShareAlike 2.0 Generic
+    - id: https://creativecommons.org/licenses/by-nc-nd/2.0/
+      term: Creative Commons Attribution-NonCommercial-NoDerivs 2.0 Generic
