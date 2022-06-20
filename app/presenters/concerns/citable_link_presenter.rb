@@ -3,7 +3,7 @@
 module CitableLinkPresenter
   extend ActiveSupport::Concern
 
-  delegate :doi, :hdl, to: :solr_document
+  delegate :doi, :hdl, :identifier, to: :solr_document
 
   def citable_link
     if doi.present?
@@ -28,16 +28,19 @@ module CitableLinkPresenter
   end
 
   def heb?
-    # this is only expected to be true for backlist/migrated HEB titles whose handles were created outside of...
-    # Fulcrum and stored in `identifier` during the DLXS-to-Fulcrum migration. New HEB titles will have a...
-    # fresh HEB-style handle created by the Fulcrum team and stored in the `handle` field like other books.
     heb.present?
   end
 
+  # All HEB Monographs should have their HEB ID set in `identifier`, e.g. `heb_id: heb34567.0001.001`,...
+  # which is then used to calculate the HEB-style, title-level handle to display as the "Citable Link",...
+  # such as https://hdl.handle.net/2027/heb34567
+  # No actual value needs to be stored in `hdl` for HEB Monographs. `doi` still takes precedence if set.
   def heb
     @heb ||= begin
-      match = /^(.*)(2027\/heb\.)(.*)$/i.match(solr_document.identifier.find { |e| /2027\/heb\./i =~ e } || '')
-      (match[2] + match[3]).downcase if match
+      # HEB ID's do *not* have a '.' after the 'heb'. We won't accept that in the identifier entry.
+      heb_id = identifier&.find { |i| i.strip.downcase[/^heb_id:\s*heb[0-9]{5}/] }&.strip&.downcase
+      # Always display the title-level handle with no period after 'heb', e.g. 2027/heb34567
+      heb_id.present? ? "2027/#{heb_id.gsub(/heb_id:\s*heb/, 'heb')[0, 8]}" : nil
     end
   end
 

@@ -17,12 +17,12 @@ RSpec.describe CitableLinkPresenter do
   subject(:presenter) {  self.class::Presenter.new(id, solr_document) }
 
   let(:id) { 'validnoid' }
-  let(:solr_document) { SolrDocument.new(hdl_ssim: [handle_path], doi_ssim: [doi_path], identifier_tesim: ['UUID', heb_handle, 'GUID']) }
+  let(:solr_document) { SolrDocument.new(hdl_ssim: [handle_path], doi_ssim: [doi_path], identifier_tesim: ['UUID', heb_id, 'GUID']) }
   let(:handle_url) { HandleNet::HANDLE_NET_PREFIX + handle_path }
   let(:heb_url) { HandleNet::HANDLE_NET_PREFIX + heb_path }
   let(:doi_url) { HandleNet::DOI_ORG_PREFIX + doi_path }
 
-  let(:heb_handle) { '' }
+  let(:heb_id) { '' }
   let(:handle_path) { '' }
   let(:heb_path) { '' }
   let(:doi_path) { '' }
@@ -55,19 +55,21 @@ RSpec.describe CitableLinkPresenter do
     end
 
     context 'and explicit heb' do
-      let(:heb_handle) { 'hTtP://Hdl.Handle.Net/2027/HeB.IdenTifier' }
-      let(:heb_path) { '2027/heb.identifier' }
+      let(:heb_id) { '  heb_id:   HeB00001.0001.001' }
+      let(:heb_path) { '2027/heb00001' }
 
-      it do
-        expect(subject.citable_link).to eq heb_url
-        expect(subject.doi?).to be false
-        expect(subject.doi_path).to eq doi_path
-        expect(subject.doi_url).to eq doi_url
-        expect(subject.heb?).to be true
-        expect(subject.heb_path).to eq heb_path
-        expect(subject.heb_url).to eq heb_url
-        expect(subject.handle_path).to eq handle_path
-        expect(subject.handle_url).to eq  handle_url
+      describe 'correct HEB ID' do
+        it 'trims and downcases proper HEB IDs, uses the correct resulting HEB handle' do
+          expect(subject.citable_link).to eq heb_url
+          expect(subject.doi?).to be false
+          expect(subject.doi_path).to eq doi_path
+          expect(subject.doi_url).to eq doi_url
+          expect(subject.heb?).to be true
+          expect(subject.heb_path).to eq heb_path
+          expect(subject.heb_url).to eq heb_url
+          expect(subject.handle_path).to eq handle_path
+          expect(subject.handle_url).to eq  handle_url
+        end
       end
 
       context 'and explicit doi' do
@@ -83,6 +85,23 @@ RSpec.describe CitableLinkPresenter do
           expect(subject.heb_url).to eq heb_url
           expect(subject.handle_path).to eq handle_path
           expect(subject.handle_url).to eq  handle_url
+        end
+      end
+
+      describe 'when someone enters a bad HEB id, containing incorrect period in "heb."' do
+        let(:heb_id) { 'heb_id: heb.00001.0001.001' }
+        let(:heb_path) { '' }
+
+        it 'ignores the value, falling back to handle for citable_link' do
+          expect(subject.citable_link).to eq handle_url
+          expect(subject.doi?).to be false
+          expect(subject.doi_path).to eq doi_path
+          expect(subject.doi_url).to eq doi_url
+          expect(subject.heb?).to be false
+          expect(subject.heb_path).to eq heb_path
+          expect(subject.heb_url).to eq heb_url
+          expect(subject.handle_path).to eq handle_path
+          expect(subject.handle_url).to eq handle_url
         end
       end
     end
