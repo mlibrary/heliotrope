@@ -20,7 +20,7 @@ RSpec.describe MonographIndexer do
             description: ["This is the abstract"],
             date_created: ['c.2018?'],
             isbn: ['978-0-252012345 (paper)', '978-0252023456 (hardcover)', '978-1-62820-123-9 (e-book)'],
-            identifier: ['bar_number:S0001', 'heb9999.0001.001'],
+            identifier: ['bar_number: S0001', 'heb_id: heb9999.0001.001'],
             press: press.subdomain)
     }
     let(:file_set) { create(:file_set, content: File.open(File.join(fixture_path, 'moby-dick.epub'))) }
@@ -115,7 +115,7 @@ RSpec.describe MonographIndexer do
     end
 
     it 'indexes identifers as symbols and removes whitespace if needed' do
-      expect(subject['identifier_ssim']).to contain_exactly('bar_number:S0001', 'heb9999.0001.001')
+      expect(subject['identifier_ssim']).to contain_exactly('bar_number:S0001', 'heb_id:heb9999.0001.001')
     end
 
     # 'isbn_numeric' is an isbn indexed multivalued field for finding books which is copied from 'isbn_tesim'

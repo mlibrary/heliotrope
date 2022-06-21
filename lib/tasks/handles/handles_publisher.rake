@@ -19,7 +19,7 @@ namespace :heliotrope do
       isbn_value = m['isbn_tesim']&.map { |val| val.sub(/\s*\(.+\)$/, '').delete('^0-9').strip } &.join('; ')
       # the Monograph row for HEB will have the HEB ID
       if args.publisher == 'heb'
-        heb_id = m['identifier_tesim']&.find { |i| i[/^heb[0-9].*/] } || ''
+        heb_id = m['identifier_tesim']&.find { |i| i.strip.downcase[/^heb_id:\s*heb[0-9]{5}/] }&.strip&.downcase&.gsub(/heb_id:\s*/, '')
         puts "#{m.id},#{Rails.application.routes.url_helpers.hyrax_monograph_path(m.id)},#{heb_id},#{isbn_value},#{m['doi_ssim']&.first}"
       else
         puts "#{m.id},#{Rails.application.routes.url_helpers.hyrax_monograph_path(m.id)},#{isbn_value},#{m['doi_ssim']&.first}"

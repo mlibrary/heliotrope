@@ -506,20 +506,6 @@ RSpec.describe Hyrax::MonographPresenter do
     end
   end
 
-  # Dependent upon CitableLinkPresenter
-  describe '#heb_dlxs_link' do
-    subject { presenter.heb_dlxs_link }
-
-    it { is_expected.to be nil }
-
-    context 'heb' do
-      let(:mono_doc) { ::SolrDocument.new(id: 'mono', has_model_ssim: ['Monograph'], identifier_tesim: [heb_handle]) }
-      let(:heb_handle) { 'hTtP://Hdl.Handle.Net/2027/HeB.IdenTifier' }
-
-      it { is_expected.to eq "https://quod.lib.umich.edu/cgi/t/text/text-idx?c=acls;idno=#{presenter.heb_url}" }
-    end
-  end
-
   describe '#bar_number' do
     let(:mono_doc) { ::SolrDocument.new(id: 'mono', has_model_ssim: ['Monograph'], identifier_tesim: identifier) }
 

@@ -139,12 +139,6 @@ module Hyrax
       awards.sort.join("\n")
     end
 
-    # Dependent upon CitableLinkPresenter
-    def heb_dlxs_link
-      return unless heb?
-      "https://quod.lib.umich.edu/cgi/t/text/text-idx?c=acls;idno=#{heb_url}"
-    end
-
     def bar_number
       identifier&.find { |i| i[/^bar_number:.*/] }&.gsub('bar_number:', '')&.strip
     end
