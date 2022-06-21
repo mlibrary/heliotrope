@@ -5,7 +5,7 @@ namespace :heliotrope do
   task :monographs_output_csv_by_press, [:directory, :subdomain] => :environment do |_t, args|
     # Usage: bundle exec rails "heliotrope:monographs_output_csv_by_press[/a_writable_folder, subdomain]"
 
-    if !File.writable?(File.dirname(args.directory))
+    if !File.writable?(args.directory)
       puts "Provided directory (#{args.directory}) is not writable. Exiting."
       exit
     end
@@ -15,7 +15,7 @@ namespace :heliotrope do
       exit
     end
 
-    file_path = File.join(args.directory, "#{args.subdomain}_monograph_metadata_#{Time.now.strftime("%Y-%m-%d")}.csv")
+    file_path = File.join(args.directory, "#{args.subdomain}_monograph_metadata_#{Time.now.getlocal.strftime("%Y-%m-%d")}.csv")
 
     docs = ActiveFedora::SolrService.query("+has_model_ssim:Monograph AND +press_sim:#{args.subdomain}", rows: 100_000)
 
@@ -26,5 +26,7 @@ namespace :heliotrope do
         csv << exporter.monograph_row
       end
     end
+
+    puts "Monograph data for press '#{args.subdomain}' saved to #{file_path}"
   end
 end
