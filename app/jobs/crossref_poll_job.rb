@@ -1,5 +1,9 @@
 # frozen_string_literal: true
 
+########################################
+## NOTE: THIS IS RUN FROM A CRON JOB! ##
+########################################
+
 class CrossrefPollJob < ApplicationJob
   queue_as :doi
   # We've submitted one or more doi registration requests to Crossref.

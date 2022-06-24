@@ -1,5 +1,9 @@
 # frozen_string_literal: true
 
+########################################
+## NOTE: THIS IS RUN FROM A CRON JOB! ##
+########################################
+
 # monkeypatch AF connection with a longer timout when running fixity checks, HELIO-4011
 module ActiveFedora
   class FixityService

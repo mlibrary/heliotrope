@@ -1,5 +1,9 @@
 # frozen_string_literal: true
 
+########################################
+## NOTE: THIS IS RUN FROM A CRON JOB! ##
+########################################
+
 class OpenAccessEbookTrustJob < ApplicationJob
   queue_as :ebook_trust
   # HELIO-3701

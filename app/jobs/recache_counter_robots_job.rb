@@ -1,5 +1,9 @@
 # frozen_string_literal: true
 
+########################################
+## NOTE: THIS IS RUN FROM A CRON JOB! ##
+########################################
+
 class RecacheCounterRobotsJob < ApplicationJob
   JSON_FILE = Rails.root.join('tmp', 'counter-robots.json')
   DOWNLOAD_CMD = "curl --silent https://raw.githubusercontent.com/atmire/COUNTER-Robots/master/COUNTER_Robots_list.json > #{JSON_FILE}"

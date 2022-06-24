@@ -1,5 +1,9 @@
 # frozen_string_literal: true
 
+########################################
+## NOTE: THIS IS RUN FROM A CRON JOB! ##
+########################################
+
 desc "save google analytics data"
 namespace :heliotrope do
   task :add_ga_history, [:start_date, :end_date] => :environment do |_t, args|

@@ -1,5 +1,9 @@
 # frozen_string_literal: true
 
+########################################
+## NOTE: THIS IS RUN FROM A CRON JOB! ##
+########################################
+
 desc 'Clean the IIIF cache and the uploads directory'
 namespace :heliotrope do
   task clean_cache: :environment do

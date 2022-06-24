@@ -1,5 +1,9 @@
 # frozen_string_literal: true
 
+########################################
+## NOTE: THIS IS RUN FROM A CRON JOB! ##
+########################################
+
 require 'htmlentities'
 
 desc 'Task to be called by a cron for Monographs create/edit from TMM CSV files (ISBN lookup)'

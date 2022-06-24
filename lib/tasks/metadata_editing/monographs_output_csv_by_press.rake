@@ -1,5 +1,9 @@
 # frozen_string_literal: true
 
+########################################
+## NOTE: THIS IS RUN FROM A CRON JOB! ##
+########################################
+
 desc 'Take any number of Monograph NOIDs and output CSV to update them'
 namespace :heliotrope do
   task :monographs_output_csv_by_press, [:directory, :subdomain] => :environment do |_t, args|
