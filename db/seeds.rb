@@ -14,7 +14,7 @@ def update_create(entry)
     press.description = entry["description"]
     press.subdomain = entry["subdomain"]
     press.press_url = entry["press_url"]
-    press.google_analytics = entry["google_analytics"] if bulleit?
+    press.google_analytics = entry["google_analytics"] if production?
     press.typekit = entry["typekit"]
     press.footer_block_a = entry["footer_block_a"]
     press.footer_block_c = entry["footer_block_c"]
