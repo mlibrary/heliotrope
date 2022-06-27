@@ -2,13 +2,13 @@
 <%# https://github.com/mlibrary/heliotrope/issues/1228 %>
 <% content_for :head do %>
   <meta name="turbolinks-cache-control" content="no-cache">
-  <script type="text/javascript" src="https://d1bxh8uas1mnw7.cloudfront.net/assets/embed.js"></script>
-  <% if @parent_presenter.doi.present? %>
-    <script async src="https://badge.dimensions.ai/badge.js" charset="utf-8"></script>
-  <% end %>
+  <!-- <script type="text/javascript" src="https://d1bxh8uas1mnw7.cloudfront.net/assets/embed.js"></script> -->
+  <%# if @parent_presenter.doi.present? %>
+    <!-- <script async src="https://badge.dimensions.ai/badge.js" charset="utf-8"></script> -->
+  <%# end %>
   <% if defined? @subdomain %>
     <%# only include hypothes.is for leverpress, um press and its subpresses at this point %>
-    <% if %w[leverpress michigan cjs cseas csas lrccs ummaa].include? @subdomain %>
+    <% if %w[michigan cjs cseas csas lrccs ummaa].include? @subdomain %>
       <!-- hypothes.is -->
       <script type="text/javascript">
         window.hypothesisConfig = function () {
@@ -33,18 +33,68 @@
   <% if defined? @presenter.file_set_coins_title %>
     <span class="Z3988" title="<%= @presenter.file_set_coins_title %>" aria-hidden="true"></span>
   <% end %>
+  <%# Not certain this survey should be presented yet. If displayed, minimize %>
   <% if @parent_presenter.open_access? || @parent_presenter.access_level(@actor_product_ids, @allow_read_product_ids).level == :free %>
     <%= render 'shared/survey_nonmodal' %>
   <% end %>
   <div class="skip"></div>
-  <%= tag.div id: 'epub', class: press_presenter.present? ? press_presenter.press_subdomains : '' do %>
-    <div id="reader"></div>
+  <%# tag.div id: 'epub', class: press_presenter.present? ? press_presenter.press_subdomains : '' do %>
+  <div class="too" id="epub">
+    
+    <div class="nm--toolbar">
+      <div id="action-close" class="cozy-control cozy-panel-close">
+        <a class="cozy-close cozy-control" href="<%= @back_link %>" title="Close reader and return to previous page" data-toggle="button" data-slot="label" aria-label="Close reader">
+          <i class="icon-x oi" data-glyph="x" aria-hidden="true"></i>
+        </a>
+      </div>
+
+      <button id="action-contents" data-toggle="open" class="button--sm">
+          <i class="icon-align-left oi" data-glyph="align-left" title="Table of Contents" aria-hidden="true"></i>
+      </button>
+
+      <button id="action-search" class="button--sm" data-toggle="open" aria-label="Search">
+          <i class="icon-magnifying-glass oi" data-glyph="magnifying-glass" title="Search" aria-hidden="true"></i>
+      </button>
+
+      <button id="action-notes" class="button--sm notes-panel" data-toggle="open" aria-label="Notes">
+          <i class="icon-document oi" data-glyph="document" title="Notes and Definitions" aria-hidden="true"></i>
+      </button>
+
+      <div id="action-map" class="cozy-control cozy-panel-map">
+        <a class="cozy-control" href="#">
+            <i class="icon-map oi" data-glyph="map" aria-hidden="true"></i>
+        </a>
+      </div>
+
+
+      <div id="action-resources" class="cozy-control cozy-panel-resources">
+        <a class="cozy-control" href="<%= @parent_presenter.catalog_url + '#resources' %>" target="_blank">
+            <i class="icon-folder oi" data-glyph="folder" aria-hidden="true"></i>
+        </a>
+      </div>
+
+      <button id="action-info" class="button--sm" data-toggle="open" aria-label="Info">
+        <i class="icon-info oi" data-glyph="info" title="Book Information" aria-hidden="true"></i>
+      </button>
+
+
+      <div id="action-help" class="cozy-control cozy-panel-feedback">
+        <a class="cozy-control" href="https://umich.qualtrics.com/jfe/form/SV_3KSLynPij0fqrD7?publisher=&url=" target="_blank" title="Report a problem or share feedback">
+            <i class="icon-question-mark oi" data-glyph="question-mark" aria-hidden="true"></i>
+        </a>
+      </div>
+
+    </div>
+
+    <div class="nm--panels" data-modal-actived="false"></div>
+    <div class="nm--reader" id="reader"></div>
 
     <script type="text/javascript">
       if ( true ) {
 
-        <% if %w[leverpress michigan cjs cseas csas lrccs ummaa].include? @subdomain %>
+        <% if %w[michigan cjs cseas csas lrccs ummaa].include? @subdomain %>
         // Create custom annotator button that is aware of its state
+        // TODO: move to _cozy_controls_annotations.html.erb and render here
         AnnotationTool = cozy.Control.Widget.Toggle.extend({
           defaultTemplate: '<button data-hypothesis-trigger class="button--sm annotation" data-toggle="button" aria-label="Open Annotations"><i class="fa fa-pencil" title="Open annotation panel" aria-hidden="true"></i></button><div class="annotation-count" data-hypothesis-annotation-count></div>',
 
@@ -96,6 +146,9 @@
         })
         <% end %>
 
+        // No modal panel initiate
+        <%= render "cozy_controls_nomodal", presenter: @presenter, parent_presenter: @parent_presenter %>
+
         // Configure and initiate reader
         var reader = cozy.reader('reader', {
           // See https://tools.lib.umich.edu/jira/browse/HELIO-3350 and https://stackoverflow.com/a/47331356
@@ -113,13 +166,14 @@
             location: 'Ann Arbor, MI'
           }
         });
+        var controls = {};
 
         <%= render "cozy_controls_top", presenter: @presenter, parent_presenter: @parent_presenter %>
 
         <%= render "cozy_controls_bottom", presenter: @presenter, parent_presenter: @parent_presenter %>
 
         // Annotation widget checks and initialization
-        <% if %w[leverpress michigan cjs cseas csas lrccs ummaa].include? @subdomain %>
+        <% if %w[michigan cjs cseas csas lrccs ummaa].include? @subdomain %>
         var tm;
         function checkForAnnotator(cb, w) {
           if (!w) {
@@ -138,20 +192,218 @@
         var $panel = $('.annotator-frame');
 
         // pass the reference to the panel
-        var annotation_tool = new AnnotationTool({
-          region: 'left.sidebar',
-          $panel: $panel
-        })
-        annotation_tool.addTo(reader);
+        //var annotation_tool = new AnnotationTool({
+        //  region: 'right.sidebar',
+        //  $panel: $panel
+        //})
+        //annotation_tool.addTo(reader);
 
         <% end %>
 
-        // Initiate EPUB Reader
-        reader.start(function() {
+        // notes panel
+        var open_panel = function() {
+          var $notes = $("#nm--panels");
+          var $book = $(".cozy-module-book-cover");
+          close_panel();
+          //$("body").addClass("panel-open panel-right");
+
+          var $notesPanel = $('.notes-panel');
+
+          if (! $notesPanel.length) {
+
+              var $notesPanelContent =
+                  '<div class="notes-panel" aria-hidden="false">' +
+                      '<div class="panel-control">' +
+                      '</div>' +
+                  '</div>';
+              $notesPanel = $($notesPanelContent).appendTo($notes);
+          } else {
+              $notesPanel.show();
+              $('.notes-panel').prop('hidden', false);
+              $('.notes-panel').attr('aria-hidden', 'false');
+          }
+
+          // resize EPUB
+          setTimeout(function() {
+              window.dispatchEvent(new Event('resize'));
+          }, 0);
+
+          notes_toggle.state('close-notes');
+        } // end open_panel
+
+        // close panel function
+        var close_panel = function() {
+            var $notesPanel = $('.notes-panel');
+            if ($notesPanel.length) {
+                $('.notes-panel').hide();
+                //$('body').removeClass('panel-open');
+                //$('body').removeClass('panel-right');
+                $('.notes-panel').prop('hidden', true);
+                $('.notes-panel').attr('aria-hidden', 'true');
+                
+                setTimeout(function() {
+                    window.dispatchEvent(new Event('resize'));
+                }, 0);
+            }
+            notes_toggle.state('open-notes');
+        }
+
+
+        // text tools
+        var tools_panel = function() {
+          var $textToolsLocation = $(".cozy-module-bottom");
+
+          var $textTools = $('.cozy-text-tools');
+
+          var $textPanelContent = 
+            '<div class="cozy-text-tools">' +
+                '<div class="versions">' +
+                    '<fieldset class="text-tools">' +
+                        '<div>Version display</div>' +
+                        '<div class="check checkbox--svg"><input class="sr-only" type="checkbox" id="french" name="french" checked>' +
+                            '<label class="svg" for="french">' +
+                                '<svg viewBox="0 0 100 100"><path class="path" fill="none" stroke="#000" stroke-width="13" d="M12.1 52.1l24.4 24.4 53-53"/></svg>' +
+                                'Française</label></div>' +
+                        '<div class="check checkbox--svg"><input class="sr-only" type="checkbox" id="english" name="english" checked>' +
+                            '<label class="svg" for="english">' +
+                                '<svg viewBox="0 0 100 100"><path class="path" fill="none" stroke="#000" stroke-width="13" d="M12.1 52.1l24.4 24.4 53-53"/></svg>' +
+                                'English</label></div>' +
+                    '</fieldset>' +
+                '</div>' +
+                '<div class="tools">' +
+                    '<fieldset class="text-tools">' +
+                        '<div>Text Tools</div>' +
+                        '<div class="check checkbox--svg"><input class="sr-only" type="checkbox" id="passages" name="passages">' +
+                            '<label class="svg" for="passages">' +
+                                '<svg viewBox="0 0 100 100"><path class="path" fill="none" stroke="#000" stroke-width="13" d="M12.1 52.1l24.4 24.4 53-53"/></svg>' +
+                                'Show key passages</label></div>' +
+                        '<div class="check checkbox--svg"><input class="sr-only" type="checkbox" id="terms" name="terms">' +
+                            '<label class="svg" for="terms">' +
+                                '<svg viewBox="0 0 100 100"><path class="path" fill="none" stroke="#000" stroke-width="13" d="M12.1 52.1l24.4 24.4 53-53"/></svg>' +
+                                'Show frequently used terms</label></div>' +
+                        '<div class="check checkbox--svg"><input class="sr-only" type="checkbox" id="definitions" name="definitions">' +
+                            '<label class="svg" for="definitions">' +
+                                '<svg viewBox="0 0 100 100"><path class="path" fill="none" stroke="#000" stroke-width="13" d="M12.1 52.1l24.4 24.4 53-53"/></svg>' +
+                                'Show words with definitions</label></div>' +
+                    '</fieldset>' +
+                '</div>' +
+            '</div>';
+
+          $textTools = $($textPanelContent).prependTo($textToolsLocation);
+        }
+
+        reader.on('ready:contents', function(contents) {
+          var frenchTexts =  contents.document.querySelectorAll(".french");
+          var englishTexts =  contents.document.querySelectorAll(".english");
+          var definitions = contents.content.querySelectorAll("[data-note-type='definition']");
+          var terms = contents.content.querySelectorAll(".FrequentlyUsedTerm", ".FrequentlyUsedTermTermwDefinition");
+
+          var frenchCheckbox = document.querySelector('#french');
+            //var frenchText;
+            frenchCheckbox.addEventListener('change', (contents) => {
+                if (frenchCheckbox.checked) {
+                    if (frenchTexts !== null) {
+                      for(var i =0, n = frenchTexts.length; i < n; i++) {
+                        var frenchText = frenchTexts[i];
+                        frenchText.classList.remove('hide');
+                        frenchText.classList.add('display');
+                      }
+                    }
+                } else {
+                    if (frenchTexts !== null) {
+                      for(var i =0, n = frenchTexts.length; i < n; i++) {
+                        var frenchText = frenchTexts[i];
+                        frenchText.classList.remove('display');
+                        frenchText.classList.add('hide');
+                      }
+                    }
+                }
+            });
+            
+            var englishCheckbox = document.querySelector('#english');
+            //var englishText;
+            englishCheckbox.addEventListener('change', (contents) => {
+                if (englishCheckbox.checked) {
+                    if (englishTexts !== null) {
+                      for(var i =0, n = englishTexts.length; i < n; i++) {
+                        var englishText = englishTexts[i];
+                        englishText.classList.remove('hide');
+                        englishText.classList.add('display');
+                      }
+                    }
+                } else {
+                    if (englishTexts !== null) {
+                      for(var i =0, n = englishTexts.length; i < n; i++) {
+                        var englishText = englishTexts[i];
+                        englishText.classList.remove('display');
+                        englishText.classList.add('hide');
+                      }
+                    }
+                }
+            });
+            
+            var passageCheckbox = document.querySelector('#passages');
+            var passage;
+
+            var termsCheckbox = document.querySelector('#terms');
+            var terms;
+            termsCheckbox.addEventListener('change', (contents) => {
+                if (termsCheckbox.checked) {
+                    if (terms !== null) {
+                        for(var i =0, n = terms.length; i < n; i++) {
+                            var term = terms[i];
+                            term.classList.add('highlight');
+                        }
+                    }
+                } else {
+                    if (terms !== null) {
+                        for(var i =0, n = terms.length; i < n; i++) {
+                            var term = terms[i];
+                            term.classList.remove('highlight');
+                        }
+                    }
+                }
+
+            });
+
+            var definitionCheckbox = document.querySelector('#definitions');
+            var definitions;
+            definitionCheckbox.addEventListener('change', (contents) => {
+                if (definitionCheckbox.checked) {
+                    if (definitions !== null) {
+                        for(var i =0, n = definitions.length; i < n; i++) {
+                            var definition = definitions[i];
+                            definition.classList.add('highlight');
+                        }
+                    }
+                } else {
+                    if (definitions !== null) {
+                        for(var i =0, n = definitions.length; i < n; i++) {
+                            var definition = definitions[i];
+                            definition.classList.remove('highlight');
+                        }
+                    }
+                }
+
+            });
+
         });
+
+        // Initiate EPUB Reader
+        // reader.start(function() {
+        // });
+        reader.start(function () {
+          console.log('-- started');
+          tools_panel();
+        });
+
+        reader.on('resized', function () {
+          console.log(":: resize detected");
+        });        
       }
     </script>
-  <% end %>
+  <%# end %>
+  </div>
   <%= render 'shared/ga' %>
 <% end %>
 <%= render template: 'layouts/csb_too_viewer' %>

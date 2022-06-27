@@ -43,6 +43,11 @@
     <%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>
     <%= javascript_pack_tag 'cozy-sun-bear-too/cozy-sun-bear-too' %>
 
+    <!-- additional JS libraries -->
+   <%= javascript_include_tag 'https://cdnjs.cloudflare.com/ajax/libs/headjs/1.0.3/head.min.js' %>
+   <%= javascript_include_tag 'https://code.jquery.com/jquery-2.2.4.min.js' %>
+   <%= javascript_include_tag 'https://cdnjs.cloudflare.com/ajax/libs/url-search-params/0.10.0/url-search-params.js' %>
+
     <!-- hotjar -->
     <%= render 'shared/hotjar' %>
     <!-- GA4 -->
@@ -78,6 +83,25 @@
         }
       </style>
     <% end %>
+    <style>
+        *, *::after, *::before {
+          box-sizing: border-box;
+        }
+
+        #epub {
+          display: grid;
+          grid-template-rows: 1fr;
+          /* grid-template-columns: min-content minmax(0, min-content) 1fr; */
+          grid-template-columns: min-content min-content 1fr;
+          grid-gap: 0;
+
+          margin: 0;
+          padding: 0;
+          height: 100vh;
+          width: 100vw;
+          overflow: hidden;
+        }
+    </style>
 
   <% if content_for?(:head) %>
     <%= yield(:head) %>
@@ -99,12 +123,13 @@
 
   </head>
 
-  <%= tag.body class: press_presenter.present? ? press_presenter.press_subdomains : '' do %>
-
+  <%# tag.body class: press_presenter.present? ? press_presenter.press_subdomains : '' do %>
+  <body>
     <%= content_for?(:body) ? yield(:body) : yield %>
 
     <%= render 'shared/ajax_modal' %>
     <%= render 'shared/cookie_alert' %>
     <%= render 'shared/monitoring' if Rails.env.production? %>
-  <% end %>
+  <%# end %>
+  </body>
 </html>

@@ -1,3 +1,10 @@
+        // Feedback and Help widget [?]
+        //cozy.control.widget.panel({
+        //  region: 'bottom.navigator',
+        //  className: 'cozy-panel-feedback',
+        //  template: '<a href="https://umich.qualtrics.com/jfe/form/SV_3KSLynPij0fqrD7?publisher=<%= @subdomain %>&noid=<%= @presenter.id %>&title=<%= @parent_presenter.page_title %>&url=<%= request.original_url %>" target="_blank" title="Report a problem or share feedback"><i class="icon-quesetion-mark oi" data-glyph="question-mark" aria-hidden="true"></i></a>',
+        //}).addTo(reader);
+        
         // Input Page List - [Input]
 
 
@@ -34,10 +41,10 @@
         <% end %>
 
         // Social Sharing [Share]
-        cozy.control.widget.button({
-          region: 'bottom.navigator.right',
-          template: '<%= @parent_presenter.social_share_widget_template %>'
-        }).addTo(reader);
+        //cozy.control.widget.button({
+        //  region: 'bottom.navigator.right',
+        //  template: '<%= @parent_presenter.social_share_widget_template %>'
+        //}).addTo(reader);
 
         //  // Restricted Share [28-Day Access]
         <% if @component.present? && @press.allow_share_links? && !@parent_presenter.open_access? && @share_link.nil? %>

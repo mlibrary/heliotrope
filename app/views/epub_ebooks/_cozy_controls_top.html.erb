@@ -1,64 +1,52 @@
+        // Left Positioned Panel - Panels are non modal and reflow text when opened.
+
+
         // Close/Previous Page [X]
-        cozy.control.widget.button({
-          region: 'left.sidebar',
-          data: { label: '<i class="icon-x oi" data-glyph="x" aria-hidden="true"></i>'},
-          template: '<button class="button--sm cozy-close" data-toggle="button" data-slot="label" aria-label="Close reader"></button>',
-          onClick: function() { window.location = "<%= "#{@back_link}" %>"; }
-        }).addTo(reader);
+        // cozy.control.widget.button({
+        //  region: 'left.sidebar',
+        //  data: { label: '<i class="icon-x oi" data-glyph="x" aria-hidden="true"></i>'},
+        //  template: '<button class="button--sm cozy-close" data-toggle="button" data-slot="label" aria-label="Close reader"></button>',
+        //  onClick: function() { window.location = "<%= "#{@back_link}" %>"; }
+        // }).addTo(reader);
 
         // Mobile Close/Previous Page [X]
-        cozy.control.widget.button({
-          region: 'left.sidebar',
-          data: { label: '<i class="icon-x oi" data-glyph="x" aria-hidden="true"></i>'},
-          template: '<button class="button--sm cozy-close mobile" data-toggle="button" data-slot="label" aria-label="Close reader"></button>',
-          onClick: function() { window.location = "<%= "#{@back_link}" %>"; }
-        }).addTo(reader);
+        // cozy.control.widget.button({
+        //  region: 'left.sidebar',
+        //  data: { label: '<i class="icon-x oi" data-glyph="x" aria-hidden="true"></i>'},
+        //  template: '<button class="button--sm cozy-close mobile" data-toggle="button" data-slot="label" aria-label="Close reader"></button>',
+        //  onClick: function() { window.location = "<%= "#{@back_link}" %>"; }
+        // }).addTo(reader);
 
         // Table of contents [Outline Icon]
-        <% if @parent_presenter.epub? %>
-        cozy.control.contents({ region: 'left.sidebar', skipLink: '.skip' }).addTo(reader);
-        <% else %>
-        var contents = new PDFContents({ region: 'left.sidebar', skipLink: '.skip' });
-        contents.addTo(reader);
-        <% end %>
+        controls.contents = cozy.control.contents({ 
+          container: actions.contents,
+          modalContainer: $panels,
+          closePanel: false
+        }).addTo(reader);
 
         // Search [Magnifying Glass Icon]
         <% unless Heliotrope::Application.config.cozy_epub_engine == 'readium' %>
-          <% if @parent_presenter.epub? %>
-          cozy.control.search({
-            region: 'left.sidebar',
-            searchUrl: "<%= @search_url %>"
+          controls.search = cozy.control.search({ 
+            container: actions.search,
+            searchUrl: "<%= @search_url %>",
+            modalContainer: $panels,
+            closePanel: false
           }).addTo(reader);
-          <% else %>
-          var search = new PDFSearch({ region: 'left.sidebar' });
-          search.addTo(reader);
-          <% end %>
         <% end %>
 
         // Bibliographic Information [Info Icon]
-
+        cozy.control.bibliographicInformation({ container: document.querySelector('#action-info')}).addTo(reader);
 
         // Notes [Notes]
-
+        //controls.notes = cozy.control.notes({ 
+        //  container: actions.notes,
+        //  modalContainer: $panels,
+        //  closePanel: false
+        //}).addTo(reader);
 
         // Maps [Geo Icon]
 
-
-        // Resources [File Icon]
-        <% if @parent_presenter.assets? %>
-        cozy.control.widget.button({
-          region: 'left.sidebar',
-          template: '<button class="button--sm media" data-toggle="button" aria-label="Resources">Resources</button>',
-          onClick: function() { window.location = "<%= "#{@parent_presenter.catalog_url + '#resources'}" %>"; }
-        }).addTo(reader);
-        <% end %>
-
         // Fullscreen [Diverging Arrows Icon]
-        cozy.control.fullscreen({ region: 'left.sidebar' }).addTo(reader);
+        // cozy.control.fullscreen({ region: 'left.sidebar' }).addTo(reader);
 
-        // Feedback and Help widget [?]
-        cozy.control.widget.panel({
-          region: 'left.sidebar',
-          className: 'cozy-panel-feedback',
-          template: '<a href="https://umich.qualtrics.com/jfe/form/SV_3KSLynPij0fqrD7?publisher=<%= @subdomain %>&noid=<%= @presenter.id %>&title=<%= @parent_presenter.page_title %>&url=<%= request.original_url %>" target="_blank" title="Report a problem or share feedback"><i class="icon-comment-square oi" data-glyph="comment-square" aria-hidden="true"></i></a>',
-        }).addTo(reader);
+

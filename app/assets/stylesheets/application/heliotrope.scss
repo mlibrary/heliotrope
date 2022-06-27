@@ -1603,6 +1603,31 @@ footer.press {
   }
 }
 
+.too #reader { 
+  .button--sm.cozy-preferences,
+  .cozy-control button.button--sm.cozy-citation {
+  color: #31343b;
+  font-size: 1em !important;
+  text-transform: none;
+  background: transparent;
+  background-image: none;
+  background-position: none;
+  background-size: none;
+  background-repeat: none;
+    &:hover, &:focus, &:active {
+      background-color: white;
+      transition: 0.2s ease-in;
+      outline: 0;
+      box-shadow: 0 0 0 6px rgba(0, 44, 99, 0.25); 
+    }
+  }
+
+  .cozy-control button.button--sm.cozy-citation {
+    margin-left: 15px;
+  }
+
+}
+
 .cozy-container i[class^='icon-'] {
     font-size: 2rem !important;
 }
@@ -1765,6 +1790,19 @@ footer.press {
   font-weight: bold;
   padding: 60px;
 }
+
+.too .cozy-container i[class^='icon-chevron-'] {
+  color: #31343b !important;
+  font-size: 2rem;
+  transition: 0.2s ease-in;
+}
+
+/* Ditto above. Duplicated here because otherwise overridden by !important */
+.too .cozy-container i[class^='icon-chevron-']:hover {
+  color: #8A96A1 !important;
+  transition: 0.2s ease-in;
+}
+
 
 /* Feel free to be horrified at the bonkers-ness of this construct. */
 .cozy-panel-toolbar div.cozy-control:not(:first-of-type) {
