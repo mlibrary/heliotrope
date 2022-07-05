@@ -1,0 +1,6 @@
+/* removed sometime after font-awesome v5, needed by resque-web v0.0.12 */
+@function fa-font-path($path) {
+  @return font-path($path);
+}
+
+$fa-sass-asset-helper: true;
