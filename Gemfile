@@ -110,6 +110,10 @@ gem 'devise-guests', '~> 0.7'
 gem 'faraday', '~> 0.9'
 # NOTE: This is the last minor release in the v0.x series, next release will be 1.0 to match Faraday v1.0 release and from then on only fixes will be applied to v0.14.x!
 gem 'faraday_middleware', '~> 0.14.0'
+
+# needed by resque-web
+gem 'font-awesome-sass', '>= 6.0'
+
 #
 # # Use gem version of handle_rest
 gem 'handle_rest', git: 'https://github.com/mlibrary/handle_rest', ref: 'baed402b5a530eb57e838443ce292ec3f46cd5e6'
@@ -164,9 +168,9 @@ gem 'prawn', '~> 2.2'
 gem 'redcarpet', '~> 3.5.1'
 gem 'reverse_markdown'
 
-gem 'resque', '~> 1.26.0'
+gem 'resque', '~> 2.2.1 '
 gem 'resque-pool'
-gem 'resque-web', '~> 0.0.7', require: 'resque_web'
+gem 'resque-web', '~> 0.0.12', require: 'resque_web'
 
 gem 'riiif', '1.4.1'
 
