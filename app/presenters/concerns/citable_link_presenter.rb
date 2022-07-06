@@ -38,9 +38,9 @@ module CitableLinkPresenter
   def heb
     @heb ||= begin
       # HEB ID's do *not* have a '.' after the 'heb'. We won't accept that in the identifier entry.
-      heb_id = identifier&.find { |i| i.strip.downcase[/^heb_id:\s*heb[0-9]{5}/] }&.strip&.downcase
+      heb_id = identifier&.find { |i| i.strip.downcase[/^heb_id:\s*heb[0-9]{5}.[0-9]{4}.[0-9]{3}/] }&.strip&.downcase
       # Always display the title-level handle with no period after 'heb', e.g. 2027/heb34567
-      heb_id.present? ? "2027/#{heb_id.gsub(/heb_id:\s*heb/, 'heb')[0, 8]}" : nil
+      heb_id.present? ? "2027/#{heb_id.gsub(/heb_id:\s*heb/, 'heb')[0, 17]}" : nil
     end
   end
 
