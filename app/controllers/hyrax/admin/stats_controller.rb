@@ -65,6 +65,16 @@ module Hyrax
           return
         end
 
+        # Force defaults for Master reports, HELIO-4282 and HELIO-4283
+        if report_type == "pr" || report_type == "tr" || report_type == "ir"
+          args[:attributes_to_show] = ["Authors", "Publication_Date", "Data_Type", "YOP", "Access_Type", "Access_Method"]
+          args[:data_types] = ["Book", "Multimedia", "Book_Segment"] if report_type == "ir"
+          args[:include_parent_details] = "true" if report_type == "ir"
+          args[:include_component_details] = "true" if report_type == "ir" # needed to see titles of downloaded chapters
+          args[:exclude_monthly_details] = "false"
+          args[:include_monthly_details] = "true"
+        end
+
         EmailCounterReportJob.perform_later(email: email, report_type: report_type, args: args)
 
         flash[:notice] = "The #{report_type.upcase} report for #{Press.find(args[:press]).name} will be sent to #{email}"

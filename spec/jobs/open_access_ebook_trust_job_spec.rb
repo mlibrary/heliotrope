@@ -156,9 +156,13 @@ RSpec.describe OpenAccessEbookTrustJob, type: :job do
         end_date: end_date,
         press: press.id,
         metric_type: 'Total_Item_Requests',
-        data_type: 'Book',
+        data_type: ["Book", "Multimedia", "Book_Segment"],
         access_type: ['Controlled', 'OA_Gold'],
-        access_method: 'Regular'
+        access_method: 'Regular',
+        attributes_to_show: ["Authors", "Publication_Date", "Data_Type", "YOP", "Access_Type", "Access_Method"],
+        include_parent_details: "true",
+        exclude_monthly_details: "false",
+        include_monthly_details: "true"
       }).and_return(inst1params)
       allow(CounterReporter::ReportParams).to receive(:new).with('ir', {
         institution: inst2.identifier,
@@ -166,9 +170,13 @@ RSpec.describe OpenAccessEbookTrustJob, type: :job do
         end_date: end_date,
         press: press.id,
         metric_type: 'Total_Item_Requests',
-        data_type: 'Book',
+        data_type: ["Book", "Multimedia", "Book_Segment"],
         access_type: ['Controlled', 'OA_Gold'],
-        access_method: 'Regular'
+        access_method: 'Regular',
+        attributes_to_show: ["Authors", "Publication_Date", "Data_Type", "YOP", "Access_Type", "Access_Method"],
+        include_parent_details: "true",
+        exclude_monthly_details: "false",
+        include_monthly_details: "true"
       }).and_return(inst2params)
       allow(CounterReporter::ItemReport).to receive(:new).with(inst1params).and_return(report1)
       allow(CounterReporter::ItemReport).to receive(:new).with(inst2params).and_return(report2)
@@ -238,6 +246,8 @@ RSpec.describe OpenAccessEbookTrustJob, type: :job do
   end
 
   describe "#zipup" do
+    after { File.unlink(Rails.root.join("tmp", "fulcrum_ebc_reports_zip")) }
+
     let(:reports) do
       {
         "A Report" => "A Report csv data",
