@@ -77,3 +77,40 @@
       }, 0);
 
     })
+
+    // event listeners for notes
+    actions.contents.addEventListener('click', (event) => {
+      // panels.notes.setAttribute('aria-hidden',
+      //   !(panels.notes.getAttribute('aria-hidden') == 'true'));
+
+      // check to see if button action is open or closed
+      if ( actions.notes.hasAttribute("data-modal-open") ) {
+        actions.notes.setAttribute("data-modal-close", "");
+        actions.notes.removeAttribute("data-modal-open");
+      } else {
+        actions.notes.setAttribute("data-modal-open", "");
+        actions.notes.removeAttribute("data-modal-close");
+      }
+
+      if ( actions.notes.hasAttribute("data-modal-close") ) {
+          //this.closePanel;
+      }
+
+      console.log("??", fn);
+      if ( fn === undefined ) {
+        fn = controls.notes._modal.callbacks.onClose;
+        controls.notess._modal.callbacks.onClose = function (modal) {
+          console.log("??", fn);
+          fn(modal);
+          setTimeout(function () {
+            console.log("-- should be resizing");
+            window.dispatchEvent(new Event('resize'));
+          }, 100);
+        }
+      }
+    
+      setTimeout(function () {
+        window.dispatchEvent(new Event('resize'));
+      }, 0);
+
+    })

@@ -200,11 +200,44 @@
 
         <% end %>
 
+        // notes
+        // function for opening panel like gabii open_panel()
+        // functions for getting content and building out panel
+            // displayed with headings and accordians in a list
+            // definitions
+                // build list
+                // display content
+            // translator notes
+                // build list
+                // display content
+            // historical characters
+                // build list
+                // display content
+        // event listeners for links in epub
+        // function for opening notes panel when a notes link is clicked
+            //var epubClickHandler = function(event) {
+            //    if (event.target.hasAttribute('data-tid')) {
+            //        var s = event.target.getAttribute('data-tid');
+            //    } else {
+            //    var s = event.target.getAttribute('data-uid');
+            //    }
+            // send note href data to panel
+            // open panel and display matching note
+            //}
+        // get all the links for the notes and listen for clicks 
+        // reader.on('ready:contents', function(contents) {
+        // var links = contents.content.querySelectorAll(" ## list of attribute selectors ##");
+        // for(var i=0, n= = links.length; i < n; i++){
+        // var link = links[i];
+        // link.addEventListener('click', epubClickHandler);
+        //}
+        //})
+        
         // notes panel
-        var open_panel = function() {
+        var openNotesPanel = function() {
           var $notes = $("#nm--panels");
           var $book = $(".cozy-module-book-cover");
-          close_panel();
+          closeNotesPanel();
           //$("body").addClass("panel-open panel-right");
 
           var $notesPanel = $('.notes-panel');
@@ -232,7 +265,7 @@
         } // end open_panel
 
         // close panel function
-        var close_panel = function() {
+        var closeNotesPanel = function() {
             var $notesPanel = $('.notes-panel');
             if ($notesPanel.length) {
                 $('.notes-panel').hide();
