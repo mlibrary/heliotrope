@@ -1,5 +1,9 @@
 # frozen_string_literal: true
 
+########################################
+## NOTE: THIS IS RUN FROM A CRON JOB! ##
+########################################
+
 desc 'Task to be called by a cron to add cover/representatives to Monographs (ISBN lookup)'
 namespace :heliotrope do
   task :tmm_upload_monograph_representatives, [:publisher, :monograph_files_dir] => :environment do |_t, args|

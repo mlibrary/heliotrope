@@ -1,5 +1,9 @@
 # frozen_string_literal: true
 
+########################################
+## NOTE: THIS IS RUN FROM A CRON JOB! ##
+########################################
+
 desc 'Removes old/reversioned epub or webgl derivatives'
 namespace :heliotrope do
   task remove_reversioned_derivatives: :environment do
