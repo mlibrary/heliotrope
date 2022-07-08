@@ -37,32 +37,6 @@
         // Bibliographic Information [Info Icon]
         cozy.control.bibliographicInformation({ container: document.querySelector('#action-info')}).addTo(reader);
 
-        // Notes [Notes]
-        //var notes_toggle = cozy.control.widget.toggle({ 
-        //  container: document.querySelector('#action-notes'),
-        //  states: [{
-        //    stateName:'open-notes',
-        //    onClick: function(btn,reader) {
-         //     openNotesPanel();
-        //      btn.state('close-notes');
-        //    }
-        //  },
-        //  {
-        //    stateName: 'close-notes',
-        //    onClick: function(btn, reader) {
-         //     closeNotesPanel();
-         //     btn.state('open-notes');
-         //   }
-        //  }],
-       // })
-       // notes_toggle.addTo(reader);
-
-        controls.notes = cozy.control.notes({ 
-          container: actions.notes,
-          modalContainer: $panels,
-          closePanel: false
-        }).addTo(reader);
-
         // Maps [Geo Icon]
 
         // Fullscreen [Diverging Arrows Icon]
