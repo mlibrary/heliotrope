@@ -55,8 +55,8 @@ RSpec.describe CitableLinkPresenter do
     end
 
     context 'and explicit heb' do
-      let(:heb_id) { '  heb_id:   HeB00001.0001.001' }
-      let(:heb_path) { '2027/heb00001' }
+      let(:heb_id) { '  heb_id:   HeB01234.0123.001' }
+      let(:heb_path) { '2027/heb01234.0123.001' }
 
       describe 'correct HEB ID' do
         it 'trims and downcases proper HEB IDs, uses the correct resulting HEB handle' do
