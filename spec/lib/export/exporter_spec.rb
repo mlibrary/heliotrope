@@ -135,7 +135,7 @@ describe Export::Exporter do
       let(:rows) { :monograph }
       let(:expected) do
         <<~eos
-          #{monograph.id},"=HYPERLINK(""#{Rails.application.routes.url_helpers.hyrax_monograph_url(monograph)}"")",#{monograph.title.first},,,,,,,,"First, Ms Joan (editor); Second, Mr Tom (editor); Third Author, Lady","Doe, Jane (illustrator); Joe, G.I.",,,,,,,,,,,,,,https://doi.org/mpub.111111111.blah,,,,,
+          #{monograph.id},"=HYPERLINK(""#{Rails.application.routes.url_helpers.hyrax_monograph_url(monograph)}"")",#{monograph.title.first},,,,,,,,"First, Ms Joan (editor); Second, Mr Tom (editor); Third Author, Lady","Doe, Jane (illustrator); Joe, G.I.",,,,,,,,,,,,,,https://doi.org/mpub.111111111.blah,,,,,,,
         eos
       end
 
@@ -151,7 +151,7 @@ describe Export::Exporter do
       let(:system_metadata) { true }
       let(:expected) do
         <<~eos
-          #{monograph.id},"=HYPERLINK(""#{Rails.application.routes.url_helpers.hyrax_monograph_url(monograph)}"")",#{monograph.title.first},,,,,,,,"First, Ms Joan (editor); Second, Mr Tom (editor); Third Author, Lady","Doe, Jane (illustrator); Joe, G.I.",,,,,,,,,,,,,,https://doi.org/mpub.111111111.blah,,,,,,false
+          #{monograph.id},"=HYPERLINK(""#{Rails.application.routes.url_helpers.hyrax_monograph_url(monograph)}"")",#{monograph.title.first},,,,,,,,"First, Ms Joan (editor); Second, Mr Tom (editor); Third Author, Lady","Doe, Jane (illustrator); Joe, G.I.",,,,,,,,,,,,,,https://doi.org/mpub.111111111.blah,,,,,,,,false
         eos
       end
 
