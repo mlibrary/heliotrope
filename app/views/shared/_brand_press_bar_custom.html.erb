@@ -64,6 +64,10 @@
           <a class="navbar-brand" href="<%= press_presenter.url %>">
             <%= image_tag "mps.png", class: 'navbar-brand-logo', alt: '', height: '40', width: 'auto' %><%= press_presenter.name %>
           </a>
+        <% elsif press_presenter.subdomain == 'michelt' %>
+          <a class="navbar-brand" href="<%= press_presenter.url %>">
+            <%= image_tag "elt_banner.png", class: 'navbar-brand-logo', alt: '', height: '67', width: 'auto' %><div class="sr-only"><%= press_presenter.name %></div>
+          </a>
         <% end %>
       </div>
 
