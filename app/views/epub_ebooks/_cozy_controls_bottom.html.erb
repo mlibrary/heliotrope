@@ -1,59 +1,52 @@
-        // Table of contents widget
-        <% if @parent_presenter.epub? %>
-        cozy.control.contents({ region: 'top.toolbar.left', skipLink: '.skip' }).addTo(reader);
+        // Feedback and Help widget [?]
+        //cozy.control.widget.panel({
+        //  region: 'bottom.navigator',
+        //  className: 'cozy-panel-feedback',
+        //  template: '<a href="https://umich.qualtrics.com/jfe/form/SV_3KSLynPij0fqrD7?publisher=<%= @subdomain %>&noid=<%= @presenter.id %>&title=<%= @parent_presenter.page_title %>&url=<%= request.original_url %>" target="_blank" title="Report a problem or share feedback"><i class="icon-quesetion-mark oi" data-glyph="question-mark" aria-hidden="true"></i></a>',
+        //}).addTo(reader);
+        
+        // Input Page List - [Input]
+
+
+        // Navigator - [Slider]
+        cozy.control.navigator({ region: 'bottom.navigator' }).addTo(reader);
+
+
+        // Paging [< >]
+        <% if @parent_presenter.pdf_ebook? %>
+        var action = cozy.control.pagePrevious({ region: 'bottom.navigator.right' }).addTo(reader);
+        action._control.setAttribute('id', 'previous');
+        action = cozy.control.pageNext({ region: 'bottom.navigator.right' }).addTo(reader);
+        action._control.setAttribute('id', 'next');
         <% else %>
-        var contents = new PDFContents({ region: 'top.toolbar.left', skipLink: '.skip' });
-        contents.addTo(reader);
+        cozy.control.pagePrevious({ region: 'bottom.navigator.right' }).addTo(reader);
+        cozy.control.pageNext({ region: 'bottom.navigator.right' }).addTo(reader);
         <% end %>
 
-        // Resources
-        <% if @parent_presenter.assets? %>
-        cozy.control.widget.button({
-          region: 'top.toolbar.left',
-          template: '<button class="button--sm media" data-toggle="button" aria-label="Resources">Resources</button>',
-          onClick: function() { window.location = "<%= "#{@parent_presenter.catalog_url + '#resources'}" %>"; }
+        // Reader Preferences [Aa]
+        cozy.control.preferences({
+          region: 'bottom.navigator.right'
         }).addTo(reader);
-        <% end %>
 
-        <% if @parent_presenter.citations_ready? %>
-        // Citation widget
+        // Citations [Cite]
         // see: https://github.com/mlibrary/cozy-sun-bear/wiki/Metadata-and-Citations
+        <% if @parent_presenter.citations_ready? %>
+
         var my_citations = [
           {format: 'MLA', text: "<%= export_as_mla_citation(@parent_presenter).gsub('"', '\"').html_safe %>" },
           {format: 'APA', text: "<%= export_as_apa_citation(@parent_presenter).gsub('"', '\"').html_safe %>" },
           {format: 'Chicago', text: "<%= export_as_chicago_citation(@parent_presenter).gsub('"', '\"').html_safe %>" }
         ]
-        cozy.control.citation({ region: 'top.toolbar.left', citations: my_citations }).addTo(reader);
+        cozy.control.citation({ region: 'bottom.navigator.right', citations: my_citations }).addTo(reader);
         <% end %>
 
-        // Search widget
-        <% unless Heliotrope::Application.config.cozy_epub_engine == 'readium' %>
-          <% if @parent_presenter.epub? %>
-          cozy.control.search({
-            region: 'top.toolbar.left',
-            searchUrl: "<%= @search_url %>"
-          }).addTo(reader);
-          <% else %>
-          var search = new PDFSearch({ region: 'top.toolbar.left' });
-          search.addTo(reader);
-          <% end %>
-        <% end %>
+        // Social Sharing [Share]
+        //cozy.control.widget.button({
+        //  region: 'bottom.navigator.right',
+        //  template: '<%= @parent_presenter.social_share_widget_template %>'
+        //}).addTo(reader);
 
-        // Share widget
-        cozy.control.widget.button({
-          region: 'top.toolbar.left',
-          template: '<%= @parent_presenter.social_share_widget_template %>'
-        }).addTo(reader);
-
-        // Download widget
-        <% if @ebook_download_presenter.csb_download_links.length.positive? && @share_link.nil? %>
-        cozy.control.download({
-            region: 'top.toolbar.left',
-            template: '<button class="button--sm cozy-download" data-toggle="open" aria-label="Download book" role="button"><i id="download-control-button" class="oi" data-glyph="data-transfer-download" title="Download book" aria-hidden="true"></i></button>',
-        }).addTo(reader);
-        <% end %>
-
-        // Restricted Share Link widget
+        //  // Restricted Share [28-Day Access]
         <% if @component.present? && @press.allow_share_links? && !@parent_presenter.open_access? && @share_link.nil? %>
         modal = reader.modal({
                 region: 'left',
@@ -94,7 +87,7 @@
 
         // Share widget
         cozy.control.widget.button({
-          region: 'top.toolbar.left',
+          region: 'bottom.navigator.right',
           template: '<button id="share-link-btn" class="button--sm cozy-share" data-toggle="button" data-slot="label" aria-label="Share a Readable Version"><i class="oi" data-glyph="link-intact" title="Share a Readable Version" aria-hidden="true"></i></button>',
           onClick: function() {
             $.get("<%= "#{epub_share_link_path(id: @presenter.id)}" %>", function(data) {
@@ -109,31 +102,10 @@
         }).addTo(reader);
         <% end %>
 
-        // Fullscreen
-        cozy.control.fullscreen({ region: 'top.toolbar.right' }).addTo(reader);
-
-        // Preferences and Settings
-        cozy.control.preferences({
-          region: 'top.toolbar.right'
+        // Download [Download]
+        <% if @ebook_download_presenter.csb_download_links.length.positive? && @share_link.nil? %>
+        cozy.control.download({
+            region: 'bottom.navigator.right',
+            template: '<button class="button--sm cozy-download" data-toggle="open" aria-label="Download book" role="button"><i id="download-control-button" class="oi" data-glyph="data-transfer-download" title="Download book" aria-hidden="true"></i></button>',
         }).addTo(reader);
-
-        // Paging widgets
-        <% if @parent_presenter.pdf_ebook? %>
-        var action = cozy.control.pagePrevious({ region: 'left.sidebar' }).addTo(reader);
-        action._control.setAttribute('id', 'previous');
-        action = cozy.control.pageNext({ region: 'right.sidebar' }).addTo(reader);
-        action._control.setAttribute('id', 'next');
-        <% else %>
-        cozy.control.pagePrevious({ region: 'left.sidebar' }).addTo(reader);
-        cozy.control.pageNext({ region: 'right.sidebar' }).addTo(reader);
         <% end %>
-
-        // Feedback widget
-        cozy.control.widget.panel({
-          region: 'bottom.navigator.left',
-          className: 'cozy-panel-feedback',
-          template: '<a href="https://umich.qualtrics.com/jfe/form/SV_3KSLynPij0fqrD7?publisher=<%= @subdomain %>&noid=<%= @presenter.id %>&title=<%= @parent_presenter.page_title %>&url=<%= request.original_url %>" target="_blank" title="Report a problem or share feedback"><i class="icon-comment-square oi" data-glyph="comment-square" aria-hidden="true"></i></a>',
-        }).addTo(reader);
-
-        // Navigator widgets
-        cozy.control.navigator({ region: 'bottom.navigator' }).addTo(reader);

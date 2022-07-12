@@ -1,0 +1,310 @@
+// notes
+    // add notes panel container to DOM and format
+    // Sections
+    var formatSections = function() {
+      // Get all the <section> <h4> headings
+      const sections = document.querySelectorAll('main#modal-notes-content section h4')
+      
+      Array.prototype.forEach.call(sections, section => {
+        // Give each <h4> a toggle button child
+        // with the SVG plus/minus icon
+        section.innerHTML = `
+          <button aria-expanded="false">
+            ${section.textContent}
+            <svg aria-hidden="true" focusable="false" viewBox="0 0 10 10">
+              <rect class="vert" height="8" width="2" y="1" x="4"/>
+              <rect height="2" width="8" y="4" x="1"/>
+            </svg>
+          </button>
+        `
+        
+        // Function to create a node list 
+        // of the content between this <dt> and the next
+        const getSection = (elem) => {
+          let elems = []
+          while (elem.nextElementSibling && elem.nextElementSibling.tagName !== 'H4') {
+            elems.push(elem.nextElementSibling)
+            elem = elem.nextElementSibling
+          }
+          
+          // Delete the old versions of the content nodes
+          elems.forEach((node) => {
+            node.parentNode.removeChild(node)
+          })
+
+          return elems
+        }
+        
+        // Assign the contents to be expanded/collapsed (array)
+        let sectionContents = getSection(section)
+        
+        // Create a wrapper element for `contents` and hide it
+        let sectionWrapper = document.createElement('div')
+        sectionWrapper.hidden = true;
+        sectionWrapper.classList.add('section');
+        
+        // Add each element of `contents` to `wrapper`
+        sectionContents.forEach(node => {
+          sectionWrapper.appendChild(node)
+        })
+        
+        // Add the wrapped content back into the DOM 
+        // after the definition
+        section.parentNode.insertBefore(sectionWrapper, section.nextElementSibling)
+        
+        // Assign the button
+        let sectionbtn = section.querySelector('button')
+        
+        sectionbtn.onclick = () => {
+          // Cast the state as a boolean
+          let expanded = sectionbtn.getAttribute('aria-expanded') === 'true' || false
+          
+          // Switch the state
+          sectionbtn.setAttribute('aria-expanded', !expanded)
+          // Switch the content's visibility
+          sectionWrapper.hidden = expanded;
+          
+          const listener = () => {
+            sectionWrapper.removeEventListener('transitionend', listener);
+          };
+          
+          if (expanded === false) {
+            sectionWrapper.removeEventListener('transitionend', listener);
+            const reflow = sectionWrapper.offsetHeight;
+            sectionWrapper.classList.add('is-open');
+          } else {
+            sectionWrapper.addEventListener('transitionend', listener);
+            sectionWrapper.classList.remove('is-open');
+          }
+        }
+      })
+    }
+
+    // Definitions
+    var formatDefinitions = function() {
+      // Get all the <dt> headings
+      const definitions = document.querySelectorAll('main#modal-notes-content section#definitions dt')
+      
+      Array.prototype.forEach.call(definitions, definition => {
+        // Give each <dt> a toggle button child
+        // with the SVG plus/minus icon
+        definition.innerHTML = `
+          <button aria-expanded="false">
+            ${definition.textContent}
+            <svg aria-hidden="true" focusable="false" viewBox="0 0 10 10">
+              <rect class="vert" height="8" width="2" y="1" x="4"/>
+              <rect height="2" width="8" y="4" x="1"/>
+            </svg>
+          </button>
+        `
+        
+        // Function to create a node list 
+        // of the content between this <dt> and the next
+        const getContent = (elem) => {
+          let elems = []
+          while (elem.nextElementSibling && elem.nextElementSibling.tagName !== 'DT') {
+            elems.push(elem.nextElementSibling)
+            elem = elem.nextElementSibling
+          }
+          
+          // Delete the old versions of the content nodes
+          elems.forEach((node) => {
+            node.parentNode.removeChild(node)
+          })
+
+          return elems
+        }
+        
+        // Assign the contents to be expanded/collapsed (array)
+        let contents = getContent(definition)
+        
+        // Create a wrapper element for `contents` and hide it
+        let wrapper = document.createElement('div')
+        wrapper.hidden = true
+        wrapper.classList.add('notes');
+        
+        // Add each element of `contents` to `wrapper`
+        contents.forEach(node => {
+          wrapper.appendChild(node)
+        })
+        
+        // Add the wrapped content back into the DOM 
+        // after the definition
+        definition.parentNode.insertBefore(wrapper, definition.nextElementSibling)
+        
+        // Assign the button
+        let defbtn = definition.querySelector('button')
+        
+        defbtn.onclick = () => {
+          // Cast the state as a boolean
+          let expanded = defbtn.getAttribute('aria-expanded') === 'true' || false
+          
+          // Switch the state
+          defbtn.setAttribute('aria-expanded', !expanded)
+          // Switch the content's visibility
+          wrapper.hidden = expanded    
+        
+          const listener = () => {
+            wrapper.removeEventListener('transitionend', listener);
+          };
+          
+          if (expanded === false) {
+            wrapper.removeEventListener('transitionend', listener);
+            const reflow = wrapper.offsetHeight;
+            wrapper.classList.add('is-open');        
+          } else {
+            wrapper.addEventListener('transitionend', listener);
+            wrapper.classList.remove('is-open');
+          }
+        
+        }
+      })
+    }
+
+    // Notes
+    var formatNotes = function() {
+      // Get all the <sup> headings
+      const notes = document.querySelectorAll('main#modal-notes-content section.pdec_notes dt')
+      
+      Array.prototype.forEach.call(notes, note => {
+        // Give each <a> a toggle button child
+        // with the SVG plus/minus icon
+        note.innerHTML = `
+          <button aria-expanded="false">Note
+            ${note.textContent}
+            <svg aria-hidden="true" focusable="false" viewBox="0 0 10 10">
+              <rect class="vert" height="8" width="2" y="1" x="4"/>
+              <rect height="2" width="8" y="4" x="1"/>
+            </svg>
+          </button>
+        `
+        
+        // Function to create a node list 
+        // of the content between this <span> and the next
+        const getNotesContent = (elem) => {
+          let elems = []
+          while (elem.nextElementSibling && elem.nextElementSibling.tagName !== 'DT') {
+            elems.push(elem.nextElementSibling)
+            elem = elem.nextElementSibling
+          }
+          
+          // Delete the old versions of the content nodes
+          elems.forEach((node) => {
+            node.parentNode.removeChild(node)
+          })
+
+          return elems
+        }
+        
+        // Assign the contents to be expanded/collapsed (array)
+        let notesContents = getNotesContent(note)
+        
+        // Create a wrapper element for `contents` and hide it
+        let noteWrapper = document.createElement('div')
+        noteWrapper.hidden = true
+        noteWrapper.classList.add('notes');
+        
+        // Add each element of `contents` to `wrapper`
+        notesContents.forEach(node => {
+          noteWrapper.appendChild(node)
+        })
+        
+        // Add the wrapped content back into the DOM 
+        // after the definition
+        note.parentNode.insertBefore(noteWrapper, note.nextElementSibling)
+        
+        // Assign the button
+        let notebtn = note.querySelector('button')
+        
+        notebtn.onclick = () => {
+          // Cast the state as a boolean
+          let expanded = notebtn.getAttribute('aria-expanded') === 'true' || false
+          
+          // Switch the state
+          notebtn.setAttribute('aria-expanded', !expanded)
+          // Switch the content's visibility
+          noteWrapper.hidden = expanded
+          
+          const listener = () => {
+            noteWrapper.removeEventListener('transitionend', listener);
+          };
+          
+          if (expanded === false) {
+            noteWrapper.removeEventListener('transitionend', listener);
+            const reflow = noteWrapper.offsetHeight;
+            noteWrapper.classList.add('is-open');        
+          } else {
+            noteWrapper.addEventListener('transitionend', listener);
+            noteWrapper.classList.remove('is-open');
+          }
+        }
+      })
+    };
+
+    // Open notes panel notes related link is clicked
+// See line 2430 for event listeners which call click_handler
+var click_handler = function(event) {
+  if (event.target.hasAttribute('data-note-type')) {
+    var s = event.target.getAttribute('href');
+  } 
+  
+  
+  function goToNote(s) {
+      
+  };
+    
+  if ($('notes-panel').hasClass('panel-open')) {
+      goToNote(s);
+    } else {
+      open_panel();
+      goToNote(s);
+    }
+};
+
+
+    // notes panel toggle
+    var notesButton = document.querySelector('#action-notes');
+    notesButton.addEventListener("click", function(){
+      if (notesButton.classList.contains('panel-open')) {
+        close_panel();
+      } else {
+        open_panel();
+      }
+    });
+
+    var notesPanelButton = document.querySelector('#modal-notes button.modal__close')
+    notesPanelButton.addEventListener("click", function() {
+      close_panel();
+    });
+
+    var open_panel = function() {
+        const notesPanel = document.querySelector('#modal-notes');
+        const notesButton = document.querySelector('#action-notes');
+        const notesPanelButton = document.querySelector('#modal-notes button.modal__close')
+        notesPanel.setAttribute("aria-hidden", "false");
+        notesPanel.parentElement.setAttribute("data-modal-actived", "true");      
+        notesButton.classList.add('panel-open');
+        notesButton.classList.remove('panel-closed');
+        // resize EPUB
+        setTimeout(function() {
+            window.dispatchEvent(new Event('resize'));
+        }, 0);
+        notesPanelButton.focus();
+    } // end open_panel
+
+    // close panel function
+    var close_panel = function() {
+      const notesPanel = document.querySelector('#modal-notes');
+      const notesButton = document.querySelector('#action-notes');
+        notesPanel.setAttribute("aria-hidden", "true");
+        notesPanel.parentElement.setAttribute("data-modal-actived", "false");      
+        notesButton.classList.add('panel-closed');
+        notesButton.classList.remove('panel-open');
+        // resize EPUB
+        setTimeout(function() {
+            window.dispatchEvent(new Event('resize'));
+        }, 0);
+        notesButton.focus();
+    }
+
+
