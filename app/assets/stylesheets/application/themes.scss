@@ -4535,6 +4535,85 @@ $um-white: #fff;
 }
 ///////////////////////////////////////////////
 // University of Michigan Press -
+// Michigan English Language Teaching
+///////////////////////////////////////////////
+.michelt {
+
+  header {
+    border-bottom: 2px solid $um-accent-color;
+    height: auto;
+  }
+
+  .navbar-default {
+    border-radius: 0;
+    background-color: $um-brand-color;
+    border: 0;
+  }
+
+  form.search-form.navbar-form {
+    float: right !important;
+  }
+
+  .jumbotron {
+    display: none;
+  } 
+  
+  //footer
+
+   footer.press {
+    border: none;
+    padding: 0;
+
+    .row {
+      display: flex;
+      justify-content: unset;
+    }
+
+    a,
+    a:hover,
+    a:active {
+      color: $um-white;
+    }
+    .press-block-a,
+    .press-block-b {
+      padding: 30px;
+
+
+      a,
+      a:hover,
+      a:active {
+        color: $um-white;
+      }
+
+      p {
+        text-transform: initial;
+        letter-spacing: initial;
+        font-size: 1.5em;
+      }
+
+    }
+    .press-block-c {
+      margin-top: 0;
+      padding: 10px 0;
+      background-color: $um-brand-color !important;
+    }
+    .platform {
+      background-color: #342f2e !important;
+
+      img {
+        margin-left: 4px;
+        vertical-align: middle;
+        width: 90px !important;
+        height: auto !important;
+      }
+    }
+  }
+
+
+}
+
+///////////////////////////////////////////////
+// University of Michigan Press -
 // Gabii Project Reports
 ///////////////////////////////////////////////
 // colors
