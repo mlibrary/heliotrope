@@ -19,9 +19,9 @@ class OpenAccessEbookTrustJob < ApplicationJob
     reports = item_master_reports(press, reports)
     reports = usage_report(reports) if january_or_july?
 
-    tmp_zip = zipup(reports)
+    zipfile = zipup(reports)
 
-    OpenAccessEbookTrustMailer.send_report(tmp_zip).deliver_now
+    OpenAccessEbookTrustMailer.send_report(zipfile).deliver_now
   end
 
   def item_master_reports(press, reports)
@@ -32,9 +32,13 @@ class OpenAccessEbookTrustJob < ApplicationJob
         end_date: end_date,
         press: press.id,
         metric_type: 'Total_Item_Requests',
-        data_type: 'Book',
+        data_type: ["Book", "Multimedia", "Book_Segment"],
         access_type: ['Controlled', 'OA_Gold'],
-        access_method: 'Regular'
+        access_method: 'Regular',
+        attributes_to_show: ["Authors", "Publication_Date", "Data_Type", "YOP", "Access_Type", "Access_Method"],
+        include_parent_details: "true",
+        exclude_monthly_details: "false",
+        include_monthly_details: "true"
       })
 
       result = CounterReporter::ItemReport.new(params).report
@@ -78,10 +82,10 @@ class OpenAccessEbookTrustJob < ApplicationJob
   end
 
   def zipup(reports)
-    tmp_zip = Tempfile.new('fulcrum_ebc_reports_zip')
+    zipfile = File.open(Rails.root.join("tmp", "fulcrum_ebc_reports_zip"), "w")
 
-    Zip::OutputStream.open(tmp_zip) { |zos| }
-    Zip::File.open(tmp_zip.path, Zip::File::CREATE) do |zip|
+    Zip::OutputStream.open(zipfile) { |zos| }
+    Zip::File.open(zipfile.path, Zip::File::CREATE) do |zip|
       reports.each do |name, data|
         tmp_report = Tempfile.new
         tmp_report.write(data)
@@ -91,8 +95,8 @@ class OpenAccessEbookTrustJob < ApplicationJob
       end
     end
 
-    tmp_zip.close
-    tmp_zip
+    zipfile.close
+    zipfile
   end
 
   def flatten_name(name)

@@ -147,7 +147,7 @@ module CounterReporter
         %w[]
       when 'ir'
         # %w[Article Book Book_Segment Multimedia Other]
-        %w[Book Multimedia]
+        %w[Book Multimedia Book_Segment]
       when 'ir_a1'
         # %w[Article]
         %w[]
@@ -171,7 +171,7 @@ module CounterReporter
         # %w[Book Chapter Section]
         %w[Book]
       else
-        %w[]
+        %w[Book Chapter Section]
       end
     end
 
