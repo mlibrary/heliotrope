@@ -103,7 +103,7 @@ jobs:
         default: '2.1.4'
       rails_version:
         type: string
-        default: '5.2.4.6'
+        default: '5.2.8.1'
     executor:
       name: 'ruby'
       ruby_version: << parameters.ruby_version >>
@@ -134,7 +134,7 @@ jobs:
         default: '2.1.4'
       rails_version:
         type: string
-        default: '5.2.4.6'
+        default: '5.2.8.1'
     executor:
       name: 'ruby'
       ruby_version: << parameters.ruby_version >>
@@ -296,10 +296,10 @@ workflows:
     jobs:
       - bundle:
           ruby_version: '2.7.4'
-          rails_version: '5.2.4.6'
+          rails_version: '5.2.8.1'
       - build:
           ruby_version: '2.7.4'
-          rails_version: '5.2.4.6'
+          rails_version: '5.2.8.1'
           requires:
             - bundle
       - test:
