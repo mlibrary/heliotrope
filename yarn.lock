@@ -2228,9 +2228,9 @@ core-js@^3.16.2:
   integrity sha512-lM3GftxzHNtPNUJg0v4pC2RC6puwMd6VZA7vXUczi+SKmCWSf4JwO89VJGMqbzmB7jlK7B5hr3S64PqwFL49cA==
 
 core-js@^3.6.5:
-  version "3.23.2"
-  resolved "https://registry.yarnpkg.com/core-js/-/core-js-3.23.2.tgz#e07a60ca8b14dd129cabdc3d2551baf5a01c76f0"
-  integrity sha512-ELJOWxNrJfOH/WK4VJ3Qd+fOqZuOuDNDJz0xG6Bt4mGg2eO/UT9CljCrbqDGovjLKUrGajEEBcoTOc0w+yBYeQ==
+  version "3.23.5"
+  resolved "https://registry.yarnpkg.com/core-js/-/core-js-3.23.5.tgz#1f82b0de5eece800827a2f59d597509c67650475"
+  integrity sha512-7Vh11tujtAZy82da4duVreQysIoO2EvVrur7y6IzZkH1IHPSekuDi8Vuw1+YKjkbfWLRD7Nc9ICQ/sIUDutcyg==
 
 core-util-is@~1.0.0:
   version "1.0.3"
@@ -2260,7 +2260,7 @@ cosmiconfig@^6.0.0:
 
 "cozy-sun-bear-too@git+https://github.com/mlibrary/cozy-sun-bear.git#too":
   version "1.0.0"
-  resolved "git+https://github.com/mlibrary/cozy-sun-bear.git#25926d50a1c5794ab179388094e40790ddbcc56f"
+  resolved "git+https://github.com/mlibrary/cozy-sun-bear.git#8b178d9c3e44c4d2a485320589e5be8ebf2179bc"
   dependencies:
     ajv "^6.12.6"
     core-js "^3.6.5"

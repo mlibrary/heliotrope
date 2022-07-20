@@ -1,24 +1,12 @@
         // Left Positioned Panel - Panels are non modal and reflow text when opened.
 
-
-        // Close/Previous Page [X]
-        // cozy.control.widget.button({
-        //  region: 'left.sidebar',
-        //  data: { label: '<i class="icon-x oi" data-glyph="x" aria-hidden="true"></i>'},
-        //  template: '<button class="button--sm cozy-close" data-toggle="button" data-slot="label" aria-label="Close reader"></button>',
-        //  onClick: function() { window.location = "<%= "#{@back_link}" %>"; }
-        // }).addTo(reader);
-
-        // Mobile Close/Previous Page [X]
-        // cozy.control.widget.button({
-        //  region: 'left.sidebar',
-        //  data: { label: '<i class="icon-x oi" data-glyph="x" aria-hidden="true"></i>'},
-        //  template: '<button class="button--sm cozy-close mobile" data-toggle="button" data-slot="label" aria-label="Close reader"></button>',
-        //  onClick: function() { window.location = "<%= "#{@back_link}" %>"; }
-        // }).addTo(reader);
+        var actions = {};
+        actions.contents = document.querySelector('#action-contents');
+        actions.search = document.querySelector('#action-search');
+        var $panels = document.querySelector('.nm--panels');
 
         // Table of contents [Outline Icon]
-        controls.contents = cozy.control.contents({ 
+        controls.contents = cozy.control.contents({
           container: actions.contents,
           modalContainer: $panels,
           closePanel: false
