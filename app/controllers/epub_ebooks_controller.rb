@@ -43,11 +43,46 @@ class EpubEbooksController < CheckpointController
     head :no_content
   end
 
+  # this is almost completly the same as EPubsController#search
   def search
-    query = params[:q] || ''
-    return render json: { q: query, search_results: [] } unless EbookReaderOperation.new(current_actor, @epub_ebook).allowed?
+    return head :not_found unless EbookReaderOperation.new(current_actor, @epub_ebook).allowed?
 
-    render json: { q: query, search_results: [] }
+    if Rails.env.development?
+      headers['Access-Control-Allow-Origin'] = '*'
+      headers['Access-Control-Allow-Methods'] = 'GET'
+      headers['Access-Control-Request-Method'] = '*'
+    end
+
+    query = params[:q] || ''
+    # due to performance issues, must have 3 or more characters to search
+    return render json: { q: query, search_results: [] } if query.length < 3
+
+    log = EpubSearchLog.create(noid: @noid, query: query, user: current_actor.email, press: @presenter.parent.subdomain, session_id: session.id)
+    start = (Time.now.to_f * 1000.0).to_i
+
+    epub = EPub::Publication.from_directory(UnpackService.root_path_from_noid(@noid, 'epub'))
+
+    # no query caching for platform_admins so they can better test performance issues, HELIO-4082
+    results = if current_actor.platform_admin?
+                epub.search(query)
+              else
+                Rails.cache.fetch(search_cache_key(@noid, query), expires_in: 30.days) { epub.search(query) }
+              end
+
+    finish = (Time.now.to_f * 1000.0).to_i
+    log.update(time: finish - start, hits: results[:search_results].count, search_results: results)
+
+    render json: results
+  rescue StandardError => e
+    Rails.logger.error "EpubEbooksController.search raised #{e}"
+    head :not_found
+  end
+
+  def search_cache_key(id, query)
+    "epub:" +
+      Digest::MD5.hexdigest(query) +
+      id +
+      @presenter.date_modified.to_s
   end
 
   def item_identifier_for_irus_analytics
