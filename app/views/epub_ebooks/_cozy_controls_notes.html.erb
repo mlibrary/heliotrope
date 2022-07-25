@@ -281,8 +281,16 @@ var click_handler = function(event) {
         const notesPanel = document.querySelector('#modal-notes');
         const notesButton = document.querySelector('#action-notes');
         const notesPanelButton = document.querySelector('#modal-notes button.modal__close')
+
+        // Look for any other currently-open modals to close first (HELIO-4287).
+        var open_modals_close_buttons = document.querySelectorAll('.cozy-modal[aria-hidden="false"] button[data-modal-close]');
+        console.log(open_modals_close_buttons);
+        open_modals_close_buttons.forEach((button) => {
+          button.click();
+        });
+
         notesPanel.setAttribute("aria-hidden", "false");
-        notesPanel.parentElement.setAttribute("data-modal-actived", "true");      
+        notesPanel.parentElement.setAttribute("data-modal-actived", "true");
         notesButton.classList.add('panel-open');
         notesButton.classList.remove('panel-closed');
         // resize EPUB
@@ -297,7 +305,7 @@ var click_handler = function(event) {
       const notesPanel = document.querySelector('#modal-notes');
       const notesButton = document.querySelector('#action-notes');
         notesPanel.setAttribute("aria-hidden", "true");
-        notesPanel.parentElement.setAttribute("data-modal-actived", "false");      
+        notesPanel.parentElement.setAttribute("data-modal-actived", "false");
         notesButton.classList.add('panel-closed');
         notesButton.classList.remove('panel-open');
         // resize EPUB

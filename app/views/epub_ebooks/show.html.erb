@@ -147,9 +147,6 @@
         })
         <% end %>
 
-        // No modal panel initiate
-        <%= render "cozy_controls_nomodal", presenter: @presenter, parent_presenter: @parent_presenter %>
-
         // Configure and initiate reader
         var reader = cozy.reader('reader', {
           // See https://tools.lib.umich.edu/jira/browse/HELIO-3350 and https://stackoverflow.com/a/47331356
