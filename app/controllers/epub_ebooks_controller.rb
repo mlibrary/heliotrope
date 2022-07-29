@@ -22,6 +22,14 @@ class EpubEbooksController < CheckpointController
                  end
     @ebook_download_presenter = EBookDownloadPresenter.new(@parent_presenter, current_ability, current_actor)
     @search_url = main_app.search_epub_ebook_url(@noid, q: '').gsub!(/locale=en&/, '')
+
+    unless Rails.env.test?
+      map_file_doc = ActiveFedora::SolrService.query("+has_model_ssim:FileSet AND +monograph_id_ssim:#{Rails.configuration.princesse_de_cleves_monograph_noid} AND +resource_type_tesim:interactive+map", rows: 1)&.first
+    else
+      map_file_doc = nil
+    end
+    @map_file_presenter = map_file_doc.present? ? Hyrax::FileSetPresenter.new(map_file_doc, current_ability).embed_link : nil
+
     CounterService.from(self, @presenter).count(request: 1)
     send_irus_analytics_request
     render layout: false
@@ -93,7 +101,6 @@ class EpubEbooksController < CheckpointController
 
       def setup
         @noid = params[:id]
-        raise(PageNotFoundError, "Princesse de Cleves NOID not equal!") unless @noid == Settings.princesse_de_cleves_noid
         raise(PageNotFoundError, "Princesse de Cleves NOID not valid!") unless ValidationService.valid_noid?(@noid)
         @presenter = Hyrax::PresenterFactory.build_for(ids: [@noid], presenter_class: Hyrax::FileSetPresenter, presenter_args: nil).first
         @epub_ebook = Sighrax.from_presenter(@presenter)
