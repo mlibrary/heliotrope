@@ -40,9 +40,11 @@ SitemapGenerator::Sitemap.create(compress: false, create_index: true, max_sitema
   docs = ActiveFedora::SolrService.query("+has_model_ssim:Monograph AND -(press_sim:demo OR press_sim:heliotrope OR press_sim:monitoringservicetarget)", rows: 100_000)
   docs.each do |d|
     next unless d['visibility_ssi'] == 'open'
+    next if d['tombstone_ssim']&.first == 'yes'
+
     cover_id = d['representative_id_ssim']&.first
 
-    d['file_set_ids_ssim'].each do |fsid|
+    d['file_set_ids_ssim']&.each do |fsid|
       fs = ActiveFedora::SolrService.query("{!terms f=id}#{fsid}", rows: 1).first
       next unless fs.present? && fs['visibility_ssi'] == 'open'
       # Monograph cover and "featured representative" file_set URLs don't need to be in sitemaps.
