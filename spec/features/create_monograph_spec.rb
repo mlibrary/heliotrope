@@ -60,7 +60,7 @@ describe 'Create a monograph' do
       # Citable Links
       fill_in 'DOI', with: '<doi>'
       fill_in 'Handle', with: '<hdl>'
-      fill_in 'Identifier', with: '<identifier>'
+      fill_in 'Identifier(s)', with: '<identifier>'
 
       click_button 'Save'
 
