@@ -23,11 +23,7 @@ class EpubEbooksController < CheckpointController
     @ebook_download_presenter = EBookDownloadPresenter.new(@parent_presenter, current_ability, current_actor)
     @search_url = main_app.search_epub_ebook_url(@noid, q: '').gsub!(/locale=en&/, '')
 
-    unless Rails.env.test?
-      map_file_doc = ActiveFedora::SolrService.query("+has_model_ssim:FileSet AND +monograph_id_ssim:#{Rails.configuration.princesse_de_cleves_monograph_noid} AND +resource_type_tesim:interactive+map", rows: 1)&.first
-    else
-      map_file_doc = nil
-    end
+    map_file_doc = ActiveFedora::SolrService.query("+has_model_ssim:FileSet AND +monograph_id_ssim:#{@parent_presenter.id} AND +resource_type_tesim:interactive+map", rows: 1)&.first
     @map_file_presenter = map_file_doc.present? ? Hyrax::FileSetPresenter.new(map_file_doc, current_ability).embed_link : nil
 
     CounterService.from(self, @presenter).count(request: 1)
@@ -103,6 +99,7 @@ class EpubEbooksController < CheckpointController
         @noid = params[:id]
         raise(PageNotFoundError, "Princesse de Cleves NOID not valid!") unless ValidationService.valid_noid?(@noid)
         @presenter = Hyrax::PresenterFactory.build_for(ids: [@noid], presenter_class: Hyrax::FileSetPresenter, presenter_args: nil).first
+        raise(PageNotFoundError, "Princesse de Cleves ISBN not valid!") unless @presenter.parent.isbn.any? { |isbn| isbn.delete("^0-9") == '9781643150383' }
         @epub_ebook = Sighrax.from_presenter(@presenter)
         raise(NotAuthorizedError, "Non Electronic Publication") unless @epub_ebook.is_a?(Sighrax::EpubEbook)
       end

@@ -107,16 +107,6 @@ module Heliotrope
     # HELIO-4309
     config.active_record.yaml_column_permitted_classes = [ActiveSupport::HashWithIndifferentAccess]
 
-    # Princesse de Cleves stuff
-    if ENV["CIRCLECI"].blank?
-      config.princesse_de_cleves_monograph_noid = ActiveFedora::SolrService.query("+isbn_numeric:9781643150383 AND +has_model_ssim:Monograph", rows: 1)&.first&.id
-      if Rails.configuration.princesse_de_cleves_monograph_noid.present?
-        config.princesse_de_cleves_epub_noid = ActiveFedora::SolrService.query("+has_model_ssim:FileSet AND +monograph_id_ssim:#{Rails.configuration.princesse_de_cleves_monograph_noid} AND +label_tesim:epub", rows: 1)&.first&.id
-      else
-        config.princesse_de_cleves_epub_noid = nil
-      end
-    end
-
     config.to_prepare do
       # ensure overrides are loaded
       # see https://bibwild.wordpress.com/2016/12/27/a-class_eval-monkey-patching-pattern-with-prepend/
