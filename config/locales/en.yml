@@ -137,6 +137,7 @@ en:
       form:
         q:
           label: "Search within %{application_name}"
+  identifier: "Identifier(s)"
   isbn: "ISBN(s)"
   keywords: "Keywords"
   last_modified: "Last Modified"
@@ -280,7 +281,7 @@ en:
         sort_date: :"sort_date"
         closed_captions: :"closed_captions"
         visual_descriptions: :"visual_descriptions"
-        transcript: :"transcript" 
+        transcript: :"transcript"
         translation: :"translation"
         tombstone: :"tombstone"
         tombstone_message: :"tombstone_message"
@@ -296,6 +297,7 @@ en:
         edition_name: :"edition_name"
         funder: "Funder"
         funder_display: "Funder Display"
+        identifier: :"identifier"
         language: "Language"
         location: "Publication Location"
         next_edition: :"next_edition"
@@ -308,7 +310,7 @@ en:
         volume: "Volume"
         oclc_owi: "OCLC Work Identifier"
         copyright_year: "Copyright Year"
-        award: "Award"
+        award: "Award(s)"
       score:
         creator: "Composer"
         license: "Creative Commons License"
