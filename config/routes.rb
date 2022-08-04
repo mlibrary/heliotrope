@@ -178,8 +178,6 @@ Rails.application.routes.draw do
     end
   end
 
-  get "epubs/#{ Rails.configuration.princesse_de_cleves_epub_noid || 'invalidnoid' }", to: redirect("epub_ebooks/#{ Rails.configuration.princesse_de_cleves_epub_noid || 'invalidnoid' }", status: 302)
-
   get 'epubs/:id', controller: :e_pubs, action: :show, as: :epub
   get 'epubs/:id/*file', controller: :e_pubs, action: :file, as: :epub_file
   get 'epubs_download_chapter/:id', controller: :e_pubs, action: :download_chapter, as: :epub_download_chapter

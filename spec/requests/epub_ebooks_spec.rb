@@ -8,11 +8,13 @@ RSpec.describe "Epub Ebooks", type: :request do
       create(:public_monograph,
              user: user,
              press: press.subdomain,
+             isbn: isbn,
              representative_id: cover.id,
              thumbnail_id: thumbnail.id)
     }
     let(:user) { create(:user) }
     let(:press) { create(:press) }
+    let(:isbn) { ['978-1-64315-038-3 (ebook)'] }
     let(:cover) { create(:public_file_set) }
     let(:thumbnail) { create(:public_file_set) }
     let(:epub) { create(:public_file_set, id: 'pdecleves', content: File.open(File.join(fixture_path, 'moby-dick.epub'))) }
@@ -46,6 +48,22 @@ RSpec.describe "Epub Ebooks", type: :request do
             expect(counter_service).not_to have_received(:count).with(request: 1)
             expect(response).to have_http_status(:unauthorized)
             expect(response).to render_template('hyrax/base/unauthorized')
+          end
+        end
+      end
+
+      context 'authorized, but id is for a Monograph with wrong ISBN (not PdC)' do
+        let(:allowed) { true }
+        let(:isbn) { ['999-1-64315-038-3 (ebook)'] }
+
+        describe 'GET /epub_ebooks/pdecleves' do
+          subject { get "/epub_ebooks/#{epub.id}" }
+
+          it do
+            expect { subject }.not_to raise_error
+            expect(counter_service).not_to have_received(:count).with(request: 1)
+            expect(response).to have_http_status(:not_found)
+            expect(response).to render_template(file: Rails.root.join('public', '404.html').to_s)
           end
         end
       end
