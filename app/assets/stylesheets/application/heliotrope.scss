@@ -1603,6 +1603,66 @@ footer.press {
   }
 }
 
+/* CSB v2 - PdeC EReader */
+.too {
+  font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+
+  .cozy-modal-search {
+    .cozy-search {
+      padding: 1em 0;
+    
+      form input {
+        padding: 10px;
+        border-radius: 0;
+        border: 1px solid #31343b;
+      }
+
+      form button {
+        padding: 10px;
+        border-radius: 0;
+        margin-left: -4px;
+        border: 1px solid #31343b;
+      }
+
+      article ol {
+        list-style: none;
+      }
+    
+    }
+  }
+
+  .nm--toolbar button:focus {
+    outline: none;
+  }
+
+  .cozy-text-tools {
+    padding: 4px 0 0;
+    
+    .versions {
+      padding-left: 5px;
+    }
+  }
+
+  .cozy-navigator-range__status {
+    font-size: 12px;
+  }
+
+  .cozy-module-left,
+  .cozy-module-right {
+    display: none;
+  }
+
+  .cozy-module-book {
+    width: 100%;
+  }
+
+  .cozy-module-book[data-manager="continuous"][data-layout="reflowable"] .epub-container {
+    padding-right: 0;
+    padding-left: 0;
+  }
+
+}
+
 .too #reader { 
   .button--sm.cozy-preferences,
   .cozy-control button.button--sm.cozy-citation {
@@ -1635,7 +1695,8 @@ footer.press {
     }
 
     main#modal-notes-content dt,
-    main#modal-notes-content section {
+    main#modal-notes-content section,
+    main#modal-notes-content section.Heading2 h5 {
       margin: 0;
     }
 
@@ -1645,7 +1706,7 @@ footer.press {
     }
 
     main#modal-notes-content h4,
-    main#modal-notes-content p {
+    main#modal-notes-content p.intro {
       padding-left: 32px;
       padding-right: 32px;
     }
@@ -1658,7 +1719,7 @@ footer.press {
       border-top: 1px solid #000;
     }
 
-    main#modal-notes-content p {
+    main#modal-notes-content p.intro {
       font-size: .95em;
       background-color:#E5E9ED;
       margin: 0;
@@ -1666,12 +1727,14 @@ footer.press {
     }
 
     main#modal-notes-content section h4:hover,
-    main#modal-notes-content dt:hover {
+    main#modal-notes-content dt:hover,
+    main#modal-notes-content section.Heading2 h5:hover {
       background-color: #f1f1f1;
     }
 
-    main#modal-notes-content section button,
-    main#modal-notes-content dt button {
+    main#modal-notes-content section h4 button,
+    main#modal-notes-content dt button,
+    main#modal-notes-content section.Heading2 h5 button {
       all: inherit;
       border: 0;
       display: flex;
@@ -1681,15 +1744,20 @@ footer.press {
     }
 
 
-    main#modal-notes-content section button:focus svg,
-    main#modal-notes-content dt button:focus svg {
+    main#modal-notes-content section h4 button:focus svg,
+    main#modal-notes-content dt button:focus svg,
+    main#modal-notes-content section.Heading2 h5 button:focus svg {
       outline: 2px solid;
     }
 
-    main#modal-notes-content section svg,
-    main#modal-notes-content button svg {
+    main#modal-notes-content section > h4 svg,
+    main#modal-notes-content dt button svg {
       height: 1em;
       margin-left: 0.5em;
+    }
+
+    main#modal-notes-content section.Heading2 > h5 button svg {
+      height: 16px;
     }
 
     main#modal-notes-content [aria-expanded="true"] .vert {
@@ -1710,7 +1778,8 @@ footer.press {
       transform: translateY(0);
     }
 
-    main#modal-notes-content div.notes {
+    main#modal-notes-content div.notes,
+    main#modal-notes-content div.character {
       max-height: 0;
       overflow: hidden;
       transition: all .5s;
@@ -1722,21 +1791,30 @@ footer.press {
       transition: all .5s;
     }
 
+    main#modal-notes-content div.character.is-open {
+      max-height: 800px;
+      overflow: scroll;
+      transition: all .5s;
+    }
+
     main#modal-notes-content dl {
       padding: 0 !important;
       margin: 0 !important;
     }
 
-    main#modal-notes-content dt {
+    main#modal-notes-content dt,
+    main#modal-notes-content section.Heading2 h5 {
       border-top: 1px solid #ccc;
       padding-top: 10px;
       padding-bottom: 10px;
       padding-left: 32px;
       padding-right: 32px;
       font-weight: normal;
+      font-size: 16px;
     }
 
-    main#modal-notes-content dd {
+    main#modal-notes-content dd,
+    main#modal-notes-content section.Heading2 .character {
       margin-left: 0;
       color: #333;
       padding: 10px 10px 20px;
@@ -1746,13 +1824,17 @@ footer.press {
       background-color: #fff;
     }
 
+    main#modal-notes-content section.Heading2 .character img {
+      padding: 10px 0 1.5em;
+    }
+
 
 .cozy-container i[class^='icon-'] {
     font-size: 2rem !important;
 }
 
 .cozy-container i[class^='icon-chevron-'] {
-    font-size: 2.5em !important;
+    font-size: 2em !important;
 }
 
 .cozy-container i.icon-comment-square {

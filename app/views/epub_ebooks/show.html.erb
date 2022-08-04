@@ -225,7 +225,7 @@
           }, 100);
         }
 
-        var $panel = $('.annotator-frame');
+        //var $panel = $('.annotator-frame');
 
         // pass the reference to the panel
         //var annotation_tool = new AnnotationTool({
@@ -242,6 +242,7 @@
           var englishTexts =  contents.document.querySelectorAll(".english");
           var definitions = contents.content.querySelectorAll("[data-note-type='definition']");
           var terms = contents.content.querySelectorAll(".FrequentlyUsedTerm", ".FrequentlyUsedTermTermwDefinition");
+          var passages = contents.content.querySelectorAll(".KeyPassage");
 
           var frenchCheckbox = document.querySelector('#french');
             //var frenchText;
@@ -288,7 +289,25 @@
             });
 
             var passageCheckbox = document.querySelector('#passages');
-            var passage;
+            var passages;
+            passageCheckbox.addEventListener('change', (contents) => {
+                if (passageCheckbox.checked) {
+                    if (passages !== null) {
+                        for(var i =0, n = passages.length; i < n; i++) {
+                            var passage = passages[i];
+                            passage.classList.add('highlight');
+                        }
+                    }
+                } else {
+                    if (passages !== null) {
+                        for(var i =0, n = passages.length; i < n; i++) {
+                            var passage = passages[i];
+                            passage.classList.remove('highlight');
+                        }
+                    }
+                }
+
+            });
 
             var termsCheckbox = document.querySelector('#terms');
             var terms;
@@ -349,6 +368,7 @@
           formatSections();
           formatNotes();
           formatDefinitions();
+          formatCharacters();
         });
 
         reader.on('resized', function () {

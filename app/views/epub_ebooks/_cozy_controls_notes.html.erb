@@ -239,7 +239,87 @@
           }
         }
       })
-    };
+    }
+
+    // Historical Characters
+    var formatCharacters = function() {
+      // Get all the <section> <h5> headings
+      const characters = document.querySelectorAll('section h5')
+      
+      Array.prototype.forEach.call(characters, character => {
+        // Give each <h5> a toggle button child
+        // with the SVG plus/minus icon
+        character.innerHTML = `
+          <button aria-expanded="false">
+            ${character.textContent}
+            <svg aria-hidden="true" focusable="false" viewBox="0 0 10 10">
+              <rect class="vert" height="8" width="2" y="1" x="4"/>
+              <rect height="2" width="8" y="4" x="1"/>
+            </svg>
+          </button>
+        `
+        
+        // Function to create a node list 
+        // of the content between this <h5> and the next
+        const getCharacter = (elem) => {
+          let elems = []
+          while (elem.nextElementSibling && elem.nextElementSibling.tagName !== 'H5') {
+            elems.push(elem.nextElementSibling)
+            elem = elem.nextElementSibling
+          }
+          
+          // Delete the old versions of the content nodes
+          elems.forEach((node) => {
+            node.parentNode.removeChild(node)
+          })
+
+          return elems
+        }
+        
+        // Assign the contents to be expanded/collapsed (array)
+        let characterContents = getCharacter(character)
+        
+        // Create a wrapper element for `contents` and hide it
+        let characterWrapper = document.createElement('div')
+        characterWrapper.hidden = true;
+        characterWrapper.classList.add('character');
+        
+        // Add each element of `contents` to `wrapper`
+        characterContents.forEach(node => {
+          characterWrapper.appendChild(node)
+        })
+        
+        // Add the wrapped content back into the DOM 
+        // after the definition
+        character.parentNode.insertBefore(characterWrapper, character.nextElementSibling)
+        
+        // Assign the button
+        let characterbtn = character.querySelector('button')
+        
+        characterbtn.onclick = () => {
+          // Cast the state as a boolean
+          let expanded = characterbtn.getAttribute('aria-expanded') === 'true' || false
+          
+          // Switch the state
+          characterbtn.setAttribute('aria-expanded', !expanded)
+          // Switch the content's visibility
+          characterWrapper.hidden = expanded;
+          
+          const listener = () => {
+            characterWrapper.removeEventListener('transitionend', listener);
+          };
+          
+          if (expanded === false) {
+            characterWrapper.removeEventListener('transitionend', listener);
+            const reflow = characterWrapper.offsetHeight;
+            characterWrapper.classList.add('is-open');
+          } else {
+            characterWrapper.addEventListener('transitionend', listener);
+            characterWrapper.classList.remove('is-open');
+          }
+        }
+      })
+    }
 
     // Open notes panel notes related link is clicked
 // See line 2430 for event listeners which call click_handler
