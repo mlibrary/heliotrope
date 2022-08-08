@@ -6,9 +6,9 @@ RSpec.describe OpenAccessEbookTrustJob, type: :job do
   describe "perform" do
     let(:mailer) { double("mailer", deliver_now: true) }
     let(:mock_zip) { double('mock_zip') }
+    let!(:press) { create(:press, subdomain: "michigan") }
 
     before do
-      create(:press, subdomain: "michigan")
       allow(OpenAccessEbookTrustMailer).to receive(:send_report).with(mock_zip).and_return(mailer)
       # This is SUPER mocky, it's bad to mock the system under test, obvs.
       # Because the methods in this job are being tested individually I'm
@@ -25,64 +25,58 @@ RSpec.describe OpenAccessEbookTrustJob, type: :job do
         expect(OpenAccessEbookTrustMailer).to have_received(:send_report).with(mock_zip)
       end
     end
-  end
 
-  describe "#start_date" do
-    it "returns the first of the previous month" do
-      travel_to(Time.parse("2020-02-01")) do
-        expect(described_class.new.start_date).to eq "2020-01-01"
+    context "with given start and end dates" do
+      # This too is a big mess. We just want to make sure the given dates are being passed
+      # around instead of the defaults
+      let!(:target) { create(:full_license, licensee: institution, product: product) }
+      let(:institution) { create(:institution) }
+      let(:product) { create(:product, identifier: "ebc_YYYY") }
+      let(:report_time) { OpenAccessEbookTrust::ReportTime.new("2022-02-14", "2022-06-11") }
+      let(:counter_items) { double("counter items") }
+
+      before do
+        allow(CounterReporter::ReportParams).to receive(:new).with(
+          'ir',
+          {
+            institution: institution.identifier,
+            start_date: report_time.start_date,
+            end_date: report_time.end_date,
+            press: press.id,
+            metric_type: 'Total_Item_Requests',
+            data_type: ["Book", "Multimedia", "Book_Segment"],
+            access_type: ['Controlled', 'OA_Gold'],
+            access_method: 'Regular',
+            attributes_to_show: ["Authors", "Publication_Date", "Data_Type", "YOP", "Access_Type", "Access_Method"],
+            include_parent_details: "true",
+            exclude_monthly_details: "false",
+            include_monthly_details: "true"
+          }
+        )
+        allow(CounterReporter::ItemReport).to receive(:new).and_return(counter_items)
+        allow(counter_items).to receive(:report).and_return([])
       end
 
-      travel_to(Time.parse("2020-01-01")) do
-        expect(described_class.new.start_date).to eq "2019-12-01"
-      end
-    end
-  end
-
-  describe "#end_date" do
-    it "returns the last day of the previous month" do
-      travel_to(Time.parse("2020-02-01")) do
-        expect(described_class.new.end_date).to eq "2020-01-31"
-      end
-
-      travel_to(Time.parse("2020-01-01")) do
-        expect(described_class.new.end_date).to eq "2019-12-31"
-      end
-    end
-  end
-
-  describe "#usage_report_start_date" do
-    it "returns the first day of the month 6 months ago" do
-      travel_to(Time.parse("2020-01-01")) do
-        expect(described_class.new.usage_report_start_date).to eq "2019-07-01"
-      end
-
-      travel_to(Time.parse("2020-07-01")) do
-        expect(described_class.new.usage_report_start_date).to eq "2020-01-01"
-      end
-    end
-  end
-
-  describe "#january_or_july?" do
-    context "if january" do
-      it "returns true" do
-        travel_to(Time.parse("2020-01-01")) do
-          expect(described_class.new.january_or_july?).to be true
-        end
-      end
-    end
-    context "if july" do
-      it "returns true" do
-        travel_to(Time.parse("2020-07-01")) do
-          expect(described_class.new.january_or_july?).to be true
-        end
-      end
-    end
-    context "if october" do
-      it "returns false" do
-        travel_to(Time.parse("2020-10-01")) do
-          expect(described_class.new.january_or_july?).to be false
-        end
+      it "calls the mailer, methods get report_time object" do
+        described_class.perform_now("michigan", "2022-02-14", "2022-06-11")
+        expect(CounterReporter::ReportParams).to have_received(:new).with(
+          'ir',
+          {
+            institution: institution.identifier,
+            start_date: report_time.start_date,
+            end_date: report_time.end_date,
+            press: press.id,
+            metric_type: 'Total_Item_Requests',
+            data_type: ["Book", "Multimedia", "Book_Segment"],
+            access_type: ['Controlled', 'OA_Gold'],
+            access_method: 'Regular',
+            attributes_to_show: ["Authors", "Publication_Date", "Data_Type", "YOP", "Access_Type", "Access_Method"],
+            include_parent_details: "true",
+            exclude_monthly_details: "false",
+            include_monthly_details: "true"
+          }
+        )
+        expect(OpenAccessEbookTrustMailer).to have_received(:send_report).with(mock_zip)
       end
     end
   end
@@ -120,7 +114,7 @@ RSpec.describe OpenAccessEbookTrustJob, type: :job do
 
     it "returns a royalty usage report" do
       travel_to(Time.parse("2020-01-01")) do
-        expect(described_class.new.usage_report({ "name" => "data" })).to eq (
+        expect(described_class.new.usage_report(OpenAccessEbookTrust::ReportTime.new, { "name" => "data" })).to eq (
           {
             "name" => "data",
             "#{name}" => "#{output}"
@@ -186,7 +180,7 @@ RSpec.describe OpenAccessEbookTrustJob, type: :job do
 
     it "return reports for each institution" do
       travel_to(Time.parse("2020-02-01")) do
-        expect(described_class.new.item_master_reports(press, {})).to eq (
+        expect(described_class.new.item_master_reports(OpenAccessEbookTrust::ReportTime.new, press, {})).to eq (
           {
             report1_name => report1_csv,
             report2_name => report2_csv
@@ -235,7 +229,7 @@ RSpec.describe OpenAccessEbookTrustJob, type: :job do
 
     it "returns reports" do
       travel_to("2020-02-01") do
-        expect(described_class.new.institution_reports(press, {})).to eq (
+        expect(described_class.new.institution_reports(OpenAccessEbookTrust::ReportTime.new, press, {})).to eq (
           {
             request_name => request_csv,
             investigation_name => investigation_csv
@@ -265,6 +259,103 @@ RSpec.describe OpenAccessEbookTrustJob, type: :job do
         expect(zip.entries[2].name).to eq "C_Report.csv"
         expect(zip.entries[2].get_input_stream.read).to eq "C Report csv data"
       end
+    end
+  end
+end
+
+RSpec.describe OpenAccessEbookTrust::ReportTime do
+  context "with the default start and end date" do
+    describe "#start_date" do
+      it "returns the first of the previous month" do
+        travel_to(Time.parse("2020-02-01")) do
+          expect(described_class.new.start_date).to eq "2020-01-01"
+        end
+
+        travel_to(Time.parse("2020-01-01")) do
+          expect(described_class.new.start_date).to eq "2019-12-01"
+        end
+      end
+    end
+
+    describe "#end_date" do
+      it "returns the last day of the previous month" do
+        travel_to(Time.parse("2020-02-01")) do
+          expect(described_class.new.end_date).to eq "2020-01-31"
+        end
+
+        travel_to(Time.parse("2020-01-01")) do
+          expect(described_class.new.end_date).to eq "2019-12-31"
+        end
+      end
+    end
+
+    describe "#usage_report_start_date" do
+      it "returns the first day of the month 6 months ago" do
+        travel_to(Time.parse("2020-01-01")) do
+          expect(described_class.new.usage_report_start_date).to eq "2019-07-01"
+        end
+
+        travel_to(Time.parse("2020-07-01")) do
+          expect(described_class.new.usage_report_start_date).to eq "2020-01-01"
+        end
+      end
+    end
+
+    describe "#january_or_july?" do
+      context "if january" do
+        it "returns true" do
+          travel_to(Time.parse("2020-01-01")) do
+            expect(described_class.new.january_or_july?).to be true
+          end
+        end
+      end
+      context "if july" do
+        it "returns true" do
+          travel_to(Time.parse("2020-07-01")) do
+            expect(described_class.new.january_or_july?).to be true
+          end
+        end
+      end
+      context "if october" do
+        it "returns false" do
+          travel_to(Time.parse("2020-10-01")) do
+            expect(described_class.new.january_or_july?).to be false
+          end
+        end
+      end
+    end
+  end
+
+  context "with a given start and end date" do
+    context "with the wrong date format" do
+      it "raises" do
+        expect { described_class.new("02/02/2022") }.to raise_error(RuntimeError, "given_start_date must be in format YYYY-MM-DD")
+        expect { described_class.new("2022-02-02", "Monday") }.to raise_error(RuntimeError, "given_end_date must be in format YYYY-MM-DD")
+      end
+    end
+
+    describe "#start_date" do
+      it "returns the given start date" do
+        expect(described_class.new("2022-02-02", "2022-07-04").start_date).to eq "2022-02-02"
+      end
+    end
+
+    describe "#end_date" do
+      it "returns the given end date" do
+        expect(described_class.new("2022-02-02", "2022-07-04").end_date).to eq "2022-07-04"
+      end
+    end
+
+    describe "#usage_report_start_date" do
+      it "returns the first day of the month 6 months before the given start date" do
+        expect(described_class.new("2022-02-02", "2022-07-04").usage_report_start_date).to eq "2021-08-01"
+      end
+    end
+
+    describe "#january_or_july?" do
+      it { expect(described_class.new("2022-02-02", "2022-07-04").january_or_july?).to be false }
+      it { expect(described_class.new("2022-07-01", "2022-09-14").january_or_july?).to be true }
+      it { expect(described_class.new("2022-01-27", "2022-09-14").january_or_july?).to be true }
     end
   end
 end
