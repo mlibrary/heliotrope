@@ -1825,7 +1825,23 @@ footer.press {
     }
 
     main#modal-notes-content section.Heading2 .character img {
-      padding: 10px 0 1.5em;
+      padding: 10px 0 0;
+    }
+
+    main#modal-notes-content section.Heading2 .character a {
+      text-decoration:none;
+      border-bottom: 1px solid #0969DA;
+      box-shadow: inset 0 0 0 #0969DA;
+      color: #0969DA;
+      transition: background 0.1s cubic-bezier(.33,.66,.66,1);
+    }
+
+    main#modal-notes-content section.Heading2 .character a:hover {
+      text-decoration:none;
+      border-bottom: 3px solid #0969DA;
+      box-shadow: inset 0 0 0 #0969DA;
+      color: #0969DA;
+      transition: background 0.1s cubic-bezier(.33,.66,.66,1);
     }
 
 
