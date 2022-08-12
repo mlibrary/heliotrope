@@ -120,22 +120,16 @@
 
         <%= render "cozy_controls_notes", presenter: @presenter, parent_presenter: @parent_presenter %>
 
-        <%= render "cozy_controls_tools", presenter: @presenter, parent_presenter: @parent_presenter %>
-
-        // open links in ereader
-            var character_links = document.querySelectorAll("#historical_characters a[data-href]");
-
-            for(var i =0, n = character_links.length; i < n; i++) {
-              var character_link = character_links[i];
-              character_link.addEventListener('click', function () {
-                  target = character_link.getAttribute('data-href');
-                  target._goto_interval = true;
-                  //this._reader.tracking.action('contents/go/link');
-                  reader.display(target);      
-                }); 
-            }
+        <%= render "cozy_controls_tools", presenter: @presenter, parent_presenter: @parent_presenter %>        
 
         reader.on('ready:contents', function(contents) {
+          //find note links in EPUB
+          var note_links = contents.content.querySelectorAll("a[data-note-ref]");
+            for(let i =0, n = note_links.length; i < n; i++) {
+              let note_link = note_links[i];
+              note_link.addEventListener('click', click_handler);                
+            }
+
           var frenchTexts =  contents.document.querySelectorAll(".french");
           var englishTexts =  contents.document.querySelectorAll(".english");
           var terms = contents.document.querySelectorAll(".FrequentlyUsedTerm", ".FrequentlyUsedTermTermwDefinition");          
@@ -186,19 +180,19 @@
             });            
 
             var termsCheckbox = document.querySelector('#terms');
-            var terms;
+            //var terms;
             termsCheckbox.addEventListener('change', (contents) => {
                 if (termsCheckbox.checked) {
                     if (terms !== null) {
-                        for(var i =0, n = terms.length; i < n; i++) {
-                            var term = terms[i];
+                        for(let i =0, n = terms.length; i < n; i++) {
+                            let term = terms[i];
                             term.classList.add('highlight');
                         }
                     }
                 } else {
                     if (terms !== null) {
-                        for(var i =0, n = terms.length; i < n; i++) {
-                            var term = terms[i];
+                        for(let i =0, n = terms.length; i < n; i++) {
+                            let term = terms[i];
                             term.classList.remove('highlight');
                         }
                     }
@@ -227,15 +221,7 @@
 
             });
 
-            
 
-
-            //find links to notes panel
-            var links = contents.content.querySelectorAll("a[data-note-type='definition']");
-            for(var i =0, n = links.length; i < n; i++) {
-              var link = links[i];
-              link.addEventListener('click', click_handler);
-            }
         });
 
         // Initiate EPUB Reader
