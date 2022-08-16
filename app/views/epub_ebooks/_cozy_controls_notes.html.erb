@@ -427,6 +427,12 @@
       
     };
 
+    // map links in text open map panel
+    var mapClick_handler = function(event) {
+      event.preventDefault();
+      open_map();
+    }
+
 
     // notes panel toggle
     var notesButton = document.querySelector('#action-notes');

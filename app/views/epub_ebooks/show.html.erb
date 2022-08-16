@@ -204,13 +204,19 @@
 
         reader.on('ready:contents', function(contents) {
           console.log('-- ready:contents');
-          //find note links in EPUB
+          // find note links in EPUB
           var note_links = contents.content.querySelectorAll("a[data-note-ref]");
-          for (let i =0, n = note_links.length; i < n; i++) {
-            let note_link = note_links[i];
-            note_link.addEventListener('click', click_handler);                
-          }
-
+            for(let i =0, n = note_links.length; i < n; i++) {
+              let note_link = note_links[i];
+              note_link.addEventListener('click', click_handler);                
+            }
+          // find map links in EPUB
+          var map_links = contents.content.querySelectorAll(".pdec_location");
+            for(let i =0, n = map_links.length; i < n; i++) {
+              let map_link = map_links[i];
+              map_link.addEventListener('click', mapClick_handler);                
+            }
+          // french / english version display 
           var frenchTexts =  contents.document.querySelectorAll(".french");
           var frenchCheckbox = document.querySelector('#french');
 
@@ -226,7 +232,7 @@
           englishCheckbox.addEventListener('change', (contents) => {
             runEnglishCheckbox(englishCheckbox, englishTexts);
           });       
-
+          // text tools
           var terms = contents.document.querySelectorAll(".FrequentlyUsedTerm", ".FrequentlyUsedTermTermwDefinition"); 
           var termsCheckbox = document.querySelector('#terms');
 
@@ -245,8 +251,6 @@
         });
 
         // Initiate EPUB Reader
-        // reader.start(function() {
-        // });
         reader.start(function () {
           console.log('-- started');
           tools_panel();
