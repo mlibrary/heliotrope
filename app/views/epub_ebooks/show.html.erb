@@ -122,106 +122,126 @@
 
         <%= render "cozy_controls_tools", presenter: @presenter, parent_presenter: @parent_presenter %>        
 
+        function runFrenchCheckbox(frenchCheckbox, frenchTexts) {
+          console.log("-- runFrenchCheckbox");
+          if (frenchCheckbox.checked) {
+            if (frenchTexts !== null) {
+              for(var i =0, n = frenchTexts.length; i < n; i++) {
+                var frenchText = frenchTexts[i];
+                frenchText.classList.remove('hide');
+                frenchText.classList.add('display');
+              }
+            }
+          } else {
+            if (frenchTexts !== null) {
+              for(var i =0, n = frenchTexts.length; i < n; i++) {
+                var frenchText = frenchTexts[i];
+                frenchText.classList.remove('display');
+                frenchText.classList.add('hide');
+              }
+            }
+          }
+        }
+
+        function runEnglishCheckbox(englishCheckbox, englishTexts) {
+          console.log("-- runEnglishCheckbox");
+          if (englishCheckbox.checked) {
+            if (englishTexts !== null) {
+              for(var i =0, n = englishTexts.length; i < n; i++) {
+                var englishText = englishTexts[i];
+                englishText.classList.remove('hide');
+                englishText.classList.add('display');
+              }
+            }
+          } else {
+            if (englishTexts !== null) {
+              for(var i =0, n = englishTexts.length; i < n; i++) {
+                var englishText = englishTexts[i];
+                englishText.classList.remove('display');
+                englishText.classList.add('hide');
+              }
+            }
+          }
+        }
+
+        function runTermsCheckbox(termsCheckbox, terms) {
+          console.log("-- runTermsCheckbox");
+          if (termsCheckbox.checked) {
+            if (terms !== null) {
+              for (let i =0, n = terms.length; i < n; i++) {
+                let term = terms[i];
+                term.classList.add('highlight');
+              }
+            }
+          } else {
+            if (terms !== null) {
+              for (let i =0, n = terms.length; i < n; i++) {
+                let term = terms[i];
+                term.classList.remove('highlight');
+              }
+            }
+          }
+        }
+
+        function runKeywordsCheckbox(keywordsCheckbox, keywords) {
+          console.log("-- runKeywordsCheckbox");
+          if (keywordsCheckbox.checked) {
+            if (keywords !== null) {
+              for (var i =0, n = keywords.length; i < n; i++) {
+                var keyword = keywords[i];
+                keyword.classList.add('highlight');
+              }
+            }
+          } else {
+            if (keywords !== null) {
+              for (var i =0, n = keywords.length; i < n; i++) {
+                var keyword = keywords[i];
+                keyword.classList.remove('highlight');
+              }
+            }
+          }
+        }
+
         reader.on('ready:contents', function(contents) {
+          console.log('-- ready:contents');
           //find note links in EPUB
           var note_links = contents.content.querySelectorAll("a[data-note-ref]");
-            for(let i =0, n = note_links.length; i < n; i++) {
-              let note_link = note_links[i];
-              note_link.addEventListener('click', click_handler);                
-            }
+          for (let i =0, n = note_links.length; i < n; i++) {
+            let note_link = note_links[i];
+            note_link.addEventListener('click', click_handler);                
+          }
 
           var frenchTexts =  contents.document.querySelectorAll(".french");
-          var englishTexts =  contents.document.querySelectorAll(".english");
-          var terms = contents.document.querySelectorAll(".FrequentlyUsedTerm", ".FrequentlyUsedTermTermwDefinition");          
-          var keywords = contents.document.querySelectorAll(".LexicalDossierLink");
-
           var frenchCheckbox = document.querySelector('#french');
-            //var frenchText;
-            frenchCheckbox.addEventListener('change', (contents) => {
-                if (frenchCheckbox.checked) {
-                    if (frenchTexts !== null) {
-                      for(var i =0, n = frenchTexts.length; i < n; i++) {
-                        var frenchText = frenchTexts[i];
-                        frenchText.classList.remove('hide');
-                        frenchText.classList.add('display');
-                      }
-                    }
-                } else {
-                    if (frenchTexts !== null) {
-                      for(var i =0, n = frenchTexts.length; i < n; i++) {
-                        var frenchText = frenchTexts[i];
-                        frenchText.classList.remove('display');
-                        frenchText.classList.add('hide');
-                      }
-                    }
-                }
-            });
 
-            var englishCheckbox = document.querySelector('#english');
-            //var englishText;
-            englishCheckbox.addEventListener('change', (contents) => {
-                if (englishCheckbox.checked) {
-                    if (englishTexts !== null) {
-                      for(var i =0, n = englishTexts.length; i < n; i++) {
-                        var englishText = englishTexts[i];
-                        englishText.classList.remove('hide');
-                        englishText.classList.add('display');
-                      }
-                    }
-                } else {
-                    if (englishTexts !== null) {
-                      for(var i =0, n = englishTexts.length; i < n; i++) {
-                        var englishText = englishTexts[i];
-                        englishText.classList.remove('display');
-                        englishText.classList.add('hide');
-                      }
-                    }
-                }
-            });            
+          runFrenchCheckbox(frenchCheckbox, frenchTexts);
+          frenchCheckbox.addEventListener('change', (contents) => {
+            runFrenchCheckbox(frenchCheckbox, frenchTexts);
+          });
 
-            var termsCheckbox = document.querySelector('#terms');
-            //var terms;
-            termsCheckbox.addEventListener('change', (contents) => {
-                if (termsCheckbox.checked) {
-                    if (terms !== null) {
-                        for(let i =0, n = terms.length; i < n; i++) {
-                            let term = terms[i];
-                            term.classList.add('highlight');
-                        }
-                    }
-                } else {
-                    if (terms !== null) {
-                        for(let i =0, n = terms.length; i < n; i++) {
-                            let term = terms[i];
-                            term.classList.remove('highlight');
-                        }
-                    }
-                }
+          var englishTexts =  contents.document.querySelectorAll(".english");
+          var englishCheckbox = document.querySelector('#english');
 
-            });
+          runEnglishCheckbox(englishCheckbox, englishTexts);
+          englishCheckbox.addEventListener('change', (contents) => {
+            runEnglishCheckbox(englishCheckbox, englishTexts);
+          });       
 
-            var keywordsCheckbox = document.querySelector('#keywords');
-            var keywords;
-            keywordsCheckbox.addEventListener('change', (contents) => {
-                if (keywordsCheckbox.checked) {
-                    if (keywords !== null) {
-                        for(var i =0, n = keywords.length; i < n; i++) {
-                            var keyword = keywords[i];
-                            keyword.classList.add('highlight');
-                        }
-                    }
-                } else {
-                    if (keywords !== null) {
-                        for(var i =0, n = keywords.length; i < n; i++) {
-                            var keyword = keywords[i];
-                            keyword.classList.remove('highlight');
-                        }
-                    }
-                }
+          var terms = contents.document.querySelectorAll(".FrequentlyUsedTerm", ".FrequentlyUsedTermTermwDefinition"); 
+          var termsCheckbox = document.querySelector('#terms');
 
-            });
+          runTermsCheckbox(termsCheckbox, terms);
+          termsCheckbox.addEventListener('change', (contents) => {
+            runTermsCheckbox(termsCheckbox, terms);
+          });
+           
+          var keywords = contents.document.querySelectorAll(".LexicalDossierLink");
+          var keywordsCheckbox = document.querySelector('#keywords');
 
-
+          runKeywordsCheckbox(keywordsCheckbox, keywords);
+          keywordsCheckbox.addEventListener('change', (contents) => {
+            runKeywordsCheckbox(keywordsCheckbox, keywords);
+          });
         });
 
         // Initiate EPUB Reader
