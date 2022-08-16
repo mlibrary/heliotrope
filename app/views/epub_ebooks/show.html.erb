@@ -16,6 +16,22 @@
     </script>
   <% end %>
 
+  <script type="text/javascript">
+    window.hypothesisConfig = function () {
+      return {
+        openSidebar: false,
+        theme: 'clean', // "clean" or "classic"
+        enableMultiFrameSupport: true,
+        onLayoutChange: function(state) {
+          var $frame = $('.annotator-frame');
+          var $reader = $("#reader");
+        },
+        enableExperimentalNewNoteButton: true
+      };
+    };
+  </script>
+  <script src="https://cdn.hypothes.is/hypothesis"></script>
+
 <% end %>
 
 <% provide :body do %>
@@ -97,6 +113,56 @@
 
     <script type="text/javascript">
       if ( true ) {
+        // hypothes.is integration
+        AnnotationTool = cozy.Control.Widget.Toggle.extend({
+            defaultTemplate: '<button data-hypothesis-trigger class="button--sm annotation" data-toggle="button" aria-label="Open Annotations"><i class="fa fa-pencil" title="Open annotation panel" aria-hidden="true"></i></button><div class="annotation-count" data-hypothesis-annotation-count></div>',
+
+
+            initialize: function(options) {
+
+              cozy.Control.Widget.Toggle.prototype.initialize.apply(this, arguments);
+
+              this.options.states = [{
+                stateName: 'close-annotator',
+                onClick: this.openAnnotator.bind(this)
+              },
+              {
+                stateName: 'open-annotator',
+                onClick: this.closeAnnotator.bind(this)
+              }];
+            },
+
+            _onAddExtra: function(container) {
+              // super._onAddExtra(container);
+              cozy.Control.Widget.Toggle.prototype._onAddExtra.apply(this, arguments);
+              this.setupHook();
+              return container;
+            },
+
+            openAnnotator: function(self, reader) {
+              this.options.$panel.removeClass("annotator-collapsed");
+              self.state('open-annotator');
+            },
+
+            closeAnnotator: function(self, reader) {
+              this.options.$panel.addClass("annotator-collapsed");
+              self.state('close-annotator');
+            },
+
+            setupHook: function() {
+              var reader = this._reader;
+              reader.rendition.hooks.content.register(function(contents, view) {
+                contents.window.addEventListener('scrolltorange', function (e) {
+                  var range = e.detail;
+                  var cfi = new reader.CFI(range, contents.cfiBase).toString();
+                  if (cfi) {
+                    reader.gotoPage(cfi);
+                  }
+                  e.preventDefault();
+                });
+              })
+            }
+          })
 
         // Configure and initiate reader
         var reader = cozy.reader('reader', {
@@ -122,6 +188,31 @@
 
         <%= render "cozy_controls_tools", presenter: @presenter, parent_presenter: @parent_presenter %>        
 
+          // hypothes.is functionality, add to reader panel
+          var tm;
+          function checkForAnnotator(cb, w) {
+            if (!w) {
+              w = window;
+            }
+            tm = setTimeout(function () {
+              if (w && w.annotator) {
+                clearTimeout(tm);
+                cb();
+              } else {
+                checkForAnnotator(cb, w);
+              }
+            }, 100);
+          }
+
+          var $panel = $('.annotator-frame');
+
+          // create annotation button in bottom panel
+          var annotation_tool = new AnnotationTool({
+            region: 'bottom.navigator.right',
+            $panel: $panel
+          })
+          annotation_tool.addTo(reader);
+        
         function runFrenchCheckbox(frenchCheckbox, frenchTexts) {
           console.log("-- runFrenchCheckbox");
           if (frenchCheckbox.checked) {
