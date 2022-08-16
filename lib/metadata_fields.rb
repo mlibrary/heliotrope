@@ -47,7 +47,7 @@ METADATA_FIELDS ||=
     { object: :monograph, field_name: 'Publisher', metadata_name: 'publisher', multivalued: :yes, description: I18n.t('csv.descriptions.publisher') },
     { object: :monograph, field_name: 'Subject', metadata_name: 'subject', multivalued: :yes_split, description: I18n.t('csv.descriptions.subject') },
     { object: :monograph, field_name: 'ISBN(s)', metadata_name: 'isbn', multivalued: :yes_split, description: I18n.t('csv.descriptions.isbn') },
-    { object: :monograph, field_name: 'Buy Book URL(s)', metadata_name: 'buy_url', multivalued: :yes, description: I18n.t('csv.descriptions.buy_url') },
+    { object: :monograph, field_name: 'Buy Book URL', metadata_name: 'buy_url', multivalued: :yes, description: I18n.t('csv.descriptions.buy_url') },
     { object: :monograph, field_name: 'Pub Year', metadata_name: 'date_created', multivalued: :yes, description: I18n.t('csv.descriptions.date_created') },
     { object: :monograph, field_name: 'Pub Location', metadata_name: 'location', multivalued: :no, description: I18n.t('csv.descriptions.location') },
     { object: :monograph, field_name: 'Series', metadata_name: 'series', multivalued: :yes_split, description: I18n.t('csv.descriptions.series') },

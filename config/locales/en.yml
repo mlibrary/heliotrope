@@ -66,7 +66,7 @@ en:
           contributor: Contributor(s)
   breadcumbs:
     home: "Home"
-  buy_url: "Buy Book URL(s)"
+  buy_url: "Buy Book URL"
   caption: "Caption"
   citable_link: "Citable Link"
   content_type: "Content Type"
