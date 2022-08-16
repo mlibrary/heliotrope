@@ -2,31 +2,6 @@
 <%# https://github.com/mlibrary/heliotrope/issues/1228 %>
 <% content_for :head do %>
   <meta name="turbolinks-cache-control" content="no-cache">
-  <!-- <script type="text/javascript" src="https://d1bxh8uas1mnw7.cloudfront.net/assets/embed.js"></script> -->
-  <%# if @parent_presenter.doi.present? %>
-    <!-- <script async src="https://badge.dimensions.ai/badge.js" charset="utf-8"></script> -->
-  <%# end %>
-  <% if defined? @subdomain %>
-    <%# only include hypothes.is for leverpress, um press and its subpresses at this point %>
-    <% if %w[michigan cjs cseas csas lrccs ummaa].include? @subdomain %>
-      <!-- hypothes.is -->
-      <script type="text/javascript">
-        window.hypothesisConfig = function () {
-          return {
-            openSidebar: false,
-            theme: 'clean', // "clean" or "classic"
-            enableMultiFrameSupport: true,
-            onLayoutChange: function(state) {
-              var $frame = $('.annotator-frame');
-              var $reader = $("#reader");
-            },
-            enableExperimentalNewNoteButton: true
-          };
-        };
-      </script>
-      <script src="https://cdn.hypothes.is/hypothesis"></script>
-    <% end %>
-  <% end %>
 
   <% if @map_file_presenter.present? %>
     <script type="text/javascript">
@@ -46,10 +21,6 @@
 <% provide :body do %>
   <% if defined? @presenter.file_set_coins_title %>
     <span class="Z3988" title="<%= @presenter.file_set_coins_title %>" aria-hidden="true"></span>
-  <% end %>
-  <%# Not certain this survey should be presented yet. If displayed, minimize %>
-  <% if @parent_presenter.open_access? || @parent_presenter.access_level(@actor_product_ids, @allow_read_product_ids).level == :free %>
-    <%= render 'shared/survey_nonmodal' %>
   <% end %>
   <div class="skip"></div>
   <%# tag.div id: 'epub', class: press_presenter.present? ? press_presenter.press_subdomains : '' do %>
@@ -112,7 +83,7 @@
           <div class="modal__container " role="dialog" aria-modal="true" aria-labelledby="modal-pdc-map-title" aria-describedby="modal-pdc-map-content" id="modal-pdc-map-container" style="height: 1170px; width: 2406px;">
             <div role="document">
               <header class="modal__header">
-                <h3 class="modal__title" id="modal-pdc-map-title">Accompanying Interactive Map for "La Princesse de Cleves"</h3>
+                <h3 class="modal__title" id="modal-pdc-map-title">Accompanying Interactive Map for <i>La Princesse de Clèves</i></h3>
                 <button class="modal__close" aria-label="Close modal" aria-controls="modal-pdc-map-container" data-modal-close="" onclick="close_map()"></button>
               </header>
               <main class="modal__content " id="modal-pdc-map-content" style="height: 980px;">
@@ -127,65 +98,8 @@
     <script type="text/javascript">
       if ( true ) {
 
-        <% if %w[michigan cjs cseas csas lrccs ummaa].include? @subdomain %>
-        // Create custom annotator button that is aware of its state
-        // TODO: move to _cozy_controls_annotations.html.erb and render here
-        AnnotationTool = cozy.Control.Widget.Toggle.extend({
-          defaultTemplate: '<button data-hypothesis-trigger class="button--sm annotation" data-toggle="button" aria-label="Open Annotations"><i class="fa fa-pencil" title="Open annotation panel" aria-hidden="true"></i></button><div class="annotation-count" data-hypothesis-annotation-count></div>',
-
-
-          initialize: function(options) {
-
-            cozy.Control.Widget.Toggle.prototype.initialize.apply(this, arguments);
-
-            this.options.states = [{
-              stateName: 'close-annotator',
-              onClick: this.openAnnotator.bind(this)
-            },
-              {
-                stateName: 'open-annotator',
-                onClick: this.closeAnnotator.bind(this)
-              }];
-          },
-
-          _onAddExtra: function(container) {
-            // super._onAddExtra(container);
-            cozy.Control.Widget.Toggle.prototype._onAddExtra.apply(this, arguments);
-            this.setupHook();
-            return container;
-          },
-
-          openAnnotator: function(self, reader) {
-            this.options.$panel.removeClass("annotator-collapsed");
-            self.state('open-annotator');
-          },
-
-          closeAnnotator: function(self, reader) {
-            this.options.$panel.addClass("annotator-collapsed");
-            self.state('close-annotator');
-          },
-
-          setupHook: function() {
-            var reader = this._reader;
-            reader.rendition.hooks.content.register(function(contents, view) {
-              contents.window.addEventListener('scrolltorange', function (e) {
-                var range = e.detail;
-                var cfi = new reader.CFI(range, contents.cfiBase).toString();
-                if (cfi) {
-                  reader.gotoPage(cfi);
-                }
-                e.preventDefault();
-              });
-            })
-          }
-        })
-        <% end %>
-
         // Configure and initiate reader
         var reader = cozy.reader('reader', {
-          // See https://tools.lib.umich.edu/jira/browse/HELIO-3350 and https://stackoverflow.com/a/47331356
-          // Hopefully this line can be removed eventually. Note these are the epub FileSet's NOIDs.
-          <% if %w[cc08hh07v x059c8342 t722h883s ws859h272 4t64gq185 3n204094k sx61dp14z 9019s4683 5138jh01s 2v23vw65x].include? @presenter.id %>...(bowser.safari && Math.floor(bowser.version) === 13 ? {flow: 'scrolled-doc'} : {}),<% end %>
           href: "<%= "#{main_app.epub_ebook_url.gsub!(/\?.*/, '')}/" %>",
           skipLink: '.skip',
           download_links: <%= @ebook_download_presenter.csb_download_links.to_json.html_safe %>,
@@ -206,42 +120,20 @@
 
         <%= render "cozy_controls_notes", presenter: @presenter, parent_presenter: @parent_presenter %>
 
-        <%= render "cozy_controls_tools", presenter: @presenter, parent_presenter: @parent_presenter %>
-
-        // Annotation widget checks and initialization
-        <% if %w[michigan cjs cseas csas lrccs ummaa].include? @subdomain %>
-        var tm;
-        function checkForAnnotator(cb, w) {
-          if (!w) {
-            w = window;
-          }
-          tm = setTimeout(function () {
-            if (w && w.annotator) {
-              clearTimeout(tm);
-              cb();
-            } else {
-              checkForAnnotator(cb, w);
-            }
-          }, 100);
-        }
-
-        var $panel = $('.annotator-frame');
-
-        // pass the reference to the panel
-        //var annotation_tool = new AnnotationTool({
-        //  region: 'right.sidebar',
-        //  $panel: $panel
-        //})
-        //annotation_tool.addTo(reader);
-
-        <% end %>
-
+        <%= render "cozy_controls_tools", presenter: @presenter, parent_presenter: @parent_presenter %>        
 
         reader.on('ready:contents', function(contents) {
+          //find note links in EPUB
+          var note_links = contents.content.querySelectorAll("a[data-note-ref]");
+            for(let i =0, n = note_links.length; i < n; i++) {
+              let note_link = note_links[i];
+              note_link.addEventListener('click', click_handler);                
+            }
+
           var frenchTexts =  contents.document.querySelectorAll(".french");
           var englishTexts =  contents.document.querySelectorAll(".english");
-          var definitions = contents.content.querySelectorAll("[data-note-type='definition']");
-          var terms = contents.content.querySelectorAll(".FrequentlyUsedTerm", ".FrequentlyUsedTermTermwDefinition");
+          var terms = contents.document.querySelectorAll(".FrequentlyUsedTerm", ".FrequentlyUsedTermTermwDefinition");          
+          var keywords = contents.document.querySelectorAll(".LexicalDossierLink");
 
           var frenchCheckbox = document.querySelector('#french');
             //var frenchText;
@@ -285,25 +177,22 @@
                       }
                     }
                 }
-            });
-
-            var passageCheckbox = document.querySelector('#passages');
-            var passage;
+            });            
 
             var termsCheckbox = document.querySelector('#terms');
-            var terms;
+            //var terms;
             termsCheckbox.addEventListener('change', (contents) => {
                 if (termsCheckbox.checked) {
                     if (terms !== null) {
-                        for(var i =0, n = terms.length; i < n; i++) {
-                            var term = terms[i];
+                        for(let i =0, n = terms.length; i < n; i++) {
+                            let term = terms[i];
                             term.classList.add('highlight');
                         }
                     }
                 } else {
                     if (terms !== null) {
-                        for(var i =0, n = terms.length; i < n; i++) {
-                            var term = terms[i];
+                        for(let i =0, n = terms.length; i < n; i++) {
+                            let term = terms[i];
                             term.classList.remove('highlight');
                         }
                     }
@@ -311,33 +200,28 @@
 
             });
 
-            var definitionCheckbox = document.querySelector('#definitions');
-            var definitions;
-            definitionCheckbox.addEventListener('change', (contents) => {
-                if (definitionCheckbox.checked) {
-                    if (definitions !== null) {
-                        for(var i =0, n = definitions.length; i < n; i++) {
-                            var definition = definitions[i];
-                            definition.classList.add('highlight');
+            var keywordsCheckbox = document.querySelector('#keywords');
+            var keywords;
+            keywordsCheckbox.addEventListener('change', (contents) => {
+                if (keywordsCheckbox.checked) {
+                    if (keywords !== null) {
+                        for(var i =0, n = keywords.length; i < n; i++) {
+                            var keyword = keywords[i];
+                            keyword.classList.add('highlight');
                         }
                     }
                 } else {
-                    if (definitions !== null) {
-                        for(var i =0, n = definitions.length; i < n; i++) {
-                            var definition = definitions[i];
-                            definition.classList.remove('highlight');
+                    if (keywords !== null) {
+                        for(var i =0, n = keywords.length; i < n; i++) {
+                            var keyword = keywords[i];
+                            keyword.classList.remove('highlight');
                         }
                     }
                 }
 
             });
 
-            //find links to notes panel
-            var links = contents.content.querySelectorAll("a[data-note-type='definition']");
-            for(var i =0, n = links.length; i < n; i++) {
-              var link = links[i];
-              link.addEventListener('click', click_handler);
-            }
+
         });
 
         // Initiate EPUB Reader
@@ -349,6 +233,7 @@
           formatSections();
           formatNotes();
           formatDefinitions();
+          formatCharacters();
         });
 
         reader.on('resized', function () {

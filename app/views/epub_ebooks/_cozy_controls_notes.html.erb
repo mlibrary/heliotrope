@@ -239,27 +239,193 @@
           }
         }
       })
-    };
-
-    // Open notes panel notes related link is clicked
-// See line 2430 for event listeners which call click_handler
-var click_handler = function(event) {
-  if (event.target.hasAttribute('data-note-type')) {
-    var s = event.target.getAttribute('href');
-  } 
-  
-  
-  function goToNote(s) {
-      
-  };
-    
-  if ($('notes-panel').hasClass('panel-open')) {
-      goToNote(s);
-    } else {
-      open_panel();
-      goToNote(s);
     }
-};
+
+    // Historical Characters
+    var formatCharacters = function() {
+      // Get all the <section> <h5> headings
+      const characters = document.querySelectorAll('section h5')
+      
+      Array.prototype.forEach.call(characters, character => {
+        // Give each <h5> a toggle button child
+        // with the SVG plus/minus icon
+        character.innerHTML = `
+          <button aria-expanded="false">
+            ${character.textContent}
+            <svg aria-hidden="true" focusable="false" viewBox="0 0 10 10">
+              <rect class="vert" height="8" width="2" y="1" x="4"/>
+              <rect height="2" width="8" y="4" x="1"/>
+            </svg>
+          </button>
+        `
+        
+        // Function to create a node list 
+        // of the content between this <h5> and the next
+        const getCharacter = (elem) => {
+          let elems = []
+          while (elem.nextElementSibling && elem.nextElementSibling.tagName !== 'H5') {
+            elems.push(elem.nextElementSibling)
+            elem = elem.nextElementSibling
+          }
+          
+          // Delete the old versions of the content nodes
+          elems.forEach((node) => {
+            node.parentNode.removeChild(node)
+          })
+
+          return elems
+        }
+        
+        // Assign the contents to be expanded/collapsed (array)
+        let characterContents = getCharacter(character)
+        
+        // Create a wrapper element for `contents` and hide it
+        let characterWrapper = document.createElement('div')
+        characterWrapper.hidden = true;
+        characterWrapper.classList.add('character');
+        
+        // Add each element of `contents` to `wrapper`
+        characterContents.forEach(node => {
+          characterWrapper.appendChild(node)
+        })
+        
+        // Add the wrapped content back into the DOM 
+        // after the definition
+        character.parentNode.insertBefore(characterWrapper, character.nextElementSibling)
+        
+        // Assign the button
+        let characterbtn = character.querySelector('button')
+        
+        characterbtn.onclick = () => {
+          // Cast the state as a boolean
+          let expanded = characterbtn.getAttribute('aria-expanded') === 'true' || false
+          
+          // Switch the state
+          characterbtn.setAttribute('aria-expanded', !expanded)
+          // Switch the content's visibility
+          characterWrapper.hidden = expanded;
+          
+          const listener = () => {
+            characterWrapper.removeEventListener('transitionend', listener);
+          };
+          
+          if (expanded === false) {
+            characterWrapper.removeEventListener('transitionend', listener);
+            const reflow = characterWrapper.offsetHeight;
+            characterWrapper.classList.add('is-open');
+          } else {
+            characterWrapper.addEventListener('transitionend', listener);
+            characterWrapper.classList.remove('is-open');
+          }
+        }
+      })
+    
+    }
+
+    // open note panel character links to text in the EPUB
+    var character_links = document.querySelectorAll("#historical_characters a[data-href]");
+    for(let i =0, n = character_links.length; i < n; i++) {
+      let character_link = character_links[i];
+      character_link.addEventListener('click', function (event) {
+        char_target = character_link.getAttribute('data-href');
+        event.preventDefault();
+        reader.display(char_target);
+      }); 
+    }
+
+    
+    var isPanelOpen = function(panel, callback) {
+      if (panel.getAttribute('aria-hidden') === "true") {
+        open_panel();
+      }
+      callback();
+    }
+
+    // open notes panel notes related link is clicked
+    // See show.html.erb for event listeners which call click_handler
+    var click_handler = function(event) {
+      var s = event.target.getAttribute('data-note-ref');
+      var panel = document.querySelector('#modal-notes');   
+      var hc_button = document.querySelector('#historical_characters h4 button');
+      var def_button = document.querySelector('#definitions h4 button');
+      var fr_button = document.querySelector('#notes h4 button');
+      var en_button = document.querySelector ('#translators h4 button');
+
+      isPanelOpen(panel, function() {
+        // now figure out what type of note this is 
+        // (hc = historical character, definition, footnote = french footnote, endnote = translator's note)
+        if (s.includes("hc")) {
+          // check if hc panel is open, if not, open
+          if (hc_button.getAttribute('aria-expanded') === "false") {
+            hc_button.click();
+          }
+          
+          var s_button = document.querySelector("#" + CSS.escape(s) + " h5 button");
+          var s_section = document.querySelector("#" + CSS.escape(s) + " .character");
+          
+          // check to see if character's panel is open, if not, open
+          if (s_button.getAttribute('aria-expanded') === "false") {
+            s_button.click();
+          }
+          
+          s_button.scrollIntoView();
+          s_section.focus();
+       
+        } else if (s.includes("definition")) {
+          // check is definition panel is open, if not, open
+          if (def_button.getAttribute('aria-expanded') === "false") {
+            def_button.click();
+          }
+
+          var s_button = document.querySelector("#" + CSS.escape(s) + " button");
+          var s_section = document.querySelector("#" + CSS.escape(s) + " + .notes");
+
+          // check to see if definition's panel is open, if not, open
+          if (s_button.getAttribute('aria-expanded') === "false") {
+            s_button.click();
+          }
+
+          s_button.scrollIntoView();
+          s_section.focus();
+
+        } else if (s.includes("footnote")) {
+          // check if french version notes panel is open, if not, open
+          if (fr_button.getAttribute('aria-expanded') === "false") {
+            fr_button.click();
+          }
+
+          var s_button = document.querySelector("#" + CSS.escape(s) + " button");
+          var s_section = document.querySelector("#" + CSS.escape(s) + " + .notes");
+
+          // check to see if french version notes panel is open, if not, open
+          if (s_button.getAttribute('aria-expanded') === "false") {
+            s_button.click();
+          }
+
+          s_button.scrollIntoView();
+          s_section.focus();
+        } else {
+          // check if french version notes panel is open, if not, open
+          if (en_button.getAttribute('aria-expanded') === "false") {
+            en_button.click();
+          }
+
+          var s_button = document.querySelector("#" + CSS.escape(s) + " button");
+          var s_section = document.querySelector("#" + CSS.escape(s) + " + .notes");
+
+          // check to see if french version notes panel is open, if not, open
+          if (s_button.getAttribute('aria-expanded') === "false") {
+            s_button.click();
+          }
+
+          s_button.scrollIntoView();
+          s_section.focus();
+        }
+
+      });
+      
+      
+    };
 
 
     // notes panel toggle
