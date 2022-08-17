@@ -42,7 +42,7 @@ class PublishJob < ApplicationJob
   # so simple, just setting things to "open", I'm not sure how necessary it is...
   def maybe_create_file_set_dois(monograph)
     return unless Press.where(subdomain: monograph.press).first&.create_dois?
-    return if monograph.doi.empty?
+    return if monograph.doi.blank?
 
     doc = Crossref::FileSetMetadata.new(monograph.id).build
     Crossref::Register.new(doc.to_xml).post

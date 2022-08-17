@@ -34,7 +34,7 @@ RSpec.describe PublishJob, type: :job do
       end
     end
 
-    context "when not making file_set DOIs" do
+    context "when press does not have file_set DOI creation set" do
       let(:press) { create(:press) }
       let(:monograph) { build(:monograph, press: press.subdomain) }
       let(:file_set) { create(:file_set) }
@@ -53,15 +53,29 @@ RSpec.describe PublishJob, type: :job do
       end
     end
 
-    context "when making file_set DOIs" do
+    context "when press has file_set DOI creation set" do
       let(:press) { create(:press, doi_creation: true) }
-      let(:monograph) { build(:monograph, press: press.subdomain, doi: "10.xxx/blah") }
+      let(:monograph) { build(:monograph, press: press.subdomain, doi: doi) }
       let(:file_set) { create(:file_set) }
 
-      it "calls FileSet DOI creation" do
-        described_class.perform_now(monograph)
-        expect(Crossref::FileSetMetadata).to have_received(:new)
-        expect(Crossref::Register).to have_received(:new)
+      context "monograph has no doi set" do
+        let(:doi) { nil }
+
+        it "does not raise an error or call file_set DOI creation" do
+          expect { described_class.perform_now(monograph) }.not_to raise_error(NoMethodError)
+          expect(Crossref::FileSetMetadata).not_to have_received(:new)
+          expect(Crossref::Register).not_to have_received(:new)
+        end
+      end
+
+      context "monograph has a DOI set" do
+        let(:doi) { "10.xxx/blah" }
+
+        it "calls FileSet DOI creation" do
+          described_class.perform_now(monograph)
+          expect(Crossref::FileSetMetadata).to have_received(:new)
+          expect(Crossref::Register).to have_received(:new)
+        end
       end
     end
   end
