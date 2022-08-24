@@ -20,5 +20,12 @@ FactoryBot.define do
     factory :public_monograph do
       visibility { Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC }
     end
+
+    # https://github.com/samvera/hyrax/blob/b034218b89dde7df534e32d1e5ade9161e129a1d/spec/factories/generic_works.rb#L52-L56
+    factory :monograph_with_one_file do
+      before(:create) do |monograph, evaluator|
+        monograph.ordered_members << create(:file_set, user: evaluator.user, title: ['A Contained FileSet'], label: 'filename.pdf')
+      end
+    end
   end
 end
