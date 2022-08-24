@@ -1860,6 +1860,14 @@ footer.press {
       transition: background 0.1s cubic-bezier(.33,.66,.66,1);
     }
 
+    main#modal-notes-content section#historical_characters section.Heading2 h5 button {
+      display: inline-block;
+    }
+
+    main#modal-notes-content section#historical_characters section.Heading2 h5 button svg {
+      float: right;
+    }
+
 
 .cozy-container i[class^='icon-'] {
     font-size: 2rem !important;
