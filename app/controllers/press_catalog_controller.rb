@@ -44,6 +44,12 @@ class PressCatalogController < ::CatalogController
     session[:preferred_press_view] = params[:view] if params[:view]
   end
 
+  def default_url_options
+    # HELIO-4332
+    @except_locale = true if @press.present? && @press&.subdomain == "barpublishing"
+    super
+  end
+
   private
 
     def load_press
