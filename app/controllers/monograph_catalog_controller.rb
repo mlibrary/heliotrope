@@ -86,6 +86,12 @@ class MonographCatalogController < ::CatalogController
     session[:preferred_monograph_view] = params[:view] if params[:view]
   end
 
+  def default_url_options
+    # HELIO-4332
+    @except_locale = true if @presenter.present? && @presenter&.subdomain == "barpublishing"
+    super
+  end
+
   def item_identifier_for_irus_analytics
     CatalogController.blacklight_config.oai[:provider][:record_prefix] + ":" + params[:id]
   end
