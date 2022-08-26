@@ -47,9 +47,11 @@ class FixityJob < ApplicationJob
         # Essentially: a file has to have a bad checksum multiple times over multiple days. It needs to fail like 12 times
         # in a row in order to actually have an email sent.
         # It's madness, but we can't have false failures.
+        days_can_fail = 4
+        days_can_fail = 1 if Settings.host == "heliotrope-preview.hydra.lib.umich.edu"
         if response[:passed] == false
           ChecksumAuditLog.create!(passed: response[:passed], file_set_id: response[:file_set_id], checked_uri: response[:checked_uri], file_id: response[:file_id], expected_result: response[:expected_result])
-          if ChecksumAuditLog.where(file_set_id: response[:file_set_id], passed: false).count >= 4
+          if ChecksumAuditLog.where(file_set_id: response[:file_set_id], passed: false).count >= days_can_fail
             failures << response
           end
         else
@@ -78,6 +80,9 @@ class FixityJob < ApplicationJob
     # But then if you run it again, it's fine.
     # So we'll bake that in. Failing checks get to be tried multiple times before we accept the failure.
     try_limit = 4
+    # Except for preview where we're testing different fedora configs, HELIO-4334
+    try_limit = 1 if Settings.host == "heliotrope-preview.hydra.lib.umich.edu"
+
     Rails.logger.info("FIXITY CHECK for file_set: #{file_set_id}, try: #{try}")
     Rails.logger.info("FIXITY Sleep 1")
     sleep(1) # This actually seems to help fixity pass by giving fedora a "rest" between checks
