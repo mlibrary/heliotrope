@@ -333,6 +333,28 @@
       }); 
     }
 
+    // open note panel notes links to text in the EPUB
+    var notes_links = document.querySelectorAll("#notes a[data-href]");
+    for(let i =0, n = notes_links.length; i < n; i++) {
+      let notes_link = notes_links[i];
+      notes_link.addEventListener('click', function (event) {
+        note_target = notes_link.getAttribute('data-href');
+        event.preventDefault();
+        reader.display(note_target);
+      });
+    }
+
+    // open note panel translator note links to text in the EPUB
+    var translator_links = document.querySelectorAll("#translators a[data-href]");
+    for(let i =0, n = translator_links.length; i < n; i++) {
+      let translator_link = translator_links[i];
+      translator_link.addEventListener('click', function (event) {
+        translator_target = translator_link.getAttribute('data-href');
+        event.preventDefault();
+        reader.display(translator_target);
+      });
+    }
+
     
     var isPanelOpen = function(panel, callback) {
       if (panel.getAttribute('aria-hidden') === "true") {
