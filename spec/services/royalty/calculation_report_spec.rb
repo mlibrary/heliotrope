@@ -63,7 +63,7 @@ RSpec.describe Royalty::CalculationReport do
                        press_sim: press.subdomain,
                        copyright_holder_tesim: ["Copyright A"],
                        title_tesim: ["A"],
-                       identifier_tesim: ["heb90001.0001.001", "http://hdl.handle.net/2027/heb.31695"])
+                       identifier_tesim: ["heb_id: heb90001.0001.001", "http://hdl.handle.net/2027/heb.31695"])
     end
 
     let(:mono2) do
@@ -72,18 +72,10 @@ RSpec.describe Royalty::CalculationReport do
                        press_sim: press.subdomain,
                        copyright_holder_tesim: ["Copyright B"],
                        title_tesim: ["B"],
-                       identifier_tesim: ["http://hdl.handle.net/2027/heb.sxklj", "heb33333.0001.001"])
+                       identifier_tesim: ["http://hdl.handle.net/2027/heb.sxklj", "heb_id: heb33333.0001.001"])
     end
     let(:counter_report) { double("counter_report") }
     let(:item_report) { { items: items } }
-    let(:ftp) do
-      instance_double(Net::FTP,
-                      "ftp",
-                      mkdir: true,
-                      chdir: true,
-                      putbinaryfile: true,
-                      close: true)
-    end
 
     before do
       ActiveFedora::SolrService.add([mono1.to_h, mono2.to_h])
@@ -92,10 +84,7 @@ RSpec.describe Royalty::CalculationReport do
       allow(counter_report).to receive(:report).and_return(item_report)
     end
 
-    it "sends the reports" do
-      allow(Net::FTP).to receive(:open).and_return(ftp)
-      allow(ftp).to receive(:mkdir).with("Library PTG Box/HEB/HEB Royalty Reports/2019-01_to_2019-06").and_return(true)
-
+    it "creates the reports" do
       @reports = subject
 
       expect(@reports.keys).to eq ["Copyright_A.calc.201901-201906.csv", "Copyright_B.calc.201901-201906.csv", "calc_combined.201901-201906.csv"]

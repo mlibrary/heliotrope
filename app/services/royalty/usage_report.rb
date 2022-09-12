@@ -130,7 +130,11 @@ module Royalty
           metric_type: 'Total_Item_Requests',
           data_type: 'Book',
           access_type: ['Controlled', 'OA_Gold'],
-          access_method: 'Regular'
+          access_method: 'Regular',
+          attributes_to_show: ["Authors", "Publication_Date", "Data_Type", "YOP", "Access_Type", "Access_Method"],
+          include_parent_details: "true",
+          exclude_monthly_details: "false",
+          include_monthly_details: "true"
         })
       end
   end
