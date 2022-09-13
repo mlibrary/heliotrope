@@ -4,7 +4,10 @@
   <% end %>
   <% if presenter.editor? %>
     <%= link_to "Edit", edit_polymorphic_path([main_app, presenter]), class: 'btn btn-default' %>
-    <%= link_to "Delete", [main_app, presenter], class: 'btn btn-danger', data: { confirm: "Delete this #{presenter.human_readable_type}?" }, method: :delete %>
+    <% if presenter.member_presenters.size < 200 %>
+      <%# HELIO-4345 only developers should delete large monographs %>
+      <%= link_to "Delete", [main_app, presenter], class: 'btn btn-danger', data: { confirm: "Delete this #{presenter.human_readable_type}?" }, method: :delete %>
+    <% end %>
     <% if presenter.member_presenters.size.positive? %>
       <%= link_to t("hyrax.file_manager.link_text"), polymorphic_path([main_app, :file_manager, presenter]), class: 'btn btn-default' %>
     <% end %>
