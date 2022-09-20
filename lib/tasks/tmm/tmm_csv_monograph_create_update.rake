@@ -6,7 +6,7 @@
 
 require 'htmlentities'
 
-desc 'Task to be called by a cron for Monographs create/edit from TMM CSV files (ISBN lookup)'
+desc 'Task to be called by a cron for Monographs create/edit from TMM CSV files'
 namespace :heliotrope do
   task :tmm_csv_monograph_create_update, [:tmm_csv_dir] => :environment do |_t, args|
     # Usage: bundle exec rails "heliotrope:tmm_csv_monograph_create_update[/path/to/tmm_csv_dir]"
@@ -14,22 +14,24 @@ namespace :heliotrope do
     # note: fail messages will be emailed to MAILTO by cron *unless* you use 2>&1 at the end of the job line
     fail "CSV directory not found: '#{args.tmm_csv_dir}'" unless Dir.exist?(args.tmm_csv_dir)
 
-    input_file = Dir.glob(File.join(args.tmm_csv_dir, "TMMEBCData_*#{Time.now.strftime('%Y-%m-%d')}.csv")).sort.last
+    input_file = Dir.glob(File.join(args.tmm_csv_dir, "TMMEBCData_*#{Time.now.getlocal.strftime('%Y-%m-%d')}.csv")).sort.last
     fail "CSV file not found in directory '#{args.tmm_csv_dir}'" if input_file.blank?
     fail "CSV file may accidentally be a backup as '#{input_file}' contains 'bak'. Exiting." if input_file.include? 'bak'
 
     puts "Parsing file: #{input_file}"
-    # we need UTF-8 and TMM needs to export UTF-16 for now because of this kind of thing: https://dba.stackexchange.com/a/250018
-    rows = CSV.read(input_file, encoding: 'utf-16:utf-8', headers: true, skip_blanks: true).delete_if { |row| row.to_hash.values.all?(&:blank?) }
+    # we need UTF-8 and TMM needs to export UTF-16LE for now because of this kind of thing: https://dba.stackexchange.com/a/250018
+    # unfortunately we need to read this file into memory to force uniform line endings before parsing the CSV.
+    # side note: although the
+    file_content = File.read(input_file, encoding: 'bom|utf-16le')
+    # Use `gsub!` to avoid holding more memory (I guess).
+    file_content.gsub!(/\r\n?/, "\n")
 
+    rows = CSV.parse(file_content, headers: true, skip_blanks: true).delete_if { |row| row.to_hash.values.all?(&:blank?) }
     monograph_fields = METADATA_FIELDS.select { |f| %i[universal monograph].include? f[:object] }
 
     check_for_unexpected_columns_isbn(rows, monograph_fields)
 
     row_num = 1
-
-    # need to ensure that we are finding Monographs from michigan's sub-presses (like gabii)
-    all_michigan_presses = Press.where(parent: Press.where(subdomain: 'michigan').first).map(&:subdomain).push('michigan')
     backup_file = ''
     backup_file_created = false
 
@@ -41,7 +43,13 @@ namespace :heliotrope do
 
       # For now this is the only place where we set a Monograph's press from a CSV column. Handle this field separately.
       # Every row should have a press set, but some use TMM names that need mapping to an actual Fulcrum subdomain.
-      # Fall back to 'michigan' if no press is set or the final value is not michigan or one of its sub-presses.
+      # We'll skip the row if no valid press is set.
+      press = row['Press']&.strip
+
+      if press.blank?
+        puts "No Press value on row #{row_num} ... SKIPPING ROW"
+        next
+      end
 
       tmm_press_name_map = { 'umasp' => 'asp',
                              'umccs' => 'lrccs',
@@ -49,81 +57,66 @@ namespace :heliotrope do
                              'umsa' => 'csas',
                              'umsea' => 'cseas' }
 
-      press = row['Press']&.strip
 
-      press = if all_michigan_presses.include?(press)
-                press
-              else
-                tmm_press_name_map[press].presence || 'michigan'
-              end
+      press = tmm_press_name_map[press] if tmm_press_name_map[press].present?
 
-      clean_isbns = []
-
-      # ISBN(s) is a multi-valued field with entries separated by a ';'
-      row['ISBN(s)']&.split(';')&.map(&:strip)&.each do |isbn|
-        isbn = isbn.gsub('-', '').downcase
-        clean_isbns << isbn.sub(/\s*\(.+\)$/, '').delete('^0-9').strip
+      unless Press.exists?(subdomain: press)
+        puts "Invalid Press value '#{press}' on row #{row_num} ... SKIPPING ROW"
+        next
       end
 
-      # sometimes ISBNs come in as just a format, with no actual number, like `(Paper)`, so at this point they're blank
-      clean_isbns = clean_isbns.reject(&:blank?)
+      # ensure we're looking for the correct Press value in Fulcrum by editing the row before lookup
+      row['Press'] = press
+      matches, identifier = ObjectLookupService.matches_for_csv_row(row)
 
-      if clean_isbns.blank?
-        puts "ISBN numbers missing on row #{row_num} ...................... SKIPPING ROW"
+      if matches.count > 1 # shouldn't happen
+        puts "More than 1 Monograph found using #{identifier} on row #{row_num} ... SKIPPING ROW"
+        matches.each { |m| puts Rails.application.routes.url_helpers.hyrax_monograph_url(m.id) }
+        puts
         next
       else
-        matches = Monograph.where(press_sim: all_michigan_presses, isbn_numeric: clean_isbns) #, visibility_ssi: 'restricted')
+        new_monograph = matches.count.zero?
+        monograph = new_monograph ? Monograph.new : matches.first
 
-        if matches.count > 1 # shouldn't happen
-          puts "More than 1 Monograph found using ISBN(s) #{clean_isbns.join('; ')} on row #{row_num} ... SKIPPING ROW"
-          matches.each { |m| puts Rails.application.routes.url_helpers.hyrax_monograph_url(m.id) }
-          puts
+        current_ability = Ability.new(User.batch_user)
+
+        attrs = {}
+        Import::RowData.new.field_values(:monograph, row, attrs)
+        attrs['press'] = press
+
+        # blank Monograph titles caused problems. We don't allow them in the importer and shouldn't here either.
+        if attrs['title'].blank?
+          puts "Monograph title is blank on row #{row_num} ............ SKIPPING ROW"
           next
-        else
-          new_monograph = matches.count.zero?
-          monograph = new_monograph ? Monograph.new : matches.first
+        end
 
-          current_ability = Ability.new(User.batch_user)
+        # in order to offer the ability to blank out metadata we need to merge in some nils
+        attrs = blank_metadata.merge(attrs)
 
-          attrs = {}
-          Import::RowData.new.field_values(:monograph, row, attrs)
-          attrs['press'] = press
+        # TMM has some fields with HTML tags in it. This functionality will have to be manually tested as...
+        # part of HELIO-2298
+        attrs = maybe_convert_to_markdown(attrs)
 
-          # blank Monograph titles caused problems. We don't allow them in the importer and shouldn't here either.
-          if attrs['title'].blank?
-            puts "Monograph title is blank on row #{row_num} ............ SKIPPING ROW"
-            next
-          end
+        # sending new_monograph param here because of a weird FCREPO bug that affects Hyrax work *creation* only
+        # https://github.com/samvera/hyrax/issues/3527
+        attrs = cleanup_characters(attrs, new_monograph)
 
-          # in order to offer the ability to blank out metadata we need to merge in some nils
-          attrs = blank_metadata.merge(attrs)
+        if new_monograph
+          puts "No Monograph found using #{identifier} on row #{row_num} .......... CREATING in press '#{attrs['press']}'"
+          attrs['visibility'] = 'restricted'
 
-          # TMM has some fields with HTML tags in it. This functionality will have to be manually tested as...
-          # part of HELIO-2298
-          attrs = maybe_convert_to_markdown(attrs)
+          Hyrax::CurationConcern.actor.create(Hyrax::Actors::Environment.new(monograph, current_ability, attrs))
+        elsif monograph.press != 'gabii' # don't edit Gabii monographs with this script
+          if check_for_changes_identifier(monograph, identifier, attrs, row_num)
+            backup_file = open_backup_file(input_file) if !backup_file_created
+            backup_file_created = true
 
-          # sending new_monograph param here because of a weird FCREPO bug that affects Hyrax work *creation* only
-          # https://github.com/samvera/hyrax/issues/3527
-          attrs = cleanup_characters(attrs, new_monograph)
-
-          if new_monograph
-            puts "No Monograph found using ISBN(s) '#{clean_isbns.join('; ')}' on row #{row_num} .......... CREATING in press '#{attrs['press']}'"
-            attrs['visibility'] = 'restricted'
-
-            Hyrax::CurationConcern.actor.create(Hyrax::Actors::Environment.new(monograph, current_ability, attrs))
-          elsif monograph.press != 'gabii' # don't edit Gabii monographs with this script
-            if check_for_changes_isbn(monograph, attrs, row_num)
-              backup_file = open_backup_file(input_file) if !backup_file_created
-              backup_file_created = true
-
-              CSV.open(backup_file, "a") do |csv|
-                exporter = Export::Exporter.new(monograph.id, :monograph)
-                csv << exporter.monograph_row
-              end
-              Hyrax::CurationConcern.actor.update(Hyrax::Actors::Environment.new(monograph, current_ability, attrs))
+            CSV.open(backup_file, "a") do |csv|
+              exporter = Export::Exporter.new(monograph.id, :monograph)
+              csv << exporter.monograph_row
             end
+            Hyrax::CurationConcern.actor.update(Hyrax::Actors::Environment.new(monograph, current_ability, attrs))
           end
-
         end
       end
     end
@@ -134,7 +127,7 @@ namespace :heliotrope do
   def check_for_unexpected_columns_isbn(rows, monograph_fields)
     # look for unexpected column names which will be ignored.
     # note: 'NOID', 'Link' are not in METADATA_FIELDS, they're export-only ADMIN_METADATA_FIELDS.
-    # 'Press' is a new exception as TMM now provides michigan sub-press Monograph metadata
+    # 'Press' is a new exception as it is a column sent from TMM but is not a "traditional" importer CSV field
     unexpecteds = rows[0].to_h.keys.map { |k| k&.strip } - monograph_fields.pluck(:field_name) - ['NOID', 'Link', 'Press']
     puts "***TITLE ROW HAS UNEXPECTED VALUES!*** These columns will be skipped: #{unexpecteds.join(', ')}\n\n" if unexpecteds.present?
   end
@@ -202,22 +195,22 @@ namespace :heliotrope do
     cleaned_values == [nil] ? nil : cleaned_values
   end
 
-  def check_for_changes_isbn(monograph, attrs, row_num)
+  def check_for_changes_identifier(object, identifier, attrs, row_num)
     column_names = METADATA_FIELDS.pluck(:metadata_name).zip(METADATA_FIELDS.pluck(:field_name)).to_h
     changes = false
-    changes_message = "Checking Monograph with ISBNs #{monograph.isbn.join('; ')} and NOID #{monograph.id} on row #{row_num}"
+    changes_message = "Checking #{object.class} #{object.id}, found with #{identifier} on row #{row_num}"
 
     # check press separately, it's not in METADATA_FIELDS
     press_changing = false
-    if monograph.press != attrs['press']
-      changes_message += "\n*** Press changing from #{monograph.press} to #{attrs['press']} ***"
+    if object.class == Monograph && object.press != attrs['press']
+      changes_message += "\n*** Press changing from #{object.press} to #{attrs['press']} ***"
       press_changing = true
     end
 
     attrs.each do |key, value|
       next if key == 'press'
       multivalued = METADATA_FIELDS.select { |x| x[:metadata_name] == key }.first[:multivalued]
-      current_value = field_value(monograph, key, multivalued)
+      current_value = field_value(object, key, multivalued)
 
       # to make the "orderless" array comparison meaningful, we sort the new values just as we do in the...
       # stolen-from-Exporter field_value method below
@@ -253,9 +246,9 @@ namespace :heliotrope do
   def open_backup_file(path)
     writable = File.writable?(File.dirname(path))
     backup_file = if writable
-                    path.sub('.csv', '') + '_' + Time.now.strftime("%Y%m%dT%H%M%S") + '.bak.csv'
+                    path.sub('.csv', '') + '_' + Time.now.getlocal.strftime("%Y%m%dT%H%M%S") + '.bak.csv'
                   else
-                    '/tmp/' + File.basename(path).sub('.csv', '') + '_' + Time.now.strftime("%Y%m%dT%H%M%S") + '.bak.csv'
+                    '/tmp/' + File.basename(path).sub('.csv', '') + '_' + Time.now.getlocal.strftime("%Y%m%dT%H%M%S") + '.bak.csv'
                   end
 
     CSV.open(backup_file, "w") do |csv|

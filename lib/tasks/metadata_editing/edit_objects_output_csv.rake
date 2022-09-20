@@ -55,7 +55,7 @@ namespace :heliotrope do
         csv << exporter.metadata_row(presenter)
       end
     end
-    # a generic message helps when calling this task from heliotrope:edit_monographs_via_csv
-    puts "Ran 'heliotrope:edit_monographs_output_csv': all monograph values written to #{file_path}"
+    # a generic message helps when calling this task from heliotrope:edit_objects_via_csv
+    puts "Ran 'heliotrope:edit_objects_output_csv': all object values written to #{file_path}"
   end
 end
