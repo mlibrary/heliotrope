@@ -6,8 +6,9 @@ module Import
   class CSVParser
     attr_reader :file
 
-    def initialize(input_file)
+    def initialize(input_file, reuse_noids = false)
       @file = input_file
+      @reuse_noids = reuse_noids
     end
 
     def attributes(stream = nil) # rubocop:disable Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity
@@ -25,10 +26,11 @@ module Import
                puts "Parsing file: #{file}"
                CSV.read(file, headers: true, skip_blanks: true).delete_if { |row| row.to_hash.values.all?(&:blank?) }
              end
-      row_data = RowData.new
+      row_data = RowData.new(@reuse_noids)
 
       # look for unexpected column names which will be ignored. note: 'File Name' is not in METADATA_FIELDS.
       unexpecteds = rows[0].to_h.keys.map { |k| k&.strip } - (METADATA_FIELDS.pluck :field_name) - ['File Name']
+      unexpecteds.delete("NOID") if @reuse_noids
       attrs['row_errors'][0] = "\n***TITLE ROW HAS UNEXPECTED VALUES!*** These columns will be skipped:\n" + unexpecteds.join(', ') unless unexpecteds.count.zero?
 
       # human-readable row counter (3 accounts for the top two discarded rows)

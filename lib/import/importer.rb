@@ -7,17 +7,18 @@ module Import
     include ::Hyrax::Noid
 
     attr_reader :root_dir, :user_email, :press_subdomain, :monograph_id, :monograph_title,
-                :visibility, :reimporting, :reimport_mono, :quiet
+                :visibility, :reimporting, :reimport_mono, :reuse_noids, :quiet
 
     def initialize(root_dir: '', user_email: '', monograph_id: '', press: '',
                    visibility: Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE,
-                   monograph_title: '', quiet: '')
+                   monograph_title: '', quiet: '', reuse_noids: false)
 
       @root_dir = root_dir
       @user_email = user_email
       @reimporting = false
       @reimport_mono = Monograph.where(id: monograph_id).first
       @quiet = quiet
+      @reuse_noids = reuse_noids
 
       if monograph_id.present?
         raise "No monograph found with id '#{monograph_id}'" if @reimport_mono.blank?
@@ -112,7 +113,7 @@ module Import
       validate_user
       validate_press unless reimporting
 
-      attrs = CSVParser.new(csv_file).attributes
+      attrs = CSVParser.new(csv_file, @reuse_noids).attributes
 
       unless @reimporting # if reimporting then the monograph has a title already
         # tombstoned HEB items have a Monograph title of `[title removed]`. We don't want to import these.

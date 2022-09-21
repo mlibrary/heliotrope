@@ -241,6 +241,37 @@ describe Import::Importer do
       end
     end
 
+    context 'when reusing noids from a manifest' do
+      # See HELIO-4359
+      # This is a special case that one would almost never use.
+      # Only in the event that you've exported content from one Fedora and want to import
+      # it into another and want to keep the noids because of handles and DOIs
+
+      let(:importer) do
+        described_class.new(root_dir: File.join(fixture_path, 'csv', 'import_a_manifest_with_noids'),
+                            user_email: user.email,
+                            press: press.subdomain,
+                            visibility: public_vis,
+                            quiet: true,
+                            reuse_noids: true)
+      end
+
+      it "imports the monographs and files and reuses the provided noids" do
+        expect { importer.run }
+          .to change(Monograph, :count)
+          .by(1)
+          .and(change(FileSet, :count)
+          .by(2))
+
+        monograph = Monograph.first
+        file_sets = monograph.ordered_members.to_a
+
+        expect(monograph.id).to eq 'aa11aa11a'
+        expect(file_sets[0].id).to eq 'bb22bb22b'
+        expect(file_sets[1].id).to eq 'cc33cc33c'
+      end
+    end
+
     context 'when the monograph id doesn\'t match a pre-existing monograph' do
       let(:monograph_id) { 'non-existent' }
       let(:reimporter) { described_class.new(root_dir: root_dir, user_email: user.email, monograph_id: monograph_id) }

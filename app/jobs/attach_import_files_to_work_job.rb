@@ -20,7 +20,12 @@ class AttachImportFilesToWorkJob < ApplicationJob
     work_permissions = work.permissions.map(&:to_hash)
 
     files.each_with_index do |file, i|
-      f = FileSet.create
+      f = if files_attributes[i][:id].present?
+            # HELIO-4359 use the noid provided if it exists
+            FileSet.create(id: files_attributes[i].delete(:id))
+          else
+            FileSet.create
+          end
       # actor = Hyrax::Actors::FileSetActor.new(f, user)
       # Unlike Hyrax::Actors::FileSetActor, this will not attach the file_set
       # to the ordered_members array of the work, which is super slow if
