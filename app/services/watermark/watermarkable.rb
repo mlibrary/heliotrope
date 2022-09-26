@@ -20,11 +20,16 @@ module Watermark
       fmt = watermark_formatted_text
 
       Rails.cache.fetch(cache_key(entity, fmt.to_s + title.to_s + chapter_index.to_s), expires_in: 30.days) do
-        # I think a nightly cron to clean up "watermark_pdf_*" files older than a couple of hours will work
+        watermark_pdfs_dir = Rails.root.join('tmp', 'watermark_pdfs')
+        # watermark_pdfs_dir will be created by the deploy process for production mode apps, as it's one of the...
+        # `linked_dirs`, i.e. one of the "persistent" symbolic link dirs in `shared/tmp`
+        FileUtils.mkdir_p(watermark_pdfs_dir) if !Rails.env.production? && !Dir.exist?(watermark_pdfs_dir)
+
         suffix = Random.rand(999_999_999).to_s.rjust(9, "0")
-        stamp_file_path = Rails.root.join('tmp', "watermark_pdf_stamp_#{suffix}.pdf")
+        # for cleanup a nightly cron can delete older "watermark_pdf_*" files inside `watermark_pdfs_dir`
+        stamp_file_path = Rails.root.join(watermark_pdfs_dir, "watermark_pdf_stamp_#{suffix}.pdf")
         create_watermark_pdf(fmt, stamp_file_path)
-        stamped_file_path = Rails.root.join('tmp', "watermark_pdf_stamped_#{suffix}.pdf")
+        stamped_file_path = Rails.root.join(watermark_pdfs_dir, "watermark_pdf_stamped_#{suffix}.pdf")
 
         command = "pdftk #{file_path} stamp #{stamp_file_path} output #{stamped_file_path}"
 
