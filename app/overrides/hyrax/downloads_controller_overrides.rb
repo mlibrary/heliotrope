@@ -22,17 +22,27 @@ Hyrax::DownloadsController.class_eval do # rubocop:disable Metrics/BlockLength
           response.headers['X-Sendfile'] = updated_file_path
           send_file updated_file_path, derivative_download_options
         else
-          CounterService.from(self, presenter).count(request: 1)
-          send_irus_analytics_request
-          self.status = 200
-          send_file_headers! content_options.merge(disposition: disposition(presenter))
-          response.headers['Content-Length'] ||= file.size.to_s
-          response.headers['Last-Modified'] = asset.modified_date.utc.strftime("%a, %d %b %Y %T GMT")
-          stream_body file.stream
+          if should_be_watermarked?
+            redirect_to Rails.application.routes.url_helpers.download_ebook_url(presenter.id)
+          else
+            CounterService.from(self, presenter).count(request: 1)
+            send_irus_analytics_request
+            self.status = 200
+            send_file_headers! content_options.merge(disposition: disposition(presenter))
+            response.headers['Content-Length'] ||= file.size.to_s
+            response.headers['Last-Modified'] = asset.modified_date.utc.strftime("%a, %d %b %Y %T GMT")
+            stream_body file.stream
+          end
         end
       else
         render 'hyrax/base/unauthorized', status: :unauthorized
       end
+    end
+
+    # See HELIO-3966
+    # Send the watermarked file for things that should be watermarked if the user is unprivileged
+    def should_be_watermarked?
+      presenter.pdf_ebook? && Press.where(subdomain: presenter.parent.subdomain)&.first.watermark && !can?(:edit, FileSet.find(params[:id]))
     end
 
     def item_identifier_for_irus_analytics
