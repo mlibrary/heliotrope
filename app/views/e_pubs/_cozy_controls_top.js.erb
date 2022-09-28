@@ -3,7 +3,7 @@ cozy.control.widget.button({
   region: 'top.header.left',
   data: { label: '<i class="icon-x oi" data-glyph="x" aria-hidden="true"></i>'},
   template: '<button class="button--sm cozy-close" data-toggle="button" data-slot="label" aria-label="Close reader"></button>',
-  onClick: function() { window.location = "<%= "#{@back_link}" %>"; }
+  onClick: function() { window.location = "<%= "#{@parent_presenter.catalog_url}" %>"; }
 }).addTo(reader);
 
 // Press brand widget
@@ -43,5 +43,5 @@ cozy.control.widget.button({
   region: 'top.toolbar.left',
   data: { label: '<i class="icon-x oi" data-glyph="x" aria-hidden="true"></i>'},
   template: '<button class="button--sm cozy-close mobile" data-toggle="button" data-slot="label" aria-label="Close reader"></button>',
-  onClick: function() { window.location = "<%= "#{@back_link}" %>"; }
+  onClick: function() { window.location = "<%= "#{@parent_presenter.catalog_url}" %>"; }
 }).addTo(reader);
