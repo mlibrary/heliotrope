@@ -15,11 +15,6 @@ class EpubEbooksController < CheckpointController
     @title = @parent_presenter.page_title
     @citable_link = @parent_presenter.citable_link
     @subdomain = @parent_presenter.subdomain
-    @back_link = if params[:publisher].present?
-                   URI.join(main_app.root_url, params[:publisher]).to_s
-                 else
-                   @parent_presenter.catalog_url
-                 end
     @ebook_download_presenter = EBookDownloadPresenter.new(@parent_presenter, current_ability, current_actor)
     @search_url = main_app.search_epub_ebook_url(@noid, q: '').gsub!(/locale=en&/, '')
 
