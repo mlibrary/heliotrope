@@ -50,6 +50,47 @@ RSpec.describe Hyrax::DownloadsController, type: :controller do
           expect(response.body).to eq file_set.original_file.content
         end
       end
+
+      context "if the file is a pdf_ebook that needs watermarking" do
+        let(:press) { create(:press, watermark: true) }
+        let(:monograph) { create(:monograph, press: press.subdomain, title: ["A Test"]) }
+
+        before do
+          monograph.ordered_members << file_set
+          monograph.save!
+          file_set.save!
+          FeaturedRepresentative.create(work_id: monograph.id, file_set_id: file_set.id, kind: "pdf_ebook")
+        end
+
+        context "and a user is logged in and privledged" do
+          let(:user) { create(:press_admin, press: press) }
+
+          before { sign_in user }
+
+          it "sends the file" do
+            get :show, params: { id: file_set.id, use_route: 'downloads' }
+            expect(response.body).to eq file_set.original_file.content
+          end
+        end
+
+        context "and a user logged in and unprivledged" do
+          let(:non_edit_user) { create(:user) }
+
+          before { sign_in non_edit_user }
+
+          it "redirects to the watermarked download" do
+            get :show, params: { id: file_set.id, use_route: 'downloads' }
+            expect(response).to redirect_to(Rails.application.routes.url_helpers.download_ebook_url(file_set.id))
+          end
+        end
+
+        context "and a user is not logged in" do
+          it "redirects to the watermarked download" do
+            get :show, params: { id: file_set.id, use_route: 'downloads' }
+            expect(response).to redirect_to(Rails.application.routes.url_helpers.download_ebook_url(file_set.id))
+          end
+        end
+      end
     end
 
     context "when allow_download is not yes" do
