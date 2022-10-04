@@ -46,7 +46,7 @@ namespace :heliotrope do
         # in HELIO-2167, the millisecond value is dropped for even seconds so use Time.parse(), not Time.strptime()
         epub_upload_time = epub_upload_time.present? ? Time.zone.parse(epub_upload_time).strftime('%Y-%m-%d') : ''
 
-        csv << [doc['visibility_ssi'], m['identifier_tesim']&.find { |i| i.strip.downcase[/^heb_id:\s*heb[0-9]{5}/] }&.strip&.downcase&.gsub(/heb_id:\s*/, ''),
+        csv << [doc['visibility_ssi'], doc['identifier_tesim']&.find { |i| i.strip.downcase[/^heb_id:\s*heb[0-9]{5}/] }&.strip&.downcase&.gsub(/heb_id:\s*/, ''),
                 '=HYPERLINK("' + Rails.application.routes.url_helpers.hyrax_monograph_url(doc.id) + '","' + doc['title_tesim'].first.gsub('"', '""') + '")',
                 Time.zone.parse(doc['date_uploaded_dtsi']).strftime('%Y-%m-%d'), epub_upload_time]
         line_count += 1
