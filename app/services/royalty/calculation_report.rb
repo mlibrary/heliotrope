@@ -137,7 +137,7 @@ module Royalty
             monographs[noid]["Authors"] = item["Authors"]
             monographs[noid]["Publisher"] = item["Publisher"]
             monographs[noid]["DOI"] = item["Parent_DOI"]
-            monographs[noid]["ISBN"] = item["Parent_ISBN"]
+            monographs[noid]["ISBN"] = item["ISBN"]
             monographs[noid]["Royalty Earning"] = 0.00  # will calculate this elsewhere
             monographs[noid]["Hits"] = item["Hits"].to_i
             item.each do |k, v|

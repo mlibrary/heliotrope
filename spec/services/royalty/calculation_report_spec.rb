@@ -9,8 +9,10 @@ RSpec.describe Royalty::CalculationReport do
           "Parent_Proprietary_ID": "AAAAAAAAA",
           "Authors": "Some One",
           "Parent_Title": "A",
-          "Parent_DOI": "http://doi.org/a",
-          "Parent_ISBN": "9780520047983 (hardcover), 9780520319196 (ebook), 9780520319189 (paper)",
+          "DOI": "http://doi.org/a",
+          "Parent_DOI": "http:/doi.org/parent",
+          "ISBN": "9780520047983 (hardcover), 9780520319196 (ebook), 9780520319189 (paper)",
+          "Parent_ISBN": "",
           "Publisher": "Flub",
           "Section_Type": "Chapter",
           "Reporting_Period_Total": 1001,
@@ -25,8 +27,10 @@ RSpec.describe Royalty::CalculationReport do
           "Proprietary_ID": "222222222",
           "Authors": "No One",
           "Parent_Title": "B",
-          "Parent_DOI": "http://doi.org/b",
-          "Parent_ISBN": "9780813915425 (hardcover), 9780813915432 (paper)",
+          "DOI": "http://doi.org/b",
+          "Parent_DOI": "http:/doi.org/parent",
+          "ISBN": "9780813915425 (hardcover), 9780813915432 (paper)",
+          "Parent_ISBN": "",
           "Publisher": "Derp",
           "Section_Type": "Chapter",
           "Reporting_Period_Total": 5,
@@ -41,8 +45,10 @@ RSpec.describe Royalty::CalculationReport do
           "Proprietary_ID": "333333333",
           "Authors": "Some One",
           "Parent_Title": "A",
-          "Parent_DOI": "http://doi.org/a",
-          "Parent_ISBN": "9780520047983 (hardcover), 9780520319196 (ebook), 9780520319189 (paper)",
+          "DOI": "http://doi.org/a",
+          "Parent_DOI": "http:/doi.org/parent",
+          "ISBN": "9780520047983 (hardcover), 9780520319196 (ebook), 9780520319189 (paper)",
+          "Parent_ISBN": "",
           "Publisher": "Flub",
           "Section_Type": "",
           "Reporting_Period_Total": 10,
@@ -131,8 +137,8 @@ RSpec.describe Royalty::CalculationReport do
          "Proprietary_ID": "111111111",
          "Authors": "Some One",
          "Parent_Title": "A",
-         "Parent_DOI": "http://doi.org/a",
-         "Parent_ISBN": "9780231503709 (E-Book)",
+         "DOI": "http://doi.org/a",
+         "ISBN": "9780231503709 (E-Book)",
          "Publisher": "Flub",
          "Section_Type": "Chapter",
          "Reporting_Period_Total": 1,
@@ -142,8 +148,8 @@ RSpec.describe Royalty::CalculationReport do
          "Proprietary_ID": "222222222",
          "Authors": "No One",
          "Parent_Title": "B",
-         "Parent_DOI": "http://doi.org/b",
-         "Parent_ISBN": "9780292713420, 029271341X, 0292713428, 9780292713413",
+         "DOI": "http://doi.org/b",
+         "ISBN": "9780292713420, 029271341X, 0292713428, 9780292713413",
          "Publisher": "Derp",
          "Section_Type": "Chapter",
          "Reporting_Period_Total": 5,
@@ -153,8 +159,8 @@ RSpec.describe Royalty::CalculationReport do
          "Proprietary_ID": "333333333",
          "Authors": "Some One",
          "Parent_Title": "A",
-         "Parent_DOI": "http://doi.org/a",
-         "Parent_ISBN": "9780231503709 (E-Book)",
+         "DOI": "http://doi.org/a",
+         "ISBN": "9780231503709 (E-Book)",
          "Publisher": "Flub",
          "Section_Type": "",
          "Reporting_Period_Total": 1,
@@ -230,8 +236,10 @@ RSpec.describe Royalty::CalculationReport do
           "Parent_Proprietary_ID": "AAAAAAAAA",
           "Authors": "Some One",
           "Parent_Title": "A",
-          "Parent_DOI": "http://doi.org/a",
-          "Parent_ISBN": "9780231503709 (E-Book)",
+          "DOI": "http://doi.org/a",
+          "Parent_DOI": "http://doi.org/parent",
+          "ISBN": "9780231503709 (E-Book)",
+          "Parent_ISBN": "",
           "Publisher": "Flub",
           "Section_Type": "Chapter",
           "Hits": 1001,
@@ -246,8 +254,10 @@ RSpec.describe Royalty::CalculationReport do
           "Proprietary_ID": "222222222",
           "Authors": "No One",
           "Parent_Title": "B",
-          "Parent_DOI": "http://doi.org/b",
-          "Parent_ISBN": "9780292713420, 029271341X, 0292713428, 9780292713413",
+          "DOI": "http://doi.org/b",
+          "Parent_DOI": "http://doi.org/parent",
+          "ISBN": "9780292713420, 029271341X, 0292713428, 9780292713413",
+          "Parent_ISBN": "",
           "Publisher": "Derp",
           "Section_Type": "Chapter",
           "Hits": 125,
@@ -262,8 +272,10 @@ RSpec.describe Royalty::CalculationReport do
           "Proprietary_ID": "333333333",
           "Authors": "Some One",
           "Parent_Title": "A",
-          "Parent_DOI": "http://doi.org/a",
-          "Parent_ISBN": "9780231503709 (E-Book)",
+          "DOI": "http://doi.org/a",
+          "Parent_DOI": "http://doi.org/parent",
+          "ISBN": "9780231503709 (E-Book)",
+          "Parent_ISBN": "",
           "Publisher": "Flub",
           "Section_Type": "",
           "Hits": 10,
@@ -285,7 +297,7 @@ RSpec.describe Royalty::CalculationReport do
       expect(subject[0]["Title"]).to eq "A"
       expect(subject[0]["Authors"]).to eq "Some One"
       expect(subject[0]["Publisher"]).to eq "Flub"
-      expect(subject[0]["DOI"]).to eq "http://doi.org/a"
+      expect(subject[0]["DOI"]).to eq "http://doi.org/parent"
       expect(subject[0]["ISBN"]).to eq "9780231503709 (E-Book)"
       expect(subject[0]["Hits"]).to be 1011
       expect(subject[0]["Royalty Earning"]).to eq 0.00
@@ -300,7 +312,7 @@ RSpec.describe Royalty::CalculationReport do
       expect(subject[1]["Title"]).to eq "B"
       expect(subject[1]["Publisher"]).to eq "Derp"
       expect(subject[1]["Authors"]).to eq "No One"
-      expect(subject[1]["DOI"]).to eq "http://doi.org/b"
+      expect(subject[1]["DOI"]).to eq "http://doi.org/parent"
       expect(subject[1]["ISBN"]).to eq "9780292713420, 029271341X, 0292713428, 9780292713413"
       expect(subject[1]["Hits"]).to be 125
       expect(subject[0]["Royalty Earning"]).to eq 0.00
