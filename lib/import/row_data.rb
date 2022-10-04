@@ -6,13 +6,19 @@ require 'redcarpet/render_strip'
 
 module Import
   class RowData
-    attr_reader :row, :attrs
+    attr_reader :row, :attrs, :reuse_noids
+
+    def initialize(reuse_noids = false)
+      @reuse_noids = reuse_noids
+    end
 
     def field_values(object, row, attrs, errors = {}, row_num = 0) # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
       md = Redcarpet::Markdown.new(Redcarpet::Render::StripDown, space_after_headers: true)
       missing_fields_errors, date_errors = Array.new(2) { [] }
 
       fields = METADATA_FIELDS.select { |f| [:universal, object].include? f[:object] } + FILE_SET_FLAG_FIELDS
+      # HELIO-4359 include original noid if @reuse_noids
+      fields << ADMIN_METADATA_FIELDS[ADMIN_METADATA_FIELDS.find_index { |item| item[:field_name] == "NOID" }] if @reuse_noids
       fields.each do |field|
         if row[field[:field_name]].present?
           is_multivalued = field[:multivalued]

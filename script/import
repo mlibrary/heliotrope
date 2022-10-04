@@ -50,6 +50,10 @@ def parse_inputs(args) # rubocop:disable Metrics/CyclomaticComplexity, Metrics/P
     inputs[:test] = true
   end
 
+  opts.on('-r [REUSE NOIDS]', '--reuse-noids', 'Use the noids that exist in the extracted manifest. ONLY to be used in the case of a restore to a NEW fedora.') do |reuse_noids|
+    inputs[:reuse_noids] = true
+  end
+
   opts.on('-h', '--help', 'Print this help message') do
     puts opts
     exit 0
@@ -83,7 +87,8 @@ importer = Import::Importer.new(root_dir: options[:root_dir],
                                 visibility: options[:visibility],
                                 monograph_title: options[:monograph_title],
                                 monograph_id: options[:monograph_id],
-                                quiet: options[:quiet])
+                                quiet: options[:quiet],
+                                reuse_noids: options[:reuse_noids])
 
 importer.run(options[:test])
 
