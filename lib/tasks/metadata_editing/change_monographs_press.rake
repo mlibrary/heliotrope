@@ -5,13 +5,10 @@ namespace :heliotrope do
   task change_monographs_press: :environment do |_t, args|
     # Usage: bundle exec rails "heliotrope:change_monographs_press[new_press_subdomain, noid1, noid2, noid3,...]"
 
-    noid_chars = ('a'..'z').to_a + ('0'..'9').to_a
-    monographs = []
+    fail "You must provide a subdomain value and at least one Monograph NOID" unless args.extras.count > 1
 
     new_subdomain = nil
     noids = []
-
-    fail "You must provide a subdomain value and at least one Monograph NOID" unless args.extras.count > 1
 
     args.extras.each_with_index do |arg, index|
       # the first argument is the new subdomain ("press") value for the Monographs
@@ -25,13 +22,10 @@ namespace :heliotrope do
       end
     end
 
-    noids.each do |noid|
-      if noid.length != 9 || !noid.chars.all? { |ch| noid_chars.include?(ch) }
-        puts "Invalid NOID detected: #{noid} .................. SKIPPING"
-        return
-      end
+    monographs = []
 
-      matches = Monograph.where(id: noid)
+    noids.each do |noid|
+      matches = ObjectLookupService.matches(noid)
       if matches.count.zero?
         puts "No Monograph found with NOID #{noid} ............ EXITING"
         return

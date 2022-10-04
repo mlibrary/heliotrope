@@ -60,7 +60,8 @@ describe 'Create a monograph' do
       # Citable Links
       fill_in 'DOI', with: '<doi>'
       fill_in 'Handle', with: '<hdl>'
-      fill_in 'Identifier(s)', with: '<identifier>'
+      # this will have its spaces removed by a `before_validation` method in `app/models/monograph.rb`
+      fill_in 'Identifier(s)', with: '<identifier with spaces>'
 
       click_button 'Save'
 
@@ -182,8 +183,8 @@ describe 'Create a monograph' do
       expect(page).to have_content '<doi>'
       # Handle
       expect(page).to have_content '<hdl>'
-      # Identifier
-      expect(page).to have_content '<identifier>'
+      # Identifier - this had its spaces removed by a `before_validation` method in `app/models/monograph.rb`
+      expect(page).to have_content '<identifierwithspaces>'
 
       # MLA citation
       expect(page).to have_content 'Johns, Jimmy, and Sub Way. #hashtag Test Monograph Title with MD Italics and HTML Italics. E-book, Ann Arbor, MI.'

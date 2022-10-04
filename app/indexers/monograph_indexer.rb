@@ -62,9 +62,8 @@ class MonographIndexer < Hyrax::WorkIndexer
       # the english text stored indexed multivalued field generated for the 'isbn' property a.k.a. object.isbn
       # See './app/models/monograph.rb' and './solr/config/schema.xml' for details.
 
-      # HELIO-3709 used in the NOID API
-      # Collapse whitespace in identifiers if they exist, although in practice HELIO-3712 fixes this
-      solr_doc['identifier_ssim'] = object.identifier.map { |id| id.gsub(/\s/, "") }
+      # a clean identifier value with no whitespace and no preceding namespace like `bar_number:` or `heb_id:`
+      solr_doc['identifier_ssim'] = object.identifier.map { |id| id.gsub(/\s/, "").gsub(/^.+:/, "") }
 
       # Index the ToC of the monograph's epub or pdf_ebook if it has one, HELIO-3870
       solr_doc['table_of_contents_tesim'] = table_of_contents(object.id)

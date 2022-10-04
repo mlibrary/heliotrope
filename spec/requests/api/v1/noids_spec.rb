@@ -92,12 +92,12 @@ RSpec.describe "Noids", type: :request do
         let(:mono_doc) do
           ::SolrDocument.new(id: 'monoid',
                              has_model_ssim: ['Monograph'],
-                             identifier_ssim: ["bar_number:S1234", "heb99999.0001.001"])
+                             identifier_tesim: ["bar_number:S1234", "heb_id:heb99999.0001.001"])
         end
         let(:no_match_doc) do
           ::SolrDocument.new(id: 'nomatch',
                              has_model_ssim: ['Monograph'],
-                             identifier_ssim: ["bar_number:S0987", "heb10000.0001.001"])
+                             identifier_tesim: ["bar_number:S0987", "heb_id:heb10000.0001.001"])
         end
 
         before do
@@ -116,7 +116,7 @@ RSpec.describe "Noids", type: :request do
 
         context "hebid" do
           it "returns the correct noid(s)" do
-            get api_noids_path, params: { identifier: "heb99999.0001.001" }, headers: headers
+            get api_noids_path, params: { identifier: "heb_id:heb99999.0001.001" }, headers: headers
             expect(response.content_type).to eq("application/json")
             expect(response).to have_http_status(:ok)
             expect(response_body).to match_array([{ "id" => "monoid" }])

@@ -30,7 +30,8 @@ RSpec.describe CatalogController, type: :controller do
                                    identifier
                                    table_of_contents]
         expected_fields = expected_tesim_fields.map { |field| described_class.solr_name(field, :stored_searchable) }
-        expected_fields << 'isbn_numeric'
+        # couple of non-tesim stragglers here
+        expected_fields.push('isbn_numeric', 'identifier_ssim')
         expect(default_solr_params[:qf].split(' ')).to match_array(expected_fields)
       end
 

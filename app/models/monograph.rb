@@ -3,6 +3,8 @@
 # Generated via
 #  `rails generate curation_concerns:work Monograph`
 class Monograph < ActiveFedora::Base
+  before_validation :clean_identifier
+
   property :creator_display, predicate: ::RDF::Vocab::FOAF.maker, multiple: false do |index|
     index.as :stored_searchable
   end
@@ -95,5 +97,9 @@ class Monograph < ActiveFedora::Base
 
     def after_destroy_jobs
       HandleDeleteJob.perform_later(id)
+    end
+
+    def clean_identifier
+      self.identifier = self.identifier.map { |id| id.gsub(/[[:space:]]/, '') } if self.identifier.present?
     end
 end

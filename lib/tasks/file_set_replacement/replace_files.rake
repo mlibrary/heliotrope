@@ -12,22 +12,20 @@ namespace :heliotrope do
     new_file_paths = Dir.glob(File.join(args.directory, '*')).select { |f| File.file?(f) }
 
     noid = nil
+    monograph_id = args.monograph_id
 
-    if args.monograph_id.present?
-      if /^[[:alnum:]]{9}$/.match?(args.monograph_id)
-        noid = args.monograph_id
+    if monograph_id.present?
+      matches = ObjectLookupService.matches(monograph_id)
+
+      if matches.count.zero?
+        raise "No ActiveFedora object found using identifier #{monograph_id} ...................... EXITING"
+      elsif matches.count > 1 # should be impossible
+        raise "More than 1 ActiveFedora object found with identifier #{monograph_id} ...................... EXITING"
       else
-        isbn = args.monograph_id.delete('^0-9') # we'll allow the ISBN to have spaces/hyphens and remove them here
-        matches = Monograph.where(isbn_numeric: isbn)
+        fail "Object must be a Monograph" unless matches.first.class == Monograph
 
-        if matches.count.zero?
-          raise "No Monograph found with ISBN #{isbn} ...................... EXITING"
-        elsif matches.count > 1 # should be impossible
-          raise "More than 1 Monograph found with ISBN #{isbn} ...................... EXITING"
-        else
-          noid = matches.first.id
-          puts "ISBN #{isbn} matches Monograph with NOID #{noid}................... CONTINUING"
-        end
+        noid = matches.first.id
+        puts "Identifier #{monograph_id} matches Monograph with NOID #{noid}................... CONTINUING"
       end
     end
 
@@ -36,7 +34,7 @@ namespace :heliotrope do
     new_file_paths.each do |new_file_path|
       new_file = File.basename(new_file_path)
       matches = noid.present? ? FileSet.where(monograph_id_ssim: noid, label: new_file) : FileSet.where(label: new_file)
-      monograph_message = args.monograph_id.present? ? "under Monograph #{args.monograph_id} " : ''
+      monograph_message = monograph_id.present? ? "under Monograph #{monograph_id} " : ''
 
       if matches.count.zero?
         puts "No FileSet found with label #{new_file} #{monograph_message}............... SKIPPING"

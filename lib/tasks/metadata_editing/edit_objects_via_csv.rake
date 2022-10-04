@@ -27,91 +27,53 @@ namespace :heliotrope do
     rows.each do |row|
       row_num += 1
 
-      # Import::RowData is not aware of any NOID column. Get it separately and check it.
-      noid = row['NOID']
-      if noid.blank?
-        clean_isbns = []
-        # ISBN(s) is a multi-valued field with entries separated by a ';'
-        row['ISBN(s)']&.split(';')&.map(&:strip)&.each do |isbn|
-          isbn = isbn.delete('-').downcase
-          clean_isbns << isbn.sub(/\s*\(.+\)$/, '').delete('^0-9').strip
-        end
+      matches, identifier = ObjectLookupService.matches_for_csv_row(row)
 
-        # sometimes ISBNs come in as just a format, with no actual number, like `(Paper)`, so at this point they're blank
-        clean_isbns = clean_isbns.reject(&:blank?)
-
-        if clean_isbns.blank?
-          puts "No NOID or ISBN(s) found on row #{row_num} ...................... SKIPPING ROW"
-          next
-        else
-          matches = Monograph.where(isbn_numeric: clean_isbns)
-
-          if matches.count.zero?
-            puts "No Monograph found using ISBN(s) '#{clean_isbns.join('; ')}' on row #{row_num} .......... SKIPPING ROW"
-            next
-          elsif matches.count > 1 # shouldn't happen
-            puts "More than 1 Monograph found using ISBN(s) #{clean_isbns.join('; ')} on row #{row_num} (see below) ... SKIPPING ROW"
-            matches.each { |m| puts Rails.application.routes.url_helpers.hyrax_monograph_url(m.id) }
-            puts
-            next
-          else
-            noid = matches.first.id
-          end
-        end
-      end
-
-      if !/^[[:alnum:]]{9}$/.match?(noid)
-        puts "Invalid NOID #{noid} on row #{row_num} .............. SKIPPING ROW"
+      if matches.count.zero?
+        puts "No object found using #{identifier} on row #{row_num} ............ SKIPPING ROW"
+        next
+      elsif matches.count > 1 # should be impossible
+        puts "More than 1 object found using #{identifier} on row #{row_num} ... SKIPPING ROW"
         next
       else
-        matches = ActiveFedora::Base.where(id: noid)
-        if matches.count.zero?
-          puts "No Object found with NOID #{noid} on row #{row_num} ............ SKIPPING ROW"
+        object = matches.first
+        if [FileSet, Monograph].exclude? object.class
+          puts "Object must be a Monograph or a FileSet"
           next
-        elsif matches.count > 1 # should be impossible
-          puts "More than 1 Object found with NOID #{noid} on row #{row_num} ... SKIPPING ROW"
-          next
-        else
-          object = matches.first
-          if [FileSet, Monograph].exclude? object.class
-            puts "Object must be a Monograph or a FileSet"
-            next
-          end
+        end
 
-          current_ability = Ability.new(User.where(user_key: ::User.batch_user_key).first)
+        current_ability = Ability.new(User.where(user_key: ::User.batch_user_key).first)
 
-          attrs = {}
-          Import::RowData.new.field_values(object.class.to_s.underscore.to_sym, row, attrs)
-          attrs = attrs.except(non_fedora_fields)
+        attrs = {}
+        Import::RowData.new.field_values(object.class.to_s.underscore.to_sym, row, attrs)
+        attrs = attrs.except(non_fedora_fields)
 
-          if check_for_changes(object, attrs)
-            backup_file = open_backup_file(args.input_file) if !backup_file_created
-            backup_file_created = true
+        if check_for_changes_identifier(object, identifier, attrs, row_num)
+          backup_file = open_backup_file(args.input_file) if !backup_file_created
+          backup_file_created = true
 
-            if object.class == Monograph
-              presenter = Hyrax::PresenterFactory.build_for(ids: [object.id], presenter_class: Hyrax::MonographPresenter, presenter_args: nil).first
+          if object.class == Monograph
+            presenter = Hyrax::PresenterFactory.build_for(ids: [object.id], presenter_class: Hyrax::MonographPresenter, presenter_args: nil).first
 
-              CSV.open(backup_file, "a") do |csv|
-                exporter = Export::Exporter.new(nil)
-                csv << exporter.metadata_row(presenter)
-              end
-
-              Hyrax::CurationConcern.actor.update(Hyrax::Actors::Environment.new(object, current_ability, attrs))
-            else
-              presenter = Hyrax::PresenterFactory.build_for(ids: [object.id], presenter_class: Hyrax::FileSetPresenter, presenter_args: nil).first
-
-              CSV.open(backup_file, "a") do |csv|
-                exporter = Export::Exporter.new(nil)
-                csv << exporter.metadata_row(presenter)
-              end
-
-              Hyrax::CurationConcern.file_set_update_actor.update(Hyrax::Actors::Environment.new(object, current_ability, attrs))
+            CSV.open(backup_file, "a") do |csv|
+              exporter = Export::Exporter.new(nil)
+              csv << exporter.metadata_row(presenter)
             end
+
+            Hyrax::CurationConcern.actor.update(Hyrax::Actors::Environment.new(object, current_ability, attrs))
+          else
+            presenter = Hyrax::PresenterFactory.build_for(ids: [object.id], presenter_class: Hyrax::FileSetPresenter, presenter_args: nil).first
+
+            CSV.open(backup_file, "a") do |csv|
+              exporter = Export::Exporter.new(nil)
+              csv << exporter.metadata_row(presenter)
+            end
+
+            Hyrax::CurationConcern.file_set_update_actor.update(Hyrax::Actors::Environment.new(object, current_ability, attrs))
           end
         end
       end
     end
-
     puts "\nChanges were made. Changed objects' metadata were first backed up to #{backup_file}" if backup_file_created
   end
 
@@ -120,29 +82,6 @@ namespace :heliotrope do
     # don't warn user for any fields that may have been output by the exporter, as they may be using its output as a starting point
     unexpecteds = rows[0].to_h.keys.map { |k| k&.strip } - METADATA_FIELDS.pluck(:field_name) - ADMIN_METADATA_FIELDS.pluck(:field_name) - FILE_SET_FLAG_FIELDS.pluck(:field_name)
     puts "***TITLE ROW HAS UNEXPECTED VALUES!*** These columns will be skipped: #{unexpecteds.join(', ')}\n\n" if unexpecteds.present?
-  end
-
-  def check_for_changes(object, attrs)
-    column_names = METADATA_FIELDS.pluck(:metadata_name).zip(METADATA_FIELDS.pluck(:field_name)).to_h
-    changes = false
-    changes_message = "Checking #{object.class} with noid #{object.id}"
-
-    attrs.each do |key, value|
-      multivalued = METADATA_FIELDS.select { |x| x[:metadata_name] == key }.first[:multivalued]
-      current_value = field_value(object, key, multivalued)
-
-      # to make the "orderless" array comparison meaningful, we sort the new values
-      value = value&.sort if multivalued == :yes_split
-
-      if value != current_value
-        changes_message = "\n" + changes_message + "\nnote: only fields with pending changes are shown\n" if !changes
-        changes = true
-        changes_message += "\n*** #{column_names[key]} ***\nCURRENT VALUE: #{current_value}\n    NEW VALUE: #{value}"
-      end
-    end
-    changes_message = changes ? changes_message + "\n\n" : changes_message + '...................... NO CHANGES'
-    puts changes_message if changes
-    changes
   end
 
   def open_backup_file(path)
