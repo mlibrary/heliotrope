@@ -7,7 +7,10 @@ namespace :heliotrope do
 
     fail "CSV file not found '#{args.input_file}'" unless File.exist?(args.input_file)
 
-    puts "NB: this script only edits metadata in Fedora, it cannot set FeaturedRepresentatives or publish objects"
+    puts "************************************************************************************************************"
+    puts "* NB: This script only edits metadata in Fedora, it cannot set FeaturedRepresentatives or publish objects. *"
+    puts "* Nor can this script delete existing metadata, it can only overwrite it. Use the Rails console to delete. *"
+    puts "************************************************************************************************************"
 
     puts "Parsing file: #{args.input_file}"
     rows = CSV.read(args.input_file, headers: true, skip_blanks: true).delete_if { |row| row.to_hash.values.all?(&:blank?) }
