@@ -387,3 +387,41 @@ en:
 
         For example:
         --2022|Golden Anniversary Monograph Award|National Communication Association;2000|EMS Monograph Award|European Mathematical Society;2011|Outstanding Monograph Prize|American Society for Aesthetics
+      article_title: |
+        If the resource belongs to a journal article, this is the title of that article
+      article_creator: |
+        If the resource belongs to a journal article, this is the author(s) of the article seperated by semi-colons
+
+        Examples:
+        --Last name, First name
+        --Last name, First name; Last name, First name
+      article_permalink: |
+        If the resource belongs to a journal article, this is the *full* permanent link to the article.
+
+        Examples:
+        --https://doi.org/10.3998/mpub.11306619
+        --https://hdl.handle.net/2027/heb40005.0001.001
+      article_volume: |
+        If the resource belongs to a journal article, this is the full volume, as it's displayed, of the journal the article is in.
+
+        Examples:
+        --Volume 1
+        --Vol. 23
+        --4
+      article_issue: |
+        If the resource belongs to a journal article, this is the full issue, as it's displayed, of the journal the article is in.
+
+        Examples:
+        --Issue 4
+        --Fall Issue
+        --5
+      article_display_date: |
+        If the resource belongs to a journal article, this is the full publication date, as it's displayed, of the journal the article is in.
+
+        Examples:
+        --Spring 2022
+        --June 2022
+        --June 1, 2022
+        --2022
+        --06/01/2022
+      

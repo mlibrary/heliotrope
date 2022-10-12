@@ -4,12 +4,29 @@
         <div class="col-sm-12">
           <h1 id="asset-title"><%= @presenter.title %></h1>
           <div class="skip"><a href="#media" data-turbolinks="false">Skip to media</a></div>
-          <span class="section">From <em><%= link_to @presenter.parent.title, main_app.monograph_catalog_path(@presenter.monograph_id) %></em>
-            <% authorship_display = @presenter.parent.authors %>
-            <% if authorship_display.present? %>
-              by <%= render_markdown authorship_display %>
-            <% end %>
-          </span>
+          <% if @presenter.article_title.present? %>
+            <!-- a resource from a journal article -->
+            <span class="section">
+              From <%= @presenter.article_title %>
+              <div>
+                <b><%= [@presenter.article_volume, @presenter.article_issue, @presenter.article_display_date].join(", ") %></b>
+              </div>
+              <div>
+                <%= @presenter.article_creators %>. 
+                <a href="<%= @presenter.article_permalink %>" target="_blank">
+                  <%= @presenter.article_title %>
+                  <span class= "glyphicon glyphicon-share"></span>
+                </a>
+              </div>
+            </span>
+          <% else %>
+            <span class="section">From <em><%= link_to @presenter.parent.title, main_app.monograph_catalog_path(@presenter.monograph_id) %></em>
+              <% authorship_display = @presenter.parent.authors %>
+              <% if authorship_display.present? %>
+                by <%= render_markdown authorship_display %>
+              <% end %>
+            </span>
+          <% end %>
           <br />
           <%= render "attributes", presenter: @presenter %>
         </div>

@@ -51,6 +51,12 @@ describe SolrDocument do
   it { is_expected.to respond_to(:allow_download_after_expiration) }
   it { is_expected.to respond_to(:allow_hi_res) }
   it { is_expected.to respond_to(:alt_text) }
+  it { is_expected.to respond_to(:article_creator) }
+  it { is_expected.to respond_to(:article_display_date) }
+  it { is_expected.to respond_to(:article_issue) }
+  it { is_expected.to respond_to(:article_permalink) }
+  it { is_expected.to respond_to(:article_title) }
+  it { is_expected.to respond_to(:article_volume) }
   it { is_expected.to respond_to(:caption) }
   it { is_expected.to respond_to(:closed_captions) }
   it { is_expected.to respond_to(:content_type) }

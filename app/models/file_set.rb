@@ -24,6 +24,30 @@ class FileSet < ActiveFedora::Base
     index.as :stored_searchable
   end
 
+  property :article_creator, predicate: ::RDF::URI.new('http://fulcrum.org/ns#articleCreator') do |index|
+    index.as :stored_searchable, :facetable
+  end
+
+  property :article_display_date, predicate: ::RDF::URI.new('http://fulcrum.org/ns#articleDisplayDate'), multiple: false do |index|
+    index.as :symbol
+  end
+
+  property :article_issue, predicate: ::RDF::URI.new('http://fulcrum.org/ns#articleIssue'), multiple: false do |index|
+    index.as :symbol
+  end
+
+  property :article_permalink, predicate: ::RDF::URI.new('http://fulcrum.org/ns#articlePermalink'), multiple: false do |index|
+    index.as :symbol
+  end
+
+  property :article_title, predicate: ::RDF::URI.new('http://fulcrum.org/ns#articleTitle'), multiple: false do |index|
+    index.as :stored_searchable, :facetable
+  end
+
+  property :article_volume, predicate: ::RDF::URI.new('http://fulcrum.org/ns#articleVolume'), multiple: false do |index|
+    index.as :symbol
+  end
+
   property :caption, predicate: ::RDF::Vocab::SCHEMA.caption do |index|
     index.as :stored_searchable
   end
