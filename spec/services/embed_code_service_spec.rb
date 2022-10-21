@@ -15,12 +15,12 @@ RSpec.describe EmbedCodeService do
     let(:video) { create(:file_set, label: 'video.mp4') }
     let(:interactive_map) { create(:file_set, label: 'interactive_map.zip', resource_type: ['interactive map']) }
 
-    let(:cover_embed_url) { Rails.application.routes.url_helpers.embed_url(hdl: HandleNet.path(cover.id)) }
-    let(:epub_embed_url) { Rails.application.routes.url_helpers.embed_url(hdl: HandleNet.path(epub.id)) }
-    let(:image_embed_url) { Rails.application.routes.url_helpers.embed_url(hdl: HandleNet.path(image.id)) }
-    let(:audio_embed_url) { Rails.application.routes.url_helpers.embed_url(hdl: HandleNet.path(audio.id)) }
-    let(:video_embed_url) { Rails.application.routes.url_helpers.embed_url(hdl: HandleNet.path(video.id)) }
-    let(:interactive_map_embed_url) { Rails.application.routes.url_helpers.embed_url(hdl: HandleNet.path(interactive_map.id)) }
+    let(:cover_embed_url) { Rails.application.routes.url_helpers.embed_url(hdl: HandleNet::FULCRUM_HANDLE_PREFIX + cover.id) }
+    let(:epub_embed_url) { Rails.application.routes.url_helpers.embed_url(hdl: HandleNet::FULCRUM_HANDLE_PREFIX + epub.id) }
+    let(:image_embed_url) { Rails.application.routes.url_helpers.embed_url(hdl: HandleNet::FULCRUM_HANDLE_PREFIX + image.id) }
+    let(:audio_embed_url) { Rails.application.routes.url_helpers.embed_url(hdl: HandleNet::FULCRUM_HANDLE_PREFIX + audio.id) }
+    let(:video_embed_url) { Rails.application.routes.url_helpers.embed_url(hdl: HandleNet::FULCRUM_HANDLE_PREFIX + video.id) }
+    let(:interactive_map_embed_url) { Rails.application.routes.url_helpers.embed_url(hdl: HandleNet::FULCRUM_HANDLE_PREFIX + interactive_map.id) }
 
     let(:cover_embed_attributes) { "div[@data-href=\"#{cover_embed_url}\"][@data-title=\"#{cover.title.first}\"][@data-resource-type=\"image\"]" }
     let(:epub_embed_attributes) { "[@data-href=\"#{epub_embed_url}\"][@data-title=\"#{epub.title.first}\"][@data-resource-type=\"resource\"]" }
@@ -338,9 +338,9 @@ RSpec.describe EmbedCodeService do
         let(:hyphen_video) { create(:file_set, label: 'hyphen-video.mp4') }
         let(:hyphen_weird_casing_interactive_map) { create(:file_set, label: 'hyphen-interactive-map.zip', resource_type: ['interactive map']) } # referenced with incorrect casing in `fake_epub_with_embeds.epub`
 
-        let(:weird_case_image_embed_url) { Rails.application.routes.url_helpers.embed_url(hdl: HandleNet.path(weird_case_image.id)) }
-        let(:hyphen_video_embed_url) { Rails.application.routes.url_helpers.embed_url(hdl: HandleNet.path(hyphen_video.id)) }
-        let(:hyphen_weird_casing_interactive_map_embed_url) { Rails.application.routes.url_helpers.embed_url(hdl: HandleNet.path(hyphen_weird_casing_interactive_map.id)) }
+        let(:weird_case_image_embed_url) { Rails.application.routes.url_helpers.embed_url(hdl: HandleNet::FULCRUM_HANDLE_PREFIX + weird_case_image.id) }
+        let(:hyphen_video_embed_url) { Rails.application.routes.url_helpers.embed_url(hdl: HandleNet::FULCRUM_HANDLE_PREFIX + hyphen_video.id) }
+        let(:hyphen_weird_casing_interactive_map_embed_url) { Rails.application.routes.url_helpers.embed_url(hdl: HandleNet::FULCRUM_HANDLE_PREFIX + hyphen_weird_casing_interactive_map.id) }
 
         let(:weird_case_image_embed_attributes) { "[@data-href=\"#{weird_case_image_embed_url}\"][@data-title=\"#{weird_case_image.title.first}\"][@data-resource-type=\"image\"]" }
         let(:hyphen_video_embed_attributes) { "[@data-href=\"#{hyphen_video_embed_url}\"][@data-title=\"#{hyphen_video.title.first}\"][@data-resource-type=\"video\"]" }

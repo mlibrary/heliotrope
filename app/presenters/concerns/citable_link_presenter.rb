@@ -53,7 +53,7 @@ module CitableLinkPresenter
   end
 
   def handle_path
-    hdl.presence || HandleNet.path(id)
+    hdl.presence || HandleNet::FULCRUM_HANDLE_PREFIX + id
   end
 
   def handle_url

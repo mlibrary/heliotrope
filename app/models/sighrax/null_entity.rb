@@ -57,7 +57,7 @@ module Sighrax
     end
 
     def identifier
-      HandleNet.url(noid)
+      HandleNet::HANDLE_NET_PREFIX + HandleNet::FULCRUM_HANDLE_PREFIX + noid.to_s
     end
 
     def languages

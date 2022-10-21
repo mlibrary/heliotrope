@@ -55,7 +55,7 @@ RSpec.describe Sighrax::Monograph, type: :model do
       expect(subject.description).to eq 'description'
       expect(subject.ebook.noid).to eq epub.id
       expect(subject.epub_ebook.noid).to eq epub.id
-      expect(subject.identifier).to eq HandleNet.url(monograph.id)
+      expect(subject.identifier).to eq HandleNet::HANDLE_NET_PREFIX + HandleNet::FULCRUM_HANDLE_PREFIX + monograph.id
       expect(subject.languages).to contain_exactly('language')
       expect(subject.modified).to eq date_modified
       expect(subject.open_access?).to be false
@@ -84,7 +84,7 @@ RSpec.describe Sighrax::Monograph, type: :model do
 
     let(:monograph) { create(:public_monograph) }
 
-    it { is_expected.to eq HandleNet.url(monograph.id) }
+    it { is_expected.to eq HandleNet::HANDLE_NET_PREFIX + HandleNet::FULCRUM_HANDLE_PREFIX + monograph.id }
 
     context 'handle' do
       before do

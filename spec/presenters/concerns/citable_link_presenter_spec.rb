@@ -28,15 +28,15 @@ RSpec.describe CitableLinkPresenter do
   let(:doi_path) { '' }
 
   it 'default' do
-    expect(subject.citable_link).to eq HandleNet.url(id)
+    expect(subject.citable_link).to eq HandleNet::HANDLE_NET_PREFIX + HandleNet::FULCRUM_HANDLE_PREFIX + id
     expect(subject.doi?).to be false
     expect(subject.doi_path).to eq doi_path
     expect(subject.doi_url).to eq doi_url
     expect(subject.heb?).to be false
     expect(subject.heb_path).to eq heb_path
     expect(subject.heb_url).to eq heb_url
-    expect(subject.handle_path).to eq HandleNet.path(id)
-    expect(subject.handle_url).to eq HandleNet.url(id)
+    expect(subject.handle_path).to eq HandleNet::FULCRUM_HANDLE_PREFIX + id
+    expect(subject.handle_url).to eq HandleNet::HANDLE_NET_PREFIX + HandleNet::FULCRUM_HANDLE_PREFIX + id
   end
 
   context 'explicit handle' do

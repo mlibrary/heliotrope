@@ -104,10 +104,11 @@ class Score < ActiveFedora::Base
   private
 
     def after_create_jobs
-      HandleCreateJob.perform_later(id)
+      HandleCreateJob.perform_later(HandleNet::FULCRUM_HANDLE_PREFIX + id,
+                                    Rails.application.routes.url_helpers.hyrax_score_url(id))
     end
 
     def after_destroy_jobs
-      HandleDeleteJob.perform_later(id)
+      HandleDeleteJob.perform_later(HandleNet::FULCRUM_HANDLE_PREFIX + id)
     end
 end

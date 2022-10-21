@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_04_14_171216) do
+ActiveRecord::Schema.define(version: 2022_10_20_221742) do
 
   create_table "api_requests", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.integer "user_id"
@@ -227,11 +227,13 @@ ActiveRecord::Schema.define(version: 2022_04_14_171216) do
   end
 
   create_table "handle_deposits", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
-    t.string "noid", null: false
+    t.string "handle", null: false
+    t.string "url_value"
     t.string "action", default: "create", null: false
     t.boolean "verified", default: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["handle"], name: "index_handle_deposits_on_handle", unique: true
   end
 
   create_table "hyrax_collection_types", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|

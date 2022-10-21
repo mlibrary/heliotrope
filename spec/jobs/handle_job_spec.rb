@@ -5,12 +5,14 @@ require 'rails_helper'
 RSpec.describe HandleJob, type: :job do
   include ActiveJob::TestHelper
 
-  let(:model_doc) { { 'id' => 'model_id' } }
+  let(:handle) { '2027/fulcrum.model_id' }
+  let(:url_value) { 'http://test.host/concern/monographs/model_id' }
+  let(:model_doc) { { 'id' => 'model_id', 'has_model_ssim' => 'Monograph' } }
 
   before do
-    allow(HandleDeleteJob).to receive(:perform_now).with(model_doc['id'])
-    allow(HandleCreateJob).to receive(:perform_now).with(model_doc['id'])
-    allow(HandleVerifyJob).to receive(:perform_now).with(model_doc['id'])
+    allow(HandleDeleteJob).to receive(:perform_now).with(handle)
+    allow(HandleCreateJob).to receive(:perform_now).with(handle, url_value)
+    allow(HandleVerifyJob).to receive(:perform_now).with(handle)
   end
 
   describe '#thirty_days_ago' do
@@ -34,12 +36,12 @@ RSpec.describe HandleJob, type: :job do
 
     it 'executes perform' do
       perform_enqueued_jobs { job }
-      expect(HandleDeleteJob).not_to have_received(:perform_now).with(model_doc['id'])
-      expect(HandleCreateJob).to have_received(:perform_now).with(model_doc['id'])
-      expect(HandleVerifyJob).to have_received(:perform_now).with(model_doc['id'])
+      expect(HandleDeleteJob).not_to have_received(:perform_now).with(handle)
+      expect(HandleCreateJob).to have_received(:perform_now).with(handle, url_value)
+      expect(HandleVerifyJob).to have_received(:perform_now).with(handle)
       expect(HandleDeposit.all.count).to eq(1)
       HandleDeposit.all.each do |record|
-        expect(record.noid).to eq(model_doc['id'])
+        expect(record.handle).to eq(handle)
         expect(record.action).to eq('create')
         expect(record.verified).to be false
       end
@@ -52,29 +54,29 @@ RSpec.describe HandleJob, type: :job do
     describe '#perform' do
       subject { job.perform }
 
-      let(:model_docs) { [] }
+      let(:required_handles) { {} }
 
-      before { allow(job).to receive(:model_docs).and_return(model_docs) }
+      before { allow(job).to receive(:required_handles).and_return(required_handles) }
 
       it 'does nothing' do
         is_expected.to be true
-        expect(HandleDeleteJob).not_to have_received(:perform_now).with(model_doc['id'])
-        expect(HandleCreateJob).not_to have_received(:perform_now).with(model_doc['id'])
-        expect(HandleVerifyJob).not_to have_received(:perform_now).with(model_doc['id'])
+        expect(HandleDeleteJob).not_to have_received(:perform_now).with(handle)
+        expect(HandleCreateJob).not_to have_received(:perform_now).with(handle, url_value)
+        expect(HandleVerifyJob).not_to have_received(:perform_now).with(handle)
         expect(HandleDeposit.all.count).to eq(0)
       end
 
       context 'when model doc' do
-        let(:model_docs) { [model_doc] }
+        let(:required_handles) { { handle => 'http://test.host/concern/monographs/model_id' } }
 
         it 'creates and verifies creation of handle' do
           is_expected.to be true
-          expect(HandleDeleteJob).not_to have_received(:perform_now).with(model_doc['id'])
-          expect(HandleCreateJob).to have_received(:perform_now).with(model_doc['id'])
-          expect(HandleVerifyJob).to have_received(:perform_now).with(model_doc['id'])
+          expect(HandleDeleteJob).not_to have_received(:perform_now).with(handle)
+          expect(HandleCreateJob).to have_received(:perform_now).with(handle, url_value)
+          expect(HandleVerifyJob).to have_received(:perform_now).with(handle)
           expect(HandleDeposit.all.count).to eq(1)
           HandleDeposit.all.each do |record|
-            expect(record.noid).to eq(model_doc['id'])
+            expect(record.handle).to eq(handle)
             expect(record.action).to eq('create')
             expect(record.verified).to be false
           end
@@ -82,32 +84,32 @@ RSpec.describe HandleJob, type: :job do
       end
 
       context 'when delete not verified' do
-        before { HandleDeposit.create(noid: model_doc['id'], action: 'delete') }
+        before { HandleDeposit.create(handle: handle, action: 'delete') }
 
         it 'deletes' do
           is_expected.to be true
-          expect(HandleCreateJob).not_to have_received(:perform_now).with(model_doc['id'])
-          expect(HandleDeleteJob).to have_received(:perform_now).with(model_doc['id'])
-          expect(HandleVerifyJob).to have_received(:perform_now).with(model_doc['id'])
+          expect(HandleCreateJob).not_to have_received(:perform_now).with(handle, url_value)
+          expect(HandleDeleteJob).to have_received(:perform_now).with(handle)
+          expect(HandleVerifyJob).to have_received(:perform_now).with(handle)
           expect(HandleDeposit.all.count).to eq(1)
           HandleDeposit.all.each do |record|
-            expect(record.noid).to eq(model_doc['id'])
+            expect(record.handle).to eq(handle)
             expect(record.action).to eq('delete')
             expect(record.verified).to be false
           end
         end
 
         context 'when model doc' do
-          let(:model_docs) { [model_doc] }
+          let(:required_handles) { { handle => 'http://test.host/concern/monographs/model_id' } }
 
           it 'overrides delete with create' do
             is_expected.to be true
-            expect(HandleDeleteJob).not_to have_received(:perform_now).with(model_doc['id'])
-            expect(HandleCreateJob).to have_received(:perform_now).with(model_doc['id'])
-            expect(HandleVerifyJob).to have_received(:perform_now).with(model_doc['id'])
+            expect(HandleDeleteJob).not_to have_received(:perform_now).with(handle)
+            expect(HandleCreateJob).to have_received(:perform_now).with(handle, url_value)
+            expect(HandleVerifyJob).to have_received(:perform_now).with(handle)
             expect(HandleDeposit.all.count).to eq(1)
             HandleDeposit.all.each do |record|
-              expect(record.noid).to eq(model_doc['id'])
+              expect(record.handle).to eq(handle)
               expect(record.action).to eq('create')
               expect(record.verified).to be false
             end
@@ -116,32 +118,32 @@ RSpec.describe HandleJob, type: :job do
       end
 
       context 'when delete verified' do
-        before { HandleDeposit.create(noid: model_doc['id'], action: 'delete', verified: true) }
+        before { HandleDeposit.create(handle: handle, action: 'delete', verified: true) }
 
         it 'does nothing' do
           is_expected.to be true
-          expect(HandleDeleteJob).not_to have_received(:perform_now).with(model_doc['id'])
-          expect(HandleCreateJob).not_to have_received(:perform_now).with(model_doc['id'])
-          expect(HandleVerifyJob).not_to have_received(:perform_now).with(model_doc['id'])
+          expect(HandleDeleteJob).not_to have_received(:perform_now).with(handle)
+          expect(HandleCreateJob).not_to have_received(:perform_now).with(handle, url_value)
+          expect(HandleVerifyJob).not_to have_received(:perform_now).with(handle)
           expect(HandleDeposit.all.count).to eq(1)
           HandleDeposit.all.each do |record|
-            expect(record.noid).to eq(model_doc['id'])
+            expect(record.handle).to eq(handle)
             expect(record.action).to eq('delete')
             expect(record.verified).to be true
           end
         end
 
         context 'when model doc' do
-          let(:model_docs) { [model_doc] }
+          let(:required_handles) { { handle => 'http://test.host/concern/monographs/model_id' } }
 
           it 'overrides delete with create' do
             is_expected.to be true
-            expect(HandleDeleteJob).not_to have_received(:perform_now).with(model_doc['id'])
-            expect(HandleCreateJob).to have_received(:perform_now).with(model_doc['id'])
-            expect(HandleVerifyJob).to have_received(:perform_now).with(model_doc['id'])
+            expect(HandleDeleteJob).not_to have_received(:perform_now).with(handle)
+            expect(HandleCreateJob).to have_received(:perform_now).with(handle, url_value)
+            expect(HandleVerifyJob).to have_received(:perform_now).with(handle)
             expect(HandleDeposit.all.count).to eq(1)
             HandleDeposit.all.each do |record|
-              expect(record.noid).to eq(model_doc['id'])
+              expect(record.handle).to eq(handle)
               expect(record.action).to eq('create')
               expect(record.verified).to be false
             end
@@ -150,16 +152,16 @@ RSpec.describe HandleJob, type: :job do
       end
 
       context 'when create not verified' do
-        before { HandleDeposit.create(noid: model_doc['id'], action: 'create') }
+        before { HandleDeposit.create(handle: handle, url_value: 'http://test.host/concern/monographs/model_id', action: 'create') }
 
         it 'creates' do
           is_expected.to be true
-          expect(HandleDeleteJob).not_to have_received(:perform_now).with(model_doc['id'])
-          expect(HandleCreateJob).to have_received(:perform_now).with(model_doc['id'])
-          expect(HandleVerifyJob).to have_received(:perform_now).with(model_doc['id'])
+          expect(HandleDeleteJob).not_to have_received(:perform_now).with(handle)
+          expect(HandleCreateJob).to have_received(:perform_now).with(handle, url_value)
+          expect(HandleVerifyJob).to have_received(:perform_now).with(handle)
           expect(HandleDeposit.all.count).to eq(1)
           HandleDeposit.all.each do |record|
-            expect(record.noid).to eq(model_doc['id'])
+            expect(record.handle).to eq(handle)
             expect(record.action).to eq('create')
             expect(record.verified).to be false
           end
@@ -170,12 +172,12 @@ RSpec.describe HandleJob, type: :job do
 
           it 'creates' do
             is_expected.to be true
-            expect(HandleDeleteJob).not_to have_received(:perform_now).with(model_doc['id'])
-            expect(HandleCreateJob).to have_received(:perform_now).with(model_doc['id'])
-            expect(HandleVerifyJob).to have_received(:perform_now).with(model_doc['id'])
+            expect(HandleDeleteJob).not_to have_received(:perform_now).with(handle)
+            expect(HandleCreateJob).to have_received(:perform_now).with(handle, url_value)
+            expect(HandleVerifyJob).to have_received(:perform_now).with(handle)
             expect(HandleDeposit.all.count).to eq(1)
             HandleDeposit.all.each do |record|
-              expect(record.noid).to eq(model_doc['id'])
+              expect(record.handle).to eq(handle)
               expect(record.action).to eq('create')
               expect(record.verified).to be false
             end
@@ -184,16 +186,16 @@ RSpec.describe HandleJob, type: :job do
       end
 
       context 'when create verified' do
-        before { HandleDeposit.create(noid: model_doc['id'], action: 'create', verified: true) }
+        before { HandleDeposit.create(handle: handle, action: 'create', verified: true) }
 
         it 'does nothing' do
           is_expected.to be true
-          expect(HandleDeleteJob).not_to have_received(:perform_now).with(model_doc['id'])
-          expect(HandleCreateJob).not_to have_received(:perform_now).with(model_doc['id'])
-          expect(HandleVerifyJob).not_to have_received(:perform_now).with(model_doc['id'])
+          expect(HandleDeleteJob).not_to have_received(:perform_now).with(handle)
+          expect(HandleCreateJob).not_to have_received(:perform_now).with(handle, url_value)
+          expect(HandleVerifyJob).not_to have_received(:perform_now).with(handle)
           expect(HandleDeposit.all.count).to eq(1)
           HandleDeposit.all.each do |record|
-            expect(record.noid).to eq(model_doc['id'])
+            expect(record.handle).to eq(handle)
             expect(record.action).to eq('create')
             expect(record.verified).to be true
           end
@@ -204,12 +206,12 @@ RSpec.describe HandleJob, type: :job do
 
           it 'does nothing' do
             is_expected.to be true
-            expect(HandleDeleteJob).not_to have_received(:perform_now).with(model_doc['id'])
-            expect(HandleCreateJob).not_to have_received(:perform_now).with(model_doc['id'])
-            expect(HandleVerifyJob).not_to have_received(:perform_now).with(model_doc['id'])
+            expect(HandleDeleteJob).not_to have_received(:perform_now).with(handle)
+            expect(HandleCreateJob).not_to have_received(:perform_now).with(handle, url_value)
+            expect(HandleVerifyJob).not_to have_received(:perform_now).with(handle)
             expect(HandleDeposit.all.count).to eq(1)
             HandleDeposit.all.each do |record|
-              expect(record.noid).to eq(model_doc['id'])
+              expect(record.handle).to eq(handle)
               expect(record.action).to eq('create')
               expect(record.verified).to be true
             end
@@ -221,16 +223,16 @@ RSpec.describe HandleJob, type: :job do
         before { allow(described_class).to receive(:thirty_days_ago).and_return(31.days.from_now) }
 
         context 'when delete not verified' do
-          before { HandleDeposit.create(noid: model_doc['id'], action: 'delete') }
+          before { HandleDeposit.create(handle: handle, action: 'delete') }
 
           it 'deletes handle' do
             is_expected.to be true
-            expect(HandleDeleteJob).to have_received(:perform_now).with(model_doc['id'])
-            expect(HandleCreateJob).not_to have_received(:perform_now).with(model_doc['id'])
-            expect(HandleVerifyJob).to have_received(:perform_now).with(model_doc['id'])
+            expect(HandleDeleteJob).to have_received(:perform_now).with(handle)
+            expect(HandleCreateJob).not_to have_received(:perform_now).with(handle, url_value)
+            expect(HandleVerifyJob).to have_received(:perform_now).with(handle)
             expect(HandleDeposit.all.count).to eq(1)
             HandleDeposit.all.each do |record|
-              expect(record.noid).to eq(model_doc['id'])
+              expect(record.handle).to eq(handle)
               expect(record.action).to eq('delete')
               expect(record.verified).to be false
             end
@@ -238,28 +240,28 @@ RSpec.describe HandleJob, type: :job do
         end
 
         context 'when delete verified' do
-          before { HandleDeposit.create(noid: model_doc['id'], action: 'delete', verified: true) }
+          before { HandleDeposit.create(handle: handle, action: 'delete', verified: true) }
 
           it 'deletes record' do
             is_expected.to be true
-            expect(HandleDeleteJob).not_to have_received(:perform_now).with(model_doc['id'])
-            expect(HandleCreateJob).not_to have_received(:perform_now).with(model_doc['id'])
-            expect(HandleVerifyJob).not_to have_received(:perform_now).with(model_doc['id'])
+            expect(HandleDeleteJob).not_to have_received(:perform_now).with(handle)
+            expect(HandleCreateJob).not_to have_received(:perform_now).with(handle, url_value)
+            expect(HandleVerifyJob).not_to have_received(:perform_now).with(handle)
             expect(HandleDeposit.all.count).to eq(0)
           end
         end
 
         context 'when create not verified' do
-          before { HandleDeposit.create(noid: model_doc['id'], action: 'create') }
+          before { HandleDeposit.create(handle: handle, action: 'create') }
 
           it 'overrides create and deletes handle' do
             is_expected.to be true
-            expect(HandleDeleteJob).to have_received(:perform_now).with(model_doc['id'])
-            expect(HandleCreateJob).not_to have_received(:perform_now).with(model_doc['id'])
-            expect(HandleVerifyJob).to have_received(:perform_now).with(model_doc['id'])
+            expect(HandleDeleteJob).to have_received(:perform_now).with(handle)
+            expect(HandleCreateJob).not_to have_received(:perform_now).with(handle, url_value)
+            expect(HandleVerifyJob).to have_received(:perform_now).with(handle)
             expect(HandleDeposit.all.count).to eq(1)
             HandleDeposit.all.each do |record|
-              expect(record.noid).to eq(model_doc['id'])
+              expect(record.handle).to eq(handle)
               expect(record.action).to eq('delete')
               expect(record.verified).to be false
             end
@@ -267,16 +269,16 @@ RSpec.describe HandleJob, type: :job do
         end
 
         context 'when create verified' do
-          before { HandleDeposit.create(noid: model_doc['id'], action: 'create', verified: true) }
+          before { HandleDeposit.create(handle: handle, action: 'create', verified: true) }
 
           it 'overrides create and deletes handle' do
             is_expected.to be true
-            expect(HandleDeleteJob).to have_received(:perform_now).with(model_doc['id'])
-            expect(HandleCreateJob).not_to have_received(:perform_now).with(model_doc['id'])
-            expect(HandleVerifyJob).to have_received(:perform_now).with(model_doc['id'])
+            expect(HandleDeleteJob).to have_received(:perform_now).with(handle)
+            expect(HandleCreateJob).not_to have_received(:perform_now).with(handle, url_value)
+            expect(HandleVerifyJob).to have_received(:perform_now).with(handle)
             expect(HandleDeposit.all.count).to eq(1)
             HandleDeposit.all.each do |record|
-              expect(record.noid).to eq(model_doc['id'])
+              expect(record.handle).to eq(handle)
               expect(record.action).to eq('delete')
               expect(record.verified).to be false
             end
@@ -285,26 +287,24 @@ RSpec.describe HandleJob, type: :job do
       end
     end
 
-    describe '#model_docs' do
-      subject { job.model_docs }
+    describe '#required_handles' do
+      subject { job.required_handles }
 
       it 'is empty' do
         is_expected.to be_empty
       end
 
       context 'when models' do
-        let(:model_docs) { [] }
-
         before do
           allow(ActiveFedora::SolrService).to receive(:query)
             .with("+(has_model_ssim:Monograph OR has_model_ssim:FileSet)",
               fl: %w[id has_model_ssim],
               rows: 100_000)
-            .and_return(model_docs)
+            .and_return([model_doc])
         end
 
-        it 'returns model docs' do
-          is_expected.to be model_docs
+        it 'returns handles' do
+          is_expected.to eq({ "2027/fulcrum.model_id" => "http://test.host/concern/monographs/model_id" })
         end
       end
     end

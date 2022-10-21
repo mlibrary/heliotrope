@@ -1,24 +1,19 @@
 # frozen_string_literal: true
 
 class HandleCreateJob < ApplicationJob
-  def perform(model_id)
-    model = Sighrax.from_noid(model_id)
-    Rails.logger.warn("HandleCreateJob #{model_id} is NOT kind of Sighrax::Model") unless model.kind_of?(Sighrax::Model)
-    return false unless model.kind_of?(Sighrax::Model)
-    record = HandleDeposit.find_or_create_by(noid: model_id)
+  def perform(handle, url_value)
+    record = HandleDeposit.find_or_create_by(handle: handle)
     record.action = 'create'
+    record.url_value = url_value
     record.verified = false
     record.save!
-    create_handle(model)
-  rescue StandardError => e
-    Rails.logger.error("HandleCreateJob #{model_id} #{e}")
-    false
-  end
 
-  def create_handle(model)
-    model_url = Sighrax.url(model) || "https://#{model.noid}"
-    service_url = HandleNet.value(model.noid)
-    return service_url if /^#{Regexp.escape(model_url)}$/i.match?(service_url)
-    HandleNet.create_or_update(model.noid, model_url)
+    service_url = HandleNet.url_value_for_handle(handle)
+    return service_url if /^#{Regexp.escape(url_value)}$/i.match?(service_url)
+
+    HandleNet.create_or_update(handle, url_value)
+  rescue StandardError => e
+    Rails.logger.error("HandleCreateJob #{handle} --> #{url_value} #{e}")
+    false
   end
 end
