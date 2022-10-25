@@ -9,6 +9,11 @@ namespace :heliotrope do
       user = User.find_by(email: arg)
       if user
         puts "Deleting user #{arg}"
+        batch_user_id = User.where(email: User.batch_user_key).first.id
+        Hyrax::UploadedFile.where(user_id: user.id).each do |uploaded_file|
+          uploaded_file.user_id = batch_user_id
+          uploaded_file.save!
+        end
         user.destroy # also removed associate roles thanks to `dependent: :destroy`
       else
         puts "User #{arg} not found. Metadata checks will proceed."
