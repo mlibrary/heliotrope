@@ -1,9 +1,13 @@
+<% princess_de_cleves = @presenter.subdomain == 'leverpress' && (@presenter.isbn.any? { |isbn| isbn.delete("^0-9") == '9781643150383' }) %>
 <div id="maincontent" class="row monograph-info-epub">
   <!-- ADMIN TOOLS -->
   <div class="platform-admin">
     <% if can? :edit, @presenter %>
       <a href="<%= main_app.edit_hyrax_monograph_path(@presenter.id) %>" title="<%= t('monograph_catalog.index.edit_page_button') %>" data-turbolinks="false"><%= t('monograph_catalog.index.edit_page_button') %></a>
       <a href="<%= main_app.monograph_show_path(@presenter.id) %>" title="<%= t('monograph_catalog.index.show_page_button') %>" data-turbolinks="false"><%= t('monograph_catalog.index.show_page_button') %></a>
+      <% if @presenter.reader_ebook? %>
+        <a href="<%= princess_de_cleves ? epub_ebook_path(@presenter.reader_ebook) : epub_path(@presenter.reader_ebook) %>" title="<%= t('monograph_catalog.index.read_book') %>" data-turbolinks="false"><%= t('monograph_catalog.index.read_book') %></a>
+      <% end %>
       <%= @presenter.permission_badge %>
     <% end %>
     </div>
@@ -68,7 +72,6 @@
                    <%= t('monograph_catalog.index.read_book') %>
                 </a>
               <% else %>
-                <% princess_de_cleves = @presenter.subdomain == 'leverpress' && (@presenter.isbn.any? { |isbn| isbn.delete("^0-9") == '9781643150383' }) %>
                 <a id="monograph-read-btn"
                    href="<%= princess_de_cleves ? epub_ebook_path(@presenter.reader_ebook) : epub_path(@presenter.reader_ebook) %>"
                    class="btn btn-default"
