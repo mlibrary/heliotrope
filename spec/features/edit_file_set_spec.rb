@@ -49,6 +49,12 @@ describe 'Edit a file set' do
     it do # rubocop:disable RSpec/ExampleLength
       visit edit_hyrax_file_set_path(file_set)
 
+      noid = current_path[/file_sets\/[[:alnum:]]{9}/][-9..-1]
+      expect(FileSet.find(noid).date_uploaded).to eq(FileSet.find(noid).create_date)
+      # amusingly, the actual (non-aliased) date_modified is nil here, because it's a Hyrax property thing and...
+      # AddFileToFileSet() is from Hydra::Works. Anyway, this is just verifying our aliasing to `modified_date`
+      expect(FileSet.find(noid).date_modified).to eq(FileSet.find(noid).modified_date)
+
       # HELIO-3094
       expect(page).not_to have_selector '#file_set_visibility_authenticated' # institutional access
       expect(page).not_to have_selector '#file_set_visibility_embargo'
@@ -90,6 +96,9 @@ describe 'Edit a file set' do
       fill_in 'Holding Contact', with: 'Unauthorized use prohibited. A Nice Museum.'
 
       click_button 'Update Attached File'
+
+      expect(FileSet.find(noid).date_modified).to eq(FileSet.find(noid).modified_date)
+      expect(FileSet.find(noid).date_uploaded).to eq(FileSet.find(noid).create_date)
 
       # Add another section title
       visit edit_hyrax_file_set_path(file_set)

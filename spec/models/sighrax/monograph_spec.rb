@@ -57,7 +57,20 @@ RSpec.describe Sighrax::Monograph, type: :model do
       expect(subject.epub_ebook.noid).to eq epub.id
       expect(subject.identifier).to eq HandleNet::HANDLE_NET_PREFIX + HandleNet::FULCRUM_HANDLE_PREFIX + monograph.id
       expect(subject.languages).to contain_exactly('language')
-      expect(subject.modified).to eq date_modified
+
+      # Here we'll show the model is aliasing the Hyrax (date_modified) to Fedora (modified_date). The latter is...
+      # indexed here with the name `system_modified`
+      # see here:
+      # https://github.com/samvera/active_fedora/blob/87e1f5b0c9f5bc5be1ccdc8ff1d25cbd5661c7a9/lib/active_fedora/indexing_service.rb#L56
+      # and here:
+      # https://github.com/samvera/active_fedora/blob/87e1f5b0c9f5bc5be1ccdc8ff1d25cbd5661c7a9/lib/active_fedora/indexing_service.rb#L36
+      doc = ActiveFedora::SolrService.query("{!terms f=id}#{monograph.id}", rows: 1).first
+      expect(doc['date_modified_dtsi']).to eq(doc['system_modified_dtsi'])
+
+      # see `modified()` in Sighrax::Model, again, remember `date_modified` and `modified_date` are aliased, and that
+      # `modified_date` is indexed as `system_modified_dtsi`
+      expect(subject.modified).to eq Time.parse(doc['system_modified_dtsi']).utc
+
       expect(subject.open_access?).to be false
       expect(subject.pdf_ebook.noid).to eq pdf_ebook.id
       expect(subject.products).to be_empty
@@ -116,7 +129,9 @@ RSpec.describe Sighrax::Monograph, type: :model do
       monograph.save
     end
 
-    it { is_expected.to eq Time.parse(yesterday.iso8601) } # Truncate to second }
+    it 'reports modified_date as this field is indexed as `date_modified_dtsi` due to aliasing in the Monograph model' do
+      is_expected.to eq Time.parse(monograph.modified_date.iso8601) # Truncate to second }
+    end
 
     it 'Aptrust Deposit updated_at' do
       record = AptrustDeposit.create(noid: monograph.id, identifier: monograph.id, verified: true)
