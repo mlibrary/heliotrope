@@ -243,7 +243,7 @@ a:focus > .thumbnail > .thumbnailSelectionRing,
   line-height: 1.0;
 }
 
-.textLayer > span {
+.textLayer > span, .textLayer > .markedContent > span {
   color: transparent;
   position: absolute;
   white-space: pre;
