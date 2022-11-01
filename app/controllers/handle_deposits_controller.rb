@@ -2,12 +2,12 @@
 
 class HandleDepositsController < ApplicationController
   def index
-    @handle_deposits = HandleDeposit.filter_by(filtering_params(params)).order(updated_at: :desc, verified: :asc, action: :desc, noid: :asc).page(params[:page])
+    @handle_deposits = HandleDeposit.filter_by(filtering_params(params)).order(updated_at: :desc, verified: :asc, action: :desc, handle: :asc).page(params[:page])
   end
 
   private
 
     def filtering_params(params)
-      params.slice(:noid_like, :action_like, :verified_like)
+      params.slice(:handle_like, :url_value_like, :action_like, :verified_like)
     end
 end

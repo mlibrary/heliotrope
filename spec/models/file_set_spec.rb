@@ -58,15 +58,19 @@ describe FileSet do
 
     before do
       ActiveFedora::Cleaner.clean!
-      allow(HandleCreateJob).to receive(:perform_later).with(noid)
-      allow(HandleDeleteJob).to receive(:perform_later).with(noid)
+      allow(HandleCreateJob).to receive(:perform_later)
+                                  .with(HandleNet::FULCRUM_HANDLE_PREFIX + noid,
+                                        Rails.application.routes.url_helpers.hyrax_file_set_url(noid))
+      allow(HandleDeleteJob).to receive(:perform_later).with(HandleNet::FULCRUM_HANDLE_PREFIX + noid)
     end
 
     it 'creates a handle after create and deletes the handle after destroy' do
       file_set.save
-      expect(HandleCreateJob).to have_received(:perform_later).with(noid)
+      expect(HandleCreateJob)
+        .to have_received(:perform_later)
+              .with(HandleNet::FULCRUM_HANDLE_PREFIX + noid, Rails.application.routes.url_helpers.hyrax_file_set_url(noid))
       file_set.destroy
-      expect(HandleDeleteJob).to have_received(:perform_later).with(noid)
+      expect(HandleDeleteJob).to have_received(:perform_later).with(HandleNet::FULCRUM_HANDLE_PREFIX + noid)
     end
   end
 

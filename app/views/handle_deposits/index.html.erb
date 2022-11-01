@@ -6,21 +6,22 @@
       <div class="col-md-12"><hr/></div>
       <div class="col-md-12">
         <% size = 12 %>
-        <div class="col-md-2"><div>NOID</div><div><input type="text" name="noid_like" value="<%= params[:noid_like] %>" size="<%= size %>" aria-label="noid_like"></div></div>
+        <div class="col-md-2"><div>Handle</div><div><input type="text" name="handle_like" value="<%= params[:handle_like] %>" size="<%= size %>" aria-label="handle_like"></div></div>
+        <div class="col-md-2"><div>URL Value</div><div><input type="text" name="url_value_like" value="<%= params[:url_value_like] %>" size="<%= size %>" aria-label="url_value_like"></div></div>
         <div class="col-md-2"><div>Action</div><div><input type="text" name="action_like" value="<%= params[:action_like] %>" size="<%= size %>" aria-label="action_like"></div></div>
         <div class="col-md-2"><div>Verified</div><div><input type="checkbox" name="verified_like" value=0 <%= params[:verified_like] == '0' ? 'checked' : '' %> aria-label="verified_like"> false</div></div>
-        <div class="col-md-6"><div>Modified</div><div><button name="submit" type="submit" value="filter">Filter</button></div></div>
+        <div class="col-md-4"><div>Modified</div><div><button name="submit" type="submit" value="filter">Filter</button></div></div>
       </div>
       <div class="col-md-12"><hr/></div>
     </b>
   </form>
   <% @handle_deposits.each do |handle_deposit| %>
     <div class="col-md-12">
-      <% entity =  Sighrax.from_noid(handle_deposit.noid) %>
-      <div class="col-md-2"><%= link_to handle_deposit.noid, Sighrax.url(entity) %></div>
+      <div class="col-md-2"><%= link_to handle_deposit.handle, HandleNet::full_handle_url(handle_deposit.handle) %></div>
+      <div class="col-md-2"><%= link_to handle_deposit.url_value if handle_deposit.url_value.present? %></div>
       <div class="col-md-2"><%= "#{handle_deposit.action}" %></div>
       <div class="col-md-2"><%= "#{handle_deposit.verified}" %></div>
-      <div class="col-md-6"><%= "#{handle_deposit.updated_at}" %></div>
+      <div class="col-md-4"><%= "#{handle_deposit.updated_at}" %></div>
     </div>
   <% end %>
   <div class="col-md-12">&nbsp;<%= paginate @handle_deposits %></div>

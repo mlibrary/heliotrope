@@ -6,37 +6,19 @@ RSpec.describe HandleNet do
   let(:invalidnoid) { 'invalidnoid' }
   let(:validnoid) { 'validnoid' }
 
-  describe '#noid' do
-    it { expect(described_class.noid(nil)).to be nil }
-    it { expect(described_class.noid(described_class::DOI_ORG_PREFIX + described_class::FULCRUM_HANDLE_PREFIX + invalidnoid)).to be nil }
-    it { expect(described_class.noid(described_class::DOI_ORG_PREFIX + described_class::FULCRUM_HANDLE_PREFIX + validnoid)).to be nil }
-    it { expect(described_class.noid(described_class::HANDLE_NET_PREFIX + described_class::FULCRUM_HANDLE_PREFIX + invalidnoid)).to be nil }
-    it { expect(described_class.noid(described_class::HANDLE_NET_PREFIX + described_class::FULCRUM_HANDLE_PREFIX + validnoid)).to eq validnoid }
-    it { expect(described_class.noid(described_class.path(invalidnoid))).to eq nil }
-    it { expect(described_class.noid(described_class.path(validnoid))).to eq validnoid }
-    it { expect(described_class.noid(described_class.url(validnoid))).to eq validnoid }
-    it { expect(described_class.noid(described_class.url(validnoid) + "?key=value")).to eq validnoid }
-  end
-
-  describe '#path' do
-    it { expect(described_class.path(nil)).to eq described_class::FULCRUM_HANDLE_PREFIX }
-    it { expect(described_class.path(invalidnoid)).to eq described_class::FULCRUM_HANDLE_PREFIX + invalidnoid }
-    it { expect(described_class.path(validnoid)).to eq described_class::FULCRUM_HANDLE_PREFIX + validnoid }
-  end
-
-  describe '#url' do
-    it { expect(described_class.url(nil)).to eq described_class::HANDLE_NET_PREFIX + described_class.path(nil) }
-    it { expect(described_class.url(invalidnoid)).to eq described_class::HANDLE_NET_PREFIX + described_class.path(invalidnoid) }
-    it { expect(described_class.url(validnoid)).to eq described_class::HANDLE_NET_PREFIX + described_class.path(validnoid) }
+  describe '#full_handle_url' do
+    it { expect(described_class.full_handle_url(nil)).to eq described_class::HANDLE_NET_PREFIX }
+    it { expect(described_class.full_handle_url('2027/fulcrum.invalidnoid')).to eq described_class::HANDLE_NET_PREFIX + '2027/fulcrum.invalidnoid' }
+    it { expect(described_class.full_handle_url('2027/fulcrum.validnoid')).to eq described_class::HANDLE_NET_PREFIX + '2027/fulcrum.validnoid' }
   end
 
   describe 'Handle Service' do
-    let(:noid) { validnoid }
+    let(:handle) { '2027/fulcrum.999999999' }
     let(:url) { double('url') }
 
-    it { expect(described_class.value(noid)).to be nil }
-    it { expect(described_class.create_or_update(noid, url)).to be false }
-    it { expect(described_class.delete(noid)).to be false }
+    it { expect(described_class.url_value_for_handle(handle)).to be nil }
+    it { expect(described_class.create_or_update(handle, url)).to be false }
+    it { expect(described_class.delete(handle)).to be false }
     it { expect(described_class.service).to be nil }
 
     context 'instantiate' do
@@ -57,22 +39,22 @@ RSpec.describe HandleNet do
 
       after { Settings.handle_service.instantiate = false }
 
-      describe '#value' do
-        subject { described_class.value(noid) }
+      describe '#url_value_for_handle' do
+        subject { described_class.url_value_for_handle(handle) }
 
-        before { allow(url_service).to receive(:get).with(HandleNet.path(noid)).and_return(url) }
+        before { allow(url_service).to receive(:get).with(handle).and_return(url) }
 
         it { is_expected.to be url }
 
         context 'error' do
           let(:logger) { instance_double(Logger, 'logger') }
-          let(:message) { "HandleNet.value(#{noid}) failed with error #{error}" }
+          let(:message) { "HandleNet.url_value_for_handle(#{handle}) failed with error #{error}" }
           let(:error) { 'error' }
 
           before do
             allow(Rails).to receive(:logger).and_return(logger)
             allow(logger).to receive(:error).with(message)
-            allow(url_service).to receive(:get).with(HandleNet.path(noid)).and_raise(error)
+            allow(url_service).to receive(:get).with(handle).and_raise(error)
           end
 
           it do
@@ -83,21 +65,21 @@ RSpec.describe HandleNet do
       end
 
       describe '#create_or_update' do
-        subject { described_class.create_or_update(noid, url) }
+        subject { described_class.create_or_update(handle, url) }
 
-        before { allow(url_service).to receive(:set).with(HandleNet.path(noid), url).and_return(url) }
+        before { allow(url_service).to receive(:set).with(handle, url).and_return(url) }
 
         it { is_expected.to be true }
 
         context 'error' do
           let(:logger) { instance_double(Logger, 'logger') }
-          let(:message) { "HandleNet.create_or_update(#{noid}, #{url}) failed with error #{error}" }
+          let(:message) { "HandleNet.create_or_update(#{handle}, #{url}) failed with error #{error}" }
           let(:error) { 'error' }
 
           before do
             allow(Rails).to receive(:logger).and_return(logger)
             allow(logger).to receive(:error).with(message)
-            allow(url_service).to receive(:set).with(HandleNet.path(noid), url).and_raise(error)
+            allow(url_service).to receive(:set).with(handle, url).and_raise(error)
           end
 
           it do
@@ -108,21 +90,21 @@ RSpec.describe HandleNet do
       end
 
       describe '#delete' do
-        subject { described_class.delete(noid) }
+        subject { described_class.delete(handle) }
 
-        before { allow(service).to receive(:delete).with(HandleRest::Handle.from_s(HandleNet.path(noid))).and_return([]) }
+        before { allow(service).to receive(:delete).with(HandleRest::Handle.from_s(handle)).and_return([]) }
 
         it { is_expected.to be true }
 
         context 'error' do
           let(:logger) { instance_double(Logger, 'logger') }
-          let(:message) { "HandleNet.delete(#{noid}) failed with error #{error}" }
+          let(:message) { "HandleNet.delete(#{handle}) failed with error #{error}" }
           let(:error) { 'error' }
 
           before do
             allow(Rails).to receive(:logger).and_return(logger)
             allow(logger).to receive(:error).with(message)
-            allow(service).to receive(:delete).with(HandleRest::Handle.from_s(HandleNet.path(noid))).and_raise(error)
+            allow(service).to receive(:delete).with(HandleRest::Handle.from_s(handle)).and_raise(error)
           end
 
           it do

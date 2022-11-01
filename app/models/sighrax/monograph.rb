@@ -42,7 +42,7 @@ module Sighrax
 
       @identifier = HandleNet::DOI_ORG_PREFIX + scalar('doi_ssim') if scalar('doi_ssim').present?
       @identifier ||= HandleNet::HANDLE_NET_PREFIX + scalar('hdl_ssim') if scalar('hdl_ssim').present?
-      @identifier ||= HandleNet.url(noid)
+      @identifier ||= HandleNet::HANDLE_NET_PREFIX + HandleNet::FULCRUM_HANDLE_PREFIX + noid.to_s
       @identifier
     end
 

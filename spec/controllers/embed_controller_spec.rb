@@ -3,6 +3,17 @@
 require 'rails_helper'
 
 RSpec.describe EmbedController, type: :controller do
+  describe '#noid' do
+    it { expect(described_class.noid(nil)).to be nil }
+    it { expect(described_class.noid(HandleNet::DOI_ORG_PREFIX + HandleNet::FULCRUM_HANDLE_PREFIX + 'invalidnoid')).to be nil }
+    it { expect(described_class.noid(HandleNet::DOI_ORG_PREFIX + HandleNet::FULCRUM_HANDLE_PREFIX + 'validnoid')).to be nil }
+    it { expect(described_class.noid(HandleNet::HANDLE_NET_PREFIX + HandleNet::FULCRUM_HANDLE_PREFIX + 'invalidnoid')).to be nil }
+    it { expect(described_class.noid(HandleNet::HANDLE_NET_PREFIX + HandleNet::FULCRUM_HANDLE_PREFIX + 'validnoid')).to eq 'validnoid' }
+    it { expect(described_class.noid(HandleNet::HANDLE_NET_PREFIX + HandleNet::FULCRUM_HANDLE_PREFIX + 'validnoid' + '?key=value')).to eq 'validnoid' }
+    it { expect(described_class.noid(HandleNet::FULCRUM_HANDLE_PREFIX + 'invalidnoid')).to eq nil }
+    it { expect(described_class.noid(HandleNet::FULCRUM_HANDLE_PREFIX + 'validnoid')).to eq 'validnoid' }
+  end
+
   describe "GET #show" do
     context 'missing param' do
       before do
@@ -16,7 +27,6 @@ RSpec.describe EmbedController, type: :controller do
       let(:hdl) { 'hdl' }
 
       before do
-        allow(HandleNet).to receive(:noid).with(hdl).and_return(nil)
         get :show, params: { hdl: hdl }
       end
 
@@ -28,7 +38,6 @@ RSpec.describe EmbedController, type: :controller do
       let(:noid) { 'noid' }
 
       before do
-        allow(HandleNet).to receive(:noid).with(hdl).and_return(noid)
         get :show, params: { hdl: hdl }
       end
 
@@ -41,7 +50,7 @@ RSpec.describe EmbedController, type: :controller do
       let(:presenter) { object_double("presenter") }
 
       before do
-        allow(HandleNet).to receive(:noid).with(hdl).and_return(noid)
+        allow(described_class).to receive(:noid).with(hdl).and_return(noid)
         allow(Hyrax::PresenterFactory).to receive(:build_for).with(ids: [noid], presenter_class: Hyrax::FileSetPresenter, presenter_args: anything).and_return([presenter])
         get :show, params: { hdl: hdl }
       end
@@ -85,7 +94,7 @@ RSpec.describe EmbedController, type: :controller do
         ActiveFedora::SolrService.add([monograph.to_h, file_set.to_h])
         ActiveFedora::SolrService.commit
         allow_any_instance_of(Keycard::Request::Attributes).to receive(:all).and_return(keycard)
-        allow(HandleNet).to receive(:noid).with(hdl).and_return('file_set_noid')
+        allow(described_class).to receive(:noid).with(hdl).and_return('file_set_noid')
       end
 
       it "counts the file_set" do

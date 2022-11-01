@@ -47,7 +47,7 @@ RSpec.describe Sighrax::NullEntity, type: :model do
     it { expect(subject.epub_ebook)       .to be_an_instance_of(Sighrax::NullEntity) }
     it { expect(subject.file_name)        .to eq 'null_file.txt' }
     it { expect(subject.file_size)        .to eq 0 }
-    it { expect(subject.identifier)       .to eq HandleNet.url(noid) }
+    it { expect(subject.identifier)       .to eq HandleNet::HANDLE_NET_PREFIX + HandleNet::FULCRUM_HANDLE_PREFIX + noid }
     it { expect(subject.languages)        .to eq [] }
     it { expect(subject.media_type)       .to eq 'text/plain' }
     it { expect(subject.modified)         .to be nil }
