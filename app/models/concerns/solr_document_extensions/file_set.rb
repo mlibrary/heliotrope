@@ -24,6 +24,30 @@ module SolrDocumentExtensions
       Array(self['alt_text_tesim'])
     end
 
+    def article_creator
+      Array(self['article_creator_tesim'])
+    end
+
+    def article_display_date
+      Array(self['article_display_date_ssim']).first
+    end
+
+    def article_issue
+      Array(self['article_issue_ssim']).first
+    end
+
+    def article_permalink
+      Array(self['article_permalink_ssim']).first
+    end
+
+    def article_title
+      Array(self['article_title_tesim']).first
+    end
+
+    def article_volume
+      Array(self['article_volume_ssim']).first
+    end
+
     def caption
       Array(self['caption_tesim'])
     end

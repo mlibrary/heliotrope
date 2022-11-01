@@ -80,12 +80,12 @@ describe Import::Importer do
       let(:file2) { create(:file_set) }
       let(:expected_manifest) do
         <<~eos
-          NOID,File Name,Link,Embed Code,Title,Resource Type,External Resource URL,Caption,Alternative Text,Copyright Holder,Copyright Status,Open Access?,Funder,Funder Display,Allow Fullscreen Display?,Allow Download?,Rights Granted,CC License,Permissions Expiration Date,After Expiration: Allow Display?,After Expiration: Allow Download?,Credit Line,Holding Contact,Exclusive to Fulcrum,Identifier(s),Content Type,Creator(s),Additional Creator(s),Creator Display,Sort Date,Display Date,Description,Publisher,Subject,ISBN(s),Buy Book URL,Pub Year,Pub Location,Series,Edition Name,Previous Edition,Next Edition,Keywords,Section,Language,Transcript,Translation,DOI,Handle,Redirect to,Closed Captions,Visual Descriptions,Tombstone?,Tombstone Message,Volume,OCLC Work Identifier,Copyright Year,Award(s),Representative Kind
-          instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder
-          #{cover.id},,"=HYPERLINK(""#{Rails.application.routes.url_helpers.hyrax_file_set_url(cover)}"")",,#{cover.title.first},#{cover.resource_type.first},,,,,,,,,,,,,,,,,,,,,,,,#{cover.sort_date},,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-          #{file1.id},,"=HYPERLINK(""#{Rails.application.routes.url_helpers.hyrax_file_set_url(file1)}"")",,#{file1.title.first},pdf,,,,,,,,,,,,,,,,,,,,,,,,#{file1.sort_date},,,,,,,,,,,,,,,,,,,,,,,,,,,,,pdf_ebook
-          #{file2.id},,"=HYPERLINK(""#{Rails.application.routes.url_helpers.hyrax_file_set_url(file2)}"")",,NEW FILE TITLE,image,,,,,,,,,,,,,,,,,,,,,,,,2000-01-01,,,,,,,,,,,,,,,,,,,,,,,,,,,,,cover
-          #{monograph.id},://:MONOGRAPH://:,"=HYPERLINK(""#{Rails.application.routes.url_helpers.hyrax_monograph_url(monograph)}"")",,NEW MONOGRAPH TITLE,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,://:MONOGRAPH://:,,,,,,,,,,,,,,,
+          NOID,File Name,Link,Embed Code,Title,Resource Type,External Resource URL,Caption,Alternative Text,Copyright Holder,Copyright Status,Open Access?,Funder,Funder Display,Allow Fullscreen Display?,Allow Download?,Rights Granted,CC License,Permissions Expiration Date,After Expiration: Allow Display?,After Expiration: Allow Download?,Credit Line,Holding Contact,Exclusive to Fulcrum,Identifier(s),Content Type,Creator(s),Additional Creator(s),Creator Display,Sort Date,Display Date,Description,Publisher,Subject,ISBN(s),Buy Book URL,Pub Year,Pub Location,Series,Edition Name,Previous Edition,Next Edition,Keywords,Section,Language,Transcript,Translation,DOI,Handle,Redirect to,Closed Captions,Visual Descriptions,Tombstone?,Tombstone Message,Volume,OCLC Work Identifier,Copyright Year,Award(s),Article Title,Article Creator(s),Article Permalink,Article Volume,Article Issue,Article Display Date,Representative Kind
+          instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder
+          #{cover.id},,"=HYPERLINK(""#{Rails.application.routes.url_helpers.hyrax_file_set_url(cover)}"")",,#{cover.title.first},#{cover.resource_type.first},,,,,,,,,,,,,,,,,,,,,,,,#{cover.sort_date},,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+          #{file1.id},,"=HYPERLINK(""#{Rails.application.routes.url_helpers.hyrax_file_set_url(file1)}"")",,#{file1.title.first},pdf,,,,,,,,,,,,,,,,,,,,,,,,#{file1.sort_date},,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,pdf_ebook
+          #{file2.id},,"=HYPERLINK(""#{Rails.application.routes.url_helpers.hyrax_file_set_url(file2)}"")",,NEW FILE TITLE,image,,,,,,,,,,,,,,,,,,,,,,,,2000-01-01,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,cover
+          #{monograph.id},://:MONOGRAPH://:,"=HYPERLINK(""#{Rails.application.routes.url_helpers.hyrax_monograph_url(monograph)}"")",,NEW MONOGRAPH TITLE,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,://:MONOGRAPH://:,,,,,,,,,,,,,,,,,,,,,
         eos
       end
       let(:monograph_id) { monograph.id }
@@ -269,6 +269,39 @@ describe Import::Importer do
         expect(monograph.id).to eq 'aa11aa11a'
         expect(file_sets[0].id).to eq 'bb22bb22b'
         expect(file_sets[1].id).to eq 'cc33cc33c'
+      end
+    end
+
+    context "journal article metadata" do
+      let(:importer) do
+        described_class.new(root_dir: File.join(fixture_path, 'csv', 'import_article_fields'),
+                            user_email: user.email,
+                            press: press.subdomain,
+                            visibility: public_vis,
+                            quiet: true,
+                            reuse_noids: true)
+      end
+
+      it "imports the monograph/journal and has the correct file_set metadata" do
+        expect { importer.run }
+          .to change(Monograph, :count)
+          .by(1)
+          .and(change(FileSet, :count)
+          .by(2))
+
+        monograph = Monograph.first
+        f1, f2 = monograph.ordered_members.to_a
+
+        expect(monograph.title).to eq ["The Tempest Journal; A Subtitle"]
+        expect(f1.article_title).to eq "An Article Title"
+        expect(f1.article_creator).to eq ["Firstname Lastname", "Secondfirst Secondlast"]
+        expect(f1.article_permalink).to eq "https://doi.org/10.1/aaa"
+        expect(f1.article_volume).to eq "Volume 1"
+        expect(f1.article_issue).to eq "Issue 1"
+        expect(f1.article_display_date).to eq "Spring 2020"
+        expect(f2.article_creator).to eq ["An Author"]
+        expect(f2.article_permalink).to eq "https://hdl.handle.net/2027/bbb"
+        expect(f2.article_display_date).to eq "July 1, 2022"
       end
     end
 

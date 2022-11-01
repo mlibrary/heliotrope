@@ -45,7 +45,8 @@ module Hyrax
              :holding_contact, :external_resource_url, :primary_creator_role,
              :display_date, :sort_date, :transcript, :translation, :file_format,
              :label, :redirect_to, :has_model, :date_modified, :visibility,
-             :closed_captions, :visual_descriptions,
+             :closed_captions, :visual_descriptions, :article_creator, :article_permalink, :article_issue,
+             :article_display_date, :article_title, :article_volume,
              to: :solr_document
 
     def monograph_id
@@ -99,6 +100,14 @@ module Hyrax
       else
         allow_hi_res&.downcase == 'yes'
       end
+    end
+
+    def article_creators
+      article_creator.join(", ")
+    end
+
+    def article_resource?
+      article_title.present?
     end
 
     # Technical Metadata

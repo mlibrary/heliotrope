@@ -15,7 +15,8 @@ module Heliotrope
                      holding_contact external_resource_url doi hdl
                      display_date transcript translation redirect_to
                      closed_captions visual_descriptions
-                     tombstone tombstone_message]
+                     tombstone tombstone_message
+                     article_creator article_title article_permalink article_issue article_volume article_display_date]
 
     # Per HELIO-2912, we dump json into this:
     self.terms += %i[extra_json_properties]
