@@ -146,6 +146,11 @@ class FileSet < ActiveFedora::Base
     ::Hyrax::FileSetPresenter.new(CatalogController.new.fetch(id).last, nil)
   end
 
+  # see https://github.com/samvera/hyrax/issues/5900 and https://mlit.atlassian.net/browse/HELIO-4358
+  # I don't think the aliased properties should ever have been added. Let the storage layer do its job.
+  alias date_uploaded create_date
+  alias date_modified modified_date
+
   private
 
     def after_create_jobs

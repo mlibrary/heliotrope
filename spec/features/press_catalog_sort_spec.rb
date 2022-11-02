@@ -9,45 +9,42 @@ describe 'Press catalog sort' do
   context 'Monograph results set end-to-end' do
     before do
       create(:press, subdomain: 'sortpress1')
+
+      # note the `sleep 1` values below are because the sortable date values (date_uploaded create_date) end up...
+      # truncated to seconds only in Solr.
       create(:public_monograph,
              press: 'sortpress1',
              title: ['silverfish'],
-             date_uploaded: DateTime.new(2018, 11, 3, 4, 5, 0, '+0'),
              creator: ["Hopeful, Barry"],
              date_created: ['20180101'])
-
+      sleep 1
       create(:public_monograph,
              press: 'sortpress1',
              title: ['Cormorant'],
-             date_uploaded: DateTime.new(2018, 10, 3, 4, 5, 0, '+0'),
              creator: ['Zidane, "Headbutt"'],
              date_created: ['2015-01-01T00:00'])
-
+      sleep 1
       create(:public_monograph,
              press: 'sortpress1',
              title: ['Zebra'],
-             date_uploaded: DateTime.new(2018, 12, 3, 4, 5, 0, '+0'),
              creator: ["Andrée, Renée"],
              date_created: ['2013MMDD'])
-
+      sleep 1
       create(:public_monograph,
              press: 'sortpress1',
              title: ['aardvark'],
-             date_uploaded: DateTime.new(2018, 7, 3, 4, 5, 0, '+0'),
              creator: ["Andrea, Rita"],
              date_created: ['2017'])
-
+      sleep 1
       create(:public_monograph,
              press: 'sortpress1',
              title: ['Manatee'],
-             date_uploaded: DateTime.new(2018, 8, 3, 4, 5, 0, '+0'),
              creator: ["Gulliver, Guy"],
              date_created: ['2016/05/05'])
-
+      sleep 1
       create(:public_monograph,
              press: 'sortpress1',
              title: ['baboon'],
-             date_uploaded: DateTime.new(2018, 9, 3, 4, 5, 0, '+0'),
              creator: ["andrew, ruth"],
              date_created: ['2014'])
 
@@ -77,12 +74,12 @@ describe 'Press catalog sort' do
 
     it 'is sortable by "Date Added (Newest First)"' do
       click_link 'Date Added (Newest First)'
-      assert_equal page.all(title_selector).map(&:text), ['Zebra',
-                                                          'silverfish',
-                                                          'Cormorant',
-                                                          'baboon',
-                                                          'Manatee',
-                                                          'aardvark']
+      assert_equal page.all(title_selector).map(&:text), ["baboon",
+                                                          "Manatee",
+                                                          "aardvark",
+                                                          "Zebra",
+                                                          "Cormorant",
+                                                          "silverfish"]
     end
 
     it 'is sortable by "Author (A-Z)"' do

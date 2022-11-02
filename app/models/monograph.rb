@@ -89,6 +89,11 @@ class Monograph < ActiveFedora::Base
 
   validates :title, presence: { message: 'Your work must have a title.' }
 
+  # see https://github.com/samvera/hyrax/issues/5900 and https://mlit.atlassian.net/browse/HELIO-4358
+  # I don't think the Hyrax properties should ever have been added. Let the storage layer do its job.
+  alias date_uploaded create_date
+  alias date_modified modified_date
+
   private
 
     def after_create_jobs

@@ -90,7 +90,9 @@ RSpec.describe Sighrax::Model, type: :model do
     it { expect(subject.children).to be_empty }
 
     describe '#modified' do
-      it { expect(subject.modified).to eq Sighrax::Entity.null_entity.modified }
+      it 'equals `modified_date` (Fedora) because `date_modified` (Hyrax) is aliased to this' do
+        expect(subject.modified).to eq Time.parse(file_set.modified_date.iso8601)
+      end
 
       context 'date modified' do
         let(:date_modified) { Time.parse(Time.now.iso8601).utc } # Strip fractions of a second
@@ -182,12 +184,8 @@ RSpec.describe Sighrax::Model, type: :model do
     it { expect(subject.children).to be_empty }
 
     describe '#modified' do
-      it { expect(subject.modified).to eq Sighrax::Entity.null_entity.modified }
-
-      context 'date modified' do
-        let(:date_modified) { Time.parse(Time.now.iso8601).utc } # Strip fractions of a second
-
-        it { expect(subject.modified).to eq date_modified }
+      it 'equals `modified_date` (Fedora) because `date_modified` (Hyrax) is aliased to this' do
+        expect(subject.modified).to eq Time.parse(monograph.modified_date.iso8601)
       end
     end
 

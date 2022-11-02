@@ -153,10 +153,12 @@ describe CharacterizeJob, :clean_repo do
       end
     end
 
+    # note the specs here, while still valid, are altered from those in Hyrax due to out aliasing of `date_modified`
     describe 'date_modified' do
       before do
         allow(file_set).to receive(:characterization_proxy).and_call_original
         allow(Hyrax::TimeService).to receive(:time_in_utc).and_return('new_mod_date')
+        file_set.save
       end
 
       context 'the new checksum is the same as the previous one' do
@@ -167,9 +169,8 @@ describe CharacterizeJob, :clean_repo do
         it 'leaves it as-is' do
           expect(file).to receive(:save!)
           expect(file_set).to receive(:update_index)
-          expect(file_set.date_modified).to eq 'old_mod_date'
+          expect(file_set).not_to receive(:date_modified=)
           described_class.perform_now(file_set, file.id)
-          expect(file_set.date_modified).to eq 'old_mod_date'
         end
       end
 
@@ -178,12 +179,11 @@ describe CharacterizeJob, :clean_repo do
           allow(file_set).to receive_message_chain(:characterization_proxy, :original_checksum).and_return(['old_checksum'], ['new_checksum']) # rubocop:disable RSpec/MessageChain
         end
 
-        it 'sets it to now()' do
+        it 'sets it to now(), a.k.a. "new_mod_date"' do
           expect(file).to receive(:save!)
           expect(file_set).to receive(:update_index)
-          expect(file_set.date_modified).to eq 'old_mod_date'
+          expect(file_set).to receive(:date_modified=)
           described_class.perform_now(file_set, file.id)
-          expect(file_set.date_modified).to eq 'new_mod_date'
         end
       end
     end

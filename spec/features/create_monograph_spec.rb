@@ -65,6 +65,11 @@ describe 'Create a monograph' do
 
       click_button 'Save'
 
+      noid = current_path[/monographs\/[[:alnum:]]{9}/][-9..-1]
+      # because we alias the Hyrax methods to the Fedora ones
+      expect(Monograph.find(noid).date_modified).to eq(Monograph.find(noid).modified_date)
+      expect(Monograph.find(noid).date_uploaded).to eq(Monograph.find(noid).create_date)
+
       # Monograph catalog page
       expect(page.title).to eq '#hashtag Test Monograph Title with MD Italics and HTML Italics'
       expect(page).to have_content '#hashtag Test Monograph Title with MD Italics and HTML Italics'
@@ -110,6 +115,9 @@ describe 'Create a monograph' do
       page.all(:fillable_field, 'monograph[isbn][]').last.set('123-456-7891')
 
       click_button 'Save'
+
+      expect(Monograph.find(noid).date_modified).to eq(Monograph.find(noid).modified_date)
+      expect(Monograph.find(noid).date_uploaded).to eq(Monograph.find(noid).create_date)
 
       # back on Monograph catalog page
       # check authorship override
