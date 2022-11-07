@@ -7741,6 +7741,420 @@ $pccn-black-80: #342f2e;
 }
 ///////////////////////////////////////////////
 //
+// Michigan Publishing Services
+// School for Environement and Sustainability
+// SEAS
+//
+///////////////////////////////////////////////
+// colors
+$seas-brand-color: #00274c;
+$seas-accent-color: #b7c9d7;
+$seas-accent-link: #417da1;
+
+$seas-blue: #0071a5;
+
+$seas-grey-1: #dedfdb;
+$seas-grey-2: #989c97;
+$seas-grey-3: #655a52;
+$seas-white: #fff;
+$seas-black-80: #342f2e;
+
+// typography
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&display=swap');
+@mixin montserrat {
+  font-family: 'Montserrat', sans-serif;
+}
+
+.seas {
+
+  // svgicon
+  #documents {
+
+    .svgicon {
+      // To change any SVGs color see https://stackoverflow.com/a/53336754
+      filter: invert(48%) sepia(34%) saturate(715%) hue-rotate(159deg) brightness(86%) contrast(86%); // $seas-accent-link: #417da1;
+
+    }
+
+  }
+
+  // typography
+  @include montserrat;
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5 {
+    font-weight: 700;
+    @include montserrat;
+  }
+
+  h1 {
+    font-size: 30px;
+  }
+
+  // links
+  a,
+  button {
+    color: $seas-blue;
+  }
+
+  a:hover,
+  a:active,
+  a:focus,
+  button:hover,
+  button:active,
+  button:focus {
+    color: $seas-brand-color;
+  }
+
+  // buttons
+  .btn, .btn-default {
+    @include montserrat;
+    background-color: rgb(255, 255, 255);
+    border-color: rgb(204, 204, 204);
+    color: rgb(5, 74, 146);
+  }
+
+  .btn:hover,
+  .btn:active,
+  .btn:focus,
+  .btn-default:hover,
+  .btn-default:active,
+  .btn-default:focus {
+    background-color: rgb(230, 230, 230);
+    color: rgb(0, 39, 76);
+    text-decoration: none;
+  }
+
+  // navigation menu
+  .navbar-default .navbar-nav > .open > a,
+  .navbar-default .navbar-nav > .open > a:hover,
+  .navbar-default .navbar-nav > .open > a:focus {
+    background-color: $seas-accent-color;
+  }
+
+  .navbar {
+    min-height: 90px;
+  }
+
+  .navbar-right {
+    padding-top: 1em;
+  }
+
+  #brand-bar {
+    background-color: $seas-brand-color;
+    border-color: $seas-brand-color;
+
+    .navbar-brand {
+      color: $seas-white;
+      @include montserrat;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      max-width: 350px;
+      font-size: 18px;
+      height: auto;
+      padding: 15px 15px 15px 15px;
+    }
+
+    .navbar-nav {
+      a#add-content,
+      a.login,
+      a.user-display-name,
+      a.language-dropdown {
+          color: $seas-accent-color;
+      }
+
+      .open > a,
+      .open > a:focus,
+      .open > a:hover {
+        background-color: $seas-blue;
+        color: $seas-accent-color;
+      }
+    }
+
+    .search-form {
+      padding-top: 1.5em;
+      margin-top: 8px;
+    }
+
+    button.search-submit {
+      background-color: $seas-accent-color;
+      border-color: $seas-accent-color;
+      color: $seas-brand-color;
+    }
+
+  }
+
+  // breadcrumbs
+  .breadcrumbs {
+    @include montserrat;
+  }
+
+  // press catalog
+
+  // jumbotron
+  .jumbotron {
+    background-color: $seas-accent-color;
+    @include montserrat;
+    padding-top: 20px;
+    padding-bottom: 20px;
+
+    .container {
+      margin-top: 1em;
+    }
+
+    p.lead {
+      font-size: 14px;
+    }
+
+    .logo {
+
+      img {
+        width: 150px;
+        margin-right: 1em;
+        display: inline-block;
+      }
+
+    }
+
+    .twitter a {
+      color: $seas-black-80;
+    }
+
+  }
+
+  // monograph catalog
+  #sort-dropdown .dropdown-toggle,
+  #per_page-dropdown .dropdown-toggle {
+    background-color: white;
+    color: $seas-blue;
+    border-color: rgb(204, 204, 204);
+  }
+
+  #sort-dropdown .dropdown-toggle:hover,
+  #per_page-dropdown .dropdown-toggle:hover,
+  #sort-dropdown .dropdown-toggle:active,
+  #per_page-dropdown .dropdown-toggle:active {
+    background-color: rgb(230, 230, 230);
+    color: #054a92;
+  }
+
+  #sort-dropdown .dropdown-toggle .caret,
+  #per_page-dropdown .dropdown-toggle .caret {
+    color: #054a92;
+  }
+
+  #sort-dropdown .dropdown-toggle:hover .caret,
+  #per_page-dropdown .dropdown-toggle:hover .caret,
+  #sort-dropdown .dropdown-toggle:active .caret,
+  #per_page-dropdown .dropdown-toggle:active .caret {
+    color: #054a92;
+  }
+
+  // monograph
+  .monograph {
+    .documentHeader {
+      p {
+        @include montserrat;
+      }
+    }
+
+    .monograph-metadata h1 {
+      font-size: 30px;
+    }
+
+    .authors, .copyright {
+      @include montserrat;
+    }
+
+    button.search-submit {
+      background-color: $seas-blue;
+      border-color: $seas-blue;
+      color: $seas-white;
+    }
+  }
+
+  // pagination
+  .page_links {
+    @include montserrat;
+  }
+
+  .pagination {
+    @include montserrat;
+     li a, li span {
+       color: $seas-blue;
+       background-color: white;
+     }
+
+     .active>a,
+     .active>a:hover,
+     .active>a:focus,
+     .active>span,
+     .active>span:hover,
+     .active>span:focus {
+       background-color: $seas-blue;
+       border-color: $seas-blue;
+       color: $seas-brand-color;
+     }
+  }
+
+  // assets
+  .asset-navigation {
+    @include montserrat;
+  }
+
+  .asset {
+    ul.nav-tabs li {
+      @include montserrat;
+    }
+  }
+
+  //footer
+  footer {
+    a,
+    a:hover,
+    a:active {
+      color: $seas-white;
+    }
+    .press-block-a,
+    .press-block-b {
+      background-color: $seas-brand-color;
+
+      a,
+      a:hover,
+      a:active {
+        color: $seas-white;
+      }
+
+      img {
+        width: 100%;
+        margin-top: 0;
+      }
+
+      p {
+        @include montserrat;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+      }
+
+    }
+    .press-block-c {
+      background-color: $seas-black-80;
+      color: white;
+      @include montserrat;
+    }
+    .platform {
+      background-color: $seas-black-80;
+    }
+  }
+
+  // e-book reader
+  #epub {
+    font-family: 'Montserrat', sans-serif !important;
+  }
+
+  #reader {
+    @include montserrat;
+
+    .cozy-control .cozy-h1 {
+      @include montserrat;
+      font-size: 1.5em;
+    }
+
+    .button {
+      @include epub-button-background-color($seas-blue,$seas-brand-color,$seas-white);
+      @include montserrat;
+    }
+
+    .button--lg {
+      @include epub-button-background-color($seas-blue,$seas-brand-color,$seas-white);
+      @include montserrat;
+    }
+
+    .button--inline {
+      @include epub-button-background-color($seas-blue,$seas-brand-color,$seas-white);
+      @include montserrat;
+    }
+
+    .button--sm {
+      @include epub-button-background-color($seas-blue,$seas-brand-color,$seas-white);
+      @include montserrat;
+    }
+
+    .button--sm.cozy-preferences {
+      @include epub-button-background-color(#f1f1f1,$seas-blue,$seas-white);
+      color: $seas-brand-color;
+      @include montserrat;
+    }
+
+    i[class^='icon-chevron-'] {
+      @include epub-prev-next-color($seas-brand-color);
+      transition: 0.2s ease-in;
+    }
+
+    i[class^='icon-chevron-']:hover {
+      @include epub-hover-prev-next-color($seas-brand-color);
+      transition: 0.2s ease-in;
+    }
+
+    .cozy-control .logo {
+      background: $seas-grey-1;
+      height: 46.6px;
+      width: 36px;
+      overflow: hidden;
+
+      img {
+        height: 36px;
+        margin-top: 6px;
+        margin-left: 11px;
+      }
+    }
+
+    // PDF loading progress bar
+    .helio-loading-bar .progress {
+      background-color: $seas-brand-color;
+    }
+
+  }
+
+
+  @media only screen and (max-width : 992px) {
+
+    #brand-bar form.search-form, .navbar-form {
+      width: 190px;
+    }
+
+  }
+
+  @media only screen and (max-width : 768px) {
+    #brand-bar form.search-form, .navbar-form {
+      padding: 10px 0;
+      margin: 0;
+      width: 100%;
+      border: 0;
+      float: none !important;
+    }
+
+    .navbar-form .input-group .input-group-btn {
+      width: 1%;
+    }
+
+    #brand-bar .navbar-brand {
+      max-width: 250px;
+    }
+
+    .navbar-header {
+      min-height: 9em;
+    }
+  }
+
+}
+///////////////////////////////////////////////
+//
 // University of Minnesota Press
 //
 ///////////////////////////////////////////////
