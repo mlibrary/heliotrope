@@ -243,7 +243,13 @@ a:focus > .thumbnail > .thumbnailSelectionRing,
   line-height: 1.0;
 }
 
-.textLayer > span, .textLayer > .markedContent > span {
+/*
+HELIO-4350
+HELIO-4376
+*/
+.textLayer > span, 
+.textLayer > .markedContent > span, 
+.textLayer > .markedContent > .markedContent > span {
   color: transparent;
   position: absolute;
   white-space: pre;
