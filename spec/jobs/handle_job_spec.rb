@@ -7,7 +7,7 @@ RSpec.describe HandleJob, type: :job do
 
   let(:handle) { '2027/fulcrum.model_id' }
   let(:url_value) { 'http://test.host/concern/monographs/model_id' }
-  let(:model_doc) { { 'id' => 'model_id', 'has_model_ssim' => 'Monograph' } }
+  let(:model_doc) { { 'id' => 'model_id', 'has_model_ssim' => ['Monograph'] } } # NB: `has_model_ssim` cardinality!
 
   before do
     allow(HandleDeleteJob).to receive(:perform_now).with(handle)
@@ -34,16 +34,36 @@ RSpec.describe HandleJob, type: :job do
       expect { job }.to have_enqueued_job(described_class).on_queue("default")
     end
 
-    it 'executes perform' do
-      perform_enqueued_jobs { job }
-      expect(HandleDeleteJob).not_to have_received(:perform_now).with(handle)
-      expect(HandleCreateJob).to have_received(:perform_now).with(handle, url_value)
-      expect(HandleVerifyJob).to have_received(:perform_now).with(handle)
-      expect(HandleDeposit.all.count).to eq(1)
-      HandleDeposit.all.each do |record|
-        expect(record.handle).to eq(handle)
-        expect(record.action).to eq('create')
-        expect(record.verified).to be false
+    context "A Monograph's Solr doc" do
+      it 'executes perform correctly' do
+        perform_enqueued_jobs { job }
+        expect(HandleDeleteJob).not_to have_received(:perform_now).with(handle)
+        expect(HandleCreateJob).to have_received(:perform_now).with(handle, url_value)
+        expect(HandleVerifyJob).to have_received(:perform_now).with(handle)
+        expect(HandleDeposit.all.count).to eq(1)
+        HandleDeposit.all.each do |record|
+          expect(record.handle).to eq(handle)
+          expect(record.action).to eq('create')
+          expect(record.verified).to be false
+        end
+      end
+    end
+
+    context "A FileSet's Solr doc" do
+      let(:url_value) { 'http://test.host/concern/file_sets/model_id' }
+      let(:model_doc) { { 'id' => 'model_id', 'has_model_ssim' => ['FileSet'] } } # NB: `has_model_ssim` cardinality!
+
+      it 'executes perform correctly' do
+        perform_enqueued_jobs { job }
+        expect(HandleDeleteJob).not_to have_received(:perform_now).with(handle)
+        expect(HandleCreateJob).to have_received(:perform_now).with(handle, url_value)
+        expect(HandleVerifyJob).to have_received(:perform_now).with(handle)
+        expect(HandleDeposit.all.count).to eq(1)
+        HandleDeposit.all.each do |record|
+          expect(record.handle).to eq(handle)
+          expect(record.action).to eq('create')
+          expect(record.verified).to be false
+        end
       end
     end
   end

@@ -107,7 +107,7 @@ class HandleJob < ApplicationJob
 
     handles = {}
     docs.each do |doc|
-      handles[HandleNet::FULCRUM_HANDLE_PREFIX + doc['id']] = if doc['has_model_ssim'] == 'Monograph'
+      handles[HandleNet::FULCRUM_HANDLE_PREFIX + doc['id']] = if doc['has_model_ssim']&.first == 'Monograph' # NB: `has_model_ssim` cardinality!
                                                                 Rails.application.routes.url_helpers.hyrax_monograph_url(doc['id'])
                                                               else
                                                                 Rails.application.routes.url_helpers.hyrax_file_set_url(doc['id'])
