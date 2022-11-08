@@ -208,7 +208,7 @@
           </section>
         <% end %>
         <!-- AWARDS -->
-        <% if @presenter.award.present? %>
+        <% if @presenter.awards.present? %>
           <section id="award" class="tab-pane fade award row" role="tabpanel" aria-hidden="true" aria-labelledby="tab-funder" tabindex="0">
             <div class="col-sm-12">
               <div aria-label="award" class="award"><%= render_markdown @presenter.awards %></div>
