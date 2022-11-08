@@ -3,13 +3,15 @@
 module Aptrust
   class Service
     def ingest_status(identifier) # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
-      response = connection.get("items?object_identifier_like=#{identifier}&item_action=Ingest")
+      # For API V3 we need identifiers that look like fulcrum.org/fulcrum.org.michelt-zc77ss45g
+      # and not just fulcrum.org.michelt-zc77ss45g
+      response = connection.get("items?object_identifier=fulcrum.org\/#{identifier}&action=Ingest")
 
       return 'http_error' unless response.success?
 
       results = response.body['results']
 
-      return 'not_found' if results.empty?
+      return 'not_found' if results.blank?
 
       item = results.first
 
