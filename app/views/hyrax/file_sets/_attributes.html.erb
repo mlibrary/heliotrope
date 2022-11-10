@@ -21,7 +21,7 @@
             <td>
               <form>
                 <label id="citable_link" for="permalink" style="display: none;"><%= t('citable_link') %></label>
-                <input type="text" class="form-control" aria-labelledby="citable_link" id="permalink" value="<%= presenter.citable_link %>" readonly="readonly" onclick="this.select(); document.execCommand('copy');" />
+                <input type="text" class="form-control" aria-labelledby="citable_link" id="permalink" aria-label="Citable link for <%= @presenter.title %>" value="<%= presenter.citable_link %>" readonly="readonly" onclick="this.select(); document.execCommand('copy');" />
               </form>
             </td>
           </tr>
