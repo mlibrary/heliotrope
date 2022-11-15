@@ -291,7 +291,7 @@
             <span class="meta-label" id="citable_link"><%= t('citable_link') %></span>
             <form>
               <label for="permalink" style="display: none;"><%= t('citable_link') %></label>
-              <input aria-labelledby="citable_link" type="text" class="form-control" id="permalink" aria-label="citable link" value="<%= @presenter.citable_link %>" readonly="readonly" onclick="this.select(); document.execCommand('copy');" />
+              <input aria-labelledby="citable_link" type="text" class="form-control" id="permalink" aria-label="Citable link for <%= @presenter.title %>" value="<%= @presenter.citable_link %>" readonly="readonly" onclick="this.select(); document.execCommand('copy');" />
             </form>
           </div>
       <% end %>
