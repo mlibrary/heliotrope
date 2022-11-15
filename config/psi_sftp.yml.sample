@@ -1,0 +1,7 @@
+# HELIO-4361
+
+psi_credentials:
+  ftp: publishersolutionsint.exavault.com
+  user: username 
+  password: password
+  root: "/"

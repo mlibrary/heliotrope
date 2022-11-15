@@ -51,6 +51,7 @@ dump.rdb
 /config/aptrust.yml
 /config/crossref.yml
 /config/box.yml
+/config/psi_sftp.yml
 
 # Configuration file for automated systems tests.
 /testing/testing.yml
