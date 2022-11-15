@@ -51,7 +51,13 @@ class AptrustDepositJob < ApplicationJob
     Export::Exporter.new(monograph.noid).extract("#{bag.bag_dir}/data/", true)
 
     # Create manifests
-    bag.manifest!
+    bag.manifest!(algo: 'md5')
+    # HELIO-4380 demo.aptrust.org doesn't like this file for some reason, gives an ingest error:
+    # "Bag contains illegal tag manifest 'sha1'""
+    # APTrust only wants SHA256, or MD5, not SHA1.
+    # 'tagmanifest-sha1.txt' is a bagit gem default, so we need to remove it manually.
+    sha1tag = File.join(bag.bag_dir, 'tagmanifest-sha1.txt')
+    File.delete(sha1tag) if File.exist?(sha1tag)
 
     dirname
   end
