@@ -907,4 +907,32 @@ RSpec.describe Hyrax::FileSetPresenter do
       it { is_expected.to eq ["10:11:40"] }
     end
   end
+
+  describe "#article_volume_issue_date" do
+    subject { presenter.article_volume_issue_date }
+
+    context "issue no volume" do
+      let(:fileset_doc) { SolrDocument.new(id: 'fileset_id', has_model_ssim: ['FileSet'], article_issue_ssim: ["Issue 1"], article_display_date_ssim: ["2022"]) }
+
+      it { is_expected.to eq "Issue 1, 2022" }
+    end
+
+    context "volume no issue" do
+      let(:fileset_doc) { SolrDocument.new(id: 'fileset_id', has_model_ssim: ['FileSet'], article_volume_ssim: ["Volume 1"], article_display_date_ssim: ["2022"]) }
+
+      it { is_expected.to eq "Volume 1, 2022" }
+    end
+
+    context "volume and issue" do
+      let(:fileset_doc) { SolrDocument.new(id: 'fileset_id', has_model_ssim: ['FileSet'], article_issue_ssim: ["Issue 1"], article_volume_ssim: ["Volume 1"], article_display_date_ssim: ["2022"]) }
+
+      it { is_expected.to eq "Volume 1, Issue 1, 2022" }
+    end
+
+    context "no volume, no issue" do
+      let(:fileset_doc) { SolrDocument.new(id: 'fileset_id', has_model_ssim: ['FileSet'], article_display_date_ssim: ["2022"]) }
+
+      it { is_expected.to eq "2022" }
+    end
+  end
 end

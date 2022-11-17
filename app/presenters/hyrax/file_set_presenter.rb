@@ -110,6 +110,19 @@ module Hyrax
       article_title.present?
     end
 
+    def article_volume_issue_date
+      # HELIO-4383
+      if article_issue.present? && article_volume.blank?
+        "#{article_issue}, #{article_display_date}"
+      elsif article_issue.blank? && article_volume.present?
+        "#{article_volume}, #{article_display_date}"
+      elsif article_issue.present? && article_volume.present?
+        "#{article_volume}, #{article_issue}, #{article_display_date}"
+      else
+        article_display_date
+      end
+    end
+
     # Technical Metadata
     def width
       solr_document['width_is']
