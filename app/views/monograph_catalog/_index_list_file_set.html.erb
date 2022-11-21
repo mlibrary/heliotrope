@@ -3,7 +3,7 @@
 <%# default partial to display solr document fields in catalog index view -%>
   <div class="document-metadata">
     <% if file_set_presenter.article_resource? %>
-      <p class="blacklight-vol_issue_date"><%= [file_set_presenter.article_volume, file_set_presenter.article_issue, file_set_presenter.article_display_date].join(", ") %></p>
+      <p class="blacklight-vol_issue_date"><%= file_set_presenter.article_volume_issue_date %></p>
       <p class="blacklight-article_title_tesim"><%= file_set_presenter.article_title %></p>
     <% else %>
       <% index_fields(document).each do |field_name, field| -%>

@@ -7,17 +7,19 @@
           <% if @presenter.article_title.present? %>
             <!-- a resource from a journal article -->
             <span class="section">
-              From <%= @presenter.article_title %>
-              <div>
-                <b><%= [@presenter.article_volume, @presenter.article_issue, @presenter.article_display_date].join(", ") %></b>
-              </div>
-              <div>
-                <%= @presenter.article_creators %>. 
-                <a href="<%= @presenter.article_permalink %>" target="_blank">
-                  <%= @presenter.article_title %>
-                  <span class= "glyphicon glyphicon-share"></span>
-                </a>
-              </div>
+              From "<%= @presenter.article_title %>"
+              <span class="article-section">
+                <div>
+                  <b><%= @presenter.article_volume_issue_date %></b>
+                </div>
+                <div>
+                  <%= @presenter.article_creators %>. 
+                  <a href="<%= @presenter.article_permalink %>" target="_blank">
+                    <%= @presenter.article_title %>
+                    <span class= "glyphicon glyphicon-share"></span>
+                  </a>
+                </div>
+              </span>
             </span>
           <% else %>
             <span class="section">From <em><%= link_to @presenter.parent.title, main_app.monograph_catalog_path(@presenter.monograph_id) %></em>
