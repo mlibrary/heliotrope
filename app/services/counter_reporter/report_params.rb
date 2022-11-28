@@ -38,8 +38,7 @@ module CounterReporter
       case @report_type
       when 'pr_p1'
         @metric_types = %w[Searches_Platform Total_Item_Requests Unique_Item_Requests Unique_Title_Requests]
-        @data_types = %w[Book]
-        @access_types = %w[Controlled]
+        @access_types = %w[Controlled OA_Gold]
         @access_methods = %w[Regular]
       when 'tr_b1'
         @metric_types = %w[Total_Item_Requests Unique_Title_Requests]
