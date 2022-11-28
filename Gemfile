@@ -168,7 +168,7 @@ gem 'prawn', '~> 2.2'
 gem 'redcarpet', '~> 3.5.1'
 gem 'reverse_markdown'
 
-gem 'resque', '~> 2.2.1 '
+gem 'resque', '~> 2.4.0'
 gem 'resque-pool'
 gem 'resque-web', '~> 0.0.12', require: 'resque_web'
 
