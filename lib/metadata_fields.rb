@@ -86,7 +86,7 @@ FILE_SET_FLAG_FIELDS ||=
 
 SYSTEM_METADATA_FIELDS ||=
   [
-    { object: :universal, field_name: 'Published?', multivalued: :no, description: I18n.t('csv.descriptions.published') },
+    { object: :universal, field_name: 'Published?', metadata_name: 'visibility', multivalued: :no, description: I18n.t('csv.descriptions.published') },
   ].freeze
 
 MONO_FILENAME_FLAG ||= '://:MONOGRAPH://:'

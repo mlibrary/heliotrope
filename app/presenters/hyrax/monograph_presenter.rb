@@ -249,7 +249,9 @@ module Hyrax
       # Wherein we hopelessly try to make structure out of an unstructured string
       # Used for sending XML to crossref to make DOIs
       creators = []
-      solr_document["importable_creator_ss"].split(";").each do |creator|
+      return creators if solr_document["creator_tesim"].blank?
+
+      solr_document["creator_tesim"].first.split(/\r?\n/).reject(&:blank?).each do |creator|
         # Last, First (Role)
         creator.match(/(.*?),(.*?)\((.*?)\)$/) do |m|
           creators << OpenStruct.new(lastname: m[1].strip, firstname: m[2].strip, role: m[3])

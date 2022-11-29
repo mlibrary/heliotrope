@@ -21,10 +21,6 @@ class MonographIndexer < Hyrax::WorkIndexer
 
       solr_doc['title_si'] = normalize_for_sort(object&.title&.first)
 
-      # now that the exporter pulls directly from Solr, we need suitable values for creator/contributor
-      solr_doc['importable_creator_ss'] = importable_names('creator')
-      solr_doc['importable_contributor_ss'] = importable_names('contributor')
-
       roleless_creators, creator_orcids = names_and_orcids('creator')
       roleless_contributors, contributor_orcids = names_and_orcids('contributor')
 
@@ -77,11 +73,6 @@ class MonographIndexer < Hyrax::WorkIndexer
     toc = EbookTableOfContentsCache.where(noid: ebook_id).first&.toc
     return [] if toc.nil?
     JSON.parse(toc).map { |entry| entry["title"] }
-  end
-
-  def importable_names(field)
-    value = object.public_send(field).first
-    value.present? ? value.split(/\r?\n/).reject(&:blank?).join('; ') : value
   end
 
   def existing_filesets

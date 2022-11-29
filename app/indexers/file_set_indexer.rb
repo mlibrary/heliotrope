@@ -9,10 +9,6 @@ class FileSetIndexer < Hyrax::FileSetIndexer
       solr_doc['title_si'] = object&.title&.first&.downcase&.gsub(/[^\w\s\d-]/, '')
       solr_doc['resource_type_si'] = object&.resource_type&.first
 
-      # now that the exporter pulls directly from Solr, we need suitable values for creator/contributor
-      solr_doc['importable_creator_ss'] = importable_names('creator')
-      solr_doc['importable_contributor_ss'] = importable_names('contributor')
-
       roleless_creators = multiline_names_minus_role('creator')
       solr_doc['creator_tesim'] = roleless_creators
       solr_doc['creator_sim'] = roleless_creators
@@ -39,11 +35,6 @@ class FileSetIndexer < Hyrax::FileSetIndexer
 
       index_extra_json_properties(solr_doc) if object.extra_json_properties.present?
     end
-  end
-
-  def importable_names(field)
-    value = object.public_send(field).first
-    value.present? ? value.split(/\r?\n/).reject(&:blank?).join('; ') : value
   end
 
   def multiline_names_minus_role(field)

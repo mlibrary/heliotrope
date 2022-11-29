@@ -15,7 +15,7 @@ describe Export::Exporter do
     let(:monograph_id) { 'validnoid' }
 
     context 'monograph not found' do
-      it { expect(subject.monograph).to be_an_instance_of(Sighrax::NullEntity) }
+      it { expect(subject.monograph).to be_nil }
     end
 
     context 'monograph' do
@@ -33,7 +33,7 @@ describe Export::Exporter do
     let(:monograph) { create(:monograph) }
 
     it "initializes" do
-      expect(subject.monograph.noid).to eq monograph.id
+      expect(subject.monograph.id).to eq monograph.id
       expect(subject.columns).to eq :all
     end
   end

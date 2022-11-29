@@ -55,23 +55,15 @@ namespace :heliotrope do
           backup_file = open_backup_file(args.input_file) if !backup_file_created
           backup_file_created = true
 
+          exporter = Export::Exporter.new(nil, :all)
+
+          CSV.open(backup_file, "a") do |csv|
+            csv << exporter.metadata_row(object)
+          end
+
           if object.class == Monograph
-            presenter = Hyrax::PresenterFactory.build_for(ids: [object.id], presenter_class: Hyrax::MonographPresenter, presenter_args: nil).first
-
-            CSV.open(backup_file, "a") do |csv|
-              exporter = Export::Exporter.new(nil)
-              csv << exporter.metadata_row(presenter)
-            end
-
             Hyrax::CurationConcern.actor.update(Hyrax::Actors::Environment.new(object, current_ability, attrs))
           else
-            presenter = Hyrax::PresenterFactory.build_for(ids: [object.id], presenter_class: Hyrax::FileSetPresenter, presenter_args: nil).first
-
-            CSV.open(backup_file, "a") do |csv|
-              exporter = Export::Exporter.new(nil)
-              csv << exporter.metadata_row(presenter)
-            end
-
             Hyrax::CurationConcern.file_set_update_actor.update(Hyrax::Actors::Environment.new(object, current_ability, attrs))
           end
         end

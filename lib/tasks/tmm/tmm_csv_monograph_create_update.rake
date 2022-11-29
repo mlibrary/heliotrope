@@ -107,7 +107,7 @@ namespace :heliotrope do
 
           Hyrax::CurationConcern.actor.create(Hyrax::Actors::Environment.new(monograph, current_ability, attrs))
         elsif monograph.press != 'gabii' # don't edit Gabii monographs with this script
-          if check_for_changes_identifier(monograph, identifier, attrs, row_num)
+          if check_for_changes_identifier(monograph, identifier, attrs, row_num, true)
             backup_file = open_backup_file(input_file) if !backup_file_created
             backup_file_created = true
 
@@ -195,21 +195,21 @@ namespace :heliotrope do
     cleaned_values == [nil] ? nil : cleaned_values
   end
 
-  def check_for_changes_identifier(object, identifier, attrs, row_num)
-    column_names = METADATA_FIELDS.pluck(:metadata_name).zip(METADATA_FIELDS.pluck(:field_name)).to_h
+  def check_for_changes_identifier(object, identifier, attrs, row_num, check_press = false)
+    column_names = (ADMIN_METADATA_FIELDS + METADATA_FIELDS).pluck(:metadata_name).zip(METADATA_FIELDS.pluck(:field_name)).to_h
     changes = false
     changes_message = "Checking #{object.class} #{object.id}, found with #{identifier} on row #{row_num}"
 
     # check press separately, it's not in METADATA_FIELDS
     press_changing = false
-    if object.class == Monograph && object.press != attrs['press']
+    if check_press && object.class == Monograph && object.press != attrs['press']
       changes_message += "\n*** Press changing from #{object.press} to #{attrs['press']} ***"
       press_changing = true
     end
 
     attrs.each do |key, value|
       next if key == 'press'
-      multivalued = METADATA_FIELDS.select { |x| x[:metadata_name] == key }.first[:multivalued]
+      multivalued = (ADMIN_METADATA_FIELDS + METADATA_FIELDS).select { |x| x[:metadata_name] == key }.first[:multivalued]
       current_value = field_value(object, key, multivalued)
 
       # to make the "orderless" array comparison meaningful, we sort the new values just as we do in the...
