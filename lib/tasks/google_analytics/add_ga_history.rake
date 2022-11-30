@@ -61,8 +61,7 @@ def regex_mapping
     Regexp.new("^/concern/file_sets/([a-z0-9]{9})$"),
     Regexp.new("^/concern/monographs/([a-z0-9]{9})$"),
     Regexp.new("^/epub/([a-z0-9]{9})$"),
-    Regexp.new("^/epubs_download_.*?/([a-z0-9]{9})$"),
-    Regexp.new("^/concern/scores/([a-z0-9]{9})$")
+    Regexp.new("^/epubs_download_.*?/([a-z0-9]{9})$")
   ]
 end
 

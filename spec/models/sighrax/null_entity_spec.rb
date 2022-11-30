@@ -77,7 +77,6 @@ RSpec.describe Sighrax::NullEntity, type: :model do
       Sighrax::Model,
       Sighrax::Work,
       Sighrax::Monograph,
-      Sighrax::Score,
       Sighrax::Resource,
       Sighrax::InteractiveMap,
       Sighrax::Ebook,
@@ -119,7 +118,6 @@ RSpec.describe Sighrax::NullEntity, type: :model do
         if [
           Sighrax::Work,
           Sighrax::Monograph,
-          Sighrax::Score
         ].include?(klass)
           # it { expect(subject.children).to eq instance.children }
           if [Sighrax::Monograph].include?(klass)

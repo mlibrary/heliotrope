@@ -123,10 +123,6 @@ class FileSet < ActiveFedora::Base
     index.as :stored_searchable
   end
 
-  # Depending on what "flavor" of file_set you are, this blob of json will have certain fields
-  # See HELIO-2912
-  property :extra_json_properties, predicate: ::RDF::URI.new('http://fulcrum.org/ns#ExtraJSONProperties'), multiple: false
-
   include HeliotropeUniversalMetadata
   include ::Hyrax::FileSetBehavior
   # This must come after the FileSetBehavior because it finalizes the metadata

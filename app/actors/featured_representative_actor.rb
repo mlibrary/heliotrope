@@ -15,7 +15,7 @@ class FeaturedRepresentativeActor < Hyrax::Actors::AbstractActor
       # Apparently this only gets called on Works, not FileSets
       # FileSet deletion is handled in the overridden hyrax FileSetController
       # See HELIO-1499
-      if env.curation_concern.class == Monograph || env.curation_concern.class == Score
+      if env.curation_concern.class == Monograph
         FeaturedRepresentative.where(work_id: env.curation_concern.id).destroy_all
       end
       true

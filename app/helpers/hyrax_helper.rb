@@ -22,8 +22,6 @@ module HyraxHelper
                      session[:preferred_press_view]
                    elsif controller.is_a?(MonographCatalogController)
                      session[:preferred_monograph_view]
-                   elsif controller.is_a?(ScoreCatalogController)
-                     session[:preferred_score_view]
                    else
                      session[:preferred_view]
                    end
