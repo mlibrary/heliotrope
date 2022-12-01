@@ -86,18 +86,28 @@ class OpenAccessEbookTrustJob < ApplicationJob
   def zipup(reports)
     zipfile = File.open(Rails.root.join("tmp", "fulcrum_ebc_reports_zip"), "w")
 
+    # HELIO-4388 Hold tempfiles outside of the zip processes so they aren't
+    # garbage collected before they are used.
+    tmp_files = []
+
     Zip::OutputStream.open(zipfile) { |zos| }
     Zip::File.open(zipfile.path, Zip::File::CREATE) do |zip|
       reports.each do |name, data|
         tmp_report = Tempfile.new
+        tmp_files << tmp_report
         tmp_report.write(data)
         tmp_report.close
         zip.add(flatten_name(name), tmp_report.path)
-        # tmp_report.unlink
       end
     end
 
     zipfile.close
+
+    # Once fully done, explictly delete the tempfiles
+    tmp_files.each do |file|
+      file.unlink
+    end
+
     zipfile
   end
 
