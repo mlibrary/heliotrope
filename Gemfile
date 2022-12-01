@@ -181,7 +181,7 @@ gem "rubyzip", ">= 1.3.0"
 
 gem 'sitemap_generator', '~> 6.1.2'
 
-gem 'sinatra', '~> 2.2.0'
+gem 'sinatra', '~> 2.2.3'
 # CVE-2018-3760
 gem 'sprockets', '~> 3.7.2'
 

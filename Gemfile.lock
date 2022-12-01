@@ -742,7 +742,7 @@ GEM
       rdf
     racc (1.6.0)
     rack (2.2.4)
-    rack-protection (2.2.2)
+    rack-protection (2.2.3)
       rack
     rack-proxy (0.7.0)
       rack
@@ -1022,10 +1022,10 @@ GEM
       json (>= 1.8, < 3)
       simplecov-html (~> 0.10.0)
     simplecov-html (0.10.2)
-    sinatra (2.2.2)
+    sinatra (2.2.3)
       mustermann (~> 2.0)
       rack (~> 2.2)
-      rack-protection (= 2.2.2)
+      rack-protection (= 2.2.3)
       tilt (~> 2.0)
     sitemap_generator (6.1.2)
       builder (~> 3.0)
@@ -1243,7 +1243,7 @@ DEPENDENCIES
   selenium-webdriver (~> 3.141.0)
   signet
   simple_solr_client
-  sinatra (~> 2.2.0)
+  sinatra (~> 2.2.3)
   sitemap_generator (~> 6.1.2)
   skylight (~> 5.0.0.beta4)
   solr_wrapper (>= 1.1, < 3.0)
