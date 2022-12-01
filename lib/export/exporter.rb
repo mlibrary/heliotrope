@@ -8,21 +8,30 @@ module Export
     attr_reader :all_metadata, :monograph, :monograph_presenter, :columns
 
     def initialize(monograph_id, columns = :all, system_metadata = false)
-      @monograph = Sighrax.from_noid(monograph_id)
+      @monograph = if monograph_id.blank?
+                     # the use case here is dumping metadata rows for o individual objects in rails/rake tasks,...
+                     # with no parent monograph involved
+                     nil
+                   else
+                     begin
+                       Monograph.find(monograph_id)
+                     rescue ActiveFedora::ObjectNotFoundError, Ldp::Gone
+                       nil
+                     end
+                   end
       @columns = columns
       @system_metadata = system_metadata
     end
 
     def export
-      return String.new(encoding: "UTF-8") if monograph.instance_of?(Sighrax::NullEntity)
+      return String.new(encoding: "UTF-8") if monograph.blank?
 
       rows = []
-      monograph.children.each do |member|
-        member_presenter = Sighrax.hyrax_presenter(member)
-        rows << metadata_row(member_presenter, monograph_presenter.representative_id)
+      monograph.ordered_members.to_a.each do |member|
+        rows << metadata_row(member, monograph_presenter.representative_id)
       end
 
-      rows << metadata_row(monograph_presenter)
+      rows << metadata_row(monograph)
       buffer = String.new(encoding: "UTF-8")
       CSV.generate(buffer) do |csv|
         write_csv_header_rows(csv)
@@ -33,7 +42,7 @@ module Export
     end
 
     def extract(use_dir = nil, now = false) # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
-      return unless monograph.valid?
+      return if monograph.blank?
 
       job_path = nil
 
@@ -49,7 +58,7 @@ module Export
         FileUtils.mkdir(base) unless Dir.exist?(base)
         press = File.join(base, monograph_presenter.subdomain.to_s)
         FileUtils.mkdir(press) unless Dir.exist?(press)
-        path = File.join(press, monograph.noid.to_s)
+        path = File.join(press, monograph.id.to_s)
         if Dir.exist?(path)
           puts "Overwrite #{path} directory? (Y/n):"
           return unless /y/i.match?(STDIN.getch)
@@ -65,14 +74,14 @@ module Export
       manifest.close
 
       if now
-        OutputMonographFilesJob.perform_now(monograph.noid, job_path)
+        OutputMonographFilesJob.perform_now(monograph.id, job_path)
       else
-        OutputMonographFilesJob.perform_later(monograph.noid, job_path)
+        OutputMonographFilesJob.perform_later(monograph.id, job_path)
       end
     end
 
     def monograph_row
-      metadata_row(monograph_presenter)
+      metadata_row(monograph)
     end
 
     def blank_csv_sheet
@@ -94,14 +103,16 @@ module Export
       csv << row1 << row2
     end
 
-    # made this a public method purely for dumping metadata in rails/rake tasks
+    # made this a public method purely for dumping metadata rows for o individual objects in rails/rake tasks,...
+    # with no parent monograph involved
     def metadata_row(item, parent_rep = nil)
       row = []
-      return row if item.instance_of?(Sighrax::NullEntity)
+      return row if item.blank?
 
-      object_type = item.has_model == 'Monograph' ? :monograph : :file_set
+      object_type = item.has_model == ['Monograph'] ? :monograph : :file_set
+      file_set_presenter = Hyrax::PresenterFactory.build_for(ids: [item.id], presenter_class: Hyrax::FileSetPresenter, presenter_args: nil).first if object_type == :file_set
       all_metadata.each do |field|
-        row << metadata_field_value(item, object_type, field, parent_rep)
+        row << metadata_field_value(item, object_type, field, parent_rep, file_set_presenter)
       end
       row
     end
@@ -109,7 +120,7 @@ module Export
     private
 
       def monograph_presenter
-        @monograph_presenter ||= Sighrax.hyrax_presenter(monograph)
+        @monograph_presenter ||= Hyrax::PresenterFactory.build_for(ids: [monograph.id], presenter_class: Hyrax::MonographPresenter, presenter_args: nil).first
       end
 
       def all_metadata
@@ -120,36 +131,43 @@ module Export
                           fields += SYSTEM_METADATA_FIELDS if @system_metadata
                           (fields).select { |f| %i[universal monograph].include? f[:object] }
                         else
-                          ADMIN_METADATA_FIELDS + METADATA_FIELDS + FILE_SET_FLAG_FIELDS
+                          # the Exporter can be instantiated with no `monograph_id`, to output individual object rows.
+                          # It doesn't make sense to output the FeaturedRepresentative relationship in that case,...
+                          # and no script that uses such object-editing output can set FeaturedRepresentative anyway.
+                          if monograph.present?
+                            ADMIN_METADATA_FIELDS + METADATA_FIELDS + FILE_SET_FLAG_FIELDS
+                          else
+                            ADMIN_METADATA_FIELDS + METADATA_FIELDS
+                          end
                         end
       end
 
-      def metadata_field_value(item, object_type, field, parent_rep) # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
+      def metadata_field_value(item, object_type, field, parent_rep, file_set_presenter = nil) # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
         # this gets around the FileSet's label not matching the original_file's name post-versioning
         # safe navigation is important as we have fileless FileSets in production and specs
-        return file_name(item) if object_type == :file_set && field[:field_name] == 'File Name'
+        return file_name(file_set_presenter) if object_type == :file_set && field[:field_name] == 'File Name'
         return representative_kind_or_cover(item, parent_rep) if object_type == :file_set && field[:field_name] == 'Representative Kind'
         return item_url(item, object_type) if field[:object] == :universal && field[:field_name] == 'Link'
-        return file_set_embed_code(item) if object_type == :file_set && field[:field_name] == 'Embed Code'
+        return file_set_presenter&.embed_code if object_type == :file_set && field[:field_name] == 'Embed Code'
         return published?(item) if field[:field_name] == 'Published?'
         return field_value(item, field[:metadata_name], field[:multivalued]) if field[:object] == :universal || field[:object] == object_type
         return MONO_FILENAME_FLAG if object_type == :monograph && (['label', 'section_title'].include? field[:metadata_name])
       end
 
-      def file_name(item)
+      def file_name(file_set_presenter)
         # ensure no entry appears in the "File Name" column for "fileless FileSets"
-        fileless_fileset(item) ? nil : CGI.unescape(item&.original_name&.first)
+        fileless_fileset(file_set_presenter) ? nil : CGI.unescape(file_set_presenter&.original_name&.first)
       end
 
-      def fileless_fileset(file_set)
-        file_set.external_resource_url.present? || file_set.file_size.blank? || file_set.file_size.zero?
+      def fileless_fileset(file_set_presenter)
+        file_set_presenter.external_resource_url.present? || file_set_presenter.file_size.blank? || file_set_presenter.file_size.zero?
       end
 
       def representative_kind_or_cover(item, parent_rep)
         # I think we can ignore thumbnail_id, should always be the same as representative_id for us
         return 'cover' if parent_rep == item.id
 
-        FeaturedRepresentative.where(file_set_id: item.id, work_id: monograph.noid).first&.kind
+        FeaturedRepresentative.where(file_set_id: item.id, work_id: monograph.id).first&.kind
       end
 
       def item_url(item, item_type)
@@ -161,51 +179,29 @@ module Export
         '=HYPERLINK("' + link + '")'
       end
 
-      def file_set_embed_code(file_set)
-        file_set.embed_code
-      end
-
       def published?(item)
-        item.solr_document["suppressed_bsi"] != true && item.solr_document["visibility_ssi"] == "open"
+        item.visibility == 'open'
       end
 
       def field_value(item, metadata_name, multivalued) # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
-        return if item.public_send(metadata_name).blank?
-
-        value = Array.wrap(item.public_send(metadata_name))
+        value = item.public_send(metadata_name)
+        return if value.blank?
 
         if multivalued == :yes_split
           # Any intended order within a multi-valued field is lost after having been stored in an...
           # `ActiveTriples::Relation`, so I'm arbitrarily sorting them alphabetically on export.
           # Items whose order must be preserved should never be stored in an `ActiveTriples::Relation`.
-          value.sort.join('; ')
+          value.to_a.sort.join('; ')
         elsif multivalued == :yes
           # this is a multi-valued field but we're only using it to hold one value
-          # Because of TitlePresenter, the title value returned by the presenter will be HTML
-          # I don't want to convert HTML to Markdown here, so taking title from the Solr doc
-          case metadata_name
-          when 'title'
-            item.solr_document['title_tesim'].first
-          else
-            value.first
-          end
+          value.first
         elsif multivalued == :yes_multiline
-          # note1: this is a multi-valued field but we're only using the first one to hold a string containing...
-          #        ordered, newline-separated values. Need such to be semi-colon-separated in a cell once again
-          # note2: now making `item` a presenter for speed. Given that there was no clean value on the Solr doc...
-          #        these were specifically indexed for the exporter
-          case metadata_name
-          when 'creator'
-            item.solr_document['importable_creator_ss']
-          when 'contributor'
-            item.solr_document['importable_contributor_ss']
-          else
-            # shouldn't happen as creator/contributor are the only :yes_multiline fields
-            value.first
-          end
+          # note: this is a multi-valued field but we're only using the first one to hold a string containing...
+          #       ordered, newline-separated values. Need such to be semi-colon-separated in a cell once again
+          value.first.split(/\r?\n/).reject(&:blank?).join('; ')
         else
           # https://tools.lib.umich.edu/jira/browse/HELIO-2321
-          metadata_name == 'doi' ? 'https://doi.org/' + value.first : value.first
+          metadata_name == 'doi' ? 'https://doi.org/' + value : value
         end
       end
   end

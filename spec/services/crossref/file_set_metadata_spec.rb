@@ -8,7 +8,6 @@ RSpec.describe Crossref::FileSetMetadata do
                        has_model_ssim: ['Monograph'],
                        title_tesim: ['A Title'],
                        creator_tesim: ["Last, First\nSecondLast, SecondFirst"],
-                       importable_creator_ss: "Last, First; SecondLast, SecondFirst",
                        press_tesim: [press.subdomain],
                        isbn_tesim: ["1234567890 (ebook)", "0987654321 (hardcover)"],
                        date_created_tesim: ['9999'],

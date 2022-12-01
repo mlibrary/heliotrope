@@ -46,13 +46,11 @@ namespace :heliotrope do
     end
 
     CSV.open(file_path, "w") do |csv|
-      object_hits.each_with_index do |object_hit, index|
-        doc = SolrDocument.new(object_hit)
-        presenter = object_hit['has_model_ssim']&.first == 'Monograph' ? Hyrax::MonographPresenter.new(doc, nil) : Hyrax::FileSetPresenter.new(doc, nil)
+      exporter = Export::Exporter.new(nil, :all)
 
-        exporter = Export::Exporter.new(presenter.id, :all)
+      object_hits.each_with_index do |object_hit, index|
         exporter.write_csv_header_rows(csv) if index == 0
-        csv << exporter.metadata_row(presenter)
+        csv << exporter.metadata_row(ActiveFedora::Base.find(object_hit.id))
       end
     end
     # a generic message helps when calling this task from heliotrope:edit_objects_via_csv

@@ -559,7 +559,7 @@ RSpec.describe Hyrax::MonographPresenter do
     let(:mono_doc) {
       SolrDocument.new(id: 'monograph_id',
                        has_model_ssim: ['Monograph'],
-                       importable_creator_ss: "Fett, Boba (bounty hunter); Lane, Lois; Chewbaka")
+                       creator_tesim: ["Fett, Boba (bounty hunter)\nLane, Lois\nChewbaka"])
     }
 
     it "returns firstname, lastname and role (or the default of 'author')" do
