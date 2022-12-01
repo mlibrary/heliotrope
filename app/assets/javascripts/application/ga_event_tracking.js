@@ -253,7 +253,6 @@ $(document).on('turbolinks:load', function() {
     var url = window.location.href.split("?")[0];
     var category = 'press_page';
     if (url.match(/monograph/g)) { category = 'monograph_page' }
-    if (url.match(/score/g)) { category = 'score_page' }
     if (url.match(/file_set/g))  { category = 'file_set_page'  }
     return category
   }

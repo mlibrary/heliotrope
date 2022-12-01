@@ -59,7 +59,7 @@ class Ability
 
   def grant_press_analyst_abiltites
     can :read, Monograph do |m|
-      @user.analyst_presses.pluck(:subdomain).include?(m.press) && !only_scores
+      @user.analyst_presses.pluck(:subdomain).include?(m.press)
     end
 
     can :read, :stats_dashboard do
@@ -69,11 +69,7 @@ class Ability
 
   def grant_press_editor_abilities
     can :manage, Monograph do |m|
-      @user.editor_presses.pluck(:subdomain).include?(m.press) && !only_scores
-    end
-
-    can :manage, Score do
-      @user.editor_presses.pluck(:subdomain).include?(Services.score_press)
+      @user.editor_presses.pluck(:subdomain).include?(m.press)
     end
 
     can :manage, FileSet do |f|
@@ -91,11 +87,7 @@ class Ability
     can :manage, FeaturedRepresentative
 
     can :manage, Monograph do |m|
-      @user.admin_presses.pluck(:subdomain).include?(m.press) && !only_scores
-    end
-
-    can :manage, Score do
-      @user.admin_presses.pluck(:subdomain).include?(Services.score_press)
+      @user.admin_presses.pluck(:subdomain).include?(m.press)
     end
 
     can :manage, FileSet do |f|
@@ -153,9 +145,5 @@ class Ability
 
   def analyst_for?(press)
     @user.analyst_presses.include(press)
-  end
-
-  def only_scores
-    @user.admin_presses.count == 1 && @user.admin_presses.pluck(:subdomain).first == Services.score_press
   end
 end

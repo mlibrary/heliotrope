@@ -1,16 +1,9 @@
 <% provide :page_title, @search_ongoing ? "#{@press.name} results - page #{@response.current_page} of #{@response.total_pages}" : @press.name %>
 <% provide :page_class, 'press' %>
-<%
-works = if @press.subdomain == Services.score_press
-          "Musical Scores"
-        else
-          "Search and Browse Books"
-        end
-%>
 <div id="maincontent">
   <% if has_facet_values?  %>
   <div class="row">
-    <div class="col-sm-12"><h2><%= works %></h2></div>
+    <div class="col-sm-12"><h2>Search and Browse Books</h2></div>
   </div>
   <div class="row">
     <div class="col-sm-3 facets-container">
@@ -22,7 +15,7 @@ works = if @press.subdomain == Services.score_press
   </div>
   <% else %>
   <div class="row">
-    <div class="col-sm-12"><h2><%= works %></h2></div>
+    <div class="col-sm-12"><h2>Search and Browse Books</h2></div>
   </div>
   <div class="row">
     <div class="col-sm-1">&nbsp;</div>

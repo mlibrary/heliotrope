@@ -95,66 +95,52 @@ class PressCatalogController < ::CatalogController
     end
 
     def conditional_blacklight_configuration # rubocop:disable Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity
-      if @press.subdomain == Services.score_press
-        musical_score
-      else
-        if display_works.count >= 9
-          # per page
-          blacklight_config.default_per_page = 15
-          blacklight_config.per_page = [10, 15, 50, 100]
+      if display_works.count >= 9
+        # per page
+        blacklight_config.default_per_page = 15
+        blacklight_config.per_page = [10, 15, 50, 100]
 
-          # facets
-          # Sort HEB facets alphabetically, others by count
-          sort = (@press.subdomain == 'heb') ? 'index' : 'count'
+        # facets
+        # Sort HEB facets alphabetically, others by count
+        sort = (@press.subdomain == 'heb') ? 'index' : 'count'
 
-          if Incognito.developer?(current_actor)
-            # This is replaced with the Access "fake facet", HELIO-3347
-            # blacklight_config.add_facet_field 'open_access_sim', label: "Open Access", limit: 1, url_method: :facet_url_helper, sort: sort
-            blacklight_config.add_facet_field 'funder_sim', label: "Funder", limit: false, url_method: :facet_url_helper, sort: sort
-            blacklight_config.add_facet_field 'subject_sim', label: "Subject", limit: false, url_method: :facet_url_helper, sort: sort
-            blacklight_config.add_facet_field 'creator_sim', label: "Author", limit: false, url_method: :facet_url_helper, sort: sort
-            if @press.subdomain == 'heb'
-              blacklight_config.add_facet_field 'publisher_sim', label: "Publisher", limit: false, url_method: :facet_url_helper, sort: sort
-            end
-            blacklight_config.add_facet_field 'series_sim', label: "Series", limit: false, url_method: :facet_url_helper, sort: sort
-            blacklight_config.add_facet_field 'press_name_sim', label: "Source", limit: false, url_method: :facet_url_helper, sort: sort
-            if Sighrax.platform_admin?(current_actor)
-              blacklight_config.add_facet_field 'product_names_sim', label: "Products", limit: false
-            end
-          else
-            # This is replaced with the Access "fake facet", HELIO-3347
-            # blacklight_config.add_facet_field 'open_access_sim', label: "Open Access", limit: 1, url_method: :facet_url_helper, sort: sort
-            blacklight_config.add_facet_field 'funder_sim', label: "Funder", limit: 5, url_method: :facet_url_helper, sort: sort
-            blacklight_config.add_facet_field 'subject_sim', label: "Subject", limit: 10, url_method: :facet_url_helper, sort: sort
-            blacklight_config.add_facet_field 'creator_sim', label: "Author", limit: 5, url_method: :facet_url_helper, sort: sort
-            if @press.subdomain == 'heb'
-              blacklight_config.add_facet_field 'publisher_sim', label: "Publisher", limit: 5, url_method: :facet_url_helper, sort: sort
-            end
-            blacklight_config.add_facet_field 'series_sim', label: "Series", limit: 5, url_method: :facet_url_helper, sort: sort
-            blacklight_config.add_facet_field 'press_name_sim', label: "Source", limit: 5, url_method: :facet_url_helper, sort: sort
-            if Sighrax.platform_admin?(current_actor)
-              blacklight_config.add_facet_field 'product_names_sim', label: "Products", limit: 5
-            end
+        if Incognito.developer?(current_actor)
+          # This is replaced with the Access "fake facet", HELIO-3347
+          # blacklight_config.add_facet_field 'open_access_sim', label: "Open Access", limit: 1, url_method: :facet_url_helper, sort: sort
+          blacklight_config.add_facet_field 'funder_sim', label: "Funder", limit: false, url_method: :facet_url_helper, sort: sort
+          blacklight_config.add_facet_field 'subject_sim', label: "Subject", limit: false, url_method: :facet_url_helper, sort: sort
+          blacklight_config.add_facet_field 'creator_sim', label: "Author", limit: false, url_method: :facet_url_helper, sort: sort
+          if @press.subdomain == 'heb'
+            blacklight_config.add_facet_field 'publisher_sim', label: "Publisher", limit: false, url_method: :facet_url_helper, sort: sort
           end
-
-          blacklight_config.add_facet_fields_to_solr_request!
+          blacklight_config.add_facet_field 'series_sim', label: "Series", limit: false, url_method: :facet_url_helper, sort: sort
+          blacklight_config.add_facet_field 'press_name_sim', label: "Source", limit: false, url_method: :facet_url_helper, sort: sort
+          if Sighrax.platform_admin?(current_actor)
+            blacklight_config.add_facet_field 'product_names_sim', label: "Products", limit: false
+          end
+        else
+          # This is replaced with the Access "fake facet", HELIO-3347
+          # blacklight_config.add_facet_field 'open_access_sim', label: "Open Access", limit: 1, url_method: :facet_url_helper, sort: sort
+          blacklight_config.add_facet_field 'funder_sim', label: "Funder", limit: 5, url_method: :facet_url_helper, sort: sort
+          blacklight_config.add_facet_field 'subject_sim', label: "Subject", limit: 10, url_method: :facet_url_helper, sort: sort
+          blacklight_config.add_facet_field 'creator_sim', label: "Author", limit: 5, url_method: :facet_url_helper, sort: sort
+          if @press.subdomain == 'heb'
+            blacklight_config.add_facet_field 'publisher_sim', label: "Publisher", limit: 5, url_method: :facet_url_helper, sort: sort
+          end
+          blacklight_config.add_facet_field 'series_sim', label: "Series", limit: 5, url_method: :facet_url_helper, sort: sort
+          blacklight_config.add_facet_field 'press_name_sim', label: "Source", limit: 5, url_method: :facet_url_helper, sort: sort
+          if Sighrax.platform_admin?(current_actor)
+            blacklight_config.add_facet_field 'product_names_sim', label: "Products", limit: 5
+          end
         end
 
-        blacklight_config.default_solr_params[:qf] += ' all_text_timv' if @press.subdomain == 'barpublishing'
-
-        search_or_browse
-        monograph_sort_fields
+        blacklight_config.add_facet_fields_to_solr_request!
       end
-    end
 
-    def musical_score
-      blacklight_config.add_facet_field 'creator_sim', label: 'Composer'
-      blacklight_config.add_facet_field 'octave_compass_sim', label: 'Octave Compass'
-      blacklight_config.add_facet_field 'bass_bells_required_sim', label: 'Bass Bells Required'
-      blacklight_config.add_facet_field 'solo_sim', label: 'Solo'
-      blacklight_config.add_facet_field 'musical_presentation_sim', label: 'Musical Presentation'
-      blacklight_config.add_facet_field 'composer_diversity_sim', label: 'Composer Diversity'
-      blacklight_config.add_facet_field 'appropriate_occasion_sim', label: 'Appropriate Occasion'
+      blacklight_config.default_solr_params[:qf] += ' all_text_timv' if @press.subdomain == 'barpublishing'
+
+      search_or_browse
+      monograph_sort_fields
     end
 
     def search_or_browse

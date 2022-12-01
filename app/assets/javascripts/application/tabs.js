@@ -1,17 +1,15 @@
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // This file is not the easiest to follow but you can take it that most of the top section is to do with adding...
 // ARIA stuff and k/b naviagation for a11y concerns, whereas the bottom part is heliotrope-specific logic that...
-// takes our Monograph/Score catalog customizations into account.
+// takes our Monograph catalog customizations into account.
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //
-// The four places tabs are being used now are:
+// The three places tabs are being used now are:
 // 1) Monograph catalog page:
 //    app/views/monograph_catalog/_index_monograph.html.erb
-// 2) Score catalog page:
-//    app/views/score_catalog/_index_score.html.erb
-// 3) FileSet asset page:
+// 2) FileSet asset page:
 //    app/views/hyrax/file_sets/_attributes.html.erb
-// 4) Press statistics page:
+// 3) Press statistics page:
 //    app/views/press_statistics/index.html.erb
 //
 // Please update if more pages start using tabs.
@@ -27,7 +25,7 @@
 // - browser back button navigates through tab loads as expected (see Hyrax's tabs.js linked below)
 //
 // Based on bugs we've fought previously (numerous times) you will at a minimum need to review these listed...
-// behaviors on eBook Monographs/Score (with TOC tab first in line) and also look at other tab pages lke assets and...
+// behaviors on eBook Monographs (with TOC tab first in line) and also look at other tab pages lke assets and...
 // press statistics.
 //
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

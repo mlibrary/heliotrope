@@ -13,7 +13,6 @@ require_dependency 'sighrax/pdf_ebook'
 require_dependency 'sighrax/platform'
 require_dependency 'sighrax/publisher'
 require_dependency 'sighrax/resource'
-require_dependency 'sighrax/score'
 require_dependency 'sighrax/work'
 
 module Sighrax # rubocop:disable Metrics/ModuleLength
@@ -94,8 +93,6 @@ module Sighrax # rubocop:disable Metrics/ModuleLength
       case entity
       when Monograph
         Hyrax::MonographPresenter.new(SolrDocument.new(entity.send(:data)), current_ability)
-      when Score
-        Hyrax::ScorePresenter.new(SolrDocument.new(entity.send(:data)), current_ability)
       when Resource
         Hyrax::FileSetPresenter.new(SolrDocument.new(entity.send(:data)), current_ability)
       else
@@ -121,8 +118,6 @@ module Sighrax # rubocop:disable Metrics/ModuleLength
       case entity
       when Sighrax::Monograph
         Rails.application.routes.url_helpers.hyrax_monograph_url(entity.noid)
-      when Sighrax::Score
-        Rails.application.routes.url_helpers.hyrax_score_url(entity.noid)
       when Sighrax::Resource
         Rails.application.routes.url_helpers.hyrax_file_set_url(entity.noid)
       else
@@ -142,8 +137,6 @@ module Sighrax # rubocop:disable Metrics/ModuleLength
       def model_factory(noid, data, model_type)
         if /^Monograph$/i.match?(model_type)
           Monograph.send(:new, noid, data)
-        elsif /^Score$/i.match?(model_type)
-          Score.send(:new, noid, data)
         elsif /^FileSet$/i.match?(model_type)
           file_set_factory(noid, data)
         else

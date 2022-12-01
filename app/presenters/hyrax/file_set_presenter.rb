@@ -354,11 +354,6 @@ module Hyrax
       current_ability.can?(:edit, id) || current_ability.can?(:destroy, id) || current_ability.can?(:download, id)
     end
 
-    # Score file_sets things, see HELIO-2912 and the FileSetIndexer
-    def score_version
-      solr_document['score_version_tesim']
-    end
-
     # Returns true if the MIME type is image, or if MIME type is not available,
     # if the file extension is a known image type.
     def probable_image?
@@ -380,8 +375,6 @@ module Hyrax
         case @parent_document["has_model_ssim"].first
         when "Monograph"
           Hyrax::MonographPresenter.new(::SolrDocument.new(@parent_document), current_ability)
-        when "Score"
-          Hyrax::ScorePresenter.new(::SolrDocument.new(@parent_document), current_ability)
         else
           WorkShowPresenter.new(::SolrDocument.new(@parent_document), current_ability)
         end

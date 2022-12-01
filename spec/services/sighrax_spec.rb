@@ -105,12 +105,6 @@ RSpec.describe Sighrax do
             it { is_expected.to be_an_instance_of(Sighrax::Monograph) }
           end
 
-          context 'Score' do
-            let(:model_type) { 'Score' }
-
-            it { is_expected.to be_an_instance_of(Sighrax::Score) }
-          end
-
           context 'Resource' do
             let(:document) { ::SolrDocument.new(id: 'validnoid', has_model_ssim: [model_type], resource_type_tesim: [resource_type]) }
             let(:model_type) { 'FileSet' }
@@ -377,13 +371,6 @@ RSpec.describe Sighrax do
         it { is_expected.to be_an_instance_of(Hyrax::MonographPresenter) }
       end
 
-      context 'Score' do
-        let(:noid) { score.id }
-        let(:score) { create(:public_score) }
-
-        it { is_expected.to be_an_instance_of(Hyrax::ScorePresenter) }
-      end
-
       context 'Resource' do
         let(:noid) { file_set.id }
         let(:file_set) { create(:public_file_set) }
@@ -457,12 +444,6 @@ RSpec.describe Sighrax do
         it { is_expected.to eq "http://test.host/concern/monographs/validnoid" }
       end
 
-      context 'score' do
-        let(:entity) { Sighrax::Score.send(:new, noid, data) }
-
-        it { is_expected.to eq "http://test.host/concern/scores/validnoid" }
-      end
-
       context 'asset' do
         let(:entity) { Sighrax::Resource.send(:new, noid, data) }
 
@@ -489,12 +470,6 @@ RSpec.describe Sighrax do
 
       context 'monograph' do
         let(:entity) { Sighrax::Monograph.send(:new, noid, data) }
-
-        it { is_expected.to eq "https://hdl.handle.net/2027/fulcrum.#{noid}" }
-      end
-
-      context 'score' do
-        let(:entity) { Sighrax::Score.send(:new, noid, data) }
 
         it { is_expected.to eq "https://hdl.handle.net/2027/fulcrum.#{noid}" }
       end

@@ -96,7 +96,6 @@ Hyrax::FileSetsController.class_eval do # rubocop:disable Metrics/BlockLength
         if params[:file_set].key?(:files)
           actor.update_content(uploaded_file_from_path)
         else
-          process_extra_json_properties # heliotrope override
           update_metadata
         end
       elsif params.key?(:files_files) # version file already uploaded with ref id in :files_files array
@@ -109,14 +108,6 @@ Hyrax::FileSetsController.class_eval do # rubocop:disable Metrics/BlockLength
     def uploaded_file_from_path
       uploaded_file = CarrierWave::SanitizedFile.new(params[:file_set][:files].first)
       Hyrax::UploadedFile.create(user_id: current_user.id, file: uploaded_file)
-    end
-
-    # See HELIO-2912. We're trying a thing here...
-    # Special properties for certain flavors of FileSet are added as json
-    def process_extra_json_properties
-      props = {}
-      props[:score_version] = params[:file_set].delete(:score_version) if params[:file_set][:score_version].present?
-      params[:file_set][:extra_json_properties] = props.to_json
     end
 
     def change_thumbnail

@@ -19,8 +19,6 @@ module BreadcrumbsHelper
     case controller_name
     when "press_statistics"
       press_statistics
-    when "score_catalog"
-      work_catalog
     when "monograph_catalog"
       work_catalog
     when "monographs"
@@ -34,11 +32,7 @@ module BreadcrumbsHelper
   private
 
     def file_sets
-      @crumbs << if @presenter.parent.is_a? Hyrax::MonographPresenter
-                   { href: main_app.monograph_catalog_path(@presenter.parent.id), text: @presenter.parent.title, class: "" }
-                 elsif @presenter.parent.is_a? Hyrax::ScorePresenter
-                   { href: main_app.score_catalog_path(@presenter.parent.id), text: @presenter.parent.title, class: "" }
-                 end
+      @crumbs << { href: main_app.monograph_catalog_path(@presenter.parent.id), text: @presenter.parent.title, class: "" }
       @crumbs << { href: "", text: @presenter.title, class: "active" }
     end
 

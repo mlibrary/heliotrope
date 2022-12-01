@@ -204,7 +204,6 @@ en:
   open_access: "Open Access?"
   original_checksum: "Original Checksum"
   pageviews_html: "<strong>%{count}</strong> views since %{date}"
-  performer: "Performer"
   permissions_expiration_date: "Permissions Expiration Date"
   press: "Publisher (Fulcrum subdivision)"
   press_catalog:
@@ -229,10 +228,6 @@ en:
       role: "Role"
       actions: "Actions"
   sample_rate: "Sample Rate"
-  score_catalog:
-    index:
-      show_page_button: "Manage Score and Files"
-      edit_page_button: "Edit Score"
   section: "Section"
   section_title: "Related Section"
   section_titles: "Section Titles"
@@ -311,9 +306,6 @@ en:
         oclc_owi: "OCLC Work Identifier"
         copyright_year: "Copyright Year"
         award: "Award(s)"
-      score:
-        creator: "Composer"
-        license: "Creative Commons License"
     hints:
       defaults:
         article_creator: "Fill this in as you would the creator and contributor field."

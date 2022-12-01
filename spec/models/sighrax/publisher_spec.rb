@@ -129,8 +129,8 @@ RSpec.describe Sighrax::Publisher, type: :model do
       context 'with child work and resource' do
         let(:child_subdomain) { 'child' }
         let(:child_press) { create(:press, subdomain: child_subdomain) }
-        let(:child_score) do
-          create(:public_score, press: child_press.subdomain) do |m|
+        let(:child_monograph) do
+          create(:public_monograph, press: child_press.subdomain) do |m|
             m.ordered_members << child_file_set
             m.save
             m
@@ -141,12 +141,12 @@ RSpec.describe Sighrax::Publisher, type: :model do
         before do
           press.children << child_press
           press.save
-          child_score
+          child_monograph
         end
 
         it { expect(subject.work_noids).to contain_exactly(monograph.id) }
         it { expect(subject.resource_noids).to contain_exactly(file_set.id) }
-        it { expect(subject.work_noids(true)).to contain_exactly(monograph.id, child_score.id) }
+        it { expect(subject.work_noids(true)).to contain_exactly(monograph.id, child_monograph.id) }
         it { expect(subject.resource_noids(true)).to contain_exactly(file_set.id, child_file_set.id) }
       end
     end
