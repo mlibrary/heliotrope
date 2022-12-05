@@ -48,4 +48,44 @@ describe Import::RowData do
       end
     end
   end
+
+  describe "'Published?' value is sanitized, only allowing the relevant Hydra::AccessControls values" do
+    let(:object) { :monograph }
+
+    context "value is 'true'" do
+      let(:row) { { 'Published?' => 'true' } }
+
+      it 'converts to the public visibility value' do
+        subject
+        expect(attrs['visibility']).to eq(Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC)
+      end
+    end
+
+    context "value is 'false'" do
+      let(:row) { { 'Published?' => 'false' } }
+
+      it 'converts to the private visibility value' do
+        subject
+        expect(attrs['visibility']).to eq(Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE)
+      end
+    end
+
+    context "value is blank" do
+      let(:row) { { 'Published?' => '' } }
+
+      it 'disallows, returns `nil`' do
+        subject
+        expect(attrs['visibility']).to be_nil
+      end
+    end
+
+    context "value is random junk" do
+      let(:row) { { 'Published?' => 'BlaH!' } }
+
+      it 'disallows, returns `nil`' do
+        subject
+        expect(attrs['visibility']).to be_nil
+      end
+    end
+  end
 end

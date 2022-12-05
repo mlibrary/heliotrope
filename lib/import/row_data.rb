@@ -16,7 +16,7 @@ module Import
       md = Redcarpet::Markdown.new(Redcarpet::Render::StripDown, space_after_headers: true)
       missing_fields_errors, date_errors = Array.new(2) { [] }
 
-      fields = METADATA_FIELDS.select { |f| [:universal, object].include? f[:object] } + FILE_SET_FLAG_FIELDS
+      fields = (METADATA_FIELDS + SYSTEM_METADATA_FIELDS).select { |f| [:universal, object].include? f[:object] } + FILE_SET_FLAG_FIELDS
       # HELIO-4359 include original noid if @reuse_noids
       fields << ADMIN_METADATA_FIELDS[ADMIN_METADATA_FIELDS.find_index { |item| item[:field_name] == "NOID" }] if @reuse_noids
       fields.each do |field|
@@ -30,6 +30,7 @@ module Import
           field_values = downcase_role(field[:field_name], field_values)
           field_values = map_doi(field[:field_name], field_values)
           field_values = map_cc_license(field[:field_name], field_values)
+          field_values = map_visibility(field[:field_name], field_values)
 
           # at this point some bad values may have been removed. This line will need to be changed if we ever start...
           # using true/false values in metadata instead of yes/no, as false will not pass through.
@@ -84,6 +85,19 @@ module Import
           # `select_all_options` rather than `select_active_options` as, unlike the UI edit forms, we allow all values here
           match = Hyrax::LicenseService.new.select_all_options.find { |license| val.downcase == license[0].downcase }
           match.present? ? match[1] : val
+        end
+      end
+
+      def map_visibility(field_name, field_values)
+        return field_values unless field_name == 'Published?'
+        field_values.map do |val|
+          if val&.strip&.downcase == 'true'
+            Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC
+          elsif val&.strip&.downcase == 'false'
+            Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE
+          else
+            nil
+          end
         end
       end
 

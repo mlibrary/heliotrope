@@ -16,7 +16,6 @@ class AttachImportFilesToWorkJob < ApplicationJob
     @cover_noid = nil
 
     user = User.find_by_user_key(work.depositor) # rubocop:disable Rails/DynamicFindBy
-    work_visibility_attributes = visibility_attributes(work_attributes)
     work_permissions = work.permissions.map(&:to_hash)
 
     files.each_with_index do |file, i|
@@ -26,6 +25,7 @@ class AttachImportFilesToWorkJob < ApplicationJob
           else
             FileSet.create
           end
+
       # actor = Hyrax::Actors::FileSetActor.new(f, user)
       # Unlike Hyrax::Actors::FileSetActor, this will not attach the file_set
       # to the ordered_members array of the work, which is super slow if
@@ -34,20 +34,22 @@ class AttachImportFilesToWorkJob < ApplicationJob
       # add_ordered_members(user, work) See:
       # https://gist.github.com/geekscruff/a9ee3cbddef3e38cf51f94582f6425c6
       actor = Hyrax::Actors::FileSetOrderedMembersActor.new(f, user)
-      actor.create_metadata(work_visibility_attributes)
+      actor.create_metadata(files_attributes[i])
 
       representative_kind = files_attributes[i].delete('representative_kind')
 
       actor.update_metadata(files_attributes[i])
       file.present? ? actor.create_content(file) : external_resource_label_title(f)
-      actor.attach_to_work(work)
+      actor.attach_to_work(work, visibility_attributes(files_attributes[i]))
 
       # external resources are missing out on an asynchronous save from jobs kicked off...
       # in create_content which amazingly *need* to happen after attach_to_work.
       f.save if file.blank?
       actor.file_set.permissions_attributes = work_permissions
       file.update(file_set_uri: actor.file_set.uri) if file.present?
-      new_ordered_members << actor.file_set
+
+      # NB: the reload here is absolutely key to seeing the proper FileSet visibility emerge at the end
+      new_ordered_members << actor.file_set.reload
 
       add_representative(work, f, representative_kind) if representative_kind.present?
     end
