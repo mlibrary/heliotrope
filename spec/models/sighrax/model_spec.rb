@@ -93,19 +93,6 @@ RSpec.describe Sighrax::Model, type: :model do
       it 'equals `modified_date` (Fedora) because `date_modified` (Hyrax) is aliased to this' do
         expect(subject.modified).to eq Time.parse(file_set.modified_date.iso8601)
       end
-
-      context 'date modified' do
-        let(:date_modified) { Time.parse(Time.now.iso8601).utc } # Strip fractions of a second
-
-        before do
-          file_set.date_modified = date_modified
-          file_set.save
-        end
-
-        it do
-          expect(subject.modified).to eq date_modified
-        end
-      end
     end
 
     it { expect(subject.parent).to eq Sighrax::Entity.null_entity }
