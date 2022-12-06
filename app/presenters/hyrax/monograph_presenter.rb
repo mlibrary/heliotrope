@@ -173,6 +173,10 @@ module Hyrax
       authorship_names.flatten.to_sentence(last_word_connector: ' and ')
     end
 
+    def creator_orcids
+      solr_document['creator_orcids_ssim']
+    end
+
     def subdomain
       Array(solr_document['press_tesim']).first
     end
