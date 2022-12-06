@@ -10,8 +10,7 @@ module Import
                 :visibility, :reimporting, :reimport_mono, :reuse_noids, :quiet
 
     def initialize(root_dir: '', user_email: '', monograph_id: '', press: '',
-                   visibility: Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE,
-                   monograph_title: '', quiet: '', reuse_noids: false)
+                   visibility: '', monograph_title: '', quiet: '', reuse_noids: false)
 
       @root_dir = root_dir
       @user_email = user_email
@@ -25,13 +24,14 @@ module Import
         @reimporting = true
       else
         @press_subdomain = press
-        @visibility = visibility
+        @explicit_visibility = visibility.present?
+        @visibility = @explicit_visibility ? visibility : Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE
         @monograph_title = monograph_title
       end
     end
 
     def metadata_field(key)
-      (METADATA_FIELDS + FILE_SET_FLAG_FIELDS).each do |field|
+      (METADATA_FIELDS + FILE_SET_FLAG_FIELDS + SYSTEM_METADATA_FIELDS).each do |field|
         return field if key == field[:field_name]
       end
       nil
@@ -153,12 +153,26 @@ module Import
       attrs['import_uploaded_files_ids'] = uploaded_files.map { |f| f&.id }
       attrs['import_uploaded_files_attributes'] = attrs.delete('files_metadata')
 
+      # If an explicit visibility (likely command line option) was used to instantiate the importer then strip any...
+      # visibility values from the files' metadata. This means they will use the Monograph's visibility as normal.
+      attrs['import_uploaded_files_attributes'].each { |fattr| fattr.delete('visibility') if @explicit_visibility || @reimporting }
+
       if reimporting
+        # Note that the post-import visibility of the Monograph and all newly-imported FileSets will be the same...
+        # as that pre-existing Monograph's visibility when 'reimporting', which is a rare use case in production.
         attrs['visibility'] = reimport_mono.visibility
         Hyrax::CurationConcern.actor.update(Hyrax::Actors::Environment.new(@reimport_mono, Ability.new(user), attrs))
       else
         attrs['press'] = press_subdomain
-        attrs['visibility'] = visibility
+        # Monograph visibility, explicit (command-line) value takes precedence, then CSV value, then default (draft).
+        attrs['visibility'] = if @explicit_visibility
+                                @visibility
+                              elsif attrs['visibility'].present?
+                                attrs['visibility']
+                              else
+                                Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE
+                              end
+
         Hyrax::CurationConcern.actor.create(Hyrax::Actors::Environment.new(Monograph.new, Ability.new(user), attrs))
       end
     end
