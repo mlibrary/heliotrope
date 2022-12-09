@@ -34,6 +34,57 @@ html, body {
   padding: .83em 1em !important;
 }
 
+@media screen and (max-width: 50em) {
+
+  .cozy-container i[class^='icon-'] {
+      font-size: 1.3rem !important;
+  }
+
+  .cozy-container i[class^='icon-chevron-'] {
+      font-size: 1.8em !important;
+  }
+
+  .cozy-container i.icon-comment-square {
+    font-size: 1.5rem !important;
+  }
+
+  .cozy-control button.button--sm.cozy-close.mobile {
+    display: flex;
+    padding: 0 .6em .4em !important;
+  }
+
+  .cozy-control button.button--sm.media,
+  .cozy-control.cozy-container-altmetric,
+  .cozy-control.cozy-container-dimensions {
+    display: none;
+  }
+
+  .cozy-container input[type="text"] {
+    width: auto !important;
+    max-width: 75px;
+  }
+
+  .cozy-control form.search {
+    width: auto;
+    max-width: 100px;
+  }
+
+  .cozy-control button.button--sm {
+    i.icon-menu {
+      padding-bottom: .3em;
+    }
+
+    i.icon-magnifying-glass,
+    i.icon-share-boxed {
+      padding-bottom: .1em;
+    }
+  }
+
+  .cozy-panel-toolbar div.cozy-control:nth-of-type(2) {
+    border-left: 1px solid white;
+  }
+}
+
 /* --- HONEY BEAR --- */
 
 #loadingBar.helio-loading-bar {
