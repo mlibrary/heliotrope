@@ -1,6 +1,12 @@
 # frozen_string_literal: true
 
 Hyrax.config do |config|
+  # We're need to use the Clamby gem instead of ClamAV gem as the latter no longer builds:https://github.com/eagleas/clamav/issues/11
+  # https://github.com/eagleas/clamav/issues/11
+  # I think probably Hyrax will swtich to clamby in version 4.0 but I'm not clear on it.
+  # See https://github.com/samvera/hydra-works/blob/master/lib/hydra/works/virus_scanner.rb and HELIO-3230
+  config.virus_scanner = Hydra::Works::VirusScanner
+
   # Injected via `rails g curation_concerns:work Monograph`
   config.register_curation_concern :monograph
   # Should schema.org microdata be displayed?
