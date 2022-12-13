@@ -328,5 +328,44 @@ RSpec.describe HandleJob, type: :job do
         end
       end
     end
+
+    context '#required_heb_monograph_handles' do
+      subject { job.required_heb_monograph_handles }
+
+      it 'is empty' do
+        is_expected.to be_empty
+      end
+
+      context 'with HEB Monographs' do
+        before do
+          ActiveFedora::SolrService.add({ has_model_ssim: ['Monograph'], id: '000000000',
+                                          press_sim: 'heb', identifier_tesim: ['heb_id: heb01234.0001.001, heb12345.0001.001'] })
+          ActiveFedora::SolrService.commit
+        end
+
+        it 'returns handles' do
+          is_expected.to eq({ "2027/heb01234.0001.001" => "http://test.host/concern/monographs/000000000",
+                              "2027/heb12345.0001.001" => "http://test.host/concern/monographs/000000000",
+                              "2027/heb01234" => "http://test.host/concern/monographs/000000000",
+                              "2027/heb12345" => "http://test.host/concern/monographs/000000000" })
+        end
+
+        context 'with multi-volume HEB Monographs' do
+          before do
+            ActiveFedora::SolrService.add({ has_model_ssim: ['Monograph'], id: '111111111',
+                                            press_sim: 'heb', identifier_tesim: ['heb_id: heb01234.0002.001'] })
+            ActiveFedora::SolrService.commit
+          end
+
+          it 'returns handles with multi-volume title handle pointing to a Blacklight wildcard search' do
+            is_expected.to eq({ "2027/heb01234.0001.001" => "http://test.host/concern/monographs/000000000",
+                                "2027/heb12345.0001.001" => "http://test.host/concern/monographs/000000000",
+                                "2027/heb01234" => "http://test.host/heb?q=heb01234*",
+                                "2027/heb12345" => "http://test.host/concern/monographs/000000000",
+                                "2027/heb01234.0002.001" => "http://test.host/concern/monographs/111111111" })
+          end
+        end
+      end
+    end
   end
 end

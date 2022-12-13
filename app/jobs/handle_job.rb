@@ -60,7 +60,7 @@ class HandleJob < ApplicationJob
     HandleDeposit.where("updated_at <= ?", HandleJob.thirty_days_ago).where(action: 'delete', verified: true).delete_all
 
     # Force create action for all existing models
-    required_handles.each do |handle, url_value|
+    (required_handles.merge(required_heb_monograph_handles)).each do |handle, url_value|
       record = HandleDeposit.find_or_create_by(handle: handle)
       record.touch # rubocop:disable Rails/SkipsModelValidations
       next if /^create$/.match?(record.action) && /^#{Regexp.escape(url_value)}$/i.match?(record.url_value)
@@ -97,7 +97,6 @@ class HandleJob < ApplicationJob
     true
   end
 
-  # in future this will need to include HEB handles etc
   def required_handles
     docs = ActiveFedora::SolrService.query(
       "+(has_model_ssim:Monograph OR has_model_ssim:FileSet)",
@@ -114,6 +113,24 @@ class HandleJob < ApplicationJob
                                                               end
     end
     handles
+  end
+
+  # The HEB Monograph handles logic will *only* be triggered in this nightly-run job. See HELIO-3879.
+  # Creation will happen nightly but deletion will be delayed for 30 days (see explanatory text atop, also comment...
+  # "Force delete action for all untouched records older than 30 days ago").
+  # But deletion is very rare, and the delay probably won't be noticed anyway (e.g. HELIO-4375).
+  def required_heb_monograph_handles
+    docs = ActiveFedora::SolrService.query(
+      "+(has_model_ssim:Monograph AND +press_sim:heb)",
+      fl: %w[id identifier_tesim],
+      rows: 100_000
+    ) || []
+
+    heb_monograph_handles = {}
+    docs.each do |doc|
+      heb_monograph_handles.merge!(HebHandleService.new(doc).handles)
+    end
+    heb_monograph_handles
   end
 
   # Makes unit test easier to write

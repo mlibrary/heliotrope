@@ -113,38 +113,38 @@ RSpec.describe HebHandleService do
       context 'when one HEB ID has no title-level matches among other Monographs' do
         it 'points the title-level handle directly to the Monograph' do
           expect(described_class.new('000000000').title_level_handles)
-            .to eq({ 'https://hdl.handle.net/2027/heb12346' => 'http://test.host/concern/monographs/000000000' })
+            .to eq({ '2027/heb12346' => 'http://test.host/concern/monographs/000000000' })
         end
       end
 
       context 'when one HEB ID has multiple title-level matches among other Monographs' do
         it 'points the title-level handle to the volume-level wildcard search' do
           expect(described_class.new('111111110').title_level_handles)
-            .to eq({ 'https://hdl.handle.net/2027/heb11111' => 'http://test.host/heb?q=heb11111*' })
+            .to eq({ '2027/heb11111' => 'http://test.host/heb?q=heb11111*' })
         end
       end
 
       context 'when multiple HEB IDs have no title-level matches among other Monographs' do
         it 'finds no matches and points all title-level handles directly to the Monograph' do
           expect(described_class.new('111111120').title_level_handles)
-            .to eq({ 'https://hdl.handle.net/2027/heb11122' => 'http://test.host/concern/monographs/111111120',
-                     'https://hdl.handle.net/2027/heb11123' => 'http://test.host/concern/monographs/111111120' })
+            .to eq({ '2027/heb11122' => 'http://test.host/concern/monographs/111111120',
+                     '2027/heb11123' => 'http://test.host/concern/monographs/111111120' })
         end
       end
 
       context 'when one of multiple HEB IDs has title-level matches among other Monographs' do
         it 'points only the matching title-level handle to the volume-level wildcard search' do
           expect(described_class.new('111111130').title_level_handles)
-            .to eq({ 'https://hdl.handle.net/2027/heb11111' => 'http://test.host/heb?q=heb11111*',
-                     'https://hdl.handle.net/2027/heb11124' => 'http://test.host/concern/monographs/111111130' })
+            .to eq({ '2027/heb11111' => 'http://test.host/heb?q=heb11111*',
+                     '2027/heb11124' => 'http://test.host/concern/monographs/111111130' })
         end
       end
 
       context 'when multiple HEB IDs have multiple title-level matches among other Monographs' do
         it 'points all of the matched title-level handles to the volume-level wildcard search' do
           expect(described_class.new('111111140').title_level_handles)
-            .to eq({ 'https://hdl.handle.net/2027/heb11111' => 'http://test.host/heb?q=heb11111*',
-                     'https://hdl.handle.net/2027/heb22222' => 'http://test.host/heb?q=heb22222*' })
+            .to eq({ '2027/heb11111' => 'http://test.host/heb?q=heb11111*',
+                     '2027/heb22222' => 'http://test.host/heb?q=heb22222*' })
         end
       end
     end
@@ -153,18 +153,18 @@ RSpec.describe HebHandleService do
       context 'regardless of title-level matching (or anything else)' do
         it 'points the book-level handle directly to the Monograph' do
           expect(described_class.new('000000000').book_level_handles)
-            .to eq({ 'https://hdl.handle.net/2027/heb12346.0001.001' => 'http://test.host/concern/monographs/000000000' })
+            .to eq({ '2027/heb12346.0001.001' => 'http://test.host/concern/monographs/000000000' })
           expect(described_class.new('111111110').book_level_handles)
-            .to eq({ 'https://hdl.handle.net/2027/heb11111.0001.001' => 'http://test.host/concern/monographs/111111110' })
+            .to eq({ '2027/heb11111.0001.001' => 'http://test.host/concern/monographs/111111110' })
           expect(described_class.new('111111120').book_level_handles)
-            .to eq({ 'https://hdl.handle.net/2027/heb11122.0001.001' => 'http://test.host/concern/monographs/111111120',
-                     'https://hdl.handle.net/2027/heb11123.0001.001' => 'http://test.host/concern/monographs/111111120' })
+            .to eq({ '2027/heb11122.0001.001' => 'http://test.host/concern/monographs/111111120',
+                     '2027/heb11123.0001.001' => 'http://test.host/concern/monographs/111111120' })
           expect(described_class.new('111111130').book_level_handles)
-            .to eq({ 'https://hdl.handle.net/2027/heb11111.0001.001' => 'http://test.host/concern/monographs/111111130',
-                     'https://hdl.handle.net/2027/heb11124.0001.001' => 'http://test.host/concern/monographs/111111130' })
+            .to eq({ '2027/heb11111.0001.001' => 'http://test.host/concern/monographs/111111130',
+                     '2027/heb11124.0001.001' => 'http://test.host/concern/monographs/111111130' })
           expect(described_class.new('111111140').book_level_handles)
-            .to eq({ 'https://hdl.handle.net/2027/heb11111.0001.001' => 'http://test.host/concern/monographs/111111140',
-                     'https://hdl.handle.net/2027/heb22222.0001.001' => 'http://test.host/concern/monographs/111111140' })
+            .to eq({ '2027/heb11111.0001.001' => 'http://test.host/concern/monographs/111111140',
+                     '2027/heb22222.0001.001' => 'http://test.host/concern/monographs/111111140' })
         end
       end
     end
