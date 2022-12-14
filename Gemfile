@@ -92,7 +92,7 @@ gem 'carrierwave', '~> 1.3.2'
 gem 'checkpoint', '~> 1.1.0'
 
 # clamav only in production
-gem 'clamby', '~> 1.5.1', group: :production
+gem 'clamby', group: :production
 
 # use config gem to pull in settings from .yml files
 gem 'config'
