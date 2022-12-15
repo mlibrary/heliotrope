@@ -28,6 +28,7 @@ class HebHandleService
   # Not used right now, but _should_ be used at some stage, as a sanity check. There is a TODO below, but such a...
   # check could instead happen elsewhere in metadata checks/rules.
   def find_duplicate_book_ids
+    return [] if @heb_ids.blank?
     # no other book should have the HEB IDs present in this Monograph's identifier `heb_id:...` entry
     # any heb Monograph *other* than the one with NOID monograph_id using any of these full-book HEB IDs?
     query = "+has_model_ssim:Monograph AND +press_sim:heb AND -id:#{@noid} AND +identifier_tesim:(#{@heb_ids.join(',')})"
