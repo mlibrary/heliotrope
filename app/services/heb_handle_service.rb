@@ -31,7 +31,9 @@ class HebHandleService
     return [] if @heb_ids.blank?
     # no other book should have the HEB IDs present in this Monograph's identifier `heb_id:...` entry
     # any heb Monograph *other* than the one with NOID monograph_id using any of these full-book HEB IDs?
-    query = "+has_model_ssim:Monograph AND +press_sim:heb AND -id:#{@noid} AND +identifier_tesim:(#{@heb_ids.join(',')})"
+    # note: wrapping each @heb_ids with wildcard '*'s because the ':' in heb_id:heb98756.0001.001 is not a word break in a _tesim field
+    # searching `identifier_ssim` instead would also work.
+    query = "+has_model_ssim:Monograph AND +press_sim:heb AND -id:#{@noid} AND +(identifier_tesim:*#{@heb_ids.join('* OR identifier_tesim:*')}*)"
     ActiveFedora::SolrService.query(query, rows: 100_000)
   end
 
@@ -43,7 +45,9 @@ class HebHandleService
     title_level_handles = {}
 
     heb_title_ids.each do |heb_title_id|
-      docs = ActiveFedora::SolrService.query("+has_model_ssim:Monograph AND +press_sim:heb AND -id:#{@noid} AND +identifier_tesim:#{heb_title_id}*", rows: 100_000)
+      # note: wrapping each `heb_title_id` with wildcard '*'s because the ':' in heb_id:heb98756.0001.001 is not a word break in a _tesim field.
+      # searching `identifier_ssim` instead would also work.
+      docs = ActiveFedora::SolrService.query("+has_model_ssim:Monograph AND +press_sim:heb AND -id:#{@noid} AND +identifier_tesim:*#{heb_title_id}*", rows: 100_000)
 
       # If a title has multiple Monographs we will point the title-level handle to a Blacklight search, e.g.:
       # '2027/heb04045' --> 'https://www.fulcrum.org/heb?q=heb04045*'
