@@ -7,8 +7,8 @@ module Opds
     delegate :to_json, to: :to_h
 
     class << self
-      def new_from_monograph(monograph, open_access = true)
-        Publication.send(:new, monograph, open_access)
+      def new_from_monograph(monograph, open_access = true, entity_id = nil)
+        Publication.send(:new, monograph, open_access, entity_id)
       end
 
       def to_iso_639_2(language)
@@ -255,6 +255,7 @@ module Opds
       end
 
       def download_ebook_url(ebook)
+        return Rails.application.routes.url_helpers.download_ebook_url(ebook.noid, entity_id: @entity_id) if @entity_id
         Rails.application.routes.url_helpers.download_ebook_url(ebook.noid)
       end
 
@@ -263,9 +264,10 @@ module Opds
         Riiif::Engine.routes.url_helpers.image_url(monograph.cover.noid, host: Rails.application.routes.url_helpers.root_url, size: width_size_string, format: 'jpg')
       end
 
-      def initialize(monograph, open_access = true)
+      def initialize(monograph, open_access = true, entity_id = nil)
         @monograph = monograph
         @open_access = open_access
+        @entity_id = entity_id
       end
   end
 end
