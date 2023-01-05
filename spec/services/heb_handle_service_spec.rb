@@ -5,14 +5,14 @@ require 'rails_helper'
 RSpec.describe HebHandleService do
   describe '#heb_ids_from_identifier' do
     context "the identifier heb_id entry contains a single HEB ID (vast majority of cases)" do
-      let(:identifier) { ['heb_id: heb12345.0001.001'] }
+      let(:identifier) { ['heb_id:heb12345.0001.001'] }
       it 'extracts the HEB ID' do
         expect(described_class.heb_ids_from_identifier(identifier)).to eq(['heb12345.0001.001'])
       end
     end
 
     context "the identifier heb_id entry contains several HEB IDs (rare)" do
-      let(:identifier) { ['heb_id: heb12345.0001.001, heb22345.0001.001, heb33345.0001.001'] }
+      let(:identifier) { ['heb_id:heb12345.0001.001, heb22345.0001.001, heb33345.0001.001'] }
 
       it 'extracts all of the HEB IDs' do
         expect(described_class.heb_ids_from_identifier(identifier)).to eq(['heb12345.0001.001',
@@ -25,30 +25,30 @@ RSpec.describe HebHandleService do
   describe '#find_duplicate_book_ids' do
     before do
       ActiveFedora::SolrService.add({ has_model_ssim: ['Monograph'], id: '000000000',
-                                      press_sim: 'heb', identifier_tesim: ['heb_id: heb00000.0001.001'] })
+                                      press_sim: 'heb', identifier_tesim: ['heb_id:heb00000.0001.001'] })
       ActiveFedora::SolrService.add({ has_model_ssim: ['Monograph'], id: '111111110',
-                                      press_sim: 'heb', identifier_tesim: ['heb_id: heb11111.0001.001'] })
+                                      press_sim: 'heb', identifier_tesim: ['heb_id:heb11111.0001.001'] })
       3.times do |index|
         ActiveFedora::SolrService.add({ has_model_ssim: ['Monograph'], id: "11111111#{index + 1}",
-                                        press_sim: 'heb', identifier_tesim: ['heb_id: heb11111.0001.001'] })
+                                        press_sim: 'heb', identifier_tesim: ['heb_id:heb11111.0001.001'] })
       end
       ActiveFedora::SolrService.add({ has_model_ssim: ['Monograph'], id: '222222222',
-                                      press_sim: 'heb', identifier_tesim: ['heb_id: heb22222.0001.001', 'heb22233.0001.001'] })
+                                      press_sim: 'heb', identifier_tesim: ['heb_id:heb22222.0001.001', 'heb22233.0001.001'] })
       ActiveFedora::SolrService.add({ has_model_ssim: ['Monograph'], id: '333333330',
-                                      press_sim: 'heb', identifier_tesim: ['heb_id: heb33333.0001.001, heb33344.0001.001'] })
+                                      press_sim: 'heb', identifier_tesim: ['heb_id:heb33333.0001.001, heb33344.0001.001'] })
       3.times do |index|
         ActiveFedora::SolrService.add({ has_model_ssim: ['Monograph'], id: "33333333#{index + 1}",
-                                        press_sim: 'heb', identifier_tesim: ['heb_id: heb33333.0001.001'] })
+                                        press_sim: 'heb', identifier_tesim: ['heb_id:heb33333.0001.001'] })
       end
       ActiveFedora::SolrService.add({ has_model_ssim: ['Monograph'], id: '444444440',
-                                      press_sim: 'heb', identifier_tesim: ['heb_id: heb44444.0001.001, heb44441.0001.001'] })
+                                      press_sim: 'heb', identifier_tesim: ['heb_id:heb44444.0001.001, heb44441.0001.001'] })
       3.times do |index|
         ActiveFedora::SolrService.add({ has_model_ssim: ['Monograph'], id: "44444444#{index + 1}",
-                                        press_sim: 'heb', identifier_tesim: ['heb_id: heb44444.0001.001'] })
+                                        press_sim: 'heb', identifier_tesim: ['heb_id:heb44444.0001.001'] })
       end
       3.times do |index|
         ActiveFedora::SolrService.add({ has_model_ssim: ['Monograph'], id: "55555555#{index + 1}",
-                                        press_sim: 'heb', identifier_tesim: ['heb_id: heb44441.0001.001'] })
+                                        press_sim: 'heb', identifier_tesim: ['heb_id:heb44441.0001.001'] })
       end
       ActiveFedora::SolrService.commit
     end
@@ -87,23 +87,23 @@ RSpec.describe HebHandleService do
   context 'handle methods' do
     before do
       ActiveFedora::SolrService.add({ has_model_ssim: ['Monograph'], id: '000000000',
-                                      press_sim: 'heb', identifier_tesim: ['heb_id: heb12346.0001.001'] })
+                                      press_sim: 'heb', identifier_tesim: ['heb_id:heb12346.0001.001'] })
       ActiveFedora::SolrService.add({ has_model_ssim: ['Monograph'], id: '111111110',
-                                      press_sim: 'heb', identifier_tesim: ['heb_id: heb11111.0001.001'] })
+                                      press_sim: 'heb', identifier_tesim: ['heb_id:heb11111.0001.001'] })
       ActiveFedora::SolrService.add({ has_model_ssim: ['Monograph'], id: '111111120',
-                                      press_sim: 'heb', identifier_tesim: ['heb_id: heb11122.0001.001, heb11123.0001.001'] })
+                                      press_sim: 'heb', identifier_tesim: ['heb_id:heb11122.0001.001, heb11123.0001.001'] })
       ActiveFedora::SolrService.add({ has_model_ssim: ['Monograph'], id: '111111130',
-                                      press_sim: 'heb', identifier_tesim: ['heb_id: heb11111.0001.001, heb11124.0001.001'] })
+                                      press_sim: 'heb', identifier_tesim: ['heb_id:heb11111.0001.001, heb11124.0001.001'] })
       ActiveFedora::SolrService.add({ has_model_ssim: ['Monograph'], id: '111111140',
-                                      press_sim: 'heb', identifier_tesim: ['heb_id: heb11111.0001.001, heb22222.0001.001'] })
+                                      press_sim: 'heb', identifier_tesim: ['heb_id:heb11111.0001.001, heb22222.0001.001'] })
       # in these two loops we're incrementing the HEB ID *volume* number (middle bit in `heb<title>.<volume>.<book>`)
       2.times do |index|
         ActiveFedora::SolrService.add({ has_model_ssim: ['Monograph'], id: "11111111#{index + 1}",
-                                        press_sim: 'heb', identifier_tesim: ["heb_id: heb11111.000#{index + 2}.001"] })
+                                        press_sim: 'heb', identifier_tesim: ["heb_id:heb11111.000#{index + 2}.001"] })
       end
       3.times do |index|
         ActiveFedora::SolrService.add({ has_model_ssim: ['Monograph'], id: "222222222#{index + 1}",
-                                        press_sim: 'heb', identifier_tesim: ["heb_id: heb22222.000#{index + 2}.001"] })
+                                        press_sim: 'heb', identifier_tesim: ["heb_id:heb22222.000#{index + 2}.001"] })
       end
 
       ActiveFedora::SolrService.commit
