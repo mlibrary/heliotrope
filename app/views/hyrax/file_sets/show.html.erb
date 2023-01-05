@@ -4,26 +4,32 @@
 <% else %>
 <% provide :page_header do %>
   <%# render 'shared/survey' %>
-  <!-- breadcrumbs -->
-  <%= render 'shared/breadcrumbs' %>
+  <!-- breadcrumbs. No breadcrumbs for articles, no previous/next links, HELIO-4392-->
+  <% unless @presenter.article_title.present? %>
+    <%= render 'shared/breadcrumbs' %>
 
-  <!-- asset navigation -->
-  <div class="row">
-    <nav class="asset-navigation col-sm-12">
-      <ul class="pager">
-          <li class="previous">
-          <% if @presenter.previous_id? %>
-            <a href="<%= @presenter.previous_id %>" class="previous" data-turbolinks="false"><span class="glyphicon glyphicon-triangle-left" aria-hidden="true"></span> Previous</a>
-          <% end %>
-          </li>
-          <li class="next">
-          <% if @presenter.next_id? %>
-            <a href="<%= @presenter.next_id %>" class="next" data-turbolinks="false">Next <span class="glyphicon glyphicon-triangle-right" aria-hidden="true"></span></a>
-          <% end %>
-          </li>
-      </ul>
-    </nav>
-  </div>
+    <!-- asset navigation -->
+    <div class="row">
+      <nav class="asset-navigation col-sm-12">
+        <ul class="pager">
+            <li class="previous">
+            <% if @presenter.previous_id? %>
+              <a href="<%= @presenter.previous_id %>" class="previous" data-turbolinks="false"><span class="glyphicon glyphicon-triangle-left" aria-hidden="true"></span> Previous</a>
+            <% end %>
+            </li>
+            <li class="next">
+            <% if @presenter.next_id? %>
+              <a href="<%= @presenter.next_id %>" class="next" data-turbolinks="false">Next <span class="glyphicon glyphicon-triangle-right" aria-hidden="true"></span></a>
+            <% end %>
+            </li>
+        </ul>
+      </nav>
+    </div>
+  <% else %>
+    <div class="row">
+      <div class="col-sm-12">&nbsp;</div>
+    </div>
+  <% end %>
 <% end %>
 
   <div id="maincontent" class="row asset">
