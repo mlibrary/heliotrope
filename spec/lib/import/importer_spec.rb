@@ -294,7 +294,7 @@ describe Import::Importer do
 
         expect(monograph.title).to eq ["The Tempest Journal; A Subtitle"]
         expect(f1.article_title).to eq "An Article Title"
-        expect(f1.article_creator).to eq ["Firstname Lastname", "Secondfirst Secondlast"]
+        expect(f1.article_creator).to eq ["Firstname Lastname\nSecondfirst Secondlast"]
         expect(f1.article_permalink).to eq "https://doi.org/10.1/aaa"
         expect(f1.article_volume).to eq "Volume 1"
         expect(f1.article_issue).to eq "Issue 1"
