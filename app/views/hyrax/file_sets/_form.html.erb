@@ -55,7 +55,7 @@
         <%= f.input :allow_download_after_expiration, input_html: { class: 'form-control' } %>
         <%= f.input :tombstone, as: :boolean, checked_value: 'yes', unchecked_value: '' %>
         <%= f.input :tombstone_message, input_html: { class: 'form-control' } %>
-        <%= f.input :article_creator, as: :multi_value, input_html: { multiple: true, value: curation_concern.article_creator.first, class: 'form-control' } %>
+        <%= f.input :article_creator, as: :text, input_html: { multiple: true, rows: '5', value: curation_concern.article_creator.first } %>
         <%= f.input :article_title, input_html: { class: 'form-control' } %>
         <%= f.input :article_permalink, input_html: { class: 'form-control' } %>
         <%= f.input :article_issue, input_html: { class: 'form-control' } %>
