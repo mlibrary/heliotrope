@@ -55,6 +55,13 @@
         <%= f.input :allow_download_after_expiration, input_html: { class: 'form-control' } %>
         <%= f.input :tombstone, as: :boolean, checked_value: 'yes', unchecked_value: '' %>
         <%= f.input :tombstone_message, input_html: { class: 'form-control' } %>
+      </fieldset>
+      <fieldset class="optional">
+        <legend>Journal Resource File Metadata</legend>
+        <b>
+          Only fill in this section's fields for <u>resource files relating to journal articles.</u><br />
+          All of these fields are required for such resources.<br /><br />
+        </b>
         <%= f.input :article_creator, as: :text, input_html: { multiple: true, rows: '5', value: curation_concern.article_creator.first } %>
         <%= f.input :article_title, input_html: { class: 'form-control' } %>
         <%= f.input :article_permalink, input_html: { class: 'form-control' } %>
