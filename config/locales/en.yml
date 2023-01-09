@@ -308,11 +308,12 @@ en:
         award: "Award(s)"
     hints:
       defaults:
+        article_title: "*REQUIRED*"
         article_creator: "Fill this in as you would the creator and contributor field."
-        article_permalink: "You may put any full permalink URL here, which links to an associated journal article."
+        article_permalink: "*REQUIRED* You may put any full permalink URL here, which links to an associated journal article."
         article_volume: "Complete volume information to display, 'Vol. 3' or 'Volume 3' and not just '3'"
         article_issue: "Complete issue information to display, 'Issue 2' or 'No. 2' not just '2'"
-        article_display_date: "Publication date to display, 'Spring 2022' or '2022' or 'June 1, 2022', etc"
+        article_display_date: "*REQUIRED* Publication date to display, 'Spring 2022' or '2022' or 'June 1, 2022', etc."
         closed_captions: "Closed Captions must be formatted as WebVTT captions. <a href='https://developer.mozilla.org/en-US/docs/Web/API/WebVTT_API' target='_blank'>Get help with WebVTT formatting.</a>"
         visual_descriptions: "Visual Descriptions must be formatted as WebVTT captions. <a href='https://developer.mozilla.org/en-US/docs/Web/API/WebVTT_API' target='_blank'>Get help with WebVTT formatting.</a>"
         tombstone: "Check box to tombstone."
