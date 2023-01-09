@@ -139,6 +139,10 @@ module API
 
         private
 
+          def feeds_params
+            params.permit(:filterByEntityId)
+          end
+
           def javascript_escaping(hash_to_json)
             # https://www.thorntech.com/4-things-you-must-do-when-putting-html-in-json/
             #
@@ -199,6 +203,28 @@ module API
             hash_to_json.gsub('\\u003c/', '\\u003c\\/')
           end
 
+          # HELIO-4389 filter access by entity_id if it exists
+          def institution_can_access?(book_products)
+            entity_id = params[:filterByEntityId]
+            return true unless entity_id
+
+            @products ||= accessible_products(entity_id)
+            (book_products & @products).present?
+          end
+
+          def accessible_products(entity_id)
+            @institutions ||= Greensub::Institution.where(entity_id: entity_id)
+            products = []
+            # Subscribed
+            @institutions.each do |inst|
+              products += inst.products.pluck(:id)
+            end
+            # Free to read
+            free_to_read ||= Greensub::Institution.find_by(identifier: Settings.world_institution_identifier)&.products&.pluck(:id)
+            products += free_to_read if free_to_read.present?
+            products
+          end
+
           def umpebc_oa_publications
             rvalue = []
 
@@ -212,7 +238,7 @@ module API
 
             (ActiveFedora::SolrService.query(query, rows: monograph_noids.count, sort: "date_modified_dtsi desc") || []).each do |solr_doc|
               sm = ::Sighrax.from_solr_document(solr_doc)
-              op = ::Opds::Publication.new_from_monograph(sm, true)
+              op = ::Opds::Publication.new_from_monograph(sm, true, params[:filterByEntityId])
               rvalue.append(op.to_h) if op.valid?
             end
 
@@ -232,8 +258,8 @@ module API
 
             (ActiveFedora::SolrService.query(query, rows: monograph_noids.count, sort: "date_modified_dtsi desc") || []).each do |solr_doc|
               sm = ::Sighrax.from_solr_document(solr_doc)
-              op = ::Opds::Publication.new_from_monograph(sm, false)
-              rvalue.append(op.to_h) if op.valid?
+              op = ::Opds::Publication.new_from_monograph(sm, false, params[:filterByEntityId])
+              rvalue.append(op.to_h) if op.valid? && (institution_can_access?(solr_doc["products_lsim"]) || sm.open_access?)
             end
 
             rvalue
@@ -248,7 +274,7 @@ module API
 
             (ActiveFedora::SolrService.query("+press_sim:#{subdomain} AND +visibility_ssi:open", rows: 100_000, sort: "date_modified_dtsi desc") || []).each do |solr_doc|
               sm = ::Sighrax.from_solr_document(solr_doc)
-              op = ::Opds::Publication.new_from_monograph(sm, true)
+              op = ::Opds::Publication.new_from_monograph(sm, true, params[:filterByEntityId])
               rvalue.append(op.to_h) if op.valid?
             end
 
