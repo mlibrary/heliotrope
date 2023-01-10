@@ -102,6 +102,25 @@ module Hyrax
       end
     end
 
+    def unreverse_names(comma_separated_names)
+      forward_names = []
+      comma_separated_names.each { |n| forward_names << unreverse_name(n) }
+      forward_names
+    end
+
+    def unreverse_name(comma_separated_name)
+      comma_separated_name.split(',').map(&:strip).reverse.join(' ')
+    end
+
+    def article_authors
+      # We want the same data entry/UI/CSV file behavior for article_creator as regular creator/contributor fields,
+      # i.e. multi-valued ActiveFedora fields where we only use the first value, and separate name entries within...
+      # that one with newlines. The splitting here is done in the indexers for the regular creator/contributor fields,
+      # for historical reasons. Those values are used in so many places in so many ways.
+      authorship_names = [unreverse_names(solr_document.article_creator&.first&.split(/\r?\n/)&.reject(&:blank?)&.map(&:strip))]
+      authorship_names.flatten.join(', ')
+    end
+
     def article_creators
       article_creator.join(", ")
     end

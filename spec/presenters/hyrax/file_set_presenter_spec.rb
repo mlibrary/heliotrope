@@ -908,6 +908,37 @@ RSpec.describe Hyrax::FileSetPresenter do
     end
   end
 
+  describe '#article_authors' do
+    subject { presenter.article_authors }
+
+    context 'nothing in article_creator' do
+      let(:fileset_doc) { SolrDocument.new(id: 'fileset_id', has_model_ssim: ['FileSet'], article_creator_tesim: ['']) }
+
+      it { is_expected.to eq '' }
+    end
+
+    context 'one author name in article_creator' do
+      let(:fileset_doc) { SolrDocument.new(id: 'fileset_id', has_model_ssim: ['FileSet'],
+                                           article_creator_tesim: ['Bob, Billy']) }
+
+      it { is_expected.to eq 'Billy Bob' }
+    end
+
+    context 'two author names in article_creator' do
+      let(:fileset_doc) { SolrDocument.new(id: 'fileset_id', has_model_ssim: ['FileSet'],
+                                           article_creator_tesim: ["Bob, Billy\nO'Lantern, Jack"]) }
+
+      it { is_expected.to eq "Billy Bob, Jack O'Lantern" }
+    end
+
+    context 'three author names in article_creator' do
+      let(:fileset_doc) { SolrDocument.new(id: 'fileset_id', has_model_ssim: ['FileSet'],
+                                           article_creator_tesim: ["Bob, Billy\nO'Lantern, Jack\r\nDoe, Jane"]) }
+
+      it { is_expected.to eq "Billy Bob, Jack O'Lantern, Jane Doe" }
+    end
+  end
+
   describe "#article_volume_issue_date" do
     subject { presenter.article_volume_issue_date }
 

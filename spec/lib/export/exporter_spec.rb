@@ -162,4 +162,22 @@ describe Export::Exporter do
       end
     end
   end
+
+  describe 'FileSet creator, contributor and article_creator' do
+    # for ease of comparison with output (and specs above) we'll pass the generated array through CSV.generate_line
+    subject { CSV.generate_line(described_class.new(nil).metadata_row(file_set)) }
+
+    let(:file_set) { create(:file_set, creator: ["First, Ms Joan (editor)\nSecond, Mr Tom (editor)\nThird Author, Lady"], contributor: ["Doe, Jane (illustrator)\nJoe, G.I."], article_creator: ["Bob, Billy\nO'Lantern, Jack\r\nDoe, Jane"]) }
+    let(:expected) do
+      <<~eos
+        #{file_set.id},,"=HYPERLINK(""#{Rails.application.routes.url_helpers.hyrax_file_set_url(file_set)}"")",,#{file_set.title.first},#{file_set.resource_type.first},,,,,,,,,,,,,,,,,,,,,"First, Ms Joan (editor); Second, Mr Tom (editor); Third Author, Lady","Doe, Jane (illustrator); Joe, G.I.",,#{file_set.sort_date},,,,,,,,,,,,,,,,,,,,,,,,,,,,,,"Bob, Billy; O'Lantern, Jack; Doe, Jane",,,,
+      eos
+    end
+
+    it 'outputs a row containing the correct field metadata in semi-colon-separated, "Fulcrum CSV"-style format' do
+      actual = subject
+      expect(actual.empty?).to be false
+      expect(actual).to match expected
+    end
+  end
 end

@@ -71,7 +71,7 @@ METADATA_FIELDS ||=
     { object: :monograph, field_name: 'Copyright Year', metadata_name: 'copyright_year', required: false, multivalued: :no, date_format: true, description: I18n.t('csv.descriptions.copyright_year') },
     { object: :monograph, field_name: 'Award(s)', metadata_name: 'award', required: false, multivalued: :yes_split, description: I18n.t('csv.descriptions.award') },
     { object: :file_set, field_name: 'Article Title', metadata_name: 'article_title', required: false, multivalued: :no, description: I18n.t('csv.descriptions.article_title') },
-    { object: :file_set, field_name: 'Article Creator(s)', metadata_name: 'article_creator', required: false, multivalued: :yes_split, description: I18n.t('csv.description.article_creator') },
+    { object: :file_set, field_name: 'Article Creator(s)', metadata_name: 'article_creator', required: false, multivalued: :yes_multiline, description: I18n.t('csv.description.article_creator') },
     { object: :file_set, field_name: 'Article Permalink', metadata_name: 'article_permalink', required: false, multivalued: :no, description: I18n.t('csv.description.article_permalink') },
     { object: :file_set, field_name: 'Article Volume', metadata_name: 'article_volume', required: false, multivalued: :no, description: I18n.t('csv.description.article_volume') },
     { object: :file_set, field_name: 'Article Issue', metadata_name: 'article_issue', required: false, multivalued: :no, description: I18n.t('csv.description.article_issue') },
