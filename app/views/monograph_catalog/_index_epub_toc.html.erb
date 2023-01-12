@@ -5,6 +5,9 @@
   princess_de_cleves = @presenter.subdomain == 'leverpress' && (@presenter.isbn.any? { |isbn| isbn.delete("^0-9") == '9781643150383' })
   show_limit = 13  # only show the first 14 intervals/chapters by default, HELIO-4245
 %>
+<%# A wrapper div whose closing tag below will control where the browser _might_ automagically close any li/ul... %>
+<%# tags we've left unmatched. Which is something that may be happening on complex/nested or broken ToC's See below. %>
+<div id="toc-container-keep">
   <% ebook_presenter.intervals.each_with_index do |interval, index| %>
     <% if interval.level > level %>
       <% level += 1 %>
@@ -50,6 +53,9 @@
   <% end %>
   </li>
 </ul>
+<%# When the browser reaches this closing "wrapper" div tag it will 'repair' the DOM by automagically closing any... %>
+<%# unmatched ul/li tags left unclosed on complex/nested or broken ToC's. %>
+</div>
 <% if ebook_presenter.intervals.count > show_limit %>
   <div class="text-center">
     <button class="btn btn-default" id="show-more">Display full Table of Contents</button>
@@ -66,7 +72,7 @@
       hidden = false;
     } else {
       $(".can-be-hidden").attr('style', 'display: none');
-      $(".can-be-hidden").attr('aira-hidden', 'true');
+      $(".can-be-hidden").attr('aria-hidden', 'true');
       moreButton.innerHTML = "Display full Table of Contents";
       hidden = true;
     }
