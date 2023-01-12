@@ -11,7 +11,7 @@ class PressesController < ApplicationController
     end
 
     authorize!(:index, Press)
-    @presses = Press.all
+    @presses = Press.all.sort_by { |press| press.name.downcase }
   end
 
   def new
