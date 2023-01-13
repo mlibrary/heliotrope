@@ -50,9 +50,16 @@
         <% end %>
       <% end %>
     </div>
+    <%# The final interval might not have a level == 1, it could be arbitrarily nested in which case we need... %>
+    <%# to close any extra nested lists too, to finalize everything. %>
+    <% if index == ebook_presenter.intervals.size - 1 %>
+      <% while level > 0 %>
+        <% level -= 1 %>
+        </ul>
+        </li>
+      <% end %>
+    <% end %>
   <% end %>
-  </li>
-</ul>
 <%# When the browser reaches this closing "wrapper" div tag it will 'repair' the DOM by automagically closing any... %>
 <%# unmatched ul/li tags left unclosed on complex/nested or broken ToC's. %>
 </div>
