@@ -14,6 +14,8 @@ namespace :heliotrope do
           uploaded_file.user_id = batch_user_id
           uploaded_file.save!
         end
+        # remove associated API request rows
+        APIRequest.where(user_id: user.id).delete_all
         user.destroy # also removed associate roles thanks to `dependent: :destroy`
       else
         puts "User #{arg} not found. Metadata checks will proceed."
