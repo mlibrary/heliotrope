@@ -41,18 +41,39 @@ namespace :heliotrope do
     Rails.logger.info("clean_cache cleaned up cache")
 
 
-    # 2. IIIF stores it's "base" images in tmp/network_files
-    #    These should be periodically cleaned up as well
+    # 2. IIIF stores its "base"/full images in tmp/network_files
+    #    See HELIO-4398. Only files that are no longer in Solr, for whatever reason, will be deleted.
     network_files_path = Rails.root.join('tmp', 'network_files')
+
+    image_urls = []
+
+    # Grab all FileSet docs and then whittle them down in to image formats while grabbing the `original_file_id_ssi`...
+    # value (Fedora path) that will allow us to figure out what the equivalent RIIIF cached file name would be.
+    #
+    # Note that using an all-in-one Solr query to search for FileSets with image file extensions is not reliable, I...
+    # guess due to stemming/tokenization. Filenames containing underscores are among those not returned by such a query.
+    # Only about half of expected images are returned. Hence the `any?` in the loop instead.
+    docs = ActiveFedora::SolrService.query('+has_model_ssim:FileSet', fl: ['file_size_lts', 'label_tesim', 'original_file_id_ssi'], rows: 100000)
+    docs.each do |doc|
+      image_urls << doc['original_file_id_ssi'] if doc['original_file_id_ssi'].present? &&
+        %w[.bmp .gif .jp2 .jpeg .jpg .png .tif .tiff].any? { |image_extension| doc['label_tesim']&.first&.strip&.end_with? image_extension }
+    end
+    image_urls.uniq!
+
+    # Convert to full Fedora path and MD5 value used for the cached files' names.
+    riiif_cached_file_names = image_urls.map { |url| Digest::MD5.hexdigest(ActiveFedora::Base.id_to_uri(CGI.unescape(url))) }.uniq
 
     Dir.foreach(network_files_path) do |f|
       file = "#{network_files_path}/#{f}"
 
-      # We track modified dates of these, so new images are cached if the modifed date changes.
-      # So there's no real reason to delete them. But I don't know. I guess do it monthly to
-      # match https://github.com/mlibrary/heliotrope/blob/master/config/initializers/riiif_initializer.rb#L31
-      # I'm not really sure this is neccessary...
-      if File.mtime(file) < 30.days.ago && File.file?(file)
+      # Anything that has been seen in Solr in the past 30 days is kept. This also makes it safe for network...
+      # glitches, Solr outages, reindexing the core etc. Only image files that have been deleted from the system...
+      # will be removed here. This will eventually take our disk space usage up to over 100GB, but right now we're...
+      # using 38GB and still getting occasional Puma overload from not caching enough, so it's a price worth paying.
+      # aside: when a new version of an image is uploaded we delete the RIIIF base image in CharacterizeJob.
+      if riiif_cached_file_names.include? f
+        FileUtils.touch(file)
+      elsif File.atime(file) < 30.days.ago && File.file?(file)
         Rails.logger.info("clean_cache deleted: #{file}")
         File.delete(file)
       end
