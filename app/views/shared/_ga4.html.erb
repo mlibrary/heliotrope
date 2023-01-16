@@ -1,3 +1,4 @@
+<!-- render GA4 -->
 <% if Settings.host == "heliotrope-preview.hydra.lib.umich.edu" %>
   <!-- HELIO-4224 -->
   <!-- This is hard coded and temporary and only for preview -->
@@ -9,5 +10,60 @@
     gtag('js', new Date());
 
     gtag('config', 'G-RDQZEZQ73K');
+  </script>
+<% end %>
+
+<% if Rails.env.development? %>
+  <% ga4_id = Rails.application.secrets.google_analytics_4_id %>
+  <% if ga4_id.present? %>
+    <% ga4_ids = press_presenter.present? ? press_presenter.all_google_analytics_4 : [] %>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=<%= ga4_id %>"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', '<%= ga4_id %>');
+      <% ga4_ids.each do |id| %>
+        gtag('config', '<%= id %>');
+      <% end %>
+    </script>
+  <% end %>
+<% end %>
+
+<% if (Rails.application.secrets.google_analytics_4_id.present?) && (Settings.host == "www.fulcrum.org") && (controller.current_institutions.map(&:identifier) & ["490", "2405", "2334", "2402"]).empty? %>
+<%# production GA4 with institution based exclusions %>
+<%# no GA for staff (490) or monitoring (2405) in production, HELIO-4090. Also: LOCKSS/CLOCKSS or Google Scholar, HELIO-4122 %>
+<% ga4_id = Rails.application.secrets.google_analytics_4_id %>
+<% ga4_ids = press_presenter.present? ? press_presenter.all_google_analytics_4 : [] %>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=<%= ga4_id %>"></script>
+  <script type="text/javascript">
+    // Wait until the cookie is set via user interaction
+    // and only then get Analytics under way.
+    (async() => {
+      while(!Cookies.get('um_cookie_consent'))
+        await new Promise(resolve => setTimeout(resolve, 1000));
+      setup_ga4();
+    })();
+
+    function setup_ga4() {
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments)};
+      gtag('js', new Date());
+
+      var allow_cookies = Cookies.get('um_cookie_consent') || 'na';
+
+      if (allow_cookies == 'deny' || allow_cookies == 'dismiss') {
+        gtag('config', '<%= ga4_id %>', { 'anonymize_ip': true });
+        <% ga4_ids.each do |id| %>
+          gtag('config', '<%= id %>', { 'anonymize_ip': true });
+        <% end %>
+      } else { 
+        gtag('config', '<%= ga4_id %>');\
+        <% ga4_ids.each do |id| %>
+          gtag('config', '<%= id %>');
+        <% end %>
+      }
+    }
   </script>
 <% end %>

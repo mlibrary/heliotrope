@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_10_20_221742) do
+ActiveRecord::Schema.define(version: 2023_01_13_175128) do
 
   create_table "api_requests", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.integer "user_id"
@@ -441,6 +441,7 @@ ActiveRecord::Schema.define(version: 2022_10_20_221742) do
     t.boolean "aboutware", default: false
     t.boolean "interval", default: false
     t.text "tombstone_message"
+    t.string "google_analytics_4"
     t.index ["parent_id"], name: "index_presses_on_parent_id"
   end
 
