@@ -71,7 +71,7 @@ class PsiReportJob < ApplicationJob
           c.created_at.strftime("%Y-%m-%d %H:%M:%S"),
           "request",
           which_doi(c, monographs, file_sets),
-          monographs[c.parent_noid]&.publisher.first,
+          monographs[c.parent_noid]&.publisher&.first,
           monographs[c.parent_noid]&.page_title,
           creators(monographs[c.parent_noid]),
           chapter,
@@ -97,12 +97,13 @@ class PsiReportJob < ApplicationJob
   end
 
   def creators(presenter)
+    return "" if presenter&.creator.blank?
     presenter.creator.join(";") # no spaces per the example in HELIO-4361
   end
 
 
   def orcids(presenter)
-    return "" if presenter.creator_orcids.blank?
+    return "" if presenter&.creator_orcids.blank?
     presenter.creator_orcids.join(";")
   end
 
