@@ -35,7 +35,7 @@ gem 'jbuilder', '~> 2.5'
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
 
-gem 'rack', '~> 2.2.3'
+gem 'rack', '~> 2.2.6'
 
 # HELIO-2404 APTRUST PRESERVATION
 gem 'bagit'
