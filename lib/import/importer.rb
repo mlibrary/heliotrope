@@ -30,26 +30,31 @@ module Import
       end
     end
 
+    # TODO: remove this if/when import() is rewritten to use CSVParser
     def metadata_field(key)
-      (METADATA_FIELDS + FILE_SET_FLAG_FIELDS + SYSTEM_METADATA_FIELDS).each do |field|
+      (METADATA_FIELDS + FILE_SET_FLAG_FIELDS).each do |field|
         return field if key == field[:field_name]
       end
       nil
     end
 
+    # TODO: remove this if/when import() is rewritten to use CSVParser
     def metadata_field_value(field, value)
+      return (value == 'true' ? 'open' : 'restricted') if field[:metadata_name] == 'visibility'
       return value if field[:multivalued] == :no
       return [value] if field[:multivalued] == :yes
       return value.split(';') if value.present?
       []
     end
 
+    # TODO: remove this if/when import() is rewritten to use CSVParser
     def metadata_monograph_field?(key)
       field = metadata_field(key)
       return field[:object] != :file_set if field.present?
       false
     end
 
+    # TODO: remove this if/when import() is rewritten to use CSVParser
     def metadata_file_set_field?(key)
       field = metadata_field(key)
       return field[:object] != :monograph if field.present?
@@ -75,6 +80,9 @@ module Import
       FeaturedRepresentative.create!(work_id: monograph.id, file_set_id: file_set.id, kind: representative_kind)
     end
 
+    # TODO: see if this method, which makes up part of the currently-unused/experimental UI "manifest"...
+    # download/edit/upload workflow, can be rewritten to use CSVParser. Right now it deviates and does not map...
+    # all the fields as intended.
     def import(manifest) # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
       return false if @reimport_mono.blank?
       monograph = @reimport_mono
@@ -90,7 +98,7 @@ module Import
           next if field.blank? || value.blank?
           if noid == monograph.id
             if metadata_monograph_field?(key)
-              monograph[field[:metadata_name]] = metadata_field_value(field, value)
+              monograph.send("#{field[:metadata_name]}=", metadata_field_value(field, value))
               monograph.save
             end
           elsif metadata_file_set_field?(key)
@@ -98,7 +106,7 @@ module Import
             if key == 'Representative Kind'
               set_representative_or_cover(monograph, file_set, value.strip.downcase)
             else
-              file_set[field[:metadata_name]] = metadata_field_value(field, value)
+              file_set.send("#{field[:metadata_name]}=", metadata_field_value(field, value))
               file_set.save
             end
           end

@@ -10,7 +10,9 @@ ADMIN_METADATA_FIELDS ||=
     { object: :universal, field_name: 'NOID', metadata_name: 'id', required: true, multivalued: :no, description: I18n.t('csv.descriptions.id') },
     { object: :file_set, field_name: 'File Name', metadata_name: 'label', required: true, multivalued: :no, description: I18n.t('csv.descriptions.label') },
     { object: :universal, field_name: 'Link', metadata_name: 'url', required: true, multivalued: :no, description: I18n.t('csv.descriptions.url') },
-    { object: :file_set, field_name: 'Embed Code', multivalued: :no, description: I18n.t('csv.descriptions.embed_code') }
+    { object: :file_set, field_name: 'Embed Code', multivalued: :no, description: I18n.t('csv.descriptions.embed_code') },
+    { object: :universal, field_name: 'Date Uploaded', metadata_name: 'date_uploaded', required: true, multivalued: :no, description: I18n.t('csv.descriptions.date_uploaded') },
+    { object: :universal, field_name: 'Date Modified', metadata_name: 'date_modified', required: true, multivalued: :no, description: I18n.t('csv.descriptions.date_modified') },
   ].freeze
 
 # ActiveFedora fields we allow folks to set
@@ -55,6 +57,7 @@ METADATA_FIELDS ||=
     { object: :monograph, field_name: 'Previous Edition', metadata_name: 'previous_edition', multivalued: :no, description: I18n.t('csv.descriptions.previous_edition') },
     { object: :monograph, field_name: 'Next Edition', metadata_name: 'next_edition', multivalued: :no, description: I18n.t('csv.descriptions.next_edition') },
     { object: :file_set, field_name: 'Keywords', metadata_name: 'keywords', required: false, multivalued: :yes_split, description: I18n.t('csv.descriptions.keywords') },
+    { object: :monograph, field_name: 'Section Titles', metadata_name: 'section_titles', required: false, multivalued: :no, description: I18n.t('csv.descriptions.section_titles') },
     { object: :file_set, field_name: 'Section', metadata_name: 'section_title', required: false, multivalued: :yes_split, description: I18n.t('csv.descriptions.section_title') },
     { object: :universal, field_name: 'Language', metadata_name: 'language', required: false, multivalued: :yes_split, description: I18n.t('csv.descriptions.language') },
     { object: :file_set, field_name: 'Transcript', metadata_name: 'transcript', required: false, multivalued: :no, description: I18n.t('csv.descriptions.transcript') },
@@ -75,18 +78,16 @@ METADATA_FIELDS ||=
     { object: :file_set, field_name: 'Article Permalink', metadata_name: 'article_permalink', required: false, multivalued: :no, description: I18n.t('csv.description.article_permalink') },
     { object: :file_set, field_name: 'Article Volume', metadata_name: 'article_volume', required: false, multivalued: :no, description: I18n.t('csv.description.article_volume') },
     { object: :file_set, field_name: 'Article Issue', metadata_name: 'article_issue', required: false, multivalued: :no, description: I18n.t('csv.description.article_issue') },
-    { object: :file_set, field_name: 'Article Display Date', metadata_name: 'article_display_date', required: false, multivalued: :no, description: I18n.t('csv.description.article_display_date') }
+    { object: :file_set, field_name: 'Article Display Date', metadata_name: 'article_display_date', required: false, multivalued: :no, description: I18n.t('csv.description.article_display_date') },
+    { object: :monograph, field_name: 'Press', metadata_name: 'press', multivalued: :no, description: I18n.t('csv.descriptions.press') },
+    { object: :universal, field_name: 'Published?', metadata_name: 'visibility', multivalued: :no, description: I18n.t('csv.descriptions.published') },
+    { object: :universal, field_name: 'Date Published on Fulcrum', metadata_name: 'date_published', multivalued: :yes, description: I18n.t('csv.descriptions.date_published') },
 ].freeze
 
 # Any fields related to "representative" relationships between FileSets and their parent Monograph
 FILE_SET_FLAG_FIELDS ||=
   [
     { object: :file_set, field_name: 'Representative Kind', metadata_name: 'representative_kind', required: false, multivalued: :no, description: I18n.t('csv.descriptions.representative_kind') }
-  ].freeze
-
-SYSTEM_METADATA_FIELDS ||=
-  [
-    { object: :universal, field_name: 'Published?', metadata_name: 'visibility', multivalued: :no, description: I18n.t('csv.descriptions.published') },
   ].freeze
 
 MONO_FILENAME_FLAG ||= '://:MONOGRAPH://:'
