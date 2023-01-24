@@ -59,6 +59,7 @@ class PressesController < ApplicationController
                                     :description,
                                     :press_url,
                                     :google_analytics,
+                                    :google_analytics_4,
                                     :typekit,
                                     :footer_block_a,
                                     :footer_block_b,

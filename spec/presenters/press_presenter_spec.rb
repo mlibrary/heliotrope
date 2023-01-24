@@ -106,6 +106,15 @@ RSpec.describe PressPresenter do
         expect(subject.all_google_analytics).to match_array [press.google_analytics, parent_press.google_analytics]
       end
     end
+
+    describe "#all_google_analytics_4 with two GA4 ids" do
+      let(:parent_press) { create(:press, subdomain: "blue", google_analytics_4: "GA-ID-BLUE-GA4") }
+      let(:press) { create(:press, subdomain: "maize", google_analytics_4: "GA-ID-MAIZE-GA4", parent_id: parent_press.id) }
+
+      it "returns both Google analytics 4 ids" do
+        expect(subject.all_google_analytics_4).to match_array [press.google_analytics_4, parent_press.google_analytics_4]
+      end
+    end
   end
 
   context "a invalid PressPresenter aka a PressPresenterNullObject" do

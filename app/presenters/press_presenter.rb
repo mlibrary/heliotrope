@@ -23,6 +23,10 @@ class PressPresenter < ApplicationPresenter
     [@press.google_analytics.presence, parent_press(@press)&.google_analytics.presence].compact
   end
 
+  def all_google_analytics_4
+    [@press.google_analytics_4.presence, parent_press(@press)&.google_analytics_4.presence].compact
+  end
+
   def name
     @press&.name.presence || ''
   end
@@ -120,6 +124,10 @@ class PressPresenterNullObject
   end
 
   def all_google_analytics
+    []
+  end
+
+  def all_google_analytics_4
     []
   end
 
