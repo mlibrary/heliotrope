@@ -38,14 +38,24 @@ class MonographIndexer < Hyrax::WorkIndexer
       solr_doc['contributor_tesim'] = roleless_contributors
       solr_doc['contributor_orcids_ssim'] = contributor_orcids
 
-      # probably we'll need more substantial cleanup here, for now discard anything that isn't a number as...
+      # `date_created` is our citation pub date. We also use it for "year asc/desc" Blacklight results sorting.
+      # Probably we'll need more substantial cleanup here, for now discard anything that isn't a number as...
       # HEB often has stuff like 'c1999' in the Publication Year (`date_created`)
       solr_doc['date_created_si'] = object.date_created&.first&.gsub(/[^0-9]/, '')
+
       # We're going to use date_published, which optionally holds the actual time the Monograph was published...
       # on Fulcrum (when it was set to public using PublishJob) to tie-break titles that have the same value...
       # indexed in date_created. Note safe navigation not needed here to prevent error, as both [].first and...
       # nil.to_i are valid, but the latter gives 0, and I think I'd rather nil so nothing is set on solr_doc
-      solr_doc['date_published_si'] = object.date_published&.first&.to_i
+      # 20230120: For the new conditional see HELIO-4397, defer to the Hyrax actor stack mod time, `date_uploaded`,...
+      # if `date_published` was never set.
+      solr_doc['date_published_si'] = if object.date_published.present?
+                                        object.date_published&.first&.to_i
+                                      else
+                                        # note also `date_uploaded` is aliased to the Fedora-level `create_date` in...
+                                        # our models, and so it will *always* be set
+                                        object.date_uploaded&.to_i
+                                      end
 
       # grab previous file set order here from Solr (before they are reindexed)
       existing_fileset_order = existing_filesets

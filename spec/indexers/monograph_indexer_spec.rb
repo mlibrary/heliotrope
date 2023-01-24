@@ -294,5 +294,35 @@ RSpec.describe MonographIndexer do
         expect(described_class.new(Monograph.new).table_of_contents(monograph_noid)).to eq ["epub toc"]
       end
     end
+
+    describe 'date_published field' do
+      subject { indexer.generate_solr_document }
+
+      let(:indexer) { described_class.new(monograph) }
+      let(:monograph) {
+        build(:monograph,
+              date_published: date_published)
+      }
+
+      before do
+        monograph.save!
+      end
+
+      context 'date_published has been set' do
+        let(:date_published) { [Hyrax::TimeService.time_in_utc] }
+
+        it 'indexes the first value, this is a multi-valued field we use as single-valued' do
+          expect(subject['date_published_si']).to eq date_published.first.to_i
+        end
+      end
+
+      context 'date_published has not been set' do
+        let(:date_published) { nil }
+
+        it "uses the Monograph's `date_uploaded` value instead, which is aliased to its Fedora `create_date`" do
+          expect(subject['date_published_si']).to eq monograph.create_date.to_i
+        end
+      end
+    end
   end
 end
