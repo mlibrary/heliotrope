@@ -46,7 +46,7 @@ Hyrax::DownloadsController.class_eval do # rubocop:disable Metrics/BlockLength
     end
 
     def item_identifier_for_irus_analytics
-      CatalogController.blacklight_config.oai[:provider][:record_prefix] + ":" + FileSet.find(params[:id]).parent.id
+      CatalogController.blacklight_config.oai[:provider][:record_prefix] + ":" + presenter&.parent&.id
     end
 
     def disposition(presenter)
