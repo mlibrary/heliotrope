@@ -40,7 +40,7 @@ Hyrax::FileSetsController.class_eval do # rubocop:disable Metrics/BlockLength
 
     # HELIO-4143
     def item_identifier_for_irus_analytics
-      CatalogController.blacklight_config.oai[:provider][:record_prefix] + ":" + FileSet.find(params[:id]).parent.id
+      CatalogController.blacklight_config.oai[:provider][:record_prefix] + ":" + presenter&.parent&.id
     end
 
     def edit
