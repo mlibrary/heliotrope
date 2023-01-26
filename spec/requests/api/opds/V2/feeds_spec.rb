@@ -378,7 +378,7 @@ RSpec.describe "OPDS Feeds", type: [:request, :json_schema]  do
         expect(schemer_validate?(opds_feed_schemer, response_body)).to be true
         expect(response_body['publications'].count).to eq(1)
         expect(response_body['publications'].first).to eq(JSON.parse(Opds::Publication.new_from_monograph(Sighrax.from_noid(monograph.id), true, entity_id).to_json))
-        expect(response_body['publications'].first["links"].first["href"]).to eq "http://test.host/ebooks/#{epub.id}/download?entity_id=https%3A%2F%2Fshibboleth.umich.edu%2Fidp%2Fshibboleth"
+        expect(response_body['publications'].first["links"].first["href"]).to eq "http://test.host/ebooks/#{epub.id}/download?entityID=https%3A%2F%2Fshibboleth.umich.edu%2Fidp%2Fshibboleth"
       end
     end
 
