@@ -2395,9 +2395,9 @@ cosmiconfig@^6.0.0:
     path-webpack "0.0.3"
     portfinder "^1.0.28"
 
-"cozy-sun-bear@git+https://github.com/mlibrary/cozy-sun-bear.git":
+"cozy-sun-bear@git+https://github.com/mlibrary/cozy-sun-bear.git#CSB-272/gabii2-hacks":
   version "1.0.0"
-  resolved "git+https://github.com/mlibrary/cozy-sun-bear.git#b98894d04e74028ae267e5909bcdf17ad512df95"
+  resolved "git+https://github.com/mlibrary/cozy-sun-bear.git#f02a6c7bf32db1c297a151d612080ba2c86564cb"
   dependencies:
     ajv "^6.12.6"
     core-js "^3.6.5"
