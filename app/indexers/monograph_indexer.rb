@@ -47,15 +47,18 @@ class MonographIndexer < Hyrax::WorkIndexer
       # on Fulcrum (when it was set to public using PublishJob) to tie-break titles that have the same value...
       # indexed in date_created. Note safe navigation not needed here to prevent error, as both [].first and...
       # nil.to_i are valid, but the latter gives 0, and I think I'd rather nil so nothing is set on solr_doc
-      # 20230120: For the new conditional see HELIO-4397, defer to the Hyrax actor stack mod time, `date_uploaded`,...
-      # if `date_published` was never set.
-      solr_doc['date_published_si'] = if object.date_published.present?
-                                        object.date_published&.first&.to_i
-                                      else
-                                        # note also `date_uploaded` is aliased to the Fedora-level `create_date` in...
-                                        # our models, and so it will *always* be set
-                                        object.date_uploaded&.to_i
-                                      end
+      # 20230120: For the new conditional see HELIO-4397, and the follow-up HELIO-4410, i.e. defer to the Hyrax...
+      # actor stack mod time, `date_uploaded`, if `date_published` was never set.
+      if object.date_published.present?
+        solr_doc['date_published_si'] = object.date_published&.first&.to_i
+        # super handles the `date_published_dtsim` value when a value exists in Fedora
+      else
+        # note also `date_uploaded` is aliased to the Fedora-level `create_date` in...
+        # our models, and so it will *always* be set
+        solr_doc['date_published_si'] = object.date_uploaded&.to_i
+        # set the `date_published_dtsim` value too so that we can display the deferred value where required.
+        solr_doc['date_published_dtsim'] = [object.date_uploaded]
+      end
 
       # grab previous file set order here from Solr (before they are reindexed)
       existing_fileset_order = existing_filesets
