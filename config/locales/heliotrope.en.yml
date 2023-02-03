@@ -291,6 +291,10 @@ en:
 
         The first four digits found are pulled and used as the citation year, so a YYYY format is best.
         If desired, a format like cYYYY or YYYY-MM-DD can be entered, from which the YYYY will be pulled.
+      date_modified: |
+        The Hyrax mod date, which we alias to the Fedora modified_date on read.
+      date_uploaded: |
+        The Hyrax create date, which we alias to the Fedora create_date on read.
       location: |
         REQUIRED FOR MONOGRAPH AUTO-CITATIONS
 
@@ -307,6 +311,8 @@ en:
         The topic of the resource. Typically, the topic will be represented using keywords or key phrases. Be consistent in how you name keywords, e.g. WWII or WW2, not both.
 
         Separate keywords with a semicolon.
+      section_titles: |
+        Used like a table of contents to indicate the order of attached FileSets' "related sections".
       section_title: |
         Which section or chapter of a project is an item associated with? Items out to be listed in the order they appear.
 
@@ -370,8 +376,12 @@ en:
         -- related: *.html file
         -- reviews: *.html file
         -- webgl: *.zip (WebGL archive file)
+      press: |
+        The monograph's publisher/press on Fulcrum.
       published: |
         Whether the object is currently "published" on Fulcrum.
+      date_published: |
+        The date on which the object was first "published" on Fulcrum.
       tombstone: |
         Whether the object is currently "tombstoned" on Fulcrum.
       tombstone_message: |

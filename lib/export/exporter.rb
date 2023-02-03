@@ -7,7 +7,7 @@ module Export
   class Exporter
     attr_reader :all_metadata, :monograph, :monograph_presenter, :columns
 
-    def initialize(monograph_id, columns = :all, system_metadata = false)
+    def initialize(monograph_id, columns = :all)
       @monograph = if monograph_id.blank?
                      # the use case here is dumping metadata rows for o individual objects in rails/rake tasks,...
                      # with no parent monograph involved
@@ -20,7 +20,6 @@ module Export
                      end
                    end
       @columns = columns
-      @system_metadata = system_metadata
     end
 
     def export
@@ -128,7 +127,6 @@ module Export
 
         @all_metadata = if @columns == :monograph
                           fields = ADMIN_METADATA_FIELDS + METADATA_FIELDS
-                          fields += SYSTEM_METADATA_FIELDS if @system_metadata
                           (fields).select { |f| %i[universal monograph].include? f[:object] }
                         else
                           # the Exporter can be instantiated with no `monograph_id`, to output individual object rows.

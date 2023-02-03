@@ -73,13 +73,13 @@ describe Export::Exporter do
 
     let(:expected) do
       <<~eos
-        NOID,File Name,Link,Embed Code,Title,Resource Type,External Resource URL,Caption,Alternative Text,Copyright Holder,Copyright Status,Open Access?,Funder,Funder Display,Allow Fullscreen Display?,Allow Download?,Rights Granted,CC License,Permissions Expiration Date,After Expiration: Allow Display?,After Expiration: Allow Download?,Credit Line,Holding Contact,Exclusive to Fulcrum,Identifier(s),Content Type,Creator(s),Additional Creator(s),Creator Display,Sort Date,Display Date,Description,Publisher,Subject,ISBN(s),Buy Book URL,Pub Year,Pub Location,Series,Edition Name,Previous Edition,Next Edition,Keywords,Section,Language,Transcript,Translation,DOI,Handle,Redirect to,Closed Captions,Visual Descriptions,Tombstone?,Tombstone Message,Volume,OCLC Work Identifier,Copyright Year,Award(s),Article Title,Article Creator(s),Article Permalink,Article Volume,Article Issue,Article Display Date,Representative Kind
-        instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder
-        #{file1.id},,"=HYPERLINK(""#{Rails.application.routes.url_helpers.hyrax_file_set_url(file1)}"")",,#{file1.title.first},#{file1.resource_type.first},,,,,,,,,,,,,,,,,,,,,"Blerg, Mr (editor); Else, Someone (illustrator)","Brushes, Paint (illustrator); Jane, G.I.",,#{file1.sort_date},,,,,,,,,,,,,,,,,,https://doi.org/mpub.222222222.blah,,,,,,,,,,,,,,,,,
-        #{file2.id},,"=HYPERLINK(""#{Rails.application.routes.url_helpers.hyrax_file_set_url(file2)}"")",,#{file2.title.first},#{file2.resource_type.first},,,,,,,,,,,,,,,,,,,,,,,,#{file2.sort_date},,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,cover
-        #{file3.id},kitty.tif,"=HYPERLINK(""#{Rails.application.routes.url_helpers.hyrax_file_set_url(file3)}"")","#{file3_presenter.embed_code}",#{file3.title.first},#{file3.resource_type.first},,,,,,,,,,,,,,,,,,,,,,,,#{file3.sort_date},,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,epub
-        #{file4.id},ファイル.txt,"=HYPERLINK(""#{Rails.application.routes.url_helpers.hyrax_file_set_url(file4)}"")",,#{file4_title_csv_encoded},#{file4.resource_type.first},,,,,,,,,,,,,,,,,,,,,,,,#{file4.sort_date},,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-        #{monograph.id},://:MONOGRAPH://:,"=HYPERLINK(""#{Rails.application.routes.url_helpers.hyrax_monograph_url(monograph)}"")",,#{monograph.title.first},,,,,,,,,,,,,,,,,,,,,,"First, Ms Joan (editor); Second, Mr Tom (editor); Third Author, Lady","Doe, Jane (illustrator); Joe, G.I.",,,,,,,,,,,,,,,,://:MONOGRAPH://:,,,,https://doi.org/mpub.111111111.blah,,,,,,,,,,,,,,,,,
+        NOID,File Name,Link,Embed Code,Date Uploaded,Date Modified,Title,Resource Type,External Resource URL,Caption,Alternative Text,Copyright Holder,Copyright Status,Open Access?,Funder,Funder Display,Allow Fullscreen Display?,Allow Download?,Rights Granted,CC License,Permissions Expiration Date,After Expiration: Allow Display?,After Expiration: Allow Download?,Credit Line,Holding Contact,Exclusive to Fulcrum,Identifier(s),Content Type,Creator(s),Additional Creator(s),Creator Display,Sort Date,Display Date,Description,Publisher,Subject,ISBN(s),Buy Book URL,Pub Year,Pub Location,Series,Edition Name,Previous Edition,Next Edition,Keywords,Section Titles,Section,Language,Transcript,Translation,DOI,Handle,Redirect to,Closed Captions,Visual Descriptions,Tombstone?,Tombstone Message,Volume,OCLC Work Identifier,Copyright Year,Award(s),Article Title,Article Creator(s),Article Permalink,Article Volume,Article Issue,Article Display Date,Press,Published?,Date Published on Fulcrum,Representative Kind
+        instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder
+        #{file1.id},,"=HYPERLINK(""#{Rails.application.routes.url_helpers.hyrax_file_set_url(file1)}"")",,#{file1.date_uploaded},#{file1.date_modified},#{file1.title.first},#{file1.resource_type.first},,,,,,,,,,,,,,,,,,,,,"Blerg, Mr (editor); Else, Someone (illustrator)","Brushes, Paint (illustrator); Jane, G.I.",,#{file1.sort_date},,,,,,,,,,,,,,,,,,,https://doi.org/mpub.222222222.blah,,,,,,,,,,,,,,,,,,false,,
+        #{file2.id},,"=HYPERLINK(""#{Rails.application.routes.url_helpers.hyrax_file_set_url(file2)}"")",,#{file2.date_uploaded},#{file2.date_modified},#{file2.title.first},#{file2.resource_type.first},,,,,,,,,,,,,,,,,,,,,,,,#{file2.sort_date},,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,false,,cover
+        #{file3.id},kitty.tif,"=HYPERLINK(""#{Rails.application.routes.url_helpers.hyrax_file_set_url(file3)}"")","#{file3_presenter.embed_code}",#{file3.date_uploaded},#{file3.date_modified},#{file3.title.first},#{file3.resource_type.first},,,,,,,,,,,,,,,,,,,,,,,,#{file3.sort_date},,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,false,,epub
+        #{file4.id},ファイル.txt,"=HYPERLINK(""#{Rails.application.routes.url_helpers.hyrax_file_set_url(file4)}"")",,#{file4.date_uploaded},#{file4.date_modified},#{file4_title_csv_encoded},#{file4.resource_type.first},,,,,,,,,,,,,,,,,,,,,,,,#{file4.sort_date},,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,false,,
+        #{monograph.id},://:MONOGRAPH://:,"=HYPERLINK(""#{Rails.application.routes.url_helpers.hyrax_monograph_url(monograph)}"")",,#{monograph.date_uploaded},#{monograph.date_modified},#{monograph.title.first},,,,,,,,,,,,,,,,,,,,,,"First, Ms Joan (editor); Second, Mr Tom (editor); Third Author, Lady","Doe, Jane (illustrator); Joe, G.I.",,,,,,,,,,,,,,,,,://:MONOGRAPH://:,,,,https://doi.org/mpub.111111111.blah,,,,,,,,,,,,,,,,,#{monograph.press},false,,
       eos
     end
 
@@ -120,7 +120,7 @@ describe Export::Exporter do
       let(:rows) { nil }
       let(:expected) do
         <<~eos
-          #{monograph.id},://:MONOGRAPH://:,"=HYPERLINK(""#{Rails.application.routes.url_helpers.hyrax_monograph_url(monograph)}"")",,#{monograph.title.first},,,,,,,,,,,,,,,,,,,,,,"First, Ms Joan (editor); Second, Mr Tom (editor); Third Author, Lady","Doe, Jane (illustrator); Joe, G.I.",,,,,,,,,,,,,,,,://:MONOGRAPH://:,,,,https://doi.org/mpub.111111111.blah,,,,,,,,,,,,,,,,,
+          #{monograph.id},://:MONOGRAPH://:,"=HYPERLINK(""#{Rails.application.routes.url_helpers.hyrax_monograph_url(monograph)}"")",,#{monograph.date_uploaded},#{monograph.date_modified},#{monograph.title.first},,,,,,,,,,,,,,,,,,,,,,"First, Ms Joan (editor); Second, Mr Tom (editor); Third Author, Lady","Doe, Jane (illustrator); Joe, G.I.",,,,,,,,,,,,,,,,,://:MONOGRAPH://:,,,,https://doi.org/mpub.111111111.blah,,,,,,,,,,,,,,,,,#{monograph.press},false,,
         eos
       end
 
@@ -135,27 +135,11 @@ describe Export::Exporter do
       let(:rows) { :monograph }
       let(:expected) do
         <<~eos
-          #{monograph.id},"=HYPERLINK(""#{Rails.application.routes.url_helpers.hyrax_monograph_url(monograph)}"")",#{monograph.title.first},,,,,,,,"First, Ms Joan (editor); Second, Mr Tom (editor); Third Author, Lady","Doe, Jane (illustrator); Joe, G.I.",,,,,,,,,,,,,,https://doi.org/mpub.111111111.blah,,,,,,,
+          #{monograph.id},"=HYPERLINK(""#{Rails.application.routes.url_helpers.hyrax_monograph_url(monograph)}"")",#{monograph.date_uploaded},#{monograph.date_modified},#{monograph.title.first},,,,,,,,"First, Ms Joan (editor); Second, Mr Tom (editor); Third Author, Lady","Doe, Jane (illustrator); Joe, G.I.",,,,,,,,,,,,,,,https://doi.org/mpub.111111111.blah,,,,,,,,#{monograph.press},false,
         eos
       end
 
       it 'outputs a row containing only Monograph and universal fields' do
-        actual = subject
-        expect(actual.empty?).to be false
-        expect(actual).to match expected
-      end
-    end
-
-    context 'system metadata' do
-      subject { CSV.generate_line(described_class.new(monograph.id, :monograph, system_metadata).monograph_row) }
-      let(:system_metadata) { true }
-      let(:expected) do
-        <<~eos
-          #{monograph.id},"=HYPERLINK(""#{Rails.application.routes.url_helpers.hyrax_monograph_url(monograph)}"")",#{monograph.title.first},,,,,,,,"First, Ms Joan (editor); Second, Mr Tom (editor); Third Author, Lady","Doe, Jane (illustrator); Joe, G.I.",,,,,,,,,,,,,,https://doi.org/mpub.111111111.blah,,,,,,,,false
-        eos
-      end
-
-      it 'outputs a row including system metadata like "Published?", which is false in this case' do
         actual = subject
         expect(actual.empty?).to be false
         expect(actual).to match expected
@@ -170,7 +154,7 @@ describe Export::Exporter do
     let(:file_set) { create(:file_set, creator: ["First, Ms Joan (editor)\nSecond, Mr Tom (editor)\nThird Author, Lady"], contributor: ["Doe, Jane (illustrator)\nJoe, G.I."], article_creator: ["Bob, Billy\nO'Lantern, Jack\r\nDoe, Jane"]) }
     let(:expected) do
       <<~eos
-        #{file_set.id},,"=HYPERLINK(""#{Rails.application.routes.url_helpers.hyrax_file_set_url(file_set)}"")",,#{file_set.title.first},#{file_set.resource_type.first},,,,,,,,,,,,,,,,,,,,,"First, Ms Joan (editor); Second, Mr Tom (editor); Third Author, Lady","Doe, Jane (illustrator); Joe, G.I.",,#{file_set.sort_date},,,,,,,,,,,,,,,,,,,,,,,,,,,,,,"Bob, Billy; O'Lantern, Jack; Doe, Jane",,,,
+        #{file_set.id},,"=HYPERLINK(""#{Rails.application.routes.url_helpers.hyrax_file_set_url(file_set)}"")",,#{file_set.date_uploaded},#{file_set.date_modified},#{file_set.title.first},#{file_set.resource_type.first},,,,,,,,,,,,,,,,,,,,,"First, Ms Joan (editor); Second, Mr Tom (editor); Third Author, Lady","Doe, Jane (illustrator); Joe, G.I.",,#{file_set.sort_date},,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,"Bob, Billy; O'Lantern, Jack; Doe, Jane",,,,,,false,
       eos
     end
 

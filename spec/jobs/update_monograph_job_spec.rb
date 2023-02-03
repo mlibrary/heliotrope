@@ -45,6 +45,15 @@ RSpec.describe UpdateMonographJob, type: :job do
     described_class.perform_now(user, monograph.id)
     updated = Export::Exporter.new(monograph.id).export
     expect(updated).not_to match original
+
+    # Dropping the "Date Modified" columns before comparison as the Monograph update will have changed it in `updated`.
+    updated_csv_table = CSV.parse(updated, headers: true, skip_blanks: true)
+    updated_csv_table.delete("Date Modified")
+    expected_csv_table = CSV.parse(expected, headers: true, skip_blanks: true)
+    expected_csv_table.delete("Date Modified")
+    updated = updated_csv_table.to_csv
+    expected = expected_csv_table.to_csv
+
     expect(updated).to match expected
 
     expect(monograph_manifest.implicit.persisted?).to be false
