@@ -255,7 +255,7 @@ module Opds
       end
 
       def download_ebook_url(ebook)
-        return Rails.application.routes.url_helpers.download_ebook_url(ebook.noid, entity_id: @entity_id) if @entity_id
+        return Rails.application.routes.url_helpers.download_ebook_url(ebook.noid, entityID: @entity_id) if @entity_id
         Rails.application.routes.url_helpers.download_ebook_url(ebook.noid)
       end
 

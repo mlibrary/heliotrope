@@ -59,7 +59,7 @@
           gtag('config', '<%= id %>', { 'anonymize_ip': true });
         <% end %>
       } else { 
-        gtag('config', '<%= ga4_id %>');\
+        gtag('config', '<%= ga4_id %>');
         <% ga4_ids.each do |id| %>
           gtag('config', '<%= id %>');
         <% end %>
