@@ -8,6 +8,8 @@ describe 'Create a monograph' do
     let!(:press) { create(:press) }
 
     before do
+      allow(Hyrax::TimeService).to receive(:time_in_utc).and_return('2023-01-01T10:10:20+00:00')
+
       login_as user
       stub_out_redis
       stub_out_irus
@@ -17,6 +19,8 @@ describe 'Create a monograph' do
       visit new_hyrax_monograph_path
 
       # Monograph form
+      expect(page).to have_css('input#monograph_date_published', count: 1)
+      expect(page.find('input#monograph_date_published')['value']).to eq(nil)
 
       # HELIO-3094
       expect(page).not_to have_selector '#monograph_visibility_authenticated' # institutional access
@@ -63,6 +67,8 @@ describe 'Create a monograph' do
       # this will have its spaces removed by a `before_validation` method in `app/models/monograph.rb`
       fill_in 'Identifier(s)', with: '<identifier with spaces>'
 
+      choose('monograph_visibility_open')
+
       click_button 'Save'
 
       noid = current_path[/monographs\/[[:alnum:]]{9}/][-9..-1]
@@ -103,6 +109,10 @@ describe 'Create a monograph' do
       click_link 'Edit'
 
       # back on Monograph form
+
+      expect(page).to have_css('input#monograph_date_published', count: 1)
+      expect(page.find('input#monograph_date_published')['value']).to eq('2023-01-01T10:10:20')
+
       # add citation_display to test authorship override
       fill_in 'Authorship Display (free-form text)', with: 'Fancy Authorship Name Stuff That Takes Precedence'
       expect(page).to have_css('input.monograph_subject', count: 2)

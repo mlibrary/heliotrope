@@ -98,6 +98,18 @@ describe FileSet do
     end
   end
 
+  it 'validates date_published' do
+    file_set = described_class.new
+    # FileSets have no minimum "validates presence" metadata
+    expect(file_set.valid?).to eq true
+    file_set.date_published = ['2023/15/15']
+    expect(file_set.valid?).to eq false
+    # this is the format that the `datetime-local` datepicker will provide,...
+    # were we to use it on the FileSet create/edit form
+    file_set.date_published = ['2023-02-03T18:07:53']
+    expect(file_set.valid?).to eq true
+  end
+
   describe '#maybe_set_date_published' do
     subject { file_set.date_published }
 

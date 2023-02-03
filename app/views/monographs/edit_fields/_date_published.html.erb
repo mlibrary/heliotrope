@@ -1,0 +1,18 @@
+<%# `as: :datetime` results in Simple Form outputting a `type="datetime-local"` control %>
+<%# https://github.com/heartcombo/simple_form#html-5-notice %>
+<%# https://stackoverflow.com/a/19507364 %>
+<%# There is no setting for a HTML5 date control that allows a time zone to be set, that was the... %>
+<%# `type="datetime-local"` control, which was removed from the HTML spec in favor of letting the programmer... %>
+<%# deal with client time zone through browser locale stuff, or allowing the user to set it in their cookies. %>
+<%# What this means here is that the closest we can get to a DateTime.to_s is the following ISO 8601 date+time: %>
+<%# 2023-02-03T18:07:53 %>
+<%# Granularity to the second is achieved with the `step: "1"` attribute. %>
+<%# The `strftime('%Y-%m-%dT%H:%M:%S')` is necessary to chop off the timezone information for the datepicker... %>
+<%# widget, given the time would otherwise look like `2023-02-03T18:07:53+00:00` and fail to parse therein. %>
+<%# For now just let the user know this is UTC time, we'd need to let them pick their own zone, or... %>
+<%# detect it otherwise. And that seems OTT for this feature for our editors right now. %>
+<%# https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/datetime-local#setting_timezones %>
+<%= f.input :date_published,
+            as: :datetime, html5: true,
+            input_html: { step: "1", multiple: true, value: curation_concern&.date_published&.first&.strftime('%Y-%m-%dT%H:%M:%S') },
+            required: f.object.required?(:date_published) %>

@@ -14,7 +14,8 @@ describe Hyrax::MonographForm do
     subject { described_class.terms }
 
     it {
-      is_expected.to eq %i[title
+      is_expected.to eq %i[date_published
+                           title
                            description
                            creator
                            contributor
@@ -82,7 +83,8 @@ describe Hyrax::MonographForm do
     subject { form.secondary_terms }
 
     it {
-      is_expected.to eq %i[description
+      is_expected.to eq %i[date_published
+                           description
                            contributor
                            creator_display
                            subject

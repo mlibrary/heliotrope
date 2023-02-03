@@ -4,7 +4,8 @@ module HeliotropeUniversalMetadata
   extend ActiveSupport::Concern
 
   included do # rubocop:disable Metrics/BlockLength
-    before_validation :maybe_set_date_published
+    validate :date_published_format
+    before_validation :maybe_convert_date_published_to_date_time, :maybe_set_date_published
 
     property :copyright_holder, predicate: ::RDF::Vocab::SCHEMA.copyrightHolder, multiple: false do |index|
       index.as :stored_searchable
@@ -41,11 +42,32 @@ module HeliotropeUniversalMetadata
     private
 
       def maybe_set_date_published
-        # conorom 20230203L `visibility_changed?` is literally the only `ActiveModel::Dirty` type method available in...
+        # conorom 20230203 `visibility_changed?` is literally the only `ActiveModel::Dirty` type method available in...
         # our current verion of `hydra-head`. More have since ben added. See https://github.com/samvera/hydra-head/pull/514
         # This logic works well enough, and the model specs around this should be thorough enough to catch all cases.
         if self.visibility_changed? && self.visibility == 'open' && self.date_published.blank?
           self.date_published = [Hyrax::TimeService.time_in_utc]
+        end
+      end
+
+      def date_published_format
+        if date_published.present? && self.date_published.first.instance_of?(String)
+          begin
+            DateTime.parse(date_published.first)
+          rescue
+            errors.add(:date_published, "invalid value for 'Date Published on Fulcrum'")
+          end
+        end
+      end
+
+      # catch values set via the datepicker and convert them from String to DateTime for consistency
+      def maybe_convert_date_published_to_date_time
+        if self.date_published.present? && self.date_published.first.instance_of?(String)
+          begin
+            self.date_published = [DateTime.parse(self.date_published.first)]
+          rescue Date::Error
+            ''
+          end
         end
       end
   end
