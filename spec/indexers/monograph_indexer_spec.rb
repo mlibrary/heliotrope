@@ -313,6 +313,9 @@ RSpec.describe MonographIndexer do
 
         it 'indexes the first value, this is a multi-valued field we use as single-valued' do
           expect(subject['date_published_si']).to eq date_published.first.to_i
+          # refresher: cause `.utc.iso8601` is how values detected as dates are indexed in ActiveFedora
+          # https://github.com/samvera/active_fedora/blob/8e7d365a087974b4ff9b9217f792c0c049789de6/lib/active_fedora/indexing/default_descriptors.rb#L114
+          expect(subject['date_published_dtsim']).to eq [date_published.first.utc.iso8601]
         end
       end
 
@@ -321,6 +324,7 @@ RSpec.describe MonographIndexer do
 
         it "uses the Monograph's `date_uploaded` value instead, which is aliased to its Fedora `create_date`" do
           expect(subject['date_published_si']).to eq monograph.create_date.to_i
+          expect(subject['date_published_dtsim']).to eq [monograph.create_date]
         end
       end
     end

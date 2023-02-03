@@ -21,8 +21,8 @@ describe "Show a monograph" do
   it do
     visit monograph_show_path(monograph)
     expect(page).to have_link 'Shakespeare, William'
-    expect(page).to have_content "Date Created\n#{today}"
-    expect(page).to have_content "Date Published\n<PublishJob never run>"
+    expect(page).to have_content "Date Uploaded\n#{today}"
+    expect(page).to have_content "Date Published on Fulcrum\n#{today}"
     expect(page).to have_content "Last Modified\n#{today}"
   end
 end
