@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_01_13_175128) do
+ActiveRecord::Schema.define(version: 2023_02_03_203704) do
 
   create_table "api_requests", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.integer "user_id"
@@ -451,6 +451,8 @@ ActiveRecord::Schema.define(version: 2023_01_13_175128) do
     t.datetime "updated_at", null: false
     t.string "purchase"
     t.string "name"
+    t.boolean "needs_kbart", default: false
+    t.string "group_key"
     t.index ["identifier"], name: "index_products_on_identifier", unique: true
   end
 

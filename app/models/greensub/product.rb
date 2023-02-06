@@ -7,6 +7,8 @@ module Greensub
     scope :identifier_like, ->(like) { where("identifier like ?", "%#{like}%") }
     scope :name_like, ->(like) { where("name like ?", "%#{like}%") }
     scope :purchase_like, ->(like) { where("purchase like ?", "%#{like}%") }
+    scope :needs_kbart_like, ->(like) { where("needs_kbart like ?", "%#{like}%") }
+    scope :group_key_like, ->(like) { where("group_key like ?", "%#{like}%") }
 
     scope :containing_monograph, ->(noid) { joins(:components).merge(Component.for_noid(noid)) }
 
