@@ -141,7 +141,7 @@ describe 'Press catalog sort' do
              title: ['Date Published Tie-Break Test 2'],
              date_uploaded: DateTime.new(2018, 8, 3, 4, 5, 0, '+0'),
              creator: ['blah'],
-             date_created: ['2014'],
+             date_created: ['2014/01/01'], # only the first 4 digits (YYYY) will have any effect on primary sort
              date_published: [DateTime.new(2019, 12, 16, 4, 3, 0, '+0')])
 
       create(:public_monograph,
@@ -157,7 +157,7 @@ describe 'Press catalog sort' do
              title: ['Date Published Tie-Break Test 4'],
              date_uploaded: DateTime.new(2018, 10, 3, 4, 5, 0, '+0'),
              creator: ['blah'],
-             date_created: ['2014'],
+             date_created: ['2014/12/12'], # only the first 4 digits (YYYY) will have any effect on primary sort
              date_published: [DateTime.new(2019, 12, 16, 4, 1, 0, '+0')])
 
       create(:public_monograph,

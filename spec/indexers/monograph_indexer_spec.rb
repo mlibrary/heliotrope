@@ -18,7 +18,7 @@ RSpec.describe MonographIndexer do
                       "Badenov, Boris  \n"\
                       " Fatale, Natasha |  https://orcid.org/0000-0002-1825-0097 "],
             description: ["This is the abstract"],
-            date_created: ['c.2018?'],
+            date_created: date_created,
             isbn: ['978-0-252012345 (paper)', '978-0252023456 (hardcover)', '978-1-62820-123-9 (e-book)'],
             identifier: ['bar_number:S0001', 'heb_id: heb9999.0001.001'],
             press: press.subdomain)
@@ -26,6 +26,7 @@ RSpec.describe MonographIndexer do
     let(:file_set) { create(:file_set, content: File.open(File.join(fixture_path, 'moby-dick.epub'))) }
     let(:press_name) { press.name }
     let(:parent_press) { nil }
+    let(:date_created) { ['2018'] }
 
     before do
       monograph.ordered_members << file_set
@@ -110,10 +111,6 @@ RSpec.describe MonographIndexer do
       expect(subject['description_tesim'].first).to eq 'This is the abstract'
     end
 
-    it 'has a single-valued, cleaned-up date_created value to sort by' do
-      expect(subject['date_created_si']).to eq '2018'
-    end
-
     it 'indexes identifiers stored searchable (as they are) and also as symbols (trimmed and sans namespaces)' do
       expect(subject['identifier_tesim']).to contain_exactly('bar_number:S0001', 'heb_id:heb9999.0001.001')
       expect(subject['identifier_ssim']).to contain_exactly('S0001', 'heb9999.0001.001')
@@ -124,6 +121,28 @@ RSpec.describe MonographIndexer do
     # the english text stored indexed multivalued field generated for the 'isbn' property a.k.a. object.isbn
     # See './app/models/monograph.rb' and './solr/config/schema.xml' for details.
     # Note: Since this happens server side see './solr/spec/core_spec.rb' for specs.
+
+    context 'date_created' do
+      it 'has a single-valued date_created value to sort by' do
+        expect(subject['date_created_si']).to eq '2018'
+      end
+
+      context 'messy value' do
+        let(:date_created) { ['c.2018?'] }
+
+        it 'has a cleaned-up, single-valued (sortable) date_created value to sort by' do
+          expect(subject['date_created_si']).to eq '2018'
+        end
+      end
+
+      context 'extra-digits and separators' do
+        let(:date_created) { ['2018/09/09'] }
+
+        it 'has a cleaned-up, 4-digit, single-valued (sortable) date_created value to sort by' do
+          expect(subject['date_created_si']).to eq '2018'
+        end
+      end
+    end
 
     context 'products' do
       let(:products) { [-1, 0, 1] }
