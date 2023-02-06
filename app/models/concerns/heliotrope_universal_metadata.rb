@@ -3,7 +3,9 @@
 module HeliotropeUniversalMetadata
   extend ActiveSupport::Concern
 
-  included do
+  included do # rubocop:disable Metrics/BlockLength
+    before_validation :maybe_set_date_published
+
     property :copyright_holder, predicate: ::RDF::Vocab::SCHEMA.copyrightHolder, multiple: false do |index|
       index.as :stored_searchable
     end
@@ -35,5 +37,16 @@ module HeliotropeUniversalMetadata
     property :tombstone_message, predicate: ::RDF::URI.new('http://fulcrum.org/ns#tombstone_message'), multiple: false do |index|
       index.as :stored_searchable
     end
+
+    private
+
+      def maybe_set_date_published
+        # conorom 20230203L `visibility_changed?` is literally the only `ActiveModel::Dirty` type method available in...
+        # our current verion of `hydra-head`. More have since ben added. See https://github.com/samvera/hydra-head/pull/514
+        # This logic works well enough, and the model specs around this should be thorough enough to catch all cases.
+        if self.visibility_changed? && self.visibility == 'open' && self.date_published.blank?
+          self.date_published = [Hyrax::TimeService.time_in_utc]
+        end
+      end
   end
 end
