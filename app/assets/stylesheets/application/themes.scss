@@ -6974,7 +6974,260 @@ $fia-teal-100: #e9f2f5;
   }
 
 }
+///////////////////////////////////////////////
+//
+// Michigan Publishing Services
+// ICMC
+//
+///////////////////////////////////////////////
+// colors
+$icmc-brand-color: #002e5e;
+$icmc-accent-color: #e4e1df;
 
+$icmc-accent-footer: #989c97;
+
+$icmc-accent-link: #00274c;
+
+$icmc-grey-1: #e5e5e5;
+$icmc-grey-2: #d5d6d2;
+$icmc-grey-3: #989c97;
+$icmc-grey-4: #655a52;
+$icmc-yellow: #ffcb05;
+$icmc-blue: #40658f;
+$icmc-blue-2: #1d3160;
+$icmc-white: #fff;
+$icmc-black-80: #342f2e;
+
+.icmc {
+
+  // svgicon
+  #documents {
+
+    .svgicon {
+      // To change any SVGs color see https://stackoverflow.com/a/53336754
+      filter: invert(14%) sepia(21%) saturate(3867%) hue-rotate(181deg) brightness(97%) contrast(106%); // $maize-accent-link: #00274c;
+
+    }
+
+  }
+
+  // links
+  a {
+    color: $icmc-accent-link;
+  }
+
+  a:hover,
+  a:active,
+  a:focus {
+    color: $icmc-blue;
+    text-decoration: underline;
+  }
+
+  // buttons
+  .btn, .btn-default {
+    background-color: $icmc-brand-color;
+    border-color: $icmc-accent-link;
+    color: $icmc-white;
+  }
+
+  .btn:hover,
+  .btn:active,
+  .btn-default:hover,
+  .btn-default:active {
+    background-color: $icmc-white;
+    color: $icmc-brand-color;
+    text-decoration: none;
+  }
+
+  // navigation menu
+  .navbar-default .navbar-nav > .open > a,
+  .navbar-default .navbar-nav > .open > a:hover,
+  .navbar-default .navbar-nav > .open > a:focus {
+    background-color: $icmc-white;
+  }
+
+  #brand-bar {
+
+    .navbar-brand {
+      text-transform: uppercase;
+      letter-spacing: unset;
+      font-size: 1.5em;
+      padding: 15px 15px 15px 15px;
+    }
+
+
+  }
+
+  // press catalog
+  .jumbotron {
+    .container {
+      margin-top: 1em;
+    }
+
+    p.lead {
+      font-size: 20px;
+      a {
+        text-decoration: underline;
+      }
+    }
+
+    p.publisher-info a {
+      text-decoration: underline;
+    }
+
+    .logo {
+
+      img {
+        display: block;
+      }
+
+    }
+
+  }
+
+  // sorts on press and monograph pages
+  #sort-dropdown .dropdown-toggle, #per_page-dropdown .dropdown-toggle {
+    background-color: $icmc-brand-color;
+    color: $icmc-white;
+    border-color: $icmc-accent-link;
+  }
+
+  #sort-dropdown .dropdown-toggle,
+  #per_page-dropdown .dropdown-toggle {
+    background-color: $icmc-brand-color;
+    color: $icmc-white;
+    border-color: $icmc-accent-link;
+
+  }
+
+  #sort-dropdown .dropdown-toggle:hover,
+  #per_page-dropdown .dropdown-toggle:hover,
+  #sort-dropdown .dropdown-toggle:active,
+  #per_page-dropdown .dropdown-toggle:active {
+    background-color: $icmc-white;
+    color: $icmc-brand-color;
+  }
+
+  #sort-dropdown .dropdown-toggle .caret,
+  #per_page-dropdown .dropdown-toggle .caret {
+    color: $icmc-white;
+  }
+
+  #sort-dropdown .dropdown-toggle:hover .caret,
+  #per_page-dropdown .dropdown-toggle:hover .caret,
+  #sort-dropdown .dropdown-toggle:active .caret,
+  #per_page-dropdown .dropdown-toggle:active .caret {
+    color: $icmc-brand-color;
+  }
+
+  // monograph
+
+  .pagination {
+     li a, li span {
+       color: $icmc-white;
+       background-color: $icmc-brand-color;
+     }
+
+     .active>a,
+     .active>a:hover,
+     .active>a:focus,
+     .active>span,
+     .active>span:hover,
+     .active>span:focus {
+       background-color: $icmc-white;
+       border-color: $icmc-grey-1;
+       color: $icmc-brand-color;
+     }
+  }
+
+
+  //footer
+  footer {
+    a,
+    a:hover,
+    a:active {
+      color: $icmc-white;
+    }
+    .press-block-a,
+    .press-block-b {
+      background-color:  $icmc-brand-color;
+
+      a,
+      a:hover,
+      a:active {
+        color: $icmc-white;
+      }
+
+      img {
+        width: 110px;
+        margin-top: 30px;
+      }
+
+      p {
+        font-weight: 300;
+        text-transform: uppercase;
+        letter-spacing: unset;
+
+        a.brand {
+          display:none;
+        }
+      }
+
+    }
+    .press-block-c {
+      background-color: $icmc-grey-1;
+      color: $icmc-brand-color;
+    }
+    .platform {
+      background-color: $icmc-black-80;
+    }
+  }
+
+  // e-book reader
+
+
+  #reader {
+
+
+    .button {
+      @include epub-button-background-color($icmc-brand-color,$icmc-blue,$icmc-white);
+    }
+
+    .button--lg {
+      @include epub-button-background-color($icmc-brand-color,$icmc-blue,$icmc-white);
+    }
+
+    .button--inline {
+      @include epub-button-background-color($icmc-brand-color,$icmc-blue,$icmc-white);
+    }
+
+    .button--sm {
+      @include epub-button-background-color($icmc-brand-color,$icmc-blue,$icmc-white);
+    }
+
+    .button--sm.cozy-preferences {
+      @include epub-button-background-color(#f1f1f1,$icmc-blue,$icmc-white);
+      color: $icmc-brand-color;
+    }
+
+    i[class^='icon-chevron-'] {
+      @include epub-prev-next-color($icmc-brand-color);
+      transition: 0.2s ease-in;
+    }
+
+    i[class^='icon-chevron-']:hover {
+      @include epub-hover-prev-next-color($icmc-brand-color);
+      transition: 0.2s ease-in;
+    }
+
+    // PDF loading progress bar
+    .helio-loading-bar .progress {
+      background-color: $icmc-brand-color;
+    }
+
+  }
+
+}
 
 ///////////////////////////////////////////////
 //
