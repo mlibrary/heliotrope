@@ -11,8 +11,9 @@ namespace :heliotrope do
     fail "Backup directory for Monographs not found: '#{args.backup_directory}'" unless Dir.exist?(args.backup_directory)
 
     count = 0
+    docs = monograph_docs
 
-    monograph_docs.each do |monograph_doc|
+    docs.each do |monograph_doc|
       output_tar_file_path = File.join(args.backup_directory, monograph_doc['press_tesim']&.first, "#{monograph_doc.id}.tar")
 
       if args.refresh_all_backups || !deposit_up_to_date?(monograph_doc, output_tar_file_path)
@@ -37,6 +38,27 @@ namespace :heliotrope do
       end
     end
     puts "Backed up #{count} Monographs"
+
+    # Now that recently created/modified Monographs are backed up, we'll run a quick loop to see if any existing...
+    # backed-up Monographs have been deleted from Fulcrum. If so, we'll just mark their tar files with a name change...
+    # so that they can be easily skipped over when restoring content.
+    count = 0
+    existing_monograph_ids = docs&.map { |doc| doc.id }
+    backup_file_paths = Dir.glob(File.join(args.backup_directory, '**/*.tar')).sort
+
+    backup_file_paths.each do |backup_file|
+      monograph_id = File.basename(backup_file, '.tar')
+      if existing_monograph_ids.exclude?(monograph_id)
+        # Fedora sanity check, confirm that it's not just missing from Solr before renaming the tar file
+        begin
+          Monograph.find(monograph_id)
+        rescue Ldp::Gone
+          count += 1
+          File.rename(backup_file, backup_file + '.deleted')
+        end
+      end
+    end
+    puts "Marked #{count} Monographs as deleted"
   end
 end
 
