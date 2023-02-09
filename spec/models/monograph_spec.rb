@@ -27,9 +27,9 @@ describe Monograph do
     expect(mono.valid?).to eq false
     expect(mono.errors.messages[:press]).to eq ['You must select a press.']
     expect(mono.errors.messages[:title]).to eq ['Your work must have a title.']
-    monograph.press = umich.subdomain
-    monograph.title = ['blah']
-    expect(monograph.valid?).to eq true
+    mono.press = umich.subdomain
+    mono.title = ['blah']
+    expect(mono.valid?).to eq true
   end
 
   context "edition information" do
@@ -70,6 +70,21 @@ describe Monograph do
       monograph.destroy
       expect(HandleDeleteJob).to have_received(:perform_later).with(HandleNet::FULCRUM_HANDLE_PREFIX + noid)
     end
+  end
+
+  it 'validates date_published' do
+    mono = described_class.new
+    # set up minimum "validates presence" metadata for the Monograph
+    expect(mono.valid?).to eq false
+    mono.press = umich.subdomain
+    mono.title = ['blah']
+    expect(mono.valid?).to eq true
+
+    mono.date_published = ['2023/15/15']
+    expect(mono.valid?).to eq false
+    # this is the format that the `datetime-local` datepicker will provide
+    mono.date_published = ['2023-02-03T18:07:53']
+    expect(mono.valid?).to eq true
   end
 
   describe '#maybe_set_date_published' do

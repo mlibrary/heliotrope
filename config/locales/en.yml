@@ -323,6 +323,9 @@ en:
         creator: "Enter one citation name per line in the format \"Lastname, Firstname (optional role)\". Omit the comma for institutions etc."
         creator_display: "An optional free-text field allowing custom authorship display."
         date_created: "The 4-digit publication year used in auto-generated citations."
+        date_published: "The date and time when the Monograph was published on Fulcrum. This is <b>automatically set</b> when the Monograph's visibility goes \"Public\" for the first time.<br/>
+                         Used for the order of \"Sort by Publication Date\" results <b>within</b> a given \"Publication Year\" (above). Manual changes can allow you to tweak the order of such results.<br/>
+                         This is stored exactly as seen as \"universal time\", i.e. your local time zone is not taken into account."
         description: "A free-text description of the work (markdown allowed)."
         doi: "https://doi.org/ is automatically prepended"
         edition_name: "Text used to describe this edition of the Monograph"

@@ -8,7 +8,7 @@ module Hyrax
     # Hyrax::BasicMetadata fields are already included
     self.terms -= %i[keyword related_url source based_near rights_statement alternative_title abstract access_right rights_notes]
     # these will hold their order, bearing in mind that required_fields are automatically removed first
-    self.terms += %i[press creator_display series buy_url isbn doi hdl copyright_holder open_access
+    self.terms += %i[press date_published creator_display series buy_url isbn doi hdl copyright_holder open_access
                      funder funder_display holding_contact location section_titles
                      edition_name previous_edition next_edition
                      tombstone tombstone_message
@@ -20,6 +20,8 @@ module Hyrax
     # force some order to group items by relation and importance
     self.terms.delete_at(self.terms.index(:description))
     self.terms = self.terms.insert(self.terms.index(:contributor) - 1, :description)
+    self.terms.delete_at(self.terms.index(:date_published))
+    self.terms = self.terms.insert(self.terms.index(:description) - 1, :date_published)
     self.terms.delete_at(self.terms.index(:creator_display))
     self.terms = self.terms.insert(self.terms.index(:contributor) + 1, :creator_display)
     self.terms.delete_at(self.terms.index(:identifier))
@@ -44,6 +46,7 @@ module Hyrax
     end
 
     # RE: below methods, see https://samvera.github.io/customize-metadata-other-customizations.html
+    # only mess with this stuff if you're trying to wrangle fields inherited from Hyrax
     def self.multiple?(field)
       if %i[title description creator contributor publisher date_created license].include? field.to_sym
         false
@@ -52,6 +55,7 @@ module Hyrax
       end
     end
 
+    # only mess with this stuff if you're trying to wrangle fields inherited from Hyrax
     def self.model_attributes(_nil) # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
       attrs = super
       attrs[:title] = Array(attrs[:title]) if attrs[:title]
@@ -64,6 +68,7 @@ module Hyrax
       attrs
     end
 
+    # only mess with this stuff if you're trying to wrangle fields inherited from Hyrax
     def title
       super.first || ""
     end
