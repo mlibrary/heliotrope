@@ -92,11 +92,11 @@ module Greensub
       end
 
       def product_params
-        params.require(:greensub_product).permit(:identifier, :name, :purchase)
+        params.require(:greensub_product).permit(:identifier, :name, :purchase, :needs_kbart, :group_key)
       end
 
       def filtering_params(params)
-        params.slice(:identifier_like, :name_like, :purchase_like)
+        params.slice(:identifier_like, :name_like, :purchase_like, :needs_kbart_like, :group_key_like)
       end
   end
 end

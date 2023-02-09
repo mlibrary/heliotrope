@@ -27,9 +27,11 @@
         </div>
         <div class="col-md-9">
           <% size = 24 %>
-          <div class="col-md-2">Identifier</div><div class="col-md-10"><input type="text" name="identifier_like" value="<%= params[:identifier_like] %>" size="<%= size %>" aria-label="identifier_like"></div>
-          <div class="col-md-2">Name</div><div class="col-md-10"><input type="text" name="name_like" value="<%= params[:name_like] %>" size="<%= size %>" aria-label="name_like"></div>
-          <div class="col-md-2">Purchase</div><div class="col-md-10"><input type="text" name="purchase_like" value="<%= params[:purchase_like] %>" size="<%= size %>" aria-label="purchase_like"></div>
+          <div class="col-md-3">Identifier</div><div class="col-md-9"><input type="text" name="identifier_like" value="<%= params[:identifier_like] %>" size="<%= size %>" aria-label="identifier_like"></div>
+          <div class="col-md-3">Name</div><div class="col-md-9"><input type="text" name="name_like" value="<%= params[:name_like] %>" size="<%= size %>" aria-label="name_like"></div>
+          <div class="col-md-3">Purchase</div><div class="col-md-9"><input type="text" name="purchase_like" value="<%= params[:purchase_like] %>" size="<%= size %>" aria-label="purchase_like"></div>
+          <div class="col-md-3">Needs KBART</div><div class="col-md-9"><input type="text" name="needs_kbart_like" value="<%= params[:needs_kbart_like] %>" size="<%= size %>" aria-label="needs_kbart_like"></div>
+          <div class="col-md-3">Group Key</div><div class="col-md-9"><input type="text" name="group_key_like" value="<%= params[:group_key_like] %>" size="<%= size %>" aria-label="group_key_like"></div>
         </div>
         <div class="col-md-2">
           <div>Components</div>
@@ -50,6 +52,8 @@
         <div><%= product.identifier %></div>
         <div><%= product.name %></div>
         <div><%= link_to product.purchase, product.purchase %>&nbsp;</div>
+        <div><%= product.needs_kbart %></div>
+        <div><%= product.group_key %></div>
       </div>
       <div class="col-md-2">
         <div class="col-md-6">C</div><div class="col-md-6"><%= link_to product.components.count, greensub_product_components_path(product) %></div>

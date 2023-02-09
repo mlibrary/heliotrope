@@ -13,6 +13,14 @@
     <%= f.input :purchase %>
   </div>
 
+  <div class="form-inputs">
+    <%= f.input :needs_kbart, as: :radio_buttons, collection: ['true', 'false'] %>
+  </div>
+
+  <div class="form-inputs">
+    <%= f.input :group_key %>
+  </div>
+
   <div class="form-actions">
     <%= f.button :submit %>
   </div>
