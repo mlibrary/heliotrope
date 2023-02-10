@@ -7,7 +7,7 @@ describe Monograph do
 
   let(:monograph) { described_class.new }
   let(:date) { DateTime.now }
-  let(:umich) { build(:press, subdomain: 'umich') }
+  let(:umich) { create(:press, subdomain: 'umich', name: "U of M") }
 
   it('includes HeliotropeUniverialMetadata') { is_expected.to be_a HeliotropeUniversalMetadata }
 
@@ -85,6 +85,58 @@ describe Monograph do
     # this is the format that the `datetime-local` datepicker will provide
     mono.date_published = ['2023-02-03T18:07:53']
     expect(mono.valid?).to eq true
+  end
+
+  describe "#maybe_save_kbart" do
+    let(:noid) { '999999999' }
+    let(:monograph) { build(:monograph, press: umich.subdomain,
+                                        id: noid,
+                                        title: ["_Italic_ Yellow"],
+                                        isbn: ["978-0-472-07581-2 (hardcover)", "978-0-472-05581-4 (paper)", "978-0-472-90313-9 (ebook)"],
+                                        publisher: ["Blue Press"],
+                                        creator: ["Lastname, Firstname\nOtherlast, Otherfirst"]) }
+
+    context "with a component that's in a product that needs a kbart" do
+      let(:product) { create(:product, identifier: 'product', name: "product", needs_kbart: true) }
+      let(:component) { create(:component, identifier: monograph.id, noid: monograph.id) }
+
+      before { product.components << component }
+
+      it "creates the Kbart row on save" do
+        monograph.save
+
+        kbart = Kbart.first
+        expect(kbart.publication_title).to eq "Italic Yellow"
+        expect(kbart.print_identifier).to eq "9780472075812"
+        expect(kbart.online_identifier).to eq "9780472903139"
+        expect(kbart.title_url).to eq "https://hdl.handle.net/2027/fulcrum.999999999"
+        expect(kbart.first_author).to eq "Lastname"
+        expect(kbart.title_id).to eq "2027/fulcrum.999999999"
+        expect(kbart.coverage_depth).to eq "fulltext"
+        expect(kbart.publisher_name).to eq umich.name
+      end
+    end
+
+    context "with a component that's in a product that does not need a kbart" do
+      let(:product) { create(:product, identifier: 'product', name: "product", needs_kbart: false) }
+      let(:component) { create(:component, identifier: monograph.id, noid: monograph.id) }
+
+      before { product.components << component }
+
+      it "does not create a Kbart row on save" do
+        monograph.save
+
+        expect(Kbart.first).to be nil
+      end
+    end
+
+    context "if no component and no product" do
+      it "does not create a Kbart row on save" do
+        monograph.save
+
+        expect(Kbart.first).to be nil
+      end
+    end
   end
 
   describe '#maybe_set_date_published' do

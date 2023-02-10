@@ -86,6 +86,7 @@ class Monograph < ActiveFedora::Base
 
   after_create :after_create_jobs
   after_destroy :after_destroy_jobs
+  after_save :maybe_save_kbart
 
   validates :title, presence: { message: 'Your work must have a title.' }
 
@@ -95,6 +96,13 @@ class Monograph < ActiveFedora::Base
   alias date_modified modified_date
 
   private
+
+    def maybe_save_kbart
+      component = Greensub::Component.find_by(noid: self.id)
+      return if component.nil?
+      return unless component&.products.map(&:needs_kbart).any?(true)
+      KbartUtils::AddRecord.create_or_update(self)
+    end
 
     def after_create_jobs
       HandleCreateJob.perform_later(HandleNet::FULCRUM_HANDLE_PREFIX + id,

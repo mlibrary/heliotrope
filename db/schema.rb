@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_02_03_203704) do
+ActiveRecord::Schema.define(version: 2023_02_09_195746) do
 
   create_table "api_requests", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.integer "user_id"
@@ -310,6 +310,28 @@ ActiveRecord::Schema.define(version: 2023_02_03_203704) do
     t.datetime "updated_at", null: false
     t.index ["uploaded_file_id"], name: "index_job_io_wrappers_on_uploaded_file_id"
     t.index ["user_id"], name: "index_job_io_wrappers_on_user_id"
+  end
+
+  create_table "kbarts", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+    t.string "noid", null: false
+    t.text "publication_title"
+    t.string "print_identifier"
+    t.string "online_identifier"
+    t.string "date_first_issue_online"
+    t.string "num_first_vol_online"
+    t.string "num_first_issue_online"
+    t.string "date_last_issue_onlline"
+    t.string "num_last_vol_online"
+    t.string "num_last_issue_online"
+    t.string "title_url"
+    t.string "first_author"
+    t.string "title_id"
+    t.string "embargo_info"
+    t.string "coverage_depth"
+    t.string "coverage_notes"
+    t.string "publisher_name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "license_affiliations", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
