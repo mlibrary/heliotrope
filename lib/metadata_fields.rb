@@ -71,7 +71,7 @@ METADATA_FIELDS ||=
     { object: :universal, field_name: 'Tombstone Message', metadata_name: 'tombstone_message', required: false, multivalued: :no, description: I18n.t('csv.descriptions.tombstone_message') },
     { object: :monograph, field_name: 'Volume', metadata_name: 'volume', required: false, multivalued: :no, description: I18n.t('csv.descriptions.volume') },
     { object: :monograph, field_name: 'OCLC Work Identifier', metadata_name: 'oclc_owi', required: false, multivalued: :no, description: I18n.t('csv.descriptions.oclc_owi') },
-    { object: :monograph, field_name: 'Copyright Year', metadata_name: 'copyright_year', required: false, multivalued: :no, date_format: true, description: I18n.t('csv.descriptions.copyright_year') },
+    { object: :monograph, field_name: 'Copyright Year', metadata_name: 'copyright_year', required: false, multivalued: :no, description: I18n.t('csv.descriptions.copyright_year') },
     { object: :monograph, field_name: 'Award(s)', metadata_name: 'award', required: false, multivalued: :yes_split, description: I18n.t('csv.descriptions.award') },
     { object: :file_set, field_name: 'Article Title', metadata_name: 'article_title', required: false, multivalued: :no, description: I18n.t('csv.descriptions.article_title') },
     { object: :file_set, field_name: 'Article Creator(s)', metadata_name: 'article_creator', required: false, multivalued: :yes_multiline, description: I18n.t('csv.description.article_creator') },
