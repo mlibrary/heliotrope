@@ -81,8 +81,8 @@ module Royalty
       @hebids = {}
       docs = ActiveFedora::SolrService.query("{!terms f=press_sim}#{@subdomain}", fl: ['id', 'identifier_tesim'], rows: 100_000)
       docs.each do |doc|
-        identifier = doc['identifier_tesim']&.find { |i| i[/^heb_id:\ heb[0-9].*/] } || ''
-        @hebids[doc["id"]] = identifier.split(": ")[1]
+        identifier = doc['identifier_tesim']&.find { |i| i[/^heb_id:heb[0-9].*/] } || ''
+        @hebids[doc["id"]] = identifier.split(":")[1]
       end
       @hebids
     end

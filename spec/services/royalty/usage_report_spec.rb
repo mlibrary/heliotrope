@@ -70,7 +70,7 @@ RSpec.describe Royalty::UsageReport do
                        press_sim: press.subdomain,
                        copyright_holder_tesim: ["Copyright A"],
                        title_tesim: ["A"],
-                       identifier_tesim: ["heb_id: heb90001.0001.001", "http://hdl.handle.net/2027/heb.31695"])
+                       identifier_tesim: ["heb_id:heb90001.0001.001", "http://hdl.handle.net/2027/heb.31695"])
     end
 
     let(:mono2) do
@@ -79,7 +79,7 @@ RSpec.describe Royalty::UsageReport do
                        press_sim: press.subdomain,
                        copyright_holder_tesim: ["Copyright B"],
                        title_tesim: ["B"],
-                       identifier_tesim: ["http://hdl.handle.net/2027/heb.sxklj", "heb_id: heb33333.0001.001"])
+                       identifier_tesim: ["http://hdl.handle.net/2027/heb.sxklj", "heb_id:heb33333.0001.001"])
     end
     let(:counter_report) { double("counter_report") }
     let(:item_report) { { items: items } }
@@ -106,6 +106,7 @@ RSpec.describe Royalty::UsageReport do
       expect(@reports["Copyright_B.usage.201901-201906.csv"][:items][0]["Parent_ISBN"]).to be nil
       expect(@reports["Copyright_B.usage.201901-201906.csv"][:items][0]["Parent_Print_ISSN"]).to be nil
       expect(@reports["Copyright_B.usage.201901-201906.csv"][:items][0]["Parent_Online_ISSN"]).to be nil
+      expect(@reports["Copyright_B.usage.201901-201906.csv"][:items][0]["hebid"]).to eq "heb33333.0001.001"
     end
   end
 
@@ -119,7 +120,7 @@ RSpec.describe Royalty::UsageReport do
                        press_sim: press.subdomain,
                        copyright_holder_tesim: ["Copyright A"],
                        title_tesim: ["A"],
-                       identifier_tesim: ["heb90001.0001.001", "http://hdl.handle.net/2027/heb.31695"])
+                       identifier_tesim: ["heb_id:heb90001.0001.001", "http://hdl.handle.net/2027/heb.31695"])
     end
 
     let(:mono2) do
@@ -128,7 +129,7 @@ RSpec.describe Royalty::UsageReport do
                        press_sim: press.subdomain,
                        copyright_holder_tesim: ["Copyright B"],
                        title_tesim: ["B"],
-                       identifier_tesim: ["http://hdl.handle.net/2027/heb.sxklj", "heb33333.0001.001"])
+                       identifier_tesim: ["http://hdl.handle.net/2027/heb.sxklj", "heb_id:heb33333.0001.001"])
     end
     let(:counter_report) { double("counter_report") }
     let(:item_report) { { items: items } }
@@ -215,7 +216,7 @@ RSpec.describe Royalty::UsageReport do
                        press_sim: press.subdomain,
                        copyright_holder_tesim: ["Copyright A"],
                        title_tesim: ["A"],
-                       identifier_tesim: ["heb_id: heb90001.0001.001", "http://hdl.handle.net/2027/heb.31695"])
+                       identifier_tesim: ["heb_id:heb90001.0001.001", "http://hdl.handle.net/2027/heb.31695"])
     end
 
     let(:mono2) do
@@ -224,7 +225,7 @@ RSpec.describe Royalty::UsageReport do
                        press_sim: press.subdomain,
                        copyright_holder_tesim: ["Copyright B"],
                        title_tesim: ["B"],
-                       identifier_tesim: ["http://hdl.handle.net/2027/heb.sxklj", "heb_id: heb33333.0001.001"])
+                       identifier_tesim: ["http://hdl.handle.net/2027/heb.sxklj", "heb_id:heb33333.0001.001"])
     end
 
     before do
@@ -277,7 +278,7 @@ RSpec.describe Royalty::UsageReport do
                        press_sim: press.subdomain,
                        copyright_holder_tesim: ["Copyright A"],
                        title_tesim: ["A"],
-                       identifier_tesim: ["heb_id: heb90001.0001.001", "http://hdl.handle.net/2027/heb.31695"])
+                       identifier_tesim: ["heb_id:heb90001.0001.001", "http://hdl.handle.net/2027/heb.31695"])
     end
 
     let(:mono2) do
@@ -286,7 +287,7 @@ RSpec.describe Royalty::UsageReport do
                        press_sim: press.subdomain,
                        copyright_holder_tesim: ["Copyright B"],
                        title_tesim: ["B"],
-                       identifier_tesim: ["http://hdl.handle.net/2027/heb.sxklj", "heb_id: heb33333.0001.001"])
+                       identifier_tesim: ["http://hdl.handle.net/2027/heb.sxklj", "heb_id:heb33333.0001.001"])
     end
 
     before do
