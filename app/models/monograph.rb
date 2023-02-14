@@ -71,6 +71,7 @@ class Monograph < ActiveFedora::Base
   property :copyright_year, predicate: ::RDF::URI.new('http://purl.org/dc/terms/dateCopyrighted'), multiple: false do |index|
     index.as :stored_searchable
   end
+  validates :copyright_year, format: { with: /\A\d\d\d\d\z/, message: "must be in YYYY format", allow_blank: true }
 
   property :award, predicate: ::RDF::URI.new('http://fulcrum.org/ns#Award') do |index|
     index.as :stored_searchable

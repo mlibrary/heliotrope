@@ -55,7 +55,7 @@ module HeliotropeUniversalMetadata
           begin
             DateTime.parse(date_published.first)
           rescue
-            errors.add(:date_published, "invalid value for 'Date Published on Fulcrum'")
+            errors.add(:date_published, "Invalid DateTime value")
           end
         end
       end
