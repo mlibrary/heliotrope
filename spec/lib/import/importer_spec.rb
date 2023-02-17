@@ -252,6 +252,32 @@ describe Import::Importer do
       end
     end
 
+    describe '#run with tarball as `root_dir`' do
+      before do
+        stub_out_redis
+      end
+
+      context 'when the importer runs successfully' do
+        # this spec fixture tarball is purposefully named with a 10-digit "NOID" to avoid any possibility of...
+        # collision with a dev's actual Monograph tar archives. It is simply the directory used above packed up, i.e.
+        # File.join(fixture_path, 'csv', 'import_sections')
+        let(:root_dir) { File.join(fixture_path, 'csv', '9999999999.tar') }
+
+        it 'imports the new monograph and files, or "reimports" them to a pre-existing monograph' do
+          expect { importer.run }
+            .to change(Monograph, :count)
+                  .by(1)
+                  .and(change(FileSet, :count)
+                         .by(12))
+                  .and(change(Hyrax::UploadedFile, :count)
+                         .by(8)) # none for the 4 external resources
+          expect(Dir.exist?(Rails.root.join('tmp', "importing-tarball-9999999999"))).to be false
+        end
+
+        # no need to redo all the metadata checks from above!
+      end
+    end
+
     context 'when reusing noids from a manifest' do
       # See HELIO-4359
       # This is a special case that one would almost never use.
