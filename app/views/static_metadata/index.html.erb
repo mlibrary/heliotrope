@@ -1,0 +1,19 @@
+
+<h2>KBART Files</h2>
+
+<br />
+<br />
+
+
+<% if @links.present? %>
+  <% @links.each do |location, href| %>
+    <p><a href="<%= href %>"><%= location %></a><p>
+  <% end %>
+<% else %>
+  <p>There are currently no files here.</p>
+<% end %>
+
+<br />
+<br />
+<br />
+<br />

@@ -277,6 +277,10 @@ Rails.application.routes.draw do
     end
   end
 
+  # For generated KBART files, maybe MARC files, etc
+  # HELIO-4408
+  get '/products(/:group_key)(/:file_type)(/:file)', controller: 'static_metadata', action: 'index'
+
   get '/presses' => 'presses#index'
   resources :presses, only: %i[new create edit update destroy]
   resources :presses, path: '/', only: %i[index edit] do
