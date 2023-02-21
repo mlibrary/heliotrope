@@ -12,6 +12,14 @@ Hyrax::DownloadsController.class_eval do # rubocop:disable Metrics/BlockLength
         render plain: presenter.closed_captions
       elsif visual_descriptions?
         render plain: presenter.visual_descriptions
+      elsif embed_css?
+        # try to prevent browsers caching these tiny CSS files, so that any changes will be picked up immediately
+        response.set_header('Last-Modified', Time.now.httpdate)
+        response.set_header('Expires', '0')
+        response.set_header('Pragma', 'no-cache')
+        response.set_header('Cache-Control', 'no-store, no-cache, must-revalidate, max-age=0, pre-check=0, post-check=0')
+        # https://stackoverflow.com/a/55101169
+        render body: presenter.embed_code_css, content_type: 'text/css'
       elsif file.present? && (thumbnail? || jpeg? || video? || sound? || animated_gif? || allow_download?)
         # See #401
         if file.is_a? String
@@ -119,6 +127,10 @@ Hyrax::DownloadsController.class_eval do # rubocop:disable Metrics/BlockLength
 
     def visual_descriptions?
       params[:file] == 'descriptions_vtt'
+    end
+
+    def embed_css?
+      params[:file] == 'embed_css'
     end
   end)
 end
