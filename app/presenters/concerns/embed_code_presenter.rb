@@ -53,7 +53,7 @@ module EmbedCodePresenter
 
   def responsive_embed_code
     <<~END
-      <div style='width:auto; page-break-inside:avoid; -webkit-column-break-inside:avoid; break-inside:avoid; max-width:#{embed_width}px; margin:auto'>
+      <div style='width:auto; page-break-inside:avoid; -webkit-column-break-inside:avoid; break-inside:avoid; max-width:#{embed_width}px; margin:auto; background-color:#000'>
         <div style='overflow:hidden; padding-bottom:#{padding_bottom}%; position:relative; height:0;'>#{embed_height_string}
           <iframe src='#{embed_link}' title='#{embed_code_title}' style='overflow:hidden; border-width:0; left:0; top:0; width:100%; height:100%; position:absolute;'></iframe>
         </div>
@@ -71,6 +71,7 @@ module EmbedCodePresenter
         break-inside:avoid;
         max-width:#{embed_width}px;
         margin:auto;
+        background-color:#000;
       }
       #fulcrum-embed-inner-#{id} {
         overflow:hidden;

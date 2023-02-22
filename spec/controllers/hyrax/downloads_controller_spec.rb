@@ -304,6 +304,7 @@ RSpec.describe Hyrax::DownloadsController, type: :controller do
                 break-inside:avoid;
                 max-width:1000px;
                 margin:auto;
+                background-color:#000;
               }
               #fulcrum-embed-inner-#{file_set.id} {
                 overflow:hidden;

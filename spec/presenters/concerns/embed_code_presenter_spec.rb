@@ -86,7 +86,7 @@ RSpec.describe EmbedCodePresenter do
   describe '#embed_code and #embed_code_css' do
     let(:map_embed_code) {
       <<~END
-        <div style='width:auto; page-break-inside:avoid; -webkit-column-break-inside:avoid; break-inside:avoid; max-width:1920px; margin:auto'>
+        <div style='width:auto; page-break-inside:avoid; -webkit-column-break-inside:avoid; break-inside:avoid; max-width:1920px; margin:auto; background-color:#000'>
           <div style='overflow:hidden; padding-bottom:60%; position:relative; height:0;'><!-- actual height: 1080px -->
             <iframe src='#{presenter.embed_link}' title='#{presenter.embed_code_title}' style='overflow:hidden; border-width:0; left:0; top:0; width:100%; height:100%; position:absolute;'></iframe>
           </div>
@@ -102,6 +102,7 @@ RSpec.describe EmbedCodePresenter do
           break-inside:avoid;
           max-width:1920px;
           margin:auto;
+          background-color:#000;
         }
         #fulcrum-embed-inner-fileset_id {
           overflow:hidden;
@@ -120,7 +121,7 @@ RSpec.describe EmbedCodePresenter do
     }
     let(:dimensionless_map_embed_code) {
       <<~END
-        <div style='width:auto; page-break-inside:avoid; -webkit-column-break-inside:avoid; break-inside:avoid; max-width:1000px; margin:auto'>
+        <div style='width:auto; page-break-inside:avoid; -webkit-column-break-inside:avoid; break-inside:avoid; max-width:1000px; margin:auto; background-color:#000'>
           <div style='overflow:hidden; padding-bottom:60%; position:relative; height:0;'>
             <iframe src='#{presenter.embed_link}' title='#{presenter.embed_code_title}' style='overflow:hidden; border-width:0; left:0; top:0; width:100%; height:100%; position:absolute;'></iframe>
           </div>
@@ -136,6 +137,7 @@ RSpec.describe EmbedCodePresenter do
           break-inside:avoid;
           max-width:1000px;
           margin:auto;
+          background-color:#000;
         }
         #fulcrum-embed-inner-fileset_id {
           overflow:hidden;
@@ -154,7 +156,7 @@ RSpec.describe EmbedCodePresenter do
     }
     let(:image_embed_code) {
       <<~END
-        <div style='width:auto; page-break-inside:avoid; -webkit-column-break-inside:avoid; break-inside:avoid; max-width:1920px; margin:auto'>
+        <div style='width:auto; page-break-inside:avoid; -webkit-column-break-inside:avoid; break-inside:avoid; max-width:1920px; margin:auto; background-color:#000'>
           <div style='overflow:hidden; padding-bottom:60%; position:relative; height:0;'><!-- actual image height: 1080px -->
             <iframe src='#{presenter.embed_link}' title='#{presenter.embed_code_title}' style='overflow:hidden; border-width:0; left:0; top:0; width:100%; height:100%; position:absolute;'></iframe>
           </div>
@@ -170,6 +172,7 @@ RSpec.describe EmbedCodePresenter do
           break-inside:avoid;
           max-width:1920px;
           margin:auto;
+          background-color:#000;
         }
         #fulcrum-embed-inner-fileset_id {
           overflow:hidden;
@@ -188,7 +191,7 @@ RSpec.describe EmbedCodePresenter do
     }
     let(:portrait_image_embed_code) {
       <<~END
-        <div style='width:auto; page-break-inside:avoid; -webkit-column-break-inside:avoid; break-inside:avoid; max-width:1080px; margin:auto'>
+        <div style='width:auto; page-break-inside:avoid; -webkit-column-break-inside:avoid; break-inside:avoid; max-width:1080px; margin:auto; background-color:#000'>
           <div style='overflow:hidden; padding-bottom:80%; position:relative; height:0;'><!-- actual image height: 1920px -->
             <iframe src='#{presenter.embed_link}' title='#{presenter.embed_code_title}' style='overflow:hidden; border-width:0; left:0; top:0; width:100%; height:100%; position:absolute;'></iframe>
           </div>
@@ -204,6 +207,7 @@ RSpec.describe EmbedCodePresenter do
           break-inside:avoid;
           max-width:1080px;
           margin:auto;
+          background-color:#000;
         }
         #fulcrum-embed-inner-fileset_id {
           overflow:hidden;
@@ -222,7 +226,7 @@ RSpec.describe EmbedCodePresenter do
     }
     let(:square_image_embed_code) {
       <<~END
-        <div style='width:auto; page-break-inside:avoid; -webkit-column-break-inside:avoid; break-inside:avoid; max-width:500px; margin:auto'>
+        <div style='width:auto; page-break-inside:avoid; -webkit-column-break-inside:avoid; break-inside:avoid; max-width:500px; margin:auto; background-color:#000'>
           <div style='overflow:hidden; padding-bottom:80%; position:relative; height:0;'><!-- actual image height: 500px -->
             <iframe src='#{presenter.embed_link}' title='#{presenter.embed_code_title}' style='overflow:hidden; border-width:0; left:0; top:0; width:100%; height:100%; position:absolute;'></iframe>
           </div>
@@ -238,6 +242,7 @@ RSpec.describe EmbedCodePresenter do
           break-inside:avoid;
           max-width:500px;
           margin:auto;
+          background-color:#000;
         }
         #fulcrum-embed-inner-fileset_id {
           overflow:hidden;
@@ -256,7 +261,7 @@ RSpec.describe EmbedCodePresenter do
     }
     let(:dimensionless_image_embed_code) {
       <<~END
-        <div style='width:auto; page-break-inside:avoid; -webkit-column-break-inside:avoid; break-inside:avoid; max-width:1000px; margin:auto'>
+        <div style='width:auto; page-break-inside:avoid; -webkit-column-break-inside:avoid; break-inside:avoid; max-width:1000px; margin:auto; background-color:#000'>
           <div style='overflow:hidden; padding-bottom:60%; position:relative; height:0;'>
             <iframe src='#{presenter.embed_link}' title='#{presenter.embed_code_title}' style='overflow:hidden; border-width:0; left:0; top:0; width:100%; height:100%; position:absolute;'></iframe>
           </div>
@@ -272,6 +277,7 @@ RSpec.describe EmbedCodePresenter do
           break-inside:avoid;
           max-width:1000px;
           margin:auto;
+          background-color:#000;
         }
         #fulcrum-embed-inner-fileset_id {
           overflow:hidden;
@@ -290,7 +296,7 @@ RSpec.describe EmbedCodePresenter do
     }
     let(:video_embed_code) {
       <<~END
-        <div style='width:auto; page-break-inside:avoid; -webkit-column-break-inside:avoid; break-inside:avoid; max-width:1920px; margin:auto'>
+        <div style='width:auto; page-break-inside:avoid; -webkit-column-break-inside:avoid; break-inside:avoid; max-width:1920px; margin:auto; background-color:#000'>
           <div style='overflow:hidden; padding-bottom:56.25%; position:relative; height:0;'><!-- actual video height: 1080px -->
             <iframe src='#{presenter.embed_link}' title='#{presenter.embed_code_title}' style='overflow:hidden; border-width:0; left:0; top:0; width:100%; height:100%; position:absolute;'></iframe>
           </div>
@@ -306,6 +312,7 @@ RSpec.describe EmbedCodePresenter do
           break-inside:avoid;
           max-width:1920px;
           margin:auto;
+          background-color:#000;
         }
         #fulcrum-embed-inner-fileset_id {
           overflow:hidden;
@@ -324,7 +331,7 @@ RSpec.describe EmbedCodePresenter do
     }
     let(:dimensionless_video_embed_code) {
       <<~END
-        <div style='width:auto; page-break-inside:avoid; -webkit-column-break-inside:avoid; break-inside:avoid; max-width:1000px; margin:auto'>
+        <div style='width:auto; page-break-inside:avoid; -webkit-column-break-inside:avoid; break-inside:avoid; max-width:1000px; margin:auto; background-color:#000'>
           <div style='overflow:hidden; padding-bottom:75%; position:relative; height:0;'>
             <iframe src='#{presenter.embed_link}' title='#{presenter.embed_code_title}' style='overflow:hidden; border-width:0; left:0; top:0; width:100%; height:100%; position:absolute;'></iframe>
           </div>
@@ -340,6 +347,7 @@ RSpec.describe EmbedCodePresenter do
           break-inside:avoid;
           max-width:1000px;
           margin:auto;
+          background-color:#000;
         }
         #fulcrum-embed-inner-fileset_id {
           overflow:hidden;
@@ -358,7 +366,7 @@ RSpec.describe EmbedCodePresenter do
     }
     let(:video_with_visual_descriptions_embed_code) {
       <<~END
-        <div style='width:auto; page-break-inside:avoid; -webkit-column-break-inside:avoid; break-inside:avoid; max-width:1920px; margin:auto'>
+        <div style='width:auto; page-break-inside:avoid; -webkit-column-break-inside:avoid; break-inside:avoid; max-width:1920px; margin:auto; background-color:#000'>
           <div style='overflow:hidden; padding-bottom:67.5%; position:relative; height:0;'><!-- actual video height: 1080px -->
             <iframe src='#{presenter.embed_link}' title='#{presenter.embed_code_title}' style='overflow:hidden; border-width:0; left:0; top:0; width:100%; height:100%; position:absolute;'></iframe>
           </div>
@@ -374,6 +382,7 @@ RSpec.describe EmbedCodePresenter do
           break-inside:avoid;
           max-width:1920px;
           margin:auto;
+          background-color:#000;
         }
         #fulcrum-embed-inner-fileset_id {
           overflow:hidden;
