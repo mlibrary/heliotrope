@@ -1,3 +1,6 @@
-<iframe title="<%= @presenter.title %>" height="600px" width="100%" src="<%= main_app.map_file_url(file_set.id, file: 'index', format: 'html') %>">
+<%# Whether or not this can *actually* go fullscreen depends on the configuration of the Leaflet map that is in this FileSet's zip, i.e. %>
+<%# whether `fullscreenControl` etc is set. For maps destined to be embedded in epub.js/CSB, that probably won't be the case. %>
+<%# `fs=1` param right now targets external/non-CSB embed use cases only. CSB has issues with fullscreen. See HELIO-2961 and HELIO-4024. %>
+<iframe title="<%= @presenter.title %>" height="100%" width="100%" style="overflow:hidden" src="<%= main_app.map_file_url(file_set.id, file: 'index', format: 'html') %>" <%= 'allowfullscreen="true"' if params[:fs] == '1' %>>
   Your browser doesn't support iframes!
 </iframe>

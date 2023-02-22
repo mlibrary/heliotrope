@@ -7,9 +7,10 @@ html, body, figure, #image {
   padding: 0px;
   border: 0px;
   width: 100%;
-  // the Leaflet embed needs this on html, body and figure, but it's messing with the automatic...
-  // iframe height for audio embeds, so I've inlined it on the erb templates if @presenter.image?
-  // height: 100%;
+}
+
+html.embedded-leaflet-map, body.embedded-leaflet-map {
+  height: 100%;
 }
 
 html {
