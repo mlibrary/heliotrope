@@ -53,9 +53,11 @@ class MonographIndexer < Hyrax::WorkIndexer
       if object.date_published.present?
         solr_doc['date_published_si'] = object.date_published&.first&.to_i
         # super handles the `date_published_dtsim` value when a value exists in Fedora
-      else
-        # note also `date_uploaded` is aliased to the Fedora-level `create_date` in...
-        # our models, and so it will *always* be set
+      elsif object.visibility == 'open'
+        # Here we index historical blank `date_published` values with `date_uploaded` to aid in results sorting.
+        # No blank date_published values should exist in future thanks to HELIO-4402.
+        # Note also `date_uploaded` is aliased to the Fedora-level `create_date` in...
+        # our models, and so it will *always* be set.
         solr_doc['date_published_si'] = object.date_uploaded&.to_i
         # set the `date_published_dtsim` value too so that we can display the deferred value where required.
         solr_doc['date_published_dtsim'] = [object.date_uploaded]

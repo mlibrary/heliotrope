@@ -318,32 +318,55 @@ RSpec.describe MonographIndexer do
       subject { indexer.generate_solr_document }
 
       let(:indexer) { described_class.new(monograph) }
-      let(:monograph) {
-        build(:monograph,
-              date_published: date_published)
-      }
+      let(:monograph) { create(:monograph, date_published: date_published, visibility: visibility) }
 
-      before do
-        monograph.save!
-      end
-
-      context 'date_published has been set' do
+      context 'date_published has been explicitly set' do
         let(:date_published) { [Hyrax::TimeService.time_in_utc] }
 
-        it 'indexes the first value, this is a multi-valued field we use as single-valued' do
-          expect(subject['date_published_si']).to eq date_published.first.to_i
-          # refresher: cause `.utc.iso8601` is how values detected as dates are indexed in ActiveFedora
-          # https://github.com/samvera/active_fedora/blob/8e7d365a087974b4ff9b9217f792c0c049789de6/lib/active_fedora/indexing/default_descriptors.rb#L114
-          expect(subject['date_published_dtsim']).to eq [date_published.first.utc.iso8601]
+        context 'draft Monograph' do
+          let(:visibility) { 'restricted' }
+
+          it 'indexes the first value of date_published (a multi-valued field we use as single-valued)' do
+            expect(subject['date_published_si']).to eq date_published.first.to_i
+            # refresher: cause `.utc.iso8601` is how values detected as dates are indexed in ActiveFedora
+            # https://github.com/samvera/active_fedora/blob/8e7d365a087974b4ff9b9217f792c0c049789de6/lib/active_fedora/indexing/default_descriptors.rb#L114
+            expect(subject['date_published_dtsim']).to eq [date_published.first.utc.iso8601]
+          end
+        end
+
+        context 'public Monograph' do
+          let(:visibility) { 'open' }
+
+          it 'indexes the first value of date_published (a multi-valued field we use as single-valued)' do
+            expect(subject['date_published_si']).to eq date_published.first.to_i
+            # refresher: cause `.utc.iso8601` is how values detected as dates are indexed in ActiveFedora
+            # https://github.com/samvera/active_fedora/blob/8e7d365a087974b4ff9b9217f792c0c049789de6/lib/active_fedora/indexing/default_descriptors.rb#L114
+            expect(subject['date_published_dtsim']).to eq [date_published.first.utc.iso8601]
+          end
         end
       end
 
-      context 'date_published has not been set' do
+      context 'date_published has not been explicitly set' do
         let(:date_published) { nil }
 
-        it "uses the Monograph's `date_uploaded` value instead, which is aliased to its Fedora `create_date`" do
-          expect(subject['date_published_si']).to eq monograph.create_date.to_i
-          expect(subject['date_published_dtsim']).to eq [monograph.create_date]
+        context 'draft Monograph' do
+          let(:visibility) { 'restricted' }
+
+          it "does nothing with date_published" do
+            expect(subject['date_published_si']).to eq nil
+            expect(subject['date_published_dtsim']).to eq nil
+          end
+        end
+
+        context 'public Monograph' do
+          let(:visibility) { 'open' }
+
+          it "monograph's date_published gets set automatically on creation, and is used for indexing" do
+            expect(subject['date_published_si']).to eq monograph.date_published.first.to_i
+            # refresher: cause `.utc.iso8601` is how values detected as dates are indexed in ActiveFedora
+            # https://github.com/samvera/active_fedora/blob/8e7d365a087974b4ff9b9217f792c0c049789de6/lib/active_fedora/indexing/default_descriptors.rb#L114
+            expect(subject['date_published_dtsim']).to eq [monograph.date_published.first.utc.iso8601]
+          end
         end
       end
     end
