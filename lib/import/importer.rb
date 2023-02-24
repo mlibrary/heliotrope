@@ -121,6 +121,22 @@ module Import
       validate_user
       validate_press unless reimporting
 
+      # Not ideal maybe but reusing `root_dir` for optional import of tarball is what's happening!
+      # Doing the switcheroo here means no alterations needed to the rest of the importer or script/import,...
+      # and won't/shouldn't affect usages such as those described here, either:
+      # https://mlit.atlassian.net/wiki/spaces/FUL/pages/9320892681/Batch+extract+and+import+of+a+Press+s+Monographs
+
+      if File.exist?(root_dir) && File.extname(root_dir) == '.tar'
+        monograph_id = File.basename(root_dir, '.tar')
+        tmp_dir_path = Rails.root.join('tmp', "importing-tarball-#{monograph_id}")
+        FileUtils.mkdir_p(tmp_dir_path) if !Dir.exist?(tmp_dir_path)
+        Minitar.unpack(root_dir, tmp_dir_path.to_s)
+        # our backups are tars of NOID-named directories
+        @root_dir = File.join(tmp_dir_path, monograph_id)
+      else
+        raise "Directory not found: #{root_dir}" unless Dir.exist?(root_dir)
+      end
+
       attrs = CSVParser.new(csv_file, @reuse_noids).attributes
 
       unless @reimporting # if reimporting then the monograph has a title already
@@ -183,6 +199,9 @@ module Import
 
         Hyrax::CurationConcern.actor.create(Hyrax::Actors::Environment.new(Monograph.new, Ability.new(user), attrs))
       end
+
+      # the temporary directory that may have been created if the importer was run against a tar archive
+      FileUtils.remove_entry tmp_dir_path if tmp_dir_path.present?
     end
 
     private
@@ -201,7 +220,6 @@ module Import
       def csv_file
         return @csv_file if @csv_file.present?
 
-        raise "Directory not found: #{root_dir}" unless Dir.exist?(root_dir)
         csv_files = Dir.glob(File.join(root_dir, '*.csv'))
         csv_files = Dir.glob(File.join(root_dir, 'manifest.csv')) if csv_files.count > 1
         if csv_files.count == 1
