@@ -19,6 +19,15 @@ module EmbedCodePresenter
     end
   end
 
+  # all the styles from the relevant embed code, which we can make available as a CSS stylesheet through DownloadsController
+  def embed_code_css
+    if video? || image? || interactive_map?
+      responsive_embed_code_css
+    elsif audio?
+      audio_embed_code_css
+    end
+  end
+
   def embed_link
     embed_url(hdl: HandleNet::FULCRUM_HANDLE_PREFIX + id)
   end
@@ -44,11 +53,39 @@ module EmbedCodePresenter
 
   def responsive_embed_code
     <<~END
-      <div style='width:auto; page-break-inside:avoid; -webkit-column-break-inside:avoid; break-inside:avoid; max-width:#{embed_width}px; margin:auto'>
+      <div style='width:auto; page-break-inside:avoid; -webkit-column-break-inside:avoid; break-inside:avoid; max-width:#{embed_width}px; margin:auto; background-color:#000'>
         <div style='overflow:hidden; padding-bottom:#{padding_bottom}%; position:relative; height:0;'>#{embed_height_string}
           <iframe src='#{embed_link}' title='#{embed_code_title}' style='overflow:hidden; border-width:0; left:0; top:0; width:100%; height:100%; position:absolute;'></iframe>
         </div>
       </div>
+    END
+  end
+
+  # all the styles from `responsive_embed_code` which we can make available as a CSS stylesheet through DownloadsController
+  def responsive_embed_code_css
+    <<~END
+      #fulcrum-embed-outer-#{id} {
+        width:auto;
+        page-break-inside:avoid;
+        -webkit-column-break-inside:avoid;
+        break-inside:avoid;
+        max-width:#{embed_width}px;
+        margin:auto;
+        background-color:#000;
+      }
+      #fulcrum-embed-inner-#{id} {
+        overflow:hidden;
+        padding-bottom:#{padding_bottom}%;
+        position:relative; height:0;
+      }
+      iframe#fulcrum-embed-iframe-#{id} {
+        overflow:hidden;
+        border-width:0;
+        left:0; top:0;
+        width:100%;
+        height:100%;
+        position:absolute;
+      }
     END
   end
 
@@ -57,12 +94,39 @@ module EmbedCodePresenter
     "<iframe src='#{embed_link}' title='#{embed_code_title}' style='page-break-inside:avoid; -webkit-column-break-inside:avoid; break-inside:avoid; display:block; overflow:hidden; border-width:0; width:98%; max-width:98%; height:#{audio_embed_height}px; margin:auto'></iframe>"
   end
 
+  # all the styles from `audio_embed_code` which we can make available as a CSS stylesheet through DownloadsController
+  def audio_embed_code_css
+    # note that we're allowing for the nested "responsive" divs here, enabling embed code consistency even though...
+    # they serve no purpose for the audio player
+    <<~END
+      #fulcrum-embed-outer-#{id} {
+      }
+      #fulcrum-embed-inner-#{id} {
+      }
+      iframe#fulcrum-embed-iframe-#{id} {
+        page-break-inside:avoid;
+        -webkit-column-break-inside:avoid;
+        break-inside:avoid;
+        display:block;
+        overflow:hidden;
+        border-width:0;
+        width:98%;
+        max-width:98%;
+        height:#{audio_embed_height}px;
+        margin:auto;
+      }
+    END
+  end
+
+  # This value is used as the max-width of the responsive divs, so 1000px is a fallback when characterization has...
+  # failed to store a width value for the media, or when the embedded FileSet is an interactive map (zip) where...
+  # `hydra-file_characterization` knows nothing about how to get the dimensions of the map inside.
   def embed_width
-    width_ok? ? width : 400
+    width_ok? ? width : 1000
   end
 
   def embed_height
-    height_ok? ? height : 300
+    height_ok? ? height : 'unknown'
   end
 
   def embed_height_string

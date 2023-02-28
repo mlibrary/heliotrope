@@ -81,93 +81,369 @@ RSpec.describe EmbedCodePresenter do
     end
   end
 
-  describe '#embed_code' do
+  # test the old-style (CSB-embed-targeting) embed codes with inline styles, as well as the equivalent CSS styles...
+  # targeting style-less (more uniform) embed codes being by external parties, especially Janeway articles.
+  describe '#embed_code and #embed_code_css' do
     let(:map_embed_code) {
       <<~END
-        <div style='width:auto; page-break-inside:avoid; -webkit-column-break-inside:avoid; break-inside:avoid; max-width:1920px; margin:auto'>
+        <div style='width:auto; page-break-inside:avoid; -webkit-column-break-inside:avoid; break-inside:avoid; max-width:1920px; margin:auto; background-color:#000'>
           <div style='overflow:hidden; padding-bottom:60%; position:relative; height:0;'><!-- actual height: 1080px -->
             <iframe src='#{presenter.embed_link}' title='#{presenter.embed_code_title}' style='overflow:hidden; border-width:0; left:0; top:0; width:100%; height:100%; position:absolute;'></iframe>
           </div>
         </div>
       END
     }
+    let(:map_embed_code_css) {
+      <<~END
+        #fulcrum-embed-outer-fileset_id {
+          width:auto;
+          page-break-inside:avoid;
+          -webkit-column-break-inside:avoid;
+          break-inside:avoid;
+          max-width:1920px;
+          margin:auto;
+          background-color:#000;
+        }
+        #fulcrum-embed-inner-fileset_id {
+          overflow:hidden;
+          padding-bottom:60%;
+          position:relative; height:0;
+        }
+        iframe#fulcrum-embed-iframe-fileset_id {
+          overflow:hidden;
+          border-width:0;
+          left:0; top:0;
+          width:100%;
+          height:100%;
+          position:absolute;
+        }
+      END
+    }
     let(:dimensionless_map_embed_code) {
       <<~END
-        <div style='width:auto; page-break-inside:avoid; -webkit-column-break-inside:avoid; break-inside:avoid; max-width:400px; margin:auto'>
+        <div style='width:auto; page-break-inside:avoid; -webkit-column-break-inside:avoid; break-inside:avoid; max-width:1000px; margin:auto; background-color:#000'>
           <div style='overflow:hidden; padding-bottom:60%; position:relative; height:0;'>
             <iframe src='#{presenter.embed_link}' title='#{presenter.embed_code_title}' style='overflow:hidden; border-width:0; left:0; top:0; width:100%; height:100%; position:absolute;'></iframe>
           </div>
         </div>
       END
     }
+    let(:dimensionless_map_embed_code_css) {
+      <<~END
+        #fulcrum-embed-outer-fileset_id {
+          width:auto;
+          page-break-inside:avoid;
+          -webkit-column-break-inside:avoid;
+          break-inside:avoid;
+          max-width:1000px;
+          margin:auto;
+          background-color:#000;
+        }
+        #fulcrum-embed-inner-fileset_id {
+          overflow:hidden;
+          padding-bottom:60%;
+          position:relative; height:0;
+        }
+        iframe#fulcrum-embed-iframe-fileset_id {
+          overflow:hidden;
+          border-width:0;
+          left:0; top:0;
+          width:100%;
+          height:100%;
+          position:absolute;
+        }
+      END
+    }
     let(:image_embed_code) {
       <<~END
-        <div style='width:auto; page-break-inside:avoid; -webkit-column-break-inside:avoid; break-inside:avoid; max-width:1920px; margin:auto'>
+        <div style='width:auto; page-break-inside:avoid; -webkit-column-break-inside:avoid; break-inside:avoid; max-width:1920px; margin:auto; background-color:#000'>
           <div style='overflow:hidden; padding-bottom:60%; position:relative; height:0;'><!-- actual image height: 1080px -->
             <iframe src='#{presenter.embed_link}' title='#{presenter.embed_code_title}' style='overflow:hidden; border-width:0; left:0; top:0; width:100%; height:100%; position:absolute;'></iframe>
           </div>
         </div>
       END
     }
+    let(:image_embed_code_css) {
+      <<~END
+        #fulcrum-embed-outer-fileset_id {
+          width:auto;
+          page-break-inside:avoid;
+          -webkit-column-break-inside:avoid;
+          break-inside:avoid;
+          max-width:1920px;
+          margin:auto;
+          background-color:#000;
+        }
+        #fulcrum-embed-inner-fileset_id {
+          overflow:hidden;
+          padding-bottom:60%;
+          position:relative; height:0;
+        }
+        iframe#fulcrum-embed-iframe-fileset_id {
+          overflow:hidden;
+          border-width:0;
+          left:0; top:0;
+          width:100%;
+          height:100%;
+          position:absolute;
+        }
+      END
+    }
     let(:portrait_image_embed_code) {
       <<~END
-        <div style='width:auto; page-break-inside:avoid; -webkit-column-break-inside:avoid; break-inside:avoid; max-width:1080px; margin:auto'>
+        <div style='width:auto; page-break-inside:avoid; -webkit-column-break-inside:avoid; break-inside:avoid; max-width:1080px; margin:auto; background-color:#000'>
           <div style='overflow:hidden; padding-bottom:80%; position:relative; height:0;'><!-- actual image height: 1920px -->
             <iframe src='#{presenter.embed_link}' title='#{presenter.embed_code_title}' style='overflow:hidden; border-width:0; left:0; top:0; width:100%; height:100%; position:absolute;'></iframe>
           </div>
         </div>
       END
     }
+    let(:portrait_image_embed_code_css) {
+      <<~END
+        #fulcrum-embed-outer-fileset_id {
+          width:auto;
+          page-break-inside:avoid;
+          -webkit-column-break-inside:avoid;
+          break-inside:avoid;
+          max-width:1080px;
+          margin:auto;
+          background-color:#000;
+        }
+        #fulcrum-embed-inner-fileset_id {
+          overflow:hidden;
+          padding-bottom:80%;
+          position:relative; height:0;
+        }
+        iframe#fulcrum-embed-iframe-fileset_id {
+          overflow:hidden;
+          border-width:0;
+          left:0; top:0;
+          width:100%;
+          height:100%;
+          position:absolute;
+        }
+      END
+    }
     let(:square_image_embed_code) {
       <<~END
-        <div style='width:auto; page-break-inside:avoid; -webkit-column-break-inside:avoid; break-inside:avoid; max-width:500px; margin:auto'>
+        <div style='width:auto; page-break-inside:avoid; -webkit-column-break-inside:avoid; break-inside:avoid; max-width:500px; margin:auto; background-color:#000'>
           <div style='overflow:hidden; padding-bottom:80%; position:relative; height:0;'><!-- actual image height: 500px -->
             <iframe src='#{presenter.embed_link}' title='#{presenter.embed_code_title}' style='overflow:hidden; border-width:0; left:0; top:0; width:100%; height:100%; position:absolute;'></iframe>
           </div>
         </div>
       END
     }
+    let(:square_image_embed_code_css) {
+      <<~END
+        #fulcrum-embed-outer-fileset_id {
+          width:auto;
+          page-break-inside:avoid;
+          -webkit-column-break-inside:avoid;
+          break-inside:avoid;
+          max-width:500px;
+          margin:auto;
+          background-color:#000;
+        }
+        #fulcrum-embed-inner-fileset_id {
+          overflow:hidden;
+          padding-bottom:80%;
+          position:relative; height:0;
+        }
+        iframe#fulcrum-embed-iframe-fileset_id {
+          overflow:hidden;
+          border-width:0;
+          left:0; top:0;
+          width:100%;
+          height:100%;
+          position:absolute;
+        }
+      END
+    }
     let(:dimensionless_image_embed_code) {
       <<~END
-        <div style='width:auto; page-break-inside:avoid; -webkit-column-break-inside:avoid; break-inside:avoid; max-width:400px; margin:auto'>
+        <div style='width:auto; page-break-inside:avoid; -webkit-column-break-inside:avoid; break-inside:avoid; max-width:1000px; margin:auto; background-color:#000'>
           <div style='overflow:hidden; padding-bottom:60%; position:relative; height:0;'>
             <iframe src='#{presenter.embed_link}' title='#{presenter.embed_code_title}' style='overflow:hidden; border-width:0; left:0; top:0; width:100%; height:100%; position:absolute;'></iframe>
           </div>
         </div>
       END
     }
+    let(:dimensionless_image_embed_code_css) {
+      <<~END
+        #fulcrum-embed-outer-fileset_id {
+          width:auto;
+          page-break-inside:avoid;
+          -webkit-column-break-inside:avoid;
+          break-inside:avoid;
+          max-width:1000px;
+          margin:auto;
+          background-color:#000;
+        }
+        #fulcrum-embed-inner-fileset_id {
+          overflow:hidden;
+          padding-bottom:60%;
+          position:relative; height:0;
+        }
+        iframe#fulcrum-embed-iframe-fileset_id {
+          overflow:hidden;
+          border-width:0;
+          left:0; top:0;
+          width:100%;
+          height:100%;
+          position:absolute;
+        }
+      END
+    }
     let(:video_embed_code) {
       <<~END
-        <div style='width:auto; page-break-inside:avoid; -webkit-column-break-inside:avoid; break-inside:avoid; max-width:1920px; margin:auto'>
+        <div style='width:auto; page-break-inside:avoid; -webkit-column-break-inside:avoid; break-inside:avoid; max-width:1920px; margin:auto; background-color:#000'>
           <div style='overflow:hidden; padding-bottom:56.25%; position:relative; height:0;'><!-- actual video height: 1080px -->
             <iframe src='#{presenter.embed_link}' title='#{presenter.embed_code_title}' style='overflow:hidden; border-width:0; left:0; top:0; width:100%; height:100%; position:absolute;'></iframe>
           </div>
         </div>
       END
     }
+    let(:video_embed_code_css) {
+      <<~END
+        #fulcrum-embed-outer-fileset_id {
+          width:auto;
+          page-break-inside:avoid;
+          -webkit-column-break-inside:avoid;
+          break-inside:avoid;
+          max-width:1920px;
+          margin:auto;
+          background-color:#000;
+        }
+        #fulcrum-embed-inner-fileset_id {
+          overflow:hidden;
+          padding-bottom:56.25%;
+          position:relative; height:0;
+        }
+        iframe#fulcrum-embed-iframe-fileset_id {
+          overflow:hidden;
+          border-width:0;
+          left:0; top:0;
+          width:100%;
+          height:100%;
+          position:absolute;
+        }
+      END
+    }
     let(:dimensionless_video_embed_code) {
       <<~END
-        <div style='width:auto; page-break-inside:avoid; -webkit-column-break-inside:avoid; break-inside:avoid; max-width:400px; margin:auto'>
+        <div style='width:auto; page-break-inside:avoid; -webkit-column-break-inside:avoid; break-inside:avoid; max-width:1000px; margin:auto; background-color:#000'>
           <div style='overflow:hidden; padding-bottom:75%; position:relative; height:0;'>
             <iframe src='#{presenter.embed_link}' title='#{presenter.embed_code_title}' style='overflow:hidden; border-width:0; left:0; top:0; width:100%; height:100%; position:absolute;'></iframe>
           </div>
         </div>
       END
     }
+    let(:dimensionless_video_embed_code_css) {
+      <<~END
+        #fulcrum-embed-outer-fileset_id {
+          width:auto;
+          page-break-inside:avoid;
+          -webkit-column-break-inside:avoid;
+          break-inside:avoid;
+          max-width:1000px;
+          margin:auto;
+          background-color:#000;
+        }
+        #fulcrum-embed-inner-fileset_id {
+          overflow:hidden;
+          padding-bottom:75%;
+          position:relative; height:0;
+        }
+        iframe#fulcrum-embed-iframe-fileset_id {
+          overflow:hidden;
+          border-width:0;
+          left:0; top:0;
+          width:100%;
+          height:100%;
+          position:absolute;
+        }
+      END
+    }
     let(:video_with_visual_descriptions_embed_code) {
       <<~END
-        <div style='width:auto; page-break-inside:avoid; -webkit-column-break-inside:avoid; break-inside:avoid; max-width:1920px; margin:auto'>
+        <div style='width:auto; page-break-inside:avoid; -webkit-column-break-inside:avoid; break-inside:avoid; max-width:1920px; margin:auto; background-color:#000'>
           <div style='overflow:hidden; padding-bottom:67.5%; position:relative; height:0;'><!-- actual video height: 1080px -->
             <iframe src='#{presenter.embed_link}' title='#{presenter.embed_code_title}' style='overflow:hidden; border-width:0; left:0; top:0; width:100%; height:100%; position:absolute;'></iframe>
           </div>
         </div>
       END
     }
+    let(:video_with_visual_descriptions_embed_code_css) {
+      <<~END
+        #fulcrum-embed-outer-fileset_id {
+          width:auto;
+          page-break-inside:avoid;
+          -webkit-column-break-inside:avoid;
+          break-inside:avoid;
+          max-width:1920px;
+          margin:auto;
+          background-color:#000;
+        }
+        #fulcrum-embed-inner-fileset_id {
+          overflow:hidden;
+          padding-bottom:67.5%;
+          position:relative; height:0;
+        }
+        iframe#fulcrum-embed-iframe-fileset_id {
+          overflow:hidden;
+          border-width:0;
+          left:0; top:0;
+          width:100%;
+          height:100%;
+          position:absolute;
+        }
+      END
+    }
     let(:audio_embed_code_without_transcript) {
       "<iframe src='#{presenter.embed_link}' title='#{presenter.embed_code_title}' style='page-break-inside:avoid; -webkit-column-break-inside:avoid; break-inside:avoid; display:block; overflow:hidden; border-width:0; width:98%; max-width:98%; height:125px; margin:auto'></iframe>"
     }
+    let(:audio_embed_code_without_transcript_css) {
+      <<~END
+        #fulcrum-embed-outer-fileset_id {
+        }
+        #fulcrum-embed-inner-fileset_id {
+        }
+        iframe#fulcrum-embed-iframe-fileset_id {
+          page-break-inside:avoid;
+          -webkit-column-break-inside:avoid;
+          break-inside:avoid;
+          display:block;
+          overflow:hidden;
+          border-width:0;
+          width:98%;
+          max-width:98%;
+          height:125px;
+          margin:auto;
+        }
+      END
+    }
     let(:audio_embed_code_with_transcript) {
       "<iframe src='#{presenter.embed_link}' title='#{presenter.embed_code_title}' style='page-break-inside:avoid; -webkit-column-break-inside:avoid; break-inside:avoid; display:block; overflow:hidden; border-width:0; width:98%; max-width:98%; height:300px; margin:auto'></iframe>"
+    }
+    let(:audio_embed_code_with_transcript_css) {
+      <<~END
+        #fulcrum-embed-outer-fileset_id {
+        }
+        #fulcrum-embed-inner-fileset_id {
+        }
+        iframe#fulcrum-embed-iframe-fileset_id {
+          page-break-inside:avoid;
+          -webkit-column-break-inside:avoid;
+          break-inside:avoid;
+          display:block;
+          overflow:hidden;
+          border-width:0;
+          width:98%;
+          max-width:98%;
+          height:300px;
+          margin:auto;
+        }
+      END
     }
     let(:file_set_doc) { SolrDocument.new(id: 'fileset_id', has_model_ssim: ['FileSet'], mime_type_ssi: mime_type, resource_type_tesim: [resource_type], closed_captions_tesim: closed_captions) }
     let(:mime_type) { nil }
@@ -184,13 +460,19 @@ RSpec.describe EmbedCodePresenter do
     context 'map FileSet' do
       let(:resource_type) { 'interactive map' }
 
-      it { expect(presenter.embed_code).to eq map_embed_code }
+      it 'returns the expected embed codes and css' do
+        expect(presenter.embed_code).to eq map_embed_code
+        expect(presenter.embed_code_css).to eq map_embed_code_css
+      end
     end
 
     context 'image FileSet (landscape)' do
       let(:mime_type) { 'image/tiff' }
 
-      it { expect(presenter.embed_code).to eq image_embed_code }
+      it 'returns the expected embed codes and css' do
+        expect(presenter.embed_code).to eq image_embed_code
+        expect(presenter.embed_code_css).to eq image_embed_code_css
+      end
     end
 
     context 'image FileSet (portrait)' do
@@ -201,7 +483,10 @@ RSpec.describe EmbedCodePresenter do
 
       let(:mime_type) { 'image/tiff' }
 
-      it { expect(presenter.embed_code).to eq portrait_image_embed_code }
+      it 'returns the expected embed codes and css' do
+        expect(presenter.embed_code).to eq portrait_image_embed_code
+        expect(presenter.embed_code_css).to eq portrait_image_embed_code_css
+      end
     end
 
     context 'image FileSet (square)' do
@@ -212,31 +497,46 @@ RSpec.describe EmbedCodePresenter do
 
       let(:mime_type) { 'image/tiff' }
 
-      it { expect(presenter.embed_code).to eq square_image_embed_code }
+      it 'returns the expected embed codes and css' do
+        expect(presenter.embed_code).to eq square_image_embed_code
+        expect(presenter.embed_code_css).to eq square_image_embed_code_css
+      end
     end
 
     context 'video FileSet' do
       let(:mime_type) { 'video/mp4' }
 
-      it { expect(presenter.embed_code).to eq video_embed_code }
+      it 'returns the expected embed codes and css' do
+        expect(presenter.embed_code).to eq video_embed_code
+        expect(presenter.embed_code_css).to eq video_embed_code_css
+      end
     end
 
     context 'dimensionless map FileSet' do
       let(:resource_type) { 'interactive map' }
 
-      it { expect(dimensionless_presenter.embed_code).to eq dimensionless_map_embed_code }
+      it 'returns the expected embed codes and css' do
+        expect(dimensionless_presenter.embed_code).to eq dimensionless_map_embed_code
+        expect(dimensionless_presenter.embed_code_css).to eq dimensionless_map_embed_code_css
+      end
     end
 
     context 'dimensionless image FileSet' do
       let(:mime_type) { 'image/tiff' }
 
-      it { expect(dimensionless_presenter.embed_code).to eq dimensionless_image_embed_code }
+      it 'returns the expected embed codes and css' do
+        expect(dimensionless_presenter.embed_code).to eq dimensionless_image_embed_code
+        expect(dimensionless_presenter.embed_code_css).to eq dimensionless_image_embed_code_css
+      end
     end
 
     context 'dimensionless video FileSet' do
       let(:mime_type) { 'video/mp4' }
 
-      it { expect(dimensionless_presenter.embed_code).to eq dimensionless_video_embed_code }
+      it 'returns the expected embed codes and css' do
+        expect(dimensionless_presenter.embed_code).to eq dimensionless_video_embed_code
+        expect(dimensionless_presenter.embed_code_css).to eq dimensionless_video_embed_code_css
+      end
     end
 
     context 'video with visual descriptions FileSet' do
@@ -246,20 +546,29 @@ RSpec.describe EmbedCodePresenter do
         allow(presenter).to receive(:visual_descriptions).and_return('blah')
       end
 
-      it { expect(presenter.embed_code).to eq video_with_visual_descriptions_embed_code }
+      it 'returns the expected embed codes and css' do
+        expect(presenter.embed_code).to eq video_with_visual_descriptions_embed_code
+        expect(presenter.embed_code_css).to eq video_with_visual_descriptions_embed_code_css
+      end
     end
 
     context 'audio FileSet' do
       let(:mime_type) { 'audio/mp3' }
 
       context 'no closed_captions present' do
-        it { expect(presenter.embed_code).to eq audio_embed_code_without_transcript }
+        it 'returns the expected embed codes and css' do
+          expect(presenter.embed_code).to eq audio_embed_code_without_transcript
+          expect(presenter.embed_code_css).to eq audio_embed_code_without_transcript_css
+        end
       end
 
       context 'closed_captions present' do
         let(:closed_captions) { ['STUFF'] }
 
-        it { expect(presenter.embed_code).to eq audio_embed_code_with_transcript }
+        it 'returns the expected embed codes and css' do
+          expect(presenter.embed_code).to eq audio_embed_code_with_transcript
+          expect(presenter.embed_code_css).to eq audio_embed_code_with_transcript_css
+        end
       end
     end
 

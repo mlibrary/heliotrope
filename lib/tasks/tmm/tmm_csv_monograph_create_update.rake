@@ -26,6 +26,9 @@ namespace :heliotrope do
     # Use `gsub!` to avoid holding more memory (I guess).
     file_content.gsub!(/\r\n?/, "\n")
 
+    # Although TMM is the "source of truth" for certain Presses' Monograph metadata, there still exist fields in...
+    # `heliotrope` which it knows nothing about. Here `rows` contains the Fulcrum Monograph fields known to TMM and...
+    # `monograph_metadata` are all of the commonly-settable Monograph fields in heliotrope.
     rows = CSV.parse(file_content, headers: true, skip_blanks: true).delete_if { |row| row.to_hash.values.all?(&:blank?) }
     monograph_fields = METADATA_FIELDS.select { |f| %i[universal monograph].include? f[:object] }
 
@@ -35,8 +38,11 @@ namespace :heliotrope do
     backup_file = ''
     backup_file_created = false
 
-    # used to enable deletion of existing values
-    blank_metadata = monograph_fields.pluck(:metadata_name).map { |name| [name, nil] }.to_h
+    # `blank_metadata` is used to enable deletion of existing values. It's *ESSENTIAL* that this hash only contain...
+    # fields actually present in the TMM CSV  (those known to TMM as mentioned above). Hence the `select`.
+    tmm_csv_header_field_names = rows[0].to_h.keys.map { |k| k&.strip }
+    blank_metadata = monograph_fields.select{ |field| tmm_csv_header_field_names.include?(field[:field_name]) }
+                                     .pluck(:metadata_name).map { |name| [name, nil] }.to_h
 
     rows.each do |row|
       row_num += 1
@@ -67,6 +73,10 @@ namespace :heliotrope do
 
       # ensure we're looking for the correct Press value in Fulcrum by editing the row before lookup
       row['Press'] = press
+      # A Monograph's press cannot technically be *changed* by this script as the lookup here will filter ISBN by...
+      # press when a value is available in the Press column, which it always should be. In other words, changing a...
+      # Monograph's press in TMM will cause a new Monograph to be created on Fulcrum. Handles and DOIs may need to...
+      # be checked, and the "old" Monograph manually deleted.
       matches, identifier = ObjectLookupService.matches_for_csv_row(row)
 
       if matches.count > 1 # shouldn't happen
@@ -107,7 +117,7 @@ namespace :heliotrope do
 
           Hyrax::CurationConcern.actor.create(Hyrax::Actors::Environment.new(monograph, current_ability, attrs))
         elsif monograph.press != 'gabii' # don't edit Gabii monographs with this script
-          if check_for_changes_identifier(monograph, identifier, attrs, row_num, true)
+          if check_for_changes_identifier(monograph, identifier, attrs, row_num)
             backup_file = open_backup_file(input_file) if !backup_file_created
             backup_file_created = true
 
@@ -127,8 +137,7 @@ namespace :heliotrope do
   def check_for_unexpected_columns_isbn(rows, monograph_fields)
     # look for unexpected column names which will be ignored.
     # note: 'NOID', 'Link' are not in METADATA_FIELDS, they're export-only ADMIN_METADATA_FIELDS.
-    # 'Press' is a new exception as it is a column sent from TMM but is not a "traditional" importer CSV field
-    unexpecteds = rows[0].to_h.keys.map { |k| k&.strip } - monograph_fields.pluck(:field_name) - ['NOID', 'Link', 'Press']
+    unexpecteds = rows[0].to_h.keys.map { |k| k&.strip } - monograph_fields.pluck(:field_name) - ['NOID', 'Link']
     puts "***TITLE ROW HAS UNEXPECTED VALUES!*** These columns will be skipped: #{unexpecteds.join(', ')}\n\n" if unexpecteds.present?
   end
 
@@ -195,20 +204,14 @@ namespace :heliotrope do
     cleaned_values == [nil] ? nil : cleaned_values
   end
 
-  def check_for_changes_identifier(object, identifier, attrs, row_num, check_press = false)
-    column_names = (ADMIN_METADATA_FIELDS + METADATA_FIELDS).pluck(:metadata_name).zip(METADATA_FIELDS.pluck(:field_name)).to_h
+  def check_for_changes_identifier(object, identifier, attrs, row_num)
+    column_names = (ADMIN_METADATA_FIELDS + METADATA_FIELDS).pluck(:metadata_name)
+                                                            .zip(ADMIN_METADATA_FIELDS + METADATA_FIELDS
+                                                            .pluck(:field_name)).to_h
     changes = false
     changes_message = "Checking #{object.class} #{object.id}, found with #{identifier} on row #{row_num}"
 
-    # check press separately, it's not in METADATA_FIELDS
-    press_changing = false
-    if check_press && object.class == Monograph && object.press != attrs['press']
-      changes_message += "\n*** Press changing from #{object.press} to #{attrs['press']} ***"
-      press_changing = true
-    end
-
     attrs.each do |key, value|
-      next if key == 'press'
       multivalued = (ADMIN_METADATA_FIELDS + METADATA_FIELDS).select { |x| x[:metadata_name] == key }.first[:multivalued]
       current_value = field_value(object, key, multivalued)
 
@@ -223,7 +226,6 @@ namespace :heliotrope do
       end
     end
 
-    changes ||= press_changing
     changes_message = changes ? changes_message + "\n\n" : changes_message + '...................... NO CHANGES'
     puts changes_message if changes
     changes

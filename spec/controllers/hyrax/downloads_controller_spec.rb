@@ -288,6 +288,111 @@ RSpec.describe Hyrax::DownloadsController, type: :controller do
         expect(response.body).to eq visual_descriptions
       end
     end
+
+    context 'embed_css' do
+      context 'responsive embed codes' do
+        let(:file_set) { create(:public_file_set, user: user, read_groups: ['public']) }
+        # Note that padding-bottom defaults to 60%, giving a 5:3 ratio when width and height values are not available.
+        # Similarly, max-width defaults to 400px.
+        # The varying padding values are thoroughly exercised in spec/presenters/concerns/embed_code_presenter_spec.rb
+        let(:embed_css) do
+          <<~EMBED_CSS
+              #fulcrum-embed-outer-#{file_set.id} {
+                width:auto;
+                page-break-inside:avoid;
+                -webkit-column-break-inside:avoid;
+                break-inside:avoid;
+                max-width:1000px;
+                margin:auto;
+                background-color:#000;
+              }
+              #fulcrum-embed-inner-#{file_set.id} {
+                overflow:hidden;
+                padding-bottom:60%;
+                position:relative; height:0;
+              }
+              iframe#fulcrum-embed-iframe-#{file_set.id} {
+                overflow:hidden;
+                border-width:0;
+                left:0; top:0;
+                width:100%;
+                height:100%;
+                position:absolute;
+              }
+          EMBED_CSS
+        end
+
+        context 'FileSet is an image' do
+          before { allow_any_instance_of(Hyrax::FileSetPresenter).to receive(:image?).and_return(true) }
+
+          it 'downloads a css file' do
+            get :show, params: { id: file_set.id, use_route: 'downloads', file: 'embed_css' }
+            expect(response).to have_http_status(:ok)
+            expect(response.content_type).to eq('text/css')
+            expect(response.body).to eq embed_css
+          end
+        end
+
+        context 'FileSet is a video' do
+          before { allow_any_instance_of(Hyrax::FileSetPresenter).to receive(:interactive_map?).and_return(true) }
+
+          it 'downloads a css file' do
+            get :show, params: { id: file_set.id, use_route: 'downloads', file: 'embed_css' }
+            expect(response).to have_http_status(:ok)
+            expect(response.content_type).to eq('text/css')
+            expect(response.body).to eq embed_css
+          end
+        end
+
+        context 'FileSet is an interactive map' do
+          let(:file_set) { create(:public_file_set, user: user, read_groups: ['public'], resource_type: ['interactive map']) }
+
+          it 'downloads a css file' do
+            get :show, params: { id: file_set.id, use_route: 'downloads', file: 'embed_css' }
+            expect(response).to have_http_status(:ok)
+            expect(response.content_type).to eq('text/css')
+            expect(response.body).to eq embed_css
+          end
+        end
+      end
+
+      context 'fixed-height embed codes (e.g. audio)' do
+        let(:file_set) { create(:public_file_set, user: user, read_groups: ['public']) }
+        # Note that heights defaults to 125px for an audio file with no WebVTT and thus no interactive transcript.
+        # The varying height values are thoroughly exercised in spec/presenters/concerns/embed_code_presenter_spec.rb
+        let(:embed_css) do
+          <<~EMBED_CSS
+              #fulcrum-embed-outer-#{file_set.id} {
+              }
+              #fulcrum-embed-inner-#{file_set.id} {
+              }
+              iframe#fulcrum-embed-iframe-#{file_set.id} {
+                page-break-inside:avoid;
+                -webkit-column-break-inside:avoid;
+                break-inside:avoid;
+                display:block;
+                overflow:hidden;
+                border-width:0;
+                width:98%;
+                max-width:98%;
+                height:125px;
+                margin:auto;
+              }
+          EMBED_CSS
+        end
+
+        context 'FileSet is an audio file' do
+          before { allow_any_instance_of(Hyrax::FileSetPresenter).to receive(:audio?).and_return(true) }
+
+          it 'downloads a css file' do
+            get :show, params: { id: file_set.id, use_route: 'downloads', file: 'embed_css' }
+            expect(response).to have_http_status(:ok)
+            expect(response.content_type).to eq('text/css')
+            expect(response.body).to eq embed_css
+          end
+        end
+      end
+    end
   end
 
   describe "#mime_type_for" do
