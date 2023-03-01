@@ -18,7 +18,7 @@ ADMIN_METADATA_FIELDS ||=
 # ActiveFedora fields we allow folks to set
 METADATA_FIELDS ||=
   [
-    { object: :universal, field_name: 'Title', metadata_name: 'title', required: true, multivalued: :yes, description: I18n.t('csv.descriptions.title') },
+    { object: :universal, field_name: 'Title', metadata_name: 'title', required: true, multivalued: :yes, newlines: false, description: I18n.t('csv.descriptions.title') },
     { object: :file_set, field_name: 'Resource Type', metadata_name: 'resource_type', required: true, multivalued: :yes, description: I18n.t('csv.descriptions.resource_type') },
     { object: :file_set, field_name: 'External Resource URL', metadata_name: 'external_resource_url', required: false, multivalued: :no, description: I18n.t('csv.descriptions.external_resource_url') },
     { object: :file_set, field_name: 'Caption', metadata_name: 'caption', required: true, multivalued: :yes, description: I18n.t('csv.descriptions.caption') },
