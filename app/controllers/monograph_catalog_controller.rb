@@ -44,7 +44,7 @@ class MonographCatalogController < ::CatalogController
       config.index_fields.delete('language_tesim')
       config.index_fields.delete('contributor_tesim')
       config.index_fields.delete('human_readable_type_tesim')
-      config.index_fields.delete('copyright_holder_tesim')
+      config.index_fields.delete('rightsholder_tesim')
       config.index_fields.delete('description_tesim')
       config.index_fields.delete('alt_text_tesim')
       config.index_fields.delete('content_type_tesim')

@@ -313,16 +313,6 @@
           <span class="meta-label">Copyright:</span> <%= @presenter.copyright_year %>
         </div>
       <% end %>
-      <!-- COPYRIGHT HOLDER -->
-      <% if @presenter.copyright_holder? %>
-      <div class="copyright-holder">
-        <% if @presenter.holding_contact? %>
-          <span class="copyright-link"><span class="meta-label">Copyright Holder:</span> <a href="<%= @presenter.holding_contact %>"><%= @presenter.copyright_holder %></a></span>
-        <% else %>
-          <span class="copyright-nolink"><span class="meta-label">Copyright Holder:</span> <%= @presenter.copyright_holder %></span>
-        <% end %>
-      </div>
-      <% end %>
       <!-- LICENSE -->
       <% if @presenter.license? %>
       <div class="license">

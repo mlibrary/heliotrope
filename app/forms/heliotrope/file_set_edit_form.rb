@@ -5,7 +5,7 @@ module Heliotrope
     # In hyrax this seems to be used for FileSetsController.params.require(:file_set).permit
     # If removed you get the "Umpermitted Parameters" error...
 
-    self.terms += %i[creator contributor resource_type caption alt_text copyright_holder
+    self.terms += %i[creator contributor resource_type caption alt_text rightsholder
                      description content_type date_created keywords
                      language section_title license
                      copyright_status rights_granted

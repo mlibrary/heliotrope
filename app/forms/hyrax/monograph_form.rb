@@ -8,7 +8,7 @@ module Hyrax
     # Hyrax::BasicMetadata fields are already included
     self.terms -= %i[keyword related_url source based_near rights_statement alternative_title abstract access_right rights_notes]
     # these will hold their order, bearing in mind that required_fields are automatically removed first
-    self.terms += %i[press date_published creator_display series buy_url isbn doi hdl copyright_holder open_access
+    self.terms += %i[press date_published creator_display series buy_url isbn doi hdl rightsholder open_access
                      funder funder_display holding_contact location section_titles
                      edition_name previous_edition next_edition
                      tombstone tombstone_message
@@ -27,7 +27,7 @@ module Hyrax
     self.terms.delete_at(self.terms.index(:identifier))
     self.terms = self.terms.insert(self.terms.index(:hdl) + 1, :identifier)
     self.terms.delete_at(self.terms.index(:license))
-    self.terms = self.terms.insert(self.terms.index(:copyright_holder), :license)
+    self.terms = self.terms.insert(self.terms.index(:rightsholder), :license)
 
     delegate :current_user, to: :current_ability
 

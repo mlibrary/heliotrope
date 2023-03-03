@@ -47,7 +47,7 @@ describe Hyrax::MonographForm do
                            hdl
                            identifier
                            license
-                           copyright_holder
+                           rightsholder
                            open_access
                            funder
                            funder_display
@@ -96,7 +96,7 @@ describe Hyrax::MonographForm do
                            hdl
                            identifier
                            license
-                           copyright_holder
+                           rightsholder
                            open_access
                            funder
                            funder_display

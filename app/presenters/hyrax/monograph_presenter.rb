@@ -15,7 +15,7 @@ module Hyrax
     delegate :date_modified, :date_uploaded, :location, :description,
              :creator_display, :creator_full_name, :contributor,
              :subject, :section_titles, :based_near, :publisher, :date_published, :language,
-             :isbn, :license, :copyright_holder, :open_access, :funder, :funder_display, :holding_contact, :has_model,
+             :isbn, :license, :rightsholder, :open_access, :funder, :funder_display, :holding_contact, :has_model,
              :buy_url, :embargo_release_date, :lease_expiration_date, :rights, :series,
              :visibility, :identifier, :doi, :handle, :thumbnail_path, :previous_edition, :next_edition,
              :volume, :oclc_owi, :copyright_year, :award,
@@ -73,8 +73,8 @@ module Hyrax
       solr_document.creator_display.present?
     end
 
-    def copyright_holder?
-      solr_document.copyright_holder.present?
+    def rightsholder?
+      solr_document.rightsholder.present?
     end
 
     def copyright_year?

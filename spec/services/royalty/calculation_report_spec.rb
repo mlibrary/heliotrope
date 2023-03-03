@@ -67,7 +67,7 @@ RSpec.describe Royalty::CalculationReport do
       SolrDocument.new(id: "AAAAAAAAA",
                        has_model_ssim: ['Monograph'],
                        press_sim: press.subdomain,
-                       copyright_holder_tesim: ["Copyright A"],
+                       rightsholder_tesim: ["Copyright A"],
                        title_tesim: ["A"],
                        identifier_tesim: ["heb_id:heb90001.0001.001", "http://hdl.handle.net/2027/heb.31695"])
     end
@@ -76,7 +76,7 @@ RSpec.describe Royalty::CalculationReport do
       SolrDocument.new(id: "BBBBBBBBB",
                        has_model_ssim: ['Monograph'],
                        press_sim: press.subdomain,
-                       copyright_holder_tesim: ["Copyright B"],
+                       rightsholder_tesim: ["Copyright B"],
                        title_tesim: ["B"],
                        identifier_tesim: ["http://hdl.handle.net/2027/heb.sxklj", "heb_id:heb33333.0001.001"])
     end
@@ -115,12 +115,12 @@ RSpec.describe Royalty::CalculationReport do
       # HELIO-3572 the calc combined has no "Report" header
       expect(@reports["calc_combined.201901-201906.csv"][:header]).to eq Hash.new
       expect(@reports["calc_combined.201901-201906.csv"][:items][0]["hebid"]).to eq "heb90001.0001.001"
-      expect(@reports["calc_combined.201901-201906.csv"][:items][0]["Copyright Holder"]).to eq "Copyright A"
+      expect(@reports["calc_combined.201901-201906.csv"][:items][0]["Rightsholder"]).to eq "Copyright A"
       expect(@reports["calc_combined.201901-201906.csv"][:items][0]["ebook ISBN"]).to eq "9780520319196"
       expect(@reports["calc_combined.201901-201906.csv"][:items][0]["hardcover ISBN"]).to eq "9780520047983"
       expect(@reports["calc_combined.201901-201906.csv"][:items][0]["paper ISBN"]).to eq "9780520319189"
       expect(@reports["calc_combined.201901-201906.csv"][:items][1]["hebid"]).to eq "heb33333.0001.001"
-      expect(@reports["calc_combined.201901-201906.csv"][:items][1]["Copyright Holder"]).to eq "Copyright B"
+      expect(@reports["calc_combined.201901-201906.csv"][:items][1]["Rightsholder"]).to eq "Copyright B"
       expect(@reports["calc_combined.201901-201906.csv"][:items][1]["ebook ISBN"]).to eq ""
       expect(@reports["calc_combined.201901-201906.csv"][:items][1]["hardcover ISBN"]).to eq "9780813915425"
       expect(@reports["calc_combined.201901-201906.csv"][:items][1]["paper ISBN"]).to eq "9780813915432"
@@ -130,7 +130,7 @@ RSpec.describe Royalty::CalculationReport do
     end
   end
 
-  describe "different case copyright holders have seperate reports" do
+  describe "different case rightsholders have seperate reports" do
     # See HELIO-3361
     let(:items) do
       [{ "Parent_Proprietary_ID": "AAAAAAAAA",
@@ -175,7 +175,7 @@ RSpec.describe Royalty::CalculationReport do
       SolrDocument.new(id: "AAAAAAAAA",
                        has_model_ssim: ['Monograph'],
                        press_sim: press.subdomain,
-                       copyright_holder_tesim: ["Assumed rights"], # note case "rights"
+                       rightsholder_tesim: ["Assumed rights"], # note case "rights"
                        title_tesim: ["A"])
     end
 
@@ -183,7 +183,7 @@ RSpec.describe Royalty::CalculationReport do
       SolrDocument.new(id: "BBBBBBBBB",
                        has_model_ssim: ['Monograph'],
                        press_sim: press.subdomain,
-                       copyright_holder_tesim: ["Assumed Rights"], # note case "Rights"
+                       rightsholder_tesim: ["Assumed Rights"], # note case "Rights"
                        title_tesim: ["B"])
     end
     let(:counter_report) { double("counter_report") }

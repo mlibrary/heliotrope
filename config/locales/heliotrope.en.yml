@@ -111,17 +111,17 @@ en:
         --This bar chart shows how much support each major presidential candidate has. Candidate 1 is at 70%, Candidate 2 is at 63%, and Candidate 3 is at 60%. The differences between each are clear.
 
         If the file is an externally hosted resource, you can leave this field empty.
-      copyright_holder: |
+      rightsholder: |
         REQUIRED FOR FULCRUM
 
-        Identify the copyright holder of the item being hosted on the Fulcrum platform.
+        Identify the rightsholder of the item being hosted on the Fulcrum platform.
 
         Examples:
         --DC Comics, Inc.
         --Acuff- Rose Music
         --Scott Ham
 
-        Note that if you, as the author, created a resource, you own the copyright, and can list yourself. If an item is considered fair use or in the public domain, you should indicate this.
+        Note that if you, as the author, created a resource, you can list yourself. If an item is considered fair use or in the public domain, you should indicate this.
       copyright_status: |
         REQUIRED FOR FULCRUM
 
@@ -175,9 +175,9 @@ en:
 
         If the digital asset is externally hosted, select "Not hosted on the platform."
       credit_line: |
-        If the copyright holder granting permission for use requires a specific credit line, please include that exact credit line as provided by the rights holder.
+        If the rightsholder granting permission for use requires a specific credit line, please include that exact credit line as provided by the rights holder.
 
-        If you are the copyright holder, please include very brief copyright information (ie. © John Doe, 1999.).
+        If you are the rightsholder, please include very brief copyright information (ie. © John Doe, 1999.).
 
         If the digital asset is externally hosted, this can be left blank.
       holding_contact: |
@@ -187,7 +187,7 @@ en:
         --Special Collections and University Archives, University of Oregon, Eugene
         --Staatsbibliothek Bamberg website: https://www.staatsbibliothek-bamberg.de
 
-        Keep in mind that while the Copyright Holder, License, and Credit Line refer to the digital asset that is hosted on the Fulcrum platform, e.g. a photograph of a painting, the Holding Contact information is about the painting itself, e.g. the museum where it resides can be entered here.
+        Keep in mind that while the Rightsholder, License, and Credit Line refer to the digital asset that is hosted on the Fulcrum platform, e.g. a photograph of a painting, the Holding Contact information is about the painting itself, e.g. the museum where it resides can be entered here.
       exclusive_to_platform: |
         This field is to highlight if the digital asset only appears on Fulcrum. If Yes is selected, the asset will be flagged as exclusive and will be identified as Exclusive to Fulcrum in the Exclusivity facet.
 

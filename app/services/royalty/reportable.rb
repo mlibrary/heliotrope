@@ -37,11 +37,11 @@ module Royalty
       items
     end
 
-    def add_copyright_holder_to_combined_report(all_items)
+    def add_rightsholder_to_combined_report(all_items)
       all_items.each_with_index do |item, index|
         monograph_noid = item["Parent_Proprietary_ID"]
         publisher_idx = item.keys.index("Publisher")
-        all_items[index] = item.to_a.insert(publisher_idx + 1, ["Copyright Holder", copyright_holders[monograph_noid]]).to_h
+        all_items[index] = item.to_a.insert(publisher_idx + 1, ["Rightsholder", rightsholders[monograph_noid]]).to_h
       end
       all_items
     end
@@ -91,25 +91,25 @@ module Royalty
       return @items_by_copyholders if @items_by_copyholders.present?
       @items_by_copyholders = {}
       items.each do |item|
-        this_copyholder = copyright_holders[item["Parent_Proprietary_ID"]]
+        this_copyholder = rightsholders[item["Parent_Proprietary_ID"]]
         @items_by_copyholders[this_copyholder] = [] if @items_by_copyholders[this_copyholder].nil?
         @items_by_copyholders[this_copyholder] << item
       end
       @items_by_copyholders
     end
 
-    def copyright_holders
-      return @copyright_holders if @copyright_holders
-      @copyright_holders = {}
-      docs = ActiveFedora::SolrService.query("{!terms f=press_sim}#{@subdomain}", fl: ['id', 'copyright_holder_tesim'], rows: 100_000)
+    def rightsholders
+      return @rightsholders if @rightsholders
+      @rightsholders = {}
+      docs = ActiveFedora::SolrService.query("{!terms f=press_sim}#{@subdomain}", fl: ['id', 'rightsholder_tesim'], rows: 100_000)
       docs.each do |doc|
-        if doc["copyright_holder_tesim"].blank? || doc["copyright_holder_tesim"].first.blank?
-          @copyright_holders[doc["id"]] = "no copyright holder"
+        if doc["rightsholder_tesim"].blank? || doc["rightsholder_tesim"].first.blank?
+          @rightsholders[doc["id"]] = "no rightsholder"
         else
-          @copyright_holders[doc["id"]] = doc["copyright_holder_tesim"].first
+          @rightsholders[doc["id"]] = doc["rightsholder_tesim"].first
         end
       end
-      @copyright_holders
+      @rightsholders
     end
 
     def total_hits_all_rightsholders(items)

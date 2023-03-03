@@ -33,11 +33,11 @@ module Royalty
     end
 
     # HELIO-3720
-    # Returns a report (not csv) for a given copyright_holder
-    def report_for_copyholder(copyright_holder)
+    # Returns a report (not csv) for a given rightsholder
+    def report_for_copyholder(rightsholder)
       # this is not efficient, just using what's already here to get this working
       items = item_report[:items]
-      ids = copyright_holders.to_a.filter_map { |i| i[0] if i[1] == copyright_holder }
+      ids = rightsholders.to_a.filter_map { |i| i[0] if i[1] == rightsholder }
       items = items.filter_map { |item| item if item["Parent_Proprietary_ID"].in?(ids) }
 
       items = update_results(items)
@@ -51,7 +51,7 @@ module Royalty
         header: {
           "Collection Name": @press.name,
           "Report Name": "Royalty Usage Report",
-          "Rightsholder Name": copyright_holder,
+          "Rightsholder Name": rightsholder,
           "Reporting Period": "#{@start_date.strftime("%Y%m")} to #{@end_date.strftime("%Y%m")}",
           "Total Hits": number_with_delimiter(@total_hits_all_rightsholders),
         },
@@ -63,7 +63,7 @@ module Royalty
 
       # Generate one additional summary usage report for all rightsholders
       def combined_report(reports, all_items)
-        all_items = add_copyright_holder_to_combined_report(all_items)
+        all_items = add_rightsholder_to_combined_report(all_items)
         combined = "usage_combined.#{@start_date.strftime("%Y%m")}-#{@end_date.strftime("%Y%m")}.csv"
         reports[combined] = {
           header: {

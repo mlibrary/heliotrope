@@ -49,7 +49,7 @@ describe 'Create an external resource' do
       fill_in 'Resource Type', with: 'image'
       fill_in 'Caption', with: 'This is a caption for the external resource'
       fill_in 'Alternative Text', with: 'This is some alt text for the external resource'
-      fill_in 'Copyright Holder', with: 'University of Michigan'
+      fill_in 'Rightsholder', with: 'University of Michigan'
       fill_in 'Copyright Status', with: 'in-copyright'
       fill_in 'Exclusive to Platform?', with: 'no'
       fill_in 'Allow Download?', with: 'no'
