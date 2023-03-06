@@ -88,4 +88,48 @@ describe Import::RowData do
       end
     end
   end
+
+  describe "newlines" do
+    let(:object) { :monograph }
+
+    context "metadata field with `newlines` unspecified" do
+      context 'LF newlines present' do
+        let(:row) { { 'Description' => "Line 1 \nLine 2  \nLine 3" } }
+
+        it 'leaves the value unchanged' do
+          subject
+          expect(attrs['description']).to eq(["Line 1 \nLine 2  \nLine 3"])
+        end
+      end
+
+      context 'CRLF newlines present' do
+        let(:row) { { 'Description' => "Line 1 \r\n  Line 2\r\nLine 3" } }
+
+        it 'leaves the value unchanged' do
+          subject
+          expect(attrs['description']).to eq(["Line 1 \r\n  Line 2\r\nLine 3"])
+        end
+      end
+    end
+
+    context "metadata field with `newlines: false`" do
+      context 'LF newlines present' do
+        let(:row) { { 'Title' => "Line 1 \nLine 2  \nLine 3" } }
+
+        it 'joins the lines with a single space' do
+          subject
+          expect(attrs['title']).to eq(['Line 1 Line 2 Line 3'])
+        end
+      end
+
+      context 'CRLF newlines present' do
+        let(:row) { { 'Title' => "Line 1 \r\n  Line 2\r\nLine 3" } }
+
+        it 'joins the lines with a single space' do
+          subject
+          expect(attrs['title']).to eq(['Line 1 Line 2 Line 3'])
+        end
+      end
+    end
+  end
 end

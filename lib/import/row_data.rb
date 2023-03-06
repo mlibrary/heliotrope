@@ -22,9 +22,12 @@ module Import
       fields.each do |field|
         if row[field[:field_name]].present?
           is_multivalued = field[:multivalued]
+          remove_newlines = field[:newlines] == false
+
           # ensuring all values are arrays
           field_values = split_field_values(row[field[:field_name]], is_multivalued)
           field_values = strip_markdown(field[:field_name], field_values, md)
+          field_values = remove_newlines(field_values) if remove_newlines
           field_values = cleanup_open_access(field[:field_name], field_values)
           field_values = downcase_format(field[:field_name], field_values)
           field_values = downcase_role(field[:field_name], field_values)
@@ -66,6 +69,10 @@ module Import
 
       def strip_markdown(field_name, field_values, metadata)
         field_name == "Keywords" ? field_values.map! { |value| metadata.render(value).strip! } : field_values
+      end
+
+      def remove_newlines(field_values)
+        field_values.map! { |value| value.split(/\r?\n/).reject(&:blank?).map(&:strip).join(' ') }
       end
 
       # HELIO-3287 only 'yes' values make sense for this Blacklight facet field
