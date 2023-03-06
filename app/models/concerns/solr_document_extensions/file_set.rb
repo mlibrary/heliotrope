@@ -81,7 +81,7 @@ module SolrDocumentExtensions
     end
 
     def keywords
-      Array(self['keywords_tesim'])
+      Array(self['keyword_tesim'])
     end
 
     def permissions_expiration_date

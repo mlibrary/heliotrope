@@ -6,7 +6,7 @@ RSpec.describe "Monograph Bootstrap tabs", type: :system, browser: true do
   let(:press) { create(:press) }
   let(:monograph) { create(:monograph, press: press.subdomain, user: User.batch_user, visibility: "open", representative_id: cover.id) }
   let(:cover) { create(:file_set, visibility: "open", content: File.open(File.join(fixture_path, 'csv', 'miranda.jpg'))) }
-  let(:file_set) { create(:file_set, visibility: "open", keywords: ['one'], content: File.open(File.join(fixture_path, 'csv', 'shipwreck.jpg'))) }
+  let(:file_set) { create(:file_set, visibility: "open", keyword: ['one'], content: File.open(File.join(fixture_path, 'csv', 'shipwreck.jpg'))) }
   let(:epub) { create(:file_set, visibility: "open", allow_download: 'no', content: File.open(File.join(fixture_path, 'moby-dick.epub'))) }
   let(:fr) { create(:featured_representative, work_id: monograph.id, file_set_id: epub.id, kind: 'epub') }
 
@@ -83,9 +83,9 @@ RSpec.describe "Monograph Bootstrap tabs", type: :system, browser: true do
 
       # test facet search
       # open the facet panel
-      find("div[data-target='#facet-keywords_sim']").click
+      find("div[data-target='#facet-keyword_sim']").click
       # click the keyword facet search link
-      find("a.facet-anchor.facet_select[href='/concern/monographs/#{monograph.id}?f%5Bkeywords_sim%5D%5B%5D=one&locale=en']").click
+      find("a.facet-anchor.facet_select[href='/concern/monographs/#{monograph.id}?f%5Bkeyword_sim%5D%5B%5D=one&locale=en']").click
 
       # Facets cause two of these 'x' icons. Clear last search by clicking the one in the sidebar (facet panel)
       find("span.glyphicon.glyphicon-remove", match: :first).click

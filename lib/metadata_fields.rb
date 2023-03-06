@@ -56,7 +56,7 @@ METADATA_FIELDS ||=
     { object: :monograph, field_name: 'Edition Name', metadata_name: 'edition_name', multivalued: :no, description: I18n.t('csv.descriptions.edition_name') },
     { object: :monograph, field_name: 'Previous Edition', metadata_name: 'previous_edition', multivalued: :no, description: I18n.t('csv.descriptions.previous_edition') },
     { object: :monograph, field_name: 'Next Edition', metadata_name: 'next_edition', multivalued: :no, description: I18n.t('csv.descriptions.next_edition') },
-    { object: :file_set, field_name: 'Keywords', metadata_name: 'keywords', required: false, multivalued: :yes_split, description: I18n.t('csv.descriptions.keywords') },
+    { object: :file_set, field_name: 'Keywords', metadata_name: 'keyword', required: false, multivalued: :yes_split, description: I18n.t('csv.descriptions.keywords') },
     { object: :monograph, field_name: 'Section Titles', metadata_name: 'section_titles', required: false, multivalued: :no, description: I18n.t('csv.descriptions.section_titles') },
     { object: :file_set, field_name: 'Section', metadata_name: 'section_title', required: false, multivalued: :yes_split, description: I18n.t('csv.descriptions.section_title') },
     { object: :universal, field_name: 'Language', metadata_name: 'language', required: false, multivalued: :yes_split, description: I18n.t('csv.descriptions.language') },

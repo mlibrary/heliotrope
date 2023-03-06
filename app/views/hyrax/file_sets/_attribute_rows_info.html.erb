@@ -10,7 +10,7 @@
                                 monograph_id: presenter.parent.id,
                                 markdown: true,
                                 sort_by: presenter.parent.ordered_section_titles) %>
-<%= presenter.attribute_to_html(:keywords, render_as: :monograph_facet, monograph_id: presenter.parent.id) %>
+<%= presenter.attribute_to_html(:keyword, label: t('keyword'), render_as: :monograph_facet, monograph_id: presenter.parent.id) %>
 <%= presenter.attribute_to_html(:content_type, label: t('content_type'), render_as: :monograph_facet, monograph_id: presenter.parent.id) %>
 <%= presenter.attribute_to_html(:language, render_as: :monograph_facet, monograph_id: presenter.parent.id) %>
 <%= presenter.attribute_to_html(:redirect_to) %>

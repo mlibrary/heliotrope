@@ -36,7 +36,7 @@ module Hyrax
     # Metadata Methods
     delegate :resource_type, :caption, :alt_text, :description, :rightsholder,
              :content_type, :creator, :creator_full_name, :contributor, :date_created,
-             :keywords, :publisher, :language, :date_uploaded,
+             :keyword, :publisher, :language, :date_uploaded,
              :rights_statement, :license, :embargo_release_date, :lease_expiration_date, :depositor, :tags,
              :title_or_label, :section_title,
              :allow_download, :allow_hi_res, :copyright_status, :rights_granted,

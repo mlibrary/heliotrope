@@ -48,7 +48,7 @@ class MonographCatalogController < ::CatalogController
       config.index_fields.delete('description_tesim')
       config.index_fields.delete('alt_text_tesim')
       config.index_fields.delete('content_type_tesim')
-      config.index_fields.delete('keywords_tesim')
+      config.index_fields.delete('keyword_tesim')
       config.index_fields.delete('section_title_tesim')
       config.index_fields.delete('license_tesim')
       config.index_fields.delete('date_published_dtsim')
@@ -58,7 +58,7 @@ class MonographCatalogController < ::CatalogController
                            label: "Section", url_method: :facet_url_helper,
                            partial: 'custom_section_facet',
                            helper_method: :markdown_as_text_facet
-    config.add_facet_field solr_name('keywords', :facetable), label: "Keyword", limit: 5, more_limit: 1000,
+    config.add_facet_field solr_name('keyword', :facetable), label: "Keyword", limit: 5, more_limit: 1000,
                            url_method: :facet_url_helper,
                            partial: 'case_insensitive_sort_facet'
     config.add_facet_field solr_name('creator', :facetable), label: 'Creator', limit: 5, url_method: :facet_url_helper

@@ -23,7 +23,7 @@ RSpec.describe MonographCatalogController, type: :controller do
           described_class.solr_name('press_name', :symbol),
           described_class.solr_name('generic_type', :facetable),
           described_class.solr_name('section_title', :facetable),
-          described_class.solr_name('keywords', :facetable),
+          described_class.solr_name('keyword', :facetable),
           described_class.solr_name('creator', :facetable),
           described_class.solr_name('content_type', :facetable),
           described_class.solr_name('resource_type', :facetable),

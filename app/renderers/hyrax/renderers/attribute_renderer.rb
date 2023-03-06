@@ -71,14 +71,23 @@ module Hyrax
         @values = ordered_values + (values - ordered_values) if ordered_values.present?
       end
 
+      # Defaults to the label provided in the options, otherwise, it
+      # fallsback to the inner logic of the method.
+      #
       # @return The human-readable label for this field.
       # @note This is a central location for determining the label of a field
       #   name. Can be overridden if more complicated logic is needed.
       def label
-        translate(
-          :"blacklight.search.fields.show.#{field}",
-          default: [:"blacklight.search.fields.#{field}", options.fetch(:label, field.to_s.humanize)]
-        )
+        if options&.key?(:label)
+          options.fetch(:label)
+        else
+          translate(
+            :"blacklight.search.fields.#{field}",
+            default: [:"blacklight.search.fields.show.#{field}",
+                      :"blacklight.search.fields.#{field}",
+                      field.to_s.humanize]
+          )
+        end
       end
 
       private

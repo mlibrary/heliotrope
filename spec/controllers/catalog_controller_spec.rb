@@ -21,7 +21,7 @@ RSpec.describe CatalogController, type: :controller do
                                    creator_display
                                    subject
                                    description
-                                   keywords
+                                   keyword
                                    contributor
                                    caption
                                    transcript

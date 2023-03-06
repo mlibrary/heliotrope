@@ -32,7 +32,7 @@ describe 'FileSet Cardinality' do
                       exclusive_to_platform: "yes",
                       external_resource_url: "https://example.com/blah",
                       holding_contact: "Some museum or something somewhere",
-                      keywords: ["dogs", "cats", "fish"],
+                      keyword: ["dogs", "cats", "fish"],
                       permissions_expiration_date: "2020-01-01",
                       rights_granted: "Non-exclusive, North America, term-limited",
                       license: ['http://creativecommons.org/publicdomain/mark/1.0/'],
@@ -145,9 +145,9 @@ describe 'FileSet Cardinality' do
       expect(doc.holding_contact).to eql 'Some museum or something somewhere'
       expect(find('#file_set_holding_contact')[:class]).not_to include 'multi-text-field'
 
-      expect(cover.keywords).to match_array(["dogs", "cats", "fish"])
-      expect(doc.keywords).to match_array(["dogs", "cats", "fish"])
-      expect(find('#file_set_keywords')[:class]).to include 'multi-text-field'
+      expect(cover.keyword).to match_array(["dogs", "cats", "fish"])
+      expect(doc.keyword).to match_array(["dogs", "cats", "fish"])
+      expect(find('#file_set_keyword')[:class]).to include 'multi-text-field'
 
       expect(cover.permissions_expiration_date).to eql '2020-01-01'
       expect(doc.permissions_expiration_date).to eql '2020-01-01'
