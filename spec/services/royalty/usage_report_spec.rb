@@ -68,7 +68,7 @@ RSpec.describe Royalty::UsageReport do
       SolrDocument.new(id: "AAAAAAAAA",
                        has_model_ssim: ['Monograph'],
                        press_sim: press.subdomain,
-                       copyright_holder_tesim: ["Copyright A"],
+                       rightsholder_tesim: ["Copyright A"],
                        title_tesim: ["A"],
                        identifier_tesim: ["heb_id:heb90001.0001.001", "http://hdl.handle.net/2027/heb.31695"])
     end
@@ -77,7 +77,7 @@ RSpec.describe Royalty::UsageReport do
       SolrDocument.new(id: "BBBBBBBBB",
                        has_model_ssim: ['Monograph'],
                        press_sim: press.subdomain,
-                       copyright_holder_tesim: ["Copyright B"],
+                       rightsholder_tesim: ["Copyright B"],
                        title_tesim: ["B"],
                        identifier_tesim: ["http://hdl.handle.net/2027/heb.sxklj", "heb_id:heb33333.0001.001"])
     end
@@ -118,7 +118,7 @@ RSpec.describe Royalty::UsageReport do
       SolrDocument.new(id: "AAAAAAAAA",
                        has_model_ssim: ['Monograph'],
                        press_sim: press.subdomain,
-                       copyright_holder_tesim: ["Copyright A"],
+                       rightsholder_tesim: ["Copyright A"],
                        title_tesim: ["A"],
                        identifier_tesim: ["heb_id:heb90001.0001.001", "http://hdl.handle.net/2027/heb.31695"])
     end
@@ -127,7 +127,7 @@ RSpec.describe Royalty::UsageReport do
       SolrDocument.new(id: "BBBBBBBBB",
                        has_model_ssim: ['Monograph'],
                        press_sim: press.subdomain,
-                       copyright_holder_tesim: ["Copyright B"],
+                       rightsholder_tesim: ["Copyright B"],
                        title_tesim: ["B"],
                        identifier_tesim: ["http://hdl.handle.net/2027/heb.sxklj", "heb_id:heb33333.0001.001"])
     end
@@ -141,7 +141,7 @@ RSpec.describe Royalty::UsageReport do
       allow(counter_report).to receive(:report).and_return(item_report)
     end
 
-    it "returns a report for a single copyright holder" do
+    it "returns a report for a single rightsholder" do
       expect(subject[:header][:"Rightsholder Name"]).to eq "Copyright A"
       expect(subject[:header][:"Total Hits"]).to eq "2,309"
       expect(subject[:items].length).to eq 2
@@ -182,7 +182,7 @@ RSpec.describe Royalty::UsageReport do
       SolrDocument.new(id: "AAAAAAAAA",
                        has_model_ssim: ['Monograph'],
                        press_sim: press.subdomain,
-                       copyright_holder_tesim: ["Copyright A"],
+                       rightsholder_tesim: ["Copyright A"],
                        title_tesim: ["A"])
     end
 
@@ -190,7 +190,7 @@ RSpec.describe Royalty::UsageReport do
       SolrDocument.new(id: "BBBBBBBBB",
                        has_model_ssim: ['Monograph'],
                        press_sim: press.subdomain,
-                       copyright_holder_tesim: ["Copyright B"],
+                       rightsholder_tesim: ["Copyright B"],
                        title_tesim: ["B"])
     end
 
@@ -199,7 +199,7 @@ RSpec.describe Royalty::UsageReport do
       ActiveFedora::SolrService.commit
     end
 
-    it "has items by copyright holders" do
+    it "has items by rightsholders" do
       expect(subject["Copyright A"][0]["Proprietary_ID"]).to eq "111111111"
       expect(subject["Copyright A"][1]["Proprietary_ID"]).to eq "333333333"
       expect(subject["Copyright B"][0]["Proprietary_ID"]).to eq "222222222"
@@ -214,7 +214,7 @@ RSpec.describe Royalty::UsageReport do
       SolrDocument.new(id: "AAAAAAAAA",
                        has_model_ssim: ['Monograph'],
                        press_sim: press.subdomain,
-                       copyright_holder_tesim: ["Copyright A"],
+                       rightsholder_tesim: ["Copyright A"],
                        title_tesim: ["A"],
                        identifier_tesim: ["heb_id:heb90001.0001.001", "http://hdl.handle.net/2027/heb.31695"])
     end
@@ -223,7 +223,7 @@ RSpec.describe Royalty::UsageReport do
       SolrDocument.new(id: "BBBBBBBBB",
                        has_model_ssim: ['Monograph'],
                        press_sim: press.subdomain,
-                       copyright_holder_tesim: ["Copyright B"],
+                       rightsholder_tesim: ["Copyright B"],
                        title_tesim: ["B"],
                        identifier_tesim: ["http://hdl.handle.net/2027/heb.sxklj", "heb_id:heb33333.0001.001"])
     end
@@ -268,15 +268,15 @@ RSpec.describe Royalty::UsageReport do
     end
   end
 
-  describe "#add_copyright_holder_to_combined_report" do
-    subject { described_class.new(press.subdomain, "2019-01-01", "2019-07-31").add_copyright_holder_to_combined_report(items) }
+  describe "#add_rightsholder_to_combined_report" do
+    subject { described_class.new(press.subdomain, "2019-01-01", "2019-07-31").add_rightsholder_to_combined_report(items) }
 
     let(:press) { create(:press, subdomain: "blue") }
     let(:mono1) do
       SolrDocument.new(id: "AAAAAAAAA",
                        has_model_ssim: ['Monograph'],
                        press_sim: press.subdomain,
-                       copyright_holder_tesim: ["Copyright A"],
+                       rightsholder_tesim: ["Copyright A"],
                        title_tesim: ["A"],
                        identifier_tesim: ["heb_id:heb90001.0001.001", "http://hdl.handle.net/2027/heb.31695"])
     end
@@ -285,7 +285,7 @@ RSpec.describe Royalty::UsageReport do
       SolrDocument.new(id: "BBBBBBBBB",
                        has_model_ssim: ['Monograph'],
                        press_sim: press.subdomain,
-                       copyright_holder_tesim: ["Copyright B"],
+                       rightsholder_tesim: ["Copyright B"],
                        title_tesim: ["B"],
                        identifier_tesim: ["http://hdl.handle.net/2027/heb.sxklj", "heb_id:heb33333.0001.001"])
     end
@@ -295,11 +295,11 @@ RSpec.describe Royalty::UsageReport do
       ActiveFedora::SolrService.commit
     end
 
-    it "has the correct Copyright Holder in the right place, after the Publisher field" do
-      expect(subject[0].keys[5]).to eq "Copyright Holder"
-      expect(subject[0]["Copyright Holder"]).to eq "Copyright A"
-      expect(subject[1].keys[5]).to eq "Copyright Holder"
-      expect(subject[1]["Copyright Holder"]).to eq "Copyright B"
+    it "has the correct Rightsholder in the right place, after the Publisher field" do
+      expect(subject[0].keys[5]).to eq "Rightsholder"
+      expect(subject[0]["Rightsholder"]).to eq "Copyright A"
+      expect(subject[1].keys[5]).to eq "Rightsholder"
+      expect(subject[1]["Rightsholder"]).to eq "Copyright B"
     end
   end
 end

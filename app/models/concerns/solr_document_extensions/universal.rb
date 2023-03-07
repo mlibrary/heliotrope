@@ -4,8 +4,8 @@ module SolrDocumentExtensions
   module Universal
     extend ActiveSupport::Concern
 
-    def copyright_holder
-      Array(self['copyright_holder_tesim']).first
+    def rightsholder
+      Array(self['rightsholder_tesim']).first
     end
 
     def date_published

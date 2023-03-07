@@ -70,7 +70,7 @@ class CatalogController < ApplicationController
     config.add_index_field solr_name('date_published', :stored_searchable, type: :date)
     config.add_index_field solr_name('isbn', :stored_searchable)
     config.add_index_field solr_name('editor', :stored_searchable)
-    config.add_index_field solr_name('copyright_holder', :stored_searchable)
+    config.add_index_field solr_name('rightsholder', :stored_searchable)
     config.add_index_field solr_name('buy_url', :symbol)
     config.add_index_field solr_name('caption', :stored_searchable)
     config.add_index_field solr_name('alt_text', :stored_searchable)

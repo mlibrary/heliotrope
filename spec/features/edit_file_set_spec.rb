@@ -63,7 +63,7 @@ describe 'Edit a file set' do
       fill_in 'Resource Type', with: 'image'
       fill_in 'Caption', with: 'This is a caption for the image'
       fill_in 'Alternative Text', with: 'This is some alt text for the image'
-      fill_in 'Copyright Holder', with: 'University of Michigan'
+      fill_in 'Rightsholder', with: 'University of Michigan'
       fill_in 'Copyright Status', with: 'in-copyright'
       fill_in 'Rights Granted', with: 'look but don\'t download!'
       select 'Creative Commons Public Domain Mark 1.0', from: 'License'

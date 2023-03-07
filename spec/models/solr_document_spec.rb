@@ -24,7 +24,7 @@ describe SolrDocument do
   end
 
   # Monograph + FileSet
-  it { is_expected.to respond_to(:copyright_holder) }
+  it { is_expected.to respond_to(:rightsholder) }
   it { is_expected.to respond_to(:date_published) }
   it { is_expected.to respond_to(:doi) }
   it { is_expected.to respond_to(:hdl) }

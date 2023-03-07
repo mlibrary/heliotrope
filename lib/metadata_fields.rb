@@ -23,7 +23,7 @@ METADATA_FIELDS ||=
     { object: :file_set, field_name: 'External Resource URL', metadata_name: 'external_resource_url', required: false, multivalued: :no, description: I18n.t('csv.descriptions.external_resource_url') },
     { object: :file_set, field_name: 'Caption', metadata_name: 'caption', required: true, multivalued: :yes, description: I18n.t('csv.descriptions.caption') },
     { object: :file_set, field_name: 'Alternative Text', metadata_name: 'alt_text', required: true, multivalued: :yes, description: I18n.t('csv.descriptions.alt_text') },
-    { object: :universal, field_name: 'Copyright Holder', metadata_name: 'copyright_holder', required: true, multivalued: :no, description: I18n.t('csv.descriptions.copyright_holder') },
+    { object: :universal, field_name: 'Rightsholder', metadata_name: 'rightsholder', required: true, multivalued: :no, description: I18n.t('csv.descriptions.rightsholder') },
     { object: :file_set, field_name: 'Copyright Status', metadata_name: 'copyright_status', required: true, multivalued: :no, description: I18n.t('csv.descriptions.copyright_status') },
     { object: :monograph, field_name: 'Open Access?', metadata_name: 'open_access', required: false, multivalued: :no, description: I18n.t('csv.descriptions.open_access') },
     { object: :monograph, field_name: 'Funder', metadata_name: 'funder', required: false, multivalued: :no, description: I18n.t('csv.descriptions.funder') },

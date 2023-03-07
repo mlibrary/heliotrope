@@ -39,7 +39,7 @@ describe 'Create a monograph' do
       fill_in 'Section Titles', with: 'Intro\nChapter 1\nChapter 2'
       fill_in 'Buy Book URL', with: 'http://www.example.com/buy'
       select 'Creative Commons Public Domain Mark 1.0', from: 'License'
-      fill_in 'Copyright Holder', with: 'Blahdy Blah Copyright Holder'
+      fill_in 'Rightsholder', with: 'Blahdy Blah Rightsholder'
       check 'Open Access?'
       fill_in 'Funder', with: 'Richie Rich'
       fill_in 'Funder Display', with: 'Made possible by Rich Richie'
@@ -136,9 +136,6 @@ describe 'Create a monograph' do
       # series
       expect(page).to have_content 'The Cereal Series'
       expect(page).to have_content 'The Second Series'
-      # copyright stuff
-      expect(page).to have_content 'Blahdy Blah Copyright Holder'
-      expect(page).to have_link("Blahdy Blah Copyright Holder", href: "http://www.blahpresscompany.com/")
       # Subject
       expect(page).to have_content 'red stuff'
       # ISBN
@@ -173,8 +170,8 @@ describe 'Create a monograph' do
       expect(page).to have_content 'http://www.example.com/buy'
       # license
       expect(page).to have_link("Creative Commons Public Domain Mark 1.0", href: "https://creativecommons.org/publicdomain/mark/1.0/")
-      # copyright_holder
-      expect(page).to have_content 'Blahdy Blah Copyright Holder'
+      # rightsholder
+      expect(page).to have_content 'Blahdy Blah Rightsholder'
       # holding_contact
       expect(page).to have_content 'http://www.blahpresscompany.com/'
 

@@ -21,7 +21,7 @@ describe 'FileSet Cardinality' do
                       closed_captions: ["This is a closed caption"],
                       content_type: ["drawing", "illustration"],
                       contributor: ["Thomas, John (playwright, author)\nGuy, Other (lackey)"],
-                      copyright_holder: "This is the © Copyright Holder",
+                      rightsholder: "This is the © Rightsholder",
                       copyright_status: "in-copyright",
                       creator: ["Smith, John (author, artist, photographer)\nCoauthor, Sally"],
                       credit_line: "Copyright by Some Person...",
@@ -99,9 +99,9 @@ describe 'FileSet Cardinality' do
       expect(doc.contributor).to match_array(['Thomas, John (playwright, author)', 'Guy, Other (lackey)'])
       expect(find('#file_set_contributor')[:class]).not_to include 'multi-text-field'
 
-      expect(cover.copyright_holder).to eql 'This is the © Copyright Holder'
-      expect(doc.copyright_holder).to eql 'This is the © Copyright Holder'
-      expect(find('#file_set_copyright_holder')[:class]).not_to include 'multi-text-field'
+      expect(cover.rightsholder).to eql 'This is the © Rightsholder'
+      expect(doc.rightsholder).to eql 'This is the © Rightsholder'
+      expect(find('#file_set_rightsholder')[:class]).not_to include 'multi-text-field'
 
       expect(cover.copyright_status).to eql 'in-copyright'
       expect(doc.copyright_status).to eql 'in-copyright'

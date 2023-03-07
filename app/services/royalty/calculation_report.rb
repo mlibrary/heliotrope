@@ -63,7 +63,7 @@ module Royalty
         # HELIO-3572
         items = add_hebids(items)
         items = reclassify_isbns(items)
-        items = add_copyright_holder_to_combined_report(items)
+        items = add_rightsholder_to_combined_report(items)
         combined = "calc_combined.#{@start_date.strftime("%Y%m")}-#{@end_date.strftime("%Y%m")}.csv"
         reports[combined] = {
           header: {},
