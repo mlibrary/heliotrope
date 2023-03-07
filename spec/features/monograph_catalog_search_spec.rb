@@ -24,7 +24,7 @@ describe 'Monograph Catalog Search' do
                       alt_text: ['garlic'],
                       description: ['tomato'],
                       contributor: ['potato'],
-                      keywords: ['squash'],
+                      keyword: ['squash'],
                       transcript: 'broccoli',
                       translation: ['cauliflower'])
   }
@@ -35,7 +35,7 @@ describe 'Monograph Catalog Search' do
                       alt_text: ['lizard'],
                       description: ['elephant'],
                       contributor: ['rhino'],
-                      keywords: ['snake'],
+                      keyword: ['snake'],
                       transcript: 'tiger',
                       translation: ['mouse'])
   }

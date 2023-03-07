@@ -65,7 +65,7 @@ describe SolrDocument do
   it { is_expected.to respond_to(:display_date) }
   it { is_expected.to respond_to(:exclusive_to_platform) }
   it { is_expected.to respond_to(:external_resource_url) }
-  it { is_expected.to respond_to(:keywords) }
+  it { is_expected.to respond_to(:keyword) }
   it { is_expected.to respond_to(:license) }
   it { is_expected.to respond_to(:permissions_expiration_date) }
   it { is_expected.to respond_to(:primary_creator_role) }

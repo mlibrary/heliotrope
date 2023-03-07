@@ -18,7 +18,7 @@ en:
         caption_tesim: "Caption"
         alt_text_tesim: "Alternative Text"
         content_type_tesim: "Content Type"
-        keywords_tesim: "Keywords"
+        keyword_tesim: "Keywords"
         section_title_tesim: "Section"
         allow_download_ssim: "Allow Download?"
         allow_hi_res_ssim: "Allow Hi-Res?"

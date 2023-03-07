@@ -188,7 +188,7 @@ describe 'Edit a file set' do
       assert_equal page.all('.list-unstyled .section_title a').map(&:text), ['C 1', 'Test section with Italicized Title therein']
 
       # check facets
-      expect(page).to have_link("Conor O'Neill's", href: "/concern/monographs/" + monograph.id + "?f%5Bkeywords_sim%5D%5B%5D=Conor+O%27Neill%27s")
+      expect(page).to have_link("Conor O'Neill's", href: "/concern/monographs/" + monograph.id + "?f%5Bkeyword_sim%5D%5B%5D=Conor+O%27Neill%27s")
       expect(page).to have_link("English", href: "/concern/monographs/" + monograph.id + "?f%5Blanguage_sim%5D%5B%5D=English")
       expect(page).to have_link("Test section with Italicized Title therein", href: "/concern/monographs/" + monograph.id + "?f%5Bsection_title_sim%5D%5B%5D=Test+section+with+_Italicized+Title_+therein")
       expect(page).to have_link("FamilyName, GivenName", href: "/concern/monographs/" + monograph.id + "?f%5Bcreator_sim%5D%5B%5D=FamilyName%2C+GivenName+%28On+Screen+Talent%29")

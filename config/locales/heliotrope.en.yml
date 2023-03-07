@@ -307,7 +307,7 @@ en:
         DOI link to a previous edition of the Fulcrum Monograph.
       next_edition: |
         DOI link to a subsequent edition of the Fulcrum Monograph.
-      keywords: |
+      keyword: |
         The topic of the resource. Typically, the topic will be represented using keywords or key phrases. Be consistent in how you name keywords, e.g. WWII or WW2, not both.
 
         Separate keywords with a semicolon.

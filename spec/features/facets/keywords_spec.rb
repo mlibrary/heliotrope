@@ -19,7 +19,7 @@ describe "Monograph Catalog Keyword Facets", type: :feature do
       m.save!
       m
     end
-    let(:file_set) { create(:public_file_set, keywords: %w[cat dog elephant lizard monkey mouse tiger]) }
+    let(:file_set) { create(:public_file_set, keyword: %w[cat dog elephant lizard monkey mouse tiger]) }
 
     it "shows keywords in the intended order" do
       visit monograph_catalog_path(id: monograph.id)
@@ -38,7 +38,7 @@ describe "Monograph Catalog Keyword Facets", type: :feature do
       within facets do
         cat_link = page.find_link('cat')
         expect(cat_link).to have_content('cat')
-        expect(CGI.unescape(cat_link[:href])).to have_content("f[keywords_sim][]=cat")
+        expect(CGI.unescape(cat_link[:href])).to have_content("f[keyword_sim][]=cat")
         expect(cat_link[:'data-ga-event-category']).to be nil
         expect(cat_link[:'data-ga-event-action']).to eq("facet_keyword")
         expect(cat_link[:'data-ga-event-label']).to eq('cat')
@@ -53,7 +53,7 @@ describe "Monograph Catalog Keyword Facets", type: :feature do
       within facets do
         cat_link = page.find_link('cat')
         expect(cat_link).to have_content('cat')
-        expect(CGI.unescape(cat_link[:href])).not_to have_content("f[keywords_sim][]=cat")
+        expect(CGI.unescape(cat_link[:href])).not_to have_content("f[keyword_sim][]=cat")
         expect(cat_link[:'data-ga-event-category']).to be nil
         expect(cat_link[:'data-ga-event-action']).to be nil
         expect(cat_link[:'data-ga-event-label']).to be nil
