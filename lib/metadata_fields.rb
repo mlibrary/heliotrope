@@ -1,5 +1,8 @@
 # frozen_string_literal: true
 
+# as this file lives outside the Rails app directory structure, this definitions file needs to be force-loaded
+I18n.load_path += Dir[Rails.root.join("config", "locales", "heliotrope.en.yml").to_s]
+
 # something to note is that the multivalued :yes/:no values mirror the model, such that assignment will work properly as a scalar or array...
 # :yes_split means that this is a field we actually want to *use* as multivalued, and so will split the CSV field on semicolons to do so
 # :yes_multiline means we only want to use <fieldname>.first of a multi-valued field to store all our values, which will be separated with a new line within that string
@@ -56,7 +59,7 @@ METADATA_FIELDS ||=
     { object: :monograph, field_name: 'Edition Name', metadata_name: 'edition_name', multivalued: :no, description: I18n.t('csv.descriptions.edition_name') },
     { object: :monograph, field_name: 'Previous Edition', metadata_name: 'previous_edition', multivalued: :no, description: I18n.t('csv.descriptions.previous_edition') },
     { object: :monograph, field_name: 'Next Edition', metadata_name: 'next_edition', multivalued: :no, description: I18n.t('csv.descriptions.next_edition') },
-    { object: :file_set, field_name: 'Keywords', metadata_name: 'keyword', required: false, multivalued: :yes_split, description: I18n.t('csv.descriptions.keywords') },
+    { object: :file_set, field_name: 'Keywords', metadata_name: 'keyword', required: false, multivalued: :yes_split, description: I18n.t('csv.descriptions.keyword') },
     { object: :monograph, field_name: 'Section Titles', metadata_name: 'section_titles', required: false, multivalued: :no, description: I18n.t('csv.descriptions.section_titles') },
     { object: :file_set, field_name: 'Section', metadata_name: 'section_title', required: false, multivalued: :yes_split, description: I18n.t('csv.descriptions.section_title') },
     { object: :universal, field_name: 'Language', metadata_name: 'language', required: false, multivalued: :yes_split, description: I18n.t('csv.descriptions.language') },
@@ -74,11 +77,11 @@ METADATA_FIELDS ||=
     { object: :monograph, field_name: 'Copyright Year', metadata_name: 'copyright_year', required: false, multivalued: :no, description: I18n.t('csv.descriptions.copyright_year') },
     { object: :monograph, field_name: 'Award(s)', metadata_name: 'award', required: false, multivalued: :yes_split, description: I18n.t('csv.descriptions.award') },
     { object: :file_set, field_name: 'Article Title', metadata_name: 'article_title', required: false, multivalued: :no, description: I18n.t('csv.descriptions.article_title') },
-    { object: :file_set, field_name: 'Article Creator(s)', metadata_name: 'article_creator', required: false, multivalued: :yes_multiline, description: I18n.t('csv.description.article_creator') },
-    { object: :file_set, field_name: 'Article Permalink', metadata_name: 'article_permalink', required: false, multivalued: :no, description: I18n.t('csv.description.article_permalink') },
-    { object: :file_set, field_name: 'Article Volume', metadata_name: 'article_volume', required: false, multivalued: :no, description: I18n.t('csv.description.article_volume') },
-    { object: :file_set, field_name: 'Article Issue', metadata_name: 'article_issue', required: false, multivalued: :no, description: I18n.t('csv.description.article_issue') },
-    { object: :file_set, field_name: 'Article Display Date', metadata_name: 'article_display_date', required: false, multivalued: :no, description: I18n.t('csv.description.article_display_date') },
+    { object: :file_set, field_name: 'Article Creator(s)', metadata_name: 'article_creator', required: false, multivalued: :yes_multiline, description: I18n.t('csv.descriptions.article_creator') },
+    { object: :file_set, field_name: 'Article Permalink', metadata_name: 'article_permalink', required: false, multivalued: :no, description: I18n.t('csv.descriptions.article_permalink') },
+    { object: :file_set, field_name: 'Article Volume', metadata_name: 'article_volume', required: false, multivalued: :no, description: I18n.t('csv.descriptions.article_volume') },
+    { object: :file_set, field_name: 'Article Issue', metadata_name: 'article_issue', required: false, multivalued: :no, description: I18n.t('csv.descriptions.article_issue') },
+    { object: :file_set, field_name: 'Article Display Date', metadata_name: 'article_display_date', required: false, multivalued: :no, description: I18n.t('csv.descriptions.article_display_date') },
     { object: :monograph, field_name: 'Press', metadata_name: 'press', multivalued: :no, description: I18n.t('csv.descriptions.press') },
     { object: :universal, field_name: 'Published?', metadata_name: 'visibility', multivalued: :no, description: I18n.t('csv.descriptions.published') },
     { object: :universal, field_name: 'Date Published on Fulcrum', metadata_name: 'date_published', multivalued: :yes, description: I18n.t('csv.descriptions.date_published') },
