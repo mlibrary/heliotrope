@@ -191,7 +191,8 @@ RSpec.describe EPubsController, type: :controller do
       end
 
       context 'file pdf' do
-        let(:monograph) { create(:public_monograph) }
+        let(:monograph) { create(:public_monograph, press: press) }
+        let(:press) { 'michigan' }
         let(:file_set) { create(:public_file_set, content: File.open(File.join(fixture_path, 'dummy.pdf'))) }
         let!(:fr) { create(:featured_representative, work_id: monograph.id, file_set_id: file_set.id, kind: 'pdf_ebook') }
 
@@ -240,6 +241,30 @@ RSpec.describe EPubsController, type: :controller do
               expect(response.body.empty?).to be false
               expect(response.header['X-Sendfile']).to include("#{file_set.id.last}-pdf_ebook.pdf")
               expect(response.header['Accept-Ranges']).to eq nil
+            end
+
+            context 'in press "barpublishing"' do
+              let(:press) { 'barpublishing' }
+
+              it 'sends the derivatives directory file and accepts byte range requests' do
+                get :file, params: { id: file_set.id, file: 'file' }
+                expect(response).to have_http_status(:success)
+                expect(response.body.empty?).to be false
+                expect(response.header['X-Sendfile']).to include("#{file_set.id.last}-pdf_ebook.pdf")
+                expect(response.header['Accept-Ranges']).to eq 'bytes'
+              end
+            end
+
+            context 'in press "heliotrope"' do
+              let(:press) { 'heliotrope' }
+
+              it 'sends the derivatives directory file and accepts byte range requests' do
+                get :file, params: { id: file_set.id, file: 'file' }
+                expect(response).to have_http_status(:success)
+                expect(response.body.empty?).to be false
+                expect(response.header['X-Sendfile']).to include("#{file_set.id.last}-pdf_ebook.pdf")
+                expect(response.header['Accept-Ranges']).to eq 'bytes'
+              end
             end
           end
         end

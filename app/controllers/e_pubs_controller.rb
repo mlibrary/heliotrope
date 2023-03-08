@@ -64,8 +64,15 @@ class EPubsController < CheckpointController
     elsif @entity.is_a?(Sighrax::PdfEbook)
       pdf = UnpackService.root_path_from_noid(@noid, 'pdf_ebook') + ".pdf"
       if File.exist? pdf
-        # conditional based on (what browsers see) as host name value is to prevent `pdf.js` range requests over EZproxy
-        response.headers['Accept-Ranges'] = 'bytes' unless request.headers['HTTP_X_FORWARDED_HOST']&.start_with?('www-fulcrum-org')
+        # The header 'HTTP_X_FORWARDED_HOST' conditional is based on (what browsers see) as host name value, which...
+        # aims to prevent `pdf.js` range requests over EZproxy
+        # For now we'll leave range requests active for all PDF file requests under barpublishing and heliotrope.
+        # The former does not have any (or much?) subscriber traffic through EZproxy. The latter just for testing.
+        if ['barpublishing', 'heliotrope'].include?(@presenter.parent.subdomain) ||
+          !request.headers['HTTP_X_FORWARDED_HOST']&.start_with?('www-fulcrum-org')
+        then
+          response.headers['Accept-Ranges'] = 'bytes'
+        end
 
         pdf.gsub!(/releases\/\d+/, "current")
         response.headers['X-Sendfile'] = pdf
