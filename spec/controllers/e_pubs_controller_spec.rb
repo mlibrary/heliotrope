@@ -221,12 +221,26 @@ RSpec.describe EPubsController, type: :controller do
             FileUtils.remove_entry_secure(UnpackService.root_path_from_noid(file_set.id, 'pdf_ebook') + '.pdf')
           end
 
-          it do
+          it 'sends the derivatives directory file and accepts byte range requests' do
             get :file, params: { id: file_set.id, file: 'file' }
             expect(response).to have_http_status(:success)
             expect(response.body.empty?).to be false
             expect(response.header['X-Sendfile']).to include("#{file_set.id.last}-pdf_ebook.pdf")
             expect(response.header['Accept-Ranges']).to eq 'bytes'
+          end
+
+          context 'EZproxy request' do
+            before do
+              request.headers['HTTP_X_FORWARDED_HOST'] = "www-fulcrum-org"
+            end
+
+            it 'sends the derivatives directory file and does *not* accept byte range requests' do
+              get :file, params: { id: file_set.id, file: 'file' }
+              expect(response).to have_http_status(:success)
+              expect(response.body.empty?).to be false
+              expect(response.header['X-Sendfile']).to include("#{file_set.id.last}-pdf_ebook.pdf")
+              expect(response.header['Accept-Ranges']).to eq nil
+            end
           end
         end
       end

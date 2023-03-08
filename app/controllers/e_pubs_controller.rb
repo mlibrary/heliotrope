@@ -64,7 +64,9 @@ class EPubsController < CheckpointController
     elsif @entity.is_a?(Sighrax::PdfEbook)
       pdf = UnpackService.root_path_from_noid(@noid, 'pdf_ebook') + ".pdf"
       if File.exist? pdf
-        response.headers['Accept-Ranges'] = 'bytes'
+        # conditional based on (what browsers see) as host name value is to prevent `pdf.js` range requests over EZproxy
+        response.headers['Accept-Ranges'] = 'bytes' unless request.headers['HTTP_X_FORWARDED_HOST']&.start_with?('www-fulcrum-org')
+
         pdf.gsub!(/releases\/\d+/, "current")
         response.headers['X-Sendfile'] = pdf
         send_file pdf
