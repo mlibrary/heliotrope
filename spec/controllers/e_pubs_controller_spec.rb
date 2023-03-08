@@ -518,7 +518,7 @@ RSpec.describe EPubsController, type: :controller do
         expect(response.headers['Content-Type']).to eq 'application/pdf'
         expect(response.headers['Content-Disposition']).to eq 'inline'
         expect(response.headers['Content-Transfer-Encoding']).to eq 'binary'
-        expect(response.body.starts_with?("%PDF-1.3\n")).to be true
+        expect(response.body.start_with?("%PDF-1.3\n")).to be true
       end
     end
 
