@@ -7,11 +7,6 @@ module HeliotropeUniversalMetadata
     validate :date_published_format
     before_validation :maybe_convert_date_published_to_date_time, :maybe_set_date_published
 
-    # TODO: remove this copyright_holder field once rightsholder is in use
-    property :copyright_holder, predicate: ::RDF::Vocab::SCHEMA.copyrightHolder, multiple: false do |index|
-      index.as :stored_searchable
-    end
-
     property :rightsholder, predicate: ::RDF::Vocab::DC.rightsHolder, multiple: false do |index|
       index.as :stored_searchable
     end
