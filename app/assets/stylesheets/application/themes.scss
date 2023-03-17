@@ -4579,11 +4579,172 @@ $um-white: #fff;
 // University of Michigan Press -
 // Michigan English Language Teaching
 ///////////////////////////////////////////////
+// colors
+$um-brand-color: #4C6781;
+$um-accent-color: #00274C;
+$um-accent-color-light: #E5E9ED;
+$um-headings: rgb(33, 43, 54);
+
+$um-accent-footer: #989c97;
+
+$um-accent-link: rgb(29, 116, 145);
+
+$um-maize: #FFCB05;
+$um-blue: #212B36;
+
+$um-grey-1: #F5F0F0;
+$um-white: #fff;
+
+// typography
+@import url("https://use.typekit.net/hfw0vui.css");
+
+@mixin muli {
+  font-family: muli, Arial, Helvetica, sans-serif;
+}
+
+@mixin meta-serif {
+  font-family: ff-meta-serif-web-pro, Georgia, 'Times New Roman', Times, serif;
+}
+
+.muli {
+  @include muli;
+}
+
+.meta-serif {
+  @include meta-serif;
+}
+
+
 .michelt {
 
+// typography
+  @include meta-serif;
+
+  h1 {
+    @include meta-serif;
+    font-weight: 700;
+    color: $um-headings;
+  }
+
+  h2,
+  h3,
+  h4,
+  h5 {
+    @include muli;
+    font-weight: 700;
+    color: $um-headings;
+  }
+
+  h2 {
+    margin-top: 2rem;
+  }
+
+  h3,
+  h4,
+  h5 {
+    margin-top: 1rem;
+  }
+
+  .bold {
+    font-weight: 700;
+  }
+
+  .text-light {
+    color: #f8f9fa !important;
+  }
+
+  p, ul li, ol li {
+    font-weight: 300;
+  }
+
+  // links
+  a, .link {
+    color: $um-accent-link;
+    text-decoration: underline;
+  }
+
+  a:hover,
+  a:active,
+  button:hover,
+  button:active,
+  .link:hover {
+    color: $um-accent-link;
+    text-decoration-thickness: 2px;
+  }
+
+  a:focus,
+  button:focus,
+  .form-control:focus,
+  .btn:focus {
+    outline: 0;
+    box-shadow: 0 0 0 2px #FFCB05,0 0 0 3px #212B36;
+    border-radius: 2px !important;
+  }
+
+  a.btn, a.previous, a.next {
+    text-decoration: none;
+  }
+
+  // buttons
+  .btn, .btn-group {
+    @include muli;
+    font-weight: 600;
+  }
+
+  .btn-default {
+    @include button-background-color($um-accent-color);
+    @include button-font-color($um-white);
+    border-color: $um-accent-color;
+    font-weight: 600;
+    @include muli;
+  }
+
+  .download {
+    .btn-default {
+    @include button-background-color($um-accent-color);
+    @include button-font-color($um-white);
+    border-color: $um-accent-color;
+    font-weight: 600;
+    @include muli;
+    }
+  }
+
+  .btn-default:hover,
+  .btn-default:active {
+    @include button-hover-background-color($um-brand-color);
+    @include button-hover-font-color(#fff);
+    border-color: $um-brand-color;
+    font-weight: 600;
+  }
+
+  .open > .btn-default.dropdown-toggle {
+    background-color: $um-blue;
+    background-image: none;
+    border-color: $um-brand-color;
+    color: #fff;
+  }
+
+  #sort-dropdown .dropdown-toggle .caret,
+  #per_page-dropdown .dropdown-toggle .caret {
+    color: $um-white;
+  }
+
+  .nav,
   header {
+    @include muli;
+  }
+
+  header {
+    @include muli;
     border-bottom: 2px solid $um-accent-color;
     height: auto;
+    
+    .container {
+      padding: 16px 15px !important;
+      height: inherit;
+      max-width: 1140px;
+    }
+  
   }
 
   .navbar-default {
@@ -4592,19 +4753,149 @@ $um-white: #fff;
     border: 0;
   }
 
+  form {
+    @include muli;
+  }
+
   form.search-form.navbar-form {
     float: right !important;
   }
+
+  .navbar-brand-logo {
+      display: inline-block;
+      padding-right: 21.5px;
+  }
+
+  // container on all pages
+  #main.container {
+    max-width: 1140px;
+    padding-top: 1.5em;
+  }
+
+  // breadcrumbs
+  .breadcrumbs {
+    @include muli;
+  }
+
 
   .jumbotron {
     display: none;
   } 
   
+  // press catalog
+
+  .press .document {
+    a {
+      display: block;
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
+      text-decoration-thickness: 2px;
+    }
+  }
+
+  #facets a {
+    text-decoration: none;
+  }
+
+  #facets a:hover {
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+  }
+
+  // monograph catalog
+  #sort-dropdown .dropdown-toggle, #per_page-dropdown .dropdown-toggle {
+    color: $um-white;
+  }
+
+  // monograph
+  .monograph {
+    .documentHeader {
+      p {
+        @include meta-serif;
+      }
+    }
+
+    .authors, .copyright {
+      @include muli;
+    }
+
+    button.search-submit {
+      background-color: $um-accent-color;
+      border-color: $um-accent-color;
+      color: $um-white;
+      height: 34px;
+    }
+  }
+
+  // pagination
+  .page_links {
+    @include muli;
+  }
+
+  .pagination {
+    @include muli;
+     li a, li span {
+       color: $um-white;
+       background-color: $um-accent-color;
+       border-color: $um-accent-color;
+     }
+
+     li a:hover, li span:hover {
+      color: $um-white;
+      background-color: $um-brand-color;
+      border-color: $um-brand-color;
+     }
+
+     .active>a,
+     .active>a:hover,
+     .active>a:focus,
+     .active>span,
+     .active>span:hover,
+     .active>span:focus {
+       background-color: $um-brand-color;
+       border-color: $um-brand-color;
+       color: $um-white;
+     }
+  }
+
+  // assets
+  .asset-navigation {
+    @include muli;
+  }
+
+  .asset {
+    ul.nav-tabs li {
+      @include muli;
+    }
+
+    .able-transcript-area {
+      .panel-title {
+        margin: 0;
+        color: #fff;
+        font-size: 1em;
+      }
+    }
+  }
+
   //footer
 
    footer.press {
+    background-color: $um-accent-color !important;
     border: none;
     padding: 0;
+
+    img {
+      height: 108px !important;
+      width: 43px !important;
+      padding-bottom: 8px !important;
+    }
+
+    img.fulcrum {
+      height: 27px !important;
+      width: auto !important;
+    }
 
     .row {
       display: flex;
@@ -4651,8 +4942,182 @@ $um-white: #fff;
     }
   }
 
+  footer {
+    .container {
+      max-width: 1140px;
+    }
+
+    .row {
+      display: flex;
+      justify-content: space-between;
+    }
+
+    a {
+      text-decoration: none;
+    }
+
+    a:hover {
+      color: #dae0e5 !important;
+      text-decoration: none;
+    }
+
+    .press
+    .press-block-a,
+    .press-block-b,
+    .press-block-c {
+      background-color:  $um-accent-color !important;
+
+      small {
+        font-size: 12.8px;
+      }
+
+    }
+
+    .press-block-c {
+      a {
+        color: #f8f9fa !important;
+      }
+    }
+
+    .admin {
+      vertical-align: middle;
+    }
+
+    section {
+      ul {
+        font-size: 16px;
+      }
+    }
+
+    h2 {
+      font-size: 17px;
+      @include muli;
+      text-transform: uppercase;
+      margin-top: 0;
+    }
+
+    .block {
+      display: block;
+    }
+
+  }
+
+    // e-book reader
+  #reader {
+
+    .cozy-control .cozy-h1 {
+      font-size: 1.5em;
+    }
+
+    .button {
+      @include epub-button-background-color($um-accent-color,$um-brand-color,$um-white);
+    }
+
+    .button--lg {
+      @include epub-button-background-color($um-accent-color,$um-brand-color,$um-white);
+    }
+
+    .button--inline {
+      @include epub-button-background-color($um-accent-color,$um-brand-color,$um-white);
+    }
+
+    .button--sm {
+      @include epub-button-background-color($um-accent-color,$um-brand-color,$um-white);
+    }
+
+    .button--sm.cozy-preferences {
+      @include epub-button-background-color(#f1f1f1,$um-brand-color,$um-white);
+      color: $um-brand-color;
+    }
+
+    i[class^='icon-chevron-'] {
+      @include epub-prev-next-color($um-accent-color);
+      transition: 0.2s ease-in;
+    }
+
+    i[class^='icon-chevron-']:hover {
+      @include epub-hover-prev-next-color($um-brand-color);
+      transition: 0.2s ease-in;
+    }
+
+    .cozy-control .logo {
+      background: $um-grey-1;
+      height: 46.6px;
+      width: 36px;
+      overflow: hidden;
+
+      img {
+        height: 36px;
+        margin-top: 6px;
+        margin-left: 11px;
+      }
+    }
+
+    .modal__footer {
+      background-color: $um-accent-color-light;
+    }
+
+    // PDF loading progress bar
+    .helio-loading-bar .progress {
+      background-color: $um-accent-color;
+    }
+
+  }
 
 }
+@media(max-width: 976px) {
+  .michelt header {
+    height: 194px;
+  }
+  .michelt .container {
+    overflow: auto;
+  }
+  .michelt header .row.justify-content-end .col-md-4.pt-3 {
+    flex-grow: 1;
+  }
+
+  .michelt header .row.justify-content-end .col-md-4.pt-3 form.navbar-form {
+    width: 80%;
+  }
+
+  .michelt header .row.justify-content-end {
+    justify-content: unset !important;
+    margin: 0 auto;
+    width: 95%;
+  }
+
+  .michelt header .navbar-brand h1 {
+    font-size: 20px;
+    letter-spacing: 1px;
+    line-height: 28px;
+  }
+
+  .michelt header .nav-browse {
+    justify-content: flex-start;
+    margin-top: .8em;
+  }
+
+  .michelt .monograph .message {
+    padding: 1.5em;
+
+    .wrapper {
+      width: auto;
+    }
+    .text {
+      width: 70%;
+    }
+    .dismiss {
+      width: 20%;
+      padding-left: 10%;
+    }
+  }
+
+  .michelt footer .row {
+    flex-wrap: wrap;
+    justify-content: unset;
+  }
+}
+
 
 ///////////////////////////////////////////////
 // University of Michigan Press -
