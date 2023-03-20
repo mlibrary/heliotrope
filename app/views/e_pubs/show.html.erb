@@ -62,7 +62,11 @@
     <span class="Z3988" title="<%= @presenter.file_set_coins_title %>" aria-hidden="true"></span>
   <% end %>
   <% if @parent_presenter.open_access? || @parent_presenter.access_level(@actor_product_ids, @allow_read_product_ids).level == :free %>
-    <%= render 'shared/survey_nonmodal' %>
+    <% if @parent_presenter.webgl?%>
+      <%= render 'shared/survey_nonmodal_gabii' %>
+    <% else %>
+      <%= render 'shared/survey_nonmodal' %>
+    <% end %>
   <% end %>
   <div class="skip"></div>
   <%= tag.div id: 'epub', class: press_presenter.present? ? press_presenter.press_subdomains : '' do %>
