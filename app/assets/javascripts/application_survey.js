@@ -25,7 +25,13 @@ function displayModalSurvey() {
 // cookie surveyStatus = 'ignore' or 'clicked'
 function displayNonModalSurvey() {
   var surveyStatus = Cookies.get('survey');
+  var gabiiSurveyStatus = Cookies.get('survey_gabii');
   if (( surveyStatus == 'ignore') || (surveyStatus == 'clicked')) {
+    $('div.alert.survey').hide();
+  } else {
+    $('div.alert.survey').show();
+  }
+  if (( gabiiSurveyStatus == 'ignore') || (gabiiSurveyStatus == 'clicked')) {
     $('div.alert.survey').hide();
   } else {
     $('div.alert.survey').show();
