@@ -81,11 +81,6 @@ class FileSet < ActiveFedora::Base
   end
   validates :external_resource_url, format: { allow_blank: true, with: URI.regexp(%w[http https]), message: 'must be a url.' }
 
-  # TODO: remove this keywords field once keyword from Hyrax::BasicMetadata is in use
-  property :keywords, predicate: ::RDF::Vocab::DC.subject do |index|
-    index.as :stored_searchable, :facetable
-  end
-
   property :permissions_expiration_date, predicate: ::RDF::URI.new('http://fulcrum.org/ns#permissionsExpirationDate'), multiple: false do |index|
     index.as :symbol
   end
