@@ -18,7 +18,7 @@ class PsiReportJob < ApplicationJob
 
     report_time = PsiReport::ReportTime.new(given_start_date, given_end_date)
     csv = build_report(press, report_time)
-    file_path = File.join("/", "tmp", "fulcrum_psi_report_#{report_time.start_date}_#{report_time.end_date}.csv")
+    file_path = File.join("/", "tmp", "fulcrum_#{subdomain}_psi_report_#{report_time.start_date}_#{report_time.end_date}.ready.csv")
     File.write(file_path, csv)
 
     config = Rails.root.join('config', 'psi_sftp.yml')
@@ -79,7 +79,7 @@ class PsiReportJob < ApplicationJob
           monographs[c.parent_noid]&.open_access? ? "TRUE" : "FALSE",
           "", # leave Journal Imprint blank
           orcids(monographs[c.parent_noid]),
-          "", # Affiliation aka ROR
+          monographs[c.parent_noid]&.publisher&.first, # HELIO-4422 Journal Imprint is the same as Publisher Name
           "" # Funder ID
         ]
       end
