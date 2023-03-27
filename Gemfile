@@ -207,7 +207,7 @@ gem 'oauth2', '~> 1.2'
 gem 'signet'
 
 # performance profiling
-gem 'skylight', '~> 5.0.0.beta4'
+gem 'skylight', '~> 5.3.4'
 
 # Rails Webpack Tool
 gem 'webpacker', '~> 5.4.2'
