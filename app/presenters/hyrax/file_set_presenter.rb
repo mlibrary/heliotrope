@@ -14,6 +14,7 @@ module Hyrax
     include TombstonePresenter
     include Rails.application.routes.url_helpers
     include ActionView::Helpers::TagHelper
+    include Skylight::Helpers
 
     attr_accessor :solr_document, :current_ability, :request, :monograph_presenter, :file_set
 
@@ -206,10 +207,12 @@ module Hyrax
       solr_document['original_name_tesim']
     end
 
+    instrument_method
     def file_set
       @file_set ||= ::FileSet.find(id)
     end
 
+    instrument_method
     def file
       # Get the original file from Fedora
       file = file_set&.original_file
