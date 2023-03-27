@@ -4737,11 +4737,11 @@ $um-white: #fff;
   header {
     @include muli;
     border-bottom: 2px solid $um-accent-color;
-    height: auto;
+    height: 115px;
     
     .container {
       padding: 16px 15px !important;
-      height: inherit;
+      height: 113px;
       max-width: 1140px;
     }
   
@@ -4910,6 +4910,7 @@ $um-white: #fff;
     .press-block-a,
     .press-block-b {
       padding: 30px;
+      background-color: $um-accent-color;
 
 
       a,
