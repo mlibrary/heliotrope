@@ -107,6 +107,13 @@ module Heliotrope
     # HELIO-4309
     config.active_record.yaml_column_permitted_classes = [ActiveSupport::HashWithIndifferentAccess]
 
+    # Adding this since config.working_path = Settings.uploads_path
+    # in initializers/hyrax.rb doesn't always seem to work
+    # HELIO-4186 Most deploys don't use this and inherit the hyrax default of ~/tmp/uploads
+    # but the newer deploys and their paired "old" deploy need it
+    # https://github.com/samvera/hyrax/blob/4c1a99a6a52c973781dff090c2c98c044ea65e42/lib/hyrax/configuration.rb#L321
+    ENV['HYRAX_UPLOAD_PATH'] = Settings.uploads_path
+
     config.to_prepare do
       # ensure overrides are loaded
       # see https://bibwild.wordpress.com/2016/12/27/a-class_eval-monkey-patching-pattern-with-prepend/
