@@ -52,8 +52,8 @@ describe "Press Catalog Facets" do
 
     context "in mps press" do
       let(:mps_press) { create(:press, subdomain: 'mps', name: 'Michigan Publishing Services') }
-      let(:mps_child_press_1) { create(:press, parent: mps_press) }
-      let(:mps_child_press_2) { create(:press, parent: mps_press) }
+      let(:mps_child_press_1) { create(:press, name: "Child_1", parent: mps_press) }
+      let(:mps_child_press_2) { create(:press, name: "Child_2", parent: mps_press) }
 
       before do
         FactoryBot.create_list :public_monograph, 5, press: mps_press.subdomain

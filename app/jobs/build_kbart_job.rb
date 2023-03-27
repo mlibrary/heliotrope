@@ -9,6 +9,7 @@ class BuildKbartJob < ApplicationJob
   def perform
     Greensub::Product.where(needs_kbart: true).each do |product|
       next if product.group_key.nil?
+      next if product.components.count == 0
 
       new_kbart_csv = make_kbart_csv(published_sorted_monographs(product))
 
@@ -43,7 +44,7 @@ class BuildKbartJob < ApplicationJob
 
   def published_sorted_monographs(product)
     monographs = []
-    ActiveFedora::SolrService.query("{!terms f=id}#{product.components.map(&:noid).join(',')}", rows: product.components.count).each do |doc|
+    ActiveFedora::SolrService.query("+has_model_ssim:Monograph AND +products_lsim:#{product.id}", rows: 100_000).each do |doc|
       next unless doc["visibility_ssi"] == 'open' # only those marked public/published
       monographs << Hyrax::MonographPresenter.new(SolrDocument.new(doc), nil)
     end
@@ -110,8 +111,9 @@ class BuildKbartJob < ApplicationJob
           title_url(monograph),
           first_author_last_name(monograph),
           title_id(monograph),
-          "", # coverage_depth
+          "", # embargo_info
           "fulltext",
+          "", # coverage_notes
           publisher_name(monograph)
         ]
       end

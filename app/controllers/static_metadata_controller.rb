@@ -2,7 +2,7 @@
 
 class StaticMetadataController < ApplicationController
   # This is the result of some odd compromises
-  # It's just a map of the file system really
+  # It's just a map of the file system under public/products
   # see HELIO-4408
   def index
     # /products/:group_key/:file_type/:file
@@ -11,14 +11,20 @@ class StaticMetadataController < ApplicationController
 
     @links = {}
 
-    if group_key.nil? && file_type.nil?
+    # Something interesting happens sometimes in production for
+    # GET /products
+    # It looks like apache (or something?) changes that into
+    # GET /products/index.html
+    # which then comes through rails as: param[:group_key] = "index"
+    # It doesn't always happen, oddily, but we need to deal with it.
+    if (group_key.nil? || group_key == "index") && file_type.nil?
       Dir.glob(root_dir + "*").each do |dir|
         location = Pathname.new(dir).basename.to_s
         @links[location] = "/products/" + location
       end
     end
 
-    if group_key.present? && file_type.nil?
+    if group_key.present? && (file_type.nil? || file_type == "index")
       Dir.glob(root_dir + group_key + "*").each do |dir|
         location = Pathname.new(dir).basename.to_s
         @links[location] = "/products/#{group_key}/" + location
