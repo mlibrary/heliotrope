@@ -214,57 +214,43 @@ RSpec.describe EPubsController, type: :controller do
         end
 
         context 'pdf is unpacked (exists in derivatives directory)' do
-          before do
-            UnpackJob.perform_now(file_set.id, 'pdf_ebook')
-          end
-
-          after do
-            FileUtils.remove_entry_secure(UnpackService.root_path_from_noid(file_set.id, 'pdf_ebook') + '.pdf')
-          end
-
-          it 'sends the derivatives directory file and accepts byte range requests' do
-            get :file, params: { id: file_set.id, file: 'file' }
-            expect(response).to have_http_status(:success)
-            expect(response.body.empty?).to be false
-            expect(response.header['X-Sendfile']).to include("#{file_set.id.last}-pdf_ebook.pdf")
-            expect(response.header['Accept-Ranges']).to eq 'bytes'
-          end
-
-          context 'EZproxy request' do
+          context 'full-file downloads' do
             before do
-              request.headers['HTTP_X_FORWARDED_HOST'] = "www-fulcrum-org"
+              UnpackJob.perform_now(file_set.id, 'pdf_ebook')
             end
 
-            it 'sends the derivatives directory file and does *not* accept byte range requests' do
+            after do
+              FileUtils.remove_entry_secure(UnpackService.root_path_from_noid(file_set.id, 'pdf_ebook') + '.pdf')
+            end
+
+            it 'sends the derivatives directory file, indicates byte range requests are accepted' do
               get :file, params: { id: file_set.id, file: 'file' }
               expect(response).to have_http_status(:success)
               expect(response.body.empty?).to be false
               expect(response.header['X-Sendfile']).to include("#{file_set.id.last}-pdf_ebook.pdf")
-              expect(response.header['Accept-Ranges']).to eq nil
+              expect(response.header['Accept-Ranges']).to eq 'bytes'
+              expect(response.header['Cache-Control']).to eq 'private'
+            end
+          end
+
+          context 'byte range request downloads' do
+            before do
+              UnpackJob.perform_now(file_set.id, 'pdf_ebook')
+              request.headers['Range'] = "bytes=0-65535"
             end
 
-            context 'in press "barpublishing"' do
-              let(:press) { 'barpublishing' }
-
-              it 'sends the derivatives directory file and accepts byte range requests' do
-                get :file, params: { id: file_set.id, file: 'file' }
-                expect(response).to have_http_status(:success)
-                expect(response.body.empty?).to be false
-                expect(response.header['X-Sendfile']).to include("#{file_set.id.last}-pdf_ebook.pdf")
-                expect(response.header['Accept-Ranges']).to eq 'bytes'
-              end
+            after do
+              FileUtils.remove_entry_secure(UnpackService.root_path_from_noid(file_set.id, 'pdf_ebook') + '.pdf')
             end
 
-            context 'in press "heliotrope"' do
-              let(:press) { 'heliotrope' }
-
-              it 'sends the derivatives directory file and accepts byte range requests' do
-                get :file, params: { id: file_set.id, file: 'file' }
-                expect(response).to have_http_status(:success)
-                expect(response.body.empty?).to be false
-                expect(response.header['X-Sendfile']).to include("#{file_set.id.last}-pdf_ebook.pdf")
-                expect(response.header['Accept-Ranges']).to eq 'bytes'
-              end
+            it 'sends the derivatives directory file, indicates byte range requests are accepted' do
+              get :file, params: { id: file_set.id, file: 'file' }
+              expect(response).to have_http_status(:success)
+              expect(response.body.empty?).to be false
+              expect(response.header['X-Sendfile']).to include("#{file_set.id.last}-pdf_ebook.pdf")
+              expect(response.header['Accept-Ranges']).to eq 'bytes'
+              # HELIO-4444 (Chromium caching range requests, EZproxy bug)
+              expect(response.header['Cache-Control']).to eq 'no-cache, no-store'
             end
           end
         end
