@@ -65,7 +65,8 @@ class EPubsController < CheckpointController
       pdf = UnpackService.root_path_from_noid(@noid, 'pdf_ebook') + ".pdf"
       if File.exist? pdf
         # HELIO-4444 never cache 206 Range requests as it makes Chromium browsers act weird over EZproxy
-        response.headers['Cache-Control'] = 'no-cache, no-store' if request.headers['Range'].present?
+        # The NOID part of the conditional is to allow the OCLC folks to continue their testing (HELIO-4448)
+        response.headers['Cache-Control'] = 'no-cache, no-store' if request.headers['Range'].present? && @noid != 'kw52jb973'
         response.headers['Accept-Ranges'] = 'bytes'
 
         pdf.gsub!(/releases\/\d+/, "current")
