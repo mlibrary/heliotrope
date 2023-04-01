@@ -132,4 +132,35 @@ describe Import::RowData do
       end
     end
   end
+
+  describe "old/alternate field name mapping using FIELD_NAME_MAP" do
+    let(:object) { :monograph }
+
+    context 'truly missing values (no `field_name` or `FIELD_NAME_MAP` values available)' do
+      let(:row) { {} }
+
+      it 'lets them be nil' do
+        subject
+        expect(attrs['rightsholder']).to eq(nil)
+      end
+    end
+
+    context 'row has a `field_name` value *and* a `FIELD_NAME_MAP` value' do
+      let(:row) { { 'Copyright Holder' => 'Copyright Holder Thingy', 'Rightsholder' => 'Rightsholder Thingy' } }
+
+      it 'defers to the official/proper/current `field_name` (CSV header row) value' do
+        subject
+        expect(attrs['rightsholder']).to eq('Rightsholder Thingy')
+      end
+    end
+
+    context 'row only has a `FIELD_NAME_MAP` value' do
+      let(:row) { { 'Copyright Holder' => 'Copyright Holder Thingy' } }
+
+      it 'uses the `FIELD_NAME_MAP` value for the corresponding `field_name` value' do
+        subject
+        expect(attrs['rightsholder']).to eq('Copyright Holder Thingy')
+      end
+    end
+  end
 end
