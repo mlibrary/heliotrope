@@ -77,9 +77,9 @@ class PsiReportJob < ApplicationJob
           chapter,
           ip,
           monographs[c.parent_noid]&.open_access? ? "TRUE" : "FALSE",
-          "", # leave Journal Imprint blank
+          monographs[c.parent_noid]&.publisher&.first, # HELIO-4422 Journal Imprint is the same as Publisher Namek
           orcids(monographs[c.parent_noid]),
-          monographs[c.parent_noid]&.publisher&.first, # HELIO-4422 Journal Imprint is the same as Publisher Name
+          "", # Affiliation
           "" # Funder ID
         ]
       end
