@@ -305,7 +305,7 @@ Rails.application.routes.draw do
 
   # Mozilla PDF viewer has annoying canonical paths in its js files. This hacky-looking thing is to keep it happy...
   # and also somewhat tidy in its own version-named (and so cache-breaking, hopefully), Jekyll-deployed directory
-  pdf_viewer_version = '2.13.216'
+  pdf_viewer_version = '3.4.120'
   get '/build(/*file)', to: redirect("/mozilla-pdf-viewer/build/%{file}?#{pdf_viewer_version}", status: 302), format: false
   get '/web(/*file)', to: redirect("/mozilla-pdf-viewer/web/%{file}?#{pdf_viewer_version}", status: 302), format: false
 end
