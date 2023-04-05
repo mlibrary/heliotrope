@@ -78,9 +78,9 @@ RSpec.describe PsiReportJob, type: :job do
         csv = CSV.new(report)
         rows = csv.read
         expect(rows[0]).to eq ["Event Date", "Event", "ISBN/DOI", "Publisher Name", "Book Title/Journal Title", "Author(s)", "Chapter/Article Title", "IP Adress", "OA/Paid", "Journal Imprint", "Orcid ID", "Affiliation", "Funders"]
-        expect(rows[1]).to eq ["2018-01-02 00:00:00", "request", "https://doi.org/10/something", "R Pub", "Red", "An Author", "A FileSet Title", "10.0.0.1", "FALSE", "", "", "R Pub", ""]
-        expect(rows[2]).to eq ["2018-01-10 00:00:00", "request", "ZZZ; YYY", "B Pub", "Blue, A Book", "Another Author;Third Author", "Chapter R", "10.0.0.2", "TRUE", "", "", "B Pub", ""]
-        expect(rows[3]).to eq ["2018-01-22 00:00:00", "request", "ZZZ; YYY", "B Pub", "Blue, A Book", "Another Author;Third Author", "Chapter X", "10.0.0.3", "TRUE", "", "", "B Pub", ""]
+        expect(rows[1]).to eq ["2018-01-02 00:00:00", "request", "https://doi.org/10/something", "R Pub", "Red", "An Author", "A FileSet Title", "10.0.0.1", "FALSE", "R Pub", "", "", ""]
+        expect(rows[2]).to eq ["2018-01-10 00:00:00", "request", "ZZZ; YYY", "B Pub", "Blue, A Book", "Another Author;Third Author", "Chapter R", "10.0.0.2", "TRUE", "B Pub", "", "", ""]
+        expect(rows[3]).to eq ["2018-01-22 00:00:00", "request", "ZZZ; YYY", "B Pub", "Blue, A Book", "Another Author;Third Author", "Chapter X", "10.0.0.3", "TRUE", "B Pub", "", "", ""]
       end
     end
   end
