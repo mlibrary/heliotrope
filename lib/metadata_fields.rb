@@ -94,3 +94,9 @@ FILE_SET_FLAG_FIELDS ||=
   ].freeze
 
 MONO_FILENAME_FLAG ||= '://:MONOGRAPH://:'
+
+# any renamed "field names", i.e. CSV header row values can go here, this enables the importer to work on older...
+# exported "manifest" CSV files or old versions of the FMSLs. Alternates like singular/plural versions of field...
+# names could also be added here if desired. Each hash entry should be in this order:
+# 'Alternative/Old Field Name' => 'Actual Field Name (as seen in the hashes above)'
+FIELD_NAME_MAP ||= { 'Copyright Holder' => 'Rightsholder' }

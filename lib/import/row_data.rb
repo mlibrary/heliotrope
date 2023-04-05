@@ -13,6 +13,10 @@ module Import
     end
 
     def field_values(object, row, attrs, errors = {}, row_num = 0) # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
+      FIELD_NAME_MAP.each do |key, value|
+        row[value] = row.delete(key) if row[key].present? && row[value].blank?
+      end
+
       md = Redcarpet::Markdown.new(Redcarpet::Render::StripDown, space_after_headers: true)
       missing_fields_errors, date_errors = Array.new(2) { [] }
 
