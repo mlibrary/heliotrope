@@ -90,10 +90,6 @@ class FileSet < ActiveFedora::Base
     allow_blank: true
   }
 
-  property :redirect_to, predicate: ::RDF::URI.new('http://fulcrum.org/ns#redirectTo'), multiple: false do |index|
-    index.as :symbol
-  end
-
   property :rights_granted, predicate: ::RDF::URI.new('http://fulcrum.org/ns#rightsGranted'), multiple: false do |index|
     index.as :symbol
   end

@@ -69,7 +69,6 @@ describe SolrDocument do
   it { is_expected.to respond_to(:license) }
   it { is_expected.to respond_to(:permissions_expiration_date) }
   it { is_expected.to respond_to(:primary_creator_role) }
-  it { is_expected.to respond_to(:redirect_to) }
   it { is_expected.to respond_to(:resource_type) }
   it { is_expected.to respond_to(:rights_granted) }
   it { is_expected.to respond_to(:section_title) }
