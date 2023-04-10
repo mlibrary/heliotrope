@@ -35,6 +35,11 @@ module API
                 "type": "application/opds+json"
               },
               {
+                "title": "ACLS Humanities Ebook",
+                "href": Rails.application.routes.url_helpers.api_opds_heb_url,
+                "type": "application/opds+json"
+              },
+              {
                 "title": "University of Michigan Press Ebook Collection",
                 "href": Rails.application.routes.url_helpers.api_opds_umpebc_url,
                 "type": "application/opds+json"
@@ -90,6 +95,28 @@ module API
             ]
           }
           feed[:publications] = umpebc_publications
+          render plain: javascript_escaping(feed.to_json), content_type: 'application/opds+json'
+        end
+
+        # This resource returns the umpebc publications feed.
+        # @example get /api/opds/heb
+        # @return [ActionDispatch::Response] { <opds_feed> }
+        def heb
+          feed = {
+            "metadata": {
+              "title": "ACLS Humanities Ebook"
+            },
+            "links": [
+              {
+                "rel": "self",
+                "href": Rails.application.routes.url_helpers.api_opds_heb_url,
+                "type": "application/opds+json"
+              }
+            ],
+            "publications": [
+            ]
+          }
+          feed[:publications] = heb_publications
           render plain: javascript_escaping(feed.to_json), content_type: 'application/opds+json'
         end
 
@@ -257,6 +284,24 @@ module API
             query = ActiveFedora::SolrQueryBuilder.construct_query_for_ids(monograph_noids)
 
             (ActiveFedora::SolrService.query(query, rows: monograph_noids.count, sort: "date_modified_dtsi desc") || []).each do |solr_doc|
+              sm = ::Sighrax.from_solr_document(solr_doc)
+              op = ::Opds::Publication.new_from_monograph(sm, false, params[:filterByEntityId])
+              rvalue.append(op.to_h) if op.valid? && (institution_can_access?(solr_doc["products_lsim"]) || sm.open_access?)
+            end
+
+            rvalue
+          end
+
+          def heb_publications
+            rvalue = []
+
+            heb_product = Greensub::Product.find_by(identifier: 'heb')
+            return rvalue if heb_product.blank?
+
+            # HEB is too big to do a noid query
+            # Use product_id/products_lsim instead
+            # HEB is a single product so that should work fine
+            (ActiveFedora::SolrService.query("+has_model_ssim:Monograph AND +products_lsim:#{heb_product.id}", rows: 100_000, sort: "date_modified_dtsi desc") || []).each do |solr_doc|
               sm = ::Sighrax.from_solr_document(solr_doc)
               op = ::Opds::Publication.new_from_monograph(sm, false, params[:filterByEntityId])
               rvalue.append(op.to_h) if op.valid? && (institution_can_access?(solr_doc["products_lsim"]) || sm.open_access?)

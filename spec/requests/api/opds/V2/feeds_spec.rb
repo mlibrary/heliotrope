@@ -54,6 +54,11 @@ RSpec.describe "OPDS Feeds", type: [:request, :json_schema]  do
                   "type": "application/opds+json"
                 },
                 {
+                  "title": "ACLS Humanities Ebook",
+                  "href": Rails.application.routes.url_helpers.api_opds_heb_url,
+                  "type": "application/opds+json"
+                },
+                {
                   "title": "University of Michigan Press Ebook Collection",
                   "href": Rails.application.routes.url_helpers.api_opds_umpebc_url,
                   "type": "application/opds+json"
@@ -460,6 +465,121 @@ RSpec.describe "OPDS Feeds", type: [:request, :json_schema]  do
         expect(response_body['publications'].count).to eq(2)
         expect(response_body['publications']).to contain_exactly(JSON.parse(Opds::Publication.new_from_monograph(Sighrax.from_noid(monograph_2020.id), false, entity_id).to_json),
                                                                 JSON.parse(Opds::Publication.new_from_monograph(Sighrax.from_noid(monograph_oa.id), false, entity_id).to_json))
+      end
+    end
+  end
+
+  describe '#heb' do
+    let!(:heb) { create(:press, subdomain: "hrb") }
+    let(:heb_feed) do
+      JSON.parse({
+        "metadata": {
+          title: "ACLS Humanities Ebook"
+        },
+        "links": [
+          {
+            "rel": "self",
+            "href": Rails.application.routes.url_helpers.api_opds_heb_url,
+            "type": "application/opds+json"
+          }
+        ],
+        "publications": [
+        ]
+      }.to_json)
+    end
+
+    context "with no books" do
+      it 'empty feed' do
+        get api_opds_heb_path, headers: headers
+        expect(response.content_type).to eq("application/opds+json")
+        expect(response).to have_http_status(:ok)
+        expect(schemer_validate?(opds_feed_schemer, response_body)).to be true
+        expect(response_body).to eq(heb_feed)
+        expect(response_body['publications']).to be_empty
+      end
+    end
+
+    context "with books" do
+      let(:monograph) { create(:public_monograph) }
+      let(:cover) { create(:public_file_set) }
+      let(:epub) { create(:public_file_set) }
+      let(:fr) { create(:featured_representative, work_id: monograph.id, file_set_id: epub.id, kind: 'epub') }
+
+      let(:monograph_oa) { create(:public_monograph) }
+      let(:cover_oa) { create(:public_file_set) }
+      let(:epub_oa) { create(:public_file_set) }
+      let(:fr_oa) { create(:featured_representative, work_id: monograph_oa.id, file_set_id: epub_oa.id, kind: 'epub') }
+
+      let(:product) { create(:product, identifier: 'heb') }
+
+      let(:component) { create(:component, noid: monograph.id) }
+      let(:component_oa) { create(:component, noid: monograph_oa.id) }
+
+      before do
+        monograph.ordered_members << cover
+        monograph.representative_id = cover.id
+        monograph.ordered_members << epub
+        monograph.date_modified = Time.now
+        monograph.save!
+        cover.save!
+        epub.save!
+        fr
+
+        monograph_oa.ordered_members << cover_oa
+        monograph_oa.representative_id = cover_oa.id
+        monograph_oa.ordered_members << epub_oa
+        monograph_oa.date_modified = Time.now
+        monograph_oa.open_access = 'yes'
+        monograph_oa.save!
+        cover_oa.save!
+        epub_oa.save!
+        fr_oa
+
+        product.components << component
+        product.components << component_oa
+      end
+
+      context "with no entity_id" do
+        it 'heb list all monographs' do
+          get api_opds_heb_path, headers: headers
+          expect(response.content_type).to eq("application/opds+json")
+          expect(response).to have_http_status(:ok)
+          expect(schemer_validate?(opds_feed_schemer, response_body)).to be true
+          expect(response_body['publications'].count).to eq(2)
+          expect(response_body['publications']).to contain_exactly(JSON.parse(Opds::Publication.new_from_monograph(Sighrax.from_noid(monograph.id), false).to_json),
+                                                                   JSON.parse(Opds::Publication.new_from_monograph(Sighrax.from_noid(monograph_oa.id), false).to_json))
+        end
+      end
+
+      context "with an entity_id" do
+        let(:entity_id) { "https://shibboleth.umich.edu/idp/shibboleth" }
+        let(:institution) { create(:institution, entity_id: entity_id) }
+        let(:institution_affiliation) { create(:institution_affiliation, institution_id: institution.id, dlps_institution_id: institution.identifier) }
+
+        context "when subscribed" do
+          before { institution.create_product_license(product) }
+
+          it 'heb list all monographs' do
+            get api_opds_heb_path, headers: headers, params: { filterByEntityId: entity_id }
+            expect(response.content_type).to eq("application/opds+json")
+            expect(response).to have_http_status(:ok)
+            expect(schemer_validate?(opds_feed_schemer, response_body)).to be true
+            expect(response_body['publications'].count).to eq(2)
+            expect(response_body['publications']).to contain_exactly(JSON.parse(Opds::Publication.new_from_monograph(Sighrax.from_noid(monograph.id), false, entity_id).to_json),
+                                                                     JSON.parse(Opds::Publication.new_from_monograph(Sighrax.from_noid(monograph_oa.id), false, entity_id).to_json))
+          end
+        end
+
+        context "when not subscribed" do
+          it 'heb list OA monographs' do
+            get api_opds_heb_path, headers: headers, params: { filterByEntityId: entity_id }
+            expect(response.content_type).to eq("application/opds+json")
+            expect(response).to have_http_status(:ok)
+            expect(schemer_validate?(opds_feed_schemer, response_body)).to be true
+            expect(response_body['publications'].count).to eq(1)
+            expect(response_body['publications']).to contain_exactly(JSON.parse(Opds::Publication.new_from_monograph(Sighrax.from_noid(monograph_oa.id), false, entity_id).to_json))
+          end
+        end
       end
     end
   end
