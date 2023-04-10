@@ -13,7 +13,6 @@ Hyrax::FileSetsController.class_eval do # rubocop:disable Metrics/BlockLength
       # then redirect them to shib login.
       wayfless_redirect_to_shib_login
 
-      redirect_to redirect_link, status: :moved_permanently if redirect_link.present?
       if presenter.multimedia?
         CounterService.from(self, presenter).count(request: 1)
         send_irus_analytics_request
@@ -61,21 +60,6 @@ Hyrax::FileSetsController.class_eval do # rubocop:disable Metrics/BlockLength
       # non-editors and search engines shouldn't see show pages for covers or "representative" FileSets
       featured_rep = FeaturedRepresentative.where(file_set_id: params[:id]).first
       !(can? :edit, params[:id]) && (featured_rep.present? || [presenter&.parent&.representative_id, presenter&.parent&.thumbnail_id].include?(params[:id]))
-    end
-
-    def redirect_link
-      # there may be a use case in future for external redirection, but for right now it's just FileSet to FileSet
-      link = file_set_doc['redirect_to_ssim']&.first
-      return nil if link.blank?
-      if link&.length == 9 && ::FileSet.where(id: link).present?
-        Rails.application.routes.url_helpers.hyrax_file_set_path(link)
-      else
-        '/'
-      end
-    end
-
-    def file_set_doc
-      ActiveFedora::SolrService.query("{!terms f=id}#{params[:id]}", rows: 1)&.first || {}
     end
 
     # this is provided so that implementing application can override this behavior and map params to different attributes

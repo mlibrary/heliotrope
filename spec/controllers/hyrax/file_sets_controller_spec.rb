@@ -253,26 +253,6 @@ RSpec.describe Hyrax::FileSetsController, type: :controller do
     end
   end
 
-  context 'redirection with redirect_to' do
-    context 'orphan FileSet redirects to FileSet with monograph parent' do
-      let(:orphan_file_set) { create(:file_set, redirect_to: file_set.id) }
-
-      it 'redirects to the appropriate file_set in redirect_to' do
-        get :show, params: { id: orphan_file_set.id }
-        expect(response).to redirect_to Rails.application.routes.url_helpers.hyrax_file_set_path(file_set.id)
-      end
-    end
-
-    context 'redirect_to doesn\'t contain a FileSet NOID' do
-      let(:root_redirect_fileset) { create(:file_set, redirect_to: 'home page') }
-
-      it 'redirects to root' do
-        get :show, params: { id: root_redirect_fileset.id }
-        expect(response).to redirect_to '/'
-      end
-    end
-  end
-
   context 'redirection of non-editors from cover/representative file_set show pages' do
     let(:epub_monograph) {
       create(:public_monograph,

@@ -92,10 +92,6 @@ module SolrDocumentExtensions
       Array(self['primary_creator_role_tesim'])
     end
 
-    def redirect_to
-      Array(self['redirect_to_ssim']).first
-    end
-
     def resource_type
       Array(self['resource_type_tesim']).first
     end
