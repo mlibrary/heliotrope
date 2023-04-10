@@ -37,4 +37,13 @@ open_access_ebook_trust_emails:
     - cc1@fulcrum
     - cc2@fulcrum
 
+recurring_usage_reports:
+  - group_key: bar
+    press: barpublishing
+    time_interval: last_week
+    to:
+      - sethajoh@umich.edu
+
+
+
 world_institution_identifier: 0
