@@ -98,6 +98,81 @@ html, body {
   width: 0;
 }
 
+/* heliotrope: This section copied from viewer.css to make the PDF...
+   loading bar work after updating to pdf.js 3.4.120, which included...
+   substantial changes. Note outerContainer (hidden in CSB) is...
+   commented out, as well as the background color on the loading bar...
+   itself, which we need to override anyway */
+
+#loadingBar {
+  /* Define these variables here, and not in :root, to avoid reflowing the
+     entire viewer when updating progress (see issue 15958). */
+  --progressBar-percent: 0%;
+  --progressBar-end-offset: 0;
+
+  position: absolute;
+  inset-inline: 0 var(--progressBar-end-offset);
+  height: 4px;
+  background-color: var(--progressBar-bg-color);
+  border-bottom: 1px solid var(--toolbar-border-color);
+  transition-property: inset-inline-start;
+  transition-duration: var(--sidebar-transition-duration);
+  transition-timing-function: var(--sidebar-transition-timing-function);
+}
+
+/* heliotrope: we hide this section in show_pdf.html.erb anyway */
+/*#outerContainer.sidebarOpen #loadingBar {*/
+/*    inset-inline-start: var(--sidebar-width);*/
+/*}*/
+
+#loadingBar .progress {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  transform: scaleX(var(--progressBar-percent));
+  transform-origin: 0 0;
+  height: 100%;
+  /* heliotrope: we need to override this per-press */
+  /*background-color: var(--progressBar-color);*/
+  overflow: hidden;
+  transition: transform 200ms;
+}
+
+@keyframes progressIndeterminate {
+  0% {
+    transform: translateX(-142px);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+#loadingBar.indeterminate .progress {
+  transform: none;
+  background-color: var(--progressBar-bg-color);
+  transition: none;
+}
+
+#loadingBar.indeterminate .progress .glimmer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: calc(100% + 150px);
+  background: repeating-linear-gradient(
+          135deg,
+          var(--progressBar-blend-color) 0,
+          var(--progressBar-bg-color) 5px,
+          var(--progressBar-bg-color) 45px,
+          var(--progressBar-color) 55px,
+          var(--progressBar-color) 95px,
+          var(--progressBar-blend-color) 100px
+  );
+  animation: progressIndeterminate 1s linear infinite;
+}
+/* End of viewer.css section copied to make the PDF loading bar work */
+
 .cozy-module-book-epub {
   overflow: auto;
 }
