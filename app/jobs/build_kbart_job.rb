@@ -90,14 +90,23 @@ class BuildKbartJob < ApplicationJob
       title_id
       embargo_info
       coverage_depth
-      coverage_notes
+      notes
       publisher_name
+      publication_type
+      date_monograph_published_print
+      date_monograph_published_online
+      monograph_volume
+      monograph_edition
+      first_editor
+      parent_publication_title_id
+      preceding_publication_title_id
+      access_type
     ]
 
-    csv = CSV.generate(force_quotes: true) do |row|
+    csv = CSV.generate(force_quotes: true) do |row| # rubocop:disable Metrics/BlockLength
       row << header
 
-      monographs.each do |monograph|
+      monographs.each do |monograph| # rubocop:disable Metrics/BlockLength
         row << [
           monograph.page_title,
           print_isbn(monograph.isbn),
@@ -112,14 +121,33 @@ class BuildKbartJob < ApplicationJob
           first_author_last_name(monograph),
           title_id(monograph),
           "", # embargo_info
-          "fulltext",
-          "", # coverage_notes
-          publisher_name(monograph)
+          "fulltext", # coverage_depth
+          "", # notes
+          publisher_name(monograph), # publisher_name
+          "monograph", # publication_type
+          date_monograph_published_print(monograph), # date_monograph_published_print
+          monograph.date_published, # date_monograph_published_online. And yes. It's the same as print above (if there's a print isbn)
+          monograph.volume || "", # volume
+          monograph.solr_document.edition_name || "", # monograph_edition
+          "", # first_editor, as far as I can tell there's no easy way to get this. We don't use (role) the way we used to. It's only in the Authorship Display, unparsed and unpredictable
+          "", # parent_publication_title_id
+          "", # preceding_publication_title_id
+          monograph.open_access? ? "F" : "P" # access_type
         ]
       end
     end
 
     csv
+  end
+
+  def date_monograph_published_print(monograph)
+    # IF we placed a value in ‘print_identifier’,
+    # THEN include the publication date (ISO 8601 format i.e. YYYY-MM-DD),
+    # ELSE, leave blank.
+    # I *think* this is the right date_published based on
+    # https://mlit.atlassian.net/wiki/spaces/FUL/pages/9782263869/Fulcrum+Programmatic+Dates
+    return monograph.date_published if print_isbn(monograph.isbn).present?
+    ""
   end
 
   def print_isbn(isbns)
