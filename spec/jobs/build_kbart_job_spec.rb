@@ -279,6 +279,15 @@ RSpec.describe BuildKbartJob, type: :job do
     it "returns the first author's last name" do
       expect(subject.first_author_last_name(monograph)).to eq "Lastname"
     end
+
+    context "when there is no name/creator" do
+      # This shouldn't happen, but it has for historical HEB metadata, HELIO-4457
+      let(:monograph) { Hyrax::MonographPresenter.new(SolrDocument.new(creator_tesim: [nil]), nil) }
+
+      it "returns the empty string" do
+        expect(subject.first_author_last_name(monograph)).to eq ""
+      end
+    end
   end
 
   describe "#print_isbn" do
