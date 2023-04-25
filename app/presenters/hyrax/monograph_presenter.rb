@@ -11,6 +11,7 @@ module Hyrax
     include TitlePresenter
     include TombstonePresenter
     include ActionView::Helpers::UrlHelper
+    include Skylight::Helpers
 
     delegate :date_modified, :date_uploaded, :location, :description,
              :creator_display, :creator_full_name, :contributor,
@@ -43,6 +44,7 @@ module Hyrax
       Array(location)
     end
 
+    instrument_method
     def ordered_section_titles
       # FileSets store their section_title as ActiveTriples::Relation, which does not preserve order.
       # As a result they can't be relied on to give the correct order for their own sections, or sections as a whole.
@@ -61,6 +63,7 @@ module Hyrax
       end
     end
 
+    instrument_method
     def display_section_titles(section_titles_in)
       section_titles_out = []
       ordered_section_titles.each do |ordered_title|
@@ -197,6 +200,7 @@ module Hyrax
       press_obj.press_url
     end
 
+    instrument_method
     def monograph_tombstone_message
       monograph = Sighrax.from_presenter(self)
       monograph.tombstone_message ||
@@ -204,26 +208,31 @@ module Hyrax
           Sighrax.platform.tombstone_message(monograph.publisher.name)
     end
 
+    instrument_method
     def previous_file_sets_id?(file_sets_id)
       return false unless ordered_file_sets_ids.include? file_sets_id
       ordered_file_sets_ids.first != file_sets_id
     end
 
+    instrument_method
     def previous_file_sets_id(file_sets_id)
       return nil unless previous_file_sets_id? file_sets_id
       ordered_file_sets_ids[(ordered_file_sets_ids.find_index(file_sets_id) - 1)]
     end
 
+    instrument_method
     def next_file_sets_id?(file_sets_id)
       return false unless ordered_file_sets_ids.include? file_sets_id
       ordered_file_sets_ids.last != file_sets_id
     end
 
+    instrument_method
     def next_file_sets_id(file_sets_id)
       return nil unless next_file_sets_id? file_sets_id
       ordered_file_sets_ids[(ordered_file_sets_ids.find_index(file_sets_id) + 1)]
     end
 
+    instrument_method
     def monograph_analytics_ids
       ordered_file_sets_ids + [id]
     end
@@ -277,6 +286,7 @@ module Hyrax
     #
     # @param [Array] allow_product_ids {  current_actor.products.pluck(:id) }
     # @param [Array] allow_read_product_ids {  Sighrax.allow_read_products.pluck(:id) }
+    instrument_method
     def access_level(actor_product_ids, allow_read_product_ids) # rubocop:disable Metrics/PerceivedComplexity
       # Open Access
       return access_indicators(:open_access)  if /yes/i.match?(solr_document.open_access)
@@ -292,6 +302,7 @@ module Hyrax
       access_indicators(:restricted)
     end
 
+    instrument_method
     def access_indicators(level)
       case level
       when :open_access

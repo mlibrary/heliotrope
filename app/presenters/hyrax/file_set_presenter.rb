@@ -21,6 +21,7 @@ module Hyrax
     # @param [SolrDocument] solr_document
     # @param [Ability] current_ability
     # @param [ActionDispatch::Request] request the http request context
+    instrument_method
     def initialize(solr_document, current_ability, request = nil)
       @solr_document = solr_document
       @current_ability = current_ability
@@ -220,10 +221,12 @@ module Hyrax
       file
     end
 
+    instrument_method
     def extracted_text_file
       file_set&.extracted_text
     end
 
+    instrument_method
     def extracted_text?
       # TODO: remove this line when we have some extracted text in place that's worth offering for download...
       # and/or a disclaimer as outlined in https://github.com/mlibrary/heliotrope/issues/1429
@@ -390,6 +393,7 @@ module Hyrax
 
     private
 
+      instrument_method
       def fetch_parent_presenter
         @parent_document ||= ActiveFedora::SolrService.query("{!field f=member_ids_ssim}#{id}", rows: 1).first
         return nil if @parent_document.blank?

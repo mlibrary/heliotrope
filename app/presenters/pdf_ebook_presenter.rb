@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
 class PDFEbookPresenter < ApplicationPresenter
+  include Skylight::Helpers
+
+  instrument_method
   def initialize(pdf_ebook)
     @pdf_ebook = pdf_ebook
   end
@@ -13,11 +16,13 @@ class PDFEbookPresenter < ApplicationPresenter
     false
   end
 
+  instrument_method
   def intervals?
     return true if EbookTableOfContentsCache.find_by(noid: @pdf_ebook.id).present?
     @pdf_ebook&.intervals&.count&.positive?
   end
 
+  instrument_method
   def intervals
     @intervals ||= begin
       record = EbookTableOfContentsCache.find_by(noid: @pdf_ebook.id)
