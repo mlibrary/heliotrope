@@ -215,16 +215,23 @@ class BuildKbartJob < ApplicationJob
     # prefer DOI, otherwise return the handle
     return "https://doi.org/" + monograph.doi if monograph.doi.present?
 
-    # We've got some values in hdl like "2027/spo.13469761.0014.001" so some none-fulcrum handles
+    # We've got some values in hdl like "2027/spo.13469761.0014.001" so some non-fulcrum handles
     # I guess prefer whatever is in hdl
     return "https://hdl.handle.net/" + monograph.hdl if monograph.hdl.present?
-    # Otherwise use the generic fulcrum handle that everything is supposed to get
+    # Otherwise use the generic fulcrum handle that everything is supposed to get but that isn't stored
     "https://hdl.handle.net/" + HandleNet::FULCRUM_HANDLE_PREFIX + monograph.id
   end
 
   def first_author_last_name(monograph)
+    # HELIO-4457
+    # An empty creator in a Monograph is: []
+    # In the solr_document of the presenter it looks like: [nil]
+    return "" if monograph.solr_document["creator_tesim"].first.blank?
+    # Just in case though...
+    return "" if monograph.solr_document["creator_tesim"].empty?
+    #
     # creators are "Lastname, Firstname\nLastname, Firstname"
-    monograph.solr_document["creator_tesim"].first.split(",")[0] || ""
+    monograph.solr_document["creator_tesim"]&.first.split(",")[0] || ""
   end
 
   def title_id(monograph)
