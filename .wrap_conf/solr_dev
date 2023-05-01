@@ -3,7 +3,7 @@ port: 8983
 download_dir: tmp/solr_download
 instance_dir: tmp/solr
 env:
-  SOLR_JAVA_STACK_SIZE: -Xss512k
+  SOLR_JAVA_STACK_SIZE: -Xss640k
 collection:
   persist: true
   dir: solr/config/

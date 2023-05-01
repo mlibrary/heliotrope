@@ -91,6 +91,9 @@ lib/doc
 # Ignore LibreOffice lock files
 .~lock*
 
+# Ignore node version manager (nvm)
+.nvmrc
+
 /public/packs
 /public/packs-test
 /node_modules
