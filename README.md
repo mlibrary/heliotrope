@@ -62,6 +62,7 @@ $ bundle install
 $ yarn install
 $ bundle exec ./bin/setup
 $ bundle exec rails checkpoint:migrate
+$ bundle exec rake assets:precompile
 ```  
 See the [Wiki](https://github.com/mlibrary/heliotrope/wiki/Static-Pages-and-Blog) for information on [Jekyll](https://jekyllrb.com/) integration.
 
