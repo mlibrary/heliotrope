@@ -2597,7 +2597,7 @@ $bigten-black: #000;
     }
 
     .button--sm.cozy-preferences {
-      @include epub-button-background-color(#f1f1f1,$bigten-brand-color,$bigten-white);
+      @include epub-button-background-color($bigten-accent-color,$bigten-brand-color,$bigten-white);
       color: $bigten-brand-color;
     }
 
