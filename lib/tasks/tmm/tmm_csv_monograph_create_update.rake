@@ -14,7 +14,7 @@ namespace :heliotrope do
     # note: fail messages will be emailed to MAILTO by cron *unless* you use 2>&1 at the end of the job line
     fail "CSV directory not found: '#{args.tmm_csv_dir}'" unless Dir.exist?(args.tmm_csv_dir)
 
-    input_file = Dir.glob(File.join(args.tmm_csv_dir, "TMMEBCData_*#{Time.now.getlocal.strftime('%Y-%m-%d')}.csv")).sort.last
+    input_file = Dir.glob(File.join(args.tmm_csv_dir, "TMMData_*#{Time.now.getlocal.strftime('%Y-%m-%d')}.csv")).sort.last
     fail "CSV file not found in directory '#{args.tmm_csv_dir}'" if input_file.blank?
     fail "CSV file may accidentally be a backup as '#{input_file}' contains 'bak'. Exiting." if input_file.include? 'bak'
 
