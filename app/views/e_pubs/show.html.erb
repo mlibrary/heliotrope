@@ -64,6 +64,8 @@
   <% if @parent_presenter.open_access? || @parent_presenter.access_level(@actor_product_ids, @allow_read_product_ids).level == :free %>
     <% if @parent_presenter.webgl?%>
       <%= render 'shared/survey_nonmodal_gabii' %>
+    <% elsif %w[bigten].include? @subdomain %>
+      <%= render 'shared/survey_nonmodal_bigten' %>
     <% else %>
       <%= render 'shared/survey_nonmodal' %>
     <% end %>

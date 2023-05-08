@@ -2,7 +2,11 @@
 <% provide :page_class, 'search monograph' %>
 <% provide :page_header do %>
     <!-- survey -->
-  <%= render 'shared/survey_modal' %>
+  <% if @presenter.subdomain == 'bigten' %>
+    <%= render 'shared/survey_modal_bigten' %>
+  <% else %>
+    <%= render 'shared/survey_modal' %>  
+  <% end %>
   <!-- breadcrumbs -->
   <%= render 'shared/breadcrumbs' %>
 <% end %><!-- provide :page_header -->

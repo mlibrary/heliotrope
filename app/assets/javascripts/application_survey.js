@@ -20,18 +20,33 @@ function displayModalSurvey() {
   }
 }
 
+function displayBigTenModalSurvey() {
+  var bigTenSurveyStatus = Cookies.get('survey');
+  if (( bigTenSurveyStatus == 'ignore') || (bigTenSurveyStatus == 'clicked')) {
+    $('#surveyBigTenModal').modal('hide');
+  } else {
+    $('#surveyBigTenModal').modal('show');
+  }
+}
+
 // This survey function is called above on document load and appears only in e-reader
 // The survey is hidden by default to prevent a flash of the survey if 
 // cookie surveyStatus = 'ignore' or 'clicked'
 function displayNonModalSurvey() {
   var surveyStatus = Cookies.get('survey');
   var gabiiSurveyStatus = Cookies.get('survey_gabii');
+  var bigTenSurveyStatus = Cookies.get('survey_bigten');
   if (( surveyStatus == 'ignore') || (surveyStatus == 'clicked')) {
     $('div.alert.survey').hide();
   } else {
     $('div.alert.survey').show();
   }
   if (( gabiiSurveyStatus == 'ignore') || (gabiiSurveyStatus == 'clicked')) {
+    $('div.alert.survey').hide();
+  } else {
+    $('div.alert.survey').show();
+  }
+  if (( bigTenSurveyStatus == 'ignore') || (bigTenSurveyStatus == 'clicked')) {
     $('div.alert.survey').hide();
   } else {
     $('div.alert.survey').show();
