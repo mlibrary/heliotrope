@@ -171,7 +171,7 @@ module FeaturedRepresentatives
 
     instrument_method
     def pdf_ebook_presenter
-      @pdf_ebook_presenter ||= PDFEbookPresenter.new(PDFEbook::Publication.from_path_id(UnpackService.root_path_from_noid(pdf_ebook_id, 'pdf_ebook') + ".pdf", pdf_ebook_id))
+      @pdf_ebook_presenter ||= PDFEbookPresenter.new(pdf_ebook_id)
     end
 
     def mobi?
