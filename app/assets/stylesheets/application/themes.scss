@@ -2088,6 +2088,611 @@ $amherst-grey-3: #dee2e6;
 }
 ///////////////////////////////////////////////
 //
+// Big Ten Open Books (BTAA) - bigten
+//
+///////////////////////////////////////////////
+// colors
+$bigten-brand-color: #0088CE;
+$bigten-accent-color: #393D42;
+$bigten-accent-color-light: #E5E9ED;
+$bigten-headings: rgb(33, 43, 54);
+$bigten-accessible-blue: #005E8E;
+$bigten-grey-1: #F5F0F0;
+$bigten-white: #fff;
+$bigten-black: #000;
+
+// typography
+@import url("https://use.typekit.net/leo4nka.css");
+
+@mixin pt-sans {
+  font-family: pt-sans-pro, sans-serif;
+}
+
+.pt-sans {
+  @include pt-sans;
+}
+
+
+.bigten {
+
+  // svgicon
+  #documents {
+
+    .svgicon {
+      // To change any SVGs color see https://stackoverflow.com/a/53336754
+      filter: invert(38%) sepia(20%) saturate(1106%) hue-rotate(165deg) brightness(93%) contrast(96%); // $bigten-accent-link: rgb(29, 116, 145);
+
+    }
+
+  }
+
+  // typography
+  @include pt-sans;
+
+  h1 {
+    font-weight: 700;
+    color: $bigten-headings;
+  }
+
+  h2,
+  h3,
+  h4,
+  h5 {
+    font-weight: 700;
+    color: $bigten-headings;
+  }
+
+  h2 {
+    margin-top: 2rem;
+  }
+
+  h3,
+  h4,
+  h5 {
+    margin-top: 1rem;
+  }
+
+  .bold {
+    font-weight: 700;
+  }
+
+  .text-light {
+    color: #f8f9fa !important;
+  }
+
+  p, ul li, ol li {
+    font-weight: 300;
+  }
+
+  // links
+  a, .link {
+    color: $bigten-accessible-blue;
+    text-decoration: underline;
+  }
+
+  a:hover,
+  a:active,
+  button:hover,
+  button:active,
+  .link:hover {
+    color: $bigten-accessible-blue;
+    text-decoration-thickness: 2px;
+  }
+
+  a:focus,
+  button:focus,
+  .form-control:focus,
+  .btn:focus {
+    outline: 0;
+    box-shadow: 0 0 0 2px #FFCB05,0 0 0 3px #212B36;
+    border-radius: 2px !important;
+  }
+
+  a.btn, a.previous, a.next {
+    text-decoration: none;
+  }
+
+  // buttons
+  .btn, .btn-group {
+    font-weight: 600;
+  }
+
+  .btn-default {
+    @include button-background-color($bigten-accent-color);
+    @include button-font-color($bigten-white);
+    border-color: $bigten-accent-color;
+    font-weight: 600;
+  }
+
+  .download {
+    .btn-default {
+    @include button-background-color($bigten-accent-color);
+    @include button-font-color($bigten-white);
+    border-color: $bigten-accent-color;
+    font-weight: 600;
+    }
+  }
+
+  .btn-default:hover,
+  .btn-default:active {
+    @include button-hover-background-color($bigten-brand-color);
+    @include button-hover-font-color(#fff);
+    border-color: $bigten-brand-color;
+    font-weight: 600;
+  }
+
+  .open > .btn-default.dropdown-toggle {
+    background-color: $bigten-brand-color;
+    background-image: none;
+    border-color: $bigten-brand-color;
+    color: #fff;
+  }
+
+  #sort-dropdown .dropdown-toggle .caret,
+  #per_page-dropdown .dropdown-toggle .caret {
+    color: $bigten-white;
+  }
+
+  // navigation menu
+
+  .nav,
+  header {
+    @include pt-sans;
+  }
+
+  header {
+    border-bottom: 2px solid $bigten-accent-color;
+    height: 113px;
+    hgroup {
+      height: inherit;
+    }
+    .container {
+      padding: 16px 15px !important;
+      height: inherit;
+      max-width: 1140px;
+    }
+    .row.justify-content-end {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end !important;
+      height: 113px;
+
+      // search box and links
+      .col-md-4.pt-3 {
+        display: flex;
+        flex-direction: column;
+        padding-top: 16px;
+
+        form.navbar-form {
+          margin: 0;
+          padding: 0;
+        }
+
+        form {
+
+          .input-group {
+            display: flex;
+            position: relative;
+            width: 100%;
+            align-items: stretch;
+
+            .form-control {
+              position: relative;
+              flex: 1 1 auto;
+              width: 1%;
+              margin-bottom: 0;
+              display: block;
+              padding: 6px 12px;
+              font-size: 16px;
+              line-height: 1.5;
+              background-clip: padding-box;
+              border: 1px solid #ced4da;
+              transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+              color: #646A72 !important;
+            }
+          }
+
+          input.search-query {
+            background-color: #F3F3F3;
+            border-right: none !important;
+            color: #646A72 !important;
+            height: 38px;
+          }
+
+          button.search-submit {
+            background-color: #E9E9ED;
+            border-top: rgb(206, 212, 218) 1px solid;
+            border-right: rgb(206, 212, 218) 1px solid;
+            border-bottom: rgb(206, 212, 218) 1px solid;
+            border-left: none !important;
+            height: 100%;
+            padding: 0;
+            text-transform: none;
+            overflow: visible;
+            border-radius: 0;
+            margin: 0;
+            width: 53px;
+            height: 38px;
+
+            svg {
+              height: auto;
+              width: auto;
+              fill: none;
+              stroke-width: 2;
+              color: #000;
+            }
+          }
+        }
+      }
+    }
+    .navbar-brand-logo {
+      display: inline-block;
+      padding-right: 21.5px;
+    }
+    .nav-browse {
+      display: flex;
+      justify-content: flex-end;
+      font-size: 14px;
+      margin-top: 4px;
+
+      a {
+        text-transform: uppercase;
+        color: #707070;
+        text-decoration: none;
+        font-weight: 600;
+      }
+      a:hover,
+      a:active {
+        text-decoration: underline;
+      }
+    }
+
+    .navbar-brand {
+      height: inherit;
+      display: inline-block;
+      padding-top: 5px;
+      padding-bottom: 5px;
+      padding-left: 0;
+      margin-right: 1rem;
+      font-size: 1.25rem;
+      line-height: inherit;
+      white-space: nowrap;
+    }
+
+    .navbar-brand-logo {
+      padding-right: 8.5rem;
+    }
+
+    .navbar-brand h1 {
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      display: inline-block;
+      margin: 0;
+      vertical-align: bottom;
+      font-size: 26px;
+      color: $bigten-accent-color;
+      line-height: 1.2;
+    }
+
+  }
+
+  // container on all pages
+  #main.container {
+    max-width: 1140px;
+    padding-top: 1.5em;
+  }
+
+  // breadcrumbs
+  .breadcrumbs {
+    @include pt-sans;
+  }
+
+  // press catalog
+
+  .press .document {
+    a {
+      display: block;
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
+      text-decoration-thickness: 2px;
+    }
+  }
+
+  #facets a {
+    text-decoration: none;
+  }
+
+  #facets a:hover {
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+  }
+
+  // monograph catalog
+  #sort-dropdown .dropdown-toggle, #per_page-dropdown .dropdown-toggle {
+    color: $bigten-white;
+  }
+
+  // monograph
+  .monograph {
+    .documentHeader {
+      p {
+        @include pt-sans;
+      }
+    }
+
+    .authors, .copyright {
+      @include pt-sans;
+    }
+
+    button.search-submit {
+      background-color: $bigten-accent-color;
+      border-color: $bigten-accent-color;
+      color: $bigten-white;
+      height: 34px;
+    }
+  }
+
+  // pagination
+  .page_links {
+    @include pt-sans;
+  }
+
+  .pagination {
+    @include pt-sans;
+     li a, li span {
+       color: $bigten-white;
+       background-color: $bigten-accent-color;
+       border-color: $bigten-accent-color;
+     }
+
+     li a:hover, li span:hover {
+      color: $bigten-white;
+      background-color: $bigten-brand-color;
+      border-color: $bigten-brand-color;
+     }
+
+     .active>a,
+     .active>a:hover,
+     .active>a:focus,
+     .active>span,
+     .active>span:hover,
+     .active>span:focus {
+       background-color: $bigten-brand-color;
+       border-color: $bigten-brand-color;
+       color: $bigten-white;
+     }
+  }
+
+  // assets
+  .asset-navigation {
+    @include pt-sans;
+  }
+
+  .asset {
+    ul.nav-tabs li {
+      @include pt-sans;
+    }
+
+    .able-transcript-area {
+      .panel-title {
+        margin: 0;
+        color: #fff;
+        font-size: 1em;
+      }
+    }
+  }
+
+  //footer
+  footer.press {
+    background-color: $bigten-accent-color !important;
+    border-top: 2px solid #4C6781;
+    padding: 48px 0 16px;
+
+    img {
+      height: 100px !important;
+      width: auto !important;
+      padding-bottom: 8px !important;
+    }
+
+    img.fulcrum {
+      height: 27px !important;
+      width: auto !important;
+    }
+
+    .press-block-c {
+      padding: 0;
+      margin-top: 16px;
+    }
+  }
+
+  footer.press .press-block-a, footer.press .press-block-b {
+    background-color: $bigten-accent-color !important;
+    padding: 0;
+  }
+
+  footer {
+    .container {
+      max-width: 1140px;
+    }
+
+    .row {
+      display: flex;
+      justify-content: space-between;
+    }
+
+    a {
+      text-decoration: none;
+    }
+
+    a:hover {
+      color: #dae0e5 !important;
+      text-decoration: none;
+    }
+
+    .press
+    .press-block-a,
+    .press-block-b,
+    .press-block-c {
+      background-color:  $bigten-accent-color !important;
+
+      small {
+        font-size: 12.8px;
+      }
+
+    }
+
+    .press-block-c {
+      a {
+        color: #f8f9fa !important;
+      }
+    }
+
+    .admin {
+      vertical-align: middle;
+    }
+
+    section {
+      ul {
+        font-size: 16px;
+      }
+    }
+
+    h2 {
+      font-size: 17px;
+      @include pt-sans;
+      text-transform: uppercase;
+      margin-top: 0;
+    }
+
+    .block {
+      display: block;
+    }
+
+  }
+
+  // e-book reader
+  #reader {
+
+    .cozy-control .cozy-h1 {
+      font-size: 1.5em;
+    }
+
+    .button {
+      @include epub-button-background-color($bigten-accent-color,$bigten-brand-color,$bigten-white);
+    }
+
+    .button--lg {
+      @include epub-button-background-color($bigten-accent-color,$bigten-brand-color,$bigten-white);
+    }
+
+    .button--inline {
+      @include epub-button-background-color($bigten-accent-color,$bigten-brand-color,$bigten-white);
+    }
+
+    .button--sm {
+      @include epub-button-background-color($bigten-accent-color,$bigten-brand-color,$bigten-white);
+    }
+
+    .button--sm.cozy-preferences {
+      @include epub-button-background-color($bigten-accent-color,$bigten-brand-color,$bigten-white);
+      color: $bigten-brand-color;
+    }
+
+    i[class^='icon-chevron-'] {
+      @include epub-prev-next-color($bigten-accent-color);
+      transition: 0.2s ease-in;
+    }
+
+    i[class^='icon-chevron-']:hover {
+      @include epub-hover-prev-next-color($bigten-brand-color);
+      transition: 0.2s ease-in;
+    }
+
+    .cozy-control .logo {
+      background: $bigten-grey-1;
+      height: 46.6px;
+      width: 36px;
+      overflow: hidden;
+
+      img {
+        height: 36px;
+        margin-top: 6px;
+        margin-left: 11px;
+      }
+    }
+
+    .modal__footer {
+      background-color: $bigten-accent-color-light;
+    }
+
+    // PDF loading progress bar
+    .helio-loading-bar .progress {
+      background-color: $bigten-accent-color;
+    }
+
+  }
+
+}
+
+@media(max-width: 976px) {
+  .bigten header {
+    height: 194px;
+  }
+  .bigten .container {
+    overflow: auto;
+  }
+  .bigten header .row.justify-content-end .col-md-4.pt-3 {
+    flex-grow: 1;
+  }
+
+  .bigten header .row.justify-content-end .col-md-4.pt-3 form.navbar-form {
+    width: 80%;
+  }
+
+  .bigten header .row.justify-content-end {
+    justify-content: unset !important;
+    margin: 0 auto;
+    width: 95%;
+  }
+
+  .bigten header .navbar-brand h1 {
+    font-size: 20px;
+    letter-spacing: 1px;
+    line-height: 28px;
+  }
+
+  .bigten header .nav-browse {
+    justify-content: flex-start;
+    margin-top: .8em;
+  }
+
+  .bigten .monograph .message {
+    padding: 1.5em;
+
+    .wrapper {
+      width: auto;
+    }
+    .text {
+      width: 70%;
+    }
+    .dismiss {
+      width: 20%;
+      padding-left: 10%;
+    }
+  }
+
+  .bigten footer .row {
+    flex-wrap: wrap;
+    justify-content: unset;
+  }
+}
+
+
+///////////////////////////////////////////////
+//
 // SMU Bridwell Press - BRIDWELL
 //
 ///////////////////////////////////////////////
