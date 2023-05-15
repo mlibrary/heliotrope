@@ -128,7 +128,7 @@ module Import
 
       if File.exist?(root_dir) && File.extname(root_dir) == '.tar'
         monograph_id = File.basename(root_dir, '.tar')
-        tmp_dir_path = Rails.root.join('tmp', "importing-tarball-#{monograph_id}")
+        tmp_dir_path = File.join(Settings.scratch_space_path, "importing-tarball-#{monograph_id}")
         FileUtils.mkdir_p(tmp_dir_path) if !Dir.exist?(tmp_dir_path)
         Minitar.unpack(root_dir, tmp_dir_path.to_s)
         # our backups are tars of NOID-named directories

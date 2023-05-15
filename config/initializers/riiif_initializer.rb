@@ -36,3 +36,4 @@ module Riiif
 end
 
 Riiif::Engine.config.cache_duration_in_days = 30
+Riiif::Image.file_resolver.cache_path = Settings.riiif_network_files_path

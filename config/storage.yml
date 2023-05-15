@@ -1,10 +1,10 @@
 test:
   service: Disk
-  root: <%= Rails.root.join("tmp/storage") %>
+  root: <%= File.join(Settings.scratch_space_path, 'storage') %>
 
 local:
   service: Disk
-  root: <%= Rails.root.join("storage") %>
+  root: <%= File.join(Settings.scratch_space_path, 'storage') %>
 
 # Use rails credentials:edit to set the AWS secrets (as aws:access_key_id|secret_access_key)
 # amazon:

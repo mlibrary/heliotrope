@@ -10,6 +10,15 @@ Bundler.require(*Rails.groups)
 
 module Heliotrope
   class Application < Rails::Application
+    # a definitive place for our "tempish" files, many of which do persist for a short time and/or are shared between...
+    # separate components of the stack (jobs etc)
+    raise 'You must set `Settings.scratch_space_path`' unless Settings.scratch_space_path
+    raise "`Settings.scratch_space_path` directory (`#{Settings.scratch_space_path}`) must exist" unless Dir.exist?(Settings.scratch_space_path)
+
+    # RIIIF will create `Settings.riiif_network_files_path` if it doesn't exist:
+    # https://github.com/sul-dlss/riiif/blob/a78b329d9871cee6a01b3851fd564f9c62e43572/app/resolvers/riiif/http_file_resolver.rb#L86
+    raise 'You must set `Settings.riiif_network_files_path`' unless Settings.riiif_network_files_path
+
     # Initialize configuration defaults for originally generated Rails version.
     config.load_defaults 5.1
 
@@ -67,7 +76,7 @@ module Heliotrope
     # See the KeycardAuthenticatable strategy for more detail.
     config.create_user_on_login = Settings.create_user_on_login && true
 
-    # HELIO-4075 Set java.io.tmpdir to application tmp
+    # HELIO-4075 Set java.io.tmpdir to `Settings.scratch_space_path`
     # Ensure tmp directories are defined (Cut and pasted from DBD October 14, 2021 then modified for Fulcrum)
     verbose_init = false
     if verbose_init
@@ -77,8 +86,14 @@ module Heliotrope
       Rails.logger.info "ENV['JAVA_OPTIONS']=#{ENV['JAVA_OPTIONS']}"
     end
 
-    # Never use /tmp, always use ~/tmp, #627 and http://stackoverflow.com/a/17068331
-    tmpdir = Rails.root.join('tmp').to_s
+    # 20230515: When it comes to scratch_space_path,  we definitely don't want to use system `/tmp`, which has always...
+    # had very limited space. Neither do we want to use app temp `Rails.root.join('tmp')`, which is similarly...
+    # restricted on the new production servers.
+    # Additionally, the files the stack writes to "temporary" storage are more like scratch space files, so we'll..
+    # use a dedicated mount for these. See HELIO-627, http://stackoverflow.com/a/17068331, HELIO-4471.
+    # note: we have used app tmp for this for many years on the old servers, so that will be the fall-back
+    tmpdir = Settings.scratch_space_path
+
     ENV['TMPDIR'] = tmpdir
     ENV['_JAVA_OPTIONS'] = "-Djava.io.tmpdir=#{tmpdir}" if ENV['_JAVA_OPTIONS'].blank?
     ENV['JAVA_OPTIONS'] = "-Djava.io.tmpdir=#{tmpdir}" if ENV['JAVA_OPTIONS'].blank?
@@ -100,7 +115,7 @@ module Heliotrope
     config.skylight.probes -= ['middleware']
 
     # Prometheus monitoring, see HELIO-3388
-    ENV["PROMETHEUS_MONITORING_DIR"] = ENV["PROMETHEUS_MONITORING_DIR"] || Settings.prometheus_monitoring.dir || Rails.root.join("tmp", "prometheus").to_s
+    ENV["PROMETHEUS_MONITORING_DIR"] = ENV["PROMETHEUS_MONITORING_DIR"] || Settings.prometheus_monitoring.dir || File.join(Settings.scratch_space_path, 'prometheus')
     FileUtils.mkdir_p ENV.fetch("PROMETHEUS_MONITORING_DIR")
     Prometheus::Client.config.data_store = Prometheus::Client::DataStores::DirectFileStore.new(dir: ENV.fetch("PROMETHEUS_MONITORING_DIR"))
 

@@ -98,7 +98,7 @@ class Manifest
     destroy(current_user)
     csv.cache!(content_type: @csv.content_type, filename: @csv.original_filename, tempfile: @csv.tempfile)
     store_csv!
-    FileUtils.rm_rf(csv.cache_dir.to_s) if Dir.exist?(csv.cache_dir.to_s)
+    FileUtils.rm_rf(csv.cache_dir) if Dir.exist?(csv.cache_dir)
     true
   end
 
@@ -111,7 +111,7 @@ class Manifest
   end
 
   def path
-    csv.store_dir.to_s
+    csv.store_dir
   end
 
   def filename

@@ -8,7 +8,7 @@ require 'fakefs/spec_helpers'
 
 describe CharacterizeJob, :clean_repo do
   let(:file_set_id) { 'abc12345' }
-  let(:filename)    { Rails.root.join('tmp', 'uploads', 'ab', 'c1', '23', '45', 'abc12345', 'picture.png').to_s }
+  let(:filename)    { File.join(Settings.scratch_space_path, 'uploads', 'ab', 'c1', '23', '45', 'abc12345', 'picture.png').to_s }
   let(:label) { 'picture.png' }
   let(:title) { ['My User-Entered Title'] }
   let(:file_set) do
@@ -209,12 +209,12 @@ describe CharacterizeJob, :clean_repo do
 
   context "when there's a preexisting IIIF cached file" do
     include FakeFS::SpecHelpers
-    let(:cached_file) { Rails.root.join('tmp', 'network_files', Digest::MD5.hexdigest(file_set.original_file.uri.to_s)) }
+    let(:cached_file) { File.join(Settings.scratch_space_path, 'network_files', Digest::MD5.hexdigest(file_set.original_file.uri.to_s)) }
 
     it "deletes the cached file" do
-      FileUtils.mkdir_p Rails.root.join('tmp', 'network_files')
+      FileUtils.mkdir_p File.join(Settings.scratch_space_path, 'network_files')
       FileUtils.touch cached_file
-      expect(cached_file.exist?).to be true
+      expect(File.exist?(cached_file)).to be true
 
       allow(Hydra::Works::CharacterizationService).to receive(:run).with(file, filename)
       allow(file).to receive(:save!)
@@ -222,7 +222,7 @@ describe CharacterizeJob, :clean_repo do
       allow(CreateDerivativesJob).to receive(:perform_later).with(file_set, file.id, filename)
       described_class.perform_now(file_set, file.id)
 
-      expect(cached_file.exist?).to be false
+      expect(File.exist?(cached_file)).to be false
     end
   end
 

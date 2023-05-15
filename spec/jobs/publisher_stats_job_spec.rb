@@ -7,7 +7,7 @@ RSpec.describe PublisherStatsJob, type: :job do
 
   subject(:job) { described_class.perform_later(stats_file) }
 
-  let(:stats_file) { Rails.root.join('tmp', 'publisher_stats.yml').to_s }
+  let(:stats_file) { File.join(Settings.scratch_space_path, 'publisher_stats.yml').to_s }
   let(:user) { create(:press_editor, press: press) }
   let(:press) { create(:press) }
   let(:monograph) do

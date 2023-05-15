@@ -4,11 +4,11 @@ class ManifestUploader < CarrierWave::Uploader::Base
   storage :file
 
   def store_dir
-    Rails.root.join("tmp", "uploads", model.class.to_s.underscore, model.id)
+    File.join(Settings.scratch_space_path, "uploads", model.class.to_s.underscore, model.id)
   end
 
   def cache_dir
-    Rails.root.join("tmp", "uploads", "cache", model.class.to_s.underscore, model.id)
+    File.join(Settings.scratch_space_path, "uploads", "cache", model.class.to_s.underscore, model.id)
   end
 
   # def default_url

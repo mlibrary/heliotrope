@@ -271,7 +271,7 @@ describe Import::Importer do
                          .by(12))
                   .and(change(Hyrax::UploadedFile, :count)
                          .by(8)) # none for the 4 external resources
-          expect(Dir.exist?(Rails.root.join('tmp', "importing-tarball-9999999999"))).to be false
+          expect(Dir.exist?(File.join(Settings.scratch_space_path, "importing-tarball-9999999999"))).to be false
         end
 
         # no need to redo all the metadata checks from above!

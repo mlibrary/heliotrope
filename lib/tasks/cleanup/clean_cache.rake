@@ -41,9 +41,9 @@ namespace :heliotrope do
     Rails.logger.info("clean_cache cleaned up cache")
 
 
-    # 2. IIIF stores its "base"/full images in tmp/network_files
+    # 2. IIIF stores its "base"/full images in Settings.riiif_network_files_path (HELIO-4470)
     #    See HELIO-4398. Only files that are no longer in Solr, for whatever reason, will be deleted.
-    network_files_path = Rails.root.join('tmp', 'network_files')
+    network_files_path = Settings.riiif_network_files_path
 
     image_urls = []
 
@@ -81,7 +81,7 @@ namespace :heliotrope do
 
     # 3. tmp/uploads  should be cleaned out as well since we don't
     #    need these files after they've been processed
-    uploads_path = Rails.root.join('tmp', 'uploads')
+    uploads_path = File.join(Settings.scratch_space_path, 'uploads')
 
     Dir.glob("#{uploads_path}/*") do |dir|
       if Dir.exist?(dir) && 7.days.ago >= File.mtime(dir)
