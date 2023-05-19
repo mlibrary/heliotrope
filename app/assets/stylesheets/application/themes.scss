@@ -2410,6 +2410,10 @@ $bigten-black: #000;
     text-decoration-thickness: 2px;
   }
 
+  #facets .access-legend {
+    display: none;
+  }
+
   // monograph catalog
   #sort-dropdown .dropdown-toggle, #per_page-dropdown .dropdown-toggle {
     color: $bigten-white;
