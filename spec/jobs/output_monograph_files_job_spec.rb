@@ -7,7 +7,7 @@ RSpec.describe OutputMonographFilesJob, type: :job do
     let(:monograph) { create(:monograph) }
     let(:file_set1) { create(:file_set, title: [file_1_original_name]) }
     let(:file_set2) { create(:file_set, title: [file_2_original_name]) }
-    let(:path) { Rails.root.join('tmp', 'spec', 'rspec_output_monograph_files_job') }
+    let(:path) { File.join(Settings.scratch_space_path, 'spec', 'rspec_output_monograph_files_job') }
     let(:file_1_original_name) { 'kitty.tif' }
     let(:file_2_original_name) { "ファイル.txt" }
 

@@ -60,10 +60,10 @@ RSpec.configure do |config|
 
   config.after(:all) do
     if Rails.env.test? || Rails.env.cucumber?
-      FileUtils.rm_rf(Dir[Rails.root.join('tmp', 'spec', 'uploads')])
-      FileUtils.rm_rf(Dir[Rails.root.join('tmp', 'spec', 'public', 'products')])
-      FileUtils.rm_rf(Dir[Rails.root.join('tmp', 'rspec_derivatives')])
-      FileUtils.rm_rf(Dir[Rails.root.join('tmp', 'spec', 'rspec_output_monograph_files_job')])
+      FileUtils.rm_rf(File.join(Settings.scratch_space_path, 'spec', 'uploads'))
+      FileUtils.rm_rf(File.join(Settings.scratch_space_path, 'spec', 'public', 'products'))
+      FileUtils.rm_rf(File.join(Settings.scratch_space_path, 'rspec_derivatives'))
+      FileUtils.rm_rf(File.join(Settings.scratch_space_path, 'spec', 'rspec_output_monograph_files_job'))
     end
   end
 

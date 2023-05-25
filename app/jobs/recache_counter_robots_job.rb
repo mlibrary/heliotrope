@@ -5,7 +5,7 @@
 ########################################
 
 class RecacheCounterRobotsJob < ApplicationJob
-  JSON_FILE = Rails.root.join('tmp', 'counter-robots.json')
+  JSON_FILE = File.join(Settings.scratch_space_path, 'counter-robots.json')
   DOWNLOAD_CMD = "curl --silent https://raw.githubusercontent.com/atmire/COUNTER-Robots/master/COUNTER_Robots_list.json > #{JSON_FILE}"
   RAILS_CACHE_KEY = 'counter_robots'
 

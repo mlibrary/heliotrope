@@ -112,16 +112,16 @@ RSpec.describe CommonWorkPresenter do
 
     context "with a thumbnail file" do
       before do
-        FileUtils.mkdir_p(Rails.root.join('tmp', 'rspec_derivatives', '99', '99', '99', '99'))
-        FileUtils.touch(Rails.root.join('tmp', 'rspec_derivatives', '99', '99', '99', '99', '9-thumbnail.jpeg'))
+        FileUtils.mkdir_p(File.join(Settings.scratch_space_path, 'rspec_derivatives', '99', '99', '99', '99'))
+        FileUtils.touch(File.join(Settings.scratch_space_path, 'rspec_derivatives', '99', '99', '99', '99', '9-thumbnail.jpeg'))
       end
 
       after do
-        FileUtils.rm_rf(Dir[Rails.root.join('tmp', 'rspec_derivatives')])
+        FileUtils.rm_rf(Dir[File.join(Settings.scratch_space_path, 'rspec_derivatives')])
       end
 
       it {
-        is_expected.to eq presenter.representative_id + "#{File.mtime(Rails.root.join('tmp', 'rspec_derivatives', '99', '99', '99', '99', '9-thumbnail.jpeg')).to_i}"
+        is_expected.to eq presenter.representative_id + "#{File.mtime(File.join(Settings.scratch_space_path, 'rspec_derivatives', '99', '99', '99', '99', '9-thumbnail.jpeg')).to_i}"
       }
     end
   end

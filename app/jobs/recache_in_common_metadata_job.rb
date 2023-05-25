@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 class RecacheInCommonMetadataJob < ApplicationJob
-  XML_FILE = Rails.root.join('tmp', 'InCommon-metadata.xml')
+  XML_FILE = File.join(Settings.scratch_space_path, 'InCommon-metadata.xml')
   DOWNLOAD_CMD = "curl --silent https://md.incommon.org/InCommon/InCommon-metadata.xml > #{XML_FILE}"
-  JSON_FILE = Rails.root.join('tmp', 'InCommon-metadata.json')
+  JSON_FILE = File.join(Settings.scratch_space_path, 'InCommon-metadata.json')
   RAILS_CACHE_KEY = 'in_common_metadata'
 
   EntityDescriptor = Struct.new(:es) do

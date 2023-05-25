@@ -6,7 +6,7 @@ RSpec.describe "StaticMetadata", type: :request do
   # All this really is is a mapping of the file system
   # Instead of letting apache do it, we're reproducing it in the controller
   # see HELIO-4408
-  let(:test_root) { Rails.root.join('tmp', 'spec', 'public', 'products', 'umpebc', 'kbart') }
+  let(:test_root) { File.join(Settings.scratch_space_path, 'spec', 'public', 'products', 'umpebc', 'kbart') }
 
   before do
     FileUtils.mkdir_p(test_root)

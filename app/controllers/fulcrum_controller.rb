@@ -88,11 +88,11 @@ class FulcrumController < ApplicationController
   private
 
     def publisher_stats_file
-      Rails.root.join('tmp', 'publisher_stats.yml')
+      File.join(Settings.scratch_space_path, 'publisher_stats.yml')
     end
 
     def publisher_stats
-      PublisherStatsJob.perform_now(publisher_stats_file.to_s)
+      PublisherStatsJob.perform_now(publisher_stats_file)
     end
 
     def incognito_params(params)

@@ -240,7 +240,7 @@ RSpec.describe OpenAccessEbookTrustJob, type: :job do
   end
 
   describe "#zipup" do
-    after { File.unlink(Rails.root.join("tmp", "fulcrum_ebc_reports_zip")) }
+    after { File.unlink(File.join(Settings.scratch_space_path, "fulcrum_ebc_reports_zip")) }
 
     let(:reports) do
       {

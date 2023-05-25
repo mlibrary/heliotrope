@@ -28,7 +28,7 @@ class RecurringUsageReportJob < ApplicationJob
       # No email "to" is required so I guess write these out to /tmp instead of emailing them
       reports.each do |name, csv|
         Rails.logger.info("[RecurringUsageReportJob] wrote #{name} to /tmp")
-        File.write(File.join("tmp", "#{name}.csv"), csv)
+        File.write(File.join(Settings.scratch_space_path, "recurring_usage_reports", "#{name}.csv"), csv)
       end
     elsif Settings.recurring_usage_reports.present?
 
@@ -200,7 +200,7 @@ class RecurringUsageReportJob < ApplicationJob
   end
 
   def zipup(reports)
-    zipfile = File.open(Rails.root.join("tmp", "recurring_reports_#{today}_zip"), "w")
+    zipfile = File.open(File.join(Settings.scratch_space_path, "recurring_reports_#{today}_zip"), "w")
 
     # HELIO-4388 Hold tempfiles outside of the zip processes so they aren't
     # garbage collected before they are used.

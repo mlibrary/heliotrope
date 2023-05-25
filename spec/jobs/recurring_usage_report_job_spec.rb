@@ -98,7 +98,7 @@ RSpec.describe RecurringUsageReportJob, type: :job do
       end
 
       before { allow_any_instance_of(described_class).to receive(:today).and_return("2023-04-01") }
-      after { File.unlink(Rails.root.join("tmp", "recurring_reports_2023-04-01_zip")) }
+      after { File.unlink(File.join(Settings.scratch_space_path, "recurring_reports_2023-04-01_zip")) }
 
       it "returns a zipped archive containing reports" do
         Zip::File.open(described_class.new.zipup(reports)) do |zip|

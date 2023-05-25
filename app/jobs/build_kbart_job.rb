@@ -31,7 +31,7 @@ class BuildKbartJob < ApplicationJob
       # Otherwise Write the new kbart file with current YYYY_MM_DD in file name
       # Both the csv
       today = Time.zone.now.strftime "%Y-%m-%d"
-      new_kbart_name = kbart_root_dir + "#{file_root}_#{today}"
+      new_kbart_name = File.join(kbart_root_dir, "#{file_root}_#{today}")
       File.write(new_kbart_name.to_s + ".csv", new_kbart_csv)
 
       # And the tsv (but with the .txt extension)
@@ -68,9 +68,9 @@ class BuildKbartJob < ApplicationJob
 
   def kbart_root(product)
     if Rails.env.test?
-      Rails.root.join("tmp", "spec", "public", "products", product.group_key, "kbart")
+      File.join(Settings.scratch_space_path, "spec", "public", "products", product.group_key, "kbart")
     else
-      Rails.root.join("public", "products", product.group_key, "kbart")
+      Rails.root.join("public", "products", product.group_key, "kbart").to_s
     end
   end
 

@@ -62,7 +62,7 @@ RSpec.describe BuildKbartJob, type: :job do
 
   describe "#perform" do
     let(:product) { create(:product, identifier: 'product', needs_kbart: true, group_key: 'product_key') }
-    let(:test_root) { Rails.root.join('tmp', 'spec', 'public', 'products', product.group_key, 'kbart') }
+    let(:test_root) { File.join(Settings.scratch_space_path, 'spec', 'public', 'products', product.group_key, 'kbart') }
     let(:old_kbart) do <<~KBART
 "publication_title","print_identifier","online_identifier","date_first_issue_online","num_first_vol_online","num_first_issue_online","date_last_issue_online","num_last_vol_online","num_last_issue_online","title_url","first_author","title_id","embargo_info","coverage_depth","notes","publisher_name","publication_type","date_monograph_published_print","date_monograph_published_online","monograph_volume","monograph_edition","first_editor","parent_publication_title_id","preceding_publication_title_id","access_type"
 "A Book Italic","A123456789","A987654321","","","","","","","https://doi.org/10.3998/mpub.A","Adams","10.3998/mpub.A","","fulltext","","A Press","monograph","2023-03-30","2023-03-30","","","","","","P"
@@ -74,7 +74,7 @@ RSpec.describe BuildKbartJob, type: :job do
     context "without components" do
       before do
         FileUtils.mkdir_p(test_root)
-        File.write(Rails.root.join(test_root, "product_2022-01-01.csv"), old_kbart)
+        File.write(File.join(test_root, "product_2022-01-01.csv"), old_kbart)
 
         ActiveFedora::SolrService.add([doc_c.to_h, doc_b.to_h, doc_d.to_h, doc_a.to_h])
         ActiveFedora::SolrService.commit
@@ -84,9 +84,9 @@ RSpec.describe BuildKbartJob, type: :job do
         travel_to("2022-02-02") do
           subject.perform_now
 
-          expect(Dir.glob(test_root + "*").count).to eq 1
-          expect(File.exist?(Rails.root.join(test_root, "product_2022-01-01.csv"))).to be true
-          expect(File.exist?(Rails.root.join(test_root, "product_2022-02-02.csv"))).to be false
+          expect(Dir.glob(test_root + "/*").count).to eq 1
+          expect(File.exist?(File.join(test_root, "product_2022-01-01.csv"))).to be true
+          expect(File.exist?(File.join(test_root, "product_2022-02-02.csv"))).to be false
         end
       end
     end
@@ -109,16 +109,16 @@ RSpec.describe BuildKbartJob, type: :job do
       context "when there are no updates" do
         before do
           FileUtils.mkdir_p(test_root)
-          File.write(Rails.root.join(test_root, "product_2022-01-01.csv"), old_kbart)
+          File.write(File.join(test_root, "product_2022-01-01.csv"), old_kbart)
         end
 
         it "does not create a new kbart file" do
           travel_to("2022-02-02") do
             subject.perform_now
 
-            expect(Dir.glob(test_root + "*").count).to eq 1
-            expect(File.exist?(Rails.root.join(test_root, "product_2022-01-01.csv"))).to be true
-            expect(File.exist?(Rails.root.join(test_root, "product_2022-02-02.csv"))).to be false
+            expect(Dir.glob(test_root + "/*").count).to eq 1
+            expect(File.exist?(File.join(test_root, "product_2022-01-01.csv"))).to be true
+            expect(File.exist?(File.join(test_root, "product_2022-02-02.csv"))).to be false
           end
         end
       end
@@ -144,20 +144,20 @@ RSpec.describe BuildKbartJob, type: :job do
           ActiveFedora::SolrService.commit
 
           FileUtils.mkdir_p(test_root)
-          File.write(Rails.root.join(test_root, "product_2022-01-01.csv"), old_kbart)
+          File.write(File.join(test_root, "product_2022-01-01.csv"), old_kbart)
         end
 
         it "creates new kbart files, .csv and .txt" do
           travel_to("2022-02-02") do
             subject.perform_now
 
-            expect(Dir.glob(test_root + "*").count).to eq 3
-            expect(File.exist?(Rails.root.join(test_root, "product_2022-01-01.csv"))).to be true
-            expect(File.exist?(Rails.root.join(test_root, "product_2022-02-02.csv"))).to be true
-            expect(File.exist?(Rails.root.join(test_root, "product_2022-02-02.txt"))).to be true
+            expect(Dir.glob(test_root + "/*").count).to eq 3
+            expect(File.exist?(File.join(test_root, "product_2022-01-01.csv"))).to be true
+            expect(File.exist?(File.join(test_root, "product_2022-02-02.csv"))).to be true
+            expect(File.exist?(File.join(test_root, "product_2022-02-02.txt"))).to be true
 
             # sneak in a check for the txt/tsv here I guess
-            tsv = CSV.read(Rails.root.join(test_root, "product_2022-02-02.txt"), col_sep: "\t")
+            tsv = CSV.read(File.join(test_root, "product_2022-02-02.txt"), col_sep: "\t")
 
             expect(tsv[0][0]).to eq "publication_title"
             expect(tsv[1][0]).to eq "A Book Italic"
@@ -177,9 +177,9 @@ RSpec.describe BuildKbartJob, type: :job do
           travel_to("2022-02-02") do
             subject.perform_now
 
-            expect(Dir.glob(test_root + "*").count).to eq 2
-            expect(File.exist?(Rails.root.join(test_root, "product_2022-02-02.csv"))).to be true
-            expect(File.exist?(Rails.root.join(test_root, "product_2022-02-02.txt"))).to be true
+            expect(Dir.glob(test_root + "/*").count).to eq 2
+            expect(File.exist?(File.join(test_root, "product_2022-02-02.csv"))).to be true
+            expect(File.exist?(File.join(test_root, "product_2022-02-02.txt"))).to be true
           end
         end
       end
@@ -214,18 +214,18 @@ RSpec.describe BuildKbartJob, type: :job do
 
   describe "#most_recent_kbart" do
     let(:product) { create(:product, identifier: 'product', needs_kbart: true, group_key: 'product_key') }
-    let(:test_root) { Rails.root.join('tmp', 'spec', 'public', 'products', product.group_key, 'kbart') }
+    let(:test_root) { File.join(Settings.scratch_space_path, 'spec', 'public', 'products', product.group_key, 'kbart') }
 
     before do
       FileUtils.rm_rf(test_root)
       FileUtils.mkdir_p(test_root)
-      FileUtils.touch(Rails.root.join(test_root, "product_2022-01-01.csv"))
-      FileUtils.touch(Rails.root.join(test_root, "product_2022-02-01.csv"))
-      FileUtils.touch(Rails.root.join(test_root, "product_2020-01-01.csv"))
+      FileUtils.touch(File.join(test_root, "product_2022-01-01.csv"))
+      FileUtils.touch(File.join(test_root, "product_2022-02-01.csv"))
+      FileUtils.touch(File.join(test_root, "product_2020-01-01.csv"))
     end
 
     it "returns the most recent kbart file for the product" do
-      expect(subject.most_recent_kbart(test_root, product.identifier)).to eq Rails.root.join(test_root, "product_2022-02-01.csv").to_s
+      expect(subject.most_recent_kbart(test_root, product.identifier)).to eq File.join(test_root, "product_2022-02-01.csv").to_s
     end
   end
 

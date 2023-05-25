@@ -11,7 +11,7 @@ class AptrustDepositJob < ApplicationJob
     monograph = Sighrax.from_noid(monograph_id)
     return false unless monograph.is_a?(Sighrax::Monograph)
 
-    Dir.mktmpdir(["deposit", monograph.noid], Rails.root.join('tmp')) do |dir|
+    Dir.mktmpdir(["deposit", monograph.noid], File.join(Settings.scratch_space_path)) do |dir|
       Dir.chdir(dir) do
         success = false
         begin

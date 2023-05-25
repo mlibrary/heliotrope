@@ -59,7 +59,7 @@ class CharacterizeJob < Hyrax::ApplicationJob
       reset_title = file_set.title.first == file_set.label
 
       # Heliotrope addition over Hyrax 3 code to clear out the riiif cached base image if one exists
-      cached_file = Rails.root.join('tmp', 'network_files', Digest::MD5.hexdigest(file_set.original_file.uri.to_s))
+      cached_file = File.join(Settings.riiif_network_files_path, Digest::MD5.hexdigest(file_set.original_file.uri.to_s))
       File.delete(cached_file) if File.exist?(cached_file)
 
       characterization_service.run(file_set.characterization_proxy, filepath)

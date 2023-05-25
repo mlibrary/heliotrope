@@ -36,14 +36,14 @@ class ExtractIngestJob < ApplicationJob
 
     def manifest_path
       return @manifest_path if @manifest_path.present?
-      @manifest_path = Rails.root.join('tmp', 'import', 'manifest')
+      @manifest_path = File.join(Settings.scratch_space_path, 'import', 'manifest')
       FileUtils.mkdir_p(@manifest_path) unless Dir.exist?(@manifest_path)
       @manifest_path
     end
 
     def extract_path
       return @extract_path if @extract_path.present?
-      @extract_path = Rails.root.join('tmp', 'import', 'extract')
+      @extract_path = File.join(Settings.scratch_space_path, 'import', 'extract')
       FileUtils.mkdir_p(@extract_path) unless Dir.exist?(@extract_path)
       @extract_path
     end

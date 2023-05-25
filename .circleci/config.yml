@@ -2,6 +2,14 @@
 # which in turn was borrowed from https://github.com/samvera-labs/samvera-circleci-orb
 version: 2.1
 
+# scratch_space_path must be set and is where short-lived files are saved
+scratch_space_path: <%= File.join(Rails.root, 'tmp') %>
+# derivatives_path contains thumbnails and web-friendly audio, and video files for playbock
+derivatives_path: <%= File.join(Rails.root, 'tmp', 'rspec_derivatives') %>
+# riiif_network_files_path contains RIIIF's cache of "full resolution" image files that have been downloaded from a...
+# "network" location, i.e. Fedora for us. See https://github.com/sul-dlss/riiif#images-retrieved-over-http
+riiif_network_files_path: <%= File.join(Rails.root, 'tmp', 'network_files') %>
+
 commands:
   bundle_for_gem:
     description: Bundles and caches a gem.

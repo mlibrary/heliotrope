@@ -17,7 +17,7 @@ namespace :heliotrope do
       output_tar_file_path = File.join(args.backup_directory, monograph_doc['press_tesim']&.first, "#{monograph_doc.id}.tar")
 
       if args.refresh_all_backups || !deposit_up_to_date?(monograph_doc, output_tar_file_path)
-        Dir.mktmpdir(["backup-monograph-#{monograph_doc.id}-"], Rails.root.join('tmp')) do |temp_directory|
+        Dir.mktmpdir(["backup-monograph-#{monograph_doc.id}-"], File.join(Settings.scratch_space_path)) do |temp_directory|
           # to prevent absolute paths being stored in the archive we'll `cd` to the temp folder...
           Dir.chdir(temp_directory) do
             # ...and export into a NOID-named folder inside that.

@@ -84,7 +84,7 @@ class OpenAccessEbookTrustJob < ApplicationJob
   end
 
   def zipup(reports)
-    zipfile = File.open(Rails.root.join("tmp", "fulcrum_ebc_reports_zip"), "w")
+    zipfile = File.open(File.join(Settings.scratch_space_path, "fulcrum_ebc_reports_zip"), "w")
 
     # HELIO-4388 Hold tempfiles outside of the zip processes so they aren't
     # garbage collected before they are used.
