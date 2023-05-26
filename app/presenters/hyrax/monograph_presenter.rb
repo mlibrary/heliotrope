@@ -63,7 +63,6 @@ module Hyrax
       end
     end
 
-    instrument_method
     def display_section_titles(section_titles_in)
       section_titles_out = []
       ordered_section_titles.each do |ordered_title|
@@ -200,7 +199,6 @@ module Hyrax
       press_obj.press_url
     end
 
-    instrument_method
     def monograph_tombstone_message
       monograph = Sighrax.from_presenter(self)
       monograph.tombstone_message ||
@@ -208,31 +206,26 @@ module Hyrax
           Sighrax.platform.tombstone_message(monograph.publisher.name)
     end
 
-    instrument_method
     def previous_file_sets_id?(file_sets_id)
       return false unless ordered_file_sets_ids.include? file_sets_id
       ordered_file_sets_ids.first != file_sets_id
     end
 
-    instrument_method
     def previous_file_sets_id(file_sets_id)
       return nil unless previous_file_sets_id? file_sets_id
       ordered_file_sets_ids[(ordered_file_sets_ids.find_index(file_sets_id) - 1)]
     end
 
-    instrument_method
     def next_file_sets_id?(file_sets_id)
       return false unless ordered_file_sets_ids.include? file_sets_id
       ordered_file_sets_ids.last != file_sets_id
     end
 
-    instrument_method
     def next_file_sets_id(file_sets_id)
       return nil unless next_file_sets_id? file_sets_id
       ordered_file_sets_ids[(ordered_file_sets_ids.find_index(file_sets_id) + 1)]
     end
 
-    instrument_method
     def monograph_analytics_ids
       ordered_file_sets_ids + [id]
     end

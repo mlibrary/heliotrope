@@ -1,11 +1,9 @@
 # frozen_string_literal: true
 
 class EBookDownloadPresenter < ApplicationPresenter
-  include Skylight::Helpers
   include ActionView::Helpers::UrlHelper
   attr_reader :monograph, :current_ability, :current_actor, :ebook_presenters
 
-  instrument_method
   def initialize(monograph_presenter, current_ability, current_actor)
     @monograph = monograph_presenter
     @current_ability = current_ability
@@ -44,7 +42,6 @@ class EBookDownloadPresenter < ApplicationPresenter
     @ebook_presenters.filter_map { |ebook| ebook if ebook.pdf_ebook? }.first
   end
 
-  instrument_method
   def downloadable?(ebook_presenter)
     Rails.logger.debug { "[EBOOK DOWNLOAD] ebook_presenter.blank? #{ebook_presenter.blank?} (#{ebook_presenter.class})" }
     return false if ebook_presenter.blank?
