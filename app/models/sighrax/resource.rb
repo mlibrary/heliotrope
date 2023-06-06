@@ -38,6 +38,15 @@ module Sighrax
       false
     end
 
+    # HELIO-4431
+    def preferred_isbn
+      false
+    end
+
+    def non_preferred_isbns
+      false
+    end
+
     private
 
       def initialize(noid, data)
