@@ -14,10 +14,14 @@
 
 if Settings.checkpoint&.database
   Checkpoint::DB.config.opts = Settings.checkpoint.database
+  # HELIO-4475 default logger currently goes to db/checkpoint.log which we do not want
+  Checkpoint::DB.config.opts[:logger] = Logger.new("log/checkpoint.log")
 end
 
 if Settings.keycard&.database
   Keycard::DB.config.opts = Settings.keycard.database
+  # HELIO-4475 default logger currently goes to db/keycard.log which we do not want
+  Keycard::DB.config.opts[:logger] = Logger.new("log/keycard.log")
 end
 
 Keycard::DB.config.readonly = true if Settings.keycard&.readonly
@@ -30,6 +34,11 @@ Keycard.config.access = Settings.keycard&.access || :direct
 # application, there should be an initializer that reads whatever appropriate
 # configuration and does the initialization.
 Checkpoint::DB.initialize!
+Keycard::DB.initialize!
+
+# HELIO-4475 Set default log level to debug
+Keycard::DB.db.sql_log_level = :debug
+Checkpoint::DB.db.sql_log_level = :debug
 
 Services = Canister.new
 
